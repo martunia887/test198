@@ -324,7 +324,14 @@ export default class Editor extends React.Component<EditorProps, {}> {
                     </BaseTheme>
                   )}
                 />
-                <PortalRenderer portalProviderAPI={portalProviderAPI} />
+                <PortalRenderer
+                  portalProviderAPI={portalProviderAPI}
+                  id="table1"
+                />
+                <PortalRenderer
+                  portalProviderAPI={portalProviderAPI}
+                  id="table2"
+                />
               </>
             )}
           />

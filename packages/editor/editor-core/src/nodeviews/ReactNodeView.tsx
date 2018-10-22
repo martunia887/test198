@@ -6,11 +6,15 @@ import { PortalProviderAPI } from '../ui/PortalProvider';
 export type getPosHandler = () => number;
 export type ReactComponentProps = { [key: string]: any };
 
+let id = 0;
+
 export default class ReactNodeView implements NodeView {
   private domRef?: HTMLElement;
   private contentDOMWrapper: Node | null;
   private reactComponent?: React.ComponentType<any>;
   private portalProviderAPI: PortalProviderAPI;
+
+  private id: number = ++id;
 
   reactComponentProps: ReactComponentProps = {};
 
@@ -77,7 +81,7 @@ export default class ReactNodeView implements NodeView {
       return;
     }
 
-    this.portalProviderAPI.render(component, this.domRef!);
+    this.portalProviderAPI.render(this.id, component, this.domRef!);
   }
 
   createDomRef(): HTMLElement {
@@ -163,7 +167,7 @@ export default class ReactNodeView implements NodeView {
       return;
     }
 
-    this.portalProviderAPI.remove(this.domRef);
+    this.portalProviderAPI.remove(this.id);
     this.domRef = undefined;
     this.contentDOM = undefined;
   }
