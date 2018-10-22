@@ -62,9 +62,27 @@ class DynamicHashTable {
       })),
     });
 
-    console.log();
-    console.log('Updates:', JSON.stringify(updates));
-    console.log();
+    // console.log();
+    // console.log('Updates:', JSON.stringify(updates));
+    // console.log();
+  }
+
+  remove(id) {
+    const hash = id % this[this.active].length;
+    this[this.active][hash] = this[this.active][hash].filter(i => i.id !== id);
+    this.activeLoad--;
+
+    setTimeout(() => {
+      this.onUpdate({
+        [this.active]: [
+          {
+            hash,
+            data: this[this.active][hash],
+          },
+        ],
+        [this.inactive]: [],
+      });
+    }, 0);
   }
 
   rehashInactive() {
@@ -77,15 +95,16 @@ class DynamicHashTable {
       return updates;
     }
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       const slotIndex = this[this.inactive].findIndex(Boolean);
       if (slotIndex === -1) {
-        console.log(`${this.inactive} is empty!`);
+        // console.log(`${this.inactive} is empty!`);
         this[this.inactive] = [];
+        this.onResize(this.inactive);
         return updates;
       }
 
-      console.log('Rehashing:', this[this.inactive][slotIndex]);
+      // console.log('Rehashing:', this[this.inactive][slotIndex]);
       updates = this[this.inactive][slotIndex].reduce((acc, item) => {
         const setUpdates = this.set(item.id, item.data, true);
         acc.active = acc.active.concat(setUpdates.active);
@@ -125,11 +144,11 @@ export class PortalProviderAPI extends EventDispatcher {
     if (table2.length) {
       this.emit('update:table2', table2);
     }
-    console.log({ table1, table2 });
+    // console.log({ table1, table2 });
   };
 
   onResize = id => {
-    this.emit(`update:${id}`, null);
+    this.emit(`update:resize:${id}`, null);
   };
 
   setContext = context => {
@@ -137,21 +156,15 @@ export class PortalProviderAPI extends EventDispatcher {
   };
 
   render(id: number, children: React.ReactChild, container: HTMLElement) {
-    this.table.set(id, { children, container });
-
-    // const portal = { id, children, container };
-    // const hash = id % this.capacity;
-    // const portals = this.portals[hash] || [];
-    // portals.push(portal);
-    // this.portals[hash] = portals;
-    // this.emit('update', { id: hash, portals });
+    setTimeout(() => {
+      this.table.set(id, { children, container });
+    }, 0);
   }
 
   remove(id: number) {
-    // const hash = id % this.capacity;
-    // const slot = this.portals[hash];
-    // this.portals[hash] = slot.filter(item => item.id !== id);
-    // this.emit('update', { id: hash, portals: this.portals[hash] });
+    setTimeout(() => {
+      this.table.remove(id);
+    }, 0);
   }
 }
 
@@ -188,15 +201,16 @@ export class PortalRenderer extends React.Component<
   };
 
   handleUpdate = slot => {
+    if (!slot) {
+      return;
+    }
     console.log({ slot });
     slot.forEach(item => {
-      console.log(slot.hash);
-      this.subscriptions[slot.hash](slot.data);
+      this.subscriptions[item.hash](item.data);
     });
   };
 
   render() {
-    console.log(this.props.portalProviderAPI.table);
     return (
       <>
         {Array.from(
@@ -216,15 +230,16 @@ export class PortalSlot extends React.Component<any, any> {
   state = {};
 
   handleUpdate = portals => {
-    console.log({ portals });
-    this.setState({ portals: portals.data });
+    this.setState({ portals });
   };
 
   render() {
     return this.state.portals && this.state.portals.length ? (
       <>
-        {this.state.portals.map(portal =>
-          createPortal(portal.children, portal.container),
+        {this.state.portals.map(
+          portal =>
+            console.log('create portal') ||
+            createPortal(portal.data.children, portal.data.container),
         )}
       </>
     ) : null;
