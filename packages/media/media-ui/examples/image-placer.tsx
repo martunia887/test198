@@ -7,7 +7,6 @@ import {
   ExportedImage,
   ExportedImageWrapper,
 } from '../example-helpers/styled';
-import { fileToDataURI } from '../src';
 
 export interface ExampleState {
   containerWidth: number;
@@ -17,7 +16,10 @@ export interface ExampleState {
   maxZoom: number;
   useConstraints: boolean;
   circular: boolean;
+  useCircularMask: boolean;
   src?: string;
+  file?: File;
+  orientation: number;
   exportedDataURI?: string;
 }
 
@@ -27,7 +29,9 @@ const MARGIN = 'Margin';
 
 class Example extends React.Component<{}, ExampleState> {
   zoomSlider?: HTMLInputElement;
-  toDataURI?: () => string;
+
+  // ImagePlacerAPI
+  toDataURL?: () => string;
 
   state: ExampleState = {
     containerWidth: 200,
@@ -36,7 +40,9 @@ class Example extends React.Component<{}, ExampleState> {
     zoom: 0,
     maxZoom: 2,
     useConstraints: true,
-    circular: true,
+    circular: false,
+    useCircularMask: false,
+    orientation: 1,
   };
 
   onZoomSliderChange = (e: any) => {
@@ -56,6 +62,11 @@ class Example extends React.Component<{}, ExampleState> {
     this.setState({ circular });
   };
 
+  onUseCircularMaskChanged = (e: any) => {
+    const useCircularMask = e.target.checked;
+    this.setState({ useCircularMask });
+  };
+
   private setZoomSlider(value: number) {
     if (this.zoomSlider) {
       this.zoomSlider.value = `${value * 100}`;
@@ -72,17 +83,17 @@ class Example extends React.Component<{}, ExampleState> {
 
   onFileInputChange = async (e: any) => {
     const files = [...e.target.files];
-    const dataUri = await fileToDataURI(files[0]);
-    this.setState({ src: dataUri });
+    const file = files[0];
+    this.setState({ src: undefined, file });
   };
 
   onExport = (api: ImagePlacerAPI) => {
-    this.toDataURI = api.toDataURI;
+    this.toDataURL = api.toDataURL;
   };
 
   onExportClick = () => {
-    if (this.toDataURI) {
-      this.setState({ exportedDataURI: this.toDataURI() });
+    if (this.toDataURL) {
+      this.setState({ exportedDataURI: this.toDataURL() });
     }
   };
 
@@ -95,15 +106,18 @@ class Example extends React.Component<{}, ExampleState> {
       maxZoom,
       useConstraints,
       circular,
+      useCircularMask,
+      file,
       src,
+      exportedDataURI,
     } = this.state;
-    const { exportedDataURI } = this.state;
 
     return (
       <Page>
         <Grid>
           <GridColumn>
             <h1>Image Placer</h1>
+            <p>todo: orientation</p>
             {this.slider(CONTAINER_WIDTH, containerWidth)}
             {this.slider(CONTAINER_HEIGHT, containerHeight)}
             {this.slider(MARGIN, margin, 0, 100, 5)}
@@ -113,6 +127,15 @@ class Example extends React.Component<{}, ExampleState> {
                 type="checkbox"
                 defaultChecked={circular}
                 onChange={this.onCircularChanged}
+              />
+            </Label>
+            <Label>
+              <span>Use Circular Mask:</span>
+              <input
+                type="checkbox"
+                disabled={!circular}
+                defaultChecked={useCircularMask}
+                onChange={this.onUseCircularMaskChanged}
               />
             </Label>
             <Label>
@@ -131,11 +154,13 @@ class Example extends React.Component<{}, ExampleState> {
               containerWidth={containerWidth}
               containerHeight={containerHeight}
               src={src}
+              file={file}
               margin={margin}
               zoom={zoom}
               maxZoom={maxZoom}
               useConstraints={useConstraints}
               circular={circular}
+              useCircularMask={useCircularMask}
               onZoomChange={this.onZoomChange}
               onExport={this.onExport}
             />
@@ -158,7 +183,7 @@ class Example extends React.Component<{}, ExampleState> {
         <Grid>
           <GridColumn>
             <input type="file" onChange={this.onFileInputChange} />
-            {src ? (
+            {typeof src === 'string' || typeof file !== 'undefined' ? (
               <p>
                 <button onClick={this.onExportClick}>Export DataURI</button>
               </p>
@@ -213,13 +238,14 @@ class Example extends React.Component<{}, ExampleState> {
     const value = e.target.valueAsNumber;
     switch (id) {
       case CONTAINER_WIDTH:
-        this.setState({ containerWidth: Math.max(1, value) });
+        this.setState({ containerWidth: value });
         break;
       case CONTAINER_HEIGHT:
-        this.setState({ containerHeight: Math.max(1, value) });
+        this.setState({ containerHeight: value });
         break;
       case MARGIN:
         this.setState({ zoom: 0, margin: value });
+        this.setZoomSlider(0);
         break;
     }
   };

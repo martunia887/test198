@@ -1,4 +1,5 @@
 import { FileInfo } from './imageMetaData/types';
+import image from '../../../core/icon/glyph/image';
 
 export function dataURItoFile(
   dataURI: string,
