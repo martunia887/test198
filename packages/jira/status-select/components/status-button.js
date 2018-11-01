@@ -153,7 +153,7 @@ class StatusButton extends PureComponent {
     if (this.props.isAnimated) {
       return <PulseOn>{button}</PulseOn>;
     }
-    return button;
+    return <div>{button}</div>;
   }
 }
 

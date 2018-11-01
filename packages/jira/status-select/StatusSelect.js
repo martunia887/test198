@@ -32,7 +32,7 @@ export default class StatusSelect extends PureComponent<Props, State> {
     const isPending = false; // TODO fix this
     const isDropdownOpen = false; // TODO fix this
     const isDisabled = false; // TODO fix this
-    const button = (
+    return (
       <StatusButton
         isDisabled={isDisabled}
         isSelected={isDropdownOpen}
@@ -45,8 +45,6 @@ export default class StatusSelect extends PureComponent<Props, State> {
         {toStatusName}
       </StatusButton>
     );
-
-    return button;
   }
 
   formatOptionWithTransitionNames = (option, { context }) => {
@@ -87,8 +85,8 @@ export default class StatusSelect extends PureComponent<Props, State> {
     const optionFormatter = useTransitionNames
       ? this.formatOptionWithTransitionNames
       : this.formatOptionWithoutTransitionNames;
-    const selectTarget = this.renderTarget();
     const selectOptions = this.optionsFromTransitions(options);
+    const targetButton = this.renderTarget();
 
     return (
       <PopupSelect
@@ -98,7 +96,7 @@ export default class StatusSelect extends PureComponent<Props, State> {
         selectedOption={this.props.selectedOption}
         placeholder="Status"
         onChange={this.props.onChange}
-        target={selectTarget}
+        target={targetButton}
         formatOptionLabel={optionFormatter}
       />
     );
