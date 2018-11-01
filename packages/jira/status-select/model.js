@@ -20,6 +20,14 @@ const statusCategories: { id: string, statusCategory: StatusCategory }[] = [
   { id: '3', statusCategory: DONE },
 ];
 
+export type Transition = {
+  fromStatusName: string,
+  fromStatusCategory: StatusCategory,
+  toStatusName: string,
+  toStatusCategory: StatusCategory,
+  isGlobal: boolean,
+};
+
 export const statusCategoryForId = (
   statusCategoryId: string | number,
 ): StatusCategory => {

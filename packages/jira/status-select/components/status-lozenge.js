@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import Lozenge from '@atlaskit/lozenge';
+import styled from 'styled-components';
 import {
   type StatusCategory,
   UNDEFINED,
@@ -39,3 +40,7 @@ export class StatusLozenge extends Component<Props> {
     );
   }
 }
+
+export const ItemContainer = styled.div`
+  display: inline;
+`;

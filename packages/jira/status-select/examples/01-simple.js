@@ -12,16 +12,19 @@ export default function Example() {
       id: 1,
       toStatusName: 'To do',
       toStatusCategory: TODO,
+      isGlobal: true,
     },
     {
       id: 2,
       toStatusName: 'In progress',
       toStatusCategory: IN_PROGRESS,
+      isGlobal: true,
     },
     {
       id: 3,
       toStatusName: 'Done',
       toStatusCategory: DONE,
+      isGlobal: true,
     },
   ];
 
