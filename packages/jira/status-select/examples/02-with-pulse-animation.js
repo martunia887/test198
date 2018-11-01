@@ -37,5 +37,12 @@ export default function Example() {
     animateTransition: true,
   };
 
-  return <StatusSelect {...defaults} />;
+  const style = {
+    margin: '30px',
+  };
+  return (
+    <div style={style}>
+      <StatusSelect {...defaults} />
+    </div>
+  );
 }

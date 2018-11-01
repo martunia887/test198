@@ -169,6 +169,7 @@ const PulseAnimation = keyframes`
 `;
 
 export const PulseOn = styled.div`
+  display: inline-block;
   border-radius: 3px;
   box-shadow: 0 0 0 0 ${akColors.G400};
   animation: ${PulseAnimation} 1.45s cubic-bezier(0.66, 0, 0, 1);
