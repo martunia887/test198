@@ -78,6 +78,7 @@ export default class StatusSelect extends PureComponent<Props, State> {
         </div>
       );
     }
+    return option.value;
   };
 
   render() {
@@ -86,16 +87,18 @@ export default class StatusSelect extends PureComponent<Props, State> {
     const optionFormatter = useTransitionNames
       ? this.formatOptionWithTransitionNames
       : this.formatOptionWithoutTransitionNames;
+    const selectTarget = this.renderTarget();
+    const selectOptions = this.optionsFromTransitions(options);
 
     return (
       <PopupSelect
         className="single-select"
         classNamePrefix="react-select"
-        options={this.optionsFromTransitions(options)}
+        options={selectOptions}
         selectedOption={this.props.selectedOption}
         placeholder="Status"
         onChange={this.props.onChange}
-        target={this.renderTarget()}
+        target={selectTarget}
         formatOptionLabel={optionFormatter}
       />
     );

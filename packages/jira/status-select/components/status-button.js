@@ -84,23 +84,21 @@ const InProgressButton = createStyledButton(inProgressColors);
 const DoneButton = createStyledButton(doneColors);
 const UndefinedButton = createStyledButton(undefinedColors);
 
-const getStyledButton = (() => {
-  return (statusCategories, category) => {
-    const { TODO, IN_PROGRESS, DONE } = statusCategories;
-    const categoryToButtonMap = {
-      [TODO]: { button: TodoButton, invertSpinnerColor: false },
-      [DONE]: { button: DoneButton, invertSpinnerColor: true },
-      [IN_PROGRESS]: { button: InProgressButton, invertSpinnerColor: true },
-    };
-
-    return (
-      categoryToButtonMap[category] || {
-        button: UndefinedButton,
-        invertSpinnerColor: false,
-      }
-    );
+const getStyledButton = (statusCategories, category) => {
+  const { TODO, IN_PROGRESS, DONE } = statusCategories;
+  const categoryToButtonMap = {
+    [TODO]: { button: TodoButton, invertSpinnerColor: false },
+    [DONE]: { button: DoneButton, invertSpinnerColor: true },
+    [IN_PROGRESS]: { button: InProgressButton, invertSpinnerColor: true },
   };
-})();
+
+  return (
+    categoryToButtonMap[category] || {
+      button: UndefinedButton,
+      invertSpinnerColor: false,
+    }
+  );
+};
 
 const Icon = <ExpandIcon label="" size="medium" />;
 
