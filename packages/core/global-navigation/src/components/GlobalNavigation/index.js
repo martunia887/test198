@@ -366,13 +366,15 @@ export default class GlobalNavigation
               return null;
             }
 
+            const width = this.props[`${drawer}DrawerWidth`] || 'wide';
+
             return (
               <Drawer
                 key={drawer}
                 isOpen={this.state[`is${capitalisedDrawerName}Open`]}
                 onClose={this.closeDrawer(drawer)}
                 shouldUnmountOnExit={shouldUnmountOnExit}
-                width="wide"
+                width={width}
               >
                 <ScreenTracker
                   name={analyticsIdMap[drawer]}

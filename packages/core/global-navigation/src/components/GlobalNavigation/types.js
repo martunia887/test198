@@ -1,6 +1,7 @@
 // @flow
 
 import type { ComponentType } from 'react';
+import type { DrawerWidth } from '@atlaskit/drawer';
 
 export type DrawerContentProps = { closeDrawer: () => void };
 
@@ -79,6 +80,7 @@ export type GlobalNavDrawerProps = {
   isStarredDrawerOpen?: boolean,
   /** The contents of the starred drawer. */
   starredDrawerContents?: ComponentType<*>,
+  starredDrawerWidth?: DrawerWidth,
   /** A callback function which will be called when the starred drawer is
    * opened. */
   onStarredDrawerOpen?: () => void,
