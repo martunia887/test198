@@ -3,12 +3,14 @@ import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
 
 export default md`
+A react component to render pagination as per ADG spec. It also exports a helper function which will help truncate the total number of pages and you can
+use the \`Ellipsis\` component where needed to signify the skipped components.
 
 ${(
   <Example
     packageName="@atlaskit/pagination"
     Component={require('../examples/01-basic').default}
-    title="Basic example"
+    title="Basic pagination"
     source={require('!!raw-loader!../examples/01-basic')}
   />
 )}
@@ -27,12 +29,12 @@ Example API:
 
 ${code`
 <Pagination>
-  {( LeftNavigator, Link, RightNavigator ) => (
+  {( LeftNavigator, Page, RightNavigator ) => (
     <Fragement>
       <LeftNavigator />
       {
         [...Array(10)].map((_, index) => (
-          <Link key={index}>{index + 1}</Link>
+          <Page key={index}>{index + 1}</Page>
         ))
       }
       <RightNavigator />
@@ -45,14 +47,14 @@ ${code`
 
 **LeftNavigator** -> This is meant to be used as left arrow in the start of pagination.
 
-**Link** -> This is meant to be used as the button representing each Page.
+**Page** -> This is meant to be used as the button representing each Page.
 
 **RightNavigator** -> This is meant to be used as right arrow in the end of pagination.
 
 ${(
   <Props
-    props={require('!!extract-react-types-loader!../src/components/pagination')}
-    heading="Link props"
+    props={require('!!extract-react-types-loader!../src/components/page')}
+    heading="Page props"
   />
 )}
 

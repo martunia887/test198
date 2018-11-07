@@ -8,24 +8,24 @@ export default md`
 
 Pagination now supports render props.
 
-Three new components are added to the
+The render prop function is called my with four arguments which are these four components:
 
-**Page**: This is the actual component that you will use to display you page
+1. **Page**: This is the actual component that you will use to display you page
 
-**LeftNavigation**: A react component that displays the left navigation button
+2. **LeftNavigation**: A react component that displays the left navigation button
 
-**RightNavigation**: A react component that displays the right navigation button
+3. **RightNavigation**: A react component that displays the right navigation button
 
-**Ellipses**: This will pring '...'  in the page, this is used to skip the pages
+4. **Ellipses**: This will pring '...'  in the page, this is used to skip the pages
 
-and a new export from the package:
+and there is a new export from the package:
 
 **collapseRange**: This is a util function which takes in maximumVisiblePages, current page value and pages as arguments
 and returns an array of items to know
 
-### 🚗 Migrate from v7
+### 🚗 Upgrade from v8
 
-To take an example if in v7 you were using a simple pagination which showed 10:
+To see an example of a pagination in v8 to show 10 pages:
 
 ${code`
 <Pagination
@@ -35,14 +35,14 @@ ${code`
 />
 `}
 
-Drawbacks with above approach:
+**Drawbacks with the above approach:**
 
-- You cannot control the total number of pagesNumber's displayed, it is constant 7.
+- You cannot control the total number of pagesNumber's displayed, as it is constant 7 defined in component.
 - You have no control over what you display on page number, by that I mean it always displays 1,2,3... there is no
 support for localisation.
 - We cannot render Link component for routing with react-router, etc.
 
-This can we re-written as:
+In v9 we can re-write the above component as:
 
 ${code`
 import Pagination, { collapseRange } from '@atlaskit/pagination';
@@ -95,6 +95,14 @@ export default class ManagedPagination extends Component<Props> {
 }
 `}
 
+This might look a lot of code at first but if you look closely we will find this API gives us more control over the component.
+
+**Advantages over old API:**
+
+- You have full control over the total number of pages's displayed, it is the first argument in the \`collapseRange\` function.
+- You have full control over what text to display in Page component, by that I mean you can render roman number I, II, III...
+localisation can be achieved easily.
+- We can render Link component for routing with react-router, etc.
 
 ## v7 to v8
 

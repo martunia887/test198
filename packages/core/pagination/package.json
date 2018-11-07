@@ -1,7 +1,7 @@
 {
   "name": "@atlaskit/pagination",
   "version": "8.0.5",
-  "description": "Pagination component",
+  "description": "A react component to be used for pagination in components like tables.",
   "license": "Apache-2.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
