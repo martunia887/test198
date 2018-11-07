@@ -22,6 +22,9 @@ export function defaultInputRuleHandler(
       ? hasUnsupportedMarkForBlockInputRule(state, start, end)
       : hasUnsupportedMarkForInputRule(state, start, end);
     if (state.selection.$from.parent.type.spec.code || unsupportedMarks) {
+      console.log(
+        'in (state.selection.$from.parent.type.spec.code || unsupportedMarks',
+      );
       return;
     }
     return originalHandler(state, match, start, end);
