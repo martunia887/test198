@@ -3,7 +3,7 @@
 import type { ComponentType, Node } from 'react';
 import type { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 
-export type DrawerWidth = 'full' | 'extended' | 'medium' | 'narrow' | 'wide';
+export type DrawerWidth = 'narrow' | 'medium' | 'wide' | 'extended' | 'full';
 
 export type BaseProps = {
   /** The content of the drawer */

@@ -12,7 +12,7 @@ import type { DrawerPrimitiveProps, DrawerWidth } from './types';
 
 const widths: { [DrawerWidth]: string | number } = {
   full: '100vw',
-  extended: '80vw',
+  extended: '95vw',
   narrow: 45 * gridSize(),
   medium: 60 * gridSize(),
   wide: 75 * gridSize(),
