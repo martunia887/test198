@@ -1,5 +1,6 @@
 //@flow
 import React, { Component, Fragment } from 'react';
+import { gridSize } from '@atlaskit/theme';
 import { HashRouter, Link, Route, Switch } from 'react-router-dom';
 import Pagination from '../src';
 
@@ -20,19 +21,19 @@ const pages = [
 
 const Dashboard = () => (
   <div>
-    <h1>This is dashboard</h1>
+    <h1>Dashboard page</h1>
     <PaginationWithSelectPage pageSelected={0} />
   </div>
 );
 const About = () => (
   <div>
-    <h1>This is about</h1>
+    <h1>About page</h1>
     <PaginationWithSelectPage pageSelected={1} />
   </div>
 );
 const Contact = () => (
   <div>
-    <h1>This is contact</h1>
+    <h1>Contact page</h1>
     <PaginationWithSelectPage pageSelected={2} />
   </div>
 );
@@ -42,7 +43,7 @@ const PaginationWithSelectPage = ({
 }: {
   pageSelected: number,
 }) => (
-  <Pagination>
+  <Pagination styles={{ marginTop: `${gridSize() * 3}px` }}>
     {(LeftNavigator, Page, RightNavigator) => (
       <Fragment>
         {pageSelected !== 0 ? (

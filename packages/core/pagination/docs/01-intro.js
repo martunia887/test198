@@ -53,6 +53,13 @@ ${code`
 
 ${(
   <Props
+    props={require('!!extract-react-types-loader!../src/components/pagination')}
+    heading="Pagination props"
+  />
+)}
+
+${(
+  <Props
     props={require('!!extract-react-types-loader!../src/components/page')}
     heading="Page props"
   />
