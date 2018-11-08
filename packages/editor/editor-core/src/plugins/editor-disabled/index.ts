@@ -1,4 +1,4 @@
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
 import { EditorPlugin } from '../../types';
 import { Dispatch } from '../../event-dispatcher';
 
@@ -18,6 +18,15 @@ export function createPlugin(
 ): Plugin | undefined {
   return new Plugin({
     key: pluginKey,
+    filterTransaction: (t: Transaction, s: EditorState) => {
+      console.log('Transaction:', t);
+      console.log('Filter transaction called!');
+      const newPluginState: EditorDisabledPluginState = t.getMeta(pluginKey);
+      if (newPluginState && newPluginState.editorDisabled === false) {
+        return false;
+      }
+      return true;
+    },
     state: {
       init: () =>
         ({
