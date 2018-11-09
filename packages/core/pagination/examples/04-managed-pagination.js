@@ -6,8 +6,12 @@ const index = 0;
 
 const leftComponent = ({ onClick }) => <div onClick={onClick}>Hello</div>;
 
+function onChange(value) {
+  console.log(value);
+}
+
 export default () => (
-  <Pagination selecetedIndex={1} leftNavigatorComponent={leftComponent}>
+  <Pagination onChange={onChange} selecetedIndex={1}>
     {[...Array(10)].map((_, index) => <Page key={index}>{index + 1}</Page>)}
   </Pagination>
 );

@@ -1,6 +1,7 @@
 import React, { Component, Fragment, type ComponentType } from 'react';
 import Pagination from './components/pagination';
 import { LeftNavigator, RightNavigator } from './components/navigators';
+import Ellipses from './components/ellipses';
 import collapseRange from './util/collapse-range';
 
 type PropsType = {
@@ -30,21 +31,17 @@ export default class managedPagination extends Component {
   };
 
   onPageChange = page => {
-    console.log(page);
-    this.setState({
-      selectedIndex: page,
-    });
+    if (!this.props.selectedIndex) {
+      this.setState({
+        selectedIndex: page,
+      });
+    }
     this.props.onChange(page);
   };
 
   getValueOf = prop => {
     if (this.props[prop]) return this.props[prop];
     return this.state[prop];
-  };
-
-  renderLeftNavigator = ({ isDisabled, onClick }) => {
-    const { leftNavigatorComponent: LeftNavigatorComponent } = this.props;
-    return <LeftNavigatorComponent isDisabled={isDisabled} onClick={onClick} />;
   };
 
   renderRightNavigator = ({ isDisabled, onClick }) => {
@@ -55,33 +52,33 @@ export default class managedPagination extends Component {
   };
 
   render() {
+    const selectedIndex = this.getValueOf('selectedIndex');
     const {
       leftNavigatorComponent: LeftNavigatorComponent,
-      children: Pages,
       rightNavigatorComponent: RightNavigatorComponent,
     } = this.props;
-    const selectedIndex = this.getValueOf('selectedIndex');
-    const pages = React.Children.map(Pages, (page, index) =>
+
+    const pages = React.Children.map(this.props.children, (page, index) =>
       React.cloneElement(page, {
         isSelected: index === selectedIndex,
         onClick: () => this.onPageChange(index),
       }),
     );
+    const visiblePages = collapseRange(7, selectedIndex, pages, <Ellipses />);
+    console.log(visiblePages);
     return (
       <Pagination>
         {() => (
           <Fragment>
-            {(() => {
-              const isDisabled = 0 === selectedIndex;
-              const onClick = () => this.onPageChange(selectedIndex - 1);
-              return this.renderLeftNavigator({ isDisabled, onClick });
-            })()}
-            {pages}
-            {(() => {
-              const isDisabled = pages.length - 1 === selectedIndex;
-              const onClick = () => this.onPageChange(selectedIndex + 1);
-              return this.renderRightNavigator({ isDisabled, onClick });
-            })()}
+            <LeftNavigatorComponent
+              isDisabled={0 === selectedIndex}
+              onClick={() => this.onPageChange(selectedIndex - 1)}
+            />
+            {visiblePages}
+            <RightNavigatorComponent
+              isDisabled={pages.length - 1 === selectedIndex}
+              onClick={() => this.onPageChange(selectedIndex + 1)}
+            />
           </Fragment>
         )}
       </Pagination>
