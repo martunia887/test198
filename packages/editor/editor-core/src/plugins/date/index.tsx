@@ -2,10 +2,6 @@ import * as React from 'react';
 import EditorDateIcon from '@atlaskit/icon/glyph/editor/date';
 import { date } from '@atlaskit/editor-common';
 import { findDomRefAtPos } from 'prosemirror-utils';
-<<<<<<< HEAD
-=======
-import { NodeSelection } from 'prosemirror-state';
->>>>>>> CHANGESET: ED-4427 Editor disabled state applies to floating toolbars and task decision checkboxes
 import * as Loadable from 'react-loadable';
 
 import { EditorPlugin } from '../../types';
