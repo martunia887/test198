@@ -1,7 +1,6 @@
 // @flow
 
-import { Component, type Node } from 'react';
-import PropTypes from 'prop-types';
+import React, { createContext, Component, type Node } from 'react';
 import UIAnalyticsEvent from './UIAnalyticsEvent';
 import type { UIAnalyticsEventHandler } from './types';
 
@@ -15,34 +14,43 @@ type Props = {
   onEvent: (event: UIAnalyticsEvent, channel?: string) => void,
 };
 
-const ContextTypes = {
-  getAtlaskitAnalyticsEventHandlers: PropTypes.func,
-};
+const { Consumer: AnalyticsListenerConsumer, Provider } = createContext(
+  (): Function[] => [],
+);
 
-export default class AnalyticsListener extends Component<Props> {
-  static contextTypes = ContextTypes;
-  static childContextTypes = ContextTypes;
+export { AnalyticsListenerConsumer };
 
-  getChildContext = () => ({
-    getAtlaskitAnalyticsEventHandlers: this.getAnalyticsEventHandlers,
-  });
+class AnalyticsListener extends Component<{
+  ...$Exact<Props>,
+  getParentHandlers: Function,
+}> {
+  static defaultProps = {
+    getParentHandlers: () => [],
+  };
 
   getAnalyticsEventHandlers = () => {
-    const { channel, onEvent } = this.props;
-    const { getAtlaskitAnalyticsEventHandlers } = this.context;
-    const parentEventHandlers =
-      (typeof getAtlaskitAnalyticsEventHandlers === 'function' &&
-        getAtlaskitAnalyticsEventHandlers()) ||
-      [];
+    const { channel, onEvent, getParentHandlers } = this.props;
     const handler: UIAnalyticsEventHandler = (event, eventChannel) => {
       if (channel === '*' || channel === eventChannel) {
         onEvent(event, eventChannel);
       }
     };
-    return [handler, ...parentEventHandlers];
+    return [handler, ...getParentHandlers()];
   };
 
   render() {
-    return this.props.children;
+    return (
+      <Provider value={this.getAnalyticsEventHandlers}>
+        {this.props.children}
+      </Provider>
+    );
   }
 }
+
+export default (props: Props) => (
+  <AnalyticsListenerConsumer>
+    {getParentHandlers => (
+      <AnalyticsListener {...props} getParentHandlers={getParentHandlers} />
+    )}
+  </AnalyticsListenerConsumer>
+);

@@ -1,15 +1,10 @@
 // @flow
 
-import React, {
-  Component,
-  type Node,
-  type ComponentType,
-  type ElementConfig,
-} from 'react';
-import PropTypes from 'prop-types';
+import React, { type ComponentType, type ElementConfig } from 'react';
 
 import UIAnalyticsEvent from './UIAnalyticsEvent';
 import { AnalyticsContextConsumer } from './AnalyticsContext';
+import { AnalyticsListenerConsumer } from './AnalyticsListener';
 import type { AnalyticsEventPayload } from './types';
 
 export type CreateUIAnalyticsEvent = (
@@ -35,40 +30,6 @@ type AnalyticsEventCreator<ProvidedProps: {}> = (
 type EventMap<ProvidedProps: {}> = {
   [string]: AnalyticsEventPayload | AnalyticsEventCreator<ProvidedProps>,
 };
-
-// This component is used to grab the analytics functions off context.
-// It uses legacy context, but provides an API similar to 16.3 context.
-// This makes it easier to use with the forward ref API.
-class AnalyticsContextCombiner extends Component<{
-  children: CreateUIAnalyticsEvent => Node,
-}> {
-  static contextTypes = {
-    getAtlaskitAnalyticsEventHandlers: PropTypes.func,
-  };
-  createAnalyticsEvent = getAnalyticsContext => (
-    payload: AnalyticsEventPayload,
-  ): UIAnalyticsEvent => {
-    const { getAtlaskitAnalyticsEventHandlers } = this.context;
-    const handlers =
-      (typeof getAtlaskitAnalyticsEventHandlers === 'function' &&
-        getAtlaskitAnalyticsEventHandlers()) ||
-      [];
-    return new UIAnalyticsEvent({
-      context: getAnalyticsContext(),
-      handlers,
-      payload,
-    });
-  };
-  render() {
-    return (
-      <AnalyticsContextConsumer>
-        {getAnalyticsContext =>
-          this.props.children(this.createAnalyticsEvent(getAnalyticsContext))
-        }
-      </AnalyticsContextConsumer>
-    );
-  }
-}
 
 // patch the callback so it provides analytics information.
 const modifyCallbackProp = <T: {}>(
@@ -112,21 +73,36 @@ export default function withAnalyticsEvents<P: {}, C: ComponentType<P>>(
     // $FlowFixMe - flow 0.67 doesn't know about forwardRef
     const WithAnalyticsEvents = React.forwardRef((props, ref) => {
       return (
-        <AnalyticsContextCombiner>
-          {createAnalyticsEvent => {
-            const modifiedProps = vmap(createEventMap, (propName, entry) =>
-              modifyCallbackProp(propName, entry, props, createAnalyticsEvent),
-            );
-            return (
-              <WrappedComponent
-                {...props}
-                {...modifiedProps}
-                createAnalyticsEvent={createAnalyticsEvent}
-                ref={ref}
-              />
-            );
-          }}
-        </AnalyticsContextCombiner>
+        <AnalyticsContextConsumer>
+          {getAnalyticsContext => (
+            <AnalyticsListenerConsumer>
+              {getAnalyticsHandlers => {
+                const createAnalyticsEvent = payload =>
+                  new UIAnalyticsEvent({
+                    payload,
+                    context: getAnalyticsContext(),
+                    handlers: getAnalyticsHandlers(),
+                  });
+                const modifiedProps = vmap(createEventMap, (propName, entry) =>
+                  modifyCallbackProp(
+                    propName,
+                    entry,
+                    props,
+                    createAnalyticsEvent,
+                  ),
+                );
+                return (
+                  <WrappedComponent
+                    {...props}
+                    {...modifiedProps}
+                    createAnalyticsEvent={createAnalyticsEvent}
+                    ref={ref}
+                  />
+                );
+              }}
+            </AnalyticsListenerConsumer>
+          )}
+        </AnalyticsContextConsumer>
       );
     });
 

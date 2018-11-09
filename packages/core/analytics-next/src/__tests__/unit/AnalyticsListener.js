@@ -1,26 +1,26 @@
 // @flow
 
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import PropTypes from 'prop-types';
 import { AnalyticsListener } from '../..';
+import { AnalyticsListenerConsumer } from '../../AnalyticsListener';
 
-const ContextConsumer = (
-  props: { onClick: (handlers: {}) => void },
-  context,
-) => {
-  const onClick = () => {
-    const eventHandlers = context.getAtlaskitAnalyticsEventHandlers();
-    props.onClick(eventHandlers);
-  };
-  return <button onClick={onClick} />;
+const ContextConsumer = (props: {
+  onClick: (handlers: Function[]) => void,
+}) => {
+  return (
+    <AnalyticsListenerConsumer>
+      {getHandlers => <button onClick={() => props.onClick(getHandlers())} />}
+    </AnalyticsListenerConsumer>
+  );
 };
 ContextConsumer.contextTypes = {
   getAtlaskitAnalyticsEventHandlers: PropTypes.func,
 };
 
 it('should render', () => {
-  const wrapper = shallow(
+  const wrapper = mount(
     <AnalyticsListener onEvent={() => {}}>
       <div />
     </AnalyticsListener>,
