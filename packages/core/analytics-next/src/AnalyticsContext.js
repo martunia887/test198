@@ -1,11 +1,6 @@
 // @flow
 
-import { Children, Component, type Node } from 'react';
-import PropTypes from 'prop-types';
-
-const ContextTypes = {
-  getAtlaskitAnalyticsContext: PropTypes.func,
-};
+import React, { createContext, Component, type Node } from 'react';
 
 type Props = {
   /** Children! */
@@ -15,26 +10,37 @@ type Props = {
   data: {},
 };
 
-export default class AnalyticsContext extends Component<Props> {
-  static contextTypes = ContextTypes;
+const { Consumer: AnalyticsContextConsumer, Provider } = createContext(
+  (): Object[] => [],
+);
 
-  static childContextTypes = ContextTypes;
+export { AnalyticsContextConsumer };
 
-  getChildContext = () => ({
-    getAtlaskitAnalyticsContext: this.getAnalyticsContext,
-  });
+class AnalyticsContext extends Component<{
+  ...Props,
+  getParentContext: Function,
+}> {
+  static defaultProps = {
+    getParentContext: () => [],
+  };
 
   getAnalyticsContext = () => {
-    const { data } = this.props;
-    const { getAtlaskitAnalyticsContext } = this.context;
-    const ancestorData =
-      (typeof getAtlaskitAnalyticsContext === 'function' &&
-        getAtlaskitAnalyticsContext()) ||
-      [];
-    return [...ancestorData, data];
+    return [...this.props.getParentContext(), this.props.data];
   };
 
   render() {
-    return Children.only(this.props.children);
+    return (
+      <Provider value={this.getAnalyticsContext}>
+        {this.props.children}
+      </Provider>
+    );
   }
 }
+
+export default (props: Props) => (
+  <AnalyticsContextConsumer>
+    {getParentContext => (
+      <AnalyticsContext {...props} getParentContext={getParentContext} />
+    )}
+  </AnalyticsContextConsumer>
+);

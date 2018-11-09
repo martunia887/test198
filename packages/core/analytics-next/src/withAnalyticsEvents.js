@@ -9,6 +9,7 @@ import React, {
 import PropTypes from 'prop-types';
 
 import UIAnalyticsEvent from './UIAnalyticsEvent';
+import { AnalyticsContextConsumer } from './AnalyticsContext';
 import type { AnalyticsEventPayload } from './types';
 
 export type CreateUIAnalyticsEvent = (
@@ -38,30 +39,34 @@ type EventMap<ProvidedProps: {}> = {
 // This component is used to grab the analytics functions off context.
 // It uses legacy context, but provides an API similar to 16.3 context.
 // This makes it easier to use with the forward ref API.
-class AnalyticsContextConsumer extends Component<{
+class AnalyticsContextCombiner extends Component<{
   children: CreateUIAnalyticsEvent => Node,
 }> {
   static contextTypes = {
     getAtlaskitAnalyticsEventHandlers: PropTypes.func,
-    getAtlaskitAnalyticsContext: PropTypes.func,
   };
-  createAnalyticsEvent = (payload: AnalyticsEventPayload): UIAnalyticsEvent => {
-    const {
-      getAtlaskitAnalyticsEventHandlers,
-      getAtlaskitAnalyticsContext,
-    } = this.context;
-    const context =
-      (typeof getAtlaskitAnalyticsContext === 'function' &&
-        getAtlaskitAnalyticsContext()) ||
-      [];
+  createAnalyticsEvent = getAnalyticsContext => (
+    payload: AnalyticsEventPayload,
+  ): UIAnalyticsEvent => {
+    const { getAtlaskitAnalyticsEventHandlers } = this.context;
     const handlers =
       (typeof getAtlaskitAnalyticsEventHandlers === 'function' &&
         getAtlaskitAnalyticsEventHandlers()) ||
       [];
-    return new UIAnalyticsEvent({ context, handlers, payload });
+    return new UIAnalyticsEvent({
+      context: getAnalyticsContext(),
+      handlers,
+      payload,
+    });
   };
   render() {
-    return this.props.children(this.createAnalyticsEvent);
+    return (
+      <AnalyticsContextConsumer>
+        {getAnalyticsContext =>
+          this.props.children(this.createAnalyticsEvent(getAnalyticsContext))
+        }
+      </AnalyticsContextConsumer>
+    );
   }
 }
 
@@ -107,7 +112,7 @@ export default function withAnalyticsEvents<P: {}, C: ComponentType<P>>(
     // $FlowFixMe - flow 0.67 doesn't know about forwardRef
     const WithAnalyticsEvents = React.forwardRef((props, ref) => {
       return (
-        <AnalyticsContextConsumer>
+        <AnalyticsContextCombiner>
           {createAnalyticsEvent => {
             const modifiedProps = vmap(createEventMap, (propName, entry) =>
               modifyCallbackProp(propName, entry, props, createAnalyticsEvent),
@@ -121,7 +126,7 @@ export default function withAnalyticsEvents<P: {}, C: ComponentType<P>>(
               />
             );
           }}
-        </AnalyticsContextConsumer>
+        </AnalyticsContextCombiner>
       );
     });
 

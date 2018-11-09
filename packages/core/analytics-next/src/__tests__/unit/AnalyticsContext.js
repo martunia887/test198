@@ -1,26 +1,12 @@
 // @flow
 
 import React from 'react';
-import { mount, shallow } from 'enzyme';
-import PropTypes from 'prop-types';
+import { mount } from 'enzyme';
 import { AnalyticsContext } from '../..';
-
-const ContextConsumer = (
-  props: { onClick: (context: {}) => void },
-  context,
-) => {
-  const onClick = () => {
-    const analyticsContext = context.getAtlaskitAnalyticsContext();
-    props.onClick(analyticsContext);
-  };
-  return <button onClick={onClick} />;
-};
-ContextConsumer.contextTypes = {
-  getAtlaskitAnalyticsContext: PropTypes.func,
-};
+import { AnalyticsContextConsumer } from '../../AnalyticsContext';
 
 it('should render', () => {
-  const wrapper = shallow(
+  const wrapper = mount(
     <AnalyticsContext data={{}}>
       <div />
     </AnalyticsContext>,
@@ -29,47 +15,78 @@ it('should render', () => {
   expect(wrapper.find('div')).toHaveLength(1);
 });
 
-it('should not create a component with multiple children', () => {
-  expect(() => {
-    shallow(
-      <AnalyticsContext data={{}}>
-        <div />
-        <div />
-      </AnalyticsContext>,
-    );
-  }).toThrow();
-});
-
 it("should add analytics context data to child's getAnalyticsContext context callback", () => {
-  let analyticsContext;
-  const getContext = context => {
-    analyticsContext = context;
-  };
-  const wrapper = mount(
+  let getAnalyticsContext = () => [];
+  mount(
     <AnalyticsContext data={{ a: 'b' }}>
-      <ContextConsumer onClick={getContext} />
+      <AnalyticsContextConsumer>
+        {getter => {
+          getAnalyticsContext = getter;
+          return null;
+        }}
+      </AnalyticsContextConsumer>
     </AnalyticsContext>,
   );
-  wrapper.find(ContextConsumer).simulate('click');
 
-  expect(analyticsContext).toEqual([{ a: 'b' }]);
+  expect(getAnalyticsContext()).toEqual([{ a: 'b' }]);
 });
 
 it("should prepend analytics context data from ancestors to child's getAnalyticsContext context callback", () => {
-  let analyticsContext;
-  const getContext = context => {
-    analyticsContext = context;
-  };
-  const wrapper = mount(
+  let getAnalyticsContext = () => [];
+  mount(
     <AnalyticsContext data={{ a: 'e' }}>
       <AnalyticsContext data={{ c: 'd' }}>
         <AnalyticsContext data={{ a: 'b' }}>
-          <ContextConsumer onClick={getContext} />
+          <AnalyticsContextConsumer>
+            {getter => {
+              getAnalyticsContext = getter;
+              return null;
+            }}
+          </AnalyticsContextConsumer>
         </AnalyticsContext>
       </AnalyticsContext>
     </AnalyticsContext>,
   );
-  wrapper.find(ContextConsumer).simulate('click');
 
-  expect(analyticsContext).toEqual([{ a: 'e' }, { c: 'd' }, { a: 'b' }]);
+  expect(getAnalyticsContext()).toEqual([{ a: 'e' }, { c: 'd' }, { a: 'b' }]);
+});
+
+it('should gracefully handle updates to context data', () => {
+  const spy = jest.fn();
+  class UseState extends React.Component<
+    { children: Function, defaultState: {} },
+    {},
+  > {
+    state = this.props.defaultState;
+    render() {
+      return this.props.children(this.state, s => this.setState(s));
+    }
+  }
+  const wrapper = mount(
+    <UseState defaultState={{ c: 'initial' }}>
+      {(state, setState) => (
+        <AnalyticsContext data={{ a: 'e' }}>
+          <AnalyticsContext data={state}>
+            <AnalyticsContext data={{ a: 'b' }}>
+              <AnalyticsContextConsumer>
+                {getContext => (
+                  <button
+                    onClick={() => {
+                      spy(getContext());
+                      setState({ c: 'updated' });
+                    }}
+                  />
+                )}
+              </AnalyticsContextConsumer>
+            </AnalyticsContext>
+          </AnalyticsContext>
+        </AnalyticsContext>
+      )}
+    </UseState>,
+  );
+
+  wrapper.find('button').simulate('click');
+  wrapper.find('button').simulate('click');
+  expect(spy).nthCalledWith(1, [{ a: 'e' }, { c: 'initial' }, { a: 'b' }]);
+  expect(spy).nthCalledWith(2, [{ a: 'e' }, { c: 'updated' }, { a: 'b' }]);
 });
