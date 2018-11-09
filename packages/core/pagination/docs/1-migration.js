@@ -8,11 +8,11 @@ export default md`
 
 Pagination now supports render props.
 
-The render prop function is called my with four arguments which are these four components:
+The pagination can we composed using four components which passed as argument to the render prop function:
 
-1. **Page**: This is the actual component that you will use to display you page
+1. **LeftNavigation**: A react component that displays the left navigation button
 
-2. **LeftNavigation**: A react component that displays the left navigation button
+2. **Page**: This is the actual component that you will use to display you page
 
 3. **RightNavigation**: A react component that displays the right navigation button
 
@@ -20,7 +20,7 @@ The render prop function is called my with four arguments which are these four c
 
 and there is a new export from the package:
 
-**collapseRange**: This is a util function which takes in maximumVisiblePages, current page value and pages as arguments
+5. **collapseRange**: This is a util function which takes in maximumVisiblePages, current page value and pages as arguments
 and returns an array of items to know
 
 ### 🚗 Upgrade from v8

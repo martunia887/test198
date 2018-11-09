@@ -2,6 +2,7 @@
 import React, { Component, Fragment } from 'react';
 import { gridSize } from '@atlaskit/theme';
 import { HashRouter, Link, Route, Switch } from 'react-router-dom';
+import styled from 'styled-components';
 import Pagination from '../src';
 
 const pages = [
@@ -38,44 +39,50 @@ const Contact = () => (
   </div>
 );
 
+const PaginationWrapper = styled.div`
+  margin-top: ${gridSize() * 3}px;
+`;
+
 const PaginationWithSelectPage = ({
   pageSelected,
 }: {
   pageSelected: number,
 }) => (
-  <Pagination styles={{ marginTop: `${gridSize() * 3}px` }}>
-    {(LeftNavigator, Page, RightNavigator) => (
-      <Fragment>
-        {pageSelected !== 0 ? (
-          <Link to={pageSelected === 0 ? '' : pages[pageSelected - 1].link}>
-            <LeftNavigator />
-          </Link>
-        ) : (
-          <LeftNavigator isDisabled />
-        )}
-        {pages.map((page, index) => (
-          <Page
-            key={page.link}
-            isSelected={pageSelected === index}
-            component={({ className, children }) => (
-              <Link to={page.link} className={className} key={`${page.link}`}>
-                {children}
-              </Link>
-            )}
-          >
-            {page.label}
-          </Page>
-        ))}
-        {pageSelected !== 2 ? (
-          <Link to={pageSelected === 2 ? '' : pages[pageSelected + 1].link}>
-            <RightNavigator />
-          </Link>
-        ) : (
-          <RightNavigator isDisabled />
-        )}
-      </Fragment>
-    )}
-  </Pagination>
+  <PaginationWrapper>
+    <Pagination innerStyles={{ marginTop: `${gridSize() * 3}px` }}>
+      {(LeftNavigator, Page, RightNavigator) => (
+        <Fragment>
+          {pageSelected !== 0 ? (
+            <Link to={pageSelected === 0 ? '' : pages[pageSelected - 1].link}>
+              <LeftNavigator />
+            </Link>
+          ) : (
+            <LeftNavigator isDisabled />
+          )}
+          {pages.map((page, index) => (
+            <Page
+              key={page.link}
+              isSelected={pageSelected === index}
+              component={({ className, children }) => (
+                <Link to={page.link} className={className} key={`${page.link}`}>
+                  {children}
+                </Link>
+              )}
+            >
+              {page.label}
+            </Page>
+          ))}
+          {pageSelected !== 2 ? (
+            <Link to={pageSelected === 2 ? '' : pages[pageSelected + 1].link}>
+              <RightNavigator />
+            </Link>
+          ) : (
+            <RightNavigator isDisabled />
+          )}
+        </Fragment>
+      )}
+    </Pagination>
+  </PaginationWrapper>
 );
 
 export default class WithReactRouterLink extends Component<{}> {
