@@ -20,12 +20,13 @@ export function createPlugin(
     key: pluginKey,
     filterTransaction: (t: Transaction, s: EditorState) => {
       const newPluginState: EditorDisabledPluginState = t.getMeta(pluginKey);
-      if (newPluginState && newPluginState.editorDisabled === false) {
+      if (newPluginState && newPluginState.editorDisabled === true) {
         console.log('Transaction rejected');
         console.log('Transaction:', t);
         return false;
       }
       console.log('Transaction allowed');
+      console.log({ newPluginState, s });
       console.log('Transaction:', t);
       return true;
     },
@@ -41,6 +42,11 @@ export function createPlugin(
           newPluginState &&
           oldPluginState.editorDisabled !== newPluginState.editorDisabled
         ) {
+          if (newPluginState.editorDisabled === true) {
+            console.log('Dispatching newPluginState to be disabled');
+            debugger;
+          }
+
           dispatch(pluginKey, newPluginState);
           return newPluginState;
         }

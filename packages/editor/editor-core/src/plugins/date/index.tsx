@@ -75,9 +75,10 @@ const datePlugin: EditorPlugin = {
         }) => {
           const { showDatePickerAt } = datePlugin;
           if (
-            !showDatePickerAt ||
-            (editorDisabledPlugin &&
-              editorDisabledPlugin.editorDisabled === true)
+            !showDatePickerAt
+            // ||
+            // (editorDisabledPlugin &&
+            //   editorDisabledPlugin.editorDisabled === true)
           ) {
             return null;
           }
