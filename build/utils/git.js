@@ -53,8 +53,8 @@ async function getChangedChangesetFilesSinceMaster(fullPath = false) {
 }
 
 async function getBranchName() {
-  const gitCmd = await spawn('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
-  return gitCmd.stdout.trim();
+  const gitCmd = await spawn('git', ['rev-parse', '--abrev-ref', 'HEAD']);
+  return gitCmd.stdout.trim().split('\n');
 }
 
 async function getMasterRef() {

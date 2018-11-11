@@ -10,10 +10,7 @@ export function extractPropsFromObject(json: any): InlineCardResolvedViewProps {
   };
 
   if (json.generator && json.generator.icon) {
-    props.icon =
-      json.generator.icon && json.generator.icon.url
-        ? json.generator.icon.url
-        : json.generator.icon;
+    props.icon = json.generator.icon;
   }
 
   return props;

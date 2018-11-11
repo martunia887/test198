@@ -81,7 +81,6 @@ export type Token = TextToken | PMNodeToken;
 export type TokenErrCallback = (err: Error, tokenType: string) => void;
 export type TokenParser = (
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ) => Token;
@@ -124,28 +123,27 @@ const tokenToTokenParserMapping: {
 export function parseToken(
   input: string,
   type: TokenType,
-  position: number,
   schema: Schema,
   errCallback?: TokenErrCallback,
 ): Token {
   const tokenParser = tokenToTokenParserMapping[type];
   if (tokenParser) {
     try {
-      return tokenParser(input, position, schema, errCallback);
+      return tokenParser(input, schema, errCallback);
     } catch (err) {
       if (errCallback) {
         errCallback(err, type);
       }
-      return fallback(input, position);
+      return fallback(input);
     }
   }
-  return fallback(input, position);
+  return fallback(input);
 }
 
-function fallback(input: string, position: number): Token {
+function fallback(input: string): Token {
   return {
     type: 'text',
-    text: input.substr(position, 1),
+    text: input.substr(0, 1),
     length: 1,
   };
 }

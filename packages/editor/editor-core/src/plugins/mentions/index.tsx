@@ -85,7 +85,7 @@ const mentionsPlugin: EditorPlugin = {
       {
         title: formatMessage(messages.mention),
         keywords: ['@'],
-        priority: 200,
+        priority: 400,
         icon: () => <MentionIcon label={formatMessage(messages.mention)} />,
         action(insert, state) {
           const mark = state.schema.mark('mentionQuery');

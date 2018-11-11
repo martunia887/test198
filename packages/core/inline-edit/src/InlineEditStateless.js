@@ -149,6 +149,7 @@ class InlineEdit extends Component<StatelessProps, State> {
     return (
       <FieldBase
         isInvalid={isInvalid}
+        isFocused={this.isReadOnly() ? false : undefined}
         isReadOnly={this.isReadOnly()}
         isFitContainerWidthEnabled={isEditing || isFitContainerWidthReadView}
         appearance={isEditing ? 'standard' : 'subtle'}

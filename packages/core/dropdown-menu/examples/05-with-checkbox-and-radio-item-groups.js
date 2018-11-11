@@ -16,8 +16,7 @@ export default () => (
       </DropdownItemRadio>
       <DropdownItemRadio id="java">Java</DropdownItemRadio>
       <DropdownItemRadio id="ruby">Ruby</DropdownItemRadio>
-    </DropdownItemGroupRadio>
-    ,
+    </DropdownItemGroupRadio>,
     <DropdownItemGroupCheckbox id="languages2" title="Languages">
       <DropdownItemCheckbox defaultSelected id="js-check">
         JavaScript

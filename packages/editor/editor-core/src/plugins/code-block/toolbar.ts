@@ -16,7 +16,6 @@ import { removeCodeBlock, changeLanguage } from './actions';
 import commonMessages from '../../messages';
 import { pluginKey, CodeBlockState } from './pm-plugins/main';
 import { Command } from '../../types';
-import { createBreakoutToolbarItems } from '../breakout/utils/create-breakout-toolbar-items';
 
 export const messages = defineMessages({
   selectLanguage: {
@@ -50,10 +49,6 @@ export const getToolbarConfig: FloatingToolbarHandler = (
       })),
     };
 
-    const breakoutToolbar = createBreakoutToolbarItems(state, {
-      formatMessage,
-    });
-
     const separator: FloatingToolbarSeparator = {
       type: 'separator',
     };
@@ -70,12 +65,7 @@ export const getToolbarConfig: FloatingToolbarHandler = (
       title: 'CodeBlock floating controls',
       getDomRef: () => codeBlockState.element,
       nodeType: state.schema.nodes.codeBlock,
-      items: [
-        languageSelect,
-        ...(breakoutToolbar ? [separator, ...breakoutToolbar] : []),
-        separator,
-        deleteButton,
-      ],
+      items: [languageSelect, separator, deleteButton],
     };
   }
 };

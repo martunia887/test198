@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import BulletListIcon from '@atlaskit/icon/glyph/editor/bullet-list';
 import NumberListIcon from '@atlaskit/icon/glyph/editor/number-list';
@@ -21,7 +21,24 @@ import {
   Shortcut,
 } from '../../../../ui/styles';
 import { toggleBulletList, toggleOrderedList } from '../../commands';
-import { messages } from '../../messages';
+
+export const messages = defineMessages({
+  unorderedList: {
+    id: 'fabric.editor.unorderedList',
+    defaultMessage: 'Bullet list',
+    description: 'A list with bullets. Also known as an “unordered” list',
+  },
+  orderedList: {
+    id: 'fabric.editor.orderedList',
+    defaultMessage: 'Numbered list',
+    description: 'A list with ordered items 1… 2… 3…',
+  },
+  lists: {
+    id: 'fabric.editor.lists',
+    defaultMessage: 'Lists',
+    description: 'Menu shows ordered/bullet list and unordered/numbered lists',
+  },
+});
 
 export interface Props {
   editorView: EditorView;

@@ -1,10 +1,11 @@
 import * as React from 'react';
-import Inline from './inline';
+export default function Paragraph(props) {
+  const { children } = props;
+  const childCount = React.Children.toArray(children).length;
 
-export default function Paragraph({ children }: React.Props<{}>) {
-  return (
-    <p>
-      <Inline>{children}</Inline>
-    </p>
-  );
+  if (!childCount) {
+    return <p>&nbsp;</p>;
+  }
+
+  return <p>{children}</p>;
 }

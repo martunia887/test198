@@ -25,7 +25,6 @@ export {
   img,
   hr,
   em,
-  breakout,
   strong,
   code,
   a,

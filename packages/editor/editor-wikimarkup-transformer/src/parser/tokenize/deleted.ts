@@ -6,7 +6,6 @@ import { parseString } from '../text';
 
 export function deleted(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ): Token {
@@ -45,7 +44,7 @@ export function deleted(
     };
   };
 
-  return commonFormatter(input, position, schema, {
+  return commonFormatter(input, schema, {
     opening: '-',
     closing: '-',
     rawContentProcessor,

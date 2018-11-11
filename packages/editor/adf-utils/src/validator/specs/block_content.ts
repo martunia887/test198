@@ -8,7 +8,7 @@ export default [
   'blockquote',
   'rule',
   'table',
-  'codeBlock_no_marks',
+  'codeBlock',
   'mediaGroup',
   'applicationCard',
   'decisionList',

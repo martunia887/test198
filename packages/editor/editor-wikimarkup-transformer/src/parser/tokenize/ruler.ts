@@ -2,10 +2,10 @@ import { Schema } from 'prosemirror-model';
 import { createRuleNode } from '../nodes/rule';
 import { Token } from './';
 
-export function ruler(input: string, position: number, schema: Schema): Token {
+export function ruler(input: string, schema: Schema): Token {
   return {
     type: 'pmnode',
-    nodes: createRuleNode(schema),
+    nodes: createRuleNode(input, schema),
     length: 4,
   };
 }

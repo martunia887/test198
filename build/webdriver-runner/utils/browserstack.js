@@ -1,8 +1,8 @@
 //@flow
 
 /*
- * util module to support connect and disconnect from browserstack.
- */
+* util module to support connect and disconnect from browserstack.
+*/
 
 const browserstack = require('browserstack-local');
 const bsLocal = new browserstack.Local();

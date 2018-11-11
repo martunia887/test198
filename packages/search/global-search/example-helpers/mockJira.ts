@@ -63,7 +63,11 @@ export const generateRandomJiraProject = (): JiraItem => {
     url: getProjectUrl(key),
     attributes: {
       '@type': 'project',
-      projectType: pickRandom(['software', 'business', 'service_desk', 'ops']),
+      projectType: pickRandom([
+        'Software project',
+        'Core projects',
+        'Servicedesk project',
+      ]),
       avatar: {
         url: randomIconUrl(),
       },

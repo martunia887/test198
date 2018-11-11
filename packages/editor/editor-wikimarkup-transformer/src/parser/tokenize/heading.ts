@@ -7,7 +7,6 @@ const HEADING_REGEXP = /^h([1|2|3|4|5|6])\.\s(.*)/;
 
 export function heading(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ): Token {
@@ -21,10 +20,10 @@ export function heading(
     TokenType.QUADRUPLE_DASH_SYMBOL,
   ];
 
-  const match = input.substring(position).match(HEADING_REGEXP);
+  const match = input.match(HEADING_REGEXP);
 
   if (!match) {
-    return fallback(input, position);
+    return fallback(input);
   }
 
   const level = parseInt(match[1], 10);
@@ -61,10 +60,10 @@ export function heading(
   }
 }
 
-function fallback(input: string, position: number): Token {
+function fallback(input: string): Token {
   return {
     type: 'text',
-    text: input.substr(position, 1),
+    text: input.substr(0, 1),
     length: 1,
   };
 }

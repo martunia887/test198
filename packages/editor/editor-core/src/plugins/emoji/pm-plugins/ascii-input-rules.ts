@@ -48,12 +48,12 @@ function inputRuleHandler(
   matchParts: [string],
   start: number,
   end: number,
-): Transaction | null {
+): Transaction | undefined {
   if (!matcher) {
-    return null;
+    return undefined;
   }
   if (!isEnabled(state)) {
-    return null;
+    return undefined;
   }
 
   const match = matcher.match(matchParts);
@@ -66,7 +66,7 @@ function inputRuleHandler(
     );
     return transactionCreator.create();
   }
-  return null;
+  return undefined;
 }
 
 function isEnabled(state: EditorState) {

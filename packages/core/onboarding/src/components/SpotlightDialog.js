@@ -1,5 +1,10 @@
 // @flow
-import React, { Component, type ElementType, type Node } from 'react';
+import React, {
+  Component,
+  type ElementType,
+  type Element,
+  type Node,
+} from 'react';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
@@ -22,7 +27,7 @@ type Props = {
   /** Buttons to render in the footer */
   actions?: ActionsType,
   /** An optional element rendered beside the footer actions */
-  actionsBeforeElement?: Node,
+  actionsBeforeElement?: Element<*>,
   /** The elements rendered in the modal */
   children?: Node,
   /** Where the dialog should appear, relative to the contents of the children. */

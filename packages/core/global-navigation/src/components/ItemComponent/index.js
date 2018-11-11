@@ -2,7 +2,6 @@
 
 import React, { Component, type ComponentType, type Node } from 'react';
 import { DropdownMenuStateless } from '@atlaskit/dropdown-menu';
-import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import { GlobalItem } from '@atlaskit/navigation-next';
 
 import type { GlobalNavItemData } from '../../config/types';
@@ -35,11 +34,10 @@ class DropdownItem extends Component<DropdownItemProps, DropdownItemState> {
   }
 }
 
-const ItemComponent = (props: GlobalNavItemData) => {
+export default (props: GlobalNavItemData) => {
   const {
     dropdownItems: DropdownItems,
     itemComponent: CustomItemComponent,
-    badgeCount,
     ...itemProps
   } = props;
   if (CustomItemComponent) {
@@ -55,22 +53,5 @@ const ItemComponent = (props: GlobalNavItemData) => {
       />
     );
   }
-
-  if (badgeCount !== undefined) {
-    return (
-      <NavigationAnalyticsContext
-        data={{
-          attributes: {
-            badgeCount,
-          },
-        }}
-      >
-        <GlobalItem {...itemProps} />
-      </NavigationAnalyticsContext>
-    );
-  }
-
   return <GlobalItem {...itemProps} />;
 };
-
-export default ItemComponent;

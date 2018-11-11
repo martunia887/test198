@@ -56,7 +56,7 @@ export default () => (
     </div>
     <h3>with field base</h3>
     <div style={containerStyle}>
-      <FieldBase>
+      <FieldBase label="Inside a FieldBase">
         {createSingleLineTextInput({
           value:
             'Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.',

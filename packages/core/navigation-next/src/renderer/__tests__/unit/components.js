@@ -290,8 +290,7 @@ describe('navigation-next view renderer', () => {
                 id="sortable-group"
                 heading="Sortable Group"
                 items={rootItems}
-              />
-              ,
+              />,
             </SortableContextComponent>
           )}
         </Harness>,

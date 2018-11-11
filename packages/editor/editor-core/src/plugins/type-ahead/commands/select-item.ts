@@ -1,4 +1,4 @@
-import { Selection, EditorState, NodeSelection } from 'prosemirror-state';
+import { Selection, EditorState } from 'prosemirror-state';
 import { Fragment, Node } from 'prosemirror-model';
 import { safeInsert } from 'prosemirror-utils';
 import { analyticsService } from '../../../analytics';
@@ -65,10 +65,7 @@ export const selectItem = (
   item: TypeAheadItem,
 ): Command => (state, dispatch) => {
   return withTypeAheadQueryMarkPosition(state, (start, end) => {
-    const insert = (
-      maybeNode?: Node | Object | string,
-      opts: { selectInlineNode?: boolean } = {},
-    ) => {
+    const insert = (maybeNode?: Node | Object | string) => {
       let tr = state.tr;
 
       tr = tr
@@ -122,15 +119,10 @@ export const selectItem = (
           }
         }
 
-        if (opts.selectInlineNode) {
-          // Select inserted node
-          tr = tr.setSelection(NodeSelection.create(tr.doc, start));
-        } else {
-          // Placing cursor after node + space.
-          tr = tr.setSelection(
-            Selection.near(tr.doc.resolve(start + fragment.size)),
-          );
-        }
+        // Placing cursor after node + space.
+        tr = tr.setSelection(
+          Selection.near(tr.doc.resolve(start + fragment.size)),
+        );
       }
 
       return tr;

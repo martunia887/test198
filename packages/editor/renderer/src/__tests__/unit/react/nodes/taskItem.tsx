@@ -23,9 +23,9 @@ describe('Renderer - React/Nodes/TaskItem', () => {
     taskItem.unmount();
   });
 
-  it('should render if no children', () => {
+  it('should not render if no children', () => {
     const taskItem = shallow(<TaskItem localId="task-2" />);
-    expect(taskItem.isEmptyRender()).toEqual(false);
+    expect(taskItem.isEmptyRender()).toEqual(true);
   });
 
   describe('analytics', () => {

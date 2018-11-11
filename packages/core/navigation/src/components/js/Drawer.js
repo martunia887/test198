@@ -32,12 +32,9 @@ type Props = {
   isOpen: boolean,
   /** A function to call when the backIcon button is clicked, the blanket
    behind the Drawer is clicked or the escape key is pressed */
-  onBackButton: (
-    event: SyntheticMouseEvent<*> | SyntheticKeyboardEvent<*> | KeyboardEvent,
-    data?: {},
-  ) => void,
+  onBackButton: (event: Event, data?: {}) => void,
   /** Standard onKeyDown callback */
-  onKeyDown?: (event: KeyboardEvent, data?: {}) => void,
+  onKeyDown?: (event: Event, data?: {}) => void,
   /** The primary icon in the Drawer – usually the globalPrimaryIcon that was
    given to the GlobalNavigation component */
   primaryIcon: Node,
@@ -86,9 +83,7 @@ export class DrawerImpl extends PureComponent<Props, State> {
   }
 
   // eslint-disable-next-line react/sort-comp
-  createBackButtonHandler = (method: string) => (
-    e: SyntheticMouseEvent<*> | SyntheticKeyboardEvent<*> | KeyboardEvent,
-  ) => {
+  createBackButtonHandler = (method: string) => (e: Event) => {
     if (this.props.isOpen) {
       this.props.onBackButton(e);
       this.props.fireAnalyticsEvent('close', { method });

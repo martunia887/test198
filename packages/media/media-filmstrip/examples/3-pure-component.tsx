@@ -38,8 +38,7 @@ export class Story extends React.PureComponent<StoryProps, StoryState> {
           that resulted in the smart-card not displaying the arrows. See{' '}
           <a href="https://product-fabric.atlassian.net/browse/MSW-181">
             MSW-181
-          </a>
-          .
+          </a>.
         </p>
         <FilmstripView
           animate={animate}

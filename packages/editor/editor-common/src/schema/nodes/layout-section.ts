@@ -11,7 +11,7 @@ export interface LayoutSectionDefinition {
   /**
    * @minItems 1
    */
-  content: Array<LayoutColumnDefinition>;
+  content: LayoutColumnDefinition[];
 }
 
 export const layoutSection: NodeSpec = {

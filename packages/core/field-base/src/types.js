@@ -1,12 +1,7 @@
 // @flow
 import type { Node } from 'react';
 
-/** The default props are typed as optional here so that we can reuse them for
- * both stateless and stateful variations. Otherwise we would have to instead
- * type the stateful component using ElementConfig<StatelessVersion> which is not
- * supported by our prop docs at the moment.
- */
-export type FieldBaseCommonProps = {|
+export type FieldBaseStatelessProps = {
   /**
    * controls the appearance of the field.
    * subtle shows styling on hover.
@@ -25,6 +20,8 @@ export type FieldBaseCommonProps = {|
   isDisabled?: boolean,
   /** whether the fit the field to the enclosing container */
   isFitContainerWidthEnabled?: boolean,
+  /** apply styling based on whether the field is focused */
+  isFocused?: boolean,
   /** set the field as invalid, triggering style and message */
   isInvalid?: boolean,
   /** show a loading indicator */
@@ -36,15 +33,15 @@ export type FieldBaseCommonProps = {|
   /** mark the field as required */
   isRequired?: boolean,
   /** handler for the onBlur event on the field element */
-  onBlur: (event: any) => void,
+  onBlur: (event: any) => mixed,
   /** handler for the onBlur event on the dialog element */
-  onDialogBlur?: (event: any) => void,
+  onDialogBlur?: (event: any) => mixed,
   /** handler for the click event on the dialog element */
-  onDialogClick?: (event: any) => void,
+  onDialogClick?: (event: any) => mixed,
   /** handler for the focus event on the dialog element */
-  onDialogFocus?: (event: any) => void,
+  onDialogFocus?: (event: any) => mixed,
   /** handler for the focus event on the field element */
-  onFocus: (event: any) => void,
+  onFocus: (event: any) => mixed,
   /** whether to call the onBlur handler inside componentDidUpdate */
   shouldReset?: boolean,
   /** the maximum width of the field-base in pixels. Don't include the "px". */
@@ -52,16 +49,15 @@ export type FieldBaseCommonProps = {|
   /** Hide the validation message and style. This is used by <Field> to disable Validation display handling by FieldBase
    */
   isValidationHidden?: boolean,
-|};
+};
 
-export type FieldBaseStatelessProps = {|
-  ...FieldBaseCommonProps,
-  /** apply styling based on whether the field is focused */
-  isFocused: boolean,
-|};
-
-export type FieldBaseProps = {|
-  ...FieldBaseCommonProps,
+export type FieldBaseProps = FieldBaseStatelessProps & {
   /** focus the element when initially rendered */
+  defaultIsFocused?: boolean,
+};
+
+export type FieldBaseDefaultProps = {
   defaultIsFocused: boolean,
-|};
+  onFocus: () => mixed,
+  onBlur: () => mixed,
+};

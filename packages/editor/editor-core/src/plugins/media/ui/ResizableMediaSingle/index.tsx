@@ -8,14 +8,20 @@ import {
   calcPxFromPct,
   MediaSingleLayout,
   akEditorBreakoutPadding,
-  calcColumnsFromPx,
 } from '@atlaskit/editor-common';
 
 import { Wrapper } from './styled';
 import { Props, EnabledHandles } from './types';
 import Resizer, { handleSides } from './Resizer';
 
-export default class ResizableMediaSingle extends React.Component<Props> {
+export default class ResizableMediaSingle extends React.Component<
+  Props,
+  { selected: boolean }
+> {
+  state = {
+    selected: false,
+  };
+
   get wrappedLayout() {
     const { layout } = this.props;
     return layout === 'wrap-left' || layout === 'wrap-right';
@@ -59,6 +65,15 @@ export default class ResizableMediaSingle extends React.Component<Props> {
     return this.props.state.doc.resolve(pos);
   }
 
+  get gridMin() {
+    return !this.wrappedLayout ? 1 : 0;
+  }
+
+  get gridMax() {
+    const { gridSize } = this.props;
+    return this.wrappedLayout ? gridSize - 1 : gridSize;
+  }
+
   /**
    * The maxmimum number of grid columns this node can resize to.
    */
@@ -69,7 +84,8 @@ export default class ResizableMediaSingle extends React.Component<Props> {
       : gridSize;
   }
 
-  calcOffsetLeft() {
+  wrapper: HTMLElement | null;
+  get snapPoints() {
     let offsetLeft = 0;
     if (this.wrapper && this.insideInlineLike) {
       let currentNode: HTMLElement | null = this.wrapper;
@@ -88,29 +104,9 @@ export default class ResizableMediaSingle extends React.Component<Props> {
       offsetLeft -= pm.offsetLeft;
     }
 
-    return offsetLeft;
-  }
-
-  calcColumnLeft = () => {
-    const offsetLeft = this.calcOffsetLeft();
-    return this.insideInlineLike
-      ? Math.floor(
-          calcColumnsFromPx(
-            offsetLeft,
-            this.props.lineLength,
-            this.props.gridSize,
-          ),
-        )
-      : 0;
-  };
-
-  wrapper: HTMLElement | null;
-  get snapPoints() {
-    const offsetLeft = this.calcOffsetLeft();
-
     const { containerWidth, lineLength, appearance } = this.props;
     const snapTargets: number[] = [];
-    for (let i = 0; i < this.gridWidth; i++) {
+    for (let i = this.gridMin; i < this.gridMax; i++) {
       snapTargets.push(
         calcPxFromColumns(i, lineLength, this.gridWidth) - offsetLeft,
       );
@@ -119,11 +115,7 @@ export default class ResizableMediaSingle extends React.Component<Props> {
     // full width
     snapTargets.push(lineLength - offsetLeft);
 
-    const minimumWidth = calcPxFromColumns(
-      this.wrappedLayout || this.insideInlineLike ? 1 : 2,
-      lineLength,
-      this.props.gridSize,
-    );
+    const minimumWidth = calcPxFromColumns(2, lineLength, 12);
     const snapPoints = snapTargets.filter(width => width >= minimumWidth);
 
     const $pos = this.$pos;
@@ -134,7 +126,7 @@ export default class ResizableMediaSingle extends React.Component<Props> {
     const isTopLevel = $pos.parent.type.name === 'doc';
     if (isTopLevel && appearance === 'full-page') {
       snapPoints.push(akEditorWideLayoutWidth);
-      const fullWidthPoint = containerWidth - akEditorBreakoutPadding;
+      const fullWidthPoint = containerWidth - 128;
       if (fullWidthPoint > akEditorWideLayoutWidth) {
         snapPoints.push(fullWidthPoint);
       }
@@ -204,15 +196,17 @@ export default class ResizableMediaSingle extends React.Component<Props> {
           {...this.props}
           width={width}
           height={height}
-          selected={this.props.selected}
+          selected={this.state.selected}
           enable={enable}
           calcNewSize={this.calcNewSize}
           snapPoints={this.snapPoints}
           scaleFactor={!this.wrappedLayout && !this.insideInlineLike ? 2 : 1}
-          isInlineLike={this.insideInlineLike}
-          getColumnLeft={this.calcColumnLeft}
         >
-          {this.props.children}
+          {React.cloneElement(React.Children.only(this.props.children), {
+            onSelection: selected => {
+              this.setState({ selected });
+            },
+          })}
         </Resizer>
       </Wrapper>
     );

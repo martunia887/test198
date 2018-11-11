@@ -1,11 +1,11 @@
 // @flow
 
-import React, { type Element } from 'react';
+import React, { type Node } from 'react';
 import Button from '@atlaskit/button';
 
 type Props = {
   onClick?: () => void,
-  children?: Element<*>,
+  children?: Node,
 };
 
 export default (props: Props) => (

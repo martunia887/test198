@@ -78,12 +78,12 @@ export interface Action {
 export interface BlockCardResolvedViewProps {
   context?: ContextViewModel;
   link?: string;
-  icon?: IconWithTooltip | React.ReactNode;
+  icon?: IconWithTooltip;
   user?: UserViewModel;
   thumbnail?: string;
   preview?: string;
   title?: TextWithTooltip;
-  byline?: TextWithTooltip | React.ReactNode;
+  byline?: TextWithTooltip;
   description?: TextWithTooltip;
   details?: DetailViewModel[];
   users?: UserViewModel[];
@@ -254,18 +254,14 @@ export class BlockCardResolvedView extends React.Component<
       return null;
     }
 
-    if ((icon as IconWithTooltip).url) {
-      // TODO: handle if there is an error loading the image -> show the placeholder
-      return (
-        <IconWrapper>
-          <Tooltip content={(icon as IconWithTooltip).tooltip}>
-            <ImageIcon src={(icon as IconWithTooltip).url} size={24} />
-          </Tooltip>
-        </IconWrapper>
-      );
-    }
-
-    return icon;
+    // TODO: handle if there is an error loading the image -> show the placeholder
+    return (
+      <IconWrapper>
+        <Tooltip content={icon.tooltip}>
+          <ImageIcon src={icon.url} size={24} />
+        </Tooltip>
+      </IconWrapper>
+    );
   }
 
   renderThumbnail() {
@@ -423,11 +419,7 @@ export class BlockCardResolvedView extends React.Component<
           <RightWrapper>
             {this.renderThumbnail()}
             {title && title.text && this.renderWithToolTip(Title, title)}
-            {!byline ? null : !(byline as TextWithTooltip).text ? (
-              <Byline>{byline}</Byline>
-            ) : (
-              this.renderWithToolTip(Byline, byline as TextWithTooltip)
-            )}
+            {byline && byline.text && this.renderWithToolTip(Byline, byline)}
             {description &&
               description.text &&
               this.renderWithToolTip(Description, description)}

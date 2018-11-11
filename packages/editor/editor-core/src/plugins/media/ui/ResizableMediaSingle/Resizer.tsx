@@ -1,30 +1,26 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
-import {
-  MediaSingleLayout,
-  calcColumnsFromPx,
-  akEditorWideLayoutWidth,
-} from '@atlaskit/editor-common';
+import { MediaSingleLayout } from '@atlaskit/editor-common';
 import { Props, EnabledHandles } from './types';
 
-import Resizable from 're-resizable';
-import { ResizableDirection, NumberSize } from 're-resizable';
+// @ts-ignore
+// tslint:disable-next-line
+const Resizable = require('re-resizable');
+import {
+  default as ResizableType,
+  ResizableDirection,
+  NumberSize,
+} from 're-resizable';
 
 import { gridTypeForLayout } from '../../../grid';
 
 export const handleSides = ['left', 'right'];
 
-const snapTo = (
-  target: number,
-  points: number[],
-  scaleFactor: number = 1,
-  direction,
-): number =>
-  points.reduce((point, closest) => {
-    return Math.abs(closest - target) < Math.abs(point - target)
-      ? closest
-      : point;
-  });
+const snapTo = (target: number, points: number[]): number =>
+  points.reduce(
+    (prev, cur) =>
+      Math.abs(cur - target) < Math.abs(prev - target) ? cur : prev,
+  );
 
 export default class Resizer extends React.Component<
   Props & {
@@ -36,25 +32,19 @@ export default class Resizer extends React.Component<
     ) => { layout: MediaSingleLayout; width: number | null };
     snapPoints: number[];
     scaleFactor?: number;
-    getColumnLeft: () => number;
-    isInlineLike: boolean;
   },
   {
     isResizing: boolean;
   }
 > {
-  resizable: Resizable;
+  resizable: ResizableType;
   state = {
     isResizing: false,
   };
 
   handleResizeStart = () => {
     this.setState({ isResizing: true }, () => {
-      this.props.displayGrid(
-        true,
-        gridTypeForLayout(this.props.layout),
-        this.highlights(this.props.width, 1),
-      );
+      this.props.displayGrid(true, gridTypeForLayout(this.props.layout));
     });
   };
 
@@ -77,50 +67,10 @@ export default class Resizer extends React.Component<
     const newSize = this.props.calcNewSize(newWidth, false);
     if (newSize.layout !== this.props.layout) {
       this.props.updateSize(newSize.width, newSize.layout);
+      this.props.displayGrid(true, gridTypeForLayout(newSize.layout));
     }
 
-    this.props.displayGrid(
-      true,
-      gridTypeForLayout(newSize.layout),
-      this.highlights(newWidth, delta.width),
-    );
     this.resizable.updateSize({ width: newWidth, height: 'auto' });
-  };
-
-  highlights = (newWidth, direction) => {
-    const snapWidth = snapTo(
-      newWidth,
-      this.props.snapPoints,
-      this.props.scaleFactor,
-      direction,
-    );
-
-    if (snapWidth > akEditorWideLayoutWidth) {
-      return ['full-width'];
-    }
-
-    const columns = calcColumnsFromPx(
-      snapWidth,
-      this.props.lineLength,
-      this.props.gridSize,
-    );
-    const columnWidth = Math.round(columns);
-
-    const highlight: number[] = [];
-    if (this.props.layout === 'wrap-left') {
-      highlight.push(0);
-      highlight.push(columnWidth);
-    } else if (this.props.layout === 'wrap-right') {
-      highlight.push(this.props.gridSize);
-      highlight.push(this.props.gridSize - columnWidth);
-    } else if (this.props.isInlineLike) {
-      highlight.push(this.props.getColumnLeft() + Math.ceil(columns));
-    } else {
-      highlight.push(Math.floor((this.props.gridSize - columnWidth) / 2));
-      highlight.push(Math.ceil((this.props.gridSize + columnWidth) / 2));
-    }
-
-    return highlight;
   };
 
   handleResizeStop = (
@@ -129,6 +79,10 @@ export default class Resizer extends React.Component<
     refToElement,
     delta: { width: number; height: number },
   ) => {
+    this.setState({ isResizing: false }, () => {
+      this.props.displayGrid(false, gridTypeForLayout(this.props.layout));
+    });
+
     if (!this.resizable) {
       return;
     }
@@ -142,25 +96,9 @@ export default class Resizer extends React.Component<
       this.props.snapPoints[0],
     );
 
-    const snapWidth = snapTo(
-      newWidth,
-      this.props.snapPoints,
-      this.props.scaleFactor,
-      delta.width,
-    );
+    const snapWidth = snapTo(newWidth, this.props.snapPoints);
     const newSize = this.props.calcNewSize(snapWidth, true);
-
-    // show committed grid size
-    this.props.displayGrid(
-      true,
-      gridTypeForLayout(newSize.layout),
-      this.highlights(newWidth, delta.width),
-    );
-
-    this.setState({ isResizing: false }, () => {
-      this.props.updateSize(newSize.width, newSize.layout);
-      this.props.displayGrid(false, gridTypeForLayout(this.props.layout));
-    });
+    this.props.updateSize(newSize.width, newSize.layout);
   };
 
   setResizableRef = ref => {
@@ -182,6 +120,7 @@ export default class Resizer extends React.Component<
     // Ideally, Resizable would let you pass in the component rather than
     // the div. For now, we just apply the same styles using CSS
     return (
+      // @ts-ignore
       <Resizable
         ref={this.setResizableRef}
         onResize={this.handleResize}

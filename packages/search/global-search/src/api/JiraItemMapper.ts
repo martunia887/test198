@@ -4,7 +4,6 @@ import {
   AnalyticsType,
   JiraResult,
   ContentType,
-  JiraProjectType,
 } from '../model/Result';
 
 import {
@@ -44,9 +43,7 @@ export const addJiraResultQueryParams = (
   return href.toString();
 };
 
-const extractSpecificAttributes = (
-  attributes: JiraItemAttributes,
-): Partial<JiraResult> | null => {
+const extractSpecificAttributes = (attributes: JiraItemAttributes) => {
   const type = attributes['@type'];
   switch (type) {
     case 'issue':
@@ -67,7 +64,6 @@ const extractSpecificAttributes = (
     case 'project':
       return {
         containerName: attributes.projectType,
-        projectType: attributes.projectType as JiraProjectType, // projectType maps directly to JiraProjectType enum at the moment for convenience
       };
   }
   return null;
@@ -105,16 +101,11 @@ const mapJiraItemToResultV2 = (
     ? addJiraResultQueryParams(url, queryParams)
     : url;
 
-  const resultType =
-    contentType === ContentType.JiraProject
-      ? ResultType.JiraProjectResult
-      : ResultType.JiraObjectResult;
-
   return {
     resultId: id,
     name: name,
     href,
-    resultType: resultType,
+    resultType: ResultType.JiraObjectResult,
     containerId: attributes.containerId,
     analyticsType: AnalyticsType.ResultJira,
     ...extractSpecificAttributes(attributes),

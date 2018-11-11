@@ -3,7 +3,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { components } from '@atlaskit/select';
-import Avatar from '@atlaskit/avatar';
 import Option from '../../Option';
 
 describe('Option', () => {
@@ -34,12 +33,7 @@ describe('Option', () => {
   });
 
   it('should render correctly', () => {
-    const data = {
-      text: 'text',
-      subText: 'subText',
-      avatar: '/url-to-avatar',
-    };
-    expect(shallow(<Option {...baseProps} data={data} />)).toMatchSnapshot();
+    expect(shallow(<Option {...baseProps} />)).toMatchSnapshot();
   });
 
   it('should pass expected props to wrapper div', () => {
@@ -51,37 +45,15 @@ describe('Option', () => {
     );
   });
 
-  it('should render <components.Option />', () => {
+  it('should render a <components.Option />', () => {
     const wrapper = mount(<Option {...baseProps} />);
     expect(wrapper.find(components.Option)).toHaveLength(1);
+  });
+
+  it('should pass expected props to <components.Option />', () => {
+    const wrapper = mount(<Option {...baseProps} />);
     expect(wrapper.find(components.Option).props()).toEqual(
       expect.objectContaining(wrapper.props()),
     );
-  });
-
-  it('should render <Avatar /> if avatar prop is present', () => {
-    const data = {
-      text: 'hello world',
-      avatar: '/url-to-avatar',
-    };
-    const wrapper = mount(<Option {...baseProps} data={data} />);
-    expect(wrapper.find(Avatar)).toHaveLength(1);
-    expect(wrapper.find(Avatar).props()).toEqual({
-      borderColor: 'transparent',
-      src: '/url-to-avatar',
-      appearance: 'square',
-    });
-  });
-
-  it('should always render text prop', () => {
-    const data = { text: 'atlassian' };
-    const wrapper = mount(<Option {...baseProps} data={data} />);
-    expect(wrapper.text()).toEqual('atlassian');
-  });
-
-  it('should render subText prop if present', () => {
-    const data = { text: 'atlassian', subText: 'sydney' };
-    const wrapper = mount(<Option {...baseProps} data={data} />);
-    expect(wrapper.text()).toEqual('atlassiansydney');
   });
 });

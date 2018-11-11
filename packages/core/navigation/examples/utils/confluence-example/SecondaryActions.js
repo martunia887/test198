@@ -185,6 +185,7 @@ const AppSwitcherMenu = ({
   timerMenu: () => mixed,
 }) => (
   <DropdownWrapper>
+    {/* $FlowFixMe */}
     <SelectableDropdownMenu
       appearance="tall"
       position="right bottom"

@@ -6,10 +6,10 @@ import Info from '@atlaskit/icon/glyph/info';
 import Tick from '@atlaskit/icon/glyph/check-circle';
 import Warning from '@atlaskit/icon/glyph/warning';
 import { colors } from '@atlaskit/theme';
-import Flag, { type AppearanceTypes } from '../src';
+import Flag from '../src';
 
 type FlagType = {
-  appearance: AppearanceTypes,
+  appearance: string,
   description: string,
   title: string,
   icon: Node,
@@ -56,9 +56,9 @@ const flagTypes: Array<FlagType> = [
     icon: <Warning label="Warning icon" secondaryColor={colors.Y300} />,
   },
   {
-    appearance: 'normal',
+    appearance: 'default',
     description: 'There is new update available',
-    title: 'normal flag',
+    title: 'default flag',
     icon: <Tick label="Success" secondaryColor={colors.N0} />,
   },
 ];

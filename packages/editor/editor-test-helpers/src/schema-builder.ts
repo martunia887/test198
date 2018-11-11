@@ -8,7 +8,6 @@ import {
   LinkAttributes,
   TableAttributes,
   CardAttributes,
-  BreakoutMarkAttrs,
 } from '@atlaskit/editor-common';
 import {
   Fragment,
@@ -403,9 +402,6 @@ export const blockCard = (attrs: CardAttributes) =>
 //
 // Marks
 //
-
-export const breakout = (attrs: BreakoutMarkAttrs) =>
-  markFactory(sampleSchema.marks.breakout, attrs);
 export const em = markFactory(sampleSchema.marks.em, {});
 export const subsup = (attrs: { type: string }) =>
   markFactory(sampleSchema.marks.subsup, attrs);

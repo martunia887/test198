@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { status } from '@atlaskit/editor-common';
+import { status, uuid } from '@atlaskit/editor-common';
 import LabelIcon from '@atlaskit/icon/glyph/label';
 import { findDomRefAtPos } from 'prosemirror-utils';
+import { NodeSelection } from 'prosemirror-state';
 import { EditorPlugin } from '../../types';
 import createStatusPlugin, { StatusState, pluginKey } from './plugin';
 import WithPluginState from '../../ui/WithPluginState';
 import StatusPicker from './ui/statusPicker';
-import { commitStatusPicker, updateStatus, createStatus } from './actions';
+import { commitStatusPicker, DEFAULT_STATUS, insertStatus } from './actions';
 
-const baseStatusPlugin = (): EditorPlugin => ({
+const statusPlugin: EditorPlugin = {
   nodes() {
     return [{ name: 'status', node: status }];
   },
@@ -40,13 +41,12 @@ const baseStatusPlugin = (): EditorPlugin => ({
 
           return (
             <StatusPicker
-              autoFocus={statusState.autoFocus}
               element={element}
               onSelect={status => {
-                updateStatus(status)(editorView);
+                insertStatus(status)(editorView);
               }}
               onTextChanged={status => {
-                updateStatus(status)(editorView);
+                insertStatus(status)(editorView);
               }}
               closeStatusPicker={() => {
                 commitStatusPicker()(editorView);
@@ -60,34 +60,28 @@ const baseStatusPlugin = (): EditorPlugin => ({
       />
     );
   },
-});
 
-const createQuickInsertMenuItem = () => ({
-  title: 'Status',
-  priority: 700,
-  keywords: ['lozenge'],
-  icon: () => <LabelIcon label="Status" />,
-  action: createStatus(),
-});
+  pluginsOptions: {
+    quickInsert: [
+      {
+        title: 'Status',
+        priority: 700,
+        keywords: ['lozenge'],
+        icon: () => <LabelIcon label="Status" />,
+        action(insert, state) {
+          const statusNode = state.schema.nodes.status.createChecked({
+            ...DEFAULT_STATUS,
+            localId: uuid.generate(),
+          });
 
-export interface StatusOptions {
-  menuDisabled: boolean;
-}
-
-const decorateWithPluginOptions = (
-  plugin: EditorPlugin,
-  options: StatusOptions,
-): EditorPlugin => {
-  if (options.menuDisabled === true) {
-    return plugin;
-  }
-  plugin.pluginsOptions = {
-    quickInsert: [createQuickInsertMenuItem()],
-  };
-  return plugin;
+          const tr = insert(statusNode);
+          const showStatusPickerAt = tr.selection.from - 2;
+          tr.setSelection(NodeSelection.create(tr.doc, showStatusPickerAt));
+          return tr.setMeta(pluginKey, { showStatusPickerAt });
+        },
+      },
+    ],
+  },
 };
-
-const statusPlugin = (options: StatusOptions): EditorPlugin =>
-  decorateWithPluginOptions(baseStatusPlugin(), options);
 
 export default statusPlugin;

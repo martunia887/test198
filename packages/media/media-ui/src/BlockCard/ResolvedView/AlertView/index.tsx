@@ -93,8 +93,7 @@ export default class AlertView extends React.Component<
         or{' '}
         <Button appearance="link" spacing="none" onClick={this.handleDismis}>
           cancel
-        </Button>
-        .
+        </Button>.
       </>
     );
   }

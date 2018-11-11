@@ -11,11 +11,10 @@ const allowedNodeType = ['paragraph', 'heading', 'orderedList', 'bulletList'];
 
 export function panelMacro(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ): Token {
-  return commonMacro(input.substring(position), schema, {
+  return commonMacro(input, schema, {
     opening: /^\{panel(?::([^\{\n\}]*))?\}/,
     closing: /\{panel\}/,
     rawContentProcessor,

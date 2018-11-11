@@ -12,7 +12,7 @@ export type Props = CommonResultProps & {
   /** Set whether to display a lock on the result's icon */
   isPrivate?: boolean;
   /** Text to be shown alongside the main `text`. */
-  subText?: React.ReactNode;
+  subText?: string;
 };
 
 /**
@@ -40,7 +40,6 @@ export default class ContainerResult extends React.PureComponent<Props> {
       name,
       isPrivate,
       type = 'container',
-      subText,
       ...commonResultProps
     } = this.props;
 
@@ -49,7 +48,6 @@ export default class ContainerResult extends React.PureComponent<Props> {
         {...commonResultProps}
         type={type}
         text={name}
-        subText={subText}
         icon={this.getAvatar()}
       />
     );

@@ -31,8 +31,7 @@ export class Story extends React.Component<StoryProps, StoryState> {
           in the smart-card's text being invisible. See{' '}
           <a href="https://product-fabric.atlassian.net/browse/MSW-98">
             MSW-98
-          </a>
-          .
+          </a>.
         </p>
         <FilmstripView
           animate={animate}

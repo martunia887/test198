@@ -41,22 +41,18 @@ const getCellAttrs = (dom: HTMLElement) => {
   };
 };
 
-export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
+export const setCellAttrs = (node: PmNode) => {
   const attrs: {
     colspan?: number;
     rowspan?: number;
     style?: string;
   } = {};
-  const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
-  const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
-
-  if (node.attrs.colspan !== colspan) {
+  if (node.attrs.colspan !== 1) {
     attrs.colspan = node.attrs.colspan;
   }
-  if (node.attrs.rowspan !== rowspan) {
+  if (node.attrs.rowspan !== 1) {
     attrs.rowspan = node.attrs.rowspan;
   }
-
   if (node.attrs.colwidth) {
     attrs['data-colwidth'] = node.attrs.colwidth.join(',');
   }
@@ -226,7 +222,7 @@ export const table: any = {
       }),
     },
   ],
-  toDOM(node: PmNode) {
+  toDOM(node) {
     const attrs = {
       'data-number-column': node.attrs.isNumberColumnEnabled,
       'data-layout': node.attrs.layout,
@@ -273,7 +269,7 @@ export const tableCell = {
       getAttrs: (dom: HTMLElement) => getCellAttrs(dom),
     },
   ],
-  toDOM(node: PmNode) {
+  toDOM(node) {
     return ['td', setCellAttrs(node), 0];
   },
 };
@@ -300,7 +296,7 @@ export const tableHeader = {
       getAttrs: (dom: HTMLElement) => getCellAttrs(dom),
     },
   ],
-  toDOM(node: PmNode) {
+  toDOM(node) {
     return ['th', setCellAttrs(node), 0];
   },
 };

@@ -38,15 +38,13 @@ export default class extends Component<{}, State> {
           <Toggle
             onChange={this.onToggleFixedChange}
             isChecked={this.state.isFixedSize}
-          />
-          Fixed size
+          />Fixed size
         </div>
         <div>
           <Toggle
             onChange={this.onLoadingChange}
             isChecked={this.state.isLoading}
-          />
-          Loading
+          />Loading
         </div>
         <DynamicTable
           caption={caption}

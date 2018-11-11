@@ -393,8 +393,8 @@ const getRecentItems = product =>
                     resultsCount: 8,
                   },
                   {
-                    id: 'jira-project-result',
-                    hasContainerId: false,
+                    id: 'jira-object-result',
+                    hasContainerId: true,
                     resultsCount: 6,
                   },
                 ],

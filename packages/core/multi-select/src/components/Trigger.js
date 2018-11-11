@@ -88,6 +88,7 @@ export default class Trigger extends PureComponent<Props, {}> {
           <Content>
             <TagGroup ref={tagGroupRefFunction}>
               {selectedItems.map(item => (
+                // $FlowFixMe - issue with appearance as string litteral
                 <Tag
                   appearance={item.tag ? item.tag.appearance : undefined}
                   elemBefore={item.tag ? item.tag.elemBefore : undefined}
@@ -96,7 +97,7 @@ export default class Trigger extends PureComponent<Props, {}> {
                     handleItemRemove(item);
                   }}
                   removeButtonText={
-                    isDisabled ? undefined : `${item.content}, remove`
+                    isDisabled ? null : `${item.content}, remove`
                   }
                   text={item.content}
                 />

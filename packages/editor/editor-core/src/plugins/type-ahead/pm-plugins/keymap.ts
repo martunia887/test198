@@ -91,7 +91,7 @@ export function keymapPlugin(): Plugin {
     (state: EditorState, dispatch) => {
       const pluginState = pluginKey.getState(state);
       if (pluginState && pluginState.active) {
-        return selectSingleItemOrDismiss()(state, dispatch);
+        selectSingleItemOrDismiss()(state, dispatch);
       }
       return false;
     },

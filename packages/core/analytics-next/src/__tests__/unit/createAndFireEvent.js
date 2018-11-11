@@ -35,8 +35,7 @@ it('should create and fire analytics event', () => {
       <div>
         <AnalyticsListener channel="atlaskit" onEvent={onEvent}>
           <AppButton />
-        </AnalyticsListener>
-        ,
+        </AnalyticsListener>,
       </div>
     </AnalyticsListener>,
   )

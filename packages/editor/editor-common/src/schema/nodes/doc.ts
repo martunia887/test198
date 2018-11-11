@@ -8,10 +8,7 @@ import { OrderedListDefinition as OrderedList } from './ordered-list';
 import { BulletListDefinition as BulletList } from './bullet-list';
 import { RuleDefinition as Rule } from './rule';
 import { HeadingDefinition as Heading } from './heading';
-import {
-  CodeBlockDefinition as CodeBlock,
-  CodeBlockWithBreakoutDefinition as CodeBlockWithBreakout,
-} from './code-block';
+import { CodeBlockDefinition as CodeBlock } from './code-block';
 import { MediaGroupDefinition as MediaGroup } from './media-group';
 import { MediaSingleDefinition as MediaSingle } from './media-single';
 import { ApplicationCardDefinition as ApplicationCard } from './applicationCard';
@@ -176,10 +173,9 @@ export interface DocNode {
   /**
    * @allowUnsupportedBlock true
    */
-  content: Array<BlockContent | LayoutSection | CodeBlockWithBreakout>;
+  content: Array<BlockContent | LayoutSection>;
 }
 
 export const doc: NodeSpec = {
   content: '(block|layoutSection)+',
-  marks: 'breakout',
 };

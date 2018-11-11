@@ -14,8 +14,7 @@ export default () => {
         rel="noopener noreferrer"
       >
         date-fns format function
-      </a>
-      .
+      </a>.
       <Label label="TimePicker - timeFormat (h:mm a)" />
       <TimePicker onChange={console.log} timeFormat="h:mm a" />
       <Label label="DatePicker - dateFormat (DD/MM/YYYY)" />

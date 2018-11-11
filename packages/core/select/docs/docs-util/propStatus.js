@@ -24,7 +24,7 @@ export default class PropStatus extends Component<*, State> {
   state = {
     modalIsOpen: false,
   };
-  onClick = (event: SyntheticEvent<*>) => {
+  onClick = (event: SyntheticEvent<HTMLElement>) => {
     event.preventDefault();
     this.setState({
       modalIsOpen: true,

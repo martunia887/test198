@@ -36,6 +36,7 @@ const codeBlockPlugin = (options: CodeBlockOptions = {}) => ({
       {
         title: formatMessage(messages.codeblock),
         priority: 700,
+        keywords: ['javascript', 'typescript'],
         icon: () => (
           <EditorCodeIcon label={formatMessage(messages.codeblock)} />
         ),

@@ -7,11 +7,10 @@ import { parseString } from '../text';
 
 export function quoteMacro(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ): Token {
-  return commonMacro(input.substring(position), schema, {
+  return commonMacro(input, schema, {
     opening: /^\{quote(?::([^\{\n\}]*))?\}/,
     closing: /\{quote\}/,
     rawContentProcessor,

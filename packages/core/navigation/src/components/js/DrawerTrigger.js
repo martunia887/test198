@@ -5,9 +5,7 @@ import DrawerTriggerInner from '../styled/DrawerTriggerInner';
 
 type Props = {
   children?: Node,
-  onActivate: (
-    event: SyntheticMouseEvent<*> | SyntheticKeyboardEvent<*>,
-  ) => void,
+  onActivate: (event: Event) => void,
 };
 
 export default class DrawerTrigger extends PureComponent<Props> {

@@ -6,7 +6,6 @@ import { parseString } from '../text';
 
 export function citation(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback: TokenErrCallback,
 ): Token {
@@ -48,7 +47,7 @@ export function citation(
     };
   };
 
-  return commonFormatter(input, position, schema, {
+  return commonFormatter(input, schema, {
     opening: '??',
     closing: '??',
     rawContentProcessor,

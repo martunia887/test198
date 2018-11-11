@@ -57,7 +57,6 @@ type Size = 'small' | 'large';
 
 export type NavItem = {
   badge?: ComponentType<*>,
-  badgeCount?: number,
   component?: ComponentType<*>,
   dropdownItems?: ComponentType<{}>,
   href?: string,
@@ -77,6 +76,5 @@ export type NavItem = {
 export type GlobalNavItemData = GlobalItemProps & {
   dropdownItems?: ComponentType<{}>,
   itemComponent?: ComponentType<{}>,
-  badgeCount?: number,
   key?: string,
 };

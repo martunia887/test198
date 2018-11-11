@@ -25,8 +25,6 @@ export function inputRulePlugin(schema: Schema): Plugin | undefined {
         analyticsService.trackEvent('atlassian.editor.image.autoformatting');
         return state.tr.replaceWith(start, end, node);
       }
-
-      return null;
     },
   );
 

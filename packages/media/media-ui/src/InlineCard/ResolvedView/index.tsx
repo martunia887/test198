@@ -7,7 +7,7 @@ import { Title } from './styled';
 import { Icon } from '../Icon';
 
 export interface InlineCardResolvedViewProps {
-  icon?: string | React.ReactNode;
+  icon?: string;
   title: string;
   lozenge?: LozengeViewModel;
   isSelected?: boolean;
@@ -22,12 +22,7 @@ export class InlineCardResolvedView extends React.Component<
     if (!icon) {
       return null;
     }
-
-    if (typeof icon === 'string') {
-      return <Icon src={icon} />;
-    }
-
-    return icon;
+    return <Icon src={icon} />;
   }
 
   renderLozenge() {

@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import FieldBaseStateless from './FieldBaseStateless';
-import type { FieldBaseProps } from '../types';
+import type { FieldBaseProps, FieldBaseDefaultProps } from '../types';
 
 const ON_BLUR_KEY = 'onBlurKey';
 const ON_CONTENT_BLUR_KEY = 'onContentBlurKey';
@@ -12,22 +12,23 @@ function waitForRender(cb) {
 }
 
 type State = {
-  /** the element is focused */
+  /** the element is focussed */
   isFocused: boolean,
-  /** the dialog is focused */
+  /** the dialog is focussed */
   isDialogFocused: boolean,
-  /** ignore the blur event if the dialog is focused */
+  /** ignore the blur event if the dialog is focussed */
   shouldIgnoreNextDialogBlur: boolean,
 };
 
 export default class FieldBase extends Component<FieldBaseProps, State> {
-  static defaultProps = {
+  static defaultProps: FieldBaseDefaultProps = {
     defaultIsFocused: false,
     onFocus: () => {},
     onBlur: () => {},
   };
 
   state: State = {
+    // $FlowFixMe - turning off error 'Property cannot be accessed on any member of intersection type..'
     isFocused: this.props.defaultIsFocused,
     isDialogFocused: false,
     shouldIgnoreNextDialogBlur: false,
@@ -97,11 +98,10 @@ export default class FieldBase extends Component<FieldBaseProps, State> {
   }
 
   render() {
-    const { defaultIsFocused, ...props } = this.props;
     const { isFocused, isDialogFocused } = this.state;
     return (
       <FieldBaseStateless
-        {...props}
+        {...this.props}
         isDialogOpen={isFocused || isDialogFocused}
         isFocused={isFocused}
         onBlur={this.onBlur}

@@ -5,7 +5,6 @@ jest.mock('../../../plugins', () => ({
   placeholderTextPlugin: jest.fn(),
   textFormattingPlugin: jest.fn(),
   codeBlockPlugin: jest.fn(),
-  statusPlugin: jest.fn(),
 }));
 
 import {
@@ -26,7 +25,6 @@ describe('createPluginsList', () => {
   beforeEach(() => {
     (insertBlockPlugin as any).mockReset();
     (placeholderTextPlugin as any).mockReset();
-    (statusPlugin as any).mockReset();
   });
 
   it('should add helpDialogPlugin if allowHelpDialog is true', () => {
@@ -86,27 +84,9 @@ describe('createPluginsList', () => {
     expect(plugins).toContain(layoutPlugin);
   });
 
-  it('should not add statuPlugin if allowStatus prop is false', () => {
-    createPluginsList({ allowStatus: false });
-    expect(statusPlugin).not.toBeCalled();
-  });
-
-  it('should add statuPlugin if allowStatus prop is true', () => {
-    createPluginsList({ allowStatus: true });
-    expect(statusPlugin).toHaveBeenCalledTimes(1);
-    expect(statusPlugin).toHaveBeenCalledWith({ menuDisabled: false });
-  });
-
-  it('should add statuPlugin if allowStatus prop is provided with menuDisabled true', () => {
-    createPluginsList({ allowStatus: { menuDisabled: true } });
-    expect(statusPlugin).toHaveBeenCalledTimes(1);
-    expect(statusPlugin).toHaveBeenCalledWith({ menuDisabled: true });
-  });
-
-  it('should add statuPlugin if allowStatus prop is provided with menuDisabled false', () => {
-    createPluginsList({ allowStatus: { menuDisabled: false } });
-    expect(statusPlugin).toHaveBeenCalledTimes(1);
-    expect(statusPlugin).toHaveBeenCalledWith({ menuDisabled: false });
+  it('should add statuPlugin if allowStatus prop is provided', () => {
+    const plugins = createPluginsList({ allowStatus: true });
+    expect(plugins).toContain(statusPlugin);
   });
 
   it('should always add insertBlockPlugin to the editor with insertMenuItems', () => {

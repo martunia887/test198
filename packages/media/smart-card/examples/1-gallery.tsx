@@ -6,7 +6,6 @@ import urlsJSON from './example-urls.json';
 import styled from 'styled-components';
 import * as lorem from 'lorem-ipsum';
 import { colors } from '@atlaskit/theme';
-import { IntlProvider } from 'react-intl';
 
 enum GroupingModes {
   none = 'none',
@@ -134,13 +133,13 @@ class Example extends React.Component<{}, ExampleState> {
 
     for (let title in grouped) {
       if (title) {
-        result.push(<h3 key={title}>{ucFirst(title)}</h3>);
+        result.push(<h3>{ucFirst(title)}</h3>);
       }
 
       result.push.apply(
         result,
-        grouped[title].map((example, idx) => (
-          <DivWithMargin key={`${idx}-${title}`}>
+        grouped[title].map(example => (
+          <DivWithMargin>
             {this.renderTitle(mode, example)}
             <Grid>
               <GridColumn medium={6}>
@@ -166,7 +165,6 @@ class Example extends React.Component<{}, ExampleState> {
     for (let mode in GroupingModes) {
       result.push(
         <Button
-          key={mode}
           isSelected={mode === currentMode}
           onClick={() => this.handleGroupClick(mode as GroupingMode)}
         >
@@ -182,28 +180,26 @@ class Example extends React.Component<{}, ExampleState> {
     const { mode } = this.state;
 
     return (
-      <IntlProvider locale="en">
-        <Provider>
-          <Page>
-            <Grid>
-              <GridColumn>
-                <Grid>
-                  <GridColumn medium={8}>
-                    <ButtonGroup>
-                      <Button isDisabled appearance="link">
-                        Group by:
-                      </Button>
-                      {this.renderButtons(mode)}
-                    </ButtonGroup>
-                  </GridColumn>
-                </Grid>
+      <Provider>
+        <Page>
+          <Grid>
+            <GridColumn>
+              <Grid>
+                <GridColumn medium={8}>
+                  <ButtonGroup>
+                    <Button isDisabled appearance="link">
+                      Group by:
+                    </Button>
+                    {this.renderButtons(mode)}
+                  </ButtonGroup>
+                </GridColumn>
+              </Grid>
 
-                {this.renderByGroup(mode)}
-              </GridColumn>
-            </Grid>
-          </Page>
-        </Provider>
-      </IntlProvider>
+              {this.renderByGroup(mode)}
+            </GridColumn>
+          </Grid>
+        </Page>
+      </Provider>
     );
   }
 }

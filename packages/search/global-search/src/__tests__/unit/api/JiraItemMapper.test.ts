@@ -103,7 +103,7 @@ describe('mapJiraItemToResult', () => {
       href: expect.stringMatching(project.url),
       containerName: project.attributes.projectType,
       analyticsType: AnalyticsType.ResultJira,
-      resultType: ResultType.JiraProjectResult,
+      resultType: ResultType.JiraObjectResult,
       contentType: ContentType.JiraProject,
     });
   });

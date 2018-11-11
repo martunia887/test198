@@ -5,22 +5,18 @@ import { Token } from './';
 // https://www.atlassian.com
 export const LINK_TEXT_REGEXP = /^(https?|irc):\/\/[\w.?\/\\#-=]+/;
 
-export function linkText(
-  input: string,
-  position: number,
-  schema: Schema,
-): Token {
-  const match = input.substring(position).match(LINK_TEXT_REGEXP);
+export function linkText(input: string, schema: Schema): Token {
+  const match = input.match(LINK_TEXT_REGEXP);
 
   if (!match) {
-    return fallback(input, position);
+    return fallback(input);
   }
 
   const textRepresentation = match[0];
   const url = match[0];
 
   if (!isSafeUrl(url)) {
-    return fallback(input, position);
+    return fallback(input);
   }
 
   const mark = schema.marks.link.create({
@@ -35,10 +31,10 @@ export function linkText(
   };
 }
 
-function fallback(input: string, position: number): Token {
+function fallback(input: string): Token {
   return {
     type: 'text',
-    text: input.substr(position, 1),
+    text: input.substr(0, 1),
     length: 1,
   };
 }

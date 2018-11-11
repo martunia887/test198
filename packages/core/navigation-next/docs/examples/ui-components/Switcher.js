@@ -100,7 +100,7 @@ export default class extends React.Component<*, State> {
     },
     text: 'Create board',
   });
-  target = ({ id, subText, text }: *) => {
+  target = (selected: *) => {
     const avatar = s => (
       <ItemAvatar
         appearance="square"
@@ -111,15 +111,7 @@ export default class extends React.Component<*, State> {
       />
     );
 
-    return (
-      <ContainerHeader
-        before={avatar}
-        after={ChevD}
-        id={id}
-        subText={subText}
-        text={text}
-      />
-    );
+    return <ContainerHeader before={avatar} after={ChevD} {...selected} />;
   };
   onChange = (selected: *) => {
     this.setState({ selected });

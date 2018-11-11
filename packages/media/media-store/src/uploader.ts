@@ -28,36 +28,29 @@ const hashingFunction = async (blob: Blob): Promise<string> => {
   return hasher.hash(blob);
 };
 
-const createProbingFunction = (
-  store: MediaStore,
-  collection?: string,
-) => async (chunks: Chunk[]): Promise<boolean[]> => {
-  const response = await store.probeChunks(hashedChunks(chunks), collection);
+const createProbingFunction = (store: MediaStore) => async (
+  chunks: Chunk[],
+): Promise<boolean[]> => {
+  const response = await store.probeChunks(hashedChunks(chunks));
   const results = response.data.results;
 
   return (Object as any).values(results).map((result: any) => result.exists);
 };
 
-const createUploadingFunction = (store: MediaStore, collection?: string) => {
-  return (chunk: Chunk) =>
-    store.uploadChunk(chunk.hash, chunk.blob, collection);
+const createUploadingFunction = (store: MediaStore) => {
+  return (chunk: Chunk) => store.uploadChunk(chunk.hash, chunk.blob);
 };
 
 const createProcessingFunction = (
   store: MediaStore,
   deferredUploadId: Promise<string>,
-  collection?: string,
 ) => {
   let offset = 0;
   return async (chunks: Chunk[]) => {
-    await store.appendChunksToUpload(
-      await deferredUploadId,
-      {
-        chunks: hashedChunks(chunks),
-        offset,
-      },
-      collection,
-    );
+    await store.appendChunksToUpload(await deferredUploadId, {
+      chunks: hashedChunks(chunks),
+      offset,
+    });
     offset += chunks.length;
   };
 };
@@ -70,7 +63,7 @@ export const uploadFile = (
   const { content, collection, name, mimeType } = file;
   const occurrenceKey = uuid.v4();
   const deferredUploadId = store
-    .createUpload(1, collection)
+    .createUpload()
     .then(response => response.data[0].id);
   const deferredEmptyFile = store.createFile({ collection, occurrenceKey });
   const { response, cancel } = chunkinator(
@@ -81,14 +74,10 @@ export const uploadFile = (
       probingBatchSize: 100,
       chunkSize: 4 * 1024 * 1024,
       uploadingConcurrency: 3,
-      uploadingFunction: createUploadingFunction(store, collection),
-      probingFunction: createProbingFunction(store, collection),
+      uploadingFunction: createUploadingFunction(store),
+      probingFunction: createProbingFunction(store),
       processingBatchSize: 1000,
-      processingFunction: createProcessingFunction(
-        store,
-        deferredUploadId,
-        collection,
-      ),
+      processingFunction: createProcessingFunction(store, deferredUploadId),
     },
     {
       onProgress(progress: number) {

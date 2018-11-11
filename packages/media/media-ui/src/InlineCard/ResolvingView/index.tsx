@@ -24,7 +24,9 @@ export class InlineCardResolvingView extends React.Component<
             </SpinnerWrapper>
           }
           title={url}
-        />
+        >
+          - Connect your account to preview links
+        </IconAndTitleLayout>
       </Frame>
     );
   }

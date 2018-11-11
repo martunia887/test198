@@ -12,12 +12,8 @@ type Props = {
   actions?: Array<Element<any>>,
   createIcon?: Element<any>,
   linkComponent?: ComponentType<*>,
-  onCreateActivate?: (
-    event: SyntheticMouseEvent<*> | SyntheticKeyboardEvent<*>,
-  ) => void,
-  onSearchActivate?: (
-    event: SyntheticMouseEvent<*> | SyntheticKeyboardEvent<*>,
-  ) => void,
+  onCreateActivate?: (event: Event) => void,
+  onSearchActivate?: (event: Event) => void,
   primaryIcon?: Element<any>,
   primaryIconAppearance?: IconAppearance,
   primaryItemHref?: string,

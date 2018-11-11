@@ -5,7 +5,6 @@ import Button from '@atlaskit/button';
 import { truncateUrlForErrorView } from '../utils';
 import { Frame } from '../Frame';
 import { IconAndTitleLayout } from '../IconAndTitleLayout';
-import { LockIconWrapper } from './styled';
 
 export interface InlineCardForbiddenViewProps {
   url: string;
@@ -32,13 +31,7 @@ export class InlineCardForbiddenView extends React.Component<
       <Frame onClick={onClick} isSelected={isSelected}>
         <IconAndTitleLayout
           icon={
-            <LockIconWrapper>
-              <LockIcon
-                label="error"
-                size="medium"
-                primaryColor={colors.B400}
-              />
-            </LockIconWrapper>
+            <LockIcon label="error" size="medium" primaryColor={colors.B400} />
           }
           title={
             truncateUrlForErrorView(url) +

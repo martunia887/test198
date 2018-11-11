@@ -90,10 +90,6 @@ export interface EditorProps {
   // To enable, you need to also provide a `taskDecisionProvider`. You will most likely need backend ADF storage for this feature.
   allowTasksAndDecisions?: boolean;
 
-  // Enables new breakout mark.
-  // This mark is being used for making code-blocks breakout.
-  allowBreakout?: boolean;
-
   // Enables horizontal rules.
   allowRule?: boolean;
 
@@ -146,12 +142,8 @@ export interface EditorProps {
   // Temporary flag to enable layouts while it's under development
   allowLayouts?: boolean;
 
-  // Enable status, if menuDisabled is passed then plugin is enabled by default
-  allowStatus?:
-    | boolean
-    | {
-        menuDisabled: boolean;
-      };
+  // Enable status.
+  allowStatus?: boolean;
 
   allowDynamicTextSizing?: boolean;
 

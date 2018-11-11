@@ -16,15 +16,13 @@ import { pluginKey as widthPluginKey } from '../../width';
 import { stateKey as reactNodeViewStateKey } from '../../../plugins/base/pm-plugins/react-nodeview';
 import { setNodeSelection } from '../../../utils';
 import ResizableMediaSingle from '../ui/ResizableMediaSingle';
-import { createDisplayGrid } from '../../../plugins/grid';
-import { EventDispatcher } from '../../../event-dispatcher';
+import { displayGrid } from '../../../plugins/grid';
 
 const DEFAULT_WIDTH = 250;
 const DEFAULT_HEIGHT = 200;
 
 export interface MediaSingleNodeProps {
   node: PMNode;
-  eventDispatcher: EventDispatcher;
   view: EditorView;
   width: number;
   selected: Function;
@@ -63,8 +61,7 @@ export default class MediaSingleNode extends Component<
       this.props.selected() !== nextProps.selected() ||
       this.props.node.attrs.layout !== nextProps.node.attrs.layout ||
       this.props.width !== nextProps.width ||
-      this.props.lineLength !== nextProps.lineLength ||
-      this.props.getPos !== nextProps.getPos
+      this.props.lineLength !== nextProps.lineLength
     ) {
       return true;
     }
@@ -110,6 +107,13 @@ export default class MediaSingleNode extends Component<
         layout,
         width,
       }),
+    );
+  };
+
+  boundDisplayGrid = (show, gridType) => {
+    displayGrid(show, gridType)(
+      this.props.view.state,
+      this.props.view.dispatch,
     );
   };
 
@@ -203,11 +207,10 @@ export default class MediaSingleNode extends Component<
         {...props}
         getPos={getPos}
         updateSize={this.updateSize}
-        displayGrid={createDisplayGrid(this.props.eventDispatcher)}
+        displayGrid={this.boundDisplayGrid}
         gridSize={12}
         state={this.props.view.state}
         appearance={this.mediaPluginState.options.appearance}
-        selected={this.props.selected()}
       >
         {MediaChild}
       </ResizableMediaSingle>
@@ -219,7 +222,6 @@ export default class MediaSingleNode extends Component<
 
 class MediaSingleNodeView extends ReactNodeView {
   render(props, forwardRef) {
-    const { eventDispatcher } = this.reactComponentProps;
     return (
       <WithPluginState
         editorView={this.view}
@@ -236,7 +238,6 @@ class MediaSingleNodeView extends ReactNodeView {
               getPos={this.getPos}
               view={this.view}
               selected={() => this.getPos() + 1 === reactNodeViewState}
-              eventDispatcher={eventDispatcher}
             />
           );
         }}
@@ -245,12 +246,10 @@ class MediaSingleNodeView extends ReactNodeView {
   }
 }
 
-export const ReactMediaSingleNode = (portalProviderAPI, eventDispatcher) => (
+export const ReactMediaSingleNode = portalProviderAPI => (
   node: PMNode,
   view: EditorView,
   getPos: () => number,
 ): NodeView => {
-  return new MediaSingleNodeView(node, view, getPos, portalProviderAPI, {
-    eventDispatcher,
-  }).init();
+  return new MediaSingleNodeView(node, view, getPos, portalProviderAPI).init();
 };

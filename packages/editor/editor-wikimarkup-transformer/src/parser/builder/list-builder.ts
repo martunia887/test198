@@ -154,13 +154,6 @@ export class ListBuilder {
         continue;
       }
 
-      if (
-        pmNode.type.name === 'paragraph' &&
-        pmNode.textContent.trim() === ''
-      ) {
-        continue;
-      }
-
       if (supportedContentType.indexOf(pmNode.type.name) === -1) {
         const listItem = this.createListItem(contentBuffer, this.schema);
         output.push(listItem);

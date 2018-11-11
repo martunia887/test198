@@ -9,7 +9,6 @@ const LINK_FORMAT_REGEXP = /^\[(?:([^\]\n\|]*)\|)?([^\]\n]+)\]/;
 
 export function linkFormat(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ): Token {
@@ -25,7 +24,7 @@ export function linkFormat(
     TokenType.LINK_TEXT,
   ];
 
-  const match = input.substring(position).match(LINK_FORMAT_REGEXP);
+  const match = input.match(LINK_FORMAT_REGEXP);
 
   if (!match) {
     return fallback();

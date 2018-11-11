@@ -67,12 +67,6 @@ const ContentStyles: ComponentClass<HTMLAttributes<{}>> = styled.div`
   /* fix cursor alignment */
   .ProseMirror .emoji-common-node {
     display: inline;
-    vertical-align: baseline;
-
-    img {
-      display: inline-block;
-      vertical-align: middle;
-    }
   }
 
   ${blocktypeStyles}

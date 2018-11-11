@@ -40,7 +40,6 @@ const unsupportedNodes = [
 
 const unsupportedMarks = [
   'action',
-  'breakout',
   'mentionQuery',
   'emojiQuery',
   '__colorGroupDeclaration',

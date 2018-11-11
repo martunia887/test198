@@ -2,6 +2,7 @@ import * as React from 'react';
 import Context from '../Context';
 import { Client, ObjectState } from '../Client';
 import { v4 } from 'uuid';
+import { Provider } from '../Provider';
 
 export interface WithObjectRenderProps {
   state: ObjectState;
@@ -17,7 +18,7 @@ interface InnerWithObjectProps {
 interface InnerWithObjectState {
   prevClient?: Client;
   prevUrl?: string;
-  cardState: ObjectState;
+  state: ObjectState;
   uuid: string;
 }
 
@@ -27,7 +28,7 @@ class InnerWithObject extends React.Component<
 > {
   state: InnerWithObjectState = {
     uuid: v4(),
-    cardState: {
+    state: {
       status: 'resolving',
       services: [],
     },
@@ -35,38 +36,57 @@ class InnerWithObject extends React.Component<
 
   reload = () => {
     const { client, url } = this.props;
-    client.reload(url, this.state.cardState.definitionId);
+    const {
+      state: { definitionId },
+    } = this.state;
+    client.reload(url, definitionId);
   };
 
-  updateState = (incoming: [ObjectState | null, boolean]) => {
-    const { url, client } = this.props;
-    const [state, expired] = incoming;
-
-    if (state === null || expired) {
-      return client.resolve(url);
+  static getDerivedStateFromProps(
+    nextProps: InnerWithObjectProps,
+    prevState: InnerWithObjectState,
+  ) {
+    if (
+      nextProps.client !== prevState.prevClient ||
+      nextProps.url !== prevState.prevUrl
+    ) {
+      return {
+        state: {
+          status: 'resolving',
+          definitionId: prevState.state.definitionId,
+        },
+        prevClient: nextProps.client,
+        prevUrl: nextProps.url,
+      };
     }
-
-    return this.setState({
-      cardState: state,
-    });
-  };
+    return null;
+  }
 
   componentDidMount() {
     const { client, url } = this.props;
     const { uuid } = this.state;
-    client.register(url).subscribe(uuid, this.updateState);
+    const {
+      state: { definitionId },
+    } = this.state;
+    client.register(url, uuid, this.updateState).resolve(url, definitionId);
   }
+
+  updateState = (state: ObjectState) => {
+    this.setState({ state });
+  };
 
   componentDidUpdate(prevProps: InnerWithObjectProps) {
     const { client, url } = this.props;
     const { uuid } = this.state;
-    if (client !== prevProps.client) {
+    if (this.props.client !== prevProps.client) {
       prevProps.client.deregister(prevProps.url, uuid);
-      client.register(url).subscribe(uuid, this.updateState);
+      client.register(url, uuid, this.updateState).resolve(url);
     }
-    if (url !== prevProps.url) {
-      client.deregister(prevProps.url, uuid);
-      client.register(url).subscribe(uuid, this.updateState);
+    if (this.props.url !== prevProps.url) {
+      client
+        .deregister(prevProps.url, uuid)
+        .register(url, uuid, this.updateState)
+        .resolve(url);
     }
     return;
   }
@@ -80,8 +100,8 @@ class InnerWithObject extends React.Component<
 
   render() {
     const { children } = this.props;
-    const { cardState } = this.state;
-    return children({ state: cardState, reload: this.reload });
+    const { state } = this.state;
+    return children({ state, reload: this.reload });
   }
 }
 
@@ -98,7 +118,8 @@ export function WithObject(props: WithObjectProps) {
       {clientFromContext => {
         // TODO: Remove the last fallback - this is a temporary workaround for React context not penetrating the <Editor />
         //       https://product-fabric.atlassian.net/browse/ED-5565
-        const client = clientFromProps || clientFromContext;
+        const client =
+          clientFromProps || clientFromContext || Provider.defaultClient;
         if (!client) {
           throw new Error(
             '@atlaskit/smart-card: No client provided. Provide a client like <Card client={new Client()} url=""/> or <Provider client={new Client()}><Card url=""/></Provider>.',

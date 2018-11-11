@@ -21,10 +21,7 @@ export function extractPropsFromObject(json: any): BlockCardResolvedViewProps {
   if (json.generator && (json.generator.name || json.generator.icon)) {
     props.context = {
       text: json.generator.name,
-      icon:
-        json.generator.icon && json.generator.icon.url
-          ? json.generator.icon.url
-          : json.generator.icon,
+      icon: json.generator.icon,
     };
   }
 

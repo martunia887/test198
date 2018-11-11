@@ -2,21 +2,20 @@ import { createEditor, doc, p, status } from '@atlaskit/editor-test-helpers';
 import statusPlugin from '../../../../plugins/status';
 import { pluginKey } from '../../../../plugins/status/plugin';
 import {
-  commitStatusPicker,
-  createStatus,
+  insertStatus,
   setStatusPickerAt,
-  updateStatus,
+  commitStatusPicker,
 } from '../../../../plugins/status/actions';
 
 describe('status plugin: actions', () => {
   const editor = (doc: any) => {
     return createEditor({
       doc,
-      editorPlugins: [statusPlugin({ menuDisabled: false })],
+      editorPlugins: [statusPlugin],
     });
   };
 
-  describe('updateStatus', () => {
+  describe('insertStatus', () => {
     it('should update node at picker location if picker is shown', () => {
       const { editorView } = editor(
         doc(
@@ -34,7 +33,7 @@ describe('status plugin: actions', () => {
       const selectionFrom = editorView.state.selection.from;
       setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
 
-      updateStatus({
+      insertStatus({
         color: 'green',
         text: 'Done',
         localId: '666',
@@ -74,7 +73,7 @@ describe('status plugin: actions', () => {
       const selectionFrom = editorView.state.selection.from;
       setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
 
-      updateStatus({
+      insertStatus({
         color: 'green',
         text: 'Done',
         localId: '666',
@@ -100,7 +99,7 @@ describe('status plugin: actions', () => {
       const selectionFrom = editorView.state.selection.from;
       setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
 
-      updateStatus({
+      insertStatus({
         color: 'green',
         text: 'Done',
         localId: '666',
@@ -112,7 +111,7 @@ describe('status plugin: actions', () => {
     it('should insert status if picker is not shown', () => {
       const { editorView } = editor(doc(p('')));
 
-      updateStatus({
+      insertStatus({
         color: 'blue',
         text: 'In progress',
         localId: '666',
@@ -163,7 +162,7 @@ describe('status plugin: actions', () => {
       const selectionFrom = editorView.state.selection.from;
       setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
 
-      updateStatus({
+      insertStatus({
         color: 'green',
         text: 'Done',
         localId: '666',
@@ -193,7 +192,7 @@ describe('status plugin: actions', () => {
       const selectionFrom = editorView.state.selection.from;
       setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
 
-      updateStatus({
+      insertStatus({
         color: 'green',
         text: 'Done',
         localId: '666',
@@ -221,7 +220,7 @@ describe('status plugin: actions', () => {
       const selectionFrom = editorView.state.selection.from;
       setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
 
-      updateStatus({
+      insertStatus({
         color: 'green',
         text: '',
         localId: '666',
@@ -248,7 +247,7 @@ describe('status plugin: actions', () => {
       const selectionFrom = editorView.state.selection.from;
       setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
 
-      updateStatus({
+      insertStatus({
         color: 'green',
         text: 'cheese',
         localId: '666',
@@ -268,77 +267,6 @@ describe('status plugin: actions', () => {
           ),
         ),
       );
-    });
-  });
-
-  describe('picker autofocus', () => {
-    const insert = editorView => node => {
-      const { tr, selection } = editorView.state;
-      tr.insert(selection.from, node);
-      return tr;
-    };
-
-    it('focus on input field should be set when inserted', () => {
-      const { editorView } = editor(doc(p('{<>}')));
-
-      const { dispatch } = editorView;
-
-      let pluginState = pluginKey.getState(editorView.state);
-      expect(pluginState.autoFocus).toEqual(false);
-
-      // Simulate quick insert, without quick insert
-      dispatch(createStatus(-1)(insert(editorView), editorView.state));
-
-      pluginState = pluginKey.getState(editorView.state);
-      expect(pluginState.autoFocus).toEqual(true);
-
-      updateStatus({
-        color: 'green',
-        text: 'cheese',
-        localId: '666',
-      })(editorView);
-
-      pluginState = pluginKey.getState(editorView.state);
-      expect(pluginState.autoFocus).toEqual(true);
-
-      commitStatusPicker()(editorView);
-
-      pluginState = pluginKey.getState(editorView.state);
-
-      expect(pluginState.autoFocus).toEqual(false);
-    });
-
-    it('focus on input field should not be set when updating', () => {
-      const { editorView } = editor(
-        doc(
-          p(
-            '{<>}',
-            status({
-              text: 'In progress',
-              color: 'blue',
-              localId: '666',
-            }),
-          ),
-        ),
-      );
-
-      const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
-
-      let pluginState = pluginKey.getState(editorView.state);
-      expect(pluginState.autoFocus).toEqual(false);
-
-      updateStatus({
-        color: 'green',
-        text: 'cheese',
-        localId: '666',
-      })(editorView);
-      pluginState = pluginKey.getState(editorView.state);
-      expect(pluginState.autoFocus).toEqual(false);
-
-      commitStatusPicker()(editorView);
-      pluginState = pluginKey.getState(editorView.state);
-      expect(pluginState.autoFocus).toEqual(false);
     });
   });
 });

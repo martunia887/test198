@@ -9,13 +9,13 @@ import { withNavigationViewController } from '../../../view-controller';
 import ConnectedItem from '../ConnectedItem';
 
 import type { GoToItemProps } from './types';
-import type { ItemPresentationProps } from '../../presentational/Item/types';
+import type { InteractionState } from '../../presentational/InteractionStateManager/types';
 
 const generateAfterProp = ({
   goTo,
   spinnerDelay,
   navigationViewController,
-}) => ({ isActive, isHover, isFocused }: ItemPresentationProps) => {
+}) => ({ isActive, isHover, isFocused }: InteractionState) => {
   const { incomingView } = navigationViewController.state;
   if (incomingView && incomingView.id === goTo) {
     return <Spinner delay={spinnerDelay} invertColor size="small" />;
@@ -36,7 +36,7 @@ class GoToItem extends Component<GoToItemProps> {
     spinnerDelay: 200,
   };
 
-  handleClick = (e: SyntheticEvent<*>) => {
+  handleClick = (e: SyntheticEvent<HTMLElement>) => {
     const {
       goTo,
       navigationViewController,

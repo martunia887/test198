@@ -8,7 +8,6 @@ import { parseNewlineOnly } from './whitespace';
 
 const LIST_ITEM_REGEXP = /^ *([*\-#]+) /;
 const EMPTY_LINE_REGEXP = /^[ \t]*\r?\n/;
-const RULER_SYMBOL = '----';
 
 const processState = {
   NEW_LINE: 0,
@@ -19,7 +18,6 @@ const processState = {
 
 export function list(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ): Token {
@@ -32,9 +30,10 @@ export function list(
     TokenType.TRIPLE_DASH_SYMBOL,
     TokenType.QUADRUPLE_DASH_SYMBOL,
     TokenType.LIST,
+    TokenType.RULER,
   ];
 
-  let index = position;
+  let index = 0;
   let state = processState.NEW_LINE;
   let buffer = '';
   let lastListSymbols: string | null = null;
@@ -48,25 +47,9 @@ export function list(
     switch (state) {
       case processState.NEW_LINE: {
         const substring = input.substring(index);
-
         const listMatch = substring.match(LIST_ITEM_REGEXP);
         if (listMatch) {
           const [, symbols] = listMatch;
-
-          // Handle ruler in list
-          if (symbols === RULER_SYMBOL) {
-            const remainingAfterSymbol = input.substring(index + 4);
-            const emptyLineMatch = remainingAfterSymbol.match(
-              EMPTY_LINE_REGEXP,
-            );
-
-            // If this is an empty line skip to the buffering step rather than match as a list element
-            if (emptyLineMatch) {
-              state = processState.BUFFER;
-              continue;
-            }
-          }
-
           if (!builder) {
             /**
              * It happens because this is the first item of the list
@@ -147,7 +130,7 @@ export function list(
           state = processState.BUFFER;
           break;
         }
-        const token = parseToken(input, match.type, index, schema);
+        const token = parseToken(input.substring(index), match.type, schema);
         if (token.type === 'text') {
           buffer += token.text;
         } else {
@@ -156,7 +139,7 @@ export function list(
            */
           if (!builder) {
             /** Something is really wrong here */
-            return fallback(input, position);
+            return fallback(input);
           }
           if (buffer.length > 0) {
             /**
@@ -184,7 +167,7 @@ export function list(
       case processState.END: {
         if (!builder) {
           /** Something is really wrong here */
-          return fallback(input, position);
+          return fallback(input);
         }
 
         if (buffer.length > 0) {
@@ -206,7 +189,7 @@ export function list(
         return {
           type: 'pmnode',
           nodes: output,
-          length: index - position,
+          length: index,
         };
       }
     }
@@ -235,7 +218,7 @@ export function list(
   return {
     type: 'pmnode',
     nodes: output,
-    length: index - position,
+    length: index,
   };
 }
 
@@ -282,10 +265,10 @@ function sanitize(nodes: PMNode[], schema: Schema) {
   }, []);
 }
 
-function fallback(input: string, position: number): Token {
+function fallback(input: string): Token {
   return {
     type: 'text',
-    text: input.substr(position, 1),
-    length: 1,
+    text: input.substr(0, 1),
+    length: length,
   };
 }

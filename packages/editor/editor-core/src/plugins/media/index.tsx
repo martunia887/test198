@@ -84,10 +84,7 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
               providerFactory,
               nodeViews: {
                 mediaGroup: ReactMediaGroupNode(portalProviderAPI),
-                mediaSingle: ReactMediaSingleNode(
-                  portalProviderAPI,
-                  eventDispatcher,
-                ),
+                mediaSingle: ReactMediaSingleNode(portalProviderAPI),
               },
               errorReporter,
               uploadErrorHandler: props.uploadErrorHandler,
@@ -176,7 +173,7 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
     quickInsert: ({ formatMessage }) => [
       {
         title: formatMessage(messages.filesAndImages),
-        priority: 400,
+        priority: 200,
         keywords: ['media'],
         icon: () => (
           <EditorImageIcon label={formatMessage(messages.filesAndImages)} />

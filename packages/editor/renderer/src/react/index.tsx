@@ -97,52 +97,38 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     const emojiBlock = isEmojiDoc(fragment, props);
     const content = ReactSerializer.getChildNodes(fragment).map(
       (node, index) => {
-        if (isTextWrapper(node)) {
-          return this.serializeTextWrapper(node.content);
+        if (isTextWrapper(node.type.name)) {
+          return this.serializeTextWrapper((node as TextWrapper).content);
         }
-
         let props;
 
         if (emojiBlock && this.appearance === 'message') {
-          props = this.getEmojiBlockProps(node);
+          props = this.getEmojiBlockProps(node as Node);
         } else if (node.type.name === 'table') {
-          props = this.getTableProps(node);
+          props = this.getTableProps(node as Node);
         } else if (node.type.name === 'date') {
-          props = this.getDateProps(node, parentInfo);
+          props = this.getDateProps(node as Node, parentInfo);
         } else if (node.type.name === 'heading') {
-          props = this.getHeadingProps(node);
+          props = this.getHeadingProps(node as Node);
         } else {
-          props = this.getProps(node);
+          props = this.getProps(node as Node);
         }
 
         let pInfo = parentInfo;
-        if (node.type.name === 'taskItem' && node.attrs.state !== 'DONE') {
+        if (
+          node.type.name === 'taskItem' &&
+          (node as Node).attrs.state !== 'DONE'
+        ) {
           pInfo = { parentIsIncompleteTask: true };
         }
 
-        const serializedContent = this.serializeFragment(
-          node.content,
+        return this.serializeFragment(
+          (node as Node).content,
           props,
-          toReact(node),
+          toReact(node as Node),
           `${node.type.name}-${index}`,
           pInfo,
         );
-
-        if (node.marks && node.marks.length) {
-          return ([] as Array<Mark>)
-            .concat(node.marks)
-            .reverse()
-            .reduce((acc, mark) => {
-              return this.renderMark(
-                markToReact(mark),
-                this.getMarkProps(mark),
-                `${mark.type.name}-${index}`,
-                acc,
-              );
-            }, serializedContent);
-        }
-
-        return serializedContent;
       },
     );
 
@@ -171,6 +157,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     );
   }
 
+  // tslint:disable-next-line:variable-name
   private renderNode(
     NodeComponent: ComponentClass<any>,
     props: any,
@@ -184,6 +171,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     );
   }
 
+  // tslint:disable-next-line:variable-name
   private renderMark(
     MarkComponent: ComponentClass<any>,
     props: any,
@@ -246,7 +234,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   }
 
   private getHeadingId(node: Node) {
-    if (this.disableHeadingIDs || !node.content.size) {
+    if (this.disableHeadingIDs || !node.content) {
       return;
     }
 

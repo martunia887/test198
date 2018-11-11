@@ -57,7 +57,8 @@ function pushCommand(options) {
 
         if (duplicateMessageIds.length !== 0) {
           throw new Error(
-            `Duplicate messageIds found: ${duplicateMessageIds.join(',')}`,
+            'Error: Duplicate messageIds found',
+            duplicateMessageIds,
           );
         }
         task.title = `Found ${messages.length} messages...`;

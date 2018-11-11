@@ -121,7 +121,6 @@ export default {
     'blockCard',
   ],
   marks: [
-    // Inline marks
     'link',
     'confluenceInlineComment',
     'em',
@@ -135,8 +134,5 @@ export default {
     'typeAheadQuery',
     'emojiQuery',
     'textColor',
-
-    // Block marks
-    'breakout',
   ],
 };

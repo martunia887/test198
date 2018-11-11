@@ -63,12 +63,6 @@ export type StyleReducer = (
   Theme?: ProductTheme,
 ) => ObjectType;
 
-export type StyleReducerWithState = (
-  Styles: ObjectType,
-  State: ObjectType,
-  Theme?: ProductTheme,
-) => ObjectType;
-
 export type ContextColors = {
   background: {
     /**

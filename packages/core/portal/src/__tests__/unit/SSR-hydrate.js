@@ -3,10 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import Portal from '../..';
+import canUseDom from '../../utils/canUseDom';
 
-jest.mock('exenv', () => ({
-  canUseDom: false,
-}));
+jest.mock('../../utils/canUseDom');
 
 afterAll(() =>
   document
@@ -23,6 +22,8 @@ const App = () => (
 );
 
 test('should ssr then hydrate portal correctly', () => {
+  // $FlowFixMe - flow can't tell canUseDOM is a jest mock function
+  canUseDom.mockReturnValueOnce(false).mockReturnValueOnce(true);
   // server-side
   const serverHTML = ReactDOMServer.renderToString(<App />);
   // client-side

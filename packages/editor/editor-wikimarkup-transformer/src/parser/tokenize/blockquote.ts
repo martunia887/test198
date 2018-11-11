@@ -7,14 +7,13 @@ const BLOCKQUOTE_REGEXP = /^bq\.\s(.*)/;
 
 export function blockquote(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ): Token {
-  const match = input.substring(position).match(BLOCKQUOTE_REGEXP);
+  const match = input.match(BLOCKQUOTE_REGEXP);
 
   if (!match) {
-    return fallback(input, position);
+    return fallback(input);
   }
 
   const [, rawContent] = match;
@@ -27,10 +26,10 @@ export function blockquote(
   );
 }
 
-function fallback(input: string, position: number): Token {
+function fallback(input: string): Token {
   return {
     type: 'text',
-    text: input.substr(position, 1),
+    text: input.substr(0, 1),
     length: 1,
   };
 }

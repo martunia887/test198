@@ -161,6 +161,7 @@ class TimePicker extends Component<Props, State> {
   getOptions(): Array<Option> {
     return this.props.times.map((time: string): Option => {
       return {
+        /* $FlowFixMe - Flow complaining timeFormat is undefined but it has a default... */
         label: formatTime(time, this.props.timeFormat),
         value: time,
       };
@@ -255,6 +256,7 @@ class TimePicker extends Component<Props, State> {
       : Select;
 
     const labelAndValue = value && {
+      /* $FlowFixMe - complaining about required args that aren't required. */
       label: formatDisplayLabel(value, timeFormat),
       value,
     };
@@ -262,6 +264,7 @@ class TimePicker extends Component<Props, State> {
     return (
       <div {...innerProps} ref={this.getContainerRef}>
         <input name={name} type="hidden" value={value} />
+        {/* $FlowFixMe - complaining about required args that aren't required. */}
         <SelectComponent
           autoFocus={autoFocus}
           components={{

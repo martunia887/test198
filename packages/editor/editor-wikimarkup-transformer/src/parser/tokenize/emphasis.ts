@@ -6,7 +6,6 @@ import { parseString } from '../text';
 
 export function emphasis(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback: TokenErrCallback,
 ): Token {
@@ -45,7 +44,7 @@ export function emphasis(
     };
   };
 
-  return commonFormatter(input, position, schema, {
+  return commonFormatter(input, schema, {
     opening: '_',
     closing: '_',
     rawContentProcessor,

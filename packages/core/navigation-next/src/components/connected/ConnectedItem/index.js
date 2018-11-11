@@ -28,21 +28,17 @@ export const iconMap = {
 
 export default class ConnectedItem extends Component<ConnectedItemProps> {
   render() {
-    const { before: beforeProp, after: afterProp, icon, ...rest } = this.props;
+    const { before: beforeProp, icon, ...rest } = this.props;
     let before = beforeProp;
     if (!before && typeof icon === 'string' && iconMap[icon]) {
       before = iconMap[icon];
     }
 
     const props = { ...rest, before };
-
     return props.goTo ? (
-      <GoToItem {...props} after={afterProp} />
+      <GoToItem {...props} />
     ) : (
-      <PresentationalItem
-        {...props}
-        after={afterProp === null ? undefined : afterProp}
-      />
+      <PresentationalItem {...props} />
     );
   }
 }

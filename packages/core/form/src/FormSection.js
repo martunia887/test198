@@ -54,7 +54,6 @@ export default class FormSection extends Component<Props, State> {
   /** Inject Form & Section state */
   renderContentChildren = () => {
     return React.Children.map(this.props.children, child => {
-      if (!React.isValidElement(child)) return null;
       return React.cloneElement(child, {
         form: this.props.form,
       });

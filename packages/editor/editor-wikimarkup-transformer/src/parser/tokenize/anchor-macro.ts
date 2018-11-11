@@ -4,11 +4,10 @@ import { commonMacro } from './common-macro';
 
 export function anchorMacro(
   input: string,
-  position: number,
   schema: Schema,
   tokenErrCallback?: TokenErrCallback,
 ): Token {
-  return commonMacro(input.substring(position), schema, {
+  return commonMacro(input, schema, {
     opening: /^\{anchor(?::([^\{\n\}]*))?\}/,
     rawContentProcessor,
     tokenErrCallback,

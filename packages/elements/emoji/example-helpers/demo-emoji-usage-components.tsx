@@ -34,13 +34,11 @@ export class EmojiUsageList extends PureComponent<EmojiUsageProps, any> {
             return (
               <span key={emoji.id} style={{ marginRight: '15px' }}>
                 <span style={{ marginRight: '3px' }}>
-                  (
-                  {
+                  ({
                     this.props.emojiQueue.filter(
                       emojiId => emojiId === emoji.id,
                     ).length
-                  }
-                  )
+                  })
                 </span>
                 <ResourcedEmoji
                   emojiId={emoji}

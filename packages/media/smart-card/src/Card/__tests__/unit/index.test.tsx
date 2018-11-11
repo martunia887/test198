@@ -50,8 +50,7 @@ describe('Card', () => {
   });
 
   it('should render the errored view when errored', async () => {
-    const client = createClient([{ status: 'errored', services: [] }]);
-
+    const client = createClient([{ status: 'errored' } as ObjectState]);
     const wrapper = mount(
       <Card
         appearance="block"
@@ -59,6 +58,8 @@ describe('Card', () => {
         url="https://www.atlassian.com/"
       />,
     );
+
+    client.resolve('https://www.atlassian.com/');
 
     wrapper.update();
     expect(wrapper.find(BlockCardErroredView).exists()).toBeTruthy();
@@ -74,6 +75,8 @@ describe('Card', () => {
       />,
     );
 
+    client.resolve('https://www.atlassian.com/');
+
     wrapper.update();
     expect(wrapper.find(BlockCardErroredView).exists()).toBeTruthy();
   });
@@ -87,6 +90,8 @@ describe('Card', () => {
         url="https://www.atlassian.com/"
       />,
     );
+
+    client.resolve('https://www.atlassian.com/');
 
     wrapper.update();
     expect(wrapper.find(BlockCardForbiddenView).exists()).toBeTruthy();
@@ -102,6 +107,8 @@ describe('Card', () => {
         url="https://www.atlassian.com/"
       />,
     );
+
+    client.resolve('https://www.atlassian.com/');
 
     wrapper.update();
     expect(wrapper.find(BlockCardUnauthorisedView).exists()).toBeTruthy();
@@ -119,6 +126,8 @@ describe('Card', () => {
       />,
     );
 
+    client.resolve('https://www.atlassian.com/');
+
     wrapper.update();
     expect(wrapper.find(BlockCardResolvedView)).toHaveLength(1);
   });
@@ -135,6 +144,8 @@ describe('Card', () => {
         url="https://www.atlassian.com/"
       />,
     );
+
+    client.resolve('https://www.atlassian.com/');
 
     wrapper.update();
     expect(wrapper.find(InlineCardResolvedView).props()).toEqual(
@@ -156,6 +167,8 @@ describe('Card', () => {
         url="https://www.atlassian.com/"
       />,
     );
+
+    client.resolve('https://www.atlassian.com/');
 
     wrapper.update();
     expect(wrapper.find(BlockCardResolvedView).props()).toEqual(
@@ -210,7 +223,8 @@ describe('Card', () => {
       />,
     );
 
-    // wait for the data to be loade
+    // wait for the data to be loaded
+    client.resolve('https://www.atlassian.com/');
 
     wrapper.update();
     expect(wrapper.find(BlockCardResolvedView).props()).toEqual(

@@ -3,8 +3,6 @@
 import React, { type Node } from 'react';
 import { mount } from 'enzyme';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
-import Portal from '@atlaskit/portal';
-import { layers } from '@atlaskit/theme';
 import Tooltip from '../../Tooltip';
 import { Tooltip as StyledTooltip } from '../../../styled';
 import { hoveredPayload } from '../../utils/analytics-payloads';
@@ -112,7 +110,7 @@ test('tooltip should render whatever is passed to component prop', () => {
 
 test('tooltip wrapping element should be a div by default', () => {
   wrapper = mount(
-    <Tooltip content="Tooltip content" tag="span">
+    <Tooltip tag="span">
       <Target>foo</Target>
     </Tooltip>,
   );
@@ -121,7 +119,7 @@ test('tooltip wrapping element should be a div by default', () => {
 
 test('tooltip wrapping element should be whatever is passed as tag prop', () => {
   wrapper = mount(
-    <Tooltip content="Tooltip content" tag="span">
+    <Tooltip tag="span">
       <Target>foo</Target>
     </Tooltip>,
   );
@@ -217,16 +215,6 @@ test('tooltips should show and hide immediately once one has opened', () => {
   wrapper.update();
   expect(wrapper.find(StyledTooltip).text()).toEqual('button two tooltip');
 });
-test('tooltip should render popup in Portal with specific z-index', () => {
-  wrapper = mount(
-    <Tooltip content="Tooltip content">
-      <Target>foo</Target>
-    </Tooltip>,
-  );
-  simulate(wrapper, Target, 'mouseover');
-  expect(wrapper.find(Portal).prop('zIndex')).toEqual(layers.tooltip());
-});
-
 describe('TooltipWithAnalytics', () => {
   beforeEach(() => {
     jest.spyOn(global.console, 'warn');

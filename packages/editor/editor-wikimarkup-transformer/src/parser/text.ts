@@ -3,6 +3,7 @@ import { createTextNode } from './nodes/text';
 import {
   parseOtherKeyword,
   parseLeadingKeyword,
+  parseFormatterKeyword,
   parseMacroKeyword,
 } from './tokenize/keyword';
 import { parseToken, TokenType, TokenErrCallback } from './tokenize';
@@ -45,6 +46,7 @@ export function parseString(
 
         const match =
           parseLeadingKeyword(substring) ||
+          parseFormatterKeyword(substring) ||
           parseMacroKeyword(substring) ||
           parseOtherKeyword(substring);
 
@@ -72,8 +74,17 @@ export function parseString(
          * keyword
          */
         let match: { type: TokenType } | null = null;
+        const endingChar = buffer[buffer.length - 1];
         if (buffer.endsWith('{')) {
           match = parseOtherKeyword(substring);
+        } else if (
+          endingChar &&
+          !/[a-zA-Z0-9]|[^\u0000-\u007F]/.test(endingChar)
+        ) {
+          match =
+            parseFormatterKeyword(substring) ||
+            parseMacroKeyword(substring) ||
+            parseOtherKeyword(substring);
         } else {
           match = parseMacroKeyword(substring) || parseOtherKeyword(substring);
         }
@@ -95,9 +106,8 @@ export function parseString(
 
       case processState.TOKEN: {
         const token = parseToken(
-          input,
+          input.substring(index),
           tokenType,
-          index,
           schema,
           tokenErrCallback,
         );
@@ -133,6 +143,7 @@ export function parseString(
         const substring = input.substring(index);
         const match =
           parseLeadingKeyword(substring) ||
+          parseFormatterKeyword(substring) ||
           parseMacroKeyword(substring) ||
           parseOtherKeyword(substring);
 
