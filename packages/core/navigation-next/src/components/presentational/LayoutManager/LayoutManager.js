@@ -355,30 +355,22 @@ export default class LayoutManager extends Component<
                     navigation={navigationUIController}
                   >
                     {({ isDragging, width }) => {
-                      const onMouseOver =
-                        isCollapsed &&
-                        experimental_flyoutOnHover &&
-                        !flyoutIsOpen
-                          ? this.mouseOverFlyoutArea
-                          : null;
                       return (
-                        <ContainerNavigationMask
-                          disableInteraction={itemIsDragging}
-                          onMouseOver={onMouseOver}
-                        >
-                          <RenderBlocker
-                            blockOnChange
-                            itemIsDragging={itemIsDragging}
-                          >
-                            {this.renderGlobalNavigation()}
-                            {this.renderContentNavigation({
-                              isDragging,
-                              transitionState,
-                              transitionStyle,
-                              width,
-                            })}
-                          </RenderBlocker>
-                        </ContainerNavigationMask>
+                        <Wtf
+                          isCollapsed={isCollapsed}
+                          experimental_flyoutOnHover={
+                            experimental_flyoutOnHover
+                          }
+                          flyoutIsOpen={flyoutIsOpen}
+                          mouseOverFlyoutArea={this.mouseOverFlyoutArea}
+                          itemIsDragging={itemIsDragging}
+                          isDragging={isDragging}
+                          transitionState={transitionState}
+                          transitionStyle={transitionStyle}
+                          width={width}
+                          renderGlobalNavigation={this.renderGlobalNavigation}
+                          renderContentNavigation={this.renderContentNavigation}
+                        />
                       );
                     }}
                   </ResizeControl>
@@ -423,6 +415,82 @@ export default class LayoutManager extends Component<
           {this.props.children}
         </Page>
       </LayoutContainer>
+    );
+  }
+}
+
+// FIXME: Move to separate file
+// eslint-disable-next-line react/no-multi-comp
+class Wtf extends React.Component<{
+  isCollapsed: boolean,
+  experimental_flyoutOnHover: boolean,
+  flyoutIsOpen: boolean,
+  mouseOverFlyoutArea: any,
+  itemIsDragging: any,
+  isDragging: any,
+  transitionState: any,
+  transitionStyle: any,
+  width: number,
+  renderGlobalNavigation: any,
+  renderContentNavigation: any,
+}> {
+  shouldComponentUpdate(nextProps) {
+    const isCollapseChanged = nextProps.isCollapsed !== this.props.isCollapsed;
+    const experimentalFlyoutChanged =
+      nextProps.experimental_flyoutOnHover !==
+      this.props.experimental_flyoutOnHover;
+    const flyoutIsOpenChanged =
+      nextProps.flyoutIsOpen !== this.props.flyoutIsOpen;
+    const mouseOverFlyoutAreaChanged =
+      nextProps.mouseOverFlyoutArea !== this.props.mouseOverFlyoutArea;
+    const isDraggingChanged = nextProps.isDragging !== this.props.isDragging;
+    const itemIsDraggingChanged =
+      nextProps.itemIsDragging !== this.props.itemIsDragging;
+    const transitionStateChanged =
+      nextProps.transitionState !== this.props.transitionState;
+    // const transitionStyleChanged nextProps.transitionStyle !== this.props.transitionStyle;
+    const widthChanged = nextProps.width !== this.props.width;
+    // eslint-disable-next-line
+    console.log('transition style >', nextProps.transitionStyle);
+    // eslint-disable-next-line
+    console.log(
+      'is different: ',
+      nextProps.transitionStyle !== this.props.transitionStyle,
+    );
+    return (
+      isCollapseChanged ||
+      experimentalFlyoutChanged ||
+      flyoutIsOpenChanged ||
+      mouseOverFlyoutAreaChanged ||
+      itemIsDraggingChanged ||
+      isDraggingChanged ||
+      transitionStateChanged ||
+      // transitionStyleChanged ||
+      widthChanged
+    );
+  }
+  render() {
+    const onMouseOver =
+      this.props.isCollapsed &&
+      this.props.experimental_flyoutOnHover &&
+      !this.props.flyoutIsOpen
+        ? this.props.mouseOverFlyoutArea
+        : null;
+    return (
+      <ContainerNavigationMask
+        disableInteraction={this.props.itemIsDragging}
+        onMouseOver={onMouseOver}
+      >
+        <RenderBlocker blockOnChange itemIsDragging={this.props.itemIsDragging}>
+          {this.props.renderGlobalNavigation()}
+          {this.props.renderContentNavigation({
+            isDragging: this.props.isDragging,
+            transitionState: this.props.transitionState,
+            transitionStyle: this.props.transitionStyle,
+            width: this.props.width,
+          })}
+        </RenderBlocker>
+      </ContainerNavigationMask>
     );
   }
 }
