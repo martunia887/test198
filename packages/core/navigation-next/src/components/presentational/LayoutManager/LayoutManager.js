@@ -368,6 +368,7 @@ export default class LayoutManager extends Component<
                           width={width}
                           renderGlobalNavigation={this.renderGlobalNavigation}
                           renderContentNavigation={this.renderContentNavigation}
+                          containerNavigation={this.props.containerNavigation}
                         />
                       );
                     }}
@@ -431,6 +432,7 @@ class Wtf extends React.Component<{
   width: number,
   renderGlobalNavigation: any,
   renderContentNavigation: any,
+  containerNavigation: any,
 }> {
   shouldComponentUpdate(nextProps) {
     const isCollapseChanged = nextProps.isCollapsed !== this.props.isCollapsed;
@@ -448,13 +450,8 @@ class Wtf extends React.Component<{
       nextProps.transitionState !== this.props.transitionState;
     // const transitionStyleChanged nextProps.transitionStyle !== this.props.transitionStyle;
     const widthChanged = nextProps.width !== this.props.width;
-    // eslint-disable-next-line
-    console.log('transition style >', nextProps.transitionStyle);
-    // eslint-disable-next-line
-    console.log(
-      'is different: ',
-      nextProps.transitionStyle !== this.props.transitionStyle,
-    );
+    const containerNavigationChanged =
+      nextProps.containerNavigation !== this.props.containerNavigation;
     return (
       isCollapseChanged ||
       experimentalFlyoutChanged ||
@@ -464,7 +461,8 @@ class Wtf extends React.Component<{
       isDraggingChanged ||
       transitionStateChanged ||
       // transitionStyleChanged ||
-      widthChanged
+      widthChanged ||
+      containerNavigationChanged
     );
   }
   render() {
