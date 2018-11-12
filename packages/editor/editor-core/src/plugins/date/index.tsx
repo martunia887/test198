@@ -74,6 +74,11 @@ const datePlugin: EditorPlugin = {
           datePlugin: DateState;
         }) => {
           const { showDatePickerAt } = datePlugin;
+
+          console.log(
+            'From the datepicker: Editor disabled plugin:',
+            editorDisabledPlugin,
+          );
           if (
             !showDatePickerAt
             // ||

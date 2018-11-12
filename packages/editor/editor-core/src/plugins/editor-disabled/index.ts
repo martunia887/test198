@@ -6,6 +6,7 @@ export const pluginKey = new PluginKey('editorDisabledPlugin');
 
 export type EditorDisabledPluginState = {
   editorDisabled?: boolean;
+  // lastEditorDisabled?: boolean;
 };
 
 /*
@@ -20,14 +21,28 @@ export function createPlugin(
     key: pluginKey,
     filterTransaction: (t: Transaction, s: EditorState) => {
       const newPluginState: EditorDisabledPluginState = t.getMeta(pluginKey);
-      if (newPluginState && newPluginState.editorDisabled === true) {
-        console.log('Transaction rejected');
-        console.log('Transaction:', t);
-        return false;
+      // if(!newPluginState) {
+      // console.log('Transaction allowed, plugin don"t exist:');
+      // console.log({ newPluginState, t,s });
+      //   return true
+      // }
+      return false;
+      // @ts-ignore
+      if (s && s.editorDisabledPlugin$) {
+        // @ts-ignore
+        const { editorDisabled } = s.editorDisabledPlugin$;
+        console.log('editorDisabled in filter:', editorDisabled);
+        console.log('newPluginState in filter:', newPluginState);
+        // console.log({ newPluginState, t,s });
+        // return !editorDisabled;
       }
-      console.log('Transaction allowed');
-      console.log({ newPluginState, s });
-      console.log('Transaction:', t);
+      // const {editorDisabled} = newPluginState;
+      // if (editorDisabled === true) {
+      //   console.log('Transaction rejected:', t);
+      //   return false;
+      // }
+      // console.log('Transaction allowed by default:');
+      // console.log({ newPluginState, t,s });
       return true;
     },
     state: {
@@ -42,10 +57,10 @@ export function createPlugin(
           newPluginState &&
           oldPluginState.editorDisabled !== newPluginState.editorDisabled
         ) {
-          if (newPluginState.editorDisabled === true) {
-            console.log('Dispatching newPluginState to be disabled');
-            debugger;
-          }
+          // if (newPluginState.editorDisabled === true) {
+          //   console.log('Dispatching newPluginState to be disabled');
+          //   debugger;
+          // }
 
           dispatch(pluginKey, newPluginState);
           return newPluginState;
