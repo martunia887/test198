@@ -357,6 +357,9 @@ if (process.env.VISUAL_REGRESSION) {
     failureThreshold: '5',
     failureThresholdType: 'percent',
     noColors: true,
+    customSnapshotsDir:
+      process.env.BITBUCKET_CLONE_DIR &&
+      `${process.env.BITBUCKET_CLONE_DIR}/vr`,
   });
 
   expect.extend({ toMatchProdImageSnapshot });

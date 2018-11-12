@@ -187,6 +187,8 @@ pipelines:
             - yarn test:vr
           caches:
             - node
+          artifacts: 
+            - vr/**
 
       # This will run essentially the branch builds, but without any optimizations and should be manually
       # run in any potentially risky builds
