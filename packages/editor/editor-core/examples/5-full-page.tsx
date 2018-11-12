@@ -11,15 +11,12 @@ import {
   cardProvider,
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
-  macroProvider,
 } from '@atlaskit/editor-test-helpers';
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import { EmojiProvider } from '@atlaskit/emoji';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 
-import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
-import { extensionHandlers } from '../example-helpers/extension-handlers';
 import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
 import { DevTools } from '../example-helpers/DevTools';
 import { EditorActions } from './../src';
@@ -113,7 +110,6 @@ const providers = {
   ),
   contextIdentifierProvider: storyContextIdentifierProviderFactory(),
   activityProvider: Promise.resolve(new MockActivityResource()),
-  macroProvider: Promise.resolve(macroProvider),
 };
 
 const mediaProvider = storyMediaProviderFactory({
@@ -149,7 +145,6 @@ export class ExampleEditor extends React.Component<EditorProps, State> {
               allowTables={{
                 advanced: true,
               }}
-              allowBreakout={true}
               allowJiraIssue={true}
               allowUnsupportedContent={true}
               allowPanel={true}
@@ -201,8 +196,6 @@ export class ExampleEditor extends React.Component<EditorProps, State> {
                 />
               }
               onSave={SAVE_ACTION}
-              insertMenuItems={customInsertMenuItems}
-              extensionHandlers={extensionHandlers}
               {...this.props}
             />
           </SmartCardProvider>

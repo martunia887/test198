@@ -7,12 +7,13 @@ import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 
 import commonMessages from '../../messages';
 import { MessageDescriptor } from '../../types/i18n';
-import { Command } from '../../../src/types';
+import { createBreakoutToolbarItems } from '../breakout/utils/create-breakout-toolbar-items';
+import { Command } from '../../types';
 import {
   FloatingToolbarConfig,
   FloatingToolbarItem,
   Icon,
-} from '../../../src/plugins/floating-toolbar/types';
+} from '../../plugins/floating-toolbar/types';
 import {
   setPresetLayout,
   deleteActiveLayoutNode,
@@ -71,6 +72,10 @@ export const buildToolbar = (
   const node = state.doc.nodeAt(pos);
   if (node) {
     const currentLayout = getPresetLayout(node);
+    const breakoutToolbar = createBreakoutToolbarItems(state, {
+      formatMessage: intl.formatMessage,
+    });
+
     return {
       title: 'Columns floating controls',
       getDomRef: view =>
@@ -78,6 +83,7 @@ export const buildToolbar = (
       nodeType: state.schema.nodes.layoutSection,
       items: [
         ...LAYOUT_TYPES.map(i => buildLayoutButton(intl, i, currentLayout)),
+        ...(breakoutToolbar ? [{ type: 'separator' }, ...breakoutToolbar] : []),
         { type: 'separator' },
         {
           type: 'button',

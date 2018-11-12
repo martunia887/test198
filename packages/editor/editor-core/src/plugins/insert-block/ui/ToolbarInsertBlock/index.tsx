@@ -351,7 +351,7 @@ class ToolbarInsertBlock extends React.PureComponent<
         {buttons.map(btn => (
           <ToolbarButton
             ref={btn.handleRef || noop}
-            key={btn.content}
+            key={btn.key || btn.content}
             spacing={isReducedSpacing ? 'none' : 'default'}
             disabled={isDisabled || btn.isDisabled}
             iconBefore={btn.elemBefore}
@@ -474,6 +474,7 @@ class ToolbarInsertBlock extends React.PureComponent<
         shortcut: ':',
       });
     }
+
     if (tableSupported) {
       const labelTable = formatMessage(messages.table);
       const shortcutTable = tooltip(toggleTable);
@@ -485,6 +486,39 @@ class ToolbarInsertBlock extends React.PureComponent<
         shortcut: shortcutTable,
       });
     }
+
+    if (layoutSectionEnabled) {
+      const labelColumns = formatMessage(messages.columns);
+      items.push({
+        content: labelColumns,
+        value: { name: 'layout' },
+        elemBefore: <LayoutTwoEqualIcon label={labelColumns} />,
+      });
+    }
+
+    if (tableSupported) {
+      const labelTable = formatMessage(messages.table);
+      const shortcutTable = tooltip(toggleTable);
+      items.push({
+        content: labelTable,
+        value: { name: 'table' },
+        key: 'table2',
+        elemBefore: <TableIcon label={labelTable} />,
+        elemAfter: <Shortcut>{shortcutTable}</Shortcut>,
+        shortcut: shortcutTable,
+      });
+    }
+
+    if (layoutSectionEnabled) {
+      const labelColumns = formatMessage(messages.columns);
+      items.push({
+        content: labelColumns,
+        key: 'layout2',
+        value: { name: 'layout' },
+        elemBefore: <LayoutTwoEqualIcon label={labelColumns} />,
+      });
+    }
+
     if (availableWrapperBlockTypes) {
       availableWrapperBlockTypes.forEach(blockType => {
         const BlockTypeIcon = blockTypeIcons[blockType.name];
@@ -540,15 +574,6 @@ class ToolbarInsertBlock extends React.PureComponent<
         content: labelPlaceholderText,
         value: { name: 'placeholder text' },
         elemBefore: <PlaceholderTextIcon label={labelPlaceholderText} />,
-      });
-    }
-
-    if (layoutSectionEnabled) {
-      const labelColumns = formatMessage(messages.columns);
-      items.push({
-        content: labelColumns,
-        value: { name: 'layout' },
-        elemBefore: <LayoutTwoEqualIcon label={labelColumns} />,
       });
     }
 

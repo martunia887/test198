@@ -3,7 +3,6 @@ import { exampleDocument } from '../example-helpers/example-document';
 
 export default function Example() {
   return FullPageExample({
-    defaultValue: exampleDocument,
-    allowDynamicTextSizing: true,
+    allowBreakout: true,
   });
 }
