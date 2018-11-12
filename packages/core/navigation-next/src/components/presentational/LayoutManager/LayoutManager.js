@@ -352,7 +352,12 @@ export default class LayoutManager extends Component<
                     navigation={navigationUIController}
                   >
                     {({ isDragging, width }) => {
-                      console.log('rendering Wtf...');
+                      const onMouseOver =
+                        isCollapsed &&
+                        experimental_flyoutOnHover &&
+                        !flyoutIsOpen
+                          ? this.mouseOverFlyoutArea
+                          : null;
                       return (
                         <Wtf
                           isCollapsed={isCollapsed}
