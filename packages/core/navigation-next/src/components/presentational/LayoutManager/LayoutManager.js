@@ -202,18 +202,15 @@ export default class LayoutManager extends Component<
     this.setState({ itemIsDragging: false });
   };
 
+  getTheme = (theme: Object) => ({ mode: light, ...theme }); // If no theme already exists default to light mode
+
   renderGlobalNavigation = () => {
     const {
       containerNavigation,
       globalNavigation: GlobalNavigation,
     } = this.props;
     return (
-      <ThemeProvider
-        theme={theme => ({
-          mode: light, // If no theme already exists default to light mode
-          ...theme,
-        })}
-      >
+      <ThemeProvider theme={this.getTheme}>
         <Fragment>
           <Shadow
             isBold={!!containerNavigation}
@@ -355,6 +352,7 @@ export default class LayoutManager extends Component<
                     navigation={navigationUIController}
                   >
                     {({ isDragging, width }) => {
+                      console.log('rendering Wtf...');
                       return (
                         <Wtf
                           isCollapsed={isCollapsed}
