@@ -25,7 +25,7 @@ import {
   EmojiPicker as AkEmojiPicker,
   EmojiProvider,
 } from '@atlaskit/emoji';
-import { Popup } from '@atlaskit/editor-common';
+import { Popup, akEditorMenuZIndex } from '@atlaskit/editor-common';
 import EditorActions from '../../../../actions';
 import {
   analyticsService as analytics,
@@ -357,6 +357,7 @@ class ToolbarInsertBlock extends React.PureComponent<
                 isOpen={isOpen}
                 fitHeight={188}
                 fitWidth={175}
+                zIndex={akEditorMenuZIndex}
               >
                 {toolbarButtonFactory(false, dropdownItems)}
               </DropdownMenu>
