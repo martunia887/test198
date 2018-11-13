@@ -450,4 +450,51 @@ describe('LayoutManager', () => {
       expect(productNav).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('when mouse enters NavigationContainer', () => {
+    it('should NOT cause a re-render of ContentNavigation and GlobalNavigation', () => {
+      const wrapper = mount(<LayoutManager {...defaultProps} />);
+      const component = wrapper.instance();
+      const renderContentNavigationSpy = jest.spyOn(
+        component,
+        'renderContentNavigation',
+      );
+      const renderContentGlobalNavigationSpy = jest.spyOn(
+        component,
+        'renderGlobalNavigation',
+      );
+      component.forceUpdate();
+      // forceUpdate renders the component so call count needs to be reseted
+      renderContentNavigationSpy.mockReset();
+      renderContentGlobalNavigationSpy.mockReset();
+
+      wrapper.find(NavigationContainer).simulate('mouseenter');
+
+      expect(renderContentNavigationSpy).not.toHaveBeenCalled();
+      expect(renderContentGlobalNavigationSpy).not.toHaveBeenCalled();
+    });
+  });
+  describe('when mouse leaves NavigationContainer', () => {
+    it('should NOT cause a re-render of ContentNavigation and GlobalNavigation', () => {
+      const wrapper = mount(<LayoutManager {...defaultProps} />);
+      const component = wrapper.instance();
+      const renderContentNavigationSpy = jest.spyOn(
+        component,
+        'renderContentNavigation',
+      );
+      const renderContentGlobalNavigationSpy = jest.spyOn(
+        component,
+        'renderGlobalNavigation',
+      );
+      component.forceUpdate();
+      // forceUpdate renders the component so call count needs to be reseted
+      renderContentNavigationSpy.mockReset();
+      renderContentGlobalNavigationSpy.mockReset();
+
+      wrapper.find(NavigationContainer).simulate('mouseleave');
+
+      expect(renderContentNavigationSpy).not.toHaveBeenCalled();
+      expect(renderContentGlobalNavigationSpy).not.toHaveBeenCalled();
+    });
+  });
 });
