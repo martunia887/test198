@@ -30,7 +30,7 @@ const createPropertyValueByState = ({ property, from, to }) => ({
 const createTransform = transitionState =>
   isTransitioning(transitionState) ? { transform: 'translate3d(0, 0, 0)' } : {};
 
-const toKebabCase = (property: propertyType): 'padding-left' | 'width' =>
+const toKebabCase = (property: TransitionProperty): 'padding-left' | 'width' =>
   ({ paddingLeft: 'padding-left', width: 'width' }[property]);
 
 export const isTransitioning = (state: TransitionState) =>
@@ -38,10 +38,10 @@ export const isTransitioning = (state: TransitionState) =>
 
 function NOOP() {}
 
-type propertyType = 'paddingLeft' | 'width';
+type TransitionProperty = 'paddingLeft' | 'width';
 export type TransitionState = 'entered' | 'entering' | 'exited' | 'exiting';
 export type TransitionStyle = {
-  [propertyType]: number,
+  [TransitionProperty]: number,
   willChange: 'width' | 'padding-left',
   transition?: string,
   transform?: string,
@@ -54,7 +54,7 @@ type Props = {
   innerRef?: HTMLElement => any,
   in: boolean,
   userIsDragging: boolean,
-  property: propertyType,
+  property: TransitionProperty,
   from: number,
   to: number,
   onExpandStart: CollapseListener,
