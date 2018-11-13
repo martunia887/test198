@@ -117,6 +117,50 @@ export class Page extends PureComponent<PageProps> {
     );
   }
 }
+// FIXME: Move to separate file
+// eslint-disable-next-line react/no-multi-comp
+class Navigation extends PureComponent<{
+  isCollapsed: boolean,
+  experimental_flyoutOnHover: boolean,
+  flyoutIsOpen: boolean,
+  mouseOverFlyoutArea: any,
+  itemIsDragging: any,
+  isDragging: any,
+  transitionState: any,
+  willChange: string,
+  transition?: string,
+  transform?: string,
+  width: number,
+  renderGlobalNavigation: any,
+  renderContentNavigation: any,
+}> {
+  render() {
+    const onMouseOver =
+      this.props.isCollapsed &&
+      this.props.experimental_flyoutOnHover &&
+      !this.props.flyoutIsOpen
+        ? this.props.mouseOverFlyoutArea
+        : null;
+    return (
+      <ContainerNavigationMask
+        disableInteraction={this.props.itemIsDragging}
+        onMouseOver={onMouseOver}
+      >
+        <RenderBlocker blockOnChange itemIsDragging={this.props.itemIsDragging}>
+          {this.props.renderGlobalNavigation()}
+          {this.props.renderContentNavigation({
+            isDragging: this.props.isDragging,
+            transitionState: this.props.transitionState,
+            willChange: this.props.willChange,
+            transition: this.props.transition,
+            transform: this.props.transform,
+            width: this.props.width,
+          })}
+        </RenderBlocker>
+      </ContainerNavigationMask>
+    );
+  }
+}
 
 /* eslint-disable camelcase */
 // eslint-disable-next-line react/no-multi-comp
@@ -222,7 +266,7 @@ export default class LayoutManager extends Component<
       </ThemeProvider>
     );
   };
-  // extract this passing all dependencies as args
+
   renderContentNavigation = (args: RenderContentNavigationArgs) => {
     const { transitionState, transition, transform, width } = args;
     const {
@@ -416,51 +460,6 @@ export default class LayoutManager extends Component<
           {this.props.children}
         </Page>
       </LayoutContainer>
-    );
-  }
-}
-
-// FIXME: Move to separate file
-// eslint-disable-next-line react/no-multi-comp
-class Navigation extends PureComponent<{
-  isCollapsed: boolean,
-  experimental_flyoutOnHover: boolean,
-  flyoutIsOpen: boolean,
-  mouseOverFlyoutArea: any,
-  itemIsDragging: any,
-  isDragging: any,
-  transitionState: any,
-  willChange: string,
-  transition?: string,
-  transform?: string,
-  width: number,
-  renderGlobalNavigation: any,
-  renderContentNavigation: any,
-}> {
-  render() {
-    const onMouseOver =
-      this.props.isCollapsed &&
-      this.props.experimental_flyoutOnHover &&
-      !this.props.flyoutIsOpen
-        ? this.props.mouseOverFlyoutArea
-        : null;
-    return (
-      <ContainerNavigationMask
-        disableInteraction={this.props.itemIsDragging}
-        onMouseOver={onMouseOver}
-      >
-        <RenderBlocker blockOnChange itemIsDragging={this.props.itemIsDragging}>
-          {this.props.renderGlobalNavigation()}
-          {this.props.renderContentNavigation({
-            isDragging: this.props.isDragging,
-            transitionState: this.props.transitionState,
-            willChange: this.props.willChange,
-            transition: this.props.transition,
-            transform: this.props.transform,
-            width: this.props.width,
-          })}
-        </RenderBlocker>
-      </ContainerNavigationMask>
     );
   }
 }
