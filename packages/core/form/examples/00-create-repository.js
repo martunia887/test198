@@ -2,10 +2,12 @@
 import React, { PureComponent } from 'react';
 import Select from '@atlaskit/select';
 import FieldText from '@atlaskit/field-text';
-import Button from '@atlaskit/button';
+import Button, { ButtonGroup } from '@atlaskit/button';
 import { Checkbox } from '@atlaskit/checkbox';
 
-import Form, { Field, FormHeader, FormSection, FormFooter } from '../src';
+import { FormHeader, FormSection, FormFooter } from '../src';
+import Form from '../src/FormNext';
+import Field from '../src/FieldNext';
 
 type State = {
   eventResult: string,
@@ -60,11 +62,9 @@ export default class LayoutExample extends PureComponent<void, State> {
       >
         <Form
           name="create-repo"
-          onSubmit={this.onSubmitHandler}
+          initialValues={{ repo_name: '' }}
+          onSubmit={console.log}
           onReset={this.onResetHandler}
-          ref={form => {
-            this.formRef = form;
-          }}
           action="//httpbin.org/get"
           method="GET"
           target="submitFrame"
@@ -72,76 +72,99 @@ export default class LayoutExample extends PureComponent<void, State> {
           <FormHeader title="Create a new repository" />
 
           <FormSection>
-            <Field label="Owner">
-              <Select
-                isSearchable={false}
-                defaultValue={{ label: 'Atlassian', value: 'atlassian' }}
-                options={[
-                  { label: 'Atlassian', value: 'atlassian' },
-                  { label: 'Sean Curtis', value: 'scurtis' },
-                  { label: 'Mike Gardiner', value: 'mg' },
-                  { label: 'Charles Lee', value: 'clee' },
-                ]}
-                name="owner"
-              />
+            <Field name="owner" label="Owner">
+              {({ field, form }) => (
+                <Select
+                  isSearchable={false}
+                  defaultValue={{ label: 'Atlassian', value: 'atlassian' }}
+                  options={[
+                    { label: 'Atlassian', value: 'atlassian' },
+                    { label: 'Sean Curtis', value: 'scurtis' },
+                    { label: 'Mike Gardiner', value: 'mg' },
+                    { label: 'Charles Lee', value: 'clee' },
+                  ]}
+                  {...field}
+                  onChange={option => {
+                    form.setFieldValue('owner', option);
+                  }}
+                />
+              )}
             </Field>
 
-            <Field label="Project" isRequired>
-              <Select
-                options={[
-                  { label: 'Atlaskit', value: 'brisbane' },
-                  { label: 'Bitbucket', value: 'bb' },
-                  { label: 'Confluence', value: 'conf' },
-                  { label: 'Jira', value: 'jra' },
-                  { label: 'Stride', value: 'stride' },
-                ]}
-                placeholder="Choose a project&hellip;"
-                isRequired
-                name="project"
-              />
+            <Field name="project" label="Project" isRequired>
+              {({ field, form }) => (
+                <Select
+                  options={[
+                    { label: 'Atlaskit', value: 'brisbane' },
+                    { label: 'Bitbucket', value: 'bb' },
+                    { label: 'Confluence', value: 'conf' },
+                    { label: 'Jira', value: 'jra' },
+                    { label: 'Stride', value: 'stride' },
+                  ]}
+                  placeholder="Choose a project&hellip;"
+                  isRequired
+                  {...field}
+                  onChange={option => {
+                    form.setFieldValue('project', option);
+                  }}
+                />
+              )}
             </Field>
 
-            <Field label="Repository name" isRequired>
-              <FieldText name="repo_name" isRequired shouldFitContainer />
+            <Field
+              name="repo_name"
+              label="Repository name"
+              isRequired
+              helperText="Name needs to be more than three characters"
+              validateOn="blur"
+            >
+              {({ field }) => (
+                <FieldText isLabelHidden shouldFitContainer {...field} />
+              )}
             </Field>
 
-            <Field label="Access level">
-              <Checkbox
-                label="This is a private repository"
-                name="access-level"
-                value="private"
-              />
+            <Field name="access-level" label="Access level">
+              {({ field }) => (
+                <Checkbox
+                  label="This is a private repository"
+                  value="private"
+                  {...field}
+                />
+              )}
             </Field>
 
-            <Field label="Include a README?">
-              <Select
-                isSearchable={false}
-                defaultValue={{ label: 'No', value: 'no' }}
-                options={[
-                  { label: 'No', value: 'no' },
-                  { label: 'Yes, with a template', value: 'yes-with-template' },
-                  {
-                    label: 'Yes, with a tutorial (for beginners)',
-                    value: 'yes-with-tutorial',
-                  },
-                ]}
-                name="include_readme"
-              />
+            <Field name="include_readme" label="Include a README?">
+              {({ field, form }) => (
+                <Select
+                  isSearchable={false}
+                  defaultValue={{ label: 'No', value: 'no' }}
+                  options={[
+                    { label: 'No', value: 'no' },
+                    {
+                      label: 'Yes, with a template',
+                      value: 'yes-with-template',
+                    },
+                    {
+                      label: 'Yes, with a tutorial (for beginners)',
+                      value: 'yes-with-tutorial',
+                    },
+                  ]}
+                  {...field}
+                  onChange={option => {
+                    form.setFieldValue('include_readme', option);
+                  }}
+                />
+              )}
             </Field>
           </FormSection>
 
-          <FormFooter
-            actionsContent={[
-              {
-                id: 'submit-button',
-              },
-              {},
-            ]}
-          >
-            <Button appearance="primary" type="submit">
-              Create repository
-            </Button>
-            <Button appearance="subtle">Cancel</Button>
+          <FormFooter>
+            <ButtonGroup>
+              <Button appearance="subtle">Cancel</Button>
+              <Button appearance="primary" type="submit">
+                Create repository
+              </Button>
+            </ButtonGroup>
           </FormFooter>
         </Form>
       </div>
