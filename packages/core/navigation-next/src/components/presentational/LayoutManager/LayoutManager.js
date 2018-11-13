@@ -118,9 +118,7 @@ export class Page extends PureComponent<PageProps> {
   }
 }
 
-/* NOTE: experimental props use an underscore */
 /* eslint-disable camelcase */
-
 // eslint-disable-next-line react/no-multi-comp
 export default class LayoutManager extends Component<
   LayoutManagerProps,

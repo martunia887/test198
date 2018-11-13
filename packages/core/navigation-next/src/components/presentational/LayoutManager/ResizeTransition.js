@@ -136,7 +136,7 @@ export default class ResizeTransition extends PureComponent<Props> {
             ...gpuAcceleration,
             ...propertyValueByState[transitionState],
           };
-          console.log(transitionStyle);
+
           return this.props.children({
             transitionStyle, // consumers must apply `transitionStyle`
             transitionState, // lets consumers react to the current state
