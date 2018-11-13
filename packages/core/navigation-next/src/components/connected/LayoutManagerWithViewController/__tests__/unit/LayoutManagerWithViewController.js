@@ -71,8 +71,8 @@ describe('LayoutManagerWithViewController', () => {
 
       layerInitialised.props().onInitialised();
       wrapper.update();
-      // eslint-disable-next-line
-      // expect(wrapper.find('LayerInitialised').props().initialised).toBe(true);
+
+      expect(wrapper.find('LayerInitialised').props().initialised).toBe(true);
     });
   });
 
