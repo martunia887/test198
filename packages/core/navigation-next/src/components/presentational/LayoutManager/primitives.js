@@ -35,6 +35,9 @@ export const NavigationContainer = ({ innerRef, ...props }: *) => (
 export type Resizable = {
   innerRef?: ElementRef<*>,
   disableInteraction: boolean,
+  transition?: string,
+  transform?: string,
+  width?: number,
 };
 export function applyDisabledProperties(disableInteraction?: boolean) {
   return disableInteraction
@@ -50,6 +53,9 @@ export function applyDisabledProperties(disableInteraction?: boolean) {
 export const ContentNavigationWrapper = ({
   innerRef,
   disableInteraction,
+  transform,
+  transition,
+  width,
   ...props
 }: Resizable) => (
   <div
@@ -60,6 +66,7 @@ export const ContentNavigationWrapper = ({
       ...applyDisabledProperties(disableInteraction),
     }}
     {...props}
+    style={{ transform, transition, width }}
   />
 );
 export const ContainerNavigationMask = ({

@@ -120,6 +120,7 @@ export default class ResizeTransition extends PureComponent<Props> {
           const willChange = getChanges(properties);
 
           // put it all together
+          // create type for this and use in layoutmanager
           const transitionStyle = {
             ...willChange,
             ...cssTransition,

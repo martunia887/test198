@@ -44,8 +44,10 @@ import { LayoutEventListener } from './LayoutEvent';
 type RenderContentNavigationArgs = {
   isDragging: boolean,
   transitionState: TransitionState,
-  transitionStyle: Object,
   width: number,
+  willChange: string,
+  transition: string,
+  transform: string,
 };
 type State = {
   flyoutIsOpen: boolean,
@@ -187,9 +189,11 @@ export default class LayoutManager extends Component<
   };
 
   mouseEnter = () => {
+    console.log('mouse enter');
     this.setState({ mouseIsOverNavigation: true });
   };
   mouseLeave = () => {
+    console.log('mouse leave');
     clearTimeout(this.flyoutMouseOverTimeout);
     this.setState({ mouseIsOverNavigation: false });
   };
@@ -222,9 +226,9 @@ export default class LayoutManager extends Component<
       </ThemeProvider>
     );
   };
-
+  // extract this passing all dependencies as args
   renderContentNavigation = (args: RenderContentNavigationArgs) => {
-    const { transitionState, transitionStyle } = args;
+    const { transitionState, transition, transform, width } = args;
     const {
       containerNavigation,
       experimental_flyoutOnHover,
@@ -241,13 +245,16 @@ export default class LayoutManager extends Component<
     const isVisible = transitionState !== 'exited';
     const shouldDisableInteraction =
       isResizing || isTransitioning(transitionState);
-
+    console.log('renderContentNavigation > ', { transition, transform, width });
     return (
       <ContentNavigationWrapper
         key="product-nav-wrapper"
         innerRef={this.getNavRef}
         disableInteraction={shouldDisableInteraction}
-        style={transitionStyle}
+        transition={transition}
+        transform={transform}
+        width={width}
+        // style={transitionStyle}
       >
         <ContentNavigation
           container={containerNavigation}
@@ -326,6 +333,7 @@ export default class LayoutManager extends Component<
                 isCollapsed && experimental_flyoutOnHover && flyoutIsOpen
                   ? this.mouseOutFlyoutArea
                   : null;
+              console.log('renderNavigation >', transitionStyle);
               return (
                 <NavigationContainer
                   innerRef={this.getContainerRef}
@@ -351,13 +359,14 @@ export default class LayoutManager extends Component<
                     ]}
                     navigation={navigationUIController}
                   >
-                    {({ isDragging, width }) => {
-                      const onMouseOver =
-                        isCollapsed &&
-                        experimental_flyoutOnHover &&
-                        !flyoutIsOpen
-                          ? this.mouseOverFlyoutArea
-                          : null;
+                    {/* whats the difference between transitionStyle.width and this width ?*/}
+                    {({ isDragging /*, width*/ }) => {
+                      // const onMouseOver =
+                      //   isCollapsed &&
+                      //   experimental_flyoutOnHover &&
+                      //   !flyoutIsOpen
+                      //     ? this.mouseOverFlyoutArea
+                      //     : null;
                       return (
                         <Wtf
                           isCollapsed={isCollapsed}
@@ -369,8 +378,10 @@ export default class LayoutManager extends Component<
                           itemIsDragging={itemIsDragging}
                           isDragging={isDragging}
                           transitionState={transitionState}
-                          transitionStyle={transitionStyle}
-                          width={width}
+                          willChange={transitionStyle.willChange}
+                          transition={transitionStyle.transition}
+                          transform={transitionStyle.transform}
+                          width={transitionStyle.width}
                           renderGlobalNavigation={this.renderGlobalNavigation}
                           renderContentNavigation={this.renderContentNavigation}
                           containerNavigation={this.props.containerNavigation}
@@ -425,7 +436,7 @@ export default class LayoutManager extends Component<
 
 // FIXME: Move to separate file
 // eslint-disable-next-line react/no-multi-comp
-class Wtf extends React.Component<{
+class Wtf extends PureComponent<{
   isCollapsed: boolean,
   experimental_flyoutOnHover: boolean,
   flyoutIsOpen: boolean,
@@ -433,43 +444,15 @@ class Wtf extends React.Component<{
   itemIsDragging: any,
   isDragging: any,
   transitionState: any,
-  transitionStyle: any,
+  willChange: string,
+  transition: string,
+  transform: string,
+  // transitionStyle: any,
   width: number,
   renderGlobalNavigation: any,
   renderContentNavigation: any,
-  containerNavigation: any,
+  // containerNavigation: any,
 }> {
-  shouldComponentUpdate(nextProps) {
-    const isCollapseChanged = nextProps.isCollapsed !== this.props.isCollapsed;
-    const experimentalFlyoutChanged =
-      nextProps.experimental_flyoutOnHover !==
-      this.props.experimental_flyoutOnHover;
-    const flyoutIsOpenChanged =
-      nextProps.flyoutIsOpen !== this.props.flyoutIsOpen;
-    const mouseOverFlyoutAreaChanged =
-      nextProps.mouseOverFlyoutArea !== this.props.mouseOverFlyoutArea;
-    const isDraggingChanged = nextProps.isDragging !== this.props.isDragging;
-    const itemIsDraggingChanged =
-      nextProps.itemIsDragging !== this.props.itemIsDragging;
-    const transitionStateChanged =
-      nextProps.transitionState !== this.props.transitionState;
-    // const transitionStyleChanged nextProps.transitionStyle !== this.props.transitionStyle;
-    const widthChanged = nextProps.width !== this.props.width;
-    const containerNavigationChanged =
-      nextProps.containerNavigation !== this.props.containerNavigation;
-    return (
-      isCollapseChanged ||
-      experimentalFlyoutChanged ||
-      flyoutIsOpenChanged ||
-      mouseOverFlyoutAreaChanged ||
-      itemIsDraggingChanged ||
-      isDraggingChanged ||
-      transitionStateChanged ||
-      // transitionStyleChanged ||
-      widthChanged ||
-      containerNavigationChanged
-    );
-  }
   render() {
     const onMouseOver =
       this.props.isCollapsed &&
@@ -477,6 +460,7 @@ class Wtf extends React.Component<{
       !this.props.flyoutIsOpen
         ? this.props.mouseOverFlyoutArea
         : null;
+    console.log('Wtf render');
     return (
       <ContainerNavigationMask
         disableInteraction={this.props.itemIsDragging}
@@ -487,7 +471,9 @@ class Wtf extends React.Component<{
           {this.props.renderContentNavigation({
             isDragging: this.props.isDragging,
             transitionState: this.props.transitionState,
-            transitionStyle: this.props.transitionStyle,
+            willChange: this.props.willChange,
+            transition: this.props.transition,
+            transform: this.props.transform,
             width: this.props.width,
           })}
         </RenderBlocker>
