@@ -368,28 +368,12 @@ export const snapshot = async (page, tolerance?: number) => {
     image = await page.screenshot();
   }
 
-  if (tolerance !== undefined) {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot({
-      failureThreshold: `${tolerance}`,
-      failureThresholdType: 'percent',
-    });
-  } else {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot();
-  }
+  // @ts-ignore
+  expect(image).toMatchProdImageSnapshot();
 };
 
 export const insertMedia = async (page, filenames = ['one.svg']) => {
   // We need to wrap this as the xpath selector used in integration tests
   // isnt valid in puppeteer
   await integrationInsertMedia(page, filenames, 'div[aria-label="%s"]');
-};
-
-// Execute the click using page.evaluate
-// Solves errors like "Node is either not visible or not an HTMLElement"
-export const evaluateClick = (page, selector) => {
-  return page.evaluate(selector => {
-    document.querySelector(selector).click();
-  }, selector);
 };
