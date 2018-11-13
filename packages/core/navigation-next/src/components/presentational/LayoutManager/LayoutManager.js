@@ -368,7 +368,7 @@ export default class LayoutManager extends Component<
                       //     ? this.mouseOverFlyoutArea
                       //     : null;
                       return (
-                        <Wtf
+                        <Navigation
                           isCollapsed={isCollapsed}
                           experimental_flyoutOnHover={
                             experimental_flyoutOnHover
@@ -436,7 +436,7 @@ export default class LayoutManager extends Component<
 
 // FIXME: Move to separate file
 // eslint-disable-next-line react/no-multi-comp
-class Wtf extends PureComponent<{
+class Navigation extends PureComponent<{
   isCollapsed: boolean,
   experimental_flyoutOnHover: boolean,
   flyoutIsOpen: boolean,
@@ -460,7 +460,7 @@ class Wtf extends PureComponent<{
       !this.props.flyoutIsOpen
         ? this.props.mouseOverFlyoutArea
         : null;
-    console.log('Wtf render');
+    console.log('Navigation render');
     return (
       <ContainerNavigationMask
         disableInteraction={this.props.itemIsDragging}
