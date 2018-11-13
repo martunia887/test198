@@ -6,11 +6,11 @@ import { mount } from 'enzyme';
 import ResizeTransition from '../../ResizeTransition';
 
 const defaultProps = {
-  from: [0],
+  from: 0,
   in: true,
   productNavWidth: 100,
-  properties: ['paddingLeft'],
-  to: [100],
+  property: 'paddingLeft',
+  to: 100,
   userIsDragging: true,
 };
 

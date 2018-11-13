@@ -90,11 +90,11 @@ export class Page extends PureComponent<PageProps> {
     } = this.props;
     return (
       <ResizeTransition
-        from={[CONTENT_NAV_WIDTH_COLLAPSED]}
+        from={CONTENT_NAV_WIDTH_COLLAPSED}
         in={!isCollapsed}
         productNavWidth={productNavWidth}
-        properties={['paddingLeft']}
-        to={[flyoutIsOpen ? CONTENT_NAV_WIDTH_FLYOUT : productNavWidth]}
+        property={'paddingLeft'}
+        to={flyoutIsOpen ? CONTENT_NAV_WIDTH_FLYOUT : productNavWidth}
         userIsDragging={isResizing}
         /* Attach expand/collapse callbacks to the page resize transition to ensure they are only
          * called when the nav is permanently expanded/collapsed, i.e. when page content position changes. */
@@ -189,11 +189,9 @@ export default class LayoutManager extends Component<
   };
 
   mouseEnter = () => {
-    console.log('mouse enter');
     this.setState({ mouseIsOverNavigation: true });
   };
   mouseLeave = () => {
-    console.log('mouse leave');
     clearTimeout(this.flyoutMouseOverTimeout);
     this.setState({ mouseIsOverNavigation: false });
   };
@@ -245,7 +243,6 @@ export default class LayoutManager extends Component<
     const isVisible = transitionState !== 'exited';
     const shouldDisableInteraction =
       isResizing || isTransitioning(transitionState);
-    console.log('renderContentNavigation > ', { transition, transform, width });
     return (
       <ContentNavigationWrapper
         key="product-nav-wrapper"
@@ -254,7 +251,6 @@ export default class LayoutManager extends Component<
         transition={transition}
         transform={transform}
         width={width}
-        // style={transitionStyle}
       >
         <ContentNavigation
           container={containerNavigation}
@@ -320,10 +316,10 @@ export default class LayoutManager extends Component<
           }}
         >
           <ResizeTransition
-            from={[CONTENT_NAV_WIDTH_COLLAPSED]}
+            from={CONTENT_NAV_WIDTH_COLLAPSED}
             in={!isCollapsed || flyoutIsOpen}
-            properties={['width']}
-            to={[flyoutIsOpen ? CONTENT_NAV_WIDTH_FLYOUT : productNavWidth]}
+            property={'width'}
+            to={flyoutIsOpen ? CONTENT_NAV_WIDTH_FLYOUT : productNavWidth}
             userIsDragging={isResizing}
             // only apply listeners to the NAV resize transition
             productNavWidth={productNavWidth}
@@ -333,7 +329,6 @@ export default class LayoutManager extends Component<
                 isCollapsed && experimental_flyoutOnHover && flyoutIsOpen
                   ? this.mouseOutFlyoutArea
                   : null;
-              console.log('renderNavigation >', transitionStyle);
               return (
                 <NavigationContainer
                   innerRef={this.getContainerRef}
@@ -359,14 +354,7 @@ export default class LayoutManager extends Component<
                     ]}
                     navigation={navigationUIController}
                   >
-                    {/* whats the difference between transitionStyle.width and this width ?*/}
-                    {({ isDragging, width }) => {
-                      // const onMouseOver =
-                      //   isCollapsed &&
-                      //   experimental_flyoutOnHover &&
-                      //   !flyoutIsOpen
-                      //     ? this.mouseOverFlyoutArea
-                      //     : null;
+                    {({ isDragging }) => {
                       return (
                         <Navigation
                           isCollapsed={isCollapsed}
@@ -381,11 +369,7 @@ export default class LayoutManager extends Component<
                           willChange={transitionStyle.willChange}
                           transition={transitionStyle.transition}
                           transform={transitionStyle.transform}
-                          width={
-                            transitionStyle.width
-                              ? transitionStyle.width
-                              : width
-                          }
+                          width={transitionStyle.width}
                           renderGlobalNavigation={this.renderGlobalNavigation}
                           renderContentNavigation={this.renderContentNavigation}
                           containerNavigation={this.props.containerNavigation}
@@ -451,11 +435,9 @@ class Navigation extends PureComponent<{
   willChange: string,
   transition?: string,
   transform?: string,
-  // transitionStyle: any,
   width: number,
   renderGlobalNavigation: any,
   renderContentNavigation: any,
-  // containerNavigation: any,
 }> {
   render() {
     const onMouseOver =
@@ -464,7 +446,6 @@ class Navigation extends PureComponent<{
       !this.props.flyoutIsOpen
         ? this.props.mouseOverFlyoutArea
         : null;
-    console.log('Navigation render');
     return (
       <ContainerNavigationMask
         disableInteraction={this.props.itemIsDragging}
