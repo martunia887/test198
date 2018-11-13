@@ -6,10 +6,6 @@ import type { CollapseListener } from './types';
 
 const DURATION = 300;
 
-const createWillChange = property => ({
-  willChange: toKebabCase(property),
-});
-
 const createTransition = ({ property, userIsDragging, isMounted }) => {
   if (!userIsDragging && isMounted) {
     const kebabCaseProperty = toKebabCase(property);
@@ -19,16 +15,6 @@ const createTransition = ({ property, userIsDragging, isMounted }) => {
   }
   return {};
 };
-
-const createPropertyValueByState = ({ property, from, to }) => ({
-  exiting: { [property]: from },
-  exited: { [property]: from },
-  entering: { [property]: to },
-  entered: { [property]: to },
-});
-
-const createTransform = transitionState =>
-  isTransitioning(transitionState) ? { transform: 'translate3d(0, 0, 0)' } : {};
 
 const toKebabCase = (property: TransitionProperty): 'padding-left' | 'width' =>
   ({ paddingLeft: 'padding-left', width: 'width' }[property]);
@@ -115,26 +101,31 @@ export default class ResizeTransition extends PureComponent<Props> {
           });
 
           // `from` and `to` styles tweened by the transition
-          const propertyValueByState = createPropertyValueByState({
-            property,
-            from,
-            to,
-          });
+          const propertyValueByTransitionState = {
+            exiting: { [property]: from },
+            exited: { [property]: from },
+            entering: { [property]: to },
+            entered: { [property]: to },
+          };
 
           // due to the use of 3d transform for GPU acceleration, which
           // changes the stacking context, we only apply the transform during
           // the animation period.
-          const gpuAcceleration = createTransform(transitionState);
+          const gpuAcceleration = isTransitioning(transitionState)
+            ? { transform: 'translate3d(0, 0, 0)' }
+            : {};
 
           // let the browser know what we're up to
-          const willChange = createWillChange(property);
+          const willChange = {
+            willChange: toKebabCase(property),
+          };
 
           // put it all together
           const transitionStyle: TransitionStyle = {
             ...willChange,
             ...cssTransition,
             ...gpuAcceleration,
-            ...propertyValueByState[transitionState],
+            ...propertyValueByTransitionState[transitionState],
           };
 
           return this.props.children({
