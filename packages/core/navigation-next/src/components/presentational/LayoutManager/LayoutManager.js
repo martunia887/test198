@@ -44,10 +44,12 @@ import { LayoutEventListener } from './LayoutEvent';
 type RenderContentNavigationArgs = {
   isDragging: boolean,
   transitionState: TransitionState,
-  width: number,
+  transitionStyle: Object,
   willChange: string,
-  transition: string,
-  transform: string,
+  width?: number,
+  paddingLeft?: number,
+  transition?: string,
+  transform?: string,
 };
 type State = {
   flyoutIsOpen: boolean,
@@ -130,7 +132,8 @@ class Navigation extends PureComponent<{
   willChange: string,
   transition?: string,
   transform?: string,
-  width: number,
+  width?: number,
+  paddingLeft?: number,
   renderGlobalNavigation: any,
   renderContentNavigation: any,
 }> {
@@ -141,6 +144,7 @@ class Navigation extends PureComponent<{
       !this.props.flyoutIsOpen
         ? this.props.mouseOverFlyoutArea
         : null;
+
     return (
       <ContainerNavigationMask
         disableInteraction={this.props.itemIsDragging}
@@ -155,6 +159,7 @@ class Navigation extends PureComponent<{
             transition: this.props.transition,
             transform: this.props.transform,
             width: this.props.width,
+            paddingLeft: this.props.paddingLeft,
           })}
         </RenderBlocker>
       </ContainerNavigationMask>
@@ -268,7 +273,14 @@ export default class LayoutManager extends Component<
   };
 
   renderContentNavigation = (args: RenderContentNavigationArgs) => {
-    const { transitionState, transition, transform, width } = args;
+    const {
+      transitionState,
+      transition,
+      transform,
+      width,
+      paddingLeft,
+      willChange,
+    } = args;
     const {
       containerNavigation,
       experimental_flyoutOnHover,
@@ -281,7 +293,6 @@ export default class LayoutManager extends Component<
       isPeeking,
       isResizing,
     } = navigationUIController.state;
-
     const isVisible = transitionState !== 'exited';
     const shouldDisableInteraction =
       isResizing || isTransitioning(transitionState);
@@ -290,9 +301,11 @@ export default class LayoutManager extends Component<
         key="product-nav-wrapper"
         innerRef={this.getNavRef}
         disableInteraction={shouldDisableInteraction}
+        willChange={willChange}
         transition={transition}
         transform={transform}
         width={width}
+        paddingLeft={paddingLeft}
       >
         <ContentNavigation
           container={containerNavigation}
@@ -412,6 +425,7 @@ export default class LayoutManager extends Component<
                           transition={transitionStyle.transition}
                           transform={transitionStyle.transform}
                           width={transitionStyle.width}
+                          paddingLeft={transitionStyle.paddingLeft}
                           renderGlobalNavigation={this.renderGlobalNavigation}
                           renderContentNavigation={this.renderContentNavigation}
                           containerNavigation={this.props.containerNavigation}
