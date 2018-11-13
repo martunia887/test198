@@ -3,7 +3,7 @@
 import React, { PureComponent, type Node } from 'react';
 import Transition from 'react-transition-group/Transition';
 import type { CollapseListener } from './types';
-
+// export correct transformStyle type
 const DURATION = 300;
 
 function camelToKebab(str: string): string {
@@ -35,9 +35,20 @@ export function isTransitioning(state: TransitionState) {
 function NOOP() {}
 
 export type TransitionState = 'entered' | 'entering' | 'exited' | 'exiting';
+export type TransitionStyle = {
+  // figure out how to make this type not optional
+  width?: number,
+  willChange: string,
+  transition?: string,
+  transform?: string,
+  exiting?: Object,
+  exited?: Object,
+  entering?: Object,
+  entered?: Object,
+};
 type Props = {
   children: ({
-    transitionStyle: Object,
+    transitionStyle: TransitionStyle,
     transitionState: TransitionState,
   }) => Node,
   innerRef?: HTMLElement => any,
@@ -96,7 +107,8 @@ export default class ResizeTransition extends PureComponent<Props> {
         in={inProp}
         timeout={this.isMounted ? DURATION : 0}
       >
-        {transitionState => {
+        {(transitionState: TransitionState) => {
+          console.log('ResizeTransition props > ', this.props);
           // transitions interupt manual resize behaviour
           const cssTransition =
             !userIsDragging && this.isMounted ? getTransition(properties) : {};
@@ -121,13 +133,13 @@ export default class ResizeTransition extends PureComponent<Props> {
 
           // put it all together
           // create type for this and use in layoutmanager
-          const transitionStyle = {
+          const transitionStyle: TransitionStyle = {
             ...willChange,
             ...cssTransition,
             ...gpuAcceleration,
             ...dynamicProperties[transitionState],
           };
-
+          console.log('ResizeTransition > transitionStyle', transitionStyle);
           return this.props.children({
             transitionStyle, // consumers must apply `transitionStyle`
             transitionState, // lets consumers react to the current state

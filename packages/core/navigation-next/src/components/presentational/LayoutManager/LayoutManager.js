@@ -360,7 +360,7 @@ export default class LayoutManager extends Component<
                     navigation={navigationUIController}
                   >
                     {/* whats the difference between transitionStyle.width and this width ?*/}
-                    {({ isDragging /*, width*/ }) => {
+                    {({ isDragging, width }) => {
                       // const onMouseOver =
                       //   isCollapsed &&
                       //   experimental_flyoutOnHover &&
@@ -381,7 +381,11 @@ export default class LayoutManager extends Component<
                           willChange={transitionStyle.willChange}
                           transition={transitionStyle.transition}
                           transform={transitionStyle.transform}
-                          width={transitionStyle.width}
+                          width={
+                            transitionStyle.width
+                              ? transitionStyle.width
+                              : width
+                          }
                           renderGlobalNavigation={this.renderGlobalNavigation}
                           renderContentNavigation={this.renderContentNavigation}
                           containerNavigation={this.props.containerNavigation}
@@ -445,8 +449,8 @@ class Navigation extends PureComponent<{
   isDragging: any,
   transitionState: any,
   willChange: string,
-  transition: string,
-  transform: string,
+  transition?: string,
+  transform?: string,
   // transitionStyle: any,
   width: number,
   renderGlobalNavigation: any,
