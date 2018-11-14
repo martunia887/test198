@@ -1,0 +1,1 @@
+- Improve performance by preventing wasted renders in multiple components when mouse hovering the navigation
