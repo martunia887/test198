@@ -145,28 +145,43 @@ class Navigation extends PureComponent<{
   }) => Node,
 }> {
   render() {
+    const {
+      isCollapsed,
+      experimental_flyoutOnHover: experimentalFlyoutOnHover,
+      flyoutIsOpen,
+      mouseOverFlyoutArea,
+      isDragging,
+      itemIsDragging,
+      transitionState,
+      willChange,
+      transition,
+      transform,
+      width,
+      paddingLeft,
+      renderGlobalNavigation,
+      renderContentNavigation,
+    } = this.props;
+
     const onMouseOver =
-      this.props.isCollapsed &&
-      this.props.experimental_flyoutOnHover &&
-      !this.props.flyoutIsOpen
-        ? this.props.mouseOverFlyoutArea
+      isCollapsed && experimentalFlyoutOnHover && !flyoutIsOpen
+        ? mouseOverFlyoutArea
         : null;
 
     return (
       <ContainerNavigationMask
-        disableInteraction={this.props.itemIsDragging}
+        disableInteraction={itemIsDragging}
         onMouseOver={onMouseOver}
       >
-        <RenderBlocker blockOnChange itemIsDragging={this.props.itemIsDragging}>
-          {this.props.renderGlobalNavigation()}
-          {this.props.renderContentNavigation({
-            isDragging: this.props.isDragging,
-            transitionState: this.props.transitionState,
-            willChange: this.props.willChange,
-            transition: this.props.transition,
-            transform: this.props.transform,
-            width: this.props.width,
-            paddingLeft: this.props.paddingLeft,
+        <RenderBlocker blockOnChange itemIsDragging={itemIsDragging}>
+          {renderGlobalNavigation()}
+          {renderContentNavigation({
+            isDragging,
+            transitionState,
+            willChange,
+            transition,
+            transform,
+            width,
+            paddingLeft,
           })}
         </RenderBlocker>
       </ContainerNavigationMask>
