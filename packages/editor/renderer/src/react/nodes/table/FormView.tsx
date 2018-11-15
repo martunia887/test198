@@ -44,13 +44,57 @@ const customStyles = {
   }),
 };
 
-export default class FormView extends PureComponent<TableProps> {
+class Slider extends React.Component<any, any> {
+  render() {
+    return (
+      <div
+        style={{
+          background: '#F4F5F7',
+          display: 'flex',
+          padding: '0 10px',
+          borderRadius: '3px',
+        }}
+      >
+        <FieldRange
+          value={this.props.value}
+          min={this.props.min}
+          max={this.props.max}
+          onChange={this.props.onChange}
+        />
+        <span
+          style={{
+            background: 'rgb(236, 236, 236)',
+            width: '35px',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            margin: '10px 0px 10px 10px',
+            borderRadius: '3px',
+            color: this.props.value >= 0.7 ? '#36B37E' : '#FF5630',
+          }}
+        >
+          {this.props.value}
+        </span>
+      </div>
+    );
+  }
+}
+
+export default class FormView extends PureComponent<TableProps, any> {
   formRef: any;
 
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
+    this.state = {
+      sliderValue: 0,
+    };
   }
+
+  private onSliderChange = (sliderValue: number) => {
+    this.setState({ sliderValue });
+  };
 
   render() {
     const { providers } = this.props;
@@ -110,6 +154,7 @@ export default class FormView extends PureComponent<TableProps> {
     // console.log(
     //   this.formRef.current.fields.fieldStates.map(field => field.value),
     // );
+
     formProvider.insertRow(this.props.localId, values);
   };
 
@@ -217,7 +262,12 @@ export default class FormView extends PureComponent<TableProps> {
         case 'slider': {
           return (
             <Field key={idx} name={idx} label={label}>
-              <FieldRange min={0} max={1.0} />
+              <Slider
+                value={this.state.sliderValue}
+                min={0}
+                max={1.0}
+                onChange={this.onSliderChange}
+              />
             </Field>
           );
         }
