@@ -144,7 +144,7 @@ export default class FormView extends PureComponent<TableProps> {
         case 'checkbox': {
           return (
             <Field key={idx} name={idx} label={label}>
-              <CheckboxWithState value="✅" />
+              <CheckboxWithState defaultValue="✅" />
             </Field>
           );
         }
@@ -154,7 +154,11 @@ export default class FormView extends PureComponent<TableProps> {
             <Field key={idx} name={idx} label={label}>
               <MultiCheckbox>
                 {options.map((option, iidx) => (
-                  <CheckboxWithState key={iidx} label={option} value={option} />
+                  <CheckboxWithState
+                    key={iidx}
+                    label={option}
+                    defaultValue={option}
+                  />
                 ))}
               </MultiCheckbox>
             </Field>

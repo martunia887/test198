@@ -5,7 +5,7 @@ import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
 import { traverse, tableRow, tableCell, p, mention } from '@atlaskit/adf-utils';
 
 import { default as Renderer } from '../src/ui/Renderer';
-import document from './helper/easy-forms.adf.json';
+import document from './helper/easy-forms.adf.1.json';
 
 const mediaProvider = storyMediaProviderFactory();
 

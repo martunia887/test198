@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
 
 export interface Props {
-  value: string;
+  defaultValue: string;
   label?: string;
   onChange?: (meta) => {};
 }
@@ -16,12 +16,12 @@ export default class CheckboxWithState extends Component<Props, State> {
   state = { isChecked: false };
 
   render() {
-    const { label, value } = this.props;
+    const { label, defaultValue } = this.props;
     const { isChecked } = this.state;
     return (
       <Checkbox
         label={label}
-        value={value}
+        value={defaultValue}
         isChecked={isChecked}
         onChange={this.handleOnChange}
       />
@@ -29,11 +29,11 @@ export default class CheckboxWithState extends Component<Props, State> {
   }
 
   private handleOnChange = event => {
-    const { onChange, value } = this.props;
+    const { onChange, defaultValue } = this.props;
     const isChecked = event.target.checked;
     this.setState({ isChecked });
     if (onChange) {
-      onChange(isChecked ? value : '');
+      onChange(isChecked ? defaultValue : '');
     }
   };
 }
