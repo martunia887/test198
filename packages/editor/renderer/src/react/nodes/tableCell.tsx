@@ -16,6 +16,16 @@ const TableCell = props => {
     style['background-color'] = color;
   }
 
+  if (props.cellType === 'slider') {
+    const { value = 0.0 } = props.content[0].content[0].attrs;
+    const color = hexToRgba(
+      value >= 0.7 ? '#abf5d1' : '#ffbdad',
+      akEditorTableCellBackgroundOpacity,
+    );
+    style['backgroundColor'] = color;
+    style['textAlign'] = 'center';
+  }
+
   return (
     <td style={style} rowSpan={props.rowspan} colSpan={props.colspan}>
       {props.children}
