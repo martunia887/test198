@@ -19,7 +19,8 @@
             {
               "type": "tableHeader",
               "attrs": {
-                "cellType": "mention"
+                "cellType": "mention",
+                "currentUser": true
               },
               "content": [
                 {

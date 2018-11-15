@@ -751,6 +751,9 @@ export const getValidNode = (
             if (attrs.cellType) {
               cellAttrs.cellType = attrs.cellType;
             }
+            if (attrs.currentUser) {
+              cellAttrs.currentUser = attrs.currentUser;
+            }
           }
 
           return {

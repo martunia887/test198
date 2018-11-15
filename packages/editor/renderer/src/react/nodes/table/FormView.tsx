@@ -62,7 +62,9 @@ export default class FormView extends PureComponent<TableProps> {
             onSubmit={this.handleSubmit(providers.formProvider)}
             ref={this.formRef}
           >
-            <FormSection>{this.renderFields()}</FormSection>
+            <FormSection>
+              {this.renderFields(providers.formProvider)}
+            </FormSection>
             <FormFooter actionsContent={[{ id: 'submit-button' }, {}]}>
               <ButtonGroup>
                 <Button appearance="primary" type="submit">
@@ -96,7 +98,7 @@ export default class FormView extends PureComponent<TableProps> {
     formProvider.insertRow(this.props.localId, values);
   };
 
-  private renderFields = () => {
+  private renderFields = formProvider => {
     const { content } = this.props;
 
     if (content.length < 2) {
@@ -111,7 +113,18 @@ export default class FormView extends PureComponent<TableProps> {
         case 'mention': {
           return (
             <Field key={idx} name={idx} label={label}>
-              <UserPicker users={exampleUsers} width={360} />
+              <UserPicker
+                defaultValue={
+                  header.attrs.currentUser
+                    ? formProvider.getCurrentUser()
+                    : undefined
+                }
+                users={header.attrs.currentUser ? [] : exampleUsers}
+                {...(header.attrs.currentUser
+                  ? { value: formProvider.getCurrentUser() }
+                  : {})}
+                width={360}
+              />
             </Field>
           );
         }
@@ -173,7 +186,7 @@ export default class FormView extends PureComponent<TableProps> {
           );
         }
         default: {
-          console.log(header.attrs.cellType);
+          // console.log(header.attrs.cellType);
           return (
             <Field key={idx} name={idx} label={label}>
               <FieldText value="" placeholder={label} shouldFitContainer />

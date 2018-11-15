@@ -82,10 +82,22 @@ export default class Example extends React.Component<any, any> {
       insertRow(tableId, row) {
         memdb[tableId] = true;
         const newDoc = insertRowIntoTable(_this.state.document, tableId, row);
+        localStorage.setItem(
+          'fabric.editor.example.full-page',
+          JSON.stringify(newDoc),
+        );
         _this.setState({ document: newDoc });
       },
       formSubmitted(tableId) {
-        return !!memdb[tableId];
+        return true;
+      },
+      getCurrentUser() {
+        return {
+          id: '16',
+          name: 'Vonda Wing',
+          nickname: 'Ariel',
+          avatarUrl: 'https://api.adorable.io/avatars/17',
+        };
       },
     };
 
