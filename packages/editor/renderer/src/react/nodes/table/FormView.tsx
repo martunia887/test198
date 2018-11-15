@@ -29,7 +29,9 @@ const Field = styled(BaseField)`
 
 export const exampleUsers = userPickerData as User[];
 
-const getText = node => node.content[0].text;
+const getText = node => {
+  return node.content && node.content[0] ? node.content[0].text : null;
+};
 const getHeaderText = header => getText(header.content[0]);
 
 const customStyles = {
