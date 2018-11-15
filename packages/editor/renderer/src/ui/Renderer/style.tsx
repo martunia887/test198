@@ -371,4 +371,7 @@ export const Wrapper = styled.div<Props & HTMLAttributes<{}>>`
       margin-top: 24px;
     }
   }
+  .ak-editor-super-select .css-1caesrm{
+    border: none;
+  }
 `;

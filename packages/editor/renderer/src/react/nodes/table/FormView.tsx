@@ -199,7 +199,11 @@ export default class FormView extends PureComponent<TableProps, any> {
             }));
           return (
             <Field key={idx} name={idx} label={label}>
-              <Select options={options} placeholder={label} />
+              <Select
+                options={options}
+                placeholder={label}
+                className="ak-editor-super-select"
+              />
             </Field>
           );
         }
@@ -280,13 +284,30 @@ export default class FormView extends PureComponent<TableProps, any> {
               color: node.attrs.color,
             }))
             .map(obj => ({
-              label: obj.text,
+              label: (
+                <div
+                  style={{
+                    background: obj.color,
+                    padding: '5px 10px',
+                    borderRadius: '3px',
+                    display: 'inline-block',
+                    textTransform: 'uppercase',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: '#565252',
+                  }}
+                  className="ak-editor-status-select-option"
+                >
+                  {obj.text}
+                </div>
+              ),
               value: obj.text,
               color: obj.color,
             }));
           return (
             <Field key={idx} name={idx} label={label}>
               <Select
+                className="ak-editor-super-select status-select"
                 styles={customStyles}
                 options={options}
                 placeholder={label}
