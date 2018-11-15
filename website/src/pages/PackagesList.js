@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Table from '@atlaskit/dynamic-table';
+import Tabs from '@atlaskit/tabs';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { gridSize } from '@atlaskit/theme';
@@ -111,20 +112,48 @@ const renderRow = (
   };
 };
 
-const StatRows = () =>
-  fs.getDirectories(packages.children).reduce(
-    (acc, team) =>
-      acc.concat(
-        fs.getDirectories(team.children).map(pkg => {
-          const pkgJSON = getConfig(team.id, pkg.id).config;
+const renderTable = packages => (
+  <Table
+    head={head}
+    rows={packages.map(pkg => renderRow(...pkg))}
+    isFixedSize
+    defaultSortKey="name"
+    defaultSortOrder="ASC"
+  />
+);
 
-          return renderRow(pkgJSON, pkg, team.id);
-        }),
-      ),
-    [],
-  );
+const getPackages = () =>
+  fs.getDirectories(packages.children).map(team => {
+    return {
+      id: team.id,
+      packages: fs.getDirectories(team.children).map(pkg => {
+        const pkgJSON = getConfig(team.id, pkg.id).config;
+        return [pkgJSON, pkg, team.id];
+      }),
+    };
+  });
+
+const getTabs = packages => {
+  const allPackages = [];
+  const tabs = packages.map(group => {
+    allPackages.push(...group.packages);
+    return {
+      label: fs.titleize(group.id),
+      content: renderTable(group.packages),
+    };
+  });
+  tabs.unshift({
+    label: 'All',
+    content: renderTable(allPackages),
+  });
+
+  return tabs;
+};
 
 export default function PackagesList() {
+  const packages = getPackages();
+
+  const tabs = getTabs(packages);
   return (
     <Page width="large">
       <Helmet>
@@ -132,13 +161,7 @@ export default function PackagesList() {
       </Helmet>
       <Title>All Packages</Title>
       <Section>
-        <Table
-          head={head}
-          rows={StatRows()}
-          isFixedSize
-          defaultSortKey="name"
-          defaultSortOrder="ASC"
-        />
+        <Tabs tabs={tabs} />
       </Section>
     </Page>
   );
