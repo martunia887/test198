@@ -9,6 +9,8 @@ import { gridSize } from '@atlaskit/theme';
 import * as fs from '../utils/fs';
 import Page, { Title, Section } from '../components/Page';
 import { externalPackages as packages, getConfig } from '../site';
+import LinkTabItem from '../components/LinkTabItem';
+import type { RouterMatch } from '../types';
 
 const head = {
   cells: [
@@ -140,31 +142,54 @@ const getTabs = packages => {
     return {
       label: fs.titleize(group.id),
       content: renderTable(group.packages),
+      to: `/packages/${group.id}`,
+      id: group.id,
     };
   });
   tabs.unshift({
     label: 'All',
     content: renderTable(allPackages),
+    to: '/packages',
+    id: 'all',
   });
 
   return tabs;
 };
 
-export default function PackagesList() {
-  const packages = getPackages();
+export default class PackagesList extends React.Component<{
+  match: RouterMatch,
+}> {
+  tabs: *;
 
-  const tabs = getTabs(packages);
-  return (
-    <Page width="large">
-      <Helmet>
-        <title>Browse all packages - {BASE_TITLE}</title>
-      </Helmet>
-      <Title>All Packages</Title>
-      <Section>
-        <Tabs tabs={tabs} />
-      </Section>
-    </Page>
-  );
+  constructor(props: *) {
+    super(props);
+    this.tabs = getTabs(getPackages());
+  }
+  render() {
+    const {
+      match: {
+        params: { groupId },
+      },
+    } = this.props;
+    const selectedTab = this.tabs.find(t => t.id === groupId) || this.tabs[0];
+    return (
+      <Page width="large">
+        <Helmet>
+          <title>
+            Browse {selectedTab.id} packages - {BASE_TITLE}
+          </title>
+        </Helmet>
+        <Title>All Packages</Title>
+        <Section>
+          <Tabs
+            tabs={this.tabs}
+            components={{ Item: LinkTabItem }}
+            selected={selectedTab}
+          />
+        </Section>
+      </Page>
+    );
+  }
 }
 
 // Tabular data

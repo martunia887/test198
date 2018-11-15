@@ -176,7 +176,10 @@ export default class App extends Component<Props, State> {
                               path="/packages/:groupId/:pkgId"
                               component={Package}
                             />
-                            <Route path="/packages" component={PackagesList} />
+                            <Route
+                              path="/packages/:groupId?"
+                              component={PackagesList}
+                            />
                             <Route
                               path="/changelog/:groupId/:pkgId/:semver?"
                               component={ChangeLogExplorer}
