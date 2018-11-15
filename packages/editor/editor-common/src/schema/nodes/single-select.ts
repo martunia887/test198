@@ -11,6 +11,9 @@ export const singleSelect: NodeSpec = {
     color: {
       default: null,
     },
+    allowCreateOptions: {
+      default: false,
+    },
   },
   parseDOM: [
     {
@@ -19,6 +22,10 @@ export const singleSelect: NodeSpec = {
         return {
           value: dom.getAttribute('data-value'),
           color: dom.getAttribute('data-color'),
+          currentUser:
+            dom.getAttribute('data-allow-create-options') === 'true'
+              ? true
+              : false,
         };
       },
     },
@@ -28,6 +35,7 @@ export const singleSelect: NodeSpec = {
       'data-node-type': 'single-select',
       'data-value': node.attrs.value,
       'data-color': node.attrs.color,
+      'data-allow-create-options': node.attrs.allowCreateOptions,
     };
     return ['select', attrs, 0];
   },
