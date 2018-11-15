@@ -1,29 +1,24 @@
 import * as React from 'react';
-import { Component } from 'react';
+import { PureComponent } from 'react';
 import Form, { Field, FormSection, FormFooter } from '@atlaskit/form';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import Select from '@atlaskit/select';
 import FieldText from '@atlaskit/field-text';
-import { Checkbox } from '@atlaskit/checkbox';
 import UserPicker, { User } from '@atlaskit/user-picker';
 
 import { WithProviders } from '@atlaskit/editor-common';
 import { userPickerData } from '@atlaskit/util-data-test';
 
 import { TableProps } from './';
+import CheckboxWithState from './CheckboxWithState';
 
 export const exampleUsers = userPickerData as User[];
 
 const getText = node => node.content[0].text;
 const getHeaderText = header => getText(header.content[0]);
 
-export interface State {
-  checkboxStates: object;
-}
-
-export default class FormView extends Component<TableProps, State> {
+export default class FormView extends PureComponent<TableProps> {
   formRef: any;
-  state = { checkboxStates: {} };
 
   constructor(props) {
     super(props);
@@ -88,7 +83,6 @@ export default class FormView extends Component<TableProps, State> {
 
   private renderFields = () => {
     const { content } = this.props;
-    const { checkboxStates } = this.state;
 
     if (content.length < 2) {
       return null;
@@ -122,12 +116,7 @@ export default class FormView extends Component<TableProps, State> {
         case 'checkbox': {
           return (
             <Field key={idx} label={label}>
-              <Checkbox
-                name={idx}
-                label={label}
-                value={checkboxStates[idx] ? 'yes' : 'no'}
-                onChange={this.handleCheckboxState(idx)}
-              />
+              <CheckboxWithState name={idx} />
             </Field>
           );
         }
@@ -144,16 +133,6 @@ export default class FormView extends Component<TableProps, State> {
           );
         }
       }
-    });
-  };
-
-  private handleCheckboxState = idx => event => {
-    const { checkboxStates } = this.state;
-    this.setState({
-      checkboxStates: {
-        ...checkboxStates,
-        [idx]: event.target.checked,
-      },
     });
   };
 }
