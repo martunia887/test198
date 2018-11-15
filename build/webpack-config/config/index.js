@@ -11,7 +11,7 @@ const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
 const HappyPack = require('happypack');
 
-const happyThreadPool = HappyPack.ThreadPool({ size: 6 });
+const happyThreadPool = HappyPack.ThreadPool({ size: 4 });
 
 module.exports = function createWebpackConfig(
   {
