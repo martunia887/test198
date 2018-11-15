@@ -10,10 +10,9 @@ import {
   tableBackgroundBorderColors,
 } from '@atlaskit/editor-common';
 import { colors } from '@atlaskit/theme';
-
+import { Checkbox } from '@atlaskit/checkbox';
 import TextField from '@atlaskit/field-text';
 import Button from '@atlaskit/button';
-import EditorAddIcon from '@atlaskit/icon/glyph/editor/add';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 import withOuterListeners from '../../../../ui/with-outer-listeners';
 import {
@@ -44,6 +43,7 @@ export interface Props {
 export interface State {
   options: Option[];
   isColorPickerOpen: any;
+  allowCreateOptions: boolean;
 }
 
 export default class ColumnTypesSettingsMenu extends React.Component<
@@ -56,6 +56,7 @@ export default class ColumnTypesSettingsMenu extends React.Component<
     this.state = {
       options: [],
       isColorPickerOpen: {},
+      allowCreateOptions: false,
     };
   }
   render() {
@@ -91,12 +92,22 @@ export default class ColumnTypesSettingsMenu extends React.Component<
         handleClickOutside={this.dismiss}
       >
         <div className={ClassName.COLUMN_TYPES_SETTINGS_MENU}>
-          <div>Options</div>
+          <div className={ClassName.COLUMN_TYPES_SETTINGS_MENU_TITLE}>
+            Options
+          </div>
           {this.state.options.map(option => (
             <div
               key={option.id}
               className={ClassName.SINGLE_SELECT_OPTION_SETTINGS}
             >
+              <TextField
+                autoFocus
+                compact
+                value={option.value}
+                isLabelHidden={true}
+                shouldFitContainer
+                onChange={event => this.handleOnChange(event, option)}
+              />
               {selectMenuType === 'status-select' && (
                 <div className={ClassName.STATUS_COLOR_PICKER}>
                   <div
@@ -125,24 +136,25 @@ export default class ColumnTypesSettingsMenu extends React.Component<
                   )}
                 </div>
               )}
-              <TextField
-                autoFocus
-                value={option.value}
-                isLabelHidden={true}
-                onChange={event => this.handleOnChange(event, option)}
-              />
               <button onMouseDown={event => this.onRemoveOption(event, option)}>
-                <EditorCloseIcon label="Remove option" />
+                <EditorCloseIcon size="medium" label="Remove option" />
               </button>
             </div>
           ))}
-          <Button
-            iconBefore={<EditorAddIcon label="Add an option" />}
-            shouldFitContainer={true}
-            onClick={this.onAddOption}
-          >
+          <Button shouldFitContainer={true} onClick={this.onAddOption}>
             Add an option
           </Button>
+          {selectMenuType === 'single-select' && (
+            <div
+              className={ClassName.COLUMN_TYPES_SETTINGS_MENU_ALLOW_CREATE_WRAP}
+            >
+              <Checkbox
+                isChecked={this.state.allowCreateOptions}
+                label="Allow respondents to create options"
+                onChange={this.updateAllowCreateOptions}
+              />
+            </div>
+          )}
           <div className={ClassName.COLUMN_TYPES_SETTINGS_MENU_BUTTONS_WRAP}>
             <Button appearance="subtle" onClick={this.dismiss}>
               Cancel
@@ -155,6 +167,10 @@ export default class ColumnTypesSettingsMenu extends React.Component<
       </PopupWithListeners>
     );
   }
+
+  private updateAllowCreateOptions = () => {
+    this.setState({ allowCreateOptions: !this.state.allowCreateOptions });
+  };
 
   private setColor = (color: string, option: Option) => {
     const newOptions = [...this.state.options];
@@ -202,7 +218,6 @@ export default class ColumnTypesSettingsMenu extends React.Component<
     if (!selectMenuType) {
       return;
     }
-
     const options: PMNode[] = [];
     this.state.options.forEach(option => {
       const attrs: any = {};
@@ -213,7 +228,12 @@ export default class ColumnTypesSettingsMenu extends React.Component<
         selectOption.createChecked(attrs, state.schema.text(option.value)),
       );
     });
-    const content = singleSelect.createChecked({}, Fragment.from(options));
+    const content = singleSelect.createChecked(
+      {
+        allowCreateOptions: this.state.allowCreateOptions,
+      },
+      Fragment.from(options),
+    );
 
     setColumnType(columnIndex, selectMenuType, content)(state, dispatch);
 
@@ -241,6 +261,6 @@ export default class ColumnTypesSettingsMenu extends React.Component<
         selectMenuType: undefined,
       }),
     );
-    this.setState({ options: [] });
+    this.setState({ options: [], allowCreateOptions: false });
   };
 }

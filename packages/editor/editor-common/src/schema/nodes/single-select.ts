@@ -22,7 +22,7 @@ export const singleSelect: NodeSpec = {
         return {
           value: dom.getAttribute('data-value'),
           color: dom.getAttribute('data-color'),
-          currentUser:
+          allowCreateOptions:
             dom.getAttribute('data-allow-create-options') === 'true'
               ? true
               : false,

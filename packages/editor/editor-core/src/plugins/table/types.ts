@@ -111,6 +111,8 @@ export const TableCssClassName = {
 
   COLUMN_TYPES_SETTINGS_MENU: `${clPrefix}column-types-settings_menu`,
   COLUMN_TYPES_SETTINGS_MENU_BUTTONS_WRAP: `${clPrefix}column-types-settings_menu-buttons-wrap`,
+  COLUMN_TYPES_SETTINGS_MENU_ALLOW_CREATE_WRAP: `${clPrefix}column-types-settings_menu-allow-create-wrap`,
+  COLUMN_TYPES_SETTINGS_MENU_TITLE: `${clPrefix}column-types-settings_menu-title`,
   SINGLE_SELECT_OPTION_SETTINGS: `${clPrefix}single-select-option-settings`,
   SINGLE_SELECT_WRAPPER: `${clPrefix}single-select-wrapper`,
   SINGLE_SELECT_DEFAULT_OPTION: `${clPrefix}single-select__default-option`,

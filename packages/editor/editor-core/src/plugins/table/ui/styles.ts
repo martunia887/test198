@@ -785,15 +785,15 @@ export const tableStyles = css`
     display: inline-block;
   }
   .${ClassName.STATUS_COLOR_PICKER} {
-    margin-right: 10px;
+    margin-left: 10px;
     display: flex;
     justify-content: center;
     flex-direction: column;
     position: relative;
 
     .${ClassName.STATUS_COLOR_PICKER_ICON} {
-      width: 20px;
-      height: 20px;
+      width: 28px;
+      height: 28px;
       border: 1px solid ${N40};
       border-radius: ${borderRadius()}px;
       cursor: pointer;
@@ -850,13 +850,26 @@ export const tableStyles = css`
     box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
     border-radius: ${borderRadius()}px;
     padding: 15px;
-    width: 200px;
-    > div {
+    width: 250px;
+    .${ClassName.COLUMN_TYPES_SETTINGS_MENU_TITLE} {
       color: ${N200};
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 80%;
     }
     button {
       margin-top: 15px;
     }
+    .${ClassName.COLUMN_TYPES_SETTINGS_MENU_ALLOW_CREATE_WRAP} {
+      display: flex;
+      margin-top: 15px;
+
+      label > span:last-child {
+        font-size: 90%;
+        color: ${N200};
+      }
+    }
+
     .${ClassName.COLUMN_TYPES_SETTINGS_MENU_BUTTONS_WRAP} {
       margin-top: 15px;
       border-top: 1px solid ${N20};
@@ -877,8 +890,8 @@ export const tableStyles = css`
         border-width: 0px;
         display: inline-block;
         align-self: center;
-        margin: 0 0 0 10px;
-        padding: 0px;
+        margin: -1px 0 0 10px;
+        padding: 3px 5px;
         transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
         outline: none !important;
         cursor: pointer;
