@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import SettingsIcon from '@atlaskit/icon/glyph/editor/settings';
 import EditorTableIcon from '@atlaskit/icon/glyph/editor/table';
-import EditorAddonIcon from '@atlaskit/icon/glyph/editor/addon';
+import FormIcon from './icons/Form';
 
 import commonMessages from '../../messages';
 import { Command } from '../../types';
@@ -137,7 +137,7 @@ export const getToolbarConfig: FloatingToolbarHandler = (
         },
         {
           type: 'button',
-          icon: EditorAddonIcon,
+          icon: FormIcon,
           onClick: setViewMode('form'),
           title: 'Form view',
           selected: isFormViewEnabled,

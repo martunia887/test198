@@ -902,6 +902,9 @@ export const tableStyles = css`
       }
     }
   }
+  button[aria-label="Form view"].cFRffJ path{
+    fill: white;
+  }
   .ProseMirror {
     table {
       .${ClassName.CELL_NODEVIEW_WRAPPER} {
