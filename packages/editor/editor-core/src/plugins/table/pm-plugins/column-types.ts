@@ -13,6 +13,7 @@ import {
   findParentNodeOfTypeClosestToPos,
   getCellsInColumn,
   findDomRefAtPos,
+  findCellClosestToPos,
 } from 'prosemirror-utils';
 import { CellType } from '@atlaskit/editor-common';
 import { pluginKey as datePluginKey } from '../../date/plugin';
@@ -46,7 +47,22 @@ export const createColumnTypesPlugin = (
       init: (): PluginState => ({
         clickedCell: undefined,
       }),
-      apply(tr: Transaction, pluginState: PluginState, _, state: EditorState) {
+      apply(tr: Transaction, _pluginState: PluginState, _, state: EditorState) {
+        let pluginState = { ..._pluginState };
+
+        if (tr.docChanged && pluginState.clickedCell) {
+          const { pos, deleted } = tr.mapping.mapResult(
+            pluginState.clickedCell.pos,
+          );
+          pluginState = {
+            ...pluginState,
+            clickedCell: deleted
+              ? undefined
+              : findCellClosestToPos(tr.doc.resolve(pos)),
+          };
+          dispatch(pluginKey, pluginState);
+        }
+
         const meta = tr.getMeta(pluginKey) as PluginState | undefined;
         if (meta !== undefined) {
           const nextState = {

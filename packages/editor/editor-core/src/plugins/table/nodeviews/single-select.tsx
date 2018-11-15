@@ -30,7 +30,7 @@ class SingleSelect extends React.PureComponent<SingleSelectProps, {}> {
       );
     }
     let value = node.attrs.value;
-    if (value.indexOf(',') > -1) {
+    if (value && value.indexOf(',') > -1) {
       value = value.split(',').join(',  ');
     }
     return <div>{value}</div>;

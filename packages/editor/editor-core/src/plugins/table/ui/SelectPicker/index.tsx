@@ -31,7 +31,7 @@ export default class SelectPicker extends Component<Props> {
     }
     const domAtPos = editorView.domAtPos.bind(editorView);
     const target = findDomRefAtPos(
-      clickedCell.pos + 2,
+      clickedCell.pos + 1,
       domAtPos,
     ) as HTMLElement;
     if (!target) {
