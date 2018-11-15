@@ -1,0 +1,1 @@
+- Load js/ts files via happypack webpack plugin to improve build times
