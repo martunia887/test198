@@ -9,6 +9,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 
 const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
+const HappyPack = require('happypack');
 
 module.exports = function createWebpackConfig(
   {
@@ -105,12 +106,7 @@ module.exports = function createWebpackConfig(
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'babel-loader',
-          options: {
-            babelrc: true,
-            rootMode: 'upward',
-            envName: 'production:cjs',
-          },
+          loader: 'happypack/loader',
         },
         {
           test: /\.tsx?$/,
@@ -215,6 +211,11 @@ function getPlugins(
       WEBSITE_ENV: `"${websiteEnv}"`,
       BASE_TITLE: `"Atlaskit by Atlassian ${!isProduction ? '- DEV' : ''}"`,
       DEFAULT_META_DESCRIPTION: `"Atlaskit is the official component library for Atlassian's Design System."`,
+    }),
+    new HappyPack({
+      loaders: [
+        'babel-loader?babelrc=true&rootMode=upward&envName=production:cjs',
+      ],
     }),
   ];
 
