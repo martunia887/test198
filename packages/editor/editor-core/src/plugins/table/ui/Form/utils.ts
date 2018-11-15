@@ -1,4 +1,4 @@
-import { EditorState } from 'prosemirror-state';
+import { EditorState, Selection } from 'prosemirror-state';
 import {
   findTable,
   findChildrenByType,
@@ -38,10 +38,18 @@ export const onDragEnd = (startIndex, endIndex) => (state, dispatch) => {
     table.node.attrs,
     rows,
   );
-  dispatch(
-    state.tr.replaceWith(table.pos, table.pos + table.node.nodeSize, newTable),
-  );
 
+  const tr = state.tr.replaceWith(
+    table.pos,
+    table.pos + table.node.nodeSize,
+    newTable,
+  );
+  const $pos = tr.doc.resolve(tr.mapping.map(table.pos));
+  const textSelection = Selection.findFrom($pos, 1, true);
+  if (textSelection) {
+    tr.setSelection(textSelection);
+  }
+  dispatch(tr);
   return true;
 };
 
