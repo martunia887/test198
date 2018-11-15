@@ -14,6 +14,9 @@ export const singleSelect: NodeSpec = {
     allowCreateOptions: {
       default: false,
     },
+    currentUser: {
+      default: false,
+    },
   },
   parseDOM: [
     {

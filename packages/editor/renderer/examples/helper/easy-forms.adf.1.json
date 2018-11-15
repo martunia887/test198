@@ -3,14 +3,21 @@
   "type": "doc",
   "content": [
     {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{
+        "type": "text",
+        "text": "Team T-Shirt size"
+      }]
+    },
+    {
       "type": "table",
       "attrs": {
         "isNumberColumnEnabled": false,
         "layout": "default",
         "viewMode": "form",
         "form": {},
-        "localId": "cb8c0aac-2032-43ee-b90a-4e6f28e37230",
-        "currentUser": false
+        "localId": "1f286232-38e5-4cd8-b143-90d7f87c051d"
       },
       "content": [
         {
@@ -19,7 +26,10 @@
             {
               "type": "tableHeader",
               "attrs": {
-                "cellType": "mention"
+                "cellType": "mention",
+                "colwidth": [
+                  155
+                ]
               },
               "content": [
                 {
@@ -36,7 +46,7 @@
             {
               "type": "tableHeader",
               "attrs": {
-                "cellType": "radio-select"
+                "cellType": "single-select"
               },
               "content": [
                 {
@@ -44,7 +54,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "text": "OS"
+                      "text": "T-Shirt"
                     }
                   ]
                 }
@@ -53,7 +63,9 @@
             {
               "type": "tableHeader",
               "attrs": {
-                "cellType": "multi-select"
+                "colwidth": [
+                  223
+                ]
               },
               "content": [
                 {
@@ -61,7 +73,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "text": "Software"
+                      "text": "Dietary requirements"
                     }
                   ]
                 }
@@ -70,7 +82,7 @@
             {
               "type": "tableHeader",
               "attrs": {
-                "cellType": "long-text"
+                "cellType": "checkbox"
               },
               "content": [
                 {
@@ -78,7 +90,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "text": "Other"
+                      "text": "Car pool"
                     }
                   ]
                 }
@@ -92,68 +104,51 @@
             {
               "type": "tableCell",
               "attrs": {
-                "cellType": "mention"
+                "colwidth": [
+                  155
+                ]
               },
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "mention",
-                      "attrs": {
-                        "id": "9",
-                        "text": "@Helga Wetherbee",
-                        "accessLevel": ""
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": " "
-                    }
-                  ]
+                  "content": [{"type": "mention", "attrs": {"id": 9, "text": "@Helga Wetherbee"}}]
                 }
               ]
             },
             {
               "type": "tableCell",
-              "attrs": {
-                "cellType": "radio-select"
-              },
+              "attrs": {},
               "content": [
                 {
                   "type": "singleSelect",
                   "attrs": {
-                    "value": "Mac",
-                    "allowCreateOptions": false
+                    "value": "Unisex - S"
                   },
                   "content": [
                     {
                       "type": "selectOption",
-                      "attrs": {},
                       "content": [
                         {
                           "type": "text",
-                          "text": "Mac"
+                          "text": "Unisex - S"
                         }
                       ]
                     },
                     {
                       "type": "selectOption",
-                      "attrs": {},
                       "content": [
                         {
                           "type": "text",
-                          "text": "Linux"
+                          "text": "Unisex - M"
                         }
                       ]
                     },
                     {
                       "type": "selectOption",
-                      "attrs": {},
                       "content": [
                         {
                           "type": "text",
-                          "text": "Windows"
+                          "text": "Unisex - L"
                         }
                       ]
                     }
@@ -164,84 +159,24 @@
             {
               "type": "tableCell",
               "attrs": {
-                "cellType": "multi-select"
-              },
-              "content": [
-                {
-                  "type": "singleSelect",
-                  "attrs": {
-                    "value": "Photoshop,Figma",
-                    "allowCreateOptions": false
-                  },
-                  "content": [
-                    {
-                      "type": "selectOption",
-                      "attrs": {},
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Photoshop"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "selectOption",
-                      "attrs": {},
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Illustrator"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "selectOption",
-                      "attrs": {},
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Sketch"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "selectOption",
-                      "attrs": {},
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Figma"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "selectOption",
-                      "attrs": {},
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Invision"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "cellType": "long-text"
+                "colwidth": [
+                  223
+                ]
               },
               "content": [
                 {
                   "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "text",
-                      "text": "No comment"
-                    }
-                  ]
+                  "content": [{"type": "text", "text": "Vegan"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {},
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "✅"}]
                 }
               ]
             }

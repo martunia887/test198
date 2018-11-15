@@ -1,16 +1,28 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import Form, { Field, FormSection, FormFooter } from '@atlaskit/form';
+import styled from 'styled-components';
+import Form, {
+  Field as BaseField,
+  FormSection,
+  FormFooter,
+} from '@atlaskit/form';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import { RadioGroup } from '@atlaskit/radio';
 import Select from '@atlaskit/select';
 import FieldText from '@atlaskit/field-text';
 import UserPicker, { User } from '@atlaskit/user-picker';
+import { FieldTextAreaStateless } from '@atlaskit/field-text-area';
 
 import { WithProviders } from '@atlaskit/editor-common';
 import { userPickerData } from '@atlaskit/util-data-test';
 
 import { TableProps } from './';
 import CheckboxWithState from './CheckboxWithState';
+import MultiCheckbox from './MultiCheckbox';
+
+const Field = styled(BaseField)`
+  margin-top: 24px;
+`;
 
 export const exampleUsers = userPickerData as User[];
 
@@ -56,9 +68,9 @@ export default class FormView extends PureComponent<TableProps> {
                 <Button appearance="primary" type="submit">
                   Submit
                 </Button>
-                <Button appearance="subtle" type="reset">
+                {/* <Button appearance="subtle" type="reset">
                   Reset
-                </Button>
+                </Button> */}
               </ButtonGroup>
             </FormFooter>
           </Form>
@@ -78,6 +90,9 @@ export default class FormView extends PureComponent<TableProps> {
         };
       },
     );
+    // console.log(
+    //   this.formRef.current.fields.fieldStates.map(field => field.value),
+    // );
     formProvider.insertRow(this.props.localId, values);
   };
 
@@ -95,8 +110,8 @@ export default class FormView extends PureComponent<TableProps> {
       switch (header.attrs.cellType) {
         case 'mention': {
           return (
-            <Field key={idx} label={label}>
-              <UserPicker name={idx} users={exampleUsers} width={360} />
+            <Field key={idx} name={idx} label={label}>
+              <UserPicker users={exampleUsers} width={360} />
             </Field>
           );
         }
@@ -108,27 +123,60 @@ export default class FormView extends PureComponent<TableProps> {
               value: option,
             }));
           return (
-            <Field key={idx} label={label}>
-              <Select name={idx} options={options} placeholder={label} />
+            <Field key={idx} name={idx} label={label}>
+              <Select options={options} placeholder={label} />
             </Field>
           );
         }
         case 'checkbox': {
           return (
-            <Field key={idx} label={label}>
-              <CheckboxWithState name={idx} />
+            <Field key={idx} name={idx} label={label}>
+              <CheckboxWithState value="✅" />
+            </Field>
+          );
+        }
+        case 'multi-select': {
+          const options = firstRow[idx].content[0].content.map(getText);
+          return (
+            <Field key={idx} name={idx} label={label}>
+              <MultiCheckbox>
+                {options.map((option, iidx) => (
+                  <CheckboxWithState key={iidx} label={option} value={option} />
+                ))}
+              </MultiCheckbox>
+            </Field>
+          );
+        }
+        case 'radio-select': {
+          const options = firstRow[idx].content[0].content
+            .map(getText)
+            .map(option => ({
+              name: idx,
+              label: option,
+              value: option,
+            }));
+          return (
+            <Field key={idx} name={idx} label={label}>
+              <RadioGroup options={options} />
+            </Field>
+          );
+        }
+        case 'long-text': {
+          return (
+            <Field key={idx} name={idx} label={label}>
+              <FieldTextAreaStateless
+                minimumRows={3}
+                shouldFitContainer={true}
+                placeholder={label}
+              />
             </Field>
           );
         }
         default: {
+          console.log(header.attrs.cellType);
           return (
-            <Field key={idx} label={label}>
-              <FieldText
-                name={idx}
-                value=""
-                placeholder={label}
-                shouldFitContainer
-              />
+            <Field key={idx} name={idx} label={label}>
+              <FieldText value="" placeholder={label} shouldFitContainer />
             </Field>
           );
         }

@@ -367,5 +367,8 @@ export const Wrapper = styled.div<Props & HTMLAttributes<{}>>`
   .tableForm__body {
     margin: 0 auto;
     max-width: 360px;
+    form > div > div > div {
+      margin-top: 24px;
+    }
   }
 `;

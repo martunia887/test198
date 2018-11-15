@@ -36,11 +36,14 @@ const insertRowIntoTable = (
                   : p();
                 break;
               }
-              case 'single-select': {
+              case 'single-select':
+                // ;) ShipIt
+                value = value.value;
+              case 'radio-select': {
                 content = value
                   ? ({
                       type: 'singleSelect',
-                      attrs: { value: value.value },
+                      attrs: { value },
                       content: firstRow[idx].content![0].content,
                     } as any)
                   : p();
