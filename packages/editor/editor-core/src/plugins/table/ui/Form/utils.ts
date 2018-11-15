@@ -77,17 +77,26 @@ export const appendColumn = (state, dispatch) => {
   return true;
 };
 
-export const updateCurrentUser = (state, dispatch) => {
-  const table = findTable(state.selection);
-  if (!table) {
+export const updateCurrentUser = (columnIndex: number) => (state, dispatch) => {
+  const cells = getCellsInColumn(columnIndex)(state.selection);
+  if (!cells) {
     return false;
   }
-  const newTable = state.schema.nodes.table.createChecked(
-    { ...table.node.attrs, currentUser: !table.node.attrs.currentUser },
-    table.node.content,
-  );
-  dispatch(
-    state.tr.replaceWith(table.pos, table.pos + table.node.nodeSize, newTable),
-  );
+  const { tr } = state;
+
+  cells.forEach(cell => {
+    const newCell = cell.node.type.create(
+      { ...cell.node.attrs, currentUser: !cell.node.attrs.currentUser },
+      cell.node.content,
+    );
+
+    tr.replaceWith(
+      tr.mapping.map(cell.pos),
+      tr.mapping.map(cell.pos + cell.node.nodeSize),
+      newCell,
+    );
+  });
+
+  dispatch(tr);
   return true;
 };

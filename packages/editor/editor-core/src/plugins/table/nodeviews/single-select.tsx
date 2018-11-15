@@ -29,8 +29,11 @@ class SingleSelect extends React.PureComponent<SingleSelectProps, {}> {
         </div>
       );
     }
-
-    return <div>{node.attrs.value}</div>;
+    let value = node.attrs.value;
+    if (value.indexOf(',') > -1) {
+      value = value.split(',').join(',  ');
+    }
+    return <div>{value}</div>;
   }
 }
 

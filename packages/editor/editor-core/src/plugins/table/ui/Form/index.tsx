@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
-
+import { getCellsInColumn } from 'prosemirror-utils';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { CellType } from '@atlaskit/editor-common';
 import Button from '@atlaskit/button';
@@ -172,12 +172,14 @@ export default class FormBuilder extends React.Component<FormProps, State> {
                                     }
                                     style={{ marginTop: 10 }}
                                   >
-                                    Populate with the current user.
                                     <Checkbox
-                                      isChecked={
-                                        this.props.node.attrs.currentUser
+                                      label="Populate with the current user."
+                                      isChecked={this.isCurrentUserEnabled(
+                                        column.index,
+                                      )}
+                                      onChange={() =>
+                                        this.updateCurrentUser(column.index)
                                       }
-                                      onChange={this.updateCurrentUser}
                                     />
                                   </div>
                                 </div>
@@ -308,9 +310,18 @@ export default class FormBuilder extends React.Component<FormProps, State> {
     appendColumn(state, dispatch);
   };
 
-  private updateCurrentUser = () => {
+  private updateCurrentUser = (columnIndex: number) => {
     const { state, dispatch } = this.props.editorView;
-    updateCurrentUser(state, dispatch);
+    updateCurrentUser(columnIndex)(state, dispatch);
+  };
+
+  private isCurrentUserEnabled = (columnIndex: number) => {
+    const { state } = this.props.editorView;
+    const cells = getCellsInColumn(columnIndex)(state.selection);
+    if (!cells) {
+      return false;
+    }
+    return cells[0].node.attrs.currentUser;
   };
 
   private onDragEnd = result => {

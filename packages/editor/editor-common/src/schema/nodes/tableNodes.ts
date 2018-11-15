@@ -39,6 +39,8 @@ const getCellAttrs = (dom: HTMLElement) => {
     colwidth: width && width.length === colspan ? width : null,
     background: dom.style.backgroundColor || null,
     cellType: dom.getAttribute('data-cell-type') || 'text',
+    currentUser:
+      dom.getAttribute('data-current-user') === 'true' ? true : false,
   };
 };
 
@@ -48,6 +50,7 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     rowspan?: number;
     style?: string;
     cellType?: CellType;
+    currentUser?: boolean;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -86,6 +89,9 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
   }
   if (node.attrs.cellType) {
     attrs.cellType = node.attrs.cellType;
+  }
+  if (node.attrs.currentUser) {
+    attrs.currentUser = node.attrs.currentUser;
   }
 
   return attrs;
@@ -224,6 +230,7 @@ export interface CellAttributes {
   colwidth?: number[];
   background?: string;
   cellType?: CellType;
+  currentUser?: boolean;
 }
 
 // TODO: Fix any, potential issue. ED-5048
@@ -236,7 +243,6 @@ export const table: any = {
     viewMode: { default: 'table' },
     form: { default: {} },
     localId: { default: uuid.generate() },
-    currentUser: { default: false },
   },
   tableRole: 'table',
   isolating: true,
@@ -253,8 +259,6 @@ export const table: any = {
         viewMode: dom.getAttribute('data-viewmode') || 'table',
         localId: dom.getAttribute('data-localId') || uuid.generate(),
         form: JSON.parse(dom.getAttribute('data-form') || '{}'),
-        currentUser:
-          dom.getAttribute('data-current-user') === 'true' ? true : false,
       }),
     },
   ],
@@ -266,7 +270,6 @@ export const table: any = {
       'data-viewmode': node.attrs.viewMode,
       'data-localId': node.attrs.localId || uuid.generate(),
       'data-form': JSON.stringify(node.attrs.form || {}),
-      'data-current-user': node.attrs.currentUser,
     };
     return ['table', attrs, ['tbody', 0]];
   },
@@ -298,6 +301,7 @@ const cellAttrs = {
   colwidth: { default: null },
   background: { default: null },
   cellType: { default: 'text' },
+  currentUser: { default: false },
 };
 
 export const tableCell = {
