@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import { ProviderFactory, CellType } from '@atlaskit/editor-common';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
 import { traverse, tableRow, tableCell, p, mention } from '@atlaskit/adf-utils';
 
@@ -14,7 +14,7 @@ const memdb = {};
 const insertRowIntoTable = (
   doc,
   tableId,
-  row: Array<{ cellType: string; value: any }>,
+  row: Array<{ cellType: CellType; value: any }>,
 ) =>
   traverse(doc, {
     table(node) {
@@ -55,7 +55,7 @@ const insertRowIntoTable = (
                 content = value ? p(value) : p();
               }
             }
-            return tableCell({})(content);
+            return tableCell({ cellType })(content);
           }),
         );
         if (node.content) {
@@ -90,6 +90,7 @@ export default class Example extends React.Component<any, any> {
         _this.setState({ document: newDoc });
       },
       formSubmitted(tableId) {
+        // return true;
         return !!memdb[tableId];
       },
       getCurrentUser() {

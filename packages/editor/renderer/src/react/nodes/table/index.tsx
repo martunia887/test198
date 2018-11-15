@@ -8,10 +8,13 @@ import {
   ProviderFactory,
   WithProviders,
 } from '@atlaskit/editor-common';
+
 import overflowShadow, {
   OverflowShadowProps,
 } from '../../../ui/overflow-shadow';
+
 import FormView from './FormView';
+import Summary from './Summary';
 
 export { OverflowShadowProps };
 export interface TableProps extends OverflowShadowProps {
@@ -108,6 +111,7 @@ class Table extends Component<TableProps> {
                     ? addNumberColumnIndexes(props.children)
                     : props.children}
                 </tbody>
+                <Summary content={props.content} />
               </table>
             </div>
           </div>
