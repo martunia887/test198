@@ -26,7 +26,7 @@ export default class MultiCheckbox extends Component<Props> {
     const { onChange } = this.props;
     this.localState[value] = true;
     if (onChange) {
-      onChange(Object.keys(this.localState).join(', '));
+      onChange(Object.keys(this.localState).join(','));
     }
   };
 }

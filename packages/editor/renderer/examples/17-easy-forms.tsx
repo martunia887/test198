@@ -40,6 +40,7 @@ const insertRowIntoTable = (
               case 'single-select':
                 // ;) ShipIt
                 value = value.value;
+              case 'multi-select':
               case 'radio-select': {
                 content = value
                   ? ({
@@ -89,7 +90,7 @@ export default class Example extends React.Component<any, any> {
         _this.setState({ document: newDoc });
       },
       formSubmitted(tableId) {
-        return true;
+        return !!memdb[tableId];
       },
       getCurrentUser() {
         return {
