@@ -356,7 +356,7 @@ export const Wrapper = styled.div<Props & HTMLAttributes<{}>>`
 
   /* Table form view */
   .tableForm {
-    margin-top: 20px;
+    margin: 20px 0 40px;
     /* 48 - (24 + 8) */
     padding: 16px 20px 48px;
     border-radius: 3px;
@@ -365,7 +365,7 @@ export const Wrapper = styled.div<Props & HTMLAttributes<{}>>`
     line-height: 1.42857142857143;
   }
   .tableForm__body {
-    margin: 0 auto;
+    margin: 0 auto 20px;
     max-width: 360px;
     form > div > div > div {
       margin-top: 24px;

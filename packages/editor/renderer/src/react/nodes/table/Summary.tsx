@@ -8,6 +8,7 @@ const getSummary = cells => {
   const cellType = getCellType(cells[0]);
   if (
     cellType === 'single-select' ||
+    cellType === 'status-select' ||
     cellType === 'radio-select' ||
     cellType === 'multi-select'
   ) {
@@ -71,6 +72,7 @@ export default ({ content }) => {
         const cellType = getCellType(cell);
         if (
           cellType === 'single-select' ||
+          cellType === 'status-select' ||
           cellType === 'radio-select' ||
           cellType === 'multi-select' ||
           cellType === 'checkbox'

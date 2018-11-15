@@ -780,6 +780,7 @@ export const getValidNode = (
 
         break;
       }
+      case 'slider':
       case 'singleSelect':
       case 'selectOption': {
         return { type, attrs, content };

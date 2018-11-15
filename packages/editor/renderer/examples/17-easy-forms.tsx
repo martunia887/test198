@@ -2,10 +2,17 @@ import * as React from 'react';
 import Button from '@atlaskit/button';
 import { ProviderFactory, CellType } from '@atlaskit/editor-common';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
-import { traverse, tableRow, tableCell, p, mention } from '@atlaskit/adf-utils';
+import {
+  traverse,
+  tableRow,
+  tableCell,
+  p,
+  mention,
+  date,
+} from '@atlaskit/adf-utils';
 
 import { default as Renderer } from '../src/ui/Renderer';
-import document from './helper/easy-forms.adf.1.json';
+import document from './helper/easy-forms.adf.json';
 
 const mediaProvider = storyMediaProviderFactory();
 
@@ -23,6 +30,7 @@ const insertRowIntoTable = (
         const newRow = tableRow(
           row.map(({ cellType, value }, idx) => {
             let content;
+            // console.log(cellType, value);
             switch (cellType) {
               case 'mention': {
                 content = value.id
@@ -38,6 +46,7 @@ const insertRowIntoTable = (
                 break;
               }
               case 'single-select':
+              case 'status-select':
                 // ;) ShipIt
                 value = value.value;
               case 'multi-select':
@@ -49,6 +58,22 @@ const insertRowIntoTable = (
                       content: firstRow[idx].content![0].content,
                     } as any)
                   : p();
+                break;
+              }
+              case 'date': {
+                const dateValue = value ? new Date(value) : new Date();
+                content = date({
+                  timestamp: dateValue.getTime().toString(),
+                });
+                break;
+              }
+              case 'slider': {
+                content = p({
+                  type: 'slider',
+                  attrs: {
+                    value: value || 0.0,
+                  },
+                } as any);
                 break;
               }
               default: {

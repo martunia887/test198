@@ -3,25 +3,14 @@
   "type": "doc",
   "content": [
     {
-      "type": "heading",
-      "attrs": {
-        "level": 1
-      },
-      "content": [
-        {
-          "type": "text",
-          "text": "Project Status"
-        }
-      ]
-    },
-    {
       "type": "table",
       "attrs": {
         "isNumberColumnEnabled": false,
-        "layout": "full-width",
+        "layout": "default",
         "viewMode": "form",
         "form": {},
-        "localId": "8e837b3d-581c-4bb1-8d48-8704b082ce55"
+        "localId": "cb8c0aac-2032-43ee-b90a-4e6f28e37230",
+        "currentUser": false
       },
       "content": [
         {
@@ -48,7 +37,7 @@
             {
               "type": "tableHeader",
               "attrs": {
-                "cellType": "single-select"
+                "cellType": "radio-select"
               },
               "content": [
                 {
@@ -56,7 +45,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "text": "Project"
+                      "text": "OS"
                     }
                   ]
                 }
@@ -65,7 +54,7 @@
             {
               "type": "tableHeader",
               "attrs": {
-                "cellType": "date"
+                "cellType": "multi-select"
               },
               "content": [
                 {
@@ -73,24 +62,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "text": "Date"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableHeader",
-              "attrs": {
-                "cellType": "slider"
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "text",
-                      "text": "Score"
+                      "text": "Software"
                     }
                   ]
                 }
@@ -107,24 +79,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "text": "Update"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableHeader",
-              "attrs": {
-                "cellType": "status-select"
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "text",
-                      "text": "Status"
+                      "text": "Other"
                     }
                   ]
                 }
@@ -147,8 +102,8 @@
                     {
                       "type": "mention",
                       "attrs": {
-                        "id": "0",
-                        "text": "@Carolyn",
+                        "id": "9",
+                        "text": "@Helga Wetherbee",
                         "accessLevel": ""
                       }
                     },
@@ -163,15 +118,14 @@
             {
               "type": "tableCell",
               "attrs": {
-                "cellType": "single-select"
+                "cellType": "radio-select"
               },
               "content": [
                 {
                   "type": "singleSelect",
                   "attrs": {
-                    "value": "Red Chilli 🌶",
-                    "allowCreateOptions": true,
-                    "currentUser": false
+                    "value": "Mac",
+                    "allowCreateOptions": false
                   },
                   "content": [
                     {
@@ -180,7 +134,27 @@
                       "content": [
                         {
                           "type": "text",
-                          "text": "Red Chilli 🌶"
+                          "text": "Mac"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "attrs": {},
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Linux"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "attrs": {},
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Windows"
                         }
                       ]
                     }
@@ -191,36 +165,65 @@
             {
               "type": "tableCell",
               "attrs": {
-                "cellType": "date"
+                "cellType": "multi-select"
               },
               "content": [
                 {
-                  "type": "paragraph",
+                  "type": "singleSelect",
+                  "attrs": {
+                    "value": "Photoshop,Figma",
+                    "allowCreateOptions": false
+                  },
                   "content": [
                     {
-                      "type": "date",
-                      "attrs": {
-                        "timestamp": "1542326400000"
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "cellType": "slider"
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
+                      "type": "selectOption",
+                      "attrs": {},
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Photoshop"
+                        }
+                      ]
+                    },
                     {
-                      "type": "slider",
-                      "attrs": {
-                        "value": 0
-                      }
+                      "type": "selectOption",
+                      "attrs": {},
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Illustrator"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "attrs": {},
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Sketch"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "attrs": {},
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Figma"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "attrs": {},
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Invision"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -237,50 +240,7 @@
                   "content": [
                     {
                       "type": "text",
-                      "text": "Project Update"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "cellType": "status-select"
-              },
-              "content": [
-                {
-                  "type": "singleSelect",
-                  "attrs": {
-                    "value": "On Track",
-                    "color": "#e3fcef",
-                    "allowCreateOptions": false,
-                    "currentUser": false
-                  },
-                  "content": [
-                    {
-                      "type": "selectOption",
-                      "attrs": {
-                        "color": "#e3fcef"
-                      },
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "On Track"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "selectOption",
-                      "attrs": {
-                        "color": "#ffebe6"
-                      },
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "In Risk"
-                        }
-                      ]
+                      "text": "No comment"
                     }
                   ]
                 }

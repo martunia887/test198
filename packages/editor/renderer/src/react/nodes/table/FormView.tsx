@@ -12,6 +12,9 @@ import Select from '@atlaskit/select';
 import FieldText from '@atlaskit/field-text';
 import UserPicker, { User } from '@atlaskit/user-picker';
 import { FieldTextAreaStateless } from '@atlaskit/field-text-area';
+import { DatePicker } from '@atlaskit/datetime-picker';
+import { format } from 'date-fns';
+import FieldRange from '@atlaskit/field-range';
 
 import { WithProviders } from '@atlaskit/editor-common';
 import { userPickerData } from '@atlaskit/util-data-test';
@@ -28,6 +31,18 @@ export const exampleUsers = userPickerData as User[];
 
 const getText = node => node.content[0].text;
 const getHeaderText = header => getText(header.content[0]);
+
+const customStyles = {
+  singleValue: (provided, state) => ({
+    ...provided,
+    background: state.data.color,
+    padding: '2px 4px',
+    borderRadius: 3,
+    textTransform: 'uppercase',
+    fontSize: 11,
+    fontWeight: 600,
+  }),
+};
 
 export default class FormView extends PureComponent<TableProps> {
   formRef: any;
@@ -184,6 +199,44 @@ export default class FormView extends PureComponent<TableProps> {
               <FieldTextAreaStateless
                 minimumRows={3}
                 shouldFitContainer={true}
+                placeholder={label}
+              />
+            </Field>
+          );
+        }
+        case 'date': {
+          return (
+            <Field key={idx} name={idx} label={label}>
+              <DatePicker
+                defaultValue={format(new Date(), 'YYYY/MM/DD')}
+                shouldFitContainer={true}
+              />
+            </Field>
+          );
+        }
+        case 'slider': {
+          return (
+            <Field key={idx} name={idx} label={label}>
+              <FieldRange min={0} max={1.0} />
+            </Field>
+          );
+        }
+        case 'status-select': {
+          const options = firstRow[idx].content[0].content
+            .map(node => ({
+              text: getText(node),
+              color: node.attrs.color,
+            }))
+            .map(obj => ({
+              label: obj.text,
+              value: obj.text,
+              color: obj.color,
+            }));
+          return (
+            <Field key={idx} name={idx} label={label}>
+              <Select
+                styles={customStyles}
+                options={options}
                 placeholder={label}
               />
             </Field>
