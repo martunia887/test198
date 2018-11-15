@@ -977,25 +977,28 @@ export const ensureCellTypes = (rowIndex: number, schema: Schema) => (
 
   const insertedCells = getCellsInRow(rowIndex)(tr.selection)!;
 
-  const nodemap = {
-    slider: schema.nodes.slider,
-    decision: null,
-    'single-select': null,
-  };
+  const nodemap = [
+    'slider',
+    'decision',
+    'single-select',
+    'multi-select',
+    'radio-select',
+    'status-select',
+  ];
 
   for (let i = insertedCells.length - 1; i >= 0; i--) {
     const cell = insertedCells[i];
     const copyCell = existingCells ? existingCells[i] : insertedCells[i];
     const { cellType } = copyCell.node.attrs;
 
-    if (Object.keys(nodemap).indexOf(cellType) !== -1) {
+    if (nodemap.indexOf(cellType) !== -1) {
       let newCell;
       if (cellType === 'decision') {
         newCell = cell.node.type.create(
           { ...cell.node.attrs, cellType },
           schema.nodes.decisionList.createAndFill() as PMNode,
         );
-      } else if (cellType === 'single-select') {
+      } else if (cellType.indexOf('-select') > -1) {
         const { firstChild } = copyCell.node;
         const content =
           firstChild && firstChild.type === schema.nodes.singleSelect
@@ -1003,12 +1006,18 @@ export const ensureCellTypes = (rowIndex: number, schema: Schema) => (
             : schema.nodes.selectOption.createChecked({}, schema.text(''));
         newCell = cell.node.type.create(
           { ...cell.node.attrs, cellType },
-          schema.nodes.singleSelect.createChecked({}, content) as PMNode,
+          schema.nodes.singleSelect.createChecked(
+            firstChild ? { ...firstChild.attrs, value: null } : {},
+            content,
+          ) as PMNode,
         );
       } else {
         newCell = cell.node.type.create(
           { ...cell.node.attrs, cellType },
-          schema.nodes.paragraph.create({}, nodemap[cellType].createChecked()),
+          schema.nodes.paragraph.create(
+            {},
+            schema.nodes.slider.createChecked(),
+          ),
         );
       }
 
