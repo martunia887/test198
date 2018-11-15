@@ -8,7 +8,7 @@ const getSummary = cell => {
   const options = getSelectOptions(cell[0])
     .map(getText)
     .map(k => ({ [k]: 0 }));
-  return options;
+  return '';
 };
 
 export default ({ content }) => {
