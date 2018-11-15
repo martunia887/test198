@@ -119,6 +119,9 @@ export default {
     'layoutColumn',
     'inlineCard',
     'blockCard',
+    'slider',
+    'singleSelect',
+    'selectOption',
   ],
   marks: [
     // Inline marks

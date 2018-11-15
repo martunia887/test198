@@ -32,6 +32,7 @@ import TableCell from './tableCell';
 import TableHeader from './tableHeader';
 import TableRow from './tableRow';
 import UnknownBlock from './unknownBlock';
+import SingleSelect from './singleSelect';
 import * as Loadable from 'react-loadable';
 
 const DecisionItem = Loadable({
@@ -136,6 +137,7 @@ export const nodeToReact = {
   tableHeader: TableHeader,
   tableRow: TableRow,
   unknownBlock: UnknownBlock,
+  singleSelect: SingleSelect,
 };
 
 export const toReact = (node: Node): React.ComponentClass<any> => {

@@ -36,11 +36,12 @@ export const handleSetTableRef = (
   state: EditorState,
   tableRef?: HTMLElement,
 ) => (pluginState: TablePluginState, dispatch: Dispatch): TablePluginState => {
+  const tableFloatingToolbarTarget =
+    closestElement(tableRef, `.${ClassName.TABLE_CONTAINER}`) || undefined;
   const nextPluginState = {
     ...pluginState,
     tableRef,
-    tableFloatingToolbarTarget:
-      closestElement(tableRef, `.${ClassName.TABLE_NODE_WRAPPER}`) || undefined,
+    tableFloatingToolbarTarget,
     tableNode: tableRef ? findTable(state.selection)!.node : undefined,
   };
   dispatch(pluginKey, nextPluginState);

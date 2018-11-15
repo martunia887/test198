@@ -2,6 +2,8 @@ import { EditorState, Transaction } from 'prosemirror-state';
 import { defineMessages } from 'react-intl';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import SettingsIcon from '@atlaskit/icon/glyph/editor/settings';
+import EditorTableIcon from '@atlaskit/icon/glyph/editor/table';
+import EditorAddonIcon from '@atlaskit/icon/glyph/editor/addon';
 
 import commonMessages from '../../messages';
 import { Command } from '../../types';
@@ -19,6 +21,7 @@ import {
   toggleHeaderRow,
   toggleHeaderColumn,
   toggleNumberColumn,
+  setViewMode,
 } from './actions';
 import {
   checkIfHeaderRowEnabled,
@@ -70,6 +73,8 @@ export const getToolbarConfig: FloatingToolbarHandler = (
     tableState.pluginConfig
   ) {
     const { pluginConfig } = tableState;
+    const isFormViewEnabled = tableState.tableNode.attrs.viewMode === 'form';
+
     return {
       title: 'Table floating controls',
       getDomRef: () => tableState.tableFloatingToolbarTarget!,
@@ -79,9 +84,9 @@ export const getToolbarConfig: FloatingToolbarHandler = (
           type: 'dropdown',
           title: formatMessage(messages.tableOptions),
           icon: SettingsIcon,
-          hidden: !(
-            pluginConfig.allowHeaderRow && pluginConfig.allowHeaderColumn
-          ),
+          hidden:
+            isFormViewEnabled ||
+            !(pluginConfig.allowHeaderRow && pluginConfig.allowHeaderColumn),
           options: [
             {
               title: formatMessage(messages.headerRow),
@@ -111,6 +116,31 @@ export const getToolbarConfig: FloatingToolbarHandler = (
               hidden: !pluginConfig.allowNumberColumn,
             },
           ],
+        },
+        {
+          type: 'separator',
+          hidden:
+            isFormViewEnabled ||
+            !(
+              pluginConfig.allowBackgroundColor &&
+              pluginConfig.allowHeaderRow &&
+              pluginConfig.allowHeaderColumn &&
+              pluginConfig.allowMergeCells
+            ),
+        },
+        {
+          type: 'button',
+          icon: EditorTableIcon,
+          onClick: setViewMode('table'),
+          title: 'Table view',
+          selected: !isFormViewEnabled,
+        },
+        {
+          type: 'button',
+          icon: EditorAddonIcon,
+          onClick: setViewMode('form'),
+          title: 'Form view',
+          selected: isFormViewEnabled,
         },
         {
           type: 'separator',

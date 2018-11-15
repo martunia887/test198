@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {"level": 2},
+      "content": [{
+        "type": "text",
+        "text": "Team T-Shirt size"
+      }]
+    },
+    {
+      "type": "table",
+      "attrs": {
+        "isNumberColumnEnabled": false,
+        "layout": "default",
+        "viewMode": "form",
+        "form": {},
+        "localId": "1f286232-38e5-4cd8-b143-90d7f87c051d"
+      },
+      "content": [
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableHeader",
+              "attrs": {
+                "cellType": "mention",
+                "colwidth": [
+                  155
+                ]
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Name"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "attrs": {
+                "cellType": "single-select"
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "T-Shirt"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "attrs": {
+                "colwidth": [
+                  223
+                ]
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Dietary requirements"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableHeader",
+              "attrs": {
+                "cellType": "checkbox"
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "Car pool"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colwidth": [
+                  155
+                ]
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": []
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {},
+              "content": [
+                {
+                  "type": "singleSelect",
+                  "attrs": {
+                    "value": "Unisex - S"
+                  },
+                  "content": [
+                    {
+                      "type": "selectOption",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Unisex - S"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Unisex - M"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Unisex - L"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colwidth": [
+                  223
+                ]
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{"type": "text", "text": "Vegan"}]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {},
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableRow",
+          "content": [
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colwidth": [
+                  155
+                ]
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": []
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {},
+              "content": [
+                {
+                  "type": "singleSelect",
+                  "attrs": {
+                    "value": "Unisex - M"
+                  },
+                  "content": [
+                    {
+                      "type": "selectOption",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Unisex - S"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Unisex - M"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "selectOption",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "Unisex - L"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {
+                "colwidth": [
+                  223
+                ]
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": []
+                }
+              ]
+            },
+            {
+              "type": "tableCell",
+              "attrs": {},
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

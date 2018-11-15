@@ -12,6 +12,9 @@ import {
   tableCell,
   tableHeader,
   tableRow,
+  slider,
+  singleSelect,
+  selectOption,
 } from '@atlaskit/editor-common';
 
 import LayoutButton from './ui/LayoutButton';
@@ -29,6 +32,13 @@ import {
 import { getToolbarConfig } from './toolbar';
 import FloatingContextualMenu from './ui/FloatingContextualMenu';
 import { isLayoutSupported } from './utils';
+import {
+  createColumnTypesPlugin,
+  pluginKey as columnTypesPluginKey,
+} from './pm-plugins/column-types';
+import ColumnTypesMenu from './ui/ColumnTypesMenu';
+import ColumnTypesSettingsMenu from './ui/ColumnTypesSettingsMenu';
+import SelectPicker from './ui/SelectPicker';
 
 export const CELL_MIN_WIDTH = 128;
 export const getCellMinWidth = newResizing =>
@@ -60,6 +70,9 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
       { name: 'tableHeader', node: tableHeader },
       { name: 'tableRow', node: tableRow },
       { name: 'tableCell', node: tableCell },
+      { name: 'slider', node: slider },
+      { name: 'singleSelect', node: singleSelect },
+      { name: 'selectOption', node: selectOption },
     ];
   },
 
@@ -80,6 +93,11 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
             pluginConfig(allowTables),
           );
         },
+      },
+      {
+        name: 'columnTypes',
+        plugin: ({ dispatch, portalProviderAPI }) =>
+          createColumnTypesPlugin(dispatch, portalProviderAPI),
       },
       {
         name: 'tablePMColResizing',
@@ -114,28 +132,59 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
       <WithPluginState
         plugins={{
           pluginState: pluginKey,
+          columnTypesState: columnTypesPluginKey,
         }}
-        render={({ pluginState }) => (
-          <>
-            <FloatingContextualMenu
-              editorView={editorView}
-              mountPoint={popupsMountPoint}
-              boundariesElement={popupsBoundariesElement}
-              targetCellPosition={pluginState.targetCellPosition}
-              isOpen={pluginState.isContextualMenuOpen}
-              pluginConfig={pluginState.pluginConfig}
-            />
-            {isLayoutSupported(editorView.state) && (
-              <LayoutButton
+        render={({ pluginState, columnTypesState }) => {
+          const { tableNode } = pluginState;
+          if (tableNode && tableNode.attrs.viewMode !== 'table') {
+            return null;
+          }
+
+          return (
+            <>
+              <FloatingContextualMenu
+                editorView={editorView}
+                mountPoint={popupsMountPoint}
+                boundariesElement={popupsBoundariesElement}
+                targetCellPosition={pluginState.targetCellPosition}
+                isOpen={pluginState.isContextualMenuOpen}
+                pluginConfig={pluginState.pluginConfig}
+              />
+              {isLayoutSupported(editorView.state) && (
+                <LayoutButton
+                  editorView={editorView}
+                  mountPoint={popupsMountPoint}
+                  boundariesElement={popupsBoundariesElement}
+                  scrollableElement={popupsScrollableElement}
+                  targetRef={pluginState.tableFloatingToolbarTarget}
+                />
+              )}
+              <ColumnTypesMenu
                 editorView={editorView}
                 mountPoint={popupsMountPoint}
                 boundariesElement={popupsBoundariesElement}
                 scrollableElement={popupsScrollableElement}
-                targetRef={pluginState.tableFloatingToolbarTarget}
+                isOpen={columnTypesState.isMenuOpen}
+                columnIndex={columnTypesState.columnIndex}
               />
-            )}
-          </>
-        )}
+              <ColumnTypesSettingsMenu
+                editorView={editorView}
+                mountPoint={popupsMountPoint}
+                boundariesElement={popupsBoundariesElement}
+                scrollableElement={popupsScrollableElement}
+                selectMenuType={columnTypesState.selectMenuType}
+                columnIndex={columnTypesState.columnIndex}
+              />
+              <SelectPicker
+                editorView={editorView}
+                mountPoint={popupsMountPoint}
+                boundariesElement={popupsBoundariesElement}
+                scrollableElement={popupsScrollableElement}
+                clickedCell={columnTypesState.clickedCell}
+              />
+            </>
+          );
+        }}
       />
     );
   },

@@ -46,6 +46,9 @@ export const defaultSchema: Schema = createSchema({
     'blockCard',
     'unsupportedBlock',
     'unsupportedInline',
+    'slider',
+    'singleSelect',
+    'selectOption',
   ],
   marks: [
     'action',

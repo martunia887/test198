@@ -31,6 +31,7 @@ const insideContentArea = (ref: HTMLElement): boolean => {
 export default class ClickAreaBlock extends React.Component<Props> {
   private handleClick = event => {
     const { editorView: view } = this.props;
+
     const contentArea = event.currentTarget.querySelector(
       '.ak-editor-content-area',
     );

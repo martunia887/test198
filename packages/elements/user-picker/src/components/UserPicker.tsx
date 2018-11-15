@@ -43,6 +43,7 @@ export type Props = {
   subtle?: boolean;
   defaultValue?: UserValue;
   value?: UserValue;
+  name?: string;
 };
 
 export type State = {
@@ -233,6 +234,7 @@ export class UserPicker extends React.PureComponent<Props, State> {
       isLoading,
       appearance,
       subtle,
+      name,
     } = this.props;
     const {
       users: usersFromState,
@@ -250,6 +252,7 @@ export class UserPicker extends React.PureComponent<Props, State> {
 
     return (
       <Select
+        name={name}
         value={value}
         ref={this.handleSelectRef}
         isMulti={isMulti}

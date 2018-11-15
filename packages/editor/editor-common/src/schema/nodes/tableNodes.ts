@@ -1,6 +1,6 @@
 import { Node as PmNode } from 'prosemirror-model';
 import { colors } from '@atlaskit/theme';
-import { hexToRgba, isHex } from '../../utils';
+import { hexToRgba, isHex, uuid } from '../../utils';
 import {
   akEditorTableCellBackgroundOpacity,
   akEditorTableNumberColumnWidth,
@@ -38,6 +38,7 @@ const getCellAttrs = (dom: HTMLElement) => {
     rowspan: Number(dom.getAttribute('rowspan') || 1),
     colwidth: width && width.length === colspan ? width : null,
     background: dom.style.backgroundColor || null,
+    cellType: dom.getAttribute('data-cell-type') || 'text',
   };
 };
 
@@ -46,6 +47,7 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     colspan?: number;
     rowspan?: number;
     style?: string;
+    cellType?: CellType;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -81,6 +83,9 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
 
       attrs.style = `${attrs.style || ''}background-color: ${color};`;
     }
+  }
+  if (node.attrs.cellType) {
+    attrs.cellType = node.attrs.cellType;
   }
 
   return attrs;
@@ -146,10 +151,30 @@ export function calcTableColumnWidths(node: PmNode): number[] {
 
 export type Layout = 'default' | 'full-width' | 'wide';
 
+export type CellType =
+  | 'text'
+  | 'number'
+  | 'currency'
+  | 'date'
+  | 'link'
+  | 'mention'
+  | 'checkbox'
+  | 'emoji'
+  | 'slider'
+  | 'long-text'
+  | 'multi-select'
+  | 'radio-select'
+  | 'status-select'
+  | 'single-select';
+
+export type ViewMode = 'table' | 'form';
+
 export interface TableAttributes {
   isNumberColumnEnabled?: boolean;
   layout?: Layout;
   __autoSize?: boolean;
+  viewMode?: ViewMode;
+  form?: any;
 }
 
 /**
@@ -198,6 +223,7 @@ export interface CellAttributes {
   rowspan?: number;
   colwidth?: number[];
   background?: string;
+  cellType?: CellType;
 }
 
 // TODO: Fix any, potential issue. ED-5048
@@ -207,6 +233,9 @@ export const table: any = {
     isNumberColumnEnabled: { default: false },
     layout: { default: 'default' },
     __autoSize: { default: false },
+    viewMode: { default: 'table' },
+    form: { default: {} },
+    localId: uuid.generate(),
   },
   tableRole: 'table',
   isolating: true,
@@ -220,6 +249,9 @@ export const table: any = {
           dom.getAttribute('data-number-column') === 'true' ? true : false,
         layout: dom.getAttribute('data-layout') || 'default',
         __autoSize: dom.getAttribute('data-autosize') === 'true' ? true : false,
+        viewMode: dom.getAttribute('data-viewmode') || 'table',
+        localId: dom.getAttribute('data-localId') || uuid.generate(),
+        form: JSON.parse(dom.getAttribute('data-form') || '{}'),
       }),
     },
   ],
@@ -228,6 +260,9 @@ export const table: any = {
       'data-number-column': node.attrs.isNumberColumnEnabled,
       'data-layout': node.attrs.layout,
       'data-autosize': node.attrs.__autoSize,
+      'data-viewmode': node.attrs.viewMode,
+      'data-localId': node.attrs.localId || uuid.generate(),
+      'data-form': JSON.stringify(node.attrs.form || {}),
     };
     return ['table', attrs, ['tbody', 0]];
   },
@@ -258,11 +293,12 @@ const cellAttrs = {
   rowspan: { default: 1 },
   colwidth: { default: null },
   background: { default: null },
+  cellType: { default: 'text' },
 };
 
 export const tableCell = {
   content:
-    '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock |  mediaGroup | mediaSingle | applicationCard | decisionList | taskList | blockCard | extension | unsupportedBlock)+',
+    '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock |  mediaGroup | mediaSingle | applicationCard | decisionList | taskList | blockCard | extension | singleSelect | unsupportedBlock)+',
   attrs: cellAttrs,
   tableRole: 'cell',
   isolating: true,

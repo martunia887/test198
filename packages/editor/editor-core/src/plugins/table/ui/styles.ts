@@ -33,6 +33,9 @@ const {
   N200,
   N0,
   R500,
+  N40,
+  G300,
+  N10,
 } = colors;
 
 export const tableToolbarColor = N20;
@@ -647,6 +650,501 @@ export const tableStyles = css`
       left: 25px;
       top: 9px;
       color: ${N90};
+    }
+  }
+
+/* =============== TABLE CELL TYPE ================== */
+  .${ClassName.TABLE_CONTAINER}.-hidden {
+    .${ClassName.ROW_CONTROLS_WRAPPER},
+    .${ClassName.COLUMN_CONTROLS_WRAPPER},
+    .${ClassName.TABLE_LEFT_SHADOW},
+    .${ClassName.TABLE_RIGHT_SHADOW} {
+      display: none !important;
+    }
+    .${ClassName.TABLE_NODE_WRAPPER} {
+      height: 0;
+      width: 0;
+      overflow: hidden;
+      padding: 0;
+    }
+  }
+
+  /* FORM */
+  .${ClassName.FORM_ADD_FIELD_BUTTON} span {
+    text-align: left;
+  }
+  .${ClassName.FORM_WRAPPER} {
+    box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
+    padding: 30px 0 40px;
+    margin: 20px 0;
+
+    .${ClassName.FORM} {
+      margin: 0 auto;
+      width: 400px;
+
+      .${ClassName.FORM_INPUT_LABEL} {
+        font-size: 85%;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: ${N90};
+      }
+      .${ClassName.FORM_INPUT_WRAP} {
+        margin-bottom: 20px;
+
+        .${ClassName.FORM_INPUT} {
+          background: ${N20A};
+          border-radius: ${borderRadius()}px;
+          padding: 7px 10px;
+          min-width: 100px;
+          cursor: pointer;
+          transition: background 0.1s ease-out 0s;
+          color: ${N200};
+
+          &:hover {
+            background: ${N40A};
+          }
+        }
+      }
+      .${ClassName.FORM_INPUT_WRAP}:last-child {
+        margin-bottom: 0;
+      }
+
+      .${ClassName.FORM_SECTION} {
+        margin-bottom: 20px;
+
+        button span {
+          vertical-align: middle;
+        }
+      }
+      .${ClassName.FORM_SECTION}:last-child {
+        margin-bottom: 0;
+      }
+
+      .${ClassName.FORM_REMOVE_FIELD_BUTTON} {
+        visibility: hidden;
+        padding: 0;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+      }
+
+      .${ClassName.FORM_SLIDER_WRAPPER} {
+        background: ${N10};
+        border-radius: ${borderRadius()}px;
+        padding: 15px;
+        caret-color: transparent;
+      }
+
+      /* DRAGGING */
+      .${ClassName.FORM_BODY}.${ClassName.FORM_SECTION}.dragging {
+        box-shadow: 6px 11px 20px -4px ${N60A}, 0 0 1px ${N60A};
+      }
+
+      .${ClassName.FORM_BODY}.${ClassName.FORM_SECTION} {
+        background: white;
+        border-radius: 3px;
+        position: relative;
+        padding: 15px;
+        padding-right: 50px;
+
+        &:hover {
+          box-shadow: 0 1px 8px -2px ${N60A}, 0 0 1px ${N60A};
+
+          .${ClassName.FORM_REMOVE_FIELD_BUTTON} {
+            visibility: visible;
+          }
+        }
+
+        .${ClassName.FORM_COLUMN_FIELD_WRAPPER} {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          > div {
+            flex: 1;
+          }
+        }
+      }
+
+      .${ClassName.FORM_FOOTER}.${ClassName.FORM_SECTION} {
+        width: 340px;
+        margin-left: 15px;
+      }
+
+      .${ClassName.FORM_MENTION_FIELD_CHECHBOX_WRAP} {
+        display: inline-flex;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  /* STATUS COLOR PICKER */
+  .${ClassName.STATUS_LOZENGE} {
+    padding: 0px 6px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .${ClassName.STATUS_COLOR_PICKER} {
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+
+    .${ClassName.STATUS_COLOR_PICKER_ICON} {
+      width: 20px;
+      height: 20px;
+      border: 1px solid ${N40};
+      border-radius: ${borderRadius()}px;
+      cursor: pointer;
+    }
+    .${ClassName.STATUS_COLOR_PICKER_PALETTE} {
+      top: 10px;
+      left: 25px;
+      position: absolute;
+      background: white;
+      border-radius: ${borderRadius()}px;
+      z-index: 999;
+      width: 128px;
+      padding: 10px;
+      box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
+
+      > div {
+        padding: 0;
+      }
+      button {
+        margin: 0 !important;
+      }
+    }
+
+  }
+
+  /* SELECT */
+  .${ClassName.SINGLE_SELECT_WRAPPER} {
+    background: ${N20A};
+    padding: 5px 10px;
+    border-radius: ${borderRadius()}px;
+    color: ${N200};
+    display: inline-flex;
+  }
+  .${ClassName.SINGLE_SELECT_CONTENT} {
+    max-width: 120px;
+    min-width: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: auto;
+    flex: 1;
+  }
+  .${ClassName.SINGLE_SELECT_ICON} {
+    display: inline-flex;
+    margin-left: 10px;
+  }
+  .${ClassName.SINGLE_SELECT_DEFAULT_OPTION} {
+    border-top: 1px solid ${N40};
+  }
+
+  /* COLUMN TYPES SETTINGS_MENU */
+  .${ClassName.COLUMN_TYPES_SETTINGS_MENU} {
+    background: white;
+    box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
+    border-radius: ${borderRadius()}px;
+    padding: 15px;
+    width: 200px;
+    > div {
+      color: ${N200};
+    }
+    button {
+      margin-top: 15px;
+    }
+    .${ClassName.COLUMN_TYPES_SETTINGS_MENU_BUTTONS_WRAP} {
+      margin-top: 15px;
+      border-top: 1px solid ${N20};
+      text-align: right;
+
+      button:last-child {
+        margin-left: 10px;
+      }
+    }
+    .${ClassName.SINGLE_SELECT_OPTION_SETTINGS} {
+      display: flex;
+      margin-top: 10px;
+
+      button {
+        background: ${N20A};
+        color: ${N300};
+        border-radius: ${borderRadius()}px;
+        border-width: 0px;
+        display: inline-block;
+        align-self: center;
+        margin: 0 0 0 10px;
+        padding: 0px;
+        transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
+        outline: none !important;
+        cursor: pointer;
+        :hover {
+          background: ${R300};
+          color: white;
+        }
+      }
+    }
+  }
+  .ProseMirror {
+    table {
+      .${ClassName.CELL_NODEVIEW_WRAPPER} {
+        display: flex;
+        margin-right: 12px;
+      }
+      .${ClassName.CELL_NODEVIEW_CONTENT} {
+        flex: 1;
+      }
+      .${ClassName.CELL_NODEVIEW_COLUMN_TYPES_BUTTON} button {
+        height: 24px;
+        width: 24px;
+        border-radius: ${borderRadius};
+        opacity: 0.5;
+        &:hover {
+          opacity: 1;
+        }
+      }
+
+      td[celltype='date'],
+      td[celltype='mention'],
+      td[celltype='emoji'],
+      td[celltype='link'],
+      td[celltype='checkbox'],
+      td[celltype='single-select'],
+      td[celltype='multi-select'],
+      td[celltype='radio-select'],
+      td[celltype='status-select'] {
+        cursor: pointer;
+        caret-color: transparent;
+      }
+      td[celltype='checkbox']{
+        text-align: center;
+      }
+      td[celltype='number'],
+      td[celltype='currency'] {
+        text-align: right;
+        padding-right: 20px;
+
+        &.invalid {
+          border: 1px solid ${R300};
+          background: ${R50};
+        }
+      }
+
+      td[celltype='currency']:before {
+        content: '$';
+        float: left;
+        color: ${N200};
+      }
+
+      td[celltype='slider'] {
+        caret-color: transparent;
+      }
+
+      tr:not(:first-child) th .ProseMirror-tableHeader-button-container {
+        display: none;
+      }
+    }
+
+    /* Range Slider */
+    .rangeslider {
+      flex: 1;
+      margin: 0 10px;
+      position: relative;
+      background: #e6e6e6;
+      -ms-touch-action: none;
+      touch-action: none;
+    }
+    .rangeslider,
+    .rangeslider .rangeslider__fill {
+      display: block;
+    }
+    .rangeslider .rangeslider__handle {
+      cursor: pointer;
+      display: inline-block;
+      position: absolute;
+    }
+    .rangeslider .rangeslider__handle .rangeslider__active {
+      opacity: 1;
+    }
+    .rangeslider .rangeslider__handle-tooltip {
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.8);
+      font-weight: 400;
+      font-size: 14px;
+      transition: all 0.1s ease-in;
+      border-radius: 4px;
+      display: inline-block;
+      color: #fff;
+      left: 50%;
+      transform: translate3d(-50%, 0, 0);
+    }
+    .rangeslider .rangeslider__handle-tooltip span {
+      margin-top: 12px;
+      display: inline-block;
+      line-height: 100%;
+    }
+    .rangeslider .rangeslider__handle-tooltip:after {
+      content: ' ';
+      position: absolute;
+      width: 0;
+      height: 0;
+    }
+    .rangeslider-horizontal .rangeslider__fill {
+      height: 100%;
+      background-color: ${G300};
+      border-radius: 3px;
+      top: 0;
+    }
+    .rangeslider-horizontal .rangeslider__handle {
+      width: 30px;
+      height: 30px;
+      border-radius: 30px;
+      top: 50%;
+      transform: translate3d(-50%, -50%, 0);
+    }
+    .rangeslider-horizontal .rangeslider__handle-tooltip {
+      top: -55px;
+    }
+    .rangeslider-horizontal .rangeslider__handle-tooltip:after {
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid rgba(0, 0, 0, 0.8);
+      left: 50%;
+      bottom: -8px;
+      transform: translate3d(-50%, 0, 0);
+    }
+    .rangeslider-vertical {
+      margin: 20px auto;
+      height: 150px;
+      max-width: 10px;
+      background-color: transparent;
+    }
+    .rangeslider-vertical .rangeslider__fill,
+    .rangeslider-vertical .rangeslider__handle {
+      position: absolute;
+    }
+    .rangeslider-vertical .rangeslider__fill {
+      width: 100%;
+      background-color: #7cb342;
+      box-shadow: none;
+      bottom: 0;
+    }
+    .rangeslider-vertical .rangeslider__handle {
+      width: 30px;
+      height: 10px;
+      left: -10px;
+      box-shadow: none;
+    }
+    .rangeslider-vertical .rangeslider__handle-tooltip {
+      left: -100%;
+      top: 50%;
+      transform: translate3d(-50%, -50%, 0);
+    }
+    .rangeslider-vertical .rangeslider__handle-tooltip:after {
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 8px solid rgba(0, 0, 0, 0.8);
+      left: 100%;
+      top: 12px;
+    }
+    .rangeslider-reverse.rangeslider-horizontal .rangeslider__fill {
+      right: 0;
+    }
+    .rangeslider-reverse.rangeslider-vertical .rangeslider__fill {
+      top: 0;
+      bottom: inherit;
+    }
+    .rangeslider__labels {
+      position: relative;
+    }
+    .rangeslider-vertical .rangeslider__labels {
+      position: relative;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+      width: 250px;
+      height: 100%;
+      left: 10px;
+    }
+    .rangeslider-vertical .rangeslider__labels .rangeslider__label-item {
+      position: absolute;
+      transform: translate3d(0, -50%, 0);
+    }
+    .rangeslider-vertical
+      .rangeslider__labels
+      .rangeslider__label-item::before {
+      content: '';
+      width: 10px;
+      height: 2px;
+      background: #000;
+      position: absolute;
+      left: -14px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: -1;
+    }
+    .rangeslider__labels .rangeslider__label-item {
+      position: absolute;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-block;
+      top: 10px;
+      transform: translate3d(-50%, 0, 0);
+    }
+    ul.rangeslider__labels {
+      margin: 0;
+    }
+    .rangeslider-horizontal {
+      height: 4px;
+      border-radius: 3px;
+      background: ${N40};
+    }
+    .rangeslider-horizontal .rangeslider__handle {
+      width: 14px;
+      height: 14px;
+      background: ${G300};
+      outline: none;
+    }
+    .rangeslider .rangeslider__handle-tooltip {
+      display: none;
+    }
+
+    .slider {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 17px;
+    }
+    .slider__value {
+      padding: 0 4px;
+      background: ${N20};
+      color: ${G300};
+      border-radius: ${borderRadius};
+      min-width: 32px;
+      text-align: center;
+    }
+    /* Range Slider End */
+    .danger {
+      .rangeslider__fill {
+        background-color: ${R300};
+        td[celltype='checkbox'] {
+          width: 60px;
+        }
+      }
+      .rangeslider__handle {
+        background: ${R300};
+      }
+      .slider__value {
+        color: ${R300};
+      }
     }
   }
 `;

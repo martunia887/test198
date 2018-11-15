@@ -74,6 +74,8 @@ export {
   TableHeader as TableHeaderDefinition,
   TableRow as TableRowDefinition,
   setCellAttrs,
+  CellType,
+  ViewMode as TableViewMode,
 } from './tableNodes';
 export {
   applicationCard,
@@ -101,3 +103,6 @@ export { blockCard, CardAttributes, BlockCardDefinition } from './block-card';
 export { unsupportedBlock } from './unsupported-block';
 export { unsupportedInline } from './unsupported-inline';
 export { status, StatusDefinition } from './status';
+export { slider } from './slider';
+export { singleSelect } from './single-select';
+export { selectOption } from './select-option';

@@ -353,4 +353,19 @@ export const Wrapper = styled.div<Props & HTMLAttributes<{}>>`
     top: 0px;
     display: block;
   }
+
+  /* Table form view */
+  .tableForm {
+    margin-top: 20px;
+    /* 48 - (24 + 8) */
+    padding: 16px 20px 48px;
+    border-radius: 3px;
+    box-shadow: 0 0 1px 0 rgba(9,30,66,0.31), 0 2px 4px -1px rgba(9,30,66,0.25);
+    /* Fixes checkbox vertical alignment issue */
+    line-height: 1.42857142857143;
+  }
+  .tableForm__body {
+    margin: 0 auto;
+    max-width: 360px;
+  }
 `;

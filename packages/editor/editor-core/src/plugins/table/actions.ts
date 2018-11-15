@@ -171,7 +171,7 @@ export const toggleHeaderRow: Command = (
   if (!table) {
     return false;
   }
-  const { tr } = state;
+  let { tr } = state;
   const map = TableMap.get(table.node);
   const { tableHeader, tableCell } = state.schema.nodes;
   const isHeaderRowEnabled = checkIfHeaderRowEnabled(state);
@@ -186,8 +186,17 @@ export const toggleHeaderRow: Command = (
     const from = tr.mapping.map(table.start + map.map[column]);
     const cell = table.node.child(0).child(column);
 
-    tr.setNodeMarkup(from, type, cell.attrs);
+    tr.setNodeMarkup(
+      from,
+      type,
+      Object.assign({}, cell.attrs, { cellType: 'text' }),
+    );
   }
+
+  if (isHeaderRowEnabled) {
+    tr = ensureCellTypes(0, state.schema)(tr);
+  }
+
   dispatch(tr);
   return true;
 };
@@ -291,12 +300,13 @@ export const insertRow = (row: number): Command => (
   const clonePreviousRow =
     (headerRowEnabled && row > 1) || (!headerRowEnabled && row >= 0);
 
-  const tr = addRowAt(row, clonePreviousRow)(state.tr);
+  let tr = addRowAt(row, clonePreviousRow)(state.tr);
 
   const table = findTable(tr.selection)!;
   // move the cursor to the newly created row
   const pos = TableMap.get(table.node).positionAt(row, 0, table.node);
-  dispatch(tr.setSelection(Selection.near(tr.doc.resolve(table.start + pos))));
+  tr = tr.setSelection(Selection.near(tr.doc.resolve(table.start + pos)));
+  dispatch(ensureCellTypes(row, state.schema)(tr));
   analyticsService.trackEvent('atlassian.editor.format.table.row.button');
   return true;
 };
@@ -924,4 +934,87 @@ export const handleShiftSelection = (event: MouseEvent): Command => (
   }
 
   return false;
+};
+
+export const setViewMode = (viewMode: string): Command => (
+  state: EditorState,
+  dispatch: (tr: Transaction) => void,
+): boolean => {
+  const table = findTable(state.selection);
+  if (!table) {
+    return false;
+  }
+
+  dispatch(
+    state.tr.setNodeMarkup(
+      table.pos,
+      undefined,
+      Object.assign({}, table.node.attrs, { viewMode }),
+    ),
+  );
+
+  return true;
+};
+
+export const ensureCellTypes = (rowIndex: number, schema: Schema) => (
+  tr: Transaction,
+): Transaction => {
+  const table = findTable(tr.selection);
+  if (!table) {
+    return tr;
+  }
+  let existingCells;
+  for (let i = 0; i < table.node.childCount; i++) {
+    if (i === rowIndex) {
+      continue;
+    }
+    const cells = getCellsInRow(i)(tr.selection);
+    if (cells && cells[0].node.type === schema.nodes.tableCell) {
+      existingCells = cells;
+      break;
+    }
+  }
+
+  const insertedCells = getCellsInRow(rowIndex)(tr.selection)!;
+
+  const nodemap = {
+    slider: schema.nodes.slider,
+    decision: null,
+    'single-select': null,
+  };
+
+  for (let i = insertedCells.length - 1; i >= 0; i--) {
+    const cell = insertedCells[i];
+    const copyCell = existingCells ? existingCells[i] : insertedCells[i];
+    const { cellType } = copyCell.node.attrs;
+
+    if (Object.keys(nodemap).indexOf(cellType) !== -1) {
+      let newCell;
+      if (cellType === 'decision') {
+        newCell = cell.node.type.create(
+          { ...cell.node.attrs, cellType },
+          schema.nodes.decisionList.createAndFill() as PMNode,
+        );
+      } else if (cellType === 'single-select') {
+        const { firstChild } = copyCell.node;
+        const content =
+          firstChild && firstChild.type === schema.nodes.singleSelect
+            ? firstChild.content
+            : schema.nodes.selectOption.createChecked({}, schema.text(''));
+        newCell = cell.node.type.create(
+          { ...cell.node.attrs, cellType },
+          schema.nodes.singleSelect.createChecked({}, content) as PMNode,
+        );
+      } else {
+        newCell = cell.node.type.create(
+          { ...cell.node.attrs, cellType },
+          schema.nodes.paragraph.create({}, nodemap[cellType].createChecked()),
+        );
+      }
+
+      tr = tr.replaceWith(cell.pos, cell.pos + cell.node.nodeSize, newCell);
+    }
+  }
+
+  return tr;
 };

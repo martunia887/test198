@@ -26,9 +26,9 @@ import {
   handleMouseDown,
   handleMouseOver,
   handleMouseLeave,
-  handleBlur,
+  // handleBlur,
   handleFocus,
-  handleClick,
+  // handleClick,
   handleTripleClick,
 } from '../event-handlers';
 import { findControlsHoverDecoration, fixTables } from '../utils';
@@ -231,12 +231,12 @@ export const createPlugin = (
       },
 
       handleDOMEvents: {
-        blur: handleBlur,
+        // blur: handleBlur,
         focus: handleFocus,
         mousedown: handleMouseDown,
         mouseover: handleMouseOver,
         mouseleave: handleMouseLeave,
-        click: handleClick,
+        // click: handleClick,
       },
 
       handleTripleClick,

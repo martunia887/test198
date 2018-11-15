@@ -705,7 +705,10 @@ export const getValidNode = (
           return {
             type,
             content,
-            attrs,
+            attrs: {
+              ...attrs,
+              localId: (attrs && attrs.localId) || uuid(),
+            },
           };
         }
         break;
@@ -744,6 +747,10 @@ export const getValidNode = (
             if (attrs.colwidth && Array.isArray(attrs.colwidth)) {
               cellAttrs.colwidth = attrs.colwidth;
             }
+
+            if (attrs.cellType) {
+              cellAttrs.cellType = attrs.cellType;
+            }
           }
 
           return {
@@ -769,6 +776,10 @@ export const getValidNode = (
         }
 
         break;
+      }
+      case 'singleSelect':
+      case 'selectOption': {
+        return { type, attrs, content };
       }
     }
   }

@@ -14,10 +14,13 @@ import ColumnControls from '../ui/TableFloatingControls/ColumnControls';
 
 import { getPluginState } from '../pm-plugins/main';
 import { scaleTable, setColumnWidths } from '../pm-plugins/table-resizing';
+import { PluginState as ColumnTypesPluginState } from '../pm-plugins/column-types';
 
 import { TablePluginState, TableCssClassName as ClassName } from '../types';
 import { getCellMinWidth } from '../';
 import * as classnames from 'classnames';
+import Form from '../ui/Form';
+
 const isIE11 = browser.ie_version === 11;
 
 import { Props } from './table';
@@ -38,6 +41,7 @@ export interface ComponentProps extends Props {
 
   containerWidth: WidthPluginState;
   pluginState: TablePluginState;
+  columnTypesState: ColumnTypesPluginState;
   width: number;
 }
 
@@ -187,37 +191,47 @@ class TableComponent extends React.Component<ComponentProps> {
       </div>,
     ];
 
+    const isFormViewMode = node.attrs.viewMode === 'form';
+
     return (
-      <div
-        style={{
-          width: this.getTableContainerWidth(node.attrs.layout, containerWidth),
-        }}
-        className={classnames(ClassName.TABLE_CONTAINER, {
-          [ClassName.WITH_CONTROLS]: tableActive,
-          'less-padding': width < akEditorMobileBreakoutPoint,
-        })}
-        data-number-column={node.attrs.isNumberColumnEnabled}
-        data-layout={node.attrs.layout}
-      >
-        {allowControls && rowControls}
+      <div className="table-parent-container">
         <div
-          className={classnames(ClassName.TABLE_NODE_WRAPPER)}
-          ref={elem => {
-            this.wrapper = elem;
-            this.props.contentDOM(elem ? elem : undefined);
-            if (elem) {
-              this.table = elem.querySelector('table');
-            }
+          style={{
+            width: this.getTableContainerWidth(
+              node.attrs.layout,
+              containerWidth,
+            ),
           }}
+          className={classnames(ClassName.TABLE_CONTAINER, {
+            '-hidden': isFormViewMode,
+            [ClassName.WITH_CONTROLS]: tableActive,
+            'less-padding': width < akEditorMobileBreakoutPoint,
+          })}
+          data-number-column={node.attrs.isNumberColumnEnabled}
+          data-layout={node.attrs.layout}
+          data-viewmode={node.attrs.viewMode}
         >
-          {allowControls && columnControls}
+          {allowControls && rowControls}
+          <div
+            className={classnames(ClassName.TABLE_NODE_WRAPPER)}
+            ref={elem => {
+              this.wrapper = elem;
+              this.props.contentDOM(elem ? elem : undefined);
+              if (elem) {
+                this.table = elem.querySelector('table');
+              }
+            }}
+          >
+            {allowControls && columnControls}
+          </div>
+          <div
+            ref={elem => {
+              this.rightShadow = elem;
+            }}
+            className={ClassName.TABLE_RIGHT_SHADOW}
+          />
+          {isFormViewMode && <Form editorView={view} node={node} />}
         </div>
-        <div
-          ref={elem => {
-            this.rightShadow = elem;
-          }}
-          className={ClassName.TABLE_RIGHT_SHADOW}
-        />
       </div>
     );
   }
