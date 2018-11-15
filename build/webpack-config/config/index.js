@@ -11,6 +11,8 @@ const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
 const HappyPack = require('happypack');
 
+const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
+
 module.exports = function createWebpackConfig(
   {
     globs = createDefaultGlob(),
@@ -106,15 +108,12 @@ module.exports = function createWebpackConfig(
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'happypack/loader',
+          loader: 'happypack/loader?id=js',
         },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          loader: require.resolve('ts-loader'),
-          options: {
-            transpileOnly: true,
-          },
+          loader: 'happypack/loader?id=ts',
         },
 
         {
@@ -213,8 +212,29 @@ function getPlugins(
       DEFAULT_META_DESCRIPTION: `"Atlaskit is the official component library for Atlassian's Design System."`,
     }),
     new HappyPack({
+      id: 'js',
+      threadPool: happyThreadPool,
       loaders: [
-        'babel-loader?babelrc=true&rootMode=upward&envName=production:cjs',
+        {
+          loader: 'babel-loader',
+          query: {
+            babelrc: true,
+            rootMode: 'upward',
+            envName: 'production:cjs',
+          },
+        },
+      ],
+    }),
+    new HappyPack({
+      id: 'ts',
+      threadPool: happyThreadPool,
+      loaders: [
+        {
+          loader: 'ts-loader',
+          query: {
+            happyPackMode: true,
+          },
+        },
       ],
     }),
   ];
@@ -225,7 +245,7 @@ function getPlugins(
       generateStatsFile: true,
       openAnalyzer: report,
       logLevel: 'error',
-      statsOptions: statsOptions,
+      statsOptions,
       defaultSizes: 'gzip',
     }),
   );
@@ -300,7 +320,7 @@ function getOptimizations({ isProduction, noMinimizeFlag }) {
     // There's an interesting bug in webpack where passing *any* uglify plugin, where `minimize` is
     // false, causes webpack to use its own minimizer plugin + settings.
     minimizer: noMinimizeFlag ? undefined : [uglifyPlugin],
-    minimize: noMinimizeFlag ? false : true,
+    minimize: !noMinimizeFlag,
     splitChunks: {
       // "Maximum number of parallel requests when on-demand loading. (default in production: 5)"
       // The default value of 5 causes the webpack process to crash, reason currently unknown
