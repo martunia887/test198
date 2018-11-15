@@ -146,7 +146,9 @@ export default class FormBuilder extends React.Component<FormProps, State> {
                                 <div style={{ display: 'block' }}>
                                   <RadioGroup
                                     defaultCheckedValue={
-                                      column.options[0].value
+                                      column.options[0]
+                                        ? column.options[0].value
+                                        : false
                                     }
                                     options={column.options}
                                     shouldFitContainer
