@@ -11,7 +11,7 @@ const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
 const HappyPack = require('happypack');
 
-const happyThreadPool = HappyPack.ThreadPool({ size: 4 });
+// const happyThreadPool = HappyPack.ThreadPool({ size: 4 });
 
 module.exports = function createWebpackConfig(
   {
@@ -108,12 +108,17 @@ module.exports = function createWebpackConfig(
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'happypack/loader?id=js',
+          loader: 'babel-loader',
+          options: {
+            babelrc: true,
+            rootMode: 'upward',
+            envName: 'production:cjs',
+          },
         },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          loader: 'happypack/loader?id=ts',
+          loader: 'happypack/loader',
         },
 
         {
@@ -211,23 +216,21 @@ function getPlugins(
       BASE_TITLE: `"Atlaskit by Atlassian ${!isProduction ? '- DEV' : ''}"`,
       DEFAULT_META_DESCRIPTION: `"Atlaskit is the official component library for Atlassian's Design System."`,
     }),
+    // new HappyPack({
+    //   id: 'js',
+    //   threadPool: happyThreadPool,
+    //   loaders: [
+    //     {
+    //       loader: 'babel-loader',
+    //       query: {
+    //         babelrc: true,
+    //         rootMode: 'upward',
+    //         envName: 'production:cjs',
+    //       },
+    //     },
+    //   ],
+    // }),
     new HappyPack({
-      id: 'js',
-      threadPool: happyThreadPool,
-      loaders: [
-        {
-          loader: 'babel-loader',
-          query: {
-            babelrc: true,
-            rootMode: 'upward',
-            envName: 'production:cjs',
-          },
-        },
-      ],
-    }),
-    new HappyPack({
-      id: 'ts',
-      threadPool: happyThreadPool,
       loaders: [
         {
           loader: 'ts-loader',
