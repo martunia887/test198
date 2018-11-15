@@ -80,12 +80,16 @@ export const SaveAndCancelButtons = props => (
             'fabric.editor.example.full-page',
             JSON.stringify(value),
           );
-          console.log(
-            'aaaaa',
-            location.origin + '/examples/editor/renderer/easy-forms',
-          );
-          location.href =
-            location.origin + '/examples/editor/renderer/easy-forms';
+          // viewing the iframe
+          if (location.pathname) {
+            location.href =
+              location.origin +
+              location.pathname +
+              '?groupId=editor&packageId=renderer&exampleId=easy-forms';
+          } else {
+            location.href =
+              location.origin + '/examples/editor/renderer/easy-forms';
+          }
         })
       }
     >

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Button from '@atlaskit/button';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
 import { traverse, tableRow, tableCell, p, mention } from '@atlaskit/adf-utils';
@@ -93,11 +94,38 @@ export default class Example extends React.Component<any, any> {
 
   render() {
     return (
-      <Renderer
-        dataProviders={providerFactory}
-        document={this.state.document}
-        appearance="full-page"
-      />
+      <>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            padding: '20px',
+          }}
+        >
+          <Button
+            tabIndex="-1"
+            onClick={() => {
+              // viewing the iframe
+              if (location.pathname) {
+                location.href =
+                  location.origin +
+                  location.pathname +
+                  '?groupId=editor&packageId=editor-core&exampleId=easy-forms';
+              } else {
+                location.href =
+                  location.origin + '/examples/editor/editor-core/easy-forms';
+              }
+            }}
+          >
+            Edit
+          </Button>
+        </div>
+        <Renderer
+          dataProviders={providerFactory}
+          document={this.state.document}
+          appearance="full-page"
+        />
+      </>
     );
   }
 }
