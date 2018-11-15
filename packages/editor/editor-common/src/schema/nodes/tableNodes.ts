@@ -235,7 +235,7 @@ export const table: any = {
     __autoSize: { default: false },
     viewMode: { default: 'table' },
     form: { default: {} },
-    localId: uuid.generate(),
+    localId: { default: uuid.generate() },
   },
   tableRole: 'table',
   isolating: true,
