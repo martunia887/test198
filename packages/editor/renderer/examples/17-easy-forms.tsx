@@ -69,7 +69,12 @@ const providerFactory = ProviderFactory.create({ mediaProvider });
 export default class Example extends React.Component<any, any> {
   constructor(props) {
     super(props);
-    this.state = { document };
+    const savedDocument = localStorage
+      ? localStorage.getItem('fabric.editor.example.full-page')
+      : null;
+    this.state = {
+      document: savedDocument ? JSON.parse(savedDocument) : document,
+    };
     const _this = this;
 
     const formProvider = {
