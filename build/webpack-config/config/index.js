@@ -9,7 +9,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 
 const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
-const HappyPack = require('happypack');
+// const HappyPack = require('happypack');
 
 // const happyThreadPool = HappyPack.ThreadPool({ size: 4 });
 
@@ -118,7 +118,10 @@ module.exports = function createWebpackConfig(
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          loader: 'happypack/loader',
+          loader: require.resolve('ts-loader'),
+          options: {
+            transpileOnly: true,
+          },
         },
 
         {
@@ -230,16 +233,16 @@ function getPlugins(
     //     },
     //   ],
     // }),
-    new HappyPack({
-      loaders: [
-        {
-          loader: 'ts-loader',
-          query: {
-            happyPackMode: true,
-          },
-        },
-      ],
-    }),
+    // new HappyPack({
+    //   loaders: [
+    //     {
+    //       loader: 'ts-loader',
+    //       query: {
+    //         happyPackMode: true,
+    //       },
+    //     },
+    //   ],
+    // }),
   ];
 
   plugins.push(
