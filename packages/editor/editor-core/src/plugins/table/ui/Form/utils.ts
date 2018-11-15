@@ -76,3 +76,18 @@ export const appendColumn = (state, dispatch) => {
   dispatch(addColumnAt(map.width)(state.tr));
   return true;
 };
+
+export const updateCurrentUser = (state, dispatch) => {
+  const table = findTable(state.selection);
+  if (!table) {
+    return false;
+  }
+  const newTable = state.schema.nodes.table.createChecked(
+    { ...table.node.attrs, currentUser: !table.node.attrs.currentUser },
+    table.node.content,
+  );
+  dispatch(
+    state.tr.replaceWith(table.pos, table.pos + table.node.nodeSize, newTable),
+  );
+  return true;
+};

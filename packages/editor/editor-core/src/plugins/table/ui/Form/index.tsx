@@ -17,7 +17,12 @@ import { TableCssClassName as ClassName } from '../../types';
 import { closestElement } from '../../../../utils';
 import FormField from './FormField';
 
-import { onDragEnd, appendColumn, getSelectOptions } from './utils';
+import {
+  updateCurrentUser,
+  onDragEnd,
+  appendColumn,
+  getSelectOptions,
+} from './utils';
 
 export interface Column {
   type: CellType;
@@ -170,14 +175,9 @@ export default class FormBuilder extends React.Component<FormProps, State> {
                                     Populate with the current user.
                                     <Checkbox
                                       isChecked={
-                                        this.state.checkbox[column.index]
+                                        this.props.node.attrs.currentUser
                                       }
-                                      onChange={event =>
-                                        this.handleCheckboxOnChange(
-                                          event,
-                                          column.index,
-                                        )
-                                      }
+                                      onChange={this.updateCurrentUser}
                                     />
                                   </div>
                                 </div>
@@ -306,6 +306,11 @@ export default class FormBuilder extends React.Component<FormProps, State> {
   private appendColumn = () => {
     const { state, dispatch } = this.props.editorView;
     appendColumn(state, dispatch);
+  };
+
+  private updateCurrentUser = () => {
+    const { state, dispatch } = this.props.editorView;
+    updateCurrentUser(state, dispatch);
   };
 
   private onDragEnd = result => {
