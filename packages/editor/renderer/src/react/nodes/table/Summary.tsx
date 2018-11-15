@@ -28,7 +28,7 @@ const getSummary = cells => {
     cells.forEach(cell => {
       if (cell.content[0].attrs) {
         const value = cell.content[0].attrs.value;
-        if (cellType === 'multi-select') {
+        if (cellType === 'multi-select' && value) {
           const values = value.split(',').map(s => s.trim());
           values.forEach(increment);
         } else {
