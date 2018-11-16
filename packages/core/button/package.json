@@ -25,6 +25,7 @@
   "dependencies": {
     "@atlaskit/analytics-next": "^3.0.10",
     "@atlaskit/spinner": "9.0.10",
+    "@atlaskit/design-tokens": "0.1.0",
     "@atlaskit/theme": "^6.1.1",
     "@babel/runtime": "^7.0.0",
     "babel-runtime": "^6.26.0"
