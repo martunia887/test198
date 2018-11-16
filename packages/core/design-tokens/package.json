@@ -1,0 +1,27 @@
+{
+  "name": "@atlaskit/design-tokens",
+  "version": "0.1.0",
+  "description": "shared codified design rules",
+  "license": "Apache-2.0",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "atlaskit:src": "src/index.js",
+  "atlaskit:designLink": "",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "author": "Atlassian Pty Ltd",
+  "maintainers": [
+    "Allard V",
+    "Charles L"
+  ],
+  "atlaskit": {
+    "name": "Design Tokens",
+    "team": "core"
+  },
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "dependencies": {},
+  "peerDependencies": {},
+  "devDependencies": {}
+}
