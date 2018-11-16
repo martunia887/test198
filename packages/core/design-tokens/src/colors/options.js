@@ -32,7 +32,7 @@ const hex2rgba = (hex, alpha = 1) => {
   throw new Error('Bad Hex');
 };
 
-export const colors = {
+export default {
   // Reds
   R50: '#FFEBE6',
   R75: '#FFBDAD',
