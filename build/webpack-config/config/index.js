@@ -9,9 +9,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 
 const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
-const HappyPack = require('happypack');
-
-const happyThreadPool = HappyPack.ThreadPool({ size: 3 });
 
 const baseCacheDir = path.resolve(
   __dirname,
@@ -113,12 +110,41 @@ module.exports = function createWebpackConfig(
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'happypack/loader?id=js',
+          use: [
+            {
+              loader: 'thread-loader',
+              options: {
+                name: 'babel-pool',
+              },
+            },
+            {
+              loader: 'babel-loader',
+              options: {
+                babelrc: true,
+                rootMode: 'upward',
+                envName: 'production:cjs',
+                cacheDirectory: path.resolve(baseCacheDir, 'babel'),
+              },
+            },
+          ],
         },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          loader: 'happypack/loader?id=ts',
+          use: [
+            {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: path.resolve(baseCacheDir, 'ts'),
+              },
+            },
+            {
+              loader: require.resolve('ts-loader'),
+              options: {
+                transpileOnly: true,
+              },
+            },
+          ],
         },
 
         {
@@ -216,39 +242,6 @@ function getPlugins(
       BASE_TITLE: `"Atlaskit by Atlassian ${!isProduction ? '- DEV' : ''}"`,
       DEFAULT_META_DESCRIPTION: `"Atlaskit is the official component library for Atlassian's Design System."`,
     }),
-    new HappyPack({
-      id: 'js',
-      threadPool: happyThreadPool,
-      loaders: [
-        {
-          loader: 'babel-loader',
-          query: {
-            babelrc: true,
-            rootMode: 'upward',
-            envName: 'production:cjs',
-            cacheDirectory: path.resolve(baseCacheDir, 'babel'),
-          },
-        },
-      ],
-    }),
-    new HappyPack({
-      id: 'ts',
-      threadPool: happyThreadPool,
-      loaders: [
-        {
-          loader: 'cache-loader',
-          options: {
-            cacheDirectory: path.resolve(baseCacheDir, 'ts'),
-          },
-        },
-        {
-          loader: 'ts-loader',
-          query: {
-            happyPackMode: true,
-          },
-        },
-      ],
-    }),
   ];
 
   plugins.push(
@@ -257,7 +250,7 @@ function getPlugins(
       generateStatsFile: true,
       openAnalyzer: report,
       logLevel: 'error',
-      statsOptions,
+      statsOptions: statsOptions,
       defaultSizes: 'gzip',
     }),
   );
@@ -332,7 +325,7 @@ function getOptimizations({ isProduction, noMinimizeFlag }) {
     // There's an interesting bug in webpack where passing *any* uglify plugin, where `minimize` is
     // false, causes webpack to use its own minimizer plugin + settings.
     minimizer: noMinimizeFlag ? undefined : [uglifyPlugin],
-    minimize: !noMinimizeFlag,
+    minimize: noMinimizeFlag ? false : true,
     splitChunks: {
       // "Maximum number of parallel requests when on-demand loading. (default in production: 5)"
       // The default value of 5 causes the webpack process to crash, reason currently unknown
