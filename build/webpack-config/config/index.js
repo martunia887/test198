@@ -13,6 +13,11 @@ const HappyPack = require('happypack');
 
 const happyThreadPool = HappyPack.ThreadPool({ size: 3 });
 
+const baseCacheDir = path.resolve(
+  __dirname,
+  '../../../node_modules/.cache-loader',
+);
+
 module.exports = function createWebpackConfig(
   {
     globs = createDefaultGlob(),
@@ -221,6 +226,7 @@ function getPlugins(
             babelrc: true,
             rootMode: 'upward',
             envName: 'production:cjs',
+            cacheDirectory: path.resolve(baseCacheDir, 'babel'),
           },
         },
       ],
@@ -229,6 +235,12 @@ function getPlugins(
       id: 'ts',
       threadPool: happyThreadPool,
       loaders: [
+        {
+          loader: 'cache-loader',
+          options: {
+            cacheDirectory: path.resolve(baseCacheDir, 'ts'),
+          },
+        },
         {
           loader: 'ts-loader',
           query: {
