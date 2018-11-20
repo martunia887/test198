@@ -11,7 +11,9 @@ export default {
     },
     content: {
       type: 'array',
-      items: [['paragraph', 'bulletList', 'orderedList', 'heading']],
+      items: [
+        ['paragraph_no_marks', 'bulletList', 'orderedList', 'heading_no_marks'],
+      ],
       minItems: 1,
     },
   },

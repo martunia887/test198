@@ -85,6 +85,12 @@ function createSpec(nodes?: Array<string>, marks?: Array<string>) {
   return Object.keys(specs).reduce((newSpecs, k) => {
     const spec = { ...specs[k] };
     if (spec.props) {
+      // Bail early for unsupported nodes
+      const type = spec.props.type.values[0];
+      if (nodes && nodes.indexOf(type) < 0) {
+        return newSpecs;
+      }
+
       spec.props = { ...spec.props };
       if (isString(spec.props.content)) {
         spec.props.content = specs[spec.props.content];
@@ -133,9 +139,11 @@ function createSpec(nodes?: Array<string>, marks?: Array<string>) {
               // Filter nodes
               .filter(subItem =>
                 // When Mark or `nodes` is undefined don't filter
-                Array.isArray(subItem) || !nodes
+                !nodes
                   ? true
-                  : nodes.indexOf(subItem) > -1,
+                  : nodes.indexOf(
+                      Array.isArray(subItem) ? subItem : subItem[0],
+                    ) > -1,
               )
               // Filter marks
               .map(subItem =>

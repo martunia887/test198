@@ -309,6 +309,7 @@ describe('validator', () => {
       type: 'paragraph',
       content: [],
     };
+
     const invalidDoc = {
       version: 1,
       type: 'doc',
@@ -335,7 +336,7 @@ describe('validator', () => {
   it('should take custom list of marks', () => {
     const validate = validator(undefined, []);
 
-    const invalidMark = { type: 'bold' };
+    const invalidMark = { type: 'strong' };
 
     const invalidDoc = {
       version: 1,

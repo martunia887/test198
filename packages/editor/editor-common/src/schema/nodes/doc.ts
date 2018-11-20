@@ -4,13 +4,13 @@ import { NodeSpec } from 'prosemirror-model';
 import { PanelDefinition as Panel } from './panel';
 import {
   ParagraphDefinition as Paragraph,
-  ParagraphWithAlignment,
+  ParagraphWithMarks,
 } from './paragraph';
 import { BlockQuoteDefinition as Blockquote } from './blockquote';
 import { OrderedListDefinition as OrderedList } from './ordered-list';
 import { BulletListDefinition as BulletList } from './bullet-list';
 import { RuleDefinition as Rule } from './rule';
-import { HeadingDefinition as Heading, HeadingWithAlignment } from './heading';
+import { HeadingDefinition as Heading, HeadingWithMarks } from './heading';
 import {
   CodeBlockDefinition as CodeBlock,
   CodeBlockWithBreakoutDefinition as CodeBlockWithBreakout,
@@ -183,8 +183,8 @@ export interface DocNode {
     | BlockContent
     | LayoutSection
     | CodeBlockWithBreakout
-    | ParagraphWithAlignment
-    | HeadingWithAlignment
+    | ParagraphWithMarks
+    | HeadingWithMarks
   >;
 }
 

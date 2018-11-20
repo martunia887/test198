@@ -1,16 +1,17 @@
 import { NodeSpec } from 'prosemirror-model';
-import { Inline, MarksObject } from './doc';
+import { Inline, MarksObject, NoMark } from './doc';
 import { AlignmentMarkDefinition } from '..';
 
 /**
  * @name heading_node
  */
-export type HeadingDefinition = {
+export type HeadingBaseDefinition = {
   type: 'heading';
   /**
    * @allowUnsupportedInline true
    */
   content?: Array<Inline>;
+  marks?: Array<any>;
   attrs: {
     /**
      * @minimum 1
@@ -21,10 +22,15 @@ export type HeadingDefinition = {
 };
 
 /**
- * @name heading_with_alignment_node
+ * @name heading_no_marks_node
+ */
+export type HeadingDefinition = HeadingBaseDefinition & NoMark;
+
+/**
+ * @name heading_with_marks_node
  * @stage 0
  */
-export type HeadingWithAlignment = HeadingDefinition &
+export type HeadingWithMarks = HeadingBaseDefinition &
   MarksObject<AlignmentMarkDefinition>;
 
 export const heading: NodeSpec = {
