@@ -136,20 +136,19 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
         }}
         render={({ pluginState, columnTypesState }) => {
           const { tableNode } = pluginState;
-          if (tableNode && tableNode.attrs.viewMode !== 'table') {
-            return null;
-          }
 
           return (
             <>
-              <FloatingContextualMenu
-                editorView={editorView}
-                mountPoint={popupsMountPoint}
-                boundariesElement={popupsBoundariesElement}
-                targetCellPosition={pluginState.targetCellPosition}
-                isOpen={pluginState.isContextualMenuOpen}
-                pluginConfig={pluginState.pluginConfig}
-              />
+              {tableNode && tableNode.attrs.viewMode === 'table' && (
+                <FloatingContextualMenu
+                  editorView={editorView}
+                  mountPoint={popupsMountPoint}
+                  boundariesElement={popupsBoundariesElement}
+                  targetCellPosition={pluginState.targetCellPosition}
+                  isOpen={pluginState.isContextualMenuOpen}
+                  pluginConfig={pluginState.pluginConfig}
+                />
+              )}
               {isLayoutSupported(editorView.state) && (
                 <LayoutButton
                   editorView={editorView}
@@ -175,13 +174,15 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
                 selectMenuType={columnTypesState.selectMenuType}
                 columnIndex={columnTypesState.columnIndex}
               />
-              <SelectPicker
-                editorView={editorView}
-                mountPoint={popupsMountPoint}
-                boundariesElement={popupsBoundariesElement}
-                scrollableElement={popupsScrollableElement}
-                clickedCell={columnTypesState.clickedCell}
-              />
+              {tableNode && tableNode.attrs.viewMode === 'table' && (
+                <SelectPicker
+                  editorView={editorView}
+                  mountPoint={popupsMountPoint}
+                  boundariesElement={popupsBoundariesElement}
+                  scrollableElement={popupsScrollableElement}
+                  clickedCell={columnTypesState.clickedCell}
+                />
+              )}
             </>
           );
         }}

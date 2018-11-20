@@ -720,12 +720,18 @@ export const tableStyles = css`
         margin-bottom: 0;
       }
 
+      .${ClassName.CELL_NODEVIEW_COLUMN_TYPES_BUTTON},
       .${ClassName.FORM_REMOVE_FIELD_BUTTON} {
         visibility: hidden;
         padding: 0;
         position: absolute;
-        right: 15px;
         top: 15px;
+      }
+      .${ClassName.FORM_REMOVE_FIELD_BUTTON} {
+        right: 15px;
+      }
+      .${ClassName.CELL_NODEVIEW_COLUMN_TYPES_BUTTON} {
+        right: 53px;
       }
 
       .${ClassName.FORM_SLIDER_WRAPPER} {
@@ -745,12 +751,13 @@ export const tableStyles = css`
         border-radius: 3px;
         position: relative;
         padding: 15px;
-        padding-right: 50px;
+        padding-right: 90px;
 
         &:hover {
           box-shadow: 0 1px 8px -2px ${N60A}, 0 0 1px ${N60A};
 
-          .${ClassName.FORM_REMOVE_FIELD_BUTTON} {
+          .${ClassName.FORM_REMOVE_FIELD_BUTTON},
+          .${ClassName.CELL_NODEVIEW_COLUMN_TYPES_BUTTON} {
             visibility: visible;
           }
         }
@@ -767,7 +774,7 @@ export const tableStyles = css`
       }
 
       .${ClassName.FORM_FOOTER}.${ClassName.FORM_SECTION} {
-        width: 340px;
+        width: 295px;
         margin-left: 15px;
       }
 

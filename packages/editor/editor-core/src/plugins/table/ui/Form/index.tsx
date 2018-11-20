@@ -94,6 +94,7 @@ export default class FormBuilder extends React.Component<FormProps, State> {
                               label={column.label}
                               columnIndex={column.index}
                               editorView={this.props.editorView}
+                              type={column.type}
                             >
                               {[
                                 'text',

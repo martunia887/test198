@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   EditorState,
   Plugin,
@@ -14,7 +15,22 @@ import {
   getCellsInColumn,
   findDomRefAtPos,
   findCellClosestToPos,
+  findTable,
 } from 'prosemirror-utils';
+import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
+import EditorTextStyleIcon from '@atlaskit/icon/glyph/editor/text-style';
+import EditorMentionIcon from '@atlaskit/icon/glyph/editor/mention';
+import EditorTaskIcon from '@atlaskit/icon/glyph/editor/task';
+import EditorEmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
+import DecisionIcon from '@atlaskit/icon/glyph/editor/decision';
+import Date from '../icons/Date';
+import Number from '../icons/Number';
+import MultiSelect from '../icons/MultiSelect';
+import Slider from '../icons/Slider';
+import Currency from '../icons/Currency';
+import EditorAlignLeftIcon from '@atlaskit/icon/glyph/editor/align-left';
+import RadioIcon from '@atlaskit/icon/glyph/radio';
+import EditorWarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import { CellType } from '@atlaskit/editor-common';
 import { pluginKey as datePluginKey } from '../../date/plugin';
 import { Cell, TableCssClassName as ClassName } from '../types';
@@ -209,18 +225,34 @@ export const setCellContent = (nodes: PMNode | PMNode[], clickedCell: Cell) => (
 export const getColumnTypesButtonRef = (columnIndex: number) => (
   view: EditorView,
 ): HTMLElement | undefined => {
-  const cells = getCellsInColumn(columnIndex)(view.state.selection);
-  if (cells) {
-    const firstCell = cells[0];
-    const { tableHeader } = view.state.schema.nodes;
-    if (firstCell && firstCell.node.type === tableHeader) {
-      const domAtPos = view.domAtPos.bind(view);
-      const cellRef = findDomRefAtPos(cells[0].pos, domAtPos) as HTMLElement;
-      if (cellRef) {
-        return cellRef.querySelector(
-          `.${ClassName.CELL_NODEVIEW_COLUMN_TYPES_BUTTON}`,
-        ) as HTMLElement;
+  const { state } = view;
+  const table = findTable(state.selection);
+  if (!table) {
+    return;
+  }
+  if (table.node.attrs.viewMode === 'table') {
+    const cells = getCellsInColumn(columnIndex)(state.selection);
+    if (cells) {
+      const firstCell = cells[0];
+      const { tableHeader } = state.schema.nodes;
+      if (firstCell && firstCell.node.type === tableHeader) {
+        const domAtPos = view.domAtPos.bind(view);
+        const cellRef = findDomRefAtPos(cells[0].pos, domAtPos) as HTMLElement;
+        if (cellRef) {
+          return cellRef.querySelector(
+            `.${ClassName.CELL_NODEVIEW_COLUMN_TYPES_BUTTON}`,
+          ) as HTMLElement;
+        }
       }
+    }
+  } else {
+    const formField = document.querySelectorAll(
+      `.${ClassName.FORM_COLUMN_FIELD_WRAPPER}`,
+    )[columnIndex];
+    if (formField) {
+      return formField.querySelector(
+        `.${ClassName.CELL_NODEVIEW_COLUMN_TYPES_BUTTON}`,
+      ) as HTMLElement;
     }
   }
 };
@@ -277,4 +309,57 @@ export const setColumnType = (
   dispatch(tr);
 
   return true;
+};
+
+export const getCellTypeIcon = (cellType: string) => {
+  let icon;
+
+  switch (cellType) {
+    case 'text':
+      icon = <EditorTextStyleIcon label="Normal text" />;
+      break;
+    case 'long-text':
+      icon = <EditorAlignLeftIcon label="Long text" />;
+      break;
+    case 'number':
+      icon = <Number label="Number" />;
+      break;
+    case 'currency':
+      icon = <Currency label="Currency" />;
+      break;
+    case 'date':
+      icon = <Date label="Date" />;
+      break;
+    case 'mention':
+      icon = <EditorMentionIcon label="Person" />;
+      break;
+    case 'checkbox':
+      icon = <EditorTaskIcon label="Checkbox" />;
+      break;
+    case 'slider':
+      icon = <Slider label="Slider" />;
+      break;
+    case 'emoji':
+      icon = <EditorEmojiIcon label="Emoji" />;
+      break;
+    case 'decision':
+      icon = <DecisionIcon label="Decision" />;
+      break;
+    case 'single-select':
+      icon = <ExpandIcon label="Single select" />;
+      break;
+    case 'multi-select':
+      icon = <MultiSelect label="Multiple select" />;
+      break;
+    case 'radio-select':
+      icon = <RadioIcon label="Radio" />;
+      break;
+    case 'status-select':
+      icon = <EditorWarningIcon label="Status" />;
+      break;
+    default:
+      icon = <EditorTextStyleIcon label="Normal text" />;
+      break;
+  }
+  return icon;
 };
