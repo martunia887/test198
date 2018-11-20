@@ -5,23 +5,19 @@ import { AlignmentMarkDefinition } from '..';
 /**
  * @name paragraph_node
  */
-export interface ParagraphDefinition {
+export type ParagraphDefinition = {
   type: 'paragraph';
   /**
    * @allowUnsupportedInline true
    */
   content?: Array<Inline>;
-}
-
-export interface ParagraphMarks extends ParagraphDefinition {
-  marks?: Array<any>;
-}
+};
 
 /**
- * @name paragraph_with_alignment
+ * @name paragraph_with_alignment_node
  * @stage 0
  */
-export type ParagraphWithAlignment = ParagraphMarks &
+export type ParagraphWithAlignment = ParagraphDefinition &
   MarksObject<AlignmentMarkDefinition>;
 
 const pDOM: DOMOutputSpec = ['p', 0];

@@ -5,7 +5,7 @@ import { AlignmentMarkDefinition } from '..';
 /**
  * @name heading_node
  */
-export interface HeadingDefinition {
+export type HeadingDefinition = {
   type: 'heading';
   /**
    * @allowUnsupportedInline true
@@ -18,17 +18,13 @@ export interface HeadingDefinition {
      */
     level: number;
   };
-}
-
-export interface HeadingMarks extends HeadingDefinition {
-  marks?: Array<any>;
-}
+};
 
 /**
- * @name heading_with_alignment
+ * @name heading_with_alignment_node
  * @stage 0
  */
-export type HeadingWithAlignment = HeadingMarks &
+export type HeadingWithAlignment = HeadingDefinition &
   MarksObject<AlignmentMarkDefinition>;
 
 export const heading: NodeSpec = {

@@ -662,45 +662,10 @@
       ],
       "additionalProperties": false
     },
-    "heading_with_alignment": {
+    "heading_with_alignment_node": {
       "allOf": [
         {
-          "type": "object",
-          "properties": {
-            "marks": {
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "heading"
-              ]
-            },
-            "content": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/inline_node"
-              }
-            },
-            "attrs": {
-              "type": "object",
-              "properties": {
-                "level": {
-                  "type": "number",
-                  "minimum": 1,
-                  "maximum": 6
-                }
-              },
-              "required": [
-                "level"
-              ],
-              "additionalProperties": false
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "type",
-            "attrs"
-          ]
+          "$ref": "#/definitions/heading_node"
         },
         {
           "type": "object",
@@ -1916,30 +1881,10 @@
       ],
       "additionalProperties": false
     },
-    "paragraph_with_alignment": {
+    "paragraph_with_alignment_node": {
       "allOf": [
         {
-          "type": "object",
-          "properties": {
-            "marks": {
-              "type": "array"
-            },
-            "type": {
-              "enum": [
-                "paragraph"
-              ]
-            },
-            "content": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/inline_node"
-              }
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "type"
-          ]
+          "$ref": "#/definitions/paragraph_node"
         },
         {
           "type": "object",
@@ -2320,7 +2265,7 @@
                 "$ref": "#/definitions/heading_node"
               },
               {
-                "$ref": "#/definitions/heading_with_alignment"
+                "$ref": "#/definitions/heading_with_alignment_node"
               },
               {
                 "$ref": "#/definitions/rule_node"
@@ -2353,7 +2298,7 @@
                 "$ref": "#/definitions/paragraph_node"
               },
               {
-                "$ref": "#/definitions/paragraph_with_alignment"
+                "$ref": "#/definitions/paragraph_with_alignment_node"
               },
               {
                 "$ref": "#/definitions/panel_node"
