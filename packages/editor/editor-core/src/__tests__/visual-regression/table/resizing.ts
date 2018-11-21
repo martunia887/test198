@@ -22,7 +22,6 @@ describe('Snapshot Test: table resizing', () => {
       await snapshot(page);
     });
 
-    // TODO: https://product-fabric.atlassian.net/browse/ED-5688
     it(`snaps back to layout width after column removal`, async () => {
       await snapshot(page);
       await deleteColumn(page, 1);
