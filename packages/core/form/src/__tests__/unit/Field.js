@@ -14,9 +14,9 @@ const touch = wrapper => {
 
 test('should not be dirty after mount', () => {
   const wrapper = mount(
-    <Form onSubmit={jest.fn()}>
+    <Form onSubmit={jest.fn()} initialValues={{ username: 'Joe Bloggs' }}>
       {() => (
-        <Field name="username" defaultValue="Joe Bloggs">
+        <Field name="username">
           {({ fieldProps, meta: { dirty } }) => (
             <>
               <FieldText {...fieldProps} />
@@ -34,13 +34,9 @@ test('should not be dirty after mount', () => {
 
 test('untouched field should not show validation error', () => {
   const wrapper = mount(
-    <Form onSubmit={jest.fn()}>
+    <Form onSubmit={jest.fn()} initialValues={{ username: 'Joe Bloggs' }}>
       {() => (
-        <Field
-          name="username"
-          defaultValue="Joe Bloggs"
-          validate={() => 'ERROR'}
-        >
+        <Field name="username" validate={() => 'ERROR'}>
           {({ fieldProps, error }) => (
             <>
               <FieldText {...fieldProps} />
@@ -59,13 +55,9 @@ test('untouched field should not show validation error', () => {
 
 test('touched field should show validation error', () => {
   const wrapper = mount(
-    <Form onSubmit={jest.fn()}>
+    <Form onSubmit={jest.fn()} initialValues={{ username: 'Joe Bloggs' }}>
       {() => (
-        <Field
-          name="username"
-          defaultValue="Joe Bloggs"
-          validate={() => 'ERROR'}
-        >
+        <Field name="username" validate={() => 'ERROR'}>
           {({ fieldProps, error }) => (
             <>
               <FieldText {...fieldProps} />
@@ -85,10 +77,13 @@ test('touched field should show validation error', () => {
 
 test('should show errors after submission', () => {
   const wrapper = mount(
-    <Form onSubmit={() => Promise.resolve({ username: 'TAKEN_USERNAME' })}>
+    <Form
+      onSubmit={() => Promise.resolve({ username: 'TAKEN_USERNAME' })}
+      initialValues={{ username: 'Joe Bloggs' }}
+    >
       {({ formProps: { onSubmit } }) => (
         <>
-          <Field name="username" defaultValue="Joe Bloggs">
+          <Field name="username">
             {({ fieldProps, error }) => (
               <>
                 <FieldText {...fieldProps} />
@@ -116,9 +111,9 @@ test('should show errors after submission', () => {
 
 test('should communicate error when isRequired is set on field', () => {
   const wrapper = mount(
-    <Form onSubmit={jest.fn()}>
+    <Form onSubmit={jest.fn()} initialValue={{ username: '' }}>
       {() => (
-        <Field name="username" defaultValue="" isRequired>
+        <Field name="username" isRequired>
           {({ fieldProps, error }) => (
             <>
               <FieldText {...fieldProps} />
@@ -141,9 +136,9 @@ test('change in defaultValue should reset form field', () => {
     <WithState defaultState={''}>
       {(defaultValue, setDefaultValue) => (
         <>
-          <Form onSubmit={jest.fn()}>
+          <Form onSubmit={jest.fn()} initialValues={{ username: defaultValue }}>
             {() => (
-              <Field name="username" defaultValue={defaultValue} isRequired>
+              <Field name="username" isRequired>
                 {({ fieldProps }) => <FieldText {...fieldProps} />}
               </Field>
             )}

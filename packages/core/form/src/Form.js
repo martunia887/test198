@@ -2,6 +2,7 @@
 import React, { createContext, type Node, type Ref } from 'react';
 import { createForm, type FormApi } from 'final-form';
 import createDecorator from 'final-form-focus';
+import shallowEqual from 'shallow-equal/objects';
 
 export const FormContext = createContext();
 
@@ -13,65 +14,61 @@ type FormProps = {
 type Props = {
   /* Children rendered inside the Form component. Function will be passed props from the form. */
   children: ({ formProps: FormProps }) => Node,
+  /* the initial values of the form */
+  initialValues: Object,
   /* Called when the form is submitted without errors */
   onSubmit: Object => any,
 };
 
-export type FieldInfo = {
-  name: string,
-  initialValue: any,
-  register: FormApi => any,
+type State = {
+  form: FormApi,
 };
 
-class Form extends React.Component<Props> {
-  fields = [];
-  form = undefined;
-  formRef = React.createRef();
+const createFinalForm = (initialValues, onSubmit, formRef) => {
+  const form = createForm({
+    initialValues,
+    onSubmit,
+  });
+  // mutate state
+  const withFocusDecorator = createDecorator(() =>
+    formRef.current
+      ? Array.from(formRef.current.querySelectorAll('input'))
+      : [],
+  );
+  withFocusDecorator(form);
+  return form;
+};
 
-  componentDidMount() {
-    const initialValues = this.fields.reduce(
-      (initials, field) => ({
-        ...initials,
-        [field.name]: field.initialValue,
-      }),
-      {},
-    );
-    this.form = createForm({
-      initialValues,
-      onSubmit: this.props.onSubmit,
-    });
-
-    const withFocusDecorator = createDecorator(() =>
-      this.formRef.current
-        ? Array.from(this.formRef.current.querySelectorAll('input'))
-        : [],
-    );
-    withFocusDecorator(this.form);
-
-    this.fields.forEach(field => {
-      if (this.form) {
-        field.register(this.form);
-      }
-    });
-    this.fields = [];
-  }
-
-  registerField = (field: FieldInfo) => {
-    this.fields = [...this.fields, field];
+class Form extends React.Component<Props, State> {
+  static defaultProps = {
+    initialValues: {},
   };
+
+  formRef = React.createRef();
+  state = {
+    form: createFinalForm(
+      this.props.initialValues,
+      this.props.onSubmit,
+      this.formRef,
+    ),
+  };
+
+  componentDidUpdate(prevProps: Props) {
+    if (!shallowEqual(prevProps.initialValues, this.props.initialValues)) {
+      this.state.form.reset(this.props.initialValues);
+    }
+  }
 
   handleSubmit = (e: SyntheticEvent<HTMLFormElement> | any) => {
     if (typeof e.preventDefault === 'function') {
       e.preventDefault();
     }
-    if (this.form) {
-      this.form.submit();
-    }
+    this.state.form.submit();
   };
 
   render() {
     return (
-      <FormContext.Provider value={this.registerField}>
+      <FormContext.Provider value={this.state.form}>
         {this.props.children({
           formProps: {
             onSubmit: this.handleSubmit,
