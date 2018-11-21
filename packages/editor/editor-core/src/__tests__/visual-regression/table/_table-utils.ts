@@ -12,6 +12,9 @@ type ResizeColumnOpts = {
   row?: number;
 };
 
+// This fixes an issue when tests will fail with
+// "Node is either not visible or not an HTMLElement" due to the table
+// header not being visible
 const clickFirstCell = async page => {
   await page.waitForSelector(ClassName.TOP_LEFT_CELL);
   await page.click(ClassName.TOP_LEFT_CELL);
