@@ -114,7 +114,6 @@ export const deleteRowOrColumn = async (page, type, atIndex) => {
   }`;
   await clickFirstCell(page);
   await page.click(controlSelector);
-
   await page.hover(deleteButtonSelector);
   await page.waitForSelector(deleteButtonSelector);
   await page.click(deleteButtonSelector);
