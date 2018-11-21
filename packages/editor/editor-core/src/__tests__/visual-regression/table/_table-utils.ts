@@ -106,7 +106,14 @@ export const deleteRowOrColumn = async (page, type, atIndex) => {
   const deleteButtonSelector = `.${ClassName.CONTROLS_DELETE_BUTTON_WRAP} .${
     ClassName.CONTROLS_DELETE_BUTTON
   }`;
+  await page.waitForSelector(
+    'table > tbody > tr:nth-child(2) > td:nth-child(1)',
+  );
+  await page.click('table > tbody > tr:nth-child(2) > td:nth-child(1)');
+  // await page.hover(controlSelector);
+  // await page.waitForSelector(controlSelector);
   await page.click(controlSelector);
+
   await page.hover(deleteButtonSelector);
   await page.waitForSelector(deleteButtonSelector);
   await page.click(deleteButtonSelector);
