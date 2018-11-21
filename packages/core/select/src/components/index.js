@@ -20,4 +20,5 @@ export const MultiValueRemove = (props: any) => (
     />
   </components.MultiValueRemove>
 );
+
 export const IndicatorSeparator = null;
