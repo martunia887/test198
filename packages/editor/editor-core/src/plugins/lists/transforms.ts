@@ -60,7 +60,9 @@ export function liftFollowingList(
   const { listItem } = state.schema.nodes;
   let lifted = false;
   tr.doc.nodesBetween(from, to, (node, pos) => {
+    console.log('Looking at lifting node:', node.type.name, node);
     if (!lifted && node.type === listItem && pos > from) {
+      console.log('actually lifting:', node.type.name, node);
       lifted = true;
       let listDepth = rootListDepth + 3;
       while (listDepth > rootListDepth + 2) {
