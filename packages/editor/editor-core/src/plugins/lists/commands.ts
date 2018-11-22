@@ -395,6 +395,22 @@ export function indentList(): Command {
   };
 }
 
+function changeParentType(): Command {
+  return function(state, dispatch) {
+    const { tr } = state;
+    const { $from, $to } = state.selection;
+
+    // tr.setNodeMarkup($from.before($from.depth), state.schema.nodes.orderedList);
+    tr.setNodeMarkup(
+      $from.before($from.depth - 2),
+      state.schema.nodes.orderedList,
+    );
+
+    dispatch(tr);
+    return true;
+  };
+}
+
 export function liftListItems(): Command {
   return function(state, dispatch) {
     const { tr } = state;
@@ -408,9 +424,12 @@ export function liftListItems(): Command {
         node.type.name === 'blockquote' ||
         node.type.name === 'panel'
       ) {
+        // Fix here - this selection will only be the line
         const sel = new NodeSelection(tr.doc.resolve(tr.mapping.map(pos)));
+
         const range = sel.$from.blockRange(sel.$to);
 
+        // Reture false if the parent isn't a list
         if (!range || sel.$from.parent.type !== state.schema.nodes.listItem) {
           return false;
         }
@@ -485,8 +504,10 @@ export const toggleList = (
     fromNode.type.name !== listType ||
     (!endNode || endNode.type.name !== listType)
   ) {
+    console.log('Toggling list from nothing');
     return toggleListCommand(listType)(state, dispatch, view);
   } else {
+    console.log('Toggling list advanced');
     let rootListDepth;
     for (let i = selection.$to.depth - 1; i > 0; i--) {
       const node = selection.$to.node(i);
@@ -536,6 +557,15 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
       $to,
       state.schema.nodes[listType],
     );
+
+    if (
+      parent.type === state.schema.nodes['bulletList'] ||
+      state.schema.nodes['orderedList']
+    ) {
+      // is ordered list right
+      // tr.setNodeMarkup(pos, state.schema.nodes.paragraph);
+      return changeParentType()(state, dispatch);
+    }
 
     if (
       ((parent && parent.type === state.schema.nodes[listType]) ||
