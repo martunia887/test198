@@ -1,4 +1,4 @@
-import { ResolvedPos, Fragment, Slice } from 'prosemirror-model';
+import { ResolvedPos, Fragment, Slice, NodeType } from 'prosemirror-model';
 import {
   EditorState,
   Transaction,
@@ -21,7 +21,11 @@ import {
   findCutBefore,
 } from '../../utils/commands';
 import { isRangeOfType } from '../../utils';
-import { liftFollowingList, liftSelectionList } from './transforms';
+import {
+  liftFollowingList,
+  liftSelectionList,
+  ancestorListDepth,
+} from './transforms';
 import { Command } from '../../types';
 import { GapCursorSelection } from '../gap-cursor';
 
@@ -509,15 +513,37 @@ export const toggleList = (
       state.tr,
     );
     tr = liftSelectionList(state, tr);
-    dispatch(tr);
+    if (dispatch) {
+      dispatch(tr);
+    }
     return true;
   }
 };
 
-export function toggleListCommand(
-  listType: 'bulletList' | 'orderedList',
-): Command {
-  return function(state, dispatch, view) {
+// Returns true if there is any node in selection with given depth
+function isAnyNodesAtDepth(
+  from: number,
+  to: number,
+  tr: Transaction,
+  depth: number,
+): boolean {
+  for (let pos = from; pos < to; pos++) {
+    if (!tr.doc.nodeAt(pos)) {
+      continue;
+    }
+    if (tr.doc.resolve(pos).depth === depth) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
+  return function(
+    state: EditorState,
+    dispatch: ((tr: Transaction) => void) | undefined,
+    view: EditorView | undefined,
+  ): boolean {
     if (dispatch) {
       dispatch(
         state.tr.setSelection(
@@ -542,10 +568,27 @@ export function toggleListCommand(
       state.schema.nodes[listType],
     );
 
+    const { bulletList, orderedList } = state.schema.nodes;
+
+    const nodes = state.schema.nodes;
+    const listNodes = [bulletList, orderedList];
+
     if (
-      ((parent && parent.type === state.schema.nodes[listType]) ||
-        (grandgrandParent &&
-          grandgrandParent.type === state.schema.nodes[listType])) &&
+      (!isAnyNodesAtDepth($from.pos, $to.pos, state.tr, 0) &&
+        (parent &&
+          listNodes.indexOf(parent.type) !== -1 &&
+          parent.type !== nodes[listType])) ||
+      (grandgrandParent &&
+        listNodes.indexOf(grandgrandParent.type) !== -1 &&
+        grandgrandParent.type !== nodes[listType])
+    ) {
+      // Change type of list from bullet to ordered or vice versa
+      return toggleListTypes(listType)(state, dispatch);
+    }
+
+    if (
+      ((parent && parent.type === nodes[listType]) ||
+        (grandgrandParent && grandgrandParent.type === nodes[listType])) &&
       isRangeOfSingleType
     ) {
       // Untoggles list
@@ -558,6 +601,77 @@ export function toggleListCommand(
       }
       return wrapInList(state.schema.nodes[listType])(state, dispatch);
     }
+  };
+}
+
+// Attempt to change the type of list in the selection to listType
+function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
+  return function(state, dispatch) {
+    const { tr } = state;
+    const { $from, $to } = state.selection;
+    const { orderedList, bulletList, listItem } = state.schema.nodes;
+    const outputListType = listType === 'bulletList' ? bulletList : orderedList;
+
+    const setListMarkup = (pos: number) =>
+      tr.setNodeMarkup(pos, outputListType);
+
+    const fromParentDepth = ancestorListDepth(
+      state.selection.$from,
+      state.schema.nodes,
+    );
+
+    /*
+    Check the nearest parent list and change the type if necessary, as we don't hit 
+    one the parent list's ul/ol node in the for loop below if selection starts in the
+    list
+    */
+    if (fromParentDepth !== undefined) {
+      const nearestFromParentListPosition = $from.before(fromParentDepth);
+      const node = tr.doc.nodeAt(nearestFromParentListPosition);
+      if (
+        node &&
+        (node.type === orderedList || node.type === bulletList) &&
+        node.type !== outputListType
+      ) {
+        setListMarkup(nearestFromParentListPosition);
+      }
+    }
+
+    let lastNodeType: NodeType | undefined;
+
+    // Iterate over nodes between start and end of selection
+    for (let pos = $from.pos; pos < $to.pos; pos++) {
+      const node = tr.doc.nodeAt(pos);
+      if (!node) {
+        continue;
+      }
+      // No need to convert a list with the correct type
+      if (node.type === outputListType) {
+        lastNodeType = node.type;
+        continue;
+      }
+      if (node.type === orderedList || node.type === bulletList) {
+        setListMarkup(pos);
+      } else if (
+        node.type === listItem &&
+        lastNodeType !== orderedList &&
+        lastNodeType !== bulletList
+      ) {
+        // If we pass through a listItem without passing through a ol/ul then we need to find the parent
+        // and convert that (as we've hit a sibling to another list element)
+        const resolvedPos: ResolvedPos = tr.doc.resolve(pos);
+        const parentListPos = resolvedPos.before(resolvedPos.depth);
+        const parentListNode = tr.doc.nodeAt(parentListPos);
+        if (parentListNode && parentListNode.type !== outputListType) {
+          setListMarkup(parentListPos);
+        }
+      }
+      lastNodeType = node.type;
+    }
+    if (dispatch) {
+      dispatch(tr);
+    }
+    return true;
   };
 }
 
