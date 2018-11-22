@@ -4,6 +4,7 @@ import {
   Transaction,
   TextSelection,
   NodeSelection,
+  Selection,
 } from 'prosemirror-state';
 import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 import { EditorView } from 'prosemirror-view';
@@ -386,6 +387,20 @@ export function indentList(): Command {
   return function(state, dispatch) {
     const { listItem } = state.schema.nodes;
     if (isInsideListItem(state)) {
+      const { $from } = state.selection;
+      console.log('Indented list');
+
+      const baseDepth = rootListDepth(state.selection, state.schema.nodes);
+      const currentDepth = $from.depth;
+
+      // Each indentation level increases the depth by two due
+      const indentationLevel = (currentDepth - baseDepth) / 2;
+      console.log('Up to indentation level:', indentationLevel);
+      if (indentationLevel > 5) {
+        return false;
+      }
+
+    // if ($from.node(-1).type === listItem) {
       baseListCommand.sinkListItem(listItem)(state, dispatch);
       return true;
     }
@@ -470,6 +485,25 @@ export function adjustSelectionInList(
   return new TextSelection(doc.resolve(startPos), doc.resolve(endPos));
 }
 
+export const rootListDepth = (selection: Selection<any>, nodes) => {
+  const { bulletList, orderedList, listItem } = nodes;
+  let depth;
+  for (let i = selection.$to.depth - 1; i > 0; i--) {
+    const node = selection.$to.node(i);
+    if (node.type === bulletList || node.type === orderedList) {
+      depth = i;
+    }
+    if (
+      node.type !== bulletList &&
+      node.type !== orderedList &&
+      node.type !== listItem
+    ) {
+      break;
+    }
+  }
+  return depth;
+};
+
 export const toggleList = (
   state: EditorState,
   dispatch: (tr: Transaction) => void,
@@ -477,7 +511,6 @@ export const toggleList = (
   listType: 'bulletList' | 'orderedList',
 ): boolean => {
   const { selection } = state;
-  const { bulletList, orderedList, listItem } = state.schema.nodes;
   const fromNode = selection.$from.node(selection.$from.depth - 2);
   const endNode = selection.$to.node(selection.$to.depth - 2);
   if (
@@ -487,25 +520,12 @@ export const toggleList = (
   ) {
     return toggleListCommand(listType)(state, dispatch, view);
   } else {
-    let rootListDepth;
-    for (let i = selection.$to.depth - 1; i > 0; i--) {
-      const node = selection.$to.node(i);
-      if (node.type === bulletList || node.type === orderedList) {
-        rootListDepth = i;
-      }
-      if (
-        node.type !== bulletList &&
-        node.type !== orderedList &&
-        node.type !== listItem
-      ) {
-        break;
-      }
-    }
+    const depth = rootListDepth(selection, state.schema.nodes);
     let tr = liftFollowingList(
       state,
       selection.$to.pos,
-      selection.$to.end(rootListDepth),
-      rootListDepth,
+      selection.$to.end(depth),
+      depth,
       state.tr,
     );
     tr = liftSelectionList(state, tr);
