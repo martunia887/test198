@@ -395,22 +395,6 @@ export function indentList(): Command {
   };
 }
 
-function changeParentType(): Command {
-  return function(state, dispatch) {
-    const { tr } = state;
-    const { $from, $to } = state.selection;
-
-    // tr.setNodeMarkup($from.before($from.depth), state.schema.nodes.orderedList);
-    tr.setNodeMarkup(
-      $from.before($from.depth - 2),
-      state.schema.nodes.orderedList,
-    );
-
-    dispatch(tr);
-    return true;
-  };
-}
-
 export function liftListItems(): Command {
   return function(state, dispatch) {
     const { tr } = state;
@@ -504,10 +488,8 @@ export const toggleList = (
     fromNode.type.name !== listType ||
     (!endNode || endNode.type.name !== listType)
   ) {
-    console.log('Toggling list from nothing');
     return toggleListCommand(listType)(state, dispatch, view);
   } else {
-    console.log('Toggling list advanced');
     let rootListDepth;
     for (let i = selection.$to.depth - 1; i > 0; i--) {
       const node = selection.$to.node(i);
@@ -560,11 +542,9 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
 
     if (
       parent.type === state.schema.nodes['bulletList'] ||
-      state.schema.nodes['orderedList']
+      parent.type === state.schema.nodes['orderedList']
     ) {
-      // is ordered list right
-      // tr.setNodeMarkup(pos, state.schema.nodes.paragraph);
-      return changeParentType()(state, dispatch);
+      return changeListType(listType)(state, dispatch);
     }
 
     if (
@@ -583,6 +563,21 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
       }
       return wrapInList(state.schema.nodes[listType])(state, dispatch);
     }
+  };
+}
+function changeListType(listType: 'bulletList' | 'orderedList'): Command {
+  return function(state, dispatch) {
+    const { tr } = state;
+    const { $from, $to } = state.selection;
+    const { orderedList, bulletList } = state.schema.nodes;
+
+    tr.setNodeMarkup(
+      $from.before($from.depth - 2),
+      listType === 'bulletList' ? bulletList : orderedList,
+    );
+
+    dispatch(tr);
+    return true;
   };
 }
 
