@@ -9,6 +9,7 @@ function liftListItem(
   tr: Transaction,
 ): Transaction {
   let { $from, $to } = selection;
+  console.log('liftListItem called for selection', selection);
   const nodeType = state.schema.nodes.listItem;
   let range = $from.blockRange(
     $to,
@@ -58,12 +59,14 @@ export function liftFollowingList(
   tr: Transaction,
 ): Transaction {
   const { listItem } = state.schema.nodes;
-  let lifted = false;
+  // let lifted = false;
+
   tr.doc.nodesBetween(from, to, (node, pos) => {
     console.log('Looking at lifting node:', node.type.name, node);
-    if (!lifted && node.type === listItem && pos > from) {
+    if (node.type === listItem) {
+      //if (node.type === listItem && pos > from) {
       console.log('actually lifting:', node.type.name, node);
-      lifted = true;
+      // lifted = true;
       let listDepth = rootListDepth + 3;
       while (listDepth > rootListDepth + 2) {
         const start = tr.doc.resolve(tr.mapping.map(pos));
@@ -79,14 +82,19 @@ export function liftFollowingList(
   return tr;
 }
 
-// The function will list paragraphs in selection out to level 1 below root list.
+// The function will lift paragraphs in selection out to level 1 below root list.
 export function liftSelectionList(
   state: EditorState,
   tr: Transaction,
 ): Transaction {
-  const { from, to } = state.selection;
+  const { $from } = state.selection;
   const { paragraph } = state.schema.nodes;
   const listCol: any[] = [];
+
+  // TOFIX: Should this 2 be hardcoded?
+  const from = $from.before($from.depth - 2);
+  const to = $from.after($from.depth - 2);
+
   tr.doc.nodesBetween(from, to, (node, pos) => {
     if (node.type === paragraph) {
       listCol.push({ node, pos });
