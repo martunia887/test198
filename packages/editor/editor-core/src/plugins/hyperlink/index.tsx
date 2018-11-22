@@ -8,6 +8,7 @@ import { plugin, stateKey, HyperlinkState } from './pm-plugins/main';
 import fakeCursorToolbarPlugin from './pm-plugins/fake-cursor-for-toolbar';
 import syncTextAndUrlPlugin from './pm-plugins/sync-text-and-url';
 import HyperlinkToolbar from './ui';
+import EditorSuccessIcon from '@atlaskit/icon/glyph/editor/success';
 
 const hyperlinkPlugin: EditorPlugin = {
   marks() {
@@ -35,6 +36,25 @@ const hyperlinkPlugin: EditorPlugin = {
         plugin: ({ schema, props }) => createKeymapPlugin(schema, props),
       },
     ];
+  },
+
+  pluginsOptions: {
+    quickInsert: ({ formatMessage }) => [
+      {
+        title: 'Hyperlink',
+        keywords: ['url', 'link', 'hyperlink'],
+        priority: 1200,
+        icon: () => <EditorSuccessIcon label={'Hyperlink'} />,
+        action(insert, state) {
+          const mark = state.schema.mark('link', {
+            href: 'http://www.google.com',
+          });
+          // const mark = state.schema.mark('link');
+          const text = state.schema.text('google', [mark]);
+          return insert(text);
+        },
+      },
+    ],
   },
 
   contentComponent({
