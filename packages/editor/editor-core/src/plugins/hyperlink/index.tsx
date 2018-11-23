@@ -4,7 +4,12 @@ import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
 import { createInputRulePlugin } from './pm-plugins/input-rule';
 import { createKeymapPlugin } from './pm-plugins/keymap';
-import { plugin, stateKey, HyperlinkState } from './pm-plugins/main';
+import {
+  plugin,
+  stateKey,
+  HyperlinkState,
+  LinkAction,
+} from './pm-plugins/main';
 import fakeCursorToolbarPlugin from './pm-plugins/fake-cursor-for-toolbar';
 import syncTextAndUrlPlugin from './pm-plugins/sync-text-and-url';
 import HyperlinkToolbar from './ui';
@@ -46,12 +51,14 @@ const hyperlinkPlugin: EditorPlugin = {
         priority: 1200,
         icon: () => <EditorSuccessIcon label={'Hyperlink'} />,
         action(insert, state) {
-          const mark = state.schema.mark('link', {
-            href: 'http://www.google.com',
-          });
+          //dispatch(state.tr.setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR));
+          // const mark = state.schema.mark('link', {
+          //   href: 'http://www.google.com',
+          // });
           // const mark = state.schema.mark('link');
-          const text = state.schema.text('google', [mark]);
-          return insert(text);
+          // const text = state.schema.text('google', [mark]);
+          // return insert(text);
+          return state.tr.setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR);
         },
       },
     ],
