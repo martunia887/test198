@@ -571,7 +571,7 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
 function changeListType(listType: 'bulletList' | 'orderedList'): Command {
   return function(state, dispatch) {
     const { tr } = state;
-    const { $from, $to } = state.selection;
+    const { $from } = state.selection;
     const { orderedList, bulletList } = state.schema.nodes;
 
     tr.setNodeMarkup(
