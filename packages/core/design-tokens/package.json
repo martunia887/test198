@@ -20,8 +20,5 @@
     "name": "Design Tokens",
     "team": "core"
   },
-  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
-  "dependencies": {},
-  "peerDependencies": {},
-  "devDependencies": {}
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2"
 }

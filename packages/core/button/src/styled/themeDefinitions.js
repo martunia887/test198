@@ -2,16 +2,6 @@
 import { colors, themed } from '@atlaskit/theme';
 import { colorTokens } from '@atlaskit/design-tokens';
 /* eslint-enable no-bitwise */
-
-const {
-  changeBoarding,
-  critical,
-  link,
-  neutral,
-  primary,
-  warning,
-} = colorTokens;
-
 /**
  * Convert a hex colour code to RGBA.
  * @param {String} hex Hex colour code.
@@ -59,52 +49,55 @@ export default {
       background: {
         default: themed({ light: colors.N20A, dark: colors.DN70 }),
         hover: themed({
-          light: neutral.backgroundColor.hover,
+          light: colorTokens.colorNeutralBackgroundHover,
           dark: colors.DN60,
         }),
         active: themed({
-          light: neutral.backgroundColor.active,
+          light: colorTokens.colorNeutralBackgroundActive,
           dark: colors.B75,
         }),
         disabled: themed({
-          light: neutral.backgroundColor.disabled,
+          light: colorTokens.colorNeutralBackgroundDisabled,
           dark: colors.DN70,
         }),
         selected: themed({
-          light: neutral.backgroundColor.selected,
+          light: colorTokens.colorNeutralBackgroundSelected,
           dark: colors.DN0,
         }),
         focusSelected: themed({
-          light: neutral.backgroundColor.selected,
+          light: colorTokens.colorNeutralBackgroundSelected,
           dark: colors.DN0,
         }),
       },
       boxShadowColor: {
         focus: themed({
-          light: neutral.boxShadowColor.focus,
+          light: colorTokens.colorNeutralBoxshadowFocus,
           dark: colors.B75,
         }),
         focusSelected: themed({
-          light: neutral.boxShadowColor.focus,
+          light: colorTokens.colorNeutralBoxshadowFocus,
           dark: colors.B75,
         }),
       },
       color: {
         default: themed({
-          light: neutral.textColor.resting,
+          light: colorTokens.colorNeutralTextResting,
           dark: colors.DN400,
         }),
-        active: themed({ light: neutral.textColor.active, dark: colors.B400 }),
+        active: themed({
+          light: colorTokens.colorNeutralTextActive,
+          dark: colors.B400,
+        }),
         disabled: themed({
-          light: neutral.textColor.disabled,
+          light: colorTokens.colorNeutralTextDisabled,
           dark: colors.DN30,
         }),
         selected: themed({
-          light: neutral.textColor.selected,
+          light: colorTokens.colorNeutralTextSelected,
           dark: colors.DN400,
         }),
         focusSelected: themed({
-          light: neutral.textColor.selected,
+          light: colorTokens.colorNeutralTextSelected,
           dark: colors.DN400,
         }),
       },
@@ -114,55 +107,55 @@ export default {
     primary: {
       background: {
         default: themed({
-          light: primary.backgroundColor.resting,
+          light: colorTokens.colorPrimaryBackgroundResting,
           dark: colors.B100,
         }),
         hover: themed({
-          light: primary.backgroundColor.hover,
+          light: colorTokens.colorPrimaryBackgroundHover,
           dark: colors.B75,
         }),
         active: themed({
-          light: primary.backgroundColor.active,
+          light: colorTokens.colorPrimaryBackgroundActive,
           dark: colors.B200,
         }),
         disabled: themed({
-          light: primary.backgroundColor.disabled,
+          light: colorTokens.colorPrimaryBackgroundDisabled,
           dark: colors.DN70,
         }),
         selected: themed({
-          light: primary.backgroundColor.selected,
+          light: colorTokens.colorPrimaryBackgroundSelected,
           dark: colors.DN0,
         }),
         focusSelected: themed({
-          light: primary.backgroundColor.selected,
+          light: colorTokens.colorPrimaryBackgroundSelected,
           dark: colors.DN0,
         }),
       },
       boxShadowColor: {
         focus: themed({
-          light: primary.boxShadowColor.focus,
+          light: colorTokens.colorPrimaryBoxshadowFocus,
           dark: colors.B75,
         }),
         focusSelected: themed({
-          light: primary.boxShadowColor.focus,
+          light: colorTokens.colorPrimaryBoxshadowFocus,
           dark: colors.B75,
         }),
       },
       color: {
         default: themed({
-          light: primary.textColor.resting,
+          light: colorTokens.colorPrimaryTextResting,
           dark: colors.DN30,
         }),
         disabled: themed({
-          light: primary.textColor.disabled,
+          light: colorTokens.colorPrimaryTextDisabled,
           dark: colors.DN30,
         }),
         selected: themed({
-          light: primary.textColor.selected,
+          light: colorTokens.colorPrimaryTextSelected,
           dark: colors.DN400,
         }),
         focusSelected: themed({
-          light: primary.textColor.selected,
+          light: colorTokens.colorPrimaryTextSelected,
           dark: colors.DN400,
         }),
       },
@@ -172,55 +165,55 @@ export default {
     warning: {
       background: {
         default: themed({
-          light: warning.backgroundColor.resting,
+          light: colorTokens.colorWarningBackgroundResting,
           dark: colors.Y300,
         }),
         hover: themed({
-          light: warning.backgroundColor.hover,
+          light: colorTokens.colorWarningBackgroundHover,
           dark: colors.Y200,
         }),
         active: themed({
-          light: warning.backgroundColor.active,
+          light: colorTokens.colorWarningBackgroundActive,
           dark: colors.Y400,
         }),
         disabled: themed({
-          light: warning.backgroundColor.disabled,
+          light: colorTokens.colorWarningBackgroundDisabled,
           dark: colors.DN70,
         }),
         selected: themed({
-          light: warning.backgroundColor.selected,
+          light: colorTokens.colorWarningBackgroundSelected,
           dark: colors.Y400,
         }),
         focusSelected: themed({
-          light: warning.backgroundColor.selected,
+          light: colorTokens.colorWarningBackgroundSelected,
           dark: colors.Y400,
         }),
       },
       boxShadowColor: {
         focus: themed({
-          light: warning.boxShadowColor.focus,
+          light: colorTokens.colorWarningBoxshadowFocus,
           dark: colors.Y500,
         }),
         focusSelected: themed({
-          light: warning.boxShadowColor.focus,
+          light: colorTokens.colorWarningBoxshadowFocus,
           dark: colors.Y500,
         }),
       },
       color: {
         default: themed({
-          light: warning.textColor.resting,
+          light: colorTokens.colorWarningTextResting,
           dark: colors.N800,
         }),
         disabled: themed({
-          light: warning.textColor.disabled,
+          light: colorTokens.colorWarningTextDisabled,
           dark: colors.DN30,
         }),
         selected: themed({
-          light: warning.textColor.selected,
+          light: colorTokens.colorWarningTextSelected,
           dark: colors.N800,
         }),
         focusSelected: themed({
-          light: warning.textColor.selected,
+          light: colorTokens.colorWarningTextSelected,
           dark: colors.N800,
         }),
       },
@@ -230,52 +223,55 @@ export default {
     danger: {
       background: {
         default: themed({
-          light: critical.backgroundColor.resting,
+          light: colorTokens.colorCriticalBackgroundResting,
           dark: colors.R400,
         }),
         hover: themed({
-          light: critical.backgroundColor.hover,
+          light: colorTokens.colorCriticalBackgroundHover,
           dark: colors.R300,
         }),
         active: themed({
-          light: critical.backgroundColor.active,
+          light: colorTokens.colorCriticalBackgroundActive,
           dark: colors.R500,
         }),
         disabled: themed({
-          light: critical.backgroundColor.disabled,
+          light: colorTokens.colorCriticalBackgroundDisabled,
           dark: colors.DN70,
         }),
         selected: themed({
-          light: critical.backgroundColor.selected,
+          light: colorTokens.colorCriticalBackgroundSelected,
           dark: colors.R500,
         }),
         focusSelected: themed({
-          light: critical.backgroundColor.active,
+          light: colorTokens.colorCriticalBackgroundActive,
           dark: colors.R500,
         }),
       },
       boxShadowColor: {
         focus: themed({
-          light: critical.boxShadowColor.focus,
+          light: colorTokens.colorCriticalBoxshadowFocus,
           dark: colors.R100,
         }),
         focusSelected: themed({
-          light: critical.boxShadowColor.focus,
+          light: colorTokens.colorCriticalBoxshadowFocus,
           dark: colors.R100,
         }),
       },
       color: {
-        default: themed({ light: critical.textColor.resting, dark: colors.N0 }),
+        default: themed({
+          light: colorTokens.colorCriticalTextResting,
+          dark: colors.N0,
+        }),
         disabled: themed({
-          light: critical.textColor.disabled,
+          light: colorTokens.colorCriticalTextDisabled,
           dark: colors.DN30,
         }),
         selected: themed({
-          light: critical.textColor.selected,
+          light: colorTokens.colorCriticalTextSelected,
           dark: colors.N0,
         }),
         focusSelected: themed({
-          light: critical.textColor.selected,
+          light: colorTokens.colorCriticalTextSelected,
           dark: colors.N0,
         }),
       },
@@ -285,55 +281,55 @@ export default {
     help: {
       background: {
         default: themed({
-          light: changeBoarding.backgroundColor.resting,
+          light: colorTokens.colorChangeboardingBackgroundResting,
           dark: colors.P400,
         }),
         hover: themed({
-          light: changeBoarding.backgroundColor.hover,
+          light: colorTokens.colorChangeboardingBackgroundHover,
           dark: colors.P200,
         }),
         active: themed({
-          light: changeBoarding.backgroundColor.active,
+          light: colorTokens.colorChangeboardingBackgroundActive,
           dark: colors.P500,
         }),
         disabled: themed({
-          light: changeBoarding.backgroundColor.disabled,
+          light: colorTokens.colorChangeboardingBackgroundDisabled,
           dark: colors.DN70,
         }),
         selected: themed({
-          light: changeBoarding.backgroundColor.selected,
+          light: colorTokens.colorChangeboardingBackgroundSelected,
           dark: colors.DN0,
         }),
         focusSelected: themed({
-          light: changeBoarding.backgroundColor.active,
+          light: colorTokens.colorChangeboardingBackgroundSelected,
           dark: colors.R500,
         }),
       },
       boxShadowColor: {
         focus: themed({
-          light: changeBoarding.boxShadowColor.focus,
+          light: colorTokens.colorChangeboardingBoxshadowFocus,
           dark: colors.P100,
         }),
         focusSelected: themed({
-          light: changeBoarding.boxShadowColor.focus,
+          light: colorTokens.colorChangeboardingBoxshadowFocus,
           dark: colors.P100,
         }),
       },
       color: {
         default: themed({
-          light: changeBoarding.textColor.resting,
+          light: colorTokens.colorChangeboardingTextResting,
           dark: colors.N0,
         }),
         disabled: themed({
-          light: changeBoarding.textColor.disabled,
+          light: colorTokens.colorChangeboardingTextDisabled,
           dark: colors.DN30,
         }),
         selected: themed({
-          light: changeBoarding.textColor.selected,
+          light: colorTokens.colorChangeboardingTextSelected,
           dark: colors.DN400,
         }),
         focusSelected: themed({
-          light: changeBoarding.textColor.resting,
+          light: colorTokens.colorChangeboardingTextSelected,
           dark: colors.N0,
         }),
       },
@@ -342,34 +338,52 @@ export default {
     // Link appearance
     link: {
       background: {
-        default: themed({ light: link.backgroundColor.resting, dark: 'none' }),
+        default: themed({
+          light: colorTokens.colorLinkBackgroundResting,
+          dark: 'none',
+        }),
         selected: themed({
-          light: link.backgroundColor.selected,
+          light: colorTokens.colorLinkBackgroundSelected,
           dark: colors.N20,
         }),
         focusSelected: themed({
-          light: link.backgroundColor.selected,
+          light: colorTokens.colorLinkBackgroundSelected,
           dark: colors.N20,
         }),
       },
       boxShadowColor: {
-        focus: themed({ light: link.boxShadowColor.focus, dark: colors.B75 }),
+        focus: themed({
+          light: colorTokens.colorLinkBoxshadowFocus,
+          dark: colors.B75,
+        }),
         focusSelected: themed({
-          light: link.boxShadowColor.focus,
+          light: colorTokens.colorLinkBoxshadowFocus,
           dark: colors.B75,
         }),
       },
       color: {
-        default: themed({ light: link.textColor.resting, dark: colors.B100 }),
-        hover: themed({ light: link.textColor.hover, dark: colors.B75 }),
-        active: themed({ light: link.textColor.active, dark: colors.B200 }),
+        default: themed({
+          light: colorTokens.colorLinkTextResting,
+          dark: colors.B100,
+        }),
+        hover: themed({
+          light: colorTokens.colorLinkTextHover,
+          dark: colors.B75,
+        }),
+        active: themed({
+          light: colorTokens.colorLinkTextActive,
+          dark: colors.B200,
+        }),
         disabled: themed({
-          light: link.textColor.disabled,
+          light: colorTokens.colorLinkTextDisabled,
           dark: colors.DN100,
         }),
-        selected: themed({ light: link.textColor.selected, dark: colors.N700 }),
+        selected: themed({
+          light: colorTokens.colorLinkTextSelected,
+          dark: colors.N700,
+        }),
         focusSelected: themed({
-          light: link.textColor.selected,
+          light: colorTokens.colorLinkTextSelected,
           dark: colors.N700,
         }),
       },
