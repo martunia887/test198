@@ -2,6 +2,7 @@
 
 import { colors } from '@atlaskit/theme';
 import { colorTokens } from '@atlaskit/design-tokens';
+
 export const backgroundColors = {
   added: { light: colors.G50, dark: colors.G50 },
   default: {

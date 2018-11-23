@@ -1,5 +1,6 @@
 // @flow
 import { hex2rgba } from './utils';
+
 export default {
   // Reds
   R50: '#FFEBE6',
