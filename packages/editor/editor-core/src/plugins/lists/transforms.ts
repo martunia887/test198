@@ -9,7 +9,6 @@ function liftListItem(
   tr: Transaction,
 ): Transaction {
   let { $from, $to } = selection;
-  console.log('liftListItem called for selection', selection);
   const nodeType = state.schema.nodes.listItem;
   let range = $from.blockRange(
     $to,
@@ -59,14 +58,11 @@ export function liftFollowingList(
   tr: Transaction,
 ): Transaction {
   const { listItem } = state.schema.nodes;
-  // let lifted = false;
+  let lifted = false;
 
   tr.doc.nodesBetween(from, to, (node, pos) => {
-    console.log('Looking at lifting node:', node.type.name, node);
-    if (node.type === listItem) {
-      //if (node.type === listItem && pos > from) {
-      console.log('actually lifting:', node.type.name, node);
-      // lifted = true;
+    if (!lifted && node.type === listItem && pos > from) {
+      lifted = true;
       let listDepth = rootListDepth + 3;
       while (listDepth > rootListDepth + 2) {
         const start = tr.doc.resolve(tr.mapping.map(pos));
