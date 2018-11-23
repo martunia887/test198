@@ -51,29 +51,9 @@ const hyperlinkPlugin: EditorPlugin = {
         priority: 1200,
         icon: () => <EditorSuccessIcon label={'Hyperlink'} />,
         action(insert, state) {
-          // const mark = state.schema.mark('link', {
-          //   href: 'http://www.google.com',
-          // });
-          // const mark = state.schema.mark('link');
-          // const text = state.schema.text('google', [mark]);
-
-          // Node before:
-          // const nodeBefore = state.selection.$from.nodeBefore;
-          /*
-          Before index
-          state.selection.$from.before()
-
-          After index
-          state.selection.$from.after ()
-          */
-          const resolvedPos = state.selection.$from;
           const pos = state.selection.from;
-          // const start = resolvedPos.before();
-          // const end = resolvedPos.after();
-
-          const quickInsertNodeSize = resolvedPos.nodeBefore!.nodeSize;
-
-          // const selection = new NodeSelection(state.selection.$from);
+          const quickInsertNodeSize = state.selection.$from.nodeBefore!
+            .nodeSize;
           return state.tr
             .setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR)
             .delete(pos - quickInsertNodeSize, pos);
