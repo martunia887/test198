@@ -58,7 +58,7 @@ const hyperlinkPlugin: EditorPlugin = {
           // const text = state.schema.text('google', [mark]);
 
           // Node before:
-          const nodeBefore = state.selection.$from.nodeBefore;
+          // const nodeBefore = state.selection.$from.nodeBefore;
           /*
           Before index
           state.selection.$from.before()
@@ -66,13 +66,17 @@ const hyperlinkPlugin: EditorPlugin = {
           After index
           state.selection.$from.after ()
           */
-          const start = state.selection.$from.before();
-          const end = state.selection.$from.after();
-          console.log({ start, end });
+          const resolvedPos = state.selection.$from;
+          const pos = state.selection.from;
+          // const start = resolvedPos.before();
+          // const end = resolvedPos.after();
 
+          const quickInsertNodeSize = resolvedPos.nodeBefore!.nodeSize;
+
+          // const selection = new NodeSelection(state.selection.$from);
           return state.tr
             .setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR)
-            .delete(start, end);
+            .delete(pos - quickInsertNodeSize, pos);
         },
       },
     ],
