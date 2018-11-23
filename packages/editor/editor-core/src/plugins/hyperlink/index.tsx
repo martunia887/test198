@@ -51,14 +51,28 @@ const hyperlinkPlugin: EditorPlugin = {
         priority: 1200,
         icon: () => <EditorSuccessIcon label={'Hyperlink'} />,
         action(insert, state) {
-          //dispatch(state.tr.setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR));
           // const mark = state.schema.mark('link', {
           //   href: 'http://www.google.com',
           // });
           // const mark = state.schema.mark('link');
           // const text = state.schema.text('google', [mark]);
-          // return insert(text);
-          return state.tr.setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR);
+
+          // Node before:
+          const nodeBefore = state.selection.$from.nodeBefore;
+          /*
+          Before index
+          state.selection.$from.before()
+
+          After index
+          state.selection.$from.after ()
+          */
+          const start = state.selection.$from.before();
+          const end = state.selection.$from.after();
+          console.log({ start, end });
+
+          return state.tr
+            .setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR)
+            .delete(start, end);
         },
       },
     ],
