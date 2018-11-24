@@ -538,19 +538,25 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
       state.schema.nodes[listType],
     );
 
+    const { bulletList, orderedList } = state.schema.nodes;
+
+    const nodes = state.schema.nodes;
+    const listNodes = [bulletList, orderedList];
+
     if (
-      parent &&
-      (parent.type === state.schema.nodes['bulletList'] ||
-        parent.type === state.schema.nodes['orderedList']) &&
-      parent.type !== state.schema.nodes[listType]
+      (parent &&
+        listNodes.includes(parent.type) &&
+        parent.type !== nodes[listType]) ||
+      (grandgrandParent &&
+        listNodes.includes(grandgrandParent.type) &&
+        grandgrandParent.type !== nodes[listType])
     ) {
       return changeListType(listType)(state, dispatch);
     }
 
     if (
-      ((parent && parent.type === state.schema.nodes[listType]) ||
-        (grandgrandParent &&
-          grandgrandParent.type === state.schema.nodes[listType])) &&
+      ((parent && parent.type === nodes[listType]) ||
+        (grandgrandParent && grandgrandParent.type === nodes[listType])) &&
       isRangeOfSingleType
     ) {
       // Untoggles list
@@ -568,13 +574,17 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
 function changeListType(listType: 'bulletList' | 'orderedList'): Command {
   return function(state, dispatch) {
     const { tr } = state;
-    const { $from } = state.selection;
+    const { $from, $to } = state.selection;
     const { orderedList, bulletList } = state.schema.nodes;
-
-    tr.setNodeMarkup(
-      $from.before($from.depth - 2),
-      listType === 'bulletList' ? bulletList : orderedList,
-    );
+    const listNodes = ['bulletList', 'orderedList'];
+    tr.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+      if (listNodes.includes(node.type.name)) {
+        tr.setNodeMarkup(
+          pos,
+          listType === 'bulletList' ? bulletList : orderedList,
+        );
+      }
+    });
 
     dispatch(tr);
     return true;
