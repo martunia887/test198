@@ -480,6 +480,7 @@ export const toggleList = (
   const { bulletList, orderedList, listItem } = state.schema.nodes;
   const fromNode = selection.$from.node(selection.$from.depth - 2);
   const endNode = selection.$to.node(selection.$to.depth - 2);
+
   if (
     !fromNode ||
     fromNode.type.name !== listType ||

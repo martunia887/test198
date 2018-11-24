@@ -62,7 +62,6 @@ export function liftFollowingList(
 
   tr.doc.nodesBetween(from, to, (node, pos) => {
     if (!lifted && node.type === listItem && pos > from) {
-      lifted = true;
       let listDepth = rootListDepth + 3;
       while (listDepth > rootListDepth + 2) {
         const start = tr.doc.resolve(tr.mapping.map(pos));
@@ -83,13 +82,13 @@ export function liftSelectionList(
   state: EditorState,
   tr: Transaction,
 ): Transaction {
-  const { $from } = state.selection;
+  const { $from, $to } = state.selection;
   const { paragraph } = state.schema.nodes;
   const listCol: any[] = [];
 
   // TOFIX: Should this 2 be hardcoded?
   const from = $from.before($from.depth - 2);
-  const to = $from.after($from.depth - 2);
+  const to = $to.after($from.depth - 2);
 
   tr.doc.nodesBetween(from, to, (node, pos) => {
     if (node.type === paragraph) {

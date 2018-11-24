@@ -450,7 +450,7 @@ describe('lists', () => {
       expect(pluginState).toHaveProperty('bulletListDisabled', true);
     });
 
-    describe.only('Toggling bullet list', () => {
+    describe('Toggling bullet list', () => {
       describe('on non list elements', () => {
         it("shouldn't affect text selection", () => {
           const { editorView } = editor(doc(p('hello{<>}')));
@@ -504,20 +504,25 @@ describe('lists', () => {
       });
     });
 
-    describe('untoggling a list', () => {
-      const expectedOutput = doc(
-        ol(li(p('One'))),
-        p('Two'),
-        p('Three'),
-        ol(li(p('Four'))),
-      );
-
-      it('should allow untoggling part of a list based on selection', () => {
+    describe.only('untoggling a list', () => {
+      it('should untoggle entire list when one element selected', () => {
         const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('{<}Two')), li(p('Three{>}')), li(p('Four'))),
           ),
         );
+        const expectedOutput = doc(p('One'), p('Two'), p('Three'), p('Four'));
+
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
+      });
+      it('should untoggle entire list when all elements selected', () => {
+        const { editorView } = editor(
+          doc(
+            ol(li(p('{<}One')), li(p('Two')), li(p('Three')), li(p('Four{>}'))),
+          ),
+        );
+        const expectedOutput = doc(p('One'), p('Two'), p('Three'), p('Four'));
 
         toggleOrderedList(editorView);
         expect(editorView.state.doc).toEqualDocument(expectedOutput);
@@ -534,7 +539,7 @@ describe('lists', () => {
         );
       });
 
-      it('should untoggle all list items with different ancestors in selection', () => {
+      it('should untoggle all list items with different ancestors in selected lists', () => {
         const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('{<}Two')), li(p('Three'))),
@@ -544,13 +549,7 @@ describe('lists', () => {
 
         toggleOrderedList(editorView);
         expect(editorView.state.doc).toEqualDocument(
-          doc(
-            ol(li(p('One'))),
-            p('Two'),
-            p('Three'),
-            p('One'),
-            ol(li(p('Two'))),
-          ),
+          doc(p('One'), p('Two'), p('Three'), p('One'), p('Two')),
         );
       });
     });
