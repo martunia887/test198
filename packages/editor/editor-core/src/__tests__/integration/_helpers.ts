@@ -178,6 +178,22 @@ export const changeSelectedNodeLayout = async (page, layoutName) => {
   await page.click(buttonSelector);
 };
 
+export const navigateOrClear = async (browser, path) => {
+  const currentUrl = browser.url();
+  if (currentUrl === path) {
+    await clearEditor(browser);
+  } else {
+    await browser.goto(path);
+  }
+};
+
+export const clearEditor = async browser => {
+  await browser.browser.execute(() => {
+    const dom = document.querySelector(editable) as HTMLElement;
+    dom.innerHTML = '<p><br /></p>';
+  });
+};
+
 /**
  * When using quick insert, `insertTitle` should match exactly to the typeahead wording.
  * We need to filter down the typeahead, as we select the first result.

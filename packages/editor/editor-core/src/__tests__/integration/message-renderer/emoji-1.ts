@@ -1,6 +1,6 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import { getDocFromElement, LONG_WAIT_FOR } from '../_helpers';
+import { getDocFromElement, LONG_WAIT_FOR, navigateOrClear } from '../_helpers';
 import {
   messageEditor,
   editable,
@@ -15,7 +15,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await insertEmoji(browser, 'grinning');
     await browser.waitForSelector(emojiItem('grinning'));
@@ -44,7 +44,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     // type slowly go get edge working
     await browser.type(editable, '# ');
@@ -62,7 +62,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, 'type `');
     await browser.type(editable, ':a:');
@@ -77,7 +77,7 @@ BrowserTestCase(
   { skip: ['safari', 'ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, 'this ');
     await browser.type(editable, ':');
@@ -101,7 +101,7 @@ BrowserTestCase(
     const emojiButton = `[aria-label="${messages.emoji.defaultMessage}"]`;
     const sweatSmile = '[aria-label=":sweat_smile:"]';
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.waitForSelector(emojiButton);
     await browser.click(emojiButton);
@@ -121,7 +121,7 @@ BrowserTestCase(
   { skip: ['firefox', 'safari', 'ie', 'edge'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, 'this ');
     await insertEmoji(browser, 'a');

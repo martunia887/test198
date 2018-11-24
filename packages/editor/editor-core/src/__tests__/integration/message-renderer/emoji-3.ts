@@ -1,6 +1,6 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import { getDocFromElement } from '../_helpers';
+import { getDocFromElement, navigateOrClear } from '../_helpers';
 import {
   messageEditor,
   editable,
@@ -16,7 +16,7 @@ BrowserTestCase(
   { skip: ['safari', 'ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, ':');
     await browser.type(editable, 'smi');
@@ -40,7 +40,7 @@ BrowserTestCase(
   { skip: ['safari', 'ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, ':');
     await browser.type(editable, 'wink');
@@ -62,7 +62,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, '```');
     await browser.waitForSelector('pre');
@@ -78,7 +78,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, '[] ');
     await insertEmoji(browser, 'smile');
@@ -93,7 +93,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, 'text: ');
     expect(await browser.isExisting(typeahead)).toBe(false);
@@ -105,7 +105,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, ': ');
     expect(await browser.isExisting(typeahead)).toBe(false);

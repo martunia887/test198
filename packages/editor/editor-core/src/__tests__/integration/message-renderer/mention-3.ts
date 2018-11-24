@@ -5,6 +5,7 @@ import {
   insertMention,
   editable,
   typeAheadPicker,
+  navigateOrClear,
 } from '../_helpers';
 
 import {
@@ -26,7 +27,7 @@ BrowserTestCase(
   async client => {
     const mentionButton = `[aria-label="${messages.mention.defaultMessage}"]`;
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.waitForSelector(mentionButton);
     await browser.click(mentionButton);
@@ -42,7 +43,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, '@');
     await browser.waitForSelector(typeAheadPicker);
@@ -61,7 +62,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, '@');
     await browser.waitForSelector(typeAheadPicker);
@@ -85,7 +86,7 @@ BrowserTestCase(
   { skip: ['safari', 'ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, '`this is inline code ');
     await insertMention(browser, 'Carolyn');
@@ -101,7 +102,7 @@ BrowserTestCase(
   { skip: ['safari', 'ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, '```');
     await browser.waitForSelector('pre');
@@ -117,7 +118,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, '@');
     await browser.waitForSelector(typeAheadPicker);

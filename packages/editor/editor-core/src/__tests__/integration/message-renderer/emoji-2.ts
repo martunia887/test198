@@ -1,6 +1,6 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import { getDocFromElement } from '../_helpers';
+import { getDocFromElement, navigateOrClear } from '../_helpers';
 import {
   messageEditor,
   editable,
@@ -15,7 +15,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.type(editable, '> ');
     await browser.type(editable, 'some text ');
     await insertEmoji(browser, 'a');
@@ -30,7 +30,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.type(editable, '* ');
     await insertEmoji(browser, 'smile');
     await browser.waitForSelector(emojiItem('smile'));
@@ -44,7 +44,7 @@ BrowserTestCase(
   { skip: ['ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.type(editable, '1. ');
     await insertEmoji(browser, 'a');
     await browser.waitForSelector(emojiItem('a'));
@@ -59,7 +59,7 @@ BrowserTestCase(
   { skip: ['safari', 'ie'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, 'this ');
     await insertEmoji(browser, 'joy');
@@ -78,7 +78,7 @@ BrowserTestCase(
   async client => {
     const decisions = 'span[aria-label="Decision"]';
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     // to get steps working on edge since its is slow
     await browser.type(editable, '<> ');
@@ -99,7 +99,7 @@ BrowserTestCase(
       messages.decision.defaultMessage
     }"]`;
     const browser = new Page(client);
-    await browser.goto(messageEditor);
+    await navigateOrClear(browser, messageEditor);
     await browser.waitForSelector(editable);
     await browser.type(editable, 'this ');
     await insertEmoji(browser, 'smile');
