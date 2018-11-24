@@ -450,7 +450,7 @@ describe('lists', () => {
       expect(pluginState).toHaveProperty('bulletListDisabled', true);
     });
 
-    describe('Toggling bullet list', () => {
+    describe.only('Toggling bullet list', () => {
       describe('on non list elements', () => {
         it("shouldn't affect text selection", () => {
           const { editorView } = editor(doc(p('hello{<>}')));
@@ -468,7 +468,7 @@ describe('lists', () => {
       });
 
       describe('on a bullet list', () => {
-        it.only('Should outdent the list to text', () => {
+        it('Should outdent the list to text', () => {
           const { editorView } = editor(
             doc(ul(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
           );
@@ -478,11 +478,30 @@ describe('lists', () => {
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
       });
-      // describe('on a numbered list', () => {
-      //   it('should change all list elements to numbered', () => {
+      describe('on an ordered list', () => {
+        it('should change all list elements to numbered when one element selected', () => {
+          const { editorView } = editor(
+            doc(ol(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
+          );
 
-      //   });
-      // });
+          const expectedOutput = doc(
+            ul(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it('should change all list elements to numbered when all elements selected', () => {
+          const { editorView } = editor(
+            doc(ol(li(p('{<}One')), li(p('Two')), li(p('Three{>}')))),
+          );
+
+          const expectedOutput = doc(
+            ul(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+      });
     });
 
     describe('untoggling a list', () => {
