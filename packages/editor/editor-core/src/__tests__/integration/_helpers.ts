@@ -188,10 +188,10 @@ export const navigateOrClear = async (browser, path) => {
 };
 
 export const clearEditor = async browser => {
-  await browser.browser.execute(() => {
+  await browser.browser.execute(editable => {
     const dom = document.querySelector(editable) as HTMLElement;
     dom.innerHTML = '<p><br /></p>';
-  });
+  }, editable);
 };
 
 /**
