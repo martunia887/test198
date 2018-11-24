@@ -179,7 +179,7 @@ export const changeSelectedNodeLayout = async (page, layoutName) => {
 };
 
 export const navigateOrClear = async (browser, path) => {
-  const currentUrl = browser.url();
+  const currentUrl = await browser.url();
   if (currentUrl === path) {
     await clearEditor(browser);
   } else {
