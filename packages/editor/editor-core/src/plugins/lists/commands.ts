@@ -541,7 +541,8 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
     if (
       parent &&
       (parent.type === state.schema.nodes['bulletList'] ||
-        parent.type === state.schema.nodes['orderedList'])
+        parent.type === state.schema.nodes['orderedList']) &&
+      parent.type !== state.schema.nodes[listType]
     ) {
       return changeListType(listType)(state, dispatch);
     }

@@ -478,33 +478,9 @@ describe('lists', () => {
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
       });
-      describe('on an ordered list', () => {
-        it('should change all list elements to numbered when one element selected', () => {
-          const { editorView } = editor(
-            doc(ol(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
-          );
-
-          const expectedOutput = doc(
-            ul(li(p('One')), li(p('Two')), li(p('Three'))),
-          );
-          toggleBulletList(editorView);
-          expect(editorView.state.doc).toEqualDocument(expectedOutput);
-        });
-        it('should change all list elements to numbered when all elements selected', () => {
-          const { editorView } = editor(
-            doc(ol(li(p('{<}One')), li(p('Two')), li(p('Three{>}')))),
-          );
-
-          const expectedOutput = doc(
-            ul(li(p('One')), li(p('Two')), li(p('Three'))),
-          );
-          toggleBulletList(editorView);
-          expect(editorView.state.doc).toEqualDocument(expectedOutput);
-        });
-      });
     });
 
-    describe.only('untoggling a list', () => {
+    describe('untoggling a list', () => {
       it('should untoggle entire list when one element selected', () => {
         const { editorView } = editor(
           doc(
@@ -555,41 +531,58 @@ describe('lists', () => {
     });
 
     describe('converting a list', () => {
-      it('should allow converting part of a list based on selection', () => {
-        const expectedOutput = doc(
-          ol(li(p('One'))),
-          ul(li(p('Two')), li(p('Three'))),
-          ol(li(p('Four'))),
-        );
-        const { editorView } = editor(
-          doc(
-            ol(li(p('One')), li(p('{<}Two')), li(p('Three{>}')), li(p('Four'))),
-          ),
-        );
+      describe('unordered to ordered', () => {
+        it('should change all list elements to ordered when one element selected', () => {
+          const { editorView } = editor(
+            doc(ol(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
+          );
 
-        toggleBulletList(editorView);
-        expect(editorView.state.doc).toEqualDocument(expectedOutput);
+          const expectedOutput = doc(
+            ul(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it('should change all list elements to ordered when all elements selected', () => {
+          const { editorView } = editor(
+            doc(ol(li(p('{<}One')), li(p('Two')), li(p('Three{>}')))),
+          );
+
+          const expectedOutput = doc(
+            ul(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+      });
+      describe('ordered to unordered', () => {
+        it('should change all list elements to unordered when one element selected', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
+          );
+
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it('should change all list elements to unordered when all elements selected', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('{<}One')), li(p('Two')), li(p('Three{>}')))),
+          );
+
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
       });
 
       it('should convert selection inside panel to list', () => {
         const expectedOutput = doc(panel()(ul(li(p('text')))));
         const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
-
-        toggleBulletList(editorView);
-        expect(editorView.state.doc).toEqualDocument(expectedOutput);
-      });
-
-      it('should allow converting part of a list based on selection that starts at the end of previous line', () => {
-        const expectedOutput = doc(
-          ol(li(p('One'))),
-          ul(li(p('Two')), li(p('Three'))),
-          ol(li(p('Four'))),
-        );
-        const { editorView } = editor(
-          doc(
-            ol(li(p('One{<}')), li(p('Two')), li(p('Three{>}')), li(p('Four'))),
-          ),
-        ); // When selection starts on previous (empty) node
 
         toggleBulletList(editorView);
         expect(editorView.state.doc).toEqualDocument(expectedOutput);
