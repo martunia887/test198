@@ -450,20 +450,39 @@ describe('lists', () => {
       expect(pluginState).toHaveProperty('bulletListDisabled', true);
     });
 
-    describe('toggling a list', () => {
-      it("shouldn't affect text selection", () => {
-        const { editorView } = editor(doc(p('hello{<>}')));
+    describe('Toggling bullet list', () => {
+      describe('on non list elements', () => {
+        it("shouldn't affect text selection", () => {
+          const { editorView } = editor(doc(p('hello{<>}')));
 
-        toggleBulletList(editorView);
-        // If the text is not selected, pressing enter will
-        // create a new paragraph. If it is selected the
-        // 'hello' text will be removed
-        sendKeyToPm(editorView, 'Enter');
+          toggleBulletList(editorView);
+          // If the text is not selected, pressing enter will
+          // create a new paragraph. If it is selected the
+          // 'hello' text will be removed
+          sendKeyToPm(editorView, 'Enter');
 
-        expect(editorView.state.doc).toEqualDocument(
-          doc(ul(li(p('hello')), li(p('')))),
-        );
+          expect(editorView.state.doc).toEqualDocument(
+            doc(ul(li(p('hello')), li(p('')))),
+          );
+        });
       });
+
+      describe('on a bullet list', () => {
+        it.only('Should outdent the list to text', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
+          );
+
+          const expectedOutput = doc(p('One'), p('Two'), p('Three'));
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+      });
+      // describe('on a numbered list', () => {
+      //   it('should change all list elements to numbered', () => {
+
+      //   });
+      // });
     });
 
     describe('untoggling a list', () => {
