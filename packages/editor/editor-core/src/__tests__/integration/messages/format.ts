@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
-import { getDocFromElement } from '../_helpers';
+import { getDocFromElement, navigateOrClear } from '../_helpers';
 
 const messageEditor = getExampleUrl('editor', 'editor-core', 'message');
 const editorSelector = '.ProseMirror';
@@ -11,7 +11,7 @@ BrowserTestCase(
   { skip: ['edge', 'ie'] },
   async client => {
     const sample = new Page(client);
-    await sample.goto(messageEditor);
+    await navigateOrClear(sample, messageEditor);
     await sample.waitForSelector(editorSelector);
     await sample.type(editorSelector, '[link](https://hello.com) ');
 
@@ -26,7 +26,7 @@ BrowserTestCase(
   { skip: ['edge', 'ie'] },
   async client => {
     const sample = new Page(client);
-    await sample.goto(messageEditor);
+    await navigateOrClear(sample, messageEditor);
     await sample.waitForSelector(editorSelector);
     await sample.type(editorSelector, '__bold__ ');
     await sample.type(editorSelector, '_italics_ ');
@@ -44,7 +44,7 @@ BrowserTestCase(
   { skip: ['edge', 'ie'] },
   async client => {
     const sample = new Page(client);
-    await sample.goto(messageEditor);
+    await navigateOrClear(sample, messageEditor);
     await sample.waitForSelector(editorSelector);
     await sample.type(editorSelector, '`');
     await sample.type(editorSelector, 'this');

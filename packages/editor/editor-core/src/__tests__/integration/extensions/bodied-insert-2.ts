@@ -5,6 +5,7 @@ import {
   fullpage,
   editable,
   insertBlockMenuItem,
+  navigateOrClear,
 } from '../_helpers';
 
 import { messages as BlockMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
@@ -21,7 +22,7 @@ import { messages as ListMessages } from '../../../plugins/lists/messages';
     { skip: ['edge', 'ie'] },
     async client => {
       const page = new Page(client);
-      await page.goto(fullpage.path);
+      await navigateOrClear(page, fullpage.path);
       await page.waitForSelector(fullpage.placeholder);
       await page.click(fullpage.placeholder);
       await insertBlockMenuItem(page, 'Bodied macro (EH)');

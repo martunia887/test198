@@ -5,6 +5,7 @@ import {
   fullpage,
   editable,
   insertBlockMenuItem,
+  navigateOrClear,
 } from '../_helpers';
 
 import { messages as InsertMessages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
@@ -20,7 +21,7 @@ import { messages as BlockTypeMessages } from '../../../plugins/block-type/types
     { skip: ['edge', 'ie'] },
     async client => {
       const page = new Page(client);
-      await page.goto(fullpage.path);
+      await navigateOrClear(page, fullpage.path);
       await page.waitForSelector(fullpage.placeholder);
       await page.click(fullpage.placeholder);
 

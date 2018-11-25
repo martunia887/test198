@@ -6,6 +6,7 @@ import {
   editable,
   insertBlockMenuItem,
   changeSelectedNodeLayout,
+  navigateOrClear,
 } from '../_helpers';
 
 import commonMessages from '../../../messages';
@@ -20,7 +21,7 @@ import commonMessages from '../../../messages';
     { skip: ['edge', 'ie'] },
     async client => {
       const page = new Page(client);
-      await page.goto(fullpage.path);
+      await navigateOrClear(page, fullpage.path);
       await page.waitForSelector(fullpage.placeholder);
       await page.click(fullpage.placeholder);
 

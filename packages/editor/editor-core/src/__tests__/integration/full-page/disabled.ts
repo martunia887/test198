@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 
-import { fullpageDisabled } from '../_helpers';
+import { fullpageDisabled, navigateOrClear } from '../_helpers';
 
 async function assertThrowsAsync(fn, regExp) {
   let f = () => {};
@@ -22,7 +22,7 @@ BrowserTestCase(
   { skip: ['edge', 'ie', 'firefox', 'safari'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(fullpageDisabled.path);
+    await navigateOrClear(browser, fullpageDisabled.path);
     await browser.waitForSelector(fullpageDisabled.placeholder);
 
     await assertThrowsAsync(
@@ -37,7 +37,7 @@ BrowserTestCase(
   { skip: ['edge', 'ie', 'firefox', 'safari'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(fullpageDisabled.path);
+    await navigateOrClear(browser, fullpageDisabled.path);
     await browser.waitForSelector(fullpageDisabled.placeholder);
 
     await assertThrowsAsync(
@@ -52,7 +52,7 @@ BrowserTestCase(
   { skip: ['edge', 'ie', 'firefox', 'safari'] },
   async client => {
     const browser = new Page(client);
-    await browser.goto(fullpageDisabled.path);
+    await navigateOrClear(browser, fullpageDisabled.path);
     await browser.waitForSelector(fullpageDisabled.placeholder);
 
     await assertThrowsAsync(

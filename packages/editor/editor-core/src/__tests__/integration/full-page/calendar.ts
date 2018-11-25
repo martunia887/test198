@@ -1,10 +1,8 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
 import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
+import { navigateOrClear, fullpage, editable } from '../_helpers';
 
-const fullPageEditor = getExampleUrl('editor', 'editor-core', 'full-page');
-const editorSelector = '.ProseMirror';
 const insertMenu = `[aria-label="${messages.insertMenu.defaultMessage}"]`;
 const dateMenu = `span=${messages.date.defaultMessage}`;
 const calendar = '[aria-label="calendar"]';
@@ -17,14 +15,14 @@ BrowserTestCase(
   async client => {
     const browser = new Page(client);
 
-    await browser.goto(fullPageEditor);
-    await browser.waitForSelector(editorSelector);
-    await browser.click(editorSelector);
+    await navigateOrClear(browser, fullpage.path);
+    await browser.waitForSelector(editable);
+    await browser.click(editable);
     await browser.click(insertMenu);
     await browser.click(dateMenu);
     await browser.waitForSelector(calendar);
     expect(await browser.isExisting(calendar)).toBe(true);
-    await browser.click(editorSelector);
+    await browser.click(editable);
     expect(await browser.isExisting(calendar)).toBe(false);
   },
 );
@@ -36,9 +34,9 @@ BrowserTestCase(
   async client => {
     const browser = new Page(client);
 
-    await browser.goto(fullPageEditor);
-    await browser.waitForSelector(editorSelector);
-    await browser.click(editorSelector);
+    await navigateOrClear(browser, fullpage.path);
+    await browser.waitForSelector(editable);
+    await browser.click(editable);
     await browser.click(insertMenu);
     await browser.click(dateMenu);
     await browser.waitForSelector(calendar);
@@ -57,14 +55,14 @@ BrowserTestCase(
   async client => {
     const browser = new Page(client);
 
-    await browser.goto(fullPageEditor);
-    await browser.waitForSelector(editorSelector);
-    await browser.click(editorSelector);
+    await navigateOrClear(browser, fullpage.path);
+    await browser.waitForSelector(editable);
+    await browser.click(editable);
     await browser.click(insertMenu);
     await browser.click(dateMenu);
     expect(await browser.isExisting(calendar)).toBe(true);
 
-    await browser.type(editorSelector, ['ArrowRight', 'ArrowRight']);
+    await browser.type(editable, ['ArrowRight', 'ArrowRight']);
     await browser.click(insertMenu);
     await browser.click(dateMenu);
     expect(await browser.isExisting(calendar)).toBe(true);
