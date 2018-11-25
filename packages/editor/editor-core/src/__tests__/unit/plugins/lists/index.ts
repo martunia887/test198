@@ -564,7 +564,7 @@ describe('lists', () => {
           const expectedOutput = doc(
             ol(li(p('One')), li(p('Two')), li(p('Three'))),
           );
-          toggleBulletList(editorView);
+          toggleOrderedList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
         it('should change all list elements to unordered when all elements selected', () => {
@@ -575,7 +575,7 @@ describe('lists', () => {
           const expectedOutput = doc(
             ol(li(p('One')), li(p('Two')), li(p('Three'))),
           );
-          toggleBulletList(editorView);
+          toggleOrderedList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
       });
@@ -584,7 +584,7 @@ describe('lists', () => {
         const expectedOutput = doc(panel()(ul(li(p('text')))));
         const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
 
-        toggleBulletList(editorView);
+        toggleOrderedList(editorView);
         expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
@@ -1138,7 +1138,7 @@ describe('lists', () => {
         toggleOrderedList(editorView);
 
         expect(editorView.state.doc).toEqualDocument(
-          doc(p('te{<}xt'), p('text{>}'), ol(li(p('text')))),
+          doc(p('te{<}xt'), p('text{>}'), p('text')),
         );
       });
 
