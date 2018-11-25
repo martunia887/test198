@@ -90,7 +90,7 @@ export function liftSelectionList(
   const from = $from.before($from.depth - 2);
   const to = $to.after($from.depth - 2);
 
-  tr.doc.nodesBetween(from, to, (node, pos) => {
+  tr.doc.nodesBetween(from, to - 2, (node, pos) => {
     if (node.type === paragraph) {
       listCol.push({ node, pos });
     }
