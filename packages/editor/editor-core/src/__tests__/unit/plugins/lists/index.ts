@@ -1153,7 +1153,7 @@ describe('lists', () => {
         toggleOrderedList(editorView);
 
         expect(editorView.state.doc).toEqualDocument(
-          doc(p('te{<}xt'), p('text'), p('te{>}xt'), ol(li(p('text')))),
+          doc(p('te{<}xt'), p('text'), p('te{>}xt'), p('text')),
         );
       });
 
