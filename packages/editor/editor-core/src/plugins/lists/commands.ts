@@ -571,20 +571,68 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
     }
   };
 }
+/*
+const nearestParentList = (node ) => {
+  const { bulletList, orderedList, listItem } = nodes;
+
+
+  for (let i = selection.$to.depth - 1; i > 0; i--) {
+    const node = selection.$to.node(i);
+    if (node.type === bulletList || node.type === orderedList) {
+      depth = i;
+    }
+    if (
+      node.type !== bulletList &&
+      node.type !== orderedList &&
+      node.type !== listItem
+    ) {
+      break;
+    }
+  }
+  return depth;
+};
+*/
+
 function changeListType(listType: 'bulletList' | 'orderedList'): Command {
   return function(state, dispatch) {
     const { tr } = state;
     const { $from, $to } = state.selection;
     const { orderedList, bulletList } = state.schema.nodes;
     const listNodes = ['bulletList', 'orderedList'];
-    tr.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+
+    // 2 can't be hardcoded because code block etc
+    const maxLevelNearestParentListNode =
+      $from.depth < $to.depth
+        ? $from.node($from.depth - 2)
+        : $to.node($to.depth - 2);
+
+    // Iterate over child nodes
+    maxLevelNearestParentListNode.descendants((node, pos, parent) => {
+      // If we're looking at a child list
       if (listNodes.includes(node.type.name)) {
+        console.log(node);
         tr.setNodeMarkup(
           pos,
           listType === 'bulletList' ? bulletList : orderedList,
         );
       }
     });
+    /*
+    tr.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+      const $pos = state.doc.resolve(pos);
+      if (listNodes.includes(node.type.name)) {
+        // console.log("Node pos:", pos, " from.pos:", $from.pos)
+        if(($pos.depth >= $from.depth - 3 || $pos.depth >= $to.depth - 3)) {
+          tr.setNodeMarkup(
+            pos,
+            listType === 'bulletList' ? bulletList : orderedList,
+          );
+        }
+        return true
+      } 
+      return false;
+    });
+    */
 
     dispatch(tr);
     return true;
