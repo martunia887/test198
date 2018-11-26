@@ -554,6 +554,28 @@ describe('lists', () => {
           toggleBulletList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
+        it('should change child list type when parent list converted to ordered', () => {
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(p('{<}One'), ul(li('Child element'))),
+                li(p('Two')),
+                li(p('Three{>}')),
+              ),
+            ),
+          );
+
+          const expectedOutput = doc(
+            ol(
+              li(p('{<}One'), ol(li('Child element'))),
+              li(p('Two')),
+              li(p('Three{>}')),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
       });
       describe('ordered to unordered', () => {
         it('should change all list elements to unordered when one element selected', () => {
@@ -580,7 +602,7 @@ describe('lists', () => {
         });
       });
 
-      it('should convert selection inside panel to list', () => {
+      it.skip('should convert selection inside panel to list', () => {
         const expectedOutput = doc(panel()(ul(li(p('text')))));
         const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
 
@@ -1178,7 +1200,7 @@ describe('lists', () => {
         );
       });
 
-      it('should only change type to bullet list when toggling orderedList to bulletList', () => {
+      it("shouldn't change type of parent list when child list type changed", () => {
         const { editorView } = editor(
           doc(
             ol(
