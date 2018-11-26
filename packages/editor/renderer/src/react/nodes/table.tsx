@@ -5,8 +5,9 @@ import {
   calcTableWidth,
   WidthConsumer,
   TableSharedCssClassName,
-  akEditorTableNumberColumnWidth,
   tableCellMinWidth,
+  akEditorTableNumberColumnWidth,
+  akEditorDefaultLayoutWidth as tableOverflowBreakpoint,
 } from '@atlaskit/editor-common';
 import overflowShadow, { OverflowShadowProps } from '../../ui/overflow-shadow';
 
@@ -41,57 +42,77 @@ const addNumberColumnIndexes = rows => {
 };
 
 class Table extends React.Component<TableProps & OverflowShadowProps> {
-  wrapper: HTMLDivElement | null;
+  originalTableWidth: number = 0;
+
+  constructor(props) {
+    super(props);
+
+    if (props.columnWidths.length && props.layout) {
+      this.originalTableWidth = props.columnWidths.reduce(
+        (acc, current) => acc + current,
+        0,
+      );
+    }
+  }
 
   render() {
-    const { isNumberColumnEnabled, layout, children } = this.props;
-
+    const {
+      layout,
+      handleRef,
+      isNumberColumnEnabled,
+      children,
+      shadowClassNames,
+    } = this.props;
     return (
       <WidthConsumer>
-        {({ width }) => (
-          <div
-            className={`${TableSharedCssClassName.TABLE_CONTAINER} ${
-              this.props.shadowClassNames
-            }`}
-            data-layout={layout}
-            ref={ref => {
-              this.wrapper = ref;
-              this.props.handleRef(ref);
-            }}
-            style={{ width: calcTableWidth(layout, width, false) }}
-          >
-            <div className={TableSharedCssClassName.TABLE_NODE_WRAPPER}>
-              <table data-number-column={isNumberColumnEnabled}>
-                {this.renderColgroup()}
-                <tbody>
-                  {isNumberColumnEnabled
-                    ? addNumberColumnIndexes(children)
-                    : children}
-                </tbody>
-              </table>
+        {({ width }) => {
+          const tableWidth = calcTableWidth(layout, width, false);
+          return (
+            <div
+              className={`${
+                TableSharedCssClassName.TABLE_CONTAINER
+              } ${shadowClassNames}`}
+              data-layout={layout}
+              ref={handleRef}
+              style={{ width: tableWidth }}
+            >
+              <div className={TableSharedCssClassName.TABLE_NODE_WRAPPER}>
+                <table
+                  data-number-column={isNumberColumnEnabled}
+                  data-resized={!!this.originalTableWidth}
+                >
+                  {this.renderColgroup(tableWidth)}
+                  <tbody>
+                    {isNumberColumnEnabled
+                      ? addNumberColumnIndexes(children)
+                      : children}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        }}
       </WidthConsumer>
     );
   }
 
-  private renderColgroup = () => {
+  private renderColgroup = tableWidth => {
     const { columnWidths, isNumberColumnEnabled } = this.props;
+
     if (!columnWidths) {
       return null;
     }
-    let actualWidth = 0;
-    if (this.wrapper) {
-      actualWidth = this.wrapper.offsetWidth;
-    } else {
-      this.forceUpdate();
-      return;
-    }
 
-    const minTableWidth = columnWidths.reduce((acc: number, width: number) => {
-      return (acc += Math.ceil(width) || tableCellMinWidth);
-    }, 0);
+    let scale;
+    const currentWidth = parseInt(tableWidth, 10);
+
+    if (currentWidth > tableOverflowBreakpoint) {
+      scale = currentWidth / this.originalTableWidth;
+    } else {
+      // If our rendering size falls below the breakpoints, we should start overflowing
+      // But the table will remain the breakpoint width to avoid snapping.
+      scale = tableOverflowBreakpoint / this.originalTableWidth;
+    }
 
     return (
       <colgroup>
@@ -99,16 +120,12 @@ class Table extends React.Component<TableProps & OverflowShadowProps> {
           <col style={{ width: akEditorTableNumberColumnWidth }} />
         )}
         {columnWidths.map((colWidth, idx) => {
-          let width;
-          // @see ED-5775:
-          // we can't rely on css min-width as long as we use "table-layout: fixed"
-          // therefore if a column is not resized, we enforce min-width when table is smaller than minimum table width
+          let style;
           if (colWidth) {
-            width = colWidth < tableCellMinWidth ? tableCellMinWidth : colWidth;
-          } else {
-            width = actualWidth <= minTableWidth ? tableCellMinWidth : 0;
+            const scaledWidth = Math.floor(colWidth * scale);
+            style = { width: `${Math.max(scaledWidth, tableCellMinWidth)}px` };
           }
-          const style = width ? { width: `${width}px` } : {};
+
           return <col key={idx} style={style} />;
         })}
       </colgroup>

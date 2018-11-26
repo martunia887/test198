@@ -91,7 +91,7 @@ export default function overflowShadow<P extends OverflowShadowProps>(
     };
 
     handleContainer = container => {
-      if (!container || this.container) {
+      if (this.container || !container) {
         return;
       }
       this.container = container;

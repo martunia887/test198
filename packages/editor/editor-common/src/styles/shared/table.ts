@@ -51,12 +51,15 @@ const tableSharedStyle = css`
     border-collapse: collapse;
     margin: ${tableMarginTop}px ${tableMarginSides}px 0;
     border: 1px solid ${akEditorTableBorder};
-    table-layout: fixed;
     font-size: ${fontSize()}px;
     width: 100%;
 
     &[data-autosize='true'] {
       table-layout: auto;
+    }
+
+    &[data-resized='true'] {
+      table-layout: fixed;
     }
 
     & {
