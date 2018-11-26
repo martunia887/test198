@@ -50,28 +50,26 @@ export default () => (
             isRequired
             validate={validate}
           >
-            {({ fieldProps, error, meta }) =>
-              console.log(meta) || (
-                <>
-                  <FieldText isLabelHidden shouldFitContainer {...fieldProps} />
-                  {!error && (
-                    <HelperMessage>
-                      Choose a memorable name that others will see.
-                    </HelperMessage>
-                  )}
-                  {error === 'TOO_SHORT' && (
-                    <ErrorMessage>
-                      That name is too short, use more than 3 characters.
-                    </ErrorMessage>
-                  )}
-                  {error === 'NAME_TAKEN' && (
-                    <ErrorMessage>
-                      Oof that name is already in use, try another one.
-                    </ErrorMessage>
-                  )}
-                </>
-              )
-            }
+            {({ fieldProps, error, meta }) => (
+              <>
+                <FieldText isLabelHidden shouldFitContainer {...fieldProps} />
+                {!error && (
+                  <HelperMessage>
+                    Choose a memorable name that others will see.
+                  </HelperMessage>
+                )}
+                {error === 'TOO_SHORT' && (
+                  <ErrorMessage>
+                    That name is too short, use more than 3 characters.
+                  </ErrorMessage>
+                )}
+                {error === 'NAME_TAKEN' && (
+                  <ErrorMessage>
+                    Oof that name is already in use, try another one.
+                  </ErrorMessage>
+                )}
+              </>
+            )}
           </Field>
           <FormFooter>
             <Button type="submit" appearance="primary">
