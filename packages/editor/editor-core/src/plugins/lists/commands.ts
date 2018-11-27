@@ -4,6 +4,7 @@ import {
   Transaction,
   TextSelection,
   NodeSelection,
+  Selection,
 } from 'prosemirror-state';
 import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 import { EditorView } from 'prosemirror-view';
@@ -593,6 +594,27 @@ const nearestParentList = (node ) => {
 };
 */
 
+// Type nodes
+export const rootListDepth = (selection: Selection<any>, nodes) => {
+  const { bulletList, orderedList, listItem } = nodes;
+  let depth;
+  for (let i = selection.$to.depth - 1; i > 0; i--) {
+    const node = selection.$to.node(i);
+    if (node.type === bulletList || node.type === orderedList) {
+      depth = i;
+      break; // hack
+    }
+    if (
+      node.type !== bulletList &&
+      node.type !== orderedList &&
+      node.type !== listItem
+    ) {
+      break;
+    }
+  }
+  return depth;
+};
+
 function changeListType(listType: 'bulletList' | 'orderedList'): Command {
   return function(state, dispatch) {
     const { tr } = state;
@@ -600,19 +622,29 @@ function changeListType(listType: 'bulletList' | 'orderedList'): Command {
     const { orderedList, bulletList } = state.schema.nodes;
     const listNodes = ['bulletList', 'orderedList'];
 
+    const rootDepth = rootListDepth(state.selection, state.schema.nodes);
     // 2 can't be hardcoded because code block etc
-    const maxLevelNearestParentListNode =
-      $from.depth < $to.depth
-        ? $from.node($from.depth - 2)
-        : $to.node($to.depth - 2);
+    const maxLevelNearestParentListNode = $from.node(rootDepth);
+    // ? $from.node($from.depth - 2)
+    // : $to.node($to.depth - 2);
+    // const maxLevelNearestParentListNode =
 
+    const nearestParentNodePos = $from.before(rootDepth);
+    // const nearestParentNodePos = $from.depth < $to.depth
+    // ? $from.index($from.depth -2)
+    // : $to.index($to.depth -2);
+
+    tr.setNodeMarkup(
+      nearestParentNodePos,
+      listType === 'bulletList' ? bulletList : orderedList,
+    );
     // Iterate over child nodes
     maxLevelNearestParentListNode.descendants((node, pos, parent) => {
       // If we're looking at a child list
       if (listNodes.includes(node.type.name)) {
         console.log(node);
         tr.setNodeMarkup(
-          pos,
+          pos + 1,
           listType === 'bulletList' ? bulletList : orderedList,
         );
       }
