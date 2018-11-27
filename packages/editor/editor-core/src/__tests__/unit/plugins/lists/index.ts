@@ -602,8 +602,8 @@ describe('lists', () => {
         });
       });
 
-      it.skip('should convert selection inside panel to list', () => {
-        const expectedOutput = doc(panel()(ul(li(p('text')))));
+      it('should convert selection inside panel to list', () => {
+        const expectedOutput = doc(panel()(ol(li(p('text')))));
         const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
 
         toggleOrderedList(editorView);
