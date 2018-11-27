@@ -10,7 +10,7 @@ const getBorderColor = (props: RadioIconThemeProps) => {
   return { light: colors.N40, dark: colors.DN80 };
 };
 
-const getDotColor = (props: RadioIconThemeProps) => {
+const getDotColor = (props: ThemeState) => {
   const { isChecked, isDisabled, isActive } = props;
 
   let color = { light: colors.N10, dark: colors.DN10 };
@@ -25,7 +25,7 @@ const getDotColor = (props: RadioIconThemeProps) => {
   return color;
 };
 
-const getCircleColor = (props: RadioIconThemeProps) => {
+const getCircleColor = (props: ThemeState) => {
   const { isChecked, isDisabled, isActive, isHovered, isInvalid } = props;
 
   // set the default
@@ -54,7 +54,7 @@ const getTextColor = ({ isDisabled }) => {
     : { light: colors.N900, dark: colors.DN600 };
 };
 
-export type RadioIconThemeProps = {
+export type ThemeState = {
   isChecked?: boolean,
   isDisabled?: boolean,
   isActive?: boolean,
@@ -78,7 +78,7 @@ export type ThemeProps = {
 export default function(props: ThemeProps) {
   const mode = props.mode || 'light';
   return {
-    radio: (state: RadioIconThemeProps) => ({
+    radio: (state: ThemeState) => ({
       dotColor: getDotColor(state)[mode],
       circleColor: getCircleColor(state)[mode],
       borderColor: getBorderColor(state)[mode],
