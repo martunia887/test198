@@ -558,7 +558,7 @@ describe('lists', () => {
           const { editorView } = editor(
             doc(
               ul(
-                li(p('{<}One'), ul(li('Child element'))),
+                li(p('{<}One'), ul(li(p('Child element')))),
                 li(p('Two')),
                 li(p('Three{>}')),
               ),
@@ -567,9 +567,9 @@ describe('lists', () => {
 
           const expectedOutput = doc(
             ol(
-              li(p('{<}One'), ol(li('Child element'))),
+              li(p('One'), ol(li(p('Child element')))),
               li(p('Two')),
-              li(p('Three{>}')),
+              li(p('Three')),
             ),
           );
 
