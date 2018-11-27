@@ -18,8 +18,22 @@ import {
   MentionProvider,
   TaskDecisionProvider,
 } from '../providers';
+import { createPromise } from '../cross-platform-promise';
 
 export const bridge: WebBridgeImpl = ((window as any).bridge = new WebBridgeImpl());
+
+// let originalFetch = window.fetch;
+if (window.webkit) {
+  // @ts-ignore
+  window.fetch = (url, options) => {
+    return createPromise('nativeFetch', JSON.stringify({ url, options }))
+      .submit()
+      .then(({ response, status, statusText, headers }) => {
+        // const blob = new Blob([response], { type: 'application/json' });
+        return new Response(response, { status, statusText, headers });
+      });
+  };
+}
 
 class EditorWithState extends Editor {
   onEditorCreated(instance: {
