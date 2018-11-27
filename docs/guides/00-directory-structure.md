@@ -170,10 +170,6 @@ The `package.json` file contains all the information and configuration that NPM 
 
 The `README.md` file contains a introduction for each package.
 
-## Patterns
-
-The `patterns` directory is a single package that houses all of our overarching component patterns. For example, this may contain a rough implementation of `@atlaskit/navigation` for Jira.
-
 ## Releases
 
 Contains the documentation for releases containing significant changes along with any migration guides.
