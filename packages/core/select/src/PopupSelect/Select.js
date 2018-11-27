@@ -2,8 +2,9 @@
 
 import React, {
   PureComponent,
+  cloneElement,
   type ElementRef,
-  type Element as ElementType,
+  type Element,
   type Node,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -51,7 +52,7 @@ type Props = {
   popperProps?: PopperPropsNoChildren,
   searchThreshold: number,
   styles: Object,
-  target: ElementType<*>,
+  target: Element<any>,
 };
 type State = {
   isOpen: boolean,
@@ -115,15 +116,6 @@ export default class PopupSelect extends PureComponent<Props, State> {
     return null;
   }
 
-  componentDidMount() {
-    if (typeof window === 'undefined') return;
-    window.addEventListener('click', this.handleClick);
-  }
-  componentWillUnmount() {
-    if (typeof window === 'undefined') return;
-    window.removeEventListener('click', this.handleClick);
-  }
-
   // Event Handlers
   // ==============================
 
@@ -135,21 +127,23 @@ export default class PopupSelect extends PureComponent<Props, State> {
       default:
     }
   };
-  handleClick = ({ target }: MouseEvent) => {
+  handleClick = (...args: Array<any>) => {
+    const { target } = this.props;
     const { isOpen } = this.state;
-    // appease flow
-    if (!(target instanceof Element)) return;
+
+    // call target onClick handler if provided
+    if (target.props.onClick) {
+      target.props.onClick(args);
+    }
 
     // NOTE: Why not use the <Blanket /> component to close?
     // We don't want to interupt the user's flow. Taking this approach allows
     // user to click "through" to other elements and close the popout.
-    if (isOpen && !this.menuRef.contains(target)) {
+    if (isOpen) {
       this.close();
     }
 
-    // open on target click -- we can't trust consumers to spread the onClick
-    // property to the target
-    if (!isOpen && this.targetRef.contains(target)) {
+    if (!isOpen) {
       this.open();
     }
   };
@@ -166,8 +160,10 @@ export default class PopupSelect extends PureComponent<Props, State> {
     const { onOpen } = this.props;
     if (onOpen) onOpen();
 
-    this.setState({ isOpen: true }, this.initialiseFocusTrap);
-    this.selectRef.select.focusOption('first'); // HACK
+    this.setState({ isOpen: true }, () => {
+      this.initialiseFocusTrap();
+      this.selectRef.select.focusOption('first'); // HACK
+    });
 
     if (typeof window === 'undefined') return;
     window.addEventListener('keydown', this.handleKeyDown);
@@ -308,7 +304,7 @@ export default class PopupSelect extends PureComponent<Props, State> {
         <Reference>
           {({ ref }) => (
             <NodeResolver innerRef={this.resolveTargetRef(ref)}>
-              {target}
+              {cloneElement(target, { onClick: this.handleClick })}
             </NodeResolver>
           )}
         </Reference>
