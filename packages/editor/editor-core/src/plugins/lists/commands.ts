@@ -618,29 +618,18 @@ export const rootListDepth = (selection: Selection<any>, nodes) => {
 function changeListType(listType: 'bulletList' | 'orderedList'): Command {
   return function(state, dispatch) {
     const { tr } = state;
-    const { $from, $to } = state.selection;
+    const { $from } = state.selection;
     const { orderedList, bulletList } = state.schema.nodes;
     const listNodes = ['bulletList', 'orderedList'];
 
     const rootDepth = rootListDepth(state.selection, state.schema.nodes);
-    // 2 can't be hardcoded because code block etc
-    const maxLevelNearestParentListNode = $from.node(rootDepth);
-    // ? $from.node($from.depth - 2)
-    // : $to.node($to.depth - 2);
-    // const maxLevelNearestParentListNode =
-
     const nearestParentNodePos = $from.before(rootDepth);
-    // const nearestParentNodePos = $from.depth < $to.depth
-    // ? $from.index($from.depth -2)
-    // : $to.index($to.depth -2);
-
     tr.setNodeMarkup(
       nearestParentNodePos,
       listType === 'bulletList' ? bulletList : orderedList,
     );
-    // Iterate over child nodes
-    maxLevelNearestParentListNode.descendants((node, pos, parent) => {
-      // If we're looking at a child list
+    // Iterate over the descendant lists of the nearest list parent
+    $from.node(rootDepth).descendants((node, pos, parent) => {
       if (listNodes.includes(node.type.name)) {
         console.log(node);
         tr.setNodeMarkup(
@@ -649,23 +638,6 @@ function changeListType(listType: 'bulletList' | 'orderedList'): Command {
         );
       }
     });
-    /*
-    tr.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
-      const $pos = state.doc.resolve(pos);
-      if (listNodes.includes(node.type.name)) {
-        // console.log("Node pos:", pos, " from.pos:", $from.pos)
-        if(($pos.depth >= $from.depth - 3 || $pos.depth >= $to.depth - 3)) {
-          tr.setNodeMarkup(
-            pos,
-            listType === 'bulletList' ? bulletList : orderedList,
-          );
-        }
-        return true
-      } 
-      return false;
-    });
-    */
-
     dispatch(tr);
     return true;
   };
