@@ -1,7 +1,7 @@
 // @flow
 import { colors } from '@atlaskit/theme';
 
-const getBorderColor = (props: RadioIconThemeProps) => {
+const getBorderColor = (props: ThemeState) => {
   if (props.isDisabled) return { light: '', dark: '' };
   if (props.isFocused) return { light: colors.B100, dark: colors.B75 };
   if (props.isActive) return { light: 'currentColor', dark: 'currentColor' };
@@ -65,7 +65,7 @@ export type ThemeState = {
 
 export type ThemeProps = {
   radio?: (
-    state: RadioIconThemeProps,
+    state: ThemeState,
   ) => {
     dotColor: string,
     circleColor: string,
