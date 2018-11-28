@@ -1,0 +1,1 @@
+- FS-1734 Removed "Try It Out" section from both emoji and mentions documentation pages which simply contained links redirecting to the same page. Removed this section entirely to match similar pages.
