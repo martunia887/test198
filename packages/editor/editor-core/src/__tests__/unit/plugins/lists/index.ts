@@ -554,6 +554,31 @@ describe('lists', () => {
           toggleBulletList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
+
+        it('should convert parent and child lists when selection across parent list', () => {
+          // Makes sure ED-5742 won't happen again
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(p('{<}foo')),
+                li(p('bar{>}'), ul(li(p('baz')), li(p('boom')))),
+                li(p('whatever')),
+              ),
+            ),
+          );
+
+          const expectedOutput = doc(
+            ol(
+              li(p('foo')),
+              li(p('bar'), ol(li(p('baz')), li(p('boom')))),
+              li(p('whatever')),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
         it('should change child list type when parent list converted to ordered', () => {
           const { editorView } = editor(
             doc(
