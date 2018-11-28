@@ -530,9 +530,9 @@ describe('lists', () => {
       });
     });
 
-    describe('converting a list', () => {
-      describe('unordered to ordered', () => {
-        it('should change all list elements to ordered when one element selected', () => {
+    describe('converting a list using', () => {
+      describe('Bullet to Ordered', () => {
+        it('1. should convert all list elements when one element selected', () => {
           const { editorView } = editor(
             doc(ol(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
           );
@@ -543,7 +543,8 @@ describe('lists', () => {
           toggleBulletList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
-        it('should change all list elements to ordered when all elements selected', () => {
+
+        it('2. should convert all list elements to ordered when all elements selected', () => {
           const { editorView } = editor(
             doc(ol(li(p('{<}One')), li(p('Two')), li(p('Three{>}')))),
           );
@@ -555,7 +556,149 @@ describe('lists', () => {
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
 
-        it('should convert parent and child lists when selection across parent list', () => {
+        it('3. should convert parent and child lists when selection across parent list', () => {
+          // Makes sure ED-5742 won't happen again
+          const { editorView } = editor(
+            doc(
+              ol(
+                li(p('{<}foo')),
+                li(p('bar{>}'), ol(li(p('baz')), li(p('boom')))),
+                li(p('whatever')),
+              ),
+            ),
+          );
+
+          const expectedOutput = doc(
+            ul(
+              li(p('foo')),
+              li(p('bar'), ul(li(p('baz')), li(p('boom')))),
+              li(p('whatever')),
+            ),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('4. should convert child list type when parent list converted to ordered', () => {
+          const { editorView } = editor(
+            doc(
+              ol(
+                li(p('{<}One'), ol(li(p('Child element')))),
+                li(p('Two')),
+                li(p('Three{>}')),
+              ),
+            ),
+          );
+
+          const expectedOutput = doc(
+            ul(
+              li(p('One'), ul(li(p('Child element')))),
+              li(p('Two')),
+              li(p('Three')),
+            ),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('5. should convert selection inside panel to list', () => {
+          const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
+          const expectedOutput = doc(panel()(ul(li(p('text')))));
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('6. should convert selection to a list when the selection starts with a paragraph and ends inside a list', () => {
+          const { editorView } = editor(
+            doc(
+              p('{<}One'),
+              ul(li(p('Two{>}')), li(p('Three')), li(p('Four'))),
+            ),
+          );
+          const expectedOutput = doc(
+            ul(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('7. should convert selection to a list when the selection contains a list but starts and end with paragraphs', () => {
+          const { editorView } = editor(
+            doc(p('{<}One'), ul(li(p('Two')), li(p('Three'))), p('Four{>}')),
+          );
+          const expectedOutput = doc(
+            ul(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('8. should convert selection to a list when the selection starts inside a list and ends with a paragraph', () => {
+          const expectedOutput = doc(
+            ul(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
+          );
+          const { editorView } = editor(
+            doc(
+              ul(li(p('One')), li(p('{<}Two')), li(p('Three'))),
+              p('Four{>}'),
+            ),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('9. should convert selection to a list and keep empty paragraphs', () => {
+          const { editorView } = editor(
+            doc(ol(li(p('{<}One')), li(p('Two')), li(p()), li(p('Three{>}')))),
+          );
+          const expectedOutput = doc(
+            ul(li(p('One')), li(p('Two')), li(p()), li(p('Three'))),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('10. should convert selection to list when there is an empty paragraph between non empty two', () => {
+          const { editorView } = editor(doc(p('{<}One'), p(), p('Three{>}')));
+          const expectedOutput = doc(ul(li(p('One')), li(p()), li(p('Three'))));
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+      });
+      describe('ordered to unordered', () => {
+        it('1. should convert all list elements when one element selected', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
+          );
+
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('2. should convert all list elements to ordered when all elements selected', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('{<}One')), li(p('Two')), li(p('Three{>}')))),
+          );
+
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('3. should convert parent and child lists when selection across parent list', () => {
           // Makes sure ED-5742 won't happen again
           const { editorView } = editor(
             doc(
@@ -579,7 +722,7 @@ describe('lists', () => {
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
 
-        it('should change child list type when parent list converted to ordered', () => {
+        it('4. should convert child list type when parent list converted to ordered', () => {
           const { editorView } = editor(
             doc(
               ul(
@@ -601,94 +744,76 @@ describe('lists', () => {
           toggleOrderedList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
-      });
-      describe('ordered to unordered', () => {
-        it('should change all list elements to unordered when one element selected', () => {
-          const { editorView } = editor(
-            doc(ul(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
-          );
 
-          const expectedOutput = doc(
-            ol(li(p('One')), li(p('Two')), li(p('Three'))),
-          );
+        it('5. should convert selection inside panel to list', () => {
+          const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
+          const expectedOutput = doc(panel()(ol(li(p('text')))));
+
           toggleOrderedList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
-        it('should change all list elements to unordered when all elements selected', () => {
+
+        it('6. should convert selection to a list when the selection starts with a paragraph and ends inside a list', () => {
           const { editorView } = editor(
-            doc(ul(li(p('{<}One')), li(p('Two')), li(p('Three{>}')))),
+            doc(
+              p('{<}One'),
+              ol(li(p('Two{>}')), li(p('Three')), li(p('Four'))),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
           );
 
-          const expectedOutput = doc(
-            ol(li(p('One')), li(p('Two')), li(p('Three'))),
-          );
           toggleOrderedList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
-      });
 
-      it('should convert selection inside panel to list', () => {
-        const expectedOutput = doc(panel()(ol(li(p('text')))));
-        const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
+        it('7. should convert selection to a list when the selection contains a list but starts and end with paragraphs', () => {
+          const { editorView } = editor(
+            doc(p('{<}One'), ol(li(p('Two')), li(p('Three'))), p('Four{>}')),
+          );
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
+          );
 
-        toggleOrderedList(editorView);
-        expect(editorView.state.doc).toEqualDocument(expectedOutput);
-      });
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
 
-      it('should convert selection to a list when the selection starts with a paragraph and ends inside a list', () => {
-        const expectedOutput = doc(
-          ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
-        );
-        const { editorView } = editor(
-          doc(p('{<}One'), ol(li(p('Two{>}')), li(p('Three')), li(p('Four')))),
-        );
+        it('8. should convert selection to a list when the selection starts inside a list and ends with a paragraph', () => {
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
+          );
+          const { editorView } = editor(
+            doc(
+              ol(li(p('One')), li(p('{<}Two')), li(p('Three'))),
+              p('Four{>}'),
+            ),
+          );
 
-        toggleOrderedList(editorView);
-        expect(editorView.state.doc).toEqualDocument(expectedOutput);
-      });
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
 
-      it('should convert selection to a list when the selection contains a list but starts and end with paragraphs', () => {
-        const expectedOutput = doc(
-          ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
-        );
-        const { editorView } = editor(
-          doc(p('{<}One'), ol(li(p('Two')), li(p('Three'))), p('Four{>}')),
-        );
+        it('9. should convert selection to a list and keep empty paragraphs', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('{<}One')), li(p('Two')), li(p()), li(p('Three{>}')))),
+          );
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p()), li(p('Three'))),
+          );
 
-        toggleOrderedList(editorView);
-        expect(editorView.state.doc).toEqualDocument(expectedOutput);
-      });
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
 
-      it('should convert selection to a list when the selection starts inside a list and ends with a paragraph', () => {
-        const expectedOutput = doc(
-          ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
-        );
-        const { editorView } = editor(
-          doc(ol(li(p('One')), li(p('{<}Two')), li(p('Three'))), p('Four{>}')),
-        );
+        it('10. should convert selection to list when there is an empty paragraph between non empty two', () => {
+          const { editorView } = editor(doc(p('{<}One'), p(), p('Three{>}')));
+          const expectedOutput = doc(ol(li(p('One')), li(p()), li(p('Three'))));
 
-        toggleOrderedList(editorView);
-        expect(editorView.state.doc).toEqualDocument(expectedOutput);
-      });
-
-      it('should convert selection to a list and keep empty paragraphs', () => {
-        const expectedOutput = doc(
-          ul(li(p('One')), li(p('Two')), li(p()), li(p('Three'))),
-        );
-        const { editorView } = editor(
-          doc(ol(li(p('{<}One')), li(p('Two')), li(p()), li(p('Three{>}')))),
-        );
-
-        toggleBulletList(editorView);
-        expect(editorView.state.doc).toEqualDocument(expectedOutput);
-      });
-
-      it('should convert selection to list when there is an empty paragraph between non empty two', () => {
-        const expectedOutput = doc(ul(li(p('One')), li(p()), li(p('Three'))));
-        const { editorView } = editor(doc(p('{<}One'), p(), p('Three{>}')));
-
-        toggleBulletList(editorView);
-        expect(editorView.state.doc).toEqualDocument(expectedOutput);
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
       });
     });
 
