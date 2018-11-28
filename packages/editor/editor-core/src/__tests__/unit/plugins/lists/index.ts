@@ -672,6 +672,62 @@ describe('lists', () => {
           toggleBulletList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
+
+        it('11. should convert child elements up to six levels down (including first)', () => {
+          const { editorView } = editor(
+            doc(
+              ol(
+                li(
+                  p('{<}first{>}'),
+                  ol(
+                    li(
+                      p('second'),
+                      ol(
+                        li(
+                          p('third'),
+                          ol(
+                            li(
+                              p('fourth'),
+                              ol(li(p('fifth'), ol(li(p('sixth'))))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                li(p('last')),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ul(
+              li(
+                p('{<}first{>}'),
+                ul(
+                  li(
+                    p('second'),
+                    ul(
+                      li(
+                        p('third'),
+                        ul(
+                          li(
+                            p('fourth'),
+                            ul(li(p('fifth'), ul(li(p('sixth'))))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              li(p('last')),
+            ),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
       });
       describe('ordered to unordered', () => {
         it('1. should convert all list elements when one element selected', () => {
@@ -810,6 +866,62 @@ describe('lists', () => {
         it('10. should convert selection to list when there is an empty paragraph between non empty two', () => {
           const { editorView } = editor(doc(p('{<}One'), p(), p('Three{>}')));
           const expectedOutput = doc(ol(li(p('One')), li(p()), li(p('Three'))));
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('11. should convert child elements up to six levels down (including first)', () => {
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(
+                  p('{<}first{>}'),
+                  ul(
+                    li(
+                      p('second'),
+                      ul(
+                        li(
+                          p('third'),
+                          ul(
+                            li(
+                              p('fourth'),
+                              ul(li(p('fifth'), ul(li(p('sixth'))))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                li(p('last')),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(
+              li(
+                p('{<}first{>}'),
+                ol(
+                  li(
+                    p('second'),
+                    ol(
+                      li(
+                        p('third'),
+                        ol(
+                          li(
+                            p('fourth'),
+                            ol(li(p('fifth'), ol(li(p('sixth'))))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              li(p('last')),
+            ),
+          );
 
           toggleOrderedList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
