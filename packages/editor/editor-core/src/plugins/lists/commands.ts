@@ -552,7 +552,7 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
         listNodes.includes(grandgrandParent.type) &&
         grandgrandParent.type !== nodes[listType])
     ) {
-      return changeListType(listType)(state, dispatch);
+      return toggleListTypes(listType)(state, dispatch);
     }
 
     if (
@@ -572,70 +572,49 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
     }
   };
 }
-/*
-const nearestParentList = (node ) => {
-  const { bulletList, orderedList, listItem } = nodes;
 
-
+const nearestParentListDepth = (
+  selection: Selection<any>,
+  nodes,
+): number | undefined => {
+  const { bulletList, orderedList } = nodes;
+  let depth: number | undefined = undefined;
   for (let i = selection.$to.depth - 1; i > 0; i--) {
     const node = selection.$to.node(i);
     if (node.type === bulletList || node.type === orderedList) {
       depth = i;
-    }
-    if (
-      node.type !== bulletList &&
-      node.type !== orderedList &&
-      node.type !== listItem
-    ) {
-      break;
-    }
-  }
-  return depth;
-};
-*/
-
-// Type nodes
-export const rootListDepth = (selection: Selection<any>, nodes) => {
-  const { bulletList, orderedList, listItem } = nodes;
-  let depth;
-  for (let i = selection.$to.depth - 1; i > 0; i--) {
-    const node = selection.$to.node(i);
-    if (node.type === bulletList || node.type === orderedList) {
-      depth = i;
-      break; // hack
-    }
-    if (
-      node.type !== bulletList &&
-      node.type !== orderedList &&
-      node.type !== listItem
-    ) {
       break;
     }
   }
   return depth;
 };
 
-function changeListType(listType: 'bulletList' | 'orderedList'): Command {
+function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
   return function(state, dispatch) {
     const { tr } = state;
     const { $from } = state.selection;
     const { orderedList, bulletList } = state.schema.nodes;
-    const listNodes = ['bulletList', 'orderedList'];
 
-    const rootDepth = rootListDepth(state.selection, state.schema.nodes);
-    const nearestParentNodePos = $from.before(rootDepth);
-    tr.setNodeMarkup(
-      nearestParentNodePos,
-      listType === 'bulletList' ? bulletList : orderedList,
+    const parentDepth = nearestParentListDepth(
+      state.selection,
+      state.schema.nodes,
     );
-    // Iterate over the descendant lists of the nearest list parent
-    $from.node(rootDepth).descendants((node, pos, parent) => {
-      if (listNodes.includes(node.type.name)) {
-        console.log(node);
-        tr.setNodeMarkup(
-          pos + 1,
-          listType === 'bulletList' ? bulletList : orderedList,
-        );
+    if (parentDepth === undefined) {
+      return false;
+    }
+    const nearestParentNodePos = $from.before(parentDepth);
+    const setListMarkup = (pos: number) =>
+      tr.setNodeMarkup(
+        pos,
+        listType === 'bulletList' ? bulletList : orderedList,
+      );
+    // Change the list type of the nearest parent list to the selection
+    setListMarkup(nearestParentNodePos);
+
+    // Iterate over the descendant lists and change their types
+    $from.node(parentDepth).descendants((node, pos, parent) => {
+      if (node.type === orderedList || node.type === bulletList) {
+        setListMarkup(pos + 1);
       }
     });
     dispatch(tr);
