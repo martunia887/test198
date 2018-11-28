@@ -184,8 +184,9 @@ if (config.testMatch.length === 0) {
   }
 }
 
-if (PROD) {
-  config.globals.__BASEURL__ = 'https://atlaskit.atlassian.com';
-}
+console.log('isDocker:', process.env.ISDOCKER);
+config.globals.__BASEURL__ = process.env.ISDOCKER
+  ? 'http://testing.local.com:9000'
+  : 'http://localhost:9000';
 
 module.exports = config;

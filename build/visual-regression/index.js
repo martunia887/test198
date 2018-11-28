@@ -12,35 +12,20 @@ const glob = require('glob');
  * and run and wait for visual-regression tests complete
  */
 const JEST_WAIT_FOR_INPUT_TIMEOUT = 1000;
-const isLocalRun = process.env.RUN_LOCAL_ONLY === 'true';
+process.env.VISUAL_REGRESSION = 'true';
 const watch = process.env.WATCH ? '--watch' : '';
-
-// move logic to remove all production snapshots before test starts
-function removeSnapshotDir() {
-  const filteredList = glob
-    .sync('**/packages/**/__image_snapshots__/', {
-      ignore: '**/node_modules/**',
-    })
-    .map(dir => {
-      fs.removeSync(dir);
-    });
-}
+const updateSnapshot = process.env.SNAPSHOT ? '--u' : '';
 
 // function to generate snapshot from production website
-function getProdSnapshots() {
-  return new Promise((resolve, reject) => {
-    let cmd = `VISUAL_REGRESSION=true PROD=true jest -u`;
-    if (watch) {
-      cmd = `${cmd} --watch`;
-    }
-    runCommand(cmd, resolve, reject);
-  });
-}
-
-// function to run tests and compare snapshot against prod snapshot
 function runTests() {
   return new Promise((resolve, reject) => {
-    const cmd = `VISUAL_REGRESSION=true jest`;
+    let cmd = `VISUAL_REGRESSION=true jest`;
+    if (watch) {
+      cmd = `${cmd} ${watch}`;
+    }
+    if (updateSnapshot) {
+      cmd = `${cmd} ${updateSnapshot}`;
+    }
     runCommand(cmd, resolve, reject);
   });
 }
@@ -59,36 +44,23 @@ function runCommand(cmd, resolve, reject) {
 }
 
 async function main() {
-  const serverAlreadyRunning = await isReachable('http://localhost:9000');
-  let prodTestStatus /*: {code: number, signal: any}*/ = {
-    code: 0,
-    signal: '',
-  };
-  removeSnapshotDir();
+  let url = 'http://localhost:9000';
+  console.log('isdocker:', process.env.ISDOCKER);
+  if (process.env.ISDOCKER) url = 'http://testing.local.com:9000';
+  console.log('trying to reach:', url);
+  let serverAlreadyRunning = await isReachable(url);
+  console.log('Running:', serverAlreadyRunning);
 
   if (!serverAlreadyRunning) {
     // Overriding the env variable to start the correct packages
-    process.env.VISUAL_REGRESSION = 'true';
     await webpack.startDevServer();
   }
 
-  if (!isLocalRun) {
-    prodTestStatus = await getProdSnapshots();
-  }
   const { code, signal } = await runTests();
-
-  console.log(
-    `Exiting tests with exit code: ${prodTestStatus.code} and signal: ${
-      prodTestStatus.signal
-    }`,
-  );
-  console.log(`Exiting tests with exit code: ${code} and signal: ${signal}`);
 
   if (!serverAlreadyRunning) {
     webpack.stopDevServer();
   }
-
-  if (prodTestStatus.code !== 0) process.exit(prodTestStatus.code);
   process.exit(code);
 }
 
