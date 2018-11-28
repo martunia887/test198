@@ -13,7 +13,6 @@ import {
 
 import { eventDispatcher } from './dispatcher';
 import { ObjectKey, TaskState } from '@atlaskit/task-decision';
-import { createPromise } from '../cross-platform-promise';
 
 export interface MobileRendererState {
   /** as defined in the renderer */
@@ -21,19 +20,6 @@ export interface MobileRendererState {
 }
 
 const rendererBridge = ((window as any).rendererBridge = new RendererBridgeImpl());
-
-// let originalFetch = window.fetch;
-if (window.webkit) {
-  // @ts-ignore
-  window.fetch = (url, options) => {
-    return createPromise('nativeFetch', JSON.stringify({ url, options }))
-      .submit()
-      .then(({ response, status, statusText, headers }) => {
-        // const blob = new Blob([response], { type: 'application/json' });
-        return new Response(response, { status, statusText, headers });
-      });
-  };
-}
 
 export default class MobileRenderer extends React.Component<
   {},
