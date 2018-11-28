@@ -3,42 +3,47 @@ import { createPromise } from '../cross-platform-promise';
 import { ElementsConfig, MediaAuthConfig } from '../types';
 
 function createEmojiProvider() {
-  return Promise.all([
-    createPromise<ElementsConfig>('getConfig').submit(),
-    createPromise<MediaAuthConfig>('getAuth').submit(),
-  ]).then(([config, auth]) => {
-    let { cloudId, baseUrl } = config;
+  return createPromise<ElementsConfig>('getConfig')
+    .submit()
+    .then(config => {
+      let { cloudId, baseUrl } = config;
 
-    baseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+      baseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 
-    const emojiConfig: EmojiResourceConfig = {
-      providers: [
-        {
-          url: `${baseUrl}emoji/standard`,
-        },
-        {
-          url: `${baseUrl}emoji/atlassian`,
-        },
-      ],
-    };
-
-    if (cloudId) {
-      const customEmojiConfig = {
-        url: `${baseUrl}emoji/${cloudId}/site`,
-        securityProvider: () => ({}),
+      const emojiConfig: EmojiResourceConfig = {
+        providers: [
+          {
+            url: `${baseUrl}emoji/standard`,
+          },
+          {
+            url: `${baseUrl}emoji/atlassian`,
+          },
+        ],
       };
 
-      if (auth && auth.token) {
-        customEmojiConfig.securityProvider = () => ({
-          headers: { Authorization: `Bearer ${auth.token}` },
-        });
+      if (cloudId) {
+        const customEmojiConfig = {
+          url: `${baseUrl}emoji/${cloudId}/site`,
+          refreshedSecurityProvider: () => {
+            return createPromise<MediaAuthConfig>('getAuth')
+              .submit()
+              .then(auth => {
+                if (auth && auth.token) {
+                  return {
+                    headers: { Authorization: `Bearer ${auth.token}` },
+                  };
+                }
+
+                return {};
+              });
+          },
+        };
+
+        emojiConfig.providers.push(customEmojiConfig);
       }
 
-      emojiConfig.providers.push(customEmojiConfig);
-    }
-
-    return new EmojiResource(emojiConfig);
-  });
+      return new EmojiResource(emojiConfig);
+    });
 }
 
 export default createEmojiProvider();
