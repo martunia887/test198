@@ -578,15 +578,15 @@ const nearestParentListDepth = (
   nodes,
 ): number | undefined => {
   const { bulletList, orderedList } = nodes;
-  let depth: number | undefined = undefined;
-  for (let i = selection.$to.depth - 1; i > 0; i--) {
-    const node = selection.$to.node(i);
-    if (node.type === bulletList || node.type === orderedList) {
-      depth = i;
-      break;
+  let currentDepth = selection.$to.depth - 1;
+  while (currentDepth > 0) {
+    const node = selection.$to.node(currentDepth);
+    if (node && (node.type === bulletList || node.type === orderedList)) {
+      return currentDepth;
     }
+    currentDepth--;
   }
-  return depth;
+  return undefined;
 };
 
 function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
