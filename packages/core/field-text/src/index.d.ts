@@ -21,9 +21,9 @@ export interface Props {
   onChange?: (event: FormEvent<HTMLInputElement>) => void;
   onBlur?: (event: FormEvent<HTMLInputElement>) => void;
   onFocus?: (event: FormEvent<HTMLInputElement>) => void;
-  onKeyDown?: (event: FormEvent<HTMLInputElement>) => void;
-  onKeyPress?: (event: FormEvent<HTMLInputElement>) => void;
-  onKeyUp?: (event: FormEvent<HTMLInputElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onKeyPress?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onKeyUp?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
   required?: boolean;
   shouldFitContainer?: boolean;
