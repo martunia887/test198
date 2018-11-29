@@ -24,16 +24,9 @@ A couple of steps are required to set linting integration within vscode.
 {
   "css.validate": false,
   "scss.validate": false,
-  "stylelint.additionalDocumentSelectors": [
-    "javascript",
-    "javascriptreact",
-    "typescript"
-  ],
 }
 ```
 3. Reload your window
-
-The additionalDocumentSelectors setting is required to make stylelint run in javascript and typescript files.
 
 ## Common linting issues
 
@@ -41,7 +34,7 @@ Below are some common linting issues that may be hard to track down due to minor
 
 ### Unknown word - CssSyntaxError
 
-This error will most often be accompanied with a line number that is incorrect. The most likely cause for this will be non-primary/incorrect usage of the styled-components [css](https://www.styled-components.com/docs/api#css) helper function. 
+This error will most often be accompanied with a line number that is incorrect. The most likely cause for this will be non-primary/incorrect usage of the styled-components [css](https://www.styled-components.com/docs/api#css) helper function.
 
 Although styled-components will allow css tagged template literals to work in more places than they need to be used, the linter has trouble with this.
 
