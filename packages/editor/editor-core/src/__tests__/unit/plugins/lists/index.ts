@@ -855,6 +855,20 @@ describe('lists', () => {
           toggleBulletList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
+
+        it.only('14. should convert child elements in subtree of selection', () => {
+          const { editorView } = editor(
+            doc(
+              ol(li(p('first'), ol(li(p('se{<}cond'), ol(li(p('th{>}ird'))))))),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(li(p('first'), ul(li(p('second'), ul(li(p('third'))))))),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
       });
       describe('ordered to unordered', () => {
         it('1. should convert all list elements when one element selected', () => {
