@@ -92,4 +92,4 @@ utility function might be useful.
 
 ## Refs
 
-The Flow React docs is a good guide to (dealing with refs)[https://flow.org/en/docs/react/refs/].
+The Flow React docs is a good guide to [dealing with refs](https://flow.org/en/docs/react/refs/).
