@@ -1,4 +1,4 @@
-import { ResolvedPos, Fragment, Slice } from 'prosemirror-model';
+import { ResolvedPos, Fragment, Slice, NodeType } from 'prosemirror-model';
 import {
   EditorState,
   Transaction,
@@ -574,13 +574,13 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
 }
 
 const nearestParentListDepth = (
-  selection: Selection<any>,
+  pos: ResolvedPos,
   nodes,
 ): number | undefined => {
   const { bulletList, orderedList } = nodes;
-  let currentDepth = selection.$to.depth - 1;
+  let currentDepth = pos.depth - 1;
   while (currentDepth > 0) {
-    const node = selection.$to.node(currentDepth);
+    const node = pos.node(currentDepth);
     if (node && (node.type === bulletList || node.type === orderedList)) {
       return currentDepth;
     }
@@ -592,31 +592,60 @@ const nearestParentListDepth = (
 function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
   return function(state, dispatch) {
     const { tr } = state;
-    const { $from } = state.selection;
-    const { orderedList, bulletList } = state.schema.nodes;
-
-    const parentDepth = nearestParentListDepth(
-      state.selection,
-      state.schema.nodes,
-    );
-    if (parentDepth === undefined) {
-      return false;
-    }
-    const nearestParentNodePos = $from.before(parentDepth);
+    const { $from, $to } = state.selection;
+    const { orderedList, bulletList, listItem } = state.schema.nodes;
     const setListMarkup = (pos: number) =>
       tr.setNodeMarkup(
         pos,
         listType === 'bulletList' ? bulletList : orderedList,
       );
+
+    const fromParentDepth = nearestParentListDepth(
+      state.selection.$from,
+      state.schema.nodes,
+    );
+
+    const nearestParentListPosition = fromParentDepth
+      ? $from.before(fromParentDepth)
+      : 0;
+
+    let lastNodeType: NodeType | undefined = undefined;
+    for (let pos = nearestParentListPosition; pos < $to.pos; pos++) {
+      const node = tr.doc.nodeAt(pos);
+      if (!node || node.type.name === listType) {
+        continue;
+      }
+      if (node.type === orderedList || node.type === bulletList) {
+        const text = node.textContent;
+        console.log({ text, node });
+        setListMarkup(pos);
+      } else if (
+        node.type === listItem &&
+        lastNodeType !== orderedList &&
+        lastNodeType !== bulletList
+      ) {
+        // If we pass through a listItem without passing through a ol/ul then we need to find the parent
+        // and convert that
+        const resolvedPos: ResolvedPos = tr.doc.resolve(pos);
+        const parentListDepth = nearestParentListDepth(
+          resolvedPos,
+          state.schema.nodes,
+        );
+        const parentListPos = resolvedPos.before(parentListDepth);
+        setListMarkup(parentListPos);
+      }
+      lastNodeType = node.type;
+    }
+
     // Change the list type of the nearest parent list to the selection
-    setListMarkup(nearestParentNodePos);
+    // setListMarkup(nearestParentNodePos);
 
     // Iterate over the descendant lists and change their types
-    $from.node(parentDepth).descendants((node, pos, parent) => {
-      if (node.type === orderedList || node.type === bulletList) {
-        setListMarkup(nearestParentNodePos + pos + 1);
-      }
-    });
+    // $from.node(parentDepth).descendants((node, pos, parent) => {
+    //   if (node.type === orderedList || node.type === bulletList) {
+    //     setListMarkup(nearestParentNodePos + pos + 1);
+    //   }
+    // });
     dispatch(tr);
     return true;
   };
