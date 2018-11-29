@@ -36,7 +36,7 @@ function createEmojiProvider() {
      * TODO: We should send all fetch requests to iOS for processing,
      *       to be as consistent as possible.
      */
-    if (window.webkit) {
+    if (window.webkit && window.bridge) {
       mockFetchFor(emojiConfig.providers.map(p => p.url));
     }
 
