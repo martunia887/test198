@@ -138,6 +138,22 @@ export default class SizeDetector extends Component<Props, State> {
     return this.props.children(sizeMetrics);
   };
 
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const { sizeMetrics } = this.state;
+    const hasNewMetrics = sizeMetrics == null && nextState.sizeMetrics != null;
+    let hasWidthChanged = false;
+    let hasHeightChanged = false;
+    if (sizeMetrics && nextState && nextState.sizeMetrics) {
+      hasWidthChanged = sizeMetrics.width !== nextState.sizeMetrics.width;
+      hasHeightChanged = sizeMetrics.height !== nextState.sizeMetrics.height;
+    }
+    if (hasNewMetrics || hasWidthChanged || hasHeightChanged) {
+      return true;
+    }
+
+    return false;
+  }
+
   render() {
     return (
       <div
