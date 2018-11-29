@@ -856,7 +856,7 @@ describe('lists', () => {
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
 
-        it.only('14. should convert child elements in subtree of selection', () => {
+        it('14. should convert child elements in subtree of selection', () => {
           const { editorView } = editor(
             doc(
               ol(li(p('first'), ol(li(p('se{<}cond'), ol(li(p('th{>}ird'))))))),
@@ -864,6 +864,51 @@ describe('lists', () => {
           );
           const expectedOutput = doc(
             ol(li(p('first'), ul(li(p('second'), ul(li(p('third'))))))),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it('15. should correctly change list type across levels', () => {
+          // This test will check an issue where some text will disappear
+          // in the p('second') node
+          const { editorView } = editor(
+            doc(
+              ol(
+                li(p('first'), ol(li(p('second'), ol(li(p('third')))))),
+                li(
+                  p('2nd first'),
+                  ol(
+                    li(
+                      p('2nd second'),
+                      ol(li(p('2nd third'), ol(li(p('{<}2nd fourth'))))),
+                    ),
+                  ),
+                ),
+                li(
+                  p('3nd first'),
+                  ol(li(p('3nd sec{>}ond'), ol(li(p('3rd third'))))),
+                ),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ul(
+              li(p('first'), ol(li(p('second'), ol(li(p('third')))))),
+              li(
+                p('2nd first'),
+                ol(
+                  li(
+                    p('2nd second'),
+                    ol(li(p('2nd third'), ul(li(p('2nd fourth'))))),
+                  ),
+                ),
+              ),
+              li(
+                p('3nd first'),
+                ul(li(p('3nd second'), ul(li(p('3rd third'))))),
+              ),
+            ),
           );
 
           toggleBulletList(editorView);
@@ -1242,6 +1287,64 @@ describe('lists', () => {
                     ol(li(p('2nd third'), ol(li(p('2nd fourth'))))),
                   ),
                 ),
+              ),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it('14. should convert child elements in subtree of selection', () => {
+          const { editorView } = editor(
+            doc(
+              ul(li(p('first'), ul(li(p('se{<}cond'), ul(li(p('th{>}ird'))))))),
+            ),
+          );
+          const expectedOutput = doc(
+            ul(li(p('first'), ol(li(p('second'), ol(li(p('third'))))))),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it('15. should correctly change list type across levels', () => {
+          // This test will check an issue where some text will disappear
+          // in the p('second') node
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(p('first'), ul(li(p('second'), ul(li(p('third')))))),
+                li(
+                  p('2nd first'),
+                  ul(
+                    li(
+                      p('2nd second'),
+                      ul(li(p('2nd third'), ul(li(p('{<}2nd fourth'))))),
+                    ),
+                  ),
+                ),
+                li(
+                  p('3nd first'),
+                  ul(li(p('3nd sec{>}ond'), ul(li(p('3rd third'))))),
+                ),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(
+              li(p('first'), ul(li(p('second'), ul(li(p('third')))))),
+              li(
+                p('2nd first'),
+                ul(
+                  li(
+                    p('2nd second'),
+                    ul(li(p('2nd third'), ol(li(p('2nd fourth'))))),
+                  ),
+                ),
+              ),
+              li(
+                p('3nd first'),
+                ol(li(p('3nd second'), ol(li(p('3rd third'))))),
               ),
             ),
           );

@@ -594,58 +594,83 @@ function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
     const { tr } = state;
     const { $from, $to } = state.selection;
     const { orderedList, bulletList, listItem } = state.schema.nodes;
-    const setListMarkup = (pos: number) =>
-      tr.setNodeMarkup(
-        pos,
-        listType === 'bulletList' ? bulletList : orderedList,
-      );
+    const outputListType = listType === 'bulletList' ? bulletList : orderedList;
+    const setListMarkup = (pos: number) => {
+      // console.log('changing at', pos)
+      // if (pos === 14) {
+      //   debugger;
+      // }
+      tr.setNodeMarkup(pos, outputListType);
+    };
 
     const fromParentDepth = nearestParentListDepth(
       state.selection.$from,
       state.schema.nodes,
     );
 
-    const nearestParentListPosition = fromParentDepth
+    const nearestFromParentListPosition = fromParentDepth
       ? $from.before(fromParentDepth)
       : 0;
 
+    let listPositions: number[] = [];
+
+    let listPositionsHash = {};
+
+    const storeListPosition = position => {
+      if (listPositionsHash[position] !== true) {
+        listPositionsHash[position] = true;
+        listPositions.push(position);
+      }
+    };
     let lastNodeType: NodeType | undefined = undefined;
-    for (let pos = nearestParentListPosition; pos < $to.pos; pos++) {
+    // Walk document across selection
+    for (let pos = nearestFromParentListPosition; pos < $to.pos; pos++) {
       const node = tr.doc.nodeAt(pos);
-      if (!node || node.type.name === listType) {
+      if (!node || node.type === outputListType) {
         continue;
       }
       if (node.type === orderedList || node.type === bulletList) {
-        const text = node.textContent;
-        console.log({ text, node });
         setListMarkup(pos);
+        // storeListPosition(pos)
       } else if (
         node.type === listItem &&
         lastNodeType !== orderedList &&
         lastNodeType !== bulletList
       ) {
         // If we pass through a listItem without passing through a ol/ul then we need to find the parent
-        // and convert that
+        // and convert that (as we've hit a sibling to another list element)
         const resolvedPos: ResolvedPos = tr.doc.resolve(pos);
         const parentListDepth = nearestParentListDepth(
           resolvedPos,
           state.schema.nodes,
         );
         const parentListPos = resolvedPos.before(parentListDepth);
-        setListMarkup(parentListPos);
+        const parentListNode = tr.doc.nodeAt(parentListPos);
+        if (parentListNode && parentListNode.type !== outputListType) {
+          // storeListPosition(parentListPos)
+          setListMarkup(parentListPos);
+        }
       }
       lastNodeType = node.type;
     }
 
-    // Change the list type of the nearest parent list to the selection
-    // setListMarkup(nearestParentNodePos);
+    // Convert any descendant lists of the end of selection node
+    const toParentDepth = nearestParentListDepth(
+      state.selection.$to,
+      state.schema.nodes,
+    );
+    const nearestToParentListPosition = toParentDepth
+      ? $to.before(toParentDepth)
+      : 0;
+    $to.node(toParentDepth).descendants((node, pos, parent) => {
+      if (node.type === orderedList || node.type === bulletList) {
+        setListMarkup(nearestToParentListPosition + pos + 1);
+        // storeListPosition(pos + 1)
+      }
+    });
 
-    // Iterate over the descendant lists and change their types
-    // $from.node(parentDepth).descendants((node, pos, parent) => {
-    //   if (node.type === orderedList || node.type === bulletList) {
-    //     setListMarkup(nearestParentNodePos + pos + 1);
-    //   }
-    // });
+    // listPositions.map(pos => setListMarkup(pos));
+    // console.log(listPositions);
     dispatch(tr);
     return true;
   };
