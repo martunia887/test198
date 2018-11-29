@@ -784,6 +784,77 @@ describe('lists', () => {
           toggleBulletList(editorView);
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
+        it("13. shouldn't convert child elements in subtree of parent's sibling list items", () => {
+          const { editorView } = editor(
+            doc(
+              ol(
+                li(
+                  p('first'),
+                  ol(
+                    li(
+                      p('second'),
+                      ol(
+                        li(
+                          p('third'),
+                          ol(
+                            li(
+                              p('fourth'),
+                              ol(li(p('fifth'), ol(li(p('sixth'))))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                li(
+                  p('2nd first'),
+                  ol(
+                    li(
+                      p('{<}2nd second{>}'),
+                      ol(li(p('2nd third'), ol(li(p('2nd fourth'))))),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(
+              li(
+                p('first'),
+                ol(
+                  li(
+                    p('second'),
+                    ol(
+                      li(
+                        p('third'),
+                        ol(
+                          li(
+                            p('fourth'),
+                            ol(li(p('fifth'), ol(li(p('sixth'))))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              li(
+                p('2nd first'),
+                ul(
+                  li(
+                    p('2nd second'),
+                    ul(li(p('2nd third'), ul(li(p('2nd fourth'))))),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          toggleBulletList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
       });
       describe('ordered to unordered', () => {
         it('1. should convert all list elements when one element selected', () => {
@@ -976,6 +1047,188 @@ describe('lists', () => {
                 ),
               ),
               li(p('last')),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it('11. should convert child elements up to six levels down (including first)', () => {
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(
+                  p('{<}first{>}'),
+                  ul(
+                    li(
+                      p('second'),
+                      ul(
+                        li(
+                          p('third'),
+                          ul(
+                            li(
+                              p('fourth'),
+                              ul(li(p('fifth'), ul(li(p('sixth'))))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                li(p('last')),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(
+              li(
+                p('{<}first{>}'),
+                ol(
+                  li(
+                    p('second'),
+                    ol(
+                      li(
+                        p('third'),
+                        ol(
+                          li(
+                            p('fourth'),
+                            ol(li(p('fifth'), ol(li(p('sixth'))))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              li(p('last')),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('12. should convert child elements in subtree of sibling list items', () => {
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(
+                  p('first'),
+                  ul(
+                    li(
+                      p('second'),
+                      ul(
+                        li(
+                          p('third'),
+                          ul(
+                            li(
+                              p('fourth'),
+                              ul(li(p('fifth'), ul(li(p('sixth'))))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                li(p('{<}2nd first{>}')),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(
+              li(
+                p('first'),
+                ol(
+                  li(
+                    p('second'),
+                    ol(
+                      li(
+                        p('third'),
+                        ol(
+                          li(
+                            p('fourth'),
+                            ol(li(p('fifth'), ol(li(p('sixth'))))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              li(p('2nd first')),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it("13. shouldn't convert child elements in subtree of parent's sibling list items", () => {
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(
+                  p('first'),
+                  ul(
+                    li(
+                      p('second'),
+                      ul(
+                        li(
+                          p('third'),
+                          ul(
+                            li(
+                              p('fourth'),
+                              ul(li(p('fifth'), ul(li(p('sixth'))))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                li(
+                  p('2nd first'),
+                  ul(
+                    li(
+                      p('{<}2nd second{>}'),
+                      ul(li(p('2nd third'), ul(li(p('2nd fourth'))))),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ul(
+              li(
+                p('first'),
+                ul(
+                  li(
+                    p('second'),
+                    ul(
+                      li(
+                        p('third'),
+                        ul(
+                          li(
+                            p('fourth'),
+                            ul(li(p('fifth'), ul(li(p('sixth'))))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              li(
+                p('2nd first'),
+                ol(
+                  li(
+                    p('2nd second'),
+                    ol(li(p('2nd third'), ol(li(p('2nd fourth'))))),
+                  ),
+                ),
+              ),
             ),
           );
 

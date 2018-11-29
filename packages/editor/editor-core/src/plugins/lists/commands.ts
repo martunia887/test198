@@ -614,7 +614,7 @@ function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
     // Iterate over the descendant lists and change their types
     $from.node(parentDepth).descendants((node, pos, parent) => {
       if (node.type === orderedList || node.type === bulletList) {
-        setListMarkup(pos + 1);
+        setListMarkup(nearestParentNodePos + pos + 1);
       }
     });
     dispatch(tr);
