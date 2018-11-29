@@ -10,6 +10,7 @@ coverage/
 junit.xml
 test-reports/
 browserstack.err
+**/__diff_ouput__/
 
 # created by build-stats tool
 .data/
