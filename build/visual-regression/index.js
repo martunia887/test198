@@ -19,7 +19,7 @@ const updateSnapshot = process.env.SNAPSHOT ? '--u' : '';
 // function to generate snapshot from production website
 function runTests() {
   return new Promise((resolve, reject) => {
-    let cmd = `VISUAL_REGRESSION=true jest`;
+    let cmd = `jest --forceExit`;
     if (watch) {
       cmd = `${cmd} ${watch}`;
     }
@@ -57,6 +57,7 @@ async function main() {
   }
 
   const { code, signal } = await runTests();
+  console.log(`exiting test with code:${code} and signal: ${signal}`);
 
   if (!serverAlreadyRunning) {
     webpack.stopDevServer();
