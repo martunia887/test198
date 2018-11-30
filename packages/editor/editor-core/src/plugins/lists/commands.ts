@@ -595,11 +595,14 @@ function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
     const { $from, $to } = state.selection;
     const { orderedList, bulletList, listItem } = state.schema.nodes;
     const outputListType = listType === 'bulletList' ? bulletList : orderedList;
+
+    let listPositions: number[] = [];
     const setListMarkup = (pos: number) => {
       // console.log('changing at', pos)
       // if (pos === 14) {
       //   debugger;
       // }
+
       tr.setNodeMarkup(pos, outputListType);
     };
 
@@ -655,18 +658,12 @@ function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
         // If we pass through a listItem without passing through a ol/ul then we need to find the parent
         // and convert that (as we've hit a sibling to another list element)
         const resolvedPos: ResolvedPos = tr.doc.resolve(pos);
-        const parentListDepth = nearestParentListDepth(
-          resolvedPos,
-          state.schema.nodes,
-        );
-        if (parentListDepth) {
-          const parentListPos = resolvedPos.before(resolvedPos.depth);
-          // const parentListPos = resolvedPos.before(parentListDepth+1);
-          const parentListNode = tr.doc.nodeAt(parentListPos);
-          if (parentListNode && parentListNode.type !== outputListType) {
-            // storeListPosition(parentListPos)
-            setListMarkup(parentListPos);
-          }
+        const parentListPos = resolvedPos.before(resolvedPos.depth);
+        // const parentListPos = resolvedPos.before(parentListDepth+1);
+        const parentListNode = tr.doc.nodeAt(parentListPos);
+        if (parentListNode && parentListNode.type !== outputListType) {
+          // storeListPosition(parentListPos)
+          setListMarkup(parentListPos);
         }
       }
       lastNodeType = node.type;
