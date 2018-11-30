@@ -522,11 +522,11 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
     dispatch: (tr: Transaction) => void,
     view: EditorView,
   ): boolean {
-    dispatch(
-      state.tr.setSelection(
-        adjustSelectionInList(state.doc, state.selection as TextSelection),
-      ),
-    );
+    // dispatch(
+    //   state.tr.setSelection(
+    //     adjustSelectionInList(state.doc, state.selection as TextSelection),
+    //   ),
+    // );
     state = view.state;
 
     const { $from, $to } = state.selection;
@@ -608,25 +608,40 @@ function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
       state.schema.nodes,
     );
 
-    const nearestFromParentListPosition = fromParentDepth
-      ? $from.before(fromParentDepth)
-      : 0;
-
-    let listPositions: number[] = [];
-
-    let listPositionsHash = {};
-
-    const storeListPosition = position => {
-      if (listPositionsHash[position] !== true) {
-        listPositionsHash[position] = true;
-        listPositions.push(position);
+    /*
+    Check the nearest parent list - we need to change the type as we don't hit one of the parent list's
+    ul/ol/listItem nodes
+    */
+    if (fromParentDepth) {
+      const nearestFromParentListPosition = $from.before(fromParentDepth);
+      const node = tr.doc.nodeAt(nearestFromParentListPosition);
+      if (
+        node &&
+        (node.type === orderedList || node.type === bulletList) &&
+        node.type !== outputListType
+      ) {
+        setListMarkup(nearestFromParentListPosition);
       }
-    };
+    }
+
+    // let listPositions: number[] = [];
+    // let listPositionsHash = {};
+    // const storeListPosition = position => {
+    //   if (listPositionsHash[position] !== true) {
+    //     listPositionsHash[position] = true;
+    //     listPositions.push(position);
+    //   }
+    // };
+
     let lastNodeType: NodeType | undefined = undefined;
-    // Walk document across selection
-    for (let pos = nearestFromParentListPosition; pos < $to.pos; pos++) {
+    for (let pos = $from.pos; pos < $to.pos; pos++) {
+      // for (let pos = nearestFromParentListPosition; pos < $to.pos; pos++) {
       const node = tr.doc.nodeAt(pos);
-      if (!node || node.type === outputListType) {
+      if (!node) {
+        continue;
+      }
+      if (node.type === outputListType) {
+        lastNodeType = node.type;
         continue;
       }
       if (node.type === orderedList || node.type === bulletList) {
@@ -644,30 +659,18 @@ function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
           resolvedPos,
           state.schema.nodes,
         );
-        const parentListPos = resolvedPos.before(parentListDepth);
-        const parentListNode = tr.doc.nodeAt(parentListPos);
-        if (parentListNode && parentListNode.type !== outputListType) {
-          // storeListPosition(parentListPos)
-          setListMarkup(parentListPos);
+        if (parentListDepth) {
+          const parentListPos = resolvedPos.before(resolvedPos.depth);
+          // const parentListPos = resolvedPos.before(parentListDepth+1);
+          const parentListNode = tr.doc.nodeAt(parentListPos);
+          if (parentListNode && parentListNode.type !== outputListType) {
+            // storeListPosition(parentListPos)
+            setListMarkup(parentListPos);
+          }
         }
       }
       lastNodeType = node.type;
     }
-
-    // Convert any descendant lists of the end of selection node
-    const toParentDepth = nearestParentListDepth(
-      state.selection.$to,
-      state.schema.nodes,
-    );
-    const nearestToParentListPosition = toParentDepth
-      ? $to.before(toParentDepth)
-      : 0;
-    $to.node(toParentDepth).descendants((node, pos, parent) => {
-      if (node.type === orderedList || node.type === bulletList) {
-        setListMarkup(nearestToParentListPosition + pos + 1);
-        // storeListPosition(pos + 1)
-      }
-    });
 
     // listPositions.map(pos => setListMarkup(pos));
     // console.log(listPositions);
