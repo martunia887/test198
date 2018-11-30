@@ -1,5 +1,20 @@
 # @atlaskit/global-search
 
+## 5.13.0
+- [minor] [347a474](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/347a474):
+
+  - Added icon on selected to quick search results
+
+## 5.12.12
+- [patch] [f84ab96](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f84ab96):
+
+  - Add extra padding to the before pre-query advanced search component.
+
+## 5.12.11
+- [patch] [f0bfc56](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f0bfc56):
+
+  - Change adv search shortcut icon to Return instead of ShiftReturn for both Confluence and Jira
+
 ## 5.12.10
 - Updated dependencies [ab9b69c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ab9b69c):
   - @atlaskit/docs@5.2.2

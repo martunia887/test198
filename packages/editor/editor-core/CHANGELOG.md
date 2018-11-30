@@ -1,5 +1,40 @@
 # @atlaskit/editor-core
 
+## 90.2.0
+- [minor] [94094fe](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/94094fe):
+
+  - Adds support for links around images
+
+## 90.1.0
+- [minor] [fef6755](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/fef6755):
+
+  - Change the way we deal with transactions in collab edit
+
+## 90.0.0
+- [major] [3a7224a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3a7224a):
+
+  - ED-5677: enabled quickInsert and gapCursor by default (quickInsert: except for mobile appearance)
+
+## 89.1.3
+- [patch] [0e72eb6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0e72eb6):
+
+  - Revert box-sizing change for node views
+
+## 89.1.2
+- [patch] [cf4e304](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cf4e304):
+
+  - Fixed toolbar being positioned over a panel at the bottom of the page
+
+## 89.1.1
+- [patch] [3061b52](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3061b52):
+
+  - AK-5723 - adjust files in package.json to ensure correct publishing of dist/package.json
+
+## 89.1.0
+- [minor] [7c9dcba](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7c9dcba):
+
+  - Responsive wide breakout mode
+
 ## 89.0.8
 - [patch] [6c90bb9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6c90bb9):
 
