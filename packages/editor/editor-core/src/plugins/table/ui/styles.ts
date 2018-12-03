@@ -658,7 +658,7 @@ export const tableStyles = css`
     font-size: 90%;
     font-weight: bold;
     height: 24px;
-    width: 100%;
+    width: calc(100% - 16px);
     padding: 8px;
     z-index: ${akEditorSmallZIndex};
 

@@ -14,7 +14,7 @@ import ColumnControls from '../ui/TableFloatingControls/ColumnControls';
 
 import { getPluginState } from '../pm-plugins/main';
 import { scaleTable, setColumnWidths } from '../pm-plugins/table-resizing';
-import { toggleRefsMenu } from '../../refs/actions';
+import { updateTitleTarget } from '../../refs/actions';
 import { TablePluginState, TableCssClassName as ClassName } from '../types';
 import { getCellMinWidth } from '../';
 import * as classnames from 'classnames';
@@ -203,7 +203,7 @@ class TableComponent extends React.Component<ComponentProps> {
       >
         <div
           className={classnames(ClassName.TABLE_TITLE)}
-          onMouseDown={this.showTitleMenu}
+          onClick={this.showTitleMenu}
         >
           {node.attrs.title}
         </div>
@@ -286,11 +286,11 @@ class TableComponent extends React.Component<ComponentProps> {
   }
 
   private showTitleMenu = event => {
-    event.preventDefault();
+    event.stopPropagation();
 
     const { view } = this.props;
-    const pos = this.props.getPos();
-    toggleRefsMenu(pos)(view.state, view.dispatch);
+    const position = this.props.getPos();
+    updateTitleTarget(event.target, position)(view.state, view.dispatch);
   };
 }
 

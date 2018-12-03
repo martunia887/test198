@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createPlugin, pluginKey } from './pm-plugins/main';
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
-import RefsMenu from './ui/RefsMenu';
+import TitleMenu from './ui/TitleMenu';
 
 const refsPlugin: EditorPlugin = {
   pmPlugins() {
@@ -27,16 +27,22 @@ const refsPlugin: EditorPlugin = {
         plugins={{
           pluginState: pluginKey,
         }}
-        render={({ pluginState }) => (
-          <RefsMenu
-            editorView={editorView}
-            isOpen={pluginState.showReferenceMenu}
-            mountPoint={popupsMountPoint}
-            boundariesElement={popupsBoundariesElement}
-            scrollableElement={popupsScrollableElement}
-            nodePosition={pluginState.nodePosition}
-          />
-        )}
+        render={({ pluginState }) => {
+          if (!pluginState.titleMenuTarget) {
+            return null;
+          }
+
+          return (
+            <TitleMenu
+              editorView={editorView}
+              target={pluginState.titleMenuTarget}
+              mountPoint={popupsMountPoint}
+              boundariesElement={popupsBoundariesElement}
+              scrollableElement={popupsScrollableElement}
+              nodePosition={pluginState.nodePosition}
+            />
+          );
+        }}
       />
     );
   },

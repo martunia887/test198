@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
-import { findDomRefAtPos } from 'prosemirror-utils';
-import Textfield from '@atlaskit/textfield';
 import {
   Popup,
   akEditorFloatingOverlapPanelZIndex,
 } from '@atlaskit/editor-common';
-import { toggleRefsMenu } from '../../actions';
+import { updateTitleTarget } from '../../actions';
+import { RefsCssClassName as ClassName } from '../../consts';
 
 export interface RefsMenuProps {
   editorView: EditorView;
-  isOpen: boolean;
+  target: HTMLElement;
   nodePosition?: number;
   mountPoint?: HTMLElement;
   boundariesElement?: HTMLElement;
@@ -29,7 +28,7 @@ export default class RefsMenu extends React.Component<
     super(props);
 
     this.state = {
-      value: '',
+      value: props.target.innerText,
     };
   }
 
@@ -50,20 +49,8 @@ export default class RefsMenu extends React.Component<
       mountPoint,
       boundariesElement,
       scrollableElement,
-      editorView,
-      isOpen,
-      nodePosition,
+      target,
     } = this.props;
-
-    if (!isOpen || typeof nodePosition !== 'number') {
-      return null;
-    }
-    const node = editorView.state.doc.nodeAt(nodePosition);
-    const domAtPos = editorView.domAtPos.bind(editorView);
-    const target = findDomRefAtPos(nodePosition, domAtPos) as HTMLElement;
-    if (!target || !node) {
-      return null;
-    }
 
     return (
       <Popup
@@ -71,18 +58,22 @@ export default class RefsMenu extends React.Component<
         alignY="top"
         target={target}
         mountTo={mountPoint}
-        offset={[0, -58]}
+        offset={[0, -40]}
         boundariesElement={boundariesElement}
         scrollableElement={scrollableElement}
-        // z-index value below is to ensure that this menu is above other floating menu
-        // in table, but below floating dialogs like typeaheads, pickers, etc.
         zIndex={akEditorFloatingOverlapPanelZIndex}
       >
-        <Textfield
-          autoFocus
-          name="event-handlers"
+        <input
+          ref={ref => {
+            if (ref) {
+              // avoid scrolling the browser window
+              setTimeout(() => ref.focus());
+            }
+          }}
+          className={`${ClassName.TITLE_MENU}`}
+          name="title-menu"
           onChange={this.handleOnChange}
-          onBlur={this.applyTitle}
+          onBlur={this.updateTitle}
           onKeyPress={this.handleKeyPress}
           value={this.state.value}
           style={{ width: target.offsetWidth - 16 }}
@@ -91,7 +82,7 @@ export default class RefsMenu extends React.Component<
     );
   }
 
-  private applyTitle = () => {
+  private updateTitle = () => {
     const { nodePosition, editorView } = this.props;
     const { state, dispatch } = editorView;
     if (typeof nodePosition !== 'number') {
@@ -108,12 +99,13 @@ export default class RefsMenu extends React.Component<
       }),
     );
 
-    toggleRefsMenu()(editorView.state, dispatch);
+    this.setState({ value: '' });
+    updateTitleTarget()(editorView.state, dispatch);
   };
 
   private handleKeyPress = event => {
     if (event.key === 'Enter') {
-      this.applyTitle();
+      this.updateTitle();
     }
   };
 

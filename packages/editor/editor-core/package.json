@@ -55,7 +55,6 @@
     "@atlaskit/spinner": "^9.0.12",
     "@atlaskit/status": "^0.2.8",
     "@atlaskit/task-decision": "^11.0.7",
-    "@atlaskit/textfield": "^0.1.2",
     "@atlaskit/theme": "^7.0.0",
     "@atlaskit/tooltip": "^12.1.12",
     "@atlaskit/util-service-support": "^3.0.2",

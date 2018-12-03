@@ -1,15 +1,14 @@
 import { Dispatch } from '../../event-dispatcher';
 import { RefsPluginState, pluginKey } from './pm-plugins/main';
 
-export const handleToggleReference = (
-  nodePosition: number,
-  pluginState: RefsPluginState,
-  dispatch: Dispatch,
-) => {
+export const handleUpdateTitleTarget = (
+  nodePosition?: number,
+  titleMenuTarget?: HTMLElement,
+) => (pluginState: RefsPluginState, dispatch: Dispatch) => {
   const nextPluginState = {
     ...pluginState,
     nodePosition,
-    showReferenceMenu: !pluginState.showReferenceMenu,
+    titleMenuTarget,
   };
   dispatch(pluginKey, nextPluginState);
   return nextPluginState;

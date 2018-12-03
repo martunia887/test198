@@ -1,30 +1,28 @@
 import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { Dispatch } from '../../../event-dispatcher';
-import { handleToggleReference } from '../action-handlers';
+import { handleUpdateTitleTarget } from '../action-handlers';
 
 export const pluginKey = new PluginKey('refsPlugin');
 
 export interface RefsPluginState {
-  showReferenceMenu: boolean;
   nodePosition?: number;
+  titleMenuTarget?: HTMLElement;
 }
 
 export enum REFS_ACTIONS {
-  TOGGLE_REFERENCE_MENU,
+  UPDATE_TITLE_TARGET,
 }
 
 export const createPlugin = (dispatch: Dispatch) =>
   new Plugin({
     state: {
       init: (): RefsPluginState => {
-        return {
-          showReferenceMenu: false,
-        };
+        return {};
       },
       apply(tr: Transaction, _pluginState: RefsPluginState) {
         const meta = tr.getMeta(pluginKey) || {};
         const data = meta.data || {};
-        const { nodePosition } = data;
+        const { nodePosition, titleMenuTarget } = data;
 
         let pluginState = { ..._pluginState };
 
@@ -39,8 +37,11 @@ export const createPlugin = (dispatch: Dispatch) =>
         }
 
         switch (meta.action) {
-          case REFS_ACTIONS.TOGGLE_REFERENCE_MENU:
-            return handleToggleReference(nodePosition, pluginState, dispatch);
+          case REFS_ACTIONS.UPDATE_TITLE_TARGET:
+            return handleUpdateTitleTarget(nodePosition, titleMenuTarget)(
+              pluginState,
+              dispatch,
+            );
 
           default:
             break;
