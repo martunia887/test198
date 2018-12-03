@@ -68,7 +68,7 @@
     "@atlaskit/toggle": "^5.0.12",
     "@atlaskit/webdriver-runner": "^0.1.0",
     "@types/dateformat": "^1.0.1",
-    "@types/enzyme": "^3.1.15",
+    "@types/enzyme": "^3.1.6",
     "@types/eventemitter2": "^4.1.0",
     "@types/filesize": "^3.2.15",
     "@types/lodash.chunk": "^4.2.3",

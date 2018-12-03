@@ -60,7 +60,7 @@
     "@atlaskit/checkbox": "^5.0.8",
     "@atlaskit/docs": "^5.2.3",
     "@atlaskit/i18n-tools": "^0.4.0",
-    "@types/enzyme": "^3.1.15",
+    "@types/enzyme": "^3.1.6",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "jsverify": "^0.8.3",
