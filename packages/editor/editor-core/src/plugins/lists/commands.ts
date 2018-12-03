@@ -541,11 +541,11 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
     dispatch: (tr: Transaction) => void,
     view: EditorView,
   ): boolean {
-    // dispatch(
-    //   state.tr.setSelection(
-    //     adjustSelectionInList(state.doc, state.selection as TextSelection),
-    //   ),
-    // );
+    dispatch(
+      state.tr.setSelection(
+        adjustSelectionInList(state.doc, state.selection as TextSelection),
+      ),
+    );
     state = view.state;
 
     const { $from, $to } = state.selection;
