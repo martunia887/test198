@@ -154,6 +154,7 @@ export interface TableAttributes {
   layout?: Layout;
   __autoSize?: boolean;
   id?: string;
+  reference?: string;
 }
 
 /**
@@ -205,14 +206,16 @@ export interface CellAttributes {
 }
 
 // TODO: Fix any, potential issue. ED-5048
+const defaultReference = 'My table';
+
 export const table: any = {
   content: 'tableRow+',
   attrs: {
     isNumberColumnEnabled: { default: false },
     layout: { default: 'default' },
     __autoSize: { default: false },
-    id: { defualt: '' },
-    reference: { defualt: '' },
+    id: { defualt: uuid.generate() },
+    reference: { defualt: defaultReference },
   },
   tableRole: 'table',
   isolating: true,
@@ -227,7 +230,7 @@ export const table: any = {
         layout: dom.getAttribute('data-layout') || 'default',
         __autoSize: dom.getAttribute('data-autosize') === 'true' ? true : false,
         id: uuid.generate(),
-        reference: '',
+        reference: dom.getAttribute('data-reference') || defaultReference,
       }),
     },
   ],

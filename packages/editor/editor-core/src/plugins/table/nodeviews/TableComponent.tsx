@@ -188,36 +188,46 @@ class TableComponent extends React.Component<ComponentProps> {
     ];
 
     return (
-      <div
-        style={{
-          width: this.getTableContainerWidth(node.attrs.layout, containerWidth),
-        }}
-        className={classnames(ClassName.TABLE_CONTAINER, {
-          [ClassName.WITH_CONTROLS]: tableActive,
-          'less-padding': width < akEditorMobileBreakoutPoint,
-        })}
-        data-number-column={node.attrs.isNumberColumnEnabled}
-        data-layout={node.attrs.layout}
-      >
-        {allowControls && rowControls}
-        <div
-          className={classnames(ClassName.TABLE_NODE_WRAPPER)}
-          ref={elem => {
-            this.wrapper = elem;
-            this.props.contentDOM(elem ? elem : undefined);
-            if (elem) {
-              this.table = elem.querySelector('table');
-            }
-          }}
-        >
-          {allowControls && columnControls}
+      <div className={classnames(ClassName.TABLE_PARENT_CONTAINER)}>
+        <div className={classnames(ClassName.TABLE_REFERENCE)}>
+          {node.attrs.reference}
         </div>
         <div
-          ref={elem => {
-            this.rightShadow = elem;
+          style={{
+            width: this.getTableContainerWidth(
+              node.attrs.layout,
+              containerWidth,
+            ),
           }}
-          className={ClassName.TABLE_RIGHT_SHADOW}
-        />
+          className={classnames(ClassName.TABLE_CONTAINER, {
+            [ClassName.WITH_CONTROLS]: tableActive,
+            'less-padding': width < akEditorMobileBreakoutPoint,
+          })}
+          data-number-column={node.attrs.isNumberColumnEnabled}
+          data-layout={node.attrs.layout}
+          data-reference={node.attrs.reference}
+          data-id={node.attrs.id}
+        >
+          {allowControls && rowControls}
+          <div
+            className={classnames(ClassName.TABLE_NODE_WRAPPER)}
+            ref={elem => {
+              this.wrapper = elem;
+              this.props.contentDOM(elem ? elem : undefined);
+              if (elem) {
+                this.table = elem.querySelector('table');
+              }
+            }}
+          >
+            {allowControls && columnControls}
+          </div>
+          <div
+            ref={elem => {
+              this.rightShadow = elem;
+            }}
+            className={ClassName.TABLE_RIGHT_SHADOW}
+          />
+        </div>
       </div>
     );
   }

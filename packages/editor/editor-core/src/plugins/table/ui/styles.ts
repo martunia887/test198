@@ -649,6 +649,14 @@ export const tableStyles = css`
       color: ${N90};
     }
   }
+
+  /* =============== TABLE REFERENCE ================== */
+  .${ClassName.TABLE_REFERENCE} {
+    color: ${N90};
+    font-size: 90%;
+    font-weight: bold;
+    height: 24px;
+  }
 `;
 
 export const tableFullPageEditorStyles = css`
