@@ -48,6 +48,7 @@ import {
   alignment,
   editorDisabledPlugin,
   indentationPlugin,
+  refsPlugin,
 } from '../plugins';
 
 /**
@@ -221,6 +222,7 @@ export default function createPluginsList(
   plugins.push(submitEditorPlugin);
   plugins.push(fakeTextCursorPlugin);
   plugins.push(floatingToolbarPlugin);
+  plugins.push(refsPlugin);
 
   if (props.appearance !== 'mobile') {
     plugins.push(quickInsertPlugin);

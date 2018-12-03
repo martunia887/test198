@@ -1,8 +1,9 @@
 import { EditorState, Transaction } from 'prosemirror-state';
+import { findTable } from 'prosemirror-utils';
 import { defineMessages } from 'react-intl';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import SettingsIcon from '@atlaskit/icon/glyph/editor/settings';
-
+import EditorLinkIcon from '@atlaskit/icon/glyph/editor/link';
 import commonMessages from '../../messages';
 import { Command } from '../../types';
 import {
@@ -25,6 +26,7 @@ import {
   checkIfHeaderColumnEnabled,
   checkIfNumberColumnEnabled,
 } from './utils';
+import { toggleRefsMenu } from '../refs/actions';
 
 export const messages = defineMessages({
   tableOptions: {
@@ -46,6 +48,11 @@ export const messages = defineMessages({
     id: 'fabric.editor.numberedColumn',
     defaultMessage: 'Numbered column',
     description: 'Adds an auto-numbering column to your table',
+  },
+  reference: {
+    id: 'fabric.editor.reference',
+    defaultMessage: 'Reference',
+    description: 'Opens a reference menu',
   },
 });
 
@@ -70,6 +77,8 @@ export const getToolbarConfig: FloatingToolbarHandler = (
     tableState.pluginConfig
   ) {
     const { pluginConfig } = tableState;
+    const table = findTable(state.selection);
+
     return {
       title: 'Table floating controls',
       getDomRef: () => tableState.tableFloatingToolbarTarget!,
@@ -111,6 +120,22 @@ export const getToolbarConfig: FloatingToolbarHandler = (
               hidden: !pluginConfig.allowNumberColumn,
             },
           ],
+        },
+        {
+          type: 'separator',
+          hidden: !(
+            pluginConfig.allowBackgroundColor &&
+            pluginConfig.allowHeaderRow &&
+            pluginConfig.allowHeaderColumn &&
+            pluginConfig.allowMergeCells
+          ),
+        },
+        {
+          type: 'button',
+          icon: EditorLinkIcon,
+          onClick: (state, dispatch) =>
+            toggleRefsMenu(table!.pos)(state, dispatch),
+          title: formatMessage(messages.reference),
         },
         {
           type: 'separator',
