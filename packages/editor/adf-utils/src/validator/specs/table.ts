@@ -9,6 +9,8 @@ export default {
           values: ['default', 'full-width', 'wide'],
           optional: true,
         },
+        id: { type: 'string' },
+        reference: { type: 'string' },
       },
       optional: true,
     },

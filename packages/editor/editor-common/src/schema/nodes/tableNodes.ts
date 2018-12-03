@@ -153,8 +153,8 @@ export interface TableAttributes {
   isNumberColumnEnabled?: boolean;
   layout?: Layout;
   __autoSize?: boolean;
-  id?: string;
-  reference?: string;
+  id: string;
+  reference: string;
 }
 
 /**
@@ -214,8 +214,8 @@ export const table: any = {
     isNumberColumnEnabled: { default: false },
     layout: { default: 'default' },
     __autoSize: { default: false },
-    id: { defualt: uuid.generate() },
-    reference: { defualt: defaultReference },
+    id: { default: uuid.generate() },
+    reference: { default: defaultReference },
   },
   tableRole: 'table',
   isolating: true,

@@ -117,11 +117,12 @@ function fireAnalyticsEvent(
   error: ValidationError,
   type: 'block' | 'inline' | 'mark' = 'block',
 ) {
-  const { code } = error;
+  const { code, meta } = error;
   analyticsService.trackEvent('atlassian.editor.unsupported', {
     name: entity.type || 'unknown',
     type,
     errorCode: code,
+    meta: Array.isArray(meta) ? meta.join(', ') : undefined,
   });
 }
 
