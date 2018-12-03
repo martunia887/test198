@@ -59,10 +59,9 @@ export function liftFollowingList(
 ): Transaction {
   const { listItem } = state.schema.nodes;
   let lifted = false;
-
   tr.doc.nodesBetween(from, to, (node, pos) => {
     if (!lifted && node.type === listItem && pos > from) {
-      // lifted = true;
+      lifted = true;
       let listDepth = rootListDepth + 3;
       while (listDepth > rootListDepth + 2) {
         const start = tr.doc.resolve(tr.mapping.map(pos));
