@@ -516,6 +516,25 @@ export const toggleList = (
   }
 };
 
+function isAnyNodesAtDepth(
+  from: number,
+  to: number,
+  tr,
+  depth: number,
+): boolean {
+  for (let pos = from; pos < to; pos++) {
+    const node = tr.doc.nodeAt(pos);
+    if (!node) {
+      continue;
+    }
+    const resolvedPos: ResolvedPos = tr.doc.resolve(pos);
+    if (resolvedPos.depth === depth) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
   return function(
     state: EditorState,
@@ -545,9 +564,10 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
     const listNodes = [bulletList, orderedList];
 
     if (
-      (parent &&
-        listNodes.includes(parent.type) &&
-        parent.type !== nodes[listType]) ||
+      (!isAnyNodesAtDepth($from.pos, $to.pos, state.tr, 0) &&
+        (parent &&
+          listNodes.includes(parent.type) &&
+          parent.type !== nodes[listType])) ||
       (grandgrandParent &&
         listNodes.includes(grandgrandParent.type) &&
         grandgrandParent.type !== nodes[listType])
