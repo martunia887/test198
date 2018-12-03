@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Button, { ButtonGroup } from '@atlaskit/button';
+import Button from '@atlaskit/button';
 import { colors, borderRadius, gridSize } from '@atlaskit/theme';
 import Toolbar from '../Toolbar';
 import PluginSlot from '../PluginSlot';
@@ -19,6 +19,7 @@ import {
 import WidthEmitter from '../WidthEmitter';
 import { GRID_GUTTER } from '../../plugins/grid';
 import * as classnames from 'classnames';
+import { ButtonGroup } from '../../ui/styles';
 
 export interface CommentEditorProps {
   isMaxContentSizeReached?: boolean;
@@ -230,7 +231,7 @@ export default class Editor extends React.Component<
               <Button
                 appearance="primary"
                 onClick={this.handleSave}
-                isDisabled={
+                disabled={
                   disabled || (mediaState && !mediaState.allUploadsFinished)
                 }
               >
@@ -241,7 +242,7 @@ export default class Editor extends React.Component<
               <Button
                 appearance="subtle"
                 onClick={this.handleCancel}
-                isDisabled={disabled}
+                disabled={disabled}
               >
                 Cancel
               </Button>
