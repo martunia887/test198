@@ -567,10 +567,10 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
     if (
       (!isAnyNodesAtDepth($from.pos, $to.pos, state.tr, 0) &&
         (parent &&
-          listNodes.includes(parent.type) &&
+          listNodes.indexOf(parent.type) !== -1 &&
           parent.type !== nodes[listType])) ||
       (grandgrandParent &&
-        listNodes.includes(grandgrandParent.type) &&
+        listNodes.indexOf(grandgrandParent.type) !== -1 &&
         grandgrandParent.type !== nodes[listType])
     ) {
       // Change type of list from bullet to ordered or vice versa
