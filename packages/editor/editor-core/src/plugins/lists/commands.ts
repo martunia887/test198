@@ -628,7 +628,7 @@ function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
       }
     }
 
-    let lastNodeType: NodeType | undefined = undefined;
+    let lastNodeType: NodeType | undefined;
 
     // Iterate over nodes between start and end of selection
     for (let pos = $from.pos; pos < $to.pos; pos++) {
