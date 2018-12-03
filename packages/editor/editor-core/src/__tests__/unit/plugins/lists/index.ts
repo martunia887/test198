@@ -1678,13 +1678,13 @@ describe('lists', () => {
 
       it('should be possible to toggle a selection across different depths in the list', () => {
         const { editorView } = editor(
-          doc(ol(li(p('te{<}xt'), ol(li(p('text{>}')))), li(p('text')))),
+          doc(ol(li(p('te{<}xt'), ol(li(p('tex{>}t')))), li(p('text')))),
         );
 
         toggleOrderedList(editorView);
 
         expect(editorView.state.doc).toEqualDocument(
-          doc(p('te{<}xt'), p('text{>}'), p('text')),
+          doc(p('te{<}xt'), p('tex{>}t'), ol(li(p('text')))),
         );
       });
 

@@ -21,7 +21,11 @@ import {
   findCutBefore,
 } from '../../utils/commands';
 import { isRangeOfType } from '../../utils';
-import { liftFollowingList, liftSelectionList } from './transforms';
+import {
+  liftFollowingList,
+  liftSelectionList,
+  ancestorListDepth,
+} from './transforms';
 import { Command } from '../../types';
 import { GapCursorSelection } from '../gap-cursor';
 
@@ -590,20 +594,6 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
     }
   };
 }
-
-// Find the nearest ancestor list depth
-const ancestorListDepth = (pos: ResolvedPos, nodes): number | undefined => {
-  const { bulletList, orderedList } = nodes;
-  let currentDepth = pos.depth - 1;
-  while (currentDepth > 0) {
-    const node = pos.node(currentDepth);
-    if (node && (node.type === bulletList || node.type === orderedList)) {
-      return currentDepth;
-    }
-    currentDepth--;
-  }
-  return undefined;
-};
 
 // Attempt to change the type of list in the selection to listType
 function toggleListTypes(listType: 'bulletList' | 'orderedList'): Command {
