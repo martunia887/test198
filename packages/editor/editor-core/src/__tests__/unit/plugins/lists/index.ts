@@ -860,7 +860,335 @@ describe('lists', () => {
           expect(editorView.state.doc).toEqualDocument(expectedOutput);
         });
       });
-      // describe('ordered to unordered', () => {});
+      describe('ordered to unordered', () => {
+        it('1. should convert all list elements when one element selected', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('One')), li(p('{<}Two{>}')), li(p('Three')))),
+          );
+
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('2. should convert all list elements when all elements selected', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('{<}One')), li(p('Two')), li(p('Three{>}')))),
+          );
+
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three'))),
+          );
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('3. should convert parent list only when selection across parent list elements', () => {
+          // @see ED-5742
+          // list would blow up
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(p('{<}foo')),
+                li(p('bar{>}'), ul(li(p('baz')), li(p('boom')))),
+                li(p('whatever')),
+              ),
+            ),
+          );
+
+          const expectedOutput = doc(
+            ol(
+              li(p('foo')),
+              li(p('bar'), ul(li(p('baz')), li(p('boom')))),
+              li(p('whatever')),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('4. should convert child list type when parent list converted to ordered', () => {
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(p('{<}One'), ul(li(p('Child element')))),
+                li(p('Two')),
+                li(p('Three{>}')),
+              ),
+            ),
+          );
+
+          const expectedOutput = doc(
+            ol(
+              li(p('One'), ol(li(p('Child element')))),
+              li(p('Two')),
+              li(p('Three')),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('5. should convert selection inside panel to list', () => {
+          const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
+          const expectedOutput = doc(panel()(ol(li(p('text')))));
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('6. should convert selection to a list when the selection starts with a paragraph and ends inside a list', () => {
+          const { editorView } = editor(
+            doc(
+              p('{<}One'),
+              ol(li(p('Two{>}')), li(p('Three')), li(p('Four'))),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('7. should convert selection to a list when the selection contains a list but starts and end with paragraphs', () => {
+          const { editorView } = editor(
+            doc(p('{<}One'), ol(li(p('Two')), li(p('Three'))), p('Four{>}')),
+          );
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('8. should convert selection to a list when the selection starts inside a list and ends with a paragraph', () => {
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
+          );
+          const { editorView } = editor(
+            doc(
+              ol(li(p('One')), li(p('{<}Two')), li(p('Three'))),
+              p('Four{>}'),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('9. should convert selection to a list and keep empty paragraphs', () => {
+          const { editorView } = editor(
+            doc(ul(li(p('{<}One')), li(p('Two')), li(p()), li(p('Three{>}')))),
+          );
+          const expectedOutput = doc(
+            ol(li(p('One')), li(p('Two')), li(p()), li(p('Three'))),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it('10. should convert selection to list when there is an empty paragraph between non empty two', () => {
+          const { editorView } = editor(doc(p('{<}One'), p(), p('Three{>}')));
+          const expectedOutput = doc(ol(li(p('One')), li(p()), li(p('Three'))));
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it("11. shouldn't convert child elements in subtree of sibling list items", () => {
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(
+                  p('first'),
+                  ul(
+                    li(
+                      p('second'),
+                      ul(
+                        li(
+                          p('third'),
+                          ul(
+                            li(
+                              p('fourth'),
+                              ul(li(p('fifth'), ul(li(p('sixth'))))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                li(p('{<}2nd first{>}')),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(
+              li(
+                p('first'),
+                ul(
+                  li(
+                    p('second'),
+                    ul(
+                      li(
+                        p('third'),
+                        ul(
+                          li(
+                            p('fourth'),
+                            ul(li(p('fifth'), ul(li(p('sixth'))))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              li(p('2nd first')),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it("12. shouldn't convert child elements in subtree of parent's sibling list items", () => {
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(
+                  p('first'),
+                  ul(
+                    li(
+                      p('second'),
+                      ul(
+                        li(
+                          p('third'),
+                          ul(
+                            li(
+                              p('fourth'),
+                              ul(li(p('fifth'), ul(li(p('sixth'))))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                li(
+                  p('2nd first'),
+                  ul(
+                    li(
+                      p('{<}2nd second{>}'),
+                      ul(li(p('2nd third'), ul(li(p('2nd fourth'))))),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ul(
+              li(
+                p('first'),
+                ul(
+                  li(
+                    p('second'),
+                    ul(
+                      li(
+                        p('third'),
+                        ul(
+                          li(
+                            p('fourth'),
+                            ul(li(p('fifth'), ul(li(p('sixth'))))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              li(
+                p('2nd first'),
+                ol(
+                  li(
+                    p('2nd second'),
+                    ul(li(p('2nd third'), ul(li(p('2nd fourth'))))),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+
+        it("13. shouldn't convert child elements in subtree of selection", () => {
+          const { editorView } = editor(
+            doc(
+              ul(li(p('first'), ul(li(p('se{<}cond'), ul(li(p('th{>}ird'))))))),
+            ),
+          );
+          const expectedOutput = doc(
+            ul(li(p('first'), ol(li(p('second'), ol(li(p('third'))))))),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+        it('14. should correctly change list type across levels', () => {
+          // This test will check an issue where some text will disappear
+          // in the p('second') node
+          const { editorView } = editor(
+            doc(
+              ul(
+                li(p('first'), ul(li(p('second'), ul(li(p('third')))))),
+                li(
+                  p('2nd first'),
+                  ul(
+                    li(
+                      p('2nd second'),
+                      ul(li(p('2nd third'), ul(li(p('{<}2nd fourth'))))),
+                    ),
+                  ),
+                ),
+                li(
+                  p('3nd first'),
+                  ul(li(p('3nd sec{>}ond'), ul(li(p('3rd third'))))),
+                ),
+              ),
+            ),
+          );
+          const expectedOutput = doc(
+            ol(
+              li(p('first'), ul(li(p('second'), ul(li(p('third')))))),
+              li(
+                p('2nd first'),
+                ul(
+                  li(
+                    p('2nd second'),
+                    ul(li(p('2nd third'), ol(li(p('2nd fourth'))))),
+                  ),
+                ),
+              ),
+              li(
+                p('3nd first'),
+                ol(li(p('3nd second'), ul(li(p('3rd third'))))),
+              ),
+            ),
+          );
+
+          toggleOrderedList(editorView);
+          expect(editorView.state.doc).toEqualDocument(expectedOutput);
+        });
+      });
     });
 
     describe('joining lists', () => {
