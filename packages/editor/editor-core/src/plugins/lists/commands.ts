@@ -516,19 +516,18 @@ export const toggleList = (
   }
 };
 
+// Returns true if there is any node in selection with given depth
 function isAnyNodesAtDepth(
   from: number,
   to: number,
-  tr,
+  tr: Transaction,
   depth: number,
 ): boolean {
   for (let pos = from; pos < to; pos++) {
-    const node = tr.doc.nodeAt(pos);
-    if (!node) {
+    if (!tr.doc.nodeAt(pos)) {
       continue;
     }
-    const resolvedPos: ResolvedPos = tr.doc.resolve(pos);
-    if (resolvedPos.depth === depth) {
+    if (tr.doc.resolve(pos).depth === depth) {
       return true;
     }
   }
@@ -572,6 +571,7 @@ export function toggleListCommand(listType: 'bulletList' | 'orderedList') {
         listNodes.includes(grandgrandParent.type) &&
         grandgrandParent.type !== nodes[listType])
     ) {
+      // Change type of list from bullet to ordered or vice versa
       return toggleListTypes(listType)(state, dispatch);
     }
 
