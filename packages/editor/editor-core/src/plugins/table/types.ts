@@ -106,8 +106,8 @@ export const TableCssClassName = {
 
   CELL_NODEVIEW_WRAPPER: `${clPrefix}cell-nodeview-wrapper`,
 
-  TABLE_PARENT_CONTAINER: `${clPrefix}-table-parent-container`,
-  TABLE_REFERENCE: `${clPrefix}-table-reference`,
+  TABLE_PARENT_CONTAINER: `${clPrefix}table-parent-container`,
+  TABLE_TITLE: `${clPrefix}table-title`,
 
   // come from prosemirror-table
   COLUMN_RESIZE_HANDLE: 'column-resize-handle',

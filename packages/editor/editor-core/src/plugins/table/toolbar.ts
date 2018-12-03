@@ -26,7 +26,6 @@ import {
   checkIfHeaderColumnEnabled,
   checkIfNumberColumnEnabled,
 } from './utils';
-import { toggleRefsMenu } from '../refs/actions';
 
 export const messages = defineMessages({
   tableOptions: {
@@ -120,22 +119,6 @@ export const getToolbarConfig: FloatingToolbarHandler = (
               hidden: !pluginConfig.allowNumberColumn,
             },
           ],
-        },
-        {
-          type: 'separator',
-          hidden: !(
-            pluginConfig.allowBackgroundColor &&
-            pluginConfig.allowHeaderRow &&
-            pluginConfig.allowHeaderColumn &&
-            pluginConfig.allowMergeCells
-          ),
-        },
-        {
-          type: 'button',
-          icon: EditorLinkIcon,
-          onClick: (state, dispatch) =>
-            toggleRefsMenu(table!.pos)(state, dispatch),
-          title: formatMessage(messages.reference),
         },
         {
           type: 'separator',

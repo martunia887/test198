@@ -17,7 +17,34 @@ export interface RefsMenuProps {
   scrollableElement?: HTMLElement;
 }
 
-export default class RefsMenu extends React.Component<RefsMenuProps> {
+export interface RefsMenuState {
+  value: string;
+}
+
+export default class RefsMenu extends React.Component<
+  RefsMenuProps,
+  RefsMenuState
+> {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: '',
+    };
+  }
+
+  componentDidUpdate() {
+    const { editorView, nodePosition } = this.props;
+    if (typeof nodePosition === 'number') {
+      const node = editorView.state.doc.nodeAt(nodePosition);
+      if (node && !this.state.value) {
+        this.setState({
+          value: node.attrs.title,
+        });
+      }
+    }
+  }
+
   render() {
     const {
       mountPoint,
@@ -33,43 +60,38 @@ export default class RefsMenu extends React.Component<RefsMenuProps> {
     }
     const node = editorView.state.doc.nodeAt(nodePosition);
     const domAtPos = editorView.domAtPos.bind(editorView);
-    const target = findDomRefAtPos(nodePosition, domAtPos);
+    const target = findDomRefAtPos(nodePosition, domAtPos) as HTMLElement;
     if (!target || !node) {
       return null;
     }
 
     return (
       <Popup
-        alignX="center"
-        alignY="bottom"
-        target={target as HTMLElement}
+        alignX="left"
+        alignY="top"
+        target={target}
         mountTo={mountPoint}
-        offset={[0, 40]}
+        offset={[0, -58]}
         boundariesElement={boundariesElement}
         scrollableElement={scrollableElement}
-        fitHeight={40}
-        fitWidth={165}
         // z-index value below is to ensure that this menu is above other floating menu
         // in table, but below floating dialogs like typeaheads, pickers, etc.
         zIndex={akEditorFloatingOverlapPanelZIndex}
       >
         <Textfield
+          autoFocus
           name="event-handlers"
           onChange={this.handleOnChange}
-          onBlur={this.dismiss}
-          value={node.attrs.reference}
+          onBlur={this.applyTitle}
+          onKeyPress={this.handleKeyPress}
+          value={this.state.value}
+          style={{ width: target.offsetWidth - 16 }}
         />
       </Popup>
     );
   }
 
-  private dismiss = () => {
-    const { editorView } = this.props;
-    const { state, dispatch } = editorView;
-    toggleRefsMenu()(state, dispatch);
-  };
-
-  private handleOnChange = event => {
+  private applyTitle = () => {
     const { nodePosition, editorView } = this.props;
     const { state, dispatch } = editorView;
     if (typeof nodePosition !== 'number') {
@@ -82,8 +104,22 @@ export default class RefsMenu extends React.Component<RefsMenuProps> {
     dispatch(
       state.tr.setNodeMarkup(nodePosition, node.type, {
         ...node.attrs,
-        reference: event.target.value,
+        title: this.state.value,
       }),
     );
+
+    toggleRefsMenu()(editorView.state, dispatch);
+  };
+
+  private handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      this.applyTitle();
+    }
+  };
+
+  private handleOnChange = event => {
+    this.setState({
+      value: event.target.value,
+    });
   };
 }

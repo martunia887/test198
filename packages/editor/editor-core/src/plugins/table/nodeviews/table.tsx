@@ -32,7 +32,7 @@ const tableAttributes = (node: PmNode) => {
     'data-layout': node.attrs.layout,
     'data-autosize': node.attrs.__autoSize,
     'data-id': node.attrs.id,
-    'data-reference': node.attrs.reference,
+    'data-title': node.attrs.title,
   };
 };
 

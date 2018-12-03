@@ -14,7 +14,7 @@ import ColumnControls from '../ui/TableFloatingControls/ColumnControls';
 
 import { getPluginState } from '../pm-plugins/main';
 import { scaleTable, setColumnWidths } from '../pm-plugins/table-resizing';
-
+import { toggleRefsMenu } from '../../refs/actions';
 import { TablePluginState, TableCssClassName as ClassName } from '../types';
 import { getCellMinWidth } from '../';
 import * as classnames from 'classnames';
@@ -188,46 +188,44 @@ class TableComponent extends React.Component<ComponentProps> {
     ];
 
     return (
-      <div className={classnames(ClassName.TABLE_PARENT_CONTAINER)}>
-        <div className={classnames(ClassName.TABLE_REFERENCE)}>
-          {node.attrs.reference}
+      <div
+        style={{
+          width: this.getTableContainerWidth(node.attrs.layout, containerWidth),
+        }}
+        className={classnames(ClassName.TABLE_CONTAINER, {
+          [ClassName.WITH_CONTROLS]: tableActive,
+          'less-padding': width < akEditorMobileBreakoutPoint,
+        })}
+        data-number-column={node.attrs.isNumberColumnEnabled}
+        data-layout={node.attrs.layout}
+        data-title={node.attrs.title}
+        data-id={node.attrs.id}
+      >
+        <div
+          className={classnames(ClassName.TABLE_TITLE)}
+          onMouseDown={this.showTitleMenu}
+        >
+          {node.attrs.title}
+        </div>
+        {allowControls && rowControls}
+        <div
+          className={classnames(ClassName.TABLE_NODE_WRAPPER)}
+          ref={elem => {
+            this.wrapper = elem;
+            this.props.contentDOM(elem ? elem : undefined);
+            if (elem) {
+              this.table = elem.querySelector('table');
+            }
+          }}
+        >
+          {allowControls && columnControls}
         </div>
         <div
-          style={{
-            width: this.getTableContainerWidth(
-              node.attrs.layout,
-              containerWidth,
-            ),
+          ref={elem => {
+            this.rightShadow = elem;
           }}
-          className={classnames(ClassName.TABLE_CONTAINER, {
-            [ClassName.WITH_CONTROLS]: tableActive,
-            'less-padding': width < akEditorMobileBreakoutPoint,
-          })}
-          data-number-column={node.attrs.isNumberColumnEnabled}
-          data-layout={node.attrs.layout}
-          data-reference={node.attrs.reference}
-          data-id={node.attrs.id}
-        >
-          {allowControls && rowControls}
-          <div
-            className={classnames(ClassName.TABLE_NODE_WRAPPER)}
-            ref={elem => {
-              this.wrapper = elem;
-              this.props.contentDOM(elem ? elem : undefined);
-              if (elem) {
-                this.table = elem.querySelector('table');
-              }
-            }}
-          >
-            {allowControls && columnControls}
-          </div>
-          <div
-            ref={elem => {
-              this.rightShadow = elem;
-            }}
-            className={ClassName.TABLE_RIGHT_SHADOW}
-          />
-        </div>
+          className={ClassName.TABLE_RIGHT_SHADOW}
+        />
       </div>
     );
   }
@@ -286,6 +284,14 @@ class TableComponent extends React.Component<ComponentProps> {
       }));
     }
   }
+
+  private showTitleMenu = event => {
+    event.preventDefault();
+
+    const { view } = this.props;
+    const pos = this.props.getPos();
+    toggleRefsMenu(pos)(view.state, view.dispatch);
+  };
 }
 
 export const updateRightShadow = (

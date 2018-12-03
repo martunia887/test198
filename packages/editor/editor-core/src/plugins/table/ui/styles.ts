@@ -650,12 +650,22 @@ export const tableStyles = css`
     }
   }
 
-  /* =============== TABLE REFERENCE ================== */
-  .${ClassName.TABLE_REFERENCE} {
+  /* =============== TABLE TITLE ================== */
+  .${ClassName.TABLE_TITLE} {
+    position: absolute;
+    top: 18px;
     color: ${N90};
     font-size: 90%;
     font-weight: bold;
     height: 24px;
+    width: 100%;
+    padding: 8px;
+    z-index: ${akEditorSmallZIndex};
+
+    &:hover {
+      background: ${N20};
+      border-radius: 5px;
+    }
   }
 `;
 

@@ -11,7 +11,7 @@ import {
 import { PanelSharedCssClassName } from './panel';
 import { calcWideWidth } from '../../utils';
 
-export const tableMarginTop = 24;
+export const tableMarginTop = 75;
 export const tableMarginBottom = 16;
 export const tableMarginSides = 8;
 
