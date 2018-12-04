@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { EditorView } from 'prosemirror-view';
 import { intlShape, IntlShape, IntlProvider } from 'react-intl';
+import { createTheme } from '@atlaskit/theme';
 
 import {
   ProviderFactory,
@@ -283,6 +284,17 @@ export default class Editor extends React.Component<EditorProps, {}> {
       ...this.props,
       onSave: this.props.onSave ? this.handleSave : undefined,
     };
+    type ThemeProps = {};
+    type ThemeTokens = {};
+
+    const Theme = createTheme<ThemeTokens, ThemeProps>(() => ({}));
+
+    const themeVal = this.props.darkMode
+      ? (theme, props) => ({
+          // mode: 'dark',
+          // backgroundColor: 'palevioletred',
+        })
+      : undefined;
 
     const editor = (
       <WidthProvider>
@@ -307,44 +319,48 @@ export default class Editor extends React.Component<EditorProps, {}> {
                               this.props.allowDynamicTextSizing
                             }
                           >
-                            <Component
-                              disabled={this.props.disabled}
-                              editorActions={this.editorActions}
-                              editorDOMElement={editor}
-                              editorView={view}
-                              providerFactory={this.providerFactory}
-                              eventDispatcher={eventDispatcher}
-                              maxHeight={this.props.maxHeight}
-                              onSave={
-                                this.props.onSave ? this.handleSave : undefined
-                              }
-                              onCancel={this.props.onCancel}
-                              popupsMountPoint={this.props.popupsMountPoint}
-                              popupsBoundariesElement={
-                                this.props.popupsBoundariesElement
-                              }
-                              contentComponents={config.contentComponents}
-                              primaryToolbarComponents={
-                                config.primaryToolbarComponents
-                              }
-                              secondaryToolbarComponents={
-                                config.secondaryToolbarComponents
-                              }
-                              insertMenuItems={this.props.insertMenuItems}
-                              customContentComponents={
-                                this.props.contentComponents
-                              }
-                              customPrimaryToolbarComponents={
-                                this.props.primaryToolbarComponents
-                              }
-                              customSecondaryToolbarComponents={
-                                this.props.secondaryToolbarComponents
-                              }
-                              addonToolbarComponents={
-                                this.props.addonToolbarComponents
-                              }
-                              collabEdit={this.props.collabEdit}
-                            />
+                            <Theme.Provider value={themeVal}>
+                              <Component
+                                disabled={this.props.disabled}
+                                editorActions={this.editorActions}
+                                editorDOMElement={editor}
+                                editorView={view}
+                                providerFactory={this.providerFactory}
+                                eventDispatcher={eventDispatcher}
+                                maxHeight={this.props.maxHeight}
+                                onSave={
+                                  this.props.onSave
+                                    ? this.handleSave
+                                    : undefined
+                                }
+                                onCancel={this.props.onCancel}
+                                popupsMountPoint={this.props.popupsMountPoint}
+                                popupsBoundariesElement={
+                                  this.props.popupsBoundariesElement
+                                }
+                                contentComponents={config.contentComponents}
+                                primaryToolbarComponents={
+                                  config.primaryToolbarComponents
+                                }
+                                secondaryToolbarComponents={
+                                  config.secondaryToolbarComponents
+                                }
+                                insertMenuItems={this.props.insertMenuItems}
+                                customContentComponents={
+                                  this.props.contentComponents
+                                }
+                                customPrimaryToolbarComponents={
+                                  this.props.primaryToolbarComponents
+                                }
+                                customSecondaryToolbarComponents={
+                                  this.props.secondaryToolbarComponents
+                                }
+                                addonToolbarComponents={
+                                  this.props.addonToolbarComponents
+                                }
+                                collabEdit={this.props.collabEdit}
+                              />
+                            </Theme.Provider>
                           </BaseTheme>
                         )}
                       />

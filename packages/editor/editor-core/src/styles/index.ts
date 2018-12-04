@@ -20,3 +20,5 @@ export const akEditorMentionSelected = N100;
 export const akEditorRuleBackground = N30;
 export const akEditorRuleBorderRadius = '1px';
 export const akEditorToolbarKeylineHeight = 2;
+
+export const akEditorDarkBackground = N900;

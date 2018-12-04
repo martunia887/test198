@@ -35,7 +35,8 @@ export interface TextColorPluginConfig {
 }
 
 export const DEFAULT_COLOR = {
-  color: colors.N800.toLowerCase(),
+  color: colors.Y300.toLowerCase(),
+  // color: colors.N800.toLowerCase(),
   label: 'Dark gray',
 };
 
