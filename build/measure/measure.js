@@ -19,7 +19,10 @@ options.entry = {
 };
 
 options.plugins = options.plugins.slice(2);
-if (process.argv.includes('--analyze')) {
+const why =
+  process.argv.includes('--analyze') || process.argv.includes('--why');
+
+if (why) {
   options.plugins.push(new BundleAnalyzerPlugin());
 }
 
@@ -36,11 +39,18 @@ options.optimization = {
   },
 };
 
-const ignoreModules = [
-  'styled-components',
-  'react',
-  'react-dom'
-]
+for (const corePackage of fs.readdirSync(
+  path.resolve(__dirname, '../../packages/core'),
+)) {
+  options.optimization.splitChunks.cacheGroups[corePackage] = {
+    test: new RegExp(`[\\/]core[\\/]${corePackage}[\\/]`),
+    name: corePackage,
+    enforce: true,
+    chunks: 'all',
+  };
+}
+
+const ignoreModules = ['styled-components', 'react', 'react-dom'];
 
 options.resolve.alias = options.resolve.alias || {};
 for (const ignore of ignoreModules) {
@@ -57,17 +67,17 @@ const packageOut = path.resolve(outputDir, 'main.js');
 const moduleOut = path.resolve(outputDir, 'node_modules.js');
 const combinedOut = path.resolve(outputDir, 'all.js');
 
-const rm = (p) => {
+const rm = p => {
   if (fs.existsSync(p)) {
     fs.unlinkSync(p);
   }
-}
+};
 
 rm(packageOut);
 rm(moduleOut);
 rm(combinedOut);
 
-const compiler = webpack([options, combinedOptions]);
+const compiler = webpack(why ? options : [options, combinedOptions]);
 compiler.run((err, s) => {
   if (err) {
     return console.error(chalk.red(err));
@@ -77,7 +87,7 @@ compiler.run((err, s) => {
     return console.error(s.toString({ colors: true }));
   }
 
-  const stats = [fStats(packageOut), fStats(moduleOut), fStats(combinedOut)];
+  const stats = [fStats(packageOut), fStats(moduleOut)];
 
   console.log(chalk.cyan('Module successfully built:\n'));
   console.log(
@@ -90,12 +100,15 @@ compiler.run((err, s) => {
     chalk.green(prettyBytes(stats[1].size)),
     `(${chalk.red(prettyBytes(stats[1].gzipSize))})`,
   );
-  console.log(
-    chalk.yellow('  Combined:'),
-    chalk.green(prettyBytes(stats[2].size)),
-    `(${chalk.red(prettyBytes(stats[2].gzipSize))})`,
-  );
-  // console.log('\n\nWatching...\n');
+
+  if (!why) {
+    const all = fStats(combinedOut);
+    console.log(
+      chalk.yellow('  Combined:'),
+      chalk.green(prettyBytes(all.size)),
+      `(${chalk.red(prettyBytes(all.gzipSize))})`,
+    );
+  }
 });
 
 function fStats(filePath) {
