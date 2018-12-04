@@ -34,12 +34,17 @@ const getCellAttrs = (dom: HTMLElement) => {
       : null;
   const colspan = Number(dom.getAttribute('colspan') || 1);
 
-  return {
+  const attrs = {
     colspan,
     rowspan: Number(dom.getAttribute('rowspan') || 1),
     colwidth: width && width.length === colspan ? width : null,
     background: dom.style.backgroundColor || null,
   };
+  if (dom.nodeName === 'TH') {
+    attrs['id'] = uuid.generate();
+    attrs['reference'] = dom.getAttribute('data-reference') || null;
+  }
+  return attrs;
 };
 
 export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
@@ -47,6 +52,8 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     colspan?: number;
     rowspan?: number;
     style?: string;
+    'data-id'?: string;
+    'data-reference'?: string;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -83,6 +90,13 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
           : background;
 
       attrs.style = `${attrs.style || ''}background-color: ${color};`;
+    }
+  }
+  if (node.type.name === 'tableHeader') {
+    attrs['data-id'] = node.attrs.id;
+
+    if (node.attrs.reference) {
+      attrs['data-reference'] = node.attrs.reference;
     }
   }
 
@@ -153,7 +167,7 @@ export interface TableAttributes {
   isNumberColumnEnabled?: boolean;
   layout?: Layout;
   __autoSize?: boolean;
-  id: string;
+  id: string | null;
   title: string;
 }
 
@@ -194,7 +208,7 @@ export interface TableCell {
  */
 export interface TableHeader {
   type: 'tableHeader';
-  attrs?: CellAttributes;
+  attrs?: HeaderCellAttributes;
   content: TableCellContent;
 }
 
@@ -203,6 +217,11 @@ export interface CellAttributes {
   rowspan?: number;
   colwidth?: number[];
   background?: string;
+}
+
+export interface HeaderCellAttributes extends CellAttributes {
+  id: string | null;
+  reference?: string;
 }
 
 // TODO: Fix any, potential issue. ED-5048
@@ -214,7 +233,7 @@ export const table: any = {
     isNumberColumnEnabled: { default: false },
     layout: { default: 'default' },
     __autoSize: { default: false },
-    id: { default: uuid.generate() },
+    id: { default: null },
     title: { default: defaultTitle },
   },
   tableRole: 'table',
@@ -304,7 +323,11 @@ export const toJSONTableCell = (node: PmNode) => ({
 export const tableHeader = {
   content:
     '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle  | applicationCard | decisionList | taskList | blockCard | extension)+',
-  attrs: cellAttrs,
+  attrs: {
+    ...cellAttrs,
+    id: { default: null },
+    reference: { default: null },
+  },
   tableRole: 'header_cell',
   isolating: true,
   marks: 'alignment',

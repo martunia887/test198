@@ -672,7 +672,7 @@ export const tableStyles = css`
     box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
     border-radius: ${borderRadius()}px;
     padding: 10px;
-    width: 200px;
+    width: 220px;
     position: absolute;
 
     .${ClassName.REFERENCE_MENU_TITLE} {

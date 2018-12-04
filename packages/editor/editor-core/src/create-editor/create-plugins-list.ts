@@ -49,6 +49,7 @@ import {
   editorDisabledPlugin,
   indentationPlugin,
   refsPlugin,
+  uniqueIdsPlugin,
   // refsServerPlugin,
 } from '../plugins';
 
@@ -224,6 +225,7 @@ export default function createPluginsList(
   plugins.push(fakeTextCursorPlugin);
   plugins.push(floatingToolbarPlugin);
   plugins.push(refsPlugin);
+  plugins.push(uniqueIdsPlugin);
   // plugins.push(refsServerPlugin);
 
   if (props.appearance !== 'mobile') {

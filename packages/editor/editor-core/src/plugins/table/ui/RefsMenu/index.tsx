@@ -112,11 +112,7 @@ export default class RefsMenu extends React.Component<
         handleClickOutside={this.handleClickOutside}
         handleEscapeKeydown={this.handleClickOutside}
       >
-        <div
-          className={`${ClassName.REFERENCE_MENU_WRAP}`}
-          onMouseDown={this.preventDefault}
-          onClick={this.preventDefault}
-        >
+        <div className={`${ClassName.REFERENCE_MENU_WRAP}`}>
           <div className={`${ClassName.REFERENCE_MENU_TITLE}`}>
             Link to Table
           </div>
@@ -136,14 +132,20 @@ export default class RefsMenu extends React.Component<
           ) : (
             'loading...'
           )}
-          {this.state.selectedTableId && (
-            <div className={`${ClassName.REFERENCE_SELECT}`}>
-              <Select
-                options={this.getColumns()}
-                placeholder="Choose a column"
-                onChange={this.handleSelectColumn}
-              />
-            </div>
+          {this.state.tables && this.state.selectedTableId && (
+            <>
+              <div className={`${ClassName.REFERENCE_MENU_DESCRIPTION}`}>
+                Choose the column on the {`"${this.getSelectedTable().title}"`}{' '}
+                table that you’d like to look up
+              </div>
+              <div className={`${ClassName.REFERENCE_SELECT}`}>
+                <Select
+                  options={this.getColumns()}
+                  placeholder="Choose a column"
+                  onChange={this.handleSelectColumn}
+                />
+              </div>
+            </>
           )}
           <div className={`${ClassName.REFERENCE_BUTTONS}`}>
             <Button onClick={this.dismiss}>Cancel</Button>
@@ -155,10 +157,6 @@ export default class RefsMenu extends React.Component<
       </PopupWithOutsideListeners>
     );
   }
-
-  private preventDefault = (event: React.SyntheticEvent) => {
-    event.preventDefault();
-  };
 
   private dismiss = () => {
     const { state, dispatch } = this.props.editorView;
@@ -190,11 +188,13 @@ export default class RefsMenu extends React.Component<
     if (!this.state.tables) {
       return [];
     }
-    return toSelectItems(
-      this.state.tables.filter(
-        table => table.id === this.state.selectedTableId,
-      )[0].columns,
-    );
+    return toSelectItems(this.getSelectedTable().columns);
+  };
+
+  private getSelectedTable = () => {
+    return (this.state.tables || []).filter(
+      table => table.id === this.state.selectedTableId,
+    )[0];
   };
 
   private handleSelectTable = ({ label, value }) => {
