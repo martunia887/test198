@@ -684,6 +684,16 @@ export const tableStyles = css`
       line-height: 1.5;
       padding: 5px 0;
     }
+    .${ClassName.REFERENCE_SELECT} {
+      margin-bottom: 10px;
+    }
+    .${ClassName.REFERENCE_BUTTONS} {
+      text-align: right;
+
+      button + button {
+        margin-left: 10px;
+      }
+    }
   }
 `;
 

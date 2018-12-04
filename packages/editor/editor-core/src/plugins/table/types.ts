@@ -113,6 +113,7 @@ export const TableCssClassName = {
   REFERENCE_MENU_TITLE: `${clPrefix}reference-menu-title`,
   REFERENCE_MENU_DESCRIPTION: `${clPrefix}reference-menu-description`,
   REFERENCE_SELECT: `${clPrefix}reference-select`,
+  REFERENCE_BUTTONS: `${clPrefix}reference-buttons`,
 
   // come from prosemirror-table
   COLUMN_RESIZE_HANDLE: 'column-resize-handle',

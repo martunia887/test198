@@ -1,7 +1,62 @@
+// array of tables available for referencing
 const tables = [
   {
-    id: '11230123097394768134',
+    id: 'table-1',
     title: 'T-shirts',
+    columns: [
+      {
+        id: 'column-1',
+        title: 'Colour',
+      },
+      {
+        id: 'column-2',
+        title: 'Brand',
+      },
+      {
+        id: 'column-3',
+        title: 'Size',
+      },
+    ],
+  },
+];
+
+// each item is the content of each cell in the selected column in the referenced table
+const values = [
+  {
+    type: 'paragraph',
+    content: [
+      {
+        type: 'text',
+        text: 'Brand',
+      },
+    ],
+  },
+  {
+    type: 'paragraph',
+    content: [
+      {
+        type: 'text',
+        text: 'Nike',
+      },
+    ],
+  },
+  {
+    type: 'paragraph',
+    content: [
+      {
+        type: 'text',
+        text: 'Adidas',
+      },
+    ],
+  },
+  {
+    type: 'paragraph',
+    content: [
+      {
+        type: 'text',
+        text: 'Puma',
+      },
+    ],
   },
 ];
 
@@ -14,10 +69,10 @@ const referenceProvider = {
     });
   },
 
-  getReferencedColumn: () => {
+  getValues: () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve();
+        resolve(values);
       }, 1000);
     });
   },

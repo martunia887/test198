@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ComponentClass, StatelessComponent, PureComponent } from 'react';
 import * as ReactDOM from 'react-dom';
 
-export type SimpleEventHandler = (event: Event) => void;
+export type SimpleEventHandler = (event) => void;
 
 export interface WithOutsideClickProps {
   handleClickOutside?: SimpleEventHandler;

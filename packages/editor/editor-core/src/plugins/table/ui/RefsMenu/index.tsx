@@ -6,6 +6,7 @@ import {
   akEditorFloatingOverlapPanelZIndex,
 } from '@atlaskit/editor-common';
 import Select from '@atlaskit/select';
+import Button from '@atlaskit/button';
 import { TableCssClassName as ClassName } from '../../types';
 import { pluginKey } from '../../pm-plugins/main';
 import { toggleReferenceMenu } from '../../actions';
@@ -13,7 +14,15 @@ import withOuterListeners from '../../../../ui/with-outer-listeners';
 import { closestElement } from '../../../../utils';
 import { ReferenceProvider } from '../../../refs/provider';
 
-export const calculateOffset = (targetCellRef, state) => {
+const PopupWithOutsideListeners = withOuterListeners(Popup);
+
+const toSelectItems = arr =>
+  arr.map(item => ({
+    label: item.title,
+    value: item.id,
+  }));
+
+const calculateOffset = (targetCellRef, state) => {
   const { tableRef } = pluginKey.getState(state);
   let top = -6;
 
@@ -38,11 +47,14 @@ export interface RefsMenuProps {
   provider: ReferenceProvider;
 }
 
-export interface RefsMenuState {
-  references: Array<object> | null;
-}
+type ReferenceItem = { id: string; title: string };
 
-const PopupWithOutsideListeners = withOuterListeners(Popup);
+export interface RefsMenuState {
+  // tables that can be referenced
+  tables: { id: string; title: string; columns: ReferenceItem[] }[] | null;
+  selectedTableId?: string;
+  selectedColumnId?: string;
+}
 
 export default class RefsMenu extends React.Component<
   RefsMenuProps,
@@ -50,18 +62,14 @@ export default class RefsMenu extends React.Component<
 > {
   constructor(props) {
     super(props);
+
     this.state = {
-      references: null,
+      tables: null,
     };
 
     props.provider.getReferences().then(references => {
-      console.log('~references~', references);
-
       this.setState({
-        references: references.map(item => ({
-          label: item.title,
-          value: item.id,
-        })),
+        tables: references,
       });
     });
   }
@@ -101,8 +109,8 @@ export default class RefsMenu extends React.Component<
         boundariesElement={boundariesElement}
         scrollableElement={scrollableElement}
         zIndex={akEditorFloatingOverlapPanelZIndex}
-        handleClickOutside={this.dismiss}
-        handleEscapeKeydown={this.dismiss}
+        handleClickOutside={this.handleClickOutside}
+        handleEscapeKeydown={this.handleClickOutside}
       >
         <div
           className={`${ClassName.REFERENCE_MENU_WRAP}`}
@@ -112,21 +120,37 @@ export default class RefsMenu extends React.Component<
           <div className={`${ClassName.REFERENCE_MENU_TITLE}`}>
             Link to Table
           </div>
-          {this.state.references ? (
+          {this.state.tables ? (
             <>
               <div className={`${ClassName.REFERENCE_MENU_DESCRIPTION}`}>
-                Choose the table that has the records you want to link to
+                Choose the table to link records from
               </div>
-              <Select
-                className={`${ClassName.REFERENCE_SELECT}`}
-                options={this.state.references}
-                placeholder="Choose a table"
-                onChange={this.handleChange}
-              />
+              <div className={`${ClassName.REFERENCE_SELECT}`}>
+                <Select
+                  options={toSelectItems(this.state.tables)}
+                  placeholder="Choose a table"
+                  onChange={this.handleSelectTable}
+                />
+              </div>
             </>
           ) : (
             'loading...'
           )}
+          {this.state.selectedTableId && (
+            <div className={`${ClassName.REFERENCE_SELECT}`}>
+              <Select
+                options={this.getColumns()}
+                placeholder="Choose a column"
+                onChange={this.handleSelectColumn}
+              />
+            </div>
+          )}
+          <div className={`${ClassName.REFERENCE_BUTTONS}`}>
+            <Button onClick={this.dismiss}>Cancel</Button>
+            <Button appearance="primary" onClick={this.handleSave}>
+              Save
+            </Button>
+          </div>
         </div>
       </PopupWithOutsideListeners>
     );
@@ -136,7 +160,17 @@ export default class RefsMenu extends React.Component<
     event.preventDefault();
   };
 
-  private dismiss = (event: Event) => {
+  private dismiss = () => {
+    const { state, dispatch } = this.props.editorView;
+    toggleReferenceMenu(state, dispatch);
+
+    this.setState({
+      selectedTableId: undefined,
+      selectedColumnId: undefined,
+    });
+  };
+
+  private handleClickOutside = (event: React.SyntheticEvent) => {
     const target = event.target as HTMLElement;
     if (
       closestElement(target, `.${ClassName.REFERENCE_MENU_WRAP}`) ||
@@ -145,12 +179,33 @@ export default class RefsMenu extends React.Component<
       event.preventDefault();
       return false;
     }
-
-    const { state, dispatch } = this.props.editorView;
-    toggleReferenceMenu(state, dispatch);
+    this.dismiss();
   };
 
-  private handleChange = ({ label, value }) => {
-    console.log('~change~');
+  private handleSave = () => {
+    console.log('~save~');
+  };
+
+  private getColumns = () => {
+    if (!this.state.tables) {
+      return [];
+    }
+    return toSelectItems(
+      this.state.tables.filter(
+        table => table.id === this.state.selectedTableId,
+      )[0].columns,
+    );
+  };
+
+  private handleSelectTable = ({ label, value }) => {
+    this.setState({
+      selectedTableId: value,
+    });
+  };
+
+  private handleSelectColumn = ({ label, value }) => {
+    this.setState({
+      selectedColumnId: value,
+    });
   };
 }
