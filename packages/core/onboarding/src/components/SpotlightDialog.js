@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, type ElementType, type Node } from 'react';
-import FocusLock from 'react-focus-lock';
+import FocusLock from 'react-focus-lock/dist/Lock';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,

@@ -2,7 +2,7 @@
 
 import React, { Component, type Node } from 'react';
 import invariant from 'tiny-invariant';
-import ReactFocusLock from 'react-focus-lock';
+import ReactFocusLock from 'react-focus-lock/dist/Lock';
 
 type Props = {
   /**

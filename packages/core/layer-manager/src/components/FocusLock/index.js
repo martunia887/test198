@@ -2,7 +2,7 @@
 
 import React, { Component, type Node } from 'react';
 import PropTypes from 'prop-types';
-import FocusTrap from 'react-focus-lock';
+import FocusTrap from 'react-focus-lock/dist/Lock';
 
 type Props = {
   /**
