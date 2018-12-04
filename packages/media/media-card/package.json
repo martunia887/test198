@@ -32,7 +32,7 @@
     "@atlaskit/media-ui": "^7.6.2",
     "@atlaskit/spinner": "^9.0.11",
     "@atlaskit/util-shared-styles": "^2.10.3",
-    "babel-runtime": "^6.26.0",
+    "@babel/runtime": "^7.0.0",
     "classnames": "^2.2.5",
     "deep-equal": "^1.0.1",
     "react-lazily-render": "^1.1.0",

@@ -42,7 +42,7 @@
     "@atlaskit/theme": "^7.0.0",
     "@atlaskit/util-service-support": "^3.0.1",
     "@atlaskit/util-shared-styles": "^2.10.3",
-    "babel-runtime": "^6.26.0",
+    "@babel/runtime": "^7.0.0",
     "date-fns": "^1.29.0",
     "lodash.debounce": "^4.0.8",
     "memoize-one": "^3.0.1",

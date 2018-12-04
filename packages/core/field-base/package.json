@@ -22,8 +22,7 @@
     "@atlaskit/inline-dialog": "^9.0.12",
     "@atlaskit/spinner": "^9.0.12",
     "@atlaskit/theme": "^7.0.0",
-    "@babel/runtime": "^7.0.0",
-    "babel-runtime": "^6.26.0"
+    "@babel/runtime": "^7.0.0"
   },
   "peerDependencies": {
     "react": "^16.4.0",

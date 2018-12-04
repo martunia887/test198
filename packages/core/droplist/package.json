@@ -27,7 +27,6 @@
     "@atlaskit/theme": "^7.0.0",
     "@atlaskit/tooltip": "^12.1.12",
     "@babel/runtime": "^7.0.0",
-    "babel-runtime": "^6.26.0",
     "classnames": "^2.2.5",
     "keycode": "^2.1.7",
     "prop-types": "^15.5.10"

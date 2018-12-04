@@ -23,8 +23,7 @@
     "@atlaskit/button": "^10.0.4",
     "@atlaskit/theme": "^7.0.0",
     "@atlaskit/tooltip": "^12.1.12",
-    "@babel/runtime": "^7.0.0",
-    "babel-runtime": "^6.26.0"
+    "@babel/runtime": "^7.0.0"
   },
   "peerDependencies": {
     "react": "^16.4.0",

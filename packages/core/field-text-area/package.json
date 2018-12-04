@@ -23,7 +23,6 @@
     "@atlaskit/field-base": "^11.0.12",
     "@atlaskit/theme": "^7.0.0",
     "@babel/runtime": "^7.0.0",
-    "babel-runtime": "^6.26.0",
     "prop-types": "^15.5.10"
   },
   "peerDependencies": {
