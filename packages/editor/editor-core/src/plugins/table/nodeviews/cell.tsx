@@ -31,7 +31,7 @@ export type CellProps = {
   view: EditorView;
   forwardRef: (ref: HTMLElement | null) => void;
   withCursor: boolean;
-  isContextualMenuOpen: boolean;
+  isMenuOpen: boolean;
   disabled: boolean;
   appearance?: EditorAppearance;
 };
@@ -40,14 +40,14 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
   shouldComponentUpdate(nextProps) {
     return (
       this.props.withCursor !== nextProps.withCursor ||
-      this.props.isContextualMenuOpen !== nextProps.isContextualMenuOpen
+      this.props.isMenuOpen !== nextProps.isMenuOpen
     );
   }
 
   render() {
     const {
       withCursor,
-      isContextualMenuOpen,
+      isMenuOpen,
       forwardRef,
       intl: { formatMessage },
       disabled,
@@ -60,7 +60,7 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
         {withCursor && !disabled && appearance !== 'mobile' && (
           <div className={ClassName.CONTEXTUAL_MENU_BUTTON}>
             <ToolbarButton
-              selected={isContextualMenuOpen}
+              selected={isMenuOpen}
               title={labelCellOptions}
               onClick={this.handleClick}
               iconBefore={<ExpandIcon label={labelCellOptions} />}
@@ -130,7 +130,10 @@ class CellView extends ReactNodeView {
           <CellComponent
             forwardRef={forwardRef}
             withCursor={this.getPos() === pluginState.targetCellPosition}
-            isContextualMenuOpen={!!pluginState.isContextualMenuOpen}
+            isMenuOpen={
+              !!pluginState.isContextualMenuOpen ||
+              !!pluginState.isReferenceMenuOpen
+            }
             view={props.view}
             appearance={props.appearance}
             disabled={(editorDisabledPlugin || {}).editorDisabled}

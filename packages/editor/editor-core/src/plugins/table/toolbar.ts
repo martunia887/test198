@@ -1,9 +1,7 @@
 import { EditorState, Transaction } from 'prosemirror-state';
-import { findTable } from 'prosemirror-utils';
 import { defineMessages } from 'react-intl';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import SettingsIcon from '@atlaskit/icon/glyph/editor/settings';
-import EditorLinkIcon from '@atlaskit/icon/glyph/editor/link';
 import commonMessages from '../../messages';
 import { Command } from '../../types';
 import {
@@ -76,7 +74,6 @@ export const getToolbarConfig: FloatingToolbarHandler = (
     tableState.pluginConfig
   ) {
     const { pluginConfig } = tableState;
-    const table = findTable(state.selection);
 
     return {
       title: 'Table floating controls',

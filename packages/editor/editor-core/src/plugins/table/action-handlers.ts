@@ -186,6 +186,20 @@ export const handleToggleContextualMenu = (
   const nextPluginState = {
     ...pluginState,
     isContextualMenuOpen: !pluginState.isContextualMenuOpen,
+    isReferenceMenuOpen: false,
+  };
+  dispatch(pluginKey, nextPluginState);
+  return nextPluginState;
+};
+
+export const handleToggleReferenceMenu = (
+  pluginState: TablePluginState,
+  dispatch: Dispatch,
+): TablePluginState => {
+  const nextPluginState = {
+    ...pluginState,
+    isContextualMenuOpen: false,
+    isReferenceMenuOpen: !pluginState.isReferenceMenuOpen,
   };
   dispatch(pluginKey, nextPluginState);
   return nextPluginState;

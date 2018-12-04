@@ -667,6 +667,24 @@ export const tableStyles = css`
       border-radius: 5px;
     }
   }
+  .${ClassName.REFERENCE_MENU_WRAP} {
+    background: white;
+    box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
+    border-radius: ${borderRadius()}px;
+    padding: 10px;
+    width: 200px;
+    position: absolute;
+
+    .${ClassName.REFERENCE_MENU_TITLE} {
+      text-align: center;
+    }
+    .${ClassName.REFERENCE_MENU_DESCRIPTION} {
+      color: ${N90};
+      font-size: 90%;
+      line-height: 1.5;
+      padding: 5px 0;
+    }
+  }
 `;
 
 export const tableFullPageEditorStyles = css`

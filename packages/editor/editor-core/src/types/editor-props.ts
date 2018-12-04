@@ -17,6 +17,7 @@ import { TaskDecisionProvider } from '@atlaskit/task-decision';
 import { PluginConfig as TablesPluginConfig } from '../plugins/table/types';
 import { TextColorPluginConfig } from '../plugins/text-color/pm-plugins/main';
 import { MediaProvider, MediaState } from '../plugins/media/types';
+import { ReferenceProvider } from '../plugins/refs/provider';
 import { AnalyticsHandler } from '../analytics/handler';
 
 import { ImageUploadHandler } from '../plugins/image-upload/types';
@@ -194,6 +195,7 @@ export interface EditorProps {
   legacyImageUploadProvider?: Promise<ImageUploadHandler>;
   mentionProvider?: Promise<MentionProvider>;
   mediaProvider?: Promise<MediaProvider>;
+  referenceProvider?: Promise<ReferenceProvider>;
 
   // This is temporary for Confluence. **Please do not use**.
   macroProvider?: Promise<MacroProvider>;

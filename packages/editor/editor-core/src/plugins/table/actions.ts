@@ -711,6 +711,20 @@ export const toggleContextualMenu: Command = (
   return true;
 };
 
+export const toggleReferenceMenu: Command = (
+  state: EditorState,
+  dispatch: (tr: Transaction) => void,
+): boolean => {
+  dispatch(
+    state.tr
+      .setMeta(pluginKey, {
+        action: ACTIONS.TOGGLE_REFERENCE_MENU,
+      })
+      .setMeta('addToHistory', false),
+  );
+  return true;
+};
+
 export const setEditorFocus = (editorHasFocus: boolean): Command => (
   state: EditorState,
   dispatch: (tr: Transaction) => void,

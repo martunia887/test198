@@ -28,7 +28,9 @@ import {
 } from './pm-plugins/table-resizing';
 import { getToolbarConfig } from './toolbar';
 import FloatingContextualMenu from './ui/FloatingContextualMenu';
+import RefsMenu from './ui/RefsMenu';
 import { isLayoutSupported } from './utils';
+import { pluginKey as referencePluginKey } from '../refs/pm-plugins/main';
 
 export const CELL_MIN_WIDTH = 128;
 export const getCellMinWidth = newResizing =>
@@ -115,8 +117,9 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
       <WithPluginState
         plugins={{
           pluginState: pluginKey,
+          referencePluginState: referencePluginKey,
         }}
-        render={({ pluginState }) => (
+        render={({ pluginState, referencePluginState }) => (
           <>
             <FloatingContextualMenu
               editorView={editorView}
@@ -133,6 +136,16 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
                 boundariesElement={popupsBoundariesElement}
                 scrollableElement={popupsScrollableElement}
                 targetRef={pluginState.tableFloatingToolbarTarget}
+              />
+            )}
+            {referencePluginState.provider && (
+              <RefsMenu
+                editorView={editorView}
+                mountPoint={popupsMountPoint}
+                boundariesElement={popupsBoundariesElement}
+                targetCellPosition={pluginState.targetCellPosition}
+                isOpen={pluginState.isReferenceMenuOpen}
+                provider={referencePluginState.provider}
               />
             )}
           </>

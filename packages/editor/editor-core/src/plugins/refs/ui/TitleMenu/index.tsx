@@ -7,7 +7,7 @@ import {
 import { updateTitleTarget } from '../../actions';
 import { RefsCssClassName as ClassName } from '../../consts';
 
-export interface RefsMenuProps {
+export interface TitleMenuProps {
   editorView: EditorView;
   target: HTMLElement;
   nodePosition?: number;
@@ -16,13 +16,13 @@ export interface RefsMenuProps {
   scrollableElement?: HTMLElement;
 }
 
-export interface RefsMenuState {
+export interface TitleMenuState {
   value: string;
 }
 
-export default class RefsMenu extends React.Component<
-  RefsMenuProps,
-  RefsMenuState
+export default class TitleMenu extends React.Component<
+  TitleMenuProps,
+  TitleMenuState
 > {
   constructor(props) {
     super(props);

@@ -12,7 +12,7 @@ import { pluginKey } from '../../pm-plugins/main';
 import { PluginConfig } from '../../types';
 
 // offset of the contextual menu dropdown
-const calculateOffset = (targetCellRef, state) => {
+export const calculateOffset = (targetCellRef, state) => {
   const { tableRef } = pluginKey.getState(state);
   let top = -contextualMenuTriggerSize;
 
@@ -24,7 +24,7 @@ const calculateOffset = (targetCellRef, state) => {
       top -= topDiff + 2;
     }
   }
-  return [1, top];
+  return [6, top];
 };
 
 export interface Props {

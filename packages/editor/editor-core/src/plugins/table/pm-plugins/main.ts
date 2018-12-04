@@ -19,6 +19,7 @@ import {
   handleHoverTable,
   handleDocOrSelectionChanged,
   handleToggleContextualMenu,
+  handleToggleReferenceMenu,
   handleShowInsertColumnButton,
   handleShowInsertRowButton,
   handleHideInsertColumnOrRowButton,
@@ -58,6 +59,7 @@ export enum ACTIONS {
   SHOW_INSERT_COLUMN_BUTTON,
   SHOW_INSERT_ROW_BUTTON,
   HIDE_INSERT_COLUMN_OR_ROW_BUTTON,
+  TOGGLE_REFERENCE_MENU,
 }
 
 export const createPlugin = (
@@ -153,6 +155,9 @@ export const createPlugin = (
 
           case ACTIONS.TOGGLE_CONTEXTUAL_MENU:
             return handleToggleContextualMenu(pluginState, dispatch);
+
+          case ACTIONS.TOGGLE_REFERENCE_MENU:
+            return handleToggleReferenceMenu(pluginState, dispatch);
 
           case ACTIONS.SHOW_INSERT_COLUMN_BUTTON:
             return handleShowInsertColumnButton(insertColumnButtonIndex)(

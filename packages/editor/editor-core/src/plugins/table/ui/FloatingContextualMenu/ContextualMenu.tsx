@@ -16,6 +16,7 @@ import {
   insertColumn,
   insertRow,
   toggleContextualMenu,
+  toggleReferenceMenu,
   deleteColumns,
   deleteRows,
   emptyMultipleCells,
@@ -133,6 +134,12 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       intl: { formatMessage },
     } = this.props;
     const items: any[] = [];
+
+    items.push({
+      content: formatMessage(tableMessages.reference),
+      value: { name: 'reference' },
+    });
+
     const { isSubmenuOpen } = this.state;
     if (allowBackgroundColor) {
       const node =
@@ -226,6 +233,9 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     const { state, dispatch } = editorView;
 
     switch (item.value.name) {
+      case 'reference':
+        toggleReferenceMenu(state, dispatch);
+        break;
       case 'merge':
         analytics.trackEvent('atlassian.editor.format.table.merge.button');
         mergeCells(state, dispatch);

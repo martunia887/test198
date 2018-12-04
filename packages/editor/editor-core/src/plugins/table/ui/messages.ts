@@ -26,4 +26,9 @@ export default defineMessages({
     defaultMessage: 'Cell options',
     description: 'Opens a menu with options for the current table cell.',
   },
+  reference: {
+    id: 'fabric.editor.reference',
+    defaultMessage: 'Link to another table',
+    description: 'Links a column to records from another table',
+  },
 });

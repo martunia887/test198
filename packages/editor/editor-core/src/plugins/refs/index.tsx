@@ -9,8 +9,8 @@ const refsPlugin: EditorPlugin = {
     return [
       {
         name: 'refs',
-        plugin: ({ dispatch }) => {
-          return createPlugin(dispatch);
+        plugin: ({ dispatch, providerFactory }) => {
+          return createPlugin(dispatch, providerFactory);
         },
       },
     ];
