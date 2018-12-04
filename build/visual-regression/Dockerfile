@@ -13,4 +13,4 @@ RUN apt-get update && apt-get install -yq gconf-service libasound2 libatk1.0-0 l
   libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
   ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
-RUN cd ~/ && yarn add puppeteer  
+RUN yarn add puppeteer  

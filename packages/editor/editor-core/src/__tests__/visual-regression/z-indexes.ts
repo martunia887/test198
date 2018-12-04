@@ -61,7 +61,7 @@ describe('Snapshot Test: z-indexes', () => {
         await snapshot(page);
       });
 
-      it('should always position code block language picker below dropdowns from main menu', async () => {
+      it.skip('should always position code block language picker below dropdowns from main menu', async () => {
         await insertTable(page);
         await page.keyboard.type('```');
         await page.waitForSelector(popupPresent);

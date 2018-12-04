@@ -8,7 +8,7 @@ import {
 } from '../_utils';
 
 // add some comments to run test
-describe('Snapshot Test: ProseMirror nodes and marks', () => {
+describe.skip('Snapshot Test: ProseMirror nodes and marks', () => {
   setTests('base');
   Object.keys(testsByAppearance).forEach(appearance => {
     const tests = testsByAppearance[appearance];

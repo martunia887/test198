@@ -42,7 +42,7 @@ describe('Snapshot Test: Media', () => {
     });
   });
 
-  describe('comment editor', () => {
+  describe.skip('comment editor', () => {
     let page;
     beforeEach(async () => {
       // @ts-ignore
