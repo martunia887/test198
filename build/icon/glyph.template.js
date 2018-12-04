@@ -8,7 +8,7 @@ module.exports = (
   wayHome /*: string*/,
   size /*:? string */,
 ) => `import React from 'react';
-import Icon from '${wayHome}';
+import Icon from '${wayHome}/components/Icon';
 
 const ${displayName} = props => (<Icon dangerouslySetGlyph={\`${svg.toString()}\`} {...props} ${
   size ? `size="${size}"` : ''
