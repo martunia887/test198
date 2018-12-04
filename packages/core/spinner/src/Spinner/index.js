@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Transition } from 'react-transition-group';
+import Transition from 'react-transition-group/Transition';
 import styled from 'styled-components';
 
 import { SIZES_MAP, DEFAULT_SIZE } from './constants';

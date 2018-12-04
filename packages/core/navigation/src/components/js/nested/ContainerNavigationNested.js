@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import { Transition } from 'react-transition-group';
+import Transition from 'react-transition-group/Transition';
 
 import NestedNavigationPage from '../../styled/NestedNavigationPage';
 import NestedNavigationWrapper from '../../styled/NestedNavigationWrapper';

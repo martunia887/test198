@@ -1,6 +1,6 @@
 // @flow
 import React, { type Node } from 'react';
-import { Transition } from 'react-transition-group';
+import Transition from 'react-transition-group/Transition';
 
 const ENTER_DURATION = 120;
 const EXIT_DURATION = 80;

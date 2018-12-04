@@ -1,6 +1,6 @@
 // @flow
 import React, { type Node } from 'react';
-import { Transition } from 'react-transition-group';
+import Transition from 'react-transition-group/Transition';
 
 const duration = 100;
 type Props = {

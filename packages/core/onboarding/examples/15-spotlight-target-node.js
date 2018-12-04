@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, type ElementRef } from 'react';
-import { Transition } from 'react-transition-group';
+import Transition from 'react-transition-group/Transition';
 import Lorem from 'react-lorem-component';
 
 import { Spotlight, SpotlightManager, SpotlightTransition } from '../src';

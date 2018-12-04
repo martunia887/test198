@@ -4,7 +4,7 @@ import React, { Children, Component, Fragment, type Node } from 'react';
 import { canUseDOM } from 'exenv';
 import { createPortal } from 'react-dom';
 import { ThemeProvider } from 'styled-components';
-import { TransitionGroup } from 'react-transition-group';
+import TransitionGroup from 'react-transition-group/TransitionGroup';
 import {
   createAndFireEvent,
   withAnalyticsEvents,

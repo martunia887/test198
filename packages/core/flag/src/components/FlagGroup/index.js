@@ -1,6 +1,6 @@
 // @flow
 import React, { Children, cloneElement, Component } from 'react';
-import { Transition } from 'react-transition-group';
+import Transition from 'react-transition-group/Transition';
 import Portal from '@atlaskit/portal';
 import { layers } from '@atlaskit/theme';
 

@@ -1,7 +1,7 @@
 import { colors } from '@atlaskit/theme';
 import * as cx from 'classnames';
 import * as React from 'react';
-import { CSSTransition } from 'react-transition-group';
+import CSSTransition from 'react-transition-group/CSSTransition';
 import { keyframes, style } from 'typestyle';
 
 const animationTime = 300;

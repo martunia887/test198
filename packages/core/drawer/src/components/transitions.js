@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, type ComponentType } from 'react';
-import { Transition } from 'react-transition-group';
+import Transition from 'react-transition-group/Transition';
 import { layers } from '@atlaskit/theme';
 
 import { transitionDurationMs, transitionTimingFunction } from '../constants';
