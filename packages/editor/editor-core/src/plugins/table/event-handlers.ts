@@ -21,6 +21,13 @@ import {
 } from './actions';
 
 export const handleBlur = (view: EditorView, event): boolean => {
+  // don't blur when cursor is inside Popup
+  if (
+    event.relatedTarget &&
+    closestElement(event.relatedTarget, '[data-editor-popup]')
+  ) {
+    return false;
+  }
   const { state, dispatch } = view;
   // fix for issue ED-4665
   if (browser.ie_version !== 11) {
