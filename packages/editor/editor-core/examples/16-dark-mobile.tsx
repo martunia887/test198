@@ -83,32 +83,30 @@ export function mobileEditor() {
           quickInsert={true}
           darkMode={true}
           defaultValue={exampleDocument}
-          allowCodeBlocks={{ enableKeybindingsForIDE: true }}
-          allowLists={true}
-          allowTextColor={true}
-          allowTables={{
-            advanced: true,
-          }}
           allowBreakout={true}
           allowJiraIssue={true}
           allowUnsupportedContent={true}
           allowPanel={true}
-          allowExtension={{
-            allowBreakout: true,
-          }}
-          allowRule={true}
-          allowDate={true}
           allowLayouts={{
             allowBreakout: true,
           }}
           allowTextAlignment={true}
           allowIndentation={true}
           allowTemplatePlaceholders={{ allowInserting: true }}
-          allowStatus={true}
           // media={{ provider: mediaProvider, allowMediaSingle: true }}
           placeholder="Write something..."
           shouldFocus={false}
           {...providers}
+          allowCodeBlocks={true}
+          allowTables={{
+            allowControls: false,
+          }}
+          allowExtension={true}
+          allowTextColor={true}
+          allowDate={true}
+          allowRule={true}
+          allowStatus={true}
+          allowLists={true}
         />
       </Content>
     </EditorContext>
