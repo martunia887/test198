@@ -17,7 +17,6 @@ const baseCacheDir = path.resolve(
 );
 
 const cacheGroups = {};
-const chunksToExclude = [];
 
 const packagesDir = path.resolve(__dirname, '../../../packages');
 for (const workspaceDir of fs.readdirSync(packagesDir)) {
@@ -70,6 +69,10 @@ const manualGroups = [
   {
     name: 'dnd',
     modules: ['react-beautiful-dnd'],
+  },
+  {
+    name: 'big-stuff',
+    modules: ['lodash', 'rxjs', 'enzyme'],
   },
 ];
 
@@ -307,7 +310,7 @@ function getPlugins(
       template: path.join(websiteDir, 'public/index.html.ejs'),
       title: HTMLPageTitle,
       favicon: faviconPath,
-      excludeChunks: ['examples'],
+      // excludeChunks: ['examples'],
     }),
 
     new HtmlWebpackPlugin({
@@ -315,7 +318,7 @@ function getPlugins(
       title: HTMLPageTitle,
       template: path.join(websiteDir, 'public/examples.html.ejs'),
       favicon: faviconPath,
-      excludeChunks: ['main'],
+      // excludeChunks: ['main'],
     }),
 
     new webpack.DefinePlugin({
