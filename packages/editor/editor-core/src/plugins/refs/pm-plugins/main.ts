@@ -1,5 +1,6 @@
 import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { EditorView, Decoration, DecorationSet } from 'prosemirror-view';
+import { getCellsInRow, getCellsInColumn } from 'prosemirror-utils';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { Dispatch } from '../../../event-dispatcher';
 import { handleUpdateTitleTarget, handleSetProvider } from '../action-handlers';
@@ -79,6 +80,43 @@ export const createPlugin = (
           }
         },
       };
+    },
+    props: {
+      // disable editing in columns that have references
+      decorations: state => {
+        const { schema, selection } = state;
+        let decorations: Decoration[] = [];
+
+        state.doc.descendants((node, pos) => {
+          if (node.type === schema.nodes.table) {
+            const columns = getCellsInRow(0)(selection);
+            if (columns) {
+              columns.forEach((headerCell, columnIndex) => {
+                if (headerCell.node.attrs.reference) {
+                  const cells = getCellsInColumn(columnIndex)(selection);
+                  if (cells) {
+                    cells.forEach(cell => {
+                      decorations.push(
+                        Decoration.node(
+                          cell.pos,
+                          cell.pos + cell.node.nodeSize,
+                          { contentEditable: false } as any,
+                        ),
+                      );
+                    });
+                  }
+                }
+              });
+            }
+          }
+        });
+
+        if (decorations.length) {
+          return DecorationSet.create(state.doc, decorations);
+        }
+
+        return null;
+      },
     },
   });
 
