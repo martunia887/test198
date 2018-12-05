@@ -22,7 +22,7 @@ export const gridStyles = css`
   }
 
   .gridLine {
-    border-left: 1px solid ${colors.N30A};
+    border-left: 1px solid hotpink;
     display: inline-block;
     box-sizing: border-box;
     height: 100%;
@@ -37,6 +37,6 @@ export const gridStyles = css`
   }
 
   .highlight {
-    border-left: 1px solid ${colors.B200};
+    border-left: 1px solid hotpink;
   }
 `;

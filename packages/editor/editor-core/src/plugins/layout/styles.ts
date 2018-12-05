@@ -40,11 +40,11 @@ export const layoutStyles = css`
         * Helps visualise when 'selectNodeBackwards' selects the node for deletion
         */
       &.ProseMirror-selectednode > * {
-        border-color: ${colors.B200};
+        border-color: hotpink;
       }
       /* Shows the border when cursor is inside a layout */
       &.selected > * {
-        border-color: ${colors.N40};
+        border-color: hotpink;
       }
     }
   }

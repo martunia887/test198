@@ -19,7 +19,7 @@ const IconWrapper = styled.div`
 `;
 
 const DropLine = styled.div`
-  background: ${colors.B200};
+  background: hotpink;
   border-radius: ${borderRadius()}px;
   margin: 2px 0;
   width: 100%;

@@ -23,10 +23,10 @@ export const Input: ComponentClass<
     font-weight: 400;
     line-height: 1.42857142857143;
     letter-spacing: -0.005em;
-    color: ${colors.N300};
+    color: hotpink;
 
     &:hover {
-      border-color: ${colors.N50};
+      border-color: hotpink;
       cursor: text;
     }
   }

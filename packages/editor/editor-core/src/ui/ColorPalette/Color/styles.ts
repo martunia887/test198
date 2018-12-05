@@ -7,10 +7,10 @@ import { colors } from '@atlaskit/theme';
 export const Button: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`
   height: 26px;
   width: 26px;
-  background: ${colors.N900};
+  background: hotpink;
   padding: 0;
   border-radius: 4px;
-  border: 1px solid ${colors.N0};
+  border: 1px solid hotpink;
   cursor: pointer;
   display: block;
 `;
@@ -24,6 +24,6 @@ export const ButtonWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
   padding: 1px;
   border-radius: 6px;
   &:hover {
-    border: 1px solid ${colors.N50};
+    border: 1px solid hotpink;
   }
 `;

@@ -9,7 +9,7 @@ import { akEditorCodeFontFamily, akEditorCodeBlockPadding } from '../../styles';
 export const codeBlockStyles = css`
   .ProseMirror .code-block {
     font-family: ${akEditorCodeFontFamily};
-    background: ${colors.N20};
+    background: hotpink;
     border-radius: ${borderRadius()}px;
     font-size: 14px;
     line-height: 24px;
@@ -19,7 +19,7 @@ export const codeBlockStyles = css`
     min-width: ${akEditorTableCellMinWidth}px;
 
     .line-number-gutter {
-      color: ${colors.N300};
+      color: hotpink;
       background-color: rgba(9, 30, 66, 0.04);
       text-align: right;
       user-select: none;
@@ -41,7 +41,7 @@ export const codeBlockStyles = css`
 
     .code-content {
       padding: ${akEditorCodeBlockPadding} 16px;
-      color: ${colors.N800};
+      color: hotpink;
       overflow: auto;
       display: flex;
       flex: 1;

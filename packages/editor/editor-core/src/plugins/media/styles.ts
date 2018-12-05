@@ -70,7 +70,7 @@ export const mediaStyles = css`
 
   .media-single:hover .mediaSingle-resize-handle-left::after,
   .media-single:hover .mediaSingle-resize-handle-right::after {
-    background: ${colors.N60};
+    background: hotpink;
   }
 
   .mediaSingle-selected .mediaSingle-resize-handle-right::after,
@@ -79,7 +79,7 @@ export const mediaStyles = css`
   .media-single .mediaSingle-resize-handle-left:hover::after,
   .media-single.is-resizing .mediaSingle-resize-handle-right::after,
   .media-single.is-resizing .mediaSingle-resize-handle-left::after {
-    background: ${colors.B200};
+    background: hotpink;
   }
 
   .__resizable_base__ {

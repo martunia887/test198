@@ -6,7 +6,7 @@ export const BackgroundWrapper: ComponentClass<
   HTMLAttributes<{}> & { maxWidth: number }
 > = styled.div`
   height: 2px;
-  background-color: ${colors.N20};
+  background-color: hotpink;
   border: transparent;
   border-radius: ${borderRadius()}px;
   ${({ maxWidth }: { maxWidth: number }) =>
@@ -34,7 +34,7 @@ export const LoaderStyle: ComponentClass<
     showCancel?: boolean;
   }
 > = styled.div`
-  background-color: ${colors.B400};
+  background-color: hotpink;
   height: 2px;
   border: transparent;
   border-radius: ${borderRadius()}px;

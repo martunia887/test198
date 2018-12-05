@@ -32,7 +32,7 @@ export const Header = styled.div`
 export const Content = styled.div`
   padding: ${padding}px;
   background: white;
-  border: 1px solid ${colors.N30};
+  border: 1px solid hotpink;
   border-radius: ${borderRadius()}px;
 `;
 

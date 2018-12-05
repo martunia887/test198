@@ -23,7 +23,7 @@ const NameWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
 `;
 
 export const Name: ComponentClass<HTMLAttributes<{}>> = styled.div`
-  color: ${colors.N800};
+  color: hotpink;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -32,7 +32,7 @@ export const Name: ComponentClass<HTMLAttributes<{}>> = styled.div`
 export const ContainerName: ComponentClass<
   React.HTMLAttributes<{}>
 > = styled.div`
-  color: ${colors.N100};
+  color: hotpink;
   font-size: 12px;
 `;
 

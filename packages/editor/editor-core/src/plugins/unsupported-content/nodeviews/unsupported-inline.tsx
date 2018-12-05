@@ -5,8 +5,8 @@ import { fontSize } from '@atlaskit/theme';
 
 const InlineNode = styled.span`
   align-items: center;
-  background: ${colors.N30};
-  border: 1px dashed ${colors.N50};
+  background: hotpink;
+  border: 1px dashed hotpink;
   border-radius: ${borderRadius()}px;
   box-sizing: border-box;
   cursor: default;
@@ -20,7 +20,7 @@ const InlineNode = styled.span`
   white-space: nowrap;
 
   &.ProseMirror-selectednode {
-    background: ${colors.N50};
+    background: hotpink;
     outline: none;
   }
 `;

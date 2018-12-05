@@ -5,6 +5,6 @@ import { colors } from '@atlaskit/theme';
 
 export const placeholderTextStyles = css`
   .ProseMirror span[data-placeholder] {
-    color: ${colors.N300};
+    color: hotpink;
   }
 `;

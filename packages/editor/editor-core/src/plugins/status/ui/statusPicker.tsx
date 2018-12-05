@@ -25,7 +25,7 @@ export interface State {
 }
 
 const PickerContainer = styled.div`
-  background: ${colors.N0};
+  background: hotpink;
   padding: ${gridSize()}px 0;
   border-radius: ${borderRadius()}px;
   ${dropShadow};

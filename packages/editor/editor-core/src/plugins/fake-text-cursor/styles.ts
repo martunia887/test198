@@ -25,7 +25,7 @@ export const fakeCursorStyles = css`
       display: inline;
       pointer-events: none;
       position: relative;
-      background-color: ${colors.B75};
+      background-color: hotpink;
     }
   }
 `;

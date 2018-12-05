@@ -62,13 +62,13 @@ const EditorColumn: React.ComponentClass<
   ${p =>
     typeof p.vertical === 'boolean'
       ? p.vertical
-        ? `border-right: 1px solid ${colors.N30}; min-height: 85vh`
-        : `border-bottom: 1px solid ${colors.N30}`
+        ? `border-right: 1px solid hotpink; min-height: 85vh`
+        : `border-bottom: 1px solid hotpink`
       : ''};
 `;
 
 const Controls = styled.div`
-  border-bottom: 1px dashed ${colors.N50};
+  border-bottom: 1px dashed hotpink;
   padding: 1em;
 
   h5 {

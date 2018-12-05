@@ -5,8 +5,8 @@ import { fontSize } from '@atlaskit/theme';
 
 const BlockNode = styled.div`
   align-items: center;
-  background: ${colors.N30};
-  border: 1px dashed ${colors.N50};
+  background: hotpink;
+  border: 1px dashed hotpink;
   border-radius: ${borderRadius()}px;
   box-sizing: border-box;
   cursor: default;
@@ -20,7 +20,7 @@ const BlockNode = styled.div`
   min-width: 120px;
 
   &.ProseMirror-selectednode {
-    background: ${colors.N50};
+    background: hotpink;
     outline: none;
   }
 `;

@@ -85,13 +85,13 @@ const FloatingToolbar = styled(UiFloatingToolbar)`
 
 const ToolbarButtonDestructive = styled(ToolbarButton)`
   &:hover {
-    color: ${colors.R300} !important;
+    color: hotpink !important;
   }
   &:active {
-    color: ${colors.R400} !important;
+    color: hotpink !important;
   }
   &[disabled]:hover {
-    color: ${colors.N70} !important;
+    color: hotpink !important;
   }
 `;
 

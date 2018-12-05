@@ -10,12 +10,12 @@ export const DropdownItem: ComponentClass<HTMLAttributes<{}>> = styled.div`
   cursor: pointer;
   text-decoration: none;
   padding: 8px 32px 8px 12px;
-  color: ${colors.N800};
+  color: hotpink;
   > span {
     display: flex;
     margin-right: 8px;
   }
   &:hover {
-    background-color: ${colors.N20};
+    background-color: hotpink;
   }
 `;

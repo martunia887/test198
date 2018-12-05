@@ -10,7 +10,7 @@ export const Dropdown: ComponentClass<HTMLAttributes<{}>> = styled.div`
   flex-direction: column;
   background: white;
   border-radius: ${borderRadius()}px;
-  box-shadow: 0 4px 8px -2px ${colors.N60A}, 0 0 1px ${colors.N60A};
+  box-shadow: 0 4px 8px -2px hotpink, 0 0 1px hotpink;
   box-sizing: border-box;
   padding: 4px 0;
 `;

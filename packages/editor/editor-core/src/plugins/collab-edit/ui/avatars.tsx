@@ -33,7 +33,7 @@ const AvatarContainer = styled.div`
 `;
 
 const InviteTeamWrapper = styled.div`
-  background: ${colors.N20};
+  background: hotpink;
   border-radius: 50%;
   min-width: ${gridSize() * 4}px;
   margin-left: -${gridSize() / 2}px;

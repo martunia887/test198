@@ -8,14 +8,14 @@ import { colors, borderRadius } from '@atlaskit/theme';
 export const padding = 8;
 
 export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
-  background: ${colors.N20};
+  background: hotpink;
   border-radius: ${borderRadius()}px;
   position: relative;
   vertical-align: middle;
   font-size: ${fontSize()}px;
 
   .ProseMirror-selectednode > & > .extension-overlay {
-    border: 2px solid ${colors.B200};
+    border: 2px solid hotpink;
     top: -2px;
     left: -2px;
     opacity: 1;
@@ -23,7 +23,7 @@ export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
 
   &.with-overlay {
     .extension-overlay {
-      background: ${colors.N20A};
+      background: hotpink;
       color: transparent;
     }
 
@@ -60,7 +60,7 @@ export const PlaceholderFallbackParams: ComponentClass<
   display: inline-block;
   max-width: 200px;
   margin-left: 5px;
-  color: ${colors.N70};
+  color: hotpink;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

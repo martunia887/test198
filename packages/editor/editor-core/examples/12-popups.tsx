@@ -10,7 +10,7 @@ import imageUploadHandler from '../example-helpers/imageUpload';
 import { colors } from '@atlaskit/theme';
 
 const Boundary = styled.div`
-  border: 2px solid ${colors.N40};
+  border: 2px solid hotpink;
   padding: 130px 60px 10px 40px;
 `;
 
@@ -133,7 +133,7 @@ class PortalInScrollContainerExample extends PureComponent<any, any> {
           overflow: 'scroll',
           height: 200,
           position: 'relative',
-          border: `1px solid ${colors.N40}`,
+          border: `1px solid hotpink`,
         }}
         ref={this.handleBoundryRef}
       >

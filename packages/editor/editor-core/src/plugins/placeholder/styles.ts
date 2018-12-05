@@ -11,7 +11,7 @@ export const placeholderStyles = css`
 
     &::before {
       content: attr(data-text);
-      color: ${colors.N90};
+      color: hotpink;
       pointer-events: none;
     }
   }

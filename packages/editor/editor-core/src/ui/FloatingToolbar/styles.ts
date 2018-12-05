@@ -11,7 +11,7 @@ export const Container: ComponentClass<
   align-items: center;
   box-sizing: border-box;
   padding: 4px 8px;
-  background-color: ${colors.N0};
+  background-color: hotpink;
   ${({ height }: { height: number | undefined }) =>
     height
       ? css`

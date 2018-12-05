@@ -16,7 +16,7 @@ const PopupWithListeners = withOuterListeners(Popup);
 const calendarStyle = {
   padding: borderRadius(),
   borderRadius: borderRadius(),
-  boxShadow: `0 4px 8px -2px ${colors.N60A}, 0 0 1px ${colors.N60A}`,
+  boxShadow: `0 4px 8px -2px hotpink, 0 0 1px hotpink`,
   backgroundColor: colors.N0,
 };
 

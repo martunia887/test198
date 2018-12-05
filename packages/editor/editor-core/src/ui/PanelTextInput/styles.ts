@@ -11,7 +11,7 @@ export const Input: ComponentClass<
     border: 0;
     border-radius: 0;
     box-sizing: content-box;
-    color: ${colors.N400};
+    color: hotpink;
     flex-grow: 1;
     font-size: 13px;
     line-height: 20px;
@@ -29,7 +29,7 @@ export const Input: ComponentClass<
     }
 
     &::placeholder {
-      color: ${colors.N400};
+      color: hotpink;
       opacity: 0.5;
     }
   }

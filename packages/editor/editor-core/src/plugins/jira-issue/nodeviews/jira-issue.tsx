@@ -7,8 +7,8 @@ import { borderRadius, colors } from '@atlaskit/theme';
 // tslint:disable-next-line:variable-name
 const WrapperNode = styled.span`
   align-items: center;
-  background: ${colors.N30};
-  border: 1px solid ${colors.N50};
+  background: hotpink;
+  border: 1px solid hotpink;
   border-radius: ${borderRadius()}px;
   box-sizing: border-box;
   cursor: default;
@@ -22,7 +22,7 @@ const WrapperNode = styled.span`
   white-space: nowrap;
 
   .ProseMirror-selectednode & {
-    background: ${colors.N50};
+    background: hotpink;
     outline: none;
   }
 `;

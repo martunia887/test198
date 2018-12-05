@@ -16,7 +16,7 @@ export const ButtonGroup: ComponentClass<
 `;
 
 export const Separator: ComponentClass<HTMLAttributes<{}>> = styled.span`
-  background: ${colors.N30};
+  background: hotpink;
   width: 1px;
   height: 24px;
   display: inline-block;
@@ -97,6 +97,6 @@ export const scrollbarStyles = `
 `;
 
 export const Shortcut = styled.small`
-  color: ${colors.N50};
+  color: hotpink;
   margin-top: 0;
 `;

@@ -16,7 +16,7 @@ const SelectableDate = styled(Date)`
     display: 'relative';
     &::before {
       content: '';
-      border: 2px solid ${colors.B200};
+      border: 2px solid hotpink;
       display: 'absolute';
       background: transparent;
       border-radius: ${borderRadius()}px;

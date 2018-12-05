@@ -45,7 +45,7 @@ const CommentEditor: any = styled.div`
     props.maxHeight
       ? 'max-height: ' + props.maxHeight + 'px;'
       : ''} background-color: white;
-  border: 1px solid ${colors.N40};
+  border: 1px solid hotpink;
   box-sizing: border-box;
   border-radius: ${borderRadius()}px;
 

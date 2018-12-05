@@ -9,7 +9,7 @@ export const Button: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`
   width: 26px;
   padding: 0;
   border-radius: 4px;
-  border: 1px solid ${colors.N0};
+  border: 1px solid hotpink;
   cursor: pointer;
   display: block;
 `;
@@ -23,6 +23,6 @@ export const ButtonWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
   padding: 1px;
   border-radius: 6px;
   &:hover {
-    border: 1px solid ${colors.N50};
+    border: 1px solid hotpink;
   }
 `;

@@ -9,7 +9,7 @@ export const TriggerWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
 `;
 
 export const Separator: ComponentClass<HTMLAttributes<{}>> = styled.span`
-  background: ${colors.N30};
+  background: hotpink;
   width: 1px;
   height: 24px;
   display: inline-block;

@@ -24,7 +24,7 @@ export const TitleInput: any = styled.input`
   padding: 0;
 
   &::placeholder {
-    color: ${colors.N80};
+    color: hotpink;
   }
 `;
 TitleInput.displayName = 'TitleInput';

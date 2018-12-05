@@ -4,19 +4,19 @@ import { colors } from '@atlaskit/theme';
 
 const pulseBackground = keyframes`
   50% {
-    background-color: ${colors.R100};
+    background-color: hotpink;
   }
 `;
 
 const pulseBackgroundReverse = keyframes`
   0% {
-    background-color: ${colors.R100};
+    background-color: hotpink;
   }
   50% {
     background-color: auto;
   }
   100% {
-    background-color: ${colors.R100};
+    background-color: hotpink;
   }
 `;
 

@@ -13,7 +13,7 @@ export const Toolbar: ComponentClass<HTMLAttributes<{}>> = styled.div`
 `;
 
 export const Separator: ComponentClass<HTMLAttributes<{}>> = styled.span`
-  border-left: 1px solid ${colors.N30};
+  border-left: 1px solid hotpink;
   width: 1px;
   display: inline-block;
   margin: 0 5px;

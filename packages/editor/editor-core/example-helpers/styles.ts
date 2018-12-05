@@ -10,7 +10,7 @@ export const Content: ComponentClass<HTMLAttributes<{}>> = styled.div`
   & div.toolsDrawer {
     margin-top: 16px;
     padding: 8px 16px;
-    background: ${colors.N800};
+    background: hotpink;
 
     & label {
       display: flex;
