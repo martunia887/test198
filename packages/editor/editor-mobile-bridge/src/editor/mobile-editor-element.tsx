@@ -2,6 +2,8 @@ import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
 import { Editor } from '@atlaskit/editor-core';
 
+// @ts-ignore
+import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { toNativeBridge } from './web-to-native';
 import WebBridgeImpl from './native-to-web';
 import MobilePicker from './MobileMediaPicker';
@@ -14,7 +16,11 @@ import {
   MentionProvider,
   TaskDecisionProvider,
   MockEmojiProvider,
+  EmojiProvider,
 } from '../providers';
+
+import { parseLocationSearch } from '../bridge-utils';
+const params = parseLocationSearch();
 
 export const bridge: WebBridgeImpl = ((window as any).bridge = new WebBridgeImpl());
 
@@ -55,7 +61,8 @@ export default function mobileEditor(props) {
     <EditorWithState
       appearance="mobile"
       mentionProvider={MentionProvider}
-      emojiProvider={Promise.resolve(MockEmojiProvider)}
+      // emojiProvider={Promise.resolve(MockEmojiProvider)}
+      emojiProvider={EmojiProvider}
       media={{
         customMediaPicker: new MobilePicker(),
         provider: props.mediaProvider || MediaProvider,
@@ -76,6 +83,9 @@ export default function mobileEditor(props) {
       allowRule={true}
       allowStatus={true}
       taskDecisionProvider={Promise.resolve(TaskDecisionProvider())}
+      // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
+      mode={(params && params.theme) || props.mode}
+      {...props}
     />
   );
 }
