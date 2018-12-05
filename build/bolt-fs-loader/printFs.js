@@ -3,7 +3,7 @@
 /*::
 import type { Directory, File } from './types';
 */
-const nodeFs = require('fs');
+const nodeFs = require('fs-extra');
 const mkdirp = require('mkdirp');
 const nodePath = require('path');
 
@@ -22,6 +22,7 @@ function getSafeRaw(file) {
 }
 
 const fakeFiles = nodePath.resolve(__dirname, '.fake');
+nodeFs.removeSync(fakeFiles);
 
 function printFile(file /*: File */, depth /*: number */) {
   const fakeFile = nodePath.resolve(fakeFiles, `${file.guid}.js`);

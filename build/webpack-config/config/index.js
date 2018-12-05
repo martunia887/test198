@@ -34,7 +34,6 @@ for (const workspaceDir of fs.readdirSync(packagesDir)) {
     const reg = new RegExp(
       `[\\/]packages[\\/]${workspaceDir}[\\/]${packageDir}[\\/]((?!node_modules[\\/]).)*$`,
     );
-    console.log(key, reg);
     cacheGroups[key] = {
       test: reg,
       name: key,
@@ -48,7 +47,6 @@ for (const workspaceDir of fs.readdirSync(packagesDir)) {
       const sreg = new RegExp(
         `[\\/]packages[\\/]${workspaceDir}[\\/]${packageDir}[\\/]${sub}`,
       );
-      console.log(skey, sreg);
       cacheGroups[skey] = {
         test: sreg,
         name: skey,
@@ -84,14 +82,6 @@ for (const group of manualGroups) {
     priority: 4,
   };
 }
-
-// cacheGroups['node_modules'] = {
-//   test: /[\\/]node_modules[\\/]/,
-//   name: 'node_modules',
-//   enforce: true,
-//   chunks: 'all',
-//   priority: 3,
-// };
 
 module.exports = function createWebpackConfig(
   {
