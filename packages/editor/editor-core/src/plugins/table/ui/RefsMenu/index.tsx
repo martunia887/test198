@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
-import { findDomRefAtPos } from 'prosemirror-utils';
+import {
+  findDomRefAtPos,
+  getCellsInColumn,
+  findCellRectClosestToPos,
+} from 'prosemirror-utils';
 import {
   Popup,
   akEditorFloatingOverlapPanelZIndex,
@@ -181,7 +185,29 @@ export default class RefsMenu extends React.Component<
   };
 
   private handleSave = () => {
-    console.log('~save~');
+    const { state, dispatch } = this.props.editorView;
+    const { selection } = state;
+    const rect = findCellRectClosestToPos(selection.$from);
+    if (!rect) {
+      return false;
+    }
+    const cells = getCellsInColumn(rect.left)(selection);
+    if (!cells) {
+      return false;
+    }
+    const { node, pos } = cells[0];
+    const { selectedTableId, selectedColumnId } = this.state;
+
+    dispatch(
+      state.tr.setNodeMarkup(pos, node.type, {
+        ...node.attrs,
+        reference: `${selectedTableId}:${selectedColumnId}`,
+      }),
+    );
+
+    this.dismiss();
+
+    return true;
   };
 
   private getColumns = () => {
