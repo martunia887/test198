@@ -292,7 +292,7 @@ export class MediaPluginState {
       this.stateManager.on(mediaState.id, this.handleMediaState);
     });
 
-    if (this.editorAppearance !== 'message' && mediaSingle) {
+    if (mediaSingle) {
       insertMediaGroupNode(this.view, nonImageAttachments, collection);
       imageAttachments.forEach(mediaState => {
         insertMediaSingleNode(this.view, mediaState, collection);

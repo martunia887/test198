@@ -15,16 +15,14 @@ export function createKeymapPlugin(
 ): Plugin | undefined {
   const list = {};
 
-  if (props.appearance !== 'message') {
-    keymaps.bindKeymapWithCommand(
-      keymaps.addLink.common!,
-      trackAndInvoke(
-        'atlassian.editor.format.hyperlink.keyboard',
-        showLinkToolbar(),
-      ),
-      list,
-    );
-  }
+  keymaps.bindKeymapWithCommand(
+    keymaps.addLink.common!,
+    trackAndInvoke(
+      'atlassian.editor.format.hyperlink.keyboard',
+      showLinkToolbar(),
+    ),
+    list,
+  );
 
   keymaps.bindKeymapWithCommand(
     keymaps.enter.common!,

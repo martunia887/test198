@@ -128,7 +128,6 @@ export function createPlugin(
         }
 
         if (
-          editorAppearance !== 'message' &&
           slice.content.childCount === 1 &&
           slice.content.firstChild!.type === media
         ) {

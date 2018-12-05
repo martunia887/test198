@@ -31,7 +31,6 @@ import { CardProvider, CardOptions } from '../plugins/card/types';
 import { QuickInsertOptions } from '../plugins/quick-insert/types';
 
 export type EditorAppearance =
-  | 'message'
   | 'inline-comment'
   | 'comment'
   | 'full-page'

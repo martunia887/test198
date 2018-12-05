@@ -6,7 +6,6 @@ import { createInputRulePlugin } from './pm-plugins/input-rule';
 import { createKeymapPlugin } from './pm-plugins/keymap';
 import { plugin, stateKey, HyperlinkState } from './pm-plugins/main';
 import fakeCursorToolbarPlugin from './pm-plugins/fake-cursor-for-toolbar';
-import syncTextAndUrlPlugin from './pm-plugins/sync-text-and-url';
 import HyperlinkToolbar from './ui';
 
 const hyperlinkPlugin: EditorPlugin = {
@@ -16,11 +15,6 @@ const hyperlinkPlugin: EditorPlugin = {
 
   pmPlugins() {
     return [
-      {
-        name: 'syncUrlText',
-        plugin: ({ props: { appearance } }) =>
-          appearance === 'message' ? syncTextAndUrlPlugin : undefined,
-      },
       { name: 'hyperlink', plugin: ({ dispatch }) => plugin(dispatch) },
       {
         name: 'fakeCursorToolbarPlugin',
@@ -38,15 +32,11 @@ const hyperlinkPlugin: EditorPlugin = {
   },
 
   contentComponent({
-    appearance,
     editorView,
     popupsMountPoint,
     popupsBoundariesElement,
     providerFactory,
   }) {
-    if (appearance === 'message') {
-      return null;
-    }
     const renderToolbar = providers => (
       <WithPluginState
         plugins={{ hyperlinkState: stateKey }}

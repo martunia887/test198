@@ -34,7 +34,7 @@ const ContextAdapter = createContextAdapter({
 });
 export default class Editor extends React.Component<EditorProps, {}> {
   static defaultProps: EditorProps = {
-    appearance: 'message',
+    appearance: 'comment',
     disabled: false,
     extensionHandlers: {},
   };
