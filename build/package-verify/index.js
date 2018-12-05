@@ -31,7 +31,12 @@ async function run() {
         }
 
         const pkg = fs.readJSONSync(path.join(packagePath, 'package.json'), {});
-        return await verifyPackage(pkg, packagePath);
+        if (pkg.private) {
+          console.warn('Trying to verify private package', pkg.name);
+          return true;
+        }
+
+        return await verifyPackage(pkg, path.resolve(packagePath));
       }),
     );
 
@@ -82,9 +87,13 @@ async function installDependencies(cwd, peerDependencies = [], tarballs = []) {
   // We should only have one tarball.
   // its only an array becuase of the globbing
   const tarball = tarballs[0];
-  await spawn('npm', ['install', ...peerDeps, `${tarball}`], {
-    cwd,
-  });
+  await spawn(
+    'npm',
+    ['install', '--no-package-lock', ...peerDeps, `${tarball}`],
+    {
+      cwd,
+    },
+  );
 
   // await spawn('open', [cwd]);
 }
