@@ -81,7 +81,7 @@ const BuildStory = (props: any) => (
       <div className="sample">
         <Button
           {...props}
-          disabled
+          isDisabled
           onClick={() => console.log('clicking the Component')}
         >
           Disabled Option
@@ -92,7 +92,7 @@ const BuildStory = (props: any) => (
       <div className="sample">
         <Button
           {...props}
-          disabled
+          isDisabled
           onClick={() => console.log('clicking the Component')}
           href="//www.atlassian.com"
           target="_blank"
@@ -257,7 +257,7 @@ const BuildStory = (props: any) => (
           {...props}
           onClick={() => console.log('clicking the Component')}
           spacing="compact"
-          disabled
+          isDisabled
         >
           Disabled Option
         </Button>

@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { PureComponent } from 'react';
 import Spinner from '@atlaskit/spinner';
 import { Popup } from '@atlaskit/editor-common';
-import Button from '@atlaskit/button';
+import Button, { ButtonGroup } from '@atlaskit/button';
 
 import { withAnalytics } from '../../analytics';
 import ToolbarButton from '../ToolbarButton';
@@ -18,7 +18,6 @@ import {
   ConfirmationHeader,
   ConfirmationImg,
 } from './styles';
-import { ButtonGroup } from '../../ui/styles';
 
 const PopupWithOutsideListeners: any = withOuterListeners(Popup);
 const POPUP_HEIGHT = 388;

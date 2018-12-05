@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Component } from 'react';
 import styled from 'styled-components';
 
+import { ButtonGroup } from '@atlaskit/button';
 import { borderRadius, gridSize } from '@atlaskit/theme';
 
 import { FloatingToolbarItem } from '../types';
@@ -10,7 +11,6 @@ import Button from './Button';
 import Dropdown from './Dropdown';
 import Select, { SelectOption } from './Select';
 import Separator from './Separator';
-import { ButtonGroup } from '../../../ui/styles';
 
 const akGridSize = gridSize();
 

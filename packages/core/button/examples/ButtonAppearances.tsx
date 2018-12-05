@@ -51,11 +51,13 @@ export default class ButtonAppearance extends React.Component<{}, State> {
         <Table>
           {appearances.map(a => (
             <Row key={a}>
-              <Btn appearance={a}>{capitalize(a)}</Btn>
-              <Btn appearance={a} disabled>
+              <Btn isLoading={showLoadingState} appearance={a}>
+                {capitalize(a)}
+              </Btn>
+              <Btn isLoading={showLoadingState} appearance={a} isDisabled>
                 Disabled
               </Btn>
-              <Btn appearance={a} isSelected>
+              <Btn isLoading={showLoadingState} appearance={a} isSelected>
                 Selected
               </Btn>
             </Row>

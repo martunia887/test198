@@ -40,8 +40,6 @@ options.resolve.alias = {
   'styled-components': path.resolve(__dirname, 'noop.js'),
   react: path.resolve(__dirname, 'noop.js'),
   'react-dom': path.resolve(__dirname, 'noop.js'),
-  emotion: path.resolve(__dirname, 'noop.js'),
-  // '@atlaskit/theme': path.resolve(__dirname, 'noop.js'),
 };
 
 const combinedOptions = { ...options, output: { ...options.output } };

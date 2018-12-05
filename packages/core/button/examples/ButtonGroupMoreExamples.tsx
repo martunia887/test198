@@ -23,10 +23,10 @@ export default () => (
       </ButtonGroup>
     </Row>
     <Row>
-      <ButtonGroup>
-        <Button appearance="subtle">Angular</Button>
-        <Button appearance="subtle">Ember</Button>
-        <Button appearance="subtle">React</Button>
+      <ButtonGroup appearance="subtle">
+        <Button>Angular</Button>
+        <Button>Ember</Button>
+        <Button>React</Button>
       </ButtonGroup>
     </Row>
   </Row>

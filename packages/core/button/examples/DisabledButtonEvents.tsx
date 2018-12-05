@@ -14,8 +14,7 @@ export default class extends React.Component<{}, State> {
     childrenEls: false,
   };
 
-  increment = e => {
-    console.log(e.target);
+  increment = () => {
     this.setState(({ count }) => ({ count: count + 1 }));
   };
 
@@ -56,7 +55,7 @@ export default class extends React.Component<{}, State> {
           </button>
         </p>
         <p>
-          <Button disabled={this.state.disabled}>
+          <Button isDisabled={this.state.disabled}>
             {this.state.childrenEls ? (
               <div>Disabled AK button</div>
             ) : (
