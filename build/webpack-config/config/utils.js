@@ -10,7 +10,7 @@ function createGlob(glob /*: string */) /*: Array<string> */ {
   ];
 }
 
-const createDefaultGlob = () => createGlob('packages/**');
+const createDefaultGlob = () => createGlob('packages/*/*');
 
 const createWorkspacesGlob = (
   workspaces /*: Array<{ dir: string }> */,

@@ -26,29 +26,29 @@ if (why) {
   options.plugins.push(new BundleAnalyzerPlugin());
 }
 
-options.optimization = {
-  splitChunks: {
-    cacheGroups: {
-      node_modules: {
-        test: /[\\/]node_modules[\\/]/,
-        name: 'node_modules',
-        enforce: true,
-        chunks: 'all',
-      },
-    },
-  },
-};
+// options.optimization = {
+//   splitChunks: {
+//     cacheGroups: {
+//       // node_modules: {
+//       //   test: /[\\/]node_modules[\\/]/,
+//       //   name: 'node_modules',
+//       //   enforce: true,
+//       //   chunks: 'all',
+//       // },
+//     },
+//   },
+// };
 
-for (const corePackage of fs.readdirSync(
-  path.resolve(__dirname, '../../packages/core'),
-)) {
-  options.optimization.splitChunks.cacheGroups[corePackage] = {
-    test: new RegExp(`[\\/]core[\\/]${corePackage}[\\/]`),
-    name: corePackage,
-    enforce: true,
-    chunks: 'all',
-  };
-}
+// for (const corePackage of fs.readdirSync(
+//   path.resolve(__dirname, '../../packages/core'),
+// )) {
+//   options.optimization.splitChunks.cacheGroups[corePackage] = {
+//     test: new RegExp(`[\\/]core[\\/]${corePackage}[\\/]`),
+//     name: corePackage,
+//     enforce: true,
+//     chunks: 'all',
+//   };
+// }
 
 const ignoreModules = ['styled-components', 'react', 'react-dom'];
 
@@ -58,13 +58,13 @@ for (const ignore of ignoreModules) {
 }
 
 const combinedOptions = { ...options, output: { ...options.output } };
-delete combinedOptions.optimization;
+// delete combinedOptions.optimization;
 
 combinedOptions.output.filename = 'all.js';
 
 const outputDir = path.resolve(__dirname, '../../dist');
 const packageOut = path.resolve(outputDir, 'main.js');
-const moduleOut = path.resolve(outputDir, 'node_modules.js');
+// const moduleOut = path.resolve(outputDir, 'node_modules.js');
 const combinedOut = path.resolve(outputDir, 'all.js');
 
 const rm = p => {
@@ -74,7 +74,7 @@ const rm = p => {
 };
 
 rm(packageOut);
-rm(moduleOut);
+// rm(moduleOut);
 rm(combinedOut);
 
 const compiler = webpack(why ? options : [options, combinedOptions]);
@@ -87,7 +87,7 @@ compiler.run((err, s) => {
     return console.error(s.toString({ colors: true }));
   }
 
-  const stats = [fStats(packageOut), fStats(moduleOut)];
+  const stats = [fStats(packageOut)];
 
   console.log(chalk.cyan('Module successfully built:\n'));
   console.log(
@@ -95,11 +95,11 @@ compiler.run((err, s) => {
     chalk.green(prettyBytes(stats[0].size)),
     `(${chalk.red(prettyBytes(stats[0].gzipSize))})`,
   );
-  console.log(
-    chalk.yellow('  Dependencies:'),
-    chalk.green(prettyBytes(stats[1].size)),
-    `(${chalk.red(prettyBytes(stats[1].gzipSize))})`,
-  );
+  // console.log(
+  //   chalk.yellow('  Dependencies:'),
+  //   chalk.green(prettyBytes(stats[1].size)),
+  //   `(${chalk.red(prettyBytes(stats[1].gzipSize))})`,
+  // );
 
   if (!why) {
     const all = fStats(combinedOut);

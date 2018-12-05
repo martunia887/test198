@@ -3,11 +3,22 @@ import { AnalyticsListener } from '@atlaskit/analytics';
 import { colors } from '@atlaskit/theme';
 import debug from '../src/util/logger';
 import { onMentionEvent } from '../example-helpers/index';
-import {
-  mockMentionData as mentionData,
-  mockMentionProvider as mentionProvider,
-} from '../src/__tests__/unit/_test-helpers';
+import MentionResource from '../src/api/MentionResource';
 import ResourcedMention from '../src/components/Mention/ResourcedMention';
+
+const mentionData = {
+  id: 'ABCD-ABCD-ABCD',
+  text: '@Oscar Wallhult',
+};
+
+const mentionResource = new MentionResource({
+  url: 'dummyurl',
+
+  shouldHighlightMention(mention) {
+    return mention.id === 'oscar';
+  },
+});
+export const mentionProvider = Promise.resolve(mentionResource);
 
 const style = {
   backgroundColor: colors.N20,

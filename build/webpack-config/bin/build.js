@@ -50,5 +50,10 @@ async function runBuild() {
 }
 
 runBuild().catch(errCode => {
-  process.exit(errCode);
+  if (typeof errCode === 'number') {
+    process.exit(errCode);
+  } else {
+    console.error(errCode);
+    process.exit(1);
+  }
 });

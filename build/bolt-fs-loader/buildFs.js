@@ -11,7 +11,13 @@ function dir(id /*: string */, path /*: string */ = '') {
 }
 
 function file(id /*: string */, path /*: string */, rootDir /*: string */) {
-  return { type: 'file', id, path, uid: nodePath.relative(rootDir, path) };
+  return {
+    type: 'file',
+    id,
+    path,
+    uid: nodePath.relative(rootDir, path),
+    guid: `${nodePath.dirname(nodePath.relative(rootDir, path))}~bolt`,
+  };
 }
 
 function findInDir(dir /*: Directory */, id /*: string */) {

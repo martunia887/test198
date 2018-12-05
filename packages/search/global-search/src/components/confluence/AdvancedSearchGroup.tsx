@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Icon from '@atlaskit/icon';
+import Icon from '@atlaskit/icon/cjs/components/Icon';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';

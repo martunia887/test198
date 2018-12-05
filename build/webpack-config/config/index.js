@@ -1,4 +1,5 @@
 // @flow
+const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const webpack = require('webpack');
@@ -14,6 +15,83 @@ const baseCacheDir = path.resolve(
   __dirname,
   '../../../node_modules/.cache-loader',
 );
+
+const cacheGroups = {};
+const chunksToExclude = [];
+
+const packagesDir = path.resolve(__dirname, '../../../packages');
+for (const workspaceDir of fs.readdirSync(packagesDir)) {
+  const workspaceAbsDir = path.resolve(packagesDir, workspaceDir);
+  if (!fs.statSync(workspaceAbsDir).isDirectory()) continue;
+
+  for (const packageDir of fs.readdirSync(
+    path.resolve(packagesDir, workspaceDir),
+  )) {
+    const packageAbsDir = path.resolve(workspaceAbsDir, packageDir);
+    if (!fs.statSync(packageAbsDir).isDirectory()) continue;
+
+    const key = `${workspaceDir}~${packageDir}`;
+    const reg = new RegExp(
+      `[\\/]packages[\\/]${workspaceDir}[\\/]${packageDir}[\\/]((?!node_modules[\\/]).)*$`,
+    );
+    console.log(key, reg);
+    cacheGroups[key] = {
+      test: reg,
+      name: key,
+      enforce: true,
+      chunks: 'all',
+      priority: 1,
+    };
+
+    for (const sub of ['CHANGELOG.md', 'docs', 'examples']) {
+      const skey = `${workspaceDir}~${packageDir}~${sub}`;
+      const sreg = new RegExp(
+        `[\\/]packages[\\/]${workspaceDir}[\\/]${packageDir}[\\/]${sub}`,
+      );
+      console.log(skey, sreg);
+      cacheGroups[skey] = {
+        test: sreg,
+        name: skey,
+        enforce: true,
+        chunks: 'all',
+        priority: 2,
+      };
+    }
+  }
+}
+
+const manualGroups = [
+  {
+    name: 'react',
+    modules: ['react', 'react-dom', 'react-router'],
+  },
+  {
+    name: 'refractor',
+    modules: ['refractor'],
+  },
+  {
+    name: 'dnd',
+    modules: ['react-beautiful-dnd'],
+  },
+];
+
+for (const group of manualGroups) {
+  cacheGroups[group.name] = {
+    test: new RegExp(`[\\/]node_modules[\\/](${group.modules.join('|')})[\\/]`),
+    name: `node_modules~${group.name}`,
+    enforce: true,
+    chunks: 'all',
+    priority: 4,
+  };
+}
+
+// cacheGroups['node_modules'] = {
+//   test: /[\\/]node_modules[\\/]/,
+//   name: 'node_modules',
+//   enforce: true,
+//   chunks: 'all',
+//   priority: 3,
+// };
 
 module.exports = function createWebpackConfig(
   {
@@ -118,12 +196,17 @@ module.exports = function createWebpackConfig(
               },
             },
             {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: path.resolve(baseCacheDir, 'babel'),
+              },
+            },
+            {
               loader: 'babel-loader',
               options: {
                 babelrc: true,
                 rootMode: 'upward',
                 envName: 'production:esm',
-                cacheDirectory: path.resolve(baseCacheDir, 'babel'),
               },
             },
           ],
@@ -133,15 +216,23 @@ module.exports = function createWebpackConfig(
           exclude: /node_modules/,
           use: [
             {
+              loader: 'thread-loader',
+              options: {
+                name: 'ts-pool',
+              },
+            },
+            {
               loader: 'cache-loader',
               options: {
                 cacheDirectory: path.resolve(baseCacheDir, 'ts'),
               },
             },
             {
-              loader: require.resolve('ts-loader'),
+              loader: 'babel-loader',
               options: {
-                transpileOnly: true,
+                babelrc: true,
+                rootMode: 'upward',
+                envName: 'production:esm:ts',
               },
             },
           ],
@@ -329,7 +420,9 @@ function getOptimizations({ isProduction, noMinimizeFlag }) {
     splitChunks: {
       // "Maximum number of parallel requests when on-demand loading. (default in production: 5)"
       // The default value of 5 causes the webpack process to crash, reason currently unknown
-      maxAsyncRequests: Infinity,
+      // maxAsyncRequests: Infinity,
+      maxAsyncRequests: 5,
+      cacheGroups,
     },
   };
 }
