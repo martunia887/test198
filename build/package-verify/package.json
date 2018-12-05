@@ -4,8 +4,14 @@
   "description": "This will definitely get split up at some point, just using for testing",
   "author": "Atlassian Pty Ltd",
   "license": "Apache-2.0",
+  "main": "./dist/es2015/index.js",
+  "bin": {
+    "package-verify": "./dist/es2015/index.js"
+  },
   "dependencies": {
     "@atlaskit/build-utils": "^2.0.2",
-    "bolt": "^0.22.1"
+    "bolt": "^0.22.1",
+    "meow": "^5.0.0",
+    "globby": "^6.1.0"
   }
 }
