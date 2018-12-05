@@ -4,6 +4,9 @@
   "description": "This will definitely get split up at some point, just using for testing",
   "author": "Atlassian Pty Ltd",
   "license": "Apache-2.0",
+  "bin": {
+    "package-verify": "./index.js"
+  },
   "dependencies": {
     "@atlaskit/build-utils": "^2.0.2",
     "bolt": "^0.22.1"

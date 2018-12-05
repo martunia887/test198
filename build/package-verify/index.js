@@ -1,6 +1,7 @@
+#!/usr/bin/env node
+
 const { promisify } = require('util');
 const path = require('path');
-const bolt = require('bolt');
 const os = require('os');
 const globby = require('globby');
 const meow = require('meow');
@@ -8,16 +9,35 @@ const fs = require('fs-extra');
 
 const { spawn } = require('./spawn');
 
-const cli = meow();
+const cli = meow({
+  help: `
+  Usage:
+    $ package-verify
+  `,
+});
 
 async function run() {
+  const cwd = process.cwd();
+
+  const packagePaths = cli.input.length ? cli.input : [cwd];
+  console.log(packagePaths);
+
   try {
-    const workspaces = await bolt.getWorkspaces();
-    const packages = workspaces.filter(
-      workspace => cli.input.indexOf(workspace.name) !== -1,
+    const runs = await Promise.all(
+      packagePaths.map(async packagePath => {
+        const packageExists = await exists(packagePath, ['package.json']);
+        if (!packageExists) {
+          return;
+        }
+
+        const pkg = fs.readJSONSync(path.join(packagePath, 'package.json'), {});
+        return await verifyPackage(pkg, packagePath);
+      }),
     );
 
-    packages.forEach(async pkg => await verifyPackage(pkg));
+    if (runs.filter(Boolean).length === 0) {
+      cli.showHelp();
+    }
   } catch (e) {
     console.log(e.message);
     process.exit(1);
@@ -26,31 +46,27 @@ async function run() {
 
 run();
 
-async function verifyPackage(package) {
-  await bolt.workspaceExec({
-    pkgName: package.name,
-    command: 'npm',
-    commandArgs: ['pack', package.name],
-  });
+async function verifyPackage(pkgConfig, cwd) {
+  await spawn('npm', ['pack', pkgConfig.name], { cwd });
 
   const tmpdir = await promisify(fs.mkdtemp)(
     path.join(os.tmpdir(), 'bolt-package-verify-'),
   );
 
-  const tarballs = await globby(`${package.dir}/*.tgz`);
-  await installDependencies(tmpdir, package.config.peerDependencies, tarballs);
+  const tarballs = await globby(`${cwd}/*.tgz`);
+  await installDependencies(tmpdir, pkgConfig.peerDependencies, tarballs);
 
   /**
    * Run a couple of simple checks to ensure package.json exists
    * The main and module (if defined) field exists.
    */
-  const files = ['package.json', package.config.main];
+  const files = ['package.json', pkgConfig.main];
 
-  if (package.config.module) {
-    files.push(package.config.module);
+  if (pkgConfig.module) {
+    files.push(pkgConfig.module);
   }
 
-  await exists(path.join(tmpdir, 'node_modules', package.name), files);
+  return await exists(path.join(tmpdir, 'node_modules', pkgConfig.name), files);
 }
 
 async function installDependencies(cwd, peerDependencies = [], tarballs = []) {
@@ -66,32 +82,11 @@ async function installDependencies(cwd, peerDependencies = [], tarballs = []) {
   // We should only have one tarball.
   // its only an array becuase of the globbing
   const tarball = tarballs[0];
-  await spawn('yarn', ['add', ...peerDeps, `file:${tarball}`], {
+  await spawn('npm', ['install', ...peerDeps, `${tarball}`], {
     cwd,
   });
 
-  // Set up for testing in local pkg
-  await spawn(
-    'npm',
-    [
-      'install',
-      'https://registry.npmjs.org/@pgleeson/enzyme/-/enzyme-3.3.7.tgz',
-      'https://registry.npmjs.org/@pgleeson/enzyme-adapter-react-16/-/enzyme-adapter-react-16-1.1.7.tgz',
-      'jest',
-      'babel-preset-env',
-      'babel-preset-react',
-      'react-dom',
-    ],
-    {
-      cwd,
-    },
-  );
-
-  await spawn('npm', ['install'], { cwd });
-
-  fs.copySync('./build/package-verify/templates/', cwd);
-
-  await spawn('./node_modules/jest/bin/jest.js', { cwd });
+  // await spawn('open', [cwd]);
 }
 
 /**
@@ -99,13 +94,14 @@ async function installDependencies(cwd, peerDependencies = [], tarballs = []) {
  * TODO raise an error if not found.
  */
 async function exists(base, files = []) {
-  await files.forEach(async file => {
-    const absolutePath = path.join(base, file);
-    try {
-      await promisify(fs.access)(absolutePath);
-      console.log(`${absolutePath} exists!`);
-    } catch (e) {
-      console.error(`${absolutePath} not found`);
-    }
-  });
+  return await Promise.all(
+    files.map(async file => {
+      const absolutePath = path.join(base, file);
+      // try {
+      return await promisify(fs.access)(absolutePath);
+      // } catch (e) {
+      // return false;
+      // }
+    }),
+  );
 }
