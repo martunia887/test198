@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import { ProviderFactory } from '@atlaskit/editor-common';
+import { ProviderFactory, WithProviders } from '@atlaskit/editor-common';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { ReactNodeView } from '../../../nodeviews';
 import TaskItem from '../ui/Task';
@@ -101,14 +101,20 @@ class Task extends ReactNodeView {
           }: {
             editorDisabledPlugin: EditorDisabledPluginState;
           }) => (
-            <TaskItem
-              taskId={localId}
-              contentRef={forwardRef}
-              isDone={state === 'DONE'}
-              onChange={this.handleOnChange}
-              showPlaceholder={this.isContentEmpty()}
-              providers={props.providerFactory}
-              disabled={(editorDisabledPlugin || {}).editorDisabled}
+            <WithProviders
+              providers={['taskDecisionProvider', 'contextIdentifierProvider']}
+              providerFactory={props.providerFactory}
+              renderNode={providers => (
+                <TaskItem
+                  taskId={localId}
+                  contentRef={forwardRef}
+                  isDone={state === 'DONE'}
+                  onChange={this.handleOnChange}
+                  showPlaceholder={this.isContentEmpty()}
+                  providers={providers}
+                  disabled={(editorDisabledPlugin || {}).editorDisabled}
+                />
+              )}
             />
           )}
         />

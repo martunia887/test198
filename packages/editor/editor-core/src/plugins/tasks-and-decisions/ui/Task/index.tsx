@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
-import { PureComponent, ReactElement } from 'react';
-import { ProviderFactory, WithProviders } from '@atlaskit/editor-common';
+import { ReactElement } from 'react';
 import TaskItemWithProviders from './task-item-with-providers';
 
 const messages = defineMessages({
@@ -20,54 +19,29 @@ export interface TaskProps {
   onChange?: (taskId: string, isChecked: boolean) => void;
   showPlaceholder?: boolean;
   children?: ReactElement<any>;
-  providers?: ProviderFactory;
+  providers: {
+    [key: string]: Promise<any>;
+  };
   disabled?: boolean;
 }
 
-export class TaskItem extends PureComponent<TaskProps & InjectedIntlProps, {}> {
-  private providerFactory: ProviderFactory;
+export function TaskItem(props: TaskProps & InjectedIntlProps) {
+  const {
+    providers,
+    intl: { formatMessage },
+    ...otherProps
+  } = props;
+  const { taskDecisionProvider, contextIdentifierProvider } = providers;
+  const placeholder = formatMessage(messages.placeholder);
 
-  constructor(props) {
-    super(props);
-    this.providerFactory = props.providers || new ProviderFactory();
-  }
-
-  componentWillUnmount() {
-    if (!this.props.providers) {
-      // new ProviderFactory is created if no `providers` has been set
-      // in this case when component is unmounted it's safe to destroy this providerFactory
-      this.providerFactory.destroy();
-    }
-  }
-
-  private renderWithProvider = providerFactory => {
-    const {
-      providers,
-      intl: { formatMessage },
-      ...otherProps
-    } = this.props;
-    const { taskDecisionProvider, contextIdentifierProvider } = providerFactory;
-    const placeholder = formatMessage(messages.placeholder);
-
-    return (
-      <TaskItemWithProviders
-        {...otherProps}
-        placeholder={placeholder}
-        taskDecisionProvider={taskDecisionProvider}
-        contextIdentifierProvider={contextIdentifierProvider}
-      />
-    );
-  };
-
-  render() {
-    return (
-      <WithProviders
-        providers={['taskDecisionProvider', 'contextIdentifierProvider']}
-        providerFactory={this.providerFactory}
-        renderNode={this.renderWithProvider}
-      />
-    );
-  }
+  return (
+    <TaskItemWithProviders
+      {...otherProps}
+      placeholder={placeholder}
+      taskDecisionProvider={taskDecisionProvider}
+      contextIdentifierProvider={contextIdentifierProvider}
+    />
+  );
 }
 
 export default injectIntl(TaskItem);

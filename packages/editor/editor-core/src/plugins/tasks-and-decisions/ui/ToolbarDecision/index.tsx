@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import DecisionIcon from '@atlaskit/icon/glyph/editor/decision';
@@ -14,47 +13,35 @@ export interface Props {
   isReducedSpacing?: boolean;
 }
 
-export interface State {
-  disabled: boolean;
-}
+const handleInsertDecision = withAnalytics(
+  'atlassian.fabric.decision.trigger.button',
+  (props: Props): boolean => {
+    const { editorView } = props;
+    if (!editorView) {
+      return false;
+    }
+    insertTaskDecision(editorView, 'decisionList');
+    return true;
+  },
+);
 
-export class ToolbarDecision extends PureComponent<
-  Props & InjectedIntlProps,
-  State
-> {
-  state: State = { disabled: false };
+export function ToolbarDecision(props: Props & InjectedIntlProps) {
+  const {
+    isDisabled,
+    isReducedSpacing,
+    intl: { formatMessage },
+  } = props;
 
-  render() {
-    const { disabled } = this.state;
-    const {
-      isDisabled,
-      isReducedSpacing,
-      intl: { formatMessage },
-    } = this.props;
+  const label = formatMessage(messages.decision);
 
-    const label = formatMessage(messages.decision);
-
-    return (
-      <ToolbarButton
-        onClick={this.handleInsertDecision}
-        disabled={disabled || isDisabled}
-        spacing={isReducedSpacing ? 'none' : 'default'}
-        title={`${label} <>`}
-        iconBefore={<DecisionIcon label={label} />}
-      />
-    );
-  }
-
-  private handleInsertDecision = withAnalytics(
-    'atlassian.fabric.decision.trigger.button',
-    (): boolean => {
-      const { editorView } = this.props;
-      if (!editorView) {
-        return false;
-      }
-      insertTaskDecision(editorView, 'decisionList');
-      return true;
-    },
+  return (
+    <ToolbarButton
+      onClick={() => handleInsertDecision(props)}
+      disabled={isDisabled}
+      spacing={isReducedSpacing ? 'none' : 'default'}
+      title={`${label} asdf <>`}
+      iconBefore={<DecisionIcon label={label} />}
+    />
   );
 }
 

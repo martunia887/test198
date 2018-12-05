@@ -122,60 +122,56 @@ function Item(props: any) {
     </AvatarItem>
   );
 }
-export default class Avatars extends React.Component<Props, any> {
-  private onAvatarClick = event => {};
-  private renderAvatars = state => {
-    if (!state.data) {
-      return null;
-    }
-    const { sessionId, activeParticipants } = state.data as PluginState;
-    const avatars = activeParticipants
-      .toArray()
-      .map(p => ({
-        email: p.email,
-        key: p.sessionId,
-        name: p.name,
-        src: p.avatar,
-        sessionId: p.sessionId,
-        size: 'medium',
-        component: Item,
-      }))
-      .sort(p => (p.sessionId === sessionId ? -1 : 1));
 
-    if (!avatars.length) {
-      return null;
-    }
-
-    return (
-      <AvatarContainer>
-        <AvatarGroup
-          appearance="stack"
-          size="medium"
-          data={avatars}
-          onAvatarClick={this.onAvatarClick}
-        />
-        {this.props.inviteToEditHandler && (
-          <InviteTeamWrapper>
-            <ToolbarButton
-              onClick={this.props.inviteToEditHandler}
-              selected={this.props.isInviteToEditButtonSelected}
-              title="Invite to edit"
-              titlePosition="bottom"
-              iconBefore={<InviteTeamIcon label="Invite to edit" />}
-            />
-          </InviteTeamWrapper>
-        )}
-      </AvatarContainer>
-    );
-  };
-
-  render() {
-    return (
-      <WithPluginState
-        plugins={{ data: collabEditPluginKey }}
-        render={this.renderAvatars}
-        editorView={this.props.editorView}
-      />
-    );
+function renderAvatars(props: Props, state: { data: PluginState }) {
+  if (!state.data) {
+    return null;
   }
+  const { sessionId, activeParticipants } = state.data;
+  const avatars = activeParticipants
+    .toArray()
+    .map(p => ({
+      ...p,
+      key: p.name,
+      src: p.avatar,
+      size: 'medium',
+      component: Item,
+    }))
+    .sort(p => (p.sessionId === sessionId ? -1 : 1));
+
+  if (!avatars.length) {
+    return null;
+  }
+
+  return (
+    <AvatarContainer>
+      <AvatarGroup
+        appearance="stack"
+        size="medium"
+        data={avatars}
+        onAvatarClick={() => {}}
+      />
+      {props.inviteToEditHandler && (
+        <InviteTeamWrapper>
+          <ToolbarButton
+            onClick={props.inviteToEditHandler}
+            selected={props.isInviteToEditButtonSelected}
+            title="Invite to edit"
+            titlePosition="bottom"
+            iconBefore={<InviteTeamIcon label="Invite to edit" />}
+          />
+        </InviteTeamWrapper>
+      )}
+    </AvatarContainer>
+  );
+}
+
+export default function Avatars(props: Props) {
+  return (
+    <WithPluginState
+      plugins={{ data: collabEditPluginKey }}
+      render={state => renderAvatars(props, state)}
+      editorView={props.editorView}
+    />
+  );
 }

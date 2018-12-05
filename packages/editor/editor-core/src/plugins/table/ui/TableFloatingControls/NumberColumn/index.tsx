@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Component } from 'react';
 import { isRowSelected } from 'prosemirror-utils';
 import { EditorView } from 'prosemirror-view';
 import { clearHoverSelection } from '../../../actions';
@@ -16,58 +15,55 @@ export interface Props {
   isInDanger?: boolean;
 }
 
-export default class NumberColumn extends Component<Props, any> {
-  render() {
-    const { tableRef, hasHeaderRow } = this.props;
-    const tbody = tableRef.querySelector('tbody');
-    if (!tbody) {
-      return null;
-    }
-    const rows = tbody.querySelectorAll('tr');
+const _hoverRows = (index: number, props: Props) =>
+  props.tableActive && props.hoverRows([index]);
+const _selectRow = (index: number, props: Props) =>
+  props.tableActive && props.selectRow(index);
 
-    return (
-      <div className={ClassName.NUMBERED_COLUMN}>
-        {Array.from(Array(rows.length).keys()).map(index => (
-          <div
-            key={`wrapper-${index}`}
-            className={this.getClassNames(index)}
-            style={{
-              height: (rows[index] as HTMLElement).offsetHeight + 1,
-            }}
-            onClick={() => this.selectRow(index)}
-            onMouseOver={() => this.hoverRows(index)}
-            onMouseOut={this.clearHoverSelection}
-          >
-            {hasHeaderRow ? (index > 0 ? index : null) : index + 1}
-          </div>
-        ))}
-      </div>
-    );
+function _clearHoverSelection(props: Props) {
+  const { tableActive, editorView } = props;
+  if (tableActive) {
+    const { state, dispatch } = editorView;
+    clearHoverSelection(state, dispatch);
   }
+}
 
-  private hoverRows = (index: number) =>
-    this.props.tableActive ? this.props.hoverRows([index]) : null;
+function _getClassNames(index: number, props: Props) {
+  const { hoveredRows, editorView, isInDanger } = props;
+  const isActive =
+    isRowSelected(index)(editorView.state.selection) ||
+    (hoveredRows || []).indexOf(index) !== -1;
+  return [
+    ClassName.NUMBERED_COLUMN_BUTTON,
+    isActive ? 'active' : '',
+    isActive && isInDanger ? 'danger' : '',
+  ].join(' ');
+}
 
-  private selectRow = (index: number) =>
-    this.props.tableActive ? this.props.selectRow(index) : null;
+export default function NumberColumn(props: Props) {
+  const { tableRef, hasHeaderRow } = props;
+  const tbody = tableRef.querySelector('tbody');
+  if (!tbody) {
+    return null;
+  }
+  const rows = tbody.querySelectorAll('tr');
 
-  private clearHoverSelection = () => {
-    const { tableActive, editorView } = this.props;
-    if (tableActive) {
-      const { state, dispatch } = editorView;
-      clearHoverSelection(state, dispatch);
-    }
-  };
-
-  private getClassNames = (index: number) => {
-    const { hoveredRows, editorView, isInDanger } = this.props;
-    const isActive =
-      isRowSelected(index)(editorView.state.selection) ||
-      (hoveredRows || []).indexOf(index) !== -1;
-    return [
-      ClassName.NUMBERED_COLUMN_BUTTON,
-      isActive ? 'active' : '',
-      isActive && isInDanger ? 'danger' : '',
-    ].join(' ');
-  };
+  return (
+    <div className={ClassName.NUMBERED_COLUMN}>
+      {Array.from(Array(rows.length).keys()).map(index => (
+        <div
+          key={`wrapper-${index}`}
+          className={_getClassNames(index, props)}
+          style={{
+            height: (rows[index] as HTMLElement).offsetHeight + 1,
+          }}
+          onClick={() => _selectRow(index, props)}
+          onMouseOver={() => _hoverRows(index, props)}
+          onMouseOut={() => _clearHoverSelection(props)}
+        >
+          {hasHeaderRow ? (index > 0 ? index : null) : index + 1}
+        </div>
+      ))}
+    </div>
+  );
 }

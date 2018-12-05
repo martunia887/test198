@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Component } from 'react';
 import { EditorView } from 'prosemirror-view';
 import { isTableSelected, selectTable, findTable } from 'prosemirror-utils';
 import { TableMap } from 'prosemirror-tables';
@@ -24,91 +23,87 @@ export interface Props {
   hoveredRows?: number[];
 }
 
-export default class CornerControls extends Component<Props, any> {
-  render() {
-    const {
-      isInDanger,
-      isHeaderRowEnabled,
-      isHeaderColumnEnabled,
-      insertColumnButtonIndex,
-      insertRowButtonIndex,
-      tableRef,
-    } = this.props;
-    if (!tableRef) {
-      return null;
-    }
-    const isActive = this.isActive();
-
-    return (
-      <div
-        className={`${ClassName.CORNER_CONTROLS} ${isActive ? 'active' : ''}`}
-      >
-        <button
-          type="button"
-          className={`${ClassName.CONTROLS_CORNER_BUTTON} ${
-            isActive && isInDanger ? 'danger' : ''
-          }`}
-          onClick={this.selectTable}
-          onMouseOver={this.hoverTable}
-          onMouseOut={this.clearHoverSelection}
-        />
-        {!isHeaderColumnEnabled && (
-          <InsertButton
-            type="column"
-            tableRef={tableRef}
-            index={0}
-            showInsertButton={insertColumnButtonIndex === 0}
-            onMouseDown={this.insertColumn}
-          />
-        )}
-        {!isHeaderRowEnabled && (
-          <InsertButton
-            type="row"
-            tableRef={tableRef}
-            index={0}
-            showInsertButton={insertRowButtonIndex === 0}
-            onMouseDown={this.insertRow}
-          />
-        )}
-      </div>
-    );
+function _isActive(props: Props) {
+  const { editorView, hoveredRows } = props;
+  const { selection } = editorView.state;
+  const table = findTable(selection);
+  if (!table) {
+    return false;
   }
+  return (
+    isTableSelected(selection) ||
+    (hoveredRows && hoveredRows.length === TableMap.get(table.node).height)
+  );
+}
 
-  private isActive = () => {
-    const { editorView, hoveredRows } = this.props;
-    const { selection } = editorView.state;
-    const table = findTable(selection);
-    if (!table) {
-      return false;
-    }
-    return (
-      isTableSelected(selection) ||
-      (hoveredRows && hoveredRows.length === TableMap.get(table.node).height)
-    );
-  };
+function _clearHoverSelection(props: Props) {
+  const { state, dispatch } = props.editorView;
+  clearHoverSelection(state, dispatch);
+}
 
-  private clearHoverSelection = () => {
-    const { state, dispatch } = this.props.editorView;
-    clearHoverSelection(state, dispatch);
-  };
+function _selectTable(props: Props) {
+  const { state, dispatch } = props.editorView;
+  dispatch(selectTable(state.tr).setMeta('addToHistory', false));
+}
 
-  private selectTable = () => {
-    const { state, dispatch } = this.props.editorView;
-    dispatch(selectTable(state.tr).setMeta('addToHistory', false));
-  };
+function _hoverTable(props: Props) {
+  const { state, dispatch } = props.editorView;
+  hoverTable()(state, dispatch);
+}
 
-  private hoverTable = () => {
-    const { state, dispatch } = this.props.editorView;
-    hoverTable()(state, dispatch);
-  };
+function _insertColumn(props: Props) {
+  const { state, dispatch } = props.editorView;
+  insertColumn(0)(state, dispatch);
+}
 
-  private insertColumn = () => {
-    const { state, dispatch } = this.props.editorView;
-    insertColumn(0)(state, dispatch);
-  };
+function _insertRow(props: Props) {
+  const { state, dispatch } = props.editorView;
+  insertRow(0)(state, dispatch);
+}
 
-  private insertRow = () => {
-    const { state, dispatch } = this.props.editorView;
-    insertRow(0)(state, dispatch);
-  };
+export default function CornerControls(props: Props) {
+  const {
+    isInDanger,
+    isHeaderRowEnabled,
+    isHeaderColumnEnabled,
+    insertColumnButtonIndex,
+    insertRowButtonIndex,
+    tableRef,
+  } = props;
+  if (!tableRef) {
+    return null;
+  }
+  const isActive = _isActive(props);
+
+  return (
+    <div className={`${ClassName.CORNER_CONTROLS} ${isActive ? 'active' : ''}`}>
+      <button
+        type="button"
+        className={`${ClassName.CONTROLS_CORNER_BUTTON} ${
+          isActive && isInDanger ? 'danger' : ''
+        }`}
+        onClick={() => _selectTable(props)}
+        onMouseOver={() => _hoverTable(props)}
+        onMouseOut={() => _clearHoverSelection(props)}
+      />
+      {!isHeaderColumnEnabled && (
+        <InsertButton
+          type="column"
+          tableRef={tableRef}
+          index={0}
+          showInsertButton={insertColumnButtonIndex === 0}
+          onMouseDown={() => _insertColumn(props)}
+        />
+      )}
+      {!isHeaderRowEnabled && (
+        <InsertButton
+          type="row"
+          tableRef={tableRef}
+          index={0}
+          showInsertButton={insertRowButtonIndex === 0}
+          onMouseDown={() => _insertRow(props)}
+        />
+      )}
+    </div>
+  );
 }

@@ -45,162 +45,151 @@ export interface CommonProps {
   popupsBoundariesElement?: HTMLElement;
 }
 
-export class AddDisplayTextToolbar extends React.PureComponent<
-  CommonProps & InjectedIntlProps
-> {
-  render() {
-    const {
-      pos,
-      node,
-      view,
-      popupsMountPoint,
-      popupsBoundariesElement,
-      intl: { formatMessage },
-    } = this.props;
-    const existingLink = (node.type.schema.marks.link.isInSet(
-      node.marks,
-    ) as Mark).attrs.href;
-    const unlink = () =>
-      removeLink(pos)(view.state, view.dispatch) && view.focus();
-    const hideToolbar = () =>
-      hideLinkToolbar()(view.state, view.dispatch) && view.focus();
-    const updateLinkText = (text: string) =>
-      setLinkText(pos, text)(view.state, view.dispatch) && view.focus();
-    const updateLinkTextOrHideToolbar = (text: string) =>
-      updateLinkText(text) || hideToolbar();
-    return (
-      <HyperlinkEdit
-        target={findDomRefAtPos(pos, view.domAtPos.bind(view))}
-        popupsMountPoint={popupsMountPoint}
-        popupsBoundariesElement={popupsBoundariesElement}
-        alwaysOpenLinkAt={existingLink}
-        placeholder={formatMessage(messages.linkTextPlaceholder)}
-        onSubmit={updateLinkText}
-        onBlur={updateLinkTextOrHideToolbar}
-        onUnlink={unlink}
-        onOpenLink={() => {}}
-      />
-    );
-  }
+export function AddDisplayTextToolbar(props: CommonProps & InjectedIntlProps) {
+  const {
+    pos,
+    node,
+    view,
+    popupsMountPoint,
+    popupsBoundariesElement,
+    intl: { formatMessage },
+  } = props;
+  const existingLink = (node.type.schema.marks.link.isInSet(node.marks) as Mark)
+    .attrs.href;
+  const unlink = () =>
+    removeLink(pos)(view.state, view.dispatch) && view.focus();
+  const hideToolbar = () =>
+    hideLinkToolbar()(view.state, view.dispatch) && view.focus();
+  const updateLinkText = (text: string) =>
+    setLinkText(pos, text)(view.state, view.dispatch) && view.focus();
+  const updateLinkTextOrHideToolbar = (text: string) =>
+    updateLinkText(text) || hideToolbar();
+  return (
+    <HyperlinkEdit
+      target={findDomRefAtPos(pos, view.domAtPos.bind(view))}
+      popupsMountPoint={popupsMountPoint}
+      popupsBoundariesElement={popupsBoundariesElement}
+      alwaysOpenLinkAt={existingLink}
+      placeholder={formatMessage(messages.linkTextPlaceholder)}
+      onSubmit={updateLinkText}
+      onBlur={updateLinkTextOrHideToolbar}
+      onUnlink={unlink}
+      onOpenLink={() => {}}
+    />
+  );
 }
+
 export const AddDisplayTextToolbarWithIntl = injectIntl(AddDisplayTextToolbar);
 
-export class EditLinkHrefToolbar extends React.PureComponent<
-  CommonProps & InjectedIntlProps
-> {
-  render() {
-    const {
-      pos,
-      node,
-      view,
-      popupsMountPoint,
-      popupsBoundariesElement,
-      intl: { formatMessage },
-    } = this.props;
-    const existingLink = (node.type.schema.marks.link.isInSet(
-      node.marks,
-    ) as Mark).attrs.href;
-    const hideToolbar = () =>
-      hideLinkToolbar()(view.state, view.dispatch) && view.focus();
-    const updateLinkHref = (href: string) =>
-      setLinkHref(pos, href)(view.state, view.dispatch) && view.focus();
-    const updateLinkHrefOrHideToolbar = (href: string) =>
-      updateLinkHref(href) || hideToolbar();
-    const unlink = () =>
-      removeLink(pos)(view.state, view.dispatch) && view.focus();
-    return (
-      <HyperlinkEdit
-        target={findDomRefAtPos(pos, view.domAtPos.bind(view))}
-        popupsMountPoint={popupsMountPoint}
-        popupsBoundariesElement={popupsBoundariesElement}
-        defaultValue={existingLink}
-        placeholder={formatMessage(messages.linkPlaceholder)}
-        onSubmit={updateLinkHref}
-        onBlur={updateLinkHrefOrHideToolbar}
-        onUnlink={unlink}
-        onOpenLink={() => {}}
-      />
-    );
-  }
+export function EditLinkHrefToolbar(props: CommonProps & InjectedIntlProps) {
+  const {
+    pos,
+    node,
+    view,
+    popupsMountPoint,
+    popupsBoundariesElement,
+    intl: { formatMessage },
+  } = props;
+  const existingLink = (node.type.schema.marks.link.isInSet(node.marks) as Mark)
+    .attrs.href;
+  const hideToolbar = () =>
+    hideLinkToolbar()(view.state, view.dispatch) && view.focus();
+  const updateLinkHref = (href: string) =>
+    setLinkHref(pos, href)(view.state, view.dispatch) && view.focus();
+  const updateLinkHrefOrHideToolbar = (href: string) =>
+    updateLinkHref(href) || hideToolbar();
+  const unlink = () =>
+    removeLink(pos)(view.state, view.dispatch) && view.focus();
+  return (
+    <HyperlinkEdit
+      target={findDomRefAtPos(pos, view.domAtPos.bind(view))}
+      popupsMountPoint={popupsMountPoint}
+      popupsBoundariesElement={popupsBoundariesElement}
+      defaultValue={existingLink}
+      placeholder={formatMessage(messages.linkPlaceholder)}
+      onSubmit={updateLinkHref}
+      onBlur={updateLinkHrefOrHideToolbar}
+      onUnlink={unlink}
+      onOpenLink={() => {}}
+    />
+  );
 }
+
 export const EditLinkHrefToolbarWithIntl = injectIntl(EditLinkHrefToolbar);
 
-export class InsertLinkToolbar extends React.PureComponent<
-  {
+export function InsertLinkToolbar(
+  props: {
     from: number;
     to: number;
     view: EditorView;
     popupsMountPoint?: HTMLElement;
     popupsBoundariesElement?: HTMLElement;
-  } & InjectedIntlProps
-> {
-  render() {
-    const {
-      from,
-      to,
-      view,
-      popupsMountPoint,
-      popupsBoundariesElement,
-      intl: { formatMessage },
-    } = this.props;
-    const hideToolbar = () =>
-      hideLinkToolbar()(view.state, view.dispatch) && view.focus();
-    const addLink = (href: string) =>
-      insertLink(from, to, href)(view.state, view.dispatch) && view.focus();
-    return (
-      <HyperlinkEdit
-        target={findDomRefAtPos(from, view.domAtPos.bind(view))}
-        popupsMountPoint={popupsMountPoint}
-        popupsBoundariesElement={popupsBoundariesElement}
-        autoFocus={true}
-        placeholder={formatMessage(messages.linkPlaceholder)}
-        onSubmit={addLink}
-        onBlur={hideToolbar}
-      />
-    );
-  }
+  } & InjectedIntlProps,
+) {
+  const {
+    from,
+    to,
+    view,
+    popupsMountPoint,
+    popupsBoundariesElement,
+    intl: { formatMessage },
+  } = props;
+  const hideToolbar = () =>
+    hideLinkToolbar()(view.state, view.dispatch) && view.focus();
+  const addLink = (href: string) =>
+    insertLink(from, to, href)(view.state, view.dispatch) && view.focus();
+  return (
+    <HyperlinkEdit
+      target={findDomRefAtPos(from, view.domAtPos.bind(view))}
+      popupsMountPoint={popupsMountPoint}
+      popupsBoundariesElement={popupsBoundariesElement}
+      autoFocus={true}
+      placeholder={formatMessage(messages.linkPlaceholder)}
+      onSubmit={addLink}
+      onBlur={hideToolbar}
+    />
+  );
 }
+
 export const InsertLinkToolbarWithIntl = injectIntl(InsertLinkToolbar);
 
-export class ActivityPoweredInsertLinkToolbar extends React.PureComponent<
-  {
+export function ActivityPoweredInsertLinkToolbar(
+  props: {
     from: number;
     to: number;
     view: EditorView;
     popupsMountPoint?: HTMLElement;
     popupsBoundariesElement?: HTMLElement;
     activityProvider: Promise<ActivityProvider>;
-  } & InjectedIntlProps
-> {
-  render() {
-    const {
-      from,
-      to,
-      view,
-      popupsMountPoint,
-      popupsBoundariesElement,
-      activityProvider,
-      intl: { formatMessage },
-    } = this.props;
-    const hideToolbar = () =>
-      hideLinkToolbar()(view.state, view.dispatch) && view.focus();
-    const addLink = (href: string, text?: string) =>
-      insertLink(from, to, href, text)(view.state, view.dispatch) &&
-      view.focus();
-    return (
-      <RecentSearch
-        target={findDomRefAtPos(from, view.domAtPos.bind(view))}
-        popupsMountPoint={popupsMountPoint}
-        popupsBoundariesElement={popupsBoundariesElement}
-        autoFocus={true}
-        activityProvider={activityProvider}
-        placeholder={formatMessage(messages.linkPlaceholderWithSearch)}
-        onSubmit={addLink}
-        onBlur={hideToolbar}
-      />
-    );
-  }
+  } & InjectedIntlProps,
+) {
+  const {
+    from,
+    to,
+    view,
+    popupsMountPoint,
+    popupsBoundariesElement,
+    activityProvider,
+    intl: { formatMessage },
+  } = props;
+  const hideToolbar = () =>
+    hideLinkToolbar()(view.state, view.dispatch) && view.focus();
+  const addLink = (href: string, text?: string) =>
+    insertLink(from, to, href, text)(view.state, view.dispatch) && view.focus();
+  return (
+    <RecentSearch
+      target={findDomRefAtPos(from, view.domAtPos.bind(view))}
+      popupsMountPoint={popupsMountPoint}
+      popupsBoundariesElement={popupsBoundariesElement}
+      autoFocus={true}
+      activityProvider={activityProvider}
+      placeholder={formatMessage(messages.linkPlaceholderWithSearch)}
+      onSubmit={addLink}
+      onBlur={hideToolbar}
+    />
+  );
 }
+
 export const ActivityPoweredInsertLinkToolbarWithIntl = injectIntl(
   ActivityPoweredInsertLinkToolbar,
 );

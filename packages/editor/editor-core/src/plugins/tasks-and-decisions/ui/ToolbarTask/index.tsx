@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import TaskIcon from '@atlaskit/icon/glyph/editor/task';
@@ -18,43 +17,35 @@ export interface State {
   disabled: boolean;
 }
 
-export class ToolbarTask extends PureComponent<
-  Props & InjectedIntlProps,
-  State
-> {
-  state: State = { disabled: false };
+const handleInsertTask = withAnalytics(
+  'atlassian.fabric.action.trigger.button',
+  (props: Props): boolean => {
+    const { editorView } = props;
+    if (!editorView) {
+      return false;
+    }
+    insertTaskDecision(editorView, 'taskList');
+    return true;
+  },
+);
 
-  render() {
-    const { disabled } = this.state;
-    const {
-      isDisabled,
-      isReducedSpacing,
-      intl: { formatMessage },
-    } = this.props;
+export function ToolbarTask(props: Props & InjectedIntlProps) {
+  const {
+    isDisabled,
+    isReducedSpacing,
+    intl: { formatMessage },
+  } = props;
 
-    const label = formatMessage(messages.action);
+  const label = formatMessage(messages.action);
 
-    return (
-      <ToolbarButton
-        onClick={this.handleInsertTask}
-        disabled={disabled || isDisabled}
-        spacing={isReducedSpacing ? 'none' : 'default'}
-        title={`${label} []`}
-        iconBefore={<TaskIcon label={label} />}
-      />
-    );
-  }
-
-  private handleInsertTask = withAnalytics(
-    'atlassian.fabric.action.trigger.button',
-    (): boolean => {
-      const { editorView } = this.props;
-      if (!editorView) {
-        return false;
-      }
-      insertTaskDecision(editorView, 'taskList');
-      return true;
-    },
+  return (
+    <ToolbarButton
+      onClick={() => handleInsertTask(props)}
+      disabled={isDisabled}
+      spacing={isReducedSpacing ? 'none' : 'default'}
+      title={`${label} []`}
+      iconBefore={<TaskIcon label={label} />}
+    />
   );
 }
 

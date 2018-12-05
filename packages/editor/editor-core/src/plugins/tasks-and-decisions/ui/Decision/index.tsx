@@ -15,24 +15,20 @@ interface Props {
   showPlaceholder?: boolean;
 }
 
-export class Decision extends React.Component<Props & InjectedIntlProps, {}> {
-  render() {
-    const {
-      contentRef,
-      showPlaceholder,
-      intl: { formatMessage },
-    } = this.props;
+export function Decision(props: Props & InjectedIntlProps) {
+  const {
+    contentRef,
+    showPlaceholder,
+    intl: { formatMessage },
+  } = props;
 
-    const placeholder = formatMessage(messages.placeholder);
-
-    return (
-      <DecisionItem
-        contentRef={contentRef}
-        placeholder={placeholder}
-        showPlaceholder={showPlaceholder}
-      />
-    );
-  }
+  return (
+    <DecisionItem
+      contentRef={contentRef}
+      placeholder={formatMessage(messages.placeholder)}
+      showPlaceholder={showPlaceholder}
+    />
+  );
 }
 
 export default injectIntl(Decision);

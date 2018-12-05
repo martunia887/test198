@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
+import { ReactNode } from 'react';
 import { Popup } from '@atlaskit/editor-common';
 import { Container } from './styles';
 
@@ -31,49 +31,49 @@ export {
   getNearestNonTextNode,
 } from './utils';
 
-export default class FloatingToolbar extends PureComponent<Props, any> {
-  render() {
-    const {
-      containerRef,
-      children,
-      target,
-      offset,
-      fitWidth,
-      fitHeight = 40,
-      onPositionCalculated,
-      popupsMountPoint,
-      popupsBoundariesElement,
-      className,
-      alignX,
-      alignY,
-      zIndex,
-    } = this.props;
+export default function FloatingToolbar(
+  props: Props & { children?: ReactNode },
+) {
+  const {
+    containerRef,
+    children,
+    target,
+    offset,
+    fitWidth,
+    fitHeight = 40,
+    onPositionCalculated,
+    popupsMountPoint,
+    popupsBoundariesElement,
+    className,
+    alignX,
+    alignY,
+    zIndex,
+  } = props;
 
-    if (!target) {
-      return null;
-    }
-
-    return (
-      <Popup
-        alignX={alignX}
-        alignY={alignY}
-        target={target}
-        zIndex={zIndex}
-        mountTo={popupsMountPoint}
-        boundariesElement={popupsBoundariesElement}
-        offset={offset}
-        fitWidth={fitWidth}
-        fitHeight={fitHeight}
-        onPositionCalculated={onPositionCalculated}
-      >
-        <Container
-          height={fitHeight}
-          className={className}
-          innerRef={containerRef}
-        >
-          {children}
-        </Container>
-      </Popup>
-    );
+  if (!target) {
+    return null;
   }
+
+  return (
+    <Popup
+      alignX={alignX}
+      alignY={alignY}
+      target={target}
+      zIndex={zIndex}
+      mountTo={popupsMountPoint}
+      boundariesElement={popupsBoundariesElement}
+      offset={offset}
+      fitWidth={fitWidth}
+      fitHeight={fitHeight}
+      onPositionCalculated={onPositionCalculated}
+    >
+      <Container
+        height={fitHeight}
+        className={className}
+        innerRef={containerRef}
+      >
+        {children}
+      </Container>
+    </Popup>
+  );
 }

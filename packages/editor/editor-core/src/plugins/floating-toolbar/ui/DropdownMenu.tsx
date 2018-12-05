@@ -49,45 +49,43 @@ export interface Props {
   items: Array<DropdownOptionT<Function>>;
 }
 
-export default class Dropdown extends Component<Props> {
-  render() {
-    const { hide, dispatchCommand, items } = this.props;
-    return (
-      <ThemeProvider theme={{ [itemThemeNamespace]: editorItemTheme }}>
-        <MenuContainer>
-          {items
-            .filter(item => !item.hidden)
-            .map((item, idx) => (
-              <Item
-                key={idx}
-                isCompact={true}
-                elemBefore={this.renderSelected(item)}
-                onClick={() => {
-                  hide();
-                  dispatchCommand(item.onClick);
-                }}
-                isDisabled={item.disabled}
-              >
-                {item.title}
-              </Item>
-            ))}
-        </MenuContainer>
-      </ThemeProvider>
+function renderSelected(item: { selected?: any }) {
+  const { selected } = item;
+  if (selected !== undefined) {
+    return selected ? (
+      <EditorDoneIcon
+        primaryColor={colors.B400}
+        size="small"
+        label="test question"
+      />
+    ) : (
+      <Spacer />
     );
   }
+}
 
-  private renderSelected(item) {
-    const { selected } = item;
-    if (selected !== undefined) {
-      return selected ? (
-        <EditorDoneIcon
-          primaryColor={colors.B400}
-          size="small"
-          label="test question"
-        />
-      ) : (
-        <Spacer />
-      );
-    }
-  }
+export default function Dropdown(props: Props) {
+  const { hide, dispatchCommand, items } = props;
+  return (
+    <ThemeProvider theme={{ [itemThemeNamespace]: editorItemTheme }}>
+      <MenuContainer>
+        {items
+          .filter(item => !item.hidden)
+          .map((item, idx) => (
+            <Item
+              key={idx}
+              isCompact={true}
+              elemBefore={renderSelected(item)}
+              onClick={() => {
+                hide();
+                dispatchCommand(item.onClick);
+              }}
+              isDisabled={item.disabled}
+            >
+              {item.title}
+            </Item>
+          ))}
+      </MenuContainer>
+    </ThemeProvider>
+  );
 }

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import Mention from '../ui/Mention';
+import { ProviderFactory, WithProviders } from '@atlaskit/editor-common';
+import { ResourcedMention } from '@atlaskit/mention';
 
 export interface Props {
   children?: React.ReactNode;
@@ -11,18 +11,22 @@ export interface Props {
   providerFactory: ProviderFactory;
 }
 
-export default class MentionNode extends React.PureComponent<Props, {}> {
-  render() {
-    const { node, providerFactory } = this.props;
-    const { id, text, accessLevel } = node.attrs;
+export default function MentionNode(props: Props) {
+  const { node, providerFactory } = props;
+  const { id, text, accessLevel } = node.attrs;
 
-    return (
-      <Mention
-        id={id}
-        text={text}
-        accessLevel={accessLevel}
-        providers={providerFactory}
-      />
-    );
-  }
+  return (
+    <WithProviders
+      providerFactory={providerFactory}
+      providers={['mentionProvider']}
+      renderNode={({ mentionProvider }) => (
+        <ResourcedMention
+          id={id}
+          text={text}
+          accessLevel={accessLevel}
+          mentionProvider={mentionProvider}
+        />
+      )}
+    />
+  );
 }

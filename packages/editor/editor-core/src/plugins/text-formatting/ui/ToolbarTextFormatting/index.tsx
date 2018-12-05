@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import BoldIcon from '@atlaskit/icon/glyph/editor/bold';
@@ -32,74 +31,72 @@ export interface Props {
   isReducedSpacing?: boolean;
 }
 
-class ToolbarTextFormatting extends PureComponent<Props & InjectedIntlProps> {
-  render() {
-    const {
-      disabled,
-      isReducedSpacing,
-      textFormattingState,
-      intl: { formatMessage },
-    } = this.props;
-    const {
-      strongHidden,
-      strongActive,
-      strongDisabled,
-      emHidden,
-      emActive,
-      emDisabled,
-    } = textFormattingState;
+const handleBoldClick = withAnalytics(
+  'atlassian.editor.format.strong.button',
+  (props: Props) => {
+    const { strongDisabled } = props.textFormattingState;
+    if (!strongDisabled) {
+      const { state, dispatch } = props.editorView;
+      return toggleStrong()(state, dispatch);
+    }
+    return false;
+  },
+);
 
-    const labelBold = formatMessage(messages.bold);
-    const labelItalic = formatMessage(messages.italic);
-    return (
-      <ButtonGroup width={isReducedSpacing ? 'small' : 'large'}>
-        {strongHidden ? null : (
-          <ToolbarButton
-            spacing={isReducedSpacing ? 'none' : 'default'}
-            onClick={this.handleBoldClick}
-            selected={strongActive}
-            disabled={disabled || strongDisabled}
-            title={tooltip(toggleBold, labelBold)}
-            iconBefore={<BoldIcon label={labelBold} />}
-          />
-        )}
+const handleItalicClick = withAnalytics(
+  'atlassian.editor.format.em.button',
+  (props: Props): boolean => {
+    const { emDisabled } = props.textFormattingState;
+    if (!emDisabled) {
+      const { state, dispatch } = props.editorView;
+      return toggleEm()(state, dispatch);
+    }
+    return false;
+  },
+);
 
-        {emHidden ? null : (
-          <ToolbarButton
-            spacing={isReducedSpacing ? 'none' : 'default'}
-            onClick={this.handleItalicClick}
-            selected={emActive}
-            disabled={disabled || emDisabled}
-            title={tooltip(toggleItalic, labelItalic)}
-            iconBefore={<ItalicIcon label={labelItalic} />}
-          />
-        )}
-      </ButtonGroup>
-    );
-  }
+function ToolbarTextFormatting(props: Props & InjectedIntlProps) {
+  const {
+    disabled,
+    isReducedSpacing,
+    textFormattingState,
+    intl: { formatMessage },
+  } = props;
+  const {
+    strongHidden,
+    strongActive,
+    strongDisabled,
+    emHidden,
+    emActive,
+    emDisabled,
+  } = textFormattingState;
 
-  private handleBoldClick = withAnalytics(
-    'atlassian.editor.format.strong.button',
-    () => {
-      const { strongDisabled } = this.props.textFormattingState;
-      if (!strongDisabled) {
-        const { state, dispatch } = this.props.editorView;
-        return toggleStrong()(state, dispatch);
-      }
-      return false;
-    },
-  );
+  const labelBold = formatMessage(messages.bold);
+  const labelItalic = formatMessage(messages.italic);
+  return (
+    <ButtonGroup width={isReducedSpacing ? 'small' : 'large'}>
+      {strongHidden ? null : (
+        <ToolbarButton
+          spacing={isReducedSpacing ? 'none' : 'default'}
+          onClick={() => handleBoldClick(props)}
+          selected={strongActive}
+          disabled={disabled || strongDisabled}
+          title={tooltip(toggleBold, labelBold)}
+          iconBefore={<BoldIcon label={labelBold} />}
+        />
+      )}
 
-  private handleItalicClick = withAnalytics(
-    'atlassian.editor.format.em.button',
-    (): boolean => {
-      const { emDisabled } = this.props.textFormattingState;
-      if (!emDisabled) {
-        const { state, dispatch } = this.props.editorView;
-        return toggleEm()(state, dispatch);
-      }
-      return false;
-    },
+      {emHidden ? null : (
+        <ToolbarButton
+          spacing={isReducedSpacing ? 'none' : 'default'}
+          onClick={() => handleItalicClick(props)}
+          selected={emActive}
+          disabled={disabled || emDisabled}
+          title={tooltip(toggleItalic, labelItalic)}
+          iconBefore={<ItalicIcon label={labelItalic} />}
+        />
+      )}
+    </ButtonGroup>
   );
 }
 

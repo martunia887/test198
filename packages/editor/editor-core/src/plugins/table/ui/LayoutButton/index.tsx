@@ -36,59 +36,57 @@ const getTitle = (layout: TableLayout) => {
   }
 };
 
-class LayoutButton extends React.Component<Props & InjectedIntlProps, any> {
-  render() {
-    const {
-      intl: { formatMessage },
-      mountPoint,
-      boundariesElement,
-      scrollableElement,
-      targetRef,
-      editorView,
-    } = this.props;
-    if (!targetRef) {
-      return null;
-    }
-    const table = findTable(editorView.state.selection);
-    if (!table) {
-      return false;
-    }
-    const { layout } = table.node.attrs;
-    const title = formatMessage(getTitle(layout));
-
-    return (
-      <Popup
-        ariaLabel={title}
-        offset={POPUP_OFFSET}
-        target={targetRef}
-        alignY="top"
-        alignX="right"
-        stickToBottom={true}
-        mountTo={mountPoint}
-        boundariesElement={boundariesElement}
-        scrollableElement={scrollableElement}
-      >
-        <div className={ClassName.LAYOUT_BUTTON}>
-          <ToolbarButton
-            title={title}
-            onClick={this.handleClick}
-            iconBefore={
-              layout === 'full-width' ? (
-                <CollapseIcon label={title} />
-              ) : (
-                <ExpandIcon label={title} />
-              )
-            }
-          />
-        </div>
-      </Popup>
-    );
+function LayoutButton(props: Props & InjectedIntlProps) {
+  const {
+    intl: { formatMessage },
+    mountPoint,
+    boundariesElement,
+    scrollableElement,
+    targetRef,
+    editorView,
+  } = props;
+  if (!targetRef) {
+    return null;
   }
+  const table = findTable(editorView.state.selection);
+  if (!table) {
+    return null;
+  }
+  const { layout } = table.node.attrs;
+  const title = formatMessage(getTitle(layout));
 
-  private handleClick = () => {
-    const { state, dispatch } = this.props.editorView;
-    toggleTableLayout(state, dispatch);
-  };
+  return (
+    <Popup
+      ariaLabel={title}
+      offset={POPUP_OFFSET}
+      target={targetRef}
+      alignY="top"
+      alignX="right"
+      stickToBottom={true}
+      mountTo={mountPoint}
+      boundariesElement={boundariesElement}
+      scrollableElement={scrollableElement}
+    >
+      <div className={ClassName.LAYOUT_BUTTON}>
+        <ToolbarButton
+          title={title}
+          onClick={evt => handleClick(evt, props)}
+          iconBefore={
+            layout === 'full-width' ? (
+              <CollapseIcon label={title} />
+            ) : (
+              <ExpandIcon label={title} />
+            )
+          }
+        />
+      </div>
+    </Popup>
+  );
+}
+
+function handleClick(evt, props: Props) {
+  const { state, dispatch } = props.editorView;
+  toggleTableLayout(state, dispatch);
 }
 
 export default injectIntl(LayoutButton);

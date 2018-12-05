@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
 import { EditorView } from 'prosemirror-view';
 import MentionIcon from '@atlaskit/icon/glyph/editor/mention';
 import { withAnalytics } from '../../../../analytics';
@@ -15,30 +14,25 @@ export interface State {
   disabled: boolean;
 }
 
-export default class ToolbarMention extends PureComponent<Props> {
-  render() {
-    return (
-      <ToolbarButton
-        spacing="none"
-        onClick={this.handleInsertMention}
-        disabled={this.props.isDisabled}
-        title="Mention @"
-        iconBefore={<MentionIcon label="Mention" />}
-      />
-    );
-  }
+const handleInsertMention = withAnalytics(
+  'atlassian.fabric.mention.picker.trigger.button',
+  (props: Props): boolean => {
+    if (!props.editorView) {
+      return false;
+    }
+    insertMentionQuery()(props.editorView.state, props.editorView.dispatch);
+    return true;
+  },
+);
 
-  private handleInsertMention = withAnalytics(
-    'atlassian.fabric.mention.picker.trigger.button',
-    (): boolean => {
-      if (!this.props.editorView) {
-        return false;
-      }
-      insertMentionQuery()(
-        this.props.editorView.state,
-        this.props.editorView.dispatch,
-      );
-      return true;
-    },
+export default function ToolbarMention(props: Props) {
+  return (
+    <ToolbarButton
+      spacing="none"
+      onClick={() => handleInsertMention(props)}
+      disabled={props.isDisabled}
+      title="Mention @"
+      iconBefore={<MentionIcon label="Mention" />}
+    />
   );
 }

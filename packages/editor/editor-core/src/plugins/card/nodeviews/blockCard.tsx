@@ -59,13 +59,11 @@ class BlockCardNode extends React.Component<Props, {}> {
 }
 
 const ClickableBlockCard = wrapComponentWithClickArea(BlockCardNode);
-export default class WrappedInline extends React.PureComponent<Props, {}> {
-  render() {
-    return (
-      <ClickableBlockCard
-        {...this.props}
-        pluginState={ReactNodeViewState.getState(this.props.view.state)}
-      />
-    );
-  }
+export default function WrappedInline(props: Props) {
+  return (
+    <ClickableBlockCard
+      {...props}
+      pluginState={ReactNodeViewState.getState(props.view.state)}
+    />
+  );
 }

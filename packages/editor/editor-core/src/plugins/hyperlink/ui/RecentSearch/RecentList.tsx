@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
 import { ActivityItem } from '@atlaskit/activity';
 import Spinner from '@atlaskit/spinner';
 import styled from 'styled-components';
@@ -35,44 +34,36 @@ export interface Props {
   onMouseMove: (objectId: string) => void;
 }
 
-export default class RecentList extends PureComponent<Props, {}> {
-  render() {
-    const {
-      onSelect,
-      onMouseMove,
-      items,
-      selectedIndex,
-      isLoading,
-    } = this.props;
+export default function RecentList(props: Props) {
+  const { onSelect, onMouseMove, items, selectedIndex, isLoading } = props;
 
-    if (isLoading) {
-      return (
-        <Container>
-          <SpinnerContainer>
-            <Spinner invertColor={true} size="medium" />
-          </SpinnerContainer>
-        </Container>
-      );
-    }
-
-    if (!items || items.length === 0) {
-      return null;
-    }
-
+  if (isLoading) {
     return (
-      <ListContainer>
-        <List>
-          {items.map((item, index) => (
-            <RecentItem
-              item={item}
-              selected={selectedIndex === index}
-              onMouseMove={onMouseMove}
-              onSelect={onSelect}
-              key={item.objectId}
-            />
-          ))}
-        </List>
-      </ListContainer>
+      <Container>
+        <SpinnerContainer>
+          <Spinner invertColor={true} size="medium" />
+        </SpinnerContainer>
+      </Container>
     );
   }
+
+  if (!items || items.length === 0) {
+    return null;
+  }
+
+  return (
+    <ListContainer>
+      <List>
+        {items.map((item, index) => (
+          <RecentItem
+            item={item}
+            selected={selectedIndex === index}
+            onMouseMove={onMouseMove}
+            onSelect={onSelect}
+            key={item.objectId}
+          />
+        ))}
+      </List>
+    </ListContainer>
+  );
 }

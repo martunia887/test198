@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
+import { MouseEvent } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
 import { colors } from '@atlaskit/theme';
@@ -59,53 +59,51 @@ export interface Props {
   checkMarkColor?: string;
 }
 
-class Color extends PureComponent<Props & InjectedIntlProps> {
-  render() {
-    const {
-      tabIndex,
-      value,
-      label,
-      isSelected,
-      borderColor,
-      checkMarkColor = colors.N0,
-      intl: { formatMessage },
-    } = this.props;
-    const borderStyle = `1px solid ${borderColor}`;
-    return (
-      <ButtonWrapper>
-        <Button
-          onClick={this.onClick}
-          onMouseDown={this.onMouseDown}
-          tabIndex={tabIndex}
-          className={`${isSelected ? 'selected' : ''}`}
-          title={
-            value && messages[value] ? formatMessage(messages[value]) : label
-          }
-          style={{
-            backgroundColor: value || 'transparent',
-            border: borderStyle,
-          }}
-        >
-          {isSelected && (
-            <EditorDoneIcon
-              primaryColor={checkMarkColor}
-              label={formatMessage(messages.selected)}
-            />
-          )}
-        </Button>
-      </ButtonWrapper>
-    );
-  }
+function onMouseDown(e: MouseEvent) {
+  e.preventDefault();
+}
 
-  onMouseDown = e => {
-    e.preventDefault();
-  };
+function onClick(e: MouseEvent<any>, props: Props) {
+  const { onClick, value } = props;
+  e.preventDefault();
+  onClick(value);
+}
 
-  onClick = e => {
-    const { onClick, value } = this.props;
-    e.preventDefault();
-    onClick(value);
-  };
+function Color(props: Props & InjectedIntlProps) {
+  const {
+    tabIndex,
+    value,
+    label,
+    isSelected,
+    borderColor,
+    checkMarkColor = colors.N0,
+    intl: { formatMessage },
+  } = props;
+  const borderStyle = `1px solid ${borderColor}`;
+  return (
+    <ButtonWrapper>
+      <Button
+        onClick={e => onClick(e, props)}
+        onMouseDown={onMouseDown}
+        tabIndex={tabIndex}
+        className={`${isSelected ? 'selected' : ''}`}
+        title={
+          value && messages[value] ? formatMessage(messages[value]) : label
+        }
+        style={{
+          backgroundColor: value || 'transparent',
+          border: borderStyle,
+        }}
+      >
+        {isSelected && (
+          <EditorDoneIcon
+            primaryColor={checkMarkColor}
+            label={formatMessage(messages.selected)}
+          />
+        )}
+      </Button>
+    </ButtonWrapper>
+  );
 }
 
 export default injectIntl(Color);
