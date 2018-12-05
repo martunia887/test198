@@ -1,0 +1,11 @@
+[AvatarPickerDialog]
+
+- user vs container modes
+- drag/drop glitch when has src
+- animated border for rect mode
+- constrain circular mask
+X spinner?
+
+[ImagePlacer]
+- blur issue
+X center image

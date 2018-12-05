@@ -9,9 +9,9 @@ import {
   getFileInfoFromSrc,
 } from '@atlaskit/media-ui';
 import { ImagePlacerContainer } from './container';
-import { ImagePlacerImage } from './image';
+import { ImagePlacerImage, IMAGE_ERRORS } from './image';
 import { Margin } from './margin';
-import { ImagePlacerWrapper, ImagePlacerErrorWrapper } from './styled';
+import { ImagePlacerWrapper } from './styled';
 import {
   initialiseImagePreview,
   renderImageAtCurrentView,
@@ -58,12 +58,13 @@ export interface ImagePlacerProps {
   originY: number;
   useConstraints: boolean;
   isCircular: boolean;
-  useCircularClipWithActions: boolean;
+  useCircularMaskWithActions: boolean;
+  constrainCircularMask: boolean;
   backgroundColor: string;
-  onImageChange?: (imageElement: HTMLImageElement) => void;
+  onImageLoad?: (imageElement: HTMLImageElement) => void;
+  onImageError: (errorMessage: string) => void;
   onZoomChange?: (zoom: number) => void;
   onImageActions?: (actions: ImageActions) => void;
-  onRenderError?: (errorMessage: string) => JSX.Element;
 }
 
 /* immutable prop defaults */
@@ -74,8 +75,9 @@ export const DEFAULT_ZOOM = 0;
 export const DEFAULT_ORIGIN_X = 0;
 export const DEFAULT_ORIGIN_Y = 0;
 export const DEFAULT_USE_CONSTRAINTS = true;
-export const DEFAULT_USE_CIRCULAR = false; /* whether or not to apply a circular margin to image while positioning */
-export const DEFAULT_USE_CIRCULAR_CLIP_WITH_ACTIONS = false; /* whether or not to apply a circular clip when rendering via actions */
+export const DEFAULT_IS_CIRCULAR = false; /* whether or not to apply a circular margin to image while positioning */
+export const DEFAULT_USE_CIRCULAR_MASK_WITH_ACTIONS = false; /* whether or not to apply a circular clip when rendering via actions */
+export const DEFAULT_CONSTRAIN_CIRCULAR_MASK = true; /* whether or not to constrain the circular margin mask and rendering clip when non-square container size */
 export const DEFAULT_BACKGROUND_COLOR = 'transparent';
 
 export const defaultProps = {
@@ -87,8 +89,9 @@ export const defaultProps = {
   originX: DEFAULT_ORIGIN_X,
   originY: DEFAULT_ORIGIN_Y,
   useConstraints: DEFAULT_USE_CONSTRAINTS,
-  isCircular: DEFAULT_USE_CIRCULAR,
-  useCircularClipWithActions: DEFAULT_USE_CIRCULAR_CLIP_WITH_ACTIONS,
+  isCircular: DEFAULT_IS_CIRCULAR,
+  useCircularMaskWithActions: DEFAULT_USE_CIRCULAR_MASK_WITH_ACTIONS,
+  constrainCircularMask: DEFAULT_CONSTRAIN_CIRCULAR_MASK,
   backgroundColor: DEFAULT_BACKGROUND_COLOR,
 };
 
@@ -98,7 +101,6 @@ export interface ImagePlacerState {
   originX: number;
   originY: number;
   zoom: number;
-  errorMessage?: string;
   dragOrigin?: Vector2;
   src?: string | File;
 }
@@ -112,6 +114,7 @@ export class ImagePlacer extends React.Component<
     0,
   ); /* original size of image (un-scaled) */
   imageElement?: HTMLImageElement; /* image element used to load */
+  originalImage?: HTMLImageElement;
 
   static defaultProps = defaultProps;
 
@@ -177,7 +180,11 @@ export class ImagePlacer extends React.Component<
     return new Bounds(originX, originY, cornerX - originX, cornerY - originY);
   }
 
-  componentWillMount() {
+  async componentWillMount() {
+    const { src } = this.props;
+    if (src instanceof File) {
+      await this.setFile(src);
+    }
     this.provideImageActions();
   }
 
@@ -277,18 +284,24 @@ export class ImagePlacer extends React.Component<
       maxZoom,
     );
     if (previewInfo) {
-      const { width, height } = previewInfo;
+      const { width, height, img } = previewInfo;
       this.imageSourceRect = new Rectangle(width, height);
+      this.originalImage = img;
       this.setSrc(previewInfo.fileInfo);
     } else {
       /* TODO: i18n https://product-fabric.atlassian.net/browse/MS-1261 */
-      this.setState({ errorMessage: 'Cannot load image' });
+      this.onImageError(IMAGE_ERRORS.LOAD_FAIL);
     }
+  }
+
+  async setFile(file: File) {
+    const fileInfo = await getFileInfo(file);
+    await this.preprocessFile(fileInfo);
+    this.provideImageActions();
   }
 
   setSrc(fileInfo: FileInfo) {
     this.setState({
-      errorMessage: undefined,
       src: fileInfo.src,
       zoom: 0,
       originX: 0,
@@ -333,17 +346,26 @@ export class ImagePlacer extends React.Component<
   /* zoom image up or down to fit visibleBounds */
   zoomToFit() {
     const { imageWidth, imageHeight } = this.state;
+    const { containerRect } = this;
     const { width: fittedWidth, height: fittedHeight } = zoomToFit(
       imageWidth,
       imageHeight,
       this.visibleBounds,
     );
+    let originX = 0;
+    let originY = 0;
+    if (fittedWidth > containerRect.width) {
+      originX = (fittedWidth - containerRect.width) * -0.5;
+    }
+    if (fittedHeight > containerRect.height) {
+      originY = (fittedHeight - containerRect.height) * -0.5;
+    }
     this.setState(
       {
         imageWidth: fittedWidth,
         imageHeight: fittedHeight,
-        originX: 0,
-        originY: 0,
+        originX,
+        originY,
         zoom: 0,
       },
       this.applyConstraints,
@@ -406,25 +428,38 @@ export class ImagePlacer extends React.Component<
       sourceBounds,
       visibleBounds,
       imageBounds,
+      originalImage,
       containerRect,
       props,
     } = this;
     const {
       useConstraints,
-      useCircularClipWithActions,
+      useCircularMaskWithActions,
+      constrainCircularMask,
       backgroundColor,
     } = props;
+    let scaleFactor = 1;
+    if (originalImage && imageElement) {
+      scaleFactor = originalImage.naturalWidth / imageElement.naturalWidth;
+    }
+    const scaledSourceBounds = new Bounds(
+      sourceBounds.x * scaleFactor,
+      sourceBounds.y * scaleFactor,
+      sourceBounds.width * scaleFactor,
+      sourceBounds.height * scaleFactor,
+    );
     const viewInfo = {
       containerRect,
       imageBounds,
-      sourceBounds,
+      sourceBounds: scaledSourceBounds,
       visibleBounds,
     };
     return renderImageAtCurrentView(
-      imageElement,
+      originalImage,
       viewInfo,
       useConstraints,
-      useCircularClipWithActions,
+      useCircularMaskWithActions,
+      constrainCircularMask,
       backgroundColor,
     );
   };
@@ -445,18 +480,18 @@ export class ImagePlacer extends React.Component<
     width: number,
     height: number,
   ) => {
-    const { onImageChange } = this.props;
+    const { onImageLoad } = this.props;
     this.imageSourceRect = new Rectangle(width, height);
     this.imageElement = imageElement;
     this.setState({ imageWidth: width, imageHeight: height }, this.update);
-    if (onImageChange) {
-      onImageChange(imageElement);
+    if (onImageLoad) {
+      onImageLoad(imageElement);
     }
   };
 
   /* image had an error */
   onImageError = (errorMessage: string) => {
-    this.setState({ errorMessage });
+    this.props.onImageError(errorMessage);
   };
 
   /* drag within container has started */
@@ -499,9 +534,9 @@ export class ImagePlacer extends React.Component<
       containerHeight,
       margin,
       isCircular,
-      onRenderError,
+      constrainCircularMask,
     } = this.props;
-    const { errorMessage, src } = this.state;
+    const { src } = this.state;
     const { imageBounds } = this;
     const imgSrc = typeof src === 'string' ? src : undefined;
 
@@ -515,29 +550,24 @@ export class ImagePlacer extends React.Component<
           onDragMove={this.onDragMove}
           onWheel={this.onWheel}
         >
-          {errorMessage ? (
-            <ImagePlacerErrorWrapper>
-              {onRenderError ? onRenderError(errorMessage) : errorMessage}
-            </ImagePlacerErrorWrapper>
-          ) : (
-            <div>
-              <ImagePlacerImage
-                src={imgSrc}
-                x={imageBounds.x}
-                y={imageBounds.y}
-                width={imageBounds.width}
-                height={imageBounds.height}
-                onLoad={this.onImageLoad}
-                onError={this.onImageError}
-              />
-              <Margin
-                width={containerWidth}
-                height={containerHeight}
-                circular={isCircular}
-                size={margin}
-              />
-            </div>
-          )}
+          <>
+            <ImagePlacerImage
+              src={imgSrc}
+              x={imageBounds.x}
+              y={imageBounds.y}
+              width={imageBounds.width}
+              height={imageBounds.height}
+              onLoad={this.onImageLoad}
+              onError={this.onImageError}
+            />
+            <Margin
+              width={containerWidth}
+              height={containerHeight}
+              isCircular={isCircular}
+              constrain={constrainCircularMask}
+              size={margin}
+            />
+          </>
         </ImagePlacerContainer>
       </ImagePlacerWrapper>
     );

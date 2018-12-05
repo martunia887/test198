@@ -97,6 +97,7 @@ export interface MarginWrapperProps {
   width: number;
   height: number;
   size: number;
+  constrain: boolean;
 }
 
 export const MarginWrapperSquare: ComponentClass<
@@ -126,11 +127,19 @@ export const MarginWrapperCircle: ComponentClass<
   &:after {
     content: '';
     position: absolute;
-    left: ${({ size }) => size}px;
-    top: ${({ size }) => size}px;
+    left: ${({ width, height, size, constrain }) =>
+      constrain
+        ? (width + size * 2) * 0.5 - Math.min(width, height) * 0.5
+        : size}px;
+    top: ${({ width, height, size, constrain }) =>
+      constrain
+        ? (height + size * 2) * 0.5 - Math.min(width, height) * 0.5
+        : size}px;
     border-radius: 100%;
-    width: ${({ width }) => width}px;
-    height: ${({ height }) => height}px;
+    width: ${({ width, height, constrain }) =>
+      constrain ? Math.min(width, height) : width}px;
+    height: ${({ width, height, constrain }) =>
+      constrain ? Math.min(width, height) : height}px;
     box-shadow: 0px 0px 0px ${({ width, height }) => Math.max(width, height)}px
       rgba(255, 255, 255, 0.3);
   }

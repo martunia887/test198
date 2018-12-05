@@ -16,6 +16,13 @@ export interface ImagePlacerImageProps {
   onError: (errorMessage: string) => void;
 }
 
+export interface ImagePlacerImageState {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 // TODO: i18n https://product-fabric.atlassian.net/browse/MS-1261
 export const IMAGE_ERRORS = {
   BAD_URL: 'Invalid image url',
@@ -24,8 +31,15 @@ export const IMAGE_ERRORS = {
 
 export class ImagePlacerImage extends React.Component<
   ImagePlacerImageProps,
-  {}
+  ImagePlacerImageState
 > {
+  state = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  };
+
   componentWillMount() {
     const { src, onError } = this.props;
     if (src !== undefined) {
@@ -35,6 +49,16 @@ export class ImagePlacerImage extends React.Component<
         onError(IMAGE_ERRORS.BAD_URL);
       }
     }
+  }
+
+  componentDidMount() {
+    const { x, y, width, height } = this.props;
+    this.setState({ x, y, width, height });
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps: ImagePlacerImageProps) {
+    const { x, y, width, height } = nextProps;
+    this.setState({ x, y, width, height });
   }
 
   onLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -48,29 +72,27 @@ export class ImagePlacerImage extends React.Component<
   };
 
   render() {
-    const { src, x, y, width, height } = this.props;
+    const { src } = this.props;
+    const { x, y, width, height } = this.state;
 
+    let crossOrigin: 'anonymous' | undefined = undefined;
     if (src) {
       try {
-        const crossOrigin = isImageRemote(src) ? 'anonymous' : undefined;
-        return (
-          <ImageWrapper
-            src={src}
-            x={x}
-            y={y}
-            crossOrigin={crossOrigin}
-            width={width}
-            height={height}
-            onLoad={this.onLoad}
-            onError={this.onError}
-            draggable={false}
-          />
-        );
-      } catch (e) {
-        return null;
-      }
+        crossOrigin = isImageRemote(src) ? 'anonymous' : undefined;
+      } catch (e) {}
     }
-
-    return null;
+    return (
+      <ImageWrapper
+        src={src}
+        x={x}
+        y={y}
+        crossOrigin={crossOrigin}
+        width={width}
+        height={height}
+        onLoad={this.onLoad}
+        onError={this.onError}
+        draggable={false}
+      />
+    );
   }
 }

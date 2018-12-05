@@ -11,6 +11,14 @@ export function radians(deg: number) {
   return deg * (Math.PI / 180);
 }
 
+export function setSmoothingQuality(
+  context: CanvasRenderingContext2D,
+  quality: 'low' | 'medium' | 'high',
+) {
+  // TODO: vendor prefixes
+  context.imageSmoothingQuality = quality;
+}
+
 export interface ViewInfo {
   containerRect: Rectangle;
   imageBounds: Bounds;
@@ -31,6 +39,7 @@ export function applyOrientation(
   const { canvas, context } = getCanvas(canvasWidth, canvasHeight);
 
   if (context) {
+    setSmoothingQuality(context, 'high');
     switch (orientation) {
       case 2:
         context.translate(destWidth, 0);
@@ -88,6 +97,7 @@ export interface PreviewInfo {
   fileInfo: FileInfo;
   width: number;
   height: number;
+  img: HTMLImageElement;
 }
 
 /* pre-process the incoming image for optimisations
@@ -146,7 +156,7 @@ export async function initialiseImagePreview(
       imageHeight,
     );
 
-    return { fileInfo, width: canvasWidth, height: canvasHeight };
+    return { fileInfo, width: canvasWidth, height: canvasHeight, img };
   }
 
   return null;
@@ -157,6 +167,7 @@ export function renderImageAtCurrentView(
   viewInfo: ViewInfo,
   useConstraints: boolean,
   useCircularClipWithActions: boolean,
+  constrainCircularClip: boolean,
   backgroundColor: string,
 ): HTMLCanvasElement {
   const { containerRect, imageBounds, sourceBounds, visibleBounds } = viewInfo;
@@ -164,21 +175,41 @@ export function renderImageAtCurrentView(
   const { canvas, context } = getCanvas(containerWidth, containerHeight);
 
   if (context) {
+    setSmoothingQuality(context, 'high');
     context.fillStyle = backgroundColor;
     context.fillRect(0, 0, containerWidth, containerHeight);
 
     if (imageElement) {
       if (useCircularClipWithActions) {
-        const cx = containerWidth * 0.5;
-        const cy = containerHeight * 0.5;
-        const rx = cx;
-        const ry = cy;
+        const containerMidX = containerWidth * 0.5;
+        const containerMidY = containerHeight * 0.5;
+        const radius = constrainCircularClip
+          ? Math.min(containerMidX, containerMidY)
+          : Math.max(containerMidX, containerMidY);
+        const scaleX = constrainCircularClip
+          ? 1
+          : containerHeight > containerWidth
+          ? containerWidth / containerHeight
+          : 1;
+        const scaleY = constrainCircularClip
+          ? 1
+          : containerWidth > containerHeight
+          ? containerHeight / containerWidth
+          : 1;
 
         context.save();
         context.beginPath();
-        context.translate(cx - rx, cy - ry);
-        context.scale(rx, ry);
-        context.arc(1, 1, 1, 0, 2 * Math.PI, false);
+        context.translate(containerMidX, containerMidY);
+        context.scale(scaleX, scaleY);
+        context.translate(-containerMidX, -containerMidY);
+        context.arc(
+          containerMidX,
+          containerMidY,
+          radius,
+          0,
+          2 * Math.PI,
+          false,
+        );
         context.restore();
         context.fill();
         context.clip();

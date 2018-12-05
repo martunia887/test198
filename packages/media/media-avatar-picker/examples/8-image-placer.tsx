@@ -6,6 +6,7 @@ import {
   Label,
   ExportedImage,
   ExportedImageWrapper,
+  ImagePlacerErrorWrapper,
 } from '../example-helpers/styled';
 
 export interface ExampleState {
@@ -14,9 +15,11 @@ export interface ExampleState {
   margin: number;
   zoom: number;
   maxZoom: number;
+  errorMessage?: string;
   useConstraints: boolean;
   isCircular: boolean;
-  useCircularClipWithActions: boolean;
+  useCircularMaskWithActions: boolean;
+  constrainCircularMask: boolean;
   src?: string | File;
   exportedDataURI?: string;
 }
@@ -38,8 +41,9 @@ class Example extends React.Component<{}, ExampleState> {
     zoom: 0,
     maxZoom: 4,
     useConstraints: true,
-    isCircular: false,
-    useCircularClipWithActions: false,
+    isCircular: true,
+    useCircularMaskWithActions: true,
+    constrainCircularMask: true,
   };
 
   onZoomSliderChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
@@ -59,16 +63,27 @@ class Example extends React.Component<{}, ExampleState> {
   };
 
   onRenderCircularMaskChanged = (e: React.SyntheticEvent<HTMLInputElement>) => {
-    const useCircularClipWithActions = e.currentTarget.checked;
-    this.setState({ useCircularClipWithActions });
+    const useCircularMaskWithActions = e.currentTarget.checked;
+    this.setState({ useCircularMaskWithActions });
+  };
+
+  onConstrainCircularMaskChanged = (
+    e: React.SyntheticEvent<HTMLInputElement>,
+  ) => {
+    const constrainCircularMask = e.currentTarget.checked;
+    this.setState({ constrainCircularMask });
   };
 
   onZoomSliderElement = (el: HTMLInputElement) => {
     this.zoomSliderElement = el;
   };
 
-  onImageChange = () => {
+  onImageLoad = () => {
     this.setState({ zoom: 0 });
+  };
+
+  onImageError = (errorMessage: string) => {
+    this.setState({ errorMessage });
   };
 
   onZoomChange = (zoom: number) => {
@@ -78,7 +93,7 @@ class Example extends React.Component<{}, ExampleState> {
   onFileInputChange = async (e: React.SyntheticEvent<HTMLInputElement>) => {
     if (e.currentTarget.files) {
       const file = e.currentTarget.files[0];
-      this.setState({ src: file });
+      this.setState({ src: file, errorMessage: undefined });
     }
   };
 
@@ -104,9 +119,11 @@ class Example extends React.Component<{}, ExampleState> {
       maxZoom,
       useConstraints,
       isCircular,
-      useCircularClipWithActions,
+      useCircularMaskWithActions,
+      constrainCircularMask,
       src,
       exportedDataURI,
+      errorMessage,
     } = this.state;
 
     return (
@@ -144,11 +161,19 @@ class Example extends React.Component<{}, ExampleState> {
               />
             </Label>
             <Label>
-              <span>Render Circular Mask:</span>
+              <span>Use Circular Mask With Actions:</span>
               <input
                 type="checkbox"
-                defaultChecked={useCircularClipWithActions}
+                defaultChecked={useCircularMaskWithActions}
                 onChange={this.onRenderCircularMaskChanged}
+              />
+            </Label>
+            <Label>
+              <span>Constrain Circular Mask:</span>
+              <input
+                type="checkbox"
+                defaultChecked={constrainCircularMask}
+                onChange={this.onConstrainCircularMaskChanged}
               />
             </Label>
             <Label>
@@ -163,20 +188,33 @@ class Example extends React.Component<{}, ExampleState> {
         </Grid>
         <Grid>
           <GridColumn>
-            <ImagePlacer
-              containerWidth={containerWidth}
-              containerHeight={containerHeight}
-              src={src}
-              margin={margin}
-              zoom={zoom}
-              maxZoom={maxZoom}
-              useConstraints={useConstraints}
-              isCircular={isCircular}
-              useCircularClipWithActions={useCircularClipWithActions}
-              onImageChange={this.onImageChange}
-              onZoomChange={this.onZoomChange}
-              onImageActions={this.onImageActions}
-            />
+            {errorMessage ? (
+              <ImagePlacerErrorWrapper
+                style={{
+                  width: containerWidth + margin * 2,
+                  height: containerHeight + margin * 2,
+                }}
+              >
+                {errorMessage}
+              </ImagePlacerErrorWrapper>
+            ) : (
+              <ImagePlacer
+                containerWidth={containerWidth}
+                containerHeight={containerHeight}
+                src={src}
+                margin={margin}
+                zoom={zoom}
+                maxZoom={maxZoom}
+                useConstraints={useConstraints}
+                isCircular={isCircular}
+                useCircularMaskWithActions={useCircularMaskWithActions}
+                constrainCircularMask={constrainCircularMask}
+                onImageLoad={this.onImageLoad}
+                onImageError={this.onImageError}
+                onZoomChange={this.onZoomChange}
+                onImageActions={this.onImageActions}
+              />
+            )}
           </GridColumn>
         </Grid>
         <Grid>

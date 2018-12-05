@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { ComponentClass } from 'react';
+import { ComponentClass, HTMLAttributes } from 'react';
+import { akColorR500 } from '@atlaskit/util-shared-styles';
 import { checkeredBg } from '../src/image-placer/styled';
 
 export const Slider = styled.input``;
@@ -38,4 +39,17 @@ export const ExportedImageWrapper = styled.div`
     font-size: 12px;
     color: blue;
   }
+`;
+
+export const ImagePlacerErrorWrapper: ComponentClass<
+  HTMLAttributes<{}>
+> = styled.div`
+  background-color: ${akColorR500};
+  color: white;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
