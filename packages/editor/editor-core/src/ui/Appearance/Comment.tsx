@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { colors, borderRadius, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme';
 import Toolbar from '../Toolbar';
 import PluginSlot from '../PluginSlot';
 import WithPluginState from '../WithPluginState';

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { InputHTMLAttributes, ComponentClass } from 'react';
-import { colors } from '@atlaskit/theme';
 
 // Normal .className gets overridden by input[type=text] hence this hack to produce input.className
 export const Input: ComponentClass<

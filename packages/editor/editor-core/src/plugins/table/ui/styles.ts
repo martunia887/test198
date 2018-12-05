@@ -1,7 +1,7 @@
 // @ts-ignore: unused variable
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
-import { borderRadius, colors, fontSize } from '@atlaskit/theme';
+import { borderRadius, fontSize } from '@atlaskit/theme';
 import {
   browser,
   tableMarginTop,

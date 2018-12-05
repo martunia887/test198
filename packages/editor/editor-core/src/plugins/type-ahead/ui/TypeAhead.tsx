@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { EditorView } from 'prosemirror-view';
-import { borderRadius, colors, gridSize, math } from '@atlaskit/theme';
+import { borderRadius, gridSize, math } from '@atlaskit/theme';
 import { Popup, akEditorFloatingDialogZIndex } from '@atlaskit/editor-common';
 import { TypeAheadItemsList } from './TypeAheadItemsList';
 import { selectByIndex } from '../commands/select-item';

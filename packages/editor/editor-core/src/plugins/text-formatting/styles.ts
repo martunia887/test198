@@ -1,7 +1,7 @@
 // @ts-ignore: unused variable
 // prettier-ignore
 import { css, Styles, StyledComponentClass, InterpolationFunction, ThemeProps } from 'styled-components';
-import { colors } from '@atlaskit/theme';
+
 import { akEditorCodeFontFamily } from '../../styles';
 import { relativeSize } from '@atlaskit/editor-common';
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
 
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme';
 
 // tslint:disable-next-line:variable-name
 export const Content: ComponentClass<HTMLAttributes<{}>> = styled.div`

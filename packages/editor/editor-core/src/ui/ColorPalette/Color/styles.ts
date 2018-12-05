@@ -2,7 +2,6 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ButtonHTMLAttributes, ComponentClass } from 'react';
-import { colors } from '@atlaskit/theme';
 
 export const Button: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`
   height: 26px;

@@ -3,7 +3,6 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { colors } from '@atlaskit/theme';
 import PubSubClient from '@atlaskit/pubsub';
 
 import Editor from './../src/editor';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Popup, akEditorFloatingDialogZIndex } from '@atlaskit/editor-common';
-import { colors, borderRadius, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme';
 import { StatusPicker as AkStatusPicker, Color } from '@atlaskit/status';
 import { dropShadow } from '../../../ui/styles';
 import withOuterListeners from '../../../ui/with-outer-listeners';

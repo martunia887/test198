@@ -6,7 +6,6 @@ import Button from '@atlaskit/button';
 
 import { IntlProvider, addLocaleData } from 'react-intl';
 import { ReactRenderer } from '@atlaskit/renderer';
-import { colors } from '@atlaskit/theme';
 import { ProviderFactory } from '@atlaskit/editor-common';
 
 import enMessages from '../src/i18n/en';

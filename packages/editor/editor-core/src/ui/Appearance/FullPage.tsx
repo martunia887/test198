@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+
 import { akEditorMenuZIndex } from '@atlaskit/editor-common';
 import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
 import Avatars from '../../plugins/collab-edit/ui/avatars';

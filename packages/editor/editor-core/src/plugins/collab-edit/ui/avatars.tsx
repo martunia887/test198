@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import { EditorView } from 'prosemirror-view';
 import Avatar from '@atlaskit/avatar';
 import AvatarGroup from '@atlaskit/avatar-group';
-import { gridSize, colors } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme';
 import InviteTeamIcon from '@atlaskit/icon/glyph/editor/add';
 import { akEditorSmallZIndex } from '@atlaskit/editor-common';
 

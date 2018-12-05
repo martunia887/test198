@@ -7,7 +7,6 @@ import { mention, emoji } from '@atlaskit/util-data-test';
 import { Editor } from '../src';
 import { Content } from '../example-helpers/styles';
 import imageUploadHandler from '../example-helpers/imageUpload';
-import { colors } from '@atlaskit/theme';
 
 const Boundary = styled.div`
   border: 2px solid hotpink;

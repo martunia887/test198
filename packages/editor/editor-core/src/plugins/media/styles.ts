@@ -2,7 +2,6 @@
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
 import { mediaSingleSharedStyle } from '@atlaskit/editor-common';
-import { colors } from '@atlaskit/theme';
 
 export const mediaStyles = css`
   .ProseMirror {

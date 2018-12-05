@@ -7,7 +7,6 @@ import { EditorView } from 'prosemirror-view';
 import { Status } from '@atlaskit/status';
 import { pluginKey } from '../plugin';
 import { setStatusPickerAt } from '../actions';
-import { colors } from '@atlaskit/theme';
 
 const { B100 } = colors;
 

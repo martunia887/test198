@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Node as PMNode } from 'prosemirror-model';
 import { JiraIcon } from '@atlaskit/logo';
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme';
 
 // tslint:disable-next-line:variable-name
 const WrapperNode = styled.span`

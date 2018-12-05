@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import { colors } from '@atlaskit/theme';
+
 import InfoIcon from '@atlaskit/icon/glyph/editor/info';
 import SuccessIcon from '@atlaskit/icon/glyph/editor/success';
 import NoteIcon from '@atlaskit/icon/glyph/editor/note';

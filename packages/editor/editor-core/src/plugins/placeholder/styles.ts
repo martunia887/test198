@@ -1,7 +1,6 @@
 // @ts-ignore: unused variable
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
-import { colors } from '@atlaskit/theme';
 
 export const placeholderStyles = css`
   .ProseMirror .placeholder-decoration {

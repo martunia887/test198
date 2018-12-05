@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import * as React from 'react';
-import { colors, borderRadius } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme';
 
 import Editor from './../src/editor';
 
