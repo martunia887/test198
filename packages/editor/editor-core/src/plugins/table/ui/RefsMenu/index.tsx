@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
+import { Node as PMNode } from 'prosemirror-model';
 import {
   findDomRefAtPos,
   getCellsInColumn,
@@ -16,7 +17,7 @@ import { pluginKey } from '../../pm-plugins/main';
 import { toggleReferenceMenu } from '../../actions';
 import withOuterListeners from '../../../../ui/with-outer-listeners';
 import { closestElement } from '../../../../utils';
-import { ReferenceProvider } from '../../../refs/provider';
+import { ReferenceProvider, Reference } from '../../../refs/provider';
 
 const PopupWithOutsideListeners = withOuterListeners(Popup);
 
@@ -51,11 +52,10 @@ export interface RefsMenuProps {
   provider: ReferenceProvider;
 }
 
-type ReferenceItem = { id: string; title: string };
-
 export interface RefsMenuState {
+  loading: boolean;
   // tables that can be referenced
-  tables: { id: string; title: string; columns: ReferenceItem[] }[] | null;
+  tables: Reference[] | null;
   selectedTableId?: string;
   selectedColumnId?: string;
 }
@@ -69,11 +69,13 @@ export default class RefsMenu extends React.Component<
 
     this.state = {
       tables: null,
+      loading: true,
     };
 
     props.provider.getReferences().then(references => {
       this.setState({
         tables: references,
+        loading: false,
       });
     });
   }
@@ -120,22 +122,16 @@ export default class RefsMenu extends React.Component<
           <div className={`${ClassName.REFERENCE_MENU_TITLE}`}>
             Link to Table
           </div>
-          {this.state.tables ? (
-            <>
-              <div className={`${ClassName.REFERENCE_MENU_DESCRIPTION}`}>
-                Choose the table to link records from
-              </div>
-              <div className={`${ClassName.REFERENCE_SELECT}`}>
-                <Select
-                  options={toSelectItems(this.state.tables)}
-                  placeholder="Choose a table"
-                  onChange={this.handleSelectTable}
-                />
-              </div>
-            </>
-          ) : (
-            'loading...'
-          )}
+          <div className={`${ClassName.REFERENCE_MENU_DESCRIPTION}`}>
+            Choose the table to link records from
+          </div>
+          <div className={`${ClassName.REFERENCE_SELECT}`}>
+            <Select
+              options={toSelectItems(this.state.tables)}
+              placeholder="Choose a table"
+              onChange={this.handleSelectTable}
+            />
+          </div>
           {this.state.tables && this.state.selectedTableId && (
             <>
               <div className={`${ClassName.REFERENCE_MENU_DESCRIPTION}`}>
@@ -152,8 +148,14 @@ export default class RefsMenu extends React.Component<
             </>
           )}
           <div className={`${ClassName.REFERENCE_BUTTONS}`}>
-            <Button onClick={this.dismiss}>Cancel</Button>
-            <Button appearance="primary" onClick={this.handleSave}>
+            <Button onClick={this.dismiss} isDisabled={this.state.loading}>
+              Cancel
+            </Button>
+            <Button
+              appearance="primary"
+              onClick={this.handleSave}
+              isLoading={this.state.loading}
+            >
               Save
             </Button>
           </div>
@@ -169,6 +171,7 @@ export default class RefsMenu extends React.Component<
     this.setState({
       selectedTableId: undefined,
       selectedColumnId: undefined,
+      loading: false,
     });
   };
 
@@ -185,27 +188,50 @@ export default class RefsMenu extends React.Component<
   };
 
   private handleSave = () => {
-    const { state, dispatch } = this.props.editorView;
+    const { provider, editorView } = this.props;
+    const { state, dispatch } = editorView;
     const { selection } = state;
     const rect = findCellRectClosestToPos(selection.$from);
     if (!rect) {
       return false;
     }
-    const cells = getCellsInColumn(rect.left)(selection);
-    if (!cells) {
-      return false;
-    }
-    const { node, pos } = cells[0];
+
+    this.setState({ loading: true });
     const { selectedTableId, selectedColumnId } = this.state;
+    const reference = `${selectedTableId}:${selectedColumnId}`;
 
-    dispatch(
-      state.tr.setNodeMarkup(pos, node.type, {
+    provider.getValues(reference).then(ADNodes => {
+      const cells = getCellsInColumn(rect.left)(selection);
+      if (!cells) {
+        return;
+      }
+      // header cell
+      const { node, pos } = cells[0];
+
+      const tr = state.tr.setNodeMarkup(pos, node.type, {
         ...node.attrs,
-        reference: `${selectedTableId}:${selectedColumnId}`,
-      }),
-    );
+        reference,
+      });
 
-    this.dismiss();
+      ADNodes.forEach((ADNode, rowIndex) => {
+        const cell = cells[rowIndex];
+        if (cell) {
+          const newCell = state.schema.nodes[cell.node.type.name].createChecked(
+            cell.node.attrs,
+            PMNode.fromJSON(state.schema, ADNode),
+          );
+          tr.replaceWith(
+            tr.mapping.map(cell.pos),
+            tr.mapping.map(cell.pos + cell.node.nodeSize),
+            newCell,
+          );
+        }
+      });
+
+      dispatch(tr);
+
+      this.dismiss();
+    });
 
     return true;
   };
