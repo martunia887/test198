@@ -207,11 +207,7 @@ export default class RefsMenu extends React.Component<
       }
       // header cell
       const { node, pos } = cells[0];
-
-      const tr = state.tr.setNodeMarkup(pos, node.type, {
-        ...node.attrs,
-        reference,
-      });
+      const { tr } = state;
 
       ADNodes.forEach((ADNode, rowIndex) => {
         const cell = cells[rowIndex];
@@ -226,6 +222,11 @@ export default class RefsMenu extends React.Component<
             newCell,
           );
         }
+      });
+
+      tr.setNodeMarkup(pos, node.type, {
+        ...node.attrs,
+        reference,
       });
 
       dispatch(tr);
