@@ -2,6 +2,7 @@
 
 import React, { Component, type Node } from 'react';
 import rafSchedule from 'raf-schd';
+import debounce from 'lodash.debounce';
 
 // Need to make outer div full height in case consumer wants to align
 // child content vertically center. These styles can be overridden by the
@@ -39,6 +40,8 @@ type Props = {
   containerStyle?: Object,
   /** Called when the component is resized. */
   onResize?: SizeMetrics => void,
+  /** Optional debounce time to reduce how often the SizeDetector reports updates */
+  debounceTime?: number,
 };
 
 type State = {
@@ -123,7 +126,11 @@ export default class SizeDetector extends Component<Props, State> {
 
     // $FlowFixMe - resizeObject is typed as HTMLElement which has no contentDocument prop
     this.resizeObjectDocument = this.resizeObject.contentDocument.defaultView;
-    this.resizeObjectDocument.addEventListener('resize', this.handleResize);
+    let resizeHandler = this.handleResize;
+    if (this.props.debounceTime) {
+      resizeHandler = debounce(this.handleResize, this.props.debounceTime);
+    }
+    this.resizeObjectDocument.addEventListener('resize', resizeHandler);
 
     // Calculate width first time, after object has loaded.
     // Prevents it from getting in a weird state where width is always 0.
