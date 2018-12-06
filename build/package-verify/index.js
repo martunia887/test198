@@ -103,14 +103,16 @@ async function getFieldValues(pkgConfig, fields) {
 }
 
 async function getCustomFieldsStatus(pkgConfig, fieldMatch) {
-  const keys = Object.keys(fieldMatch);
-  const resultStatus = keys.reduce((acc, key) => {
-    return {
-      ...acc,
-      [key]: pkgConfig[key] === fieldMatch[key],
-    };
-  }, {});
-  return resultStatus;
+  if (fieldMatch) {
+    const keys = Object.keys(fieldMatch);
+    const resultStatus = keys.reduce((acc, key) => {
+      return {
+        ...acc,
+        [key]: pkgConfig[key] === fieldMatch[key],
+      };
+    }, {});
+    return resultStatus;
+  }
 }
 
 async function installDependencies(cwd, peerDependencies = [], tarballs = []) {
