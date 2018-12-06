@@ -120,6 +120,5 @@ export const createPlugin = (
     },
   });
 
-export const getPluginState = (state: EditorState) => {
-  return pluginKey.getState(state);
-};
+export const getPluginState = (state: EditorState): RefsPluginState =>
+  pluginKey.getState(state);

@@ -263,6 +263,6 @@ export const createPlugin = (
     },
   });
 
-export const getPluginState = (state: EditorState) => {
-  return pluginKey.getState(state);
-};
+export const getPluginState = (
+  state: EditorState,
+): TablePluginState | undefined => pluginKey.getState(state);

@@ -12,4 +12,5 @@ export interface Reference {
 export interface ReferenceProvider {
   getValues: (reference?: string) => Promise<ADNode[]>;
   getReferences: () => Promise<Reference[]>;
+  getDocumentId: () => string;
 }

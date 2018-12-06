@@ -194,18 +194,6 @@ export function processRawValue(
           return;
         }
 
-        /**
-         * There's a inconsistency between ProseMirror and ADF.
-         * `content` is actually optional in ProseMirror.
-         * And, also empty `text` node is not valid.
-         */
-        if (
-          error.code === VALIDATION_ERRORS.MISSING_PROPERTY &&
-          entity.type === 'paragraph'
-        ) {
-          return { type: 'paragraph', content: [] };
-        }
-
         // Can't fix it by wrapping
         // TODO: We can repair missing content like `panel` without a `paragraph`.
         if (error.code === VALIDATION_ERRORS.INVALID_CONTENT_LENGTH) {

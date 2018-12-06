@@ -50,7 +50,7 @@ import {
   indentationPlugin,
   refsPlugin,
   uniqueIdsPlugin,
-  // refsServerPlugin,
+  refsServerPlugin,
 } from '../plugins';
 
 /**
@@ -226,7 +226,7 @@ export default function createPluginsList(
   plugins.push(floatingToolbarPlugin);
   plugins.push(refsPlugin);
   plugins.push(uniqueIdsPlugin);
-  // plugins.push(refsServerPlugin);
+  plugins.push(refsServerPlugin);
 
   if (props.appearance !== 'mobile') {
     plugins.push(quickInsertPlugin);

@@ -87,14 +87,17 @@ export default (
               path.join(resolvedOutDir, `${fileName}.ts`),
               prettier.format(
                 `export default ${JSON.stringify(def.node.toSpec())}`,
-                options,
+                { parser: 'babylon', ...options },
               ),
             );
           });
           // Generate index.ts with exports
           fs.writeFileSync(
             path.join(resolvedOutDir, 'index.ts'),
-            prettier.format(exports.join('\n'), options),
+            prettier.format(exports.join('\n'), {
+              parser: 'babylon',
+              ...options,
+            }),
           );
         });
       }

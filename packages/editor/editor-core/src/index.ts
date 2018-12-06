@@ -84,3 +84,5 @@ export {
   PortalProviderAPI,
   PortalRenderer,
 } from './ui/PortalProvider';
+
+export { ReferenceProvider } from './plugins/refs/provider';

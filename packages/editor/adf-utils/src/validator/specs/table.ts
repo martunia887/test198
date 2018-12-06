@@ -10,7 +10,7 @@ export default {
           optional: true,
         },
         id: { type: 'string' },
-        reference: { type: 'string' },
+        title: { type: 'string' },
       },
       optional: true,
     },

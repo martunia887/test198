@@ -1,3 +1,6 @@
+import { uuid } from '@atlaskit/editor-common';
+import { ReferenceProvider } from '../../src';
+
 // array of tables available for referencing
 const tables = [
   {
@@ -60,11 +63,12 @@ const values = [
   },
 ];
 
-const referenceProvider = {
+const referenceProvider: ReferenceProvider = {
   getReferences: () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(tables);
+        // TODO: Fix the type
+        resolve(tables as any);
       }, 1000);
     });
   },
@@ -75,6 +79,15 @@ const referenceProvider = {
         resolve(values);
       }, 1000);
     });
+  },
+  getDocumentId: () => {
+    const docId = localStorage.getItem('fabric.editor.docId');
+    if (docId) {
+      return docId;
+    }
+    const newDocId = uuid.generate() as string;
+    localStorage.setItem('fabric.editor.docId', newDocId);
+    return newDocId;
   },
 };
 

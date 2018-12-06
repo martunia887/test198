@@ -314,6 +314,8 @@ const cellAttrs = {
   rowspan: { default: 1 },
   colwidth: { default: null },
   background: { default: null },
+  id: { default: null },
+  reference: { default: null },
 };
 
 export const tableCell = {
