@@ -1232,6 +1232,10 @@
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.2.tgz#0e670ea254d559241b6eeb3894f8754991e73220"
 
+"@types/jest@^19.2.3":
+  version "19.2.4"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-19.2.4.tgz#543651712535962b7dc615e18e4a381fc2687442"
+
 "@types/jest@^23.0.2":
   version "23.3.2"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.2.tgz#07b90f6adf75d42c34230c026a2529e56c249dbb"
@@ -1244,6 +1248,12 @@
   version "2.0.48"
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-2.0.48.tgz#3e90d8cde2d29015e5583017f7830cb3975b2eef"
 
+"@types/lodash.chunk@^4.2.2":
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/@types/lodash.chunk/-/lodash.chunk-4.2.4.tgz#d0301e7ed435f7eb60c570e715fb05047256d536"
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.chunk@^4.2.3":
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/@types/lodash.chunk/-/lodash.chunk-4.2.3.tgz#5a53fe41c3c91b25032ebd7438d0c2ecc8436657"
@@ -1253,6 +1263,12 @@
 "@types/lodash.debounce@^4.0.4":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@types/lodash.debounce/-/lodash.debounce-4.0.4.tgz#a3d082628ef1bb1964c2b6a2d4f45acae7209e7a"
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash.sum@^4.0.2":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@types/lodash.sum/-/lodash.sum-4.0.4.tgz#4385db0d605f1e435c6f29a184af35697cbfea8e"
   dependencies:
     "@types/lodash" "*"
 
@@ -10058,6 +10074,10 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
 
+lodash.sum@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/lodash.sum/-/lodash.sum-4.0.2.tgz#ad90e397965d803d4f1ff7aa5b2d0197f3b4637b"
+
 lodash.template@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.template/-/lodash.template-4.4.0.tgz#e73a0385c8355591746e020b99679c690e68fba0"
@@ -13159,6 +13179,16 @@ react-markings@^1.2.0, react-markings@^1.3.0:
     commonmark "^0.27.0"
     commonmark-react-renderer "^4.3.3"
 
+react-micdrop@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-micdrop/-/react-micdrop-0.2.1.tgz#b07166856914db1c3b7ce8fc56c3af5411012de3"
+  dependencies:
+    "@types/jest" "^19.2.3"
+    "@types/lodash.chunk" "^4.2.2"
+    "@types/lodash.sum" "^4.0.2"
+    lodash.chunk "^4.2.0"
+    lodash.sum "^4.0.2"
+
 react-node-resolver@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-node-resolver/-/react-node-resolver-1.0.1.tgz#1798a729c0e218bf2f0e8ddf79c550d4af61d83a"
@@ -13290,9 +13320,9 @@ react-value@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/react-value/-/react-value-0.2.0.tgz#04d6e3351add34e9365d4597f207e2a13ba85564"
 
-react-video-renderer@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/react-video-renderer/-/react-video-renderer-2.2.1.tgz#97aed21fd105fcf15abd4a6874f94543c6ca764f"
+react-video-renderer@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/react-video-renderer/-/react-video-renderer-2.4.1.tgz#46b3a317b839ce859d278c73f6f5c2b92820e0f2"
 
 react-virtualized@^9.8.0:
   version "9.12.0"

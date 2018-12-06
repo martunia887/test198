@@ -339,7 +339,10 @@ export const DefaultCoverWrapper = styled.div`
   justify-content: center;
 
   > * {
-    transform: scale(2);
+    transform: scale(3);
+    position: absolute;
+    z-index: 9;
+    opacity: 0.7;
   }
 `;
 

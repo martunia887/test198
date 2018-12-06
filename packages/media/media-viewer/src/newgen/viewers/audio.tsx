@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ProcessedFileState, Context } from '@atlaskit/media-core';
-import AudioIcon from '@atlaskit/icon/glyph/media-services/audio';
+import AudioIcon from '@atlaskit/icon/glyph/audio';
 import { constructAuthTokenUrl } from '../utils';
 import { Outcome, MediaViewerFeatureFlags } from '../domain';
 import {
@@ -8,7 +8,6 @@ import {
   AudioCover,
   Audio,
   DefaultCoverWrapper,
-  blanketColor,
   CustomAudioPlayerWrapper,
 } from '../styled';
 import { createError, MediaViewerError } from '../error';
@@ -17,6 +16,7 @@ import { BaseState, BaseViewer } from './base-viewer';
 import { isIE } from '../utils/isIE';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { getFeatureFlag } from '../utils/getFeatureFlag';
+import { MicDropFromRef } from 'react-micdrop';
 
 export type Props = Readonly<{
   item: ProcessedFileState;
@@ -33,7 +33,7 @@ export type State = BaseState<string> & {
 
 const defaultCover = (
   <DefaultCoverWrapper>
-    <AudioIcon label="cover" size="xlarge" primaryColor={blanketColor} />
+    <AudioIcon label="cover" size="xlarge" primaryColor="#3b475c" />
   </DefaultCoverWrapper>
 );
 
@@ -87,7 +87,11 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
             src={src}
             isShortcutEnabled={true}
             showControls={showControls}
-          />
+          >
+            {ref => {
+              return <MicDropFromRef audioRef={ref} color="#2581FF" />;
+            }}
+          </CustomMediaPlayer>
         </CustomAudioPlayerWrapper>
       </AudioPlayer>
     ) : (

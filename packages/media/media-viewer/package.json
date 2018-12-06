@@ -34,6 +34,7 @@
     "deep-equal": "^1.0.1",
     "pdfjs-dist": "^2.0.489",
     "query-string": "^4.3.2",
+    "react-micdrop": "^0.2.1",
     "tslib": "^1.8.0"
   },
   "peerDependencies": {

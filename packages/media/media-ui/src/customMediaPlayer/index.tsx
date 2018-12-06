@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Component } from 'react';
+import { Component, ReactNode, RefObject } from 'react';
 import PlayIcon from '@atlaskit/icon/glyph/vid-play';
 import PauseIcon from '@atlaskit/icon/glyph/vid-pause';
 import FullScreenIconOn from '@atlaskit/icon/glyph/vid-full-screen-on';
@@ -17,6 +17,7 @@ import MediaPlayer, {
 import { colors } from '@atlaskit/theme';
 import FieldRange from '@atlaskit/field-range';
 import { ThemeProvider } from 'styled-components';
+import { MicDropFromRef } from 'react-micdrop';
 import theme from '../theme';
 import { TimeRange } from './timeRange';
 import {
@@ -53,6 +54,7 @@ export interface CustomMediaPlayerProps {
   readonly showControls?: () => void;
   readonly isAutoPlay: boolean;
   readonly isShortcutEnabled?: boolean;
+  readonly children?: (ref: RefObject<HTMLAudioElement>) => ReactNode;
 }
 
 export interface CustomMediaPlayerState {
@@ -199,13 +201,19 @@ export class CustomMediaPlayer extends Component<
       src,
       isAutoPlay,
       isShortcutEnabled,
+      children,
       intl: { formatMessage },
     } = this.props;
     return (
       <ThemeProvider theme={theme}>
         <CustomVideoWrapper innerRef={this.saveVideoWrapperRef}>
-          <MediaPlayer sourceType={type} src={src} autoPlay={isAutoPlay}>
-            {(video, videoState, actions) => {
+          <MediaPlayer
+            sourceType={type}
+            src={src}
+            autoPlay={isAutoPlay}
+            crossOrigin="anonymous"
+          >
+            {(video, videoState, actions, mediaRef) => {
               const {
                 status,
                 currentTime,
@@ -247,6 +255,7 @@ export class CustomMediaPlayer extends Component<
                   {video}
                   {isLoading && this.renderSpinner()}
                   {shortcuts}
+                  {children && children(mediaRef)}
                   <ControlsWrapper className={hideControlsClassName}>
                     <TimeWrapper>
                       <TimeRange
