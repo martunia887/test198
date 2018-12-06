@@ -42,7 +42,6 @@ for (const workspaceDir of fs.readdirSync(packagesDir)) {
       priority: 1,
     };
 
-    // , 'docs', 'examples'
     for (const sub of ['CHANGELOG.md']) {
       if (!subCacheKeys[sub]) {
         subCacheKeys[sub] = {};
@@ -69,29 +68,10 @@ for (const workspaceDir of fs.readdirSync(packagesDir)) {
   }
 }
 
-// for (const sub of ['docs', 'examples']) {
-//   for (const workspace of Object.keys(subCacheKeys[sub])) {
-//     const keySet = new Set(subCacheKeys[sub][workspace]);
-//     const vendorKey = `vendors~${workspace}~${sub}`;
-
-//     cacheGroups[vendorKey] = {
-//       name: vendorKey,
-//       test: /[\\/]node_modules[\\/]/,
-//       enforce: true,
-//       priority: 3,
-//       chunks: (chunk) => {
-//         console.log(chunk.name);
-//         return keySet.has(chunk.name);
-//       }
-//     };
-//     console.log(vendorKey, cacheGroups[vendorKey]);
-//   }
-// }
-
 const manualGroups = [
   {
     name: 'react',
-    modules: ['react', 'react-dom', 'react-router'],
+    modules: ['react', 'react-dom', 'react-router', 'react-intl'],
   },
   {
     name: 'refractor',
@@ -105,6 +85,18 @@ const manualGroups = [
     name: 'big-stuff',
     modules: ['lodash', 'rxjs', 'enzyme'],
   },
+  {
+    name: 'moment-tz',
+    modules: ['moment-timezone'],
+  },
+  {
+    name: 'why-oh-why',
+    modules: ['ajv', 'xregexp'],
+  },
+  {
+    name: 'big-editor-is-big',
+    modules: ['pubnub', 'axios', 'jsondiffpatch', 'markdown-it'],
+  },
 ];
 
 for (const group of manualGroups) {
@@ -116,6 +108,14 @@ for (const group of manualGroups) {
     priority: 4,
   };
 }
+
+cacheGroups.prosemirror = {
+  test: new RegExp(`[\\/]node_modules[\\/]prosemirror`),
+  name: `node_modules~prosemirror`,
+  enforce: true,
+  chunks: 'all',
+  priority: 5,
+};
 
 module.exports = function createWebpackConfig(
   {
