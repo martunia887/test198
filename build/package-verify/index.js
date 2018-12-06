@@ -6,7 +6,6 @@ const os = require('os');
 const globby = require('globby');
 const meow = require('meow');
 const fs = require('fs-extra');
-
 const { spawn } = require('./spawn');
 
 const cli = meow({
@@ -65,19 +64,39 @@ async function verifyPackage(pkgConfig, cwd) {
    * Run a couple of simple checks to ensure package.json exists
    * The main and module (if defined) field exists.
    */
-  const files = ['package.json', pkgConfig.main];
+  //console.log(pkgConfig);
 
-  if (pkgConfig.module) {
-    files.push(pkgConfig.module);
-  }
+  //  pkgConfig.packageVerify.fields.forEach(field =>{
+  //    console.log(field);
+  //    if(field)
+  //  })
+  let validateFileExists = [];
+  const files = ['package.json'];
+  const pkgPath = path.join(tmpdir, 'node_modules', pkgConfig.name);
 
-  if (pkgConfig.verifyExists) {
-    pkgConfig.verifyExists.forEach(entry => {
-      files.push(Object.values(entry).toString());
+  const fieldEntries = await getFieldValuesfromPkgJson(
+    pkgConfig,
+    pkgConfig.packageVerify.fields,
+  );
+  if (pkgConfig.packageVerify.customPaths) {
+    pkgConfig.packageVerify.customPaths.forEach(entry => {
+      files.push(entry);
     });
   }
 
-  return await exists(path.join(tmpdir, 'node_modules', pkgConfig.name), files);
+  if (fieldEntries)
+    fieldEntries.forEach(entry => {
+      files.push(entry);
+    });
+
+  return await exists(pkgPath, files);
+}
+
+async function getFieldValuesfromPkgJson(pkgConfig, fields) {
+  const fieldValues = fields.reduce((acc, key) => {
+    if (pkgConfig[key]) return acc.concat(pkgConfig[key]);
+  }, []);
+  return fieldValues;
 }
 
 async function installDependencies(cwd, peerDependencies = [], tarballs = []) {

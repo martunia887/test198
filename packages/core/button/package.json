@@ -48,8 +48,18 @@
     "react-dom": "^16.4.2",
     "react-router-dom": "^4.2.2"
   },
-  "verifyExists": [
-    {"types-es5":"dist/es5/index.d.ts"},
-    {"types-es2015":"dist/es2015/index.d.ts"}
+  "packageVerify": {
+    "fieldMatch": {
+
+    },
+    "fields": [ 
+      "types",
+      "main",
+      "module" 
+    ],
+    "customPaths": [
+      "./dist/es5/index.d.ts",
+      "./dist/es2015/index.d.ts"
     ]
+  } 
 }
