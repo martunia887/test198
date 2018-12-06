@@ -20,7 +20,7 @@ import logoIcons from '../utils/logoIcons';
 const iconIconInfo = Promise.all(
   Object.keys(metadata).map(async (name: $Keys<typeof metadata>) => {
     // $ExpectError - we are fine with this being dynamic
-    const icon = await import(`../glyph/${name}.js`);
+    const icon = await import(/* webpackChunkName:"icon-glyph-explorer/[request]" */ `../glyph/${name}.js`);
     return { name, icon: icon.default };
   }),
 ).then(newData =>
@@ -34,7 +34,7 @@ const objectIconInfo = Promise.all(
   Object.keys(objectIconMetadata).map(
     async (name: $Keys<typeof objectIconMetadata>) => {
       // $ExpectError - we are fine with this being dynamic
-      const icon = await import(`@atlaskit/icon-object/glyph/${name}.js`);
+      const icon = await import(/* webpackChunkName:"icon-object-glyph-explorer/[request]" */ `@atlaskit/icon-object/glyph/${name}.js`);
       return { name, icon: icon.default };
     },
   ),
@@ -49,7 +49,7 @@ const fileTypeIconInfo = Promise.all(
   Object.keys(fileTypeIconMetadata).map(
     async (name: $Keys<typeof fileTypeIconMetadata>) => {
       // $ExpectError - we are fine with this being dynamic
-      const icon = await import(`@atlaskit/icon-file-type/glyph/${name}.js`);
+      const icon = await import(/* webpackChunkName:"icon-object-glyph-explorer/[request]" */ `@atlaskit/icon-file-type/glyph/${name}.js`);
       return { name, icon: icon.default };
     },
   ),

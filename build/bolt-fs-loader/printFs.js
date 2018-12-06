@@ -12,7 +12,10 @@ function pad(str /*: string */, depth /*: number */) {
 }
 
 function getSafeRaw(file) {
-  let raw = `function(){ return import('!!raw-loader!${file.path}'); }`;
+  const chunkName = `raw~${file.path.replace(/\//g, '~')}`;
+  let raw = `function(){ return import(/* webpackChunkName:"${chunkName}" */'!!raw-loader!${
+    file.path
+  }'); }`;
   if (['.json'].includes(nodePath.extname(file.path))) {
     raw = `function(){ return Promise.reject({
         error: "We cannot parse raw json at the moment due to weback4 trying to parse json after it has gone through the raw loader. Please use the non-raw version of of JSON files"
@@ -36,9 +39,11 @@ function printFile(file /*: File */, depth /*: number */) {
   content += `\nexport const ${key} = require('${file.path}')`;
   nodeFs.writeFileSync(fakeFile, content);
 
+  const chunkName = `bolt~${file.guid.replace(/\//g, '~')}`;
+
   return pad(
     `file('${file.id}',
-    function(){ return import('${fakeFile}').then(m => m['${key}']); }, ${getSafeRaw(
+    function(){ return import(/* webpackChunkName:"${chunkName}" */'${fakeFile}').then(m => m['${key}']); }, ${getSafeRaw(
       file,
     )}
   )`,

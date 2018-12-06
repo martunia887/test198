@@ -17,6 +17,7 @@ const baseCacheDir = path.resolve(
 );
 
 const cacheGroups = {};
+const subCacheKeys = {};
 
 const packagesDir = path.resolve(__dirname, '../../../packages');
 for (const workspaceDir of fs.readdirSync(packagesDir)) {
@@ -41,21 +42,51 @@ for (const workspaceDir of fs.readdirSync(packagesDir)) {
       priority: 1,
     };
 
-    for (const sub of ['CHANGELOG.md', 'docs', 'examples']) {
-      const skey = `${workspaceDir}~${packageDir}~${sub}`;
+    // , 'docs', 'examples'
+    for (const sub of ['CHANGELOG.md']) {
+      if (!subCacheKeys[sub]) {
+        subCacheKeys[sub] = {};
+      }
+      if (!subCacheKeys[sub][workspaceDir]) {
+        subCacheKeys[sub][workspaceDir] = [];
+      }
+
+      const skey = `${sub}~${workspaceDir}~${packageDir}`;
       const sreg = new RegExp(
         `[\\/]packages[\\/]${workspaceDir}[\\/]${packageDir}[\\/]${sub}`,
       );
+      subCacheKeys[sub][workspaceDir].push(skey);
+
       cacheGroups[skey] = {
         test: sreg,
         name: skey,
         enforce: true,
         chunks: 'all',
         priority: 2,
+        reuseExistingChunk: true,
       };
     }
   }
 }
+
+// for (const sub of ['docs', 'examples']) {
+//   for (const workspace of Object.keys(subCacheKeys[sub])) {
+//     const keySet = new Set(subCacheKeys[sub][workspace]);
+//     const vendorKey = `vendors~${workspace}~${sub}`;
+
+//     cacheGroups[vendorKey] = {
+//       name: vendorKey,
+//       test: /[\\/]node_modules[\\/]/,
+//       enforce: true,
+//       priority: 3,
+//       chunks: (chunk) => {
+//         console.log(chunk.name);
+//         return keySet.has(chunk.name);
+//       }
+//     };
+//     console.log(vendorKey, cacheGroups[vendorKey]);
+//   }
+// }
 
 const manualGroups = [
   {
@@ -126,7 +157,10 @@ module.exports = function createWebpackConfig(
       }),
     },
     output: {
-      filename: '[name].js',
+      filename: isProduction ? '[name].[chunkhash].min.js' : '[name].js',
+      chunkFilename: isProduction
+        ? '[name].[chunkhash].chunk.min.js'
+        : '[name].chunk.js',
       path: path.resolve(websiteDir, 'dist'),
       publicPath: '/',
     },
@@ -310,7 +344,7 @@ function getPlugins(
       template: path.join(websiteDir, 'public/index.html.ejs'),
       title: HTMLPageTitle,
       favicon: faviconPath,
-      // excludeChunks: ['examples'],
+      excludeChunks: ['examples'],
     }),
 
     new HtmlWebpackPlugin({
@@ -414,7 +448,8 @@ function getOptimizations({ isProduction, noMinimizeFlag }) {
       // "Maximum number of parallel requests when on-demand loading. (default in production: 5)"
       // The default value of 5 causes the webpack process to crash, reason currently unknown
       // maxAsyncRequests: Infinity,
-      maxAsyncRequests: 5,
+      maxAsyncRequests: 10,
+      maxInitialRequests: 20,
       cacheGroups,
     },
   };

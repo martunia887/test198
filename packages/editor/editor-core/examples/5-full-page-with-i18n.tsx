@@ -41,11 +41,11 @@ export default class ExampleEditor extends React.Component<Props, State> {
   }
 
   private loadLocale = async (locale: string) => {
-    const localeData = await import(`react-intl/locale-data/${this.getLocalTag(
+    const localeData = await import(/* webpackChunkName:"@atlaskit-internal-editore-core-locales/[request]" */ `react-intl/locale-data/${this.getLocalTag(
       locale,
     )}`);
     addLocaleData(localeData.default);
-    const messages = await import(`../src/i18n/${locale}`);
+    const messages = await import(/* webpackChunkName:"@atlaskit-internal-editore-core-locale-data/[request]" */ `../src/i18n/${locale}`);
     this.setState({ locale, messages: messages.default });
   };
 

@@ -422,7 +422,9 @@ export default class FullPageRendererExample extends React.Component<
       return;
     }
 
-    const docModule = await import(`../example-helpers/${opt.value}`);
+    const docModule = await import(/* webpackChunkName:"@atlaskit-internal-editore-core-example-helpers/[request]" */ `../example-helpers/${
+      opt.value
+    }`);
     const adf = docModule.exampleDocument;
 
     actions.replaceDocument(adf);
@@ -440,11 +442,11 @@ export default class FullPageRendererExample extends React.Component<
   };
 
   private loadLocale = async (locale: string) => {
-    const localeData = await import(`react-intl/locale-data/${this.getLocalTag(
+    const localeData = await import(/* webpackChunkName:"@atlaskit-internal-editore-core-locales/[request]" */ `react-intl/locale-data/${this.getLocalTag(
       locale,
     )}`);
     addLocaleData(localeData.default);
-    const messages = await import(`../src/i18n/${locale}`);
+    const messages = await import(/* webpackChunkName:"@atlaskit-internal-editore-core-locale-data/[request]" */ `../src/i18n/${locale}`);
     this.setState({ locale, messages: messages.default });
   };
 

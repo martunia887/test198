@@ -11,7 +11,7 @@ import IconExplorerCell from './utils/IconExplorerCell';
 const allIcons = Promise.all(
   Object.keys(metadata).map(async (name: $Keys<typeof metadata>) => {
     // $ExpectError
-    const icon = await import(`../glyph/${name}.js`);
+    const icon = await import(/* webpackChunkName:"icon-file-type-glyph-explorer/[request]" */ `../glyph/${name}.js`);
     return { name, icon: icon.default };
   }),
 ).then(newData =>
