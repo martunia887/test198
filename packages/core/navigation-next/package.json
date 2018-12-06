@@ -75,5 +75,6 @@
     "clean": "../../../build/tools/command.sh clean && git clean -xf",
     "clean:build": "../../../build/tools/command.sh clean build && git clean -xf",
     "lint": "../../../build/tools/command.sh lint flow",
+    "test": "../../../build/tools/command.sh test"
   }
 }

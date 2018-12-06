@@ -47,7 +47,16 @@ module.exports = {
       ],
     },
     test: {
-      presets: ['@babel/env'],
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: {
+              node: '8.4.0',
+            },
+          },
+        ],
+      ],
       // There is no @babel/ scoped transform for this plugin
       plugins: ['transform-dynamic-import'],
     },

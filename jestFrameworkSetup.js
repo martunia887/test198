@@ -1,10 +1,10 @@
 /* eslint-disable */
-import 'jest-styled-components';
-import snakeCase from 'snake-case';
-import { toMatchSnapshot } from 'jest-snapshot';
-import { configureToMatchImageSnapshot } from 'jest-image-snapshot';
-import * as emotion from 'emotion';
-import { createSerializer } from 'jest-emotion';
+require('jest-styled-components');
+const snakeCase = require('snake-case');
+const { toMatchSnapshot } = require('jest-snapshot');
+const { configureToMatchImageSnapshot } = require('jest-image-snapshot');
+const emotion = require('emotion');
+const { createSerializer } = require('jest-emotion');
 
 let consoleError;
 let consoleWarn;
