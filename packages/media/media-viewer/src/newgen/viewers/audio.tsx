@@ -89,7 +89,9 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
             showControls={showControls}
           >
             {ref => {
-              return <MicDropFromRef audioRef={ref} color="#2581FF" />;
+              return (
+                <MicDropFromRef barNumber={50} audioRef={ref} color="#2581FF" />
+              );
             }}
           </CustomMediaPlayer>
         </CustomAudioPlayerWrapper>

@@ -300,6 +300,7 @@ export const CustomAudioPlayerWrapper = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 100%;
 `;
 
 export const AudioPlayer = styled.div`
@@ -327,8 +328,10 @@ export const Audio = styled.audio`
 export const AudioCover = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: scale-down;
-  background-color: #000000;
+  position: absolute;
+  z-index: 9;
+  opacity: 0.5;
+  object-fit: none;
 `;
 
 export const DefaultCoverWrapper = styled.div`

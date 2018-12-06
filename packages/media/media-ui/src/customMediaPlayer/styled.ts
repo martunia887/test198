@@ -125,6 +125,7 @@ export const ControlsWrapper = styled.div`
   background: linear-gradient(to top, #0e1624, rgba(14, 22, 36, 0));
   position: absolute;
   bottom: 0px;
+  z-index: 10;
 `;
 
 export const VolumeToggleWrapper = styled.div`
