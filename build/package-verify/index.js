@@ -65,14 +65,19 @@ async function verifyPackage(pkgConfig, cwd) {
    * The main and module (if defined) field exists.
    */
 
-  let validateFileExists = [];
   const files = ['package.json'];
   const pkgPath = path.join(tmpdir, 'node_modules', pkgConfig.name);
 
-  const fieldEntries = await getFieldValuesfromPkgJson(
+  const fieldEntries = await getFieldValues(
     pkgConfig,
     pkgConfig.packageVerify.fields,
   );
+
+  const fieldMatchStatus = await getCustomFieldsStatus(
+    pkgConfig,
+    pkgConfig.packageVerify.fieldMatch,
+  );
+  console.log('matchStatus:', fieldMatchStatus);
 
   if (pkgConfig.packageVerify.customPaths) {
     pkgConfig.packageVerify.customPaths.forEach(entry => {
@@ -88,13 +93,24 @@ async function verifyPackage(pkgConfig, cwd) {
   return await exists(pkgPath, files);
 }
 
-async function getFieldValuesfromPkgJson(pkgConfig, fields) {
+async function getFieldValues(pkgConfig, fields) {
   if (fields) {
     const fieldValues = fields.reduce((acc, key) => {
       if (pkgConfig[key]) return acc.concat(pkgConfig[key]);
     }, []);
     return fieldValues;
   }
+}
+
+async function getCustomFieldsStatus(pkgConfig, fieldMatch) {
+  const keys = Object.keys(fieldMatch);
+  const resultStatus = keys.reduce((acc, key) => {
+    return {
+      ...acc,
+      [key]: pkgConfig[key] === fieldMatch[key],
+    };
+  }, {});
+  return resultStatus;
 }
 
 async function installDependencies(cwd, peerDependencies = [], tarballs = []) {
