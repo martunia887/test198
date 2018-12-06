@@ -71,6 +71,12 @@ async function verifyPackage(pkgConfig, cwd) {
     files.push(pkgConfig.module);
   }
 
+  if (pkgConfig.verifyExists) {
+    pkgConfig.verifyExists.forEach(entry => {
+      files.push(Object.values(entry).toString());
+    });
+  }
+
   return await exists(path.join(tmpdir, 'node_modules', pkgConfig.name), files);
 }
 
@@ -94,8 +100,6 @@ async function installDependencies(cwd, peerDependencies = [], tarballs = []) {
       cwd,
     },
   );
-
-  // await spawn('open', [cwd]);
 }
 
 /**
@@ -106,11 +110,7 @@ async function exists(base, files = []) {
   return await Promise.all(
     files.map(async file => {
       const absolutePath = path.join(base, file);
-      // try {
       return await promisify(fs.access)(absolutePath);
-      // } catch (e) {
-      // return false;
-      // }
     }),
   );
 }
