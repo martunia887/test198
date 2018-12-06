@@ -205,6 +205,19 @@ export const handleToggleReferenceMenu = (
   return nextPluginState;
 };
 
+export const handleToggleFormattingMenu = (
+  pluginState: TablePluginState,
+  dispatch: Dispatch,
+): TablePluginState => {
+  const nextPluginState = {
+    ...pluginState,
+    isContextualMenuOpen: false,
+    isFormattingMenuOpen: !pluginState.isFormattingMenuOpen,
+  };
+  dispatch(pluginKey, nextPluginState);
+  return nextPluginState;
+};
+
 export const handleShowInsertColumnButton = (
   insertColumnButtonIndex?: number,
 ) => (pluginState: TablePluginState, dispatch: Dispatch): TablePluginState => {

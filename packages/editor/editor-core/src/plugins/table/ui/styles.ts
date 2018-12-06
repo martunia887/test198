@@ -667,7 +667,9 @@ export const tableStyles = css`
       border-radius: 5px;
     }
   }
-  .${ClassName.REFERENCE_MENU_WRAP} {
+
+  /* Sub menu (reference, formatting) */
+  .${ClassName.MENU_WRAP} {
     background: white;
     box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
     border-radius: ${borderRadius()}px;
@@ -675,23 +677,40 @@ export const tableStyles = css`
     width: 220px;
     position: absolute;
 
-    .${ClassName.REFERENCE_MENU_TITLE} {
+    &.${ClassName.FORMATTING_MENU_WRAP} {
+      width: 320px;
+    }
+
+    .${ClassName.MENU_TITLE} {
       text-align: center;
     }
-    .${ClassName.REFERENCE_MENU_DESCRIPTION} {
+    .${ClassName.MENU_DESCRIPTION} {
       color: ${N90};
       font-size: 90%;
       line-height: 1.5;
-      padding: 5px 0;
     }
-    .${ClassName.REFERENCE_SELECT} {
+    .${ClassName.SECTION} {
       margin-bottom: 10px;
     }
-    .${ClassName.REFERENCE_BUTTONS} {
+    .${ClassName.BUTTONS_WRAP} {
       text-align: right;
 
       button + button {
         margin-left: 10px;
+      }
+    }
+    .${ClassName.RULE_WRAP} {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .${ClassName.FORMATTING_BUTTONS_WRAP} {
+      display: flex;
+      > button {
+        margin-right: 10px;
+      }
+      > button:last-child {
+        margin-right: 0;
       }
     }
   }

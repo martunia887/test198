@@ -31,4 +31,9 @@ export default defineMessages({
     defaultMessage: 'Link to another table',
     description: 'Links a column to records from another table',
   },
+  formatting: {
+    id: 'fabric.editor.formatting',
+    defaultMessage: 'Conditional formatting',
+    description: 'Specify a conditional formatting for your table',
+  },
 });

@@ -132,7 +132,8 @@ class CellView extends ReactNodeView {
             withCursor={this.getPos() === pluginState.targetCellPosition}
             isMenuOpen={
               !!pluginState.isContextualMenuOpen ||
-              !!pluginState.isReferenceMenuOpen
+              !!pluginState.isReferenceMenuOpen ||
+              !!pluginState.isFormattingMenuOpen
             }
             view={props.view}
             appearance={props.appearance}

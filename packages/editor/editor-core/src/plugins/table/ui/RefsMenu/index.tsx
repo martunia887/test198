@@ -39,7 +39,7 @@ const calculateOffset = (targetCellRef, state) => {
       top -= topDiff + 4;
     }
   }
-  return [-6, -top];
+  return [-8, -top];
 };
 
 export interface RefsMenuProps {
@@ -118,14 +118,14 @@ export default class RefsMenu extends React.Component<
         handleClickOutside={this.handleClickOutside}
         handleEscapeKeydown={this.handleClickOutside}
       >
-        <div className={`${ClassName.REFERENCE_MENU_WRAP}`}>
-          <div className={`${ClassName.REFERENCE_MENU_TITLE}`}>
+        <div className={ClassName.MENU_WRAP}>
+          <div className={`${ClassName.MENU_TITLE} ${ClassName.SECTION}`}>
             Link to Table
           </div>
-          <div className={`${ClassName.REFERENCE_MENU_DESCRIPTION}`}>
+          <div className={`${ClassName.MENU_DESCRIPTION} ${ClassName.SECTION}`}>
             Choose the table to link records from
           </div>
-          <div className={`${ClassName.REFERENCE_SELECT}`}>
+          <div className={ClassName.SECTION}>
             <Select
               options={toSelectItems(this.state.tables)}
               placeholder="Choose a table"
@@ -134,11 +134,13 @@ export default class RefsMenu extends React.Component<
           </div>
           {this.state.tables && this.state.selectedTableId && (
             <>
-              <div className={`${ClassName.REFERENCE_MENU_DESCRIPTION}`}>
-                Choose the column on the {`"${this.getSelectedTable().title}"`}{' '}
+              <div
+                className={`${ClassName.MENU_DESCRIPTION} ${ClassName.SECTION}`}
+              >
+                Choose the column on the {`"${this.getSelectedTable().title}"`}
                 table that you’d like to look up
               </div>
-              <div className={`${ClassName.REFERENCE_SELECT}`}>
+              <div className={ClassName.SECTION}>
                 <Select
                   options={this.getColumns()}
                   placeholder="Choose a column"
@@ -147,7 +149,7 @@ export default class RefsMenu extends React.Component<
               </div>
             </>
           )}
-          <div className={`${ClassName.REFERENCE_BUTTONS}`}>
+          <div className={ClassName.BUTTONS_WRAP}>
             <Button onClick={this.dismiss} isDisabled={this.state.loading}>
               Cancel
             </Button>
@@ -178,7 +180,7 @@ export default class RefsMenu extends React.Component<
   private handleClickOutside = (event: React.SyntheticEvent) => {
     const target = event.target as HTMLElement;
     if (
-      closestElement(target, `.${ClassName.REFERENCE_MENU_WRAP}`) ||
+      closestElement(target, `.${ClassName.MENU_WRAP}`) ||
       target.getAttribute('role') === 'option'
     ) {
       event.preventDefault();

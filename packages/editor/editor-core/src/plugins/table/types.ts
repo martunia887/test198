@@ -38,6 +38,7 @@ export interface TablePluginState {
   tableFloatingToolbarTarget?: HTMLElement;
   isContextualMenuOpen?: boolean;
   isReferenceMenuOpen?: boolean;
+  isFormattingMenuOpen?: boolean;
   isInDanger?: boolean;
   insertColumnButtonIndex?: number;
   insertRowButtonIndex?: number;
@@ -109,11 +110,14 @@ export const TableCssClassName = {
 
   TABLE_PARENT_CONTAINER: `${clPrefix}table-parent-container`,
   TABLE_TITLE: `${clPrefix}table-title`,
-  REFERENCE_MENU_WRAP: `${clPrefix}reference-menu-wrap`,
-  REFERENCE_MENU_TITLE: `${clPrefix}reference-menu-title`,
-  REFERENCE_MENU_DESCRIPTION: `${clPrefix}reference-menu-description`,
-  REFERENCE_SELECT: `${clPrefix}reference-select`,
-  REFERENCE_BUTTONS: `${clPrefix}reference-buttons`,
+  MENU_WRAP: `${clPrefix}menu-wrap`,
+  MENU_TITLE: `${clPrefix}menu-title`,
+  MENU_DESCRIPTION: `${clPrefix}menu-description`,
+  SECTION: `${clPrefix}section`,
+  BUTTONS_WRAP: `${clPrefix}buttons-wrap`,
+  RULE_WRAP: `${clPrefix}rule-wrap`,
+  FORMATTING_MENU_WRAP: `${clPrefix}formatting-menu-wrap`,
+  FORMATTING_BUTTONS_WRAP: `${clPrefix}formatting-buttons-wrap`,
 
   // come from prosemirror-table
   COLUMN_RESIZE_HANDLE: 'column-resize-handle',

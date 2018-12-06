@@ -29,6 +29,7 @@ import {
 import { getToolbarConfig } from './toolbar';
 import FloatingContextualMenu from './ui/FloatingContextualMenu';
 import RefsMenu from './ui/RefsMenu';
+import FormattingMenu from './ui/FormattingMenu';
 import { isLayoutSupported } from './utils';
 import { pluginKey as referencePluginKey } from '../refs/pm-plugins/main';
 
@@ -148,6 +149,13 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
                 provider={referencePluginState.provider}
               />
             )}
+            <FormattingMenu
+              editorView={editorView}
+              mountPoint={popupsMountPoint}
+              boundariesElement={popupsBoundariesElement}
+              targetCellPosition={pluginState.targetCellPosition}
+              isOpen={pluginState.isFormattingMenuOpen}
+            />
           </>
         )}
       />

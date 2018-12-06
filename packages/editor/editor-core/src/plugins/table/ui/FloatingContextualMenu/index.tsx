@@ -24,7 +24,7 @@ export const calculateOffset = (targetCellRef, state) => {
       top -= topDiff + 2;
     }
   }
-  return [6, top];
+  return [8, top];
 };
 
 export interface Props {

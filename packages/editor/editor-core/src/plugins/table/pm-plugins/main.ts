@@ -20,6 +20,7 @@ import {
   handleDocOrSelectionChanged,
   handleToggleContextualMenu,
   handleToggleReferenceMenu,
+  handleToggleFormattingMenu,
   handleShowInsertColumnButton,
   handleShowInsertRowButton,
   handleHideInsertColumnOrRowButton,
@@ -37,6 +38,7 @@ import {
   findControlsHoverDecoration,
   fixTables,
   normalizeSelection,
+  applyFormatting,
 } from '../utils';
 
 export const pluginKey = new PluginKey('tablePlugin');
@@ -60,6 +62,7 @@ export enum ACTIONS {
   SHOW_INSERT_ROW_BUTTON,
   HIDE_INSERT_COLUMN_OR_ROW_BUTTON,
   TOGGLE_REFERENCE_MENU,
+  TOGGLE_FORMATTING_MENU,
 }
 
 export const createPlugin = (
@@ -159,6 +162,9 @@ export const createPlugin = (
           case ACTIONS.TOGGLE_REFERENCE_MENU:
             return handleToggleReferenceMenu(pluginState, dispatch);
 
+          case ACTIONS.TOGGLE_FORMATTING_MENU:
+            return handleToggleFormattingMenu(pluginState, dispatch);
+
           case ACTIONS.SHOW_INSERT_COLUMN_BUTTON:
             return handleShowInsertColumnButton(insertColumnButtonIndex)(
               pluginState,
@@ -197,7 +203,7 @@ export const createPlugin = (
         return fixTables(handleCut(tr, oldState, newState));
       }
       if (transactions.find(tr => tr.docChanged)) {
-        return fixTables(newState.tr);
+        return applyFormatting(fixTables(newState.tr));
       }
       if (transactions.find(tr => tr.selectionSet)) {
         return normalizeSelection(newState.tr);

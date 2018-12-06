@@ -43,6 +43,9 @@ const getCellAttrs = (dom: HTMLElement) => {
   if (dom.nodeName === 'TH') {
     attrs['id'] = uuid.generate();
     attrs['reference'] = dom.getAttribute('data-reference') || null;
+    attrs['formatting'] = JSON.parse(
+      dom.getAttribute('data-formatting') || '{}',
+    );
   }
   return attrs;
 };
@@ -54,6 +57,7 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     style?: string;
     'data-id'?: string;
     'data-reference'?: string;
+    'data-formatting'?: string;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -97,6 +101,9 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
 
     if (node.attrs.reference) {
       attrs['data-reference'] = node.attrs.reference;
+    }
+    if (node.attrs.formatting) {
+      attrs['data-formatting'] = JSON.stringify(node.attrs.formatting);
     }
   }
 
@@ -163,6 +170,16 @@ export function calcTableColumnWidths(node: PmNode): number[] {
 
 export type Layout = 'default' | 'full-width' | 'wide';
 
+export type FormattingCondition =
+  | 'is'
+  | 'is_not'
+  | 'contains'
+  | 'does_not_contain'
+  | 'is_empty'
+  | 'is_not_empty';
+
+export type FormattingMarks = 'strong' | 'em' | 'underline' | 'strike';
+
 export interface TableAttributes {
   isNumberColumnEnabled?: boolean;
   layout?: Layout;
@@ -222,6 +239,13 @@ export interface CellAttributes {
 export interface HeaderCellAttributes extends CellAttributes {
   id: string | null;
   reference?: string;
+  formatting?: {
+    rules: {
+      condition: FormattingCondition;
+      value: string;
+    };
+    marks: FormattingMarks[];
+  };
 }
 
 // TODO: Fix any, potential issue. ED-5048
@@ -327,6 +351,7 @@ export const tableHeader = {
     ...cellAttrs,
     id: { default: null },
     reference: { default: null },
+    formatting: { default: null },
   },
   tableRole: 'header_cell',
   isolating: true,

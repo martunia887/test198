@@ -74,6 +74,8 @@ export {
   TableHeader as TableHeaderDefinition,
   TableRow as TableRowDefinition,
   setCellAttrs,
+  FormattingMarks as TableFormattingMarks,
+  FormattingCondition as TableFormattingCondition,
 } from './tableNodes';
 export {
   applicationCard,
