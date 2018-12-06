@@ -30,8 +30,8 @@ function buildPkg() {
 
 function buildFlow() {
   buildBabel &
-  buildFlowTypes &
   wait
+  buildFlowTypes
 }
 
 function buildCjs() {
