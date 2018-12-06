@@ -6,10 +6,10 @@ set -e
 export PACKAGE_PATH=$(pwd)
 export ROOT=$(node -e "console.log(require('path').resolve(__dirname, '../../../'))")
 CURRENT_COMMAND=${1}
-COMMAND_PATH="${ROOT}/build/tools/commands/${CURRENT_COMMAND}.sh"
+COMMAND_PATH="${ROOT}/build/package-scripts/commands/${CURRENT_COMMAND}.sh"
 
-source ${ROOT}/build/tools/include/color.sh
-source ${ROOT}/build/tools/include/environment.sh
+source ${ROOT}/build/package-scripts/include/color.sh
+source ${ROOT}/build/package-scripts/include/environment.sh
 
 # Make sure the script was invoked under packages folder
 if [[ "${PACKAGE_PATH}" != */packages/* ]]; then

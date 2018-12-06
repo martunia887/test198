@@ -26,7 +26,9 @@ const { execSync } = require('child_process');
   const packagePath = workspaces[0].dir;
 
   execSync(
-    `../../../build/tools/command.sh ${command} ${commandArgs.join(' ')}`,
+    `../../../build/package-scripts/command.sh ${command} ${commandArgs.join(
+      ' ',
+    )}`,
     { cwd: packagePath, stdio: 'inherit' },
   );
 })();

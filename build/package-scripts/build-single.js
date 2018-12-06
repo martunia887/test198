@@ -30,7 +30,10 @@ const { getPackagesInfo } = require('@atlaskit/build-utils/tools');
     process.exit(2);
   }
 
-  execSync(`./build/tools/root-command.js build ${pkgName} ${buildType}`, {
-    stdio: 'inherit',
-  });
+  execSync(
+    `./build/package-scripts/root-command.js build ${pkgName} ${buildType}`,
+    {
+      stdio: 'inherit',
+    },
+  );
 })();
