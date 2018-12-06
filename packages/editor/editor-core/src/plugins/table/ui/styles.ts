@@ -712,6 +712,29 @@ export const tableStyles = css`
       > button:last-child {
         margin-right: 0;
       }
+
+      button > span > span {
+        margin: 0px !important;
+        padding: 0px !important;
+      }
+    }
+    .${ClassName.FORMATTING_COLOR_PICKER_BUTTON} {
+      display: block;
+      border: 1px solid ${N90};
+      border-radius: ${borderRadius()}px;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      margin: 0;
+    }
+    .${ClassName.FORMATTING_COLOR_PICKER} {
+      position: absolute;
+      width: 144px;
+      padding: 6px 0;
+      background: white;
+      box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
+      border-radius: ${borderRadius()}px;
+      z-index: 10;
     }
   }
 `;

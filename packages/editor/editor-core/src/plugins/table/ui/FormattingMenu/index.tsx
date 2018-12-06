@@ -11,7 +11,10 @@ import {
   uuid,
   TableFormattingMarks,
   TableFormattingCondition,
+  tableBackgroundColorPalette,
+  tableBackgroundBorderColors,
 } from '@atlaskit/editor-common';
+import { colors } from '@atlaskit/theme';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 import EditorBoldIcon from '@atlaskit/icon/glyph/editor/bold';
 import EditorItalicIcon from '@atlaskit/icon/glyph/editor/italic';
@@ -20,6 +23,7 @@ import EditorStrikethroughIcon from '@atlaskit/icon/glyph/editor/strikethrough';
 import Select from '@atlaskit/select';
 import Button from '@atlaskit/button';
 import TextField from '@atlaskit/field-text';
+import ColorPalette from '../../../../ui/ColorPalette';
 import { TableCssClassName as ClassName } from '../../types';
 import { pluginKey } from '../../pm-plugins/main';
 import { toggleFormattingMenu } from '../../actions';
@@ -107,6 +111,8 @@ export interface FormattingMenuProps {
 export interface FormattingMenuState {
   rules: Rule[];
   marks: TableFormattingMarks[];
+  isColorPickerOpen: boolean;
+  background: string | null;
 }
 
 export default class FormattingMenu extends React.Component<
@@ -119,6 +125,8 @@ export default class FormattingMenu extends React.Component<
     this.state = {
       rules: [],
       marks: [],
+      isColorPickerOpen: false,
+      background: null,
     };
   }
 
@@ -218,6 +226,28 @@ export default class FormattingMenu extends React.Component<
                   }
                 />
               ))}
+              <Button
+                onClick={this.toggleColorPicker}
+                iconBefore={
+                  <div
+                    className={ClassName.FORMATTING_COLOR_PICKER_BUTTON}
+                    style={{ background: this.state.background || 'white' }}
+                  />
+                }
+              >
+                {this.state.isColorPickerOpen && (
+                  <div className={ClassName.FORMATTING_COLOR_PICKER}>
+                    <ColorPalette
+                      palette={tableBackgroundColorPalette}
+                      borderColors={tableBackgroundBorderColors}
+                      onClick={this.setBackgroundColor}
+                      selectedColor={this.state.background}
+                      checkMarkColor={colors.N500}
+                    />
+                  </div>
+                )}
+              </Button>
+              <div />
             </div>
           )}
           <div className={ClassName.SECTION}>
@@ -252,6 +282,14 @@ export default class FormattingMenu extends React.Component<
     this.setState({
       rules,
     });
+  };
+
+  private setBackgroundColor = (background: string) => {
+    this.setState({ background });
+  };
+
+  private toggleColorPicker = () => {
+    this.setState({ isColorPickerOpen: !this.state.isColorPickerOpen });
   };
 
   private deleteRule = (event: React.SyntheticEvent, ruleId: string) => {
@@ -327,6 +365,7 @@ export default class FormattingMenu extends React.Component<
         value: rule.value,
       })),
       marks: this.state.marks,
+      background: this.state.background,
     };
 
     dispatch(

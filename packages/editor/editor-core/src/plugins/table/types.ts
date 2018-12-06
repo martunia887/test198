@@ -118,6 +118,8 @@ export const TableCssClassName = {
   RULE_WRAP: `${clPrefix}rule-wrap`,
   FORMATTING_MENU_WRAP: `${clPrefix}formatting-menu-wrap`,
   FORMATTING_BUTTONS_WRAP: `${clPrefix}formatting-buttons-wrap`,
+  FORMATTING_COLOR_PICKER_BUTTON: `${clPrefix}formatting-color-picker-button`,
+  FORMATTING_COLOR_PICKER: `${clPrefix}formatting-color-picker`,
 
   // come from prosemirror-table
   COLUMN_RESIZE_HANDLE: 'column-resize-handle',

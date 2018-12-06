@@ -60,6 +60,12 @@ export const applyFormatting = (tr: Transaction) => {
                           mark,
                         );
                       });
+                      if (formatting.background) {
+                        tr.setNodeMarkup(cell.pos, cell.node.type, {
+                          ...cell.node,
+                          background: formatting.background,
+                        });
+                      }
                     });
                   }
                 });
