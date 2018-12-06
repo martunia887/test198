@@ -1,0 +1,6 @@
+{
+  "name": "@atlaskit/tools",
+  "version": "1.0.0",
+  "description": "A collection of common scripts used by each package",
+  "private": true
+}

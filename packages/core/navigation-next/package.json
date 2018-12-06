@@ -70,6 +70,7 @@
     "react-router-dom": "^4.2.2"
   },
   "scripts": {
-    "build": "node scripts/build-entrypoints.js"
+    "build": "../../../build/tools/command.sh build flow",
+    "postbuild": "node scripts/build-entrypoints.js",
   }
 }
