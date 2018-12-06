@@ -240,10 +240,10 @@ export interface HeaderCellAttributes extends CellAttributes {
   id: string | null;
   reference?: string;
   formatting?: {
-    rules: {
+    rules: Array<{
       condition: FormattingCondition;
       value: string;
-    };
+    }>;
     marks: FormattingMarks[];
   };
 }
