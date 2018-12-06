@@ -72,5 +72,8 @@
   "scripts": {
     "build": "../../../build/tools/command.sh build flow",
     "postbuild": "node scripts/build-entrypoints.js",
+    "clean": "../../../build/tools/command.sh clean && git clean -xf",
+    "clean:build": "../../../build/tools/command.sh clean build && git clean -xf",
+    "lint": "../../../build/tools/command.sh lint flow",
   }
 }
