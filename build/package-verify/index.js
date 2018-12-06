@@ -64,12 +64,7 @@ async function verifyPackage(pkgConfig, cwd) {
    * Run a couple of simple checks to ensure package.json exists
    * The main and module (if defined) field exists.
    */
-  //console.log(pkgConfig);
 
-  //  pkgConfig.packageVerify.fields.forEach(field =>{
-  //    console.log(field);
-  //    if(field)
-  //  })
   let validateFileExists = [];
   const files = ['package.json'];
   const pkgPath = path.join(tmpdir, 'node_modules', pkgConfig.name);
@@ -78,6 +73,7 @@ async function verifyPackage(pkgConfig, cwd) {
     pkgConfig,
     pkgConfig.packageVerify.fields,
   );
+
   if (pkgConfig.packageVerify.customPaths) {
     pkgConfig.packageVerify.customPaths.forEach(entry => {
       files.push(entry);
@@ -93,10 +89,12 @@ async function verifyPackage(pkgConfig, cwd) {
 }
 
 async function getFieldValuesfromPkgJson(pkgConfig, fields) {
-  const fieldValues = fields.reduce((acc, key) => {
-    if (pkgConfig[key]) return acc.concat(pkgConfig[key]);
-  }, []);
-  return fieldValues;
+  if (fields) {
+    const fieldValues = fields.reduce((acc, key) => {
+      if (pkgConfig[key]) return acc.concat(pkgConfig[key]);
+    }, []);
+    return fieldValues;
+  }
 }
 
 async function installDependencies(cwd, peerDependencies = [], tarballs = []) {
