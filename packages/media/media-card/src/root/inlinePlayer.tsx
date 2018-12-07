@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Component, CSSProperties } from 'react';
+import { Component } from 'react';
 import { Context } from '@atlaskit/media-core';
 import { Subscription } from 'rxjs/Subscription';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
@@ -55,9 +55,12 @@ export class InlinePlayer extends Component<
             const { artifacts } = state;
 
             try {
+              const preferedArtifact = artifacts['video_1280.mp4']
+                ? 'video_1280.mp4'
+                : 'video_640.mp4';
               const fileSrc = await context.file.getArtifactURL(
                 artifacts,
-                'video_1280.mp4',
+                preferedArtifact,
                 collectionName,
               );
 
@@ -93,13 +96,18 @@ export class InlinePlayer extends Component<
     this.revoke();
   }
 
-  get style(): CSSProperties {
-    const { width, height } = this.props.dimensions;
+  private getStyle = (): React.CSSProperties => {
+    const { dimensions } = this.props;
+    // We are given dimensions. But we can’t just blindly apply them as width and height.
+    // Because editor is giving us “maximum” dimensions (equal to what it can go to if resized to 100%
+    // of available width). And the same time we don’t want to ignore these dimensions completely,
+    // because if consumer do not constraint width/height of container we still want to stick to given dimensions.
+    // Here we put width as a style. In combination with max-width: 100%; and max-height: 100%;
+    // it would give us required effect.
     return {
-      width,
-      height,
+      width: dimensions.width,
     };
-  }
+  };
 
   render() {
     const { fileSrc } = this.state;
@@ -110,7 +118,7 @@ export class InlinePlayer extends Component<
     }
 
     return (
-      <InlinePlayerWrapper style={this.style}>
+      <InlinePlayerWrapper style={this.getStyle()}>
         <CustomMediaPlayer
           type="video"
           src={fileSrc}
