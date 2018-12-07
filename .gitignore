@@ -40,3 +40,8 @@ secrets.json
 
 # this is created only in deploy-branch-build-dists builds in CI
 dists/
+
+**/.cache/
+website-gatsby/public
+
+**/.next/

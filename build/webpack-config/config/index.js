@@ -63,35 +63,6 @@ module.exports = function createWebpackConfig(
     module: {
       rules: [
         {
-          test: /SITE_DATA$/,
-          loader: require.resolve('bolt-fs-loader'),
-          options: {
-            include: [...globs, 'docs/**/*.md'].filter(Boolean),
-            exclude: ['**/node_modules/**', 'packages/build/docs/**'],
-          },
-        },
-        {
-          test: /NAV_DATA$/,
-          loader: require.resolve('nav-info-loader'),
-          options: {
-            /** $FlowFixMe - We have absolutely 0 idea why flow is complaining here */
-            include: globs
-              .filter(p => p.includes('package.json'))
-              .map(p => p.replace('/package.json', '')),
-            exclude: ['**/node_modules/**', 'packages/build/docs/**'],
-            configProps: [
-              'name',
-              'version',
-              'description',
-              'atlaskit',
-              'maintainers',
-              'peerDependencies',
-              'devDependencies',
-              'dependencies',
-            ],
-          },
-        },
-        {
           test: /CHANGELOG\.md$/,
           exclude: /node_modules/,
           loader: require.resolve('changelog-md-loader'),
@@ -109,7 +80,7 @@ module.exports = function createWebpackConfig(
         },
         {
           test: /\.js$/,
-          exclude: /node_modules/,
+          exclude: [/node_modules/, /website-next/],
           use: [
             {
               loader: 'thread-loader',
@@ -130,7 +101,7 @@ module.exports = function createWebpackConfig(
         },
         {
           test: /\.tsx?$/,
-          exclude: /node_modules/,
+          exclude: [/node_modules/, /website-next/],
           use: [
             {
               loader: 'cache-loader',

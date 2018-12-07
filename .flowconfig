@@ -2,6 +2,7 @@
 .*/node_modules/styled-components/.*
 .*/website/dist/sandbox/.*
 .*/website/.*
+.*/website-gatsby/.*
 .*/docs/templates/.*
 .*/packages/bitbucket/codemod-util-shared-styles-to-theme/__fixtures__/.*
 .*/packages/elements/icon/cjs/.*
@@ -14,6 +15,7 @@
 .*/.git/.*
 [untyped]
 .*/node_modules/react-select
+
 
 [include]
 

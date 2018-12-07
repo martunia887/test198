@@ -26,7 +26,9 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-type Props = {};
+export type Props = {};
+export const defaultProps = {};
+
 type State = { themeMode: 'light' | 'dark' };
 
 export default class extends Component<Props, State> {
