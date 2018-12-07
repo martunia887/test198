@@ -15,6 +15,7 @@ import {
   wideImageFileId,
   genericLinkId,
   errorFileId,
+  videoSquareFileId,
 } from '@atlaskit/media-test-helpers';
 import { MediaViewerItem } from '../src';
 
@@ -107,6 +108,12 @@ export const videoHorizontalFileItem: MediaViewerItem = {
 export const videoLargeFileItem: MediaViewerItem = {
   type: 'file',
   id: videoLargeFileId.id,
+  occurrenceKey: 'testOccurrenceKey',
+};
+
+export const videoSquareFileItem: MediaViewerItem = {
+  type: 'file',
+  id: videoSquareFileId.id,
   occurrenceKey: 'testOccurrenceKey',
 };
 

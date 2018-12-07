@@ -17,6 +17,7 @@ import {
   videoProcessingFailedItem,
   wideImageItem,
   defaultCollectionName,
+  videoSquareFileItem,
 } from '../example-helpers';
 import { MediaViewer, MediaViewerItem } from '../src';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
@@ -79,6 +80,7 @@ export default class Example extends React.Component<{}, State> {
             <h2>Video</h2>
             <ButtonList>
               <li>{this.createItem(videoHorizontalFileItem, 'Horizontal')}</li>
+              <li>{this.createItem(videoSquareFileItem, 'Square')}</li>
               <li>{this.createItem(videoLargeFileItem, 'Large')}</li>
               <li>{this.createItem(videoItem, 'Normal')}</li>
             </ButtonList>
