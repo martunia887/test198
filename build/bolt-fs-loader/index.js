@@ -92,5 +92,12 @@ module.exports = async function boltFsLoader() {
 
   addWebpackDependencies(result, this.addContextDependency.bind(this));
 
+  // const out = createLoaderOutput(result, files, opts.debug);
+
+  // console.log(out);
+  // // console.log(path.resolve)
+
+  // fs.writeFileSync(path.resolve(__dirname, Date.now()), out);
+
   return createLoaderOutput(result, files, opts.debug);
 };

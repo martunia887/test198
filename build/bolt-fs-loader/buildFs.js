@@ -16,7 +16,9 @@ function file(id /*: string */, path /*: string */, rootDir /*: string */) {
     id,
     path,
     uid: nodePath.relative(rootDir, path),
-    guid: `${nodePath.dirname(nodePath.relative(rootDir, path))}~bolt`,
+    guid: `${nodePath.dirname(
+      nodePath.dirname(nodePath.relative(rootDir, path)),
+    )}~bolt`,
   };
 }
 

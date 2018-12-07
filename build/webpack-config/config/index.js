@@ -32,7 +32,7 @@ for (const workspaceDir of fs.readdirSync(packagesDir)) {
 
     const key = `${workspaceDir}~${packageDir}`;
     const reg = new RegExp(
-      `[\\/]packages[\\/]${workspaceDir}[\\/]${packageDir}[\\/]((?!node_modules[\\/]).)*$`,
+      `[\\/]packages[\\/]${workspaceDir}[\\/]${packageDir}[\\/]((?!(node_modules|examples)[\\/]).)*$`,
     );
     cacheGroups[key] = {
       test: reg,
