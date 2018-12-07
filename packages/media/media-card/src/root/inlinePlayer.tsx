@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Component } from 'react';
 import { Context, MediaType } from '@atlaskit/media-core';
 import { Subscription } from 'rxjs/Subscription';
+import { MicDropFromRef } from 'react-micdrop';
 // import { MediaFileArtifact } from '@atlaskit/media-store';/**/
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { FileIdentifier } from './domain';
@@ -138,7 +139,13 @@ export class InlinePlayer extends Component<
           src={fileSrc}
           isAutoPlay
           isHDAvailable={false}
-        />
+        >
+          {(ref: React.RefObject<HTMLAudioElement>) =>
+            mediaType === 'audio' ? (
+              <MicDropFromRef barNumber={50} audioRef={ref} color="#2581FF" />
+            ) : null
+          }
+        </CustomMediaPlayer>
       </InlinePlayerWrapper>
     );
   }
