@@ -68,9 +68,9 @@ export class InlinePlayer extends Component<
             try {
               const preferedArtifact =
                 (mediaType === 'audio' && 'audio.mp3') ||
-                artifacts['video_1280.mp4']
+                (artifacts['video_1280.mp4']
                   ? 'video_1280.mp4'
-                  : 'video_640.mp4';
+                  : 'video_640.mp4');
 
               const fileSrc = await context.file.getArtifactURL(
                 artifacts,
