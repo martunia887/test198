@@ -16,7 +16,6 @@ import MediaPlayer, {
 } from 'react-video-renderer';
 import { colors } from '@atlaskit/theme';
 import { ThemeProvider } from 'styled-components';
-import { MicDropFromRef } from 'react-micdrop';
 import theme from '../theme';
 import { TimeRange } from './timeRange';
 import {

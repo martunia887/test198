@@ -7,6 +7,7 @@ import {
   NonImagePreview,
   Preview,
 } from '../../domain/preview';
+import { ImageMetadata } from '../../../../media-store';
 
 export default function(): Middleware {
   return store => (next: Dispatch<State>) => action => {
@@ -54,10 +55,25 @@ export async function getPreview(
         // We need to wait for the next tick since rxjs might call "next" before returning from "subscribe"
         window.setTimeout(() => subscription.unsubscribe());
 
-        if (mediaType === 'image' || mediaType === 'video') {
-          const metadata = await userContext.getImageMetadata(file.id, {
-            collection,
-          });
+        if (
+          mediaType === 'image' ||
+          mediaType === 'video' ||
+          mediaType === 'audio'
+        ) {
+          let metadata: ImageMetadata;
+          try {
+            metadata = await userContext.getImageMetadata(file.id, {
+              collection,
+            });
+          } catch (e) {
+            metadata = {
+              pending: false,
+              original: {
+                height: 640,
+                width: 640,
+              },
+            };
+          }
           const preview = getPreviewFromMetadata(metadata);
           dispatchPreviewUpdate(store, action, preview);
         } else {

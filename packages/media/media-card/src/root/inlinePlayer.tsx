@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Context } from '@atlaskit/media-core';
+import { Context, MediaType } from '@atlaskit/media-core';
 import { Subscription } from 'rxjs/Subscription';
+// import { MediaFileArtifact } from '@atlaskit/media-store';/**/
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { FileIdentifier } from './domain';
 import { InlinePlayerWrapper } from './styled';
@@ -17,6 +18,7 @@ export interface InlinePlayerProps {
 
 export interface InlinePlayerState {
   fileSrc?: string;
+  mediaType: MediaType;
 }
 
 export class InlinePlayer extends Component<
@@ -24,7 +26,9 @@ export class InlinePlayer extends Component<
   InlinePlayerState
 > {
   subscription?: Subscription;
-  state: InlinePlayerState = {};
+  state: InlinePlayerState = {
+    mediaType: 'video',
+  };
 
   static defaultProps = {
     dimensions: defaultImageCardDimensions,
@@ -40,10 +44,17 @@ export class InlinePlayer extends Component<
       .getFileState(await id, { collectionName })
       .subscribe({
         next: async state => {
+          if (state.status !== 'error') {
+            this.setState({ mediaType: state.mediaType });
+          }
+
           if (state.status !== 'error' && state.preview) {
             const { blob } = state.preview;
 
-            if (blob.type.indexOf('video/') === 0) {
+            if (
+              blob.type.indexOf('video/') === 0 ||
+              blob.type.indexOf('audio/') === 0
+            ) {
               const fileSrc = URL.createObjectURL(state.preview.blob);
               this.setState({ fileSrc });
               window.setTimeout(this.unsubscribe, 0);
@@ -52,12 +63,15 @@ export class InlinePlayer extends Component<
           }
 
           if (state.status === 'processed') {
-            const { artifacts } = state;
+            const { artifacts, mediaType } = state;
 
             try {
-              const preferedArtifact = artifacts['video_1280.mp4']
-                ? 'video_1280.mp4'
-                : 'video_640.mp4';
+              const preferedArtifact =
+                (mediaType === 'audio' && 'audio.mp3') ||
+                artifacts['video_1280.mp4']
+                  ? 'video_1280.mp4'
+                  : 'video_640.mp4';
+
               const fileSrc = await context.file.getArtifactURL(
                 artifacts,
                 preferedArtifact,
@@ -110,7 +124,7 @@ export class InlinePlayer extends Component<
   };
 
   render() {
-    const { fileSrc } = this.state;
+    const { fileSrc, mediaType } = this.state;
 
     if (!fileSrc) {
       const { dimensions } = this.props;
@@ -120,7 +134,7 @@ export class InlinePlayer extends Component<
     return (
       <InlinePlayerWrapper style={this.getStyle()}>
         <CustomMediaPlayer
-          type="video"
+          type={mediaType}
           src={fileSrc}
           isAutoPlay
           isHDAvailable={false}

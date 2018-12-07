@@ -19,7 +19,7 @@ export interface CardContentProps {
 export class CardContent extends PureComponent<CardContentProps, {}> {
   renderPlayButton = () => {
     const { mediaType } = this.props;
-    if (mediaType !== 'video') {
+    if (mediaType !== 'video' && mediaType !== 'audio') {
       return null;
     }
 

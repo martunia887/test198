@@ -207,6 +207,7 @@ export class Card extends Component<CardProps, CardState> {
                 };
                 const width = getDataURIDimension('width', options);
                 const height = getDataURIDimension('height', options);
+                console.log({ width, height, state });
                 try {
                   const allowAnimated = appearance !== 'small';
                   const blob = await context.getImage(resolvedId, {
@@ -219,9 +220,11 @@ export class Card extends Component<CardProps, CardState> {
                   const dataURI = URL.createObjectURL(blob);
                   this.releaseDataURI();
                   if (this.hasBeenMounted) {
+                    console.log({ dataURI, name: state.name });
                     this.setState({ dataURI });
                   }
                 } catch (e) {
+                  console.log({ e, name: state.name });
                   // We don't want to set status=error if the preview fails, we still want to display the metadata
                 }
               }
@@ -288,6 +291,7 @@ export class Card extends Component<CardProps, CardState> {
   }
 
   onClick = (result: CardEvent, analyticsEvent?: UIAnalyticsEventInterface) => {
+    console.log('on click');
     const { onClick, useInlinePlayer } = this.props;
     const { mediaItemDetails } = result;
     if (onClick) {
@@ -296,7 +300,7 @@ export class Card extends Component<CardProps, CardState> {
 
     if (useInlinePlayer && mediaItemDetails) {
       const { mediaType } = mediaItemDetails as FileDetails;
-      if (mediaType === 'video') {
+      if (mediaType === 'video' || mediaType === 'audio') {
         this.setState({
           isPlayingFile: true,
         });

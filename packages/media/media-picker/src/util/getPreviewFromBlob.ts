@@ -8,6 +8,7 @@ export const getPreviewFromBlob = (
   mediaType: MediaType,
 ): Promise<Preview> =>
   new Promise(async (resolve, reject) => {
+    console.log('getPreviewFromBlob for', file);
     const src = URL.createObjectURL(file);
 
     if (mediaType === 'image') {
@@ -36,6 +37,17 @@ export const getPreviewFromBlob = (
       };
 
       snapshoter.end();
+      resolve(preview);
+    } else if (mediaType === 'audio') {
+      const preview: ImagePreview = {
+        file,
+        dimensions: {
+          width: 640,
+          height: 640,
+        },
+        scaleFactor: 1,
+      };
+      console.log('is audio', preview);
       resolve(preview);
     } else {
       resolve({ file });

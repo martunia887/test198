@@ -222,6 +222,7 @@ export default class PickerFacade {
     }
 
     const { dimensions, scaleFactor } = preview as ImagePreview;
+
     const states = this.stateManager.newState(file.id, {
       fileName: file.name,
       fileSize: file.size,

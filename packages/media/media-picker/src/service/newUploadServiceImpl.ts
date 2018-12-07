@@ -314,12 +314,19 @@ export class NewUploadServiceImpl implements UploadService {
           });
         });
       } else {
-        getPreviewFromBlob(file, mediaType).then(preview => {
-          this.emit('file-preview-update', {
-            file: mediaFile,
-            preview,
-          });
-        });
+        console.log('Not an image. buty', mediaType);
+        getPreviewFromBlob(file, mediaType).then(
+          preview => {
+            console.log('emitting file-preview-update', preview);
+            this.emit('file-preview-update', {
+              file: mediaFile,
+              preview,
+            });
+          },
+          e => {
+            console.log('Unexpected shit', e);
+          },
+        );
       }
     });
   }
