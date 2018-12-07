@@ -170,12 +170,7 @@ export class CustomMediaPlayer extends Component<
   renderFullScreenButton = () => {
     const {
       intl: { formatMessage },
-      type,
     } = this.props;
-
-    if (type === 'audio') {
-      return;
-    }
 
     const { isFullScreenEnabled } = this.state;
     const icon = isFullScreenEnabled ? (

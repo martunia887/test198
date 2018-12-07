@@ -342,6 +342,7 @@ export class Card extends Component<CardProps, CardState> {
     const { progress, metadata, dataURI, previewOrientation } = this.state;
     const { analyticsContext, onRetry, onClick, actions } = this;
     const status = getCardStatus(this.state, this.props);
+    console.log({ status, metadata, dimensions });
     const card = (
       <AnalyticsContext data={analyticsContext}>
         <CardView

@@ -69,8 +69,8 @@ export async function getPreview(
             metadata = {
               pending: false,
               original: {
-                height: 640,
-                width: 640,
+                height: 360,
+                width: 480,
               },
             };
           }

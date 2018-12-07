@@ -42,8 +42,8 @@ export const getPreviewFromBlob = (
       const preview: ImagePreview = {
         file,
         dimensions: {
-          width: 640,
-          height: 640,
+          height: 360,
+          width: 480,
         },
         scaleFactor: 1,
       };
