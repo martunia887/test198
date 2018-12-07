@@ -296,11 +296,15 @@ export const RightHeader = styled.div`
 `;
 
 export const CustomAudioPlayerWrapper = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 100%;
+
+  canvas {
+    width: 100%;
+  }
 `;
 
 export const AudioPlayer = styled.div`
