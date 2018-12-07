@@ -77,3 +77,14 @@ export const InlinePlayerWrapper = styled.div`
 `;
 
 InlinePlayerWrapper.displayName = 'InlinePlayerWrapper';
+
+export const MicDropWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  canvas {
+    width: 100%;
+  }
+`;

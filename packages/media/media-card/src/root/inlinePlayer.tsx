@@ -6,7 +6,7 @@ import { MicDropFromRef } from 'react-micdrop';
 // import { MediaFileArtifact } from '@atlaskit/media-store';/**/
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { FileIdentifier } from './domain';
-import { InlinePlayerWrapper } from './styled';
+import { InlinePlayerWrapper, MicDropWrapper } from './styled';
 import { CardDimensions, defaultImageCardDimensions } from '..';
 import { CardLoading } from '../utils/cardLoading';
 
@@ -140,11 +140,13 @@ export class InlinePlayer extends Component<
           isAutoPlay
           isHDAvailable={false}
         >
-          {(ref: React.RefObject<HTMLAudioElement>) =>
-            mediaType === 'audio' ? (
-              <MicDropFromRef barNumber={50} audioRef={ref} color="#2581FF" />
-            ) : null
-          }
+          {ref => {
+            return mediaType === 'audio' ? (
+              <MicDropWrapper>
+                <MicDropFromRef barNumber={50} audioRef={ref} color="#2581FF" />
+              </MicDropWrapper>
+            ) : null;
+          }}
         </CustomMediaPlayer>
       </InlinePlayerWrapper>
     );
