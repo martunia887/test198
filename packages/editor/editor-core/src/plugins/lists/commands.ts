@@ -388,15 +388,13 @@ export function indentList(): Command {
     const { listItem } = state.schema.nodes;
     if (isInsideListItem(state)) {
       const { $from } = state.selection;
-      console.log('Indented list');
-
       const baseDepth = rootListDepth(state.selection, state.schema.nodes);
       const currentDepth = $from.depth;
 
-      // Each indentation level increases the depth by two due
+      // Each indentation level increases the depth by two due to the ol/ul
+      // and the li
       const indentationLevel = (currentDepth - baseDepth) / 2;
-      console.log('Up to indentation level:', indentationLevel);
-      if (indentationLevel >= 6) {
+      if (indentationLevel > 5) {
         return true;
       }
 
@@ -484,6 +482,7 @@ export function adjustSelectionInList(
   return new TextSelection(doc.resolve(startPos), doc.resolve(endPos));
 }
 
+// Get the depth of the nearest ancestor list
 export const rootListDepth = (selection: Selection<any>, nodes) => {
   const { bulletList, orderedList, listItem } = nodes;
   let depth;
