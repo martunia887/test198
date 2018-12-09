@@ -396,11 +396,10 @@ export function indentList(): Command {
       // Each indentation level increases the depth by two due
       const indentationLevel = (currentDepth - baseDepth) / 2;
       console.log('Up to indentation level:', indentationLevel);
-      if (indentationLevel > 5) {
-        return false;
+      if (indentationLevel >= 6) {
+        return true;
       }
 
-    // if ($from.node(-1).type === listItem) {
       baseListCommand.sinkListItem(listItem)(state, dispatch);
       return true;
     }
