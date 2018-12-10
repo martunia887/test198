@@ -325,6 +325,9 @@ export const emoji = (attrs: {
   };
   return nodeFactory(sampleSchema.nodes.emoji, emojiNodeAttrs);
 };
+
+const NON_WIDTH_CHAR = '\u200B';
+
 export const mention = (attrs: MentionAttributes) =>
   nodeFactory(sampleSchema.nodes.mention, attrs);
 export const table = (attrs?: TableAttributes) =>
@@ -336,6 +339,8 @@ export const th = (attrs?: CellAttributes) =>
   nodeFactory(sampleSchema.nodes.tableHeader, attrs);
 export const tdEmpty = td()(p(''));
 export const thEmpty = th()(p(''));
+export const thWithNonWidthChar = th()(p(NON_WIDTH_CHAR));
+export const tdWithNonWidthChar = td()(p(NON_WIDTH_CHAR));
 export const tdCursor = td()(p('{<>}'));
 export const thCursor = th()(p('{<>}'));
 export const decisionList = (attrs: { localId?: string } = {}) =>
