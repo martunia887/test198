@@ -1,15 +1,12 @@
 // @flow
 import React, { Component } from 'react';
-import { Theme } from '@atlaskit/theme';
+import GlobalTheme from '@atlaskit/theme';
 import Icon from '@atlaskit/icon/glyph/radio';
 import { IconWrapper } from './styled/Radio';
-import defaultTheme from './theme';
+import { Theme, type ThemeTokens } from './theme';
 import type { RadioIconProps } from './types';
 
 export default class RadioIcon extends Component<RadioIconProps> {
-  static defaultProps = {
-    theme: defaultTheme,
-  };
   render() {
     const {
       isActive,
@@ -20,35 +17,42 @@ export default class RadioIcon extends Component<RadioIconProps> {
       isInvalid,
       theme,
     } = this.props;
+    const themeState = {
+      isActive,
+      isChecked,
+      isDisabled,
+      isFocused,
+      isHovered,
+      isInvalid,
+    };
     return (
-      <Theme values={theme}>
-        {t => (
-          <IconWrapper
-            {...t.radio({
-              isActive,
-              isChecked,
-              isDisabled,
-              isFocused,
-              isHovered,
-              isInvalid,
-            })}
-            isActive={isActive}
-            isChecked={isChecked}
-            isDisabled={isDisabled}
-            isFocused={isFocused}
-            isHovered={isHovered}
-            isInvalid={isInvalid}
-          >
-            <Icon
-              isActive={isActive}
-              isHovered={isHovered}
-              label=""
-              primaryColor="inherit"
-              secondaryColor="inherit"
-            />
-          </IconWrapper>
+      <GlobalTheme.Consumer>
+        {({ mode }: { mode: 'dark' | 'light' }) => (
+          <Theme.Provider value={theme}>
+            <Theme.Consumer {...themeState} mode={mode}>
+              {(tokens: ThemeTokens) => (
+                <IconWrapper
+                  {...tokens}
+                  isActive={isActive}
+                  isChecked={isChecked}
+                  isDisabled={isDisabled}
+                  isFocused={isFocused}
+                  isHovered={isHovered}
+                  isInvalid={isInvalid}
+                >
+                  <Icon
+                    isActive={isActive}
+                    isHovered={isHovered}
+                    label=""
+                    primaryColor="inherit"
+                    secondaryColor="inherit"
+                  />
+                </IconWrapper>
+              )}
+            </Theme.Consumer>
+          </Theme.Provider>
         )}
-      </Theme>
+      </GlobalTheme.Consumer>
     );
   }
 }

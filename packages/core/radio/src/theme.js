@@ -1,5 +1,5 @@
 // @flow
-import { colors } from '@atlaskit/theme';
+import { colors, createTheme } from '@atlaskit/theme';
 
 const getBorderColor = (props: ThemeState) => {
   if (props.isDisabled) return { light: '', dark: '' };
@@ -63,29 +63,20 @@ export type ThemeState = {
   isFocused?: boolean,
 };
 
-export type ThemeProps = {
-  radio?: (
-    state: ThemeState,
-  ) => {
-    dotColor: string,
-    circleColor: string,
-    borderColor: string,
-    textColor: string,
-  },
-  mode?: 'light' | 'dark',
+export type ThemeProps = ThemeState & { mode: 'light' | 'dark' };
+
+export type ThemeTokens = {
+  dotColor: string,
+  circleColor: string,
+  borderColor: string,
+  textColor: string,
 };
 
-export default function(props: ThemeProps) {
-  const mode = props.mode || 'light';
-  return {
-    radio: (state: ThemeState) => ({
-      dotColor: getDotColor(state)[mode],
-      circleColor: getCircleColor(state)[mode],
-      borderColor: getBorderColor(state)[mode],
-      textColor: getTextColor(state)[mode],
-      ...(props.radio ? props.radio(state) : null),
-    }),
-    mode,
-    ...props,
-  };
-}
+export const Theme = createTheme<ThemeTokens, ThemeProps>(
+  ({ mode, ...state }: ThemeProps) => ({
+    dotColor: getDotColor(state)[mode],
+    circleColor: getCircleColor(state)[mode],
+    borderColor: getBorderColor(state)[mode],
+    textColor: getTextColor(state)[mode],
+  }),
+);

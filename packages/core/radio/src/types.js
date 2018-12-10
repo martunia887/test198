@@ -1,6 +1,6 @@
 // @flow
 import type { Node } from 'react';
-import type { ThemeProps } from './theme';
+import type { ThemeProps, ThemeTokens } from './theme';
 
 // Used by RadioGroupStateless
 export type OptionPropType = {
@@ -27,7 +27,7 @@ export type RadioIconProps = {
   /* Field invalid state */
   isInvalid?: boolean,
   /* theme object */
-  theme: ThemeProps => ThemeProps,
+  theme?: ((ThemeProps) => ThemeTokens, ThemeProps) => ThemeTokens,
 };
 
 export type RadioInputProps = RadioIconProps & {
@@ -70,16 +70,22 @@ export type RadioProps = {
   name?: string,
   /** onChange event handler, passed into the props of each Radio Component instantiated within RadioGroup */
   onChange: (SyntheticEvent<*>) => void,
+  /** onBlur event handler */
   onBlur?: (SyntheticInputEvent<*>) => void,
+  /** onFocus event handler */
   onFocus?: (SyntheticInputEvent<*>) => void,
+  /** onMouseDown event handler */
   onMouseDown?: (SyntheticInputEvent<*>) => void,
+  /** onMouseUp event handler */
   onMouseUp?: (SyntheticInputEvent<*>) => void,
+  /** onMouseEnter event handler */
   onMouseEnter?: (SyntheticInputEvent<*>) => void,
+  /** onMouseLeave event handler */
   onMouseLeave?: (SyntheticInputEvent<*>) => void,
   /** onInvalid event handler, passed into the props of each Radio Component instantiated within RadioGroup */
   onInvalid?: (SyntheticEvent<*>) => void,
   /** theme object */
-  theme: ThemeProps => ThemeProps,
+  theme?: ((ThemeProps) => ThemeTokens, ThemeProps) => ThemeTokens,
   /** Field value */
   value?: string | number,
 };
