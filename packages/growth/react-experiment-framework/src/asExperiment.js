@@ -57,7 +57,7 @@ export default function asExperiment(
         return null;
       }
 
-      const { enrollmentDetails } = experimentDetails;
+      const { enrollmentDetails, enrollmentOptions } = experimentDetails;
       if (!enrollmentDetails) {
         throw new Error(
           `Experiment ${experimentKey} has missing enrollment details`,
@@ -81,6 +81,7 @@ export default function asExperiment(
         cohort,
         isEligible,
         ineligibilityReasons,
+        enrollmentOptions,
       };
 
       return (

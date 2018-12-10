@@ -6,12 +6,12 @@ import type {
   ExperimentKey,
   EnrollmentDetails,
   Experiments,
-  ExperimentEnrollmentConfig,
+  ExperimentsConfig,
   ResolverPromises,
 } from './types';
 
 type Props = {
-  experimentEnrollmentConfig: ExperimentEnrollmentConfig,
+  experimentsConfig: ExperimentsConfig,
   children?: Element<any>,
 };
 
@@ -27,9 +27,9 @@ class ExperimentController extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const { experimentEnrollmentConfig } = this.props;
+    const { experimentsConfig } = this.props;
 
-    const intialExperiments = Object.keys(experimentEnrollmentConfig).reduce(
+    const intialExperiments = Object.keys(experimentsConfig).reduce(
       (cumulative: any, experimentKey: ExperimentKey) => ({
         ...cumulative,
         [experimentKey]: {
@@ -37,6 +37,7 @@ class ExperimentController extends Component<Props, State> {
           enrollmentResolver: () =>
             this.resolverPromises[experimentKey] ||
             this.resolveEnrollmentForExperiment(experimentKey),
+          enrollmentOptions: experimentsConfig[experimentKey].enrollmentOptions,
         },
       }),
       {},
@@ -48,12 +49,22 @@ class ExperimentController extends Component<Props, State> {
   }
 
   resolveEnrollmentForExperiment(experimentKey: ExperimentKey) {
-    const { experimentEnrollmentConfig } = this.props;
+    const { experimentsConfig } = this.props;
+    let enrollmentResolver;
+    let enrollmentOptions;
 
-    const enrollmentResolver = experimentEnrollmentConfig[experimentKey];
+    if (
+      experimentsConfig[experimentKey] &&
+      experimentsConfig[experimentKey].enrollmentResolver
+    ) {
+      enrollmentResolver = experimentsConfig[experimentKey].enrollmentResolver;
+      enrollmentOptions = experimentsConfig[experimentKey].enrollmentOptions;
+    } else {
+      enrollmentResolver = experimentsConfig[experimentKey];
+    }
 
     // updates context after resolving
-    const enrollmentPromise = enrollmentResolver();
+    const enrollmentPromise = enrollmentResolver(enrollmentOptions);
 
     enrollmentPromise.then((enrollmentDetails: EnrollmentDetails) => {
       this.setState({
@@ -61,6 +72,7 @@ class ExperimentController extends Component<Props, State> {
           [experimentKey]: {
             isEnrollmentDecided: true,
             enrollmentDetails,
+            enrollmentOptions,
           },
         },
       });

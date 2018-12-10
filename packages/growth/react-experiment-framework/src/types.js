@@ -10,10 +10,15 @@ export type EnrollmentDetails = {
 
 export type ExperimentEnrollmentResolver = () => Promise<EnrollmentDetails>;
 
+export type EnrollmentOptions = {
+  [string]: any,
+};
+
 export type ExperimentDetails = {
   isEnrollmentDecided: boolean,
   enrollmentResolver: ExperimentEnrollmentResolver,
   enrollmentDetails?: EnrollmentDetails,
+  enrollmentOptions?: EnrollmentOptions,
 };
 
 export type Experiments = {
@@ -21,7 +26,12 @@ export type Experiments = {
 };
 
 export type ExperimentEnrollmentConfig = {
-  [ExperimentKey]: ExperimentEnrollmentResolver,
+  enrollmentResolver: ExperimentEnrollmentResolver,
+  enrollmentOptions?: EnrollmentOptions,
+};
+
+export type ExperimentsConfig = {
+  [ExperimentKey]: ExperimentEnrollmentResolver | ExperimentEnrollmentConfig,
 };
 
 export type ExposureDetails = EnrollmentDetails & {
