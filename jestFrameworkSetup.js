@@ -328,6 +328,7 @@ expect.addSnapshotSerializer(createSerializer(emotion));
 
 // set up for visual regression
 if (process.env.VISUAL_REGRESSION) {
+  console.log('inside tests------');
   const puppeteer = require('puppeteer');
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
 
@@ -348,6 +349,9 @@ if (process.env.VISUAL_REGRESSION) {
   }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
   afterAll(async () => {
+    console.log('closing tests------');
+    console.log(global.browser.close());
+
     await global.browser.close();
   });
 
