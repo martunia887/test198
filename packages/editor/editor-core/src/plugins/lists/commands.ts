@@ -387,17 +387,13 @@ export function indentList(): Command {
   return function(state, dispatch) {
     const { listItem } = state.schema.nodes;
     if (isInsideListItem(state)) {
-      const { $from } = state.selection;
-      const baseDepth = rootListDepth(state.selection, state.schema.nodes);
-      const currentDepth = $from.depth;
-
-      // Each indentation level increases the depth by two due to the ol/ul
-      // and the li
-      const indentationLevel = (currentDepth - baseDepth) / 2;
-      if (indentationLevel > 5) {
+      const indentationLevels = numberNestedLists(
+        state.selection,
+        state.schema.nodes,
+      );
+      if (indentationLevels > 5) {
         return true;
       }
-
       baseListCommand.sinkListItem(listItem)(state, dispatch);
       return true;
     }
@@ -500,6 +496,23 @@ export const rootListDepth = (selection: Selection<any>, nodes) => {
     }
   }
   return depth;
+};
+
+// Returns the number of nested lists that are ancestors of the given selection
+export const numberNestedLists = (selection: Selection<any>, nodes) => {
+  const { bulletList, orderedList } = nodes;
+  console.log({
+    fromDepth: selection.$from.depth,
+    toDepth: selection.$to.depth,
+  });
+  let count = 0;
+  for (let i = selection.$to.depth - 1; i > 0; i--) {
+    const node = selection.$to.node(i);
+    if (node.type === bulletList || node.type === orderedList) {
+      count += 1;
+    }
+  }
+  return count;
 };
 
 export const toggleList = (
