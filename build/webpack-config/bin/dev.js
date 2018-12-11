@@ -33,7 +33,7 @@ const createConfig = require('../config');
 const utils = require('../config/utils');
 const { print, devServerBanner, errorMsg } = require('../banner');
 
-const HOST = 'localhost';
+const HOST = '0.0.0.0';
 const PORT = +process.env.ATLASKIT_DEV_PORT || 9000;
 
 async function runDevServer() {

@@ -10,6 +10,10 @@ const path = require('path');
 const fs = require('fs-extra');
 const pageSelector = '#examples';
 
+const url = process.env.DOCKER
+  ? 'http://host.docker.internal:9000'
+  : 'http://localhost:9000';
+
 async function takeScreenShot(page /*:any*/, url /*:string*/) {
   await page.goto(url);
   await page.waitForSelector(pageSelector);
@@ -52,7 +56,7 @@ function getExamplesFor(pkgName /*: string */) /*: Array<Object> */ {
 }
 
 // construct example urls for a given example
-const baseUrl = 'http://localhost:9000';
+const baseUrl = url;
 const getExampleUrl = (
   group: string,
   packageName: string,

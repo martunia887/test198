@@ -329,26 +329,27 @@ expect.addSnapshotSerializer(createSerializer(emotion));
 if (process.env.VISUAL_REGRESSION) {
   const puppeteer = require('puppeteer');
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
+  if (!process.env.DOCKER) {
+    beforeAll(async () => {
+      // show browser when watch is enabled
+      const isWatch = process.env.WATCH === 'true';
+      let headless = true;
+      if (isWatch) {
+        headless = false;
+      }
+      global.browser = await puppeteer.launch({
+        // run test in headless mode
+        headless: headless,
+        slowMo: 100,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
+      global.page = await global.browser.newPage();
+    }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
-  beforeAll(async () => {
-    // show browser when watch is enabled
-    const isWatch = process.env.WATCH === 'true';
-    let headless = true;
-    if (isWatch) {
-      headless = false;
-    }
-    global.browser = await puppeteer.launch({
-      // run test in headless mode
-      headless: headless,
-      slowMo: 100,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    afterAll(async () => {
+      await global.browser.close();
     });
-    global.page = await global.browser.newPage();
-  }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
-
-  afterAll(async () => {
-    await global.browser.close();
-  });
+  }
 
   // TODO tweak failureThreshold to provide best results
   // TODO: A failureThreshold of 1 will pass tests that have > 2 percent failing pixels

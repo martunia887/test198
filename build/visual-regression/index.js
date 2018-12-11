@@ -12,6 +12,8 @@ const glob = require('glob');
  * and run and wait for visual-regression tests complete
  */
 const JEST_WAIT_FOR_INPUT_TIMEOUT = 1000;
+// const url = process.env.DOCKER ? 'http://host.docker.internal:9000' : 'http://localhost:9000';
+const isCreateSnapshot = process.env.CREATE_SNAPSHOT === 'true';
 const isLocalRun = process.env.RUN_LOCAL_ONLY === 'true';
 const watch = process.env.WATCH ? '--watch' : '';
 
@@ -26,10 +28,10 @@ function removeSnapshotDir() {
     });
 }
 
-// function to generate snapshot from production website
-function getProdSnapshots() {
+// function to generate snapshot from local branch
+function getSnapshots() {
   return new Promise((resolve, reject) => {
-    let cmd = `VISUAL_REGRESSION=true PROD=true jest -u`;
+    let cmd = `VISUAL_REGRESSION=true PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true jest -u`;
     if (watch) {
       cmd = `${cmd} --watch`;
     }
@@ -40,7 +42,7 @@ function getProdSnapshots() {
 // function to run tests and compare snapshot against prod snapshot
 function runTests() {
   return new Promise((resolve, reject) => {
-    const cmd = `VISUAL_REGRESSION=true jest`;
+    const cmd = `VISUAL_REGRESSION=true DOCKER=true PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true jest`;
     runCommand(cmd, resolve, reject);
   });
 }
@@ -60,36 +62,42 @@ function runCommand(cmd, resolve, reject) {
 
 async function main() {
   const serverAlreadyRunning = await isReachable('http://localhost:9000');
-  let prodTestStatus /*: {code: number, signal: any}*/ = {
+  let snapshotStatus /*: {code: number, signal: any}*/ = {
     code: 0,
     signal: '',
   };
-  removeSnapshotDir();
+  // TODO: to decide if we remove the snapshots
+  // removeSnapshotDir();
 
-  if (!serverAlreadyRunning) {
+  if (!serverAlreadyRunning && isCreateSnapshot) {
     // Overriding the env variable to start the correct packages
     process.env.VISUAL_REGRESSION = 'true';
     await webpack.startDevServer();
   }
 
-  if (!isLocalRun) {
-    prodTestStatus = await getProdSnapshots();
+  if (isCreateSnapshot) {
+    snapshotStatus = await getSnapshots();
+    const serverDockerAlreadyRunning = await isReachable(
+      'http://host.docker.internal:9000',
+    );
+    console.log('Where I am');
+    console.log(serverDockerAlreadyRunning);
+
+    console.log(
+      `Exiting tests with exit code: ${snapshotStatus.code} and signal: ${
+        snapshotStatus.signal
+      }`,
+    );
+    if (snapshotStatus.code !== 0) process.exit(snapshotStatus.code);
+  } else {
+    const { code, signal } = await runTests();
+    console.log(`Exiting tests with exit code: ${code} and signal: ${signal}`);
+    process.exit(code);
   }
-  const { code, signal } = await runTests();
 
-  console.log(
-    `Exiting tests with exit code: ${prodTestStatus.code} and signal: ${
-      prodTestStatus.signal
-    }`,
-  );
-  console.log(`Exiting tests with exit code: ${code} and signal: ${signal}`);
-
-  if (!serverAlreadyRunning) {
+  if (!serverAlreadyRunning && isCreateSnapshot) {
     webpack.stopDevServer();
   }
-
-  if (prodTestStatus.code !== 0) process.exit(prodTestStatus.code);
-  process.exit(code);
 }
 
 main().catch(err => {
