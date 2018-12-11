@@ -12,20 +12,23 @@ const glob = require('glob');
  * and run and wait for visual-regression tests complete
  */
 const JEST_WAIT_FOR_INPUT_TIMEOUT = 1000;
-process.env.VISUAL_REGRESSION = 'true';
+// process.env.VISUAL_REGRESSION = 'true';
 const watch = process.env.WATCH ? '--watch' : '';
 const updateSnapshot = process.env.SNAPSHOT ? '--u' : '';
 
 // function to generate snapshot from production website
 function runTests() {
   return new Promise((resolve, reject) => {
-    let cmd = `jest --forceExit`;
+    let cmd = `VISUAL_REGRESSION=true jest`;
     if (watch) {
       cmd = `${cmd} ${watch}`;
     }
     if (updateSnapshot) {
       cmd = `${cmd} ${updateSnapshot}`;
     }
+    console.log('command running', cmd);
+    console.log(`${process.env.VISUAL_REGRESSION}`);
+
     runCommand(cmd, resolve, reject);
   });
 }

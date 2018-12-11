@@ -9,12 +9,20 @@
 // Start of the hack for the issue with the webpack watcher that leads to it dying in attempt of watching files
 // in node_modules folder which contains circular symbolic links
 const DirectoryWatcher = require('watchpack/lib/DirectoryWatcher');
-const _oldcreateNestedWatcher = DirectoryWatcher.prototype.createNestedWatcher;
-DirectoryWatcher.prototype.createNestedWatcher = function(
-  dirPath /*: string */,
+const _oldSetDirectory = DirectoryWatcher.prototype.setDirectory;
+DirectoryWatcher.prototype.setDirectory = function(
+  directoryPath,
+  exist,
+  initial,
+  type,
 ) {
-  if (dirPath.includes('node_modules')) return;
-  _oldcreateNestedWatcher.call(this, dirPath);
+  // Any new files created under src/ will trigger a rebuild when in watch mode
+  // If we are just adding snapshots, we can safely ignore those
+  if (directoryPath.includes('__snapshots__')) return;
+  if (directoryPath.includes('__image_snapshots__')) return;
+  if (!directoryPath.includes('node_modules')) {
+    _oldSetDirectory.call(this, directoryPath, exist, initial, type);
+  }
 };
 
 const flattenDeep = require('lodash.flattendeep');
