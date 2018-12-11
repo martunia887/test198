@@ -1,7 +1,7 @@
 // @ts-ignore: unused variable
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
-import { borderRadius, colors, fontSize } from '@atlaskit/theme';
+import { borderRadius, fontSize } from '@atlaskit/theme';
 import {
   browser,
   tableMarginTop,
@@ -33,7 +33,25 @@ const {
   N200,
   N0,
   R500,
-} = colors;
+} = {
+  N40A: 'hotpink',
+  B100: 'hotpink',
+  B300: 'hotpink',
+  N300: 'hotpink',
+  B75: 'hotpink',
+  N20: 'hotpink',
+  N50: 'hotpink',
+  R50: 'hotpink',
+  R300: 'hotpink',
+  R75: 'hotpink',
+  N20A: 'hotpink',
+  N60A: 'hotpink',
+  N30: 'hotpink',
+  N90: 'hotpink',
+  N200: 'hotpink',
+  N0: 'hotpink',
+  R500: 'hotpink',
+};
 
 export const tableToolbarColor = N20;
 export const tableBorderColor = N50;
