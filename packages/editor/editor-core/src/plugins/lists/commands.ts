@@ -387,12 +387,35 @@ export function indentList(): Command {
   return function(state, dispatch) {
     const { listItem } = state.schema.nodes;
     if (isInsideListItem(state)) {
-      const indentationLevels = numberNestedLists(
-        state.selection,
+      const maxIndentation = 5;
+      /*
+      - take initial depth (using new # of 
+      - take min of to and from pos
+      - keep going forward in document until depth of the node is < than the original, 
+      - if max indentation is EVER > 5, return true (without doing anything)
+      */
+      const initialIndentationLevel = numberNestedLists(
+        state.selection.$from,
         state.schema.nodes,
       );
-      if (indentationLevels > 5) {
+      if (initialIndentationLevel > maxIndentation) {
         return true;
+      }
+      let currentIndentationLevel = initialIndentationLevel;
+
+      let currentPos = state.tr.selection.$from.pos;
+
+      while (currentIndentationLevel >= initialIndentationLevel) {
+        currentPos++;
+        const resolvedPos = state.doc.resolve(currentPos);
+        currentIndentationLevel = numberNestedLists(
+          resolvedPos,
+          state.schema.nodes,
+        );
+        if (currentIndentationLevel > maxIndentation) {
+          // cancel sink list
+          return true;
+        }
       }
       baseListCommand.sinkListItem(listItem)(state, dispatch);
       return true;
@@ -499,15 +522,12 @@ export const rootListDepth = (selection: Selection<any>, nodes) => {
 };
 
 // Returns the number of nested lists that are ancestors of the given selection
-export const numberNestedLists = (selection: Selection<any>, nodes) => {
+export const numberNestedLists = (resolvedPos: ResolvedPos, nodes) => {
+  // export const numberNestedLists = (selection: Selection<any>, nodes) => {
   const { bulletList, orderedList } = nodes;
-  console.log({
-    fromDepth: selection.$from.depth,
-    toDepth: selection.$to.depth,
-  });
   let count = 0;
-  for (let i = selection.$to.depth - 1; i > 0; i--) {
-    const node = selection.$to.node(i);
+  for (let i = resolvedPos.depth - 1; i > 0; i--) {
+    const node = resolvedPos.node(i);
     if (node.type === bulletList || node.type === orderedList) {
       count += 1;
     }
