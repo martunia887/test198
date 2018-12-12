@@ -388,35 +388,31 @@ export function indentList(): Command {
     const { listItem } = state.schema.nodes;
     if (isInsideListItem(state)) {
       const maxIndentation = 5;
-      /*
-      - take initial depth (using new # of 
-      - take min of to and from pos
-      - keep going forward in document until depth of the node is < than the original, 
-      - if max indentation is EVER > 5, return true (without doing anything)
-      */
       const initialIndentationLevel = numberNestedLists(
         state.selection.$from,
         state.schema.nodes,
       );
-      if (initialIndentationLevel > maxIndentation) {
-        return true;
-      }
-      let currentIndentationLevel = initialIndentationLevel;
-
-      let currentPos = state.tr.selection.$from.pos;
-
-      while (currentIndentationLevel >= initialIndentationLevel) {
-        currentPos++;
+      /*
+      - Take initial list depth (of selection)
+      - Keep going forward in document until depth of the node is < than the initial 
+      - If max indentation is EVER > max list depth, exit and ton't sink the list
+      */
+      let currentIndentationLevel;
+      let currentPos = state.tr.selection.$to.pos;
+      do {
         const resolvedPos = state.doc.resolve(currentPos);
         currentIndentationLevel = numberNestedLists(
           resolvedPos,
           state.schema.nodes,
         );
         if (currentIndentationLevel > maxIndentation) {
-          // cancel sink list
+          // Cancel sink list.
+          // If current indentation less than the initial, it won't be
+          // larger than the max, and the loop will terminate at end of this iteration
           return true;
         }
-      }
+        currentPos++;
+      } while (currentIndentationLevel >= initialIndentationLevel);
       baseListCommand.sinkListItem(listItem)(state, dispatch);
       return true;
     }
