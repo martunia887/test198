@@ -498,11 +498,11 @@ export function adjustSelectionInList(
 }
 
 // Get the depth of the nearest ancestor list
-export const rootListDepth = (selection: Selection<any>, nodes) => {
+export const rootListDepth = (pos: ResolvedPos, nodes) => {
   const { bulletList, orderedList, listItem } = nodes;
   let depth;
-  for (let i = selection.$to.depth - 1; i > 0; i--) {
-    const node = selection.$to.node(i);
+  for (let i = pos.depth - 1; i > 0; i--) {
+    const node = pos.node(i);
     if (node.type === bulletList || node.type === orderedList) {
       depth = i;
     }
@@ -547,7 +547,7 @@ export const toggleList = (
   ) {
     return toggleListCommand(listType)(state, dispatch, view);
   } else {
-    const depth = rootListDepth(selection, state.schema.nodes);
+    const depth = rootListDepth(selection.$to, state.schema.nodes);
     let tr = liftFollowingList(
       state,
       selection.$to.pos,
