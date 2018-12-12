@@ -393,9 +393,9 @@ export function indentList(): Command {
         state.schema.nodes,
       );
       /*
-      - Take initial list depth (of selection)
-      - Keep going forward in document until depth of the node is < than the initial 
-      - If max indentation is EVER > max list depth, exit and ton't sink the list
+      - Record initial list indentation
+      - Keep going forward in document until indentation of the node is < than the initial 
+      - If indentation is EVER > max indentation, return true and don't sink the list
       */
       let currentIndentationLevel;
       let currentPos = state.tr.selection.$to.pos;
