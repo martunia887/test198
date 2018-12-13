@@ -84,6 +84,7 @@ export const ImageWrapper: ComponentClass<ImageWrapperProps> = styled.img.attrs<
     height: height,
   }),
 })`
+  image-rendering: high-quality;
   transform: ${({ transform }) => transform};
   position: absolute;
   transition: margin-left ${EASING}s ease-out, margin-top ${EASING}s ease-out,

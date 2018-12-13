@@ -81,14 +81,16 @@ export class ImageView extends Component<ImageViewProps, ImageViewState> {
     this.onFileSelected(file);
   };
 
-  onFileSelected = (file: File) => {
-    const validationError = this.validateFile(file);
-    if (validationError) {
-      this.setState({
-        errorMessage: validationError,
-      });
-    } else {
-      this.setState({ src: file, errorMessage: undefined });
+  onFileSelected = (file: File | undefined) => {
+    if (file) {
+      const validationError = this.validateFile(file);
+      if (validationError) {
+        this.setState({
+          errorMessage: validationError,
+        });
+      } else {
+        this.setState({ src: file, errorMessage: undefined });
+      }
     }
   };
 

@@ -56,6 +56,7 @@ export const ModalFooterButtons = styled.div`
 /** ImageView */
 
 export const ImageViewWrapper = styled.div`
+  border-radius: ${akGridSizeUnitless}px;
   position: relative;
   width: 256px;
   height: 300px;

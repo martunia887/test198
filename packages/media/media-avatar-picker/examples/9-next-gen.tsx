@@ -52,7 +52,6 @@ class Example extends Component<{}, ExampleState> {
 
     return (
       <div>
-        <h2>Next</h2>
         <Page>
           <Grid>
             <GridColumn medium={2} />

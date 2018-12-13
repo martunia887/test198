@@ -1,11 +1,20 @@
 [AvatarPickerDialog]
 
 - user vs container modes
+  - per design spec
+  - predefined, pass selected no save, only save if different selection or image
 - drag/drop glitch when has src
 - animated border for rect mode
-- constrain circular mask
-X spinner?
+- when predefined avatar disabled use disabled cursor
+X constrain circular mask
+- spinner
+  - move to button (spinner example)
+  - fade and block existing UI
+- click drop target to open
 
 [ImagePlacer]
-- blur issue
+X blur issue
 X center image
+
+[DESIGN QA]
+- border radius on ImagePlacer (INNER & OUTER)

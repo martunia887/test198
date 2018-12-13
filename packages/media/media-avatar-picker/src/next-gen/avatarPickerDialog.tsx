@@ -89,15 +89,15 @@ export class AvatarPickerDialog extends Component<
     return (
       <ModalFooter>
         <ModalFooterButtons>
+          <Button appearance="subtle" onClick={this.onCancel}>
+            {'Cancel' /* i18n */}
+          </Button>
           <Button
             appearance="primary"
             onClick={this.onSave}
             isDisabled={isLoading}
           >
             {primaryButtonText /* i18n */}
-          </Button>
-          <Button appearance="default" onClick={this.onCancel}>
-            {'Cancel' /* i18n */}
           </Button>
         </ModalFooterButtons>
       </ModalFooter>
