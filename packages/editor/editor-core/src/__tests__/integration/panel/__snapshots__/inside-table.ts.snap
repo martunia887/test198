@@ -28,6 +28,11 @@ Object {
                     Object {
                       "content": Array [
                         Object {
+                          "marks": Array [
+                            Object {
+                              "type": "strong",
+                            },
+                          ],
                           "text": "this text should be in the panel",
                           "type": "text",
                         },

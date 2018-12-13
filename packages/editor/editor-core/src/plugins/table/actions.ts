@@ -49,6 +49,9 @@ import { outdentList } from '../lists/commands';
 import { mapSlice } from '../../utils/slice';
 import { TableCssClassName as ClassName } from './types';
 import { closestElement } from '../../utils';
+import { isEmptyNode } from '../../utils/document';
+import { toggleStrong } from '../text-formatting/commands/text-formatting';
+import { pluginKey as textFormatingPluginKey } from '../text-formatting/pm-plugins/main';
 
 export const clearHoverSelection: Command = (state, dispatch) => {
   if (dispatch) {
@@ -944,6 +947,20 @@ export const handleShiftSelection = (event: MouseEvent): Command => (
       }
       return true;
     }
+  }
+
+  return false;
+};
+
+export const toggleBoldOnHeaderCells = (cellHeaderNode): Command => (
+  state,
+  dispatch,
+) => {
+  const textFormatState = textFormatingPluginKey.getState(state);
+  const isStrong = textFormatState.strongActive;
+
+  if (!isStrong && isEmptyNode(cellHeaderNode)) {
+    return toggleStrong()(state, dispatch);
   }
 
   return false;

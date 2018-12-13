@@ -1,5 +1,8 @@
 import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
-import { findParentDomRefOfType } from 'prosemirror-utils';
+import {
+  findParentDomRefOfType,
+  findParentNodeOfType,
+} from 'prosemirror-utils';
 import { EditorView, DecorationSet } from 'prosemirror-view';
 import { PluginConfig, TablePluginState } from '../types';
 import { EditorAppearance } from '../../../types';
@@ -8,7 +11,12 @@ import { createTableView } from '../nodeviews/table';
 import { createCellView } from '../nodeviews/cell';
 import { EventDispatcher } from '../../../event-dispatcher';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import { setTableRef, clearHoverSelection, handleCut } from '../actions';
+import {
+  setTableRef,
+  clearHoverSelection,
+  handleCut,
+  toggleBoldOnHeaderCells,
+} from '../actions';
 import {
   handleSetFocus,
   handleSetTableRef,
@@ -215,6 +223,14 @@ export const createPlugin = (
             if (parent) {
               tableRef = (parent as HTMLElement).querySelector('table');
             }
+
+            const tableCellHeader = findParentNodeOfType(
+              state.schema.nodes.tableHeader,
+            )(state.selection);
+
+            if (tableCellHeader) {
+              toggleBoldOnHeaderCells(tableCellHeader.node)(state, dispatch);
+            }
           }
           if (pluginState.tableRef !== tableRef) {
             setTableRef(tableRef)(state, dispatch);
@@ -223,7 +239,9 @@ export const createPlugin = (
       };
     },
     props: {
-      decorations: state => getPluginState(state).decorationSet,
+      decorations: state => {
+        return getPluginState(state).decorationSet;
+      },
 
       handleClick: ({ state, dispatch }) => {
         const { decorationSet } = getPluginState(state);

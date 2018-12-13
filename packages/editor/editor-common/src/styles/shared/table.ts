@@ -91,12 +91,6 @@ const tableSharedStyle = css`
       th {
         background-color: ${akEditorTableToolbar};
         text-align: left;
-        & *:not(strong) {
-          font-weight: normal;
-        }
-        & .${TableSharedCssClassName.TABLE_CELL_NODEVIEW_CONTENT_DOM} > p {
-          font-weight: bold;
-        }
       }
     }
   }

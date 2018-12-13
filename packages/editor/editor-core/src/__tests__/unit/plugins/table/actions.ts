@@ -1,7 +1,11 @@
 import { Slice, Fragment } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 import { CellSelection } from 'prosemirror-tables';
-import { isColumnSelected, isRowSelected } from 'prosemirror-utils';
+import {
+  isColumnSelected,
+  isRowSelected,
+  findParentNodeOfType,
+} from 'prosemirror-utils';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   doc,
@@ -29,6 +33,7 @@ import {
   selectColumn,
   selectRow,
   handleCut,
+  toggleBoldOnHeaderCells,
 } from '../../../../plugins/table/actions';
 import { TablePluginState } from '../../../../plugins/table/types';
 import tablesPlugin from '../../../../plugins/table';
@@ -532,6 +537,42 @@ describe('table plugin: actions', () => {
           ),
         );
         editorView.destroy();
+      });
+    });
+  });
+
+  describe('#toggleBoldOnHeaderCells', () => {
+    describe('when the cursor is on table header cell', () => {
+      it('should add strong mark on storedMarks', () => {
+        const { editorView } = editor(
+          doc(table()(tr(th()(p('{<>}'))), tr(td()(p(''))))),
+        );
+        const { state, dispatch } = editorView;
+        expect(editorView.state.storedMarks).toBeNull();
+
+        const tableCellHeader = findParentNodeOfType(
+          state.schema.nodes.tableHeader,
+        )(state.selection) || { node: {} };
+
+        toggleBoldOnHeaderCells(tableCellHeader.node)(state, dispatch);
+        const result = editorView.state.storedMarks || [];
+        expect(result.length).toBeGreaterThan(0);
+        expect(result[0].type).toEqual(state.schema.marks.strong);
+      });
+
+      it('should not add strong mark on storedMarks for not empty paragraph', () => {
+        const { editorView } = editor(
+          doc(table()(tr(th()(p('Rato{<>}'))), tr(td()(p('Rato'))))),
+        );
+        const { state, dispatch } = editorView;
+        expect(editorView.state.storedMarks).toBeNull();
+
+        const tableCellHeader = findParentNodeOfType(
+          state.schema.nodes.tableHeader,
+        )(state.selection) || { node: {} };
+
+        toggleBoldOnHeaderCells(tableCellHeader.node)(state, dispatch);
+        expect(editorView.state.storedMarks).toBeNull();
       });
     });
   });
