@@ -41,7 +41,7 @@ export const getToolbarConfig: FloatingToolbarHandler = (
 
     const languageSelect: FloatingToolbarSelect<Command> = {
       type: 'select',
-      onChange: option => changeLanguage(option.value),
+      onChange: option => changeLanguage(option),
       defaultValue: language,
       placeholder: formatMessage(messages.selectLanguage),
       options: createLanguageList(DEFAULT_LANGUAGES).map(lang => ({
