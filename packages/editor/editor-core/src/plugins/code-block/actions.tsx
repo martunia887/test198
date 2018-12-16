@@ -1,7 +1,6 @@
 import { setParentNodeMarkup, removeParentNodeOfType } from 'prosemirror-utils';
 import { Command } from '../../types';
 import { CodeBlockState } from './pm-plugins/main';
-import { SelectOption } from '../floating-toolbar/ui/Select';
 
 export type DomAtPos = (pos: number) => { node: HTMLElement; offset: number };
 export const removeCodeBlock: Command = (state, dispatch) => {
@@ -15,7 +14,7 @@ export const removeCodeBlock: Command = (state, dispatch) => {
   return true;
 };
 
-export const changeLanguage = (language: SelectOption): Command => (
+export const changeLanguage = (language: string): Command => (
   state,
   dispatch,
 ) => {
@@ -24,6 +23,7 @@ export const changeLanguage = (language: SelectOption): Command => (
     tr,
   } = state;
   const attrs: CodeBlockState = { language };
+
   if (dispatch) {
     dispatch(setParentNodeMarkup(nodes.codeBlock, null, attrs)(tr));
   }

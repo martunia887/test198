@@ -39,15 +39,17 @@ export const getToolbarConfig: FloatingToolbarHandler = (
   ) {
     const { language } = codeBlockState;
 
+    const options = createLanguageList(DEFAULT_LANGUAGES).map(lang => ({
+      label: lang.name,
+      value: getLanguageIdentifier(lang),
+    }));
+
     const languageSelect: FloatingToolbarSelect<Command> = {
       type: 'select',
-      onChange: option => changeLanguage(option),
-      defaultValue: language,
+      onChange: option => changeLanguage(option.value),
+      defaultValue: options.find(option => option.value === language),
       placeholder: formatMessage(messages.selectLanguage),
-      options: createLanguageList(DEFAULT_LANGUAGES).map(lang => ({
-        label: lang.name,
-        value: getLanguageIdentifier(lang),
-      })),
+      options,
     };
 
     const breakoutToolbar = createBreakoutToolbarItems(state, {

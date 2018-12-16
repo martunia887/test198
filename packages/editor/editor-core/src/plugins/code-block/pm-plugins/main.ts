@@ -6,11 +6,10 @@ import {
 } from 'prosemirror-utils';
 
 import codeBlockNodeView from '../nodeviews/code-block';
-import { SelectOption } from '../../floating-toolbar/ui/Select';
 
 export type CodeBlockState = {
   element?: HTMLElement;
-  language?: SelectOption | undefined;
+  language?: string | undefined;
   toolbarVisible?: boolean | undefined;
 };
 
