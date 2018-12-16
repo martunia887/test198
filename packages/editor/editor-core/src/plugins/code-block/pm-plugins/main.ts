@@ -75,7 +75,7 @@ export const createPlugin = ({
           if (parentDOM !== pluginState.element) {
             const parent = findParentNodeOfType(codeBlock)(selection);
             const newState: CodeBlockState = {
-              element: parentDOM as HTMLElement, // is this okay?
+              element: parentDOM as HTMLElement,
               language: parent && parent!.node.attrs['language'],
               toolbarVisible: !!parent,
             };
