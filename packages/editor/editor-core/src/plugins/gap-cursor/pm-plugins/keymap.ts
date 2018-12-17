@@ -8,17 +8,23 @@ import { setTextSelection } from 'prosemirror-utils';
 import { GapCursorSelection } from '../selection';
 
 const enterKeyCommand: Command = (state, dispatch): boolean => {
-  const { listItem, paragraph } = state.schema.nodes;
+  const { listItem, paragraph, bulletList, orderedList } = state.schema.nodes;
+  const { $to, $from } = state.selection;
   if (state.selection instanceof GapCursorSelection) {
-    const { $to } = state.selection;
-    const tr = state.tr.insert(
-      $to.pos + 1,
-      listItem.createChecked({}, paragraph.createChecked()),
-    );
-    if (dispatch) {
-      dispatch(setTextSelection($to.pos + 3)(tr));
+    const wrapper = $from.node($from.depth - 1);
+    if (
+      (wrapper && wrapper.type === bulletList) ||
+      wrapper.type === orderedList
+    ) {
+      const tr = state.tr.insert(
+        $to.pos + 1,
+        listItem.createChecked({}, paragraph.createChecked()),
+      );
+      if (dispatch) {
+        dispatch(setTextSelection($to.pos + 3)(tr));
+      }
+      return true;
     }
-    return true;
   }
   return false;
 };
