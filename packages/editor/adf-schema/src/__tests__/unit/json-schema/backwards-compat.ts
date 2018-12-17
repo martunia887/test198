@@ -20,7 +20,7 @@ async function fetchJSONSchema(url: string) {
 
 function fetchLastPublishedJSONSchema() {
   return fetchJSONSchema(
-    `https://unpkg.com/@atlaskit/adf-schema@lastest/dist/json-schema/v1/full.json`,
+    `https://unpkg.com/@atlaskit/adf-schema@latest/dist/json-schema/v1/full.json`,
   );
 }
 
