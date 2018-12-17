@@ -1,0 +1,1 @@
+- Apply strong mark by default on table headers
