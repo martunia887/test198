@@ -9,7 +9,6 @@ import { GapCursorSelection } from '../selection';
 
 const enterKeyCommand: Command = (state, dispatch): boolean => {
   const { listItem, paragraph } = state.schema.nodes;
-  // if(selection instanceof GapCursorSelection) {
   if (state.selection instanceof GapCursorSelection) {
     const { $to } = state.selection;
     const tr = state.tr.insert(
@@ -23,43 +22,6 @@ const enterKeyCommand: Command = (state, dispatch): boolean => {
   }
   return false;
 };
-/*
-    Enter: (state: EditorState, dispatch) => {
-      const {
-        selection,
-        schema: { nodes },
-      } = state;
-      const { $from, $to } = selection;
-      const node = $from.node($from.depth);
-
-      const selectionIsAtEndOfCodeBlock =
-        node &&
-        node.type === nodes.codeBlock &&
-        $from.parentOffset === $from.parent.nodeSize  2 && // cursor offset is at the end of block
-        $from.indexAfter($from.depth) === node.childCount; // paragraph is the last child of code block
-      const codeBlockEndsWithNewLine =
-        node.lastChild &&
-        node.lastChild.text &&
-        node.lastChild.text.endsWith('\n');
-
-      if (selectionIsAtEndOfCodeBlock && codeBlockEndsWithNewLine) {
-        const tr = state.tr.insert(
-          $to.pos + 1,
-          nodes.paragraph.createChecked({}),
-        );
-
-        dispatch(
-          setTextSelection($to.pos + 1)(tr)
-            .delete($from.pos  1, $from.pos)
-            .scrollIntoView(),
-        );
-        return true;
-      }
-      return false;
-    },
-    const { listItem } = state.schema.nodes;
-      if (isEmptyNode(node) && !wrapperHasContent) {
-*/
 
 export default function keymapPlugin(): Plugin {
   const map = {};

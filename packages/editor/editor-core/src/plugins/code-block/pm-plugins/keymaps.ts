@@ -2,7 +2,6 @@ import { keymap } from 'prosemirror-keymap';
 import { Schema } from 'prosemirror-model';
 import { Plugin, EditorState } from 'prosemirror-state';
 import {
-  setTextSelection,
   findParentNodeOfTypeClosestToPos,
   hasParentNodeOfType,
 } from 'prosemirror-utils';
