@@ -12,6 +12,7 @@ const enterKeyCommand: Command = (state, dispatch): boolean => {
   const { $to, $from } = state.selection;
   if (state.selection instanceof GapCursorSelection) {
     const wrapper = $from.node($from.depth - 1);
+    // Only create a new list item if we're inside a list
     if (
       (wrapper && wrapper.type === bulletList) ||
       wrapper.type === orderedList
