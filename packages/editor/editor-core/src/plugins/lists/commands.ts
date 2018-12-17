@@ -187,6 +187,7 @@ const canOutdent = (state: EditorState): boolean => {
 };
 
 export const enterKeyCommand: Command = (state, dispatch): boolean => {
+  return true;
   const { selection } = state;
   if (selection.empty) {
     const { $from } = selection;

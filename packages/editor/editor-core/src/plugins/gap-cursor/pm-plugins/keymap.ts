@@ -4,57 +4,25 @@ import * as keymaps from '../../../keymaps';
 import { arrow, deleteNode } from '../actions';
 import { Direction } from '../direction';
 import { Command } from '../../../types';
-import { splitListItem } from 'prosemirror-schema-list';
 import { setTextSelection } from 'prosemirror-utils';
-
-// export function testFunc(
-//   tr
-// ) {
-//   console.log('from:', tr.selection.from)
-//   return tr
-// }
+import { GapCursorSelection } from '../selection';
 
 const enterKeyCommand: Command = (state, dispatch): boolean => {
-  const { selection } = state;
-  console.log('Handling gap cursor enter');
   const { listItem, paragraph } = state.schema.nodes;
-  // return splitListItem(listItem)(state, dispatch);
-  const { $from, $to } = state.selection;
-  const tr = state.tr.insert(
-    $to.pos + 1, // + 1,
-    paragraph.createChecked({}),
-  );
-  if (dispatch) {
-    dispatch(
-      setTextSelection($to.pos + 1)(tr)
-        // setTextSelection($to.pos + 7)(tr)
-        .delete($from.pos + 3, $from.pos + 4)
-        // .delete($from.pos - 1, $from.pos)
-        .scrollIntoView(),
+  // if(selection instanceof GapCursorSelection) {
+  if (state.selection instanceof GapCursorSelection) {
+    const { $to } = state.selection;
+    const tr = state.tr.insert(
+      $to.pos + 1,
+      listItem.createChecked({}, paragraph.createChecked()),
     );
+    if (dispatch) {
+      dispatch(setTextSelection($to.pos + 3)(tr));
+    }
+    return true;
   }
-
-  // if (selection.empty) {
-  // return fallback(input, position)alse;
-  // const { $from } = selection;
-  // const { listItem, codeBlock } = state.schema.nodes;
-  // const node = $from.node($from.depth);
-  // const wrapper = $from.node($from.depth - 1);
-
-  // if (wrapper && wrapper.type === listItem) {
-  //   const wrapperHasContent = hasVisibleContent(wrapper);
-  //   if (node.type === codeBlock || (isEmptyNode(node) && !wrapperHasContent )) {
-  //     return outdentList()(state, dispatch);
-  //   } else {
-  //     return splitListItem(listItem)(state, dispatch);
-  //   }
-  // }
-  // }
-
-  //return false gives you two newlines, true only one
-  return true;
+  return false;
 };
-
 /*
     Enter: (state: EditorState, dispatch) => {
       const {
@@ -96,16 +64,7 @@ const enterKeyCommand: Command = (state, dispatch): boolean => {
 export default function keymapPlugin(): Plugin {
   const map = {};
 
-  keymaps.bindKeymapWithCommand(
-    keymaps.enter.common!,
-    enterKeyCommand,
-    // (state, dispatch, view) => {
-    //   const endOfTextblock = view ? view.endOfTextblock.bind(view) : undefined;
-    //   return arrow(Direction.LEFT, endOfTextblock)(state, dispatch);
-    // },
-    map,
-  );
-  // keymaps.bindKeymapWithCommand(keymaps.enter.common!!,
+  keymaps.bindKeymapWithCommand(keymaps.enter.common!, enterKeyCommand, map);
 
   keymaps.bindKeymapWithCommand(
     keymaps.moveLeft.common!,
