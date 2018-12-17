@@ -119,7 +119,10 @@ const ProductNavigation = () => (
   </div>
 );
 const ContainerNavigation = () => (
-  <div data-webdriver-test-key="container-navigation">
+  <div
+    css={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
+    data-webdriver-test-key="container-navigation"
+  >
     <HeaderSection>
       {({ css }) => (
         <div
@@ -145,7 +148,7 @@ const ContainerNavigation = () => (
     </HeaderSection>
     <MenuSection>
       {({ className }) => (
-        <div className={className}>
+        <div className={className} css={{ flex: 1 }}>
           <Item
             before={BacklogIcon}
             text="Backlog"
@@ -169,6 +172,7 @@ const ContainerNavigation = () => (
         </div>
       )}
     </MenuSection>
+    <button css={{ height: '2rem' }}>Footer button</button>
   </div>
 );
 const Content = makeTestComponent(
