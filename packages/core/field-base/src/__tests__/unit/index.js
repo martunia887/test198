@@ -264,6 +264,7 @@ describe('ak-field-base', () => {
       jest.runOnlyPendingTimers();
       expect(spy).toHaveBeenCalledTimes(1);
     });
+
     it('should close the dialog when focus goes away from both the element and the dialog', () => {
       const invalidMessage = <div className="errorMessage">foo</div>;
       const wrapper = mount(
@@ -293,6 +294,20 @@ describe('ak-field-base', () => {
       jest.runTimersToTime(10);
 
       expect(wrapper.state('isFocused')).toBe(true);
+    });
+
+    it('should not output an error when the component is unmounted after a focus and blur event', () => {
+      const spy = jest.spyOn(global.console, 'error');
+      const wrapper = mount(<FieldBase />);
+      const content = wrapper.find(Content);
+
+      content.simulate('focus');
+      content.simulate('blur');
+      wrapper.unmount();
+
+      jest.runAllTimers();
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
     });
   });
 });

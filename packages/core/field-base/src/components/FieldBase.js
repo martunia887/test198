@@ -33,7 +33,13 @@ export default class FieldBase extends Component<FieldBaseProps, State> {
     shouldIgnoreNextDialogBlur: false,
   };
 
-  timers: any;
+  timers: { [key: string]: TimeoutID } = {};
+
+  componentWillUnmount() {
+    Object.keys(this.timers).forEach((key: string) => {
+      clearTimeout(this.timers[key]);
+    });
+  }
 
   onFocus = (e: SyntheticEvent<*>) => {
     this.setState({ isFocused: true });
@@ -77,18 +83,16 @@ export default class FieldBase extends Component<FieldBaseProps, State> {
     });
   };
 
-  cancelSchedule(key: any) {
-    this.timers = this.timers || {};
+  cancelSchedule(key: string) {
     if (this.timers[key]) {
       clearTimeout(this.timers[key]);
       delete this.timers[key];
     }
   }
 
-  reschedule(key: any, callback: () => mixed) {
+  reschedule(key: string, callback: () => mixed) {
     // Use reschedule (not just schedule) to avoid race conditions when multiple blur events
     // happen one by one.
-    this.timers = this.timers || {};
     this.cancelSchedule(key);
     this.timers[key] = setTimeout(() => {
       callback();
