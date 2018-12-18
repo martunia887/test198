@@ -13,6 +13,11 @@ const ResultBox = styled.div`
   white-space: nowrap;
 `;
 
+type SizeMetrics = {
+  width: number,
+  height: number,
+};
+
 const displayResults = ({ width, height }: SizeMetrics) => (
   <ResultBox>
     <span className="sd-size" data-width={width} data-height={height}>
