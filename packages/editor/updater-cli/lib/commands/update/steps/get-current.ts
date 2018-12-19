@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import * as ora from 'ora';
 import {
   loadPackageJson,
@@ -14,6 +15,7 @@ export async function getCurrent(packageName: string) {
     const packageVersion = getPackageVersion(packageJson, packageName);
 
     if (packageVersion) {
+      spinner.text += chalk.dim(`[${packageVersion}]`);
       spinner.succeed();
       return packageVersion;
     }
