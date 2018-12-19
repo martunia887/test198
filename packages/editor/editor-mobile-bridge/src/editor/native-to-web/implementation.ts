@@ -22,6 +22,7 @@ import {
   insertBlockType,
   createTable,
   insertTaskDecision,
+  changeColor,
 } from '@atlaskit/editor-core';
 import { EditorView } from 'prosemirror-view';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
@@ -121,6 +122,12 @@ export default class WebBridgeImpl extends WebBridge
     this.textFormatBridgeState = state;
   }
 
+  setTextColor(color: string) {
+    if (this.editorView) {
+      changeColor(color)(this.editorView.state, this.editorView.dispatch);
+    }
+  }
+
   onMediaPicked(eventName: string, mediaPayload: string) {
     if (this.mediaPicker) {
       const payload = JSON.parse(mediaPayload);
@@ -139,7 +146,7 @@ export default class WebBridgeImpl extends WebBridge
           return;
         }
         case 'upload-end': {
-          if (payload.file.collectionName) {
+          if (typeof payload.file.collectionName === 'string') {
             /**
              * We call this custom event instead of `upload-end` to set the collection
              * As when emitting `upload-end`, the `ready` handler will usually fire before

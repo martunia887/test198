@@ -10,35 +10,37 @@ import {
   ListsState,
   statusPluginKey,
   StatusState,
+  textColorPluginKey,
+  TextColorPluginState,
 } from '@atlaskit/editor-core';
 
 import { valueOf as valueOfListState } from '../web-to-native/listState';
 import { valueOf as valueOfMarkState } from '../web-to-native/markState';
 import WebBridgeImpl from '../native-to-web';
-import { toNativeBridge } from '../web-to-native';
+import { toNativeBridge, EditorPluginBridges } from '../web-to-native';
 
-interface BridgeStates {
-  textFormatBridge: TextFormattingState;
-  listBridge: ListsState;
-  blockFormatBridge: BlockTypeState;
-  statusBridge: StatusState;
-}
-
-type Bridge = keyof BridgeStates;
-type StateUpdater<B extends Bridge> = (state: BridgeStates[B]) => void;
-
-interface BridgePluginListener<T extends Bridge> {
-  bridge: T;
+interface BridgePluginListener<T> {
+  bridge: EditorPluginBridges;
   pluginKey: PluginKey;
-  updater: StateUpdater<T>;
+  updater: (state: T, initialPass?: boolean) => void;
+  sendInitialState?: boolean;
 }
 
-const createListenerConfig = <T extends Bridge>(
-  config: BridgePluginListener<T>,
-) => config;
+interface SerialisedTextColor {
+  color: string | null;
+  disabled?: boolean | undefined;
+  borderColorPalette?: {
+    [color: string]: string; // Hex
+  };
+  palette?: {
+    [color: string]: string; // Hex
+  };
+}
 
-const configs: Array<BridgePluginListener<Bridge>> = [
-  createListenerConfig({
+const createListenerConfig = <T>(config: BridgePluginListener<T>) => config;
+
+const configs: Array<BridgePluginListener<any>> = [
+  createListenerConfig<StatusState>({
     bridge: 'statusBridge',
     pluginKey: statusPluginKey,
     updater: state => {
@@ -54,25 +56,38 @@ const configs: Array<BridgePluginListener<Bridge>> = [
       }
     },
   }),
-  createListenerConfig({
+  createListenerConfig<TextFormattingState>({
     bridge: 'textFormatBridge',
     pluginKey: textFormattingStateKey,
     updater: state => {
       toNativeBridge.call('textFormatBridge', 'updateTextFormat', {
-        state: JSON.stringify(valueOfMarkState(state)),
+        states: JSON.stringify(valueOfMarkState(state)),
       });
     },
   }),
-  createListenerConfig({
+  createListenerConfig<BlockTypeState>({
     bridge: 'blockFormatBridge',
     pluginKey: blockPluginStateKey,
     updater: state => {
-      toNativeBridge.call('blockFormatBridge', 'updateBlockState', {
-        state: state.currentBlockType.name,
-      });
+      /**
+       * Currently `updateBlockState` is on different bridges in native land.
+       * We have a ticket to align on the naming.
+       * @see https://product-fabric.atlassian.net/browse/FM-1341
+       */
+      if (window.webkit) {
+        // iOS
+        toNativeBridge.call('blockFormatBridge', 'updateBlockState', {
+          states: state.currentBlockType.name,
+        });
+      } else {
+        // Android
+        toNativeBridge.call('textFormatBridge', 'updateBlockState', {
+          states: state.currentBlockType.name,
+        });
+      }
     },
   }),
-  createListenerConfig({
+  createListenerConfig<ListsState>({
     bridge: 'listBridge',
     pluginKey: listsStateKey,
     updater: state => {
@@ -80,6 +95,35 @@ const configs: Array<BridgePluginListener<Bridge>> = [
         states: JSON.stringify(valueOfListState(state)),
       });
     },
+  }),
+  createListenerConfig<TextColorPluginState>({
+    bridge: 'textFormatBridge',
+    pluginKey: textColorPluginKey,
+    updater: (state, initialPass) => {
+      let color = state.color || null;
+      let serialisedState: SerialisedTextColor = {
+        color,
+        disabled: state.disabled,
+      };
+
+      if (initialPass) {
+        let palette = Object.create(null);
+        for (let [k, v] of state.palette) {
+          palette[v] = k;
+        }
+
+        serialisedState = {
+          ...state,
+          color,
+          palette,
+        };
+      }
+
+      toNativeBridge.call('textFormatBridge', 'updateTextColor', {
+        states: JSON.stringify(serialisedState),
+      });
+    },
+    sendInitialState: true,
   }),
 ];
 
@@ -91,7 +135,13 @@ export const initPluginListeners = (
   configs.forEach(config => {
     const { updater, pluginKey } = config;
     const state = pluginKey.getState(view.state);
-    bridge[`${config.bridge}State`] = state;
+    bridge[`${config.bridge}State`] = {
+      ...bridge[`${config.bridge}State`],
+      ...state,
+    };
+    if (config.sendInitialState) {
+      updater(state, true);
+    }
     eventDispatcher.on((pluginKey as any).key, state => updater(state));
   });
 };

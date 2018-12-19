@@ -1,7 +1,8 @@
 import { Node as PmNode } from 'prosemirror-model';
 import { Transaction } from 'prosemirror-state';
 import { DecorationSet } from 'prosemirror-view';
-import { TableLayout, TableSharedCssClassName } from '@atlaskit/editor-common';
+import { TableLayout } from '@atlaskit/adf-schema';
+import { TableSharedCssClassName } from '@atlaskit/editor-common';
 
 export type PermittedLayoutsDescriptor = TableLayout[] | 'all';
 export type Cell = { pos: number; start: number; node: PmNode };
@@ -19,8 +20,6 @@ export interface PluginConfig {
   stickToolbarToBottom?: boolean;
   permittedLayouts?: PermittedLayoutsDescriptor;
   allowControls?: boolean;
-  // This flag can specifiy re-size mode.
-  UNSAFE_allowFlexiColumnResizing?: boolean;
 }
 
 export interface TablePluginState {
@@ -112,6 +111,8 @@ export const TableCssClassName = {
 
   // defined in ReactNodeView based on PM node name
   NODEVIEW_WRAPPER: 'tableView-content-wrap',
+  TABLE_HEADER_NODE_WRAPPER: 'tableHeaderView-content-wrap',
+  TABLE_CELL_NODE_WRAPPER: 'tableCellView-content-wrap',
 
   TOP_LEFT_CELL: 'table > tbody > tr:nth-child(2) > td:nth-child(1)',
 };

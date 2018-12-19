@@ -8,8 +8,8 @@ import {
   CardOnClickCallback,
 } from '@atlaskit/media-card';
 import { Context, ImageResizeMode } from '@atlaskit/media-core';
+import { MediaType } from '@atlaskit/adf-schema';
 import {
-  MediaType,
   withImageLoader,
   ImageStatus,
   // @ts-ignore
@@ -138,6 +138,7 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
         resizeMode={resizeMode}
         isLazy={rendererAppearance === 'mobile' ? false : true}
         disableOverlay={disableOverlay}
+        useInlinePlayer={false}
       />
     );
   }

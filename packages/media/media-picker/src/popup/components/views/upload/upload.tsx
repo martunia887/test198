@@ -348,7 +348,7 @@ export class StatelessUploadView extends Component<
       ]; // TODO [MS-1017]: allow file annotation for uploading files
 
       const identifier: FileIdentifier = {
-        id: upfrontId,
+        id: userUpfrontId,
         mediaItemType: 'file',
       };
 
@@ -502,7 +502,8 @@ const mapDispatchToProps = (
 export default connect<
   UploadViewStateProps,
   UploadViewDispatchProps,
-  UploadViewOwnProps
+  UploadViewOwnProps,
+  State
 >(
   mapStateToProps,
   mapDispatchToProps,
