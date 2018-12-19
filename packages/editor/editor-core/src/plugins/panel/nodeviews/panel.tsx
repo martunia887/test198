@@ -10,7 +10,7 @@ import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
 import TipIcon from '@atlaskit/icon/glyph/editor/hint';
 import ReactNodeView from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import { PanelType } from '../../../../../editor-common';
+import { PanelType } from '@atlaskit/adf-schema';
 import styled from 'styled-components';
 import { hexToRgba } from '@atlaskit/editor-common';
 
