@@ -16,5 +16,5 @@ export function run() {
     return updateCommand(cli.input[1]);
   }
 
-  console.log(cli.help);
+  return Promise.resolve(console.log(cli.help));
 }

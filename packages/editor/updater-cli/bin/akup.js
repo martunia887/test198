@@ -6,4 +6,11 @@ const project = path.join(__dirname, '../tsconfig.json');
 
 require('ts-node').register({ project });
 
-require(path.join('..', 'lib')).run();
+require(path.join('..', 'lib'))
+  .run()
+  .catch(error => {
+    if (typeof error === 'number') {
+      process.exit(error);
+    }
+    console.error(error);
+  });
