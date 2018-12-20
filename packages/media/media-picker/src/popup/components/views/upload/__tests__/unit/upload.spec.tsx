@@ -192,7 +192,7 @@ describe('<StatelessUploadView />', () => {
               id: 'id1',
               mimeType: 'image/jpeg',
               name: 'some-file-name',
-              upfrontId,
+              userUpfrontId: upfrontId,
             },
           },
         } as LocalUpload,
@@ -438,14 +438,6 @@ describe('<UploadView />', () => {
           },
           index: 0,
           events: [],
-          tenant: {
-            auth: {
-              clientId: 'some-tenant-client-id',
-              token: 'some-tenant-client-token',
-              baseUrl: 'some-base-url',
-            },
-            uploadParams: {},
-          },
           progress: 0,
           timeStarted: 0,
         },

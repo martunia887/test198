@@ -100,7 +100,7 @@ async function runDevServer() {
     compress: true,
 
     historyApiFallback: true,
-
+    disableHostCheck: true,
     overlay: true,
     stats: {
       colors: true,

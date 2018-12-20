@@ -10,6 +10,8 @@ import {
   ListsState,
   statusPluginKey,
   StatusState,
+  textColorPluginKey,
+  TextColorPluginState,
 } from '@atlaskit/editor-core';
 
 import { valueOf as valueOfListState } from '../web-to-native/listState';
@@ -20,7 +22,19 @@ import { toNativeBridge, EditorPluginBridges } from '../web-to-native';
 interface BridgePluginListener<T> {
   bridge: EditorPluginBridges;
   pluginKey: PluginKey;
-  updater: (state: T) => void;
+  updater: (state: T, initialPass?: boolean) => void;
+  sendInitialState?: boolean;
+}
+
+interface SerialisedTextColor {
+  color: string | null;
+  disabled?: boolean | undefined;
+  borderColorPalette?: {
+    [color: string]: string; // Hex
+  };
+  palette?: {
+    [color: string]: string; // Hex
+  };
 }
 
 const createListenerConfig = <T>(config: BridgePluginListener<T>) => config;
@@ -60,15 +74,17 @@ const configs: Array<BridgePluginListener<any>> = [
        * We have a ticket to align on the naming.
        * @see https://product-fabric.atlassian.net/browse/FM-1341
        */
-
-      // iOS
-      toNativeBridge.call('blockFormatBridge', 'updateBlockState', {
-        states: state.currentBlockType.name,
-      });
-      // Android
-      toNativeBridge.call('textFormatBridge', 'updateBlockState', {
-        states: state.currentBlockType.name,
-      });
+      if (window.webkit) {
+        // iOS
+        toNativeBridge.call('blockFormatBridge', 'updateBlockState', {
+          states: state.currentBlockType.name,
+        });
+      } else {
+        // Android
+        toNativeBridge.call('textFormatBridge', 'updateBlockState', {
+          states: state.currentBlockType.name,
+        });
+      }
     },
   }),
   createListenerConfig<ListsState>({
@@ -80,6 +96,35 @@ const configs: Array<BridgePluginListener<any>> = [
       });
     },
   }),
+  createListenerConfig<TextColorPluginState>({
+    bridge: 'textFormatBridge',
+    pluginKey: textColorPluginKey,
+    updater: (state, initialPass) => {
+      let color = state.color || null;
+      let serialisedState: SerialisedTextColor = {
+        color,
+        disabled: state.disabled,
+      };
+
+      if (initialPass) {
+        let palette = Object.create(null);
+        for (let [k, v] of state.palette) {
+          palette[v] = k;
+        }
+
+        serialisedState = {
+          ...state,
+          color,
+          palette,
+        };
+      }
+
+      toNativeBridge.call('textFormatBridge', 'updateTextColor', {
+        states: JSON.stringify(serialisedState),
+      });
+    },
+    sendInitialState: true,
+  }),
 ];
 
 export const initPluginListeners = (
@@ -90,7 +135,13 @@ export const initPluginListeners = (
   configs.forEach(config => {
     const { updater, pluginKey } = config;
     const state = pluginKey.getState(view.state);
-    bridge[`${config.bridge}State`] = state;
+    bridge[`${config.bridge}State`] = {
+      ...bridge[`${config.bridge}State`],
+      ...state,
+    };
+    if (config.sendInitialState) {
+      updater(state, true);
+    }
     eventDispatcher.on((pluginKey as any).key, state => updater(state));
   });
 };

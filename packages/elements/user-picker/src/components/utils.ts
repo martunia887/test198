@@ -23,21 +23,8 @@ export const isIterable = (
 ): a is Iterable<Promisable<User | User[]>> =>
   typeof a[Symbol.iterator] === 'function';
 
-export const getUsers = (usersFromState: User[], usersFromProps?: User[]) => {
-  if (usersFromState.length > 0) {
-    return usersFromState;
-  }
-  return usersFromProps;
-};
-
-export const getOptions = memoizeOne(
-  (usersFromState: User[], usersFromProps?: User[]) => {
-    const users = getUsers(usersFromState, usersFromProps);
-    if (users) {
-      return users.map(userToOption);
-    }
-    return undefined;
-  },
+export const getOptions = memoizeOne((options: User[]) =>
+  options.map(userToOption),
 );
 
 export const usersToOptions = memoizeOne((defaultValue: UserValue) => {
@@ -50,14 +37,8 @@ export const usersToOptions = memoizeOne((defaultValue: UserValue) => {
   return userToOption(defaultValue);
 });
 
-export const getAvatarSize = (
-  appearance: string,
-): 'small' | 'xsmall' | 'medium' =>
-  appearance === 'normal'
-    ? 'small'
-    : appearance === 'big'
-    ? 'medium'
-    : 'xsmall';
+export const getAvatarSize = (appearance: string): 'small' | 'medium' =>
+  appearance === 'big' ? 'medium' : 'small';
 
 export const isChildInput = (child: ReactChild): child is ReactElement<any> =>
   child &&
@@ -71,3 +52,8 @@ export const isSingleValue = (
 
 export const hasValue = (value?: string): value is string =>
   !!value && value.trim().length > 0;
+
+export const callCallback = <U extends any[], R>(
+  callback: ((...U) => R) | undefined,
+  ...args: U
+): R | undefined => callback && callback(...args);
