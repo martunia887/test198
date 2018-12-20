@@ -1,13 +1,9 @@
-import { resolveToCwd, exists, readFile } from './fs';
+import { readFile } from './fs';
 
 export async function isPackageJsonExist() {}
 
-export async function loadPackageJson() {
-  const packageJsonPath = resolveToCwd('package.json');
-  if (await exists(packageJsonPath)) {
-    return JSON.parse(await readFile(packageJsonPath, 'utf8'));
-  }
-  return {};
+export async function loadPackageJson(packageJsonPath: string) {
+  return JSON.parse(await readFile(packageJsonPath, 'utf8'));
 }
 
 export function getPackageVersion(packageJson: any, packageName: string) {
