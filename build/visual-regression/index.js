@@ -42,7 +42,7 @@ function getSnapshots() {
 // function to run tests and compare snapshot against prod snapshot
 function runTests() {
   return new Promise((resolve, reject) => {
-    const cmd = `VISUAL_REGRESSION=true DOCKER=true PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true jest`;
+    const cmd = `VISUAL_REGRESSION=true DOCKER=true PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true jest --env=jsdom`;
     runCommand(cmd, resolve, reject);
   });
 }
