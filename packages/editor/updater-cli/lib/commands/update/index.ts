@@ -8,8 +8,7 @@ import { getCommonDependencies } from './steps/get-common-dependencies';
 import { updateDependencies } from './steps/update-dependencies';
 
 export async function updateCommand(packageName: string) {
-  // TODO: check if project is using yarn
-  // TODO: fail if project is using npm, as we won't support it right away
+  // TODO: check if project is using yarn and fail if it's not
   // TODO: fail if project is using bolt, as it requires extra work to support it
 
   const packageJsonPath = resolveToCwd('package.json');
