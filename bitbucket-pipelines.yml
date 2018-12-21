@@ -18,6 +18,7 @@ pipelines:
             - source ./build/visual-regression/getDockerCompose.sh
             - pwd
             - ls
+            - ls -Rla /opt/atlassian/pipelines/agent/build/node_modules/
             - cat /opt/atlassian/pipelines/agent/build/node_modules/jest-puppeteer-docker/docker-compose.yml
             - yarn test:vr
           caches:
