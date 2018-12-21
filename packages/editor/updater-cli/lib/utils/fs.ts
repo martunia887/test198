@@ -11,3 +11,4 @@ export function resolveToCwd(filename: string = ''): string {
 
 export const exists = promisify(fs.exists);
 export const readFile = promisify(fs.readFile);
+export const writeFile = promisify(fs.writeFile);

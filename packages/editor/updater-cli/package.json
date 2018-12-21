@@ -25,7 +25,8 @@
     "meow": "^5.0.0",
     "ora": "^3.0.0",
     "semver": "^5.4.1",
-    "ts-node": "^6.1.1"
+    "ts-node": "^6.1.1",
+    "yarn-deduplicate": "^1.0.5"
   },
   "devDependencies": {},
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2"
