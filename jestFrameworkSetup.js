@@ -6,7 +6,8 @@ import { configureToMatchImageSnapshot } from 'jest-image-snapshot';
 import * as emotion from 'emotion';
 import { createSerializer } from 'jest-emotion';
 import path from 'path';
-import * as fetch from 'node-fetch';
+
+const fetch = require('node-fetch');
 
 let consoleError;
 let consoleWarn;
@@ -343,7 +344,7 @@ if (process.env.VISUAL_REGRESSION) {
     //   headless = false;
     // }
 
-    if (process.env.IMAGE_SNAPSHOT || process.env.ISDOCKER) {
+    if (process.env.IMAGE_SNAPSHOT || process.env.DOCKER) {
       const getData = async () => {
         try {
           const response = await fetch(`http://localhost:9222/json/version`);

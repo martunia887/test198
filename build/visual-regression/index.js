@@ -27,8 +27,6 @@ function runTests() {
       cmd = `${cmd} ${updateSnapshot}`;
     }
     console.log('command running', cmd);
-    console.log(`${process.env.VISUAL_REGRESSION}`);
-
     runCommand(cmd, resolve, reject);
   });
 }
@@ -48,7 +46,7 @@ function runCommand(cmd, resolve, reject) {
 
 async function main() {
   let url = 'http://localhost:9000';
-  console.log('isdocker:', process.env.IMAGE_SNAPSHOT);
+  console.log('isRecordingSnapshot:', process.env.IMAGE_SNAPSHOT);
   if (process.env.IMAGE_SNAPSHOT) url = 'http://testing.local.com:9000';
   console.log('trying to reach:', url);
   let serverAlreadyRunning = await isReachable(url);
