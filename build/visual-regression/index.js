@@ -48,8 +48,8 @@ function runCommand(cmd, resolve, reject) {
 
 async function main() {
   let url = 'http://localhost:9000';
-  console.log('isdocker:', process.env.ISDOCKER);
-  if (process.env.ISDOCKER) url = 'http://testing.local.com:9000';
+  console.log('isdocker:', process.env.IMAGE_SNAPSHOT);
+  if (process.env.IMAGE_SNAPSHOT) url = 'http://testing.local.com:9000';
   console.log('trying to reach:', url);
   let serverAlreadyRunning = await isReachable(url);
   console.log('Running:', serverAlreadyRunning);

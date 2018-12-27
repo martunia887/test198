@@ -1,14 +1,12 @@
-version: '3'
 
+version: '3'
 services:
-  dev:
+  chromium:
     build:
-      context: .
+      context: ./
       dockerfile: Dockerfile
-    working_dir: /opt/atlaskit-mk2
-    container_name: "dev"
+    shm_size: '1gb'
+    ports:
+      - '9222:9222'
     extra_hosts:
-      - "testing.local.com : ${IPADDR}"
-    volumes:
-      - ../../../atlaskit-mk2:/opt/atlaskit-mk2
-    command: bolt run test:vr:docker
+    - "testing.local.com:172.22.32.90"  

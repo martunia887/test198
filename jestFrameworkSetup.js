@@ -6,6 +6,7 @@ import { configureToMatchImageSnapshot } from 'jest-image-snapshot';
 import * as emotion from 'emotion';
 import { createSerializer } from 'jest-emotion';
 import path from 'path';
+import * as fetch from 'node-fetch';
 
 let consoleError;
 let consoleWarn;
@@ -330,22 +331,47 @@ expect.addSnapshotSerializer(createSerializer(emotion));
 if (process.env.VISUAL_REGRESSION) {
   console.log('inside tests------');
   const puppeteer = require('puppeteer');
+
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
 
   beforeAll(async () => {
+    console.log('iiiiiiii');
     // show browser when watch is enabled
-    const isWatch = process.env.WATCH === 'true';
-    let headless = true;
-    if (isWatch) {
-      headless = false;
+    // const isWatch = process.env.WATCH === 'true';
+    // let headless = false;
+    // if (isWatch) {
+    //   headless = false;
+    // }
+
+    if (process.env.IMAGE_SNAPSHOT || process.env.ISDOCKER) {
+      const getData = async () => {
+        try {
+          const response = await fetch(`http://localhost:9222/json/version`);
+          const json = await response.json();
+          console.log(json);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      const wsEndpoint = result.data.webSocketDebuggerUrl;
+      console.log('someendpoint', wsEndpoint);
+      global.browser = await puppeteer.connect({
+        browserWSEndpoint: wsEndpoint,
+        ignoreHTTPSErrors: true,
+      });
+      global.page = await browser.newPage();
     }
-    global.browser = await puppeteer.launch({
-      // run test in headless mode
-      headless: headless,
-      slowMo: 100,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-    global.page = await global.browser.newPage();
+
+    // else {
+    //   global.browser = await puppeteer.launch({
+    //     // run test in headless mode
+    //     headless: headless,
+    //     slowMo: 100,
+    //     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    //   });
+    //   global.page = await global.browser.newPage();
+    // }
   }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
   afterAll(async () => {
