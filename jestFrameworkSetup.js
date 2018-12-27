@@ -7,7 +7,7 @@ import * as emotion from 'emotion';
 import { createSerializer } from 'jest-emotion';
 import path from 'path';
 
-const fetch = require('node-fetch');
+global.fetch = require('jest-fetch-mock');
 
 let consoleError;
 let consoleWarn;
@@ -336,15 +336,15 @@ if (process.env.VISUAL_REGRESSION) {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
 
   beforeAll(async () => {
-    console.log('iiiiiiii');
+    console.log('inside before all');
     // show browser when watch is enabled
-    // const isWatch = process.env.WATCH === 'true';
-    // let headless = false;
-    // if (isWatch) {
-    //   headless = false;
-    // }
+    const isWatch = process.env.WATCH === 'true';
+    let headless = false;
+    if (isWatch) {
+      headless = false;
+    }
 
-    if (process.env.IMAGE_SNAPSHOT || process.env.DOCKER) {
+    if (process.env.IMAGE_SNAPSHOT && process.env.DOCKER) {
       const getData = async () => {
         try {
           const response = await fetch(`http://localhost:9222/json/version`);
@@ -356,7 +356,7 @@ if (process.env.VISUAL_REGRESSION) {
       };
 
       const wsEndpoint = result.data.webSocketDebuggerUrl;
-      console.log('someendpoint', wsEndpoint);
+      console.log('Endpoint:', wsEndpoint);
       global.browser = await puppeteer.connect({
         browserWSEndpoint: wsEndpoint,
         ignoreHTTPSErrors: true,
