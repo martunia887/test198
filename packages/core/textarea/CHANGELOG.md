@@ -1,5 +1,22 @@
 # @atlaskit/textarea
 
+## 0.2.3
+- Updated dependencies [58b84fa](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/58b84fa):
+  - @atlaskit/analytics-next@3.1.2
+  - @atlaskit/button@10.1.1
+  - @atlaskit/theme@7.0.1
+  - @atlaskit/docs@6.0.0
+
+## 0.2.2
+- [patch] [9e6b592](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9e6b592):
+
+  - Added tslib import for textarea
+
+## 0.2.1
+- [patch] [d13242d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d13242d):
+
+  - Change API to experimental theming API to namespace component themes into separate contexts and make theming simpler. Update all dependant components.
+
 ## 0.2.0
 - [minor] [76a8f1c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/76a8f1c):
 
