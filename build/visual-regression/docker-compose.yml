@@ -9,4 +9,4 @@ services:
     ports:
       - '9222:9222'
     extra_hosts:
-    - "testing.local.com:172.22.32.90"  
+    - "testing.local.com:${HOST_IP}"  
