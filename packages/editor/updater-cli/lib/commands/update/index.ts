@@ -6,6 +6,7 @@ import { compareVersions } from './steps/compare-version';
 import { getDependencies } from './steps/get-dependencies';
 import { getCommonDependencies } from './steps/get-common-dependencies';
 import { updateDependencies } from './steps/update-dependencies';
+import { showChangelog } from './steps/show-changelog';
 
 export async function updateCommand(packageName: string) {
   // TODO: check if project is using yarn and fail if it's not
@@ -21,6 +22,8 @@ export async function updateCommand(packageName: string) {
   const currentVersion = await getCurrent(packageName, packageJson);
 
   await compareVersions(packageName, currentVersion, latestVersion);
+
+  await showChangelog(packageName, currentVersion, latestVersion);
 
   const deps = await getDependencies(packageName, latestVersion);
   const commonDeps = getCommonDependencies(
