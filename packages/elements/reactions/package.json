@@ -57,6 +57,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@atlaskit/docs": "^6.0.0",
+    "@atlaskit/editor-test-helpers": "^6.3.4",
     "@atlaskit/i18n-tools": "^0.4.0",
     "@atlaskit/tooltip": "^12.1.13",
     "@atlaskit/util-common-test": "^2.4.2",
