@@ -333,6 +333,7 @@ if (process.env.VISUAL_REGRESSION) {
 
   beforeAll(async () => {
     if (process.env.CI) {
+      console.log('puppeteer:', puppeteer.executablePath());
       global.browser = await puppeteer.launch({
         // run test in headless mode
         headless: true,
