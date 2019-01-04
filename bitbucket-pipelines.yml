@@ -108,9 +108,7 @@ pipelines:
               - bolt install --pure-lockfile 
               - yarn global add puppeteer  
               # If we have changed any packages with webdriver tests, we wait until browserstack has free resources, then run our tests
-              - yarn test:vr:changed
-            caches:
-              - node        
+              - yarn test:vr:changed      
         - step:
             name: Building website
             script:
