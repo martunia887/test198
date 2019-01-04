@@ -18,7 +18,7 @@ const watch = process.env.WATCH ? '--watch' : '';
 // function to run tests and compare snapshot against prod snapshot
 function runTests() {
   return new Promise((resolve, reject) => {
-    const cmd = `VISUAL_REGRESSION=true jest --detectOpenHandles`;
+    const cmd = `VISUAL_REGRESSION=true jest --forceExit`;
     runCommand(cmd, resolve, reject);
   });
 }
