@@ -337,7 +337,11 @@ if (process.env.VISUAL_REGRESSION) {
         // run test in headless mode
         headless: false,
         slowMo: 100,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+        ],
       });
       global.page = await global.browser.newPage();
     } else {
