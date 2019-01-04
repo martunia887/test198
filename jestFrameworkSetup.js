@@ -335,9 +335,6 @@ if (process.env.VISUAL_REGRESSION) {
     if (process.env.CI) {
       console.log('puppeteer:', puppeteer.executablePath());
       global.browser = await puppeteer.launch({
-        // run test in headless mode
-        headless: true,
-        slowMo: 100,
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
