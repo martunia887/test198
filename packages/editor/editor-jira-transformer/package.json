@@ -19,7 +19,6 @@
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
     "@atlaskit/adf-schema": "^1.0.0",
-    "@atlaskit/editor-common": "^25.0.0",
     "collapse-whitespace": "^1.1.6",
     "prosemirror-model": "^1.6.1"
   },
@@ -27,6 +26,7 @@
     "react": "^16.4.0"
   },
   "devDependencies": {
+    "@atlaskit/editor-common": "^25.0.0",
     "@atlaskit/docs": "^6.0.0",
     "@atlaskit/editor-core": "^92.0.0",
     "@atlaskit/editor-json-transformer": "^4.1.1",

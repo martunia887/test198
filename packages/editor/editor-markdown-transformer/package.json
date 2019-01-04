@@ -17,13 +17,13 @@
   "license": "MIT",
   "dependencies": {
     "@atlaskit/adf-schema": "^1.0.0",
-    "@atlaskit/editor-common": "^25.0.0",
     "markdown-it": "^8.4.0",
     "markdown-it-table": "^2.0.4",
     "prosemirror-markdown": "^1.2.0",
     "prosemirror-model": "^1.6.1"
   },
   "devDependencies": {
+    "@atlaskit/editor-common": "^25.0.0",
     "@atlaskit/docs": "^6.0.0",
     "@atlaskit/editor-core": "^92.0.0",
     "@atlaskit/editor-test-helpers": "^6.3.4",
