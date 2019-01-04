@@ -108,7 +108,7 @@ pipelines:
               - source ./build-setup.sh
               - bolt install --pure-lockfile   
               # If we have changed any packages with webdriver tests, we wait until browserstack has free resources, then run our tests
-              - yarn test:vr button
+              - yarn test:vr:changed
             caches:
               - node        
         - step:
