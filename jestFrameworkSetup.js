@@ -328,22 +328,38 @@ expect.addSnapshotSerializer(createSerializer(emotion));
 // set up for visual regression
 if (process.env.VISUAL_REGRESSION) {
   const puppeteer = require('puppeteer');
+  const request = require('request-promise-native');
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
 
   beforeAll(async () => {
-    // show browser when watch is enabled
-    const isWatch = process.env.WATCH === 'true';
-    let headless = true;
-    if (isWatch) {
-      headless = false;
+    if (process.env.CI) {
+      global.browser = await puppeteer.launch({
+        // run test in headless mode
+        headless: false,
+        slowMo: 100,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
+      global.page = await global.browser.newPage();
+    } else {
+      console.log('Capturing image snapshot');
+      const options = {
+        uri: `http://localhost:9222/json/version`,
+        json: true,
+        resolveWithFullResponse: true,
+      };
+      const response = await request(options);
+      console.log(
+        'Connecting to webSocket:',
+        response.body.webSocketDebuggerUrl,
+      );
+      const wsEndpoint = response.body.webSocketDebuggerUrl;
+      global.browser = await puppeteer.connect({
+        browserWSEndpoint: wsEndpoint,
+        ignoreHTTPSErrors: true,
+      });
+      console.log('global browser:', global.browser);
+      global.page = await global.browser.newPage();
     }
-    global.browser = await puppeteer.launch({
-      // run test in headless mode
-      headless: headless,
-      slowMo: 100,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-    global.page = await global.browser.newPage();
   }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
   afterAll(async () => {

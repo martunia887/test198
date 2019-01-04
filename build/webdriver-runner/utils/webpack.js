@@ -35,7 +35,7 @@ const {
 } = require('@atlaskit/webpack-config/banner');
 const utils = require('@atlaskit/webpack-config/config/utils');
 
-const HOST = 'localhost';
+const HOST = '0.0.0.0';
 const PORT = 9000;
 const WEBPACK_BUILD_TIMEOUT = 10000;
 const CHANGED_PACKAGES = process.env.CHANGED_PACKAGES;
@@ -151,6 +151,7 @@ async function startDevServer() {
     noInfo: false,
     overlay: false,
     hot: false,
+    disableHostCheck: true,
 
     // disable hot reload for tests - they don't need it for running
     hot: false,

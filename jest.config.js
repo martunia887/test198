@@ -189,8 +189,8 @@ if (config.testMatch.length === 0) {
   }
 }
 
-if (PROD) {
-  config.globals.__BASEURL__ = 'https://atlaskit.atlassian.com';
+if (process.env.VISUAL_REGRESSION && !process.env.CI) {
+  config.globals.__BASEURL__ = 'http://testing.local.com:9000';
 }
 
 module.exports = config;

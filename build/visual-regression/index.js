@@ -15,28 +15,6 @@ const JEST_WAIT_FOR_INPUT_TIMEOUT = 1000;
 const isLocalRun = process.env.RUN_LOCAL_ONLY === 'true';
 const watch = process.env.WATCH ? '--watch' : '';
 
-// move logic to remove all production snapshots before test starts
-function removeSnapshotDir() {
-  const filteredList = glob
-    .sync('**/packages/**/__image_snapshots__/', {
-      ignore: '**/node_modules/**',
-    })
-    .map(dir => {
-      fs.removeSync(dir);
-    });
-}
-
-// function to generate snapshot from production website
-function getProdSnapshots() {
-  return new Promise((resolve, reject) => {
-    let cmd = `VISUAL_REGRESSION=true PROD=true jest -u`;
-    if (watch) {
-      cmd = `${cmd} --watch`;
-    }
-    runCommand(cmd, resolve, reject);
-  });
-}
-
 // function to run tests and compare snapshot against prod snapshot
 function runTests() {
   return new Promise((resolve, reject) => {
@@ -64,7 +42,6 @@ async function main() {
     code: 0,
     signal: '',
   };
-  removeSnapshotDir();
 
   if (!serverAlreadyRunning) {
     // Overriding the env variable to start the correct packages
@@ -72,9 +49,6 @@ async function main() {
     await webpack.startDevServer();
   }
 
-  if (!isLocalRun) {
-    prodTestStatus = await getProdSnapshots();
-  }
   const { code, signal } = await runTests();
 
   console.log(

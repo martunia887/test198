@@ -12,6 +12,7 @@ describe('Snapshot Test', () => {
       // @ts-ignore
       global.__BASEURL__,
     );
+    console.log(url);
     // @ts-ignore
     const image = await takeScreenShot(global.page, url);
     expect(image).toMatchProdImageSnapshot();

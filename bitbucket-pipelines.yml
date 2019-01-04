@@ -101,6 +101,17 @@ pipelines:
             caches:
               - node
         - step:
+            name: Visual regression testing
+            script:
+              - source ./build/visual-regression/puppeteer.sh
+              - yarn add puppeteer@1.10.0
+              - source ./build-setup.sh
+              - bolt install --pure-lockfile   
+              # If we have changed any packages with webdriver tests, we wait until browserstack has free resources, then run our tests
+              - yarn test:vr button
+            caches:
+              - node        
+        - step:
             name: Building website
             script:
               - source ./build-setup.sh
