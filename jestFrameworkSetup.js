@@ -335,7 +335,7 @@ if (process.env.VISUAL_REGRESSION) {
     if (process.env.CI) {
       global.browser = await puppeteer.launch({
         // run test in headless mode
-        headless: false,
+        headless: true,
         slowMo: 100,
         args: [
           '--no-sandbox',
@@ -366,9 +366,9 @@ if (process.env.VISUAL_REGRESSION) {
     }
   }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
-  // afterAll(async () => {
-  //   await global.browser.close();
-  // });
+  afterAll(async () => {
+    await global.browser.close();
+  });
 
   // TODO tweak failureThreshold to provide best results
   // TODO: A failureThreshold of 1 will pass tests that have > 2 percent failing pixels
