@@ -104,9 +104,9 @@ pipelines:
             name: Visual regression testing
             script:
               - source ./build/visual-regression/puppeteer.sh
-              - yarn global add puppeteer@1.10.0
               - source ./build-setup.sh
-              - bolt install --pure-lockfile   
+              - bolt install --pure-lockfile 
+              - yarn global add puppeteer  
               # If we have changed any packages with webdriver tests, we wait until browserstack has free resources, then run our tests
               - yarn test:vr:changed
             caches:
