@@ -113,10 +113,15 @@ export async function getChangelog(
   packageName: string,
   currentVersion: string,
   version: string = 'latest',
+  showSpinner: boolean = true,
 ) {
-  const spinner = ora(
-    `Getting changelogs for "${packageName}" from ${currentVersion} to ${version}.`,
-  ).start();
+  let spinner;
+
+  if (showSpinner) {
+    spinner = ora(
+      `Getting changelogs for "${packageName}" from ${currentVersion} to ${version}.`,
+    ).start();
+  }
 
   const res = await fetch(
     `https://unpkg.com/${packageName}@latest/CHANGELOG.md`,
@@ -124,10 +129,14 @@ export async function getChangelog(
   if (res.status === 200) {
     const data = await res.text();
     const logs = sortChanges(parseChangelog(data));
-    spinner.succeed();
+    if (spinner) {
+      spinner.succeed();
+    }
     return logs;
   }
 
-  spinner.fail(`Unable to fetch changelog for "${packageName}".`);
+  if (spinner) {
+    spinner.fail(`Unable to fetch changelog for "${packageName}".`);
+  }
   throw new Error(`Unable to fetch changelog for "${packageName}".`);
 }

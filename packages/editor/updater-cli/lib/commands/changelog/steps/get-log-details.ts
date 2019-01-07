@@ -19,7 +19,7 @@ function printLogDetails(log: Log) {
               ),
           );
         } else {
-          acc.push(chalk.white('   ' + md(detail.text)));
+          acc.push(chalk.white('  ' + md(detail.text)));
         }
 
         return acc;
