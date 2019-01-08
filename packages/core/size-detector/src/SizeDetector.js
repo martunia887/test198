@@ -52,14 +52,31 @@ export default class SizeDetector extends Component<Props, State> {
   props: Props;
   state: State;
 
+  _originalHandleResize: Function;
+
   constructor(props: Object) {
     super(props);
     this.state = {};
+
+    this._originalHandleResize = this.handleResize;
   }
+
+  _maybeDebounceHandleResize = () => {
+    const { debounceTime } = this.props;
+    if (debounceTime && debounceTime > 0) {
+      this.handleResize = debounce(this._originalHandleResize, debounceTime, {
+        leading: true,
+        trailing: true,
+      });
+    } else {
+      this.handleResize = this._originalHandleResize;
+    }
+  };
 
   static defaultProps = {
     // eslint-disable-line react/sort-comp
     containerStyle: {},
+    debounceTime: 0,
   };
 
   container: ?HTMLDivElement;
@@ -90,6 +107,13 @@ export default class SizeDetector extends Component<Props, State> {
     if (this.resizeObject) {
       // $FlowFixMe - resizeObject is HTMLElement which doesn't contain .data prop
       this.resizeObject.data = 'about:blank';
+    }
+    this._maybeDebounceHandleResize();
+  }
+
+  componentDidUpdate(nextProps: Props) {
+    if (this.props.debounceTime !== nextProps.debounceTime) {
+      this._maybeDebounceHandleResize();
     }
   }
 
@@ -126,11 +150,7 @@ export default class SizeDetector extends Component<Props, State> {
 
     // $FlowFixMe - resizeObject is typed as HTMLElement which has no contentDocument prop
     this.resizeObjectDocument = this.resizeObject.contentDocument.defaultView;
-    let resizeHandler = this.handleResize;
-    if (this.props.debounceTime) {
-      resizeHandler = debounce(this.handleResize, this.props.debounceTime);
-    }
-    this.resizeObjectDocument.addEventListener('resize', resizeHandler);
+    this.resizeObjectDocument.addEventListener('resize', this.handleResize);
 
     // Calculate width first time, after object has loaded.
     // Prevents it from getting in a weird state where width is always 0.
