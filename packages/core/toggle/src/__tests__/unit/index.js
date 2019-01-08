@@ -3,9 +3,8 @@ import React from 'react';
 import { mount } from 'enzyme';
 import CloseIcon from '@atlaskit/icon/glyph/cross';
 import ConfirmIcon from '@atlaskit/icon/glyph/check';
-import ToggleStatelessWithAnalytics, {
-  ToggleStatelessWithoutAnalytics as Toggle,
-} from '../../ToggleStateless';
+import ToggleStatelessWithAnalytics from '../../ToggleStateless';
+import Toggle from '../../ToggleBase';
 import { Input } from '../../styled';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);

@@ -1,5 +1,7 @@
 // @flow
 
+export type Size = 'regular' | 'large';
+
 type BaseProps = {
   /** Whether the toggle is disabled or not. This will prevent any interaction with the user */
   isDisabled: boolean,
@@ -16,7 +18,9 @@ type BaseProps = {
   /** Handler to be called when toggle is focused. */
   onFocus: (event: Event) => void,
   /** Defines the size of the toggle. */
-  size: 'regular' | 'large',
+  size: Size,
+  /** Sets the toggle to a loading state. See examples for intended usage. */
+  isLoading?: boolean,
 };
 
 // All base props have defaults

@@ -22,6 +22,7 @@
     "@atlaskit/analytics-next": "^3.1.2",
     "@atlaskit/icon": "^15.0.2",
     "@atlaskit/theme": "^7.0.1",
+    "@atlaskit/spinner": "^9.0.10",
     "@babel/runtime": "^7.0.0",
     "uuid": "^3.1.0"
   },
