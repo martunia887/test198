@@ -2,6 +2,7 @@
 
 import styled, { keyframes } from 'styled-components';
 import type { SpinnerPhases } from '../types';
+import { secondsDurations as durations } from './constants';
 
 type AnimationParams = {
   delay: number,
@@ -26,26 +27,29 @@ const keyframeNames = {
     from { transform: rotate(230deg); }
     to { transform: rotate(510deg); }
   `,
-  leaveOpacity: keyframes`
-    from { opacity: 1; }
-    to { opacity: 0; }
-  `,
 };
 
 export const getContainerAnimation = ({ delay, phase }: AnimationParams) => {
-  if (phase === 'DELAY') {
+  if (phase === 'OFF') {
     /* This hides the spinner and allows us to use animationend events to move to the next phase in
      * the same way we do with the other lifecycle stages */
     return `animation: ${delay}s ${keyframeNames.noop};`;
   }
 
   if (phase === 'ENTER' || phase === 'IDLE') {
-    return `animation: 1s ease-in-out forwards ${keyframeNames.enterRotate};`;
+    return `animation: ${durations.inAnimation} ease-in-out forwards ${
+      keyframeNames.enterRotate
+    };`;
   }
 
   if (phase === 'LEAVE') {
-    return `animation: 0.53s ease-in-out forwards ${keyframeNames.leaveRotate},
-      0.2s ease-in-out 0.33s ${keyframeNames.leaveOpacity};`;
+    return `animation: ${durations.outAnimation} ease-in-out forwards ${
+      keyframeNames.leaveRotate
+    };
+    transition: opacity ${durations.outFade} ease-in-out ${
+      durations.outFadeDelay
+    };
+    opacity: 0;`;
   }
 
   return '';
@@ -57,13 +61,6 @@ const Container = styled.div`
   ${getContainerAnimation} display: flex;
   height: ${getSize};
   width: ${getSize};
-
-  /* Rapidly creating and removing spinners will result in multiple spinners being visible while
-   * they complete their exit animations. This rules hides the spinner if another one has been
-   * added. */
-  div + & {
-    display: none;
-  }
 `;
 Container.displayName = 'SpinnerContainer';
 export default Container;

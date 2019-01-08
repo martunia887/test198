@@ -10,24 +10,21 @@ type State = {
 
 class StatefulSpinnerExample extends Component<{}, State> {
   state = {
-    isCompleting: false,
+    isCompleting: true,
   };
 
   completeSpinner = () =>
     this.setState({ isCompleting: !this.state.isCompleting });
 
   render() {
+    const { isCompleting } = this.state;
     return (
       <div>
         <div>
           <Button onClick={this.completeSpinner}>Toggle Spinners</Button>
         </div>
-        <Spinner
-          size="xlarge"
-          delay={3000}
-          isCompleting={this.state.isCompleting}
-        />
-        <Spinner size="xlarge" isCompleting={this.state.isCompleting} />
+        <Spinner size="xlarge" delay={2900} isCompleting={isCompleting} />
+        <Spinner size="xlarge" isCompleting={isCompleting} />
       </div>
     );
   }

@@ -18,18 +18,24 @@ export default md`
   ${(
     <Example
       packageName="@atlaskit/spinner"
-      Component={require('../examples/0-basic').default}
+      Component={require('../examples/0-basic-rendering').default}
       title="Basic"
-      source={require('!!raw-loader!../examples/0-basic')}
+      source={require('!!raw-loader!../examples/0-basic-rendering')}
     />
   )}
+
+  Under ADG3, spinners have an outro animation. To ensure the outro animation is
+  played correctly, you should not unmount the spinner until the \`onComplete()\`
+  prop has been called.
+
+  Below is an example of the quintessential way to use a spinner for loading.
   
   ${(
     <Example
       packageName="@atlaskit/spinner"
-      Component={require('../examples/1-usage').default}
+      Component={require('../examples/0-how-to-use-a-spinner').default}
       title="Animation Options"
-      source={require('!!raw-loader!../examples/1-usage')}
+      source={require('!!raw-loader!../examples/0-how-to-use-a-spinner')}
     />
   )}
  
