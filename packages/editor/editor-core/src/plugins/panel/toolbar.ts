@@ -57,6 +57,11 @@ export const getToolbarConfig: FloatingToolbarHandler = (
       nodeType: state.schema.nodes.panel,
       items: [
         {
+          type: 'input',
+          onSubmit: () => console.log('hello'),
+          placeholder: 'Setup link here',
+        },
+        {
           type: 'button',
           icon: InfoIcon,
           onClick: changePanelType('info'),

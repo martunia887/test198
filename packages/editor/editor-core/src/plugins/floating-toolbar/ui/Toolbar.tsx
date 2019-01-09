@@ -11,6 +11,7 @@ import Button from './Button';
 import Dropdown from './Dropdown';
 import Select, { SelectOption } from './Select';
 import Separator from './Separator';
+import Input from './Input';
 
 const akGridSize = gridSize();
 
@@ -70,13 +71,29 @@ export default class Toolbar extends Component<Props> {
                     <Button
                       key={idx}
                       title={item.title}
+                      href={item.href}
                       icon={<ButtonIcon label={item.title} />}
                       appearance={item.appearance}
+                      target={item.target}
                       onClick={() => dispatchCommand(item.onClick)}
                       onMouseEnter={() => dispatchCommand(item.onMouseEnter)}
                       onMouseLeave={() => dispatchCommand(item.onMouseLeave)}
                       selected={item.selected}
                       disabled={item.disabled}
+                    />
+                  );
+
+                case 'input':
+                  return (
+                    <Input
+                      key={idx}
+                      mountPoint={popupsMountPoint}
+                      boundariesElement={popupsBoundariesElement}
+                      defaultValue={item.defaultValue}
+                      placeholder={item.placeholder}
+                      onSubmit={text => {
+                        return dispatchCommand(item.onSubmit(text));
+                      }}
                     />
                   );
 

@@ -22,6 +22,8 @@ export type FloatingToolbarButton<T> = {
   disabled?: boolean;
   hidden?: boolean;
   appearance?: ButtonAppearance;
+  href?: string;
+  target?: string;
 };
 
 export type FloatingToolbarSelect<T> = {
