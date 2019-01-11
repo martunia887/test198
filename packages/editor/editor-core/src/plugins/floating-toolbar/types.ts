@@ -26,6 +26,15 @@ export type FloatingToolbarButton<T> = {
   target?: string;
 };
 
+export type FloatingToolbarInput<T> = {
+  type: 'input';
+  onSubmit: (...args: any[]) => any;
+  onBlur: (...args: any[]) => any;
+  defaultValue?: string;
+  placeholder?: string;
+  hidden?: boolean;
+};
+
 export type FloatingToolbarSelect<T> = {
   type: 'select';
   options: SelectOptions<T>;
@@ -54,6 +63,7 @@ export type FloatingToolbarItem<T> =
   | FloatingToolbarButton<T>
   | FloatingToolbarDropdown<T>
   | FloatingToolbarSelect<T>
+  | FloatingToolbarInput<T>
   | FloatingToolbarSeparator;
 
 export interface FloatingToolbarConfig {

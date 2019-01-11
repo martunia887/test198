@@ -91,9 +91,8 @@ export default class Toolbar extends Component<Props> {
                       boundariesElement={popupsBoundariesElement}
                       defaultValue={item.defaultValue}
                       placeholder={item.placeholder}
-                      onSubmit={text => {
-                        return dispatchCommand(item.onSubmit(text));
-                      }}
+                      onSubmit={value => dispatchCommand(item.onSubmit(value))}
+                      onBlur={value => dispatchCommand(item.onBlur(value))}
                     />
                   );
 

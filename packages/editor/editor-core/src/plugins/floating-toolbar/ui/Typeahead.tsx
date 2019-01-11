@@ -15,7 +15,7 @@ export interface State {
   text: string;
 }
 
-export default class TextField extends Component<Props, State> {
+export default class Typeahead extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {

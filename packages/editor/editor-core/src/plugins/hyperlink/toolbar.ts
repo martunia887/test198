@@ -4,26 +4,19 @@ import OpenIcon from '@atlaskit/icon/glyph/editor/open';
 import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
 
 import { stateKey, HyperlinkState } from './pm-plugins/main';
-import {
-  removeLink,
-  setLinkText,
-  showLinkToolbar,
-  setLinkHref,
-} from './commands';
+import { removeLink, setLinkText, setLinkHref } from './commands';
 import { normalizeUrl } from './utils';
 
 export const messages = defineMessages({
-  info: {
-    id: 'fabric.editor.info',
-    defaultMessage: 'Info',
-    description:
-      'Panels provide a way to highlight text. The info panel has a blue background.',
+  openLink: {
+    id: 'fabric.editor.openLink',
+    defaultMessage: 'Open link',
+    description: 'Follows the hyperlink.',
   },
-  note: {
-    id: 'fabric.editor.note',
-    defaultMessage: 'Note',
-    description:
-      'Panels provide a way to highlight text. The note panel has a purple background.',
+  unlink: {
+    id: 'fabric.editor.unlink',
+    defaultMessage: 'Unlink',
+    description: 'Removes the hyperlink but keeps your text.',
   },
 });
 
@@ -33,6 +26,7 @@ const showTextToolbar = (text, pos) => {
       type: 'input',
       onSubmit: text => setLinkText(pos, text),
       placeholder: 'Text to display',
+      onBlur: text => setLinkText(pos, text),
     },
   ];
 };
@@ -41,9 +35,10 @@ const showLinkEditToolbar = (link, pos) => {
   return [
     {
       type: 'input',
-      onSubmit: setLinkHref(pos, link),
+      onSubmit: link => setLinkHref(pos, link),
       placeholder: 'Setup link here',
       defaultValue: link || '',
+      onBlur: link => setLinkHref(pos, link),
     },
   ];
 };
@@ -62,7 +57,7 @@ export const getToolbarConfig: FloatingToolbarHandler = (
 ) => {
   const linkState: HyperlinkState | undefined = stateKey.getState(state);
 
-  if (linkState && linkState.activeLinkMark) {
+  if (linkState && linkState.activeLinkMark && linkState.activeLinkMark) {
     const {
       activeLinkMark: { pos, node },
     } = linkState;
@@ -72,6 +67,9 @@ export const getToolbarConfig: FloatingToolbarHandler = (
     );
     const link = linkMark[0] && linkMark[0].attrs.href;
     const text = node.text;
+
+    const labelOpenLink = formatMessage(messages.openLink);
+    const labelUnlink = formatMessage(messages.unlink);
 
     return {
       title: 'Hyperlink floating controls',
@@ -87,14 +85,14 @@ export const getToolbarConfig: FloatingToolbarHandler = (
           target: '_blank',
           href: link,
           selected: false,
-          title: 'Open link',
+          title: labelOpenLink,
         },
         {
           type: 'button',
           icon: UnlinkIcon,
           onClick: removeLink(pos),
           selected: false,
-          title: 'Unlink',
+          title: labelUnlink,
         },
       ],
     };
