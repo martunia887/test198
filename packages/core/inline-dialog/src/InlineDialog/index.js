@@ -25,6 +25,7 @@ class InlineDialog extends Component<Props, {}> {
     onContentFocus: () => {},
     onClose: () => {},
     placement: 'bottom-start',
+    shouldCloseOnEscapePress: false,
   };
 
   containerRef: ?HTMLElement = null;
@@ -32,27 +33,46 @@ class InlineDialog extends Component<Props, {}> {
 
   componentDidUpdate(prevProps: Props) {
     if (typeof window === 'undefined') return;
+    if (typeof document === 'undefined') return;
 
     if (!prevProps.isOpen && this.props.isOpen) {
       window.addEventListener('click', this.handleClickOutside, true);
+      document.addEventListener('keydown', this.handleKeyDown, false);
     } else if (prevProps.isOpen && !this.props.isOpen) {
       window.removeEventListener('click', this.handleClickOutside);
+      document.removeEventListener('keydown', this.handleKeyDown, false);
     }
   }
 
   componentDidMount() {
     if (typeof window === 'undefined') return;
-
     if (this.props.isOpen) {
       window.addEventListener('click', this.handleClickOutside, true);
+    }
+
+    if (typeof document === 'undefined') return;
+    if (this.props.isOpen) {
+      document.addEventListener('keydown', this.handleKeyDown, false);
     }
   }
 
   componentWillUnMount() {
     if (typeof window === 'undefined') return;
-
     window.removeEventListener('click', this.handleClickOutside);
+
+    if (typeof document === 'undefined') return;
+    document.removeEventListener('keydown', this.handleKeyDown, false);
   }
+
+  handleKeyDown = (event: SyntheticKeyboardEvent<any>) => {
+    const { isOpen, onClose, shouldCloseOnEscapePress } = this.props;
+    switch (event.key) {
+      case 'Escape':
+        if (isOpen && shouldCloseOnEscapePress) onClose(event);
+        break;
+      default:
+    }
+  };
 
   handleClickOutside = (event: any) => {
     const { isOpen, onClose } = this.props;

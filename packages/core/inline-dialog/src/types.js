@@ -36,4 +36,6 @@ export type Props = {
   onClose: ({ isOpen: false, event: any }) => void,
   /** Where the dialog should appear, relative to the contents of the children. */
   placement: Placement,
+  /** Boolean indicating if pressing the `esc` key should close the dialog. */
+  shouldCloseOnEscapePress: boolean,
 };

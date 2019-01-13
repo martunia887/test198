@@ -103,6 +103,42 @@ describe('inline-dialog', () => {
     });
   });
 
+  describe('handleKeyDown', () => {
+    it('should not trigger the onClose prop if the dialog is not opened or the shouldCloseOnEscapePress is false', () => {
+      const spy = jest.fn();
+      const wrapper = shallow(
+        <InlineDialog onClose={spy} isOpen shouldCloseOnEscapePress={false} />,
+      );
+      const event = {
+        key: 'Escape',
+      };
+
+      wrapper.instance().handleKeyDown(event);
+      expect(spy).not.toHaveBeenCalled();
+
+      wrapper.setProps({
+        isOpen: false,
+        shouldCloseOnEscapePress: true,
+      });
+
+      wrapper.instance().handleKeyDown(event);
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should trigger the onClose prop', () => {
+      const spy = jest.fn();
+      const wrapper = shallow(
+        <InlineDialog onClose={spy} isOpen shouldCloseOnEscapePress />,
+      );
+      const event = {
+        key: 'Escape',
+      };
+
+      wrapper.instance().handleKeyDown(event);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('handleClickOutside', () => {
     it('should not trigger the onClose prop if event is defaultPrevented', () => {
       const spy = jest.fn();
