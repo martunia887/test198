@@ -1,0 +1,367 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Anonymise should anonymise block-card node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "attrs": Object {
+        "url": "https://anonymised.atlassian.com",
+      },
+      "type": "blockCard",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise blockquote node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "content": Array [
+            Object {
+              "text": "Content is anonymised",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+      "type": "blockquote",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise bodiedExtension node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "attrs": Object {
+        "extensionKey": "plugin",
+        "extensionType": "com.atlassian.fabric",
+        "layout": "full-width",
+        "parameters": Object {
+          "message": "The content of this object is anonymised",
+        },
+        "text": "Content is anonymised",
+      },
+      "content": Array [],
+      "type": "bodiedExtension",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise bullet-list node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "content": Array [
+            Object {
+              "content": Array [
+                Object {
+                  "text": "Content is anonymised",
+                  "type": "text",
+                },
+              ],
+              "type": "paragraph",
+            },
+          ],
+          "type": "listItem",
+        },
+        Object {
+          "content": Array [
+            Object {
+              "content": Array [
+                Object {
+                  "text": "Content is anonymised",
+                  "type": "text",
+                },
+              ],
+              "type": "paragraph",
+            },
+          ],
+          "type": "listItem",
+        },
+      ],
+      "type": "bulletList",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise code-block node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "attrs": Object {
+        "language": "javascript",
+      },
+      "content": Array [
+        Object {
+          "text": "Content is anonymised",
+          "type": "text",
+        },
+      ],
+      "type": "codeBlock",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise date node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "timestamp": "1111111111111",
+          },
+          "type": "date",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise decision nodes 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "attrs": Object {
+        "localId": "xxxxx",
+      },
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "localId": "xxx",
+            "state": "DECIDED",
+          },
+          "content": Array [
+            Object {
+              "text": "Content is anonymised",
+              "type": "text",
+            },
+          ],
+          "type": "decisionItem",
+        },
+      ],
+      "type": "decisionList",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise emoji node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "id": "123456789",
+            "shortName": "Content is anonymised",
+            "text": "Content is anonymised",
+          },
+          "type": "emoji",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise extension node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "attrs": Object {
+        "extensionKey": "plugin",
+        "extensionType": "com.atlassian.fabric",
+        "layout": "full-width",
+        "parameters": Object {
+          "message": "The content of this object is anonymised",
+        },
+        "text": "Content is anonymised",
+      },
+      "type": "extension",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise heading node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "attrs": Object {
+        "level": 1,
+      },
+      "content": Array [
+        Object {
+          "text": "Content is anonymised",
+          "type": "text",
+        },
+      ],
+      "type": "heading",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise inline-card node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "url": "https://anonymised.atlassian.com",
+          },
+          "type": "inlineCard",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise list nodes 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "content": Array [
+            Object {
+              "content": Array [
+                Object {
+                  "text": "Content is anonymised",
+                  "type": "text",
+                },
+              ],
+              "type": "paragraph",
+            },
+          ],
+          "type": "listItem",
+        },
+      ],
+      "type": "bulletList",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise media-group node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "collection": "123456789",
+            "height": 183,
+            "id": "123456789",
+            "occurrenceKey": "123456789",
+            "type": "file",
+            "width": 183,
+          },
+          "type": "media",
+        },
+      ],
+      "type": "mediaGroup",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise mention node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "accessLevel": "",
+            "id": "123456789",
+            "text": "Content is anonymised",
+          },
+          "type": "mention",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should anonymise panel node 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "attrs": Object {
+        "panelType": "info",
+      },
+      "content": Array [
+        Object {
+          "content": Array [
+            Object {
+              "text": "Content is anonymised",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+      "type": "panel",
+    },
+  ],
+  "type": "doc",
+  "version": 1,
+}
+`;
+
+exports[`Anonymise should should anonymise doc node 1`] = `
+Object {
+  "content": Array [],
+  "type": "doc",
+  "version": 1,
+}
+`;
