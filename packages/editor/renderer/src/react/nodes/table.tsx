@@ -7,7 +7,8 @@ import {
   TableSharedCssClassName,
   tableCellMinWidth,
   akEditorTableNumberColumnWidth,
-  akEditorDefaultLayoutWidth as tableOverflowBreakpoint,
+  akEditorWideLayoutWidth,
+  akEditorDefaultLayoutWidth,
 } from '@atlaskit/editor-common';
 import overflowShadow, { OverflowShadowProps } from '../../ui/overflow-shadow';
 
@@ -16,6 +17,11 @@ export interface TableProps {
   layout: TableLayout;
   isNumberColumnEnabled: boolean;
   children: ReactNode;
+  renderWidth: number;
+}
+
+interface TableState {
+  remappedColWidths?: Array<number>;
 }
 
 const isHeaderRowEnabled = rows => {
@@ -41,7 +47,46 @@ const addNumberColumnIndexes = rows => {
   });
 };
 
-class Table extends React.Component<TableProps & OverflowShadowProps> {
+const tableLayoutSizes = {
+  default: akEditorDefaultLayoutWidth,
+  wide: akEditorWideLayoutWidth,
+  'full-width': 1800,
+};
+
+const shouldRemapCols = (tableWidth, renderWidth, layout) => {
+  if (layout === 'full-width') {
+    return tableWidth > 1000 || renderWidth < 1000;
+  }
+
+  return true;
+};
+
+const remapColWidths = (
+  columnWidths,
+  tableWidth,
+  renderWidth,
+  zeroBasedCols,
+  layout,
+) => {
+  const isLegacyResizedTable =
+    zeroBasedCols > 0 && zeroBasedCols < columnWidths.length;
+  if (
+    isLegacyResizedTable === false ||
+    shouldRemapCols(tableWidth, renderWidth, layout) === false
+  ) {
+    return;
+  }
+
+  const remainingColWidth =
+    (tableLayoutSizes[layout] - tableWidth) / zeroBasedCols;
+
+  return columnWidths.map(colWidth => colWidth || remainingColWidth);
+};
+
+class Table extends React.Component<
+  TableProps & OverflowShadowProps,
+  TableState
+> {
   originalTableWidth: number = 0;
   legacyResizedTable: boolean;
 
@@ -49,17 +94,29 @@ class Table extends React.Component<TableProps & OverflowShadowProps> {
     super(props);
 
     if (props.columnWidths.length && props.layout) {
-      let zeroWidthCols: Array<number> = [];
-      this.originalTableWidth = props.columnWidths.reduce((acc, current) => {
-        if (current === 0) {
-          zeroWidthCols.push(current);
-        }
-        return acc + current;
-      }, 0);
+      const zeroBasedCols = props.columnWidths.filter(
+        colWidth => colWidth === 0,
+      ).length;
+
+      this.originalTableWidth = props.columnWidths.reduce(
+        (acc, current) => acc + current,
+        0,
+      );
+      const remappedColWidths = remapColWidths(
+        props.columnWidths,
+        this.originalTableWidth,
+        props.renderWidth,
+        zeroBasedCols,
+        props.layout,
+      );
+
+      this.state = {
+        remappedColWidths,
+      };
 
       this.legacyResizedTable =
-        zeroWidthCols.length > 0 &&
-        zeroWidthCols.length < props.columnWidths.length;
+        zeroBasedCols > 0 &&
+        zeroBasedCols < (remappedColWidths || props.columnWidths).length;
     }
   }
 
@@ -70,43 +127,39 @@ class Table extends React.Component<TableProps & OverflowShadowProps> {
       isNumberColumnEnabled,
       children,
       shadowClassNames,
+      renderWidth,
     } = this.props;
+
+    const tableWidth = calcTableWidth(layout, renderWidth, false);
     return (
-      <WidthConsumer>
-        {({ width }) => {
-          const tableWidth = calcTableWidth(layout, width, false);
-          return (
-            <div
-              className={`${
-                TableSharedCssClassName.TABLE_CONTAINER
-              } ${shadowClassNames}`}
-              data-layout={layout}
-              ref={handleRef}
-              style={{ width: tableWidth }}
-            >
-              <div className={TableSharedCssClassName.TABLE_NODE_WRAPPER}>
-                <table
-                  data-number-column={isNumberColumnEnabled}
-                  data-legacy-resize={this.legacyResizedTable}
-                  data-resized={!!this.originalTableWidth}
-                >
-                  {this.renderColgroup(tableWidth)}
-                  <tbody>
-                    {isNumberColumnEnabled
-                      ? addNumberColumnIndexes(children)
-                      : children}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          );
-        }}
-      </WidthConsumer>
+      <div
+        className={`${
+          TableSharedCssClassName.TABLE_CONTAINER
+        } ${shadowClassNames}`}
+        data-layout={layout}
+        ref={handleRef}
+        style={{ width: tableWidth }}
+      >
+        <div className={TableSharedCssClassName.TABLE_NODE_WRAPPER}>
+          <table
+            data-number-column={isNumberColumnEnabled}
+            data-resized={!!this.originalTableWidth}
+          >
+            {this.renderColgroup(tableWidth)}
+            <tbody>
+              {isNumberColumnEnabled
+                ? addNumberColumnIndexes(children)
+                : children}
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   }
 
   private renderColgroup = tableWidth => {
     const { columnWidths, isNumberColumnEnabled, layout } = this.props;
+    const { remappedColWidths } = this.state;
 
     if (!columnWidths) {
       return null;
@@ -114,8 +167,13 @@ class Table extends React.Component<TableProps & OverflowShadowProps> {
 
     let scale = 1;
     const currentWidth = parseInt(tableWidth, 10);
-    // TODO if originalTableSize is smaller than breakpoint, use table size as breakpoint.
-    if (layout !== 'default') {
+    let tableOverflowBreakpoint = akEditorDefaultLayoutWidth;
+    // If originalTableSize is smaller than breakpoint, use table size as breakpoint.
+    if (this.originalTableWidth < currentWidth) {
+      tableOverflowBreakpoint = currentWidth;
+    }
+
+    if (layout !== 'default' && !this.legacyResizedTable) {
       if (currentWidth > tableOverflowBreakpoint) {
         scale = currentWidth / this.originalTableWidth;
       } else {
@@ -130,7 +188,7 @@ class Table extends React.Component<TableProps & OverflowShadowProps> {
         {isNumberColumnEnabled && (
           <col style={{ width: akEditorTableNumberColumnWidth }} />
         )}
-        {columnWidths.map((colWidth, idx) => {
+        {(remappedColWidths || columnWidths).map((colWidth, idx) => {
           let style;
           if (colWidth) {
             const scaledWidth = Math.floor(colWidth * scale);
@@ -144,7 +202,15 @@ class Table extends React.Component<TableProps & OverflowShadowProps> {
   };
 }
 
-export default overflowShadow(Table, {
+const TableWithShadows = overflowShadow(Table, {
   overflowSelector: `.${TableSharedCssClassName.TABLE_NODE_WRAPPER}`,
   scrollableSelector: 'table',
 });
+
+const TableWithWidth = (props: TableProps) => (
+  <WidthConsumer>
+    {({ width }) => <TableWithShadows {...props} renderWidth={width} />}
+  </WidthConsumer>
+);
+
+export default TableWithWidth;

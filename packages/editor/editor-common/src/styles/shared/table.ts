@@ -62,10 +62,6 @@ const tableSharedStyle = css`
       table-layout: fixed;
     }
 
-    &[data-legacy-resize='true'] {
-      table-layout: auto;
-    }
-
     & {
       * {
         box-sizing: border-box;
