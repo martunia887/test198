@@ -19,7 +19,6 @@ import {
   li,
   mediaGroup,
   media,
-  mediaSingle,
   mention,
   panel,
 } from '../../../builders';
