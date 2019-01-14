@@ -1,0 +1,1 @@
+- Inline-dialog now supports dialog exit by pressing Escape key
