@@ -1,5 +1,87 @@
 # @atlaskit/editor-core
 
+## 95.0.1
+- [patch] [df30c63](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/df30c63):
+
+  - ED-5723: Enables typeahead support for mobile editor
+
+  * Added a new bridge `typeAheadBridge`, which contains `typeAheadQuery()` and `dismissTypeAhead()`
+    * `typeAheadQuery(query: string, trigger: string)` - This will notify integrators when a user is attempting to filter down a list.
+    * `dismissTypeAhead` - Call this to dismiss any typeahead related content.
+  * Added bridge function `insertTypeAheadItem()`, which currently only supports inserting mentions.
+    * `insertTypeAheadItem(type: 'mention', payload: string)` - Payload is a stringified JSON blob containing the information to insert a mention in this scenario.
+  * Added bridge function `setFocus()` to handle returning the focus to the editor after a native interaction.
+  * Added new promise `getAccountId`, which is used to highlight the current user's mention.
+
+## 95.0.0
+- [major] [0c116d6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0c116d6):
+
+  - Removed client-side indexed cache of mention results. Also removed method 'getUsersInContext' from MentionResourceConfig, 'remoteSearch' from MentionStats and 'weight' from MentionDescription. If you used to use them, simply remove any references to them.
+
+## 94.1.5
+- [patch] [c0dc7e3](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c0dc7e3):
+
+  - FS-3360 - Support state analytics attribute with values new or existing. Implement for web, and mobile support via mobile-bridge.
+
+## 94.1.4
+- [patch] [7d9ccd7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7d9ccd7):
+
+  - fixed copy/paste status from renderer to editor
+
+## 94.1.3
+- [patch] [323b457](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/323b457):
+
+  - trimmed status text so now the placeholder appears correctly when user types spaces in the status picker
+
+## 94.1.2
+- [patch] [c8a5e65](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c8a5e65):
+
+  - ED-6023: fix scaling a table when deleting column
+
+## 94.1.1
+- [patch] [9b0341d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9b0341d):
+
+  - ED-5871 Fix issue where user had to click twice to focus cursor in editor on full page editor in Firefox
+
+## 94.1.0
+- [minor] [58e30bb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/58e30bb):
+
+  - deduped i18n key fabric.editor.orderedList
+
+## 94.0.0
+- Updated dependencies [cbb8cb5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cbb8cb5):
+  - @atlaskit/editor-common@28.0.0
+  - @atlaskit/editor-test-helpers@6.3.7
+  - @atlaskit/renderer@35.0.0
+  - @atlaskit/emoji@51.0.0
+  - @atlaskit/media-card@49.0.0
+  - @atlaskit/media-filmstrip@23.0.0
+  - @atlaskit/media-picker@29.0.0
+  - @atlaskit/media-test-helpers@18.9.1
+  - @atlaskit/editor-bitbucket-transformer@4.1.4
+  - @atlaskit/editor-json-transformer@4.1.4
+  - @atlaskit/editor-markdown-transformer@2.1.4
+  - @atlaskit/task-decision@11.1.4
+  - @atlaskit/util-data-test@10.0.31
+  - @atlaskit/media-core@26.0.0
+
+## 93.0.0
+- Updated dependencies [72d37fb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72d37fb):
+  - @atlaskit/editor-common@27.0.0
+  - @atlaskit/editor-test-helpers@6.3.6
+  - @atlaskit/renderer@34.0.0
+  - @atlaskit/emoji@50.0.0
+  - @atlaskit/media-card@48.0.0
+  - @atlaskit/media-filmstrip@22.0.0
+  - @atlaskit/media-picker@28.0.0
+  - @atlaskit/editor-bitbucket-transformer@4.1.3
+  - @atlaskit/editor-json-transformer@4.1.3
+  - @atlaskit/editor-markdown-transformer@2.1.3
+  - @atlaskit/task-decision@11.1.3
+  - @atlaskit/util-data-test@10.0.30
+  - @atlaskit/media-core@25.0.0
+  - @atlaskit/media-test-helpers@18.9.0
+
 ## 92.0.21
 - [patch] [e930505](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e930505):
 

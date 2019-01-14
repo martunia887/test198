@@ -1,5 +1,42 @@
 # @atlaskit/renderer
 
+## 35.0.1
+- Updated dependencies [0c116d6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0c116d6):
+  - @atlaskit/editor-json-transformer@4.1.5
+  - @atlaskit/editor-test-helpers@6.3.8
+  - @atlaskit/editor-common@28.0.2
+  - @atlaskit/util-data-test@10.0.32
+  - @atlaskit/mention@16.0.0
+
+## 35.0.0
+- Updated dependencies [cbb8cb5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cbb8cb5):
+  - @atlaskit/editor-common@28.0.0
+  - @atlaskit/editor-test-helpers@6.3.7
+  - @atlaskit/media-card@49.0.0
+  - @atlaskit/media-filmstrip@23.0.0
+  - @atlaskit/media-test-helpers@18.9.1
+  - @atlaskit/editor-json-transformer@4.1.4
+  - @atlaskit/task-decision@11.1.4
+  - @atlaskit/util-data-test@10.0.31
+  - @atlaskit/media-core@26.0.0
+
+## 34.0.0
+- Updated dependencies [72d37fb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72d37fb):
+  - @atlaskit/editor-common@27.0.0
+  - @atlaskit/editor-test-helpers@6.3.6
+  - @atlaskit/media-card@48.0.0
+  - @atlaskit/media-filmstrip@22.0.0
+  - @atlaskit/editor-json-transformer@4.1.3
+  - @atlaskit/task-decision@11.1.3
+  - @atlaskit/util-data-test@10.0.30
+  - @atlaskit/media-core@25.0.0
+  - @atlaskit/media-test-helpers@18.9.0
+
+## 33.0.7
+- [patch] [8db5ddc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8db5ddc):
+
+  - ED-6002 Fixes overflowed layout column rendering in renderer
+
 ## 33.0.6
 - [patch] [38f3592](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/38f3592):
 
