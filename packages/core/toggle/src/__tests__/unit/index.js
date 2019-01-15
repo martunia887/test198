@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import { mount } from 'enzyme';
-import CloseIcon from '@atlaskit/icon/glyph/cross';
-import ConfirmIcon from '@atlaskit/icon/glyph/check';
-import ToggleStatelessWithAnalytics from '../../ToggleStateless';
-import Toggle from '../../ToggleBase';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
+import CheckIcon from '@atlaskit/icon/glyph/check';
+import Toggle from '../../Toggle';
+import ToggleStateless from '../../ToggleStateless';
 import { Input } from '../../styled';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -12,17 +12,17 @@ const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 describe('Toggle', () => {
   describe('properties', () => {
     it('should set the correct icons when checked', () => {
-      const wrapper = mount(<Toggle isChecked />);
-      expect(wrapper.find(Input).prop('checked')).toBe(true);
-      expect(wrapper.find(ConfirmIcon).exists()).toBe(true);
-      expect(wrapper.find(CloseIcon).exists()).toBe(false);
+      const wrapper = mount(<Toggle isDefaultChecked />);
+      expect(wrapper.find('input').prop('checked')).toBe(true);
+      expect(wrapper.find(CheckIcon).exists()).toBe(true);
+      expect(wrapper.find(CrossIcon).exists()).toBe(false);
     });
 
     it('should set the correct icons when not checked', () => {
       const wrapper = mount(<Toggle />);
-      expect(wrapper.find(Input).prop('checked')).toBe(false);
-      expect(wrapper.find(ConfirmIcon).exists()).toBe(false);
-      expect(wrapper.find(CloseIcon).exists()).toBe(true);
+      expect(wrapper.find('input').prop('checked')).toBe(false);
+      expect(wrapper.find(CheckIcon).exists()).toBe(false);
+      expect(wrapper.find(CrossIcon).exists()).toBe(true);
     });
 
     it('should disable the input when disabled', () => {
@@ -71,7 +71,7 @@ describe('Toggle', () => {
   });
 });
 
-describe('ToggleStatelessWithAnalytics', () => {
+describe('ToggleStateless', () => {
   beforeEach(() => {
     jest.spyOn(global.console, 'warn');
     jest.spyOn(global.console, 'error');
@@ -82,7 +82,7 @@ describe('ToggleStatelessWithAnalytics', () => {
   });
 
   it('should mount without errors', () => {
-    mount(<ToggleStatelessWithAnalytics isChecked />);
+    mount(<ToggleStateless isChecked />);
     /* eslint-disable no-console */
     expect(console.warn).not.toHaveBeenCalled();
     expect(console.error).not.toHaveBeenCalled();
