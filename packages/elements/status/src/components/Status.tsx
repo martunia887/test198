@@ -58,7 +58,7 @@ class StatusInternal extends PureComponent<Props, any> {
   }
 
   render() {
-    const { text, color, style, onClick } = this.props;
+    const { text, color, style, localId, onClick } = this.props;
     if (text.trim().length === 0) {
       return null;
     }
@@ -74,6 +74,7 @@ class StatusInternal extends PureComponent<Props, any> {
         data-node-type="status"
         data-color={color}
         data-style={style}
+        data-local-id-ref={localId}
       >
         <Lozenge appearance={appearance} maxWidth={MAX_WIDTH}>
           {text}

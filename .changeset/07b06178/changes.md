@@ -1,0 +1,1 @@
+- fixed bug to fire statusPicker closed/opened analytics properly when user clicks in two statuses instances 
