@@ -1,0 +1,1 @@
+- delete Status empty placeholder when user clicks away

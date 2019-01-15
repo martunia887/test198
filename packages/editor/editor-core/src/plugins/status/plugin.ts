@@ -56,22 +56,6 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
       }),
       apply(tr, state: StatusState, editorState) {
         const meta = tr.getMeta(pluginKey);
-
-        const nodeAtSelection = tr.doc.nodeAt(tr.selection.from);
-        if (
-          state.showStatusPickerAt &&
-          (!nodeAtSelection ||
-            nodeAtSelection.type !== editorState.schema.nodes.status)
-        ) {
-          let newState = {
-            ...state,
-            showStatusPickerAt: null,
-            selectedStatus: null,
-          };
-          dispatch(pluginKey, newState);
-          return newState;
-        }
-
         if (meta) {
           let selectedStatus: StatusType | null = null;
           if (
@@ -100,7 +84,6 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
 
           if (newState.showStatusPickerAt !== state.showStatusPickerAt) {
             dispatch(pluginKey, newState);
-
             return newState;
           }
         }
