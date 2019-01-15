@@ -15,6 +15,9 @@ import {
   TouchFileDescriptor,
   TouchedFiles,
   UploadableFileUpfrontIds,
+  MediaStoreCopyFileWithTokenBody,
+  MediaStoreCopyFileWithTokenParams,
+  MediaFile,
 } from '@atlaskit/media-store';
 import * as isValidId from 'uuid-validate';
 import {
@@ -154,6 +157,8 @@ export class FileFetcher {
           const response = await this.dataloader.load({ id, collection });
 
           if (!response) {
+            // TODO: why we were not doing this?
+            observer.error({});
             return;
           }
 
@@ -185,6 +190,15 @@ export class FileFetcher {
     return this.mediaStore
       .touchFiles({ descriptors }, { collection })
       .then(({ data }) => data);
+  }
+
+  async copyWithToken(
+    body: MediaStoreCopyFileWithTokenBody,
+    params: MediaStoreCopyFileWithTokenParams,
+  ): Promise<MediaFile> {
+    const response = await this.mediaStore.copyFileWithToken(body, params);
+
+    return response.data;
   }
 
   private generateUploadableFileUpfrontIds(

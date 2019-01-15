@@ -123,6 +123,7 @@ export const providers = {
 
 export const mediaProvider = storyMediaProviderFactory({
   includeUserAuthProvider: true,
+  includeUploadContext: true,
 });
 
 export const quickInsertProvider = quickInsertProviderFactory();

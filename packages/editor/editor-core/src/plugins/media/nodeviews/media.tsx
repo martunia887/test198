@@ -8,7 +8,11 @@ import {
   MediaPluginState,
   stateKey as mediaStateKey,
 } from '../pm-plugins/main';
-import { Context, ImageResizeMode } from '@atlaskit/media-core';
+import {
+  Context,
+  ImageResizeMode,
+  isAsapBasedAuth,
+} from '@atlaskit/media-core';
 import { MediaProvider } from '../pm-plugins/main';
 import {
   Card,
@@ -17,6 +21,7 @@ import {
   CardEventHandler,
   CardOnClickCallback,
   Identifier,
+  OnLoadingChangeState,
 } from '@atlaskit/media-card';
 import { MediaType, MediaBaseAttributes } from '@atlaskit/adf-schema';
 import { withImageLoader, ImageStatus } from '@atlaskit/editor-common';
@@ -68,7 +73,7 @@ class MediaNode extends Component<
   MediaNodeState
 > {
   private pluginState: MediaPluginState;
-  private mediaProvider;
+  private mediaProvider: Promise<MediaProvider>;
   private hasBeenMounted: boolean = false;
 
   state = {
@@ -164,9 +169,40 @@ class MediaNode extends Component<
         onClick={onClick}
         useInlinePlayer={false}
         isLazy={editorAppearance !== 'mobile'}
+        onLoadingChange={this.onCardLoadingChange}
       />
     );
   }
+
+  private onCardLoadingChange = async (state: OnLoadingChangeState) => {
+    const { node } = this.props;
+    const { id, collection } = node.attrs;
+    const { viewContext, uploadParams } = await this.mediaProvider;
+    const uploadContext = viewContext; // TODO: use real uploadContext
+
+    if (state.type === 'error' && uploadContext) {
+      const resolvedUploadContext = await uploadContext;
+      const auth = await resolvedUploadContext.config.authProvider({
+        collectionName: collection,
+      });
+
+      // TODO: add ClientAltBasedAuth support
+      if (isAsapBasedAuth(auth)) {
+        resolvedUploadContext.file.copyWithToken(
+          {
+            sourceFile: {
+              owner: auth,
+              id,
+              collection,
+            },
+          },
+          {
+            collection: uploadParams && uploadParams.collection,
+          },
+        );
+      }
+    }
+  };
 
   private handleNewNode = (props: MediaNodeProps) => {
     const { node } = props;
