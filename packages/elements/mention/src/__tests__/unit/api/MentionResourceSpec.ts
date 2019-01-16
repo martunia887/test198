@@ -211,18 +211,17 @@ describe('MentionResource', () => {
   });
 
   describe('#filter', () => {
-    // TODO FS-3223: Fix test
-    // it('should add valid duration field to stats object', done => {
-    //   const resource = new MentionResource(apiConfig);
-    //   resource.subscribe('test1', (mentions, query, stats) => {
-    //     if ((stats && !stats!.duration) || !stats) {
-    //       fail(`stats.duration is undefined: ${JSON.stringify(stats)}`);
-    //     }
-    //     expect(stats!.duration).toBeGreaterThanOrEqual(0);
-    //     done();
-    //   });
-    //   resource.filter('');
-    // });
+    it('should add valid duration field to stats object', done => {
+      const resource = new MentionResource(apiConfig);
+      resource.subscribe('test1', (mentions, query, stats) => {
+        if ((stats && !stats!.duration) || !stats) {
+          fail(`stats.duration is undefined: ${JSON.stringify(stats)}`);
+        }
+        expect(stats!.duration).toBeGreaterThan(0);
+        done();
+      });
+      resource.filter('');
+    });
 
     it('all results callback should receive all results', done => {
       const resource = new MentionResource(apiConfig);
