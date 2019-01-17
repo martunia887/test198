@@ -1,4 +1,4 @@
 {
-  "releases": [{ "name": "@atlaskit/inline-dialog", "type": "minor" }],
+  "releases": [{ "name": "@atlaskit/inline-dialog", "type": "major" }],
   "dependents": []
 }
