@@ -105,19 +105,10 @@ export const setStatusPickerAt = (showStatusPickerAt: number | null) => (
   return true;
 };
 
-export const commitStatusPicker = (emptyStatus?: any) => (
-  editorView: EditorView,
-) => {
+export const commitStatusPicker = () => (editorView: EditorView) => {
   const { state, dispatch } = editorView;
-
-  // delete previous status instance that has no text
-  if (emptyStatus && emptyStatus.position) {
-    const tr = state.tr.delete(emptyStatus.position, emptyStatus.position + 1);
-    dispatch(tr);
-    return;
-  }
-
   const { showStatusPickerAt } = pluginKey.getState(state);
+
   if (!showStatusPickerAt) {
     return;
   }

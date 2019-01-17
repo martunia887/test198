@@ -52,7 +52,6 @@ const baseStatusPlugin = (): EditorPlugin => ({
 
           return (
             <StatusPicker
-              position={showStatusPickerAt}
               isNew={statusState.isNew}
               target={target}
               defaultText={text}
@@ -64,11 +63,11 @@ const baseStatusPlugin = (): EditorPlugin => ({
               onTextChanged={status => {
                 updateStatus(status)(editorView);
               }}
-              closeStatusPicker={oldStatus => {
-                commitStatusPicker(oldStatus)(editorView);
+              closeStatusPicker={() => {
+                commitStatusPicker()(editorView);
               }}
               onEnter={() => {
-                commitStatusPicker(undefined)(editorView);
+                commitStatusPicker()(editorView);
               }}
             />
           );
