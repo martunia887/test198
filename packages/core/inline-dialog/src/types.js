@@ -36,4 +36,6 @@ export type Props = {
   onClose: ({ isOpen: false, event: any }) => void,
   /** Where the dialog should appear, relative to the contents of the children. */
   placement: Placement,
+  /** Formatted like "0, 8px" — how far to offset the dialog from the Reference. Changes automatically based on the placement */
+  offset: number | string | typeof undefined,
 };

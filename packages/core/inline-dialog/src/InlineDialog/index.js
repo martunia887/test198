@@ -25,6 +25,7 @@ class InlineDialog extends Component<Props, {}> {
     onContentFocus: () => {},
     onClose: () => {},
     placement: 'bottom-start',
+    offset: undefined,
   };
 
   containerRef: ?HTMLElement = null;
@@ -81,10 +82,11 @@ class InlineDialog extends Component<Props, {}> {
       onContentBlur,
       onContentFocus,
       onContentClick,
+      offset,
     } = this.props;
 
     const popper = isOpen ? (
-      <Popper placement={placement}>
+      <Popper placement={placement} offset={offset}>
         {({ ref, style, outOfBoundaries }) => (
           <Container
             onBlur={onContentBlur}
