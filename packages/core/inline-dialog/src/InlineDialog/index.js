@@ -73,7 +73,7 @@ class InlineDialog extends Component<Props, {}> {
     this.escapeIsHeldDown = false;
   };
 
-  handleKeyDown = (event: SyntheticKeyboardEvent<any>) => {
+  handleKeyDown = (event: KeyboardEvent) => {
     // this is to prevent from continuous firing if an user holds escape key.
     if (this.escapeIsHeldDown) return;
 
@@ -81,7 +81,8 @@ class InlineDialog extends Component<Props, {}> {
     switch (event.key) {
       case 'Escape':
         this.escapeIsHeldDown = true;
-        if (isOpen && shouldCloseOnEscapePress) onClose(event);
+        if (isOpen && shouldCloseOnEscapePress)
+          onClose({ isOpen: false, event });
         break;
       default:
     }
