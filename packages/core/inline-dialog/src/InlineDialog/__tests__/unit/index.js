@@ -104,7 +104,7 @@ describe('inline-dialog', () => {
   });
 
   describe('handleKeyDown', () => {
-    it('should not trigger the onClose prop if the dialog is not opened or the shouldCloseOnEscapePress is false', () => {
+    it('should not trigger the onClose prop if this.escapeIsHeldDown is true or the dialog is not opened or the shouldCloseOnEscapePress is false', () => {
       const spy = jest.fn();
       const wrapper = shallow(
         <InlineDialog onClose={spy} isOpen shouldCloseOnEscapePress={false} />,
@@ -121,6 +121,15 @@ describe('inline-dialog', () => {
         shouldCloseOnEscapePress: true,
       });
 
+      wrapper.instance().handleKeyDown(event);
+      expect(spy).not.toHaveBeenCalled();
+
+      wrapper.setProps({
+        isOpen: true,
+        shouldCloseOnEsapcePress: true,
+      });
+      wrapper.instance().escapeIsHeldDown = true;
+      wrapper.instance().forceUpdate();
       wrapper.instance().handleKeyDown(event);
       expect(spy).not.toHaveBeenCalled();
     });
