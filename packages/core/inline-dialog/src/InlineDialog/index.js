@@ -25,9 +25,10 @@ class InlineDialog extends Component<Props, {}> {
     onContentFocus: () => {},
     onClose: () => {},
     placement: 'bottom-start',
-    shouldCloseOnEscapePress: false,
+    shouldCloseOnEscapePress: true,
   };
 
+  escapeIsHeldDown: boolean = false;
   containerRef: ?HTMLElement = null;
   triggerRef: ?HTMLElement = null;
 
@@ -38,9 +39,11 @@ class InlineDialog extends Component<Props, {}> {
     if (!prevProps.isOpen && this.props.isOpen) {
       window.addEventListener('click', this.handleClickOutside, true);
       document.addEventListener('keydown', this.handleKeyDown, false);
+      document.addEventListener('keyup', this.handleKeyUp, false);
     } else if (prevProps.isOpen && !this.props.isOpen) {
       window.removeEventListener('click', this.handleClickOutside);
       document.removeEventListener('keydown', this.handleKeyDown, false);
+      document.removeEventListener('keyup', this.handleKeyUp, false);
     }
   }
 
@@ -53,6 +56,7 @@ class InlineDialog extends Component<Props, {}> {
     if (typeof document === 'undefined') return;
     if (this.props.isOpen) {
       document.addEventListener('keydown', this.handleKeyDown, false);
+      document.addEventListener('keyup', this.handleKeyUp, false);
     }
   }
 
@@ -62,12 +66,21 @@ class InlineDialog extends Component<Props, {}> {
 
     if (typeof document === 'undefined') return;
     document.removeEventListener('keydown', this.handleKeyDown, false);
+    document.removeEventListener('keyup', this.handleKeyUp, false);
   }
 
+  handleKeyUp = () => {
+    this.escapeIsHeldDown = false;
+  };
+
   handleKeyDown = (event: SyntheticKeyboardEvent<any>) => {
+    // this is to prevent from continuous firing if an user holds escape key.
+    if (this.escapeIsHeldDown) return;
+
     const { isOpen, onClose, shouldCloseOnEscapePress } = this.props;
     switch (event.key) {
       case 'Escape':
+        this.escapeIsHeldDown = true;
         if (isOpen && shouldCloseOnEscapePress) onClose(event);
         break;
       default:
