@@ -4,8 +4,9 @@ import OpenIcon from '@atlaskit/icon/glyph/editor/open';
 import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
 
 import { stateKey, HyperlinkState } from './pm-plugins/main';
-import { removeLink, setLinkText, setLinkHref } from './commands';
+import { removeLink, setLinkText, setLinkHref, insertLink } from './commands';
 import { normalizeUrl } from './utils';
+import RecentList from './ui/RecentSearch';
 
 export const messages = defineMessages({
   openLink: {
@@ -54,47 +55,73 @@ const getToolbarToShow = (link, text, pos) => {
 export const getToolbarConfig: FloatingToolbarHandler = (
   state,
   { formatMessage },
+  providerFactory,
 ) => {
   const linkState: HyperlinkState | undefined = stateKey.getState(state);
 
   if (linkState && linkState.activeLinkMark && linkState.activeLinkMark) {
-    const {
-      activeLinkMark: { pos, node },
-    } = linkState;
+    const { activeLinkMark } = linkState;
 
-    const linkMark = node.marks.filter(
-      mark => mark.type === state.schema.marks.link,
-    );
-    const link = linkMark[0] && linkMark[0].attrs.href;
-    const text = node.text;
-
-    const labelOpenLink = formatMessage(messages.openLink);
-    const labelUnlink = formatMessage(messages.unlink);
-
-    return {
+    const hyperLinkToolbar = {
       title: 'Hyperlink floating controls',
       nodeType: state.schema.nodes.paragraph,
-      items: [
-        ...getToolbarToShow(link, text, pos),
-        {
-          type: 'separator',
-        },
-        {
-          type: 'button',
-          icon: OpenIcon,
-          target: '_blank',
-          href: link,
-          selected: false,
-          title: labelOpenLink,
-        },
-        {
-          type: 'button',
-          icon: UnlinkIcon,
-          onClick: removeLink(pos),
-          selected: false,
-          title: labelUnlink,
-        },
-      ],
+      align: 'left',
     };
+
+    switch (activeLinkMark.type) {
+      case 'EDIT': {
+        const { pos, node } = activeLinkMark;
+        const linkMark = node.marks.filter(
+          mark => mark.type === state.schema.marks.link,
+        );
+        const link = linkMark[0] && linkMark[0].attrs.href;
+        const text = node.text;
+
+        const labelOpenLink = formatMessage(messages.openLink);
+        const labelUnlink = formatMessage(messages.unlink);
+
+        return {
+          ...hyperLinkToolbar,
+          items: [
+            ...getToolbarToShow(link, text, pos),
+            {
+              type: 'separator',
+            },
+            {
+              type: 'button',
+              icon: OpenIcon,
+              target: '_blank',
+              href: link,
+              selected: false,
+              title: labelOpenLink,
+            },
+            {
+              type: 'button',
+              icon: UnlinkIcon,
+              onClick: removeLink(pos),
+              selected: false,
+              title: labelUnlink,
+            },
+          ],
+        };
+      }
+
+      case 'INSERT': {
+        const { from, to } = linkState.activeLinkMark;
+        const linkProvider = providerFactory.providers.get('activityProvider');
+        return {
+          ...hyperLinkToolbar,
+          items: [
+            {
+              type: 'typeahead',
+              placeholder: 'Paste link or search recently viewed',
+              provider: linkProvider,
+              onSubmit: (href, text) => insertLink(from, to, href, text),
+              TypeaheadItems: RecentList,
+            },
+          ],
+        };
+      }
+    }
   }
 };

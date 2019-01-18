@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Input } from '../../../ui/PanelTextInput/styles';
+import styled from 'styled-components';
+import { InputHTMLAttributes, ComponentClass } from 'react';
+import { colors } from '@atlaskit/theme';
 
 export interface Props {
   mountPoint?: HTMLElement;
@@ -9,11 +11,44 @@ export interface Props {
   placeholder?: string;
   onBlur?: (text: string) => void;
   onSubmit?: (text) => void;
+  loadItems: () => Promise<any>;
+  searchItems: () => Promise<any>;
+  maxItems?: number;
 }
 
 export interface State {
   text: string;
 }
+
+export const Input: ComponentClass<
+  InputHTMLAttributes<{}> & { innerRef?: any }
+> = styled.input`
+  input& {
+    border: 0;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: ${colors.N400};
+    font-size: 13px;
+    line-height: 20px;
+    padding: 8px;
+    min-width: 145px;
+    width: 100%;
+
+    /* Hides IE10+ built-in [x] clear input button */
+    &::-ms-clear {
+      display: none;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: ${colors.N400};
+      opacity: 0.5;
+    }
+  }
+`;
 
 export default class Typeahead extends Component<Props, State> {
   constructor(props) {
@@ -38,14 +73,21 @@ export default class Typeahead extends Component<Props, State> {
   };
 
   render() {
-    const { placeholder } = this.props;
+    const { placeholder, TypeaheadItems, provider, onSubmit } = this.props;
+
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form>
         <Input
           value={this.state.text}
           onChange={this.handleChange}
           placeholder={placeholder}
           onBlur={this.handleBlur}
+          autoFocus
+        />
+        <TypeaheadItems
+          inputValue={this.state.text}
+          provider={provider}
+          onSubmit={onSubmit}
         />
       </form>
     );

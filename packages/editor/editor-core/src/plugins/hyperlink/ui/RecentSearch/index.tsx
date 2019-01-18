@@ -1,36 +1,18 @@
 import * as React from 'react';
 import { KeyboardEvent, PureComponent } from 'react';
-import styled from 'styled-components';
 import { ActivityProvider, ActivityItem } from '@atlaskit/activity';
 
 import { analyticsService } from '../../../../analytics';
-import PanelTextInput from '../../../../ui/PanelTextInput';
 import RecentList from './RecentList';
-import { FloatingToolbar } from '../styles';
-import { getNearestNonTextNode } from '../../../../ui/FloatingToolbar';
-
-const Container = styled.span`
-  width: 420px;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-`;
 
 export interface Props {
   onBlur?: (text: string) => void;
   onSubmit?: (href: string, text?: string) => void;
-
-  target: Node;
-  popupsMountPoint?: HTMLElement;
-  popupsBoundariesElement?: HTMLElement;
-
-  autoFocus?: boolean;
-  placeholder: string;
-  activityProvider: Promise<ActivityProvider>;
+  provider: Promise<ActivityProvider>;
 }
 
 export interface State {
-  activityProvider?: ActivityProvider;
+  provider?: ActivityProvider;
   items: Array<ActivityItem>;
   selectedIndex: number;
   text: string;
@@ -46,9 +28,9 @@ export default class RecentSearch extends PureComponent<Props, State> {
   } as State;
 
   async resolveProvider() {
-    const activityProvider = await this.props.activityProvider;
-    this.setState({ activityProvider });
-    return activityProvider;
+    const provider = await this.props.provider;
+    this.setState({ provider });
+    return provider;
   }
 
   async componentDidMount() {
@@ -65,63 +47,35 @@ export default class RecentSearch extends PureComponent<Props, State> {
     }
   }
 
-  private updateInput = async (input: string) => {
-    this.setState({ text: input });
+  // private updateInput = async (input: string) => {
+  //   this.setState({ text: input });
 
-    if (this.state.activityProvider) {
-      if (input.length === 0) {
-        this.setState({
-          items: limit(await this.state.activityProvider.getRecentItems()),
-          selectedIndex: -1,
-        });
-      } else {
-        this.setState({
-          items: limit(await this.state.activityProvider.searchRecent(input)),
-          selectedIndex: 0,
-        });
-      }
-    }
-  };
+  //   if (this.state.activityProvider) {
+  //     if (input.length === 0) {
+  //       this.setState({
+  //         items: limit(await this.state.activityProvider.getRecentItems()),
+  //         selectedIndex: -1,
+  //       });
+  //     } else {
+  //       this.setState({
+  //         items: limit(await this.state.activityProvider.searchRecent(input)),
+  //         selectedIndex: 0,
+  //       });
+  //     }
+  //   }
+  // };
 
   render() {
-    const {
-      target,
-      popupsMountPoint,
-      popupsBoundariesElement,
-      placeholder,
-    } = this.props;
     const { items, isLoading, selectedIndex } = this.state;
 
     return (
-      <FloatingToolbar
-        target={getNearestNonTextNode(target)!}
-        popupsMountPoint={popupsMountPoint}
-        popupsBoundariesElement={popupsBoundariesElement}
-        fitWidth={420}
-        fitHeight={350}
-        zIndex={500}
-        offset={[0, 12]}
-        className="recent-search"
-      >
-        <Container>
-          <PanelTextInput
-            placeholder={placeholder}
-            autoFocus={true}
-            onSubmit={this.handleSubmit}
-            onChange={this.updateInput}
-            onBlur={this.handleBlur}
-            onCancel={this.handleBlur}
-            onKeyDown={this.handleKeyDown}
-          />
-          <RecentList
-            items={items}
-            isLoading={isLoading}
-            selectedIndex={selectedIndex}
-            onSelect={this.handleSelected}
-            onMouseMove={this.handleMouseMove}
-          />
-        </Container>
-      </FloatingToolbar>
+      <RecentList
+        items={items}
+        isLoading={isLoading}
+        selectedIndex={selectedIndex}
+        onSelect={this.handleSelected}
+        onMouseMove={this.handleMouseMove}
+      />
     );
   }
 

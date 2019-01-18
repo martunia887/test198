@@ -85,6 +85,7 @@ export function insertLink(
       }
 
       if (dispatch) {
+        tr.setMeta(stateKey, LinkAction.HIDE_TOOLBAR);
         dispatch(tr);
       }
       return true;

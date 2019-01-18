@@ -12,6 +12,8 @@ import Dropdown from './Dropdown';
 import Select, { SelectOption } from './Select';
 import Separator from './Separator';
 import Input from './Input';
+import Typeahead from './Typeahead';
+import { ProviderFactory } from '@atlaskit/editor-common';
 
 const akGridSize = gridSize();
 
@@ -21,6 +23,7 @@ export interface Props {
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
+  providerFactory: ProviderFactory;
 }
 
 const ToolbarContainer = styled.div`
@@ -37,6 +40,11 @@ const ToolbarContainer = styled.div`
   & > div {
     align-items: center;
   }
+
+  .hyperlink-toolbar {
+    position: relative;
+    left: 50%;
+  }
 `;
 
 export default class Toolbar extends Component<Props> {
@@ -47,6 +55,7 @@ export default class Toolbar extends Component<Props> {
       popupsMountPoint,
       popupsBoundariesElement,
       popupsScrollableElement,
+      focusEditor,
     } = this.props;
     if (!items.length) {
       return null;
@@ -93,6 +102,24 @@ export default class Toolbar extends Component<Props> {
                       placeholder={item.placeholder}
                       onSubmit={value => dispatchCommand(item.onSubmit(value))}
                       onBlur={value => dispatchCommand(item.onBlur(value))}
+                    />
+                  );
+
+                case 'typeahead':
+                  console.log('focus is ', focusEditor);
+                  return (
+                    <Typeahead
+                      key={idx}
+                      boundariesElement={popupsBoundariesElement}
+                      mountPoint={popupsMountPoint}
+                      placeholder={item.placeholder}
+                      provider={item.provider}
+                      onSubmit={(href, text) => {
+                        dispatchCommand(item.onSubmit(href, text));
+                        focusEditor();
+                        // return true;
+                      }}
+                      TypeaheadItems={item.TypeaheadItems}
                     />
                   );
 
