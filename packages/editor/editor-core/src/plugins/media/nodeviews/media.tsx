@@ -177,29 +177,35 @@ class MediaNode extends Component<
   private onCardLoadingChange = async (state: OnLoadingChangeState) => {
     const { node } = this.props;
     const { id, collection } = node.attrs;
-    const { viewContext, uploadParams } = await this.mediaProvider;
-    const uploadContext = viewContext; // TODO: use real uploadContext
+    const { uploadContext, uploadParams } = await this.mediaProvider;
 
     if (state.type === 'error' && uploadContext) {
       const resolvedUploadContext = await uploadContext;
+
       const auth = await resolvedUploadContext.config.authProvider({
         collectionName: collection,
       });
 
       // TODO: add ClientAltBasedAuth support
       if (isAsapBasedAuth(auth)) {
-        resolvedUploadContext.file.copyWithToken(
-          {
-            sourceFile: {
-              owner: auth,
-              id,
-              collection,
+        try {
+          const result = await resolvedUploadContext.file.copyWithToken(
+            {
+              sourceFile: {
+                owner: auth,
+                id,
+                collection,
+              },
             },
-          },
-          {
-            collection: uploadParams && uploadParams.collection,
-          },
-        );
+            {
+              collection: uploadParams && uploadParams.collection,
+            },
+          );
+
+          console.log('done', result);
+        } catch (e) {
+          console.error('error', e);
+        }
       }
     }
   };
