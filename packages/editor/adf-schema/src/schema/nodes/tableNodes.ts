@@ -23,6 +23,16 @@ import { TableCellContent } from './doc';
 const akEditorTableCellBackgroundOpacity = 0.5;
 const akEditorTableNumberColumnWidth = 42;
 
+export type CellType =
+  | 'text'
+  | 'number'
+  | 'currency'
+  | 'date'
+  | 'mention'
+  | 'checkbox'
+  | 'emoji'
+  | 'slider';
+
 const getCellAttrs = (dom: HTMLElement) => {
   const widthAttr = dom.getAttribute('data-colwidth');
   const width =
@@ -30,12 +40,17 @@ const getCellAttrs = (dom: HTMLElement) => {
       ? widthAttr.split(',').map(str => Number(str))
       : null;
   const colspan = Number(dom.getAttribute('colspan') || 1);
+  const initialMarks = JSON.parse(
+    dom.getAttribute('data-initialMarks') || '[]',
+  );
 
   return {
     colspan,
     rowspan: Number(dom.getAttribute('rowspan') || 1),
     colwidth: width && width.length === colspan ? width : null,
     background: dom.style.backgroundColor || null,
+    cellType: dom.getAttribute('data-cell-type') || 'text',
+    initialMarks,
   };
 };
 
@@ -44,6 +59,8 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     colspan?: number;
     rowspan?: number;
     style?: string;
+    cellType?: CellType;
+    initialMarks?: string;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -83,6 +100,12 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     }
   }
 
+  if (node.attrs.initialMarks) {
+    attrs.initialMarks = JSON.stringify(node.attrs.initialMarks);
+  }
+  if (node.attrs.cellType) {
+    attrs.cellType = node.attrs.cellType;
+  }
   return attrs;
 };
 
@@ -195,6 +218,8 @@ export interface CellAttributes {
   rowspan?: number;
   colwidth?: number[];
   background?: string;
+  cellType?: CellType;
+  initialMarks?: string[];
 }
 
 // TODO: Fix any, potential issue. ED-5048
@@ -255,6 +280,8 @@ const cellAttrs = {
   rowspan: { default: 1 },
   colwidth: { default: null },
   background: { default: null },
+  cellType: { default: 'text' },
+  initialMarks: { default: [] },
 };
 
 export const tableCell = {
@@ -288,7 +315,11 @@ export const toJSONTableCell = (node: PmNode) => ({
 export const tableHeader = {
   content:
     '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle  | applicationCard | decisionList | taskList | blockCard | extension)+',
-  attrs: cellAttrs,
+  attrs: {
+    ...cellAttrs,
+    background: { default: tableBackgroundColorNames.get('gray') },
+    initialMarks: { default: ['strong'] },
+  },
   tableRole: 'header_cell',
   isolating: true,
   marks: 'alignment',

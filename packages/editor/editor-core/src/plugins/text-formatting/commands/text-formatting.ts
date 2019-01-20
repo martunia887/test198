@@ -1,11 +1,81 @@
 import { TextSelection, Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { toggleMark } from 'prosemirror-commands';
+import { MarkType } from 'prosemirror-model';
+import { toggleMark as toggleMarkDefault } from 'prosemirror-commands';
+import { findParentNodeOfType } from 'prosemirror-utils';
 import { hasCode } from '../utils';
 import { markActive } from '../utils';
 import { transformToCodeAction } from './transform-to-code';
 import { analyticsService } from '../../../analytics';
 import { Command } from '../../../types';
+import { CellSelection } from 'prosemirror-tables';
+
+export const toggleMark = (
+  markType: MarkType,
+  attrs?: { [key: string]: any },
+): Command => (state, dispatch) => {
+  const { schema, selection, tr } = state;
+  const { tableHeader, tableCell } = schema.nodes;
+  const cell = findParentNodeOfType([tableHeader, tableCell])(state.selection);
+  if (!dispatch || !cell) {
+    return toggleMarkDefault(markType, attrs)(state, dispatch);
+  }
+
+  if (selection instanceof CellSelection) {
+    let enabledOnRange = true;
+    selection.forEachCell((cell, pos) => {
+      const { initialMarks } = cell.attrs;
+      if (initialMarks.indexOf(markType.name) === -1) {
+        enabledOnRange = false;
+      }
+    });
+
+    selection.forEachCell((cell, pos) => {
+      const { initialMarks } = cell.attrs;
+      const attrs = {
+        ...cell.attrs,
+        initialMarks: enabledOnRange
+          ? initialMarks.filter(mark => mark !== markType.name)
+          : initialMarks
+              .filter(mark => mark !== markType.name)
+              .concat([markType.name]),
+      };
+
+      tr.removeStoredMark(markType).setNodeMarkup(pos, cell.type, attrs);
+    });
+  } else {
+    const { initialMarks } = cell.node.attrs;
+    const attrs = {
+      ...cell.node.attrs,
+      initialMarks:
+        initialMarks.indexOf(markType.name) > -1
+          ? initialMarks.filter(mark => mark !== markType.name)
+          : initialMarks
+              .filter(mark => mark !== markType.name)
+              .concat([markType.name]),
+    };
+    tr.removeStoredMark(markType).setNodeMarkup(
+      cell.pos,
+      cell.node.type,
+      attrs,
+    );
+  }
+
+  let has = false;
+  for (let i = 0; !has && i < selection.ranges.length; i++) {
+    let { $from, $to } = selection.ranges[i];
+    has = state.doc.rangeHasMark($from.pos, $to.pos, markType);
+  }
+  for (let i = 0; i < selection.ranges.length; i++) {
+    let { $from, $to } = selection.ranges[i];
+    if (has) tr.removeMark($from.pos, $to.pos, markType);
+    else tr.addMark($from.pos, $to.pos, markType.create(attrs));
+  }
+
+  dispatch(tr);
+
+  return true;
+};
 
 export const moveRight = (): Command => {
   return (state, dispatch) => {

@@ -37,6 +37,7 @@ import {
   findControlsHoverDecoration,
   fixTables,
   normalizeSelection,
+  applyInitialMarks,
 } from '../utils';
 import { TableCssClassName as ClassName } from '../types';
 
@@ -194,10 +195,10 @@ export const createPlugin = (
         return fixTables(handleCut(tr, oldState, newState));
       }
       if (transactions.find(tr => tr.docChanged)) {
-        return fixTables(newState.tr);
+        return applyInitialMarks(fixTables(newState.tr));
       }
       if (transactions.find(tr => tr.selectionSet)) {
-        return normalizeSelection(newState.tr);
+        return applyInitialMarks(normalizeSelection(newState.tr));
       }
     },
     view: (editorView: EditorView) => {
@@ -227,7 +228,7 @@ export const createPlugin = (
     props: {
       decorations: state => getPluginState(state).decorationSet,
 
-      handleClick: ({ state, dispatch }, pos, event: MouseEvent) => {
+      handleClick: ({ state, dispatch }, _, event: MouseEvent) => {
         const { decorationSet } = getPluginState(state);
         if (findControlsHoverDecoration(decorationSet).length) {
           clearHoverSelection(state, dispatch);

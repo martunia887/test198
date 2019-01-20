@@ -1515,6 +1515,12 @@
             },
             "background": {
               "type": "string"
+            },
+            "initialMarks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "additionalProperties": false
@@ -1554,6 +1560,12 @@
             },
             "background": {
               "type": "string"
+            },
+            "initialMarks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "additionalProperties": false

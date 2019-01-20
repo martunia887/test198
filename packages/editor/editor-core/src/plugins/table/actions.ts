@@ -10,13 +10,11 @@ import {
   TableMap,
   CellSelection,
 } from 'prosemirror-tables';
-import { Node as PMNode, Slice, Schema } from 'prosemirror-model';
+import { Node as PMNode, Slice, Schema, Fragment } from 'prosemirror-model';
 import {
   findTable,
   getCellsInColumn,
   getCellsInRow,
-  addColumnAt,
-  addRowAt,
   isCellSelection,
   removeTable,
   removeSelectedColumns,
@@ -35,6 +33,7 @@ import {
   getSelectionRangeInColumn,
   getSelectionRect,
 } from 'prosemirror-utils';
+import { addRowAt, addColumnAt } from './pm-utils';
 import { getPluginState, pluginKey, ACTIONS } from './pm-plugins/main';
 import {
   checkIfHeaderRowEnabled,
@@ -170,7 +169,7 @@ export const toggleHeaderRow: Command = (state, dispatch) => {
   if (!table) {
     return false;
   }
-  const { tr } = state;
+  let { tr } = state;
   const map = TableMap.get(table.node);
   const { tableHeader, tableCell } = state.schema.nodes;
   const isHeaderRowEnabled = checkIfHeaderRowEnabled(state);
@@ -185,7 +184,14 @@ export const toggleHeaderRow: Command = (state, dispatch) => {
     const from = tr.mapping.map(table.start + map.map[column]);
     const cell = table.node.child(0).child(column);
 
-    tr.setNodeMarkup(from, type, cell.attrs);
+    tr.setNodeMarkup(
+      from,
+      type,
+      Object.assign({}, cell.attrs, { cellType: 'text' }),
+    );
+  }
+  if (isHeaderRowEnabled) {
+    tr = ensureCellTypes(0, state.schema)(tr);
   }
 
   if (dispatch) {
@@ -275,7 +281,11 @@ export const setCellAttr = (name: string, value: any): Command => (
 
 export const insertColumn = (column: number): Command => (state, dispatch) => {
   const tr = addColumnAt(column)(state.tr);
-  const table = findTable(tr.selection)!;
+  const table = findTable(tr.selection);
+  if (!table) {
+    debugger;
+    return false;
+  }
   // move the cursor to the newly created column
   const pos = TableMap.get(table.node).positionAt(0, column, table.node);
   if (dispatch) {
@@ -289,22 +299,15 @@ export const insertColumn = (column: number): Command => (state, dispatch) => {
 
 export const insertRow = (row: number): Command => (state, dispatch) => {
   clearHoverSelection(state, dispatch);
-
-  // Dont clone the header row
-  const headerRowEnabled = checkIfHeaderRowEnabled(state);
-  const clonePreviousRow =
-    (headerRowEnabled && row > 1) || (!headerRowEnabled && row >= 0);
-
-  const tr = addRowAt(row, clonePreviousRow)(state.tr);
+  const tr = addRowAt(row)(state.tr);
 
   const table = findTable(tr.selection)!;
   // move the cursor to the newly created row
   const pos = TableMap.get(table.node).positionAt(row, 0, table.node);
 
   if (dispatch) {
-    dispatch(
-      tr.setSelection(Selection.near(tr.doc.resolve(table.start + pos))),
-    );
+    tr.setSelection(Selection.near(tr.doc.resolve(table.start + pos))),
+      dispatch(ensureCellTypes(row, state.schema)(tr));
   }
   analyticsService.trackEvent('atlassian.editor.format.table.row.button');
   return true;
@@ -947,4 +950,70 @@ export const handleShiftSelection = (event: MouseEvent): Command => (
   }
 
   return false;
+};
+
+export const ensureCellTypes = (rowIndex: number, schema: Schema) => (
+  tr: Transaction,
+): Transaction => {
+  const table = findTable(tr.selection);
+  if (!table) {
+    return tr;
+  }
+  let existingCells;
+  for (let i = 0; i < table.node.childCount; i++) {
+    if (i === rowIndex) {
+      continue;
+    }
+    const cells = getCellsInRow(i)(tr.selection);
+    if (cells && cells[0].node.type === schema.nodes.tableCell) {
+      existingCells = cells;
+      break;
+    }
+  }
+
+  const insertedCells = getCellsInRow(rowIndex)(tr.selection)!;
+
+  for (let i = insertedCells.length - 1; i >= 0; i--) {
+    const cell = insertedCells[i];
+    const copyCell = existingCells ? existingCells[i] : insertedCells[i];
+    const { cellType } = copyCell.node.attrs;
+
+    const { alignment } = schema.marks;
+    let marks: any = [];
+    if (cellType === 'number' || cellType === 'currency') {
+      marks.push(alignment.create({ align: 'end' }));
+    } else if (cellType === 'checkbox') {
+      marks.push(alignment.create({ align: 'center' }));
+    }
+
+    let newCell;
+    if (cellType === 'decision') {
+      newCell = cell.node.type.create(
+        { ...cell.node.attrs, cellType },
+        schema.nodes.decisionList.createAndFill() as PMNode,
+      );
+    } else if (cellType === 'slider') {
+      newCell = cell.node.type.create(
+        { ...cell.node.attrs, cellType },
+        cell.node.content.firstChild!.type.createChecked(
+          {},
+          schema.nodes.slider.createChecked(),
+          marks,
+        ),
+      );
+    } else {
+      newCell = cell.node.type.create(
+        { ...cell.node.attrs, cellType },
+        cell.node.content.firstChild!.type.createChecked(
+          {},
+          Fragment.empty,
+          marks,
+        ),
+      );
+    }
+
+    tr = tr.replaceWith(cell.pos, cell.pos + cell.node.nodeSize, newCell);
+  }
+
+  return tr;
 };
