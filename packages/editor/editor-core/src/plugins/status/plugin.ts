@@ -1,4 +1,11 @@
-import { EditorState, Plugin, PluginKey, Selection } from 'prosemirror-state';
+import {
+  EditorState,
+  Plugin,
+  PluginKey,
+  Selection,
+  NodeSelection,
+  Transaction,
+} from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Color as ColorType } from '@atlaskit/status';
 import StatusNodeView from './nodeviews/status';
@@ -44,6 +51,65 @@ export class SelectionChange {
     this.changeHandlers.forEach(cb => cb(newSelection, prevSelection));
   }
 }
+
+const getStatusNodeAt = (
+  view: EditorView,
+  position?: number,
+): StatusType | null => {
+  if (position) {
+    const node = view.state.tr.doc.nodeAt(position);
+    if (node && node.type === view.state.schema.nodes.status) {
+      return node.attrs as StatusType;
+    }
+  }
+  return null;
+};
+
+const isStatusNodeSelection = (selection: Selection, statusSchema): boolean => {
+  if (selection && selection instanceof NodeSelection) {
+    const nodeSelection = selection as NodeSelection;
+    return nodeSelection.node.type === statusSchema;
+  }
+  return false;
+};
+
+const isEmptyStatus = (node: StatusType): boolean =>
+  node && ((node.text && node.text.trim().length === 0) || node.text === '');
+
+const deleteNodeAt = (position: number, tr: Transaction): Transaction =>
+  tr.delete(position, position + 1);
+
+const handleStatusSelectionChange = (
+  view: EditorView,
+  prevEditorState: EditorState,
+) => {
+  const pluginState: StatusState = pluginKey.getState(view.state);
+  const prevState = pluginKey.getState(prevEditorState);
+  const newSelection = view.state.selection;
+
+  const prevStatusNode = getStatusNodeAt(view, prevState.showStatusPickerAt);
+
+  if (prevStatusNode && isEmptyStatus(prevStatusNode)) {
+    const newSelectionIsStatus = isStatusNodeSelection(
+      newSelection,
+      view.state.schema.nodes.status,
+    );
+    const meta = {
+      showStatusPickerAt: newSelectionIsStatus
+        ? pluginState.showStatusPickerAt
+        : null,
+      isNew: newSelectionIsStatus ? pluginState.isNew : false,
+      selectedStatus: newSelectionIsStatus ? pluginState.selectedStatus : null,
+    };
+    // delete node and set the selection to the new Status instance if newSelection is a Status node
+    const tr = deleteNodeAt(prevState.showStatusPickerAt, view.state.tr)
+      .setMeta(pluginKey, meta)
+      .setSelection(newSelection);
+
+    view.dispatch(tr);
+    view.focus();
+  }
+};
 
 const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
   new Plugin({
@@ -122,9 +188,12 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
         update: (view: EditorView, prevState: EditorState) => {
           const newSelection = view.state.selection;
           const prevSelection = prevState.selection;
+
           if (!prevSelection.eq(newSelection)) {
+            handleStatusSelectionChange(view, prevState);
             // selection changed
             const pluginState: StatusState = pluginKey.getState(view.state);
+
             const { selectionChanges } = pluginState;
             if (selectionChanges) {
               selectionChanges.notifyNewSelection(newSelection, prevSelection);

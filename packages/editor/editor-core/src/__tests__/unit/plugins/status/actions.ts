@@ -7,6 +7,17 @@ import {
   setStatusPickerAt,
   updateStatus,
 } from '../../../../plugins/status/actions';
+import { NodeSelection } from 'prosemirror-state';
+
+export const selectNodeAndSetStatusPickerAt = (selectionFrom, editorView) => {
+  // simulate click doing node selection via Prosemirror
+  editorView.dispatch(
+    editorView.state.tr.setSelection(
+      NodeSelection.create(editorView.state.doc, selectionFrom),
+    ),
+  );
+  setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+};
 
 describe('status plugin: actions', () => {
   const editor = (doc: any) => {
@@ -32,7 +43,7 @@ describe('status plugin: actions', () => {
       );
 
       const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+      selectNodeAndSetStatusPickerAt(selectionFrom, editorView);
 
       updateStatus({
         color: 'green',
@@ -72,7 +83,7 @@ describe('status plugin: actions', () => {
       );
 
       const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+      selectNodeAndSetStatusPickerAt(selectionFrom, editorView);
 
       updateStatus({
         color: 'green',
@@ -98,7 +109,7 @@ describe('status plugin: actions', () => {
         ),
       );
       const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+      selectNodeAndSetStatusPickerAt(selectionFrom, editorView);
 
       updateStatus({
         color: 'green',
@@ -162,7 +173,7 @@ describe('status plugin: actions', () => {
       );
 
       const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+      selectNodeAndSetStatusPickerAt(selectionFrom, editorView);
 
       updateStatus({
         color: 'green',
@@ -192,7 +203,7 @@ describe('status plugin: actions', () => {
       const focusSpy = jest.spyOn(editorView, 'focus');
 
       const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+      selectNodeAndSetStatusPickerAt(selectionFrom, editorView);
 
       updateStatus({
         color: 'green',
@@ -220,7 +231,7 @@ describe('status plugin: actions', () => {
       );
 
       const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+      selectNodeAndSetStatusPickerAt(selectionFrom, editorView);
 
       updateStatus({
         color: 'green',
@@ -232,6 +243,7 @@ describe('status plugin: actions', () => {
 
       expect(editorView.state.doc).toEqualDocument(doc(p('abc ')));
     });
+
     it('should keep status node when text in status node', () => {
       const { editorView } = editor(
         doc(
@@ -247,7 +259,7 @@ describe('status plugin: actions', () => {
       );
 
       const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+      selectNodeAndSetStatusPickerAt(selectionFrom, editorView);
 
       updateStatus({
         color: 'green',
@@ -281,7 +293,6 @@ describe('status plugin: actions', () => {
 
     it('focus on input field should be set when inserted', () => {
       const { editorView } = editor(doc(p('{<>}')));
-
       const { dispatch } = editorView;
 
       let pluginState = pluginKey.getState(editorView.state);
@@ -318,7 +329,7 @@ describe('status plugin: actions', () => {
       );
 
       const selectionFrom = editorView.state.selection.from;
-      setStatusPickerAt(selectionFrom)(editorView.state, editorView.dispatch);
+      selectNodeAndSetStatusPickerAt(selectionFrom, editorView);
 
       let pluginState = pluginKey.getState(editorView.state);
       expect(pluginState.isNew).toEqual(false);

@@ -6,17 +6,19 @@ import {
   NodeSelection,
 } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import {
-  createEditor,
-  doc,
-  p,
-  StatusLocalIdRegex,
-} from '@atlaskit/editor-test-helpers';
-import { updateStatus } from '../../../../plugins/status/actions';
 import createPlugin, {
   pluginKey,
   SelectionChange,
 } from '../../../../plugins/status/plugin';
+import {
+  createEditor,
+  doc,
+  p,
+  status,
+  StatusLocalIdRegex,
+} from '@atlaskit/editor-test-helpers';
+import { updateStatus } from '../../../../plugins/status/actions';
+import { selectNodeAndSetStatusPickerAt } from './actions';
 
 describe('status plugin: plugin', () => {
   const createSelection = (from: number, to?: number): Selection => {
@@ -28,9 +30,6 @@ describe('status plugin: plugin', () => {
     } as any;
   };
 
-  const sel1 = createSelection(1);
-  const sel2 = createSelection(2);
-
   const editorFactory = (doc: any) =>
     createEditor({
       editorProps: {
@@ -38,6 +37,9 @@ describe('status plugin: plugin', () => {
       },
       doc,
     });
+
+  const sel1 = createSelection(1);
+  const sel2 = createSelection(2);
 
   describe('SelectionChangeHandler', () => {
     let change: SelectionChange;
@@ -170,6 +172,65 @@ describe('status plugin: plugin', () => {
         showStatusPickerAt: null,
         selectedStatus: null,
       });
+    });
+
+    it('Empty status should be deleted when new Status instance is selected', () => {
+      const { editorView, refs } = editorFactory(
+        doc(
+          p(
+            '{firstStatus}',
+            status({
+              text: 'aloha',
+              color: 'green',
+              localId: 'd25d03dd-529d-41bf-8de1-e5856ba7cd71',
+            }),
+          ),
+          p('{<>}'),
+        ),
+      );
+
+      const firstStatus = refs['firstStatus'];
+
+      // create the second Status with empty text
+      updateStatus({ text: '', color: 'blue' })(editorView);
+
+      // two Status nodes at this point
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          p(
+            status({
+              text: 'aloha',
+              color: 'green',
+              localId: 'd25d03dd-529d-41bf-8de1-e5856ba7cd71',
+            }),
+          ),
+          p(
+            status({
+              text: '',
+              color: 'blue',
+              localId: expect.stringMatching(StatusLocalIdRegex),
+            }),
+            ' ',
+          ),
+        ),
+      );
+
+      // select first Status
+      selectNodeAndSetStatusPickerAt(firstStatus, editorView);
+
+      // The empty status node was deleted and only the first Status exists now
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          p(
+            status({
+              text: 'aloha',
+              color: 'green',
+              localId: 'd25d03dd-529d-41bf-8de1-e5856ba7cd71',
+            }),
+          ),
+          p(' '),
+        ),
+      );
     });
   });
 });

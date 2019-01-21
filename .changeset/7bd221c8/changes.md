@@ -1,0 +1,1 @@
+- empty status placeholder should be removed
