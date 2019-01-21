@@ -10,6 +10,7 @@ import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import EditorAlignImageLeft from '@atlaskit/icon/glyph/editor/align-image-left';
 import EditorAlignImageRight from '@atlaskit/icon/glyph/editor/align-image-right';
 import EditorAlignImageCenter from '@atlaskit/icon/glyph/editor/align-image-center';
+import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
 
 import commonMessages from '../../messages';
 import { Command, EditorAppearance } from '../../../src/types';
@@ -35,6 +36,12 @@ export const messages = defineMessages({
     id: 'fabric.editor.wrapRight',
     defaultMessage: 'Wrap right',
     description: 'Aligns your image to the right and wraps text around it.',
+  },
+  annotate: {
+    id: 'fabric.editor.annotate',
+    defaultMessage: 'Annotate',
+    description:
+      'Annotate an image by drawing arrows, adding text, or scribbles.',
   },
 });
 
@@ -62,6 +69,16 @@ const layoutToMessages = {
   'full-width': commonMessages.layoutFullWidth,
   'align-end': commonMessages.alignImageRight,
   'align-start': commonMessages.alignImageLeft,
+};
+
+const annotate: Command = state => {
+  const pluginState: MediaPluginState | undefined = stateKey.getState(state);
+  if (!pluginState) {
+    return false;
+  }
+
+  pluginState.openMediaEditor();
+  return true;
 };
 
 const remove: Command = (state, dispatch) => {
@@ -155,7 +172,16 @@ export const floatingToolbar = (
   if (appearance === 'full-page') {
     layoutButtons = buildLayoutButtons(state, intl, allowResizing);
     if (layoutButtons.length) {
-      layoutButtons.push({ type: 'separator' });
+      layoutButtons.push(
+        { type: 'separator' },
+        {
+          type: 'button',
+          icon: AnnotateIcon,
+          title: intl.formatMessage(messages.annotate),
+          onClick: annotate,
+        },
+        { type: 'separator' },
+      );
     }
   }
 

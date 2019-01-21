@@ -89,7 +89,7 @@ describe('media', () => {
         'full-page',
       );
       expect(toolbar).toBeDefined();
-      expect(toolbar!.items.length).toEqual(11);
+      expect(toolbar!.items.length).toEqual(13);
     });
 
     it('should only render alignment and wrapping buttons in full page when resizing is enabled', () => {
@@ -102,7 +102,7 @@ describe('media', () => {
         'full-page',
       );
       expect(toolbar).toBeDefined();
-      expect(toolbar!.items.length).toEqual(8);
+      expect(toolbar!.items.length).toEqual(10);
     });
 
     it('should not render any layout buttons when in comment', () => {

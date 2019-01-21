@@ -12,7 +12,11 @@ import {
 } from 'prosemirror-state';
 import { Context } from '@atlaskit/media-core';
 import { UploadParams } from '@atlaskit/media-picker';
-import { MediaType, MediaSingleLayout } from '@atlaskit/adf-schema';
+import {
+  MediaType,
+  MediaSingleLayout,
+  MediaBaseAttributes,
+} from '@atlaskit/adf-schema';
 import { ErrorReporter } from '@atlaskit/editor-common';
 
 import analyticsService from '../../../analytics/service';
@@ -35,6 +39,7 @@ import DefaultMediaStateManager from '../default-state-manager';
 import { insertMediaSingleNode } from '../utils/media-single';
 
 import { findDomRefAtPos } from 'prosemirror-utils';
+import { FileIdentifier } from '@atlaskit/media-card';
 export { DefaultMediaStateManager };
 export { MediaState, MediaProvider, MediaStateStatus, MediaStateManager };
 
@@ -51,6 +56,7 @@ export class MediaPluginState {
   public allowsMedia: boolean = false;
   public allowsUploads: boolean = false;
   public mediaContext: Context;
+  public uploadContext?: Context;
   public stateManager: MediaStateManager;
   public ignoreLinks: boolean = false;
   public waitForMediaUpload: boolean = true;
@@ -77,6 +83,10 @@ export class MediaPluginState {
   private dropzonePicker?: PickerFacade;
   // @ts-ignore
   private customPicker?: PickerFacade;
+
+  public editingMediaSinglePos?: number;
+  public showEditingDialog?: boolean;
+
   public editorAppearance: EditorAppearance;
   private removeOnCloseListener: () => void = () => {};
 
@@ -138,7 +148,6 @@ export class MediaPluginState {
     }
 
     // TODO disable (not destroy!) pickers until mediaProvider is resolved
-
     try {
       let resolvedMediaProvider: MediaProvider = (this.mediaProvider = await mediaProvider);
 
@@ -185,12 +194,12 @@ export class MediaPluginState {
     }
 
     if (this.allowsUploads) {
-      const uploadContext = await this.mediaProvider.uploadContext;
+      this.uploadContext = await this.mediaProvider.uploadContext;
 
-      if (this.mediaProvider.uploadParams && uploadContext) {
+      if (this.mediaProvider.uploadParams && this.uploadContext) {
         await this.initPickers(
           this.mediaProvider.uploadParams,
-          uploadContext,
+          this.uploadContext,
           PickerFacade,
           this.reactContext,
         );
@@ -411,6 +420,61 @@ export class MediaPluginState {
    */
   handleMediaNodeUnmount = (oldNode: PMNode) => {
     this.mediaNodes = this.mediaNodes.filter(({ node }) => oldNode !== node);
+  };
+
+  openMediaEditor = () => {
+    const { state } = this.view;
+    const { mediaSingle } = state.schema.nodes;
+
+    if (
+      !(state.selection instanceof NodeSelection) ||
+      state.selection.node.type !== mediaSingle
+    ) {
+      return;
+    }
+
+    this.editingMediaSinglePos = state.selection.from;
+    this.showEditingDialog = true;
+
+    this.view.dispatch(this.view.state.tr.setMeta(stateKey, 'edit'));
+  };
+
+  closeMediaEditor = () => {
+    this.showEditingDialog = false;
+    this.view.dispatch(this.view.state.tr.setMeta(stateKey, 'close-edit'));
+  };
+
+  replaceEditingMedia = (fileIdentifier: FileIdentifier) => {
+    if (typeof this.editingMediaSinglePos !== 'number') {
+      return;
+    }
+
+    const { state, dispatch } = this.view;
+    const { doc, schema } = state;
+
+    const mediaPos = this.editingMediaSinglePos + 1;
+    const oldMediaNode = doc.nodeAt(mediaPos);
+    if (!oldMediaNode) {
+      return;
+    }
+
+    const newMediaNodeAttrs: MediaBaseAttributes = {
+      ...oldMediaNode.attrs,
+
+      id: fileIdentifier.id as string,
+      collection:
+        fileIdentifier.collectionName || oldMediaNode.attrs.collection,
+      occurrenceKey: fileIdentifier.occurrenceKey,
+    };
+
+    const tr = state.tr.replaceWith(
+      mediaPos,
+      mediaPos + oldMediaNode.nodeSize,
+      schema.nodes.media!.createChecked(newMediaNodeAttrs),
+    );
+
+    this.editingMediaSinglePos = undefined;
+    dispatch(tr.setMeta('addToHistory', false));
   };
 
   align = (layout: MediaSingleLayout, gridSize: number = 12): boolean => {
@@ -797,6 +861,13 @@ export const createPlugin = (
       },
       apply(tr, pluginState: MediaPluginState, oldState, newState) {
         const { parent } = newState.selection.$from;
+
+        // remap editing media single position if we're in collab
+        if (typeof pluginState.editingMediaSinglePos === 'number') {
+          pluginState.editingMediaSinglePos = tr.mapping.map(
+            pluginState.editingMediaSinglePos,
+          );
+        }
 
         // Update Layout
         const { mediaSingle } = oldState.schema.nodes;
