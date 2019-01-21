@@ -25,7 +25,7 @@ describe('Spinner', () => {
 
   it('should be active by default', () => {
     const wrapper = mount(<Spinner />);
-    expect(wrapper.prop('isCompleting')).toBe(false);
+    expect(wrapper.prop('isCompleting')).toBe(true);
   });
 
   it('should not use the inverted color scheme by default', () => {

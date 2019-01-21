@@ -12,7 +12,7 @@ export type SpinnerProps = {
   /**
     Sets whether the spinner should be visible or not. Changing this value will trigger the transition animation.
     While the spinner is out, <Spinner /> will occupy no space on the page. This will likely be changed to
-    `isCompleting` in a future breaking change.
+    `isVisible` in a future breaking change.
   */
   isCompleting?: boolean,
   /** Handler for once the spinner has completed its outro animation */

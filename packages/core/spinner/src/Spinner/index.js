@@ -109,16 +109,15 @@ export default class Spinner extends Component<SpinnerProps, SpinnerState> {
     }
   }
 
-  modeChange() {
+  async modeChange() {
     this.animationInProgress = true;
     const transitionFunction = this.machine[this.currentMode][this.nextMode];
     this.currentMode = this.nextMode;
-    transitionFunction().then(() => {
-      this.animationInProgress = false;
-      if (this.currentMode !== this.nextMode) {
-        this.modeChange();
-      }
-    });
+    await transitionFunction();
+    this.animationInProgress = false;
+    if (this.currentMode !== this.nextMode) {
+      this.modeChange();
+    }
   }
 
   componentDidMount() {
