@@ -1,0 +1,1 @@
+- TEAMS-223 Show default team avatars in examples
