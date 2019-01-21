@@ -105,6 +105,10 @@ export default class Toolbar extends Component<Props> {
                     />
                   );
 
+                case 'custom':
+                  const { Component } = item;
+                  return <Component key={idx} />;
+
                 case 'typeahead':
                   console.log('focus is ', focusEditor);
                   return (

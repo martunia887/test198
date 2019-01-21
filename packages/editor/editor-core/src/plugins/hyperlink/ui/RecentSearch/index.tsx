@@ -9,6 +9,7 @@ export interface Props {
   onBlur?: (text: string) => void;
   onSubmit?: (href: string, text?: string) => void;
   provider: Promise<ActivityProvider>;
+  inputValue: string;
 }
 
 export interface State {
@@ -20,12 +21,21 @@ export interface State {
 }
 
 export default class RecentSearch extends PureComponent<Props, State> {
-  state = {
-    selectedIndex: -1,
-    isLoading: false,
-    text: '',
-    items: [],
-  } as State;
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: props.inputValue || '',
+      selectedIndex: -1,
+      isLoading: false,
+      items: [],
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.inputValue !== this.state.text) {
+      this.updateInput(nextProps.inputValue);
+    }
+  }
 
   async resolveProvider() {
     const provider = await this.props.provider;
@@ -47,23 +57,23 @@ export default class RecentSearch extends PureComponent<Props, State> {
     }
   }
 
-  // private updateInput = async (input: string) => {
-  //   this.setState({ text: input });
+  private updateInput = async (input: string) => {
+    this.setState({ text: input });
 
-  //   if (this.state.activityProvider) {
-  //     if (input.length === 0) {
-  //       this.setState({
-  //         items: limit(await this.state.activityProvider.getRecentItems()),
-  //         selectedIndex: -1,
-  //       });
-  //     } else {
-  //       this.setState({
-  //         items: limit(await this.state.activityProvider.searchRecent(input)),
-  //         selectedIndex: 0,
-  //       });
-  //     }
-  //   }
-  // };
+    if (this.state.provider) {
+      if (input.length === 0) {
+        this.setState({
+          items: limit(await this.state.provider.getRecentItems()),
+          selectedIndex: -1,
+        });
+      } else {
+        this.setState({
+          items: limit(await this.state.provider.searchRecent(input)),
+          selectedIndex: 0,
+        });
+      }
+    }
+  };
 
   render() {
     const { items, isLoading, selectedIndex } = this.state;
