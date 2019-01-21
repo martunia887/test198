@@ -107,6 +107,7 @@ const floatingToolbarPlugin: EditorPlugin = {
               getDomRef = getDomRefFromSelection,
               items,
               align = 'center',
+              className = '',
             } = relevantConfig;
             const targetRef = getDomRef(editorView);
 
@@ -128,6 +129,7 @@ const floatingToolbarPlugin: EditorPlugin = {
                     dispatchCommand={fn =>
                       fn && fn(editorView.state, editorView.dispatch)
                     }
+                    className={className}
                     focusEditor={() => editorView.focus()}
                     providerFactory={providerFactory}
                     popupsMountPoint={popupsMountPoint}

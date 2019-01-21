@@ -4,7 +4,13 @@ import OpenIcon from '@atlaskit/icon/glyph/editor/open';
 import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
 
 import { stateKey, HyperlinkState } from './pm-plugins/main';
-import { removeLink, setLinkText, setLinkHref, insertLink } from './commands';
+import {
+  removeLink,
+  setLinkText,
+  setLinkHref,
+  insertLink,
+  hideLinkToolbar,
+} from './commands';
 import { normalizeUrl } from './utils';
 import RecentList from './ui/RecentSearch';
 
@@ -66,6 +72,8 @@ export const getToolbarConfig: FloatingToolbarHandler = (
       title: 'Hyperlink floating controls',
       nodeType: state.schema.nodes.paragraph,
       align: 'left',
+      className:
+        activeLinkMark.type === 'INSERT' ? 'hyperlink-floating-toolbar' : '',
     };
 
     switch (activeLinkMark.type) {
@@ -113,11 +121,11 @@ export const getToolbarConfig: FloatingToolbarHandler = (
           ...hyperLinkToolbar,
           items: [
             {
-              type: 'typeahead',
-              placeholder: 'Paste link or search recently viewed',
+              type: 'custom',
               provider: linkProvider,
               onSubmit: (href, text) => insertLink(from, to, href, text),
-              TypeaheadItems: RecentList,
+              Component: RecentList,
+              // onBlur: () => hideLinkToolbar()
             },
           ],
         };

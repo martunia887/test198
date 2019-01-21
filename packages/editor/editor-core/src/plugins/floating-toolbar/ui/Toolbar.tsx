@@ -24,6 +24,7 @@ export interface Props {
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
   providerFactory: ProviderFactory;
+  className?: string;
 }
 
 const ToolbarContainer = styled.div`
@@ -56,6 +57,7 @@ export default class Toolbar extends Component<Props> {
       popupsBoundariesElement,
       popupsScrollableElement,
       focusEditor,
+      className,
     } = this.props;
     if (!items.length) {
       return null;
@@ -68,6 +70,7 @@ export default class Toolbar extends Component<Props> {
       <ToolbarContainer
         aria-label="Floating Toolbar"
         hasCompactLeftPadding={firstElementIsSelect}
+        className={className}
       >
         <ButtonGroup>
           {items
@@ -107,10 +110,19 @@ export default class Toolbar extends Component<Props> {
 
                 case 'custom':
                   const { Component } = item;
-                  return <Component key={idx} />;
+                  return (
+                    <Component
+                      key={idx}
+                      onSubmit={(href, text) => {
+                        dispatchCommand(item.onSubmit(href, text));
+                        focusEditor();
+                      }}
+                      provider={item.provider}
+                      onBlur={value => dispatchCommand(item.onBlur(value))}
+                    />
+                  );
 
                 case 'typeahead':
-                  console.log('focus is ', focusEditor);
                   return (
                     <Typeahead
                       key={idx}

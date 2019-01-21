@@ -1,15 +1,36 @@
 import * as React from 'react';
 import { KeyboardEvent, PureComponent } from 'react';
+import styled from 'styled-components';
 import { ActivityProvider, ActivityItem } from '@atlaskit/activity';
 
 import { analyticsService } from '../../../../analytics';
+import PanelTextInput from '../../../../ui/PanelTextInput';
 import RecentList from './RecentList';
+
+const Container = styled.div`
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
+  line-height: 2;
+
+  input {
+    padding: 8px;
+  }
+`;
 
 export interface Props {
   onBlur?: (text: string) => void;
   onSubmit?: (href: string, text?: string) => void;
+
+  target: Node;
+  popupsMountPoint?: HTMLElement;
+  popupsBoundariesElement?: HTMLElement;
+
+  autoFocus?: boolean;
+  placeholder: string;
   provider: Promise<ActivityProvider>;
-  inputValue: string;
 }
 
 export interface State {
@@ -21,21 +42,12 @@ export interface State {
 }
 
 export default class RecentSearch extends PureComponent<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: props.inputValue || '',
-      selectedIndex: -1,
-      isLoading: false,
-      items: [],
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.inputValue !== this.state.text) {
-      this.updateInput(nextProps.inputValue);
-    }
-  }
+  state = {
+    selectedIndex: -1,
+    isLoading: false,
+    text: '',
+    items: [],
+  } as State;
 
   async resolveProvider() {
     const provider = await this.props.provider;
@@ -76,16 +88,28 @@ export default class RecentSearch extends PureComponent<Props, State> {
   };
 
   render() {
+    const { placeholder } = this.props;
     const { items, isLoading, selectedIndex } = this.state;
 
     return (
-      <RecentList
-        items={items}
-        isLoading={isLoading}
-        selectedIndex={selectedIndex}
-        onSelect={this.handleSelected}
-        onMouseMove={this.handleMouseMove}
-      />
+      <Container>
+        <PanelTextInput
+          placeholder="Paste link or search recently viewed"
+          autoFocus={true}
+          onSubmit={this.handleSubmit}
+          onChange={this.updateInput}
+          onBlur={this.handleBlur}
+          onCancel={this.handleBlur}
+          onKeyDown={this.handleKeyDown}
+        />
+        <RecentList
+          items={items}
+          isLoading={isLoading}
+          selectedIndex={selectedIndex}
+          onSelect={this.handleSelected}
+          onMouseMove={this.handleMouseMove}
+        />
+      </Container>
     );
   }
 
