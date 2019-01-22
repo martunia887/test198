@@ -220,7 +220,6 @@ export default class GlobalNavigation extends Component<
   };
 
   openDrawer = (drawerName: DrawerName) => () => {
-    console.log('HERE', drawerName);
     const capitalisedDrawerName = this.getCapitalisedDrawerName(drawerName);
     let onOpenCallback = noop;
 
@@ -235,7 +234,6 @@ export default class GlobalNavigation extends Component<
     // Update the state only if it's a controlled drawer.
     // componentDidMount takes care of the uncontrolled drawers
     if (this.drawers[drawerName].isControlled) {
-      console.log('NOW');
       this.setState(
         {
           [`is${capitalisedDrawerName}Open`]: true,
@@ -390,8 +388,7 @@ export default class GlobalNavigation extends Component<
     switch (drawerName) {
       case 'centralisedappswitcher':
         this.mockJiraEndpoints();
-        return props =>
-          console.log(props) || <JiraAppSwitcher cloudId="some-cloud-id" />;
+        return () => <JiraAppSwitcher cloudId="some-cloud-id" />;
       case 'notification':
         if (this.isNotificationInbuilt) {
           return this.renderNotificationDrawerContents;
