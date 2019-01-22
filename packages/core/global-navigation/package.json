@@ -26,6 +26,7 @@
     "@atlaskit/spinner": "^9.0.13",
     "@atlaskit/theme": "^7.0.1",
     "@babel/runtime": "^7.0.0",
+    "@atlaskit/centralised-app-switcher": "^1.0.1",
     "emotion": "^9.1.1",
     "emotion-theming": "^9.0.0",
     "prop-types": "^15.5.10",

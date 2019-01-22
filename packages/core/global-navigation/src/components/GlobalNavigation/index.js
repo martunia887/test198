@@ -7,6 +7,9 @@ import { NotificationIndicator } from '@atlaskit/notification-indicator';
 import { NotificationLogClient } from '@atlaskit/notification-log-client';
 import { GlobalNav } from '@atlaskit/navigation-next';
 import Drawer from '@atlaskit/drawer';
+import { JiraAppSwitcher } from '@atlaskit/centralised-app-switcher';
+import fetchMock from 'fetch-mock';
+
 import {
   name as packageName,
   version as packageVersion,
@@ -32,6 +35,7 @@ type GlobalNavigationState = {
   isNotificationDrawerOpen: boolean,
   isStarredDrawerOpen: boolean,
   isSettingsDrawerOpen: boolean,
+  isCentralisedappswitcherDrawerOpen: boolean,
   notificationCount: number,
 };
 
@@ -61,6 +65,9 @@ export default class GlobalNavigation extends Component<
     create: {
       isControlled: false,
     },
+    centralisedappswitcher: {
+      isControlled: false,
+    },
   };
   isNotificationInbuilt = false;
 
@@ -73,6 +80,7 @@ export default class GlobalNavigation extends Component<
       isNotificationDrawerOpen: false,
       isStarredDrawerOpen: false,
       isSettingsDrawerOpen: false,
+      isCentralisedappswitcherDrawerOpen: false,
       notificationCount: 0,
     };
 
@@ -212,6 +220,7 @@ export default class GlobalNavigation extends Component<
   };
 
   openDrawer = (drawerName: DrawerName) => () => {
+    console.log('HERE', drawerName);
     const capitalisedDrawerName = this.getCapitalisedDrawerName(drawerName);
     let onOpenCallback = noop;
 
@@ -226,6 +235,7 @@ export default class GlobalNavigation extends Component<
     // Update the state only if it's a controlled drawer.
     // componentDidMount takes care of the uncontrolled drawers
     if (this.drawers[drawerName].isControlled) {
+      console.log('NOW');
       this.setState(
         {
           [`is${capitalisedDrawerName}Open`]: true,
@@ -339,6 +349,59 @@ export default class GlobalNavigation extends Component<
     };
   };
 
+  mockJiraEndpoints = () => {
+    const RECENT_CONTAINERS_DATA = {
+      data: [
+        {
+          objectId:
+            'ari:cloud:jira:a436116f-02ce-4520-8fbb-7301462a1674:project/30255',
+          type: 'jira-project',
+          name: 'Jira App Switcher',
+          url: 'https://hello.atlassian.net/projects/CEN',
+          iconUrl:
+            'https://hello.atlassian.net/secure/projectavatar?size=medium&avatarId=24523',
+        },
+      ],
+    };
+
+    const CUSTOM_LINKS_DATA = [
+      {
+        key: 'home',
+        link: 'https://hello.atlassian.net/secure',
+        label: 'Hello Jira',
+        local: true,
+        self: false,
+        applicationType: 'jira',
+      },
+    ];
+    fetchMock.get(
+      '/gateway/api/activity/api/client/recent/containers?cloudId=some-cloud-id',
+      new Promise(res => setTimeout(() => res(RECENT_CONTAINERS_DATA), 1500)),
+      { overwriteRoutes: true },
+    );
+    fetchMock.get(
+      '/rest/menu/latest/appswitcher',
+      new Promise(res => setTimeout(() => res(CUSTOM_LINKS_DATA), 2500)),
+      { overwriteRoutes: true },
+    );
+  };
+
+  getDrawerContents = drawerName => {
+    switch (drawerName) {
+      case 'centralisedappswitcher':
+        this.mockJiraEndpoints();
+        return props =>
+          console.log(props) || <JiraAppSwitcher cloudId="some-cloud-id" />;
+      case 'notification':
+        if (this.isNotificationInbuilt) {
+          return this.renderNotificationDrawerContents;
+        }
+        break;
+      default:
+    }
+    return this.props[`${drawerName}DrawerContents`];
+  };
+
   render() {
     // TODO: Look into memoizing this to avoid memory bloat
     const { primaryItems, secondaryItems } = this.constructNavItems();
@@ -365,10 +428,7 @@ export default class GlobalNavigation extends Component<
               `should${capitalisedDrawerName}UnmountOnExit`
             ];
 
-            const DrawerContents =
-              drawerName === 'notification' && this.isNotificationInbuilt
-                ? this.renderNotificationDrawerContents
-                : this.props[`${drawerName}DrawerContents`];
+            const DrawerContents = this.getDrawerContents(drawerName);
 
             if (!DrawerContents) {
               return null;

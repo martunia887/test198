@@ -220,6 +220,11 @@ export default function generateProductConfig(
       onSettingsClick || (settingsDrawerContents && openDrawer('settings')),
       settingsTooltip,
     ),
+    centralisedappswitcher: configFactory(
+      onSettingsClick ||
+        (settingsDrawerContents && openDrawer('centralisedappswitcher')),
+      settingsTooltip,
+    ),
     notification: notificationConfigFactory(
       notificationTooltip,
       notificationCount,
