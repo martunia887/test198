@@ -43,7 +43,7 @@ export const toggleMark = (
 
       tr.removeStoredMark(markType).setNodeMarkup(pos, cell.type, attrs);
     });
-  } else {
+  } else if (!cell.node.textContent) {
     const { initialMarks } = cell.node.attrs;
     const attrs = {
       ...cell.node.attrs,
@@ -61,15 +61,23 @@ export const toggleMark = (
     );
   }
 
-  let has = false;
-  for (let i = 0; !has && i < selection.ranges.length; i++) {
-    let { $from, $to } = selection.ranges[i];
-    has = state.doc.rangeHasMark($from.pos, $to.pos, markType);
-  }
-  for (let i = 0; i < selection.ranges.length; i++) {
-    let { $from, $to } = selection.ranges[i];
-    if (has) tr.removeMark($from.pos, $to.pos, markType);
-    else tr.addMark($from.pos, $to.pos, markType.create(attrs));
+  if (selection.empty) {
+    if (markType.isInSet(state.storedMarks || selection.$from.marks())) {
+      tr.removeStoredMark(markType);
+    } else {
+      tr.addStoredMark(markType.create(attrs));
+    }
+  } else {
+    let has = false;
+    for (let i = 0; !has && i < selection.ranges.length; i++) {
+      let { $from, $to } = selection.ranges[i];
+      has = state.doc.rangeHasMark($from.pos, $to.pos, markType);
+    }
+    for (let i = 0; i < selection.ranges.length; i++) {
+      let { $from, $to } = selection.ranges[i];
+      if (has) tr.removeMark($from.pos, $to.pos, markType);
+      else tr.addMark($from.pos, $to.pos, markType.create(attrs));
+    }
   }
 
   dispatch(tr);

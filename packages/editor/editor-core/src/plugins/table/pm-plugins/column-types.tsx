@@ -263,7 +263,7 @@ export const setColumnType = (
       cell.node.child(0).type.name === 'paragraph' &&
       `${parseInt(cell.node.textContent, 10)}` === cell.node.textContent
     ) {
-      cellContent = cell.node.content;
+      cellContent = cell.node.firstChild;
     } else {
       cellContent = content;
     }
