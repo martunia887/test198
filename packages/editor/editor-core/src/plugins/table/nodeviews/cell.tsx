@@ -83,6 +83,7 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
           {withCursor && !disabled && appearance !== 'mobile' && (
             <div className={ClassName.CONTEXTUAL_MENU_BUTTON_WRAP}>
               <ToolbarButton
+                className={ClassName.CONTEXTUAL_MENU_BUTTON}
                 disabled={isResizing}
                 selected={isContextualMenuOpen}
                 title={labelCellOptions}

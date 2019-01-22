@@ -283,7 +283,6 @@ export const insertColumn = (column: number): Command => (state, dispatch) => {
   const tr = addColumnAt(column)(state.tr);
   const table = findTable(tr.selection);
   if (!table) {
-    debugger;
     return false;
   }
   // move the cursor to the newly created column
