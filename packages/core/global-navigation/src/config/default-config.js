@@ -71,13 +71,13 @@ export default function generateDefaultConfig(): DefaultConfigShape {
       tooltip: 'Settings',
       id: 'settings',
     },
-    centralisedappswitcher: {
+    centralisedAppSwitcher: {
       icon: AppSwitcherIcon,
       label: 'App Switcher',
       section: 'secondary',
       rank: 3,
       tooltip: 'Switch to test ...',
-      id: 'centralisedappswitcher',
+      id: 'centralisedAppSwitcher',
     },
     profile: {
       label: 'Your profile and Settings',

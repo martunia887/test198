@@ -35,7 +35,7 @@ type GlobalNavigationState = {
   isNotificationDrawerOpen: boolean,
   isStarredDrawerOpen: boolean,
   isSettingsDrawerOpen: boolean,
-  isCentralisedappswitcherDrawerOpen: boolean,
+  isCentralisedAppSwitcherDrawerOpen: boolean,
   notificationCount: number,
 };
 
@@ -65,7 +65,7 @@ export default class GlobalNavigation extends Component<
     create: {
       isControlled: false,
     },
-    centralisedappswitcher: {
+    centralisedAppSwitcher: {
       isControlled: false,
     },
   };
@@ -80,7 +80,7 @@ export default class GlobalNavigation extends Component<
       isNotificationDrawerOpen: false,
       isStarredDrawerOpen: false,
       isSettingsDrawerOpen: false,
-      isCentralisedappswitcherDrawerOpen: false,
+      isCentralisedAppSwitcherDrawerOpen: false,
       notificationCount: 0,
     };
 
@@ -387,7 +387,7 @@ export default class GlobalNavigation extends Component<
   getDrawerContents = drawerName => {
     const { cloudId, triggerXFlow } = this.props;
     switch (drawerName) {
-      case 'centralisedappswitcher':
+      case 'centralisedAppSwitcher':
         this.mockJiraEndpoints();
         return () => (
           <JiraAppSwitcher cloudId={cloudId} triggerXFlow={triggerXFlow} />
@@ -422,7 +422,7 @@ export default class GlobalNavigation extends Component<
             secondaryItems={secondaryItems}
           />
           {Object.keys(this.drawers).map(drawerName => {
-            if (drawerName === 'centralisedappswitcher' && !enableCAS) {
+            if (drawerName === 'centralisedAppSwitcher' && !enableCAS) {
               return null;
             }
 

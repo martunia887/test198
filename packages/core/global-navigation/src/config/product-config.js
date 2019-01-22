@@ -222,8 +222,8 @@ export default function generateProductConfig(
       onSettingsClick || (settingsDrawerContents && openDrawer('settings')),
       settingsTooltip,
     ),
-    centralisedappswitcher: enableCAS
-      ? configFactory(openDrawer('centralisedappswitcher'))
+    centralisedAppSwitcher: enableCAS
+      ? configFactory(openDrawer('centralisedAppSwitcher'))
       : null,
     notification: notificationConfigFactory(
       notificationTooltip,
