@@ -385,10 +385,13 @@ export default class GlobalNavigation extends Component<
   };
 
   getDrawerContents = drawerName => {
+    const { cloudId, triggerXFlow } = this.props;
     switch (drawerName) {
       case 'centralisedappswitcher':
         this.mockJiraEndpoints();
-        return () => <JiraAppSwitcher cloudId="some-cloud-id" />;
+        return () => (
+          <JiraAppSwitcher cloudId={cloudId} triggerXFlow={triggerXFlow} />
+        );
       case 'notification':
         if (this.isNotificationInbuilt) {
           return this.renderNotificationDrawerContents;
@@ -402,6 +405,7 @@ export default class GlobalNavigation extends Component<
   render() {
     // TODO: Look into memoizing this to avoid memory bloat
     const { primaryItems, secondaryItems } = this.constructNavItems();
+    const { enableCAS } = this.props;
 
     return (
       <NavigationAnalyticsContext
@@ -418,6 +422,10 @@ export default class GlobalNavigation extends Component<
             secondaryItems={secondaryItems}
           />
           {Object.keys(this.drawers).map(drawerName => {
+            if (drawerName === 'centralisedappswitcher' && !enableCAS) {
+              return null;
+            }
+
             const capitalisedDrawerName = this.getCapitalisedDrawerName(
               drawerName,
             );

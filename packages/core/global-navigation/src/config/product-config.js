@@ -193,6 +193,8 @@ export default function generateProductConfig(
     settingsTooltip,
     settingsDrawerContents,
 
+    enableCAS,
+
     profileItems,
     profileTooltip,
     loginHref,
@@ -220,11 +222,9 @@ export default function generateProductConfig(
       onSettingsClick || (settingsDrawerContents && openDrawer('settings')),
       settingsTooltip,
     ),
-    centralisedappswitcher: configFactory(
-      onSettingsClick ||
-        (settingsDrawerContents && openDrawer('centralisedappswitcher')),
-      settingsTooltip,
-    ),
+    centralisedappswitcher: enableCAS
+      ? configFactory(openDrawer('centralisedappswitcher'))
+      : null,
     notification: notificationConfigFactory(
       notificationTooltip,
       notificationCount,
@@ -240,12 +240,13 @@ export default function generateProductConfig(
       loginHref,
       profileIconUrl,
     ),
-    appSwitcher: appSwitcherComponent
-      ? {
-          itemComponent: appSwitcherComponent,
-          label: appSwitcherTooltip,
-          tooltip: appSwitcherTooltip,
-        }
-      : null,
+    appSwitcher:
+      appSwitcherComponent && !enableCAS
+        ? {
+            itemComponent: appSwitcherComponent,
+            label: appSwitcherTooltip,
+            tooltip: appSwitcherTooltip,
+          }
+        : null,
   };
 }
