@@ -121,7 +121,9 @@ export default class Spinner extends Component<SpinnerProps, SpinnerState> {
   }
 
   componentDidMount() {
-    if (this.props.isCompleting) this.setMode('visible');
+    if (this.props.isCompleting) {
+      this.setMode('visible');
+    }
   }
 
   componentWillUnmount() {

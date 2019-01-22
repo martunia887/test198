@@ -44,20 +44,19 @@ describe('Spinner', () => {
     const wrapper = mount(<Spinner />);
     wrapper.setState({ phase: 'ON' });
     setTimeout(() =>
-      expect(wrapper.find(Container).prop('phase')).not.toBe('DELAY'),
+      expect(wrapper.find(Container).prop('phase')).not.toBe('OFF'),
     );
   });
 
   describe('delay prop', () => {
-    it('should be reflected to the DELAY phase animation', () => {
+    it('should be reflected to the OFF phase animation', () => {
       const delayProp = 1234;
       const wrapper = mount(<Spinner delay={delayProp} />);
-      wrapper.setState({ phase: 'ON' });
-      const container = wrapper.find(Container);
-      const animation = getContainerAnimation(container.props());
+      const delay = wrapper.props().delay;
+      const animation = getContainerAnimation({ delay, phase: 'OFF' });
       const animationMatch = animation.match(/animation: (([0-9]|\.*)*)/);
       const animationDelay = animationMatch
-        ? parseFloat(animationMatch[1]) * 1000
+        ? parseFloat(animationMatch[1])
         : null;
       expect(animationDelay).toBe(delayProp);
     });
@@ -78,21 +77,15 @@ describe('Spinner', () => {
   });
 
   describe('onComplete prop', () => {
-    it('should be called after isCompleting prop is set', done => {
+    it('should be called after isCompleting prop is set', () => {
       const spy = jest.fn();
       const wrapper = mount(<Spinner delay={0} onComplete={spy} />);
-      wrapper.setState({ phase: 'ON' });
-      // const transitionContainerNode = wrapper.find(Container).getDOMNode();
+      const transitionContainerNode = wrapper.find(Container).getDOMNode();
 
-      wrapper.setProps({ isCompleting: false });
+      wrapper.setProps({ isCompleting: true });
+      transitionContainerNode.dispatchEvent(new Event('animationend'));
 
-      // TODO - setProps on machine: console.log(wrapper.instance().machine);
-
-      // transitionContainerNode.dispatchEvent(new Event('animationend'));
-      // setTimeout(() => {
-      //   expect(spy).toHaveBeenCalledTimes(1);
-      //   done();
-      // }, 1500);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('should not be called if isCompleting is not set', () => {
