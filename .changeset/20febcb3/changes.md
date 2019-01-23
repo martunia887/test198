@@ -1,0 +1,1 @@
+- Add divider and truncator functionality to dropdown menu
