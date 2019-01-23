@@ -33,6 +33,7 @@ export default class DropdownMenu extends Component<
     shouldFlip: true,
     triggerType: 'default',
     onPositioned: () => {},
+    withDivider: false,
   };
 
   state = {
@@ -111,6 +112,8 @@ export default class DropdownMenu extends Component<
       triggerButtonProps,
       triggerType,
       onPositioned,
+      withDivider,
+      triggerMaxWidth,
     } = this.props;
 
     return (
@@ -131,6 +134,8 @@ export default class DropdownMenu extends Component<
         triggerButtonProps={triggerButtonProps}
         triggerType={triggerType}
         onPositioned={onPositioned}
+        withDivider={withDivider}
+        triggerMaxWidth={triggerMaxWidth}
       >
         {children}
       </StatelessMenu>

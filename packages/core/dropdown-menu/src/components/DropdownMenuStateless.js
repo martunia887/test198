@@ -21,6 +21,8 @@ import DropdownItemClickManager from './context/DropdownItemClickManager';
 import DropdownItemSelectionCache from './context/DropdownItemSelectionCache';
 import WidthConstrainer from '../styled/WidthConstrainer';
 import { KEY_DOWN, KEY_SPACE, KEY_ENTER } from '../util/keys';
+import Divider from '../styled/Divider.js';
+import { FieldTruncator } from '../styled/FieldTruncator.js';
 import type {
   DeprecatedItem,
   DeprecatedItemGroup,
@@ -284,6 +286,7 @@ class DropdownMenuStateless extends Component<
       isOpen,
       triggerButtonProps,
       triggerType,
+      triggerMaxWidth,
     } = this.props;
     const insideTriggerContent = this.isUsingDeprecatedAPI()
       ? children
@@ -303,10 +306,21 @@ class DropdownMenuStateless extends Component<
     if (!triggerProps.iconAfter && !triggerProps.iconBefore) {
       triggerProps.iconAfter = <ExpandIcon size="medium" label="" />;
     }
+
     return (
-      <Button {...defaultButtonProps} {...triggerProps}>
-        {insideTriggerContent}
-      </Button>
+      <React.Fragment>
+        {triggerMaxWidth ? (
+          <FieldTruncator triggerMaxWidth={triggerMaxWidth}>
+            <Button {...defaultButtonProps} {...triggerProps}>
+              {insideTriggerContent}
+            </Button>
+          </FieldTruncator>
+        ) : (
+          <Button {...defaultButtonProps} {...triggerProps}>
+            {insideTriggerContent}
+          </Button>
+        )}
+      </React.Fragment>
     );
   };
 
@@ -438,6 +452,7 @@ class DropdownMenuStateless extends Component<
       shouldAllowMultilineItems,
       shouldFitContainer,
       shouldFlip,
+      withDivider,
     } = this.props;
     const { id } = this.state;
     const isDeprecated = this.isUsingDeprecatedAPI();
@@ -481,7 +496,9 @@ class DropdownMenuStateless extends Component<
               shouldFitContainer={shouldFitContainer}
             >
               <DropdownItemClickManager onItemClicked={this.handleItemClicked}>
-                {this.renderDropdownItems()}
+                <Divider withDivider={withDivider}>
+                  {this.renderDropdownItems()}
+                </Divider>
               </DropdownItemClickManager>
             </WidthConstrainer>
           )}

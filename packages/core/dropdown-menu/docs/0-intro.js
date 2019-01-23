@@ -39,6 +39,15 @@ ${(
   />
 )}
 
+${(
+  <Example
+    packageName="@atlaskit/dropdown-menu"
+    Component={require('../examples/12-divided-dropdown-menu').default}
+    title="Dropdown Menu with Divider"
+    source={require('!!raw-loader!../examples/12-divided-dropdown-menu')}
+  />
+)}
+
 ${
   (
     // Note: DropdownItem props are the same as Item props.

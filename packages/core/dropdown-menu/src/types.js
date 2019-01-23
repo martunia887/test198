@@ -89,6 +89,8 @@ type DropdownMenuBaseProps = {
   triggerType: 'default' | 'button',
   /** Callback to know when the menu is correctly positioned after it is opened */
   onPositioned?: Function,
+  withDivider?: boolean,
+  triggerMaxWidth?: number,
 };
 
 export type OnOpenChangeArgs = {
