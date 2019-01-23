@@ -6,7 +6,7 @@ import DropdownMenu, { DropdownItemGroup, DropdownItem } from '../src';
 export default () => (
   <div style={{ padding: '100px 40px' }}>
     <DropdownMenu
-      trigger="Choices Choices Choices Choices Choices Choices Choices Choices Choices Choices Choices"
+      trigger="Choices"
       triggerType="button"
       shouldFlip={false}
       position="right middle"
