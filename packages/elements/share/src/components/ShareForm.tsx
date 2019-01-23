@@ -15,12 +15,15 @@ const LeftAlignmentContainer = styled.div`
 `;
 
 export type Props = {
-  title?: React.ReactNode;
+  capabilitiesInfoMessage?: React.ReactNode;
+  copyLink: string;
   loadOptions: LoadOptions;
+  onCommentChange?: (event: Event) => void;
   onLinkCopy?: (link: string) => void;
   onShareClick?: Function;
-  copyLink: string;
+  shouldShowCommentField?: boolean;
   submitButtonLabel?: React.ReactNode;
+  title?: React.ReactNode;
 };
 
 export const ShareForm: React.StatelessComponent<Props> = props => (
@@ -30,7 +33,9 @@ export const ShareForm: React.StatelessComponent<Props> = props => (
         <ShareHeader title={props.title} />
         <FormSection>
           <UserPickerField loadOptions={props.loadOptions} />
-          <CommentField />
+          {props.shouldShowCommentField && (
+            <CommentField onChange={props.onCommentChange} />
+          )}
         </FormSection>
         <FormFooter>
           <LeftAlignmentContainer>
@@ -52,4 +57,7 @@ export const ShareForm: React.StatelessComponent<Props> = props => (
 
 ShareForm.defaultProps = {
   onShareClick: () => {},
+  // It is false by default because we want the integrater
+  // to raise the awareness of turning it on, i.e. in Atlassian we have to check if the sites are in evaluation.
+  shouldShowCommentField: false,
 };

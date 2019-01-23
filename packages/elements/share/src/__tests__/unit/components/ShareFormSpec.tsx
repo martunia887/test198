@@ -1,6 +1,6 @@
 import Button from '@atlaskit/button';
 import Form, { FormFooter, FormSection } from '@atlaskit/form';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { CommentField } from '../../../components/CommentField';
@@ -39,7 +39,7 @@ describe('ShareForm', () => {
     const userPickerField = formSection.find(UserPickerField);
     expect(userPickerField).toHaveLength(1);
     expect(userPickerField.prop('loadOptions')).toBe(loadOptions);
-    expect(formSection.find(CommentField)).toHaveLength(1);
+    expect(formSection.find(CommentField)).toHaveLength(0);
 
     const footer = form.find(FormFooter);
     expect(footer).toHaveLength(1);
@@ -76,5 +76,22 @@ describe('ShareForm', () => {
     const footer = form.find(FormFooter);
     const button = footer.find(Button);
     expect(button.text()).toEqual('Invite');
+  });
+
+  describe('shouldShowCommentField prop', () => {
+    it('should only render CommentField if shouldShowCommentField prop is true', () => {
+      const loadOptions = jest.fn();
+      const onShareClick = jest.fn();
+      const wrapper = mount(
+        <ShareForm
+          copyLink="link"
+          loadOptions={loadOptions}
+          onShareClick={onShareClick}
+          title="some title"
+          shouldShowCommentField
+        />,
+      );
+      expect(wrapper.find(CommentField)).toHaveLength(1);
+    });
   });
 });
