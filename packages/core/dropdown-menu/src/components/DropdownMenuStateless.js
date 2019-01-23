@@ -21,8 +21,8 @@ import DropdownItemClickManager from './context/DropdownItemClickManager';
 import DropdownItemSelectionCache from './context/DropdownItemSelectionCache';
 import WidthConstrainer from '../styled/WidthConstrainer';
 import { KEY_DOWN, KEY_SPACE, KEY_ENTER } from '../util/keys';
-import Divider from '../styled/Divider.js';
-import { FieldTruncator } from '../styled/FieldTruncator.js';
+import Divider from '../styled/Divider';
+import { FieldTruncator } from '../styled/FieldTruncator';
 import type {
   DeprecatedItem,
   DeprecatedItemGroup,
