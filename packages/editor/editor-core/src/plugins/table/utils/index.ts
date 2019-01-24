@@ -8,6 +8,7 @@ export * from './column-controls';
 export * from './row-controls';
 export * from './fix-tables';
 export * from './initial-marks';
+export * from './dismis-typeahead';
 export {
   generateColgroup,
   renderColgroupFromNode,

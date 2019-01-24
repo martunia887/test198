@@ -28,6 +28,7 @@ import {
   EditorDisabledPluginState,
   pluginKey as editorDisabledPluginKey,
 } from '../../editor-disabled';
+import { dismissTypeAhead } from '../utils/dismis-typeahead';
 
 export interface CellViewProps {
   node: PmNode;
@@ -108,16 +109,14 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
     );
   }
   private isColumnTypeMenuOpen = (): boolean => {
+    const { columnIndex, view } = this.props;
     const pos = this.props.getPos();
-    if (pos) {
-      const { columnIndex, view } = this.props;
+    if (typeof columnIndex !== 'undefined' && pos) {
       const cell = findDomRefAtPos(
         pos,
         view.domAtPos.bind(view),
       ) as HTMLTableDataCellElement;
-      return (
-        typeof columnIndex !== 'undefined' && cell.cellIndex === columnIndex
-      );
+      return cell.cellIndex === columnIndex;
     }
     return false;
   };
@@ -125,23 +124,26 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
   private toggleContextualMenu = () => {
     const { state, dispatch } = this.props.view;
     toggleContextualMenu(state, dispatch);
+    dispatch(dismissTypeAhead(this.props.view.state.tr));
   };
 
   private toggleCellTypeMenu = (event: React.SyntheticEvent) => {
-    const { dispatch, state } = this.props.view;
+    const {
+      dispatch,
+      state: { tr },
+    } = this.props.view;
     const target = event.target as HTMLElement;
     const ref = closestElement(target, 'th') as HTMLTableDataCellElement;
     const columnIndex = ref ? ref.cellIndex : undefined;
     const targetCellPosition = this.props.getPos();
     if (targetCellPosition) {
-      dispatch(
-        state.tr.setMeta(columnTypesPluginKey, {
-          isMenuOpen: true,
-          targetCellPosition,
-          columnIndex,
-        }),
-      );
+      tr.setMeta(columnTypesPluginKey, {
+        isMenuOpen: true,
+        targetCellPosition,
+        columnIndex,
+      });
     }
+    dispatch(dismissTypeAhead(tr));
   };
 }
 

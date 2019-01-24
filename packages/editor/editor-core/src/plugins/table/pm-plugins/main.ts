@@ -38,6 +38,7 @@ import {
   fixTables,
   normalizeSelection,
   applyInitialMarks,
+  dismissTypeAhead,
 } from '../utils';
 import { TableCssClassName as ClassName } from '../types';
 
@@ -198,7 +199,9 @@ export const createPlugin = (
         return applyInitialMarks(fixTables(newState.tr));
       }
       if (transactions.find(tr => tr.selectionSet)) {
-        return applyInitialMarks(normalizeSelection(newState.tr));
+        return dismissTypeAhead(
+          applyInitialMarks(normalizeSelection(newState.tr)),
+        );
       }
     },
     view: (editorView: EditorView) => {
