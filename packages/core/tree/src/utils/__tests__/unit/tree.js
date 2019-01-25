@@ -6,7 +6,10 @@ import {
   mutateTree,
   getTreePosition,
   moveItemOnTree,
+  addItemToTree,
 } from '../../tree';
+import { type TreeItem } from '../../../types';
+
 import { treeWithThreeLeaves } from '../../../../mockdata/treeWithThreeLeaves';
 import { treeWithTwoBranches } from '../../../../mockdata/treeWithTwoBranches';
 
@@ -264,6 +267,23 @@ describe('@atlaskit/tree - utils/tree', () => {
       expect(newPages.items['1-1'].children[0]).toBe('1-1-2');
       expect(newPages.items['1-2-1'].children.length).toBe(1);
       expect(newPages.items['1-2-1'].children[0]).toBe('1-1-1');
+    });
+  });
+
+  describe('#addItemToTree', () => {
+    it('should add new item to the tree', () => {
+      const newItem: TreeItem = {
+        id: 'new',
+        children: [],
+      };
+      const newPages = addItemToTree(
+        treeWithTwoBranches,
+        { parentId: '1', index: 0 },
+        newItem,
+      );
+      expect(newPages.rootId).toBe(treeWithTwoBranches.rootId);
+      expect(newPages.items['new']).toEqual(newItem);
+      expect(newPages.items['1'].children).toEqual(['new', '1-1', '1-2']);
     });
   });
 });

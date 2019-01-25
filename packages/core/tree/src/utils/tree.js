@@ -122,13 +122,14 @@ const hasLoadedChildren = (item: TreeItem): boolean =>
 
 const isLeafItem = (item: TreeItem): boolean => !item.hasChildren;
 
-const removeItemFromTree = (
+export const removeItemFromTree = (
   tree: TreeData,
   position: TreeSourcePosition,
 ): { tree: TreeData, itemRemoved: TreeItem } => {
   const sourceParent: TreeItem = tree.items[position.parentId];
   const newSourceChildren = [...sourceParent.children];
-  const itemRemoved: TreeItem = newSourceChildren.splice(position.index, 1)[0];
+  const removedId = newSourceChildren.splice(position.index, 1)[0];
+  const itemRemoved: TreeItem = tree.items[removedId];
   const newTree = mutateTree(tree, position.parentId, {
     children: newSourceChildren,
     hasChildren: newSourceChildren.length > 0,
@@ -140,21 +141,27 @@ const removeItemFromTree = (
   };
 };
 
-const addItemToTree = (
+export const addItemToTree = (
   tree: TreeData,
   position: TreeDestinationPosition,
   item: TreeItem,
 ): TreeData => {
-  const destinationParent: TreeItem = tree.items[position.parentId];
+  const newTree: TreeData = {
+    rootId: tree.rootId,
+    items: tree.items[item.id]
+      ? tree.items
+      : { ...tree.items, [item.id]: item },
+  };
+  const destinationParent: TreeItem = newTree.items[position.parentId];
   const newDestinationChildren = [...destinationParent.children];
   if (typeof position.index === 'undefined') {
     if (hasLoadedChildren(destinationParent) || isLeafItem(destinationParent)) {
-      newDestinationChildren.push(item);
+      newDestinationChildren.push(item.id);
     }
   } else {
-    newDestinationChildren.splice(position.index, 0, item);
+    newDestinationChildren.splice(position.index, 0, item.id);
   }
-  return mutateTree(tree, position.parentId, {
+  return mutateTree(newTree, position.parentId, {
     children: newDestinationChildren,
     hasChildren: true,
   });

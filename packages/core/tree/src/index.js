@@ -13,4 +13,9 @@ export type {
   TreeDestinationPosition,
 } from './types';
 
-export { mutateTree, moveItemOnTree } from './utils/tree';
+export {
+  mutateTree,
+  moveItemOnTree,
+  addItemToTree,
+  removeItemFromTree,
+} from './utils/tree';
