@@ -1,0 +1,1 @@
+- Exposing addItemToTree and removeItemFromTree util functions
