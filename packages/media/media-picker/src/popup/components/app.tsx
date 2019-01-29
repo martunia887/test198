@@ -253,11 +253,12 @@ export class App extends Component<AppProps, AppState> {
   private renderCurrentView(selectedServiceName: ServiceName): JSX.Element {
     if (selectedServiceName === 'upload') {
       // We need to create a new context since Cards in recents view need user auth
-      const { userContext } = this.props;
+      const { userContext, tenantContext } = this.props;
       return (
         <UploadView
           mpBrowser={this.mpBrowser}
           context={userContext}
+          tenantContext={tenantContext}
           recentsCollection={RECENTS_COLLECTION}
         />
       );

@@ -15,6 +15,7 @@ import { NewUploadServiceImpl } from '../service/newUploadServiceImpl';
 
 export interface LocalUploadConfig {
   uploadParams: UploadParams; // This is tenant upload params
+  storageUsageKey?: string;
   shouldCopyFileToRecents?: boolean;
 }
 

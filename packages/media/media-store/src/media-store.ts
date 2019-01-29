@@ -350,6 +350,16 @@ export class MediaStore {
     }).then(mapResponseToJson);
   }
 
+  getLimits(
+    key: string,
+    collectionName?: string,
+  ): Promise<MediaStoreResponse<LimitsPayload>> {
+    return this.request('/limits', {
+      params: { key },
+      authContext: { collectionName },
+    }).then(mapResponseToJson);
+  }
+
   async request(
     path: string,
     options: MediaStoreRequestOptions = {
@@ -376,6 +386,14 @@ export class MediaStore {
   }
 }
 
+export interface LimitsPayload {
+  displayName: string;
+  total: {
+    used: number;
+    allowed: number;
+  };
+  maxFileSize: number;
+}
 export interface FileItem {
   id: string;
   type: 'file';

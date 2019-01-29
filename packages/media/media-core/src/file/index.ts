@@ -18,7 +18,6 @@ import {
 } from '@atlaskit/media-store';
 import * as isValidId from 'uuid-validate';
 import {
-  FilePreview,
   FileState,
   GetFileOptions,
   mapMediaItemToFileState,
@@ -265,22 +264,12 @@ export class FileFetcherImpl implements FileFetcher {
 
     const id = uploadableFileUpfrontIds.id;
     const occurrenceKey = uploadableFileUpfrontIds.occurrenceKey;
-
-    let mimeType = '';
-    let size = 0;
-    let preview: FilePreview | undefined;
-    // TODO [MSW-796]: get file size for base64
+    const { size = 0, type: mimeType } = content;
+    const preview = {
+      value: content,
+    };
     const mediaType = getMediaTypeFromUploadableFile(file);
     const subject = new ReplaySubject<FileState>(1);
-
-    if (content instanceof Blob) {
-      size = content.size;
-      mimeType = content.type;
-      preview = {
-        value: content,
-      };
-    }
-
     const stateBase = {
       name,
       size,

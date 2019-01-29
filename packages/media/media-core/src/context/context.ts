@@ -3,6 +3,7 @@ import {
   ContextConfig,
   MediaStoreGetFileImageParams,
   ImageMetadata,
+  LimitsPayload,
 } from '@atlaskit/media-store';
 import { CollectionFetcher } from '../collection';
 import { FileFetcherImpl, FileFetcher } from '../file';
@@ -21,6 +22,7 @@ export interface Context {
     id: string,
     params?: MediaStoreGetFileImageParams,
   ): Promise<string>;
+  getLimits(key: string, collectionName?: string): Promise<LimitsPayload>;
 
   readonly collection: CollectionFetcher;
   readonly file: FileFetcher;
@@ -66,5 +68,23 @@ class ContextImpl implements Context {
     params?: MediaStoreGetFileImageParams,
   ): Promise<ImageMetadata> {
     return (await this.mediaStore.getImageMetadata(id, params)).metadata;
+  }
+
+  async getLimits(
+    key: string,
+    collectionName?: string,
+  ): Promise<LimitsPayload> {
+    if (key === 'free-plan-key') {
+      return Promise.resolve({
+        displayName: '',
+        total: {
+          used: 0,
+          allowed: 0,
+        },
+        maxFileSize: 20000000,
+      });
+    }
+
+    return (await this.mediaStore.getLimits(key, collectionName)).data;
   }
 }

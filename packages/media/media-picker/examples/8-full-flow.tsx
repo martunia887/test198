@@ -12,11 +12,11 @@ import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
 import { MediaPicker, UploadPreviewUpdateEventPayload } from '../src';
 
 const context = createUploadContext();
-
 const popup = MediaPicker('popup', context, {
   uploadParams: {
     collection: defaultCollectionName,
   },
+  storageUsageKey: 'free-plan-key',
 });
 const dataSourceOptions = [
   { label: 'List', value: 'list' },

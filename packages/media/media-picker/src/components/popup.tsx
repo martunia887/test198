@@ -22,6 +22,7 @@ export interface PopupConfig {
   readonly uploadParams: UploadParams; // Tenant upload params
   readonly proxyReactContext?: AppProxyReactContext;
   readonly singleSelect?: boolean;
+  readonly storageUsageKey?: string;
 }
 
 export interface PopupConstructor {
@@ -50,6 +51,7 @@ export class Popup extends UploadComponent<PopupUploadEventPayloadMap>
       uploadParams, // tenant
       proxyReactContext,
       singleSelect,
+      storageUsageKey,
     }: PopupConfig,
   ) {
     super();
@@ -75,6 +77,7 @@ export class Popup extends UploadComponent<PopupUploadEventPayloadMap>
       proxyReactContext,
       singleSelect,
       uploadParams: tenantUploadParams,
+      storageUsageKey,
     });
 
     this.tenantUploadParams = tenantUploadParams;

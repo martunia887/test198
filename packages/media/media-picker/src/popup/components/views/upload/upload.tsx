@@ -20,6 +20,7 @@ import Flag, { FlagGroup } from '@atlaskit/flag';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
 import TrashIcon from '@atlaskit/icon/glyph/trash';
 import EditorInfoIcon from '@atlaskit/icon/glyph/error';
+import WarningIcon from '@atlaskit/icon/glyph/warning';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import { messages, InfiniteScroll } from '@atlaskit/media-ui';
@@ -49,6 +50,7 @@ import {
   CardsWrapper,
   RecentUploadsTitle,
   CardWrapper,
+  MaxFileSizeWrapper,
 } from './styled';
 import { RECENTS_COLLECTION } from '../../../config';
 import { removeFileFromRecents } from '../../../actions/removeFileFromRecents';
@@ -77,6 +79,7 @@ const cardDimension = { width: 162, height: 108 };
 export interface UploadViewOwnProps {
   readonly mpBrowser: Browser;
   readonly context: Context;
+  readonly tenantContext: Context;
   readonly recentsCollection: string;
 }
 
@@ -85,6 +88,7 @@ export interface UploadViewStateProps {
   readonly recents: Recents;
   readonly uploads: LocalUploads;
   readonly selectedItems: SelectedItem[];
+  readonly storageUsageKey?: string;
 }
 
 export interface UploadViewDispatchProps {
@@ -124,6 +128,13 @@ export interface UploadViewState {
     occurrenceKey: string;
     userFileId?: string;
   };
+  readonly maxFileSize: number;
+}
+
+export interface CardDetails {
+  key: string;
+  el: JSX.Element;
+  size: number;
 }
 
 export class StatelessUploadView extends Component<
@@ -135,7 +146,22 @@ export class StatelessUploadView extends Component<
     isWebGLWarningFlagVisible: false,
     shouldDismissWebGLWarningFlag: false,
     isLoadingNextPage: false,
+    maxFileSize: Infinity,
   };
+
+  async componentDidMount() {
+    const { tenantContext, storageUsageKey } = this.props;
+
+    if (storageUsageKey) {
+      // TODO: should we do this everytime?
+      const { maxFileSize } = await tenantContext.getLimits(storageUsageKey);
+      if (maxFileSize) {
+        this.setState({
+          maxFileSize,
+        });
+      }
+    }
+  }
 
   render() {
     const { isLoading, mpBrowser } = this.props;
@@ -294,16 +320,31 @@ export class StatelessUploadView extends Component<
   private renderCards() {
     const recentFilesCards = this.recentFilesCards();
     const uploadingFilesCards = this.uploadingFilesCards();
+    const { maxFileSize } = this.state;
     return uploadingFilesCards
       .concat(recentFilesCards)
-      .map(({ key, el: card }) => (
-        <CardWrapper tabIndex={0} className="e2e-recent-upload-card" key={key}>
-          {card}
-        </CardWrapper>
-      ));
+      .map(({ key, el: card, size }) => {
+        const maxFileSizeReached = size > maxFileSize;
+
+        return (
+          <CardWrapper
+            maxFileSizeReached={maxFileSizeReached}
+            tabIndex={0}
+            className="e2e-recent-upload-card"
+            key={key}
+          >
+            {maxFileSizeReached && (
+              <MaxFileSizeWrapper>
+                <WarningIcon size="large" label="warning" />
+              </MaxFileSizeWrapper>
+            )}
+            {card}
+          </CardWrapper>
+        );
+      });
   }
 
-  private uploadingFilesCards(): { key: string; el: JSX.Element }[] {
+  private uploadingFilesCards(): CardDetails[] {
     const { uploads, onFileClick, context } = this.props;
     const itemsKeys = Object.keys(uploads);
     itemsKeys.sort((a, b) => {
@@ -357,6 +398,7 @@ export class StatelessUploadView extends Component<
       };
 
       return {
+        size,
         key: id,
         el: (
           <Card
@@ -373,7 +415,7 @@ export class StatelessUploadView extends Component<
     });
   }
 
-  private recentFilesCards(): { key: string; el: JSX.Element }[] {
+  private recentFilesCards(): CardDetails[] {
     const {
       context,
       recents,
@@ -446,6 +488,7 @@ export class StatelessUploadView extends Component<
       }
 
       return {
+        size: details.size,
         key: `${occurrenceKey}-${id}`,
         el: (
           <Card
@@ -486,6 +529,7 @@ const mapStateToProps = (state: State): UploadViewStateProps => ({
   recents: state.recents,
   uploads: state.uploads,
   selectedItems: state.selectedItems,
+  storageUsageKey: state.config.storageUsageKey,
 });
 
 const mapDispatchToProps = (
