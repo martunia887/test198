@@ -89,6 +89,12 @@ export class ConfluenceQuickSearchContainer extends React.Component<
     const referrerId =
       referralContextIdentifiers && referralContextIdentifiers.searchReferrerId;
 
+    if (referralContextIdentifiers) {
+      console.log(referralContextIdentifiers.currentContentId);
+    } else {
+      console.log('No content id found');
+    }
+
     const results = await crossProductSearchClient.search(
       query,
       { sessionId, referrerId },

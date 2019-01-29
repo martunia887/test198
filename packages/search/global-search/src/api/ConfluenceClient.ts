@@ -14,9 +14,11 @@ import {
 } from '@atlaskit/util-service-support';
 import * as URI from 'urijs';
 import * as unescapeHtml from 'unescape';
+import { type } from 'os';
 
 const RECENT_PAGES_PATH: string = 'rest/recentlyviewed/1.0/recent';
 const RECENT_SPACE_PATH: string = 'rest/recentlyviewed/1.0/recent/spaces';
+const PAGE_INFO_PATH: string = 'rest/api/content'
 const QUICK_NAV_PATH: string = 'rest/quicknav/1/search';
 
 const QUICKNAV_CLASSNAME_PERSON = 'content-type-userinfo';
@@ -24,6 +26,7 @@ const QUICKNAV_CLASSNAME_PERSON = 'content-type-userinfo';
 export interface ConfluenceClient {
   getRecentItems(searchSessionId: string): Promise<Result[]>;
   getRecentSpaces(searchSessionId: string): Promise<Result[]>;
+  getCurrentSpaceDetails(pageId: string): Promise<RecentSpace>;
   searchPeopleInQuickNav(
     query: string,
     searchSessionId: string,
@@ -43,6 +46,12 @@ export interface RecentPage {
   type: string;
   url: string;
   iconClass: string;
+}
+
+export interface PageDetails {
+  id: string,
+  title: string,
+  space: RecentSpace
 }
 
 export interface RecentSpace {
@@ -107,6 +116,28 @@ export default class ConfluenceClientImpl implements ConfluenceClient {
     return recentSpaces.map(recentSpace =>
       recentSpaceToResult(recentSpace, baseUrl, searchSessionId),
     );
+  }
+
+  public async getCurrentSpaceDetails(pageId: string): Promise<RecentSpace> {
+    const currentSpaceDetails = await this.createPageDetailsPromise(
+      pageId,
+    );
+
+    return currentSpaceDetails.space;
+  }
+
+
+  private createPageDetailsPromise(
+    pageId: string,
+  ): Promise<PageDetails> {
+    const options: RequestServiceOptions = {
+      path: PAGE_INFO_PATH + '/' + pageId,
+      queryParams: {
+        expand: 'space'
+      },
+    };
+
+    return utils.requestService(this.serviceConfig, options);
   }
 
   private createQuickNavRequestPromise(

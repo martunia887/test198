@@ -1,11 +1,8 @@
 import * as React from 'react';
 import FieldBase from '@atlaskit/field-base';
-import {
-  SearchBox,
-  SearchFieldBaseInner,
-  SearchInner,
-  SearchInput,
-} from './styled';
+import { SearchBox, SearchFieldBaseInner, SearchInner } from './styled';
+import SearchInputWithLabels from './SearchInputWithLabels';
+import { FilterItem } from './types';
 
 const controlKeys = ['ArrowUp', 'ArrowDown', 'Enter'];
 
@@ -20,6 +17,10 @@ type Props = {
   onInput?: (event: React.FormEvent<HTMLInputElement>) => void;
   /** Function to be called when the user hits the escape key.  */
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  /** Filtering labels to apply to the search */
+  labels?: FilterItem[];
+  /** Called when a filter label is updated */
+  onLabelsUpdated?: (newLabels: FilterItem[]) => void;
   /** Placeholder text for search field. */
   placeholder?: string;
   /** Current value of search field. */
@@ -61,14 +62,15 @@ export default class Search extends React.PureComponent<Props, State> {
     }
   };
 
-  setInputRef = (ref: React.Ref<any>) => {
-    this.inputRef = ref;
-  };
-
-  inputRef: React.Ref<any>;
-
   render() {
-    const { children, onBlur, placeholder, isLoading } = this.props;
+    const {
+      children,
+      onBlur,
+      placeholder,
+      isLoading,
+      labels,
+      onLabelsUpdated,
+    } = this.props;
     const { value } = this.state;
 
     return (
@@ -81,15 +83,13 @@ export default class Search extends React.PureComponent<Props, State> {
             isLoading={isLoading}
           >
             <SearchFieldBaseInner>
-              <SearchInput
-                autoFocus
-                innerRef={this.setInputRef}
+              <SearchInputWithLabels
                 onBlur={onBlur}
                 onInput={this.onInput}
                 placeholder={placeholder}
-                spellCheck={false}
-                type="text"
                 value={value}
+                labels={labels}
+                onLabelsUpdated={onLabelsUpdated}
                 onKeyDown={this.onInputKeyDown}
               />
             </SearchFieldBaseInner>

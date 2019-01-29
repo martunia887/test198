@@ -39,6 +39,7 @@
     "@atlaskit/docs": "^6.0.1",
     "@atlaskit/drawer": "^2.7.1",
     "@atlaskit/navigation": "^33.3.9",
+    "@atlaskit/select": "^6.1.19",
     "enzyme": "^3.7.0",
     "prop-types": "^15.5.10",
     "react": "^16.4.0",
