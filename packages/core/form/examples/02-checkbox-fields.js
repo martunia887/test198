@@ -18,10 +18,20 @@ export default () => (
       {({ formProps }) => (
         <form {...formProps}>
           <Fieldset legend="Products">
-            <CheckboxField name="product" value="jira">
+            <CheckboxField
+              label="something"
+              id="foo"
+              name="product"
+              value="jira"
+            >
               {({ fieldProps }) => <Checkbox {...fieldProps} label="Jira" />}
             </CheckboxField>
-            <CheckboxField name="product" value="confluence">
+            <CheckboxField
+              label="something1"
+              id="foo1"
+              name="product"
+              value="confluence"
+            >
               {({ fieldProps }) => (
                 <Checkbox {...fieldProps} label="Confluence" />
               )}

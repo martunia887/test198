@@ -75,6 +75,10 @@ describe(name, () => {
       describe('value prop', () => {
         expectPropReflectedToInput('value', 'value', 'value-val');
       });
+
+      describe('id prop', () => {
+        expectPropReflectedToInput('id', 'id', 'radio-foo');
+      });
     });
   });
 });

@@ -84,6 +84,13 @@ describe(name, () => {
       expect(element.checked).toBe(false);
     });
   });
+
+  describe('<Checkbox id/>', () => {
+    it('should pass down the id to the html checkbox', () => {
+      const cb = mountCheckbox({ id: 'checkbox-foo' });
+      expect(cb.find('input[type="checkbox"]').prop('id')).toBe('checkbox-foo');
+    });
+  });
 });
 
 describe('CheckboxWithAnalytics', () => {

@@ -148,6 +148,13 @@ describe('TextArea input focus', () => {
   });
 });
 
+describe('id prop', () => {
+  it('should pass down the id prop to input', () => {
+    const wrapper = mount(<TextArea id="text-area-foo" />);
+    expect(wrapper.find('textarea').prop('id')).toBe('text-area-foo');
+  });
+});
+
 describe('TextAreaWithAnalytics', () => {
   beforeEach(() => {
     jest.spyOn(global.console, 'warn');
