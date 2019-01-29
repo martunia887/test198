@@ -308,7 +308,7 @@ export default class PopupSelect extends PureComponent<Props, State> {
         <Reference>
           {({ ref }) => (
             <NodeResolver innerRef={this.resolveTargetRef(ref)}>
-              {target}
+              {typeof target === 'function' ? target(isOpen) : target}
             </NodeResolver>
           )}
         </Reference>
