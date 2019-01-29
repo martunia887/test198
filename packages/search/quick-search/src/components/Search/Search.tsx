@@ -6,6 +6,8 @@ import {
   SearchInner,
   SearchInput,
 } from './styled';
+import SearchInputWithLabels from './SearchInputWithLabels';
+import { FilterItem } from './types';
 
 const controlKeys = ['ArrowUp', 'ArrowDown', 'Enter'];
 
@@ -20,6 +22,10 @@ type Props = {
   onInput?: (event: React.FormEvent<HTMLInputElement>) => void;
   /** Function to be called when the user hits the escape key.  */
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  /** Filtering labels to apply to the search */
+  labels?: FilterItem[];
+  /** Called when a filter label is updated */
+  onLabelsUpdated?: (newLabels: FilterItem[]) => void;
   /** Placeholder text for search field. */
   placeholder?: string;
   /** Current value of search field. */
@@ -67,9 +73,41 @@ export default class Search extends React.PureComponent<Props, State> {
 
   inputRef: React.Ref<any>;
 
-  render() {
-    const { children, onBlur, placeholder, isLoading } = this.props;
+  selectInputComponent = () => {
+    const { labels, onLabelsUpdated, onBlur, placeholder } = this.props;
     const { value } = this.state;
+
+    if (labels && onLabelsUpdated) {
+      return (
+        <SearchInputWithLabels
+          onBlur={onBlur}
+          onInput={this.onInput}
+          placeholder={placeholder}
+          value={value}
+          labels={labels}
+          onLabelsUpdated={onLabelsUpdated}
+          onKeyDown={this.onInputKeyDown}
+        />
+      );
+    }
+
+    return (
+      <SearchInput
+        autoFocus
+        innerRef={this.setInputRef}
+        onBlur={onBlur}
+        onInput={this.onInput}
+        placeholder={placeholder}
+        spellCheck={false}
+        type="text"
+        value={value}
+        onKeyDown={this.onInputKeyDown}
+      />
+    );
+  };
+
+  render() {
+    const { children, isLoading } = this.props;
 
     return (
       <SearchInner>
@@ -81,17 +119,7 @@ export default class Search extends React.PureComponent<Props, State> {
             isLoading={isLoading}
           >
             <SearchFieldBaseInner>
-              <SearchInput
-                autoFocus
-                innerRef={this.setInputRef}
-                onBlur={onBlur}
-                onInput={this.onInput}
-                placeholder={placeholder}
-                spellCheck={false}
-                type="text"
-                value={value}
-                onKeyDown={this.onInputKeyDown}
-              />
+              {this.selectInputComponent()}
             </SearchFieldBaseInner>
           </FieldBase>
         </SearchBox>

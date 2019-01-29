@@ -6,6 +6,7 @@ import {
   ContainerResult,
   PersonResult,
   ObjectResult,
+  quickSearchFilterItem,
 } from '../../src';
 
 type DataShape = {
@@ -71,23 +72,27 @@ const store: Store = {};
 
 type Props = {
   fakeNetworkLatency?: number;
+  labels: quickSearchFilterItem[];
 };
 
 type State = {
   query: string;
   results: DataShape[];
   isLoading: boolean;
+  labels: quickSearchFilterItem[];
 };
 
 export default class BasicQuickSearch extends React.Component<Props, State> {
   static defaultProps = {
     fakeNetworkLatency: 0,
+    labels: [],
   };
 
   state = {
     query: store.query || '',
     results: searchData(''),
     isLoading: false,
+    labels: this.props.labels,
   };
 
   searchTimeoutId: any;
@@ -116,6 +121,12 @@ export default class BasicQuickSearch extends React.Component<Props, State> {
     }, this.props.fakeNetworkLatency);
   };
 
+  onLabelsUpdated = newLabels => {
+    this.setState({
+      labels: newLabels,
+    });
+  };
+
   render() {
     return (
       <QuickSearch
@@ -125,6 +136,8 @@ export default class BasicQuickSearch extends React.Component<Props, State> {
         }}
         onSearchSubmit={() => console.log('onSearchSubmit', this.state.query)}
         value={this.state.query}
+        labels={this.state.labels}
+        onLabelsUpdated={this.onLabelsUpdated}
       >
         <div style={{ paddingLeft: '10px' }}>
           {mapResultsDataToComponents(this.state.results)}

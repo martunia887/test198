@@ -29,4 +29,12 @@ describe('Search', () => {
         .prop('isLoading'),
     ).toBe(false);
   });
+
+  it('should fall back to a basic input if labels are not specified', () => {
+    expect(
+      mount(
+        <Search onInput={() => {}} onKeyDown={() => {}} isLoading={false} />,
+      ).contains('SearchInputWithLabels'),
+    ).toBeFalsy();
+  });
 });

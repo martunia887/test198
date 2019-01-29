@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { withAnalytics, FireAnalyticsEvent } from '@atlaskit/analytics';
 import { ResultData, SelectedResultId, ResultId } from './Results/types';
+import { FilterItem } from './Search/types';
 import AkSearch from './Search/Search';
 import {
   ResultContext,
@@ -99,6 +100,10 @@ export type Props = {
   placeholder?: string;
   /** Value of the search input field */
   value?: string;
+  /** Filtering labels to apply to the search */
+  labels?: FilterItem[];
+  /** Called when a filter label is updated */
+  onLabelsUpdated?: (newLabels: FilterItem[]) => void;
   /** Corresponds to the `resultId` of the selected result */
   selectedResultId?: SelectedResultId;
   /** Optional way of being notified when the selected result changes due to keyboard nav */
@@ -417,6 +422,8 @@ export class QuickSearch extends React.Component<Props, State> {
         onKeyDown={this.handleSearchKeyDown}
         placeholder={this.props.placeholder}
         value={this.props.value}
+        labels={this.props.labels}
+        onLabelsUpdated={this.props.onLabelsUpdated}
         ref={this.setSearchInputRef}
       >
         <ResultContext.Provider value={this.state.context}>
