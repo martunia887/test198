@@ -1,5 +1,5 @@
 import { Context } from '@atlaskit/media-core';
-import { MediaCollectionItem } from '@atlaskit/media-store';
+import { MediaCollectionItem, LimitsPayload } from '@atlaskit/media-store';
 import { Subscription } from 'rxjs/Subscription';
 import { LocalUploads } from './local-upload';
 
@@ -40,6 +40,7 @@ export interface State {
   readonly collectionItemsSubscription?: Subscription;
   readonly onCancelUpload: CancelUploadHandler;
   readonly config: Partial<PopupConfig>;
+  readonly storageLimits: LimitsPayload;
   readonly deferredIdUpfronts: {
     [id: string]: { resolver: (id: string) => void; rejecter: Function };
   };
@@ -149,6 +150,7 @@ export interface ServiceFile {
 
 export interface SelectedItem extends ServiceFile {
   readonly serviceName: ServiceName;
+  readonly maxFileSizeReached?: boolean; // TODO: check if we need this at all
   readonly accountId?: string;
 }
 

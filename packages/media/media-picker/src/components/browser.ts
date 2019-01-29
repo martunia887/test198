@@ -37,6 +37,11 @@ export class Browser extends LocalUploadComponent {
       );
     }
 
+    if (browserConfig.storageUsageKey) {
+      // TODO: ask for context.getLimits
+      // set maxlength attr
+    }
+
     // IE11 hack - click will not execute if input has no parent
     // WebDriver hack - click will not execute if input isn't in the document
     document.body.appendChild(this.browseElement);

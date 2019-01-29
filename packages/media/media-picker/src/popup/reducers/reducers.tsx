@@ -38,6 +38,7 @@ import startApp from './startApp';
 import setUpfrontIdDeferred from './setUpfrontIdDeferred';
 import saveCollectionItemsSubscription from './saveCollectionItemsSubscription';
 import removeFileFromRecents from './removeFileFromRecents';
+import { getStorageLimitsFullfilled } from './storageLimits';
 
 const reducers = combineReducers([
   fileClick,
@@ -76,6 +77,7 @@ const reducers = combineReducers([
   startApp,
   setUpfrontIdDeferred,
   saveCollectionItemsSubscription,
+  getStorageLimitsFullfilled,
 ]);
 
 function combineReducers(reducers: any) {

@@ -153,7 +153,7 @@ export class StatelessUploadView extends Component<
     const { tenantContext, storageUsageKey } = this.props;
 
     if (storageUsageKey) {
-      // TODO: should we do this everytime?
+      // TODO: remove for here and just use store.storageLimits
       const { maxFileSize } = await tenantContext.getLimits(storageUsageKey);
       if (maxFileSize) {
         this.setState({
@@ -328,7 +328,6 @@ export class StatelessUploadView extends Component<
 
         return (
           <CardWrapper
-            maxFileSizeReached={maxFileSizeReached}
             tabIndex={0}
             className="e2e-recent-upload-card"
             key={key}
@@ -336,6 +335,7 @@ export class StatelessUploadView extends Component<
             {maxFileSizeReached && (
               <MaxFileSizeWrapper>
                 <WarningIcon size="large" label="warning" />
+                File exceeds size limit
               </MaxFileSizeWrapper>
             )}
             {card}
@@ -345,18 +345,18 @@ export class StatelessUploadView extends Component<
   }
 
   private uploadingFilesCards(): CardDetails[] {
-    const { uploads, onFileClick, context } = this.props;
+    const { uploads, onFileClick, context, selectedItems } = this.props;
     const itemsKeys = Object.keys(uploads);
     itemsKeys.sort((a, b) => {
       return uploads[b].index - uploads[a].index;
     });
 
-    const selectedUploadIds = this.props.selectedItems
+    const selectedUploadIds = selectedItems
       .filter(item => item.serviceName === 'upload')
       .map(item => item.id);
 
     return itemsKeys.map(key => {
-      const item = this.props.uploads[key];
+      const item = uploads[key];
       const { file } = item;
       const mediaType = getMediaTypeFromMimeType(file.metadata.mimeType);
       const fileMetadata: LocalUploadFileMetadata = {

@@ -31,6 +31,7 @@ import sendUploadEventMiddleware from '../popup/middleware/sendUploadEvent';
 import { PopupConfig, PopupUploadEventEmitter } from '../components/popup';
 import analyticsProcessing from '../popup/middleware/analyticsProcessing';
 import { removeFileFromRecents } from '../popup/middleware/removeFileFromRecents';
+import { getStorageLimits } from '../popup/middleware/getStorageLimits';
 
 export default (
   eventEmitter: PopupUploadEventEmitter,
@@ -58,6 +59,7 @@ export default (
         analyticsProcessing as Middleware,
         startAppMiddleware() as Middleware,
         getFilesInRecents() as Middleware,
+        getStorageLimits() as Middleware,
         changeService as Middleware,
         changeAccount as Middleware,
         changeCloudAccountFolderMiddleware(fetcher) as Middleware,

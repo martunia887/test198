@@ -81,24 +81,6 @@ export const CardWrapper = styled.div`
   outline: none;
   position: relative;
 
-  /* ${({ maxFileSizeReached }: CardWrapperProps) => {
-    if (maxFileSizeReached) {
-      return `
-        &:before {
-          content: ' ';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-          background: rgba(0, 0, 0, 0.5);
-        }
-      `;
-    }
-    return '';
-  }} */
-
   /* Cards are displayed in rows of 4, line up last card with edge of dropzone border */
   &:nth-child(4n) {
     margin-right: 0;
@@ -132,6 +114,7 @@ export const MaxFileSizeWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   color: red;
   border-radius: 3px;
 `;

@@ -65,7 +65,8 @@ export interface AppStateProps {
   readonly isVisible: boolean;
   readonly tenantContext: Context;
   readonly userContext: Context;
-  readonly config?: Partial<PopupConfig>;
+  readonly config: Partial<PopupConfig>;
+  readonly storageUsageKey?: string;
 }
 
 export interface AppDispatchProps {

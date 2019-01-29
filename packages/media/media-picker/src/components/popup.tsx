@@ -7,6 +7,7 @@ import App, { AppProxyReactContext } from '../popup/components/app';
 import { cancelUpload } from '../popup/actions/cancelUpload';
 import { showPopup } from '../popup/actions/showPopup';
 import { resetView } from '../popup/actions/resetView';
+import { getStorageLimits } from '../popup/actions/getStorageLimits';
 import { getFilesInRecents } from '../popup/actions/getFilesInRecents';
 import { State } from '../popup/domain';
 import { hidePopup } from '../popup/actions/hidePopup';
@@ -99,6 +100,7 @@ export class Popup extends UploadComponent<PopupUploadEventPayloadMap>
     dispatch(resetView());
     dispatch(getFilesInRecents());
     dispatch(showPopup());
+    dispatch(getStorageLimits());
   }
 
   public async cancel(

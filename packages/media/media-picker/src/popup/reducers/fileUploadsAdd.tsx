@@ -5,7 +5,7 @@ import { LocalUpload, State, SelectedItem } from '../domain';
 
 export default function fileUploadsAdd(state: State, action: Action): State {
   if (isFileUploadsStartAction(action)) {
-    const { uploads, selectedItems, lastUploadIndex } = state;
+    const { uploads, selectedItems, lastUploadIndex, storageLimits } = state;
 
     const files = action.files;
     const newUploads: { [id: string]: LocalUpload } = {};
@@ -44,7 +44,6 @@ export default function fileUploadsAdd(state: State, action: Action): State {
         }
       },
     );
-
     const newSelectedItems: SelectedItem[] = files.map(
       ({ id, name, type, size, upfrontId, occurrenceKey }) =>
         ({
@@ -57,6 +56,7 @@ export default function fileUploadsAdd(state: State, action: Action): State {
           parentId: '',
           size,
           serviceName: 'upload',
+          maxFileSizeReached: size > storageLimits.maxFileSize,
         } as SelectedItem),
     );
 
