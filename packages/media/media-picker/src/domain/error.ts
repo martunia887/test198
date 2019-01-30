@@ -6,7 +6,8 @@ export type MediaErrorName =
   | 'token_source_empty'
   | 'upload_fail'
   | 'user_token_fetch_fail'
-  | 'remote_upload_fail';
+  | 'remote_upload_fail'
+  | 'file_size_exceeded';
 
 export type MediaError = {
   readonly fileId?: string;

@@ -4,6 +4,8 @@ import { LocalUploadComponent, LocalUploadConfig } from '../localUpload';
 import { whenDomReady } from '../../util/documentReady';
 import dropzoneUI from './dropzoneUI';
 import { UploadEventPayloadMap } from '../..';
+import { LimitsPayload } from '@atlaskit/media-store';
+import { MediaError } from '../../domain/error';
 
 export interface DropzoneReactContext {
   intl?: InjectedIntl;
@@ -45,7 +47,8 @@ export class Dropzone extends LocalUploadComponent<
 
   constructor(context: Context, config: DropzoneConfig = { uploadParams: {} }) {
     super(context, config);
-    const { container, headless, proxyReactContext, storageUsageKey } = config;
+    const { container, headless, proxyReactContext } = config;
+
     this.container = container || document.body;
     this.headless = headless || false;
     this.uiActive = false;
@@ -73,15 +76,30 @@ export class Dropzone extends LocalUploadComponent<
       return;
     }
 
+    const maxFileSize = this.storageLimits
+      ? this.storageLimits.maxFileSize
+      : Infinity;
     dragEvent.preventDefault();
     dragEvent.stopPropagation();
     this.onDrop(dragEvent);
 
-    const filesArray = Array.from(dragEvent.dataTransfer.files);
-    // TODO: remove files bigger than limit
+    const droppedFiles = Array.from(dragEvent.dataTransfer.files);
+    const filesWithinLimit = droppedFiles.filter(
+      file => file.size <= maxFileSize,
+    );
+
+    this.uploadService.addFiles(filesWithinLimit);
+
     // TODO: fire on error if there is any bigger file
-    console.log(filesArray);
-    this.uploadService.addFiles(filesArray);
+    if (droppedFiles.length > filesWithinLimit.length) {
+      const error: MediaError = {
+        description: '',
+        name: 'file_size_exceeded',
+      };
+
+      // TODO: fix MediaFile first argument
+      this.emitUploadError({}, error);
+    }
   };
 
   public deactivate(): void {

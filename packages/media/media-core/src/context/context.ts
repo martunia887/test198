@@ -70,6 +70,8 @@ class ContextImpl implements Context {
     return (await this.mediaStore.getImageMetadata(id, params)).metadata;
   }
 
+  // TODO: rename => getStorageLimits or context.storage.getLimits
+  // TODO: cache value per key
   async getLimits(
     key: string,
     collectionName?: string,

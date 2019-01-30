@@ -11,7 +11,7 @@ import Button from '@atlaskit/button';
 import Toggle from '@atlaskit/toggle';
 import Spinner from '@atlaskit/spinner';
 import { ContextFactory } from '@atlaskit/media-core';
-import { MediaPicker, Dropzone } from '../src';
+import { MediaPicker, Dropzone, UploadErrorEventPayload } from '../src';
 import {
   DropzoneContainer,
   PopupHeader,
@@ -19,7 +19,6 @@ import {
   DropzoneContentWrapper,
   DropzoneItemsInfo,
 } from '../example-helpers/styled';
-import { UploadPreviews } from '../example-helpers/upload-previews';
 
 export interface DropzoneWrapperState {
   isConnectedToUsersCollection: boolean;
@@ -64,8 +63,8 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
       });
   }
 
-  onUploadError = () => {
-    console.log('onUploadError');
+  onUploadError = (event: UploadErrorEventPayload) => {
+    console.log('Dropzone example onUploadError', event.error.name);
   };
 
   createDropzone() {
@@ -82,6 +81,7 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
       },
+      storageUsageKey: 'free-plan-key',
     });
 
     dropzone.on('upload-error', this.onUploadError);
@@ -156,7 +156,6 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
       isConnectedToUsersCollection,
       isActive,
       inflightUploads,
-      dropzone,
     } = this.state;
     const isCancelButtonDisabled = inflightUploads.length === 0;
 
@@ -187,7 +186,6 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
             innerRef={this.saveDropzoneContainer}
           />
           <DropzoneItemsInfo>
-            {dropzone ? <UploadPreviews picker={dropzone} /> : null}
             <h1>User collection items</h1>
             {this.renderLastItems()}
           </DropzoneItemsInfo>

@@ -12,6 +12,7 @@ import {
 import { UploadComponent } from './component';
 import { UploadParams } from '../domain/config';
 import { NewUploadServiceImpl } from '../service/newUploadServiceImpl';
+import { LimitsPayload } from '@atlaskit/media-store';
 
 export interface LocalUploadConfig {
   uploadParams: UploadParams; // This is tenant upload params
@@ -24,6 +25,7 @@ export class LocalUploadComponent<
 > extends UploadComponent<M> {
   protected readonly uploadService: UploadService;
   readonly context: Context;
+  protected storageLimits?: LimitsPayload;
   config: LocalUploadConfig;
 
   constructor(context: Context, config: LocalUploadConfig) {
@@ -46,6 +48,16 @@ export class LocalUploadComponent<
     this.uploadService.on('file-converting', this.onFileConverting);
     this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
+
+    this.getStorageLimits(config.storageUsageKey);
+  }
+
+  private async getStorageLimits(storageUsageKey?: string) {
+    if (!storageUsageKey) {
+      return;
+    }
+
+    this.storageLimits = await this.context.getLimits(storageUsageKey);
   }
 
   public cancel(uniqueIdentifier?: string): void {

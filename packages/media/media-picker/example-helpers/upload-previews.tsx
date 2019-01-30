@@ -57,9 +57,6 @@ export class UploadPreviews extends React.Component<
     const { previewsData } = this.state;
 
     picker.on('uploads-start', this.onUploadsStart);
-    picker.on('upload-error', data => {
-      console.log('upload error:', data);
-    });
     picker.on('upload-preview-update', async data => {
       const currentItem = previewsData[previewsData.length - 1];
       currentItem.preview = data.preview;

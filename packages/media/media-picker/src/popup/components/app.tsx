@@ -123,8 +123,9 @@ export class App extends Component<AppProps, AppState> {
       tenantContext,
       userContext,
       tenantUploadParams,
+      config,
     } = props;
-
+    const { storageUsageKey } = config;
     this.state = {
       isDropzoneActive: false,
     };
@@ -154,6 +155,7 @@ export class App extends Component<AppProps, AppState> {
       uploadParams: tenantUploadParams,
       shouldCopyFileToRecents: false,
       headless: true,
+      storageUsageKey,
     });
     this.mpDropzone.on('drag-enter', this.onDragEnter);
     this.mpDropzone.on('drag-leave', this.onDragLeave);

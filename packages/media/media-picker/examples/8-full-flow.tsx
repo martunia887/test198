@@ -9,7 +9,11 @@ import { FileDetails, MediaItemType } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
 import Select from '@atlaskit/select';
 import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
-import { MediaPicker, UploadPreviewUpdateEventPayload } from '../src';
+import {
+  MediaPicker,
+  UploadPreviewUpdateEventPayload,
+  UploadErrorEventPayload,
+} from '../src';
 
 const context = createUploadContext();
 const popup = MediaPicker('popup', context, {
@@ -59,7 +63,12 @@ export default class Example extends React.Component<{}, State> {
     });
 
     popup.on('upload-preview-update', this.onUploadPreviewUpdate);
+    popup.on('upload-error', this.onUploadError);
   }
+
+  private onUploadError = (event: UploadErrorEventPayload) => {
+    console.log('FullFlow onUploadError', event);
+  };
 
   private onUploadPreviewUpdate = async (
     event: UploadPreviewUpdateEventPayload,
