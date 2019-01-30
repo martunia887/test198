@@ -93,7 +93,7 @@ export class Dropzone extends LocalUploadComponent<
     // TODO: fire on error if there is any bigger file
     if (droppedFiles.length > filesWithinLimit.length) {
       const error: MediaError = {
-        description: '',
+        description: '', // TODO: Potentially pass file names
         name: 'file_size_exceeded',
       };
 
