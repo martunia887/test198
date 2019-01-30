@@ -102,7 +102,7 @@ export class Dropzone extends LocalUploadComponent<
         creationDate: 0,
         type: '',
       };
-      // TODO: fix MediaFile first argument
+
       this.emitUploadError(fakeFile, error);
     }
   };

@@ -13,6 +13,7 @@ import {
   MediaPicker,
   UploadPreviewUpdateEventPayload,
   UploadErrorEventPayload,
+  UploadEndEventPayload,
 } from '../src';
 
 const context = createUploadContext();
@@ -64,7 +65,12 @@ export default class Example extends React.Component<{}, State> {
 
     popup.on('upload-preview-update', this.onUploadPreviewUpdate);
     popup.on('upload-error', this.onUploadError);
+    popup.on('upload-end', this.onUploadEnd);
   }
+
+  private onUploadEnd = (event: UploadEndEventPayload) => {
+    console.log('onUploadEnd', event.file.id);
+  };
 
   private onUploadError = (event: UploadErrorEventPayload) => {
     console.log('FullFlow onUploadError', event);
