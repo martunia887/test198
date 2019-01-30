@@ -25,6 +25,7 @@ export const fakeContext = (
   const getImageMetadata = jest.fn();
   const touchFiles = jest.fn();
   const downloadBinary = jest.fn();
+  const getLimits = jest.fn();
   const file = {
     getFileState: getFile,
     downloadBinary,
@@ -40,6 +41,7 @@ export const fakeContext = (
     config,
     collection,
     file,
+    getLimits,
   };
 
   const wrappedStubbedContext: any = {};

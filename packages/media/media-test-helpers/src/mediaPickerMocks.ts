@@ -37,6 +37,14 @@ export const mockState: State = {
   userContext: fakeContext(),
   config: {},
   deferredIdUpfronts: {},
+  storageLimits: {
+    displayName: '',
+    maxFileSize: 0,
+    total: {
+      allowed: 0,
+      used: 0,
+    },
+  },
 };
 
 export const mockStore = (state?: Partial<State>) => ({

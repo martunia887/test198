@@ -4,7 +4,6 @@ import { LocalUploadComponent, LocalUploadConfig } from '../localUpload';
 import { whenDomReady } from '../../util/documentReady';
 import dropzoneUI from './dropzoneUI';
 import { UploadEventPayloadMap } from '../..';
-import { LimitsPayload } from '@atlaskit/media-store';
 import { MediaError } from '../../domain/error';
 
 export interface DropzoneReactContext {
@@ -90,15 +89,21 @@ export class Dropzone extends LocalUploadComponent<
 
     this.uploadService.addFiles(filesWithinLimit);
 
-    // TODO: fire on error if there is any bigger file
     if (droppedFiles.length > filesWithinLimit.length) {
       const error: MediaError = {
         description: '', // TODO: Potentially pass file names
         name: 'file_size_exceeded',
       };
-
+      const fakeFile = {
+        id: '',
+        upfrontId: Promise.resolve(''),
+        name: '',
+        size: 0,
+        creationDate: 0,
+        type: '',
+      };
       // TODO: fix MediaFile first argument
-      this.emitUploadError({}, error);
+      this.emitUploadError(fakeFile, error);
     }
   };
 
