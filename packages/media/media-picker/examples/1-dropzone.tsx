@@ -64,6 +64,10 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
       });
   }
 
+  onUploadError = () => {
+    console.log('onUploadError');
+  };
+
   createDropzone() {
     const { isConnectedToUsersCollection } = this.state;
     const dropzoneContext = isConnectedToUsersCollection
@@ -79,6 +83,8 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
         collection: defaultMediaPickerCollectionName,
       },
     });
+
+    dropzone.on('upload-error', this.onUploadError);
 
     dropzone.activate();
 

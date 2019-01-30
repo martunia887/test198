@@ -45,7 +45,7 @@ export class Dropzone extends LocalUploadComponent<
 
   constructor(context: Context, config: DropzoneConfig = { uploadParams: {} }) {
     super(context, config);
-    const { container, headless, proxyReactContext } = config;
+    const { container, headless, proxyReactContext, storageUsageKey } = config;
     this.container = container || document.body;
     this.headless = headless || false;
     this.uiActive = false;
@@ -77,7 +77,10 @@ export class Dropzone extends LocalUploadComponent<
     dragEvent.stopPropagation();
     this.onDrop(dragEvent);
 
-    const filesArray = [].slice.call(dragEvent.dataTransfer.files);
+    const filesArray = Array.from(dragEvent.dataTransfer.files);
+    // TODO: remove files bigger than limit
+    // TODO: fire on error if there is any bigger file
+    console.log(filesArray);
     this.uploadService.addFiles(filesArray);
   };
 
