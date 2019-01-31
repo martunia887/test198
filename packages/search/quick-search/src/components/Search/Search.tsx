@@ -73,7 +73,7 @@ export default class Search extends React.PureComponent<Props, State> {
 
   inputRef: React.Ref<any>;
 
-  selectInputComponent = () => {
+  renderInputComponent = () => {
     const { labels, onLabelsUpdated, onBlur, placeholder } = this.props;
     const { value } = this.state;
 
@@ -119,7 +119,7 @@ export default class Search extends React.PureComponent<Props, State> {
             isLoading={isLoading}
           >
             <SearchFieldBaseInner>
-              {this.selectInputComponent()}
+              {this.renderInputComponent()}
             </SearchFieldBaseInner>
           </FieldBase>
         </SearchBox>
