@@ -1,49 +1,17 @@
-import { EditorState, Plugin, PluginKey, Selection } from 'prosemirror-state';
+import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { Color as ColorType } from '@atlaskit/status';
 import StatusNodeView from './nodeviews/status';
 import { ReactNodeView } from '../../nodeviews';
 import { PMPluginFactory } from '../../types';
+import {
+  mayGetStatusNodeAt,
+  isEmptyStatus,
+  setSelectionNearPos,
+  removeEmptyStatusesFromDoc,
+} from './utils';
+import { StatusType, StatusState, SelectionChange } from './types';
 
 export const pluginKey = new PluginKey('statusPlugin');
-
-export type StatusType = {
-  color: ColorType;
-  text: string;
-  localId?: string;
-};
-
-export type StatusState = {
-  isNew: boolean;
-  showStatusPickerAt: number | null;
-  selectionChanges: SelectionChange;
-  selectedStatus: StatusType | null;
-};
-
-export type SelectionChangeHandler = (
-  newSelection: Selection,
-  prevSelection: Selection,
-) => any;
-
-export class SelectionChange {
-  private changeHandlers: SelectionChangeHandler[] = [];
-
-  constructor() {
-    this.changeHandlers = [];
-  }
-
-  subscribe(cb: SelectionChangeHandler) {
-    this.changeHandlers.push(cb);
-  }
-
-  unsubscribe(cb: SelectionChangeHandler) {
-    this.changeHandlers = this.changeHandlers.filter(ch => ch !== cb);
-  }
-
-  notifyNewSelection(newSelection: Selection, prevSelection: Selection) {
-    this.changeHandlers.forEach(cb => cb(newSelection, prevSelection));
-  }
-}
 
 const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
   new Plugin({
@@ -54,14 +22,12 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
         showStatusPickerAt: null,
         selectedStatus: null,
       }),
-      apply(tr, state: StatusState, editorState) {
+      apply(tr, state: StatusState, oldEditorState, newEditorState) {
         const meta = tr.getMeta(pluginKey);
-        const nodeAtSelection = tr.doc.nodeAt(tr.selection.from);
-
+        const statusNodeAtSelection = mayGetStatusNodeAt(tr.selection);
         if (
           state.showStatusPickerAt &&
-          (!nodeAtSelection ||
-            nodeAtSelection.type !== editorState.schema.nodes.status ||
+          (!statusNodeAtSelection ||
             // note: Status node has to==from+1 so from==to is positioned just before the Status node and StatusPicker should be dismissed
             tr.selection.from === tr.selection.to)
         ) {
@@ -103,13 +69,56 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
 
           if (newState.showStatusPickerAt !== state.showStatusPickerAt) {
             dispatch(pluginKey, newState);
-
             return newState;
           }
         }
 
         return state;
       },
+    },
+    appendTransaction: (
+      transactions: Transaction[],
+      oldEditorState: EditorState,
+      newEditorState: EditorState,
+    ) => {
+      let oldStatus: StatusType | null = mayGetStatusNodeAt(
+        oldEditorState.selection,
+      );
+      let newStatus: StatusType | null = mayGetStatusNodeAt(
+        newEditorState.selection,
+      );
+
+      const newState = pluginKey.getState(newEditorState);
+      let tr = newEditorState.tr;
+      let changed = false;
+
+      // user hit Enter key in the StatusPicker with empty text - emptyCurrentNode is set in actions.commitStatusPicker()
+      if (newState && newState.emptyCurrentNode) {
+        if (newStatus && isEmptyStatus(newStatus)) {
+          const pos = newEditorState.selection.from;
+          tr.deleteSelection();
+          setSelectionNearPos(tr, pos);
+          changed = true;
+        }
+      }
+
+      // user leaves the StatusPicker with empty text and selects a new node
+      if (transactions.find(tr => tr.selectionSet)) {
+        if (
+          oldStatus &&
+          ((newStatus && oldStatus.localId !== newStatus.localId) || !newStatus)
+        ) {
+          if (isEmptyStatus(oldStatus)) {
+            const pos = oldEditorState.selection.from;
+            tr.delete(
+              tr.mapping.map(pos),
+              tr.mapping.map(pos + 1),
+            ).setSelection(newEditorState.selection);
+            changed = true;
+          }
+        }
+      }
+      return changed ? tr : undefined;
     },
     key: pluginKey,
     props: {
@@ -122,13 +131,39 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
         update: (view: EditorView, prevState: EditorState) => {
           const newSelection = view.state.selection;
           const prevSelection = prevState.selection;
+          const pluginState: StatusState = pluginKey.getState(view.state);
+
           if (!prevSelection.eq(newSelection)) {
-            // selection changed
-            const pluginState: StatusState = pluginKey.getState(view.state);
             const { selectionChanges } = pluginState;
             if (selectionChanges) {
               selectionChanges.notifyNewSelection(newSelection, prevSelection);
             }
+          }
+
+          // user hit Enter key in the StatusPicker with empty text - emptyCurrentNode is set in actions.commitStatusPicker()
+          // simply reset emptyCurrentNode
+          if (pluginState && pluginState.emptyCurrentNode) {
+            const tr = view.state.tr;
+            tr.setMeta(pluginKey, {
+              ...view.state,
+              emptyCurrentNode: false,
+            });
+            view.dispatch(tr);
+          }
+          // user created an empty status and exited or created a valid status and then undo the operation: an empty status node appears in the case.
+          // to fix this problem, there is a undo command listener in keymap to set the undo property to true so that this code can delete all empty
+          // statuses from the document - not ideal to traverse the entire document but no alternative solutions found.
+          else if (pluginState && pluginState.undo) {
+            const { tr, selection } = view.state;
+            const statusRemoved = !!removeEmptyStatusesFromDoc(tr);
+            tr.setMeta(pluginKey, {
+              ...view.state,
+              undo: false,
+            });
+            if (statusRemoved) {
+              setSelectionNearPos(tr, selection.from);
+            }
+            view.dispatch(tr);
           }
         },
       };

@@ -62,11 +62,8 @@ export { insertBlockType, setBlockType } from './plugins/block-type/commands';
 export { createTable } from './plugins/table/actions';
 export { insertTaskDecision } from './plugins/tasks-and-decisions/commands';
 export { EventDispatcher } from './event-dispatcher';
-export {
-  pluginKey as statusPluginKey,
-  StatusState,
-  StatusType,
-} from './plugins/status/plugin';
+export { pluginKey as statusPluginKey } from './plugins/status/plugin';
+export { StatusType, StatusState } from './plugins/status/types';
 export {
   commitStatusPicker,
   setStatusPickerAt,

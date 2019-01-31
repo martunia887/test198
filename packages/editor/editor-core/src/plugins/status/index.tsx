@@ -3,10 +3,12 @@ import { status } from '@atlaskit/adf-schema';
 import LabelIcon from '@atlaskit/icon/glyph/label';
 import { findDomRefAtPos } from 'prosemirror-utils';
 import { EditorPlugin } from '../../types';
-import createStatusPlugin, { StatusState, pluginKey } from './plugin';
+import createStatusPlugin, { pluginKey } from './plugin';
 import WithPluginState from '../../ui/WithPluginState';
 import StatusPicker from './ui/statusPicker';
 import { commitStatusPicker, updateStatus, createStatus } from './actions';
+import { keymapPlugin } from './keymap';
+import { StatusState } from './types';
 
 const baseStatusPlugin = (): EditorPlugin => ({
   nodes() {
@@ -18,6 +20,10 @@ const baseStatusPlugin = (): EditorPlugin => ({
       {
         name: 'status',
         plugin: createStatusPlugin,
+      },
+      {
+        name: 'statusKeymap',
+        plugin: ({ schema }) => keymapPlugin(),
       },
     ];
   },
@@ -47,7 +53,6 @@ const baseStatusPlugin = (): EditorPlugin => ({
           if (!statusNode || statusNode.type.name !== 'status') {
             return null;
           }
-
           const { text, color, localId } = statusNode.attrs;
 
           return (

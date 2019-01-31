@@ -6,7 +6,7 @@ import { StatusPicker as AkStatusPicker, Color } from '@atlaskit/status';
 import { dropShadow } from '../../../ui/styles';
 import withOuterListeners from '../../../ui/with-outer-listeners';
 import { DEFAULT_STATUS } from '../actions';
-import { StatusType } from '../plugin';
+import { StatusType } from '../types';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
 import { analyticsState, createStatusAnalyticsAndFire } from '../analytics';

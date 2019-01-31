@@ -7,7 +7,8 @@ import {
 } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { uuid } from '@atlaskit/adf-schema';
-import { pluginKey, StatusType } from './plugin';
+import { pluginKey } from './plugin';
+import { StatusType } from './types';
 
 export const DEFAULT_STATUS: StatusType = {
   text: '',
@@ -114,29 +115,29 @@ export const commitStatusPicker = () => (editorView: EditorView) => {
   }
 
   const statusNode = state.tr.doc.nodeAt(showStatusPickerAt);
-
   if (!statusNode) {
     return;
   }
 
   let tr = state.tr;
-  tr = tr.setMeta(pluginKey, {
-    showStatusPickerAt: null,
-    isNew: false,
-    selectedStatus: null,
-  });
+  let emptyCurrentNode = false;
 
   if (statusNode.attrs.text) {
     // still has content - keep content, move selection after status
-    tr = tr.setSelection(
+    tr.setSelection(
       Selection.near(state.tr.doc.resolve(showStatusPickerAt + 2)),
     );
   } else {
-    // no content - remove node
-    tr = tr
-      .delete(showStatusPickerAt, showStatusPickerAt + 1)
-      .setSelection(Selection.near(state.tr.doc.resolve(showStatusPickerAt)));
+    // no content - set emptyCurrentNode so indicate that current selection should be removed
+    emptyCurrentNode = true;
   }
+
+  tr.setMeta(pluginKey, {
+    showStatusPickerAt: null,
+    isNew: false,
+    selectedStatus: null,
+    emptyCurrentNode,
+  });
 
   dispatch(tr);
   editorView.focus();

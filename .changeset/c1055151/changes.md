@@ -1,0 +1,1 @@
+- fixed status bugs: selection issues, empty status orphan node, prevent undo operation from bringing empty status back 
