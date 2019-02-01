@@ -1,0 +1,1 @@
+- FM-1516 Adds flushContent method to bridge to trigger nativeBridge.updateText with text inside composition buffer

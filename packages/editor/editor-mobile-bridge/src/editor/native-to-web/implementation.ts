@@ -35,6 +35,7 @@ import NativeToWebBridge from './bridge';
 import WebBridge from '../../web-bridge';
 import { ProseMirrorDOMChange } from '../../types';
 import { rejectPromise, resolvePromise } from '../../cross-platform-promise';
+import { toNativeBridge } from '../web-to-native';
 
 export default class WebBridgeImpl extends WebBridge
   implements NativeToWebBridge {
@@ -124,6 +125,14 @@ export default class WebBridgeImpl extends WebBridge
     this.flushDOM();
 
     return JSON.stringify(this.transformer.encode(this.editorView.state.doc));
+  }
+
+  // Used to flush composition buffer into content and it magically triggers [toNativeBridge.updateText] method with the updated content
+  flushContent() {
+    if (!this.flushDOM()) {
+      // when flushDOM returns true it calls [nativeBridge.updateText] magically...
+      toNativeBridge.updateText(this.getContent());
+    }
   }
 
   setTextFormattingStateAndSubscribe(state: TextFormattingState) {
