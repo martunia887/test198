@@ -1,5 +1,25 @@
 # @atlaskit/smart-card
 
+## 9.6.8
+- [patch] [af3918bc89](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/af3918bc89):
+
+  - The url part of the unauthorized link is now grey
+
+## 9.6.7
+- [patch] [abce6949c0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/abce6949c0):
+
+  - fix icon sizing and url key.
+
+## 9.6.6
+- [patch] [5ae645d661](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5ae645d661):
+
+  - Fixing analytics in smart-cards
+
+## 9.6.5
+- [patch] [2035bef8fb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2035bef8fb):
+
+  - Fix inline extractor priority preventing @type arrays in some cases.
+
 ## 9.6.4
 - [patch] [56c5a4b41f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/56c5a4b41f):
 

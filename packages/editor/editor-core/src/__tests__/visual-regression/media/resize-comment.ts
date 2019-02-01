@@ -23,7 +23,6 @@ const editorConfigs: Array<TestPageConfig> = [
   },
 ];
 
-// TODO - split tests
 describe.skip('Snapshot Test: Media', () => {
   describe('comment editor', () => {
     let page;
