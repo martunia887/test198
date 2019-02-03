@@ -94,10 +94,27 @@ class MediaNode extends Component<
     return false;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { node } = this.props;
+    const { type, url } = node.attrs;
+
     this.hasBeenMounted = true;
     this.handleNewNode(this.props);
     this.updateMediaContext();
+
+    if (type === 'external' && url) {
+      const context = await this.getMediaContext('upload');
+      // TODO: check blob domain
+      const blob = await (await fetch(url)).blob();
+
+      if (context) {
+        console.log('upload', blob.size);
+        context.file.upload({
+          content: blob,
+          collection: 'MediaServicesSample', // TODO: get from uploadParams
+        });
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -114,13 +131,26 @@ class MediaNode extends Component<
     this.pluginState.updateElement();
   }
 
-  private updateMediaContext = async () => {
+  getMediaContext = async (
+    type: 'view' | 'upload',
+  ): Promise<Context | undefined> => {
     if (this.props.mediaProvider) {
       this.mediaProvider = await this.props.mediaProvider;
-      const viewContext = await this.mediaProvider.viewContext;
-      if (viewContext && this.hasBeenMounted) {
-        this.setState({ viewContext });
-      }
+      const context = await (type === 'view'
+        ? this.mediaProvider.viewContext
+        : this.mediaProvider.uploadContext);
+
+      return context;
+    }
+
+    return undefined;
+  };
+
+  private updateMediaContext = async () => {
+    const viewContext = await this.getMediaContext('view');
+
+    if (viewContext && this.hasBeenMounted) {
+      this.setState({ viewContext });
     }
   };
 
