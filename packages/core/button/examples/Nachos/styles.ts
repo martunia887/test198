@@ -13,7 +13,7 @@ export const nachosBase: NachosBase = {
   height: '32px',
 };
 
-export const button = {
+export const buttonTheme = {
   background: {
     default: {
       default: colors.N30,
@@ -87,34 +87,51 @@ export const button = {
   },
 };
 
-const getBackground = (background, { appearance, state }) => {
-  if (appearance === 'disabled') return background[appearance];
-  return background[appearance][state];
+type Theme = { [key: string]: string | Theme };
+
+type ThemeStructure = { [key: string]: any[] | null };
+
+function getStyle(
+  current: Theme | string,
+  structure: any[] | null,
+  depth: number = 0,
+): string | null {
+  // If the theme is just a string, return that
+  if (typeof current === 'string') return current;
+  // return null if nothing else is present. Should the default be returned instead?
+  if (!structure || !current[structure[depth]]) return null;
+  // Move down the styling tree and see if a leaf is reached
+  const n = current[structure[depth]];
+  return typeof n === 'string' ? n : getStyle(n, structure, depth + 1);
+}
+
+export const getButtonStyles = (props: { [key: string]: any }) => {
+  const basicStructure = [props.appearance, props.state];
+  const buttonThemeStructure = {
+    background: basicStructure,
+    borderColor: basicStructure,
+    boxShadow: basicStructure,
+    color: basicStructure,
+    cursor: [props.state],
+    fontWeight: basicStructure,
+    border: null,
+  };
+
+  return themeReduce(
+    Object.keys(buttonThemeStructure),
+    buttonThemeStructure,
+    buttonTheme,
+  );
 };
 
-const getBoxShadow = (boxShadow, { appearance, state }) => {
-  if (appearance === 'default') return boxShadow[appearance][state];
-  return boxShadow[appearance];
-};
-
-const getBorderColor = (borderColor, { appearance, state }) =>
-  borderColor[appearance][state];
-
-const getfontWeight = (fontWeight, { appearance, state }) => fontWeight[state];
-
-const getCursor = (cursor, { state }) => cursor[state];
-
-const getColor = (color, { appearance, state }) => {
-  if (appearance === 'default') return color[appearance][state];
-  return color[appearance];
-};
-
-export const getButtonStyles = props => ({
-  border: button.border,
-  background: getBackground(button.background, props),
-  borderColor: getBorderColor(button.borderColor, props),
-  boxShadow: getBoxShadow(button.boxShadow, props),
-  color: getColor(button.color, props),
-  cursor: getCursor(button.cursor, props),
-  fontWeight: getfontWeight(button.fontWeight, props),
-});
+const initialTokens: { [key: string]: string } = {};
+export const themeReduce = (
+  properties: string[],
+  themeStructure: ThemeStructure,
+  theme: Theme,
+) =>
+  properties.reduce((acc, p) => {
+    const result = getStyle(theme[p], themeStructure[p]);
+    if (result) acc[p] = result;
+    return acc;
+  }, initialTokens);
