@@ -1,4 +1,5 @@
 import { NodeSpec, Node as PMNode } from 'prosemirror-model';
+import { fileStreamsCache, FileStreamCache } from '@atlaskit/media-core';
 import { N30 } from '../../utils/colors';
 
 export type MediaType = 'file' | 'link' | 'external';
@@ -105,6 +106,12 @@ export const media: NodeSpec = {
       ignore: true,
     },
     {
+      tag: 'img[src*="blob:"]',
+      getAttrs: (dom: HTMLElement) => {
+        debugger;
+      },
+    },
+    {
       tag: 'img',
       getAttrs: dom => {
         return {
@@ -115,6 +122,28 @@ export const media: NodeSpec = {
     },
   ],
   toDOM(node: PMNode) {
+    const state = fileStreamsCache.get(
+      FileStreamCache.createKey(node.attrs.id, {
+        collectionName: node.attrs.collection,
+      }),
+    );
+
+    let mediaState;
+    if (state) {
+      state.subscribe({
+        next(state) {
+          if (state.status !== 'error') {
+            mediaState = state;
+          }
+        },
+      });
+    }
+
+    if (mediaState.preview) {
+      const src = URL.createObjectURL(mediaState.preview.blob);
+      return ['img', { src }];
+    }
+
     const attrs = {
       'data-id': node.attrs.id,
       'data-node-type': 'media',
