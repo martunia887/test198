@@ -1,6 +1,8 @@
 import { colors } from '@atlaskit/theme';
 import { nachosColors } from './colors';
 
+type Theme = { [key: string]: string | Theme };
+type ThemeStructure = { [key: string]: any[] | null };
 type NachosBase = {
   padding: string;
   lineHeight: string;
@@ -87,9 +89,23 @@ export const buttonTheme = {
   },
 };
 
-type Theme = { [key: string]: string | Theme };
+export const getButtonStyles = (props: { [key: string]: any }) => {
+  const buttonThemeStructure = {
+    background: [props.appearance, props.state],
+    borderColor: [props.appearance, props.state],
+    boxShadow: [props.appearance, props.state],
+    color: [props.appearance, props.state],
+    cursor: [props.state],
+    fontWeight: [props.appearance, props.state],
+    border: null,
+  };
 
-type ThemeStructure = { [key: string]: any[] | null };
+  return themeReduce(
+    Object.keys(buttonThemeStructure),
+    buttonThemeStructure,
+    buttonTheme,
+  );
+};
 
 function getStyle(
   current: Theme | string,
@@ -104,25 +120,6 @@ function getStyle(
   const n = current[structure[depth]];
   return typeof n === 'string' ? n : getStyle(n, structure, depth + 1);
 }
-
-export const getButtonStyles = (props: { [key: string]: any }) => {
-  const basicStructure = [props.appearance, props.state];
-  const buttonThemeStructure = {
-    background: basicStructure,
-    borderColor: basicStructure,
-    boxShadow: basicStructure,
-    color: basicStructure,
-    cursor: [props.state],
-    fontWeight: basicStructure,
-    border: null,
-  };
-
-  return themeReduce(
-    Object.keys(buttonThemeStructure),
-    buttonThemeStructure,
-    buttonTheme,
-  );
-};
 
 const initialTokens: { [key: string]: string } = {};
 export const themeReduce = (
