@@ -636,7 +636,7 @@ export class MediaPluginState {
     };
   }
 
-  private updateMediaNodeAttrs = (
+  updateMediaNodeAttrs = (
     id: string,
     attrs: object,
     isMediaSingle: boolean,

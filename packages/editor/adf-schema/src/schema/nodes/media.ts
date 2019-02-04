@@ -1,5 +1,6 @@
 import { NodeSpec, Node as PMNode } from 'prosemirror-model';
 import { N30 } from '../../utils/colors';
+import { fileStreamsCache } from '@atlaskit/media-core';
 
 export type MediaType = 'file' | 'link' | 'external';
 export type DisplayType = 'file' | 'thumbnail';
@@ -71,6 +72,7 @@ export const defaultAttrs: DefaultAttributes<
   __fileMimeType: { default: null },
   __displayType: { default: null },
   __key: { default: null },
+  __src: { default: null },
 };
 
 export const media: NodeSpec = {
@@ -115,8 +117,12 @@ export const media: NodeSpec = {
     },
   ],
   toDOM(node: PMNode) {
+    const { id } = node.attrs;
+    const preview = fileStreamsCache.getPreview(id);
+
+    // TODO: get preview sync
     const attrs = {
-      'data-id': node.attrs.id,
+      'data-id': id,
       'data-node-type': 'media',
       'data-type': node.attrs.type,
       'data-collection': node.attrs.collection,
@@ -132,6 +138,12 @@ export const media: NodeSpec = {
       // rectangle that provides an affordance for media.
       style: `display: inline-block; border-radius: 3px; background: ${N30}; box-shadow: 0 1px 1px rgba(9, 30, 66, 0.2), 0 0 1px 0 rgba(9, 30, 66, 0.24);`,
     };
+
+    if (preview) {
+      const src = URL.createObjectURL(preview);
+
+      (attrs as any)['data-src'] = src;
+    }
 
     copyPrivateAttributes(
       node.attrs,

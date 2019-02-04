@@ -40,6 +40,7 @@
     "@atlaskit/editor-json-transformer": "^4.1.9",
     "@atlaskit/editor-test-helpers": "^6.3.19",
     "@atlaskit/json-schema-generator": "^1.2.0",
+    "@atlaskit/media-core": "^27.0.0",
     "ajv": "^4.11.3",
     "axios": "^0.17.1",
     "json-schema-diff-validator": "^0.2.0"
