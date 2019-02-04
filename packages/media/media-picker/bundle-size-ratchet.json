@@ -13,8 +13,7 @@
     "stats": {
       "size": 117351,
       "gzipSize": 30605
-    },
-    "new": true
+    }
   },
   {
     "id": "node_modules.async",
@@ -38,8 +37,7 @@
     "stats": {
       "size": 269,
       "gzipSize": 170
-    },
-    "new": true
+    }
   },
   {
     "id": "atlaskit.media.async",
