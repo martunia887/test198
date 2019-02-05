@@ -109,6 +109,7 @@ export const media: NodeSpec = {
     {
       tag: 'img',
       getAttrs: dom => {
+        debugger;
         return {
           type: 'external',
           url: (dom as HTMLElement).getAttribute('src') || '',

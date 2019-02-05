@@ -96,22 +96,25 @@ class MediaNode extends Component<
 
   async componentDidMount() {
     const { node } = this.props;
-    const { collection, __src, id } = node.attrs;
+    const { collection, type, __src, url, id } = node.attrs;
     this.hasBeenMounted = true;
     this.handleNewNode(this.props);
     this.updateMediaContext();
-    if (__src) {
-      const context = await this.getMediaContext('upload');
+    const context = await this.getMediaContext('upload');
+    // TODO: also handle external type
+    // TODO: handle renderer to editor
+    if (__src && context) {
       const uploadParams = this.mediaProvider.uploadParams;
       const uploadCollection = uploadParams && uploadParams.collection;
-      const url = new URL(__src);
-      const isSameOrigin = url.origin === location.origin;
+      // const url = new URL(__src);
+      const isSameOrigin = true;
+      // const isSameOrigin = url.origin === location.origin;
       // const isDifferentCollection = collection !== uploadCollection;
       const isDifferentCollection = true; // Forced for testing
       if (isDifferentCollection && isSameOrigin) {
-        const blob = await (await fetch(__src)).blob();
-
-        if (context) {
+        try {
+          const blob = await (await fetch(__src)).blob();
+          console.log(blob);
           // TODO: pass file descriptor to use file id upfront
           // TODO: pass file name
           // TODO: pass file mimeType
@@ -124,6 +127,7 @@ class MediaNode extends Component<
               next: state => {
                 const { id: newFileId } = state;
                 console.log('updateMediaNodeAttrs', id, newFileId);
+                // TODO: pass missing properties
                 this.pluginState.updateMediaNodeAttrs(
                   id,
                   {
@@ -136,8 +140,11 @@ class MediaNode extends Component<
                 subscription.unsubscribe();
               },
             });
-        }
+        } catch (e) {}
       }
+    } else if (url && type === 'external') {
+      const blob = await (await fetch(url)).blob();
+      console.log({ url }, blob);
     }
   }
 

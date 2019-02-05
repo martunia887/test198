@@ -26,6 +26,9 @@
   "atlaskit": {
     "internal": true
   },
+  "peerDependencies": {
+    "@atlaskit/media-core": "^27.0.0"
+  },
   "dependencies": {
     "@types/linkify-it": "^2.0.4",
     "@types/prosemirror-model": "^1.5.0",
