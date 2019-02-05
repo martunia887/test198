@@ -10,7 +10,7 @@ describe('Snapshot Test: Layouts', () => {
     page = global.page;
   });
 
-  describe('Snapshot Test: Breakout', () => {
+  describe('Snapshot Test: layouts', () => {
     it('should correctly render 2 layout for 1100X500', async () => {
       await page.setViewport({ width: 1100, height: 500 });
       await initFullPageEditorWithAdf(page, column2);
