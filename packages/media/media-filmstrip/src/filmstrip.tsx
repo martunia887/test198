@@ -29,7 +29,7 @@ export interface FilmstripItem {
 
 export interface FilmstripProps {
   items: FilmstripItem[];
-  context?: Context;
+  context?: Context | Promise<Context | undefined>;
 }
 
 export interface FilmstripState {

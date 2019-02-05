@@ -32,34 +32,36 @@ export interface FilmstripWithProviderState {
   context?: Context;
 }
 
-class FilmstripWithProvider extends PureComponent<
-  FilmstripWithProviderProps,
-  FilmstripWithProviderState
-> {
-  state: FilmstripWithProviderState = {};
+// class FilmstripWithProvider extends PureComponent<
+//   FilmstripWithProviderProps,
+//   FilmstripWithProviderState
+// > {
+//   state: FilmstripWithProviderState = {};
 
-  async componentDidMount() {
-    const { mediaProvider } = this.props;
+//   async componentDidMount() {
+//     const { mediaProvider } = this.props;
 
-    if (!mediaProvider) {
-      return;
-    }
+//     if (!mediaProvider) {
+//       return;
+//     }
 
-    const provider = await mediaProvider;
-    const context = await provider.viewContext;
+//     // Promise<MediaProvider>
+//     // Promise<Context>
+//     const provider = await mediaProvider;
+//     const context = await provider.viewContext;
 
-    this.setState({
-      context,
-    });
-  }
+//     this.setState({
+//       context,
+//     });
+//   }
 
-  render() {
-    const { context } = this.state;
-    const { items } = this.props;
+//   render() {
+//     const { context } = this.state;
+//     const { items } = this.props;
 
-    return <Filmstrip items={items} context={context} />;
-  }
-}
+//     return <Filmstrip items={items} context={context} />;
+//   }
+// }
 
 export default class MediaGroup extends PureComponent<MediaGroupProps, {}> {
   providerFactory: ProviderFactory =
@@ -125,7 +127,7 @@ export default class MediaGroup extends PureComponent<MediaGroupProps, {}> {
     this.props.eventHandlers.media.onClick(event, surroundings, analyticsEvent);
   };
 
-  renderNode = (providers: { mediaProvider?: MediaProvider } = {}) => {
+  renderNode = (providers: { mediaProvider?: Promise<MediaProvider> } = {}) => {
     const { mediaProvider } = providers;
     const { children } = this.props;
     const surroundingItems = React.Children.map(
@@ -143,10 +145,16 @@ export default class MediaGroup extends PureComponent<MediaGroupProps, {}> {
         ),
       };
     });
+    let context: undefined | Promise<Context | undefined>;
+    console.log('mediaProvider', mediaProvider);
+    if (mediaProvider) {
+      context = mediaProvider.then(provider => provider.viewContext);
+    }
 
-    return (
-      <FilmstripWithProvider items={items} mediaProvider={mediaProvider} />
-    );
+    return <Filmstrip items={items} context={context} />;
+    // return (
+    //   <FilmstripWithProvider items={items} mediaProvider={mediaProvider} />
+    // );
   };
 
   renderStrip() {
