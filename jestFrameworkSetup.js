@@ -341,6 +341,8 @@ if (process.env.VISUAL_REGRESSION) {
   const customConfig = { threshold: 0.5 };
   const toMatchProdImageSnapshot = configureToMatchImageSnapshot({
     customDiffConfig: customConfig,
+    failureThreshold: '0.03',
+    failureThresholdType: 'percent',
     noColors: true,
   });
 
