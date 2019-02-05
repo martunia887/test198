@@ -113,7 +113,7 @@ pipelines:
               - bolt install --pure-lockfile
               - yarn run test:vr:changed
             after-script:
-              - find . -name '*-diff.png' -not -path "./node_modules/*"
+              - find . -name '*-diff.png' not -path "./node_modules/*" |  tar -cvjf ImageSnapshotFailures.tar --files-from -
               # Extract all the diff images and store them into a folder for download
               - mkdir ./imageSnapshotFailures && find . -name '*-diff.png' -not -path "./node_modules/*" -exec cp {} ./imageSnapshotFailures \;
             # If a failure occurs, you can download the image snapshot of the differences.
