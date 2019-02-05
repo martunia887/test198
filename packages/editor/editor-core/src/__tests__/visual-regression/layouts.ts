@@ -1,84 +1,39 @@
-import {
-  initEditor,
-  snapshot,
-  insertBlockMenuItem,
-  clearEditor,
-} from './_utils';
-import { messages } from '../../plugins/insert-block/ui/ToolbarInsertBlock/index';
-import { messages as toolbarMessages } from '../../plugins/layout/toolbar';
+import { initFullPageEditorWithAdf, clearEditor, snapshot } from './_utils';
+import * as column2 from './adf-data/column-2.json';
+import * as column3 from './adf-data/column-3.json';
 
-const firstColumn = '[data-layout-section] [data-layout-column]:nth-child(1)';
-const secondColumn = '[data-layout-section] [data-layout-column]:nth-child(2)';
-const thirdColumn = '[data-layout-section] [data-layout-column]:nth-child(3)';
-
-const threeColumnsLayout = `div[aria-label="Columns floating controls"] [aria-label="${
-  toolbarMessages.threeColumns.defaultMessage
-}"]`;
-
-describe.skip('Snapshot Test: Layouts', () => {
+// TODO: add insert columns integration tests
+describe('Snapshot Test: Layouts', () => {
   let page;
-  beforeAll(async () => {
+  beforeEach(async () => {
     // @ts-ignore
     page = global.page;
-    await initEditor(page, 'full-page');
+    // await clearEditor(page);
   });
 
-  beforeEach(async () => {
-    await clearEditor(page);
-  });
-
-  describe('2 columns', () => {
-    it('should correctly render layout', async () => {
+  // TODO: There is an issue Error: Evaluation failed: TypeError: Cannot set property 'value' of null
+  describe('Snapshot Test: Breakout', () => {
+    it('should correctly render 2 layout for 1100X500', async () => {
+      await initFullPageEditorWithAdf(page, column2);
       await page.setViewport({ width: 1100, height: 500 });
-      await insertBlockMenuItem(page, messages.columns.defaultMessage);
-      await page.waitForSelector(firstColumn);
-      await page.click(firstColumn);
-      await page.keyboard.type('Column 1');
-      await page.click(secondColumn);
-      await page.keyboard.type('Column 2');
       await snapshot(page);
     });
 
-    it('should stack layout on smaller screen sizes', async () => {
+    it('should correctly render 2 layout for 600X500', async () => {
+      await initFullPageEditorWithAdf(page, column2);
       await page.setViewport({ width: 600, height: 500 });
-      await insertBlockMenuItem(page, messages.columns.defaultMessage);
-      await page.waitForSelector(firstColumn);
-      await page.click(firstColumn);
-      await page.keyboard.type('Column 1');
-      await page.click(secondColumn);
-      await page.keyboard.type('Column 2');
       await snapshot(page);
     });
-  });
 
-  describe('3 columns', () => {
-    it('should correctly render layout', async () => {
+    it('should correctly render 3 layout for 600X500', async () => {
+      await initFullPageEditorWithAdf(page, column3);
+      await page.setViewport({ width: 600, height: 500 });
+      await snapshot(page);
+    });
+
+    it('should correctly render 3 layout for 1100X500', async () => {
+      await initFullPageEditorWithAdf(page, column3);
       await page.setViewport({ width: 1100, height: 500 });
-      await insertBlockMenuItem(page, messages.columns.defaultMessage);
-      await page.waitForSelector(threeColumnsLayout);
-      await page.click(threeColumnsLayout);
-      await page.waitForSelector(firstColumn);
-      await page.click(firstColumn);
-      await page.keyboard.type('Column 1');
-      await page.click(secondColumn);
-      await page.keyboard.type('Column 2');
-      await page.click(thirdColumn);
-      await page.keyboard.type('Column 3');
-      await snapshot(page);
-    });
-
-    it('should stack layout on smaller screen sizes', async () => {
-      await page.setViewport({ width: 600, height: 500 });
-      await insertBlockMenuItem(page, messages.columns.defaultMessage);
-      await page.waitForSelector(threeColumnsLayout);
-      await page.click(threeColumnsLayout);
-      await page.waitForSelector(firstColumn);
-      await page.click(firstColumn);
-      await page.keyboard.type('Column 1');
-      await page.click(secondColumn);
-      await page.keyboard.type('Column 2');
-      await page.click(thirdColumn);
-      await page.keyboard.type('Column 3');
       await snapshot(page);
     });
   });

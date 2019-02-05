@@ -1,0 +1,57 @@
+{
+    "version": 1,
+    "type": "doc",
+    "content": [
+      {
+        "type": "layoutSection",
+        "content": [
+          {
+            "type": "layoutColumn",
+            "attrs": {
+              "width": 33.33
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "col1"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "layoutColumn",
+            "attrs": {
+              "width": 33.33
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "col2"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "layoutColumn",
+            "attrs": {
+              "width": 33.33
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }

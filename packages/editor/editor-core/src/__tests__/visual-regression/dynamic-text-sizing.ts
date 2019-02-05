@@ -9,6 +9,7 @@ const loadExampleDocument = async browser => {
   await browser.click('.loadExampleDocument');
 };
 
+// causes memory leak
 describe.skip('Snapshot Test: Dynamic Text Sizing', () => {
   let page;
   beforeAll(async () => {
