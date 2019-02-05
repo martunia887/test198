@@ -6,32 +6,64 @@ import {
   Identifier,
   LinkIdentifier,
 } from '@atlaskit/media-card';
-import { FilmstripView } from '@atlaskit/media-filmstrip';
-import { EventHandlers, CardSurroundings } from '@atlaskit/editor-common';
+import { Filmstrip, FilmstripItem } from '@atlaskit/media-filmstrip';
+import {
+  EventHandlers,
+  CardSurroundings,
+  WithProviders,
+  ProviderFactory,
+} from '@atlaskit/editor-common';
 import { MediaProps } from './media';
+import { MediaProvider } from '../../ui/MediaCard';
+import { Context } from '@atlaskit/media-core';
 
 export interface MediaGroupProps {
   children?: React.ReactNode;
   eventHandlers?: EventHandlers;
+  providers?: ProviderFactory;
 }
 
-export interface MediaGroupState {
-  animate: boolean;
-  offset: number;
+export interface FilmstripWithProviderProps {
+  items: FilmstripItem[];
+  mediaProvider?: MediaProvider;
 }
 
-export default class MediaGroup extends PureComponent<
-  MediaGroupProps,
-  MediaGroupState
+export interface FilmstripWithProviderState {
+  context?: Context;
+}
+
+class FilmstripWithProvider extends PureComponent<
+  FilmstripWithProviderProps,
+  FilmstripWithProviderState
 > {
-  state: MediaGroupState = {
-    animate: false,
-    offset: 0,
-  };
+  state: FilmstripWithProviderState = {};
 
-  private handleSize = ({ offset }) => this.setState({ offset });
-  private handleScroll = ({ animate, offset }) =>
-    this.setState({ animate, offset });
+  async componentDidMount() {
+    const { mediaProvider } = this.props;
+
+    if (!mediaProvider) {
+      return;
+    }
+
+    const provider = await mediaProvider;
+    const context = await provider.viewContext;
+
+    this.setState({
+      context,
+    });
+  }
+
+  render() {
+    const { context } = this.state;
+    const { items } = this.props;
+
+    return <Filmstrip items={items} context={context} />;
+  }
+}
+
+export default class MediaGroup extends PureComponent<MediaGroupProps, {}> {
+  providerFactory: ProviderFactory =
+    this.props.providers || new ProviderFactory();
 
   render() {
     const numChildren = React.Children.count(this.props.children);
@@ -68,65 +100,64 @@ export default class MediaGroup extends PureComponent<
     } as MediaProps);
   }
 
-  cloneFileCard(
+  onCardClick = (
     child: ReactElement<MediaProps>,
     surroundingItems: Identifier[],
-  ) {
-    return React.cloneElement(child, {
-      eventHandlers: {
-        ...child.props.eventHandlers,
+  ) => (event: CardEvent, analyticsEvent?: any) => {
+    /**
+     * eventHandlers: {
+        ...child.props.eventHandlers
         media: {
-          onClick: (event: CardEvent, analyticsEvent?: any) => {
-            if (
-              !this.props ||
-              !this.props.eventHandlers ||
-              !this.props.eventHandlers.media ||
-              !this.props.eventHandlers.media.onClick
-            ) {
-              return;
-            }
-            const surroundings: CardSurroundings = {
-              collectionName: child.props.collection!,
-              list: surroundingItems,
-            };
-            this.props.eventHandlers.media.onClick(
-              event,
-              surroundings,
-              analyticsEvent,
-            );
-          },
-        },
-      },
-    } as MediaProps);
-  }
+     */
+    if (
+      !this.props ||
+      !this.props.eventHandlers ||
+      !this.props.eventHandlers.media ||
+      !this.props.eventHandlers.media.onClick
+    ) {
+      return;
+    }
+    const surroundings: CardSurroundings = {
+      collectionName: child.props.collection!,
+      list: surroundingItems,
+    };
+    this.props.eventHandlers.media.onClick(event, surroundings, analyticsEvent);
+  };
 
-  renderStrip() {
+  renderNode = (providers: { mediaProvider?: MediaProvider } = {}) => {
+    const { mediaProvider } = providers;
     const { children } = this.props;
-    const { animate, offset } = this.state;
     const surroundingItems = React.Children.map(children, child =>
       this.mapMediaPropsToIdentifier(
         (child as React.ReactElement<MediaProps>).props,
       ),
     );
+    const items = React.Children.map<FilmstripItem>(children, child => {
+      const identifier = this.mapMediaPropsToIdentifier(
+        (child as React.ReactElement<MediaProps>).props,
+      );
+
+      return {
+        identifier,
+        onClick: this.onCardClick(
+          child as React.ReactElement<MediaProps>,
+          surroundingItems,
+        ),
+      };
+    });
 
     return (
-      <FilmstripView
-        animate={animate}
-        offset={offset}
-        onSize={this.handleSize}
-        onScroll={this.handleScroll}
-      >
-        {React.Children.map(children, rawChild => {
-          const child = rawChild as React.ReactElement<MediaProps>;
-          switch (child.props.type) {
-            case 'file':
-              return this.cloneFileCard(child, surroundingItems);
-            case 'link':
-            default:
-              return React.cloneElement(child);
-          }
-        })}
-      </FilmstripView>
+      <FilmstripWithProvider items={items} mediaProvider={mediaProvider} />
+    );
+  };
+
+  renderStrip() {
+    return (
+      <WithProviders
+        providers={['mediaProvider']}
+        providerFactory={this.providerFactory}
+        renderNode={this.renderNode}
+      />
     );
   }
 
