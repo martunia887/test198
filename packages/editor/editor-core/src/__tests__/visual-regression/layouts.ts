@@ -1,4 +1,4 @@
-import { initFullPageEditorWithAdf, clearEditor, snapshot } from './_utils';
+import { initFullPageEditorWithAdf, snapshot } from './_utils';
 import * as column2 from './adf-data/column-2.json';
 import * as column3 from './adf-data/column-3.json';
 
@@ -8,7 +8,6 @@ describe('Snapshot Test: Layouts', () => {
   beforeEach(async () => {
     // @ts-ignore
     page = global.page;
-    // await clearEditor(page);
   });
 
   // TODO: There is an issue Error: Evaluation failed: TypeError: Cannot set property 'value' of null
