@@ -105,6 +105,7 @@ export default class MediaGroup extends PureComponent<MediaGroupProps, {}> {
     surroundingItems: Identifier[],
   ) => (event: CardEvent, analyticsEvent?: any) => {
     /**
+     * // TODO: should we pass this somewhere?
      * eventHandlers: {
         ...child.props.eventHandlers
         media: {
@@ -127,15 +128,12 @@ export default class MediaGroup extends PureComponent<MediaGroupProps, {}> {
   renderNode = (providers: { mediaProvider?: MediaProvider } = {}) => {
     const { mediaProvider } = providers;
     const { children } = this.props;
-    const surroundingItems = React.Children.map(children, child =>
-      this.mapMediaPropsToIdentifier(
-        (child as React.ReactElement<MediaProps>).props,
-      ),
+    const surroundingItems = React.Children.map(
+      children,
+      this.mapChildToIdentifier,
     );
     const items = React.Children.map<FilmstripItem>(children, child => {
-      const identifier = this.mapMediaPropsToIdentifier(
-        (child as React.ReactElement<MediaProps>).props,
-      );
+      const identifier = this.mapChildToIdentifier(child);
 
       return {
         identifier,
@@ -161,12 +159,14 @@ export default class MediaGroup extends PureComponent<MediaGroupProps, {}> {
     );
   }
 
-  private mapMediaPropsToIdentifier({
-    id,
-    type,
-    occurrenceKey,
-    collection,
-  }: MediaProps): Identifier {
+  private mapChildToIdentifier(child: React.ReactChild): Identifier {
+    const {
+      id,
+      type,
+      occurrenceKey,
+      collection,
+    } = (child as React.ReactElement<MediaProps>).props;
+
     switch (type) {
       case 'file':
         return {
