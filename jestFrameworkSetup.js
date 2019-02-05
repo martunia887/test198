@@ -338,11 +338,9 @@ if (process.env.VISUAL_REGRESSION) {
   });
 
   // A failureThreshold of 1 will pass tests that have > 2 percent failing pixels
-  const customConfig = { threshold: 0.5 };
+  const customConfig = { threshold: 0.8 };
   const toMatchProdImageSnapshot = configureToMatchImageSnapshot({
     customDiffConfig: customConfig,
-    failureThreshold: '0.03',
-    failureThresholdType: 'percent',
     noColors: true,
   });
 
