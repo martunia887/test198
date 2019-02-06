@@ -6,6 +6,9 @@ describe('Snapshot Test: Breakout', () => {
     // @ts-ignore
     const page = global.page;
     await page.setViewport({ width: 1280, height: 1024 });
+    let viewport = page.viewport();
+    expect(viewport.width).toBe(1280);
+    expect(viewport.height).toBe(1024);
     await initFullPageEditorWithAdf(page, adf);
     await snapshot(page);
   });

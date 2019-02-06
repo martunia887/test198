@@ -3,7 +3,7 @@ import * as column2 from './adf-data/column-2.json';
 import * as column3 from './adf-data/column-3.json';
 
 // TODO: add insert columns integration tests
-describe('Snapshot Test: Layouts', () => {
+describe.skip('Snapshot Test: Layouts', () => {
   let page;
   beforeEach(async () => {
     // @ts-ignore
