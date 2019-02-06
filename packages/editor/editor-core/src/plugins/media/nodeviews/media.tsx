@@ -108,7 +108,6 @@ class MediaNode extends Component<
       const url = new URL(__src);
       const isSameOrigin = url.origin === location.origin;
       const isDifferentCollection = collection !== uploadCollection;
-
       if (isDifferentCollection && isSameOrigin) {
         try {
           const blob = await (await fetch(__src)).blob();

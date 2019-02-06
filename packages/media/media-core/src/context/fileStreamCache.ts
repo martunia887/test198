@@ -24,13 +24,20 @@ export class FileStreamCache {
     this.fileStreams.set(id, fileStream);
     const deferred = this.stateDeferreds.get(id);
 
-    if (deferred) {
-      fileStream.toPromise().then(state => {
-        // TODO: use this.setPreview if there is preview in the state
-        console.log(state);
+    fileStream.toPromise().then(async state => {
+      const currentPreview = this.getPreview(id);
+
+      if (!currentPreview && state.status !== 'error' && state.preview) {
+        const previewValue = (await state.preview).value;
+        if (previewValue instanceof Blob) {
+          this.setPreview(id, previewValue);
+        }
+      }
+
+      if (deferred) {
         deferred.resolve(state);
-      });
-    }
+      }
+    });
   }
 
   get(id: string): Observable<FileState> | undefined {
@@ -73,7 +80,6 @@ export class FileStreamCache {
   }
 
   setPreview(id: string, blob: Blob) {
-    console.log('setPreview', id, blob);
     this.filePreviews.set(id, blob);
   }
 
