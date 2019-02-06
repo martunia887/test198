@@ -20,6 +20,7 @@ async function globalSetup() {
     const browser = await puppeteer.launch({
       args: [
         '--no-sandbox',
+        '--disable-gpu',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
       ],
