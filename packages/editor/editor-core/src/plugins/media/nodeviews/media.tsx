@@ -95,21 +95,25 @@ class MediaNode extends Component<
   }
 
   async componentDidMount() {
-    const { node } = this.props;
-    const { collection, __src, id } = node.attrs;
     this.hasBeenMounted = true;
     this.handleNewNode(this.props);
     this.updateMediaContext();
+    this.checkForPastedImage();
+  }
+
+  checkForPastedImage = async () => {
+    const { node } = this.props;
+    const { collection, __src, id } = node.attrs;
     const context = await this.getMediaContext('upload');
 
     if (__src && context) {
-      const uploadParams = this.mediaProvider.uploadParams;
-      const uploadCollection = uploadParams && uploadParams.collection;
-      const url = new URL(__src);
-      const isSameOrigin = url.origin === location.origin;
-      const isDifferentCollection = collection !== uploadCollection;
-      if (isDifferentCollection && isSameOrigin) {
-        try {
+      try {
+        const uploadParams = this.mediaProvider.uploadParams;
+        const uploadCollection = uploadParams && uploadParams.collection;
+        const url = new URL(__src);
+        const isSameOrigin = url.origin === location.origin;
+        const isDifferentCollection = collection !== uploadCollection;
+        if (isDifferentCollection && isSameOrigin) {
           const blob = await (await fetch(__src)).blob();
           // TODO v2: pass file descriptor to use file id upfront
           // TODO: pass file name
@@ -133,10 +137,10 @@ class MediaNode extends Component<
                 subscription.unsubscribe();
               },
             });
-        } catch (e) {}
-      }
+        }
+      } catch (e) {}
     }
-  }
+  };
 
   componentWillUnmount() {
     const { node } = this.props;
