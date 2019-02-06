@@ -96,44 +96,38 @@ class MediaNode extends Component<
 
   async componentDidMount() {
     const { node } = this.props;
-    const { collection, type, __src, url, id } = node.attrs;
+    const { collection, __src, id } = node.attrs;
     this.hasBeenMounted = true;
     this.handleNewNode(this.props);
     this.updateMediaContext();
     const context = await this.getMediaContext('upload');
-    // TODO: also handle external type
-    // TODO: handle renderer to editor
+
     if (__src && context) {
       const uploadParams = this.mediaProvider.uploadParams;
       const uploadCollection = uploadParams && uploadParams.collection;
-      // const url = new URL(__src);
-      const isSameOrigin = true;
-      // const isSameOrigin = url.origin === location.origin;
-      // const isDifferentCollection = collection !== uploadCollection;
-      const isDifferentCollection = true; // Forced for testing
+      const url = new URL(__src);
+      const isSameOrigin = url.origin === location.origin;
+      const isDifferentCollection = collection !== uploadCollection;
+
       if (isDifferentCollection && isSameOrigin) {
         try {
           const blob = await (await fetch(__src)).blob();
-          console.log(blob);
-          // TODO: pass file descriptor to use file id upfront
+          // TODO v2: pass file descriptor to use file id upfront
           // TODO: pass file name
-          // TODO: pass file mimeType
           const subscription = context.file
             .upload({
               content: blob,
               collection: uploadCollection,
+              mimeType: blob.type,
             })
             .subscribe({
               next: state => {
                 const { id: newFileId } = state;
-                console.log('updateMediaNodeAttrs', id, newFileId);
-                // TODO: pass missing properties
+
                 this.pluginState.updateMediaNodeAttrs(
                   id,
                   {
                     id: newFileId,
-                    publicId: newFileId,
-                    fileId: newFileId,
                   },
                   true,
                 );
@@ -142,9 +136,6 @@ class MediaNode extends Component<
             });
         } catch (e) {}
       }
-    } else if (url && type === 'external') {
-      const blob = await (await fetch(url)).blob();
-      console.log({ url }, blob);
     }
   }
 

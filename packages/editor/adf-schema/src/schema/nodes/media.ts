@@ -44,6 +44,7 @@ export interface MediaBaseAttributes {
 
   // Need this until there is actual "upfront" media ID
   __key?: string | null;
+  __src?: string;
 }
 
 export interface MediaAttributes extends MediaBaseAttributes {
@@ -109,7 +110,6 @@ export const media: NodeSpec = {
     {
       tag: 'img',
       getAttrs: dom => {
-        debugger;
         return {
           type: 'external',
           url: (dom as HTMLElement).getAttribute('src') || '',
@@ -120,9 +120,7 @@ export const media: NodeSpec = {
   toDOM(node: PMNode) {
     const { id } = node.attrs;
     const preview = fileStreamsCache.getPreview(id);
-
-    // TODO: get preview sync
-    const attrs = {
+    const attrs: { [key: string]: string } = {
       'data-id': id,
       'data-node-type': 'media',
       'data-type': node.attrs.type,
@@ -141,9 +139,7 @@ export const media: NodeSpec = {
     };
 
     if (preview) {
-      const src = URL.createObjectURL(preview);
-
-      (attrs as any)['data-src'] = src;
+      attrs['data-src'] = URL.createObjectURL(preview);
     }
 
     copyPrivateAttributes(
