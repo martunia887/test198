@@ -12,7 +12,7 @@ export const Textarea: any = styled.textarea`
   font-family: monospace;
   padding: 10px;
   width: 100%;
-  height: 250px;
+  height: 20px;
 `;
 
 export interface State {

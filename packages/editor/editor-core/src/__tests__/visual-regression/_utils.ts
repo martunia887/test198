@@ -398,11 +398,11 @@ export const snapshot = async (page, selector = '.akEditor') => {
   // Try to take a screenshot of only the editor.
   // Otherwise take the whole page.
   let image;
-  if (editor) {
-    image = await editor.screenshot();
-  } else {
-    image = await page.screenshot();
-  }
+  // if (editor) {
+  //   image = await editor.screenshot();
+  // } else {
+  image = await page.screenshot();
+  // }
   // @ts-ignore
   expect(image).toMatchProdImageSnapshot();
 };
