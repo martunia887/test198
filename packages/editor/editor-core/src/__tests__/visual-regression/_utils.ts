@@ -400,10 +400,7 @@ export const setTests = forInput => {
   });
 };
 
-export const snapshot = async (
-  page,
-  selector = '.fabric-editor-popup-scroll-parent',
-) => {
+export const snapshot = async (page, selector = '.akEditor') => {
   // .akeditor throws error with different size on different environment
   const editor = await page.$(selector);
 
