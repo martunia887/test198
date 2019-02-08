@@ -426,7 +426,7 @@ export const snapshot = async (
   } else {
     // @ts-ignore
     expect(image).toMatchProdImageSnapshot({
-      failureThreshold: 5000,
+      failureThreshold: 8000,
       failureThresholdType: 'pixel',
     });
   }
