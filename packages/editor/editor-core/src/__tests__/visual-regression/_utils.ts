@@ -400,7 +400,11 @@ export const setTests = forInput => {
   });
 };
 
-export const snapshot = async (page, selector = '.akEditor') => {
+export const snapshot = async (
+  page,
+  selector = '.fabric-editor-popup-scroll-parent',
+) => {
+  // .akeditor throws error with different size on different environment
   const editor = await page.$(selector);
 
   // Try to take a screenshot of only the editor.
@@ -411,6 +415,7 @@ export const snapshot = async (page, selector = '.akEditor') => {
   } else {
     image = await page.screenshot();
   }
+
   // @ts-ignore
   expect(image).toMatchProdImageSnapshot();
 };

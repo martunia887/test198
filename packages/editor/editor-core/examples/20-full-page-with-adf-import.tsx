@@ -30,7 +30,8 @@ export default class Example extends React.Component<any, State> {
   render() {
     return (
       <EditorContext>
-        <div style={{ height: '100%' }}>
+        <div style={{ height: '100%', width: '100%' }}>
+          <FullPageEditor />
           <DevTools />
           <Textarea
             id="adf-input"
@@ -56,7 +57,6 @@ export default class Example extends React.Component<any, State> {
                 >
                   Export ADF
                 </button>
-                <FullPageEditor />
               </>
             )}
           />
