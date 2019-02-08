@@ -405,17 +405,19 @@ export const snapshot = async (
   tolerance?: number,
   selector = '.akEditor',
 ) => {
-  const editor = await page.$(selector);
+  // TODO: enable this once we have fixed screenshot size mismatch error
+  // const editor = await page.$(selector);
 
-  // Try to take a screenshot of only the editor.
-  // Otherwise take the whole page.
-  let image;
-  if (editor) {
-    image = await editor.screenshot();
-  } else {
-    image = await page.screenshot();
-  }
+  // // Try to take a screenshot of only the editor.
+  // // Otherwise take the whole page.
+  // let image;
+  // if (editor) {
+  //   image = await editor.screenshot();
+  // } else {
+  //   image = await page.screenshot();
+  // }
 
+  const image = await page.screenshot();
   if (tolerance !== undefined) {
     // @ts-ignore
     expect(image).toMatchProdImageSnapshot({
