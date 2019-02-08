@@ -400,22 +400,35 @@ export const setTests = forInput => {
   });
 };
 
-export const snapshot = async (page, selector = '.akEditor') => {
-  // .akeditor throws error with different size on different environment
-  // const editor = await page.$(selector);
+export const snapshot = async (
+  page,
+  tolerance?: number,
+  selector = '.akEditor',
+) => {
+  const editor = await page.$(selector);
 
   // Try to take a screenshot of only the editor.
   // Otherwise take the whole page.
-  // let image;
-  // if (editor) {
-  //   image = await editor.screenshot();
-  // } else {
-  //   image = await page.screenshot();
-  // }
+  let image;
+  if (editor) {
+    image = await editor.screenshot();
+  } else {
+    image = await page.screenshot();
+  }
 
-  const image = await page.screenshot();
-  // @ts-ignore
-  expect(image).toMatchProdImageSnapshot();
+  if (tolerance !== undefined) {
+    // @ts-ignore
+    expect(image).toMatchProdImageSnapshot({
+      failureThreshold: `${tolerance}`,
+      failureThresholdType: 'percent',
+    });
+  } else {
+    // @ts-ignore
+    expect(image).toMatchProdImageSnapshot({
+      failureThreshold: 5000,
+      failureThresholdType: 'pixel',
+    });
+  }
 };
 
 export const insertMedia = async (page, filenames = ['one.svg']) => {
