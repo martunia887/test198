@@ -31,6 +31,14 @@ export const dynamicTextViewportSizes = [
   { width: 800, height: 3000 },
 ];
 
+export const deviceViewPorts = {
+  HiDPI: { width: 1440, height: 900 },
+  MDPI: { width: 1280, height: 800 },
+  iPadPro: { width: 1024, height: 1366 },
+  iPad: { width: 768, height: 1024 },
+  iPhonePlus: { width: 414, height: 736 },
+};
+
 export const viewportSizes = [
   ...dynamicTextViewportSizes,
   { width: 400, height: 3000 },
@@ -398,11 +406,11 @@ export const snapshot = async (page, selector = '.akEditor') => {
   // Try to take a screenshot of only the editor.
   // Otherwise take the whole page.
   let image;
-  // if (editor) {
-  //   image = await editor.screenshot();
-  // } else {
-  image = await page.screenshot();
-  // }
+  if (editor) {
+    image = await editor.screenshot();
+  } else {
+    image = await page.screenshot();
+  }
   // @ts-ignore
   expect(image).toMatchProdImageSnapshot();
 };
