@@ -12,7 +12,7 @@ export const Textarea: any = styled.textarea`
   font-family: monospace;
   padding: 10px;
   width: 100%;
-  height: 20px;
+  height: 10px;
 `;
 
 export interface State {
@@ -30,8 +30,7 @@ export default class Example extends React.Component<any, State> {
   render() {
     return (
       <EditorContext>
-        <div style={{ height: '100%', width: '100%' }}>
-          <FullPageEditor />
+        <div style={{ height: '100%' }}>
           <DevTools />
           <Textarea
             id="adf-input"
@@ -57,6 +56,7 @@ export default class Example extends React.Component<any, State> {
                 >
                   Export ADF
                 </button>
+                <FullPageEditor />
               </>
             )}
           />
