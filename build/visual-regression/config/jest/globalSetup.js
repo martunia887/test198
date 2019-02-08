@@ -19,7 +19,6 @@ async function globalSetup() {
     console.log('puppeteer:', puppeteer.executablePath());
     const browser = await puppeteer.launch({
       headless: true,
-      slowMo: 150,
       args: [
         '--no-sandbox',
         '--disable-gpu',
