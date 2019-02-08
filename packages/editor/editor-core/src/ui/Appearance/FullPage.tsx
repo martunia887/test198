@@ -20,6 +20,7 @@ const GUTTER_PADDING = 32;
 const FullPageEditorWrapper = styled.div`
   min-width: 340px;
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
