@@ -36,18 +36,36 @@ const createContext = () => {
 const uploadFileMock: jest.Mock<any> = uploadFile as any;
 
 describe('Context', () => {
+  const id = uuid.v4();
+  const response = Promise.resolve({
+    data: {
+      items: [
+        {
+          id,
+          collection: 'some-collection',
+          details: {
+            name: 'file-one',
+            size: 1,
+            processingStatus: 'succeeded',
+          },
+        },
+      ],
+    },
+  });
+  const getItems = jest.fn().mockReturnValue(response);
+  const touchFiles = jest.fn();
+  const fakeStore: Partial<MediaStore> = { touchFiles, getItems };
+
   beforeEach(() => {
     uploadFileMock.mockReset();
+    fileStreamsCache.removeAll();
   });
 
   describe('.file.getFileState()', () => {
-    let id: string;
     let occurrenceKey: string;
     let uploadableFileUpfrontIds: UploadableFileUpfrontIds;
     const controller = new UploadController();
-
     beforeEach(() => {
-      id = uuid.v4();
       occurrenceKey = uuid.v4();
       uploadableFileUpfrontIds = {
         id,
@@ -58,25 +76,6 @@ describe('Context', () => {
 
     it('should fetch the file if it doesnt exist locally', done => {
       const context = createContext();
-      const response = Promise.resolve({
-        data: {
-          items: [
-            {
-              id,
-              collection: 'some-collection',
-              details: {
-                name: 'file-one',
-                size: 1,
-                processingStatus: 'succeeded',
-              },
-            },
-          ],
-        },
-      });
-      const getItems = jest.fn().mockReturnValue(response);
-      const fakeStore = {
-        getItems,
-      };
       (context as any).mediaStore = fakeStore;
       (context.file as any).mediaStore = fakeStore;
       const observer = context.file.getFileState(id, {
@@ -145,6 +144,7 @@ describe('Context', () => {
 
     it('should pass options down', () => {
       const context = createContext();
+      (context.file as any).mediaStore = fakeStore;
 
       context.file.getFileState(id, {
         collectionName: 'my-collection',
@@ -156,14 +156,11 @@ describe('Context', () => {
 
     it('should return local file state while file is still uploading', done => {
       const context = createContext();
-      const getFile = jest.fn();
       const content = new Blob();
       const file = {
         content,
       };
-      (context as any).mediaStore = {
-        getFile,
-      };
+      (context as any).mediaStore = fakeStore;
       uploadFileMock.mockReturnValue(jest.fn());
 
       const subscription = context.file
@@ -188,7 +185,6 @@ describe('Context', () => {
                   occurrenceKey,
                 };
                 expect(state).toEqual(expectedState);
-                expect(getFile).not.toBeCalled();
                 subscription.unsubscribe();
                 done();
               },
@@ -199,21 +195,11 @@ describe('Context', () => {
 
     it('should return file state regardless of the state', done => {
       const context = createContext();
-      const getFile = jest.fn().mockReturnValue({
-        data: {
-          processingStatus: 'succeeded',
-          id,
-          name: 'file-one',
-          size: 1,
-          mediaType: 'image',
-          mimeType: 'image/png',
-        },
-      });
       const next = jest.fn();
       const file = {
         content: 'data:image/gif;base64,R0lGODlhAQABAAAAACw=',
       };
-      (context as any).mediaStore = { getFile };
+
       uploadFileMock.mockImplementation((_, __, ___, callbacks) => {
         callbacks.onUploadFinish();
         return {};
@@ -244,14 +230,14 @@ describe('Context', () => {
   });
 
   describe('.file.upload()', () => {
-    let id;
     let occurrenceKey;
     let uploadableFileUpfrontIds: UploadableFileUpfrontIds;
     let promissedUploadId: string;
     let controller: UploadController;
 
     beforeEach(() => {
-      id = uuid.v4();
+      uploadFileMock.mockReset();
+      fileStreamsCache.removeAll();
       occurrenceKey = uuid.v4();
       promissedUploadId = uuid.v4();
       uploadableFileUpfrontIds = {
@@ -269,10 +255,6 @@ describe('Context', () => {
         callbacks.onProgress(0.1);
         return {};
       });
-      const touchFiles = jest.fn();
-      const fakeStore: Partial<MediaStore> = {
-        touchFiles,
-      };
       (context as any).mediaStore = fakeStore;
       (context.file as any).mediaStore = fakeStore;
       touchFiles.mockReturnValue(new Promise(() => {}));
@@ -305,10 +287,6 @@ describe('Context', () => {
         callbacks.onProgress(0.1);
         return {};
       });
-      const touchFiles = jest.fn();
-      const fakeStore: Partial<MediaStore> = {
-        touchFiles,
-      };
       (context as any).mediaStore = fakeStore;
       (context.file as any).mediaStore = fakeStore;
       const touchFilesResult: Promise<
@@ -353,14 +331,6 @@ describe('Context', () => {
 
     it('should call subscription error when upload is cancelled', () => {
       const context = createContext();
-      const getFile = jest.fn().mockReturnValue({
-        data: {
-          processingStatus: 'succeeded',
-          id: 'file-id-1',
-          name: 'file-one',
-          size: 1,
-        },
-      });
       const createDownloadFileStream = jest.fn().mockReturnValue(
         new Observable(observer => {
           observer.complete();
@@ -371,7 +341,7 @@ describe('Context', () => {
         collection: 'some-collection',
       };
       const cancelMock = jest.fn();
-      (context as any).mediaStore = { getFile };
+      (context as any).mediaStore = fakeStore;
       (context as any).createDownloadFileStream = createDownloadFileStream;
       uploadFileMock.mockImplementation(
         (_, __, ___, callbacks: UploadFileCallbacks) => {
@@ -400,24 +370,20 @@ describe('Context', () => {
 
     it('should emit file preview when file is a Blob', done => {
       const context = createContext();
-      const getFile = jest.fn().mockReturnValue({
-        data: {
-          processingStatus: 'succeeded',
-          id: 'file-id-1',
-          name: 'file-one',
-          size: 1,
-        },
-      });
       const file = {
         content: new File([], '', { type: 'image/png' }),
         name: 'file-name.png',
       };
 
-      uploadFileMock.mockImplementation(() => {
-        return {};
-      });
+      (context as any).mediaStore = fakeStore;
+      (context.file as any).mediaStore = fakeStore;
 
-      (context as any).mediaStore = { getFile };
+      uploadFileMock.mockImplementation(
+        (_, __, ___, callbacks: UploadFileCallbacks) => {
+          callbacks.onProgress(0.1);
+          return {};
+        },
+      );
 
       const subscription = context.file
         .upload(file, controller, uploadableFileUpfrontIds)
@@ -432,7 +398,7 @@ describe('Context', () => {
             expect(
               (await (state as UploadingFileState).preview!).value,
             ).toBeInstanceOf(Blob);
-            subscription.unsubscribe();
+            setTimeout(() => subscription.unsubscribe(), 0);
             done();
           },
         });
@@ -440,26 +406,25 @@ describe('Context', () => {
 
     it('should pass right mimeType when file is a Blob', done => {
       const context = createContext();
-      const getFile = jest.fn().mockReturnValue({
-        data: {
-          processingStatus: 'succeeded',
-        },
-      });
       const file = {
         content: new File([], '', { type: 'image/png' }),
       };
-      uploadFileMock.mockImplementation(() => {
-        return {};
-      });
 
-      (context as any).mediaStore = { getFile };
+      (context as any).mediaStore = fakeStore;
+
+      uploadFileMock.mockImplementation(
+        (_, __, ___, callbacks: UploadFileCallbacks) => {
+          callbacks.onProgress(0.1);
+          return {};
+        },
+      );
 
       const subscription = context.file
         .upload(file, controller, uploadableFileUpfrontIds)
         .subscribe({
           next(state) {
             expect((state as UploadingFileState).mimeType).toEqual('image/png');
-            subscription.unsubscribe();
+            setTimeout(() => subscription.unsubscribe(), 0);
             done();
           },
         });
