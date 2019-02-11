@@ -42,6 +42,7 @@ export interface MediaNodeProps extends ReactNodeProps {
   ) => void;
   editorAppearance: EditorAppearance;
   mediaProvider?: Promise<MediaProvider>;
+  viewContext?: Context;
 }
 
 export interface Props extends Partial<MediaBaseAttributes> {
@@ -57,6 +58,7 @@ export interface Props extends Partial<MediaBaseAttributes> {
   context: Context;
   disableOverlay?: boolean;
   mediaProvider?: Promise<MediaProvider>;
+  viewContext?: Context;
 }
 
 export interface MediaNodeState {
@@ -68,12 +70,6 @@ class MediaNode extends Component<
   MediaNodeState
 > {
   private pluginState: MediaPluginState;
-  private mediaProvider: MediaProvider;
-  private hasBeenMounted: boolean = false;
-
-  state: MediaNodeState = {
-    viewContext: undefined,
-  };
 
   constructor(props) {
     super(props);
@@ -84,7 +80,7 @@ class MediaNode extends Component<
   shouldComponentUpdate(nextProps, nextState) {
     if (
       this.props.selected !== nextProps.selected ||
-      this.state.viewContext !== nextState.viewContext ||
+      this.props.viewContext !== nextProps.viewContext ||
       this.props.node.attrs.id !== nextProps.node.attrs.id ||
       this.props.node.attrs.collection !== nextProps.node.attrs.collection ||
       this.props.cardDimensions !== nextProps.cardDimensions
@@ -95,20 +91,19 @@ class MediaNode extends Component<
   }
 
   async componentDidMount() {
-    this.hasBeenMounted = true;
     this.handleNewNode(this.props);
     this.updateMediaContext();
     this.checkForPastedImage();
   }
 
   checkForPastedImage = async () => {
-    const { node } = this.props;
+    const { node, mediaProvider } = this.props;
     const { collection, __src, id } = node.attrs;
     const context = await this.getMediaContext('upload');
 
-    if (__src && context) {
+    if (__src && context && mediaProvider) {
       try {
-        const uploadParams = this.mediaProvider.uploadParams;
+        const uploadParams = (await mediaProvider).uploadParams;
         const uploadCollection = uploadParams && uploadParams.collection;
         const url = new URL(__src);
         const isSameOrigin = url.origin === location.origin;
@@ -145,11 +140,6 @@ class MediaNode extends Component<
   componentWillUnmount() {
     const { node } = this.props;
     this.pluginState.handleMediaNodeUnmount(node);
-    this.hasBeenMounted = false;
-  }
-
-  componentWillReceiveProps(props) {
-    this.updateMediaContext();
   }
 
   componentDidUpdate() {
@@ -159,11 +149,12 @@ class MediaNode extends Component<
   getMediaContext = async (
     type: 'view' | 'upload',
   ): Promise<Context | undefined> => {
-    if (this.props.mediaProvider) {
-      this.mediaProvider = await this.props.mediaProvider;
-      const context = await (type === 'view'
-        ? this.mediaProvider.viewContext
-        : this.mediaProvider.uploadContext);
+    const { mediaProvider } = await this.props;
+    if (mediaProvider) {
+      const context =
+        type === 'view'
+          ? (await mediaProvider).viewContext
+          : (await mediaProvider).uploadContext;
 
       return context;
     }
@@ -174,7 +165,7 @@ class MediaNode extends Component<
   private updateMediaContext = async () => {
     const viewContext = await this.getMediaContext('view');
 
-    if (viewContext && this.hasBeenMounted) {
+    if (viewContext) {
       this.setState({ viewContext });
     }
   };
@@ -188,7 +179,7 @@ class MediaNode extends Component<
       editorAppearance,
     } = this.props;
     const { id, type, collection, url, __key } = node.attrs;
-    const { viewContext } = this.state;
+    const { viewContext } = this.props;
     /**
      * On mobile we don't receive a collectionName until the `upload-end` event.
      * We don't want to render a proper card until we have a valid collection.
