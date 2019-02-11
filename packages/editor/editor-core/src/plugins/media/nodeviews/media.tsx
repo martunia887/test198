@@ -9,17 +9,15 @@ import {
   stateKey as mediaStateKey,
   MediaProvider,
 } from '../pm-plugins/main';
-import { Context, ImageResizeMode } from '@atlaskit/media-core';
+import { Context } from '@atlaskit/media-core';
 import {
   Card,
   CardDimensions,
   CardView,
-  CardEventHandler,
   CardOnClickCallback,
   Identifier,
 } from '@atlaskit/media-card';
-import { MediaType, MediaBaseAttributes } from '@atlaskit/adf-schema';
-import { withImageLoader, ImageStatus } from '@atlaskit/editor-common';
+import { withImageLoader } from '@atlaskit/editor-common';
 
 import { EditorAppearance } from '../../../types';
 
@@ -45,39 +43,18 @@ export interface MediaNodeProps extends ReactNodeProps {
   viewContext?: Context;
 }
 
-export interface Props extends Partial<MediaBaseAttributes> {
-  type: MediaType;
-  cardDimensions?: CardDimensions;
-  onClick?: CardOnClickCallback;
-  onDelete?: CardEventHandler;
-  resizeMode?: ImageResizeMode;
-  appearance?: Appearance;
-  selected?: boolean;
-  url?: string;
-  imageStatus?: ImageStatus;
-  context: Context;
-  disableOverlay?: boolean;
-  mediaProvider?: Promise<MediaProvider>;
-  viewContext?: Context;
-}
+export type Props = MediaNodeProps & ImageLoaderProps;
 
-export interface MediaNodeState {
-  viewContext?: Context;
-}
-
-class MediaNode extends Component<
-  MediaNodeProps & ImageLoaderProps,
-  MediaNodeState
-> {
+class MediaNode extends Component<Props> {
   private pluginState: MediaPluginState;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     const { view } = this.props;
     this.pluginState = mediaStateKey.getState(view.state);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: Props) {
     if (
       this.props.selected !== nextProps.selected ||
       this.props.viewContext !== nextProps.viewContext ||
@@ -90,9 +67,8 @@ class MediaNode extends Component<
     return false;
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.handleNewNode(this.props);
-    this.updateMediaContext();
     this.checkForPastedImage();
   }
 
@@ -119,8 +95,8 @@ class MediaNode extends Component<
               mimeType: blob.type,
             })
             .subscribe({
-              next: state => {
-                const { id: newFileId } = state;
+              next: fileState => {
+                const { id: newFileId } = fileState;
 
                 this.pluginState.updateMediaNodeAttrs(
                   id,
@@ -160,14 +136,6 @@ class MediaNode extends Component<
     }
 
     return undefined;
-  };
-
-  private updateMediaContext = async () => {
-    const viewContext = await this.getMediaContext('view');
-
-    if (viewContext) {
-      this.setState({ viewContext });
-    }
   };
 
   render() {
