@@ -81,33 +81,13 @@ class MediaNode extends Component<Props> {
       try {
         const uploadParams = (await mediaProvider).uploadParams;
         const uploadCollection = uploadParams && uploadParams.collection;
-        const url = new URL(__src);
-        const isSameOrigin = url.origin === location.origin;
         const isDifferentCollection = collection !== uploadCollection;
-        if (isDifferentCollection && isSameOrigin) {
-          const blob = await (await fetch(__src)).blob();
-          // TODO v2: pass file descriptor to use file id upfront
-          // TODO: pass file name
-          const subscription = context.file
-            .upload({
-              content: blob,
-              collection: uploadCollection,
-              mimeType: blob.type,
-            })
-            .subscribe({
-              next: fileState => {
-                const { id: newFileId } = fileState;
-
-                this.pluginState.updateMediaNodeAttrs(
-                  id,
-                  {
-                    id: newFileId,
-                  },
-                  true,
-                );
-                subscription.unsubscribe();
-              },
-            });
+        if (isDifferentCollection) {
+          const newFileId = await context.file.uploadExternal(
+            __src,
+            uploadCollection,
+          );
+          this.pluginState.updateMediaNodeAttrs(id, { id: newFileId }, true);
         }
       } catch (e) {}
     }
