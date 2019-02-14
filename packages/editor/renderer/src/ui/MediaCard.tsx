@@ -7,6 +7,7 @@ import {
   CardView,
   CardOnClickCallback,
   ExternalImageIdentifier,
+  FileIdentifier,
 } from '@atlaskit/media-card';
 import { Context, ImageResizeMode } from '@atlaskit/media-core';
 import { MediaType } from '@atlaskit/adf-schema';
@@ -120,6 +121,7 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
       id,
       type,
       collection,
+      occurrenceKey,
       cardDimensions,
       resizeMode,
       rendererAppearance,
@@ -138,10 +140,21 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
       return this.renderLoadingCard();
     }
 
-    let identifier: any = {
+    if (!id || type !== 'file') {
+      return (
+        <CardView
+          status="error"
+          mediaItemType={type}
+          dimensions={cardDimensions}
+        />
+      );
+    }
+
+    let identifier: FileIdentifier = {
       id,
-      mediaItemType: type,
+      mediaItemType: 'file',
       collectionName: collection,
+      occurrenceKey,
     };
 
     return (
