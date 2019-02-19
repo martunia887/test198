@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import merge from 'lodash.merge';
 import Textfield, { Theme } from '../src';
 
 export default function() {
@@ -14,8 +15,8 @@ export default function() {
     N800: '#17394D',
     B500: '#0079BF',
   };
-  const nachosTheme = (theme, props) => ({
-    ...theme(props),
+
+  const nachosTheme = () => ({
     backgroundColor: colors.N10,
     backgroundColorFocus: colors.N0,
     borderColor: colors.N40,
@@ -25,7 +26,6 @@ export default function() {
     placeholderTextColor: colors.N200,
     textColor: colors.N800,
     disabledRules: {
-      ...theme(props).disabledRules,
       backgroundColor: colors.N30,
       backgroundColorHover: colors.N30,
       borderColor: colors.N30,
@@ -35,7 +35,9 @@ export default function() {
 
   return (
     <div>
-      <Theme.Provider value={nachosTheme}>
+      <Theme.Provider
+        value={(theme, props) => merge(theme(props), nachosTheme())}
+      >
         <label htmlFor="default-value">Default Value</label>
         <Textfield
           isCompact
@@ -45,6 +47,8 @@ export default function() {
 
         <label htmlFor="focused">Focused</label>
         <Textfield name="focused" autoFocus defaultValue="Focus on me!" />
+        <label htmlFor="invalid">Invalid</label>
+        <Textfield name="invalid" isInvalid />
         <label htmlFor="disabled">Disabled</label>
         <Textfield
           name="disabled"
