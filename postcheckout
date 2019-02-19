@@ -8,3 +8,5 @@ runOnChange() {
 
 # If dependencies have changed, rerun package manager to install latest deps.
 runOnChange yarn.lock "bolt"
+
+echo "custom post-checkout"
