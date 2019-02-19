@@ -1,0 +1,10 @@
+#!/bin/sh
+
+changedFiles="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
+
+runOnChange() {
+	echo "$changedFiles" | grep -q "$1" && eval "$2"
+}
+
+# If dependencies have changed, rerun package manager to install latest deps.
+runOnChange yarn.lock "bolt"

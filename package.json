@@ -525,7 +525,8 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "./prepush $HUSKY_GIT_PARAMS <<< $HUSKY_GIT_STDIN"
+      "pre-push": "./prepush $HUSKY_GIT_PARAMS <<< $HUSKY_GIT_STDIN",
+      "post-checkout": "./postcheckout"
     }
   },
   "lint-staged": {
