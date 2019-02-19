@@ -12,16 +12,25 @@ const transitionDuration = '0.2s';
 const verticalPaddingCompact = grid / 2;
 const verticalPaddingBase = grid;
 
-const getPadding = ({ isCompact }) => {
+const getPadding = ({ isCompact, ...p }) => {
   const verticalPadding = isCompact
     ? verticalPaddingCompact
     : verticalPaddingBase;
+
+  if (p.padding) {
+    return css`
+      padding: ${p.padding};
+    `;
+  }
   return css`
     padding: ${verticalPadding}px ${horizontalPadding - borderWidth}px;
   `;
 };
 
-const getLineHeight = () => {
+const getLineHeight = (...p) => {
+  if (p.lineHeight) {
+    return p.lineHeight;
+  }
   return lineHeight / fontSize();
 };
 
@@ -29,7 +38,7 @@ const getDisabledState = props =>
   props.isDisabled &&
   css`
     color: ${props.disabledRules.textColor};
-    pointer-events: none;
+    cursor: not-allowed;
   `;
 
 const getHoverState = props => {
@@ -174,7 +183,6 @@ export const InputWrapper = styled.div`
     border-color ${transitionDuration} ease-in-out;
   word-wrap: break-word;
   vertical-align: top;
-  ${p => p.isDisabled && `cursor: not-allowed;`}
   ${getPadding} ${getHoverState} ${getDisabledState};
 
   & > input {
