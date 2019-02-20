@@ -3,6 +3,8 @@ import {
   Rectangle,
   Vector2,
   Bounds,
+  loadImage,
+  getOrientation,
   dataURItoFile,
   FileInfo,
   getFileInfo,
@@ -12,10 +14,7 @@ import { ImagePlacerContainer } from './container';
 import { ImagePlacerImage, IMAGE_ERRORS } from './image';
 import { Margin } from './margin';
 import { ImagePlacerWrapper } from './styled';
-import {
-  initialiseImagePreview,
-  renderImageAtCurrentView,
-} from './imageProcessor';
+import { renderImageAtCurrentView, transformImage } from './imageProcessor';
 import {
   zoomToFit,
   applyConstraints,
@@ -277,17 +276,51 @@ export class ImagePlacer extends React.Component<
   }
 
   async preprocessFile(fileInfo: FileInfo) {
-    const { maxZoom } = this.props;
-    const previewInfo = await initialiseImagePreview(
-      fileInfo,
-      this.containerRect,
-      maxZoom,
-    );
-    if (previewInfo) {
-      const { width, height, img } = previewInfo;
-      this.imageSourceRect = new Rectangle(width, height);
-      this.originalImage = img;
-      this.setSrc(previewInfo.fileInfo);
+    let orientation: number = 1;
+    let rawImage: HTMLImageElement;
+
+    try {
+      const result = await Promise.all([
+        getOrientation(fileInfo.file),
+        loadImage(fileInfo.src),
+      ]);
+      orientation = result[0];
+      rawImage = result[1];
+    } catch (e) {
+      return;
+    }
+
+    if (rawImage) {
+      const { maxZoom } = this.props;
+      const containerRect = this.containerRect;
+      const maxRect = new Rectangle(
+        containerRect.width * maxZoom,
+        containerRect.height * maxZoom,
+      );
+      const { naturalWidth: imgWidth, naturalHeight: imgHeight } = rawImage;
+
+      const {
+        image: rotatedImage,
+        width: rotatedWidth,
+        height: rotatedHeight,
+      } = await transformImage(rawImage, orientation, imgWidth, imgHeight);
+
+      const srcRect = new Rectangle(rotatedWidth, rotatedHeight);
+      const scaleFactor = srcRect.scaleToFitLargestSide(maxRect);
+      const scaledRect =
+        scaleFactor < 1 ? srcRect.scaled(scaleFactor) : srcRect;
+      const { width: previewWidth, height: previewHeight } = scaledRect;
+
+      const { image: previewImage } = await transformImage(
+        rotatedImage,
+        1,
+        previewWidth,
+        previewHeight,
+      );
+
+      this.setSrc(previewImage.src);
+      this.imageSourceRect = new Rectangle(previewWidth, previewHeight);
+      this.originalImage = rotatedImage;
     } else {
       /* TODO: i18n https://product-fabric.atlassian.net/browse/MS-1261 */
       this.onImageError(IMAGE_ERRORS.LOAD_FAIL);
@@ -300,9 +333,9 @@ export class ImagePlacer extends React.Component<
     this.provideImageActions();
   }
 
-  setSrc(fileInfo: FileInfo) {
+  setSrc(src: string) {
     this.setState({
-      src: fileInfo.src,
+      src,
       zoom: 0,
       originX: 0,
       originY: 0,

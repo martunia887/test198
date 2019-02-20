@@ -190,6 +190,11 @@ class Example extends React.Component<{}, ExampleState> {
         </Grid>
         <Grid>
           <GridColumn>
+            <input type="file" onChange={this.onFileInputChange} />
+          </GridColumn>
+        </Grid>
+        <Grid>
+          <GridColumn>
             {errorMessage ? (
               <ImagePlacerErrorWrapper
                 style={{
@@ -217,6 +222,11 @@ class Example extends React.Component<{}, ExampleState> {
                 onImageActions={this.onImageActions}
               />
             )}
+            {src !== undefined ? (
+              <p>
+                <button onClick={this.onGetImageClick}>Export DataURI</button>
+              </p>
+            ) : null}
           </GridColumn>
         </Grid>
         <Grid>
@@ -231,16 +241,6 @@ class Example extends React.Component<{}, ExampleState> {
               innerRef={this.onZoomSliderElement}
               style={{ width: containerWidth + margin * 2 }}
             />
-          </GridColumn>
-        </Grid>
-        <Grid>
-          <GridColumn>
-            <input type="file" onChange={this.onFileInputChange} />
-            {src !== undefined ? (
-              <p>
-                <button onClick={this.onGetImageClick}>Export DataURI</button>
-              </p>
-            ) : null}
           </GridColumn>
         </Grid>
         <Grid>
