@@ -20,7 +20,12 @@ const Layout: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   }
 `;
 
+const SelectedImage: React.ComponentClass<
+  React.ImgHTMLAttributes<{}>
+> = styled.img``;
+
 interface ExampleState {
+  selectedImg?: string;
   isOpen: boolean;
 }
 
@@ -34,6 +39,7 @@ class Example extends Component<{}, ExampleState> {
   };
 
   onImageSelected = (actions: ImageActions) => {
+    this.setState({ selectedImg: actions.toDataURL() });
     console.log(actions.toDataURL());
     this.onClose();
   };
@@ -48,7 +54,7 @@ class Example extends Component<{}, ExampleState> {
   };
 
   render() {
-    const { isOpen } = this.state;
+    const { isOpen, selectedImg } = this.state;
 
     return (
       <div>
@@ -57,12 +63,15 @@ class Example extends Component<{}, ExampleState> {
             <GridColumn medium={2} />
             <GridColumn medium={8}>
               <Layout>
+                {selectedImg ? <SelectedImage src={selectedImg} /> : null}
                 <Button appearance="primary" onClick={this.onOpen}>
                   Open sesame!
                 </Button>
               </Layout>
               <AvatarPickerDialog
+                mode="user"
                 avatars={avatars}
+                selectedAvatar={avatars[0]}
                 isCircular={true}
                 isOpen={isOpen}
                 isLoading={false}

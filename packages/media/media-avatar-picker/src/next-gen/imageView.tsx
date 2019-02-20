@@ -6,7 +6,7 @@ import { UploadButton } from './uploadButton';
 import { CloseButton } from './closeButton';
 import { Slider } from './slider';
 import { ImagePlacer, ImageActions } from '../image-placer';
-import { errorIcon, dragDropIcon } from './images';
+import { errorIcon, dragDropIcon } from './icons';
 import {
   ACCEPTED_FILE_TYPES,
   ERROR_MESSAGES,

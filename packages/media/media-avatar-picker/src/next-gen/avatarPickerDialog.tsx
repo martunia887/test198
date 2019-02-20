@@ -11,9 +11,15 @@ import { AvatarViewSmall } from './avatarViewSmall';
 import { AvatarViewLarge } from './avatarViewLarge';
 import { CaptureWebCam } from './captureWebcam';
 import { StackedView } from './stackedView';
-import { AvatarPickerWrapper, ModalHeader, ModalFooterButtons } from './styled';
+import {
+  AvatarPickerWrapper,
+  ModalHeader,
+  ModalFooterButtons,
+  TextMessage,
+} from './styled';
 
 export interface AvatarPickerDialogProps extends AvatarProps {
+  mode: 'user' | 'container';
   isCircular: boolean;
   isOpen: boolean;
   isLoading: boolean;
@@ -25,6 +31,7 @@ export interface AvatarPickerDialogProps extends AvatarProps {
 }
 
 export const defaultProps = {
+  mode: 'user',
   isCircular: true,
   isOpen: true,
   isLoading: false,
@@ -38,6 +45,7 @@ export interface AvatarPickerDialogState {
   selectedAvatar?: Avatar;
   hasImage: boolean;
   isOpen: boolean;
+  isModified: boolean;
 }
 
 export enum ViewMode {
@@ -59,7 +67,14 @@ export class AvatarPickerDialog extends Component<
     selectedAvatar: this.selectDefaultAvatar(),
     hasImage: false,
     isOpen: this.props.isOpen,
+    isModified: false,
   };
+
+  get canSave() {
+    const { isLoading } = this.props;
+    const { isModified } = this.state;
+    return !isLoading && isModified;
+  }
 
   UNSAFE_componentWillReceiveProps(nextProps: AvatarPickerDialogProps) {
     const { isOpen } = nextProps;
@@ -85,7 +100,7 @@ export class AvatarPickerDialog extends Component<
   };
 
   footer = () => {
-    const { primaryButtonText, isLoading } = this.props;
+    const { primaryButtonText } = this.props;
     return (
       <ModalFooter>
         <ModalFooterButtons>
@@ -95,7 +110,7 @@ export class AvatarPickerDialog extends Component<
           <Button
             appearance="primary"
             onClick={this.onSave}
-            isDisabled={isLoading}
+            isDisabled={!this.canSave}
           >
             {primaryButtonText /* i18n */}
           </Button>
@@ -133,11 +148,11 @@ export class AvatarPickerDialog extends Component<
   };
 
   onImageLoad = () => {
-    this.setState({ hasImage: true });
+    this.setState({ hasImage: true, isModified: true });
   };
 
   onImageCleared = () => {
-    this.setState({ hasImage: false });
+    this.setState({ hasImage: false, isModified: false });
   };
 
   onStackedViewBack = () => {
@@ -156,7 +171,7 @@ export class AvatarPickerDialog extends Component<
   };
 
   renderImageView() {
-    const { isCircular, avatars } = this.props;
+    const { isCircular, avatars, mode } = this.props;
     const { selectedAvatar, hasImage, src } = this.state;
 
     return (
@@ -169,13 +184,20 @@ export class AvatarPickerDialog extends Component<
           onImageCleared={this.onImageCleared}
           onTakePhotoClick={this.onTakePhotoClick}
         />
-        <AvatarViewSmall
-          avatars={avatars}
-          selectedAvatar={hasImage ? undefined : selectedAvatar}
-          isDisabled={hasImage}
-          onAvatarSelected={this.onAvatarSelected}
-          onShowMore={this.onShowMoreAvatars}
-        />
+        {mode === 'user' ? (
+          <TextMessage>
+            Your profile photo is visible to people using the same Atlassian
+            systems as you and who know your email address
+          </TextMessage>
+        ) : (
+          <AvatarViewSmall
+            avatars={avatars}
+            selectedAvatar={hasImage ? undefined : selectedAvatar}
+            isDisabled={hasImage}
+            onAvatarSelected={this.onAvatarSelected}
+            onShowMore={this.onShowMoreAvatars}
+          />
+        )}
       </>
     );
   }

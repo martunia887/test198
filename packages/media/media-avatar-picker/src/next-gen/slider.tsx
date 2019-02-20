@@ -17,12 +17,18 @@ export const defaultProps = {
 export class Slider extends Component<SliderProps, {}> {
   static defaultProps = defaultProps;
 
+  onChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
+    const { onChange } = this.props;
+    const value = parseFloat(e.currentTarget.value);
+    onChange(value);
+  };
+
   render() {
     const { value } = this.props;
     return (
       <SliderWrapper>
         <ScaleSmallIcon label="scale-small-icon" />
-        <FieldRange value={value} onChange={this.props.onChange} />
+        <FieldRange value={value} onChange={this.onChange} />
         <ScaleLargeIcon label="scale-large-icon" />
       </SliderWrapper>
     );

@@ -93,7 +93,9 @@ class Example extends React.Component<{}, ExampleState> {
   onFileInputChange = async (e: React.SyntheticEvent<HTMLInputElement>) => {
     if (e.currentTarget.files) {
       const file = e.currentTarget.files[0];
-      this.setState({ src: file, errorMessage: undefined });
+      if (file) {
+        this.setState({ src: file, errorMessage: undefined });
+      }
     }
   };
 

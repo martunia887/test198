@@ -114,6 +114,16 @@ export const ImageButtonsWrapper = styled.div`
   }
 `;
 
+export const TextMessage = styled.p`
+  position: absolute;
+  left: 0;
+  bottom: -60px;
+  width: 100%;
+  text-align: center;
+  font-size: 85%;
+  color: ${akColorN200};
+`;
+
 /** DropZone */
 
 export const ImageIcon = styled.img`
