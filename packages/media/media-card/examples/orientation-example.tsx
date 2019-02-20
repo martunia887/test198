@@ -2,15 +2,17 @@ import * as React from 'react';
 
 import { Card, FileIdentifier } from '../src';
 import * as uuid from 'uuid/v4';
+import { MediaClient } from '@atlaskit/media-client';
 import {
   mediaPickerAuthProvider,
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
-import { ContextFactory } from '@atlaskit/media-core';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = ContextFactory.create({
+const mediaClientConfig = {
   authProvider: mediaPickerAuthProvider('asap'),
-});
+};
+const mediaClient = new MediaClient(mediaClientConfig);
 const collection = defaultCollectionName;
 
 interface State {
@@ -33,13 +35,13 @@ class Example extends React.Component<{}, State> {
       return;
     }
     const fileId = uuid();
-    const touchedFiles = context.file.touchFiles([
+    const touchedFiles = mediaClient.file.touchFiles([
       {
         fileId,
         collection,
       },
     ]);
-    context.file.upload(
+    mediaClient.file.upload(
       {
         content: file,
         name: file.name,
@@ -79,7 +81,6 @@ class Example extends React.Component<{}, State> {
             <td>
               <Card
                 resizeMode="fit"
-                context={context}
                 identifier={identifier}
                 dimensions={{
                   width: 200,
@@ -90,7 +91,6 @@ class Example extends React.Component<{}, State> {
             <td>
               <Card
                 resizeMode="fit"
-                context={context}
                 identifier={identifier}
                 dimensions={{
                   width: 100,
@@ -104,7 +104,6 @@ class Example extends React.Component<{}, State> {
             <td>
               <Card
                 resizeMode="crop"
-                context={context}
                 identifier={identifier}
                 dimensions={{
                   width: 200,
@@ -115,7 +114,6 @@ class Example extends React.Component<{}, State> {
             <td>
               <Card
                 resizeMode="crop"
-                context={context}
                 identifier={identifier}
                 dimensions={{
                   width: 100,
@@ -133,14 +131,14 @@ class Example extends React.Component<{}, State> {
     const { identifier } = this.state;
 
     return (
-      <div>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
         <h2>Choose a file</h2>
         In this example you can test how media-card handles images with
         orientation info saved in EXIF.
         <br />
         <input type="file" onChange={this.onChange} />
         {identifier ? this.renderCards(identifier) : null}
-      </div>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

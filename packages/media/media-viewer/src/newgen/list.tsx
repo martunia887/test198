@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Context } from '@atlaskit/media-core';
+import { WithMediaClientProps } from '@atlaskit/media-client';
 import { ItemViewer } from './item-viewer';
 import { Identifier, MediaViewerFeatureFlags } from './domain';
 import { HeaderWrapper, hideControlsClassName, ListWrapper } from './styled';
@@ -15,8 +15,8 @@ export type Props = Readonly<{
   featureFlags?: MediaViewerFeatureFlags;
   defaultSelectedItem: Identifier;
   items: Identifier[];
-  context: Context;
-}>;
+}> &
+  WithMediaClientProps;
 
 export type State = {
   selectedItem: Identifier;
@@ -35,7 +35,7 @@ export class List extends React.Component<Props, State> {
   }
 
   renderContent(items: Identifier[]) {
-    const { context, onClose, featureFlags, showControls } = this.props;
+    const { mediaClient, onClose, featureFlags, showControls } = this.props;
     const { selectedItem } = this.state;
     if (getSelectedIndex(items, selectedItem) < 0) {
       return <ErrorMessage error={createError('idNotFound')} />;
@@ -44,14 +44,14 @@ export class List extends React.Component<Props, State> {
         <ListWrapper>
           <HeaderWrapper className={hideControlsClassName}>
             <Header
-              context={context}
+              mediaClient={mediaClient}
               identifier={selectedItem}
               onClose={onClose}
             />
           </HeaderWrapper>
           <ItemViewer
             featureFlags={featureFlags}
-            context={context}
+            mediaClient={mediaClient}
             identifier={selectedItem}
             showControls={showControls}
             onClose={onClose}

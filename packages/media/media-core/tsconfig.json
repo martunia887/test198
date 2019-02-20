@@ -3,9 +3,5 @@
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",
-    "./examples/*.ts",
-    "./examples/*.tsx",
-    "./test-helpers/*.ts",
-    "./test-helpers/*.tsx"
   ]
 }

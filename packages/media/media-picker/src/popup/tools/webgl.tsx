@@ -6,10 +6,10 @@ export const isWebGLAvailable = (forceCheck?: boolean): boolean => {
   }
 
   const canvas = document.createElement('canvas');
-  const context =
+  const mediaClient =
     canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); // experimental-webgl is needed for IE11
 
-  isWebGLAvailableValue = !!context;
+  isWebGLAvailableValue = !!mediaClient;
 
   return isWebGLAvailableValue;
 };

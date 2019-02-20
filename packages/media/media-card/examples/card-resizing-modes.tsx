@@ -1,104 +1,75 @@
 import * as React from 'react';
 import {
   StoryList,
-  createStorybookContext,
+  createStorybookMediaClientConfig,
   smallImageFileId,
   wideImageFileId,
   largeImageFileId,
 } from '@atlaskit/media-test-helpers';
 
 import { Card } from '../src';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 const defaultCards = [
   {
     title: 'Small',
-    content: <Card identifier={smallImageFileId} context={context} />,
+    content: <Card identifier={smallImageFileId} />,
   },
   {
     title: 'Wide',
-    content: <Card identifier={wideImageFileId} context={context} />,
+    content: <Card identifier={wideImageFileId} />,
   },
   {
     title: 'Large',
-    content: <Card identifier={largeImageFileId} context={context} />,
+    content: <Card identifier={largeImageFileId} />,
   },
 ];
 const croppedCards = [
   {
     title: 'Small',
-    content: (
-      <Card identifier={smallImageFileId} context={context} resizeMode="crop" />
-    ),
+    content: <Card identifier={smallImageFileId} resizeMode="crop" />,
   },
   {
     title: 'Wide',
-    content: (
-      <Card identifier={wideImageFileId} context={context} resizeMode="crop" />
-    ),
+    content: <Card identifier={wideImageFileId} resizeMode="crop" />,
   },
   {
     title: 'Large',
-    content: (
-      <Card identifier={largeImageFileId} context={context} resizeMode="crop" />
-    ),
+    content: <Card identifier={largeImageFileId} resizeMode="crop" />,
   },
 ];
 const fitCards = [
   {
     title: 'Small',
-    content: (
-      <Card identifier={smallImageFileId} context={context} resizeMode="fit" />
-    ),
+    content: <Card identifier={smallImageFileId} resizeMode="fit" />,
   },
   {
     title: 'Wide',
-    content: (
-      <Card identifier={wideImageFileId} context={context} resizeMode="fit" />
-    ),
+    content: <Card identifier={wideImageFileId} resizeMode="fit" />,
   },
   {
     title: 'Large',
-    content: (
-      <Card identifier={largeImageFileId} context={context} resizeMode="fit" />
-    ),
+    content: <Card identifier={largeImageFileId} resizeMode="fit" />,
   },
 ];
 const fullFitCards = [
   {
     title: 'Small',
-    content: (
-      <Card
-        identifier={smallImageFileId}
-        context={context}
-        resizeMode="full-fit"
-      />
-    ),
+    content: <Card identifier={smallImageFileId} resizeMode="full-fit" />,
   },
   {
     title: 'Wide',
-    content: (
-      <Card
-        identifier={wideImageFileId}
-        context={context}
-        resizeMode="full-fit"
-      />
-    ),
+    content: <Card identifier={wideImageFileId} resizeMode="full-fit" />,
   },
   {
     title: 'Large',
-    content: (
-      <Card
-        identifier={largeImageFileId}
-        context={context}
-        resizeMode="full-fit"
-      />
-    ),
+    content: <Card identifier={largeImageFileId} resizeMode="full-fit" />,
   },
 ];
 
 export default () => (
-  <div>
+  <MediaClientConfigContext.Provider value={mediaClientConfig}>
     <h3>Default</h3>
     <StoryList>{defaultCards}</StoryList>
     <h3>Crop</h3>
@@ -107,5 +78,5 @@ export default () => (
     <StoryList>{fitCards}</StoryList>
     <h3>Full Fit</h3>
     <StoryList>{fullFitCards}</StoryList>
-  </div>
+  </MediaClientConfigContext.Provider>
 );

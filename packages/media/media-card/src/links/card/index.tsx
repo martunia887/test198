@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { UrlPreview, ImageResizeMode, Resource } from '@atlaskit/media-core';
+import { UrlPreview, ImageResizeMode, Resource } from '@atlaskit/media-client';
 
 import { SharedCardProps, CardStatus, CardAppearance } from '../..';
 import { LinkCardGenericView } from '../cardGenericView';

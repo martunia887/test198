@@ -42,7 +42,7 @@
     "@atlaskit/build-utils": "^2.1.0",
     "@atlaskit/docs": "^6.0.1",
     "@atlaskit/media-core": "^27.0.0",
-    "@atlaskit/media-store": "^9.1.5",
+    "@atlaskit/media-client": "^9.1.5",
     "@atlaskit/media-test-helpers": "^20.1.2",
     "enzyme": "^3.7.0",
     "react-dom": "^16.4.2",

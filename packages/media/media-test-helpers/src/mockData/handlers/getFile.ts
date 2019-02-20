@@ -27,12 +27,12 @@ export const getFile = (context: () => MockContext) => (
   });
 
   const availableFiles: Array<MediaCollectionFile> = [
-    ...context().userContext.collection,
+    ...context().userMediaClient.collection,
     ...context().tenantContext.collection,
   ];
 
-  const userData: Array<any> = context().userContext.collection.map(
-    requestDataTemplate(context().userContext.collectionName),
+  const userData: Array<any> = context().userMediaClient.collection.map(
+    requestDataTemplate(context().userMediaClient.collectionName),
   );
   const tenantData: Array<any> = context().tenantContext.collection.map(
     requestDataTemplate(context().tenantContext.collectionName),

@@ -1,17 +1,22 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
-import { Context, FileState, isErrorFileState } from '@atlaskit/media-core';
-import { DownloadButtonWrapper } from './styled';
+import {
+  WithMediaClientProps,
+  FileState,
+  isErrorFileState,
+  MediaClient,
+} from '@atlaskit/media-client';
 import Button from '@atlaskit/button';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
+import { DownloadButtonWrapper } from './styled';
 import {
   downloadButtonEvent,
   downloadErrorButtonEvent,
 } from './analytics/download';
 import { channel } from './analytics';
 import { Identifier } from './domain';
-import DownloadIcon from '@atlaskit/icon/glyph/download';
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
 import { MediaViewerError } from './error';
 
@@ -26,20 +31,19 @@ export const DownloadButton = withAnalyticsEvents({
 
 export const createItemDownloader = (
   file: FileState,
-  context: Context,
+  mediaClient: MediaClient,
   collectionName?: string,
 ) => () => {
   const id = file.id;
   const name = !isErrorFileState(file) ? file.name : undefined;
-  return context.file.downloadBinary(id, name, collectionName);
+  return mediaClient.file.downloadBinary(id, name, collectionName);
 };
 
 export type ErrorViewDownloadButtonProps = {
   state: FileState;
-  context: Context;
   err: MediaViewerError;
   collectionName?: string;
-};
+} & WithMediaClientProps;
 
 export const ErrorViewDownloadButton = (
   props: ErrorViewDownloadButtonProps,
@@ -52,7 +56,7 @@ export const ErrorViewDownloadButton = (
         appearance="primary"
         onClick={createItemDownloader(
           props.state,
-          props.context,
+          props.mediaClient,
           props.collectionName,
         )}
       >
@@ -62,11 +66,11 @@ export const ErrorViewDownloadButton = (
   );
 };
 
-export type ToolbarDownloadButtonProps = {
+export type ToolbarDownloadButtonProps = Readonly<{
   state: FileState;
   identifier: Identifier;
-  context: Context;
-};
+}> &
+  WithMediaClientProps;
 
 export const ToolbarDownloadButton = (props: ToolbarDownloadButtonProps) => {
   const downloadEvent = downloadButtonEvent(props.state);
@@ -76,7 +80,7 @@ export const ToolbarDownloadButton = (props: ToolbarDownloadButtonProps) => {
       appearance={'toolbar' as any}
       onClick={createItemDownloader(
         props.state,
-        props.context,
+        props.mediaClient,
         props.identifier.collectionName,
       )}
       iconBefore={downloadIcon}

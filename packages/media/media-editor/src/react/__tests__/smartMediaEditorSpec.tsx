@@ -4,7 +4,7 @@ import {
   asMock,
   expectFunctionToHaveBeenCalledWith,
   expectToEqual,
-  fakeContext,
+  fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
 import * as uuid from 'uuid';
 import { FileIdentifier } from '@atlaskit/media-card';
@@ -46,7 +46,7 @@ describe('Smart Media Editor', () => {
     };
     onFinish = jest.fn();
     onUploadStart = jest.fn();
-    context = fakeContext();
+    context = fakeMediaClient();
     givenFileStateObservable = new ReplaySubject<FileState>(1);
     asMock(context.file.getFileState).mockReturnValue(givenFileStateObservable);
 

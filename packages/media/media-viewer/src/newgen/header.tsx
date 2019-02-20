@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
 import {
-  Context,
   FileState,
   MediaType,
   ProcessedFileState,
   ProcessingFileState,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
 import * as deepEqual from 'deep-equal';
 import { messages, toHumanReadableMediaSize } from '@atlaskit/media-ui';
@@ -29,12 +28,13 @@ import {
   ToolbarDownloadButton,
   DisabledToolbarDownloadButton,
 } from './download';
+import { WithMediaClientProps } from '@atlaskit/media-client';
 
-export type Props = {
-  readonly identifier: Identifier;
-  readonly context: Context;
-  readonly onClose?: () => void;
-};
+export type Props = Readonly<{
+  identifier: Identifier;
+  onClose?: () => void;
+}> &
+  WithMediaClientProps;
 
 export type State = {
   item: Outcome<FileState, MediaViewerError>;
@@ -66,8 +66,8 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
 
   private init(props: Props) {
     this.setState(initialState, () => {
-      const { context, identifier } = props;
-      this.subscription = context.file
+      const { mediaClient, identifier } = props;
+      this.subscription = mediaClient.file
         .getFileState(identifier.id, {
           collectionName: identifier.collectionName,
         })
@@ -88,7 +88,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
 
   private renderDownload = () => {
     const { item } = this.state;
-    const { identifier, context } = this.props;
+    const { identifier, mediaClient } = this.props;
     return item.match({
       pending: () => DisabledToolbarDownloadButton,
       failed: () => DisabledToolbarDownloadButton,
@@ -96,7 +96,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
         <ToolbarDownloadButton
           state={item}
           identifier={identifier}
-          context={context}
+          mediaClient={mediaClient}
         />
       ),
     });
@@ -176,7 +176,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
   private needsReset(propsA: Props, propsB: Props) {
     return (
       !deepEqual(propsA.identifier, propsB.identifier) ||
-      propsA.context !== propsB.context
+      propsA.mediaClient !== propsB.mediaClient
     );
   }
 

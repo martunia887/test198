@@ -1,4 +1,4 @@
-import { UrlPreview, LinkDetails, FileDetails } from '@atlaskit/media-core';
+import { UrlPreview, LinkDetails, FileDetails } from '@atlaskit/media-client';
 import { isLinkDetails } from '../../isLinkDetails';
 
 describe('isLinkDetails()', () => {

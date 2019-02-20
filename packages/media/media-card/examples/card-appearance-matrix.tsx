@@ -1,13 +1,14 @@
 import * as React from 'react';
 import {
   Matrix,
-  createStorybookContext,
   defaultCollectionName as collectionName,
+  createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 
 import { Card, UrlPreviewIdentifier, FileIdentifier } from '../src';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 const genericUrlIdentifier: UrlPreviewIdentifier = {
   mediaItemType: 'link',
   url: 'https://atlassian.com',
@@ -20,68 +21,58 @@ const fileIdentifier: FileIdentifier = {
 };
 
 // file cards
-const imageFileCard = <Card context={context} identifier={fileIdentifier} />;
+const imageFileCard = <Card identifier={fileIdentifier} />;
 
 // link cards
 const linkCardImage = (
-  <Card
-    context={context}
-    identifier={genericUrlIdentifier}
-    appearance="image"
-  />
+  <Card identifier={genericUrlIdentifier} appearance="image" />
 );
 const horizontalLinkCard = (
-  <Card
-    context={context}
-    identifier={genericUrlIdentifier}
-    appearance="horizontal"
-  />
+  <Card identifier={genericUrlIdentifier} appearance="horizontal" />
 );
 const squareLinkCard = (
-  <Card
-    context={context}
-    identifier={genericUrlIdentifier}
-    appearance="square"
-  />
+  <Card identifier={genericUrlIdentifier} appearance="square" />
 );
 
 export default () => (
-  <div style={{ margin: '40px' }}>
-    <h1>Appearance matrix</h1>
-    <Matrix>
-      <thead>
-        <tr>
-          <td />
-          <td>small</td>
-          <td>image</td>
-          <td>horizontal</td>
-          <td>square</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>File Cards</td>
-          <td>
-            <div>{imageFileCard}</div>
-          </td>
-          <td>No design implemented</td>
-          <td>No design implemented</td>
-        </tr>
-        <tr>
-          <td>
-            <div>Link Cards</div>
-          </td>
-          <td>
-            <div>{linkCardImage}</div>
-          </td>
-          <td>
-            <div>{horizontalLinkCard}</div>
-          </td>
-          <td>
-            <div>{squareLinkCard}</div>
-          </td>
-        </tr>
-      </tbody>
-    </Matrix>
-  </div>
+  <MediaClientConfigContext.Provider value={mediaClientConfig}>
+    <div style={{ margin: '40px' }}>
+      <h1>Appearance matrix</h1>
+      <Matrix>
+        <thead>
+          <tr>
+            <td />
+            <td>small</td>
+            <td>image</td>
+            <td>horizontal</td>
+            <td>square</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>File Cards</td>
+            <td>
+              <div>{imageFileCard}</div>
+            </td>
+            <td>No design implemented</td>
+            <td>No design implemented</td>
+          </tr>
+          <tr>
+            <td>
+              <div>Link Cards</div>
+            </td>
+            <td>
+              <div>{linkCardImage}</div>
+            </td>
+            <td>
+              <div>{horizontalLinkCard}</div>
+            </td>
+            <td>
+              <div>{squareLinkCard}</div>
+            </td>
+          </tr>
+        </tbody>
+      </Matrix>
+    </div>
+  </MediaClientConfigContext.Provider>
 );

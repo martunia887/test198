@@ -1,4 +1,4 @@
-import { FileDetails, LinkDetails, UrlPreview } from '@atlaskit/media-core';
+import { FileDetails, LinkDetails, UrlPreview } from '@atlaskit/media-client';
 
 // can NOT use MediaItemDetails because get the following error: https://github.com/Microsoft/TypeScript/issues/9944
 export const isLinkDetails = (

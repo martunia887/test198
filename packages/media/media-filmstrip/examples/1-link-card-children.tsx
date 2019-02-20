@@ -3,7 +3,7 @@ import { Component } from 'react';
 
 import { Card } from '@atlaskit/media-card';
 import {
-  createStorybookContext,
+  createStorybookMediaClient,
   youtubeLinkId,
 } from '@atlaskit/media-test-helpers';
 
@@ -26,7 +26,7 @@ export class Story extends Component<{}, StoryState> {
   constructor(props) {
     super(props);
 
-    this.mediaContext = createStorybookContext();
+    this.mediaContext = createStorybookMediaClient();
     this.cardDimensions = { width: 363 }; // dimensions used in the renderer
   }
 

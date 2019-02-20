@@ -3,7 +3,7 @@ import {
   UrlPreview,
   LinkDetails,
   FileDetails,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import { ExternalImageIdentifier } from '@atlaskit/media-card';
 import {
   defaultCollectionName as collectionName,

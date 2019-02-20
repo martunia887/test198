@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { borderRadius } from '@atlaskit/theme';
-import { MediaItemType } from '@atlaskit/media-core';
+import { MediaItemType } from '@atlaskit/media-client';
 import { CardDimensions, CardAppearance } from '../';
 import { getCSSUnitValue } from '../utils/getCSSUnitValue';
 import { getCSSBoundaries } from '../utils/cardDimensions';

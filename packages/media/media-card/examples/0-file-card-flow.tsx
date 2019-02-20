@@ -15,11 +15,12 @@ import {
   errorFileId,
   gifFileId,
   noMetadataFileId,
-  createUploadContext,
+  createUploadMediaClientConfig,
+  createUploadMediaClient,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
 import { Card, FileIdentifier, OnLoadingChangeState } from '../src';
-import { UploadController, FileState } from '@atlaskit/media-core';
+import { UploadController, FileState } from '@atlaskit/media-client';
 import { Observable } from 'rxjs/Observable';
 import {
   CardWrapper,
@@ -27,8 +28,10 @@ import {
   CardsWrapper,
   CardState,
 } from '../example-helpers/styled';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createUploadContext();
+const mediaClientConfig = createUploadMediaClientConfig();
+const mediaClient = createUploadMediaClient();
 
 export interface ComponentProps {}
 export interface ComponentState {
@@ -68,14 +71,15 @@ class Example extends Component<ComponentProps, ComponentState> {
       };
       return (
         <CardWrapper key={id}>
-          <div>
-            <Card
-              context={context}
-              identifier={identifier}
-              onLoadingChange={this.updateCardState(id)}
-            />
-          </div>
-          {this.renderCardState(state)}
+          <MediaClientConfigContext.Provider value={mediaClientConfig}>
+            <div>
+              <Card
+                identifier={identifier}
+                onLoadingChange={this.updateCardState(id)}
+              />
+            </div>
+            {this.renderCardState(state)}
+          </MediaClientConfigContext.Provider>
         </CardWrapper>
       );
     });
@@ -124,7 +128,7 @@ class Example extends Component<ComponentProps, ComponentState> {
       collection: defaultCollectionName,
     };
     const uploadController = new UploadController();
-    const stream = context.file.upload(uplodableFile, uploadController);
+    const stream = mediaClient.file.upload(uplodableFile, uploadController);
 
     this.uploadController = uploadController;
     this.addStream(stream);

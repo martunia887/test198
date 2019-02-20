@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { ProcessedFileState } from '@atlaskit/media-core';
+import { ProcessedFileState } from '@atlaskit/media-client';
 import {
   awaitError,
   mountWithIntlContext,
-  fakeContext,
+  fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
 import {
   ImageViewer,
@@ -25,20 +25,20 @@ const imageItem: ProcessedFileState = {
 };
 
 function createFixture(response: Promise<Blob>) {
-  const context = fakeContext();
-  (context.getImage as jest.Mock).mockReturnValue(response);
+  const mediaClient = fakeMediaClient();
+  (mediaClient.getImage as jest.Mock).mockReturnValue(response);
   const onClose = jest.fn();
   const onLoaded = jest.fn();
   const el = mountWithIntlContext<ImageViewerProps, BaseState<Content>>(
     <ImageViewer
-      context={context}
+      mediaClient={mediaClient}
       item={imageItem}
       collectionName={collectionName}
       onClose={onClose}
       onLoad={onLoaded}
     />,
   );
-  return { context, el, onClose };
+  return { mediaClient, el, onClose };
 }
 
 describe('ImageViewer', () => {
@@ -91,14 +91,14 @@ describe('ImageViewer', () => {
     expect(revokeObjectUrl).toHaveBeenCalled();
   });
 
-  it('should pass collectionName to context.getImage', async () => {
+  it('should pass collectionName to mediaClient.getImage', async () => {
     const response = Promise.resolve(new Blob());
-    const { el, context } = createFixture(response);
+    const { el, mediaClient } = createFixture(response);
 
     await response;
     el.update();
 
-    expect(context.getImage).toHaveBeenCalledWith(
+    expect(mediaClient.getImage).toHaveBeenCalledWith(
       'some-id',
       expect.objectContaining({ collection: 'some-collection' }),
       expect.anything(),

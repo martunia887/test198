@@ -26,7 +26,7 @@
     "@atlaskit/button": "^10.1.2",
     "@atlaskit/field-range": "^5.0.14",
     "@atlaskit/icon": "^16.0.0",
-    "@atlaskit/media-store": "^9.1.5",
+    "@atlaskit/media-client": "^9.1.5",
     "@atlaskit/media-ui": "^9.0.0",
     "@atlaskit/spinner": "^9.0.13",
     "@atlaskit/theme": "^7.0.2",

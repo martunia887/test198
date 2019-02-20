@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import Button from '@atlaskit/button';
 import AkSpinner from '@atlaskit/spinner';
-import { createStorybookContext } from '@atlaskit/media-test-helpers';
+import { createStorybookMediaClient } from '@atlaskit/media-test-helpers';
 import { ButtonList, Container, Group } from '../example-helpers/styled';
 import {
   docIdentifier,
@@ -25,7 +25,7 @@ import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
 
-const context = createStorybookContext();
+const mediaClient = createStorybookMediaClient();
 
 const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
   const { payload } = analyticsEvent;
@@ -45,7 +45,7 @@ export default class Example extends React.Component<{}, State> {
   private subscription?: Subscription;
 
   componentDidMount() {
-    this.subscription = context.collection
+    this.subscription = mediaClient.collection
       .getItems(defaultCollectionName, { limit: 1 })
       .subscribe({
         next: items => {
@@ -229,7 +229,7 @@ export default class Example extends React.Component<{}, State> {
           {this.state.selected && (
             <AnalyticsListener channel="media" onEvent={handleEvent}>
               <MediaViewer
-                context={context}
+                mediaClient={mediaClient}
                 selectedItem={this.state.selected.identifier}
                 dataSource={this.state.selected.dataSource}
                 collectionName={defaultCollectionName}

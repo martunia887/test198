@@ -31,12 +31,10 @@ export class I18NWrapper extends Component<I18NWrapperProps, I18NWrapperState> {
     const { locale } = this.state;
     // We need to clone the element and pass a the locale prop to force a re render
     const childrenWithLocale = React.cloneElement(children, { locale });
+    const localTag = this.getLocalTag(locale);
 
     return (
-      <IntlProvider
-        locale={this.getLocalTag(locale)}
-        messages={locales[locale]}
-      >
+      <IntlProvider locale={localTag} messages={locales[locale]}>
         <div>
           <LanguagePicker
             languages={languages}

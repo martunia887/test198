@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { ContextFactory } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
 import AKListeners from '@atlaskit/analytics-listeners';
 import {
@@ -11,7 +11,7 @@ import {
   mediaPickerAuthProvider,
   defaultCollectionName,
   defaultMediaPickerCollectionName,
-  createStorybookContext,
+  createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
 import Toggle from '@atlaskit/toggle';
@@ -37,7 +37,7 @@ import {
 import { PopupUploadEventPayloadMap } from '../src/components/types';
 import { AuthEnvironment } from '../example-helpers/types';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 
 export type PublicFile = {
   publicId: string;
@@ -95,12 +95,12 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
       popup.teardown();
     }
 
-    const context = ContextFactory.create({
+    const mediaClientConfig = {
       authProvider: mediaPickerAuthProvider(this.state.authEnvironment),
       userAuthProvider,
-    });
+    };
 
-    const newPopup = await MediaPicker('popup', context, {
+    const newPopup = await MediaPicker('popup', mediaClientConfig, {
       container: document.body,
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
@@ -354,7 +354,6 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     const cards = publicIds.map((id, key) => (
       <CardItemWrapper key={key}>
         <Card
-          context={context}
           isLazy={false}
           identifier={{
             mediaItemType: 'file',
@@ -394,66 +393,70 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     const isCancelButtonDisabled = Object.keys(inflightUploads).length === 0;
 
     return (
-      <PopupContainer>
-        <PopupHeader>
-          <Button
-            appearance="primary"
-            onClick={this.onShow}
-            isDisabled={hasTorndown}
-          >
-            Show
-          </Button>
-          <Button
-            appearance="warning"
-            onClick={this.onCancelUpload}
-            isDisabled={isCancelButtonDisabled || hasTorndown}
-          >
-            Cancel uploads
-          </Button>
-          <Button
-            appearance="danger"
-            onClick={this.onTeardown}
-            isDisabled={hasTorndown}
-          >
-            Teardown
-          </Button>
-          <Button
-            onClick={this.onUploadingFilesToggle}
-            isDisabled={hasTorndown}
-          >
-            Toggle Uploading files
-          </Button>
-          <DropdownMenu trigger={collectionName} triggerType="button">
-            <DropdownItem onClick={this.onCollectionChange}>
-              {defaultMediaPickerCollectionName}
-            </DropdownItem>
-            <DropdownItem onClick={this.onCollectionChange}>
-              {defaultCollectionName}
-            </DropdownItem>
-          </DropdownMenu>
-          <DropdownMenu trigger={authEnvironment} triggerType="button">
-            <DropdownItem onClick={this.onAuthTypeChange}>client</DropdownItem>
-            <DropdownItem onClick={this.onAuthTypeChange}>asap</DropdownItem>
-          </DropdownMenu>
-          Only select single item:
-          <Toggle
-            isDefaultChecked={singleSelect}
-            onChange={this.onSingleSelectChange}
-          />
-          Proxy context from Popup creator:
-          <Toggle isDefaultChecked onChange={this.toggleProxyContext} />
-          Closed times: {closedTimes}
-        </PopupHeader>
-        {isUploadingFilesVisible ? (
-          <FilesInfoWrapper>
-            {this.renderUploadingFiles()}
-            {this.renderCards()}
-          </FilesInfoWrapper>
-        ) : (
-          undefined
-        )}
-        <PopupEventsWrapper>{this.renderEvents(events)}</PopupEventsWrapper>
-      </PopupContainer>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
+        <PopupContainer>
+          <PopupHeader>
+            <Button
+              appearance="primary"
+              onClick={this.onShow}
+              isDisabled={hasTorndown}
+            >
+              Show
+            </Button>
+            <Button
+              appearance="warning"
+              onClick={this.onCancelUpload}
+              isDisabled={isCancelButtonDisabled || hasTorndown}
+            >
+              Cancel uploads
+            </Button>
+            <Button
+              appearance="danger"
+              onClick={this.onTeardown}
+              isDisabled={hasTorndown}
+            >
+              Teardown
+            </Button>
+            <Button
+              onClick={this.onUploadingFilesToggle}
+              isDisabled={hasTorndown}
+            >
+              Toggle Uploading files
+            </Button>
+            <DropdownMenu trigger={collectionName} triggerType="button">
+              <DropdownItem onClick={this.onCollectionChange}>
+                {defaultMediaPickerCollectionName}
+              </DropdownItem>
+              <DropdownItem onClick={this.onCollectionChange}>
+                {defaultCollectionName}
+              </DropdownItem>
+            </DropdownMenu>
+            <DropdownMenu trigger={authEnvironment} triggerType="button">
+              <DropdownItem onClick={this.onAuthTypeChange}>
+                client
+              </DropdownItem>
+              <DropdownItem onClick={this.onAuthTypeChange}>asap</DropdownItem>
+            </DropdownMenu>
+            Only select single item:
+            <Toggle
+              isDefaultChecked={singleSelect}
+              onChange={this.onSingleSelectChange}
+            />
+            Proxy context from Popup creator:
+            <Toggle isDefaultChecked onChange={this.toggleProxyContext} />
+            Closed times: {closedTimes}
+          </PopupHeader>
+          {isUploadingFilesVisible ? (
+            <FilesInfoWrapper>
+              {this.renderUploadingFiles()}
+              {this.renderCards()}
+            </FilesInfoWrapper>
+          ) : (
+            undefined
+          )}
+          <PopupEventsWrapper>{this.renderEvents(events)}</PopupEventsWrapper>
+        </PopupContainer>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

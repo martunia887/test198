@@ -2,7 +2,7 @@ import {
   constructAuthTokenUrl,
   getSelectedIndex,
 } from '../../../../newgen/utils';
-import { createContext } from '../../_stubs';
+import { createMediaClient } from '../../_stubs';
 import { Identifier } from '../../../../newgen/domain';
 
 const token = 'some-token';
@@ -13,10 +13,10 @@ describe('utils', () => {
     it('should add auth token and client query parameters to the url when auth is client based', async () => {
       const clientId = 'some-client-id';
       const authPromise = Promise.resolve({ token, clientId, baseUrl });
-      const context = createContext({ authPromise });
+      const mediaClient = createMediaClient({ authPromise });
       const url = await constructAuthTokenUrl(
         '/file/3333-4444-5555',
-        context,
+        mediaClient,
         'mycollection',
       );
       expect(url).toEqual(
@@ -27,10 +27,10 @@ describe('utils', () => {
     it('should work with urls with params', async () => {
       const clientId = 'some-client-id';
       const authPromise = Promise.resolve({ token, clientId, baseUrl });
-      const context = createContext({ authPromise });
+      const mediaClient = createMediaClient({ authPromise });
       const url = await constructAuthTokenUrl(
         '/file/3333-4444-5555?version=1',
-        context,
+        mediaClient,
         'mycollection',
       );
       expect(url).toEqual(
@@ -45,10 +45,10 @@ describe('utils', () => {
         asapIssuer: issuer,
         baseUrl,
       });
-      const context = createContext({ authPromise });
+      const mediaClient = createMediaClient({ authPromise });
       const url = await constructAuthTokenUrl(
         '/file/3333-4444-5555',
-        context,
+        mediaClient,
         'mycollection',
       );
       expect(url).toEqual(

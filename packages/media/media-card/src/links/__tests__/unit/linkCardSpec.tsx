@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { UrlPreview } from '@atlaskit/media-core';
+import { UrlPreview } from '@atlaskit/media-client';
 import {
   genericLinkDetails,
   spotifyLinkDetails,

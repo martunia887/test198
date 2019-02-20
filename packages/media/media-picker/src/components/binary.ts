@@ -1,11 +1,11 @@
 import { LocalUploadComponent } from './localUpload';
-import { Context } from '@atlaskit/media-core';
+import { MediaClient } from '@atlaskit/media-client';
 import { BinaryUploader, BinaryConfig } from './types';
 
 export class BinaryUploaderImpl extends LocalUploadComponent
   implements BinaryUploader {
-  constructor(context: Context, config: BinaryConfig) {
-    super(context, config);
+  constructor(mediaClient: MediaClient, config: BinaryConfig) {
+    super(mediaClient, config);
   }
 
   public upload(base64: string, name: string): void {

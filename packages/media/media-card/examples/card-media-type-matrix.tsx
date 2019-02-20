@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   Matrix,
-  createStorybookContext,
+  createStorybookMediaClientConfig,
   videoUrlPreviewId,
   audioUrlPreviewId,
   imageUrlPreviewId,
@@ -15,82 +15,83 @@ import {
 } from '@atlaskit/media-test-helpers';
 
 import { Card } from '../src';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 // link cards
-const videoLinkCard = <Card context={context} identifier={videoUrlPreviewId} />;
-const imageLinkCard = <Card context={context} identifier={imageUrlPreviewId} />;
-const audioLinkCard = <Card context={context} identifier={audioUrlPreviewId} />;
-const docLinkCard = <Card context={context} identifier={docUrlPreviewId} />;
-const unknownLinkCard = (
-  <Card context={context} identifier={unknownUrlPreviewId} />
-);
+const videoLinkCard = <Card identifier={videoUrlPreviewId} />;
+const imageLinkCard = <Card identifier={imageUrlPreviewId} />;
+const audioLinkCard = <Card identifier={audioUrlPreviewId} />;
+const docLinkCard = <Card identifier={docUrlPreviewId} />;
+const unknownLinkCard = <Card identifier={unknownUrlPreviewId} />;
 
 // file cards
-const videoFileCard = <Card context={context} identifier={videoFileId} />;
-const imageFileCard = <Card context={context} identifier={imageFileId} />;
-const audioFileCard = <Card context={context} identifier={audioFileId} />;
-const docFileCard = <Card context={context} identifier={docFileId} />;
-const unknownFileCard = <Card context={context} identifier={unknownFileId} />;
+const videoFileCard = <Card identifier={videoFileId} />;
+const imageFileCard = <Card identifier={imageFileId} />;
+const audioFileCard = <Card identifier={audioFileId} />;
+const docFileCard = <Card identifier={docFileId} />;
+const unknownFileCard = <Card identifier={unknownFileId} />;
 
 export default () => (
-  <div style={{ margin: '40px' }}>
-    <h1>Media type matrix</h1>
-    <Matrix>
-      <thead>
-        <tr>
-          <td />
-          <td>File Cards</td>
-          <td>Link Cards</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>video</td>
-          <td>
-            <div>{videoFileCard}</div>
-          </td>
-          <td>
-            <div>{videoLinkCard}</div>
-          </td>
-        </tr>
-        <tr>
-          <td>image</td>
-          <td>
-            <div>{imageFileCard}</div>
-          </td>
-          <td>
-            <div>{imageLinkCard}</div>
-          </td>
-        </tr>
-        <tr>
-          <td>audio</td>
-          <td>
-            <div>{audioFileCard}</div>
-          </td>
-          <td>
-            <div>{audioLinkCard}</div>
-          </td>
-        </tr>
-        <tr>
-          <td>doc</td>
-          <td>
-            <div>{docFileCard}</div>
-          </td>
-          <td>
-            <div>{docLinkCard}</div>
-          </td>
-        </tr>
-        <tr>
-          <td>unknown</td>
-          <td>
-            <div>{unknownFileCard}</div>
-          </td>
-          <td>
-            <div>{unknownLinkCard}</div>
-          </td>
-        </tr>
-      </tbody>
-    </Matrix>
-  </div>
+  <MediaClientConfigContext.Provider value={mediaClientConfig}>
+    <div style={{ margin: '40px' }}>
+      <h1>Media type matrix</h1>
+      <Matrix>
+        <thead>
+          <tr>
+            <td />
+            <td>File Cards</td>
+            <td>Link Cards</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>video</td>
+            <td>
+              <div>{videoFileCard}</div>
+            </td>
+            <td>
+              <div>{videoLinkCard}</div>
+            </td>
+          </tr>
+          <tr>
+            <td>image</td>
+            <td>
+              <div>{imageFileCard}</div>
+            </td>
+            <td>
+              <div>{imageLinkCard}</div>
+            </td>
+          </tr>
+          <tr>
+            <td>audio</td>
+            <td>
+              <div>{audioFileCard}</div>
+            </td>
+            <td>
+              <div>{audioLinkCard}</div>
+            </td>
+          </tr>
+          <tr>
+            <td>doc</td>
+            <td>
+              <div>{docFileCard}</div>
+            </td>
+            <td>
+              <div>{docLinkCard}</div>
+            </td>
+          </tr>
+          <tr>
+            <td>unknown</td>
+            <td>
+              <div>{unknownFileCard}</div>
+            </td>
+            <td>
+              <div>{unknownLinkCard}</div>
+            </td>
+          </tr>
+        </tbody>
+      </Matrix>
+    </div>
+  </MediaClientConfigContext.Provider>
 );

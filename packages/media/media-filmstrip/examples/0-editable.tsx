@@ -8,7 +8,7 @@ import Slider from '@atlaskit/field-range';
 import Button from '@atlaskit/button';
 import { Card } from '@atlaskit/media-card';
 import {
-  createStorybookContext,
+  createStorybookMediaClient,
   genericUrlPreviewId,
   genericLinkId,
   genericFileId,
@@ -47,7 +47,7 @@ const Box: ComponentClass<HTMLAttributes<{}> & BoxProps> = styled.div`
   ${({ grow }: { grow?: number }) => (grow && `flex-grow: ${grow};`) || ''};
 `;
 
-const context = createStorybookContext() as any;
+const context = createStorybookMediaClient() as any;
 
 const exampleActions = [{ label: 'View', handler: () => console.log('View') }];
 

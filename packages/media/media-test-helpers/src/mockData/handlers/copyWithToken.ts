@@ -13,7 +13,7 @@ export const copyWithToken = (context: () => MockContext) => (
   req: MockRequest,
   res: MockResponse,
 ) => {
-  const data: Array<any> = context().userContext.collection.map(
+  const data: Array<any> = context().userMediaClient.collection.map(
     (item: any) => ({
       method: 'POST',
       url: {
@@ -31,10 +31,10 @@ export const copyWithToken = (context: () => MockContext) => (
       body: JSON.stringify({
         sourceFile: {
           id: item.id,
-          collection: context().userContext.collectionName,
+          collection: context().userMediaClient.collectionName,
           owner: {
-            id: context().userContext.auth.clientId,
-            token: context().userContext.auth.token,
+            id: context().userMediaClient.auth.clientId,
+            token: context().userMediaClient.auth.token,
           },
         },
       }),
@@ -42,7 +42,7 @@ export const copyWithToken = (context: () => MockContext) => (
   );
 
   const availableFiles: Array<MediaCollectionFile> = [
-    ...context().userContext.collection,
+    ...context().userMediaClient.collection,
   ];
 
   const matchingDataItem = data.reduce(

@@ -11,7 +11,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
     const {
       featureFlags,
       onClose,
-      context,
+      mediaClient,
       selectedItem,
       collectionName,
       dataSource,
@@ -35,7 +35,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
       };
       return (
         <MediaViewerNextGen
-          context={context}
+          mediaClient={mediaClient}
           selectedItem={identifier}
           onClose={onClose}
           itemSource={itemSource}
@@ -54,7 +54,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
       };
       return (
         <MediaViewerNextGen
-          context={context}
+          mediaClient={mediaClient}
           selectedItem={identifier}
           onClose={onClose}
           itemSource={itemSource}

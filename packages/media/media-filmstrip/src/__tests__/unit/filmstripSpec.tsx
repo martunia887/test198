@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { Filmstrip, FilmstripView, FilmstripProps, FilmstripItem } from '../..';
-import { fakeContext } from '@atlaskit/media-test-helpers';
+import { fakeMediaClient } from '@atlaskit/media-test-helpers';
 import { Card, Identifier } from '@atlaskit/media-card';
 
 describe('<Filmstrip />', () => {
@@ -10,7 +10,7 @@ describe('<Filmstrip />', () => {
     mediaItemType: 'file',
   };
   const setup = (props?: Partial<FilmstripProps>) => {
-    const context = fakeContext();
+    const context = fakeMediaClient();
     const items: FilmstripItem[] = [
       {
         identifier: firstIdenfier,

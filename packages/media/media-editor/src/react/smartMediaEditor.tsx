@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { v4 as uuid } from 'uuid';
 import { Subscription } from 'rxjs/Subscription';
-import { Context, UploadableFile } from '@atlaskit/media-core';
+import { MediaClient, UploadableFile } from '@atlaskit/media-client';
 import { FileIdentifier } from '@atlaskit/media-card';
 import { messages, Shortcut } from '@atlaskit/media-ui';
 import Spinner from '@atlaskit/spinner';
@@ -14,7 +14,7 @@ import ErrorView from './editorView/errorView/errorView';
 
 export interface SmartMediaEditorProps {
   identifier: FileIdentifier;
-  context: Context;
+  mediaClient: MediaClient;
   onUploadStart: (identifier: FileIdentifier) => void;
   onFinish: () => void;
 }
@@ -46,10 +46,10 @@ export class SmartMediaEditor extends React.Component<
   }
 
   componentWillReceiveProps(nextProps: Readonly<SmartMediaEditorProps>) {
-    const { identifier, context } = this.props;
+    const { identifier, mediaClient } = this.props;
     if (
       nextProps.identifier.id !== identifier.id ||
-      nextProps.context !== context
+      nextProps.mediaClient !== mediaClient
     ) {
       this.getFile(nextProps.identifier);
     }
@@ -66,10 +66,10 @@ export class SmartMediaEditor extends React.Component<
   }
 
   getFile = async (identifier: FileIdentifier) => {
-    const { context } = this.props;
+    const { mediaClient } = this.props;
     const { collectionName, occurrenceKey } = identifier;
     const id = await identifier.id;
-    const getFileSubscription = context.file
+    const getFileSubscription = mediaClient.file
       .getFileState(id, { collectionName, occurrenceKey })
       .subscribe({
         next: async state => {
@@ -105,9 +105,9 @@ export class SmartMediaEditor extends React.Component<
   };
 
   setImageUrl = async (identifier: FileIdentifier) => {
-    const { context } = this.props;
+    const { mediaClient } = this.props;
     const id = await identifier.id;
-    const imageUrl = await context.getImageUrl(id, {
+    const imageUrl = await mediaClient.getImageUrl(id, {
       collection: identifier.collectionName,
       mode: 'full-fit',
     });
@@ -119,7 +119,7 @@ export class SmartMediaEditor extends React.Component<
   private onSave = (imageData: string) => {
     const { fileName } = this;
     const {
-      context,
+      mediaClient,
       identifier,
       onUploadStart,
       onFinish,
@@ -133,7 +133,7 @@ export class SmartMediaEditor extends React.Component<
       name: fileName,
     };
     const id = uuid();
-    const touchedFiles = context.file.touchFiles(
+    const touchedFiles = mediaClient.file.touchFiles(
       [
         {
           fileId: id,
@@ -151,7 +151,7 @@ export class SmartMediaEditor extends React.Component<
       occurrenceKey,
     };
 
-    const uploadingFileState = context.file.upload(
+    const uploadingFileState = mediaClient.file.upload(
       uploadableFile,
       undefined,
       uploadableFileUpfrontIds,

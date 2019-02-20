@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MouseEvent, Component, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
 import * as cx from 'classnames';
-import { MediaType } from '@atlaskit/media-core';
+import { MediaType } from '@atlaskit/media-client';
 import TickIcon from '@atlaskit/icon/glyph/check';
 import { Ellipsify } from '@atlaskit/media-ui';
 import { messages } from '@atlaskit/media-ui';
@@ -146,7 +146,7 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
       if (!onRetry) {
         return <ErrorIcon />;
       }
-
+      console.log(this.context.intl);
       return (
         <ErrorWrapper>
           <ErrorIcon />

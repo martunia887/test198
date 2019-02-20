@@ -41,7 +41,7 @@ export const userAuth = (context: () => MockContext) => (
         baseUrl: userAuthProviderBaseURL,
       }),
     };
-    context().userContext.auth = {
+    context().userMediaClient.auth = {
       clientId,
       token,
       baseUrl: userAuthProviderBaseURL,

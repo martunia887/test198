@@ -1,4 +1,4 @@
-import { MediaItemType } from '@atlaskit/media-core';
+import { MediaItemType } from '@atlaskit/media-client';
 
 export { Outcome } from './outcome';
 

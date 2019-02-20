@@ -9,7 +9,7 @@ export const userCollectionFetch = (context: () => MockContext) => (
   const data = {
     method: 'GET',
     url: {
-      path: `/collection/${context().userContext.collectionName}/items`,
+      path: `/collection/${context().userMediaClient.collectionName}/items`,
       query: {
         sortDirection: 'desc',
         limit: '30',
@@ -17,8 +17,8 @@ export const userCollectionFetch = (context: () => MockContext) => (
     },
     headers: {
       accept: 'application/json, text/plain, */*',
-      'x-client-id': `${context().userContext.auth.clientId}`,
-      authorization: `Bearer ${context().userContext.auth.token}`,
+      'x-client-id': `${context().userMediaClient.auth.clientId}`,
+      authorization: `Bearer ${context().userMediaClient.auth.token}`,
     },
     body: null,
   };
@@ -50,7 +50,7 @@ export const userCollectionFetch = (context: () => MockContext) => (
         },
       }),
     };
-    context().userContext.collection.push(...userCollection);
+    context().userMediaClient.collection.push(...userCollection);
     fillInResponse(res, resdata);
     return res;
   }

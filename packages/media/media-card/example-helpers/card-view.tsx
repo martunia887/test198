@@ -6,7 +6,7 @@ import {
   MediaItemType,
   FileDetails,
   UrlPreview,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import {
   wideTransparentImage,
   tallImage,

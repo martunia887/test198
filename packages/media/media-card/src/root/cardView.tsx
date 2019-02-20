@@ -7,7 +7,7 @@ import {
   FileDetails,
   UrlPreview,
   ImageResizeMode,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import {
   withAnalyticsEvents,
   createAndFireEvent,

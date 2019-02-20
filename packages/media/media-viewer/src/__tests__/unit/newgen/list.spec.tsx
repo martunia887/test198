@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MediaItemType } from '@atlaskit/media-core';
+import { MediaItemType } from '@atlaskit/media-client';
 import { Observable } from 'rxjs';
 import { List, Props, State } from '../../../newgen/list';
 import { ErrorMessage } from '../../../newgen/error';
@@ -16,7 +16,7 @@ function createFixture(props: Partial<Props>) {
     occurrenceKey: '',
     type: 'file' as MediaItemType,
   };
-  const context = {
+  const mediaClient = {
     file: {
       getFileState: () =>
         Observable.of({
@@ -30,7 +30,7 @@ function createFixture(props: Partial<Props>) {
     <List
       items={items}
       defaultSelectedItem={selectedItem}
-      context={context}
+      mediaClient={mediaClient}
       {...props}
     />,
   );

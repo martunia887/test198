@@ -2,13 +2,13 @@ import * as React from 'react';
 import Button from '@atlaskit/button';
 import ModalDialog from '@atlaskit/modal-dialog';
 import {
-  createStorybookContext,
+  createStorybookMediaClient,
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
 import { imageItem } from '../example-helpers';
 import { MediaViewer, MediaViewerItem } from '../src/index';
 
-const context = createStorybookContext();
+const mediaClient = createStorybookMediaClient();
 
 export type State = {
   selectedItem?: MediaViewerItem;
@@ -31,7 +31,7 @@ export default class Example extends React.Component<{}, State> {
 
         {this.state.selectedItem && (
           <MediaViewer
-            context={context}
+            mediaClient={mediaClient}
             selectedItem={this.state.selectedItem}
             dataSource={{ list: [this.state.selectedItem] }}
             collectionName={defaultCollectionName}

@@ -1,4 +1,4 @@
-import { AuthProvider, ContextFactory } from '@atlaskit/media-core';
+import { AuthProvider } from '@atlaskit/media-core';
 import { MediaPicker } from '../..';
 import { PopupImpl } from '../../components/popup';
 import { BinaryUploaderImpl } from '../../components/binary';
@@ -18,7 +18,7 @@ describe('MediaPicker', () => {
       token: 'some-token',
       baseUrl: 'some-api-url',
     });
-  const context = ContextFactory.create({
+  const mediaClientConfig = {
     userAuthProvider,
     authProvider: () =>
       Promise.resolve({
@@ -26,7 +26,7 @@ describe('MediaPicker', () => {
         token: 'some-token',
         baseUrl: 'some-api-url',
       }),
-  });
+  };
   const config = {
     uploadParams: {
       collection: 'some-collection',
@@ -35,13 +35,13 @@ describe('MediaPicker', () => {
 
   describe('binary', () => {
     it('should be instance of MediaPickerBinaryUploader given options', async () => {
-      const binary = await MediaPicker('binary', context, config);
+      const binary = await MediaPicker('binary', mediaClientConfig, config);
 
       expect(binary).toBeInstanceOf(BinaryUploaderImpl);
     });
 
     it('should be able to register listeners to generic upload events', async () => {
-      const binary = await MediaPicker('binary', context, config);
+      const binary = await MediaPicker('binary', mediaClientConfig, config);
       binary.on('upload-status-update', () => {});
       binary.on('upload-preview-update', () => {});
       binary.on('upload-processing', () => {});
@@ -52,13 +52,13 @@ describe('MediaPicker', () => {
 
   describe('browser', () => {
     it('should be instance of MediaPickerBrowser given just module config', async () => {
-      const browser = await MediaPicker('browser', context, config);
+      const browser = await MediaPicker('browser', mediaClientConfig, config);
 
       expect(browser).toBeInstanceOf(BrowserImpl);
     });
 
     it('should be instance of MediaPickerBrowser given moduleConfig and pickerConfig', async () => {
-      const browser = await MediaPicker('browser', context, {
+      const browser = await MediaPicker('browser', mediaClientConfig, {
         ...config,
         multiple: true,
         fileExtensions: ['image/jpeg', 'image/png'],
@@ -72,7 +72,7 @@ describe('MediaPicker', () => {
     // });
 
     it('should be able to register listeners to generic upload events', async () => {
-      const browser = await MediaPicker('browser', context, config);
+      const browser = await MediaPicker('browser', mediaClientConfig, config);
 
       browser.on('uploads-start', () => {});
       browser.on('upload-status-update', () => {});
@@ -85,7 +85,11 @@ describe('MediaPicker', () => {
 
   describe('clipboard', () => {
     it('should be instance of MediaPickerClipboard given options', async () => {
-      const clipboard = await MediaPicker('clipboard', context, config);
+      const clipboard = await MediaPicker(
+        'clipboard',
+        mediaClientConfig,
+        config,
+      );
 
       expect(clipboard).toBeInstanceOf(ClipboardImpl);
     });
@@ -95,7 +99,11 @@ describe('MediaPicker', () => {
     // });
 
     it('should be able to register listeners to generic upload events', async () => {
-      const clipboard = await MediaPicker('clipboard', context, config);
+      const clipboard = await MediaPicker(
+        'clipboard',
+        mediaClientConfig,
+        config,
+      );
 
       clipboard.on('uploads-start', () => {});
       clipboard.on('upload-status-update', () => {});
@@ -108,13 +116,13 @@ describe('MediaPicker', () => {
 
   describe('dropzone', () => {
     it('should be instance of MediaPickerDropzone given just moduleConfig', async () => {
-      const dropzone = await MediaPicker('dropzone', context, config);
+      const dropzone = await MediaPicker('dropzone', mediaClientConfig, config);
 
       expect(dropzone).toBeInstanceOf(DropzoneImpl);
     });
 
     it('should be instance of MediaPickerDropzone given moduleConfig and pickerConfig', async () => {
-      const dropzone = await MediaPicker('dropzone', context, {
+      const dropzone = await MediaPicker('dropzone', mediaClientConfig, {
         ...config,
         container,
       });
@@ -127,7 +135,7 @@ describe('MediaPicker', () => {
     // });
 
     it('should be able to register listeners to generic upload events', async () => {
-      const dropzone = await MediaPicker('dropzone', context, config);
+      const dropzone = await MediaPicker('dropzone', mediaClientConfig, config);
 
       dropzone.on('uploads-start', () => {});
       dropzone.on('upload-status-update', () => {});
@@ -138,7 +146,7 @@ describe('MediaPicker', () => {
     });
 
     it('consumers should be able to listen for "drop", "drag-enter" and "drag-leave" events', async () => {
-      const dropzone = await MediaPicker('dropzone', context, config);
+      const dropzone = await MediaPicker('dropzone', mediaClientConfig, config);
 
       dropzone.on('drop', () => {});
       dropzone.on('drag-enter', () => {});
@@ -150,7 +158,7 @@ describe('MediaPicker', () => {
     const popupConfig: PopupConfig = { ...config, container };
 
     it('should be instance of MediaPickerPopup given options', async () => {
-      const popup = await MediaPicker('popup', context, popupConfig);
+      const popup = await MediaPicker('popup', mediaClientConfig, popupConfig);
 
       expect(popup).toBeInstanceOf(PopupImpl);
     });
@@ -160,7 +168,7 @@ describe('MediaPicker', () => {
     // });
 
     it('should be able to register listeners to generic upload events', async () => {
-      const popup = await MediaPicker('popup', context, popupConfig);
+      const popup = await MediaPicker('popup', mediaClientConfig, popupConfig);
 
       popup.on('uploads-start', () => {});
       popup.on('upload-status-update', () => {});

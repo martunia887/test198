@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   StoryList,
-  createStorybookContext,
+  createStorybookMediaClientConfig,
   genericUrlPreviewId,
   youTubeUrlPreviewId,
   spotifyUrlPreviewId,
@@ -17,8 +17,9 @@ import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 
 import { Card } from '../src';
 import { createApiCards } from '../example-helpers';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 const onClick = (_: any, analyticsEvent: any) => {
   console.log('public analytics onClick event', analyticsEvent);
 };
@@ -30,7 +31,6 @@ const standardCards = [
     content: (
       <Card
         identifier={genericUrlPreviewId}
-        context={context}
         appearance="auto"
         onClick={onClick}
       />
@@ -38,33 +38,15 @@ const standardCards = [
   },
   {
     title: 'Image',
-    content: (
-      <Card
-        identifier={genericUrlPreviewId}
-        context={context}
-        appearance="image"
-      />
-    ),
+    content: <Card identifier={genericUrlPreviewId} appearance="image" />,
   },
   {
     title: 'Horizontal',
-    content: (
-      <Card
-        identifier={genericUrlPreviewId}
-        context={context}
-        appearance="horizontal"
-      />
-    ),
+    content: <Card identifier={genericUrlPreviewId} appearance="horizontal" />,
   },
   {
     title: 'Square',
-    content: (
-      <Card
-        identifier={genericUrlPreviewId}
-        context={context}
-        appearance="square"
-      />
-    ),
+    content: <Card identifier={genericUrlPreviewId} appearance="square" />,
   },
 ];
 
@@ -75,40 +57,26 @@ const apiCards = createApiCards('horizontal', genericUrlPreviewId);
 const errorCards = [
   {
     title: 'Image',
-    content: (
-      <Card identifier={errorLinkId} context={context} appearance="image" />
-    ),
+    content: <Card identifier={errorLinkId} appearance="image" />,
   },
   {
     title: 'Horizontal',
-    content: (
-      <Card
-        identifier={errorLinkId}
-        context={context}
-        appearance="horizontal"
-      />
-    ),
+    content: <Card identifier={errorLinkId} appearance="horizontal" />,
   },
   {
     title: 'Square',
-    content: (
-      <Card identifier={errorLinkId} context={context} appearance="square" />
-    ),
+    content: <Card identifier={errorLinkId} appearance="square" />,
   },
 ];
 
 const smartCards = [
   {
     title: 'Public board',
-    content: (
-      <Card identifier={publicTrelloBoardUrlPreviewId} context={context} />
-    ),
+    content: <Card identifier={publicTrelloBoardUrlPreviewId} />,
   },
   {
     title: 'Private board',
-    content: (
-      <Card identifier={privateTrelloBoardUrlPreviewId} context={context} />
-    ),
+    content: <Card identifier={privateTrelloBoardUrlPreviewId} />,
   },
 ];
 
@@ -116,11 +84,7 @@ const smartCardsAppearances = [
   {
     title: 'Image',
     content: (
-      <Card
-        identifier={publicTrelloBoardUrlPreviewId}
-        context={context}
-        appearance="image"
-      />
+      <Card identifier={publicTrelloBoardUrlPreviewId} appearance="image" />
     ),
   },
   {
@@ -128,7 +92,6 @@ const smartCardsAppearances = [
     content: (
       <Card
         identifier={publicTrelloBoardUrlPreviewId}
-        context={context}
         appearance="horizontal"
       />
     ),
@@ -136,11 +99,7 @@ const smartCardsAppearances = [
   {
     title: 'Square',
     content: (
-      <Card
-        identifier={publicTrelloBoardUrlPreviewId}
-        context={context}
-        appearance="square"
-      />
+      <Card identifier={publicTrelloBoardUrlPreviewId} appearance="square" />
     ),
   },
 ];
@@ -148,21 +107,20 @@ const smartCardsAppearances = [
 const embedCards = [
   {
     title: 'YouTube',
-    content: <Card identifier={youTubeUrlPreviewId} context={context} />,
+    content: <Card identifier={youTubeUrlPreviewId} />,
   },
   {
     title: 'Spotify',
-    content: <Card identifier={spotifyUrlPreviewId} context={context} />,
+    content: <Card identifier={spotifyUrlPreviewId} />,
   },
   {
     title: 'Sound Cloud',
-    content: <Card identifier={soundcloudUrlPreviewId} context={context} />,
+    content: <Card identifier={soundcloudUrlPreviewId} />,
   },
   {
     title: 'Twitter',
     content: (
       <Card
-        context={context}
         identifier={{
           mediaItemType: 'link',
           url: 'https://twitter.com/horse_js/status/859988831780708352',
@@ -174,7 +132,6 @@ const embedCards = [
     title: 'Trello',
     content: (
       <Card
-        context={context}
         identifier={{
           mediaItemType: 'link',
           url: 'https://trello.com/c/ksPxRsbf/1-test',
@@ -190,26 +147,28 @@ const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
 };
 
 export default () => (
-  <AnalyticsListener channel="media" onEvent={handleEvent}>
-    <div>
-      <h1 style={{ margin: '10px 20px' }}>Link cards</h1>
-      <div style={{ margin: '20px 40px' }}>
-        <h3>Standard</h3>
-        <StoryList>{standardCards}</StoryList>
+  <MediaClientConfigContext.Provider value={mediaClientConfig}>
+    <AnalyticsListener channel="media" onEvent={handleEvent}>
+      <div>
+        <h1 style={{ margin: '10px 20px' }}>Link cards</h1>
+        <div style={{ margin: '20px 40px' }}>
+          <h3>Standard</h3>
+          <StoryList>{standardCards}</StoryList>
 
-        <h3>API Cards</h3>
-        <StoryList>{apiCards}</StoryList>
+          <h3>API Cards</h3>
+          <StoryList>{apiCards}</StoryList>
 
-        <h3>Error</h3>
-        <StoryList>{errorCards}</StoryList>
+          <h3>Error</h3>
+          <StoryList>{errorCards}</StoryList>
 
-        <h3>Smart cards</h3>
-        <StoryList>{smartCards}</StoryList>
-        <StoryList>{smartCardsAppearances}</StoryList>
+          <h3>Smart cards</h3>
+          <StoryList>{smartCards}</StoryList>
+          <StoryList>{smartCardsAppearances}</StoryList>
 
-        <h3>Embed cards</h3>
-        <StoryList>{embedCards}</StoryList>
+          <h3>Embed cards</h3>
+          <StoryList>{embedCards}</StoryList>
+        </div>
       </div>
-    </div>
-  </AnalyticsListener>
+    </AnalyticsListener>
+  </MediaClientConfigContext.Provider>
 );

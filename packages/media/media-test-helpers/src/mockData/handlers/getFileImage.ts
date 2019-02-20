@@ -28,8 +28,8 @@ export const getFileImage = (context: () => MockContext) => (
     },
     body: null,
   });
-  const userData: Array<any> = context().userContext.collection.map(
-    requestDataTemplate(context().userContext.collectionName),
+  const userData: Array<any> = context().userMediaClient.collection.map(
+    requestDataTemplate(context().userMediaClient.collectionName),
   );
   const tenantData: Array<any> = context().tenantContext.collection.map(
     requestDataTemplate(context().tenantContext.collectionName),

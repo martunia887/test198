@@ -14,17 +14,18 @@ import {
   imageUrlPreviewId,
   docUrlPreviewId,
   unknownUrlPreviewId,
-  createUploadContext,
+  createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { Card, OnLoadingChangeState, Identifier } from '../src';
-import { UploadController } from '@atlaskit/media-core';
+import { UploadController } from '@atlaskit/media-client';
 import {
   CardWrapper,
   CardsWrapper,
   CardState,
 } from '../example-helpers/styled';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createUploadContext();
+const mediaClientConfig = createUploadMediaClientConfig();
 
 export interface ComponentProps {}
 export interface ComponentState {
@@ -59,9 +60,11 @@ class Example extends Component<ComponentProps, ComponentState> {
     const cards = links.map((identifier, id) => {
       return (
         <CardWrapper key={id}>
-          <div>
-            <Card context={context} identifier={identifier} />
-          </div>
+          <MediaClientConfigContext.Provider value={mediaClientConfig}>
+            <div>
+              <Card identifier={identifier} />
+            </div>
+          </MediaClientConfigContext.Provider>
         </CardWrapper>
       );
     });

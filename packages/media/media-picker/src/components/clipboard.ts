@@ -1,4 +1,4 @@
-import { Context } from '@atlaskit/media-core';
+import { MediaClient } from '@atlaskit/media-client';
 
 import { LocalUploadComponent } from './localUpload';
 import { whenDomReady } from '../util/documentReady';
@@ -21,10 +21,10 @@ export const getFilesFromClipboard = (files: FileList) => {
 
 export class ClipboardImpl extends LocalUploadComponent implements Clipboard {
   constructor(
-    context: Context,
+    mediaClient: MediaClient,
     config: ClipboardConfig = { uploadParams: {} },
   ) {
-    super(context, config);
+    super(mediaClient, config);
   }
 
   public async activate(): Promise<void> {

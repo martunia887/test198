@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Context, FileDetails, isPreviewableType } from '@atlaskit/media-core';
+import {
+  FileDetails,
+  isPreviewableType,
+  MediaClient,
+  withMediaClient,
+  WithMediaClientProps,
+} from '@atlaskit/media-client';
 import { AnalyticsContext } from '@atlaskit/analytics-next';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
@@ -31,7 +37,8 @@ import { isBigger } from '../../utils/dimensionComparer';
 import { getCardStatus } from './getCardStatus';
 import { InlinePlayer } from '../inlinePlayer';
 
-export class Card extends Component<CardProps, CardState> {
+type BaseCardProps = CardProps & WithMediaClientProps;
+export class Card extends Component<BaseCardProps, CardState> {
   private hasBeenMounted: boolean = false;
   private onClickPayload?: {
     result: CardEvent;
@@ -39,7 +46,7 @@ export class Card extends Component<CardProps, CardState> {
   };
 
   subscription?: Subscription;
-  static defaultProps: Partial<CardProps> = {
+  static defaultProps: Partial<BaseCardProps> = {
     appearance: 'auto',
     resizeMode: 'crop',
     isLazy: true,
@@ -54,19 +61,19 @@ export class Card extends Component<CardProps, CardState> {
   };
 
   componentDidMount() {
-    const { identifier, context } = this.props;
+    const { identifier, mediaClient } = this.props;
     this.hasBeenMounted = true;
-    this.subscribe(identifier, context);
+    this.subscribe(identifier, mediaClient);
   }
 
-  componentWillReceiveProps(nextProps: CardProps) {
+  componentWillReceiveProps(nextProps: BaseCardProps) {
     const {
-      context: currentContext,
+      mediaClient: currentMediaClient,
       identifier: currentIdentifier,
       dimensions: currentDimensions,
     } = this.props;
     const {
-      context: nextContext,
+      mediaClient: nextMediaClient,
       identifier: nextIdenfifier,
       dimensions: nextDimensions,
     } = nextProps;
@@ -76,11 +83,11 @@ export class Card extends Component<CardProps, CardState> {
     );
 
     if (
-      currentContext !== nextContext ||
+      currentMediaClient !== nextMediaClient ||
       isDifferent ||
       this.shouldRefetchImage(currentDimensions, nextDimensions)
     ) {
-      this.subscribe(nextIdenfifier, nextContext);
+      this.subscribe(nextIdenfifier, nextMediaClient);
     }
   }
 
@@ -116,7 +123,7 @@ export class Card extends Component<CardProps, CardState> {
     }
   };
 
-  async subscribe(identifier: Identifier, context: Context) {
+  async subscribe(identifier: Identifier, mediaClient: MediaClient) {
     const { isCardVisible } = this.state;
     if (!isCardVisible) {
       return;
@@ -150,7 +157,7 @@ export class Card extends Component<CardProps, CardState> {
     const { id, collectionName, occurrenceKey } = identifier;
     const resolvedId = await id;
     this.unsubscribe();
-    this.subscription = context.file
+    this.subscription = mediaClient.file
       .getFileState(resolvedId, { collectionName, occurrenceKey })
       .subscribe({
         next: async fileState => {
@@ -172,7 +179,6 @@ export class Card extends Component<CardProps, CardState> {
               previewOrientation,
             });
           }
-
           switch (fileState.status) {
             case 'uploading':
               const { progress } = fileState;
@@ -213,7 +219,7 @@ export class Card extends Component<CardProps, CardState> {
                 try {
                   const mode =
                     resizeMode === 'stretchy-fit' ? 'full-fit' : resizeMode;
-                  const blob = await context.getImage(resolvedId, {
+                  const blob = await mediaClient.getImage(resolvedId, {
                     collection: collectionName,
                     mode,
                     height,
@@ -265,9 +271,9 @@ export class Card extends Component<CardProps, CardState> {
 
   // This method is called when card fails and user press 'Retry'
   private onRetry = () => {
-    const { identifier, context } = this.props;
+    const { identifier, mediaClient } = this.props;
 
-    this.subscribe(identifier, context);
+    this.subscribe(identifier, mediaClient);
   };
 
   get analyticsContext(): CardAnalyticsContext {
@@ -289,7 +295,7 @@ export class Card extends Component<CardProps, CardState> {
         label: 'Download',
         icon: <DownloadIcon label="Download" />,
         handler: async () =>
-          this.props.context.file.downloadBinary(
+          this.props.mediaClient.file.downloadBinary(
             await identifier.id,
             (metadata as FileDetails).name,
             identifier.collectionName,
@@ -337,11 +343,11 @@ export class Card extends Component<CardProps, CardState> {
   };
 
   renderInlinePlayer = () => {
-    const { identifier, context, dimensions, selected } = this.props;
+    const { identifier, mediaClient, dimensions, selected } = this.props;
 
     return (
       <InlinePlayer
-        context={context}
+        mediaClient={mediaClient}
         dimensions={dimensions}
         identifier={identifier as FileIdentifier}
         onError={this.onInlinePlayerError}
@@ -415,8 +421,10 @@ export class Card extends Component<CardProps, CardState> {
 
   onCardInViewport = () => {
     this.setState({ isCardVisible: true }, () => {
-      const { identifier, context } = this.props;
-      this.subscribe(identifier, context);
+      const { identifier, mediaClient } = this.props;
+      this.subscribe(identifier, mediaClient);
     });
   };
 }
+
+export default withMediaClient(Card);

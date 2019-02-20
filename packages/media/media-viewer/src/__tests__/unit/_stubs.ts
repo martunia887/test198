@@ -1,13 +1,9 @@
 import * as events from 'events';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
-import {
-  Context,
-  ContextConfig,
-  MediaItem,
-  Auth,
-  FileState,
-} from '@atlaskit/media-core';
+import { MediaClientConfig, Auth } from '@atlaskit/media-core';
+import { MediaItem, FileState, MediaClient } from '@atlaskit/media-client';
+import { fakeMediaClient, asMock } from '@atlaskit/media-test-helpers';
 
 export class Stubs {
   static mediaViewer(overrides: any) {
@@ -46,10 +42,10 @@ export class Stubs {
     };
   }
 
-  static context(
-    config: ContextConfig,
+  static mediaClient(
+    config: MediaClientConfig,
     getFileState?: () => Observable<FileState>,
-  ): Partial<Context> {
+  ): Partial<MediaClient> {
     return {
       config,
       file: {
@@ -68,23 +64,25 @@ export class Stubs {
 export interface CreateContextOptions {
   authPromise?: Promise<Auth>;
   getFileState?: () => Observable<FileState>;
-  config?: ContextConfig;
+  config?: MediaClientConfig;
 }
 
-export const createContext = (options?: CreateContextOptions) => {
-  const defaultOptions: CreateContextOptions = {
-    authPromise: Promise.resolve<Auth>({
-      token: 'some-token',
-      clientId: 'some-client-id',
-      baseUrl: 'some-service-host',
-    }),
-    getFileState: undefined,
-    config: undefined,
-  };
-  const { authPromise, getFileState, config } = options || defaultOptions;
-  const authProvider = jest.fn(() => authPromise);
-  const contextConfig: ContextConfig = {
-    authProvider,
-  };
-  return Stubs.context(config || contextConfig, getFileState) as Context;
+export const createMediaClient = (options: CreateContextOptions = {}) => {
+  const { authPromise, getFileState, config } = options;
+  const mediaClient = fakeMediaClient(
+    config || {
+      authProvider: () =>
+        authPromise ||
+        Promise.resolve<Auth>({
+          token: 'some-token',
+          clientId: 'some-client-id',
+          baseUrl: 'some-service-host',
+        }),
+    },
+  );
+  if (getFileState) {
+    asMock(mediaClient.file.getFileState).mockImplementation(getFileState);
+  }
+  // Stubs.context(config || contextConfig, getFileState) as Context;
+  return mediaClient;
 };

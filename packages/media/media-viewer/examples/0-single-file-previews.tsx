@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createStorybookContext } from '@atlaskit/media-test-helpers';
+import { createStorybookMediaClient } from '@atlaskit/media-test-helpers';
 import { FileIdentifier, Card } from '@atlaskit/media-card';
 import { ButtonList, Container, Group } from '../example-helpers/styled';
 import {
@@ -23,7 +23,7 @@ import { MediaViewer, MediaViewerItem } from '../src';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
-const context = createStorybookContext();
+const mediaClient = createStorybookMediaClient();
 
 const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
   const { payload } = analyticsEvent;
@@ -52,7 +52,7 @@ export default class Example extends React.Component<{}, State> {
     return (
       <div>
         <h4>{title}</h4>
-        <Card identifier={identifier} context={context} onClick={onClick} />
+        <Card identifier={identifier} onClick={onClick} />
       </div>
     );
   };
@@ -108,7 +108,7 @@ export default class Example extends React.Component<{}, State> {
           {this.state.selectedItem && (
             <AnalyticsListener channel="media" onEvent={handleEvent}>
               <MediaViewer
-                context={context}
+                mediaClient={mediaClient}
                 selectedItem={this.state.selectedItem}
                 dataSource={{ list: [this.state.selectedItem] }}
                 collectionName={defaultCollectionName}

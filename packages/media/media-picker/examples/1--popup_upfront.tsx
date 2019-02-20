@@ -7,9 +7,10 @@ import { Component } from 'react';
 import Button from '@atlaskit/button';
 import {
   defaultMediaPickerCollectionName,
-  createUploadContext,
+  createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 import { MediaPicker, Popup } from '../src';
 import {
   PopupContainer,
@@ -23,7 +24,7 @@ import {
   UploadPreviewUpdateEventPayload,
 } from '../src/domain/uploadEvent';
 
-const context = createUploadContext();
+const mediaClientConfig = createUploadMediaClientConfig();
 
 export interface PopupWrapperState {
   files: Promise<string>[];
@@ -38,7 +39,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
   };
 
   async componentDidMount() {
-    const popup = await MediaPicker('popup', context, {
+    const popup = await MediaPicker('popup', mediaClientConfig, {
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
       },
@@ -64,7 +65,9 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
 
   componentWillUnmount() {
     const { popup } = this.state;
-    if (popup) popup.removeAllListeners();
+    if (popup) {
+      popup.removeAllListeners();
+    }
   }
 
   onUploadsStart = (data: UploadsStartEventPayload) => {
@@ -93,7 +96,9 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
   onShow = () => {
     const { popup } = this.state;
     // Synchronously with next command tenantAuthProvider will be requested.
-    if (popup) popup.show().catch(console.error);
+    if (popup) {
+      popup.show().catch(console.error);
+    }
   };
 
   renderCards = () => {
@@ -106,7 +111,6 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
       return (
         <CardItemWrapper key={key}>
           <Card
-            context={context}
             isLazy={false}
             identifier={{
               id: upfrontId,
@@ -126,16 +130,18 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     const isUploadFinished = !length;
 
     return (
-      <PopupContainer>
-        <PopupHeader>
-          <Button appearance="primary" onClick={this.onShow}>
-            Show
-          </Button>
-          <div>Upload finished: {`${isUploadFinished}`}</div>
-          <div>Uploading files: {length}</div>
-        </PopupHeader>
-        {this.renderCards()}
-      </PopupContainer>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
+        <PopupContainer>
+          <PopupHeader>
+            <Button appearance="primary" onClick={this.onShow}>
+              Show
+            </Button>
+            <div>Upload finished: {`${isUploadFinished}`}</div>
+            <div>Uploading files: {length}</div>
+          </PopupHeader>
+          {this.renderCards()}
+        </PopupContainer>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

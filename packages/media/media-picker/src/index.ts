@@ -1,3 +1,6 @@
+import { MediaClientConfig } from '@atlaskit/media-core';
+import { MediaClient } from '@atlaskit/media-client';
+
 export {
   DropzoneUploadEventPayloadMap,
   PopupUploadEventPayloadMap,
@@ -20,8 +23,6 @@ import {
   DropzoneConstructor,
   Dropzone,
 } from './components/types';
-
-import { Context } from '@atlaskit/media-core';
 
 export const isBinaryUploader = (
   component: any,
@@ -108,41 +109,42 @@ export {
 
 export async function MediaPicker<K extends keyof MediaPickerComponents>(
   componentName: K,
-  context: Context,
+  mediaClientConfig: MediaClientConfig,
   pickerConfig?: ComponentConfigs[K],
 ): Promise<MediaPickerComponents[K]> {
+  const mediaClient = new MediaClient(mediaClientConfig);
   switch (componentName) {
     case 'binary':
       const {
         BinaryUploaderImpl,
       } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-binary" */ './components/binary');
-      return new BinaryUploaderImpl(context, pickerConfig as BinaryConfig);
+      return new BinaryUploaderImpl(mediaClient, pickerConfig as BinaryConfig);
     case 'browser':
       const {
         BrowserImpl,
       } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-browser" */ './components/browser');
-      return new BrowserImpl(context, pickerConfig as
+      return new BrowserImpl(mediaClient, pickerConfig as
         | BrowserConfig
         | undefined);
     case 'clipboard':
       const {
         ClipboardImpl,
       } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-clipboard" */ './components/clipboard');
-      return new ClipboardImpl(context, pickerConfig as
+      return new ClipboardImpl(mediaClient, pickerConfig as
         | ClipboardConfig
         | undefined);
     case 'dropzone':
       const {
         DropzoneImpl,
       } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-dropzone" */ './components/dropzone');
-      return new DropzoneImpl(context, pickerConfig as
+      return new DropzoneImpl(mediaClient, pickerConfig as
         | DropzoneConfig
         | undefined);
     case 'popup':
       const {
         PopupImpl,
       } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-popup" */ './components/popup');
-      return new PopupImpl(context, pickerConfig as PopupConfig);
+      return new PopupImpl(mediaClient, pickerConfig as PopupConfig);
     default:
       throw new Error(`The component ${componentName} does not exist`);
   }

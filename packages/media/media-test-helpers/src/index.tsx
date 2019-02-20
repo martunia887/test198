@@ -1,7 +1,7 @@
 import './jest_check';
 export * from './authProvider';
 export * from './contextProvider';
-export * from './fakeContextProvider';
+export * from './fakeMediaClient';
 export * from './story-list';
 export * from './images';
 export * from './waitUntil';

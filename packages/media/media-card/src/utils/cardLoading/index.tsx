@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { MediaItemType } from '@atlaskit/media-core';
+import { MediaItemType } from '@atlaskit/media-client';
 import FileIcon from '@atlaskit/icon/glyph/file';
 import LinkIcon from '@atlaskit/icon/glyph/link';
 import { Wrapper } from './styled';
