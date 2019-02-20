@@ -4,9 +4,6 @@ import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Button from '@atlaskit/button';
 import styled from 'styled-components';
 import { AvatarPickerDialog, ImageActions, Avatar } from '../src/next-gen';
-import { generateAvatars } from '../example-helpers';
-
-const avatars: Array<Avatar> = generateAvatars(30);
 
 const Layout: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   display: flex;
@@ -22,14 +19,25 @@ const Layout: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
 
 const SelectedImage: React.ComponentClass<
   React.ImgHTMLAttributes<{}>
-> = styled.img``;
+> = styled.img`
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+  border: 1px solid #000;
+`;
+
+interface ExampleProps {
+  containerWidth: number;
+  containerHeight: number;
+  mode: 'user' | 'container';
+  avatars?: Array<Avatar>;
+  selectedAvatar?: Avatar;
+}
 
 interface ExampleState {
   selectedImg?: string;
   isOpen: boolean;
 }
 
-class Example extends Component<{}, ExampleState> {
+export class AvatarPickerExample extends Component<ExampleProps, ExampleState> {
   state: ExampleState = {
     isOpen: true,
   };
@@ -40,12 +48,11 @@ class Example extends Component<{}, ExampleState> {
 
   onImageSelected = (actions: ImageActions) => {
     this.setState({ selectedImg: actions.toDataURL() });
-    console.log(actions.toDataURL());
     this.onClose();
   };
 
   onAvatarSelected = (avatar: Avatar) => {
-    console.log(avatar.dataURI);
+    console.log('Avatar Selected:', avatar.dataURI);
     this.onClose();
   };
 
@@ -54,6 +61,7 @@ class Example extends Component<{}, ExampleState> {
   };
 
   render() {
+    const { mode, avatars, selectedAvatar } = this.props;
     const { isOpen, selectedImg } = this.state;
 
     return (
@@ -69,10 +77,9 @@ class Example extends Component<{}, ExampleState> {
                 </Button>
               </Layout>
               <AvatarPickerDialog
-                mode="user"
+                mode={mode}
                 avatars={avatars}
-                selectedAvatar={avatars[0]}
-                isCircular={true}
+                selectedAvatar={selectedAvatar}
                 isOpen={isOpen}
                 isLoading={false}
                 onImageSelected={this.onImageSelected}
@@ -87,5 +94,3 @@ class Example extends Component<{}, ExampleState> {
     );
   }
 }
-
-export default () => <Example />;

@@ -228,6 +228,13 @@ class Example extends React.Component<{}, ExampleState> {
               </p>
             ) : null}
           </GridColumn>
+          <GridColumn>
+            {exportedDataURI ? (
+              <ExportedImageWrapper>
+                <ExportedImage src={exportedDataURI} style={{ margin }} />
+              </ExportedImageWrapper>
+            ) : null}
+          </GridColumn>
         </Grid>
         <Grid>
           <GridColumn>
@@ -241,15 +248,6 @@ class Example extends React.Component<{}, ExampleState> {
               innerRef={this.onZoomSliderElement}
               style={{ width: containerWidth + margin * 2 }}
             />
-          </GridColumn>
-        </Grid>
-        <Grid>
-          <GridColumn>
-            {exportedDataURI ? (
-              <ExportedImageWrapper>
-                <ExportedImage src={exportedDataURI} style={{ margin }} />
-              </ExportedImageWrapper>
-            ) : null}
           </GridColumn>
         </Grid>
       </Page>

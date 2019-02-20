@@ -66,6 +66,7 @@ export const ContainerWrapper: ComponentClass<
   cursor: move;
   user-select: none;
   overflow: hidden;
+  border-radius: 10px;
 `;
 
 export const EASING = 0.15;

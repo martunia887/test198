@@ -6,7 +6,7 @@ import { ModalTransition } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
 import { AVATAR_DIALOG_WIDTH, AVATAR_DIALOG_HEIGHT } from './common';
 import { ImageView, ImageActions } from './imageView';
-import { AvatarProps, Avatar } from './avatar';
+import { AvatarProps, Avatar } from './common';
 import { AvatarViewSmall } from './avatarViewSmall';
 import { AvatarViewLarge } from './avatarViewLarge';
 import { CaptureWebCam } from './captureWebcam';
@@ -20,10 +20,9 @@ import {
 
 export interface AvatarPickerDialogProps extends AvatarProps {
   mode: 'user' | 'container';
-  isCircular: boolean;
   isOpen: boolean;
   isLoading: boolean;
-  title: string;
+  title?: string;
   primaryButtonText: string;
   onImageSelected: (actions: ImageActions) => void;
   onAvatarSelected: (avatar: Avatar) => void;
@@ -32,10 +31,8 @@ export interface AvatarPickerDialogProps extends AvatarProps {
 
 export const defaultProps = {
   mode: 'user',
-  isCircular: true,
   isOpen: true,
   isLoading: false,
-  title: 'Upload a profile photo' /* i18n */,
   primaryButtonText: 'Save' /* i18n */,
 };
 
@@ -62,13 +59,17 @@ export class AvatarPickerDialog extends Component<
 
   imageActions?: ImageActions;
 
-  state: AvatarPickerDialogState = {
-    viewMode: ViewMode.Image,
-    selectedAvatar: this.selectDefaultAvatar(),
-    hasImage: false,
-    isOpen: this.props.isOpen,
-    isModified: false,
-  };
+  state: AvatarPickerDialogState = this.defaultState;
+
+  get defaultState(): AvatarPickerDialogState {
+    return {
+      viewMode: ViewMode.Image,
+      selectedAvatar: this.props.selectedAvatar,
+      hasImage: false,
+      isOpen: this.props.isOpen,
+      isModified: false,
+    };
+  }
 
   get canSave() {
     const { isLoading } = this.props;
@@ -83,20 +84,14 @@ export class AvatarPickerDialog extends Component<
     }
   }
 
-  selectDefaultAvatar(): Avatar | undefined {
-    const { avatars, selectedAvatar } = this.props;
-    if (selectedAvatar === undefined) {
-      /* pick a random one */
-      return avatars.length ? avatars[0] : undefined;
-    } else {
-      /* use given selected one */
-      return selectedAvatar;
-    }
-  }
-
   header = () => {
-    const { title } = this.props;
-    return <ModalHeader>{title /* i18n */}</ModalHeader>;
+    const { title, mode } = this.props;
+    const headerTitle = title
+      ? title
+      : mode === 'user'
+      ? 'Upload a profile photo'
+      : 'Upload an avatar';
+    return <ModalHeader>{headerTitle /* i18n */}</ModalHeader>;
   };
 
   footer = () => {
@@ -131,11 +126,17 @@ export class AvatarPickerDialog extends Component<
   };
 
   onAvatarSelected = (avatar: Avatar) => {
-    this.setState({ selectedAvatar: avatar });
+    this.setState({
+      selectedAvatar: avatar,
+      isModified: avatar === this.props.selectedAvatar ? false : true,
+    });
   };
 
   onCancel = () => {
-    this.setState({ isOpen: false });
+    this.setState({
+      ...this.defaultState,
+      isOpen: false,
+    });
     this.props.onCancel();
   };
 
@@ -156,7 +157,7 @@ export class AvatarPickerDialog extends Component<
   };
 
   onStackedViewBack = () => {
-    this.setState({ viewMode: ViewMode.Image });
+    this.setState({ viewMode: ViewMode.Image, src: undefined });
   };
 
   onTakePhotoClick = () => {
@@ -171,14 +172,14 @@ export class AvatarPickerDialog extends Component<
   };
 
   renderImageView() {
-    const { isCircular, avatars, mode } = this.props;
+    const { avatars, mode } = this.props;
     const { selectedAvatar, hasImage, src } = this.state;
 
     return (
       <>
         <ImageView
           src={src}
-          isCircular={isCircular}
+          isCircular={mode === 'user'}
           onImageActions={this.onImageActions}
           onImageLoad={this.onImageLoad}
           onImageCleared={this.onImageCleared}

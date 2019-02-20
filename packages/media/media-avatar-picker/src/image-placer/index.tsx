@@ -108,6 +108,7 @@ export class ImagePlacer extends React.Component<
   ImagePlacerProps,
   ImagePlacerState
 > {
+  currentSrc?: File | string;
   imageSourceRect = new Rectangle(
     0,
     0,
@@ -201,14 +202,13 @@ export class ImagePlacer extends React.Component<
 
   /* respond to prop changes */
   async UNSAFE_componentWillReceiveProps(nextProps: ImagePlacerProps) {
-    const { imageSourceRect, state, props } = this;
+    const { imageSourceRect, state, props, currentSrc } = this;
     const { zoom } = state;
     const {
       useConstraints: currentUseConstraints,
       containerWidth: currentContainerWidth,
       containerHeight: currentContainerHeight,
       margin: currentMargin,
-      src: currentSrc,
     } = props;
     const {
       zoom: nextZoom,
@@ -232,7 +232,7 @@ export class ImagePlacer extends React.Component<
       nextContainerHeight !== currentContainerHeight;
     const isMarginChange =
       nextMargin !== undefined && nextMargin !== currentMargin;
-    const isImageAction = typeof nextOnImageActions !== undefined;
+    const hasImageActionListener = typeof nextOnImageActions !== undefined;
 
     const zoomReset = { zoom: 0 };
 
@@ -260,17 +260,19 @@ export class ImagePlacer extends React.Component<
 
     if (nextSrc instanceof File && nextSrc !== currentSrc) {
       fileInfo = await getFileInfo(nextSrc as File);
+      this.currentSrc = fileInfo.file;
     }
 
     if (typeof nextSrc === 'string' && nextSrc !== currentSrc) {
       fileInfo = await getFileInfoFromSrc(nextSrc as string);
+      this.currentSrc = fileInfo.src;
     }
 
     if (fileInfo) {
       await this.preprocessFile(fileInfo);
     }
 
-    if (isImageAction) {
+    if (hasImageActionListener) {
       this.provideImageActions();
     }
   }
@@ -311,15 +313,15 @@ export class ImagePlacer extends React.Component<
         scaleFactor < 1 ? srcRect.scaled(scaleFactor) : srcRect;
       const { width: previewWidth, height: previewHeight } = scaledRect;
 
-      const { image: previewImage } = await transformImage(
+      const { image: previewImage, width, height } = await transformImage(
         rotatedImage,
         1,
         previewWidth,
         previewHeight,
       );
 
-      this.setSrc(previewImage.src);
-      this.imageSourceRect = new Rectangle(previewWidth, previewHeight);
+      await this.setSrc(previewImage.src);
+      this.imageSourceRect = new Rectangle(width, height);
       this.originalImage = rotatedImage;
     } else {
       /* TODO: i18n https://product-fabric.atlassian.net/browse/MS-1261 */
@@ -328,19 +330,28 @@ export class ImagePlacer extends React.Component<
   }
 
   async setFile(file: File) {
+    const { containerRect } = this;
     const fileInfo = await getFileInfo(file);
+    this.setState({
+      imageWidth: 0,
+      imageHeight: 0,
+      zoom: 0,
+      originX: containerRect.width * 0.5,
+      originY: containerRect.height * 0.5,
+    });
     await this.preprocessFile(fileInfo);
     this.provideImageActions();
   }
 
   setSrc(src: string) {
-    this.setState({
-      src,
-      zoom: 0,
-      originX: 0,
-      originY: 0,
-    });
-    this.updateZoomProp();
+    this.setState(
+      {
+        src,
+      },
+      () => {
+        this.updateZoomProp();
+      },
+    );
   }
 
   /* tell consumer that zoom has changed */

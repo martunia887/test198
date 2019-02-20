@@ -75,7 +75,7 @@ export class ImagePlacerImage extends React.Component<
     const { src } = this.props;
     const { x, y, width, height } = this.state;
 
-    let crossOrigin: 'anonymous' | undefined = undefined;
+    let crossOrigin: 'anonymous' | undefined;
     if (src) {
       try {
         crossOrigin = isImageRemote(src) ? 'anonymous' : undefined;

@@ -13,9 +13,8 @@ const mockImagePlacerUtil = {
 jest.mock('../../util', () => mockImagePlacerUtil);
 
 import {
-  applyOrientation,
+  transformImage,
   radians,
-  initialiseImagePreview,
   renderImageAtCurrentView,
   PreviewInfo,
   ViewInfo,

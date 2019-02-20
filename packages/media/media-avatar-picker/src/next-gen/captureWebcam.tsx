@@ -6,16 +6,19 @@ import CameraFilledIcon from '@atlaskit/icon/glyph/camera-filled';
 import { getCanvas } from '../image-placer/util';
 import { VideoWrapper, CountdownWrapper } from './styled';
 
+export const GET_MEDIA_REQUEST_TIMEOUT_MS = 5000; // how many MS to wait after requesting camera
+const FLASH_MS = 250; // how many MS to flash/pause before capturing on final countdown
+
 export const hasWebCamCapabilities = () =>
   !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 
-export enum CameraMode {
-  Idle,
-  Three,
-  Two,
-  One,
-  Capture,
-}
+export const CameraMode: { [key: string]: number } = {
+  Idle: -1,
+  Three: 3,
+  Two: 2,
+  One: 1,
+  Capture: 0,
+};
 
 export interface CaptureWebCamProps {
   onCapture: (dataURL: string) => void;
@@ -24,50 +27,67 @@ export interface CaptureWebCamProps {
 export interface CaptureWebCamState {
   stream?: MediaStream;
   hasError: boolean;
-  mode: CameraMode;
+  cameraMode: number;
 }
-
-export const defaultProps = {};
 
 export class CaptureWebCam extends Component<
   CaptureWebCamProps,
   CaptureWebCamState
 > {
   videoElement = createRef<HTMLVideoElement>();
+  getUserMediaTimeout?: NodeJS.Timer;
+  hasUnmounted: boolean = false;
 
-  static defaultProps = defaultProps;
+  static defaultProps = {};
 
   state: CaptureWebCamState = {
-    mode: CameraMode.Idle,
+    cameraMode: CameraMode.Idle,
     hasError: false,
   };
 
   async componentDidMount() {
     try {
+      this.getUserMediaTimeout = setTimeout(() => {
+        if (this.hasUnmounted) {
+          return;
+        }
+        this.setState({ hasError: true });
+      }, GET_MEDIA_REQUEST_TIMEOUT_MS);
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       const videoElement = this.videoElement.current;
       if (videoElement) {
         videoElement.srcObject = stream;
+        clearTimeout(this.getUserMediaTimeout);
+        delete this.getUserMediaTimeout;
         this.setState({ stream });
       }
     } catch (e) {}
   }
 
-  setCountdown(number: CameraMode) {
-    this.setState({ mode: number });
-    setTimeout(() => {
-      if (number === CameraMode.Three) {
+  componentWillUnmount() {
+    // use to abort timeouts when component is unmounted
+    this.hasUnmounted = true;
+  }
+
+  setCountdown(cameraMode: number) {
+    this.setState({ cameraMode });
+    const asyncCapture = () => {
+      if (this.hasUnmounted) {
+        return;
+      }
+      if (cameraMode === CameraMode.Three) {
         this.setCountdown(CameraMode.Two);
-      } else if (number === CameraMode.Two) {
+      } else if (cameraMode === CameraMode.Two) {
         this.setCountdown(CameraMode.One);
-      } else if (number === CameraMode.One) {
+      } else if (cameraMode === CameraMode.One) {
         this.capture();
       }
-    }, 1000);
+    };
+    setTimeout(asyncCapture, 1000);
   }
 
   capture() {
-    this.setState({ mode: CameraMode.Capture });
+    this.setState({ cameraMode: CameraMode.Capture });
     const videoElement = this.videoElement.current;
     if (videoElement) {
       const { canvas, context } = getCanvas(
@@ -78,7 +98,13 @@ export class CaptureWebCam extends Component<
         context.drawImage(videoElement, 0, 0);
         const dataURL = canvas.toDataURL('image/pmg');
         /* slight delay to allow capture icon to be visible before view changes */
-        setTimeout(() => this.props.onCapture(dataURL), 250);
+        const asyncCapture = () => {
+          if (this.hasUnmounted) {
+            return;
+          }
+          this.props.onCapture(dataURL);
+        };
+        setTimeout(asyncCapture, FLASH_MS);
       }
     }
   }
@@ -88,7 +114,7 @@ export class CaptureWebCam extends Component<
   };
 
   renderMode() {
-    const { mode } = this.state;
+    const { cameraMode: mode } = this.state;
     switch (mode) {
       case CameraMode.Idle:
         return <Button onClick={this.onTakePhotoClick}>{'Take photo'}</Button>;
@@ -97,8 +123,8 @@ export class CaptureWebCam extends Component<
     }
   }
 
-  getColor(mode: CameraMode) {
-    return mode === this.state.mode ? akColorN900 : akColorN30;
+  getColor(mode: number) {
+    return mode === this.state.cameraMode ? akColorN900 : akColorN30;
   }
 
   renderCountdown() {
@@ -121,12 +147,12 @@ export class CaptureWebCam extends Component<
     return (
       <VideoWrapper>
         <video autoPlay={true} ref={this.videoElement} />
-        {!stream && (
+        {!stream && !hasError && (
           <div className="message">Requesting camera permissions...</div>
         ) /* i18n */}
-        {hasError && (
+        {!stream && hasError && (
           <div className="message">
-            There was an error accessing your camera
+            There were no permissions granted accessing your camera
           </div>
         ) /* i18n */}
         {!hasError && !!stream && this.renderMode()}

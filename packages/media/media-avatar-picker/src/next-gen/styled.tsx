@@ -4,13 +4,11 @@ import {
   akColorN200,
   akColorB200,
   akColorN30,
-  akColorN10,
-  akColorN800,
   akBorderRadius,
   akGridSizeUnitless,
 } from '@atlaskit/util-shared-styles';
 import { AVATAR_DIALOG_WIDTH, CONTAINER_SIZE } from './common';
-import { AvatarImageProps } from './avatar';
+import { AvatarImageProps } from './common';
 
 /** AvatarPickerDialog */
 

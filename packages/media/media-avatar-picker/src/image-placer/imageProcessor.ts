@@ -103,13 +103,6 @@ export function transformImage(
         originalCanvasWidth,
         originalCanvasHeight,
       );
-
-      context.strokeStyle = '#00ee00';
-      context.beginPath();
-      context.moveTo(0, 0);
-      context.lineTo(imgWidth, imgHeight);
-      context.stroke();
-      context.closePath();
     }
 
     const transformedImage = new Image(canvasWidth, canvasHeight);

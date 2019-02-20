@@ -1,9 +1,9 @@
 [AvatarPickerDialog]
 
 - user vs container modes
-  - per design spec
-  - predefined, pass selected no save, only save if different selection or image
-- drag/drop glitch when has src
+  X per design spec
+  X predefined, pass selected no save, only save if different selection or image
+? drag/drop glitch when has src
 - animated border for rect mode
 - when predefined avatar disabled use disabled cursor
 X constrain circular mask
@@ -17,4 +17,4 @@ X blur issue
 X center image
 
 [DESIGN QA]
-- border radius on ImagePlacer (INNER & OUTER)
++ border radius on ImagePlacer (INNER & OUTER)

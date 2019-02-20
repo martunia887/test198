@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Avatar, AvatarProps, defaultAvatarProps } from './avatar';
+import { Avatar, AvatarProps, defaultAvatarProps } from './common';
 import { ShowMoreButton } from './showMoreButton';
 import {
   SmallAvatarImage,
@@ -24,7 +24,7 @@ export class AvatarViewSmall extends Component<AvatarViewSmallProps, {}> {
   getVisibleAvatars(): Array<Avatar> {
     const visibleAvatars: Array<Avatar> = [];
     const { avatars, selectedAvatar } = this.props;
-    if (selectedAvatar) {
+    if (avatars && selectedAvatar) {
       const selectedIndex = avatars.indexOf(selectedAvatar);
       if (selectedIndex >= MAX_VISIBLE) {
         visibleAvatars.splice(1, 0, ...avatars.slice(0, MAX_VISIBLE - 1));
@@ -33,7 +33,9 @@ export class AvatarViewSmall extends Component<AvatarViewSmallProps, {}> {
         visibleAvatars.splice(0, 0, ...avatars.slice(0, MAX_VISIBLE));
       }
     } else {
-      visibleAvatars.splice(0, 0, ...avatars.slice(0, MAX_VISIBLE));
+      if (avatars) {
+        visibleAvatars.splice(0, 0, ...avatars.slice(0, MAX_VISIBLE));
+      }
     }
     return visibleAvatars;
   }
@@ -48,7 +50,7 @@ export class AvatarViewSmall extends Component<AvatarViewSmallProps, {}> {
   render() {
     const { avatars, selectedAvatar, isDisabled, onShowMore } = this.props;
 
-    if (!avatars.length) {
+    if (!avatars) {
       return null;
     }
 

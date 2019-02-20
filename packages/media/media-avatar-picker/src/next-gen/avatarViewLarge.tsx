@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Avatar, AvatarProps, defaultAvatarProps } from './avatar';
+import { Avatar, AvatarProps, defaultAvatarProps } from './common';
 import {
   LargeAvatarImage,
   AvatarViewLargeWrapper,
@@ -19,16 +19,16 @@ export class AvatarViewLarge extends Component<AvatarProps, {}> {
 
   render() {
     const { avatars, selectedAvatar } = this.props;
-    const icons: Array<JSX.Element> = avatars.map(
-      (avatar: Avatar, i: number) => (
-        <LargeAvatarImage
-          key={`small-avatar-${i}`}
-          src={avatar.dataURI}
-          isSelected={avatar === selectedAvatar}
-          onClick={this.clickHandler(avatar)}
-        />
-      ),
-    );
+    const icons: Array<JSX.Element> = avatars
+      ? avatars.map((avatar: Avatar, i: number) => (
+          <LargeAvatarImage
+            key={`small-avatar-${i}`}
+            src={avatar.dataURI}
+            isSelected={avatar === selectedAvatar}
+            onClick={this.clickHandler(avatar)}
+          />
+        ))
+      : [];
 
     return (
       <>
