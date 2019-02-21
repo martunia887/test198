@@ -11,7 +11,7 @@ import {
 } from '@atlaskit/editor-common';
 import { FullPagePadding } from '../../ui/Renderer/style';
 import { RendererAppearance } from '../../ui/Renderer';
-import { MediaProps } from './media';
+import { MediaCardProps } from '../../ui/MediaCard';
 
 export interface Props {
   children: ReactElement<any>;
@@ -115,7 +115,7 @@ export default class MediaSingle extends Component<
                 cardDimensions,
                 onExternalImageLoaded: this.onExternalImageLoaded,
                 disableOverlay: true,
-              } as MediaProps & ImageLoaderProps)}
+              } as MediaCardProps & ImageLoaderProps)}
             </ExtendedUIMediaSingle>
           );
         }}

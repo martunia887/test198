@@ -2,7 +2,7 @@ import appleTextHTML from './__third-party__/apple-pages/text/html';
 import appleTextPlain from './__third-party__/apple-pages/text/plain';
 import confluenceTextHTML from './__third-party__/atlassian-confluence/text/html';
 import confluenceTextPlain from './__third-party__/atlassian-confluence/text/plain';
-import dropboxTextHTML from './__third-party__/dropbox-paper/text/html';
+import dropboxTextHTML from './__third-party__/dropbox-pap  er/text/html';
 import dropboxTextPlain from './__third-party__/dropbox-paper/text/plain';
 import googleTextHTML from './__third-party__/google-docs/text/html';
 import googleTextPlain from './__third-party__/google-docs/text/plain';
@@ -19,8 +19,6 @@ import {
   p,
   dispatchPasteEvent,
 } from '@atlaskit/editor-test-helpers';
-import { smallImage } from '@atlaskit/media-test-helpers';
-import { dataURItoBlob } from '../../../../../../../media/media-test-helpers/src/mockData/utils';
 
 describe('paste plugin: third-party', () => {
   const createEditor = createEditorFactory();
@@ -72,8 +70,7 @@ describe('paste plugin: third-party', () => {
   });
 
   describe('`Microsoft Word`: ', () => {
-    const blob = dataURItoBlob(smallImage);
-    const image = new File([blob], 'image.png', { type: 'image/png' });
+    const image = new File([], 'image.png', { type: 'image/png' });
     const eventPayload = {
       html: msWordTextHTML,
       plain: msWordTextPlain,

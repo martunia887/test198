@@ -52,7 +52,7 @@ describe(name, () => {
           .returns(testCollectionName);
 
         const provider = await mediaProvider;
-        await provider.uploadContext;
+        await provider.uploadMediaClientConfig;
         await waitForPluginStateChange(pluginState);
 
         // wait a tick for await MediaPicker in picker-facade

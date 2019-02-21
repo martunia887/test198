@@ -10,7 +10,7 @@ import {
   Plugin,
   PluginKey,
 } from 'prosemirror-state';
-import { Context } from '@atlaskit/media-core';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { UploadParams } from '@atlaskit/media-picker';
 import { MediaType, MediaSingleLayout } from '@atlaskit/adf-schema';
 import { ErrorReporter } from '@atlaskit/editor-common';
@@ -50,7 +50,7 @@ export interface MediaNodeWithPosHandler {
 export class MediaPluginState {
   public allowsMedia: boolean = false;
   public allowsUploads: boolean = false;
-  public mediaContext: Context;
+  public mediaClientConfig: MediaClientConfig;
   public stateManager: MediaStateManager;
   public ignoreLinks: boolean = false;
   public waitForMediaUpload: boolean = true;
@@ -143,7 +143,7 @@ export class MediaPluginState {
       let resolvedMediaProvider: MediaProvider = (this.mediaProvider = await mediaProvider);
 
       assert(
-        resolvedMediaProvider && resolvedMediaProvider.viewContext,
+        resolvedMediaProvider && resolvedMediaProvider.viewMediaClientConfig,
         `MediaProvider promise did not resolve to a valid instance of MediaProvider - ${resolvedMediaProvider}`,
       );
     } catch (err) {
@@ -162,7 +162,7 @@ export class MediaPluginState {
     }
 
     this.allowsMedia = true;
-    this.mediaContext = await this.mediaProvider.viewContext;
+    this.mediaClientConfig = await this.mediaProvider.viewMediaClientConfig;
 
     // release all listeners for default state manager
     const { stateManager } = this.mediaProvider;
@@ -175,7 +175,7 @@ export class MediaPluginState {
       this.stateManager = stateManager;
     }
 
-    this.allowsUploads = !!this.mediaProvider.uploadContext;
+    this.allowsUploads = !!this.mediaProvider.uploadMediaClientConfig;
     const { view, allowsUploads } = this;
 
     // make sure editable DOM node is mounted
@@ -185,7 +185,7 @@ export class MediaPluginState {
     }
 
     if (this.allowsUploads) {
-      const uploadContext = await this.mediaProvider.uploadContext;
+      const uploadContext = await this.mediaProvider.uploadMediaClientConfig;
 
       if (this.mediaProvider.uploadParams && uploadContext) {
         await this.initPickers(
@@ -528,7 +528,7 @@ export class MediaPluginState {
 
   private async initPickers(
     uploadParams: UploadParams,
-    context: Context,
+    mediaClientConfig: MediaClientConfig,
     Picker: typeof PickerFacade,
     reactContext: () => {},
   ) {
@@ -539,7 +539,7 @@ export class MediaPluginState {
     // create pickers if they don't exist, re-use otherwise
     if (!pickers.length) {
       const pickerFacadeConfig: PickerFacadeConfig = {
-        context,
+        mediaClientConfig,
         stateManager,
         errorReporter,
       };
@@ -560,7 +560,7 @@ export class MediaPluginState {
         pickers.push(
           (this.popupPicker = await new Picker(
             // Fallback to browser picker for unauthenticated users
-            context.config.userAuthProvider ? 'popup' : 'browser',
+            mediaClientConfig.userAuthProvider ? 'popup' : 'browser',
             pickerFacadeConfig,
             defaultPickerConfig,
           ).init()),

@@ -19,6 +19,7 @@
     "@atlaskit/button": "^10.1.2",
     "@atlaskit/field-base": "^11.0.14",
     "@atlaskit/icon": "^16.0.0",
+    "@atlaskit/media-client": "^9.1.5",
     "@atlaskit/spinner": "^9.0.13",
     "@atlaskit/theme": "^7.0.1",
     "@atlaskit/tooltip": "^12.1.15",

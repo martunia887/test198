@@ -3,7 +3,7 @@ import {
   MediaPickerComponents,
   MediaPickerComponent,
 } from '@atlaskit/media-picker';
-import { ContextFactory } from '@atlaskit/media-core';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   StoryBookAuthProvider,
   userAuthProvider,
@@ -27,15 +27,15 @@ describe('Media PickerFacade', () => {
     captureMessage: (msg: any) => {},
   };
 
-  const context = ContextFactory.create({
+  const mediaClientConfig: MediaClientConfig = {
     authProvider: StoryBookAuthProvider.create(false),
     userAuthProvider,
-  });
+  };
 
   const getPickerFacadeConfig = (
     stateManager: MediaStateManager,
   ): PickerFacadeConfig => ({
-    context,
+    mediaClientConfig,
     stateManager,
     errorReporter,
   });

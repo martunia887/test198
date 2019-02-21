@@ -147,3 +147,4 @@ export interface CardState {
 }
 
 export { defaultImageCardDimensions } from './utils';
+export { ImageResizeMode } from '@atlaskit/media-client';

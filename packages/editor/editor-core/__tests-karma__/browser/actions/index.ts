@@ -169,7 +169,7 @@ describe(name, () => {
             });
 
             const provider = await mediaProvider;
-            await provider.uploadContext;
+            await provider.uploadMediaClientConfig;
             const mediaPluginState = getMediaPluginState(editorView);
             mediaPluginState.insertFiles([
               { id: testTempFileId, fileId: Promise.resolve('id') },
@@ -196,7 +196,7 @@ describe(name, () => {
             });
 
             const provider = await mediaProvider;
-            await provider.uploadContext;
+            await provider.uploadMediaClientConfig;
 
             const mediaPluginState = getMediaPluginState(editorView);
             mediaPluginState.insertFiles([
@@ -225,7 +225,7 @@ describe(name, () => {
             });
 
             const provider = await mediaProvider;
-            await provider.uploadContext;
+            await provider.uploadMediaClientConfig;
             const mediaPluginState = getMediaPluginState(editorView);
 
             mediaPluginState.insertFiles([
@@ -262,7 +262,7 @@ describe(name, () => {
               fileId: Promise.resolve('id'),
             });
             const provider = await mediaProvider;
-            await provider.uploadContext;
+            await provider.uploadMediaClientConfig;
             const mediaPluginState = getMediaPluginState(editorView);
 
             mediaPluginState.insertFiles([
@@ -296,8 +296,8 @@ describe(name, () => {
             });
 
             const provider = await mediaProvider;
-            await provider.uploadContext;
-            await provider.viewContext;
+            await provider.uploadMediaClientConfig;
+            await provider.viewMediaClientConfig;
             const mediaPluginState = getMediaPluginState(editorView);
 
             mediaPluginState.insertFiles([
@@ -438,7 +438,7 @@ describe(name, () => {
         });
 
         const provider = await mediaProvider;
-        await provider.uploadContext;
+        await provider.uploadMediaClientConfig;
 
         mediaPluginState.insertFiles([
           { id: testTempFileId, fileId: Promise.resolve('id') },

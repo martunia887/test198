@@ -44,8 +44,8 @@ import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types'
 const emojiProvider = emojiData.testData.getEmojiResourcePromise();
 
 const mediaProvider: Promise<MediaProvider> = Promise.resolve({
-  viewContext: Promise.resolve({} as any),
-  uploadContext: Promise.resolve({} as any),
+  viewMediaClientConfig: Promise.resolve({} as any),
+  uploadMediaClientConfig: Promise.resolve({} as any),
 });
 
 const providerFactory = ProviderFactory.create({ mediaProvider });

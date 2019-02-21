@@ -7,8 +7,8 @@ import {
   CardView,
   CardOnClickCallback,
   ExternalImageIdentifier,
+  ImageResizeMode,
 } from '@atlaskit/media-card';
-import { Context, ImageResizeMode } from '@atlaskit/media-core';
 import { MediaType } from '@atlaskit/adf-schema';
 import {
   withImageLoader,
@@ -20,13 +20,8 @@ import {
 } from '@atlaskit/editor-common';
 import { RendererAppearance } from './Renderer';
 
-export interface MediaProvider {
-  viewContext?: Context;
-}
-
 export interface MediaCardProps {
   id?: string;
-  mediaProvider?: MediaProvider;
   eventHandlers?: {
     media?: {
       onClick?: CardOnClickCallback;
@@ -45,29 +40,7 @@ export interface MediaCardProps {
   useInlinePlayer?: boolean;
 }
 
-export interface State {
-  context?: Context;
-  // externalStatus: CardStatus;
-}
-
-export class MediaCardInternal extends Component<MediaCardProps, State> {
-  state: State = {};
-
-  async componentDidMount() {
-    const { mediaProvider } = this.props;
-
-    if (!mediaProvider) {
-      return;
-    }
-
-    const provider = await mediaProvider;
-    const context = await provider.viewContext;
-
-    this.setState({
-      context,
-    });
-  }
-
+export class MediaCardInternal extends Component<MediaCardProps> {
   private renderLoadingCard = () => {
     const { cardDimensions } = this.props;
 
@@ -81,7 +54,6 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
   };
 
   private renderExternal() {
-    const { context } = this.state;
     const {
       cardDimensions,
       resizeMode,
@@ -103,7 +75,6 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
 
     return (
       <Card
-        context={context as any} // context is not really used when the type is external and we want to render the component asap
         identifier={identifier}
         dimensions={cardDimensions}
         appearance={appearance}
@@ -114,7 +85,6 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
   }
 
   render() {
-    const { context } = this.state;
     const {
       eventHandlers,
       id,
@@ -134,9 +104,10 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
       return this.renderExternal();
     }
 
-    if (!context) {
-      return this.renderLoadingCard();
-    }
+    // I assume we don't need to do this, because mediaClientConfig is in Context tree now
+    // if (!mediaClientConfig) {
+    //   return this.renderLoadingCard();
+    // }
 
     let identifier: any = {
       id,
@@ -147,7 +118,6 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
     return (
       <Card
         identifier={identifier}
-        context={context}
         dimensions={cardDimensions}
         onClick={
           eventHandlers && eventHandlers.media && eventHandlers.media.onClick

@@ -1,4 +1,4 @@
-import { Context } from '@atlaskit/media-core';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { UploadParams } from '@atlaskit/media-picker';
 
 export type MediaStateStatus =
@@ -51,19 +51,19 @@ export interface MediaProvider {
    * Used for displaying Media Cards and downloading files.
    * This is context config is required.
    */
-  viewContext: Promise<Context>;
+  viewMediaClientConfig: Promise<MediaClientConfig>;
 
   /**
    * (optional) Used for creating new uploads and finalizing files.
    * NOTE: We currently don't accept Context instance, because we need config properties
    *       to initialize
    */
-  uploadContext?: Promise<Context>;
+  uploadMediaClientConfig?: Promise<MediaClientConfig>;
 
   /**
    * (optional) Used for creation of new Media links.
    */
-  linkCreateContext?: Promise<Context>;
+  linkMediaClientConfig?: Promise<MediaClientConfig>;
 
   /**
    * (optional) For any additional feature to be enabled
