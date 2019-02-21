@@ -1,5 +1,4 @@
-import { isErrorFileState } from '../../fileState';
-import { ErrorFileState, ProcessingFailedState } from '../../../index';
+import { ErrorFileState, ProcessingFailedState, isErrorFileState } from '../..';
 
 describe('isErrorFileState()', () => {
   const processingFailedState: ProcessingFailedState = {

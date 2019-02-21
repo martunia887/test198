@@ -1,6 +1,6 @@
-import { MediaStore, FileItem } from '../..';
+import { MediaStore, ResponseFileItem } from '../..';
 import * as uuid from 'uuid';
-// import { FileFetcher, getItemsFromKeys } from '../../file';
+import { FileFetcher, getItemsFromKeys } from '../../client/file-fetcher';
 
 describe('FileFetcher', () => {
   const setup = () => {
@@ -36,7 +36,7 @@ describe('FileFetcher', () => {
       getFileBinaryURL: jest.fn(),
       getItems: jest.fn().mockReturnValue(itemsResponse),
     } as any;
-    const fileFetcher = new FileFetcherImpl(mediaStore);
+    const fileFetcher = new FileFetcher(mediaStore);
 
     return { fileFetcher, mediaStore, items, itemsResponse };
   };
@@ -181,7 +181,7 @@ describe('getItemsFromKeys()', () => {
         collection: 'user-collection',
       },
     ];
-    const items: FileItem[] = [
+    const items: ResponseFileItem[] = [
       {
         id: '1',
         type: 'file',
@@ -205,7 +205,7 @@ describe('getItemsFromKeys()', () => {
         collection: 'user-collection',
       },
     ];
-    const items: FileItem[] = [
+    const items: ResponseFileItem[] = [
       {
         id: '2',
         type: 'file',
@@ -250,7 +250,7 @@ describe('getItemsFromKeys()', () => {
         collection: 'user-collection',
       },
     ];
-    const items: FileItem[] = [
+    const items: ResponseFileItem[] = [
       {
         id: '2',
         type: 'file',
@@ -295,7 +295,7 @@ describe('getItemsFromKeys()', () => {
         collection: 'b',
       },
     ];
-    const items: FileItem[] = [
+    const items: ResponseFileItem[] = [
       {
         id: '2',
         type: 'file',

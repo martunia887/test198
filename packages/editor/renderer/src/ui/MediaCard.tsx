@@ -6,15 +6,10 @@ import {
   Card,
   CardView,
   CardOnClickCallback,
-} from '@atlaskit/media-card';
-import {
-  Context,
-  ImageResizeMode,
-  Identifier,
-  ExternalImageIdentifier,
   ImageResizeMode,
 } from '@atlaskit/media-card';
 import { MediaType } from '@atlaskit/adf-schema';
+import { Identifier, ExternalImageIdentifier } from '@atlaskit/media-client';
 import {
   withImageLoader,
   ImageStatus,
@@ -113,7 +108,7 @@ export class MediaCardInternal extends Component<MediaCardProps> {
       return null;
     }
 
-    if (!mediaClientConfig || !id) {
+    if (!id) {
       return this.renderLoadingCard();
     }
 

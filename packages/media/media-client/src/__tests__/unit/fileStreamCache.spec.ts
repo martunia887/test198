@@ -1,10 +1,11 @@
-import FileStreamCache from '../../context/fileStreamCache';
+import { LRUCache } from 'lru-fast';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { StreamsCache } from '../../file-streams-cache';
 
-describe('FileStreamCache', () => {
+describe('StreamsCache', () => {
   it('should return the stream if already exist', () => {
-    const cache = new FileStreamCache();
+    const cache = new StreamsCache(new Map(), new LRUCache(10));
     const fileStream1 = Observable.create();
 
     cache.set('1', fileStream1);
@@ -16,7 +17,7 @@ describe('FileStreamCache', () => {
 
   describe('getCurrentState()', () => {
     it('should resolve with existing state if there was something already', async () => {
-      const cache = new FileStreamCache();
+      const cache = new StreamsCache(new Map(), new LRUCache(10));
       const subject = new ReplaySubject(1);
 
       subject.next({
@@ -30,7 +31,7 @@ describe('FileStreamCache', () => {
     });
 
     it('should eventually resolve when a state is updated', async () => {
-      const cache = new FileStreamCache();
+      const cache = new StreamsCache(new Map(), new LRUCache(10));
       const subject = new ReplaySubject(1);
       const state = cache.getCurrentState('2');
 

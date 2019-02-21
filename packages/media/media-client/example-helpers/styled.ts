@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import { FileStatus } from '../../media-core/src';
-import styled from 'styled-components';
 import { FileStatus } from '../src';
 
 export const Wrapper: React.ComponentClass<

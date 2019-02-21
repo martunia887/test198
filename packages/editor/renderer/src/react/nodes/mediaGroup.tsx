@@ -3,8 +3,8 @@ import { ReactElement, PureComponent } from 'react';
 import { CardEvent, defaultImageCardDimensions } from '@atlaskit/media-card';
 import { FilmstripView } from '@atlaskit/media-filmstrip';
 import { EventHandlers, CardSurroundings } from '@atlaskit/editor-common';
-import { Identifier } from '@atlaskit/media-core';
-import { MediaProps } from './media';
+import { Identifier } from '@atlaskit/media-client';
+import { MediaCardProps } from '../../ui/MediaCard';
 
 export interface MediaGroupProps {
   children?: React.ReactNode;
@@ -53,22 +53,22 @@ export default class MediaGroup extends PureComponent<
     return <div className="MediaGroup">{content}</div>;
   }
 
-  renderSingleFile(child: ReactElement<MediaProps>) {
+  renderSingleFile(child: ReactElement<MediaCardProps>) {
     return React.cloneElement(child, {
       resizeMode: 'stretchy-fit',
       cardDimensions: defaultImageCardDimensions,
       useInlinePlayer: false,
-    } as MediaProps);
+    } as MediaCardProps);
   }
 
-  renderSingleLink(child: ReactElement<MediaProps>) {
+  renderSingleLink(child: ReactElement<MediaCardProps>) {
     return React.cloneElement(child, {
       appearance: 'auto',
-    } as MediaProps);
+    } as MediaCardProps);
   }
 
   cloneFileCard(
-    child: ReactElement<MediaProps>,
+    child: ReactElement<MediaCardProps>,
     surroundingItems: Identifier[],
   ) {
     return React.cloneElement(child, {
@@ -97,7 +97,7 @@ export default class MediaGroup extends PureComponent<
           },
         },
       },
-    } as MediaProps);
+    } as MediaCardProps);
   }
 
   renderStrip() {
@@ -105,7 +105,7 @@ export default class MediaGroup extends PureComponent<
     const { animate, offset } = this.state;
     const surroundingItems = React.Children.map(children, child =>
       this.mapMediaPropsToIdentifier(
-        (child as React.ReactElement<MediaProps>).props,
+        (child as React.ReactElement<MediaCardProps>).props,
       ),
     ).filter(identifier => !!identifier);
 
@@ -117,7 +117,7 @@ export default class MediaGroup extends PureComponent<
         onScroll={this.handleScroll}
       >
         {React.Children.map(children, rawChild => {
-          const child = rawChild as React.ReactElement<MediaProps>;
+          const child = rawChild as React.ReactElement<MediaCardProps>;
           switch (child.props.type) {
             case 'file':
               return this.cloneFileCard(
@@ -139,7 +139,7 @@ export default class MediaGroup extends PureComponent<
     type,
     occurrenceKey,
     collection,
-  }: MediaProps): Identifier | undefined {
+  }: MediaCardProps): Identifier | undefined {
     switch (type) {
       case 'file':
         return {

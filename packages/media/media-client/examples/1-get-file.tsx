@@ -6,19 +6,23 @@ import {
   defaultCollectionName,
   mediaPickerAuthProvider,
 } from '@atlaskit/media-test-helpers';
-import { ContextFactory } from '../src';
+import {
+  MediaClientConfig,
+  MediaClientConfigContext,
+} from '@atlaskit/media-core';
 import { FilesWrapper, FileWrapper } from '../example-helpers/styled';
 import { Observable } from 'rxjs/Observable';
-import { FileState } from '../src/fileState';
+import { FileState, MediaClient } from '../src';
 
 export interface ComponentProps {}
 export interface ComponentState {
   files: { [id: string]: FileState };
 }
 
-const mediaContext = ContextFactory.create({
+const mediaClientConfig: MediaClientConfig = {
   authProvider: mediaPickerAuthProvider('asap'),
-});
+};
+const mediaClient = new MediaClient(mediaClientConfig);
 
 class Example extends Component<ComponentProps, ComponentState> {
   fileStreams: Observable<FileState>[];
@@ -62,14 +66,14 @@ class Example extends Component<ComponentProps, ComponentState> {
   };
 
   getFile = (id: string, collectionName?: string) => {
-    const stream = mediaContext.file.getFileState(id, { collectionName });
+    const stream = mediaClient.file.getFileState(id, { collectionName });
 
     this.addStream(stream);
   };
 
   uploadFile = async (event: SyntheticEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files![0];
-    const stream = mediaContext.file.upload({
+    const stream = mediaClient.file.upload({
       content: file,
       name: file.name,
       collection: defaultCollectionName,
@@ -124,18 +128,22 @@ class Example extends Component<ComponentProps, ComponentState> {
 
   render() {
     return (
-      <div>
-        <input type="file" onChange={this.uploadFile} />
-        <button onClick={this.getImageFile}>Get processed file</button>
-        <button onClick={this.getProcessingFailedFile}>
-          Get processing failed file
-        </button>
-        <button onClick={this.getNonExistingFile}>Get non existing file</button>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
         <div>
-          <h1>Files</h1>
-          {this.renderFiles()}
+          <input type="file" onChange={this.uploadFile} />
+          <button onClick={this.getImageFile}>Get processed file</button>
+          <button onClick={this.getProcessingFailedFile}>
+            Get processing failed file
+          </button>
+          <button onClick={this.getNonExistingFile}>
+            Get non existing file
+          </button>
+          <div>
+            <h1>Files</h1>
+            {this.renderFiles()}
+          </div>
         </div>
-      </div>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

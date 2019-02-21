@@ -10,12 +10,13 @@ import * as uuid from 'uuid';
 import { Shortcut } from '@atlaskit/media-ui';
 import Spinner from '@atlaskit/spinner';
 import {
-  Context,
   FileState,
   UploadableFile,
   FileIdentifier,
-} from '@atlaskit/media-core';
-import { TouchedFiles, UploadableFileUpfrontIds } from '@atlaskit/media-store';
+  TouchedFiles,
+  UploadableFileUpfrontIds,
+  MediaClient,
+} from '@atlaskit/media-client';
 import {
   SmartMediaEditor,
   SmartMediaEditorProps,
@@ -32,7 +33,7 @@ describe('Smart Media Editor', () => {
   let fileIdentifier: FileIdentifier;
   let onFinish: SmartMediaEditorProps['onFinish'];
   let onUploadStart: SmartMediaEditorProps['onUploadStart'];
-  let context: Context;
+  let mediaClient: MediaClient;
   let component: ShallowWrapper<SmartMediaEditorProps, SmartMediaEditorState>;
   let givenFileStateObservable: ReplaySubject<FileState>;
   let formatMessage: jest.Mock<any>;
@@ -50,13 +51,15 @@ describe('Smart Media Editor', () => {
     };
     onFinish = jest.fn();
     onUploadStart = jest.fn();
-    context = fakeMediaClient();
+    mediaClient = fakeMediaClient();
     givenFileStateObservable = new ReplaySubject<FileState>(1);
-    asMock(context.file.getFileState).mockReturnValue(givenFileStateObservable);
+    asMock(mediaClient.file.getFileState).mockReturnValue(
+      givenFileStateObservable,
+    );
 
     component = shallow(
       <SmartMediaEditor
-        context={context}
+        mediaClient={mediaClient}
         identifier={fileIdentifier}
         onFinish={onFinish}
         onUploadStart={onUploadStart}
@@ -87,7 +90,7 @@ describe('Smart Media Editor', () => {
   it('should call getFileState for given file', async () => {
     const { collectionName, occurrenceKey } = fileIdentifier;
     await fileIdPromise;
-    expectFunctionToHaveBeenCalledWith(context.file.getFileState, [
+    expectFunctionToHaveBeenCalledWith(mediaClient.file.getFileState, [
       fileId,
       {
         collectionName,
@@ -98,7 +101,7 @@ describe('Smart Media Editor', () => {
 
   const forFileToBeProcessed = async () => {
     const imageUrlPromise = Promise.resolve('some-image-url');
-    asMock(context.getImageUrl).mockReturnValue(imageUrlPromise);
+    asMock(mediaClient.getImageUrl).mockReturnValue(imageUrlPromise);
     givenFileStateObservable.next({
       status: 'processed',
       id: fileId,
@@ -127,7 +130,7 @@ describe('Smart Media Editor', () => {
     });
 
     it('should call context.getImageUrl', () => {
-      expectFunctionToHaveBeenCalledWith(context.getImageUrl, [
+      expectFunctionToHaveBeenCalledWith(mediaClient.getImageUrl, [
         fileId,
         {
           collection: fileIdentifier.collectionName,
@@ -163,8 +166,10 @@ describe('Smart Media Editor', () => {
           },
         ],
       };
-      asMock(context.file.touchFiles).mockResolvedValue(touchedFiles);
-      asMock(context.file.upload).mockReturnValue(resultingFileStateObservable);
+      asMock(mediaClient.file.touchFiles).mockResolvedValue(touchedFiles);
+      asMock(mediaClient.file.upload).mockReturnValue(
+        resultingFileStateObservable,
+      );
       const editorView = component.find<EditorViewProps>(EditorView);
       const { onSave } = editorView.props();
       onSave('some-image-content');
@@ -172,7 +177,7 @@ describe('Smart Media Editor', () => {
 
     it('should upload a file', async () => {
       // First we touch files with client generated id
-      expectFunctionToHaveBeenCalledWith(context.file.touchFiles, [
+      expectFunctionToHaveBeenCalledWith(mediaClient.file.touchFiles, [
         [
           {
             fileId: 'uuid1',
@@ -193,13 +198,13 @@ describe('Smart Media Editor', () => {
         deferredUploadId: expect.anything(),
         occurrenceKey: 'some-occurrence-key',
       };
-      expectFunctionToHaveBeenCalledWith(context.file.upload, [
+      expectFunctionToHaveBeenCalledWith(mediaClient.file.upload, [
         expectedUploadableFile,
         undefined,
         expectedUploadableFileUpfrontIds,
       ]);
       const actualUploadableFileUpfrontIds: UploadableFileUpfrontIds = asMock(
-        context.file.upload,
+        mediaClient.file.upload,
       ).mock.calls[0][2];
       const actualUploadId = await actualUploadableFileUpfrontIds.deferredUploadId;
       expectToEqual(actualUploadId, 'some-upload-id');

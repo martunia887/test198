@@ -6,8 +6,10 @@ import { FileIdentifier } from '..';
 import { Card } from '@atlaskit/media-card';
 import Button from '@atlaskit/button';
 import { CardsWrapper, Header } from '../example-helpers/styled';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createUserMediaClient();
+const mediaClient = createUserMediaClient();
+
 const collectionName = 'recents';
 export interface ExampleState {
   fileIds: string[];
@@ -43,7 +45,6 @@ class Example extends Component<{}, ExampleState> {
         <Card
           key={id}
           identifier={identifier}
-          context={context}
           dimensions={{
             width: 100,
             height: 50,
@@ -61,24 +62,26 @@ class Example extends Component<{}, ExampleState> {
   }
 
   getItems = () => {
-    this.subscription = context.collection.getItems(collectionName).subscribe({
-      next: items => {
-        const fileIds = items.map(item => item.id);
+    this.subscription = mediaClient.collection
+      .getItems(collectionName)
+      .subscribe({
+        next: items => {
+          const fileIds = items.map(item => item.id);
 
-        this.setState({
-          fileIds,
-        });
-      },
-    });
+          this.setState({
+            fileIds,
+          });
+        },
+      });
   };
 
   fetchNextPage = () => {
-    context.collection.loadNextPage(collectionName);
+    mediaClient.collection.loadNextPage(collectionName);
   };
 
   getFirstPage = () => {
     // We are intentionally creating a new subscription to simulate "new items" case
-    context.collection.getItems(collectionName).subscribe();
+    mediaClient.collection.getItems(collectionName).subscribe();
   };
 
   renderHeader = () => {
@@ -99,16 +102,12 @@ class Example extends Component<{}, ExampleState> {
 
   render() {
     return (
-      <div>
+      <MediaClientConfigContext.Provider value={mediaClient.config}>
         {this.renderHeader()}
         {this.renderCards()}
-      </div>
+      </MediaClientConfigContext.Provider>
     );
   }
 }
 
-export default () => (
-  <div>
-    <Example />
-  </div>
-);
+export default () => <Example />;

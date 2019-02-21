@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { isImageRemote } from '@atlaskit/media-client';
 import { ImageWrapper } from './styled';
-import { isImageRemote } from '@atlaskit/media-core';
 
 export interface ImagePlacerImageProps {
   src?: string;

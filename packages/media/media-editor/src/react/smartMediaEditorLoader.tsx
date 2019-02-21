@@ -3,15 +3,15 @@ import * as React from 'react';
 import { ModalSpinner } from '@atlaskit/media-ui';
 import { colors } from '@atlaskit/theme';
 import SmartMediaEditorType, {
-  SmartMediaEditorProps,
+  SmartMediaEditorOwnProps,
 } from './smartMediaEditor';
 
 interface AsyncSmartMediaEditorState {
   SmartMediaEditor?: typeof SmartMediaEditorType;
 }
 
-export default class AsyncSmartMediaEditor extends React.PureComponent<
-  SmartMediaEditorProps & AsyncSmartMediaEditorState,
+export default class SmartMediaEditorLoader extends React.PureComponent<
+  SmartMediaEditorOwnProps & AsyncSmartMediaEditorState,
   AsyncSmartMediaEditorState
 > {
   static displayName = 'AsyncSmartMediaEditor';
@@ -19,14 +19,14 @@ export default class AsyncSmartMediaEditor extends React.PureComponent<
 
   state = {
     // Set state value to equal to current static value of this class.
-    SmartMediaEditor: AsyncSmartMediaEditor.SmartMediaEditor,
+    SmartMediaEditor: SmartMediaEditorLoader.SmartMediaEditor,
   };
 
   async componentWillMount() {
     if (!this.state.SmartMediaEditor) {
       const module = await import(/* webpackChunkName:"@atlaskit-internal_smart-media-editor" */
       './smartMediaEditor');
-      AsyncSmartMediaEditor.SmartMediaEditor = module.default;
+      SmartMediaEditorLoader.SmartMediaEditor = module.default;
       this.setState({ SmartMediaEditor: module.default });
     }
   }

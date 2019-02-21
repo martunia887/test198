@@ -17,9 +17,7 @@ export class StreamsCache<T> {
   }
 
   set(id: string, stream: Observable<T>) {
-    console.log(this.streams);
     this.streams.set(id, stream);
-    console.log(this.streams);
     const deferred = this.stateDeferreds.get(id);
 
     if (deferred) {

@@ -3,10 +3,11 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import { Card } from '@atlaskit/media-card';
 import {
   imageFileId,
-  createUploadMediaClient,
   I18NWrapper,
+  createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 import { SmartMediaEditor } from '../src';
 
 interface State {
@@ -15,7 +16,7 @@ interface State {
   newFileIdentifier?: FileIdentifier;
 }
 
-const context = createUploadMediaClient();
+const mediaClientConfig = createUploadMediaClientConfig();
 
 class SmartMediaEditorExample extends React.Component<{}, State> {
   state: State = {
@@ -52,7 +53,6 @@ class SmartMediaEditorExample extends React.Component<{}, State> {
           ...imageFileId,
           id: showWithError ? '🥳' : imageFileId.id,
         }}
-        context={context}
         onFinish={this.onFinish}
         onUploadStart={this.onUploadStart}
       />
@@ -79,17 +79,15 @@ class SmartMediaEditorExample extends React.Component<{}, State> {
   render() {
     const { newFileIdentifier } = this.state;
     return (
-      <div>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
         <h3>With i18n</h3>
         <I18NWrapper>{this.renderContent('with-i18n')}</I18NWrapper>
 
         <h3>Without i18n</h3>
         {this.renderContent('without-i18n')}
 
-        {newFileIdentifier ? (
-          <Card identifier={newFileIdentifier} context={context} />
-        ) : null}
-      </div>
+        {newFileIdentifier ? <Card identifier={newFileIdentifier} /> : null}
+      </MediaClientConfigContext.Provider>
     );
   }
 }

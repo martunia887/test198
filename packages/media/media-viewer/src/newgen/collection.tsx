@@ -5,7 +5,7 @@ import {
   FileIdentifier,
 } from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
-import { Outcome, Identifier, MediaViewerFeatureFlags } from './domain';
+import { Outcome, MediaViewerFeatureFlags } from './domain';
 import ErrorMessage, { createError, MediaViewerError } from './error';
 import { List } from './list';
 import { toIdentifier } from './utils';

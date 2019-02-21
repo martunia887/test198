@@ -2,9 +2,10 @@ import * as React from 'react';
 import { v4 as uuid } from 'uuid';
 import { Subscription } from 'rxjs/Subscription';
 import {
-  MediaClient,
   UploadableFile,
   FileIdentifier,
+  withMediaClient,
+  WithMediaClientProps,
 } from '@atlaskit/media-client';
 import { messages, Shortcut } from '@atlaskit/media-ui';
 import Spinner from '@atlaskit/spinner';
@@ -15,12 +16,14 @@ import { fileToBase64 } from '../util';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import ErrorView from './editorView/errorView/errorView';
 
-export interface SmartMediaEditorProps {
+export interface SmartMediaEditorOwnProps {
   identifier: FileIdentifier;
-  mediaClient: MediaClient;
   onUploadStart: (identifier: FileIdentifier) => void;
   onFinish: () => void;
 }
+
+export type SmartMediaEditorProps = SmartMediaEditorOwnProps &
+  WithMediaClientProps;
 
 export interface SmartMediaEditorState {
   hasError: boolean;
@@ -238,7 +241,9 @@ export class SmartMediaEditor extends React.Component<
   }
 }
 
-export default class extends React.Component<SmartMediaEditorProps> {
+export class SmartMediaEditorWithIntl extends React.Component<
+  SmartMediaEditorProps
+> {
   render() {
     const Component = injectIntl(SmartMediaEditor);
     const content = <Component {...this.props} />;
@@ -249,3 +254,5 @@ export default class extends React.Component<SmartMediaEditorProps> {
     );
   }
 }
+
+export default withMediaClient(SmartMediaEditorWithIntl);

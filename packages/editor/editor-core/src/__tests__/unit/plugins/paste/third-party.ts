@@ -2,7 +2,7 @@ import appleTextHTML from './__third-party__/apple-pages/text/html';
 import appleTextPlain from './__third-party__/apple-pages/text/plain';
 import confluenceTextHTML from './__third-party__/atlassian-confluence/text/html';
 import confluenceTextPlain from './__third-party__/atlassian-confluence/text/plain';
-import dropboxTextHTML from './__third-party__/dropbox-pap  er/text/html';
+import dropboxTextHTML from './__third-party__/dropbox-paper/text/html';
 import dropboxTextPlain from './__third-party__/dropbox-paper/text/plain';
 import googleTextHTML from './__third-party__/google-docs/text/html';
 import googleTextPlain from './__third-party__/google-docs/text/plain';

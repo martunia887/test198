@@ -9,7 +9,7 @@ import {
   stateKey as mediaStateKey,
   MediaProvider,
 } from '../pm-plugins/main';
-import { ImageResizeMode, Identifier } from '@atlaskit/media-card';
+import { ImageResizeMode, Identifier } from '@atlaskit/media-client';
 import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   Card,
@@ -42,7 +42,6 @@ export interface MediaNodeProps extends ReactNodeProps {
   ) => void;
   editorAppearance: EditorAppearance;
   mediaProvider?: Promise<MediaProvider>;
-  viewMediaClientConfig?: MediaClientConfig;
 }
 
 export interface Props extends Partial<MediaBaseAttributes> {
@@ -58,17 +57,9 @@ export interface Props extends Partial<MediaBaseAttributes> {
   mediaClientConfig: MediaClientConfig;
   disableOverlay?: boolean;
   mediaProvider?: Promise<MediaProvider>;
-  viewMediaClientConfig?: MediaClientConfig;
 }
 
-export interface MediaNodeState {
-  viewMediaClientConfig?: MediaClientConfig;
-}
-
-class MediaNode extends Component<
-  MediaNodeProps & ImageLoaderProps,
-  MediaNodeState
-> {
+class MediaNode extends Component<MediaNodeProps & ImageLoaderProps> {
   private pluginState: MediaPluginState;
 
   constructor(props) {
@@ -77,13 +68,9 @@ class MediaNode extends Component<
     this.pluginState = mediaStateKey.getState(view.state);
   }
 
-  shouldComponentUpdate(
-    nextProps: MediaNodeProps & ImageLoaderProps,
-    nextState: MediaNodeState,
-  ) {
+  shouldComponentUpdate(nextProps: MediaNodeProps & ImageLoaderProps) {
     if (
       this.props.selected !== nextProps.selected ||
-      this.props.viewMediaClientConfig !== nextProps.viewMediaClientConfig ||
       this.props.node.attrs.id !== nextProps.node.attrs.id ||
       this.props.node.attrs.collection !== nextProps.node.attrs.collection ||
       this.props.cardDimensions !== nextProps.cardDimensions
@@ -115,7 +102,6 @@ class MediaNode extends Component<
       editorAppearance,
     } = this.props;
     const { id, type, collection, url, __key } = node.attrs;
-    const { viewMediaClientConfig } = this.props;
     /**
      * On mobile we don't receive a collectionName until the `upload-end` event.
      * We don't want to render a proper card until we have a valid collection.
@@ -124,7 +110,7 @@ class MediaNode extends Component<
     const isMobile = editorAppearance === 'mobile';
     let isMobileReady = isMobile ? typeof collection === 'string' : true;
 
-    if (type !== 'external' && (!viewMediaClientConfig || !isMobileReady)) {
+    if (type !== 'external' && !isMobileReady) {
       return <CardView status="loading" dimensions={cardDimensions} />;
     }
 
@@ -147,7 +133,6 @@ class MediaNode extends Component<
 
     return (
       <Card
-        // context={viewMediaClientConfig as any}
         resizeMode="stretchy-fit"
         dimensions={cardDimensions}
         identifier={identifier}

@@ -1,4 +1,4 @@
-import { ContextFactory, FileState } from '@atlaskit/media-core';
+import { FileState, MediaClient } from '@atlaskit/media-client';
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
 import 'whatwg-fetch';
 import * as fetchMock from 'fetch-mock/src/client';
@@ -32,7 +32,7 @@ import {
 } from '../../_test-data';
 import { Observable } from 'rxjs/Observable';
 
-jest.mock('@atlaskit/media-core');
+jest.mock('@atlaskit/media-client');
 
 class TestSiteEmojiResource extends SiteEmojiResource {
   constructor(tokenManager: TokenManager) {
@@ -98,11 +98,9 @@ describe('SiteEmojiResource', () => {
         }),
       );
 
-      (ContextFactory as any).create = () => {
-        return {
-          file: { upload: uploadFile },
-        };
-      };
+      (MediaClient as jest.Mock<any>).mockReturnValue({
+        file: { upload: uploadFile },
+      });
 
       return { uploadFile };
     };
@@ -176,7 +174,9 @@ describe('SiteEmojiResource', () => {
         }),
       );
 
-      (ContextFactory as any).create = () => ({ file: { upload: uploadFile } });
+      (MediaClient as jest.Mock<any>).mockReturnValue({
+        file: { upload: uploadFile },
+      });
 
       const tokenManagerStub = sinon.createStubInstance(TokenManager) as any;
       const siteEmojiResource = new TestSiteEmojiResource(tokenManagerStub);
@@ -269,7 +269,9 @@ describe('SiteEmojiResource', () => {
         }),
       );
 
-      (ContextFactory as any).create = () => ({ file: { upload: uploadFile } });
+      (MediaClient as jest.Mock<any>).mockReturnValue({
+        file: { upload: uploadFile },
+      });
       const tokenManagerStub = sinon.createStubInstance(TokenManager) as any;
       const siteEmojiResource = new TestSiteEmojiResource(tokenManagerStub);
 

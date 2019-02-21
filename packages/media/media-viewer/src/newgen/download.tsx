@@ -17,7 +17,6 @@ import {
   downloadErrorButtonEvent,
 } from './analytics/download';
 import { channel } from './analytics';
-import DownloadIcon from '@atlaskit/icon/glyph/download';
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
 import { MediaViewerError } from './error';
 

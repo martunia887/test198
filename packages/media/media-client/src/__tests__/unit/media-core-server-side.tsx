@@ -4,12 +4,12 @@
 import * as React from 'react';
 import { Component } from 'react';
 import * as ReactDOMServer from 'react-dom/server';
-import { ContextFactory } from '../../';
+import { MediaClient } from '../../client';
 
 class Example extends Component {
   constructor(props: any) {
     super(props);
-    const context = ContextFactory.create({
+    const mediaClient = new MediaClient({
       authProvider: () =>
         Promise.resolve({
           clientId: '',
@@ -18,7 +18,7 @@ class Example extends Component {
         }),
     });
 
-    context.file.getFileState('1');
+    mediaClient.file.getFileState('1');
   }
 
   render() {
@@ -26,6 +26,6 @@ class Example extends Component {
   }
 }
 
-test('media-core context server side rendering', async () => {
+test('media-core context server side rendering', () => {
   expect(() => ReactDOMServer.renderToString(<Example />)).not.toThrowError();
 });

@@ -1,11 +1,9 @@
 jest.mock('chunkinator');
-jest.mock('../../media-client');
+// jest.mock('../../client');
 
 import chunkinator, { Options } from 'chunkinator';
-import { uploadFile } from '../..';
-import { AuthProvider, MediaApiConfig } from '../../models/auth';
-import { UploadableFileUpfrontIds } from '../../uploader';
-import { MediaStore } from '../../media-store';
+import { AuthProvider, MediaApiConfig } from '@atlaskit/media-core';
+import { uploadFile, UploadableFileUpfrontIds, MediaStore } from '../..';
 
 describe('Uploader', () => {
   const uploadableFileUpfrontIds: UploadableFileUpfrontIds = {

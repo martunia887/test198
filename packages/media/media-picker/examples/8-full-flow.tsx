@@ -153,7 +153,6 @@ export default class Example extends React.Component<{}, State> {
         : { list };
     return (
       <MediaViewer
-        context={mediaClientConfig}
         selectedItem={selectedItem}
         dataSource={dataSource}
         collectionName={defaultCollectionName}

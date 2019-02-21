@@ -7,11 +7,7 @@ import {
   fakeMediaClient,
   asMock,
 } from '@atlaskit/media-test-helpers';
-import {
-  MediaClient,
-  MediaItemType,
-  MediaCollectionItem,
-} from '@atlaskit/media-client';
+import { MediaClient, MediaCollectionItem } from '@atlaskit/media-client';
 import Spinner from '@atlaskit/spinner';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
 import { Collection, Props, State } from '../../../newgen/collection';

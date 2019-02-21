@@ -1,16 +1,15 @@
 import 'whatwg-fetch';
 import * as fetchMock from 'fetch-mock';
 import { stringify } from 'query-string';
-
-import { Auth, AuthProvider, CreatedTouchedFile, MediaStore } from '../..';
+import { Auth, AuthProvider } from '@atlaskit/media-core';
 import {
+  CreatedTouchedFile,
+  MediaStore,
   MediaUpload,
   MediaChunksProbe,
   MediaFile,
   MediaCollection,
   MediaCollectionItems,
-} from '../../models/media';
-import {
   MediaStoreGetFileParams,
   EmptyFile,
   ItemsPayload,
@@ -19,8 +18,8 @@ import {
   TouchFileDescriptor,
   TouchedFiles,
   MediaStoreTouchFileParams,
-} from '../../media-store';
-import { MediaFileArtifacts } from '../../models/artifacts';
+  MediaFileArtifacts,
+} from '../..';
 
 describe('MediaStore', () => {
   const baseUrl = 'http://some-host';

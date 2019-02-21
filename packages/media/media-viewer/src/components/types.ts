@@ -1,4 +1,4 @@
-import { MediaClient, Identifier } from '@atlaskit/media-client';
+import { Identifier } from '@atlaskit/media-client';
 import { MediaViewerFeatureFlags } from '../newgen/domain';
 
 export interface MediaViewerDataSource {
@@ -7,8 +7,6 @@ export interface MediaViewerDataSource {
 }
 
 export interface MediaViewerProps {
-  readonly mediaClient: MediaClient;
-
   readonly selectedItem: Identifier;
   readonly dataSource: MediaViewerDataSource;
 

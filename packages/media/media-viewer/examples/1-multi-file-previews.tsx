@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import Button from '@atlaskit/button';
 import AkSpinner from '@atlaskit/spinner';
-import { createStorybookMediaClient } from '@atlaskit/media-test-helpers';
+import { createStorybookMediaClientConfig } from '@atlaskit/media-test-helpers';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 import { ButtonList, Container, Group } from '../example-helpers/styled';
 import {
   docIdentifier,
@@ -23,9 +24,10 @@ import { MediaViewerDataSource } from '..';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
-import { Identifier } from '@atlaskit/media-core';
+import { Identifier, MediaClient } from '@atlaskit/media-client';
 
-const mediaClient = createStorybookMediaClient();
+const mediaClientConfig = createStorybookMediaClientConfig();
+const mediaClient = new MediaClient(mediaClientConfig);
 
 const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
   const { payload } = analyticsEvent;
@@ -179,66 +181,67 @@ export default class Example extends React.Component<{}, State> {
   render() {
     return (
       <I18NWrapper>
-        <Container>
-          <Group>
-            <h2>File lists</h2>
-            <ButtonList>
-              <li>
-                <Button onClick={this.openList}>Small list</Button>
-              </li>
-            </ButtonList>
-          </Group>
+        <MediaClientConfigContext.Provider value={mediaClientConfig}>
+          <Container>
+            <Group>
+              <h2>File lists</h2>
+              <ButtonList>
+                <li>
+                  <Button onClick={this.openList}>Small list</Button>
+                </li>
+              </ButtonList>
+            </Group>
 
-          <Group>
-            <h2>Collection names</h2>
-            <ButtonList>
-              <li>
-                {this.state.firstCollectionItem ? (
-                  <Button onClick={this.openCollection}>
-                    Default collection
+            <Group>
+              <h2>Collection names</h2>
+              <ButtonList>
+                <li>
+                  {this.state.firstCollectionItem ? (
+                    <Button onClick={this.openCollection}>
+                      Default collection
+                    </Button>
+                  ) : (
+                    <AkSpinner />
+                  )}
+                </li>
+              </ButtonList>
+            </Group>
+
+            <Group>
+              <h2>Errors</h2>
+              <ButtonList>
+                <li>
+                  <Button onClick={this.openNotFound}>
+                    Selected item not found
                   </Button>
-                ) : (
-                  <AkSpinner />
-                )}
-              </li>
-            </ButtonList>
-          </Group>
+                </li>
+                <li>
+                  <Button onClick={this.openInvalidId}>Invalid ID</Button>
+                </li>
+                <li>
+                  <Button onClick={this.openInvalidCollection}>
+                    Invalid collection name
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={this.openErrorList}>Error list</Button>
+                </li>
+              </ButtonList>
+            </Group>
 
-          <Group>
-            <h2>Errors</h2>
-            <ButtonList>
-              <li>
-                <Button onClick={this.openNotFound}>
-                  Selected item not found
-                </Button>
-              </li>
-              <li>
-                <Button onClick={this.openInvalidId}>Invalid ID</Button>
-              </li>
-              <li>
-                <Button onClick={this.openInvalidCollection}>
-                  Invalid collection name
-                </Button>
-              </li>
-              <li>
-                <Button onClick={this.openErrorList}>Error list</Button>
-              </li>
-            </ButtonList>
-          </Group>
-
-          {this.state.selected && (
-            <AnalyticsListener channel="media" onEvent={handleEvent}>
-              <MediaViewer
-                mediaClient={mediaClient}
-                selectedItem={this.state.selected.identifier}
-                dataSource={this.state.selected.dataSource}
-                collectionName={defaultCollectionName}
-                onClose={this.onClose}
-                pageSize={5}
-              />
-            </AnalyticsListener>
-          )}
-        </Container>
+            {this.state.selected && (
+              <AnalyticsListener channel="media" onEvent={handleEvent}>
+                <MediaViewer
+                  selectedItem={this.state.selected.identifier}
+                  dataSource={this.state.selected.dataSource}
+                  collectionName={defaultCollectionName}
+                  onClose={this.onClose}
+                  pageSize={5}
+                />
+              </AnalyticsListener>
+            )}
+          </Container>
+        </MediaClientConfigContext.Provider>
       </I18NWrapper>
     );
   }

@@ -4,10 +4,13 @@ import {
   defaultCollectionName,
   mediaPickerAuthProvider,
 } from '@atlaskit/media-test-helpers';
-import { ContextFactory, UploadController } from '../src';
+import {
+  MediaClientConfig,
+  MediaClientConfigContext,
+} from '@atlaskit/media-core';
+import { FileState, MediaClient, UploadController } from '../src';
 import { FilesWrapper, FileWrapper } from '../example-helpers/styled';
 import { Observable } from 'rxjs/Observable';
-import { FileState } from '../src/fileState';
 import { Subscription } from 'rxjs/Subscription';
 
 export interface ComponentProps {}
@@ -15,9 +18,10 @@ export interface ComponentState {
   files: { [id: string]: FileState };
 }
 
-const mediaContext = ContextFactory.create({
+const mediaClientConfig: MediaClientConfig = {
   authProvider: mediaPickerAuthProvider('asap'),
-});
+};
+const mediaClient = new MediaClient(mediaClientConfig);
 
 class Example extends Component<ComponentProps, ComponentState> {
   fileStreams: Observable<FileState>[];
@@ -55,7 +59,7 @@ class Example extends Component<ComponentProps, ComponentState> {
       collection: defaultCollectionName,
     };
     const uploadController = new UploadController();
-    const stream = mediaContext.file.upload(uplodableFile, uploadController);
+    const stream = mediaClient.file.upload(uplodableFile, uploadController);
 
     this.uploadController = uploadController;
     this.addStream(stream);
@@ -136,7 +140,7 @@ class Example extends Component<ComponentProps, ComponentState> {
 
   render() {
     return (
-      <div>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
         <input type="file" onChange={this.uploadFile} />
         <button onClick={this.unsubscribe}>Unsubscribe</button>
         <button onClick={this.cancelUpload}>Cancel upload</button>
@@ -144,7 +148,7 @@ class Example extends Component<ComponentProps, ComponentState> {
           <h1>Files</h1>
           {this.renderFiles()}
         </div>
-      </div>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

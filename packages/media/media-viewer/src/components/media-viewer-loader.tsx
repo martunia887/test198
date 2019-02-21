@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { colors } from '@atlaskit/theme';
 import { ModalSpinner } from '@atlaskit/media-ui';
-import { MediaViewer } from './media-viewer';
+import MediaViewer from './media-viewer';
 import { MediaViewerProps } from './types';
 
 interface AsyncMediaViewerState {
@@ -25,8 +25,8 @@ export default class AsyncMediaViewer extends React.PureComponent<
     if (!this.state.MediaViewer) {
       const module = await import(/* webpackChunkName:"@atlaskit-internal_media-viewer" */
       './media-viewer');
-      AsyncMediaViewer.MediaViewer = module.MediaViewer;
-      this.setState({ MediaViewer: module.MediaViewer });
+      AsyncMediaViewer.MediaViewer = module.default;
+      this.setState({ MediaViewer: module.default });
     }
   }
 

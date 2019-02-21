@@ -14,8 +14,7 @@ import { Observable } from 'rxjs';
 import Spinner from '@atlaskit/spinner';
 import Button from '@atlaskit/button';
 import {
-  MediaItemType,
-  mediaClient,
+  MediaClient,
   ProcessedFileState,
   Identifier,
   FileIdentifier,
@@ -51,7 +50,7 @@ const makeFakeContext = (observable: Observable<any>) =>
     },
   } as any);
 
-function mountComponent(mediaClient: mediaClient, identifier: Identifier) {
+function mountComponent(mediaClient: MediaClient, identifier: Identifier) {
   const el = mountWithIntlContext(
     <ItemViewer
       previewCount={0}
@@ -64,7 +63,7 @@ function mountComponent(mediaClient: mediaClient, identifier: Identifier) {
 }
 
 function mountBaseComponent(
-  mediaClient: mediaClient,
+  mediaClient: MediaClient,
   identifier: FileIdentifier,
 ) {
   const createAnalyticsEventSpy = jest.fn();
