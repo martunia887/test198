@@ -1,0 +1,9 @@
+- [x] Backwards compat for `theme` prop
+- [x] Fallbacks for appearance styles
+- [x] Tokens && Theme naming conflict rectified
+- [ ] Benchmarks. Current vs v11.x
+- [ ] Appy new theme onto exisiting Button
+- [ ] Change examples - Non-Trello vibes
+- [ ] Reducers instead of hefty functions per styled property
+- [ ] Tests (esp. for Theming)
+- [ ] Refactoring

@@ -73,7 +73,8 @@ export type ButtonProps = {
   shouldFitContainer: boolean;
   /** Set the button to autofocus on mount. */
   autoFocus: boolean;
-  theme?: string;
+  // theme?: string;
+  theme?: Function;
 };
 
 export type DerivedButtonProps = {
@@ -82,3 +83,22 @@ export type DerivedButtonProps = {
   isHover: boolean;
   fit: boolean;
 } & ButtonProps;
+
+export type ThemeMode = 'dark' | 'light';
+
+export type ThemeTokens = {};
+
+export type ThemeProps = {
+  appearance: string;
+  state: string;
+  mode?: ThemeMode;
+};
+
+export type AppearanceStates = {
+  default: { light: string; dark?: string };
+  hover?: { light: string; dark?: string };
+  active?: { light: string; dark?: string };
+  disabled?: { light: string; dark?: string };
+  selected?: { light: string; dark?: string };
+  focusSelected?: { light: string; dark?: string };
+};
