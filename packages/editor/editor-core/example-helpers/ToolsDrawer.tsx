@@ -84,9 +84,6 @@ const providers = {
     'view only': storyMediaProviderFactory({
       includeUploadMediaClientConfig: false,
     }),
-    'with link cards': storyMediaProviderFactory({
-      includeLinkCreateMediaClientConfig: true,
-    }),
     'w/o userAuthProvider': storyMediaProviderFactory({
       includeUserAuthProvider: false,
     }),

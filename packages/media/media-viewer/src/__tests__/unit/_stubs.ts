@@ -2,7 +2,12 @@ import * as events from 'events';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { MediaClientConfig, Auth } from '@atlaskit/media-core';
-import { MediaItem, FileState, MediaClient } from '@atlaskit/media-client';
+import {
+  FileItem,
+  MediaItem,
+  FileState,
+  MediaClient,
+} from '@atlaskit/media-client';
 import { fakeMediaClient, asMock } from '@atlaskit/media-test-helpers';
 
 export class Stubs {
@@ -36,9 +41,9 @@ export class Stubs {
     return jest.fn(() => Stubs.mediaViewer(overrides || {}));
   }
 
-  static mediaItemProvider(subject?: Subject<MediaItem>) {
+  static mediaItemProvider(subject?: Subject<FileItem>) {
     return {
-      observable: jest.fn(() => subject || new Subject<MediaItem>()),
+      observable: jest.fn(() => subject || new Subject<FileItem>()),
     };
   }
 

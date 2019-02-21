@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { Component } from 'react';
 import {
-  Identifier,
   Card,
   CardAction,
   CardOnClickCallback,
@@ -11,6 +10,7 @@ import {
   OnLoadingChangeFunc,
   defaultImageCardDimensions,
 } from '@atlaskit/media-card';
+import { Identifier } from '@atlaskit/media-client';
 import { FilmstripView } from './filmstripView';
 import { generateIdentifierKey } from './utils/generateIdentifierKey';
 
@@ -40,8 +40,9 @@ export class Filmstrip extends Component<FilmstripProps, FilmstripState> {
     offset: 0,
   };
 
-  private handleSize = ({ offset }) => this.setState({ offset });
-  private handleScroll = ({ animate, offset }) =>
+  private handleSize = ({ offset }: Pick<FilmstripState, 'offset'>) =>
+    this.setState({ offset });
+  private handleScroll = ({ animate, offset }: FilmstripState) =>
     this.setState({ animate, offset });
 
   private renderCards() {

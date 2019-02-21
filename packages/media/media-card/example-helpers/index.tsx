@@ -1,12 +1,12 @@
 /* tslint:disable:no-console */
 
 import * as React from 'react';
+import { Identifier } from '@atlaskit/media-client';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
 import { SelectableCard } from './selectableCard';
 import {
   Card,
-  Identifier,
   CardAppearance,
   CardEvent,
   OnSelectChangeFuncResult,

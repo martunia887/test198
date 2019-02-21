@@ -29,14 +29,9 @@ export default class Card extends React.Component<
   }
 
   render() {
-    const { dimensions, identifier } = this.props;
+    const { dimensions } = this.props;
     if (!this.state.Card) {
-      return (
-        <CardLoading
-          dimensions={dimensions}
-          mediaItemType={identifier.mediaItemType}
-        />
-      );
+      return <CardLoading dimensions={dimensions} />;
     }
 
     return <this.state.Card {...this.props} />;

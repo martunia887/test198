@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { Component } from 'react';
 import {
+  Identifier,
+  FileIdentifier,
   FileDetails,
   isPreviewableType,
+  isFileIdentifier,
+  isExternalImageIdentifier,
+  isDifferentIdentifier,
   MediaClient,
   withMediaClient,
   WithMediaClientProps,
@@ -20,19 +25,12 @@ import {
   CardState,
   CardEvent,
 } from '../..';
-import { Identifier, FileIdentifier } from '../domain';
 import { CardView } from '../cardView';
 import { LazyContent } from '../../utils/lazyContent';
 import { getBaseAnalyticsContext } from '../../utils/analyticsUtils';
 import { getDataURIDimension } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
-import {
-  isFileIdentifier,
-  isUrlPreviewIdentifier,
-  isExternalImageIdentifier,
-  isDifferentIdentifier,
-} from '../../utils/identifier';
 import { isBigger } from '../../utils/dimensionComparer';
 import { getCardStatus } from './getCardStatus';
 import { InlinePlayer } from '../inlinePlayer';
@@ -140,15 +138,6 @@ export class Card extends Component<BaseCardProps, CardState> {
           name: name || dataURI,
           mediaType: 'image',
         },
-      });
-
-      return;
-    }
-
-    if (identifier.mediaItemType !== 'file') {
-      this.notifyStateChange({
-        error: new Error('Links are no longer supported in <Card />'),
-        status: 'error',
       });
 
       return;
@@ -278,9 +267,7 @@ export class Card extends Component<BaseCardProps, CardState> {
 
   get analyticsContext(): CardAnalyticsContext {
     const { identifier } = this.props;
-    const id = isUrlPreviewIdentifier(identifier)
-      ? identifier.url
-      : isExternalImageIdentifier(identifier)
+    const id = isExternalImageIdentifier(identifier)
       ? 'external-image'
       : identifier.id;
 

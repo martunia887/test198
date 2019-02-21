@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
+import { FileIdentifier } from '@atlaskit/media-client';
 import {
   mountWithIntlContext,
   fakeMediaClient,
@@ -15,29 +16,27 @@ import Spinner from '@atlaskit/spinner';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
 import { Collection, Props, State } from '../../../newgen/collection';
 import { ErrorMessage } from '../../../newgen/error';
-import { Identifier } from '../../../newgen/domain';
 import { List } from '../../../newgen/list';
 
 const collectionName = 'my-collection';
 
-const identifier = {
+const identifier: any = {
   id: 'some-id',
   occurrenceKey: 'some-custom-occurrence-key',
-  type: 'file' as MediaItemType,
+  mediaItemType: 'file',
 };
 
-const identifier2 = {
+const identifier2: any = {
   id: 'some-id-2',
   occurrenceKey: 'some-custom-occurrence-key-2',
-  type: 'file' as MediaItemType,
+  mediaItemType: 'file',
 };
 
 const mediaCollectionItems: MediaCollectionItem[] = [
   {
     id: identifier.id,
-    occurrenceKey: identifier.occurrenceKey,
+    occurrenceKey: identifier.occurrenceKey || '',
     insertedAt: 1,
-    type: 'file',
     details: {
       artifacts: {},
       mediaType: 'image',
@@ -48,7 +47,6 @@ const mediaCollectionItems: MediaCollectionItem[] = [
     },
   },
   {
-    type: 'file',
     id: identifier2.id,
     occurrenceKey: identifier2.occurrenceKey,
     insertedAt: 1,
@@ -65,7 +63,7 @@ const mediaCollectionItems: MediaCollectionItem[] = [
 
 function createFixture(
   mediaClient: MediaClient,
-  identifier: Identifier,
+  identifier: FileIdentifier,
   onClose?: () => {},
 ) {
   const el = mountWithIntlContext<Props, State>(
@@ -157,11 +155,11 @@ describe('<Collection />', () => {
     const el = createFixture(mediaClient, identifier);
     subject.next(mediaCollectionItems);
     el.update();
-    const listProps = el.find(List).props();
+    const listProps: any = el.find(List).props();
     expect(listProps.defaultSelectedItem.collectionName).toEqual(
       collectionName,
     );
-    listProps.items.forEach((item: Identifier) => {
+    listProps.items.forEach((item: any) => {
       expect(item.collectionName).toEqual(collectionName);
     });
   });

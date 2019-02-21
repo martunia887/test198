@@ -2,9 +2,11 @@ import {
   setViewerPayload,
   ImageViewer as ImageViewerMock,
 } from '../../mocks/_image-viewer';
-jest.mock('../../../newgen/viewers/image', () => ({
+
+const mockImageViewer = {
   ImageViewer: ImageViewerMock,
-}));
+};
+jest.mock('../../../newgen/viewers/image', () => mockImageViewer);
 
 import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
@@ -15,6 +17,8 @@ import {
   MediaItemType,
   mediaClient,
   ProcessedFileState,
+  Identifier,
+  FileIdentifier,
 } from '@atlaskit/media-client';
 import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
 import {
@@ -28,16 +32,15 @@ import { ImageViewer } from '../../../newgen/viewers/image';
 import { VideoViewer } from '../../../newgen/viewers/video';
 import { AudioViewer } from '../../../newgen/viewers/audio';
 import { DocViewer } from '../../../newgen/viewers/doc';
-import { Identifier } from '../../../newgen/domain';
 import {
   name as packageName,
   version as packageVersion,
 } from '../../../../package.json';
 
-const identifier = {
+const identifier: any = {
   id: 'some-id',
   occurrenceKey: 'some-custom-occurrence-key',
-  type: 'file' as MediaItemType,
+  mediaItemType: 'file',
   collectionName: 'some-collection',
 };
 
@@ -60,7 +63,10 @@ function mountComponent(mediaClient: mediaClient, identifier: Identifier) {
   return { el, instance };
 }
 
-function mountBaseComponent(mediaClient: mediaClient, identifier: Identifier) {
+function mountBaseComponent(
+  mediaClient: mediaClient,
+  identifier: FileIdentifier,
+) {
   const createAnalyticsEventSpy = jest.fn();
   createAnalyticsEventSpy.mockReturnValue({ fire: jest.fn() });
   const el: ReactWrapper<

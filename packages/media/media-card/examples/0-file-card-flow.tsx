@@ -19,8 +19,12 @@ import {
   createUploadMediaClient,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
-import { Card, FileIdentifier, OnLoadingChangeState } from '../src';
-import { UploadController, FileState } from '@atlaskit/media-client';
+import { Card, OnLoadingChangeState } from '../src';
+import {
+  UploadController,
+  FileIdentifier,
+  FileState,
+} from '@atlaskit/media-client';
 import { Observable } from 'rxjs/Observable';
 import {
   CardWrapper,

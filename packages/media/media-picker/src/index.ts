@@ -74,6 +74,7 @@ export type MediaPickerComponent =
   | Clipboard
   | Dropzone
   | Popup;
+
 export interface MediaPickerComponents {
   binary: BinaryUploader;
   browser: Browser;

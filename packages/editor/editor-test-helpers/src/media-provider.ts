@@ -1,6 +1,5 @@
 import {
   defaultCollectionName,
-  StoryBookAuthProvider,
   userAuthProvider,
   mediaPickerAuthProvider,
   defaultMediaPickerAuthProvider,
@@ -13,7 +12,6 @@ export interface MediaProviderFactoryConfig {
   stateManager?: MediaStateManager;
   dropzoneContainer?: HTMLElement;
   includeUploadMediaClientConfig?: boolean;
-  includeLinkCreateMediaClientConfig?: boolean;
   includeUserAuthProvider?: boolean;
   useMediaPickerAuthProvider?: boolean;
 }
@@ -29,7 +27,6 @@ export function storyMediaProviderFactory(
     collectionName,
     stateManager,
     includeUploadMediaClientConfig,
-    includeLinkCreateMediaClientConfig,
     includeUserAuthProvider,
     useMediaPickerAuthProvider = true,
   } = mediaProviderFactoryConfig;
@@ -51,15 +48,6 @@ export function storyMediaProviderFactory(
       includeUploadMediaClientConfig === false
         ? undefined
         : Promise.resolve(mediaClientConfig),
-    linkMediaClientConfig: !includeLinkCreateMediaClientConfig
-      ? undefined
-      : Promise.resolve<MediaClientConfig>({
-          authProvider: StoryBookAuthProvider.create(false, {
-            [`urn:filestore:collection:${collection}`]: ['read', 'update'],
-            'urn:filestore:file:*': ['read'],
-            'urn:filestore:chunk:*': ['read'],
-          }),
-        }),
   });
 }
 
@@ -85,17 +73,4 @@ export function fileToBase64(blob) {
 
 export function isImage(type: string) {
   return ['image/jpeg', 'image/png'].indexOf(type) > -1;
-}
-
-export function getLinkCreateContextMock(testLinkId: string) {
-  return {
-    getUrlPreviewProvider: url => ({
-      observable: () => ({
-        subscribe: cb => cb({}),
-      }),
-    }),
-    addLinkItem: (url, collection, metadata) => {
-      return Promise.resolve(testLinkId);
-    },
-  } as any;
 }

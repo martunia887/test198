@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MediaClient, MediaItem, FileState } from '@atlaskit/media-client';
+import { MediaClient, FileItem, FileState } from '@atlaskit/media-client';
 import { getOrientation } from '@atlaskit/media-ui';
 import { Outcome } from '../../domain';
 import { createError, MediaViewerError } from '../../error';
@@ -22,7 +22,7 @@ export interface ImageViewerContent {
   orientation?: number;
 }
 
-function processedFileStateToMediaItem(file: FileState): MediaItem {
+function processedFileStateToMediaItem(file: FileState): FileItem {
   return {
     type: 'file',
     details: {

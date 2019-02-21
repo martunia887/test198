@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   MediaCollectionItem,
   WithMediaClientProps,
+  FileIdentifier,
 } from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
 import { Outcome, Identifier, MediaViewerFeatureFlags } from './domain';
@@ -12,7 +13,7 @@ import { Spinner } from './loading';
 
 export type Props = Readonly<{
   onClose?: () => void;
-  defaultSelectedItem?: Identifier;
+  defaultSelectedItem?: FileIdentifier;
   showControls?: () => void;
   featureFlags?: MediaViewerFeatureFlags;
   collectionName: string;
@@ -120,7 +121,7 @@ export class Collection extends React.Component<Props, State> {
     );
   }
 
-  private onNavigationChange = (item: Identifier) => {
+  private onNavigationChange = (item: FileIdentifier) => {
     const { mediaClient, collectionName, pageSize } = this.props;
     if (this.shouldLoadNext(item)) {
       mediaClient.collection.loadNextPage(collectionName, {
@@ -129,7 +130,7 @@ export class Collection extends React.Component<Props, State> {
     }
   };
 
-  private shouldLoadNext(selectedItem: Identifier): boolean {
+  private shouldLoadNext(selectedItem: FileIdentifier): boolean {
     const { items } = this.state;
     return items.match({
       pending: () => false,
@@ -139,8 +140,12 @@ export class Collection extends React.Component<Props, State> {
     });
   }
 
-  private isLastItem(selectedItem: Identifier, items: MediaCollectionItem[]) {
+  private isLastItem(
+    selectedItem: FileIdentifier,
+    items: MediaCollectionItem[],
+  ) {
     const lastItem = items[items.length - 1];
+
     const isLastItem =
       selectedItem.id === lastItem.id &&
       selectedItem.occurrenceKey === lastItem.occurrenceKey;

@@ -61,11 +61,6 @@ export interface MediaProvider {
   uploadMediaClientConfig?: Promise<MediaClientConfig>;
 
   /**
-   * (optional) Used for creation of new Media links.
-   */
-  linkMediaClientConfig?: Promise<MediaClientConfig>;
-
-  /**
    * (optional) For any additional feature to be enabled
    */
   featureFlags?: FeatureFlags;

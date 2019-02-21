@@ -98,7 +98,9 @@ const verifyEventHandling = (
   expect(wrapper.find(Dropzone).props().isActive).toEqual(dropzonesActive);
 
   if (!dropzonesActive && setTimeoutMockHandler) {
-    setTimeoutMockHandler.reset();
+    if (setTimeoutMockHandler) {
+      setTimeoutMockHandler.reset();
+    }
   }
 };
 

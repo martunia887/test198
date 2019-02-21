@@ -61,13 +61,6 @@ export default class MediaSingleNode extends Component<
     ) as MediaPluginState;
   }
 
-  componentDidUpdate() {
-    const { layout } = this.props.node.attrs;
-    if (this.props.selected()) {
-      this.mediaPluginState.updateLayout(layout);
-    }
-  }
-
   async componentDidMount() {
     const mediaProvider = await this.props.mediaProvider;
     if (mediaProvider) {

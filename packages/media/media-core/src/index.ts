@@ -14,3 +14,4 @@ export {
 export { mediaState } from './cache';
 
 export { MediaClientConfigContext } from './media-client-config-context';
+export * from './identifier';

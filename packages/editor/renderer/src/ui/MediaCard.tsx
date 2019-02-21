@@ -6,6 +6,11 @@ import {
   Card,
   CardView,
   CardOnClickCallback,
+} from '@atlaskit/media-card';
+import {
+  Context,
+  ImageResizeMode,
+  Identifier,
   ExternalImageIdentifier,
   ImageResizeMode,
 } from '@atlaskit/media-card';
@@ -104,12 +109,15 @@ export class MediaCardInternal extends Component<MediaCardProps> {
       return this.renderExternal();
     }
 
-    // I assume we don't need to do this, because mediaClientConfig is in Context tree now
-    // if (!mediaClientConfig) {
-    //   return this.renderLoadingCard();
-    // }
+    if (type === 'link') {
+      return null;
+    }
 
-    let identifier: any = {
+    if (!mediaClientConfig || !id) {
+      return this.renderLoadingCard();
+    }
+
+    const identifier: Identifier = {
       id,
       mediaItemType: type,
       collectionName: collection,

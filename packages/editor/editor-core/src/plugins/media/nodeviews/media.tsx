@@ -9,7 +9,7 @@ import {
   stateKey as mediaStateKey,
   MediaProvider,
 } from '../pm-plugins/main';
-import { ImageResizeMode } from '@atlaskit/media-card';
+import { ImageResizeMode, Identifier } from '@atlaskit/media-card';
 import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   Card,
@@ -17,7 +17,6 @@ import {
   CardView,
   CardEventHandler,
   CardOnClickCallback,
-  Identifier,
 } from '@atlaskit/media-card';
 import { MediaType, MediaBaseAttributes } from '@atlaskit/adf-schema';
 import { withImageLoader, ImageStatus } from '@atlaskit/editor-common';

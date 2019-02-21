@@ -1,13 +1,6 @@
-import { MediaItemType } from '@atlaskit/media-client';
+import { Identifier } from '@atlaskit/media-client';
 
 export { Outcome } from './outcome';
-
-export type Identifier = {
-  type: MediaItemType;
-  id: string;
-  occurrenceKey: string;
-  collectionName?: string;
-};
 
 export type ItemSource =
   | { kind: 'COLLECTION'; collectionName: string; pageSize: number }

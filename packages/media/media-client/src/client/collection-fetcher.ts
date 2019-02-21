@@ -10,8 +10,6 @@ import {
   mapMediaFileToFileState,
   FileItem,
   FileDetails,
-  LinkItem,
-  LinkDetails,
   fileStreamsCache,
 } from '..';
 
@@ -21,14 +19,6 @@ export interface MediaCollectionFileItemDetails extends FileDetails {
 
 export interface MediaCollectionFileItem extends FileItem {
   details: MediaCollectionFileItemDetails;
-}
-
-export interface MediaCollectionLinkItemDetails extends LinkDetails {
-  occurrenceKey: string;
-}
-
-export interface MediaCollectionLinkItem extends LinkItem {
-  details: MediaCollectionLinkItemDetails;
 }
 
 export interface MediaCollection {

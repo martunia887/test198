@@ -7,12 +7,12 @@ import {
   CardEvent,
   CardAction,
   CardEventHandler,
-  FileIdentifier,
 } from '@atlaskit/media-card';
 import {
   MediaClient,
-  MediaItem,
+  FileItem,
   FileDetails,
+  FileIdentifier,
   getMediaTypeFromMimeType,
 } from '@atlaskit/media-client';
 import { MediaClientConfigContext } from '@atlaskit/media-core';
@@ -412,7 +412,7 @@ export class StatelessUploadView extends Component<
       }
     };
 
-    const editHandler: CardEventHandler = (mediaItem?: MediaItem) => {
+    const editHandler: CardEventHandler = (mediaItem?: FileItem) => {
       if (mediaItem && mediaItem.type === 'file') {
         const { id, name } = mediaItem.details;
 

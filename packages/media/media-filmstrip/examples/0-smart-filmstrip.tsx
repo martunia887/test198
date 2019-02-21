@@ -10,11 +10,17 @@ import {
   defaultCollectionName,
   createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
-import { CardEvent, FileIdentifier, CardAction } from '@atlaskit/media-card';
+import { CardEvent, CardAction } from '@atlaskit/media-card';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 import { Filmstrip, FilmstripItem } from '../src';
 import { ExampleWrapper, FilmstripWrapper } from '../example-helpers/styled';
-import { MediaClient, MediaItem, UploadableFile } from '@atlaskit/media-client';
+import {
+  FileItem,
+  UploadableFile,
+  MediaClient,
+  MediaItem,
+  FileIdentifier,
+} from '@atlaskit/media-client';
 import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 export interface ExampleState {
@@ -60,7 +66,7 @@ class Example extends Component<{}, ExampleState> {
     return -1;
   };
 
-  onClose = (item?: MediaItem) => {
+  onClose = (item?: FileItem) => {
     if (!item) {
       return;
     }
