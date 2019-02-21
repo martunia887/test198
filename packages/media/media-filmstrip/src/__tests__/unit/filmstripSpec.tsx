@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { Filmstrip, FilmstripView, FilmstripProps, FilmstripItem } from '../..';
-import { fakeMediaClient } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
-import { Identifier } from '@atlaskit/media-core';
+import { Identifier } from '@atlaskit/media-client';
 
 describe('<Filmstrip />', () => {
   const firstIdenfier: Identifier = {
@@ -11,7 +10,6 @@ describe('<Filmstrip />', () => {
     mediaItemType: 'file',
   };
   const setup = (props?: Partial<FilmstripProps>) => {
-    const context = fakeMediaClient();
     const items: FilmstripItem[] = [
       {
         identifier: firstIdenfier,
@@ -23,13 +21,10 @@ describe('<Filmstrip />', () => {
         },
       },
     ];
-    const component = shallow(
-      <Filmstrip context={context} items={items} {...props} />,
-    );
+    const component = shallow(<Filmstrip items={items} {...props} />);
 
     return {
       component,
-      context,
     };
   };
 
@@ -60,7 +55,7 @@ describe('<Filmstrip />', () => {
   });
 
   it('should pass properties down to Cards', () => {
-    const { component, context } = setup({
+    const { component } = setup({
       items: [
         {
           identifier: firstIdenfier,
@@ -78,7 +73,6 @@ describe('<Filmstrip />', () => {
         .props(),
     ).toEqual(
       expect.objectContaining({
-        context,
         selectable: true,
         selected: true,
         identifier: {
@@ -90,9 +84,7 @@ describe('<Filmstrip />', () => {
   });
 
   it('should render loading cards if context is missing', () => {
-    const { component } = setup({
-      context: undefined,
-    });
+    const { component } = setup();
     expect(component.find('CardView[status="loading"]')).toHaveLength(2);
   });
 });

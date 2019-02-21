@@ -8,9 +8,10 @@ import Slider from '@atlaskit/field-range';
 import Button from '@atlaskit/button';
 import { Card } from '@atlaskit/media-card';
 import {
-  createStorybookMediaClient,
+  createStorybookMediaClientConfig,
   genericFileId,
 } from '@atlaskit/media-test-helpers';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 import { FilmstripView } from '../src/filmstripView';
 
 const StoryWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
@@ -45,17 +46,12 @@ const Box: ComponentClass<HTMLAttributes<{}> & BoxProps> = styled.div`
   ${({ grow }: { grow?: number }) => (grow && `flex-grow: ${grow};`) || ''};
 `;
 
-const context = createStorybookMediaClient() as any;
+const mediaClientConfig = createStorybookMediaClientConfig();
 
 const exampleActions = [{ label: 'View', handler: () => console.log('View') }];
 
 const cards = [
-  <Card
-    key="card3"
-    context={context}
-    identifier={genericFileId}
-    actions={exampleActions}
-  />,
+  <Card key="card3" identifier={genericFileId} actions={exampleActions} />,
 ];
 
 export interface ViewStoryProps {}
@@ -235,13 +231,15 @@ export class ViewStory extends React.Component<ViewStoryProps, ViewStoryState> {
 
   render() {
     return (
-      <StoryWrapper>
-        <h1>Make your own 🍽</h1>
-        <Separator />
-        {this.renderFilmstrip()}
-        <Separator />
-        {this.renderControls()}
-      </StoryWrapper>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
+        <StoryWrapper>
+          <h1>Make your own 🍽</h1>
+          <Separator />
+          {this.renderFilmstrip()}
+          <Separator />
+          {this.renderControls()}
+        </StoryWrapper>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

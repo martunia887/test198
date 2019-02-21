@@ -18,7 +18,6 @@ import {
   FileItem,
   UploadableFile,
   MediaClient,
-  MediaItem,
   FileIdentifier,
 } from '@atlaskit/media-client';
 import { MediaClientConfigContext } from '@atlaskit/media-core';

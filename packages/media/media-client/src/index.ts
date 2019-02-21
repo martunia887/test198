@@ -23,3 +23,5 @@ export {
   withMediaClient,
   WithMediaClientProps,
 } from './utils/with-media-client';
+
+export * from './identifier';

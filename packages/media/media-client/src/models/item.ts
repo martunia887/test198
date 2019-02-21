@@ -1,4 +1,4 @@
-import { MediaType } from '@atlaskit/media-client';
+import { MediaType } from './media';
 export type MediaItemType = 'file' | 'external-image';
 
 export interface FileItem {
