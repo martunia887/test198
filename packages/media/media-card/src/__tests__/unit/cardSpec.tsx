@@ -2,14 +2,18 @@ jest.mock('../../../src/utils/getDataURIFromFileState');
 import { Observable, ReplaySubject } from 'rxjs';
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { fakeContext, nextTick } from '@atlaskit/media-test-helpers';
 import {
-  Context,
+  asMock,
+  fakeMediaClient,
+  nextTick,
+} from '@atlaskit/media-test-helpers';
+import {
   FileState,
   FileDetails,
   FileIdentifier,
   ExternalImageIdentifier,
-} from '@atlaskit/media-core';
+  MediaClient,
+} from '@atlaskit/media-client';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { CardAction, CardProps, CardDimensions } from '../../../src';

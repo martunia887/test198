@@ -8,7 +8,7 @@ import {
   createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 
 import { Card } from '../src';

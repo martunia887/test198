@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { MediaFileArtifacts } from '@atlaskit/media-client';
 import { asMock, fakeMediaClient } from '@atlaskit/media-test-helpers';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
 import { InlinePlayer, InlinePlayerProps } from '../../../root/inlinePlayer';
 import { CardLoading } from '../../../utils';
 import { InlinePlayerWrapper } from '../../../root/styled';

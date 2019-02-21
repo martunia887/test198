@@ -12,7 +12,7 @@ import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
 import { Card } from '../src';
 import { createApiCards, actions } from '../example-helpers';
 import { MediaClientConfigContext } from '@atlaskit/media-core';
