@@ -31,7 +31,7 @@ const floatingToolbarLanguageSelector = 'div[aria-label="Floating Toolbar"]';
 
       const doc = await page.$eval(editable, getDocFromElement);
       expect(doc).toMatchDocSnapshot();
-      await browser.checkConsoleErrors();
+      await page.checkConsoleErrors();
     },
   );
 
@@ -61,7 +61,7 @@ const floatingToolbarLanguageSelector = 'div[aria-label="Floating Toolbar"]';
       await page.waitForSelector(floatingToolbarLanguageSelector);
       const language = await page.getText(floatingToolbarLanguageSelector);
       expect(language.trim()).toEqual('JavaScript');
-      await browser.checkConsoleErrors();
+      await page.checkConsoleErrors();
     },
   );
 
@@ -113,7 +113,7 @@ const floatingToolbarLanguageSelector = 'div[aria-label="Floating Toolbar"]';
         floatingToolbarLanguageSelector,
       );
       expect(secondCodeBlock.trim()).toEqual('Arduino');
-      await browser.checkConsoleErrors();
+      await page.checkConsoleErrors();
     },
   );
 

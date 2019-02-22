@@ -65,6 +65,6 @@ BrowserTestCase(
 
     const doc = await browser.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
-    await page.checkConsoleErrors();
+    await browser.checkConsoleErrors();
   },
 );
