@@ -102,7 +102,7 @@ class Example extends Component<{}, ExampleState> {
 
   render() {
     return (
-      <MediaClientConfigContext.Provider value={mediaClient.config}>
+      <MediaClientConfigContext.Provider value={mediaClient.mediaClientConfig}>
         {this.renderHeader()}
         {this.renderCards()}
       </MediaClientConfigContext.Provider>

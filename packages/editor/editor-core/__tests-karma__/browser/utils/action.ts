@@ -48,8 +48,7 @@ describe(name, () => {
           .stub(pluginState, 'collectionFromProvider' as any)
           .returns(testCollectionName);
 
-        const provider = await mediaProvider;
-        await provider.uploadMediaClientConfig;
+        await mediaProvider;
 
         // wait a tick for await MediaPicker in picker-facade
         await new Promise(resolve => setTimeout(resolve, 0));

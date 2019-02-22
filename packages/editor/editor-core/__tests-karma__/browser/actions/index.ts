@@ -168,8 +168,7 @@ describe(name, () => {
               fileId: Promise.resolve('id'),
             });
 
-            const provider = await mediaProvider;
-            await provider.uploadMediaClientConfig;
+            await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
             mediaPluginState.insertFiles([
               { id: testTempFileId, fileId: Promise.resolve('id') },
@@ -195,8 +194,7 @@ describe(name, () => {
               fileId: Promise.resolve('id'),
             });
 
-            const provider = await mediaProvider;
-            await provider.uploadMediaClientConfig;
+            await mediaProvider;
 
             const mediaPluginState = getMediaPluginState(editorView);
             mediaPluginState.insertFiles([
@@ -224,8 +222,7 @@ describe(name, () => {
               fileId: Promise.resolve('id'),
             });
 
-            const provider = await mediaProvider;
-            await provider.uploadMediaClientConfig;
+            await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
             mediaPluginState.insertFiles([
@@ -261,8 +258,7 @@ describe(name, () => {
               id: testTempFileId,
               fileId: Promise.resolve('id'),
             });
-            const provider = await mediaProvider;
-            await provider.uploadMediaClientConfig;
+            await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
             mediaPluginState.insertFiles([
@@ -295,9 +291,7 @@ describe(name, () => {
               fileId: Promise.resolve('id'),
             });
 
-            const provider = await mediaProvider;
-            await provider.uploadMediaClientConfig;
-            await provider.viewMediaClientConfig;
+            await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
             mediaPluginState.insertFiles([
@@ -437,8 +431,7 @@ describe(name, () => {
           fileId: Promise.resolve('id'),
         });
 
-        const provider = await mediaProvider;
-        await provider.uploadMediaClientConfig;
+        await mediaProvider;
 
         mediaPluginState.insertFiles([
           { id: testTempFileId, fileId: Promise.resolve('id') },

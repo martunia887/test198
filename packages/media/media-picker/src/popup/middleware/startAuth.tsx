@@ -18,7 +18,7 @@ export const startCloudAccountOAuthFlow = (
 
     const accounts = cloudService
       .startAuth(redirectUrl, serviceName)
-      .then(() => userMediaClient.config.authProvider())
+      .then(() => userMediaClient.mediaClientConfig.authProvider())
       .then(auth => fetcher.getServiceList(auth));
 
     store.dispatch(updateServiceList(accounts));

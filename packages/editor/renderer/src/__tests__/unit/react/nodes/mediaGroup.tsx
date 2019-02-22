@@ -98,9 +98,7 @@ describe('MediaGroup', () => {
 
     expect(mediaGroup.find(FilmstripView)).toHaveLength(1);
 
-    const provider = await mediaProvider;
-    await provider.viewMediaClientConfig;
-    await provider.uploadMediaClientConfig;
+    await mediaProvider;
     mediaGroup.update();
 
     const card = mediaGroup

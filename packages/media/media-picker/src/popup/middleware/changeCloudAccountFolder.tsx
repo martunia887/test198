@@ -17,7 +17,7 @@ export const changeCloudAccountFolderMiddleware = (fetcher: Fetcher) => (
     const lastPath =
       path.length === 0 ? { id: '', name: '' } : path[path.length - 1];
 
-    userMediaClient.config
+    userMediaClient.mediaClientConfig
       .authProvider()
       .then(auth =>
         fetcher.fetchCloudAccountFolder(

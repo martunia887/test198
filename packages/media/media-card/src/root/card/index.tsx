@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Component } from 'react';
 import {
   Identifier,
   FileIdentifier,
@@ -9,7 +8,6 @@ import {
   isExternalImageIdentifier,
   isDifferentIdentifier,
   MediaClient,
-  withMediaClient,
   WithMediaClientProps,
 } from '@atlaskit/media-client';
 import { AnalyticsContext } from '@atlaskit/analytics-next';
@@ -21,7 +19,7 @@ import {
   CardAnalyticsContext,
   CardAction,
   CardDimensions,
-  CardProps,
+  BaseCardProps,
   CardState,
   CardEvent,
 } from '../..';
@@ -35,8 +33,9 @@ import { isBigger } from '../../utils/dimensionComparer';
 import { getCardStatus } from './getCardStatus';
 import { InlinePlayer } from '../inlinePlayer';
 
-type BaseCardProps = CardProps & WithMediaClientProps;
-export class Card extends Component<BaseCardProps, CardState> {
+export type CardProps = BaseCardProps & WithMediaClientProps;
+
+export class Card extends React.Component<CardProps, CardState> {
   private hasBeenMounted: boolean = false;
   private onClickPayload?: {
     result: CardEvent;
@@ -44,7 +43,7 @@ export class Card extends Component<BaseCardProps, CardState> {
   };
 
   subscription?: Subscription;
-  static defaultProps: Partial<BaseCardProps> = {
+  static defaultProps: Partial<CardProps> = {
     appearance: 'auto',
     resizeMode: 'crop',
     isLazy: true,
@@ -64,7 +63,7 @@ export class Card extends Component<BaseCardProps, CardState> {
     this.subscribe(identifier, mediaClient);
   }
 
-  componentWillReceiveProps(nextProps: BaseCardProps) {
+  componentWillReceiveProps(nextProps: CardProps) {
     const {
       mediaClient: currentMediaClient,
       identifier: currentIdentifier,
@@ -413,5 +412,3 @@ export class Card extends Component<BaseCardProps, CardState> {
     });
   };
 }
-
-export default withMediaClient(Card);

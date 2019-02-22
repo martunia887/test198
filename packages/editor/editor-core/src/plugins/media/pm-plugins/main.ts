@@ -47,7 +47,7 @@ export interface MediaNodeWithPosHandler {
 
 export class MediaPluginState {
   public allowsUploads: boolean = false;
-  public mediaClientConfig: MediaClientConfig;
+  public mediaClientConfig?: MediaClientConfig;
   public stateManager: MediaStateManager;
   public ignoreLinks: boolean = false;
   public waitForMediaUpload: boolean = true;
@@ -153,7 +153,7 @@ export class MediaPluginState {
       return;
     }
 
-    this.mediaClientConfig = await this.mediaProvider.viewMediaClientConfig;
+    this.mediaClientConfig = this.mediaProvider.viewMediaClientConfig;
 
     // release all listeners for default state manager
     const { stateManager } = this.mediaProvider;
@@ -176,12 +176,13 @@ export class MediaPluginState {
     }
 
     if (this.allowsUploads) {
-      const uploadContext = await this.mediaProvider.uploadMediaClientConfig;
+      const uploadMediaClientConfig = this.mediaProvider
+        .uploadMediaClientConfig;
 
-      if (this.mediaProvider.uploadParams && uploadContext) {
+      if (this.mediaProvider.uploadParams && uploadMediaClientConfig) {
         await this.initPickers(
           this.mediaProvider.uploadParams,
-          uploadContext,
+          uploadMediaClientConfig,
           PickerFacade,
           this.reactContext,
         );

@@ -9,25 +9,30 @@ export interface WithMediaClientProps {
   readonly mediaClient: MediaClient;
 }
 
+export interface WithOptionalMediaClientProps {
+  readonly mediaClient?: MediaClient;
+}
+
 export function withMediaClient<P>(
-  Component: React.ComponentType<P & WithMediaClientProps>,
+  Component: React.ComponentType<P & WithOptionalMediaClientProps>,
 ) {
-  // TODO Any problem with old React context?
-  let mediaClient: MediaClient;
-  let previousMediaClientConfig: MediaClientConfig;
+  const mediaClientsMap = new Map<MediaClientConfig, MediaClient>();
 
   return class extends React.Component<P> {
     render() {
       return (
         <MediaClientConfigContext.Consumer>
           {mediaClientConfig => {
-            if (
-              !mediaClient ||
-              mediaClientConfig !== previousMediaClientConfig
-            ) {
-              mediaClient = new MediaClient(mediaClientConfig);
+            let mediaClient: MediaClient | undefined;
+
+            if (mediaClientConfig) {
+              mediaClient = mediaClientsMap.get(mediaClientConfig);
+              if (!mediaClient) {
+                mediaClient = new MediaClient(mediaClientConfig);
+                mediaClientsMap.set(mediaClientConfig, mediaClient);
+              }
             }
-            previousMediaClientConfig = mediaClientConfig;
+
             return <Component {...this.props} mediaClient={mediaClient} />;
           }}
         </MediaClientConfigContext.Consumer>

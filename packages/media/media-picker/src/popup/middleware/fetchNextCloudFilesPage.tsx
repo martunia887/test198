@@ -20,7 +20,7 @@ export const fetchNextCloudFilesPageMiddleware = (fetcher: Fetcher) => (
     const cursor = view && view.nextCursor;
     const items = (view && view.items) || [];
 
-    userMediaClient.config
+    userMediaClient.mediaClientConfig
       .authProvider()
       .then(auth =>
         fetcher.fetchCloudAccountFolder(

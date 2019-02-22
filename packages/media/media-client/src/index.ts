@@ -22,6 +22,7 @@ export * from './utils/getMediaTypeFromMimeType';
 export {
   withMediaClient,
   WithMediaClientProps,
+  WithOptionalMediaClientProps,
 } from './utils/with-media-client';
 
 export * from './identifier';

@@ -13,7 +13,9 @@ export async function constructAuthTokenUrl(
   mediaClient: MediaClient,
   collectionName?: string,
 ): Promise<string> {
-  const auth = await mediaClient.config.authProvider({ collectionName });
+  const auth = await mediaClient.mediaClientConfig.authProvider({
+    collectionName,
+  });
 
   if (isClientBasedAuth(auth)) {
     return buildClientBasedUrl(

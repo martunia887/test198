@@ -16,7 +16,7 @@ import {
 } from '@atlaskit/media-client';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
-import { CardAction, CardProps, CardDimensions } from '../../../src';
+import { CardAction, BaseCardProps, CardDimensions } from '../../../src';
 
 import { CardView } from '../../../src/root/cardView';
 
@@ -38,7 +38,7 @@ describe('Card', () => {
   };
   const setup = (
     mediaClient: MediaClient = fakeMediaClient(),
-    props?: Partial<CardProps>,
+    props?: Partial<BaseCardProps>,
     filePreview: FilePreview = { src: 'some-data-uri', orientation: 6 },
   ) => {
     asMock(getDataURIFromFileState).mockReset();

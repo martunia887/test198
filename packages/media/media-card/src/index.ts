@@ -119,8 +119,7 @@ export interface CardViewAnalyticsContext extends BaseAnalyticsContext {
   linkAttributes?: AnalyticsLinkAttributes;
 }
 
-export interface CardProps extends SharedCardProps, CardEventProps {
-  // readonly mediaClient: MediaClient;
+export interface BaseCardProps extends SharedCardProps, CardEventProps {
   readonly identifier: Identifier;
   readonly isLazy?: boolean;
   readonly resizeMode?: ImageResizeMode;

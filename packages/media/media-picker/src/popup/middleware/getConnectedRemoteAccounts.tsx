@@ -22,7 +22,7 @@ export const getConnectedRemoteAccounts = (fetcher: Fetcher) => (
 
     store.dispatch(
       updateServiceList(
-        userMediaClient.config
+        userMediaClient.mediaClientConfig
           .authProvider()
           .then(auth => fetcher.getServiceList(auth)),
       ),

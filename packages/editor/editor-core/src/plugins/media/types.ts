@@ -51,14 +51,12 @@ export interface MediaProvider {
    * Used for displaying Media Cards and downloading files.
    * This is context config is required.
    */
-  viewMediaClientConfig: Promise<MediaClientConfig>;
+  viewMediaClientConfig: MediaClientConfig;
 
   /**
    * (optional) Used for creating new uploads and finalizing files.
-   * NOTE: We currently don't accept Context instance, because we need config properties
-   *       to initialize
    */
-  uploadMediaClientConfig?: Promise<MediaClientConfig>;
+  uploadMediaClientConfig?: MediaClientConfig;
 
   /**
    * (optional) For any additional feature to be enabled

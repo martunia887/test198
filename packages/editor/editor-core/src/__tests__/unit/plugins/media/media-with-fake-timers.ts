@@ -56,9 +56,7 @@ describe('Media plugin', async () => {
   describe('updateUploadState', () => {
     it('should change upload state to unfinished when uploads start', async () => {
       const { pluginState } = editor(doc(p('')));
-      const provider = await mediaProvider;
-      await provider.uploadMediaClientConfig;
-      await provider.viewMediaClientConfig;
+      await mediaProvider;
 
       pluginState.insertFiles([
         {
@@ -73,9 +71,7 @@ describe('Media plugin', async () => {
 
     it('should change upload state to finished once an upload finishes', async () => {
       const { pluginState } = editor(doc(p('')));
-      const provider = await mediaProvider;
-      await provider.uploadMediaClientConfig;
-      await provider.viewMediaClientConfig;
+      await mediaProvider;
 
       pluginState.insertFiles([
         {
@@ -101,9 +97,7 @@ describe('Media plugin', async () => {
 
     it('should change upload state to finished once multiple uploads have finished', async () => {
       const { pluginState } = editor(doc(p('')));
-      const provider = await mediaProvider;
-      await provider.uploadMediaClientConfig;
-      await provider.viewMediaClientConfig;
+      await mediaProvider;
 
       pluginState.insertFiles([
         {

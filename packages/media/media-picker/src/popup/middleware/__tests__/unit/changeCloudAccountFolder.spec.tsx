@@ -22,9 +22,9 @@ describe('changePath', () => {
     const next = jest.fn();
 
     const { userMediaClient } = store.getState();
-    (userMediaClient.config.authProvider as jest.Mock<any>).mockReturnValue(
-      Promise.resolve(auth),
-    );
+    (userMediaClient.mediaClientConfig.authProvider as jest.Mock<
+      any
+    >).mockReturnValue(Promise.resolve(auth));
 
     return { fetcher, store, next };
   };

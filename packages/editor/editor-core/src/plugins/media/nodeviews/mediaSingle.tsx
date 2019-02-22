@@ -82,7 +82,7 @@ export default class MediaSingleNode extends Component<
     if (height && width) {
       return;
     }
-    const viewMediaClientConfig = await mediaProvider.viewMediaClientConfig;
+    const viewMediaClientConfig = mediaProvider.viewMediaClientConfig;
     const mediaClient = new MediaClient(viewMediaClientConfig);
     const state = await mediaClient.getImageMetadata(id, {
       collection,
@@ -251,7 +251,7 @@ class MediaSingleNodeView extends ReactNodeView {
               render={({ width, reactNodeViewState }) => {
                 const viewMediaClientConfig =
                   mediaPluginState.mediaClientConfig;
-
+                console.log({ viewMediaClientConfig });
                 return (
                   <MediaClientConfigContext.Provider
                     value={viewMediaClientConfig}

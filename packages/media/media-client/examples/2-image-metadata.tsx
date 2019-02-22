@@ -16,7 +16,7 @@ class Example extends Component<{}, ExampleState> {
 
   async componentDidMount() {
     const store = new MediaStore({
-      authProvider: context.config.authProvider,
+      authProvider: context.mediaClientConfig.authProvider,
     });
     const response = await store.getImageMetadata(imageFileId.id, {
       collection: imageFileId.collectionName,

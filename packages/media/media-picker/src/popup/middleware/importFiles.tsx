@@ -197,7 +197,7 @@ export async function importFiles(
     config.uploadParams && config.uploadParams.collection;
   store.dispatch(hidePopup());
 
-  const auth = await userMediaClient.config.authProvider();
+  const auth = await userMediaClient.mediaClientConfig.authProvider();
   const selectedUploadFiles = selectedItems.map(item =>
     mapSelectedItemToSelectedUploadFile(item, tenantCollection),
   );

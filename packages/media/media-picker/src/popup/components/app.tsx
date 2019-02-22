@@ -128,8 +128,8 @@ export class App extends Component<AppProps, AppState> {
     // Each of the local components using this mediaClient will upload first to user's recents
     // and then copy to a tenant's collection.
     const mediaClient = new MediaClient({
-      authProvider: tenantMediaClient.config.authProvider,
-      userAuthProvider: userMediaClient.config.authProvider,
+      authProvider: tenantMediaClient.mediaClientConfig.authProvider,
+      userAuthProvider: userMediaClient.mediaClientConfig.authProvider,
     });
 
     this.mpBrowser = new MpBrowser(mediaClient, {

@@ -14,9 +14,9 @@ export class MediaClient {
   public readonly collection: CollectionFetcher;
   public readonly file: FileFetcher;
 
-  constructor(readonly config: MediaClientConfig) {
+  constructor(readonly mediaClientConfig: MediaClientConfig) {
     this.mediaStore = new MediaStore({
-      authProvider: config.authProvider,
+      authProvider: mediaClientConfig.authProvider,
     });
     this.collection = new CollectionFetcher(this.mediaStore);
     this.file = new FileFetcher(this.mediaStore);

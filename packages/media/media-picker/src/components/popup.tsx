@@ -41,7 +41,7 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
     super();
     this.proxyReactContext = proxyReactContext;
 
-    const { userAuthProvider } = tenantMediaClient.config;
+    const { userAuthProvider } = tenantMediaClient.mediaClientConfig;
     if (!userAuthProvider) {
       throw new Error(
         'When using Popup media picker userAuthProvider must be provided in the mediaClient',

@@ -5,6 +5,6 @@ const defaultValue: MediaClientConfig = {
   authProvider: () => Promise.reject("AuthProvider hasn't been defined"),
 };
 
-export const MediaClientConfigContext = createContext<MediaClientConfig>(
-  defaultValue,
-);
+export const MediaClientConfigContext = createContext<
+  MediaClientConfig | undefined
+>(defaultValue);

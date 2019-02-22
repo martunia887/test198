@@ -6,7 +6,7 @@ export interface MediaViewerDataSource {
   collectionName?: string;
 }
 
-export interface MediaViewerProps {
+export interface BaseMediaViewerProps {
   readonly selectedItem: Identifier;
   readonly dataSource: MediaViewerDataSource;
 

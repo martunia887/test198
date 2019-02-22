@@ -58,7 +58,7 @@ export class NewUploadServiceImpl implements UploadService {
     const {
       authProvider: tenantAuthProvider,
       userAuthProvider,
-    } = tenantMediaClient.config;
+    } = tenantMediaClient.mediaClientConfig;
     // We need a non user auth store, since we want to create the empty file in the public collection
     this.tenantMediaStore = new MediaStore({
       authProvider: tenantAuthProvider,
@@ -412,7 +412,9 @@ export class NewUploadServiceImpl implements UploadService {
       return Promise.resolve();
     }
     const { collection: sourceCollection } = tenantUploadParams;
-    const { authProvider: tenantAuthProvider } = this.tenantMediaClient.config;
+    const {
+      authProvider: tenantAuthProvider,
+    } = this.tenantMediaClient.mediaClientConfig;
     return tenantAuthProvider({ collectionName: sourceCollection }).then(
       auth => {
         const body: MediaStoreCopyFileWithTokenBody = {

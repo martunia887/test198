@@ -152,7 +152,7 @@ export class StatelessUploadView extends Component<
     const confirmationDialog = this.renderDeleteConfirmation();
 
     return (
-      <MediaClientConfigContext.Provider value={mediaClient.config}>
+      <MediaClientConfigContext.Provider value={mediaClient.mediaClientConfig}>
         <InfiniteScroll
           height="100%"
           onThresholdReached={this.onThresholdReachedListener}

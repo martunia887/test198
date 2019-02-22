@@ -43,11 +43,9 @@ export function storyMediaProviderFactory(
     featureFlags: {},
     stateManager,
     uploadParams: { collection },
-    viewMediaClientConfig: Promise.resolve(mediaClientConfig),
+    viewMediaClientConfig: mediaClientConfig,
     uploadMediaClientConfig:
-      includeUploadMediaClientConfig === false
-        ? undefined
-        : Promise.resolve(mediaClientConfig),
+      includeUploadMediaClientConfig === false ? undefined : mediaClientConfig,
   });
 }
 

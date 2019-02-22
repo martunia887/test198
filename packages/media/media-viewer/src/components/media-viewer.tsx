@@ -2,15 +2,14 @@ import * as React from 'react';
 import { Component } from 'react';
 import { MediaViewer as MediaViewerNextGen } from '../newgen/media-viewer';
 import { ItemSource } from '../newgen/domain';
-import { MediaViewerProps } from './types';
+import { BaseMediaViewerProps } from './types';
 import { withMediaClient, WithMediaClientProps } from '@atlaskit/media-client';
 
 export interface MediaViewerState {}
 
-export class MediaViewer extends Component<
-  MediaViewerProps & WithMediaClientProps,
-  MediaViewerState
-> {
+export type MediaViewerProps = BaseMediaViewerProps & WithMediaClientProps;
+
+export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
   render(): JSX.Element {
     const {
       featureFlags,

@@ -134,7 +134,7 @@ class MediaGroupNodeView extends ReactNodeView {
           editorDisabledPlugin: EditorDisabledPluginState;
         }) => {
           const mediaPluginState: MediaPluginState = mediaStateKey.getState(
-            props.view.state,
+            this.view.state,
           );
           const viewMediaClientConfig = mediaPluginState.mediaClientConfig;
 
@@ -142,6 +142,7 @@ class MediaGroupNodeView extends ReactNodeView {
           const { $anchor, $head } = this.view.state.selection;
           const isSelected =
             nodePos < $anchor.pos && $head.pos < nodePos + this.node.nodeSize;
+
           return (
             <MediaClientConfigContext.Provider value={viewMediaClientConfig}>
               <MediaGroup

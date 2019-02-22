@@ -34,7 +34,7 @@ export function finalizeUpload(
   { file, uploadId, source, replaceFileId }: FinalizeUploadAction,
 ): Promise<SendUploadEventAction> {
   const { userMediaClient } = store.getState();
-  return userMediaClient.config
+  return userMediaClient.mediaClientConfig
     .authProvider()
     .then(mapAuthToSourceFileOwner)
     .then(owner => {
@@ -108,7 +108,7 @@ async function copyFile({
           uploadId,
         }),
       );
-      const auth = await tenantMediaClient.config.authProvider({
+      const auth = await tenantMediaClient.mediaClientConfig.authProvider({
         collectionName: collection,
       });
       // TODO [MS-725]: replace by mediaClient.getFile

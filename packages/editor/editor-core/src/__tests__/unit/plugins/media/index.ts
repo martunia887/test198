@@ -138,8 +138,7 @@ describe('Media plugin', () => {
 
   it('should invoke binary picker when calling insertFileFromDataUrl', async () => {
     const { pluginState } = editor(doc(p('{<>}')));
-    const provider = await mediaProvider;
-    await provider.uploadMediaClientConfig;
+    await mediaProvider;
 
     await waitForAllPickersInitialised(pluginState);
 
@@ -515,9 +514,7 @@ describe('Media plugin', () => {
     const tempFileId = `temporary:${randomId()}`;
 
     // wait until mediaProvider has been set
-    const provider = await mediaProvider;
-    // wait until mediaProvider's uploadMediaClientConfig has been set
-    await provider.uploadMediaClientConfig;
+    await mediaProvider;
 
     const publicId = 'public-id';
     const fileState = [
@@ -576,9 +573,7 @@ describe('Media plugin', () => {
     const tempFileId = `temporary:${randomId()}`;
 
     // wait until mediaProvider has been set
-    const provider = await mediaProvider;
-    // wait until mediaProvider's uploadMediaClientConfig has been set
-    await provider.uploadMediaClientConfig;
+    await mediaProvider;
 
     pluginState.insertFiles([
       { id: tempFileId, fileId: Promise.resolve('id') },
@@ -674,8 +669,7 @@ describe('Media plugin', () => {
 
     const mediaProvider1 = getFreshMediaProvider();
     await pluginState.setMediaProvider(mediaProvider1);
-    const resolvedMediaProvider1 = await mediaProvider1;
-    await resolvedMediaProvider1.uploadMediaClientConfig;
+    await mediaProvider1;
 
     pluginState.pickers.forEach(picker => {
       picker.setUploadParams = jest.fn();
@@ -683,8 +677,7 @@ describe('Media plugin', () => {
 
     const mediaProvider2 = getFreshMediaProvider();
     await pluginState.setMediaProvider(mediaProvider2);
-    const resolvedMediaProvider2 = await mediaProvider2;
-    await resolvedMediaProvider2.uploadMediaClientConfig;
+    await mediaProvider2;
 
     pluginState.pickers.forEach(picker => {
       expect(picker.setUploadParams as any).toHaveBeenCalledTimes(1);
@@ -700,9 +693,7 @@ describe('Media plugin', () => {
       analyticsService.handler = null;
     });
 
-    const provider = await mediaProvider;
-    await provider.uploadMediaClientConfig;
-    await provider.viewMediaClientConfig;
+    await mediaProvider;
     await waitForAllPickersInitialised(pluginState);
     expect(typeof pluginState.binaryPicker!).toBe('object');
 
@@ -743,9 +734,7 @@ describe('Media plugin', () => {
       'collectionFromProvider' as any,
     );
     collectionFromProvider.mockImplementation(() => testCollectionName);
-    const provider = await mediaProvider;
-    await provider.uploadMediaClientConfig;
-    await provider.viewMediaClientConfig;
+    await mediaProvider;
     await waitForAllPickersInitialised(pluginState);
     expect(typeof pluginState.binaryPicker!).toBe('object');
 
@@ -781,9 +770,7 @@ describe('Media plugin', () => {
       analyticsService.handler = null;
     });
 
-    const provider = await mediaProvider;
-    await provider.uploadMediaClientConfig;
-    await provider.viewMediaClientConfig;
+    await mediaProvider;
     await waitForAllPickersInitialised(pluginState);
     expect(typeof pluginState.binaryPicker!).toBe('object');
 
@@ -817,9 +804,7 @@ describe('Media plugin', () => {
       analyticsService.handler = null;
     });
 
-    const provider = await mediaProvider;
-    await provider.uploadMediaClientConfig;
-    await provider.viewMediaClientConfig;
+    await mediaProvider;
     await waitForAllPickersInitialised(pluginState);
 
     expect(typeof pluginState.binaryPicker!).toBe('object');
@@ -1163,8 +1148,7 @@ describe('Media plugin', () => {
         dropzoneContainer,
       );
 
-      const provider = await mediaProvider;
-      await provider.uploadMediaClientConfig;
+      await mediaProvider;
       // MediaPicker DropZone bind events inside a `whenDomReady`, so we have to wait for the next tick
       await sleep(0);
       expect(getWidgetDom(editorView)).toBeNull();
@@ -1188,8 +1172,7 @@ describe('Media plugin', () => {
         dropzoneContainer,
       );
 
-      const provider = await mediaProvider;
-      await provider.uploadMediaClientConfig;
+      await mediaProvider;
       // MediaPicker DropZone bind events inside a `whenDomReady`, so we have to wait for the next tick
       await sleep(0);
       expect(getWidgetDom(editorView)).toBeNull();

@@ -32,7 +32,7 @@ export const fakeMediaClient = (
     const mediaStore = new MediaStore({} as MediaApiConfig);
     mediaClient.file = fileFetcher;
     mediaClient.collection = collectionFetcher;
-    mediaClient.config = config;
+    mediaClient.mediaClientConfig = config;
     mediaClient.mediaStore = mediaStore;
 
     asMock(mediaClient.getImageUrl).mockResolvedValue('some-image-url');

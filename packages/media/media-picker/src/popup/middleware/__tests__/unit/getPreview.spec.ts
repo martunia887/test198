@@ -31,9 +31,9 @@ describe('getPreviewMiddleware', () => {
   const setup = () => {
     const store = mockStore();
     const { userMediaClient } = store.getState();
-    (userMediaClient.config.authProvider as jest.Mock<any>).mockReturnValue(
-      Promise.resolve(auth),
-    );
+    (userMediaClient.mediaClientConfig.authProvider as jest.Mock<
+      any
+    >).mockReturnValue(Promise.resolve(auth));
     (userMediaClient.file.getFileState as any) = jest.fn().mockReturnValue(
       Observable.of({
         status: 'processing',

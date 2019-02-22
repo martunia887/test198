@@ -95,7 +95,7 @@ describe('UploadService', () => {
       uploadService.on('files-added', () => resolve()),
     );
 
-    if (mediaClient.config.userAuthProvider) {
+    if (mediaClient.mediaClientConfig.userAuthProvider) {
       jest
         .spyOn((uploadService as any).userMediaStore, 'createFile')
         .mockResolvedValue({ data: { id: 'some-new-user-file-id' } });
@@ -542,7 +542,7 @@ describe('UploadService', () => {
       const sourceFileId = 'some-source-file-id';
       return {
         uploadService,
-        authProvider: mediaClient.config.authProvider,
+        authProvider: mediaClient.mediaClientConfig.authProvider,
         sourceFileId,
         sourceFileCollection: collectionNameStub,
       };

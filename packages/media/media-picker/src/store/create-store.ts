@@ -38,7 +38,7 @@ export default (
   userContext: MediaClient,
   config: Partial<PopupConfig>,
 ): Store<State> => {
-  const userAuthProvider = userContext.config.authProvider;
+  const userAuthProvider = userContext.mediaClientConfig.authProvider;
   const redirectUrl = appConfig.html.redirectUrl;
   const fetcher = new MediaApiFetcher();
   const wsProvider = new WsProvider();

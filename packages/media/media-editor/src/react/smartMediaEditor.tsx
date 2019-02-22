@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 import {
   UploadableFile,
   FileIdentifier,
-  withMediaClient,
   WithMediaClientProps,
 } from '@atlaskit/media-client';
 import { messages, Shortcut } from '@atlaskit/media-ui';
@@ -254,5 +253,3 @@ export class SmartMediaEditorWithIntl extends React.Component<
     );
   }
 }
-
-export default withMediaClient(SmartMediaEditorWithIntl);

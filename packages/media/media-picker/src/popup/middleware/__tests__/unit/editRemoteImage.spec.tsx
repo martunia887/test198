@@ -28,9 +28,9 @@ describe('editRemoteImage', () => {
     const { userMediaClient } = store.getState();
     const getImageUrl = jest.spyOn(userMediaClient, 'getImageUrl');
 
-    (userMediaClient.config.authProvider as jest.Mock<any>).mockReturnValue(
-      Promise.resolve(auth),
-    );
+    (userMediaClient.mediaClientConfig.authProvider as jest.Mock<
+      any
+    >).mockReturnValue(Promise.resolve(auth));
 
     return { store, getImageUrl };
   };

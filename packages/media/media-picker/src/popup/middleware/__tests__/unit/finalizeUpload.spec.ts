@@ -53,7 +53,9 @@ describe('finalizeUploadMiddleware', () => {
   const setup = (state: Partial<State> = {}) => {
     const store = mockStore(state);
     const { userMediaClient, tenantMediaClient } = store.getState();
-    asMock(userMediaClient.config.authProvider).mockResolvedValue(auth);
+    asMock(userMediaClient.mediaClientConfig.authProvider).mockResolvedValue(
+      auth,
+    );
 
     const fetcher = mockFetcher();
     asMock(tenantMediaClient.mediaStore.copyFileWithToken).mockResolvedValue({
@@ -208,7 +210,7 @@ describe('finalizeUploadMiddleware', () => {
         },
       ],
     );
-    expect(tenantMediaClient.config.authProvider).toBeCalledWith({
+    expect(tenantMediaClient.mediaClientConfig.authProvider).toBeCalledWith({
       collectionName: 'some-tenant-collection',
     });
   });
