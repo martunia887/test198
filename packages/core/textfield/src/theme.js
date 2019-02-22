@@ -123,7 +123,6 @@ const getContainerBorderColor = ({
   isInvalid,
   mode,
 }: ThemeProps) => {
-  console.log('HELo');
   if (isDisabled) {
     // switch on focus then switch on hover
     if (isFocused) {
