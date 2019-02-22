@@ -1,7 +1,22 @@
 import { colors, createTheme } from '@atlaskit/theme';
-import { hex2rgba } from './styled/utils';
-import { ThemeProps, ThemeTokens } from './types';
-import getButtonStyles from './styled/getButtonStyles';
+import { hex2rgba } from './components/utils';
+import {
+  ButtonThemeProps,
+  ThemeTokens,
+  ThemeMode,
+  ThemeFallbacks,
+} from './types';
+import {
+  getButtonStyles,
+  getSpinnerStyles,
+  getIconStyles,
+} from './components/getStyles';
+
+export const fallbacks: ThemeFallbacks = {
+  background: { light: colors.N20A, dark: colors.DN70 },
+  color: { light: colors.N400, dark: colors.DN400 },
+  textDecoration: { light: 'none', dark: 'none' },
+};
 
 export const baseTheme = {
   // Default appearance
@@ -180,15 +195,17 @@ export function applyPropertyStyle(
     appearance = 'default',
     state = 'default',
     mode = 'light',
-  }: { appearance: string; state: string; mode: string },
+  }: { appearance?: string; state?: string; mode?: ThemeMode },
   theme: any,
 ) {
   const propertyStyles = theme[property];
-  if (!propertyStyles) return;
+  if (!propertyStyles) return 'initial';
 
   // Check for relevant fallbacks.
   if (!propertyStyles[appearance]) {
-    if (!propertyStyles['default']) return;
+    if (!propertyStyles['default']) {
+      return fallbacks[property][mode] ? fallbacks[property][mode] : 'initial';
+    }
     appearance = 'default';
   }
 
@@ -203,6 +220,8 @@ export function applyPropertyStyle(
   return stateStyles[mode] || appearanceStyles.default[mode];
 }
 
-export const Theme = createTheme<ThemeTokens, ThemeProps>(themeProps => ({
-  button: getButtonStyles(themeProps),
+export const Theme = createTheme<ThemeTokens, ButtonThemeProps>(themeProps => ({
+  buttonStyles: getButtonStyles(themeProps),
+  spinnerStyles: getSpinnerStyles(),
+  iconStyles: getIconStyles(themeProps),
 }));

@@ -4,19 +4,29 @@ import Button from '../../src/components/Button';
 import { ButtonProps, ThemeProps } from '../../src/types';
 
 export default (nachosProps: ButtonProps) => (
-  <Button
-    theme={(
-      adgTheme: Function,
-      { appearance = 'default', state = 'default' }: ThemeProps,
-    ) => {
-      const { button: adgButton } = adgTheme({ appearance, state });
-      return {
-        button: {
-          ...adgButton,
-          ...getButtonStyles({ appearance, state, ...nachosProps }),
-        },
-      };
-    }}
-    {...nachosProps} // spacing,
-  />
+  <Button theme={NachosTheme} {...nachosProps} />
 );
+
+export const NachosTheme = (
+  adgTheme: Function,
+  { appearance = 'default', state = 'default', ...rest }: ThemeProps,
+) => {
+  const {
+    buttonStyles: adgButtonStyles,
+    spinnerStyles: adgSpinnerStyles,
+    iconStyles: adgIconStyles,
+  } = adgTheme({ appearance, state, ...rest });
+
+  return {
+    buttonStyles: {
+      ...adgButtonStyles,
+      ...getButtonStyles({ appearance, state, ...rest }),
+    },
+    spinnerStyles: {
+      ...adgSpinnerStyles,
+    },
+    iconStyles: {
+      ...adgIconStyles,
+    },
+  };
+};
