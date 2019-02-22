@@ -17,7 +17,7 @@
     "Phil P"
   ],
   "atlaskit": {
-    "internal": true
+    "internal": false
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {

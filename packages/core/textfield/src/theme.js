@@ -75,6 +75,7 @@ const getContainerBackgroundColor = ({
   isInvalid,
   mode,
 }: ThemeProps) => {
+  console.log('HIDEY HO');
   if (isDisabled) {
     // switch on focus then switch on hover
     if (isFocused) {
