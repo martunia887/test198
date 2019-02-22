@@ -95,8 +95,9 @@ const FIELD_META = {
     type: NumberFilter,
   },
   search: {
+    label: 'Search',
     type: SearchFilter,
-    defaultValue: 'Hello w',
+    defaultValue: 'Hello',
   },
   'issue-type': {
     type: IssueSelectFilter,
@@ -184,29 +185,29 @@ const dataMap = ([key, val]) => (
   </div>
 );
 
-const decodeQuery = () => {
-  const params = querystring.parse(window.location.search.replace('?', ''));
-  const decoded = objectMap(params, v => JSON.parse(v));
-
-  return decoded;
-};
-
-const EncodeQuery = ({ values }) => {
-  const params = objectMap(values, v => JSON.stringify(v));
-  const path = window.location.origin + window.location.pathname;
-  const qs = `?${querystring.stringify(params)}`;
-
-  window.history.replaceState({}, null, path + qs);
-
-  return null;
-};
+// const decodeQuery = () => {
+//   const params = querystring.parse(window.location.search.replace('?', ''));
+//   const decoded = objectMap(params, v => JSON.parse(v));
+//
+//   return decoded;
+// };
+//
+// const EncodeQuery = ({ values }) => {
+//   const params = objectMap(values, v => JSON.stringify(v));
+//   const path = window.location.origin + window.location.pathname;
+//   const qs = `?${querystring.stringify(params)}`;
+//
+//   window.history.replaceState({}, null, path + qs);
+//
+//   return null;
+// };
 
 // ==============================
 // APP EXAMPLE
 // ==============================
 
 class RefinementBarExample extends Component {
-  state = { values: decodeQuery() };
+  // state = { values: decodeQuery() };
   addValue = add => {
     const values = cloneObj(this.state.values, { add });
     this.setState({ values });
@@ -224,15 +225,15 @@ class RefinementBarExample extends Component {
     return (
       <RefinementBarConfig
         fields={FIELD_META}
-        addValue={this.addValue}
-        removeValue={this.removeValue}
-        updateValue={this.updateValue}
-        values={this.state.values}
+        // addValue={this.addValue}
+        // removeValue={this.removeValue}
+        // updateValue={this.updateValue}
+        // values={this.state.values}
       >
         <>
-          <RefinementBarConsumer>
+          {/* <RefinementBarConsumer>
             {values => <EncodeQuery values={values} />}
-          </RefinementBarConsumer>
+          </RefinementBarConsumer> */}
 
           <h1>Refinement Bar: Prototype</h1>
           <RefinementBar

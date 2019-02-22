@@ -39,7 +39,15 @@ const Group = ({ children }: *) => {
 // Maintain the value state in this class until it is "committed" to context
 // where it's broadcast to any subscribers.
 
-class ActualRefinementBar extends Component {
+type Props = {
+  initialAvailable: Array<string>,
+  initialSelected: Array<string>,
+  constant: Array<string>,
+  invalid: Object,
+  rbctx: Object,
+};
+
+class ActualRefinementBar extends Component<Props> {
   static defaultProps = {
     available: [],
     constant: [],
@@ -92,11 +100,14 @@ class ActualRefinementBar extends Component {
 
     const field = fields[key];
     const { message, isInvalid } = field.validateValue(value);
-    const invalid = isInvalid
-      ? cloneObj(oldInvalid, { add: { [key]: message } })
-      : oldInvalid[key]
-      ? cloneObj(oldInvalid, { remove: key })
-      : oldInvalid;
+
+    let invalid = oldInvalid;
+
+    if (isInvalid) {
+      invalid = cloneObj(oldInvalid, { add: { [key]: message } });
+    } else if (oldInvalid[key]) {
+      invalid = cloneObj(oldInvalid, { remove: key });
+    }
 
     this.setState({ invalid, values });
   };
@@ -115,8 +126,12 @@ class ActualRefinementBar extends Component {
     const Field = type.view;
     const currentValue =
       this.props.rbctx.state.values[key] || field.getInitialValue();
+    const value =
+      this.state.values[key] === undefined
+        ? field.getInitialValue()
+        : this.state.values[key];
 
-    const invalidMessage = this.state.invalid[key]; // message
+    const invalidMessage = this.state.invalid[key];
 
     return (
       <Field
@@ -124,11 +139,11 @@ class ActualRefinementBar extends Component {
         currentValue={currentValue}
         currentValues={this.props.rbctx.state.values}
         invalidMessage={invalidMessage}
-        field={field} // label, loadOptions
+        field={field}
         key={key}
         onChange={this.handleFieldChange(key)}
         onRemove={this.handleFieldRemove(key)}
-        value={this.state.values[key]}
+        value={value}
         {...listProps}
       />
     );
@@ -185,9 +200,9 @@ class ActualRefinementBar extends Component {
           hideSelectedOptions={false}
           target={({ ref, isOpen }) => (
             <Button
-              innerRef={ref}
               appearance="link"
               iconBefore={<AddIcon />}
+              innerRef={ref}
               isSelected={isOpen}
             >
               Add Filter

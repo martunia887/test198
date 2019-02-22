@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import FieldController from '../Controller';
 import { isObject, objectMap } from '../../utils';
@@ -38,7 +40,7 @@ export default class NumberController extends FieldController {
   getFilterLabel = () => {
     return this.label;
   };
-  formatFilter = ({ type, value }) => {
+  formatFilter = ({ type, value }: *) => {
     const typeLabel = this.getFilterTypes().find(f => f.type === type).label;
     const showValue = type !== 'is_not_set';
     const valueLabel = isObject(value)
@@ -96,8 +98,16 @@ export default class NumberController extends FieldController {
     if (isObject(value)) {
       // avoid invalidating the field before the second field has input
       if (value.lt && value.gt) {
+        if (value.lt <= value.gt) {
+          return {
+            message:
+              'Invalid range; the second input must be greater than the first.',
+            isInvalid: true,
+          };
+        }
+
         objectMap(value, (val, key) => {
-          let r = validateInput(this.label, val, nameMap[key]);
+          const r = validateInput(this.label, val, nameMap[key]);
           if (r.isInvalid) result = r;
           return null;
         });

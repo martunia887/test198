@@ -8,7 +8,10 @@ import { colors } from '@atlaskit/theme';
 import { FilterButton } from '../../components/FilterButton';
 
 // TODO: there's probably a better way to do this, but it's late, and i'm tired.
-export const CLEAR_VALUE = '__clear-selected';
+export const CLEAR_DATA = {
+  value: '__clear-selected',
+  label: 'Clear selected items',
+};
 
 const ClearOption = ({ children, innerProps, isFocused }: *) => (
   <div
@@ -37,24 +40,30 @@ const ClearOption = ({ children, innerProps, isFocused }: *) => (
 // and behave in a different way
 
 const Option = (props: *) =>
-  props.data.value === CLEAR_VALUE ? (
+  props.data === CLEAR_DATA ? (
     <ClearOption {...props} />
   ) : (
     <CheckboxOption {...props} />
   );
 
 const lcase = str => str.toLowerCase();
+const trim = str => str.replace(/^\s+|\s+$/g, '');
+const stringify = option => `${option.label} ${option.value}`;
 
 // NOTE: determine which options should be visible to the user
 // - reimplements react-select's input matching
 // - checks (and hides) if the option already exists "above the fold"
-const filterOptions = currentValue => ({ data, value }, input) => {
-  const match = lcase(data.value).includes(lcase(input));
+const filterOptions = currentValue => (option, rawInput) => {
+  const { data, value } = option;
   const notCurrentlySelected =
     !currentValue || !currentValue.some(o => o.value === value);
 
-  if (input) {
-    return match && !data.aboveTheFold;
+  if (rawInput) {
+    const input = lcase(trim(rawInput));
+    const candidate = lcase(trim(stringify(option)));
+    const isMatch = candidate.includes(input);
+
+    return isMatch && !data.aboveTheFold;
   }
 
   return notCurrentlySelected || data.aboveTheFold;
@@ -68,7 +77,7 @@ const getOptions = (current, resolved) => {
 
   return current
     .map(o => ({ ...o, aboveTheFold: true }))
-    .concat([{ value: CLEAR_VALUE, label: 'Clear selected items' }])
+    .concat([CLEAR_DATA])
     .concat(resolved);
 };
 
@@ -78,6 +87,7 @@ const SelectView = ({
   applyChanges,
   field,
   isRemovable,
+  onChange,
   onRemove,
   ...props
 }: *) => {
@@ -87,6 +97,8 @@ const SelectView = ({
   if (!field.label) {
     throw new Error('Select type requires a label.');
   }
+
+  let closeMenuOnSelect = false;
 
   // NOTE: supports options array to be the result of a function.
   // - pass the "current values" to the function
@@ -98,15 +110,26 @@ const SelectView = ({
   // build this monstrosity of options
   const augmentedOptions = getOptions(currentValue, resolvedOptions);
 
+  // support clearing
+  const onChangeWithClearHandler = value => {
+    if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {
+      onChange([]);
+      closeMenuOnSelect = true;
+    } else {
+      onChange(value);
+    }
+  };
+
   return (
     <PopupSelect
       components={{ IndicatorSeparator: null, Option }}
       isMulti
       onMenuClose={applyChanges}
-      closeMenuOnSelect={false}
+      closeMenuOnSelect={closeMenuOnSelect}
       hideSelectedOptions={false}
       filterOption={filterOptions(currentValue)}
       options={augmentedOptions}
+      onChange={onChangeWithClearHandler}
       target={({ ref, isOpen }) => (
         <FilterButton
           ref={ref}

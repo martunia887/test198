@@ -16,7 +16,7 @@ const makeValue = value => {
   return parseFloat(value, 10);
 };
 
-const Row = ({ children, ...props }) => (
+const Row = ({ children, ...props }: *) => (
   <div {...props} style={{ display: 'flex', marginLeft: -4, marginRight: -4 }}>
     {React.Children.map(children, c => (
       <div style={{ marginLeft: 4, marginRight: 4 }}>{c}</div>
@@ -24,7 +24,17 @@ const Row = ({ children, ...props }) => (
   </div>
 );
 
-class NumberView extends React.Component {
+type Props = {
+  applyChanges: () => void,
+  currentValue: Object,
+  field: Object,
+  invalidMessage: Object,
+  isRemovable: boolean,
+  onChange: () => void,
+  onRemove: () => void,
+};
+
+class NumberView extends React.Component<Props> {
   state = { ...this.props.currentValue, gt: '', lt: '' };
   dropdownRef = React.createRef();
   get isBetween() {

@@ -5,9 +5,9 @@ import { jsx } from '@emotion/core';
 import { CheckboxOption, PopupSelect, makeAsyncSelect } from '@atlaskit/select';
 import Spinner from '@atlaskit/spinner';
 import { colors, gridSize } from '@atlaskit/theme';
-import SearchIcon from '@atlaskit/icon/glyph/search';
 
 import { FilterButton } from '../../components/FilterButton';
+import noResultsIcon from '../../assets/no-results-icon.png';
 
 const AsyncPopupSelect = makeAsyncSelect(PopupSelect);
 
@@ -61,13 +61,13 @@ const AsyncSelectView = ({
 
 // Styled Components
 
-const Box = props => (
+const Box = ({ height = 140, ...props }: *) => (
   <div
     css={{
       alignItems: 'center',
       display: 'flex',
       flexDirection: 'column',
-      height: 140,
+      height,
       justifyContent: 'center',
     }}
     {...props}
@@ -79,20 +79,27 @@ const Text = props => (
       fontWeight: 500,
       fontSize: '0.85rem',
       color: colors.N100,
-      marginTop: gridSize(),
+      marginTop: gridSize() * 2,
     }}
     {...props}
   />
 );
 const NoMatch = () => (
   <Box>
-    <SearchIcon size="xlarge" primaryColor={colors.N50} />
+    <img
+      alt="magnifying glass with question marks"
+      height="75"
+      src={noResultsIcon}
+      width="82"
+    />
     <Text>No matches found</Text>
   </Box>
 );
 const Loading = () => (
   <Box>
-    <Spinner size="large" />
+    <Box height={75}>
+      <Spinner size="large" />
+    </Box>
     <Text>Loading...</Text>
   </Box>
 );
