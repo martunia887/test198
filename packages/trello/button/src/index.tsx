@@ -1,7 +1,14 @@
-import AkButton, { ButtonProps } from '../../../core/button/index';
-import theme from './theme';
+import AkButton, { ButtonProps } from '@atlaskit/button';
+import nachosTheme from './theme';
 import * as React from 'react';
+export { ButtonGroup } from '@atlaskit/button';
 
-export { ButtonGroup, ButtonTheme } from '@atlaskit/button';
+export default (buttonProps: ButtonProps) => {
+  let theme = nachosTheme;
+  if (buttonProps.theme) {
+    theme = (adgTheme, themeProps) =>
+      buttonProps.theme(x => nachosTheme(adgTheme, x), themeProps);
+  }
 
-export default (props: ButtonProps) => <AkButton {...props} theme={theme} />;
+  return <AkButton {...buttonProps} theme={theme} />;
+};
