@@ -32,6 +32,7 @@ BrowserTestCase(
     await page.type(editable, 'hello');
     await alignRight(page);
     expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -53,6 +54,7 @@ BrowserTestCase(
     await page.click(headingh1);
     await alignRight(page);
     expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -71,6 +73,7 @@ BrowserTestCase(
     await page.waitFor(alignButton);
     const isEnabled = await page.isEnabled(alignButton);
     expect(isEnabled).toBe(false);
+    await page.checkConsoleErrors();
   },
 );
 
@@ -86,6 +89,7 @@ BrowserTestCase(
     });
     const isEnabled = await page.isEnabled(alignButton);
     expect(isEnabled).toBe(false);
+    await page.checkConsoleErrors();
   },
 );
 // TODO:https://product-fabric.atlassian.net/browse/ED-6288

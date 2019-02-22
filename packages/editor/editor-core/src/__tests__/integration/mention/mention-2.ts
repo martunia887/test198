@@ -32,6 +32,7 @@ BrowserTestCase(
     await page.type(editable, '@');
     await page.waitForSelector(typeAheadPicker);
     expect(await page.isExisting(typeAheadPicker)).toBe(true);
+    await page.checkConsoleErrors();
   },
 );
 
@@ -46,6 +47,7 @@ BrowserTestCase(
 
     await page.type(editable, 'test@');
     expect(await page.isExisting(typeAheadPicker)).toBe(false);
+    await page.checkConsoleErrors();
   },
 );
 
@@ -65,6 +67,7 @@ BrowserTestCase(
     await page.waitForSelector(lozenge);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -79,6 +82,7 @@ BrowserTestCase(
 
     await page.type(editable, '@ Carolyn');
     expect(await page.isExisting(typeAheadPicker)).toBe(false);
+    await page.checkConsoleErrors();
   },
 );
 
@@ -95,6 +99,7 @@ BrowserTestCase(
     await page.waitForSelector('span=@Summer');
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -111,5 +116,6 @@ BrowserTestCase(
     await page.waitForSelector(typeAheadPicker);
     await page.type(editable, 'Escape');
     expect(await page.isExisting(typeAheadPicker)).toBe(false);
+    await page.checkConsoleErrors();
   },
 );

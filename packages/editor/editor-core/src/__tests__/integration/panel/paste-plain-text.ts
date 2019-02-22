@@ -40,5 +40,6 @@ BrowserTestCase(
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );

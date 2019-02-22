@@ -18,6 +18,7 @@ BrowserTestCase(
     await page.waitForSelector('a');
     const doc = await page.$eval(editorSelector, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -35,6 +36,7 @@ BrowserTestCase(
     await page.waitForSelector('strong');
     const doc = await page.$eval(editorSelector, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -51,5 +53,6 @@ BrowserTestCase(
     await page.waitForSelector('span.code');
     const doc = await page.$eval(editorSelector, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );

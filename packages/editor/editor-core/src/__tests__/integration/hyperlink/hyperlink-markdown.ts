@@ -20,6 +20,7 @@ import { getDocFromElement, comment, fullpage, editable } from '../_helpers';
 
       const doc = await browser.$eval(editable, getDocFromElement);
       expect(doc).toMatchDocSnapshot();
+      await browser.checkConsoleErrors();
     },
   );
 });

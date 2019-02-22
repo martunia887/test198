@@ -49,5 +49,6 @@ BrowserTestCase(
     expect(doc).toMatchDocSnapshot();
     expect(await page.isExisting(tableControls)).toBe(false);
     expect(await page.isVisible(tableControls)).toBe(false);
+    await page.checkConsoleErrors();
   },
 );

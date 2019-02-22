@@ -44,7 +44,7 @@ import {
       await page.click('.image [aria-label="delete"]');
 
       expect(await page.count('.wrapper .image')).toBe(0);
-
+      await page.checkConsoleErrors();
       // TODO: check ADF
     },
   );

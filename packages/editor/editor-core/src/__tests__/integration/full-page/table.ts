@@ -32,5 +32,6 @@ BrowserTestCase(
     await browser.type(editorSelector, arrowUpArr);
     expect(await browser.isExisting(tableControls)).toBe(true);
     expect(await browser.isVisible(tableControls)).toBe(true);
+    await browser.checkConsoleErrors();
   },
 );

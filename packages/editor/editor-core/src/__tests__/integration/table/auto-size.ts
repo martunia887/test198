@@ -44,6 +44,7 @@ BrowserTestCase(
     const page = await goToEditorTestingExample(client);
     const doc = await loadAndRetrieveDocument(page, autoSizeToDefaultLayout);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -58,6 +59,7 @@ BrowserTestCase(
       'wide',
     );
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -72,5 +74,6 @@ BrowserTestCase(
       'full-width',
     );
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );

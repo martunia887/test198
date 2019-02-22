@@ -36,6 +36,7 @@ BrowserTestCase(
     await browser.paste(editable);
     const doc = await browser.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await browser.checkConsoleErrors();
   },
 );
 
@@ -58,6 +59,7 @@ BrowserTestCase(
     await browser.paste(editable);
     const doc = await browser.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await browser.checkConsoleErrors();
   },
 );
 
@@ -75,5 +77,6 @@ BrowserTestCase(
     await browser.type(editable, 'adding decisions');
     const doc = await browser.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await browser.checkConsoleErrors();
   },
 );

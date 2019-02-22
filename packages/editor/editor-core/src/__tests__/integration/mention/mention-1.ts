@@ -37,6 +37,7 @@ BrowserTestCase(
     await page.waitForSelector(lozenge);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -57,6 +58,7 @@ BrowserTestCase(
     await page.waitForSelector(lozenge);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -77,6 +79,7 @@ BrowserTestCase(
     await page.waitForSelector(lozenge);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -94,6 +97,7 @@ BrowserTestCase(
     await page.waitForSelector(lozenge);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -111,6 +115,7 @@ BrowserTestCase(
     await page.waitForSelector(lozenge);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -129,5 +134,6 @@ BrowserTestCase(
     await page.type(editable, 'Enter');
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );

@@ -15,6 +15,7 @@ BrowserTestCase(
     await browser.waitForSelector(fullpage.placeholder);
 
     expect(await browser.hasFocus(titleSelector)).toBe(true);
+    await browser.checkConsoleErrors();
   },
 );
 
@@ -28,6 +29,7 @@ BrowserTestCase(
     await browser.click(fullpage.placeholder);
 
     expect(await browser.hasFocus(fullpage.placeholder)).toBe(true);
+    await browser.checkConsoleErrors();
   },
 );
 
@@ -41,5 +43,6 @@ BrowserTestCase(
     await browser.type(titleSelector, 'Tab');
 
     expect(await browser.hasFocus(fullpage.placeholder)).toBe(true);
+    await browser.checkConsoleErrors();
   },
 );

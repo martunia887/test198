@@ -32,6 +32,7 @@ const clear = `span=${messages.clearFormatting.defaultMessage}`;
       await page.type(editable, 'cleared');
       const doc = await page.$eval(editable, getDocFromElement);
       expect(doc).toMatchDocSnapshot();
+      await page.checkConsoleErrors();
     },
   );
 });

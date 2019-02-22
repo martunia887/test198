@@ -25,6 +25,7 @@ BrowserTestCase(
     expect(await page.isExisting(calendar)).toBe(true);
     await page.click(editorSelector);
     expect(await page.isExisting(calendar)).toBe(false);
+    await page.checkConsoleErrors();
   },
 );
 
@@ -45,6 +46,7 @@ BrowserTestCase(
     // wait for element to disappear
     await page.waitFor(calendar, '5000', true);
     expect(await page.isExisting(calendar)).toBe(false);
+    await page.checkConsoleErrors();
   },
 );
 
@@ -67,5 +69,6 @@ BrowserTestCase(
     await page.waitForSelector(dateView);
     await page.click(dateView);
     expect(await page.isExisting(calendar)).toBe(true);
+    await page.checkConsoleErrors();
   },
 );

@@ -59,6 +59,7 @@ const input = 'helloworld ';
       await page.type(editable, input);
       const doc = await page.$eval(editable, getDocFromElement);
       expect(doc).toMatchDocSnapshot();
+      await page.checkConsoleErrors();
     },
   );
 });

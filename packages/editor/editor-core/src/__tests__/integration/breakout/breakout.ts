@@ -36,6 +36,7 @@ BrowserTestCase(
     await page.waitForSelector(wideBreakoutButtonQuery);
     await page.click(wideBreakoutButtonQuery);
     expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -57,6 +58,7 @@ BrowserTestCase(
     await page.waitForSelector(fullWidthBreakoutButtonQuery);
     await page.click(fullWidthBreakoutButtonQuery);
     expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -81,6 +83,7 @@ BrowserTestCase(
     // Disable breakout
     await page.click(centerBreakoutButtonQuery);
     expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -105,5 +108,6 @@ BrowserTestCase(
     await page.type(editable, 'a');
     await page.type(editable, 'Backspace');
     expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );

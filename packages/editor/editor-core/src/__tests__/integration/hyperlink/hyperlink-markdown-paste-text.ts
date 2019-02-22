@@ -36,6 +36,7 @@ import {
 
       const doc = await sample.$eval(editable, getDocFromElement);
       expect(doc).toMatchDocSnapshot();
+      await sample.checkConsoleErrors();
     },
   );
 });

@@ -22,5 +22,6 @@ BrowserTestCase(
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
     expect(await page.isExisting(PM_FOCUS_SELECTOR)).toBeTruthy();
+    await page.checkConsoleErrors();
   },
 );

@@ -38,6 +38,7 @@ BrowserTestCase(
     await browser.paste(editable);
     const doc = await browser.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await browser.checkConsoleErrors();
   },
 );
 
@@ -60,6 +61,7 @@ BrowserTestCase(
     await browser.paste(editable);
     const doc = await browser.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await browser.checkConsoleErrors();
   },
 );
 
@@ -77,6 +79,7 @@ BrowserTestCase(
     await browser.type(editable, 'adding action');
     const doc = await browser.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await browser.checkConsoleErrors();
   },
 );
 
@@ -92,5 +95,6 @@ BrowserTestCase(
     await insertMentionUsingClick(browser, '0');
     const doc = await browser.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await browser.checkConsoleErrors();
   },
 );

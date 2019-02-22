@@ -47,6 +47,7 @@ const linkText2 = 'FAB-983';
 
       const doc = await browser.$eval(editable, getDocFromElement);
       expect(doc).toMatchDocSnapshot();
+      await browser.checkConsoleErrors();
     },
   );
 });

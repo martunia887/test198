@@ -34,6 +34,7 @@ import commonMessages from '../../../messages';
 
       const doc = await page.$eval(editable, getDocFromElement);
       expect(doc).toMatchDocSnapshot();
+      await page.checkConsoleErrors();
     },
   );
 });

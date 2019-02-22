@@ -27,6 +27,7 @@ const input = 'helloworld';
       for (let i = 1; i <= 6; i++) {
         await validateFormat(page, i);
       }
+      await page.checkConsoleErrors();
     },
   );
 });

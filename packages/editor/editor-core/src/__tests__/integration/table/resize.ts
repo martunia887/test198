@@ -35,6 +35,7 @@ BrowserTestCase(
 
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -56,6 +57,7 @@ BrowserTestCase(
 
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -77,5 +79,6 @@ BrowserTestCase(
 
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );

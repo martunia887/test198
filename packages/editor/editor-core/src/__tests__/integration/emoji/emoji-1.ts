@@ -22,6 +22,7 @@ BrowserTestCase(
     await page.waitForSelector(emojiItem('grinning'), 1000);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -39,6 +40,7 @@ BrowserTestCase(
     await page.waitForSelector(emojiItem('slight_smile'), 1000);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -54,6 +56,7 @@ BrowserTestCase(
     await page.type(editable, '`');
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -75,6 +78,7 @@ BrowserTestCase(
 
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -116,5 +120,6 @@ BrowserTestCase(
     await page.type(editable, ' that ');
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );

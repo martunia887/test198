@@ -30,5 +30,6 @@ BrowserTestCase(
     await insertMentionUsingClick(page, '0');
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );

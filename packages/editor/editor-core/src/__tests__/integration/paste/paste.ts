@@ -26,6 +26,7 @@ BrowserTestCase(
     const doc = await page.$eval(editorSelector, getDocFromElement);
 
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -47,6 +48,7 @@ BrowserTestCase(
     await page.waitForSelector('strong');
     const doc = await page.$eval(editorSelector, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -70,6 +72,7 @@ BrowserTestCase(
     await page.waitForSelector('ul');
     const doc = await page.$eval(editorSelector, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
 
@@ -93,5 +96,6 @@ BrowserTestCase(
     await page.waitForSelector('p');
     const doc = await page.$eval(editorSelector, getDocFromElement);
     expect(doc).toMatchDocSnapshot();
+    await page.checkConsoleErrors();
   },
 );
