@@ -6,8 +6,8 @@ export default md`
 
   ## Usage
 
-  ${code`import { MediaImage } from '@atlaskit/media-image';
-
+  ${code`import { MediaClient } from '@atlaskit/media-client';
+const mediaClient = new MediaClient({ authProvider });
   `}
 
   ${(
