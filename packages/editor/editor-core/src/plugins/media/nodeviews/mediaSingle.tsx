@@ -251,7 +251,6 @@ class MediaSingleNodeView extends ReactNodeView {
               render={({ width, reactNodeViewState }) => {
                 const viewMediaClientConfig =
                   mediaPluginState.mediaClientConfig;
-                console.log({ viewMediaClientConfig });
                 return (
                   <MediaClientConfigContext.Provider
                     value={viewMediaClientConfig}

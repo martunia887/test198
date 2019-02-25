@@ -146,7 +146,6 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
       if (!onRetry) {
         return <ErrorIcon />;
       }
-      console.log(this.context.intl);
       return (
         <ErrorWrapper>
           <ErrorIcon />

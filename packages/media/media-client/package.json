@@ -21,8 +21,9 @@
     "@types/query-string": "^4.3.1",
     "chunkinator": "^2.0.4",
     "dataloader": "^1.4.0",
-    "query-string": "^4.3.2",
+    "deep-equal": "^1.0.1",
     "lru-fast": "^0.2.2",
+    "query-string": "^4.3.2",
     "rusha": "^0.8.13",
     "uuid": "^3.1.0",
     "uuid-validate": "^0.0.3"
@@ -36,7 +37,6 @@
     "@atlaskit/media-test-helpers": "^20.1.5",
     "@types/fetch-mock": "^6.0.3",
     "fetch-mock": "^6.5.2",
-    "react": "^16.4.0",
     "react-dom": "^16.4.2",
     "rxjs": "^5.5.0",
     "whatwg-fetch": "^2.0.3"
@@ -44,6 +44,7 @@
   "peerDependencies": {
     "@atlaskit/media-core": "^27.0.1",
     "styled-components": "^3.2.6",
+    "react": "^16.4.0",
     "rxjs": "^5.5.0"
   },
   "resolutions": {

@@ -7,7 +7,6 @@ export class MediaClient {
   public readonly file: FileFetcher;
 
   constructor(readonly config: MediaClientConfig) {
-    console.log('I AM BEING USED');
     this.collection = new CollectionFetcher({} as any);
     this.file = new FileFetcher({} as any);
   }

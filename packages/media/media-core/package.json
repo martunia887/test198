@@ -18,7 +18,6 @@
   ],
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
-    "deep-equal": "^1.0.1",
     "lru-fast": "^0.2.2",
     "tslib": "^1.8.0"
   },
