@@ -82,9 +82,4 @@ describe('<Filmstrip />', () => {
       }),
     );
   });
-
-  it('should render loading cards if context is missing', () => {
-    const { component } = setup();
-    expect(component.find('CardView[status="loading"]')).toHaveLength(2);
-  });
 });
