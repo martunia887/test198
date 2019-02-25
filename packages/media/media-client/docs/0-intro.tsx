@@ -14,7 +14,7 @@ export default md`
     <Example
       Component={require('../examples/0-media-client').default}
       title="Media Client"
-      source={require('!!raw-loader!../examples/0-media-client')}
+      source={require('!!raw-loader!../examples/2-upload-file')}
     />
   )}
 `;
