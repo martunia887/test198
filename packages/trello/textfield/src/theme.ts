@@ -30,6 +30,7 @@ const textField = {
     default: 'initial',
     disabled: 'not-allowed',
   },
+  placeholderTextColor: colors.N200,
 };
 
 const getBackgroundColor = (
@@ -38,6 +39,7 @@ const getBackgroundColor = (
 ) => {
   if (isDisabled) return backgroundColor.disabled;
   if (isFocused) return backgroundColor[appearance].focus;
+  if (isInvalid) return;
   if (!backgroundColor[appearance]) {
     return backgroundColor.standard['default'];
   }
@@ -50,6 +52,7 @@ const getBorderColor = (
 ) => {
   if (isDisabled) return borderColor.disabled;
   if (isFocused) return borderColor[appearance].focus;
+  if (isInvalid) return;
   if (!borderColor[appearance]) {
     return borderColor.standard['default'];
   }
@@ -75,16 +78,23 @@ const getCursor = (cursor, { isDisabled }) => {
   return cursor.default;
 };
 
-const getTextFieldStyles = (props: typeof ThemeProps) => {
-  // return original ADG styles (any way to do this at property level?)
-  if (props.isInvalid) return {};
+const getTextFieldStyles = (adgContainerStyles, props: typeof ThemeProps) => {
   return {
-    borderColor: getBorderColor(textField.borderColor, props),
-    backgroundColor: getBackgroundColor(textField.backgroundColor, props),
-    color: getColor(textField.color, props),
+    // the "OR" statement kicks in if the `get` function doesn't return a truthy value
+    // this is for the situation where you don't want to change the value
+    // of the default theme provided
+
+    borderColor:
+      getBorderColor(textField.borderColor, props) ||
+      adgContainerStyles.borderColor,
+    backgroundColor:
+      getBackgroundColor(textField.backgroundColor, props) ||
+      adgContainerStyles.backgroundColor,
+    color: getColor(textField.color, props) || adgContainerStyles.color,
     cursor: getCursor(textField.cursor, props),
     lineHeight: textField.lineHeight,
     padding: textField.padding,
+    placeholderTextColor: textField.placeholderTextColor,
   };
 };
 
@@ -101,7 +111,7 @@ const theme = (
   return {
     container: {
       ...adgContainerStyles,
-      ...getTextFieldStyles({ appearance, state, ...rest }),
+      ...getTextFieldStyles(adgContainerStyles, { appearance, state, ...rest }),
     },
     input: {
       ...adgInputStyles,
