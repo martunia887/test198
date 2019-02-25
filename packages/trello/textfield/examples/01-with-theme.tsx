@@ -1,9 +1,9 @@
 import * as React from 'react';
-import NachosTextField, { NTextFieldProps } from '../src';
-import { nachosColors as colors } from '../src';
+import TextField, { TextFieldProps } from '../src';
+import { colors } from '../src/colors';
 
 export default function() {
-  const skyBlueTheme = props => {
+  const skyBlueTheme = (props: TextFieldProps) => {
     let backgroundColor = colors['sky-500'];
     let borderColor = colors['sky-400'];
 
@@ -23,14 +23,14 @@ export default function() {
   return (
     <div>
       <label htmlFor="default-value">Default Value</label>
-      <NachosTextField
-        theme={(props: NTextFieldProps) => skyBlueTheme(props)}
+      <TextField
+        theme={(props: TextFieldProps) => skyBlueTheme(props)}
         name="default-value"
         defaultValue="Tacos are yummy!"
       />
       <label htmlFor="default-value">Invalid</label>
-      <NachosTextField
-        theme={(props: NTextFieldProps) => skyBlueTheme(props)}
+      <TextField
+        theme={(props: TextFieldProps) => skyBlueTheme(props)}
         name="default-value"
         defaultValue="Tacos are disgusting!"
         isInvalid

@@ -117,7 +117,7 @@ const getColor = (color, { appearance, state, isDisabled }) => {
   return color[appearance];
 };
 
-const getButtonStyles = (props: ThemeProps) => ({
+const getButtonStyles = (props: typeof ThemeProps) => ({
   border: button.border,
   background: getBackground(button.background, props),
   boxShadow: getBoxShadow(button.boxShadow, props),
@@ -129,7 +129,7 @@ const getButtonStyles = (props: ThemeProps) => ({
 
 const theme = (
   adgTheme: Function,
-  { appearance = 'default', state = 'default', ...rest }: ThemeProps,
+  { appearance = 'default', state = 'default', ...rest }: typeof ThemeProps,
 ) => {
   const {
     buttonStyles: adgButtonStyles,

@@ -3,7 +3,7 @@ import nachosTheme from './theme';
 import * as React from 'react';
 export { ButtonGroup } from '@atlaskit/button';
 
-export default (buttonProps: ButtonProps) => {
+export default (buttonProps: typeof ButtonProps) => {
   let theme = nachosTheme;
   if (buttonProps.theme) {
     theme = (adgTheme, themeProps) =>
