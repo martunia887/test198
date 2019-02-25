@@ -1,9 +1,11 @@
-import { FileState, MediaClient } from '@atlaskit/media-client';
+jest.mock('@atlaskit/media-client');
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
 import 'whatwg-fetch';
 import * as fetchMock from 'fetch-mock/src/client';
 import * as sinon from 'sinon';
 import { waitUntil } from '@atlaskit/util-common-test';
+import { FileState, MediaClient } from '@atlaskit/media-client';
+import { fakeMediaClient, asMock } from '@atlaskit/media-test-helpers';
 
 import SiteEmojiResource, {
   EmojiProgress,
@@ -83,26 +85,29 @@ describe('SiteEmojiResource', () => {
       ],
     };
 
-    const setup = () => {
-      const uploadFile = jest.fn().mockReturnValue(
-        new Observable(observer => {
-          window.setTimeout(() => {
-            // We need it due rxjs sync unsubscription
-            observer.next({
-              id: '123',
-              name: 'some-name',
-              size: 1,
-              status: 'processing',
-            });
-          });
-        }),
-      );
-
-      (MediaClient as jest.Mock<any>).mockReturnValue({
-        file: { upload: uploadFile },
+    const defaultUploadResponse = new Observable<FileState>(observer => {
+      window.setTimeout(() => {
+        // We need it due rxjs sync unsubscription
+        observer.next({
+          id: '123',
+          name: 'some-name',
+          size: 1,
+          status: 'processing',
+          mediaType: 'image',
+          mimeType: 'image/png',
+        });
       });
+    });
 
-      return { uploadFile };
+    const setup = (
+      uploadResponse: Observable<FileState> = defaultUploadResponse,
+    ) => {
+      const mediaClient = fakeMediaClient();
+      asMock(MediaClient).mockImplementation(() => mediaClient);
+
+      asMock(mediaClient.file.upload).mockReturnValue(uploadResponse);
+
+      return { uploadFile: mediaClient.file.upload };
     };
 
     it('successful upload', () => {
@@ -255,19 +260,18 @@ describe('SiteEmojiResource', () => {
     });
 
     it('media progress events', () => {
-      const uploadFile = jest.fn().mockReturnValue(
-        new Observable<FileState>(observer => {
-          observer.next({
-            id: '123',
-            name: 'some-name',
-            size: 1,
-            status: 'uploading',
-            progress: 0.5,
-            mediaType: 'image',
-            mimeType: 'image/png',
-          });
-        }),
-      );
+      const uploadResponse = new Observable<FileState>(observer => {
+        observer.next({
+          id: '123',
+          name: 'some-name',
+          size: 1,
+          status: 'uploading',
+          progress: 0.5,
+          mediaType: 'image',
+          mimeType: 'image/png',
+        });
+      });
+      const { uploadFile } = setup(uploadResponse);
 
       (MediaClient as jest.Mock<any>).mockReturnValue({
         file: { upload: uploadFile },
