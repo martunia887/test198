@@ -64,63 +64,34 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
       init: () => ({
         isNew: false,
         selectionChanges: new SelectionChange(),
-        showStatusPickerAt: null,
         selectedStatus: null,
       }),
-      apply(tr, state: StatusState, editorState) {
+      apply(tr, state: StatusState) {
         const meta = tr.getMeta(pluginKey);
-        const nodeAtSelection = tr.doc.nodeAt(tr.selection.from);
+        const statusNodeAtSelection = mayGetStatusNodeAt(tr.selection);
+        let newState = state;
 
-        if (
-          state.showStatusPickerAt &&
-          (!nodeAtSelection ||
-            nodeAtSelection.type !== editorState.schema.nodes.status ||
-            // note: Status node has to==from+1 so from==to is positioned just before the Status node and StatusPicker should be dismissed
-            tr.selection.from === tr.selection.to)
-        ) {
-          let newState = {
-            ...state,
-            showStatusPickerAt: null,
-            selectedStatus: null,
-          };
-          dispatch(pluginKey, newState);
-          return newState;
+        if (!statusNodeAtSelection) {
+          if (state.selectedStatus) {
+            newState = {
+              ...state,
+              selectedStatus: null,
+            };
+          }
+        } else {
+          if (state.selectedStatus !== statusNodeAtSelection) {
+            newState = { ...state, selectedStatus: statusNodeAtSelection };
+          }
         }
 
         if (meta) {
-          let selectedStatus: StatusType | null = null;
-          if (
-            meta.showStatusPickerAt &&
-            meta.showStatusPickerAt !== state.showStatusPickerAt
-          ) {
-            const statusNode = tr.doc.nodeAt(meta.showStatusPickerAt);
-            if (statusNode) {
-              selectedStatus = statusNode.attrs as StatusType;
-            }
-          }
-          let newState = { ...state, ...meta, selectedStatus };
+          newState = { ...newState, ...meta };
+        }
 
+        if (newState !== state) {
           dispatch(pluginKey, newState);
-          return newState;
         }
-
-        if (tr.docChanged && state.showStatusPickerAt) {
-          const { pos, deleted } = tr.mapping.mapResult(
-            state.showStatusPickerAt,
-          );
-
-          const newState = {
-            showStatusPickerAt: deleted ? null : pos,
-            selectedStatus: null,
-          };
-
-          if (newState.showStatusPickerAt !== state.showStatusPickerAt) {
-            dispatch(pluginKey, newState);
-
-            return newState;
-          }
-        }
-        return state;
+        return newState;
       },
     },
     appendTransaction: (

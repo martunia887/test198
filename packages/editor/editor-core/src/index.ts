@@ -61,16 +61,9 @@ export { insertBlockType, setBlockType } from './plugins/block-type/commands';
 export { createTable } from './plugins/table/actions';
 export { insertTaskDecision } from './plugins/tasks-and-decisions/commands';
 export { EventDispatcher } from './event-dispatcher';
-export {
-  pluginKey as statusPluginKey,
-  StatusState,
-  StatusType,
-} from './plugins/status/plugin';
-export {
-  commitStatusPicker,
-  setStatusPickerAt,
-  updateStatus,
-} from './plugins/status/actions';
+export { pluginKey as statusPluginKey } from './plugins/status/plugin';
+export { StatusType, StatusState } from './plugins/status/types';
+export { commitStatusPicker, updateStatus } from './plugins/status/actions';
 export { typeAheadPluginKey, TypeAheadPluginState } from './plugins/type-ahead';
 export { TypeAheadItem } from './plugins/type-ahead/types';
 export { selectItem } from './plugins/type-ahead/commands/select-item';

@@ -14,7 +14,7 @@ export const DEFAULT_STATUS: StatusType = {
   color: 'neutral',
 };
 
-export const createStatus = (showStatusPickerAtOffset = -2) => (
+export const createStatus = (offset = -2) => (
   insert: (node: Node | Object | string) => Transaction,
   state: EditorState,
 ): Transaction => {
@@ -24,16 +24,13 @@ export const createStatus = (showStatusPickerAtOffset = -2) => (
   });
 
   const selectedStatus = statusNode.attrs;
-
   const tr = insert(statusNode);
-  const showStatusPickerAt = tr.selection.from + showStatusPickerAtOffset;
-  return tr
-    .setSelection(NodeSelection.create(tr.doc, showStatusPickerAt))
-    .setMeta(pluginKey, {
-      showStatusPickerAt,
-      isNew: true,
-      selectedStatus,
-    });
+  const pos = tr.selection.from + offset;
+
+  return tr.setSelection(NodeSelection.create(tr.doc, pos)).setMeta(pluginKey, {
+    isNew: true,
+    selectedStatus,
+  });
 };
 
 export const updateStatus = (status?: StatusType) => (
@@ -56,9 +53,8 @@ export const updateStatus = (status?: StatusType) => (
   };
 
   let tr = state.tr;
-  const { showStatusPickerAt } = pluginKey.getState(state);
-
-  if (!showStatusPickerAt) {
+  const pluginState = pluginKey.getState(state);
+  if (!pluginState.selectedStatus) {
     // Same behaviour as quick insert (used in createStatus)
     const statusNode = schema.nodes.status.createChecked(statusProps);
     const fragment = Fragment.fromArray([statusNode, state.schema.text(' ')]);
@@ -68,7 +64,6 @@ export const updateStatus = (status?: StatusType) => (
     tr = tr.setSelection(NodeSelection.create(tr.doc, newShowStatusPickerAt));
     tr = tr
       .setMeta(pluginKey, {
-        showStatusPickerAt: newShowStatusPickerAt,
         selectedStatus,
         isNew: true,
       })
@@ -77,12 +72,11 @@ export const updateStatus = (status?: StatusType) => (
     return true;
   }
 
-  if (state.doc.nodeAt(showStatusPickerAt)) {
-    tr = tr.setNodeMarkup(showStatusPickerAt, schema.nodes.status, statusProps);
-    tr = tr.setSelection(NodeSelection.create(tr.doc, showStatusPickerAt));
-    tr = tr
-      .setMeta(pluginKey, { showStatusPickerAt, selectedStatus })
-      .scrollIntoView();
+  if (pluginState.selectedStatus) {
+    const pos = tr.selection.from;
+    tr = tr.setNodeMarkup(pos, schema.nodes.status, statusProps);
+    tr = tr.setSelection(NodeSelection.create(tr.doc, pos));
+    tr = tr.setMeta(pluginKey, { selectedStatus }).scrollIntoView();
 
     dispatch(tr);
     return true;
@@ -91,51 +85,32 @@ export const updateStatus = (status?: StatusType) => (
   return false;
 };
 
-export const setStatusPickerAt = (showStatusPickerAt: number | null) => (
-  state: EditorState,
-  dispatch: (tr: Transaction) => void,
-): boolean => {
-  dispatch(
-    state.tr.setMeta(pluginKey, {
-      showStatusPickerAt,
-      isNew: false,
-      selectedStatus: null,
-    }),
-  );
-  return true;
-};
-
-export const commitStatusPicker = () => (editorView: EditorView) => {
+export const commitStatusPicker = (select: boolean) => (
+  editorView: EditorView,
+) => {
   const { state, dispatch } = editorView;
-  const { showStatusPickerAt } = pluginKey.getState(state);
+  const { selectedStatus } = pluginKey.getState(state);
 
-  if (!showStatusPickerAt) {
-    return;
-  }
-
-  const statusNode = state.tr.doc.nodeAt(showStatusPickerAt);
-
-  if (!statusNode) {
+  if (!selectedStatus) {
     return;
   }
 
   let tr = state.tr;
-  tr = tr.setMeta(pluginKey, {
-    showStatusPickerAt: null,
+  tr.setMeta(pluginKey, {
     isNew: false,
     selectedStatus: null,
   });
 
-  if (statusNode.attrs.text) {
+  if (selectedStatus.text) {
     // still has content - keep content, move selection after status
-    tr = tr.setSelection(
-      Selection.near(state.tr.doc.resolve(showStatusPickerAt + 2)),
+    //if (select) {
+    tr.setSelection(
+      Selection.near(state.tr.doc.resolve(tr.selection.from + 2)),
     );
+    //}
   } else {
     // no content - remove node
-    tr = tr
-      .delete(showStatusPickerAt, showStatusPickerAt + 1)
-      .setSelection(Selection.near(state.tr.doc.resolve(showStatusPickerAt)));
+    tr.deleteSelection();
   }
 
   dispatch(tr);

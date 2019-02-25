@@ -36,25 +36,16 @@ const baseStatusPlugin = (): EditorPlugin => ({
           statusState: pluginKey,
         }}
         render={({ statusState = {} as StatusState }) => {
-          const { showStatusPickerAt } = statusState;
-          if (showStatusPickerAt === null) {
+          if (!statusState.selectedStatus) {
             return null;
           }
 
           const target = findDomRefAtPos(
-            showStatusPickerAt,
+            editorView.state.tr.selection.from,
             domAtPos,
           ) as HTMLElement;
 
-          const statusNode: any = editorView.state.doc.nodeAt(
-            showStatusPickerAt,
-          );
-
-          if (!statusNode || statusNode.type.name !== 'status') {
-            return null;
-          }
-
-          const { text, color, localId } = statusNode.attrs;
+          const { text, color, localId } = statusState.selectedStatus;
 
           return (
             <StatusPicker
@@ -70,10 +61,10 @@ const baseStatusPlugin = (): EditorPlugin => ({
                 updateStatus(status)(editorView);
               }}
               closeStatusPicker={() => {
-                commitStatusPicker()(editorView);
+                commitStatusPicker(false)(editorView);
               }}
               onEnter={() => {
-                commitStatusPicker()(editorView);
+                commitStatusPicker(true)(editorView);
               }}
             />
           );

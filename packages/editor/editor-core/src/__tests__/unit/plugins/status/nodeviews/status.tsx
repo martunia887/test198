@@ -20,8 +20,11 @@ import statusPlugin from '../../../../../plugins/status';
 import {
   pluginKey,
   SelectionChange,
-  StatusState,
 } from '../../../../../plugins/status/plugin';
+import {
+  StatusState,
+  SelectionChangeType,
+} from '../../../../../plugins/status/types';
 import * as Actions from '../../../../../plugins/status/actions';
 // @ts-ignore
 import { __serializeForClipboard } from 'prosemirror-view';
@@ -133,7 +136,7 @@ describe('Status - NodeView', () => {
   describe('selection', () => {
     let wrapper: ReactWrapper<StatusNodeViewProps, StatusNodeViewState>;
     let getPos: jest.Mock<number>;
-    let selectionChanges: SelectionChange;
+    let selectionChanges: SelectionChangeType;
     let editorInstance: EditorInstance;
 
     const createSelection = (from: number, to?: number): Selection => {

@@ -6,7 +6,6 @@ import { Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Status } from '@atlaskit/status';
 import { pluginKey } from '../plugin';
-import { setStatusPickerAt } from '../actions';
 import { colors } from '@atlaskit/theme';
 
 const { B100 } = colors;
@@ -120,13 +119,10 @@ class StatusNodeView extends React.Component<Props & InjectedIntlProps, State> {
       </StatusContainer>
     );
   }
-
   private handleClick = (event: React.SyntheticEvent<any>) => {
     if (event.nativeEvent.stopImmediatePropagation) {
       event.nativeEvent.stopImmediatePropagation();
     }
-    const { state, dispatch } = this.props.view;
-    setStatusPickerAt(state.selection.from)(state, dispatch);
   };
 }
 
