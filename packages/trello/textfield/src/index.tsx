@@ -14,31 +14,17 @@ export type TextFieldProps = {
   theme?: any;
 };
 
-export default class TextField extends React.Component<TextFieldProps> {
-  render() {
-    const { isInvalid, isFocused, isDisabled, theme, ...rest } = this.props;
+export default (textFieldProps: TextFieldProps) => {
+  const nachosTheme = (adgTheme: any, themeProps: TextFieldProps) => ({
+    container: {
+      ...nachosTFTheme(adgTheme, themeProps).container,
+      ...(textFieldProps.theme && textFieldProps.theme(themeProps).container),
+    },
+    input: {
+      ...nachosTFTheme(adgTheme, themeProps).input,
+      ...(textFieldProps.theme && textFieldProps.theme(themeProps).input),
+    },
+  });
 
-    const nachosTheme = (adgTheme: any, themeProps: TextFieldProps) => ({
-      container: {
-        ...nachosTFTheme(adgTheme, themeProps).container,
-        ...(this.props.theme && this.props.theme(themeProps).container),
-      },
-      input: {
-        ...nachosTFTheme(adgTheme, themeProps).input,
-        ...(this.props.theme && this.props.theme(themeProps).input),
-      },
-    });
-
-    return (
-      <div>
-        <Textfield
-          isInvalid={isInvalid}
-          isFocused={isFocused}
-          isDisabled={isDisabled}
-          theme={nachosTheme}
-          {...rest}
-        />
-      </div>
-    );
-  }
-}
+  return <Textfield {...textFieldProps} theme={nachosTheme} />;
+};
