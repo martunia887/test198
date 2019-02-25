@@ -1,4 +1,5 @@
-import { ThemeProps } from '@atlaskit/button';
+import * as React from 'react';
+import { ThemeProps, ButtonTheme as AdgButtonTheme } from '@atlaskit/button';
 import { colors } from './colors';
 
 const button = {
@@ -149,6 +150,10 @@ const theme = (
       ...adgIconStyles,
     },
   };
+};
+
+export const Theme = {
+  Provider: props => <AdgButtonTheme.Provider value={theme} {...props} />,
 };
 
 export default theme;
