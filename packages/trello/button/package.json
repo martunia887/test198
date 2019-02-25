@@ -6,7 +6,7 @@
   "main": "dist/es5/index.js",
   "module": "dist/es2015/index.js",
   "types": "dist/es5/index.d.ts",
-  "atlaskit:src": "src/index.ts",
+  "atlaskit:src": "./index.ts",
   "sideEffects": false,
   "files": [
     "dist"
