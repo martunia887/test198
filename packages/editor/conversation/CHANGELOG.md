@@ -1,5 +1,16 @@
 # @atlaskit/conversation
 
+## 12.0.1
+- Updated dependencies [4a84fc40e0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4a84fc40e0):
+  - @atlaskit/comment@6.0.43
+  - @atlaskit/editor-core@101.0.0
+  - @atlaskit/renderer@40.0.0
+
+## 12.0.0
+- [major] [dce41f798f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/dce41f798f):
+
+  - use objectId to identity the document and make containerId as optional
+
 ## 11.1.16
 - Updated dependencies [4af5bd2a58](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4af5bd2a58):
   - @atlaskit/comment@6.0.42
