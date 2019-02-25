@@ -15,14 +15,14 @@ export default function() {
         isInvalid
         defaultValue="Tacos are disgusting!"
       />
-      {/* <label htmlFor="disabled">Disabled</label>
+      <label htmlFor="disabled">Disabled</label>
       <TextField
         name="disabled"
         isDisabled
         defaultValue="can't touch this..."
       />
       <label htmlFor="placeholder">Placeholder</label>
-      <TextField name="placeholder" placeholder="Click here to input..." /> */}
+      <TextField name="placeholder" placeholder="Click here to input..." />
     </div>
   );
 }

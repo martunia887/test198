@@ -16,7 +16,7 @@ const textField = {
       hover: colors.N40,
       focus: colors['blue-500'],
     },
-    disabled: 'none',
+    disabled: colors.N30,
   },
   color: {
     default: {
