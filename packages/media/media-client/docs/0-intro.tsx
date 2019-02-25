@@ -12,7 +12,7 @@ const mediaClient = new MediaClient({ authProvider });
 
   ${(
     <Example
-      Component={require('../examples/0-media-client').default}
+      Component={require('../examples/2-upload-file').default}
       title="Media Client"
       source={require('!!raw-loader!../examples/2-upload-file')}
     />
