@@ -36,4 +36,11 @@ describe('MediaClientConfigContext', () => {
       'config transported 42',
     );
   });
+
+  it('should user default provider', () => {
+    const component = mount(<DummyClass />);
+    expect(component.find("div[id='some-div']").text()).toBe(
+      'config transported [object Promise]',
+    );
+  });
 });
