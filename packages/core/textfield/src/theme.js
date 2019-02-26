@@ -75,6 +75,11 @@ const getContainerBackgroundColor = ({
   isInvalid,
   mode,
 }: ThemeProps) => {
+  if (!backgroundColor[appearance]) {
+    return {
+      backgroundColor: backgroundColor.standard[mode],
+    };
+  }
   if (isDisabled) {
     // switch on focus then switch on hover
     if (isFocused) {
@@ -123,6 +128,11 @@ const getContainerBorderColor = ({
   isInvalid,
   mode,
 }: ThemeProps) => {
+  if (!borderColor[appearance]) {
+    return {
+      borderColor: borderColor.standard[mode],
+    };
+  }
   if (isDisabled) {
     // switch on focus then switch on hover
     if (isFocused) {
