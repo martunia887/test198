@@ -89,7 +89,11 @@ class MediaNode extends Component<MediaNodeProps & ImageLoaderProps> {
     this.pluginState.handleMediaNodeUnmount(node);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Readonly<MediaNodeProps & ImageLoaderProps>) {
+    if (prevProps.node.attrs.id !== this.props.node.attrs.id) {
+      this.pluginState.handleMediaNodeUnmount(prevProps.node);
+      this.handleNewNode(this.props);
+    }
     this.pluginState.updateElement();
   }
 
@@ -101,7 +105,7 @@ class MediaNode extends Component<MediaNodeProps & ImageLoaderProps> {
       onClick,
       editorAppearance,
     } = this.props;
-    const { id, type, collection, url, __key } = node.attrs;
+    const { id, type, collection, url } = node.attrs;
     /**
      * On mobile we don't receive a collectionName until the `upload-end` event.
      * We don't want to render a proper card until we have a valid collection.
@@ -115,8 +119,8 @@ class MediaNode extends Component<MediaNodeProps & ImageLoaderProps> {
     }
 
     /** For new images, the media state will be loaded inside the plugin state */
-    const getState = this.pluginState.getMediaNodeState(__key);
-    const fileId = getState && getState.fileId ? getState.fileId : id;
+    const state = this.pluginState.getMediaNodeState(id);
+    const fileId = (state && state.fileId) || id;
 
     const identifier: Identifier =
       type === 'external'
