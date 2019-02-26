@@ -1,0 +1,1 @@
+- Decides what main field is preferred based on environment. Prefer 'module' in production. Prefer 'atlaskit:src' otherwise.
