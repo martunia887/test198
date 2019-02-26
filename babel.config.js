@@ -20,11 +20,7 @@ module.exports = {
   ],
   env: {
     'production:cjs': {
-      plugins: [
-        '@babel/transform-runtime',
-        ['styled-components', { minify: false }],
-        'transform-dynamic-import',
-      ],
+      plugins: ['@babel/transform-runtime', 'transform-dynamic-import'],
       presets: [['@babel/env', { modules: 'commonjs' }]],
       ignore: [
         '**/__mocks__',
@@ -34,10 +30,7 @@ module.exports = {
       ],
     },
     'production:esm': {
-      plugins: [
-        '@babel/transform-runtime',
-        ['styled-components', { minify: false }],
-      ],
+      plugins: ['@babel/transform-runtime'],
       presets: [['@babel/env', { modules: false }]],
       ignore: [
         '**/__mocks__',
