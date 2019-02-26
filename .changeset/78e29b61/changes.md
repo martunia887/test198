@@ -1,0 +1,1 @@
+- MediaProvider properties `viewContext` and `uploadContext` are replaced with `viewMediaClientConfig` and `uploadMediaClientConfig` with type `MediaClientConfig` (NB! not a Promise)
