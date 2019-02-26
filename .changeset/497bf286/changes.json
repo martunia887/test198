@@ -1,0 +1,100 @@
+{
+  "releases": [
+    { "name": "@atlaskit/media-card", "type": "major" },
+    { "name": "@atlaskit/media-editor", "type": "major" },
+    { "name": "@atlaskit/media-filmstrip", "type": "major" },
+    { "name": "@atlaskit/media-picker", "type": "major" },
+    { "name": "@atlaskit/media-viewer", "type": "major" },
+    { "name": "@atlaskit/media-test-helpers", "type": "major" }
+  ],
+  "dependents": [
+    {
+      "name": "@atlaskit/editor-common",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-client",
+        "@atlaskit/editor-test-helpers",
+        "@atlaskit/emoji",
+        "@atlaskit/media-card"
+      ]
+    },
+    {
+      "name": "@atlaskit/editor-core",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/editor-common",
+        "@atlaskit/renderer",
+        "@atlaskit/media-client",
+        "@atlaskit/editor-test-helpers",
+        "@atlaskit/emoji",
+        "@atlaskit/media-card",
+        "@atlaskit/media-filmstrip",
+        "@atlaskit/media-picker",
+        "@atlaskit/media-test-helpers"
+      ]
+    },
+    {
+      "name": "@atlaskit/renderer",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/editor-common",
+        "@atlaskit/media-client",
+        "@atlaskit/editor-test-helpers",
+        "@atlaskit/media-card",
+        "@atlaskit/media-filmstrip",
+        "@atlaskit/media-test-helpers"
+      ]
+    },
+    {
+      "name": "@atlaskit/media-client",
+      "type": "patch",
+      "dependencies": ["@atlaskit/media-card", "@atlaskit/media-test-helpers"]
+    },
+    {
+      "name": "@atlaskit/website",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-card",
+        "@atlaskit/media-filmstrip",
+        "@atlaskit/media-test-helpers"
+      ]
+    },
+    {
+      "name": "@atlaskit/editor-test-helpers",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/editor-common",
+        "@atlaskit/editor-core",
+        "@atlaskit/media-test-helpers"
+      ]
+    },
+    {
+      "name": "@atlaskit/emoji",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-client",
+        "@atlaskit/editor-test-helpers",
+        "@atlaskit/media-test-helpers"
+      ]
+    },
+    {
+      "name": "@atlaskit/media-avatar-picker",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-client",
+        "@atlaskit/media-ui",
+        "@atlaskit/media-test-helpers"
+      ]
+    },
+    {
+      "name": "@atlaskit/media-image",
+      "type": "patch",
+      "dependencies": ["@atlaskit/media-test-helpers"]
+    },
+    {
+      "name": "@atlaskit/media-ui",
+      "type": "patch",
+      "dependencies": ["@atlaskit/media-test-helpers"]
+    }
+  ]
+}

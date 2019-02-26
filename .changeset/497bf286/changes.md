@@ -1,0 +1,1 @@
+- Changes due to media-core -> media-client transition. Everywhere where Context was used MediaClientConfig is now used.
