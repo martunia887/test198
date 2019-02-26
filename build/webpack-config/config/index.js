@@ -190,7 +190,11 @@ module.exports = function createWebpackConfig(
       ],
     },
     resolve: {
-      mainFields: ['module', 'atlaskit:src', 'browser', 'main'],
+      // prefer 'module' in production, otherwise prefer 'atlaskit:src'
+      mainFields: (isProduction
+        ? ['module', 'atlaskit:src']
+        : ['atlaskit:src', 'module']
+      ).concat('browser', 'main'),
       extensions: ['.js', '.ts', '.tsx'],
     },
     resolveLoader: {
