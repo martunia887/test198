@@ -1,6 +1,7 @@
 // @flow
 /** @jsx jsx */
 
+// $FlowFixMe
 import { forwardRef } from 'react';
 import { jsx } from '@emotion/core';
 import { borderRadius, colors, gridSize } from '@atlaskit/theme';

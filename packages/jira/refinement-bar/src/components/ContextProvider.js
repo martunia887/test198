@@ -1,18 +1,39 @@
 // @flow
 
-import React from 'react';
+import React, { Component, type ComponentType, type Node } from 'react';
 
 import { cloneObj, objectMap } from '../utils';
 
-export const RefinementBarContext = React.createContext();
+export const RefinementBarContext = React.createContext({});
 
-export class RefinementBarConfig extends React.Component {
+type ValueType = {
+  label: string,
+  type: ComponentType<*>,
+};
+type FieldsType = { [key: string]: ValueType };
+
+type ConfigProps = {
+  children: Node,
+  fields: FieldsType,
+  initialValues: Object,
+  values: Object,
+
+  addValue?: (*) => void,
+  removeValue?: (*) => void,
+  updateValue?: (*) => void,
+};
+type State = {
+  fields: FieldsType,
+  values: Object,
+};
+
+export class RefinementBarConfig extends Component<ConfigProps, State> {
   static defaultProps = {
     fields: {},
     initialValues: {},
   };
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props: ConfigProps, state: State) {
     if (props.values && props.values !== state.values) {
       return { values: props.values };
     }
@@ -20,7 +41,7 @@ export class RefinementBarConfig extends React.Component {
     return null;
   }
 
-  constructor(props) {
+  constructor(props: ConfigProps) {
     super(props);
     const { fields, initialValues, values } = this.props;
 
@@ -37,15 +58,15 @@ export class RefinementBarConfig extends React.Component {
   }
 
   // Value Interface
-  addValue = add => {
+  addValue = (add: Object) => {
     const values = cloneObj(this.state.values, { add });
     this.setState({ values });
   };
-  removeValue = remove => {
+  removeValue = (remove: string) => {
     const values = cloneObj(this.state.values, { remove });
     this.setState({ values });
   };
-  updateValue = add => {
+  updateValue = (add: Object) => {
     const values = cloneObj(this.state.values, { add });
     this.setState({ values });
   };
@@ -66,15 +87,20 @@ export class RefinementBarConfig extends React.Component {
   }
 }
 
-export const RefinementBarConsumer = ({ children }) => (
+type consumerProps = {
+  children: Object => Node,
+};
+export const RefinementBarConsumer = ({ children }: consumerProps) => (
   <RefinementBarContext.Consumer>
     {({ state }) => children(state.values)}
   </RefinementBarContext.Consumer>
 );
 
 // Required until atlaskit upgrades to react >= 16.6 😞
-export const withRefinementBarContext = Component => props => (
+export const withRefinementBarContext = (Comp: ComponentType<*>) => (
+  props: *,
+) => (
   <RefinementBarContext.Consumer>
-    {rbctx => <Component {...props} rbctx={rbctx} />}
+    {rbctx => <Comp {...props} rbctx={rbctx} />}
   </RefinementBarContext.Consumer>
 );

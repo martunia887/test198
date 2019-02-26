@@ -1,6 +1,7 @@
 // @flow
 /** @jsx jsx */
 
+// $FlowFixMe
 import { forwardRef } from 'react';
 import { jsx } from '@emotion/core';
 import Textfield from '@atlaskit/textfield';

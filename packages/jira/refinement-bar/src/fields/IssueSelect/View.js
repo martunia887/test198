@@ -27,7 +27,7 @@ import Task16Icon from '@atlaskit/icon-object/glyph/task/16';
 import Select from '../Select/View';
 
 // do NOT assign directly; a new component must be created to avoid inheritence
-const IssueSelectView = props => <Select {...props} />;
+const IssueSelectView = (props: *) => <Select {...props} />;
 
 const icons = {
   blog: Blog16Icon,
@@ -51,7 +51,7 @@ const icons = {
   task: Task16Icon,
 };
 
-export const formatOptionLabel = data => {
+export const formatOptionLabel = (data: Object) => {
   if (!data.type) {
     return data.label;
   }

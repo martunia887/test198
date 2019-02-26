@@ -1,17 +1,27 @@
 // @flow
 
+type validateFnType = (
+  value: Object,
+) => { message: string | null, isInvalid: boolean };
+type initialFnType = (value: Object) => any;
+
 export default class FieldController {
-  constructor(config) {
+  constructor(config: *) {
     this.config = config;
     this.key = config.key;
     this.label = config.label;
     this.note = config.note;
     this.type = config.type;
   }
+  config: Object;
+  key: string;
+  label: string;
+  note: string;
+  type: string;
 
-  hasValue = ({ value }) => Boolean(value);
+  hasValue = ({ value }: Object) => Boolean(value);
 
-  getValue = data => data[this.config.key] || '';
-  getInitialValue = () => this.config.defaultValue || '';
-  validateValue = () => ({ message: null, isInvalid: false });
+  getValue = (data: Object) => data[this.config.key] || '';
+  getInitialValue: initialFnType = () => this.config.defaultValue || '';
+  validateValue: validateFnType = () => ({ message: null, isInvalid: false });
 }

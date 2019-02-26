@@ -1,6 +1,7 @@
 // @flow
 /** @jsx jsx */
 
+// $FlowFixMe
 import { Component, createRef, forwardRef, Fragment, type Node } from 'react';
 import createFocusTrap from 'focus-trap';
 import { jsx } from '@emotion/core';
@@ -11,14 +12,15 @@ const NOOP = () => {};
 type Props = {
   allowClose: boolean,
   children: Node,
-  onClose: Event => void,
-  onOpen: Event => void,
+  onClose: (*) => void,
+  onOpen: (*) => void,
   target: Object => Node,
 };
+type State = { isOpen: boolean, placement: 'left' | 'right' };
 
 // smart components
 
-export default class Dropdown extends Component<Props> {
+export default class Dropdown extends Component<Props, State> {
   static defaultProps = {
     onClose: NOOP,
     onOpen: NOOP,
@@ -26,12 +28,14 @@ export default class Dropdown extends Component<Props> {
   state = { isOpen: false, placement: 'left' };
   dialogRef = createRef();
   targetRef = createRef();
+  focusTrap: *;
 
-  resolveTargetRef = popperRef => ref => {
+  resolveTargetRef = (popperRef: *) => (ref: *) => {
+    // $FlowFixMe
     this.targetRef(ref);
     popperRef(ref);
   };
-  handleKeyDown = ({ key }) => {
+  handleKeyDown = ({ key }: *) => {
     if (key === 'Escape') this.close();
   };
   initialiseFocusTrap = () => {
@@ -47,22 +51,23 @@ export default class Dropdown extends Component<Props> {
     setTimeout(() => this.focusTrap.activate(), 1);
   };
 
-  close = e => {
+  close = (e: *) => {
     if (!this.props.allowClose) return;
 
-    this.setState({ isOpen: false, placement: null }, () => {
+    this.setState({ isOpen: false }, () => {
       window.removeEventListener('keydown', this.handleKeyDown);
       this.focusTrap.deactivate();
       this.props.onClose(e);
     });
   };
 
-  open = e => {
+  open = (e: *) => {
     this.setState({ isOpen: true }, () => {
       window.addEventListener('keydown', this.handleKeyDown);
 
       if (this.dialogRef.current) {
         this.initialiseFocusTrap();
+        // $FlowFixMe
         const { right } = this.dialogRef.current.getBoundingClientRect();
         const placement = right > window.innerWidth ? 'right' : 'left';
         this.setState({ placement });
@@ -71,7 +76,7 @@ export default class Dropdown extends Component<Props> {
     });
   };
 
-  handleClick = e => {
+  handleClick = (e: *) => {
     const fn = this.state.isOpen ? this.close : this.open;
     fn(e);
   };

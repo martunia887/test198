@@ -1,9 +1,10 @@
+// @flow
+
 import Controller from './Controller';
 import View from './View';
 
 export default {
-  adapters: {},
   controller: Controller,
-  type: 'Select',
+  type: 'AsyncSelect',
   view: View,
 };

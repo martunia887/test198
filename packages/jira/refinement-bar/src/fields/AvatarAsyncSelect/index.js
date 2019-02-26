@@ -1,3 +1,5 @@
+// @flow
+
 import Controller from './Controller';
 import View from './View';
 

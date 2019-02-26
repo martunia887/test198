@@ -1,3 +1,5 @@
+// @flow
+
 import SelectController from '../Select/Controller';
 
 const AvatarSelectController = SelectController;

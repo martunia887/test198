@@ -1,6 +1,7 @@
 // @flow
 /** @jsx jsx */
 
+import { type Node } from 'react';
 import { jsx } from '@emotion/core';
 import { CheckboxOption, PopupSelect, makeAsyncSelect } from '@atlaskit/select';
 import Spinner from '@atlaskit/spinner';
@@ -60,8 +61,11 @@ const AsyncSelectView = ({
 };
 
 // Styled Components
-
-const Box = ({ height = 140, ...props }: *) => (
+type BoxProps = {
+  children: Node,
+  height: number,
+};
+const Box = ({ height, ...props }: BoxProps) => (
   <div
     css={{
       alignItems: 'center',
@@ -73,7 +77,11 @@ const Box = ({ height = 140, ...props }: *) => (
     {...props}
   />
 );
-const Text = props => (
+
+Box.defaultProps = {
+  height: 140,
+};
+const Text = (props: *) => (
   <div
     css={{
       fontWeight: 500,

@@ -1,9 +1,18 @@
-export const isObject = o =>
-  typeof o === 'object' && o !== null && !Array.isArray(o);
-export const isPromise = p => p.then && typeof p.then === 'function'; // maybe?
-export const isEmptyString = str => typeof str === 'string' && str.length === 0;
+// @flow
 
-export const cloneArr = (arr, { add, remove, sort }) => {
+export const isObject = (o: *) =>
+  typeof o === 'object' && o !== null && !Array.isArray(o);
+export const isPromise = (p: *) => p.then && typeof p.then === 'function'; // maybe?
+export const isEmptyString = (str: *) =>
+  typeof str === 'string' && str.length === 0;
+
+type cloneArrOptions = { add?: any, remove?: any, sort?: boolean };
+export const cloneArr = (
+  arr: Array<any>,
+  options: cloneArrOptions = {},
+): Array<any> => {
+  const { add, remove, sort } = options;
+
   let array = [...arr];
 
   if (Array.isArray(add)) array = [...array, ...add];
@@ -12,7 +21,11 @@ export const cloneArr = (arr, { add, remove, sort }) => {
 
   return sort ? array.sort() : array;
 };
-export const cloneObj = (obj, { add, remove }) => {
+
+type cloneObjOptions = { add?: Object, remove?: string };
+export const cloneObj = (obj: Object, options: cloneObjOptions = {}) => {
+  const { add, remove } = options;
+
   // add key/value pair
   if (add) {
     return { ...obj, ...add };
@@ -28,12 +41,16 @@ export const cloneObj = (obj, { add, remove }) => {
   return { ...obj };
 };
 
-export const arrayToObject = arr =>
-  arr.reduce((obj, { key, ...value }) => ({ ...obj, [key]: value }), {});
+export const objectMap = (object: Object, mapFn: (any, string) => any) => {
+  return Object.keys(object).reduce((res, key) => {
+    const result = cloneObj(res);
+    const value = mapFn(object[key], key);
 
-export const objectMap = (object, mapFn) => {
-  return Object.keys(object).reduce((result, key) => {
-    result[key] = mapFn(object[key], key);
-    return result;
+    if (value) {
+      result[key] = value;
+      return result;
+    }
+
+    return res;
   }, {});
 };

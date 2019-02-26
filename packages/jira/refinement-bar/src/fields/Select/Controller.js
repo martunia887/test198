@@ -1,22 +1,33 @@
 // @flow
 
-import React from 'react';
+import React, { type Node } from 'react';
 import FieldController from '../Controller';
 import { isObject } from '../../utils';
 
+export interface SelectControllerInterface {
+  config: Object;
+  getFilterLabel: (*) => any;
+  hasValue: (*) => boolean;
+  getInitialValue: (*) => any;
+  formatFilter: (*) => Node;
+  validateOptions: (*) => Object;
+  validateValue: (*) => boolean;
+}
+
 export default class SelectController extends FieldController {
-  constructor(...args) {
+  constructor(...args: *) {
     super(...args);
     this.options = this.config.options;
   }
+  options: Array<Object>;
   getFilterLabel = () => {
     return this.label;
   };
-  hasValue = ({ value }) => {
+  hasValue = ({ value }: *) => {
     return Array.isArray(value) ? value.length > 0 : isObject(value);
   };
   getInitialValue = () => null;
-  formatFilter = ({ value }) => {
+  formatFilter = ({ value }: *) => {
     const separator = ', ';
     const max = 3;
     const makeLabel = suffix => (
@@ -46,7 +57,7 @@ export default class SelectController extends FieldController {
 
   // Implementation
 
-  validateOptions = options => {
+  validateOptions = (options: *) => {
     let message = null;
     let validity = true;
 
@@ -60,8 +71,5 @@ export default class SelectController extends FieldController {
     }
 
     return { message, validity };
-  };
-  validateValue = value => {
-    return isObject(value); // TODO
   };
 }

@@ -10,10 +10,11 @@ import { isObject, isEmptyString, objectMap } from '../../utils';
 
 const makeValue = value => {
   if (isObject(value)) {
-    return objectMap(value, v => parseFloat(v, 10));
+    // $FlowFixMe
+    return objectMap(value, v => parseFloat(v));
   }
 
-  return parseFloat(value, 10);
+  return parseFloat(value);
 };
 
 const Row = ({ children, ...props }: *) => (
@@ -30,23 +31,31 @@ type Props = {
   field: Object,
   invalidMessage: Object,
   isRemovable: boolean,
-  onChange: () => void,
-  onRemove: () => void,
+  onChange: (*) => void,
+  onRemove: (*) => void,
+};
+type State = {
+  value: string,
+  type: string,
+  gt: string,
+  lt: string,
 };
 
-class NumberView extends React.Component<Props> {
+class NumberView extends React.Component<Props, State> {
   state = { ...this.props.currentValue, gt: '', lt: '' };
   dropdownRef = React.createRef();
   get isBetween() {
     return this.state.type === 'between';
   }
-  handleSubmit = e => {
+  handleSubmit = (e: *) => {
     e.preventDefault();
     if (this.props.invalidMessage) return;
-    this.dropdownRef.current.close();
+    if (this.dropdownRef.current) {
+      this.dropdownRef.current.close();
+    }
   };
 
-  onChangeCheckbox = ({ target }) => {
+  onChangeCheckbox = ({ target }: *) => {
     const { onChange } = this.props;
     const type = target.value;
 
@@ -64,7 +73,7 @@ class NumberView extends React.Component<Props> {
     });
   };
 
-  onChangeInput = ({ target: { name, value: val } }) => {
+  onChangeInput = ({ target: { name, value: val } }: *) => {
     const { onChange } = this.props;
     const { type } = this.state;
 

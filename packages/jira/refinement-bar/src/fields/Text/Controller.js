@@ -1,10 +1,14 @@
+// @flow
+
 import React from 'react';
 import FieldController from '../Controller';
 
 export default class TextController extends FieldController {
-  formatFilter = ({ type, value }) => {
+  formatFilter = ({ type, value }: *) => {
     const exact = type === 'is';
     const notset = type === 'is_not_set';
+
+    // $FlowFixMe
     const typeLabel = this.getFilterTypes().find(f => f.type === type).label;
     const showType = exact || notset || this.hasValue({ value });
     const showValue = exact || this.hasValue({ value });
@@ -48,7 +52,7 @@ export default class TextController extends FieldController {
 
   // Implementation
 
-  validateValue = ({ type, value }) => {
+  validateValue = ({ value }: *) => {
     const INVALID_FIRST_CHARS = ['*', '?'];
     let message = null;
     let isInvalid = false;

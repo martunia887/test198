@@ -2,8 +2,6 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/core';
-
-import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
 
 const Form = props => (
@@ -69,8 +67,13 @@ export const Radio = ({ children, ...props }: *) => {
   );
 };
 
-export const Note = styled.div({
-  color: colors.N200,
-  fontSize: '0.75rem',
-  marginTop: '0.5em',
-});
+export const Note = (props: *) => (
+  <div
+    css={{
+      color: colors.N200,
+      fontSize: '0.75rem',
+      marginTop: '0.5em',
+    }}
+    {...props}
+  />
+);

@@ -1,9 +1,10 @@
+// @flow
+
 import Controller from './Controller';
 import View from './View';
 
 export default {
-  type: 'Number',
   controller: Controller,
+  type: 'Number',
   view: View,
-  adapters: {},
 };

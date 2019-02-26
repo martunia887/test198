@@ -7,16 +7,32 @@ import Dropdown from '../../components/Dropdown';
 import { FilterButton } from '../../components/FilterButton';
 import { Group, Note, Radio } from '../../components/InputGroup';
 
-class TextView extends React.Component {
+type Props = {
+  applyChanges: (*) => void,
+  currentValue: Object,
+  field: Object,
+  invalidMessage: string,
+  isRemovable: boolean,
+  onChange: (*) => void,
+  onRemove: (*) => void,
+};
+type State = {
+  type: string,
+  value: string,
+};
+
+class TextView extends React.Component<Props, State> {
   state = this.props.currentValue;
   dropdownRef = React.createRef();
-  handleSubmit = e => {
+  handleSubmit = (e: *) => {
     e.preventDefault();
     if (this.props.invalidMessage) return;
-    this.dropdownRef.current.close(); // HACK? (imperative)
+    if (this.dropdownRef.current) {
+      this.dropdownRef.current.close(); // HACK? (imperative)
+    }
   };
 
-  onChangeCheckbox = ({ target }) => {
+  onChangeCheckbox = ({ target }: *) => {
     const { onChange } = this.props;
     const type = target.value;
 
@@ -25,7 +41,7 @@ class TextView extends React.Component {
     onChange({ type, value });
   };
 
-  onChangeInput = ({ target }) => {
+  onChangeInput = ({ target }: *) => {
     const { onChange } = this.props;
     const { type } = this.state;
 
@@ -34,6 +50,7 @@ class TextView extends React.Component {
     onChange({ type, value });
   };
 
+  // TODO: Move to field controller???
   get filterTypes() {
     return this.props.field.getFilterTypes();
   }

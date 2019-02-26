@@ -46,8 +46,16 @@ type Props = {
   invalid: Object,
   rbctx: Object,
 };
+type State = {
+  available: Array<string>,
+  constant: Array<string>,
+  invalid: Object,
+  selected: Array<string>,
+  selectedIsExpanded: boolean,
+  values: Object,
+};
 
-class ActualRefinementBar extends Component<Props> {
+class ActualRefinementBar extends Component<Props, State> {
   static defaultProps = {
     available: [],
     constant: [],
@@ -55,7 +63,7 @@ class ActualRefinementBar extends Component<Props> {
     selected: [],
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     const {
       initialAvailable,
@@ -75,7 +83,7 @@ class ActualRefinementBar extends Component<Props> {
       values,
     };
   }
-  handleFieldRemove = key => event => {
+  handleFieldRemove = (key: string) => (event: *) => {
     event.preventDefault();
 
     // remove the key from values
@@ -90,7 +98,7 @@ class ActualRefinementBar extends Component<Props> {
       this.props.rbctx.removeValue(key);
     });
   };
-  handleFieldChange = key => value => {
+  handleFieldChange = (key: string) => (value: *) => {
     const { fields } = this.props.rbctx.state;
     const oldInvalid = this.state.invalid;
     const values = {
@@ -111,7 +119,7 @@ class ActualRefinementBar extends Component<Props> {
 
     this.setState({ invalid, values });
   };
-  handleFieldSubmit = key => () => {
+  handleFieldSubmit = (key: string) => () => {
     // don't commit changes to context if there's invalid keys
     if (this.state.invalid[key]) {
       return;
@@ -120,7 +128,7 @@ class ActualRefinementBar extends Component<Props> {
     this.props.rbctx.updateValue(this.state.values);
   };
 
-  makeField = listProps => key => {
+  makeField = (listProps: *) => (key: string) => {
     const { fields } = this.props.rbctx.state;
     const { type, ...field } = fields[key];
     const Field = type.view;
@@ -148,9 +156,14 @@ class ActualRefinementBar extends Component<Props> {
       />
     );
   };
-  onChangeFilter = options => {
+  onChangeFilter = (options: *) => {
     const selected = options.map(o => o.value);
     this.setState({ selected });
+  };
+  toggleSelectedVisibility = () => {
+    this.setState(s => ({
+      selectedIsExpanded: !s.selectedIsExpanded,
+    }));
   };
 
   render() {
@@ -214,11 +227,7 @@ class ActualRefinementBar extends Component<Props> {
         {selected.length ? (
           <Button
             appearance="subtle-link"
-            onClick={() =>
-              this.setState(s => ({
-                selectedIsExpanded: !s.selectedIsExpanded,
-              }))
-            }
+            onClick={this.toggleSelectedVisibility}
             iconAfter={
               selectedIsExpanded ? null : (
                 <Badge appearance="important">{selected.length}</Badge>

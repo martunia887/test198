@@ -24,7 +24,7 @@ const validateInput = (label, value, name) => {
 };
 
 export default class NumberController extends FieldController {
-  getFilterGraphQL = ({ type, value }) => {
+  getFilterGraphQL = ({ type, value }: *) => {
     // special case where the value is a tuple
     if (type === 'between') {
       return `AND: [{
@@ -41,6 +41,7 @@ export default class NumberController extends FieldController {
     return this.label;
   };
   formatFilter = ({ type, value }: *) => {
+    // $FlowFixMe
     const typeLabel = this.getFilterTypes().find(f => f.type === type).label;
     const showValue = type !== 'is_not_set';
     const valueLabel = isObject(value)
@@ -91,7 +92,7 @@ export default class NumberController extends FieldController {
 
   // Implementation
 
-  validateValue = ({ value }) => {
+  validateValue = ({ value }: *) => {
     let result = { message: null, isInvalid: false };
     const nameMap = { lt: 'to', gt: 'from' };
 
