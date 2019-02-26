@@ -224,7 +224,7 @@ export class MediaPluginState {
       if (!node.childNodes.length) {
         return node.parentNode as HTMLElement | undefined;
       }
-
+      console.log((node as HTMLElement).innerHTML);
       const target = (node as HTMLElement).querySelector('.wrapper') || node;
       return target;
     }

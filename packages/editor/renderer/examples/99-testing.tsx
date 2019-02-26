@@ -3,7 +3,9 @@ import * as ReactDOM from 'react-dom';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { taskDecision, emoji } from '@atlaskit/util-data-test';
 import { Provider } from '@atlaskit/smart-card';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 import {
+  storyMediaProviderConfig,
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
@@ -12,6 +14,7 @@ import { document as doc } from './helper/story-data';
 import Sidebar from './helper/NavigationNext';
 
 const mediaProvider = storyMediaProviderFactory();
+const mediaClientConfig = storyMediaProviderConfig();
 const emojiProvider = emoji.storyData.getEmojiResource();
 const contextIdentifierProvider = storyContextIdentifierProviderFactory();
 const mentionProvider = Promise.resolve({
@@ -46,16 +49,18 @@ function createRendererWindowBindings(win: Window) {
     ReactDOM.unmountComponentAtNode(target);
     ReactDOM.render(
       <Provider>
-        <Sidebar showSidebar={showSidebar}>
-          {additionalRendererProps => (
-            <Renderer
-              dataProviders={providerFactory}
-              document={doc}
-              {...reactProps}
-              {...additionalRendererProps}
-            />
-          )}
-        </Sidebar>
+        <MediaClientConfigContext.Provider value={mediaClientConfig}>
+          <Sidebar showSidebar={showSidebar}>
+            {additionalRendererProps => (
+              <Renderer
+                dataProviders={providerFactory}
+                document={doc}
+                {...reactProps}
+                {...additionalRendererProps}
+              />
+            )}
+          </Sidebar>
+        </MediaClientConfigContext.Provider>
       </Provider>,
       target,
     );

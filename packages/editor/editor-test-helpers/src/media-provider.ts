@@ -16,6 +16,23 @@ export interface MediaProviderFactoryConfig {
   useMediaPickerAuthProvider?: boolean;
 }
 
+export const storyMediaProviderConfig = (
+  mediaProviderFactoryConfig: MediaProviderFactoryConfig = {},
+): MediaClientConfig => {
+  const {
+    includeUserAuthProvider,
+    useMediaPickerAuthProvider = true,
+  } = mediaProviderFactoryConfig;
+
+  return {
+    authProvider: useMediaPickerAuthProvider
+      ? mediaPickerAuthProvider()
+      : defaultMediaPickerAuthProvider,
+    userAuthProvider:
+      includeUserAuthProvider === false ? undefined : userAuthProvider,
+  };
+};
+
 /**
  * Add "import * as mediaTestHelpers from '@atlaskit/media-test-helpers'"
  * at the beginning of your file and pass "mediaTestHelpers" into this function
@@ -27,17 +44,9 @@ export function storyMediaProviderFactory(
     collectionName,
     stateManager,
     includeUploadMediaClientConfig,
-    includeUserAuthProvider,
-    useMediaPickerAuthProvider = true,
   } = mediaProviderFactoryConfig;
   const collection = collectionName || defaultCollectionName;
-  const mediaClientConfig: MediaClientConfig = {
-    authProvider: useMediaPickerAuthProvider
-      ? mediaPickerAuthProvider()
-      : defaultMediaPickerAuthProvider,
-    userAuthProvider:
-      includeUserAuthProvider === false ? undefined : userAuthProvider,
-  };
+  const mediaClientConfig = storyMediaProviderConfig();
 
   return Promise.resolve<MediaProvider>({
     featureFlags: {},

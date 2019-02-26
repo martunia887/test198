@@ -8,6 +8,7 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 import { ReactRenderer } from '@atlaskit/renderer';
 import { colors } from '@atlaskit/theme';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 import enMessages from '../src/i18n/en';
 import languages from '../src/i18n/languages';
@@ -16,6 +17,7 @@ import {
   SaveAndCancelButtons,
   providers,
   mediaProvider,
+  mediaClientConfig,
   LOCALSTORAGE_defaultDocKey,
 } from './5-full-page';
 import LanguagePicker from '../example-helpers/LanguagePicker';
@@ -354,16 +356,20 @@ class FullPageRendererExample extends React.Component<Props, State> {
                         locale={this.getLocalTag(locale)}
                         messages={messages}
                       >
-                        <SmartCardProvider>
-                          <ReactRenderer
-                            document={this.state.adf}
-                            adfStage="stage0"
-                            dataProviders={this.dataProviders}
-                            extensionHandlers={extensionHandlers}
-                            // @ts-ignore
-                            appearance={this.state.appearance}
-                          />
-                        </SmartCardProvider>
+                        <MediaClientConfigContext.Provider
+                          value={mediaClientConfig}
+                        >
+                          <SmartCardProvider>
+                            <ReactRenderer
+                              document={this.state.adf}
+                              adfStage="stage0"
+                              dataProviders={this.dataProviders}
+                              extensionHandlers={extensionHandlers}
+                              // @ts-ignore
+                              appearance={this.state.appearance}
+                            />
+                          </SmartCardProvider>
+                        </MediaClientConfigContext.Provider>
                       </IntlProvider>
                     </div>
                   ) : (

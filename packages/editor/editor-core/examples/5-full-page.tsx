@@ -24,6 +24,7 @@ import { DevTools } from '../example-helpers/DevTools';
 import { TitleInput } from '../example-helpers/PageElements';
 import { EditorActions } from './../src';
 import withSentry from '../example-helpers/withSentry';
+import { storyMediaProviderConfig } from '@atlaskit/editor-test-helpers/src/media-provider';
 
 /**
  * +-------------------------------+
@@ -108,6 +109,10 @@ export const providers = {
   activityProvider: Promise.resolve(new MockActivityResource()),
   macroProvider: Promise.resolve(macroProvider),
 };
+
+export const mediaClientConfig = storyMediaProviderConfig({
+  includeUserAuthProvider: true,
+});
 
 export const mediaProvider = storyMediaProviderFactory({
   includeUserAuthProvider: true,

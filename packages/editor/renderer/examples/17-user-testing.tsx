@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+import {
+  storyMediaProviderConfig,
+  storyMediaProviderFactory,
+} from '@atlaskit/editor-test-helpers';
 import Button from '@atlaskit/button';
 
 import { default as Renderer } from '../src/ui/Renderer';
@@ -9,8 +12,10 @@ import {
   LOCALSTORAGE_defaultTitleKey,
 } from '../../editor-core/examples/5-full-page';
 import Sidebar from './helper/NavigationNext';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 const mediaProvider = storyMediaProviderFactory();
+const mediaClientConfig = storyMediaProviderConfig();
 const providerFactory = ProviderFactory.create({ mediaProvider });
 
 export default class ExampleRenderer extends React.Component {
@@ -25,38 +30,41 @@ export default class ExampleRenderer extends React.Component {
 
   render() {
     return (
-      <Sidebar showSidebar={true}>
-        {additionalProps => (
-          <React.Fragment>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-              }}
-            >
-              <Button tabIndex="-1" onClick={this.handleRedirect}>
-                Edit
-              </Button>
-            </div>
-            <h1 style={{ margin: '20px 0' }}>
-              {localStorage
-                ? localStorage.getItem(LOCALSTORAGE_defaultTitleKey)
-                : null}
-            </h1>
-            <Renderer
-              dataProviders={providerFactory}
-              {...additionalProps}
-              document={
-                localStorage
-                  ? JSON.parse(
-                      localStorage.getItem(LOCALSTORAGE_defaultDocKey) || '{}',
-                    )
-                  : undefined
-              }
-            />
-          </React.Fragment>
-        )}
-      </Sidebar>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
+        <Sidebar showSidebar={true}>
+          {additionalProps => (
+            <React.Fragment>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <Button tabIndex="-1" onClick={this.handleRedirect}>
+                  Edit
+                </Button>
+              </div>
+              <h1 style={{ margin: '20px 0' }}>
+                {localStorage
+                  ? localStorage.getItem(LOCALSTORAGE_defaultTitleKey)
+                  : null}
+              </h1>
+              <Renderer
+                dataProviders={providerFactory}
+                {...additionalProps}
+                document={
+                  localStorage
+                    ? JSON.parse(
+                        localStorage.getItem(LOCALSTORAGE_defaultDocKey) ||
+                          '{}',
+                      )
+                    : undefined
+                }
+              />
+            </React.Fragment>
+          )}
+        </Sidebar>
+      </MediaClientConfigContext.Provider>
     );
   }
 

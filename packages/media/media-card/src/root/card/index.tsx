@@ -3,8 +3,6 @@ import {
   Identifier,
   FileIdentifier,
   FileDetails,
-  Identifier,
-  FileIdentifier,
   isPreviewableType,
   isFileIdentifier,
   isExternalImageIdentifier,
@@ -411,7 +409,7 @@ export class Card extends React.Component<CardProps, CardState> {
 
   renderMediaViewer = () => {
     const { mediaViewerSelectedItem } = this.state;
-    const { context, identifier } = this.props;
+    const { identifier } = this.props;
     if (!mediaViewerSelectedItem || identifier.mediaItemType !== 'file') {
       return;
     }
@@ -423,7 +421,6 @@ export class Card extends React.Component<CardProps, CardState> {
       <MediaViewer
         collectionName={collectionName}
         dataSource={dataSource}
-        context={context}
         selectedItem={mediaViewerSelectedItem}
         onClose={this.onMediaViewerClose}
       />
