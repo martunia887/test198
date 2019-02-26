@@ -1,0 +1,105 @@
+{
+  "releases": [{ "name": "@atlaskit/media-client", "type": "major" }],
+  "dependents": [
+    {
+      "name": "@atlaskit/editor-common",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/emoji",
+        "@atlaskit/media-card",
+        "@atlaskit/media-client"
+      ]
+    },
+    {
+      "name": "@atlaskit/editor-core",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/editor-common",
+        "@atlaskit/renderer",
+        "@atlaskit/emoji",
+        "@atlaskit/media-card",
+        "@atlaskit/media-filmstrip",
+        "@atlaskit/media-picker",
+        "@atlaskit/media-test-helpers",
+        "@atlaskit/media-client"
+      ]
+    },
+    {
+      "name": "@atlaskit/renderer",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/editor-common",
+        "@atlaskit/media-card",
+        "@atlaskit/media-filmstrip",
+        "@atlaskit/media-test-helpers",
+        "@atlaskit/media-client"
+      ]
+    },
+    {
+      "name": "@atlaskit/emoji",
+      "type": "patch",
+      "dependencies": ["@atlaskit/media-test-helpers", "@atlaskit/media-client"]
+    },
+    {
+      "name": "@atlaskit/media-avatar-picker",
+      "type": "patch",
+      "dependencies": ["@atlaskit/media-test-helpers", "@atlaskit/media-client"]
+    },
+    {
+      "name": "@atlaskit/media-card",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-test-helpers",
+        "@atlaskit/media-viewer",
+        "@atlaskit/media-client"
+      ]
+    },
+    {
+      "name": "@atlaskit/media-editor",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-card",
+        "@atlaskit/media-test-helpers",
+        "@atlaskit/media-client"
+      ]
+    },
+    {
+      "name": "@atlaskit/media-filmstrip",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-card",
+        "@atlaskit/media-test-helpers",
+        "@atlaskit/media-client"
+      ]
+    },
+    {
+      "name": "@atlaskit/media-picker",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-card",
+        "@atlaskit/media-editor",
+        "@atlaskit/media-test-helpers",
+        "@atlaskit/media-viewer",
+        "@atlaskit/media-client"
+      ]
+    },
+    {
+      "name": "@atlaskit/media-test-helpers",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-card",
+        "@atlaskit/media-picker",
+        "@atlaskit/media-client"
+      ]
+    },
+    {
+      "name": "@atlaskit/media-viewer",
+      "type": "patch",
+      "dependencies": [
+        "@atlaskit/media-card",
+        "@atlaskit/media-test-helpers",
+        "@atlaskit/media-client"
+      ]
+    }
+  ]
+}

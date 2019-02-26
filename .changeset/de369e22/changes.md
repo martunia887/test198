@@ -1,0 +1,1 @@
+- Most (>95%) of API existed in media-store and media-core are now into media-client. MediaClient is a main Class/constructor to access all the Media API.
