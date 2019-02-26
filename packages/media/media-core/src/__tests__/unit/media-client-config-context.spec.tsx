@@ -11,7 +11,7 @@ class DummyClass extends React.Component {
             <div id="some-div">
               {mediaClientConfig
                 ? 'config transported ' + mediaClientConfig.authProvider()
-                : null}
+                : 'no config'}
             </div>
           )}
         </MediaClientConfigContext.Consumer>
@@ -39,8 +39,6 @@ describe('MediaClientConfigContext', () => {
 
   it('should user default provider', () => {
     const component = mount(<DummyClass />);
-    expect(component.find("div[id='some-div']").text()).toBe(
-      'config transported [object Promise]',
-    );
+    expect(component.find("div[id='some-div']").text()).toBe('no config');
   });
 });

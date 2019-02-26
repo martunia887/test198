@@ -26,19 +26,11 @@ export function withMediaClient<P>(
             let mediaClient: MediaClient | undefined;
 
             if (mediaClientConfig) {
-              console.log(
-                'mediaClientConfig is here. Looking for mediaClient now',
-              );
               mediaClient = mediaClientsMap.get(mediaClientConfig);
               if (!mediaClient) {
-                console.log('mediaClient is not found. Making a new one.');
                 mediaClient = new MediaClient(mediaClientConfig);
                 mediaClientsMap.set(mediaClientConfig, mediaClient);
-              } else {
-                console.log('mediaClient is found. Using that.');
               }
-            } else {
-              console.log('mediaClientConfig is undefined. waiting for one');
             }
 
             return <Component {...this.props} mediaClient={mediaClient} />;
