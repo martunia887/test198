@@ -1,4 +1,8 @@
 // @flow
 
-export { RefinementBarConfig, RefinementBarConsumer } from './ContextProvider';
-export { RefinementBar } from './RefinementBar';
+export {
+  RefinementBarProvider,
+  RefinementBarConsumer,
+  RefinementBarContext,
+} from './ContextProvider';
+export { RefinementBarUI, RefinementBar as default } from './RefinementBar';

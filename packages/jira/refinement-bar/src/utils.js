@@ -6,11 +6,13 @@ export const isPromise = (p: *) => p.then && typeof p.then === 'function'; // ma
 export const isEmptyString = (str: *) =>
   typeof str === 'string' && str.length === 0;
 
+type X = Object;
+type Z = Arrray<any>;
+
+export const diffArr = (a: Z, b: Z): Z => a.filter(i => b.indexOf(i) < 0);
+
 type cloneArrOptions = { add?: any, remove?: any, sort?: boolean };
-export const cloneArr = (
-  arr: Array<any>,
-  options: cloneArrOptions = {},
-): Array<any> => {
+export const cloneArr = (arr: Z, options: cloneArrOptions = {}): Z => {
   const { add, remove, sort } = options;
 
   let array = [...arr];
@@ -22,8 +24,8 @@ export const cloneArr = (
   return sort ? array.sort() : array;
 };
 
-type cloneObjOptions = { add?: Object, remove?: string };
-export const cloneObj = (obj: Object, options: cloneObjOptions = {}) => {
+type cloneObjOptions = { add?: X, remove?: string };
+export const cloneObj = (obj: X, options: cloneObjOptions = {}) => {
   const { add, remove } = options;
 
   // add key/value pair
@@ -41,7 +43,7 @@ export const cloneObj = (obj: Object, options: cloneObjOptions = {}) => {
   return { ...obj };
 };
 
-export const objectMap = (object: Object, mapFn: (any, string) => any) => {
+export const objectMap = (object: X, mapFn: (any, string) => any) => {
   return Object.keys(object).reduce((res, key) => {
     const result = cloneObj(res);
     const value = mapFn(object[key], key);

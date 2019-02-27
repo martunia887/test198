@@ -60,11 +60,10 @@ export default class NumberController extends FieldController {
     );
   };
 
-  getInitialValue = () =>
-    this.config.defaultValue || {
-      type: 'is',
-      value: '',
-    };
+  getInitialValue = () => ({
+    type: 'is',
+    value: '',
+  });
   getFilterTypes = () => [
     { type: 'is', label: 'is', hasInput: true },
     {

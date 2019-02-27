@@ -13,8 +13,7 @@ import noResultsIcon from '../../assets/no-results-icon.png';
 const AsyncPopupSelect = makeAsyncSelect(PopupSelect);
 
 const AsyncSelectView = ({
-  currentValue,
-  currentValues,
+  storedValue,
   applyChanges,
   field,
   isRemovable,
@@ -50,9 +49,9 @@ const AsyncSelectView = ({
           isRemovable={isRemovable}
           isSelected={isOpen}
           onRemove={onRemove}
-          value={currentValue}
+          value={storedValue}
         >
-          {field.formatFilter({ value: currentValue })}
+          {field.formatFilter({ value: storedValue })}
         </FilterButton>
       )}
       {...props}

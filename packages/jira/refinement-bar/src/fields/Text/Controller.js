@@ -26,11 +26,10 @@ export default class TextController extends FieldController {
     );
   };
 
-  getInitialValue = () =>
-    this.config.defaultValue || {
-      type: 'contains',
-      value: '',
-    };
+  getInitialValue = () => ({
+    type: 'contains',
+    value: '',
+  });
   getFilterTypes = () => [
     {
       type: 'contains',

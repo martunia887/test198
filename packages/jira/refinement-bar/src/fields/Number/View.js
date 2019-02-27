@@ -27,7 +27,7 @@ const Row = ({ children, ...props }: *) => (
 
 type Props = {
   applyChanges: () => void,
-  currentValue: Object,
+  storedValue: Object,
   field: Object,
   invalidMessage: Object,
   isRemovable: boolean,
@@ -42,7 +42,7 @@ type State = {
 };
 
 class NumberView extends React.Component<Props, State> {
-  state = { ...this.props.currentValue, gt: '', lt: '' };
+  state = { ...this.props.storedValue, gt: '', lt: '' };
   dropdownRef = React.createRef();
   get isBetween() {
     return this.state.type === 'between';
@@ -90,7 +90,7 @@ class NumberView extends React.Component<Props, State> {
   render() {
     const {
       applyChanges,
-      currentValue,
+      storedValue,
       field,
       invalidMessage,
       isRemovable,
@@ -113,9 +113,9 @@ class NumberView extends React.Component<Props, State> {
             onClick={onClick}
             onRemove={onRemove}
             ref={ref}
-            value={currentValue.value}
+            value={storedValue.value}
           >
-            {field.formatFilter(currentValue)}
+            {field.formatFilter(storedValue)}
           </FilterButton>
         )}
       >

@@ -5,7 +5,7 @@
 import { Component, createRef, forwardRef, Fragment, type Node } from 'react';
 import createFocusTrap from 'focus-trap';
 import { jsx } from '@emotion/core';
-import { colors, layers } from '@atlaskit/theme';
+import { colors, gridSize, layers } from '@atlaskit/theme';
 
 const NOOP = () => {};
 
@@ -129,7 +129,7 @@ const Dialog = forwardRef(({ placement, ...props }, ref) => (
       marginTop: 8,
       maxWidth: 440,
       minWidth: 160,
-      padding: 16,
+      padding: `${gridSize()}px ${gridSize() * 1.5}px`,
       position: 'absolute',
       top: '100%',
       [placement]: 0,

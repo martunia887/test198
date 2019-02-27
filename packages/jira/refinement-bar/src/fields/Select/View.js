@@ -53,10 +53,10 @@ const stringify = option => `${option.label} ${option.value}`;
 // NOTE: determine which options should be visible to the user
 // - reimplements react-select's input matching
 // - checks (and hides) if the option already exists "above the fold"
-const filterOptions = currentValue => (option, rawInput) => {
+const filterOptions = storedValue => (option, rawInput) => {
   const { data, value } = option;
   const notCurrentlySelected =
-    !currentValue || !currentValue.some(o => o.value === value);
+    !storedValue || !storedValue.some(o => o.value === value);
 
   if (rawInput) {
     const input = lcase(trim(rawInput));
@@ -82,8 +82,8 @@ const getOptions = (current, resolved) => {
 };
 
 const SelectView = ({
-  currentValue,
-  currentValues,
+  storedValue,
+  refinementBarValue,
   applyChanges,
   field,
   isRemovable,
@@ -104,11 +104,11 @@ const SelectView = ({
   // - pass the "current values" to the function
   let resolvedOptions = field.options;
   if (typeof field.options === 'function') {
-    resolvedOptions = field.options(currentValues);
+    resolvedOptions = field.options(refinementBarValue);
   }
 
   // build this monstrosity of options
-  const augmentedOptions = getOptions(currentValue, resolvedOptions);
+  const augmentedOptions = getOptions(storedValue, resolvedOptions);
 
   // support clearing
   const onChangeWithClearHandler = value => {
@@ -127,7 +127,7 @@ const SelectView = ({
       onMenuClose={applyChanges}
       closeMenuOnSelect={closeMenuOnSelect}
       hideSelectedOptions={false}
-      filterOption={filterOptions(currentValue)}
+      filterOption={filterOptions(storedValue)}
       options={augmentedOptions}
       onChange={onChangeWithClearHandler}
       target={({ ref, isOpen }) => (
@@ -137,9 +137,9 @@ const SelectView = ({
           isRemovable={isRemovable}
           isSelected={isOpen}
           onRemove={onRemove}
-          value={currentValue}
+          value={storedValue}
         >
-          {field.formatFilter({ value: currentValue })}
+          {field.formatFilter({ value: storedValue })}
         </FilterButton>
       )}
       {...props}

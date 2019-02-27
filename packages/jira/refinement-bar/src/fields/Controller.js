@@ -22,6 +22,6 @@ export default class FieldController {
   hasValue = ({ value }: Object) => Boolean(value);
 
   getValue = (data: Object) => data[this.config.key] || '';
-  getInitialValue: initialFnType = () => this.config.defaultValue || '';
+  getInitialValue: initialFnType = () => '';
   validateValue: validateFnType = () => ({ message: null, isInvalid: false });
 }

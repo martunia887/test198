@@ -1,8 +1,9 @@
 // @noflow
+/** @jsx jsx */
 
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import querystring from 'querystring';
+import { jsx } from '@emotion/core';
 
 import { cloneObj, objectMap } from '../src/utils';
 import {
@@ -13,11 +14,79 @@ import {
   SearchFilter,
   TextFilter,
 } from '../src/fields';
-import {
-  RefinementBar,
-  RefinementBarConfig,
+import RefinementBar, {
+  RefinementBarUI,
+  RefinementBarProvider,
   RefinementBarConsumer,
 } from '../src/components';
+
+// ==============================
+// APP EXAMPLE
+// ==============================
+
+class RefinementBarExample extends Component {
+  state = { value: decodeQuery() };
+  onChange = (value: Object, meta: Object) => {
+    switch (meta.action) {
+      case 'add':
+        this.addValue({ [meta.key]: meta.data });
+        break;
+      case 'remove':
+        this.removeValue(meta.key);
+        break;
+      case 'update':
+        this.updateValue(value);
+        break;
+      default:
+    }
+  };
+  addValue = (add: Object) => {
+    const value = cloneObj(this.state.value, { add });
+    this.setState({ value });
+  };
+  removeValue = (remove: string) => {
+    const value = cloneObj(this.state.value, { remove });
+    this.setState({ value });
+  };
+  updateValue = value => {
+    this.setState({ value });
+  };
+
+  // render() {
+  //   return (
+  //     <RefinementBar
+  //       fieldConfig={FIELD_CONFIG}
+  //       irremovableKeys={['search', 'issue-assignee', 'issue-type']}
+  //       onChange={this.onChange}
+  //       value={this.state.value}
+  //     />
+  //   );
+  // }
+
+  render() {
+    return (
+      <RefinementBarProvider
+        fieldConfig={FIELD_CONFIG}
+        irremovableKeys={['search', 'issue-assignee', 'issue-type']}
+        onChange={this.onChange}
+        value={this.state.value}
+      >
+        <>
+          <RefinementBarConsumer>{encodeQuery}</RefinementBarConsumer>
+          <RefinementBarUI />
+          <RefinementBarConsumer>
+            {({ value }) => (
+              <>
+                <Heading>Values</Heading>
+                <Pre>{Object.entries(value).map(dataMap)}</Pre>
+              </>
+            )}
+          </RefinementBarConsumer>
+        </>
+      </RefinementBarProvider>
+    );
+  }
+}
 
 // ==============================
 // DATA
@@ -71,7 +140,7 @@ const filterAssignees = inputValue => {
   );
 };
 
-const FIELD_META = {
+const FIELD_CONFIG = {
   approvals: {
     label: 'Approvals',
     type: SelectFilter,
@@ -97,7 +166,6 @@ const FIELD_META = {
   search: {
     label: 'Search',
     type: SearchFilter,
-    defaultValue: 'Hello',
   },
   'issue-type': {
     type: IssueSelectFilter,
@@ -157,21 +225,31 @@ const FIELD_META = {
 // STYLED COMPONENTS
 // ==============================
 
-const Pre = styled.pre({
-  backgroundColor: '#F4F5F7',
-  borderRadius: 4,
-  boxSizing: 'border-box',
-  color: '#505F79',
-  flex: 1,
-  fontSize: '0.85rem',
-  lineHeight: 1.6,
-  maxWidth: '100%',
-  overflow: 'auto',
-  padding: 16,
-});
-const Heading = styled.h4({
-  margin: '1em 0 0',
-});
+const Pre = props => (
+  <pre
+    css={{
+      backgroundColor: '#F4F5F7',
+      borderRadius: 4,
+      boxSizing: 'border-box',
+      color: '#505F79',
+      flex: 1,
+      fontSize: '0.85rem',
+      lineHeight: 1.6,
+      maxWidth: '100%',
+      overflow: 'auto',
+      padding: 16,
+    }}
+    {...props}
+  />
+);
+const Heading = props => (
+  <h4
+    css={{
+      margin: '1em 0 0',
+    }}
+    {...props}
+  />
+);
 
 // ==============================
 // HELPERS
@@ -188,7 +266,7 @@ const dataMap = ([key, val]) => (
 const decodeQuery = () => {
   const params = querystring.parse(window.location.search.replace('?', ''));
   const decoded = objectMap(params, (v, k) => {
-    if (Object.keys(FIELD_META).includes(k)) {
+    if (Object.keys(FIELD_CONFIG).includes(k)) {
       return JSON.parse(v);
     }
     return null;
@@ -199,7 +277,7 @@ const decodeQuery = () => {
 
 const encodeQuery = values => {
   const params = objectMap(values, (v, k) => {
-    if (Object.keys(FIELD_META).includes(k)) {
+    if (Object.keys(FIELD_CONFIG).includes(k)) {
       return JSON.stringify(v);
     }
     return null;
@@ -211,62 +289,5 @@ const encodeQuery = values => {
 
   return null;
 };
-
-// ==============================
-// APP EXAMPLE
-// ==============================
-
-class RefinementBarExample extends Component {
-  state = { values: decodeQuery() };
-  addValue = add => {
-    const values = cloneObj(this.state.values, { add });
-    this.setState({ values });
-  };
-  removeValue = remove => {
-    const values = cloneObj(this.state.values, { remove });
-    this.setState({ values });
-  };
-  updateValue = add => {
-    const values = cloneObj(this.state.values, { add });
-    this.setState({ values });
-  };
-
-  render() {
-    return (
-      <RefinementBarConfig
-        fields={FIELD_META}
-        addValue={this.addValue}
-        removeValue={this.removeValue}
-        updateValue={this.updateValue}
-        values={this.state.values}
-      >
-        <>
-          <RefinementBarConsumer>{encodeQuery}</RefinementBarConsumer>
-
-          <h1>Refinement Bar: Prototype</h1>
-          <RefinementBar
-            constant={['search', 'issue-assignee', 'issue-type']}
-            initialAvailable={[
-              'approvals',
-              'browser',
-              'comment',
-              'description',
-              'votes',
-            ]}
-            initialSelected={[]}
-          />
-          <RefinementBarConsumer>
-            {values => (
-              <>
-                <Heading>Values</Heading>
-                <Pre>{Object.entries(values).map(dataMap)}</Pre>
-              </>
-            )}
-          </RefinementBarConsumer>
-        </>
-      </RefinementBarConfig>
-    );
-  }
-}
 
 export default () => <RefinementBarExample />;

@@ -2,97 +2,89 @@
 
 import React, { Component, type ComponentType, type Node } from 'react';
 
-import { cloneObj, objectMap } from '../utils';
+import { diffArr, objectMap } from '../utils';
 
 export const RefinementBarContext = React.createContext({});
 
-type ValueType = {
+type FieldType = {
   label: string,
   type: ComponentType<*>,
 };
-type FieldsType = { [key: string]: ValueType };
+type FieldConfigType = { [key: string]: FieldType };
+type Keys = Array<string>;
+type Meta = {
+  type: 'add' | 'remove' | 'update',
+  key: string,
+  data?: any,
+};
 
 type ConfigProps = {
-  children: Node,
-  fields: FieldsType,
-  initialValues: Object,
-  values: Object,
-
-  addValue?: (*) => void,
-  removeValue?: (*) => void,
-  updateValue?: (*) => void,
+  children?: Node,
+  fieldConfig: FieldConfigType,
+  irremovableKeys?: Keys,
+  onChange: (value: Object, meta: Meta) => void,
+  value: Object,
 };
 type State = {
-  fields: FieldsType,
-  values: Object,
+  fieldConfig: FieldConfigType,
+  value: Object,
 };
 
-export class RefinementBarConfig extends Component<ConfigProps, State> {
+export class RefinementBarProvider extends Component<ConfigProps, State> {
   static defaultProps = {
-    fields: {},
-    initialValues: {},
+    irremovableKeys: [],
   };
-
-  static getDerivedStateFromProps(props: ConfigProps, state: State) {
-    if (props.values && props.values !== state.values) {
-      return { values: props.values };
-    }
-
-    return null;
-  }
-
   constructor(props: ConfigProps) {
     super(props);
-    const { fields, initialValues, values } = this.props;
+    const { fieldConfig } = this.props;
 
-    // initialize field controllers
-    const initializedFields = objectMap(fields, (value, key) => {
-      const Controller = value.type.controller;
-      return new Controller({ key, ...value });
+    const initializedFields = objectMap(fieldConfig, (field, key) => {
+      const Controller = field.type.controller;
+      return new Controller({ key, ...field });
     });
 
     this.state = {
-      fields: initializedFields,
-      values: values !== undefined ? values : initialValues,
+      fieldConfig: initializedFields,
     };
   }
 
-  // Value Interface
-  addValue = (add: Object) => {
-    const values = cloneObj(this.state.values, { add });
-    this.setState({ values });
-  };
-  removeValue = (remove: string) => {
-    const values = cloneObj(this.state.values, { remove });
-    this.setState({ values });
-  };
-  updateValue = (add: Object) => {
-    const values = cloneObj(this.state.values, { add });
-    this.setState({ values });
-  };
+  get removeableKeys() {
+    const all = Object.keys(this.props.fieldConfig);
+    const irremovable = this.props.irremovableKeys;
+    return diffArr(all, irremovable);
+  }
+
+  get selectedKeys() {
+    const values = Object.keys(this.props.value);
+    const irremovable = this.props.irremovableKeys;
+    return diffArr(values, irremovable);
+  }
 
   render() {
-    const addValue = this.props.addValue || this.addValue;
-    const removeValue = this.props.removeValue || this.removeValue;
-    const updateValue = this.props.updateValue || this.updateValue;
-    const state = this.state;
+    const context = {
+      fieldConfig: this.state.fieldConfig,
+      irremovableKeys: this.props.irremovableKeys,
+      onChange: this.props.onChange,
+      removeableKeys: this.removeableKeys,
+      selectedKeys: this.selectedKeys,
+      value: this.props.value,
+    };
 
     return (
-      <RefinementBarContext.Provider
-        value={{ addValue, removeValue, updateValue, state }}
-      >
+      <RefinementBarContext.Provider value={context}>
         {this.props.children}
       </RefinementBarContext.Provider>
     );
   }
 }
 
-type consumerProps = {
+export const RefinementBarConsumer = ({
+  children,
+}: {
   children: Object => Node,
-};
-export const RefinementBarConsumer = ({ children }: consumerProps) => (
+}) => (
   <RefinementBarContext.Consumer>
-    {({ state }) => children(state.values)}
+    {ctx => children(ctx)}
   </RefinementBarContext.Consumer>
 );
 
@@ -101,6 +93,6 @@ export const withRefinementBarContext = (Comp: ComponentType<*>) => (
   props: *,
 ) => (
   <RefinementBarContext.Consumer>
-    {rbctx => <Comp {...props} rbctx={rbctx} />}
+    {c => <Comp {...props} tempContextFromProps={c} />}
   </RefinementBarContext.Consumer>
 );

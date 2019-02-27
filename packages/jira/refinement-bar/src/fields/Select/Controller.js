@@ -26,7 +26,7 @@ export default class SelectController extends FieldController {
   hasValue = ({ value }: *) => {
     return Array.isArray(value) ? value.length > 0 : isObject(value);
   };
-  getInitialValue = () => null;
+  getInitialValue = () => [];
   formatFilter = ({ value }: *) => {
     const separator = ', ';
     const max = 3;

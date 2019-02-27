@@ -9,7 +9,7 @@ import { Group, Note, Radio } from '../../components/InputGroup';
 
 type Props = {
   applyChanges: (*) => void,
-  currentValue: Object,
+  storedValue: Object,
   field: Object,
   invalidMessage: string,
   isRemovable: boolean,
@@ -22,7 +22,7 @@ type State = {
 };
 
 class TextView extends React.Component<Props, State> {
-  state = this.props.currentValue;
+  state = this.props.storedValue;
   dropdownRef = React.createRef();
   handleSubmit = (e: *) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ class TextView extends React.Component<Props, State> {
   render() {
     const {
       applyChanges,
-      currentValue,
+      storedValue,
       field,
       invalidMessage,
       isRemovable,
@@ -80,9 +80,9 @@ class TextView extends React.Component<Props, State> {
             onClick={onClick}
             onRemove={onRemove}
             ref={ref}
-            value={currentValue.value}
+            value={storedValue.value}
           >
-            {field.formatFilter(currentValue)}
+            {field.formatFilter(storedValue)}
           </FilterButton>
         )}
       >
