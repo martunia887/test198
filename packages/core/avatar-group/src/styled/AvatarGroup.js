@@ -1,6 +1,7 @@
 // @flow
 import styled from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import colors from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
 import { BORDER_WIDTH } from '@atlaskit/avatar';
 
 // TODO: use math utilities within styled component

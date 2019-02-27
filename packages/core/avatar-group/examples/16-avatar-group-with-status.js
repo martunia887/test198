@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme'; //TODO: FIXME this export is removed (as it was for legacy support)
 import Toggle from '@atlaskit/toggle';
 import AvatarGroup from '../src';
 import { RANDOM_USERS, getAdorableAvatar } from '../examples-util/data';

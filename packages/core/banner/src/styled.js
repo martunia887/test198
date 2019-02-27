@@ -1,6 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { colors, gridSize, math, themed } from '@atlaskit/theme';
+import { themed, math } from '@atlaskit/theme';
+import { R400, R300, Y300, N500, N0, DN40, N700 } from '@atlaskit/theme/colors';
+import { gridSize } from '@atlaskit/theme/constants';
 
 const TRANSITION_DURATION = '0.25s ease-in-out';
 
@@ -12,9 +14,9 @@ export const getMaxHeight = ({
 }) => (appearance === 'announcement' ? '88px' : '52px');
 
 export const backgroundColor = themed('appearance', {
-  error: { light: colors.R400, dark: colors.R300 },
-  warning: { light: colors.Y300, dark: colors.Y300 },
-  announcement: { light: colors.N500, dark: colors.N500 },
+  error: { light: R400, dark: R300 },
+  warning: { light: Y300, dark: Y300 },
+  announcement: { light: N500, dark: N500 },
 });
 
 export const Container = styled.div`
@@ -24,13 +26,13 @@ export const Container = styled.div`
   background-color: ${backgroundColor};
 `;
 
-export const testErrorBackgroundColor = colors.R400;
-export const testErrorTextColor = colors.N0;
+export const testErrorBackgroundColor = R400;
+export const testErrorTextColor = N0;
 
 export const textColor = themed('appearance', {
-  error: { light: colors.N0, dark: colors.DN40 },
-  warning: { light: colors.N700, dark: colors.DN40 },
-  announcement: { light: colors.N0, dark: colors.N0 },
+  error: { light: N0, dark: DN40 },
+  warning: { light: N700, dark: DN40 },
+  announcement: { light: N0, dark: N0 },
 });
 export const Content = styled.div`
   align-items: center;

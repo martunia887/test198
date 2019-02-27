@@ -1,8 +1,10 @@
 // @flow
 import styled from 'styled-components';
-import { colors, themed, layers } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme';
+import { N100A, DN90A } from '@atlaskit/theme/colors';
+import { layers } from '@atlaskit/theme/constants';
 
-const backgroundColor = themed({ light: colors.N100A, dark: colors.DN90A });
+const backgroundColor = themed({ light: N100A, dark: DN90A });
 export const opacity = (p: any) => (p.isTinted ? 1 : 0);
 export const pointerEvents = (p: any) =>
   p.canClickThrough ? 'none' : 'initial';

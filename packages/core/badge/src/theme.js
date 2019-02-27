@@ -1,6 +1,23 @@
 // @flow
 
-import { colors, createTheme } from '@atlaskit/theme';
+import { createTheme } from '@atlaskit/theme';
+import {
+  G50,
+  N40,
+  DN70,
+  R400,
+  B400,
+  B100,
+  G500,
+  DN400,
+  N0,
+  R50,
+  N800,
+  DN900,
+  DN0,
+  B500,
+  R500,
+} from '@atlaskit/theme/colors';
 
 export type ThemeAppearance =
   | 'added'
@@ -24,24 +41,24 @@ export type ThemeTokens = {
 };
 
 export const backgroundColors = {
-  added: { light: colors.G50, dark: colors.G50 },
-  default: { light: colors.N40, dark: colors.DN70 },
-  important: { light: colors.R400, dark: colors.R400 },
-  primary: { light: colors.B400, dark: colors.B100 },
+  added: { light: G50, dark: G50 },
+  default: { light: N40, dark: DN70 },
+  important: { light: R400, dark: R400 },
+  primary: { light: B400, dark: B100 },
   /* Note that primary inverted is a temporary implementation. Once navigation has
   context of the nav location to pass down, this will be moved to the primary when
   viewed in a global context. */
-  primaryInverted: { light: colors.N0, dark: colors.DN400 },
-  removed: { light: colors.R50, dark: colors.R50 },
+  primaryInverted: { light: N0, dark: DN400 },
+  removed: { light: R50, dark: R50 },
 };
 
 export const textColors = {
-  added: { light: colors.G500, dark: colors.G500 },
-  default: { light: colors.N800, dark: colors.DN900 },
-  important: { light: colors.N0, dark: colors.N0 },
-  primary: { light: colors.N0, dark: colors.DN0 },
-  primaryInverted: { light: colors.B500, dark: colors.DN0 },
-  removed: { light: colors.R500, dark: colors.R500 },
+  added: { light: G500, dark: G500 },
+  default: { light: N800, dark: DN900 },
+  important: { light: N0, dark: N0 },
+  primary: { light: N0, dark: DN0 },
+  primaryInverted: { light: B500, dark: DN0 },
+  removed: { light: R500, dark: R500 },
 };
 
 export const Theme = createTheme<ThemeTokens, ThemeProps>(
