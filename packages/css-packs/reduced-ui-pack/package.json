@@ -6,10 +6,6 @@
   "main": "bundle.css",
   "atlaskit:src": "src/bundle.css",
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/overview",
-  "files": [
-    "dist/bundle.css",
-    "dist/icons-sprite.svg"
-  ],
   "author": "Atlassian Pty Ltd",
   "maintainers": [
     "Sean C",
