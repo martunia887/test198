@@ -52,7 +52,6 @@ Some examples of what would fall under the abstract semver umbrella:
 3. **PATCH** version when
   - update package dependencies
   - Directory structure changes
-    - Reworking our directory structure. We offer a `dist/esm` build where the module field in the `package.json` points to the entry point within that folder. There should be no reason to reach into packages.
 4. **NO RELEASE** when
   - Update dev dependencies (including `flow-bin`)
   - Add tests or examples

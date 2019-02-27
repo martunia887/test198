@@ -1,0 +1,1 @@
+- Dropped CJS support, from now on Atlaskit Core only ships ESM
