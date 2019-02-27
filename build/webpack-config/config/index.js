@@ -15,7 +15,49 @@ const baseCacheDir = path.resolve(
   '../../../node_modules/.cache-loader',
 );
 
-module.exports = function createWebpackConfig(
+const glob = require('glob');
+const bolt = require('bolt');
+
+function fromEntries(iterable) {
+  return [...iterable].reduce(
+    (obj, { 0: key, 1: val }) => Object.assign(obj, { [key]: val }),
+    {},
+  );
+}
+
+function getAliasesForWorkspace({ name: packageName, dir }) {
+  return new Promise((resolve, reject) => {
+    glob(`${dir}/src/*.js`, (err, paths) => {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(
+        paths.map(pathName => {
+          const { name: entryName } = path.parse(pathName);
+
+          return [`${packageName}/${entryName}`, pathName];
+        }),
+      );
+    });
+  });
+}
+
+async function getAlternativeEntryPointAliasList() {
+  const workspaces = await bolt.getWorkspaces();
+
+  const aliasPromises = workspaces.map(workspace =>
+    getAliasesForWorkspace(workspace),
+  );
+  const aliases = fromEntries(
+    (await Promise.all(aliasPromises))
+      .filter(aliases => aliases.length > 0)
+      .reduce((acc, a) => [...acc, ...a], []),
+  );
+  return aliases;
+}
+
+module.exports = async function createWebpackConfig(
   {
     globs = createDefaultGlob(),
     mode = 'development',
@@ -37,7 +79,8 @@ module.exports = function createWebpackConfig(
   }*/,
 ) {
   const isProduction = mode === 'production';
-
+  const aliasList = await getAlternativeEntryPointAliasList();
+  console.log(aliasList);
   return {
     stats: statsOptions,
     mode,
@@ -192,6 +235,9 @@ module.exports = function createWebpackConfig(
     resolve: {
       mainFields: ['module', 'atlaskit:src', 'browser', 'main'],
       extensions: ['.js', '.ts', '.tsx'],
+      alias: {
+        ...aliasList,
+      },
     },
     resolveLoader: {
       modules: [
