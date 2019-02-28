@@ -16,13 +16,21 @@ const projects: Array<OptionType> = createMetaJson.projects.map(project => ({
   iconUrl: project.avatarUrls['16x16'],
 }));
 
-export const issueTypes: Array<OptionType> = createMetaJson.projects[1].issuetypes.map(
-  issueType => ({
-    label: issueType.name,
-    value: issueType.id,
-    iconUrl: issueType.iconUrl,
-  }),
-);
+const issueType2Option = issueType => ({
+  label: issueType.name,
+  value: issueType.id,
+  iconUrl: issueType.iconUrl,
+});
+
+// NOTE: Keeping it for you ED
+export const issueTypes: Array<
+  OptionType
+> = createMetaJson.projects[1].issuetypes.map(issueType2Option);
+
+const getIssueTypesForProject = projectId =>
+  createMetaJson.projects
+    .filter(project => project.id === projectId)[0]
+    .issuetypes.map(issueType2Option);
 
 const Wrapper = styled.div`
   display: inline-flex;
@@ -44,6 +52,7 @@ interface Props {
 }
 
 interface State {
+  issueTypes: Array<OptionType>;
   project?: OptionType;
   issueType?: OptionType;
   summary?: string;
@@ -54,13 +63,19 @@ export default class JiraCreate extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
-    const defaultProject = localStorage.getItem(
+    const LS_defaultProject = localStorage.getItem(
       'atlassian.editor.shipit.jiraQuery.project',
     );
+    const defaultProject = LS_defaultProject
+      ? JSON.parse(LS_defaultProject)
+      : undefined;
 
     this.state = {
       hasError: false,
-      project: defaultProject ? JSON.parse(defaultProject) : undefined,
+      issueTypes: defaultProject
+        ? getIssueTypesForProject(defaultProject.value)
+        : issueTypes,
+      project: defaultProject,
       issueType: {
         label: 'Task',
         value: '10002',
@@ -71,7 +86,7 @@ export default class JiraCreate extends React.Component<Props, State> {
   }
 
   render() {
-    const { issueType, project, hasError } = this.state;
+    const { issueTypes, issueType, project, hasError } = this.state;
     return (
       <Wrapper data-has-error={hasError}>
         <JiraSelect
@@ -79,7 +94,11 @@ export default class JiraCreate extends React.Component<Props, State> {
           options={projects}
           value={project}
           onChange={project => {
-            this.setState({ project, hasError: false });
+            this.setState({
+              project,
+              hasError: false,
+              issueTypes: getIssueTypesForProject(project.value),
+            });
             localStorage.setItem(
               'atlassian.editor.shipit.jiraQuery.project',
               JSON.stringify(project),
