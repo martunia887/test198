@@ -48,7 +48,7 @@
     "typecheck": "                           yarn run typecheck:flow && yarn run typecheck:typescript",
     "typecheck:flow": "                      flow check --max-warnings=0",
     "typecheck:typescript": "                tsc --noEmit --project ./tsconfig.typecheck.json",
-    "measure": "                             measure",
+    "measure": "                             node --max-old-space-size=8192 $(yarn bin)/measure",
     "measure:changed": "                     yarn measure $(node build/ci-scripts/get.changed.packages.since.master.js --spaceDelimited --only='packages') --lint",
     "measure:updateSnapshot": "              yarn measure $(node build/ci-scripts/get.changed.packages.since.master.js --spaceDelimited --only='packages') --updateSnapshot",
     "website:start": "                       cd website && yarn start",
