@@ -128,6 +128,7 @@ export default {
     'layoutColumn',
     'inlineCard',
     'blockCard',
+    'jiraQuery',
   ],
   marks: [
     // Inline marks
@@ -142,7 +143,6 @@ export default {
     'code',
     'typeAheadQuery',
     'emojiQuery',
-    'jiraQuery',
     'textColor',
 
     // Block marks

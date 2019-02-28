@@ -60,7 +60,6 @@ export const defaultSchema: Schema = createSchema({
     'code',
     'mentionQuery',
     'emojiQuery',
-    'jiraQuery',
     'textColor',
     'confluenceInlineComment',
     'breakout',

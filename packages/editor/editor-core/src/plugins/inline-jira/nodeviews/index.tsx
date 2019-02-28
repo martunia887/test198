@@ -1,4 +1,5 @@
 import * as React from 'react';
+// import * as ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
@@ -36,55 +37,17 @@ export interface Props {
   providerFactory: ProviderFactory;
 }
 
-interface State {
-  text: string;
-}
-
-export class JiraCreateNode extends React.Component<Props, State> {
-  state = {
-    text: '',
-  };
-
-  onChange = e => {
-    this.setState(
-      {
-        text: e.target.value,
-      },
-      () => {
-        console.log('am i going crazy', this.state.text);
-      },
-    );
-
-    e.preventDefault();
-  };
-
-  render() {
-    console.log(this.state.text);
-
-    return (
-      <JiraCreate>
-        <JiraSelect options={projects} />
-        <JiraSelect options={issueTypes} />
-        <input onChange={this.onChange} type="text" value={this.state.text} />
-        {this.state.text}
-      </JiraCreate>
-    );
-  }
-}
-
 class InlineJiraView extends ReactNodeView {
-  getContentDOM() {
-    const dom = document.createElement('span');
-    dom.className = 'jiraView-content-wrap';
-    return { dom };
+  render(props) {
+    return <JiraCreateNode />;
   }
 
-  createDomRef(): HTMLElement {
-    return document.createElement('span');
+  stopEvent(event) {
+    return !!(this.dom && this.dom.contains(event.target));
   }
 
-  render(props, forwardRef) {
-    return <JiraCreateNode view={this.view} />;
+  ignoreMutation() {
+    return true;
   }
 
   ignoreMutation() {
