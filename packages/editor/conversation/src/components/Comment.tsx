@@ -406,10 +406,9 @@ export default class Comment extends React.Component<Props, State> {
     if (!comments || comments.length === 0) {
       return null;
     }
-
-    return comments.map(child => (
+    return comments.map((child, index) => (
       <CommentContainer
-        key={child.localId}
+        key={child.localId || index}
         comment={child}
         user={user}
         conversationId={conversationId}
@@ -587,6 +586,7 @@ export default class Comment extends React.Component<Props, State> {
 
     return (
       <AkComment
+        key={commentId}
         id={commentId}
         author={
           // Render with onClick/href if they're supplied

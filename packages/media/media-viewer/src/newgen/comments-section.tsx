@@ -4,13 +4,16 @@ import {
   FileIdentifier,
   ConversationsContext,
   PageConversations,
+  Context,
 } from '@atlaskit/media-core';
 import { Conversation } from '@atlaskit/conversation';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { CommentsSectionWrapper } from './styled';
+import { MediaProvider } from '../../../../editor/editor-core';
 
 interface Props {
   identifier: FileIdentifier;
+  context: Context;
 }
 
 interface State {
@@ -19,6 +22,21 @@ interface State {
 
 export class CommentsSection extends React.Component<Props, State> {
   state: State = {};
+  dataProviders: ProviderFactory;
+
+  constructor(props: Props) {
+    super(props);
+    const { context } = props;
+    const mediaProvider: MediaProvider = {
+      viewContext: Promise.resolve(context),
+    };
+
+    this.dataProviders = new ProviderFactory();
+    this.dataProviders.setProvider(
+      'mediaProvider',
+      Promise.resolve(mediaProvider),
+    );
+  }
 
   async componentWillMount() {
     const fileId = await this.props.identifier.id;
@@ -27,9 +45,7 @@ export class CommentsSection extends React.Component<Props, State> {
 
   render() {
     const { fileId } = this.state;
-    const dataProviders = new ProviderFactory();
-    const mediaProvider = {};
-    dataProviders.setProvider('mediaProvider', Promise.resolve(mediaProvider));
+    const {dataProviders} = this;
 
     return (
       <CommentsSectionWrapper>
