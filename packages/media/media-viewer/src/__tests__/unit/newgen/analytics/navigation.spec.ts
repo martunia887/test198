@@ -3,7 +3,7 @@ import { createNavigationEvent } from '../../../../newgen/analytics/navigation';
 import {
   version as packageVersion,
   name as packageName,
-} from '../../../../link-2-package.json';
+} from '../../../../../link-2-package.json';
 
 const identifier: Identifier = {
   id: 'my-id',

@@ -2,7 +2,7 @@ import { GasPayload } from '@atlaskit/analytics-gas-types';
 import {
   name as packageName,
   version as packageVersion,
-} from '.link-2-package.json';
+} from './link-2-package.json';
 import { ObjectState } from './Client/types';
 
 export const ANALYTICS_CHANNEL = 'media';
