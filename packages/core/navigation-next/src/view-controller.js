@@ -8,4 +8,4 @@ export {
 export {
   default as withNavigationViewController,
 } from './view-controller/withNavigationViewController';
-export { default as viewReducerUtils } from '../view-controller/reducer-utils';
+export { default as viewReducerUtils } from './view-controller/reducer-utils';
