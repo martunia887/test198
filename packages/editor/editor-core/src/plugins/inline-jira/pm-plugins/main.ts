@@ -26,10 +26,10 @@ const createPlugin = portalProviderAPI =>
           jiraIssueNodeView,
           portalProviderAPI,
         ),
-        jiraIssueSelect: ReactNodeView.fromComponent(
-          JiraIssueSelectNodeView,
-          portalProviderAPI,
-        ),
+        // jiraIssueSelect: ReactNodeView.fromComponent(
+        //   JiraIssueSelectNodeView,
+        //   portalProviderAPI,
+        // ),
       },
     },
   });

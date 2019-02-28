@@ -11,7 +11,6 @@ import {
   code,
   emojiQuery,
   typeAheadQuery,
-  jiraQuery,
   textColor,
   confluenceInlineComment,
   action,
@@ -65,6 +64,7 @@ import {
   unsupportedBlock,
   unsupportedInline,
   status,
+  jiraQuery,
   jiraIssue,
   jiraIssueSelect,
 } from './nodes';
@@ -179,6 +179,7 @@ const nodesInOrder: SchemaBuiltInItem[] = [
   { name: 'unsupportedInline', spec: unsupportedInline },
   { name: 'jiraIssue', spec: jiraIssue },
   { name: 'jiraIssueSelect', spec: jiraIssueSelect },
+  { name: 'jiraQuery', spec: jiraQuery },
 ];
 
 const marksInOrder: SchemaBuiltInItem[] = [
@@ -191,7 +192,6 @@ const marksInOrder: SchemaBuiltInItem[] = [
   { name: 'code', spec: code },
   { name: 'emojiQuery', spec: emojiQuery },
   { name: 'typeAheadQuery', spec: typeAheadQuery },
-  { name: 'jiraQuery', spec: jiraQuery },
   { name: 'textColor', spec: textColor },
   { name: 'action', spec: action },
   { name: 'alignment', spec: alignment },

@@ -13,11 +13,13 @@ const projects: Options = json.projects.map(project => ({
   iconUrl: project.avatarUrls['16x16'],
 }));
 
-const issueTypes: Options = json.projects[1].issuetypes.map(issueType => ({
-  label: issueType.name,
-  value: issueType.id,
-  iconUrl: issueType.iconUrl,
-}));
+export const issueTypes: Options = json.projects[1].issuetypes.map(
+  issueType => ({
+    label: issueType.name,
+    value: issueType.id,
+    iconUrl: issueType.iconUrl,
+  }),
+);
 
 const Wrapper = styled.div`
   display: inline-flex;

@@ -5,7 +5,7 @@ import { pluginKey } from './main';
 import { CardPluginState, Request } from '../types';
 import { Command } from '../../../types';
 import { resolveCard } from './actions';
-import { issueTypes as issueTypesJson } from '../../inline-jira/nodeviews';
+import { issueTypes as issueTypesJson } from '../../inline-jira/nodeviews/JiraCreate';
 
 // data
 import { default as jqlJson } from '../../inline-jira/nodeviews/data/jql.json';
