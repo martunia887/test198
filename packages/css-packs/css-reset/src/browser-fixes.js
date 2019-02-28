@@ -1,7 +1,7 @@
 // @flow
-import evaluateInner from './utils/evaluate-inner';
+import { css } from '@emotion/core';
 
-export default evaluateInner`
+export default css`
   /* IE11 doesn't support <template> elements which shouldn't be displayed */
   template {
     display: none;

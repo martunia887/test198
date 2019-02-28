@@ -23,12 +23,12 @@ export default css`
   a[href][data-ak-tooltip]:focus::after,
   button[data-ak-tooltip]:focus::after {
     background-color: ${colors.N900};
-    border-radius: ${borderRadius};
+    border-radius: ${borderRadius()};
     box-sizing: border-box;
     color: ${fontColor};
     content: attr(data-ak-tooltip);
     display: inline-block;
-    font-size: ${fontSize}px;
+    font-size: ${fontSize()}px;
     line-height: ${lineHeight};
     max-width: ${maxWidth}px;
     overflow: hidden;

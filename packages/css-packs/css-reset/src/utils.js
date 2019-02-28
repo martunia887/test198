@@ -1,7 +1,7 @@
 //@flow
-import evaluateInner from './utils/evaluate-inner';
+import { css } from '@emotion/core';
 
-export default evaluateInner`
+export default css`
   .assistive {
     border: 0 !important;
     clip: rect(1px, 1px, 1px, 1px) !important;

@@ -1,4 +1,5 @@
 // @flow
+import { css } from '@emotion/core';
 import {
   colors,
   typography,
@@ -6,9 +7,8 @@ import {
   fontFamily,
   codeFontFamily,
 } from '@atlaskit/theme';
-import evaluateInner from './utils/evaluate-inner';
 
-export default evaluateInner`
+export default css`
   body,
   html {
     height: 100%;

@@ -1,5 +1,5 @@
 //@flow
-import css from './utils/evaluate-inner';
+import { css } from '@emotion/core';
 // Reset
 export default css`
   html,
