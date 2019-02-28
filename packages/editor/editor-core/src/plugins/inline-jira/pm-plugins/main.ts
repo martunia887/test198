@@ -1,8 +1,10 @@
 import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
+import { ReactNodeView } from '../../../nodeviews';
+import JiraCreateNode from '../nodeviews';
 
 export const pluginKey = new PluginKey('inlineJiraPlugin');
 
-const createPlugin = () =>
+const createPlugin = portalProviderAPI =>
   new Plugin({
     key: pluginKey,
     state: {
@@ -15,7 +17,9 @@ const createPlugin = () =>
     },
 
     props: {
-      nodeViews: {},
+      nodeViews: {
+        jira: ReactNodeView.fromComponent(JiraCreateNode, portalProviderAPI),
+      },
     },
   });
 
