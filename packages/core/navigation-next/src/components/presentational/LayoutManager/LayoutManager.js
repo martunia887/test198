@@ -86,7 +86,7 @@ export default class LayoutManager extends Component<
     experimental_flyoutOnHover: false,
     experimental_alternateFlyoutBehaviour: false,
     experimental_fullWidthFlyout: false,
-    PageHeader: (
+    pageBanner: (
       <Banner isOpen appearance="warning">
         This is a Banner
       </Banner>
@@ -448,11 +448,13 @@ export default class LayoutManager extends Component<
           position: 'relative',
         }}
       >
-        {this.props.PageHeader}
-        <LayoutContainer>
-          {this.renderNavigation()}
-          {this.renderPageContent()}
-        </LayoutContainer>
+        <>
+          {this.props.pageBanner}
+          <LayoutContainer>
+            {this.renderNavigation()}
+            {this.renderPageContent()}
+          </LayoutContainer>
+        </>
       </div>
     );
   }

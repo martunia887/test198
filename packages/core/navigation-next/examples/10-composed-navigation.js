@@ -133,16 +133,27 @@ const ProductNavigation = () => (
   </div>
 );
 
-type State = { shouldDisplayContainerNav: boolean, dialogOpen: boolean };
+type State = {
+  shouldDisplayContainerNav: boolean,
+  isEmptySpaceEnabled: boolean,
+  dialogOpen: boolean,
+};
 export default class Example extends Component<{}, State> {
   state = {
     shouldDisplayContainerNav: true,
     dialogOpen: false,
+    isEmptySpaceEnabled: false,
   };
 
   toggleContainerNav = () => {
     this.setState(state => ({
       shouldDisplayContainerNav: !state.shouldDisplayContainerNav,
+    }));
+  };
+
+  toggleSpacer = () => {
+    this.setState(state => ({
+      isEmptySpaceEnabled: !state.isEmptySpaceEnabled,
     }));
   };
   ContainerNavigation = () => (
@@ -217,7 +228,10 @@ export default class Example extends Component<{}, State> {
   );
 
   render() {
-    const { shouldDisplayContainerNav } = this.state;
+    const { shouldDisplayContainerNav, isEmptySpaceEnabled } = this.state;
+    const headerProps = this.state.isEmptySpaceEnabled
+      ? { pageBanner: <div css={{ padding: '2rem' }} /> }
+      : {};
     return (
       <NavigationProvider>
         <LayoutManager
@@ -226,6 +240,7 @@ export default class Example extends Component<{}, State> {
           containerNavigation={
             shouldDisplayContainerNav ? this.ContainerNavigation : null
           }
+          {...headerProps}
         >
           <div
             data-webdriver-test-key="content"
@@ -236,6 +251,16 @@ export default class Example extends Component<{}, State> {
               onChange={this.toggleContainerNav}
             />{' '}
             Display container navigation layer
+          </div>
+          <div
+            data-webdriver-test-key="spacer"
+            style={{ padding: `${gridSize * 4}px ${gridSize * 5}px` }}
+          >
+            <ToggleStateless
+              isChecked={isEmptySpaceEnabled}
+              onChange={this.toggleSpacer}
+            />{' '}
+            Show empty space instead of a banner.
           </div>
         </LayoutManager>
       </NavigationProvider>

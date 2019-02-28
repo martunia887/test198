@@ -81,6 +81,8 @@ export type ConnectedLayoutManagerProps = {
   collapseToggleTooltipContent: CollapseToggleTooltipContent,
   ...$Exact<CollapseListeners>,
   ...$Exact<ExperimentalFeatureFlags>,
+  /** Component which will be displayed above the page content and navigation. **/
+  pageBanner?: Node,
 };
 
 export type LayoutManagerProps = {
