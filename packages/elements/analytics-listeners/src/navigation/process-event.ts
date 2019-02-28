@@ -22,7 +22,7 @@ import {
   getComponents,
 } from './extract-data-from-event';
 import Logger from '../helpers/logger';
-import { version as listenerVersion } from '..link-2-package.json';
+import { version as listenerVersion } from '../link-2-package.json';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 
 const NAVIGATION_TAG = 'navigation';

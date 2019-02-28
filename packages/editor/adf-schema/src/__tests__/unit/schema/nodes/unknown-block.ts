@@ -1,4 +1,4 @@
-import { name } from '../../../..link-2-package.json';
+import { name } from '../../../../link-2-package.json';
 import { schema, fromHTML, toHTML } from '../../../../../test-helpers';
 import { inlineNodes } from '../../../../schema/inline-nodes';
 

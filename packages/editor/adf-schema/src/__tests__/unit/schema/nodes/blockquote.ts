@@ -1,4 +1,4 @@
-import { name } from '../../../..link-2-package.json';
+import { name } from '../../../../link-2-package.json';
 import {
   fromHTML,
   toHTML,

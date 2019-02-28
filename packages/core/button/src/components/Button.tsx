@@ -19,7 +19,7 @@ import { ButtonProps } from '../types';
 import {
   name as packageName,
   version as packageVersion,
-} from '..link-2-package.json';
+} from '../link-2-package.json';
 import { withDefaultProps } from '@atlaskit/type-helpers';
 
 const StyledButton = styled.button`

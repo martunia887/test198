@@ -1,4 +1,4 @@
-import { name } from '../../..link-2-package.json';
+import { name } from '../../../link-2-package.json';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { TextSelection } from 'prosemirror-state';

@@ -10,7 +10,7 @@ import { ZoomLevel } from '../../../newgen/domain/zoomLevel';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../..link-2-package.json';
+} from '../../../link-2-package.json';
 import { fakeIntl } from '@atlaskit/media-test-helpers';
 
 describe('Zooming', () => {

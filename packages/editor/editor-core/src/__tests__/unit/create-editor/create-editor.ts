@@ -1,4 +1,4 @@
-import { name } from '../../..link-2-package.json';
+import { name } from '../../../link-2-package.json';
 import { Selection } from 'prosemirror-state';
 import { createEditorFactory } from '@atlaskit/editor-test-helpers';
 import {
