@@ -21,7 +21,7 @@ const issueTypes: Options = json.projects[0].issuetypes.map(issueType => ({
 }));
 
 const JiraCreate = styled.div`
-  display: flex;
+  display: inline-flex;
 `;
 
 export interface Props {
@@ -44,9 +44,13 @@ export class JiraCreateNode extends React.Component<Props, {}> {
 
 class InlineJiraView extends ReactNodeView {
   getContentDOM() {
-    const dom = document.createElement('div');
+    const dom = document.createElement('span');
     dom.className = 'jiraView-content-wrap';
     return { dom };
+  }
+
+  createDomRef(): HTMLElement {
+    return document.createElement('span');
   }
 
   render(props, forwardRef) {
