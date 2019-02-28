@@ -1,4 +1,4 @@
-import { name } from '../../../package.json';
+import { name } from '../../..link-2-package.json';
 import { code as codeBase, createSchema, sanitizeNodes } from '../../..';
 const filterGroupDecMark = marks =>
   marks.filter(mark => mark[0] !== '_' || mark[1] !== '_');

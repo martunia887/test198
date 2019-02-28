@@ -15,7 +15,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../..link-2-package.json';
 import '../../components/TextArea';
 
 describe('TextArea', () => {

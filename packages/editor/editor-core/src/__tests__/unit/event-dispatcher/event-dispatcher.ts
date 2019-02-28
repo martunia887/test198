@@ -1,4 +1,4 @@
-import { name } from '../../../package.json';
+import { name } from '../../..link-2-package.json';
 import { EventDispatcher, createDispatch } from '../../../event-dispatcher';
 import { PluginKey } from 'prosemirror-state';
 

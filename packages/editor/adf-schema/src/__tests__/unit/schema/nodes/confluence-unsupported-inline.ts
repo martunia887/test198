@@ -1,4 +1,4 @@
-import { name } from '../../../../package.json';
+import { name } from '../../../..link-2-package.json';
 import { schema, toDOM, fromHTML } from '../../../../../test-helpers';
 
 describe(`${name}/schema unsupportedInline node`, () => {
