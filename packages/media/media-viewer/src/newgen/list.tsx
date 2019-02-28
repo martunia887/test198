@@ -91,7 +91,9 @@ export class List extends React.Component<Props, State> {
               onChange={this.onNavigationChange}
             />
           </ListWrapper2>
-          {showComments ? <CommentsSection identifier={selectedItem} /> : null}
+          {showComments ? (
+            <CommentsSection context={context} identifier={selectedItem} />
+          ) : null}
         </ListWrapper>
       );
     }
