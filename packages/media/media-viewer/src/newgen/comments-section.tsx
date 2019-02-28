@@ -5,7 +5,6 @@ import {
   ConversationsContext,
   PageConversations,
 } from '@atlaskit/media-core';
-import * as uuid from 'uuid/v4';
 import { Conversation } from '@atlaskit/conversation';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { CommentsSectionWrapper } from './styled';
@@ -49,15 +48,12 @@ export class CommentsSection extends React.Component<Props, State> {
                   const thisFileConversation = conversations.filter(
                     convo => convo.meta.mediaFileId === fileId,
                   );
-                  console.log(
-                    'thisFileConversation',
-                    thisFileConversation.length,
-                  );
 
-                  const list = thisFileConversation.map(conversation => {
+                  if (thisFileConversation.length > 0) {
+                    const conversation = thisFileConversation[0];
                     return (
                       <Conversation
-                        isInline={true}
+                        isInline={false}
                         meta={conversation.meta}
                         key={conversation.conversationId}
                         id={conversation.conversationId}
@@ -66,20 +62,17 @@ export class CommentsSection extends React.Component<Props, State> {
                         dataProviders={dataProviders}
                       />
                     );
-                  });
-
-                  list.push(
-                    <Conversation
-                      noLocalIdConversation={true}
-                      isInline={false}
-                      key="new-one"
-                      meta={{ mediaFileId: fileId }}
-                      objectId={objectId}
-                      provider={provider}
-                    />,
-                  );
-                  console.log('rendering ', list.length, 'components');
-                  return list;
+                  } else {
+                    return (
+                      <Conversation
+                        isInline={false}
+                        key="new-one"
+                        meta={{ mediaFileId: fileId }}
+                        objectId={objectId}
+                        provider={provider}
+                      />
+                    );
+                  }
                 }}
               </ConversationsContext.Consumer>
             );
