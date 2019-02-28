@@ -1,0 +1,1 @@
+- Dropped ES5 distributable for the typescript modules
