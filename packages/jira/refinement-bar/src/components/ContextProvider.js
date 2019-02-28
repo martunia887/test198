@@ -21,13 +21,12 @@ type Meta = {
 type ConfigProps = {
   children?: Node,
   fieldConfig: FieldConfigType,
-  irremovableKeys?: Keys,
+  irremovableKeys: Keys,
   onChange: (value: Object, meta: Meta) => void,
   value: Object,
 };
 type State = {
   fieldConfig: FieldConfigType,
-  value: Object,
 };
 
 export class RefinementBarProvider extends Component<ConfigProps, State> {

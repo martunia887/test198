@@ -35,6 +35,7 @@ class ActualRefinementBar extends Component<Props, State> {
       values: this.ctx.value,
     };
   }
+  ctx: Object;
 
   // Required until atlaskit upgrades to react >= 16.6 😞
   // eslint-disable-next-line camelcase
@@ -260,7 +261,7 @@ export const RefinementBarUI = withRefinementBarContext(ActualRefinementBar);
 // Put it together
 // ==============================
 
-export const RefinementBar = props => (
+export const RefinementBar = (props: *) => (
   <RefinementBarProvider {...props}>
     <RefinementBarUI />
   </RefinementBarProvider>

@@ -7,7 +7,7 @@ export const isEmptyString = (str: *) =>
   typeof str === 'string' && str.length === 0;
 
 type X = Object;
-type Z = Arrray<any>;
+type Z = Array<any>;
 
 export const diffArr = (a: Z, b: Z): Z => a.filter(i => b.indexOf(i) < 0);
 
