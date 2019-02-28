@@ -22,6 +22,9 @@ const issueTypes: Options = json.projects[0].issuetypes.map(issueType => ({
 
 const JiraCreate = styled.div`
   display: inline-flex;
+  border: 1px solid #eeeeec;
+  padding: 8px;
+  min-width: 400px;
 `;
 
 export interface Props {
@@ -31,12 +34,37 @@ export interface Props {
   providerFactory: ProviderFactory;
 }
 
-export class JiraCreateNode extends React.Component<Props, {}> {
+interface State {
+  text: string;
+}
+
+export class JiraCreateNode extends React.Component<Props, State> {
+  state = {
+    text: '',
+  };
+
+  onChange = e => {
+    this.setState(
+      {
+        text: e.target.value,
+      },
+      () => {
+        console.log('am i going crazy', this.state.text);
+      },
+    );
+
+    e.preventDefault();
+  };
+
   render() {
+    console.log(this.state.text);
+
     return (
       <JiraCreate>
         <JiraSelect options={projects} />
         <JiraSelect options={issueTypes} />
+        <input onChange={this.onChange} type="text" value={this.state.text} />
+        {this.state.text}
       </JiraCreate>
     );
   }
@@ -55,6 +83,15 @@ class InlineJiraView extends ReactNodeView {
 
   render(props, forwardRef) {
     return <JiraCreateNode view={this.view} />;
+  }
+
+  ignoreMutation() {
+    return true;
+  }
+
+  stopEvent(e) {
+    console.log('got event', e);
+    return true;
   }
 }
 

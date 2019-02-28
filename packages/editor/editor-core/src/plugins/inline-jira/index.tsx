@@ -4,6 +4,8 @@ import { EditorPlugin } from '../../types';
 import createInlineJiraPlugin from './pm-plugins/main';
 import { jiraQuery, jiraIssue } from '@atlaskit/adf-schema';
 import { Mark } from 'prosemirror-model';
+import { pluginKey } from './pm-plugins/main';
+import { Decoration } from 'prosemirror-view';
 
 const title = 'Create Jira issue';
 
@@ -33,10 +35,29 @@ export default {
         priority: 600,
         icon: () => <JiraIcon size="small" label={title} />,
         action(insert, state) {
-          const mark: Mark = state.schema.marks.jiraQuery.create();
-          const jiraText = state.schema.text('_', [mark]);
+          // const mark: Mark = state.schema.nodes.paragraph;
+          const jiraText = state.schema.text('hello', []);
           console.log(jiraText);
-          return insert(jiraText);
+          const tr = insert(jiraText);
+          // TODO: figure out pos in tr
+
+          tr.setMeta(pluginKey, {
+            decorations: Decoration.widget(
+              0,
+              (view, getPos) => {
+                const node = document.createElement('span');
+                node.style.background = 'red';
+                node.innerText = 'hello';
+                return node;
+              },
+              {
+                side: -1,
+                key: 'jiraInsert',
+              },
+            ),
+          });
+
+          return tr;
         },
       },
     ],
