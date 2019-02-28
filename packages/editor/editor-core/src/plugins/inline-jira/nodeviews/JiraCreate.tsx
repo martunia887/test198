@@ -5,15 +5,15 @@ import { colors } from '@atlaskit/theme';
 import PanelTextInput from '../../../ui/PanelTextInput';
 
 import { JiraSelect, Options } from './JiraSelect';
-import json from './data/createMeta.json';
+import { createMetaJson } from './data/createMeta';
 
-const projects: Options = json.projects.map(project => ({
+const projects: Options = createMetaJson.projects.map(project => ({
   label: project.name,
   value: project.key,
   iconUrl: project.avatarUrls['16x16'],
 }));
 
-export const issueTypes: Options = json.projects[1].issuetypes.map(
+export const issueTypes: Options = createMetaJson.projects[1].issuetypes.map(
   issueType => ({
     label: issueType.name,
     value: issueType.id,

@@ -9,9 +9,9 @@ import { resolveCard } from './actions';
 import { issueTypes as issueTypesJson } from '../../inline-jira/nodeviews/JiraCreate';
 
 // data
-import { default as jqlJson } from '../../inline-jira/nodeviews/data/jql.json';
-import { default as priorityJson } from '../../inline-jira/nodeviews/data/priority.json';
-import { default as statusCategoryJson } from '../../inline-jira/nodeviews/data/statusCategory.json';
+import { jqlJson } from '../../inline-jira/nodeviews/data/jql';
+import { priorityJson } from '../../inline-jira/nodeviews/data/priority';
+import { statusCategoryJson } from '../../inline-jira/nodeviews/data/statusCategory';
 import { Transaction } from 'prosemirror-state';
 
 /**
