@@ -19,26 +19,16 @@
     "id": "atlaskit.core.main",
     "name": "main",
     "stats": {
-<<<<<<< HEAD
-      "size": 27164,
-      "gzipSize": 6768
-=======
       "size": 26931,
       "gzipSize": 6741
->>>>>>> SHIPIT-45-202-JustDropES5Already
     }
   },
   {
     "id": "combined.main",
     "name": "main",
     "stats": {
-<<<<<<< HEAD
-      "size": 41945,
-      "gzipSize": 10561
-=======
       "size": 41712,
       "gzipSize": 10547
->>>>>>> SHIPIT-45-202-JustDropES5Already
     }
   }
 ]
