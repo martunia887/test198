@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import Select from '@atlaskit/select';
+import { Status, Color } from '@atlaskit/status';
 
 export interface OptionType {
   label: string;
   value: string;
   iconUrl: string;
+  colorName?: Color;
 }
 
 export type Options = Array<OptionType>;
@@ -23,11 +25,21 @@ const Option = styled.div`
   }
 `;
 
-const formatOptionLabel = (option: OptionType, { context }) => (
-  <Option>
-    <img src={option.iconUrl} /> {option.label}
-  </Option>
-);
+const formatOptionLabel = (option: OptionType, { context }) => {
+  if (option.colorName) {
+    return <Status text={option.label} color={option.colorName} />;
+  }
+
+  if (option.iconUrl) {
+    return (
+      <Option>
+        <img src={option.iconUrl} /> {option.label}
+      </Option>
+    );
+  }
+
+  return null;
+};
 
 export const JiraSelect = ({
   options,
@@ -42,7 +54,7 @@ export const JiraSelect = ({
     options={options}
     styles={{
       container: css => ({ ...css, width: 105 }),
-      menu: css => ({ ...css, width: 300 }),
+      menu: css => ({ ...css, width: 105 }),
     }}
   />
 );
@@ -59,7 +71,7 @@ export default class JiraIssueSelectNodeView extends React.PureComponent<
 > {
   render() {
     const { node } = this.props;
-    const { name, id, iconUrl, options } = node.attrs.data;
+    const { name, id, iconUrl, colorName, options } = node.attrs.data;
 
     return (
       <JiraSelect
@@ -67,7 +79,8 @@ export default class JiraIssueSelectNodeView extends React.PureComponent<
         value={{
           label: name,
           value: id,
-          iconUrl: iconUrl,
+          iconUrl,
+          colorName,
         }}
       />
     );

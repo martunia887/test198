@@ -32,11 +32,10 @@ export const Issue = styled.div`
 export default class JiraIssue extends React.PureComponent<Props, {}> {
   render() {
     const { node } = this.props;
-    const { url, key, type } = node.attrs.data;
+    const { url, key } = node.attrs.data;
 
     return (
       <Issue>
-        <Icon src={type.iconUrl} />
         <a href={url} target="_blank">
           {key}
         </a>

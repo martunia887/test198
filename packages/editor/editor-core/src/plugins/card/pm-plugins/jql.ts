@@ -4,9 +4,11 @@ import { closeHistory } from 'prosemirror-history';
 import { pluginKey } from './main';
 import { CardPluginState, Request } from '../types';
 import { default as json } from '../../inline-jira/nodeviews/data/jql.json';
+import { default as priorityJson } from '../../inline-jira/nodeviews/data/priority.json';
+import { default as statusCategoryJson } from '../../inline-jira/nodeviews/data/statusCategory.json';
 import { Command } from '../../../types';
 import { resolveCard } from './actions';
-import { issueTypes } from '../../inline-jira/nodeviews';
+import { issueTypes as issueTypesJson } from '../../inline-jira/nodeviews';
 
 /**
  * test url: https://product-fabric.atlassian.net/browse/ED-6380?jql=project%20%3D%20ED%20AND%20issuetype%20%3D%20Bug%20AND%20status%20in%20(Backlog%2C%20Duplicate%2C%20%22In%20Review%22%2C%20%22In%20progress%22)%20AND%20text%20~%20%22table%22
@@ -92,7 +94,6 @@ export const replaceQueuedUrlWithTable = (
     tableHeader,
     paragraph,
     mention,
-    status,
     jiraIssue,
     jiraIssueSelect,
   } = schema.nodes;
@@ -114,9 +115,9 @@ export const replaceQueuedUrlWithTable = (
 
     const titles = [
       'Key',
-
-      'Status',
+      'Type',
       'Priority',
+      'Status',
       'Summary',
       'Assignee',
       'Reporter',
@@ -136,26 +137,26 @@ export const replaceQueuedUrlWithTable = (
         // Key
         cells.push(
           createCell(schema, {
-            width: 125,
+            width: 90,
             inline: true,
             content: jiraIssue.createChecked({
               data: {
                 key: issue.key,
                 url: `${issue.fields.status.iconUrl}browse/${issue.key}`,
-                type: issue.fields.issuetype,
               },
             }),
           }),
         );
 
-        // Status
+        // Type
         cells.push(
           createCell(schema, {
             width: 125,
-            inline: true,
-            content: status.createChecked({
-              text: issue.fields.status.name,
-              color: issue.fields.status.statusCategory.colorName,
+            content: jiraIssueSelect.createChecked({
+              data: {
+                ...issue.fields.issuetype,
+                options: issueTypesJson,
+              },
             }),
           }),
         );
@@ -167,7 +168,31 @@ export const replaceQueuedUrlWithTable = (
             content: jiraIssueSelect.createChecked({
               data: {
                 ...issue.fields.priority,
-                options: issueTypes,
+                options: priorityJson.map(item => ({
+                  label: item.name,
+                  value: item.id,
+                  iconUrl: item.iconUrl,
+                })),
+              },
+            }),
+          }),
+        );
+
+        // Status
+        cells.push(
+          createCell(schema, {
+            width: 125,
+            content: jiraIssueSelect.createChecked({
+              data: {
+                name: issue.fields.status.statusCategory.name,
+                id: issue.fields.status.statusCategory.id,
+                colorName: issue.fields.status.statusCategory.colorName,
+
+                options: statusCategoryJson.map(item => ({
+                  label: item.name,
+                  value: item.id,
+                  colorName: item.colorName,
+                })),
               },
             }),
           }),
@@ -176,7 +201,7 @@ export const replaceQueuedUrlWithTable = (
         // Summary
         cells.push(
           createCell(schema, {
-            width: 300,
+            width: 350,
             inline: true,
             content: schema.text(issue.fields.summary),
           }),
@@ -223,7 +248,7 @@ export const replaceQueuedUrlWithTable = (
     tr.replaceWith(
       pos,
       pos + (node.text || '').length,
-      table.createChecked({ layout: 'wide' }, rows),
+      table.createChecked({ layout: 'full-width' }, rows),
     );
   });
 
