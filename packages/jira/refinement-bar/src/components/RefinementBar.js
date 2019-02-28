@@ -36,20 +36,13 @@ class ActualRefinementBar extends Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-    // TODO: irremovable field values
-    this.ctx.irremovableKeys.forEach(key => {
-      this.handleFieldAdd(key);
-    });
-  }
-
   // Required until atlaskit upgrades to react >= 16.6 😞
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.ctx = nextProps.tempContextFromProps;
   }
-  handleFieldAdd = async (key: string) => {
-    const field = await this.ctx.fieldConfig[key];
+  handleFieldAdd = (key: string) => {
+    const field = this.ctx.fieldConfig[key];
     const data = field.getInitialValue();
     const meta = { action: 'add', key, data };
     const values = cloneObj(this.state.values, { add: { [key]: data } });
@@ -72,10 +65,7 @@ class ActualRefinementBar extends Component<Props, State> {
   handleFieldChange = (key: string) => (value: *) => {
     const { fieldConfig } = this.ctx;
     const oldInvalid = this.state.invalid;
-    const values = {
-      ...this.state.values,
-      [key]: value,
-    };
+    const values = cloneObj(this.state.values, { add: { [key]: value } });
 
     const field = fieldConfig[key];
     const { message, isInvalid } = field.validateValue(value);
@@ -88,6 +78,24 @@ class ActualRefinementBar extends Component<Props, State> {
       invalid = cloneObj(oldInvalid, { remove: key });
     }
 
+    // const liveUpdateStoredValues = () => {
+    //   // don't commit changes to context if there's invalid keys
+    //   if (invalid[key]) {
+    //     return;
+    //   }
+    //
+    //   // avoid unnecessary calls
+    //   if (values[key] === this.ctx.value[key]) {
+    //     return;
+    //   }
+    //
+    //   const data = values[key];
+    //   const meta = { action: 'update', key, data };
+    //
+    //   this.ctx.onChange(values, meta);
+    // };
+    // this.setState({ invalid, values }, liveUpdateStoredValues);
+
     this.setState({ invalid, values });
   };
   handleFieldSubmit = (key: string) => () => {
@@ -98,43 +106,45 @@ class ActualRefinementBar extends Component<Props, State> {
       return;
     }
 
+    // avoid unnecessary calls
+    if (values[key] === this.ctx.value[key]) {
+      return;
+    }
+
     const data = values[key];
     const meta = { action: 'update', key, data };
 
     this.ctx.onChange(values, meta);
   };
 
-  // TODO: memoize this method; it gets called too often!
   makeField = (config: Object) => (key: string) => {
     const { type, ...field } = this.ctx.fieldConfig[key];
     const Field = type.view;
-    const storedValue = this.ctx.value[key];
-    const value = this.state.values[key];
     const invalidMessage = this.state.invalid[key];
+    const storedValue = this.ctx.value[key] || field.getInitialValue();
+    const localvalue = this.state.values[key] || field.getInitialValue();
 
     // this shouldn't be possible, but better to be safe
     if (!Field) {
       throw new Error(
-        `There's something wrong with the renderer (${type.type}) for ${key}.`,
+        `There's something wrong with the renderer (${
+          type.type
+        }) for "${key}".`,
       );
-    }
-
-    // wait for values to safely render the field
-    if (storedValue == null || value == null) {
-      return null;
     }
 
     return (
       <Field
         applyChanges={this.handleFieldSubmit(key)}
-        storedValue={storedValue}
-        refinementBarValue={this.ctx.value}
         invalidMessage={invalidMessage}
         field={field}
         key={key}
         onChange={this.handleFieldChange(key)}
         onRemove={event => this.handleFieldRemove(key, event)}
-        value={value}
+        // this is a bit of a mess...
+        value={localvalue}
+        storedValue={storedValue}
+        refinementBarValue={this.ctx.value}
         {...config}
       />
     );

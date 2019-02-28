@@ -8,23 +8,6 @@ import { FilterButton } from '../../components/FilterButton';
 import { Group, Note, Radio } from '../../components/InputGroup';
 import { isObject, isEmptyString, objectMap } from '../../utils';
 
-const makeValue = value => {
-  if (isObject(value)) {
-    // $FlowFixMe
-    return objectMap(value, v => parseFloat(v));
-  }
-
-  return parseFloat(value);
-};
-
-const Row = ({ children, ...props }: *) => (
-  <div {...props} style={{ display: 'flex', marginLeft: -4, marginRight: -4 }}>
-    {React.Children.map(children, c => (
-      <div style={{ marginLeft: 4, marginRight: 4 }}>{c}</div>
-    ))}
-  </div>
-);
-
 type Props = {
   applyChanges: () => void,
   storedValue: Object,
@@ -178,5 +161,30 @@ class NumberView extends React.Component<Props, State> {
     );
   }
 }
+
+// ==============================
+// Helpers
+// ==============================
+
+const makeValue = value => {
+  if (isObject(value)) {
+    // $FlowFixMe
+    return objectMap(value, v => parseFloat(v));
+  }
+
+  return parseFloat(value);
+};
+
+// ==============================
+// Styled Components
+// ==============================
+
+const Row = ({ children, ...props }: *) => (
+  <div {...props} style={{ display: 'flex', marginLeft: -4, marginRight: -4 }}>
+    {React.Children.map(children, c => (
+      <div style={{ marginLeft: 4, marginRight: 4 }}>{c}</div>
+    ))}
+  </div>
+);
 
 export default NumberView;

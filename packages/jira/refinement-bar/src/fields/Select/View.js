@@ -1,6 +1,7 @@
 // @flow
 /** @jsx jsx */
 
+import { PureComponent } from 'react';
 import { jsx } from '@emotion/core';
 import { CheckboxOption, PopupSelect } from '@atlaskit/select';
 import { colors } from '@atlaskit/theme';
@@ -81,70 +82,70 @@ const getOptions = (current, resolved) => {
     .concat(resolved);
 };
 
-const SelectView = ({
-  storedValue,
-  refinementBarValue,
-  applyChanges,
-  field,
-  isRemovable,
-  onChange,
-  onRemove,
-  ...props
-}: *) => {
-  if (!field.options) {
-    throw new Error('Select type requires options.');
-  }
-  if (!field.label) {
-    throw new Error('Select type requires a label.');
-  }
-
-  let closeMenuOnSelect = false;
-
-  // NOTE: supports options array to be the result of a function.
-  // - pass the "current values" to the function
-  let resolvedOptions = field.options;
-  if (typeof field.options === 'function') {
-    resolvedOptions = field.options(refinementBarValue);
-  }
-
-  // build this monstrosity of options
-  const augmentedOptions = getOptions(storedValue, resolvedOptions);
-
-  // support clearing
-  const onChangeWithClearHandler = value => {
-    if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {
-      onChange([]);
-      closeMenuOnSelect = true;
-    } else {
-      onChange(value);
+class SelectView extends PureComponent<*> {
+  render() {
+    const {
+      storedValue,
+      refinementBarValue,
+      applyChanges,
+      field,
+      isRemovable,
+      onChange,
+      onRemove,
+      ...props
+    } = this.props;
+    if (!field.options) {
+      throw new Error('Select type requires options.');
     }
-  };
+    if (!field.label) {
+      throw new Error('Select type requires a label.');
+    }
 
-  return (
-    <PopupSelect
-      components={{ IndicatorSeparator: null, Option }}
-      isMulti
-      onMenuClose={applyChanges}
-      closeMenuOnSelect={closeMenuOnSelect}
-      hideSelectedOptions={false}
-      filterOption={filterOptions(storedValue)}
-      options={augmentedOptions}
-      onChange={onChangeWithClearHandler}
-      target={({ ref, isOpen }) => (
-        <FilterButton
-          ref={ref}
-          field={field}
-          isRemovable={isRemovable}
-          isSelected={isOpen}
-          onRemove={onRemove}
-          value={storedValue}
-        >
-          {field.formatFilter({ value: storedValue })}
-        </FilterButton>
-      )}
-      {...props}
-    />
-  );
-};
+    // NOTE: supports options array to be the result of a function.
+    // - pass the "current values" to the function
+    let resolvedOptions = field.options;
+    if (typeof field.options === 'function') {
+      resolvedOptions = field.options(refinementBarValue);
+    }
+
+    // build this monstrosity of options
+    const augmentedOptions = getOptions(storedValue, resolvedOptions);
+
+    // support clearing
+    const onChangeWithClearHandler = value => {
+      if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {
+        onChange([]);
+      } else {
+        onChange(value);
+      }
+    };
+
+    return (
+      <PopupSelect
+        components={{ IndicatorSeparator: null, Option }}
+        isMulti
+        onMenuClose={applyChanges}
+        closeMenuOnSelect={false}
+        hideSelectedOptions={false}
+        filterOption={filterOptions(storedValue)}
+        options={augmentedOptions}
+        onChange={onChangeWithClearHandler}
+        target={({ ref, isOpen }) => (
+          <FilterButton
+            ref={ref}
+            field={field}
+            isRemovable={isRemovable}
+            isSelected={isOpen}
+            onRemove={onRemove}
+            value={storedValue}
+          >
+            {field.formatFilter({ value: storedValue })}
+          </FilterButton>
+        )}
+        {...props}
+      />
+    );
+  }
+}
 
 export default SelectView;
