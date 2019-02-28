@@ -22,14 +22,16 @@ const createPlugin = portalProviderAPI =>
       nodeViews: {
         jiraQuery: (node, view, getPos) =>
           new InlineJiraView(node, view, getPos, portalProviderAPI).init(),
+
         jiraIssue: ReactNodeView.fromComponent(
           jiraIssueNodeView,
           portalProviderAPI,
         ),
-        // jiraIssueSelect: ReactNodeView.fromComponent(
-        //   JiraIssueSelectNodeView,
-        //   portalProviderAPI,
-        // ),
+
+        jiraIssueSelect: ReactNodeView.fromComponent(
+          JiraIssueSelectNodeView,
+          portalProviderAPI,
+        ),
       },
     },
   });
