@@ -67,6 +67,7 @@ import {
   jiraQuery,
   jiraIssue,
   jiraIssueSelect,
+  jqlQuery,
 } from './nodes';
 
 function addItems(
@@ -180,6 +181,7 @@ const nodesInOrder: SchemaBuiltInItem[] = [
   { name: 'jiraIssue', spec: jiraIssue },
   { name: 'jiraIssueSelect', spec: jiraIssueSelect },
   { name: 'jiraQuery', spec: jiraQuery },
+  { name: 'jqlQuery', spec: jqlQuery },
 ];
 
 const marksInOrder: SchemaBuiltInItem[] = [

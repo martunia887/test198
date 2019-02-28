@@ -105,3 +105,4 @@ export { status, StatusDefinition } from './status';
 export { jiraIssue } from './jira-issue';
 export { jiraIssueSelect } from './jira-issue-select';
 export { jiraQuery } from './jiraQuery';
+export { jqlQuery } from './jql-query';

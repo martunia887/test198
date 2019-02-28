@@ -48,6 +48,8 @@ export const defaultSchema: Schema = createSchema({
     'unsupportedInline',
     'jiraIssue',
     'jiraIssueSelect',
+    'jiraQuery',
+    'jqlQuery',
   ],
   marks: [
     'action',

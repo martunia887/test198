@@ -43,6 +43,8 @@ const nodes = [
   'unsupportedInline',
   'jiraIssue',
   'jiraIssueSelect',
+  'jiraQuery',
+  'jqlQuery',
 ];
 
 const marks = [
@@ -53,7 +55,6 @@ const marks = [
   'subsup',
   'underline',
   'mentionQuery',
-  'jqlQuery',
   'code',
   'textColor',
   'confluenceInlineComment',

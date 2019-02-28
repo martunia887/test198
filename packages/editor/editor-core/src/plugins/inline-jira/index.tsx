@@ -2,7 +2,12 @@ import * as React from 'react';
 import { JiraIcon } from '@atlaskit/logo';
 import { EditorPlugin } from '../../types';
 import createInlineJiraPlugin from './pm-plugins/main';
-import { jiraQuery, jiraIssue, jiraIssueSelect } from '@atlaskit/adf-schema';
+import {
+  jiraQuery,
+  jqlQuery,
+  jiraIssue,
+  jiraIssueSelect,
+} from '@atlaskit/adf-schema';
 
 const CreateJiraIssueTitle = 'Create Jira issue';
 const JQLTitle = 'JQL';
@@ -13,6 +18,7 @@ export default {
       { name: 'jiraIssue', node: jiraIssue },
       { name: 'jiraIssueSelect', node: jiraIssueSelect },
       { name: 'jiraQuery', node: jiraQuery },
+      { name: 'jqlQuery', node: jqlQuery },
     ];
   },
 
