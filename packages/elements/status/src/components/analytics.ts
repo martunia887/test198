@@ -5,7 +5,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../link-2-package.json';
+} from '../versions.json';
 
 export const ELEMENTS_CHANNEL = 'fabric-elements';
 

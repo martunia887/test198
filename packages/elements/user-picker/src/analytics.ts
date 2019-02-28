@@ -7,7 +7,7 @@ import * as uuid from 'uuid/v4';
 import {
   name as packageName,
   version as packageVersion,
-} from './link-2-package.json';
+} from './versions.json';
 import {
   Option,
   OptionData,

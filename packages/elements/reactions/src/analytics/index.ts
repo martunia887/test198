@@ -12,7 +12,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../link-2-package.json';
+} from '../versions.json';
 import { ReactionSummary, ReactionSource } from '../types';
 
 export type PreviousState = 'new' | 'existingNotReacted' | 'existingReacted';

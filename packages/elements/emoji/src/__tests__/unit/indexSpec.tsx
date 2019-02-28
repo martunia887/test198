@@ -1,6 +1,6 @@
 import DefaultExport from '../..';
 import EmojiPicker from '../../components/picker/EmojiPicker';
-import { name } from '../../link-2-package.json';
+import { name } from '../../versions.json';
 
 describe(name, () => {
   describe('exports', () => {
