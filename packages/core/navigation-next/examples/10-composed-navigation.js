@@ -231,7 +231,7 @@ export default class Example extends Component<{}, State> {
   render() {
     const { shouldDisplayContainerNav, isEmptySpaceEnabled } = this.state;
     const headerProps = this.state.isEmptySpaceEnabled
-      ? { pageBanner: <div css={{ height: '2rem' }} /> }
+      ? { pageBanner: <div css={{ height: '4rem' }} /> }
       : {
           pageBanner: (
             <Banner isOpen appearance="warning">
