@@ -6,6 +6,7 @@ import {
   getSelectionRect,
   getSelectionRangeInColumn,
   getSelectionRangeInRow,
+  findParentNodeOfType,
 } from 'prosemirror-utils';
 
 export const isSelectionUpdated = (
@@ -78,6 +79,35 @@ export const normalizeSelection = (tr: Transaction): Transaction => {
     const { $anchor } = getSelectionRangeInRow(rect.top)(tr);
     const { $head } = getSelectionRangeInRow(rect.bottom - 1)(tr);
     return tr.setSelection(new CellSelection($anchor, $head) as any);
+  }
+
+  return tr;
+};
+
+export const saveJira = (tr: Transaction, oldState, newState): Transaction => {
+  const { tableCell, tableHeader } = oldState.schema.nodes;
+  const prevCell = findParentNodeOfType([tableCell, tableHeader])(
+    oldState.selection,
+  );
+
+  const currentCell = findParentNodeOfType([tableCell, tableHeader])(
+    newState.selection,
+  );
+
+  const prevIssueKey = prevCell ? prevCell.node.attrs.issueKey : null;
+  const currentIssueKey = currentCell ? currentCell.node.attrs.issueKey : null;
+
+  if (prevCell && prevIssueKey && prevIssueKey !== currentIssueKey) {
+    fetch(`/rest/api/3/issue/${prevIssueKey}`, {
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Accept: 'application/json, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ fields: { summary: prevCell.node.textContent } }),
+    });
   }
 
   return tr;

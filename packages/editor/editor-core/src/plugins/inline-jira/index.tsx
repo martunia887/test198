@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { JiraIcon } from '@atlaskit/logo';
-import { NodeSelection } from 'prosemirror-state';
-import EditorSearchIcon from '@atlaskit/icon/glyph/editor/search';
+import SearchIcon from '@atlaskit/icon/glyph/search';
 import { EditorPlugin } from '../../types';
 import createInlineJiraPlugin from './pm-plugins/main';
 import {
@@ -48,7 +47,7 @@ export default {
       {
         title: JQLTitle,
         priority: 700,
-        icon: () => <EditorSearchIcon size="small" label={JQLTitle} />,
+        icon: () => <SearchIcon size="small" label={JQLTitle} />,
         action(insert, state) {
           const node = state.schema.nodes.jqlQuery.create();
           return insert(node);

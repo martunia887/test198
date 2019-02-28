@@ -1,5 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { EditorView } from 'prosemirror-view';
+import { Node as PMNode } from 'prosemirror-model';
+import Spinner from '@atlaskit/spinner';
 import { ReactNodeView } from '../../../nodeviews';
 import PanelTextInput from '../../../ui/PanelTextInput';
 import { colors } from '@atlaskit/theme';
@@ -20,17 +23,53 @@ const Wrapper = styled.div`
   }
 `;
 
-class JQLQueryView extends ReactNodeView {
-  render(props) {
+export interface JQLQueryProps {
+  view: EditorView;
+  node: PMNode;
+}
+
+class JQLQuery extends React.Component<JQLQueryProps> {
+  loading: boolean = false;
+
+  render() {
     return (
       <Wrapper>
-        <PanelTextInput
-          onSubmit={this.onSubmit}
-          placeholder="project = ED"
-          autoFocus={true}
-        />
+        {this.loading ? (
+          <Spinner size="medium" />
+        ) : (
+          <PanelTextInput
+            onSubmit={this.onSubmit}
+            placeholder="project = ED"
+            autoFocus={true}
+          />
+        )}
       </Wrapper>
     );
+  }
+
+  private onSubmit = jql => {
+    this.loading = true;
+    this.forceUpdate();
+
+    resolveJql(jql).then(jqlQuery => {
+      this.loading = false;
+      this.forceUpdate();
+
+      const { state, dispatch } = this.props.view;
+      const { pos } = state.selection.$from;
+
+      dispatch(
+        replaceWithJqlTable(jqlQuery, pos, pos + this.props.node.nodeSize)(
+          state.tr,
+        ),
+      );
+    });
+  };
+}
+
+export default class JQLQueryView extends ReactNodeView {
+  render(props) {
+    return <JQLQuery view={this.view} node={this.node} />;
   }
 
   stopEvent(event) {
@@ -40,16 +79,4 @@ class JQLQueryView extends ReactNodeView {
   ignoreMutation() {
     return true;
   }
-
-  private onSubmit = jql => {
-    resolveJql(jql).then(jqlQuery => {
-      const { state, dispatch } = this.view;
-      const { pos } = state.selection.$from;
-      dispatch(
-        replaceWithJqlTable(jqlQuery, pos, pos + this.node.nodeSize)(state.tr),
-      );
-    });
-  };
 }
-
-export default JQLQueryView;

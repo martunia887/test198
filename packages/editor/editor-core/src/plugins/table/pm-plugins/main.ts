@@ -33,7 +33,11 @@ import {
   handleClick,
   handleTripleClick,
 } from '../event-handlers';
-import { findControlsHoverDecoration, normalizeSelection } from '../utils';
+import {
+  findControlsHoverDecoration,
+  normalizeSelection,
+  saveJira,
+} from '../utils';
 import { fixTables } from '../transforms';
 import { TableCssClassName as ClassName } from '../types';
 
@@ -194,7 +198,7 @@ export const createPlugin = (
         return fixTables(newState.tr);
       }
       if (transactions.find(tr => tr.selectionSet)) {
-        return normalizeSelection(newState.tr);
+        return saveJira(normalizeSelection(newState.tr), oldState, newState);
       }
     },
     view: (editorView: EditorView) => {

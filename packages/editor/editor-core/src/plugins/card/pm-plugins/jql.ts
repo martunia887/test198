@@ -1,6 +1,7 @@
 import { EditorView } from 'prosemirror-view';
 import { Node as PMNode, Schema } from 'prosemirror-model';
 import { closeHistory } from 'prosemirror-history';
+
 import { pluginKey } from './main';
 import { CardPluginState, Request } from '../types';
 import { Command } from '../../../types';
@@ -34,7 +35,7 @@ export function resolveJql(jql: string): Promise<any> {
     console.log({ jql });
 
     if (location.hostname === 'localhost') {
-      return resolve(jqlJson);
+      return setTimeout(() => resolve(jqlJson), 300);
     }
 
     fetch(`rest/api/3/search?jql=${encodeURIComponent(jql)}`, {
@@ -154,6 +155,7 @@ export const replaceWithJqlTable = (jqlQuery, from: number, to: number) => (
       cells.push(
         createCell(schema, {
           width: 350,
+          attrs: { issueKey: issue.key },
           inline: true,
           content: schema.text(issue.fields.summary),
         }),
@@ -248,12 +250,18 @@ function createCell(
   {
     width,
     content,
+    attrs = {},
     inline = false,
-  }: { width: number; content: PMNode; inline?: boolean },
+  }: {
+    width: number;
+    content: PMNode;
+    attrs?: object;
+    inline?: boolean;
+  },
 ) {
   const { tableCell, paragraph } = schema.nodes;
   const cell = tableCell.createChecked(
-    { colwidth: [width] },
+    { ...attrs, colwidth: [width] },
     inline ? paragraph.createChecked({}, content) : content,
   );
 

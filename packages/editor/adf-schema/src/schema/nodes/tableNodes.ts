@@ -36,6 +36,7 @@ const getCellAttrs = (dom: HTMLElement) => {
     rowspan: Number(dom.getAttribute('rowspan') || 1),
     colwidth: width && width.length === colspan ? width : null,
     background: dom.style.backgroundColor || null,
+    issueKey: dom.getAttribute('data-issueKey') || null,
   };
 };
 
@@ -45,6 +46,7 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     rowspan?: number;
     style?: string;
     'data-colwidth'?: string;
+    'data-issueKey'?: string;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -59,6 +61,10 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
   if (node.attrs.colwidth) {
     attrs['data-colwidth'] = node.attrs.colwidth.join(',');
   }
+  if (node.attrs.issueKey) {
+    attrs['data-issueKey'] = node.attrs.issueKey;
+  }
+
   if (node.attrs.background) {
     const { background } = node.attrs;
     const nodeType = node.type.name;
@@ -196,6 +202,7 @@ export interface CellAttributes {
   rowspan?: number;
   colwidth?: number[];
   background?: string;
+  issueKey?: string;
 }
 
 // TODO: Fix any, potential issue. ED-5048
@@ -254,6 +261,7 @@ const cellAttrs = {
   rowspan: { default: 1 },
   colwidth: { default: null },
   background: { default: null },
+  issueKey: { default: null },
 };
 
 export const tableCell = {
