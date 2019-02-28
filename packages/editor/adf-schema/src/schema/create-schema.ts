@@ -65,6 +65,7 @@ import {
   unsupportedBlock,
   unsupportedInline,
   status,
+  jiraIssue,
 } from './nodes';
 
 function addItems(
@@ -175,6 +176,7 @@ const nodesInOrder: SchemaBuiltInItem[] = [
   { name: 'unknownBlock', spec: unknownBlock },
   { name: 'unsupportedBlock', spec: unsupportedBlock },
   { name: 'unsupportedInline', spec: unsupportedInline },
+  { name: 'jiraIssue', spec: jiraIssue },
 ];
 
 const marksInOrder: SchemaBuiltInItem[] = [

@@ -41,6 +41,7 @@ const nodes = [
   'inlineCard',
   'unsupportedBlock',
   'unsupportedInline',
+  'jiraIssue',
 ];
 
 const marks = [

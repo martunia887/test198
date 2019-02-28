@@ -2,7 +2,7 @@ import * as React from 'react';
 import { JiraIcon } from '@atlaskit/logo';
 import { EditorPlugin } from '../../types';
 import createInlineJiraPlugin from './pm-plugins/main';
-import { jiraQuery } from '@atlaskit/adf-schema';
+import { jiraQuery, jiraIssue } from '@atlaskit/adf-schema';
 import { Mark } from 'prosemirror-model';
 
 const title = 'Create Jira issue';
@@ -11,6 +11,11 @@ export default {
   marks() {
     return [{ name: 'jiraQuery', mark: jiraQuery }];
   },
+
+  nodes() {
+    return [{ name: 'jiraIssue', node: jiraIssue }];
+  },
+
   pmPlugins() {
     return [
       {

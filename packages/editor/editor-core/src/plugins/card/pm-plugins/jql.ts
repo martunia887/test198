@@ -50,6 +50,32 @@ export function resolveJql(url: string): Promise<any> {
   });
 }
 
+function createMentionCell(schema, displayName, accountId) {
+  const { tableCell, mention, paragraph } = schema.nodes;
+
+  return tableCell.createChecked(
+    {},
+    paragraph.createChecked(
+      {},
+      mention.createChecked({
+        text: `@${displayName}`,
+        id: accountId,
+        // hardcoded :)
+        accessLevel: 'CONTAINER',
+        userType: 'DEFAULT',
+      }),
+    ),
+  );
+}
+
+function createCell(schema, width, content) {
+  const { tableCell, paragraph } = schema.nodes;
+  return tableCell.createChecked(
+    { colwidth: [width] },
+    paragraph.createChecked({}, content),
+  );
+}
+
 export const replaceQueuedUrlWithTable = (
   url: string,
   jqlQuery: any,
@@ -67,11 +93,11 @@ export const replaceQueuedUrlWithTable = (
   const {
     table,
     tableRow,
-    tableCell,
     tableHeader,
     paragraph,
     mention,
     status,
+    jiraIssue,
   } = schema.nodes;
 
   let tr = editorState.tr;
@@ -89,15 +115,7 @@ export const replaceQueuedUrlWithTable = (
       return;
     }
 
-    const titles = [
-      'Key',
-      'Summary',
-      'Type',
-      'Assignee',
-      'Reporter',
-      'P',
-      'Status',
-    ];
+    const titles = ['Key', 'Status', 'Summary', 'Assignee', 'Reporter'];
     const headerCells = titles.map(title =>
       tableHeader.createChecked(
         {},
@@ -108,59 +126,73 @@ export const replaceQueuedUrlWithTable = (
 
     jqlQuery.issues
       .map(issue => {
-        const contentNodes: PMNode[] = [];
+        const cells: PMNode[] = [];
 
-        // Key
-        contentNodes.push(schema.text(issue.key));
+        // Jira issue node (💥custom)
+        cells.push(
+          createCell(
+            schema,
+            135,
+            jiraIssue.createChecked({
+              data: {
+                key: issue.key,
+                priority: issue.fields.priority,
+                type: issue.fields.issuetype,
+              },
+            }),
+          ),
+        );
+
+        // Status
+        cells.push(
+          createCell(
+            schema,
+            80,
+            status.createChecked({
+              text: issue.fields.status.name,
+              color: issue.fields.status.statusCategory.colorName,
+            }),
+          ),
+        );
 
         // Summary
-        contentNodes.push(schema.text(issue.fields.summary));
-
-        // Type
-        contentNodes.push(schema.text(issue.fields.issuetype.name));
+        cells.push(createCell(schema, 405, schema.text(issue.fields.summary)));
 
         // Assignee
         if (issue.fields.assignee) {
           const { displayName, accountId } = issue.fields.assignee;
-          contentNodes.push(
-            mention.createChecked({
-              text: `@${displayName}`,
-              id: accountId,
-              // hardcoded :)
-              accessLevel: 'CONTAINER',
-              userType: 'DEFAULT',
-            }),
+          cells.push(
+            createCell(
+              schema,
+              150,
+              mention.createChecked({
+                text: `@${displayName}`,
+                id: accountId,
+                accessLevel: 'CONTAINER',
+                userType: 'DEFAULT',
+              }),
+            ),
           );
         }
 
         // Reporter
         if (issue.fields.reporter) {
           const { displayName, accountId } = issue.fields.reporter;
-          contentNodes.push(
-            mention.createChecked({
-              text: `@${displayName}`,
-              id: accountId,
-              // hardcoded :)
-              accessLevel: 'CONTAINER',
-              userType: 'DEFAULT',
-            }),
+          cells.push(
+            createCell(
+              schema,
+              150,
+              mention.createChecked({
+                text: `@${displayName}`,
+                id: accountId,
+                accessLevel: 'CONTAINER',
+                userType: 'DEFAULT',
+              }),
+            ),
           );
         }
 
-        // P
-        contentNodes.push(schema.text(issue.fields.priority.name));
-
-        // Status
-        contentNodes.push(
-          status.createChecked({
-            text: issue.fields.status.name,
-            color: issue.fields.status.statusCategory.colorName,
-          }),
-        );
-
-        return contentNodes.map(content =>
-          tableCell.createChecked({}, paragraph.createChecked({}, content)),
-        );
+        return cells;
       })
       .forEach(cells => {
         rows.push(tableRow.createChecked({}, cells));
@@ -169,7 +201,7 @@ export const replaceQueuedUrlWithTable = (
     tr.replaceWith(
       pos,
       pos + (node.text || '').length,
-      table.createChecked({ layout: 'full-width' }, rows),
+      table.createChecked({ layout: 'wide' }, rows),
     );
   });
 
