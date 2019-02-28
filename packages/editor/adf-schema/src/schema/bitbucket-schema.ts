@@ -31,6 +31,7 @@ export const bitbucketSchema: Schema = createSchema({
     'link',
     'mentionQuery',
     'emojiQuery',
+    'jiraQuery',
     'code',
   ],
 });

@@ -142,6 +142,7 @@ export default {
     'code',
     'typeAheadQuery',
     'emojiQuery',
+    'jiraQuery',
     'textColor',
 
     // Block marks
