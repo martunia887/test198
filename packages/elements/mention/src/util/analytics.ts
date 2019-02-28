@@ -9,7 +9,7 @@ import { ELEMENTS_CHANNEL } from '../constants';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../package.json';
 
 import { isSpecialMentionText } from '../types';
 

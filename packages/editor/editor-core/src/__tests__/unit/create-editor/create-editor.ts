@@ -1,4 +1,4 @@
-import { name } from '../../../../package.json';
+import { name } from '../../../package.json';
 import { Selection } from 'prosemirror-state';
 import { createEditorFactory } from '@atlaskit/editor-test-helpers';
 import {

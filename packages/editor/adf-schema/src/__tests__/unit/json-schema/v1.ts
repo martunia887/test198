@@ -1,4 +1,4 @@
-import { name } from '../../../../package.json';
+import { name } from '../../../package.json';
 import * as Ajv from 'ajv';
 import { readFilesSync } from '../../../../test-helpers';
 

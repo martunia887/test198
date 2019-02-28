@@ -15,7 +15,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../../package.json';
+} from '../../package.json';
 import '../../components/TextArea';
 
 describe('TextArea', () => {
