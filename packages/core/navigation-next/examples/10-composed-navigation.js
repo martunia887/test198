@@ -14,6 +14,7 @@ import Avatar from '@atlaskit/avatar';
 import AddIcon from '@atlaskit/icon/glyph/add';
 import BacklogIcon from '@atlaskit/icon/glyph/backlog';
 import BoardIcon from '@atlaskit/icon/glyph/board';
+import Banner from '@atlaskit/banner';
 import DashboardIcon from '@atlaskit/icon/glyph/dashboard';
 import FolderIcon from '@atlaskit/icon/glyph/folder';
 import GraphLineIcon from '@atlaskit/icon/glyph/graph-line';
@@ -231,7 +232,13 @@ export default class Example extends Component<{}, State> {
     const { shouldDisplayContainerNav, isEmptySpaceEnabled } = this.state;
     const headerProps = this.state.isEmptySpaceEnabled
       ? { pageBanner: <div css={{ padding: '2rem' }} /> }
-      : {};
+      : {
+          pageBanner: (
+            <Banner isOpen appearance="warning">
+              This is a Banner
+            </Banner>
+          ),
+        };
     return (
       <NavigationProvider>
         <LayoutManager
