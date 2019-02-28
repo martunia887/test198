@@ -5,9 +5,23 @@ import { EditorView } from 'prosemirror-view';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { ReactNodeView } from '../../../nodeviews';
 
-// tslint:disable-next-line:variable-name
-const Wrapper = styled.span`
-  user-select: all;
+import { JiraSelect, Options } from './JiraSelect';
+import json from './data/createMeta.json';
+
+const projects: Options = json.projects.map(project => ({
+  label: project.name,
+  value: project.key,
+  iconUrl: project.avatarUrls['16x16'],
+}));
+
+const issueTypes: Options = json.projects[0].issuetypes.map(issueType => ({
+  label: issueType.name,
+  value: issueType.id,
+  iconUrl: issueType.iconUrl,
+}));
+
+const JiraCreate = styled.div`
+  display: flex;
 `;
 
 export interface Props {
@@ -19,7 +33,12 @@ export interface Props {
 
 export class JiraCreateNode extends React.Component<Props, {}> {
   render() {
-    return <div>Hello world</div>;
+    return (
+      <JiraCreate>
+        <JiraSelect options={projects} />
+        <JiraSelect options={issueTypes} />
+      </JiraCreate>
+    );
   }
 }
 

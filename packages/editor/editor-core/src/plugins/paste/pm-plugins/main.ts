@@ -19,6 +19,7 @@ import { pluginKey as tableStateKey } from '../../table/pm-plugins/main';
 import {
   transformSliceToRemoveOpenTable,
   transformSliceToRemoveNumberColumn,
+  transformNormalizeNestedList,
 } from '../../table/utils';
 import { transformSliceToAddTableHeaders } from '../../table/actions';
 import {
@@ -227,10 +228,13 @@ export function createPlugin(
         return false;
       },
       transformPasted(slice) {
-        // remove table number column if its part of the node
+        // Remove table number column if its part of the node
         slice = transformSliceToRemoveNumberColumn(slice, schema);
 
-        /** If a partial paste of table, paste only table's content */
+        // Normalize nested list when inside table
+        slice = transformNormalizeNestedList(slice, schema);
+
+        // If a partial paste of table, paste only table's content
         slice = transformSliceToRemoveOpenTable(slice, schema);
 
         // We do this separately so it also applies to drag/drop events

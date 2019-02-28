@@ -112,3 +112,37 @@ export function transformSliceToRemoveNumberColumn(
     return maybeTable;
   });
 }
+
+export function transformNormalizeNestedList(
+  slice: Slice,
+  schema: Schema,
+): Slice {
+  if (slice.content.childCount && slice.content.firstChild) {
+    const { firstChild } = slice.content;
+    const { bulletList, orderedList, listItem } = schema.nodes;
+    if (
+      bulletList &&
+      orderedList &&
+      (firstChild.type === bulletList || firstChild.type === orderedList) &&
+      // Slice started inside a nested list
+      slice.openStart > slice.openEnd
+    ) {
+      const listItems = [] as Array<PMNode>;
+      slice.content.descendants(node => {
+        if (node.type === listItem) {
+          listItems.push(node);
+          return false;
+        }
+        return true;
+      });
+      if (listItems.length) {
+        const list = firstChild.type.createChecked({}, listItems);
+        console.log(list.toJSON());
+        return new Slice(Fragment.from(list), 0, 0);
+        // return list.slice(0);
+      }
+      return slice;
+    }
+  }
+  return slice;
+}
