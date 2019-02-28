@@ -25,17 +25,23 @@ export const Icon = styled.img`
   vertical-align: middle;
 `;
 
+export const Issue = styled.div`
+  display: inline-block;
+`;
+
 export default class JiraIssue extends React.PureComponent<Props, {}> {
   render() {
     const { node } = this.props;
-    const { key, priority, type } = node.attrs.data;
+    const { url, key, priority, type } = node.attrs.data;
 
     return (
-      <div>
+      <Issue>
         <Icon src={priority.iconUrl} />
         <Icon src={type.iconUrl} />
-        <span>{key}</span>
-      </div>
+        <a href={url} target="_blank">
+          {key}
+        </a>
+      </Issue>
     );
   }
 }

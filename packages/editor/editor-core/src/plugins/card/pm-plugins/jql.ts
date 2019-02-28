@@ -6,10 +6,10 @@ import { CardPluginState, Request } from '../types';
 import { jqlResponse } from '../../../../example-helpers/jql-doc';
 import { Command } from '../../../types';
 import { resolveCard } from './actions';
-import * as format from 'date-fns/format';
 
 /**
  * test url: https://product-fabric.atlassian.net/browse/ED-6381?jql=project%20%3D%20ED%20AND%20issuetype%20%3D%20Bug%20AND%20status%20%3D%20Done%20AND%20text%20~%20%22table%22%20AND%20assignee%20in%20(nflew)
+ * jql: project = ED AND issuetype = Bug AND status = Done AND text ~ "table" AND assignee in (nflew)
  */
 
 export const handleResolvedJql = (
@@ -25,8 +25,12 @@ export const handleResolvedJql = (
 
 export function resolveJql(url: string): Promise<any> {
   return new Promise((resolve, reject) => {
-    const jqlQuery = (url.match(/\?jql=(.*)/) || [, null])[1];
-    if (jqlQuery) {
+    const query = (url.match(/\?jql=(.*)/) || [, null])[1];
+    const jqlUrl = `https://product-fabric.atlassian.net/rest/api/3/search?fields=summary,status,assignee,title,description&jql=${encodeURIComponent(
+      query!,
+    )}`;
+
+    if (jqlUrl) {
       // const requestUrl = `https://product-fabric.atlassian.net/rest/api/3/search?fields=summary,status,assignee,title,description&jql=${encodeURIComponent(
       //   jqlQuery,
       // )}`;
@@ -48,24 +52,6 @@ export function resolveJql(url: string): Promise<any> {
       resolve(url);
     }
   });
-}
-
-function createMentionCell(schema, displayName, accountId) {
-  const { tableCell, mention, paragraph } = schema.nodes;
-
-  return tableCell.createChecked(
-    {},
-    paragraph.createChecked(
-      {},
-      mention.createChecked({
-        text: `@${displayName}`,
-        id: accountId,
-        // hardcoded :)
-        accessLevel: 'CONTAINER',
-        userType: 'DEFAULT',
-      }),
-    ),
-  );
 }
 
 function createCell(schema, width, content) {
@@ -136,6 +122,7 @@ export const replaceQueuedUrlWithTable = (
             jiraIssue.createChecked({
               data: {
                 key: issue.key,
+                url: `${issue.fields.status.iconUrl}browse/${issue.key}`,
                 priority: issue.fields.priority,
                 type: issue.fields.issuetype,
               },
