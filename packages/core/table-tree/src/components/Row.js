@@ -14,7 +14,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../package.json';
 import { TreeRowContainer } from '../styled';
 import Chevron from './Chevron';
 import Cell from './Cell';

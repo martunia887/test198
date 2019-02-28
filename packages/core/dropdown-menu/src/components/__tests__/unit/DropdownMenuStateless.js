@@ -6,7 +6,7 @@ import Droplist from '@atlaskit/droplist';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../../../package.json';
+} from '../../../package.json';
 //import DropdownMenuStatelessWithAnalytics from '../../DropdownMenuStateless';
 
 import DropdownMenuStatelessWithAnalytics, {

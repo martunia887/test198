@@ -9,7 +9,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../package.json';
 
 import Chrome from '../Chrome';
 import Content from '../Content';

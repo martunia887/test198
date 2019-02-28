@@ -17,7 +17,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../../package.json';
+} from '../../package.json';
 import {
   navigationExpandedCollapsed,
   type CollapseExpandTrigger,

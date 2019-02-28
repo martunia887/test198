@@ -9,7 +9,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../package.json';
 import EditedStyles from '../styled/EditedStyles';
 
 type Props = {
