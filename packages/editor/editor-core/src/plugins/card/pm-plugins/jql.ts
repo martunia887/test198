@@ -3,75 +3,43 @@ import { Node as PMNode, Schema } from 'prosemirror-model';
 import { closeHistory } from 'prosemirror-history';
 import { pluginKey } from './main';
 import { CardPluginState, Request } from '../types';
-import { default as json } from '../../inline-jira/nodeviews/data/jql.json';
-import { default as priorityJson } from '../../inline-jira/nodeviews/data/priority.json';
-import { default as statusCategoryJson } from '../../inline-jira/nodeviews/data/statusCategory.json';
 import { Command } from '../../../types';
 import { resolveCard } from './actions';
 import { issueTypes as issueTypesJson } from '../../inline-jira/nodeviews';
 
+// data
+import { default as jqlJson } from '../../inline-jira/nodeviews/data/jql.json';
+import { default as priorityJson } from '../../inline-jira/nodeviews/data/priority.json';
+import { default as statusCategoryJson } from '../../inline-jira/nodeviews/data/statusCategory.json';
+
 /**
  * test url: https://product-fabric.atlassian.net/browse/ED-6380?jql=project%20%3D%20ED%20AND%20issuetype%20%3D%20Bug%20AND%20status%20in%20(Backlog%2C%20Duplicate%2C%20%22In%20Review%22%2C%20%22In%20progress%22)%20AND%20text%20~%20%22table%22
- * jql: project = ED AND issuetype = Bug AND status = Done AND text ~ "table" AND assignee in (nflew)
+ * jql: project = ED AND issuetype = Bug AND status in (Backlog, Duplicate, "In Review", "In progress") AND text ~ "table"
  */
-
-export const handleResolvedJql = (
-  view: EditorView,
-  request: Request,
-) => resolvedJql => {
-  replaceQueuedUrlWithTable(request.url, resolvedJql)(
-    view.state,
-    view.dispatch,
-  );
-  return resolvedJql;
-};
 
 export function resolveJql(url: string): Promise<any> {
   return new Promise((resolve, reject) => {
+    if (location.hostname === 'localhost') {
+      return resolve(jqlJson);
+    }
+
     const query = (url.match(/\?jql=(.*)/) || [, null])[1];
-    const jqlUrl = `https://product-fabric.atlassian.net/rest/api/3/search?fields=summary,status,assignee,title,description&jql=${encodeURIComponent(
-      query!,
-    )}`;
-
-    if (jqlUrl) {
-      // const requestUrl = `https://product-fabric.atlassian.net/rest/api/3/search?fields=summary,status,assignee,title,description&jql=${encodeURIComponent(
-      //   jqlQuery,
-      // )}`;
-
-      // fetch(requestUrl, {
-      //   method: 'GET',
-      //   mode: 'cors',
-      //   headers: {
-      //     'Access-Control-Allow-Origin': '*',
-      //     Accept: 'application/json, */*',
-      //     'Content-Type': 'application/json',
-      //   },
-      // })
-      //   .then(resolve)
-      //   .catch(reject);
-
-      resolve(json);
+    if (query) {
+      fetch(`rest/api/3/search?jql=${encodeURIComponent(query)}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json, */*',
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(resolve)
+        .catch(reject);
     } else {
       resolve(url);
     }
   });
-}
-
-function createCell(
-  schema: Schema,
-  {
-    width,
-    content,
-    inline = false,
-  }: { width: number; content: PMNode; inline?: boolean },
-) {
-  const { tableCell, paragraph } = schema.nodes;
-  const cell = tableCell.createChecked(
-    { colwidth: [width] },
-    inline ? paragraph.createChecked({}, content) : content,
-  );
-
-  return cell;
 }
 
 export const replaceQueuedUrlWithTable = (
@@ -142,7 +110,7 @@ export const replaceQueuedUrlWithTable = (
             content: jiraIssue.createChecked({
               data: {
                 key: issue.key,
-                url: `${issue.fields.status.iconUrl}browse/${issue.key}`,
+                url: `https://product-fabric.atlassian.net/browse/${issue.key}`,
               },
             }),
           }),
@@ -257,4 +225,32 @@ export const replaceQueuedUrlWithTable = (
   }
 
   return true;
+};
+
+function createCell(
+  schema: Schema,
+  {
+    width,
+    content,
+    inline = false,
+  }: { width: number; content: PMNode; inline?: boolean },
+) {
+  const { tableCell, paragraph } = schema.nodes;
+  const cell = tableCell.createChecked(
+    { colwidth: [width] },
+    inline ? paragraph.createChecked({}, content) : content,
+  );
+
+  return cell;
+}
+
+export const handleResolvedJql = (
+  view: EditorView,
+  request: Request,
+) => resolvedJql => {
+  replaceQueuedUrlWithTable(request.url, resolvedJql)(
+    view.state,
+    view.dispatch,
+  );
+  return resolvedJql;
 };
