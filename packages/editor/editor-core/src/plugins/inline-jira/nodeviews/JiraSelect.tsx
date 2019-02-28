@@ -7,7 +7,16 @@ interface OptionType {
   value: string;
   iconUrl: string;
 }
+
 export type Options = Array<OptionType>;
+
+interface Props {
+  options: Options;
+  iconOnly?: boolean;
+  isSearchable?: boolean;
+  minWidth?: number;
+  defaultValue?: OptionType;
+}
 
 const Option = styled.div`
   display: flex;
@@ -16,23 +25,51 @@ const Option = styled.div`
     border-radius: 2px;
     width: 16px;
     height: 16px;
-    margin-right: 4px;
   }
 `;
 
-const formatOptionLabel = (option: OptionType, { context }) => (
+const Label = styled.span`
+  margin-left: 4px;
+`;
+
+const formatOptionLabel = (iconOnly: boolean) => (
+  { iconUrl, label }: OptionType,
+  { context },
+) => (
   <Option>
-    <img src={option.iconUrl} /> {option.label}
+    <img src={iconUrl} />
+    {iconOnly ? (
+      context === 'menu' ? (
+        <Label>{label}</Label>
+      ) : (
+        ''
+      )
+    ) : (
+      <Label>{label}</Label>
+    )}
   </Option>
 );
 
-export const JiraSelect = ({ options }: { options: Options }) => (
+export const JiraSelect = ({
+  options,
+  iconOnly = false,
+  isSearchable = false,
+  minWidth = 120,
+  defaultValue,
+}: Props) => (
   <Select
-    formatOptionLabel={formatOptionLabel}
+    spacing="compact"
+    formatOptionLabel={formatOptionLabel(iconOnly)}
     options={options}
+    isSearchable={isSearchable}
+    defaultValue={defaultValue}
     styles={{
-      container: css => ({ ...css, width: 105 }),
-      // dropdownIndicator: css => ({ ...css, paddingLeft: 0 }),
+      container: css => ({ ...css, minWidth }),
+      control: css => ({
+        ...css,
+        background: 'transparent',
+        border: 0,
+      }),
       menu: css => ({ ...css, width: 300 }),
     }}
   />
