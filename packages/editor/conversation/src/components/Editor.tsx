@@ -209,7 +209,13 @@ export default class Editor extends React.Component<Props, State> {
           {renderEditor ? (
             renderEditor(AkEditor, defaultProps)
           ) : (
-            <AkEditor {...defaultProps} />
+            <AkEditor
+              {...defaultProps}
+              media={{
+                allowMediaSingle: true,
+                provider: providers.mediaProvider,
+              }}
+            />
           )}
         </CollapsedEditor>
       </div>

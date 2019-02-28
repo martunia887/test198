@@ -32,7 +32,8 @@ export const Blanket = styled.div`
   bottom: 0;
   right: 0;
   background-color: ${blanketColor};
-  z-index: ${overlayZindex};
+  /* z-index: ${overlayZindex}; */
+  z-index: 500;
 `;
 
 export const HeaderWrapper = styled.div`

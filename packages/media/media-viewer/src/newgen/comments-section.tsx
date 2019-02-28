@@ -29,6 +29,10 @@ export class CommentsSection extends React.Component<Props, State> {
     const { context } = props;
     const mediaProvider: MediaProvider = {
       viewContext: Promise.resolve(context),
+      uploadContext: Promise.resolve(context),
+      uploadParams: {
+        collection: 'MediaServicesSample',
+      },
     };
 
     this.dataProviders = new ProviderFactory();
@@ -86,6 +90,7 @@ export class CommentsSection extends React.Component<Props, State> {
                         meta={{ mediaFileId: fileId }}
                         objectId={objectId}
                         provider={provider}
+                        dataProviders={dataProviders}
                       />
                     );
                   }
