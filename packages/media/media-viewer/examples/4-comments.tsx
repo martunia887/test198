@@ -103,18 +103,6 @@ export default class Example extends React.PureComponent<{}, State> {
   };
 
   async componentWillMount() {
-    const conversations = await conversationProvider.getConversations(
-      PAGE_OBJECT_ID,
-    );
-    this.sortConversations(conversations);
-    this.setState({ conversations });
-  }
-
-  private sortConversations = (convs: ConversationInterface[]) =>
-    convs.sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
-
-  render() {
-    const { conversations } = this.state;
     // TODO usubscribe on unmount
     const usubscribe = conversationProvider.store.subscribe(() => {
       const state = conversationProvider.store.getState();
@@ -127,6 +115,19 @@ export default class Example extends React.PureComponent<{}, State> {
         }
       }
     });
+
+    const conversations = await conversationProvider.getConversations(
+      PAGE_OBJECT_ID,
+    );
+    this.sortConversations(conversations);
+    this.setState({ conversations });
+  }
+
+  private sortConversations = (convs: ConversationInterface[]) =>
+    convs.sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
+
+  render() {
+    const { conversations } = this.state;
 
     const pageConversations: PageConversations = {
       conversations,
