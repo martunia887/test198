@@ -9,7 +9,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../link-2-package.json';
+} from '../version.json';
 import { Container, IndicatorButton, IndicatorDiv } from '../styled/Dots';
 
 type Props = {

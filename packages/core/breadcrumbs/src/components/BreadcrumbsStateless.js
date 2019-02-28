@@ -8,7 +8,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../link-2-package.json';
+} from '../version.json';
 import EllipsisItem from './EllipsisItem';
 import Container from '../styled/BreadcrumbsContainer';
 

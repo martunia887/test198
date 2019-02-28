@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { mount, shallow } from 'enzyme';
 import { RadioWithoutAnalytics as Radio } from '../../Radio';
-import { name } from '../../link-2-package.json';
+import { name } from '../../version.json';
 
 describe(name, () => {
   describe('Radio', () => {

@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
 import { Gateway, GatewayDest, GatewayProvider } from '../../..';
-import { name } from '../../../link-2-package.json';
+import { name } from '../../../version.json';
 
 function render(jsx) {
   return ReactDOMServer.renderToStaticMarkup(jsx);

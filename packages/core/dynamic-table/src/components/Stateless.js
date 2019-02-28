@@ -11,7 +11,7 @@ import ManagedPagination from './managedPagination';
 import {
   name as packageName,
   version as packageVersion,
-} from '../link-2-package.json';
+} from '../version.json';
 
 import { ASC, DESC, SMALL, LARGE } from '../internal/constants';
 import {

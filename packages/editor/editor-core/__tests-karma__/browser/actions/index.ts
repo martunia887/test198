@@ -23,7 +23,7 @@ import {
   DefaultMediaStateManager,
 } from './../../../src/plugins/media/pm-plugins/main';
 import extensionPlugin from '../../../src/plugins/extension';
-import { name } from '../../../package.json';
+import { name } from '../../package.json';
 import tasksAndDecisionsPlugin from '../../../src/plugins/tasks-and-decisions';
 import mediaPlugin from '../../../src/plugins/media';
 import EditorActions from '../../../src/actions';

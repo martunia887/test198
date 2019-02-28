@@ -10,7 +10,7 @@ import Base, { Label } from '@atlaskit/field-base';
 import {
   name as packageName,
   version as packageVersion,
-} from '../link-2-package.json';
+} from '../version.json';
 import TextArea from './styled/TextArea';
 
 const Wrapper = styled.div`

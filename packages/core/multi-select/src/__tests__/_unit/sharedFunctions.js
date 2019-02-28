@@ -1,5 +1,5 @@
 // @flow
-import { name } from '../../link-2-package.json';
+import { name } from '../../version.json';
 import {
   getNextFocusable,
   getPrevFocusable,

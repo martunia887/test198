@@ -11,7 +11,7 @@ import ConfirmIcon from '@atlaskit/icon/glyph/check';
 import {
   name as packageName,
   version as packageVersion,
-} from '../link-2-package.json';
+} from '../version.json';
 import { Handle, IconWrapper, Inner, Input, Label, Slide } from './styled';
 import defaultBaseProps from './defaultBaseProps';
 import type { StatelessProps, DefaultBaseProps } from './types';

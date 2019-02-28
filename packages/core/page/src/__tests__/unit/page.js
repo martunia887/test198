@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Page from '../..';
-import { name } from '../../link-2-package.json';
+import { name } from '../../version.json';
 
 describe(name, () => {
   it('page should accept navigation as a property', () => {

@@ -12,7 +12,7 @@ import type { Props } from '../types';
 import {
   name as packageName,
   version as packageVersion,
-} from '../link-2-package.json';
+} from '../version.json';
 import { Container } from './styled';
 
 class InlineDialog extends Component<Props, {}> {

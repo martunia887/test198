@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { FieldBaseStateless } from '@atlaskit/field-base';
 import { MultiSelectStateless } from '../..';
 
-import { name } from '../../link-2-package.json';
+import { name } from '../../version.json';
 
 describe(`${name} - stateless`, () => {
   const animStub = window.cancelAnimationFrame;
