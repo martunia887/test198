@@ -5,7 +5,7 @@ import { shallow, mount } from 'enzyme';
 import { toClass } from 'recompose';
 
 import Item, { itemThemeNamespace } from '../../..';
-import { name } from '../../../package.json';
+import { name } from '../../../link-2-package.json';
 import { After, Before, Content, Description } from '../../../styled/ItemParts';
 
 describe(`${name} - Item`, () => {

@@ -4,7 +4,7 @@ import { mount, shallow } from 'enzyme';
 
 import { RadioWithoutAnalytics as Radio } from '../../Radio';
 import RadioGroup from '../../RadioGroup';
-import { name } from '../../package.json';
+import { name } from '../../link-2-package.json';
 import type { OptionPropType } from '../../types';
 
 describe(name, () => {

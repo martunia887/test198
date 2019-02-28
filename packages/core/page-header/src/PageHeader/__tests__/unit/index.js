@@ -3,7 +3,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import renderer from 'react-test-renderer';
 import PageHeader from '../../..';
-import { name } from '../../../package.json';
+import { name } from '../../../link-2-package.json';
 import { StyledTitle } from '../../styled';
 
 describe(name, () => {

@@ -11,7 +11,7 @@ import Blanket from '@atlaskit/blanket';
 import {
   name as packageName,
   version as packageVersion,
-} from '../package.json';
+} from '../link-2-package.json';
 
 import { WIDTH_ENUM } from '../shared-variables';
 

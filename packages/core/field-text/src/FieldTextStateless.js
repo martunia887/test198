@@ -11,7 +11,7 @@ import Base, { Label } from '@atlaskit/field-base';
 import {
   name as packageName,
   version as packageVersion,
-} from '../package.json';
+} from '../link-2-package.json';
 import Input from './styled/Input';
 import type { FieldTextProps } from './types';
 

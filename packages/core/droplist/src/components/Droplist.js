@@ -14,7 +14,7 @@ import { gridSize } from '@atlaskit/theme';
 import {
   name as packageName,
   version as packageVersion,
-} from '../package.json';
+} from '../link-2-package.json';
 import Wrapper, {
   Content,
   SpinnerContainer,

@@ -6,7 +6,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../../package.json';
+} from '../../../link-2-package.json';
 import '../../Tooltip';
 
 // This is a global mock for this file that will mock all components wrapped with analytics

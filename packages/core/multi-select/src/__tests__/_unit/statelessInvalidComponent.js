@@ -5,7 +5,7 @@ import { FieldBaseStateless } from '@atlaskit/field-base';
 import { MultiSelectStateless } from '../..';
 import type { GroupType } from '../../types';
 
-import { name } from '../../package.json';
+import { name } from '../../link-2-package.json';
 
 describe(`${name} - stateless`, () => {
   const animStub = window.cancelAnimationFrame;

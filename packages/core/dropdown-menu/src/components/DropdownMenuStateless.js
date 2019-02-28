@@ -14,7 +14,7 @@ import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import {
   name as packageName,
   version as packageVersion,
-} from '../package.json';
+} from '../link-2-package.json';
 
 import DropdownItemFocusManager from './context/DropdownItemFocusManager';
 import DropdownItemClickManager from './context/DropdownItemClickManager';

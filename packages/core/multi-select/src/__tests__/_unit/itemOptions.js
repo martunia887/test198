@@ -2,7 +2,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { name } from '../../package.json';
+import { name } from '../../link-2-package.json';
 import { MultiSelectStateless } from '../..';
 import type { ItemType, GroupType } from '../../types';
 

@@ -10,7 +10,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../package.json';
+} from '../link-2-package.json';
 
 import RadioIcon from './RadioIcon';
 import { RadioInputWrapper, HiddenInput } from './styled/RadioInput';

@@ -8,7 +8,7 @@ import type {
   TabContentComponentProvided,
   TabItemComponentProvided,
 } from '../../../types';
-import { name } from '../../../package.json';
+import { name } from '../../../link-2-package.json';
 
 const tabs = [
   { content: 'Tab 1 content', label: 'Tab 1 label' },
