@@ -11,7 +11,7 @@ const createPlugin = portalProviderAPI =>
     key: pluginKey,
     state: {
       init: () => {
-        return { decorations: null };
+        return {};
       },
       apply: (tr, pluginState) => {
         return pluginState;
@@ -26,7 +26,6 @@ const createPlugin = portalProviderAPI =>
           jiraIssueNodeView,
           portalProviderAPI,
         ),
-
         jiraIssueSelect: ReactNodeView.fromComponent(
           JiraIssueSelectNodeView,
           portalProviderAPI,

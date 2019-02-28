@@ -14,15 +14,6 @@ class InlineJiraView extends ReactNodeView {
   ignoreMutation() {
     return true;
   }
-
-  ignoreMutation() {
-    return true;
-  }
-
-  stopEvent(e) {
-    console.log('got event', e);
-    return true;
-  }
 }
 
 export default InlineJiraView;

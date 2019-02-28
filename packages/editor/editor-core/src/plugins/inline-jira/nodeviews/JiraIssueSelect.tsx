@@ -71,6 +71,9 @@ export default class JiraIssueSelectNodeView extends React.PureComponent<
 > {
   render() {
     const { node } = this.props;
+    if (!node.attrs.data) {
+      return null;
+    }
     const { name, id, iconUrl, colorName, options } = node.attrs.data;
 
     return (

@@ -1,13 +1,8 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { JiraIcon } from '@atlaskit/logo';
 import { EditorPlugin } from '../../types';
 import createInlineJiraPlugin from './pm-plugins/main';
 import { jiraQuery, jiraIssue, jiraIssueSelect } from '@atlaskit/adf-schema';
-import { Mark } from 'prosemirror-model';
-import { pluginKey } from './pm-plugins/main';
-import { Decoration } from 'prosemirror-view';
-import { JiraCreateNode } from './nodeviews';
 
 const title = 'Create Jira issue';
 
