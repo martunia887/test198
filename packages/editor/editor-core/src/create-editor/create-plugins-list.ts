@@ -50,6 +50,7 @@ import {
   annotationPlugin,
   compositionPlugin,
   analyticsPlugin,
+  inlineJiraPlugin,
 } from '../plugins';
 
 /**
@@ -246,6 +247,8 @@ export default function createPluginsList(
   if (props.appearance === 'mobile') {
     plugins.push(compositionPlugin);
   }
+
+  plugins.push(inlineJiraPlugin);
 
   return plugins;
 }

@@ -50,6 +50,7 @@ export default {
     'tableKeymap',
     'hyperlinkInputRule',
     'tablePMColResizing',
+    'inlineJira',
     'hyperlinkKeymap',
     'tableColResizing',
     'blockTypeKeyMap',
