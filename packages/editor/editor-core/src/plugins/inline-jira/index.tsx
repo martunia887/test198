@@ -37,15 +37,15 @@ export default {
         priority: 600,
         icon: () => <JiraIcon size="small" label={title} />,
         action(insert, state) {
-          // const mark: Mark = state.schema.nodes.paragraph;
-          const jiraText = state.schema.text('hello', []);
+          const mark: Mark = state.schema.marks.jiraQuery;
+          const jiraText = state.schema.text('ihavewidgert', [mark]);
           console.log(jiraText);
           const tr = insert(jiraText);
           // TODO: figure out pos in tr
 
           tr.setMeta(pluginKey, {
             decorations: Decoration.widget(
-              0,
+              1,
               (view, getPos) => {
                 const node = document.createElement('span');
                 ReactDOM.render(React.createElement(JiraCreateNode), node);
