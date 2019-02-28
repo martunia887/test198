@@ -108,6 +108,8 @@ export default {
     'confluenceJiraIssue',
     'hardBreak',
     'emoji',
+    'jiraIssue',
+    'jiraIssueSelect',
     'placeholder',
     'mediaGroup',
     'table',

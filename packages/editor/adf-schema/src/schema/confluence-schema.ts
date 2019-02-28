@@ -53,6 +53,7 @@ const marks = [
   'subsup',
   'underline',
   'mentionQuery',
+  'jqlQuery',
   'code',
   'textColor',
   'confluenceInlineComment',
