@@ -79,8 +79,6 @@ const appearances = ({ appearance, isSelected }) => {
 
 const Button = forwardRef(
   ({ appearance, hasIcon, isSelected, ...props }: *, ref) => {
-    const buttonHeight = '2.28571em'; // FIXME
-
     const dynamic = appearances({ appearance, isSelected });
 
     return (

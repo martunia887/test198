@@ -1,7 +1,7 @@
 // @noflow
 /** @jsx jsx */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import querystring from 'querystring';
 import { jsx } from '@emotion/core';
 
@@ -14,7 +14,7 @@ import {
   SearchFilter,
   TextFilter,
 } from '../src/fields';
-import RefinementBar, {
+import {
   RefinementBarUI,
   RefinementBarProvider,
   RefinementBarConsumer,
@@ -242,13 +242,15 @@ const Pre = props => (
     {...props}
   />
 );
-const Heading = props => (
+const Heading = ({ children, ...props }: *) => (
   <h4
     css={{
       margin: '1em 0 0',
     }}
     {...props}
-  />
+  >
+    {children}
+  </h4>
 );
 
 // ==============================
