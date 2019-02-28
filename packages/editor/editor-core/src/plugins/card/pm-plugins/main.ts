@@ -7,7 +7,7 @@ import inlineCardNodeView from '../nodeviews/inlineCard';
 import blockCardNodeView from '../nodeviews/blockCard';
 import { replaceQueuedUrlWithCard } from './doc';
 import { CardNodeView } from '../nodeviews';
-import { resolveJql, handleResolvedJql } from './jql';
+import { resolveJqlUrl, handleResolvedJql } from './jql';
 
 export const pluginKey = new PluginKey('cardPlugin');
 
@@ -41,7 +41,7 @@ export const resolveWithProvider = (
     parent.firstChild!.text === request.url &&
     $pos.node($pos.depth - 1).type.name === 'doc';
 
-  resolveJql(request.url).then(
+  resolveJqlUrl(request.url).then(
     handleResolvedJql(view, request),
     handleRejected(view, request),
   );

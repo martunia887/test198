@@ -1,9 +1,9 @@
 import { NodeSpec } from 'prosemirror-model';
 
 export const jqlQuery: NodeSpec = {
-  group: 'inline',
-  inline: true,
+  group: 'block',
+  inline: false,
   selectable: true,
-  toDOM: () => ['span', { 'data-jql-query': 'true' }],
-  parseDOM: [{ tag: 'span[data-jql-query]' }],
+  toDOM: () => ['div', { 'data-jql-query': 'true' }],
+  parseDOM: [{ tag: 'div[data-jql-query]' }],
 };

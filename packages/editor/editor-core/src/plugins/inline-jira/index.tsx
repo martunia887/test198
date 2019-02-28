@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { JiraIcon } from '@atlaskit/logo';
+import { NodeSelection } from 'prosemirror-state';
+import EditorSearchIcon from '@atlaskit/icon/glyph/editor/search';
 import { EditorPlugin } from '../../types';
 import createInlineJiraPlugin from './pm-plugins/main';
 import {
@@ -46,14 +48,10 @@ export default {
       {
         title: JQLTitle,
         priority: 700,
-        icon: () => <JiraIcon size="small" label={JQLTitle} />,
+        icon: () => <EditorSearchIcon size="small" label={JQLTitle} />,
         action(insert, state) {
-          // const mark: Mark = state.schema.marks.jqlQuery;
-          // const jiraText = state.schema.text('ihavewidget', [mark]);
-          // console.log(jiraText);
-          // const tr = insert(jiraText);
-
-          return state.tr;
+          const node = state.schema.nodes.jqlQuery.create();
+          return insert(node);
         },
       },
     ],

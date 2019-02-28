@@ -131,6 +131,7 @@ export default {
     'inlineCard',
     'blockCard',
     'jiraQuery',
+    'jqlQuery',
   ],
   marks: [
     // Inline marks
