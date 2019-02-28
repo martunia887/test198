@@ -2,6 +2,7 @@
 
 import React, { Component, Fragment, type ElementRef } from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import Banner from '@atlaskit/banner';
 import { colors } from '@atlaskit/theme';
 
 import {
@@ -85,6 +86,11 @@ export default class LayoutManager extends Component<
     experimental_flyoutOnHover: false,
     experimental_alternateFlyoutBehaviour: false,
     experimental_fullWidthFlyout: false,
+    PageHeader: (
+      <Banner isOpen appearance="warning">
+        This is a Banner
+      </Banner>
+    ),
   };
 
   static getDerivedStateFromProps(props: LayoutManagerProps, state: State) {
@@ -434,10 +440,20 @@ export default class LayoutManager extends Component<
 
   render() {
     return (
-      <LayoutContainer>
-        {this.renderNavigation()}
-        {this.renderPageContent()}
-      </LayoutContainer>
+      <div
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          position: 'relative',
+        }}
+      >
+        {this.props.PageHeader}
+        <LayoutContainer>
+          {this.renderNavigation()}
+          {this.renderPageContent()}
+        </LayoutContainer>
+      </div>
     );
   }
 }
