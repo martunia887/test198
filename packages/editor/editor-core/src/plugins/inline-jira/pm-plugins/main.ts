@@ -1,7 +1,5 @@
 import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
-import { ReactNodeView } from '../../../nodeviews';
-import JiraCreateNode from '../nodeviews';
-import { jiraQuery } from '@atlaskit/adf-schema';
+import InlineJiraView from '../nodeviews';
 
 export const pluginKey = new PluginKey('inlineJiraPlugin');
 
@@ -19,15 +17,8 @@ const createPlugin = portalProviderAPI =>
 
     props: {
       nodeViews: {
-        jiraQuery: (node, view, getPos) => {
-          console.warn('hello');
-          debugger;
-          return ReactNodeView.fromComponent(JiraCreateNode, portalProviderAPI)(
-            node,
-            view,
-            getPos,
-          );
-        },
+        jiraQuery: (node, view, getPos) =>
+          new InlineJiraView(node, view, getPos, portalProviderAPI, {}).init(),
       },
     },
   });

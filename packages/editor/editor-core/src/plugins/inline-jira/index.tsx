@@ -28,8 +28,9 @@ export default {
         priority: 600,
         icon: () => <JiraIcon size="small" label={title} />,
         action(insert, state) {
-          const mark: Mark = state.schema.mark('jiraQuery');
-          const jiraText = state.schema.text(':', [mark]);
+          const mark: Mark = state.schema.marks.jiraQuery.create();
+          const jiraText = state.schema.text('_', [mark]);
+          console.log(jiraText);
           return insert(jiraText);
         },
       },

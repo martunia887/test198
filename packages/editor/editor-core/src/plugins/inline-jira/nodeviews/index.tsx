@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { ReactNodeView } from '../../../nodeviews';
 
 // tslint:disable-next-line:variable-name
 const Wrapper = styled.span`
@@ -16,8 +17,22 @@ export interface Props {
   providerFactory: ProviderFactory;
 }
 
-export default class JiraCreateNode extends React.PureComponent<Props, {}> {
+export class JiraCreateNode extends React.Component<Props, {}> {
   render() {
-    return <p>hello</p>;
+    return <div>Hello world</div>;
   }
 }
+
+class InlineJiraView extends ReactNodeView {
+  getContentDOM() {
+    const dom = document.createElement('div');
+    dom.className = 'jiraView-content-wrap';
+    return { dom };
+  }
+
+  render(props, forwardRef) {
+    return <JiraCreateNode view={this.view} />;
+  }
+}
+
+export default InlineJiraView;
