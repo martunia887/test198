@@ -103,3 +103,4 @@ export { unsupportedBlock } from './unsupported-block';
 export { unsupportedInline } from './unsupported-inline';
 export { status, StatusDefinition } from './status';
 export { jiraIssue } from './jira-issue';
+export { jiraIssueSelect } from './jira-issue-select';

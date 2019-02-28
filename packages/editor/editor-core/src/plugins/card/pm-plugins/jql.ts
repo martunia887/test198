@@ -1,14 +1,15 @@
 import { EditorView } from 'prosemirror-view';
-import { Node as PMNode } from 'prosemirror-model';
+import { Node as PMNode, Schema } from 'prosemirror-model';
 import { closeHistory } from 'prosemirror-history';
 import { pluginKey } from './main';
 import { CardPluginState, Request } from '../types';
-import { jqlResponse } from '../../../../example-helpers/jql-doc';
+import { default as json } from '../../inline-jira/nodeviews/data/jql.json';
 import { Command } from '../../../types';
 import { resolveCard } from './actions';
+import { issueTypes } from '../../inline-jira/nodeviews';
 
 /**
- * test url: https://product-fabric.atlassian.net/browse/ED-6381?jql=project%20%3D%20ED%20AND%20issuetype%20%3D%20Bug%20AND%20status%20%3D%20Done%20AND%20text%20~%20%22table%22%20AND%20assignee%20in%20(nflew)
+ * test url: https://product-fabric.atlassian.net/browse/ED-6380?jql=project%20%3D%20ED%20AND%20issuetype%20%3D%20Bug%20AND%20status%20in%20(Backlog%2C%20Duplicate%2C%20%22In%20Review%22%2C%20%22In%20progress%22)%20AND%20text%20~%20%22table%22
  * jql: project = ED AND issuetype = Bug AND status = Done AND text ~ "table" AND assignee in (nflew)
  */
 
@@ -47,19 +48,28 @@ export function resolveJql(url: string): Promise<any> {
       //   .then(resolve)
       //   .catch(reject);
 
-      resolve(jqlResponse);
+      resolve(json);
     } else {
       resolve(url);
     }
   });
 }
 
-function createCell(schema, width, content) {
+function createCell(
+  schema: Schema,
+  {
+    width,
+    content,
+    inline = false,
+  }: { width: number; content: PMNode; inline?: boolean },
+) {
   const { tableCell, paragraph } = schema.nodes;
-  return tableCell.createChecked(
+  const cell = tableCell.createChecked(
     { colwidth: [width] },
-    paragraph.createChecked({}, content),
+    inline ? paragraph.createChecked({}, content) : content,
   );
+
+  return cell;
 }
 
 export const replaceQueuedUrlWithTable = (
@@ -84,6 +94,7 @@ export const replaceQueuedUrlWithTable = (
     mention,
     status,
     jiraIssue,
+    jiraIssueSelect,
   } = schema.nodes;
 
   let tr = editorState.tr;
@@ -101,7 +112,15 @@ export const replaceQueuedUrlWithTable = (
       return;
     }
 
-    const titles = ['Key', 'Status', 'Summary', 'Assignee', 'Reporter'];
+    const titles = [
+      'Key',
+
+      'Status',
+      'Priority',
+      'Summary',
+      'Assignee',
+      'Reporter',
+    ];
     const headerCells = titles.map(title =>
       tableHeader.createChecked(
         {},
@@ -114,70 +133,86 @@ export const replaceQueuedUrlWithTable = (
       .map(issue => {
         const cells: PMNode[] = [];
 
-        // Jira issue node (💥custom)
+        // Key
         cells.push(
-          createCell(
-            schema,
-            135,
-            jiraIssue.createChecked({
+          createCell(schema, {
+            width: 125,
+            inline: true,
+            content: jiraIssue.createChecked({
               data: {
                 key: issue.key,
                 url: `${issue.fields.status.iconUrl}browse/${issue.key}`,
-                priority: issue.fields.priority,
                 type: issue.fields.issuetype,
               },
             }),
-          ),
+          }),
         );
 
         // Status
         cells.push(
-          createCell(
-            schema,
-            80,
-            status.createChecked({
+          createCell(schema, {
+            width: 125,
+            inline: true,
+            content: status.createChecked({
               text: issue.fields.status.name,
               color: issue.fields.status.statusCategory.colorName,
             }),
-          ),
+          }),
+        );
+
+        // Priority
+        cells.push(
+          createCell(schema, {
+            width: 125,
+            content: jiraIssueSelect.createChecked({
+              data: {
+                ...issue.fields.priority,
+                options: issueTypes,
+              },
+            }),
+          }),
         );
 
         // Summary
-        cells.push(createCell(schema, 405, schema.text(issue.fields.summary)));
+        cells.push(
+          createCell(schema, {
+            width: 300,
+            inline: true,
+            content: schema.text(issue.fields.summary),
+          }),
+        );
 
         // Assignee
-        if (issue.fields.assignee) {
-          const { displayName, accountId } = issue.fields.assignee;
-          cells.push(
-            createCell(
-              schema,
-              150,
-              mention.createChecked({
-                text: `@${displayName}`,
-                id: accountId,
-                accessLevel: 'CONTAINER',
-                userType: 'DEFAULT',
-              }),
-            ),
-          );
-        }
+        cells.push(
+          createCell(schema, {
+            width: 140,
+            inline: true,
+            content: issue.fields.assignee
+              ? mention.createChecked({
+                  text: `@${issue.fields.assignee.displayName}`,
+                  id: issue.fields.assignee.accountId,
+                  accessLevel: 'CONTAINER',
+                  userType: 'DEFAULT',
+                })
+              : schema.text(' '),
+          }),
+        );
 
         // Reporter
-        if (issue.fields.reporter) {
-          const { displayName, accountId } = issue.fields.reporter;
-          cells.push(
-            createCell(
-              schema,
-              150,
-              mention.createChecked({
-                text: `@${displayName}`,
-                id: accountId,
-                accessLevel: 'CONTAINER',
-                userType: 'DEFAULT',
-              }),
-            ),
-          );
-        }
+        cells.push(
+          createCell(schema, {
+            width: 140,
+            inline: true,
+            content: issue.fields.reporter
+              ? mention.createChecked({
+                  text: `@${issue.fields.reporter.displayName}`,
+                  id: issue.fields.reporter.accountId,
+                  accessLevel: 'CONTAINER',
+                  userType: 'DEFAULT',
+                })
+              : schema.text(' '),
+          }),
+        );
 
         return cells;
       })

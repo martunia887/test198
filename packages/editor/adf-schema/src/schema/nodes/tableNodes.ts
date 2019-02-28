@@ -258,7 +258,7 @@ const cellAttrs = {
 
 export const tableCell = {
   content:
-    '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock |  mediaGroup | mediaSingle | applicationCard | decisionList | taskList | blockCard | extension | unsupportedBlock)+',
+    '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock |  mediaGroup | mediaSingle | applicationCard | decisionList | taskList | blockCard | extension | jiraIssueSelect | unsupportedBlock)+',
   attrs: cellAttrs,
   tableRole: 'cell',
   marks: 'alignment',
@@ -288,7 +288,7 @@ export const toJSONTableCell = (node: PmNode) => ({
 
 export const tableHeader = {
   content:
-    '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle  | applicationCard | decisionList | taskList | blockCard | extension)+',
+    '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle  | applicationCard | decisionList | taskList | blockCard | jiraIssueSelect | extension)+',
   attrs: cellAttrs,
   tableRole: 'header_cell',
   isolating: true,

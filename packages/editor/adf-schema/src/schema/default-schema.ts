@@ -47,6 +47,7 @@ export const defaultSchema: Schema = createSchema({
     'unsupportedBlock',
     'unsupportedInline',
     'jiraIssue',
+    'jiraIssueSelect',
   ],
   marks: [
     'action',

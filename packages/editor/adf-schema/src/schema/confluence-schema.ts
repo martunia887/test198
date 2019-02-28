@@ -42,6 +42,7 @@ const nodes = [
   'unsupportedBlock',
   'unsupportedInline',
   'jiraIssue',
+  'jiraIssueSelect',
 ];
 
 const marks = [

@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { JiraIcon } from '@atlaskit/logo';
 import { EditorPlugin } from '../../types';
 import createInlineJiraPlugin from './pm-plugins/main';
-import { jiraQuery, jiraIssue } from '@atlaskit/adf-schema';
+import { jiraQuery, jiraIssue, jiraIssueSelect } from '@atlaskit/adf-schema';
 import { Mark } from 'prosemirror-model';
 import { pluginKey } from './pm-plugins/main';
 import { Decoration } from 'prosemirror-view';
@@ -17,7 +17,10 @@ export default {
   },
 
   nodes() {
-    return [{ name: 'jiraIssue', node: jiraIssue }];
+    return [
+      { name: 'jiraIssue', node: jiraIssue },
+      { name: 'jiraIssueSelect', node: jiraIssueSelect },
+    ];
   },
 
   pmPlugins() {

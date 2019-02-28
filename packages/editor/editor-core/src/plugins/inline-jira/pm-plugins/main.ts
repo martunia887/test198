@@ -3,6 +3,7 @@ import { DecorationSet } from 'prosemirror-view';
 import { ReactNodeView } from '../../../nodeviews';
 import InlineJiraView from '../nodeviews';
 import jiraIssueNodeView from '../nodeviews/jiraIssue';
+import JiraIssueSelectNodeView from '../nodeviews/JiraIssueSelect';
 
 export const pluginKey = new PluginKey('inlineJiraPlugin');
 
@@ -31,6 +32,11 @@ const createPlugin = portalProviderAPI =>
 
         jiraIssue: ReactNodeView.fromComponent(
           jiraIssueNodeView,
+          portalProviderAPI,
+        ),
+
+        jiraIssueSelect: ReactNodeView.fromComponent(
+          JiraIssueSelectNodeView,
           portalProviderAPI,
         ),
       },
