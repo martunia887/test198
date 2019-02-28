@@ -75,7 +75,7 @@ const config = {
   moduleFileExtensions: ['js', 'ts', 'tsx', 'json'],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/fileMock.js',
-    '^link-2-package.json$': '<rootDir>/link-2-package.json',
+    '^.*link-2-package.json$': '<rootDir>/link-2-package.json',
   },
   snapshotSerializers: ['enzyme-to-json/serializer'],
   setupFiles: ['./build/jest-config/setup.js'],
