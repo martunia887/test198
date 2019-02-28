@@ -2,20 +2,19 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Select from '@atlaskit/select';
 
-interface OptionType {
+export interface OptionType {
   label: string;
   value: string;
   iconUrl: string;
 }
 
-export type Options = Array<OptionType>;
-
 interface Props {
-  options: Options;
+  options: Array<OptionType>;
   iconOnly?: boolean;
   isSearchable?: boolean;
   minWidth?: number;
-  defaultValue?: OptionType;
+  value?: OptionType;
+  onChange?: (value: OptionType) => void;
 }
 
 const Option = styled.div`
@@ -55,14 +54,16 @@ export const JiraSelect = ({
   iconOnly = false,
   isSearchable = false,
   minWidth = 120,
-  defaultValue,
+  value,
+  onChange,
 }: Props) => (
   <Select
     spacing="compact"
     formatOptionLabel={formatOptionLabel(iconOnly)}
     options={options}
     isSearchable={isSearchable}
-    defaultValue={defaultValue}
+    value={value}
+    onChange={onChange}
     styles={{
       container: css => ({ ...css, minWidth }),
       control: css => ({

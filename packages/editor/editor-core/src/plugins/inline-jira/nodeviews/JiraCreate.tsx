@@ -1,19 +1,22 @@
 import * as React from 'react';
 import styled from 'styled-components';
-
+import { EditorView } from 'prosemirror-view';
+import { replaceSelectedNode } from 'prosemirror-utils';
 import { colors } from '@atlaskit/theme';
+
+import { setNodeSelection } from '../../../utils';
 import PanelTextInput from '../../../ui/PanelTextInput';
+import { getPosHandler } from '../../../nodeviews/ReactNodeView';
+import { JiraSelect, OptionType } from './JiraSelect';
+import createMetaJson from './data/createMeta.json';
 
-import { JiraSelect, Options } from './JiraSelect';
-import { createMetaJson } from './data/createMeta';
-
-const projects: Options = createMetaJson.projects.map(project => ({
+const projects: Array<OptionType> = createMetaJson.projects.map(project => ({
   label: project.name,
-  value: project.key,
+  value: project.id,
   iconUrl: project.avatarUrls['16x16'],
 }));
 
-export const issueTypes: Options = createMetaJson.projects[1].issuetypes.map(
+export const issueTypes: Array<OptionType> = createMetaJson.projects[1].issuetypes.map(
   issueType => ({
     label: issueType.name,
     value: issueType.id,
@@ -25,30 +28,133 @@ const Wrapper = styled.div`
   display: inline-flex;
   border: 1px solid ${colors.N40};
   border-radius: 3px;
+  .ProseMirror-selectednode & {
+    border-color: ${props =>
+      props['data-has-error'] ? colors.R400 : colors.B100};
+  }
   > input {
     padding: 0 8px 0 4px;
-    min-width: 150px;
+    min-width: 250px;
   }
 `;
 
-export default class JiraCreate extends React.Component {
+interface Props {
+  view: EditorView;
+  getPos: getPosHandler;
+}
+
+interface State {
+  project?: OptionType;
+  issueType?: OptionType;
+  summary?: string;
+  hasError: boolean;
+}
+
+export default class JiraCreate extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+
+    const defaultProject = localStorage.getItem(
+      'atlassian.editor.shipit.jiraQuery.project',
+    );
+
+    this.state = {
+      hasError: false,
+      project: defaultProject ? JSON.parse(defaultProject) : undefined,
+      issueType: {
+        label: 'Task',
+        value: '10002',
+        iconUrl:
+          'https://product-fabric.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype',
+      },
+    };
+  }
+
   render() {
+    const { issueType, project, hasError } = this.state;
     return (
-      <Wrapper>
-        <JiraSelect isSearchable options={projects} />
+      <Wrapper data-has-error={hasError}>
+        <JiraSelect
+          isSearchable
+          options={projects}
+          value={project}
+          onChange={project => {
+            this.setState({ project, hasError: false });
+            localStorage.setItem(
+              'atlassian.editor.shipit.jiraQuery.project',
+              JSON.stringify(project),
+            );
+          }}
+        />
         <JiraSelect
           iconOnly
           options={issueTypes}
           minWidth={55}
-          defaultValue={{
-            label: 'Task',
-            value: '10002',
-            iconUrl:
-              'https://product-fabric.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype',
-          }}
+          value={issueType}
+          onChange={issueType => this.setState({ issueType, hasError: false })}
         />
-        <PanelTextInput placeholder="What needs to be done?" />
+        <PanelTextInput
+          onMouseDown={this.handleNodeSelect}
+          placeholder="What needs to be done?"
+          onChange={summary => this.setState({ summary, hasError: false })}
+          onSubmit={this.handleIssueCreate}
+        />
       </Wrapper>
     );
   }
+
+  handleNodeSelect = () => {
+    setNodeSelection(this.props.view, this.props.getPos());
+  };
+
+  handleIssueCreate = () => {
+    const { issueType, project, summary } = this.state;
+    if (!project || !issueType || !summary || !summary.trim()) {
+      this.setState({ hasError: true });
+      return false;
+    }
+
+    if (location.hostname === 'localhost') {
+      setTimeout(() => {
+        this.insertIssueLink('ED-1234');
+      }, 150);
+    } else {
+      fetch(`https://product-fabric.atlassian.net/rest/api/3/issue`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json, */*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fields: {
+            summary,
+            project: { id: project.value },
+            issuetype: issueType.value,
+          },
+        }),
+      })
+        .then(response => response.json())
+        .then(json => {
+          this.insertIssueLink(json.key);
+        })
+        .catch(_ => {
+          alert('[ShipIt] Something went wrong!');
+        });
+    }
+  };
+
+  insertIssueLink = key => {
+    const { view } = this.props;
+    const {
+      state: { schema, tr },
+    } = view;
+
+    const href = `https://product-fabric.atlassian.net/browse/${key}`;
+    const mark = schema.marks.link.create({ href });
+    const link = schema.text(href, [mark]);
+
+    view.dispatch(replaceSelectedNode(link)(tr));
+  };
 }
