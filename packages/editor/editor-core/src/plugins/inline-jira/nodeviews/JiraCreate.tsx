@@ -154,7 +154,7 @@ export default class JiraCreate extends React.Component<Props, State> {
           fields: {
             summary,
             project: { id: project.value },
-            issuetype: issueType.value,
+            issuetype: { id: issueType.value },
           },
         }),
       })
