@@ -108,11 +108,6 @@ export default class JiraCreate extends React.Component<Props, State> {
           }}
         />
         <JiraSelect
-          isSearchable
-          options={projects}
-          onChange={project => this.setState({ project, hasError: false })}
-        />
-        <JiraSelect
           iconOnly
           options={issueTypes}
           minWidth={55}
