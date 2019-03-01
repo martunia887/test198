@@ -40,15 +40,6 @@ export function resolveJql(jql: string): Promise<any> {
       `https://product-fabric.atlassian.net/rest/api/3/search?jql=${encodeURIComponent(
         jql,
       )}`,
-      {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          Accept: 'application/json, */*',
-          'Content-Type': 'application/json',
-        },
-      },
     )
       .then(response => response.json())
       .then(resolve)

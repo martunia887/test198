@@ -146,10 +146,8 @@ export default class JiraCreate extends React.Component<Props, State> {
     } else {
       fetch(`https://product-fabric.atlassian.net/rest/api/3/issue`, {
         method: 'POST',
-        mode: 'cors',
+        credentials: 'same-origin',
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          Accept: 'application/json, */*',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
