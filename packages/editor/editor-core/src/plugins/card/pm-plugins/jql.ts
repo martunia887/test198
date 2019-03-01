@@ -32,8 +32,6 @@ export function resolveJqlUrl(url: string): Promise<any> {
 
 export function resolveJql(jql: string): Promise<any> {
   return new Promise((resolve, reject) => {
-    console.log({ jql });
-
     if (location.hostname === 'localhost') {
       return setTimeout(() => resolve(jqlJson), 300);
     }
@@ -52,6 +50,7 @@ export function resolveJql(jql: string): Promise<any> {
         },
       },
     )
+      .then(response => response.json())
       .then(resolve)
       .catch(reject);
   });
