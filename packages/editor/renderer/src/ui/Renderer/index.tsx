@@ -102,7 +102,7 @@ export default class Renderer extends PureComponent<Props, {}> {
       maxHeight,
       truncated,
     } = this.props;
-
+    console.log('Renderer render');
     try {
       const { result, stat } = renderDocument(
         document,

@@ -539,8 +539,11 @@ export class Card extends Component<CardProps, CardState> {
     return (
       <CardCommentsWrapper>
         <Button
+          appearance="primary"
           onClick={this.onCommentButtonClick(mediaViewerSelectedItem)}
-          iconBefore={<MediaServicesAddCommentIcon label="comment" />}
+          iconBefore={
+            <MediaServicesAddCommentIcon label="comment" primaryColor="white" />
+          }
         >
           {commentsLength}
         </Button>
