@@ -16,6 +16,7 @@ interface Props {
   isSearchable?: boolean;
   minWidth?: number;
   defaultValue?: OptionType;
+  onChange: (e: object) => void;
 }
 
 const Option = styled.div`
@@ -52,6 +53,7 @@ const formatOptionLabel = (iconOnly: boolean) => (
 
 export const JiraSelect = ({
   options,
+  onChange,
   iconOnly = false,
   isSearchable = false,
   minWidth = 120,
@@ -61,6 +63,7 @@ export const JiraSelect = ({
     spacing="compact"
     formatOptionLabel={formatOptionLabel(iconOnly)}
     options={options}
+    onChange={onChange}
     isSearchable={isSearchable}
     defaultValue={defaultValue}
     styles={{

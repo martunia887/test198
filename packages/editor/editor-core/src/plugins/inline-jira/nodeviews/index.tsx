@@ -4,7 +4,7 @@ import JiraCreate from './JiraCreate';
 
 class InlineJiraView extends ReactNodeView {
   render(props) {
-    return <JiraCreate />;
+    return <JiraCreate view={this.view} getPos={this.getPos} />;
   }
 
   stopEvent(event) {
