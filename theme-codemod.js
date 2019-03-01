@@ -59,7 +59,10 @@ function getIndexImport(j, path) {
     return;
   }
 
-  return j.importDeclaration(mainIndexSpecifierspath, j.literal(akTheme));
+  return j.importDeclaration(
+    mainIndexSpecifierspath,
+    j.literal(`${akTheme}/components`),
+  );
 }
 
 function getOtherImports(j, path) {
