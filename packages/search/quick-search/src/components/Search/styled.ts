@@ -19,6 +19,7 @@ export const SearchFieldBaseInner = styled.div`
     2}px; /* pad search text from FieldBase's isLoading spinner */
   display: flex;
   flex-grow: 1;
+  position: relative;
 `;
 
 export const SearchInner = styled.div`
@@ -52,11 +53,34 @@ export const getPlaceholderColor = css`
 `;
 
 export const SearchInput = styled.input`
-  background-color: ${colors.N0};
+  background-color: transparent;
   border: 0;
   color: ${colors.N500};
   flex-grow: 1;
   font-size: 1.4em;
   outline: 0;
   ${getPlaceholderStyle(getPlaceholderColor)};
+`;
+
+export const SearchInputTypeAhead = styled.input`
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+  background-color: transparent;
+  border: 0;
+  color: ${colors.N70};
+  flex-grow: 1;
+  font-size: 1.4em;
+  outline: 0;
+  ${getPlaceholderStyle(getPlaceholderColor)};
+`;
+
+export const Guidance = styled.div`
+  white-space: nowrap;
+  width: 100%;
+  overflow-x: hidden;
+
+  > button {
+    margin-right: 3px;
+  }
 `;
