@@ -188,17 +188,14 @@ export default class JiraCreate extends React.Component<Props, State> {
         },
         isCompleted: false,
         isDeleted: false,
-        name: this.state.summary,
-        tag: {
-          name: this.state.issueType.label,
-        },
+        name: `${key} ${this.state.summary}`,
         taskType: {
           '@type': ['Object', 'atlassian:TaskType'],
           '@id': 'https://www.atlassian.com/#JiraCustomTaskType',
           name: 'JiraCustomTaskType',
         },
         icon: {
-          url: this.state.issueType.icon,
+          url: this.state.issueType.iconUrl,
         },
       },
     };
