@@ -380,4 +380,8 @@ export const CommentsSectionWrapper = styled.div`
   padding: 10px;
   height: 100vh;
   overflow: auto;
+
+  > div {
+    padding-top: 15px !important;
+  }
 `;
