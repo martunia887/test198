@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { colors, themed, layers } from '@atlaskit/theme';
 
 const backgroundColor = themed({ light: colors.N100A, dark: colors.DN90A });

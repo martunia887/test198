@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
-import { withTheme } from 'styled-components';
+import { withTheme } from 'emotion-theming';
 import ContainerLogoStyled from '../styled/ContainerLogo';
 import { rootKey } from '../../theme/util';
 

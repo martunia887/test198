@@ -2,7 +2,7 @@
 /* sample-data.js */
 import React from 'react';
 import Avatar from '@atlaskit/avatar';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import presidents from './numerical.json';
 
 function createKey(input) {

@@ -1,6 +1,6 @@
 // @flow
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize } from '@atlaskit/theme';
 
 const HORIZONTAL_SPACING = `${gridSize() / 2}px`;

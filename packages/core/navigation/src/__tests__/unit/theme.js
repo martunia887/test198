@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled from '@emotion/styled';
+import { ThemeProvider } from 'emotion-theming';
 import { mount } from 'enzyme';
 import chromatism from 'chromatism';
 import * as presets from '../../theme/presets';

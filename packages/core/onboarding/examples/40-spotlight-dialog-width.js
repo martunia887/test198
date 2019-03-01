@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import Lorem from 'react-lorem-component';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import ArrowUpIcon from '@atlaskit/icon/glyph/arrow-up';
 import ArrowDownIcon from '@atlaskit/icon/glyph/arrow-down';
 

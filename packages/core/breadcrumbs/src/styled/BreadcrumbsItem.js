@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize, fontSize } from '@atlaskit/theme';
 
 const height = (gridSize() * 3) / parseInt(fontSize(), 10);

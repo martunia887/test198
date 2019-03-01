@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Question from '@atlaskit/icon/glyph/question';
 import Expand from '@atlaskit/icon/glyph/arrow-down';
 

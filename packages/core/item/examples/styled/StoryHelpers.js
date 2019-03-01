@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { colors, gridSize, math } from '@atlaskit/theme';
 
 export const GroupsWrapper = styled.div`

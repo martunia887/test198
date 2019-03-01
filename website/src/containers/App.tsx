@@ -4,7 +4,8 @@ import GlobalTheme from '@atlaskit/theme';
 import * as React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
-import styled, { injectGlobal } from 'styled-components';
+import { injectGlobal } from '@emotion/core';
+import styled from '@emotion/styled';
 
 import Home from '../pages/Home';
 import ChangeLogExplorer from '../pages/ChangeLogExplorer';
@@ -22,21 +23,21 @@ import AnalyticsListeners from '../components/Analytics/AnalyticsListeners';
 
 import Nav from './Nav';
 
-// eslint-disable-next-line
-injectGlobal`
-  body {
-    margin: 0;
-    font-family:
-      -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  }
+// // eslint-disable-next-line
+// injectGlobal`
+//   body {
+//     margin: 0;
+//     font-family:
+//       -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+//       sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+//   }
 
-  #app {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-`;
+//   #app {
+//     position: relative;
+//     width: 100%;
+//     height: 100%;
+//   }
+// `;
 
 const AppContent = styled.div`
   flex: 1 1 auto;

@@ -2,7 +2,9 @@
 
 /* eslint no-confusing-arrow: 0 */
 
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { colors, themed } from '@atlaskit/theme';
 
 const wrapperBackgroundColor = themed({ light: colors.N0, dark: colors.N700 });

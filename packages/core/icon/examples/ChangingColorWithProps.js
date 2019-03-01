@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { colors } from '@atlaskit/theme';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Tooltip from '@atlaskit/tooltip';
 import Button from '@atlaskit/button';
 import BookIcon from '../glyph/book';

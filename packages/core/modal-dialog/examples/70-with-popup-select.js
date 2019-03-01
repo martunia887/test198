@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import { PopupSelect } from '@atlaskit/select';
 import ModalDialog from '../src';
 

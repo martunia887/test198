@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable react/no-array-index-key */
 import React, { Component, type ElementConfig } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import DropdownMenu, { DropdownItemGroup } from '@atlaskit/dropdown-menu';
 import Avatar, {
   type AvatarClickType,

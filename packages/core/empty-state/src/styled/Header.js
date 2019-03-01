@@ -1,6 +1,6 @@
 // @flow
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize, typography } from '@atlaskit/theme';
 
 const Header = styled.h4`

@@ -1,5 +1,6 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { colors, themed, math, gridSize } from '@atlaskit/theme';
 
 export const HiddenCheckbox = styled.input`
@@ -42,12 +43,12 @@ type IconWrapperProps = {
 };
 
 const borderColor = themed({ light: colors.N40, dark: colors.DN80 });
-const focusBorder = css`
-  stroke: ${themed({ light: colors.B100, dark: colors.B75 })};
+const focusBorder = props => css`
+  stroke: ${themed({ light: colors.B100, dark: colors.B75 })(props)};
   stroke-width: 2px;
 `;
-const invalidBorder = css`
-  stroke: ${themed({ light: colors.R300, dark: colors.R300 })};
+const invalidBorder = props => css`
+  stroke: ${themed({ light: colors.R300, dark: colors.R300 })(props)};
   stroke-width: 2px;
 `;
 const activeBorder = css`
@@ -58,10 +59,10 @@ const checkedBorder = css`
   stroke: currentColor;
   stroke-width: 2px;
 `;
-const border = css`
+const border = props => css`
   stroke: ${({ isHovered, ...rest }) =>
     isHovered
-      ? themed({ light: colors.N40, dark: colors.DN200 })(rest)
+      ? themed({ light: colors.N40, dark: colors.DN200 })(props)(rest)
       : borderColor(rest)};
   stroke-width: 2px;
 `;

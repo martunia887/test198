@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Table from '@atlaskit/dynamic-table';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Helmet } from 'react-helmet';
 import { gridSize } from '@atlaskit/theme';
 import * as fs from '../utils/fs';

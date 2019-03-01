@@ -3,7 +3,7 @@
 import React, { PureComponent } from 'react';
 import { colors } from '@atlaskit/theme';
 import { Link, BrowserRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { ProgressTracker } from '../src';
 import type { Stage, LinkElement } from '../src/types';
 

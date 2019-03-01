@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { borderRadius, colors, gridSize, math, themed } from '@atlaskit/theme';
 
 function lockSelectedColor(normal) {

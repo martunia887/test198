@@ -10,7 +10,7 @@ import {
 } from '@atlaskit/analytics-next';
 import pick from 'lodash.pick';
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { parse, format, isValid } from 'date-fns';
 
 import {

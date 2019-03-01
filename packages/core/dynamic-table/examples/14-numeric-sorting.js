@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import DynamicTable from '../src';
 import { caption, head, rows } from './content/sample-data-numerical';
 

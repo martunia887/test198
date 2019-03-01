@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { AkCodeBlock } from '@atlaskit/code';
 import Select from '@atlaskit/select';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import * as Logos from '../src';
 
 const products = [

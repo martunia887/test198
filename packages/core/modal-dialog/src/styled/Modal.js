@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { borderRadius, colors, themed, layers } from '@atlaskit/theme';
 import { WIDTH_ENUM, gutter } from '../shared-variables';
 
@@ -98,7 +100,7 @@ export const Dialog = styled.div`
       ? null
       : css`
           background-color: ${dialogBgColor};
-          border-radius: ${borderRadius}px;
+          border-radius: ${borderRadius()}px;
           box-shadow: ${boxShadow};
         `} color: ${colors.text};
   display: flex;

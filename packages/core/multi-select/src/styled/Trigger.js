@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 
 import { fontSize, gridSize, colors } from '@atlaskit/theme';
 
@@ -29,8 +31,8 @@ const getPlaceholderStyle = style => css`
     ${style};
   }
 `;
-const getPlaceholderColor = css`
-  color: ${colors.placeholderText};
+const getPlaceholderColor = props => css`
+  color: ${colors.placeholderText(props)};
 `;
 
 const Content = styled.div`

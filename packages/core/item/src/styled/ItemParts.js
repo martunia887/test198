@@ -1,6 +1,7 @@
 // @flow
 import { type StatelessFunctionalComponent } from 'react';
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { fontSize, fontSizeSmall } from '@atlaskit/theme';
 import {
   getThemeStyle,

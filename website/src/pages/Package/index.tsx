@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { match } from 'react-router';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Link } from '../../components/WrappedLink';
 import Loadable from '../../components/WrappedLoader';
 import { Helmet } from 'react-helmet';

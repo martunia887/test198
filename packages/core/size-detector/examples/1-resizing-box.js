@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import { keyframes } from '@emotion/core';
+import styled from '@emotion/styled';
 import SizeDetector from '../src';
 
 const startSize = 100;

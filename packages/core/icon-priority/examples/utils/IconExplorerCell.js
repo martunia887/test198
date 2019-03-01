@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, type ElementRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { FieldTextStateless } from '@atlaskit/field-text';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';

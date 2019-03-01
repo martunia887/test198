@@ -1,6 +1,8 @@
 // @flow
 /* eslint-disable no-mixed-operators */
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { colors, elevation } from '@atlaskit/theme';
 import { thumb, track } from './theme';
 
@@ -10,8 +12,8 @@ const sliderLineThickness = 4;
 const transitionDuration = '0.2s';
 export const overallHeight = 40;
 
-const sliderThumbStyle = css`
-  background: ${thumb.default.background};
+const sliderThumbStyle = props => css`
+  background: ${thumb.default.background(props)};
   border: ${sliderThumbBorderThickness}px solid transparent;
   border-radius: 50%;
   height: ${sliderThumbSize}px;

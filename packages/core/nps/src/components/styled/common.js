@@ -1,5 +1,5 @@
 //@flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { colors, fontSize } from '@atlaskit/theme';
 
 export const Wrapper = styled.div`

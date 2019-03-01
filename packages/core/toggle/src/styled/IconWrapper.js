@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { themed, colors } from '@atlaskit/theme';
 import { getWidth, paddingUnitless } from './constants';
 

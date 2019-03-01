@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Prism from 'prismjs';
 import { colors, gridSize, themed } from '@atlaskit/theme';
 

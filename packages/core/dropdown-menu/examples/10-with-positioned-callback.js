@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { DropdownMenuStateless, DropdownItemGroup, DropdownItem } from '../src';
 
 const Description = styled.p`

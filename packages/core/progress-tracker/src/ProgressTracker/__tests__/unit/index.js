@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import { Grid } from '@atlaskit/page';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import ProgressTracker from '../../index';
 import ProgressTrackerStage from '../../../ProgressTrackerStage';
 import { ProgressTrackerContainer } from '../../styled';

@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const ContainerTitleText = styled.span`
   font-weight: 500;

@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import { css } from '@emotion/core';
 import { borderRadius, fontSize, gridSize, math } from '@atlaskit/theme';
 import themeDefinitions from './themeDefinitions';
 import { themeNamespace } from '../theme';
@@ -175,10 +175,10 @@ export default function getButtonStyles(props: StyleProps) {
 
   /* Note use of !important to override the ThemeReset on anchor tag styles */
 
-  return css<StyleProps>`
+  return props => css<StyleProps>`
     align-items: baseline;
-    background: ${background};
-    border-radius: ${borderRadius}px;
+    background: ${background(props)};
+    border-radius: ${borderRadius()}px;
     border-width: 0;
     box-sizing: border-box;
     color: ${color} !important;

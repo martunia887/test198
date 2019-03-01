@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled from '@emotion/styled';
+import { ThemeProvider } from 'emotion-theming';
 import Lorem from 'react-lorem-component';
 import Button, { ButtonGroup } from '@atlaskit/button';
 

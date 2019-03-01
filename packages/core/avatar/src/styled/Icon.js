@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { colors, withTheme } from '@atlaskit/theme';
 import { BORDER_WIDTH } from './constants';
 

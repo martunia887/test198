@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PackageIcon from '@atlaskit/icon/glyph/chevron-right';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { isSubNavExpanded } from '../utils/linkComponents';
 import renderNav from '../utils/renderNav';
 import { Directory, File, NavGroup, NavGroupItem } from '../../../types';

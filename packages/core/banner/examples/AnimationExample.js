@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Button from '@atlaskit/button';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
 import Banner from '../src';

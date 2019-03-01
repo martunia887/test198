@@ -1,6 +1,6 @@
 // @flow
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { animationTime } from '../../shared-variables';
 
 const transition = `height ${animationTime}, opacity ${animationTime}`;

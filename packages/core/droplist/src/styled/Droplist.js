@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { borderRadius, colors, gridSize, math } from '@atlaskit/theme';
 
 /* When dropdown contains more than 9 elements (droplist items, droplist groups),
@@ -29,7 +31,7 @@ export default styled.div`
 
 const backgroundColor = colors.backgroundOnLayer;
 const boxShadow = css`
-  box-shadow: 0 ${math.divide(gridSize, 2)}px ${gridSize}px -${math.divide(
+  box-shadow: 0 ${math.divide(gridSize, 2)}px ${gridSize()}px -${math.divide(
         gridSize,
         4,
       )}px ${colors.N50A},

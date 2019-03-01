@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import RadioGroup from '@atlaskit/field-radio-group';
 import { colors } from '@atlaskit/theme';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import * as logos from '../src';
 
 const Centered = styled.div`

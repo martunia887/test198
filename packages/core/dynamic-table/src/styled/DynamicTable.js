@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { gridSize, math } from '@atlaskit/theme';
 
 export const Table = styled.table`

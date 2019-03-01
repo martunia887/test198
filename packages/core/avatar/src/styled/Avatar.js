@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { Node } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { withTheme } from '@atlaskit/theme';
 import { Theme } from '../theme';
 import { getInnerStyles } from './utils';

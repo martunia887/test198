@@ -1,6 +1,6 @@
 // @flow
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize } from '@atlaskit/theme';
 
 const verticalMarginSize = gridSize() * 6;

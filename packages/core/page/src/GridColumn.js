@@ -1,10 +1,6 @@
 // @flow
 import React, { Component, type Node } from 'react';
-import {
-  ThemeProvider,
-  withTheme,
-  type ThemeProviderProps,
-} from 'styled-components';
+import { ThemeProvider, withTheme } from 'emotion-theming';
 
 import { defaultGridColumns } from './internal/vars';
 import GridColumn from './internal/GridColumnElement';

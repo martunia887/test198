@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { layout } from '../../shared-variables';
 
 const DrawerContent = styled.div`

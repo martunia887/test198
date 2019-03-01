@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 // We need to wrap the NavigationItems in a parent that is constrained to the same width
 // as the grandparent, so that text truncation continues to get triggered inside the

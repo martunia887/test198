@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { ThemeProvider, withTheme } from 'styled-components';
+import { ThemeProvider, withTheme } from 'emotion-theming';
 import Radio from './RadioBase';
 
 const RadioWithTheme = withTheme(Radio);

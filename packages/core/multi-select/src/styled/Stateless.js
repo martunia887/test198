@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { colors, gridSize, fontSize } from '@atlaskit/theme';
 
 const lineHeightDefault = (gridSize() * 2) / fontSize();
@@ -26,8 +28,8 @@ const getPlaceholderStyle = style => css`
     ${style};
   }
 `;
-const getPlaceholderColor = css`
-  color: ${colors.placeholderText};
+const getPlaceholderColor = props => css`
+  color: ${colors.placeholderText(props)};
 `;
 
 const Input = styled.input`

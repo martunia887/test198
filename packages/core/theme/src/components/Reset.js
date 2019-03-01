@@ -1,7 +1,8 @@
 // @flow
 
 import React, { type Node } from 'react';
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import * as colors from '../colors';
 import { createTheme, type ThemeProp } from '../utils/createTheme';
 

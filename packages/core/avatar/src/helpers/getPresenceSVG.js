@@ -2,7 +2,7 @@
 
 import { colors, themed, withTheme } from '@atlaskit/theme';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import type { PresenceType } from '../types';
 
 const Svg = props => (

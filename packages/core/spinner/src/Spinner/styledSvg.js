@@ -1,6 +1,8 @@
 // @flow
 
-import styled, { css, keyframes } from 'styled-components';
+import { css, keyframes } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { colors, themed } from '@atlaskit/theme';
 import type { SpinnerPhases } from '../types';
 import { SIZES_MAP } from './constants';

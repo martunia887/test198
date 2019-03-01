@@ -1,7 +1,7 @@
 // @flow
 import React, { Fragment } from 'react';
 import { colors } from '@atlaskit/theme';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import {
   BitbucketIcon,

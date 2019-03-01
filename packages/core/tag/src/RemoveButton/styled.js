@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { colors, borderRadius, themed } from '@atlaskit/theme';
 import { buttonWidthUnitless, focusRingColor } from '../constants';
 

@@ -12,7 +12,7 @@ import {
 import { format, isValid, parse, getDaysInMonth } from 'date-fns';
 import pick from 'lodash.pick';
 import React, { Component, type Node, type ElementRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import {
   name as packageName,

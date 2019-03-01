@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { toClass } from 'recompose';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize } from '@atlaskit/theme';
 import { AkNavigationItem } from '@atlaskit/navigation';
 import renderNav from './renderNav';

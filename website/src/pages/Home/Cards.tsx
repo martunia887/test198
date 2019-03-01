@@ -1,5 +1,6 @@
 import * as React from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import { keyframes, css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { Link } from '../../components/WrappedLink';
 import { gridSize, colors, math } from '@atlaskit/theme';
 import debounce from 'lodash.debounce';
@@ -71,7 +72,7 @@ const BaseCardStyles = css`
   position: relative;
   overflow: hidden;
   background-color: ${colors.N0};
-  margin: ${gridSize}px;
+  margin: ${gridSize()}px;
   background-repeat: no-repeat;
   opacity: 0;
   top: ${cardVerticalAnimationDistance}px;
@@ -87,7 +88,7 @@ const BaseCardStyles = css`
 
   @media (max-width: ${TABLET_BREAKPOINT_MIN}px) {
     display: block;
-    margin: ${math.multiply(gridSize, 3)}px ${gridSize}px;
+    margin: ${math.multiply(gridSize, 3)}px ${gridSize()}px;
   }
 
   &:hover {

@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent, type Node } from 'react';
-import { ThemeProvider, withTheme } from 'styled-components';
+import { ThemeProvider, withTheme } from 'emotion-theming';
 import { itemThemeNamespace } from '@atlaskit/item';
 import AkDropdownMenu from '@atlaskit/dropdown-menu';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';

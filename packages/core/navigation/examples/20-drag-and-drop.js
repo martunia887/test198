@@ -1,7 +1,8 @@
 // @flow
 
 import React, { Component, type Element } from 'react';
-import styled, { injectGlobal } from 'styled-components';
+import { injectGlobal } from '@emotion/core';
+import styled from '@emotion/styled';
 import { Draggable, Droppable, DragDropContext } from 'react-beautiful-dnd';
 
 import Navigation, { AkNavigationItem } from '../src';

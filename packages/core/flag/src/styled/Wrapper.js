@@ -1,5 +1,7 @@
 // @flow
-import styled, { keyframes } from 'styled-components';
+import { keyframes } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { gridSize } from '@atlaskit/theme';
 
 export const flagWidth = gridSize() * 50;

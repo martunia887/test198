@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { borderRadius, gridSize, math } from '@atlaskit/theme';
 
 export const Body = styled.div`

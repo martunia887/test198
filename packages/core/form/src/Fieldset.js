@@ -1,6 +1,6 @@
 // @flow
 import React, { type Node } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize } from '@atlaskit/theme';
 import { Label } from './styled/Field';
 

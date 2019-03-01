@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import NavigationItemIcon from '../styled/NavigationItemIcon';
 import { whenCollapsed } from '../../theme/util';
 

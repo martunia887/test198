@@ -9,7 +9,7 @@ import {
 } from '@atlaskit/analytics-next';
 import Layer from '@atlaskit/layer';
 import Spinner from '@atlaskit/spinner';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import { gridSize } from '@atlaskit/theme';
 import {
   name as packageName,

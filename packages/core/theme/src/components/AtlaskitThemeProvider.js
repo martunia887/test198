@@ -2,7 +2,8 @@
 
 import React, { Component, type Node } from 'react';
 import PropTypes from 'prop-types';
-import styled, { ThemeProvider } from 'styled-components';
+import styled from '@emotion/styled';
+import { ThemeProvider } from 'emotion-theming';
 import exenv from 'exenv';
 import type { ThemeModes, ThemeProps } from '../types';
 import * as colors from '../colors';

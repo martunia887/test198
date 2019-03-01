@@ -1,5 +1,5 @@
 // @flow
-import { css } from 'styled-components';
+import { css } from '@emotion/core';
 import { gridSize, math } from '@atlaskit/theme';
 import { ASC, DESC } from '../internal/constants';
 import { arrow } from '../theme';
@@ -48,7 +48,7 @@ export const arrowsStyle = (props: Object) => {
     display: block;
     height: 0;
     position: absolute;
-    right: -${gridSize}px;
+    right: -${gridSize()}px;
     width: 0;
   `;
 
@@ -94,7 +94,7 @@ export const arrowsStyle = (props: Object) => {
 
 export const cellStyle = css`
   border: none;
-  padding: ${math.divide(gridSize, 2)}px ${gridSize}px;
+  padding: ${math.divide(gridSize, 2)}px ${gridSize()}px;
   text-align: left;
 
   &:first-child {

@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import React, { Component } from 'react';
 import { colors } from '@atlaskit/theme';
 import Spinner from '@atlaskit/spinner';

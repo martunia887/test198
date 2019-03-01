@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { ToggleStateless as Toggle } from '@atlaskit/toggle';
 import DynamicTable from '../src';
 import { caption, createHead, rows } from './content/sample-data';

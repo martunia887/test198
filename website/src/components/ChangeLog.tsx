@@ -1,7 +1,8 @@
 import * as React from 'react';
 import ReactMarkdown from 'react-markdown';
 import semver from 'semver';
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { math, gridSize, colors, borderRadius } from '@atlaskit/theme';
 
 const gutter = math.multiply(gridSize, 3);

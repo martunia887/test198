@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize, layout } from '../../shared-variables';
 import { isElectronMac, electronMacTopPadding } from '../../theme/util';
 

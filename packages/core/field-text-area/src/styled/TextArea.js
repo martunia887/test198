@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { codeFontFamily, colors, fontSize } from '@atlaskit/theme';
 
 const getPlaceholderStyle = style => css`
@@ -24,8 +26,8 @@ const getPlaceholderStyle = style => css`
     ${style};
   }
 `;
-const getPlaceholderColor = css`
-  color: ${colors.placeholderText};
+const getPlaceholderColor = props => css`
+  color: ${colors.placeholderText(props)};
 `;
 
 // Safari puts on some difficult to remove styles, mainly for disabled inputs

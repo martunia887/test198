@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import keyCode from 'keycode';
 import { fontSize } from '@atlaskit/theme';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const common = `
   appearance: none;

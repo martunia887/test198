@@ -18,7 +18,7 @@ export default css`
   body {
     background-color: #fff;
     color: ${colors.N800};
-    font-family: ${fontFamily};
+    font-family: ${fontFamily()};
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -173,7 +173,7 @@ export default css`
 
   code,
   kbd {
-    font-family: ${codeFontFamily};
+    font-family: ${codeFontFamily()};
   }
 
   var,

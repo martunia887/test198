@@ -2,7 +2,7 @@
 import { shallow, mount, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import ContainerNavigation from '../../components/js/ContainerNavigation';
 import { globalSecondaryActions } from '../../shared-variables';
 import { isCollapsed } from '../../theme/util';

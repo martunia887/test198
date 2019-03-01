@@ -1,6 +1,8 @@
 // @flow
 
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import {
   borderRadius,
   colors,
@@ -94,7 +96,7 @@ export function getStyles({
   return css`
     align-items: center;
     background-color: ${getBackgroundColor};
-    border-radius: ${borderRadius}px;
+    border-radius: ${borderRadius()}px;
     border: 2px solid ${borderColor};
     box-sizing: content-box;
     color: inherit;

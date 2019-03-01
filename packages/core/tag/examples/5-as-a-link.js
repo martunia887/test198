@@ -1,6 +1,6 @@
 // @flow
 import React, { Fragment } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Tag from '../src';
 
 const A = styled.a``;

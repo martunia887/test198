@@ -1,6 +1,6 @@
 // @flow
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { colors } from '@atlaskit/theme';
 
 export const Heading = styled.div`

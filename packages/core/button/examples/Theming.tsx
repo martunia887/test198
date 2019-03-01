@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import { themed, colors } from '@atlaskit/theme';
 import Button, { ButtonGroup, themeNamespace, ButtonAppearances } from '../src';
 

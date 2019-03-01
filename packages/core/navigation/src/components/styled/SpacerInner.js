@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { resizeAnimationTime } from '../../shared-variables';
 
 const SpacerInner = styled.div`

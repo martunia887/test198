@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import tickInlineSvg from '../examples-util/tick.svg';
 import WithAllAvatarSizes from '../examples-util/withAllAvatarSizes';
 

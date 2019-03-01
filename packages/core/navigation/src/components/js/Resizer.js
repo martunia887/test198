@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent, type ElementRef } from 'react';
-import { withTheme } from 'styled-components';
+import { withTheme } from 'emotion-theming';
 import rafSchedule from 'raf-schd';
 import ResizerInner from '../styled/ResizerInner';
 import ResizerButton from './ResizerButton';

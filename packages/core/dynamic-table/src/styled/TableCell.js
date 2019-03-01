@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { onClickStyle, truncateStyle, cellStyle } from './constants';
 
 export const TableBodyCell = styled.td`

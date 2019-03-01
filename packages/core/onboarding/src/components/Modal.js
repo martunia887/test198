@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, type ElementType, type Node } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import Modal from '@atlaskit/modal-dialog';
 import Button from '@atlaskit/button';
 

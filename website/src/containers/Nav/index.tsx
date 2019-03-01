@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { toClass } from 'recompose';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Switch, Route } from 'react-router-dom';
 import { Link } from '../../components/WrappedLink';
 import Navigation, {

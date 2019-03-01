@@ -2,7 +2,7 @@
 import React from 'react';
 import Button from '@atlaskit/button';
 import Lorem from 'react-lorem-component';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { elevation, borderRadius } from '@atlaskit/theme';
 
 import { Manager, Reference, Popper } from '../src';

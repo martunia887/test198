@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { typography } from '@atlaskit/theme';
 import Button from '@atlaskit/button';
 import UndoIcon from '@atlaskit/icon/glyph/editor/undo';

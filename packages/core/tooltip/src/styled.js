@@ -1,6 +1,8 @@
 // @flow
 
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { borderRadius, colors, themed, layers } from '@atlaskit/theme';
 
 const backgroundColor = themed({

@@ -8,7 +8,7 @@ import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import Button from '@atlaskit/button';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import toJson from 'enzyme-to-json';
 
 import SectionMessage from '../../';

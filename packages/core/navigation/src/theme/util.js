@@ -1,5 +1,5 @@
 // @flow
-import { css } from 'styled-components';
+import { css } from '@emotion/core';
 
 import hasOwnProperty from '../utils/has-own-property';
 import type { Provided, ScrollBarTheme } from '../theme/types';

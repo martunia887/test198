@@ -2,7 +2,7 @@
 
 import { colors, type ThemeProp } from '@atlaskit/theme';
 import React, { type Node, type ComponentType } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import Card, { type CardTokens } from './Card';
 import { getSpotlightTheme } from './theme';
 import type { ActionsType } from '../types';

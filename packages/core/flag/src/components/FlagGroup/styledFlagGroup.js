@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 
 import { gridSize, math, layers } from '@atlaskit/theme';

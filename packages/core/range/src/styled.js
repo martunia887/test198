@@ -1,6 +1,8 @@
 // @flow
 /* eslint-disable no-mixed-operators */
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { elevation } from '@atlaskit/theme';
 
 const sliderThumbSize = 16;
@@ -18,8 +20,8 @@ const getBackgroundGradient = ({ lower, upper }, percent) =>
     }
   `;
 
-const sliderThumbStyle = css`
-  background: ${({ thumb }) => thumb.default.background};
+const sliderThumbStyle = props => css`
+  background: ${({ thumb }) => thumb.default.background(props)};
   border: ${sliderThumbBorderThickness}px solid transparent;
   border-radius: 50%;
   height: ${sliderThumbSize}px;
@@ -40,8 +42,8 @@ const sliderThumbDisabledStyle = css`
 const sliderDefaultBackground = props =>
   getBackgroundGradient(props.track.default, props.valuePercent);
 
-const sliderTrackStyle = css`
-  background: ${({ track }) => track.background};
+const sliderTrackStyle = props => css`
+  background: ${({ track }) => track.background(props)};
   border-radius: ${sliderLineThickness / 2}px;
   border: 0;
   cursor: pointer;

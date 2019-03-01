@@ -2,7 +2,7 @@
 import React from 'react';
 import Item from '@atlaskit/item';
 import { toClass } from 'recompose';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import Navigation from '../../components/js/Navigation';
 import NavigationItem from '../../components/js/NavigationItem';
 import NavigationItemIcon from '../../components/styled/NavigationItemIcon';

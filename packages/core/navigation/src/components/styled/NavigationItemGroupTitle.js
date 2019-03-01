@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { whenCollapsedAndNotInOverflowDropdown } from '../../theme/util';
 import { truncate } from '../../utils/mixins';
 import { gridSize } from '../../shared-variables';

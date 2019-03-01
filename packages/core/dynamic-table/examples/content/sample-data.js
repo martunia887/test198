@@ -6,7 +6,7 @@ import DropdownMenu, {
   DropdownItemGroup,
   DropdownItem,
 } from '@atlaskit/dropdown-menu';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import presidents from './presidents.json';
 import lorem from './lorem.json';
 

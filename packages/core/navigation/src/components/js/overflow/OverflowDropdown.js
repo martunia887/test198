@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import type { Node } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import DropdownMenu from '@atlaskit/dropdown-menu';
 import Item from '@atlaskit/item';
 import MoreVerticalIcon from '@atlaskit/icon/glyph/more-vertical';

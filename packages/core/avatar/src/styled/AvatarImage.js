@@ -1,7 +1,7 @@
 // @flow
 
 import React, { type Node } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { colors, themed, withTheme } from '@atlaskit/theme';
 import { Theme } from '../theme';
 import type { AppearanceType, SizeType } from '../types';

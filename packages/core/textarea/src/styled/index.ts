@@ -1,4 +1,5 @@
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { codeFontFamily, fontSize, gridSize } from '@atlaskit/theme';
 import { ThemeTokens } from '../theme';
 import { Props } from '../components/TextArea';

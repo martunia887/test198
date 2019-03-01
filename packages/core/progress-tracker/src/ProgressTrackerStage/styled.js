@@ -1,6 +1,6 @@
 // @flow
 import { colors, gridSize, fontSize } from '@atlaskit/theme';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { spacing } from '../constants';
 
 const halfGridSize = gridSize() / 2;

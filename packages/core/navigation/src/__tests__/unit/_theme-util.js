@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { type Node } from 'react';
 import { mount, shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import { itemThemeNamespace } from '@atlaskit/item';
 import { prefix } from '../../theme/util';
 import * as presets from '../../theme/presets';

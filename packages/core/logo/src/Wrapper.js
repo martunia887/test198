@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { sizes, type WrapperProps } from './constants';
 
 const Span = styled.span`

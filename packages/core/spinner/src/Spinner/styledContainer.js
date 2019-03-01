@@ -1,6 +1,8 @@
 // @flow
 
-import styled, { keyframes } from 'styled-components';
+import { keyframes } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import type { SpinnerPhases } from '../types';
 
 type AnimationParams = {

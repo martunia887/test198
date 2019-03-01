@@ -1,5 +1,5 @@
 //@flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize, colors, fontSize } from '@atlaskit/theme';
 
 export const Contact = styled.div`

@@ -1,6 +1,6 @@
 //@flow
 import React, { type Node } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 export type EliipsisPropType = {
   key: string,

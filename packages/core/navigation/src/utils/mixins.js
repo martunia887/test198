@@ -1,5 +1,5 @@
 // @flow
-import { css } from 'styled-components';
+import { css } from '@emotion/core';
 import type { Color } from '../theme/types';
 
 export const truncate = (width: string = '100%') => css`

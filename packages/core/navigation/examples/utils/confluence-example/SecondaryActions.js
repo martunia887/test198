@@ -11,7 +11,7 @@ import HomeFilledIcon from '@atlaskit/icon/glyph/home-filled';
 import MenuIcon from '@atlaskit/icon/glyph/menu';
 import NotificationIcon from '@atlaskit/icon/glyph/notification';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Tooltip from '@atlaskit/tooltip';
 import { JiraIcon } from '@atlaskit/logo';
 

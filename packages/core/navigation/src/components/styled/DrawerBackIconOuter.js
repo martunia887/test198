@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { drawerBackIconSize } from '../../utils/drawer-style-variables';
 import { getProvided } from '../../theme/util';
 

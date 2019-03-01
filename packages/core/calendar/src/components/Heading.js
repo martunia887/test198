@@ -4,7 +4,7 @@ import ArrowleftIcon from '@atlaskit/icon/glyph/chevron-left-large';
 import ArrowrightIcon from '@atlaskit/icon/glyph/chevron-right-large';
 import { colors } from '@atlaskit/theme';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { getMonthName } from '../util';
 import Btn from './Btn';
 

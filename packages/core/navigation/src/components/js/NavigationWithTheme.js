@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { withTheme, ThemeProvider } from 'styled-components';
+import { withTheme, ThemeProvider } from 'emotion-theming';
 import Navigation from './Navigation';
 
 const NavigationWithTheme = withTheme(Navigation);

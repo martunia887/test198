@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent, type Node, type ComponentType } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import GlobalItemInner, { globalItemStyles } from '../styled/GlobalItemInner';
 import DefaultLinkComponent from './DefaultLinkComponent';
 import type { IconAppearance } from '../../types';

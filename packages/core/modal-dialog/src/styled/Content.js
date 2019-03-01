@@ -1,6 +1,7 @@
 // @flow
 import React, { type ElementType, type Node } from 'react';
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { colors, gridSize, math, themed } from '@atlaskit/theme';
 
 import { flexMaxHeightIEFix } from '../utils/flex-max-height-ie-fix';

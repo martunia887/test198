@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import type { ComponentType, Node } from 'react';
-import { withTheme } from 'styled-components';
+import { withTheme } from 'emotion-theming';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,

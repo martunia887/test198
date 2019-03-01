@@ -1,7 +1,7 @@
 // @flow
 import React, { Component, type ElementType } from 'react';
 import uuid from 'uuid/v1';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import Container, { Action, StyledButton } from './styledFlagActions';
 import type { ActionsType, AppearanceTypes } from '../../types';
 import { getFlagTheme } from '../../theme';

@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { globalOpenWidth, layout } from '../../shared-variables';
 import {
   getProvided,

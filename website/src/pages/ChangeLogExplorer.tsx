@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as H from 'history';
 import { match } from 'react-router';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Link } from '../components/WrappedLink';
 import BackIcon from '@atlaskit/icon/glyph/arrow-left';
 import TextField from '@atlaskit/field-text';

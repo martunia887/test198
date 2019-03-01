@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { colors, fontSize, gridSize, math, themed } from '@atlaskit/theme';
 
 const activeBackgroundColor = themed({ light: colors.B75, dark: colors.DN30 });
@@ -27,9 +29,9 @@ const selectedPrimaryTextColor = themed({
   dark: colors.N800,
 });
 
-const focusedStyles = css`
-  box-shadow: 0 0 0 2px ${themed({ light: colors.B100, dark: colors.B75 })}
-    inset;
+const focusedStyles = props => css`
+  box-shadow: 0 0 0 2px
+    ${themed({ light: colors.B100, dark: colors.B75 })(props)} inset;
   outline: none;
   outline-offset: 0;
   position: relative; /* prevents bgcolor of a hovered element from obfuscating focus ring of a focused sibling element */
@@ -55,7 +57,7 @@ const sharedStyles = props => css`
   cursor: ${props.isDisabled ? 'not-allowed' : 'pointer'};
   display: ${props.isHidden ? 'none' : 'flex'};
   flex-wrap: nowrap;
-  font-size: ${fontSize}px;
+  font-size: ${fontSize()}px;
   font-weight: normal;
   padding: 0 ${math.multiply(gridSize, 1.5)}px;
   text-decoration: none;

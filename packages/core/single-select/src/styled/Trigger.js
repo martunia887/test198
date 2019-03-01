@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize, math } from '@atlaskit/theme';
 
 const Trigger = styled.div`

@@ -1,6 +1,7 @@
 // @flow
 import React, { Component, type Node } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled from '@emotion/styled';
+import { ThemeProvider } from 'emotion-theming';
 
 const Wrapper = styled.div`
   display: flex;

@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import { Grid } from '@atlaskit/page';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'emotion-theming';
 import ProgressTrackerStage from '../ProgressTrackerStage';
 import { ProgressTrackerContainer } from './styled';
 import ProgressTrackerLink from '../ProgressTrackerLink';

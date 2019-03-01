@@ -1,6 +1,6 @@
 // @flow
 import React, { type StatelessFunctionalComponent } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 import { scrollHintSpacing, gridSize } from '../../shared-variables';
 import { whenCollapsed } from '../../theme/util';

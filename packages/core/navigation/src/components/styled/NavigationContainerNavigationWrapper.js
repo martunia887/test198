@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { containerClosedWidth } from '../../shared-variables';
 import { isElectronMac } from '../../theme/util';
 

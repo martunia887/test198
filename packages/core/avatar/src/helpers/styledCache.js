@@ -1,7 +1,7 @@
 // @flow
 import { type ComponentType } from 'react';
 import { withTheme } from '@atlaskit/theme';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import CustomComponentProxy from '../components/CustomComponentProxy';
 
 // This is necessary because we don't know what DOM element the custom component will render.

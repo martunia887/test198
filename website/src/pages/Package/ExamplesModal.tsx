@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { match } from 'react-router';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { Redirect } from 'react-router-dom';
 import { Link } from '../../components/WrappedLink';
 import { Helmet } from 'react-helmet';
@@ -77,8 +78,8 @@ const ModalActions = styled.div`
 // NAVIGATION
 // ==============================
 
-const keylineMask = css`
-  background-color: ${colors.background};
+const keylineMask = props => css`
+  background-color: ${colors.background(props)};
   margin-top: -2px;
   padding-top: 2px;
 `;

@@ -1,6 +1,6 @@
 // @flow
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize, colors } from '@atlaskit/theme';
 
 const Description = styled.p`

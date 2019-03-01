@@ -1,5 +1,5 @@
 // @flow
-import { css } from 'styled-components';
+import { css } from '@emotion/core';
 import * as colors from './colors';
 import * as elevation from './elevation';
 import * as typography from './typography';

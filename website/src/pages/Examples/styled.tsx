@@ -1,5 +1,6 @@
 import * as React from 'react';
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { Link } from '../../components/WrappedLink';
 import { Transition } from 'react-transition-group';
 import { colors } from '@atlaskit/theme';
@@ -117,13 +118,13 @@ export const NavSection = styled.div`
   display: flex;
 `;
 
-const navButtonStyles = css`
+const navButtonStyles = props => css`
   align-items: center;
   background-color: ${(p: { isSelected?: boolean }) =>
-    p.isSelected ? colors.primary : 'transparent'};
+    p.isSelected ? colors.primary(props) : 'transparent'};
   border-radius: 50%;
   border: 1px solid;
-  border-color: ${p => (p.isSelected ? colors.primary : colors.N80)};
+  border-color: ${p => (p.isSelected ? colors.primary(props) : colors.N80)};
   box-sizing: border-box;
   color: ${p => (p.isSelected ? colors.N0 : colors.N80)};
   display: flex;
@@ -136,7 +137,7 @@ const navButtonStyles = css`
 
   &:not([disabled]):hover,
   &:not([disabled]):focus {
-    border-color: ${p => (p.isSelected ? colors.primary : colors.B200)};
+    border-color: ${p => (p.isSelected ? colors.primary(props) : colors.B200)};
     color: ${p => (p.isSelected ? colors.N0 : colors.B200)};
     cursor: pointer;
     outline: 0;

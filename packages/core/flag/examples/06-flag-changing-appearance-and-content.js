@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Spinner from '@atlaskit/spinner';
 import { colors, gridSize } from '@atlaskit/theme';
 import ErrorIcon from '@atlaskit/icon/glyph/error';

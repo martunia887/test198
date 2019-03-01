@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import ScrollLock from 'react-scrolllock';
 
 const Blanket = styled.div`

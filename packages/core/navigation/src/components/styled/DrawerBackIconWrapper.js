@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { isElectronMac, electronMacTopPadding } from '../../theme/util';
 
 const getTopOffset = ({ iconOffset, theme }) =>

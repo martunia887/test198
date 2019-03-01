@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { borderRadius, colors, gridSize, math, themed } from '@atlaskit/theme';
 
 // dialog may not be smaller than 160px or larger than 600px

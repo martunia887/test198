@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { gridSize, math, colors } from '@atlaskit/theme';
 import Cards from './Cards';
 import { TABLET_BREAKPOINT_MIN } from './config';

@@ -1,9 +1,9 @@
 // @flow
-import { css } from 'styled-components';
+import { css } from '@emotion/core';
 import { colors } from '@atlaskit/theme';
 
-const placeholderStyles = css`
-  color: ${colors.placeholderText};
+const placeholderStyles = props => css`
+  color: ${colors.placeholderText(props)};
   font-size: 14px;
 `;
 

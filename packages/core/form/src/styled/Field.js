@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { typography, colors, gridSize, math } from '@atlaskit/theme';
 
 /**

@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { getProvided, whenNotCollapsed } from '../../theme/util';
 import {
   scrollBarSize,

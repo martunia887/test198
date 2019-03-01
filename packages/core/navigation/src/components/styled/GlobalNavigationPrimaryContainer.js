@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const GlobalNavigationPrimaryContainer = styled.div`
   /* definition is spread out to be correctly understood by ie11 */

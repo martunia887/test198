@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Range from '../src';
 
 const Container = styled.div`

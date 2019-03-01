@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { Transition } from 'react-transition-group';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { SIZES_MAP, DEFAULT_SIZE } from './constants';
 import Container from './styledContainer';

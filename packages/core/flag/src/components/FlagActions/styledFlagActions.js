@@ -1,7 +1,9 @@
 // @flow
 /* eslint-disable no-confusing-arrow */
 
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 
 import { gridSize, math } from '@atlaskit/theme';
 import Button from '@atlaskit/button';
@@ -12,7 +14,7 @@ import { flagTextColor, flagFocusRingColor } from '../../theme';
 const getDivider = ({ hasDivider, useMidDot }) => css`
   display: ${hasDivider ? 'inline-block' : 'none'};
   content: "${useMidDot ? '\u00B7' : ''}";
-  width: ${useMidDot ? math.multiply(gridSize, 2) : gridSize}px;
+  width: ${useMidDot ? math.multiply(gridSize, 2) : gridSize()}px;
 `;
 
 export default styled.div`

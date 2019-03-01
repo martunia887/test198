@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { globalPrimaryActions, gridSize } from '../../shared-variables';
 
 const GlobalPrimaryActionsInner = styled.div`

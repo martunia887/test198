@@ -1,6 +1,8 @@
 // @flow
 
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { codeFontFamily, gridSize, fontSize } from '@atlaskit/theme';
 
 const borderRadius = '3px';

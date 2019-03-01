@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 // Display toggle needed to prevent edit click trigger exceeding hover width.
 // Max-width required to prevent text overflow when display is inline.

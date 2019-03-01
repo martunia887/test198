@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable react/no-multi-comp */
 import React, { Component, PureComponent, type Node } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';

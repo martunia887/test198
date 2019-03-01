@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, type Node, type ElementRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import rafSchedule from 'raf-schd';
 
 import Popper from 'popper.js';

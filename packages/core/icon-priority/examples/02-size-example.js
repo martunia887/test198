@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, type Element } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Btn, { ButtonGroup } from '@atlaskit/button';
 
 import PriorityTrivial from '../glyph/priority-trivial';

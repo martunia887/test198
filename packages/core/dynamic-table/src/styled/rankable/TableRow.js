@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { colors, elevation } from '@atlaskit/theme';
 import { TableBodyRow } from '../TableRow';
 

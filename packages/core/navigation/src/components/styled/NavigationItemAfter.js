@@ -1,5 +1,5 @@
 // @flow
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { isCollapsed } from '../../theme/util';
 
 const getDisplay = ({ theme, isDropdownTrigger }) => {

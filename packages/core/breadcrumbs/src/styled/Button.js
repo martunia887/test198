@@ -1,6 +1,7 @@
 // @flow
 import Button from '@atlaskit/button';
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 
 const ButtonElement = styled(Button)`
   ${({ truncationWidth }: { truncationWidth: number }) =>

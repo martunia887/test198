@@ -1,5 +1,7 @@
 // @flow
-import styled, { css } from 'styled-components';
+import { css } from '@emotion/core';
+
+import styled from '@emotion/styled';
 import { gridSize, fontSize, colors, math } from '@atlaskit/theme';
 import {
   buttonWidthUnitless,
@@ -9,7 +11,7 @@ import {
 
 // Common styles for Text & Link
 const COMMON_STYLES = css`
-  font-size: ${fontSize}px;
+  font-size: ${fontSize()}px;
   font-weight: normal;
   line-height: 1;
   margin-left: ${math.divide(gridSize, 2)}px;
@@ -30,7 +32,7 @@ export const Text = styled.span`
 
 // Styles exclusive to Link
 
-const getFocusedStyles = ({ isFocused, color, ...rest }) => {
+const getFocusedStyles = props => {
   if (color !== 'standard')
     return css`
       color: inherit;
@@ -42,12 +44,12 @@ const getFocusedStyles = ({ isFocused, color, ...rest }) => {
   return null;
 };
 
-export const linkStyles = css`
+export const linkStyles = props => css`
   ${COMMON_STYLES} ${getFocusedStyles} text-decoration: ${({ color }) =>
   color === 'standard' ? 'none' : 'underline'};
 
   &:hover {
-    color: ${colors.linkHover};
+    color: ${colors.linkHover(props)};
     ${({ color }) =>
       color === 'standard'
         ? ''
