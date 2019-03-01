@@ -138,10 +138,7 @@ export default class JiraCreate extends React.Component<Props, State> {
     if (location.hostname === 'localhost') {
       setTimeout(() => {
         const key = 'ED-1234';
-        this.insertIssueLink(
-          key,
-          'https://product-fabric.atlassian.net/browse/${key}',
-        );
+        this.insertIssueLink(key);
       }, 150);
     } else {
       fetch(`https://product-fabric.atlassian.net/rest/api/3/issue`, {
@@ -162,7 +159,7 @@ export default class JiraCreate extends React.Component<Props, State> {
       })
         .then(response => response.json())
         .then(json => {
-          this.insertIssueLink(json.key, json.self);
+          this.insertIssueLink(json.key);
         })
         .catch(_ => {
           alert('[ShipIt] Something went wrong!');
@@ -170,7 +167,8 @@ export default class JiraCreate extends React.Component<Props, State> {
     }
   };
 
-  insertIssueLink = (key, url) => {
+  insertIssueLink = key => {
+    const url = `https://product-fabric.atlassian.net/browse/${key}`;
     const { view } = this.props;
     const {
       state: { schema, tr },
