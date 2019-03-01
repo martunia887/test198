@@ -4,7 +4,6 @@ import {
   ConversationsContext,
   PageConversations,
 } from '@atlaskit/media-core';
-import { imageFileId, smallImageFileId } from '@atlaskit/media-test-helpers';
 import RendererDemo from '../../../editor/renderer/examples/helper/RendererDemo';
 import { MOCK_USERS } from '../../../editor/conversation/example-helpers/MockData';
 import {
@@ -12,6 +11,7 @@ import {
   ConversationResource,
 } from '@atlaskit/conversation';
 import { ConversationAuth } from '../../../editor/conversation/src/api/ConversationResource';
+import { fakeBackground } from './background';
 
 const conversationAuthProvider = () => {
   const url =
@@ -38,58 +38,17 @@ const conversationAuthProvider = () => {
 const authProvider = conversationAuthProvider();
 export const conversationProvider = new ConversationResource({
   url: 'https://pf-conversation-service.us-west-2.staging.atl-paas.net',
-  user: MOCK_USERS[3],
+  user: MOCK_USERS[0],
   authProvider,
 });
 authProvider().then(auth => {
   conversationProvider.updateUser({
-    ...MOCK_USERS[3],
+    ...MOCK_USERS[0],
     account_id: auth.userAri,
   });
 });
 
-const doc = {
-  type: 'doc',
-  version: 1,
-  content: [
-    {
-      type: 'mediaSingle',
-      attrs: {
-        layout: 'full-width',
-      },
-      content: [
-        {
-          type: 'media',
-          attrs: {
-            id: smallImageFileId.id,
-            type: 'file',
-            collection: 'MediaServicesSample',
-            width: 250,
-            height: 30,
-          },
-        },
-      ],
-    },
-    {
-      type: 'mediaSingle',
-      attrs: {
-        layout: 'full-width',
-      },
-      content: [
-        {
-          type: 'media',
-          attrs: {
-            id: imageFileId.id,
-            type: 'file',
-            collection: 'MediaServicesSample',
-            width: 100,
-            height: 10,
-          },
-        },
-      ],
-    },
-  ],
-};
+const doc = JSON.parse(localStorage.getItem('fabric.editor.example.full-page'));
 
 interface State {
   conversations: ConversationInterface[];
@@ -134,15 +93,35 @@ export default class Example extends React.PureComponent<{}, State> {
       objectId: PAGE_OBJECT_ID,
     };
     return (
-      <ConversationResourceContext.Provider value={conversationProvider}>
-        <ConversationsContext.Provider value={pageConversations}>
-          <RendererDemo
-            document={doc}
-            withProviders={true}
-            serializer="react"
-          />
-        </ConversationsContext.Provider>
-      </ConversationResourceContext.Provider>
+      <div
+        style={{
+          background: `url(${fakeBackground})`,
+          backgroundRepeat: 'no-repeat',
+          // overflow: 'auto',
+          height: `100vh`,
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            width: 800,
+            margin: '0 auto',
+            overflow: 'auto',
+            height: '90vh',
+            marginTop: 190,
+          }}
+        >
+          <ConversationResourceContext.Provider value={conversationProvider}>
+            <ConversationsContext.Provider value={pageConversations}>
+              <RendererDemo
+                document={doc}
+                withProviders={true}
+                serializer="react"
+              />
+            </ConversationsContext.Provider>
+          </ConversationResourceContext.Provider>
+        </div>
+      </div>
     );
   }
 }

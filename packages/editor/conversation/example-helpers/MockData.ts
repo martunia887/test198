@@ -5,8 +5,9 @@ import { uuid } from '../src/internal/uuid';
 export const MOCK_USERS: User[] = [
   {
     account_id: 'ari:cloud:identity::user/3f000e23-3588-4e5d-aa4b-99mock_user',
-    name: 'Oscar Wallhult',
-    picture: 'https://api.adorable.io/avatars/80/oscarwallhult.png',
+    name: 'Aleksandr Motsjonov',
+    picture:
+      'https://avatar-cdn.stg.internal.atlassian.com/a36e2ab2811a63df58e7f8d82dff6adc?by=hash&d=https%3A%2F%2Favatar-management--avatars.us-west-2.staging.public.atl-paas.net%2Finitials%2FAM-2.svg',
   },
   {
     account_id: 'ari:cloud:identity::user/3f000e23-3588-4e5d-aa4b-99mock_user3',
