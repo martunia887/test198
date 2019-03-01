@@ -137,7 +137,11 @@ export default class JiraCreate extends React.Component<Props, State> {
 
     if (location.hostname === 'localhost') {
       setTimeout(() => {
-        this.insertIssueLink('ED-1234');
+        const key = 'ED-1234';
+        this.insertIssueLink(
+          key,
+          'https://product-fabric.atlassian.net/browse/${key}',
+        );
       }, 150);
     } else {
       fetch(`https://product-fabric.atlassian.net/rest/api/3/issue`, {
@@ -195,7 +199,7 @@ export default class JiraCreate extends React.Component<Props, State> {
           name: 'JiraCustomTaskType',
         },
         icon: {
-          url: this.state.issueType.iconUrl,
+          url: this.state.issueType!.iconUrl,
         },
       },
     };
