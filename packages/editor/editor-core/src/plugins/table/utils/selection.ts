@@ -98,16 +98,21 @@ export const saveJira = (tr: Transaction, oldState, newState): Transaction => {
   const currentIssueKey = currentCell ? currentCell.node.attrs.issueKey : null;
 
   if (prevCell && prevIssueKey && prevIssueKey !== currentIssueKey) {
-    fetch(`/rest/api/3/issue/${prevIssueKey}`, {
-      method: 'PUT',
-      mode: 'cors',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        Accept: 'application/json, */*',
-        'Content-Type': 'application/json',
+    fetch(
+      `https://product-fabric.atlassian.net/rest/api/3/issue/${prevIssueKey}`,
+      {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json, */*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fields: { summary: prevCell.node.textContent },
+        }),
       },
-      body: JSON.stringify({ fields: { summary: prevCell.node.textContent } }),
-    });
+    );
   }
 
   return tr;

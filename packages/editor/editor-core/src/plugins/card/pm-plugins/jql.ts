@@ -38,15 +38,20 @@ export function resolveJql(jql: string): Promise<any> {
       return setTimeout(() => resolve(jqlJson), 300);
     }
 
-    fetch(`rest/api/3/search?jql=${encodeURIComponent(jql)}`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        Accept: 'application/json, */*',
-        'Content-Type': 'application/json',
+    fetch(
+      `https://product-fabric.atlassian.net/rest/api/3/search?jql=${encodeURIComponent(
+        jql,
+      )}`,
+      {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json, */*',
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
       .then(resolve)
       .catch(reject);
   });

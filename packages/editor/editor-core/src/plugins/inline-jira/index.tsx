@@ -34,14 +34,14 @@ export default {
   },
 
   pluginsOptions: {
-    quickInsert: ({ formatMessage }) => [
+    quickInsert: () => [
       {
         title: CreateJiraIssueTitle,
         priority: 600,
         icon: () => <JiraIcon size="small" label={CreateJiraIssueTitle} />,
         action(insert, state) {
           const node = state.schema.nodes.jiraQuery.create();
-          return insert(node);
+          return insert(node, { selectInlineNode: true });
         },
       },
       {

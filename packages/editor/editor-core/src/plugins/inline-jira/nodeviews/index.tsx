@@ -3,8 +3,20 @@ import { ReactNodeView } from '../../../nodeviews';
 import JiraCreate from './JiraCreate';
 
 class InlineJiraView extends ReactNodeView {
-  render(props) {
-    return <JiraCreate view={this.view} getPos={this.getPos} />;
+  render() {
+    return <JiraCreate getPos={this.getPos} view={this.view} />;
+  }
+
+  selectNode() {
+    if (this.dom) {
+      this.dom.classList.add('ProseMirror-selectednode');
+      const input = this.dom.querySelector(
+        'div > div + div + input',
+      ) as HTMLInputElement;
+      if (input) {
+        input.focus();
+      }
+    }
   }
 
   stopEvent(event) {
