@@ -3,16 +3,19 @@
 
 import { PureComponent } from 'react';
 import { jsx } from '@emotion/core';
-import { CheckboxOption, PopupSelect } from '@atlaskit/select';
+import { CheckboxOption } from '@atlaskit/select';
 import { colors } from '@atlaskit/theme';
-
-import { FilterButton } from '../../components/FilterButton';
+import { BaseSelect, selectComponents } from '../../components/Select';
+import { DialogInner } from '../../components/Popup';
 
 // TODO: there's probably a better way to do this, but it's late, and i'm tired.
 export const CLEAR_DATA = {
   value: '__clear-selected',
   label: 'Clear selected items',
 };
+// ==============================
+// Styled Components
+// ==============================
 
 const ClearOption = ({ children, innerProps, isFocused }: *) => (
   <div
@@ -46,6 +49,65 @@ const Option = (props: *) =>
   ) : (
     <CheckboxOption {...props} />
   );
+
+const defaultComponents = { ...selectComponents, Option };
+
+export default class SelectView extends PureComponent<*> {
+  state = { components: {} };
+  constructor(props) {
+    super(props);
+
+    const { field, refinementBarValue, storedValue } = props;
+
+    // NOTE: support array or function that resolves to an array.
+    let resolvedOptions = field.options;
+    if (typeof field.options === 'function') {
+      resolvedOptions = field.options(refinementBarValue);
+    }
+
+    // set options here ONCE when the dialog opens, so they don't jostle about
+    // as users select/deselect values
+    this.options = getOptions(storedValue, resolvedOptions);
+    this.filterOptionFn = filterOptions(storedValue);
+  }
+  static getDerivedStateFromProps(p, s) {
+    if (p.components !== s.components) {
+      return { components: { ...defaultComponents, ...p.components } };
+    }
+
+    return null;
+  }
+  handleChange = value => {
+    const { onChange } = this.props;
+
+    if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {
+      onChange([]);
+    } else {
+      onChange(value);
+    }
+  };
+  render() {
+    const { onChange, storedValue, ...props } = this.props;
+
+    return (
+      <DialogInner minWidth={220}>
+        <BaseSelect
+          components={this.state.components}
+          closeMenuOnSelect={false}
+          hideSelectedOptions={false}
+          filterOption={this.filterOptionFn}
+          options={this.options}
+          onChange={this.handleChange}
+          {...props}
+        />
+      </DialogInner>
+    );
+  }
+}
+
+// ==============================
+// Helper Utilities
+// ==============================
 
 const lcase = str => str.toLowerCase();
 const trim = str => str.replace(/^\s+|\s+$/g, '');
@@ -81,71 +143,3 @@ const getOptions = (current, resolved) => {
     .concat([CLEAR_DATA])
     .concat(resolved);
 };
-
-class SelectView extends PureComponent<*> {
-  render() {
-    const {
-      storedValue,
-      refinementBarValue,
-      applyChanges,
-      field,
-      isRemovable,
-      onChange,
-      onRemove,
-      ...props
-    } = this.props;
-    if (!field.options) {
-      throw new Error('Select type requires options.');
-    }
-    if (!field.label) {
-      throw new Error('Select type requires a label.');
-    }
-
-    // NOTE: supports options array to be the result of a function.
-    // - pass the "current values" to the function
-    let resolvedOptions = field.options;
-    if (typeof field.options === 'function') {
-      resolvedOptions = field.options(refinementBarValue);
-    }
-
-    // build this monstrosity of options
-    const augmentedOptions = getOptions(storedValue, resolvedOptions);
-
-    // support clearing
-    const onChangeWithClearHandler = value => {
-      if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {
-        onChange([]);
-      } else {
-        onChange(value);
-      }
-    };
-
-    return (
-      <PopupSelect
-        components={{ IndicatorSeparator: null, Option }}
-        isMulti
-        onMenuClose={applyChanges}
-        closeMenuOnSelect={false}
-        hideSelectedOptions={false}
-        filterOption={filterOptions(storedValue)}
-        options={augmentedOptions}
-        onChange={onChangeWithClearHandler}
-        target={({ ref, isOpen }) => (
-          <FilterButton
-            ref={ref}
-            field={field}
-            isRemovable={isRemovable}
-            isSelected={isOpen}
-            onRemove={onRemove}
-            value={storedValue}
-          >
-            {field.formatFilter({ value: storedValue })}
-          </FilterButton>
-        )}
-        {...props}
-      />
-    );
-  }
-}
-
-export default SelectView;

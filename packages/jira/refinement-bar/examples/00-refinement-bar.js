@@ -1,7 +1,7 @@
 // @noflow
 /** @jsx jsx */
 
-import { Component } from 'react';
+import React from 'react';
 import querystring from 'querystring';
 import { jsx } from '@emotion/core';
 
@@ -24,7 +24,7 @@ import {
 // APP EXAMPLE
 // ==============================
 
-class RefinementBarExample extends Component {
+class RefinementBarExample extends React.Component {
   state = { value: decodeQuery() };
   onChange = (value: Object, meta: Object) => {
     switch (meta.action) {

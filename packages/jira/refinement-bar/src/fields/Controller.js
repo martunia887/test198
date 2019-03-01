@@ -12,6 +12,10 @@ export default class FieldController {
     this.label = config.label;
     this.note = config.note;
     this.type = config.type;
+
+    if (!this.label) {
+      throw new Error(`"${this.key}" requires a label.`);
+    }
   }
   config: Object;
   key: string;

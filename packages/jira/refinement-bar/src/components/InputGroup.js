@@ -23,6 +23,13 @@ const Label = ({ htmlFor, ...props }: *) => (
       marginBottom: 8,
       marginTop: 8,
 
+      ':first-of-type': {
+        marginTop: 0,
+      },
+      ':last-of-type': {
+        marginBottom: 0,
+      },
+
       span: {
         marginLeft: 4,
       },

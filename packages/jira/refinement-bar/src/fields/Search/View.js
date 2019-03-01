@@ -8,13 +8,12 @@ import SearchIcon from '@atlaskit/icon/glyph/search';
 const handleChange = onChange => ({ target: { value } }) => {
   onChange(value);
 };
-const handleSubmit = applyChanges => event => {
+const handleSubmit = event => {
   event.preventDefault();
-  applyChanges(event);
 };
 
-const SearchView = ({ applyChanges, onChange, value }: *) => (
-  <Form onSubmit={handleSubmit(applyChanges)}>
+const SearchView = ({ onChange, value }: *) => (
+  <Form onSubmit={handleSubmit}>
     <Input onChange={handleChange(onChange)} value={value} />
     <Button type="submit">
       <SearchIcon label="Submit" />

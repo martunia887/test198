@@ -4,7 +4,7 @@ import React from 'react';
 import FieldController from '../Controller';
 
 export default class TextController extends FieldController {
-  formatFilter = ({ type, value }: *) => {
+  formatButtonLabel = ({ type, value }: *) => {
     const exact = type === 'is';
     const notset = type === 'is_not_set';
 

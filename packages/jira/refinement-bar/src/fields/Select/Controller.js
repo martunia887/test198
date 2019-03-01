@@ -9,25 +9,35 @@ export interface SelectControllerInterface {
   getFilterLabel: (*) => any;
   hasValue: (*) => boolean;
   getInitialValue: (*) => any;
-  formatFilter: (*) => Node;
+  formatButtonLabel: (*) => Node;
   validateOptions: (*) => Object;
   validateValue: (*) => boolean;
 }
 
+type Options = Array<Object>;
+
 export default class SelectController extends FieldController {
   constructor(...args: *) {
     super(...args);
+
+    // FIXME this would be nice, but shouldn't be inherited by async...
+    // if (!this.config.options) {
+    //   throw new Error(
+    //     'Select type requires an options array or a function that resolves to an array.',
+    //   );
+    // }
+
     this.options = this.config.options;
   }
-  options: Array<Object>;
+  options: Options | (Object => Array<Object>);
   getFilterLabel = () => {
     return this.label;
   };
-  hasValue = ({ value }: *) => {
+  hasValue = (value: *) => {
     return Array.isArray(value) ? value.length > 0 : isObject(value);
   };
   getInitialValue = () => [];
-  formatFilter = ({ value }: *) => {
+  formatButtonLabel = (value: *) => {
     const separator = ', ';
     const max = 3;
     const makeLabel = suffix => (
@@ -37,7 +47,7 @@ export default class SelectController extends FieldController {
     );
 
     // no value
-    if (!this.hasValue({ value })) return this.label;
+    if (!this.hasValue(value)) return this.label;
 
     // value is object
     if (!Array.isArray(value)) return makeLabel(value.label);

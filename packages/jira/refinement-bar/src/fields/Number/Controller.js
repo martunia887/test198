@@ -40,7 +40,7 @@ export default class NumberController extends FieldController {
   getFilterLabel = () => {
     return this.label;
   };
-  formatFilter = ({ type, value }: *) => {
+  formatButtonLabel = ({ type, value }: *) => {
     // $FlowFixMe
     const typeLabel = this.getFilterTypes().find(f => f.type === type).label;
     const showValue = type !== 'is_not_set';

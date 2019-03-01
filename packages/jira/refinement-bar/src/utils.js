@@ -9,6 +9,9 @@ export const isEmptyString = (str: *) =>
 type X = Object;
 type Z = Array<any>;
 
+// Array Helpers
+// ------------------------------
+
 export const diffArr = (a: Z, b: Z): Z => a.filter(i => b.indexOf(i) < 0);
 
 type cloneArrOptions = { add?: any, remove?: any, sort?: boolean };
@@ -23,6 +26,9 @@ export const cloneArr = (arr: Z, options: cloneArrOptions = {}): Z => {
 
   return sort ? array.sort() : array;
 };
+
+// Object Helpers
+// ------------------------------
 
 type cloneObjOptions = { add?: X, remove?: string };
 export const cloneObj = (obj: X, options: cloneObjOptions = {}) => {
@@ -56,3 +62,39 @@ export const objectMap = (object: X, mapFn: (any, string) => any) => {
     return res;
   }, {});
 };
+
+// Function Helpers
+// ------------------------------
+
+export function debounce(func, wait, immediate) {
+  let timeout;
+  return function a(...args) {
+    const context = this;
+    function later() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    }
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+
+export function throttle(func, wait, options) {
+  let leading = true;
+  let trailing = true;
+
+  if (typeof func !== 'function') {
+    throw new TypeError('Expected a function');
+  }
+  if (isObject(options)) {
+    leading = 'leading' in options ? !!options.leading : leading;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+  return debounce(func, wait, {
+    leading,
+    trailing,
+    maxWait: wait,
+  });
+}

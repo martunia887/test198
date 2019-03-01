@@ -3,13 +3,11 @@
 import React, { Fragment } from 'react';
 import Input from '@atlaskit/textfield';
 
-import Dropdown from '../../components/Dropdown';
-import { FilterButton } from '../../components/FilterButton';
 import { Group, Note, Radio } from '../../components/InputGroup';
+import { DialogInner } from '../../components/Popup';
 import { isObject, isEmptyString, objectMap } from '../../utils';
 
 type Props = {
-  applyChanges: () => void,
   storedValue: Object,
   field: Object,
   invalidMessage: Object,
@@ -27,6 +25,10 @@ type State = {
 class NumberView extends React.Component<Props, State> {
   state = { ...this.props.storedValue, gt: '', lt: '' };
   dropdownRef = React.createRef();
+  nextInputRef = React.createRef();
+  componentDidMount() {
+    this.focusNextInput();
+  }
   get isBetween() {
     return this.state.type === 'between';
   }
@@ -48,6 +50,8 @@ class NumberView extends React.Component<Props, State> {
         return;
       }
 
+      this.focusNextInput();
+
       const { gt, lt } = this.state;
       const value = this.isBetween
         ? makeValue({ gt, lt })
@@ -67,97 +71,82 @@ class NumberView extends React.Component<Props, State> {
     });
   };
 
+  // NOTE: resist the urge to use `autoFocus` on the text input; it will break
+  // programmatic focus used elsewhere
+  focusNextInput = () => {
+    if (this.nextInputRef.current) {
+      // wait for the focus trap (Popup) to grab the node that envoked the
+      // dialog, before assigning focus within
+      setTimeout(() => {
+        this.nextInputRef.current.focus();
+      }, 10);
+    }
+  };
+
   get filterTypes() {
     return this.props.field.getFilterTypes();
   }
   render() {
-    const {
-      applyChanges,
-      storedValue,
-      field,
-      invalidMessage,
-      isRemovable,
-      onRemove,
-    } = this.props;
+    const { field, invalidMessage } = this.props;
     const { type } = this.state;
     const isInvalid = Boolean(invalidMessage);
 
     return (
-      <Dropdown
-        allowClose={!isInvalid}
-        ref={this.dropdownRef}
-        onClose={applyChanges}
-        target={({ isOpen, onClick, ref }) => (
-          <FilterButton
-            field={field}
-            isInvalid={isInvalid}
-            isRemovable={isRemovable}
-            isSelected={isOpen}
-            onClick={onClick}
-            onRemove={onRemove}
-            ref={ref}
-            value={storedValue.value}
-          >
-            {field.formatFilter(storedValue)}
-          </FilterButton>
-        )}
-      >
-        <>
-          <Group onSubmit={this.handleSubmit}>
-            {this.filterTypes.map(m => {
-              const isCurrent = m.type === type;
+      <DialogInner isPadded maxWidth={160}>
+        <Group onSubmit={this.handleSubmit}>
+          {this.filterTypes.map(m => {
+            const isCurrent = m.type === type;
 
-              return (
-                <Fragment key={m.type}>
-                  <Radio
-                    checked={isCurrent}
-                    name="mode"
-                    onChange={this.onChangeCheckbox}
-                    type="radio"
-                    value={m.type}
-                  >
-                    {m.label}
-                  </Radio>
-                  {isCurrent && m.hasInput ? (
-                    <>
-                      {m.type === 'between' ? (
-                        <Row>
-                          <Input
-                            autoFocus
-                            name="gt"
-                            isInvalid={isInvalid}
-                            onChange={this.onChangeInput}
-                            type="number"
-                            value={this.state.gt}
-                          />
-                          <Input
-                            name="lt"
-                            isInvalid={isInvalid}
-                            onChange={this.onChangeInput}
-                            type="number"
-                            value={this.state.lt}
-                          />
-                        </Row>
-                      ) : (
+            return (
+              <Fragment key={m.type}>
+                <Radio
+                  checked={isCurrent}
+                  name="mode"
+                  onChange={this.onChangeCheckbox}
+                  type="radio"
+                  value={m.type}
+                >
+                  {m.label}
+                </Radio>
+                {isCurrent && m.hasInput ? (
+                  <>
+                    {m.type === 'between' ? (
+                      <InputRow>
                         <Input
-                          autoFocus
+                          ref={this.nextInputRef}
+                          name="gt"
                           isInvalid={isInvalid}
-                          name="value"
                           onChange={this.onChangeInput}
                           type="number"
-                          value={this.state.value}
+                          value={this.state.gt}
                         />
-                      )}
-                      {invalidMessage && <Note>{invalidMessage}</Note>}
-                    </>
-                  ) : null}
-                </Fragment>
-              );
-            })}
-          </Group>
-          {field.note && <Note>{field.note}</Note>}
-        </>
-      </Dropdown>
+                        <Input
+                          name="lt"
+                          isInvalid={isInvalid}
+                          onChange={this.onChangeInput}
+                          type="number"
+                          value={this.state.lt}
+                        />
+                      </InputRow>
+                    ) : (
+                      <Input
+                        ref={this.nextInputRef}
+                        isInvalid={isInvalid}
+                        name="value"
+                        onChange={this.onChangeInput}
+                        type="number"
+                        value={this.state.value}
+                      />
+                    )}
+                    {invalidMessage && <Note>{invalidMessage}</Note>}
+                  </>
+                ) : null}
+              </Fragment>
+            );
+          })}
+        </Group>
+        {field.note && <Note>{field.note}</Note>}
+      </DialogInner>
     );
   }
 }
@@ -169,7 +158,7 @@ class NumberView extends React.Component<Props, State> {
 const makeValue = value => {
   if (isObject(value)) {
     // $FlowFixMe
-    return objectMap(value, v => parseFloat(v));
+    return objectMap(value, v => parseFloat(v)); // TODO: should this be `parseInt()`?
   }
 
   return parseFloat(value);
@@ -179,8 +168,15 @@ const makeValue = value => {
 // Styled Components
 // ==============================
 
-const Row = ({ children, ...props }: *) => (
-  <div {...props} style={{ display: 'flex', marginLeft: -4, marginRight: -4 }}>
+const InputRow = ({ children, ...props }: *) => (
+  <div
+    {...props}
+    style={{
+      display: 'flex',
+      marginLeft: -4,
+      marginRight: -4,
+    }}
+  >
     {React.Children.map(children, c => (
       <div style={{ marginLeft: 4, marginRight: 4 }}>{c}</div>
     ))}
