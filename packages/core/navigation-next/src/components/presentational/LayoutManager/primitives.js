@@ -8,8 +8,7 @@ export const LayoutContainer = (props: {}) => (
     css={{
       display: 'flex',
       flexDirection: 'row',
-      position: 'relative',
-      flexGrow: 1,
+      height: '100vh',
     }}
     {...props}
   />
@@ -23,7 +22,7 @@ export const NavigationContainer = ({ innerRef, ...props }: *) => (
       display: 'flex',
       flexDirection: 'row',
       left: 0,
-      position: 'absolute',
+      position: 'fixed',
       top: 0,
       zIndex: layers.navigation(),
     }}
