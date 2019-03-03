@@ -55,7 +55,11 @@ const globalNavSecondaryItems = [
 // ==============================
 
 function makeTestComponent(key, element) {
-  return () => <div data-webdriver-test-key={key}>{element}</div>;
+  return () => (
+    <div height="100%" data-webdriver-test-key={key}>
+      {element}
+    </div>
+  );
 }
 
 const GlobalNavigation = makeTestComponent(

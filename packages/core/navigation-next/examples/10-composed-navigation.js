@@ -83,7 +83,7 @@ const globalNavSecondaryItems = [
 ];
 
 const GlobalNavigation = () => (
-  <div data-webdriver-test-key="global-navigation">
+  <div css={{ height: '100%' }} data-webdriver-test-key="global-navigation">
     <GlobalNav
       primaryItems={globalNavPrimaryItems}
       secondaryItems={globalNavSecondaryItems}
@@ -133,17 +133,30 @@ const ProductNavigation = () => (
   </div>
 );
 
-type State = { shouldDisplayContainerNav: boolean, dialogOpen: boolean };
+type State = {
+  shouldDisplayContainerNav: boolean,
+  dialogOpen: boolean,
+  topOffset: number,
+};
 export default class Example extends Component<{}, State> {
   state = {
     shouldDisplayContainerNav: true,
     dialogOpen: false,
+    topOffset: 0,
   };
 
   toggleContainerNav = () => {
     this.setState(state => ({
       shouldDisplayContainerNav: !state.shouldDisplayContainerNav,
     }));
+  };
+
+  handleOffset = (ev: Event) => {
+    if (ev.target instanceof HTMLInputElement) {
+      this.setState({
+        topOffset: +ev.target.value,
+      });
+    }
   };
   ContainerNavigation = () => (
     <div data-webdriver-test-key="container-navigation">
@@ -219,26 +232,42 @@ export default class Example extends Component<{}, State> {
   render() {
     const { shouldDisplayContainerNav } = this.state;
     return (
-      <NavigationProvider>
-        <LayoutManager
-          globalNavigation={GlobalNavigation}
-          productNavigation={ProductNavigation}
-          containerNavigation={
-            shouldDisplayContainerNav ? this.ContainerNavigation : null
-          }
-        >
-          <div
-            data-webdriver-test-key="content"
-            style={{ padding: `${gridSize * 4}px ${gridSize * 5}px` }}
+      <>
+        <div css={{ height: '200px', backgroundColor: 'salmon' }}>
+          Test banner 200px in height
+        </div>
+        <NavigationProvider>
+          <LayoutManager
+            globalNavigation={GlobalNavigation}
+            productNavigation={ProductNavigation}
+            topOffset={`${this.state.topOffset || 0}px`}
+            containerNavigation={
+              shouldDisplayContainerNav ? this.ContainerNavigation : null
+            }
           >
-            <ToggleStateless
-              isChecked={shouldDisplayContainerNav}
-              onChange={this.toggleContainerNav}
-            />{' '}
-            Display container navigation layer
-          </div>
-        </LayoutManager>
-      </NavigationProvider>
+            <div
+              data-webdriver-test-key="content"
+              style={{ padding: `${gridSize * 4}px ${gridSize * 5}px` }}
+            >
+              <ToggleStateless
+                isChecked={shouldDisplayContainerNav}
+                onChange={this.toggleContainerNav}
+              />{' '}
+              Display container navigation layer
+            </div>
+            <div>
+              <label htmlFor="offset">
+                Enter topOffset without any unit:{' '}
+                <input
+                  id="offset"
+                  onChange={this.handleOffset}
+                  value={`${this.state.topOffset}`}
+                />
+              </label>
+            </div>
+          </LayoutManager>
+        </NavigationProvider>
+      </>
     );
   }
 }

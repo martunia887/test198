@@ -3,18 +3,23 @@
 import React, { type ElementRef } from 'react';
 import { layers } from '@atlaskit/theme';
 
-export const LayoutContainer = (props: {}) => (
+export const LayoutContainer = ({
+  topOffset,
+  ...props
+}: {
+  topOffset: string,
+}) => (
   <div
     css={{
       display: 'flex',
       flexDirection: 'row',
-      height: '100vh',
+      height: `calc(100vh - ${topOffset})`,
     }}
     {...props}
   />
 );
 
-export const NavigationContainer = ({ innerRef, ...props }: *) => (
+export const NavigationContainer = ({ topOffset, innerRef, ...props }: *) => (
   <div
     ref={innerRef}
     css={{
@@ -23,7 +28,7 @@ export const NavigationContainer = ({ innerRef, ...props }: *) => (
       flexDirection: 'row',
       left: 0,
       position: 'fixed',
-      top: 0,
+      top: topOffset,
       zIndex: layers.navigation(),
     }}
     {...props}

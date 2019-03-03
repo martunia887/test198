@@ -77,6 +77,9 @@ export type ConnectedLayoutManagerProps = {
   globalNavigation: ComponentType<{}>,
   /** A component which will render the product navigation layer. */
   productNavigation: ComponentType<{}>,
+  /** Number of pixels to push the navigation and pagecontent by. To be used for
+   * showing banners on the page */
+  topOffset: string,
   /** Displayed when the user's mouse is over the collapse/expand toggle. */
   collapseToggleTooltipContent: CollapseToggleTooltipContent,
   ...$Exact<CollapseListeners>,

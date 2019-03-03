@@ -12,7 +12,7 @@ const baseStyles = {
   display: 'flex',
   flexDirection: 'column',
   flexShrink: 0,
-  height: '100vh',
+  height: '100%',
   justifyContent: 'space-between',
   paddingBottom: gridSize * 3,
   paddingTop: gridSize * 3,
