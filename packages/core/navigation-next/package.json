@@ -22,6 +22,7 @@
     "@atlaskit/analytics-namespaced-context": "^2.1.5",
     "@atlaskit/analytics-next": "^3.1.2",
     "@atlaskit/avatar": "^14.1.8",
+    "@atlaskit/banner": "^7.0.13",
     "@atlaskit/icon": "^16.0.0",
     "@atlaskit/select": "^7.0.0",
     "@atlaskit/spinner": "^9.0.13",
@@ -46,7 +47,6 @@
   },
   "devDependencies": {
     "@atlaskit/analytics-listeners": "^4.1.4",
-    "@atlaskit/banner": "^7.0.13",
     "@atlaskit/badge": "^9.2.2",
     "@atlaskit/build-utils": "^2.0.0",
     "@atlaskit/button": "^10.1.2",
