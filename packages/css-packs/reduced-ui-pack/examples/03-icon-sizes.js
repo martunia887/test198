@@ -2,7 +2,7 @@
 
 import React from 'react';
 // eslint-disable-next-line
-import icons from '!!raw-loader!..//icons-sprite.svg';
+import icons from '!!raw-loader!../icons-sprite.svg';
 // eslint-disable-next-line
 import stuff from '!!style-loader!css-loader!../bundle.css';
 import Warning from './utils/warning';
