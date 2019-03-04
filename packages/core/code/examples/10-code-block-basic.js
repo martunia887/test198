@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { AkCodeBlock } from '../src';
+import { AkCodeBlock } from '../';
 
 const exampleCodeBlock = `  // React Component
   class HelloMessage extends React.Component {

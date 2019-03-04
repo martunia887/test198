@@ -1,8 +1,8 @@
 // @flow
 import React, { Component } from 'react';
 import Form, { Field } from '@atlaskit/form';
-import { RadioGroup } from '../src';
-import type { OptionsPropType } from '../src/types';
+import { RadioGroup } from '../';
+import type { OptionsPropType } from '..//types';
 
 type State = {
   value: string | number | null,

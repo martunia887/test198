@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import { AtlaskitThemeProvider } from '../src';
+import { AtlaskitThemeProvider } from '../';
 
 type Props = {};
 type State = { themeMode: 'light' | 'dark' };

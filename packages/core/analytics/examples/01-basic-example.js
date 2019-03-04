@@ -6,7 +6,7 @@ import {
   AnalyticsListener,
   cleanProps,
   withAnalytics,
-} from '../src';
+} from '../';
 
 type ButtonProps = {
   fireAnalyticsEvent: (eventName: string) => {},

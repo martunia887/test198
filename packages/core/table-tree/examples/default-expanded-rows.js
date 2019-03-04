@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import Button from '@atlaskit/button';
-import TableTree, { Headers, Header, Rows, Row, Cell } from '../src';
+import TableTree, { Headers, Header, Rows, Row, Cell } from '../';
 import staticData from './data-cleancode-toc.json';
 
 type State = {

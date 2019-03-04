@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Button from '@atlaskit/button';
-import Form, { Field, FormFooter } from '../src';
+import Form, { Field, FormFooter } from '../';
 
 type ColorButtonProps = {
   color: string,

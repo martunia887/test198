@@ -9,7 +9,7 @@ import { metadata as objectIconMetadata } from '@atlaskit/icon-object';
 import { metadata as fileTypeIconMetadata } from '@atlaskit/icon-file-type';
 import { metadata as priorityIconMetadata } from '@atlaskit/icon-priority';
 
-import { metadata } from '../src';
+import { metadata } from '../';
 import IconExplorerCell from './utils/IconExplorerCell';
 import logoIcons from '../utils/logoIcons';
 

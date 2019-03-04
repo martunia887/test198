@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 
-import { AnalyticsListener, cleanProps, withAnalytics } from '../src';
+import { AnalyticsListener, cleanProps, withAnalytics } from '../';
 
 const DefaultPropsButton = withAnalytics(
   ({ children, ...props }) => (

@@ -13,7 +13,7 @@ import Tree, {
   type TreeItem,
   type TreeData,
   type ItemId,
-} from '../src';
+} from '../';
 import { treeWithTwoBranches } from '../mockdata/treeWithTwoBranches';
 
 const Container = styled.div`

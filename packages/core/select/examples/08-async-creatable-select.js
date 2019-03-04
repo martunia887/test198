@@ -2,7 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
-import { AsyncCreatableSelect as AsyncCreatable } from '../src';
+import { AsyncCreatableSelect as AsyncCreatable } from '../';
 
 import { cities } from './common/data';
 

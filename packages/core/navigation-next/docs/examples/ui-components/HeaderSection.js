@@ -3,9 +3,9 @@
 import React, { type ElementConfig } from 'react';
 import { colors } from '@atlaskit/theme';
 import { AtlassianWordmark } from '@atlaskit/logo';
-import { HeaderSection, Section, Wordmark } from '../../../src';
+import { HeaderSection, Section, Wordmark } from '../../../';
 
-import { CONTENT_NAV_WIDTH } from '../../../src/common/constants';
+import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
 
 const SectionExample = ({
   component: SectionComponent,

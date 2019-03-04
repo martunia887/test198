@@ -1,6 +1,6 @@
 // @flow
 import React, { Fragment } from 'react';
-import { AkCode } from '../src';
+import { AkCode } from '../';
 
 const jsCode = `const map = new Map({ key: 'value' })`;
 

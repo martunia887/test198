@@ -6,7 +6,7 @@ import {
   DropdownMenuStateless,
   DropdownItemGroupRadio,
   DropdownItemRadio,
-} from '../src';
+} from '../';
 
 type State = {
   isDropdownOpen: boolean,

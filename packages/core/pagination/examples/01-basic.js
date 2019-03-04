@@ -1,6 +1,6 @@
 //@flow
 import React, { Component, Fragment } from 'react';
-import Pagination from '../src';
+import Pagination from '../';
 
 const Pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 

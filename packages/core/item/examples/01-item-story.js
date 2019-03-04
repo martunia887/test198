@@ -8,7 +8,7 @@ import Avatar from '@atlaskit/avatar';
 import Lozenge from '@atlaskit/lozenge';
 import Tooltip from '@atlaskit/tooltip';
 import { colors, gridSize } from '@atlaskit/theme';
-import Item from '../src';
+import Item from '../';
 import {
   DropImitation,
   GroupsWrapper,

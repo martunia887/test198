@@ -7,7 +7,7 @@ import { Checkbox } from '@atlaskit/checkbox';
 import Textfield from '@atlaskit/textfield';
 import RadioGroup, { AkRadio } from '@atlaskit/field-radio-group';
 
-import ModalDialog, { ModalFooter, ModalTransition } from '../src';
+import ModalDialog, { ModalFooter, ModalTransition } from '../';
 
 type State = { isOpen: boolean };
 export default class AtlaskitFormDemo extends Component<{}, State> {

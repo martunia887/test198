@@ -3,8 +3,8 @@
 import React from 'react';
 import Badge from '@atlaskit/badge';
 import CloseButton from '@atlaskit/icon/glyph/cross';
-import { Item, ItemAvatar } from '../../../src';
-import { CONTENT_NAV_WIDTH } from '../../../src/common/constants';
+import { Item, ItemAvatar } from '../../../';
+import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
 
 export default () => (
   <div css={{ width: CONTENT_NAV_WIDTH }}>

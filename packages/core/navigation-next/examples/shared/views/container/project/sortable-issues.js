@@ -7,7 +7,7 @@ import {
   SortableItem,
   ViewController,
   ViewControllerSubscriber,
-} from '../../../../../src';
+} from '../../../../../';
 
 import { LinkItem } from '../../../components';
 import SortableItemState from '../../../providers/sortable-item-state';

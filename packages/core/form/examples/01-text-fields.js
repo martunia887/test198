@@ -5,7 +5,7 @@ import TextField from '@atlaskit/textfield';
 import TextArea from '@atlaskit/textarea';
 import { FieldTextStateless } from '@atlaskit/field-text';
 import { FieldTextAreaStateless } from '@atlaskit/field-text-area';
-import Form, { Field, FormFooter } from '../src';
+import Form, { Field, FormFooter } from '../';
 
 export default () => (
   <div

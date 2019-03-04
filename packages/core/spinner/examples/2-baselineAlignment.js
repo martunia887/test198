@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import Spinner from '../src';
+import Spinner from '../';
 
 export default () => (
   <div>

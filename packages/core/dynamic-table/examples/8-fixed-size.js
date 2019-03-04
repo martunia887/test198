@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import DynamicTable from '../src';
+import DynamicTable from '../';
 import { caption, head, rows } from './content/sample-data';
 
 export default class extends Component<{}, {}> {

@@ -4,13 +4,13 @@ import uid from 'uid';
 import styled from 'styled-components';
 import { AtlasKitThemeProvider, colors, themed } from '@atlaskit/theme';
 import { profiles } from '../../mock-helpers';
-import { AkProfilecard } from '../../src';
+import { AkProfilecard } from '../../';
 
 import type {
   PresenceTypes,
   StatusTypes,
   StatusModifiedDateType,
-} from '../../src/types';
+} from '../..//types';
 
 const StoryWrapper = styled.div`
   label {

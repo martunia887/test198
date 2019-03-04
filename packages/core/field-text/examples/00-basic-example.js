@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import TextField from '../src';
+import TextField from '../';
 
 type State = {|
   eventResult: string,

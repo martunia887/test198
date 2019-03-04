@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
-import SectionMessage from '../src';
+import SectionMessage from '../';
 
 const CustomLink = styled.button`
   background-color: ${colors.P100} !important;

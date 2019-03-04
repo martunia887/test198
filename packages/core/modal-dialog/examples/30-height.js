@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Lorem from 'react-lorem-component';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import ModalDialog, { ModalTransition } from '../src';
+import ModalDialog, { ModalTransition } from '../';
 
 const units = [420, '42em', '100%'];
 const H4 = styled.h4`

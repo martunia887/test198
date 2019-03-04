@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import Range from '../src';
+import Range from '../';
 
 export default class SimpleRange extends Component<*, *> {
   state = {

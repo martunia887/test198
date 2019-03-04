@@ -9,7 +9,7 @@ import CrossIcon from '@atlaskit/icon/glyph/cross';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { colors } from '@atlaskit/theme';
 
-import ModalDialog, { ModalFooter, ModalTransition } from '../src';
+import ModalDialog, { ModalFooter, ModalTransition } from '../';
 
 const defaults = ['header', 'footer', 'both', 'neither'];
 const custom = ['custom header', 'custom body', 'custom footer'];

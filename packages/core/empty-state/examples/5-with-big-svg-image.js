@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import EmptyState from '../src';
+import EmptyState from '../';
 import exampleImage from './img/example-image.svg';
 
 const props = {

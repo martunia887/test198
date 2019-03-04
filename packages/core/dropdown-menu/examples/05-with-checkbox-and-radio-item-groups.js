@@ -6,7 +6,7 @@ import Dropdown, {
   DropdownItemGroupCheckbox,
   DropdownItemRadio,
   DropdownItemGroupRadio,
-} from '../src';
+} from '../';
 
 export default () => (
   <Dropdown defaultOpen triggerType="button" trigger="Drop menu">

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import AkProfilecardResourced from '../src';
+import AkProfilecardResourced from '../';
 import { getMockProfileClient } from './helper/util';
 import LocaleIntlProvider from './helper/locale-intl-provider';
 

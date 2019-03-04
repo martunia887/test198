@@ -5,7 +5,7 @@ import Lorem from 'react-lorem-component';
 import styled from 'styled-components';
 import { elevation, borderRadius } from '@atlaskit/theme';
 
-import { Manager, Reference, Popper } from '../src';
+import { Manager, Reference, Popper } from '../';
 
 const Popup = styled.div`
   background: white;

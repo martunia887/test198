@@ -3,8 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { profiles } from '../mock-helpers/index';
 
-import { AkProfilecard } from '../src';
-import type { ProfilecardProps } from '../src/types';
+import { AkProfilecard } from '../';
+import type { ProfilecardProps } from '..//types';
 import LocaleIntlProvider from './helper/locale-intl-provider';
 
 export const MainStage = styled.div`

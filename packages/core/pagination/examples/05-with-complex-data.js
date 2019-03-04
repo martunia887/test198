@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import Pagination from '../src';
+import Pagination from '../';
 
 const PAGES = [...Array(10)].map((_, i) => ({
   label: i + 1,

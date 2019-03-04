@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import { BigTarget } from './styled';
 import type { Color } from './styled';
-import Tooltip from '../src';
+import Tooltip from '../';
 
 const VALID_POSITIONS = ['top', 'right', 'bottom', 'left'];
 

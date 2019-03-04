@@ -7,7 +7,7 @@ import {
   SpotlightManager,
   SpotlightTarget,
   SpotlightTransition,
-} from '../src';
+} from '../';
 import { HighlightGroup, Highlight } from './styled';
 
 type State = {

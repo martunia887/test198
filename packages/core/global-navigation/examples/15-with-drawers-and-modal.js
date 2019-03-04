@@ -17,7 +17,7 @@ import { ToggleStateless } from '@atlaskit/toggle';
 import Lorem from 'react-lorem-component';
 import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
 
-import GlobalNavigation from '../src';
+import GlobalNavigation from '../';
 
 const DEFAULT_NOTIFICATION_COUNT = 5;
 

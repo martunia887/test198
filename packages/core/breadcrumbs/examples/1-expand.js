@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { BreadcrumbsStateless, BreadcrumbsItem } from '../src';
+import { BreadcrumbsStateless, BreadcrumbsItem } from '../';
 
 export default class BreadcrumbsExpand extends Component<
   {},

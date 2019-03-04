@@ -1,8 +1,8 @@
 // @flow
 import React, { PureComponent } from 'react';
 
-import { MultiSelectStateless } from '../src';
-import type { ItemType } from '../src/types';
+import { MultiSelectStateless } from '../';
+import type { ItemType } from '..//types';
 
 const selectItems = [
   {

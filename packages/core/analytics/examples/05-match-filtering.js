@@ -6,7 +6,7 @@ import {
   AnalyticsListener,
   cleanProps,
   withAnalytics,
-} from '../src';
+} from '../';
 
 const Button = withAnalytics(
   ({ children, ...props }) => (

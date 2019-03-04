@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import FieldTextArea from '../src/FieldTextArea';
+import FieldTextArea from '..//FieldTextArea';
 
 const formTestUrl = '//httpbin.org/get';
 

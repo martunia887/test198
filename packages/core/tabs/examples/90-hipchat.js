@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { colors } from '@atlaskit/theme';
-import Tabs from '../src';
+import Tabs from '../';
 
 export default () => (
   <div

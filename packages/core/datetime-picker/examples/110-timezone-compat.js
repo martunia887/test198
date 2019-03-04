@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import moment from 'moment';
-import { DateTimePicker } from '../src';
+import { DateTimePicker } from '../';
 
 // 8 AM in GMT+8
 const jiraServerValueConvertedToHKTime = '2018-05-02T08:00:00.000+0800';

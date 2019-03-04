@@ -7,8 +7,8 @@ import ErrorIcon from '@atlaskit/icon/glyph/error';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
 import FieldRadioGroup from '@atlaskit/field-radio-group';
 import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
-import Flag, { FlagGroup } from '../src';
-import { AppearanceArray, type AppearanceTypes } from '../src/types';
+import Flag, { FlagGroup } from '../';
+import { AppearanceArray, type AppearanceTypes } from '..//types';
 
 const boldAppearanceNames = AppearanceArray.filter(val => val !== 'normal');
 const boldAppearanceItems = boldAppearanceNames.map(val => ({

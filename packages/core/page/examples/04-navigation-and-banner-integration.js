@@ -4,7 +4,7 @@ import Navigation, { AkNavigationItem } from '@atlaskit/navigation';
 import Banner from '@atlaskit/banner';
 import Button from '@atlaskit/button';
 import { AtlassianIcon } from '@atlaskit/logo';
-import Page, { Grid } from '../src';
+import Page, { Grid } from '../';
 
 type State = {
   isErrorBannerOpen: boolean,

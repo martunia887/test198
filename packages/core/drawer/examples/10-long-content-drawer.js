@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Lorem from 'react-lorem-component';
 
-import Drawer from '../src';
+import Drawer from '../';
 
 type State = {
   isDrawerOpen: boolean,

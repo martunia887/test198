@@ -2,11 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
-import {
-  AtlaskitThemeProvider,
-  elevation as AkElevations,
-  themed,
-} from '../src';
+import { AtlaskitThemeProvider, elevation as AkElevations, themed } from '../';
 
 // the below adaptation may be written statically like ${akElevationMixins.e100}
 const Box = styled.div`

@@ -5,7 +5,7 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import TextField from '@atlaskit/textfield';
 import Select from '@atlaskit/select';
 
-import PageHeader from '../src';
+import PageHeader from '../';
 
 const breadcrumbs = (
   <BreadcrumbsStateless onExpand={() => {}}>

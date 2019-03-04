@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import SizeDetector from '../src';
+import SizeDetector from '../';
 
 const ResultBox = styled.div`
   align-items: center;

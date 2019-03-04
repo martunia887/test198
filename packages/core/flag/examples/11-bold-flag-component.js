@@ -6,7 +6,7 @@ import Info from '@atlaskit/icon/glyph/info';
 import Tick from '@atlaskit/icon/glyph/check-circle';
 import Warning from '@atlaskit/icon/glyph/warning';
 import { colors, gridSize } from '@atlaskit/theme';
-import Flag from '../src';
+import Flag from '../';
 
 const actions = [
   { content: 'Understood', onClick: () => {} },

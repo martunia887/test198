@@ -25,7 +25,7 @@ import QuestionIcon from '@atlaskit/icon/glyph/question';
 // $FlowFixMe: cannot resolve TS module
 import { AkSearch } from '@atlaskit/quick-search';
 
-import { getProvided } from '../src/theme/util';
+import { getProvided } from '..//theme/util';
 import SecondaryActions from './utils/confluence-example/SecondaryActions';
 import Navigation, {
   AkContainerLogo,
@@ -35,7 +35,7 @@ import Navigation, {
   AkNavigationItem,
   AkSearchDrawer,
   presetThemes,
-} from '../src';
+} from '../';
 
 const BackIcon = (
   <Tooltip position="right" content="Back">

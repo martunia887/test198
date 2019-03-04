@@ -1,7 +1,7 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import Button from '@atlaskit/button';
-import TableTree from '../src';
+import TableTree from '../';
 import staticData from './data-structured-nodes.json';
 
 /* eslint-disable react/no-unused-prop-types */

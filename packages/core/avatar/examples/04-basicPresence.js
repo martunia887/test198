@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Presence } from '../src';
+import { Presence } from '../';
 import { Block, ShrinkWrap } from '../examples-util/helpers';
 
 export default () => (

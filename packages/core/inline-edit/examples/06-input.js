@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { SingleLineTextInput } from '../src';
+import { SingleLineTextInput } from '../';
 
 const containerStyle = {
   padding: 20,

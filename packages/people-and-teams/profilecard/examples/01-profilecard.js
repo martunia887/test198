@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { profiles } from '../mock-helpers/index';
-import { AkProfilecard } from '../src';
+import { AkProfilecard } from '../';
 import LocaleIntlProvider from './helper/locale-intl-provider';
 
 const avatarImage = profiles[4].User.avatarUrl;

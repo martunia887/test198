@@ -1,8 +1,8 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
-import { RadioGroup } from '../src';
-import type { OptionsPropType } from '../src/types';
+import { RadioGroup } from '../';
+import type { OptionsPropType } from '..//types';
 
 const options: OptionsPropType = [
   { name: 'color', value: 'red', label: 'Red' },

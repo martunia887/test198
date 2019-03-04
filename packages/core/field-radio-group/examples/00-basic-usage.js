@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
-import FieldRadioGroup from '../src';
-import type { ItemsPropTypeSmart } from '../src/types';
+import FieldRadioGroup from '../';
+import type { ItemsPropTypeSmart } from '..//types';
 
 const items: ItemsPropTypeSmart = [
   { name: 'color', value: 'red', label: 'Red' },

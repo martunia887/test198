@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { defaultProps as defaultButtonProps } from '@atlaskit/button';
-import DropdownMenu, { DropdownItemGroup, DropdownItem } from '../src';
+import DropdownMenu, { DropdownItemGroup, DropdownItem } from '../';
 
 export default () => (
   <DropdownMenu

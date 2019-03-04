@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
-import LayerManager from '../src';
+import LayerManager from '../';
 
 type State = {
   isOuterModalOpen: boolean,

@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import InlineDialog from '../src';
+import InlineDialog from '../';
 import { Placements } from './utils';
 
 type State = {

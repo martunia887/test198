@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { CheckboxSelect } from '../src';
+import { CheckboxSelect } from '../';
 import { cities } from './common/data';
 
 // data imported for brevity; equal to the options from Single Select example

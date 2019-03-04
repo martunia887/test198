@@ -38,7 +38,7 @@ import {
   NavigationProvider,
   Separator,
   Wordmark,
-} from '../src';
+} from '../';
 
 const gridSize = gridSizeFn();
 

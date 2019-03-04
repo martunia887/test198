@@ -23,7 +23,7 @@ import {
   Item,
   ThemeProvider,
   modeGenerator,
-} from '../src';
+} from '../';
 
 const gridSize = gridSizeFn();
 

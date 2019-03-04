@@ -2,7 +2,7 @@
 
 import React from 'react';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
-import Banner from '../src';
+import Banner from '../';
 
 const Padded = props => <div style={{ padding: 16 }} {...props} />;
 

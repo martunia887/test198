@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { AkCodeBlock } from '@atlaskit/code';
 import Select from '@atlaskit/select';
 import styled from 'styled-components';
-import * as Logos from '../src';
+import * as Logos from '../';
 
 const products = [
   { label: 'Atlassian', value: 'Atlassian' },

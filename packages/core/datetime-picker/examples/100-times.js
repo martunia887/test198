@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Label } from '@atlaskit/field-base';
-import { DateTimePicker, TimePicker } from '../src';
+import { DateTimePicker, TimePicker } from '../';
 
 export default () => {
   const times: Array<string> = ['10:00', '10:15', '10:30', '10:45', '11:00'];

@@ -3,7 +3,7 @@
 import React from 'react';
 import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
 import { colors } from '@atlaskit/theme';
-import Flag, { FlagGroup } from '../src';
+import Flag, { FlagGroup } from '../';
 
 export default () => (
   <FlagGroup>

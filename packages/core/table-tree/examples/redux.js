@@ -4,7 +4,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import thunk from 'redux-thunk';
 
-import TableTree, { Headers, Header, Rows, Row, Cell } from '../src';
+import TableTree, { Headers, Header, Rows, Row, Cell } from '../';
 import staticData from '../examples/data-freeform-nodes.json';
 
 const actions = {
