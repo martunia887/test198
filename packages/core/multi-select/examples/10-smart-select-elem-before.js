@@ -2,7 +2,7 @@
 import React from 'react';
 import Avatar from '@atlaskit/avatar';
 import Select from '../';
-import type { GroupType, ItemType } from '..//types';
+import type { GroupType, ItemType } from '../types';
 
 function createItem(key, presence, disabled = false): ItemType {
   return {

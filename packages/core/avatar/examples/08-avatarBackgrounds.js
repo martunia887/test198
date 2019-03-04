@@ -6,7 +6,7 @@ import Avatar from '../';
 import { Code, Note } from '../examples-util/helpers';
 import nucleusImage from '../examples-util/nucleus.png';
 import { avatarUrl } from '../examples-util/data';
-import type { PresenceType, StatusType } from '..//types';
+import type { PresenceType, StatusType } from '../types';
 
 const exampleColors: string[] = [
   colors.N800,

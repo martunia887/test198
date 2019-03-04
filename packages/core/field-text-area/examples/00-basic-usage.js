@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import FieldTextArea from '..//FieldTextArea';
+import FieldTextArea from '../FieldTextArea';
 
 type State = {
   onChangeResult: string,

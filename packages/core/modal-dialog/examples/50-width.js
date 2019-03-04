@@ -4,7 +4,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import Lorem from 'react-lorem-component';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import { WIDTH_ENUM } from '..//shared-variables';
+import { WIDTH_ENUM } from '../shared-variables';
 import ModalDialog, { ModalTransition } from '../';
 
 const units = [420, '42%', '42em'];

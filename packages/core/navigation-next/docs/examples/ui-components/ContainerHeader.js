@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ContainerHeader, ItemAvatar } from '../../../';
-import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
+import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 export default () => (
   <div style={{ width: CONTENT_NAV_WIDTH }}>

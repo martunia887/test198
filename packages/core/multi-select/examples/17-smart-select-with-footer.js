@@ -2,7 +2,7 @@
 import React from 'react';
 import AddIcon from '@atlaskit/icon/glyph/add';
 import MultiSelect from '../';
-import type { GroupType } from '..//types';
+import type { GroupType } from '../types';
 
 const selectItems: Array<GroupType> = [
   {

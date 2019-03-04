@@ -15,7 +15,7 @@ import Tree, {
   type ItemId,
   type Path,
 } from '../';
-import { range } from '..//utils/handy';
+import { range } from '../utils/handy';
 
 const Container = styled.div`
   display: flex;

@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import MultiSelect from '../';
-import type { GroupType } from '..//types';
+import type { GroupType } from '../types';
 
 const selectItems: Array<GroupType> = [
   {

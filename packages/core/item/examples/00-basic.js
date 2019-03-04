@@ -8,7 +8,7 @@ import Avatar from '@atlaskit/avatar';
 import { colors, gridSize, math } from '@atlaskit/theme';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 
-import type { ItemTheme } from '..//types';
+import type { ItemTheme } from '../types';
 
 import Item, { ItemGroup, itemThemeNamespace } from '../';
 

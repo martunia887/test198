@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import FieldRadioGroup, { AkRadio } from '../';
-import type { ItemsPropTypeSmart } from '..//types';
+import type { ItemsPropTypeSmart } from '../types';
 
 const formTestUrl = '//httpbin.org/get';
 const colorItems: ItemsPropTypeSmart = [

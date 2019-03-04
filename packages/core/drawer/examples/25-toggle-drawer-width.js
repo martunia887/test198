@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Drawer, { type DrawerWidth } from '../';
-import { widths } from '..//constants';
+import { widths } from '../constants';
 
 type State = {
   width: DrawerWidth,

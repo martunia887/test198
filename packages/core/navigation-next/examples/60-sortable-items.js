@@ -5,7 +5,7 @@ import type { DropResult } from 'react-beautiful-dnd';
 import { colors } from '@atlaskit/theme';
 
 import { SortableItem, SortableGroup, SortableContext } from '../';
-import { CONTENT_NAV_WIDTH } from '..//common/constants';
+import { CONTENT_NAV_WIDTH } from '../common/constants';
 
 const SectionWrapper = (props: *) => (
   <div

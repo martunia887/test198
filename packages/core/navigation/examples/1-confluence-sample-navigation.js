@@ -25,7 +25,7 @@ import QuestionIcon from '@atlaskit/icon/glyph/question';
 // $FlowFixMe: cannot resolve TS module
 import { AkSearch } from '@atlaskit/quick-search';
 
-import { getProvided } from '..//theme/util';
+import { getProvided } from '../theme/util';
 import SecondaryActions from './utils/confluence-example/SecondaryActions';
 import Navigation, {
   AkContainerLogo,

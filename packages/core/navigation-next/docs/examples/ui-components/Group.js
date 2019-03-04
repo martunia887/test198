@@ -4,7 +4,7 @@ import React from 'react';
 import { colors } from '@atlaskit/theme';
 import { Group, Item } from '../../../';
 
-import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
+import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 export default () => (
   <div

@@ -8,7 +8,7 @@ import IssuesIcon from '@atlaskit/icon/glyph/issues';
 
 import { Item, MenuSection, Section } from '../../../';
 
-import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
+import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 const SectionExample = ({
   component: SectionComponent,

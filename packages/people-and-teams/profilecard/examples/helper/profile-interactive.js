@@ -10,7 +10,7 @@ import type {
   PresenceTypes,
   StatusTypes,
   StatusModifiedDateType,
-} from '../..//types';
+} from '../../types';
 
 const StoryWrapper = styled.div`
   label {

@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 
 import { MultiSelectStateless } from '../';
-import type { ItemType } from '..//types';
+import type { ItemType } from '../types';
 
 const selectItems = [
   {

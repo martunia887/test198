@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import Tabs from '../';
-import type { TabData } from '..//types';
+import type { TabData } from '../types';
 import { Content } from './shared';
 
 export const tabs = [

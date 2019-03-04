@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import Button from '@atlaskit/button';
 import Select from '../';
-import type { GroupType } from '..//types';
+import type { GroupType } from '../types';
 
 const cities: Array<GroupType> = [
   {

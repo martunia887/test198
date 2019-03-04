@@ -16,8 +16,8 @@ import {
   modeGenerator,
   ThemeProvider,
 } from '../';
-import { CONTENT_NAV_WIDTH } from '..//common/constants';
-import type { Mode } from '..//theme/types';
+import { CONTENT_NAV_WIDTH } from '../common/constants';
+import type { Mode } from '../theme/types';
 
 /**
  * Helper components

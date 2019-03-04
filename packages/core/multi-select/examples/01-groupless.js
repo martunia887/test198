@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import MultiSelect from '../';
-import type { ItemType } from '..//types';
+import type { ItemType } from '../types';
 
 const selectItems: Array<ItemType> = [
   { content: 'Sydney', value: 'sydney' },

@@ -5,7 +5,7 @@ import { colors } from '@atlaskit/theme';
 import { AtlassianWordmark } from '@atlaskit/logo';
 import { HeaderSection, Section, Wordmark } from '../../../';
 
-import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
+import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 const SectionExample = ({
   component: SectionComponent,

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { profiles } from '../mock-helpers/index';
 
 import { AkProfilecard } from '../';
-import type { ProfilecardProps } from '..//types';
+import type { ProfilecardProps } from '../types';
 import LocaleIntlProvider from './helper/locale-intl-provider';
 
 export const MainStage = styled.div`

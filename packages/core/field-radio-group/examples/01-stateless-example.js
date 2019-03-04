@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { AkFieldRadioGroup } from '../';
-import type { ItemsPropType } from '..//types';
+import type { ItemsPropType } from '../types';
 
 type State = {
   value: string | number,

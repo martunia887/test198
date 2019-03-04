@@ -3,8 +3,8 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Drawer from '../';
-import type { DrawerWidth } from '..//components/types';
-import { widths } from '..//constants';
+import type { DrawerWidth } from '../components/types';
+import { widths } from '../constants';
 
 type State = {
   isDrawerOpen: boolean,

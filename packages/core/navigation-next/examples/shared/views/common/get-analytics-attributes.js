@@ -1,7 +1,7 @@
 // @flow
 
 import { viewReducerUtils } from '../../../../';
-import type { ViewData } from '../../../..//view-controller/types';
+import type { ViewData } from '../../../../view-controller/types';
 
 import { LinkItem } from '../../components';
 

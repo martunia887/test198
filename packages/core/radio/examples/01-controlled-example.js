@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Form, { Field } from '@atlaskit/form';
 import { RadioGroup } from '../';
-import type { OptionsPropType } from '..//types';
+import type { OptionsPropType } from '../types';
 
 type State = {
   value: string | number | null,

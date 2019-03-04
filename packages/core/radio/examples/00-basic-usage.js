@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
 import { RadioGroup } from '../';
-import type { OptionsPropType } from '..//types';
+import type { OptionsPropType } from '../types';
 
 const options: OptionsPropType = [
   { name: 'color', value: 'red', label: 'Red' },

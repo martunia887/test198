@@ -5,7 +5,7 @@ import { colors } from '@atlaskit/theme';
 import { Link, BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { ProgressTracker } from '../';
-import type { Stage, LinkElement } from '..//types';
+import type { Stage, LinkElement } from '../types';
 
 const items = [
   {

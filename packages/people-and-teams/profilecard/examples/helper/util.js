@@ -1,7 +1,7 @@
 // @flow
 import { getMockProfileClient as getMockProfileClientUtil } from '../../mock-helpers';
 import { AkProfileClient, modifyResponse } from '../../';
-import type { ProfilecardProps } from '../..//types';
+import type { ProfilecardProps } from '../../types';
 
 export const getMockProfileClient = (
   cacheSize: number,

@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { MultiSelectStateless } from '../';
-import type { GroupType, ItemType } from '..//types';
+import type { GroupType, ItemType } from '../types';
 
 const selectItems: Array<GroupType> = [
   {

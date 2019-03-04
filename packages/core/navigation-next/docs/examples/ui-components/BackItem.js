@@ -16,7 +16,7 @@ import {
   Wordmark,
 } from '../../../';
 
-import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
+import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 const SectionWrapper = props => (
   <div

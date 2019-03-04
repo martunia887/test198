@@ -12,7 +12,7 @@ import {
   NavigationProvider,
 } from '../../../';
 
-import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
+import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 const Wrapper = (props: *) => (
   <div

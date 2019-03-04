@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Tabs from '../';
-import type { TabContentComponentProvided } from '..//types';
+import type { TabContentComponentProvided } from '../types';
 
 const Content = styled.div`
   padding: 20px;

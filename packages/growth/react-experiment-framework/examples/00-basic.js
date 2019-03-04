@@ -2,8 +2,8 @@
 // @flow
 import React, { Component } from 'react';
 
-import asExperiment from '..//asExperiment';
-import ExperimentController from '..//ExperimentController';
+import asExperiment from '../asExperiment';
+import ExperimentController from '../ExperimentController';
 
 export class Control extends Component<{ title: string }> {
   render() {

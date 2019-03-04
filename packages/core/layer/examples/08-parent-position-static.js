@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type { Props } from '..//components/Layer';
+import type { Props } from '../components/Layer';
 import Layer from '../';
 
 const staticDiv = {

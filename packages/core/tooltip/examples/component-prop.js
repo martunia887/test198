@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import Tooltip from '../';
-import { TooltipPrimitive } from '..//styled';
+import { TooltipPrimitive } from '../styled';
 
 const InlineDialog = styled(TooltipPrimitive)`
   background: white;
