@@ -68,7 +68,7 @@ export const SearchInputTypeAhead = styled.input`
   z-index: -1;
   background-color: transparent;
   border: 0;
-  color: ${colors.N70};
+  color: ${colors.N50};
   flex-grow: 1;
   font-size: 1.4em;
   outline: 0;

@@ -11,7 +11,7 @@ import {
   Guidance,
 } from './styled';
 
-const controlKeys = ['ArrowUp', 'ArrowDown', 'Enter', 'Tab'];
+const controlKeys = ['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'ArrowRight'];
 
 const suggestionURL =
   'https://schebykin-connie-nlp.us-west-2.dev.public.atl-paas.net/api/autocomplete?autofix=1&term=';
@@ -56,7 +56,7 @@ export default class Search extends React.PureComponent<Props, State> {
     if (controlKeys.indexOf(event.key) === -1) {
       return;
     }
-    if (event.key == 'Tab') {
+    if (event.key == 'Tab' || event.key == 'ArrowRight') {
       this.onTab(event);
     }
     if (onKeyDown) {
@@ -85,8 +85,16 @@ export default class Search extends React.PureComponent<Props, State> {
   };
 
   onTab = (event: React.FormEvent<HTMLInputElement>) => {
+    event.preventDefault();
     const originalSuggestion = this.getOriginalSuggestion();
     const inputValue = event.currentTarget.value;
+    if (
+      inputValue.length === 0 ||
+      (inputValue[inputValue.length - 1] === ' ' &&
+        originalSuggestion.length === 0)
+    ) {
+      return;
+    }
     const newValue =
       originalSuggestion.length > 0
         ? `${originalSuggestion} `
@@ -100,14 +108,13 @@ export default class Search extends React.PureComponent<Props, State> {
       this.inputRef.value = newValue;
     }
     this.onInput(event);
-    event.preventDefault();
   };
 
   fetchSuggestion = debounce((query: string) => {
     fetch(`${suggestionURL}${query}`)
       .then(response => response.json())
       .then(suggestions => this.onSuggestionReceived(suggestions));
-  }, 100);
+  }, 200);
 
   renderGuidance = () => {
     const guidance = this.getGuidance();
