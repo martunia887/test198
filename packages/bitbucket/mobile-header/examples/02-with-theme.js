@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import Navigation from '@atlaskit/navigation';
 import DetailViewIcon from '@atlaskit/icon/glyph/detail-view';
-import MobileHeader from '../src';
+import MobileHeader from '../';
 
 const FakeSideBar = styled.div`
   background-color: white;

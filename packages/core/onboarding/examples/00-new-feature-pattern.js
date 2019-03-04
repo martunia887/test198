@@ -9,7 +9,7 @@ import {
   SpotlightManager,
   SpotlightTarget,
   SpotlightTransition,
-} from '../src';
+} from '../';
 
 const Pulse = styled(SpotlightPulse)`
   position: static;

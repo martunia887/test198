@@ -1,6 +1,6 @@
 // @flow
 import React, { type Node } from 'react';
-import Avatar from '../src';
+import Avatar from '../';
 
 function CustomComponent({ children }: { children: Node }) {
   return <span>{children}</span>;

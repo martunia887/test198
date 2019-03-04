@@ -2,7 +2,7 @@
 
 import React from 'react';
 import color from 'color';
-import { createTheme } from '../src';
+import { createTheme } from '../';
 
 type ThemeProps = *;
 type ThemeTokens = {

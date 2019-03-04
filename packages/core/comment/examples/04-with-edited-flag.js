@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Avatar from '@atlaskit/avatar';
-import Comment, { CommentAuthor, CommentAction, CommentEdited } from '../src';
+import Comment, { CommentAuthor, CommentAction, CommentEdited } from '../';
 import avatarImg from './utils/sample-avatar.png';
 
 // hard coded for example to show how it looks with time

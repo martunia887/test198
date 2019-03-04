@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import TableTree, { Headers, Header, Rows, Row, Cell } from '../src';
+import TableTree, { Headers, Header, Rows, Row, Cell } from '../';
 
 const staticData = [
   {

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import FieldBase from '@atlaskit/field-base';
-import SingleLineTextInput from '../src';
+import SingleLineTextInput from '../';
 
 const containerStyle = {
   padding: 20,

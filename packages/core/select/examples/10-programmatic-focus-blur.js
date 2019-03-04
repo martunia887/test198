@@ -1,7 +1,7 @@
 // @flow
 import React, { Component, Fragment, type ElementRef } from 'react';
 import Btn from '@atlaskit/button';
-import Select from '../src';
+import Select from '../';
 
 const Button = ({ inline = true, ...props }: { inline?: boolean }) => (
   <div

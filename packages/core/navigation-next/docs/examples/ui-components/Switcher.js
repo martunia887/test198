@@ -10,9 +10,9 @@ import {
   SectionHeading,
   Switcher,
   NavigationProvider,
-} from '../../../src';
+} from '../../../';
 
-import { CONTENT_NAV_WIDTH } from '../../../src/common/constants';
+import { CONTENT_NAV_WIDTH } from '../../..//common/constants';
 
 const Wrapper = (props: *) => (
   <div

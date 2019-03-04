@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Avatar, { AvatarItem } from '../src';
+import Avatar, { AvatarItem } from '../';
 import { RANDOM_USERS, getAdorableAvatar } from '../examples-util/data';
 
 function getPresence() {

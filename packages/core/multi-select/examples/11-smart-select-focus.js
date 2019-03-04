@@ -1,8 +1,8 @@
 // @flow
 import React, { PureComponent } from 'react';
 import Button from '@atlaskit/button';
-import Select from '../src';
-import type { GroupType } from '../src/types';
+import Select from '../';
+import type { GroupType } from '..//types';
 
 const cities: Array<GroupType> = [
   {

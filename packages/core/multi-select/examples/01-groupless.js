@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import MultiSelect from '../src';
-import type { ItemType } from '../src/types';
+import MultiSelect from '../';
+import type { ItemType } from '..//types';
 
 const selectItems: Array<ItemType> = [
   { content: 'Sydney', value: 'sydney' },

@@ -8,7 +8,7 @@ import {
   SpotlightManager,
   SpotlightTarget,
   SpotlightTransition,
-} from '../src';
+} from '../';
 import { Highlight } from './styled';
 
 const Wrapper = styled.div`

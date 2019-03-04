@@ -9,7 +9,7 @@ import {
   SpotlightPulse,
   SpotlightTarget,
   SpotlightTransition,
-} from '../src';
+} from '../';
 import { Code } from './styled';
 
 import logo from './assets/logo.png';

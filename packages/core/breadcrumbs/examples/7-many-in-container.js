@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Breadcrumbs, { BreadcrumbsItem } from '../src';
+import Breadcrumbs, { BreadcrumbsItem } from '../';
 
 export default () => (
   // with many items, inside a container

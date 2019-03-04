@@ -18,7 +18,7 @@ import {
   ContainerHeader,
   ItemAvatar,
   Switcher,
-} from '../../src';
+} from '../../';
 
 export const GlobalLink = ({ className, to, onClick, children }: any) => {
   return (

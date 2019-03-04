@@ -2,7 +2,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { colors } from '@atlaskit/theme';
-import Tooltip from '../src';
+import Tooltip from '../';
 import { Target } from './styled';
 
 const direction = {

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Label } from '@atlaskit/field-base';
-import { DatePicker } from '../src';
+import { DatePicker } from '../';
 
 export default () => {
   return (

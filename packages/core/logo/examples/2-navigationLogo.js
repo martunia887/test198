@@ -11,7 +11,7 @@ import {
   JiraServiceDeskIcon,
   JiraSoftwareIcon,
   StrideIcon,
-} from '../src';
+} from '../';
 
 const logoOptions = [
   BitbucketIcon,

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { Label } from '@atlaskit/field-base';
 import FieldText from '@atlaskit/field-text';
-import { DatePicker, TimePicker, DateTimePicker } from '../src';
+import { DatePicker, TimePicker, DateTimePicker } from '../';
 
 type State = {
   datePickerValue: string,

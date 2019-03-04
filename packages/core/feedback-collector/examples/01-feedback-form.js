@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import { FeedbackForm } from '../src';
+import { FeedbackForm } from '../';
 
 type State = { isOpen: boolean, displayFlag: boolean };
 

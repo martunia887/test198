@@ -6,7 +6,7 @@ import { AtlassianIcon } from '@atlaskit/logo';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import HelpIcon from '@atlaskit/icon/glyph/question';
 import { colors } from '@atlaskit/theme';
-import { GlobalItem } from '../../../src';
+import { GlobalItem } from '../../../';
 
 export default () => (
   <div

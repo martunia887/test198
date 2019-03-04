@@ -1,6 +1,6 @@
 // @flow
 import React, { Fragment } from 'react';
-import Range from '../src';
+import Range from '../';
 
 const CustomValues = () => (
   <Fragment>

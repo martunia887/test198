@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Lorem from 'react-lorem-component';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { AtlasKitThemeProvider, colors, themed } from '@atlaskit/theme';
-import { ProgressDots } from '../src';
+import { ProgressDots } from '../';
 
 const appearances = ['default', 'primary', 'help', 'inverted'];
 const themes = ['light', 'dark'];

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import ModalDialog, { ModalTransition } from '../src';
+import ModalDialog, { ModalTransition } from '../';
 
 const H4 = styled.h4`
   margin-bottom: 0.66em;

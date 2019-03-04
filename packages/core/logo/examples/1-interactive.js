@@ -5,7 +5,7 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import RadioGroup from '@atlaskit/field-radio-group';
 import { colors } from '@atlaskit/theme';
 import styled from 'styled-components';
-import * as logos from '../src';
+import * as logos from '../';
 
 const Centered = styled.div`
   display: flex;

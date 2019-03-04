@@ -1,7 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-import Spinner from '../src';
+import Spinner from '../';
 
 type State = {
   active: boolean,

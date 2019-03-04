@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import Range from '../src';
+import Range from '../';
 
 export default class SimpleRange extends Component<*, *> {
   state = {

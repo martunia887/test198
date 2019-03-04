@@ -6,7 +6,7 @@ import DropdownMenu, {
   DropdownItemGroup,
   DropdownItem,
 } from '@atlaskit/dropdown-menu';
-import Drawer from '../src';
+import Drawer from '../';
 
 type State = {
   isDrawerOpen: boolean,

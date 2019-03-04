@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import Calendar from '../src';
+import Calendar from '../';
 
 const log = msg => e => console.log(msg, e);
 

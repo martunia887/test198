@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Lozenge from '../src';
+import Lozenge from '../';
 
 export default () => (
   <Lozenge isBold appearance="new">

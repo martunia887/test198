@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 
-import { Modal } from '../src';
+import { Modal } from '../';
 import welcomeImage from './assets/this-is-new-jira.png';
 
 type State = {

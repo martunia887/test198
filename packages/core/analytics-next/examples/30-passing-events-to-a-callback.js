@@ -1,10 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import {
-  AnalyticsListener,
-  UIAnalyticsEvent,
-  withAnalyticsEvents,
-} from '../src';
+import { AnalyticsListener, UIAnalyticsEvent, withAnalyticsEvents } from '../';
 
 class ManualButtonBase extends Component<*> {
   handleClick = e => {

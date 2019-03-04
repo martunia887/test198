@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import Theme from '../src';
+import Theme from '../';
 
 export default () => (
   <Theme.Consumer>

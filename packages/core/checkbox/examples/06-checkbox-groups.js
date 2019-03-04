@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Checkbox } from '../src';
+import { Checkbox } from '../';
 
 const GroupDiv = styled.div`
   display: flex;

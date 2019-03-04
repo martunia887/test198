@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import Tooltip from '../src';
+import Tooltip from '../';
 
 // unique enough id
 function getUEID() {

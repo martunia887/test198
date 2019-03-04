@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { RadioGroup } from '../src';
+import { RadioGroup } from '../';
 
 const options = [
   { value: 'light', name: 'numbers', label: 'Light Mode' },

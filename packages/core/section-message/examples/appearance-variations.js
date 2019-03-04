@@ -1,7 +1,7 @@
 // @flow
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import SectionMessage from '../src';
+import SectionMessage from '../';
 
 const Padding = styled.div`
   padding: 8px;

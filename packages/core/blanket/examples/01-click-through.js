@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import Button from '@atlaskit/button';
-import Blanket from '../src';
+import Blanket from '../';
 
 type State = {
   canClickThrough: boolean,

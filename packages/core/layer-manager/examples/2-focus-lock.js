@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import UnlockIcon from '@atlaskit/icon/glyph/unlock';
 import LockIcon from '@atlaskit/icon/glyph/lock';
-import { FocusLock } from '../src';
+import { FocusLock } from '../';
 
 type Props = {};
 type State = { isActive: boolean };

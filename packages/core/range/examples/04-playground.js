@@ -3,7 +3,7 @@
 import React, { Component, Fragment } from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
 import { colors } from '@atlaskit/theme';
-import Range from '../src';
+import Range from '../';
 
 const initialState = {
   min: 0,

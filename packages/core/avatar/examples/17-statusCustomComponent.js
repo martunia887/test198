@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import Avatar from '../src';
+import Avatar from '../';
 import { Block } from '../examples-util/helpers';
 
 const DivPresence = styled.div`

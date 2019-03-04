@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Button from '@atlaskit/button';
-import Select from '../src';
+import Select from '../';
 
 const cities = [
   {

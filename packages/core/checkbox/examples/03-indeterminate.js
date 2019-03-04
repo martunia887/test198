@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import { Checkbox } from '../src';
+import { Checkbox } from '../';
 
 type CheckedItems = { [value: string]: boolean };
 type State = {

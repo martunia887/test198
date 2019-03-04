@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import InlineMessage from '../src';
+import InlineMessage from '../';
 
 export default () => (
   <div>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { colors } from '@atlaskit/theme';
-import Spinner from '../src';
+import Spinner from '../';
 
 const SpinnerExample = () => (
   <div>

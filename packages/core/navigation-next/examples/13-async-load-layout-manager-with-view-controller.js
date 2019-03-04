@@ -13,7 +13,7 @@ import {
   SkeletonContainerView,
   ItemsRenderer,
   SkeletonItem,
-} from '../src';
+} from '../';
 
 import ContainerViews from './shared/views/container';
 

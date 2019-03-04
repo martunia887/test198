@@ -7,7 +7,7 @@ import {
   SpotlightManager,
   SpotlightTarget,
   SpotlightTransition,
-} from '../src';
+} from '../';
 
 type State = {
   active: boolean,

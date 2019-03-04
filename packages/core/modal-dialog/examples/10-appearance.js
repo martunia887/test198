@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import Lorem from 'react-lorem-component';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import Modal, { ModalTransition } from '../src';
+import Modal, { ModalTransition } from '../';
 
 const appearances = ['warning', 'danger'];
 

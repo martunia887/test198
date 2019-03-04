@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { ScrollLock } from '../src';
+import { ScrollLock } from '../';
 
 type Props = {};
 type State = { isActive: boolean };

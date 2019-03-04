@@ -23,7 +23,7 @@ import {
   ViewController,
   viewReducerUtils,
   withNavigationViewController,
-} from '../../../src';
+} from '../../../';
 
 const MyGlobalNavigation = () => (
   <GlobalNavigation

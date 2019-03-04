@@ -7,7 +7,7 @@ import DownArrow from '@atlaskit/icon/glyph/arrow-down';
 import LeftArrow from '@atlaskit/icon/glyph/arrow-left';
 import RightArrow from '@atlaskit/icon/glyph/arrow-right';
 
-import Select from '../src';
+import Select from '../';
 
 const size = 'small';
 

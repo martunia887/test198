@@ -1,7 +1,7 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { Target } from './styled';
-import Tooltip from '../src';
+import Tooltip from '../';
 
 const colors = ['teal', 'blue', 'purple'];
 

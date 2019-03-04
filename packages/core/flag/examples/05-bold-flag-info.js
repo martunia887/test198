@@ -3,7 +3,7 @@
 import React from 'react';
 import { colors } from '@atlaskit/theme';
 import InfoIcon from '@atlaskit/icon/glyph/info';
-import Flag, { FlagGroup } from '../src';
+import Flag, { FlagGroup } from '../';
 
 export default () => (
   <FlagGroup>

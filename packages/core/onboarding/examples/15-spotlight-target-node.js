@@ -3,7 +3,7 @@ import React, { Component, type ElementRef } from 'react';
 import { Transition } from 'react-transition-group';
 import Lorem from 'react-lorem-component';
 
-import { Spotlight, SpotlightManager, SpotlightTransition } from '../src';
+import { Spotlight, SpotlightManager, SpotlightTransition } from '../';
 import { Highlight } from './styled';
 
 type State = {

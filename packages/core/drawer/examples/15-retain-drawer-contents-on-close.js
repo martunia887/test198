@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import Drawer from '../src';
+import Drawer from '../';
 
 type State = {
   isDrawerOpen: boolean,

@@ -2,7 +2,7 @@
 
 import React, { Fragment } from 'react';
 import color from 'color';
-import { colors } from '../src';
+import { colors } from '../';
 
 export default () => (
   <Fragment>

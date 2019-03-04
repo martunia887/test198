@@ -7,7 +7,7 @@ import Comment, {
   CommentTime,
   CommentAction,
   CommentEdited,
-} from '../src';
+} from '../';
 import avatarImg from './utils/sample-avatar.png';
 
 export default () => (

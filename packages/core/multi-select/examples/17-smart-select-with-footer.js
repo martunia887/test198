@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import AddIcon from '@atlaskit/icon/glyph/add';
-import MultiSelect from '../src';
-import type { GroupType } from '../src/types';
+import MultiSelect from '../';
+import type { GroupType } from '..//types';
 
 const selectItems: Array<GroupType> = [
   {

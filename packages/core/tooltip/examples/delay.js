@@ -2,7 +2,7 @@
 import React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import Tooltip from '../src';
+import Tooltip from '../';
 
 export default () => (
   <ButtonGroup>

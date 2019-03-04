@@ -1,8 +1,8 @@
 // @flow
 
 import React, { Component } from 'react';
-import Tabs from '../src';
-import type { TabData } from '../src/types';
+import Tabs from '../';
+import type { TabData } from '..//types';
 import { Content } from './shared';
 
 const tabs = [

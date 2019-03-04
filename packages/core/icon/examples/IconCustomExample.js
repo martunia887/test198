@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import Icon from '../src';
+import Icon from '../';
 
 const customGlyph = () => (
   <svg viewBox="0 0 24 24" focusable="false" role="presentation">

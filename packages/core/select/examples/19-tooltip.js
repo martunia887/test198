@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Tooltip from '@atlaskit/tooltip';
-import Select, { components } from '../src';
+import Select, { components } from '../';
 
 const Option = props => {
   const { data } = props; // eslint-disable-line react/prop-types

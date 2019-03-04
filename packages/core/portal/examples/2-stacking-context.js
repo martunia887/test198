@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Portal from '../src';
+import Portal from '../';
 
 const StackingContextExample = () => (
   <div>

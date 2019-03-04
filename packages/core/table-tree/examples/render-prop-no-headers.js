@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import TableTree, { Rows, Row, Cell } from '../src';
+import TableTree, { Rows, Row, Cell } from '../';
 import staticData from './data-cleancode-toc.json';
 
 export default () => (
