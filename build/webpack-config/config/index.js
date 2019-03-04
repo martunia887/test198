@@ -190,7 +190,7 @@ module.exports = function createWebpackConfig(
       ],
     },
     resolve: {
-      mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
+      mainFields: ['module', 'browser', 'main'],
       extensions: ['.js', '.ts', '.tsx'],
     },
     resolveLoader: {

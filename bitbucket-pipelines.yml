@@ -125,6 +125,7 @@ pipelines:
             script:
               - source ./build-setup.sh
               - bolt install --pure-lockfile
+              - yarn build # THIS IS FOR QA NOT A REAL CHANGE TO BE MERGED
               - cd website
               # This next line just makes it so we can skip website builds by having a branch name that starts with "skip-website/".
               - if [[ "$BITBUCKET_BRANCH" == skip-website/* ]]; then echo "Skipping website build" && mkdir dist && echo "Build skipped" > dist/index.html; else WEBSITE_ENV=staging yarn build:no-minimize; fi
