@@ -1,1 +1,1 @@
-- Drop ES5 from all the flow modules
+- Drop ES5 from all the flow modules and moving the ESM output to the root of the build package. This means that any imports into core modules dist directory will have to be updated. I.e. `@atlaskit/button/dist/esm/FictionalModule` will become `@atlaskit/button/FictionalModule`.
