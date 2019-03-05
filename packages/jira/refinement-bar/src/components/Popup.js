@@ -3,6 +3,7 @@
 
 import React, {
   PureComponent,
+  // $FlowFixMe
   forwardRef,
   type ElementRef,
   type Element as ElementType,
@@ -53,15 +54,11 @@ const defaultPopperProps = {
 
 export default class Popup extends PureComponent<Props, State> {
   focusTrap: Object;
-  dialogRef: HTMLElement = React.createRef();
+  dialogRef: ElementRef<*> = React.createRef();
+  blanketRef: ElementRef<*> = React.createRef();
+  openEvent: Event;
   state = { isOpen: false, popperProps: defaultPopperProps };
-  constructor(props) {
-    super(props);
-    this.uniqueDialogKey = Math.random()
-      .toString(32)
-      .slice(2);
-  }
-  static getDerivedStateFromProps(p, s) {
+  static getDerivedStateFromProps(p: Props, s: State) {
     if (p.popperProps !== s.popperProps) {
       return { popperProps: { ...defaultPopperProps, ...p.popperProps } };
     }
@@ -80,20 +77,20 @@ export default class Popup extends PureComponent<Props, State> {
   handleClick = (event: MouseEvent) => {
     const { target } = event;
 
-    if (this.dialogRef.current && !this.dialogRef.current.contains(target)) {
+    if (isOutside(this.dialogRef.current, target)) {
       this.close(event);
     }
   };
 
-  open = event => {
+  open = (event: *) => {
     this.openEvent = event.nativeEvent;
 
     this.setState({ isOpen: true }, this.initialiseFocusTrap);
 
     window.addEventListener('keydown', this.handleKeyDown);
-    window.addEventListener('click', this.handleClick);
+    window.addEventListener('click', this.handleClick, true);
   };
-  close = event => {
+  close = (event: Event) => {
     // bail if this is the open event; listeners are bound too quickly...
     if (this.openEvent === event) return;
 
@@ -108,11 +105,10 @@ export default class Popup extends PureComponent<Props, State> {
   };
   initialiseFocusTrap = () => {
     const trapConfig = {
-      clickOutsideDeactivates: true, // TODO should respond to `allowClose`
-      escapeDeactivates: true, // TODO should respond to `allowClose`
+      clickOutsideDeactivates: false,
+      escapeDeactivates: false,
       fallbackFocus: this.dialogRef.current,
       returnFocusOnDeactivate: true,
-      // onDeactivate: this.close, // this would be nice...
     };
     this.focusTrap = createFocusTrap(this.dialogRef.current, trapConfig);
 
@@ -124,7 +120,7 @@ export default class Popup extends PureComponent<Props, State> {
   };
 
   render() {
-    const { children, target } = this.props;
+    const { allowClose, children, target } = this.props;
     const { isOpen, popperProps } = this.state;
     const onClick = isOpen ? this.close : this.open;
 
@@ -146,19 +142,28 @@ export default class Popup extends PureComponent<Props, State> {
       </Popper>
     );
 
+    const portalTarget = ((document.body: any): HTMLElement);
+
     const fixedOrPortal = popperProps.positionFixed
       ? popperInstance
-      : createPortal(popperInstance, document.body);
+      : createPortal(popperInstance, portalTarget);
 
     return (
       <Manager>
         <Reference>{({ ref }) => target({ ref, isOpen, onClick })}</Reference>
         {isOpen ? fixedOrPortal : null}
+        {isOpen && !allowClose && <Blanket />}
       </Manager>
     );
   }
 }
 
+function isOutside(boundary, target) {
+  if (boundary === target) {
+    return false;
+  }
+  return boundary && !boundary.contains(target);
+}
 function isEscapeEvent(e) {
   return e.key === 'Escape' || e.key === 'Esc' || e.keyCode === 27;
 }
@@ -167,6 +172,22 @@ function isEscapeEvent(e) {
 // Styled Components
 // ==============================
 
+export const Blanket = forwardRef((props: *, ref) => (
+  <div
+    ref={ref}
+    css={{
+      bottom: 0,
+      cursor: 'not-allowed',
+      left: 0,
+      position: 'fixed',
+      right: 0,
+      top: 0,
+      transform: 'translateZ(0)',
+      zIndex: layers.layer(),
+    }}
+    {...props}
+  />
+));
 export const Dialog = forwardRef((props: *, ref) => {
   const shadow = colors.N40A;
   return (

@@ -7,12 +7,13 @@ import { Group, Note, Radio } from '../../components/InputGroup';
 import { DialogInner } from '../../components/Popup';
 
 type Props = {
-  storedValue: Object,
+  closePopup: (*) => void,
   field: Object,
   invalidMessage: string,
   isRemovable: boolean,
   onChange: (*) => void,
   onRemove: (*) => void,
+  storedValue: Object,
 };
 type State = {
   type: string,
@@ -29,7 +30,7 @@ class TextView extends React.Component<Props, State> {
     e.preventDefault();
     if (this.props.invalidMessage) return;
 
-    if (this.props.closePopup) {
+    if (typeof this.props.closePopup === 'function') {
       this.props.closePopup(); // HACK? (imperative)
     }
   };

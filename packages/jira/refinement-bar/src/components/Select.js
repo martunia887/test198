@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import React, { forwardRef, type Node } from 'react';
+import React, { type Node } from 'react';
 import { jsx } from '@emotion/core';
 import Select, { CheckboxOption } from '@atlaskit/select';
 import SearchIcon from '@atlaskit/icon/glyph/editor/search';
@@ -92,14 +92,22 @@ const loadingMessage = () => (
 // Exports
 // ==============================
 
+const Option = (props: *) => (
+  <CheckboxOption css={{ paddingLeft: `8px !important` }} {...props} />
+);
+
 export const selectComponents = {
   Control,
   DropdownIndicator,
   IndicatorSeparator: null,
   LoadingIndicator: null,
   Menu,
-  Option: CheckboxOption,
+  Option,
 };
+
+// Simple Select
+// ------------------------------
+//
 // export const BaseSelect = forwardRef((props, ref) => (
 //   <Select
 //     backspaceRemovesValue={false}
@@ -118,12 +126,22 @@ export const selectComponents = {
 //   />
 // ));
 
-export class BaseSelect extends React.Component {
+type State = {
+  inputValue: string,
+};
+
+export class BaseSelect extends React.Component<*, State> {
   state = { inputValue: '' };
-  onInputChange = inputValue => {
+  selectRef = React.createRef();
+  onInputChange = (inputValue: string) => {
     this.setState({ inputValue });
   };
-  componentDidUpdate(p, s) {
+  componentDidMount() {
+    if (this.selectRef.current) {
+      this.selectRef.current.select.openMenu('first');
+    }
+  }
+  componentDidUpdate(p: *, s: State) {
     const newValue = this.props.inputValue || this.state.inputValue;
     const oldValue = p.inputValue || s.inputValue;
 
@@ -136,6 +154,7 @@ export class BaseSelect extends React.Component {
 
     return (
       <Select
+        innerRef={this.selectRef}
         backspaceRemovesValue={false}
         closeMenuOnSelect={false}
         controlShouldRenderValue={false}

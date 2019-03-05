@@ -24,7 +24,6 @@ type State = {
 
 class NumberView extends React.Component<Props, State> {
   state = { ...this.props.storedValue, gt: '', lt: '' };
-  dropdownRef = React.createRef();
   nextInputRef = React.createRef();
   componentDidMount() {
     this.focusNextInput();
@@ -35,8 +34,9 @@ class NumberView extends React.Component<Props, State> {
   handleSubmit = (e: *) => {
     e.preventDefault();
     if (this.props.invalidMessage) return;
-    if (this.dropdownRef.current) {
-      this.dropdownRef.current.close();
+
+    if (typeof this.props.closePopup === 'function') {
+      this.props.closePopup(); // HACK? (imperative)
     }
   };
 
@@ -74,11 +74,13 @@ class NumberView extends React.Component<Props, State> {
   // NOTE: resist the urge to use `autoFocus` on the text input; it will break
   // programmatic focus used elsewhere
   focusNextInput = () => {
-    if (this.nextInputRef.current) {
+    const el = this.nextInputRef.current;
+
+    if (el && typeof el.focus === 'function') {
       // wait for the focus trap (Popup) to grab the node that envoked the
       // dialog, before assigning focus within
       setTimeout(() => {
-        this.nextInputRef.current.focus();
+        el.focus();
       }, 10);
     }
   };

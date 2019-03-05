@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import { Component, Children, createRef } from 'react';
+import { Component, Children } from 'react';
 import { jsx } from '@emotion/core';
 import Badge from '@atlaskit/badge';
 import Button from '@atlaskit/button';
@@ -11,7 +11,7 @@ import {
   RefinementBarProvider,
   withRefinementBarContext,
 } from './ContextProvider';
-import { cloneObj, debounce } from '../utils';
+import { cloneObj } from '../utils';
 import Popup, { DialogInner } from './Popup';
 import { BaseSelect, selectComponents } from './Select';
 import { FilterButton } from './FilterButton';
@@ -42,6 +42,7 @@ class ActualRefinementBar extends Component<Props, State> {
     };
   }
   ctx: Object;
+  filterOptions: Array<Object>;
 
   // Required until atlaskit upgrades to react >= 16.6 😞
   // eslint-disable-next-line camelcase
@@ -85,7 +86,7 @@ class ActualRefinementBar extends Component<Props, State> {
       invalid = cloneObj(oldInvalid, { remove: key });
     }
 
-    const liveUpdateStoredValues = debounce(() => {
+    const liveUpdateStoredValues = () => {
       // don't commit changes to context if there's invalid keys
       if (invalid[key]) {
         return;
@@ -100,7 +101,7 @@ class ActualRefinementBar extends Component<Props, State> {
       const meta = { action: 'update', key, data };
 
       this.ctx.onChange(values, meta);
-    }, 500);
+    };
 
     this.setState({ invalid, values }, liveUpdateStoredValues);
 
@@ -108,8 +109,9 @@ class ActualRefinementBar extends Component<Props, State> {
   };
 
   activePopupRef = null;
-  getActivePopupRef = r => {
-    this.activePopupRef = r;
+  setPopupRef = (key: *) => (r: *) => {
+    // $FlowFixMe
+    this[`popupRef-${key}`] = r;
   };
 
   makeField = (config: Object) => (key: string) => {
@@ -128,13 +130,15 @@ class ActualRefinementBar extends Component<Props, State> {
         }) for "${key}".`,
       );
     }
+    // $FlowFixMe
+    const popupRef = this[`popupRef-${key}`];
 
     const fieldUI = ({ scheduleUpdate }) => {
       const extra = scheduleUpdate ? { ...config, scheduleUpdate } : config;
 
       return (
         <Field
-          closePopup={this.activePopupRef && this.activePopupRef.close}
+          closePopup={popupRef && popupRef.close}
           field={field}
           invalidMessage={invalidMessage}
           key={key}
@@ -154,7 +158,7 @@ class ActualRefinementBar extends Component<Props, State> {
         key={key}
         allowClose={!isInvalid}
         localValue={localValue}
-        ref={this.getActivePopupRef}
+        ref={this.setPopupRef(key)}
         storedValue={storedValue}
         target={({ isOpen, onClick, ref }: *) => (
           <FilterButton
@@ -226,10 +230,17 @@ class ActualRefinementBar extends Component<Props, State> {
           {({ scheduleUpdate }) => (
             <DialogInner minWidth={220}>
               <BaseSelect
+                components={selectComponents}
                 options={this.filterOptions}
                 value={selectedKeys.map(this.mapKeyToOption)}
-                onChange={this.onChangeFilter}
-                components={selectComponents}
+                onChange={(...args) => {
+                  this.onChangeFilter(...args);
+
+                  // TODO: make a decision
+                  // whilst this is the "expected behaviour", it makes the
+                  // dialog jostle about if made to wrap
+                  // scheduleUpdate();
+                }}
                 scheduleUpdate={scheduleUpdate}
               />
             </DialogInner>

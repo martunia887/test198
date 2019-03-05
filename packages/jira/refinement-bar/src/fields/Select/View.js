@@ -3,7 +3,6 @@
 
 import { PureComponent } from 'react';
 import { jsx } from '@emotion/core';
-import { CheckboxOption } from '@atlaskit/select';
 import { colors } from '@atlaskit/theme';
 import { BaseSelect, selectComponents } from '../../components/Select';
 import { DialogInner } from '../../components/Popup';
@@ -47,14 +46,16 @@ const Option = (props: *) =>
   props.data === CLEAR_DATA ? (
     <ClearOption {...props} />
   ) : (
-    <CheckboxOption {...props} />
+    <selectComponents.Option {...props} />
   );
 
 const defaultComponents = { ...selectComponents, Option };
 
-export default class SelectView extends PureComponent<*> {
+export default class SelectView extends PureComponent<*, *> {
   state = { components: {} };
-  constructor(props) {
+  filterOptionFn: Object => boolean;
+  options: Array<Object>;
+  constructor(props: *) {
     super(props);
 
     const { field, refinementBarValue, storedValue } = props;
@@ -70,14 +71,14 @@ export default class SelectView extends PureComponent<*> {
     this.options = getOptions(storedValue, resolvedOptions);
     this.filterOptionFn = filterOptions(storedValue);
   }
-  static getDerivedStateFromProps(p, s) {
+  static getDerivedStateFromProps(p: *, s: *) {
     if (p.components !== s.components) {
       return { components: { ...defaultComponents, ...p.components } };
     }
 
     return null;
   }
-  handleChange = value => {
+  handleChange = (value: *) => {
     const { onChange } = this.props;
 
     if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {
