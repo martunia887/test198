@@ -22,15 +22,29 @@ type State = {
   lt: string,
 };
 
+const getInitialState = (storedValue: *) => {
+  const { type, value } = storedValue;
+  const base = { gt: '', lt: '', type, single: '' };
+
+  return typeof value === 'number'
+    ? { ...base, single: value }
+    : { ...base, ...value };
+};
+
 class NumberView extends React.Component<Props, State> {
-  state = { ...this.props.storedValue, gt: '', lt: '' };
+  state = getInitialState(this.props.storedValue);
   nextInputRef = React.createRef();
   componentDidMount() {
     this.focusNextInput();
   }
+
   get isBetween() {
     return this.state.type === 'between';
   }
+  get filterTypes() {
+    return this.props.field.getFilterTypes();
+  }
+
   handleSubmit = (e: *) => {
     e.preventDefault();
     if (this.props.invalidMessage) return;
@@ -39,14 +53,13 @@ class NumberView extends React.Component<Props, State> {
       this.props.closePopup(); // HACK? (imperative)
     }
   };
-
   onChangeCheckbox = ({ target }: *) => {
     const { onChange } = this.props;
     const type = target.value;
 
     this.setState({ type }, () => {
       // avoid creating an invalid state where '' === NaN
-      if (isEmptyString(this.state.value)) {
+      if (isEmptyString(this.state.single)) {
         return;
       }
 
@@ -55,11 +68,10 @@ class NumberView extends React.Component<Props, State> {
       const { gt, lt } = this.state;
       const value = this.isBetween
         ? makeValue({ gt, lt })
-        : makeValue(this.state.value);
+        : makeValue(this.state.single);
       onChange({ type, value });
     });
   };
-
   onChangeInput = ({ target: { name, value: val } }: *) => {
     const { onChange } = this.props;
     const { type } = this.state;
@@ -70,7 +82,6 @@ class NumberView extends React.Component<Props, State> {
       onChange({ type, value });
     });
   };
-
   // NOTE: resist the urge to use `autoFocus` on the text input; it will break
   // programmatic focus used elsewhere
   focusNextInput = () => {
@@ -85,9 +96,6 @@ class NumberView extends React.Component<Props, State> {
     }
   };
 
-  get filterTypes() {
-    return this.props.field.getFilterTypes();
-  }
   render() {
     const { field, invalidMessage } = this.props;
     const { type } = this.state;
@@ -134,10 +142,10 @@ class NumberView extends React.Component<Props, State> {
                       <Input
                         ref={this.nextInputRef}
                         isInvalid={isInvalid}
-                        name="value"
+                        name="single"
                         onChange={this.onChangeInput}
                         type="number"
-                        value={this.state.value}
+                        value={this.state.single}
                       />
                     )}
                     {invalidMessage && <Note>{invalidMessage}</Note>}
