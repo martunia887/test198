@@ -119,7 +119,6 @@ describe('<MediaImage />', () => {
   });
 
   it('should remove subscription if the component is unmounted', async () => {
-    console.log('start');
     const wrapper = await shallowRender(defaultProps);
     const instance = wrapper.instance();
     jest.spyOn(instance, 'unsubscribe');

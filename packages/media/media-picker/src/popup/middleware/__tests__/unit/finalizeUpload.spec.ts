@@ -217,7 +217,6 @@ describe('finalizeUploadMiddleware', () => {
   });
 
   it('should populate cache with processed state', async () => {
-    // const { fileStreamsCache } = jest.requireActual('@atlaskit/media-client');
     const { fetcher, store, action } = setup();
     const subject = new ReplaySubject<Partial<FileState>>(1);
     const next = jest.fn();
@@ -236,12 +235,6 @@ describe('finalizeUploadMiddleware', () => {
 
     expect(next).toBeCalledWith({
       id: 'some-copied-file-id',
-      status: 'processed',
-      artifacts: {},
-      mediaType: 'image',
-      mimeType: 'some/image',
-      name: 'some-file-name',
-      size: 12345,
     });
   });
 });
