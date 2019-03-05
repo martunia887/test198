@@ -229,6 +229,7 @@ describe('MediaClient', () => {
               name: '',
               size: 14,
               occurrenceKey,
+              representations: {},
             };
             expect(next.mock.calls[0][0]).toEqual(
               expect.objectContaining(expectedState),

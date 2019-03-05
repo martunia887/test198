@@ -9,6 +9,7 @@ export {
   MediaClientConfig,
   MediaApiConfig,
   AuthContext,
+  MediaFileArtifacts,
 } from './auth';
 
 export { mediaState } from './cache';

@@ -43,7 +43,6 @@ describe(name, () => {
   describe('EditorActions', () => {
     const testTempFileId = `temporary:${randomId()}`;
     const testTempFileId2 = `temporary:${randomId()}`;
-    const testPubFileId = `${randomId()}`;
     const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
     const stateManager = new DefaultMediaStateManager();
     const mediaProvider = storyMediaProviderFactory({
@@ -165,14 +164,11 @@ describe(name, () => {
           it('should not resolve when all media operations are pending', async () => {
             stateManager.updateState(testTempFileId, {
               id: testTempFileId,
-              fileId: Promise.resolve('id'),
             });
 
             await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
-            mediaPluginState.insertFiles([
-              { id: testTempFileId, fileId: Promise.resolve('id') },
-            ]);
+            mediaPluginState.insertFiles([{ id: testTempFileId }]);
 
             let resolved: any;
 
@@ -191,15 +187,12 @@ describe(name, () => {
           it('should reject after timeout is reached', async () => {
             stateManager.updateState(testTempFileId, {
               id: testTempFileId,
-              fileId: Promise.resolve('id'),
             });
 
             await mediaProvider;
 
             const mediaPluginState = getMediaPluginState(editorView);
-            mediaPluginState.insertFiles([
-              { id: testTempFileId, fileId: Promise.resolve('id') },
-            ]);
+            mediaPluginState.insertFiles([{ id: testTempFileId }]);
 
             // Note: getValue() public API doesn't yet support timeout, but the
             //       plugin state does and we want to have coverage of that.
@@ -214,20 +207,16 @@ describe(name, () => {
           it('should not resolve when some media operations are pending', async () => {
             stateManager.updateState(testTempFileId, {
               id: testTempFileId,
-              fileId: Promise.resolve('id'),
             });
 
             stateManager.updateState(testTempFileId2, {
               id: testTempFileId2,
-              fileId: Promise.resolve('id'),
             });
 
             await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
-            mediaPluginState.insertFiles([
-              { id: testTempFileId, fileId: Promise.resolve('id') },
-            ]);
+            mediaPluginState.insertFiles([{ id: testTempFileId }]);
 
             let resolved: any;
 
@@ -235,14 +224,11 @@ describe(name, () => {
               .getValue()
               .then(potentialValue => (resolved = potentialValue));
 
-            mediaPluginState.insertFiles([
-              { id: testTempFileId2, fileId: Promise.resolve('id') },
-            ]);
+            mediaPluginState.insertFiles([{ id: testTempFileId2 }]);
 
             stateManager.updateState(testTempFileId, {
               status: 'ready',
               id: testTempFileId,
-              publicId: testPubFileId,
             });
 
             return new Promise(resolve => {
@@ -256,21 +242,17 @@ describe(name, () => {
           it('should resolve after media have resolved', async () => {
             stateManager.updateState(testTempFileId, {
               id: testTempFileId,
-              fileId: Promise.resolve('id'),
             });
             await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
-            mediaPluginState.insertFiles([
-              { id: testTempFileId, fileId: Promise.resolve('id') },
-            ]);
+            mediaPluginState.insertFiles([{ id: testTempFileId }]);
 
             // To simulate async behavior, trigger ready on next tick
             window.setTimeout(() => {
               stateManager.updateState(testTempFileId, {
                 status: 'ready',
                 id: testTempFileId,
-                publicId: testTempFileId,
               });
             }, 0);
 
@@ -288,22 +270,18 @@ describe(name, () => {
           it('should resolve after processing status', async () => {
             stateManager.updateState(testTempFileId, {
               id: testTempFileId,
-              fileId: Promise.resolve('id'),
             });
 
             await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
-            mediaPluginState.insertFiles([
-              { id: testTempFileId, fileId: Promise.resolve('id') },
-            ]);
+            mediaPluginState.insertFiles([{ id: testTempFileId }]);
 
             // To simulate async behavior, trigger ready on next tick
             window.setTimeout(() => {
               stateManager.updateState(testTempFileId, {
                 status: 'ready',
                 id: testTempFileId,
-                publicId: testTempFileId,
               });
             }, 0);
 
@@ -428,14 +406,11 @@ describe(name, () => {
 
         stateManager.updateState(testTempFileId, {
           id: testTempFileId,
-          fileId: Promise.resolve('id'),
         });
 
         await mediaProvider;
 
-        mediaPluginState.insertFiles([
-          { id: testTempFileId, fileId: Promise.resolve('id') },
-        ]);
+        mediaPluginState.insertFiles([{ id: testTempFileId }]);
 
         const value = (await editorActions.getValue()) as any;
 

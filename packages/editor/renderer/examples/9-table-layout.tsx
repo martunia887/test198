@@ -19,7 +19,7 @@ export default function Example() {
   return (
     <MediaClientConfigContext.Provider value={mediaClientConfig}>
       <Sidebar showSidebar={true}>
-        {additionalProps => (
+        {(additionalProps: object) => (
           <Renderer
             dataProviders={providerFactory}
             document={document}

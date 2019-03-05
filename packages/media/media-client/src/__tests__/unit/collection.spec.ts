@@ -154,7 +154,7 @@ describe('CollectionFetcher', () => {
         });
     });
 
-    it('should update nextInclusiveStartKey only the first time', async done => {
+    it('should update nextInclusiveStartKey every time', async done => {
       const { collectionFetcher, getCollectionItems, contents } = setup();
 
       expect(collectionCache.recents).toBeUndefined();
@@ -171,14 +171,14 @@ describe('CollectionFetcher', () => {
         },
       });
       await nextTick();
+      const next = jest.fn();
       collectionFetcher.getItems('recents').subscribe({
-        next() {
-          expect(collectionCache.recents.nextInclusiveStartKey).toEqual(
-            'first-key',
-          );
-          done();
-        },
+        next,
       });
+      await nextTick();
+
+      expect(collectionCache.recents.nextInclusiveStartKey).toEqual('new-key');
+      done();
     });
 
     it('should call error callback if call to /items fails', done => {

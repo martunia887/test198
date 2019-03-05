@@ -24,7 +24,12 @@ import { MediaViewerDataSource } from '..';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
-import { Identifier, MediaClient } from '@atlaskit/media-client';
+import {
+  Identifier,
+  MediaClient,
+  FileIdentifier,
+} from '@atlaskit/media-client';
+import { Card } from '@atlaskit/media-card';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const mediaClient = new MediaClient(mediaClientConfig);
@@ -197,9 +202,16 @@ export default class Example extends React.Component<{}, State> {
               <ButtonList>
                 <li>
                   {this.state.firstCollectionItem ? (
-                    <Button onClick={this.openCollection}>
-                      Default collection
-                    </Button>
+                    <Card
+                      context={context}
+                      identifier={{
+                        collectionName: defaultCollectionName,
+                        id: (this.state.firstCollectionItem as FileIdentifier)
+                          .id,
+                        mediaItemType: 'file',
+                      }}
+                      onClick={this.openCollection}
+                    />
                   ) : (
                     <AkSpinner />
                   )}

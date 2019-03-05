@@ -19,7 +19,7 @@ const mediaClientConfig = storyMediaProviderConfig();
 const providerFactory = ProviderFactory.create({ mediaProvider });
 
 export default class ExampleRenderer extends React.Component {
-  constructor(props) {
+  constructor(props: object) {
     super(props);
 
     // opens an iframe
@@ -32,7 +32,7 @@ export default class ExampleRenderer extends React.Component {
     return (
       <MediaClientConfigContext.Provider value={mediaClientConfig}>
         <Sidebar showSidebar={true}>
-          {additionalProps => (
+          {(additionalProps: object) => (
             <React.Fragment>
               <div
                 style={{

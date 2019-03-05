@@ -6,11 +6,12 @@ import {
   taskDecision,
 } from '@atlaskit/util-data-test';
 import { CardEvent } from '@atlaskit/media-card';
-import { defaultSchema } from '@atlaskit/adf-schema';
+import { defaultSchema, ActionMarkAction } from '@atlaskit/adf-schema';
 import {
   CardSurroundings,
   ProviderFactory,
   ExtensionHandlers,
+  EventHandlers,
 } from '@atlaskit/editor-common';
 import Button from '@atlaskit/button';
 import {
@@ -41,7 +42,7 @@ const MockProfileClient = getMockProfileClientUtil(
 );
 
 const mentionProvider = Promise.resolve({
-  shouldHighlightMention(mention) {
+  shouldHighlightMention(mention: { id: string }) {
     return mention.id === 'ABCDE-ABCDE-ABCDE-ABCDE';
   },
 });
@@ -137,7 +138,7 @@ const extensionHandlers: ExtensionHandlers = {
   },
 };
 
-const eventHandlers = {
+const eventHandlers: EventHandlers = {
   mention: {
     onClick: () => console.log('onMentionClick'),
     onMouseEnter: () => console.log('onMentionMouseEnter'),
@@ -160,7 +161,8 @@ const eventHandlers = {
     },
   },
   action: {
-    onClick: event => console.log('onClick', '[react.MouseEvent]', event),
+    onClick: (event: ActionMarkAction) =>
+      console.log('onClick', '[react.MouseEvent]', event),
   },
 };
 
@@ -231,7 +233,7 @@ export default class RendererDemo extends React.Component<
   render() {
     return (
       <Sidebar showSidebar={this.state.showSidebar}>
-        {additionalRendererProps => (
+        {(additionalRendererProps: object) => (
           <div ref="root" style={{ padding: 20 }}>
             <fieldset style={{ marginBottom: 20 }}>
               <legend>Input</legend>
@@ -280,13 +282,13 @@ export default class RendererDemo extends React.Component<
     }
   }
 
-  private toggleTruncated(e) {
+  private toggleTruncated(e: Event) {
     this.setState(prevState => ({
       truncated: !prevState.truncated,
     }));
   }
 
-  private renderRenderer(additionalRendererProps) {
+  private renderRenderer(additionalRendererProps: any) {
     if (this.props.serializer !== 'react') {
       return null;
     }
@@ -326,7 +328,7 @@ export default class RendererDemo extends React.Component<
           <Button
             appearance={'link'}
             spacing={'none'}
-            onClick={e => this.toggleTruncated(e)}
+            onClick={(e: Event) => this.toggleTruncated(e)}
           >
             {this.state.truncated ? 'Expand text' : 'Collapse text'}
           </Button>

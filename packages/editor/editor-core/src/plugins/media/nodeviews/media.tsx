@@ -118,10 +118,6 @@ class MediaNode extends Component<MediaNodeProps & ImageLoaderProps> {
       return <CardView status="loading" dimensions={cardDimensions} />;
     }
 
-    /** For new images, the media state will be loaded inside the plugin state */
-    const state = this.pluginState.getMediaNodeState(id);
-    const fileId = (state && state.fileId) || id;
-
     const identifier: Identifier =
       type === 'external'
         ? {
@@ -130,7 +126,7 @@ class MediaNode extends Component<MediaNodeProps & ImageLoaderProps> {
             mediaItemType: 'external-image',
           }
         : {
-            id: fileId,
+            id,
             mediaItemType: 'file',
             collectionName: collection!,
           };

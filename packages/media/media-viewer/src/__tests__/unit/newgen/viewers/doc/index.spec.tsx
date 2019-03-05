@@ -43,6 +43,7 @@ const item: ProcessedFileState = {
       processingStatus: 'succeeded',
     },
   },
+  representations: {},
 };
 
 const itemWithNoArtifacts: ProcessedFileState = {

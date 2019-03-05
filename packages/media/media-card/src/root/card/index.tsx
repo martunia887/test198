@@ -9,6 +9,7 @@ import {
   isDifferentIdentifier,
   MediaClient,
   WithMediaClientProps,
+  isImageRepresentationReady,
 } from '@atlaskit/media-client';
 import { AnalyticsContext } from '@atlaskit/analytics-next';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
@@ -144,7 +145,7 @@ export class Card extends React.Component<CardProps, CardState> {
     }
 
     const { id, collectionName, occurrenceKey } = identifier;
-    const resolvedId = await id;
+    const resolvedId = typeof id === 'string' ? id : await id;
     this.unsubscribe();
     this.subscription = mediaClient.file
       .getFileState(resolvedId, { collectionName, occurrenceKey })
@@ -192,38 +193,6 @@ export class Card extends React.Component<CardProps, CardState> {
               }
               break;
             case 'processed':
-              if (
-                !currentDataURI &&
-                metadata.mediaType &&
-                isPreviewableType(metadata.mediaType)
-              ) {
-                const { appearance, dimensions, resizeMode } = this.props;
-                const options = {
-                  appearance,
-                  dimensions,
-                  component: this,
-                };
-                const width = getDataURIDimension('width', options);
-                const height = getDataURIDimension('height', options);
-                try {
-                  const mode =
-                    resizeMode === 'stretchy-fit' ? 'full-fit' : resizeMode;
-                  const blob = await mediaClient.getImage(resolvedId, {
-                    collection: collectionName,
-                    mode,
-                    height,
-                    width,
-                    allowAnimated: true,
-                  });
-                  const dataURI = URL.createObjectURL(blob);
-                  this.releaseDataURI();
-                  if (this.hasBeenMounted) {
-                    this.setState({ dataURI });
-                  }
-                } catch (e) {
-                  // We don't want to set status=error if the preview fails, we still want to display the metadata
-                }
-              }
               this.notifyStateChange({ status: 'complete', metadata });
               break;
             case 'failed-processing':
@@ -231,6 +200,40 @@ export class Card extends React.Component<CardProps, CardState> {
               break;
             case 'error':
               this.notifyStateChange({ status: 'error' });
+          }
+
+          if (
+            !currentDataURI &&
+            isImageRepresentationReady(fileState) &&
+            metadata.mediaType &&
+            isPreviewableType(metadata.mediaType)
+          ) {
+            const { appearance, dimensions, resizeMode } = this.props;
+            const options = {
+              appearance,
+              dimensions,
+              component: this,
+            };
+            const width = getDataURIDimension('width', options);
+            const height = getDataURIDimension('height', options);
+            try {
+              const mode =
+                resizeMode === 'stretchy-fit' ? 'full-fit' : resizeMode;
+              const blob = await mediaClient.getImage(resolvedId, {
+                collection: collectionName,
+                mode,
+                height,
+                width,
+                allowAnimated: true,
+              });
+              const dataURI = URL.createObjectURL(blob);
+              this.releaseDataURI();
+              if (this.hasBeenMounted) {
+                this.setState({ dataURI });
+              }
+            } catch (e) {
+              // We don't want to set status=error if the preview fails, we still want to display the metadata
+            }
           }
         },
         error: error => {

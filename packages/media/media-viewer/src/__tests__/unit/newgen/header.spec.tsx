@@ -32,6 +32,9 @@ const processedImageState: FileState = {
   name: 'my image',
   size: 0,
   artifacts: {},
+  representations: {
+    image: {},
+  },
 };
 
 describe('<Header />', () => {
@@ -169,6 +172,9 @@ describe('<Header />', () => {
           name: 'my item',
           size: 12222222,
           artifacts: {},
+          representations: {
+            image: {},
+          },
         };
         const mediaClient = createMediaClient({
           getFileState: () => Observable.of(testItem),

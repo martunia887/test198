@@ -280,6 +280,7 @@ export class FileFetcher {
 
       subject.next({
         status: 'processing',
+        representations: {},
         ...stateBase,
       });
       subject.complete();

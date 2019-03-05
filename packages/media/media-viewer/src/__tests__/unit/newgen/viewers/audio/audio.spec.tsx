@@ -34,6 +34,7 @@ const audioItem: ProcessedFileState = {
       processingStatus: 'succeeded',
     },
   },
+  representations: {},
 };
 
 const audioItemWithNoArtifacts: ProcessedFileState = {

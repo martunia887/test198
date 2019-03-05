@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { WithMediaClientProps, FileIdentifier } from '@atlaskit/media-client';
+import {
+  WithMediaClientProps,
+  FileIdentifier,
+  FileState,
+  MediaFileArtifacts,
+} from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { InlinePlayerWrapper } from './styled';
@@ -18,6 +23,25 @@ export interface InlinePlayerProps extends WithMediaClientProps {
 export interface InlinePlayerState {
   fileSrc?: string;
 }
+
+export const getPreferredVideoArtifact = (
+  fileState: FileState,
+): keyof MediaFileArtifacts | undefined => {
+  if (fileState.status === 'processed' || fileState.status === 'processing') {
+    const { artifacts } = fileState;
+    if (!artifacts) {
+      return undefined;
+    }
+
+    return artifacts['video_1280.mp4']
+      ? 'video_1280.mp4'
+      : artifacts['video_640.mp4']
+      ? 'video_640.mp4'
+      : undefined;
+  }
+
+  return undefined;
+};
 
 export class InlinePlayer extends Component<
   InlinePlayerProps,
@@ -51,16 +75,17 @@ export class InlinePlayer extends Component<
             }
           }
 
-          if (state.status === 'processed') {
+          if (state.status === 'processed' || state.status === 'processing') {
+            const artifactName = getPreferredVideoArtifact(state);
             const { artifacts } = state;
+            if (!artifactName || !artifacts) {
+              return;
+            }
 
             try {
-              const preferedArtifact = artifacts['video_1280.mp4']
-                ? 'video_1280.mp4'
-                : 'video_640.mp4';
               const fileSrc = await mediaClient.file.getArtifactURL(
                 artifacts,
-                preferedArtifact,
+                artifactName,
                 collectionName,
               );
 

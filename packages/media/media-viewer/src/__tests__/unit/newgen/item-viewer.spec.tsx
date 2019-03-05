@@ -18,6 +18,7 @@ import {
   ProcessedFileState,
   Identifier,
   FileIdentifier,
+  FileState,
 } from '@atlaskit/media-client';
 import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
 import {
@@ -192,6 +193,7 @@ describe('<ItemViewer />', () => {
       name: '',
       size: 1,
       artifacts: {},
+      representations: {},
     };
     const mediaClient = makeFakeContext(Observable.of(state));
     const { el } = mountComponent(mediaClient, identifier);
@@ -221,13 +223,17 @@ describe('<ItemViewer />', () => {
   });
 
   it('should show the document viewer if media type is document', () => {
-    const mediaClient = makeFakeContext(
-      Observable.of({
-        id: identifier.id,
-        mediaType: 'doc',
-        status: 'processed',
-      }),
-    );
+    const state: FileState = {
+      id: identifier.id,
+      mediaType: 'doc',
+      status: 'processed',
+      artifacts: {},
+      name: '',
+      size: 0,
+      mimeType: '',
+      representations: { image: {} },
+    };
+    const mediaClient = makeFakeContext(Observable.of(state));
     const { el } = mountComponent(mediaClient, identifier);
     el.update();
     expect(el.find(DocViewer)).toHaveLength(1);
