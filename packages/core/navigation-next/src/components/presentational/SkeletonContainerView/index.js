@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { gridSize as gridSizeFn } from '@atlaskit/theme';
 
 import Section from '../Section';

@@ -1,6 +1,11 @@
 // @flow
 
-import React, { Component, Fragment, type ElementRef } from 'react';
+import React, {
+  PureComponent,
+  Component,
+  Fragment,
+  type ElementRef,
+} from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import { colors } from '@atlaskit/theme';
 
@@ -23,6 +28,8 @@ import {
   ContainerNavigationMask,
   ContentNavigationWrapper,
 } from '../ContentNavigation/primitives';
+
+import memoizeOne from 'memoize-one';
 
 import {
   CONTENT_NAV_WIDTH_COLLAPSED,
@@ -52,7 +59,123 @@ function defaultTooltipContent(isCollapsed: boolean) {
     : { text: 'Collapse', char: '[' };
 }
 
-/* NOTE: experimental props use an underscore */
+class NavigationInLayoutManager extends PureComponent {
+  renderGlobalNavigation = () => {
+    const {
+      containerNavigation,
+      GlobalNavigation,
+      // eslint-disable-next-line camelcase
+      EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR,
+    } = this.props;
+    return (
+      <div
+        onMouseOver={
+          EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR ? this.closeFlyout : null
+        }
+      >
+        <ThemeProvider
+          theme={theme => ({
+            mode: light, // If no theme already exists default to light mode
+            ...theme,
+          })}
+        >
+          <Fragment>
+            <Shadow
+              isBold={!!containerNavigation}
+              isOverDarkBg
+              style={{ marginLeft: GLOBAL_NAV_WIDTH }}
+            />
+            <GlobalNavigation />
+          </Fragment>
+        </ThemeProvider>
+      </div>
+    );
+  };
+
+  renderContentNavigation = (args: RenderContentNavigationArgs) => {
+    const { transitionState, transitionStyle } = args;
+    const {
+      containerNavigation,
+      // eslint-disable-next-line camelcase
+      EXPERIMENTAL_FLYOUT_ON_HOVER,
+      navigationUIController,
+      productNavigation,
+    } = this.props;
+    const { isCollapsed, isResizing } = navigationUIController.state;
+
+    const isVisible = transitionState !== 'exited';
+    const shouldDisableInteraction =
+      isResizing || isTransitioning(transitionState);
+
+    return (
+      <ContentNavigationWrapper
+        key="product-nav-wrapper"
+        innerRef={this.getNavRef}
+        disableInteraction={shouldDisableInteraction}
+        style={transitionStyle}
+      >
+        <ContentNavigation
+          container={containerNavigation}
+          isVisible={isVisible}
+          key="product-nav"
+          product={productNavigation}
+        />
+        {isCollapsed && !EXPERIMENTAL_FLYOUT_ON_HOVER ? (
+          <div
+            aria-label="Click to expand the navigation"
+            role="button"
+            onClick={navigationUIController.expand}
+            css={{
+              cursor: 'pointer',
+              height: '100%',
+              outline: 0,
+              position: 'absolute',
+              transition: 'background-color 100ms',
+              width: CONTENT_NAV_WIDTH_COLLAPSED,
+
+              ':hover': {
+                backgroundColor: containerNavigation
+                  ? colors.N30
+                  : 'rgba(255, 255, 255, 0.08)',
+              },
+              ':active': {
+                backgroundColor: colors.N40A,
+              },
+            }}
+            tabIndex="0"
+          />
+        ) : null}
+      </ContentNavigationWrapper>
+    );
+  };
+
+  render() {
+    const {
+      isDragging,
+      transitionState,
+      transitionStyle,
+      width,
+      itemIsDragging,
+      blockOnChange,
+    } = this.props;
+    return (
+      <RenderBlocker
+        blockOnChange={blockOnChange}
+        itemIsDragging={itemIsDragging}
+      >
+        <Fragment>
+          {this.renderGlobalNavigation()}
+          {this.renderContentNavigation({
+            isDragging,
+            transitionState,
+            transitionStyle,
+            width,
+          })}
+        </Fragment>
+      </RenderBlocker>
+    );
+  }
+}
 
 export default class LayoutManager extends Component<
   LayoutManagerProps,
@@ -93,8 +216,35 @@ export default class LayoutManager extends Component<
     this.publishRefs();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>) {
     this.publishRefs();
+
+    console.group(this.constructor.name);
+
+    prevProps &&
+      Object.keys(prevProps).forEach(key =>
+        (prevProps[key] === this.props[key] ? console.log : console.warn)(
+          `${this.constructor.name} props`,
+          key,
+          prevProps[key] === this.props[key],
+          prevProps[key] !== this.props[key] ? prevProps[key] : undefined,
+          prevProps[key] !== this.props[key]
+            ? this.props[key]
+            : this.props[key],
+        ),
+      );
+
+    prevState &&
+      Object.keys(prevState).forEach(key =>
+        console.log(
+          `${this.constructor.name} state`,
+          key,
+          prevState[key] === this.state[key],
+          prevState[key],
+          this.state[key],
+        ),
+      );
+    console.groupEnd();
   }
 
   publishRefs() {
@@ -193,6 +343,7 @@ export default class LayoutManager extends Component<
   };
 
   renderContentNavigation = (args: RenderContentNavigationArgs) => {
+    return false;
     const { transitionState, transitionStyle } = args;
     const {
       containerNavigation,
@@ -249,6 +400,21 @@ export default class LayoutManager extends Component<
     );
   };
 
+  static ResizeTransitionProperties = ['width'];
+  static ResizeTransitionFrom = [CONTENT_NAV_WIDTH_COLLAPSED];
+
+  getResizeTransitionTo = memoizeOne(flyoutIsOpen => {
+    const {
+      navigationUIController,
+      experimental_fullWidthFlyout: EXPERIMENTAL_FULL_WIDTH_FLYOUT,
+    } = this.props;
+    const { productNavWidth } = navigationUIController.state;
+    const flyoutWidth = EXPERIMENTAL_FULL_WIDTH_FLYOUT
+      ? productNavWidth
+      : CONTENT_NAV_WIDTH_FLYOUT;
+    return [flyoutIsOpen ? flyoutWidth : productNavWidth];
+  });
+
   renderNavigation = () => {
     const {
       navigationUIController,
@@ -259,8 +425,13 @@ export default class LayoutManager extends Component<
       // eslint-disable-next-line camelcase
       experimental_fullWidthFlyout: EXPERIMENTAL_FULL_WIDTH_FLYOUT,
       collapseToggleTooltipContent,
+      containerNavigation,
+      globalNavigation: GlobalNavigation,
+      productNavigation,
+      // eslint-disable-next-line camelcase
     } = this.props;
     const { flyoutIsOpen, mouseIsOverNavigation, itemIsDragging } = this.state;
+
     const {
       isCollapsed,
       isResizeDisabled,
@@ -291,10 +462,10 @@ export default class LayoutManager extends Component<
           }}
         >
           <ResizeTransition
-            from={[CONTENT_NAV_WIDTH_COLLAPSED]}
+            from={LayoutManager.ResizeTransitionFrom}
             in={!isCollapsed || flyoutIsOpen}
-            properties={['width']}
-            to={[flyoutIsOpen ? flyoutWidth : productNavWidth]}
+            properties={LayoutManager.ResizeTransitionProperties}
+            to={this.getResizeTransitionTo(flyoutIsOpen)}
             userIsDragging={isResizing}
             // only apply listeners to the NAV resize transition
             productNavWidth={productNavWidth}
@@ -350,18 +521,28 @@ export default class LayoutManager extends Component<
                               : onMouseOver
                           }
                         >
-                          <RenderBlocker
+                          <NavigationInLayoutManager
                             blockOnChange
                             itemIsDragging={itemIsDragging}
-                          >
-                            {this.renderGlobalNavigation()}
-                            {this.renderContentNavigation({
-                              isDragging,
-                              transitionState,
-                              transitionStyle,
-                              width,
-                            })}
-                          </RenderBlocker>
+                            isDragging={isDragging}
+                            transitionState={transitionState}
+                            transitionStyle={transitionStyle}
+                            width={width}
+                            containerNavigation={containerNavigation}
+                            EXPERIMENTAL_FLYOUT_ON_HOVER={
+                              EXPERIMENTAL_FLYOUT_ON_HOVER
+                            }
+                            navigationUIController={navigationUIController}
+                            productNavigation={productNavigation}
+                            isCollapsed={
+                              navigationUIController.state.isCollapsed
+                            }
+                            isResizing={navigationUIController.state.isResizing}
+                            GlobalNavigation={GlobalNavigation}
+                            EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR={
+                              EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
+                            }
+                          />
                         </ContainerNavigationMask>
                       );
                     }}

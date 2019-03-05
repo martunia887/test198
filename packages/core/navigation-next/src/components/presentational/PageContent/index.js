@@ -4,6 +4,7 @@ import React, { PureComponent, type Ref, type Node } from 'react';
 import { PageWrapper } from './primitives';
 import type { CollapseListeners } from '../LayoutManager/types';
 import ResizeTransition, { isTransitioning } from '../ResizeTransition';
+import memoizeOne from 'memoize-one';
 
 import {
   CONTENT_NAV_WIDTH_COLLAPSED,
@@ -22,6 +23,13 @@ type PageProps = {
 };
 
 export default class PageContent extends PureComponent<PageProps> {
+  static ResizeTransitionFrom = [CONTENT_NAV_WIDTH_COLLAPSED];
+  static ResizeTransitionProperties = ['paddingLeft'];
+
+  getResizeTransitionTo = memoizeOne(flyoutIsOpen => [
+    flyoutIsOpen ? CONTENT_NAV_WIDTH_FLYOUT : this.props.productNavWidth,
+  ]);
+
   render() {
     const {
       flyoutIsOpen,
@@ -36,11 +44,11 @@ export default class PageContent extends PureComponent<PageProps> {
     } = this.props;
     return (
       <ResizeTransition
-        from={[CONTENT_NAV_WIDTH_COLLAPSED]}
         in={!isCollapsed}
         productNavWidth={productNavWidth}
-        properties={['paddingLeft']}
-        to={[flyoutIsOpen ? CONTENT_NAV_WIDTH_FLYOUT : productNavWidth]}
+        properties={PageContent.ResizeTransitionProperties}
+        from={PageContent.ResizeTransitionFrom}
+        to={this.getResizeTransitionTo(flyoutIsOpen)}
         userIsDragging={isResizing}
         /* Attach expand/collapse callbacks to the page resize transition to ensure they are only
          * called when the nav is permanently expanded/collapsed, i.e. when page content position changes. */

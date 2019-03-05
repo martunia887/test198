@@ -3,6 +3,7 @@
 import React, { PureComponent, type Node } from 'react';
 import Transition from 'react-transition-group/Transition';
 import type { CollapseListener } from './types';
+import memoizeOne from 'memoize-one';
 
 const DURATION = 300;
 
@@ -34,10 +35,18 @@ export function isTransitioning(state: TransitionState) {
 
 function NOOP() {}
 
+type TransitionProperty = 'paddingLeft' | 'width';
+
 export type TransitionState = 'entered' | 'entering' | 'exited' | 'exiting';
+export type TransitionStyle = {
+  [TransitionProperty]: number,
+  willChange: 'width' | 'padding-left',
+  transition?: string,
+  transform?: string,
+};
 type Props = {
   children: ({
-    transitionStyle: Object,
+    transitionStyle: TransitionStyle,
     transitionState: TransitionState,
   }) => Node,
   innerRef?: HTMLElement => any,
@@ -74,6 +83,31 @@ export default class ResizeTransition extends PureComponent<Props> {
     if (innerRef) innerRef(ref);
   };
 
+  getTransitionStyle = memoizeOne(
+    (
+      transitionState,
+      transition,
+      transform,
+      willChange,
+      dynamicKeys,
+      dynamicValues,
+    ) => {
+      return {
+        willChange,
+        transition,
+        transform,
+        ...getStyle({ keys: dynamicKeys, values: dynamicValues }),
+      };
+    },
+  );
+
+  getDynamicPropertiesKeys = (transitionState, from, to) => {
+    if (transitionState === 'exiting' || transitionState === 'exited') {
+      return from;
+    }
+    return to;
+  };
+
   render() {
     const {
       from,
@@ -101,14 +135,6 @@ export default class ResizeTransition extends PureComponent<Props> {
           const cssTransition =
             !userIsDragging && this.isMounted ? getTransition(properties) : {};
 
-          // `from` and `to` styles tweened by the transition
-          const dynamicProperties = {
-            exiting: getStyle({ keys: properties, values: from }),
-            exited: getStyle({ keys: properties, values: from }),
-            entering: getStyle({ keys: properties, values: to }),
-            entered: getStyle({ keys: properties, values: to }),
-          };
-
           // due to the use of 3d transform for GPU acceleration, which
           // changes the stacking context, we only apply the transform during
           // the animation period.
@@ -117,15 +143,17 @@ export default class ResizeTransition extends PureComponent<Props> {
             : {};
 
           // let the browser know what we're up to
-          const willChange = getChanges(properties);
+          const willChange = getChanges(properties).willChange;
 
           // put it all together
-          const transitionStyle = {
-            ...willChange,
-            ...cssTransition,
-            ...gpuAcceleration,
-            ...dynamicProperties[transitionState],
-          };
+          const transitionStyle = this.getTransitionStyle(
+            transitionState,
+            cssTransition.transition,
+            gpuAcceleration.transform,
+            willChange,
+            properties,
+            this.getDynamicPropertiesKeys(transitionState, from, to),
+          );
 
           return this.props.children({
             transitionStyle, // consumers must apply `transitionStyle`
