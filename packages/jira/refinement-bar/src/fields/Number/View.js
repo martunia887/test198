@@ -16,7 +16,7 @@ type Props = {
   onRemove: (*) => void,
 };
 type State = {
-  value: string,
+  single: string,
   type: string,
   gt: string,
   lt: string,
