@@ -88,15 +88,14 @@ export default class ResizeState {
 
   stackResize(colIdx: number, amount: number): ResizeState {
     // Dont allow resizing off the last column for grow.
-    if (!this.cols[colIdx + 1]) {
+    if (amount > 0 && !this.cols[colIdx + 1]) {
       return new ResizeState(this.cols, this.maxSize, true);
     }
 
     let newState = this.clone();
+    const cols = newState.cols;
     // Candidates is every column to the right of `colIdx`
     let candidates = getCandidates(newState, colIdx, amount);
-
-    const cols = newState.cols;
 
     /**
      * In the case of shrink (amount less than zero).
