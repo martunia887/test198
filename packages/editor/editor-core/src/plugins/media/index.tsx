@@ -3,7 +3,7 @@ import EditorImageIcon from '@atlaskit/icon/glyph/editor/image';
 import { media, mediaGroup, mediaSingle } from '@atlaskit/adf-schema';
 import { EditorPlugin, EditorAppearance } from '../../types';
 import { SmartMediaEditor } from '@atlaskit/media-editor';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
 import {
   stateKey as pluginKey,
   createPlugin,
@@ -60,7 +60,7 @@ export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
   }
   const { id } = node.firstChild!.attrs;
 
-  if (mediaState.uploadContext && mediaState.showEditingDialog) {
+  if (mediaState.uploadMediaClientConfig && mediaState.showEditingDialog) {
     const identifier: FileIdentifier = {
       id,
       mediaItemType: 'file',
@@ -70,7 +70,6 @@ export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
     return (
       <SmartMediaEditor
         identifier={identifier}
-        context={mediaState.uploadContext}
         onUploadStart={(newFileIdentifier: FileIdentifier) => {
           mediaState.closeMediaEditor();
           mediaState.replaceEditingMedia(newFileIdentifier);

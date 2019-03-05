@@ -43,6 +43,7 @@ describe('finalizeUploadMiddleware', () => {
     name: 'some-file-name',
     size: 12345,
     artifacts: {} as MediaFileArtifacts,
+    representations: {},
   };
   const collection = 'some-collection';
   const uploadId = 'some-upload-id';

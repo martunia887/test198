@@ -8,12 +8,13 @@ import {
   imageFileId,
   docFileId,
   errorFileId,
-  createStorybookContext,
+  createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import Spinner from '@atlaskit/spinner';
 import Select from '@atlaskit/select';
 import { MediaImage } from '../src';
 import { OptionsWrapper, MediaImageWrapper } from '../example-helpers/styled';
+import { MediaClientConfigContext } from '../../media-core';
 
 export interface ExampleProps {}
 
@@ -27,7 +28,7 @@ export interface ExampleState {
   height: number;
 }
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 const imageIds: MediaImageId[] = [
   { label: 'Generic', value: genericFileId },
   { label: 'Gif', value: gifFileId },
@@ -59,52 +60,53 @@ class Example extends Component<ExampleProps, ExampleState> {
     const { imageId, width, height } = this.state;
 
     return (
-      <div>
-        <OptionsWrapper>
-          <Select
-            options={imageIds}
-            defaultValue={imageId}
-            onChange={(imageId: any) => {
-              this.setState({ imageId });
-            }}
-          />
-          <FieldText
-            label="width"
-            placeholder="width"
-            value={`${width}`}
-            onChange={this.onWidthChange}
-          />
-          <FieldText
-            label="height"
-            placeholder="height"
-            value={`${height}`}
-            onChange={this.onHeightChange}
-          />
-        </OptionsWrapper>
-        <MediaImageWrapper>
-          <MediaImage
-            identifier={imageId.value}
-            context={context}
-            apiConfig={{ width, height }}
-          >
-            {({ loading, error, data }) => {
-              if (loading) {
-                return <Spinner />;
-              }
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
+        <div>
+          <OptionsWrapper>
+            <Select
+              options={imageIds}
+              defaultValue={imageId}
+              onChange={(imageId: any) => {
+                this.setState({ imageId });
+              }}
+            />
+            <FieldText
+              label="width"
+              placeholder="width"
+              value={`${width}`}
+              onChange={this.onWidthChange}
+            />
+            <FieldText
+              label="height"
+              placeholder="height"
+              value={`${height}`}
+              onChange={this.onHeightChange}
+            />
+          </OptionsWrapper>
+          <MediaImageWrapper>
+            <MediaImage
+              identifier={imageId.value}
+              apiConfig={{ width, height }}
+            >
+              {({ loading, error, data }) => {
+                if (loading) {
+                  return <Spinner />;
+                }
 
-              if (error) {
-                return <div>Error :(</div>;
-              }
+                if (error) {
+                  return <div>Error :(</div>;
+                }
 
-              if (!data) {
-                return null;
-              }
+                if (!data) {
+                  return null;
+                }
 
-              return <img src={data.src} />;
-            }}
-          </MediaImage>
-        </MediaImageWrapper>
-      </div>
+                return <img src={data.src} />;
+              }}
+            </MediaImage>
+          </MediaImageWrapper>
+        </div>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

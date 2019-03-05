@@ -203,7 +203,6 @@ export default class Example extends React.Component<{}, State> {
                 <li>
                   {this.state.firstCollectionItem ? (
                     <Card
-                      context={context}
                       identifier={{
                         collectionName: defaultCollectionName,
                         id: (this.state.firstCollectionItem as FileIdentifier)

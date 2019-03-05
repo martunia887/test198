@@ -110,7 +110,7 @@ describe('ImageViewer', () => {
 
   it('should not call context.getImage when image representation is not present', async () => {
     const response = Promise.resolve(new Blob());
-    const { el, context } = createFixture(response, {
+    const { el, mediaClient } = createFixture(response, {
       ...imageItem,
       representations: {},
     });
@@ -118,7 +118,7 @@ describe('ImageViewer', () => {
     await response;
     el.update();
 
-    expect(context.getImage).not.toHaveBeenCalled();
+    expect(mediaClient.getImage).not.toHaveBeenCalled();
   });
 
   it('MSW-700: clicking on background of ImageViewer does not close it', async () => {

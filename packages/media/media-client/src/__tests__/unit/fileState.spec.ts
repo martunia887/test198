@@ -1,11 +1,11 @@
-import { isErrorFileState, isImageRepresentationReady } from '../../fileState';
 import {
   ErrorFileState,
   isErrorFileState,
+  isImageRepresentationReady,
   ProcessingFailedState,
   ProcessedFileState,
   ProcessingFileState,
-} from '../../index';
+} from '../..';
 
 describe('isErrorFileState()', () => {
   const processingFailedState: ProcessingFailedState = {

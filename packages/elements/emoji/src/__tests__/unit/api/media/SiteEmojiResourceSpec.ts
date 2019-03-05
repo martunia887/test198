@@ -95,6 +95,7 @@ describe('SiteEmojiResource', () => {
           status: 'processing',
           mediaType: 'image',
           mimeType: 'image/png',
+          representations: {},
         });
       });
     });
