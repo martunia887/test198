@@ -36,7 +36,7 @@
     "name": "main",
     "stats": {
       "size": 25511,
-      "gzipSize": 6914
+      "gzipSize": 6912
     }
   },
   {
@@ -59,7 +59,7 @@
     "id": "atlaskit.media.async",
     "name": "async",
     "stats": {
-      "size": 14971,
+      "size": 14977,
       "gzipSize": 3856
     }
   },
@@ -68,15 +68,15 @@
     "name": "main",
     "stats": {
       "size": 51002,
-      "gzipSize": 13359
+      "gzipSize": 13358
     }
   },
   {
     "id": "combined.async",
     "name": "async",
     "stats": {
-      "size": 213153,
-      "gzipSize": 65551
+      "size": 213159,
+      "gzipSize": 65549
     }
   }
 ]

@@ -1,1 +1,122 @@
-[]
+[
+  {
+    "id": "src.main",
+    "name": "main",
+    "stats": {
+      "size": 49601,
+      "gzipSize": 12553
+    }
+  },
+  {
+    "id": "src.async",
+    "name": "async",
+    "stats": {
+      "size": 6220,
+      "gzipSize": 1727
+    }
+  },
+  {
+    "id": "node_modules.main",
+    "name": "node_modules [main]",
+    "stats": {
+      "size": 1161889,
+      "gzipSize": 382951
+    }
+  },
+  {
+    "id": "node_modules.async",
+    "name": "node_modules [async]",
+    "stats": {
+      "size": 1376183,
+      "gzipSize": 387387
+    }
+  },
+  {
+    "id": "atlaskit.core.main",
+    "name": "main",
+    "stats": {
+      "size": 154149,
+      "gzipSize": 36661
+    }
+  },
+  {
+    "id": "atlaskit.core.async",
+    "name": "async",
+    "stats": {
+      "size": 172909,
+      "gzipSize": 33531
+    }
+  },
+  {
+    "id": "atlaskit.editor.main",
+    "name": "main",
+    "stats": {
+      "size": 94322,
+      "gzipSize": 23229
+    }
+  },
+  {
+    "id": "atlaskit.editor.async",
+    "name": "async",
+    "stats": {
+      "size": 2143,
+      "gzipSize": 882
+    }
+  },
+  {
+    "id": "atlaskit.elements.main",
+    "name": "main",
+    "stats": {
+      "size": 35010,
+      "gzipSize": 8951
+    }
+  },
+  {
+    "id": "atlaskit.elements.async",
+    "name": "async",
+    "stats": {
+      "size": 15502,
+      "gzipSize": 5134
+    }
+  },
+  {
+    "id": "atlaskit.media.async",
+    "name": "async",
+    "stats": {
+      "size": 353451,
+      "gzipSize": 82079
+    }
+  },
+  {
+    "id": "atlaskit.people-and-teams.main",
+    "name": "main",
+    "stats": {
+      "size": 84077,
+      "gzipSize": 14842
+    }
+  },
+  {
+    "id": "atlaskit.teamwork-ecosystem.async",
+    "name": "async",
+    "stats": {
+      "size": 625,
+      "gzipSize": 367
+    }
+  },
+  {
+    "id": "combined.main",
+    "name": "main",
+    "stats": {
+      "size": 1574692,
+      "gzipSize": 477683
+    }
+  },
+  {
+    "id": "combined.async",
+    "name": "async",
+    "stats": {
+      "size": 1923646,
+      "gzipSize": 514605
+    }
+  }
+]
