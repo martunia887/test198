@@ -177,7 +177,18 @@ export function reduceSpace(
   return state;
 }
 
+const serialiseMap = (map: Map<number, ColumnState>) => {
+  const arr: Array<ColumnState> = [];
+  for (let [, col] of map) {
+    arr.push(col);
+  }
+
+  return arr;
+};
+
 export default class ResizeState {
+  public colMap: Map<number, ColumnState> = new Map();
+
   constructor(
     public cols: ColumnState[],
     public maxSize: number,
@@ -187,6 +198,7 @@ export default class ResizeState {
       direction: number,
     ) => number = findNextFreeCol,
   ) {
+    cols.forEach((colState, idx) => this.colMap.set(idx, colState));
     return Object.freeze(this);
   }
 
@@ -302,9 +314,63 @@ export default class ResizeState {
     return newState;
   }
 
+  stackGrow(colIdx: number, amount: number): ResizeState {
+    // Dont allow resizing off the last column for grow.
+    if (!this.cols[colIdx + 1] || !this.colMap.has(colIdx + 1)) {
+      return new ResizeState(this.cols, this.maxSize, true);
+    }
+
+    let newState = this.clone();
+    // Candidates is every column to the right of `colIdx`
+    let candidates = getCandidates(newState, colIdx, amount);
+
+    const map = newState.colMap;
+    const currentCol = map.get(colIdx);
+
+    // Directly resize our target col.
+    // We steal widths from other cols below.
+    if (currentCol) {
+      const newWidth = Math.max(currentCol.width + amount, currentCol.minWidth);
+      map.set(colIdx, currentCol.clone(newWidth));
+    }
+
+    // Iterate over all our 'candidates'.
+    // Take as much width as possibile (upto Column minWidth)
+    // Move onto to the next col until we dont meet minWidth.
+    let remaining = amount;
+    for (let { col, idx } of candidates) {
+      // Skip any column already at its min.
+      if (col.width === col.minWidth) {
+        continue;
+      }
+
+      // Calculate potential new width.
+      const newWidth = col.width - Math.abs(remaining);
+
+      // Don't allow the column to go below its defined minWidth.
+      if (newWidth < col.minWidth) {
+        map.set(idx, col.clone(col.minWidth));
+        remaining = col.minWidth - newWidth;
+        continue;
+      }
+
+      // If we reach here, the remaining/amount value
+      // didnt take up all available space in this column.
+      // We can bail out here since there is no 'amount' left.
+      map.set(idx, col.clone(newWidth));
+      break;
+    }
+
+    return new ResizeState(
+      serialiseMap(map),
+      newState.maxSize,
+      newState.breakout,
+    );
+  }
+
   resize(colIdx: number, amount: number): ResizeState {
     if (amount > 0) {
-      return this.grow(colIdx, amount);
+      return this.stackGrow(colIdx, amount);
     } else if (amount < 0) {
       return this.shrink(colIdx, amount);
     }
