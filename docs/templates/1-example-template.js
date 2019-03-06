@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
 
-// Imports from your component should be imported from `../src`
+// Imports from your component should be imported from `..`
 // If this is done, 2 magic things happen:
 // 1. On the website, the paths are transformed to the package name to make the example a copyable snippet
 // 2. When the example is uploaded to codesandbox, no files from `src` will be included,
 // and instead files will just be pulled from npm.
-import MyComponent, { MySubComponent } from '../src';
+import MyComponent, { MySubComponent } from '..';
 // DO NOT import anything else from src. That indicates we are doing something wrong.
 
 // While ideally examples are standalone renderable files, sometimes providing clear code that demonstrates
