@@ -40,10 +40,9 @@ const updatePayloadWithContext = (
       | GasPayload
       | GasScreenEventPayload;
   }
-  const {
-    [ELEMENTS_CONTEXT]: attributes,
-    ...fields
-  }: ObjectType = fieldExtractor(event.context);
+  const { [ELEMENTS_CONTEXT]: attributes, ...fields }: any = fieldExtractor(
+    event.context,
+  );
 
   if (attributes) {
     event.payload.attributes = merge(
