@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 
-import Page, { Grid, GridColumn } from '../src';
+import Page, { Grid, GridColumn } from '..';
 
 const Dummy = styled.div`
   background: #fea;

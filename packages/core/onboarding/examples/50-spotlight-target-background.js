@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Lorem from 'react-lorem-component';
 
-import { Spotlight, SpotlightManager, SpotlightTarget } from '../src';
+import { Spotlight, SpotlightManager, SpotlightTarget } from '..';
 import { Code, Highlight, HighlightGroup } from './styled';
 
 const Wrapper = styled.div`

@@ -7,7 +7,7 @@ import TextField from '@atlaskit/textfield';
 import Select from '@atlaskit/select';
 import InlineEdit, { SingleLineTextInput } from '@atlaskit/inline-edit';
 
-import PageHeader from '../src';
+import PageHeader from '..';
 
 const breadcrumbs = (
   <BreadcrumbsStateless onExpand={() => {}}>

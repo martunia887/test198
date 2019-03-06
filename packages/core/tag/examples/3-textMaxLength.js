@@ -1,7 +1,7 @@
 // @flow
 import React, { type Node } from 'react';
 import styled from 'styled-components';
-import Tag from '../src';
+import Tag from '..';
 
 const cupcakeipsum =
   'Croissant topping tiramisu gummi bears. Bonbon chocolate bar danish soufflé';

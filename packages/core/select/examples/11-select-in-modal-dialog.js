@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
 import Button from '@atlaskit/button';
-import Select from '../src';
+import Select from '..';
 
 type State = {
   isOpen: boolean,

@@ -9,7 +9,7 @@ import {
 } from '@atlaskit/navigation-next';
 import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
 
-import GlobalNavigation from '../src';
+import GlobalNavigation from '..';
 
 const AppSwitcherComponent = props => (
   <GlobalItem

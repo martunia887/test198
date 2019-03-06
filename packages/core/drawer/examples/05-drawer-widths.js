@@ -2,9 +2,9 @@
 
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import Drawer from '../src';
-import type { DrawerWidth } from '../src/components/types';
-import { widths } from '../src/constants';
+import Drawer from '..';
+import type { DrawerWidth } from '../components/types';
+import { widths } from '../constants';
 
 type State = {
   isDrawerOpen: boolean,

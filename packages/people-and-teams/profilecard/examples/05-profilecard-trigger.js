@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { AkProfilecardTrigger } from '../src';
+import { AkProfilecardTrigger } from '..';
 import { getMockProfileClient } from './helper/util';
 import LocaleIntlProvider from './helper/locale-intl-provider';
 

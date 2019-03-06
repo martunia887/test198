@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { Label } from '@atlaskit/field-base';
 import Button from '@atlaskit/button';
 import Item, { ItemGroup } from '@atlaskit/item';
-import DropList from '../src';
+import DropList from '..';
 
 type State = {|
   eventResult: string,

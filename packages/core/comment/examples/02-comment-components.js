@@ -1,12 +1,7 @@
 // @flow
 
 import React from 'react';
-import {
-  CommentAuthor,
-  CommentTime,
-  CommentAction,
-  CommentEdited,
-} from '../src';
+import { CommentAuthor, CommentTime, CommentAction, CommentEdited } from '..';
 
 export default () => (
   <div>

@@ -6,7 +6,7 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import { RadioGroup } from '@atlaskit/radio';
 import { Checkbox } from '@atlaskit/checkbox';
 
-import Form, { Field, FormHeader, FormSection, FormFooter } from '../src';
+import Form, { Field, FormHeader, FormSection, FormFooter } from '..';
 
 type State = {
   eventResult: string,

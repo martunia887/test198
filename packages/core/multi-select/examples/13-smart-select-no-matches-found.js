@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import Select from '../src';
-import type { GroupType } from '../src/types';
+import Select from '..';
+import type { GroupType } from '../types';
 
 const selectItems: Array<GroupType> = [
   {

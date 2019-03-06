@@ -4,7 +4,7 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
-import { withNavigationViewController } from '../../src';
+import { withNavigationViewController } from '../..';
 
 import ShortcutsPlugin from './shortcuts-plugin';
 

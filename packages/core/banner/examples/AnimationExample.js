@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
-import Banner from '../src';
+import Banner from '..';
 
 const Icon = <WarningIcon label="Warning icon" secondaryColor="inherit" />;
 

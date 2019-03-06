@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
-import Range from '../src';
+import Range from '..';
 
 const Container = styled.div`
   width: 500px;

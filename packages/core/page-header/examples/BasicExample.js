@@ -2,7 +2,7 @@
 import React from 'react';
 import { BreadcrumbsStateless, BreadcrumbsItem } from '@atlaskit/breadcrumbs';
 
-import PageHeader from '../src';
+import PageHeader from '..';
 
 const breadcrumbs = (
   <BreadcrumbsStateless onExpand={() => {}}>

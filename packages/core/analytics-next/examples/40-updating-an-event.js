@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import FieldText from '@atlaskit/field-text';
 import Button from '@atlaskit/button';
-import { AnalyticsListener } from '../src';
+import { AnalyticsListener } from '..';
 
 class Form extends Component<*, { value: string }> {
   state = {

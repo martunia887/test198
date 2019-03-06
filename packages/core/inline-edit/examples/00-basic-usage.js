@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import InlineEdit, { SingleLineTextInput } from '../src';
+import InlineEdit, { SingleLineTextInput } from '..';
 
 type State = {
   onEventResult: string,

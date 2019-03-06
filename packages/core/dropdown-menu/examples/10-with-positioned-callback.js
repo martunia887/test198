@@ -2,7 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
-import { DropdownMenuStateless, DropdownItemGroup, DropdownItem } from '../src';
+import { DropdownMenuStateless, DropdownItemGroup, DropdownItem } from '..';
 
 const Description = styled.p`
   margin-bottom: 16px;

@@ -15,7 +15,7 @@ import Tree, {
   type ItemId,
   type TreeSourcePosition,
   type TreeDestinationPosition,
-} from '../src';
+} from '..';
 import { complexTree } from '../mockdata/complexTree';
 
 const Container = styled.div`

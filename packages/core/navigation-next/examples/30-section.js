@@ -5,8 +5,8 @@ import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import ArrowRightIcon from '@atlaskit/icon/glyph/arrow-right';
 import { colors } from '@atlaskit/theme';
 
-import { Item, Section, SectionHeading, Separator } from '../src';
-import { CONTENT_NAV_WIDTH } from '../src/common/constants';
+import { Item, Section, SectionHeading, Separator } from '..';
+import { CONTENT_NAV_WIDTH } from '../common/constants';
 
 const Container = props => (
   <div

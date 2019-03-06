@@ -6,7 +6,7 @@ import { HashRouter } from 'react-router-dom';
 import { Label } from '@atlaskit/field-base';
 import { ToggleStateless } from '@atlaskit/toggle';
 
-import { LayoutManagerWithViewController, NavigationProvider } from '../src';
+import { LayoutManagerWithViewController, NavigationProvider } from '..';
 
 import {
   DefaultGlobalNavigation,

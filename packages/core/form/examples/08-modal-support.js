@@ -9,7 +9,7 @@ import ModalDialog, {
   ModalFooter,
   ModalTransition,
 } from '@atlaskit/modal-dialog';
-import Form, { Field, CheckboxField } from '../../form/src';
+import Form, { Field, CheckboxField } from '../../form';
 
 type State = { isOpen: boolean };
 export default class AtlaskitFormDemo extends Component<{}, State> {

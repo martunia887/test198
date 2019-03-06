@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import SectionMessage from '../src';
+import SectionMessage from '..';
 
 const SomeParts = ({
   body,

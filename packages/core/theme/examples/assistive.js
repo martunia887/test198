@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import SectionMessage from '@atlaskit/section-message';
-import { assistive } from '../src';
+import { assistive } from '..';
 
 const AssitiveText = styled.span`
   ${assistive()};

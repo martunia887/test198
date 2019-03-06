@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
-import { Radio } from '../src';
+import { Radio } from '..';
 
 const Tr = styled.tr`
   background-color: ${p => (p.isChecked ? colors.B50 : 'transparent')};

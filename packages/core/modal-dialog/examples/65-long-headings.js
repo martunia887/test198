@@ -5,7 +5,7 @@ import Lorem from 'react-lorem-component';
 
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import ModalDialog, { ModalTransition } from '../src';
+import ModalDialog, { ModalTransition } from '..';
 
 const oneLineNonBreakableString = 'one line heading without spaces';
 const multiLineNonBreakableString = 'multiline heading without spaces';

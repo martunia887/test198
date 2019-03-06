@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import DynamicTable from '../src';
+import DynamicTable from '..';
 
 const Wrapper = styled.div`
   min-width: 600px;

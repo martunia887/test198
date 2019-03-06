@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { StatelessSelect } from '../src';
+import { StatelessSelect } from '..';
 
 const InitialLoading = () => (
   <StatelessSelect

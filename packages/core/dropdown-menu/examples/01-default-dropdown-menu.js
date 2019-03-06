@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import DropdownMenu, { DropdownItemGroup, DropdownItem } from '../src';
+import DropdownMenu, { DropdownItemGroup, DropdownItem } from '..';
 
 export default () => (
   <div style={{ margin: '20px' }}>

@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import { DynamicTableStateless } from '../src';
+import { DynamicTableStateless } from '..';
 import { head, rows } from './content/sample-data';
 
 type State = {

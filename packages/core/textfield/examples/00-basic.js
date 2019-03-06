@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import Textfield from '../src';
+import Textfield from '..';
 
 const eventResultStyle = {
   borderStyle: 'dashed',

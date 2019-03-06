@@ -8,7 +8,7 @@ import TableTree, {
   Row,
   Cell,
   TableTreeDataHelper,
-} from '../../src';
+} from '../..';
 
 type State = {
   items: Array<Object>,

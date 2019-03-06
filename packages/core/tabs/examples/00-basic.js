@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import Tabs from '../src';
+import Tabs from '..';
 import { Content } from './shared';
 
 const tabs = [

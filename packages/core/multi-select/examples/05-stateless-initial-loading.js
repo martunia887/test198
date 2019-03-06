@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import { MultiSelectStateless } from '../src';
-import type { GroupType } from '../src/types';
+import { MultiSelectStateless } from '..';
+import type { GroupType } from '../types';
 
 const array: Array<GroupType> = [];
 export default () => (

@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, Fragment, type Node } from 'react';
-import { createTheme, type ThemeProp } from '../src';
+import { createTheme, type ThemeProp } from '..';
 
 type ThemeProps = {
   hover: boolean,

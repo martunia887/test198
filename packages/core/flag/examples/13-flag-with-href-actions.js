@@ -6,7 +6,7 @@ import Info from '@atlaskit/icon/glyph/info';
 import Tick from '@atlaskit/icon/glyph/check-circle';
 import Warning from '@atlaskit/icon/glyph/warning';
 import { colors } from '@atlaskit/theme';
-import Flag, { type AppearanceTypes } from '../src';
+import Flag, { type AppearanceTypes } from '..';
 
 type FlagType = {
   appearance: AppearanceTypes,

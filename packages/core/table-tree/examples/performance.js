@@ -9,7 +9,7 @@ import TableTree, {
   Row,
   Cell,
   TableTreeDataHelper,
-} from '../src';
+} from '..';
 
 const tableTreeDataHelper = new TableTreeDataHelper({ key: 'id' });
 

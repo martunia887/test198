@@ -4,7 +4,7 @@ import React, { Component, type Element } from 'react';
 import styled, { injectGlobal } from 'styled-components';
 import { Draggable, Droppable, DragDropContext } from 'react-beautiful-dnd';
 
-import Navigation, { AkNavigationItem } from '../src';
+import Navigation, { AkNavigationItem } from '..';
 
 const Container = styled.div`
   display: flex;

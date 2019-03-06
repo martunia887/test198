@@ -12,7 +12,7 @@ import {
   LayoutManager,
   NavigationProvider,
   UIControllerSubscriber,
-} from '../src';
+} from '..';
 
 const gridSize = gridSizeFn();
 

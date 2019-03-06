@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Layer from '../src';
+import Layer from '..';
 
 const targetStyle = {
   display: 'inline-block',

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import Spinner from '../src';
+import Spinner from '..';
 
 type State = {
   isCompleting: boolean,

@@ -3,7 +3,7 @@
 import React, { Fragment } from 'react';
 import Form, { Field, ErrorMessage } from '@atlaskit/form';
 import { cities } from './common/data';
-import Select from '../src';
+import Select from '..';
 
 type ValidationState = 'default' | 'error' | 'success';
 const errorMsg = 'This field is required.';

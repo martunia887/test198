@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { borderRadius, colors } from '@atlaskit/theme';
-import Badge from '../src';
+import Badge from '..';
 
 const Item = styled.div`
   align-items: center;

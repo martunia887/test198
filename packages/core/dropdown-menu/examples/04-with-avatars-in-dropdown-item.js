@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Avatar from '@atlaskit/avatar';
-import Dropdown, { DropdownItem, DropdownItemGroup } from '../src';
+import Dropdown, { DropdownItem, DropdownItemGroup } from '..';
 
 export default () => (
   <Dropdown defaultOpen triggerType="button" trigger="Drop menu">

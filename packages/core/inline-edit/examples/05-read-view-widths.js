@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import FieldText from '@atlaskit/field-text';
 import FieldRadioGroup from '@atlaskit/field-radio-group';
-import InlineEdit, { SingleLineTextInput } from '../src';
+import InlineEdit, { SingleLineTextInput } from '..';
 
 const radioItems = [
   {

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { AtlasKitThemeProvider } from '@atlaskit/theme';
-import { AkCodeBlock } from '../src';
+import { AkCodeBlock } from '..';
 
 const exampleCodeBlock = `  // React component
   class HelloMessage extends React.Component {

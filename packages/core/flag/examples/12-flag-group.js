@@ -7,7 +7,7 @@ import Info from '@atlaskit/icon/glyph/info';
 import Tick from '@atlaskit/icon/glyph/check-circle';
 import Warning from '@atlaskit/icon/glyph/warning';
 import { colors } from '@atlaskit/theme';
-import Flag, { FlagGroup } from '../src';
+import Flag, { FlagGroup } from '..';
 
 type State = {
   flags: Array<?flagData>,

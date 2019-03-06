@@ -2,11 +2,8 @@
 
 import React, { Component } from 'react';
 
-import Navigation, {
-  AkNavigationItem,
-  AkContainerNavigationNested,
-} from '../src';
-import type { Stack } from '../src/components/js/nested/types';
+import Navigation, { AkNavigationItem, AkContainerNavigationNested } from '..';
+import type { Stack } from '../components/js/nested/types';
 
 type State = {
   stack: Stack,

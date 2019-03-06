@@ -1,7 +1,7 @@
 // @flow
 
 import { Component } from 'react';
-import { withNavigationViewController } from '../../../../src';
+import { withNavigationViewController } from '../../../..';
 
 import getAnalyticsAttributes from './get-analytics-attributes';
 

@@ -1,7 +1,7 @@
 // @flow
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import React from 'react';
-import Lozenge from '../src';
+import Lozenge from '..';
 
 export default function Example() {
   return (

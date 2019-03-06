@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { InlineEditStateless, SingleLineTextInput } from '../src';
+import { InlineEditStateless, SingleLineTextInput } from '..';
 
 type State = {|
   value: string | number,

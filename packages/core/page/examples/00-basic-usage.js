@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import Page, { Grid, GridColumn } from '../src';
+import Page, { Grid, GridColumn } from '..';
 
 export default class BasicExample extends PureComponent<void, void> {
   render() {

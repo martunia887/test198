@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import AvatarGroup from '../src';
+import AvatarGroup from '..';
 import { ExampleGroup } from '../examples-util/helpers';
 import { RANDOM_USERS, getAdorableAvatar } from '../examples-util/data';
 

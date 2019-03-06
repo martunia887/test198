@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { AkProfilecardTrigger } from '../../src';
+import { AkProfilecardTrigger } from '../..';
 
 const positionsOrder = [
   'top left',

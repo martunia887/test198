@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Lorem from 'react-lorem-component';
 
-import { Spotlight, SpotlightManager, SpotlightTarget } from '../src';
+import { Spotlight, SpotlightManager, SpotlightTarget } from '..';
 import { HighlightGroup, Highlight } from './styled';
 
 type State = {

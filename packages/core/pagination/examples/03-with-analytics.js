@@ -1,7 +1,7 @@
 //@flow
 import React, { Component } from 'react';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
-import Pagination from '../src';
+import Pagination from '..';
 
 type State = {
   analyticEventContext: Object,

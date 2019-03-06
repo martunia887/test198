@@ -23,7 +23,7 @@ import Navigation, {
   AkCreateDrawer,
   AkContainerTitle,
   presetThemes,
-} from '../src';
+} from '..';
 
 const items = ['cat', 'dog', 'fish', 'lizard'];
 

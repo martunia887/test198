@@ -7,7 +7,7 @@ import {
   SpotlightManager,
   SpotlightTarget,
   SpotlightTransition,
-} from '../src';
+} from '..';
 import { Code, Highlight } from './styled';
 
 const options = [

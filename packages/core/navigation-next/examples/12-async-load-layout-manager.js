@@ -16,7 +16,7 @@ import {
   modeGenerator,
   ThemeProvider,
   SkeletonContainerView,
-} from '../src';
+} from '..';
 
 /**
  * Data

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Tag from '@atlaskit/tag';
-import TagGroup from '../src';
+import TagGroup from '..';
 
 const tagNames = [
   'liquorice',

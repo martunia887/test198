@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
-import Banner from '../src';
+import Banner from '..';
 
 const Icon = <ErrorIcon label="Error icon" secondaryColor="inherit" />;
 

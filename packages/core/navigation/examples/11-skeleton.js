@@ -6,7 +6,7 @@ import Toggle from '@atlaskit/toggle';
 import SingleSelect from '@atlaskit/single-select';
 import { colors } from '@atlaskit/theme';
 
-import { Skeleton, presetThemes, createGlobalTheme } from '../src';
+import { Skeleton, presetThemes, createGlobalTheme } from '..';
 
 type AppearanceOptions = 'global' | 'container' | 'settings' | 'custom';
 

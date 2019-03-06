@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Status } from '../src';
+import { Status } from '..';
 import { Block, ShrinkWrap } from '../examples-util/helpers';
 
 export default () => (

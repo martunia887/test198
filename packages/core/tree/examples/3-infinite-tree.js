@@ -14,8 +14,8 @@ import Tree, {
   type TreeData,
   type ItemId,
   type Path,
-} from '../src';
-import { range } from '../src/utils/handy';
+} from '..';
+import { range } from '../utils/handy';
 
 const Container = styled.div`
   display: flex;

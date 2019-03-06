@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import Textfield from '../src';
+import Textfield from '..';
 
 export default function() {
   return (

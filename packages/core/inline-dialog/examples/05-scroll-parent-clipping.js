@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Lorem from 'react-lorem-component';
 
-import InlineDialog from '../src';
+import InlineDialog from '..';
 
 type State = {
   dialogOpen: boolean,

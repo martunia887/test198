@@ -3,7 +3,7 @@
 import React, { Component, Fragment } from 'react';
 import Button from '@atlaskit/button';
 import Select from '@atlaskit/select';
-import { BreadcrumbsStateless, BreadcrumbsItem } from '../src';
+import { BreadcrumbsStateless, BreadcrumbsItem } from '..';
 
 const data = [
   <BreadcrumbsItem href="/item" key="Item" text="Item" />,

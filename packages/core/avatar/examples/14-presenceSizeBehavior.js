@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Presence } from '../src';
+import { Presence } from '..';
 import { Note } from '../examples-util/helpers';
 
 type State = {|

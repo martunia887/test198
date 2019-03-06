@@ -24,7 +24,7 @@ import Navigation, {
   presetThemes,
   SkeletonDefaultContainerHeader,
   SkeletonContainerItems,
-} from '../src';
+} from '..';
 
 const SkeletonItemsWrapper = styled.div`
   padding-right: ${gridSize() * 3}px;

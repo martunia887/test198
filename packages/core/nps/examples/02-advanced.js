@@ -6,7 +6,7 @@ import {
   FollowupPage,
   ThankyouPage,
   getDefaultMessages,
-} from '../src';
+} from '..';
 import { WithDataDisplay } from '../examples/helpers/helpers';
 
 export default function Advanced() {

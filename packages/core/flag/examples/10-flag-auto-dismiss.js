@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import { colors, gridSize, math } from '@atlaskit/theme';
 import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
-import { AutoDismissFlag, FlagGroup } from '../src';
+import { AutoDismissFlag, FlagGroup } from '..';
 
 const appearances = ['error', 'info', 'normal', 'success', 'warning'];
 const color = {

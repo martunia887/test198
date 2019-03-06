@@ -1,7 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
-import { StatelessSelect } from '../src';
-import type { ItemType } from '../src/types';
+import { StatelessSelect } from '..';
+import type { ItemType } from '../types';
 
 const selectItems = [
   {

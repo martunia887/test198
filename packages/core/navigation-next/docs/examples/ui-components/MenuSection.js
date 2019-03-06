@@ -6,9 +6,9 @@ import DashboardIcon from '@atlaskit/icon/glyph/dashboard';
 import FolderIcon from '@atlaskit/icon/glyph/folder';
 import IssuesIcon from '@atlaskit/icon/glyph/issues';
 
-import { Item, MenuSection, Section } from '../../../src';
+import { Item, MenuSection, Section } from '../../..';
 
-import { CONTENT_NAV_WIDTH } from '../../../src/common/constants';
+import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 const SectionExample = ({
   component: SectionComponent,

@@ -6,7 +6,7 @@ import { Label } from '@atlaskit/field-base';
 import FieldRange from '@atlaskit/field-range';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
 import Lorem from 'react-lorem-component';
-import { DateTimePicker } from '../src';
+import { DateTimePicker } from '..';
 
 type State = {
   datePickerValue: string,

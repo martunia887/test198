@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { CreatableSelect } from '../src';
+import { CreatableSelect } from '..';
 
 const defaultOptions = [
   { label: 'Adelaide', value: 'adelaide' },

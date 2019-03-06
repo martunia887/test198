@@ -6,7 +6,7 @@ import TextField from '@atlaskit/textfield';
 import Select from '@atlaskit/select';
 import Page from '@atlaskit/page';
 
-import PageHeader from '../src';
+import PageHeader from '..';
 
 const breadcrumbs = (
   <BreadcrumbsStateless onExpand={() => {}}>

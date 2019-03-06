@@ -31,7 +31,7 @@ import {
   StrideLogo,
   StrideIcon,
   StrideWordmark,
-} from '../src';
+} from '..';
 
 export default () => (
   <div>

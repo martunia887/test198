@@ -1,6 +1,6 @@
 // @flow
 import React, { PureComponent } from 'react';
-import FieldTextArea from '../src/FieldTextArea';
+import FieldTextArea from '../FieldTextArea';
 
 export default class ResizableExample extends PureComponent<void, void> {
   render() {

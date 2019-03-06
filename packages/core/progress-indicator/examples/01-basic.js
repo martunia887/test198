@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import styled from 'styled-components';
-import { ProgressDots } from '../src';
+import { ProgressDots } from '..';
 
 const Footer = styled.div`
   display: flex;

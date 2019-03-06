@@ -8,7 +8,7 @@ import Form, {
   ErrorMessage,
   HelperMessage,
   ValidMessage,
-} from '../src';
+} from '..';
 
 export default class extends Component<{}> {
   textValue = '';

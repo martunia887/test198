@@ -9,7 +9,7 @@ import Form, {
   ErrorMessage,
   ValidMessage,
 } from '@atlaskit/form';
-import Textfield from '../src';
+import Textfield from '..';
 
 function validate(value) {
   if (value !== 'open sesame') {

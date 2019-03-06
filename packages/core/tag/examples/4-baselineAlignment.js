@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Tag from '../src';
+import Tag from '..';
 
 const cupcakeipsum =
   'Croissant topping tiramisu gummi bears. Bonbon chocolate bar danish soufflé';

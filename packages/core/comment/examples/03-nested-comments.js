@@ -2,7 +2,7 @@
 
 import React, { type Node } from 'react';
 import Avatar from '@atlaskit/avatar';
-import Comment, { CommentAuthor } from '../src';
+import Comment, { CommentAuthor } from '..';
 import avatarImg from './utils/sample-avatar.png';
 
 type Props = {

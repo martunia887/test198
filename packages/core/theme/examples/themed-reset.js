@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Reset, ResetTheme } from '../src';
+import { Reset, ResetTheme } from '..';
 
 export default () => (
   <ResetTheme.Provider

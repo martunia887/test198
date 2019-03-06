@@ -6,7 +6,7 @@ import FolderIcon from '@atlaskit/icon/glyph/folder';
 import IssuesIcon from '@atlaskit/icon/glyph/issues';
 import { JiraWordmark } from '@atlaskit/logo';
 
-import { HeaderSection, Item, Wordmark, MenuSection } from '../../../src';
+import { HeaderSection, Item, Wordmark, MenuSection } from '../../..';
 
 const ProductNavigation = () => (
   <div data-webdriver-test-key="product-navigation">

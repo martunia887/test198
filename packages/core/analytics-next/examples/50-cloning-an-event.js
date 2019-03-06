@@ -5,7 +5,7 @@ import {
   AnalyticsListener,
   withAnalyticsEvents,
   type UIAnalyticsEvent,
-} from '../src';
+} from '..';
 
 const AtlaskitButton = withAnalyticsEvents({
   onClick: create => {

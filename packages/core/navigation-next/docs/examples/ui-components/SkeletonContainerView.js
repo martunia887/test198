@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { colors } from '@atlaskit/theme';
-import { SkeletonContainerView } from '../../../src';
+import { SkeletonContainerView } from '../../..';
 
 export default () => (
   <div

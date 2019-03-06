@@ -2,7 +2,7 @@
 
 import React, { Component, type ElementRef } from 'react';
 import Button from '@atlaskit/button';
-import Textfield from '../src';
+import Textfield from '..';
 
 type Props = {};
 type FormRef = {

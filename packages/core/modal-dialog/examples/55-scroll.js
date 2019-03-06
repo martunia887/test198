@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Lorem from 'react-lorem-component';
 import Button from '@atlaskit/button';
 import FieldRadioGroup from '@atlaskit/field-radio-group';
-import Modal, { ModalTransition } from '../src';
+import Modal, { ModalTransition } from '..';
 
 const TallContainer = styled.div`
   height: 2000px;

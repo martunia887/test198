@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { PopupSelect } from '@atlaskit/select';
-import ModalDialog from '../src';
+import ModalDialog from '..';
 
 const options = [
   { label: 'Adelaide', value: 'adelaide' },

@@ -7,7 +7,7 @@ import Button from '@atlaskit/button';
 import { LayoutManager, NavigationProvider } from '@atlaskit/navigation-next';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 
-import GlobalNavigation from '../src';
+import GlobalNavigation from '..';
 
 const fabricNotificationLogUrl = '/gateway/api/notification-log/';
 const cloudId = 'DUMMY-158c8204-ff3b-47c2-adbb-a0906ccc722b';

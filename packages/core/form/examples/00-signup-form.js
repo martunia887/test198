@@ -10,7 +10,7 @@ import Form, {
   HelperMessage,
   ErrorMessage,
   ValidMessage,
-} from '../src';
+} from '..';
 
 export default () => (
   <div

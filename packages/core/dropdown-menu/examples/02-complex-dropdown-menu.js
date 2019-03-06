@@ -2,10 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import DropdownMenu, {
-  DropdownItemGroupRadio,
-  DropdownItemRadio,
-} from '../src';
+import DropdownMenu, { DropdownItemGroupRadio, DropdownItemRadio } from '..';
 
 const Container = styled.div`
   padding: 200px 40px;

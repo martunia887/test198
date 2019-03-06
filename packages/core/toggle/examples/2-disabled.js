@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Toggle from '../src';
+import Toggle from '..';
 
 export default () => (
   <div>

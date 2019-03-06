@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Select from '../src';
+import Select from '..';
 
 const getOptionValue = option => {
   if (option.filterValues && option.filterValues.length) {

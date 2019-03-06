@@ -13,7 +13,7 @@ import {
   UIControllerSubscriber,
   UIController,
   withNavigationUIController,
-} from '../src';
+} from '..';
 
 const GlobalNavigation = () => (
   <GlobalNav primaryItems={[]} secondaryItems={[]} />

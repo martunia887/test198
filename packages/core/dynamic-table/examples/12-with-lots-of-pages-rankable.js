@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { ToggleStateless as Toggle } from '@atlaskit/toggle';
-import DynamicTable from '../src';
+import DynamicTable from '..';
 import { caption, createHead, rows } from './content/sample-data';
 
 const Wrapper = styled.div`

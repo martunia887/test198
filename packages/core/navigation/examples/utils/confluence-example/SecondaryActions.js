@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import Tooltip from '@atlaskit/tooltip';
 import { JiraIcon } from '@atlaskit/logo';
 
-import { AkNavigationItem, AkGlobalItem } from '../../../src';
+import { AkNavigationItem, AkGlobalItem } from '../../..';
 import emmaAvatar from '../emma.png';
 
 type TriggerFunc = (isOpen: boolean) => Node;

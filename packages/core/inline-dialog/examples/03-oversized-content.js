@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { colors } from '@atlaskit/theme';
-import InlineDialog from '../src';
+import InlineDialog from '..';
 
 const centeredContainerStyles = {
   display: 'flex',

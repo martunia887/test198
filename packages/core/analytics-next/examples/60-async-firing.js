@@ -6,7 +6,7 @@ import {
   AnalyticsListener,
   withAnalyticsEvents,
   type UIAnalyticsEvent,
-} from '../src';
+} from '..';
 
 const Button = withAnalyticsEvents({ onClick: { action: 'click ' } })(
   ({ createAnalyticsEvent, ...props }) => <button {...props} />,

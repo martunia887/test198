@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import SizeDetector from '../src';
+import SizeDetector from '..';
 
 const startSize = 100;
 const endSize = startSize * 2;

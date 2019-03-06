@@ -23,7 +23,7 @@ import Navigation, {
   presetThemes,
   SkeletonDefaultContainerHeader,
   SkeletonContainerItems,
-} from '../src';
+} from '..';
 
 const BackIcon = (
   <Tooltip position="right" content="Back">

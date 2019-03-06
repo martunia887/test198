@@ -3,7 +3,7 @@
 import { Component } from 'react';
 import AddIcon from '@atlaskit/icon/glyph/add';
 import ShortcutIcon from '@atlaskit/icon/glyph/shortcut';
-import { viewReducerUtils, withNavigationViewController } from '../../src';
+import { viewReducerUtils, withNavigationViewController } from '../..';
 
 const { appendChildren, findId } = viewReducerUtils;
 

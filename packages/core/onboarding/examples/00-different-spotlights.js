@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { typography } from '@atlaskit/theme';
 import Button from '@atlaskit/button';
 import UndoIcon from '@atlaskit/icon/glyph/editor/undo';
-import { SpotlightCard } from '../src';
+import { SpotlightCard } from '..';
 
 import welcomeImage from './assets/this-is-new-jira.png';
 

@@ -13,7 +13,7 @@ import { ToggleStateless } from '@atlaskit/toggle';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
 
-import GlobalNavigation from '../src';
+import GlobalNavigation from '..';
 
 const appSwitcherData = {
   recentContainers: [

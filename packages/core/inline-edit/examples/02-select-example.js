@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import MultiSelect from '@atlaskit/multi-select';
 import Group from '@atlaskit/tag-group';
 import Tag from '@atlaskit/tag';
-import InlineEditor from '../src';
+import InlineEditor from '..';
 
 const MultiSelectItems: Array<any> = [
   { content: 'Apple', value: 'Apple' },

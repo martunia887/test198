@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import Item, { ItemGroup } from '../src';
+import Item, { ItemGroup } from '..';
 import { GroupsWrapper } from './styled/StoryHelpers';
 
 // eslint-disable-next-line react/prop-types

@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { FieldTextStateless } from '../src';
+import { FieldTextStateless } from '..';
 
 type State = {
   value: string | number,

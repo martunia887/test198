@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import Modal, { ModalTransition } from '../src';
+import Modal, { ModalTransition } from '..';
 
 const noop = () => {};
 

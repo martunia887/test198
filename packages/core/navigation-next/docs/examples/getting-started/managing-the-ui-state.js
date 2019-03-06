@@ -19,7 +19,7 @@ import {
   Separator,
   UIControllerSubscriber,
   Wordmark,
-} from '../../../src';
+} from '../../..';
 
 const MyGlobalNavigation = () => (
   <GlobalNavigation

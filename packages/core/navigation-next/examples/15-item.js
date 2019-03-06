@@ -27,8 +27,8 @@ import {
   SkeletonContainerHeader,
   SkeletonItem,
   ThemeProvider,
-} from '../src';
-import { CONTENT_NAV_WIDTH } from '../src/common/constants';
+} from '..';
+import { CONTENT_NAV_WIDTH } from '../common/constants';
 
 const themeModes = { light, dark, settings };
 

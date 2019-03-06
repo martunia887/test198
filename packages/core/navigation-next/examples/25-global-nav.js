@@ -27,7 +27,7 @@ import {
   GlobalNavigationSkeleton,
   ThemeProvider,
   modeGenerator,
-} from '../src';
+} from '..';
 
 type GlobalItemWithDropdownProps = {
   items: Node,

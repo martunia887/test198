@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Tag from '../src';
+import Tag from '..';
 
 export default () => (
   <div>

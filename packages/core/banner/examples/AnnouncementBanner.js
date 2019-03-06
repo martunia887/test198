@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Fragment } from 'react';
-import Banner from '../src';
+import Banner from '..';
 
 export default () => (
   <Fragment>

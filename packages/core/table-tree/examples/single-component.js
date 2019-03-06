@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 
-import TableTree from '../src';
+import TableTree from '..';
 import staticData from './data-structured-nodes.json';
 
 /* eslint react/no-unused-prop-types: 0 */

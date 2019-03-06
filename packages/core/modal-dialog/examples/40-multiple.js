@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import Lorem from 'react-lorem-component';
-import Modal, { ModalTransition } from '../src';
+import Modal, { ModalTransition } from '..';
 
 const sizes = ['large', 'medium', 'small'];
 type State = { isOpen: Array<any> };

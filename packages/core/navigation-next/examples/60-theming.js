@@ -15,9 +15,9 @@ import {
   Separator,
   modeGenerator,
   ThemeProvider,
-} from '../src';
-import { CONTENT_NAV_WIDTH } from '../src/common/constants';
-import type { Mode } from '../src/theme/types';
+} from '..';
+import { CONTENT_NAV_WIDTH } from '../common/constants';
+import type { Mode } from '../theme/types';
 
 /**
  * Helper components

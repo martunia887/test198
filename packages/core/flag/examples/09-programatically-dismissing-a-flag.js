@@ -4,7 +4,7 @@ import React, { Component, type Node } from 'react';
 import Button from '@atlaskit/button';
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import { gridSize } from '@atlaskit/theme';
-import Flag, { FlagGroup } from '../src';
+import Flag, { FlagGroup } from '..';
 
 type State = {
   flags: Array<Node>,

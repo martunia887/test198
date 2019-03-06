@@ -1,7 +1,7 @@
 // @flow
 import React, { Fragment } from 'react';
 import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
-import { PopupSelect } from '../src';
+import { PopupSelect } from '..';
 
 const options = [
   { label: 'Adelaide', value: 'adelaide' },
