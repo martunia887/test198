@@ -6,11 +6,11 @@ import { forwardRef } from 'react';
 import { jsx } from '@emotion/core';
 import { borderRadius, colors, gridSize } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
-import CloseIcon from '@atlaskit/icon/glyph/editor/close';
+
+import { ClearButton } from './common';
 
 export const FilterButton = forwardRef(
   ({ children, field, isInvalid, onRemove, value, ...rest }, ref) => {
-    const iconColor = rest.isSelected && !isInvalid ? 'white' : colors.N400;
     return onRemove ? (
       <ButtonWrapper>
         <Button
@@ -26,12 +26,8 @@ export const FilterButton = forwardRef(
           <ClearButton
             isSelected={rest.isSelected && !isInvalid}
             onClick={onRemove}
-          >
-            <CloseIcon
-              primaryColor={iconColor}
-              label={`Clear ${field.label} filter`}
-            />
-          </ClearButton>
+            label={`Clear ${field.label} filter`}
+          />
         </Tooltip>
       </ButtonWrapper>
     ) : (
@@ -139,30 +135,4 @@ Button.defaultProps = {
 };
 const ButtonWrapper = props => (
   <div css={{ position: 'relative' }} {...props} />
-);
-
-const ClearButton = ({ isInvalid, isSelected, ...props }: *) => (
-  <button
-    css={{
-      background: 0,
-      border: 0,
-      borderRadius: borderRadius() / 2,
-      cursor: 'pointer',
-      lineHeight: 1,
-      opacity: 0.66,
-      outline: 0,
-      padding: 0,
-      position: 'absolute',
-      right: 8,
-      top: '50%',
-      transform: 'translateY(-50%)',
-      transition: 'background-color 200ms, opacity 200ms',
-
-      ':hover, :focus': {
-        backgroundColor: isSelected ? colors.N400A : colors.N30A,
-        opacity: 1,
-      },
-    }}
-    {...props}
-  />
 );

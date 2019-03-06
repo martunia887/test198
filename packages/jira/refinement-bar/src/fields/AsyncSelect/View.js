@@ -25,10 +25,10 @@ export default class AsyncSelectView extends PureComponent<*, State> {
       loadOptions,
       ...props
     } = this.props;
-    // NOTE: once at least one option is selected show the value by default
-    // it's a bit hacky, but works well. there may be a better solution
-    const hasValue = props.value && props.value.length;
-    const visibleOptions = hasValue ? props.value : field.defaultOptions;
+
+    const visibleOptions = props.value
+      .filter(o => !field.defaultOptions.includes(o))
+      .concat([{ label: 'Recommended', options: field.defaultOptions }]);
 
     return (
       <DialogInner minWidth={220}>
@@ -37,13 +37,15 @@ export default class AsyncSelectView extends PureComponent<*, State> {
           defaultOptions={visibleOptions}
           loadOptions={field.loadOptions}
           {...props}
-          onInputChange={(inputValue, { action }) => {
-            if (['set-value', 'menu-close'].includes(action)) {
-              return;
-            }
-            this.setState({ inputValue });
-          }}
-          inputValue={this.state.inputValue}
+
+          // alternative behaviour; don't throw away results on select...
+          // onInputChange={(newValue, { action }) => {
+          //   const inputValue =
+          //     action === 'set-value' ? this.state.inputValue : newValue;
+          //   this.setState({ inputValue });
+          //
+          //   return inputValue;
+          // }}
         />
       </DialogInner>
     );

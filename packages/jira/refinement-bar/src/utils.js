@@ -1,8 +1,11 @@
 // @flow
 
+// Type Helpers
+// ------------------------------
+
 export const isObject = (o: *) =>
   typeof o === 'object' && o !== null && !Array.isArray(o);
-export const isPromise = (p: *) => p.then && typeof p.then === 'function'; // maybe?
+export const isPromise = (p: *) => p.then && typeof p.then === 'function';
 export const isEmptyString = (str: *) =>
   typeof str === 'string' && str.length === 0;
 
@@ -12,6 +15,7 @@ type Z = Array<any>;
 // Array Helpers
 // ------------------------------
 
+export const uniqueArr = (arr: Z): Z => [...new Set(arr)];
 export const diffArr = (a: Z, b: Z): Z => a.filter(i => b.indexOf(i) < 0);
 
 type cloneArrOptions = { add?: any, remove?: any, sort?: boolean };

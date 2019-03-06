@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/core';
-import { colors } from '@atlaskit/theme';
+import { HiddenSubmitButton } from './common';
 
 const Form = props => (
   <form
@@ -38,22 +38,6 @@ const Label = ({ htmlFor, ...props }: *) => (
   />
 );
 
-const HiddenSubmitButton = props => (
-  <button
-    css={{
-      background: 0,
-      backgroundClip: '-1px -1px -1px -1px',
-      border: 0,
-      height: 1,
-      opacity: 0,
-      padding: 0,
-      position: 'absolute',
-      width: 1,
-    }}
-    {...props}
-  />
-);
-
 export const Group = ({ children, ...props }: *) => (
   <Form {...props}>
     {children}
@@ -73,14 +57,3 @@ export const Radio = ({ children, ...props }: *) => {
     </Label>
   );
 };
-
-export const Note = (props: *) => (
-  <div
-    css={{
-      color: colors.N200,
-      fontSize: '0.75rem',
-      marginTop: '0.5em',
-    }}
-    {...props}
-  />
-);

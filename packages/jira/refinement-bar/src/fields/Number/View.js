@@ -3,7 +3,8 @@
 import React, { Fragment } from 'react';
 import Input from '@atlaskit/textfield';
 
-import { Group, Note, Radio } from '../../components/InputGroup';
+import { Note } from '../../components/common';
+import { Group, Radio } from '../../components/InputGroup';
 import { DialogInner } from '../../components/Popup';
 import { isObject, isEmptyString, objectMap } from '../../utils';
 

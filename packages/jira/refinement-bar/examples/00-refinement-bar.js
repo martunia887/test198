@@ -102,43 +102,113 @@ const CAPITALS = [
   { label: 'Perth', value: 'perth' },
   { label: 'Sydney', value: 'sydney' },
 ];
-const USERS = [
-  {
-    value: 'dan-abromov',
-    label: 'Dan Abromov',
-    avatar: `http://i.pravatar.cc/48?u=dan-abromov`,
-  },
-  {
-    value: 'kyle-mathews',
-    label: 'Kyle Mathews',
-    avatar: `http://i.pravatar.cc/48?u=kyle-mathews`,
-  },
-  {
-    value: 'brian-vaughn',
-    label: 'Brian Vaughn',
-    avatar: `http://i.pravatar.cc/48?u=brian-vaughn`,
-  },
-  {
-    value: 'sunil-pai',
-    label: 'Sunil Pai',
-    avatar: `http://i.pravatar.cc/48?u=sunil-pai`,
-  },
-  {
-    value: 'michael-jackson',
-    label: 'Michael Jackson',
-    avatar: `http://i.pravatar.cc/48?u=michael-jackson`,
-  },
-  {
-    value: 'ryan-florence',
-    label: 'Ryan Florence',
-    avatar: `http://i.pravatar.cc/48?u=ryan-florence`,
-  },
-];
-const filterAssignees = inputValue => {
-  return USERS.filter(i =>
-    i.label.toLowerCase().includes(inputValue.toLowerCase()),
-  );
-};
+// const USERS = [
+//   {
+//     value: 'dan-abromov',
+//     label: 'Dan Abromov',
+//     avatar: `http://i.pravatar.cc/48?u=dan-abromov`,
+//   },
+//   {
+//     value: 'kyle-mathews',
+//     label: 'Kyle Mathews',
+//     avatar: `http://i.pravatar.cc/48?u=kyle-mathews`,
+//   },
+//   {
+//     value: 'brian-vaughn',
+//     label: 'Brian Vaughn',
+//     avatar: `http://i.pravatar.cc/48?u=brian-vaughn`,
+//   },
+//   {
+//     value: 'sunil-pai',
+//     label: 'Sunil Pai',
+//     avatar: `http://i.pravatar.cc/48?u=sunil-pai`,
+//   },
+//   {
+//     value: 'michael-jackson',
+//     label: 'Michael Jackson',
+//     avatar: `http://i.pravatar.cc/48?u=michael-jackson`,
+//   },
+//   {
+//     value: 'ryan-florence',
+//     label: 'Ryan Florence',
+//     avatar: `http://i.pravatar.cc/48?u=ryan-florence`,
+//   },
+//   {
+//     value: 'kent-c-dodds',
+//     label: 'Kent C. Dodds',
+//     avatar: `http://i.pravatar.cc/48?u=kent-c-dodds`,
+//   },
+//   {
+//     value: 'james-long',
+//     label: 'James Long',
+//     avatar: `http://i.pravatar.cc/48?u=james-long`,
+//   },
+//   {
+//     value: 'jason-miller',
+//     label: 'Jason Miller',
+//     avatar: `http://i.pravatar.cc/48?u=jason-miller`,
+//   },
+//   {
+//     value: 'andrew-clark',
+//     label: 'Andrew Clark',
+//     avatar: `http://i.pravatar.cc/48?u=andrew-clark`,
+//   },
+//   {
+//     value: 'sophie-alpert',
+//     label: 'Sophie Alpert',
+//     avatar: `http://i.pravatar.cc/48?u=sophie-alpert`,
+//   },
+//   {
+//     value: 'brian-vaughn',
+//     label: 'Brian Vaughn',
+//     avatar: `http://i.pravatar.cc/48?u=brian-vaughn`,
+//   },
+//   {
+//     value: 'ken-wheeler',
+//     label: 'Ken Wheeler',
+//     avatar: `http://i.pravatar.cc/48?u=ken-wheeler`,
+//   },
+//   {
+//     value: 'ken-wheeler',
+//     label: 'Ken Wheeler',
+//     avatar: `http://i.pravatar.cc/48?u=ken-wheeler`,
+//   },
+//   {
+//     value: 'lee-byron',
+//     label: 'Lee Byron',
+//     avatar: `http://i.pravatar.cc/48?u=lee-byron`,
+//   },
+//   {
+//     value: 'sebastian-markbage',
+//     label: 'Sebastian Markbåge',
+//     avatar: `http://i.pravatar.cc/48?u=sebastian-markbage`,
+//   },
+//   {
+//     value: 'paul-oshannessy',
+//     label: 'Paul O’Shannessy',
+//     avatar: `http://i.pravatar.cc/48?u=paul-oshannessy`,
+//   },
+//   {
+//     value: 'pete-hunt',
+//     label: 'Pete Hunt',
+//     avatar: `http://i.pravatar.cc/48?u=pete-hunt`,
+//   },
+//   {
+//     value: 'cheng-lou',
+//     label: 'Cheng Lou',
+//     avatar: `http://i.pravatar.cc/48?u=cheng-lou`,
+//   },
+//   {
+//     value: 'christopher-chedeau',
+//     label: 'Christopher Chedeau',
+//     avatar: `http://i.pravatar.cc/48?u=christopher-chedeau`,
+//   },
+// ];
+// const filterAssignees = inputValue => {
+//   return USERS.filter(i =>
+//     i.label.toLowerCase().includes(inputValue.toLowerCase()),
+//   );
+// };
 
 const FIELD_CONFIG = {
   approvals: {
@@ -212,12 +282,28 @@ const FIELD_CONFIG = {
         avatar: null,
       },
     ],
-    loadOptions: inputValue =>
-      new Promise(resolve => {
-        setTimeout(() => {
-          resolve(filterAssignees(inputValue));
-        }, 1000);
-      }),
+    // this will likely be rate limited with the amount of traffic the website gets.
+    // remove before pushing to production
+    loadOptions: async inputValue => {
+      const response = await fetch(
+        'https://api.github.com/repos/facebook/react/contributors',
+      ).then(r => r.json());
+
+      return response
+        .filter(u => u.login.includes(inputValue))
+        .sort((a, b) => b.contributions - a.contributions)
+        .map(u => ({
+          avatar: u.avatar_url,
+          label: u.login,
+          value: u.login,
+        }));
+    },
+    // loadOptions: inputValue =>
+    //   new Promise(resolve => {
+    //     setTimeout(() => {
+    //       resolve(filterAssignees(inputValue));
+    //     }, 1000);
+    //   }),
   },
 };
 
