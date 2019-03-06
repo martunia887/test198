@@ -113,7 +113,7 @@ module.exports = function createWebpackConfig(
         },
         {
           test: /\.js$/,
-          exclude: /node_modules/,
+          exclude: /node_modules|packages\/media\/media-editor\/src\/engine\/core\/binaries\/mediaEditor.js/,
           use: [
             {
               loader: 'thread-loader',
