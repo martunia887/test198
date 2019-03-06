@@ -134,7 +134,7 @@ module.exports = function createWebpackConfig(
         },
         {
           test: /\.tsx?$/,
-          exclude: [/node_modules/, /\.d.tsx?$/],
+          exclude: /node_modules|\.d.tsx?$/,
           use: [
             {
               loader: 'cache-loader',
