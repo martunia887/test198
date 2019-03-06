@@ -32,7 +32,7 @@ export default md`
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/FieldRange')}
+      props={require('!!extract-react-types-loader!../FieldRange')}
       heading="FieldRange Props"
     />
   )}

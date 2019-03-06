@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { MentionProvider } from '../src/api/MentionResource';
-import { PresenceProvider } from '../src/api/PresenceResource';
-import MentionPicker, { Position } from '../src/components/MentionPicker';
-import { MentionDescription, OnMentionEvent } from '../src/types';
-import debug from '../src/util/logger';
+import { MentionProvider } from '../api/MentionResource';
+import { PresenceProvider } from '../api/PresenceResource';
+import MentionPicker, { Position } from '../components/MentionPicker';
+import { MentionDescription, OnMentionEvent } from '../types';
+import debug from '../util/logger';
 import SearchTextInput from './demo-search-text-input';
 
 const onOpen = () => debug('picker opened');

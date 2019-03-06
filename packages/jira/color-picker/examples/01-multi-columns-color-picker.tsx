@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ColorPicker from '../src';
+import ColorPicker from '../';
 import { simplePalette } from '../mock-data';
 import { colors } from '@atlaskit/theme';
 

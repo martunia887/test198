@@ -6,7 +6,7 @@ import {
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
 import { imageItem } from '../example-helpers';
-import { MediaViewer } from '..';
+import { MediaViewer } from '../';
 import { Identifier } from '@atlaskit/media-core';
 
 const context = createStorybookContext();

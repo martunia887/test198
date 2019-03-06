@@ -46,7 +46,7 @@ ${
     // We decided to render directly the props from Item to help the consumer.
     <Props
       heading="DropdownItem Props"
-      props={require('!!extract-react-types-loader!../../item/src/components/Item')}
+      props={require('!!extract-react-types-loader!../../item/components/Item')}
     />
   )
 }
@@ -54,21 +54,21 @@ ${
 ${(
   <Props
     heading="DropdownItemGroup Props"
-    props={require('!!extract-react-types-loader!../src/components/group/DropdownItemGroup')}
+    props={require('!!extract-react-types-loader!../components/group/DropdownItemGroup')}
   />
 )}
 
 ${(
   <Props
     heading="DropdownMenu Props"
-    props={require('!!extract-react-types-loader!../src/components/DropdownMenu')}
+    props={require('!!extract-react-types-loader!../components/DropdownMenu')}
   />
 )}
 
 ${(
   <Props
     heading="DropdownMenuStateless Props"
-    props={require('!!extract-react-types-loader!../src/components/DropdownMenuStateless')}
+    props={require('!!extract-react-types-loader!../components/DropdownMenuStateless')}
   />
 )}
 

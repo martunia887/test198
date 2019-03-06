@@ -39,9 +39,9 @@ const App = ({ isOpen, onClose }) => (
 We have created a codemod whichs aims to reduce the amount of busy work to upgrade
 to this new pattern. Here is how to get up and running:
 
-1. Clone the [Atlaskit Codemod repository](https://bitbucket.org/atlassian/atlaskit-codemods/src/master/).
-2. Follow the setup instructions on the [README](https://bitbucket.org/atlassian/atlaskit-codemods/src/master/README.md).
-3. The codemod created for this upgrade is the [wrap-conditional-render](https://bitbucket.org/atlassian/atlaskit-codemods/src/master/src/wrap-conditional-render/README.md) codemod.
+1. Clone the [Atlaskit Codemod repository](https://bitbucket.org/atlassian/atlaskit-codemods/master/).
+2. Follow the setup instructions on the [README](https://bitbucket.org/atlassian/atlaskit-codemods/master/README.md).
+3. The codemod created for this upgrade is the [wrap-conditional-render](https://bitbucket.org/atlassian/atlaskit-codemods/master/wrap-conditional-render/README.md) codemod.
 The README in that directory contains all the information about setting up and running the codemod.
 
 `;

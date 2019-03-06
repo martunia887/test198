@@ -35,7 +35,7 @@ ConnectedItem is an Item that will render a [GoToItem](#gotoitem) if goTo prop i
 ${(
       <Props
         heading="ConnectedItem props"
-        props={require('!!extract-react-types-loader!../src/components/connected/ConnectedItem')}
+        props={require('!!extract-react-types-loader!../components/connected/ConnectedItem')}
       />
     )}
 
@@ -76,7 +76,7 @@ ${(
 ${(
       <Props
         heading="GlobalItem props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/GlobalItem')}
+        props={require('!!extract-react-types-loader!../components/presentational/GlobalItem')}
       />
     )}
 
@@ -91,7 +91,7 @@ The GlobalNav component is a primitive layout component which renders GlobalItem
 ${(
       <Props
         heading="GlobalNav props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/GlobalNav')}
+        props={require('!!extract-react-types-loader!../components/presentational/GlobalNav')}
       />
     )}
 
@@ -115,7 +115,7 @@ ${(
 ${(
       <Props
         heading="GlobalNavigationSkeleton props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/GlobalNavigationSkeleton')}
+        props={require('!!extract-react-types-loader!../components/presentational/GlobalNavigationSkeleton')}
       />
     )}
 
@@ -155,7 +155,7 @@ ${(
 ${(
       <Props
         heading="Group props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/Group')}
+        props={require('!!extract-react-types-loader!../components/presentational/Group')}
       />
     )}
 
@@ -168,7 +168,7 @@ The heading for a group of items.
 ${(
       <Props
         heading="GroupHeading props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/GroupHeading')}
+        props={require('!!extract-react-types-loader!../components/presentational/GroupHeading')}
       />
     )}
 
@@ -190,7 +190,7 @@ ${(
 ${(
       <Props
         heading="HeaderSection props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/HeaderSection')}
+        props={require('!!extract-react-types-loader!../components/presentational/HeaderSection')}
       />
     )}
 
@@ -210,7 +210,7 @@ ${(
 ${(
       <Props
         heading="Item props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/Item')}
+        props={require('!!extract-react-types-loader!../components/presentational/Item')}
       />
     )}
 
@@ -223,7 +223,7 @@ The ItemAvatar is a useful wrapper around Atlaskit's Avatar component, which wil
 ${(
       <Props
         heading="ItemAvatar props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/ItemAvatar')}
+        props={require('!!extract-react-types-loader!../components/presentational/ItemAvatar')}
       />
     )}
 
@@ -236,7 +236,7 @@ The LayoutManager is the entrypoint to navigation. It is in charge of laying out
 ${(
       <Props
         heading="LayoutManager props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/LayoutManager')}
+        props={require('!!extract-react-types-loader!../components/presentational/LayoutManager')}
       />
     )}
 
@@ -260,7 +260,7 @@ ${(
 ${(
       <Props
         heading="MenuSection props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/MenuSection')}
+        props={require('!!extract-react-types-loader!../components/presentational/MenuSection')}
       />
     )}
 
@@ -287,7 +287,7 @@ ${(
 ${(
       <Props
         heading="Section props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/Section')}
+        props={require('!!extract-react-types-loader!../components/presentational/Section')}
       />
     )}
 
@@ -309,7 +309,7 @@ ${(
 ${(
       <Props
         heading="SortableContext props"
-        props={require('!!extract-react-types-loader!../src/components/connected/SortableContext')}
+        props={require('!!extract-react-types-loader!../components/connected/SortableContext')}
       />
     )}
 
@@ -323,7 +323,7 @@ Takes the same props as [Item](#item) as well as some additional props documente
 ${(
       <Props
         heading="SortableItem props"
-        props={require('!!extract-react-types-loader!../src/components/connected/SortableItem')}
+        props={require('!!extract-react-types-loader!../components/connected/SortableItem')}
       />
     )}
 
@@ -337,7 +337,7 @@ Takes the same props as [Group](#group) as well as some additional props documen
 ${(
       <Props
         heading="SortableGroup props"
-        props={require('!!extract-react-types-loader!../src/components/connected/SortableGroup')}
+        props={require('!!extract-react-types-loader!../components/connected/SortableGroup')}
       />
     )}
 
@@ -350,7 +350,7 @@ The SectionHeading is meant to be used at the top of a nested menu section. Ther
 ${(
       <Props
         heading="SectionHeading props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/SectionHeading')}
+        props={require('!!extract-react-types-loader!../components/presentational/SectionHeading')}
       />
     )}
 
@@ -380,7 +380,7 @@ ${(
 ${(
       <Props
         heading="SkeletonContainerView props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/SkeletonContainerView')}
+        props={require('!!extract-react-types-loader!../components/presentational/SkeletonContainerView')}
       />
     )}
 
@@ -404,7 +404,7 @@ ${(
 ${(
       <Props
         heading="Switcher props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/Switcher')}
+        props={require('!!extract-react-types-loader!../components/presentational/Switcher')}
         overrides={{
           // NOTE remove horrible (aesthetically) default value from docs
           // it's not really relevant to the consumer.
@@ -441,7 +441,7 @@ Renders the provided icon or logo wordmark component with relevant padding.
 ${(
       <Props
         heading="Wordmark props"
-        props={require('!!extract-react-types-loader!../src/components/presentational/Wordmark')}
+        props={require('!!extract-react-types-loader!../components/presentational/Wordmark')}
       />
     )}
 

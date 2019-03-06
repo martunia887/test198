@@ -6,10 +6,10 @@ import {
   defaultCollectionName,
   mediaPickerAuthProvider,
 } from '@atlaskit/media-test-helpers';
-import { ContextFactory } from '../src';
+import { ContextFactory } from '../';
 import { FilesWrapper, FileWrapper } from '../example-helpers/styled';
 import { Observable } from 'rxjs/Observable';
-import { FileState } from '../src/fileState';
+import { FileState } from '../fileState';
 
 export interface ComponentProps {}
 export interface ComponentState {

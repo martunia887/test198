@@ -39,7 +39,7 @@ export default md`
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/Range')}
+      props={require('!!extract-react-types-loader!../Range')}
       heading={''}
     />
   )}

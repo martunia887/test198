@@ -115,6 +115,6 @@ For further documentation regarding props, please refer to the react-select [doc
 ${(
   //   <Props
   //     heading="Select Props"
-  //     props={require('!!extract-react-types-loader!../src/createSelect')}
+  //     props={require('!!extract-react-types-loader!../createSelect')}
   //   />
  )}*/

@@ -3,7 +3,7 @@ import { md, Example, Props, code } from '@atlaskit/docs';
 import TaskDecisionExample from '../examples/00-decision-item';
 const TaskDecisionSource = require('!!raw-loader!../examples/00-decision-item');
 
-const TaskDecisionProps = require('!!extract-react-types-loader!../src/components/DecisionItem');
+const TaskDecisionProps = require('!!extract-react-types-loader!../components/DecisionItem');
 
 export default md`
   This component provides components for rendering tasks and decisions.

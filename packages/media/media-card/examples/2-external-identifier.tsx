@@ -6,7 +6,7 @@ import {
   imageFileId,
 } from '@atlaskit/media-test-helpers';
 import { ExternalImageIdentifier } from '@atlaskit/media-core';
-import { Card, CardView } from '../src';
+import { Card, CardView } from '../';
 import { ExternalIdentifierWrapper } from '../example-helpers/styled';
 
 const context = createStorybookContext();

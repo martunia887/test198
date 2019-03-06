@@ -13,7 +13,7 @@ import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { FileIdentifier } from '@atlaskit/media-core';
-import { Card } from '../src';
+import { Card } from '../';
 import { createApiCards, actions } from '../example-helpers';
 
 const context = createStorybookContext();

@@ -71,7 +71,7 @@ export default md`
       actions={[
         {
           href:
-            'https://bitbucket.org/atlassian/atlaskit-mk-2/src/master/packages/elements/emoji/src/components/common/Emoji.tsx',
+            'https://bitbucket.org/atlassian/atlaskit-mk-2/master/packages/elements/emoji/components/common/Emoji.tsx',
           text: 'Emoji Props',
         },
       ]}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { onSelection, randomMentions } from '../example-helpers';
-import MentionList from '../src/components/MentionList';
-import { MentionDescription } from '../src/types';
+import MentionList from '../components/MentionList';
+import { MentionDescription } from '../types';
 
 export interface State {
   mentions: MentionDescription[];

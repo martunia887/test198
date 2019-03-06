@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@atlaskit/button';
 import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
 import Drawer, { DrawerItemTheme } from '@atlaskit/drawer';
-import { GlobalQuickSearch } from '../src';
+import { GlobalQuickSearch } from '../';
 import LocaleIntlProvider from '../example-helpers/LocaleIntlProvider';
 
 export default class extends React.Component {

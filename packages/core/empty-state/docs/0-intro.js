@@ -24,7 +24,7 @@ export default md`
   ${(
     <Props
       heading="EmptyState Props"
-      props={require('!!extract-react-types-loader!../src/EmptyState')}
+      props={require('!!extract-react-types-loader!../EmptyState')}
     />
   )}
 `;

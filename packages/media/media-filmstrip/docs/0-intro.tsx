@@ -49,7 +49,5 @@ ${(
   />
 )}
 
-${(
-  <Props props={require('!!extract-react-types-loader!../src/filmstripView')} />
-)}
+${<Props props={require('!!extract-react-types-loader!../filmstripView')} />}
 `;

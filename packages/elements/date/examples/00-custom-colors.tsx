@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Date, Color } from '../src';
+import { Date, Color } from '../';
 
 const DateInParagraph = ({ color }: { color?: Color }) => (
   <p>

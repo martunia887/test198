@@ -5,9 +5,9 @@ import {
   createComponentWithAnalytics,
   IncorrectEventType,
 } from '../examples/helpers';
-import { LOG_LEVEL } from '../src';
-import FabricAnalyticsListeners from '../src/FabricAnalyticsListeners';
-import { FabricChannel } from '../src/types';
+import { LOG_LEVEL } from '../';
+import FabricAnalyticsListeners from '../FabricAnalyticsListeners';
+import { FabricChannel } from '../types';
 
 const DummyElementsComponentWithAnalytics = createComponentWithAnalytics(
   FabricChannel.elements,

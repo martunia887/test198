@@ -20,7 +20,7 @@ export default md`
   ${(
     <Props
       heading="WidthDetector Props"
-      props={require('!!extract-react-types-loader!../src/WidthDetector')}
+      props={require('!!extract-react-types-loader!../WidthDetector')}
     />
   )}
 `;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { default as Renderer } from '../src/ui/Renderer';
+import { default as Renderer } from '../ui/Renderer';
 import document from './helper/smart-card.adf.json';
 import { Provider } from '@atlaskit/smart-card';
 

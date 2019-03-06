@@ -7,7 +7,7 @@ import {
   BlockCardUnauthorisedView,
   BlockCardForbiddenView,
   BlockCardResolvedView,
-} from '../src/BlockCard';
+} from '../BlockCard';
 
 const url = 'https://www.dropbox.com/';
 const icon =

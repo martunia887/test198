@@ -43,7 +43,7 @@ ${(
 
 ${(
   <Props
-    props={require('!!extract-react-types-loader!../src/components/Pagination')}
+    props={require('!!extract-react-types-loader!../components/Pagination')}
     heading="Pagination props"
   />
 )}

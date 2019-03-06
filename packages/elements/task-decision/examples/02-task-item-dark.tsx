@@ -3,7 +3,7 @@ import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 
-import TaskItem from '../src/components/TaskItem';
+import TaskItem from '../components/TaskItem';
 import {
   MessageContainer,
   SidebarContainer,

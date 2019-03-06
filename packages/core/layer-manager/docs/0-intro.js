@@ -90,7 +90,7 @@ export default class App extends Component {
   ${(
     <Props
       heading="Focus Lock Props"
-      props={require('!!extract-react-types-loader!../src/components/FocusLock')}
+      props={require('!!extract-react-types-loader!../components/FocusLock')}
     />
   )}
 
@@ -158,7 +158,7 @@ const App = () => (
   ${(
     <Props
       heading="LayerManager Props"
-      props={require('!!extract-react-types-loader!../src/components/LayerManager')}
+      props={require('!!extract-react-types-loader!../components/LayerManager')}
     />
   )}
 `;

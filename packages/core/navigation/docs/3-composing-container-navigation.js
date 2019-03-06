@@ -24,7 +24,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="AkNavigationItem Props"
-      props={require('!!extract-react-types-loader!../src/components/js/NavigationItem.js')}
+      props={require('!!extract-react-types-loader!../components/js/NavigationItem.js')}
     />
   )}
 
@@ -32,7 +32,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="AkNavigationItemGroup Props"
-      props={require('!!extract-react-types-loader!../src/components/js/NavigationItemGroup.js')}
+      props={require('!!extract-react-types-loader!../components/js/NavigationItemGroup.js')}
     />
   )}
 
@@ -40,7 +40,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="AkContainerTitle Props"
-      props={require('!!extract-react-types-loader!../src/components/js/ContainerTitle.js')}
+      props={require('!!extract-react-types-loader!../components/js/ContainerTitle.js')}
     />
   )}
 
@@ -48,7 +48,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="AkContainerLogo Props"
-      props={require('!!extract-react-types-loader!../src/components/js/ContainerLogo.js')}
+      props={require('!!extract-react-types-loader!../components/js/ContainerLogo.js')}
     />
   )}
 
@@ -56,7 +56,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="AkContainerTitleDropdown Props"
-      props={require('!!extract-react-types-loader!../src/components/js/ContainerTitleDropdown.js')}
+      props={require('!!extract-react-types-loader!../components/js/ContainerTitleDropdown.js')}
     />
   )}
 
@@ -64,7 +64,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="AkContainerNavigation Props"
-      props={require('!!extract-react-types-loader!../src/components/js/ContainerNavigation.js')}
+      props={require('!!extract-react-types-loader!../components/js/ContainerNavigation.js')}
     />
   )}
 
@@ -72,7 +72,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="AkContainerNavigationNested Props"
-      props={require('!!extract-react-types-loader!../src/components/js/nested/ContainerNavigationNested.js')}
+      props={require('!!extract-react-types-loader!../components/js/nested/ContainerNavigationNested.js')}
     />
   )}
 `;

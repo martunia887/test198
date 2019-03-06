@@ -1,11 +1,11 @@
 import { AnalyticsViewerContainer } from '@atlaskit/analytics-viewer';
 import * as React from 'react';
-import { ReactionClient } from '../../src';
-import { MockReactionsClient } from '../../src/client/MockReactionsClient';
+import { ReactionClient } from '../..';
+import { MockReactionsClient } from '../../client/MockReactionsClient';
 import {
   MemoryReactionsStore,
   ReactionsStore,
-} from '../../src/reaction-store/ReactionsStore';
+} from '../../reaction-store/ReactionsStore';
 
 export type Props = {
   client?: ReactionClient;

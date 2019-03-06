@@ -17,7 +17,7 @@ The \`NavigationProvider\` facilitates sharing state throughout the application 
 ${(
     <Props
       heading="NavigationProvider props"
-      props={require('!!extract-react-types-loader!../src/provider/NavigationProvider')}
+      props={require('!!extract-react-types-loader!../provider/NavigationProvider')}
     />
   )}
 

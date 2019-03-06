@@ -40,7 +40,7 @@ export default md`
   ${(
     <Props
       heading="Tag Props"
-      props={require('!!extract-react-types-loader!../src/Tag')}
+      props={require('!!extract-react-types-loader!../Tag')}
     />
   )}
 `;

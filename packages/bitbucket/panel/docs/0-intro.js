@@ -22,9 +22,5 @@ There are two initial visibility options for the panel: expanded or collapsed. P
 
 Panels are not a fixed height and will expand to the height of the content inside.
 
-${(
-  <Props
-    props={require('!!extract-react-types-loader!../src/components/Panel')}
-  />
-)}
+${<Props props={require('!!extract-react-types-loader!../components/Panel')} />}
 `;

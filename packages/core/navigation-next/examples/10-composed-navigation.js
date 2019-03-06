@@ -6,7 +6,7 @@
   This is the source file for the webdriver test. If you make changes here,
   please update the tests to reflect those changes:
 
-  `packages/core/navigation-next/src/__tests__/integration/navigation.js`
+  `packages/core/navigation-next/__tests__/integration/navigation.js`
 */
 
 import React, { Component, type Node } from 'react';

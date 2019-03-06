@@ -112,8 +112,8 @@ export default md`
   MediaPicker is fully written in Typescript, and it exports all its public types and interfaces.
   We refer to some of those objects in the docs, if you want to know more about those please have a look into:
 
-  - media-picker/src/domain
-  - media-picker/popup/src/domain
+  - media-picker/domain
+  - media-picker/popup/domain
 
   <a name="events"></a>
   ## Events

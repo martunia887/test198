@@ -37,7 +37,7 @@ export default md`
 ${(
   <Props
     heading="Layer Props"
-    props={require('!!extract-react-types-loader!../src/components/Layer')}
+    props={require('!!extract-react-types-loader!../components/Layer')}
   />
 )}
 

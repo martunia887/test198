@@ -22,7 +22,7 @@ export default md`
   ${(
     <Props
       heading="Mobile Header Props"
-      props={require('!!extract-react-types-loader!../src/components/MobileHeader')}
+      props={require('!!extract-react-types-loader!../components/MobileHeader')}
     />
   )}
 `;

@@ -25,7 +25,7 @@ export default md`
   ${(
     <Props
       heading="Button Props"
-      props={require('!!extract-react-types-loader!../src/components/Button')}
+      props={require('!!extract-react-types-loader!../components/Button')}
     />
   )}
 
@@ -43,7 +43,7 @@ export default md`
   ${(
     <Props
       heading="Button Group Props"
-      props={require('!!extract-react-types-loader!../src/components/ButtonGroup')}
+      props={require('!!extract-react-types-loader!../components/ButtonGroup')}
     />
   )}
 `;

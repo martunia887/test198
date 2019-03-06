@@ -1,6 +1,6 @@
 import * as React from 'react';
-import EmojiPreview from '../src/components/common/EmojiPreview';
-import { emojiPickerWidth } from '../src/constants';
+import EmojiPreview from '../components/common/EmojiPreview';
+import { emojiPickerWidth } from '../constants';
 
 const emoji = {
   id: '118608',

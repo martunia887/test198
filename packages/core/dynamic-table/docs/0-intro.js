@@ -38,14 +38,14 @@ export default md`
       ${(
         <Props
           heading="Stateful DynamicTable Props"
-          props={require('!!extract-react-types-loader!../src/components/Stateful')}
+          props={require('!!extract-react-types-loader!../components/Stateful')}
         />
       )}
 
       ${(
         <Props
           heading="Stateless DynamicTable Props"
-          props={require('!!extract-react-types-loader!../src/components/Stateless')}
+          props={require('!!extract-react-types-loader!../components/Stateless')}
         />
       )}
 `;

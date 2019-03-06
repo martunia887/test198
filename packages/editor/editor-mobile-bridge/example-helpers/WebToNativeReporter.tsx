@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { toNativeBridge } from '../src/editor/web-to-native';
+import { toNativeBridge } from '../editor/web-to-native';
 
 export interface LogItem {
   log: string;

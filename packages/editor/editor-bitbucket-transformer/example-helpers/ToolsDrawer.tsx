@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mention, emoji } from '@atlaskit/util-data-test';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
-import { BitbucketTransformer } from '../src';
+import { BitbucketTransformer } from '..';
 
 import { Content } from './styles';
 

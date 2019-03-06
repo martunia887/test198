@@ -49,21 +49,21 @@ AkRadio component to render. Both stateful and stateless
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/RadioGroup')}
+      props={require('!!extract-react-types-loader!../RadioGroup')}
       heading="RadioGroup Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/RadioGroupStateless')}
+      props={require('!!extract-react-types-loader!../RadioGroupStateless')}
       heading="AkFieldRadioGroup (Stateless) Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/RadioBase')}
+      props={require('!!extract-react-types-loader!../RadioBase')}
       heading="RadioBase Props"
     />
   )}

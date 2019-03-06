@@ -5,7 +5,7 @@ import {
   defaultMediaPickerAuthProvider,
   defaultMediaPickerCollectionName,
 } from '@atlaskit/media-test-helpers';
-import { MediaPicker, BinaryUploader, BinaryConfig } from '../src';
+import { MediaPicker, BinaryUploader, BinaryConfig } from '../';
 import { ContextFactory } from '@atlaskit/media-core';
 
 class BinaryWrapper extends Component<{}> {

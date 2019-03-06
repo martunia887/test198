@@ -1,5 +1,5 @@
 import { userPickerData } from '@atlaskit/util-data-test';
-import { OptionData } from '../src/types';
+import { OptionData } from '../types';
 
 export const exampleOptions = userPickerData as OptionData[];
 

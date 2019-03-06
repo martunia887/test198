@@ -55,7 +55,7 @@ export default md`
   ${(
     <Props
       heading="Drawer Props"
-      props={require('!!extract-react-types-loader!../src/components/index')}
+      props={require('!!extract-react-types-loader!../components/index')}
     />
   )}
 `;

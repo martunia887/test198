@@ -38,7 +38,7 @@ ${(
 ${(
   <Props
     heading="Feedback Collector Props"
-    props={require('!!extract-react-types-loader!../src/components/FeedbackCollector')}
+    props={require('!!extract-react-types-loader!../components/FeedbackCollector')}
   />
 )}
 
@@ -59,7 +59,7 @@ ${(
 ${(
   <Props
     heading="Feedback Form Props"
-    props={require('!!extract-react-types-loader!../src/components/FeedbackForm')}
+    props={require('!!extract-react-types-loader!../components/FeedbackForm')}
   />
 )}
 

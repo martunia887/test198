@@ -62,14 +62,14 @@ export default md`
   ${(
     <Props
       heading="ExperimentController Props"
-      props={require('!!extract-react-types-loader!../src/ExperimentController')}
+      props={require('!!extract-react-types-loader!../ExperimentController')}
     />
   )}
 
   ${(
     <Props
       heading="CohortTracker Props"
-      props={require('!!extract-react-types-loader!../src/CohortTracker')}
+      props={require('!!extract-react-types-loader!../CohortTracker')}
     />
   )}
 `;

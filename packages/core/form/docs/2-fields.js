@@ -26,7 +26,7 @@ const UsernameField = () => (
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/Field')}
+      props={require('!!extract-react-types-loader!../Field')}
       heading=""
     />
   )}
@@ -57,7 +57,7 @@ const RememberMeField = () => (
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/CheckboxField')}
+      props={require('!!extract-react-types-loader!../CheckboxField')}
       heading=""
     />
   )}
@@ -95,7 +95,7 @@ const ProductField = () => (
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/Fieldset')}
+      props={require('!!extract-react-types-loader!../Fieldset')}
       heading=""
     />
   )}

@@ -3,7 +3,7 @@ import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
 import { mockEndpoints, REQUEST_FAST } from './helpers/mock-endpoints';
 import { withAnalyticsLogger } from './helpers';
-import AtlassianSwitcher from '../src';
+import AtlassianSwitcher from '../';
 
 class JiraSwitcherExample extends Component {
   state = {

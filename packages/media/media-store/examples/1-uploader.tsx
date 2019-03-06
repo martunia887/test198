@@ -12,8 +12,8 @@ import {
   Wrapper,
   FileInput,
 } from '../example-helpers/styled';
-import { uploadFile, MediaStore, UploadableFileUpfrontIds } from '../src';
-import { UploadableFile, UploadFileCallbacks } from '../src/uploader';
+import { uploadFile, MediaStore, UploadableFileUpfrontIds } from '../';
+import { UploadableFile, UploadFileCallbacks } from '../uploader';
 
 type UploaderExampleProps = {};
 export interface UploaderExampleState {

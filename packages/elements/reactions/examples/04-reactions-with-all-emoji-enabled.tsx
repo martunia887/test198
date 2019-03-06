@@ -1,7 +1,7 @@
 import { EmojiProvider } from '@atlaskit/emoji';
 import { emoji } from '@atlaskit/util-data-test';
 import * as React from 'react';
-import { ConnectedReactionsView } from '../src';
+import { ConnectedReactionsView } from '../';
 import { ReactionsExampleWrapper } from './examples-util';
 
 const { getEmojiResource } = emoji.storyData;

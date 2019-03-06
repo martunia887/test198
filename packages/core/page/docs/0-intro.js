@@ -50,21 +50,21 @@ import Page, { Grid, GridColumn } from '@atlaskit/page';
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/Page')}
+      props={require('!!extract-react-types-loader!../Page')}
       heading="Page Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/GridColumn')}
+      props={require('!!extract-react-types-loader!../GridColumn')}
       heading="GridColumn Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/Grid')}
+      props={require('!!extract-react-types-loader!../Grid')}
       heading="Grid Props"
     />
   )}

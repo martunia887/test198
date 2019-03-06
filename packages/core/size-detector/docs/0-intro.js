@@ -21,7 +21,7 @@ export default md`
   ${(
     <Props
       heading="SizeDetector Props"
-      props={require('!!extract-react-types-loader!../src/SizeDetector')}
+      props={require('!!extract-react-types-loader!../SizeDetector')}
     />
   )}
 `;

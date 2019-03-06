@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AtlassianIcon } from '@atlaskit/logo';
-import Button from '../src';
+import Button from '../';
 
 const Icon = <AtlassianIcon label="Test icon" size="small" />;
 

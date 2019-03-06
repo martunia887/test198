@@ -12,7 +12,7 @@ import {
   CardEvent,
   OnSelectChangeFuncResult,
   CardAction,
-} from '../src';
+} from '..';
 
 const context = createStorybookContext();
 

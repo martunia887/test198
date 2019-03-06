@@ -69,14 +69,14 @@ import {
   ${(
     <Props
       heading="AnalyticsDecorator Props"
-      props={require('!!extract-react-types-loader!../src/AnalyticsDecorator')}
+      props={require('!!extract-react-types-loader!../AnalyticsDecorator')}
     />
   )}
 
   ${(
     <Props
       heading="AnalyticsListener Props"
-      props={require('!!extract-react-types-loader!../src/AnalyticsListener')}
+      props={require('!!extract-react-types-loader!../AnalyticsListener')}
     />
   )}
 `;

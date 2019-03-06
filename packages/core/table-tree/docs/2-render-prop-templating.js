@@ -43,7 +43,7 @@ export default md`
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/Headers')}
+      props={require('!!extract-react-types-loader!../components/Headers')}
     />
   )}
   
@@ -52,7 +52,7 @@ export default md`
     
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/Header')}
+      props={require('!!extract-react-types-loader!../components/Header')}
     />
   )}
   
@@ -62,27 +62,19 @@ export default md`
   The data is supplied by the \`items\` property.
   
   ${(
-    <Props
-      props={require('!!extract-react-types-loader!../src/components/Rows')}
-    />
+    <Props props={require('!!extract-react-types-loader!../components/Rows')} />
   )}
   
   ## Row
   A row holding the data cells.
   
-  ${(
-    <Props
-      props={require('!!extract-react-types-loader!../src/components/Row')}
-    />
-  )}
+  ${<Props props={require('!!extract-react-types-loader!../components/Row')} />}
   
   ## Cell
   A cell of data to display.
   
   ${(
-    <Props
-      props={require('!!extract-react-types-loader!../src/components/Cell')}
-    />
+    <Props props={require('!!extract-react-types-loader!../components/Cell')} />
   )}
   
 `;

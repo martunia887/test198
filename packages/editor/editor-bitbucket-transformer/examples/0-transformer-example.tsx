@@ -7,7 +7,7 @@ import {
   WithEditorActions,
 } from '@atlaskit/editor-core';
 import { mention, taskDecision } from '@atlaskit/util-data-test';
-import { BitbucketTransformer } from '../src';
+import { BitbucketTransformer } from '../';
 import exampleBitbucketHTML from '../example-helpers/exampleHTML';
 import imageUploadHandler from '../../editor-core/example-helpers/imageUpload';
 

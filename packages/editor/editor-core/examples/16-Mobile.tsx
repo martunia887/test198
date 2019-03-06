@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Editor } from '../src/index';
-import EditorContext from '../src/ui/EditorContext';
-import WithEditorActions from '../src/ui/WithEditorActions';
+import { Editor } from '../index';
+import EditorContext from '../ui/EditorContext';
+import WithEditorActions from '../ui/WithEditorActions';
 import { MentionDescription, MentionProvider } from '@atlaskit/mention';
 
 class MentionProviderImpl implements MentionProvider {

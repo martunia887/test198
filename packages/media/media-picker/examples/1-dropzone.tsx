@@ -11,7 +11,7 @@ import Button from '@atlaskit/button';
 import Toggle from '@atlaskit/toggle';
 import Spinner from '@atlaskit/spinner';
 import { ContextFactory } from '@atlaskit/media-core';
-import { MediaPicker, Dropzone } from '../src';
+import { MediaPicker, Dropzone } from '../';
 import {
   DropzoneContainer,
   PopupHeader,

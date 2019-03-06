@@ -5,7 +5,7 @@ import {
   teardownMocks,
   DEFAULT_MOCKS_CONFIG,
 } from '../example-helpers/mockApis';
-import { GlobalQuickSearch } from '../src';
+import { GlobalQuickSearch } from '../';
 import withNavigation from '../example-helpers/withNavigation';
 
 const GlobalQuickSearchInNavigation = withNavigation(GlobalQuickSearch);

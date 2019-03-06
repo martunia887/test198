@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
-import SectionMessage from '../src';
+import SectionMessage from '..';
 
 export default md`
   ${(
@@ -52,7 +52,7 @@ export default md`
   ${(
     <Props
       heading="SectionMessage Props"
-      props={require('!!extract-react-types-loader!../src/components/SectionMessage')}
+      props={require('!!extract-react-types-loader!../components/SectionMessage')}
     />
   )}
 `;

@@ -9,7 +9,7 @@ import {
 import Button from '@atlaskit/button';
 import Toggle from '@atlaskit/toggle';
 import Spinner from '@atlaskit/spinner';
-import { MediaPicker, Clipboard } from '../src';
+import { MediaPicker, Clipboard } from '../';
 import {
   PopupHeader,
   PopupContainer,

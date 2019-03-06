@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button from '../src';
+import Button from '../';
 
 const Table = (props: React.HTMLProps<HTMLDivElement>) => (
   <div style={{ display: 'table' }} {...props} />

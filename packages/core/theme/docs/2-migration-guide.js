@@ -42,7 +42,7 @@ const Header = styled.h1\`
 `}
 
 We have a code mod that will replace all the usage of util-shared-styles with theme in the javascript files.
-Please see [codemod-util-shared-styles-to-theme](https://bitbucket.org/atlassian/atlaskit-mk-2/src/master/packages/bitbucket/codemod-util-shared-styles-to-theme/)
+Please see [codemod-util-shared-styles-to-theme](https://bitbucket.org/atlassian/atlaskit-mk-2/master/packages/bitbucket/codemod-util-shared-styles-to-theme/)
 and go through readme for details.
 
 ### Migrating the less styles
@@ -58,7 +58,7 @@ In util-shared-styles we used to create styles in less files as follows:
 
 ${code`
 // styles.less
-@import '../node_modules/@atlaskit/util-shared-styles/src/grid.less';
+@import '../node_modules/@atlaskit/util-shared-styles/grid.less';
 
 .header{
   margin-right: (@ak-grid-size * 1.5)
@@ -95,6 +95,6 @@ import styleSheet from '../styles';
 await writeFile(path.join(DIST, 'styles.css'), styleSheet);
 `}
 
-***( This is just the structure, please see [css-reset/js-to-css.js](https://bitbucket.org/atlassian/atlaskit-mk-2/src/master/packages/css-packs/css-reset/build/js-to-css.js)
+***( This is just the structure, please see [css-reset/js-to-css.js](https://bitbucket.org/atlassian/atlaskit-mk-2/master/packages/css-packs/css-reset/build/js-to-css.js)
 for a working implementation )***
 `;

@@ -4,11 +4,11 @@ import ResourcedEmojiControl, {
   getEmojiConfig,
   getRealEmojiResource,
 } from '../example-helpers/demo-resource-control';
-import { EmojiProvider, OnEmojiProviderChange } from '../src/api/EmojiResource';
-import ResourcedEmoji from '../src/components/common/ResourcedEmoji';
-import { customCategory } from '../src/constants';
-import { toEmojiId } from '../src/type-helpers';
-import { EmojiDescription, EmojiSearchResult } from '../src/types';
+import { EmojiProvider, OnEmojiProviderChange } from '../api/EmojiResource';
+import ResourcedEmoji from '../components/common/ResourcedEmoji';
+import { customCategory } from '../constants';
+import { toEmojiId } from '../type-helpers';
+import { EmojiDescription, EmojiSearchResult } from '../types';
 
 const customFilter = (emoji: EmojiDescription) =>
   emoji.category === customCategory;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import applyDevTools from 'prosemirror-dev-tools';
-import { WithEditorActions } from '../src';
+import { WithEditorActions } from '..';
 
 export function DevTools() {
   return (

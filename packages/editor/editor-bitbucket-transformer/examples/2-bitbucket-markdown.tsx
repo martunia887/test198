@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Editor, EditorContext, CollapsedEditor } from '@atlaskit/editor-core';
 import { taskDecision } from '@atlaskit/util-data-test';
 import ToolsDrawer from '../example-helpers/ToolsDrawer';
-import { BitbucketTransformer } from '../src';
+import { BitbucketTransformer } from '../';
 
 const SAVE_ACTION = () => console.log('Save');
 const CANCEL_ACTION = () => console.log('Cancel');

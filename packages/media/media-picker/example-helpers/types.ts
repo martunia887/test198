@@ -1,4 +1,4 @@
-import { Preview } from '../src/domain/preview';
+import { Preview } from '../domain/preview';
 
 export type AuthEnvironment = 'asap' | 'client';
 

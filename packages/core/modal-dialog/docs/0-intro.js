@@ -81,14 +81,14 @@ ${code`
   ${(
     <Props
       heading="ModalDialog Props"
-      props={require('!!extract-react-types-loader!../src/components/ModalWrapper')}
+      props={require('!!extract-react-types-loader!../components/ModalWrapper')}
     />
   )}
 
   ${(
     <Props
       heading="ModalTransition Props"
-      props={require('!!extract-react-types-loader!../src/components/ModalTransition')}
+      props={require('!!extract-react-types-loader!../components/ModalTransition')}
     />
   )}
 `;

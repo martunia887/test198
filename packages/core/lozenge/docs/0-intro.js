@@ -20,5 +20,5 @@ export default md`
     />
   )}
 
-  ${<Props props={require('!!extract-react-types-loader!../src/Lozenge')} />}
+  ${<Props props={require('!!extract-react-types-loader!../Lozenge')} />}
 `;

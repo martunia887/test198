@@ -5,7 +5,7 @@ const StatusSource = require('!!raw-loader!../examples/00-simple-status');
 import StatusPickerExample from '../examples/01-status-picker';
 const StatusPickerSource = require('!!raw-loader!../examples/01-status-picker');
 
-const StatusPickerProps = require('!!extract-react-types-loader!../src/components/StatusPicker');
+const StatusPickerProps = require('!!extract-react-types-loader!../components/StatusPicker');
 
 export default md`
 This component is the implementation of the Status element in React.

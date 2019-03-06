@@ -21,7 +21,7 @@ import {
   imageFileDetails,
   wideImage,
 } from '@atlaskit/media-test-helpers';
-import { CardView, CardAppearance, CardDimensions } from '../src';
+import { CardView, CardAppearance, CardDimensions } from '..';
 import {
   actions,
   annotateCardAction,

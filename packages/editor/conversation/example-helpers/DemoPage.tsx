@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ResourceProvider } from '../src/api/ConversationResource';
-import { Conversation } from '../src';
+import { ResourceProvider } from '../api/ConversationResource';
+import { Conversation } from '../';
 import SingleSelect from '@atlaskit/single-select';
-import { Conversation as ConversationType, User } from '../src/model';
-import { State } from '../src/internal/store';
+import { Conversation as ConversationType, User } from '../model';
+import { State } from '../internal/store';
 import { MOCK_USERS } from './MockData';
 import { ProviderFactory } from '@atlaskit/editor-common';
 

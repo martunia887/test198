@@ -12,7 +12,7 @@ import * as Ajv from 'ajv';
 import * as React from 'react';
 import { ChangeEvent, PureComponent } from 'react';
 
-import Renderer from '../src/ui/Renderer';
+import Renderer from '../ui/Renderer';
 
 export interface State {
   value: string;

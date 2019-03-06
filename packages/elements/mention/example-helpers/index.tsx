@@ -4,8 +4,8 @@ import {
   MentionDescription,
   OnMentionEvent,
   MentionEventHandler,
-} from '../src/types';
-import debug from '../src/util/logger';
+} from '../types';
+import debug from '../util/logger';
 export { MockPresenceResource } from '@atlaskit/util-data-test';
 
 export const resourceProvider: MockMentionResource =

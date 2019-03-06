@@ -23,7 +23,7 @@ import TextArea from '@atlaskit/textarea';
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/TextArea')}
+      props={require('!!extract-react-types-loader!../components/TextArea')}
       heading="TextArea Props"
     />
   )}

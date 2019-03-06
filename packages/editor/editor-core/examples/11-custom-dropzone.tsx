@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Editor } from '../src';
+import { Editor } from '../';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
 
 type State = {

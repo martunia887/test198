@@ -1,4 +1,4 @@
-import asDataProvider from '../../src/providers/as-data-provider';
+import asDataProvider from '../../providers/as-data-provider';
 
 interface MockDataStructure {
   data: string;

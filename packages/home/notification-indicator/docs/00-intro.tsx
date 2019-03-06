@@ -24,7 +24,7 @@ export default md`
   ${(
     <Props
       heading="Props"
-      props={require('!!extract-react-types-loader!../src/NotificationIndicator')}
+      props={require('!!extract-react-types-loader!../NotificationIndicator')}
     />
   )}
 `;

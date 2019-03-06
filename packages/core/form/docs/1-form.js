@@ -35,10 +35,7 @@ const MyForm = () => (
 ### Form props
   
   ${(
-    <Props
-      props={require('!!extract-react-types-loader!../src/Form')}
-      heading=""
-    />
+    <Props props={require('!!extract-react-types-loader!../Form')} heading="" />
   )}
 
 `;

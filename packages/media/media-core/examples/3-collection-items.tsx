@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Component } from 'react';
 import { createUserContext } from '@atlaskit/media-test-helpers';
 import { Subscription } from 'rxjs/Subscription';
-import { FileIdentifier } from '..';
+import { FileIdentifier } from '../';
 import { Card } from '@atlaskit/media-card';
 import Button from '@atlaskit/button';
 import { CardsWrapper, Header } from '../example-helpers/styled';

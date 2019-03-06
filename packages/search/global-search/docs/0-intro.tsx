@@ -30,7 +30,7 @@ export default md`
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/GlobalQuickSearch')}
+      props={require('!!extract-react-types-loader!../components/GlobalQuickSearch')}
     />
   )}
 `;

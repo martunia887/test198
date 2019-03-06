@@ -47,14 +47,14 @@ import NPSCollector, { NPS } from '@atlaskit/nps';
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/DefaultNPS')}
+      props={require('!!extract-react-types-loader!../components/DefaultNPS')}
       heading="NPS Default Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/NPS')}
+      props={require('!!extract-react-types-loader!../components/NPS')}
       heading="NPS Named Props"
     />
   )}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { MediaStore, ImageMetadata } from '../src';
+import { MediaStore, ImageMetadata } from '../';
 import {
   createStorybookContext,
   imageFileId,

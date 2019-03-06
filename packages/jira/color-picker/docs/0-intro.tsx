@@ -49,7 +49,7 @@ ${(
 ${(
   <Props
     heading="Color picker props"
-    props={require('!!extract-react-types-loader!../src/components/ColorPicker')}
+    props={require('!!extract-react-types-loader!../components/ColorPicker')}
   />
 )}
 `;

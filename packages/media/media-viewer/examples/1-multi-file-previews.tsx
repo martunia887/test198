@@ -17,9 +17,9 @@ import {
   audioItem,
   audioItemNoCover,
 } from '../example-helpers';
-import { MediaViewer } from '../src';
+import { MediaViewer } from '../';
 import { videoFileId } from '@atlaskit/media-test-helpers';
-import { MediaViewerDataSource } from '..';
+import { MediaViewerDataSource } from '../';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';

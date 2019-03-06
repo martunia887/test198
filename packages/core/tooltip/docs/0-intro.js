@@ -74,7 +74,7 @@ export default md`
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/Tooltip')}
+      props={require('!!extract-react-types-loader!../components/Tooltip')}
     />
   )}
 `;

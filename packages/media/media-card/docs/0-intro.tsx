@@ -87,14 +87,14 @@ ${(
 ${(
   <Props
     heading="Card Props"
-    props={require('!!extract-react-types-loader!../src/files/card')}
+    props={require('!!extract-react-types-loader!../files/card')}
   />
 )}
 
 ${(
   <Props
     heading="Card View Props"
-    props={require('!!extract-react-types-loader!../src/files/cardImageView')}
+    props={require('!!extract-react-types-loader!../files/cardImageView')}
   />
 )}
 

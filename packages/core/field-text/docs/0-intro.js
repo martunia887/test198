@@ -46,14 +46,14 @@ import FieldText, { FieldTextStateless } from '@atlaskit/field-text';
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/FieldText')}
+      props={require('!!extract-react-types-loader!../FieldText')}
       heading="FieldText Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/FieldTextStateless')}
+      props={require('!!extract-react-types-loader!../FieldTextStateless')}
       heading="FieldTextStateless Props"
     />
   )}

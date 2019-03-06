@@ -59,7 +59,7 @@ ${code`
 ${(
   <Props
     heading="TableTree Props"
-    props={require('!!extract-react-types-loader!../src/components/TableTree')}
+    props={require('!!extract-react-types-loader!../components/TableTree')}
   />
 )}
 `;

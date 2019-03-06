@@ -41,7 +41,7 @@ export default md`
   ${(
     <Props
       heading="User Picker Props"
-      props={require('!!extract-react-types-loader!../src/components/UserPicker')}
+      props={require('!!extract-react-types-loader!../components/UserPicker')}
       overrides={{
         createAnalyticsEvent: () => null,
       }}

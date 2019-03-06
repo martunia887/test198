@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button, { ButtonGroup } from '../src';
+import Button, { ButtonGroup } from '../';
 
 export default () => (
   <ButtonGroup>

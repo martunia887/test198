@@ -36,7 +36,7 @@ export default md`
   ${(
     <Props
       heading="Spinner Props"
-      props={require('!!extract-react-types-loader!../src/Spinner')}
+      props={require('!!extract-react-types-loader!../Spinner')}
     />
   )}
 `;

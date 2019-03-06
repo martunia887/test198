@@ -40,28 +40,28 @@ import DropList, {
 
    ${(
      <Props
-       props={require('!!extract-react-types-loader!../src/components/Droplist')}
+       props={require('!!extract-react-types-loader!../components/Droplist')}
        heading="Droplist Props"
      />
    )}
 
    ${(
      <Props
-       props={require('!!extract-react-types-loader!../src/components/Group')}
+       props={require('!!extract-react-types-loader!../components/Group')}
        heading="Group Props"
      />
    )}
 
    ${(
      <Props
-       props={require('!!extract-react-types-loader!../src/components/Element')}
+       props={require('!!extract-react-types-loader!../components/Element')}
        heading="Element Props"
      />
    )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/Item')}
+      props={require('!!extract-react-types-loader!../components/Item')}
       heading="Item Props"
     />
   )}

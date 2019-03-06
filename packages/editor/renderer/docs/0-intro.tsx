@@ -69,7 +69,7 @@ ${(
 ${(
   <Props
     heading="Props"
-    props={require('!!extract-react-types-loader!../src/ui/Renderer/index')}
+    props={require('!!extract-react-types-loader!../ui/Renderer/index')}
   />
 )}
 `;

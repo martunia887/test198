@@ -5,7 +5,7 @@ import {
   NotificationCountResponse,
 } from '@atlaskit/notification-log-client';
 
-import { NotificationIndicator } from '../src';
+import { NotificationIndicator } from '../';
 
 class MockNotificationLogClient extends NotificationLogClient {
   private response?: Promise<NotificationCountResponse>;

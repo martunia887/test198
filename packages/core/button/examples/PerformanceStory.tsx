@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Button from '../src';
+import Button from '../';
 
 type Props = {
   children: React.ReactChild;

@@ -1,12 +1,12 @@
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { MemoryReactionsStore } from '@atlaskit/reactions';
-import { MockReactionsClient } from '@atlaskit/reactions/src/client/MockReactionsClient';
+import { MockReactionsClient } from '@atlaskit/reactions/client/MockReactionsClient';
 import { emoji, mention } from '@atlaskit/util-data-test';
 import {
   AbstractConversationResource,
   ConversationResourceConfig,
-} from '../src/api/ConversationResource';
-import { HttpError } from '../src/api/HttpError';
+} from '../api/ConversationResource';
+import { HttpError } from '../api/HttpError';
 import {
   ADD_COMMENT_ERROR,
   ADD_COMMENT_REQUEST,
@@ -24,9 +24,9 @@ import {
   UPDATE_COMMENT_REQUEST,
   UPDATE_COMMENT_SUCCESS,
   UPDATE_USER_SUCCESS,
-} from '../src/internal/actions';
-import { uuid } from '../src/internal/uuid';
-import { Comment, Conversation, User } from '../src/model';
+} from '../internal/actions';
+import { uuid } from '../internal/uuid';
+import { Comment, Conversation, User } from '../model';
 import { generateMockConversation, mockInlineConversation } from './MockData';
 
 const MockDataProviders = {

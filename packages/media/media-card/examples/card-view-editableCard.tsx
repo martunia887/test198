@@ -19,8 +19,8 @@ import { ImageResizeMode, MediaItemType } from '@atlaskit/media-core';
 import Toggle from '@atlaskit/toggle';
 import Slider from '@atlaskit/field-range';
 import * as exenv from 'exenv';
-import { CardView } from '../src/root/cardView';
-import { CardAppearance, CardStatus, CardDimensions, CardAction } from '../src';
+import { CardView } from '../root/cardView';
+import { CardAppearance, CardStatus, CardDimensions, CardAction } from '../';
 import {
   openAction,
   closeAction,
@@ -36,7 +36,7 @@ import {
   MainWrapper,
   CardPreviewWrapper,
 } from '../example-helpers/styled';
-import { defaultImageCardDimensions } from '../src/utils/cardDimensions';
+import { defaultImageCardDimensions } from '../utils/cardDimensions';
 
 const appearanceOptions = [
   { value: 'auto', label: 'Auto' },

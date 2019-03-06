@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { getEmojis } from '../example-helpers';
 
-import EmojiPreview from '../src/components/common/EmojiPreview';
+import EmojiPreview from '../components/common/EmojiPreview';
 
-import { emojiPickerWidth } from '../src/constants';
-import filters from '../src/util/filters';
+import { emojiPickerWidth } from '../constants';
+import filters from '../util/filters';
 
 const emojis = getEmojis();
 

@@ -49,21 +49,21 @@ export default md`
   ${(
     <Props
       heading="Flag Props"
-      props={require('!!extract-react-types-loader!../src/components/Flag')}
+      props={require('!!extract-react-types-loader!../components/Flag')}
     />
   )}
 
   ${(
     <Props
       heading="Auto Dismiss Flag Props"
-      props={require('!!extract-react-types-loader!../src/components/AutoDismissFlag')}
+      props={require('!!extract-react-types-loader!../components/AutoDismissFlag')}
     />
   )}
 
   ${(
     <Props
       heading="Flag Group Props"
-      props={require('!!extract-react-types-loader!../src/components/FlagGroup')}
+      props={require('!!extract-react-types-loader!../components/FlagGroup')}
     />
   )}
 

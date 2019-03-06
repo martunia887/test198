@@ -99,7 +99,7 @@ MediaViewer is Atlassian's powerful solution for viewing files on the web. It's 
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/media-viewer')}
+      props={require('!!extract-react-types-loader!../components/media-viewer')}
     />
   )}
   `;

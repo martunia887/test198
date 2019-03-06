@@ -8,7 +8,7 @@ const DateStyledSource = require('!!raw-loader!../examples/01-date-with-style');
 const CustomColorSource = require('!!raw-loader!../examples/00-custom-colors');
 const CustomFormatSource = require('!!raw-loader!../examples/02-custom-format');
 
-const DateProps = require('!!extract-react-types-loader!../src/components/Date');
+const DateProps = require('!!extract-react-types-loader!../components/Date');
 
 export default md`
 This component is the implementation of the Date element in React.

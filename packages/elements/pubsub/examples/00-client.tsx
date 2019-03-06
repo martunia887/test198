@@ -4,7 +4,7 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import FieldText from '@atlaskit/field-text';
 import Lozenge from '@atlaskit/lozenge';
 
-import Client, { PubSubClientConfig, SpecialEventType } from '../src';
+import Client, { PubSubClientConfig, SpecialEventType } from '../';
 
 let clientConfig: { serviceConfig: PubSubClientConfig };
 try {

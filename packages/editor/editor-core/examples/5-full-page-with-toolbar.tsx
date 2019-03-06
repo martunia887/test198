@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import Editor from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
+import Editor from './../editor';
+import EditorContext from './../ui/EditorContext';
+import WithEditorActions from './../ui/WithEditorActions';
 import { macroProvider, cardProvider } from '@atlaskit/editor-test-helpers';
 import ToolsDrawer from '../example-helpers/ToolsDrawer';
 

@@ -12,7 +12,7 @@ import {
 } from '@atlaskit/media-test-helpers';
 import Spinner from '@atlaskit/spinner';
 import Select from '@atlaskit/select';
-import { MediaImage } from '../src';
+import { MediaImage } from '../';
 import { OptionsWrapper, MediaImageWrapper } from '../example-helpers/styled';
 
 export interface ExampleProps {}

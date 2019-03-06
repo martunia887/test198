@@ -22,7 +22,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="Global Navigation Item Props"
-      props={require('!!extract-react-types-loader!../src/components/js/GlobalItem.js')}
+      props={require('!!extract-react-types-loader!../components/js/GlobalItem.js')}
     />
   )}
 
@@ -32,7 +32,7 @@ export default md`
     <Props
       shouldCollapseProps
       heading="Global Navigation Props"
-      props={require('!!extract-react-types-loader!../src/components/js/GlobalNavigation.js')}
+      props={require('!!extract-react-types-loader!../components/js/GlobalNavigation.js')}
     />
   )}
 

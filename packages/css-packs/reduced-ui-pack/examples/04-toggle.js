@@ -2,7 +2,7 @@
 
 import React from 'react';
 // eslint-disable-next-line
-import stuff from '!!style-loader!css-loader!../src/bundle.css';
+import stuff from '!!style-loader!css-loader!../bundle.css';
 import Warning from './utils/warning';
 
 export default () => (

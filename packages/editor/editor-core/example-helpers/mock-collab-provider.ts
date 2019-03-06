@@ -3,7 +3,7 @@ import { Step } from 'prosemirror-transform';
 import {
   CollabEditProvider,
   CollabEvent,
-} from '../src/plugins/collab-edit/provider';
+} from '../plugins/collab-edit/provider';
 
 interface Participant {
   sid: string;

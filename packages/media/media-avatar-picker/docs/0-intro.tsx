@@ -77,28 +77,28 @@ ${(
 ${(
   <Props
     heading="Avatar List Props"
-    props={require('!!extract-react-types-loader!../src/avatar-list')}
+    props={require('!!extract-react-types-loader!../avatar-list')}
   />
 )}
 
 ${(
   <Props
     heading="Avatar Picker Dialog Props"
-    props={require('!!extract-react-types-loader!../src/avatar-picker-dialog')}
+    props={require('!!extract-react-types-loader!../avatar-picker-dialog')}
   />
 )}
 
 ${(
   <Props
     heading="Predefined Avatar List Props"
-    props={require('!!extract-react-types-loader!../src/predefined-avatar-list')}
+    props={require('!!extract-react-types-loader!../predefined-avatar-list')}
   />
 )}
 
 ${(
   <Props
     heading="Predefined Avatar View Props"
-    props={require('!!extract-react-types-loader!../src/predefined-avatar-view')}
+    props={require('!!extract-react-types-loader!../predefined-avatar-view')}
   />
 )}
 `;
@@ -109,20 +109,20 @@ ${(
 // ${(
 //   <Props
 //     heading = "Image Cropper Props"
-//     props={require('!!extract-react-types-loader!../src/image-cropper')}
+//     props={require('!!extract-react-types-loader!../image-cropper')}
 //   />
 // )}
 
 // ${(
 //   <Props
 //     heading = "Image Navigator Props"
-//     props={require('!!extract-react-types-loader!../src/image-navigator')}
+//     props={require('!!extract-react-types-loader!../image-navigator')}
 //   />
 // )}
 
 // ${(
 //   <Props
 //     heading = "Image Placer Props"
-//     props={require('!!extract-react-types-loader!../src/image-placer')}
+//     props={require('!!extract-react-types-loader!../image-placer')}
 //   />
 // )}

@@ -25,7 +25,7 @@ export default md`
   ${(
     <Props
       heading="ProgressDots Props"
-      props={require('!!extract-react-types-loader!../src/components/Dots')}
+      props={require('!!extract-react-types-loader!../components/Dots')}
     />
   )}
 

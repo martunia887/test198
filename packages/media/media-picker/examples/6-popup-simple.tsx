@@ -9,7 +9,7 @@ import { Component } from 'react';
 import Button from '@atlaskit/button';
 import { ContextFactory } from '@atlaskit/media-core';
 
-import { MediaPicker } from '../src';
+import { MediaPicker } from '../';
 import { Popup } from '../index';
 
 mediaMock.enable();

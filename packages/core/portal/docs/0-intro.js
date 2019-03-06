@@ -30,7 +30,7 @@ const Modal = () => (
   ${(
     <Props
       heading="Portal Props"
-      props={require('!!extract-react-types-loader!../src/components/Portal')}
+      props={require('!!extract-react-types-loader!../components/Portal')}
     />
   )}
 `;

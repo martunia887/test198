@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ComponentType } from 'react';
 import styled from 'styled-components';
-import { Props } from '../src';
+import { Props } from '..';
 import BasicNavigation from './BasicNavigation';
 import LocaleIntlProvider from './LocaleIntlProvider';
 import { DEVELOPMENT_LOGGER } from './logger';

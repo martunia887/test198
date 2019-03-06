@@ -50,84 +50,84 @@ export default md`
     ${(
       <Props
         heading="LinkView Props"
-        props={require('!!extract-react-types-loader!../src/LinkView')}
+        props={require('!!extract-react-types-loader!../LinkView')}
       />
     )}
 
     ${(
       <Props
         heading="InlineCard ResolvingView Props"
-        props={require('!!extract-react-types-loader!../src/InlineCard/ResolvingView')}
+        props={require('!!extract-react-types-loader!../InlineCard/ResolvingView')}
       />
     )}
 
     ${(
       <Props
         heading="InlineCard ResolvedView Props"
-        props={require('!!extract-react-types-loader!../src/InlineCard/ResolvedView')}
+        props={require('!!extract-react-types-loader!../InlineCard/ResolvedView')}
       />
     )}
 
     ${(
       <Props
         heading="InlineCard ErroredView Props"
-        props={require('!!extract-react-types-loader!../src/InlineCard/ErroredView')}
+        props={require('!!extract-react-types-loader!../InlineCard/ErroredView')}
       />
     )}
 
     ${(
       <Props
         heading="InlineCard ForbiddenView Props"
-        props={require('!!extract-react-types-loader!../src/InlineCard/ForbiddenView')}
+        props={require('!!extract-react-types-loader!../InlineCard/ForbiddenView')}
       />
     )}
 
     ${(
       <Props
         heading="InlineCard Frame Props"
-        props={require('!!extract-react-types-loader!../src/InlineCard/Frame')}
+        props={require('!!extract-react-types-loader!../InlineCard/Frame')}
       />
     )}
 
     ${(
       <Props
         heading="InlineCard UnauthorisedView Props"
-        props={require('!!extract-react-types-loader!../src/InlineCard/UnauthorisedView')}
+        props={require('!!extract-react-types-loader!../InlineCard/UnauthorisedView')}
       />
     )}
 
     ${(
       <Props
         heading="BlockCard ResolvingView Props"
-        props={require('!!extract-react-types-loader!../src/BlockCard/ResolvingView')}
+        props={require('!!extract-react-types-loader!../BlockCard/ResolvingView')}
       />
     )}
 
     ${(
       <Props
         heading="BlockCard ResolvedView Props"
-        props={require('!!extract-react-types-loader!../src/BlockCard/ResolvedView')}
+        props={require('!!extract-react-types-loader!../BlockCard/ResolvedView')}
       />
     )}
 
     ${(
       <Props
         heading="BlockCard ErroredView Props"
-        props={require('!!extract-react-types-loader!../src/BlockCard/ErroredView')}
+        props={require('!!extract-react-types-loader!../BlockCard/ErroredView')}
       />
     )}
 
     ${(
       <Props
         heading="BlockCard ForbiddenView Props"
-        props={require('!!extract-react-types-loader!../src/BlockCard/ForbiddenView')}
+        props={require('!!extract-react-types-loader!../BlockCard/ForbiddenView')}
       />
     )}
 
     ${(
       <Props
         heading="BlockCard UnauthorisedView Props"
-        props={require('!!extract-react-types-loader!../src/BlockCard/UnauthorisedView')}
+        props={require('!!extract-react-types-loader!../BlockCard/UnauthorisedView')}
       />
     )}
     

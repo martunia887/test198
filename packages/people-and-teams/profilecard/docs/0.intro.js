@@ -122,14 +122,14 @@ const profileClient = new CustomProfileClient({
   ${(
     <Props
       heading="ProfileCard Props"
-      props={require('!!extract-react-types-loader!../src/profilecard')}
+      props={require('!!extract-react-types-loader!../profilecard')}
     />
   )}
 
   ${(
     <Props
       heading="ProfileCardResourced Props"
-      props={require('!!extract-react-types-loader!../src/profilecard-resourced')}
+      props={require('!!extract-react-types-loader!../profilecard-resourced')}
     />
   )}
  

@@ -42,7 +42,7 @@ export default md`
   ${(
     <Props
       heading="MediaImage Props"
-      props={require('!!extract-react-types-loader!../src/mediaImage')}
+      props={require('!!extract-react-types-loader!../mediaImage')}
     />
   )}
 

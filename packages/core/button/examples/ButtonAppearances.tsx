@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Checkbox } from '@atlaskit/checkbox';
-import Button, { ButtonAppearances } from '../src';
+import Button, { ButtonAppearances } from '../';
 
 const appearances: ButtonAppearances[] = [
   'default',

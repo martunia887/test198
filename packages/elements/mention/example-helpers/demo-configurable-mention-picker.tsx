@@ -1,7 +1,5 @@
 import * as React from 'react';
-import MentionResource, {
-  MentionResourceConfig,
-} from '../src/api/MentionResource';
+import MentionResource, { MentionResourceConfig } from '../api/MentionResource';
 
 // FIXME FAB-1732 - extract or replace with third-party implementation
 const toJavascriptString = (obj: object | string | any[]) => {

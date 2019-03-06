@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 
-import { TaskDecisionProvider } from '../src/types';
+import { TaskDecisionProvider } from '../types';
 import {
   MockTaskDecisionResource,
   MockTaskDecisionResourceConfig,

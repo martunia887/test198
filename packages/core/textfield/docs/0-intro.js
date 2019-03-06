@@ -34,7 +34,7 @@ To control the component, specify a value prop; to specify the defaultValue but 
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/Textfield')}
+      props={require('!!extract-react-types-loader!../components/Textfield')}
     />
   )}
 `;

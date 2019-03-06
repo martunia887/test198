@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
-import { WikiMarkupTransformer } from '../src';
+import { WikiMarkupTransformer } from '../';
 import { ReactRenderer } from '@atlaskit/renderer';
 import {
   storyMediaProviderFactory,
@@ -15,7 +15,7 @@ import {
   taskDecision,
 } from '@atlaskit/util-data-test';
 import { AkProfileClient, modifyResponse } from '@atlaskit/profilecard';
-import { Context } from '../src/parser/tokenize';
+import { Context } from '../parser/tokenize';
 
 const Container = styled.div`
   display: grid;

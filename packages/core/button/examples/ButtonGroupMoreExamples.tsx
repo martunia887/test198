@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Button, { ButtonGroup } from '../src';
+import Button, { ButtonGroup } from '../';
 
 const Row = (props: React.HTMLProps<HTMLDivElement>) => (
   <div style={{ padding: 8 }} {...props} />

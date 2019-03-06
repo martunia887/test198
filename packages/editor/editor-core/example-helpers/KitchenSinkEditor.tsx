@@ -10,9 +10,9 @@ import {
 import { validator, ErrorCallback, ADFEntity } from '@atlaskit/adf-utils';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 
-import Editor from './../src/editor';
-import { EditorAppearance } from '../src/types';
-import { EditorActions } from '../src';
+import Editor from './../editor';
+import { EditorAppearance } from '../types';
+import { EditorActions } from '..';
 
 import {
   providers,

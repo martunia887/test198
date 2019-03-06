@@ -66,14 +66,14 @@ import InlineEdit, { InlineEditStateless } from '@atlaskit/inline-edit';
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/InlineEdit')}
+      props={require('!!extract-react-types-loader!../InlineEdit')}
       heading="InlineEdit Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/InlineEditStateless')}
+      props={require('!!extract-react-types-loader!../InlineEditStateless')}
       heading="InlineEditStateless Props"
     />
   )}

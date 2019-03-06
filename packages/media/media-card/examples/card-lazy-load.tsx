@@ -5,7 +5,7 @@ import {
   createStorybookContext,
   genericFileId,
 } from '@atlaskit/media-test-helpers';
-import { Card } from '../src';
+import { Card } from '../';
 
 const GradientBackground: React.ComponentClass<
   React.HTMLAttributes<{}>

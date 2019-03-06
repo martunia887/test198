@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GlobalQuickSearch } from '../src';
+import { GlobalQuickSearch } from '../';
 import withNavigation from '../example-helpers/withNavigation';
 
 const GlobalQuickSearchInNavigation = withNavigation(GlobalQuickSearch);

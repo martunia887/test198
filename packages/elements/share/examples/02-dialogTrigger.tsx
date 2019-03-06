@@ -1,6 +1,6 @@
 import Button from '@atlaskit/button';
 import * as React from 'react';
-import { ShareDialogWithTrigger } from '../src/components/ShareDialogWithTrigger';
+import { ShareDialogWithTrigger } from '../components/ShareDialogWithTrigger';
 
 const loadUserOptions = () => [];
 const onShareSubmit = () => Promise.resolve({});

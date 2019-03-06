@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Layer from '@atlaskit/layer';
-import EmojiPicker from '../src/components/picker/EmojiPicker';
+import EmojiPicker from '../components/picker/EmojiPicker';
 import ResourcedEmojiControl, {
   getEmojiConfig,
   getRealEmojiResource,
 } from '../example-helpers/demo-resource-control';
 import { onSelection } from '../example-helpers';
-import { emojiPickerHeight } from '../src/constants';
+import { emojiPickerHeight } from '../constants';
 
 const getPicker = () => (
   <div style={{ padding: '10px' }}>

@@ -26,7 +26,7 @@ ${(
 ${(
   <Props
     heading="Calendar Props"
-    props={require('!!extract-react-types-loader!../src/components/Calendar')}
+    props={require('!!extract-react-types-loader!../components/Calendar')}
   />
 )}
 `;

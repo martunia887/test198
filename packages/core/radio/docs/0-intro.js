@@ -79,21 +79,21 @@ ${(
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/RadioGroup')}
+      props={require('!!extract-react-types-loader!../RadioGroup')}
       heading="RadioGroup Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/Radio')}
+      props={require('!!extract-react-types-loader!../Radio')}
       heading="Radio Props"
     />
   )}
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/RadioIcon')}
+      props={require('!!extract-react-types-loader!../RadioIcon')}
       heading="RadioIcon Props"
     />
   )}

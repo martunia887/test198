@@ -38,7 +38,7 @@ ${(
 ${(
   <Props
     heading="Avatar Group Props"
-    props={require('!!extract-react-types-loader!../src/components/AvatarGroup')}
+    props={require('!!extract-react-types-loader!../components/AvatarGroup')}
     overrides={{
       data: props => {
         /* eslint-disable */

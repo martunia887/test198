@@ -55,42 +55,42 @@ ${(
 ${(
   <Props
     heading="Comment Props"
-    props={require('!!extract-react-types-loader!../src/components/Comment')}
+    props={require('!!extract-react-types-loader!../components/Comment')}
   />
 )}
 
 ${(
   <Props
     heading="CommentAction Props"
-    props={require('!!extract-react-types-loader!../src/components/ActionItem')}
+    props={require('!!extract-react-types-loader!../components/ActionItem')}
   />
 )}
 
 ${(
   <Props
     heading="CommentAuthor Props"
-    props={require('!!extract-react-types-loader!../src/components/Author')}
+    props={require('!!extract-react-types-loader!../components/Author')}
   />
 )}
 
 ${(
   <Props
     heading="CommentEdited Props"
-    props={require('!!extract-react-types-loader!../src/components/Edited')}
+    props={require('!!extract-react-types-loader!../components/Edited')}
   />
 )}
 
 ${(
   <Props
     heading="CommentLayout Props"
-    props={require('!!extract-react-types-loader!../src/components/Layout')}
+    props={require('!!extract-react-types-loader!../components/Layout')}
   />
 )}
 
 ${(
   <Props
     heading="CommentTime Props"
-    props={require('!!extract-react-types-loader!../src/components/Time')}
+    props={require('!!extract-react-types-loader!../components/Time')}
   />
 )}
 `;

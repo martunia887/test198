@@ -1,7 +1,7 @@
 import * as React from 'react';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { Date, Color } from '../src';
+import { Date, Color } from '../';
 
 const DateInParagraph = ({ color }: { color?: Color }) => (
   <p>

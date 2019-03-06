@@ -33,7 +33,7 @@ using [@atlaskit/navigation](./navigation) alongside it.
 ${(
   <Props
     heading="Banner Props"
-    props={require('!!extract-react-types-loader!../src/components/Banner')}
+    props={require('!!extract-react-types-loader!../components/Banner')}
   />
 )}
 `;

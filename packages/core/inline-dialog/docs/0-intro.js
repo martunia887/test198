@@ -28,7 +28,7 @@ export default md`
   ${(
     <Props
       heading="InlineDialog Props"
-      props={require('!!extract-react-types-loader!../src/InlineDialog')}
+      props={require('!!extract-react-types-loader!../InlineDialog')}
     />
   )}
 `;

@@ -1,5 +1,5 @@
 import { MediaMock } from '@atlaskit/media-test-helpers';
-import { fakeImage } from '../../../media/media-test-helpers/src/mocks/database/mockData';
+import { fakeImage } from '../../../media/media-test-helpers/mocks/database/mockData';
 
 export default new MediaMock({
   'one.svg': fakeImage,

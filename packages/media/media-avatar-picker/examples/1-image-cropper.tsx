@@ -1,7 +1,7 @@
 /* tslint:disable:variable-name no-console */
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
-import ImageCropper from '../src/image-cropper';
+import ImageCropper from '../image-cropper';
 import { tallImage } from '@atlaskit/media-test-helpers';
 
 const naturalWidth = 5360;

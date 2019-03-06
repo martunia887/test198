@@ -87,7 +87,7 @@ export default md`
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/Reset')}
+      props={require('!!extract-react-types-loader!../components/Reset')}
     />
   )}
 
@@ -112,7 +112,7 @@ export default md`
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/AtlaskitThemeProvider')}
+      props={require('!!extract-react-types-loader!../components/AtlaskitThemeProvider')}
     />
   )}
 

@@ -77,7 +77,7 @@ import {
   ${(
     <Props
       heading="Props"
-      props={require('!!extract-react-types-loader!../src/components/FocusedTaskCloseAccount')}
+      props={require('!!extract-react-types-loader!../components/FocusedTaskCloseAccount')}
     />
   )}
 

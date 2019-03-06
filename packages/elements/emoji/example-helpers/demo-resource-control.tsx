@@ -5,7 +5,7 @@ import {
   default as UploadingEmojiResource,
   EmojiProvider,
   EmojiResourceConfig,
-} from '../src/api/EmojiResource';
+} from '../api/EmojiResource';
 
 export function getEmojiConfig() {
   let emojiConfig;

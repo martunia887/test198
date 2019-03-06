@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { code, md } from '@atlaskit/docs';
-import { instrumentedComponents } from '../src/AnalyticsEventMap';
+import { instrumentedComponents } from '../AnalyticsEventMap';
 
 type InstrumentedItem = {
   packageName: string,

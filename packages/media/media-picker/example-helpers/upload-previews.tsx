@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { UploadPreview } from './upload-preview';
-import { LocalUploadComponent } from '../src/components/localUpload';
-import { UploadsStartEventPayload } from '../src';
+import { LocalUploadComponent } from '../components/localUpload';
+import { UploadsStartEventPayload } from '..';
 import { PreviewsTitle, PreviewsWrapper } from './styled';
 import { PreviewData } from './types';
 

@@ -25,7 +25,7 @@ ${(
 ${(
   <Props
     heading="GlobalNavigation props"
-    props={require('!!extract-react-types-loader!../src/components/GlobalNavigation')}
+    props={require('!!extract-react-types-loader!../components/GlobalNavigation')}
   />
 )}
 `;

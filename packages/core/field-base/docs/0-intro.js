@@ -46,21 +46,21 @@ FieldBase components *will* work by themselves, but are really meant to be exten
 
   ${(
     <Props
-      props={require('!!extract-react-types-loader!../src/components/FieldBase')}
+      props={require('!!extract-react-types-loader!../components/FieldBase')}
       heading="FieldBase Props"
     />
   )}
 
    ${(
      <Props
-       props={require('!!extract-react-types-loader!../src/components/FieldBaseStateless')}
+       props={require('!!extract-react-types-loader!../components/FieldBaseStateless')}
        heading="FieldBaseStateless Props"
      />
    )}
 
    ${(
      <Props
-       props={require('!!extract-react-types-loader!../src/components/Label')}
+       props={require('!!extract-react-types-loader!../components/Label')}
        heading="Label Props"
      />
    )}

@@ -22,7 +22,7 @@ ${(
 ${(
   <Props
     heading="Skeleton Props"
-    props={require('!!extract-react-types-loader!../src/components/Skeleton')}
+    props={require('!!extract-react-types-loader!../components/Skeleton')}
   />
 )}
 `;

@@ -6,7 +6,7 @@ import {
   filterUsers,
   unassigned,
 } from '../example-helpers';
-import { LoadOptions, OnInputChange, OptionData } from '../src/types';
+import { LoadOptions, OnInputChange, OptionData } from '../types';
 
 type ChildrenProps = {
   loadUsers: LoadOptions;

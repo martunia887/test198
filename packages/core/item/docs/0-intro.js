@@ -28,28 +28,28 @@ Item is generally a layout component, concerned with visual presentation of the 
   ${(
     <Props
       heading="Item Props"
-      props={require('!!extract-react-types-loader!../src/components/Item')}
+      props={require('!!extract-react-types-loader!../components/Item')}
     />
   )}
 
   ${(
     <Props
       heading="ItemGroup Props"
-      props={require('!!extract-react-types-loader!../src/components/ItemGroup')}
+      props={require('!!extract-react-types-loader!../components/ItemGroup')}
     />
   )}
 
   ${(
     <Props
       heading="withItemClick Props"
-      props={require('!!extract-react-types-loader!../src/components/ItemGroup')}
+      props={require('!!extract-react-types-loader!../components/ItemGroup')}
     />
   )}
 
   ${(
     <Props
       heading="withItemFocus Props"
-      props={require('!!extract-react-types-loader!../src/components/ItemGroup')}
+      props={require('!!extract-react-types-loader!../components/ItemGroup')}
     />
   )}
 

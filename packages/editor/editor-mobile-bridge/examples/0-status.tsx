@@ -5,9 +5,9 @@ import Form, { Field, FormFooter } from '@atlaskit/form';
 import AkButton from '@atlaskit/button';
 import Textfield from '@atlaskit/textfield';
 import AkSelect from '@atlaskit/select';
-import MobileEditor from '../src/editor/mobile-editor-element';
+import MobileEditor from '../editor/mobile-editor-element';
 import WebToNativeReporter from '../example-helpers/WebToNativeReporter';
-import { bridge } from '../src/editor/mobile-editor-element';
+import { bridge } from '../editor/mobile-editor-element';
 
 export interface Props {
   text: string;

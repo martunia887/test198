@@ -182,7 +182,7 @@ onDragEnd = (source: TreePosition, destination: ?TreePosition) => {
     <Props
       title="API Reference"
       heading="Tree Props"
-      props={require('!!extract-react-types-loader!../src/components/Tree/Tree')}
+      props={require('!!extract-react-types-loader!../components/Tree/Tree')}
     />
   )}
 `;

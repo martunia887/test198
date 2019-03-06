@@ -29,21 +29,21 @@ ${(
 ${(
   <Props
     heading="DatePicker Props"
-    props={require('!!extract-react-types-loader!../src/components/DatePicker')}
+    props={require('!!extract-react-types-loader!../components/DatePicker')}
   />
 )}
 
 ${(
   <Props
     heading="TimePicker Props"
-    props={require('!!extract-react-types-loader!../src/components/TimePicker')}
+    props={require('!!extract-react-types-loader!../components/TimePicker')}
   />
 )}
 
 ${(
   <Props
     heading="DateTimePicker Props"
-    props={require('!!extract-react-types-loader!../src/components/DateTimePicker')}
+    props={require('!!extract-react-types-loader!../components/DateTimePicker')}
   />
 )}
 `;

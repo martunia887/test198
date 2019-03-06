@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Card } from '../src';
+import { Card } from '../';
 import {
   createStorybookContext,
   imageFileId,

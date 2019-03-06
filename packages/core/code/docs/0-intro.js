@@ -22,14 +22,14 @@ export default md`
   ${(
     <Props
       heading="Code Props"
-      props={require('!!extract-react-types-loader!../src/components/Code')}
+      props={require('!!extract-react-types-loader!../components/Code')}
     />
   )}
 
   ${(
     <Props
       heading="CodeBlock Props"
-      props={require('!!extract-react-types-loader!../src/components/CodeBlock')}
+      props={require('!!extract-react-types-loader!../components/CodeBlock')}
     />
   )}
 

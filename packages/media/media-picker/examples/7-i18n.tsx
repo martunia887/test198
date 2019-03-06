@@ -7,7 +7,7 @@ import {
 import * as React from 'react';
 import { Component } from 'react';
 import { ContextFactory } from '@atlaskit/media-core';
-import { MediaPicker, Popup } from '../src';
+import { MediaPicker, Popup } from '../';
 import { intlShape } from 'react-intl';
 
 const mediaContext = ContextFactory.create({

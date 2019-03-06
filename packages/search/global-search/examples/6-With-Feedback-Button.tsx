@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { withFeedbackButton } from '../src/index';
-import { GlobalQuickSearch, Props } from '../src';
+import { withFeedbackButton } from '../index';
+import { GlobalQuickSearch, Props } from '../';
 import withNavigation from '../example-helpers/withNavigation';
 
 const GlobalQuickSearchWithFeedbackInNavigation = withNavigation(

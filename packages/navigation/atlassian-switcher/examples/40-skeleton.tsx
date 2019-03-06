@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Drawer from '@atlaskit/drawer';
 import Button from '@atlaskit/button';
-import Skeleton from '../src/primitives/skeleton';
+import Skeleton from '../primitives/skeleton';
 import { withAnalyticsLogger } from './helpers';
 
 class SkeletonExample extends Component {

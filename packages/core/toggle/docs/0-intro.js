@@ -35,14 +35,14 @@ export default md`
   ${(
     <Props
       heading="Toggle Default Props"
-      props={require('!!extract-react-types-loader!../src/Toggle')}
+      props={require('!!extract-react-types-loader!../Toggle')}
     />
   )}
 
   ${(
     <Props
       heading="Toggle Stateless Props"
-      props={require('!!extract-react-types-loader!../src/ToggleStateless')}
+      props={require('!!extract-react-types-loader!../ToggleStateless')}
     />
   )}
 `;

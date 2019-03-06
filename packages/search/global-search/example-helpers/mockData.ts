@@ -1,10 +1,10 @@
-import { GraphqlResponse, SearchResult } from '../src/api/PeopleSearchClient';
-import { RecentItemsResponse } from '../src/api/RecentSearchClient';
-import { QuickNavResult } from '../src/api/ConfluenceClient';
+import { GraphqlResponse, SearchResult } from '../api/PeopleSearchClient';
+import { RecentItemsResponse } from '../api/RecentSearchClient';
+import { QuickNavResult } from '../api/ConfluenceClient';
 import {
   CrossProductSearchResponse,
   CrossProductExperimentResponse,
-} from '../src/api/CrossProductSearchClient';
+} from '../api/CrossProductSearchClient';
 import {
   Scope,
   ConfluenceItem,
@@ -12,7 +12,7 @@ import {
   JiraItemV1,
   JiraItemV2,
   PersonItem,
-} from '../src/api/types';
+} from '../api/types';
 import {
   generateRandomJiraIssue,
   generateRandomJiraBoard,

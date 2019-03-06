@@ -7,8 +7,8 @@ import Tooltip from '@atlaskit/tooltip';
 import { Content, ButtonGroup } from './styles';
 import imageUploadHandler from './imageUpload';
 
-import { MentionResource, EmojiResource } from '../src';
-import { toJSON } from '../src/utils';
+import { MentionResource, EmojiResource } from '..';
+import { toJSON } from '../utils';
 import {
   storyContextIdentifierProviderFactory,
   storyMediaProviderFactory,

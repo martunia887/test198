@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
 import styled from 'styled-components';
-import { MediaStore } from '../src';
+import { MediaStore } from '../';
 import { createUploadContext } from '../../media-test-helpers';
 import * as uuid from 'uuid';
 

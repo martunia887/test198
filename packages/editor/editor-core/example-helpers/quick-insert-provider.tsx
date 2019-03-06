@@ -3,7 +3,7 @@ import DevIcon from '@atlaskit/icon/glyph/editor/code';
 import {
   QuickInsertItem,
   QuickInsertProvider,
-} from '../src/plugins/quick-insert/types';
+} from '../plugins/quick-insert/types';
 
 const items: Array<QuickInsertItem> = [
   {

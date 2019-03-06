@@ -15,7 +15,7 @@ import {
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
 import Toggle from '@atlaskit/toggle';
-import { MediaPicker, Popup, MediaProgress } from '../src';
+import { MediaPicker, Popup, MediaProgress } from '../';
 import {
   PopupContainer,
   PopupHeader,
@@ -33,8 +33,8 @@ import {
   UploadProcessingEventPayload,
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
-} from '../src/domain/uploadEvent';
-import { PopupUploadEventPayloadMap } from '../src/components/types';
+} from '../domain/uploadEvent';
+import { PopupUploadEventPayloadMap } from '../components/types';
 import { AuthEnvironment } from '../example-helpers/types';
 
 const context = createStorybookContext();

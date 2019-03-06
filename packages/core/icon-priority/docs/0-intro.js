@@ -37,7 +37,7 @@ ${<PitchSentence />}
 ${(
   <Props
     heading="Icon Props"
-    props={require('!!extract-react-types-loader!../src/components/Icon')}
+    props={require('!!extract-react-types-loader!../components/Icon')}
   />
 )}
 `;

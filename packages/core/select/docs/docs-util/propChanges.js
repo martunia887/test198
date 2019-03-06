@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, Fragment, type Node } from 'react';
-import { CheckboxSelect, RadioSelect } from '../../src';
+import { CheckboxSelect, RadioSelect } from '../..';
 import PropStatus from './propStatus';
 
 const allOptions = [

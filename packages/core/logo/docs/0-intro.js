@@ -25,7 +25,7 @@ export default md`
   ${(
     <Props
       heading="Logo Props"
-      props={require('!!extract-react-types-loader!../src/AtlassianLogo/Logo')}
+      props={require('!!extract-react-types-loader!../AtlassianLogo/Logo')}
     />
   )}
 

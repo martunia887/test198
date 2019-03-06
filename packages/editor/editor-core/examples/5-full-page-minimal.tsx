@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import * as React from 'react';
 import { borderRadius } from '@atlaskit/theme';
 
-import Editor from './../src/editor';
+import Editor from './../editor';
 
 import {
   akEditorCodeBackground,
   akEditorCodeBlockPadding,
   akEditorCodeFontFamily,
-} from '../src/styles';
+} from '../styles';
 
 export const Wrapper: any = styled.div`
   height: 500px;

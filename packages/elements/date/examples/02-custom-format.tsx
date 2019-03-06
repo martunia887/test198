@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Date } from '../src';
+import { Date } from '../';
 
 export default () => (
   <div>
