@@ -30,6 +30,7 @@
     "@atlaskit/spinner": "^9.0.13",
     "@atlaskit/textfield": "^0.1.6",
     "@atlaskit/theme": "^7.0.4",
+    "@atlaskit/tooltip": "^12.1.17",
     "@emotion/core": "^10.0.7",
     "apply-ref": "^0.2.0",
     "focus-trap": "^2.4.5",

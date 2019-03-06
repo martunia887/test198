@@ -11,9 +11,7 @@ type Props = {
   storedValue: Object,
   field: Object,
   invalidMessage: Object,
-  isRemovable: boolean,
   onChange: (*) => void,
-  onRemove: (*) => void,
 };
 type State = {
   single: string,

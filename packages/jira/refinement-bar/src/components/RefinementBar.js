@@ -163,11 +163,14 @@ class ActualRefinementBar extends Component<Props, State> {
         target={({ isOpen, onClick, ref }: *) => (
           <FilterButton
             field={field}
-            isRemovable={config.isRemovable}
             isInvalid={isInvalid}
             isSelected={isOpen}
             onClick={onClick}
-            onRemove={event => this.handleFieldRemove(key, event)}
+            onRemove={
+              config.isRemovable
+                ? event => this.handleFieldRemove(key, event)
+                : null
+            }
             ref={ref}
             value={storedValue.value}
           >

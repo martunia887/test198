@@ -5,14 +5,13 @@
 import { forwardRef } from 'react';
 import { jsx } from '@emotion/core';
 import { borderRadius, colors, gridSize } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
 import CloseIcon from '@atlaskit/icon/glyph/editor/close';
 
 export const FilterButton = forwardRef(
-  (
-    { children, field, isInvalid, isRemovable, onRemove, value, ...rest },
-    ref,
-  ) => {
-    return isRemovable ? (
+  ({ children, field, isInvalid, onRemove, value, ...rest }, ref) => {
+    const iconColor = rest.isSelected && !isInvalid ? 'white' : colors.N400;
+    return onRemove ? (
       <ButtonWrapper>
         <Button
           appearance={isInvalid ? 'warning' : 'default'}
@@ -23,17 +22,17 @@ export const FilterButton = forwardRef(
           {children}
         </Button>
 
-        <ClearButton
-          onClick={onRemove}
-          style={{
-            color: rest.isSelected && !isInvalid ? 'white' : colors.N800,
-          }}
-        >
-          <CloseIcon
-            primaryColor="inherit"
-            label={`Remove ${field.label} filter`}
-          />
-        </ClearButton>
+        <Tooltip content="Clear filter" position="top">
+          <ClearButton
+            isSelected={rest.isSelected && !isInvalid}
+            onClick={onRemove}
+          >
+            <CloseIcon
+              primaryColor={iconColor}
+              label={`Clear ${field.label} filter`}
+            />
+          </ClearButton>
+        </Tooltip>
       </ButtonWrapper>
     ) : (
       <Button {...rest} ref={ref}>
@@ -142,7 +141,7 @@ const ButtonWrapper = props => (
   <div css={{ position: 'relative' }} {...props} />
 );
 
-const ClearButton = props => (
+const ClearButton = ({ isInvalid, isSelected, ...props }: *) => (
   <button
     css={{
       background: 0,
@@ -150,16 +149,18 @@ const ClearButton = props => (
       borderRadius: borderRadius() / 2,
       cursor: 'pointer',
       lineHeight: 1,
-      opacity: 0.5,
+      opacity: 0.66,
       outline: 0,
       padding: 0,
       position: 'absolute',
       right: 8,
       top: '50%',
       transform: 'translateY(-50%)',
+      transition: 'background-color 200ms, opacity 200ms',
 
       ':hover, :focus': {
-        backgroundColor: colors.N30A,
+        backgroundColor: isSelected ? colors.N400A : colors.N30A,
+        opacity: 1,
       },
     }}
     {...props}
