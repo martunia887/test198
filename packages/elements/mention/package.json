@@ -7,7 +7,7 @@
   "description": "A React component used to display user profiles in a list for 'Mention' functionality",
   "module": "index.js",
   "types": "index.d.ts",
-  "atlaskit:src": "src/index.ts",
+   
   "sideEffects": false,
   "files": [
     "dist",

@@ -6,7 +6,7 @@
   "jsnext:main": "index.js",
   "module": "index.js",
   "types": "index.d.ts",
-  "atlaskit:src": "src/index.ts",
+   
   "author": "Atlassian Pty Ltd",
   "maintainers": [
     "Ahmed Fouad",

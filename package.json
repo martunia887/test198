@@ -8,6 +8,7 @@
   "author": "Atlassian Pty Ltd",
   "license": "Apache-2.0",
   "scripts": {
+    "build:removeatlaskitsrc": "                NODE_ENV=production bolt workspaces exec --only-fs \"$(node ./build/ci-scripts/get.glob.packages.for.tools.js typescript)\" -- sed -i.bak 's/\"atlaskit:src\": .*,/ /' package.json",
     "build": "                               run-p build:pkg build:babel build:flowtypes && run-p build:typescript build:adf-schema:json-schema --print-label --continue-on-error && yarn build:exception-packages",
     "build:exception-packages": "            yarn build:media-editor:copy-binaries && yarn build:css-reset && yarn build:reduced-ui-pack && run-p build:navigation-next --print-label",
     "build:pkg": "                           bolt workspaces exec --only-fs 'packages/**' -- copy-pkg package.json dist/package.json --only name,version,sideEffects && yarn build:pkg:new && echo \"TODO: Remove pkg:new when everything has dropped cjs\"",

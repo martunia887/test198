@@ -4,7 +4,7 @@
   "description": "Some helpers for Typescript typing of Atlaskit",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "index.ts",
+   
   "types": "index.d.ts",
   "sideEffects": false,
   "files": [

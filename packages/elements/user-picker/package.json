@@ -7,7 +7,7 @@
   "description": "Fabric component for display a dropdown to select a user from",
   "module": "index.js",
   "types": "index.d.ts",
-  "atlaskit:src": "src/index.ts",
+   
   "sideEffects": false,
   "files": [
     "dist",

@@ -3,7 +3,7 @@
   "version": "4.2.1",
   "description": "Editor Bitbucket transformer",
   "license": "Apache-2.0",
-  "atlaskit:src": "src/index.ts",
+   
   "module": "index.js",
   "types": "index.d.ts",
   "sideEffects": false,

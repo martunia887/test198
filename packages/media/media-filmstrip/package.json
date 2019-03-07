@@ -3,7 +3,7 @@
   "version": "28.0.0",
   "description": "Includes components that show media cards as a filmstrip",
   "license": "Apache-2.0",
-  "atlaskit:src": "src/index.tsx",
+   
   "module": "index.js",
   "types": "index.d.ts",
   "sideEffects": false,

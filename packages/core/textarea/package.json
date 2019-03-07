@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "module": "index.js",
   "types": "index.d.ts",
-  "atlaskit:src": "src/index.ts",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/text-field",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",
