@@ -112,7 +112,9 @@ class MediaNode extends Component<MediaNodeProps & ImageLoaderProps> {
      * Render loading until we do.
      */
     const isMobile = editorAppearance === 'mobile';
-    let isMobileReady = isMobile ? typeof collection === 'string' : true;
+    let isMobileReady = isMobile
+      ? typeof collection === 'string' && collection.length > 0
+      : true;
 
     if (type !== 'external' && !isMobileReady) {
       return <CardView status="loading" dimensions={cardDimensions} />;

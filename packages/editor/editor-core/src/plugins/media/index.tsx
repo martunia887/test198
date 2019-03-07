@@ -2,7 +2,7 @@ import * as React from 'react';
 import EditorImageIcon from '@atlaskit/icon/glyph/editor/image';
 import { media, mediaGroup, mediaSingle } from '@atlaskit/adf-schema';
 import { EditorPlugin, EditorAppearance } from '../../types';
-import { SmartMediaEditor } from '@atlaskit/media-editor';
+import { SmartMediaEditor, Dimensions } from '@atlaskit/media-editor';
 import { FileIdentifier } from '@atlaskit/media-client';
 import {
   stateKey as pluginKey,
@@ -70,9 +70,12 @@ export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
     return (
       <SmartMediaEditor
         identifier={identifier}
-        onUploadStart={(newFileIdentifier: FileIdentifier) => {
+        onUploadStart={(
+          newFileIdentifier: FileIdentifier,
+          dimensions: Dimensions,
+        ) => {
           mediaState.closeMediaEditor();
-          mediaState.replaceEditingMedia(newFileIdentifier);
+          mediaState.replaceEditingMedia(newFileIdentifier, dimensions);
         }}
         onFinish={mediaState.closeMediaEditor}
       />

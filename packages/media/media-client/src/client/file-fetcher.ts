@@ -319,6 +319,10 @@ export class FileFetcher {
     const isIE11 =
       !!(window as any).MSInputMethodContext &&
       !!(document as any).documentMode;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(
+      (navigator as Navigator).userAgent,
+    );
+
     const iframeName = 'media-download-iframe';
     const link = document.createElement('a');
     let iframe = document.getElementById(iframeName) as HTMLIFrameElement;
@@ -331,7 +335,7 @@ export class FileFetcher {
     }
     link.href = await this.mediaStore.getFileBinaryURL(id, collectionName);
     link.download = name;
-    link.target = isIE11 ? '_blank' : iframeName;
+    link.target = isIE11 || isSafari ? '_blank' : iframeName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
