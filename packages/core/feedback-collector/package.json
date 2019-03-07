@@ -6,7 +6,7 @@
   },
   "description": "A component that collects feedback across Atlassian products.",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "sideEffects": false,
   "files": [
     "dist",

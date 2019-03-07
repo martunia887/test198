@@ -4,7 +4,7 @@
   "description": "A set of UI elements for indicating progress through a user journey",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/progress-indicators",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",

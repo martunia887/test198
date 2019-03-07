@@ -4,7 +4,7 @@
   "description": "A React component rendering a mobile header",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "author": "Atlassian Pty Ltd",
   "maintainers": [
     "Ben G",

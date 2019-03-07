@@ -4,7 +4,7 @@
   "description": "This component displays as a tag with an optional link and/or button to remove the given tag.",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "sideEffects": false,
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/tags",
   "author": "Atlassian Pty Ltd",

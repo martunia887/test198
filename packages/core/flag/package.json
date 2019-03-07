@@ -4,7 +4,7 @@
   "description": "Flags are used for confirmations, alerts, and acknowledgments that require minimal user interaction.",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/flag-messages",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",

@@ -3,7 +3,7 @@
   "version": "4.0.10",
   "description": "A React component that shows the steps and progress in a journey",
   "license": "Apache-2.0",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/progress-tracker",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",

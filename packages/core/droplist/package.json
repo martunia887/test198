@@ -4,7 +4,7 @@
   "description": "Droplist component",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/drop-menu",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",

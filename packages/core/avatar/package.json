@@ -4,7 +4,7 @@
   "description": "A component that represents a user.",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/avatars",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",

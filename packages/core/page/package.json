@@ -4,7 +4,7 @@
   "description": "A component for building page layouts. Also includes the Grid and GridColumn components.",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/grid",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",

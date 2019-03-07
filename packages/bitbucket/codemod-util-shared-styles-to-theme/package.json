@@ -4,7 +4,7 @@
   "private": true,
   "description": "Converts @atlaskit/util-shared-styles to @atlaskit/theme",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "scripts": {
     "test": "jest"
   },

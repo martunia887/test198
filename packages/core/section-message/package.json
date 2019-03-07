@@ -4,7 +4,7 @@
   "description": "A react component used to alert users of a particular screen area that needs user action",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",
   "maintainers": [

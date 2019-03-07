@@ -4,7 +4,7 @@
   "description": "A React Component for displaying Tooltips",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "sideEffects": false,
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/tooltips",
   "author": "Atlassian Pty Ltd",

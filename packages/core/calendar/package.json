@@ -4,7 +4,7 @@
   "description": "A React component for displaying a calendar.",
   "license": "Apache-2.0",
   "main": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/date-picker",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",

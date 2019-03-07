@@ -4,7 +4,7 @@
   "description": "React component which allows selection of multiple items from a dropdown list. Substitute for the native multiple select element",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/multi-select",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",

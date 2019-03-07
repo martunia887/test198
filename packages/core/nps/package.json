@@ -6,7 +6,7 @@
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "sideEffects": false,
 "maintainers": [
     "Sean C",

@@ -4,7 +4,7 @@
   "description": "A React component that represents Header of an application page",
   "license": "Apache-2.0",
   "module": "index.js",
-  "atlaskit:src": "src/index.js",
+   
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/page-header",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",
