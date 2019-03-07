@@ -11,9 +11,9 @@ import {
   TypeaheadProps,
   TypeaheadState,
 } from '../example-helpers/typeahead-props';
-import EmojiTypeAhead from '../src/components/typeahead/EmojiTypeAhead';
-import { emojiTypeAheadMaxHeight } from '../src/shared-styles';
-import { EmojiId, OptionalEmojiDescription } from '../src/types';
+import EmojiTypeAhead from '../components/typeahead/EmojiTypeAhead';
+import { emojiTypeAheadMaxHeight } from '../shared-styles';
+import { EmojiId, OptionalEmojiDescription } from '../types';
 
 class EmojiTypeAheadTextInput extends Component<
   TypeaheadProps,

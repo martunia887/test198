@@ -5,7 +5,7 @@ import {
   getFileInfo,
   ImageMetaData,
   getScaleFactor,
-} from '../src';
+} from '..';
 import {
   InputWrapper,
   PreviewList,

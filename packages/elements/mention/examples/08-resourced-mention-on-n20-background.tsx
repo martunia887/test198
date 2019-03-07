@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { AnalyticsListener } from '@atlaskit/analytics';
 import { colors } from '@atlaskit/theme';
-import debug from '../src/util/logger';
+import debug from '../util/logger';
 import { onMentionEvent } from '../example-helpers/index';
 import {
   mockMentionData as mentionData,
   mockMentionProvider as mentionProvider,
-} from '../src/__tests__/unit/_test-helpers';
-import ResourcedMention from '../src/components/Mention/ResourcedMention';
+} from '../__tests__/unit/_test-helpers';
+import ResourcedMention from '../components/Mention/ResourcedMention';
 
 const style = {
   backgroundColor: colors.N20,

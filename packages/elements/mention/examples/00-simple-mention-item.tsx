@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import MentionItem from '../src/components/MentionItem';
+import MentionItem from '../components/MentionItem';
 import { generateMentionItem, onSelection } from '../example-helpers';
 
 export default function Example() {

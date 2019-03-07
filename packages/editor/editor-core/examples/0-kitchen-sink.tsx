@@ -9,9 +9,9 @@ import { ReactRenderer } from '@atlaskit/renderer';
 import { colors } from '@atlaskit/theme';
 import { ProviderFactory } from '@atlaskit/editor-common';
 
-import enMessages from '../src/i18n/en';
-import languages from '../src/i18n/languages';
-import WithEditorActions from './../src/ui/WithEditorActions';
+import enMessages from '../i18n/en';
+import languages from '../i18n/languages';
+import WithEditorActions from './../ui/WithEditorActions';
 import {
   SaveAndCancelButtons,
   providers,
@@ -19,9 +19,9 @@ import {
   LOCALSTORAGE_defaultDocKey,
 } from './5-full-page';
 import LanguagePicker from '../example-helpers/LanguagePicker';
-import EditorContext from './../src/ui/EditorContext';
-import { EditorAppearance } from '../src/types';
-import { EditorActions } from '../src';
+import EditorContext from './../ui/EditorContext';
+import { EditorAppearance } from '../types';
+import { EditorActions } from '..';
 
 import { extensionHandlers } from '../example-helpers/extension-handlers';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
@@ -440,7 +440,7 @@ class FullPageRendererExample extends React.Component<Props, State> {
       locale,
     )}`);
     addLocaleData(localeData.default);
-    const messages = await import(`../src/i18n/${locale}`);
+    const messages = await import(`../i18n/${locale}`);
     this.setState({ locale, messages: messages.default });
   };
 

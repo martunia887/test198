@@ -3,8 +3,8 @@
 import * as React from 'react';
 
 import { Editor, EditorContext, CollapsedEditor } from '@atlaskit/editor-core';
-import ToolsDrawer from '../example-helpers/ToolsDrawer';
-import { JIRATransformer } from '../src';
+import ToolsDrawer, { RenderEditorProps } from '../example-helpers/ToolsDrawer';
+import { JIRATransformer } from '..';
 
 const SAVE_ACTION = () => console.log('Save');
 const CANCEL_ACTION = () => console.log('Cancel');

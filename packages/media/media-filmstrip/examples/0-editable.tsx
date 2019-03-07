@@ -11,7 +11,7 @@ import {
   createStorybookContext,
   genericFileId,
 } from '@atlaskit/media-test-helpers';
-import { FilmstripView } from '../src/filmstripView';
+import { FilmstripView } from '../filmstripView';
 
 const StoryWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   padding: 1em;

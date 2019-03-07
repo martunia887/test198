@@ -2,8 +2,8 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import FabricAnalyticsListener from '@atlaskit/analytics-listeners';
 
-import { Query } from '../src/types';
-import ResourcedItemList, { Props } from '../src/components/ResourcedItemList';
+import { Query } from '../types';
+import ResourcedItemList, { Props } from '../components/ResourcedItemList';
 import {
   analyticsWebClientMock,
   createProviders,

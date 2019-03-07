@@ -11,7 +11,7 @@ import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { FileIdentifier } from '@atlaskit/media-core';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 
-import { Card } from '../src';
+import { Card } from '..';
 import { createApiCards, actions } from '../example-helpers';
 
 const context = createStorybookContext();

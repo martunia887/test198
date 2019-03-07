@@ -7,7 +7,7 @@ import 'brace/mode/json';
 import 'brace/theme/tomorrow';
 import 'brace/ext/language_tools';
 import AceEditor from 'react-ace';
-import { Provider, Card } from '../src';
+import { Provider, Card } from '..';
 
 import * as mockedExamples from './_jsonLDExamples';
 import { IntlProvider } from 'react-intl';

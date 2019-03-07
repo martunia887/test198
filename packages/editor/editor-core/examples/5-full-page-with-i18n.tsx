@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { IntlProvider, addLocaleData } from 'react-intl';
-import enMessages from '../src/i18n/en';
-import languages from '../src/i18n/languages';
-import WithEditorActions from './../src/ui/WithEditorActions';
+import enMessages from '../i18n/en';
+import languages from '../i18n/languages';
+import WithEditorActions from './../ui/WithEditorActions';
 import {
   default as FullPageExample,
   SaveAndCancelButtons,
@@ -45,7 +45,7 @@ export default class ExampleEditor extends React.Component<Props, State> {
       locale,
     )}`);
     addLocaleData(localeData.default);
-    const messages = await import(`../src/i18n/${locale}`);
+    const messages = await import(`../i18n/${locale}`);
     this.setState({ locale, messages: messages.default });
   };
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Editor, { EditorProps } from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
-import CollapsedEditor from '../src/ui/CollapsedEditor';
+import Editor, { EditorProps } from './../editor';
+import EditorContext from './../ui/EditorContext';
+import WithEditorActions from './../ui/WithEditorActions';
+import CollapsedEditor from '../ui/CollapsedEditor';
 import { mention, emoji } from '@atlaskit/util-data-test';
 import { mediaProvider } from './5-full-page';
 import { EmojiProvider } from '../../../elements/emoji';

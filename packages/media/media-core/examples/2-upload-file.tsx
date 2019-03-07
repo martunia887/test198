@@ -4,10 +4,10 @@ import {
   defaultCollectionName,
   mediaPickerAuthProvider,
 } from '@atlaskit/media-test-helpers';
-import { ContextFactory, UploadController } from '../src';
+import { ContextFactory, UploadController } from '..';
 import { FilesWrapper, FileWrapper } from '../example-helpers/styled';
 import { Observable } from 'rxjs/Observable';
-import { FileState } from '../src/fileState';
+import { FileState } from '../fileState';
 import { Subscription } from 'rxjs/Subscription';
 
 export interface ComponentProps {}

@@ -7,7 +7,7 @@ import { colors } from '@atlaskit/theme';
 import AkDrawer from '@atlaskit/drawer';
 import { mockEndpoints } from './helpers/mock-endpoints';
 import { withAnalyticsLogger } from './helpers';
-import AtlassianSwitcher from '../src';
+import AtlassianSwitcher from '..';
 
 class ConfluenceSwitcherExample extends Component {
   state = {

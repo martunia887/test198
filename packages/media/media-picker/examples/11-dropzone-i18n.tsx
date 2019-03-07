@@ -6,7 +6,7 @@ import {
   defaultMediaPickerCollectionName,
   I18NWrapper,
 } from '@atlaskit/media-test-helpers';
-import { MediaPicker } from '../src';
+import { MediaPicker } from '..';
 import {
   DropzoneContainer,
   PopupContainer,

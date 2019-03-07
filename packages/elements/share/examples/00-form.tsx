@@ -1,6 +1,6 @@
 import { userPickerData } from '@atlaskit/util-data-test';
 import * as React from 'react';
-import { ShareForm } from '../src/components/ShareForm';
+import { ShareForm } from '../components/ShareForm';
 
 const loadOptions = () => userPickerData;
 

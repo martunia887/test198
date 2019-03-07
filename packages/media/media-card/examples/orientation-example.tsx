@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Card } from '../src';
+import { Card } from '..';
 import * as uuid from 'uuid/v4';
 import {
   mediaPickerAuthProvider,

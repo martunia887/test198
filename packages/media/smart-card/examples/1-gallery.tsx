@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { Provider, Card, Client } from '../src';
+import { Provider, Card, Client } from '..';
 import urlsJSON from './example-urls.json';
 import styled from 'styled-components';
 import * as lorem from 'lorem-ipsum';

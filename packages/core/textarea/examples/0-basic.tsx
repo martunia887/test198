@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import TextArea from '../src';
+import TextArea from '..';
 
 const Div = styled.div`
   max-width: 500px;

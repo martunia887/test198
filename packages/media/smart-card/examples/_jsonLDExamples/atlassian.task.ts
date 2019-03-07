@@ -9,7 +9,7 @@ import {
   JIRA_CHANGE,
   JIRA_PROBLEM,
   JIRA_CUSTOM_TASK_TYPE,
-} from '../../src/extractInlinePropsFromJSONLD/constants';
+} from '../../extractInlinePropsFromJSONLD/constants';
 
 export const AsanaTask = {
   '@context': {

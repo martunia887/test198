@@ -1,5 +1,5 @@
 import * as React from 'react';
-import FeatureFlagClient from '../src/index';
+import FeatureFlagClient from '../index';
 
 const myAnalyticsHandler = event => {
   console.log('Sending exposure event', event);

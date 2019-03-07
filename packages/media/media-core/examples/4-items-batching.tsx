@@ -9,7 +9,7 @@ import {
   animatedFileId,
 } from '@atlaskit/media-test-helpers';
 import * as uuid from 'uuid';
-import { FileState } from '../src';
+import { FileState } from '..';
 import { FileStateWrapper } from '../example-helpers/styled';
 
 export interface ExampleState {

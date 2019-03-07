@@ -7,7 +7,7 @@ import {
   I18NWrapper,
 } from '@atlaskit/media-test-helpers';
 import { FileIdentifier } from '@atlaskit/media-core';
-import { SmartMediaEditor } from '../src';
+import { SmartMediaEditor } from '..';
 
 interface State {
   showEditorVersion?: 'with-i18n' | 'without-i18n';

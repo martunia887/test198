@@ -12,7 +12,7 @@ import {
   ContainerResult,
   PersonResult,
   ResultItemGroup,
-} from '../src';
+} from '..';
 
 export default class extends React.Component {
   render() {

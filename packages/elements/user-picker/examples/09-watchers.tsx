@@ -4,9 +4,9 @@ import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import * as React from 'react';
 import styled from 'styled-components';
 import { ExampleWrapper } from '../example-helpers/ExampleWrapper';
-import { OptionData, Value } from '../src';
-import { UserPicker } from '../src/components/UserPicker';
-import { isTeam, isUser } from '../src/components/utils';
+import { OptionData, Value } from '..';
+import { UserPicker } from '../components/UserPicker';
+import { isTeam, isUser } from '../components/utils';
 
 type State = {
   value: OptionData[];

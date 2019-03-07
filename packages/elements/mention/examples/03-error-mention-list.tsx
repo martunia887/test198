@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { HttpError } from '../src/api/MentionResource';
-import MentionList from '../src/components/MentionList';
+import { HttpError } from '../api/MentionResource';
+import MentionList from '../components/MentionList';
 
 const resourceError = new Error('monkey trousers');
 const error401 = new HttpError(401, 'not used');

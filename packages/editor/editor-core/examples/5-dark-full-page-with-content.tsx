@@ -1,7 +1,7 @@
 import React from 'react';
 import { default as FullPageExample, ExampleProps } from './5-full-page';
 import { exampleDocument } from '../example-helpers/example-document';
-import { EditorProps } from './../src/editor';
+import { EditorProps } from './../editor';
 
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
 
-import accessibleSites from '../src/mocks/accessibleSites';
-import { catherineHirons } from '../src/mocks/users';
+import accessibleSites from '../mocks/accessibleSites';
+import { catherineHirons } from '../mocks/users';
 
 import { IntlProvider } from 'react-intl';
 
@@ -10,7 +10,7 @@ import {
   FocusedTaskCloseAccount,
   DeleteUserOverviewScreen,
   DeleteUserContentPreviewScreen,
-} from '../src';
+} from '..';
 
 const submitButton = (
   <Button appearance="primary" onClick={() => null}>

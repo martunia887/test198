@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { getEmojis, onSelection } from '../example-helpers';
-import EmojiTypeAheadList from '../src/components/typeahead/EmojiTypeAheadList';
-import { EmojiDescription } from '../src/types';
+import EmojiTypeAheadList from '../components/typeahead/EmojiTypeAheadList';
+import { EmojiDescription } from '../types';
 
 function randomEmojis(): EmojiDescription[] {
   return getEmojis()

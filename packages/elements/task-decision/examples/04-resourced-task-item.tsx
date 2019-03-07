@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ResourcedTaskItem from '../src/components/ResourcedTaskItem';
+import ResourcedTaskItem from '../components/ResourcedTaskItem';
 import {
   Grid,
   Item,

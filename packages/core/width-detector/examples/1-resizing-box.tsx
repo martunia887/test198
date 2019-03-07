@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
-import WidthDetector from '../src';
+import WidthDetector from '..';
 
 const startSize = 100;
 const endSize = startSize * 2;

@@ -4,10 +4,10 @@ import {
   ExampleEditor as FullPageEditor,
   LOCALSTORAGE_defaultDocKey,
 } from './5-full-page';
-import EditorContext from '../src/ui/EditorContext';
+import EditorContext from '../ui/EditorContext';
 import { DevTools } from '../example-helpers/DevTools';
-import WithEditorActions from '../src/ui/WithEditorActions';
-import { EditorActions } from '../src';
+import WithEditorActions from '../ui/WithEditorActions';
+import { EditorActions } from '..';
 
 export const Textarea: any = styled.textarea`
   box-sizing: border-box;

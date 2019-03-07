@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
 import { Switcher, withAnalyticsLogger } from './helpers';
-import ErrorBoundary from '../src/components/error-boundary';
+import ErrorBoundary from '../components/error-boundary';
 
 class SwitcherExample extends Component {
   state = {

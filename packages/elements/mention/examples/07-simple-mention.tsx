@@ -3,10 +3,10 @@ import { AnalyticsListener as AnalyticsListenerNext } from '@atlaskit/analytics-
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import * as React from 'react';
 import { onMentionEvent } from '../example-helpers/index';
-import Mention from '../src/components/Mention';
-import { ELEMENTS_CHANNEL } from '../src/constants';
-import debug from '../src/util/logger';
-import { mockMentionData as mentionData } from '../src/__tests__/unit/_test-helpers';
+import Mention from '../components/Mention';
+import { ELEMENTS_CHANNEL } from '../constants';
+import debug from '../util/logger';
+import { mockMentionData as mentionData } from '../__tests__/unit/_test-helpers';
 
 const padding = { padding: '10px' };
 

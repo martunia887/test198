@@ -5,7 +5,7 @@ import {
   ServiceProvider,
   DocumentMode,
   Toolbar,
-} from '../src';
+} from '..';
 
 import { Container } from './helpers/styles';
 

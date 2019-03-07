@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ShareButton } from '../src/components/ShareButton';
+import { ShareButton } from '../components/ShareButton';
 
 const noop = () => {};
 

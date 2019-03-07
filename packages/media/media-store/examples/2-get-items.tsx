@@ -5,7 +5,7 @@ import {
   imageFileId,
   audioFileId,
 } from '@atlaskit/media-test-helpers';
-import { MediaStore, ItemsPayload } from '../src';
+import { MediaStore, ItemsPayload } from '..';
 
 const context = createStorybookContext();
 const store = new MediaStore({

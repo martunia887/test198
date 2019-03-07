@@ -1,6 +1,6 @@
 // tslint:disable:no-console
 import * as React from 'react';
-import { Avatar, AvatarPickerDialog } from '../src';
+import { Avatar, AvatarPickerDialog } from '..';
 import { generateAvatars } from '../example-helpers';
 
 const avatars: Array<Avatar> = generateAvatars(30);

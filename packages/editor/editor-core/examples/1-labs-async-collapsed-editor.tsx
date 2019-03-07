@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CollapsedEditor from './../src/labs/CollapsedEditor';
+import CollapsedEditor from './../labs/CollapsedEditor';
 
 export interface State {
   isExpanded: boolean;

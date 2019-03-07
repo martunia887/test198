@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { AnalyticsListener } from '../../../core/analytics-next/src/';
+import { AnalyticsListener } from '../../../core/analytics-next/';
 import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
-import { GlobalQuickSearch } from '../src';
+import { GlobalQuickSearch } from '..';
 import withNavigation from '../example-helpers/withNavigation';
 
 const GlobalQuickSearchWrapper = withNavigation(GlobalQuickSearch);

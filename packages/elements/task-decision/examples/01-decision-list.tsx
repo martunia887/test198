@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 
-import DecisionList from '../src/components/DecisionList';
-import DecisionItem from '../src/components/DecisionItem';
+import DecisionList from '../components/DecisionList';
+import DecisionItem from '../components/DecisionItem';
 import {
   MessageContainer,
   dumpRef,

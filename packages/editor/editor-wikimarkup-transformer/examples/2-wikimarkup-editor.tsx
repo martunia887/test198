@@ -7,7 +7,7 @@ import {
 } from '@atlaskit/editor-core';
 import { mention, taskDecision } from '@atlaskit/util-data-test';
 
-import { WikiMarkupTransformer } from '../src';
+import { WikiMarkupTransformer } from '..';
 
 const Container = styled.div`
   display: grid;

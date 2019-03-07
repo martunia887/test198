@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Date, DateProps } from '../src';
+import { Date, DateProps } from '..';
 import styled, { css } from 'styled-components';
 import { colors, borderRadius } from '@atlaskit/theme';
 
