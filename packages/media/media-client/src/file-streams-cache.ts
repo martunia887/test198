@@ -2,6 +2,7 @@ import { LRUCache } from 'lru-fast';
 import { Observable } from 'rxjs/Observable';
 import { mediaState } from '@atlaskit/media-core';
 import { FileState } from './models/file-state';
+import { observableToPromise } from './utils';
 
 export class StreamsCache<T> {
   constructor(
@@ -21,7 +22,7 @@ export class StreamsCache<T> {
     const deferred = this.stateDeferreds.get(id);
 
     if (deferred) {
-      stream.toPromise().then(state => {
+      observableToPromise(stream).then(state => {
         deferred.resolve(state);
       });
     }
@@ -35,7 +36,7 @@ export class StreamsCache<T> {
     const state = this.get(id);
 
     if (state) {
-      return state.toPromise();
+      return observableToPromise(state);
     }
     const deferred = this.stateDeferreds.get(id);
     if (deferred) {
