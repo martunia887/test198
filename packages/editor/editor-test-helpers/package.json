@@ -3,7 +3,7 @@
   "version": "7.0.1",
   "description": "Test Helpers for Atlassian Editor components",
   "license": "Apache-2.0",
-  "atlaskit:src": "src/index.ts",
+   
   "module": "index.js",
   "types": "index.d.ts",
   "author": "Atlassian Pty Ltd",

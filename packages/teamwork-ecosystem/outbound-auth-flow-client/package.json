@@ -5,7 +5,7 @@
   "config": {
     "access": "public"
   },
-  "atlaskit:src": "src/index.ts",
+   
   "jsnext:main": "index.js",
   "module": "index.js",
   "types": "index.d.ts",

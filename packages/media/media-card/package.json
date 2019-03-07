@@ -3,7 +3,7 @@
   "version": "54.1.0",
   "description": "Includes all media card related components, CardView, CardViewSmall, Card...",
   "license": "Apache-2.0",
-  "atlaskit:src": "src/index.ts",
+   
   "module": "index.js",
   "types": "index.d.ts",
   "author": "Atlassian Pty Ltd",

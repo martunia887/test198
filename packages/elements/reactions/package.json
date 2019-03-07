@@ -7,7 +7,7 @@
   "description": "Reactions component",
   "module": "index.js",
   "types": "index.d.ts",
-  "atlaskit:src": "src/index.ts",
+   
   "files": [
     "dist",
     "src"

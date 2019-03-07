@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "types": "index.d.ts",
   "module": "index.js",
-  "atlaskit:src": "src/index.ts",
+   
   "author": "Atlassian Pty Ltd",
   "maintainers": [
     "Jimmy L",
