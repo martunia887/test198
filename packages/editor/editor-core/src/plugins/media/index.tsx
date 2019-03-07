@@ -30,6 +30,7 @@ import {
   ACTION_SUBJECT_ID,
 } from '../analytics';
 import WithPluginState from '../../ui/WithPluginState';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 export {
   MediaState,
@@ -68,17 +69,21 @@ export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
     };
 
     return (
-      <SmartMediaEditor
-        identifier={identifier}
-        onUploadStart={(
-          newFileIdentifier: FileIdentifier,
-          dimensions: Dimensions,
-        ) => {
-          mediaState.closeMediaEditor();
-          mediaState.replaceEditingMedia(newFileIdentifier, dimensions);
-        }}
-        onFinish={mediaState.closeMediaEditor}
-      />
+      <MediaClientConfigContext.Provider
+        value={mediaState.uploadMediaClientConfig}
+      >
+        <SmartMediaEditor
+          identifier={identifier}
+          onUploadStart={(
+            newFileIdentifier: FileIdentifier,
+            dimensions: Dimensions,
+          ) => {
+            mediaState.closeMediaEditor();
+            mediaState.replaceEditingMedia(newFileIdentifier, dimensions);
+          }}
+          onFinish={mediaState.closeMediaEditor}
+        />
+      </MediaClientConfigContext.Provider>
     );
   }
 

@@ -12,6 +12,7 @@ import EditorAlignImageLeft from '@atlaskit/icon/glyph/editor/align-image-left';
 import EditorAlignImageRight from '@atlaskit/icon/glyph/editor/align-image-right';
 import EditorAlignImageCenter from '@atlaskit/icon/glyph/editor/align-image-center';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 import commonMessages from '../../messages';
 import { Command, EditorAppearance } from '../../../src/types';
@@ -251,12 +252,16 @@ const renderAnnotationButton = (
     }
 
     return (
-      <AnnotationToolbarWithMediaClient
+      <MediaClientConfigContext.Provider
         key={idx}
-        id={selectedContainer.firstChild!.attrs.id}
-        view={view}
-        intl={intl}
-      />
+        value={pluginState.mediaClientConfig}
+      >
+        <AnnotationToolbarWithMediaClient
+          id={selectedContainer.firstChild!.attrs.id}
+          view={view}
+          intl={intl}
+        />
+      </MediaClientConfigContext.Provider>
     );
   };
 };
