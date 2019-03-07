@@ -7,7 +7,7 @@ import {
   largeImageFileId,
 } from '@atlaskit/media-test-helpers';
 
-import { Card } from '../src';
+import { Card } from '..';
 
 const context = createStorybookContext();
 const defaultCards = [

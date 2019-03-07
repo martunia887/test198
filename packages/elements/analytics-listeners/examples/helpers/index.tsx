@@ -10,7 +10,7 @@ import {
 import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import Button from '@atlaskit/button';
 import * as React from 'react';
-import { FabricChannel } from '../../src/types';
+import { FabricChannel } from '../../types';
 
 export type OwnProps = {
   onClick: (e: React.SyntheticEvent) => void;

@@ -7,7 +7,7 @@ import {
   WithEditorActions,
 } from '@atlaskit/editor-core';
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
-import { JIRATransformer } from '../src';
+import { JIRATransformer } from '..';
 
 const Container = styled.div`
   display: grid;

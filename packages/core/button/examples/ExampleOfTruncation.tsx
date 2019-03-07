@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Question from '@atlaskit/icon/glyph/question';
 import Expand from '@atlaskit/icon/glyph/arrow-down';
 
-import Button from '../src';
+import Button from '..';
 
 const NarrowWrapper = styled.div`
   margin: 10px;

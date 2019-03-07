@@ -3,13 +3,13 @@
 import * as React from 'react';
 
 import Button, { ButtonGroup } from '@atlaskit/button';
-import Editor from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
-import ToolbarHelp from './../src/ui/ToolbarHelp';
+import Editor from './../editor';
+import EditorContext from './../ui/EditorContext';
+import WithEditorActions from './../ui/WithEditorActions';
+import ToolbarHelp from './../ui/ToolbarHelp';
 import ToolsDrawer from '../example-helpers/ToolsDrawer';
-import CollapsedEditor from '../src/ui/CollapsedEditor';
-import ToolbarFeedback from '../src/ui/ToolbarFeedback';
+import CollapsedEditor from '../ui/CollapsedEditor';
+import ToolbarFeedback from '../ui/ToolbarFeedback';
 import { name, version } from '../package.json';
 
 const SAVE_ACTION = () => console.log('Save');

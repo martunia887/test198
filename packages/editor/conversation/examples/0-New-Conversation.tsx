@@ -4,7 +4,7 @@ import {
   getDataProviderFactory,
 } from '../example-helpers/MockProvider';
 import { MOCK_USERS } from '../example-helpers/MockData';
-import { Conversation } from '../src';
+import { Conversation } from '..';
 
 const provider = new ConversationResource({
   url: 'http://mockservice/',

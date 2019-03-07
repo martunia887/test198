@@ -12,9 +12,9 @@ import { colors } from '@atlaskit/theme';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { Skeleton } from '@atlaskit/icon';
 
-import Toolbar from '../src/plugins/floating-toolbar/ui/Toolbar';
-import { FloatingToolbarItem } from '../src/plugins/floating-toolbar/types';
-import ColorPalette from '../src/ui/ColorPalette';
+import Toolbar from '../plugins/floating-toolbar/ui/Toolbar';
+import { FloatingToolbarItem } from '../plugins/floating-toolbar/types';
+import ColorPalette from '../ui/ColorPalette';
 import { Content } from '../example-helpers/styles';
 
 const SAVE_ACTION = () => console.log('Save');

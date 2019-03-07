@@ -6,7 +6,7 @@ import Expand from '@atlaskit/icon/glyph/arrow-down';
 import Unlink from '@atlaskit/icon/glyph/editor/unlink';
 import Open from '@atlaskit/icon/glyph/editor/open';
 
-import Button, { ButtonAppearances } from '../src';
+import Button, { ButtonAppearances } from '..';
 
 const css = `
   .container {

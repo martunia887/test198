@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
-import WithEditorActions from './../src/ui/WithEditorActions';
+import WithEditorActions from './../ui/WithEditorActions';
 import {
   default as FullPageExample,
   LOCALSTORAGE_defaultDocKey,

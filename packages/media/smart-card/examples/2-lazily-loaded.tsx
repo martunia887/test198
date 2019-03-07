@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Provider, Card, Client } from '../src';
+import { Provider, Card, Client } from '..';
 
 export default () => (
   <Provider>

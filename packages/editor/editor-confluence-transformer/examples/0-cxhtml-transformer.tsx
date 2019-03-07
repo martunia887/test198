@@ -29,7 +29,7 @@ import {
   BODIED_NESTED_EXTENSION,
   DATE,
 } from '../example-helpers/cxhtml-test-data';
-import { ConfluenceTransformer } from '../src';
+import { ConfluenceTransformer } from '..';
 
 // tslint:disable-next-line:variable-name
 export const Content = styled.div`

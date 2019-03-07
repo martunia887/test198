@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 
-import TaskItem from '../src/components/TaskItem';
+import TaskItem from '../components/TaskItem';
 import {
   MessageContainer,
   SidebarContainer,

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { LocaleAndMessagesIntlProvider } from '../example-helpers/LocaleIntlProvider';
-import NoResults from '../src/components/NoResults';
-import ConfluenceNoResultState from '../src/components/confluence/NoResultsState';
-import JiraeNoResultState from '../src/components/jira/NoResultsState';
+import NoResults from '../components/NoResults';
+import ConfluenceNoResultState from '../components/confluence/NoResultsState';
+import JiraeNoResultState from '../components/jira/NoResultsState';
 import withNavigation from '../example-helpers/withNavigation';
 
 interface Props {

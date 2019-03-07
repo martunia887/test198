@@ -1,10 +1,10 @@
 /* tslint:disable:no-console */
 import * as React from 'react';
 import styled from 'styled-components';
-import { Avatar } from '../src';
-import { AvatarList } from '../src/avatar-list';
-import { PredefinedAvatarList } from '../src/predefined-avatar-list';
-import { PredefinedAvatarView } from '../src/predefined-avatar-view';
+import { Avatar } from '..';
+import { AvatarList } from '../avatar-list';
+import { PredefinedAvatarList } from '../predefined-avatar-list';
+import { PredefinedAvatarView } from '../predefined-avatar-view';
 
 import { generateAvatars } from '../example-helpers';
 

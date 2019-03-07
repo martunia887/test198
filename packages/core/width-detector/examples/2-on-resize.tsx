@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import WidthDetector from '../src';
+import WidthDetector from '..';
 import * as debounce from 'lodash.debounce';
 
 const ResultBox = styled.div`

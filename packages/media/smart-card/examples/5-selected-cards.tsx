@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import { Card } from '../src';
+import { Card } from '..';
 
 const defaultText = `{
   "@type": "Document",

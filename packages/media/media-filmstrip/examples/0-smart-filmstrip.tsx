@@ -12,7 +12,7 @@ import {
 } from '@atlaskit/media-test-helpers';
 import { CardEvent, CardAction } from '@atlaskit/media-card';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
-import { Filmstrip, FilmstripItem } from '../src';
+import { Filmstrip, FilmstripItem } from '..';
 import { ExampleWrapper, FilmstripWrapper } from '../example-helpers/styled';
 import {
   FileItem,

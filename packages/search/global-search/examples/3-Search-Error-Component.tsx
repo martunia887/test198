@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LocaleAndMessagesIntlProvider } from '../example-helpers/LocaleIntlProvider';
-import SearchError from '../src/components/SearchError';
+import SearchError from '../components/SearchError';
 
 export default class extends React.Component {
   render() {

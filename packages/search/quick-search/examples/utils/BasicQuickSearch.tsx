@@ -6,7 +6,7 @@ import {
   ContainerResult,
   PersonResult,
   ObjectResult,
-} from '../../src';
+} from '../..';
 
 type DataShape = {
   title: string;

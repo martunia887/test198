@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Editor from './../src/editor/mobile-editor-element';
+import Editor from './../editor/mobile-editor-element';
 
 export const Wrapper: any = styled.div`
   position: absolute;

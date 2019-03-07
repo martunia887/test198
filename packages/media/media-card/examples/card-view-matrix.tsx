@@ -6,9 +6,9 @@ import styled from 'styled-components';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
 import BookIcon from '@atlaskit/icon/glyph/book';
 import EditIcon from '@atlaskit/icon/glyph/edit';
-import { CardAction, CardStatus, CardEvent } from '../src';
+import { CardAction, CardStatus, CardEvent } from '..';
 import { MediaType } from '@atlaskit/media-store';
-import { CardView } from '../src/root/cardView';
+import { CardView } from '../root/cardView';
 import { FileDetails } from '@atlaskit/media-core';
 
 const CardWrapper = styled.div`

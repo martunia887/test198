@@ -9,7 +9,7 @@ import {
   unknownFileId,
 } from '@atlaskit/media-test-helpers';
 
-import { Card } from '../src';
+import { Card } from '..';
 
 const context = createStorybookContext();
 // file cards

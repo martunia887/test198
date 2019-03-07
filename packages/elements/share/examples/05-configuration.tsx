@@ -3,7 +3,7 @@ import { ToggleStateless as Toggle } from '@atlaskit/toggle';
 import { OptionData } from '@atlaskit/user-picker';
 import { userPickerData } from '@atlaskit/util-data-test';
 import * as React from 'react';
-import { ShareDialogContainer } from '../src';
+import { ShareDialogContainer } from '..';
 import {
   Comment,
   ConfigResponse,
@@ -15,7 +15,7 @@ import {
   ShareClient,
   ShareResponse,
   User,
-} from '../src/types';
+} from '../types';
 
 type UserData = {
   avatarUrl?: string;

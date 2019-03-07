@@ -13,9 +13,9 @@ import {
   TypeaheadProps,
   TypeaheadState,
 } from '../example-helpers/typeahead-props';
-import EmojiTypeAhead from '../src/components/typeahead/EmojiTypeAhead';
-import { EmojiId, OptionalEmojiDescription } from '../src/types';
-import debug from '../src/util/logger';
+import EmojiTypeAhead from '../components/typeahead/EmojiTypeAhead';
+import { EmojiId, OptionalEmojiDescription } from '../types';
+import debug from '../util/logger';
 
 export class EmojiTypeAheadTextInput extends Component<
   TypeaheadProps,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import { ImagePlacer, ImageActions } from '../src/image-placer';
+import { ImagePlacer, ImageActions } from '../image-placer';
 import {
   Slider,
   Label,

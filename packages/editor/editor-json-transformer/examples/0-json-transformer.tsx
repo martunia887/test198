@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { EditorView } from 'prosemirror-view';
 import { Editor } from '@atlaskit/editor-core';
 import { taskDecision } from '@atlaskit/util-data-test';
-import { JSONTransformer } from '../src';
+import { JSONTransformer } from '..';
 
 const Container = styled.div`
   display: grid;

@@ -5,9 +5,9 @@ import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { borderRadius } from '@atlaskit/theme';
 
-import Editor from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
+import Editor from './../editor';
+import EditorContext from './../ui/EditorContext';
+import WithEditorActions from './../ui/WithEditorActions';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
@@ -18,7 +18,7 @@ import {
   akEditorCodeBackground,
   akEditorCodeBlockPadding,
   akEditorCodeFontFamily,
-} from '../src/styles';
+} from '../styles';
 
 import { collabEditProvider } from '../example-helpers/mock-collab-provider';
 import { EmojiProvider } from '@atlaskit/emoji';

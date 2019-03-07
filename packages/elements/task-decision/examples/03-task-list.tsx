@@ -2,8 +2,8 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 
-import TaskList from '../src/components/TaskList';
-import TaskItem from '../src/components/TaskItem';
+import TaskList from '../components/TaskList';
+import TaskItem from '../components/TaskItem';
 import {
   MessageContainer,
   dumpRef,

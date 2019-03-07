@@ -1,7 +1,7 @@
 import uuid from 'uuid/v1';
-import { Props as ObjectResultProps } from '../../src/components/Results/ObjectResult';
-import { Props as ContainerResultProps } from '../../src/components/Results/ContainerResult';
-import { Props as PersonResultProps } from '../../src/components/Results/PersonResult';
+import { Props as ObjectResultProps } from '../../components/Results/ObjectResult';
+import { Props as ContainerResultProps } from '../../components/Results/ContainerResult';
+import { Props as PersonResultProps } from '../../components/Results/PersonResult';
 
 function pickRandom<T>(array: Array<T>): T {
   return array[Math.floor(Math.random() * array.length)];

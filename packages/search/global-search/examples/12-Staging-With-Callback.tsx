@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GlobalQuickSearch } from '../src/index';
-import { Config } from '../src/api/configureSearchClients';
+import { GlobalQuickSearch } from '../index';
+import { Config } from '../api/configureSearchClients';
 import withNavigation from '../example-helpers/withNavigation';
 
 const message = (

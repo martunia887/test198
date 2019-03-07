@@ -25,11 +25,11 @@ import {
   default as Renderer,
   Props as RendererProps,
   RendererAppearance,
-} from '../../src/ui/Renderer';
+} from '../../ui/Renderer';
 
 import { AkProfileClient, modifyResponse } from '@atlaskit/profilecard';
 
-import { EmailSerializer, renderDocument, TextSerializer } from '../../src';
+import { EmailSerializer, renderDocument, TextSerializer } from '../..';
 
 import Sidebar, { getDefaultShowSidebarState } from './NavigationNext';
 

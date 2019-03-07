@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Renderer from './../src/renderer/mobile-renderer-element';
+import Renderer from './../renderer/mobile-renderer-element';
 
 export const Wrapper: any = styled.div`
   position: absolute;

@@ -18,7 +18,7 @@ import {
   createUploadContext,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
-import { Card, OnLoadingChangeState } from '../src';
+import { Card, OnLoadingChangeState } from '..';
 import {
   UploadController,
   FileIdentifier,

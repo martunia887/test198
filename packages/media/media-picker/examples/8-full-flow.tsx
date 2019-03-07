@@ -14,7 +14,7 @@ import {
   UploadPreviewUpdateEventPayload,
   MediaFile,
   Popup,
-} from '../src';
+} from '..';
 
 const context = createUploadContext();
 

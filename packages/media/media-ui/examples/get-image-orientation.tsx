@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import { getOrientation, getFileInfo } from '../src';
+import { getOrientation, getFileInfo } from '..';
 import {
   InputWrapper,
   PreviewList,

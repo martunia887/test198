@@ -4,7 +4,7 @@ import { UIAnalyticsEvent } from '@atlaskit/analytics-next-types';
 
 import * as React from 'react';
 import { createDummyComponentWithAnalytics } from '../examples/helpers';
-import { FabricElementsAnalyticsContext } from '../src';
+import { FabricElementsAnalyticsContext } from '..';
 
 const myOnClickHandler = () => {};
 

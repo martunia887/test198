@@ -4,7 +4,7 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import styled from 'styled-components';
 import { mention, emoji } from '@atlaskit/util-data-test';
-import { Editor } from '../src';
+import { Editor } from '..';
 import { Content } from '../example-helpers/styles';
 import imageUploadHandler from '../example-helpers/imageUpload';
 import { colors } from '@atlaskit/theme';

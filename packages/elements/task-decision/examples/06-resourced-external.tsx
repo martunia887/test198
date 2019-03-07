@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 
-import { TaskDecisionProvider, RenderDocument } from '../src/types';
-import ResourcedItemList from '../src/components/ResourcedItemList';
-import TaskDecisionResource from '../src/api/TaskDecisionResource';
+import { TaskDecisionProvider, RenderDocument } from '../types';
+import ResourcedItemList from '../components/ResourcedItemList';
+import TaskDecisionResource from '../api/TaskDecisionResource';
 import {
   createRenderer,
   SidebarContainer,

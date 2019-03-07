@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
-import { GlobalQuickSearch } from '../src';
+import { GlobalQuickSearch } from '..';
 import withNavigation from '../example-helpers/withNavigation';
 
 const GlobalQuickSearchInNavigation = withNavigation(GlobalQuickSearch);

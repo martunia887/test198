@@ -16,10 +16,10 @@ import {
   TypeaheadProps,
   TypeaheadState,
 } from '../example-helpers/typeahead-props';
-import { EmojiProvider } from '../src/api/EmojiResource';
-import EmojiTypeAhead from '../src/components/typeahead/EmojiTypeAhead';
-import { EmojiId, OptionalEmojiDescription } from '../src/types';
-import debug from '../src/util/logger';
+import { EmojiProvider } from '../api/EmojiResource';
+import EmojiTypeAhead from '../components/typeahead/EmojiTypeAhead';
+import { EmojiId, OptionalEmojiDescription } from '../types';
+import debug from '../util/logger';
 
 const tallPageStyle = {
   height: '1000px',

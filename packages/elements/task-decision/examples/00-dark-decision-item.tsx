@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import DecisionItem from '../src/components/DecisionItem';
+import DecisionItem from '../components/DecisionItem';
 import {
   MessageContainer,
   SidebarContainer,

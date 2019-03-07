@@ -7,7 +7,7 @@ import {
   InlineCardErroredView,
   InlineCardForbiddenView,
   InlineCardUnauthorizedView,
-} from '../src/InlineCard';
+} from '../InlineCard';
 
 interface Lozenge {
   text: string;

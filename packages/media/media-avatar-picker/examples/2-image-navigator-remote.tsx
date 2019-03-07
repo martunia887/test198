@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { remoteImage } from '@atlaskit/media-test-helpers';
-import ImageNavigator from '../src/image-navigator';
+import ImageNavigator from '../image-navigator';
 
 let onLoadParams: any;
 let imageElement: any;

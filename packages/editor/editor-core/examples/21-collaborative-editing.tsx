@@ -5,9 +5,9 @@ import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import PubSubClient from '@atlaskit/pubsub';
 
-import Editor from './../src/editor';
-import EditorContext from './../src/ui/EditorContext';
-import WithEditorActions from './../src/ui/WithEditorActions';
+import Editor from './../editor';
+import EditorContext from './../ui/EditorContext';
+import WithEditorActions from './../ui/WithEditorActions';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
@@ -16,7 +16,7 @@ import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { EmojiProvider } from '@atlaskit/emoji';
 import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
 import { extensionHandlers } from '../example-helpers/extension-handlers';
-import { CollabProvider } from '../src/plugins/collab-edit';
+import { CollabProvider } from '../plugins/collab-edit';
 
 export const getRandomUser = () => {
   return Math.floor(Math.random() * 10000).toString();
