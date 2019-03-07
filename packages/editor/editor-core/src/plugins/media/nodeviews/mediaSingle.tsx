@@ -58,7 +58,7 @@ export default class MediaSingleNode extends Component<
     width: undefined,
   };
 
-  constructor(props) {
+  constructor(props: MediaSingleNodeProps) {
     super(props);
     this.mediaPluginState = stateKey.getState(
       this.props.view.state,

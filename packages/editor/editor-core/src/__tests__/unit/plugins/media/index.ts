@@ -2,7 +2,7 @@
 import 'whatwg-fetch';
 import * as assert from 'assert';
 import { EditorView } from 'prosemirror-view';
-
+import { SmartMediaEditor } from '@atlaskit/media-editor';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
@@ -46,8 +46,6 @@ import quickInsertPlugin from '../../../../plugins/quick-insert';
 import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-single';
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
 import { temporaryMedia, temporaryMediaGroup } from './_utils';
-
-import { SmartMediaEditor } from '@atlaskit/media-editor';
 
 const stateManager = new DefaultMediaStateManager();
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
@@ -1333,9 +1331,7 @@ describe('Media plugin', () => {
         setNodeSelection(editorView, 0);
         closeMediaEditorSpy = jest.spyOn(pluginState, 'closeMediaEditor');
         pluginState.openMediaEditor();
-        const toolbar = mountWithIntl<SmartMediaEditor['props'], {}>(
-          renderSmartMediaEditor(pluginState)!,
-        );
+        const toolbar = mountWithIntl(renderSmartMediaEditor(pluginState)!);
         const { onUploadStart } = toolbar.props();
         onUploadStart(
           { id: 'some-new-id', mediaItemType: 'file' },

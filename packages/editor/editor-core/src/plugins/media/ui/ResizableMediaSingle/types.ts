@@ -1,6 +1,6 @@
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import { MediaSingleProps } from '@atlaskit/editor-common';
-import { MediaClientConfig } from '@atlaskit/media-core';
+import { WithOptionalMediaClientProps } from '@atlaskit/media-client';
 import { EditorAppearance } from '../../../../types';
 import { GridType } from '../../../grid/types';
 import { EditorView } from 'prosemirror-view';
@@ -23,5 +23,4 @@ export type Props = MediaSingleProps & {
   containerWidth: number;
   appearance: EditorAppearance;
   selected: boolean;
-  viewMediaClientConfig?: MediaClientConfig;
-};
+} & WithOptionalMediaClientProps;
