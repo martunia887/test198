@@ -1,5 +1,5 @@
 import * as React from 'react';
-import DecisionItem from '../src/components/DecisionItem';
+import DecisionItem from '../components/DecisionItem';
 import {
   MessageContainer,
   SidebarContainer,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import TaskList from '../src/components/TaskList';
-import TaskItem from '../src/components/TaskItem';
+import TaskList from '../components/TaskList';
+import TaskItem from '../components/TaskItem';
 import {
   MessageContainer,
   dumpRef,

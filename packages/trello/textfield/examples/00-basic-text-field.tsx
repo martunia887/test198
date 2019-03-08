@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TextField from '../src';
+import TextField from '..';
 
 export default function() {
   return (

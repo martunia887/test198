@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TaskItem from '../src/components/TaskItem';
+import TaskItem from '../components/TaskItem';
 import {
   MessageContainer,
   SidebarContainer,

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import DecisionList from '../src/components/DecisionList';
-import DecisionItem from '../src/components/DecisionItem';
+import DecisionList from '../components/DecisionList';
+import DecisionItem from '../components/DecisionItem';
 import { MessageContainer, dumpRef } from '../example-helpers/story-utils';
 
 export default () => (
