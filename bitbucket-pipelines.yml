@@ -240,6 +240,21 @@ pipelines:
                 - git merge master --no-edit
                 - bolt install --pure-lockfile
                 - LANDKID=true yarn test:webdriver:browserstack:changed
+          - step:
+              name: Running Visual Regression tests
+              image: atlassianlabs/atlaskit-mk-2-vr:1.0.8
+              script:
+                - source ./build-setup.sh
+                - git merge master --no-edit
+                - git lfs pull
+                - bolt install --pure-lockfile
+                - yarn test:vr:dependents
+              after-script:
+                # Extract all the diff images and store them into a folder for download.
+                - mkdir ./imageSnapshotFailures && find . -name '*-diff.png' -not -path "./node_modules/*" -exec cp {} ./imageSnapshotFailures \;
+              # If a failure occurs, you can download the image snapshot of the differences.
+              artifacts: 
+                - imageSnapshotFailures/**
       - step:
           name: Wait until no master is running
           script:

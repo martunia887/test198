@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
 import { mockEndpoints, REQUEST_FAST } from './helpers/mock-endpoints';
-import { withAnalyticsLogger } from './helpers';
-import AtlassianSwitcher from '..';
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
+import AtlassianSwitcher from '../src';
 
 class JiraSwitcherExample extends Component {
   state = {
@@ -51,4 +51,4 @@ class JiraSwitcherExample extends Component {
   }
 }
 
-export default withAnalyticsLogger(JiraSwitcherExample);
+export default withIntlProvider(withAnalyticsLogger(JiraSwitcherExample));

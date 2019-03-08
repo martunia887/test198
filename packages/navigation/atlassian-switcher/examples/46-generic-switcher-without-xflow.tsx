@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
 import { mockEndpoints } from './helpers/mock-endpoints';
-import { withAnalyticsLogger } from './helpers';
-import AtlassianSwitcher from '..';
+import { withAnalyticsLogger, withIntlProvider } from './helpers';
+import AtlassianSwitcher from '../src';
 
 class GenericSwitcherExample extends Component {
   state = {
@@ -77,4 +77,4 @@ class GenericSwitcherExample extends Component {
   }
 }
 
-export default withAnalyticsLogger(GenericSwitcherExample);
+export default withIntlProvider(withAnalyticsLogger(GenericSwitcherExample));
