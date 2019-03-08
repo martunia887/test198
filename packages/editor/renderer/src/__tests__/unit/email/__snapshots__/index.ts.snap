@@ -20,7 +20,7 @@ exports[`Renderer - EmailSerializer should align heading correctly 1`] = `
     Plain Heading
   </h1>
   <div
-    style="width: 100%;text-align: center;"
+    style="width:100%;text-align:center"
   >
     <h1
       style=",
@@ -39,7 +39,7 @@ exports[`Renderer - EmailSerializer should align heading correctly 1`] = `
     </h1>
   </div>
   <div
-    style="width: 100%;text-align: right;"
+    style="width:100%;text-align:right"
   >
     <h1
       style=",
@@ -70,7 +70,7 @@ exports[`Renderer - EmailSerializer should align paragraph correctly 1`] = `
     Plain Paragraph
   </p>
   <div
-    style="width: 100%;text-align: center;"
+    style="width:100%;text-align:center"
   >
     <p
       style="white-space: pre-wrap;word-wrap: break-word;"
@@ -79,7 +79,7 @@ exports[`Renderer - EmailSerializer should align paragraph correctly 1`] = `
     </p>
   </div>
   <div
-    style="width: 100%;text-align: right;"
+    style="width:100%;text-align:right"
   >
     <p
       style="white-space: pre-wrap;word-wrap: break-word;"
