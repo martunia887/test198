@@ -71,7 +71,7 @@ class RefinementBarExample extends React.Component {
         onChange={this.onChange}
         value={this.state.value}
       >
-        <>
+        <div style={{ padding: 40 }}>
           <RefinementBarConsumer>{encodeQuery}</RefinementBarConsumer>
           <RefinementBarUI />
           <RefinementBarConsumer>
@@ -82,7 +82,7 @@ class RefinementBarExample extends React.Component {
               </>
             )}
           </RefinementBarConsumer>
-        </>
+        </div>
       </RefinementBarProvider>
     );
   }
@@ -290,7 +290,7 @@ const FIELD_CONFIG = {
       ).then(r => r.json());
 
       return response
-        .filter(u => u.login.includes(inputValue))
+        .filter(u => u.login.toLowerCase().includes(inputValue.toLowerCase()))
         .sort((a, b) => b.contributions - a.contributions)
         .map(u => ({
           avatar: u.avatar_url,

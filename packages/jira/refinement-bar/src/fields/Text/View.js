@@ -36,11 +36,14 @@ class TextView extends React.Component<Props, State> {
     }
   };
 
-  onChangeCheckbox = ({ target }: *) => {
+  onChangeCheckbox = (event: *) => {
     const { onChange } = this.props;
-    const type = target.value;
+    const type = event.target.value;
+    const isKeyboardEvent =
+      event.nativeEvent.screenX === 0 && event.nativeEvent.screenY === 0;
+    const callback = isKeyboardEvent ? null : this.focusNextInput;
 
-    this.setState({ type }, this.focusNextInput);
+    this.setState({ type }, callback);
     const value = type === 'is_not_set' ? null : this.state.value;
     onChange({ type, value });
   };

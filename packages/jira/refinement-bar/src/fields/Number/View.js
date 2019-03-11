@@ -52,17 +52,21 @@ class NumberView extends React.Component<Props, State> {
       this.props.closePopup(); // HACK? (imperative)
     }
   };
-  onChangeCheckbox = ({ target }: *) => {
+  onChangeCheckbox = (event: *) => {
     const { onChange } = this.props;
-    const type = target.value;
+    const type = event.target.value;
+    const isKeyboardEvent =
+      event.nativeEvent.screenX === 0 && event.nativeEvent.screenY === 0;
 
     this.setState({ type }, () => {
+      if (!isKeyboardEvent) {
+        this.focusNextInput();
+      }
+
       // avoid creating an invalid state where '' === NaN
       if (isEmptyString(this.state.single)) {
         return;
       }
-
-      this.focusNextInput();
 
       const { gt, lt } = this.state;
       const value = this.isBetween

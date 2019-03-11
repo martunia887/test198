@@ -5,6 +5,6 @@ import View from './View';
 
 export default {
   controller: Controller,
-  type: 'Select',
+  name: 'Select',
   view: View,
 };

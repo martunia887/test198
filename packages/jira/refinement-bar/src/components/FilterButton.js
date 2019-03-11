@@ -80,7 +80,7 @@ const Button = forwardRef(
       <button
         ref={ref}
         css={{
-          alignItems: 'baseline',
+          // alignItems: 'baseline',
           borderRadius: borderRadius(),
           borderWidth: 0,
           boxSizing: 'border-box',

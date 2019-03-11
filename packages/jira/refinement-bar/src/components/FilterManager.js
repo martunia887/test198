@@ -4,13 +4,12 @@
 import { PureComponent } from 'react';
 import { jsx } from '@emotion/core';
 import { colors } from '@atlaskit/theme';
-import { BaseSelect, selectComponents } from '../../components/Select';
-import { DialogInner } from '../../components/Popup';
 
-// TODO: there's probably a better way to do this, but it's late, and i'm tired.
+import { BaseSelect, selectComponents } from './Select';
+
 export const CLEAR_DATA = {
-  value: '__clear-selected',
-  label: 'Clear selected items',
+  value: '__remove-all',
+  label: 'Remove all filters',
 };
 // ==============================
 // Styled Components
@@ -49,57 +48,41 @@ const Option = (props: *) =>
     <selectComponents.Option {...props} />
   );
 
-const defaultComponents = { ...selectComponents, Option };
-
-export default class SelectView extends PureComponent<*, *> {
-  state = { components: {} };
+export class FilterManager extends PureComponent<*> {
   filterOptionFn: Object => boolean;
   options: Array<Object>;
+  components = { ...selectComponents, Option };
   constructor(props: *) {
     super(props);
 
-    const { field, refinementBarValue, storedValue } = props;
-
-    // NOTE: support array or function that resolves to an array.
-    let resolvedOptions = field.options;
-    if (typeof field.options === 'function') {
-      resolvedOptions = field.options(refinementBarValue);
-    }
+    const { options, value } = props;
 
     // set options here ONCE when the dialog opens, so they don't jostle about
     // as users select/deselect values
-    this.options = getOptions(storedValue, resolvedOptions);
-    this.filterOptionFn = filterOptions(storedValue);
+    this.options = getOptions(value, options);
+    this.filterOptionFn = filterOptions(value);
   }
-  static getDerivedStateFromProps(p: *, s: *) {
-    if (p.components !== s.components) {
-      return { components: { ...defaultComponents, ...p.components } };
-    }
-
-    return null;
-  }
-  handleChange = (value: *) => {
+  handleChange = (value: *, meta) => {
     const { onChange } = this.props;
 
     if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {
-      onChange([]);
+      onChange(this.props.value, { action: 'clear-options' });
     } else {
-      onChange(value);
+      onChange(value, meta);
     }
   };
   render() {
     const { onChange, storedValue, ...props } = this.props;
 
     return (
-      <DialogInner minWidth={220}>
-        <BaseSelect
-          components={this.state.components}
-          filterOption={this.filterOptionFn}
-          options={this.options}
-          onChange={this.handleChange}
-          {...props}
-        />
-      </DialogInner>
+      <BaseSelect
+        components={this.components}
+        filterOption={this.filterOptionFn}
+        onChange={this.handleChange}
+        {...props}
+        options={this.options}
+        closeMenuOnSelect
+      />
     );
   }
 }

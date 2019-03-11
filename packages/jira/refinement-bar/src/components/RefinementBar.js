@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 
-import { Component, Children } from 'react';
+import { Component, Children, forwardRef } from 'react';
 import { jsx } from '@emotion/core';
 import Badge from '@atlaskit/badge';
 import Button from '@atlaskit/button';
@@ -13,8 +13,8 @@ import {
 } from './ContextProvider';
 import { cloneObj } from '../utils';
 import Popup, { DialogInner } from './Popup';
-import { BaseSelect, selectComponents } from './Select';
 import { FilterButton } from './FilterButton';
+import { FilterManager } from './FilterManager';
 
 type Props = {
   tempContextFromProps: Object,
@@ -38,6 +38,7 @@ class ActualRefinementBar extends Component<Props, State> {
     this.state = {
       invalid: {},
       isExpanded: true,
+      isWrapped: false,
       values: this.ctx.value,
     };
   }
@@ -49,22 +50,29 @@ class ActualRefinementBar extends Component<Props, State> {
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.ctx = nextProps.tempContextFromProps;
   }
-  handleFieldAdd = (key: string) => {
+
+  // ==============================
+  // Field Handlers
+  // ==============================
+
+  handleFieldAdd = async (key: string) => {
     const field = this.ctx.fieldConfig[key];
     const data = field.getInitialValue();
     const meta = { action: 'add', key, data };
-    const values = cloneObj(this.state.values, { add: { [key]: data } });
+    const values = await cloneObj(this.state.values, { add: { [key]: data } });
 
-    this.setState({ values }, () => {
+    this.activePopupKey = key;
+
+    this.setState({ values, isExpanded: true }, () => {
       this.ctx.onChange(values, meta);
     });
   };
-  handleFieldRemove = (key: string, event?: Event) => {
+  handleFieldRemove = async (key: string, event?: Event) => {
     if (event) {
       event.preventDefault();
     }
 
-    const values = cloneObj(this.state.values, { remove: key });
+    const values = await cloneObj(this.state.values, { remove: key });
 
     this.setState({ values }, () => {
       this.ctx.onChange(values, { action: 'remove', key });
@@ -104,8 +112,6 @@ class ActualRefinementBar extends Component<Props, State> {
     };
 
     this.setState({ invalid, values }, liveUpdateStoredValues);
-
-    // this.setState({ invalid, values });
   };
 
   activePopupRef = null;
@@ -121,17 +127,19 @@ class ActualRefinementBar extends Component<Props, State> {
     const isInvalid = Boolean(invalidMessage);
     const storedValue = this.ctx.value[key] || field.getInitialValue();
     const localValue = this.state.values[key] || field.getInitialValue();
+    // $FlowFixMe
+    const popupRef = this[`popupRef-${key}`];
+    const shouldOpenPopup = this.activePopupKey === key;
+    const hasPopup = typeof field.formatButtonLabel === 'function';
 
     // this shouldn't be possible, but better to be safe
     if (!Field) {
       throw new Error(
         `There's something wrong with the renderer (${
-          type.type
+          type.name
         }) for "${key}".`,
       );
     }
-    // $FlowFixMe
-    const popupRef = this[`popupRef-${key}`];
 
     const fieldUI = ({ scheduleUpdate }) => {
       const extra = scheduleUpdate ? { ...config, scheduleUpdate } : config;
@@ -151,15 +159,17 @@ class ActualRefinementBar extends Component<Props, State> {
       );
     };
 
-    const hasPopup = typeof field.formatButtonLabel === 'function';
-
     return hasPopup ? (
       <Popup
         key={key}
+        defaultIsOpen={shouldOpenPopup}
+        onOpen={() => {
+          if (shouldOpenPopup) {
+            this.activePopupKey = null;
+          }
+        }}
         allowClose={!isInvalid}
-        localValue={localValue}
         ref={this.setPopupRef(key)}
-        storedValue={storedValue}
         target={({ isOpen, onClick, ref }: *) => (
           <FilterButton
             field={field}
@@ -186,6 +196,9 @@ class ActualRefinementBar extends Component<Props, State> {
   };
   onChangeFilter = (options: *, meta) => {
     switch (meta.action) {
+      case 'clear-options':
+        options.forEach(o => this.handleFieldRemove(o.value));
+        break;
       case 'select-option':
         this.handleFieldAdd(meta.option.value);
         break;
@@ -195,10 +208,8 @@ class ActualRefinementBar extends Component<Props, State> {
       default:
     }
   };
-  toggleSelectedVisibility = () => {
-    this.setState(s => ({
-      isExpanded: !s.isExpanded,
-    }));
+  showMore = isExpanded => () => {
+    this.setState({ isExpanded });
   };
 
   mapKeyToOption = value => {
@@ -212,9 +223,21 @@ class ActualRefinementBar extends Component<Props, State> {
     const { isExpanded } = this.state;
 
     return (
-      <Group>
+      <Group ref={this.groupRef}>
         {irremovableKeys.map(this.makeField({ isRemovable: false }))}
         {isExpanded && selectedKeys.map(this.makeField({ isRemovable: true }))}
+
+        {/* Show More/Less Control */}
+        {!isExpanded && selectedKeys.length ? (
+          <Button
+            onClick={this.showMore(true)}
+            iconAfter={
+              <Badge appearance="primary">{selectedKeys.length}</Badge>
+            }
+          >
+            Show More
+          </Button>
+        ) : null}
 
         {/* Add Filter Popup */}
         <Popup
@@ -230,38 +253,24 @@ class ActualRefinementBar extends Component<Props, State> {
             </Button>
           )}
         >
-          {({ scheduleUpdate }) => (
+          {({ popupRef, scheduleUpdate }) => (
             <DialogInner minWidth={220}>
-              <BaseSelect
-                components={selectComponents}
+              <FilterManager
                 options={this.filterOptions}
-                value={selectedKeys.map(this.mapKeyToOption)}
                 onChange={(...args) => {
                   this.onChangeFilter(...args);
-
-                  // TODO: make a decision
-                  // whilst this is the "expected behaviour", it makes the
-                  // dialog jostle about if made to wrap
-                  // scheduleUpdate();
+                  popupRef.close();
                 }}
                 scheduleUpdate={scheduleUpdate}
+                value={selectedKeys.map(this.mapKeyToOption)}
               />
             </DialogInner>
           )}
         </Popup>
 
-        {/* Show More/Less Control */}
-        {selectedKeys.length ? (
-          <Button
-            appearance="subtle-link"
-            onClick={this.toggleSelectedVisibility}
-            iconAfter={
-              isExpanded ? null : (
-                <Badge appearance="important">{selectedKeys.length}</Badge>
-              )
-            }
-          >
-            Show {isExpanded ? 'Less' : 'More'}
+        {isExpanded && selectedKeys.length ? (
+          <Button appearance="subtle-link" onClick={this.showMore(false)}>
+            Show Less
           </Button>
         ) : null}
       </Group>
@@ -273,13 +282,13 @@ class ActualRefinementBar extends Component<Props, State> {
 // Styled Components
 // ==============================
 
-const Group = ({ children }: *) => {
+const Group = forwardRef(({ children }: *, ref) => {
   const gutter = 4;
   const childArray = Children.toArray(children).filter(Boolean); // filter out null and undefined children
   return (
     <div
+      ref={ref}
       css={{
-        alignItems: 'center',
         display: 'flex',
         flexWrap: 'wrap',
         margin: -gutter,
@@ -292,7 +301,7 @@ const Group = ({ children }: *) => {
       ))}
     </div>
   );
-};
+});
 
 // ==============================
 // Main Export

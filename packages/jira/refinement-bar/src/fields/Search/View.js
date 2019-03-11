@@ -10,6 +10,7 @@ import SearchIcon from '@atlaskit/icon/glyph/search';
 import { ClearButton, HiddenSubmitButton } from '../../components/common';
 
 export default class SearchView extends PureComponent<*> {
+  state = { isFocused: false };
   inputRef = createRef();
   handleChange = (event: Event) => {
     // $FlowFixMe "property `value` is missing in `EventTarget`"
@@ -26,12 +27,24 @@ export default class SearchView extends PureComponent<*> {
   handleSubmit = (event: Event) => {
     event.preventDefault();
   };
+  toggleFocus = isFocused => () => {
+    this.setState({ isFocused });
+  };
   render() {
     const { value } = this.props;
+    const { isFocused } = this.state;
+    const width = isFocused || (value && value.length) ? 160 : 80;
 
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Input ref={this.inputRef} onChange={this.handleChange} value={value} />
+        <Input
+          ref={this.inputRef}
+          onChange={this.handleChange}
+          onBlur={this.toggleFocus(false)}
+          onFocus={this.toggleFocus(true)}
+          value={value}
+          style={{ width }}
+        />
 
         {value ? (
           <ClearButton onClick={this.handleClear} label="Clear search" />
@@ -92,7 +105,8 @@ const Input = forwardRef((props, ref) => {
         padding: `${gridSize()}px ${gridSize() * 1.5}px`,
         paddingRight: 40,
         outline: 0,
-        transition: 'background-color 150ms',
+        transition:
+          'background-color 150ms, width 200ms cubic-bezier(0.2, 0.0, 0.0, 1)',
 
         ':hover': {
           backgroundColor: colors.N30A,

@@ -66,3 +66,39 @@ export const objectMap = (object: X, mapFn: (any, string) => any) => {
     return res;
   }, {});
 };
+export const isEmptyObj = obj => {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
+};
+
+export const get = (obj, ...props) => {
+  const val = obj[props[0]];
+
+  if (props.length === 1 || !val) return val;
+
+  const rest = props.slice(1);
+
+  return get.apply(null, [val, ...rest]);
+};
+
+// Function Helpers
+// ------------------------------
+
+export const throttle = (func, ms = 50, context = window) => {
+  let to; // eslint-disable-line no-unused-vars
+  let wait = false;
+  return (...args) => {
+    const later = () => {
+      func.apply(context, args);
+    };
+    if (!wait) {
+      later();
+      wait = true;
+      to = setTimeout(() => {
+        wait = false;
+      }, ms);
+    }
+  };
+};

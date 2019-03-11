@@ -105,27 +105,6 @@ export const selectComponents = {
   Option,
 };
 
-// Simple Select
-// ------------------------------
-//
-// export const BaseSelect = forwardRef((props, ref) => (
-//   <Select
-//     backspaceRemovesValue={false}
-//     closeMenuOnSelect={false}
-//     controlShouldRenderValue={false}
-//     hideSelectedOptions={false}
-//     isClearable={false}
-//     isMulti
-//     menuIsOpen
-//     menuShouldScrollIntoView={false}
-//     ref={ref}
-//     tabSelectsValue={false}
-//     noOptionsMessage={noOptionsMessage}
-//     loadingMessage={loadingMessage}
-//     {...props}
-//   />
-// ));
-
 type State = {
   inputValue: string,
 };
@@ -142,16 +121,27 @@ export class BaseSelect extends React.Component<*, State> {
     }
   }
   componentDidUpdate(p: *, s: State) {
-    const newValue = this.props.inputValue || this.state.inputValue;
-    const oldValue = p.inputValue || s.inputValue;
+    const diffInput = s.inputValue !== this.state.inputValue;
+    const diffLoading = p.isLoading !== this.props.isLoading;
+    const diffValue = p.value !== this.props.value;
 
-    if (oldValue !== newValue && this.props.scheduleUpdate) {
+    // call the `scheduleUpdate` function provided by "react-popper" when
+    // there's potential for the dialog to shift position
+    if (
+      (diffInput || diffLoading || diffValue) &&
+      typeof this.props.scheduleUpdate === 'function'
+    ) {
       this.props.scheduleUpdate();
     }
   }
-  render() {
-    const onInputChange = this.props.onInputChange || this.onInputChange;
+  handleInputChange = (inputValue, meta) => {
+    if (this.props.onInputChange) {
+      this.props.onInputChange(inputValue, meta);
+    }
 
+    this.setState({ inputValue });
+  };
+  render() {
     return (
       <Select
         innerRef={this.selectRef}
@@ -166,9 +156,8 @@ export class BaseSelect extends React.Component<*, State> {
         tabSelectsValue={false}
         noOptionsMessage={noOptionsMessage}
         loadingMessage={loadingMessage}
-        onInputChange={onInputChange}
-        inputValue={this.props.inputValue}
         {...this.props}
+        onInputChange={this.handleInputChange}
       />
     );
   }

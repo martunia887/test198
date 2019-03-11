@@ -32,34 +32,40 @@ export const HiddenSubmitButton = (props: *) => (
   />
 );
 
-export const ClearButton = ({ label, isSelected, ...props }: *) => (
-  <button
-    css={{
-      background: 0,
-      border: 0,
-      borderRadius: borderRadius() / 2,
-      color: isSelected ? 'white' : colors.N400,
-      cursor: 'pointer',
-      lineHeight: 1,
-      opacity: 0.66,
-      outline: 0,
-      padding: 0,
-      position: 'absolute',
-      right: 8,
-      top: '50%',
-      transform: 'translateY(-50%)',
-      transition: 'background-color 200ms, opacity 200ms',
+export const ClearButton = ({ label, isSelected, ...props }: *) => {
+  const size = 24;
 
-      ':hover, :focus': {
-        backgroundColor: isSelected ? colors.N400A : colors.N30A,
-        opacity: 1,
-      },
-    }}
-    {...props}
-  >
-    <CloseIcon primaryColor="inherit" label={label} />
-  </button>
-);
+  return (
+    <button
+      css={{
+        background: 0,
+        border: 0,
+        borderRadius: borderRadius() / 2,
+        color: isSelected ? 'white' : colors.N400,
+        cursor: 'pointer',
+        height: size,
+        lineHeight: 1,
+        opacity: 0.66,
+        outline: 0,
+        padding: 0,
+        position: 'absolute',
+        right: 8,
+        top: '50%',
+        marginTop: -(size / 2),
+        transition: 'background-color 200ms, opacity 200ms',
+        width: size,
+
+        ':hover, :focus': {
+          backgroundColor: isSelected ? colors.N400A : colors.N30A,
+          opacity: 1,
+        },
+      }}
+      {...props}
+    >
+      <CloseIcon primaryColor="inherit" label={label} />
+    </button>
+  );
+};
 ClearButton.defaultProps = {
   isSelected: false,
   type: 'button',

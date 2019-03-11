@@ -5,6 +5,6 @@ import View from './View';
 
 export default {
   controller: Controller,
-  type: 'AvatarAsyncSelect',
+  name: 'AvatarAsyncSelect',
   view: View,
 };

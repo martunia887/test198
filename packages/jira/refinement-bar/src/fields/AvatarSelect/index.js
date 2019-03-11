@@ -5,6 +5,6 @@ import View from './View';
 
 export default {
   controller: Controller,
-  type: 'AvatarSelect',
+  name: 'AvatarSelect',
   view: View,
 };

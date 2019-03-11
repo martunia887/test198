@@ -10,7 +10,6 @@ import React, {
   type Node,
 } from 'react';
 import { createPortal } from 'react-dom';
-import createFocusTrap from 'focus-trap';
 import { applyRefs } from 'apply-ref';
 import {
   Manager,
@@ -22,6 +21,9 @@ import {
 import { colors, gridSize, layers } from '@atlaskit/theme';
 import { jsx } from '@emotion/core';
 
+import { isEmptyObj } from '../utils';
+import FocusTrap from './FocusTrap';
+
 // ==============================
 // Types
 // ==============================
@@ -31,7 +33,11 @@ type PopperPropsNoChildren = $Diff<PopperProps, PopperChildren>;
 type Props = {
   allowClose: boolean,
   children?: Node | (({ scheduleUpdate: * }) => Node),
+  defaultIsOpen: boolean,
+  isOpen: boolean,
   popperProps?: PopperPropsNoChildren,
+  onClose: (*) => void,
+  onOpen: (*) => void,
   target: ({
     ref: ElementRef<*>,
     isOpen: boolean,
@@ -57,16 +63,41 @@ export default class Popup extends PureComponent<Props, State> {
   dialogRef: ElementRef<*> = React.createRef();
   blanketRef: ElementRef<*> = React.createRef();
   openEvent: Event;
-  state = { isOpen: false, popperProps: defaultPopperProps };
+  state = {
+    isOpen:
+      this.props.isOpen !== undefined
+        ? this.props.isOpen
+        : this.props.defaultIsOpen,
+    popperProps: defaultPopperProps,
+  };
   static getDerivedStateFromProps(p: Props, s: State) {
+    const stateSlice = {};
     if (p.popperProps !== s.popperProps) {
-      return { popperProps: { ...defaultPopperProps, ...p.popperProps } };
+      stateSlice.popperProps = { ...defaultPopperProps, ...p.popperProps };
+    }
+    if (!isEmptyObj(stateSlice)) {
+      return stateSlice;
     }
     return null;
   }
   static defaultProps = {
     allowClose: true,
+    defaultIsOpen: false,
     popperProps: defaultPopperProps,
+  };
+  componentDidMount() {
+    if (this.props.defaultIsOpen) {
+      this.open();
+    }
+  }
+  getProp = (key: string) => {
+    return this.props[key] !== undefined ? this.props[key] : this.state[key];
+  };
+  callProp = (name: string, ...args): any => {
+    if (typeof this.props[name] === 'function') {
+      return this.props[name](...args);
+    }
+    return null;
   };
 
   handleKeyDown = (event: KeyboardEvent) => {
@@ -74,49 +105,28 @@ export default class Popup extends PureComponent<Props, State> {
       this.close(event);
     }
   };
-  handleClick = (event: MouseEvent) => {
-    const { target } = event;
-
-    if (isOutside(this.dialogRef.current, target)) {
-      this.close(event);
-    }
-  };
 
   open = (event: *) => {
-    this.openEvent = event.nativeEvent;
+    // call the consumer's function
+    this.callProp('onOpen', event);
 
-    this.setState({ isOpen: true }, this.initialiseFocusTrap);
+    this.setState({ isOpen: true });
 
     window.addEventListener('keydown', this.handleKeyDown);
-    window.addEventListener('click', this.handleClick, true);
+    // window.addEventListener('click', this.handleClick, true);
   };
   close = (event: Event) => {
-    // bail if this is the open event; listeners are bound too quickly...
-    if (this.openEvent === event) return;
-
     // the consumer needs this dialog to remain open, likely until an invalid
     // state is resolved
     if (!this.props.allowClose) return;
 
-    this.setState({ isOpen: false }, this.focusTrap.deactivate);
+    // call the consumer's function
+    this.callProp('onClose', event);
+
+    this.setState({ isOpen: false });
 
     window.removeEventListener('keydown', this.handleKeyDown);
-    window.removeEventListener('click', this.handleClick);
-  };
-  initialiseFocusTrap = () => {
-    const trapConfig = {
-      clickOutsideDeactivates: false,
-      escapeDeactivates: false,
-      fallbackFocus: this.dialogRef.current,
-      returnFocusOnDeactivate: true,
-    };
-    this.focusTrap = createFocusTrap(this.dialogRef.current, trapConfig);
-
-    // wait until the dialog is positioned, it begins at left/top 0/0.
-    // otherwise the body will be scrolled to top.
-    setTimeout(() => {
-      this.focusTrap.activate();
-    }, 1);
+    // window.removeEventListener('click', this.handleClick);
   };
 
   render() {
@@ -126,23 +136,29 @@ export default class Popup extends PureComponent<Props, State> {
 
     const popperInstance = (
       <Popper {...popperProps}>
-        {({ placement, ref, style, scheduleUpdate }) => {
-          return (
-            <Dialog
-              ref={applyRefs(ref, this.dialogRef)}
-              style={style}
-              data-placement={placement}
-            >
-              {typeof children === 'function'
-                ? children({ scheduleUpdate })
-                : children}
-            </Dialog>
-          );
-        }}
+        {({ placement, ref: popperRef, style, scheduleUpdate }) => (
+          <FocusTrap isActive={allowClose}>
+            {({ ref: focusRef }) => (
+              <Dialog
+                ref={applyRefs(popperRef, focusRef)}
+                style={style}
+                data-placement={placement}
+              >
+                {typeof children === 'function'
+                  ? children({ popupRef: this, scheduleUpdate })
+                  : children}
+              </Dialog>
+            )}
+          </FocusTrap>
+        )}
       </Popper>
     );
 
     const portalTarget = ((document.body: any): HTMLElement);
+    const tabCatcher = createPortal(
+      <div tabIndex="0" data-last-tabbable-node />, // eslint-disable-line
+      portalTarget,
+    );
 
     const fixedOrPortal = popperProps.positionFixed
       ? popperInstance
@@ -151,19 +167,14 @@ export default class Popup extends PureComponent<Props, State> {
     return (
       <Manager>
         <Reference>{({ ref }) => target({ ref, isOpen, onClick })}</Reference>
-        {isOpen ? fixedOrPortal : null}
-        {isOpen && !allowClose && <Blanket />}
+        {isOpen && fixedOrPortal}
+        {isOpen && <Blanket onClick={this.close} allowClose={allowClose} />}
+        {isOpen && tabCatcher}
       </Manager>
     );
   }
 }
 
-function isOutside(boundary, target) {
-  if (boundary === target) {
-    return false;
-  }
-  return boundary && !boundary.contains(target);
-}
 function isEscapeEvent(e) {
   return e.key === 'Escape' || e.key === 'Esc' || e.keyCode === 27;
 }
@@ -172,12 +183,12 @@ function isEscapeEvent(e) {
 // Styled Components
 // ==============================
 
-export const Blanket = forwardRef((props: *, ref) => (
+export const Blanket = forwardRef(({ allowClose, ...props }: *, ref) => (
   <div
     ref={ref}
     css={{
       bottom: 0,
-      cursor: 'not-allowed',
+      cursor: !allowClose ? 'not-allowed' : null,
       left: 0,
       position: 'fixed',
       right: 0,
