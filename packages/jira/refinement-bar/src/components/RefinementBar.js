@@ -2,6 +2,7 @@
 /** @jsx jsx */
 
 import { Component, Children, forwardRef } from 'react';
+import memo from 'memoize-one';
 import { jsx } from '@emotion/core';
 import Badge from '@atlaskit/badge';
 import Button from '@atlaskit/button';
@@ -50,6 +51,17 @@ class ActualRefinementBar extends Component<Props, State> {
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.ctx = nextProps.tempContextFromProps;
   }
+
+  // ==============================
+  // Popups
+  // ==============================
+
+  openPopup = key => () => {
+    this.setState({ activePopupKey: key });
+  };
+  closePopup = () => {
+    this.setState({ activePopupKey: null });
+  };
 
   // ==============================
   // Field Handlers
@@ -120,6 +132,7 @@ class ActualRefinementBar extends Component<Props, State> {
     const storedValue = this.ctx.value[key] || field.getInitialValue();
     const localValue = this.state.values[key] || field.getInitialValue();
     const hasPopup = typeof field.formatButtonLabel === 'function';
+    const popupIsOpen = this.state.activePopupKey === key;
 
     // this shouldn't be possible, but better to be safe
     if (!Field) {
@@ -135,9 +148,7 @@ class ActualRefinementBar extends Component<Props, State> {
 
       return (
         <Field
-          closePopup={() => {
-            this.setState({ activePopupKey: null });
-          }}
+          closePopup={this.closePopup}
           field={field}
           invalidMessage={invalidMessage}
           key={key}
@@ -153,13 +164,9 @@ class ActualRefinementBar extends Component<Props, State> {
     return hasPopup ? (
       <Popup
         key={key}
-        isOpen={this.state.activePopupKey === key}
-        onOpen={() => {
-          this.setState({ activePopupKey: key });
-        }}
-        onClose={() => {
-          this.setState({ activePopupKey: null });
-        }}
+        isOpen={popupIsOpen}
+        onOpen={this.openPopup(key)}
+        onClose={this.closePopup}
         allowClose={!isInvalid}
         target={({ isOpen, onClick, ref }: *) => (
           <FilterButton
@@ -186,6 +193,7 @@ class ActualRefinementBar extends Component<Props, State> {
     );
   };
   onChangeFilter = (options: *, meta) => {
+    this.closePopup();
     switch (meta.action) {
       case 'clear-options':
         options.forEach(o => this.handleFieldRemove(o.value));
@@ -199,6 +207,9 @@ class ActualRefinementBar extends Component<Props, State> {
       default:
     }
   };
+  getFilterValue = memo(keys => {
+    return keys.map(this.mapKeyToOption);
+  });
   showMore = isExpanded => () => {
     this.setState({ isExpanded });
   };
@@ -211,7 +222,10 @@ class ActualRefinementBar extends Component<Props, State> {
 
   render() {
     const { irremovableKeys, selectedKeys } = this.ctx;
-    const { isExpanded } = this.state;
+    const { activePopupKey, isExpanded } = this.state;
+    const FILTER_POPUP_KEY = 'filter-menu';
+
+    console.log('RefinementBar render');
 
     return (
       <Group ref={this.groupRef}>
@@ -232,6 +246,9 @@ class ActualRefinementBar extends Component<Props, State> {
 
         {/* Add Filter Popup */}
         <Popup
+          onOpen={this.openPopup(FILTER_POPUP_KEY)}
+          onClose={this.closePopup}
+          isOpen={activePopupKey === FILTER_POPUP_KEY}
           target={({ isOpen, onClick, ref }: *) => (
             <Button
               appearance="link"
@@ -244,16 +261,13 @@ class ActualRefinementBar extends Component<Props, State> {
             </Button>
           )}
         >
-          {({ popupRef, scheduleUpdate }) => (
+          {({ scheduleUpdate }) => (
             <DialogInner minWidth={220}>
               <FilterManager
                 options={this.filterOptions}
-                onChange={(...args) => {
-                  this.onChangeFilter(...args);
-                  popupRef.close();
-                }}
+                onChange={this.onChangeFilter}
                 scheduleUpdate={scheduleUpdate}
-                value={selectedKeys.map(this.mapKeyToOption)}
+                value={this.getFilterValue(selectedKeys)}
               />
             </DialogInner>
           )}

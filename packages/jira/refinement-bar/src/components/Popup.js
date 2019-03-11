@@ -131,7 +131,7 @@ export default class Popup extends PureComponent<Props, State> {
                 data-placement={placement}
               >
                 {typeof children === 'function'
-                  ? children({ popupRef: this, scheduleUpdate })
+                  ? children({ scheduleUpdate })
                   : children}
               </Dialog>
             )}
