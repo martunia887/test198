@@ -33,11 +33,10 @@ type PopperPropsNoChildren = $Diff<PopperProps, PopperChildren>;
 type Props = {
   allowClose: boolean,
   children?: Node | (({ scheduleUpdate: * }) => Node),
-  defaultIsOpen: boolean,
-  isOpen: boolean,
+  isOpen?: boolean,
   popperProps?: PopperPropsNoChildren,
-  onClose: (*) => void,
-  onOpen: (*) => void,
+  onClose?: (*) => void,
+  onOpen?: (*) => void,
   target: ({
     ref: ElementRef<*>,
     isOpen: boolean,
@@ -64,10 +63,7 @@ export default class Popup extends PureComponent<Props, State> {
   blanketRef: ElementRef<*> = React.createRef();
   openEvent: Event;
   state = {
-    isOpen:
-      this.props.isOpen !== undefined
-        ? this.props.isOpen
-        : this.props.defaultIsOpen,
+    isOpen: this.props.isOpen !== undefined ? this.props.isOpen : false,
     popperProps: defaultPopperProps,
   };
   static getDerivedStateFromProps(p: Props, s: State) {
@@ -82,14 +78,8 @@ export default class Popup extends PureComponent<Props, State> {
   }
   static defaultProps = {
     allowClose: true,
-    defaultIsOpen: false,
     popperProps: defaultPopperProps,
   };
-  componentDidMount() {
-    if (this.props.defaultIsOpen) {
-      this.open();
-    }
-  }
   getProp = (key: string) => {
     return this.props[key] !== undefined ? this.props[key] : this.state[key];
   };
@@ -107,37 +97,33 @@ export default class Popup extends PureComponent<Props, State> {
   };
 
   open = (event: *) => {
-    // call the consumer's function
     this.callProp('onOpen', event);
-
     this.setState({ isOpen: true });
 
     window.addEventListener('keydown', this.handleKeyDown);
-    // window.addEventListener('click', this.handleClick, true);
   };
   close = (event: Event) => {
     // the consumer needs this dialog to remain open, likely until an invalid
     // state is resolved
     if (!this.props.allowClose) return;
 
-    // call the consumer's function
     this.callProp('onClose', event);
-
     this.setState({ isOpen: false });
 
     window.removeEventListener('keydown', this.handleKeyDown);
-    // window.removeEventListener('click', this.handleClick);
   };
 
-  render() {
-    const { allowClose, children, target } = this.props;
-    const { isOpen, popperProps } = this.state;
-    const onClick = isOpen ? this.close : this.open;
+  renderDialog() {
+    const { children } = this.props;
+    const { popperProps } = this.state;
+    const isOpen = this.getProp('isOpen');
+
+    if (!isOpen) return null;
 
     const popperInstance = (
       <Popper {...popperProps}>
         {({ placement, ref: popperRef, style, scheduleUpdate }) => (
-          <FocusTrap isActive={allowClose}>
+          <FocusTrap>
             {({ ref: focusRef }) => (
               <Dialog
                 ref={applyRefs(popperRef, focusRef)}
@@ -154,22 +140,21 @@ export default class Popup extends PureComponent<Props, State> {
       </Popper>
     );
 
-    const portalTarget = ((document.body: any): HTMLElement);
-    const tabCatcher = createPortal(
-      <div tabIndex="0" data-last-tabbable-node />, // eslint-disable-line
-      portalTarget,
-    );
-
-    const fixedOrPortal = popperProps.positionFixed
+    return popperProps.positionFixed
       ? popperInstance
-      : createPortal(popperInstance, portalTarget);
+      : createPortal(popperInstance, ((document.body: any): HTMLElement));
+  }
+
+  render() {
+    const { allowClose, target } = this.props;
+    const isOpen = this.getProp('isOpen');
+    const onClick = isOpen ? this.close : this.open;
 
     return (
       <Manager>
         <Reference>{({ ref }) => target({ ref, isOpen, onClick })}</Reference>
-        {isOpen && fixedOrPortal}
+        {this.renderDialog()}
         {isOpen && <Blanket onClick={this.close} allowClose={allowClose} />}
-        {isOpen && tabCatcher}
       </Manager>
     );
   }

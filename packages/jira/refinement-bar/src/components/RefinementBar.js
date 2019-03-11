@@ -61,9 +61,7 @@ class ActualRefinementBar extends Component<Props, State> {
     const meta = { action: 'add', key, data };
     const values = await cloneObj(this.state.values, { add: { [key]: data } });
 
-    this.activePopupKey = key;
-
-    this.setState({ values, isExpanded: true }, () => {
+    this.setState({ activePopupKey: key, values, isExpanded: true }, () => {
       this.ctx.onChange(values, meta);
     });
   };
@@ -114,12 +112,6 @@ class ActualRefinementBar extends Component<Props, State> {
     this.setState({ invalid, values }, liveUpdateStoredValues);
   };
 
-  activePopupRef = null;
-  setPopupRef = (key: *) => (r: *) => {
-    // $FlowFixMe
-    this[`popupRef-${key}`] = r;
-  };
-
   makeField = (config: Object) => (key: string) => {
     const { type, ...field } = this.ctx.fieldConfig[key];
     const Field = type.view;
@@ -127,9 +119,6 @@ class ActualRefinementBar extends Component<Props, State> {
     const isInvalid = Boolean(invalidMessage);
     const storedValue = this.ctx.value[key] || field.getInitialValue();
     const localValue = this.state.values[key] || field.getInitialValue();
-    // $FlowFixMe
-    const popupRef = this[`popupRef-${key}`];
-    const shouldOpenPopup = this.activePopupKey === key;
     const hasPopup = typeof field.formatButtonLabel === 'function';
 
     // this shouldn't be possible, but better to be safe
@@ -146,7 +135,9 @@ class ActualRefinementBar extends Component<Props, State> {
 
       return (
         <Field
-          closePopup={popupRef && popupRef.close}
+          closePopup={() => {
+            this.setState({ activePopupKey: null });
+          }}
           field={field}
           invalidMessage={invalidMessage}
           key={key}
@@ -162,14 +153,14 @@ class ActualRefinementBar extends Component<Props, State> {
     return hasPopup ? (
       <Popup
         key={key}
-        defaultIsOpen={shouldOpenPopup}
+        isOpen={this.state.activePopupKey === key}
         onOpen={() => {
-          if (shouldOpenPopup) {
-            this.activePopupKey = null;
-          }
+          this.setState({ activePopupKey: key });
+        }}
+        onClose={() => {
+          this.setState({ activePopupKey: null });
         }}
         allowClose={!isInvalid}
-        ref={this.setPopupRef(key)}
         target={({ isOpen, onClick, ref }: *) => (
           <FilterButton
             field={field}

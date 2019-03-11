@@ -383,7 +383,6 @@
     "flow": "^0.2.3",
     "flushable": "^1.0.0",
     "focus-trap": "^2.4.5",
-    "focusin": "^2.0.0",
     "fs-extra": "^4.0.2",
     "fuzzy": "^0.1.3",
     "glob": "^7.1.2",

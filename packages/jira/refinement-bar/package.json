@@ -33,9 +33,6 @@
     "@atlaskit/tooltip": "^12.1.17",
     "@emotion/core": "^10.0.7",
     "apply-ref": "^0.2.0",
-    "focus-trap": "^2.4.5",
-    "focusin": "^2.0.0",
-    "memoize-one": "^3.0.1",
     "react-popper": "1.0.2",
     "styled-components": "^3.2.6",
     "tabbable": "^3.1.2"
