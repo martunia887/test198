@@ -9,7 +9,11 @@ import SearchIcon from '@atlaskit/icon/glyph/search';
 
 import { ClearButton, HiddenSubmitButton } from '../../components/common';
 
-export default class SearchView extends PureComponent<*> {
+type State = {
+  isFocused: boolean,
+};
+
+export default class SearchView extends PureComponent<*, State> {
   state = { isFocused: false };
   inputRef = createRef();
   handleChange = (event: Event) => {
@@ -27,7 +31,7 @@ export default class SearchView extends PureComponent<*> {
   handleSubmit = (event: Event) => {
     event.preventDefault();
   };
-  toggleFocus = isFocused => () => {
+  toggleFocus = (isFocused: boolean) => () => {
     this.setState({ isFocused });
   };
   render() {

@@ -134,7 +134,7 @@ export class BaseSelect extends React.Component<*, State> {
       this.props.scheduleUpdate();
     }
   }
-  handleInputChange = (inputValue, meta) => {
+  handleInputChange = (inputValue: string, meta: Object) => {
     if (this.props.onInputChange) {
       this.props.onInputChange(inputValue, meta);
     }

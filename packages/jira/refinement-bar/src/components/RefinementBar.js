@@ -1,8 +1,16 @@
 // @flow
 /** @jsx jsx */
 
-import { Component, Children, forwardRef } from 'react';
+import {
+  PureComponent,
+  Children,
+  // $FlowFixMe "there is no `forwardRef` export in `react`"
+  forwardRef,
+  createRef,
+  type ElementRef,
+} from 'react';
 import memo from 'memoize-one';
+import { applyRefs } from 'apply-ref';
 import { jsx } from '@emotion/core';
 import Badge from '@atlaskit/badge';
 import Button from '@atlaskit/button';
@@ -21,15 +29,17 @@ type Props = {
   tempContextFromProps: Object,
 };
 type State = {
+  activePopupKey: string | null,
   invalid: Object,
   isExpanded: boolean,
   values: Object,
 };
 
-class ActualRefinementBar extends Component<Props, State> {
+class ActualRefinementBar extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    // TEMP: until `static contextType` is available
     this.ctx = props.tempContextFromProps;
 
     // declared here once so react-select can keep track of the keys;
@@ -37,14 +47,16 @@ class ActualRefinementBar extends Component<Props, State> {
     this.filterOptions = this.ctx.removeableKeys.map(this.mapKeyToOption);
 
     this.state = {
+      activePopupKey: null,
       invalid: {},
       isExpanded: true,
-      isWrapped: false,
       values: this.ctx.value,
     };
   }
   ctx: Object;
   filterOptions: Array<Object>;
+  showLessRef: ElementRef<*> = createRef();
+  showMoreRef: ElementRef<*> = createRef();
 
   // Required until atlaskit upgrades to react >= 16.6 😞
   // eslint-disable-next-line camelcase
@@ -145,6 +157,7 @@ class ActualRefinementBar extends Component<Props, State> {
 
     const fieldUI = ({ scheduleUpdate }) => {
       const extra = scheduleUpdate ? { ...config, scheduleUpdate } : config;
+      console.log('makeField', key);
 
       return (
         <Field
@@ -211,7 +224,18 @@ class ActualRefinementBar extends Component<Props, State> {
     return keys.map(this.mapKeyToOption);
   });
   showMore = isExpanded => () => {
-    this.setState({ isExpanded });
+    this.setState({ isExpanded }, () => {
+      // NOTE: focus is managed manually here because the show/hide buttons are
+      // removed from the DOM and the user should stay focused _somewhere_ in
+      // the refinement bar
+      const target = isExpanded
+        ? this.showLessRef.current
+        : this.showMoreRef.current;
+
+      if (target && typeof target.focus === 'function') {
+        target.focus();
+      }
+    });
   };
 
   mapKeyToOption = value => {
@@ -225,16 +249,15 @@ class ActualRefinementBar extends Component<Props, State> {
     const { activePopupKey, isExpanded } = this.state;
     const FILTER_POPUP_KEY = 'filter-menu';
 
-    console.log('RefinementBar render');
-
     return (
-      <Group ref={this.groupRef}>
+      <Group>
         {irremovableKeys.map(this.makeField({ isRemovable: false }))}
         {isExpanded && selectedKeys.map(this.makeField({ isRemovable: true }))}
 
         {/* Show More/Less Control */}
         {!isExpanded && selectedKeys.length ? (
           <Button
+            innerRef={applyRefs(this.showMoreRef)}
             onClick={this.showMore(true)}
             iconAfter={
               <Badge appearance="primary">{selectedKeys.length}</Badge>
@@ -274,7 +297,11 @@ class ActualRefinementBar extends Component<Props, State> {
         </Popup>
 
         {isExpanded && selectedKeys.length ? (
-          <Button appearance="subtle-link" onClick={this.showMore(false)}>
+          <Button
+            innerRef={applyRefs(this.showLessRef)}
+            appearance="subtle-link"
+            onClick={this.showMore(false)}
+          >
             Show Less
           </Button>
         ) : null}

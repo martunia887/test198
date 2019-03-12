@@ -62,7 +62,7 @@ export class FilterManager extends PureComponent<*> {
     this.options = getOptions(value, options);
     this.filterOptionFn = filterOptions(value);
   }
-  handleChange = (value: *, meta) => {
+  handleChange = (value: *, meta: Object) => {
     const { onChange } = this.props;
 
     if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {

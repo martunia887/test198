@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Fragment } from 'react';
+import React, { createRef, Children, Fragment, PureComponent } from 'react';
 import Input from '@atlaskit/textfield';
 
 import { Note } from '../../components/common';
@@ -30,9 +30,9 @@ const getInitialState = (storedValue: *) => {
     : { ...base, ...value };
 };
 
-class NumberView extends React.Component<Props, State> {
+class NumberView extends PureComponent<Props, State> {
   state = getInitialState(this.props.storedValue);
-  nextInputRef = React.createRef();
+  nextInputRef = createRef();
   componentDidMount() {
     this.focusNextInput();
   }
@@ -190,7 +190,7 @@ const InputRow = ({ children, ...props }: *) => (
       marginRight: -4,
     }}
   >
-    {React.Children.map(children, c => (
+    {Children.map(children, c => (
       <div style={{ marginLeft: 4, marginRight: 4 }}>{c}</div>
     ))}
   </div>

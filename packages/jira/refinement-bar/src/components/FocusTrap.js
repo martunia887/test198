@@ -9,15 +9,15 @@ type Props = {
 };
 
 export default class FocusTrap extends React.Component<Props> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     if (typeof document !== 'undefined') {
       this.originElement = document.activeElement;
     }
-
-    this.target = React.createRef();
   }
+  target: ElementRef<*> = React.createRef();
+  originElement: HTMLElement | null;
   focus = () => {
     const target = this.target.current;
     const el = tabbable(target)[0] || target;

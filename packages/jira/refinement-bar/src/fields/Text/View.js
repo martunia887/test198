@@ -7,6 +7,8 @@ import { Note } from '../../components/common';
 import { Group, Radio } from '../../components/InputGroup';
 import { DialogInner } from '../../components/Popup';
 
+const NOOP = () => {};
+
 type Props = {
   closePopup: (*) => void,
   field: Object,
@@ -41,7 +43,7 @@ class TextView extends React.Component<Props, State> {
     const type = event.target.value;
     const isKeyboardEvent =
       event.nativeEvent.screenX === 0 && event.nativeEvent.screenY === 0;
-    const callback = isKeyboardEvent ? null : this.focusNextInput;
+    const callback = isKeyboardEvent ? NOOP : this.focusNextInput;
 
     this.setState({ type }, callback);
     const value = type === 'is_not_set' ? null : this.state.value;

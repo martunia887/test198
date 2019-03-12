@@ -83,7 +83,7 @@ export default class Popup extends PureComponent<Props, State> {
   getProp = (key: string) => {
     return this.props[key] !== undefined ? this.props[key] : this.state[key];
   };
-  callProp = (name: string, ...args): any => {
+  callProp = (name: string, ...args: Array<any>): any => {
     if (typeof this.props[name] === 'function') {
       return this.props[name](...args);
     }
