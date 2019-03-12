@@ -7,11 +7,6 @@
   "description": "Fabric Date React Components",
   "modules": "index.js",
   "types": "dist/es5/types.d.ts",
-   
-  "files": [
-    "dist",
-    "src"
-  ],
   "repository": {
     "type": "git",
     "url": "https://bitbucket.org/atlassian/atlaskit-mk-2"
