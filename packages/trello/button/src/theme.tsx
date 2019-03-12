@@ -1,6 +1,18 @@
 import * as React from 'react';
-import { ThemeProps, ButtonTheme as AdgButtonTheme } from '@atlaskit/button';
+import { ButtonTheme as AdgButtonTheme } from '@atlaskit/button';
+import { ThemeProps, ThemeTokens } from '@atlaskit/button/dist/es5/types';
 import { colors } from './colors';
+
+export interface ButtonThemeProps extends ThemeProps {
+  appearance:
+    | 'default'
+    | 'danger'
+    | 'link'
+    | 'primary'
+    | 'subtle'
+    | 'subtle-link';
+  state: 'default' | 'hover' | 'active';
+}
 
 const button = {
   background: {
@@ -51,6 +63,8 @@ const button = {
   },
   fontWeight: {
     default: 'bold',
+    primary: 'bold',
+    danger: 'bold',
     subtle: 'normal',
     link: 'normal',
     'subtle-link': 'normal',
@@ -59,6 +73,7 @@ const button = {
   color: {
     default: {
       default: colors.N800,
+      hover: colors.N800,
       active: colors.N0,
     },
     primary: colors.N0,
@@ -75,63 +90,65 @@ const button = {
   },
 };
 
-const getBackground = (background, { appearance, state, isDisabled }) => {
-  if (isDisabled) return background.disabled;
-  if (!background[appearance]) {
-    return background.default[state];
+const getBackground = ({ appearance, state, isDisabled }: ButtonThemeProps) => {
+  if (isDisabled) return button.background.disabled;
+  if (appearance && !(appearance in button.background)) {
+    return button.background.default[state];
   }
-  return background[appearance][state];
+  return button.background[appearance][state];
 };
 
-const getBoxShadow = (
-  boxShadow,
-  { state, appearance, isLoading, isDisabled },
-) => {
-  if (isDisabled) return boxShadow.disabled;
+const getBoxShadow = ({
+  state,
+  appearance,
+  isLoading,
+  isDisabled,
+}: ButtonThemeProps) => {
+  if (isDisabled) return button.boxShadow.disabled;
   if (isLoading) return 'none';
-  if (appearance === 'default') return boxShadow[appearance][state];
-  return boxShadow[appearance];
+  if (appearance === 'default') return button.boxShadow[appearance][state];
+  return button.boxShadow[appearance];
 };
 
-const getFontWeight = (fontWeight, { appearance, isDisabled }) => {
-  if (isDisabled) return fontWeight.disabled;
-  if (!fontWeight[appearance]) return fontWeight.default;
-  return fontWeight[appearance];
+const getFontWeight = ({ appearance, isDisabled }: ButtonThemeProps) => {
+  if (isDisabled) return button.fontWeight.disabled;
+  if (appearance in button.fontWeight) return button.fontWeight[appearance];
+  return button.fontWeight.default;
 };
 
-const getCursor = (cursor, { isDisabled }) => {
-  if (isDisabled) return cursor.disabled;
-  return cursor.default;
+const getCursor = ({ isDisabled }: ThemeProps) => {
+  if (isDisabled) return button.cursor.disabled;
+  return button.cursor.default;
 };
 
-const getColor = (color, { appearance, state, isDisabled }) => {
-  if (isDisabled) return color.disabled;
+const getColor = ({ appearance, state, isDisabled }: ButtonThemeProps) => {
+  if (isDisabled) return button.color.disabled;
   if (appearance === 'default') {
-    if (!color[appearance][state]) {
-      return color.default.default;
+    if (!(state in button.color.default)) {
+      return button.color.default.default;
     }
-    return color[appearance][state];
+    return button.color.default[state];
   }
-  if (!color[appearance]) {
-    return color.default.default;
+  if (!button.color[appearance]) {
+    return button.color.default.default;
   }
-  return color[appearance];
+  return button.color[appearance];
 };
 
-const getButtonStyles = (props: typeof ThemeProps) => ({
+const getButtonStyles = (props: ButtonThemeProps) => ({
   border: button.border,
-  background: getBackground(button.background, props),
-  boxShadow: getBoxShadow(button.boxShadow, props),
-  color: getColor(button.color, props),
-  cursor: getCursor(button.cursor, props),
-  fontWeight: getFontWeight(button.fontWeight, props),
+  background: getBackground(props),
+  boxShadow: getBoxShadow(props),
+  color: getColor(props),
+  cursor: getCursor(props),
+  fontWeight: getFontWeight(props),
   textDecoration: props.appearance === 'link' ? 'underline' : 'none',
 });
 
 const theme = (
   adgTheme: Function,
-  { appearance = 'default', state = 'default', ...rest }: typeof ThemeProps,
-) => {
+  { appearance = 'default', state = 'default', ...rest }: ThemeProps,
+): ThemeTokens => {
   const {
     buttonStyles: adgButtonStyles,
     spinnerStyles: adgSpinnerStyles,
@@ -141,7 +158,7 @@ const theme = (
   return {
     buttonStyles: {
       ...adgButtonStyles,
-      ...getButtonStyles({ appearance, state, ...rest }),
+      ...getButtonStyles({ appearance, state, ...rest } as ButtonThemeProps),
     },
     spinnerStyles: {
       ...adgSpinnerStyles,
@@ -153,7 +170,9 @@ const theme = (
 };
 
 export const Theme = {
-  Provider: props => <AdgButtonTheme.Provider value={theme} {...props} />,
+  Provider: (props: ThemeProps) => (
+    <AdgButtonTheme.Provider value={theme} {...props} />
+  ),
 };
 
 export default theme;
