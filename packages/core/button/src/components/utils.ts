@@ -9,16 +9,28 @@ export const mapAttributesToState = ({
   isHover = false,
   isSelected = false,
 }) => {
-  if (isDisabled) return 'disabled';
-  if (isSelected && isFocus) return 'focusSelected';
-  if (isSelected) return 'selected';
-  if (isActive) return 'active';
-  if (isHover) return 'hover';
-  if (isFocus) return 'focus';
+  if (isDisabled) {
+    return 'disabled';
+  }
+  if (isSelected && isFocus) {
+    return 'focusSelected';
+  }
+  if (isSelected) {
+    return 'selected';
+  }
+  if (isActive) {
+    return 'active';
+  }
+  if (isHover) {
+    return 'hover';
+  }
+  if (isFocus) {
+    return 'focus';
+  }
   return 'default';
 };
 
-export const filterHTMLAttributes = (props: ButtonProps) =>
+export const filterHTMLAttributes = (props: { [key: string]: any }) =>
   (Object.keys(props) as Array<keyof ButtonProps>).filter(isPropValid).reduce(
     (filteredProps, prop) => ({
       ...filteredProps,
@@ -28,7 +40,9 @@ export const filterHTMLAttributes = (props: ButtonProps) =>
   );
 
 export const filterProps = (props: ButtonProps, type: React.ReactNode) => {
-  if (props.component) return props;
+  if (props.component) {
+    return props;
+  }
 
   // Remove `href` and `target` if component type is `span`.
   let newProps = props;
@@ -89,6 +103,7 @@ export const checkDeprecations = ({
   ariaHaspopup,
 }: ButtonProps) => {
   if (ariaControls || ariaExpanded || ariaLabel || ariaHaspopup) {
+    // tslint:disable-next-line
     console.warn(
       'Button aria* props have been deprecated, please use the React ARIA props - https://goo.gl/Qnise1',
     );

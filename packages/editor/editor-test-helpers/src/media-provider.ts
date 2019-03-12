@@ -1,7 +1,6 @@
 import { Context, ContextFactory } from '@atlaskit/media-core';
 import {
   defaultCollectionName,
-  StoryBookAuthProvider,
   userAuthProvider,
   mediaPickerAuthProvider,
   defaultMediaPickerAuthProvider,
@@ -13,7 +12,6 @@ export interface MediaProviderFactoryConfig {
   stateManager?: MediaStateManager;
   dropzoneContainer?: HTMLElement;
   includeUploadContext?: boolean;
-  includeLinkCreateContext?: boolean;
   includeUserAuthProvider?: boolean;
   useMediaPickerAuthProvider?: boolean;
 }
@@ -29,7 +27,6 @@ export function storyMediaProviderFactory(
     collectionName,
     stateManager,
     includeUploadContext,
-    includeLinkCreateContext,
     includeUserAuthProvider,
     useMediaPickerAuthProvider = true,
   } = mediaProviderFactoryConfig;
@@ -51,25 +48,14 @@ export function storyMediaProviderFactory(
       includeUploadContext === false
         ? undefined
         : Promise.resolve<Context>(context),
-    linkCreateContext: !includeLinkCreateContext
-      ? undefined
-      : Promise.resolve<Context>(
-          ContextFactory.create({
-            authProvider: StoryBookAuthProvider.create(false, {
-              [`urn:filestore:collection:${collection}`]: ['read', 'update'],
-              'urn:filestore:file:*': ['read'],
-              'urn:filestore:chunk:*': ['read'],
-            }),
-          }),
-        ),
   });
 }
 
 export type promisedString = Promise<string>;
-export type resolveFn = (...any) => any;
+export type resolveFn = (...v: any) => any;
 export type thumbnailStore = { [id: string]: promisedString | resolveFn };
 
-export function fileToBase64(blob) {
+export function fileToBase64(blob: Blob) {
   return new Promise((resolve, reject) => {
     const reader = new (window as any).FileReader();
     reader.onloadend = function() {
@@ -78,7 +64,7 @@ export function fileToBase64(blob) {
     reader.onabort = function() {
       reject('abort');
     };
-    reader.onerror = function(err) {
+    reader.onerror = function(err: ErrorEvent) {
       reject(err);
     };
     reader.readAsDataURL(blob);
@@ -87,17 +73,4 @@ export function fileToBase64(blob) {
 
 export function isImage(type: string) {
   return ['image/jpeg', 'image/png'].indexOf(type) > -1;
-}
-
-export function getLinkCreateContextMock(testLinkId: string) {
-  return {
-    getUrlPreviewProvider: url => ({
-      observable: () => ({
-        subscribe: cb => cb({}),
-      }),
-    }),
-    addLinkItem: (url, collection, metadata) => {
-      return Promise.resolve(testLinkId);
-    },
-  } as any;
 }

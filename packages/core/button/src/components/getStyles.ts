@@ -1,38 +1,28 @@
 import { borderRadius, fontSize, gridSize } from '@atlaskit/theme';
 import { applyPropertyStyle, baseTheme } from '../theme';
 import { getLoadingStyle } from './utils';
-import { ButtonThemeProps } from '../types';
+import { ThemeProps } from '../types';
 
-type Spacing = 'compact' | 'default' | 'none';
-
-export type ButtonStyles = {
-  [index: string]: string | number | { [index: string]: number };
-};
-
-export type SpinnerStyles = {
-  [index: string]: string;
-};
-
-export type IconStyles = {
-  [index: string]: string | number;
-};
-
-const getBackground = (props: ButtonThemeProps) => {
+const getBackground = (props: ThemeProps) => {
   return applyPropertyStyle('background', props, baseTheme);
 };
 
-const getColor = (props: ButtonThemeProps) => {
+const getColor = (props: ThemeProps) => {
   return applyPropertyStyle('color', props, baseTheme);
 };
 
 const getCursor = ({ state = 'default' }: { state: string }) => {
   let cursor = 'default';
-  if (state === 'hover') cursor = 'pointer';
-  if (state === 'disabled') cursor = 'not-allowed';
+  if (state === 'hover') {
+    cursor = 'pointer';
+  }
+  if (state === 'disabled') {
+    cursor = 'not-allowed';
+  }
   return cursor;
 };
 
-const getPadding = (props: ButtonThemeProps) => {
+const getPadding = (props: ThemeProps) => {
   const paddingSize = (gridSize() * 1.5) / fontSize();
   let padLeft = props.iconBefore ? 0 : paddingSize;
   let padRight = props.iconAfter ? 0 : paddingSize;
@@ -43,13 +33,16 @@ const getPadding = (props: ButtonThemeProps) => {
     (props.iconBefore || props.iconAfter) &&
     !(props.iconBefore && props.iconAfter) &&
     props.isLoading
-  )
+  ) {
     padLeft = padRight = paddingSize / 2;
+  }
 
   // TODO: RTL support
   let padding = `0 ${padRight}em 0 ${padLeft}em`;
 
-  if (props.spacing === 'none' || props.iconIsOnlyChild) padding = '0';
+  if (props.spacing === 'none' || props.iconIsOnlyChild) {
+    padding = '0';
+  }
   return padding;
 };
 
@@ -65,32 +58,26 @@ const getTransition = ({ state = 'default' }: { state: string }) => {
 
 const getTransitionDuration = ({ state = 'default' }: { state: string }) => {
   let transitionDuration = '0.1s, 0.15s';
-  if (state === 'active') transitionDuration = '0s';
-  if (state === 'focus') transitionDuration = '0s, 0.2s';
+  if (state === 'active') {
+    transitionDuration = '0s';
+  }
+  if (state === 'focus') {
+    transitionDuration = '0s, 0.2s';
+  }
   return transitionDuration;
 };
 
-const getVerticalAlign = ({ spacing = 'default' }: { spacing: Spacing }) => {
+const getVerticalAlign = ({ spacing = 'default' }: ThemeProps) => {
   return spacing === 'none' ? 'baseline' : 'middle';
 };
 
-const getBoxShadow = (props: ButtonThemeProps) => {
+const getBoxShadow = (props: ThemeProps) => {
   const boxShadowColor = applyPropertyStyle('boxShadowColor', props, baseTheme);
   return `0 0 0 2px ${boxShadowColor}`;
 };
 
-const getWidth = ({
-  spacing,
-  shouldFitContainer,
-}: {
-  spacing: Spacing;
-  shouldFitContainer: boolean;
-}) => {
-  let width = 'auto';
-  if (spacing === 'compact') width = '100%';
-  if (shouldFitContainer) width = '100%';
-  return width;
-};
+const getWidth = ({ shouldFitContainer }: ThemeProps) =>
+  shouldFitContainer ? '100%' : 'auto';
 
 const staticStyles = {
   alignItems: 'baseline',
@@ -107,14 +94,18 @@ const staticStyles = {
   whiteSpace: 'nowrap',
 };
 
-export const getButtonStyles = (props: ButtonThemeProps): ButtonStyles => {
+export const getButtonStyles = (props: ThemeProps) => {
   const compactButtonHeight = `${(gridSize() * 3) / fontSize()}em`;
   const buttonHeight = `${(gridSize() * 4) / fontSize()}em`;
 
-  const getLineHeight = ({ spacing = 'default' }: { spacing: Spacing }) => {
+  const getLineHeight = ({ spacing = 'default' }: ThemeProps) => {
     let lineHeight = buttonHeight;
-    if (spacing === 'compact') lineHeight = compactButtonHeight;
-    if (spacing === 'none') lineHeight = 'inherit';
+    if (spacing === 'compact') {
+      lineHeight = compactButtonHeight;
+    }
+    if (spacing === 'none') {
+      lineHeight = 'inherit';
+    }
     return lineHeight;
   };
 
@@ -141,7 +132,7 @@ export const getButtonStyles = (props: ButtonThemeProps): ButtonStyles => {
   };
 };
 
-export const getSpinnerStyles = (): SpinnerStyles => ({
+export const getSpinnerStyles = () => ({
   display: 'flex',
   position: 'absolute',
   left: '50%',
@@ -149,12 +140,21 @@ export const getSpinnerStyles = (): SpinnerStyles => ({
   transform: 'translate(-50%, -50%)',
 });
 
-const getIconMargin = (props: ButtonThemeProps) => {
-  if (props.spacing === 'none') return 0;
-  return `${gridSize() / 2}px`;
+const getIconMargin = ({ spacing }: ThemeProps) => {
+  const akGridSize = gridSize();
+
+  if (spacing === 'none') {
+    return `0 ${akGridSize / 2}px`;
+  }
+
+  if (spacing === 'compact') {
+    return `0 ${akGridSize}px`;
+  }
+
+  return `${akGridSize / 2}px ${akGridSize}px`;
 };
 
-export const getIconStyles = (props: ButtonThemeProps): IconStyles => ({
+export const getIconStyles = (props: ThemeProps) => ({
   alignSelf: 'center',
   display: 'flex',
   flexShrink: 0,

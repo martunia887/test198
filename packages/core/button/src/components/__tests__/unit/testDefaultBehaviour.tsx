@@ -3,8 +3,12 @@ import * as React from 'react';
 import Spinner from '@atlaskit/spinner';
 import { AtlassianIcon } from '@atlaskit/logo';
 import * as renderer from 'react-test-renderer';
+import * as emotion from 'emotion';
+import { createMatchers } from 'jest-emotion';
 import Button from '../../Button';
-import IconWrapper from '../../IconWrapper';
+import InnerWrapper from '../../InnerWrapper';
+
+expect.extend(createMatchers(emotion));
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -128,7 +132,7 @@ describe('ak-button/default-behaviour', () => {
         button
       </Button>,
     );
-    wrapper.find(ButtonWrapper).simulate('click');
+    wrapper.find(InnerWrapper).simulate('click');
     expect(spy).toHaveBeenCalledTimes(0);
   });
 
@@ -181,58 +185,70 @@ describe('ak-button/default-behaviour', () => {
       expect(wrapper.find(Spinner).length).toEqual(0);
     });
 
-    // it.only('set the opacity of the text to 0 when isLoading is true', () => {
-    //   let buttonRef;
-    //   const wrapper = mount(
-    //     <div>
-    //       <Button ref={el => (buttonRef = el)} isLoading>
-    //         Some text
-    //       </Button>
-    //     </div>,
-    //   );
+    it('set the opacity of the text to 0 when isLoading is true', () => {
+      const wrapper = renderer
+        .create(<Button isLoading>Some text</Button>)
+        .toJSON();
 
-    //   // console.log('buttonRef', buttonRef);
-    //   const spanny = wrapper.find('span');
-    //   console.log(spanny.debug());
+      const parent =
+        wrapper &&
+        wrapper.children &&
+        wrapper.children[0] &&
+        wrapper.children[0].children;
 
-    //   // const style = window.getComputedStyle(buttonRef);
-    //   // console.log(style);
-    //   // const tree = renderer.create(wrapper).toJSON();
-    //   // console.log(tree);
-    //   // expect(tree).toHaveStyleRule('opacity', 0);
-    // });
+      const { opacity } = parent && parent[1].props.style;
+      expect(opacity).toEqual(0);
+    });
 
     it('set the iconBefore opacity to 0 when isLoading', () => {
-      const wrapper = (
-        <Button isLoading iconBefore={<AtlassianIcon />}>
-          Some text
-        </Button>
-      );
-      const Component = renderer.create(wrapper).toJSON();
-      console.log('Component', Component);
+      const wrapper = renderer
+        .create(
+          <Button isLoading iconBefore={<AtlassianIcon />}>
+            Some text
+          </Button>,
+        )
+        .toJSON();
+
+      const parent =
+        wrapper &&
+        wrapper.children &&
+        wrapper.children[0] &&
+        wrapper.children[0].children;
+
+      const child = parent && parent[1];
+      expect(child).toHaveStyleRule('opacity', '0');
     });
 
     it('set the iconAfter opacity to 0 when isLoading', () => {
-      const wrapper = mount(
-        <Button isLoading iconAfter={<AtlassianIcon />}>
-          Some text
-        </Button>,
-      );
-      expect(
-        wrapper
-          .find(IconWrapper)
-          .find('span')
-          .get(0).props.style.opacity,
-      ).toEqual(0);
+      const wrapper = renderer
+        .create(
+          <Button isLoading iconAfter={<AtlassianIcon />}>
+            Some text
+          </Button>,
+        )
+        .toJSON();
+
+      const parent =
+        wrapper &&
+        wrapper.children &&
+        wrapper.children[0] &&
+        wrapper.children[0].children;
+
+      const child = parent && parent[2];
+      expect(child).toHaveStyleRule('opacity', '0');
     });
-    it('set the opacity of the text to undefined when isLoading is false', () => {
-      const wrapper = mount(<Button>Some text</Button>);
-      expect(
-        wrapper
-          .find(ButtonContent)
-          .find('span')
-          .get(0).props.style.opacity,
-      ).toEqual(1);
+
+    it('set the opacity of the text to 1 when isLoading is false', () => {
+      const wrapper = renderer.create(<Button>Some text</Button>).toJSON();
+
+      const parent =
+        wrapper &&
+        wrapper.children &&
+        wrapper.children[0] &&
+        wrapper.children[0].children;
+
+      const { opacity } = parent && parent[0].props.style;
+      expect(opacity).toEqual(1);
     });
   });
 
@@ -246,5 +262,10 @@ describe('ak-button/default-behaviour', () => {
     const button = wrapper.find('button');
     button.prop('onBlur')!({} as any);
     expect(spy).toHaveBeenCalled();
+  });
+
+  it("should pass interaction state props from the component's state", () => {
+    const wrapper = mount(<Button />);
+    expect(wrapper.find('Consumer').get(1).props.state).toBe('default');
   });
 });

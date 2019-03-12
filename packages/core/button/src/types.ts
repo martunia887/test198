@@ -11,7 +11,7 @@ export type ButtonAppearances =
   | 'warning'
   | 'help';
 
-export type ButtonProps = {
+export interface ButtonProps {
   /** The base styling to apply to the button */
   appearance?: ButtonAppearances;
   /** Set the button to autofocus on mount */
@@ -19,7 +19,7 @@ export type ButtonProps = {
   /** Add a classname to the button */
   className?: string;
   /** A custom component to use instead of the default button */
-  component?: React.ComponentType;
+  component?: React.ComponentType<ButtonProps>;
   /** Name property of a linked form that the button submits when clicked */
   form?: string;
   /** Provides a url for buttons being used as a link */
@@ -28,20 +28,20 @@ export type ButtonProps = {
   iconAfter?: React.ReactChild;
   /** Places an icon within the button, before the button's text */
   iconBefore?: React.ReactChild;
-  /** Pass a reference on to the styled component */
-  innerRef?: (element: HTMLElement) => void;
+  /** Pass a reference on to the button component */
+  innerRef?: React.Ref<HTMLElement | any | undefined>;
   /** Provide a unique id to the button */
   id?: string;
   /** Set if the button is disabled */
-  isDisabled: boolean;
+  isDisabled?: boolean;
   /**
    * Set if the button is loading. When isLoading is true, text is hidden, and
    * a spinner is shown in its place. The button maintains the width that it
    * would have if the text were visible.
    */
-  isLoading: boolean;
+  isLoading?: boolean;
   /** Change the style to indicate the button is selected */
-  isSelected: boolean;
+  isSelected?: boolean;
   /** Handler to be called on blur */
   onBlur?: React.FocusEventHandler<HTMLElement>;
   /** Handler to be called on click. The second argument can be used to track analytics data. See the tutorial in the analytics-next package for details */
@@ -56,18 +56,20 @@ export type ButtonProps = {
   /** Handler to be called on focus */
   onFocus?: React.FocusEventHandler<HTMLElement>;
   /** Set the amount of padding in the button */
-  spacing: 'compact' | 'default' | 'none';
+  spacing?: Spacing;
   /** Assign specific tabIndex order to the underlying html button */
   tabIndex?: number;
   /** Pass target down to a link within the button component, if a href is provided */
   target?: string;
   /** Set whether it is a button or a form submission */
-  type: 'button' | 'submit' | 'reset';
+  type?: 'button' | 'submit' | 'reset';
   /** Option to fit button width to its parent width */
-  shouldFitContainer: boolean;
+  shouldFitContainer?: boolean;
   /** Pass in a custom theme */
-  theme: () => ThemeTokens;
-
+  theme?: (
+    current: (props: ThemeProps) => ThemeTokens,
+    props: ThemeProps,
+  ) => ThemeTokens;
   /** DEPRECATED */
   /** Pass aria-controls to underlying html button */
   ariaControls?: string;
@@ -77,7 +79,9 @@ export type ButtonProps = {
   ariaLabel?: string;
   /** Pass aria-haspopup to underlying html button */
   ariaHaspopup?: boolean;
-};
+}
+
+export type Spacing = 'compact' | 'default' | 'none';
 
 export type DerivedButtonProps = {
   isActive: boolean;
@@ -88,29 +92,21 @@ export type DerivedButtonProps = {
 
 export type ThemeMode = 'dark' | 'light';
 
-export type ThemeTokens = {};
-
-export type ThemeProps = {
-  appearance: string;
-  state: string;
-  mode?: ThemeMode;
+export type ThemeTokens = {
+  buttonStyles: Object;
+  iconStyles: Object;
+  spinnerStyles: Object;
 };
 
-export type ButtonThemePropsList = {
-  buttonStyles: ButtonThemeProps;
-  iconStyles: ButtonThemeProps;
-  spinnerStyles: ButtonThemeProps;
-};
-
-export interface ButtonThemeProps extends ButtonProps {
+export interface ThemeProps extends Partial<ButtonProps> {
   state: string;
-  mode?: ThemeMode;
   iconIsOnlyChild?: boolean;
+  mode?: ThemeMode;
 }
 
 export type IconProps = {
   spacing: string;
-  styles: any;
+  styles: any; // Needs to be CSSObject?
   isOnlyChild: boolean;
   isLoading?: boolean;
   icon: React.ReactChild;

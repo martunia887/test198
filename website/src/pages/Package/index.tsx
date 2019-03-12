@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { match } from 'react-router';
 import styled from 'styled-components';
-import { Link } from '../../components/WrappedLink';
 import Loadable from '../../components/WrappedLoader';
 import { Helmet } from 'react-helmet';
 import { gridSize, colors, math } from '@atlaskit/theme';
@@ -23,6 +22,7 @@ import fetchPackageData, {
   PackageData,
   PackageJson,
 } from './utils/fsOperations';
+import LinkButton from '../../components/LinkButton';
 
 export const Title = styled.div`
   display: flex;
@@ -156,14 +156,11 @@ class Package extends React.Component<Props> {
           <h1>{title}</h1>
           {examplePath && (
             <ButtonGroup>
-              <Button
-                component={Link}
+              <LinkButton
                 iconBefore={<ExamplesIcon label="Examples Icon" />}
                 to={examplePath}
               />
-              <Button component={Link} to={exampleModalPath}>
-                Examples
-              </Button>
+              <LinkButton to={exampleModalPath}>Examples</LinkButton>
               {pkg && pkg['atlaskit:designLink'] && (
                 <Button
                   iconBefore={<AtlassianIcon size="small" />}

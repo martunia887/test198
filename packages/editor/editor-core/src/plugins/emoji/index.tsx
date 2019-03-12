@@ -1,7 +1,7 @@
 import * as React from 'react';
 import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
 import { emoji, emojiQuery } from '@atlaskit/adf-schema';
-import { WithProviders } from '@atlaskit/editor-common';
+import { WithProviders, Providers } from '@atlaskit/editor-common';
 
 import { EditorPlugin } from '../../types';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
@@ -40,7 +40,7 @@ const emojiPlugin: EditorPlugin = {
         name: 'emojiInputRule',
         plugin: ({ schema }) => inputRulePlugin(schema),
       },
-      { name: 'emojiKeymap', plugin: ({ schema }) => keymap(schema) },
+      { name: 'emojiKeymap', plugin: () => keymap() },
       {
         name: 'emojiAsciiInputRule',
         plugin: ({ schema, providerFactory }) =>
@@ -54,9 +54,9 @@ const emojiPlugin: EditorPlugin = {
     providerFactory,
     popupsMountPoint,
     popupsBoundariesElement,
-    popupsScrollableElement,
+    dispatchAnalyticsEvent,
   }) {
-    const renderNode = providers => {
+    const renderNode = (providers: Providers) => {
       return (
         <EmojiTypeAhead
           editorView={editorView}
@@ -64,6 +64,7 @@ const emojiPlugin: EditorPlugin = {
           emojiProvider={providers.emojiProvider}
           popupsMountPoint={popupsMountPoint}
           popupsBoundariesElement={popupsBoundariesElement}
+          dispatchAnalyticsEvent={dispatchAnalyticsEvent}
         />
       );
     };
@@ -79,16 +80,13 @@ const emojiPlugin: EditorPlugin = {
 
   secondaryToolbarComponent({
     editorView,
-    eventDispatcher,
     providerFactory,
-    appearance,
     popupsMountPoint,
     popupsBoundariesElement,
     popupsScrollableElement,
     disabled,
   }) {
-    const renderNode = providers => {
-      // numFollowingButtons must be changed if buttons are added after ToolbarEmojiPicker to the message editor
+    const renderNode = (providers: Providers) => {
       return (
         <ToolbarEmojiPicker
           editorView={editorView}

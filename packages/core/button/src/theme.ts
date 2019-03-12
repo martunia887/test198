@@ -1,11 +1,6 @@
 import { colors, createTheme } from '@atlaskit/theme';
 import { hex2rgba } from './components/utils';
-import {
-  ButtonThemeProps,
-  ThemeTokens,
-  ThemeMode,
-  ThemeFallbacks,
-} from './types';
+import { ThemeProps, ThemeTokens, ThemeMode, ThemeFallbacks } from './types';
 import {
   getButtonStyles,
   getSpinnerStyles,
@@ -199,7 +194,9 @@ export function applyPropertyStyle(
   theme: any,
 ) {
   const propertyStyles = theme[property];
-  if (!propertyStyles) return 'initial';
+  if (!propertyStyles) {
+    return 'initial';
+  }
 
   // Check for relevant fallbacks.
   if (!propertyStyles[appearance]) {
@@ -211,16 +208,20 @@ export function applyPropertyStyle(
 
   // If there is no 'state' key (ie, 'hover') defined for a given appearance,
   // return the 'default' state of that appearance.
-  if (!propertyStyles[appearance][state]) state = 'default';
+  if (!propertyStyles[appearance][state]) {
+    state = 'default';
+  }
 
   const appearanceStyles = propertyStyles[appearance];
   const stateStyles = appearanceStyles[state];
 
-  if (!stateStyles) return 'inherit';
+  if (!stateStyles) {
+    return 'inherit';
+  }
   return stateStyles[mode] || appearanceStyles.default[mode];
 }
 
-export const Theme = createTheme<ThemeTokens, ButtonThemeProps>(themeProps => ({
+export const Theme = createTheme<ThemeTokens, ThemeProps>(themeProps => ({
   buttonStyles: getButtonStyles(themeProps),
   spinnerStyles: getSpinnerStyles(),
   iconStyles: getIconStyles(themeProps),

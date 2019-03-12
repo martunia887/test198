@@ -14,9 +14,10 @@
   ],
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Raja B",
-    "Ben C",
-    "Ajay M"
+    "Sean C",
+    "Ajay M",
+    "Daniel D",
+    "Kang C"
   ],
   "atlaskit": {
     "name": "Button",
@@ -32,6 +33,7 @@
     "@babel/runtime": "^7.0.0",
     "@emotion/is-prop-valid": "^0.7.3",
     "babel-runtime": "^6.26.0",
+    "emotion": "^9.1.1",
     "tslib": "^1.8.0"
   },
   "peerDependencies": {
@@ -44,7 +46,9 @@
     "@atlaskit/icon": "^16.0.0",
     "@atlaskit/logo": "^9.2.6",
     "@atlaskit/visual-regression": "^0.0.1",
+    "@types/react-test-renderer": "^16.8.0",
     "enzyme": "^3.7.0",
+    "jest-emotion": "^9.2.7",
     "react-dom": "^16.4.2",
     "react-router-dom": "^4.2.2",
     "react-test-renderer": "^16.3.0"

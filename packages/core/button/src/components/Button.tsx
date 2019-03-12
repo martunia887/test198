@@ -16,15 +16,8 @@ import Content from './Content';
 import InnerWrapper from './InnerWrapper';
 import IconWrapper from './IconWrapper';
 import LoadingSpinner from './LoadingSpinner';
+import { ButtonProps, ThemeMode, ThemeProps, ThemeTokens } from '../types';
 import { withDefaultProps } from '@atlaskit/type-helpers';
-import { ButtonProps, ThemeMode } from '../types';
-import { ButtonStyles, SpinnerStyles, IconStyles } from './getStyles';
-
-type ButtonThemeStyles = {
-  buttonStyles: ButtonStyles;
-  spinnerStyles: SpinnerStyles;
-  iconStyles: IconStyles;
-};
 
 export type ButtonState = {
   isHover: boolean;
@@ -32,29 +25,21 @@ export type ButtonState = {
   isFocus: boolean;
 };
 
-export const defaultProps: Pick<
-  ButtonProps,
-  | 'appearance'
-  | 'isDisabled'
-  | 'isSelected'
-  | 'isLoading'
-  | 'spacing'
-  | 'type'
-  | 'shouldFitContainer'
-  | 'autoFocus'
-> = {
-  appearance: 'default',
-  isDisabled: false,
-  isSelected: false,
-  isLoading: false,
-  spacing: 'default',
-  type: 'button',
-  shouldFitContainer: false,
-  autoFocus: false,
-};
-
 export class Button extends React.Component<ButtonProps, ButtonState> {
-  button: HTMLElement | undefined;
+  static defaultProps: ButtonProps = {
+    appearance: 'default',
+    isDisabled: false,
+    isSelected: false,
+    isLoading: false,
+    spacing: 'default',
+    type: 'button',
+    shouldFitContainer: false,
+    autoFocus: false,
+    theme: (current, props) => current(props),
+  };
+
+  // ref can be a range of things because we render button, a, span or other React components
+  button: React.ReactType | undefined;
 
   state = {
     isActive: false,
@@ -63,7 +48,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
   };
 
   componentDidMount() {
-    if (this.props.autoFocus && this.button) {
+    if (this.props.autoFocus && this.button instanceof HTMLButtonElement) {
       this.button.focus();
     }
     checkDeprecations(this.props);
@@ -100,7 +85,9 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
   getElement = () => {
     const { href, isDisabled } = this.props;
-    if (href) return isDisabled ? 'span' : 'a';
+    if (href) {
+      return isDisabled ? 'span' : 'a';
+    }
     return 'button';
   };
 
@@ -109,41 +96,44 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
   // Swallow click events when the button is disabled
   // to prevent inner child clicks bubbling up.
   onInnerClick: React.MouseEventHandler<HTMLElement> = e => {
-    if (!this.isInteractive()) e.stopPropagation();
+    if (!this.isInteractive()) {
+      e.stopPropagation();
+    }
     return true;
   };
 
   // Handle innerRef for focusing button
-  getInnerRef = (ref: HTMLElement) => {
+  getInnerRef = (ref: any | undefined) => {
     this.button = ref;
 
     const { innerRef } = this.props;
-    if (innerRef) innerRef(ref);
+    if (typeof innerRef === 'function') {
+      innerRef(ref);
+    }
   };
 
   render() {
     const {
-      appearance,
+      appearance = 'default',
       children,
       className,
       component: CustomComponent,
       iconAfter,
       iconBefore,
-      isDisabled,
-      isLoading,
-      isSelected,
-      shouldFitContainer,
-      spacing,
-      theme,
+      isDisabled = false,
+      isLoading = false,
+      isSelected = false,
+      shouldFitContainer = false,
+      spacing = 'default',
+      theme = (
+        current: (props: ThemeProps) => ThemeTokens,
+        props: ThemeProps,
+      ) => current(props),
     } = this.props;
 
     const attributes = { ...this.state, isSelected, isDisabled };
 
-    const StyledButton = CustomComponent
-      ? React.forwardRef((props, ref) => (
-          <CustomComponent innerRef={ref} {...props} />
-        ))
-      : this.getElement();
+    const StyledButton: React.ReactType = CustomComponent || this.getElement();
 
     const iconIsOnlyChild: boolean = !!(
       (iconBefore && !iconAfter && !children) ||
@@ -173,14 +163,12 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
               iconIsOnlyChild={iconIsOnlyChild}
               {...this.props}
             >
-              {({
-                buttonStyles,
-                spinnerStyles,
-                iconStyles,
-              }: ButtonThemeStyles) => (
+              {({ buttonStyles, spinnerStyles, iconStyles }) => (
                 <StyledButton
                   {...filterProps(this.props, StyledButton)}
-                  ref={this.getInnerRef}
+                  {...(CustomComponent
+                    ? { innerRef: this.getInnerRef }
+                    : { ref: this.getInnerRef })}
                   onMouseEnter={this.onMouseEnter}
                   onMouseLeave={this.onMouseLeave}
                   onMouseDown={this.onMouseDown}
@@ -240,10 +228,13 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
   }
 }
 
-const DefaultedButton = withDefaultProps(defaultProps, Button);
-const ButtonWithForwardRef = React.forwardRef((props, ref) => (
-  <DefaultedButton {...props} innerRef={ref} />
-));
+const ButtonWithForwardRef = withDefaultProps(
+  Button.defaultProps,
+  React.forwardRef((props: ButtonProps, ref) => (
+    <Button {...props} innerRef={ref} />
+  )),
+);
+
 const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
 
 export default withAnalyticsContext({

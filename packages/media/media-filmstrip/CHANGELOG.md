@@ -1,5 +1,16 @@
 # @atlaskit/media-filmstrip
 
+## 28.0.0
+- Updated dependencies [4aee5f3cec](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4aee5f3cec):
+  - @atlaskit/media-card@55.0.0
+  - @atlaskit/media-test-helpers@20.1.6
+  - @atlaskit/media-core@27.2.0
+
+## 27.1.0
+- [minor] [f1b46bcb42](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f1b46bcb42):
+
+  - ED-6259 Enable stricter types for media packages
+
 ## 27.0.0
 - [patch] [2e676676ba](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2e676676ba):
 

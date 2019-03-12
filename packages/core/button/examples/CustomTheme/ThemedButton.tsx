@@ -1,24 +1,25 @@
 import * as React from 'react';
 import getButtonStyles from './styles';
 import Button from '../../src/components/Button';
-import { ButtonProps, ThemeProps } from '../../src/types';
+import { ButtonProps, ButtonAppearances } from '../../src/types';
 
-export default (customProps: ButtonProps) => (
+export default (props: ButtonProps) => (
   <Button
-    theme={(
-      adgTheme: Function,
-      { appearance = 'default', state = 'default' }: ThemeProps,
-    ) => {
+    theme={(adgTheme, { appearance = 'default', state = 'default' }) => {
       const {
         buttonStyles: adgButtonStyles,
         spinnerStyles: adgSpinnerStyles,
         iconStyles: adgIconStyles,
-      } = adgTheme({ appearance, state, ...customProps });
+      } = adgTheme({ ...props, appearance, state });
 
       return {
         buttonStyles: {
           ...adgButtonStyles,
-          ...getButtonStyles({ appearance, state, ...customProps }),
+          ...getButtonStyles({
+            ...props,
+            appearance: appearance as ButtonAppearances,
+            state,
+          }),
         },
         spinnerStyles: {
           ...adgSpinnerStyles,
@@ -28,6 +29,6 @@ export default (customProps: ButtonProps) => (
         },
       };
     }}
-    {...customProps}
+    {...props}
   />
 );
