@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { Context, ProcessedFileState, FileState } from '@atlaskit/media-core';
-import { getArtifactUrl } from '@atlaskit/media-store';
+import {
+  MediaClient,
+  ProcessedFileState,
+  FileState,
+} from '@atlaskit/media-client';
+import { getArtifactUrl } from '@atlaskit/media-client';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { constructAuthTokenUrl } from '../utils';
 import { Outcome, MediaViewerFeatureFlags } from '../domain';
@@ -12,7 +16,7 @@ import { getObjectUrlFromFileState } from '../utils/getObjectUrlFromFileState';
 
 export type Props = Readonly<{
   item: FileState;
-  context: Context;
+  mediaClient: MediaClient;
   collectionName?: string;
   featureFlags?: MediaViewerFeatureFlags;
   showControls?: () => void;
@@ -72,7 +76,7 @@ export class VideoViewer extends BaseViewer<string, Props, State> {
   }
 
   protected async init(isHDActive: boolean = this.state.isHDActive) {
-    const { context, item, collectionName } = this.props;
+    const { mediaClient, item, collectionName } = this.props;
 
     try {
       let contentUrl: string | undefined;
@@ -84,7 +88,7 @@ export class VideoViewer extends BaseViewer<string, Props, State> {
         }
         contentUrl = await constructAuthTokenUrl(
           artifactUrl,
-          context,
+          mediaClient,
           collectionName,
         );
         if (!contentUrl) {

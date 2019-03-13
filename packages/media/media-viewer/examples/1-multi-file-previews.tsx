@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import Button from '@atlaskit/button';
 import AkSpinner from '@atlaskit/spinner';
-import { createStorybookContext } from '@atlaskit/media-test-helpers';
+import { createStorybookMediaClientConfig } from '@atlaskit/media-test-helpers';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 import { ButtonList, Container, Group } from '../example-helpers/styled';
 import {
   docIdentifier,
@@ -23,10 +24,15 @@ import { MediaViewerDataSource } from '..';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
-import { Identifier, FileIdentifier } from '@atlaskit/media-core';
+import {
+  Identifier,
+  MediaClient,
+  FileIdentifier,
+} from '@atlaskit/media-client';
 import { Card } from '@atlaskit/media-card';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
+const mediaClient = new MediaClient(mediaClientConfig);
 
 const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
   const { payload } = analyticsEvent;
@@ -46,7 +52,7 @@ export default class Example extends React.Component<{}, State> {
   private subscription?: Subscription;
 
   componentDidMount() {
-    this.subscription = context.collection
+    this.subscription = mediaClient.collection
       .getItems(defaultCollectionName, { limit: 1 })
       .subscribe({
         next: items => {
@@ -180,72 +186,73 @@ export default class Example extends React.Component<{}, State> {
   render() {
     return (
       <I18NWrapper>
-        <Container>
-          <Group>
-            <h2>File lists</h2>
-            <ButtonList>
-              <li>
-                <Button onClick={this.openList}>Small list</Button>
-              </li>
-            </ButtonList>
-          </Group>
+        <MediaClientConfigContext.Provider value={mediaClientConfig}>
+          <Container>
+            <Group>
+              <h2>File lists</h2>
+              <ButtonList>
+                <li>
+                  <Button onClick={this.openList}>Small list</Button>
+                </li>
+              </ButtonList>
+            </Group>
 
-          <Group>
-            <h2>Collection names</h2>
-            <ButtonList>
-              <li>
-                {this.state.firstCollectionItem ? (
-                  <Card
-                    context={context}
-                    identifier={{
-                      collectionName: defaultCollectionName,
-                      id: (this.state.firstCollectionItem as FileIdentifier).id,
-                      mediaItemType: 'file',
-                    }}
-                    onClick={this.openCollection}
-                  />
-                ) : (
-                  <AkSpinner />
-                )}
-              </li>
-            </ButtonList>
-          </Group>
+            <Group>
+              <h2>Collection names</h2>
+              <ButtonList>
+                <li>
+                  {this.state.firstCollectionItem ? (
+                    <Card
+                      identifier={{
+                        collectionName: defaultCollectionName,
+                        id: (this.state.firstCollectionItem as FileIdentifier)
+                          .id,
+                        mediaItemType: 'file',
+                      }}
+                      onClick={this.openCollection}
+                    />
+                  ) : (
+                    <AkSpinner />
+                  )}
+                </li>
+              </ButtonList>
+            </Group>
 
-          <Group>
-            <h2>Errors</h2>
-            <ButtonList>
-              <li>
-                <Button onClick={this.openNotFound}>
-                  Selected item not found
-                </Button>
-              </li>
-              <li>
-                <Button onClick={this.openInvalidId}>Invalid ID</Button>
-              </li>
-              <li>
-                <Button onClick={this.openInvalidCollection}>
-                  Invalid collection name
-                </Button>
-              </li>
-              <li>
-                <Button onClick={this.openErrorList}>Error list</Button>
-              </li>
-            </ButtonList>
-          </Group>
+            <Group>
+              <h2>Errors</h2>
+              <ButtonList>
+                <li>
+                  <Button onClick={this.openNotFound}>
+                    Selected item not found
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={this.openInvalidId}>Invalid ID</Button>
+                </li>
+                <li>
+                  <Button onClick={this.openInvalidCollection}>
+                    Invalid collection name
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={this.openErrorList}>Error list</Button>
+                </li>
+              </ButtonList>
+            </Group>
 
-          {this.state.selected && (
-            <AnalyticsListener channel="media" onEvent={handleEvent}>
-              <MediaViewer
-                context={context}
-                selectedItem={this.state.selected.identifier}
-                dataSource={this.state.selected.dataSource}
-                collectionName={defaultCollectionName}
-                onClose={this.onClose}
-                pageSize={5}
-              />
-            </AnalyticsListener>
-          )}
-        </Container>
+            {this.state.selected && (
+              <AnalyticsListener channel="media" onEvent={handleEvent}>
+                <MediaViewer
+                  selectedItem={this.state.selected.identifier}
+                  dataSource={this.state.selected.dataSource}
+                  collectionName={defaultCollectionName}
+                  onClose={this.onClose}
+                  pageSize={5}
+                />
+              </AnalyticsListener>
+            )}
+          </Container>
+        </MediaClientConfigContext.Provider>
       </I18NWrapper>
     );
   }

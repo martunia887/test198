@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
   defaultCollectionName,
-  createUploadContext,
+  createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
 import Button from '@atlaskit/button';
 import Select from '@atlaskit/select';
 import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
@@ -15,8 +15,9 @@ import {
   MediaFile,
   Popup,
 } from '../src';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createUploadContext();
+const mediaClientConfig = createUploadMediaClientConfig();
 
 const dataSourceOptions = [
   { label: 'List', value: 'list' },
@@ -38,7 +39,7 @@ export default class Example extends React.Component<{}, State> {
   state: State = { events: [], dataSourceType: 'list' };
 
   async componentDidMount() {
-    const popup = await MediaPicker('popup', context, {
+    const popup = await MediaPicker('popup', mediaClientConfig, {
       uploadParams: {
         collection: defaultCollectionName,
       },
@@ -110,7 +111,6 @@ export default class Example extends React.Component<{}, State> {
       return (
         <div key={key} style={{ display: 'inline-block', margin: '10px' }}>
           <Card
-            context={context}
             identifier={identifier}
             dimensions={{
               width: 200,
@@ -134,7 +134,7 @@ export default class Example extends React.Component<{}, State> {
     const { popup } = this.state;
 
     return (
-      <React.Fragment>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
         <OptionsWrapper>
           <Button
             appearance="primary"
@@ -152,7 +152,7 @@ export default class Example extends React.Component<{}, State> {
           </SelectWrapper>
         </OptionsWrapper>
         <div>{this.renderCards()}</div>
-      </React.Fragment>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

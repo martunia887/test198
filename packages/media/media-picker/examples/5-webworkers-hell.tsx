@@ -4,9 +4,19 @@ import { Component } from 'react';
 import {
   mediaPickerAuthProvider,
   defaultMediaPickerCollectionName,
+  createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
-import { MediaPicker, Browser, BrowserConfig } from '../src';
+import {
+  MediaClientConfig,
+  MediaClientConfigContext,
+} from '@atlaskit/media-core';
+import {
+  MediaPicker,
+  Browser,
+  BrowserConfig,
+  UploadPreviewUpdateEventPayload,
+} from '../src';
 import {
   PreviewsWrapper,
   PopupHeader,
@@ -14,11 +24,12 @@ import {
   PreviewsTitle,
 } from '../example-helpers/styled';
 import { UploadPreview } from '../example-helpers/upload-preview';
-import { ContextFactory } from '@atlaskit/media-core';
 
 export interface BrowserWrapperState {
   previewsData: any[];
 }
+
+const mediaClientConfig = createUploadMediaClientConfig();
 
 class BrowserWrapper extends Component<{}, BrowserWrapperState> {
   browserComponents: Browser[] = [];
@@ -36,9 +47,9 @@ class BrowserWrapper extends Component<{}, BrowserWrapperState> {
   }
 
   createBrowse = async () => {
-    const context = ContextFactory.create({
+    const mediaClientConfig: MediaClientConfig = {
       authProvider: mediaPickerAuthProvider(),
-    });
+    };
 
     const browseConfig: BrowserConfig = {
       multiple: true,
@@ -47,11 +58,18 @@ class BrowserWrapper extends Component<{}, BrowserWrapperState> {
         collection: defaultMediaPickerCollectionName,
       },
     };
-    const fileBrowser = await MediaPicker('browser', context, browseConfig);
+    const fileBrowser = await MediaPicker(
+      'browser',
+      mediaClientConfig,
+      browseConfig,
+    );
 
-    fileBrowser.on('upload-preview-update', data => {
-      this.setState({ previewsData: [...this.state.previewsData, data] });
-    });
+    fileBrowser.on(
+      'upload-preview-update',
+      (data: UploadPreviewUpdateEventPayload) => {
+        this.setState({ previewsData: [...this.state.previewsData, data] });
+      },
+    );
 
     return fileBrowser;
   };
@@ -78,13 +96,15 @@ class BrowserWrapper extends Component<{}, BrowserWrapperState> {
     });
 
     return (
-      <PopupContainer>
-        <PopupHeader>{buttons}</PopupHeader>
-        <PreviewsWrapper>
-          <PreviewsTitle>Upload previews</PreviewsTitle>
-          {this.renderPreviews()}
-        </PreviewsWrapper>
-      </PopupContainer>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
+        <PopupContainer>
+          <PopupHeader>{buttons}</PopupHeader>
+          <PreviewsWrapper>
+            <PreviewsTitle>Upload previews</PreviewsTitle>
+            {this.renderPreviews()}
+          </PreviewsWrapper>
+        </PopupContainer>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

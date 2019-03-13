@@ -1,11 +1,17 @@
-jest.mock('@atlaskit/media-store');
-import { MediaStore } from '@atlaskit/media-store';
+import { Auth } from '@atlaskit/media-core';
 import {
-  ContextFactory,
-  fileStreamsCache,
   FileState,
-} from '@atlaskit/media-core';
-import { mockStore, mockFetcher } from '@atlaskit/media-test-helpers';
+  MediaFile,
+  MediaFileArtifacts,
+  fileStreamsCache,
+} from '@atlaskit/media-client';
+import {
+  mockStore,
+  mockFetcher,
+  fakeMediaClient,
+  asMock,
+  expectFunctionToHaveBeenCalledWith,
+} from '@atlaskit/media-test-helpers';
 import { sendUploadEvent } from '../../../actions/sendUploadEvent';
 import finalizeUploadMiddleware, { finalizeUpload } from '../../finalizeUpload';
 import {
@@ -16,9 +22,10 @@ import { State } from '../../../domain';
 import { ReplaySubject, Observable } from 'rxjs';
 
 describe('finalizeUploadMiddleware', () => {
-  const auth = {
+  const auth: Auth = {
     clientId: 'some-client-id',
     token: 'some-token',
+    baseUrl: 'some-base-url',
   };
   const upfrontId = Promise.resolve('1');
   const file = {
@@ -29,9 +36,14 @@ describe('finalizeUploadMiddleware', () => {
     size: 12345,
     upfrontId,
   };
-  const copiedFile = {
-    ...file,
+  const copiedFile: MediaFile = {
     id: 'some-copied-file-id',
+    mediaType: 'image',
+    mimeType: 'some/image',
+    name: 'some-file-name',
+    size: 12345,
+    artifacts: {} as MediaFileArtifacts,
+    representations: {},
   };
   const collection = 'some-collection';
   const uploadId = 'some-upload-id';
@@ -41,15 +53,15 @@ describe('finalizeUploadMiddleware', () => {
   };
   const setup = (state: Partial<State> = {}) => {
     const store = mockStore(state);
-    const { userContext } = store.getState();
-    (userContext.config.authProvider as jest.Mock<any>).mockReturnValue(
-      Promise.resolve(auth),
+    const { userMediaClient, tenantMediaClient } = store.getState();
+    asMock(userMediaClient.mediaClientConfig.authProvider).mockResolvedValue(
+      auth,
     );
 
     const fetcher = mockFetcher();
-    (MediaStore as any).mockImplementation(() => ({
-      copyFileWithToken: () => Promise.resolve({ data: copiedFile }),
-    }));
+    asMock(tenantMediaClient.mediaStore.copyFileWithToken).mockResolvedValue({
+      data: copiedFile,
+    });
     fetcher.pollFile.mockImplementation(() => Promise.resolve(copiedFile));
 
     return {
@@ -119,10 +131,11 @@ describe('finalizeUploadMiddleware', () => {
     const error = {
       message: 'some-error-message',
     };
+    const { tenantMediaClient } = store.getState();
 
-    (MediaStore as any).mockImplementation(() => ({
-      copyFileWithToken: () => Promise.reject(error),
-    }));
+    asMock(tenantMediaClient.mediaStore.copyFileWithToken).mockRejectedValue(
+      error,
+    );
 
     return finalizeUpload(fetcher, store, action).then(() => {
       expect(store.dispatch).toBeCalledWith(
@@ -162,42 +175,43 @@ describe('finalizeUploadMiddleware', () => {
   });
 
   it('should call copyFileWithToken with the right params', async () => {
-    const tenantContext = ContextFactory.create({
-      authProvider: jest.fn().mockImplementation(() => Promise.resolve({})),
-    });
+    const tenantMediaClient = fakeMediaClient();
     const { fetcher, store, action } = setup({
       config: { uploadParams: { collection: 'some-tenant-collection' } },
-      tenantContext,
+      tenantMediaClient,
     });
-    const copyFileWithToken = jest
-      .fn()
-      .mockReturnValue(Promise.resolve({ data: { id: 'some-id' } }));
 
-    (MediaStore as any).mockImplementation(() => ({
-      copyFileWithToken,
-    }));
+    asMock(tenantMediaClient.mediaStore.copyFileWithToken).mockResolvedValue({
+      data: { id: 'some-id' },
+    });
 
     await finalizeUpload(fetcher, store, action);
 
-    expect(copyFileWithToken).toBeCalledTimes(1);
-    expect(copyFileWithToken).toBeCalledWith(
-      {
-        sourceFile: {
-          collection: 'some-collection',
-          id: 'some-file-id',
-          owner: {
-            clientId: 'some-client-id',
-            token: 'some-token',
+    expect(
+      asMock(tenantMediaClient.mediaStore.copyFileWithToken),
+    ).toBeCalledTimes(1);
+    expectFunctionToHaveBeenCalledWith(
+      tenantMediaClient.mediaStore.copyFileWithToken,
+      [
+        {
+          sourceFile: {
+            collection: 'some-collection',
+            id: 'some-file-id',
+            owner: {
+              id: 'some-client-id',
+              token: 'some-token',
+              baseUrl: 'some-base-url',
+            },
           },
         },
-      },
-      {
-        collection: 'some-tenant-collection',
-        occurrenceKey: undefined,
-        replaceFileId: undefined,
-      },
+        {
+          collection: 'some-tenant-collection',
+          occurrenceKey: undefined,
+          replaceFileId: undefined,
+        },
+      ],
     );
-    expect(tenantContext.config.authProvider).toBeCalledWith({
+    expect(tenantMediaClient.mediaClientConfig.authProvider).toBeCalledWith({
       collectionName: 'some-tenant-collection',
     });
   });
@@ -221,12 +235,6 @@ describe('finalizeUploadMiddleware', () => {
 
     expect(next).toBeCalledWith({
       id: 'some-copied-file-id',
-      status: 'processed',
-      artifacts: undefined,
-      mediaType: undefined,
-      mimeType: undefined,
-      name: 'some-file-name',
-      size: 12345,
     });
   });
 });

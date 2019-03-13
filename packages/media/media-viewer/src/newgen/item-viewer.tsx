@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Context, FileState, FileIdentifier } from '@atlaskit/media-core';
+import { MediaClient, FileState, FileIdentifier } from '@atlaskit/media-client';
 import { FormattedMessage } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
 import { Outcome, MediaViewerFeatureFlags } from './domain';
@@ -32,7 +32,7 @@ import { AudioViewer } from './viewers/audio';
 
 export type Props = Readonly<{
   identifier: FileIdentifier;
-  context: Context;
+  mediaClient: MediaClient;
   featureFlags?: MediaViewerFeatureFlags;
   showControls?: () => void;
   onClose?: () => void;
@@ -104,7 +104,7 @@ export class ItemViewerBase extends React.Component<Props, State> {
     }
 
     const {
-      context,
+      mediaClient,
       identifier,
       featureFlags,
       showControls,
@@ -113,7 +113,7 @@ export class ItemViewerBase extends React.Component<Props, State> {
     } = this.props;
 
     const viewerProps = {
-      context,
+      mediaClient,
       item,
       collectionName: identifier.collectionName,
       onClose,
@@ -183,11 +183,11 @@ export class ItemViewerBase extends React.Component<Props, State> {
   }
 
   private renderDownloadButton(state: FileState, err: MediaViewerError) {
-    const { context, identifier } = this.props;
+    const { mediaClient, identifier } = this.props;
     return (
       <ErrorViewDownloadButton
         state={state}
-        context={context}
+        mediaClient={mediaClient}
         err={err}
         collectionName={identifier.collectionName}
       />
@@ -195,11 +195,11 @@ export class ItemViewerBase extends React.Component<Props, State> {
   }
 
   private async init(props: Props) {
-    const { context, identifier } = props;
+    const { mediaClient, identifier } = props;
     const id =
       typeof identifier.id === 'string' ? identifier.id : await identifier.id;
     this.fireAnalytics(mediaFileCommencedEvent(id));
-    this.subscription = context.file
+    this.subscription = mediaClient.file
       .getFileState(id, {
         collectionName: identifier.collectionName,
       })
@@ -228,12 +228,12 @@ export class ItemViewerBase extends React.Component<Props, State> {
     }
   };
 
-  // It's possible that a different identifier or context was passed.
+  // It's possible that a different identifier or mediaClient was passed.
   // We therefore need to reset Media Viewer.
   private needsReset(propsA: Props, propsB: Props) {
     return (
       !deepEqual(propsA.identifier, propsB.identifier) ||
-      propsA.context !== propsB.context
+      propsA.mediaClient !== propsB.mediaClient
     );
   }
 

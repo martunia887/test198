@@ -3,14 +3,17 @@ import * as React from 'react';
 import { Component } from 'react';
 import {
   userAuthProvider,
-  createUploadContext,
   mediaPickerAuthProvider,
   defaultMediaPickerCollectionName,
+  createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
 import Toggle from '@atlaskit/toggle';
 import Spinner from '@atlaskit/spinner';
-import { ContextFactory } from '@atlaskit/media-core';
+import {
+  MediaClientConfig,
+  MediaClientConfigContext,
+} from '@atlaskit/media-core';
 import { MediaPicker, Dropzone } from '../src';
 import {
   DropzoneContainer,
@@ -29,10 +32,10 @@ export interface DropzoneWrapperState {
   inflightUploads: string[];
   dropzone?: Dropzone;
 }
-const context = createUploadContext();
-const nonUserContext = ContextFactory.create({
+const mediaClientConfig = createUploadMediaClientConfig();
+const nonMediaClientConfig: MediaClientConfig = {
   authProvider: mediaPickerAuthProvider('asap'),
-});
+};
 
 class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
   dropzoneContainer?: HTMLDivElement;
@@ -66,14 +69,14 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
 
   async createDropzone() {
     const { isConnectedToUsersCollection } = this.state;
-    const dropzoneContext = isConnectedToUsersCollection
-      ? context
-      : nonUserContext;
+    const dropzoneMediaClientConfig = isConnectedToUsersCollection
+      ? mediaClientConfig
+      : nonMediaClientConfig;
 
     if (this.state.dropzone) {
       this.state.dropzone.deactivate();
     }
-    const dropzone = await MediaPicker('dropzone', dropzoneContext, {
+    const dropzone = await MediaPicker('dropzone', dropzoneMediaClientConfig, {
       container: this.dropzoneContainer,
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
@@ -155,38 +158,43 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
     const isCancelButtonDisabled = inflightUploads.length === 0;
 
     return (
-      <PopupContainer>
-        <PopupHeader>
-          <Button appearance="primary" onClick={this.onFetchLastItems}>
-            Fetch last items
-          </Button>
-          <Button
-            appearance="danger"
-            onClick={this.onCancel}
-            isDisabled={isCancelButtonDisabled}
-          >
-            Cancel uploads
-          </Button>
-          Connected to users collection
-          <Toggle
-            isDefaultChecked={isConnectedToUsersCollection}
-            onChange={this.onConnectionChange}
-          />
-          Active
-          <Toggle isDefaultChecked={isActive} onChange={this.onActiveChange} />
-        </PopupHeader>
-        <DropzoneContentWrapper>
-          <DropzoneContainer
-            isActive={isActive}
-            innerRef={this.saveDropzoneContainer}
-          />
-          <DropzoneItemsInfo>
-            {dropzone ? <UploadPreviews picker={dropzone} /> : null}
-            <h1>User collection items</h1>
-            {this.renderLastItems()}
-          </DropzoneItemsInfo>
-        </DropzoneContentWrapper>
-      </PopupContainer>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
+        <PopupContainer>
+          <PopupHeader>
+            <Button appearance="primary" onClick={this.onFetchLastItems}>
+              Fetch last items
+            </Button>
+            <Button
+              appearance="danger"
+              onClick={this.onCancel}
+              isDisabled={isCancelButtonDisabled}
+            >
+              Cancel uploads
+            </Button>
+            Connected to users collection
+            <Toggle
+              isDefaultChecked={isConnectedToUsersCollection}
+              onChange={this.onConnectionChange}
+            />
+            Active
+            <Toggle
+              isDefaultChecked={isActive}
+              onChange={this.onActiveChange}
+            />
+          </PopupHeader>
+          <DropzoneContentWrapper>
+            <DropzoneContainer
+              isActive={isActive}
+              innerRef={this.saveDropzoneContainer}
+            />
+            <DropzoneItemsInfo>
+              {dropzone ? <UploadPreviews picker={dropzone} /> : null}
+              <h1>User collection items</h1>
+              {this.renderLastItems()}
+            </DropzoneItemsInfo>
+          </DropzoneContentWrapper>
+        </PopupContainer>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

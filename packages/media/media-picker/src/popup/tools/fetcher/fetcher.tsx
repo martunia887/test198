@@ -1,5 +1,6 @@
 import * as url from 'url';
-import { Auth, FileDetails } from '@atlaskit/media-core';
+import { Auth } from '@atlaskit/media-core';
+import { FileDetails, MediaStore, MediaFile } from '@atlaskit/media-client';
 import {
   AuthHeaders,
   Service,
@@ -10,7 +11,6 @@ import {
 } from '../../domain';
 
 import { mapAuthToAuthHeaders } from '../../domain/auth';
-import { MediaStore, MediaFile } from '@atlaskit/media-store';
 
 const METADATA_POLL_INTERVAL_MS = 2000;
 const giphyApiKey = 'lBOxhhz1BM62Y3JsK0iQv1pRYyOGUjR8';

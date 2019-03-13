@@ -2,16 +2,19 @@ import * as React from 'react';
 import { Component } from 'react';
 import { MediaViewer as MediaViewerNextGen } from '../newgen/media-viewer';
 import { ItemSource } from '../newgen/domain';
-import { MediaViewerProps } from './types';
+import { BaseMediaViewerProps } from './types';
+import { withMediaClient, WithMediaClientProps } from '@atlaskit/media-client';
 
 export interface MediaViewerState {}
+
+export type MediaViewerProps = BaseMediaViewerProps & WithMediaClientProps;
 
 export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
   render(): JSX.Element {
     const {
       featureFlags,
       onClose,
-      context,
+      mediaClient,
       selectedItem,
       collectionName,
       dataSource,
@@ -35,7 +38,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
       };
       return (
         <MediaViewerNextGen
-          context={context}
+          mediaClient={mediaClient}
           selectedItem={identifier}
           onClose={onClose}
           itemSource={itemSource}
@@ -54,7 +57,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
       };
       return (
         <MediaViewerNextGen
-          context={context}
+          mediaClient={mediaClient}
           selectedItem={identifier}
           onClose={onClose}
           itemSource={itemSource}
@@ -66,3 +69,5 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
     }
   }
 }
+
+export default withMediaClient(MediaViewer);

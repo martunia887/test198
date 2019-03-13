@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { Dispatch, Store } from 'redux';
 import { connect, Provider } from 'react-redux';
 import { IntlShape } from 'react-intl';
-import { Context, ContextFactory } from '@atlaskit/media-core';
+import { MediaClient } from '@atlaskit/media-client';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import {
   UIAnalyticsEventHandlerSignature,
@@ -59,8 +59,8 @@ import {
 export interface AppStateProps {
   readonly selectedServiceName: ServiceName;
   readonly isVisible: boolean;
-  readonly tenantContext: Context;
-  readonly userContext: Context;
+  readonly tenantMediaClient: MediaClient;
+  readonly userMediaClient: MediaClient;
   readonly config?: Partial<PopupConfig>;
 }
 
@@ -115,8 +115,8 @@ export class App extends Component<AppProps, AppState> {
       onUploadProcessing,
       onUploadEnd,
       onUploadError,
-      tenantContext,
-      userContext,
+      tenantMediaClient,
+      userMediaClient,
       tenantUploadParams,
     } = props;
 
@@ -124,16 +124,15 @@ export class App extends Component<AppProps, AppState> {
       isDropzoneActive: false,
     };
 
-    // Context that has both auth providers defined explicitly using to provided contexts.
-    // Each of the local components using this context will upload first to user's recents
+    // MediaClient that has both auth providers defined explicitly using to provided contexts.
+    // Each of the local components using this mediaClient will upload first to user's recents
     // and then copy to a tenant's collection.
-    const context = ContextFactory.create({
-      authProvider: tenantContext.config.authProvider,
-      userAuthProvider: userContext.config.authProvider,
-      cacheSize: tenantContext.config.cacheSize,
+    const mediaClient = new MediaClient({
+      authProvider: tenantMediaClient.mediaClientConfig.authProvider,
+      userAuthProvider: userMediaClient.mediaClientConfig.authProvider,
     });
 
-    this.mpBrowser = new MpBrowser(context, {
+    this.mpBrowser = new MpBrowser(mediaClient, {
       uploadParams: tenantUploadParams,
       shouldCopyFileToRecents: false,
       multiple: true,
@@ -145,7 +144,7 @@ export class App extends Component<AppProps, AppState> {
     this.mpBrowser.on('upload-end', onUploadEnd);
     this.mpBrowser.on('upload-error', onUploadError);
 
-    this.mpDropzone = new MpDropzone(context, {
+    this.mpDropzone = new MpDropzone(mediaClient, {
       uploadParams: tenantUploadParams,
       shouldCopyFileToRecents: false,
       headless: true,
@@ -159,7 +158,7 @@ export class App extends Component<AppProps, AppState> {
     this.mpDropzone.on('upload-end', onUploadEnd);
     this.mpDropzone.on('upload-error', onUploadError);
 
-    this.mpBinary = new MpBinary(context, {
+    this.mpBinary = new MpBinary(mediaClient, {
       uploadParams: tenantUploadParams,
       shouldCopyFileToRecents: false,
     });
@@ -248,12 +247,12 @@ export class App extends Component<AppProps, AppState> {
 
   private renderCurrentView(selectedServiceName: ServiceName): JSX.Element {
     if (selectedServiceName === 'upload') {
-      // We need to create a new context since Cards in recents view need user auth
-      const { userContext } = this.props;
+      // We need to create a new mediaClient since Cards in recents view need user auth
+      const { userMediaClient } = this.props;
       return (
         <UploadView
           mpBrowser={this.mpBrowser}
-          context={userContext}
+          mediaClient={userMediaClient}
           recentsCollection={RECENTS_COLLECTION}
         />
       );
@@ -273,15 +272,15 @@ export class App extends Component<AppProps, AppState> {
 
 const mapStateToProps = ({
   view,
-  tenantContext,
-  userContext,
+  tenantMediaClient,
+  userMediaClient,
   config,
 }: State): AppStateProps => ({
   selectedServiceName: view.service.name,
   isVisible: view.isVisible,
   config,
-  tenantContext,
-  userContext,
+  tenantMediaClient: tenantMediaClient,
+  userMediaClient: userMediaClient,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): AppDispatchProps => ({

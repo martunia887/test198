@@ -25,12 +25,12 @@ describe('editRemoteImage', () => {
         originalFile: file,
       },
     });
-    const { userContext } = store.getState();
-    const getImageUrl = jest.spyOn(userContext, 'getImageUrl');
+    const { userMediaClient } = store.getState();
+    const getImageUrl = jest.spyOn(userMediaClient, 'getImageUrl');
 
-    (userContext.config.authProvider as jest.Mock<any>).mockReturnValue(
-      Promise.resolve(auth),
-    );
+    (userMediaClient.mediaClientConfig.authProvider as jest.Mock<
+      any
+    >).mockReturnValue(Promise.resolve(auth));
 
     return { store, getImageUrl };
   };
@@ -69,7 +69,7 @@ describe('editRemoteImage', () => {
 
     await editRemoteImage(store, action);
 
-    expect(store.getState().userContext.getImageUrl).toHaveBeenCalledWith(
+    expect(store.getState().userMediaClient.getImageUrl).toHaveBeenCalledWith(
       file.id,
       {
         mode: 'full-fit',

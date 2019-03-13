@@ -30,7 +30,7 @@
     "@atlaskit/icon": "^16.0.4",
     "@atlaskit/media-card": "^55.0.4",
     "@atlaskit/media-editor": "^29.1.2",
-    "@atlaskit/media-store": "^9.2.1",
+    "@atlaskit/media-client": "^1.0.0",
     "@atlaskit/media-ui": "^9.2.1",
     "@atlaskit/modal-dialog": "^8.0.0",
     "@atlaskit/spinner": "^10.0.0",

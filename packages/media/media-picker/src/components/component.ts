@@ -1,4 +1,4 @@
-import { MediaFile as MediaStoreMediaFile } from '@atlaskit/media-store';
+import { MediaFile as MediaStoreMediaFile } from '@atlaskit/media-client';
 import { MediaFile } from '../domain/file';
 import { MediaProgress } from '../domain/progress';
 import { MediaError } from '../domain/error';

@@ -21,10 +21,10 @@ describe('changePath', () => {
     const store = mockStore();
     const next = jest.fn();
 
-    const { userContext } = store.getState();
-    (userContext.config.authProvider as jest.Mock<any>).mockReturnValue(
-      Promise.resolve(auth),
-    );
+    const { userMediaClient } = store.getState();
+    (userMediaClient.mediaClientConfig.authProvider as jest.Mock<
+      any
+    >).mockReturnValue(Promise.resolve(auth));
 
     return { fetcher, store, next };
   };

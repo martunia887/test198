@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
-  Context,
+  MediaClient,
   Identifier,
   isFileIdentifier,
   FileIdentifier,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import { IntlProvider, intlShape } from 'react-intl';
 import { ThemeProvider } from 'styled-components';
 import { Shortcut, theme } from '@atlaskit/media-ui';
@@ -27,7 +27,7 @@ export type Props = Readonly<
     onClose?: () => void;
     selectedItem?: Identifier;
     featureFlags?: MediaViewerFeatureFlags;
-    context: Context;
+    mediaClient: MediaClient;
     itemSource: ItemSource;
   } & WithAnalyticsEventProps
 >;
@@ -70,7 +70,7 @@ class MediaViewerComponent extends React.Component<Props, {}> {
   private renderContent() {
     const {
       selectedItem,
-      context,
+      mediaClient,
       onClose,
       itemSource,
       featureFlags,
@@ -84,7 +84,7 @@ class MediaViewerComponent extends React.Component<Props, {}> {
           pageSize={itemSource.pageSize}
           defaultSelectedItem={defaultSelectedItem}
           collectionName={itemSource.collectionName}
-          context={context}
+          mediaClient={mediaClient}
           onClose={onClose}
           featureFlags={featureFlags}
         />
@@ -99,7 +99,7 @@ class MediaViewerComponent extends React.Component<Props, {}> {
         <List
           defaultSelectedItem={defaultSelectedItem || firstItem}
           items={items}
-          context={context}
+          mediaClient={mediaClient}
           onClose={onClose}
           featureFlags={featureFlags}
         />
