@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import ReactNodeView from '../../../nodeviews/ReactNodeView';
+import ReactNodeView, { ForwardRef } from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { Filmstrip } from '@atlaskit/media-filmstrip';
 import {
@@ -40,7 +40,7 @@ export default class MediaGroup extends React.Component<MediaGroupProps> {
   private mediaPluginState: MediaPluginState;
   private mediaNodes: PMNode[];
 
-  constructor(props) {
+  constructor(props: MediaGroupProps) {
     super(props);
     this.mediaPluginState = mediaStateKey.getState(props.view.state);
     this.setMediaItems(props);
@@ -50,7 +50,7 @@ export default class MediaGroup extends React.Component<MediaGroupProps> {
     this.setMediaItems(props);
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: MediaGroupProps) {
     if (
       this.props.selected !== nextProps.selected ||
       this.props.node !== nextProps.node
@@ -60,7 +60,7 @@ export default class MediaGroup extends React.Component<MediaGroupProps> {
     return false;
   }
 
-  setMediaItems = props => {
+  setMediaItems = (props: MediaGroupProps) => {
     const { node } = props;
     this.mediaNodes = [] as Array<PMNode>;
     node.forEach((item, childOffset) => {
@@ -113,7 +113,7 @@ export default class MediaGroup extends React.Component<MediaGroupProps> {
 }
 
 class MediaGroupNodeView extends ReactNodeView {
-  render(props, forwardRef) {
+  render(_props: any, forwardRef: ForwardRef) {
     const { editorAppearance } = this.reactComponentProps;
 
     return (
@@ -164,7 +164,7 @@ class MediaGroupNodeView extends ReactNodeView {
 
 export const ReactMediaGroupNode = (
   portalProviderAPI: PortalProviderAPI,
-  editorAppearance: EditorAppearance,
+  editorAppearance?: EditorAppearance,
 ) => (node: PMNode, view: EditorView, getPos: () => number): NodeView => {
   return new MediaGroupNodeView(node, view, getPos, portalProviderAPI, {
     editorAppearance,

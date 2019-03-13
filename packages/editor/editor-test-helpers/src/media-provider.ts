@@ -4,12 +4,11 @@ import {
   mediaPickerAuthProvider,
   defaultMediaPickerAuthProvider,
 } from '@atlaskit/media-test-helpers';
-import { MediaProvider, MediaStateManager } from '@atlaskit/editor-core';
+import { MediaProvider } from '@atlaskit/editor-core';
 import { MediaClientConfig } from '@atlaskit/media-core';
 
 export interface MediaProviderFactoryConfig {
   collectionName?: string;
-  stateManager?: MediaStateManager;
   dropzoneContainer?: HTMLElement;
   includeUploadMediaClientConfig?: boolean;
   includeUserAuthProvider?: boolean;
@@ -50,7 +49,6 @@ export function storyMediaProviderFactory(
 
   return Promise.resolve<MediaProvider>({
     featureFlags: {},
-    stateManager,
     uploadParams: { collection },
     viewMediaClientConfig: mediaClientConfig,
     uploadMediaClientConfig:

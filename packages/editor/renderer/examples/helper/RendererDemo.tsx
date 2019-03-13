@@ -183,6 +183,7 @@ export interface DemoRendererState {
   portal?: HTMLElement;
   truncated: boolean;
   showSidebar: boolean;
+  shouldUseEventHandlers: boolean;
 }
 
 export default class RendererDemo extends React.Component<
@@ -203,6 +204,7 @@ export default class RendererDemo extends React.Component<
       input: JSON.stringify(doc, null, 2),
       truncated: true,
       showSidebar: getDefaultShowSidebarState(false),
+      shouldUseEventHandlers: false,
     };
   }
 
@@ -255,6 +257,9 @@ export default class RendererDemo extends React.Component<
                 value={this.state.input}
               />
               <button onClick={this.toggleSidebar}>Toggle Sidebar</button>
+              <button onClick={this.toggleEventHandlers}>
+                Toggle Event handlers
+              </button>
             </fieldset>
             {this.renderRenderer(additionalRendererProps)}
             {this.renderText()}
@@ -289,6 +294,7 @@ export default class RendererDemo extends React.Component<
   }
 
   private renderRenderer(additionalRendererProps: any) {
+    const { shouldUseEventHandlers } = this.state;
     if (this.props.serializer !== 'react') {
       return null;
     }
@@ -299,7 +305,9 @@ export default class RendererDemo extends React.Component<
       };
 
       if (this.props.withProviders) {
-        props.eventHandlers = eventHandlers;
+        props.eventHandlers = shouldUseEventHandlers
+          ? eventHandlers
+          : undefined;
         props.dataProviders = providerFactory;
       }
 
@@ -407,6 +415,12 @@ export default class RendererDemo extends React.Component<
 
   private toggleSidebar = () => {
     this.setState(prevState => ({ showSidebar: !prevState.showSidebar }));
+  };
+
+  private toggleEventHandlers = () => {
+    this.setState(prevState => ({
+      shouldUseEventHandlers: !prevState.shouldUseEventHandlers,
+    }));
   };
 
   private onDocumentChange = () => {

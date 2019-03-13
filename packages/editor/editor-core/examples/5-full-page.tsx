@@ -51,7 +51,7 @@ export const Content: any = styled.div`
 Content.displayName = 'Content';
 
 // tslint:disable-next-line:no-console
-export const analyticsHandler = (actionName, props) =>
+export const analyticsHandler = (actionName: string, props?: {}) =>
   console.log(actionName, props);
 // tslint:disable-next-line:no-console
 const SAVE_ACTION = () => console.log('Save');
@@ -60,12 +60,18 @@ export const LOCALSTORAGE_defaultDocKey = 'fabric.editor.example.full-page';
 export const LOCALSTORAGE_defaultTitleKey =
   'fabric.editor.example.full-page.title';
 
-export const SaveAndCancelButtons = props => (
+export const SaveAndCancelButtons = (props: {
+  editorActions?: EditorActions;
+}) => (
   <ButtonGroup>
     <Button
-      tabIndex="-1"
+      tabIndex={-1}
       appearance="primary"
-      onClick={() =>
+      onClick={() => {
+        if (!props.editorActions) {
+          return;
+        }
+
         props.editorActions.getValue().then(value => {
           // tslint:disable-next-line:no-console
           console.log(value);
@@ -73,15 +79,18 @@ export const SaveAndCancelButtons = props => (
             LOCALSTORAGE_defaultDocKey,
             JSON.stringify(value),
           );
-        })
-      }
+        });
+      }}
     >
       Publish
     </Button>
     <Button
-      tabIndex="-1"
+      tabIndex={-1}
       appearance="subtle"
       onClick={() => {
+        if (!props.editorActions) {
+          return;
+        }
         props.editorActions.clear();
         localStorage.removeItem(LOCALSTORAGE_defaultDocKey);
       }}
@@ -93,7 +102,7 @@ export const SaveAndCancelButtons = props => (
 
 export type State = { disabled: boolean; title: string };
 
-export const providers = {
+export const providers: any = {
   emojiProvider: emoji.storyData.getEmojiResource({
     uploadSupported: true,
     currentUser: {
@@ -171,6 +180,7 @@ class ExampleEditorComponent extends React.Component<
               }}
               allowTextAlignment={true}
               allowIndentation={true}
+              allowDynamicTextSizing={true}
               allowTemplatePlaceholders={{ allowInserting: true }}
               UNSAFE_cards={{
                 provider: Promise.resolve(cardProvider),

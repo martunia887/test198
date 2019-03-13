@@ -29,6 +29,7 @@ import { createDisplayGrid } from '../../../plugins/grid';
 import { EventDispatcher } from '../../../event-dispatcher';
 import { MediaProvider } from '../types';
 import { EditorAppearance } from '../../../types';
+import { PortalProviderAPI } from '../../../ui/PortalProvider';
 
 export interface MediaSingleNodeProps {
   node: PMNode;
@@ -114,7 +115,13 @@ export default class MediaSingleNode extends Component<
     };
   }
 
-  private onExternalImageLoaded = ({ width, height }) => {
+  private onExternalImageLoaded = ({
+    width,
+    height,
+  }: {
+    width: number;
+    height: number;
+  }) => {
     this.setState(
       {
         width,
@@ -306,9 +313,9 @@ class MediaSingleNodeView extends ReactNodeView {
 }
 
 export const ReactMediaSingleNode = (
-  portalProviderAPI,
-  eventDispatcher,
-  editorAppearance,
+  portalProviderAPI: PortalProviderAPI,
+  eventDispatcher: EventDispatcher,
+  editorAppearance?: EditorAppearance,
 ) => (node: PMNode, view: EditorView, getPos: () => number) => {
   return new MediaSingleNodeView(node, view, getPos, portalProviderAPI, {
     eventDispatcher,

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { Component } from 'react';
 import {
   Identifier,
   FileIdentifier,
@@ -420,13 +422,14 @@ export class Card extends React.Component<CardProps, CardState> {
     const { collectionName = '' } = identifier;
     const dataSource = this.getMediaViewerDataSource();
 
-    return (
+    return ReactDOM.createPortal(
       <MediaViewer
         collectionName={collectionName}
         dataSource={dataSource}
         selectedItem={mediaViewerSelectedItem}
         onClose={this.onMediaViewerClose}
-      />
+      />,
+      document.body,
     );
   };
 

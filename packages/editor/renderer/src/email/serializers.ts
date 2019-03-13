@@ -22,7 +22,7 @@ import text from './nodes/text';
 import unknownBlock from './nodes/unknown-block';
 
 import code from './marks/code';
-import em from './marks/strong';
+import em from './marks/em';
 import link from './marks/link';
 import strike from './marks/strike';
 import strong from './marks/strong';
@@ -30,6 +30,7 @@ import subsup from './marks/subsup';
 import textColor from './marks/text-color';
 import underline from './marks/underline';
 import indentation from './marks/indentation';
+import alignment from './marks/alignment';
 
 const renderNothing = () => '';
 
@@ -70,4 +71,5 @@ export const markSerializers: { [key: string]: MarkSerializer } = {
   subsup,
   textColor,
   underline,
+  alignment,
 };
