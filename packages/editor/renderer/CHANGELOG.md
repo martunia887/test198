@@ -1,5 +1,33 @@
 # @atlaskit/renderer
 
+## 43.0.0
+- [major] [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+
+  - Dropped ES5 distributables from the typescript packages
+- Updated dependencies [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+  - @atlaskit/profilecard@8.0.2
+  - @atlaskit/docs@7.0.1
+  - @atlaskit/icon@16.0.5
+  - @atlaskit/navigation-next@5.0.1
+  - @atlaskit/theme@8.0.1
+  - @atlaskit/editor-common@34.0.0
+  - @atlaskit/media-card@56.0.0
+  - @atlaskit/media-filmstrip@29.0.0
+  - @atlaskit/field-range@6.0.1
+  - @atlaskit/button@11.0.0
+  - @atlaskit/adf-schema@2.0.0
+  - @atlaskit/editor-json-transformer@5.0.0
+  - @atlaskit/editor-test-helpers@8.0.0
+  - @atlaskit/analytics-listeners@5.0.0
+  - @atlaskit/analytics-namespaced-context@3.0.0
+  - @atlaskit/mention@17.0.0
+  - @atlaskit/status@0.6.0
+  - @atlaskit/task-decision@13.0.0
+  - @atlaskit/util-data-test@11.0.0
+  - @atlaskit/media-core@28.0.0
+  - @atlaskit/media-test-helpers@21.0.0
+  - @atlaskit/smart-card@10.0.0
+
 ## 42.0.1
 - Updated dependencies [72c6f68226](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72c6f68226):
   - @atlaskit/util-data-test@10.2.4

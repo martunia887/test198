@@ -1,5 +1,10 @@
 # @atlaskit/editor-mobile-bridge
 
+## 7.0.0
+- [major] [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+
+  - Dropped ES5 distributables from the typescript packages
+
 ## 6.14.1
 - Updated dependencies [72c6f68226](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72c6f68226):
   - @atlaskit/editor-core@104.1.1

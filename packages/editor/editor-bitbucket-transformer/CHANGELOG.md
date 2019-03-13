@@ -1,5 +1,10 @@
 # @atlaskit/editor-bitbucket-transformer
 
+## 5.0.0
+- [major] [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+
+  - Dropped ES5 distributables from the typescript packages
+
 ## 4.2.4
 - Updated dependencies [4d17df92f8](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4d17df92f8):
   - @atlaskit/editor-test-helpers@7.0.5

@@ -1,5 +1,10 @@
 # @atlaskit/embedded-document
 
+## 0.3.0
+- [minor] [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+
+  - Dropped ES5 distributables from the typescript packages
+
 ## 0.2.8
 - Updated dependencies [4d17df92f8](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4d17df92f8):
   - @atlaskit/editor-core@104.0.0

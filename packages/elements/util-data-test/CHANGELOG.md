@@ -1,5 +1,10 @@
 # @atlaskit/util-data-test
 
+## 11.0.0
+- [major] [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+
+  - Dropped ES5 distributables from the typescript packages
+
 ## 10.2.4
 - Updated dependencies [72c6f68226](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/72c6f68226):
   - @atlaskit/task-decision@12.0.0

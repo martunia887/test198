@@ -1,5 +1,19 @@
 # @atlaskit/media-image
 
+## 9.0.0
+- [major] [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+
+  - Dropped ES5 distributables from the typescript packages
+- Updated dependencies [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+  - @atlaskit/docs@7.0.1
+  - @atlaskit/field-text@8.0.1
+  - @atlaskit/select@8.0.2
+  - @atlaskit/spinner@10.0.1
+  - @atlaskit/theme@8.0.1
+  - @atlaskit/media-core@28.0.0
+  - @atlaskit/media-store@10.0.0
+  - @atlaskit/media-test-helpers@21.0.0
+
 ## 8.0.1
 - Updated dependencies [76299208e6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/76299208e6):
   - @atlaskit/media-core@27.2.3

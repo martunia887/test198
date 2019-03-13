@@ -1,5 +1,21 @@
 # @atlaskit/editor-common
 
+## 34.0.0
+- [major] [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+
+  - Dropped ES5 distributables from the typescript packages
+- Updated dependencies [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+  - @atlaskit/profilecard@8.0.2
+  - @atlaskit/icon@16.0.5
+  - @atlaskit/theme@8.0.1
+  - @atlaskit/emoji@57.0.0
+  - @atlaskit/media-card@56.0.0
+  - @atlaskit/adf-schema@2.0.0
+  - @atlaskit/editor-json-transformer@5.0.0
+  - @atlaskit/editor-test-helpers@8.0.0
+  - @atlaskit/mention@17.0.0
+  - @atlaskit/media-core@28.0.0
+
 ## 33.1.0
 - [minor] [6739aea208](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6739aea208):
 
