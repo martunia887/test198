@@ -12,6 +12,7 @@ import EditorAlignImageLeft from '@atlaskit/icon/glyph/editor/align-image-left';
 import EditorAlignImageRight from '@atlaskit/icon/glyph/editor/align-image-right';
 import EditorAlignImageCenter from '@atlaskit/icon/glyph/editor/align-image-center';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 import commonMessages from '../../messages';
 import { Command, EditorAppearance } from '../../../src/types';
@@ -24,9 +25,12 @@ import { stateKey, MediaPluginState } from './pm-plugins/main';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import { Schema } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { Context } from '@atlaskit/media-core';
 import Button from '../floating-toolbar/ui/Button';
 import Separator from '../floating-toolbar/ui/Separator';
+import {
+  withMediaClient,
+  WithOptionalMediaClientProps,
+} from '@atlaskit/media-client';
 
 export type IconMap = Array<
   { value: string; icon: React.ComponentClass<any> } | { value: 'separator' }
@@ -163,12 +167,11 @@ const buildLayoutButtons = (
   return toolbarItems;
 };
 
-type AnnotationToolbarProps = {
-  viewContext: Context;
+interface AnnotationToolbarProps extends WithOptionalMediaClientProps {
   id: string;
   intl: InjectedIntl;
   view?: EditorView;
-};
+}
 
 class AnnotationToolbar extends React.Component<AnnotationToolbarProps> {
   state = {
@@ -179,10 +182,21 @@ class AnnotationToolbar extends React.Component<AnnotationToolbarProps> {
     this.checkIsImage();
   }
 
+  componentWillReceiveProps({
+    mediaClient: newMediaClient,
+  }: AnnotationToolbarProps) {
+    const { mediaClient } = this.props;
+    if (mediaClient !== newMediaClient) {
+      this.checkIsImage();
+    }
+  }
+
   async checkIsImage() {
-    const state = await this.props.viewContext.file.getCurrentState(
-      this.props.id,
-    );
+    const { mediaClient } = this.props;
+    if (!mediaClient) {
+      return;
+    }
+    const state = await mediaClient.file.getCurrentState(this.props.id);
 
     if (state && state.status !== 'error' && state.mediaType === 'image') {
       this.setState({
@@ -228,6 +242,8 @@ class AnnotationToolbar extends React.Component<AnnotationToolbarProps> {
   }
 }
 
+const AnnotationToolbarWithMediaClient = withMediaClient(AnnotationToolbar);
+
 const renderAnnotationButton = (
   pluginState: MediaPluginState,
   intl: InjectedIntl,
@@ -239,13 +255,16 @@ const renderAnnotationButton = (
     }
 
     return (
-      <AnnotationToolbar
+      <MediaClientConfigContext.Provider
         key={idx}
-        viewContext={pluginState.mediaContext}
-        id={selectedContainer.firstChild!.attrs.id}
-        view={view}
-        intl={intl}
-      />
+        value={pluginState.mediaClientConfig}
+      >
+        <AnnotationToolbarWithMediaClient
+          id={selectedContainer.firstChild!.attrs.id}
+          view={view}
+          intl={intl}
+        />
+      </MediaClientConfigContext.Provider>
     );
   };
 };

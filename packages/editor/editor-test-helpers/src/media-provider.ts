@@ -1,4 +1,3 @@
-import { Context, ContextFactory } from '@atlaskit/media-core';
 import {
   defaultCollectionName,
   userAuthProvider,
@@ -6,14 +5,32 @@ import {
   defaultMediaPickerAuthProvider,
 } from '@atlaskit/media-test-helpers';
 import { MediaProvider } from '@atlaskit/editor-core';
+import { MediaClientConfig } from '@atlaskit/media-core';
 
 export interface MediaProviderFactoryConfig {
   collectionName?: string;
   dropzoneContainer?: HTMLElement;
-  includeUploadContext?: boolean;
+  includeUploadMediaClientConfig?: boolean;
   includeUserAuthProvider?: boolean;
   useMediaPickerAuthProvider?: boolean;
 }
+
+export const storyMediaProviderConfig = (
+  mediaProviderFactoryConfig: MediaProviderFactoryConfig = {},
+): MediaClientConfig => {
+  const {
+    includeUserAuthProvider,
+    useMediaPickerAuthProvider = true,
+  } = mediaProviderFactoryConfig;
+
+  return {
+    authProvider: useMediaPickerAuthProvider
+      ? mediaPickerAuthProvider()
+      : defaultMediaPickerAuthProvider,
+    userAuthProvider:
+      includeUserAuthProvider === false ? undefined : userAuthProvider,
+  };
+};
 
 /**
  * Add "import * as mediaTestHelpers from '@atlaskit/media-test-helpers'"
@@ -24,27 +41,17 @@ export function storyMediaProviderFactory(
 ) {
   const {
     collectionName,
-    includeUploadContext,
-    includeUserAuthProvider,
-    useMediaPickerAuthProvider = true,
+    includeUploadMediaClientConfig,
   } = mediaProviderFactoryConfig;
   const collection = collectionName || defaultCollectionName;
-  const context = ContextFactory.create({
-    authProvider: useMediaPickerAuthProvider
-      ? mediaPickerAuthProvider()
-      : defaultMediaPickerAuthProvider,
-    userAuthProvider:
-      includeUserAuthProvider === false ? undefined : userAuthProvider,
-  });
+  const mediaClientConfig = storyMediaProviderConfig();
 
   return Promise.resolve<MediaProvider>({
     featureFlags: {},
     uploadParams: { collection },
-    viewContext: Promise.resolve<Context>(context),
-    uploadContext:
-      includeUploadContext === false
-        ? undefined
-        : Promise.resolve<Context>(context),
+    viewMediaClientConfig: mediaClientConfig,
+    uploadMediaClientConfig:
+      includeUploadMediaClientConfig === false ? undefined : mediaClientConfig,
   });
 }
 

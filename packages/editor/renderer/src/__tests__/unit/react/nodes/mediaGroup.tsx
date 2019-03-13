@@ -9,7 +9,7 @@ import {
   defaultImageCardDimensions,
 } from '@atlaskit/media-card';
 import { FilmstripView } from '@atlaskit/media-filmstrip';
-import { ProviderFactory, EventHandlers } from '@atlaskit/editor-common';
+import { EventHandlers } from '@atlaskit/editor-common';
 import Media from '../../../../react/nodes/media';
 import MediaGroup from '../../../../react/nodes/mediaGroup';
 
@@ -17,8 +17,6 @@ describe('MediaGroup', () => {
   let fixture: HTMLDivElement;
 
   const mediaProvider = storyMediaProviderFactory();
-
-  const providerFactory = ProviderFactory.create({ mediaProvider });
 
   beforeEach(() => {
     fixture = document.createElement('div');
@@ -87,14 +85,12 @@ describe('MediaGroup', () => {
           type={imageFileId.mediaItemType}
           occurrenceKey="001"
           collection={imageFileId.collectionName}
-          providers={providerFactory}
         />
         <Media
           id={imageFileId.id}
           type={imageFileId.mediaItemType}
           occurrenceKey="001"
           collection={imageFileId.collectionName}
-          providers={providerFactory}
         />
       </MediaGroup>,
       { attachTo: fixture },
@@ -102,9 +98,7 @@ describe('MediaGroup', () => {
 
     expect(mediaGroup.find(FilmstripView)).toHaveLength(1);
 
-    const provider = await mediaProvider;
-    await provider.viewContext;
-    await provider.uploadContext;
+    await mediaProvider;
     mediaGroup.update();
 
     const card = mediaGroup

@@ -160,8 +160,7 @@ describe(name, () => {
 
         describe('with waitForMediaUpload === true', () => {
           it('should not resolve when all media operations are pending', async () => {
-            const provider = await mediaProvider;
-            await provider.uploadContext;
+            await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
             mediaPluginState.insertFile({ id: testTempFileId }, () => {});
 
@@ -180,8 +179,7 @@ describe(name, () => {
           });
 
           it('should reject after timeout is reached', async () => {
-            const provider = await mediaProvider;
-            await provider.uploadContext;
+            await mediaProvider;
 
             const mediaPluginState = getMediaPluginState(editorView);
             mediaPluginState.insertFile({ id: testTempFileId }, () => {});
@@ -197,8 +195,7 @@ describe(name, () => {
           });
 
           it('should not resolve when some media operations are pending', async () => {
-            const provider = await mediaProvider;
-            await provider.uploadContext;
+            await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
             const evts: Array<(state: MediaState) => void> = [];
@@ -231,8 +228,7 @@ describe(name, () => {
           });
 
           it('should resolve after media have resolved', async () => {
-            const provider = await mediaProvider;
-            await provider.uploadContext;
+            await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
             const evts: Array<(state: MediaState) => void> = [];
@@ -263,9 +259,7 @@ describe(name, () => {
           });
 
           it('should resolve after processing status', async () => {
-            const provider = await mediaProvider;
-            await provider.uploadContext;
-            await provider.viewContext;
+            await mediaProvider;
             const mediaPluginState = getMediaPluginState(editorView);
 
             const evts: Array<(state: MediaState) => void> = [];
@@ -403,8 +397,7 @@ describe(name, () => {
 
         const mediaPluginState = getMediaPluginState(editorView);
 
-        const provider = await mediaProvider;
-        await provider.uploadContext;
+        await mediaProvider;
 
         mediaPluginState.insertFile({ id: testTempFileId }, () => {});
 

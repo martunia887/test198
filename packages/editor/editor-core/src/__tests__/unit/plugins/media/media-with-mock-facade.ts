@@ -84,9 +84,7 @@ describe('Media with mock facade', () => {
     const { pluginState } = editor(doc(p('{<>}')));
     await waitForAllPickersInitialised(pluginState);
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
 
     expect(spies.popup.onClose).toHaveBeenCalledTimes(1);
     expect(spies.popup.onClose).toHaveBeenCalledWith(
@@ -100,9 +98,7 @@ describe('Media with mock facade', () => {
     const { pluginState } = editor(doc(p('{<>}')));
     await waitForAllPickersInitialised(pluginState);
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
 
     pluginState.destroy();
     expect(removeOnCloseListener).toHaveBeenCalledTimes(1);
@@ -114,9 +110,7 @@ describe('Media with mock facade', () => {
     const { pluginState } = editor(doc(p('{<>}')));
     await waitForAllPickersInitialised(pluginState);
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
 
     pluginState.showMediaPicker();
     expect(spies.popup.show).toHaveBeenCalledTimes(1);
@@ -130,9 +124,7 @@ describe('Media with mock facade', () => {
     const { pluginState } = editor(doc(p('{<>}')));
     await waitForAllPickersInitialised(pluginState);
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
 
     pluginState.showMediaPicker();
     expect(spies.dropzone.activate).toHaveBeenCalledTimes(0);

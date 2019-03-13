@@ -2,7 +2,7 @@
 import 'whatwg-fetch';
 import * as assert from 'assert';
 import { EditorView } from 'prosemirror-view';
-
+import { SmartMediaEditor } from '@atlaskit/media-editor';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
@@ -46,7 +46,6 @@ import quickInsertPlugin from '../../../../plugins/quick-insert';
 import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-single';
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
 import { temporaryMedia, temporaryMediaGroup } from './_utils';
-import { SmartMediaEditor } from '@atlaskit/media-editor';
 
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 
@@ -143,8 +142,7 @@ describe('Media plugin', () => {
 
   it('should invoke binary picker when calling insertFileFromDataUrl', async () => {
     const { pluginState } = editor(doc(p('{<>}')));
-    const provider = await mediaProvider;
-    await provider.uploadContext;
+    await mediaProvider;
 
     await waitForAllPickersInitialised(pluginState);
 
@@ -424,8 +422,7 @@ describe('Media plugin', () => {
 
     const mediaProvider1 = getFreshMediaProvider();
     await pluginState.setMediaProvider(mediaProvider1);
-    const resolvedMediaProvider1 = await mediaProvider1;
-    await resolvedMediaProvider1.uploadContext;
+    await mediaProvider1;
 
     pluginState.pickers.forEach(picker => {
       picker.setUploadParams = jest.fn();
@@ -433,8 +430,7 @@ describe('Media plugin', () => {
 
     const mediaProvider2 = getFreshMediaProvider();
     await pluginState.setMediaProvider(mediaProvider2);
-    const resolvedMediaProvider2 = await mediaProvider2;
-    await resolvedMediaProvider2.uploadContext;
+    await mediaProvider2;
 
     pluginState.pickers.forEach(picker => {
       expect(picker.setUploadParams as any).toHaveBeenCalledTimes(1);
@@ -450,9 +446,7 @@ describe('Media plugin', () => {
       analyticsService.handler = null;
     });
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
     await waitForAllPickersInitialised(pluginState);
     expect(typeof pluginState.binaryPicker!).toBe('object');
 
@@ -493,9 +487,7 @@ describe('Media plugin', () => {
       'collectionFromProvider' as any,
     );
     collectionFromProvider.mockImplementation(() => testCollectionName);
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
     await waitForAllPickersInitialised(pluginState);
     expect(typeof pluginState.binaryPicker!).toBe('object');
 
@@ -531,9 +523,7 @@ describe('Media plugin', () => {
       analyticsService.handler = null;
     });
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
     await waitForAllPickersInitialised(pluginState);
     expect(typeof pluginState.binaryPicker!).toBe('object');
 
@@ -567,9 +557,7 @@ describe('Media plugin', () => {
       analyticsService.handler = null;
     });
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
     await waitForAllPickersInitialised(pluginState);
 
     expect(typeof pluginState.binaryPicker!).toBe('object');
@@ -910,8 +898,7 @@ describe('Media plugin', () => {
         dropzoneContainer,
       );
 
-      const provider = await mediaProvider;
-      await provider.uploadContext;
+      await mediaProvider;
       // MediaPicker DropZone bind events inside a `whenDomReady`, so we have to wait for the next tick
       await sleep(0);
       expect(getWidgetDom(editorView)).toBeNull();
@@ -935,8 +922,7 @@ describe('Media plugin', () => {
         dropzoneContainer,
       );
 
-      const provider = await mediaProvider;
-      await provider.uploadContext;
+      await mediaProvider;
       // MediaPicker DropZone bind events inside a `whenDomReady`, so we have to wait for the next tick
       await sleep(0);
       expect(getWidgetDom(editorView)).toBeNull();
@@ -975,7 +961,9 @@ describe('Media plugin', () => {
         setNodeSelection(editorView, 0);
 
         expect(pluginState.element).not.toBeUndefined();
-        expect(pluginState.element!.className).toBe('wrapper');
+        expect(pluginState.element!.className).toContain(
+          'ProseMirror-selectednode',
+        );
       });
     });
 
@@ -1288,9 +1276,7 @@ describe('Media plugin', () => {
         setNodeSelection(editorView, 0);
         closeMediaEditorSpy = jest.spyOn(pluginState, 'closeMediaEditor');
         pluginState.openMediaEditor();
-        const toolbar = mountWithIntl<SmartMediaEditor['props'], {}>(
-          renderSmartMediaEditor(pluginState)!,
-        );
+        const toolbar = mountWithIntl(renderSmartMediaEditor(pluginState)!);
         const { onUploadStart } = toolbar.props();
         onUploadStart(
           { id: 'some-new-id', mediaItemType: 'file' },

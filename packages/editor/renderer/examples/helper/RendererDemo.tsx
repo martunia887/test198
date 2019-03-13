@@ -17,6 +17,7 @@ import Button from '@atlaskit/button';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
+  storyMediaProviderConfig,
 } from '@atlaskit/editor-test-helpers';
 import * as Clock from 'react-live-clock';
 
@@ -32,6 +33,7 @@ import { AkProfileClient, modifyResponse } from '@atlaskit/profilecard';
 import { EmailSerializer, renderDocument, TextSerializer } from '../../src';
 
 import Sidebar, { getDefaultShowSidebarState } from './NavigationNext';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;
 const MockProfileClient = getMockProfileClientUtil(
@@ -46,6 +48,7 @@ const mentionProvider = Promise.resolve({
 });
 
 const mediaProvider = storyMediaProviderFactory();
+const mediaClientConfig = storyMediaProviderConfig();
 
 const emojiProvider = emoji.storyData.getEmojiResource();
 
@@ -345,19 +348,21 @@ export default class RendererDemo extends React.Component<
       );
 
       return (
-        <div>
-          <div style={{ color: '#ccc', marginBottom: '8px' }}>
-            &lt;Renderer&gt;
+        <MediaClientConfigContext.Provider value={mediaClientConfig}>
+          <div>
+            <div style={{ color: '#ccc', marginBottom: '8px' }}>
+              &lt;Renderer&gt;
+            </div>
+            <div id="RendererOutput">
+              <Renderer {...props} />
+            </div>
+            {this.props.truncationEnabled ? expandButton : null}
+            <div style={{ color: '#ccc', marginTop: '8px' }}>
+              &lt;/Renderer&gt;
+            </div>
+            <div ref={this.handlePortalRef} />
           </div>
-          <div id="RendererOutput">
-            <Renderer {...props} />
-          </div>
-          {this.props.truncationEnabled ? expandButton : null}
-          <div style={{ color: '#ccc', marginTop: '8px' }}>
-            &lt;/Renderer&gt;
-          </div>
-          <div ref={this.handlePortalRef} />
-        </div>
+        </MediaClientConfigContext.Provider>
       );
     } catch (ex) {
       return <pre>Invalid document: {ex.stack}</pre>;

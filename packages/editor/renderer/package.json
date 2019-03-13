@@ -25,6 +25,7 @@
     "@atlaskit/editor-json-transformer": "^4.3.4",
     "@atlaskit/icon": "^16.0.4",
     "@atlaskit/media-card": "^55.0.3",
+    "@atlaskit/media-client": "^1.0.0",
     "@atlaskit/media-filmstrip": "^28.0.1",
     "@atlaskit/mention": "^16.2.2",
     "@atlaskit/smart-card": "^9.11.4",

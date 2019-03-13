@@ -8,7 +8,8 @@ import {
   MediaPluginState,
   stateKey as mediaStateKey,
 } from '../pm-plugins/main';
-import { Context, FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 import { setNodeSelection } from '../../../utils';
 import WithPluginState from '../../../ui/WithPluginState';
 import { stateKey as reactNodeViewStateKey } from '../../../plugins/base/pm-plugins/react-nodeview';
@@ -35,20 +36,9 @@ export type MediaGroupProps = {
   editorAppearance: EditorAppearance;
 };
 
-export interface MediaGroupState {
-  viewContext?: Context;
-}
-
-export default class MediaGroup extends React.Component<
-  MediaGroupProps,
-  MediaGroupState
-> {
+export default class MediaGroup extends React.Component<MediaGroupProps> {
   private mediaPluginState: MediaPluginState;
   private mediaNodes: PMNode[];
-
-  state: MediaGroupState = {
-    viewContext: undefined,
-  };
 
   constructor(props: MediaGroupProps) {
     super(props);
@@ -56,35 +46,18 @@ export default class MediaGroup extends React.Component<
     this.setMediaItems(props);
   }
 
-  componentDidMount() {
-    this.updateMediaContext();
-  }
-
   componentWillReceiveProps(props: MediaGroupProps) {
-    this.updateMediaContext();
     this.setMediaItems(props);
   }
 
   shouldComponentUpdate(nextProps: MediaGroupProps) {
     if (
       this.props.selected !== nextProps.selected ||
-      this.props.node !== nextProps.node ||
-      this.state.viewContext !== this.mediaPluginState.mediaContext
+      this.props.node !== nextProps.node
     ) {
       return true;
     }
-
     return false;
-  }
-
-  updateMediaContext() {
-    const { viewContext } = this.state;
-    const { mediaContext } = this.mediaPluginState;
-    if (!viewContext && mediaContext) {
-      this.setState({
-        viewContext: mediaContext,
-      });
-    }
   }
 
   setMediaItems = (props: MediaGroupProps) => {
@@ -100,7 +73,6 @@ export default class MediaGroup extends React.Component<
   };
 
   renderChildNodes = () => {
-    const { viewContext } = this.state;
     const items = this.mediaNodes.map((item, idx) => {
       const identifier: FileIdentifier = {
         id: item.attrs.id,
@@ -132,7 +104,7 @@ export default class MediaGroup extends React.Component<
       };
     });
 
-    return <Filmstrip items={items} context={viewContext} />;
+    return <Filmstrip items={items} />;
   };
 
   render() {
@@ -143,6 +115,7 @@ export default class MediaGroup extends React.Component<
 class MediaGroupNodeView extends ReactNodeView {
   render(_props: any, forwardRef: ForwardRef) {
     const { editorAppearance } = this.reactComponentProps;
+
     return (
       <WithPluginState
         editorView={this.view}
@@ -155,20 +128,28 @@ class MediaGroupNodeView extends ReactNodeView {
         }: {
           editorDisabledPlugin: EditorDisabledPluginState;
         }) => {
+          const mediaPluginState: MediaPluginState = mediaStateKey.getState(
+            this.view.state,
+          );
+          const viewMediaClientConfig = mediaPluginState.mediaClientConfig;
+
           const nodePos = this.getPos();
           const { $anchor, $head } = this.view.state.selection;
           const isSelected =
             nodePos < $anchor.pos && $head.pos < nodePos + this.node.nodeSize;
+
           return (
-            <MediaGroup
-              node={this.node}
-              getPos={this.getPos}
-              view={this.view}
-              forwardRef={forwardRef}
-              selected={isSelected ? $anchor.pos : null}
-              disabled={(editorDisabledPlugin || {}).editorDisabled}
-              editorAppearance={editorAppearance}
-            />
+            <MediaClientConfigContext.Provider value={viewMediaClientConfig}>
+              <MediaGroup
+                node={this.node}
+                getPos={this.getPos}
+                view={this.view}
+                forwardRef={forwardRef}
+                selected={isSelected ? $anchor.pos : null}
+                disabled={(editorDisabledPlugin || {}).editorDisabled}
+                editorAppearance={editorAppearance}
+              />
+            </MediaClientConfigContext.Provider>
           );
         }}
       />

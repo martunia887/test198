@@ -19,8 +19,6 @@ import {
   p,
   dispatchPasteEvent,
 } from '@atlaskit/editor-test-helpers';
-import { smallImage } from '@atlaskit/media-test-helpers';
-import { dataURItoBlob } from '../../../../../../../media/media-test-helpers/src/mockData/utils';
 
 describe('paste plugin: third-party', () => {
   const createEditor = createEditorFactory();
@@ -72,8 +70,7 @@ describe('paste plugin: third-party', () => {
   });
 
   describe('`Microsoft Word`: ', () => {
-    const blob = dataURItoBlob(smallImage);
-    const image = new File([blob], 'image.png', { type: 'image/png' });
+    const image = new File([], 'image.png', { type: 'image/png' });
     const eventPayload = {
       html: msWordTextHTML,
       plain: msWordTextPlain,

@@ -7,7 +7,7 @@ import {
   PMPluginFactoryParams,
 } from '../../types';
 import { SmartMediaEditor, Dimensions } from '@atlaskit/media-editor';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
 import {
   stateKey as pluginKey,
   createPlugin,
@@ -32,6 +32,7 @@ import {
   ACTION_SUBJECT_ID,
 } from '../analytics';
 import WithPluginState from '../../ui/WithPluginState';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 export { MediaState, MediaProvider, CustomMediaPicker };
 
@@ -56,7 +57,7 @@ export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
   }
   const { id } = node.firstChild!.attrs;
 
-  if (mediaState.uploadContext && mediaState.showEditingDialog) {
+  if (mediaState.uploadMediaClientConfig && mediaState.showEditingDialog) {
     const identifier: FileIdentifier = {
       id,
       mediaItemType: 'file',
@@ -64,18 +65,21 @@ export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
     };
 
     return (
-      <SmartMediaEditor
-        identifier={identifier}
-        context={mediaState.uploadContext}
-        onUploadStart={(
-          newFileIdentifier: FileIdentifier,
-          dimensions: Dimensions,
-        ) => {
-          mediaState.closeMediaEditor();
-          mediaState.replaceEditingMedia(newFileIdentifier, dimensions);
-        }}
-        onFinish={mediaState.closeMediaEditor}
-      />
+      <MediaClientConfigContext.Provider
+        value={mediaState.uploadMediaClientConfig}
+      >
+        <SmartMediaEditor
+          identifier={identifier}
+          onUploadStart={(
+            newFileIdentifier: FileIdentifier,
+            dimensions: Dimensions,
+          ) => {
+            mediaState.closeMediaEditor();
+            mediaState.replaceEditingMedia(newFileIdentifier, dimensions);
+          }}
+          onFinish={mediaState.closeMediaEditor}
+        />
+      </MediaClientConfigContext.Provider>
     );
   }
 
