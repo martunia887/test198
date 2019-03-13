@@ -22,14 +22,12 @@
     "tslib": "^1.8.0"
   },
   "peerDependencies": {
-    "react": "^16.4.0",
-    "rxjs": "^5.5.0"
+    "react": "^16.4.0"
   },
   "devDependencies": {
     "@atlaskit/docs": "^7.0.0",
     "enzyme": "^3.7.0",
-    "react-dom": "^16.4.2",
-    "rxjs": "^5.5.0"
+    "react-dom": "^16.4.2"
   },
   "resolutions": {
     "lru-fast": "0.2.2"

@@ -1,5 +1,4 @@
 jest.mock('chunkinator');
-// jest.mock('../../client');
 
 import chunkinator, { Options } from 'chunkinator';
 import { AuthProvider, MediaApiConfig } from '@atlaskit/media-core';
