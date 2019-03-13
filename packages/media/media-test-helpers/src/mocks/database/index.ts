@@ -1,5 +1,5 @@
 import { ClientBasedAuth } from '@atlaskit/media-core';
-import { MediaStore, MediaCollection } from '@atlaskit/media-store';
+import { MediaStore, MediaCollection } from '@atlaskit/media-client';
 import { Database } from 'kakapo';
 import * as uuid from 'uuid';
 

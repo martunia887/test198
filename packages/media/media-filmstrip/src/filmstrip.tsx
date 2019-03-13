@@ -9,9 +9,8 @@ import {
   OnSelectChangeFunc,
   OnLoadingChangeFunc,
   defaultImageCardDimensions,
-  CardView,
 } from '@atlaskit/media-card';
-import { Context, Identifier } from '@atlaskit/media-core';
+import { Identifier } from '@atlaskit/media-client';
 import { FilmstripView } from './filmstripView';
 import { generateIdentifierKey } from './utils/generateIdentifierKey';
 
@@ -28,7 +27,6 @@ export interface FilmstripItem {
 
 export interface FilmstripProps {
   items: FilmstripItem[];
-  context?: Context;
 }
 
 export interface FilmstripState {
@@ -48,25 +46,13 @@ export class Filmstrip extends Component<FilmstripProps, FilmstripState> {
     this.setState({ animate, offset });
 
   private renderCards() {
-    const { items, context } = this.props;
-
+    const { items } = this.props;
     const cards = items.map(item => {
       const key = generateIdentifierKey(item.identifier);
-
-      if (!context) {
-        return (
-          <CardView
-            key={key}
-            status="loading"
-            dimensions={defaultImageCardDimensions}
-          />
-        );
-      }
 
       return (
         <Card
           key={key}
-          context={context}
           dimensions={defaultImageCardDimensions}
           useInlinePlayer={false}
           {...item}

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { Observable } from 'rxjs';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
-import { MediaFileArtifacts } from '@atlaskit/media-store';
-import { FileIdentifier, FileState } from '@atlaskit/media-core';
+import { MediaFileArtifacts } from '@atlaskit/media-client';
+import { asMock, fakeMediaClient } from '@atlaskit/media-test-helpers';
+import { FileIdentifier, FileState } from '@atlaskit/media-client';
 import {
   InlinePlayer,
   InlinePlayerProps,
@@ -20,29 +21,31 @@ describe('<InlinePlayer />', () => {
     props?: Partial<InlinePlayerProps>,
     artifacts: MediaFileArtifacts = defaultArtifact,
   ) => {
-    const context = {
-      file: {
-        getFileState: jest.fn().mockReturnValue(
-          Observable.of({
-            status: 'processed',
-            artifacts,
-          }),
-        ),
-        getArtifactURL: jest.fn().mockReturnValue('some-url'),
-      },
-    } as any;
+    const mediaClient = fakeMediaClient();
+    asMock(mediaClient.file.getFileState).mockReturnValue(
+      Observable.of({
+        status: 'processed',
+        artifacts,
+      }),
+    );
+    asMock(mediaClient.file.getArtifactURL).mockReturnValue('some-url');
+
     const identifier = {
       id: Promise.resolve('some-id'),
       collectionName: 'some-collection',
     } as FileIdentifier;
 
     const component = shallow(
-      <InlinePlayer context={context} identifier={identifier} {...props} />,
+      <InlinePlayer
+        mediaClient={mediaClient}
+        identifier={identifier}
+        {...props}
+      />,
     );
 
     return {
       component,
-      context,
+      mediaClient,
     };
   };
   const update = async (component: ShallowWrapper) => {
@@ -66,11 +69,11 @@ describe('<InlinePlayer />', () => {
   });
 
   it('should call getFileState with right properties', async () => {
-    const { component, context } = setup();
+    const { component, mediaClient } = setup();
 
     await update(component);
-    expect(context.file.getFileState).toBeCalledTimes(1);
-    expect(context.file.getFileState).toBeCalledWith('some-id', {
+    expect(mediaClient.file.getFileState).toBeCalledTimes(1);
+    expect(mediaClient.file.getFileState).toBeCalledWith('some-id', {
       collectionName: 'some-collection',
     });
   });
@@ -93,19 +96,16 @@ describe('<InlinePlayer />', () => {
 
   it('should use local preview if available', async () => {
     const blob = new Blob([], { type: 'video/mp4' });
-    const context = {
-      file: {
-        getFileState: jest.fn().mockReturnValue(
-          Observable.of({
-            status: 'uploading',
-            preview: {
-              value: blob,
-            },
-          }),
-        ),
-      },
-    } as any;
-    const { component } = setup({ context });
+    const mediaClient = fakeMediaClient();
+    asMock(mediaClient.file.getFileState).mockReturnValue(
+      Observable.of({
+        status: 'uploading',
+        preview: {
+          value: blob,
+        },
+      }),
+    );
+    const { component } = setup({ mediaClient });
 
     await update(component);
 
@@ -115,11 +115,11 @@ describe('<InlinePlayer />', () => {
   });
 
   it('should use right file artifact', async () => {
-    const { component, context } = setup();
+    const { component, mediaClient } = setup();
 
     await update(component);
-    expect(context.file.getArtifactURL).toBeCalledTimes(1);
-    expect(context.file.getArtifactURL).toBeCalledWith(
+    expect(mediaClient.file.getArtifactURL).toBeCalledTimes(1);
+    expect(mediaClient.file.getArtifactURL).toBeCalledWith(
       {
         'video_1280.mp4': {
           processingStatus: 'succeeded',
@@ -133,7 +133,7 @@ describe('<InlinePlayer />', () => {
   });
 
   it('should use sd artifact if hd one is not present', async () => {
-    const { component, context } = setup(undefined, {
+    const { component, mediaClient } = setup(undefined, {
       'video_640.mp4': {
         processingStatus: 'succeeded',
         url: '',
@@ -141,8 +141,8 @@ describe('<InlinePlayer />', () => {
     });
 
     await update(component);
-    expect(context.file.getArtifactURL).toBeCalledTimes(1);
-    expect(context.file.getArtifactURL).toBeCalledWith(
+    expect(mediaClient.file.getArtifactURL).toBeCalledTimes(1);
+    expect(mediaClient.file.getArtifactURL).toBeCalledWith(
       {
         'video_640.mp4': {
           processingStatus: 'succeeded',

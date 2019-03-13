@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
-import { MediaType, ImageResizeMode } from '@atlaskit/media-core';
+import { MediaType, ImageResizeMode } from '@atlaskit/media-client';
 
 import { CardDimensions, CardStatus } from '../../index';
 import { CardAction } from '../../actions';

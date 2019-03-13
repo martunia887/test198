@@ -1,6 +1,7 @@
+import { MediaClient } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { StoryBookAuthProvider } from './authProvider';
 import { collectionNames } from './collectionNames';
-import { ContextFactory, Context } from '@atlaskit/media-core';
 import { mediaPickerAuthProvider } from './mediaPickerAuthProvider';
 import { userAuthProvider } from './userAuthProvider';
 
@@ -26,9 +27,15 @@ const defaultAuthParameter: AuthParameter = {
  * @param {AuthParameter} authParameter specifies serviceName and whatever auth should be done with clientId or asapIssuer
  * @returns {Context}
  */
-export const createStorybookContext = (
+export const createStorybookMediaClient = (
   authParameter: AuthParameter = defaultAuthParameter,
-): Context => {
+): MediaClient => {
+  return new MediaClient(createStorybookMediaClientConfig(authParameter));
+};
+
+export const createStorybookMediaClientConfig = (
+  authParameter: AuthParameter = defaultAuthParameter,
+): MediaClientConfig => {
   const scopes: { [resource: string]: string[] } = {
     'urn:filestore:file:*': ['read'],
     'urn:filestore:chunk:*': ['read'],
@@ -39,14 +46,13 @@ export const createStorybookContext = (
 
   const isAsapEnvironment = authParameter.authType === 'asap';
   const authProvider = StoryBookAuthProvider.create(isAsapEnvironment, scopes);
-
-  return ContextFactory.create({
-    authProvider,
-  });
+  return { authProvider };
 };
 
-export const createUploadContext = (): Context =>
-  ContextFactory.create({
-    authProvider: mediaPickerAuthProvider('asap'),
-    userAuthProvider,
-  });
+export const createUploadMediaClient = () =>
+  new MediaClient(createUploadMediaClientConfig());
+
+export const createUploadMediaClientConfig = (): MediaClientConfig => ({
+  authProvider: mediaPickerAuthProvider('asap'),
+  userAuthProvider,
+});

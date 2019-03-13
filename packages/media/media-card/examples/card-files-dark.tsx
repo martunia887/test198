@@ -2,33 +2,28 @@
 import * as React from 'react';
 import {
   StoryList,
-  createStorybookContext,
   imageFileId,
   unknownFileId,
   errorFileId,
+  createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 
 import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
 import { Card } from '../src';
 import { createApiCards, actions } from '../example-helpers';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 // standard
 const successIdentifier: FileIdentifier = imageFileId;
 const standardCards = [
   {
     title: 'Image',
-    content: (
-      <Card
-        identifier={successIdentifier}
-        context={context}
-        appearance="image"
-      />
-    ),
+    content: <Card identifier={successIdentifier} appearance="image" />,
   },
 ];
 
@@ -36,9 +31,7 @@ const standardCards = [
 const errorCards = [
   {
     title: 'Image',
-    content: (
-      <Card identifier={errorFileId} context={context} appearance="image" />
-    ),
+    content: <Card identifier={errorFileId} appearance="image" />,
   },
 ];
 
@@ -48,7 +41,6 @@ const menuCards = [
     content: (
       <Card
         identifier={successIdentifier}
-        context={context}
         appearance="image"
         actions={actions}
       />
@@ -63,9 +55,7 @@ const apiCards = createApiCards('image', successIdentifier);
 const noThumbnailCards = [
   {
     title: 'Image',
-    content: (
-      <Card identifier={unknownFileId} context={context} appearance="image" />
-    ),
+    content: <Card identifier={unknownFileId} appearance="image" />,
   },
 ];
 
@@ -74,23 +64,13 @@ const lazyLoadCards = [
   {
     title: 'Lazy',
     content: (
-      <Card
-        isLazy={true}
-        identifier={successIdentifier}
-        context={context}
-        appearance="image"
-      />
+      <Card isLazy={true} identifier={successIdentifier} appearance="image" />
     ),
   },
   {
     title: 'No lazy',
     content: (
-      <Card
-        isLazy={false}
-        identifier={successIdentifier}
-        context={context}
-        appearance="image"
-      />
+      <Card isLazy={false} identifier={successIdentifier} appearance="image" />
     ),
   },
 ];
@@ -102,7 +82,6 @@ const noHoverStateCards = [
     content: (
       <Card
         identifier={successIdentifier}
-        context={context}
         appearance="image"
         disableOverlay={true}
       />
@@ -113,7 +92,6 @@ const noHoverStateCards = [
     content: (
       <Card
         identifier={successIdentifier}
-        context={context}
         appearance="image"
         disableOverlay={true}
         selectable={true}
@@ -132,11 +110,11 @@ const fileWithNoCollection: FileIdentifier = {
 const collectionConfigCards = [
   {
     title: 'Standalone file (NO collection)',
-    content: <Card identifier={fileWithNoCollection} context={context} />,
+    content: <Card identifier={fileWithNoCollection} />,
   },
   {
     title: 'File within collection',
-    content: <Card identifier={successIdentifier} context={context} />,
+    content: <Card identifier={successIdentifier} />,
   },
 ];
 const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
@@ -145,36 +123,38 @@ const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
 };
 
 export default () => (
-  <AtlaskitThemeProvider mode={'dark'}>
-    <AnalyticsListener channel="media" onEvent={handleEvent}>
-      <div>
-        <h1 style={{ margin: '10px 20px' }}>File cards</h1>
-        <div style={{ margin: '20px 40px' }}>
-          <h3>Standard</h3>
-          <StoryList>{standardCards}</StoryList>
+  <MediaClientConfigContext.Provider value={mediaClientConfig}>
+    <AtlaskitThemeProvider mode={'dark'}>
+      <AnalyticsListener channel="media" onEvent={handleEvent}>
+        <div>
+          <h1 style={{ margin: '10px 20px' }}>File cards</h1>
+          <div style={{ margin: '20px 40px' }}>
+            <h3>Standard</h3>
+            <StoryList>{standardCards}</StoryList>
 
-          <h3>Error</h3>
-          <StoryList>{errorCards}</StoryList>
+            <h3>Error</h3>
+            <StoryList>{errorCards}</StoryList>
 
-          <h3>Menu</h3>
-          <StoryList>{menuCards}</StoryList>
+            <h3>Menu</h3>
+            <StoryList>{menuCards}</StoryList>
 
-          <h3>API Cards</h3>
-          <StoryList>{apiCards}</StoryList>
+            <h3>API Cards</h3>
+            <StoryList>{apiCards}</StoryList>
 
-          <h3>Thumbnail not available</h3>
-          <StoryList>{noThumbnailCards}</StoryList>
+            <h3>Thumbnail not available</h3>
+            <StoryList>{noThumbnailCards}</StoryList>
 
-          <h3>Lazy load</h3>
-          <StoryList>{lazyLoadCards}</StoryList>
+            <h3>Lazy load</h3>
+            <StoryList>{lazyLoadCards}</StoryList>
 
-          <h3>Collection configurations</h3>
-          <StoryList>{collectionConfigCards}</StoryList>
+            <h3>Collection configurations</h3>
+            <StoryList>{collectionConfigCards}</StoryList>
 
-          <h3>Overlay disabled</h3>
-          <StoryList>{noHoverStateCards}</StoryList>
+            <h3>Overlay disabled</h3>
+            <StoryList>{noHoverStateCards}</StoryList>
+          </div>
         </div>
-      </div>
-    </AnalyticsListener>
-  </AtlaskitThemeProvider>
+      </AnalyticsListener>
+    </AtlaskitThemeProvider>
+  </MediaClientConfigContext.Provider>
 );

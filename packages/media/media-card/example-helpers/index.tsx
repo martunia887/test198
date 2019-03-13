@@ -1,8 +1,7 @@
 /* tslint:disable:no-console */
 
 import * as React from 'react';
-import { Context, FileItem, Identifier } from '@atlaskit/media-core';
-import { createStorybookContext } from '@atlaskit/media-test-helpers';
+import { Identifier } from '@atlaskit/media-client';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
 import { SelectableCard } from './selectableCard';
@@ -13,8 +12,6 @@ import {
   OnSelectChangeFuncResult,
   CardAction,
 } from '../src';
-
-const context = createStorybookContext();
 
 export const clickHandler = (result: CardEvent) => {
   result.event.preventDefault();
@@ -40,7 +37,6 @@ export const createApiCards = (
       title: 'not selectable',
       content: (
         <Card
-          context={context}
           appearance={appearance}
           identifier={identifier}
           onClick={clickHandler}
@@ -54,7 +50,6 @@ export const createApiCards = (
     title: 'selectable',
     content: (
       <SelectableCard
-        context={context}
         identifier={identifier}
         onSelectChange={onSelectChangeHandler}
       />
@@ -102,23 +97,3 @@ export const actions = [
   annotateCardAction,
   deleteAction,
 ];
-
-export const anotherAction: CardAction = {
-  label: 'Some other action',
-  handler: (item?: FileItem) => {
-    console.log('Some other action', item);
-  },
-};
-
-export const annotateAction: CardAction = {
-  label: 'Annotate',
-  handler: (item?: FileItem) => {
-    console.log('annotate', item);
-  },
-};
-
-export const cardsActions = [anotherAction, annotateAction];
-export const wrongContext: Context = createStorybookContext({
-  authType: 'client',
-});
-export const wrongCollection = 'adfasdf';

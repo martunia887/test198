@@ -30,7 +30,7 @@
     "@atlaskit/media-card": "^55.0.2",
     "@atlaskit/media-core": "^27.2.3",
     "@atlaskit/media-picker": "^35.0.1",
-    "@atlaskit/media-store": "^9.2.1",
+    "@atlaskit/media-client": "^1.0.0",
     "@atlaskit/media-ui": "^9.2.1",
     "@atlaskit/select": "^8.0.0",
     "axios": "^0.17.1",

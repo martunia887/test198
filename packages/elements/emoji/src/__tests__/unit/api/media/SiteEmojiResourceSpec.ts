@@ -1,9 +1,11 @@
-import { ContextFactory, FileState } from '@atlaskit/media-core';
+jest.mock('@atlaskit/media-client');
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
 import 'whatwg-fetch';
 import * as fetchMock from 'fetch-mock/src/client';
 import * as sinon from 'sinon';
 import { waitUntil } from '@atlaskit/util-common-test';
+import { FileState, MediaClient } from '@atlaskit/media-client';
+import { fakeMediaClient, asMock } from '@atlaskit/media-test-helpers';
 
 import SiteEmojiResource, {
   EmojiProgress,
@@ -32,7 +34,7 @@ import {
 } from '../../_test-data';
 import { Observable } from 'rxjs/Observable';
 
-jest.mock('@atlaskit/media-core');
+jest.mock('@atlaskit/media-client');
 
 class TestSiteEmojiResource extends SiteEmojiResource {
   constructor(tokenManager: TokenManager) {
@@ -83,28 +85,30 @@ describe('SiteEmojiResource', () => {
       ],
     };
 
-    const setup = () => {
-      const uploadFile = jest.fn().mockReturnValue(
-        new Observable(observer => {
-          window.setTimeout(() => {
-            // We need it due rxjs sync unsubscription
-            observer.next({
-              id: '123',
-              name: 'some-name',
-              size: 1,
-              status: 'processing',
-            });
-          });
-        }),
-      );
+    const defaultUploadResponse = new Observable<FileState>(observer => {
+      window.setTimeout(() => {
+        // We need it due rxjs sync unsubscription
+        observer.next({
+          id: '123',
+          name: 'some-name',
+          size: 1,
+          status: 'processing',
+          mediaType: 'image',
+          mimeType: 'image/png',
+          representations: {},
+        });
+      });
+    });
 
-      (ContextFactory as any).create = () => {
-        return {
-          file: { upload: uploadFile },
-        };
-      };
+    const setup = (
+      uploadResponse: Observable<FileState> = defaultUploadResponse,
+    ) => {
+      const mediaClient = fakeMediaClient();
+      asMock(MediaClient).mockImplementation(() => mediaClient);
 
-      return { uploadFile };
+      asMock(mediaClient.file.upload).mockReturnValue(uploadResponse);
+
+      return { uploadFile: mediaClient.file.upload };
     };
 
     it('successful upload', () => {
@@ -176,7 +180,9 @@ describe('SiteEmojiResource', () => {
         }),
       );
 
-      (ContextFactory as any).create = () => ({ file: { upload: uploadFile } });
+      (MediaClient as jest.Mock<any>).mockReturnValue({
+        file: { upload: uploadFile },
+      });
 
       const tokenManagerStub = sinon.createStubInstance(TokenManager) as any;
       const siteEmojiResource = new TestSiteEmojiResource(tokenManagerStub);
@@ -255,21 +261,22 @@ describe('SiteEmojiResource', () => {
     });
 
     it('media progress events', () => {
-      const uploadFile = jest.fn().mockReturnValue(
-        new Observable<FileState>(observer => {
-          observer.next({
-            id: '123',
-            name: 'some-name',
-            size: 1,
-            status: 'uploading',
-            progress: 0.5,
-            mediaType: 'image',
-            mimeType: 'image/png',
-          });
-        }),
-      );
+      const uploadResponse = new Observable<FileState>(observer => {
+        observer.next({
+          id: '123',
+          name: 'some-name',
+          size: 1,
+          status: 'uploading',
+          progress: 0.5,
+          mediaType: 'image',
+          mimeType: 'image/png',
+        });
+      });
+      const { uploadFile } = setup(uploadResponse);
 
-      (ContextFactory as any).create = () => ({ file: { upload: uploadFile } });
+      (MediaClient as jest.Mock<any>).mockReturnValue({
+        file: { upload: uploadFile },
+      });
       const tokenManagerStub = sinon.createStubInstance(TokenManager) as any;
       const siteEmojiResource = new TestSiteEmojiResource(tokenManagerStub);
 

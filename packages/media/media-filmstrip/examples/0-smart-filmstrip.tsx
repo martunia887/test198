@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
 import { first } from 'rxjs/operators/first';
 import {
-  createUploadContext,
   genericFileId,
   audioFileId,
   errorFileId,
   gifFileId,
   externalImageIdentifier,
   defaultCollectionName,
+  createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { CardEvent, CardAction } from '@atlaskit/media-card';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
@@ -17,17 +17,16 @@ import { ExampleWrapper, FilmstripWrapper } from '../example-helpers/styled';
 import {
   FileItem,
   UploadableFile,
-  Context,
+  MediaClient,
   FileIdentifier,
-} from '@atlaskit/media-core';
-import Button from '@atlaskit/button';
+} from '@atlaskit/media-client';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 export interface ExampleState {
   items: FilmstripItem[];
-  context?: Context;
 }
 
-const defaultContext = createUploadContext();
+const mediaClientConfig = createUploadMediaClientConfig();
 
 class Example extends Component<{}, ExampleState> {
   onCardClick = (result: CardEvent) => {
@@ -116,7 +115,6 @@ class Example extends Component<{}, ExampleState> {
         ...this.cardProps,
       },
     ],
-    context: defaultContext,
   };
 
   createOnClickFromId = (id: string) => (event: any) => {
@@ -147,12 +145,7 @@ class Example extends Component<{}, ExampleState> {
   };
 
   uploadFile = async (event: SyntheticEvent<HTMLInputElement>) => {
-    const { context } = this.state;
-    if (
-      !event.currentTarget.files ||
-      !event.currentTarget.files.length ||
-      !context
-    ) {
+    if (!event.currentTarget.files || !event.currentTarget.files.length) {
       return;
     }
 
@@ -162,8 +155,8 @@ class Example extends Component<{}, ExampleState> {
       name: file.name,
       collection: defaultCollectionName,
     };
-
-    context.file
+    const mediaClient = new MediaClient(mediaClientConfig);
+    mediaClient.file
       .upload(uplodableFile)
       .pipe(first())
       .subscribe({
@@ -194,32 +187,20 @@ class Example extends Component<{}, ExampleState> {
       });
   };
 
-  toggleContext = () => {
-    const { context: currentContext } = this.state;
-
-    this.setState({
-      context: currentContext ? undefined : defaultContext,
-    });
-  };
-
   render() {
-    const { items, context } = this.state;
+    const { items } = this.state;
 
     return (
-      <ExampleWrapper>
-        <FilmstripWrapper>
-          <Filmstrip context={context} items={items} />
-        </FilmstripWrapper>
-        <div>
-          Upload file <input type="file" onChange={this.uploadFile} />
-        </div>
-        <div>
-          <Button appearance="primary" onClick={this.toggleContext}>
-            toggle context
-          </Button>
-          Context is: {context ? 'ON' : 'OFF'}
-        </div>
-      </ExampleWrapper>
+      <MediaClientConfigContext.Provider value={mediaClientConfig}>
+        <ExampleWrapper>
+          <FilmstripWrapper>
+            <Filmstrip items={items} />
+          </FilmstripWrapper>
+          <div>
+            Upload file <input type="file" onChange={this.uploadFile} />
+          </div>
+        </ExampleWrapper>
+      </MediaClientConfigContext.Provider>
     );
   }
 }

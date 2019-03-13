@@ -4,7 +4,7 @@ import {
   ImageResizeMode,
   MediaItemType,
   FileDetails,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import {
   wideTransparentImage,
   tallImage,

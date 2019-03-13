@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Component } from 'react';
 import {
-  createStorybookContext,
+  createStorybookMediaClientConfig,
   atlassianLogoUrl,
   imageFileId,
 } from '@atlaskit/media-test-helpers';
-import { ExternalImageIdentifier } from '@atlaskit/media-core';
+import { MediaClientConfigContext } from '@atlaskit/media-core';
+import { ExternalImageIdentifier } from '@atlaskit/media-client';
 import { Card, CardView } from '../src';
 import { ExternalIdentifierWrapper } from '../example-helpers/styled';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
+
 const externalIdentifierWithName: ExternalImageIdentifier = {
   mediaItemType: 'external-image',
   dataURI: atlassianLogoUrl,
@@ -24,22 +26,24 @@ class Example extends Component {
   render() {
     return (
       <ExternalIdentifierWrapper>
-        <div>
-          <h2>External image identifier</h2>
-          <Card context={context} identifier={externalIdentifier} />
-        </div>
-        <div>
-          <h2>External image identifier with name</h2>
-          <Card context={context} identifier={externalIdentifierWithName} />
-        </div>
-        <div>
-          <h2>File identifier</h2>
-          <Card context={context} identifier={imageFileId} />
-        </div>
-        <div>
-          <h2>CardView</h2>
-          <CardView status="complete" dataURI={atlassianLogoUrl} />
-        </div>
+        <MediaClientConfigContext.Provider value={mediaClientConfig}>
+          <div>
+            <h2>External image identifier</h2>
+            <Card identifier={externalIdentifier} />
+          </div>
+          <div>
+            <h2>External image identifier with name</h2>
+            <Card identifier={externalIdentifierWithName} />
+          </div>
+          <div>
+            <h2>File identifier</h2>
+            <Card identifier={imageFileId} />
+          </div>
+          <div>
+            <h2>CardView</h2>
+            <CardView status="complete" dataURI={atlassianLogoUrl} />
+          </div>
+        </MediaClientConfigContext.Provider>
       </ExternalIdentifierWrapper>
     );
   }
