@@ -47,7 +47,6 @@ import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
 import { temporaryMedia, temporaryMediaGroup } from './_utils';
 
-const stateManager = new DefaultMediaStateManager();
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 
 const getFreshMediaProvider = () =>

@@ -77,7 +77,7 @@ export default class MediaGroup extends PureComponent<
 
   onMediaClick = (
     cardClickHandler: CardEventClickHandler,
-    child: ReactElement<MediaProps>,
+    child: ReactElement<MediaCardProps>,
     surroundingItems: Identifier[],
   ) => (event: CardEvent, analyticsEvent?: any) => {
     const surroundings: CardSurroundings = {

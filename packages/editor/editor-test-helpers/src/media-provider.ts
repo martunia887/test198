@@ -41,7 +41,6 @@ export function storyMediaProviderFactory(
 ) {
   const {
     collectionName,
-    stateManager,
     includeUploadMediaClientConfig,
   } = mediaProviderFactoryConfig;
   const collection = collectionName || defaultCollectionName;

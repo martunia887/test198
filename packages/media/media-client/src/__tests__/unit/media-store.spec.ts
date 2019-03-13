@@ -21,8 +21,8 @@ import {
   TouchedFiles,
   MediaStoreTouchFileParams,
   MediaFileArtifacts,
+  checkWebpSupport,
 } from '../..';
-import { checkWebpSupport } from '../../utils/checkWebpSupport';
 
 describe('MediaStore', () => {
   const baseUrl = 'http://some-host';

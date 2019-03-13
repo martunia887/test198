@@ -21,8 +21,8 @@ import {
   mapResponseToBlob,
   MediaFileArtifacts,
   getArtifactUrl,
+  checkWebpSupport,
 } from '..';
-import { checkWebpSupport } from './utils/checkWebpSupport';
 
 const defaultImageOptions: MediaStoreGetFileImageParams = {
   'max-age': 3600,
