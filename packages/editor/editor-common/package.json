@@ -26,7 +26,7 @@
     "@atlaskit/emoji": "^56.2.1",
     "@atlaskit/icon": "^16.0.4",
     "@atlaskit/media-card": "^55.0.2",
-    "@atlaskit/media-client": "^9.1.7",
+    "@atlaskit/media-client": "^1.0.0",
     "@atlaskit/mention": "^16.2.2",
     "@atlaskit/profilecard": "^8.0.0",
     "@atlaskit/size-detector": "^7.0.0",
