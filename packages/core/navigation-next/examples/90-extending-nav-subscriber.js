@@ -83,14 +83,14 @@ const ProductNavigation = () => (
   <div data-webdriver-test-key="product-navigation">
     <HeaderSection>
       {({ className }) => (
-        <div className={className}>
+        <div css={className}>
           <Wordmark wordmark={JiraWordmark} />
         </div>
       )}
     </HeaderSection>
     <MenuSection>
       {({ className }) => (
-        <div className={className}>
+        <div css={className}>
           <Item
             before={DashboardIcon}
             text="Dashboards"
@@ -138,7 +138,7 @@ const ContainerNavigation = () => (
     </HeaderSection>
     <MenuSection>
       {({ className }) => (
-        <div className={className}>
+        <div css={className}>
           <Item
             before={BacklogIcon}
             text="Backlog"

@@ -102,7 +102,7 @@ const ProductNavigation = () => (
   <div data-webdriver-test-key="product-navigation">
     <HeaderSection>
       {({ className }) => (
-        <div className={className}>
+        <div css={className}>
           <TestMark id="product-header">
             <Wordmark wordmark={JiraWordmark} />
           </TestMark>
@@ -111,7 +111,7 @@ const ProductNavigation = () => (
     </HeaderSection>
     <MenuSection>
       {({ className }) => (
-        <div className={className}>
+        <div css={className}>
           <Item
             before={DashboardIcon}
             text="Dashboards"
@@ -172,7 +172,7 @@ export default class Example extends Component<{}, State> {
       </HeaderSection>
       <MenuSection>
         {({ className }) => (
-          <div className={className}>
+          <div css={className}>
             <Item
               before={BacklogIcon}
               text="Backlog"

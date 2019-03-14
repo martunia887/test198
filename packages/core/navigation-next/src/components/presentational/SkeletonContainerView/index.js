@@ -43,7 +43,7 @@ export default class SkeletonContainerView extends Component<SkeletonContainerVi
           </Section>
           <Section>
             {({ className }) => (
-              <div className={className}>
+              <div css={className}>
                 <SkeletonItem hasBefore />
                 <SkeletonItem hasBefore />
                 <SkeletonItem hasBefore />

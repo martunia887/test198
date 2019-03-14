@@ -84,7 +84,7 @@ class NestedSection extends Component<{}, { activeLevel: number }> {
       <NestedSectionWrapper>
         <Section key="nested-section" {...sectionProps}>
           {({ className }) => (
-            <div className={className}>
+            <div css={className}>
               <SectionHeading>{title}</SectionHeading>
               {items.map(({ goTo, ...itemProps }) => (
                 <Item

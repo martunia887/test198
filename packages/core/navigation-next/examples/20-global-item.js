@@ -182,7 +182,7 @@ const variations: Array<VariationCategory> = [
       },
       {
         component: ({ children, className }: *) => (
-          <div className={className} to="/">
+          <div css={className} to="/">
             {children}
           </div>
         ),

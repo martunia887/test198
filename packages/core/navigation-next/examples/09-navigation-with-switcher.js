@@ -213,7 +213,7 @@ const ContainerNavigation = () => (
     </HeaderSection>
     <MenuSection>
       {({ className }) => (
-        <div className={className}>
+        <div css={className}>
           <Item
             before={BacklogIcon}
             text="Backlog"

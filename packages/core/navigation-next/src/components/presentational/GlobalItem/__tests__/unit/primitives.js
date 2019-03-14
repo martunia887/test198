@@ -82,7 +82,7 @@ describe('GlobalNavigationItemPrimitive', () => {
 
   it('should render a CustomComponent when a component prop is passed', () => {
     const MyComponent = ({ className, children, onClick }: any) => (
-      <button className={className} onClick={onClick} id="customComponent">
+      <button css={className} onClick={onClick} id="customComponent">
         {children}
       </button>
     );
@@ -174,7 +174,7 @@ describe('GlobalNavigationItemPrimitive', () => {
       <GlobalNavigationItemPrimitive
         {...defaultProps}
         component={({ className, children, onClick }) => (
-          <button className={className} onClick={onClick} id="customComponent">
+          <button css={className} onClick={onClick} id="customComponent">
             {children}
           </button>
         )}

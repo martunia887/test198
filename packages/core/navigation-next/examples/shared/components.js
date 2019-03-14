@@ -22,7 +22,7 @@ import {
 
 export const GlobalLink = ({ className, to, onClick, children }: any) => {
   return (
-    <Link className={className} to={to} onClick={onClick}>
+    <Link css={className} to={to} onClick={onClick}>
       {children}
     </Link>
   );
@@ -183,7 +183,7 @@ export const LinkItem = ({
             draggableProps,
           }) => (
             <Link
-              className={className}
+              css={className}
               to={to}
               onClick={props.onClick}
               innerRef={innerRef}

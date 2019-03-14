@@ -64,7 +64,7 @@ const DEFAULT_ITEMS = [
   },
   {
     component: ({ children, className, draggableProps, innerRef }: *) => (
-      <div className={className} to="/" {...draggableProps} ref={innerRef}>
+      <div css={className} to="/" {...draggableProps} ref={innerRef}>
         {children}
       </div>
     ),

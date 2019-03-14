@@ -4,11 +4,11 @@ import React from 'react';
 import HeaderSection from '../../index';
 
 <HeaderSection>
-  {({ className }) => <div className={className}>Header</div>}
+  {({ className }) => <div css={className}>Header</div>}
 </HeaderSection>;
 
 <HeaderSection id="foo" parentId="bar">
-  {({ className }) => <div className={className}>Header</div>}
+  {({ className }) => <div css={className}>Header</div>}
 </HeaderSection>;
 
 // $ExpectError - missing children prop

@@ -12,11 +12,11 @@ describe('HeaderSection', () => {
 
   it('should render Section with correct props', () => {
     const MyHeader = ({ className }: { className: string }) => (
-      <div className={className}>My Header</div>
+      <div css={className}>My Header</div>
     );
     const wrapper = shallow(
       <HeaderSection>
-        {({ className }) => <MyHeader className={className} />}
+        {({ className }) => <MyHeader css={className} />}
       </HeaderSection>,
     );
 
@@ -25,12 +25,12 @@ describe('HeaderSection', () => {
 
   it('should render children with section styles containing paddingTop', () => {
     const MyHeader = ({ className }: { className: string }) => (
-      <div className={className}>My Header</div>
+      <div css={className}>My Header</div>
     );
     const wrapper = mount(
       <HeaderSection>
         {({ className, css }) => (
-          <MyHeader className={className} headerSectionCss={css} />
+          <MyHeader css={className} headerSectionCss={css} />
         )}
       </HeaderSection>,
     );

@@ -121,7 +121,7 @@ class ItemPrimitive extends PureComponent<ItemPrimitiveProps> {
     return (
       <ComponentSwitch
         as={itemComponent}
-        className={css({ '&&': styles.itemBase })}
+        css={css({ '&&': styles.itemBase })}
         {...itemProps}
       >
         {!!Before && (

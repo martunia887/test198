@@ -80,7 +80,7 @@ export default class Example extends Component<{}, State> {
         </HeaderSection>
         <MenuSection>
           {({ className }) => (
-            <div className={className}>
+            <div css={className}>
               <Item before={DashboardIcon} text="Dashboards" />
               <Item before={BacklogIcon} text="Backlog" />
               <Item before={IssuesIcon} text="Issues and filters" />

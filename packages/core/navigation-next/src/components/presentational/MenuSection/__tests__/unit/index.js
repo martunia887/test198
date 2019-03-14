@@ -12,11 +12,11 @@ describe('MenuSection', () => {
 
   it('should render Section with correct props', () => {
     const MyHeader = ({ className }: { className: string }) => (
-      <div className={className}>My Header</div>
+      <div css={className}>My Header</div>
     );
     const wrapper = shallow(
       <MenuSection>
-        {({ className }) => <MyHeader className={className} />}
+        {({ className }) => <MyHeader css={className} />}
       </MenuSection>,
     );
 
@@ -25,12 +25,12 @@ describe('MenuSection', () => {
 
   it('should render children with section styles containing paddingBottom', () => {
     const MyHeader = ({ className }: { className: string }) => (
-      <div className={className}>My Header</div>
+      <div css={className}>My Header</div>
     );
     const wrapper = mount(
       <MenuSection>
         {({ className, css }) => (
-          <MyHeader className={className} MenuSectionCss={css} />
+          <MyHeader css={className} MenuSectionCss={css} />
         )}
       </MenuSection>,
     );

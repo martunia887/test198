@@ -131,7 +131,7 @@ const GlobalNavWithRegularItems = () => (
       },
       {
         component: ({ className, onClick }: *) => (
-          <span className={className}>
+          <span css={className}>
             <Avatar
               borderColor="transparent"
               isActive={false}
@@ -174,7 +174,7 @@ const GlobalNavWithDropdowns = () => (
       },
       {
         component: ({ className, onClick }: *) => (
-          <span className={className}>
+          <span css={className}>
             <Avatar
               borderColor="transparent"
               isActive={false}

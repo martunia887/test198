@@ -141,7 +141,7 @@ const Section = <T: TypeShape>({
       shouldGrow={shouldGrow}
     >
       {({ className }) => (
-        <div className={className}>
+        <div css={className}>
           <TypedItemsRenderer
             items={items}
             customComponents={customComponents}
@@ -160,7 +160,7 @@ const HeaderSection = <T: TypeShape>({
   items.length ? (
     <HeaderSectionComponent id={id} key={nestedGroupKey}>
       {({ className }) => (
-        <div className={className}>
+        <div css={className}>
           <TypedItemsRenderer
             items={items}
             customComponents={customComponents}
@@ -185,7 +185,7 @@ const MenuSection = <T: TypeShape>({
     parentId={parentId}
   >
     {({ className }) => (
-      <div className={className}>
+      <div css={className}>
         <TypedItemsRenderer items={items} customComponents={customComponents} />
       </div>
     )}

@@ -99,7 +99,7 @@ class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> 
       itemBase = (
         <CustomComponent
           {...this.getGlobalItemExternalProps()}
-          className={css({ '&&': styles.itemBase })}
+          css={css({ '&&': styles.itemBase })}
         >
           {this.renderIconAndBadge(styles.badgeWrapper)}
         </CustomComponent>
@@ -111,7 +111,7 @@ class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> 
           id={globalID}
           onClick={onClick}
           target={target}
-          className={css({ '&&': styles.itemBase })}
+          css={css({ '&&': styles.itemBase })}
           {...dataset}
         >
           {this.renderIconAndBadge(styles.badgeWrapper)}
@@ -122,7 +122,7 @@ class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> 
         <button
           id={globalID}
           onClick={onClick}
-          className={css({ '&&': styles.itemBase })}
+          css={css({ '&&': styles.itemBase })}
           {...dataset}
         >
           {this.renderIconAndBadge(styles.badgeWrapper)}
@@ -130,11 +130,7 @@ class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> 
       );
     } else {
       itemBase = (
-        <span
-          id={globalID}
-          className={css({ '&&': styles.itemBase })}
-          {...dataset}
-        >
+        <span id={globalID} css={css({ '&&': styles.itemBase })} {...dataset}>
           {this.renderIconAndBadge(styles.badgeWrapper)}
         </span>
       );
@@ -154,7 +150,7 @@ class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> 
         hideTooltipOnClick
         hideTooltipOnMouseDown
       >
-        <div className={css({ display: 'inline-block' })}>
+        <div css={css({ display: 'inline-block' })}>
           {this.renderChildren(styles)}
         </div>
       </Tooltip>
