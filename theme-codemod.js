@@ -1,5 +1,3 @@
-//kanker astexplorer
-// Press ctrl+space for code completion
 const themeIndexImports = [
   'themed',
   'withTheme',
