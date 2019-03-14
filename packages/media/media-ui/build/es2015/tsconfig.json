@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "../../"
+    "outDir": "../../dist/es2015"
   },
   "include": ["../../src/**/*.ts", "../../src/**/*.tsx"],
   "exclude": [

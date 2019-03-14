@@ -13,7 +13,7 @@ import { MediaViewerError } from '../../../newgen/error';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../../version.json';
+} from '../../../../package.json';
 
 describe('download', () => {
   const processingFailedState: ProcessingFailedState = {

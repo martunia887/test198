@@ -3,7 +3,7 @@ import { MediaType } from '@atlaskit/media-store';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../version.json';
+} from '../../../package.json';
 
 export const channel = 'media';
 

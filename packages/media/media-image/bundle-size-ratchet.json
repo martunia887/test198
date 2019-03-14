@@ -13,7 +13,8 @@
     "stats": {
       "size": 114567,
       "gzipSize": 24212
-    }
+    },
+    "new": true
   },
   {
     "id": "node_modules.async",
@@ -21,7 +22,8 @@
     "stats": {
       "size": 12686,
       "gzipSize": 4356
-    }
+    },
+    "new": true
   },
   {
     "id": "atlaskit.media.main",
@@ -29,7 +31,8 @@
     "stats": {
       "size": 18022,
       "gzipSize": 5080
-    }
+    },
+    "new": true
   },
   {
     "id": "atlaskit.media.async",
@@ -37,7 +40,8 @@
     "stats": {
       "size": 1684,
       "gzipSize": 724
-    }
+    },
+    "new": true
   },
   {
     "id": "combined.main",
@@ -53,6 +57,7 @@
     "stats": {
       "size": 14310,
       "gzipSize": 4877
-    }
+    },
+    "new": true
   }
 ]
