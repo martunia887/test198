@@ -29,6 +29,14 @@ const POPUP_OFFSET = [
 ];
 
 const getTitle = (layout: TableLayout) => {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(
+    (navigator as Navigator).userAgent,
+  );
+
+  if (isSafari) {
+    throw new Error('nem use safari');
+  }
+
   switch (layout) {
     case 'default':
       return commonMessages.layoutWide;
