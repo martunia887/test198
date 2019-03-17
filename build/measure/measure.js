@@ -140,7 +140,7 @@ module.exports = function main(
      * Main config for detailed breakdown of dependencies, includes:
      * – main bundle: which is src of provided package
      * – node_modules bundle: includes all external dependencies
-     * – package groups bundles: e.g. core, media, editor, etc...
+     * – package groups bundles: e.g. design-system, media, editor, etc...
      */
     const mainConfig = createWebpackConfig({
       outputDir: measureCompiledOutputPath,

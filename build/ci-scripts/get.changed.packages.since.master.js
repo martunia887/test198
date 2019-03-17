@@ -8,7 +8,7 @@ const flattenDeep = require('lodash.flattendeep');
 //  * NOTE: This prints the list of changed packages and dependent packages since master ONLY if they have been commited.
 //  * It will print them all out as a json array of relative paths
 //  * i.e: $ node build/ci-scripts/get.changed.packages.since.master.js
-//  *        ["packages/core/avatar", "packages/core/badge"]
+//  *        ["packages/design-system/avatar", "packages/design-system/badge"]
 //  * */
 
 const cli = meow(
@@ -104,8 +104,8 @@ const displayChangedPackagesSinceMaster = async () => {
 
   // This check is only for the way of changed packages output is displayed:
   // '--spaceDelimited' - using the measure tool, will return the changedPackages
-  // like 'packages/core/button packages/editor/editor-core ...'.
-  // Otherwise, the standard output will be ["packages/core/button", "packages/editor/editor-core", ...].
+  // like 'packages/design-system/button packages/editor/editor-core ...'.
+  // Otherwise, the standard output will be ["packages/design-system/button", "packages/editor/editor-core", ...].
   if (cli.flags.spaceDelimited) {
     console.log(changedPackagesRelativePaths.join(' '));
   } else {

@@ -112,7 +112,7 @@
   - @atlaskit/code@7.0.2
 
 ## 5.0.1
-- [patch] Move analytics tests and replace elements to core [49d4ab4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/49d4ab4)
+- [patch] Move analytics tests and replace elements to design-system [49d4ab4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/49d4ab4)
 - [none] Updated dependencies [49d4ab4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/49d4ab4)
   - @atlaskit/button@9.0.2
 

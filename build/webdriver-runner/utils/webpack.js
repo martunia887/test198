@@ -116,7 +116,7 @@ async function startDevServer() {
   */
   if (globs.indexOf('website') === -1) {
     globs = globs.map(glob =>
-      glob.replace('website', 'packages/core/polyfills'),
+      glob.replace('website', 'packages/design-system/polyfills'),
     );
   }
 

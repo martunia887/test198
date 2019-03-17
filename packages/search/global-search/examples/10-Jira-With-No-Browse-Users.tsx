@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AnalyticsListener } from '../../../core/analytics-next/src/';
+import { AnalyticsListener } from '../../../design-system/analytics-next/src/';
 import {
   setupMocks,
   teardownMocks,

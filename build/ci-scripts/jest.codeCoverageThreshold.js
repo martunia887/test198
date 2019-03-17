@@ -1,13 +1,13 @@
 // @flow
 
 module.exports = {
-  'packages/core/navigation-next/src': {
+  'packages/design-system/navigation-next/src': {
     statements: 78,
     branches: 69,
     functions: 78,
     lines: 79,
   },
-  'packages/core/global-navigation/src': {
+  'packages/design-system/global-navigation/src': {
     statements: 90,
     branches: 90,
     functions: 90,

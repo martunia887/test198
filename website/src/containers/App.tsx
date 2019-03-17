@@ -134,7 +134,7 @@ export default class App extends React.Component<{}, State> {
                                 <Redirect
                                   to={props.location.pathname.replace(
                                     '/components',
-                                    '/packages/core',
+                                    '/packages/design-system',
                                   )}
                                 />
                               )}

@@ -13,7 +13,7 @@ yarn measure [path1] [path2] [path3]
 For example, to measure button, you would use:
 
 ```sh
-yarn measure packages/core/button
+yarn measure packages/design-system/button
 ```
 
 This prints output just to the terminal which will look like:

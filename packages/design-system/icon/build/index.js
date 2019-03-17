@@ -21,7 +21,7 @@ buildIcons(config).then(icons => {
     icons,
     '@atlaskit/icon',
     synonyms,
-    ['icon', 'core'],
+    ['icon', 'design-system'],
   );
   return fs.outputFile(path.resolve(root, 'src/metadata.js'), iconDocs);
 });

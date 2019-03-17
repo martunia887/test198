@@ -103,9 +103,15 @@ export default class CodeSandbox extends React.Component<Props, State> {
         }}
         importReplacements={[
           [`packages/${groupId}/${packageId}/src`, pkgJSON.name],
-          ['packages/core/icon/glyph/*', `${pkgJSON.name}/glyph/`],
-          ['packages/core/icon-file-type/glyph/*', `${pkgJSON.name}/glyph/`],
-          ['packages/core/icon-object/glyph/*', `${pkgJSON.name}/glyph/`],
+          ['packages/design-system/icon/glyph/*', `${pkgJSON.name}/glyph/`],
+          [
+            'packages/design-system/icon-file-type/glyph/*',
+            `${pkgJSON.name}/glyph/`,
+          ],
+          [
+            'packages/design-system/icon-object/glyph/*',
+            `${pkgJSON.name}/glyph/`,
+          ],
           ...cssLoaderExceptions(pkgJSON.name, groupId, packageId),
         ]}
         dependencies={{

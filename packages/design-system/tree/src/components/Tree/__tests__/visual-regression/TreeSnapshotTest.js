@@ -7,7 +7,7 @@ import {
 describe('Snapshot Test', () => {
   it('Static tree should match production example', async () => {
     const url = getExampleUrl(
-      'core',
+      'design-system',
       'tree',
       'static-tree',
       global.__BASEURL__,

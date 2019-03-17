@@ -13,7 +13,7 @@ export default md`
 
 ### Following the guide
 
-Keeping up with value *Be the change you seek* we migrated all the core packages and css-packs. While migrating these
+Keeping up with value *Be the change you seek* we migrated all the design-system packages and css-packs. While migrating these
 package we came up with two migration paths. One is for the usage of util-shared-styles as css-in-js solution
 and other is for usage in less files.
 

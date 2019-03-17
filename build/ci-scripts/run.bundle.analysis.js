@@ -12,7 +12,7 @@ const analysisServerEndpoint = process.env.ANALYSIS_SERVER_ENDPOINT;
         'build/*',
         'packages/css-packs/*',
         'website',
-        'packages/core/polyfills',
+        'packages/design-system/polyfills',
         'packages/elements/util-data-test',
       ],
     });

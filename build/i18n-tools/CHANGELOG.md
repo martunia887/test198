@@ -18,7 +18,7 @@
     Usage:
 
     ```
-    i18n-tools pull --ignore "**/__tests__/**,**/__fixtures__/**"  packages/core/xyz
+    i18n-tools pull --ignore "**/__tests__/**,**/__fixtures__/**"  packages/design-system/xyz
     ```
 
   **Breaking**
