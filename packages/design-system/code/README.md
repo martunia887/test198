@@ -10,4 +10,4 @@ yarn add @atlaskit/code
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/code).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/code).

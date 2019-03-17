@@ -10,4 +10,4 @@ yarn add @atlaskit/modal-dialog
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/modal-dialog).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/modal-dialog).

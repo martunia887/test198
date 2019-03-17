@@ -13,4 +13,4 @@ yarn add @atlaskit/tag-group
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/tag-group).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/tag-group).

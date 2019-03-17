@@ -12,4 +12,4 @@ yarn add @atlaskit/analytics
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/analytics).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/analytics).

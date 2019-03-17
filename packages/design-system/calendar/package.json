@@ -16,7 +16,7 @@
   ],
   "atlaskit": {
     "name": "Calendar",
-    "team": "core"
+    "team": "design-system"
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {

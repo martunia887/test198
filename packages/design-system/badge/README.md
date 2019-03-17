@@ -10,4 +10,4 @@ yarn add @atlaskit/badge
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/badge).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/badge).

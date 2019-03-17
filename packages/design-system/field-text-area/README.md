@@ -10,4 +10,4 @@ yarn add @atlaskit/field-text-area
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/field-text-area).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/field-text-area).

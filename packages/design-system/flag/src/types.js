@@ -61,7 +61,7 @@ export type AutoDismissFlagProps = {
   title: string,
   /** A link component that is passed down to the `@atlaskit/button` used by actions,
   to allow custom routers to be used. See the
-  [button with router](https://atlaskit.atlassian.com/packages/core/button/example/ButtonWithRouter)
+  [button with router](https://atlaskit.atlassian.com/packages/design-system/button/example/ButtonWithRouter)
   example of what this component should look like. */
   linkComponent?: ElementType,
 };

@@ -47,7 +47,7 @@
 - [major] [d7ef59d432](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d7ef59d432):
 
   - Moved the priority icons to its own package.
-  - Check the [Upgrade Guide](https://atlaskit.atlassian.com/packages/core/icon/docs/upgrade-guide) for more information.
+  - Check the [Upgrade Guide](https://atlaskit.atlassian.com/packages/design-system/icon/docs/upgrade-guide) for more information.
 - Updated dependencies [d0333acfba](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d0333acfba):
   - @atlaskit/icon-priority@1.0.0
 
@@ -176,7 +176,7 @@ d):
     - JiraIcon
     - StatuspageIcon
     - StrideIcon
-  - Check the [Upgrade Guide](https://atlaskit.atlassian.com/packages/core/icon/docs/upgrade-guide) for more information.
+  - Check the [Upgrade Guide](https://atlaskit.atlassian.com/packages/design-system/icon/docs/upgrade-guide) for more information.
 - [patch] Updated dependencies [709b239](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/709b239)
   - @atlaskit/icon-file-type@1.0.0
   - @atlaskit/icon-object@1.0.0

@@ -10,4 +10,4 @@ yarn add @atlaskit/inline-dialog
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/inline-dialog).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/inline-dialog).

@@ -10,4 +10,4 @@ yarn add @atlaskit/dropdown-menu
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/dropdown-menu).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/dropdown-menu).

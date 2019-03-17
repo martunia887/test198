@@ -64,7 +64,7 @@ type Props = {
   /* A function for formatting the date displayed in the input. By default composes together [date-fn's parse method](https://date-fns.org/v1.29.0/docs/parse) and [date-fn's format method](https://date-fns.org/v1.29.0/docs/format) to return a correctly formatted date string*/
   formatDisplayLabel: (value: string, dateFormat: string) => string,
   /** Props to apply to the select. This can be used to set options such as placeholder text.
-   *  See [here](/packages/core/select) for documentation on select props. */
+   *  See [here](/packages/design-system/select) for documentation on select props. */
   selectProps: Object,
   /* This prop affects the height of the select control. Compact is gridSize() * 4, default is gridSize * 5  */
   spacing?: 'compact' | 'default',

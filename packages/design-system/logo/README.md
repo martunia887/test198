@@ -10,4 +10,4 @@ yarn add @atlaskit/logo
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/logo).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/logo).

@@ -254,7 +254,7 @@
 ## 4.0.0
 - [major] [8e753fc](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8e753fc):
 
-  - View the [upgrade guide](https://atlaskit.atlassian.com/packages/core/navigation-next/docs/upgrade-guide) to help you upgrade to v4
+  - View the [upgrade guide](https://atlaskit.atlassian.com/packages/design-system/navigation-next/docs/upgrade-guide) to help you upgrade to v4
   - The API for renderer items that use components as their `type` property have now changed to use a type value of `'InlineComponent'` and specify the component via a `component` prop instead. This allows the renderer item types to be typed correctly as disjoint unions on the type property.
   - Rename `withNavigationUI` HOC to `withNavigationUIController`
   - Rename `ViewRenderer` component to `ItemsRenderer`
@@ -284,10 +284,10 @@
 
   - BREAKING: A breaking change was accidentally released in this version.
 
-    The API for renderer items that use components as their \`type\` property have now changed to use a type value of \`'InlineComponent'\` and specify the component via a \`component\` prop instead. See the View the [v3 - v4 upgrade guide](https://atlaskit.atlassian.com/packages/core/navigation-next/docs/upgrade-guide) for more information.
+    The API for renderer items that use components as their \`type\` property have now changed to use a type value of \`'InlineComponent'\` and specify the component via a \`component\` prop instead. See the View the [v3 - v4 upgrade guide](https://atlaskit.atlassian.com/packages/design-system/navigation-next/docs/upgrade-guide) for more information.
   - Export flow types for each built-in item renderer type
   - Export a generic flow typed version of the renderer, `TypedViewRenderer`, that is designed to be extended to pass custom component flow types
-    so the renderer typechecks custom components. See the [View Renderer documentation](https://atlaskit.atlassian.com/packages/core/navigation-next/docs/state-controllers#view-renderer) for more information.
+    so the renderer typechecks custom components. See the [View Renderer documentation](https://atlaskit.atlassian.com/packages/design-system/navigation-next/docs/state-controllers#view-renderer) for more information.
 
 ## 3.24.0
 - [minor] [c2c0b0c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c2c0b0c):

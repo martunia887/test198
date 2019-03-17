@@ -13,4 +13,4 @@ yarn add @atlaskit/lozenge
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/lozenge).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/lozenge).

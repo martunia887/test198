@@ -7,7 +7,7 @@ import {
 describe('Snapshot Test', () => {
   it('Basic usage example should match production example', async () => {
     const url = getExampleUrl(
-      'core',
+      'design-system',
       'checkbox',
       'basic-usage',
       global.__BASEURL__,

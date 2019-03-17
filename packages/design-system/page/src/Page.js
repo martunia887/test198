@@ -46,7 +46,7 @@ type Props = {
   /*
     If you provide the banner or banners you are to use, page will help you
     coordinate the showing and hiding of them in conjunction with `isBannerOpen`.
-    This is designed to take [our banner](/packages/core/banner) component, and
+    This is designed to take [our banner](/packages/design-system/banner) component, and
     matches the animation timing of our banner.
 
     The only time that two banners should be rendered are when an announcement
@@ -54,7 +54,7 @@ type Props = {
   */
   banner?: Node,
   /*
-    Takes our [navigation component](/packages/core/navigation) and helps
+    Takes our [navigation component](/packages/design-system/navigation) and helps
     position it with consideration to rendered banners.
   */
   navigation?: Node,
@@ -77,7 +77,7 @@ type Props = {
 
     In addition to setting the height of the banner's container for dynamically
     heighted banners, you will need to set the `pageOffset` in navigation. Since
-    this is a lot to think about, [here](/examples/core/page/navigation-example)
+    this is a lot to think about, [here](/examples/design-system/page/navigation-example)
     is an example that implements displaying both an announcement banner and a
     warning banner on a page, while matching the height of each.
   */

@@ -10,4 +10,4 @@ yarn add @atlaskit/field-range
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/field-range).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/field-range).

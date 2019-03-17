@@ -10,4 +10,4 @@ yarn add @atlaskit/progress-tracker
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/progress-tracker).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/progress-tracker).

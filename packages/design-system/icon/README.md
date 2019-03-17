@@ -10,7 +10,7 @@ yarn add @atlaskit/icon
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/icon).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/icon).
 
 ## BEFORE YOU CHANGE ICONS
 
@@ -23,7 +23,7 @@ paths when published.
 You will manually need to run `yarn build:icon` from the root repository, or
 `yarn build` from inside the icon folder whenever you make changes to icon.
 
-New Icons should be added to `/packages/core/icon/utils/raw_svgs`.
+New Icons should be added to `/packages/design-system/icon/utils/raw_svgs`.
 
 **NOTE:** The `reduced-ui-pack` package should contain all the icons we include
 in this package. Make sure to rebuild the `reduced-ui-pack` sprite as outlined in

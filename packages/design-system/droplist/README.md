@@ -10,4 +10,4 @@ yarn add @atlaskit/droplist
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/droplist).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/droplist).

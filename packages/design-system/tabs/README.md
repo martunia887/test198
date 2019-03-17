@@ -10,4 +10,4 @@ yarn add @atlaskit/tabs
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/tabs).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/tabs).

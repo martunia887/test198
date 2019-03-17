@@ -10,4 +10,4 @@ yarn add @atlaskit/layer-manager
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/layer-manager).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/layer-manager).

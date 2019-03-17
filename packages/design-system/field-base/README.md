@@ -17,4 +17,4 @@ yarn add @atlaskit/field-base
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/field-base).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/field-base).

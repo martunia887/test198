@@ -68,9 +68,9 @@ type Props = {
     time: string,
     timezone: string,
   ) => { dateValue: string, timeValue: string, zoneValue: string },
-  /** [Select props](/packages/core/select) to pass onto the DatePicker component. This can be used to set options such as placeholder text. */
+  /** [Select props](/packages/design-system/select) to pass onto the DatePicker component. This can be used to set options such as placeholder text. */
   datePickerSelectProps: {},
-  /** [Select props](/packages/core/select) to pass onto the TimePicker component. This can be used to set options such as placeholder text. */
+  /** [Select props](/packages/design-system/select) to pass onto the TimePicker component. This can be used to set options such as placeholder text. */
   timePickerSelectProps: {},
   /** The times to show in the times dropdown. */
   times?: Array<string>,

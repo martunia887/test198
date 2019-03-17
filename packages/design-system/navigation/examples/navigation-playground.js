@@ -68,7 +68,7 @@ const NavOptionsGroup = ({
         icon={showIcon ? <AtlassianIcon label="Atlassian" /> : null}
         isCompact={compactItems}
         text="Basic Link"
-        href="/examples/core/navigation/basic"
+        href="/examples/design-system/navigation/basic"
       />
       <AkNavigationItem
         icon={showIcon ? <AtlassianIcon label="Atlassian" /> : null}

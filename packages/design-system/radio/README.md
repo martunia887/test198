@@ -10,4 +10,4 @@ yarn add @atlaskit/radio
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/radio).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/radio).

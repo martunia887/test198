@@ -7,7 +7,7 @@ import {
 describe('Snapshot Test', () => {
   it('Inline code basic example should match production example', async () => {
     const url = getExampleUrl(
-      'core',
+      'design-system',
       'code',
       'inline-code-basic',
       global.__BASEURL__,
@@ -18,7 +18,7 @@ describe('Snapshot Test', () => {
   });
   it('Code block example should match production example', async () => {
     const url = getExampleUrl(
-      'core',
+      'design-system',
       'code',
       'code-block-basic',
       global.__BASEURL__,

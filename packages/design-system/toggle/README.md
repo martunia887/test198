@@ -10,4 +10,4 @@ yarn add @atlaskit/toggle
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/toggle).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/toggle).

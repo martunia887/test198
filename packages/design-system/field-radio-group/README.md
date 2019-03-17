@@ -10,4 +10,4 @@ yarn add @atlaskit/field-radio-group
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/field-radio-group).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/field-radio-group).

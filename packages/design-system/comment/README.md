@@ -10,4 +10,4 @@ yarn add @atlaskit/comment
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/comment).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/comment).

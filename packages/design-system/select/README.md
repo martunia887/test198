@@ -9,5 +9,5 @@ yarn add @atlaskit/select
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/select).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/select).
 

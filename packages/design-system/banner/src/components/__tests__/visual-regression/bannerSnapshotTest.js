@@ -7,7 +7,7 @@ import {
 describe('Snapshot Test', () => {
   it('Announcement banner example should match production example', async () => {
     const url = getExampleUrl(
-      'core',
+      'design-system',
       'banner',
       'announcementBanner',
       global.__BASEURL__,

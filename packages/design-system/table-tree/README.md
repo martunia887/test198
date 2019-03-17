@@ -10,4 +10,4 @@ yarn add @atlaskit/table-tree
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/table-tree).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/table-tree).

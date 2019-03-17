@@ -10,4 +10,4 @@ yarn add @atlaskit/global-navigation
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/global-navigation).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/global-navigation).

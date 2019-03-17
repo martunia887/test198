@@ -8,4 +8,4 @@ yarn add @atlaskit/inline-message
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/inline-message).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/inline-message).

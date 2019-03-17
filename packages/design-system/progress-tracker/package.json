@@ -16,7 +16,7 @@
   ],
   "atlaskit": {
     "name": "Progress tracker",
-    "team": "core"
+    "team": "design-system"
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-22",
   "dependencies": {

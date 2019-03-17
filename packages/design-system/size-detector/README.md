@@ -9,7 +9,7 @@ yarn add @atlaskit/size-detector
 ```
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/size-detector).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/size-detector).
 
 
 ## Acknowledgements

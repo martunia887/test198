@@ -10,4 +10,4 @@ yarn add @atlaskit/progress-indicator
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/progress-indicator).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/progress-indicator).

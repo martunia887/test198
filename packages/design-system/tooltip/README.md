@@ -10,4 +10,4 @@ yarn add @atlaskit/tooltip
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/tooltip).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/tooltip).

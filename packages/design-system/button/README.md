@@ -11,4 +11,4 @@ yarn add @atlaskit/button
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/button).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/button).

@@ -15,4 +15,4 @@ yarn add @atlaskit/tag
 
 ## Usage
 
-Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/core/tag).
+Detailed docs and example usage can be found [here](https://atlaskit.atlassian.com/packages/design-system/tag).

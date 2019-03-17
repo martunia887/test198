@@ -40,7 +40,7 @@ type Props = {
   actions?: Array<ActionType>,
   /*
     An Icon component to be rendered instead of the default icon for the component.
-    This should only be an `@atlaskit/icon` icon. You can check out [this example](/packages/core/section-message/example/custom-icon)
+    This should only be an `@atlaskit/icon` icon. You can check out [this example](/packages/design-system/section-message/example/custom-icon)
     to see how to provide this icon.
   */
   icon?: ElementType,
