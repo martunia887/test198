@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renderer - Email - ADF to MJML chould convert adf -> mjml 1`] = `
+Object {
+  "attributes": Object {},
+  "children": Array [
+    Object {
+      "attributes": Object {},
+      "children": Array [
+        Object {
+          "attributes": Object {
+            "level": 3,
+          },
+          "children": Array [
+            Object {
+              "attributes": undefined,
+              "content": "inlineCard with url",
+              "tagName": "mj-text",
+            },
+          ],
+          "content": undefined,
+          "tagName": "mj-text",
+        },
+        Object {
+          "attributes": undefined,
+          "children": Array [
+            Object {
+              "attributes": undefined,
+              "content": "Lorem ipsum",
+              "tagName": "mj-text",
+            },
+            Object {
+              "attributes": Object {
+                "url": "https://extranet.atlassian.com/pages/viewpage.action?pageId=3088533424",
+              },
+              "content": undefined,
+              "tagName": "mj-text",
+            },
+            Object {
+              "attributes": undefined,
+              "content": "dolor sit amet",
+              "tagName": "mj-text",
+            },
+          ],
+          "content": undefined,
+          "tagName": "mj-text",
+        },
+      ],
+      "tagName": "mj-body",
+    },
+  ],
+  "tagName": "mjml",
+}
+`;
+
+exports[`Renderer - Email - ADF to MJML chould convert very simple adf -> mjml -> html 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "formattedMessage": "Line undefined of undefined (mj-text) — mj-text cannot be used inside mj-body, only inside: mj-attributes, mj-column, mj-hero",
+      "line": undefined,
+      "message": "mj-text cannot be used inside mj-body, only inside: mj-attributes, mj-column, mj-hero",
+      "tagName": "mj-text",
+    },
+  ],
+  "html": "<!doctype html>
+<html xmlns=\\"http://www.w3.org/1999/xhtml\\" xmlns:v=\\"urn:schemas-microsoft-com:vml\\" xmlns:o=\\"urn:schemas-microsoft-com:office:office\\">
+
+<head>
+  <title>
+  </title>
+  <!--[if !mso]><!-- -->
+  <meta http-equiv=\\"X-UA-Compatible\\" content=\\"IE=edge\\">
+  <!--<![endif]-->
+  <meta http-equiv=\\"Content-Type\\" content=\\"text/html; charset=UTF-8\\">
+  <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\">
+  <style type=\\"text/css\\">
+    #outlook a {
+      padding: 0;
+    }
+
+    .ReadMsgBody {
+      width: 100%;
+    }
+
+    .ExternalClass {
+      width: 100%;
+    }
+
+    .ExternalClass * {
+      line-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if !mso]><!-->
+  <style type=\\"text/css\\">
+    @media only screen and (max-width:480px) {
+      @-ms-viewport {
+        width: 320px;
+      }
+
+      @viewport {
+        width: 320px;
+      }
+    }
+  </style>
+  <!--<![endif]-->
+  <!--[if mso]>
+        <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+        </xml>
+        <![endif]-->
+  <!--[if lte mso 11]>
+        <style type=\\"text/css\\">
+          .outlook-group-fix { width:100% !important; }
+        </style>
+        <![endif]-->
+  <!--[if !mso]><!-->
+  <link href=\\"https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700\\" rel=\\"stylesheet\\" type=\\"text/css\\">
+  <style type=\\"text/css\\">
+    @import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700);
+  </style>
+  <!--<![endif]-->
+  <style type=\\"text/css\\">
+  </style>
+</head>
+
+<body>
+  <div style=\\"\\">
+    <div style=\\"font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:left;color:#000000;\\"> !!!!!!! -----> SIMPLE TEXT <----- !!!!!! </div> </div> </body> </html>",
+}
+`;

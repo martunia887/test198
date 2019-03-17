@@ -31,6 +31,9 @@
     "@atlaskit/status": "^0.5.1",
     "@atlaskit/task-decision": "^12.0.1",
     "@atlaskit/theme": "^8.0.0",
+    "mjml": "^4.4.0-beta.1",
+    "mjml-core": "^4.4.0-beta.1",
+    "mjml-validator": "^4.4.0-beta.1",
     "prosemirror-model": "^1.7.0",
     "raf-schd": "^2.1.0",
     "react-loadable": "^5.1.0"
@@ -53,6 +56,7 @@
     "@atlaskit/util-data-test": "^10.2.5",
     "@atlaskit/visual-regression": "^0.0.1",
     "@types/prosemirror-model": "^1.5.0",
+    "@types/mjml": "^4.0.2",
     "@types/puppeteer": "^1.12.1",
     "@types/react-loadable": "^5.4.1",
     "enzyme": "^3.7.0",
