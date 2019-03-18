@@ -1,0 +1,7007 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "panel",
+      "attrs": {
+        "panelType": "info"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "text": "The Fabric team just completed a massive Q1 innovation week and we wanted to share some of the awesome projects worked on. Here we go… ",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Innovation Week Projects:",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "extension",
+      "attrs": {
+        "layout": "default",
+        "extensionType": "com.atlassian.confluence.macro.core",
+        "extensionKey": "toc",
+        "text": " | maxLevel = 2",
+        "parameters": {
+          "macroParams": {
+            "maxLevel": {
+              "value": "2"
+            }
+          },
+          "macroMetadata": {
+            "macroId": {
+              "value": "bc443ab6-2b2d-4652-983c-6cccdaeb95b0"
+            },
+            "schemaVersion": {
+              "value": "1"
+            },
+            "title": {
+              "key": "org.randombits.confluence.toc.toc.label"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Emoji bullets",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:1f96567a-6867-4786-964b-102b3e1c7c5c",
+            "text": "@Eduard Shvedai"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = WIP | colour = Yellow",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Yellow"
+                },
+                "title": {
+                  "value": "WIP"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "30799d49-2404-4f44-aef6-6702cb252077"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=WIP"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - bullet lists that contain emojis instead of bullet points",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered and next steps",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - I’ve built the working prototype: ",
+                  "type": "text"
+                },
+                {
+                  "text": "demo",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "http://5b6cc4553813f0663347991c.ak-mk-2-staging.netlify.com/examples/editor/editor-core/full-page"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": ". Next steps: ",
+                  "type": "text"
+                }
+              ]
+            },
+            {
+              "type": "orderedList",
+              "attrs": {
+                "order": 1
+              },
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "find a place for emoji bullets in editor roadmap ",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "create an ADF proposal ",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "emoji",
+                          "attrs": {
+                            "id": "1f6a2",
+                            "text": "🚢",
+                            "shortName": ":ship:"
+                          }
+                        },
+                        {
+                          "text": " ",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Learnings",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - I’ve learned how a combination of simple features could create something cool and innovative. All credits to ",
+                  "type": "text"
+                },
+                {
+                  "type": "mention",
+                  "attrs": {
+                    "id": "557058:14f955e1-0b75-4e74-bc5e-2e6463d7fe73",
+                    "text": "@Bradley Rodgers"
+                  }
+                },
+                {
+                  "text": " for the idea.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Images",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "mediaSingle",
+              "attrs": {
+                "layout": "center"
+              },
+              "content": [
+                {
+                  "type": "media",
+                  "attrs": {
+                    "__fileSize": 130985,
+                    "__fileMimeType": "image/gif",
+                    "width": "424",
+                    "id": "051eb180-4d71-4eab-8ab2-d73281194a14",
+                    "collection": "contentId-731480733",
+                    "type": "file",
+                    "__fileName": "emoji-bullets.gif",
+                    "height": "507"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Bundle Size Inspector",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:1cf7c44b-4b6d-4cb9-8aee-3dd955490ef2",
+            "text": "@Scott Sidwell"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "0b337d37-96f3-4160-9645-544f86bad5de"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "See ",
+          "type": "text"
+        },
+        {
+          "text": "https://hello.atlassian.net/wiki/spaces/~ssidwell/blog/2018/08/20/271350717/bundle-inspector+easy+bundle+analysis",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://hello.atlassian.net/wiki/spaces/~ssidwell/blog/2018/08/20/271350717/bundle-inspector+easy+bundle+analysis"
+              }
+            }
+          ]
+        },
+        {
+          "text": " for a write-up",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Make it really easy for Platform teams to work out why Jira/Confluence/Bitbucket are taking so long to load, without having to pull down their repos and build them locally",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "What was delivered and next steps",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "A NPM CLI tool called bundle-inspector, that you can point at a website with source-maps and generate a whole bunch of insight into how much duplication / unused code there is.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 991879,
+            "__fileMimeType": "image/png",
+            "width": "2793",
+            "id": "64d3b40e-2b15-4e82-a63a-700c85b9d8ae",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "image-20180821-010246.png",
+            "height": "2062"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Get Apdex on AK site!",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:47ffeef5-cea3-46d0-956e-668dad8848e5",
+            "text": "@Jony Cheung"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:b8ef8c49-c789-4d00-a432-41c7b91a004b",
+            "text": "@Raja Bellebon"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:c1c16f4f-03bf-4d57-aee6-ea94c6f3151f",
+            "text": "@Ben Conolly"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "81f615d2-a5e0-4d84-9901-e33a05220832"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": "- Get Apdex for Atlaskit Website so we can track and improve our components' performance.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered and next steps -",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " A ",
+                  "type": "text"
+                },
+                {
+                  "text": "dashboard on Redash",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://redash.data.internal.atlassian.com/dashboard/fabric-apdex"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": " showing full page load Apdex for Atlaskit website. Next steps are in this ",
+                  "type": "text"
+                },
+                {
+                  "text": "PC-7168",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://hello.atlassian.net/browse/PC-7168"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": " ticket.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Learnings",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "-",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " We have very loose definition of Apdex. ",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Images – ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 51675,
+            "__fileMimeType": "image/png",
+            "width": "713",
+            "id": "ddb75d78-d91e-4c11-918f-87333109be91",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "Screen Shot 2018-08-20 at 5.56.08 PM.png",
+            "height": "447"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Editor runtime performance monitoring",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:1f96567a-6867-4786-964b-102b3e1c7c5c",
+            "text": "@Eduard Shvedai"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "d1fc29bb-cdc4-4e8e-97df-8cb47f847f85"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": "- Autonomously measure rendering time of every ADF node in Fabric Editor.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered and next steps ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": "- a micros service that uses puppeteer for measuring rendering time of a posted ADF document and scheduled pipeline script for uploading benchmark data to ",
+                  "type": "text"
+                },
+                {
+                  "text": "splunk",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://splunk.paas-inf.net/en-US/app/search/fabric_editor_runtime_performance"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": ".",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Learnings",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - runtime performance is very sensitive to available cpu and memory, therefore we won’t be able to reliably use it for performance testing (e.g. fail a branch build if performance get worse). Even running such tests on a same machine would be flaky if there’s a heavy background process running in parallel. However, for external benchmarking system (micros service) having spikes in performance would not be critical as we could build a performance graph based on average data for a certain period (e.g. last 24 hours) and alert us whenever performance degrades. ",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "Next steps: ",
+                  "type": "text"
+                }
+              ]
+            },
+            {
+              "type": "orderedList",
+              "attrs": {
+                "order": 1
+              },
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "upload data to redash",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "identify the baseline (what is slow)",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "measure memory usage",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "create a system that would diagnose problems",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Images",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "mediaSingle",
+              "attrs": {
+                "layout": "center"
+              },
+              "content": [
+                {
+                  "type": "media",
+                  "attrs": {
+                    "__fileSize": 163291,
+                    "__fileMimeType": "image/png",
+                    "width": "1832",
+                    "id": "0eef32f8-adc3-474a-b31c-f1b39e5290b8",
+                    "collection": "contentId-731480733",
+                    "type": "file",
+                    "__fileName": "Screen Shot 2018-08-27 at 8.14.37 am.png",
+                    "height": "800"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Atlassian Customer Feedback Visualiser ✨",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:4e9c26be-e5a1-4861-b0b6-c4dc680ac5f6",
+            "text": "@Abhi Kishore"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:4d12e1ff-d9c1-4474-b593-c814d1c169a6",
+            "text": "@Samuel Attard"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "c89779a7-7e15-4c4c-8091-9e1ef67138b6"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " (",
+          "type": "text"
+        },
+        {
+          "text": "go/fabric-feedback",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "http://go.atlassian.com/fabric-feedback"
+              }
+            }
+          ]
+        },
+        {
+          "text": ")",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " – being on a Platform Team, it can sometimes be difficult to empathise with the pain which customers experience whilst using our components and products at Atlassian. Fabric Feedback was an Innovation Week project which looked to visualise public feedback via Twitter, combined with details about how customers are feeling through sentiment analysis. ",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " – a dashboard experience which searches for tweets tagged with Atlassian + <optional query> was shipped. Each tweet was visualised and enhanced with information regarding the sentiment of the customer/tweet using the IBM Watson API, and NER through Stanford NLP (scoring range: -1 = max negative, 1 = max positive). The dashboard accordingly provides filters for tweets by tag and sentiment, as well as overall statistics on how customers are feeling.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Any learnings? – ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": "never trust/visualise public data without cleaning it first! There were (and still are) many tweets from bots and official Atlassian accounts being captured. One of the next steps for this project is to make it more relevant and clean!",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Images – ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "wrap-left"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 84445,
+            "__fileMimeType": "image/png",
+            "width": "1134",
+            "id": "aff6e538-669f-4354-807a-4b868d0a48c5",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "image-20180820-063122.png",
+            "height": "404"
+          }
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "wrap-right"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 1492496,
+            "__fileMimeType": "image/png",
+            "width": "3840",
+            "id": "77326920-e7d5-4266-9dee-06cf10dd63e9",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "image-20180820-063247.png",
+            "height": "2204"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Entity Service Performance ",
+          "type": "text"
+        },
+        {
+          "type": "emoji",
+          "attrs": {
+            "id": "1f680",
+            "text": "🚀",
+            "shortName": ":rocket:"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:76c3d5bc-9a84-4916-8f01-fc0e46fdc294",
+            "text": "@Samuel Reis"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "e64e89f0-c6e4-48a5-a052-c8ceeb513512"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": "– The Entity Service is a new services that is being built in Media to support a part of the core data model for files. As such, reliability and performance of this service is critical. Lately, there had been a concern around the tail end latency of the service, which I set out to measure and improve.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered and next steps",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " – It turned out that the ",
+                  "type": "text"
+                },
+                {
+                  "text": "express-openapi",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " middleware was responsible for a large amount of CPU usage in the service, which introduced event loop lag, causing elevated tail end latency. I authored a series of PRs to the middleware that were released as express-openapi 2.0.0 and improved runtime by up to 1000X, reducing 99p latency from 273ms to 76ms.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Any learnings?",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " – We learned how to effectively use ",
+                  "type": "text"
+                },
+                {
+                  "text": "Linux perf",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://perf.wiki.kernel.org/index.php/Main_Page"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": " and ",
+                  "type": "text"
+                },
+                {
+                  "text": "Netflix flamescope",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/Netflix/flamescope"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": " to diagnose hot spots in Node.js applications, which will hopefully be featured in a follow-up blog.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Atlaskit Changesets v2",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:9512f4e4-3319-4d30-a78d-7d5f8ed243ae",
+            "text": "@Luke Batchelor"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "0c7c98ab-cd3c-4e26-b5a3-cf81182e434b"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "We wanted to make creating changesets easier and less error prone",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "We delivered exactly that, we managed to rewrite all of the changeset creation logic to no longer require asking questions about bumping dependents.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Check out our ",
+                  "type": "text"
+                },
+                {
+                  "text": "blog",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://hello.atlassian.net/wiki/spaces/AtlasKit/blog/2018/08/15/269039767/"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": "!",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "mediaSingle",
+              "attrs": {
+                "layout": "center"
+              },
+              "content": [
+                {
+                  "type": "media",
+                  "attrs": {
+                    "__fileSize": 397547,
+                    "__fileMimeType": "image/gif",
+                    "width": "776",
+                    "id": "01282259-616b-4b92-9f46-ecb98e4baa3d",
+                    "collection": "contentId-731480733",
+                    "type": "file",
+                    "__fileName": "newChangeset.gif",
+                    "height": "488"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Add TypeScript support to ",
+          "type": "text"
+        },
+        {
+          "text": "extract-react-types",
+          "type": "text",
+          "marks": [
+            {
+              "type": "code"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:0b97ef40-a145-4b6a-b4e9-da3e4b50ddec",
+            "text": "@Agnes Ro"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5b29a0b8c1daa065f98fe943",
+            "text": "@Nathan Flew"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:2b35bdc5-4a0d-4965-a1e0-a69f7ea01816",
+            "text": "@Oscar Wallhult"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:199aa917-eff8-4da3-8cf3-55353c21eee1",
+            "text": "@Rifat Nabi"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = In PR | colour = Blue",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Blue"
+                },
+                "title": {
+                  "value": "In PR"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "93cbe7be-8903-4ae6-8617-c90abe6bb3a9"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Blue&title=In+PR"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Atlaskit flow packages can generate dynamic documentation from code. Which is super helpful for consumers. On the other hand, editor consumers kept complaining about the lack of our documentation. It's really hard to keep documentation up to date without proper tooling. So, we decided to add TypeScript support to ",
+          "type": "text"
+        },
+        {
+          "text": "extract-react-types",
+          "type": "text",
+          "marks": [
+            {
+              "type": "code"
+            }
+          ]
+        },
+        {
+          "text": ". Now all TypeScript packages (editor, elements & media) inside Atlaskit will be benefitted from this.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "What was delivered and next steps",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "After merging several upstream PRs",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "https://github.com/atlassian/extract-react-types/pull/26",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/atlassian/extract-react-types/pull/26"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "https://github.com/atlassian/extract-react-types/pull/27",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/atlassian/extract-react-types/pull/27"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "https://github.com/atlassian/extract-react-types/pull/28",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/atlassian/extract-react-types/pull/28"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "https://github.com/Noviny/pretty-proptypes/pull/2",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/Noviny/pretty-proptypes/pull/2"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "https://github.com/babel-utils/babel-explode-module/pull/5",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/babel-utils/babel-explode-module/pull/5"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "https://github.com/babel-utils/babel-file/pull/1",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/babel-utils/babel-file/pull/1"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "https://github.com/babel-utils/babel-helper-simplify-module/pull/1",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://github.com/babel-utils/babel-helper-simplify-module/pull/1"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Now, we have a ",
+          "type": "text"
+        },
+        {
+          "text": "Atlaskit PR",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/2822/upgrade-extract-react-types-and-pretty/diff"
+              }
+            }
+          ]
+        },
+        {
+          "text": " waiting to be merged.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Check the documentation",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "http://5b834e5e73f2cf2ed9b035cf.ak-mk-2-staging.netlify.com/packages/editor/editor-core"
+              }
+            }
+          ]
+        },
+        {
+          "text": " in PR branch.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Learnings",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Avoid ",
+                  "type": "text"
+                },
+                {
+                  "text": "export *",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " if you can.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Recursive types are painful to work with.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Images",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 266217,
+            "__fileMimeType": "image/png",
+            "width": "1062",
+            "id": "14d64f18-5a32-46ac-b69c-3244b1163e6a",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "editor-props.png",
+            "height": "1776"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Media group galleries",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:f9c4fdc8-455d-420f-b13d-18ff5a18b5c1",
+            "text": "@Aleksandr Sasha Motsjonov"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:14f955e1-0b75-4e74-bc5e-2e6463d7fe73",
+            "text": "@Bradley Rodgers"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:920a8831-d8f4-46a8-845b-002c8c75bf6c",
+            "text": "@Hector Zarco Garcia"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = In PR | colour = Blue",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Blue"
+                },
+                "title": {
+                  "value": "In PR"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "1ef0cfba-00c4-4d07-8455-0bd710e15477"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Blue&title=In+PR"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "text": ": We want to improve the current media-group experience in the editor, there is no interaction at all in the current one + we wanted to provide a nice a grid view and emphasize images",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "What was delivered and next steps",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "text": ": we shipped a new react component that contains all the logic to create and manage the grid experience, preview + edit mode.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "typescript"
+      },
+      "content": [
+        {
+          "text": "import {MediaGrid} from '@ataskit/media-filmstrip';\n\nconst identifiers = [{id: 'media-id-1'}, {id: 'media-id-2'}]\n\n<MediaGrid \n  isInteractive\n  context={mediaContext} \n  items={identifiers} \n/>",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Any learnings?",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "text": ": Try to get something small into master first, instead of coming up with a very advance solution to a problem, later validate that thing is true, iterate, repeat.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Images:",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Improve/Explore documentation via automated tooling",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:ac8fa06c-c95b-4812-b5fa-ffbf7621db39",
+            "text": "@Ali Chamas"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = WIP | colour = Yellow",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Yellow"
+                },
+                "title": {
+                  "value": "WIP"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "04d752c9-44a9-4e0f-a09b-04aa52b34c10"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=WIP"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Concept:",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "text": " To explore methods and develop tooling to generate documentation from repo source",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "What was delivered and next steps:",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "text": " A tool was developed as a proof of concept which walks a repo (Atlaskit used for test) and produces static documentation on every files imports/exports (dependencies). The content was also used to deliver a talk at the Front End Forum around Babel AST.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "https://github.com/dragonworx/jst",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://github.com/dragonworx/jst"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Any learnings: ",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "text": "Many good details about working with Babel AST, and the possibilities for future tooling",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Elements on Helium",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:0c514804-d6e2-4299-acbe-bc8bb7e671ae",
+            "text": "@Tara Tjandra"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:bf353c76-54f2-41d7-a6cf-5aba6a936806",
+            "text": "@Craig Petchell"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:241636eb-4280-4663-99a2-7dc66b83f686",
+            "text": "@Eduardo Soares"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = WIP | colour = Yellow",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Yellow"
+                },
+                "title": {
+                  "value": "WIP"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "1ed4e56e-59d6-4776-ab9a-6f7e454210de"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=WIP"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": "+",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "b418cdf6-bbfd-4cce-8b62-3ee71cfece0e"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "https://product-fabric.atlassian.net/wiki/spaces/FS/pages/726401140/Fabric+Innovation+Week+-+Elements+On+Helium",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://product-fabric.atlassian.net/wiki/spaces/FS/pages/726401140/Fabric+Innovation+Week+-+Elements+On+Helium"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Performance improvements to Fabric Elements frontend components by reducing bundle size, introducing code splitting and extracting our components to separate packages.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "What was delivered and next steps/Any Learnings/Images",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "https://product-fabric.atlassian.net/wiki/spaces/FS/blog/2018/08/10/729155225/Elements+on+Helium+Innovation+Week+Wrap-up",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://product-fabric.atlassian.net/wiki/spaces/FS/blog/2018/08/10/729155225/Elements+on+Helium+Innovation+Week+Wrap-up"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Incredible",
+          "type": "text",
+          "marks": [
+            {
+              "type": "confluenceInlineComment",
+              "attrs": {
+                "reference": "617fc7ba-07e3-4cec-9052-46d0fdc06013"
+              }
+            }
+          ]
+        },
+        {
+          "text": " 4.0™",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:ff721128-093e-4357-8d8e-8caf869f577f",
+            "text": "@Artur Bodera"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:793f6871-7058-4b6c-a574-2def9d7edb4b",
+            "text": "@Bogdan Vatulya"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5a137d066a747c0e71aa20f6",
+            "text": "@Callum Osmotherly"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:6324c749-b4a7-402c-834b-d22bfce456b1",
+            "text": "@Luciano Leggieri"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:8d37eb0e-f1e2-4cb3-9382-9aad470cdeae",
+            "text": "@Pavel 'Pascha' Aksenkin"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:5173035b-1edf-4e79-b1fe-bb9443619a8f",
+            "text": "@Stefano Dalpiaz"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557058:5575cf61-e1b0-447f-9ccd-44267f7b0ff8",
+            "text": "@Tong Li"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "648faccf-f389-4873-b885-148e4ef63c7e"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "https://hello.atlassian.net/wiki/spaces/~abodera/pages/261043745",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://hello.atlassian.net/wiki/spaces/~abodera/pages/261043745"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "We wanted to make the Node.js stack:",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "modular",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " — easily add or remove unnecessary features",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "easy to start working with",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " — everyone familiar with express-style frameworks (or koa in particular) should be able to understand what is going on and make changes fast.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "minimum boilerplate",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " — while incredible monolith did a lot of work for us, maintaining the apps on it, or on several tools build on top (incredible-runner, terrarium), was quite tedious and required a lot of work. The new incredible should put the focus on the business logic.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "type safety",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " — with Typescript evolving, we want to detect the issues even before we run the tests. ",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "text": "What we delivered",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "We have created some of the necessary packages:",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "koa-config",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " to manage the modular config of the service and of the other middleware packages;",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "koa-asap",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " to generate or validate ASAP tokens;",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "koa-logging-opentracing",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " to abstract away sending logs and tying requests together;",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "koa-cancellable",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " to drop the long-lasting operations when the connection is dropped;",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "koa-statsd-metrics",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " to add the ability to send metrics and send some standard HTTP metrics.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "To find about all the supported features we also created a reference app that demonstrates what is possible. Here’s how the main file of the reference service looks:",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "typescript"
+      },
+      "content": [
+        {
+          "text": "export default (config: Config) => {\n  const app = new Koa();\n\n  // Provides ctx.config in routes\n  app.context.config = config;\n  \n  // Provides ctx.logger and ctx.tracer\n  attachLoggingAndTracing(app);\n  \n  // Provides ctx.asapGenerator\n  attachAsapGenerator(app, config.asap);\n  \n  // Provides ctx.metrics (via StatsD)\n  attachStatsDMetrics(app, config.metrics);\n  \n  // Add request-scoped cancellation\n  app.use(cancellationMiddleware);\n  \n  // Count number of incoming requests\n  app.use(requestCounterMiddleware);\n\n  // OpenAPI request and response validation\n  app.use(oas({\n    file: `${__dirname}/../../openapi.yaml`,\n    endpoint: '/openapi.json',\n    uiEndpoint: '/api.html',\n    validatePaths: ['/api'],\n    validateResponse: process.env.NODE_ENV === 'production' ? false : true\n  }));\n\n  // Attach all our routes\n  app.use(routes);\n\n  return app;\n};",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "text": "Next steps",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "One of the biggest missing parts of the project is an abstracted HTTP client interface plus at least one reference implementation. With this ready, we should be able to start switching the smaller services right away.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "That’s why we continue the work on ",
+          "type": "text"
+        },
+        {
+          "text": "ShipIt 43",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://shipit.atlassian.net/browse/SHPXLIII-175"
+              }
+            }
+          ]
+        },
+        {
+          "text": "! Take a look at what we do next in this write-up: ",
+          "type": "text"
+        },
+        {
+          "text": "https://hello.atlassian.net/wiki/spaces/~abodera/pages/271403890/Node.js+Stack+next-gen+A.K.A.+Incredible+4.0+RC+ShipIt+Aug+23th",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://hello.atlassian.net/wiki/spaces/~abodera/pages/271403890/Node.js+Stack+next-gen+A.K.A.+Incredible+4.0+RC+ShipIt+Aug+23th"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "And, of course, none of it would be worth it without dogfooding. Teamwork Ecosystem part is going to switch its services to the new stack, starting with ",
+          "type": "text"
+        },
+        {
+          "text": "this PR for inbound-event-service",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://bitbucket.org/atlassian/inbound-event-service/pull-requests/49/feat-upgrade-to-incredible-4/diff"
+              }
+            }
+          ]
+        },
+        {
+          "text": ".",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Monday metrics",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5a838414a08cc5310a6c9a63",
+            "text": "@Vijay Sutrave"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = WIP | colour = Yellow",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Yellow"
+                },
+                "title": {
+                  "value": "WIP"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "840cbbcf-15e2-4a43-b392-e3a89f13a6b6"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=WIP"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " + ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "741360dc-12fa-470e-87da-5d268152f188"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "As an effort to make devs more aware of our current Metrics, etc, and stride towards a more metrics-driven development pattern, I decided to build a chat bot which would bring the current Editor metrics pulled from various sources (Redash, Bitbucket, NPM, etc) right into the Editor Room (Yes, it is future proofed, a Slack bot counterpart was built too).",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "What was delivered and next steps",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Both Slack and Stride bots were developed and are configured to ping the room every Monday. The service is running on Macros. ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Next step would be to try and make this service a generic one so other teams can hook onto it to extend it and create their own Metrics bot. Also to pair up with our Product Managers to optimise the content in the ping.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Any learnings",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "It was interesting to learn how to setup a service with Macros and how they work, and also of course setting up an Atlassian App ",
+          "type": "text"
+        },
+        {
+          "type": "emoji",
+          "attrs": {
+            "id": "1f642",
+            "text": "🙂",
+            "shortName": ":slight_smile:"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Images",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Stride - ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 400549,
+            "__fileMimeType": "image/png",
+            "width": "1674",
+            "id": "8fbe4358-2c91-46b6-a9ad-5ffd59a24314",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "Screen Shot 2018-08-27 at 10.49.01 am.png",
+            "height": "1818"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Slack: ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 521983,
+            "__fileMimeType": "image/png",
+            "width": "2898",
+            "id": "49f3a6d2-1038-41eb-bfae-196a6eaffab9",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "Screen Shot 2018-08-27 at 10.56.55 am.png",
+            "height": "2090"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Design System Tools - ADG sketch plugin versioning script",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:5990ce71-4194-4da8-af87-f74493444a4b",
+            "text": "@Allard van Helbergen"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:63861565-d51a-4275-9f4d-c575ce7b2e8c",
+            "text": "@Jacob Miller"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "http://go/designsystemtools",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "http://go/designsystemtools"
+              }
+            }
+          ]
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = In PR | colour = Blue",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Blue"
+                },
+                "title": {
+                  "value": "In PR"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "25543c39-a42a-4aaa-84ca-a28ab1ed3c19"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Blue&title=In+PR"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "text": "We’ve been working on a plugin for sketch to allow designers across all of Atlassian to consume the ",
+          "type": "text"
+        },
+        {
+          "text": "GUI pack",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "http://go/guipack"
+              }
+            }
+          ]
+        },
+        {
+          "text": " in an easy way. We’re 99% there. We wrote a version script that would allow us to autogenerate an appcast file hooking into Sketch’s auto-update system. ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "What was delivered and next steps",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "text": "We wrote the versioning script and the publishing script. They seem to work… ",
+          "type": "text"
+        },
+        {
+          "type": "emoji",
+          "attrs": {
+            "id": "1f92a",
+            "text": "🤪",
+            "shortName": ":crazy_face:"
+          }
+        },
+        {
+          "text": "  ",
+          "type": "text"
+        },
+        {
+          "text": "https://bitbucket.org/atlassian/dst-atlassian-sketch-plugin/pull-requests/15",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://bitbucket.org/atlassian/dst-atlassian-sketch-plugin/pull-requests/15"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Any learnings?",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "NPM Lifecycle methods ",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "NPM has really useful lifecycle hooks that you can tie your scripts into. As well as pre- and post- hooks allowing you to wrap NPM commands magically. This allows you to manipulate multiple files during the version step and bump everything in a single commit. ",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "https://docs.npmjs.com/cli/version",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://docs.npmjs.com/cli/version"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Statlas",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "We have an internal static hosting service. Why had I never heard of this before?! ",
+                  "type": "text"
+                },
+                {
+                  "text": "https://statlas.prod.atl-paas.net/",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://statlas.prod.atl-paas.net/"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 597624,
+            "__fileMimeType": "image/gif",
+            "width": "479",
+            "id": "010d2e1d-ef95-4fd1-8443-5a866711e028",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "Version-script.gif",
+            "height": "267"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Retrieve individual tasks within pf-content-service",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:a4a0fd39-b8ca-4ef1-b477-a391707a34d8",
+            "text": "@Paul Curren"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = WIP | colour = Yellow",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Yellow"
+                },
+                "title": {
+                  "value": "WIP"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "9a52aab2-f60e-4520-a708-adf89d7df8d0"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=WIP"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Full write up at: ",
+          "type": "text"
+        },
+        {
+          "text": "Inno Week Demo: Fabric Elements in the pf-content-service",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://product-fabric.atlassian.net/wiki/spaces/PRODUCT/blog/2018/08/15/730760200/Inno+Week+Demo%3A+Fabric+Elements+in+the+pf-content-service"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "[Metrics] evaluate SignalFX, Wavefront",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5aba0a7b057b1b2a9814803c",
+            "text": "@Waldemar Neto"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "192fb4f2-b4d0-4fdc-b464-dd48fdec0bb7"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "text": "As part of the decision ",
+          "type": "text"
+        },
+        {
+          "text": "for the new monitoring service",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://hello.atlassian.net/wiki/spaces/OBSERVABILITY/pages/245511695/DACI+-+Which+solution+will+be+our+future+monitoring+platform"
+              }
+            }
+          ]
+        },
+        {
+          "text": ", the observability/metrics team asked for volunteers to help to evaluate some 3party vendors to replace Datadog at Atlassian.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "During the innovation week, I tested 2 possible candidates, Wavefront and SignalFX. It was easy to test (",
+          "type": "text"
+        },
+        {
+          "text": "thanks to Observability team that synced all our metrics which are on Datadog to flow automagically to the new tools",
+          "type": "text",
+          "marks": [
+            {
+              "type": "em"
+            }
+          ]
+        },
+        {
+          "text": ") and I could replicate the same dashboards we have in Datadog on both services which made easy to compare and test.",
+          "type": "text"
+        },
+        {
+          "type": "hardBreak"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "What was delivered and next steps",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "text": "I’m writing a blog post about both services and given the DACI is about to be decided and the most probable to be chosen is SignalFX the next step will be a ",
+          "type": "text"
+        },
+        {
+          "text": "brownbag",
+          "type": "text",
+          "marks": [
+            {
+              "type": "em"
+            }
+          ]
+        },
+        {
+          "text": " session to the Teamwork Ecosystem team and then prepare migration of our dashboards from Datadog to SignalFX.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Any learnings?",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "text": "A lot, could use and learn two new monitoring service providers which I didn’t know before.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Images",
+          "type": "text",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Wavefront",
+          "type": "text",
+          "marks": [
+            {
+              "type": "em"
+            }
+          ]
+        },
+        {
+          "text": " Teamwork Ecosystem dashboards",
+          "type": "text"
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "text": "https://atlassian.wavefront.com/dashboard/teamwork-ecosystem-ops#_v01(g:(c:off,d:604800,ls:!f,s:1533686640)",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://atlassian.wavefront.com/dashboard/teamwork-ecosystem-ops#_v01(g:(c:off,d:604800,ls:!f,s:1533686640)"
+              }
+            }
+          ]
+        },
+        {
+          "text": ")",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 800486,
+            "__fileMimeType": "image/png",
+            "width": "3324",
+            "id": "cd81f976-c0a4-4b22-b80c-e74422377f57",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "Screen Shot 2018-08-23 at 10.07.19 am.png",
+            "height": "932"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "SignalFX",
+          "type": "text",
+          "marks": [
+            {
+              "type": "em"
+            }
+          ]
+        },
+        {
+          "text": " Teamwork Ecosystem dashboards",
+          "type": "text"
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "text": "https://app.signalfx.com/#/dashboard/Dkdesb5AYBc?startTimeUTC=1533776069000&endTimeUTC=1534380869000",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://app.signalfx.com/#/dashboard/Dkdesb5AYBc?startTimeUTC=1533776069000&endTimeUTC=1534380869000"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 570884,
+            "__fileMimeType": "image/png",
+            "width": "3316",
+            "id": "8df1ea1d-ec3d-442f-aa33-330d28a99e4d",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "Screen Shot 2018-08-23 at 10.58.06 am.png",
+            "height": "1414"
+          }
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Spiking Undo Redo for editor on iOS",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:3281130f-b88e-4b1f-9631-331ac7f02afc",
+            "text": "@Le Huy"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "9ed50ed9-7ced-48ed-83e9-b50619d694a6"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 4
+      },
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "It’s clear that any editing application need an Undo/Redo Manager",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 4
+      },
+      "content": [
+        {
+          "text": "What was delivered and next steps",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "Deliver",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "I spiked on various solutions to figure out what is the right solution for the editor team. There are 4 solutions with various pros and cons:",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Using the current code from WebEditor",
+                  "type": "text"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Pros: Simplest.",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Cons: ",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "bulletList",
+                      "content": [
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "Not able to save the undo versions for new sessions. ",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "Not able to maintain the memory.",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Cache various versions of ADF on the client-side",
+                  "type": "text"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Pros: ",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "bulletList",
+                      "content": [
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "Flexible, simpler than other solutions, ",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "The client-side is able to handle the data.",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Cons: Not able to scale for big data. (Copied various big documents increase the space consumption significantly)",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Use native Undo Manager on Foundation.",
+                  "type": "text"
+                }
+              ]
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Pros: ",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "bulletList",
+                      "content": [
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "Undo Manager will break ADF into steps, so it saves space.",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "Able to encode and decode data",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "Able to copy the undo / redo data between platforms (iOS <-> Mac)",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "Able to use undo / redo on many platforms and extensions (iOS, Mac, TV, Watch, Extension, Notification)",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Cons:",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "bulletList",
+                      "content": [
+                        {
+                          "type": "listItem",
+                          "content": [
+                            {
+                              "type": "paragraph",
+                              "content": [
+                                {
+                                  "text": "Need to invest in Man Power",
+                                  "type": "text"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "Next step",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Base on our roadmap and vision for Editor, we could choose appropriate solutions to move forward.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 4
+      },
+      "content": [
+        {
+          "text": "Learnings",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "There is no silver-bullet solutions, always has trade-off.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Private npm package search and detail website",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5b29a0909ebc9456e1185054",
+            "text": "@Henry Zhuang"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "cc1101ea-8c1a-47a5-a91c-f037a71dd307"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " (",
+          "type": "text"
+        },
+        {
+          "text": "go/npm-web",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "http://go/npm-web"
+              }
+            }
+          ]
+        },
+        {
+          "text": ")",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept-  A easy system to find npm modules that Atlassians has published yet.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered and next steps",
+                  "type": "text"
+                }
+              ]
+            },
+            {
+              "type": "orderedList",
+              "attrs": {
+                "order": 1
+              },
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Visit ",
+                          "type": "text"
+                        },
+                        {
+                          "text": "http://go/npm-web",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "link",
+                              "attrs": {
+                                "href": "http://go/npm-web"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "text": " to unlock the whole experience which includes search module and details of the module.",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Might add history versions and module rank.",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Images",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "wrap-left"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 46425,
+            "__fileMimeType": "image/png",
+            "width": "2618",
+            "id": "0d3a73fc-27ef-4b0a-a95c-421c42943ba1",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "home.png",
+            "height": "1946"
+          }
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "wrap-right"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 110486,
+            "__fileMimeType": "image/png",
+            "width": "2618",
+            "id": "83f0f490-7f07-41d6-a225-88d9bd007efc",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "search.png",
+            "height": "1946"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Upgrade Reactions service to new version of the stack",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:c7bd112e-68b8-4b88-8db2-2ced74814146",
+            "text": "@Julien Michel Hoarau"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "6c9b86e1-dfea-4746-ba22-51d03c6470cc"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": "- Migrate reactions service to the new version (Spring boot 2 + WebFlux)",
+                  "type": "text"
+                }
+              ]
+            },
+            {
+              "type": "orderedList",
+              "attrs": {
+                "order": 1
+              },
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Why?",
+                          "type": "text",
+                          "marks": [
+                            {
+                              "type": "strong"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "hardBreak"
+                        },
+                        {
+                          "text": "The new stack is an evolution of our existing reactive stack. The current stack is a patchwork of various libraries to make a reactive stack on legacy tech (servlet). The new stack is fully asynchronous from the webserver (Netty) to the framework (WebFlux). ",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Benefits:",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Faster startup time (30% faster)",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Scale better (half response time at p99)",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Better reactive library (full backpressure support unlike RxJava 1.x)",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Other reasons:",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Hystrix still uses RxJava 1.x",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "RxJava 1.x is EOL",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Spring boot 1.x is EOL next year",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered and next steps",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "orderedList",
+              "attrs": {
+                "order": 1
+              },
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "Reactions service was migrated to the new stack",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "text": "In the process a bunch of common packages were written to facilitate the process for the next service",
+                          "type": "text"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Any learnings?",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "We’ve confirmed that the new stack scales a lot better than the old one.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Better state management for Fabric Elements components",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5aa86db9fff1d42a5df09c99",
+            "text": "@Luiz Pereira"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = In PR | colour = Blue",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Blue"
+                },
+                "title": {
+                  "value": "In PR"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "66361b56-7433-4c63-9988-4659452d6b00"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Blue&title=In+PR"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "https://product-fabric.atlassian.net/wiki/spaces/FS/blog/2018/08/16/730761741/atlaskit+reactions+new+state+management",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://product-fabric.atlassian.net/wiki/spaces/FS/blog/2018/08/16/730761741/atlaskit+reactions+new+state+management"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Introduce FSM library to Synchrony",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:95f1ad9a-2b14-4250-b66f-56f38a38fd2a",
+            "text": "@Richard Cordova"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5ab1a81bf8fe5e2a75958e86",
+            "text": "@Jongwon Choi"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Failed | colour = Yellow",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Yellow"
+                },
+                "title": {
+                  "value": "Failed"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "8eed4895-ea74-4666-b961-bbfd12d45951"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=Failed"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - model Synchrony delta to step generation as a finite state machine, and establish a pattern for clear and maintainable state management",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered and next steps",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - Wait for a better library to come along / re-attempt on a different platform",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Any learnings?",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " Heaps, check out ",
+                  "type": "text"
+                },
+                {
+                  "text": "https://product-fabric.atlassian.net/wiki/spaces/FCS/pages/726433913/Innovation+-+introduce+FSM+to+synchrony",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://product-fabric.atlassian.net/wiki/spaces/FCS/pages/726433913/Innovation+-+introduce+FSM+to+synchrony"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Images",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " - Action shot:",
+                  "type": "text"
+                }
+              ]
+            },
+            {
+              "type": "mediaSingle",
+              "attrs": {
+                "layout": "center"
+              },
+              "content": [
+                {
+                  "type": "media",
+                  "attrs": {
+                    "__fileSize": 68515,
+                    "__fileMimeType": "image/png",
+                    "width": "1419",
+                    "id": "328d5d5e-a80c-4cd8-81d3-ffdae7a1742a",
+                    "collection": "contentId-731480733",
+                    "type": "file",
+                    "__fileName": "rhizome 2018-08-10 11-17-37.png",
+                    "height": "474"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Improving MediaClient on iOS",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:7682b4ed-f491-4cc2-a187-750f7be706fb",
+            "text": "@Vadim Kazakov"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5b0df0f56d76184b7d988bb1",
+            "text": "@Alex Ney"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = WIP | colour = Yellow",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Yellow"
+                },
+                "title": {
+                  "value": "WIP"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "ca74f7b2-3e14-4822-95aa-346ff4014a24"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=WIP"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Concept",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": ". All Media requests in iOS  libraries through the ",
+                  "type": "text"
+                },
+                {
+                  "text": "MediaClient",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " class. Though we have an old working version, there are some problems with it:",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "- it is a monolithic object which is hard to test, because we need to stub the network layer, other tests are not possible;",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "- as a consequence it has a low test coverage about 40%;",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "- it does not retrieve credentials leaving it to the caller, however it seems reasonable to have this step in the client because credentials are required to make a request. This reduced a lot of redundant statements.",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "During this innovation week we targeted to recreate the Media client, make it testable.",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "What was delivered and next steps",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "type": "mention",
+                  "attrs": {
+                    "id": "5b0df0f56d76184b7d988bb1",
+                    "text": "@Alex Ney"
+                  }
+                },
+                {
+                  "text": " came up with ideas how to structure the client better. We started implementing them during this innovation week. Now the client consists of layers:",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "- ",
+                  "type": "text"
+                },
+                {
+                  "text": "HTTPClient ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": "– makes HTTP requests with Alamofire. Coverage 100%, ",
+                  "type": "text"
+                },
+                {
+                  "type": "inlineExtension",
+                  "attrs": {
+                    "extensionType": "com.atlassian.confluence.macro.core",
+                    "extensionKey": "status",
+                    "text": " | title = DONE | colour = Green",
+                    "parameters": {
+                      "macroParams": {
+                        "colour": {
+                          "value": "Green"
+                        },
+                        "title": {
+                          "value": "DONE"
+                        }
+                      },
+                      "macroMetadata": {
+                        "macroId": {
+                          "value": "b1af76b6-fc94-4d89-a904-e7fbfdf562ac"
+                        },
+                        "schemaVersion": {
+                          "value": "1"
+                        },
+                        "placeholder": [
+                          {
+                            "type": "image",
+                            "data": {
+                              "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=DONE"
+                            }
+                          }
+                        ],
+                        "title": {
+                          "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "- ",
+                  "type": "text"
+                },
+                {
+                  "text": "MediaHTTPClient ",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": "– retrieves credentials and makes a request. Uses HTTPClient to make requests. Coverage 98%, ",
+                  "type": "text"
+                },
+                {
+                  "type": "inlineExtension",
+                  "attrs": {
+                    "extensionType": "com.atlassian.confluence.macro.core",
+                    "extensionKey": "status",
+                    "text": " | title = DONE | colour = Green",
+                    "parameters": {
+                      "macroParams": {
+                        "colour": {
+                          "value": "Green"
+                        },
+                        "title": {
+                          "value": "DONE"
+                        }
+                      },
+                      "macroMetadata": {
+                        "macroId": {
+                          "value": "43a962f0-5d8e-4d0b-ae9c-90d157c189f4"
+                        },
+                        "schemaVersion": {
+                          "value": "1"
+                        },
+                        "placeholder": [
+                          {
+                            "type": "image",
+                            "data": {
+                              "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=DONE"
+                            }
+                          }
+                        ],
+                        "title": {
+                          "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "- ",
+                  "type": "text"
+                },
+                {
+                  "text": "MediaClient",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "text": " – makes calls to Media using MediaHTTPClient. Its responsibility is to make a call and parse the data. ",
+                  "type": "text"
+                },
+                {
+                  "type": "inlineExtension",
+                  "attrs": {
+                    "extensionType": "com.atlassian.confluence.macro.core",
+                    "extensionKey": "status",
+                    "text": " | title = WIP | colour = Yellow",
+                    "parameters": {
+                      "macroParams": {
+                        "colour": {
+                          "value": "Yellow"
+                        },
+                        "title": {
+                          "value": "WIP"
+                        }
+                      },
+                      "macroMetadata": {
+                        "macroId": {
+                          "value": "ff71578d-6443-425b-9541-4ed51645dc52"
+                        },
+                        "schemaVersion": {
+                          "value": "1"
+                        },
+                        "placeholder": [
+                          {
+                            "type": "image",
+                            "data": {
+                              "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=WIP"
+                            }
+                          }
+                        ],
+                        "title": {
+                          "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "In this structure every layer has a single responsibility which makes the code more clear and easier to test. We used network stubbing only to test HTTPClient. Every other layer is tested by mocking the layer it depends on.",
+                  "type": "text"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "Currently we have a ",
+                  "type": "text"
+                },
+                {
+                  "text": "PR",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://bitbucket.org/atlassianmobile/mobilekit-apple/pull-requests/1630/getting-file-metadata-from-the-new-media/diff"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": " that adds a method to retrieve file metadata. We are going to add new functions to the client and gradually switch components to the new client.",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Improve Android MediaViewer by removing legacy code and using better internal APIs",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "557057:fb9fe8e8-077a-4814-8b0e-6cfa2b8aa835",
+            "text": "@Mina Samy"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "4a90aa5f-f31a-44c3-8ed7-bfd578b38402"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "This was an engineering health project to remove legacy code from MedaViewer NextGen + use rxJava instead of ResultReceiver",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "PR here: ",
+          "type": "text"
+        },
+        {
+          "text": "https://bitbucket.org/atlassianmobile/mobilekit-android/pull-requests/1267/media-msm-425-remove-fileviewerdocument/diff",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://bitbucket.org/atlassianmobile/mobilekit-android/pull-requests/1267/media-msm-425-remove-fileviewerdocument/diff"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Blog published here: ",
+          "type": "text"
+        },
+        {
+          "text": "https://hello.atlassian.net/wiki/spaces/FIL/blog/2018/08/08/264088487/ReactiveX+rxJava+replacing+common+Android+patterns",
+          "type": "text",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://hello.atlassian.net/wiki/spaces/FIL/blog/2018/08/08/264088487/ReactiveX+rxJava+replacing+common+Android+patterns"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Image captions",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5a73b1732d61371e861f3130",
+            "text": "@Alexander Hixon"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = WIP | colour = Yellow",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Yellow"
+                },
+                "title": {
+                  "value": "WIP"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "40aa4331-6f85-4a1c-9ac6-511defba9709"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Yellow&title=WIP"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": "+",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = In PR | colour = Blue",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Blue"
+                },
+                "title": {
+                  "value": "In PR"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "f39864d5-90e0-4acd-8105-05d6ac857e97"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Blue&title=In+PR"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Image Captions are a long requested feature. So, I decided to and build them!",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "What was delivered and next steps",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Refactored part of media plugin for Editor (tech debt)",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Click-to-add captions on images within the Editor – supports all inline ADF nodes!",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "ADF change proposal",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://product-fabric.atlassian.net/wiki/spaces/E/pages/729155214/ADF+Change+23+Image+Captions"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": " to add captions to document format",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "Any learnings?",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Dealing with content-editable bug hell in browsers. Check the second half of ",
+                  "type": "text"
+                },
+                {
+                  "text": "my blog!",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://product-fabric.atlassian.net/wiki/spaces/~483126222/blog/2018/08/14/730202278/Image+Captions+in+the+Editor"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "Images",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "__fileSize": 6403452,
+            "__fileMimeType": "image/gif",
+            "width": "1260",
+            "id": "37b6d3be-038d-4e73-96a8-dbeef6cb1d9a",
+            "collection": "contentId-731480733",
+            "type": "file",
+            "__fileName": "image-captions-editor.gif",
+            "height": "750"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "text": "Hunting low hanging Birdies.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "mention",
+          "attrs": {
+            "id": "5a42e0ce9653887dd455ef59",
+            "text": "@Alex Gisby"
+          }
+        },
+        {
+          "text": " ",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Status: ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = In PR | colour = Blue",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Blue"
+                },
+                "title": {
+                  "value": "In PR"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "127de9bf-47ac-43bb-965e-7b5453b05922"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Blue&title=In+PR"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        },
+        {
+          "text": "+ ",
+          "type": "text"
+        },
+        {
+          "type": "inlineExtension",
+          "attrs": {
+            "extensionType": "com.atlassian.confluence.macro.core",
+            "extensionKey": "status",
+            "text": " | title = Shipped | colour = Green",
+            "parameters": {
+              "macroParams": {
+                "colour": {
+                  "value": "Green"
+                },
+                "title": {
+                  "value": "Shipped"
+                }
+              },
+              "macroMetadata": {
+                "macroId": {
+                  "value": "07aa13f5-627a-425f-95eb-caea57a2daba"
+                },
+                "schemaVersion": {
+                  "value": "1"
+                },
+                "placeholder": [
+                  {
+                    "type": "image",
+                    "data": {
+                      "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                    }
+                  }
+                ],
+                "title": {
+                  "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "Concept",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "text": "Birdy is the HTTP client written by media which is used across a lot of Fabric. During the Teamwork Ecosystem work on Calendar Service, I encountered a few areas of improvement that I wanted to improve within the library.",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "What was delivered and next steps:",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "order": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "inlineExtension",
+                  "attrs": {
+                    "extensionType": "com.atlassian.confluence.macro.core",
+                    "extensionKey": "status",
+                    "text": " | title = Shipped | colour = Green",
+                    "parameters": {
+                      "macroParams": {
+                        "colour": {
+                          "value": "Green"
+                        },
+                        "title": {
+                          "value": "Shipped"
+                        }
+                      },
+                      "macroMetadata": {
+                        "macroId": {
+                          "value": "2ffb0ce3-c01c-4d97-a67f-3b9037a4168d"
+                        },
+                        "schemaVersion": {
+                          "value": "1"
+                        },
+                        "placeholder": [
+                          {
+                            "type": "image",
+                            "data": {
+                              "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Green&title=Shipped"
+                            }
+                          }
+                        ],
+                        "title": {
+                          "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "Callback driven status code validation.",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "When making calls to services, birdy requires a list of \"acceptable\" status codes to recieve in response. For services that need to catch all, or a range of codes, this gets cumbersome. It is now possible to provide a callback to verify the code: ",
+                  "type": "text"
+                },
+                {
+                  "text": "client.awaitJson(status => status > 400)",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "inlineExtension",
+                  "attrs": {
+                    "extensionType": "com.atlassian.confluence.macro.core",
+                    "extensionKey": "status",
+                    "text": " | title = In PR | colour = Blue",
+                    "parameters": {
+                      "macroParams": {
+                        "colour": {
+                          "value": "Blue"
+                        },
+                        "title": {
+                          "value": "In PR"
+                        }
+                      },
+                      "macroMetadata": {
+                        "macroId": {
+                          "value": "4f8fd021-66aa-416a-b129-1017220db907"
+                        },
+                        "schemaVersion": {
+                          "value": "1"
+                        },
+                        "placeholder": [
+                          {
+                            "type": "image",
+                            "data": {
+                              "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Blue&title=In+PR"
+                            }
+                          }
+                        ],
+                        "title": {
+                          "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "Automatic gzip and deflate response handling.",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "Webservices often send back payloads uysing gzip or deflate compression to reduce transfer size and times. Birdy can now implicitly handle these payloads, decompressing them for your invisibly (with the option to not decompress if you wish to work directly with the compressed stream). ",
+                  "type": "text"
+                },
+                {
+                  "text": "PR is here",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://bitbucket.org/atlassian/birdy/pull-requests/17/feat-add-support-for-decompressing/diff"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": ".",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "inlineExtension",
+                  "attrs": {
+                    "extensionType": "com.atlassian.confluence.macro.core",
+                    "extensionKey": "status",
+                    "text": " | title = In PR | colour = Blue",
+                    "parameters": {
+                      "macroParams": {
+                        "colour": {
+                          "value": "Blue"
+                        },
+                        "title": {
+                          "value": "In PR"
+                        }
+                      },
+                      "macroMetadata": {
+                        "macroId": {
+                          "value": "f6e54d0c-0d3d-4085-8413-8e68f536ce26"
+                        },
+                        "schemaVersion": {
+                          "value": "1"
+                        },
+                        "placeholder": [
+                          {
+                            "type": "image",
+                            "data": {
+                              "url": "https://confluence-prod-us-5-3.prod.atl-paas.net/wiki/plugins/servlet/status-macro/placeholder?colour=Blue&title=In+PR"
+                            }
+                          }
+                        ],
+                        "title": {
+                          "key": "com.atlassian.confluence.plugins.status-macro.status.label"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "URL array parameter handling.",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "type": "hardBreak"
+                },
+                {
+                  "text": "Arrays in URLs are a mess, with languages varying in their support and formats accepted. Birdy previously only supported sending ",
+                  "type": "text"
+                },
+                {
+                  "text": "param=1&param=2",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " (repeating key) style arrays in URLs. Now, it also supports comma ( ",
+                  "type": "text"
+                },
+                {
+                  "text": "param=1,2",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " ) and square bracket ( ",
+                  "type": "text"
+                },
+                {
+                  "text": "param[]=1&param[]=2",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "code"
+                    }
+                  ]
+                },
+                {
+                  "text": " ) style URL arrays. ",
+                  "type": "text"
+                },
+                {
+                  "text": "PR is here",
+                  "type": "text",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://bitbucket.org/atlassian/birdy/pull-requests/19/feat-add-support-for-comma-and-bracket/diff"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "text": ".",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 5
+      },
+      "content": [
+        {
+          "text": "Any learnings?",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "URL spec needs to actually formally define how to represent URLs. Jeez…",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "text": "Deepening personal learnings around duplex streams and streams in Node in general",
+                  "type": "text"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    }
+  ],
+  "version": 1
+}
