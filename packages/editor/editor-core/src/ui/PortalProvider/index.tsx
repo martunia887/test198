@@ -12,7 +12,12 @@ export type PortalProviderProps = {
   ) => React.ReactChild | JSX.Element | null;
 };
 
-export type Portals = Map<HTMLElement, React.ReactChild>;
+type RenderFunction = () => React.ReactChild | JSX.Element | null;
+type Portal = {
+  render: RenderFunction;
+  container: HTMLElement;
+};
+export type Portals = Map<string, Portal>;
 
 export type PortalRendererState = {
   portals: Portals;
@@ -24,47 +29,38 @@ type MountedPortal = {
 };
 
 export class PortalProviderAPI extends EventDispatcher {
-  portals: Map<HTMLElement, MountedPortal> = new Map();
+  portals: Portals = new Map();
   context: any;
 
   setContext = (context: any) => {
     this.context = context;
   };
 
-  render(
-    children: () => React.ReactChild | JSX.Element | null,
-    container: HTMLElement,
-    hasReactContext: boolean = false,
-  ) {
-    this.portals.set(container, { children, hasReactContext });
-    unstable_renderSubtreeIntoContainer(
-      this.context,
-      children() as React.ReactElement<any>,
-      container,
-    );
-  }
+  render = (renderFn: RenderFunction, container: HTMLElement, id: string) => {
+    this.portals.set(id, { render: renderFn, container });
+    this.emit('update', { portals: this.portals });
+  };
 
   // TODO: until https://product-fabric.atlassian.net/browse/ED-5013
   // we (unfortunately) need to re-render to pass down any updated context.
   // selectively do this for nodeviews that opt-in via `hasReactContext`
   forceUpdate() {
-    this.portals.forEach((portal, container) => {
-      if (!portal.hasReactContext) {
-        return;
-      }
-
-      unstable_renderSubtreeIntoContainer(
-        this.context,
-        portal.children() as React.ReactElement<any>,
-        container,
-      );
-    });
+    // this.portals.forEach((portal, container) => {
+    //   if (!portal.hasReactContext) {
+    //     return;
+    //   }
+    //   unstable_renderSubtreeIntoContainer(
+    //     this.context,
+    //     portal.children() as React.ReactElement<any>,
+    //     container,
+    //   );
+    // });
   }
 
-  remove(container: HTMLElement) {
-    this.portals.delete(container);
-    unmountComponentAtNode(container);
-  }
+  remove = (container: HTMLElement, id: string) => {
+    this.portals.delete(id);
+    this.emit('update', { portals: this.portals });
+  };
 }
 
 export class PortalProvider extends React.Component<PortalProviderProps> {
@@ -83,6 +79,10 @@ export class PortalProvider extends React.Component<PortalProviderProps> {
     this.portalProviderAPI.forceUpdate();
   }
 }
+type RenderPortalProps = { render: RenderFunction; container: HTMLElement };
+export const RenderPortal = ({ render, container }: RenderPortalProps) => {
+  return createPortal(render(), container);
+};
 
 export class PortalRenderer extends React.Component<
   { portalProviderAPI: PortalProviderAPI },
@@ -95,15 +95,21 @@ export class PortalRenderer extends React.Component<
     this.state = { portals: new Map() };
   }
 
-  handleUpdate = (portals: Portals) => this.setState({ portals });
+  handleUpdate = ({ portals }: { portals: Portals }) => {
+    this.setState({ portals });
+  };
 
   render() {
     const { portals } = this.state;
     return (
       <>
-        {Array.from(portals.entries()).map(([container, children]) =>
-          createPortal(children, container),
-        )}
+        {Array.from(portals.entries()).map(([id, portal]) => (
+          <RenderPortal
+            render={portal.render}
+            container={portal.container}
+            key={id}
+          />
+        ))}
       </>
     );
   }

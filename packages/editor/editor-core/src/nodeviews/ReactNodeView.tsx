@@ -2,13 +2,14 @@ import * as React from 'react';
 import { NodeView, EditorView, Decoration } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { PortalProviderAPI } from '../ui/PortalProvider';
-
+import uuidv1 from 'uuid/v1';
 export type getPosHandler = () => number;
 export type ReactComponentProps = { [key: string]: any };
 export type ForwardRef = (node: HTMLElement | null) => void;
 
 export default class ReactNodeView implements NodeView {
   private domRef?: HTMLElement;
+  private uuid: string;
   private contentDOMWrapper: Node | null;
   private reactComponent?: React.ComponentType<any>;
   private portalProviderAPI: PortalProviderAPI;
@@ -37,6 +38,7 @@ export default class ReactNodeView implements NodeView {
     this.reactComponentProps = reactComponentProps;
     this.reactComponent = reactComponent;
     this.hasContext = hasContext;
+    this.uuid = uuidv1(this.node.type.name);
   }
 
   /**
@@ -82,8 +84,9 @@ export default class ReactNodeView implements NodeView {
     if (!this.domRef || !component) {
       return;
     }
+    console.log('Rendering');
 
-    this.portalProviderAPI.render(component, this.domRef!, this.hasContext);
+    this.portalProviderAPI.render(component, this.domRef!, this.uuid);
   }
 
   createDomRef(): HTMLElement {
@@ -169,7 +172,7 @@ export default class ReactNodeView implements NodeView {
       return;
     }
 
-    this.portalProviderAPI.remove(this.domRef);
+    this.portalProviderAPI.remove(this.domRef, this.uuid);
     this.domRef = undefined;
     this.contentDOM = undefined;
   }
