@@ -34,6 +34,7 @@ export class BitmapExporter implements Core.BitmapExporterInterop {
     buffer: number,
     bufferLength: number,
   ): void {
+    console.log({ left, top, width, height });
     const context = this.supplementaryCanvas.getContext('2d');
     if (context) {
       const array = new Uint8ClampedArray(
