@@ -21,6 +21,6 @@
     "minimatch": "^3.0.4",
     "ora": "^3.0.0",
     "pretty-bytes": "^5.1.0",
-    "webpack": "^4.16.1"
+    "webpack": "^4.29.0"
   }
 }
