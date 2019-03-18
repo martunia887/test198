@@ -77,7 +77,7 @@ const layoutToMessages: Record<string, any> = {
   'align-start': commonMessages.alignImageLeft,
 };
 
-const annotate: Command = state => {
+export const annotate: Command = state => {
   const pluginState: MediaPluginState | undefined = stateKey.getState(state);
   if (!pluginState) {
     return false;
@@ -232,7 +232,6 @@ const renderAnnotationButton = (
   pluginState: MediaPluginState,
   intl: InjectedIntl,
 ) => {
-  console.log('renderAnnotationButton');
   return (view?: EditorView, idx?: number) => {
     const selectedContainer = pluginState.selectedMediaContainerNode();
     if (!selectedContainer) {

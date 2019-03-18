@@ -50,17 +50,11 @@ export interface MediaSingleOptions {
 }
 
 export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
-  const node = mediaState.selectedMediaContainerNode();
-  if (!node) {
-    return null;
-  }
-  const { id } = node.firstChild!.attrs;
-
   if (mediaState.uploadContext && mediaState.showEditingDialog) {
     const identifier: FileIdentifier = {
-      id,
+      id: mediaState.editingId || '',
       mediaItemType: 'file',
-      collectionName: node.firstChild!.attrs.collection,
+      collectionName: mediaState.editingCollection,
     };
 
     return (

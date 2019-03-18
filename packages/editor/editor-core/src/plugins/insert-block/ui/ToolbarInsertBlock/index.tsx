@@ -22,6 +22,7 @@ import StatusIcon from '@atlaskit/icon/glyph/status';
 import PlaceholderTextIcon from '@atlaskit/icon/glyph/media-services/text';
 import LayoutTwoEqualIcon from '@atlaskit/icon/glyph/editor/layout-two-equal';
 import HorizontalRuleIcon from '@atlaskit/icon/glyph/editor/horizontal-rule';
+import MediaServicesBrushIcon from '@atlaskit/icon/glyph/media-services/brush';
 import {
   EmojiId,
   EmojiPicker as AkEmojiPicker,
@@ -90,6 +91,11 @@ export const messages = defineMessages({
     defaultMessage: 'Files & images',
     description: 'Insert one or more files or images',
   },
+  sketch: {
+    id: 'fabric.editor.sketch',
+    defaultMessage: 'Sketch',
+    description: 'Add a quick sketch',
+  },
   image: {
     id: 'fabric.editor.image',
     defaultMessage: 'Image',
@@ -152,11 +158,6 @@ export const messages = defineMessages({
     description:
       'Opens a menu of additional items that can be inserted into your document.',
   },
-  mediaSketch: {
-    id: 'fabric.editor.mediaSketch',
-    defaultMessage: 'Sketch',
-    description: '',
-  },
 });
 
 export interface Props {
@@ -194,6 +195,7 @@ export interface Props {
   macroProvider?: MacroProvider | null;
   insertMenuItems?: InsertMenuCustomItem[];
   onShowMediaPicker?: () => void;
+  onShowSketchTool?: () => void;
   onInsertBlockType?: (name: string) => Command;
   onInsertMacroFromMacroBrowser?: (
     macroProvider: MacroProvider,
@@ -485,6 +487,7 @@ class ToolbarInsertBlock extends React.PureComponent<
         elemBefore: <EditorImageIcon label={labelFilesAndImages} />,
       });
     }
+
     if (imageUploadSupported) {
       const labelImage = formatMessage(messages.image);
       items.push({
@@ -618,6 +621,16 @@ class ToolbarInsertBlock extends React.PureComponent<
         elemBefore: <EditorMoreIcon label={labelViewMore} />,
       });
     }
+
+    if (mediaSupported && mediaUploadsEnabled) {
+      const labelSketch = formatMessage(messages.sketch);
+      items.push({
+        content: labelSketch,
+        value: { name: 'sketch' },
+        elemBefore: <MediaServicesBrushIcon label={labelSketch} />,
+      });
+    }
+
     return items;
   };
 
@@ -712,6 +725,13 @@ class ToolbarInsertBlock extends React.PureComponent<
       return true;
     },
   );
+
+  private openSketchTool = () => {
+    const { onShowSketchTool } = this.props;
+    if (onShowSketchTool) {
+      onShowSketchTool();
+    }
+  };
 
   private insertTaskDecision = (
     name: 'action' | 'decision',
@@ -841,6 +861,9 @@ class ToolbarInsertBlock extends React.PureComponent<
         break;
       case 'media':
         this.openMediaPicker();
+        break;
+      case 'sketch':
+        this.openSketchTool();
         break;
       case 'mention':
         this.insertMention!();
