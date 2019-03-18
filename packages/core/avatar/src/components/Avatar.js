@@ -1,7 +1,17 @@
 // @flow
+
 import React, { Component } from 'react';
 import type { Node } from 'react';
+import {
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  createAndFireEvent,
+} from '@atlaskit/analytics-next';
 import Tooltip from '@atlaskit/tooltip';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 import { validIconSizes, propsOmittedFromClickData } from './constants';
 import Presence from './Presence';
 import AvatarImage from './AvatarImage';
@@ -10,6 +20,7 @@ import Outer, { PresenceWrapper, StatusWrapper } from '../styled/Avatar';
 import { omit } from '../utils';
 import { getProps, getStyledAvatar } from '../helpers';
 import { mapProps, withPseudoState } from '../hoc';
+import { Theme } from '../theme';
 import type { AvatarPropTypes, SupportedSizeWithAnIcon } from '../types';
 
 const warn = (message: string) => {
@@ -27,6 +38,26 @@ class Avatar extends Component<AvatarPropTypes> {
     size: 'medium',
   };
 
+  createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
+
+  clickAnalyticsCaller = () => {
+    const { createAnalyticsEvent } = this.props;
+
+    if (createAnalyticsEvent) {
+      return this.createAndFireEventOnAtlaskit({
+        action: 'clicked',
+        actionSubject: 'avatar',
+
+        attributes: {
+          componentName: 'avatar',
+          packageName,
+          packageVersion,
+        },
+      })(createAnalyticsEvent);
+    }
+    return undefined;
+  };
+
   // expose blur/focus to consumers via ref
   blur = () => {
     if (this.ref) this.ref.blur();
@@ -42,9 +73,11 @@ class Avatar extends Component<AvatarPropTypes> {
 
     if (isDisabled || typeof onClick !== 'function') return;
 
-    const item: Object = omit(this.props, ...propsOmittedFromClickData);
+    const item = omit(this.props, ...propsOmittedFromClickData);
 
-    onClick({ item, event });
+    const analyticsEvent = this.clickAnalyticsCaller();
+
+    onClick({ item, event }, analyticsEvent);
   };
 
   // enforce status / presence rules
@@ -97,9 +130,17 @@ class Avatar extends Component<AvatarPropTypes> {
       }
 
       // showStatus
+      const customStatusNode = typeof status === 'object' ? status : null;
+
       return (
         <StatusWrapper appearance={appearance} size={size}>
-          <Status status={status} borderColor={borderColor} size={size} />
+          <Status
+            borderColor={borderColor}
+            status={!customStatusNode && status}
+            size={size}
+          >
+            {customStatusNode}
+          </Status>
         </StatusWrapper>
       );
     })();
@@ -120,6 +161,7 @@ class Avatar extends Component<AvatarPropTypes> {
       src,
       stackIndex,
       onClick,
+      theme,
     } = this.props;
 
     // distill props from context, props, and state
@@ -129,23 +171,26 @@ class Avatar extends Component<AvatarPropTypes> {
     // TODO: why not enhanced props?
     const Inner: any = getStyledAvatar(this.props);
 
-    const AvatarNode = (
-      <Outer size={size} stackIndex={stackIndex}>
-        <Inner
-          innerRef={this.setRef}
-          {...enhancedProps}
-          onClick={onClick != null ? this.guardedClick : undefined}
-        >
-          <AvatarImage
-            alt={name}
-            appearance={appearance}
-            size={size}
-            src={src}
-          />
-        </Inner>
+    Inner.displayName = 'Inner';
 
-        {this.renderIcon()}
-      </Outer>
+    const AvatarNode = (
+      <Theme.Provider value={theme}>
+        <Outer size={size} stackIndex={stackIndex}>
+          <Inner
+            innerRef={this.setRef}
+            {...enhancedProps}
+            onClick={onClick != null ? this.guardedClick : undefined}
+          >
+            <AvatarImage
+              alt={name}
+              appearance={appearance}
+              size={size}
+              src={src}
+            />
+          </Inner>
+          {this.renderIcon()}
+        </Outer>
+      </Theme.Provider>
     );
 
     return enableTooltip && name ? (
@@ -156,17 +201,7 @@ class Avatar extends Component<AvatarPropTypes> {
   }
 }
 
-/**
- *  1. Higher order components seem to ignore default properties. Mapping
- *     `appearance` explicity here circumvents the issue.
- *  2. The withPseudoState HOC should remain generic so rather than pass on
- *     `enableTooltip` we map it to `isInteractive`.
- *  3. Handle keyboard/mouse events and pass props to the wrapped component:
- *     - isActive
- *     - isFocus
- *     - isHover
- */
-export default mapProps({
+export const AvatarWithoutAnalytics = mapProps({
   appearance: props => props.appearance || Avatar.defaultProps.appearance, // 1
   isInteractive: props =>
     Boolean(
@@ -174,4 +209,10 @@ export default mapProps({
         ? props.enableTooltip
         : Avatar.defaultProps.enableTooltip) && props.name,
     ), // 2
-})(withPseudoState(Avatar)); // 3
+})(withPseudoState(Avatar));
+
+export default withAnalyticsContext({
+  componentName: 'avatar',
+  packageName,
+  packageVersion,
+})(withAnalyticsEvents()(AvatarWithoutAnalytics));

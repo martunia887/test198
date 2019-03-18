@@ -3,97 +3,86 @@ import { Component } from 'react';
 import Button from '@atlaskit/button';
 import ZoomOutIcon from '@atlaskit/icon/glyph/media-services/zoom-out';
 import ZoomInIcon from '@atlaskit/icon/glyph/media-services/zoom-in';
+import { ZoomLevel } from './domain/zoomLevel';
 import {
   ZoomWrapper,
   ZoomControlsWrapper,
   hideControlsClassName,
-  ZoomLevel,
+  ZoomLevelIndicator,
 } from './styled';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
+import { channel } from './analytics';
+import { ZoomControlsGasPayload, createZoomEvent } from './analytics/zoom';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { messages } from '@atlaskit/media-ui';
 
-export type ZoomDirection = 'out' | 'in';
+export type ZoomControlsProps = Readonly<{
+  onChange: (newZoomLevel: ZoomLevel) => void;
+  zoomLevel: ZoomLevel;
+}> &
+  WithAnalyticsEventProps;
 
-export interface ZoomControlsProps {
-  zoomLevel: number;
-  onChange: (zoomLevel: number) => void;
-  step?: number;
-}
-
-export interface ZoomControlsState {}
-
-const minZoomLevel = 0.2;
-const maxZoomLevel = 5;
-const zoomingStep = 0.2;
-
-export const getZoomLevel = (
-  currentZoomLevel: number,
-  direction: ZoomDirection,
-  step: number = zoomingStep,
-): number => {
-  const increase = step * currentZoomLevel;
-  const newZoomLevel = direction === 'out' ? -increase : increase;
-  const zoomLevel = Math.min(
-    Math.max(
-      Math.round((currentZoomLevel + newZoomLevel) * 100) / 100,
-      minZoomLevel,
-    ),
-    maxZoomLevel,
-  );
-
-  return zoomLevel;
-};
-
-export class ZoomControls extends Component<
-  ZoomControlsProps,
-  ZoomControlsState
+export class ZoomControlsBase extends Component<
+  ZoomControlsProps & InjectedIntlProps,
+  {}
 > {
-  static defaultProps: Partial<ZoomControlsProps> = {
-    step: zoomingStep,
+  zoomIn = () => {
+    const { onChange, zoomLevel } = this.props;
+    if (zoomLevel.canZoomIn) {
+      const zoom = zoomLevel.zoomIn();
+      this.fireAnalytics(createZoomEvent('zoomIn', zoom.value));
+      onChange(zoom);
+    }
   };
 
-  zoom = (direction: ZoomDirection) => () => {
-    const { onChange, step } = this.props;
-    const { zoomLevel: currentZoomLevel } = this.props;
-    const zoomLevel = getZoomLevel(currentZoomLevel, direction, step);
-
-    onChange(zoomLevel);
+  zoomOut = () => {
+    const { onChange, zoomLevel } = this.props;
+    if (zoomLevel.canZoomOut) {
+      const zoom = zoomLevel.zoomOut();
+      this.fireAnalytics(createZoomEvent('zoomOut', zoom.value));
+      onChange(zoom);
+    }
   };
-
-  get canZoomOut(): boolean {
-    const { zoomLevel } = this.props;
-
-    return zoomLevel > minZoomLevel;
-  }
-
-  get canZoomIn(): boolean {
-    const { zoomLevel } = this.props;
-
-    return zoomLevel < maxZoomLevel;
-  }
 
   render() {
-    const { canZoomOut, canZoomIn } = this;
-    const { zoomLevel } = this.props;
+    const {
+      zoomLevel,
+      intl: { formatMessage },
+    } = this.props;
 
     return (
       <ZoomWrapper className={hideControlsClassName}>
         <ZoomControlsWrapper>
           <Button
-            isDisabled={!canZoomOut}
-            onClick={this.zoom('out')}
-            iconBefore={<ZoomOutIcon primaryColor="white" label="zoom out" />}
+            appearance={'toolbar' as any}
+            isDisabled={!zoomLevel.canZoomOut}
+            onClick={this.zoomOut}
+            iconBefore={
+              <ZoomOutIcon label={formatMessage(messages.zoom_out)} />
+            }
           />
           <Button
-            isDisabled={!canZoomIn}
-            onClick={this.zoom('in')}
-            iconBefore={<ZoomInIcon primaryColor="white" label="zoom in" />}
+            appearance={'toolbar' as any}
+            isDisabled={!zoomLevel.canZoomIn}
+            onClick={this.zoomIn}
+            iconBefore={<ZoomInIcon label={formatMessage(messages.zoom_in)} />}
           />
         </ZoomControlsWrapper>
-        <ZoomLevel>{this.getFriendlyZoomLevel(zoomLevel)} %</ZoomLevel>
+        <ZoomLevelIndicator>{zoomLevel.asPercentage}</ZoomLevelIndicator>
       </ZoomWrapper>
     );
   }
 
-  private getFriendlyZoomLevel(zoomLevel: number) {
-    return Math.round(zoomLevel * 100);
-  }
+  private fireAnalytics = (payload: ZoomControlsGasPayload) => {
+    const { createAnalyticsEvent } = this.props;
+    if (createAnalyticsEvent) {
+      const ev = createAnalyticsEvent(payload);
+      ev.fire(channel);
+    }
+  };
 }
+
+export const ZoomControls = withAnalyticsEvents({})(
+  injectIntl(ZoomControlsBase),
+);

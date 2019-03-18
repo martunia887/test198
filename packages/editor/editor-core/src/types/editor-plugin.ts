@@ -2,34 +2,44 @@ import * as React from 'react';
 import { Schema } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import ErrorReporter from '../utils/error-reporter';
-import { NodeConfig, MarkConfig } from './editor-config';
-import { EditorProps, EditorAppearance } from './editor-props';
+import { ProviderFactory, ErrorReporter } from '@atlaskit/editor-common';
 import { Dispatch, EventDispatcher } from '../event-dispatcher';
 import EditorActions from '../actions';
 import { ToolbarSize } from '../ui/Toolbar';
+import { QuickInsertHandler } from '../plugins/quick-insert/types';
+import { TypeAheadHandler } from '../plugins/type-ahead/types';
+import { FloatingToolbarHandler } from '../plugins/floating-toolbar/types';
+import { PortalProviderAPI } from '../ui/PortalProvider';
+import { NodeConfig, MarkConfig } from './editor-config';
+import { EditorProps, EditorAppearance } from './editor-props';
+import { AnalyticsEventPayload } from '../plugins/analytics';
+
+export type PMPluginFactoryParams = {
+  schema: Schema;
+  props: EditorProps;
+  dispatch: Dispatch;
+  eventDispatcher: EventDispatcher;
+  providerFactory: ProviderFactory;
+  errorReporter: ErrorReporter;
+  portalProviderAPI: PortalProviderAPI;
+  reactContext: () => { [key: string]: any };
+};
 
 export type PMPluginFactory = (
-  params: {
-    schema: Schema;
-    props: EditorProps;
-    dispatch: Dispatch;
-    eventDispatcher: EventDispatcher;
-    providerFactory: ProviderFactory;
-    errorReporter: ErrorReporter;
-  },
+  params: PMPluginFactoryParams,
 ) => Plugin | undefined;
 
 export type UiComponentFactoryParams = {
   editorView: EditorView;
   editorActions: EditorActions;
   eventDispatcher: EventDispatcher;
+  dispatchAnalyticsEvent?: (payload: AnalyticsEventPayload) => void;
   providerFactory: ProviderFactory;
   appearance: EditorAppearance;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
+  containerElement: HTMLElement | undefined;
   disabled: boolean;
 };
 
@@ -46,6 +56,13 @@ export type ToolbarUIComponentFactory = (
   params: ToolbarUiComponentFactoryParams,
 ) => React.ReactElement<any> | null;
 
+export type PluginsOptions = {
+  [pluginName: string]: any;
+  quickInsert?: QuickInsertHandler;
+  typeAhead?: TypeAheadHandler;
+  floatingToolbar?: FloatingToolbarHandler;
+};
+
 export interface EditorPlugin {
   /**
    * Name of a plugin, that other plugins can use to provide options to it.
@@ -55,22 +72,22 @@ export interface EditorPlugin {
   /**
    * Options that will be passed to a plugin with a corresponding name if it exists and enabled.
    */
-  pluginsOptions?: { [pluginName: string]: any };
+  pluginsOptions?: PluginsOptions;
 
   /**
    * List of ProseMirror-plugins. This is where we define which plugins will be added to EditorView (main-plugin, keybindings, input-rules, etc.).
    */
   pmPlugins?: (
     pluginOptions?: any,
-  ) => { rank: number; plugin: PMPluginFactory }[];
+  ) => { name: string; plugin: PMPluginFactory }[];
 
   /**
-   * List of Nodes to add to the schema. Needs to specify a rank for each node according to spec in Document Structure.
+   * List of Nodes to add to the schema.
    */
   nodes?: (editorProps: EditorProps) => NodeConfig[];
 
   /**
-   * List of Marks to add to the schema. Needs to specify a rank for each mark according to spec in Document Structure.
+   * List of Marks to add to the schema.
    */
   marks?: (editorProps: EditorProps) => MarkConfig[];
 

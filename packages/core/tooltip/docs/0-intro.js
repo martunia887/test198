@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { md, Example, Props } from '@atlaskit/docs';
+import { md, Example, Props, code } from '@atlaskit/docs';
 
 export default md`
   This package exports \`Tooltip\` and \`TooltipPrimitive\` components.
@@ -13,27 +13,30 @@ export default md`
   custom tooltip in \`component\` prop to display it when user hovers over wrapper
   content of \`Tooltip\`.
 
+  ## Usage
+
+  ${code`import Tooltip, { TooltipPrimitive } from '@atlaskit/tooltip';`}
+
   ${(
     <Example
+      packageName="@atlaskit/tooltip"
       Component={require('../examples/basic').default}
       source={require('!!raw-loader!../examples/basic')}
-      title="Basic Usage"
+      title="Basic"
     />
   )}
 
   Above is a basic example of how to use tooltip.
 
-  ${
-    (
-      // $FlowFixMe TEMPORARY
-      <Example
-        Component={require('../examples/position').default}
-        source={require('!!raw-loader!../examples/position')}
-        title="Position"
-        componentProps={{ test: true }}
-      />
-    )
-  }
+  ${(
+    <Example
+      packageName="@atlaskit/tooltip"
+      Component={require('../examples/position').default}
+      source={require('!!raw-loader!../examples/position')}
+      title="Position"
+      componentProps={{ test: true }}
+    />
+  )}
 
   Tooltips have four standard positions available; "top", "right", "bottom", and "left".
   Each standard position center-aligns itself along the appropriate axis and appears outside the target element.
@@ -43,6 +46,7 @@ export default md`
 
   ${(
     <Example
+      packageName="@atlaskit/tooltip"
       Component={require('../examples/hover-intent').default}
       source={require('!!raw-loader!../examples/hover-intent')}
       title="Intent"

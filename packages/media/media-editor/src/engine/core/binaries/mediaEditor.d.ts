@@ -1,8 +1,10 @@
+import { Dimensions } from '../../../common';
+
 declare namespace MediaEditor {
   /*
-    * Types exposed by the native part.
-    * See src/bindings.cpp for details
-    */
+   * Types exposed by the native part.
+   * See src/bindings.cpp for details
+   */
 
   type VeColor = {
     red: number;
@@ -139,6 +141,8 @@ declare namespace MediaEditor {
       buffer: number,
       bufferLength: number,
     ): void;
+
+    getDimensions(): Dimensions;
   }
 
   // Interface described in src/typeset.h

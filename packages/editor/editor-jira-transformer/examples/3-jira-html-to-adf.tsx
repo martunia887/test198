@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { defaultSchema } from '@atlaskit/editor-common';
+import { defaultSchema } from '@atlaskit/adf-schema';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import { JIRATransformer } from '../src';
 
@@ -42,8 +42,8 @@ export interface State {
 class Example extends React.PureComponent<{}, State> {
   state: State = { source: '' };
 
-  handleChange = evt => {
-    this.setState({ source: evt.target.value });
+  handleChange = (evt: React.FormEvent<HTMLTextAreaElement>) => {
+    this.setState({ source: evt.currentTarget.value });
   };
 
   render() {

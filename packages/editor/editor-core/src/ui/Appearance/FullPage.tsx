@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
 import styled from 'styled-components';
-import { akColorN30 } from '@atlaskit/util-shared-styles';
-import { akEditorFullPageMaxWidth } from '@atlaskit/editor-common';
+import { colors } from '@atlaskit/theme';
+import { akEditorMenuZIndex } from '@atlaskit/editor-common';
 import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
 import Avatars from '../../plugins/collab-edit/ui/avatars';
 import PluginSlot from '../PluginSlot';
 import Toolbar from '../Toolbar';
 import ContentStyles from '../ContentStyles';
 import { ClickAreaBlock } from '../Addon';
-import WidthDetector from '../WidthDetector';
 import { tableFullPageEditorStyles } from '../../plugins/table/ui/styles';
 import { akEditorToolbarKeylineHeight } from '../../styles';
 import rafSchedule from 'raf-schd';
 import { scrollbarStyles } from '../styles';
+import WidthEmitter from '../WidthEmitter';
 
 const GUTTER_PADDING = 32;
 
@@ -28,7 +28,7 @@ FullPageEditorWrapper.displayName = 'FullPageEditorWrapper';
 
 const ScrollContainer = styled(ContentStyles)`
   flex-grow: 1;
-  overflow-y: auto;
+  overflow-y: scroll;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -41,7 +41,7 @@ const ContentArea = styled.div`
   line-height: 24px;
   height: 100%;
   width: 100%;
-  max-width: ${akEditorFullPageMaxWidth + GUTTER_PADDING * 2}px;
+  max-width: ${({ theme }: any) => theme.layoutMaxWidth + GUTTER_PADDING * 2}px;
   padding-top: 50px;
   margin: 0 auto;
   display: flex;
@@ -85,13 +85,17 @@ const MainToolbar: React.ComponentClass<
   align-items: center;
   box-shadow: ${(props: MainToolbarProps) =>
     props.showKeyline
-      ? `0 ${akEditorToolbarKeylineHeight}px 0 0 ${akColorN30}`
+      ? `0 ${akEditorToolbarKeylineHeight}px 0 0 ${colors.N30}`
       : 'none'};
   transition: box-shadow 200ms;
-  z-index: 1;
+  z-index: ${akEditorMenuZIndex};
   display: flex;
   height: 80px;
   flex-shrink: 0;
+
+  & object {
+    height: 0 !important;
+  }
 `;
 MainToolbar.displayName = 'MainToolbar';
 
@@ -126,7 +130,7 @@ export default class Editor extends React.Component<
   stopPropagation = (event: MouseEvent<HTMLDivElement>) =>
     event.stopPropagation();
 
-  scrollContainerRef = ref => {
+  scrollContainerRef = (ref: HTMLElement | null) => {
     const previousScrollContainer = this.scrollContainer;
 
     // remove existing handler
@@ -137,9 +141,9 @@ export default class Editor extends React.Component<
       );
     }
 
-    this.scrollContainer = ref;
+    this.scrollContainer = ref ? ref : undefined;
 
-    if (typeof this.scrollContainer !== 'undefined') {
+    if (this.scrollContainer) {
       this.scrollContainer.addEventListener(
         'scroll',
         this.scheduleUpdateToolbarKeyline,
@@ -160,11 +164,7 @@ export default class Editor extends React.Component<
     return false;
   };
 
-  private scheduleUpdateToolbarKeyline = () => {
-    this.scheduledKeylineUpdate = rafSchedule(() =>
-      this.updateToolbarKeyline(),
-    );
-  };
+  private scheduleUpdateToolbarKeyline = rafSchedule(this.updateToolbarKeyline);
 
   componentDidMount() {
     window.addEventListener('resize', this.scheduleUpdateToolbarKeyline, false);
@@ -173,7 +173,7 @@ export default class Editor extends React.Component<
   componentWillUnmount() {
     window.removeEventListener('resize', this.scheduleUpdateToolbarKeyline);
 
-    if (typeof this.scheduledKeylineUpdate !== 'undefined') {
+    if (this.scheduledKeylineUpdate) {
       cancelAnimationFrame(this.scheduledKeylineUpdate);
     }
   }
@@ -194,12 +194,13 @@ export default class Editor extends React.Component<
       popupsScrollableElement,
       disabled,
       collabEdit,
+      dispatchAnalyticsEvent,
     } = this.props;
 
     const { showKeyline } = this.state;
 
     return (
-      <FullPageEditorWrapper>
+      <FullPageEditorWrapper className="akEditor">
         <MainToolbar showKeyline={showKeyline}>
           <Toolbar
             editorView={editorView!}
@@ -212,6 +213,7 @@ export default class Editor extends React.Component<
             popupsBoundariesElement={popupsBoundariesElement}
             popupsScrollableElement={popupsScrollableElement}
             disabled={!!disabled}
+            dispatchAnalyticsEvent={dispatchAnalyticsEvent}
           />
           <MainToolbarCustomComponentsSlot>
             <Avatars
@@ -225,12 +227,15 @@ export default class Editor extends React.Component<
             {customPrimaryToolbarComponents}
           </MainToolbarCustomComponentsSlot>
         </MainToolbar>
-        <ScrollContainer innerRef={this.scrollContainerRef}>
+        <ScrollContainer
+          innerRef={this.scrollContainerRef}
+          className="fabric-editor-popup-scroll-parent"
+        >
           <ClickAreaBlock editorView={editorView}>
             <ContentArea>
               <div
                 style={{ padding: `0 ${GUTTER_PADDING}px` }}
-                className="content-area"
+                className="ak-editor-content-area"
               >
                 {customContentComponents}
                 {
@@ -245,6 +250,8 @@ export default class Editor extends React.Component<
                     popupsBoundariesElement={popupsBoundariesElement}
                     popupsScrollableElement={popupsScrollableElement}
                     disabled={!!disabled}
+                    containerElement={this.scrollContainer}
+                    dispatchAnalyticsEvent={dispatchAnalyticsEvent}
                   />
                 }
                 {editorDOMElement}
@@ -252,7 +259,10 @@ export default class Editor extends React.Component<
             </ContentArea>
           </ClickAreaBlock>
         </ScrollContainer>
-        <WidthDetector editorView={editorView!} />
+        <WidthEmitter
+          editorView={editorView!}
+          contentArea={this.scrollContainer}
+        />
       </FullPageEditorWrapper>
     );
   }

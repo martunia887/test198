@@ -1,22 +1,17 @@
 /* tslint:disable:no-console */
 
 import * as React from 'react';
-import {
-  MediaCollectionItem,
-  MediaCollection,
-  Context,
-} from '@atlaskit/media-core';
+import { Context, FileItem, Identifier } from '@atlaskit/media-core';
 import { createStorybookContext } from '@atlaskit/media-test-helpers';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
-
 import { SelectableCard } from './selectableCard';
 import {
   Card,
-  Identifier,
   CardAppearance,
   CardEvent,
   OnSelectChangeFuncResult,
+  CardAction,
 } from '../src';
 
 const context = createStorybookContext();
@@ -93,7 +88,7 @@ export const deleteAction = {
   icon: <CrossIcon size="small" label="delete" />,
 };
 
-export const annotateCardAction = {
+export const annotateCardAction: CardAction = {
   label: 'Annotate',
   handler: () => {
     console.log('annotate');
@@ -108,32 +103,22 @@ export const actions = [
   deleteAction,
 ];
 
-export const anotherAction = {
+export const anotherAction: CardAction = {
   label: 'Some other action',
-  handler: (
-    item: MediaCollectionItem,
-    collection: MediaCollection,
-    e?: Event,
-  ) => {
-    console.log('Some other action', item, collection);
+  handler: (item?: FileItem) => {
+    console.log('Some other action', item);
   },
 };
 
-export const annotateAction = {
+export const annotateAction: CardAction = {
   label: 'Annotate',
-  handler: (
-    item: MediaCollectionItem,
-    collection: MediaCollection,
-    e?: Event,
-  ) => {
-    console.log('annotate', item, collection);
+  handler: (item?: FileItem) => {
+    console.log('annotate', item);
   },
 };
 
-// TODO: Add deleteAction back to story. see: https://jira.atlassian.com/browse/FIL-4004
-export const cardsActions = [/*deleteAction, */ anotherAction, annotateAction];
+export const cardsActions = [anotherAction, annotateAction];
 export const wrongContext: Context = createStorybookContext({
-  serviceHost: 'http://example.com',
   authType: 'client',
 });
 export const wrongCollection = 'adfasdf';

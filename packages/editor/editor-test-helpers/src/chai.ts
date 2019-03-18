@@ -13,6 +13,10 @@ function isNodeOrFragment(thing: any): thing is Node | Fragment {
   return thing && typeof thing.eq === 'function';
 }
 
+function isNode(thing: any): thing is Node {
+  return thing && thing.type && thing.type.schema;
+}
+
 function isSlice(thing: any): thing is Slice {
   return (
     typeof thing.openStart === 'number' &&
@@ -26,7 +30,7 @@ export default (chai: any) => {
 
   // Node and Fragment
   Assertion.overwriteMethod('equal', (equalSuper: Function) => {
-    return function(right: any) {
+    return function(this: any, right: any) {
       const left: any = this._obj;
       const deep = util.flag(this, 'deep');
       if (
@@ -41,12 +45,8 @@ export default (chai: any) => {
         //
         // Also it fixes issues that happens sometimes when actual schema and expected schema
         // are different objects, making this case impossible by always using actual schema to create expected node.
-        if (
-          typeof right === 'function' &&
-          left['type'] &&
-          left['type'].schema
-        ) {
-          right = right(left['type'].schema);
+        if (typeof right === 'function' && isNode(left)) {
+          right = right(left.type.schema);
         }
 
         this.assert(
@@ -65,7 +65,7 @@ export default (chai: any) => {
 
   // Slice
   Assertion.overwriteMethod('equal', (equalSuper: Function) => {
-    return function(right: any) {
+    return function(this: any, right: any) {
       const left: any = this._obj;
       const deep = util.flag(this, 'deep');
       if (deep && isSlice(left) && isSlice(right)) {
@@ -96,7 +96,7 @@ export default (chai: any) => {
     };
   });
 
-  Assertion.addMethod('nodeType', function(nodeType: NodeType) {
+  Assertion.addMethod('nodeType', function(this: any, nodeType: NodeType) {
     const obj: Node = util.flag(this, 'object');
     const negate: boolean = util.flag(this, 'negate');
 
@@ -106,7 +106,11 @@ export default (chai: any) => {
     return new Assertion(obj.type).to.be.an.instanceof(nodeType);
   });
 
-  Assertion.addMethod('textWithMarks', function(text: string, marks: Mark[]) {
+  Assertion.addMethod('textWithMarks', function(
+    this: any,
+    text: string,
+    marks: Mark[],
+  ) {
     const obj: Node = util.flag(this, 'object');
     const negate: boolean = util.flag(this, 'negate');
 
@@ -125,7 +129,7 @@ export default (chai: any) => {
     return new Assertion(matched).to.be.true;
   });
 
-  Assertion.addMethod('nodeSpec', function(nodeSpec: NodeSpec) {
+  Assertion.addMethod('nodeSpec', function(this: any, nodeSpec: NodeSpec) {
     const obj: Node = util.flag(this, 'object');
     const negate: boolean = util.flag(this, 'negate');
 

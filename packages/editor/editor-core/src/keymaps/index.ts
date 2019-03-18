@@ -1,6 +1,5 @@
 import { browser } from '@atlaskit/editor-common';
-import { EditorState, Transaction } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { Command } from '../types';
 
 export const toggleBold = makeKeyMapWithCommon('Bold', 'Mod-b');
 export const toggleItalic = makeKeyMapWithCommon('Italic', 'Mod-i');
@@ -10,6 +9,10 @@ export const toggleStrikethrough = makeKeyMapWithCommon(
   'Mod-Shift-s',
 );
 export const toggleCode = makeKeyMapWithCommon('Code', 'Mod-Shift-m');
+export const pastePlainText = makeKeyMapWithCommon(
+  'Paste Plain Text',
+  'Mod-Shift-v',
+);
 export const clearFormatting = makeKeyMapWithCommon(
   'Clear formatting',
   'Mod-\\',
@@ -22,7 +25,7 @@ export const toggleHeading4 = makeKeymap('Heading 4', '', 'Cmd-Alt-4');
 export const toggleHeading5 = makeKeymap('Heading 5', '', 'Cmd-Alt-5');
 export const toggleOrderedList = makeKeymap('Numbered list', '', 'Cmd-Shift-7');
 export const toggleBulletList = makeKeymap('Bullet list', '', 'Cmd-Shift-8');
-export const toggleBlockQuote = makeKeymap('Block quote', '', 'Cmd-Alt-9');
+export const toggleBlockQuote = makeKeymap('Quote', '', 'Cmd-Alt-9');
 export const insertNewLine = makeKeyMapWithCommon(
   'Insert new line',
   'Shift-Enter',
@@ -47,10 +50,12 @@ export const outdentList = makeKeyMapWithCommon('Outdent List', 'Shift-Tab');
 export const redo = makeKeymap('Redo', 'Ctrl-y', 'Cmd-Shift-z');
 export const redoBarred = makeKeymap('Redo Barred', 'Ctrl-Shift-z', 'Cmd-y');
 export const openHelp = makeKeyMapWithCommon('Open Help', 'Mod-/');
-export const addLink = makeKeyMapWithCommon('Insert link', 'Mod-k');
+export const addLink = makeKeyMapWithCommon('Link', 'Mod-k');
 export const submit = makeKeyMapWithCommon('Submit Content', 'Mod-Enter');
 export const enter = makeKeyMapWithCommon('Enter', 'Enter');
 export const tab = makeKeyMapWithCommon('Tab', 'Tab');
+export const indent = makeKeyMapWithCommon('Indent', 'Tab');
+export const outdent = makeKeyMapWithCommon('Outdent', 'Shift-Tab');
 export const backspace = makeKeyMapWithCommon('Backspace', 'Backspace');
 export const deleteKey = makeKeyMapWithCommon('Delete', 'Delete');
 export const space = makeKeyMapWithCommon('Space', 'Space');
@@ -58,30 +63,56 @@ export const escape = makeKeyMapWithCommon('Escape', 'Escape');
 export const nextCell = makeKeyMapWithCommon('Next cell', 'Tab');
 export const previousCell = makeKeyMapWithCommon('Previous cell', 'Shift-Tab');
 export const toggleTable = makeKeyMapWithCommon('Table', 'Shift-Alt-t');
+export const addRowBefore = makeKeyMapWithCommon(
+  'Add Row Above',
+  'Ctrl-Alt-ArrowUp',
+);
+export const addRowAfter = makeKeyMapWithCommon(
+  'Add Row Below',
+  'Ctrl-Alt-ArrowDown',
+);
+export const addColumnAfter = makeKeyMapWithCommon(
+  'Add Column After',
+  'Ctrl-Alt-ArrowRight',
+);
+export const addColumnBefore = makeKeyMapWithCommon(
+  'Add Column Before',
+  'Ctrl-Alt-ArrowLeft',
+);
 export const cut = makeKeyMapWithCommon('Cut', 'Mod-x');
 export const copy = makeKeyMapWithCommon('Copy', 'Mod-c');
 export const paste = makeKeyMapWithCommon('Paste', 'Mod-v');
 export const altPaste = makeKeyMapWithCommon('Paste', 'Mod-Shift-v');
 
+const arrowKeysMap: Record<string, string> = {
+  // for reference: https://wincent.com/wiki/Unicode_representations_of_modifier_keys
+  ARROWLEFT: '\u2190',
+  ARROWRIGHT: '\u2192',
+  ARROWUP: '\u2191',
+  ARROWDOWN: '\u2193',
+};
+
 export function tooltip(
   keymap: Keymap | undefined,
-  compact?: boolean,
+  description?: string,
 ): string | undefined {
   if (keymap) {
     let shortcut: string;
     if (browser.mac) {
+      // for reference: https://wincent.com/wiki/Unicode_representations_of_modifier_keys
       shortcut = keymap.mac
-        .replace(/Cmd/i, '⌘')
-        .replace(/Shift/i, '⇧')
-        .replace(/Ctrl/i, '^')
-        .replace(/Alt/i, '⌥');
+        .replace(/Cmd/i, '\u2318')
+        .replace(/Shift/i, '\u21E7')
+        .replace(/Ctrl/i, '\u2303')
+        .replace(/Alt/i, '\u2325');
     } else {
       shortcut = keymap.windows;
     }
     const keys = shortcut.split('-');
-    keys[keys.length - 1] = keys[keys.length - 1].toUpperCase();
+    const lastKey = keys[keys.length - 1].toUpperCase();
+    keys[keys.length - 1] = arrowKeysMap[lastKey] || lastKey;
     shortcut = keys.join(browser.mac ? '' : '+');
-    return compact ? shortcut : `${keymap.description} ${shortcut}`;
+    return description ? `${description} ${shortcut}` : shortcut;
   }
 }
 
@@ -163,21 +194,13 @@ export interface Keymap {
 
 export function bindKeymapWithCommand(
   shortcut: string,
-  cmd: (
-    state: EditorState,
-    dispatch: (tr: Transaction) => void,
-    editorView?: EditorView,
-  ) => boolean,
+  cmd: Command,
   keymap: { [key: string]: Function },
 ) {
   const oldCmd = keymap[shortcut];
   let newCmd = cmd;
   if (keymap[shortcut]) {
-    newCmd = (
-      state: EditorState,
-      dispatch: (tr: Transaction) => void,
-      editorView?: EditorView,
-    ): boolean => {
+    newCmd = (state, dispatch, editorView) => {
       return oldCmd(state, dispatch) || cmd(state, dispatch, editorView);
     };
   }
@@ -193,43 +216,6 @@ export function findKeyMapForBrowser(kayMap: Keymap): string | undefined {
     return kayMap.windows;
   }
 }
-
-export const keyCodes: { [key: string]: number } = {
-  Enter: 13,
-  Backspace: 8,
-  Tab: 9,
-  Shift: 16,
-  Ctrl: 17,
-  Alt: 18,
-  Pause: 19,
-  CapsLock: 20,
-  Esc: 27,
-  Space: 32,
-  PageUp: 63276,
-  PageDown: 63277,
-  End: 63275,
-  Home: 63273,
-  Left: 63234,
-  Up: 63232,
-  Right: 63235,
-  Down: 63233,
-  PrintScrn: 44,
-  Insert: 63302,
-  Delete: 46,
-  ';': 186,
-  '=': 187,
-  Mod: 93,
-  '*': 106,
-  '-': 189,
-  '.': 190,
-  '/': 191,
-  ',': 188,
-  '`': 192,
-  '[': 219,
-  '\\': 220,
-  ']': 221,
-  "'": 222,
-};
 
 export const LEFT = 37;
 export const RIGHT = 39;

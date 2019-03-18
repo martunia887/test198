@@ -11,7 +11,8 @@ import {
   isMarkTypeAllowedInCurrentSelection,
   isChromeWithSelectionBug,
 } from '../../../utils';
-import { nodeViewFactory } from '../../../nodeviews';
+import { ReactNodeView } from '../../../nodeviews';
+import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import emojiNodeView from '../nodeviews/emoji';
 
 export const emojiPluginKey = new PluginKey('emojiPlugin');
@@ -32,18 +33,18 @@ export class EmojiState {
 
   onSelectPrevious = (): boolean => false;
   onSelectNext = (): boolean => false;
-  onSelectCurrent = (key?: string): boolean => false;
+  onSelectCurrent = (_key?: string): boolean => false;
   onSpaceSelectCurrent = (
-    emoji: EmojiDescription,
-    key?: string,
-    query?: string,
+    _emoji: EmojiDescription,
+    _key?: string,
+    _query?: string,
   ): void => {};
   onSpaceTyped = (): void => {};
   onDismiss = (): void => {};
 
   private changeHandlers: StateChangeHandler[] = [];
   private state: EditorState;
-  private view: EditorView;
+  private view!: EditorView;
   private queryResult: EmojiDescription[] = [];
 
   constructor(state: EditorState, providerFactory: ProviderFactory) {
@@ -190,7 +191,10 @@ export class EmojiState {
 
       // This problem affects Chrome v58-62. See: https://github.com/ProseMirror/prosemirror/issues/710
       if (isChromeWithSelectionBug) {
-        document.getSelection().empty();
+        const selection = document.getSelection();
+        if (selection) {
+          selection.empty();
+        }
       }
 
       view.dispatch(state.tr.replaceWith(start, end, [node, textNode]));
@@ -202,7 +206,11 @@ export class EmojiState {
     }
   };
 
-  handleProvider = (name: string, provider: Promise<any>): void => {
+  handleProvider = (name: string, provider: Promise<any> | undefined): void => {
+    if (!provider) {
+      return;
+    }
+
     switch (name) {
       case 'emojiProvider':
         provider
@@ -262,27 +270,32 @@ export class EmojiState {
   }
 }
 
-export function createPlugin(providerFactory: ProviderFactory) {
+export function createPlugin(
+  portalProviderAPI: PortalProviderAPI,
+  providerFactory: ProviderFactory,
+) {
   return new Plugin({
     state: {
-      init(config, state) {
+      init(_config, state) {
         return new EmojiState(state, providerFactory);
       },
-      apply(tr, pluginState, oldState, newState) {
+      apply(_tr, pluginState, _oldState, _newState) {
         // NOTE: Don't call pluginState.update here.
         return pluginState;
       },
     },
     props: {
       nodeViews: {
-        emoji: nodeViewFactory(providerFactory, { emoji: emojiNodeView }),
+        emoji: ReactNodeView.fromComponent(emojiNodeView, portalProviderAPI, {
+          providerFactory,
+        }),
       },
       handleDOMEvents: {
-        focus(view: EditorView, event) {
+        focus(view: EditorView, _event) {
           emojiPluginKey.getState(view.state).updateEditorFocused(true);
           return false;
         },
-        blur(view: EditorView, event) {
+        blur(view: EditorView, _event) {
           emojiPluginKey.getState(view.state).updateEditorFocused(false);
           return false;
         },
@@ -294,7 +307,7 @@ export function createPlugin(providerFactory: ProviderFactory) {
       pluginState.setView(view);
 
       return {
-        update(view: EditorView, prevState: EditorState) {
+        update(view: EditorView, _prevState: EditorState) {
           pluginState.update(view.state);
         },
         destroy() {

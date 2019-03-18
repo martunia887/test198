@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Button from '@atlaskit/button';
 import { gridSize, math } from '@atlaskit/theme';
 import styled from 'styled-components';
+import { messages } from '../messages';
 import ErrorImage from '../assets/ErrorImage';
 
 const ErrorWrapper = styled.div`
@@ -20,12 +22,26 @@ export default class SearchError extends React.Component<Props> {
     return (
       <ErrorWrapper>
         <ErrorImage />
-        <h3>We're having trouble searching.</h3>
+        <h3>
+          <FormattedMessage {...messages.search_error_title} />
+        </h3>
         <p>
-          <span>It might just be hiccup. Best thing is to </span>
-          <Button appearance="link" spacing="none" onClick={onRetryClick}>
-            try again
-          </Button>.
+          <span>
+            <FormattedMessage
+              {...messages.search_error_body}
+              values={{
+                link: (
+                  <Button
+                    appearance="link"
+                    spacing="none"
+                    onClick={onRetryClick}
+                  >
+                    <FormattedMessage {...messages.search_error_body_link} />
+                  </Button>
+                ),
+              }}
+            />
+          </span>
         </p>
       </ErrorWrapper>
     );

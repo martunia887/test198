@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Component } from 'react';
 import { pd } from 'pretty-data';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { akColorN80 } from '@atlaskit/util-shared-styles';
 import {
   Editor,
   EditorContext,
@@ -17,6 +16,7 @@ import {
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Spinner from '@atlaskit/spinner';
+import { TitleInput } from '@atlaskit/editor-core/example-helpers/PageElements';
 
 import {
   CODE_MACRO,
@@ -30,20 +30,6 @@ import {
   DATE,
 } from '../example-helpers/cxhtml-test-data';
 import { ConfluenceTransformer } from '../src';
-
-// tslint:disable-next-line:variable-name
-export const TitleInput = styled.input`
-  border: none;
-  outline: none;
-  font-size: 2.07142857em;
-  margin: 0 0 21px;
-  padding: 0;
-
-  &::placeholder {
-    color: ${akColorN80};
-  }
-`;
-TitleInput.displayName = 'TitleInput';
 
 // tslint:disable-next-line:variable-name
 export const Content = styled.div`
@@ -164,7 +150,6 @@ class Example extends Component<ExampleProps, ExampleState> {
                 <Editor
                   appearance="full-page"
                   analyticsHandler={analyticsHandler}
-                  allowTasksAndDecisions={true}
                   allowCodeBlocks={true}
                   allowLists={true}
                   allowTextColor={true}
@@ -192,11 +177,8 @@ class Example extends Component<ExampleProps, ExampleState> {
                   defaultValue={this.state.input}
                   key={this.state.input}
                   contentComponents={
-                    <TitleInput
-                      placeholder="Give this page a title..."
-                      // tslint:disable-next-line:jsx-no-lambda
-                      innerRef={ref => ref && ref.focus()}
-                    />
+                    // tslint:disable-next-line:jsx-no-lambda
+                    <TitleInput innerRef={ref => ref && ref.focus()} />
                   }
                   primaryToolbarComponents={
                     <WithEditorActions

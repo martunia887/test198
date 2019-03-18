@@ -1,26 +1,26 @@
-import { isSafeUrl } from '@atlaskit/editor-common';
-import { Schema } from 'prosemirror-model';
-import { Token } from './';
+import { isSafeUrl } from '@atlaskit/adf-schema';
+import { Token, TokenParser } from './';
 
 // https://www.atlassian.com
-const LINK_TEXT_REGEXP = /^(https?|irc):\/\/[\w.?\/#-=]*/;
+export const LINK_TEXT_REGEXP = /^(https?:\/\/|irc:\/\/|mailto:)([\w.?\/\\#-=@]+)/;
 
-export function linkText(input: string, schema: Schema): Token {
-  const match = input.match(LINK_TEXT_REGEXP);
+export const linkText: TokenParser = ({ input, position, schema }) => {
+  const match = input.substring(position).match(LINK_TEXT_REGEXP);
 
   if (!match) {
-    return fallback(input);
+    return fallback(input, position);
   }
 
-  const textRepresentation = match[0];
-  const url = match[0];
+  // Remove mailto:
+  const textRepresentation = match[1] === 'mailto:' ? match[2] : match[0];
+  const url = unescape(match[0]);
 
   if (!isSafeUrl(url)) {
-    return fallback(input);
+    return fallback(input, position);
   }
 
   const mark = schema.marks.link.create({
-    href: url,
+    href: encodeURI(url),
   });
   const textNode = schema.text(textRepresentation, [mark]);
 
@@ -29,12 +29,29 @@ export function linkText(input: string, schema: Schema): Token {
     nodes: [textNode],
     length: match[0].length,
   };
+};
+
+function unescape(url: string) {
+  let result = '';
+  for (let i = 0; i < url.length; i++) {
+    const char = url[i];
+    if (char !== '\\') {
+      result += char;
+      continue;
+    }
+    const nextChar = url[i + 1];
+    if (nextChar) {
+      result += nextChar;
+      i++;
+    }
+  }
+  return result;
 }
 
-function fallback(input: string): Token {
+function fallback(input: string, position: number): Token {
   return {
     type: 'text',
-    text: input.substr(0, 1),
+    text: input.substr(position, 1),
     length: 1,
   };
 }

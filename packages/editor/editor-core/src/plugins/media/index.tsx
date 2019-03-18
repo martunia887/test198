@@ -1,35 +1,39 @@
 import * as React from 'react';
-import { media, mediaGroup, mediaSingle } from '@atlaskit/editor-common';
-
-import { EditorPlugin } from '../../types';
-import { nodeViewFactory } from '../../nodeviews';
-import WithPluginState from '../../ui/WithPluginState';
-import { pluginKey as widthPluginKey } from '../width';
-
+import EditorImageIcon from '@atlaskit/icon/glyph/editor/image';
+import { media, mediaGroup, mediaSingle } from '@atlaskit/adf-schema';
+import {
+  EditorPlugin,
+  EditorAppearance,
+  PMPluginFactoryParams,
+} from '../../types';
+import { SmartMediaEditor, Dimensions } from '@atlaskit/media-editor';
+import { FileIdentifier } from '@atlaskit/media-core';
 import {
   stateKey as pluginKey,
   createPlugin,
-  MediaProvider,
   MediaState,
-  MediaStateManager,
-  DefaultMediaStateManager,
+  MediaPluginState,
 } from './pm-plugins/main';
 import keymapMediaSinglePlugin from './pm-plugins/keymap-media-single';
 import keymapPlugin from './pm-plugins/keymap';
 import ToolbarMedia from './ui/ToolbarMedia';
-import MediaSingleEdit from './ui/MediaSingleEdit';
-import ReactMediaGroupNode from './nodeviews/media-group';
-import ReactMediaNode from './nodeviews/media';
-import ReactMediaSingleNode from './nodeviews/media-single';
-import { CustomMediaPicker } from './types';
+import { ReactMediaGroupNode } from './nodeviews/mediaGroup';
+import { ReactMediaSingleNode } from './nodeviews/mediaSingle';
+import { CustomMediaPicker, MediaProvider } from './types';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { floatingToolbar } from './toolbar';
 
-export {
-  MediaState,
-  MediaStateManager,
-  DefaultMediaStateManager,
-  MediaProvider,
-  CustomMediaPicker,
-};
+import {
+  addAnalytics,
+  ACTION,
+  ACTION_SUBJECT,
+  INPUT_METHOD,
+  EVENT_TYPE,
+  ACTION_SUBJECT_ID,
+} from '../analytics';
+import WithPluginState from '../../ui/WithPluginState';
+
+export { MediaState, MediaProvider, CustomMediaPicker };
 
 export interface MediaOptions {
   provider?: Promise<MediaProvider>;
@@ -37,18 +41,56 @@ export interface MediaOptions {
   allowMediaGroup?: boolean;
   customDropzoneContainer?: HTMLElement;
   customMediaPicker?: CustomMediaPicker;
+  allowResizing?: boolean;
+  allowAnnotation?: boolean;
 }
 
 export interface MediaSingleOptions {
   disableLayout?: boolean;
 }
 
-const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
+export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
+  const node = mediaState.selectedMediaContainerNode();
+  if (!node) {
+    return null;
+  }
+  const { id } = node.firstChild!.attrs;
+
+  if (mediaState.uploadContext && mediaState.showEditingDialog) {
+    const identifier: FileIdentifier = {
+      id,
+      mediaItemType: 'file',
+      collectionName: node.firstChild!.attrs.collection,
+    };
+
+    return (
+      <SmartMediaEditor
+        identifier={identifier}
+        context={mediaState.uploadContext}
+        onUploadStart={(
+          newFileIdentifier: FileIdentifier,
+          dimensions: Dimensions,
+        ) => {
+          mediaState.closeMediaEditor();
+          mediaState.replaceEditingMedia(newFileIdentifier, dimensions);
+        }}
+        onFinish={mediaState.closeMediaEditor}
+      />
+    );
+  }
+
+  return null;
+};
+
+const mediaPlugin = (
+  options?: MediaOptions,
+  appearance?: EditorAppearance,
+): EditorPlugin => ({
   nodes() {
     return [
-      { name: 'mediaGroup', node: mediaGroup, rank: 1700 },
-      { name: 'mediaSingle', node: mediaSingle, rank: 1750 },
-      { name: 'media', node: media, rank: 1800 },
+      { name: 'mediaGroup', node: mediaGroup },
+      { name: 'mediaSingle', node: mediaSingle },
+      { name: 'media', node: media },
     ].filter(node => {
       const { allowMediaGroup = true, allowMediaSingle = false } =
         options || {};
@@ -68,7 +110,7 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
   pmPlugins() {
     return [
       {
-        rank: 1200,
+        name: 'media',
         plugin: ({
           schema,
           props,
@@ -76,36 +118,23 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
           eventDispatcher,
           providerFactory,
           errorReporter,
-        }) =>
+          portalProviderAPI,
+          reactContext,
+        }: PMPluginFactoryParams) =>
           createPlugin(
             schema,
             {
               providerFactory,
               nodeViews: {
-                mediaGroup: nodeViewFactory(providerFactory, {
-                  mediaGroup: ReactMediaGroupNode,
-                  media: ReactMediaNode,
-                }),
-                mediaSingle: nodeViewFactory(providerFactory, {
-                  mediaSingle: ({ view, node, ...props }) => (
-                    <WithPluginState
-                      editorView={view}
-                      eventDispatcher={eventDispatcher}
-                      plugins={{
-                        width: widthPluginKey,
-                      }}
-                      render={({ width }) => (
-                        <ReactMediaSingleNode
-                          view={view}
-                          node={node}
-                          width={width}
-                          {...props}
-                        />
-                      )}
-                    />
-                  ),
-                  media: ReactMediaNode,
-                }),
+                mediaGroup: ReactMediaGroupNode(
+                  portalProviderAPI,
+                  props.appearance,
+                ),
+                mediaSingle: ReactMediaSingleNode(
+                  portalProviderAPI,
+                  eventDispatcher,
+                  props.appearance,
+                ),
               },
               errorReporter,
               uploadErrorHandler: props.uploadErrorHandler,
@@ -113,16 +142,22 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
               customDropzoneContainer:
                 options && options.customDropzoneContainer,
               customMediaPicker: options && options.customMediaPicker,
+              appearance: props.appearance,
+              allowResizing: !!(options && options.allowResizing),
             },
+            reactContext,
             dispatch,
             props.appearance,
           ),
       },
-      { rank: 1220, plugin: ({ schema }) => keymapPlugin(schema) },
+      {
+        name: 'mediaKeymap',
+        plugin: ({ schema }: PMPluginFactoryParams) => keymapPlugin(),
+      },
     ].concat(
       options && options.allowMediaSingle
         ? {
-            rank: 1250,
+            name: 'mediaSingleKeymap',
             plugin: ({ schema }) => keymapMediaSinglePlugin(schema),
           }
         : [],
@@ -130,37 +165,61 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
   },
 
   contentComponent({ editorView }) {
-    if (!options) {
-      return null;
-    }
-
-    const { allowMediaSingle } = options;
-    let disableLayout: boolean | undefined;
-    if (typeof allowMediaSingle === 'object') {
-      disableLayout = allowMediaSingle.disableLayout;
-    }
-
-    if (
-      (typeof allowMediaSingle === 'boolean' && allowMediaSingle === false) ||
-      (typeof disableLayout === 'boolean' && disableLayout === true)
-    ) {
-      return null;
-    }
-
-    const pluginState = pluginKey.getState(editorView.state);
-
-    return <MediaSingleEdit pluginState={pluginState} />;
+    return (
+      <WithPluginState
+        editorView={editorView}
+        plugins={{
+          mediaState: pluginKey,
+        }}
+        render={({ mediaState }) => renderSmartMediaEditor(mediaState)}
+      />
+    );
   },
 
-  secondaryToolbarComponent({ editorView, disabled }) {
+  secondaryToolbarComponent({ editorView, eventDispatcher, disabled }) {
     return (
       <ToolbarMedia
         editorView={editorView}
+        eventDispatcher={eventDispatcher}
         pluginKey={pluginKey}
         isDisabled={disabled}
         isReducedSpacing={true}
       />
     );
+  },
+
+  pluginsOptions: {
+    quickInsert: ({ formatMessage }) => [
+      {
+        title: formatMessage(messages.filesAndImages),
+        priority: 400,
+        keywords: ['media'],
+        icon: () => (
+          <EditorImageIcon label={formatMessage(messages.filesAndImages)} />
+        ),
+        action(insert, state) {
+          const pluginState = pluginKey.getState(state);
+          pluginState.showMediaPicker();
+          const tr = insert('');
+          return addAnalytics(tr, {
+            action: ACTION.OPENED,
+            actionSubject: ACTION_SUBJECT.PICKER,
+            actionSubjectId: ACTION_SUBJECT_ID.PICKER_CLOUD,
+            attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
+            eventType: EVENT_TYPE.UI,
+          });
+        },
+      },
+    ],
+
+    floatingToolbar: (state, intl) =>
+      floatingToolbar(
+        state,
+        intl,
+        options && options.allowResizing,
+        options && options.allowAnnotation,
+        appearance,
+      ),
   },
 });
 

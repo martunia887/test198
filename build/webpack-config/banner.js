@@ -1,5 +1,4 @@
 // @flow
-
 const chalk = require('chalk');
 
 function print(msg /*: Array<String>*/) {
@@ -12,13 +11,12 @@ function redBadge(label /*: string */) {
 
 function devServerBanner(
   {
-    entry,
     workspaces,
     workspacesGlob,
     isAll,
     port,
     host,
-  } /*: { entry: string, workspaces: Array<{ name: string, dir: string }>, workspacesGlob: string, isAll: boolean, port: number, host: string } */,
+  } /*: { workspaces: Array<{ name: string, dir: string }>, workspacesGlob: string, isAll: boolean, port: number, host: string } */,
 ) {
   const msg /*: Array<any> */ = [''];
   const wsNamePadLength = workspaces.reduce(

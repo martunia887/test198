@@ -1,14 +1,19 @@
 {
-  "extends": "../../../tsconfig.fabric.json",
+  "extends": "../../../tsconfig.media.json",
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",
-    "./__tests__/**/*.ts",
-    "./__tests__/**/*.tsx",
     "./docs/*.ts",
     "./docs/*.tsx",
     "./examples/*.ts",
-    "./examples/*.tsx",
-    "./typings/**/*.d.ts"
-  ]
+    "./examples/*.tsx"
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@atlaskit/analytics-next": [
+        "node_modules/@atlaskit/analytics-next-types"
+      ]
+    }
+  }
 }

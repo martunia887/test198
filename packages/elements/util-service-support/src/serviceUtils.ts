@@ -1,12 +1,14 @@
 import * as URL from 'url';
-import * as URLSearchParams from 'url-search-params'; // IE, Safari, Mobile Chrome, Mobile Safari
+import * as USP from 'url-search-params'; // IE, Safari, Mobile Chrome, Mobile Safari
 import {
+  buildCredentials,
   KeyValues,
   RequestServiceOptions,
-  ServiceConfig,
   SecurityOptions,
-  buildCredentials,
+  ServiceConfig,
 } from './types';
+
+const URLSearchParams = USP.default || USP;
 
 const defaultRequestServiceOptions: RequestServiceOptions = {};
 
@@ -102,26 +104,24 @@ export const requestService = <T>(
     credentials,
   };
 
-  return fetch(new Request(requestUrl, requestOptions)).then(
-    (response: Response) => {
-      if (response.status === 204) {
-        return Promise.resolve();
-      } else if (response.ok) {
-        return response.json();
-      } else if (response.status === 401 && refreshedSecurityProvider) {
-        // auth issue - try once
-        return refreshedSecurityProvider().then(newSecOptions => {
-          const retryServiceConfig = {
-            url,
-            securityProvider: () => newSecOptions,
-          };
-          return requestService(retryServiceConfig, options);
-        });
-      }
-      return Promise.reject({
-        code: response.status,
-        reason: response.statusText,
+  return fetch(requestUrl, requestOptions).then((response: Response) => {
+    if (response.status === 204) {
+      return Promise.resolve();
+    } else if (response.ok) {
+      return response.json();
+    } else if (response.status === 401 && refreshedSecurityProvider) {
+      // auth issue - try once
+      return refreshedSecurityProvider().then(newSecOptions => {
+        const retryServiceConfig = {
+          url,
+          securityProvider: () => newSecOptions,
+        };
+        return requestService(retryServiceConfig, options);
       });
-    },
-  );
+    }
+    return Promise.reject({
+      code: response.status,
+      reason: response.statusText,
+    });
+  });
 };

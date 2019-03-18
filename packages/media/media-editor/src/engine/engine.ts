@@ -38,9 +38,9 @@ const maxColorChannel = 255;
 export class Engine {
   private resourceManager = new ResourceManager();
 
-  private module: Core.NativeModule;
-  private ve: Core.VeEngine;
-  private bitmapExporter: BitmapExporter;
+  private module!: Core.NativeModule;
+  private ve!: Core.VeEngine;
+  private bitmapExporter!: BitmapExporter;
 
   constructor(private config: EngineConfig) {
     try {
@@ -65,7 +65,8 @@ export class Engine {
         const image = this.bitmapExporter.getBase64Image(
           format || defaultFormat,
         );
-        return { isExported: true, content: image };
+        const dimensions = this.bitmapExporter.getDimensions();
+        return { isExported: true, content: image, dimensions };
       }
     } catch (error) {
       return { isExported: false, error: error.message };

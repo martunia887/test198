@@ -1,32 +1,20 @@
-import { LocalUploadComponent, LocalUploadConfig } from './localUpload';
-import { MPBrowserLoaded } from '../outer/analytics/events';
-import { MediaPickerContext } from '../domain/context';
+import { LocalUploadComponent } from './localUpload';
 import { Context } from '@atlaskit/media-core';
-import { OldUploadServiceImpl } from '../service/uploadService';
+import * as exenv from 'exenv';
+import { Browser, BrowserConfig } from './types';
 
-export interface BrowserConfig extends LocalUploadConfig {
-  readonly multiple?: boolean;
-  readonly fileExtensions?: Array<string>;
-}
-
-export interface BrowserConstructor {
-  new (
-    analyticsContext: MediaPickerContext,
-    context: Context,
-    browserConfig: BrowserConfig,
-  ): Browser;
-}
-
-export class Browser extends LocalUploadComponent {
+export class BrowserImpl extends LocalUploadComponent implements Browser {
   private readonly browseElement: HTMLInputElement;
 
   constructor(
-    analyticsContext: MediaPickerContext,
     context: Context,
     browserConfig: BrowserConfig = { uploadParams: {} },
   ) {
-    super(analyticsContext, context, browserConfig);
-
+    super(context, browserConfig);
+    if (!exenv.canUseDOM) {
+      this.browseElement = {} as any;
+      return;
+    }
     this.browseElement = document.createElement('input');
     this.browseElement.setAttribute('type', 'file');
     this.browseElement.style.display = 'none';
@@ -47,24 +35,14 @@ export class Browser extends LocalUploadComponent {
     document.body.appendChild(this.browseElement);
 
     this.addEvents();
-
-    this.analyticsContext.trackEvent(new MPBrowserLoaded());
   }
 
   private addEvents() {
-    if (this.config.useNewUploadService) {
-      this.browseElement.addEventListener('change', this.onFilePicked);
-    } else {
-      (this.uploadService as OldUploadServiceImpl).addBrowse(
-        this.browseElement,
-      );
-    }
+    this.browseElement.addEventListener('change', this.onFilePicked);
   }
 
   private removeEvents() {
-    if (this.config.useNewUploadService) {
-      this.browseElement.removeEventListener('change', this.onFilePicked);
-    }
+    this.browseElement.removeEventListener('change', this.onFilePicked);
   }
 
   private onFilePicked = () => {

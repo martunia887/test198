@@ -1,55 +1,62 @@
 import * as React from 'react';
-import { Context } from '@atlaskit/media-core';
+import { Context, FileIdentifier } from '@atlaskit/media-core';
 import { ItemViewer } from './item-viewer';
-import { Identifier } from './domain';
-import { HeaderWrapper, ListWrapper } from './styled';
-import { getSelectedIndex } from './util';
-import { ErrorMessage } from './styled';
-import Navigation from './navigation';
+import { MediaViewerFeatureFlags } from './domain';
+import { HeaderWrapper, hideControlsClassName, ListWrapper } from './styled';
+import { getSelectedIndex } from './utils';
+import ErrorMessage, { createError } from './error';
+import { Navigation } from './navigation';
 import Header from './header';
 
-export type Props = {
+export type Props = Readonly<{
   onClose?: () => void;
-  onNavigationChange?: (selectedItem: Identifier) => void;
+  onNavigationChange?: (selectedItem: FileIdentifier) => void;
   showControls?: () => void;
-  selectedItem: Identifier;
-  items: Identifier[];
+  featureFlags?: MediaViewerFeatureFlags;
+  defaultSelectedItem: FileIdentifier;
+  items: FileIdentifier[];
   context: Context;
-};
+}>;
 
 export type State = {
-  selectedItem: Identifier;
+  selectedItem: FileIdentifier;
+  previewCount: number;
 };
 
 export class List extends React.Component<Props, State> {
-  state: State = { selectedItem: this.props.selectedItem };
+  state: State = {
+    selectedItem: this.props.defaultSelectedItem,
+    previewCount: 0,
+  };
 
   render() {
     const { items } = this.props;
     return this.renderContent(items);
   }
 
-  renderContent(items: Identifier[]) {
-    const { context, onClose } = this.props;
+  renderContent(items: FileIdentifier[]) {
+    const { context, onClose, featureFlags, showControls } = this.props;
     const { selectedItem } = this.state;
     if (getSelectedIndex(items, selectedItem) < 0) {
-      return (
-        <ErrorMessage>
-          The selected item with id '{selectedItem.id}' was not found on the
-          list
-        </ErrorMessage>
-      );
+      return <ErrorMessage error={createError('idNotFound')} />;
     } else {
       return (
         <ListWrapper>
-          <HeaderWrapper>
+          <HeaderWrapper className={hideControlsClassName}>
             <Header
               context={context}
               identifier={selectedItem}
               onClose={onClose}
             />
           </HeaderWrapper>
-          <ItemViewer context={context} identifier={selectedItem} />
+          <ItemViewer
+            featureFlags={featureFlags}
+            context={context}
+            identifier={selectedItem}
+            showControls={showControls}
+            onClose={onClose}
+            previewCount={this.state.previewCount}
+          />
           <Navigation
             items={items}
             selectedItem={selectedItem}
@@ -60,7 +67,7 @@ export class List extends React.Component<Props, State> {
     }
   }
 
-  onNavigationChange = (selectedItem: Identifier) => {
+  onNavigationChange = (selectedItem: FileIdentifier) => {
     const { onNavigationChange, showControls } = this.props;
     if (onNavigationChange) {
       onNavigationChange(selectedItem);
@@ -69,6 +76,6 @@ export class List extends React.Component<Props, State> {
       showControls();
     }
 
-    this.setState({ selectedItem });
+    this.setState({ selectedItem, previewCount: this.state.previewCount + 1 });
   };
 }

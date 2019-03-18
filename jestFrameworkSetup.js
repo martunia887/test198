@@ -2,6 +2,10 @@
 import 'jest-styled-components';
 import snakeCase from 'snake-case';
 import { toMatchSnapshot } from 'jest-snapshot';
+import { configureToMatchImageSnapshot } from 'jest-image-snapshot';
+import * as emotion from 'emotion';
+import { createSerializer } from 'jest-emotion';
+import 'jest-localstorage-mock';
 
 let consoleError;
 let consoleWarn;
@@ -10,7 +14,17 @@ let consoleLog;
 // URL is not available for non Node environment
 if (global.URL) {
   global.URL.createObjectURL = () => 'mock result of URL.createObjectURL()';
+  global.URL.revokeObjectURL = () => 'mock result of URL.revokeObjectURL()';
 }
+
+if (!global.WEBSITE_ENV) {
+  global.WEBSITE_ENV = 'local';
+}
+
+// Node promise rejection are now logged for debbugging
+process.on('unhandledRejection', reason => {
+  console.log('REJECTION', reason);
+});
 
 /*
   This file is executed after the test framework is setup for each test file. Addons that modify
@@ -90,12 +104,6 @@ if (typeof window !== 'undefined' && !('cancelAnimationFrame' in window)) {
   };
 }
 
-function isNodeOrFragment(thing) {
-  // Using a simple `instanceof` check is intentionally avoided here to make
-  // this code agnostic to a specific instance of a Schema.
-  return thing && typeof thing.eq === 'function';
-}
-
 function transformDoc(fn) {
   return doc => {
     const walk = fn => node => {
@@ -112,6 +120,7 @@ function transformDoc(fn) {
 }
 
 const hasLocalId = type =>
+  type === 'status' ||
   type === 'taskItem' ||
   type === 'taskList' ||
   type === 'decisionItem' ||
@@ -123,7 +132,7 @@ const removeIdsFromDoc = transformDoc(node => {
    * @see https://regex101.com/r/FrYUen/1
    */
   if (node.type === 'media') {
-    return {
+    const replacedNode = {
       ...node,
       attrs: {
         ...node.attrs,
@@ -131,8 +140,19 @@ const removeIdsFromDoc = transformDoc(node => {
           /(temporary:)?([a-z0-9\-]+)(:.*)?$/,
           '$11234-5678-abcd-efgh$3',
         ),
+
+        __fileName: 'example.png',
       },
     };
+
+    if (node.attrs.__key) {
+      replacedNode.attrs.__key = node.attrs.__key.replace(
+        /(temporary:)?([a-z0-9\-]+)(:.*)?$/,
+        '$11234-5678-abcd-efgh$3',
+      );
+    }
+
+    return replacedNode;
   }
   if (hasLocalId(node.type)) {
     return {
@@ -219,16 +239,21 @@ expect.extend({
   toMatchDocSnapshot(actual) {
     const { currentTestName, snapshotState } = this;
 
-    const removeLastWord = sentence =>
+    const removeFirstWord = sentence =>
       sentence
         .split(' ')
-        .slice(0, -1)
+        .slice(1)
         .join(' ');
 
-    const newTestName = removeLastWord(currentTestName);
+    // this change is to ensure we are mentioning test file name only once in snapshot file
+    // for integration tests only
+    const newTestName = removeFirstWord(currentTestName);
+
+    // remove ids that may change from the document so snapshots are repeatable
     const transformedDoc = removeIdsFromDoc(actual);
 
-    // We are only overriding snapshot for doc snapshot. The gotcha is test names have to be unique per file
+    // since the test runner fires off multiple browsers for a single test, map each snapshot to the same one
+    // (otherwise we'll try to create as many snapshots as there are browsers)
     const oldCounters = snapshotState._counters;
     snapshotState._counters = Object.create(oldCounters, {
       set: {
@@ -296,4 +321,31 @@ if (process.env.CI) {
     console.warn = consoleWarn;
     console.log = consoleLog;
   });
+}
+
+expect.addSnapshotSerializer(createSerializer(emotion));
+
+// set up for visual regression
+if (process.env.VISUAL_REGRESSION) {
+  jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
+
+  beforeAll(async () => {
+    global.page = await global.browser.newPage();
+  }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
+
+  afterAll(async () => {
+    await global.page.close();
+    await global.browser.disconnect();
+  });
+
+  // A failureThreshold of 1 will pass tests that have > 2 percent failing pixels
+  const customConfig = { threshold: 0.0 };
+  const toMatchProdImageSnapshot = configureToMatchImageSnapshot({
+    customDiffConfig: customConfig,
+    failureThreshold: '20',
+    failureThresholdType: 'pixel',
+    noColors: true,
+  });
+
+  expect.extend({ toMatchProdImageSnapshot });
 }

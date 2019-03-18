@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { typeAheadQuery } from '@atlaskit/editor-common';
+import { typeAheadQuery } from '@atlaskit/adf-schema';
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
 import { TypeAheadHandler } from './types';
 import {
+  createInitialPluginState,
   createPlugin,
   pluginKey as typeAheadPluginKey,
   PluginState as TypeAheadPluginState,
@@ -16,21 +17,22 @@ const typeAheadPlugin: EditorPlugin = {
   name: 'typeAhead',
 
   marks() {
-    return [{ name: 'typeAheadQuery', mark: typeAheadQuery, rank: 1300 }];
+    return [{ name: 'typeAheadQuery', mark: typeAheadQuery }];
   },
 
   pmPlugins(typeAhead: Array<TypeAheadHandler> = []) {
     return [
       {
-        rank: 600,
-        plugin: ({ dispatch }) => createPlugin(dispatch, typeAhead),
+        name: 'typeAhead',
+        plugin: ({ dispatch, reactContext }) =>
+          createPlugin(dispatch, reactContext, typeAhead),
       },
       {
-        rank: 620,
+        name: 'typeAheadInputRule',
         plugin: ({ schema }) => inputRulePlugin(schema, typeAhead),
       },
       {
-        rank: 640,
+        name: 'typeAheadKeymap',
         plugin: () => keymapPlugin(),
       },
     ];
@@ -48,18 +50,19 @@ const typeAheadPlugin: EditorPlugin = {
           typeAhead: typeAheadPluginKey,
         }}
         render={({
-          typeAhead = {
-            active: false,
-            items: [],
-            currentIndex: 0,
-            itemsLoader: null,
-          },
+          typeAhead = createInitialPluginState(),
         }: {
           typeAhead: TypeAheadPluginState;
         }) => {
-          const anchorElement = editorView.dom.querySelector(
-            '[data-type-ahead-query]',
-          ) as HTMLElement;
+          const { queryMarkPos } = typeAhead;
+          const domRef =
+            queryMarkPos !== null ? editorView.domAtPos(queryMarkPos) : null;
+          const anchorElement = domRef
+            ? ((domRef.node as HTMLElement).childNodes[
+                domRef.offset
+              ] as HTMLElement)
+            : undefined;
+
           return (
             <TypeAhead
               editorView={editorView}
@@ -79,4 +82,5 @@ const typeAheadPlugin: EditorPlugin = {
   },
 };
 
+export { typeAheadPluginKey, TypeAheadPluginState };
 export default typeAheadPlugin;

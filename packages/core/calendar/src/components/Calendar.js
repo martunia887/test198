@@ -3,7 +3,16 @@
 import { Calendar as CalendarBase } from 'calendar-base';
 import pick from 'lodash.pick';
 import React, { Component } from 'react';
-import uuid from 'uuid/v1';
+import { uid } from 'react-uid';
+import {
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  createAndFireEvent,
+} from '@atlaskit/analytics-next';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 import { dateToString, getShortDayName, makeArrayFromNumber } from '../util';
 import DateComponent from './Date';
 import Heading from './Heading';
@@ -85,14 +94,14 @@ type State = {
 };
 
 function getUniqueId(prefix: string) {
-  return `${prefix}-${uuid()}`;
+  return `${prefix}-${uid({ id: prefix })}`;
 }
 
 function padToTwo(number: number) {
   return number <= 99 ? `0${number}`.slice(-2) : `${number}`;
 }
 
-export default class Calendar extends Component<Props, State> {
+class Calendar extends Component<Props, State> {
   calendar: Object;
   container: HTMLElement | null;
 
@@ -115,7 +124,7 @@ export default class Calendar extends Component<Props, State> {
     const thisMonth = now.getMonth() + 1;
     const thisYear = now.getFullYear();
     this.state = {
-      day: this.props.defaultDay,
+      day: this.props.defaultDay || thisDay,
       disabled: this.props.defaultDisabled,
       selected: this.props.defaultSelected,
       month: this.props.defaultMonth || thisMonth,
@@ -453,3 +462,36 @@ export default class Calendar extends Component<Props, State> {
     );
   }
 }
+
+export { Calendar as CalendarWithoutAnalytics };
+const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
+
+export default withAnalyticsContext({
+  componentName: 'calendar',
+  packageName,
+  packageVersion,
+})(
+  withAnalyticsEvents({
+    onChange: createAndFireEventOnAtlaskit({
+      action: 'changed',
+      actionSubject: 'calendarDate',
+
+      attributes: {
+        componentName: 'calendar',
+        packageName,
+        packageVersion,
+      },
+    }),
+
+    onSelect: createAndFireEventOnAtlaskit({
+      action: 'selected',
+      actionSubject: 'calendarDate',
+
+      attributes: {
+        componentName: 'calendar',
+        packageName,
+        packageVersion,
+      },
+    }),
+  })(Calendar),
+);

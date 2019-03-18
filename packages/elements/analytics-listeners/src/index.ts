@@ -1,3 +1,5 @@
-import FabricAnalyticsListeners from './FabricAnalyticsListeners';
+export { default } from './FabricAnalyticsListeners';
 
-export default FabricAnalyticsListeners;
+export { LOG_LEVEL } from './helpers/logger';
+
+export { FabricChannel, AnalyticsWebClient } from './types';

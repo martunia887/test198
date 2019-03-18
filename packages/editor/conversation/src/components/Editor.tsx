@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as debounce from 'lodash.debounce';
 import styled from 'styled-components';
 import AkAvatar from '@atlaskit/avatar';
 import { ProviderFactory } from '@atlaskit/editor-common';
@@ -23,7 +24,10 @@ export interface Props {
   isExpanded?: boolean;
   onCancel?: () => void;
   onSave?: (value: any) => void;
+  onClose?: () => void;
+  onOpen?: () => void;
   isEditing?: boolean;
+  onChange?: (value: any) => void;
 
   // Provider
   dataProviders?: ProviderFactory;
@@ -91,25 +95,52 @@ export default class Editor extends React.Component<Props, State> {
     };
   }
 
+  UNSAFE_componentWillUpdate(nextProps: Props, nextState: State) {
+    if (nextState.isExpanded && !this.state.isExpanded && this.props.onOpen) {
+      this.props.onOpen();
+    } else if (
+      !nextState.isExpanded &&
+      this.state.isExpanded &&
+      this.props.onClose
+    ) {
+      this.props.onClose();
+    }
+  }
+
+  componentDidMount() {
+    if (this.state.isExpanded && this.props.onOpen) {
+      this.props.onOpen();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.onClose) {
+      this.props.onClose();
+    }
+  }
+
   private onFocus = () =>
     this.setState(prevState => ({ isExpanded: !prevState.isExpanded }));
 
   private onCancel = () => {
     if (this.props.onCancel) {
       this.props.onCancel();
-    } else {
-      this.setState({
-        isExpanded: false,
-        isEditing: false,
-      });
     }
+
+    this.setState({
+      isExpanded: false,
+      isEditing: false,
+    });
   };
 
   private onSave = async (actions: any) => {
     if (this.props.onSave) {
       const value = await actions.getValue();
 
-      if (value && value.content.some(n => n.content && n.content.length)) {
+      if (
+        value &&
+        value.content.some((n: any) => n.content && n.content.length)
+      ) {
         this.props.onSave(value);
         actions.clear();
       } else {
@@ -124,13 +155,10 @@ export default class Editor extends React.Component<Props, State> {
     });
   };
 
-  private handleRef = (node: HTMLDivElement) => {
-    if (!this.props.disableScrollTo && this.props.isExpanded && node) {
-      if ((node as any).scrollIntoViewIfNeeded) {
-        (node as any).scrollIntoViewIfNeeded({ behavior: 'smooth' });
-      } else if (node.scrollIntoView) {
-        node.scrollIntoView({ behavior: 'smooth' });
-      }
+  private onChange = async (actions: EditorActions) => {
+    if (this.props.onChange) {
+      const value = await actions.getValue();
+      this.props.onChange(value);
     }
   };
 
@@ -142,11 +170,11 @@ export default class Editor extends React.Component<Props, State> {
       placeholder,
       allowFeedbackAndHelpButtons,
     } = this.props;
-    let providers = {};
+    let providers: Record<number, any> = {};
 
     // @TODO Remove and just pass the factory through once AkEditor is updated
     if (dataProviders) {
-      (dataProviders as any).providers.forEach((provider, key) => {
+      (dataProviders as any).providers.forEach((provider: any, key: number) => {
         providers[key] = provider;
       });
     }
@@ -158,6 +186,7 @@ export default class Editor extends React.Component<Props, State> {
       allowLists: true,
       onSave: () => this.onSave(actions),
       onCancel: this.onCancel,
+      onChange: debounce(() => this.onChange(actions), 250),
       defaultValue,
       allowHelpDialog: allowFeedbackAndHelpButtons,
       primaryToolbarComponents: allowFeedbackAndHelpButtons
@@ -174,7 +203,7 @@ export default class Editor extends React.Component<Props, State> {
     };
 
     return (
-      <div ref={this.handleRef}>
+      <div>
         <CollapsedEditor
           placeholder={placeholder}
           isExpanded={this.state.isExpanded}

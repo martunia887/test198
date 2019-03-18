@@ -43,7 +43,6 @@ export default class SelectExample extends Component<void, State> {
   renderEditView = () => (
     <MultiSelect
       defaultSelected={MultiSelectItems}
-      // $FlowFixMe TEMPORARY
       items={MultiSelectItems}
       isDefaultOpen
       shouldFitContainer
@@ -65,7 +64,7 @@ export default class SelectExample extends Component<void, State> {
 
   render() {
     return (
-      <div>
+      <div style={{ padding: '0 16px' }}>
         <InlineEditor
           label="With Multi Select Edit View"
           disableEditViewFieldBase

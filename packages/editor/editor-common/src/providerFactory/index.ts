@@ -1,17 +1,5 @@
 export { WithProviders } from './withProviders';
-
-const findIndex = (array: any[], predicate: (item: any) => boolean): number => {
-  let index = -1;
-  array.some((item, i) => {
-    if (predicate(item)) {
-      index = i;
-      return true;
-    }
-    return false;
-  });
-
-  return index;
-};
+export { Providers } from '../types';
 
 export type ProviderHandler = (name: string, provider?: Promise<any>) => void;
 
@@ -38,7 +26,7 @@ export default class ProviderFactory {
 
   setProvider(name: string, provider?: Promise<any>) {
     // Do not trigger notifyUpdate if provider is the same.
-    if (provider && this.providers.get(name) === provider) {
+    if (this.providers.get(name) === provider) {
       return;
     }
 
@@ -75,7 +63,7 @@ export default class ProviderFactory {
       return;
     }
 
-    const index = findIndex(handlers, h => h === handler);
+    const index = handlers.indexOf(handler);
 
     if (index !== -1) {
       handlers.splice(index, 1);

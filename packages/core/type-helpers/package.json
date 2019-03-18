@@ -1,0 +1,27 @@
+{
+  "name": "@atlaskit/type-helpers",
+  "version": "3.0.2",
+  "description": "Some helpers for Typescript typing of Atlaskit",
+  "license": "Apache-2.0",
+  "module": "index.js",
+  "atlaskit:src": "index.ts",
+  "types": "index.d.ts",
+  "sideEffects": false,
+  "author": "Atlassian Pty Ltd",
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "dependencies": {
+    "react": "^16.4.0"
+  },
+  "peerDependencies": {
+    "react": "^16.4.0"
+  },
+  "atlaskit": {
+    "internal": true
+  },
+  "devDependencies": {},
+  "keywords": [
+    "atlaskit",
+    "react",
+    "ui"
+  ]
+}

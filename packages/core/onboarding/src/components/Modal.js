@@ -1,4 +1,5 @@
 // @flow
+
 import React, { Component, type ElementType, type Node } from 'react';
 import { ThemeProvider } from 'styled-components';
 import Modal from '@atlaskit/modal-dialog';
@@ -8,7 +9,6 @@ import { Actions, ActionItem, Body, Heading, Image } from '../styled/Modal';
 import { getModalTheme } from './theme';
 import type { ActionsType } from '../types';
 
-/* eslint-disable react/no-unused-prop-types */
 type Props = {|
   /** Buttons to render in the footer */
   actions?: ActionsType,
@@ -23,57 +23,55 @@ type Props = {|
   /** Heading text rendered above the body */
   heading?: string,
 |};
-/* eslint-enable react/no-unused-prop-types */
 
-const noop = () => {};
+function noop() {}
 
-export default class OnboardingModal extends Component<Props, null> {
+export default class OnboardingModal extends Component<Props> {
+  headerComponent = (props: Props) => {
+    const { header: HeaderElement, image: src } = props;
+
+    const ImageElement = () => <Image alt="" src={src} />;
+
+    return HeaderElement || ImageElement;
+  };
+  footerComponent = (props: Props) => {
+    const { footer: FooterElement, actions: actionList } = props;
+
+    const ActionsElement = () =>
+      actionList ? (
+        <ThemeProvider theme={getModalTheme}>
+          <Actions>
+            {actionList.map(({ text, key, ...rest }, idx) => {
+              const variant = idx ? 'subtle-link' : 'primary';
+              return (
+                <ActionItem
+                  key={key || (typeof text === 'string' ? text : `${idx}`)}
+                >
+                  <Button appearance={variant} autoFocus={!idx} {...rest}>
+                    {text}
+                  </Button>
+                </ActionItem>
+              );
+            })}
+          </Actions>
+        </ThemeProvider>
+      ) : (
+        undefined
+      );
+
+    return FooterElement || ActionsElement;
+  };
+
   render() {
-    const {
-      footer: footerElement,
-      header: headerElement,
-      actions,
-      children,
-      heading,
-      image,
-      ...props
-    } = this.props;
-    // NOTE: @atlaskit/modal-dialog expects a component for header/footer. This
-    // is inconsistent with Spotlight so we take the element and create a component.
-    const footer = footerElement ? () => footerElement : null;
-    const header = headerElement ? () => headerElement : null;
-
-    const safeActions = actions;
-
-    const footerComponent =
-      footer ||
-      (safeActions
-        ? () => (
-            <ThemeProvider theme={getModalTheme}>
-              <Actions>
-                {safeActions.map(({ text, ...rest }, idx) => {
-                  const variant = idx ? 'subtle-link' : 'primary';
-                  return (
-                    <ActionItem key={text || idx}>
-                      <Button appearance={variant} autoFocus={!idx} {...rest}>
-                        {text}
-                      </Button>
-                    </ActionItem>
-                  );
-                })}
-              </Actions>
-            </ThemeProvider>
-          )
-        : null);
-
-    const headerComponent =
-      header || (image ? () => <Image alt={heading} src={image} /> : null);
+    const { actions, children, heading, ...props } = this.props;
 
     return (
       <Modal
         autoFocus
-        footer={footerComponent}
-        header={headerComponent}
+        components={{
+          Header: this.headerComponent(this.props),
+          Footer: this.footerComponent(this.props),
+        }}
         onClose={noop}
         scrollBehavior="outside"
         shouldCloseOnOverlayClick={false}

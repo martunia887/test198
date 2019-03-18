@@ -1,4 +1,10 @@
-import { Result, ResultType, AnalyticsType } from '../model/Result';
+import {
+  PersonResult,
+  ResultType,
+  AnalyticsType,
+  Result,
+  ContentType,
+} from '../model/Result';
 import {
   RequestServiceOptions,
   ServiceConfig,
@@ -9,6 +15,8 @@ export interface GraphqlResponse {
   errors?: GraphqlError[];
   data?: {
     AccountCentricUserSearch?: SearchResult[];
+    Collaborators?: SearchResult[];
+    UserSearch?: SearchResult[];
   };
 }
 
@@ -16,6 +24,9 @@ export interface SearchResult {
   id: string;
   avatarUrl: string;
   fullName: string;
+  department: string;
+  title: string;
+  nickname: string;
 }
 
 export interface GraphqlError {
@@ -25,18 +36,44 @@ export interface GraphqlError {
 
 export interface PeopleSearchClient {
   search(query: string): Promise<Result[]>;
+  getRecentPeople(): Promise<Result[]>;
 }
 
 export default class PeopleSearchClientImpl implements PeopleSearchClient {
   private serviceConfig: ServiceConfig;
   private cloudId: string;
 
+  private readonly RESULT_LIMIT = 5;
+
   constructor(url: string, cloudId: string) {
     this.serviceConfig = { url: url };
     this.cloudId = cloudId;
   }
 
-  private buildQuery(query: string) {
+  private buildRecentQuery() {
+    return {
+      query: `query Collaborators(
+          $cloudId: String!,
+          $limit: Int) {
+          Collaborators(cloudId: $cloudId, limit: $limit) {
+            id,
+            fullName,
+            avatarUrl,
+            title,
+            nickname,
+            department
+          }
+        }`,
+      variables: {
+        cloudId: this.cloudId,
+        limit: 3,
+        excludeBots: true,
+        excludeInactive: true,
+      },
+    };
+  }
+
+  private buildSearchQuery(query: string) {
     return {
       query: `query Search(
         $cloudId: String!,
@@ -44,19 +81,24 @@ export default class PeopleSearchClientImpl implements PeopleSearchClient {
         $first: Int!,
         $offset: Int,
         $excludeInactive: Boolean,
-        $excludeBots: Boolean
+        $excludeBots: Boolean,
+        $product: String,
       ) {
-        AccountCentricUserSearch (displayName: $displayName, cloudId: $cloudId, first: $first, offset: $offset,
+        UserSearch (product: $product, displayName: $displayName, cloudId: $cloudId, first: $first, offset: $offset,
         filter: { excludeInactive: $excludeInactive, excludeBots: $excludeBots }) {
           id,
           fullName,
-          avatarUrl
+          avatarUrl,
+          title,
+          nickname,
+          department
         }
       }`,
       variables: {
         cloudId: this.cloudId,
+        product: 'confluence',
         displayName: query,
-        first: 5,
+        first: this.RESULT_LIMIT,
         offset: 1,
         excludeInactive: true,
         excludeBots: true,
@@ -64,17 +106,45 @@ export default class PeopleSearchClientImpl implements PeopleSearchClient {
     };
   }
 
-  public async search(query: string): Promise<Result[]> {
-    const options: RequestServiceOptions = {
+  private buildRequestOptions(body: object): RequestServiceOptions {
+    return {
       path: 'graphql',
       requestInit: {
         headers: {
           'Content-Type': 'application/json',
         },
         method: 'POST',
-        body: JSON.stringify(this.buildQuery(query)),
+        body: JSON.stringify(body),
       },
     };
+  }
+
+  public async getRecentPeople(): Promise<Result[]> {
+    const options = this.buildRequestOptions(this.buildRecentQuery());
+
+    const response = await utils.requestService<GraphqlResponse>(
+      this.serviceConfig,
+      options,
+    );
+
+    if (response.errors) {
+      // TODO should probably catch and log this
+      return [];
+    }
+
+    if (!response.data || !response.data.Collaborators) {
+      return [];
+    }
+
+    return response.data.Collaborators.map(record =>
+      userSearchResultToResult(record, AnalyticsType.RecentPerson),
+    );
+  }
+
+  public async search(query: string): Promise<Result[]> {
+    const options = this.buildRequestOptions(
+      this.buildSearchQuery(query.trim()),
+    );
 
     const response = await utils.requestService<GraphqlResponse>(
       this.serviceConfig,
@@ -85,11 +155,13 @@ export default class PeopleSearchClientImpl implements PeopleSearchClient {
       throw new Error(makeGraphqlErrorMessage(response.errors));
     }
 
-    if (!response.data || !response.data.AccountCentricUserSearch) {
+    if (!response.data || !response.data.UserSearch) {
       throw new Error('PeopleSearchClient: Response data missing');
     }
 
-    return response.data.AccountCentricUserSearch.map(userSearchResultToResult);
+    return response.data.UserSearch.map(record =>
+      userSearchResultToResult(record, AnalyticsType.ResultPerson),
+    );
   }
 }
 
@@ -98,13 +170,21 @@ function makeGraphqlErrorMessage(errors: GraphqlError[]) {
   return `${firstError.category}: ${firstError.message}`;
 }
 
-function userSearchResultToResult(searchResult: SearchResult): Result {
+function userSearchResultToResult(
+  searchResult: SearchResult,
+  analyticsType: AnalyticsType,
+): PersonResult {
+  const mention = searchResult.nickname || searchResult.fullName;
+
   return {
-    resultType: ResultType.Person,
+    resultType: ResultType.PersonResult,
     resultId: 'people-' + searchResult.id,
     name: searchResult.fullName,
-    href: '/home/people/' + searchResult.id,
+    href: '/people/' + searchResult.id,
     avatarUrl: searchResult.avatarUrl,
-    analyticsType: AnalyticsType.ResultPerson,
+    contentType: ContentType.Person,
+    analyticsType,
+    mentionName: mention,
+    presenceMessage: searchResult.title,
   };
 }

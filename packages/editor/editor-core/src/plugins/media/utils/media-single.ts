@@ -1,18 +1,49 @@
-import { Node as PMNode, Schema, Fragment } from 'prosemirror-model';
+import { Node as PMNode, Schema, Fragment, Slice } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { ImagePreview } from '@atlaskit/media-picker';
 
-import { isImage, setTextSelection, isTableCell } from '../../../utils';
 import {
-  insertNodesEndWithNewParagraph,
-  shouldAppendParagraphAfterBlockNode,
-} from '../../../commands';
+  isImage,
+  atTheBeginningOfBlock,
+  checkNodeDown,
+  isEmptyParagraph,
+} from '../../../utils';
 import { copyOptionalAttrsFromMediaState } from '../utils/media-common';
 import { MediaState } from '../types';
-import { safeInsert } from 'prosemirror-utils';
+import { safeInsert, hasParentNodeOfType } from 'prosemirror-utils';
+import { EditorState, Selection } from 'prosemirror-state';
+import { Command } from '../../../types';
+import { mapSlice } from '../../../utils/slice';
 
 export interface MediaSingleState extends MediaState {
-  thumbnail: ImagePreview;
+  dimensions: { width: number; height: number };
+  scaleFactor?: number;
+}
+
+function shouldAddParagraph(state: EditorState) {
+  return (
+    atTheBeginningOfBlock(state) &&
+    !checkNodeDown(state.selection, state.doc, isEmptyParagraph)
+  );
+}
+
+function insertNodesWithOptionalParagraph(nodes: PMNode[]): Command {
+  return function(state, dispatch) {
+    const { tr, schema } = state;
+    const { paragraph } = schema.nodes;
+
+    let openEnd = 0;
+    if (shouldAddParagraph(state)) {
+      nodes.push(paragraph.create());
+      openEnd = 1;
+    }
+
+    tr.replaceSelection(new Slice(Fragment.from(nodes), 0, openEnd));
+
+    if (dispatch) {
+      dispatch(tr);
+    }
+    return true;
+  };
 }
 
 export const insertMediaAsMediaSingle = (
@@ -27,13 +58,16 @@ export const insertMediaAsMediaSingle = (
   }
 
   // if not an image type media node
-  if (node.type !== media || !isImage(node.attrs.__fileMimeType)) {
+  if (
+    node.type !== media ||
+    (!isImage(node.attrs.__fileMimeType) && node.attrs.type !== 'external')
+  ) {
     return false;
   }
 
   const mediaSingleNode = mediaSingle.create({}, node);
   const nodes = [mediaSingleNode];
-  return insertNodesEndWithNewParagraph(nodes)(state, dispatch);
+  return insertNodesWithOptionalParagraph(nodes)(state, dispatch);
 };
 
 export const insertMediaSingleNode = (
@@ -41,7 +75,7 @@ export const insertMediaSingleNode = (
   mediaState: MediaState,
   collection?: string,
 ): boolean => {
-  if (!collection) {
+  if (collection === undefined) {
     return false;
   }
 
@@ -54,19 +88,11 @@ export const insertMediaSingleNode = (
     grandParent && grandParent.type.validContent(Fragment.from(node));
 
   if (shouldSplit) {
-    insertNodesEndWithNewParagraph([node])(state, dispatch);
-    if (isTableCell(state)) {
-      /** If table cell, the default is to move to the next cell, override to select paragraph */
-      setTextSelection(
-        view,
-        state.selection.head + 1,
-        state.selection.head + 1,
-      );
-    }
+    insertNodesWithOptionalParagraph([node])(state, dispatch);
   } else {
     dispatch(
       safeInsert(
-        shouldAppendParagraphAfterBlockNode(view.state)
+        shouldAddParagraph(view.state)
           ? Fragment.fromArray([node, state.schema.nodes.paragraph.create()])
           : node,
       )(state.tr),
@@ -79,10 +105,10 @@ export const insertMediaSingleNode = (
 export const createMediaSingleNode = (schema: Schema, collection: string) => (
   mediaState: MediaSingleState,
 ) => {
-  const { id, thumbnail } = mediaState;
-  const { width, height } = (thumbnail && thumbnail.dimensions) || {
-    width: undefined,
+  const { id, dimensions, scaleFactor = 1 } = mediaState;
+  const { width, height } = dimensions || {
     height: undefined,
+    width: undefined,
   };
   const { media, mediaSingle } = schema.nodes;
 
@@ -90,11 +116,26 @@ export const createMediaSingleNode = (schema: Schema, collection: string) => (
     id,
     type: 'file',
     collection,
-    width,
-    height,
-    __key: id,
+    width: Math.round(width / scaleFactor),
+    height: Math.round(height / scaleFactor),
   });
 
   copyOptionalAttrsFromMediaState(mediaState, mediaNode);
   return mediaSingle.create({}, mediaNode);
 };
+
+export function transformSliceForMedia(slice: Slice, schema: Schema) {
+  const { mediaSingle, layoutSection, table } = schema.nodes;
+
+  return (selection: Selection) => {
+    if (hasParentNodeOfType([layoutSection, table])(selection)) {
+      return mapSlice(slice, node =>
+        node.type.name === 'mediaSingle'
+          ? mediaSingle.createChecked({}, node.content, node.marks)
+          : node,
+      );
+    }
+
+    return slice;
+  };
+}

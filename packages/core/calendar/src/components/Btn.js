@@ -1,11 +1,11 @@
 // @flow
 
-import React, { type Node } from 'react';
+import React, { type Element } from 'react';
 import Button from '@atlaskit/button';
 
 type Props = {
   onClick?: () => void,
-  children?: Node,
+  children?: Element<*>,
 };
 
 export default (props: Props) => (
@@ -14,7 +14,6 @@ export default (props: Props) => (
     onClick={props.onClick}
     spacing="none"
     tabIndex={-1}
-  >
-    {props.children}
-  </Button>
+    iconBefore={props.children}
+  />
 );

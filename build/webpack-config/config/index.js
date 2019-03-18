@@ -6,76 +6,71 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
+
 const { createDefaultGlob } = require('./utils');
+const statsOptions = require('./statsOptions');
+
+const baseCacheDir = path.resolve(
+  __dirname,
+  '../../../node_modules/.cache-loader',
+);
+
 module.exports = function createWebpackConfig(
   {
-    entry,
-    host,
-    port,
     globs = createDefaultGlob(),
-    includePatterns = false,
-    env = 'development',
-    cwd = process.cwd(),
+    mode = 'development',
+    websiteEnv = 'local',
+    websiteDir = process.cwd(), // if not passed in, we must be in the websiteDir already
     noMinimize = false,
     report = false,
+    entry,
+    output,
   } /*: {
-    entry: string,
-    host?: string,
-    port?: number,
     globs?: Array<string>,
-    cwd?: string,
-    includePatterns: boolean,
-    env: string,
+    websiteDir?: string,
+    mode: string,
+    websiteEnv: string,
     noMinimize?: boolean,
     report?: boolean,
+    entry?: any,
+    output?: any
   }*/,
 ) {
+  const isProduction = mode === 'production';
+
   return {
-    entry: {
-      main:
-        env === 'development' && host && port
-          ? [
-              `${require.resolve(
-                'webpack-dev-server/client',
-              )}?http://${host}:${port}/`,
-              path.join(process.cwd(), entry),
-            ]
-          : path.join(cwd, entry),
-      examples:
-        env === 'development' && host && port
-          ? [
-              `${require.resolve(
-                'webpack-dev-server/client',
-              )}?http://${host}:${port}/`,
-              path.join(process.cwd(), './src/examples-entry.js'),
-            ]
-          : path.join(cwd, './src/examples-entry.js'),
-      vendor: [
-        'react',
-        'react-dom',
-        'styled-components',
-        'highlight.js',
-        'react-router',
-        'react-router-dom',
-      ],
+    stats: statsOptions,
+    mode,
+    performance: {
+      // performance hints are used to warn you about large bundles but come at their own perf cost
+      hints: false,
     },
-    output: {
+    // parallelism: ??, TODO
+    entry: entry || {
+      main: getEntries({
+        isProduction,
+        websiteDir,
+        entryPath: './src/index.tsx',
+      }),
+      examples: getEntries({
+        isProduction,
+        websiteDir,
+        entryPath: './src/examples-entry.tsx',
+      }),
+    },
+    output: output || {
       filename: '[name].js',
-      path: path.resolve(cwd, 'dist'),
+      path: path.resolve(websiteDir, 'dist'),
       publicPath: '/',
     },
-    devtool: env === 'production' ? false : 'cheap-module-source-map',
+    devtool: isProduction ? false : 'cheap-module-source-map',
     module: {
       rules: [
         {
           test: /SITE_DATA$/,
           loader: require.resolve('bolt-fs-loader'),
           options: {
-            include: [
-              'docs/**/*.md',
-              includePatterns && 'patterns/**/*.js',
-              ...globs,
-            ].filter(p => !!p),
+            include: [...globs, 'docs/**/*.md'].filter(Boolean),
             exclude: ['**/node_modules/**', 'packages/build/docs/**'],
           },
         },
@@ -83,7 +78,8 @@ module.exports = function createWebpackConfig(
           test: /NAV_DATA$/,
           loader: require.resolve('nav-info-loader'),
           options: {
-            include: [...globs]
+            /** $FlowFixMe - We have absolutely 0 idea why flow is complaining here */
+            include: globs
               .filter(p => p.includes('package.json'))
               .map(p => p.replace('/package.json', '')),
             exclude: ['**/node_modules/**', 'packages/build/docs/**'],
@@ -106,24 +102,53 @@ module.exports = function createWebpackConfig(
         },
         {
           test: /\.md$/,
-          exclude: /node_modules/,
+          exclude: /node_modules|docs/,
           loader: require.resolve('raw-loader'),
         },
         {
-          test: /\.js$/,
+          test: /\.md$/,
+          include: /docs/,
           exclude: /node_modules/,
-          loader: require.resolve('babel-loader'),
-          options: {
-            cacheDirectory: true,
-          },
+          loader: require.resolve('gray-matter-loader'),
+        },
+        {
+          test: /\.js$/,
+          exclude: /node_modules|packages\/media\/media-editor\/src\/engine\/core\/binaries\/mediaEditor.js/,
+          use: [
+            {
+              loader: 'thread-loader',
+              options: {
+                name: 'babel-pool',
+              },
+            },
+            {
+              loader: 'babel-loader',
+              options: {
+                babelrc: true,
+                rootMode: 'upward',
+                envName: 'production:esm',
+                cacheDirectory: path.resolve(baseCacheDir, 'babel'),
+              },
+            },
+          ],
         },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          loader: require.resolve('ts-loader'),
-          options: {
-            transpileOnly: true,
-          },
+          use: [
+            {
+              loader: 'cache-loader',
+              options: {
+                cacheDirectory: path.resolve(baseCacheDir, 'ts'),
+              },
+            },
+            {
+              loader: require.resolve('ts-loader'),
+              options: {
+                transpileOnly: true,
+              },
+            },
+          ],
         },
         {
           test: /\.css$/,
@@ -143,8 +168,11 @@ module.exports = function createWebpackConfig(
           ],
         },
         {
-          test: /\.(gif|jpe?g|png|ico)$/,
-          loader: 'url-loader?limit=10000',
+          test: /\.(gif|jpe?g|png|ico|woff|woff2)$/,
+          loader: require.resolve('url-loader'),
+          options: {
+            limit: 10000,
+          },
         },
         {
           test: /\.svg/,
@@ -162,146 +190,96 @@ module.exports = function createWebpackConfig(
       ],
     },
     resolve: {
-      mainFields: ['atlaskit:src', 'browser', 'main'],
+      mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
       extensions: ['.js', '.ts', '.tsx'],
     },
     resolveLoader: {
       modules: [
-        path.join(__dirname, '..', '..', '..', 'build/'),
+        path.join(__dirname, '..', '..'), // resolve custom loaders from `build/` dir
         'node_modules',
       ],
     },
-    plugins: plugins({ cwd, env, noMinimize, report }),
+    plugins: getPlugins({ websiteDir, isProduction, websiteEnv, report }),
+    optimization: getOptimizations({
+      isProduction,
+      noMinimizeFlag: noMinimize,
+    }),
   };
 };
 
-function plugins(
+function getPlugins(
   {
-    cwd,
-    env,
-    noMinimize,
+    websiteDir,
+    isProduction,
+    websiteEnv,
     report,
-  } /*: { cwd: string, env: string, noMinimize: boolean, report: boolean } */,
+  } /*: { websiteDir: string, websiteEnv: string, report: boolean, isProduction: boolean } */,
 ) {
+  const faviconPath = path.join(
+    websiteDir,
+    `public/favicon${!isProduction ? '-dev' : ''}.ico`,
+  );
+  const HTMLPageTitle = `Atlaskit by Atlassian${!isProduction ? ' - DEV' : ''}`;
   const plugins = [
-    new webpack.NamedChunksPlugin(
-      chunk =>
-        chunk.name && path.isAbsolute(chunk.name) ? chunk.id : chunk.name,
-    ),
-    new webpack.NamedModulesPlugin(),
-    //
-    // Order of CommonsChunkPlugins is important,
-    // each next one of them can drag some dependencies from the previous ones.
-
-    new webpack.optimize.CommonsChunkPlugin({
-      async: 'async-deps',
-      minChunks(module, count) {
-        const context = module.context;
-        return (
-          count === 1 &&
-          (context &&
-            // We're intentionally excluding rxjs-async-map from this chunk as it currently breaks our build
-            // This package is being used by the media-store package. Unfortunately it's not transpiled, and is thus breaking in ie11.
-            (context && !context.includes('node_modules/rxjs-async-map')))
-        );
-      },
-    }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      async: 'editor-packages',
-      minChunks(module, count) {
-        const context = module.context;
-        return (
-          context &&
-          (context.includes('packages/editor') ||
-            context.includes('prosemirror'))
-        );
-      },
-    }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      async: 'fabric-elements-packages',
-      minChunks(module, count) {
-        const context = module.context;
-        return context && context.includes('packages/elements');
-      },
-    }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      async: 'media-packages',
-      minChunks(module, count) {
-        const context = module.context;
-        return context && context.includes('packages/media');
-      },
-    }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      async: 'core-packages',
-      minChunks(module, count) {
-        const context = module.context;
-        return context && context.includes('packages/core');
-      },
-    }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'common-app',
-      chunks: ['main', 'examples'],
-      minChunks(module, count) {
-        const resource = module.resource;
-        return !resource || !resource.includes('website/src/index.js');
-      },
-    }),
-
     new HtmlWebpackPlugin({
-      template: path.join(cwd, 'public/index.html.ejs'),
-      title: `Atlaskit by Atlassian${env === 'development' ? ' - DEV' : ''}`,
-      favicon: path.join(
-        cwd,
-        `public/favicon${env === 'development' ? '-dev' : ''}.ico`,
-      ),
+      template: path.join(websiteDir, 'public/index.html.ejs'),
+      title: HTMLPageTitle,
+      favicon: faviconPath,
       excludeChunks: ['examples'],
     }),
 
     new HtmlWebpackPlugin({
       filename: 'examples.html',
-      title: `Atlaskit by Atlassian${env === 'development' ? ' - DEV' : ''}`,
-      template: path.join(cwd, 'public/examples.html.ejs'),
-      favicon: path.join(
-        cwd,
-        `public/favicon${env === 'development' ? '-dev' : ''}.ico`,
-      ),
+      title: HTMLPageTitle,
+      template: path.join(websiteDir, 'public/examples.html.ejs'),
+      favicon: faviconPath,
       excludeChunks: ['main'],
     }),
 
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': `"${env}"`,
+      WEBSITE_ENV: `"${websiteEnv}"`,
+      BASE_TITLE: `"Atlaskit by Atlassian ${!isProduction ? '- DEV' : ''}"`,
+      DEFAULT_META_DESCRIPTION: `"Atlaskit is the official component library for Atlassian's Design System."`,
     }),
   ];
 
-  if (report) {
-    plugins.push(
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        openAnalyzer: true,
-        generateStatsFile: true,
-        logLevel: 'error',
-      }),
-    );
-  }
-
-  if (env === 'production' && !noMinimize) {
-    plugins.push(uglify());
-  }
+  plugins.push(
+    new BundleAnalyzerPlugin({
+      analyzerMode: report ? 'static' : 'disabled',
+      generateStatsFile: true,
+      openAnalyzer: report,
+      logLevel: 'error',
+      statsOptions: statsOptions,
+      defaultSizes: 'gzip',
+    }),
+  );
 
   return plugins;
 }
 
-const uglify = () => {
-  return new UglifyJsPlugin({
+//
+function getEntries({ isProduction, entryPath, websiteDir }) {
+  const absEntryPath = path.join(websiteDir, entryPath);
+  if (isProduction) {
+    return absEntryPath;
+  }
+  const port = process.env.ATLASKIT_DEV_PORT || '9000';
+  const devServerPath = `${require.resolve(
+    'webpack-dev-server/client',
+  )}?http://localhost:${port}/`;
+  return [devServerPath, absEntryPath];
+}
+
+function getOptimizations({ isProduction, noMinimizeFlag }) {
+  if (!isProduction) {
+    // If we are in development, use all of webpack's default optimizations ("do nothing")
+    return undefined;
+  }
+  const uglifyPlugin = new UglifyJsPlugin({
     parallel: Math.max(os.cpus().length - 1, 1),
     uglifyOptions: {
       compress: {
-        // Disabling following options speeds up minimization by 20 – 30s
+        // Disabling following options speeds up minimization by 20 - 30s
         // without any significant impact on a bundle size.
         arrows: false,
         booleans: false,
@@ -309,7 +287,8 @@ const uglify = () => {
 
         // https://product-fabric.atlassian.net/browse/MSW-436
         comparisons: false,
-
+        // We disables a lot of these rules because they don't effect the size very much, but cost a lot
+        // of time
         computed_props: false,
         hoist_funs: false,
         hoist_props: false,
@@ -340,4 +319,16 @@ const uglify = () => {
       mangle: true,
     },
   });
-};
+
+  return {
+    // There's an interesting bug in webpack where passing *any* uglify plugin, where `minimize` is
+    // false, causes webpack to use its own minimizer plugin + settings.
+    minimizer: noMinimizeFlag ? undefined : [uglifyPlugin],
+    minimize: noMinimizeFlag ? false : true,
+    splitChunks: {
+      // "Maximum number of parallel requests when on-demand loading. (default in production: 5)"
+      // The default value of 5 causes the webpack process to crash, reason currently unknown
+      maxAsyncRequests: Infinity,
+    },
+  };
+}

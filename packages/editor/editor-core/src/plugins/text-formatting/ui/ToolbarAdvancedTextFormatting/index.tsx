@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import MoreIcon from '@atlaskit/icon/glyph/editor/more';
+import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
+import MoreIcon from '@atlaskit/icon/glyph/editor/more';
+import { akEditorMenuZIndex } from '@atlaskit/editor-common';
 import { analyticsService } from '../../../../analytics';
 import { TextFormattingState } from '../../pm-plugins/main';
 import { ClearFormattingState } from '../../pm-plugins/clear-formatting';
@@ -9,85 +11,84 @@ import {
   toggleUnderline,
   toggleStrikethrough,
   toggleCode,
-  clearFormatting,
+  clearFormatting as clearFormattingKeymap,
   tooltip,
 } from '../../../../keymaps';
 import ToolbarButton from '../../../../ui/ToolbarButton';
 import DropdownMenu from '../../../../ui/DropdownMenu';
-import { TriggerWrapper, Wrapper, Separator } from '../../../../ui/styles';
+import {
+  TriggerWrapper,
+  Wrapper,
+  Separator,
+  Shortcut,
+} from '../../../../ui/styles';
+import * as commands from '../../commands/text-formatting';
+import { clearFormattingWithAnalytics } from '../../commands/clear-formatting';
+import { INPUT_METHOD } from '../../../analytics';
 
 export interface Props {
   isDisabled?: boolean;
   editorView: EditorView;
-  pluginStateTextFormatting?: TextFormattingState | undefined;
-  pluginStateClearFormatting?: ClearFormattingState | undefined;
+  textFormattingState?: TextFormattingState;
+  clearFormattingState?: ClearFormattingState;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
   isReducedSpacing?: boolean;
 }
 
+export const messages = defineMessages({
+  underline: {
+    id: 'fabric.editor.underline',
+    defaultMessage: 'Underline',
+    description: 'Whether the text selection has underlined text',
+  },
+  strike: {
+    id: 'fabric.editor.strike',
+    defaultMessage: 'Strikethrough',
+    description: 'Whether the text selection has crossed out text',
+  },
+  code: {
+    id: 'fabric.editor.code',
+    defaultMessage: 'Code',
+    description: 'Whether the text selection has monospaced/code font',
+  },
+  subscript: {
+    id: 'fabric.editor.subscript',
+    defaultMessage: 'Subscript',
+    description:
+      'Whether the text selection is written below the line in a slightly smaller size',
+  },
+  superscript: {
+    id: 'fabric.editor.superscript',
+    defaultMessage: 'Superscript',
+    description:
+      'Whether the text selection is written above the line in a slightly smaller size',
+  },
+  clearFormatting: {
+    id: 'fabric.editor.clearFormatting',
+    defaultMessage: 'Clear formatting',
+    description: 'Remove all rich text formatting from the selected text',
+  },
+  moreFormatting: {
+    id: 'fabric.editor.moreFormatting',
+    defaultMessage: 'More formatting',
+    description:
+      'Clicking this will show a menu with additional formatting options',
+  },
+});
+
 export interface State {
   isOpen?: boolean;
-  underlineActive?: boolean;
-  underlineDisabled?: boolean;
-  underlineHidden?: boolean;
-  codeActive?: boolean;
-  codeDisabled?: boolean;
-  codeHidden?: boolean;
-  strikethroughActive?: boolean;
-  strikethroughDisabled?: boolean;
-  strikeHidden?: boolean;
-  subscriptActive?: boolean;
-  subscriptDisabled?: boolean;
-  subscriptHidden?: boolean;
-  superscriptActive?: boolean;
-  superscriptDisabled?: boolean;
-  superscriptHidden?: boolean;
-  clearFormattingDisabled?: boolean;
 }
 
-export default class ToolbarAdvancedTextFormatting extends PureComponent<
-  Props,
+class ToolbarAdvancedTextFormatting extends PureComponent<
+  Props & InjectedIntlProps,
   State
 > {
   state: State = {
     isOpen: false,
   };
-
-  componentDidMount() {
-    const {
-      pluginStateTextFormatting,
-      pluginStateClearFormatting,
-    } = this.props;
-    if (pluginStateTextFormatting) {
-      pluginStateTextFormatting.subscribe(
-        this.handlePluginStateTextFormattingChange,
-      );
-    }
-    if (pluginStateClearFormatting) {
-      pluginStateClearFormatting.subscribe(
-        this.handlePluginStateClearFormattingChange,
-      );
-    }
-  }
-
-  componentWillUnmount() {
-    const {
-      pluginStateTextFormatting,
-      pluginStateClearFormatting,
-    } = this.props;
-    if (pluginStateTextFormatting) {
-      pluginStateTextFormatting.unsubscribe(
-        this.handlePluginStateTextFormattingChange,
-      );
-    }
-    if (pluginStateClearFormatting) {
-      pluginStateClearFormatting.unsubscribe(
-        this.handlePluginStateClearFormattingChange,
-      );
-    }
-  }
 
   private onOpenChange = (attrs: any) => {
     this.setState({
@@ -100,27 +101,32 @@ export default class ToolbarAdvancedTextFormatting extends PureComponent<
   };
 
   render() {
-    const {
-      isOpen,
-      codeActive,
-      underlineActive,
-      strikethroughActive,
-      subscriptActive,
-      superscriptActive,
-      codeDisabled,
-      underlineDisabled,
-      strikethroughDisabled,
-      clearFormattingDisabled,
-      subscriptDisabled,
-      superscriptDisabled,
-    } = this.state;
+    const { isOpen } = this.state;
     const {
       popupsMountPoint,
       popupsBoundariesElement,
       popupsScrollableElement,
       isReducedSpacing,
+      textFormattingState = {},
+      clearFormattingState = {},
+      intl: { formatMessage },
     } = this.props;
+    const {
+      codeActive,
+      underlineActive,
+      strikeActive,
+      subscriptActive,
+      superscriptActive,
+      codeDisabled,
+      underlineDisabled,
+      strikeDisabled,
+      subscriptDisabled,
+      superscriptDisabled,
+    } = textFormattingState;
+    const { formattingIsPresent } = clearFormattingState;
     const items = this.createItems();
+    const labelMoreFormatting = formatMessage(messages.moreFormatting);
+
     const toolbarButtonFactory = (disabled: boolean) => (
       <ToolbarButton
         spacing={isReducedSpacing ? 'none' : 'default'}
@@ -128,15 +134,16 @@ export default class ToolbarAdvancedTextFormatting extends PureComponent<
           isOpen ||
           underlineActive ||
           codeActive ||
-          strikethroughActive ||
+          strikeActive ||
           subscriptActive ||
           superscriptActive
         }
         disabled={disabled}
         onClick={this.handleTriggerClick}
+        title={labelMoreFormatting}
         iconBefore={
           <TriggerWrapper>
-            <MoreIcon label="Open or close advance text formatting dropdown" />
+            <MoreIcon label={labelMoreFormatting} />
           </TriggerWrapper>
         }
       />
@@ -145,8 +152,8 @@ export default class ToolbarAdvancedTextFormatting extends PureComponent<
     if (
       !this.props.isDisabled &&
       !(
-        strikethroughDisabled &&
-        clearFormattingDisabled &&
+        strikeDisabled &&
+        !formattingIsPresent &&
         codeDisabled &&
         subscriptDisabled &&
         superscriptDisabled &&
@@ -164,6 +171,7 @@ export default class ToolbarAdvancedTextFormatting extends PureComponent<
             boundariesElement={popupsBoundariesElement}
             scrollableElement={popupsScrollableElement}
             isOpen={isOpen}
+            zIndex={akEditorMenuZIndex}
             fitHeight={188}
             fitWidth={136}
           >
@@ -184,131 +192,137 @@ export default class ToolbarAdvancedTextFormatting extends PureComponent<
 
   private createItems = () => {
     const {
-      pluginStateTextFormatting,
-      pluginStateClearFormatting,
+      textFormattingState,
+      clearFormattingState,
+      editorView,
+      intl: { formatMessage },
     } = this.props;
+    const { code, underline, subsup, strike } = editorView.state.schema.marks;
     let items: any[] = [];
 
-    if (pluginStateTextFormatting) {
+    if (textFormattingState) {
       const {
         underlineHidden,
         codeHidden,
         strikeHidden,
         subscriptHidden,
         superscriptHidden,
-      } = this.state;
-      if (!underlineHidden) {
+      } = textFormattingState;
+      if (!underlineHidden && underline) {
         this.addRecordToItems(
           items,
-          'Underline',
+          formatMessage(messages.underline),
           'underline',
-          tooltip(toggleUnderline, true),
+          tooltip(toggleUnderline),
         );
       }
-      if (!strikeHidden) {
+      if (!strikeHidden && strike) {
         this.addRecordToItems(
           items,
-          'Strikethrough',
+          formatMessage(messages.strike),
           'strike',
-          tooltip(toggleStrikethrough, true),
+          tooltip(toggleStrikethrough),
         );
       }
-      if (!codeHidden) {
-        this.addRecordToItems(items, 'Code', 'code', tooltip(toggleCode, true));
+      if (!codeHidden && code) {
+        this.addRecordToItems(
+          items,
+          formatMessage(messages.code),
+          'code',
+          tooltip(toggleCode),
+        );
       }
-      if (!subscriptHidden) {
-        this.addRecordToItems(items, 'Subscript', 'subscript');
+      if (!subscriptHidden && subsup) {
+        this.addRecordToItems(
+          items,
+          formatMessage(messages.subscript),
+          'subscript',
+        );
       }
-      if (!superscriptHidden) {
-        this.addRecordToItems(items, 'Superscript', 'superscript');
+      if (!superscriptHidden && subsup) {
+        this.addRecordToItems(
+          items,
+          formatMessage(messages.superscript),
+          'superscript',
+        );
       }
     }
-    if (pluginStateClearFormatting) {
+    if (clearFormattingState) {
       this.addRecordToItems(
         items,
-        'Clear Formatting',
+        formatMessage(messages.clearFormatting),
         'clearFormatting',
-        tooltip(clearFormatting, true),
+        tooltip(clearFormattingKeymap),
+        !clearFormattingState.formattingIsPresent,
       );
     }
-    return [
-      {
-        items,
-      },
-    ];
+    return [{ items }];
   };
 
-  private addRecordToItems = (items, content, value, tooltipDescription?) => {
+  private addRecordToItems = (
+    items: Array<any>,
+    content: string,
+    value: string,
+    tooltip?: string,
+    isDisabled?: boolean,
+  ) => {
+    let active = false;
+    let disabled = false;
+    if (this.props.textFormattingState) {
+      active =
+        this.props.textFormattingState![
+          `${value}Active` as keyof TextFormattingState
+        ] || false;
+      disabled =
+        isDisabled ||
+        this.props.textFormattingState![
+          `${value}Disabled` as keyof TextFormattingState
+        ] ||
+        false;
+    }
     items.push({
+      key: value,
       content,
+      elemAfter: <Shortcut>{tooltip}</Shortcut>,
       value,
-      isActive: this.state[`${value}Active`],
-      isDisabled: this.state[`${value}Disabled`],
-      tooltipDescription,
-      tooltipPosition: 'right',
+      isActive: active,
+      isDisabled: disabled,
     });
   };
 
-  private handlePluginStateTextFormattingChange = (
-    pluginState: TextFormattingState,
-  ) => {
-    this.setState({
-      underlineActive: pluginState.underlineActive,
-      underlineDisabled: pluginState.underlineDisabled,
-      underlineHidden: pluginState.underlineHidden,
-
-      codeActive: pluginState.codeActive,
-      codeDisabled: pluginState.codeDisabled,
-      codeHidden: pluginState.codeHidden,
-
-      strikethroughActive: pluginState.strikeActive,
-      strikethroughDisabled: pluginState.strikeDisabled,
-      strikeHidden: pluginState.strikeHidden,
-
-      subscriptActive: pluginState.subscriptActive,
-      subscriptDisabled: pluginState.subscriptDisabled,
-      subscriptHidden: pluginState.subscriptHidden,
-
-      superscriptActive: pluginState.superscriptActive,
-      superscriptDisabled: pluginState.superscriptDisabled,
-      superscriptHidden: pluginState.superscriptHidden,
-    });
-  };
-
-  private handlePluginStateClearFormattingChange = (
-    pluginState: ClearFormattingState,
-  ) => {
-    this.setState({
-      clearFormattingDisabled: !pluginState.formattingIsPresent,
-    });
-  };
-
-  private onItemActivated = ({ item }) => {
+  private onItemActivated = ({ item }: { item: any }) => {
     analyticsService.trackEvent(`atlassian.editor.format.${item.value}.button`);
-    const {
-      pluginStateTextFormatting,
-      pluginStateClearFormatting,
-    } = this.props;
+
+    const { state, dispatch } = this.props.editorView;
     switch (item.value) {
       case 'underline':
-        pluginStateTextFormatting!.toggleUnderline(this.props.editorView);
+        commands.toggleUnderlineWithAnalytics({
+          inputMethod: INPUT_METHOD.TOOLBAR,
+        })(state, dispatch);
         break;
       case 'code':
-        pluginStateTextFormatting!.toggleCode(this.props.editorView);
+        commands.toggleCodeWithAnalytics({ inputMethod: INPUT_METHOD.TOOLBAR })(
+          state,
+          dispatch,
+        );
         break;
       case 'strike':
-        pluginStateTextFormatting!.toggleStrike(this.props.editorView);
+        commands.toggleStrikeWithAnalytics({
+          inputMethod: INPUT_METHOD.TOOLBAR,
+        })(state, dispatch);
         break;
       case 'subscript':
-        pluginStateTextFormatting!.toggleSubscript(this.props.editorView);
+        commands.toggleSubscriptWithAnalytics()(state, dispatch);
         break;
       case 'superscript':
-        pluginStateTextFormatting!.toggleSuperscript(this.props.editorView);
+        commands.toggleSuperscriptWithAnalytics()(state, dispatch);
         break;
       case 'clearFormatting':
-        pluginStateClearFormatting!.clearFormatting(this.props.editorView);
+        clearFormattingWithAnalytics(INPUT_METHOD.TOOLBAR)(state, dispatch);
         break;
     }
     this.setState({ isOpen: false });
   };
 }
+
+export default injectIntl(ToolbarAdvancedTextFormatting);

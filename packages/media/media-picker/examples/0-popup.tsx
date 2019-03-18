@@ -1,16 +1,16 @@
 /* tslint:disable:no-console */
 import * as React from 'react';
 import { Component } from 'react';
+import * as PropTypes from 'prop-types';
 import { ContextFactory } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
 import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
+import AKListeners from '@atlaskit/analytics-listeners';
 import {
   userAuthProvider,
   mediaPickerAuthProvider,
   defaultCollectionName,
   defaultMediaPickerCollectionName,
-  userAuthProviderBaseURL,
   createStorybookContext,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
@@ -20,7 +20,6 @@ import {
   PopupContainer,
   PopupHeader,
   PopupEventsWrapper,
-  PreviewImage,
   UploadingFilesWrapper,
   FileProgress,
   FilesInfoWrapper,
@@ -35,14 +34,13 @@ import {
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
 } from '../src/domain/uploadEvent';
-import { PopupUploadEventPayloadMap } from '../src/components/popup';
+import { PopupUploadEventPayloadMap } from '../src/components/types';
 import { AuthEnvironment } from '../example-helpers/types';
 
 const context = createStorybookContext();
 
 export type PublicFile = {
   publicId: string;
-  preview?: string;
 };
 export interface Event<K extends keyof PopupUploadEventPayloadMap> {
   readonly eventName: K;
@@ -57,7 +55,8 @@ export interface PopupWrapperState {
   inflightUploads: { [key: string]: MediaProgress };
   publicFiles: { [key: string]: PublicFile };
   isUploadingFilesVisible: boolean;
-  useNewUploadService: boolean;
+  singleSelect: boolean;
+  useProxyContext: boolean;
   popup?: Popup;
 }
 
@@ -70,11 +69,16 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     inflightUploads: {},
     publicFiles: {},
     isUploadingFilesVisible: true,
-    useNewUploadService: true,
+    useProxyContext: true,
+    singleSelect: false,
   };
 
-  componentDidMount() {
-    this.createPopup();
+  static contextTypes = {
+    getAtlaskitAnalyticsEventHandlers: PropTypes.func,
+  };
+
+  async componentDidMount() {
+    await this.createPopup();
   }
 
   componentWillUnmount() {
@@ -84,9 +88,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     }
   }
 
-  private createPopup(
-    useNewUploadService: boolean = this.state.useNewUploadService,
-  ) {
+  private async createPopup(singleSelect: boolean = this.state.singleSelect) {
     const { popup } = this.state;
     if (popup) {
       popup.removeAllListeners();
@@ -94,21 +96,21 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     }
 
     const context = ContextFactory.create({
-      serviceHost: userAuthProviderBaseURL,
       authProvider: mediaPickerAuthProvider(this.state.authEnvironment),
       userAuthProvider,
     });
 
-    const newPopup = MediaPicker('popup', context, {
+    const newPopup = await MediaPicker('popup', context, {
       container: document.body,
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
       },
-      useNewUploadService,
+      singleSelect,
+      proxyReactContext: this.state.useProxyContext ? this.context : undefined,
     });
 
     newPopup.on('uploads-start', this.onUploadsStart);
-    newPopup.on('upload-preview-update', this.onUploadPreviewUpdate);
+    newPopup.on('upload-preview-update', this.onUploadPreview);
     newPopup.on('upload-status-update', this.onUploadStatusUpdate);
     newPopup.on('upload-processing', this.onUploadProcessing);
     newPopup.on('upload-end', this.onUploadEnd);
@@ -117,7 +119,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
 
     this.setState({
       popup: newPopup,
-      useNewUploadService,
+      singleSelect,
     });
   }
 
@@ -169,44 +171,32 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     });
   };
 
-  onUploadPreviewUpdate = (data: UploadPreviewUpdateEventPayload) => {
-    const id = data.file.id;
-    const preview = data.preview && data.preview.src;
-
-    if (preview) {
-      const newPublicFile = {
-        [id]: {
-          publicId: id,
-          preview,
-        },
-      };
-
-      this.setState({
-        publicFiles: { ...this.state.publicFiles, ...newPublicFile },
-        events: [
-          ...this.state.events,
-          { eventName: 'upload-preview-update', data },
-        ],
-      });
-    }
-  };
-
   onUploadProcessing = (data: UploadProcessingEventPayload) => {
     const { publicFiles } = this.state;
     const publicFile = publicFiles[data.file.id];
 
     if (publicFile) {
-      const publicId = data.file.publicId;
+      const publicId = data.file.id;
       publicFile.publicId = publicId;
-      if (publicFile.preview) {
-        context.setLocalPreview(publicId, publicFile.preview);
-      }
 
       this.setState({
         publicFiles,
         events: [
           ...this.state.events,
           { eventName: 'upload-processing', data },
+        ],
+      });
+    }
+  };
+
+  onUploadPreview = (data: UploadPreviewUpdateEventPayload) => {
+    const preview = data.preview;
+
+    if (preview) {
+      this.setState({
+        events: [
+          ...this.state.events,
+          { eventName: 'upload-preview-update', data },
         ],
       });
     }
@@ -226,26 +216,27 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
         collection,
       });
 
-      // Populate cache in userAuthProvider.
-      userAuthProvider();
       // Synchronously with next command tenantAuthProvider will be requested.
       popup.show().catch(console.error);
     }
   };
 
-  onCollectionChange = e => {
-    const { innerText: collectionName } = e.target;
+  onCollectionChange = (e: React.SyntheticEvent<HTMLElement>) => {
+    const { innerText: collectionName } = e.currentTarget;
 
     this.setState({ collectionName });
   };
 
-  onAuthTypeChange = e => {
-    const { innerText: authEnvironment } = e.target;
+  onAuthTypeChange = (e: React.SyntheticEvent<HTMLElement>) => {
+    const { innerText: authEnvironment } = e.currentTarget;
 
-    this.setState({ authEnvironment }, this.createPopup);
+    this.setState(
+      { authEnvironment: authEnvironment as AuthEnvironment },
+      this.createPopup,
+    );
   };
 
-  renderSerializedEvent(eventName, data, key) {
+  renderSerializedEvent(eventName: string, data: any, key: number) {
     const serializedEvent = JSON.stringify(data, undefined, 2);
 
     return (
@@ -276,19 +267,15 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
           return;
         }
 
-        const imageUrl = data.preview.src.toString();
         // We don't want to print the original image src because it freezes the browser
-        const newData = {
+        const newData: UploadPreviewUpdateEventPayload = {
           ...data,
-          preview: { ...data.preview, src: `src length: ${imageUrl.length}` },
+          preview: { ...data.preview },
         };
 
         return (
           <div key={key}>
             {this.renderSerializedEvent(eventName, newData, key)}
-            <div>
-              <PreviewImage src={imageUrl} id={data.file.id} fadedOut={false} />
-            </div>
           </div>
         );
       }
@@ -321,12 +308,12 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     this.setState({ inflightUploads: {} });
   };
 
-  onEvent = event => {
+  onEvent = (event: any) => {
     console.log(event);
   };
 
-  onuseNewUploadServiceChange = () => {
-    this.createPopup(!this.state.useNewUploadService);
+  onSingleSelectChange = () => {
+    this.createPopup(!this.state.singleSelect);
   };
 
   renderUploadingFiles = () => {
@@ -385,6 +372,13 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     );
   };
 
+  toggleProxyContext = () => {
+    this.setState(
+      ({ useProxyContext }) => ({ useProxyContext: !useProxyContext }),
+      this.createPopup,
+    );
+  };
+
   render() {
     const {
       closedTimes,
@@ -393,77 +387,86 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
       collectionName,
       inflightUploads,
       isUploadingFilesVisible,
-      useNewUploadService,
+      singleSelect,
       popup,
     } = this.state;
     const hasTorndown = !popup;
     const isCancelButtonDisabled = Object.keys(inflightUploads).length === 0;
 
     return (
-      <AnalyticsListener onEvent={this.onEvent} channel="media">
-        <PopupContainer>
-          <PopupHeader>
-            <Button
-              appearance="primary"
-              onClick={this.onShow}
-              isDisabled={hasTorndown}
-            >
-              Show
-            </Button>
-            <Button
-              appearance="warning"
-              onClick={this.onCancelUpload}
-              isDisabled={isCancelButtonDisabled || hasTorndown}
-            >
-              Cancel uploads
-            </Button>
-            <Button
-              appearance="danger"
-              onClick={this.onTeardown}
-              isDisabled={hasTorndown}
-            >
-              Teardown
-            </Button>
-            <Button
-              onClick={this.onUploadingFilesToggle}
-              isDisabled={hasTorndown}
-            >
-              Toggle Uploading files
-            </Button>
-            <DropdownMenu trigger={collectionName} triggerType="button">
-              <DropdownItem onClick={this.onCollectionChange}>
-                {defaultMediaPickerCollectionName}
-              </DropdownItem>
-              <DropdownItem onClick={this.onCollectionChange}>
-                {defaultCollectionName}
-              </DropdownItem>
-            </DropdownMenu>
-            <DropdownMenu trigger={authEnvironment} triggerType="button">
-              <DropdownItem onClick={this.onAuthTypeChange}>
-                client
-              </DropdownItem>
-              <DropdownItem onClick={this.onAuthTypeChange}>asap</DropdownItem>
-            </DropdownMenu>
-            Use new upload service
-            <Toggle
-              isDefaultChecked={useNewUploadService}
-              onChange={this.onuseNewUploadServiceChange}
-            />
-            Closed times: {closedTimes}
-          </PopupHeader>
-          {isUploadingFilesVisible ? (
-            <FilesInfoWrapper>
-              {this.renderUploadingFiles()}
-              {this.renderCards()}
-            </FilesInfoWrapper>
-          ) : (
-            undefined
-          )}
-          <PopupEventsWrapper>{this.renderEvents(events)}</PopupEventsWrapper>
-        </PopupContainer>
-      </AnalyticsListener>
+      <PopupContainer>
+        <PopupHeader>
+          <Button
+            appearance="primary"
+            onClick={this.onShow}
+            isDisabled={hasTorndown}
+          >
+            Show
+          </Button>
+          <Button
+            appearance="warning"
+            onClick={this.onCancelUpload}
+            isDisabled={isCancelButtonDisabled || hasTorndown}
+          >
+            Cancel uploads
+          </Button>
+          <Button
+            appearance="danger"
+            onClick={this.onTeardown}
+            isDisabled={hasTorndown}
+          >
+            Teardown
+          </Button>
+          <Button
+            onClick={this.onUploadingFilesToggle}
+            isDisabled={hasTorndown}
+          >
+            Toggle Uploading files
+          </Button>
+          <DropdownMenu trigger={collectionName} triggerType="button">
+            <DropdownItem onClick={this.onCollectionChange}>
+              {defaultMediaPickerCollectionName}
+            </DropdownItem>
+            <DropdownItem onClick={this.onCollectionChange}>
+              {defaultCollectionName}
+            </DropdownItem>
+          </DropdownMenu>
+          <DropdownMenu trigger={authEnvironment} triggerType="button">
+            <DropdownItem onClick={this.onAuthTypeChange}>client</DropdownItem>
+            <DropdownItem onClick={this.onAuthTypeChange}>asap</DropdownItem>
+          </DropdownMenu>
+          Only select single item:
+          <Toggle
+            isDefaultChecked={singleSelect}
+            onChange={this.onSingleSelectChange}
+          />
+          Proxy context from Popup creator:
+          <Toggle isDefaultChecked onChange={this.toggleProxyContext} />
+          Closed times: {closedTimes}
+        </PopupHeader>
+        {isUploadingFilesVisible ? (
+          <FilesInfoWrapper>
+            {this.renderUploadingFiles()}
+            {this.renderCards()}
+          </FilesInfoWrapper>
+        ) : (
+          undefined
+        )}
+        <PopupEventsWrapper>{this.renderEvents(events)}</PopupEventsWrapper>
+      </PopupContainer>
     );
   }
 }
 
-export default () => <PopupWrapper />;
+export default () => (
+  <AKListeners
+    client={{
+      sendUIEvent: () => {},
+      sendOperationalEvent: () => {},
+      sendTrackEvent: () => {},
+      sendScreenEvent: () => {},
+    }}
+  >
+    <PopupWrapper />
+  </AKListeners>
+);

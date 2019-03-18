@@ -1,32 +1,44 @@
+export {
+  DropzoneUploadEventPayloadMap,
+  PopupUploadEventPayloadMap,
+} from './components/types';
+
 import {
   BinaryUploader,
   BinaryUploaderConstructor,
   BinaryConfig,
-} from './components/binary';
-import {
   Browser,
   BrowserConfig,
   BrowserConstructor,
-} from './components/browser';
-import {
-  Clipboard,
   ClipboardConstructor,
   ClipboardConfig,
-} from './components/clipboard';
-import {
-  Dropzone,
+  Clipboard,
+  Popup,
+  PopupConfig,
+  PopupConstructor,
   DropzoneConfig,
   DropzoneConstructor,
-} from './components/dropzone';
-import { Popup, PopupConfig, PopupConstructor } from './components/popup';
-import { UserTracker } from './outer/analytics/tracker';
-import { handleError } from './util/handleError';
+  Dropzone,
+} from './components/types';
+
 import { Context } from '@atlaskit/media-core';
 
-export { DropzoneUploadEventPayloadMap } from './components/dropzone';
-export { PopupUploadEventPayloadMap } from './components/popup';
-
-const trackEvent = new UserTracker().track();
+export const isBinaryUploader = (
+  component: any,
+): component is BinaryUploader => {
+  return 'upload' in component;
+};
+export const isBrowser = (component: any): component is Browser =>
+  component && 'browse' in component && 'teardown' in component;
+export const isClipboard = (component: any): component is Clipboard =>
+  component && 'activate' in component && 'deactivate' in component;
+export const isDropzone = (component: any): component is Dropzone =>
+  component && 'activate' in component && 'deactivate' in component;
+export const isPopup = (component: any): component is Popup =>
+  component &&
+  ['show', 'cancel', 'teardown', 'hide'].every(
+    (prop: string) => prop in component,
+  );
 
 // Events public API and types
 export {
@@ -37,14 +49,13 @@ export {
   UploadEndEventPayload,
   UploadErrorEventPayload,
   UploadEventPayloadMap,
+  isImagePreview,
 } from './domain/uploadEvent';
 
-export { MediaFile, PublicMediaFile } from './domain/file';
+export { MediaFile } from './domain/file';
 export { MediaProgress } from './domain/progress';
 export { MediaError } from './domain/error';
 export { ImagePreview, Preview, NonImagePreview } from './domain/preview';
-
-export { MediaFileData } from './service/mediaApi';
 
 // Constructor public API and types
 export interface MediaPickerConstructors {
@@ -62,6 +73,7 @@ export type MediaPickerComponent =
   | Clipboard
   | Dropzone
   | Popup;
+
 export interface MediaPickerComponents {
   binary: BinaryUploader;
   browser: Browser;
@@ -72,7 +84,13 @@ export interface MediaPickerComponents {
 
 export { UploadParams } from './domain/config';
 
-export { BrowserConfig, DropzoneConfig, PopupConfig, BinaryConfig };
+export {
+  BrowserConfig,
+  DropzoneConfig,
+  PopupConfig,
+  BinaryConfig,
+  ClipboardConfig,
+};
 export interface ComponentConfigs {
   binary: BinaryConfig;
   browser: BrowserConfig;
@@ -88,73 +106,45 @@ export {
   DropzoneConstructor,
   PopupConstructor,
 };
-export type ComponentConstructor =
-  | BinaryUploaderConstructor
-  | BrowserConstructor
-  | ClipboardConstructor
-  | DropzoneConstructor
-  | PopupConstructor;
 
-// returns component constructor when just supplied with component name
-export function MediaPicker<K extends keyof MediaPickerComponents>(
-  componentName: K,
-): MediaPickerConstructors[K];
-
-// returns component instance when supplied with component name and module config
-export function MediaPicker<K extends keyof MediaPickerComponents>(
+export async function MediaPicker<K extends keyof MediaPickerComponents>(
   componentName: K,
   context: Context,
   pickerConfig?: ComponentConfigs[K],
-): MediaPickerComponents[K];
-
-// TODO: Remove factory ??
-export function MediaPicker<K extends keyof MediaPickerComponents>(
-  componentName: K,
-  context?: Context,
-  pickerConfig?: ComponentConfigs[K],
-): MediaPickerComponents[K] | MediaPickerConstructors[K] {
-  if (context) {
-    const analyticsContext = { trackEvent };
-
-    switch (componentName) {
-      case 'binary':
-        return new BinaryUploader(
-          analyticsContext,
-          context,
-          pickerConfig as BinaryConfig,
-        );
-      case 'browser':
-        return new Browser(analyticsContext, context, pickerConfig as
-          | BrowserConfig
-          | undefined);
-      case 'clipboard':
-        return new Clipboard(analyticsContext, context, pickerConfig as
-          | ClipboardConfig
-          | undefined);
-      case 'dropzone':
-        return new Dropzone(analyticsContext, context, pickerConfig as
-          | DropzoneConfig
-          | undefined);
-      case 'popup':
-        return new Popup(
-          analyticsContext,
-          context,
-          pickerConfig as PopupConfig,
-        );
-      default:
-        const message = `The component ${componentName} does not exist`;
-        handleError('wrong_component', message);
-        throw new Error(message);
-    }
-  } else {
-    const constructors = {
-      binary: BinaryUploader,
-      browser: Browser,
-      clipboard: Clipboard,
-      dropzone: Dropzone,
-      popup: Popup,
-    };
-
-    return constructors[componentName];
+): Promise<MediaPickerComponents[K]> {
+  switch (componentName) {
+    case 'binary':
+      const {
+        BinaryUploaderImpl,
+      } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-binary" */ './components/binary');
+      return new BinaryUploaderImpl(context, pickerConfig as BinaryConfig);
+    case 'browser':
+      const {
+        BrowserImpl,
+      } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-browser" */ './components/browser');
+      return new BrowserImpl(context, pickerConfig as
+        | BrowserConfig
+        | undefined);
+    case 'clipboard':
+      const {
+        ClipboardImpl,
+      } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-clipboard" */ './components/clipboard');
+      return new ClipboardImpl(context, pickerConfig as
+        | ClipboardConfig
+        | undefined);
+    case 'dropzone':
+      const {
+        DropzoneImpl,
+      } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-dropzone" */ './components/dropzone');
+      return new DropzoneImpl(context, pickerConfig as
+        | DropzoneConfig
+        | undefined);
+    case 'popup':
+      const {
+        PopupImpl,
+      } = await import(/* webpackChunkName:"@atlaskit-internal_media-picker-popup" */ './components/popup');
+      return new PopupImpl(context, pickerConfig as PopupConfig);
+    default:
+      throw new Error(`The component ${componentName} does not exist`);
   }
 }

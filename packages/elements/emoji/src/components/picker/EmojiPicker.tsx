@@ -1,15 +1,24 @@
+import { FireAnalyticsEvent, withAnalytics } from '@atlaskit/analytics';
 import * as React from 'react';
-import * as styles from './styles';
-
+import { ComponentClass } from 'react';
+import { EmojiProvider } from '../../api/EmojiResource';
+import { OnEmojiEvent } from '../../types';
 import LoadingEmojiComponent, {
   Props as LoadingProps,
   State as LoadingState,
 } from '../common/LoadingEmojiComponent';
-import EmojiPickerComponent, { PickerRefHandler } from './EmojiPickerComponent';
+import {
+  PickerRefHandler,
+  Props as ComponentProps,
+} from './EmojiPickerComponent';
 import { LoadingItem } from './EmojiPickerVirtualItems';
-import { OnEmojiEvent } from '../../types';
-import { EmojiProvider } from '../../api/EmojiResource';
-import { FireAnalyticsEvent, withAnalytics } from '@atlaskit/analytics';
+import * as styles from './styles';
+
+const emojiPickerModuleLoader = () =>
+  import(/* webpackChunkName:"@atlaskit-internal_emojiPickerComponent" */ './EmojiPickerComponent');
+
+const emojiPickerLoader: () => Promise<ComponentClass<ComponentProps>> = () =>
+  emojiPickerModuleLoader().then(module => module.default);
 
 export interface Props extends LoadingProps {
   onSelection?: OnEmojiEvent;
@@ -22,8 +31,22 @@ export class EmojiPickerInternal extends LoadingEmojiComponent<
   Props,
   LoadingState
 > {
-  constructor(props) {
+  // state initialised with static component to prevent
+  // rerender when the module has already been loaded
+  static AsyncLoadedComponent?: ComponentClass<ComponentProps>;
+  state = {
+    asyncLoadedComponent: EmojiPickerInternal.AsyncLoadedComponent,
+  };
+
+  constructor(props: Props) {
     super(props, {});
+  }
+
+  asyncLoadComponent() {
+    emojiPickerLoader().then(component => {
+      EmojiPickerInternal.AsyncLoadedComponent = component;
+      this.setAsyncState(component);
+    });
   }
 
   renderLoading(): JSX.Element | null {
@@ -40,9 +63,11 @@ export class EmojiPickerInternal extends LoadingEmojiComponent<
     );
   }
 
-  renderLoaded(loadedEmojiProvider: EmojiProvider) {
+  renderLoaded(
+    loadedEmojiProvider: EmojiProvider,
+    EmojiPickerComponent: ComponentClass<ComponentProps>,
+  ) {
     const { emojiProvider, ...otherProps } = this.props;
-
     return (
       <EmojiPickerComponent
         emojiProvider={loadedEmojiProvider}

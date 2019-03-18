@@ -1,44 +1,38 @@
 export type MediaFile = {
   readonly id: string;
+  readonly upfrontId: Promise<string>;
+  readonly userUpfrontId?: Promise<string>;
+  readonly userOccurrenceKey?: Promise<string>;
   readonly name: string;
   readonly size: number;
   readonly creationDate: number;
   readonly type: string;
-};
-
-export type PublicMediaFile = MediaFile & {
-  readonly publicId: string;
+  readonly occurrenceKey?: string;
 };
 
 export function copyMediaFileForUpload(
-  { name, size, creationDate, type }: MediaFile,
-  uploadId: string,
+  {
+    name,
+    size,
+    creationDate,
+    type,
+    upfrontId,
+    userUpfrontId,
+    occurrenceKey,
+    userOccurrenceKey,
+  }: MediaFile,
+  fileId: string,
 ): MediaFile {
   // We dont' use spread here because user upload events are not sanitized
   return {
-    id: uploadId,
+    id: fileId,
     name,
     size,
     creationDate,
     type,
+    upfrontId,
+    userUpfrontId,
+    occurrenceKey,
+    userOccurrenceKey,
   };
-}
-
-export function copyPublicMediaFileForUpload(
-  { name, size, creationDate, type, publicId }: PublicMediaFile,
-  uploadId: string,
-): PublicMediaFile {
-  // We dont' use spread here because user upload events are not sanitized
-  return {
-    id: uploadId,
-    name,
-    size,
-    creationDate,
-    type,
-    publicId,
-  };
-}
-
-export function isPublicMediaFile(file: MediaFile): file is PublicMediaFile {
-  return !!(file as PublicMediaFile).publicId;
 }

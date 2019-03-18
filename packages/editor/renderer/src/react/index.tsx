@@ -1,33 +1,30 @@
 import * as React from 'react';
-import { ComponentClass } from 'react';
-
-import { Fragment, Mark, Node, Schema } from 'prosemirror-model';
+// @ts-ignore: unused variable
+// prettier-ignore
+import { ComponentType, Consumer, Provider } from 'react';
+import { Fragment, Mark, MarkType, Node, Schema } from 'prosemirror-model';
 
 import { Serializer } from '../';
+import { getText } from '../utils';
+import { RendererAppearance } from '../ui/Renderer';
 
 import {
   Doc,
   mergeTextNodes,
   isTextWrapper,
   TextWrapper,
-  isEmojiDoc,
   toReact,
-  BreakoutProvider,
 } from './nodes';
 
 import { toReact as markToReact } from './marks';
-
+import { calcTableColumnWidths } from '@atlaskit/adf-schema';
 import {
   ProviderFactory,
   getMarksByOrder,
   isSameMark,
   EventHandlers,
   ExtensionHandlers,
-  calcTableColumnWidths,
 } from '@atlaskit/editor-common';
-import { bigEmojiHeight } from '../utils';
-
-export { BreakoutProvider };
 
 export interface RendererContext {
   objectAri?: string;
@@ -42,7 +39,38 @@ export interface ConstructorParams {
   extensionHandlers?: ExtensionHandlers;
   portal?: HTMLElement;
   objectContext?: RendererContext;
-  useNewApplicationCard?: boolean;
+  appearance?: RendererAppearance;
+  disableHeadingIDs?: boolean;
+  allowDynamicTextSizing?: boolean;
+}
+
+type MarkWithContent = Partial<Mark<any>> & {
+  content: Array<MarkWithContent | Node<any>>;
+};
+
+function mergeMarks(marksAndNodes: Array<MarkWithContent | Node>) {
+  return marksAndNodes.reduce(
+    (acc, markOrNode) => {
+      const prev = (acc.length && acc[acc.length - 1]) || null;
+
+      if (
+        markOrNode.type instanceof MarkType &&
+        prev &&
+        prev.type instanceof MarkType &&
+        Array.isArray(prev.content) &&
+        isSameMark(prev as Mark, markOrNode as Mark)
+      ) {
+        prev.content = mergeMarks(
+          prev.content.concat((markOrNode as MarkWithContent).content),
+        );
+      } else {
+        acc.push(markOrNode);
+      }
+
+      return acc;
+    },
+    [] as Array<MarkWithContent | Node>,
+  );
 }
 
 export default class ReactSerializer implements Serializer<JSX.Element> {
@@ -51,7 +79,10 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   private extensionHandlers?: ExtensionHandlers;
   private portal?: HTMLElement;
   private rendererContext?: RendererContext;
-  private useNewApplicationCard?: boolean;
+  private appearance?: RendererAppearance;
+  private disableHeadingIDs?: boolean;
+  private headingIds: string[] = [];
+  private allowDynamicTextSizing?: boolean;
 
   constructor({
     providers,
@@ -59,14 +90,22 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     extensionHandlers,
     portal,
     objectContext,
-    useNewApplicationCard,
+    appearance,
+    disableHeadingIDs,
+    allowDynamicTextSizing,
   }: ConstructorParams) {
     this.providers = providers;
     this.eventHandlers = eventHandlers;
     this.extensionHandlers = extensionHandlers;
     this.portal = portal;
     this.rendererContext = objectContext;
-    this.useNewApplicationCard = useNewApplicationCard;
+    this.appearance = appearance;
+    this.disableHeadingIDs = disableHeadingIDs;
+    this.allowDynamicTextSizing = allowDynamicTextSizing;
+  }
+
+  private resetState() {
+    this.headingIds = [];
   }
 
   serializeFragment(
@@ -74,28 +113,59 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     props: any = {},
     target: any = Doc,
     key: string = 'root-0',
+    parentInfo?: { parentIsIncompleteTask: boolean },
   ): JSX.Element | null {
-    const emojiBlock = isEmojiDoc(fragment, props);
+    // This makes sure that we reset internal state on re-render.
+    if (key === 'root-0') {
+      this.resetState();
+    }
+
     const content = ReactSerializer.getChildNodes(fragment).map(
       (node, index) => {
-        if (isTextWrapper(node.type.name)) {
-          return this.serializeTextWrapper((node as TextWrapper).content);
-        }
-        let props;
-        if (emojiBlock) {
-          props = this.getEmojiBlockProps(node as Node);
-        } else if (node.type.name === 'table') {
-          props = this.getTableProps(node as Node);
-        } else {
-          props = this.getProps(node as Node);
+        if (isTextWrapper(node)) {
+          return this.serializeTextWrapper(node.content);
         }
 
-        return this.serializeFragment(
-          (node as Node).content,
+        let props;
+
+        if (node.type.name === 'table') {
+          props = this.getTableProps(node);
+        } else if (node.type.name === 'date') {
+          props = this.getDateProps(node, parentInfo);
+        } else if (node.type.name === 'heading') {
+          props = this.getHeadingProps(node);
+        } else {
+          props = this.getProps(node);
+        }
+
+        let pInfo = parentInfo;
+        if (node.type.name === 'taskItem' && node.attrs.state !== 'DONE') {
+          pInfo = { parentIsIncompleteTask: true };
+        }
+
+        const serializedContent = this.serializeFragment(
+          node.content,
           props,
-          toReact(node as Node),
+          toReact(node),
           `${node.type.name}-${index}`,
+          pInfo,
         );
+
+        if (node.marks && node.marks.length) {
+          return ([] as Array<Mark>)
+            .concat(node.marks)
+            .reverse()
+            .reduce((acc, mark) => {
+              return this.renderMark(
+                markToReact(mark),
+                this.getMarkProps(mark),
+                `${mark.type.name}-${index}`,
+                acc,
+              );
+            }, serializedContent);
+        }
+
+        return serializedContent;
       },
     );
 
@@ -113,8 +183,8 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       return (mark as any).text;
     }
 
-    const content = ((mark as any).content || []).map((child, index) =>
-      this.serializeMark(child, index),
+    const content = ((mark as any).content || []).map(
+      (child: Mark, index: number) => this.serializeMark(child, index),
     );
     return this.renderMark(
       markToReact(mark),
@@ -124,9 +194,8 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     );
   }
 
-  // tslint:disable-next-line:variable-name
   private renderNode(
-    NodeComponent: ComponentClass<any>,
+    NodeComponent: ComponentType<any>,
     props: any,
     key: string,
     content: string | JSX.Element | any[] | null | undefined,
@@ -138,9 +207,8 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     );
   }
 
-  // tslint:disable-next-line:variable-name
   private renderMark(
-    MarkComponent: ComponentClass<any>,
+    MarkComponent: ComponentType<any>,
     props: any,
     key: string,
     content: any,
@@ -152,17 +220,20 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     );
   }
 
-  private getEmojiBlockProps(node: Node) {
-    return {
-      ...this.getProps(node),
-      fitToHeight: bigEmojiHeight,
-    };
-  }
-
   private getTableProps(node: Node) {
     return {
       ...this.getProps(node),
       columnWidths: calcTableColumnWidths(node),
+    };
+  }
+
+  private getDateProps(
+    node: Node,
+    parentInfo: { parentIsIncompleteTask: boolean } | undefined,
+  ) {
+    return {
+      timestamp: node.attrs && node.attrs.timestamp,
+      parentIsIncompleteTask: parentInfo && parentInfo.parentIsIncompleteTask,
     };
   }
 
@@ -176,9 +247,46 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       rendererContext: this.rendererContext,
       serializer: this,
       content: node.content ? node.content.toJSON() : undefined,
-      useNewApplicationCard: this.useNewApplicationCard,
+      allowDynamicTextSizing: this.allowDynamicTextSizing,
+      rendererAppearance: this.appearance,
       ...node.attrs,
     };
+  }
+
+  private getHeadingProps(node: Node) {
+    return {
+      ...node.attrs,
+      content: node.content ? node.content.toJSON() : undefined,
+      headingId: this.getHeadingId(node),
+    };
+  }
+
+  private getHeadingId(node: Node) {
+    if (this.disableHeadingIDs || !node.content.size) {
+      return;
+    }
+
+    const headingId = (node as any).content
+      .toJSON()
+      .reduce((acc: string, node: any) => acc.concat(getText(node) || ''), '')
+      .replace(/ /g, '-');
+
+    return this.getUniqueHeadingId(headingId);
+  }
+
+  private getUniqueHeadingId(baseId: string, counter = 0): string {
+    if (counter === 0 && this.headingIds.indexOf(baseId) === -1) {
+      this.headingIds.push(baseId);
+      return baseId;
+    } else if (counter !== 0) {
+      const headingId = `${baseId}.${counter}`;
+      if (this.headingIds.indexOf(headingId) === -1) {
+        this.headingIds.push(headingId);
+        return headingId;
+      }
+    }
+
+    return this.getUniqueHeadingId(baseId, ++counter);
   }
 
   private getMarkProps(mark: Mark): any {
@@ -207,51 +315,48 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   }
 
   static buildMarkStructure(content: Node[]) {
-    let currentMarkNode: any;
-    return content.reduce(
-      (acc, node, index) => {
+    return mergeMarks(
+      content.map(node => {
         const nodeMarks = this.getMarks(node);
-
         if (nodeMarks.length === 0) {
-          currentMarkNode = node;
-          acc.push(currentMarkNode);
-        } else {
-          nodeMarks.forEach((mark, markIndex) => {
-            const isSameAsPrevious = isSameMark(mark, currentMarkNode as Mark);
-            const previousIsInMarks =
-              markIndex > 0 &&
-              nodeMarks.some(m => isSameMark(m, currentMarkNode));
-
-            if (!isSameAsPrevious) {
-              let newMarkNode: any = {
-                ...mark,
-                content: [],
-              };
-
-              if (previousIsInMarks) {
-                currentMarkNode.content!.push(newMarkNode);
-                currentMarkNode = newMarkNode;
-              } else {
-                acc.push(newMarkNode);
-                currentMarkNode = newMarkNode;
-              }
-            }
-          });
-
-          currentMarkNode.content!.push(node);
+          return node;
         }
 
-        return acc;
-      },
-      [] as Mark[],
-    );
+        return nodeMarks.reverse().reduce(
+          (acc, mark) => {
+            const { eq } = mark;
+
+            return {
+              ...mark,
+              eq,
+              content: [acc],
+            };
+          },
+          node as any,
+        );
+      }),
+    ) as Mark[];
   }
 
   static fromSchema(
     schema: Schema,
-    { providers, eventHandlers, extensionHandlers }: ConstructorParams,
+    {
+      providers,
+      eventHandlers,
+      extensionHandlers,
+      appearance,
+      disableHeadingIDs,
+      allowDynamicTextSizing,
+    }: ConstructorParams,
   ): ReactSerializer {
     // TODO: Do we actually need the schema here?
-    return new ReactSerializer({ providers, eventHandlers, extensionHandlers });
+    return new ReactSerializer({
+      providers,
+      eventHandlers,
+      extensionHandlers,
+      appearance,
+      disableHeadingIDs,
+      allowDynamicTextSizing,
+    });
   }
 }

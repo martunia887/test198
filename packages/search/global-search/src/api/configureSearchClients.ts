@@ -8,12 +8,14 @@ import PeopleSearchClientImpl, {
   PeopleSearchClient,
 } from './PeopleSearchClient';
 import ConfluenceClientImpl, { ConfluenceClient } from './ConfluenceClient';
+import JiraClientImpl, { JiraClient } from './JiraClient';
 
 export interface SearchClients {
   recentSearchClient: RecentSearchClient;
   crossProductSearchClient: CrossProductSearchClient;
   peopleSearchClient: PeopleSearchClient;
   confluenceClient: ConfluenceClient;
+  jiraClient: JiraClient;
 }
 
 export interface Config {
@@ -21,6 +23,8 @@ export interface Config {
   searchAggregatorServiceUrl: string;
   directoryServiceUrl: string;
   confluenceUrl: string;
+  jiraUrl: string;
+  addSessionIdToJiraResult?: boolean;
 }
 
 const defaultConfig: Config = {
@@ -28,6 +32,8 @@ const defaultConfig: Config = {
   searchAggregatorServiceUrl: '/gateway/api/xpsearch-aggregator',
   directoryServiceUrl: '/gateway/api/directory',
   confluenceUrl: '/wiki',
+  jiraUrl: '',
+  addSessionIdToJiraResult: false,
 };
 
 export default function configureSearchClients(
@@ -47,11 +53,17 @@ export default function configureSearchClients(
     crossProductSearchClient: new CrossProductSearchClientImpl(
       config.searchAggregatorServiceUrl,
       cloudId,
+      config.addSessionIdToJiraResult,
     ),
     peopleSearchClient: new PeopleSearchClientImpl(
       config.directoryServiceUrl,
       cloudId,
     ),
     confluenceClient: new ConfluenceClientImpl(config.confluenceUrl, cloudId),
+    jiraClient: new JiraClientImpl(
+      config.jiraUrl,
+      cloudId,
+      config.addSessionIdToJiraResult,
+    ),
   };
 }

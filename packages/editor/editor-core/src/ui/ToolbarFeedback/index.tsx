@@ -1,13 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { PureComponent } from 'react';
+import * as PropTypes from 'prop-types';
 import Spinner from '@atlaskit/spinner';
 import { Popup } from '@atlaskit/editor-common';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import { analyticsDecorator as analytics } from '../../analytics';
+import { withAnalytics } from '../../analytics';
 import ToolbarButton from '../ToolbarButton';
-import { version as coreVersion } from '../../../package.json';
+import { version as coreVersion } from '../../version.json';
 import withOuterListeners from '../with-outer-listeners';
 
 import {
@@ -18,6 +19,15 @@ import {
   ConfirmationHeader,
   ConfirmationImg,
 } from './styles';
+import {
+  analyticsEventKey,
+  AnalyticsDispatch,
+  ACTION,
+  ACTION_SUBJECT,
+  EVENT_TYPE,
+  ACTION_SUBJECT_ID,
+} from '../../plugins/analytics';
+import { createDispatch } from '../../event-dispatcher';
 
 const PopupWithOutsideListeners: any = withOuterListeners(Popup);
 const POPUP_HEIGHT = 388;
@@ -42,6 +52,7 @@ export interface Props {
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
+  labels?: string[];
 }
 
 export interface State {
@@ -61,7 +72,7 @@ declare global {
  * Inspired from:
  * https://stackoverflow.com/questions/11219582/how-to-detect-my-browser-version-and-operating-system-using-javascript
  */
-export const getBrowserInfo = nAgt => {
+export const getBrowserInfo = (nAgt: string) => {
   let browserName;
   let browserVersion;
   let nameOffset;
@@ -129,9 +140,9 @@ export const getBrowserInfo = nAgt => {
  * Inspired from:
  * https://stackoverflow.com/questions/9514179/how-to-find-the-operating-system-version-using-javascript
  */
-export const getDeviceInfo = (nAgt, nVersion) => {
+export const getDeviceInfo = (nAgt: string, nVersion: string) => {
   let os = '';
-  let osVersion = '';
+  let osVersion: string | null = '';
 
   let clientStrings = [
     { s: 'Windows 3.11', r: /Win16/ },
@@ -189,18 +200,22 @@ export const getDeviceInfo = (nAgt, nVersion) => {
       break;
     case 'iOS':
       match = /OS (\d+)_(\d+)_?(\d+)?/.exec(nVersion);
-      osVersion = match && match[1] + '.' + match[2] + '.' + (match[3] | 0);
+      osVersion = match && match[1] + '.' + match[2] + '.' + (match[3] || 0);
   }
   return `${os} ${osVersion}`;
 };
 
 export default class ToolbarFeedback extends PureComponent<Props, State> {
+  static contextTypes = {
+    editorActions: PropTypes.object.isRequired,
+  };
+
   state: State = {
     jiraIssueCollectorScriptLoading: false,
     showOptOutOption: false,
   };
 
-  private handleRef = ref => {
+  private handleRef = (ref: ToolbarButton | null) => {
     if (ref) {
       this.setState({
         target: ReactDOM.findDOMNode(ref || null) as HTMLElement,
@@ -254,18 +269,18 @@ export default class ToolbarFeedback extends PureComponent<Props, State> {
               <ConfirmationText>
                 <div>
                   We are rolling out a new editing experience across Atlassian
-                  products, help us improve by providing feedback.
+                  products. Help us improve by providing feedback.
                 </div>
                 <div>
-                  You can opt-out for now in Bitbucket labs by turning off the
-                  "Atlassian editor" feature in settings.
+                  You can opt-out for now by turning off the "Atlassian Editor"
+                  feature on the Labs page in Bitbucket settings.
                 </div>
                 <ButtonGroup>
                   <Button appearance="primary" onClick={this.openFeedbackPopup}>
-                    Give Feedback
+                    Give feedback
                   </Button>
                   <Button appearance="default" onClick={this.openLearnMorePage}>
-                    Learn More
+                    Learn more
                   </Button>
                 </ButtonGroup>
               </ConfirmationText>
@@ -288,57 +303,71 @@ export default class ToolbarFeedback extends PureComponent<Props, State> {
     this.setState({ showOptOutOption: !this.state.showOptOutOption });
   };
 
-  @analytics('atlassian.editor.feedback.button')
-  private openFeedbackPopup = (): boolean => {
-    if (typeof this.showJiraCollectorDialogCallback === 'function') {
-      this.showJiraCollectorDialogCallback();
-      return false;
-    }
+  private openFeedbackPopup = withAnalytics(
+    'atlassian.editor.feedback.button',
+    (): boolean => {
+      const dispatch: AnalyticsDispatch = createDispatch(
+        this.context.editorActions.eventDispatcher,
+      );
+      dispatch(analyticsEventKey, {
+        payload: {
+          action: ACTION.CLICKED,
+          actionSubject: ACTION_SUBJECT.BUTTON,
+          actionSubjectId: ACTION_SUBJECT_ID.BUTTON_FEEDBACK,
+          eventType: EVENT_TYPE.UI,
+        },
+      });
 
-    this.setState({
-      jiraIssueCollectorScriptLoading: true,
-      showOptOutOption: false,
-    });
+      if (typeof this.showJiraCollectorDialogCallback === 'function') {
+        this.showJiraCollectorDialogCallback();
+        return false;
+      }
 
-    const product = this.props.product || 'n/a';
+      this.setState({
+        jiraIssueCollectorScriptLoading: true,
+        showOptOutOption: false,
+      });
 
-    // triggerFunction is executed as soon as JIRA issue collector script is loaded
-    window.ATL_JQ_PAGE_PROPS = {
-      triggerFunction: showCollectorDialog => {
-        this.setState({ jiraIssueCollectorScriptLoading: false });
+      const product = this.props.product || 'n/a';
 
-        if (typeof showCollectorDialog === 'function') {
-          // save reference to `showCollectorDialog` for future calls
-          this.showJiraCollectorDialogCallback = showCollectorDialog;
+      // triggerFunction is executed as soon as JIRA issue collector script is loaded
+      window.ATL_JQ_PAGE_PROPS = {
+        triggerFunction: (showCollectorDialog: () => void) => {
+          this.setState({ jiraIssueCollectorScriptLoading: false });
 
-          // and run it now
-          // next tick is essential due to JIRA issue collector behaviour
-          setTimeout(showCollectorDialog, 0);
-        }
-      },
-      fieldValues: {
-        description: `Please describe the problem you're having or feature you'd like to see:\n\n\n---~---~---~---~---~---~---~---~---~---~---~---~---~---~---\n version: ${
-          this.props.packageName
-        }@${
-          this.props.packageVersion
-        } (${coreVersion})\n product: ${product}\n---~---~---~---~---~---~---~---~---~---~---~---~---~---~---\nBrowser: ${getBrowserInfo(
-          navigator.userAgent,
-        )}\nOS: ${getDeviceInfo(
-          navigator.userAgent,
-          navigator.appVersion,
-        )}\n---~---~---~---~---~---~---~---~---~---~---~---~---~---~---\n\n
-        `,
-      },
-      environment: {
-        'Editor Package': this.props.packageName,
-        'Editor Version': this.props.packageVersion,
-        'Editor Core Version': coreVersion,
-      },
-    };
+          if (typeof showCollectorDialog === 'function') {
+            // save reference to `showCollectorDialog` for future calls
+            this.showJiraCollectorDialogCallback = showCollectorDialog;
 
-    this.loadJiraIssueCollectorScript();
-    return true;
-  };
+            // and run it now
+            // next tick is essential due to JIRA issue collector behaviour
+            window.setTimeout(showCollectorDialog, 0);
+          }
+        },
+        fieldValues: {
+          description: `Please describe the problem you're having or feature you'd like to see:\n\n\n`,
+          // 11711 is the field ID for the Feedback Labels field on Product Fabric.
+          // this is found by clicking "configure" on the field and inspecting the URL
+          customfield_11711: [product, ...(this.props.labels || [])],
+          customfield_11712: `version: ${this.props.packageName}@${
+            this.props.packageVersion
+          } (${coreVersion})
+          Browser: ${getBrowserInfo(navigator.userAgent)}
+          OS: ${getDeviceInfo(navigator.userAgent, navigator.appVersion)}`,
+        },
+        environment: {
+          'Editor Package': this.props.packageName,
+          'Editor Version': this.props.packageVersion,
+          'Editor Core Version': coreVersion,
+        },
+        priority: '1',
+        components: '15306', // Fix here
+      };
+
+      this.loadJiraIssueCollectorScript();
+      return true;
+    },
+  );
 
   private loadJiraIssueCollectorScript = (): void => {
     if (this.hasJquery()) {

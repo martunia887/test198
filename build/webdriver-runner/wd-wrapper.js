@@ -1,9 +1,9 @@
-/*
-* wrapper on top of webdriver-io apis to give a feel of puppeeteer api
-*/
+const assert = require('assert').strict;
 
-//TODO :move this to a new npm-pkg
-const webdriverio = require('webdriverio');
+/*
+ * wrapper on top of webdriver-io apis to give a feel of puppeeteer api
+ */
+
 const WAIT_TIMEOUT = 5000;
 
 const TODO = () => {
@@ -61,6 +61,10 @@ export default class Page {
     return this.browser.url(url);
   }
 
+  hover(selector) {
+    return this.browser.moveToObject(selector).pause(500);
+  }
+
   title() {
     return this.browser.getTitle();
   }
@@ -73,16 +77,39 @@ export default class Page {
     return this.browser.elements(selector);
   }
 
-  $eval(selector, pageFunction) {
+  $eval(selector, pageFunction, param) {
     return this.browser
       .execute(
-        `return (${pageFunction}(document.querySelector("${selector}")))`,
+        `return (${pageFunction}(document.querySelector("${selector}"), ${JSON.stringify(
+          param,
+        )}))`,
       )
       .then(obj => obj.value);
   }
 
-  type(selector, text) {
-    return this.browser.addValue(selector, text);
+  count(selector) {
+    return this.$$(selector).then(function(result) {
+      return result.value.length;
+    });
+  }
+
+  async type(selector, text) {
+    if (Array.isArray(text)) {
+      for (let t of text) {
+        await this.browser.addValue(selector, t);
+      }
+    } else {
+      await this.browser.addValue(selector, text);
+    }
+  }
+
+  setValue(selector, text) {
+    return this.browser.setValue(selector, text);
+  }
+
+  // TODO: remove it
+  clear(selector) {
+    return this.browser.clearElement(selector);
   }
 
   click(selector) {
@@ -93,9 +120,17 @@ export default class Page {
     return this.browser.keys(value);
   }
 
+  debug() {
+    return this.browser.debug();
+  }
+
   // Get
   getProperty(selector, cssProperty) {
     return this.browser.getCssProperty(selector, cssProperty);
+  }
+
+  getLocation(selector, property) {
+    return this.browser.getLocation(selector, property);
   }
 
   url() {
@@ -109,6 +144,18 @@ export default class Page {
 
   close() {
     return this.browser.close();
+  }
+
+  async checkConsoleErrors() {
+    // Console errors can only be checked in Chrome
+    if (this.isBrowser('chrome')) {
+      const logs = await this.browser.log('browser');
+      if (logs.value) {
+        logs.value.forEach(val => {
+          assert.notStrictEqual(val.level, 'SEVERE', `Error : ${val.message}`);
+        });
+      }
+    }
   }
 
   backspace(selector) {
@@ -129,6 +176,14 @@ export default class Page {
     // replace with await page.evaluate(() => document.querySelector('p').textContent)
     // for puppteer
     return this.browser.getText(selector);
+  }
+
+  getBrowserName() {
+    return this.browser.desiredCapabilities.browserName;
+  }
+
+  isBrowser(browserName) {
+    return this.getBrowserName() === browserName;
   }
 
   getCssProperty(selector, cssProperty) {
@@ -165,7 +220,7 @@ export default class Page {
     let keys;
     if (this.browser.desiredCapabilities.os === 'Windows') {
       keys = ['Control', 'v'];
-    } else if (this.browser.desiredCapabilities.browserName === 'chrome') {
+    } else if (this.isBrowser('chrome')) {
       // Workaround for https://bugs.chromium.org/p/chromedriver/issues/detail?id=30
       keys = ['Shift', 'Insert'];
     } else {
@@ -174,18 +229,86 @@ export default class Page {
     return this.browser.addValue(selector, keys);
   }
 
+  copy(selector) {
+    let keys;
+    if (this.browser.desiredCapabilities.os === 'Windows') {
+      keys = ['Control', 'c'];
+    } else if (this.isBrowser('chrome')) {
+      // Workaround for https://bugs.chromium.org/p/chromedriver/issues/detail?id=30
+      keys = ['Control', 'Insert'];
+    } else {
+      keys = ['Command', 'c'];
+    }
+    return this.browser.addValue(selector, keys);
+  }
+
   // Wait
-  waitForSelector(selector) {
-    return this.browser.waitForExist(selector, WAIT_TIMEOUT);
+  waitForSelector(selector, options = {}, reverse = false) {
+    return this.browser.waitForExist(
+      selector,
+      options.timeout || WAIT_TIMEOUT,
+      reverse,
+    );
+  }
+
+  waitForVisible(selector, options = {}) {
+    return this.browser.waitForVisible(
+      selector,
+      options.timeout || WAIT_TIMEOUT,
+    );
   }
 
   waitFor(selector, ms, reverse) {
     return this.browser.waitForVisible(selector, ms, reverse);
   }
 
+  waitUntil(predicate) {
+    return this.browser.waitUntil(predicate, WAIT_TIMEOUT);
+  }
+
   // Window
   setViewPort(size, type) {
     return this.browser.setViewPort(size, type);
+  }
+
+  chooseFile(selector, localPath) {
+    return this.browser.chooseFile(selector, localPath);
+  }
+
+  mockDate(timestamp, timezoneOffset) {
+    this.browser.execute(
+      (t, tz) => {
+        const _Date = (window._Date = window.Date);
+        const realDate = params => new _Date(params);
+        let offset = 0;
+
+        if (tz) {
+          localDateOffset = new _Date(t).getTimezoneOffset() / 60;
+          offset = (tz + localDateOffset) * 3600000;
+        }
+
+        const mockedDate = new _Date(t + offset);
+
+        Date = function(...params) {
+          if (params.length > 0) {
+            return realDate(...params);
+          }
+          return mockedDate;
+        };
+        Object.getOwnPropertyNames(_Date).forEach(property => {
+          Date[property] = _Date[property];
+        });
+        Date.now = () => t;
+      },
+      timestamp,
+      timezoneOffset,
+    );
+    return () => {
+      // Teardown function
+      this.browser.execute(() => {
+        window.Date = window._Date;
+      });
+    };
   }
 }
 //TODO: Maybe wrapping all functions?

@@ -1,21 +1,21 @@
 // @flow
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
+import {
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  createAndFireEvent,
+} from '@atlaskit/analytics-next';
 import Base, { Label } from '@atlaskit/field-base';
+import { name as packageName, version as packageVersion } from './version.json';
 import Radio from './Radio';
-import type { RadioGroupStatelessPropTypes, ItemsPropType } from './types';
+import type { RadioGroupStatelessPropTypes } from './types';
 
-type DefaultPropsTypes = {
-  isRequired: boolean,
-  items: ItemsPropType,
-  label: string,
-};
-
-export default class FieldRadioGroupStateless extends Component<
+class FieldRadioGroupStateless extends Component<
   RadioGroupStatelessPropTypes,
   void,
 > {
-  static defaultProps: DefaultPropsTypes = {
+  static defaultProps = {
     isRequired: false,
     items: [],
     label: '',
@@ -44,13 +44,12 @@ export default class FieldRadioGroupStateless extends Component<
   render() {
     return (
       <div>
-        {/* $FlowFixMe TEMPORARY */}
-        <Label label={this.props.label} isRequired={this.props.isRequired} />
-        <Base
-          appearance="none"
+        <Label
+          // FIXME: Once label is properly typed as required we can remove this
+          label={this.props.label || ''}
           isRequired={this.props.isRequired}
-          label={this.props.label}
-        >
+        />
+        <Base appearance="none" isRequired={this.props.isRequired}>
           <div aria-label={this.props.label} role="group">
             {this.renderItems()}
           </div>
@@ -59,3 +58,25 @@ export default class FieldRadioGroupStateless extends Component<
     );
   }
 }
+
+export { FieldRadioGroupStateless as AkFieldRadioGroupWithoutAnalytics };
+const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
+
+export default withAnalyticsContext({
+  componentName: 'fieldRadioGroup',
+  packageName,
+  packageVersion,
+})(
+  withAnalyticsEvents({
+    onRadioChange: createAndFireEventOnAtlaskit({
+      action: 'selected',
+      actionSubject: 'radioItem',
+
+      attributes: {
+        componentName: 'fieldRadioGroup',
+        packageName,
+        packageVersion,
+      },
+    }),
+  })(FieldRadioGroupStateless),
+);

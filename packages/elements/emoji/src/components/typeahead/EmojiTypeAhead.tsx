@@ -1,16 +1,24 @@
 import * as React from 'react';
-
-import { RelativePosition } from '../../types';
+import { ComponentClass } from 'react';
 import { EmojiProvider } from '../../api/EmojiResource';
+import { RelativePosition } from '../../types';
+import debug from '../../util/logger';
 import LoadingEmojiComponent, {
   Props as LoadingProps,
   State as LoadingState,
 } from '../common/LoadingEmojiComponent';
+import Popup from '../common/Popup';
 import EmojiTypeAheadComponent, {
   EmojiTypeAheadBaseProps,
+  Props as ComponentProps,
 } from './EmojiTypeAheadComponent';
-import Popup from '../common/Popup';
-import debug from '../../util/logger';
+
+const emojiTypeAheadModuleLoader = () =>
+  import(/* webpackChunkName:"@atlaskit-internal_emojiTypeAheadComponent" */ './EmojiTypeAheadComponent');
+
+const emojiTypeAheadComponentLoader: () => Promise<
+  ComponentClass<ComponentProps>
+> = () => emojiTypeAheadModuleLoader().then(module => module.default);
 
 export interface Props extends EmojiTypeAheadBaseProps, LoadingProps {
   /** CSS selector, or target HTML element */
@@ -25,7 +33,14 @@ export default class EmojiTypeahead extends LoadingEmojiComponent<
   Props,
   LoadingState
 > {
-  constructor(props) {
+  // state initialised with static component to prevent
+  // rerender when the module has already been loaded
+  static AsyncLoadedComponent?: ComponentClass<ComponentProps>;
+  state = {
+    asyncLoadedComponent: EmojiTypeahead.AsyncLoadedComponent,
+  };
+
+  constructor(props: Props) {
     super(props, {});
   }
 
@@ -54,7 +69,17 @@ export default class EmojiTypeahead extends LoadingEmojiComponent<
     return 0;
   };
 
-  renderLoaded(loadedEmojiProvider: EmojiProvider) {
+  asyncLoadComponent() {
+    emojiTypeAheadComponentLoader().then(component => {
+      EmojiTypeahead.AsyncLoadedComponent = component;
+      this.setAsyncState(component);
+    });
+  }
+
+  renderLoaded(
+    loadedEmojiProvider: EmojiProvider,
+    EmojiTypeAheadComponent: ComponentClass<ComponentProps>,
+  ) {
     const {
       emojiProvider,
       target,

@@ -1,4 +1,4 @@
-const emojiMap = {
+const emojiMap: { [key: string]: string } = {
   'smile.png': '🙂',
   'sad.png': '☹️',
   'tongue.png': '😛',
@@ -20,7 +20,7 @@ const emojiMap = {
   'star_green.png': '💚',
   'star_blue.png': '💙',
   'flag.png': '🚩',
-  'flag_grey.png': '🏳',
+  'flag_gray.png': '🏳',
 };
 
 export function mapImageToEmoji(imageElement: HTMLImageElement) {

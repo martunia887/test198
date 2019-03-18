@@ -1,22 +1,27 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { Mark as PMMark } from 'prosemirror-model';
 
-export type InputRuleHandler =
-  | string
-  | ((state: EditorState, match, start, end) => Transaction | null | undefined);
+export type InputRuleWithHandler = InputRule & { handler: InputRuleHandler };
+
+export type InputRuleHandler = ((
+  state: EditorState,
+  match: Array<string>,
+  start: number,
+  end: number,
+) => Transaction | null);
 
 export function defaultInputRuleHandler(
-  inputRule: InputRule,
+  inputRule: InputRuleWithHandler,
   isBlockNodeRule: boolean = false,
-): InputRule {
+): InputRuleWithHandler {
   const originalHandler = (inputRule as any).handler;
-  // TODO: Fix types (ED-2987)
-  (inputRule as any).handler = (state: EditorState, match, start, end) => {
+  inputRule.handler = (state: EditorState, match, start, end) => {
     // Skip any input rule inside code
     // https://product-fabric.atlassian.net/wiki/spaces/E/pages/37945345/Editor+content+feature+rules#Editorcontent/featurerules-Rawtextblocks
     const unsupportedMarks = isBlockNodeRule
-      ? hasMarksNotSupportedByBlocks(state, start, end)
-      : hasCodeMark(state, start, end);
+      ? hasUnsupportedMarkForBlockInputRule(state, start, end)
+      : hasUnsupportedMarkForInputRule(state, start, end);
     if (state.selection.$from.parent.type.spec.code || unsupportedMarks) {
       return;
     }
@@ -29,9 +34,9 @@ export function createInputRule(
   match: RegExp,
   handler: InputRuleHandler,
   isBlockNodeRule: boolean = false,
-): InputRule {
+): InputRuleWithHandler {
   return defaultInputRuleHandler(
-    new InputRule(match, handler),
+    new InputRule(match, handler) as InputRuleWithHandler,
     isBlockNodeRule,
   );
 }
@@ -49,15 +54,20 @@ export const uuid = () =>
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
   });
 
-const hasMarksNotSupportedByBlocks = (
+const hasUnsupportedMarkForBlockInputRule = (
   state: EditorState,
   start: number,
   end: number,
 ) => {
-  const { doc, schema: { marks } } = state;
+  const {
+    doc,
+    schema: { marks },
+  } = state;
   let unsupportedMarksPresent = false;
-  const isUnsupportedMark = node =>
-    node.type === marks.code || node.type === marks.link;
+  const isUnsupportedMark = (node: PMMark) =>
+    node.type === marks.code ||
+    node.type === marks.link ||
+    node.type === marks.typeAheadQuery;
   doc.nodesBetween(start, end, node => {
     unsupportedMarksPresent =
       unsupportedMarksPresent ||
@@ -66,10 +76,18 @@ const hasMarksNotSupportedByBlocks = (
   return unsupportedMarksPresent;
 };
 
-const hasCodeMark = (state: EditorState, start: number, end: number) => {
-  const { doc, schema: { marks } } = state;
+const hasUnsupportedMarkForInputRule = (
+  state: EditorState,
+  start: number,
+  end: number,
+) => {
+  const {
+    doc,
+    schema: { marks },
+  } = state;
   let unsupportedMarksPresent = false;
-  const isCodemark = node => node.type === marks.code;
+  const isCodemark = (node: PMMark) =>
+    node.type === marks.code || node.type === marks.typeAheadQuery;
   doc.nodesBetween(start, end, node => {
     unsupportedMarksPresent =
       unsupportedMarksPresent || node.marks.filter(isCodemark).length > 0;

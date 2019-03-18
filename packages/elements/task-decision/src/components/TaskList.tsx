@@ -1,23 +1,39 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
+import { PureComponent, ReactNode } from 'react';
 import ListWrapper from '../styled/ListWrapper';
+import { FabricElementsAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 
 export interface Props {
-  children?: Array<JSX.Element> | JSX.Element;
+  listId?: string;
+  children?: ReactNode;
 }
 
 export default class TaskList extends PureComponent<Props, {}> {
   render() {
-    const { children } = this.props;
+    const { listId, children } = this.props;
+
+    const listSize = React.Children.count(children);
 
     if (!children) {
       return null;
     }
 
+    // Data attributes are required for copy and paste from rendered content
+    // to preserve the task
     return (
-      <ListWrapper>
+      <ListWrapper data-task-list-local-id="">
         {React.Children.map(children, (child, idx) => (
-          <li key={idx}>{child}</li>
+          <FabricElementsAnalyticsContext
+            data={{
+              listLocalId: listId,
+              listSize,
+              position: idx,
+            }}
+          >
+            <li key={idx} data-task-local-id="">
+              {child}
+            </li>
+          </FabricElementsAnalyticsContext>
         ))}
       </ListWrapper>
     );

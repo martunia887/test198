@@ -1,24 +1,30 @@
-import { defaultSchema, Transformer } from '@atlaskit/editor-common';
+import { defaultSchema } from '@atlaskit/adf-schema';
+import { Transformer } from '@atlaskit/editor-common';
 import * as MarkdownIt from 'markdown-it';
 import { markdownItTable } from 'markdown-it-table';
 import { MarkdownParser } from 'prosemirror-markdown';
 import { Schema, Node as PMNode } from 'prosemirror-model';
+import { markdownItMedia } from './media';
 
 function filterMdToPmSchemaMapping(schema: Schema, map: any) {
-  return Object.keys(map).reduce((newMap, key) => {
+  return Object.keys(map).reduce((newMap: any, key: string) => {
     const value = map[key];
     const block = value.block || value.node;
     const mark = value.mark;
 
     if ((block && schema.nodes[block]) || (mark && schema.marks[mark])) {
-      // @ts-ignore
       newMap[key] = value;
     }
     return newMap;
   }, {});
 }
 
-const pmSchemaToMdMapping = {
+interface SchemaMapping {
+  nodes: { [key: string]: string | string[] };
+  marks: { [key: string]: string | string[] };
+}
+
+const pmSchemaToMdMapping: SchemaMapping = {
   nodes: {
     blockquote: 'blockquote',
     paragraph: 'paragraph',
@@ -55,6 +61,8 @@ const mdToPmMapping = {
     block: 'heading',
     attrs: (tok: any) => ({ level: +tok.tag.slice(1) }),
   },
+  softbreak: { node: 'hardBreak' },
+  hardbreak: { node: 'hardBreak' },
   code_block: { block: 'codeBlock' },
   list_item: { block: 'listItem' },
   bullet_list: { block: 'bulletList' },
@@ -65,15 +73,23 @@ const mdToPmMapping = {
   code_inline: { mark: 'code' },
   fence: {
     block: 'codeBlock',
-    attrs: (tok: any) => ({ language: tok.info || null }),
+    // we trim any whitespaces around language definition
+    attrs: (tok: any) => ({ language: (tok.info && tok.info.trim()) || null }),
   },
-  image: {
-    node: 'image',
-    attrs: (tok: any) => ({
-      src: tok.attrGet('src'),
-      title: tok.attrGet('title') || null,
-      alt: (tok.children[0] && tok.children[0].content) || null,
-    }),
+  media_single: {
+    block: 'mediaSingle',
+    attrs: (tok: any) => {
+      return {};
+    },
+  },
+  media: {
+    node: 'media',
+    attrs: (tok: any) => {
+      return {
+        url: tok.attrGet('url'),
+        type: 'external',
+      };
+    },
   },
   emoji: {
     node: 'emoji',
@@ -107,17 +123,20 @@ export class MarkdownTransformer implements Transformer<Markdown> {
   private markdownParser: MarkdownParser;
   constructor(schema: Schema = defaultSchema, tokenizer: MarkdownIt = md) {
     // Enable markdown plugins based on schema
-    ['nodes', 'marks'].forEach((key: 'nodes' | 'marks') => {
+    (['nodes', 'marks'] as (keyof SchemaMapping)[]).forEach(key => {
       for (const idx in pmSchemaToMdMapping[key]) {
         if (schema[key][idx]) {
-          // @ts-ignore
           tokenizer.enable(pmSchemaToMdMapping[key][idx]);
         }
       }
     });
 
     if (schema.nodes.table) {
-      md.use(markdownItTable);
+      tokenizer.use(markdownItTable);
+    }
+
+    if (schema.nodes.media && schema.nodes.mediaSingle) {
+      tokenizer.use(markdownItMedia);
     }
 
     this.markdownParser = new MarkdownParser(

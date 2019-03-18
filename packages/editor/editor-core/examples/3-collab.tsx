@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { akColorN80 } from '@atlaskit/util-shared-styles';
+import { borderRadius } from '@atlaskit/theme';
 
 import Editor from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
@@ -20,28 +20,16 @@ import {
   akEditorCodeFontFamily,
 } from '../src/styles';
 
-import { akBorderRadius } from '@atlaskit/util-shared-styles';
 import { collabEditProvider } from '../example-helpers/mock-collab-provider';
 import { EmojiProvider } from '@atlaskit/emoji';
 import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
 import { extensionHandlers } from '../example-helpers/extension-handlers';
+import { TitleInput } from '../example-helpers/PageElements';
+import { EditorActions } from '../src';
 
-export const TitleInput: any = styled.input`
-  border: none;
-  outline: none;
-  font-size: 2.07142857em;
-  margin: 0 0 21px;
-  padding: 0;
-
-  &::placeholder {
-    color: ${akColorN80};
-  }
-`;
-TitleInput.displayName = 'TitleInput';
-
-export const Content: any = styled.div`
+export const Content = styled.div`
   padding: 0 20px;
-  height: 50%;
+  height: 100vh;
   background: #fff;
   box-sizing: border-box;
 
@@ -50,17 +38,27 @@ export const Content: any = styled.div`
       font-family: ${akEditorCodeFontFamily};
       background: ${akEditorCodeBackground};
       padding: ${akEditorCodeBlockPadding};
-      border-radius: ${akBorderRadius};
+      border-radius: ${borderRadius()}px;
     }
   }
 `;
 Content.displayName = 'Content';
 
-const analyticsHandler = (actionName, props) => console.log(actionName, props);
+export const Columns = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const Column = styled.div`
+  flex: 1 1 0;
+`;
+
+const analyticsHandler = (actionName: string, props?: {}) =>
+  console.log(actionName, props);
 const inviteToEditHandler = (event: Event) =>
   console.log('invite to edit clicked');
 
-const SaveAndCancelButtons = props => (
+const SaveAndCancelButtons = (props: { editorActions: EditorActions }) => (
   <ButtonGroup>
     <Button
       appearance="primary"
@@ -88,7 +86,7 @@ class DropzoneEditorWrapper extends React.Component<
 > {
   dropzoneContainer: HTMLElement | null = null;
 
-  handleRef = node => {
+  handleRef = (node: HTMLElement) => {
     this.dropzoneContainer = node;
     this.forceUpdate();
   };
@@ -116,130 +114,142 @@ export default class Example extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        <DropzoneEditorWrapper>
-          {parentContainer => (
-            <EditorContext>
-              <Editor
-                appearance="full-page"
-                analyticsHandler={analyticsHandler}
-                allowTasksAndDecisions={true}
-                allowCodeBlocks={true}
-                UNSAFE_allowLayouts={true}
-                allowLists={true}
-                allowTextColor={true}
-                allowTables={{
-                  allowColumnResizing: true,
-                  allowMergeCells: true,
-                  allowNumberColumn: true,
-                  allowBackgroundColor: true,
-                  allowHeaderRow: true,
-                  allowHeaderColumn: true,
-                  permittedLayouts: 'all',
-                  stickToolbarToBottom: true,
-                }}
-                allowTemplatePlaceholders={{ allowInserting: true }}
-                media={{
-                  provider: mediaProvider1,
-                  allowMediaSingle: true,
-                  customDropzoneContainer: parentContainer,
-                }}
-                emojiProvider={
-                  emoji.storyData.getEmojiResource() as Promise<EmojiProvider>
-                }
-                mentionProvider={Promise.resolve(
-                  mention.storyData.resourceProvider,
-                )}
-                taskDecisionProvider={Promise.resolve(
-                  taskDecision.getMockTaskDecisionResource(),
-                )}
-                contextIdentifierProvider={storyContextIdentifierProviderFactory()}
-                collabEdit={{
-                  provider: collabEditProvider('rick'),
-                  inviteToEditHandler: this.inviteToEditHandler,
-                  isInviteToEditButtonSelected: this.state
-                    .isInviteToEditButtonSelected,
-                }}
-                placeholder="Write something..."
-                shouldFocus={false}
-                contentComponents={
-                  <TitleInput
-                    placeholder="Give this page a title..."
-                    innerRef={ref => ref && ref.focus()}
-                  />
-                }
-                primaryToolbarComponents={
-                  <WithEditorActions
-                    render={actions => (
-                      <SaveAndCancelButtons editorActions={actions} />
+        <Columns>
+          <Column>
+            <DropzoneEditorWrapper>
+              {parentContainer => (
+                <EditorContext>
+                  <Editor
+                    appearance="full-page"
+                    analyticsHandler={analyticsHandler}
+                    allowAnalyticsGASV3={true}
+                    allowCodeBlocks={true}
+                    allowLayouts={true}
+                    allowLists={true}
+                    allowTextColor={true}
+                    allowDate={true}
+                    allowPanel={true}
+                    allowTables={{
+                      allowColumnResizing: true,
+                      allowMergeCells: true,
+                      allowNumberColumn: true,
+                      allowBackgroundColor: true,
+                      allowHeaderRow: true,
+                      allowHeaderColumn: true,
+                      permittedLayouts: 'all',
+                      stickToolbarToBottom: true,
+                    }}
+                    allowTemplatePlaceholders={{ allowInserting: true }}
+                    media={{
+                      provider: mediaProvider1,
+                      allowMediaSingle: true,
+                      customDropzoneContainer: parentContainer,
+                    }}
+                    emojiProvider={
+                      emoji.storyData.getEmojiResource() as Promise<
+                        EmojiProvider
+                      >
+                    }
+                    mentionProvider={Promise.resolve(
+                      mention.storyData.resourceProvider,
                     )}
-                  />
-                }
-                allowExtension={true}
-                insertMenuItems={customInsertMenuItems}
-                extensionHandlers={extensionHandlers}
-              />
-            </EditorContext>
-          )}
-        </DropzoneEditorWrapper>
-        <DropzoneEditorWrapper>
-          {parentContainer => (
-            <EditorContext>
-              <Editor
-                appearance="full-page"
-                analyticsHandler={analyticsHandler}
-                allowTasksAndDecisions={true}
-                allowCodeBlocks={true}
-                allowLists={true}
-                allowTextColor={true}
-                allowTables={{
-                  allowColumnResizing: true,
-                  allowMergeCells: true,
-                  allowNumberColumn: true,
-                  allowBackgroundColor: true,
-                  allowHeaderRow: true,
-                  allowHeaderColumn: true,
-                  permittedLayouts: 'all',
-                  stickToolbarToBottom: true,
-                }}
-                allowTemplatePlaceholders={{ allowInserting: true }}
-                media={{
-                  provider: mediaProvider2,
-                  allowMediaSingle: true,
-                  customDropzoneContainer: parentContainer,
-                }}
-                emojiProvider={
-                  emoji.storyData.getEmojiResource() as Promise<EmojiProvider>
-                }
-                mentionProvider={Promise.resolve(
-                  mention.storyData.resourceProvider,
-                )}
-                collabEdit={{
-                  provider: collabEditProvider('morty'),
-                  inviteToEditHandler,
-                  isInviteToEditButtonSelected: false,
-                }}
-                placeholder="Write something..."
-                shouldFocus={false}
-                contentComponents={
-                  <TitleInput
-                    placeholder="Give this page a title..."
-                    innerRef={ref => ref && ref.focus()}
-                  />
-                }
-                primaryToolbarComponents={
-                  <WithEditorActions
-                    render={actions => (
-                      <SaveAndCancelButtons editorActions={actions} />
+                    taskDecisionProvider={Promise.resolve(
+                      taskDecision.getMockTaskDecisionResource(),
                     )}
+                    contextIdentifierProvider={storyContextIdentifierProviderFactory()}
+                    collabEdit={{
+                      provider: collabEditProvider('rick'),
+                      inviteToEditHandler: this.inviteToEditHandler,
+                      isInviteToEditButtonSelected: this.state
+                        .isInviteToEditButtonSelected,
+                    }}
+                    placeholder="Write something..."
+                    shouldFocus={false}
+                    quickInsert={true}
+                    contentComponents={
+                      <TitleInput innerRef={ref => ref && ref.focus()} />
+                    }
+                    primaryToolbarComponents={
+                      <WithEditorActions
+                        render={actions => (
+                          <SaveAndCancelButtons editorActions={actions} />
+                        )}
+                      />
+                    }
+                    allowExtension={true}
+                    insertMenuItems={customInsertMenuItems}
+                    extensionHandlers={extensionHandlers}
                   />
-                }
-                allowExtension={true}
-                insertMenuItems={customInsertMenuItems}
-                extensionHandlers={extensionHandlers}
-              />
-            </EditorContext>
-          )}
-        </DropzoneEditorWrapper>
+                </EditorContext>
+              )}
+            </DropzoneEditorWrapper>
+          </Column>
+          <Column>
+            <DropzoneEditorWrapper>
+              {parentContainer => (
+                <EditorContext>
+                  <Editor
+                    appearance="full-page"
+                    analyticsHandler={analyticsHandler}
+                    allowCodeBlocks={true}
+                    allowLists={true}
+                    allowTextColor={true}
+                    allowDate={true}
+                    allowPanel={true}
+                    allowTables={{
+                      allowColumnResizing: true,
+                      allowMergeCells: true,
+                      allowNumberColumn: true,
+                      allowBackgroundColor: true,
+                      allowHeaderRow: true,
+                      allowHeaderColumn: true,
+                      permittedLayouts: 'all',
+                      stickToolbarToBottom: true,
+                    }}
+                    allowTemplatePlaceholders={{ allowInserting: true }}
+                    media={{
+                      provider: mediaProvider2,
+                      allowMediaSingle: true,
+                      customDropzoneContainer: parentContainer,
+                    }}
+                    emojiProvider={
+                      emoji.storyData.getEmojiResource() as Promise<
+                        EmojiProvider
+                      >
+                    }
+                    mentionProvider={Promise.resolve(
+                      mention.storyData.resourceProvider,
+                    )}
+                    taskDecisionProvider={Promise.resolve(
+                      taskDecision.getMockTaskDecisionResource(),
+                    )}
+                    collabEdit={{
+                      provider: collabEditProvider('morty'),
+                      inviteToEditHandler,
+                      isInviteToEditButtonSelected: false,
+                    }}
+                    placeholder="Write something..."
+                    shouldFocus={false}
+                    quickInsert={true}
+                    contentComponents={
+                      <TitleInput innerRef={ref => ref && ref.focus()} />
+                    }
+                    primaryToolbarComponents={
+                      <WithEditorActions
+                        render={actions => (
+                          <SaveAndCancelButtons editorActions={actions} />
+                        )}
+                      />
+                    }
+                    allowExtension={true}
+                    insertMenuItems={customInsertMenuItems}
+                    extensionHandlers={extensionHandlers}
+                  />
+                </EditorContext>
+              )}
+            </DropzoneEditorWrapper>
+          </Column>
+        </Columns>
       </div>
     );
   }

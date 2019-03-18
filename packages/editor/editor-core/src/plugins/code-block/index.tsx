@@ -1,42 +1,68 @@
 import * as React from 'react';
-import { codeBlock } from '@atlaskit/editor-common';
-import { EditorPlugin } from '../../types';
-import { plugin, stateKey } from './pm-plugins/main';
-import keymap from './pm-plugins/keymaps';
-import LanguagePicker from './ui/LanguagePicker';
 
-const codeBlockPlugin: EditorPlugin = {
+import EditorCodeIcon from '@atlaskit/icon/glyph/editor/code';
+import { codeBlock } from '@atlaskit/adf-schema';
+
+import { createPlugin } from './pm-plugins/main';
+import { getToolbarConfig } from './toolbar';
+import keymap from './pm-plugins/keymaps';
+import ideUX from './pm-plugins/ide-ux';
+import { messages } from '../block-type/types';
+import {
+  addAnalytics,
+  ACTION,
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+  INPUT_METHOD,
+  EVENT_TYPE,
+} from '../analytics';
+import { PMPluginFactoryParams, EditorPlugin } from '../../types';
+
+export interface CodeBlockOptions {
+  enableKeybindingsForIDE?: boolean;
+}
+
+const codeBlockPlugin = (options: CodeBlockOptions = {}): EditorPlugin => ({
   nodes() {
-    return [{ name: 'codeBlock', node: codeBlock, rank: 800 }];
+    return [{ name: 'codeBlock', node: codeBlock }];
   },
 
   pmPlugins() {
     return [
-      { rank: 700, plugin: () => plugin },
-      { rank: 720, plugin: ({ schema }) => keymap(schema) },
+      { name: 'codeBlock', plugin: createPlugin },
+      {
+        name: 'codeBlockIDEKeyBindings',
+        plugin: () => (options.enableKeybindingsForIDE ? ideUX : undefined),
+      },
+      {
+        name: 'codeBlockKeyMap',
+        plugin: ({ schema }: PMPluginFactoryParams) => keymap(schema),
+      },
     ];
   },
-
-  contentComponent({
-    editorView,
-    appearance,
-    popupsMountPoint,
-    popupsBoundariesElement,
-  }) {
-    if (appearance === 'message') {
-      return null;
-    }
-
-    const pluginState = stateKey.getState(editorView.state);
-    return (
-      <LanguagePicker
-        editorView={editorView}
-        pluginState={pluginState}
-        popupsMountPoint={popupsMountPoint}
-        popupsBoundariesElement={popupsBoundariesElement}
-      />
-    );
+  pluginsOptions: {
+    quickInsert: ({ formatMessage }) => [
+      {
+        title: formatMessage(messages.codeblock),
+        priority: 700,
+        icon: () => (
+          <EditorCodeIcon label={formatMessage(messages.codeblock)} />
+        ),
+        action(insert, state) {
+          const schema = state.schema;
+          const tr = insert(schema.nodes.codeBlock.createChecked());
+          return addAnalytics(tr, {
+            action: ACTION.INSERTED,
+            actionSubject: ACTION_SUBJECT.DOCUMENT,
+            actionSubjectId: ACTION_SUBJECT_ID.CODE_BLOCK,
+            attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
+            eventType: EVENT_TYPE.TRACK,
+          });
+        },
+      },
+    ],
+    floatingToolbar: getToolbarConfig,
   },
-};
+});
 
 export default codeBlockPlugin;

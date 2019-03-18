@@ -26,14 +26,33 @@ export interface MentionDescription {
   lozenge?: string;
   presence?: Presence;
   accessLevel?: string;
-  weight?: number;
   inContext?: boolean;
   userType?: string;
+  // Team mention can use context to store members data
+  context?: MentionDescContext;
+}
+
+export interface MentionDescContext {
+  members: TeamMember[];
 }
 
 export interface MentionsResult {
   mentions: MentionDescription[];
   query: string;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+}
+
+// data is returned from team search service
+export interface Team {
+  id: string;
+  smallAvatarImageUrl: string;
+  displayName: string;
+  members: TeamMember[];
+  highlight?: Highlight;
 }
 
 export type MentionEventHandler = (
@@ -52,14 +71,14 @@ export enum MentionType {
   DEFAULT,
 }
 
-enum UserAccessLevel {
+export enum UserAccessLevel {
   NONE,
   SITE,
   APPLICATION,
   CONTAINER,
 }
 
-enum UserType {
+export enum UserType {
   DEFAULT,
   SPECIAL,
   APP,
@@ -67,14 +86,14 @@ enum UserType {
   SYSTEM,
 }
 
-export function isRestricted(accessLevel) {
+export function isRestricted(accessLevel?: string): boolean {
   return (
-    accessLevel && accessLevel !== UserAccessLevel[UserAccessLevel.CONTAINER]
+    !!accessLevel && accessLevel !== UserAccessLevel[UserAccessLevel.CONTAINER]
   );
 }
 
-export function isSpecialMention(mention: MentionDescription) {
-  return mention.userType && mention.userType === UserType[UserType.SPECIAL];
+export function isSpecialMention(mention: MentionDescription): boolean {
+  return !!mention.userType && mention.userType === UserType[UserType.SPECIAL];
 }
 
 export function isAppMention(mention: MentionDescription) {

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
+import { PureComponent, ReactNode } from 'react';
 import ListWrapper from '../styled/ListWrapper';
 
 export interface Props {
-  children?: Array<JSX.Element> | JSX.Element;
+  children?: ReactNode;
 }
 
 export default class DecisionList extends PureComponent<Props, {}> {
@@ -14,10 +14,14 @@ export default class DecisionList extends PureComponent<Props, {}> {
       return null;
     }
 
+    // Data attributes are required for copy and paste from rendered content
+    // to preserve the decision
     return (
-      <ListWrapper>
+      <ListWrapper data-decision-list-local-id="">
         {React.Children.map(children, (child, idx) => (
-          <li key={idx}>{child}</li>
+          <li key={idx} data-decision-local-id="" data-decision-state="DECIDED">
+            {child}
+          </li>
         ))}
       </ListWrapper>
     );

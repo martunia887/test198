@@ -1,41 +1,42 @@
 {
   "name": "@atlaskit/spinner",
-  "version": "5.0.2",
+  "version": "10.0.1",
   "description": "A React component that displays a spinning icon to show a loading state",
   "license": "Apache-2.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "index.js",
   "atlaskit:src": "src/index.js",
+  "sideEffects": false,
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/spinners",
   "src": "src/index.js",
-  "files": [
-    "dist"
-  ],
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Raja B",
-    "Ben C",
-    "Ajay M"
+    "Sean C",
+    "Ajay M",
+    "Daniel D",
+    "Kang C"
   ],
   "atlaskit": {
     "name": "Spinner",
-    "team": "elements"
+    "team": "core"
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
-    "@atlaskit/theme": "^3.2.2",
+    "@atlaskit/theme": "^8.0.1",
+    "@babel/runtime": "^7.0.0",
     "babel-runtime": "^6.26.0",
-    "react-transition-group": "^2.2.1",
-    "styled-components": "1.4.6 - 3"
+    "react-transition-group": "^2.2.1"
   },
   "peerDependencies": {
-    "react": "^16.3.0"
+    "react": "^16.4.0",
+    "styled-components": "^3.2.6"
   },
   "devDependencies": {
-    "@atlaskit/button": "^7.2.5",
-    "@atlaskit/docs": "^3.0.4",
-    "@atlaskit/util-shared-styles": "^2.10.3",
-    "enzyme": "https://registry.npmjs.org/@pgleeson/enzyme/-/enzyme-3.3.7.tgz",
+    "@atlaskit/build-utils": "^2.0.0",
+    "@atlaskit/button": "^11.0.0",
+    "@atlaskit/docs": "^7.0.1",
+    "@atlaskit/ssr": "^0.0.1",
+    "enzyme": "^3.7.0",
+    "react-dom": "^16.4.2",
     "sinon": "^2.2.0"
   }
 }

@@ -3,12 +3,6 @@ import {
   utils as serviceUtils,
 } from '@atlaskit/util-service-support';
 import {
-  MediaPicker,
-  BinaryConfig,
-  BinaryUploader,
-} from '@atlaskit/media-picker';
-
-import {
   EmojiDescription,
   EmojiId,
   EmojiServiceDescription,
@@ -34,7 +28,7 @@ import {
 import TokenManager from './TokenManager';
 
 import debug from '../../util/logger';
-import { Context, ContextFactory, FileDetails } from '@atlaskit/media-core';
+import { ContextFactory } from '@atlaskit/media-core';
 
 export interface EmojiUploadResponse {
   emojis: EmojiServiceDescription[];
@@ -105,49 +99,48 @@ export default class SiteEmojiResource {
       return new Promise<EmojiDescription>((resolve, reject) => {
         const { url, clientId, collectionName } = uploadToken;
         const context = ContextFactory.create({
-          serviceHost: url,
           authProvider: () =>
             Promise.resolve({
               clientId,
               token: uploadToken.jwt,
+              baseUrl: url,
             }),
         });
-        const mpConfig = {
-          uploadParams: {
-            collection: collectionName,
-          },
-        };
 
-        const mpBinary = this.createMediaPicker(context, mpConfig);
-        mpBinary.on('upload-end', result => {
-          const totalUploadTime = Date.now() - startTime;
-          const mediaUploadTime = totalUploadTime - tokenLoadTime;
-          debug(
-            'total upload / media upload times',
-            totalUploadTime,
-            mediaUploadTime,
-          );
-          this.postToEmojiService(upload, result.public)
-            .then(emoji => {
-              resolve(emoji);
-            })
-            .catch(httpError => {
-              reject(httpError.reason || httpError);
-            });
-        });
-        mpBinary.on('upload-error', errorResult => {
-          reject(errorResult.error);
-        });
-        mpBinary.on('upload-status-update', statusUpdate => {
-          debug('upload progress', statusUpdate.progress);
-          if (progressCallback) {
-            progressCallback({
-              percent:
-                statusUpdate.progress.portion * mediaProportionOfProgress,
-            });
-          }
-        });
-        mpBinary.upload(upload.dataURL, upload.filename);
+        const subscription = context.file
+          .upload({
+            content: upload.dataURL,
+            name: upload.filename,
+            collection: collectionName,
+          })
+          .subscribe({
+            next: state => {
+              if (state.status === 'uploading' && progressCallback) {
+                progressCallback({
+                  percent: state.progress * mediaProportionOfProgress,
+                });
+              } else if (state.status === 'processing') {
+                subscription.unsubscribe();
+                const totalUploadTime = Date.now() - startTime;
+                const mediaUploadTime = totalUploadTime - tokenLoadTime;
+                debug(
+                  'total upload / media upload times',
+                  totalUploadTime,
+                  mediaUploadTime,
+                );
+                this.postToEmojiService(upload, state.id)
+                  .then(emoji => {
+                    resolve(emoji);
+                  })
+                  .catch(httpError => {
+                    reject(httpError.reason || httpError);
+                  });
+              }
+            },
+            error(error) {
+              reject(error);
+            },
+          });
       });
     });
   }
@@ -214,19 +207,9 @@ export default class SiteEmojiResource {
     );
   }
 
-  /**
-   * Intended to be overridden for unit testing.
-   */
-  protected createMediaPicker(
-    context: Context,
-    config: BinaryConfig,
-  ): BinaryUploader {
-    return MediaPicker('binary', context, config);
-  }
-
   private postToEmojiService = (
     upload: EmojiUpload,
-    mediaApiData: FileDetails,
+    fileId: string,
   ): Promise<EmojiDescription> => {
     const { shortName, name } = upload;
     const { width, height } = upload;
@@ -240,7 +223,7 @@ export default class SiteEmojiResource {
         name,
         width,
         height,
-        fileId: mediaApiData.id,
+        fileId,
       }),
     };
 
@@ -248,32 +231,34 @@ export default class SiteEmojiResource {
       .requestService<EmojiUploadResponse>(this.siteServiceConfig, {
         requestInit,
       })
-      .then((response): EmojiDescription => {
-        const { emojis } = response;
-        if (emojis.length) {
-          const { altRepresentations, ...emoji } = emojis[0];
+      .then(
+        (response): EmojiDescription => {
+          const { emojis } = response;
+          if (emojis.length) {
+            const { altRepresentations, ...emoji } = emojis[0];
 
-          const response = {
-            ...emoji,
-            representation: convertImageToMediaRepresentation(
-              emoji.representation as ImageRepresentation,
-            ),
-          };
-          const altRepresentation = getAltRepresentation(
-            altRepresentations || {},
-          );
-          const imgAltRepresentation = altRepresentation
-            ? convertImageToMediaRepresentation(
-                altRepresentation as ImageRepresentation,
-              )
-            : undefined;
+            const response = {
+              ...emoji,
+              representation: convertImageToMediaRepresentation(
+                emoji.representation as ImageRepresentation,
+              ),
+            };
+            const altRepresentation = getAltRepresentation(
+              altRepresentations || {},
+            );
+            const imgAltRepresentation = altRepresentation
+              ? convertImageToMediaRepresentation(
+                  altRepresentation as ImageRepresentation,
+                )
+              : undefined;
 
-          return buildEmojiDescriptionWithAltRepresentation(
-            response,
-            imgAltRepresentation,
-          );
-        }
-        throw new Error('No emoji returns from upload. Upload failed.');
-      });
+            return buildEmojiDescriptionWithAltRepresentation(
+              response,
+              imgAltRepresentation,
+            );
+          }
+          throw new Error('No emoji returns from upload. Upload failed.');
+        },
+      );
   };
 }

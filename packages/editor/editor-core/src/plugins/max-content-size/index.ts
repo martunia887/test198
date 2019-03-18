@@ -4,10 +4,11 @@ import { Dispatch } from '../../event-dispatcher';
 
 export const pluginKey = new PluginKey('maxContentSizePlugin');
 
+export type MaxContentSizePluginState = { maxContentSizeReached: boolean };
+
 export function createPlugin(
   dispatch: Dispatch,
   maxContentSize?: number,
-  onMaxContentSize?: (isMaxContentSizeReached: boolean) => void,
 ): Plugin | undefined {
   if (!maxContentSize) {
     return;
@@ -33,7 +34,7 @@ const maxContentSizePlugin: EditorPlugin = {
   pmPlugins() {
     return [
       {
-        rank: 10000,
+        name: 'maxContentSize',
         plugin: ({ dispatch, props }) =>
           createPlugin(dispatch, props.maxContentSize),
       },

@@ -5,17 +5,23 @@ import NoResultsImage from '../assets/NoResultsImage';
 
 const NoResultsWrapper = styled.div`
   text-align: center;
-  margin-top: ${math.multiply(gridSize, 4)}px;
-  margin-bottom: ${math.multiply(gridSize, 4)}px;
+  margin-top: ${math.multiply(gridSize, 15)}px;
+  margin-bottom: 0;
 `;
 
-export default class NoResults extends React.Component {
+export interface Props {
+  title: JSX.Element | string;
+  body: JSX.Element | string;
+}
+
+export default class NoResults extends React.Component<Props> {
   render() {
+    const { title, body } = this.props;
     return (
       <NoResultsWrapper>
         <NoResultsImage />
-        <h3>We couldn't find any search results.</h3>
-        <p>Try a different query, or use more specialized searches below.</p>
+        <h3>{title}</h3>
+        <p>{body}</p>
       </NoResultsWrapper>
     );
   }

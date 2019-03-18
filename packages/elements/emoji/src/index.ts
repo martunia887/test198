@@ -3,6 +3,7 @@ import Emoji from './components/common/Emoji';
 import EmojiPlaceholder from './components/common/EmojiPlaceholder';
 import ResourcedEmoji from './components/common/ResourcedEmoji';
 import EmojiPicker from './components/picker/EmojiPicker';
+import EmojiUploader from './components/uploader/EmojiUploader';
 import EmojiTypeAhead from './components/typeahead/EmojiTypeAhead';
 import EmojiResource, {
   EmojiProvider,
@@ -19,6 +20,7 @@ import {
   emojiPickerWidth,
   emojiPickerHeight,
 } from './constants';
+import { UsageFrequencyTracker } from './api/internal/UsageFrequencyTracker';
 
 export {
   // Classes
@@ -27,6 +29,7 @@ export {
   EmojiPlaceholder,
   EmojiLoader,
   EmojiPicker,
+  EmojiUploader,
   EmojiResource,
   EmojiRepository,
   EmojiTypeAhead,
@@ -44,6 +47,7 @@ export {
   defaultEmojiHeight,
   customCategory,
   EmojiResourceConfig,
+  UsageFrequencyTracker,
 };
 
 export * from './types';

@@ -1,6 +1,17 @@
 // @flow
 import React, { Component, type Component as ComponentType } from 'react';
-import Pagination from '@atlaskit/pagination';
+import {
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  createAndFireEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
+import ManagedPagination from './managedPagination';
+
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 
 import { ASC, DESC, SMALL, LARGE } from '../internal/constants';
 import {
@@ -18,7 +29,7 @@ import {
   EmptyViewWithFixedHeight,
 } from '../styled/EmptyBody';
 
-import { Table, Caption } from '../styled/DynamicTable';
+import { Table, Caption, PaginationWrapper } from '../styled/DynamicTable';
 
 import type {
   StatelessProps as Props,
@@ -42,7 +53,7 @@ type State = {
   isRanking: boolean,
 };
 
-export default class DynamicTable extends Component<Props, State> {
+class DynamicTable extends Component<Props, State> {
   tableBody: ?ComponentType<any, any>;
 
   state = {
@@ -84,7 +95,7 @@ export default class DynamicTable extends Component<Props, State> {
     const { sortKey, sortOrder, onSort, isRankable } = this.props;
     const { key } = item;
     if (!key) return;
-    this.onSetPage(1);
+    this.onSetPage(1, undefined);
 
     if (isRankable && key === sortKey && sortOrder === DESC) {
       onSort({
@@ -101,7 +112,9 @@ export default class DynamicTable extends Component<Props, State> {
     onSort({ key, item, sortOrder: sortOrderFormatted });
   };
 
-  onSetPage = (page?: number) => this.props.onSetPage(page);
+  onSetPage = (page: number, event: ?UIAnalyticsEvent) => {
+    this.props.onSetPage(page, event);
+  };
 
   onRankStart = (params: RankStart) => {
     this.setState({
@@ -181,9 +194,8 @@ export default class DynamicTable extends Component<Props, State> {
     const spinnerSize = this.getSpinnerSize();
     const emptyBody = this.renderEmptyBody();
     const canRank = isRankable && !sortKey;
-
     return (
-      <div>
+      <>
         <LoadingContainerAdvanced
           isLoading={isLoading && rowsExist}
           spinnerSize={spinnerSize}
@@ -216,20 +228,54 @@ export default class DynamicTable extends Component<Props, State> {
           </Table>
         </LoadingContainerAdvanced>
         {!totalPages ? null : (
-          <Pagination
-            value={page}
-            onChange={this.onSetPage}
-            total={totalPages}
-            i18n={paginationi18n}
-          />
+          <PaginationWrapper>
+            <ManagedPagination
+              value={page}
+              onChange={this.onSetPage}
+              total={totalPages}
+              i18n={paginationi18n}
+            />
+          </PaginationWrapper>
         )}
-        {!rowsExist &&
-          emptyBody && (
-            <LoadingContainer isLoading={isLoading} spinnerSize={LARGE}>
-              {emptyBody}
-            </LoadingContainer>
-          )}
-      </div>
+        {!rowsExist && emptyBody && (
+          <LoadingContainer isLoading={isLoading} spinnerSize={LARGE}>
+            {emptyBody}
+          </LoadingContainer>
+        )}
+      </>
     );
   }
 }
+
+export { DynamicTable as DynamicTableWithoutAnalytics };
+const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
+
+export default withAnalyticsContext({
+  componentName: 'dynamicTable',
+  packageName,
+  packageVersion,
+})(
+  withAnalyticsEvents({
+    onSort: createAndFireEventOnAtlaskit({
+      action: 'sorted',
+      actionSubject: 'dynamicTable',
+
+      attributes: {
+        componentName: 'dynamicTable',
+        packageName,
+        packageVersion,
+      },
+    }),
+
+    onRankEnd: createAndFireEventOnAtlaskit({
+      action: 'ranked',
+      actionSubject: 'dynamicTable',
+
+      attributes: {
+        componentName: 'dynamicTable',
+        packageName,
+        packageVersion,
+      },
+    }),
+  })(DynamicTable),
+);

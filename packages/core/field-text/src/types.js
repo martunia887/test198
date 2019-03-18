@@ -3,7 +3,7 @@ import type { Node } from 'react';
 
 export type FieldTextProps = {
   /** Standard HTML input autocomplete attribute. */
-  autoComplete?: 'on' | 'off',
+  autoComplete?: string,
   /** Standard HTML input form attribute. This is useful if the input cannot be included directly
    inside a form. */
   form?: string,
@@ -36,7 +36,7 @@ export type FieldTextProps = {
   /** Handler to be called when the input loses focus. */
   onBlur?: (e: SyntheticEvent<>) => mixed,
   /** Handler to be called when the input changes. */
-  onChange?: (e: SyntheticEvent<HTMLInputElement>) => mixed,
+  onChange?: (e: SyntheticInputEvent<HTMLInputElement>) => mixed,
   /** Handler to be called when the input receives focus. */
   onFocus?: (e: SyntheticEvent<>) => mixed,
   /** Standard input onkeydown event. */
@@ -49,6 +49,8 @@ export type FieldTextProps = {
   id?: string,
   /** Sets whether to show or hide the label. */
   isLabelHidden?: boolean,
+  /** Sets content text value to monospace */
+  isMonospaced?: boolean,
   /** Provided component is rendered inside a modal dialogue when the field is
    selected. */
   invalidMessage?: Node,

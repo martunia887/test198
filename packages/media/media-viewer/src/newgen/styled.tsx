@@ -7,24 +7,20 @@ import { MediaType } from '@atlaskit/media-core';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, VideoHTMLAttributes, AudioHTMLAttributes, ImgHTMLAttributes, ComponentClass, ClassAttributes } from 'react';
-import {
-  akColorY200,
-  akColorP200,
-  akColorB300,
-  akColorN400,
-  akBorderRadius,
-} from '@atlaskit/util-shared-styles';
+import { colors, layers, borderRadius } from '@atlaskit/theme';
+import { ellipsis } from '@atlaskit/media-ui';
 
-const overlayZindex = 999;
+const overlayZindex = layers.modal() + 10;
 
-export const colors = {
-  image: akColorY200,
-  audio: akColorP200,
+export const mediaTypeIconColors = {
+  image: colors.Y200,
+  audio: colors.P200,
   video: '#ff7143',
-  doc: akColorB300,
+  doc: colors.B300,
   unknown: '#3dc7dc',
-  blanketColor: '#1b2638',
 };
+
+export const blanketColor = colors.DN30;
 
 export const hideControlsClassName = 'mvng-hide-controls';
 
@@ -34,7 +30,7 @@ export const Blanket = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: ${colors.blanketColor};
+  background-color: ${blanketColor};
   z-index: ${overlayZindex};
 `;
 
@@ -47,9 +43,11 @@ export const HeaderWrapper = styled.div`
   opacity: 0.85;
   background-image: linear-gradient(to bottom, #0e1624, rgba(14, 22, 36, 0));
   color: #b8c7e0;
+  font-weight: 500;
   padding-top: 15px;
   padding: 24px;
   box-sizing: border-box;
+  pointer-events: none;
   z-index: ${overlayZindex + 1};
 `;
 
@@ -81,22 +79,33 @@ export const CloseButtonWrapper = styled.div`
 
 export const ZoomWrapper = styled.div`
   width: 100%;
-  position: absolute;
-  bottom: 10px;
-  text-align: center;
+  position: fixed;
+  bottom: 0;
+  height: 98px;
+  background-image: linear-gradient(to top, #0e1624, rgba(14, 22, 36, 0));
+  opacity: 0.85;
+  pointer-events: none;
 `;
 
 export const ZoomControlsWrapper = styled.div`
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  bottom: 10px;
   button {
     margin-right: 10px;
   }
+  > * {
+    pointer-events: all;
+  }
 `;
 
-export const ZoomLevel = styled.span`
+export const ZoomLevelIndicator = styled.span`
   position: absolute;
   right: 24px;
-  top: 0;
+  bottom: 22px;
   color: #b8c7e0;
+  pointer-events: all;
 `;
 
 const handleControlsVisibility = ({ showControls }: ContentWrapperProps) => `
@@ -119,18 +128,22 @@ export const ContentWrapper = styled.div`
 
 ContentWrapper.displayName = 'Content';
 
-export const ErrorMessage = styled.div`
+export const ErrorMessageWrapper = styled.div`
+  text-align: center;
   color: #b8c7e0;
+  p {
+    line-height: 100%;
+  }
 `;
 
-export const Img: ComponentClass<ImgHTMLAttributes<{}>> = styled.img`
-  transition: transform 0.2s;
-  transform-origin: center;
+export const ErrorImage = styled.img`
+  margin-bottom: 10px;
+  user-select: none;
 `;
 
 export const Video: ComponentClass<VideoHTMLAttributes<{}>> = styled.video`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 `;
 
 export const PDFWrapper = styled.div`
@@ -142,21 +155,35 @@ export const PDFWrapper = styled.div`
   right: 0;
 `;
 
-const ArrowWrapper = styled.div`
-  flex: 1;
-  padding: 20px;
-`;
-
 export const Arrow = styled.span`
   cursor: pointer;
+
+  > span {
+    color: rgba(27, 38, 56, 0.5);
+    fill: #9fb0cc;
+    filter: drop-shadow(1px 1px 1px rgba(27, 38, 56, 0.2));
+
+    &:hover {
+      color: #fff;
+    }
+  }
+`;
+
+const ArrowWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 20px;
 `;
 
 export const LeftWrapper = styled(ArrowWrapper)`
   text-align: left;
+  left: 0;
 `;
 
 export const RightWrapper = styled(ArrowWrapper)`
   text-align: right;
+  right: 0;
 `;
 
 // header.tsx
@@ -165,17 +192,65 @@ export const Header = styled.div`
 `;
 
 export const LeftHeader = styled.div`
-  flex: 0.8;
+  flex: 1;
+  overflow: hidden;
+  > * {
+    pointer-events: all;
+  }
 `;
 
 export const ImageWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
 `;
+
+export const BaselineExtend = styled.div`
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+`;
+
+export type ImgProps = {
+  canDrag: boolean;
+  isDragging: boolean;
+  shouldPixelate: boolean;
+};
+
+export const Img: ComponentClass<ImgHTMLAttributes<{}> & ImgProps> = styled.img`
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  cursor: ${({ canDrag, isDragging }: ImgProps) => {
+    if (canDrag && isDragging) {
+      return 'grabbing';
+    } else if (canDrag) {
+      return 'grab';
+    } else {
+      return 'auto';
+    }
+  }};
+  ${({ shouldPixelate }) =>
+    shouldPixelate
+      ? `/* Prevent images from being smoothed when scaled up */
+    image-rendering: optimizeSpeed; /* Legal fallback */
+    image-rendering: -moz-crisp-edges; /* Firefox        */
+    image-rendering: -o-crisp-edges; /* Opera          */
+    image-rendering: -webkit-optimize-contrast; /* Safari         */
+    image-rendering: optimize-contrast; /* CSS3 Proposed  */
+    image-rendering: crisp-edges; /* CSS4 Proposed  */
+    image-rendering: pixelated; /* CSS4 Proposed  */
+    -ms-interpolation-mode: nearest-neighbor; /* IE8+           */`
+      : ``}
+`;
+
+export const MedatadataTextWrapper = styled.div`
+  overflow: hidden;
+`;
+
 export const MetadataWrapper = styled.div`
   display: flex;
 `;
@@ -184,10 +259,12 @@ export const MetadataFileName = styled.div`
   &::first-letter {
     text-transform: uppercase;
   }
+  ${ellipsis()};
 `;
 
 export const MetadataSubText = styled.div`
-  color: ${akColorN400};
+  color: ${colors.DN400};
+  ${ellipsis()};
 `;
 
 export const MetadataIconWrapper = styled.div`
@@ -203,26 +280,40 @@ export const IconWrapper: ComponentClass<
   HTMLAttributes<{}> & IconWrapperProps
 > = styled.div`
   display: inline-flex;
-  color: ${({ type }: IconWrapperProps) => colors[type] || colors.unknown};
+  color: ${({ type }: IconWrapperProps) =>
+    mediaTypeIconColors[type] || mediaTypeIconColors.unknown};
 `;
 
 export const RightHeader = styled.div`
-  flex: 0.2;
   text-align: right;
-  margin-right: 50px;
+  margin-right: 40px;
+  min-width: 200px;
+  > * {
+    pointer-events: all;
+  }
+`;
+
+export const CustomAudioPlayerWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 `;
 
 export const AudioPlayer = styled.div`
-  border-radius: ${akBorderRadius};
+  background-color: ${blanketColor};
+  border-radius: ${borderRadius()};
   align-items: center;
   justify-content: center;
   width: 400px;
-  height: 250px;
+  height: 400px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
 `;
+
+AudioPlayer.displayName = 'AudioPlayer';
 
 export const Audio = styled.audio`
   width: 100%;
@@ -234,7 +325,8 @@ export const Audio = styled.audio`
 export const AudioCover = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: scale-down;
+  background-color: #000000;
 `;
 
 export const DefaultCoverWrapper = styled.div`
@@ -246,5 +338,23 @@ export const DefaultCoverWrapper = styled.div`
 
   > * {
     transform: scale(2);
+  }
+`;
+
+export const DownloadButtonWrapper = styled.div`
+  margin-top: 28px;
+  text-align: center;
+
+  button {
+    font-weight: bold;
+  }
+`;
+
+export const CustomVideoPlayerWrapper = styled.div`
+  video {
+    flex: 1;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
   }
 `;

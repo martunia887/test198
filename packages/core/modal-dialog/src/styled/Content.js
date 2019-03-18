@@ -1,4 +1,5 @@
 // @flow
+import React, { type ElementType, type Node } from 'react';
 import styled, { css } from 'styled-components';
 import { colors, gridSize, math, themed } from '@atlaskit/theme';
 
@@ -13,12 +14,37 @@ export const keylineHeight = 2;
 
 // Wrapper
 // ==============================
-export const Wrapper = styled.div`
+
+const DefaultWrapperComponent = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   ${flexMaxHeightIEFix};
 `;
+
+export const Wrapper = ({
+  component,
+  children,
+}: {
+  component: ElementType,
+  children: Node,
+}) => {
+  let StyledComponent = DefaultWrapperComponent;
+  if (component !== 'div') {
+    // $FlowFixMe
+    StyledComponent = styled(component)`
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      ${flexMaxHeightIEFix};
+    `;
+  }
+  return <StyledComponent>{children}</StyledComponent>;
+};
+
+Wrapper.defaultProps = {
+  component: 'div',
+};
 
 // Header
 // ==============================
@@ -28,9 +54,9 @@ const HeaderOrFooter = styled.div`
   flex: 0 0 auto;
   justify-content: space-between;
   transition: box-shadow 200ms;
+  z-index: 1;
 `;
 
-// $FlowFixMe: Passed in type incompatible with expected type of React.Component (quite sure this is an issue with styled component flow types)
 export const Header = styled(HeaderOrFooter)`
   padding: ${outerGutter}px ${outerGutter}px ${innerGutter - keylineHeight}px;
   box-shadow: ${p =>
@@ -81,10 +107,11 @@ export const TitleIconWrapper = styled.span`
   children. The combined vertical spacing is maintained by subtracting the
   keyline height from header and footer.
 */
+
 export const Body = styled.div`
   flex: 1 1 auto;
-  ${p =>
-    p.shouldScroll
+  ${p => {
+    return p.shouldScroll
       ? `
           overflow-y: auto;
           overflow-x: hidden;
@@ -92,13 +119,38 @@ export const Body = styled.div`
         `
       : `
           padding: 0 ${outerGutter}px;
-        `};
+        `;
+  }};
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    overflow-y: auto;
+    height: 100%;
+  }
 `;
+
+export const styledBody = (component: ?ElementType) =>
+  component
+    ? // $FlowFixMe
+      styled(component)`
+        flex: 1 1 auto;
+        ${p => {
+          return p.shouldScroll
+            ? `
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: ${keylineHeight}px ${outerGutter}px;
+          `
+            : `
+            border-radius: 0px;
+            padding: 0 ${outerGutter}px;
+    `;
+        }};
+      `
+    : undefined;
 
 // Footer
 // ==============================
 
-// $FlowFixMe: Passed in type incompatible with expected type of React.Component (quite sure this is an issue with styled component flow types)
 export const Footer = styled(HeaderOrFooter)`
   padding: ${innerGutter - keylineHeight}px ${outerGutter}px ${outerGutter}px;
   box-shadow: ${p =>

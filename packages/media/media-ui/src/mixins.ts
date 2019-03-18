@@ -1,22 +1,5 @@
 import { keyframes } from 'styled-components';
-import {
-  akColorN900,
-  akColorN300,
-  akBorderRadius,
-} from '@atlaskit/util-shared-styles';
-
-export const cardTitle = `
-  color: ${akColorN900};
-  font-size: 16px;
-  font-weight: 500;
-  line-height: ${20 / 16};
-`;
-
-export const cardDescription = `
-  color: ${akColorN300};
-  font-size: 12px;
-  line-height: ${16 / 12};
-`;
+import { borderRadius as akBorderRadius } from '@atlaskit/theme';
 
 export const ellipsis = (maxWidth: string | number = '100%') => {
   const unit = typeof maxWidth === 'number' ? 'px' : '';
@@ -51,12 +34,12 @@ export const absolute = (top = 0, left = 0) => `
 `;
 
 export const borderRadius = `
-  border-radius: ${akBorderRadius};
+  border-radius: ${akBorderRadius()}px;
 `;
 
 export const borderRadiusBottom = `
-  border-bottom-left-radius: ${akBorderRadius};
-  border-bottom-right-radius: ${akBorderRadius};
+  border-bottom-left-radius: ${akBorderRadius()}px;
+  border-bottom-right-radius: ${akBorderRadius()}px;
 `;
 
 export const easeInOutCubic = 'cubic-bezier(0.645, 0.045, 0.355, 1)';

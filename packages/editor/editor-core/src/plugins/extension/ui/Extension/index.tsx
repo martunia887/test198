@@ -7,21 +7,20 @@ import {
   WithProviders,
   ExtensionHandlers,
 } from '@atlaskit/editor-common';
-import { setExtensionElement } from '../../actions';
 import ExtensionComponent from './ExtensionComponent';
 
 export interface Props {
   editorView: EditorView;
   node: PMNode;
   providerFactory?: ProviderFactory;
-  handleContentDOMRef: (node: HTMLElement) => void;
+  handleContentDOMRef: (node: HTMLElement | null) => void;
   extensionHandlers: ExtensionHandlers;
 }
 
 export default class Extension extends Component<Props, any> {
   private providerFactory: ProviderFactory;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.providerFactory = props.providerFactory || new ProviderFactory();
   }
@@ -34,7 +33,7 @@ export default class Extension extends Component<Props, any> {
     }
   }
 
-  private renderWithProvider = providers => {
+  private renderWithProvider = (providers: Record<string, Promise<any>>) => {
     const {
       node,
       editorView,
@@ -48,7 +47,6 @@ export default class Extension extends Component<Props, any> {
         editorView={editorView}
         node={node}
         macroProvider={macroProvider}
-        setExtensionElement={setExtensionElement}
         handleContentDOMRef={handleContentDOMRef}
         extensionHandlers={extensionHandlers}
       />

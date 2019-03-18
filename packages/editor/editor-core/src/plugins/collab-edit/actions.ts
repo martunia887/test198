@@ -1,5 +1,11 @@
+import { receiveTransaction } from 'prosemirror-collab';
 import { Step } from 'prosemirror-transform';
-import { AllSelection, NodeSelection, Selection } from 'prosemirror-state';
+import {
+  AllSelection,
+  NodeSelection,
+  Selection,
+  Transaction,
+} from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 import {
@@ -9,27 +15,25 @@ import {
   PresenceData,
   TelepointerData,
   SendableSelection,
+  CollabEditOptions,
 } from './types';
 
-export const handleInit = (initData: InitData, view: EditorView) => {
-  const { doc, json } = initData;
-  if (doc) {
-    const { state, state: { schema, tr } } = view;
-    const content = (doc.content || []).map(child =>
-      schema.nodeFromJSON(child),
-    );
+import { replaceDocument } from './utils';
 
-    if (content.length) {
-      const newState = state.apply(
-        tr
-          .setMeta('addToHistory', false)
-          .replaceWith(0, state.doc.nodeSize - 2, content)
-          .scrollIntoView(),
-      );
-      view.updateState(newState);
-    }
+export const handleInit = (
+  initData: InitData,
+  view: EditorView,
+  options?: CollabEditOptions,
+) => {
+  const { doc, json, version } = initData;
+  if (doc) {
+    const { state } = view;
+    const tr = replaceDocument(doc, state, version, options);
+    tr.setMeta('isRemote', true);
+    const newState = state.apply(tr);
+    view.updateState(newState);
   } else if (json) {
-    applyRemoteSteps(json, view);
+    applyRemoteSteps(json, undefined, view);
   }
 };
 
@@ -37,7 +41,9 @@ export const handleConnection = (
   connectionData: ConnectionData,
   view: EditorView,
 ) => {
-  const { state: { tr } } = view;
+  const {
+    state: { tr },
+  } = view;
   view.dispatch(tr.setMeta('sessionId', connectionData));
 };
 
@@ -45,39 +51,75 @@ export const handlePresence = (
   presenceData: PresenceData,
   view: EditorView,
 ) => {
-  const { state: { tr } } = view;
+  const {
+    state: { tr },
+  } = view;
   view.dispatch(tr.setMeta('presence', presenceData));
 };
 
-export const applyRemoteData = (remoteData: RemoteData, view: EditorView) => {
-  const { json, newState } = remoteData;
+export const applyRemoteData = (
+  remoteData: RemoteData,
+  view: EditorView,
+  options?: CollabEditOptions,
+) => {
+  const { json, newState, userIds = [] } = remoteData;
   if (json) {
-    applyRemoteSteps(json, view);
+    applyRemoteSteps(json, userIds, view, options);
   } else if (newState) {
     view.updateState(newState);
   }
 };
 
-export const applyRemoteSteps = (json: any[], view: EditorView) => {
-  const { state, state: { schema } } = view;
-  let { tr } = state;
+export const applyRemoteSteps = (
+  json: any[],
+  userIds: string[] | undefined,
+  view: EditorView,
+  options?: CollabEditOptions,
+) => {
+  const {
+    state,
+    state: { schema },
+  } = view;
 
-  json.forEach(stepJson => {
-    const step = Step.fromJSON(schema, stepJson);
-    tr.step(step);
-  });
+  const steps = json.map(step => Step.fromJSON(schema, step));
 
-  tr.setMeta('addToHistory', false);
-  tr.scrollIntoView();
-  const newState = state.apply(tr);
-  view.updateState(newState);
+  let tr: Transaction;
+
+  if (options && options.useNativePlugin && userIds) {
+    tr = receiveTransaction(state, steps, userIds);
+  } else {
+    tr = state.tr;
+    steps.forEach(step => tr.step(step));
+  }
+
+  if (tr) {
+    tr.setMeta('addToHistory', false);
+    tr.setMeta('isRemote', true);
+
+    const { from, to } = state.selection;
+    const [firstStep] = json;
+
+    /**
+     * If the cursor is a the same position as the first step in
+     * the remote data, we need to manually set it back again
+     * in order to prevent the cursor from moving.
+     */
+    if (from === firstStep.from && to === firstStep.to) {
+      tr.setSelection(state.selection);
+    }
+
+    const newState = state.apply(tr);
+    view.updateState(newState);
+  }
 };
 
 export const handleTelePointer = (
   telepointerData: TelepointerData,
   view: EditorView,
 ) => {
-  const { state: { tr } } = view;
+  const {
+    state: { tr },
+  } = view;
   view.dispatch(tr.setMeta('telepointer', telepointerData));
 };
 

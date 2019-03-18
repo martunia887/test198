@@ -22,7 +22,7 @@ export interface State {
 export default class PanelTextInput extends PureComponent<Props, State> {
   private input?: HTMLInputElement;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -108,7 +108,7 @@ export default class PanelTextInput extends PureComponent<Props, State> {
       this.input = input;
       if (this.props.autoFocus) {
         // Need this to prevent jumping when we render TextInput inside Portal @see ED-2992
-        setTimeout(() => input.focus());
+        window.setTimeout(() => input.focus());
       }
     } else {
       this.input = undefined;

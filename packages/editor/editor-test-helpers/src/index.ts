@@ -1,10 +1,15 @@
+export { Refs } from './schema-builder';
 export * from './base64fileconverter';
 export { default as sendKeyToPm } from './send-key-to-pm';
 export { default as chaiPlugin } from './chai';
 export { default as createEvent } from './create-event';
 export { default as dispatchPasteEvent } from './dispatch-paste-event';
-export { default as createEditor } from './create-editor';
+export { default as createEditorFactory } from './create-editor';
+export {
+  default as createAnalyticsEventMock,
+} from './create-analytics-event-mock';
 export { default as fixtures } from './fixtures';
+export { default as simulatePlatform, Platforms } from './simulatePlatform';
 export { default as patchEditorViewForJSDOM } from './jsdom-fixtures';
 export * from './transactions';
 export {
@@ -25,6 +30,7 @@ export {
   img,
   hr,
   em,
+  breakout,
   strong,
   code,
   a,
@@ -43,7 +49,6 @@ export {
   offsetRefs,
   panel,
   panelNote,
-  mentionQuery,
   hardBreak,
   emojiQuery,
   typeAheadQuery,
@@ -77,13 +82,18 @@ export {
   placeholder,
   layoutSection,
   layoutColumn,
+  inlineCard,
+  blockCard,
+  clean,
+  status,
+  alignment,
+  indentation,
+  unsupportedBlock,
+  unsupportedInline,
 } from './schema-builder';
 export { default as defaultSchema } from './schema';
 export * from './html-helpers';
-export {
-  storyMediaProviderFactory,
-  getLinkCreateContextMock,
-} from './media-provider';
+export { storyMediaProviderFactory } from './media-provider';
 export {
   storyContextIdentifierProviderFactory,
 } from './context-identifier-provider';
@@ -99,3 +109,8 @@ export {
   bodiedExtensionData,
 } from './mock-extension-data';
 export * from './schema-element-builder';
+export { cardProvider, EditorTestCardProvider } from './card-provider';
+export * from './enzyme';
+export { compareSelection } from './selection';
+export * from './table';
+export * from './constants';

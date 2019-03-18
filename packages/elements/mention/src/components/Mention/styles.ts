@@ -1,56 +1,53 @@
+import { colors, themed } from '@atlaskit/theme';
+import { ComponentClass, HTMLAttributes } from 'react';
 import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
-import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import {
-  akColorB400,
-  akColorN20,
-  akColorN30A,
-  akColorN500,
-  akFontSizeDefault,
-} from '@atlaskit/util-shared-styles';
 import { MentionType } from '../../types';
 
 export interface MentionStyleProps {
   mentionType: MentionType;
 }
 
-const mentionStyle = {};
-mentionStyle[MentionType.SELF] = {
-  background: akColorB400,
-  border: 'transparent',
-  text: akColorN20,
+const mentionStyle: { [key in MentionType]: any } = {
+  [MentionType.SELF]: {
+    background: themed({ light: colors.B400, dark: colors.B200 }),
+    border: 'transparent',
+    text: themed({ light: colors.N20, dark: colors.DN30 }),
+  },
+  [MentionType.RESTRICTED]: {
+    background: 'transparent',
+    border: themed({ light: colors.N500, dark: colors.DN80 }),
+    text: themed({ light: colors.N500, dark: colors.DN100 }),
+  },
+  [MentionType.DEFAULT]: {
+    background: themed({ light: colors.N30A, dark: colors.DN80 }),
+    border: 'transparent',
+    text: themed({ light: colors.N500, dark: colors.DN800 }),
+  },
 };
-mentionStyle[MentionType.RESTRICTED] = {
-  background: 'transparent',
-  border: akColorN500,
-  text: akColorN500,
-};
-mentionStyle[MentionType.DEFAULT] = {
-  background: akColorN30A,
-  border: 'transparent',
-  text: akColorN500,
+
+const getStyle = (
+  props: MentionStyleProps,
+  property: 'background' | 'border' | 'text',
+) => {
+  const obj = mentionStyle[props.mentionType][property];
+  // themed() returns a function
+  return typeof obj === 'string' ? obj : obj(props);
 };
 
 export const MentionStyle: ComponentClass<
   HTMLAttributes<{}> & MentionStyleProps
 > = styled.span`
   ${(props: MentionStyleProps) => `
-  display: inline-block;
-  background: ${mentionStyle[props.mentionType].background};
-  border: 1px solid ${mentionStyle[props.mentionType].border};
+  display: inline;
+  background: ${getStyle(props, 'background')};
+  border: 1px solid ${getStyle(props, 'border')};
   border-radius: 20px;
-  color: ${mentionStyle[props.mentionType].text};
+  color: ${getStyle(props, 'text')};
   cursor: pointer;
-  padding: 0 4px 2px 3px;
-  white-space: nowrap;
-  line-height: 16px;
-  font-size: ${akFontSizeDefault};
+  padding: 0 0.3em 2px 0.23em;
+  line-height: 1.714;
+  font-size: 1em;
   font-weight: normal;
+  word-break: break-word;
 `};
-`;
-
-export const MentionContainer: ComponentClass<HTMLAttributes<{}>> = styled.span`
-  display: inline-table;
-  white-space: nowrap;
 `;

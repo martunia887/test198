@@ -1,17 +1,15 @@
 {
   "name": "@atlaskit/quick-search",
-  "version": "1.6.0",
+  "version": "6.0.1",
   "description": "A quick-search component",
   "license": "Apache-2.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "atlaskit:src": "src/index.js",
-  "files": [
-    "dist"
-  ],
+  "jsnext:main": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts",
+  "atlaskit:src": "src/index.ts",
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "David Richard",
+    "Ahmed Fouad",
     "Patrick Teen"
   ],
   "atlaskit": {
@@ -20,24 +18,27 @@
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
-    "@atlaskit/analytics": "^3.0.1",
-    "@atlaskit/avatar": "^10.0.6",
-    "@atlaskit/field-base": "^9.0.3",
-    "@atlaskit/icon": "^11.3.0",
-    "@atlaskit/item": "^6.0.3",
-    "@atlaskit/theme": "^3.2.2",
-    "babel-runtime": "^6.26.0",
-    "styled-components": "1.4.6 - 3"
+    "@atlaskit/analytics": "^5.0.0",
+    "@atlaskit/avatar": "^15.0.1",
+    "@atlaskit/field-base": "^12.0.0",
+    "@atlaskit/icon": "^16.0.5",
+    "@atlaskit/item": "^9.0.0",
+    "@atlaskit/theme": "^8.0.1",
+    "babel-runtime": "^6.26.0"
   },
   "peerDependencies": {
-    "react": "^16.3.0"
+    "react": "^16.4.0",
+    "styled-components": "^3.2.6"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^3.0.4",
-    "@atlaskit/navigation": "^31.0.4",
-    "enzyme": "https://registry.npmjs.org/@pgleeson/enzyme/-/enzyme-3.3.7.tgz",
-    "faker": "^4.1.0",
+    "@atlaskit/avatar": "^15.0.1",
+    "@atlaskit/docs": "^7.0.1",
+    "@atlaskit/drawer": "^3.0.1",
+    "@atlaskit/navigation": "^34.0.1",
+    "enzyme": "^3.7.0",
     "prop-types": "^15.5.10",
-    "sinon": "^2.2.0"
+    "react": "^16.4.0",
+    "sinon": "^2.2.0",
+    "uuid": "^3.1.0"
   }
 }

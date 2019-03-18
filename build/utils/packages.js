@@ -2,7 +2,7 @@
 
 const path = require('path');
 const bolt = require('bolt');
-const git = require('../utils/git');
+const git = require('./git');
 
 async function getChangedPackagesSinceCommit(commit) {
   const changedFiles = await git.getChangedFilesSince(commit, true);
@@ -21,6 +21,7 @@ async function getChangedPackagesSinceCommit(commit) {
 
   return (
     changedFiles
+      .filter(fileName => !fileName.endsWith('bundle-size-ratchet.json'))
       // ignore deleted files
       .filter(fileName => fileExistsInPackage(fileName))
       .map(fileName => fileNameToPackage(fileName))

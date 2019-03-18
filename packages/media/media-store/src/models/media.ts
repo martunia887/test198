@@ -1,20 +1,19 @@
-export type MediaFileArtifacts = {
-  readonly [artifactName: string]: {
-    readonly href: string;
-    readonly processingStatus: string;
-  };
+import { MediaFileArtifacts } from './artifacts';
+
+export type MediaFileProcessingStatus = 'pending' | 'succeeded' | 'failed';
+export type MediaType = 'doc' | 'audio' | 'video' | 'image' | 'unknown';
+export const isPreviewableType = (type: MediaType): boolean => {
+  return ['audio', 'video', 'image'].indexOf(type) > -1;
 };
-
-export type MediaFileProcessingStatus = 'pending' | 'succeeded';
-
 export type MediaFile = {
   readonly id: string;
-  readonly mediaType: string;
+  readonly mediaType: MediaType;
   readonly mimeType: string;
   readonly name: string;
-  readonly processingStatus: MediaFileProcessingStatus;
+  readonly processingStatus?: MediaFileProcessingStatus;
   readonly size: number;
   readonly artifacts: MediaFileArtifacts;
+  readonly representations: MediaRepresentations;
 };
 
 export type MediaCollection = {
@@ -24,14 +23,13 @@ export type MediaCollection = {
 
 export type MediaCollectionItems = {
   readonly contents: MediaCollectionItem[];
-  readonly nextInclusiveStartKey: string | null;
+  readonly nextInclusiveStartKey?: string;
 };
 
 export type MediaCollectionItem = {
   readonly id: string;
   readonly insertedAt: number;
   readonly occurrenceKey: string;
-  readonly type: 'file' | 'link';
   readonly details: MediaCollectionItemDetails;
 };
 
@@ -41,12 +39,17 @@ export type MediaCollectionItemMinimalDetails = {
 };
 
 export type MediaCollectionItemFullDetails = {
-  readonly mediaType: string;
+  readonly mediaType: MediaType;
   readonly mimeType: string;
   readonly name: string;
   readonly processingStatus: MediaFileProcessingStatus;
   readonly size: number;
   readonly artifacts: MediaFileArtifacts;
+  readonly representations: MediaRepresentations;
+};
+
+export type MediaRepresentations = {
+  image?: Object;
 };
 
 export type MediaCollectionItemDetails =

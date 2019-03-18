@@ -1,108 +1,146 @@
 import {
   Result,
+  PersonResult,
   ResultType,
-  ResultContentType,
   AnalyticsType,
+  ContentType,
 } from '../model/Result';
+import { mapJiraItemToResult } from './JiraItemMapper';
+import { mapConfluenceItemToResult } from './ConfluenceItemMapper';
 import {
   RequestServiceOptions,
   ServiceConfig,
   utils,
 } from '@atlaskit/util-service-support';
+import { Scope, ConfluenceItem, JiraItem, PersonItem } from './types';
 
-export enum Scope {
-  ConfluencePageBlog = 'confluence.page,blogpost',
-  ConfluencePageBlogAttachment = 'confluence.page,blogpost,attachment',
-  ConfluenceSpace = 'confluence.space',
-  JiraIssue = 'jira.issue',
-}
+export type CrossProductSearchResults = {
+  results: Map<Scope, Result[]>;
+  abTest?: ABTest;
+};
+
+export type SearchSession = {
+  sessionId: string;
+  referrerId?: string;
+};
+
+export const EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE: CrossProductSearchResults = {
+  results: new Map(),
+};
 
 export interface CrossProductSearchResponse {
   scopes: ScopeResult[];
 }
 
-export interface JiraItem {
-  key: string;
-  fields: {
-    summary: string;
-    project: {
-      name: string;
-    };
-    issuetype: {
-      iconUrl: string;
-    };
-  };
+export interface CrossProductExperimentResponse {
+  scopes: Experiment[];
 }
 
-export interface ConfluenceItem {
-  title: string; // this is highlighted
-  baseUrl: string;
-  url: string;
-  content?: {
-    id: string;
-    type: ResultContentType;
-  };
-  iconCssClass: string;
-  container: {
-    title: string; // this is unhighlighted
-    displayUrl: string;
-  };
-  space?: {
-    icon: {
-      path: string;
-    };
-  };
-}
+export type SearchItem = ConfluenceItem | JiraItem | PersonItem;
 
-export type SearchItem = ConfluenceItem | JiraItem;
+export interface ABTest {
+  abTestId: string;
+  controlId: string;
+  experimentId: string;
+}
 
 export interface ScopeResult {
   id: Scope;
   error?: string;
   results: SearchItem[];
+  abTest?: ABTest; // in case of an error abTest will be undefined
+}
+
+export interface Experiment {
+  id: Scope;
+  error?: string;
+  abTest?: ABTest;
 }
 
 export interface CrossProductSearchClient {
   search(
     query: string,
-    searchSessionId: string,
+    searchSession: SearchSession,
     scopes: Scope[],
-  ): Promise<Map<Scope, Result[]>>;
+    resultLimit?: Number,
+  ): Promise<CrossProductSearchResults>;
+
+  getAbTestData(
+    scope: Scope,
+    searchSession: SearchSession,
+  ): Promise<ABTest | undefined>;
 }
 
 export default class CrossProductSearchClientImpl
   implements CrossProductSearchClient {
   private serviceConfig: ServiceConfig;
   private cloudId: string;
+  private addSessionIdToJiraResult;
 
-  constructor(url: string, cloudId: string) {
+  // result limit per scope
+  private readonly RESULT_LIMIT = 10;
+
+  constructor(
+    url: string,
+    cloudId: string,
+    addSessionIdToJiraResult?: boolean,
+  ) {
     this.serviceConfig = { url: url };
     this.cloudId = cloudId;
+    this.addSessionIdToJiraResult = addSessionIdToJiraResult;
   }
 
   public async search(
     query: string,
-    searchSessionId: string,
+    searchSession: SearchSession,
     scopes: Scope[],
-  ): Promise<Map<Scope, Result[]>> {
-    const response = await this.makeRequest(query, scopes);
-
-    return this.parseResponse(response, searchSessionId, scopes);
-  }
-
-  private async makeRequest(
-    query: string,
-    scopes: Scope[],
-  ): Promise<CrossProductSearchResponse> {
+    resultLimit?: Number,
+  ): Promise<CrossProductSearchResults> {
+    const path = 'quicksearch/v1';
     const body = {
       query: query,
       cloudId: this.cloudId,
-      limit: 5,
+      limit: resultLimit || this.RESULT_LIMIT,
       scopes: scopes,
+      searchSession,
     };
 
+    const response = await this.makeRequest<CrossProductSearchResponse>(
+      path,
+      body,
+    );
+    return this.parseResponse(response, searchSession.sessionId);
+  }
+
+  public async getAbTestData(
+    scope: Scope,
+    searchSession: SearchSession,
+  ): Promise<ABTest | undefined> {
+    const path = 'experiment/v1';
+    const body = {
+      cloudId: this.cloudId,
+      scopes: [scope],
+    };
+
+    const response = await this.makeRequest<CrossProductExperimentResponse>(
+      path,
+      body,
+    );
+
+    const scopeWithAbTest: Experiment | undefined = response.scopes.find(
+      s => s.id === scope,
+    );
+
+    if (scopeWithAbTest) {
+      return Promise.resolve(scopeWithAbTest.abTest);
+    }
+
+    return Promise.resolve(undefined);
+  }
+
+  private async makeRequest<T>(path: string, body: object): Promise<T> {
     const options: RequestServiceOptions = {
-      path: 'quicksearch/v1',
+      path,
       requestInit: {
         method: 'POST',
         headers: {
@@ -112,115 +150,90 @@ export default class CrossProductSearchClientImpl
       },
     };
 
-    return utils.requestService<CrossProductSearchResponse>(
-      this.serviceConfig,
-      options,
-    );
+    return utils.requestService<T>(this.serviceConfig, options);
   }
 
+  /**
+   * Converts the raw xpsearch-aggregator response into a CrossProductSearchResults object containing
+   * the results set and the experimentId that generated them.
+   *
+   * @param response
+   * @param searchSessionId
+   * @returns a CrossProductSearchResults object
+   */
   private parseResponse(
     response: CrossProductSearchResponse,
     searchSessionId: string,
-    scopes: Scope[],
-  ): Map<Scope, Result[]> {
-    const results: Map<Scope, Result[]> = response.scopes.reduce(
-      (resultsMap, scopeResult) => {
+  ): CrossProductSearchResults {
+    let abTest: ABTest | undefined;
+    const results: Map<Scope, Result[]> = response.scopes
+      .filter(scope => scope.results)
+      .reduce((resultsMap, scopeResult) => {
         resultsMap.set(
           scopeResult.id,
           scopeResult.results.map(result =>
-            mapItemToResult(scopeResult.id as Scope, result, searchSessionId),
+            mapItemToResult(
+              scopeResult.id as Scope,
+              result,
+              searchSessionId,
+              scopeResult.abTest && scopeResult.abTest!.experimentId,
+              this.addSessionIdToJiraResult,
+            ),
           ),
         );
+
+        if (!abTest) {
+          abTest = scopeResult.abTest;
+        }
         return resultsMap;
-      },
-      new Map(),
-    );
+      }, new Map());
 
-    return results;
+    return { results, abTest };
   }
 }
 
-// TODO need real icons
-export function getConfluenceAvatarUrl(iconCssClass: string): string {
-  if (iconCssClass.indexOf('blogpost') > -1) {
-    return 'https://home.useast.atlassian.io/confluence-blogpost-icon.svg';
-  } else {
-    return 'https://home.useast.atlassian.io/confluence-page-icon.svg';
-  }
-}
+function mapPersonItemToResult(item: PersonItem): PersonResult {
+  const mention = item.nickname || item.name;
 
-export function removeHighlightTags(text: string): string {
-  return text.replace(/@@@hl@@@|@@@endhl@@@/g, '');
+  return {
+    resultType: ResultType.PersonResult,
+    resultId: 'people-' + item.account_id,
+    name: item.name,
+    href: '/people/' + item.account_id,
+    avatarUrl: item.picture,
+    contentType: ContentType.Person,
+    analyticsType: AnalyticsType.ResultPerson,
+    mentionName: mention,
+    presenceMessage: item.job_title || '',
+  };
 }
 
 function mapItemToResult(
   scope: Scope,
   item: SearchItem,
   searchSessionId: string,
+  experimentId?: string,
+  addSessionIdToJiraResult?: boolean,
 ): Result {
-  switch (scope) {
-    case Scope.ConfluencePageBlog:
-    case Scope.ConfluencePageBlogAttachment: {
-      return mapConfluenceItemToResultObject(
-        item as ConfluenceItem,
-        searchSessionId,
-      );
-    }
-    case Scope.ConfluenceSpace: {
-      return mapConfluenceItemToResultSpace(item as ConfluenceItem);
-    }
-    case Scope.JiraIssue: {
-      return mapJiraItemToResult(item as JiraItem);
-    }
-    default: {
-      // Make the TS compiler verify that all enums have been matched
-      const _nonExhaustiveMatch: never = scope;
-      throw new Error(`Non-exhaustive match for scope: ${_nonExhaustiveMatch}`);
-    }
+  if (scope.startsWith('confluence')) {
+    return mapConfluenceItemToResult(
+      scope,
+      item as ConfluenceItem,
+      searchSessionId,
+      experimentId,
+    );
   }
-}
-
-function mapConfluenceItemToResultObject(
-  item: ConfluenceItem,
-  searchSessionId: string,
-): Result {
-  const result: Result = {
-    resultType: ResultType.Object,
-    resultId: 'search-' + item.url,
-    avatarUrl: getConfluenceAvatarUrl(item.iconCssClass),
-    name: removeHighlightTags(item.title),
-    href: `${item.baseUrl}${item.url}?search_id=${searchSessionId}`,
-    containerName: item.container.title,
-    analyticsType: AnalyticsType.ResultConfluence,
-  };
-
-  if (item.content && item.content.type) {
-    result.contentType = item.content.type as ResultContentType;
+  if (scope.startsWith('jira')) {
+    return mapJiraItemToResult(
+      item as JiraItem,
+      searchSessionId,
+      addSessionIdToJiraResult,
+    );
   }
 
-  return result;
-}
+  if (scope === Scope.People) {
+    return mapPersonItemToResult(item as PersonItem);
+  }
 
-function mapJiraItemToResult(item: JiraItem): Result {
-  return {
-    resultType: ResultType.Object,
-    resultId: 'search-' + item.key,
-    avatarUrl: item.fields.issuetype.iconUrl,
-    name: item.fields.summary,
-    href: '/browse/' + item.key,
-    containerName: item.fields.project.name,
-    objectKey: item.key,
-    analyticsType: AnalyticsType.ResultJira,
-  };
-}
-
-function mapConfluenceItemToResultSpace(spaceItem: ConfluenceItem): Result {
-  return {
-    resultType: ResultType.Container,
-    resultId: 'search-' + spaceItem.container.displayUrl,
-    avatarUrl: `${spaceItem.baseUrl}${spaceItem.space!.icon.path}`,
-    name: spaceItem.container.title,
-    href: `${spaceItem.baseUrl}${spaceItem.container.displayUrl}`,
-    analyticsType: AnalyticsType.ResultConfluence,
-  };
+  throw new Error(`Non-exhaustive match for scope: ${scope}`);
 }

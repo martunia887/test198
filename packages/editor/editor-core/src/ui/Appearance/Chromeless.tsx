@@ -1,30 +1,15 @@
 import * as React from 'react';
-import styled, { keyframes } from 'styled-components';
-import { akColorR100 } from '@atlaskit/util-shared-styles';
+import styled from 'styled-components';
 import PluginSlot from '../PluginSlot';
 import WithPluginState from '../WithPluginState';
 import ContentStyles from '../ContentStyles';
 import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
-import { pluginKey as maxContentSizePluginKey } from '../../plugins/max-content-size';
+import {
+  pluginKey as maxContentSizePluginKey,
+  MaxContentSizePluginState,
+} from '../../plugins/max-content-size';
 import { scrollbarStyles } from '../styles';
-
-const pulseBackground = keyframes`
-  50% {
-    background-color: ${akColorR100};
-  }
-`;
-
-const pulseBackgroundReverse = keyframes`
-  0% {
-    background-color: ${akColorR100};
-  }
-  50% {
-    background-color: auto;
-  }
-  100% {
-    background-color: ${akColorR100};
-  }
-`;
+import WithFlash from '../WithFlash';
 
 export interface ChromelessEditorProps {
   isMaxContentSizeReached?: boolean;
@@ -44,14 +29,6 @@ const ChromelessEditor: any = styled.div`
   ${scrollbarStyles} max-width: inherit;
   box-sizing: border-box;
   word-wrap: break-word;
-  animation: ${(props: any) =>
-    props.isMaxContentSizeReached
-      ? `.25s ease-in-out ${pulseBackground}`
-      : 'none'};
-
-  &.-flash {
-    animation: 0.25s ease-in-out ${pulseBackgroundReverse};
-  }
 
   div > .ProseMirror {
     outline: none;
@@ -72,11 +49,14 @@ export default class Editor extends React.Component<
 > {
   static displayName = 'ChromelessEditorAppearance';
 
-  private flashToggle = false;
-
   private appearance: EditorAppearance = 'chromeless';
+  private containerElement: HTMLElement | undefined;
 
-  private renderChrome = ({ maxContentSize }) => {
+  private renderChrome = ({
+    maxContentSize,
+  }: {
+    maxContentSize: MaxContentSizePluginState;
+  }) => {
     const {
       editorDOMElement,
       editorView,
@@ -90,34 +70,39 @@ export default class Editor extends React.Component<
       popupsBoundariesElement,
       popupsScrollableElement,
       disabled,
+      dispatchAnalyticsEvent,
     } = this.props;
     const maxContentSizeReached =
       maxContentSize && maxContentSize.maxContentSizeReached;
-    this.flashToggle = maxContentSizeReached && !this.flashToggle;
 
     return (
-      <ChromelessEditor
-        className={this.flashToggle ? '-flash' : ''}
-        isMaxContentSizeReached={maxContentSizeReached}
-        maxHeight={maxHeight}
-      >
-        <ContentArea>
-          {customContentComponents}
-          <PluginSlot
-            editorView={editorView}
-            editorActions={editorActions}
-            eventDispatcher={eventDispatcher}
-            providerFactory={providerFactory}
-            appearance={this.appearance}
-            items={contentComponents}
-            popupsMountPoint={popupsMountPoint}
-            popupsBoundariesElement={popupsBoundariesElement}
-            popupsScrollableElement={popupsScrollableElement}
-            disabled={!!disabled}
-          />
-          {editorDOMElement}
-        </ContentArea>
-      </ChromelessEditor>
+      <WithFlash animate={maxContentSizeReached}>
+        <ChromelessEditor
+          maxHeight={maxHeight}
+          innerRef={(ref: HTMLElement | undefined) =>
+            (this.containerElement = ref)
+          }
+        >
+          <ContentArea>
+            {customContentComponents}
+            <PluginSlot
+              editorView={editorView}
+              editorActions={editorActions}
+              eventDispatcher={eventDispatcher}
+              providerFactory={providerFactory}
+              appearance={this.appearance}
+              items={contentComponents}
+              popupsMountPoint={popupsMountPoint}
+              popupsBoundariesElement={popupsBoundariesElement}
+              popupsScrollableElement={popupsScrollableElement}
+              containerElement={this.containerElement}
+              disabled={!!disabled}
+              dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+            />
+            {editorDOMElement}
+          </ContentArea>
+        </ChromelessEditor>
+      </WithFlash>
     );
   };
 

@@ -1,13 +1,20 @@
 import * as React from 'react';
-import { ExtensionHandlers } from '@atlaskit/editor-common';
+import { ExtensionHandlers, ExtensionParams } from '@atlaskit/editor-common';
 
-const FakeExtension = ({ colour, children }) => {
+const FakeExtension = ({
+  colour,
+  children,
+}: {
+  colour: string;
+  children: React.ReactChild;
+}) => {
   return (
     <div
       style={{
         backgroundColor: colour,
         color: 'white',
         padding: 10,
+        minWidth: 85,
       }}
     >
       {children}
@@ -15,12 +22,16 @@ const FakeExtension = ({ colour, children }) => {
   );
 };
 
-const InlineExtension = () => {
-  return <FakeExtension colour="green">Inline extension demo</FakeExtension>;
+const InlineExtension = ({ node }: { node: ExtensionParams<any> }) => {
+  return <FakeExtension colour="green">{node.content as string}</FakeExtension>;
 };
 
-const BlockExtension = () => {
-  return <FakeExtension colour="black">Block extension demo</FakeExtension>;
+const BlockExtension = ({ node }: { node: ExtensionParams<any> }) => {
+  return (
+    <FakeExtension colour="black">
+      <div style={{ minWidth: 200 }}>{node.content}</div>
+    </FakeExtension>
+  );
 };
 
 const BodiedExtension = () => {
@@ -39,6 +50,8 @@ export const extensionHandlers: ExtensionHandlers = {
 
     switch (extensionKey) {
       case 'block-eh':
+        return <BlockExtension {...macroProps} />;
+      case 'block-layout-eh':
         return <BlockExtension {...macroProps} />;
       case 'bodied-eh':
         return <BodiedExtension {...macroProps} />;

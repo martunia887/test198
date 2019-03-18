@@ -1,215 +1,483 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import SearchIcon from '@atlaskit/icon/glyph/search';
-import CreateIcon from '@atlaskit/icon/glyph/add';
-import Avatar from '@atlaskit/avatar';
-import QuestionIcon from '@atlaskit/icon/glyph/question';
-import MenuIcon from '@atlaskit/icon/glyph/menu';
-import NotificationIcon from '@atlaskit/icon/glyph/notification';
-import PeopleIcon from '@atlaskit/icon/glyph/people';
-import { NavigationSubscriber, GlobalNav } from '@atlaskit/navigation-next';
+import type { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import { NotificationIndicator } from '@atlaskit/notification-indicator';
+import { NotificationLogClient } from '@atlaskit/notification-log-client';
+import { GlobalNav } from '@atlaskit/navigation-next';
+import Drawer from '@atlaskit/drawer';
+import AtlassianSwitcher, {
+  AtlassianSwitcherPrefetchTrigger,
+} from '@atlaskit/atlassian-switcher';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../../version.json';
+import generateDefaultConfig from '../../config/default-config';
+import generateProductConfig from '../../config/product-config';
+import ItemComponent from '../ItemComponent';
+import ScreenTracker from '../ScreenTracker';
+import { analyticsIdMap, fireDrawerDismissedEvents } from './analytics';
+import NotificationDrawerContents from '../../platform-integration';
 
-import Drawer from '../Drawer';
-import type {
+import type { GlobalNavItemData, NavItem } from '../../config/types';
+import type { GlobalNavigationProps, DrawerName } from './types';
+
+const noop = () => {};
+
+const localStorage = typeof window === 'object' ? window.localStorage : {};
+
+type GlobalNavigationState = {
+  [any]: boolean, // Need an indexer property to appease flow for is${capitalisedDrawerName}Open
+  isCreateDrawerOpen: boolean,
+  isSearchDrawerOpen: boolean,
+  isNotificationDrawerOpen: boolean,
+  isStarredDrawerOpen: boolean,
+  isSettingsDrawerOpen: boolean,
+  isAtlassianSwitcherDrawerOpen: boolean,
+  notificationCount: number,
+};
+
+type DrawerInstanceState = {
+  isControlled: boolean,
+};
+
+export default class GlobalNavigation extends Component<
   GlobalNavigationProps,
-  WrappedGlobalNavigationProps,
-} from './types';
+  GlobalNavigationState,
+> {
+  drawers: {
+    [DrawerName]: DrawerInstanceState,
+  } = {
+    search: {
+      isControlled: false,
+    },
+    notification: {
+      isControlled: false,
+    },
+    starred: {
+      isControlled: false,
+    },
+    settings: {
+      isControlled: false,
+    },
+    create: {
+      isControlled: false,
+    },
+    atlassianSwitcher: {
+      isControlled: false,
+    },
+  };
+  isNotificationInbuilt = false;
+  shouldRenderAtlassianSwitcher = false;
 
-// By default we will render a button which toggles the peek behaviour. The
-// consumer can opt out of this by passing their own handler or `false` to the
-// onClick prop, or by passing a href (which will render an <a>).
-// They also opt out of the peek behaviour if they pass in a component to
-// the primary item (where getProductPrimaryItemComponent is called)
-const getProductPrimaryItemComponent = navigation => ({
-  className,
-  children,
-  href,
-  onClick,
-  target,
-}: *) =>
-  href ? (
-    <a
-      className={className}
-      href={href}
-      onClick={onClick || null}
-      target={target}
-    >
-      {children}
-    </a>
-  ) : (
-    <button
-      className={className}
-      onClick={
-        typeof onClick !== 'undefined' ? onClick || null : navigation.togglePeek
-      }
-      onMouseEnter={navigation.hint}
-      onMouseLeave={navigation.unHint}
-    >
-      {children}
-    </button>
-  );
-
-class GlobalNavigation extends Component<WrappedGlobalNavigationProps> {
   static defaultProps = {
-    primaryActions: [],
-    secondaryActions: [],
+    enableAtlassianSwitcher: false,
+    createDrawerWidth: 'wide',
+    searchDrawerWidth: 'wide',
+    notificationDrawerWidth: 'wide',
+    starredDrawerWidth: 'wide',
+    settingsDrawerWidth: 'wide',
   };
 
-  constructPrimaryItems = () => {
-    const { create, product, search, primaryActions, navigation } = this.props;
+  constructor(props: GlobalNavigationProps) {
+    super(props);
 
-    const inbuiltPrimaryItems = [];
+    this.state = {
+      isCreateDrawerOpen: false,
+      isSearchDrawerOpen: false,
+      isNotificationDrawerOpen: false,
+      isStarredDrawerOpen: false,
+      isSettingsDrawerOpen: false,
+      isAtlassianSwitcherDrawerOpen: false,
+      notificationCount: 0,
+    };
 
-    if (product) {
-      const { component, ...rest } = product;
-      inbuiltPrimaryItems.push({
-        ...rest,
-        component: component || getProductPrimaryItemComponent(navigation),
-      });
-    }
+    Object.keys(this.drawers).forEach((drawer: DrawerName) => {
+      this.updateDrawerControlledStatus(drawer, props);
 
-    if (search) {
-      const defaultSearch = {
-        icon: SearchIcon,
-        label: 'Search',
-        onClick: navigation.openSearchDrawer,
-        tooltip: 'Search',
-      };
-      inbuiltPrimaryItems.push({ ...defaultSearch, ...search });
-    }
+      const capitalisedDrawerName = this.getCapitalisedDrawerName(drawer);
 
-    if (create) {
-      const defaultCreate = {
-        icon: CreateIcon,
-        label: 'Create',
-        onClick: navigation.openCreateDrawer,
-        tooltip: 'Create',
-      };
-      inbuiltPrimaryItems.push({ ...defaultCreate, ...create });
-    }
+      if (
+        props[`${drawer}DrawerContents`] &&
+        !props[`on${capitalisedDrawerName}Close`]
+      ) {
+        /* eslint-disable no-console */
+        console.warn(`You have provided an onClick handler for ${drawer}, but no close handler for the drawer.
+        Please pass on${capitalisedDrawerName}Close prop to handle closing of the ${drawer} drawer.`);
+        /* eslint-enable */
+      }
 
-    return [...inbuiltPrimaryItems, ...primaryActions];
-  };
+      // Set it's initial state using a prop with the same name.
+      this.state[`is${capitalisedDrawerName}Open`] =
+        props[`is${capitalisedDrawerName}Open`];
+    });
 
-  constructSecondaryItems = () => {
     const {
-      secondaryActions,
-      navigation,
-      help,
-      profile,
-      appSwitcher,
-      notification,
-      people,
+      cloudId,
+      enableAtlassianSwitcher,
+      fabricNotificationLogUrl,
+      notificationDrawerContents,
+      product,
     } = this.props;
-    const inbuiltSecondaryItems = [];
+    this.isNotificationInbuilt = !!(
+      !notificationDrawerContents &&
+      cloudId &&
+      fabricNotificationLogUrl
+    );
+    this.shouldRenderAtlassianSwitcher =
+      enableAtlassianSwitcher && cloudId && product;
+  }
 
-    if (notification) {
-      const defaultNotifications = {
-        icon: NotificationIcon,
-        label: 'Notifications',
-        onClick: navigation.openNotificationDrawer,
-        tooltip: 'Notifications',
-      };
-      inbuiltSecondaryItems.push({ ...defaultNotifications, ...notification });
+  componentDidUpdate(prevProps: GlobalNavigationProps) {
+    Object.keys(this.drawers).forEach(drawerName => {
+      this.updateDrawerControlledStatus(drawerName, this.props);
+
+      const capitalisedDrawerName = this.getCapitalisedDrawerName(drawerName);
+      // Do nothing if it's a controlled drawer
+      if (this.drawers[drawerName].isControlled) {
+        return;
+      }
+
+      if (
+        prevProps[`is${capitalisedDrawerName}Open`] !==
+        this.props[`is${capitalisedDrawerName}Open`]
+      ) {
+        // Update the state based on the prop
+        this.setState({
+          [`is${capitalisedDrawerName}Open`]: this.props[
+            `is${capitalisedDrawerName}Open`
+          ],
+        });
+      }
+    });
+
+    const {
+      cloudId,
+      enableAtlassianSwitcher,
+      fabricNotificationLogUrl,
+      notificationDrawerContents,
+      product,
+    } = this.props;
+    this.isNotificationInbuilt = !!(
+      !notificationDrawerContents &&
+      cloudId &&
+      fabricNotificationLogUrl
+    );
+    this.shouldRenderAtlassianSwitcher =
+      enableAtlassianSwitcher && cloudId && product;
+  }
+
+  onCountUpdating = (
+    param: { visibilityChangesSinceTimer: number } = {
+      visibilityChangesSinceTimer: 0,
+    },
+  ) => {
+    if (
+      !this.state.notificationCount ||
+      param.visibilityChangesSinceTimer <= 1
+    ) {
+      // fetch the notificationCount
+      return {};
     }
 
-    if (people) {
-      const defaultPeople = {
-        icon: PeopleIcon,
-        label: 'People directory',
-        onClick: navigation.openPeopleDrawer,
-        tooltip: 'People directory',
-      };
-      inbuiltSecondaryItems.push({ ...defaultPeople, ...people });
+    // skip fetch, refresh from local storage if newer
+    const cachedCount = parseInt(this.getLocalStorageCount(), 10);
+    const result = {};
+    if (cachedCount && cachedCount !== this.state.notificationCount) {
+      result.countOverride = cachedCount;
+    } else {
+      result.skip = true;
     }
-
-    if (appSwitcher) {
-      const defaultAppSwitcher = {
-        icon: MenuIcon,
-        label: 'App Switcher',
-        tooltip: 'App Switcher',
-      };
-      inbuiltSecondaryItems.push({ ...defaultAppSwitcher, ...appSwitcher });
-    }
-
-    if (help) {
-      const defaultHelp = {
-        icon: QuestionIcon,
-        label: 'Help',
-        tooltip: 'Help',
-      };
-      inbuiltSecondaryItems.push({ ...defaultHelp, ...help });
-    }
-
-    if (profile) {
-      const defaultUser = {
-        icon: () => (
-          <Avatar
-            borderColor="transparent"
-            isActive={false}
-            isHover={false}
-            size="small"
-          />
-        ),
-        label: 'Your profile and Settings',
-        tooltip: 'Your profile and Settings',
-      };
-      inbuiltSecondaryItems.push({ ...defaultUser, ...profile });
-    }
-
-    return [...secondaryActions, ...inbuiltSecondaryItems];
+    return result;
   };
 
-  renderDrawer = (
-    drawerKey: 'create' | 'search' | 'notification' | 'people',
-    drawerProps,
-  ) => {
-    const { navigation } = this.props;
-    const { activeDrawer } = navigation.state;
-    const action = this.props[drawerKey];
+  onCountUpdated = (param: { newCount: number } = { newCount: 0 }) => {
+    this.updateLocalStorageCount(param.newCount);
+    this.setState({
+      notificationCount: param.newCount,
+    });
+  };
 
-    if (!action || !action.drawer) {
+  getLocalStorageCount = () => {
+    try {
+      return localStorage.getItem('notificationBadgeCountCache');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+    return null;
+  };
+
+  updateLocalStorageCount = (newCount: number) => {
+    try {
+      localStorage.setItem('notificationBadgeCountCache', newCount);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+  };
+
+  updateDrawerControlledStatus = (
+    drawerName: DrawerName,
+    props: GlobalNavigationProps,
+  ) => {
+    const capitalisedDrawerName = this.getCapitalisedDrawerName(drawerName);
+
+    if (props[`on${capitalisedDrawerName.replace('Drawer', '')}Click`]) {
+      this.drawers[drawerName].isControlled = false;
+    } else {
+      // If a drawer doesn't have an onClick handler, mark it as a controlled drawer.
+      this.drawers[drawerName].isControlled = true;
+    }
+  };
+
+  getCapitalisedDrawerName = (drawerName: DrawerName) => {
+    return `${drawerName[0].toUpperCase()}${drawerName.slice(1)}Drawer`;
+  };
+
+  openDrawer = (drawerName: DrawerName) => () => {
+    const capitalisedDrawerName = this.getCapitalisedDrawerName(drawerName);
+    let onOpenCallback = noop;
+
+    if (typeof this.props[`on${capitalisedDrawerName}Open`] === 'function') {
+      onOpenCallback = this.props[`on${capitalisedDrawerName}Open`];
+    }
+
+    if (drawerName === 'notification' && this.isNotificationInbuilt) {
+      this.onCountUpdated({ newCount: 0 });
+    }
+
+    // Update the state only if it's a controlled drawer.
+    // componentDidMount takes care of the uncontrolled drawers
+    if (this.drawers[drawerName].isControlled) {
+      this.setState(
+        {
+          [`is${capitalisedDrawerName}Open`]: true,
+        },
+        onOpenCallback,
+      );
+    } else {
+      // invoke callback in both cases
+      onOpenCallback();
+    }
+  };
+
+  closeDrawer = (drawerName: DrawerName) => (
+    event: SyntheticMouseEvent<*> | SyntheticKeyboardEvent<*>,
+    analyticsEvent: UIAnalyticsEvent,
+  ) => {
+    const capitalisedDrawerName = this.getCapitalisedDrawerName(drawerName);
+    let onCloseCallback = noop;
+
+    if (typeof this.props[`on${capitalisedDrawerName}Close`] === 'function') {
+      onCloseCallback = this.props[`on${capitalisedDrawerName}Close`];
+    }
+
+    fireDrawerDismissedEvents(drawerName, analyticsEvent);
+
+    // Update the state only if it's a controlled drawer.
+    // componentDidMount takes care of the uncontrolled drawers
+    if (this.drawers[drawerName].isControlled) {
+      this.setState(
+        {
+          [`is${capitalisedDrawerName}Open`]: false,
+        },
+        onCloseCallback,
+      );
+    } else {
+      // invoke callback in both cases
+      onCloseCallback();
+    }
+  };
+
+  CustomizedItemComponent = (props: GlobalNavItemData) => {
+    if (
+      this.shouldRenderAtlassianSwitcher &&
+      props.id === 'atlassianSwitcher'
+    ) {
+      return (
+        <AtlassianSwitcherPrefetchTrigger cloudId={this.props.cloudId}>
+          <ItemComponent {...props} />
+        </AtlassianSwitcherPrefetchTrigger>
+      );
+    }
+
+    return <ItemComponent {...props} />;
+  };
+
+  renderNotificationBadge = () => {
+    if (this.state.isNotificationDrawerOpen) {
+      // Unmount the badge when the drawer is open
+      // So that it can remount with the latest badgeCount when the drawer closes.
       return null;
     }
 
-    const DrawerContent = action.drawer.content;
+    const { cloudId, fabricNotificationLogUrl } = this.props;
+    const refreshRate = this.state.notificationCount ? 180000 : 60000;
 
     return (
-      <Drawer
-        isOpen={activeDrawer === drawerKey}
-        onClose={
-          (action.drawer && action.drawer.onClose) ||
-          navigation.closeActiveDrawer
+      <NotificationIndicator
+        notificationLogProvider={
+          new NotificationLogClient(fabricNotificationLogUrl, cloudId)
         }
-        {...drawerProps}
-      >
-        <DrawerContent closeDrawer={navigation.closeActiveDrawer} />
-      </Drawer>
+        refreshRate={refreshRate}
+        onCountUpdated={this.onCountUpdated}
+        onCountUpdating={this.onCountUpdating}
+      />
     );
   };
 
+  renderNotificationDrawerContents = () => {
+    const { locale, product } = this.props;
+
+    return <NotificationDrawerContents product={product} locale={locale} />;
+  };
+
+  constructNavItems = () => {
+    const productConfig = generateProductConfig(
+      this.props,
+      this.openDrawer,
+      this.isNotificationInbuilt,
+    );
+    const defaultConfig = generateDefaultConfig();
+    const badge = this.renderNotificationBadge;
+    const { notificationCount: badgeCount } = this.isNotificationInbuilt
+      ? this.state
+      : this.props;
+
+    const navItems: NavItem[] = Object.keys(productConfig).map(item => ({
+      ...(productConfig[item]
+        ? {
+            ...(item === 'notification' && this.isNotificationInbuilt
+              ? { id: 'notifications', badge }
+              : {}),
+            ...defaultConfig[item],
+            ...productConfig[item],
+            ...(item === 'notification'
+              ? { id: 'notifications', badgeCount }
+              : {}),
+          }
+        : null),
+    }));
+
+    return {
+      primaryItems: navItems
+        .filter(({ section }) => section === 'primary')
+        .sort(({ rank: rank1 }, { rank: rank2 }) => rank1 - rank2)
+        .map(navItem => {
+          const { section, rank, ...props } = navItem;
+          return props;
+        }),
+      secondaryItems: navItems
+        .filter(({ section }) => section === 'secondary')
+        .sort(({ rank: rank1 }, { rank: rank2 }) => rank1 - rank2)
+        .map(navItem => {
+          const { section, rank, ...props } = navItem;
+          return props;
+        }),
+    };
+  };
+
+  triggerXFlow = (productKey: string, sourceComponent: string) => {
+    const { triggerXFlow } = this.props;
+    this.setState({
+      isAtlassianSwitcherDrawerOpen: false,
+    });
+    if (triggerXFlow) {
+      triggerXFlow(productKey, sourceComponent);
+    }
+  };
+
+  renderAtlassianSwitcherDrawerContents = () => {
+    // eslint-disable-next-line camelcase
+    const { product, cloudId, experimental_enableSplitJira } = this.props;
+    return (
+      <AtlassianSwitcher
+        cloudId={cloudId}
+        product={product}
+        triggerXFlow={this.triggerXFlow}
+        // eslint-disable-next-line camelcase
+        enableSplitJira={experimental_enableSplitJira}
+      />
+    );
+  };
+
+  getDrawerContents = (drawerName: DrawerName) => {
+    switch (drawerName) {
+      case 'atlassianSwitcher':
+        return this.shouldRenderAtlassianSwitcher
+          ? this.renderAtlassianSwitcherDrawerContents
+          : null;
+      case 'notification':
+        return this.isNotificationInbuilt
+          ? this.renderNotificationDrawerContents
+          : this.props.notificationDrawerContents;
+      default:
+        return this.props[`${drawerName}DrawerContents`];
+    }
+  };
+
   render() {
-    const primaryItems = this.constructPrimaryItems();
-    const secondaryItems = this.constructSecondaryItems();
+    // TODO: Look into memoizing this to avoid memory bloat
+    const { primaryItems, secondaryItems } = this.constructNavItems();
 
     return (
-      <Fragment>
-        <GlobalNav
-          primaryItems={primaryItems}
-          secondaryItems={secondaryItems}
-        />
-        {this.renderDrawer('create')}
-        {this.renderDrawer('search', { width: 'wide' })}
-        {this.renderDrawer('notification', { width: 'wide' })}
-        {this.renderDrawer('people', { width: 'wide' })}
-      </Fragment>
+      <NavigationAnalyticsContext
+        data={{
+          packageName,
+          packageVersion,
+          componentName: 'globalNavigation',
+        }}
+      >
+        <Fragment>
+          <GlobalNav
+            itemComponent={this.CustomizedItemComponent}
+            primaryItems={primaryItems}
+            secondaryItems={secondaryItems}
+          />
+          {Object.keys(this.drawers).map(drawerName => {
+            const capitalisedDrawerName = this.getCapitalisedDrawerName(
+              drawerName,
+            );
+            const shouldUnmountOnExit = this.props[
+              `should${capitalisedDrawerName}UnmountOnExit`
+            ];
+
+            const DrawerContents = this.getDrawerContents(drawerName);
+
+            if (!DrawerContents) {
+              return null;
+            }
+
+            const onCloseComplete = this.props[
+              `on${capitalisedDrawerName}CloseComplete`
+            ];
+
+            return (
+              <Drawer
+                key={drawerName}
+                isOpen={this.state[`is${capitalisedDrawerName}Open`]}
+                onClose={this.closeDrawer(drawerName)}
+                onCloseComplete={onCloseComplete}
+                shouldUnmountOnExit={shouldUnmountOnExit}
+                width={
+                  drawerName === 'atlassianSwitcher'
+                    ? 'narrow'
+                    : this.props[`${drawerName}DrawerWidth`]
+                }
+              >
+                <ScreenTracker
+                  name={analyticsIdMap[drawerName]}
+                  isVisible={this.state[`is${capitalisedDrawerName}Open`]}
+                />
+                <DrawerContents />
+              </Drawer>
+            );
+          })}
+        </Fragment>
+      </NavigationAnalyticsContext>
     );
   }
 }
-
-export default (props: GlobalNavigationProps) => (
-  <NavigationSubscriber>
-    {navigation => <GlobalNavigation navigation={navigation} {...props} />}
-  </NavigationSubscriber>
-);

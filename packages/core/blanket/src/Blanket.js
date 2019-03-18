@@ -1,5 +1,11 @@
 // @flow
 import React, { PureComponent } from 'react';
+import {
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  createAndFireEvent,
+} from '@atlaskit/analytics-next';
+import { name as packageName, version as packageVersion } from './version.json';
 import Div from './styled';
 
 type Props = {
@@ -8,10 +14,10 @@ type Props = {
   /** Whether the blanket has a tinted background color. */
   isTinted: boolean,
   /** Handler function to be called when the blanket is clicked */
-  onBlanketClicked: (event: Event) => void,
+  onBlanketClicked: (event: SyntheticMouseEvent<*>) => void,
 };
 
-export default class Blanket extends PureComponent<Props, void> {
+class Blanket extends PureComponent<Props, void> {
   static defaultProps = {
     canClickThrough: false,
     isTinted: false,
@@ -26,3 +32,25 @@ export default class Blanket extends PureComponent<Props, void> {
     return <Div {...containerProps} />;
   }
 }
+
+export { Blanket as BlanketWithoutAnalytics };
+const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
+
+export default withAnalyticsContext({
+  componentName: 'blanket',
+  packageName,
+  packageVersion,
+})(
+  withAnalyticsEvents({
+    onBlanketClicked: createAndFireEventOnAtlaskit({
+      action: 'clicked',
+      actionSubject: 'blanket',
+
+      attributes: {
+        componentName: 'blanket',
+        packageName,
+        packageVersion,
+      },
+    }),
+  })(Blanket),
+);

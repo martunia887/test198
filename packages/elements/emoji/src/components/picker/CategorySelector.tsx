@@ -1,35 +1,39 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { PureComponent } from 'react';
-import * as classNames from 'classnames';
-
-import * as styles from './styles';
-import { CategoryDescription, OnCategory } from '../../types';
+import { FormattedMessage } from 'react-intl';
 import { defaultCategories } from '../../constants';
-
-import { CategoryDescriptionMap } from './categories';
+import { CategoryDescription, OnCategory } from '../../types';
+import { messages } from '../i18n';
+import {
+  CategoryDescriptionMap,
+  CategoryGroupKey,
+  CategoryId,
+} from './categories';
+import * as styles from './styles';
 
 export interface Props {
-  dynamicCategories?: string[];
-  activeCategoryId?: string;
+  dynamicCategories?: CategoryId[];
+  activeCategoryId?: CategoryId;
   disableCategories?: boolean;
   onCategorySelected?: OnCategory;
 }
 
 export interface State {
-  categories: string[];
+  categories: CategoryId[];
 }
 
 export type CategoryMap = {
   [id: string]: CategoryDescription;
 };
 
-export const sortCategories = (c1, c2) =>
+export const sortCategories = (c1: CategoryGroupKey, c2: CategoryGroupKey) =>
   CategoryDescriptionMap[c1].order - CategoryDescriptionMap[c2].order;
 
 const addNewCategories = (
-  oldCategories: string[],
-  newCategories?: string[],
-): string[] => {
+  oldCategories: CategoryId[],
+  newCategories?: CategoryId[],
+): CategoryId[] => {
   if (!newCategories) {
     return oldCategories;
   }
@@ -59,14 +63,14 @@ export default class CategorySelector extends PureComponent<Props, State> {
     };
   }
 
-  onClick = categoryId => {
+  onClick = (categoryId: CategoryId) => {
     const { onCategorySelected } = this.props;
     if (onCategorySelected) {
       onCategorySelected(categoryId);
     }
   };
 
-  componentWillUpdate(nextProps: Props, nextState: State) {
+  componentWillUpdate(nextProps: Props) {
     if (this.props.dynamicCategories !== nextProps.dynamicCategories) {
       this.setState({
         categories: addNewCategories(
@@ -84,14 +88,14 @@ export default class CategorySelector extends PureComponent<Props, State> {
     if (categories) {
       categoriesSection = (
         <ul>
-          {categories.map(categoryId => {
+          {categories.map((categoryId: CategoryId) => {
             const category = CategoryDescriptionMap[categoryId];
             const categoryClasses = [styles.category];
             if (categoryId === this.props.activeCategoryId) {
               categoryClasses.push(styles.active);
             }
 
-            const onClick = e => {
+            const onClick = (e: React.SyntheticEvent) => {
               e.preventDefault();
               // ignore if disabled
               if (!disableCategories) {
@@ -104,16 +108,20 @@ export default class CategorySelector extends PureComponent<Props, State> {
 
             // tslint:disable-next-line:variable-name
             const Icon = category.icon;
-
             return (
-              <li key={category.name}>
-                <button
-                  className={classNames(categoryClasses)}
-                  onClick={onClick}
-                  title={category.name}
-                >
-                  <Icon label={category.name} />
-                </button>
+              <li key={category.id}>
+                <FormattedMessage {...messages[category.name]}>
+                  {categoryName => (
+                    <button
+                      data-category-id={category.id}
+                      className={classNames(categoryClasses)}
+                      onClick={onClick}
+                      title={categoryName as string}
+                    >
+                      <Icon label={categoryName} />
+                    </button>
+                  )}
+                </FormattedMessage>
               </li>
             );
           })}

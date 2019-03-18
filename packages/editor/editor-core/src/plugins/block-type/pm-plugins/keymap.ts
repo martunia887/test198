@@ -8,6 +8,11 @@ import * as keymaps from '../../../keymaps';
 import * as commands from '../../../commands';
 import { trackAndInvoke } from '../../../analytics';
 import * as blockTypes from '../types';
+import {
+  cleanUpAtTheStartOfDocument,
+  insertBlockTypesWithAnalytics,
+} from '../../block-type/commands';
+import { INPUT_METHOD } from '../../analytics';
 
 const analyticsEventName = (blockTypeName: string, eventSource: string) =>
   `atlassian.editor.format.${blockTypeName}.${eventSource}`;
@@ -20,7 +25,7 @@ export default function keymapPlugin(schema: Schema): Plugin {
     keymaps.insertNewLine.common!,
     trackAndInvoke(
       'atlassian.editor.newline.keyboard',
-      commands.insertNewLine(),
+      commands.insertNewLineWithAnalytics,
     ),
     list,
   );
@@ -61,7 +66,7 @@ export default function keymapPlugin(schema: Schema): Plugin {
 
   keymaps.bindKeymapWithCommand(
     keymaps.backspace.common!,
-    commands.removeEmptyHeadingAtStartOfDocument,
+    cleanUpAtTheStartOfDocument,
     list,
   );
 
@@ -76,12 +81,23 @@ export default function keymapPlugin(schema: Schema): Plugin {
     blockTypes.BLOCK_QUOTE,
   ].forEach(blockType => {
     if (schema.nodes[blockType.nodeName]) {
-      const shortcut = keymaps.findShortcutByDescription(blockType.title);
+      const shortcut = keymaps.findShortcutByDescription(
+        blockType.title.defaultMessage,
+      );
       if (shortcut) {
-        const eventName = analyticsEventName(blockType.name, 'keyboard');
+        const eventName = analyticsEventName(
+          blockType.name,
+          INPUT_METHOD.KEYBOARD,
+        );
         keymaps.bindKeymapWithCommand(
           shortcut,
-          trackAndInvoke(eventName, commands.insertBlockType(blockType.name)),
+          trackAndInvoke(
+            eventName,
+            insertBlockTypesWithAnalytics(
+              blockType.name,
+              INPUT_METHOD.KEYBOARD,
+            ),
+          ),
           list,
         );
       }

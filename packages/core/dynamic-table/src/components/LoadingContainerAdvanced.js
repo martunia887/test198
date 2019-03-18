@@ -20,7 +20,7 @@ type Props = {
   isLoading?: boolean,
   spinnerSize?: SpinnerSizeType,
   contentsOpacity: number,
-  targetRef?: Function,
+  targetRef?: Function, // eslint-disable-line react/no-unused-prop-types
 };
 
 export default class LoadingContainerAdvanced extends Component<Props, {}> {
@@ -120,9 +120,9 @@ export default class LoadingContainerAdvanced extends Component<Props, {}> {
     transformY: number,
     isFixed?: boolean,
   ) => {
-    // $FlowFixMe
+    // $FlowFixMe - style is not Element
     spinnerNode.style.position = isFixed ? 'fixed' : ''; // eslint-disable-line no-param-reassign
-    // $FlowFixMe
+    // $FlowFixMe - style is not Element
     spinnerNode.style.transform = // eslint-disable-line no-param-reassign
       transformY !== 0 ? `translate3d(0, ${transformY}px, 0)` : '';
   };
@@ -132,6 +132,7 @@ export default class LoadingContainerAdvanced extends Component<Props, {}> {
     const { isLoading, contentsOpacity } = this.props;
     if (
       targetNode &&
+      // $FlowFixMe - style is not Element
       targetNode.style &&
       typeof targetNode.style === 'object'
     ) {
@@ -146,9 +147,9 @@ export default class LoadingContainerAdvanced extends Component<Props, {}> {
     const spinnerNode = this.getSpinnerNode();
 
     if (!targetNode || !spinnerNode) return;
-    // $FlowFixMe
+    // $FlowFixMe - getBoundingClientRect() is not found
     const targetRect = targetNode.getBoundingClientRect();
-    // $FlowFixMe
+    // $FlowFixMe - getBoundingClientRect() is not found
     const spinnerRect = spinnerNode.getBoundingClientRect();
     const spinnerHeight = spinnerRect.height;
     const isInViewport = this.isVerticallyVisible(targetRect, viewportHeight);

@@ -1,11 +1,14 @@
 import {
   EmojiRepository,
   denormaliseEmojiServiceResponse,
+  EmojiDescription,
+  UsageFrequencyTracker,
 } from '@atlaskit/emoji';
 import { customCategory, customType } from './utils';
 import {
   mockNonUploadingEmojiResourceFactory,
   mockEmojiResourceFactory,
+  MockEmojiResourceConfig,
 } from './MockEmojiResource';
 
 export const spriteEmoji = {
@@ -135,8 +138,8 @@ export const siteEmojiWtf = {
   shortName: ':wtf:',
   creatorUserId: 'Thor',
   representation: {
-    height: 72,
-    width: 92,
+    height: 120,
+    width: 100,
     imagePath:
       'https://pf-emoji-service--cdn.useast.atlassian.io/atlassian/wtf@4x.png',
   },
@@ -170,7 +173,7 @@ export const siteServiceEmojis = () => ({
   },
 });
 
-export const filterToSearchable = emojis => {
+export const filterToSearchable = (emojis: EmojiDescription[]) => {
   return emojis.filter(emoji => emoji.searchable);
 };
 
@@ -185,7 +188,16 @@ export const siteEmojis = [mediaEmoji];
 export const emojis = [...standardEmojis, ...atlassianEmojis, ...siteEmojis];
 export const searchableEmojis = filterToSearchable(emojis);
 
-export const newEmojiRepository: () => any = () => new EmojiRepository(emojis);
+// EmojiReposity using TestUsageFrequencyTracker
+class TestEmojiRepository extends EmojiRepository {
+  constructor(emojis: EmojiDescription[]) {
+    super(emojis);
+    this.usageTracker = new UsageFrequencyTracker(false);
+  }
+}
+
+export const newEmojiRepository: () => any = () =>
+  new TestEmojiRepository(emojis);
 export const newSiteEmojiRepository: () => any = () =>
   new EmojiRepository(siteEmojis);
 
@@ -217,11 +229,14 @@ export const congoFlagEmoji = defaultEmojiRepository.findByShortName(
   ':flag_cg:',
 );
 
-export const getNonUploadingEmojiResourcePromise = (config?) =>
-  mockNonUploadingEmojiResourceFactory(newEmojiRepository(), config);
+export const getNonUploadingEmojiResourcePromise = (
+  config?: MockEmojiResourceConfig,
+) => mockNonUploadingEmojiResourceFactory(newEmojiRepository(), config);
 
-export const getEmojiResourcePromise = (config?) =>
+export const getEmojiResourcePromise = (config?: MockEmojiResourceConfig) =>
   mockEmojiResourceFactory(newEmojiRepository(), config);
 
-export const getEmojiResourcePromiseFromRepository = (repo, config?) =>
-  mockEmojiResourceFactory(repo, config);
+export const getEmojiResourcePromiseFromRepository = (
+  repo: EmojiRepository,
+  config?: MockEmojiResourceConfig,
+) => mockEmojiResourceFactory(repo, config);

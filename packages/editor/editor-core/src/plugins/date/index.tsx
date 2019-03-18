@@ -1,10 +1,32 @@
 import * as React from 'react';
-import { date } from '@atlaskit/editor-common';
+import EditorDateIcon from '@atlaskit/icon/glyph/editor/date';
+import { date } from '@atlaskit/adf-schema';
+import { findDomRefAtPos } from 'prosemirror-utils';
+import * as Loadable from 'react-loadable';
+
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
-import { insertDate, selectElement } from './actions';
-import createPlugin, { DateState, pluginKey } from './plugin';
-import DatePicker from './ui/DatePicker';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { insertDate, setDatePickerAt } from './actions';
+import createDatePlugin, {
+  DateState,
+  pluginKey as datePluginKey,
+} from './plugin';
+import keymap from './keymap';
+
+import {
+  pluginKey as editorDisabledPluginKey,
+  EditorDisabledPluginState,
+} from '../editor-disabled';
+import { todayTimestampInUTC } from '@atlaskit/editor-common';
+
+const DatePicker = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-editor-datepicker" */ './ui/DatePicker').then(
+      module => module.default,
+    ),
+  loading: () => null,
+});
 
 export type DateType = {
   year: number;
@@ -14,39 +36,90 @@ export type DateType = {
 
 const datePlugin: EditorPlugin = {
   nodes() {
-    return [{ rank: 2400, name: 'date', node: date }];
+    return [{ name: 'date', node: date }];
   },
 
   pmPlugins() {
     return [
       {
-        rank: 2410,
-        plugin: ({ schema, props, dispatch, providerFactory }) =>
-          createPlugin(dispatch, providerFactory),
+        name: 'date',
+        plugin: options => {
+          DatePicker.preload();
+          return createDatePlugin(options);
+        },
+      },
+      {
+        name: 'dateKeymap',
+        plugin: () => {
+          DatePicker.preload();
+          return keymap();
+        },
       },
     ];
   },
 
   contentComponent({ editorView }) {
     const { dispatch } = editorView;
+    const domAtPos = editorView.domAtPos.bind(editorView);
     return (
       <WithPluginState
         plugins={{
-          dateState: pluginKey,
+          datePlugin: datePluginKey,
+          editorDisabledPlugin: editorDisabledPluginKey,
         }}
-        render={({ dateState = {} as DateState }) =>
-          dateState.element ? (
+        render={({
+          editorDisabledPlugin,
+          datePlugin,
+        }: {
+          editorDisabledPlugin: EditorDisabledPluginState;
+          datePlugin: DateState;
+        }) => {
+          const { showDatePickerAt } = datePlugin;
+          if (
+            !showDatePickerAt ||
+            (editorDisabledPlugin || {}).editorDisabled
+          ) {
+            return null;
+          }
+          const element = findDomRefAtPos(
+            showDatePickerAt,
+            domAtPos,
+          ) as HTMLElement;
+
+          return (
             <DatePicker
-              element={dateState.element}
+              key={showDatePickerAt}
+              element={element}
               onSelect={date => insertDate(date)(editorView.state, dispatch)}
-              onClickOutside={() =>
-                selectElement(null)(editorView.state, dispatch)
+              closeDatePicker={() =>
+                setDatePickerAt(null)(editorView.state, dispatch)
               }
             />
-          ) : null
-        }
+          );
+        }}
       />
     );
+  },
+
+  pluginsOptions: {
+    quickInsert: ({ formatMessage }) => [
+      {
+        title: formatMessage(messages.date),
+        priority: 800,
+        keywords: ['time', 'today', '/'],
+        icon: () => <EditorDateIcon label={formatMessage(messages.date)} />,
+        action(insert, state) {
+          const dateNode = state.schema.nodes.date.createChecked({
+            timestamp: todayTimestampInUTC(),
+          });
+
+          const tr = insert(dateNode, { selectInlineNode: true });
+          return tr.setMeta(datePluginKey, {
+            showDatePickerAt: tr.selection.from,
+          });
+        },
+      },
+    ],
   },
 };
 

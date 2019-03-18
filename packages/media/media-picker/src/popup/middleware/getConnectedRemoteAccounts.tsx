@@ -18,11 +18,15 @@ export const getConnectedRemoteAccounts = (fetcher: Fetcher) => (
   store: Store<State>,
 ) => (next: Dispatch<Action>) => (action: Action) => {
   if (isGetConnectedRemoteAccountsAction(action)) {
-    const { apiUrl, userAuthProvider } = store.getState();
+    const { userContext } = store.getState();
 
-    userAuthProvider()
-      .then(auth => fetcher.getServiceList(apiUrl, auth))
-      .then(accounts => store.dispatch(updateServiceList(accounts)));
+    store.dispatch(
+      updateServiceList(
+        userContext.config
+          .authProvider()
+          .then(auth => fetcher.getServiceList(auth)),
+      ),
+    );
   }
 
   return next(action);

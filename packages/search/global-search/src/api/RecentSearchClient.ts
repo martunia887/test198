@@ -1,4 +1,11 @@
-import { Result, ResultType, AnalyticsType } from '../model/Result';
+import {
+  Result,
+  ResultType,
+  AnalyticsType,
+  JiraResult,
+  ConfluenceObjectResult,
+  ContentType,
+} from '../model/Result';
 import {
   RequestServiceOptions,
   ServiceConfig,
@@ -117,17 +124,36 @@ function maybeSplitIssueKeyAndName(recentItem: RecentItem) {
 function recentItemToResult(recentItem: RecentItem): Result {
   const { name, objectKey } = maybeSplitIssueKeyAndName(recentItem);
 
-  return {
-    resultType: ResultType.Object,
-    resultId: 'recent-' + recentItem.objectId,
+  const baseResult = {
+    resultId: `recent-${recentItem.objectId}`,
     avatarUrl: recentItem.iconUrl,
     name: name,
     href: recentItem.url,
     containerName: recentItem.container,
-    objectKey: objectKey,
-    analyticsType:
-      recentItem.provider === 'jira'
-        ? AnalyticsType.RecentJira
-        : AnalyticsType.RecentConfluence,
   };
+
+  if (recentItem.provider === 'jira') {
+    const jiraResult: JiraResult = {
+      objectKey: objectKey!,
+      resultType: ResultType.JiraObjectResult,
+      analyticsType: AnalyticsType.RecentJira,
+      contentType: ContentType.JiraIssue,
+      ...baseResult,
+    };
+
+    return jiraResult;
+  } else {
+    const confluenceResult: ConfluenceObjectResult = {
+      resultType: ResultType.ConfluenceObjectResult,
+      analyticsType: AnalyticsType.RecentConfluence,
+      containerId: 'UNAVAILABLE',
+      contentType:
+        recentItem.objectId && recentItem.objectId.includes(':blogpost/')
+          ? ContentType.ConfluenceBlogpost
+          : ContentType.ConfluencePage,
+      ...baseResult,
+    };
+
+    return confluenceResult;
+  }
 }

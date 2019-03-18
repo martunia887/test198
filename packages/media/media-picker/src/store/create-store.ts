@@ -28,38 +28,36 @@ import { handleCloudFetchingEvent } from '../popup/middleware/handleCloudFetchin
 import searchGiphy from '../popup/middleware/searchGiphy';
 import hidePopupMiddleware from '../popup/middleware/hidePopup';
 import sendUploadEventMiddleware from '../popup/middleware/sendUploadEvent';
-import { PopupUploadEventEmitter } from '../components/popup';
+import { PopupConfig, PopupUploadEventEmitter } from '../components/types';
+import analyticsProcessing from '../popup/middleware/analyticsProcessing';
+import { removeFileFromRecents } from '../popup/middleware/removeFileFromRecents';
 
 export default (
   eventEmitter: PopupUploadEventEmitter,
-  context: Context,
-  useNewUploadService?: boolean,
+  tenantContext: Context,
+  userContext: Context,
+  config: Partial<PopupConfig>,
 ): Store<State> => {
-  const { userAuthProvider, serviceHost, authProvider } = context.config;
-  if (!userAuthProvider) {
-    throw new Error('userAuthProvider must be provided in the context');
-  }
-
+  const userAuthProvider = userContext.config.authProvider;
   const redirectUrl = appConfig.html.redirectUrl;
   const fetcher = new MediaApiFetcher();
   const wsProvider = new WsProvider();
   const cloudService = new CloudService(userAuthProvider);
-
+  const partialState: State = {
+    ...defaultState,
+    redirectUrl,
+    tenantContext: tenantContext,
+    userContext: userContext,
+    config,
+  };
   return createStore(
     reducers,
-    {
-      ...defaultState,
-      apiUrl: serviceHost,
-      redirectUrl,
-      tenantAuthProvider: authProvider,
-      userAuthProvider,
-      context,
-      useNewUploadService,
-    } as Partial<State>,
+    partialState,
     composeWithDevTools(
       applyMiddleware(
-        startAppMiddleware(eventEmitter) as Middleware,
-        getFilesInRecents(fetcher) as Middleware,
+        analyticsProcessing as Middleware,
+        startAppMiddleware() as Middleware,
+        getFilesInRecents() as Middleware,
         changeService as Middleware,
         changeAccount as Middleware,
         changeCloudAccountFolderMiddleware(fetcher) as Middleware,
@@ -69,14 +67,15 @@ export default (
         getConnectedRemoteAccounts(fetcher) as Middleware,
         cancelUpload as Middleware,
         importFilesMiddleware(eventEmitter, wsProvider),
-        editRemoteImageMiddleware(fetcher) as Middleware,
-        getPreviewMiddleware(fetcher),
+        editRemoteImageMiddleware() as Middleware,
+        getPreviewMiddleware(),
         finalizeUploadMiddleware(fetcher),
         proxyUploadEvents as Middleware,
         handleCloudFetchingEvent as Middleware,
         searchGiphy(fetcher) as Middleware,
         hidePopupMiddleware(eventEmitter) as Middleware,
         sendUploadEventMiddleware(eventEmitter),
+        removeFileFromRecents as Middleware,
       ),
     ),
   );

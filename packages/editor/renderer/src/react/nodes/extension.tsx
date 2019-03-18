@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { RendererContext } from '..';
 import { renderNodes, Serializer } from '../..';
-import { ADNode, ExtensionHandlers } from '@atlaskit/editor-common';
+import { ExtensionLayout } from '@atlaskit/adf-schema';
+import {
+  ADNode,
+  ExtensionHandlers,
+  WidthConsumer,
+} from '@atlaskit/editor-common';
+import { calcBreakoutWidth } from '@atlaskit/editor-common';
+import { RendererCssClassName } from '../../consts';
 
 export interface Props {
   serializer: Serializer<any>;
@@ -11,7 +18,24 @@ export interface Props {
   extensionKey: string;
   text?: string;
   parameters?: any;
+  layout?: ExtensionLayout;
 }
+
+export const renderExtension = (content: any, layout: string) => (
+  <WidthConsumer>
+    {({ width }) => (
+      <div
+        className={RendererCssClassName.EXTENSION}
+        style={{
+          width: calcBreakoutWidth(layout, width),
+        }}
+        data-layout={layout}
+      >
+        {content}
+      </div>
+    )}
+  </WidthConsumer>
+);
 
 const Extension: React.StatelessComponent<Props> = ({
   serializer,
@@ -21,7 +45,7 @@ const Extension: React.StatelessComponent<Props> = ({
   extensionKey,
   text,
   parameters,
-  children,
+  layout = 'default',
 }) => {
   try {
     if (extensionHandlers && extensionHandlers[extensionType]) {
@@ -39,7 +63,7 @@ const Extension: React.StatelessComponent<Props> = ({
       switch (true) {
         case content && React.isValidElement(content):
           // Return the content directly if it's a valid JSX.Element
-          return <div>{content}</div>;
+          return renderExtension(content, layout);
         case !!content:
           // We expect it to be Atlassian Document here
           const nodes = Array.isArray(content) ? content : [content];
@@ -55,9 +79,8 @@ const Extension: React.StatelessComponent<Props> = ({
     /** We don't want this error to block renderer */
     /** We keep rendering the default content */
   }
-
   // Always return default content if anything goes wrong
-  return <div>{text || 'extension'}</div>;
+  return renderExtension(text || 'extension', layout);
 };
 
 export default Extension;

@@ -1,13 +1,20 @@
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import * as React from 'react';
-
-import { MentionPickerStyle, MentionPickerInfoStyle } from './styles';
-import { OnMentionEvent } from '../../types';
-import { MentionProvider } from '../../api/MentionResource';
+import {
+  ErrorCallback,
+  InfoCallback,
+  MentionProvider,
+  MentionStats,
+} from '../../api/MentionResource';
 import { PresenceProvider } from '../../api/PresenceResource';
-import ResourcedMentionList from '../ResourcedMentionList';
-import Popup from '../Popup';
-import debug from '../../util/logger';
+import { MentionDescription, OnMentionEvent } from '../../types';
+import * as UtilAnalytics from '../../util/analytics';
 import uniqueId from '../../util/id';
+import debug from '../../util/logger';
+import Popup from '../Popup';
+import ResourcedMentionList from '../ResourcedMentionList';
+import { MentionPickerInfoStyle, MentionPickerStyle } from './styles';
 
 export interface OnOpen {
   (): void;
@@ -43,9 +50,12 @@ export interface State {
 /**
  * @class MentionPicker
  */
-export default class MentionPicker extends React.PureComponent<Props, State> {
+export class MentionPicker extends React.PureComponent<
+  Props & WithAnalyticsEventProps,
+  State
+> {
   private subscriberKey: string;
-  private mentionListRef: ResourcedMentionList;
+  private mentionListRef?: ResourcedMentionList | null;
 
   static defaultProps = {
     onSelection: () => {},
@@ -53,7 +63,7 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
     onClose: () => {},
   };
 
-  constructor(props) {
+  constructor(props: Props & WithAnalyticsEventProps) {
     super(props);
     this.subscriberKey = uniqueId('ak-mention-picker');
     this.state = {
@@ -66,7 +76,7 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
     this.subscribeResourceProvider(this.props.resourceProvider);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props & WithAnalyticsEventProps) {
     this.applyPropChanges(this.props, nextProps);
   }
 
@@ -126,7 +136,7 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
     }
   }
 
-  private subscribeResourceProvider(resourceProvider) {
+  private subscribeResourceProvider(resourceProvider?: MentionProvider) {
     if (resourceProvider) {
       resourceProvider.subscribe(
         this.subscriberKey,
@@ -137,7 +147,7 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
     }
   }
 
-  private unsubscribeResourceProvider(resourceProvider) {
+  private unsubscribeResourceProvider(resourceProvider?: MentionProvider) {
     if (resourceProvider) {
       resourceProvider.unsubscribe(this.subscriberKey);
     }
@@ -150,7 +160,10 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
    * It should be noted that the visible state of the component is not considered in
    * this function. Instead the old state and new state should be passed as parameters.
    */
-  private onFilterVisibilityChange = (oldVisibility, newVisibility) => {
+  private onFilterVisibilityChange = (
+    oldVisibility: boolean,
+    newVisibility: boolean,
+  ) => {
     if (oldVisibility !== newVisibility) {
       if (newVisibility) {
         if (this.props.onOpen) {
@@ -165,7 +178,11 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
   };
 
   // internal, used for callbacks
-  private filterChange = mentions => {
+  private filterChange = (
+    mentions: MentionDescription[],
+    query?: string,
+    stats?: MentionStats,
+  ) => {
     debug('ak-mention-picker.filterChange', mentions.length);
     const wasVisible = this.state.visible;
     const visible = mentions.length > 0;
@@ -174,9 +191,16 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
     });
 
     this.onFilterVisibilityChange(wasVisible, visible);
+
+    UtilAnalytics.fireAnalyticsMentionTypeaheadEvent(this.props)(
+      'rendered',
+      stats && stats.duration,
+      mentions.map(mention => mention.id),
+      query,
+    );
   };
 
-  private filterError = error => {
+  private filterError: ErrorCallback = error => {
     debug('ak-mention-picker.filterError', error);
     const wasVisible = this.state.visible;
     this.setState({
@@ -187,14 +211,14 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
     this.onFilterVisibilityChange(wasVisible, true);
   };
 
-  private filterInfo = info => {
+  private filterInfo: InfoCallback = info => {
     debug('ak-mention-picker.filterInfo', info);
     this.setState({
       info,
     } as State);
   };
 
-  private handleMentionListRef = ref => {
+  private handleMentionListRef = (ref: ResourcedMentionList | null) => {
     this.mentionListRef = ref;
   };
 
@@ -272,3 +296,11 @@ export default class MentionPicker extends React.PureComponent<Props, State> {
     );
   }
 }
+
+export const MentionPickerWithAnalytics = withAnalyticsEvents({})(
+  MentionPicker,
+);
+
+export type MentionPickerWithAnalytics = MentionPicker;
+
+export default MentionPickerWithAnalytics;

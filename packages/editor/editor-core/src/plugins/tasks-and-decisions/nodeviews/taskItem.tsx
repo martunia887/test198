@@ -1,13 +1,24 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { Node as PMNode } from 'prosemirror-model';
-import { EditorView, NodeView } from 'prosemirror-view';
+import { EditorView, NodeView, Decoration } from 'prosemirror-view';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { AnalyticsDelegate, AnalyticsDelegateProps } from '@atlaskit/analytics';
-import { ContentNodeView } from '../../../nodeviews';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
+import {
+  UIAnalyticsEventInterface,
+  AnalyticsEventPayload,
+} from '@atlaskit/analytics-next-types';
+import { ReactNodeView, ReactComponentProps } from '../../../nodeviews';
 import TaskItem from '../ui/Task';
-
-type getPosHandler = () => number;
+import { PortalProviderAPI } from '../../../ui/PortalProvider';
+import WithPluginState from '../../../ui/WithPluginState';
+import {
+  stateKey as taskPluginKey,
+  TaskDecisionPluginState,
+} from '../pm-plugins/main';
+import {
+  pluginKey as editorDisabledPluginKey,
+  EditorDisabledPluginState,
+} from '../../editor-disabled';
 
 export interface Props {
   children?: React.ReactNode;
@@ -15,30 +26,9 @@ export interface Props {
   node: PMNode;
 }
 
-class Task extends ContentNodeView implements NodeView {
-  private domRef: HTMLElement | undefined;
-  private node: PMNode;
-  private view: EditorView;
-  private getPos: getPosHandler;
-  private isContentEmpty: boolean = false;
-  private analyticsDelegateContext: AnalyticsDelegateProps;
-  private providerFactory: ProviderFactory;
-
-  constructor(
-    node: PMNode,
-    view: EditorView,
-    getPos: getPosHandler,
-    analyticsDelegateContext: AnalyticsDelegateProps,
-    providerFactory: ProviderFactory,
-  ) {
-    super(node, view);
-    this.node = node;
-    this.view = view;
-    this.getPos = getPos;
-    this.isContentEmpty = node.content.childCount === 0;
-    this.analyticsDelegateContext = analyticsDelegateContext;
-    this.providerFactory = providerFactory;
-    this.renderReactComponent();
+class Task extends ReactNodeView {
+  private isContentEmpty() {
+    return this.node.content.childCount === 0;
   }
 
   private handleOnChange = (taskId: string, isChecked: boolean) => {
@@ -53,64 +43,127 @@ class Task extends ContentNodeView implements NodeView {
     this.view.dispatch(tr);
   };
 
-  private renderReactComponent() {
-    this.domRef = document.createElement('li');
-    this.domRef.style['list-style-type'] = 'none';
+  /**
+   * Dynamically generates analytics data relating to the parent list.
+   *
+   * Required to be dynamic, as list (in prosemirror model) may have
+   * changed (e.g. item movements, or additional items in list).
+   * This node view will have not rerendered for those changes, so
+   * cannot render the position and listSize into the
+   * AnalyticsContext at initial render time.
+   */
+  private addListAnalyticsData = (event: UIAnalyticsEventInterface) => {
+    try {
+      const resolvedPos = this.view.state.doc.resolve(this.getPos());
+      const position = resolvedPos.index();
+      const listSize = resolvedPos.parent.childCount;
+      const listLocalId = resolvedPos.parent.attrs.localId;
 
-    const node = this.node;
-    const { localId, state } = node.attrs;
+      event.update((payload: AnalyticsEventPayload) => {
+        const { attributes = {}, actionSubject } = payload;
+        if (actionSubject !== 'action') {
+          // Not action related, ignore
+          return payload;
+        }
+        return {
+          ...payload,
+          attributes: {
+            ...attributes,
+            position,
+            listSize,
+            listLocalId,
+          },
+        };
+      });
+    } catch (e) {
+      // This can occur if pos is NaN (seen it in some test cases)
+      // Act defensively here, and lose some analytics data rather than
+      // cause any user facing error.
+    }
+  };
 
-    const taskItem = (
-      <TaskItem
-        taskId={localId}
-        contentRef={this.handleRef}
-        isDone={state === 'DONE'}
-        onChange={this.handleOnChange}
-        showPlaceholder={this.isContentEmpty}
-        providers={this.providerFactory}
-      />
-    );
-    ReactDOM.render(
-      <AnalyticsDelegate {...this.analyticsDelegateContext}>
-        {taskItem}
-      </AnalyticsDelegate>,
-      this.domRef,
+  createDomRef() {
+    const domRef = document.createElement('li');
+    domRef.style['list-style-type' as any] = 'none';
+    return domRef;
+  }
+
+  getContentDOM() {
+    return { dom: document.createElement('div') };
+  }
+
+  render(props: ReactComponentProps, forwardRef: any) {
+    const { localId, state } = this.node.attrs;
+
+    return (
+      <AnalyticsListener
+        channel="fabric-elements"
+        onEvent={this.addListAnalyticsData}
+      >
+        <WithPluginState
+          plugins={{
+            editorDisabledPlugin: editorDisabledPluginKey,
+            taskDecisionPlugin: taskPluginKey,
+          }}
+          render={({
+            editorDisabledPlugin,
+            taskDecisionPlugin,
+          }: {
+            editorDisabledPlugin: EditorDisabledPluginState;
+            taskDecisionPlugin: TaskDecisionPluginState;
+          }) => {
+            let insideCurrentNode = false;
+            if (
+              taskDecisionPlugin &&
+              taskDecisionPlugin.currentTaskDecisionItem
+            ) {
+              insideCurrentNode = this.node.eq(
+                taskDecisionPlugin.currentTaskDecisionItem,
+              );
+            }
+
+            return (
+              <TaskItem
+                taskId={localId}
+                contentRef={forwardRef}
+                isDone={state === 'DONE'}
+                onChange={this.handleOnChange}
+                showPlaceholder={!insideCurrentNode && this.isContentEmpty()}
+                providers={props.providerFactory}
+                disabled={(editorDisabledPlugin || {}).editorDisabled}
+              />
+            );
+          }}
+        />
+      </AnalyticsListener>
     );
   }
 
-  get dom() {
-    return this.domRef;
-  }
-
-  update(node: PMNode) {
+  update(node: PMNode, decorations: Decoration[]) {
     /**
-     * Return false here because allowing node updates breaks 'checking the box'
-     * when using collab editing.
+     * Returning false here when the previous content was empty fixes an error where the editor fails to set selection
+     * inside the contentDOM after a transaction. See ED-2374.
      *
-     * This is likely because the taskDecisionProvider is updating itself &
-     * Prosemirror is interfering.
+     * Returning false also when the task state has changed to force the checkbox to update. See ED-5107
      */
-    return false;
-  }
 
-  destroy() {
-    ReactDOM.unmountComponentAtNode(this.domRef!);
-    this.domRef = undefined;
-    super.destroy();
+    return super.update(
+      node,
+      decorations,
+      (currentNode, newNode) =>
+        !this.isContentEmpty() &&
+        !!(currentNode.attrs.state === newNode.attrs.state),
+    );
   }
 }
 
 export function taskItemNodeViewFactory(
-  analyticsDelegateContext: AnalyticsDelegateProps,
+  portalProviderAPI: PortalProviderAPI,
   providerFactory: ProviderFactory,
 ) {
   return (node: any, view: any, getPos: () => number): NodeView => {
-    return new Task(
-      node,
-      view,
-      getPos,
-      analyticsDelegateContext,
+    return new Task(node, view, getPos, portalProviderAPI, {
       providerFactory,
-    );
+    }).init();
   };
 }

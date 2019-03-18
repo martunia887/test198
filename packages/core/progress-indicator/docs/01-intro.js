@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { md, Example, Props } from '@atlaskit/docs';
+import { md, Example, Props, code } from '@atlaskit/docs';
 
 export default md`
   The progress dots are visual indicators used when stepping a user through
@@ -9,21 +9,22 @@ export default md`
 
   They are typically accompanied by a carousel or other such UI device.
 
-  ## Examples
+  ## Usage
 
-  ${
-    (
-      // $FlowFixMe TEMPORARY
-      <Example
-        Component={require('../examples/01-basic').default}
-        title="Basic"
-        source={require('!!raw-loader!../examples/01-basic')}
-      />
-    )
-  }
+  ${code`import { ProgressDots } from '@atlaskit/progress-indicator';`}
+
+  ${(
+    <Example
+      packageName="@atlaskit/progress-indicator"
+      Component={require('../examples/01-basic').default}
+      title="Basic"
+      source={require('!!raw-loader!../examples/01-basic')}
+    />
+  )}
 
   ${(
     <Props
+      heading="ProgressDots Props"
       props={require('!!extract-react-types-loader!../src/components/Dots')}
     />
   )}

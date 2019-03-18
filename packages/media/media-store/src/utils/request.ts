@@ -20,6 +20,7 @@ export type RequestOptions = {
 export function request(
   url: string,
   options: RequestOptions = {},
+  controller?: AbortController,
 ): Promise<Response> {
   const { method = 'GET', auth, params, headers, body } = options;
 
@@ -36,6 +37,7 @@ export function request(
       method,
       body,
       headers,
+      signal: controller && controller.signal,
     }).then(processFetchResponse);
   } else {
     return fetch(createUrl(url, { params }), {
@@ -48,6 +50,10 @@ export function request(
 
 export function mapResponseToJson(response: Response): Promise<any> {
   return response.json();
+}
+
+export function mapResponseToBlob(response: Response): Promise<Blob> {
+  return response.blob();
 }
 
 export function mapResponseToVoid(_response: Response): Promise<void> {

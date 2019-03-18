@@ -1,31 +1,43 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
+import { PureComponent, ReactElement } from 'react';
 import styled from 'styled-components';
 import DropList from '@atlaskit/droplist';
 import Item, { ItemGroup } from '@atlaskit/item';
 import Tooltip from '@atlaskit/tooltip';
-import { Popup } from '@atlaskit/editor-common';
+import { Popup, akEditorFloatingPanelZIndex } from '@atlaskit/editor-common';
 import withOuterListeners from '../with-outer-listeners';
+
+const Wrapper = styled.div`
+  line-height: 0;
+`;
 
 export interface Props {
   mountTo?: HTMLElement;
   boundariesElement?: HTMLElement;
   scrollableElement?: HTMLElement;
   isOpen?: boolean;
-  onOpenChange?: (attrs) => void;
-  onItemActivated?: (attrs) => void;
+  onOpenChange?: (attrs: any) => void;
+  onItemActivated?: (attrs: any) => void;
+  onMouseEnter?: (attrs: any) => void;
+  onMouseLeave?: (attrs: any) => void;
   fitWidth?: number;
   fitHeight?: number;
+  offset?: Array<number>;
+  zIndex?: number;
   items: Array<{
-    items: Array<{
-      content: string;
-      elemBefore?: React.ReactNode;
-      tooltipDescription?: string;
-      tooltopPosition?: string;
-      isActive: boolean;
-      isDisabled?: boolean;
-    }>;
+    items: MenuItem[];
   }>;
+}
+
+export interface MenuItem {
+  key?: string;
+  content: string | ReactElement<any>;
+  elemBefore?: React.ReactNode;
+  elemAfter?: React.ReactNode;
+  tooltipDescription?: string;
+  tooltipPosition?: string;
+  isActive: boolean;
+  isDisabled?: boolean;
 }
 
 export interface State {
@@ -36,7 +48,7 @@ export interface State {
 const DropListWithOutsideListeners: any = withOuterListeners(DropList);
 
 /**
- * Hack for item to immitate old dropdown-menu selected styles
+ * Hack for item to imitate old dropdown-menu selected styles
  */
 const ItemWrapper: any = styled.div`
   ${(props: any) =>
@@ -56,19 +68,15 @@ const ItemContentWrapper: any = styled.span`
  * Also it controls popper's placement.
  */
 export default class DropdownMenuWrapper extends PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      popupPlacement: ['bottom', 'left'],
-    };
-  }
-
-  private handleRef = target => {
-    this.setState({ target });
+  state: State = {
+    popupPlacement: ['bottom', 'left'],
   };
 
-  private updatePopupPlacement = placement => {
+  private handleRef = (target: HTMLElement | null) => {
+    this.setState({ target: target || undefined });
+  };
+
+  private updatePopupPlacement = (placement: [string, string]) => {
     this.setState({ popupPlacement: placement });
   };
 
@@ -78,13 +86,24 @@ export default class DropdownMenuWrapper extends PureComponent<Props, State> {
     }
   };
 
-  private renderItem(item, onItemActivated) {
+  private renderItem(item: typeof Item) {
+    const { onItemActivated, onMouseEnter, onMouseLeave } = this.props;
+
+    // onClick and value.name are the action indicators in the handlers
+    // If neither are present, don't wrap in an Item.
+    if (!item.onClick && !item.value && !item.value.name) {
+      return <span key={String(item.content)}>{item.content}</span>;
+    }
+
     const dropListItem = (
       <ItemWrapper key={item.key || item.content} isSelected={item.isActive}>
         <Item
           elemBefore={item.elemBefore}
+          elemAfter={item.elemAfter}
           isDisabled={item.isDisabled}
           onClick={() => onItemActivated && onItemActivated({ item })}
+          onMouseEnter={() => onMouseEnter && onMouseEnter({ item })}
+          onMouseLeave={() => onMouseLeave && onMouseLeave({ item })}
           className={item.className}
         >
           <ItemContentWrapper hasElemBefore={!!item.elemBefore}>
@@ -116,10 +135,11 @@ export default class DropdownMenuWrapper extends PureComponent<Props, State> {
       mountTo,
       boundariesElement,
       scrollableElement,
-      onItemActivated,
+      offset,
       fitHeight,
       fitWidth,
       isOpen,
+      zIndex,
     } = this.props;
 
     return (
@@ -131,6 +151,8 @@ export default class DropdownMenuWrapper extends PureComponent<Props, State> {
         onPlacementChanged={this.updatePopupPlacement}
         fitHeight={fitHeight}
         fitWidth={fitWidth}
+        zIndex={zIndex || akEditorFloatingPanelZIndex}
+        offset={offset}
       >
         <DropListWithOutsideListeners
           isOpen={true}
@@ -145,7 +167,7 @@ export default class DropdownMenuWrapper extends PureComponent<Props, State> {
           <div style={{ height: 0, minWidth: fitWidth || 0 }} />
           {items.map((group, index) => (
             <ItemGroup key={index}>
-              {group.items.map(item => this.renderItem(item, onItemActivated))}
+              {group.items.map(item => this.renderItem(item))}
             </ItemGroup>
           ))}
         </DropListWithOutsideListeners>
@@ -157,10 +179,10 @@ export default class DropdownMenuWrapper extends PureComponent<Props, State> {
     const { children, isOpen } = this.props;
 
     return (
-      <div>
+      <Wrapper>
         <div ref={this.handleRef}>{children}</div>
         {isOpen ? this.renderDropdownMenu() : null}
-      </div>
+      </Wrapper>
     );
   }
 }

@@ -1,101 +1,116 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import BoldIcon from '@atlaskit/icon/glyph/editor/bold';
 import ItalicIcon from '@atlaskit/icon/glyph/editor/italic';
-import { analyticsDecorator as analytics } from '../../../../analytics';
+import { withAnalytics } from '../../../../analytics';
 import { toggleBold, toggleItalic, tooltip } from '../../../../keymaps';
 import { TextFormattingState } from '../../pm-plugins/main';
 import ToolbarButton from '../../../../ui/ToolbarButton';
 import { ButtonGroup } from '../../../../ui/styles';
+import {
+  toggleStrongWithAnalytics,
+  toggleEmWithAnalytics,
+} from '../../commands/text-formatting';
+import { INPUT_METHOD } from '../../../analytics';
+
+export const messages = defineMessages({
+  bold: {
+    id: 'fabric.editor.bold',
+    defaultMessage: 'Bold',
+    description:
+      'This refers to bold or “strong” formatting, indicates that its contents have strong importance, seriousness, or urgency.',
+  },
+  italic: {
+    id: 'fabric.editor.italic',
+    defaultMessage: 'Italic',
+    description: 'This refers to italics or emphasized formatting.',
+  },
+});
 
 export interface Props {
   editorView: EditorView;
-  pluginState: TextFormattingState;
+  textFormattingState: TextFormattingState;
   disabled?: boolean;
   isReducedSpacing?: boolean;
 }
 
-export interface State {
-  boldActive?: boolean;
-  boldDisabled?: boolean;
-  boldHidden?: boolean;
-  italicActive?: boolean;
-  italicDisabled?: boolean;
-  italicHidden?: boolean;
-  underlineActive?: boolean;
-  underlineDisabled?: boolean;
-  underlineHidden?: boolean;
-}
-
-export default class ToolbarTextFormatting extends PureComponent<Props, State> {
-  state: State = {};
-
-  componentDidMount() {
-    this.props.pluginState.subscribe(this.handlePluginStateChange);
-  }
-
-  componentWillUnmount() {
-    this.props.pluginState.unsubscribe(this.handlePluginStateChange);
-  }
-
+class ToolbarTextFormatting extends PureComponent<Props & InjectedIntlProps> {
   render() {
-    const { disabled, isReducedSpacing } = this.props;
+    const {
+      disabled,
+      isReducedSpacing,
+      textFormattingState,
+      intl: { formatMessage },
+    } = this.props;
+    const {
+      strongHidden,
+      strongActive,
+      strongDisabled,
+      emHidden,
+      emActive,
+      emDisabled,
+    } = textFormattingState;
 
+    const labelBold = formatMessage(messages.bold);
+    const labelItalic = formatMessage(messages.italic);
     return (
       <ButtonGroup width={isReducedSpacing ? 'small' : 'large'}>
-        {this.state.boldHidden ? null : (
+        {strongHidden ? null : (
           <ToolbarButton
             spacing={isReducedSpacing ? 'none' : 'default'}
             onClick={this.handleBoldClick}
-            selected={this.state.boldActive}
-            disabled={disabled || this.state.boldDisabled}
-            title={tooltip(toggleBold)}
-            iconBefore={<BoldIcon label="Bold" />}
+            selected={strongActive}
+            disabled={disabled || strongDisabled}
+            title={tooltip(toggleBold, labelBold)}
+            iconBefore={<BoldIcon label={labelBold} />}
           />
         )}
 
-        {this.state.italicHidden ? null : (
+        {emHidden ? null : (
           <ToolbarButton
             spacing={isReducedSpacing ? 'none' : 'default'}
             onClick={this.handleItalicClick}
-            selected={this.state.italicActive}
-            disabled={disabled || this.state.italicDisabled}
-            title={tooltip(toggleItalic)}
-            iconBefore={<ItalicIcon label="Italic" />}
+            selected={emActive}
+            disabled={disabled || emDisabled}
+            title={tooltip(toggleItalic, labelItalic)}
+            iconBefore={<ItalicIcon label={labelItalic} />}
           />
         )}
       </ButtonGroup>
     );
   }
 
-  private handlePluginStateChange = (pluginState: TextFormattingState) => {
-    this.setState({
-      boldActive: pluginState.strongActive,
-      boldDisabled: pluginState.strongDisabled,
-      boldHidden: pluginState.strongHidden,
-      italicActive: pluginState.emActive,
-      italicDisabled: pluginState.emDisabled,
-      italicHidden: pluginState.emHidden,
-      underlineActive: pluginState.underlineActive,
-      underlineDisabled: pluginState.underlineDisabled,
-      underlineHidden: pluginState.underlineHidden,
-    });
-  };
+  private handleBoldClick = withAnalytics(
+    'atlassian.editor.format.strong.button',
+    () => {
+      const { strongDisabled } = this.props.textFormattingState;
+      if (!strongDisabled) {
+        const { state, dispatch } = this.props.editorView;
+        return toggleStrongWithAnalytics({ inputMethod: INPUT_METHOD.TOOLBAR })(
+          state,
+          dispatch,
+        );
+      }
+      return false;
+    },
+  );
 
-  @analytics('atlassian.editor.format.strong.button')
-  private handleBoldClick = (): boolean => {
-    if (!this.state.boldDisabled) {
-      return this.props.pluginState.toggleStrong(this.props.editorView);
-    }
-    return false;
-  };
-
-  @analytics('atlassian.editor.format.em.button')
-  private handleItalicClick = (): boolean => {
-    if (!this.state.italicDisabled) {
-      return this.props.pluginState.toggleEm(this.props.editorView);
-    }
-    return false;
-  };
+  private handleItalicClick = withAnalytics(
+    'atlassian.editor.format.em.button',
+    (): boolean => {
+      const { emDisabled } = this.props.textFormattingState;
+      if (!emDisabled) {
+        const { state, dispatch } = this.props.editorView;
+        return toggleEmWithAnalytics({ inputMethod: INPUT_METHOD.TOOLBAR })(
+          state,
+          dispatch,
+        );
+      }
+      return false;
+    },
+  );
 }
+
+export default injectIntl(ToolbarTextFormatting);

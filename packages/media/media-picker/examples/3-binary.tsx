@@ -4,22 +4,20 @@ import { Component } from 'react';
 import {
   defaultMediaPickerAuthProvider,
   defaultMediaPickerCollectionName,
-  userAuthProviderBaseURL,
 } from '@atlaskit/media-test-helpers';
 import { MediaPicker, BinaryUploader, BinaryConfig } from '../src';
 import { ContextFactory } from '@atlaskit/media-core';
 
 class BinaryWrapper extends Component<{}> {
-  binary: BinaryUploader;
-  dropzoneContainer: HTMLDivElement;
+  binary?: BinaryUploader;
+  dropzoneContainer?: HTMLDivElement;
 
-  componentDidMount() {
-    this.createBinary();
+  async componentDidMount() {
+    await this.createBinary();
   }
 
-  createBinary() {
+  async createBinary() {
     const context = ContextFactory.create({
-      serviceHost: userAuthProviderBaseURL,
       authProvider: defaultMediaPickerAuthProvider,
     });
     const config: BinaryConfig = {
@@ -27,7 +25,7 @@ class BinaryWrapper extends Component<{}> {
         collection: defaultMediaPickerCollectionName,
       },
     };
-    const binary = MediaPicker('binary', context, config);
+    const binary = await MediaPicker('binary', context, config);
 
     this.binary = binary;
 

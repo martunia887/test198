@@ -1,36 +1,64 @@
 import { keymap } from 'prosemirror-keymap';
-import { Plugin, EditorState, Selection, Transaction } from 'prosemirror-state';
-import { CellSelection } from 'prosemirror-tables';
+import { Plugin, Selection } from 'prosemirror-state';
+import {
+  addColumnBefore,
+  addColumnAfter,
+  addRowBefore,
+  addRowAfter,
+  CellSelection,
+} from 'prosemirror-tables';
 import {
   emptyCell,
   findCellClosestToPos,
   isCellSelection,
 } from 'prosemirror-utils';
-import tableCommands from '../commands';
+import {
+  createTable,
+  goToNextCell,
+  moveCursorBackward,
+  triggerUnlessTableHeader,
+} from '../actions';
 import * as keymaps from '../../../keymaps';
 import { analyticsService } from '../../../analytics';
+import {
+  withAnalytics,
+  ACTION,
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+  INPUT_METHOD,
+  EVENT_TYPE,
+} from '../../analytics';
+
+const createTableWithAnalytics = () =>
+  withAnalytics({
+    action: ACTION.INSERTED,
+    actionSubject: ACTION_SUBJECT.DOCUMENT,
+    actionSubjectId: ACTION_SUBJECT_ID.TABLE,
+    attributes: { inputMethod: INPUT_METHOD.SHORTCUT },
+    eventType: EVENT_TYPE.TRACK,
+  })(createTable);
 
 export function keymapPlugin(): Plugin {
   const list = {};
 
   keymaps.bindKeymapWithCommand(
     keymaps.nextCell.common!,
-    tableCommands.goToNextCell(1),
+    goToNextCell(1),
     list,
   );
   keymaps.bindKeymapWithCommand(
     keymaps.previousCell.common!,
-    tableCommands.goToNextCell(-1),
+    goToNextCell(-1),
     list,
   );
   keymaps.bindKeymapWithCommand(
     keymaps.toggleTable.common!,
-    tableCommands.createTable(),
+    createTableWithAnalytics(),
     list,
   );
   keymaps.bindKeymapWithCommand(
     keymaps.backspace.common!,
-    (state: EditorState, dispatch: (tr: Transaction) => void) => {
+    (state, dispatch) => {
       if (!isCellSelection(state.selection)) {
         return false;
       }
@@ -46,7 +74,11 @@ export function keymapPlugin(): Plugin {
         if (textSelection) {
           tr.setSelection(textSelection);
         }
-        dispatch(tr);
+
+        if (dispatch) {
+          dispatch(tr);
+        }
+
         analyticsService.trackEvent(
           'atlassian.editor.format.table.delete_content.keyboard',
         );
@@ -58,7 +90,28 @@ export function keymapPlugin(): Plugin {
   );
   keymaps.bindKeymapWithCommand(
     keymaps.backspace.common!,
-    tableCommands.moveCursorBackward(),
+    moveCursorBackward,
+    list,
+  );
+
+  // Add row/column shortcuts
+  keymaps.bindKeymapWithCommand(
+    keymaps.addRowBefore.common!,
+    triggerUnlessTableHeader(addRowBefore),
+    list,
+  );
+
+  keymaps.bindKeymapWithCommand(keymaps.addRowAfter.common!, addRowAfter, list);
+
+  keymaps.bindKeymapWithCommand(
+    keymaps.addColumnBefore.common!,
+    triggerUnlessTableHeader(addColumnBefore),
+    list,
+  );
+
+  keymaps.bindKeymapWithCommand(
+    keymaps.addColumnAfter.common!,
+    addColumnAfter,
     list,
   );
 

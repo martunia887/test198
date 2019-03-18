@@ -1,11 +1,4 @@
 /**
- * A replacement for `Array.from` until it becomes widely implemented.
- */
-function arrayFrom(obj: any): any[] {
-  return Array.prototype.slice.call(obj);
-}
-
-/**
  * A replacement for `String.repeat` until it becomes widely available.
  */
 export function stringRepeat(text: string, length: number): string {
@@ -21,13 +14,20 @@ export function stringRepeat(text: string, length: number): string {
  * formatting by Bitbucket server (via python-markdown).
  * @see MarkdownSerializerState.esc()
  */
-export function escapeMarkdown(str: string, startOfLine?: boolean): string {
+export function escapeMarkdown(
+  str: string,
+  startOfLine?: boolean,
+  insideTable?: boolean,
+): string {
   let strToEscape = str || '';
-  strToEscape = strToEscape.replace(/[`*\\+_|()\[\]{}]/g, '\\$&');
+  strToEscape = strToEscape.replace(/[`*\\+_()\[\]{}]/g, '\\$&');
   if (startOfLine) {
     strToEscape = strToEscape
       .replace(/^[#-&(-*]/, '\\$&') // Don't escape ' character
       .replace(/^(\d+)\./, '$1\\.');
+  }
+  if (insideTable) {
+    strToEscape = strToEscape.replace(/[|]/g, '\\$&');
   }
   return strToEscape;
 }
@@ -53,23 +53,31 @@ export function transformHtml(
   el.innerHTML = html;
 
   // Remove zero-width-non-joiner
-  arrayFrom(el.querySelectorAll('p')).forEach((p: HTMLParagraphElement) => {
+  Array.from(el.querySelectorAll('p')).forEach((p: HTMLParagraphElement) => {
     removeSpecialCharacters(p);
   });
 
   // Convert mention containers, i.e.:
   //   <a href="/abodera/" rel="nofollow" title="@abodera" class="mention mention-me">Artur Bodera</a>
-  arrayFrom(el.querySelectorAll('a.mention')).forEach((a: HTMLLinkElement) => {
+  Array.from(
+    el.querySelectorAll<HTMLLinkElement>('a.mention, a.ap-mention'),
+  ).forEach((a: HTMLLinkElement) => {
     const span = document.createElement('span');
     span.setAttribute('class', 'editor-entity-mention');
     span.setAttribute('contenteditable', 'false');
 
-    const title = a.getAttribute('title') || '';
-    if (title) {
-      const usernameMatch = title.match(/^@(.*?)$/);
-      if (usernameMatch) {
-        const username = usernameMatch[1];
-        span.setAttribute('data-mention-id', username);
+    const atlassianId = a.getAttribute('data-atlassian-id') || '';
+    if (atlassianId) {
+      // Atlassian ID is wrapped in curlies so that it get serialized as @{aid-id} instead of @aid-id
+      span.setAttribute('data-mention-id', `{${atlassianId}}`);
+    } else {
+      const title = a.getAttribute('title') || '';
+      if (title) {
+        const usernameMatch = title.match(/^@(.*?)$/);
+        if (usernameMatch) {
+          const username = usernameMatch[1];
+          span.setAttribute('data-mention-id', username);
+        }
       }
     }
 
@@ -84,9 +92,28 @@ export function transformHtml(
     a.parentNode!.removeChild(a);
   });
 
+  // Convert mention containers, i.e.:
+  //   <span class="ap-mention" data-atlassian-id="5c09bf77ec71bd223bbe866f">@Scott Demo</span>
+  Array.from(el.querySelectorAll<HTMLSpanElement>('span.ap-mention')).forEach(
+    (s: HTMLSpanElement) => {
+      const span = document.createElement('span');
+      span.setAttribute('class', 'editor-entity-mention');
+      span.setAttribute('contenteditable', 'false');
+
+      const atlassianId = s.getAttribute('data-atlassian-id') || '';
+      span.setAttribute('data-mention-id', `{${atlassianId}}`);
+
+      const text = s.textContent || '';
+      span.textContent = text.indexOf('@') === 0 ? text : `@${text}`;
+
+      s.parentNode!.insertBefore(span, s);
+      s.parentNode!.removeChild(s);
+    },
+  );
+
   // Parse emojis i.e.
   //     <img src="https://d301sr5gafysq2.cloudfront.net/207268dc597d/emoji/img/diamond_shape_with_a_dot_inside.svg" alt="diamond shape with a dot inside" title="diamond shape with a dot inside" class="emoji">
-  arrayFrom(el.querySelectorAll('img.emoji')).forEach(
+  Array.from(el.querySelectorAll<HTMLImageElement>('img.emoji')).forEach(
     (img: HTMLImageElement) => {
       const span = document.createElement('span');
       let shortName = img.getAttribute('data-emoji-short-name') || '';
@@ -113,22 +140,26 @@ export function transformHtml(
 
   if (!options.disableBitbucketLinkStripping) {
     // Convert all automatic links to plain text, because they will be re-created on render by the server
-    arrayFrom(el.querySelectorAll('a'))
+    Array.from(el.querySelectorAll('a'))
       // Don't convert external links (i.e. not automatic links)
       .filter(
-        (a: HTMLLinkElement) =>
+        (a: HTMLAnchorElement) =>
           a.getAttribute('data-is-external-link') !== 'true',
       )
-      .forEach((a: HTMLLinkElement) => {
-        const text = document.createTextNode(a.innerText);
-        a.parentNode!.insertBefore(text, a);
+      .forEach((a: HTMLAnchorElement) => {
+        Array.from(a.childNodes).forEach(child => {
+          a.parentNode!.insertBefore(child, a);
+        });
         a.parentNode!.removeChild(a);
       });
   }
 
   // Parse images
-  arrayFrom(el.querySelectorAll('img:not(.emoji)')).forEach(
-    (img: HTMLImageElement) => {
+  // Not using :pseudo because of IE11 bug:
+  // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/16104908/
+  Array.from(el.querySelectorAll('img'))
+    .filter(img => !img.classList.contains('emoji'))
+    .forEach((img: HTMLImageElement) => {
       const { parentNode } = img;
 
       if (!parentNode) {
@@ -160,10 +191,9 @@ export function transformHtml(
 
       img.parentNode!.insertBefore(mediaSingle, img);
       img.parentNode!.removeChild(img);
-    },
-  );
+    });
 
-  function validateImageNodeParent(node: Node) {
+  function validateImageNodeParent(node: Node): boolean {
     const ALLOWED_PARENTS = [
       'LI',
       'UL',

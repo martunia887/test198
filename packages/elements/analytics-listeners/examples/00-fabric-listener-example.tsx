@@ -1,33 +1,74 @@
+import { AnalyticsContext } from '@atlaskit/analytics-next';
 import * as React from 'react';
-import { mount } from 'enzyme';
 import FabricAnalyticsListeners from '../src/FabricAnalyticsListeners';
-import { DummyComponentWithAnalytics } from '../example-helpers';
-import debug, { enableLogger } from '../example-helpers/logger';
+import { FabricChannel } from '../src/types';
+import {
+  createAnalyticsWebClientMock,
+  createComponentWithAnalytics,
+  createComponentWithAttributesWithAnalytics,
+} from './helpers';
+
+const DummyElementsComponent = createComponentWithAnalytics(
+  FabricChannel.elements,
+);
+const DummyElementsComponentWithAttributes = createComponentWithAttributesWithAnalytics(
+  FabricChannel.elements,
+);
+const DummyAtlaskitComponent = createComponentWithAnalytics(
+  FabricChannel.atlaskit,
+);
+const DummyNavigationComponent = createComponentWithAnalytics(
+  FabricChannel.navigation,
+);
 
 const myOnClickHandler = () => {
-  debug('DIV clicked ! Yay!');
+  console.log('Button clicked ! Yay!');
 };
 
-const analyticsWebClientMock = {
-  sendUIEvent: event => {
-    debug('sendUIEvent: ', event);
-  },
-  sendOperationalEvent: event => {
-    debug('sendOperationalEvent: ', event);
-  },
-  sendTrackEvent: (event: any) => {
-    debug('sendTrackEvent: ', event);
-  },
-  sendScreenEvent: (event: any) => {
-    debug('sendScreenEvent: ', event);
-  },
-};
-
-export default function Example() {
-  enableLogger(true);
+function Example() {
   return (
-    <FabricAnalyticsListeners client={analyticsWebClientMock}>
-      <DummyComponentWithAnalytics onClick={myOnClickHandler} />
+    <FabricAnalyticsListeners client={createAnalyticsWebClientMock()}>
+      <div>
+        <DummyElementsComponent onClick={myOnClickHandler} />
+
+        <AnalyticsContext data={{ issueId: 100, greeting: 'hello' }}>
+          <AnalyticsContext data={{ issueId: 200 }}>
+            <DummyElementsComponentWithAttributes onClick={myOnClickHandler} />
+          </AnalyticsContext>
+        </AnalyticsContext>
+
+        <DummyAtlaskitComponent onClick={myOnClickHandler} />
+
+        <AnalyticsContext
+          data={{
+            component: 'page',
+            packageName: '@atlaskit/page',
+            packageVersion: '2.0.1',
+            attributes: { pageName: 'myPage' },
+            source: 'homePage',
+          }}
+        >
+          <AnalyticsContext
+            data={{
+              component: 'myComponent',
+              packageName: '@atlaskit/my-component',
+              packageVersion: '1.0.0',
+              attributes: { customAttr: true },
+              source: 'componentPage',
+            }}
+          >
+            <DummyNavigationComponent onClick={myOnClickHandler} />
+          </AnalyticsContext>
+        </AnalyticsContext>
+      </div>
     </FabricAnalyticsListeners>
   );
 }
+
+Object.assign(Example, {
+  meta: {
+    noListener: true,
+  },
+});
+
+export default Example;

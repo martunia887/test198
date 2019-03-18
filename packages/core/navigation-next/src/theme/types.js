@@ -1,45 +1,50 @@
 // @flow
 
-import type { GlobalItemPresentationProps } from '../components/GlobalItem/types';
-import type { ItemPresentationProps } from '../components/Item/types';
+import type { ComponentType, ElementConfig } from 'react';
+import type { Diffable } from '../common/types';
+import type {
+  GlobalItemPresentationProps,
+  GlobalItemStyles,
+} from '../components/presentational/GlobalItem/types';
+import type { ItemPresentationProps } from '../components/presentational/Item/types';
+import type { SectionPresentationProps } from '../components/presentational/Section/types';
 
 /**
  * Types
  */
-type ObjectType = { [string]: * };
+type ObjectType = { [string]: any };
 
-type ProductComponentThemeObject = { container: ObjectType, root: ObjectType };
+type ContentNavigationComponentThemeObject = {
+  container: ObjectType,
+  product: ObjectType,
+};
 
-type GlobalComponentTheme<Props: {} | void> = Props => ObjectType;
-
-type ProductComponentTheme<
+type GlobalNavigationComponentTheme<
   Props: {} | void,
-> = Props => ProductComponentThemeObject;
+  Styles: {},
+> = Props => Styles;
 
-// Every component which responds to theming should export a
-// ThemedGlobalComponentStyles or ThemedProductComponentStyles object from
-// /styles.js
-export type ThemedGlobalComponentStyles<Props> = {
-  light: GlobalComponentTheme<Props>,
-  dark: GlobalComponentTheme<Props>,
-  settings: GlobalComponentTheme<Props>,
-};
+type ContentNavigationComponentTheme<
+  Props: {} | void,
+> = Props => ContentNavigationComponentThemeObject;
 
-export type ThemedProductComponentStyles<Props> = {
-  light: ProductComponentTheme<Props>,
-  dark: ProductComponentTheme<Props>,
-  settings: ProductComponentTheme<Props>,
-};
-
-// This is the shape of a theme 'mode', e.g. light, dark and settings modes
+// This is the shape of a theme 'mode', e.g. light, dark, settings or custom
 export type Mode = {
-  globalItem: GlobalComponentTheme<GlobalItemPresentationProps>,
-  globalNav: GlobalComponentTheme<void>,
-  productNav: ProductComponentTheme<void>,
-  item: ProductComponentTheme<ItemPresentationProps>,
-  sectionTitle: ProductComponentTheme<void>,
-  sectionSeparator: ProductComponentTheme<void>,
-  scrollHint: ProductComponentTheme<void>,
+  // Allow GlobalItemPresentationProps to be optional, need to spread it into an
+  // object type since $Shape allows void/undefined instead of always enforcing an object
+  globalItem: GlobalNavigationComponentTheme<
+    {
+      ...$Shape<GlobalItemPresentationProps>,
+    },
+    GlobalItemStyles,
+  >,
+  globalNav: GlobalNavigationComponentTheme<void, {}>,
+  heading: ContentNavigationComponentTheme<void>,
+  item: ContentNavigationComponentTheme<ItemPresentationProps>,
+  contentNav: ContentNavigationComponentTheme<void>,
+  section: ContentNavigationComponentTheme<SectionPresentationProps>,
+  separator: ContentNavigationComponentTheme<void>,
+  skeletonItem: ContentNavigationComponentTheme<void>,
 };
 
 export type ProductTheme = {
@@ -49,6 +54,89 @@ export type ProductTheme = {
 
 export type GlobalTheme = {
   mode: Mode,
+  context?: string,
+  topOffset?: string,
 };
 
-export type StyleReducer<State> = (ObjectType, State) => ObjectType;
+export type Theme = GlobalTheme | ProductTheme | void;
+
+export type StyleReducer = (
+  Styles: ObjectType,
+  State?: ObjectType,
+  Theme?: ProductTheme,
+) => ObjectType;
+
+export type StyleReducerWithState = (
+  Styles: ObjectType,
+  State: ObjectType,
+  Theme?: ProductTheme,
+) => ObjectType;
+
+export type ContextColors = {
+  background: {
+    /**
+     * Color provided to the mode generator */
+    default: string,
+    /**
+     * Generated color, usually brighter
+     * Used as nav item hover background */
+    hint: string,
+    /**
+     * Generated color, gentle variation over default
+     * Used as nav item active background */
+    interact: string,
+    /**
+     * Generated color, either lighter or darker of default
+     * Used as nav item selected background, separator background, ... */
+    static: string,
+  },
+  text: {
+    /**
+     * Color provided to the mode generator */
+    default: string,
+    /**
+     * Generated color, slighly faded out
+     * Used as nav item sub text color and group headings color */
+    subtle: string,
+  },
+};
+
+export type ModeColors = {
+  product: ContextColors,
+};
+
+/**
+ * withTheme
+ */
+
+export type WithThemeProps = {|
+  theme: Theme,
+|};
+
+export type ThemeWrappedComp<C> = ComponentType<
+  $Diff<ElementConfig<$Supertype<C>>, Diffable<WithThemeProps>>,
+>;
+
+/**
+ * withContentTheme
+ */
+
+export type WithContentThemeProps = {|
+  theme: ProductTheme,
+|};
+
+export type ContentThemeWrappedComp<C> = ComponentType<
+  $Diff<ElementConfig<$Supertype<C>>, Diffable<WithContentThemeProps>>,
+>;
+
+/**
+ * withGlobalTheme
+ */
+
+export type WithGlobalThemeProps = {|
+  theme: GlobalTheme,
+|};
+
+export type GlobalThemeWrappedComp<C> = ComponentType<
+  $Diff<ElementConfig<$Supertype<C>>, Diffable<WithGlobalThemeProps>>,
+>;

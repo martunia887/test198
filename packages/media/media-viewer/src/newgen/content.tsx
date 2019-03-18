@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Component, SyntheticEvent, ReactElement, ReactNode } from 'react';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import Button from '@atlaskit/button';
+import { closeOnDirectClick } from './utils/closeOnDirectClick';
 import {
   ContentWrapper,
   CloseButtonWrapper,
@@ -45,21 +46,23 @@ export const findParent = (
 };
 
 export class Content extends Component<ContentProps, ContentState> {
-  private checkActivityTimeout: number;
-  private contentWrapperElement: HTMLElement;
+  private checkActivityTimeout?: number;
+  private contentWrapperElement?: HTMLElement;
 
   state: ContentState = {
     showControls: true,
   };
 
   private clearTimeout = () => {
-    window.clearTimeout(this.checkActivityTimeout);
+    if (this.checkActivityTimeout) {
+      window.clearTimeout(this.checkActivityTimeout);
+    }
   };
 
-  private hideControls = (e?: HTMLElement) => () => {
-    if (e) {
+  private hideControls = (element?: HTMLElement) => () => {
+    if (element) {
       const parent = findParent(
-        e,
+        element,
         hideControlsClassName,
         this.contentWrapperElement,
       );
@@ -72,8 +75,14 @@ export class Content extends Component<ContentProps, ContentState> {
   };
 
   private checkMouseMovement = (e?: SyntheticEvent<HTMLElement>) => {
+    const { showControls } = this.state;
     this.clearTimeout();
-    this.setState({ showControls: true });
+    // This check is needed to not trigger a render call on every movement.
+    // Even if nothing will be re-renderer since the value is the same, it
+    // will go into any children render method for nothing.
+    if (!showControls) {
+      this.setState({ showControls: true });
+    }
     this.checkActivityTimeout = window.setTimeout(
       this.hideControls(e && (e.target as HTMLElement)),
       mouseMovementDelay,
@@ -90,20 +99,13 @@ export class Content extends Component<ContentProps, ContentState> {
 
   // We want to check mouse movement on click too
   // in order to not hide controls when user is interacting with any control
-  private onClick = e => {
-    this.checkMouseMovement();
-    this.onClickContentClose(e);
-  };
-
-  private onClickContentClose = e => {
+  private onClick = (e: any) => {
     const { onClose } = this.props;
-
-    if (e.target === e.currentTarget && onClose) {
-      onClose();
-    }
+    this.checkMouseMovement();
+    closeOnDirectClick(onClose)(e);
   };
 
-  private saveContentWrapperRef = el => {
+  private saveContentWrapperRef = (el: HTMLElement) => {
     this.contentWrapperElement = el;
   };
 
@@ -126,7 +128,11 @@ export class Content extends Component<ContentProps, ContentState> {
         onClick={this.onClick}
       >
         <CloseButtonWrapper className={hideControlsClassName}>
-          <Button onClick={onClose} iconBefore={<CrossIcon label="Close" />} />
+          <Button
+            appearance={'toolbar' as any}
+            onClick={onClose}
+            iconBefore={<CrossIcon label="Close" />}
+          />
         </CloseButtonWrapper>
         {children}
       </ContentWrapper>

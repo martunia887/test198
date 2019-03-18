@@ -1,9 +1,28 @@
 import * as React from 'react';
 import { GlobalQuickSearch } from '../src/index';
-import BasicNavigation from '../example-helpers/BasicNavigation';
-import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
 import { Config } from '../src/api/configureSearchClients';
+import withNavigation from '../example-helpers/withNavigation';
 
+const message = (
+  <p>
+    To get search results from{' '}
+    <a
+      href="https://jdog.jira-dev.com"
+      target="_blank"
+      title="497ea592-beb4-43c3-9137-a6e5fa301088"
+    >
+      jdog
+    </a>{' '}
+    please login to{' '}
+    <a href="https://id.stg.internal.atlassian.com" target="_blank">
+      Staging Identity
+    </a>
+  </p>
+);
+const GlobalQuickSearchInNavigation = withNavigation(GlobalQuickSearch, {
+  hideLocale: true,
+  message,
+});
 const config: Partial<Config> = {
   activityServiceUrl: 'https://api-private.stg.atlassian.com/activity',
   searchAggregatorServiceUrl:
@@ -11,39 +30,9 @@ const config: Partial<Config> = {
   directoryServiceUrl: 'https://api-private.stg.atlassian.com/directory',
 };
 
+const cloudId = '497ea592-beb4-43c3-9137-a6e5fa301088'; // JDOG
 export default class extends React.Component<{}, { cloudId: string }> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cloudId: 'DUMMY-7c8a2b74-595a-41c7-960c-fd32f8572cea', // SDOG
-    };
-  }
-
-  handleInputChange = e => {
-    this.setState({
-      cloudId: e.target.value,
-    });
-  };
-
   render() {
-    return (
-      <div>
-        Cloud Id:{' '}
-        <input
-          type="text"
-          value={this.state.cloudId}
-          onChange={this.handleInputChange}
-        />
-        <BasicNavigation
-          searchDrawerContent={
-            <GlobalQuickSearch
-              cloudId={this.state.cloudId}
-              {...config}
-              context="confluence"
-            />
-          }
-        />
-      </div>
-    );
+    return <GlobalQuickSearchInNavigation cloudId={cloudId} {...config} />;
   }
 }

@@ -1,35 +1,38 @@
 {
   "name": "@atlaskit/code",
-  "version": "4.0.4",
+  "version": "9.0.0",
   "config": {
     "access": "public"
   },
   "description": "Renders inline code snippets and code blocks",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "index.js",
   "atlaskit:src": "src/index.js",
-  "files": [
-    "dist",
-    "src"
-  ],
+  "sideEffects": false,
   "dependencies": {
-    "@atlaskit/theme": "^3.2.2",
-    "react-syntax-highlighter": "^6.0.2",
-    "styled-components": "1.4.6 - 3"
+    "@atlaskit/theme": "^8.0.0",
+    "@babel/runtime": "^7.0.0",
+    "memoize-one": "^3.0.1",
+    "react-syntax-highlighter": "^10.0.1"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^3.0.4",
-    "enzyme": "https://registry.npmjs.org/@pgleeson/enzyme/-/enzyme-3.3.7.tgz"
+    "@atlaskit/build-utils": "^2.0.0",
+    "@atlaskit/ssr": "^0.0.1",
+    "@atlaskit/docs": "^7.0.0",
+    "@atlaskit/visual-regression": "^0.0.1",
+    "enzyme": "^3.7.0",
+    "react-dom": "^16.4.2"
   },
   "peerDependencies": {
-    "react": "^16.3.0"
+    "react": "^16.4.0",
+    "styled-components": "^3.2.6"
   },
   "author": "Atlassian Pty. Ltd",
   "maintainers": [
-    "Raja B",
-    "Ben C",
+    "Sean C",
     "Ajay M",
-    "Oscar W"
+    "Oscar W",
+    "Daniel D",
+    "Kang C"
   ],
   "atlaskit": {
     "name": "Code"

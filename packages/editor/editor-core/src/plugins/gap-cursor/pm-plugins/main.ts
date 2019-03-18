@@ -3,21 +3,11 @@ import { EditorView, Decoration, DecorationSet } from 'prosemirror-view';
 import { ResolvedPos } from 'prosemirror-model';
 import { findPositionOfNodeBefore } from 'prosemirror-utils';
 import { GapCursorSelection, JSON_ID, Side } from '../selection';
-import { fixCursorAlignment } from '../utils';
-import { setGapCursorAtPos } from '../actions';
+import { fixCursorAlignment, isIgnoredClick } from '../utils';
+import { setGapCursorAtPos, deleteNode } from '../actions';
+import { Direction } from '../direction';
 
 export const pluginKey = new PluginKey('gapCursorPlugin');
-
-export const isButton = (elem: HTMLElement | null) => {
-  const tableControls = document.querySelector(
-    '.table-column-controls-wrapper',
-  );
-  return (
-    elem &&
-    (elem.nodeName === 'BUTTON' ||
-      (tableControls && tableControls.contains(elem)))
-  );
-};
 
 const plugin = new Plugin({
   key: pluginKey,
@@ -49,12 +39,12 @@ const plugin = new Plugin({
         if (side === Side.RIGHT && $from.nodeBefore) {
           const nodeBeforeStart = findPositionOfNodeBefore(selection);
           if (typeof nodeBeforeStart === 'number') {
-            position = nodeBeforeStart - 1;
+            position = nodeBeforeStart;
           }
         }
 
         return DecorationSet.create(doc, [
-          Decoration.widget(position, node, { key: `${JSON_ID}` }),
+          Decoration.widget(position, node, { key: `${JSON_ID}`, side: -1 }),
         ]);
       }
 
@@ -86,7 +76,7 @@ const plugin = new Plugin({
       if (
         posAtCoords &&
         posAtCoords.inside !== position &&
-        !isButton(event.target as HTMLElement)
+        !isIgnoredClick(event.target as HTMLElement)
       ) {
         // max available space between parent and child from the left side in px
         // this ensures the correct side of the gap cursor in case of clicking in between two block nodes
@@ -95,6 +85,25 @@ const plugin = new Plugin({
         return setGapCursorAtPos(position, side)(view.state, view.dispatch);
       }
       return false;
+    },
+    handleDOMEvents: {
+      /**
+       * Android composition events aren't handled well by Prosemirror
+       * We've added a couple of beforeinput hooks to help PM out when trying to delete
+       * certain nodes. We can remove these when PM has better composition support.
+       * @see https://github.com/ProseMirror/prosemirror/issues/543
+       */
+      beforeinput: (view, event: any) => {
+        if (
+          event.inputType === 'deleteContentBackward' &&
+          view.state.selection instanceof GapCursorSelection
+        ) {
+          event.preventDefault();
+          return deleteNode(Direction.BACKWARD)(view.state, view.dispatch);
+        }
+
+        return false;
+      },
     },
   },
 });

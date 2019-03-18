@@ -1,14 +1,16 @@
 import {
   codeBlockToJSON,
   defaultSchema,
+  linkToJSON,
   mediaToJSON,
+  mediaSingleToJSON,
   mentionToJSON,
   tableToJSON,
   toJSONTableCell,
   toJSONTableHeader,
-  Transformer,
-} from '@atlaskit/editor-common';
-import { Node as PMNode } from 'prosemirror-model';
+} from '@atlaskit/adf-schema';
+import { Transformer } from '@atlaskit/editor-common';
+import { Node as PMNode, Mark as PMMark } from 'prosemirror-model';
 
 export type JSONNode = {
   type: string;
@@ -24,19 +26,46 @@ export type JSONDocNode = {
   content: JSONNode[];
 };
 
-const isCodeBlock = (node: PMNode) => node.type.name === 'codeBlock';
-const isMediaNode = (node: PMNode) => node.type.name === 'media';
-const isMentionNode = (node: PMNode) => node.type.name === 'mention';
-const isParagraph = (node: PMNode) => node.type.name === 'paragraph';
-const isTable = (node: PMNode) => node.type.name === 'table';
-const isTableCell = (node: PMNode) => node.type.name === 'tableCell';
-const isTableHeader = (node: PMNode) => node.type.name === 'tableHeader';
+const isType = (type: string) => (node: PMNode | PMMark) =>
+  node.type.name === type;
+
+const isCodeBlock = isType('codeBlock');
+const isMediaNode = isType('media');
+const isMediaSingleNode = isType('mediaSingle');
+const isMentionNode = isType('mention');
+const isParagraph = isType('paragraph');
+const isHeading = isType('heading');
+const isTable = isType('table');
+const isTableCell = isType('tableCell');
+const isTableHeader = isType('tableHeader');
+const isLinkMark = isType('link');
+const isUnsupportedNode = (node: PMNode) =>
+  isType('unsupportedBlock')(node) || isType('unsupportedInline')(node);
+
+const filterNull = (subject: any) => {
+  return Object.keys(subject).reduce((acc, key) => {
+    let current = subject[key];
+
+    if (current === null) {
+      return acc;
+    }
+
+    if (typeof current === 'object' && !Array.isArray(current)) {
+      current = filterNull(current);
+    }
+
+    return { ...acc, [key]: current };
+  }, {});
+};
 
 const toJSON = (node: PMNode): JSONNode => {
   const obj: JSONNode = { type: node.type.name };
-
-  if (isMediaNode(node)) {
+  if (isUnsupportedNode(node)) {
+    return node.attrs.originalValue;
+  } else if (isMediaNode(node)) {
     obj.attrs = mediaToJSON(node).attrs;
+  } else if (isMediaSingleNode(node)) {
+    obj.attrs = mediaSingleToJSON(node).attrs;
   } else if (isMentionNode(node)) {
     obj.attrs = mentionToJSON(node).attrs;
   } else if (isCodeBlock(node)) {
@@ -51,6 +80,10 @@ const toJSON = (node: PMNode): JSONNode => {
     obj.attrs = node.attrs;
   }
 
+  if (obj.attrs) {
+    obj.attrs = filterNull(obj.attrs);
+  }
+
   if (node.isText) {
     obj.text = node.textContent;
   } else {
@@ -60,13 +93,17 @@ const toJSON = (node: PMNode): JSONNode => {
     });
   }
 
-  if (isParagraph(node)) {
-    // Paragraph shall always has a content
+  if (isParagraph(node) || isHeading(node)) {
     obj.content = obj.content || [];
   }
 
   if (node.marks.length) {
-    obj.marks = node.marks.map(n => n.toJSON());
+    obj.marks = node.marks.map(n => {
+      if (isLinkMark(n)) {
+        return linkToJSON(n);
+      }
+      return n.toJSON();
+    });
   }
   return obj;
 };
@@ -93,5 +130,12 @@ export class JSONTransformer implements Transformer<JSONDocNode> {
     const doc = defaultSchema.nodeFromJSON(content);
     doc.check();
     return doc;
+  }
+
+  /**
+   * This method is used to encode a single node
+   */
+  encodeNode(node: PMNode): JSONNode {
+    return toJSON(node);
   }
 }

@@ -1,7 +1,15 @@
 // @flow
-import React, { Component, type Node } from 'react';
+import React, { Component, type Node, type ElementType } from 'react';
 import ReactDOM from 'react-dom';
+import {
+  withAnalyticsEvents,
+  createAndFireEvent,
+} from '@atlaskit/analytics-next';
 import AKTooltip from '@atlaskit/tooltip';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../version.json';
 import ItemWrapper from '../styled/BreadcrumbsItem';
 import Button from '../styled/Button';
 import Separator from '../styled/Separator';
@@ -27,14 +35,14 @@ type Props = {
   /** Provide a custom component to use instead of the default button.
    *  The custom component should accept a className prop so it can be styled
    *  and possibly all action handlers */
-  component?: string | (() => Node) | Node,
+  component?: ElementType,
 };
 
 type State = {
   hasOverflow: boolean,
 };
 
-export default class BreadcrumbsItem extends Component<Props, State> {
+class BreadcrumbsItem extends Component<Props, State> {
   props: Props; // eslint-disable-line react/sort-comp
   button: ?HTMLButtonElement;
 
@@ -98,7 +106,6 @@ export default class BreadcrumbsItem extends Component<Props, State> {
     const { hasOverflow } = this.state;
 
     return (
-      // $FlowFixMe - styled components return types have gone crazy
       <Button
         truncationWidth={truncationWidth}
         appearance="subtle-link"
@@ -112,6 +119,11 @@ export default class BreadcrumbsItem extends Component<Props, State> {
           this.button = el;
         }}
         component={component}
+        analyticsContext={{
+          componentName: 'breadcrumbsItem',
+          packageName,
+          packageVersion,
+        }}
       >
         {text}
       </Button>
@@ -138,3 +150,19 @@ export default class BreadcrumbsItem extends Component<Props, State> {
     );
   }
 }
+
+export { BreadcrumbsItem as BreadcrumbsItemWithoutAnalytics };
+const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
+
+export default withAnalyticsEvents({
+  onClick: createAndFireEventOnAtlaskit({
+    action: 'clicked',
+    actionSubject: 'breadcrumbsItem',
+
+    attributes: {
+      componentName: 'breadcrumbsItem',
+      packageName,
+      packageVersion,
+    },
+  }),
+})(BreadcrumbsItem);

@@ -1,25 +1,22 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { Schema } from 'prosemirror-model';
+import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   ADFStage,
   UnsupportedBlock,
   ProviderFactory,
-  defaultSchema,
   EventHandlers,
   ExtensionHandlers,
+  BaseTheme,
+  WidthProvider,
 } from '@atlaskit/editor-common';
 import { ReactSerializer, renderDocument, RendererContext } from '../../';
-import { RenderOutputStat } from '../../';
+import { RenderOutputStat } from '../../render-document';
 import { Wrapper } from './style';
+import { TruncatedWrapper } from './truncated-wrapper';
 
-export type RendererAppearance =
-  | 'message'
-  | 'inline-comment'
-  | 'comment'
-  | 'full-page'
-  | 'mobile'
-  | undefined;
+export type RendererAppearance = 'comment' | 'full-page' | 'mobile' | undefined;
 
 export interface Extension<T> {
   extensionKey: string;
@@ -36,10 +33,13 @@ export interface Props {
   portal?: HTMLElement;
   rendererContext?: RendererContext;
   schema?: Schema;
-  useNewApplicationCard?: boolean;
   appearance?: RendererAppearance;
   adfStage?: ADFStage;
   isDiff?: boolean;
+  disableHeadingIDs?: boolean;
+  allowDynamicTextSizing?: boolean;
+  maxHeight?: number;
+  truncated?: boolean;
 }
 
 export default class Renderer extends PureComponent<Props, {}> {
@@ -49,7 +49,6 @@ export default class Renderer extends PureComponent<Props, {}> {
   constructor(props: Props) {
     super(props);
     this.providerFactory = props.dataProviders || new ProviderFactory();
-
     this.updateSerializer(props);
   }
 
@@ -67,7 +66,9 @@ export default class Renderer extends PureComponent<Props, {}> {
       document,
       extensionHandlers,
       schema,
-      useNewApplicationCard,
+      appearance,
+      disableHeadingIDs,
+      allowDynamicTextSizing,
     } = props;
 
     this.serializer = new ReactSerializer({
@@ -80,7 +81,9 @@ export default class Renderer extends PureComponent<Props, {}> {
         schema,
         ...rendererContext,
       } as RendererContext,
-      useNewApplicationCard,
+      appearance,
+      disableHeadingIDs,
+      allowDynamicTextSizing,
     });
   }
 
@@ -92,6 +95,9 @@ export default class Renderer extends PureComponent<Props, {}> {
       appearance,
       adfStage,
       isDiff,
+      allowDynamicTextSizing,
+      maxHeight,
+      truncated,
     } = this.props;
 
     try {
@@ -106,13 +112,28 @@ export default class Renderer extends PureComponent<Props, {}> {
       if (onComplete) {
         onComplete(stat);
       }
+      const rendererOutput = (
+        <RendererWrapper
+          appearance={appearance}
+          dynamicTextSizing={!!allowDynamicTextSizing}
+        >
+          {result}
+        </RendererWrapper>
+      );
 
-      return <Wrapper appearance={appearance}>{result}</Wrapper>;
+      return truncated ? (
+        <TruncatedWrapper height={maxHeight}>{rendererOutput}</TruncatedWrapper>
+      ) : (
+        rendererOutput
+      );
     } catch (ex) {
       return (
-        <Wrapper appearance={appearance}>
+        <RendererWrapper
+          appearance={appearance}
+          dynamicTextSizing={!!allowDynamicTextSizing}
+        >
           <UnsupportedBlock />
-        </Wrapper>
+        </RendererWrapper>
       );
     }
   }
@@ -126,4 +147,23 @@ export default class Renderer extends PureComponent<Props, {}> {
       this.providerFactory.destroy();
     }
   }
+}
+
+type RendererWrapperProps = {
+  appearance: RendererAppearance;
+  dynamicTextSizing: boolean;
+} & { children?: React.ReactNode };
+
+export function RendererWrapper({
+  appearance,
+  children,
+  dynamicTextSizing,
+}: RendererWrapperProps) {
+  return (
+    <WidthProvider>
+      <BaseTheme dynamicTextSizing={dynamicTextSizing}>
+        <Wrapper appearance={appearance}>{children}</Wrapper>
+      </BaseTheme>
+    </WidthProvider>
+  );
 }

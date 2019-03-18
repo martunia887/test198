@@ -1,39 +1,95 @@
-import { HTMLAttributes, ComponentClass } from 'react';
-import {
-  akColorB300,
-  akColorB400,
-  akColorN800,
-  akColorN40,
-  akColorN300,
-  akColorN30A,
-  akGridSizeUnitless,
-  akTypographyMixins,
-  akFontFamily,
-  akFontSizeDefault,
-} from '@atlaskit/util-shared-styles';
+import { HTMLAttributes } from 'react';
 import styled from 'styled-components';
 
+import {
+  colors,
+  gridSize,
+  fontFamily,
+  fontSize,
+  borderRadius,
+  themed,
+} from '@atlaskit/theme';
+import {
+  tableSharedStyle,
+  columnLayoutSharedStyle,
+  editorFontSize,
+  blockquoteSharedStyles,
+  headingsSharedStyles,
+  panelSharedStyles,
+  ruleSharedStyles,
+  paragraphSharedStyles,
+  indentationSharedStyles,
+  blockMarksSharedStyles,
+  mediaSingleSharedStyle,
+  blockNodesVerticalMargin,
+  akEditorTableToolbar,
+  akEditorTableBorder,
+  akEditorTableNumberColumnWidth,
+  TableSharedCssClassName,
+  tableMarginTop,
+  akEditorSmallZIndex,
+  gridMediumMaxWidth,
+  codeMarkSharedStyles,
+} from '@atlaskit/editor-common';
 import { RendererAppearance } from './';
+import { RendererCssClassName } from '../../consts';
 
-export interface Props {
-  appearance?: RendererAppearance;
-}
+export const FullPagePadding = 32;
+const shadowWidth = 8;
 
-const getLineHeight = ({ appearance }: Props) => {
-  return `line-height: ${appearance === 'message' ? 20 : 24}px`;
+export const shadowClassNames = {
+  RIGHT_SHADOW: 'right-shadow',
+  LEFT_SHADOW: 'left-shadow',
 };
 
-export const Wrapper: ComponentClass<Props & HTMLAttributes<{}>> = styled.div`
-  ${getLineHeight};
-  color: ${akColorN800};
+export type Props = {
+  appearance?: RendererAppearance;
+  theme?: any;
+};
+
+const tableStyles = ({ appearance }: Props) => {
+  if (appearance === 'mobile') {
+    return 'table-layout: auto';
+  }
+
+  return '';
+};
+
+const fullPageStyles = ({
+  theme,
+  appearance,
+}: {
+  appearance?: 'full-page' | 'mobile';
+  theme?: any;
+}) => {
+  if (appearance !== 'full-page' && appearance !== 'mobile') {
+    return '';
+  }
+
+  return `
+    max-width: ${
+      theme && theme.layoutMaxWidth ? `${theme.layoutMaxWidth}px` : 'none'
+    };
+    margin: 0 auto;
+    padding: 0 ${appearance === 'full-page' ? FullPagePadding : 0}px;
+  `;
+};
+
+// prettier-ignore
+export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
+  ${fullPageStyles}
+
+  font-size: ${editorFontSize}px;
+  line-height: 24px;
+  color: ${themed({ light: colors.N800, dark: '#B8C7E0' })};
   word-wrap: break-word;
 
   & span.akActionMark {
-    color: ${akColorB400};
+    color: ${colors.B400};
     text-decoration: none;
 
     &:hover {
-      color: ${akColorB300};
+      color: ${colors.B300};
       text-decoration: underline;
     }
   }
@@ -42,36 +98,36 @@ export const Wrapper: ComponentClass<Props & HTMLAttributes<{}>> = styled.div`
     cursor: pointer;
   }
 
-  & blockquote {
-    margin: ${akGridSizeUnitless * 1.5}px 0 0 0;
-    color: ${akColorN300};
-    border-left: 2px solid ${akColorN40};
-    padding-left: ${akGridSizeUnitless * 2}px;
+  ${blockquoteSharedStyles};
+  ${headingsSharedStyles};
+  ${panelSharedStyles};
+  ${ruleSharedStyles};
+  ${paragraphSharedStyles};
+  ${indentationSharedStyles};
+  ${blockMarksSharedStyles};
+  ${codeMarkSharedStyles};
 
-    & :first-child {
-      margin-top: 0;
-    }
-
-    & > :last-child {
-      display: inline-block;
-    }
-
-    &::before {
-      content: '';
-    }
-
-    &::after {
-      content: '';
-    }
-  }
-
-  & p,
   & .UnknownBlock {
-    font-family: ${akFontFamily};
-    font-size: ${akFontSizeDefault};
+    font-family: ${fontFamily()};
+    font-size: ${fontSize()};
     font-weight: 400;
     white-space: pre-wrap;
     word-wrap: break-word;
+  }
+
+  & span.date-node {
+    background: ${colors.N30A};
+    border-radius: ${borderRadius()}px;
+    color: ${colors.N800};
+    padding: 2px 4px;
+    margin: 0 1px;
+    transition: background 0.3s;
+    white-space: nowrap;
+  }
+
+  & span.date-node-highlighted {
+    background: ${colors.R50};
+    color: ${colors.R500};
   }
 
   & ul {
@@ -137,73 +193,25 @@ export const Wrapper: ComponentClass<Props & HTMLAttributes<{}>> = styled.div`
   & .akTaskList > ol,
   & .akDecisionList > ol {
     list-style-type: none;
+    font-size: ${fontSize()}px;
   }
 
-  & h1 {
-    ${akTypographyMixins.h800 as any};
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  & h2 {
-    ${akTypographyMixins.h700 as any};
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  & h3 {
-    ${akTypographyMixins.h600 as any};
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  & h4 {
-    ${akTypographyMixins.h500 as any};
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  & h5 {
-    ${akTypographyMixins.h400 as any};
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  & h6 {
-    ${akTypographyMixins.h300 as any};
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  & hr {
-    border: none;
-    background-color: ${akColorN30A};
-    height: 2px;
-    border-radius: 1px;
-  }
-
-  & img {
+  & .renderer-image {
     max-width: 100%;
+    display: block;
+    margin: ${gridSize() * 3}px 0;
   }
 
-  & div > .media-wrapped + .media-wrapped + *:not(.media-wrapped) {
-    clear: both;
-  }
-
-  & .media-wrapped + div:not(.media-wrapped) {
+  .media-single.media-wrapped + .media-single:not(.media-wrapped) {
     clear: both;
   }
 
   & .CodeBlock,
   & blockquote,
   & hr,
-  & > div > div:not(.media-wrapped) {
+  & > div > div:not(.media-wrapped),
+  .media-single.media-wrapped + .media-wrapped + *:not(.media-wrapped),
+  .media-single.media-wrapped + div:not(.media-wrapped) {
     clear: both;
   }
 
@@ -218,10 +226,58 @@ export const Wrapper: ComponentClass<Props & HTMLAttributes<{}>> = styled.div`
     }
   }
 
-  & .wrap-left + .wrap-right,
-  & .wrap-right + .wrap-left {
+  ${mediaSingleSharedStyle} &
+  div[class^='image-wrap-'] + div[class^='image-wrap-'] {
     margin-left: 0;
     margin-right: 0;
+  }
+
+  /* Breakout for tables and extensions */
+  .${RendererCssClassName.DOCUMENT} > {
+    .${TableSharedCssClassName.TABLE_CONTAINER}[data-layout='full-width'],
+    .${TableSharedCssClassName.TABLE_CONTAINER}[data-layout='wide'],
+    .${RendererCssClassName.EXTENSION}[data-layout='wide'],
+    .${RendererCssClassName.EXTENSION}[data-layout='full-width']   {
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+    * .${TableSharedCssClassName.TABLE_CONTAINER},
+    * .${RendererCssClassName.EXTENSION} {
+      width: 100% !important;
+    }
+  }
+
+    .${TableSharedCssClassName.TABLE_NODE_WRAPPER} {
+      overflow-x: auto;
+    }
+
+  ${tableSharedStyle}
+
+  .${TableSharedCssClassName.TABLE_CONTAINER} {
+    transition: all 0.1s linear;
+
+    /** Shadow overrides */
+    &.${shadowClassNames.RIGHT_SHADOW}::after, &.${shadowClassNames.LEFT_SHADOW}::before {
+      top: ${tableMarginTop - 1}px;
+      height: calc(100% - ${tableMarginTop}px);
+    }
+
+    table {
+      ${tableStyles};
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    table[data-number-column='true'] {
+      .${RendererCssClassName.NUMBER_COLUMN} {
+        background-color: ${akEditorTableToolbar};
+        border-right: 1px solid ${akEditorTableBorder};
+        width: ${akEditorTableNumberColumnWidth}px;
+        text-align: center;
+        color: ${colors.N200};
+        font-size: ${fontSize()}px;
+      }
+    }
   }
 
   /*
@@ -238,6 +294,13 @@ export const Wrapper: ComponentClass<Props & HTMLAttributes<{}>> = styled.div`
     /* stylelint-enable */
 
     grid-template-columns: minmax(0, 1fr);
+    position: relative;
+
+    /*
+     * The overall renderer has word-wrap: break; which causes issues with
+     * code block line numbers in Safari / iOS.
+     */
+    word-wrap: normal;
 
     & > span {
       /* stylelint-disable value-no-vendor-prefix */
@@ -248,12 +311,60 @@ export const Wrapper: ComponentClass<Props & HTMLAttributes<{}>> = styled.div`
     }
   }
 
-  & .ApplicationCard,
   & .MediaGroup,
   & .CodeBlock {
-    margin-top: 12px;
+    margin-top: ${blockNodesVerticalMargin};
+
     &:first-child {
       margin-top: 0;
     }
+  }
+
+  ${columnLayoutSharedStyle};
+  & [data-layout-section] {
+    margin-top: ${gridSize() * 2.5}px;
+    & > div + div {
+      margin-left: ${gridSize() * 4}px;
+    }
+
+    @media screen and (max-width: ${gridMediumMaxWidth}px) {
+      & > div + div {
+        margin-left: 0;
+      }
+    }
+  }
+
+  & .${shadowClassNames.RIGHT_SHADOW}::before, .${shadowClassNames.RIGHT_SHADOW}::after,
+    .${shadowClassNames.LEFT_SHADOW}::before, .${shadowClassNames.LEFT_SHADOW}::after {
+      display: none;
+      position: absolute;
+      pointer-events: none;
+      z-index: ${akEditorSmallZIndex};
+      width: ${shadowWidth}px;
+      content: '';
+      /* Scrollbar is outside the content in IE, inset in other browsers. */
+      height: calc(100%);
+  }
+
+  & .${shadowClassNames.LEFT_SHADOW}::before {
+    background: linear-gradient(
+      to left,
+      rgba(99, 114, 130, 0) 0,
+      ${colors.N40A} 100%
+    );
+    top: 0px;
+    left: 0;
+    display: block;
+  }
+
+  & .${shadowClassNames.RIGHT_SHADOW}::after {
+    background: linear-gradient(
+      to right,
+      rgba(99, 114, 130, 0) 0,
+      ${colors.N40A} 100%
+    );
+    left: calc(100% - ${shadowWidth}px);
+    top: 0px;
+    display: block;
   }
 `;

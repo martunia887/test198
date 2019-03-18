@@ -1,38 +1,21 @@
-import axios from 'axios';
 import * as url from 'url';
 import { Auth, FileDetails } from '@atlaskit/media-core';
-import { Preview } from '../../../domain/preview';
-import { getPreviewFromBlob } from '../../../util/getPreviewFromBlob';
-
 import {
   AuthHeaders,
-  CollectionItem,
   Service,
   ServiceAccountWithType,
   ServiceFolder,
   ServiceFolderItem,
   ServiceName,
-  SourceFile,
 } from '../../domain';
 
 import { mapAuthToAuthHeaders } from '../../domain/auth';
+import { MediaStore, MediaFile } from '@atlaskit/media-store';
 
 const METADATA_POLL_INTERVAL_MS = 2000;
-const NON_IMAGE_PREVIEW_WIDTH = 640;
-const NON_IMAGE_PREVIEW_HEIGHT = 480;
-const MAX_IMAGE_PREVIEW_SIZE = 4096; // This is needed to retrieve the max image dimensions even if the image is smaller/bigger to let Api know that we want the original size.
-
-export interface GetRecentFilesData {
-  readonly contents: CollectionItem[];
-  readonly nextInclusiveStartKey: string;
-}
-
+const giphyApiKey = 'lBOxhhz1BM62Y3JsK0iQv1pRYyOGUjR8';
+const toJson = (response: Response) => response.json();
 type Method = 'GET' | 'POST' | 'DELETE';
-
-export interface CopyFileDestination {
-  readonly auth: Auth;
-  readonly collection?: string;
-}
 
 export interface GiphyImage {
   url: string;
@@ -73,50 +56,15 @@ export interface ImageCardModel {
 
 export interface Fetcher {
   fetchCloudAccountFolder(
-    apiUrl: string,
     auth: Auth,
     serviceName: ServiceName,
     accountId: string,
     folderId: string,
     cursor?: string,
   ): Promise<ServiceFolder>;
-  pollFile(
-    apiUrl: string,
-    auth: Auth,
-    fileId: string,
-    collection?: string,
-  ): Promise<FileDetails>;
-  getPreview(
-    apiUrl: string,
-    auth: Auth,
-    fileId: string,
-    collection?: string,
-  ): Promise<Preview>;
-  getImage(
-    apiUrl: string,
-    auth: Auth,
-    fileId: string,
-    collection?: string,
-  ): Promise<Blob>;
-  getServiceList(apiUrl: string, auth: Auth): Promise<ServiceAccountWithType[]>;
-  getRecentFiles(
-    apiUrl: string,
-    auth: Auth,
-    limit: number,
-    sortDirection: string,
-    inclusiveStartKey?: string,
-  ): Promise<GetRecentFilesData>;
-  unlinkCloudAccount(
-    apiUrl: string,
-    auth: Auth,
-    accountId: string,
-  ): Promise<void>;
-  copyFile(
-    apiUrl: string,
-    sourceFile: SourceFile,
-    destination: CopyFileDestination,
-    collection?: string,
-  ): Promise<FileDetails>;
+  pollFile(auth: Auth, fileId: string, collection?: string): Promise<MediaFile>;
+  getServiceList(auth: Auth): Promise<ServiceAccountWithType[]>;
+  unlinkCloudAccount(auth: Auth, accountId: string): Promise<void>;
   fetchTrendingGifs(offset?: number): Promise<GiphyData>;
   fetchGifsRelevantToSearch(query: string, offset?: number): Promise<GiphyData>;
 }
@@ -125,15 +73,14 @@ export class MediaApiFetcher implements Fetcher {
   constructor() {}
 
   fetchCloudAccountFolder(
-    apiUrl: string,
     auth: Auth,
     serviceName: ServiceName,
     accountId: string,
     folderId: string,
     cursor?: string,
   ): Promise<ServiceFolder> {
-    return this.query<{ data: ServiceFolder }>(
-      `${this.pickerUrl(apiUrl)}/service/${serviceName}/${accountId}/folder`,
+    return this.query(
+      `${pickerUrl(auth.baseUrl)}/service/${serviceName}/${accountId}/folder`,
       'GET',
       {
         folderId,
@@ -141,179 +88,100 @@ export class MediaApiFetcher implements Fetcher {
         cursor,
       },
       mapAuthToAuthHeaders(auth),
-    ).then(({ data: serviceFolder }) => {
-      if (serviceName === 'dropbox') {
-        return {
-          ...serviceFolder,
-          items: this.sortDropboxFiles(serviceFolder.items),
-        };
-      } else {
-        return serviceFolder;
-      }
-    });
+    )
+      .then(toJson)
+      .then(({ data: serviceFolder }) => {
+        if (serviceName === 'dropbox') {
+          return {
+            ...serviceFolder,
+            items: this.sortDropboxFiles(serviceFolder.items),
+          };
+        } else {
+          return serviceFolder;
+        }
+      });
   }
 
+  // TODO [MS-725]: remove
   pollFile(
-    apiUrl: string,
     auth: Auth,
     fileId: string,
     collection?: string,
-  ): Promise<FileDetails> {
-    return new Promise((resolve, reject) => {
-      return this.query<{ data: FileDetails }>(
-        `${this.fileStoreUrl(apiUrl)}/file/${fileId}`,
-        'GET',
-        {
-          collection,
-        },
-        mapAuthToAuthHeaders(auth),
-      )
-        .then(({ data: file }) => {
-          if (
-            file.processingStatus === 'succeeded' ||
-            file.processingStatus === 'failed'
-          ) {
-            resolve(file);
-          } else {
-            setTimeout(() => {
-              this.pollFile(apiUrl, auth, fileId, collection).then(
-                resolve,
-                reject,
-              );
-            }, METADATA_POLL_INTERVAL_MS);
-          }
-        })
-        .catch(error => {
-          // this._handleUploadError('metadata_fetch_fail', JSON.stringify(err));
-          reject('metadata_fetch_fail');
-        });
+  ): Promise<MediaFile> {
+    const store = new MediaStore({
+      authProvider: () => Promise.resolve(auth),
     });
-  }
 
-  getPreview(
-    apiUrl: string,
-    auth: Auth,
-    fileId: string,
-    collection?: string,
-  ): Promise<Preview> {
-    return this.pollFile(apiUrl, auth, fileId, collection).then(file => {
-      if (file.processingStatus === 'failed') {
-        return Promise.reject('get_preview_failed');
+    return new Promise(async (resolve, reject) => {
+      try {
+        const file = (await store.getFile(fileId, { collection })).data;
+        if (
+          file.processingStatus === 'succeeded' ||
+          file.processingStatus === 'failed'
+        ) {
+          resolve(file);
+        } else {
+          window.setTimeout(() => {
+            this.pollFile(auth, fileId, collection).then(resolve, reject);
+          }, METADATA_POLL_INTERVAL_MS);
+        }
+      } catch (e) {
+        reject('metadata_fetch_fail');
       }
-      const isImage = file.mediaType === 'image';
-      const width = isImage ? MAX_IMAGE_PREVIEW_SIZE : NON_IMAGE_PREVIEW_WIDTH;
-      const height = isImage
-        ? MAX_IMAGE_PREVIEW_SIZE
-        : NON_IMAGE_PREVIEW_HEIGHT;
-
-      return this.query(
-        `${this.fileStoreUrl(apiUrl)}/file/${fileId}/image`,
-        'GET',
-        {
-          width,
-          height,
-          collection,
-        },
-        mapAuthToAuthHeaders(auth),
-        'blob',
-      ).then(blob => getPreviewFromBlob(blob, file.mediaType!));
     });
   }
 
-  getImage(
-    apiUrl: string,
-    auth: Auth,
-    fileId: string,
-    collection?: string,
-  ): Promise<Blob> {
-    const collectionName = collection ? `?collection=${collection}` : '';
-    const url = `${this.fileStoreUrl(
-      apiUrl,
-    )}/file/${fileId}/image${collectionName}`;
-
+  getServiceList(auth: Auth): Promise<ServiceAccountWithType[]> {
     return this.query(
-      url,
-      'GET',
-      { mode: 'full-fit' },
-      mapAuthToAuthHeaders(auth),
-      'blob',
-    );
-  }
-
-  getServiceList(
-    apiUrl: string,
-    auth: Auth,
-  ): Promise<ServiceAccountWithType[]> {
-    return this.query<{ data: Service[] }>(
-      `${this.pickerUrl(apiUrl)}/accounts`,
+      `${pickerUrl(auth.baseUrl)}/accounts`,
       'GET',
       {},
       mapAuthToAuthHeaders(auth),
-    ).then(({ data: services }) => flattenAccounts(services));
+    )
+      .then(toJson)
+      .then(({ data: services }) => flattenAccounts(services));
   }
 
-  getRecentFiles(
-    apiUrl: string,
-    auth: Auth,
-    limit: number,
-    sortDirection: string,
-    inclusiveStartKey?: string,
-  ): Promise<GetRecentFilesData> {
-    return this.query<{ data: GetRecentFilesData }>(
-      `${this.fileStoreUrl(apiUrl)}/collection/recents/items`,
-      'GET',
-      {
-        sortDirection,
-        limit,
-        inclusiveStartKey,
-      },
-      mapAuthToAuthHeaders(auth),
-    ).then(({ data }) => data);
-  }
-
-  unlinkCloudAccount(
-    apiUrl: string,
-    auth: Auth,
-    accountId: string,
-  ): Promise<void> {
+  unlinkCloudAccount(auth: Auth, accountId: string): Promise<void> {
     return this.query(
-      `${this.pickerUrl(apiUrl)}/account/${accountId}`,
+      `${pickerUrl(auth.baseUrl)}/account/${accountId}`,
       'DELETE',
       {},
       mapAuthToAuthHeaders(auth),
-    );
+    ).then(() => {});
   }
 
-  copyFile(
-    apiUrl: string,
-    sourceFile: SourceFile,
-    { auth, collection }: CopyFileDestination,
-  ): Promise<FileDetails> {
-    const params = collection ? `?collection=${collection}` : '';
-    return this.query<{ data: FileDetails }>(
-      `${this.fileStoreUrl(apiUrl)}/file/copy/withToken${params}`,
-      'POST',
-      JSON.stringify({ sourceFile }),
-      mapAuthToAuthHeaders(auth),
-    ).then(({ data: file }) => file);
+  stringifyParams(queryParams: {
+    [key: string]: string | undefined | number;
+  }): string {
+    const keys = Object.keys(queryParams);
+    if (!keys.length) {
+      return '';
+    }
+
+    const stringifiedParams = keys
+      .map(key => {
+        const value = queryParams[key];
+        return value !== undefined ? `${key}=${value}` : undefined;
+      })
+      .filter(key => !!key)
+      .join('&');
+
+    return `?${stringifiedParams}`;
   }
 
   fetchTrendingGifs = (offset?: number): Promise<GiphyData> => {
     const baseUrl = 'https://api.giphy.com/v1/gifs/trending';
-
-    const requestConfig = {
-      url: `${baseUrl}`,
-      params: {
-        // TODO Move these keys somewhere in config MSW-406
-        api_key: 'lBOxhhz1BM62Y3JsK0iQv1pRYyOGUjR8',
-        rating: 'pg',
-        offset,
-      },
+    const params = {
+      api_key: giphyApiKey,
+      rating: 'pg',
+      offset,
     };
+    const url = `${baseUrl}${this.stringifyParams(params)}`;
 
-    return axios
-      .request(requestConfig)
-      .then(response => this.mapGiphyResponseToViewModel(response.data));
+    return fetch(url)
+      .then(toJson)
+      .then(this.mapGiphyResponseToViewModel);
   };
 
   fetchGifsRelevantToSearch = (
@@ -321,20 +189,17 @@ export class MediaApiFetcher implements Fetcher {
     offset?: number,
   ): Promise<GiphyData> => {
     const baseUrl = 'https://api.giphy.com/v1/gifs/search';
-
-    const requestConfig = {
-      url: `${baseUrl}`,
-      params: {
-        api_key: 'lBOxhhz1BM62Y3JsK0iQv1pRYyOGUjR8',
-        rating: 'pg',
-        q: query,
-        offset,
-      },
+    const params = {
+      api_key: giphyApiKey,
+      rating: 'pg',
+      q: query,
+      offset,
     };
+    const url = `${baseUrl}${this.stringifyParams(params)}`;
 
-    return axios
-      .request(requestConfig)
-      .then(response => this.mapGiphyResponseToViewModel(response.data));
+    return fetch(url)
+      .then(toJson)
+      .then(this.mapGiphyResponseToViewModel);
   };
 
   private mapGiphyResponseToViewModel = (
@@ -370,54 +235,27 @@ export class MediaApiFetcher implements Fetcher {
     };
   };
 
-  private parsePayload(
-    method: Method,
-    payload: any,
-  ): { data?: any; params?: any } {
-    if (method === 'GET') {
-      return { params: payload };
-    } else {
-      return { data: payload };
-    }
-  }
-
-  private query<R = void>(
-    url: string,
-    method: Method,
-    payload: any,
-    authHeaders: AuthHeaders,
-  ): Promise<R>;
   private query(
-    url: string,
+    baseUrl: string,
     method: Method,
     payload: any,
     authHeaders: AuthHeaders,
-    responseType: 'blob',
-  ): Promise<Blob>;
-  private query<R = void>(
-    url: string,
-    method: Method,
-    payload: any,
-    authHeaders: AuthHeaders,
-    responseType?: string,
-  ): Promise<R> | Promise<Blob> {
+  ): Promise<Response> {
     const contentType = 'application/json; charset=utf-8';
-    const headers = {
+    const headers = new Headers({
       ...authHeaders,
       'Content-Type': contentType,
-    };
-    const { data, params } = this.parsePayload(method, payload);
-    const config = {
-      url,
+    });
+    const params = method === 'GET' ? this.stringifyParams(payload) : '';
+    const body = method !== 'GET' ? JSON.stringify(payload) : undefined;
+    const url = `${baseUrl}${params}`;
+    const request = new Request(url, {
       method,
       headers,
-      data,
-      params,
-      contentType,
-      responseType,
-    };
+      body,
+    });
 
-    return axios.request(config).then(response => response.data);
+    return fetch(request);
   }
 
   private isFolder(item: ServiceFolderItem): boolean {
@@ -448,16 +286,16 @@ export class MediaApiFetcher implements Fetcher {
       }
     });
   }
-
-  private fileStoreUrl(apiUrl: string): string {
-    const { protocol, host } = url.parse(apiUrl);
-    return `${protocol}//${host}`;
-  }
-
-  private pickerUrl(apiUrl: string): string {
-    return `${this.fileStoreUrl(apiUrl)}/picker`;
-  }
 }
+
+export const fileStoreUrl = (baseUrl: string): string => {
+  const { protocol, host } = url.parse(baseUrl);
+  return `${protocol}//${host}`;
+};
+
+export const pickerUrl = (baseUrl: string): string => {
+  return `${fileStoreUrl(baseUrl)}/picker`;
+};
 
 export function flattenAccounts(services: Service[]): ServiceAccountWithType[] {
   return services.reduce(

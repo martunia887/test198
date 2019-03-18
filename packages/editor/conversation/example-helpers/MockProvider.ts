@@ -1,40 +1,42 @@
-import {
-  ConversationResourceConfig,
-  AbstractConversationResource,
-} from '../src/api/ConversationResource';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { Comment, Conversation, User } from '../src/model';
-import { uuid } from '../src/internal/uuid';
-import { generateMockConversation, mockInlineConversation } from './MockData';
-import { mention, emoji } from '@atlaskit/util-data-test';
-import { reactionsProvider } from '@atlaskit/reactions';
-import { HttpError } from '../src/api/HttpError';
-
+import { MemoryReactionsStore } from '@atlaskit/reactions';
+import { MockReactionsClient } from '@atlaskit/reactions/src/client/MockReactionsClient';
+import { emoji, mention } from '@atlaskit/util-data-test';
 import {
-  FETCH_CONVERSATIONS_REQUEST,
-  FETCH_CONVERSATIONS_SUCCESS,
+  AbstractConversationResource,
+  ConversationResourceConfig,
+} from '../src/api/ConversationResource';
+import { HttpError } from '../src/api/HttpError';
+import {
+  ADD_COMMENT_ERROR,
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
-  ADD_COMMENT_ERROR,
-  UPDATE_COMMENT_REQUEST,
-  UPDATE_COMMENT_SUCCESS,
-  UPDATE_COMMENT_ERROR,
-  DELETE_COMMENT_REQUEST,
-  DELETE_COMMENT_SUCCESS,
-  DELETE_COMMENT_ERROR,
-  REVERT_COMMENT,
+  CREATE_CONVERSATION_ERROR,
   CREATE_CONVERSATION_REQUEST,
   CREATE_CONVERSATION_SUCCESS,
-  CREATE_CONVERSATION_ERROR,
+  DELETE_COMMENT_ERROR,
+  DELETE_COMMENT_REQUEST,
+  DELETE_COMMENT_SUCCESS,
+  FETCH_CONVERSATIONS_REQUEST,
+  FETCH_CONVERSATIONS_SUCCESS,
+  REVERT_COMMENT,
+  UPDATE_COMMENT_ERROR,
+  UPDATE_COMMENT_REQUEST,
+  UPDATE_COMMENT_SUCCESS,
   UPDATE_USER_SUCCESS,
 } from '../src/internal/actions';
+import { uuid } from '../src/internal/uuid';
+import { Comment, Conversation, User } from '../src/model';
+import { generateMockConversation, mockInlineConversation } from './MockData';
 
 const MockDataProviders = {
   mentionProvider: Promise.resolve(mention.storyData.resourceProvider),
   emojiProvider: Promise.resolve(
     emoji.storyData.getEmojiResource({ uploadSupported: true }),
   ),
-  reactionsProvider: Promise.resolve(reactionsProvider),
+  reactionsStore: Promise.resolve(
+    new MemoryReactionsStore(new MockReactionsClient()),
+  ),
 };
 
 const RESPONSE_MESSAGES = {
@@ -66,12 +68,13 @@ export class MockProvider extends AbstractConversationResource {
   constructor(config: ConversationResourceConfig) {
     super();
     this.config = config;
+    //@ts-ignore
     this.updateUser(config.user);
     this.responseCode = 200;
   }
 
   /**
-   * Retrieve the IDs (and meta-data) for all conversations associated with the container ID.
+   * Retrieve the IDs (and meta-data) for all conversations associated with the object ID.
    */
   async getConversations(): Promise<Conversation[]> {
     const { dispatch } = this;
@@ -84,18 +87,20 @@ export class MockProvider extends AbstractConversationResource {
   }
 
   /**
-   * Creates a new Conversation and associates it with the containerId provided.
+   * Creates a new Conversation and associates it with the objectId provided.
    */
   async create(
     localId: string,
-    containerId: string,
     value: any,
     meta: any,
+    objectId: string,
+    containerId?: string,
   ): Promise<Conversation> {
     const conversationId = <string>uuid.generate();
 
     const result = {
       conversationId,
+      objectId,
       containerId,
       localId,
       comments: [this.createComment(conversationId, conversationId, value)],
@@ -106,7 +111,7 @@ export class MockProvider extends AbstractConversationResource {
 
     dispatch({ type: CREATE_CONVERSATION_REQUEST, payload: result });
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       const errResult = {
         ...result,
         error: new HttpError(responseCode, RESPONSE_MESSAGES[responseCode]),
@@ -138,16 +143,19 @@ export class MockProvider extends AbstractConversationResource {
 
     dispatch({ type: ADD_COMMENT_REQUEST, payload: result });
 
-    setTimeout(() => {
-      const errResult = {
-        ...result,
-        error: new HttpError(responseCode, RESPONSE_MESSAGES[responseCode]),
-      };
-      const type =
-        responseCode >= 400 ? ADD_COMMENT_ERROR : ADD_COMMENT_SUCCESS;
-      const payload = responseCode >= 400 ? errResult : result;
-      dispatch({ type, payload });
-    }, 1000);
+    await new Promise(resolve => {
+      window.setTimeout(() => {
+        const errResult = {
+          ...result,
+          error: new HttpError(responseCode, RESPONSE_MESSAGES[responseCode]),
+        };
+        const type =
+          responseCode >= 400 ? ADD_COMMENT_ERROR : ADD_COMMENT_SUCCESS;
+        const payload = responseCode >= 400 ? errResult : result;
+        dispatch({ type, payload });
+        resolve();
+      }, 1000);
+    });
 
     return result as Comment;
   }
@@ -160,7 +168,7 @@ export class MockProvider extends AbstractConversationResource {
   ): Comment {
     return {
       commentAri: `abc:cloud:platform::comment/${localId}`,
-      createdBy: this.config.user,
+      createdBy: this.config.user!,
       createdAt: Date.now(),
       commentId: <string>uuid.generate(),
       document: {
@@ -195,7 +203,7 @@ export class MockProvider extends AbstractConversationResource {
     const { dispatch, responseCode } = this;
     dispatch({ type: UPDATE_COMMENT_REQUEST, payload: result });
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       const errResult = {
         conversationId,
         commentId,
@@ -208,6 +216,7 @@ export class MockProvider extends AbstractConversationResource {
       dispatch({ type, payload });
     }, 500);
 
+    //@ts-ignore
     return result;
   }
 
@@ -229,7 +238,7 @@ export class MockProvider extends AbstractConversationResource {
     };
     dispatch({ type: DELETE_COMMENT_REQUEST, payload: result });
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       const type =
         responseCode >= 400 ? DELETE_COMMENT_ERROR : DELETE_COMMENT_SUCCESS;
       dispatch({ type, payload: result });

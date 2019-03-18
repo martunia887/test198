@@ -1,26 +1,15 @@
-import { Schema } from 'prosemirror-model';
-import { Token } from './';
-import { parseWhitespace } from './whitespace';
+import { TokenParser } from './';
+import { parseNewlineOnly } from './whitespace';
 
-export function hardbreak(input: string, schema: Schema): Token {
-  // Look for special hardbreak \\
-  const firstTwoChar = input.substr(0, 2);
-  if (firstTwoChar === '\\\\') {
-    return {
-      type: 'pmnode',
-      nodes: [schema.nodes.hardBreak.createChecked()],
-      length: 2,
-    };
-  }
-
+export const hardbreak: TokenParser = ({ input, position, schema }) => {
   // Look for normal hardbreak \r, \n, \r\n
-  const length = parseWhitespace(input, true);
+  const length = parseNewlineOnly(input.substring(position));
 
   if (length === 0) {
     // not a valid hardbreak
     return {
       type: 'text',
-      text: input.substr(0, 1),
+      text: input.substr(position, 1),
       length: 1,
     };
   }
@@ -30,4 +19,4 @@ export function hardbreak(input: string, schema: Schema): Token {
     nodes: [schema.nodes.hardBreak.createChecked()],
     length,
   };
-}
+};

@@ -1,17 +1,14 @@
 import * as React from 'react';
 import { Fragment, Node } from 'prosemirror-model';
 
-import ApplicationCard, { AppCardViewProps } from './applicationCard';
 import Blockquote from './blockquote';
 import BodiedExtension, {
   Props as BodiedExtensionProps,
 } from './bodiedExtension';
 import BulletList from './bulletList';
 import CodeBlock from './codeBlock';
-import DecisionItem, { Props as DecisionItemProps } from './decisionItem';
 import DecisionList from './decisionList';
 import Doc from './doc';
-import Emoji from './emoji';
 import Extension, { Props as ExtensionProps } from './extension';
 import HardBreak from './hardBreak';
 import Heading from './heading';
@@ -19,11 +16,10 @@ import Image from './image';
 import InlineExtension, {
   Props as InlineExtensionProps,
 } from './inlineExtension';
+import LayoutSection from './layoutSection';
+import LayoutColumn from './layoutColumn';
 import ListItem from './listItem';
-import Media from './media';
-import MediaGroup from './mediaGroup';
-import MediaSingle, { BreakoutProvider } from './mediaSingle';
-import Mention from './mention';
+import MediaSingle from './mediaSingle';
 import OrderedList from './orderedList';
 import Panel from './panel';
 import Paragraph from './paragraph';
@@ -37,14 +33,77 @@ import TableHeader from './tableHeader';
 import TableRow from './tableRow';
 import UnknownBlock from './unknownBlock';
 import { InlineDiff, BlockDiff } from './inlineDiff';
+import * as Loadable from 'react-loadable';
 
-import { bigEmojiHeight } from '../../utils';
+const DecisionItem = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_DecisionItem" */
+    './decisionItem').then(module => module.default),
+  loading: () => null,
+});
 
-export const nodeToReact = {
-  applicationCard: ApplicationCard,
+const Date = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Date" */
+    './date').then(module => module.default),
+  loading: () => null,
+});
+
+const Status = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Status" */
+    './status').then(module => module.default),
+  loading: () => null,
+});
+
+const Emoji = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Emoji" */
+    './emoji').then(module => module.default),
+  loading: () => null,
+});
+
+const InlineCard = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_InlineCard" */
+    './inlineCard').then(module => module.default),
+  loading: () => null,
+});
+
+const BlockCard = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_BlockCard" */
+    './blockCard').then(module => module.default),
+  loading: () => null,
+});
+
+const Media = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Media" */
+    './media').then(module => module.default),
+  loading: () => null,
+});
+
+const MediaGroup = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_MediaGroup" */
+    './mediaGroup').then(module => module.default),
+  loading: () => null,
+});
+
+const Mention = Loadable({
+  loader: () =>
+    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Mention" */
+    './mention').then(module => module.default),
+  loading: () => null,
+});
+
+export const nodeToReact: { [key: string]: React.ComponentType<any> } = {
   blockquote: Blockquote,
   bulletList: BulletList,
+  blockCard: BlockCard,
   codeBlock: CodeBlock,
+  date: Date,
   decisionItem: DecisionItem,
   decisionList: DecisionList,
   doc: Doc,
@@ -54,7 +113,10 @@ export const nodeToReact = {
   hardBreak: HardBreak,
   heading: Heading,
   image: Image,
+  inlineCard: InlineCard,
   inlineExtension: InlineExtension,
+  layoutSection: LayoutSection,
+  layoutColumn: LayoutColumn,
   listItem: ListItem,
   media: Media,
   mediaGroup: MediaGroup,
@@ -65,6 +127,7 @@ export const nodeToReact = {
   paragraph: Paragraph,
   placeholder: Placeholder,
   rule: Rule,
+  status: Status,
   taskItem: TaskItem,
   taskList: TaskList,
   table: Table,
@@ -76,7 +139,7 @@ export const nodeToReact = {
   blockDiff: BlockDiff,
 };
 
-export const toReact = (node: Node): React.ComponentClass<any> => {
+export const toReact = (node: Node): React.ComponentType<any> => {
   return nodeToReact[node.type.name];
 };
 
@@ -145,7 +208,7 @@ export const mergeTextNodes = (nodes: (Node | NodeSimple)[]) => {
     }
 
     // Append node to previous node, if it was a text wrapper
-    if (acc.length > 0 && isTextWrapper(acc[acc.length - 1].type.name)) {
+    if (acc.length > 0 && isTextWrapper(acc[acc.length - 1])) {
       (acc[acc.length - 1] as TextWrapper).content!.push(current as Node);
     } else {
       acc.push({
@@ -164,8 +227,10 @@ export const isText = (type: string): type is 'text' => {
   return type === 'text';
 };
 
-export const isTextWrapper = (type: string): type is 'textWrapper' => {
-  return type === 'textWrapper';
+export const isTextWrapper = (
+  node: Node | TextWrapper | NodeSimple,
+): node is TextWrapper => {
+  return node.type.name === 'textWrapper';
 };
 
 const whitespaceRegex = /^\s*$/;
@@ -175,11 +240,6 @@ const whitespaceRegex = /^\s*$/;
  * whose content satisfies the condition for an emoji block
  */
 export const isEmojiDoc = (doc: Fragment, props: any = {}): boolean => {
-  // Previously calculated to be true so pass prop down
-  // from paragraph node to emoji node
-  if (props.fitToHeight === bigEmojiHeight) {
-    return true;
-  }
   if (doc.childCount !== 1) {
     return false;
   }
@@ -219,15 +279,14 @@ const isEmojiBlock = (pnode: Fragment): boolean => {
 };
 
 export {
-  AppCardViewProps,
-  ApplicationCard,
   Blockquote,
   BodiedExtension,
   BodiedExtensionProps,
   BulletList,
+  BlockCard,
   CodeBlock,
+  Date,
   DecisionItem,
-  DecisionItemProps,
   DecisionList,
   Doc,
   Emoji,
@@ -237,8 +296,11 @@ export {
   Heading,
   ListItem,
   Image,
+  InlineCard,
   InlineExtension,
   InlineExtensionProps,
+  LayoutSection,
+  LayoutColumn,
   Media,
   MediaGroup,
   MediaSingle,
@@ -248,6 +310,7 @@ export {
   Paragraph,
   Placeholder,
   Rule,
+  Status,
   TaskItem,
   TaskList,
   Table,
@@ -255,5 +318,4 @@ export {
   TableHeader,
   TableRow,
   UnknownBlock,
-  BreakoutProvider,
 };

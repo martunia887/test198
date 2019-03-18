@@ -6,7 +6,7 @@ import {
   TextSelection,
 } from 'prosemirror-state';
 import { PluginKey } from 'prosemirror-state';
-import { placeholder } from '@atlaskit/editor-common';
+import { placeholder } from '@atlaskit/adf-schema';
 import { EditorPlugin } from '../../types/editor-plugin';
 import WithPluginState from '../../ui/WithPluginState';
 import { Dispatch } from '../../event-dispatcher';
@@ -93,9 +93,7 @@ export function createPlugin(
               newState.doc,
               adjacentNodePos,
             );
-            return newState.tr
-              .setMeta('isLocal', true)
-              .deleteRange($from.pos, $to.pos);
+            return newState.tr.deleteRange($from.pos, $to.pos);
           }
         }
       }
@@ -127,13 +125,13 @@ const placeholderTextPlugin = (
   options: PlaceholderTextOptions,
 ): EditorPlugin => ({
   nodes() {
-    return [{ name: 'placeholder', node: placeholder, rank: 1600 }];
+    return [{ name: 'placeholder', node: placeholder }];
   },
 
   pmPlugins() {
     return [
       {
-        rank: 400,
+        name: 'placeholderText',
         plugin: ({ schema, props, dispatch }) =>
           createPlugin(dispatch, options),
       },

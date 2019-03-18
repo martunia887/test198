@@ -1,36 +1,76 @@
 import { AnalyticsWebClient } from './types';
-import { GasPayload } from '@atlaskit/analytics-gas-types';
+import {
+  GasPayload,
+  GasScreenEventPayload,
+  GasPureScreenEventPayload,
+  GasPurePayload,
+} from '@atlaskit/analytics-gas-types';
+import Logger from './helpers/logger';
 
-export const sendEvent = (client: AnalyticsWebClient) => (
-  event: GasPayload,
-): void => {
-  const gasEvent = {
-    ...event,
-  };
-  delete gasEvent.eventType;
+const isPromise = (c: any): c is Promise<AnalyticsWebClient> => {
+  return typeof c.then === 'function';
+};
 
-  switch (event.eventType) {
-    case 'ui':
-      client.sendUIEvent(gasEvent);
-      break;
+export const sendEvent = (
+  logger: Logger,
+  client?: AnalyticsWebClient | Promise<AnalyticsWebClient>,
+) => (event: GasPayload | GasScreenEventPayload): void => {
+  if (client) {
+    const gasEvent = {
+      ...event,
+    };
+    delete gasEvent.eventType;
 
-    case 'operational':
-      client.sendOperationalEvent(gasEvent);
-      break;
+    const withClient = (cb: (analyticsClient: AnalyticsWebClient) => void) => {
+      if (isPromise(client)) {
+        client
+          .then(cb)
+          .catch(e => logger.warn('There was an error sending the event', e));
+      } else {
+        try {
+          cb(client);
+        } catch (e) {
+          logger.warn('There was an error sending the event', e);
+        }
+      }
+    };
 
-    case 'track':
-      client.sendTrackEvent(gasEvent);
-      break;
+    switch (event.eventType) {
+      case 'ui':
+        logger.debug('Sending UI Event via analytics client', gasEvent);
+        withClient(client => client.sendUIEvent(gasEvent as GasPurePayload));
+        break;
 
-    case 'screen':
-      client.sendScreenEvent(gasEvent);
-      break;
+      case 'operational':
+        logger.debug(
+          'Sending Operational Event via analytics client',
+          gasEvent,
+        );
+        withClient(client =>
+          client.sendOperationalEvent(gasEvent as GasPurePayload),
+        );
+        break;
 
-    default:
-      throw Error(
-        `cannot map eventType ${
-          event.eventType
-        } to an analytics-web-client function`,
-      );
+      case 'track':
+        logger.debug('Sending Track Event via analytics client', gasEvent);
+        withClient(client => client.sendTrackEvent(gasEvent as GasPurePayload));
+        break;
+
+      case 'screen':
+        logger.debug('Sending Screen Event via analytics client', gasEvent);
+        withClient(client =>
+          client.sendScreenEvent(gasEvent as GasPureScreenEventPayload),
+        );
+        break;
+
+      default:
+        logger.error(
+          `cannot map eventType ${
+            event.eventType
+          } to an analytics-web-client function`,
+        );
+    }
+  } else {
+    logger.warn('AnalyticsWebClient instance is not provided');
   }
 };

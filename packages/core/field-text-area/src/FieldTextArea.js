@@ -28,10 +28,11 @@ type Props = {|
   id?: string,
   /** Sets whether to show or hide the label. */
   isLabelHidden?: boolean,
+  /** Sets content text value to monospace */
+  isMonospaced?: boolean,
   /** Provided component is rendered inside a modal dialogue when the field is
    selected. */
   invalidMessage?: Node,
-
   /** Ensure the input fits in to its containing element. If the field is still
    resizable, it will not be hotizontally resizable. */
   shouldFitContainer?: boolean,
@@ -44,8 +45,8 @@ type Props = {|
   maxLength?: number,
   /** The minimum number of rows of text to display */
   minimumRows?: number,
-  /** Disables the resizing of the text area. */
-  enableResize?: boolean,
+  /** Enables the resizing of the textarea (in both directions, or restricted to one axis) */
+  enableResize: boolean | 'horizontal' | 'vertical',
 |};
 
 type State = {|
@@ -55,11 +56,11 @@ type State = {|
 |};
 
 export default class FieldTextArea extends Component<Props, State> {
-  props: Props; // eslint-disable-line react/sort-comp
   input: any; // eslint-disable-line react/sort-comp
 
   static defaultProps = {
     onChange: () => {},
+    enableResize: false,
   };
 
   state = {

@@ -1,30 +1,30 @@
-import { AuthProvider, Context } from '@atlaskit/media-core';
+import { Context } from '@atlaskit/media-core';
 
-import { LocalUploadComponent, LocalUploadConfig } from './localUpload';
-import { MPClipboardLoaded } from '../outer/analytics/events';
-import { MediaPickerContext } from '../domain/context';
+import { LocalUploadComponent } from './localUpload';
 import { whenDomReady } from '../util/documentReady';
+import { appendTimestamp } from '../util/appendTimestamp';
+import { LocalFileSource, LocalFileWithSource } from '../service/types';
+import { Clipboard, ClipboardConfig } from './types';
 
-export interface ClipboardConfig extends LocalUploadConfig {
-  readonly userAuthProvider?: AuthProvider;
-}
+export const getFilesFromClipboard = (files: FileList) => {
+  return Array.from(files).map(file => {
+    if (file.type.indexOf('image/') === 0) {
+      const name = appendTimestamp(file.name, (file as any).lastModified);
+      return new File([file], name, {
+        type: file.type,
+      });
+    } else {
+      return file;
+    }
+  });
+};
 
-export interface ClipboardConstructor {
-  new (
-    analyticsContext: MediaPickerContext,
-    context: Context,
-    clipboardConfig: ClipboardConfig,
-  ): Clipboard;
-}
-
-export class Clipboard extends LocalUploadComponent {
+export class ClipboardImpl extends LocalUploadComponent implements Clipboard {
   constructor(
-    analyticsContext: MediaPickerContext,
     context: Context,
     config: ClipboardConfig = { uploadParams: {} },
   ) {
-    super(analyticsContext, context, config);
-    this.analyticsContext.trackEvent(new MPClipboardLoaded());
+    super(context, config);
   }
 
   public async activate(): Promise<void> {
@@ -38,12 +38,22 @@ export class Clipboard extends LocalUploadComponent {
     document.removeEventListener('paste', this.pasteHandler);
   }
 
-  private pasteHandler = (event: ClipboardEvent): void => {
+  private pasteHandler = (event: Event): void => {
     /*
       Browser behaviour for getting files from the clipboard is very inconsistent and buggy.
       @see https://extranet.atlassian.com/display/FIL/RFC+099%3A+Clipboard+browser+inconsistency
     */
-    const filesArray = Array.from(event.clipboardData.files);
-    this.uploadService.addFiles(filesArray);
+    const { clipboardData } = event as ClipboardEvent;
+
+    if (clipboardData && clipboardData.files) {
+      const fileSource =
+        clipboardData.types.length === 1
+          ? LocalFileSource.PastedScreenshot
+          : LocalFileSource.PastedFile;
+      const filesArray: LocalFileWithSource[] = getFilesFromClipboard(
+        clipboardData.files,
+      ).map((file: File) => ({ file, source: fileSource }));
+      this.uploadService.addFilesWithSource(filesArray);
+    }
   };
 }

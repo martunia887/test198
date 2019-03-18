@@ -1,6 +1,4 @@
 export * from './item';
-export * from './actions';
-
 export {
   ClientBasedAuth,
   AsapBasedAuth,
@@ -14,12 +12,18 @@ export {
   UploadableFile,
   UploadFileCallbacks,
   UploadFileResult,
+  UploadController,
+  MediaType,
+  isPreviewableType,
+  TouchFileDescriptor,
+  MediaFileArtifacts,
 } from '@atlaskit/media-store';
 
-export * from './mediaTypes';
+export { FileFetcher } from './file';
 export * from './context/context';
-export * from './collection';
-export * from './providers';
-export * from './services';
 export * from './utils';
-export * from './error';
+export * from './fileState';
+export * from './utils/getMediaTypeFromMimeType';
+export * from './context/fileStreamCache';
+export type ImageResizeMode = 'crop' | 'fit' | 'full-fit' | 'stretchy-fit';
+export * from './identifier';

@@ -1,6 +1,8 @@
+import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
 import { EditorPlugin, EditorProps } from '../types';
 import {
   basePlugin,
+  breakoutPlugin,
   blockTypePlugin,
   clearMarksOnChangeToEmptyDocumentPlugin,
   codeBlockPlugin,
@@ -14,7 +16,6 @@ import {
   hyperlinkPlugin,
   imageUploadPlugin,
   insertBlockPlugin,
-  isMultilineContentPlugin,
   jiraIssuePlugin,
   layoutPlugin,
   listsPlugin,
@@ -39,38 +40,61 @@ import {
   quickInsertPlugin,
   gapCursorPlugin,
   inlineActionPlugin,
+  cardPlugin,
+  floatingToolbarPlugin,
+  statusPlugin,
+  gridPlugin,
+  alignment,
+  editorDisabledPlugin,
+  indentationPlugin,
+  annotationPlugin,
+  compositionPlugin,
+  analyticsPlugin,
 } from '../plugins';
 
 /**
  * Returns list of plugins that are absolutely necessary for editor to work
  */
-export function getDefaultPluginsList(props: EditorProps = {}): EditorPlugin[] {
-  const textFormattingOptions = props.textFormatting
-    ? props.textFormatting
-    : typeof props.allowTextFormatting === 'object'
-      ? props.allowTextFormatting
-      : {};
-  return [
+export function getDefaultPluginsList(
+  props: EditorProps,
+  createAnalyticsEvent?: CreateUIAnalyticsEventSignature,
+): EditorPlugin[] {
+  let defaultPluginList: EditorPlugin[] = [];
+
+  if (props.allowAnalyticsGASV3) {
+    defaultPluginList.push(analyticsPlugin(createAnalyticsEvent));
+  }
+
+  return defaultPluginList.concat([
     pastePlugin,
     basePlugin,
     blockTypePlugin,
     placeholderPlugin,
     clearMarksOnChangeToEmptyDocumentPlugin,
     hyperlinkPlugin,
-    textFormattingPlugin(textFormattingOptions),
+    textFormattingPlugin(props.textFormatting || {}),
     widthPlugin,
     typeAheadPlugin,
-  ];
+    unsupportedContentPlugin,
+    editorDisabledPlugin,
+  ]);
 }
 
 /**
  * Maps EditorProps to EditorPlugins
  */
-export default function createPluginsList(props: EditorProps): EditorPlugin[] {
-  const plugins = getDefaultPluginsList(props);
+export default function createPluginsList(
+  props: EditorProps,
+  createAnalyticsEvent?: CreateUIAnalyticsEventSignature,
+): EditorPlugin[] {
+  const plugins = getDefaultPluginsList(props, createAnalyticsEvent);
 
-  if (props.UNSAFE_allowQuickInsert) {
-    plugins.push(quickInsertPlugin);
+  if (props.allowBreakout && props.appearance === 'full-page') {
+    plugins.push(breakoutPlugin);
+  }
+
+  if (props.allowTextAlignment) {
+    plugins.push(alignment);
   }
 
   if (props.allowInlineAction) {
@@ -90,15 +114,16 @@ export default function createPluginsList(props: EditorProps): EditorPlugin[] {
   }
 
   if (props.media || props.mediaProvider) {
-    plugins.push(mediaPlugin(props.media));
+    plugins.push(mediaPlugin(props.media, props.appearance));
   }
 
   if (props.allowCodeBlocks) {
-    plugins.push(codeBlockPlugin);
+    const options = props.allowCodeBlocks !== true ? props.allowCodeBlocks : {};
+    plugins.push(codeBlockPlugin(options));
   }
 
   if (props.mentionProvider) {
-    plugins.push(mentionsPlugin);
+    plugins.push(mentionsPlugin(createAnalyticsEvent));
   }
 
   if (props.emojiProvider) {
@@ -106,10 +131,10 @@ export default function createPluginsList(props: EditorProps): EditorPlugin[] {
   }
 
   if (props.allowTables) {
-    plugins.push(tablesPlugin);
+    plugins.push(tablesPlugin(props.allowTables));
   }
 
-  if (props.allowTasksAndDecisions) {
+  if (props.allowTasksAndDecisions || props.taskDecisionProvider) {
     plugins.push(tasksAndDecisionsPlugin);
   }
 
@@ -135,7 +160,7 @@ export default function createPluginsList(props: EditorProps): EditorPlugin[] {
   }
 
   if (props.collabEdit || props.collabEditProvider) {
-    plugins.push(collabEditPlugin);
+    plugins.push(collabEditPlugin(props.collabEdit));
   }
 
   if (props.maxContentSize) {
@@ -144,10 +169,6 @@ export default function createPluginsList(props: EditorProps): EditorPlugin[] {
 
   if (props.allowJiraIssue) {
     plugins.push(jiraIssuePlugin);
-  }
-
-  if (props.allowUnsupportedContent) {
-    plugins.push(unsupportedContentPlugin);
   }
 
   if (props.allowPanel) {
@@ -172,18 +193,31 @@ export default function createPluginsList(props: EditorProps): EditorPlugin[] {
 
   if (props.allowTemplatePlaceholders) {
     const options =
-      props.allowTemplatePlaceholders === true
-        ? {}
-        : props.allowTemplatePlaceholders;
+      props.allowTemplatePlaceholders !== true
+        ? props.allowTemplatePlaceholders
+        : {};
     plugins.push(placeholderTextPlugin(options));
   }
 
-  if (props.UNSAFE_allowLayouts) {
+  if (props.allowLayouts) {
     plugins.push(layoutPlugin);
   }
 
-  if (props.allowGapCursor) {
-    plugins.push(gapCursorPlugin);
+  if (props.UNSAFE_cards) {
+    plugins.push(cardPlugin);
+  }
+
+  let statusMenuDisabled = true;
+  if (props.allowStatus) {
+    statusMenuDisabled =
+      typeof props.allowStatus === 'object'
+        ? props.allowStatus.menuDisabled
+        : false;
+    plugins.push(statusPlugin({ menuDisabled: statusMenuDisabled }));
+  }
+
+  if (props.allowIndentation) {
+    plugins.push(indentationPlugin);
   }
 
   // UI only plugins
@@ -191,14 +225,26 @@ export default function createPluginsList(props: EditorProps): EditorPlugin[] {
     insertBlockPlugin({
       insertMenuItems: props.insertMenuItems,
       horizontalRuleEnabled: props.allowRule,
+      nativeStatusSupported: !statusMenuDisabled,
     }),
   );
 
+  if (props.allowConfluenceInlineComment) {
+    plugins.push(annotationPlugin);
+  }
+
+  plugins.push(gapCursorPlugin);
+  plugins.push(gridPlugin);
   plugins.push(submitEditorPlugin);
   plugins.push(fakeTextCursorPlugin);
+  plugins.push(floatingToolbarPlugin);
 
-  if (props.appearance === 'message') {
-    plugins.push(isMultilineContentPlugin);
+  if (props.appearance !== 'mobile') {
+    plugins.push(quickInsertPlugin);
+  }
+
+  if (props.appearance === 'mobile') {
+    plugins.push(compositionPlugin);
   }
 
   return plugins;

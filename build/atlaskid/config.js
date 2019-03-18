@@ -17,33 +17,35 @@ const atlaskitTeam = [
   'bconolly',
   'raja07',
   'thejameskyle',
-  'mblaszczyk-atlassian',
   'jmackison',
   'scurtis',
-  'jaredcroweatlassian',
-  'jedw',
   'alexreardon',
   'pete_gleeson',
   'mgardiner_atlas',
   'padmaia',
-  'isriharsha',
+  'vbelgiornozegna',
 ];
 const editorTeam = [
   'imsysoev',
   'jyotiatl',
-  'ed919',
+  'atlasmarco',
+  'eshvedai',
   'scottsidwell',
   'rifat_nabi',
   'ckrishnakumar',
-  'ttjandra',
   'owallhult',
   'dsorin',
   'jmack2',
   'supertong',
-  'pcurren',
+  'jcoppinger',
   'agnes',
   'vsutrave',
   'ahixon_atlassian',
+  'wangjerome',
+  'nathanflew',
+  'fghilini',
+  'MichaelOates',
+  'wcalderipe',
 ];
 const elementsTeam = [
   'sguillope',
@@ -68,8 +70,14 @@ const mediaTeam = [
   'vvvlasov',
   'dklinnert',
   'iloire-atlassian',
+  'ivandemchenko',
 ];
-const searchAndSmartsTeam = ['drichard', 'pteen', 'ashwini_rattihalli'];
+const searchAndSmartsTeam = [
+  'drichard',
+  'pteen',
+  'ashwini_rattihalli',
+  'fo2ad',
+];
 const kitkatTeam = [
   'kamil-kaczmarczyk',
   'mszerszynski',
@@ -77,6 +85,46 @@ const kitkatTeam = [
   'pmurawski_atlassian',
   'vpetrychuk',
   'bgryta',
+];
+const growthTeam = [
+  'hchehab',
+  'jcanoatlas',
+  'kanishkpurohit',
+  'anthonyrussell',
+  'wiwong',
+  'leandro_lemos',
+  'rob_sangster',
+  'mpuckeridge',
+  'ilavskym',
+];
+const navigationTeam = [
+  'jaredcroweatlassian',
+  'jedw',
+  'mblaszczyk-atlassian',
+  'wmendesneto',
+  'isriharsha',
+  'lucaslago_atlassian',
+];
+const homeTeam = [
+  'losang', // maintainer
+  'damevin', // maintainer
+  'sesther', // maintainer
+  'erwinbolwidt',
+  'zeev_gilovitz',
+  'hmaher',
+];
+const bitbucketTeam = [
+  'bgummer',
+  'stacylondoner',
+  'ttadej-atlassian',
+  'mafrauen',
+  'IvonneTerrero',
+  'seanaty',
+  'sogrady',
+  'ebutleratlassian',
+  'jpoh',
+  'cdoan-atlassian',
+  'peterwilliams-atl',
 ];
 const usersAllowedToApprove = [].concat(
   atlaskitTeam,
@@ -86,6 +134,10 @@ const usersAllowedToApprove = [].concat(
   mediaTeam,
   searchAndSmartsTeam,
   kitkatTeam,
+  growthTeam,
+  navigationTeam,
+  homeTeam,
+  bitbucketTeam,
 );
 
 module.exports = {
@@ -98,12 +150,20 @@ module.exports = {
     botPassword: botPassword,
     repoOwner: repoOwner,
     repoName: repoName,
-    usersAllowedToApprove: usersAllowedToApprove,
+    repoUuid: '{6380b4e9-6ac5-4dd4-a8e0-65f09cabe4c8}',
   },
   ciConfig: {
     botUsername: botUsername,
     botPassword: botPassword,
     repoOwner: repoOwner,
     repoName: repoName,
+  },
+  prSettings: {
+    requiredApprovals: 1,
+    canApproveOwnPullRequest: false,
+    requireClosedTasks: true,
+    requireGreenBuild: true,
+    allowLandWhenAble: true,
+    usersAllowedToApprove: usersAllowedToApprove,
   },
 };

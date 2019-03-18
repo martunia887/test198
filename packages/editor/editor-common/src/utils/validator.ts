@@ -1,9 +1,11 @@
-import { generateUuid as uuid } from './uuid';
-import { defaultSchema } from '../schema';
+import {
+  generateUuid as uuid,
+  defaultSchema,
+  isSafeUrl,
+  inlineNodes,
+  CellAttributes,
+} from '@atlaskit/adf-schema';
 import { Mark as PMMark, Schema } from 'prosemirror-model';
-import { isSafeUrl } from '.';
-import { inlineNodes } from '../schema';
-import { CellAttributes } from '../schema/nodes/tableNodes';
 
 export type ADFStage = 'stage0' | 'final';
 
@@ -41,11 +43,13 @@ export const markOrder = [
   'link',
   'em',
   'strong',
+  'textColor',
   'strike',
   'subsup',
   'underline',
   'code',
   'confluenceInlineComment',
+  'annotation',
 ];
 
 export const isSubSupType = (type: string): type is 'sub' | 'sup' => {
@@ -89,11 +93,8 @@ export const getValidDocument = (
 };
 
 const wrapInlineNodes = (nodes: ADNode[] = []): ADNode[] => {
-  return nodes.map(
-    node =>
-      inlineNodes.has(node.type)
-        ? { type: 'paragraph', content: [node] }
-        : node,
+  return nodes.map(node =>
+    inlineNodes.has(node.type) ? { type: 'paragraph', content: [node] } : node,
   );
 };
 
@@ -142,17 +143,17 @@ const flattenUnknownBlockTree = (
 };
 
 // null is Object, also maybe check obj.constructor == Object if we want to skip Class
-const isValidObject = obj => obj !== null && typeof obj === 'object';
-const isValidString = str => typeof str === 'string';
-const keysLen = obj => Object.keys(obj).length;
+const isValidObject = (obj: object) => obj !== null && typeof obj === 'object';
+const isValidString = (str: any): str is string => typeof str === 'string';
+const keysLen = (obj: object) => Object.keys(obj).length;
 
-const isValidIcon = icon =>
+const isValidIcon = (icon: any) =>
   isValidObject(icon) &&
   keysLen(icon) === 2 &&
   isValidString(icon.url) &&
   isValidString(icon.label);
 
-const isValidUser = user => {
+const isValidUser = (user: { id: string; icon: any }) => {
   const len = keysLen(user);
   return (
     isValidObject(user) &&
@@ -293,7 +294,7 @@ export const getValidNode = (
         }
         if (
           actions &&
-          actions.some(meta => {
+          actions.some((meta: any) => {
             const { key, title, target, parameters } = meta;
             if (key && !isValidString(key)) {
               return true;
@@ -323,7 +324,7 @@ export const getValidNode = (
         }
         if (
           details &&
-          details.some(meta => {
+          details.some((meta: any) => {
             const { badge, lozenge, users } = meta;
             if (badge && typeof badge.value !== 'number') {
               return true;
@@ -360,17 +361,45 @@ export const getValidNode = (
         break;
       }
       case 'codeBlock': {
+        if (content) {
+          content = content.reduce((acc: ADNode[], val) => {
+            if (val.type === 'text') {
+              acc.push({ type: val.type, text: val.text });
+            }
+            return acc;
+          }, []);
+        }
         if (attrs && attrs.language) {
           return {
             type,
             attrs,
             content,
+            marks,
           };
         }
         return {
           type,
           content,
+          marks,
         };
+      }
+      case 'date': {
+        if (attrs && attrs.timestamp) {
+          return {
+            type,
+            attrs,
+          };
+        }
+        break;
+      }
+      case 'status': {
+        if (attrs && attrs.text && attrs.color) {
+          return {
+            type,
+            attrs,
+          };
+        }
+        break;
       }
       case 'emoji': {
         if (attrs && attrs.shortName) {
@@ -384,6 +413,16 @@ export const getValidNode = (
       case 'inlineExtension':
       case 'extension': {
         if (attrs && attrs.extensionType && attrs.extensionKey) {
+          return {
+            type,
+            attrs,
+          };
+        }
+        break;
+      }
+      case 'inlineCard':
+      case 'blockCard': {
+        if (attrs && (attrs.url || attrs.data)) {
           return {
             type,
             attrs,
@@ -470,6 +509,7 @@ export const getValidNode = (
             type,
             attrs,
             content,
+            marks,
           };
         }
         break;
@@ -495,10 +535,11 @@ export const getValidNode = (
             attrs: {
               id: mentionId,
               text: mentionText,
+              accessLevel: '',
             },
           };
           if (mentionAccess) {
-            mentionNode.attrs['accessLevel'] = mentionAccess;
+            mentionNode.attrs.accessLevel = mentionAccess;
           }
 
           return mentionNode;
@@ -506,10 +547,13 @@ export const getValidNode = (
         break;
       }
       case 'paragraph': {
-        return {
-          type,
-          content: content || [],
-        };
+        return marks
+          ? {
+              type,
+              content: content || [],
+              marks,
+            }
+          : { type, content: content || [] };
       }
       case 'rule': {
         return {
@@ -537,17 +581,26 @@ export const getValidNode = (
         break;
       }
       case 'heading': {
-        if (attrs && content) {
+        if (attrs) {
           const { level } = attrs;
-          const between = (x, a, b) => x >= a && x <= b;
+          const between = (x: number, a: number, b: number) => x >= a && x <= b;
           if (level && between(level, 1, 6)) {
-            return {
-              type,
-              content,
-              attrs: {
-                level,
-              },
-            };
+            return marks
+              ? {
+                  type,
+                  content,
+                  marks,
+                  attrs: {
+                    level,
+                  },
+                }
+              : {
+                  type,
+                  content,
+                  attrs: {
+                    level,
+                  },
+                };
           }
         }
         break;
@@ -577,7 +630,7 @@ export const getValidNode = (
         if (content) {
           return {
             type,
-            content,
+            content: wrapInlineNodes(content),
           };
         }
         break;
@@ -600,6 +653,28 @@ export const getValidNode = (
               type,
               attrs: { panelType },
               content,
+            };
+          }
+        }
+        break;
+      }
+      case 'layoutSection': {
+        if (content) {
+          return {
+            type,
+            marks,
+            content,
+          };
+        }
+        break;
+      }
+      case 'layoutColumn': {
+        if (attrs && content) {
+          if (attrs.width > 0 && attrs.width <= 100) {
+            return {
+              type,
+              content,
+              attrs,
             };
           }
         }
@@ -695,7 +770,7 @@ export const getValidNode = (
 
           return {
             type,
-            content,
+            content: wrapInlineNodes(content),
             attrs: attrs ? cellAttrs : undefined,
           };
         }
@@ -847,6 +922,12 @@ export const getValidMark = (
   if (adfStage === 'stage0') {
     switch (type) {
       case 'confluenceInlineComment': {
+        return {
+          type,
+          attrs,
+        };
+      }
+      case 'annotation': {
         return {
           type,
           attrs,

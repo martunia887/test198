@@ -25,7 +25,9 @@ export function normalizeHexColor(
     return rgbToHex(color);
   } else {
     // http://dev.w3.org/csswg/css-color/#named-colors
-    if (namedColors[color]) {
+    if (namedColors.default && (namedColors as any).default[color]) {
+      color = (namedColors as any).default[color];
+    } else if (namedColors && namedColors[color]) {
       color = namedColors[color];
     } else {
       return null;
@@ -99,7 +101,7 @@ export function rgbToHex(value: string): string | null {
 }
 
 export function isRgb(color: string): boolean {
-  return /rgb\(/.test(color);
+  return /rgba?\(/.test(color);
 }
 
 export function isHex(color: string): boolean {

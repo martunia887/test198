@@ -8,7 +8,9 @@ export const getOffsetParent = (
     ? (popupsMountPoint.offsetParent as HTMLElement)
     : (editorViewDom.offsetParent as HTMLElement);
 export const getNearestNonTextNode = (node: Node) =>
-  node.nodeType === Node.TEXT_NODE ? node.parentElement : (node as HTMLElement);
+  node.nodeType === Node.TEXT_NODE
+    ? (node.parentNode as HTMLElement)
+    : (node as HTMLElement);
 
 /**
  * We need to translate the co-ordinates because `coordsAtPos` returns co-ordinates
@@ -20,9 +22,9 @@ export const getNearestNonTextNode = (node: Node) =>
  * |               | [FloatingToolbar]               |  |
  */
 const convertFixedCoordinatesToAbsolutePositioning = (
-  coordinates,
-  offsetParent,
-  cursorHeight,
+  coordinates: { top: number; left: number; bottom: number; right: number },
+  offsetParent: HTMLElement,
+  cursorHeight: number,
 ) => {
   const {
     left: offsetParentLeft,
@@ -49,7 +51,12 @@ export const handlePositionCalculatedWith = (
   offsetParent: HTMLElement,
   node: Node,
   getCurrentFixedCoordinates: () => any,
-) => position => {
+) => (position: {
+  top?: number;
+  left?: number;
+  bottom?: number;
+  right?: number;
+}) => {
   if (!offsetParent) {
     return position;
   }

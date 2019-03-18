@@ -1,20 +1,14 @@
-import { EditorState, Transaction } from 'prosemirror-state';
+import { EditorState, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { ResolvedPos } from 'prosemirror-model';
+import { ResolvedPos, MarkType } from 'prosemirror-model';
+import { toggleMark as defaultToggleMark } from 'prosemirror-commands';
+import { GapCursorSelection } from '../plugins/gap-cursor';
+import { Command } from '../types';
 
-type Command = (
-  state: EditorState,
-  dispatch: (tr: Transaction) => void,
-  view?: EditorView,
-) => boolean;
 type Predicate = (state: EditorState, view?: EditorView) => boolean;
 
 const filter = (predicates: Predicate[] | Predicate, cmd: Command): Command => {
-  return function(
-    state: EditorState,
-    dispatch: (tr: Transaction) => void,
-    view?: EditorView,
-  ): boolean {
+  return function(state, dispatch, view): boolean {
     if (!Array.isArray(predicates)) {
       predicates = [predicates];
     }
@@ -32,7 +26,10 @@ const isEmptySelectionAtStart = (
   view?: EditorView,
 ): boolean => {
   const { empty, $from } = state.selection;
-  return empty && $from.parentOffset === 0;
+  return (
+    empty &&
+    ($from.parentOffset === 0 || state.selection instanceof GapCursorSelection)
+  );
 };
 
 const isFirstChildOfParent = (
@@ -40,7 +37,11 @@ const isFirstChildOfParent = (
   view?: EditorView,
 ): boolean => {
   const { $from } = state.selection;
-  return $from.depth > 1 ? $from.index($from.depth - 1) === 0 : true;
+  return $from.depth > 1
+    ? (state.selection instanceof GapCursorSelection &&
+        $from.parentOffset === 0) ||
+        $from.index($from.depth - 1) === 0
+    : true;
 };
 
 /**
@@ -52,10 +53,10 @@ const isFirstChildOfParent = (
  * is usually inside the text content.
  */
 const isNthParentOfType = (
-  nodeType,
-  depthAway,
+  nodeType: string,
+  depthAway: number,
 ): ((state: EditorState, view?: EditorView) => boolean) => {
-  return (state: EditorState, view?: EditorView): boolean => {
+  return (state: EditorState): boolean => {
     const { $from } = state.selection;
     const parent = $from.node($from.depth - depthAway);
 
@@ -89,10 +90,57 @@ function findCutBefore($pos: ResolvedPos): ResolvedPos | null {
   return null;
 }
 
+/**
+ * A wrapper over the default toggleMark, except when we have a selection
+ * we only toggle marks on text nodes rather than inline nodes.
+ * @param markType
+ * @param attrs
+ */
+const toggleMark = (
+  markType: MarkType,
+  attrs?: { [key: string]: any },
+): Command => (state, dispatch) => {
+  // For cursor selections we can use the default behaviour.
+  if (state.selection instanceof TextSelection && state.selection.$cursor) {
+    return defaultToggleMark(markType)(state, dispatch);
+  }
+
+  let tr = state.tr;
+  const { $from, $to } = state.selection;
+  const markInRange = state.doc.rangeHasMark($from.pos, $to.pos, markType);
+  const mark = markType.create(attrs);
+
+  state.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+    if (!node.isText) {
+      return true;
+    }
+
+    const from = Math.max(pos, $from.pos);
+    const to = Math.min(pos + node.nodeSize, $to.pos);
+
+    if (markInRange) {
+      tr = tr.removeMark(from, to, markType);
+      return true;
+    }
+
+    tr = tr.addMark(from, to, mark);
+    return true;
+  });
+
+  if (dispatch && tr.docChanged) {
+    dispatch(tr);
+    return true;
+  }
+
+  return false;
+};
+
 export {
+  Predicate,
   filter,
   isEmptySelectionAtStart,
   isFirstChildOfParent,
   isNthParentOfType,
   findCutBefore,
+  toggleMark,
 };

@@ -1,59 +1,38 @@
 import { Context } from '@atlaskit/media-core';
-import { UploadParams, MediaFile } from '@atlaskit/media-picker';
+import { MediaFile, UploadParams } from '@atlaskit/media-picker';
 
 export type MediaStateStatus =
   | 'unknown'
-  | 'uploading'
-  | 'processing'
   | 'ready'
-  | 'error'
   | 'cancelled'
-  | 'preview';
+  | 'preview'
+  | 'error'
+  | 'mobile-upload-end';
 
 export interface MediaState {
   id: string;
   status?: MediaStateStatus;
-  publicId?: string;
   fileName?: string;
   fileSize?: number;
-  fileType?: string;
   fileMimeType?: string;
-  progress?: number;
-  ready?: boolean;
-  preview?: boolean;
-  thumbnail?: {
-    src: string;
-    dimensions?: {
-      width: number;
-      height: number;
-    };
+  collection?: string;
+  dimensions?: {
+    width: number | undefined;
+    height: number | undefined;
   };
+  scaleFactor?: number;
   error?: {
     name: string;
     description: string;
   };
+  /** still require to support Mobile */
+  publicId?: string;
 }
 
-export interface MediaStateManager {
-  getState(tempId: string): MediaState | undefined;
-  updateState(tempId: string, newState: Partial<MediaState>): void;
-  newState(file: MediaFile, status: string, publicId?: string): MediaState;
-  on(tempId: string, cb: (state: MediaState) => void);
-  off(tempId: string, cb: (state: MediaState) => void): void;
-  destroy(): void;
-}
-
-export interface FeatureFlags {
-  useNewUploadService?: boolean;
-}
+export interface FeatureFlags {}
 
 export interface MediaProvider {
   uploadParams?: UploadParams;
-
-  /**
-   * A manager notifying subscribers on changes in Media states
-   */
-  stateManager?: MediaStateManager;
 
   /**
    * Used for displaying Media Cards and downloading files.
@@ -69,11 +48,6 @@ export interface MediaProvider {
   uploadContext?: Promise<Context>;
 
   /**
-   * (optional) Used for creation of new Media links.
-   */
-  linkCreateContext?: Promise<Context>;
-
-  /**
    * (optional) For any additional feature to be enabled
    */
   featureFlags?: FeatureFlags;
@@ -83,8 +57,15 @@ export type Listener = (data: any) => void;
 
 export interface CustomMediaPicker {
   on(event: string, cb: Listener): void;
-  removeAllListeners(event: any);
+  removeAllListeners(event: any): void;
   emit(event: string, data: any): void;
   destroy(): void;
-  setUploadParams(uploadParams: UploadParams);
+  setUploadParams(uploadParams: UploadParams): void;
 }
+
+export type MobileUploadEndEventPayload = {
+  readonly file: MediaFile & {
+    readonly collectionName?: string;
+    readonly publicId?: string;
+  };
+};

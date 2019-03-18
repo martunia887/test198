@@ -4,13 +4,15 @@ import { EventDispatcher } from '../event-dispatcher';
 import EditorActions from '../actions';
 import {
   UIComponentFactory,
-  ReactElement,
+  ToolbarUIComponentFactory,
+  ReactComponents,
   InsertMenuCustomItem,
 } from '../types';
 import { CollabEditOptions } from '../plugins/collab-edit';
+import { AnalyticsEventPayload } from '../plugins/analytics';
 
 export interface EditorAppearanceComponentProps {
-  onUiReady?: (ref) => void;
+  onUiReady?: (ref: HTMLElement) => void;
   onSave?: (editorView: EditorView) => void;
   onCancel?: (editorView: EditorView) => void;
 
@@ -20,19 +22,20 @@ export interface EditorAppearanceComponentProps {
   editorView?: EditorView;
 
   eventDispatcher?: EventDispatcher;
+  dispatchAnalyticsEvent?: (payload: AnalyticsEventPayload) => void;
 
   maxHeight?: number;
 
   contentComponents?: UIComponentFactory[];
-  primaryToolbarComponents?: UIComponentFactory[];
+  primaryToolbarComponents?: ToolbarUIComponentFactory[];
   secondaryToolbarComponents?: UIComponentFactory[];
 
-  customContentComponents?: ReactElement;
-  customPrimaryToolbarComponents?: ReactElement;
-  customSecondaryToolbarComponents?: ReactElement;
+  customContentComponents?: ReactComponents;
+  customPrimaryToolbarComponents?: ReactComponents;
+  customSecondaryToolbarComponents?: ReactComponents;
   insertMenuItems?: InsertMenuCustomItem[];
 
-  addonToolbarComponents?: ReactElement;
+  addonToolbarComponents?: ReactComponents;
 
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;

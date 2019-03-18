@@ -16,7 +16,8 @@ const SAVE_ACTION = () => console.log('Save');
 const CANCEL_ACTION = () => console.log('Cancel');
 const EXPAND_ACTION = () => console.log('Expand');
 
-const analyticsHandler = (actionName, props) => console.log(actionName, props);
+const analyticsHandler = (actionName: string, props?: {}) =>
+  console.log(actionName, props);
 const exampleDocument = {
   version: 1,
   type: 'doc',
@@ -89,13 +90,10 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
             renderEditor={({
               mentionProvider,
               emojiProvider,
-              activityProvider,
-              taskDecisionProvider,
-              contextIdentifierProvider,
               imageUploadProvider,
               onChange,
               disabled,
-            }) => (
+            }: any) => (
               <div style={{ padding: '20px' }}>
                 <CollapsedEditor
                   placeholder="What do you want to say?"
@@ -106,9 +104,9 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
                   <Editor
                     appearance="comment"
                     analyticsHandler={analyticsHandler}
+                    allowAnalyticsGASV3={true}
                     allowCodeBlocks={true}
                     allowLists={true}
-                    allowMentions={true}
                     allowTables={{
                       isHeaderRowRequired: true,
                     }}
@@ -125,11 +123,13 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
                     onChange={onChange}
                     onSave={SAVE_ACTION}
                     onCancel={CANCEL_ACTION}
+                    quickInsert={true}
                     primaryToolbarComponents={[
                       <ToolbarFeedback
                         packageVersion={version}
                         packageName={name}
                         key="toolbar-feedback"
+                        labels={['atlaskit-comment-bitbucket']}
                       />,
                       <ToolbarHelp key="toolbar-help" />,
                     ]}

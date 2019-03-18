@@ -4,7 +4,7 @@ import { Component } from 'react';
 import {
   userAuthProvider,
   defaultMediaPickerAuthProvider,
-  userAuthProviderBaseURL,
+  defaultMediaPickerCollectionName,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
 import Toggle from '@atlaskit/toggle';
@@ -28,8 +28,8 @@ export interface ClipboardWrapperState {
 }
 
 class ClipboardWrapper extends Component<{}, ClipboardWrapperState> {
-  clipboard: Clipboard;
-  dropzoneContainer: HTMLDivElement;
+  clipboard?: Clipboard;
+  dropzoneContainer?: HTMLDivElement;
 
   state: ClipboardWrapperState = {
     isConnectedToUsersCollection: true,
@@ -44,11 +44,9 @@ class ClipboardWrapper extends Component<{}, ClipboardWrapperState> {
     this.setState({ isFetchingLastItems: true });
 
     userAuthProvider()
-      .then(({ clientId, token }) => {
+      .then(({ clientId, token, baseUrl }) => {
         const queryParams = `client=${clientId}&token=${token}&limit=5&details=full&sortDirection=desc`;
-        return fetch(
-          `${userAuthProviderBaseURL}/collection/recents/items?${queryParams}`,
-        );
+        return fetch(`${baseUrl}/collection/recents/items?${queryParams}`);
       })
       .then(r => r.json())
       .then(data => {
@@ -68,11 +66,11 @@ class ClipboardWrapper extends Component<{}, ClipboardWrapperState> {
     this.setState({ isWindowFocused: false });
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     window.addEventListener('focus', this.onFocus);
     window.addEventListener('blur', this.onBlur);
 
-    this.createClipboard();
+    await this.createClipboard();
     this.fetchLastItems();
   }
 
@@ -81,26 +79,33 @@ class ClipboardWrapper extends Component<{}, ClipboardWrapperState> {
     window.removeEventListener('blur', this.onBlur);
   }
 
-  createClipboard() {
+  async createClipboard() {
     const { isConnectedToUsersCollection, isActive } = this.state;
     const context = ContextFactory.create({
-      serviceHost: userAuthProviderBaseURL,
       authProvider: defaultMediaPickerAuthProvider,
       userAuthProvider: isConnectedToUsersCollection
         ? userAuthProvider
         : undefined,
     });
-    const clipboard = MediaPicker('clipboard', context);
+    const clipboard = await MediaPicker('clipboard', context, {
+      uploadParams: {
+        collection: defaultMediaPickerCollectionName,
+      },
+    });
 
     this.clipboard = clipboard;
 
     clipboard.on('upload-end', data => {
       console.log('upload finished');
-      console.log(data);
+      console.log('upload-end:', data);
     });
 
     clipboard.on('upload-error', mpError => {
-      console.log('Error', mpError);
+      console.log('upload-error:', mpError);
+    });
+
+    clipboard.on('upload-preview-update', data => {
+      console.log('upload-preview-update:', data);
     });
 
     isActive ? clipboard.activate() : clipboard.deactivate();
@@ -116,7 +121,9 @@ class ClipboardWrapper extends Component<{}, ClipboardWrapperState> {
 
   onActiveChange = () => {
     const { clipboard } = this;
-
+    if (!clipboard) {
+      return;
+    }
     this.setState({ isActive: !this.state.isActive }, () => {
       const { isActive } = this.state;
       isActive ? clipboard.activate() : clipboard.deactivate();
@@ -131,9 +138,15 @@ class ClipboardWrapper extends Component<{}, ClipboardWrapperState> {
     }
 
     return lastItems.map((item, key) => {
+      const { id, details } = item;
+
+      // details are not always present in the response
+      const name = details ? details.name : '<no-details>';
+      const mediaType = details ? details.mediaType : '<no-details>';
+
       return (
         <div key={key}>
-          {item.id} | {item.details.name} | {item.details.mediaType}
+          {id} | {name} | {mediaType}
         </div>
       );
     });

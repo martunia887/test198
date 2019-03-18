@@ -1,36 +1,55 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { withAnalytics } from '@atlaskit/analytics';
 import { EditorView } from 'prosemirror-view';
-import { ProviderFactory, Transformer } from '@atlaskit/editor-common';
+import { intlShape, IntlShape, IntlProvider } from 'react-intl';
+
+import {
+  ProviderFactory,
+  Transformer,
+  BaseTheme,
+  WidthProvider,
+} from '@atlaskit/editor-common';
+import { Context as CardContext } from '@atlaskit/smart-card';
+
 import { getUiComponent } from './create-editor';
 import EditorActions from './actions';
-import { EditorProps } from './types';
+import { EditorProps } from './types/editor-props';
 import { ReactEditorView } from './create-editor';
 import { EventDispatcher } from './event-dispatcher';
 import EditorContext from './ui/EditorContext';
+import { WithCreateAnalyticsEvent } from './ui/WithCreateAnalyticsEvent';
+import { PortalProvider, PortalRenderer } from './ui/PortalProvider';
+import { nextMajorVersion } from './version-wrapper';
+import { createContextAdapter } from './nodeviews';
 
 export * from './types';
 
+type Context = {
+  editorActions?: EditorActions;
+  intl: IntlShape;
+};
+
+// allows connecting external React.Context through to nodeviews
+const ContextAdapter = createContextAdapter({
+  card: CardContext,
+});
+
 export default class Editor extends React.Component<EditorProps, {}> {
   static defaultProps: EditorProps = {
-    appearance: 'message',
+    appearance: 'comment',
     disabled: false,
     extensionHandlers: {},
   };
 
   static contextTypes = {
     editorActions: PropTypes.object,
-  };
-
-  context: {
-    editorActions?: EditorActions;
+    intl: intlShape,
   };
 
   private providerFactory: ProviderFactory;
   private editorActions: EditorActions;
 
-  constructor(props: EditorProps, context) {
+  constructor(props: EditorProps, context: Context) {
     super(props);
     this.providerFactory = new ProviderFactory();
     this.deprecationWarnings(props);
@@ -64,22 +83,90 @@ export default class Editor extends React.Component<EditorProps, {}> {
     );
     if (this.props.shouldFocus) {
       if (!instance.view.hasFocus()) {
-        instance.view.focus();
+        window.setTimeout(() => {
+          instance.view.focus();
+        }, 0);
       }
     }
   }
 
-  private deprecationWarnings(props) {
-    if (props.hasOwnProperty('allowHyperlinks')) {
+  private deprecationWarnings(props: EditorProps) {
+    const nextVersion = nextMajorVersion();
+    const deprecatedProperties = {
+      mediaProvider: {
+        message:
+          'To pass media provider use media property – <Editor media={{ provider }} />',
+        type: 'removed',
+      },
+      allowTasksAndDecisions: {
+        message:
+          'To allow tasks and decisions use taskDecisionProvider – <Editor taskDecisionProvider={{ provider }} />',
+        type: 'removed',
+      },
+      allowPlaceholderCursor: {
+        type: 'removed',
+      },
+      allowInlineAction: {
+        type: 'removed',
+      },
+      allowConfluenceInlineComment: {
+        type: 'removed',
+      },
+      addonToolbarComponents: {
+        type: 'removed',
+      },
+      cardProvider: {
+        type: 'removed',
+      },
+      allowCodeBlocks: {
+        message:
+          'To disable codeBlocks use - <Editor allowBlockTypes={{ exclude: ["codeBlocks"] }} />',
+      },
+      allowLists: {},
+      allowHelpDialog: {},
+      allowGapCursor: {
+        type: 'removed',
+      },
+      allowUnsupportedContent: {
+        message: 'Deprecated. Defaults to true.',
+        type: 'removed',
+      },
+    };
+
+    (Object.keys(deprecatedProperties) as Array<
+      keyof typeof deprecatedProperties
+    >).forEach(property => {
+      if (props.hasOwnProperty(property)) {
+        const meta: { type?: string; message?: string } =
+          deprecatedProperties[property];
+        const type = meta.type || 'enabled by default';
+
+        // tslint:disable-next-line:no-console
+        console.warn(
+          `${property} property is deprecated. ${meta.message ||
+            ''} [Will be ${type} in editor-core@${nextVersion}]`,
+        );
+      }
+    });
+
+    if (
+      props.hasOwnProperty('quickInsert') &&
+      typeof props.quickInsert === 'boolean'
+    ) {
       // tslint:disable-next-line:no-console
       console.warn(
-        "allowHyperlinks property is deprecated. It's safe to remove it because hyperlink plugin is enabled by default.",
+        `quickInsert property is deprecated. [Will be enabled by default in editor-core@${nextVersion}]`,
       );
     }
-    if (props.hasOwnProperty('allowTextFormatting')) {
+
+    if (
+      props.hasOwnProperty('allowTables') &&
+      typeof props.allowTables !== 'boolean' &&
+      (!props.allowTables || !props.allowTables.advanced)
+    ) {
       // tslint:disable-next-line:no-console
       console.warn(
-        'allowTextFormatting property is deprecated. TextFormatting plugin is enabled by default. If you need to pass options to textFormatting plugin use `textFormatting={{ textFormattingOptions }}` [Will be removed in editor-core@63.0.0]',
+        `Advanced table options are deprecated (except isHeaderRowRequired) to continue using advanced table features use - <Editor allowTables={{ advanced: true }} /> [Will be changed in editor-core@${nextVersion}]`,
       );
     }
   }
@@ -123,6 +210,8 @@ export default class Editor extends React.Component<EditorProps, {}> {
       legacyImageUploadProvider,
       media,
       collabEdit,
+      quickInsert,
+      UNSAFE_cards,
     } = props;
     this.providerFactory.setProvider('emojiProvider', emojiProvider);
     this.providerFactory.setProvider('mentionProvider', mentionProvider);
@@ -151,6 +240,17 @@ export default class Editor extends React.Component<EditorProps, {}> {
     this.providerFactory.setProvider('activityProvider', activityProvider);
     this.providerFactory.setProvider('presenceProvider', presenceProvider);
     this.providerFactory.setProvider('macroProvider', macroProvider);
+
+    if (UNSAFE_cards && UNSAFE_cards.provider) {
+      this.providerFactory.setProvider('cardProvider', UNSAFE_cards.provider);
+    }
+
+    if (quickInsert && typeof quickInsert !== 'boolean') {
+      this.providerFactory.setProvider(
+        'quickInsertProvider',
+        quickInsert.provider,
+      );
+    }
   }
 
   handleSave = (view: EditorView): void => {
@@ -165,7 +265,9 @@ export default class Editor extends React.Component<EditorProps, {}> {
     // to work around the PM editable being out of sync with
     // the document, force a DOM sync before calling onSave
     // if we've already started typing
+    // @ts-ignore
     if (view['inDOMChange']) {
+      // @ts-ignore
       view['inDOMChange'].finish(true);
     }
 
@@ -173,57 +275,100 @@ export default class Editor extends React.Component<EditorProps, {}> {
   };
 
   render() {
-    const Component = getUiComponent(this.props.appearance);
+    const Component = getUiComponent(this.props.appearance!);
 
     const overriddenEditorProps = {
       ...this.props,
       onSave: this.props.onSave ? this.handleSave : undefined,
     };
 
-    return (
-      <EditorContext editorActions={this.editorActions}>
-        <ReactEditorView
-          editorProps={overriddenEditorProps}
-          providerFactory={this.providerFactory}
-          onEditorCreated={this.onEditorCreated}
-          onEditorDestroyed={this.onEditorDestroyed}
-          render={({ editor, view, eventDispatcher, config }) => (
-            <Component
-              disabled={this.props.disabled}
-              editorActions={this.editorActions}
-              editorDOMElement={editor}
-              editorView={view}
-              providerFactory={this.providerFactory}
-              eventDispatcher={eventDispatcher}
-              maxHeight={this.props.maxHeight}
-              onSave={this.props.onSave ? this.handleSave : undefined}
-              onCancel={this.props.onCancel}
-              popupsMountPoint={this.props.popupsMountPoint}
-              popupsBoundariesElement={this.props.popupsBoundariesElement}
-              contentComponents={config.contentComponents}
-              primaryToolbarComponents={config.primaryToolbarComponents}
-              secondaryToolbarComponents={config.secondaryToolbarComponents}
-              insertMenuItems={this.props.insertMenuItems}
-              customContentComponents={this.props.contentComponents}
-              customPrimaryToolbarComponents={
-                this.props.primaryToolbarComponents
-              }
-              customSecondaryToolbarComponents={
-                this.props.secondaryToolbarComponents
-              }
-              addonToolbarComponents={this.props.addonToolbarComponents}
-              collabEdit={this.props.collabEdit}
-            />
-          )}
-        />
-      </EditorContext>
+    const editor = (
+      <WidthProvider>
+        <EditorContext editorActions={this.editorActions}>
+          <WithCreateAnalyticsEvent
+            render={createAnalyticsEvent => (
+              <ContextAdapter>
+                <PortalProvider
+                  render={portalProviderAPI => (
+                    <>
+                      <ReactEditorView
+                        editorProps={overriddenEditorProps}
+                        createAnalyticsEvent={createAnalyticsEvent}
+                        portalProviderAPI={portalProviderAPI}
+                        providerFactory={this.providerFactory}
+                        onEditorCreated={this.onEditorCreated}
+                        onEditorDestroyed={this.onEditorDestroyed}
+                        allowAnalyticsGASV3={this.props.allowAnalyticsGASV3}
+                        disabled={this.props.disabled}
+                        render={({
+                          editor,
+                          view,
+                          eventDispatcher,
+                          config,
+                          dispatchAnalyticsEvent,
+                        }) => (
+                          <BaseTheme
+                            dynamicTextSizing={
+                              this.props.allowDynamicTextSizing
+                            }
+                          >
+                            <Component
+                              disabled={this.props.disabled}
+                              editorActions={this.editorActions}
+                              editorDOMElement={editor}
+                              editorView={view}
+                              providerFactory={this.providerFactory}
+                              eventDispatcher={eventDispatcher}
+                              dispatchAnalyticsEvent={dispatchAnalyticsEvent}
+                              maxHeight={this.props.maxHeight}
+                              onSave={
+                                this.props.onSave ? this.handleSave : undefined
+                              }
+                              onCancel={this.props.onCancel}
+                              popupsMountPoint={this.props.popupsMountPoint}
+                              popupsBoundariesElement={
+                                this.props.popupsBoundariesElement
+                              }
+                              contentComponents={config.contentComponents}
+                              primaryToolbarComponents={
+                                config.primaryToolbarComponents
+                              }
+                              secondaryToolbarComponents={
+                                config.secondaryToolbarComponents
+                              }
+                              insertMenuItems={this.props.insertMenuItems}
+                              customContentComponents={
+                                this.props.contentComponents
+                              }
+                              customPrimaryToolbarComponents={
+                                this.props.primaryToolbarComponents
+                              }
+                              customSecondaryToolbarComponents={
+                                this.props.secondaryToolbarComponents
+                              }
+                              addonToolbarComponents={
+                                this.props.addonToolbarComponents
+                              }
+                              collabEdit={this.props.collabEdit}
+                            />
+                          </BaseTheme>
+                        )}
+                      />
+                      <PortalRenderer portalProviderAPI={portalProviderAPI} />
+                    </>
+                  )}
+                />
+              </ContextAdapter>
+            )}
+          />
+        </EditorContext>
+      </WidthProvider>
+    );
+
+    return this.context.intl ? (
+      editor
+    ) : (
+      <IntlProvider locale="en">{editor}</IntlProvider>
     );
   }
 }
-
-export const EditorWithAnalytics = withAnalytics<typeof Editor>(
-  Editor,
-  {},
-  {},
-  true,
-);

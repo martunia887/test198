@@ -1,15 +1,33 @@
 import * as React from 'react';
-import { GlobalQuickSearch } from '../src/index';
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import BasicNavigation from '../example-helpers/BasicNavigation';
 import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
+import { AnalyticsListener as AnalyticsNextListener } from '../../../core/analytics-next/src/';
 import styled from 'styled-components';
-
 import { AnalyticsListener } from '@atlaskit/analytics';
+import { GlobalQuickSearch } from '../src';
+import withNavigation from '../example-helpers/withNavigation';
 
-const Panel = styled.div`
+const GlobalQuickSearchInNavigation = withNavigation(GlobalQuickSearch, {
+  hideLocale: true,
+});
+
+const ComponentPanel = styled.div`
   flex: 1;
-  padding: 8px;
+  display: flex;
+  overflow: scroll;
+  max-width: 600px;
+`;
+
+const EventsPanel = styled.div`
+  flex: 1;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  min-width: 400px;
+  background: lightgray;
+  word-wrap: break-word;
+  padding-right: 4px;
+  min-height: 800px;
 `;
 
 const Bordered = styled.div`
@@ -28,6 +46,7 @@ const EventsList = styled.ul`
   }
 `;
 
+// TODO wrapping this with withNavigation really fucked up the styles. Needs some adjusting
 export default class extends React.Component<any, any> {
   constructor(props) {
     super(props);
@@ -56,37 +75,67 @@ export default class extends React.Component<any, any> {
     }));
   };
 
+  onAnalyticsNextEvent(event) {
+    this.onEvent(
+      `${event.payload.actionSubject} ${event.payload.action}`,
+      event.payload,
+    );
+  }
+
   render() {
     const events = this.state.events;
 
     return (
-      <Outer>
-        <Panel>
-          <h2>Quick search - ignore styling/keyboard issues for now</h2>
-          <Bordered>
-            <AnalyticsListener onEvent={this.onEvent}>
-              <AnalyticsListener onEvent={this.onEvent} matchPrivate={true}>
-                <AtlaskitThemeProvider mode="light">
-                  <GlobalQuickSearch cloudId="cloudId" context="home" />
-                </AtlaskitThemeProvider>
-              </AnalyticsListener>
+      <Outer id="outer">
+        <ComponentPanel>
+          <AnalyticsListener onEvent={this.onEvent}>
+            <AnalyticsListener onEvent={this.onEvent} matchPrivate={true}>
+              <AnalyticsNextListener
+                channel="fabric-elements"
+                onEvent={e => this.onAnalyticsNextEvent(e)}
+              >
+                <GlobalQuickSearchInNavigation />
+              </AnalyticsNextListener>
             </AnalyticsListener>
-          </Bordered>
-        </Panel>
-
-        <Panel>
+          </AnalyticsListener>
+        </ComponentPanel>
+        <EventsPanel>
           <h2>Analytics Events</h2>
+          <a
+            href="#"
+            onClick={() => {
+              this.setState({
+                events: [],
+              });
+            }}
+          >
+            clear
+          </a>
           <Bordered>
             <EventsList>
-              {events.map(event => (
-                <li>
+              {events.map((event, i) => (
+                <li key={i}>
                   <strong>Event:</strong> {event.name} | <strong>Data:</strong>{' '}
-                  {JSON.stringify(event.data)}
+                  <a
+                    href="#"
+                    onClick={() => {
+                      if (this.state.expandedEvent === i) {
+                        this.setState({ expandedEvent: null });
+                      } else {
+                        this.setState({ expandedEvent: i });
+                      }
+                    }}
+                  >
+                    Data
+                  </a>
+                  {i === this.state.expandedEvent ? (
+                    <div>{JSON.stringify(event.data)}</div>
+                  ) : null}
                 </li>
               ))}
             </EventsList>
           </Bordered>
-        </Panel>
+        </EventsPanel>
       </Outer>
     );
   }

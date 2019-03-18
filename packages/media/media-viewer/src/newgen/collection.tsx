@@ -1,39 +1,35 @@
 import * as React from 'react';
-import {
-  Context,
-  MediaCollectionItem,
-  MediaCollectionProvider,
-  isError,
-} from '@atlaskit/media-core';
-import { Outcome, Identifier } from './domain';
-import { ErrorMessage } from './styled';
+import { Context, FileIdentifier } from '@atlaskit/media-core';
+import { Outcome, MediaViewerFeatureFlags } from './domain';
+import ErrorMessage, { createError, MediaViewerError } from './error';
 import { List } from './list';
-import { Subscription } from 'rxjs';
-import { toIdentifier } from './util';
+import { Subscription } from 'rxjs/Subscription';
+import { toIdentifier } from './utils';
 import { Spinner } from './loading';
+import { MediaCollectionItem } from '@atlaskit/media-store';
 
-export type Props = {
+export type Props = Readonly<{
   onClose?: () => void;
-  selectedItem?: Identifier;
+  defaultSelectedItem?: FileIdentifier;
   showControls?: () => void;
+  featureFlags?: MediaViewerFeatureFlags;
   collectionName: string;
   context: Context;
   pageSize: number;
-};
+}>;
 
 export type State = {
-  items: Outcome<MediaCollectionItem[], Error>;
+  items: Outcome<MediaCollectionItem[], MediaViewerError>;
 };
 
-const initialState: State = { items: { status: 'PENDING' } };
+const initialState: State = { items: Outcome.pending() };
 
 export class Collection extends React.Component<Props, State> {
   state: State = initialState;
 
-  private subscription: Subscription;
-  private provider: MediaCollectionProvider;
+  private subscription?: Subscription;
 
-  componentWillUpdate(nextProps) {
+  componentWillUpdate(nextProps: Props) {
     if (this.needsReset(this.props, nextProps)) {
       this.release();
       this.init(nextProps);
@@ -50,67 +46,58 @@ export class Collection extends React.Component<Props, State> {
 
   render() {
     const {
-      selectedItem,
+      defaultSelectedItem,
       context,
       onClose,
       collectionName,
       showControls,
     } = this.props;
-    const { items } = this.state;
-    switch (items.status) {
-      case 'PENDING':
-        return <Spinner />;
-      case 'FAILED':
-        return <ErrorMessage>Error loading collection</ErrorMessage>;
-      case 'SUCCESSFUL':
-        const identifiers = items.data.map(x =>
-          toIdentifier(x, collectionName),
-        );
-        const item = selectedItem
-          ? { ...selectedItem, collectionName }
+
+    return this.state.items.match({
+      pending: () => <Spinner />,
+      successful: items => {
+        const identifiers = items.map(x => toIdentifier(x, collectionName));
+        const item = defaultSelectedItem
+          ? { ...defaultSelectedItem, collectionName }
           : identifiers[0];
+
         return (
           <List
             items={identifiers}
-            selectedItem={item}
+            defaultSelectedItem={item}
             context={context}
             onClose={onClose}
             onNavigationChange={this.onNavigationChange}
             showControls={showControls}
           />
         );
-    }
+      },
+      failed: err => <ErrorMessage error={err} />,
+    });
   }
 
   private init(props: Props) {
     this.setState(initialState);
-    const { collectionName, context, selectedItem, pageSize } = props;
-    this.provider = context.getMediaCollectionProvider(
-      collectionName,
-      pageSize,
-    );
-    this.subscription = this.provider.observable().subscribe({
-      next: collection => {
-        if (isError(collection)) {
+    const { collectionName, context, defaultSelectedItem, pageSize } = props;
+    this.subscription = context.collection
+      .getItems(collectionName, { limit: pageSize })
+      .subscribe({
+        next: items => {
           this.setState({
-            items: {
-              status: 'FAILED',
-              err: collection,
-            },
+            items: Outcome.successful(items),
           });
-        } else {
-          this.setState({
-            items: {
-              status: 'SUCCESSFUL',
-              data: collection.items,
-            },
-          });
-          if (selectedItem && this.shouldLoadNext(selectedItem)) {
-            this.provider.loadNextPage();
+          if (defaultSelectedItem && this.shouldLoadNext(defaultSelectedItem)) {
+            context.collection.loadNextPage(collectionName, {
+              limit: pageSize,
+            });
           }
-        }
-      },
-    });
+        },
+        error: () => {
+          this.setState({
+            items: Outcome.failed(createError('metadataFailed')),
+          });
+        },
+      });
   }
 
   private release() {
@@ -126,25 +113,34 @@ export class Collection extends React.Component<Props, State> {
     );
   }
 
-  private onNavigationChange = (item: Identifier) => {
+  private onNavigationChange = (item: FileIdentifier) => {
+    const { context, collectionName, pageSize } = this.props;
     if (this.shouldLoadNext(item)) {
-      this.provider.loadNextPage();
+      context.collection.loadNextPage(collectionName, {
+        limit: pageSize,
+      });
     }
   };
 
-  private shouldLoadNext(selectedItem: Identifier): boolean {
+  private shouldLoadNext(selectedItem: FileIdentifier): boolean {
     const { items } = this.state;
-    if (items.status !== 'SUCCESSFUL' || items.data.length === 0) {
-      return false;
-    }
-    return this.isLastItem(selectedItem, items.data);
+    return items.match({
+      pending: () => false,
+      failed: () => false,
+      successful: items =>
+        items.length !== 0 && this.isLastItem(selectedItem, items),
+    });
   }
 
-  private isLastItem(selectedItem: Identifier, items: MediaCollectionItem[]) {
+  private isLastItem(
+    selectedItem: FileIdentifier,
+    items: MediaCollectionItem[],
+  ) {
     const lastItem = items[items.length - 1];
+
     const isLastItem =
-      selectedItem.id === lastItem.details.id &&
-      selectedItem.occurrenceKey === lastItem.details.occurrenceKey;
+      selectedItem.id === lastItem.id &&
+      selectedItem.occurrenceKey === lastItem.occurrenceKey;
     return isLastItem;
   }
 }

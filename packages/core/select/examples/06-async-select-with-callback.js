@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import AsyncSelect from '../src/AsyncSelect';
+import { AsyncSelect } from '../src';
 
 import { cities } from './common/data';
 
@@ -18,8 +18,8 @@ const loadOptions = (inputValue, callback) => {
 
 const AsyncExample = () => (
   <AsyncSelect
-    className="react-select"
-    classNamePrefix="select"
+    className="async-select-with-callback"
+    classNamePrefix="react-select"
     defaultOptions
     loadOptions={loadOptions}
     options={cities}

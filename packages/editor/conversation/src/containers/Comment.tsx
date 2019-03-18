@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { SharedProps } from '../components/Comment';
+import { SharedProps } from '../components/types';
 import { Comment as CommentType } from '../model';
 import { getComments, getHighlighted } from '../internal/selectors';
 import { State } from '../internal/store';
@@ -8,6 +8,7 @@ import { State } from '../internal/store';
 export interface Props extends SharedProps {
   comment: CommentType;
   conversationId: string;
+  objectId?: string;
   containerId?: string;
   renderComment: (props: any) => JSX.Element;
 }

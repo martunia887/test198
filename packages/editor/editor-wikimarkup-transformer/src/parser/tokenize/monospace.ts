@@ -1,19 +1,14 @@
-import { Schema } from 'prosemirror-model';
+import { Node as PMNode } from 'prosemirror-model';
+import { Token, TokenType, TokenParser } from './';
+import { commonFormatter } from './common-formatter';
 import { parseString } from '../text';
-import { Token, TokenType } from './';
-import { parseWhitespace } from './whitespace';
 
-const processState = {
-  START: 0,
-  BUFFER: 1,
-  END: 2,
-};
-
-export function monospace(input: string, schema: Schema): Token {
-  let index = 0;
-  let state = processState.START;
-  let buffer = '';
-
+export const monospace: TokenParser = ({
+  input,
+  position,
+  schema,
+  context,
+}) => {
   /**
    * The following token types will be ignored in parsing
    * the content
@@ -22,72 +17,38 @@ export function monospace(input: string, schema: Schema): Token {
     TokenType.DOUBLE_DASH_SYMBOL,
     TokenType.TRIPLE_DASH_SYMBOL,
     TokenType.QUADRUPLE_DASH_SYMBOL,
+    TokenType.ISSUE_KEY,
   ];
-
-  while (index < input.length) {
-    const char = input.charAt(index);
-    const twoChar = input.substr(index, 2);
-
-    switch (state) {
-      case processState.START: {
-        if (twoChar !== '{{') {
-          // this is not a valid monospace
-          return fallback();
-        }
-        state = processState.BUFFER;
-        index += 2;
-        continue;
-      }
-      case processState.BUFFER: {
-        // the linebreak would break the monospace
-        const length = parseWhitespace(buffer, true);
-        if (length) {
-          return fallback();
-        }
-        if (twoChar === '}}') {
-          state = processState.END;
-          continue;
-        } else {
-          buffer += char;
-        }
-        break;
-      }
-      case processState.END: {
-        // empty monospace is treated as normal text
-        if (buffer.length === 0) {
-          return {
-            type: 'text',
-            text: '{{}}',
-            length: 4,
-          };
-        }
-
-        const rawContent = parseString(buffer, schema, ignoreTokenTypes);
-        const decoratedContent = rawContent.map(n => {
-          const mark = schema.marks.code.create();
-          if (n.type.name === 'text') {
-            return n.mark([...n.marks, mark]);
-          }
-          return n;
-        });
-
-        return {
-          type: 'pmnode',
-          nodes: decoratedContent,
-          length: buffer.length + 4,
-        };
-      }
-      default:
+  // Add code mark to each text
+  const contentDecorator = (n: PMNode) => {
+    const mark = schema.marks.code.create();
+    // We don't want to mix `code` mark with others
+    if (n.type.name === 'text' && n.marks.length) {
+      return n;
     }
-    index++;
-  }
-  return fallback();
-}
-
-function fallback(): Token {
-  return {
-    type: 'text',
-    text: '{{',
-    length: 2,
+    return n.mark([mark]);
   };
-}
+
+  const rawContentProcessor = (raw: string, length: number): Token => {
+    const content = parseString({
+      ignoreTokenTypes,
+      schema,
+      context,
+      input: raw,
+    });
+    const decoratedContent = content.map(contentDecorator);
+
+    return {
+      type: 'pmnode',
+      nodes: decoratedContent,
+      length,
+    };
+  };
+
+  return commonFormatter(input, position, schema, {
+    opening: '{{',
+    closing: '}}',
+    context,
+    rawContentProcessor,
+  });
+};

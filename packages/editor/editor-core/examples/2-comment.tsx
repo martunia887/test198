@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import Button, { ButtonGroup } from '@atlaskit/button';
 import LockCircleIcon from '@atlaskit/icon/glyph/lock-circle';
-import Editor from './../src/editor';
+import Editor, { EditorProps } from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
 import WithEditorActions from './../src/ui/WithEditorActions';
 import ToolbarHelp from './../src/ui/ToolbarHelp';
@@ -16,12 +16,14 @@ import { name, version } from '../package.json';
 import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
 import { extensionHandlers } from '../example-helpers/extension-handlers';
 import { DevTools } from '../example-helpers/DevTools';
+import withSentry from '../example-helpers/withSentry';
 
 const SAVE_ACTION = () => console.log('Save');
 const CANCEL_ACTION = () => console.log('Cancel');
 const EXPAND_ACTION = () => console.log('Expand');
 
-const analyticsHandler = (actionName, props) => console.log(actionName, props);
+const analyticsHandler = (actionName: string, props?: {}) =>
+  console.log(actionName, props);
 const exampleDocument = {
   version: 1,
   type: 'doc',
@@ -49,13 +51,17 @@ const exampleDocument = {
   ],
 };
 
-export type Props = {};
+export type Props = {
+  editorProps?: EditorProps;
+  replacementDoc?: any;
+};
+
 export type State = {
   hasJquery?: boolean;
   isExpanded?: boolean;
 };
 
-export default class EditorWithFeedback extends React.Component<Props, State> {
+class CommentEditorWithFeedbackComponent extends React.Component<Props, State> {
   state = {
     hasJquery: false,
     isExpanded: false,
@@ -81,7 +87,11 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
             render={actions => (
               <ButtonGroup>
                 <Button
-                  onClick={() => actions.replaceDocument(exampleDocument)}
+                  onClick={() =>
+                    actions.replaceDocument(
+                      this.props.replacementDoc || exampleDocument,
+                    )
+                  }
                 >
                   Load Document
                 </Button>
@@ -99,7 +109,8 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
               contextIdentifierProvider,
               onChange,
               disabled,
-            }) => (
+              enabledFeatures,
+            }: any) => (
               <div style={{ padding: '20px' }}>
                 <CollapsedEditor
                   placeholder="What do you want to say?"
@@ -111,35 +122,41 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
                     appearance="comment"
                     placeholder="What do you want to say?"
                     analyticsHandler={analyticsHandler}
+                    allowAnalyticsGASV3={true}
                     shouldFocus={true}
-                    allowTasksAndDecisions={true}
+                    quickInsert={true}
                     allowCodeBlocks={true}
                     allowTextColor={true}
                     allowLists={true}
                     allowRule={true}
                     allowTables={true}
                     allowHelpDialog={true}
-                    allowGapCursor={true}
                     disabled={disabled}
                     activityProvider={activityProvider}
                     mentionProvider={mentionProvider}
                     emojiProvider={emojiProvider}
-                    mediaProvider={mediaProvider}
+                    media={{
+                      provider: mediaProvider,
+                      allowMediaSingle: enabledFeatures.imageResizing,
+                      allowResizing: enabledFeatures.imageResizing,
+                    }}
+                    allowDynamicTextSizing={enabledFeatures.dynamicTextSizing}
                     taskDecisionProvider={taskDecisionProvider}
                     contextIdentifierProvider={contextIdentifierProvider}
                     onChange={onChange}
                     onSave={SAVE_ACTION}
                     onCancel={CANCEL_ACTION}
                     primaryToolbarComponents={
-                      <>
+                      <React.Fragment>
                         <ToolbarFeedback
                           product={'bitbucket'}
                           packageVersion={version}
                           packageName={name}
                           key="toolbar-feedback"
+                          labels={['atlaskit-comment']}
                         />
                         <ToolbarHelp key="toolbar-help" />
-                      </>
+                      </React.Fragment>
                     }
                     allowExtension={true}
                     insertMenuItems={customInsertMenuItems}
@@ -151,6 +168,7 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
                         label="Permissions"
                       />,
                     ]}
+                    {...this.props.editorProps}
                   />
                 </CollapsedEditor>
               </div>
@@ -177,4 +195,12 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
 
     document.body.appendChild(scriptElem);
   };
+}
+
+export const CommentEditorWithFeedback = withSentry(
+  CommentEditorWithFeedbackComponent,
+);
+
+export default function CommentExample(props?: Props) {
+  return <CommentEditorWithFeedback {...props} />;
 }

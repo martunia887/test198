@@ -1,34 +1,67 @@
 import * as React from 'react';
-import { Context, FileItem } from '@atlaskit/media-core';
-import { ErrorMessage } from './styled';
-import { Outcome, Identifier } from './domain';
+import { Context, FileState, FileIdentifier } from '@atlaskit/media-core';
+import { FormattedMessage } from 'react-intl';
+import { messages } from '@atlaskit/media-ui';
+import { Outcome, MediaViewerFeatureFlags } from './domain';
 import { ImageViewer } from './viewers/image';
 import { VideoViewer } from './viewers/video';
-import { AudioViewer } from './viewers/audio';
-import { PDFViewer } from './viewers/pdf';
+import { DocViewer } from './viewers/doc';
 import { Spinner } from './loading';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import * as deepEqual from 'deep-equal';
+import ErrorMessage, {
+  createError,
+  MediaViewerError,
+  ErrorName,
+} from './error';
+import { ErrorViewDownloadButton } from './download';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
+import {
+  ViewerLoadPayload,
+  mediaFileCommencedEvent,
+  mediaFileLoadSucceededEvent,
+  mediaFileLoadFailedEvent,
+} from './analytics/item-viewer';
+import { channel } from './analytics/index';
+import {
+  GasPayload,
+  GasScreenEventPayload,
+} from '@atlaskit/analytics-gas-types';
+import { AudioViewer } from './viewers/audio';
 
-export type Props = {
-  readonly identifier: Identifier;
-  readonly context: Context;
-};
+export type Props = Readonly<{
+  identifier: FileIdentifier;
+  context: Context;
+  featureFlags?: MediaViewerFeatureFlags;
+  showControls?: () => void;
+  onClose?: () => void;
+  previewCount: number;
+}> &
+  WithAnalyticsEventProps;
 
 export type State = {
-  item: Outcome<FileItem, Error>;
+  item: Outcome<FileState, MediaViewerError>;
 };
 
-const initialState: State = { item: { status: 'PENDING' } };
-export class ItemViewer extends React.Component<Props, State> {
+const initialState: State = {
+  item: Outcome.pending(),
+};
+export class ItemViewerBase extends React.Component<Props, State> {
   state: State = initialState;
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (this.needsReset(this.props, nextProps)) {
       this.release();
-      this.init(nextProps);
+      this.setState(initialState);
+    }
+  }
+
+  componentDidUpdate(oldProps: Props) {
+    if (this.needsReset(oldProps, this.props)) {
+      this.init(this.props);
     }
   }
 
@@ -40,83 +73,160 @@ export class ItemViewer extends React.Component<Props, State> {
     this.init(this.props);
   }
 
-  render() {
-    const { context, identifier } = this.props;
+  private onViewerLoaded = async (payload: ViewerLoadPayload) => {
     const { item } = this.state;
-    switch (item.status) {
-      case 'PENDING':
-        return <Spinner />;
-      case 'SUCCESSFUL':
-        const itemUnwrapped = item.data;
-        const viewerProps = {
-          context,
-          item: itemUnwrapped,
-          collectionName: identifier.collectionName,
-        };
-        switch (itemUnwrapped.details.mediaType) {
-          case 'image':
-            return <ImageViewer {...viewerProps} />;
-          case 'audio':
-            return <AudioViewer {...viewerProps} />;
-          case 'video':
-            return <VideoViewer {...viewerProps} />;
-          case 'doc':
-            return <PDFViewer {...viewerProps} />;
-          default:
-            return <ErrorMessage>This file is unsupported</ErrorMessage>;
+    // the item.whenFailed case is handled in the "init" method
+    item.whenSuccessful(async file => {
+      if (file.status === 'processed') {
+        if (payload.status === 'success') {
+          this.fireAnalytics(mediaFileLoadSucceededEvent(file));
+        } else if (payload.status === 'error') {
+          const { identifier } = this.props;
+          const id =
+            typeof identifier.id === 'string'
+              ? identifier.id
+              : await identifier.id;
+          this.fireAnalytics(
+            mediaFileLoadFailedEvent(
+              id,
+              payload.errorMessage || 'Viewer error',
+              file,
+            ),
+          );
         }
-      case 'FAILED':
-        return <ErrorMessage>{item.err.message}</ErrorMessage>;
+      }
+    });
+  };
+
+  private renderFileState(item: FileState) {
+    if (item.status === 'error') {
+      return this.renderError('previewFailed', item);
+    }
+
+    const {
+      context,
+      identifier,
+      featureFlags,
+      showControls,
+      onClose,
+      previewCount,
+    } = this.props;
+
+    const viewerProps = {
+      context,
+      item,
+      collectionName: identifier.collectionName,
+      onClose,
+      previewCount,
+    };
+
+    switch (item.mediaType) {
+      case 'image':
+        return <ImageViewer onLoad={this.onViewerLoaded} {...viewerProps} />;
+      case 'audio':
+        return (
+          <AudioViewer
+            showControls={showControls}
+            featureFlags={featureFlags}
+            {...viewerProps}
+          />
+        );
+      case 'video':
+        return (
+          <VideoViewer
+            showControls={showControls}
+            featureFlags={featureFlags}
+            {...viewerProps}
+          />
+        );
+      case 'doc':
+        return <DocViewer {...viewerProps} />;
+      default:
+        return this.renderError('unsupported', item);
     }
   }
 
-  private init(props: Props) {
-    this.setState(initialState);
-    const { context, identifier } = props;
-    const provider = context.getMediaItemProvider(
-      identifier.id,
-      identifier.type,
-      identifier.collectionName,
-    );
+  private renderError(errorName: ErrorName, file?: FileState) {
+    if (file) {
+      const err = createError(errorName, undefined, file);
+      return (
+        <ErrorMessage error={err}>
+          <p>
+            <FormattedMessage {...messages.try_downloading_file} />
+          </p>
+          {this.renderDownloadButton(file, err)}
+        </ErrorMessage>
+      );
+    } else {
+      return <ErrorMessage error={createError(errorName)} />;
+    }
+  }
 
-    this.subscription = provider.observable().subscribe({
-      next: mediaItem => {
-        if (mediaItem.type === 'link') {
-          this.setState({
-            item: {
-              status: 'FAILED',
-              err: new Error('links are not supported at the moment'),
-            },
-          });
-        } else {
-          const { processingStatus } = mediaItem.details;
-          if (processingStatus === 'failed') {
-            this.setState({
-              item: {
-                status: 'FAILED',
-                err: new Error('processing failed'),
-              },
-            });
-          } else if (processingStatus === 'succeeded') {
-            this.setState({
-              item: {
-                status: 'SUCCESSFUL',
-                data: mediaItem,
-              },
-            });
-          }
+  render() {
+    return this.state.item.match({
+      successful: item => {
+        switch (item.status) {
+          case 'processed':
+          case 'uploading':
+          case 'processing':
+            return this.renderFileState(item);
+          case 'failed-processing':
+          case 'error':
+            return this.renderError('previewFailed', item);
+          default:
+            return <Spinner />;
         }
       },
-      error: err => {
-        this.setState({
-          item: {
-            status: 'FAILED',
-            err,
-          },
-        });
-      },
+      pending: () => <Spinner />,
+      failed: err => this.renderError(err.errorName, this.state.item.data),
     });
   }
+
+  private renderDownloadButton(state: FileState, err: MediaViewerError) {
+    const { context, identifier } = this.props;
+    return (
+      <ErrorViewDownloadButton
+        state={state}
+        context={context}
+        err={err}
+        collectionName={identifier.collectionName}
+      />
+    );
+  }
+
+  private async init(props: Props) {
+    const { context, identifier } = props;
+    const id =
+      typeof identifier.id === 'string' ? identifier.id : await identifier.id;
+    this.fireAnalytics(mediaFileCommencedEvent(id));
+    this.subscription = context.file
+      .getFileState(id, {
+        collectionName: identifier.collectionName,
+      })
+      .subscribe({
+        next: file => {
+          this.setState({
+            item: Outcome.successful(file),
+          });
+        },
+        error: err => {
+          this.setState({
+            item: Outcome.failed(createError('metadataFailed', err)),
+          });
+          this.fireAnalytics(
+            mediaFileLoadFailedEvent(id, 'Metadata fetching failed'),
+          );
+        },
+      });
+  }
+
+  private fireAnalytics = (payload: GasPayload | GasScreenEventPayload) => {
+    const { createAnalyticsEvent } = this.props;
+    if (createAnalyticsEvent) {
+      const ev = createAnalyticsEvent(payload);
+      ev.fire(channel);
+    }
+  };
 
   // It's possible that a different identifier or context was passed.
   // We therefore need to reset Media Viewer.
@@ -133,3 +243,5 @@ export class ItemViewer extends React.Component<Props, State> {
     }
   }
 }
+
+export const ItemViewer = withAnalyticsEvents()(ItemViewerBase);

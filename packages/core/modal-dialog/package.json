@@ -1,47 +1,56 @@
 {
   "name": "@atlaskit/modal-dialog",
-  "version": "4.0.5",
+  "version": "8.0.2",
   "description": "A React component that displays content in a layer blocking the interaction with the page.",
   "license": "Apache-2.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "index.js",
   "atlaskit:src": "src/index.js",
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/modal-dialog",
-  "files": [
-    "dist"
-  ],
+  "sideEffects": false,
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Trey S",
-    "Alex R",
-    "Peter G"
+    "Sean C",
+    "Ajay M",
+    "Daniel D",
+    "Kang C"
   ],
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
-    "@atlaskit/blanket": "^5.0.2",
-    "@atlaskit/button": "^7.2.5",
-    "@atlaskit/icon": "^11.3.0",
-    "@atlaskit/layer-manager": "^3.0.4",
-    "@atlaskit/theme": "^3.2.2",
-    "focusin": "^2.0.0",
+    "@atlaskit/analytics-next": "^4.0.1",
+    "@atlaskit/blanket": "^8.0.1",
+    "@atlaskit/button": "^11.0.0",
+    "@atlaskit/form": "^5.2.1",
+    "@atlaskit/icon": "^16.0.5",
+    "@atlaskit/portal": "^0.2.1",
+    "@atlaskit/textfield": "^0.3.1",
+    "@atlaskit/theme": "^8.0.1",
+    "@babel/runtime": "^7.0.0",
+    "exenv": "^1.2.2",
     "prop-types": "^15.5.10",
     "raf-schd": "^2.1.0",
+    "react-focus-lock": "^1.11.3",
+    "react-scrolllock": "^3.0.2",
     "react-transition-group": "^2.2.1",
-    "styled-components": "1.4.6 - 3",
-    "tabbable": "^1.1.0"
+    "tiny-invariant": "^0.0.3"
   },
   "peerDependencies": {
-    "react": "^16.3.0"
+    "react": "^16.4.0",
+    "styled-components": "^3.2.6"
   },
   "devDependencies": {
-    "@atlaskit/avatar": "^10.0.6",
-    "@atlaskit/checkbox": "^2.0.2",
-    "@atlaskit/docs": "^3.0.4",
-    "@atlaskit/field-radio-group": "^2.0.3",
-    "@atlaskit/field-text": "^5.0.3",
-    "@atlaskit/inline-dialog": "^6.0.2",
-    "enzyme": "https://registry.npmjs.org/@pgleeson/enzyme/-/enzyme-3.3.7.tgz",
-    "react-beautiful-dnd": "^4.0.1",
+    "@atlaskit/avatar": "^15.0.1",
+    "@atlaskit/build-utils": "^2.0.0",
+    "@atlaskit/checkbox": "^6.0.1",
+    "@atlaskit/docs": "^7.0.1",
+    "@atlaskit/field-radio-group": "^5.0.1",
+    "@atlaskit/field-text": "^8.0.1",
+    "@atlaskit/inline-dialog": "^10.0.1",
+    "@atlaskit/select": "^8.0.3",
+    "@atlaskit/ssr": "^0.0.1",
+    "@atlaskit/visual-regression": "^0.0.1",
+    "enzyme": "^3.7.0",
+    "react-beautiful-dnd": "^10.0.2",
+    "react-dom": "^16.4.2",
     "react-lorem-component": "^0.12.2"
   },
   "keywords": [

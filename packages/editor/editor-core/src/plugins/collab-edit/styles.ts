@@ -1,3 +1,6 @@
+// @ts-ignore: unused variable
+// prettier-ignore
+import { css, Styles, StyledComponentClass } from 'styled-components';
 import { colors, Color } from './utils';
 
 const telepointerColorStyle = (color: Color, index: number) => `
@@ -11,9 +14,10 @@ const telepointerColorStyle = (color: Color, index: number) => `
   }
 `;
 
-export const telepointerStyle = `
-  {
+export const telepointerStyle = css`
+  .ProseMirror .telepointer {
     position: relative;
+    transition: opacity 200ms;
 
     &.telepointer-selection {
       line-height: 1.2;
@@ -21,7 +25,7 @@ export const telepointerStyle = `
       user-select: none;
     }
 
-    &.telepointer-selection-badge:after {
+    &.telepointer-selection-badge::after {
       content: attr(data-initial);
       position: absolute;
       display: block;
@@ -34,6 +38,10 @@ export const telepointerStyle = `
       line-height: initial;
     }
 
-    ${colors.map((color, index) => telepointerColorStyle(color, index))}
+    &.telepointer-dim {
+      opacity: 0.2;
+    }
+
+    ${colors.map((color, index) => telepointerColorStyle(color, index))};
   }
 `;

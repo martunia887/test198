@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-
+import { MediaFile as MediaStoreMediaFile } from '@atlaskit/media-store';
 import {
   UploadEndEvent,
   UploadEndEventPayload,
@@ -10,7 +10,7 @@ export const FILE_UPLOAD_END = 'FILE_UPLOAD_END';
 export interface FileUploadEndAction extends Action {
   readonly type: 'FILE_UPLOAD_END';
   readonly file: MediaFile;
-  readonly publicFile: object;
+  readonly publicFile: Partial<MediaStoreMediaFile>;
   readonly originalEvent: UploadEndEvent;
 }
 

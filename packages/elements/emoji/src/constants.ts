@@ -1,10 +1,14 @@
+import { CategoryId } from './components/picker/categories';
+
 export const customCategory = 'CUSTOM';
 export const frequentCategory = 'FREQUENT';
 export const customType = 'SITE';
-export const customTitle = 'All uploads';
-export const userCustomTitle = 'Your uploads';
+
+export const customTitle = 'allUploadsCustomCategory';
+export const userCustomTitle = 'userUploadsCustomCategory';
 
 export const dataURLPrefix = 'data:';
+export const deleteEmojiLabel = 'delete-emoji';
 
 /**
  * A constant used in sorting/ordering to represent a number 'obviously much bigger than any item in the set being handled'.
@@ -19,7 +23,7 @@ export const emojiPickerHeight = 295;
 
 export const localStoragePrefix = 'fabric.emoji';
 export const selectedToneStorageKey = `${localStoragePrefix}.selectedTone`;
-export const defaultCategories = [
+export const defaultCategories: CategoryId[] = [
   'PEOPLE',
   'NATURE',
   'FOODS',

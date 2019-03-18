@@ -1,5 +1,5 @@
 import { EditorPlugin } from '../../types';
-import { confluenceInlineComment } from '@atlaskit/editor-common';
+import { confluenceInlineComment } from '@atlaskit/adf-schema';
 
 // tslint:disable-next-line:variable-name
 const confluenceInlineCommentPlugin: EditorPlugin = {
@@ -8,7 +8,6 @@ const confluenceInlineCommentPlugin: EditorPlugin = {
       {
         name: 'confluenceInlineComment',
         mark: confluenceInlineComment,
-        rank: 190,
       },
     ];
   },

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import * as React from 'react';
-import { akColorN80 } from '@atlaskit/util-shared-styles';
+import { borderRadius } from '@atlaskit/theme';
 
 import Editor from './../src/editor';
 
@@ -11,25 +11,10 @@ import {
   akEditorCodeFontFamily,
 } from '../src/styles';
 
-import { akBorderRadius } from '@atlaskit/util-shared-styles';
-
 export const Wrapper: any = styled.div`
   height: 500px;
 `;
 Wrapper.displayName = 'Wrapper';
-
-export const TitleInput: any = styled.input`
-  border: none;
-  outline: none;
-  font-size: 2.07142857em;
-  margin: 0 0 21px;
-  padding: 0;
-
-  &::placeholder {
-    color: ${akColorN80};
-  }
-`;
-TitleInput.displayName = 'TitleInput';
 
 export const Content: any = styled.div`
   padding: 0 20px;
@@ -42,7 +27,7 @@ export const Content: any = styled.div`
       font-family: ${akEditorCodeFontFamily};
       background: ${akEditorCodeBackground};
       padding: ${akEditorCodeBlockPadding};
-      border-radius: ${akBorderRadius};
+      border-radius: ${borderRadius()}px;
     }
   }
 `;

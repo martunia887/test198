@@ -2,7 +2,7 @@
 import React from 'react';
 import { AkCodeBlock } from '../src';
 
-const exampleCodeBlock = `
+const exampleCodeBlock = `  // React Component
   class HelloMessage extends React.Component {
     render() {
       return (
@@ -20,5 +20,16 @@ const exampleCodeBlock = `
 `;
 
 export default function Component() {
-  return <AkCodeBlock language="java" text={exampleCodeBlock} />;
+  return (
+    <div>
+      <h2>Showing code without line numbers</h2>
+      <AkCodeBlock
+        language="java"
+        text={exampleCodeBlock}
+        showLineNumbers={false}
+      />
+      <h2>Showing code with line numbers</h2>
+      <AkCodeBlock language="java" text={exampleCodeBlock} />
+    </div>
+  );
 }

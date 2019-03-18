@@ -20,6 +20,7 @@ import {
 import { Participants, ReadOnlyParticipants } from './participants';
 import { findPointers, createTelepointers } from './utils';
 import { CollabEditProvider } from './provider';
+import { CollabEditOptions } from './types';
 
 export { CollabEditProvider };
 
@@ -28,6 +29,7 @@ export const pluginKey = new PluginKey('collabEditPlugin');
 export const createPlugin = (
   dispatch: Dispatch,
   providerFactory: ProviderFactory,
+  options?: CollabEditOptions,
 ) => {
   let collabEditProvider: CollabEditProvider | null;
   let isReady = false;
@@ -39,7 +41,7 @@ export const createPlugin = (
       apply(tr, prevPluginState: PluginState, oldState, newState) {
         const pluginState = prevPluginState.apply(tr);
 
-        if (tr.getMeta('isLocal')) {
+        if (tr.getMeta('isRemote') !== true) {
           if (collabEditProvider) {
             collabEditProvider.send(tr, oldState, newState);
           }
@@ -50,8 +52,9 @@ export const createPlugin = (
 
         if (collabEditProvider) {
           const selectionChanged = !oldState.selection.eq(newState.selection);
-          const participantsChanged =
-            prevActiveParticipants !== activeParticipants;
+          const participantsChanged = !prevActiveParticipants.eq(
+            activeParticipants,
+          );
 
           if (
             (sessionId && selectionChanged && !tr.docChanged) ||
@@ -60,7 +63,7 @@ export const createPlugin = (
             const selection = getSendableSelection(newState.selection);
             // Delay sending selection till next tick so that participants info
             // can go before it
-            setTimeout(
+            window.setTimeout(
               collabEditProvider.sendMessage.bind(collabEditProvider),
               0,
               {
@@ -77,7 +80,7 @@ export const createPlugin = (
       },
     },
     props: {
-      decorations(state) {
+      decorations(this: Plugin, state) {
         return this.getState(state).decorations;
       },
     },
@@ -101,12 +104,22 @@ export const createPlugin = (
             collabEditProvider
               .on('init', data => {
                 isReady = true;
-                handleInit(data, view);
+                handleInit(data, view, options);
               })
               .on('connected', data => handleConnection(data, view))
-              .on('data', data => applyRemoteData(data, view))
+              .on('data', data => applyRemoteData(data, view, options))
               .on('presence', data => handlePresence(data, view))
               .on('telepointer', data => handleTelePointer(data, view))
+              .on('local-steps', data => {
+                const { steps } = data;
+                const { state } = view;
+
+                const { tr } = state;
+                steps.forEach((step: Step) => tr.step(step));
+
+                const newState = state.apply(tr);
+                view.updateState(newState);
+              })
               .on('error', err => {
                 // TODO: Handle errors property (ED-2580)
               })
@@ -138,8 +151,14 @@ const isReplaceStep = (step: Step) => step instanceof ReplaceStep;
  */
 const getValidPos = (tr: Transaction, pos: number) => {
   const resolvedPos = tr.doc.resolve(pos);
-  const validSelection = Selection.findFrom(resolvedPos, -1, true);
-  return validSelection ? validSelection.$anchor.pos : pos;
+  const backwardSelection = Selection.findFrom(resolvedPos, -1, true);
+  // if there's no correct cursor position before the `pos`, we try to find it after the `pos`
+  const forwardSelection = Selection.findFrom(resolvedPos, 1, true);
+  return backwardSelection
+    ? backwardSelection.from
+    : forwardSelection
+    ? forwardSelection.from
+    : pos;
 };
 
 export class PluginState {
@@ -169,7 +188,7 @@ export class PluginState {
     this.sid = sessionId;
   }
 
-  getInitial(sessionId) {
+  getInitial(sessionId: string) {
     const participant = this.participants.get(sessionId);
     return participant ? participant.name.substring(0, 1).toUpperCase() : 'X';
   }
@@ -208,7 +227,7 @@ export class PluginState {
 
     if (telepointerData) {
       const { sessionId } = telepointerData;
-      if (sessionId && sessionId !== sid) {
+      if (participants.get(sessionId) && sessionId !== sid) {
         const oldPointers = findPointers(
           telepointerData.sessionId,
           decorationSet,
@@ -223,11 +242,16 @@ export class PluginState {
         const rawTo = anchor >= head ? anchor : head;
         const isSelection = rawTo - rawFrom > 0;
 
-        const from = getValidPos(
-          tr,
-          isSelection ? Math.max(rawFrom - 1, 0) : rawFrom,
-        );
-        const to = isSelection ? getValidPos(tr, rawTo) : from;
+        let from = 1;
+        let to = 1;
+
+        try {
+          from = getValidPos(
+            tr,
+            isSelection ? Math.max(rawFrom - 1, 0) : rawFrom,
+          );
+          to = isSelection ? getValidPos(tr, rawTo) : from;
+        } catch (err) {}
 
         add = add.concat(
           createTelepointers(
@@ -243,34 +267,41 @@ export class PluginState {
 
     if (tr.docChanged) {
       // Adjust decoration positions to changes made by the transaction
-      decorationSet = decorationSet.map(tr.mapping, tr.doc, {
-        // Reapplies decorators those got removed by the state change
-        onRemove: (spec: { pointer: { sessionId: string } }) => {
-          if (spec.pointer && spec.pointer.sessionId) {
-            const step = tr.steps.filter(isReplaceStep)[0];
-            if (step) {
-              const { sessionId } = spec.pointer;
-              const { slice: { content: { size } }, from } = step as any;
-              const pos = getValidPos(
-                tr,
-                size
-                  ? Math.min(from + size, tr.doc.nodeSize - 3)
-                  : Math.max(from, 1),
-              );
+      try {
+        decorationSet = decorationSet.map(tr.mapping, tr.doc, {
+          // Reapplies decorators those got removed by the state change
+          onRemove: spec => {
+            if (spec.pointer && spec.pointer.sessionId) {
+              const step = tr.steps.filter(isReplaceStep)[0];
+              if (step) {
+                const { sessionId } = spec.pointer;
+                const {
+                  slice: {
+                    content: { size },
+                  },
+                  from,
+                } = step as any;
+                const pos = getValidPos(
+                  tr,
+                  size
+                    ? Math.min(from + size, tr.doc.nodeSize - 3)
+                    : Math.max(from, 1),
+                );
 
-              add = add.concat(
-                createTelepointers(
-                  pos,
-                  pos,
-                  sessionId,
-                  false,
-                  this.getInitial(sessionId),
-                ),
-              );
+                add = add.concat(
+                  createTelepointers(
+                    pos,
+                    pos,
+                    sessionId,
+                    false,
+                    this.getInitial(sessionId),
+                  ),
+                );
+              }
             }
-          }
-        },
-      });
+          },
+        });
+      } catch (err) {}
 
       // Remove any selection decoration within the change range,
       // takes care of the issue when after pasting we end up with a dead selection
@@ -285,6 +316,19 @@ export class PluginState {
         });
       });
     }
+
+    const { selection } = tr;
+    decorationSet.find().forEach((deco: any) => {
+      if (deco.type.toDOM) {
+        if (deco.from === selection.from && deco.to === selection.to) {
+          deco.type.toDOM.classList.add('telepointer-dim');
+          deco.type.side = -1;
+        } else {
+          deco.type.toDOM.classList.remove('telepointer-dim');
+          deco.type.side = 0;
+        }
+      }
+    });
 
     if (remove.length) {
       decorationSet = decorationSet.remove(remove);

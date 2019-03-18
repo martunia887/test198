@@ -1,21 +1,17 @@
 import * as React from 'react';
-import { Component } from 'react';
 import styled from 'styled-components';
-import {
-  akBorderRadius,
-  akColorN30,
-  akColorN50,
-} from '@atlaskit/util-shared-styles';
+import { borderRadius, colors } from '@atlaskit/theme';
+import { fontSize } from '@atlaskit/theme';
 
 const InlineNode = styled.span`
   align-items: center;
-  background: ${akColorN30};
-  border: 1px dashed ${akColorN50};
-  border-radius: ${akBorderRadius};
+  background: ${colors.N30};
+  border: 1px dashed ${colors.N50};
+  border-radius: ${borderRadius()}px;
   box-sizing: border-box;
   cursor: default;
   display: inline-flex;
-  font-size: 13px;
+  font-size: ${fontSize()}px;
   margin: 0 2px;
   min-height: 24px;
   padding: 0 10px;
@@ -24,13 +20,11 @@ const InlineNode = styled.span`
   white-space: nowrap;
 
   &.ProseMirror-selectednode {
-    background: ${akColorN50};
+    background: ${colors.N50};
     outline: none;
   }
 `;
 
-export default class UnsupportedInlineNode extends Component<{}, {}> {
-  render() {
-    return <InlineNode>Unsupported content</InlineNode>;
-  }
+export default function UnsupportedInlineNode() {
+  return <InlineNode>Unsupported content</InlineNode>;
 }

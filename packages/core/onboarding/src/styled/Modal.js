@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { gridSize, math } from '@atlaskit/theme';
+import { borderRadius, gridSize, math } from '@atlaskit/theme';
 
 export const Body = styled.div`
   padding: 40px 20px;
@@ -18,10 +18,15 @@ export const Heading = styled.h4`
   line-height: 1.2;
   margin-bottom: ${gridSize}px;
 `;
-
 export const Image = styled.img`
+  border-top-left-radius: ${borderRadius}px;
+  border-top-right-radius: ${borderRadius}px;
   height: auto;
-  max-width: 100%;
+  width: 100%;
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    border-radius: 0;
+  }
 `;
 export const Actions = styled.div`
   display: flex;

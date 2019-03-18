@@ -1,89 +1,85 @@
-import { CellSelection } from 'prosemirror-tables';
-import { EditorState } from 'prosemirror-state';
-import { TableMap } from 'prosemirror-tables';
-import { isColumnSelected } from 'prosemirror-utils';
+import { Transaction, Selection } from 'prosemirror-state';
+import { CellSelection, TableMap, Rect } from 'prosemirror-tables';
+import {
+  findTable,
+  isCellSelection,
+  getSelectionRect,
+  getSelectionRangeInColumn,
+  getSelectionRangeInRow,
+} from 'prosemirror-utils';
 
-export const getCellSelection = (
-  state: EditorState,
-): CellSelection | undefined => {
-  const { selection } = state;
-  if (selection instanceof CellSelection) {
-    return selection;
-  }
-};
+export const isSelectionUpdated = (
+  oldSelection: Selection,
+  newSelection?: Selection,
+) =>
+  !!(!newSelection && oldSelection) ||
+  (isCellSelection(oldSelection) !== isCellSelection(newSelection!) ||
+    (isCellSelection(oldSelection) &&
+      isCellSelection(newSelection!) &&
+      oldSelection.ranges !== newSelection!.ranges));
 
-export const isHeaderRowSelected = (state: EditorState): boolean => {
-  const cellSelection = getCellSelection(state);
-  if (cellSelection && cellSelection.isRowSelection()) {
-    const { $from } = cellSelection;
-    const { tableHeader } = state.schema.nodes;
-    for (let i = $from.depth; i > 0; i--) {
-      if ($from.node(i).type === tableHeader) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-};
-
-export const getSelectedColumn = (
-  state: EditorState,
-): { anchor: number; head: number } => {
-  const cellSelection = getCellSelection(state);
-  const { $anchorCell, $headCell } = cellSelection!;
-  const tableNode = $anchorCell.node(-1);
-  const map = TableMap.get(tableNode);
-  const start = $anchorCell.start(-1);
-  const anchor = map.colCount($anchorCell.pos - start);
-  const head = map.colCount($headCell.pos - start);
-
-  return { anchor, head };
-};
-
-export const getSelectedRow = (
-  state: EditorState,
-): { anchor: number; head: number } => {
-  const cellSelection = getCellSelection(state);
-  const { $anchorCell, $headCell } = cellSelection!;
-  const anchor = $anchorCell.index(-1);
-  const head = $headCell.index(-1);
-
-  return { anchor, head };
-};
-
-export const checkIfNumberColumnSelected = (state: EditorState): boolean => {
-  const cellSelection = getCellSelection(state);
-  if (cellSelection) {
-    const tableNode = cellSelection.$anchorCell.node(-1);
-    if (
-      tableNode!.attrs.isNumberColumnEnabled &&
-      isColumnSelected(0)(state.selection)
-    ) {
-      return true;
-    }
-  }
-  return false;
-};
-
-export const checkIfNumberColumnCellsSelected = (
-  state: EditorState,
+const isRectangularCellSelection = (
+  selection: Selection,
+  rect: Rect,
 ): boolean => {
-  const cellSelection = getCellSelection(state);
-  if (cellSelection) {
-    const tableNode = cellSelection.$anchorCell.node(-1);
-    if (tableNode!.attrs.isNumberColumnEnabled) {
-      const map = TableMap.get(tableNode);
-      const start = cellSelection.$anchorCell.start(-1);
-      let selected = false;
-      cellSelection.forEachCell((cell, pos) => {
-        const rect = map.findCell(pos - start);
-        if (rect.left === 0) {
-          selected = true;
-        }
-      });
-      return selected;
-    }
+  const table = findTable(selection);
+  if (!table) {
+    return true;
   }
-  return false;
+  const { width, height, map } = TableMap.get(table.node);
+
+  let indexTop = rect.top * width + rect.left;
+  let indexLeft = indexTop;
+  let indexBottom = (rect.bottom - 1) * width + rect.left;
+  let indexRight = indexTop + (rect.right - rect.left - 1);
+
+  for (let i = rect.top; i < rect.bottom; i++) {
+    if (
+      (rect.left > 0 && map[indexLeft] === map[indexLeft - 1]) ||
+      (rect.right < width && map[indexRight] === map[indexRight + 1])
+    ) {
+      return false;
+    }
+    indexLeft += width;
+    indexRight += width;
+  }
+  for (let i = rect.left; i < rect.right; i++) {
+    if (
+      (rect.top > 0 && map[indexTop] === map[indexTop - width]) ||
+      (rect.bottom < height && map[indexBottom] === map[indexBottom + width])
+    ) {
+      return false;
+    }
+    indexTop++;
+    indexBottom++;
+  }
+
+  return true;
+};
+
+export const normalizeSelection = (tr: Transaction): Transaction => {
+  const { selection } = tr;
+  const rect = getSelectionRect(selection);
+
+  if (
+    !rect ||
+    !(selection instanceof CellSelection) ||
+    isRectangularCellSelection(selection, rect)
+  ) {
+    return tr;
+  }
+
+  if (selection.isColSelection()) {
+    const { $anchor } = getSelectionRangeInColumn(rect.left)(tr);
+    const { $head } = getSelectionRangeInColumn(rect.right - 1)(tr);
+    return tr.setSelection(new CellSelection($anchor, $head) as any);
+  }
+
+  if (selection.isRowSelection()) {
+    const { $anchor } = getSelectionRangeInRow(rect.top)(tr);
+    const { $head } = getSelectionRangeInRow(rect.bottom - 1)(tr);
+    return tr.setSelection(new CellSelection($anchor, $head) as any);
+  }
+
+  return tr;
 };

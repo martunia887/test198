@@ -5,6 +5,7 @@ import { ProviderFactory } from '@atlaskit/editor-common';
 import { EditorAppearance, UIComponentFactory } from '../../types';
 import { EventDispatcher } from '../../event-dispatcher';
 import EditorActions from '../../actions';
+import { AnalyticsEventPayload } from '../../plugins/analytics';
 
 const PluginsComponentsWrapper = styled.div`
   display: flex;
@@ -20,7 +21,9 @@ export interface Props {
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
+  containerElement: HTMLElement | undefined;
   disabled: boolean;
+  dispatchAnalyticsEvent?: (payload: AnalyticsEventPayload) => void;
 }
 
 export default class PluginSlot extends React.Component<Props, any> {
@@ -34,6 +37,7 @@ export default class PluginSlot extends React.Component<Props, any> {
       popupsMountPoint,
       popupsBoundariesElement,
       popupsScrollableElement,
+      containerElement,
       disabled,
     } = this.props;
     return !(
@@ -45,6 +49,7 @@ export default class PluginSlot extends React.Component<Props, any> {
       nextProps.popupsMountPoint === popupsMountPoint &&
       nextProps.popupsBoundariesElement === popupsBoundariesElement &&
       nextProps.popupsScrollableElement === popupsScrollableElement &&
+      nextProps.containerElement === containerElement &&
       nextProps.disabled === disabled
     );
   }
@@ -60,7 +65,9 @@ export default class PluginSlot extends React.Component<Props, any> {
       popupsMountPoint,
       popupsBoundariesElement,
       popupsScrollableElement,
+      containerElement,
       disabled,
+      dispatchAnalyticsEvent,
     } = this.props;
 
     if (!items || !editorView) {
@@ -76,10 +83,12 @@ export default class PluginSlot extends React.Component<Props, any> {
             editorActions: editorActions as EditorActions,
             eventDispatcher: eventDispatcher as EventDispatcher,
             providerFactory,
+            dispatchAnalyticsEvent,
             appearance,
             popupsMountPoint,
             popupsBoundariesElement,
             popupsScrollableElement,
+            containerElement,
             disabled,
           });
           return element && React.cloneElement(element, props);

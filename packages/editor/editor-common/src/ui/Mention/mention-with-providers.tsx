@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { MentionProvider, ResourcedMention } from '@atlaskit/mention';
+import { MentionUserType as UserType } from '@atlaskit/adf-schema';
 
-import { MentionUserType as UserType } from '../../schema';
 import { MentionEventHandlers } from '../EventHandlers';
 import ResourcedMentionWithProfilecard from './mention-with-profilecard';
 import { ProfilecardProvider } from './types';
@@ -69,8 +69,10 @@ export default class MentionWithProviders extends PureComponent<Props, State> {
 
     const { profilecardProvider } = this.state;
 
-    const actionHandlers = {};
-    ['onClick', 'onMouseEnter', 'onMouseLeave'].forEach(handler => {
+    const actionHandlers: MentionEventHandlers = {} as any;
+    (['onClick', 'onMouseEnter', 'onMouseLeave'] as Array<
+      keyof MentionEventHandlers
+    >).forEach(handler => {
       actionHandlers[handler] =
         (eventHandlers && eventHandlers[handler]) || noop;
     });
@@ -88,7 +90,7 @@ export default class MentionWithProviders extends PureComponent<Props, State> {
         accessLevel={accessLevel}
         userType={userType}
         mentionProvider={mentionProvider}
-        profilecardProvider={profilecardProvider}
+        profilecardProvider={profilecardProvider!}
         portal={portal}
         {...actionHandlers}
       />

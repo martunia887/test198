@@ -1,9 +1,9 @@
 import { BaseAnalyticsContext } from '../index';
-import { version, name } from '../../package.json';
+import { version, name } from '../version.json';
 
 export const getBaseAnalyticsContext = (
-  componentName,
-  actionSubjectId,
+  componentName: any,
+  actionSubjectId: any,
 ): BaseAnalyticsContext => ({
   packageVersion: version,
   packageName: name,

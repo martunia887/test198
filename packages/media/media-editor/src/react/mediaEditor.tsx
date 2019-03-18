@@ -1,12 +1,13 @@
 import * as React from 'react';
-
+import Spinner from '@atlaskit/spinner';
 import {
-  EditorContainer,
+  MediaEditorContainer,
   OutputArea,
   DrawingCanvas,
   HiddenTextArea,
   HiddenTextHelperDiv,
   SupplementaryCanvas,
+  SpinnerWrapper,
 } from './styled';
 import { Engine } from '../engine/engine';
 import {
@@ -59,28 +60,39 @@ export interface MediaEditorProps {
   onLoad: LoadHandler;
   onError: ErrorHandler;
   onShapeParametersChanged: ShapeParametersChangedHandler;
+  onAnyEdit?: () => void;
+}
+
+export interface MediaEditorState {
+  isImageLoaded: boolean;
 }
 
 const defaultTextDirection = 'ltr';
 
-export class MediaEditor extends React.Component<MediaEditorProps, {}> {
+export class MediaEditor extends React.Component<
+  MediaEditorProps,
+  MediaEditorState
+> {
   private isUnmounted: boolean;
 
   // DOM elements that we need to create the engine
-  private outputArea: HTMLDivElement;
-  private canvas: HTMLCanvasElement;
-  private supplementaryCanvas: HTMLCanvasElement;
-  private hiddenTextArea: HTMLTextAreaElement;
-  private hiddenTextHelperDiv: HTMLDivElement;
+  private outputArea!: HTMLDivElement;
+  private canvas!: HTMLCanvasElement;
+  private supplementaryCanvas!: HTMLCanvasElement;
+  private hiddenTextArea!: HTMLTextAreaElement;
+  private hiddenTextHelperDiv!: HTMLDivElement;
 
   // Engine and its components
-  private drawingArea: DefaultDrawingArea;
-  private toolbar: DefaultToolbar;
-  private engine: Engine;
+  private drawingArea?: DefaultDrawingArea;
+  private toolbar?: DefaultToolbar;
+  private engine?: Engine;
 
   constructor(props: MediaEditorProps) {
     super(props);
     this.isUnmounted = false;
+    this.state = {
+      isImageLoaded: false,
+    };
   }
 
   componentDidMount() {
@@ -100,8 +112,9 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
     }
 
     if (
-      !dimensionsSame(currProps.dimensions, prevProps.dimensions) ||
-      currProps.screenScaleFactor !== prevProps.screenScaleFactor
+      this.drawingArea &&
+      (!dimensionsSame(currProps.dimensions, prevProps.dimensions) ||
+        currProps.screenScaleFactor !== prevProps.screenScaleFactor)
     ) {
       this.drawingArea.setSize(MediaEditor.toOutputSize(currProps));
     }
@@ -123,17 +136,19 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
       lineWidth: prevLineWidth,
       addShadow: prevAddShadow,
     } = prevProps.shapeParameters;
-    if (!colorSame(currColor, prevColor)) {
-      this.toolbar.setColor(currColor);
-    }
-    if (currLineWidth !== prevLineWidth) {
-      this.toolbar.setLineWidth(currLineWidth);
-    }
-    if (currAddShadow !== prevAddShadow) {
-      this.toolbar.setAddShadow(currAddShadow);
-    }
-    if (currProps.tool !== prevProps.tool) {
-      this.toolbar.setTool(currProps.tool);
+    if (this.toolbar) {
+      if (!colorSame(currColor, prevColor)) {
+        this.toolbar.setColor(currColor);
+      }
+      if (currLineWidth !== prevLineWidth) {
+        this.toolbar.setLineWidth(currLineWidth);
+      }
+      if (currAddShadow !== prevAddShadow) {
+        this.toolbar.setAddShadow(currAddShadow);
+      }
+      if (currProps.tool !== prevProps.tool) {
+        this.toolbar.setTool(currProps.tool);
+      }
     }
   }
 
@@ -142,29 +157,37 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
     this.unloadEngine();
   }
 
-  private handleOutputAreaInnerRef = outputArea => {
+  private handleOutputAreaInnerRef = (outputArea: HTMLDivElement) => {
     this.outputArea = outputArea;
   };
-  private handleSupplementaryCanvasInnerRef = canvas => {
+  private handleSupplementaryCanvasInnerRef = (canvas: HTMLCanvasElement) => {
     this.supplementaryCanvas = canvas;
   };
-  private handleHiddenTextAreaInnerRef = textArea => {
+  private handleHiddenTextAreaInnerRef = (textArea: HTMLTextAreaElement) => {
     this.hiddenTextArea = textArea;
   };
-  private handleHiddenTextHelperDivInnerRef = div => {
+  private handleHiddenTextHelperDivInnerRef = (div: HTMLDivElement) => {
     this.hiddenTextHelperDiv = div;
   };
-  private handleDrawingCanvasInnerRef = canvas => {
+  private handleDrawingCanvasInnerRef = (canvas: HTMLCanvasElement) => {
     this.canvas = canvas;
   };
 
+  private renderSpinner = () => (
+    <SpinnerWrapper>
+      <Spinner size="large" invertColor={true} />
+    </SpinnerWrapper>
+  );
+
   render() {
+    const { isImageLoaded } = this.state;
     const { dimensions } = this.props;
     const width = `${dimensions.width}px`;
     const height = `${dimensions.height}px`;
 
     return (
-      <EditorContainer style={{ width, height }}>
+      <MediaEditorContainer style={{ width, height }}>
+        {!isImageLoaded ? this.renderSpinner() : null}
         <OutputArea
           innerRef={this.handleOutputAreaInnerRef}
           style={{ width, height }}
@@ -183,13 +206,21 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
           />
 
           <DrawingCanvas
+            onClick={this.onCanvasClick}
             innerRef={this.handleDrawingCanvasInnerRef}
             style={{ width, height }}
           />
         </OutputArea>
-      </EditorContainer>
+      </MediaEditorContainer>
     );
   }
+
+  private onCanvasClick = () => {
+    const { onAnyEdit } = this.props;
+    if (onAnyEdit) {
+      onAnyEdit();
+    }
+  };
 
   private loadEngine(): void {
     const { imageUrl } = this.props;
@@ -203,6 +234,7 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
         if (this.isUnmounted || imageUrl !== this.props.imageUrl) {
           return;
         }
+        this.setState({ isImageLoaded: true });
 
         // Creating components for the engine
         const outputSize = MediaEditor.toOutputSize(this.props);
@@ -252,8 +284,8 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
         };
 
         this.engine = new Engine(config);
-        const loadParameters = {
-          imageGetter: (format?: string) => this.engine.getBase64Image(format),
+        const loadParameters: LoadParameters = {
+          imageGetter: (format?: string) => this.engine!.getBase64Image(format),
         };
 
         this.props.onLoad(imageUrl, loadParameters);
@@ -265,6 +297,7 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
     if (this.engine) {
       this.engine.unload();
       delete this.engine;
+      this.setState({ isImageLoaded: false });
     }
   }
 

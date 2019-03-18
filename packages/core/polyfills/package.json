@@ -1,26 +1,28 @@
 {
   "name": "@atlaskit/polyfills",
-  "version": "2.0.1",
+  "version": "3.0.5",
   "description": "A package containing polyfills for native methods.",
   "license": "Apache-2.0",
-  "main": "index.js",
-  "files": [
-    "*.js"
-  ],
+  "module": "index.js",
+  "sideEffects": false,
   "atlaskit": {
     "internal": true
   },
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Trey S",
-    "Alex R",
-    "Peter G"
+    "Sean C",
+    "Ajay M",
+    "Daniel D",
+    "Kang C"
   ],
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "peerDependencies": {
-    "react": "^16.3.0"
+    "react": "^16.4.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^3.0.4"
+    "@atlaskit/docs": "^7.0.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0"
   }
 }

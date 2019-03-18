@@ -14,6 +14,7 @@ import {
   EmojiProvider,
   UploadingEmojiProvider,
   EmojiRepository,
+  CategoryId,
 } from '@atlaskit/emoji';
 
 import {
@@ -53,13 +54,15 @@ export interface MockEmojiResourceConfig {
   currentUser?: User;
 }
 
-export class MockNonUploadingEmojiResource extends AbstractResource<
-  string,
-  EmojiSearchResult,
-  any,
-  undefined,
-  SearchOptions
-> implements EmojiProvider {
+export class MockNonUploadingEmojiResource
+  extends AbstractResource<
+    string,
+    EmojiSearchResult,
+    any,
+    undefined,
+    SearchOptions
+  >
+  implements EmojiProvider {
   protected emojiRepository: EmojiRepository;
   protected promiseBuilder: PromiseBuilder<any>;
   protected lastQuery: string = '';
@@ -81,7 +84,7 @@ export class MockNonUploadingEmojiResource extends AbstractResource<
       this.optimisticRendering = config.optimisticRendering;
     }
 
-    if (window.localStorage) {
+    if (typeof window !== 'undefined' && window.localStorage) {
       const storedTone = window.localStorage.getItem(selectedToneStorageKey);
       this.selectedTone = storedTone ? parseInt(storedTone, 10) : undefined;
     }
@@ -127,7 +130,7 @@ export class MockNonUploadingEmojiResource extends AbstractResource<
     return this.promiseBuilder(emoji, 'findById');
   }
 
-  findInCategory(categoryId: string): Promise<EmojiDescription[]> {
+  findInCategory(categoryId: CategoryId): Promise<EmojiDescription[]> {
     const emojis = this.emojiRepository.findInCategory(categoryId);
     return this.promiseBuilder(emojis, 'findInCategory');
   }
@@ -232,7 +235,9 @@ export class MockEmojiResource extends MockNonUploadingEmojiResource
     return this.uploads;
   }
 
-  prepareForUpload() {}
+  prepareForUpload() {
+    return Promise.resolve();
+  }
 
   // Make public for testing
   notifyNotReady() {
@@ -279,7 +284,7 @@ export class UsageClearEmojiResource extends MockNonUploadingEmojiResource {
 }
 
 export const mockNonUploadingEmojiResourceFactory = (
-  emojiRepository,
+  emojiRepository: EmojiRepository,
   config?: MockEmojiResourceConfig,
   promiseBuilder?: PromiseBuilder<any>,
 ) => {
@@ -297,7 +302,7 @@ export const mockNonUploadingEmojiResourceFactory = (
 };
 
 export const mockEmojiResourceFactory = (
-  emojiRepository,
+  emojiRepository: EmojiRepository,
   config?: MockEmojiResourceConfig,
   promiseBuilder?: PromiseBuilder<any>,
 ) => {

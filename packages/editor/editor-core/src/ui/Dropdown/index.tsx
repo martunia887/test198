@@ -9,9 +9,10 @@ export interface Props {
   scrollableElement?: HTMLElement;
   trigger: React.ReactElement<any>;
   isOpen?: boolean;
-  onOpenChange?: (attrs) => void;
+  onOpenChange?: (attrs: any) => void;
   fitWidth?: number;
   fitHeight?: number;
+  zIndex?: number;
 }
 
 export interface State {
@@ -34,11 +35,11 @@ export default class Dropdown extends PureComponent<Props, State> {
     };
   }
 
-  private handleRef = target => {
-    this.setState({ target });
+  private handleRef = (target: HTMLElement | null) => {
+    this.setState({ target: target || undefined });
   };
 
-  private updatePopupPlacement = placement => {
+  private updatePopupPlacement = (placement: [string, string]) => {
     this.setState({ popupPlacement: placement });
   };
 
@@ -52,6 +53,7 @@ export default class Dropdown extends PureComponent<Props, State> {
       onOpenChange,
       fitHeight,
       fitWidth,
+      zIndex,
     } = this.props;
 
     return (
@@ -63,6 +65,7 @@ export default class Dropdown extends PureComponent<Props, State> {
         onPlacementChanged={this.updatePopupPlacement}
         fitHeight={fitHeight}
         fitWidth={fitWidth}
+        zIndex={zIndex}
       >
         <div style={{ height: 0, minWidth: fitWidth || 0 }}>
           <DropdownList

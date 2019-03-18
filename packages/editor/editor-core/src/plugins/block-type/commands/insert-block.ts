@@ -1,4 +1,5 @@
-import { NodeType } from 'prosemirror-model';
+import { NodeType, Node as PMNode } from 'prosemirror-model';
+import { hasParentNodeOfType } from 'prosemirror-utils';
 import {
   TextSelection,
   NodeSelection,
@@ -11,19 +12,23 @@ export const insertBlock = (
   state: EditorState,
   nodeType: NodeType,
   nodeName: string,
-  start,
-  end,
+  start: number,
+  end: number,
   attrs?: { [key: string]: any },
-): Transaction | undefined => {
+): Transaction | null => {
   // To ensure that match is done after HardBreak.
-  const { hardBreak } = state.schema.nodes;
-  if (state.doc.resolve(start).nodeAfter!.type !== hardBreak) {
-    return;
+  const { hardBreak, codeBlock, listItem } = state.schema.nodes;
+  const $pos = state.doc.resolve(start);
+  if ($pos.nodeAfter!.type !== hardBreak) {
+    return null;
   }
 
-  // To ensure no nesting is done.
-  if (state.doc.resolve(start).depth > 1) {
-    return;
+  // To ensure no nesting is done. (unless we're inserting a codeBlock inside lists)
+  if (
+    $pos.depth > 1 &&
+    !(nodeType === codeBlock && hasParentNodeOfType(listItem)(state.selection))
+  ) {
+    return null;
   }
 
   // Track event
@@ -37,12 +42,16 @@ export const insertBlock = (
 
   // If node has more content split at the end of autoformatting.
   let nodeHasMoreContent = false;
-  tr.doc.nodesBetween(start, start + currentNode!.nodeSize, (node, pos) => {
-    if (!nodeHasMoreContent && node.type === hardBreak) {
-      nodeHasMoreContent = true;
-      tr = tr.split(pos + 1).delete(pos, pos + 1);
-    }
-  });
+  tr.doc.nodesBetween(
+    start,
+    start + (currentNode as PMNode).nodeSize,
+    (node, pos) => {
+      if (!nodeHasMoreContent && node.type === hardBreak) {
+        nodeHasMoreContent = true;
+        tr = tr.split(pos + 1).delete(pos, pos + 1);
+      }
+    },
+  );
   if (nodeHasMoreContent) {
     currentNode = tr.doc.nodeAt(start + 1);
   }
@@ -53,10 +62,10 @@ export const insertBlock = (
   let depth;
   if (nodeType === blockquote) {
     depth = 3;
-    content = [paragraph.create({}, currentNode!.content)];
+    content = [paragraph.create({}, (currentNode as PMNode).content)];
   } else {
     depth = 2;
-    content = currentNode!.content;
+    content = (currentNode as PMNode).content;
   }
   const newNode = nodeType.create(attrs, content);
 

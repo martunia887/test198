@@ -6,22 +6,22 @@ import { getEmojiRepository } from '../example-helpers';
 const emojiService = getEmojiRepository();
 
 const renderEmoji = (fitToHeight: number = 24) => {
-  const zoidberg = emojiService.findByShortName(':zoidberg:');
-  const zoidbergEmoji = zoidberg ? (
-    <Emoji emoji={zoidberg} showTooltip={true} fitToHeight={fitToHeight} />
+  const blueStar = emojiService.findById('atlassian-blue_star');
+  const blueStarEmoji = blueStar ? (
+    <Emoji emoji={blueStar} showTooltip={true} fitToHeight={fitToHeight} />
   ) : (
-    <span>[zoidberg emoji not found]</span>
+    <span>[blueStar emoji not found]</span>
   );
-  const awthanks = emojiService.findByShortName(':awthanks:');
-  const awthanksEmoji = awthanks ? (
+  const wtf = emojiService.findByShortName(':wtf:');
+  const wtfEmoji = wtf ? (
     <Emoji
-      emoji={awthanks}
+      emoji={wtf}
       showTooltip={true}
       fitToHeight={fitToHeight}
       selected={true}
     />
   ) : (
-    <span>[awthanks emoji not found]</span>
+    <span>[wtf emoji not found]</span>
   );
   const grimacing = emojiService.findByShortName(':grimacing:');
   const grimacingEmoji = grimacing ? (
@@ -31,9 +31,10 @@ const renderEmoji = (fitToHeight: number = 24) => {
   );
   return (
     <div style={{ lineHeight: `${fitToHeight}px` }}>
-      {zoidbergEmoji}
-      {awthanksEmoji}
+      {blueStarEmoji}
+      {wtfEmoji}
       {grimacingEmoji}
+      Emoji at {fitToHeight}px.
     </div>
   );
 };
@@ -41,10 +42,14 @@ const renderEmoji = (fitToHeight: number = 24) => {
 export default function Example() {
   return (
     <div>
-      <p>{renderEmoji()}</p>
-      <p>{renderEmoji(32)}</p>
-      <p>{renderEmoji(48)}</p>
-      <p>{renderEmoji(128)}</p>
+      <div>{renderEmoji(12)}</div>
+      <br />
+      <div>{renderEmoji()}</div>
+      <br />
+      <div>{renderEmoji(40)}</div>
+      <br />
+      <div>{renderEmoji(64)}</div>
+      <br />
     </div>
   );
 }

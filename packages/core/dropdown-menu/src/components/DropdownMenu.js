@@ -17,8 +17,6 @@ export default class DropdownMenu extends Component<
   DropdownMenuStatefulProps,
   State,
 > {
-  props: DropdownMenuStatefulProps; // eslint-disable-line react/sort-comp
-
   static defaultProps = {
     appearance: 'default',
     boundariesElement: 'viewport',
@@ -29,11 +27,12 @@ export default class DropdownMenu extends Component<
     onItemActivated: () => {},
     onOpenChange: () => {},
     position: 'bottom left',
+    isMenuFixed: false,
     shouldAllowMultilineItems: false,
     shouldFitContainer: false,
     shouldFlip: true,
-    triggerButtonProps: {},
     triggerType: 'default',
+    onPositioned: () => {},
   };
 
   state = {
@@ -83,14 +82,16 @@ export default class DropdownMenu extends Component<
     }
   };
 
-  handleOpenChange = (attrs: OnOpenChangeArgs) => {
+  handleOpenChange = (attrs: OnOpenChangeArgs, ...args: Array<any>) => {
+    if (this.state.isOpen === attrs.isOpen) return;
     this.setState({ isOpen: attrs.isOpen });
-    this.props.onOpenChange(attrs);
+    this.props.onOpenChange(attrs, ...args);
   };
 
-  close = () => {
+  close = (...args: Array<any>) => {
+    if (this.state.isOpen === false) return;
     this.setState({ isOpen: false });
-    this.props.onOpenChange({ isOpen: false });
+    this.props.onOpenChange({ isOpen: false }, ...args);
   };
 
   render() {
@@ -102,12 +103,14 @@ export default class DropdownMenu extends Component<
       isLoading,
       items,
       position,
+      isMenuFixed,
       shouldAllowMultilineItems,
       shouldFitContainer,
       shouldFlip,
       trigger,
       triggerButtonProps,
       triggerType,
+      onPositioned,
     } = this.props;
 
     return (
@@ -120,12 +123,14 @@ export default class DropdownMenu extends Component<
         onItemActivated={this.handleItemActivation}
         onOpenChange={this.handleOpenChange}
         position={position}
+        isMenuFixed={isMenuFixed}
         shouldAllowMultilineItems={shouldAllowMultilineItems}
         shouldFitContainer={shouldFitContainer}
         shouldFlip={shouldFlip}
         trigger={trigger}
         triggerButtonProps={triggerButtonProps}
         triggerType={triggerType}
+        onPositioned={onPositioned}
       >
         {children}
       </StatelessMenu>

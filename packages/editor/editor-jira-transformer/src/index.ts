@@ -13,8 +13,8 @@ import {
   isSchemaWithBlockQuotes,
   isSchemaWithMedia,
   isSchemaWithTables,
-  Transformer,
-} from '@atlaskit/editor-common';
+} from '@atlaskit/adf-schema';
+import { Transformer } from '@atlaskit/editor-common';
 
 export type CustomEncoder = (userId: string) => string;
 
@@ -24,7 +24,7 @@ export interface JIRACustomEncoders {
 
 export interface ContextInfo {
   clientId: string;
-  serviceHost: string;
+  baseUrl: string;
   token: string;
   collection: string;
 }
@@ -80,7 +80,10 @@ export class JIRATransformer implements Transformer<string> {
     // JIRA encodes empty content as a single nbsp
     if (nodes.length === 1 && nodes[0].textContent === '\xa0') {
       const schemaNodes = this.schema.nodes;
-      return schemaNodes.doc.create({}, schemaNodes.paragraph.create());
+      return schemaNodes.doc.createChecked(
+        {},
+        schemaNodes.paragraph.createChecked(),
+      );
     }
 
     // Process through nodes in reverse (so deepest child elements are first).
@@ -144,6 +147,7 @@ export class JIRATransformer implements Transformer<string> {
       paragraph,
       rule,
       mediaGroup,
+      mediaSingle,
       media,
       table,
     } = this.schema.nodes;
@@ -189,6 +193,8 @@ export class JIRATransformer implements Transformer<string> {
     if (isSchemaWithMedia(this.schema)) {
       if (node.type === mediaGroup) {
         return this.encodeMediaGroup(node);
+      } else if (node.type === mediaSingle) {
+        return this.encodeMediaSingle(node);
       } else if (node.type === media) {
         return this.encodeMedia(node);
       }
@@ -206,7 +212,7 @@ export class JIRATransformer implements Transformer<string> {
   private makeDocument() {
     const doc = document.implementation.createHTMLDocument('');
     doc.body = doc.createElement('body');
-    doc.documentElement.appendChild(doc.body);
+    doc.documentElement!.appendChild(doc.body);
     return doc;
   }
 
@@ -229,7 +235,9 @@ export class JIRATransformer implements Transformer<string> {
       return specialsEncoded;
     }
 
-    const elem = this.doc.createElement(`h${node.attrs.level}`);
+    const { level } = node.attrs;
+    // @see ED-4708
+    const elem = this.doc.createElement(`h${level === 6 ? 5 : level}`);
     const anchor = this.doc.createElement('a');
     anchor.setAttribute('name', anchorNameEncode(node.textContent));
     elem.appendChild(anchor);
@@ -251,7 +259,7 @@ export class JIRATransformer implements Transformer<string> {
         code,
         em,
         link,
-        mentionQuery,
+        typeAheadQuery,
         strike,
         strong,
         subsup,
@@ -302,7 +310,7 @@ export class JIRATransformer implements Transformer<string> {
             fontElem.setAttribute('color', mark.attrs['color']);
             elem = elem.appendChild(fontElem);
             break;
-          case mentionQuery:
+          case typeAheadQuery:
             break;
           default:
             throw new Error(`Unable to encode mark '${mark.type.name}'`);
@@ -348,6 +356,7 @@ export class JIRATransformer implements Transformer<string> {
   private encodeListItem(node: PMNode) {
     const elem = this.doc.createElement('li');
     if (node.content.childCount) {
+      let hasBlocks = false;
       node.content.forEach(childNode => {
         if (
           childNode.type === this.schema.nodes.bulletList ||
@@ -364,15 +373,23 @@ export class JIRATransformer implements Transformer<string> {
           if (list instanceof HTMLElement && list.tagName === 'UL') {
             list.setAttribute('type', 'circle');
 
-            [].forEach.call(list.querySelectorAll('ul'), ul => {
-              ul.setAttribute('type', 'square');
-            });
+            [].forEach.call(
+              list.querySelectorAll('ul'),
+              (ul: HTMLUListElement) => {
+                ul.setAttribute('type', 'square');
+              },
+            );
           }
 
           elem.appendChild(list);
-        } else {
+        } else if (childNode.type.name === 'paragraph' && !hasBlocks) {
           // Strip the paragraph node from the list item.
           elem.appendChild(this.encodeFragment((childNode as PMNode).content));
+        } else {
+          if (childNode.isBlock) {
+            hasBlocks = true;
+          }
+          elem.appendChild(this.encodeNode(childNode));
         }
       });
     }
@@ -427,12 +444,27 @@ export class JIRATransformer implements Transformer<string> {
     return elem;
   }
 
+  private encodeMediaSingle(node: PMNode) {
+    const elem = this.doc.createElement('p');
+    elem.setAttribute('class', 'mediaSingle');
+    elem.appendChild(this.encodeFragment(node.content));
+    return elem;
+  }
+
   private addDataToNode(
     domNode: HTMLElement,
     mediaNode: PMNode,
     defaultDisplayType = 'thumbnail',
   ) {
-    const { id, type, collection, __fileName, __displayType } = mediaNode.attrs;
+    const {
+      id,
+      type,
+      collection,
+      __fileName,
+      __displayType,
+      width,
+      height,
+    } = mediaNode.attrs;
     // Order of dataset matters in IE Edge, please keep the current order
     domNode.setAttribute(
       'data-attachment-type',
@@ -441,6 +473,14 @@ export class JIRATransformer implements Transformer<string> {
 
     if (__fileName) {
       domNode.setAttribute('data-attachment-name', __fileName);
+    }
+
+    if (width) {
+      domNode.setAttribute('data-width', width);
+    }
+
+    if (height) {
+      domNode.setAttribute('data-height', height);
     }
 
     domNode.setAttribute('data-media-services-type', type);
@@ -452,8 +492,8 @@ export class JIRATransformer implements Transformer<string> {
   }
 
   private buildURLWithContextInfo(fileId: string, contextInfo: ContextInfo) {
-    const { clientId, serviceHost, token, collection } = contextInfo;
-    return `${serviceHost}/file/${fileId}/image?token=${token}&client=${clientId}&collection=${collection}&width=200&height=200&mode=fit`;
+    const { clientId, baseUrl, token, collection } = contextInfo;
+    return `${baseUrl}/file/${fileId}/image?token=${token}&client=${clientId}&collection=${collection}&width=200&height=200&mode=fit`;
   }
 
   private isImageMimeType(mimeType?: string) {

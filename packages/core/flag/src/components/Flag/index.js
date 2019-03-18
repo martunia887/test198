@@ -1,8 +1,17 @@
 // @flow
 import React, { Component } from 'react';
+import {
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  createAndFireEvent,
+} from '@atlaskit/analytics-next';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import ChevronUpIcon from '@atlaskit/icon/glyph/chevron-up';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../../version.json';
 import Container, {
   Description,
   DismissButton,
@@ -22,7 +31,7 @@ type State = {
   isExpanded: boolean,
 };
 
-export default class Flag extends Component<FlagProps, State> {
+class Flag extends Component<FlagProps, State> {
   props: FlagProps; // eslint-disable-line react/sort-comp
 
   static defaultProps = {
@@ -84,7 +93,7 @@ export default class Flag extends Component<FlagProps, State> {
       <DismissButton
         appearance={appearance}
         aria-expanded={this.state.isExpanded}
-        // $FlowFixMe TEMPORARY
+        // $FlowFixMe - theme is not found in props
         focusRingColor={flagFocusRingColor(this.props)}
         onClick={buttonAction}
         type="button"
@@ -95,7 +104,7 @@ export default class Flag extends Component<FlagProps, State> {
   };
 
   renderBody = () => {
-    const { actions, appearance, description } = this.props;
+    const { actions, appearance, description, linkComponent } = this.props;
     const isExpanded = !this.isBold() || this.state.isExpanded;
 
     return (
@@ -103,7 +112,11 @@ export default class Flag extends Component<FlagProps, State> {
         {description && (
           <Description appearance={appearance}>{description}</Description>
         )}
-        <Actions actions={actions} appearance={appearance} />
+        <Actions
+          actions={actions}
+          appearance={appearance}
+          linkComponent={linkComponent}
+        />
       </Expander>
     );
   };
@@ -148,3 +161,47 @@ export default class Flag extends Component<FlagProps, State> {
     );
   }
 }
+
+export { Flag as FlagWithoutAnalytics };
+const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
+
+export default withAnalyticsContext({
+  componentName: 'flag',
+  packageName,
+  packageVersion,
+})(
+  withAnalyticsEvents({
+    onBlur: createAndFireEventOnAtlaskit({
+      action: 'blurred',
+      actionSubject: 'flag',
+
+      attributes: {
+        componentName: 'flag',
+        packageName,
+        packageVersion,
+      },
+    }),
+
+    onDismissed: createAndFireEventOnAtlaskit({
+      action: 'dismissed',
+      actionSubject: 'flag',
+
+      attributes: {
+        componentName: 'flag',
+        packageName,
+        packageVersion,
+      },
+    }),
+
+    onFocus: createAndFireEventOnAtlaskit({
+      action: 'focused',
+      actionSubject: 'flag',
+
+      attributes: {
+        componentName: 'flag',
+        packageName,
+        packageVersion,
+      },
+    }),
+  })(Flag),
+);

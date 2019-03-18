@@ -1,5 +1,84 @@
 // @flow
-export const SUPPORTED_LANGUAGES = [
+/* eslint import/no-dynamic-require: 0, global-require: 0 */
+import memoizeOne from 'memoize-one';
+
+/*
+ * These values all those are supported by ADF.
+ * The comments show mappings of these values to the corresponding
+ * language definition file, or to that of the most
+ * syntactically similar language supported by highlightjs
+ */
+export type SupportedLanguages =
+  | 'abap' // → sql
+  | 'actionscript'
+  | 'ada'
+  | 'arduino'
+  | 'autoit'
+  | 'c' // → cpp
+  | 'c++' // → cpp
+  | 'coffeescript'
+  | 'csharp' // → cs
+  | 'css'
+  | 'cuda' // → cpp
+  | 'd'
+  | 'dart'
+  | 'delphi'
+  | 'elixir'
+  | 'erlang'
+  | 'fortran'
+  | 'foxpro' // → purebasic
+  | 'go'
+  | 'groovy'
+  | 'haskell'
+  | 'haxe'
+  | 'html' // → xml
+  | 'java'
+  | 'javascript'
+  | 'json'
+  | 'julia'
+  | 'kotlin'
+  | 'latex' // → tex
+  | 'livescript'
+  | 'lua'
+  | 'mathematica'
+  | 'matlab'
+  | 'objective-c' // → objectivec
+  | 'objective-j' // → objectivec
+  | 'objectpascal' // → delphi
+  | 'ocaml'
+  | 'octave' // → matlab
+  | 'perl'
+  | 'php'
+  | 'powershell'
+  | 'prolog'
+  | 'puppet'
+  | 'python'
+  | 'qml'
+  | 'r'
+  | 'racket' // → lisp
+  | 'restructuredtext' // → rest
+  | 'ruby'
+  | 'rust'
+  | 'sass' // → less
+  | 'scala'
+  | 'scheme'
+  | 'shell'
+  | 'smalltalk'
+  | 'sql'
+  | 'standardml' // → sml
+  | 'swift'
+  | 'tcl'
+  | 'tex'
+  | 'text'
+  | 'typescript'
+  | 'vala'
+  | 'vbnet'
+  | 'verilog'
+  | 'vhdl'
+  | 'xml'
+  | 'xquery';
+
+export const SUPPORTED_LANGUAGE_ALIASES = Object.freeze([
   {
     name: 'PHP',
     alias: ['php', 'php3', 'php4', 'php5'],
@@ -32,7 +111,7 @@ export const SUPPORTED_LANGUAGES = [
   },
   {
     name: 'C++',
-    alias: ['c++', 'cpp'],
+    alias: ['c++', 'cpp', 'clike'],
     value: 'cpp',
   },
   {
@@ -48,7 +127,7 @@ export const SUPPORTED_LANGUAGES = [
   {
     name: 'C',
     alias: ['c'],
-    value: '',
+    value: 'cpp',
   },
   {
     name: 'Swift',
@@ -63,7 +142,7 @@ export const SUPPORTED_LANGUAGES = [
   {
     name: 'Shell',
     alias: ['shell', 'bash', 'sh', 'ksh', 'zsh'],
-    value: 'bash',
+    value: 'shell',
   },
   {
     name: 'Scala',
@@ -81,19 +160,9 @@ export const SUPPORTED_LANGUAGES = [
     value: 'actionscript',
   },
   {
-    name: 'AppleScript',
-    alias: ['applescript'],
-    value: 'applescript',
-  },
-  {
     name: 'ColdFusion',
     alias: ['coldfusion'],
     value: 'xml',
-  },
-  {
-    name: 'Diff',
-    alias: ['diff'],
-    value: 'diff',
   },
   {
     name: 'JavaFX',
@@ -101,19 +170,14 @@ export const SUPPORTED_LANGUAGES = [
     value: 'java',
   },
   {
-    name: 'VisualBasic',
-    alias: ['visualbasic', 'vb'],
-    value: 'vbscript',
-  },
-  {
-    name: 'PlainText',
-    alias: ['plaintext', 'text'],
-    value: 'text',
-  },
-  {
     name: 'VbNet',
     alias: ['vbnet', 'vb.net'],
     value: 'vbnet',
+  },
+  {
+    name: 'JSON',
+    alias: ['json'],
+    value: 'json',
   },
   {
     name: 'MATLAB',
@@ -176,11 +240,6 @@ export const SUPPORTED_LANGUAGES = [
     name: 'CoffeeScript',
     alias: ['coffeescript', 'coffee-script', 'coffee'],
     value: 'coffeescript',
-  },
-  {
-    name: 'Clojure',
-    alias: ['clojure', 'clj'],
-    value: 'clojure',
   },
   {
     name: 'Haskell',
@@ -284,7 +343,7 @@ export const SUPPORTED_LANGUAGES = [
   },
   {
     name: 'QML',
-    alias: ['qbs'],
+    alias: ['qbs', 'qml'],
     value: 'qml',
   },
   {
@@ -295,7 +354,7 @@ export const SUPPORTED_LANGUAGES = [
   {
     name: 'FoxPro',
     alias: ['foxpro', 'vfp', 'clipper', 'xbase'],
-    value: 'vbscript',
+    value: 'vbnet',
   },
   {
     name: 'Scheme',
@@ -328,11 +387,6 @@ export const SUPPORTED_LANGUAGES = [
     value: 'tcl',
   },
   {
-    name: 'Markdown',
-    alias: ['mkdown', 'md', 'markdown'],
-    value: 'markdown',
-  },
-  {
     name: 'Mathematica',
     alias: ['mathematica', 'mma', 'nb'],
     value: 'mathematica',
@@ -344,7 +398,7 @@ export const SUPPORTED_LANGUAGES = [
   },
   {
     name: 'StandardML',
-    alias: ['standardmL', 'sml'],
+    alias: ['standardmL', 'sml', 'standardml'],
     value: 'sml',
   },
   {
@@ -377,18 +431,27 @@ export const SUPPORTED_LANGUAGES = [
     alias: ['xquery', 'xqy', 'xq', 'xql', 'xqm'],
     value: 'xquery',
   },
-];
-
-export const languageList: string[] = SUPPORTED_LANGUAGES.reduce(
-  (acc: string[], val: any) => {
-    return acc.concat(val.name, val.alias);
+  {
+    name: 'PlainText',
+    alias: ['text', 'plaintext'],
+    value: 'text',
   },
-  [],
-);
+  {
+    name: 'Yaml',
+    alias: ['yaml', 'yml'],
+    value: 'yaml',
+  },
+]);
 
-export function normalizeLanguage(language?: string): string {
-  const match = SUPPORTED_LANGUAGES.filter(val => {
-    return val.name === language || val.alias.indexOf(language) !== -1;
-  }).shift();
-  return match ? match.value : ''; // default to empty string to enable language auto-detect
-}
+export const normalizeLanguage = memoizeOne(
+  (language?: string): string => {
+    if (!language) {
+      return '';
+    }
+    const match = SUPPORTED_LANGUAGE_ALIASES.find(val => {
+      return val.name === language || val.alias.includes(language);
+    });
+    // Fallback to plain monospaced text if language passed but not supported
+    return match ? match.value : 'text';
+  },
+);

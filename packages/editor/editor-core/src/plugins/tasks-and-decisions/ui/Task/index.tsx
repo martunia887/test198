@@ -1,22 +1,38 @@
 import * as React from 'react';
+import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { PureComponent, ReactElement } from 'react';
-import { ProviderFactory, WithProviders } from '@atlaskit/editor-common';
+import {
+  Providers,
+  ProviderFactory,
+  WithProviders,
+} from '@atlaskit/editor-common';
 import TaskItemWithProviders from './task-item-with-providers';
+import { ContentRef } from '@atlaskit/task-decision';
+
+const messages = defineMessages({
+  placeholder: {
+    id: 'fabric.editor.taskPlaceholder',
+    defaultMessage: "Type your action, use '@' to assign to someone.",
+    description:
+      'Placeholder description for an empty action/task in the editor',
+  },
+});
 
 export interface TaskProps {
   taskId: string;
   isDone: boolean;
-  contentRef?: (node: HTMLElement | undefined) => void;
+  contentRef?: ContentRef;
   onChange?: (taskId: string, isChecked: boolean) => void;
   showPlaceholder?: boolean;
   children?: ReactElement<any>;
   providers?: ProviderFactory;
+  disabled?: boolean;
 }
 
-export default class TaskItem extends PureComponent<TaskProps, {}> {
+export class TaskItem extends PureComponent<TaskProps & InjectedIntlProps, {}> {
   private providerFactory: ProviderFactory;
 
-  constructor(props) {
+  constructor(props: TaskProps & InjectedIntlProps) {
     super(props);
     this.providerFactory = props.providers || new ProviderFactory();
   }
@@ -29,13 +45,19 @@ export default class TaskItem extends PureComponent<TaskProps, {}> {
     }
   }
 
-  private renderWithProvider = providerFactory => {
-    const { providers, ...otherProps } = this.props;
-    const { taskDecisionProvider, contextIdentifierProvider } = providerFactory;
+  private renderWithProvider = (providers: Providers) => {
+    const {
+      providers: _providerFactory,
+      intl: { formatMessage },
+      ...otherProps
+    } = this.props;
+    const { taskDecisionProvider, contextIdentifierProvider } = providers;
+    const placeholder = formatMessage(messages.placeholder);
 
     return (
       <TaskItemWithProviders
         {...otherProps}
+        placeholder={placeholder}
         taskDecisionProvider={taskDecisionProvider}
         contextIdentifierProvider={contextIdentifierProvider}
       />
@@ -52,3 +74,5 @@ export default class TaskItem extends PureComponent<TaskProps, {}> {
     );
   }
 }
+
+export default injectIntl(TaskItem);

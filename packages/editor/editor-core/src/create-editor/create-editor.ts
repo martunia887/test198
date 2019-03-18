@@ -1,14 +1,31 @@
-import { Schema, MarkSpec } from 'prosemirror-model';
+import { Schema, MarkSpec, NodeSpec } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
-import { sanitizeNodes, ProviderFactory } from '@atlaskit/editor-common';
+import { sanitizeNodes } from '@atlaskit/adf-schema';
+import {
+  ProviderFactory,
+  ErrorReporter,
+  ErrorReportingHandler,
+} from '@atlaskit/editor-common';
 import { analyticsService, AnalyticsHandler } from '../analytics';
-import { EditorPlugin, EditorProps, EditorConfig } from '../types';
-import ErrorReporter from '../utils/error-reporter';
-import { name, version } from '../version';
+import {
+  EditorPlugin,
+  EditorProps,
+  EditorConfig,
+  PluginsOptions,
+} from '../types';
+import { name, version } from '../version-wrapper';
 import { Dispatch, EventDispatcher } from '../event-dispatcher';
+import { PortalProviderAPI } from '../ui/PortalProvider';
+import Ranks from '../plugins/rank';
 
 export function sortByRank(a: { rank: number }, b: { rank: number }): number {
   return a.rank - b.rank;
+}
+
+function sortByOrder(item: 'plugins' | 'nodes' | 'marks') {
+  return function(a: { name: string }, b: { name: string }): number {
+    return Ranks[item].indexOf(a.name) - Ranks[item].indexOf(b.name);
+  };
 }
 
 export function fixExcludes(marks: {
@@ -36,18 +53,21 @@ export function processPluginsList(
   /**
    * First pass to collect pluginsOptions
    */
-  const pluginsOptions = plugins.reduce((acc, plugin) => {
-    if (plugin.pluginsOptions) {
-      Object.keys(plugin.pluginsOptions).forEach(pluginName => {
-        if (!acc[pluginName]) {
-          acc[pluginName] = [];
-        }
-        acc[pluginName].push(plugin.pluginsOptions![pluginName]);
-      });
-    }
+  const pluginsOptions = plugins.reduce(
+    (acc, plugin) => {
+      if (plugin.pluginsOptions) {
+        Object.keys(plugin.pluginsOptions).forEach(pluginName => {
+          if (!acc[pluginName]) {
+            acc[pluginName] = [];
+          }
+          acc[pluginName].push(plugin.pluginsOptions![pluginName]);
+        });
+      }
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {} as PluginsOptions,
+  );
 
   /**
    * Process plugins
@@ -97,34 +117,51 @@ export function processPluginsList(
 
 export function createSchema(editorConfig: EditorConfig) {
   const marks = fixExcludes(
-    editorConfig.marks.sort(sortByRank).reduce((acc, mark) => {
-      acc[mark.name] = mark.mark;
-      return acc;
-    }, {}),
+    editorConfig.marks.sort(sortByOrder('marks')).reduce(
+      (acc, mark) => {
+        acc[mark.name] = mark.mark;
+        return acc;
+      },
+      {} as { [nodeName: string]: MarkSpec },
+    ),
   );
-
   const nodes = sanitizeNodes(
-    editorConfig.nodes.sort(sortByRank).reduce((acc, node) => {
-      acc[node.name] = node.node;
-      return acc;
-    }, {}),
+    editorConfig.nodes.sort(sortByOrder('nodes')).reduce(
+      (acc, node) => {
+        acc[node.name] = node.node;
+        return acc;
+      },
+      {} as { [nodeName: string]: NodeSpec },
+    ),
     marks,
   );
 
   return new Schema({ nodes, marks });
 }
 
-export function createPMPlugins(
-  editorConfig: EditorConfig,
-  schema: Schema,
-  props: EditorProps,
-  dispatch: Dispatch,
-  eventDispatcher: EventDispatcher,
-  providerFactory: ProviderFactory,
-  errorReporter: ErrorReporter,
-): Plugin[] {
+export function createPMPlugins({
+  editorConfig,
+  schema,
+  props,
+  dispatch,
+  eventDispatcher,
+  providerFactory,
+  errorReporter,
+  portalProviderAPI,
+  reactContext,
+}: {
+  editorConfig: EditorConfig;
+  schema: Schema;
+  props: EditorProps;
+  dispatch: Dispatch;
+  eventDispatcher: EventDispatcher;
+  providerFactory: ProviderFactory;
+  errorReporter: ErrorReporter;
+  portalProviderAPI: PortalProviderAPI;
+  reactContext: () => { [key: string]: any };
+}): Plugin[] {
   return editorConfig.pmPlugins
-    .sort(sortByRank)
+    .sort(sortByOrder('plugins'))
     .map(({ plugin }) =>
       plugin({
         schema,
@@ -133,12 +170,16 @@ export function createPMPlugins(
         providerFactory,
         errorReporter,
         eventDispatcher,
+        portalProviderAPI,
+        reactContext,
       }),
     )
     .filter(plugin => !!plugin) as Plugin[];
 }
 
-export function createErrorReporter(errorReporterHandler) {
+export function createErrorReporter(
+  errorReporterHandler?: ErrorReportingHandler,
+) {
   const errorReporter = new ErrorReporter();
   if (errorReporterHandler) {
     errorReporter.handler = errorReporterHandler;

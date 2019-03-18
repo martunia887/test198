@@ -66,7 +66,7 @@ update(
   ${code`import { withAnalyticsEvents } from '@atlaskit/analytics-next';`}
 
   A HOC which provides the wrapped component with a method for creating \`UIAnalyticsEvent\`s, via \`props.createAnalyticsEvent\`.
-  See the section on [creating your own events](/mk-2/packages/core/analytics-next/docs/concepts#creating-your-own-events) 
+  See the section on [creating your own events](/packages/core/analytics-next/docs/concepts#creating-your-own-events) 
   in the Concepts page for a thorough explanation of how to use this component.
 
   Usage:
@@ -109,6 +109,7 @@ ${code`
 
   ${(
     <Props
+      heading="AnalyticsListener Props"
       props={require('!!extract-react-types-loader!../src/AnalyticsListener')}
     />
   )}
@@ -124,6 +125,7 @@ ${code`
 
   ${(
     <Props
+      heading="AnalyticsContext Props"
       props={require('!!extract-react-types-loader!../src/AnalyticsContext')}
     />
   )}

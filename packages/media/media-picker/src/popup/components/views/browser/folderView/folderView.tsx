@@ -11,6 +11,7 @@ import Spinner from '@atlaskit/spinner';
 
 /* Actions */
 import { fileClick } from '../../../../actions/fileClick';
+import { setUpfrontIdDeferred } from '../../../../actions/setUpfrontIdDeferred';
 
 import {
   isServiceFile,
@@ -18,7 +19,6 @@ import {
   Path,
   SelectedItem,
   ServiceAccountLink,
-  ServiceAccountWithType,
   ServiceFile,
   ServiceFolder,
   ServiceFolderItem,
@@ -61,7 +61,6 @@ const getDateString = (timestamp?: number) => {
 
 export interface FolderViewerStateProps {
   readonly path: Path;
-  readonly accounts: ServiceAccountWithType[];
   readonly service: ServiceAccountLink;
   readonly items: ServiceFolderItem[];
   readonly selectedItems: SelectedItem[];
@@ -87,6 +86,11 @@ export interface FolderViewDispatchProps {
     accountId: string,
     path: Path,
     nextCursor: string,
+  ) => void;
+  readonly setUpfrontIdDeferred: (
+    id: string,
+    resolver: (id: string) => void,
+    rejecter: Function,
   ) => void;
 }
 
@@ -200,7 +204,7 @@ export class FolderViewer extends Component<FolderViewerProps, {}> {
     );
   };
 
-  private renderFileCreateDateAndSize = ({ date, size }) => {
+  private renderFileCreateDateAndSize = ({ date, size }: ServiceFile) => {
     return (
       <FileMetadataGroup>
         <FileCreateDate>{getDateString(date)}</FileCreateDate>
@@ -252,16 +256,29 @@ export class FolderViewer extends Component<FolderViewerProps, {}> {
         path.push({ id: item.id, name: item.name });
         onFolderClick(service.name, service.accountId, path);
       } else {
-        onFileClick(service.name, service.accountId, item);
+        const { setUpfrontIdDeferred } = this.props;
+        const upfrontId = new Promise<string>((resolve, reject) => {
+          setUpfrontIdDeferred(item.id, resolve, reject);
+        });
+
+        const file: ServiceFile = {
+          ...item,
+          upfrontId,
+        };
+        onFileClick(service.name, service.accountId, file);
       }
     };
   }
 }
 
-export default connect<FolderViewerStateProps, FolderViewDispatchProps, {}>(
-  ({ view, accounts, selectedItems }: State) => ({
+export default connect<
+  FolderViewerStateProps,
+  FolderViewDispatchProps,
+  {},
+  State
+>(
+  ({ view, selectedItems }) => ({
     path: view.path,
-    accounts,
     service: view.service,
     items: view.items,
     selectedItems,
@@ -278,5 +295,7 @@ export default connect<FolderViewerStateProps, FolderViewDispatchProps, {}>(
       dispatch(
         fetchNextCloudFilesPage(serviceName, accountId, path, nextCursor),
       ),
+    setUpfrontIdDeferred: (id, resolver, rejecter) =>
+      dispatch(setUpfrontIdDeferred(id, resolver, rejecter)),
   }),
 )(FolderViewer);

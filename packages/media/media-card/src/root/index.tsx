@@ -1,4 +1,2 @@
-export * from './card';
-export * from './cardView';
-export * from './mediaCard';
-export * from './withDataURI';
+export { default as Card } from './card/cardLoader';
+export * from './cardViewLoader';

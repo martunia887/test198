@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { md, Props, Example } from '@atlaskit/docs';
+import { code, md, Props, Example } from '@atlaskit/docs';
 
 const newConversationSource = `import { Conversation, ConversationResource } from '@atlaskit/conversation';
 
@@ -8,7 +8,7 @@ const provider = new ConversationResource({
   user: {...}
 });
 
-<Conversation containerId="ari:cloud:platform::conversation/demo" provider={provider} />
+<Conversation objectId="ari:cloud:platform::conversation/demo" provider={provider} />
 `;
 
 const existingConversationSource = `import { Conversation, ConversationResource } from '@atlaskit/conversation';
@@ -19,7 +19,7 @@ const provider = new ConversationResource({
 });
 
 const [conversation] = await provider.getConversations();
-<Conversation id={conversation.conversationId} containerId="ari:cloud:platform::conversation/demo" provider={provider} />;
+<Conversation id={conversation.conversationId} objectId="ari:cloud:platform::conversation/demo" provider={provider} />;
 `;
 
 const customEditorSource = `import { Conversation, ConversationResource } from '@atlaskit/conversation';
@@ -32,9 +32,9 @@ const provider = new ConversationResource({
 const [conversation] = await provider.getConversations();
 <Conversation
   id={conversation.conversationId}
-  containerId="ari:cloud:platform::conversation/demo"
+  objectId="ari:cloud:platform::conversation/demo"
   provider={provider}
-  renderEditor={(Editor, props) => <Editor {...props} appearance="message" saveOnEnter={true} />}
+  renderEditor={(Editor, props) => <Editor {...props} saveOnEnter={true} />}
 />;
 `;
 
@@ -54,7 +54,7 @@ const props = {
           {
             key: {
               kind: 'id',
-              name: 'containerId',
+              name: 'objectId',
             },
             kind: 'property',
             optional: false,
@@ -327,7 +327,9 @@ export default md`
   The conversation component is a mini-app which comes with an internal store. It's completely driven by a provider (\`ConversationResource\`).
 
   Using the component is fairly straight forward. Just import \`Conversation\` and \`ConversationResource\` from \`@atlaskit/conversation\`. The component can then be used like below.
-
+  
+  ${code`import { Conversation, ConversationResource } from '@atlaskit/conversation';`}
+  
   ${(
     <Example
       Component={require('../examples/0-New-Conversation').default}
@@ -346,7 +348,7 @@ export default md`
     />
   )}
 
-  The rendering of the editor can be customized by using the \`renderEditor\` prop. Here's an example using the "message"-appearance and "saveOnEnter":
+  The rendering of the editor can be customized by using the \`renderEditor\` prop. Here's an example using "saveOnEnter":
 
   ${(
     <Example

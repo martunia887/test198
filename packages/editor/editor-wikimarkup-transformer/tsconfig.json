@@ -1,8 +1,10 @@
 {
-  "extends": "../../../tsconfig.editor.json",
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noImplicitAny": true
+  },
   "include": [
     "./src/**/*.ts",
-    "./__tests__/**/*.ts",
     "./docs/**/*.ts",
     "./examples/**/*.ts"
   ]

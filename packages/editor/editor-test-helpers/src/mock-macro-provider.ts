@@ -6,7 +6,10 @@ import {
 } from '@atlaskit/editor-core';
 import { bodiedExtensionData } from './mock-extension-data';
 
-const getMacroADFNode = (macroName, macroParams): MacroAttributes => {
+const getMacroADFNode = (
+  macroName: string,
+  macroParams: any,
+): MacroAttributes => {
   return {
     type: 'inlineExtension' as ExtensionType,
     attrs: {
@@ -15,7 +18,7 @@ const getMacroADFNode = (macroName, macroParams): MacroAttributes => {
       parameters: {
         macroParams,
         macroMetadata: {
-          macroId: { value: new Date().valueOf() },
+          macroId: { value: 12345 },
           placeholder: [
             {
               data: { url: '' },
@@ -30,9 +33,9 @@ const getMacroADFNode = (macroName, macroParams): MacroAttributes => {
 
 export class MockMacroProvider implements MacroProvider {
   public config = {};
-  private mockExtensionData;
+  private mockExtensionData: any;
 
-  constructor(mockExtensionData) {
+  constructor(mockExtensionData: any) {
     this.mockExtensionData = mockExtensionData;
   }
 
@@ -42,10 +45,14 @@ export class MockMacroProvider implements MacroProvider {
 
   autoConvert(link: String): MacroAttributes | null {
     switch (link) {
+      case 'http://www.dumbmacro.com?paramA=CFE':
+      case 'https://www.dumbmacro.com?paramA=CFE':
       case 'www.dumbmacro.com?paramA=CFE':
         return getMacroADFNode('dumbMacro', {
           paramA: { value: 'CFE' },
         });
+      case 'http://www.smartmacro.com?paramB=CFE':
+      case 'https://www.smartmacro.com?paramB=CFE':
       case 'www.smartmacro.com?paramB=CFE':
         return getMacroADFNode('smartMacro', {
           paramB: { value: 'CFE' },

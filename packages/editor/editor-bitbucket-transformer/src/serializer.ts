@@ -29,6 +29,8 @@ const generateOuterBacktickChain: (
 })();
 
 export class MarkdownSerializerState extends PMMarkdownSerializerState {
+  context = { insideTable: false };
+
   renderContent(parent: PMNode): void {
     parent.forEach((child: PMNode, offset: number, index: number) => {
       if (
@@ -56,11 +58,36 @@ export class MarkdownSerializerState extends PMMarkdownSerializerState {
    */
   renderInline(parent: PMNode): void {
     const active: Mark[] = [];
+    let trailing = '';
 
     const progress = (node: PMNode | null, _?: any, index?: number) => {
       let marks = node
-        ? node.marks.filter(mark => this.marks[mark.type.name])
+        ? node.marks.filter(mark => this.marks[mark.type.name as any])
         : [];
+
+      let leading = trailing;
+      trailing = '';
+      // If whitespace has to be expelled from the node, adjust
+      // leading and trailing accordingly.
+      if (
+        node &&
+        node.isText &&
+        marks.some(mark => {
+          let info = this.marks[mark.type.name as any];
+          return info && (info as any).expelEnclosingWhitespace;
+        })
+      ) {
+        let [, lead, inner, trail] = /^(\s*)(.*?)(\s*)$/m.exec(node.text!)!;
+        leading += lead;
+        trailing = trail;
+        if (lead || trail) {
+          node = inner ? (node as any).withText(inner) : null;
+          if (!node) {
+            marks = active;
+          }
+        }
+      }
+
       const code =
         marks.length &&
         marks[marks.length - 1].type.name === 'code' &&
@@ -73,12 +100,12 @@ export class MarkdownSerializerState extends PMMarkdownSerializerState {
       // active.
       outer: for (let i = 0; i < len; i++) {
         const mark: Mark = marks[i];
-        if (!this.marks[mark.type.name].mixable) {
+        if (!(this.marks[mark.type.name as any] as any).mixable) {
           break;
         }
         for (let j = 0; j < active.length; j++) {
           const other = active[j];
-          if (!this.marks[other.type.name].mixable) {
+          if (!(this.marks[other.type.name as any] as any).mixable) {
             break;
           }
           if (mark.eq(other)) {
@@ -112,6 +139,11 @@ export class MarkdownSerializerState extends PMMarkdownSerializerState {
       // Close the marks that need to be closed
       while (keep < active.length) {
         this.text(this.markString(active.pop()!, false), false);
+      }
+
+      // Output any previously expelled trailing whitespace outside the marks
+      if (leading) {
+        this.text(leading);
       }
 
       // Open the marks that need to be opened
@@ -179,17 +211,11 @@ const editorNodes = {
     parent: PMNode,
     index: number,
   ) {
-    if (!node.attrs.language) {
-      state.wrapBlock('    ', undefined, node, () =>
-        state.text(node.textContent ? node.textContent : '\u200c', false),
-      );
-    } else {
-      const backticks = generateOuterBacktickChain(node.textContent, 3);
-      state.write(backticks + node.attrs.language + '\n');
-      state.text(node.textContent ? node.textContent : '\u200c', false);
-      state.ensureNewLine();
-      state.write(backticks);
-    }
+    const backticks = generateOuterBacktickChain(node.textContent, 3);
+    state.write(backticks + (node.attrs.language || '') + '\n');
+    state.text(node.textContent ? node.textContent : '\u200c', false);
+    state.ensureNewLine();
+    state.write(backticks);
     state.closeBlock(node);
   },
   heading(
@@ -274,14 +300,17 @@ const editorNodes = {
       state.render(child, node, i);
     }
   },
-  mediaSingle(state: MarkdownSerializerState, node: PMNode) {
+  mediaSingle(state: MarkdownSerializerState, node: PMNode, parent: PMNode) {
     for (let i = 0; i < node.childCount; i++) {
       const child = node.child(i);
       state.render(child, node, i);
+      if (!parent.type.name.startsWith('table')) {
+        state.write('\n');
+      }
     }
   },
   media(state: MarkdownSerializerState, node: PMNode) {
-    state.write('![](' + node.attrs.url + ')\n');
+    state.write('![](' + node.attrs.url + ')');
   },
   image(state: MarkdownSerializerState, node: PMNode) {
     // Note: the 'title' is not escaped in this flavor of markdown.
@@ -304,14 +333,7 @@ const editorNodes = {
     index: number,
   ) {
     const previousNode = index === 0 ? null : parent.child(index - 1);
-    const previousNodeIsAMention =
-      previousNode && previousNode.type.name === 'mention';
-    const currentNodeStartWithASpace = node.textContent.indexOf(' ') === 0;
-    const trimTrailingWhitespace =
-      previousNodeIsAMention && currentNodeStartWithASpace;
-    let text = trimTrailingWhitespace
-      ? node.textContent.replace(' ', '') // only first blank space occurrence is replaced
-      : node.textContent;
+    let text = node.textContent;
 
     // BB converts 4 spaces at the beginning of the line to code block
     // that's why we escape 4 spaces with zero-width-non-joiner
@@ -324,7 +346,11 @@ const editorNodes = {
     for (let i = 0; i < lines.length; i++) {
       const startOfLine = state.atBlank() || !!state.closed;
       state.write();
-      state.out += escapeMarkdown(lines[i], startOfLine);
+      state.out += escapeMarkdown(
+        lines[i],
+        startOfLine,
+        state.context.insideTable,
+      );
       if (i !== lines.length - 1) {
         if (
           lines[i] &&
@@ -349,7 +375,12 @@ const editorNodes = {
     index: number,
   ) {
     const isLastNode = parent.childCount === index + 1;
-    const delimiter = isLastNode ? '' : ' ';
+    let delimiter = '';
+    if (!isLastNode) {
+      const nextNode = parent.child(index + 1);
+      const nextNodeHasLeadingSpace = nextNode.textContent.indexOf(' ') === 0;
+      delimiter = nextNodeHasLeadingSpace ? '' : ' ';
+    }
 
     state.write(`@${node.attrs.id}${delimiter}`);
   },
@@ -366,9 +397,19 @@ const editorNodes = {
 export const nodes = { ...editorNodes, ...tableNodes };
 
 export const marks = {
-  em: { open: '*', close: '*', mixable: true },
-  strong: { open: '**', close: '**', mixable: true },
-  strike: { open: '~~', close: '~~', mixable: true },
+  em: { open: '_', close: '_', mixable: true, expelEnclosingWhitespace: true },
+  strong: {
+    open: '**',
+    close: '**',
+    mixable: true,
+    expelEnclosingWhitespace: true,
+  },
+  strike: {
+    open: '~~',
+    close: '~~',
+    mixable: true,
+    expelEnclosingWhitespace: true,
+  },
   link: {
     open: '[',
     close(state: MarkdownSerializerState, mark: any) {

@@ -1,5 +1,6 @@
 import { MockURL } from 'xhr-mock/lib/MockURL';
 import { MockHeaders } from 'xhr-mock/lib/types';
+import { ClientBasedAuth } from '@atlaskit/media-store';
 
 export * from './matchers';
 export * from './utils';
@@ -19,19 +20,18 @@ export interface ResponseData {
   body?: any;
 }
 
-export class MockContextItem {
-  auth: {
-    clientId: string;
-    token: string;
-  };
+export interface MockContextItem {
+  auth: ClientBasedAuth;
   collection: Array<MediaCollectionFile>;
   collectionName: string;
 }
+
 export class MockContext {
   userContext: MockContextItem = {
     auth: {
       clientId: '',
       token: '',
+      baseUrl: '',
     },
     collection: [],
     collectionName: 'recents',
@@ -40,6 +40,7 @@ export class MockContext {
     auth: {
       clientId: '',
       token: '',
+      baseUrl: '',
     },
     collection: [],
     collectionName: 'MediaServicesSample',

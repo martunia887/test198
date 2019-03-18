@@ -2,14 +2,11 @@
  * Inspired by analytics-web-react
  */
 
-declare namespace merge {
-
-}
-
 import * as last from 'lodash.last';
 import * as merge from 'lodash.merge';
 
 import {
+  DEFAULT_SOURCE,
   UI_EVENT_TYPE,
   SCREEN_EVENT_TYPE,
   TRACK_EVENT_TYPE,
@@ -24,7 +21,9 @@ import {
   getPackageInfo,
   getComponents,
 } from './extract-data-from-event';
-import { EventNextType } from '../types';
+import Logger from '../helpers/logger';
+import { version as listenerVersion } from '../version.json';
+import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 
 const ATLASKIT_TAG = 'atlaskit';
 
@@ -55,27 +54,30 @@ const ATLASKIT_TAG = 'atlaskit';
  *  }
  */
 
-export default (event: EventNextType): GasPayload | null => {
+export default (
+  event: UIAnalyticsEventInterface,
+  logger: Logger,
+): GasPayload | null => {
   const sources = getSources(event);
-  const source = last(sources);
+  const source = last(sources) || DEFAULT_SOURCE;
   const extraAttributes = getExtraAttributes(event);
   const components = getComponents(event);
 
   const packages = getPackageInfo(event);
   const { packageName, packageVersion } =
     last(getPackageInfo(event)) || ({} as any);
-  const packageHierarchy = packages.map(
-    p =>
-      p.packageVersion ? `${p.packageName}@${p.packageVersion}` : p.packageName,
+  const packageHierarchy = packages.map(p =>
+    p.packageVersion ? `${p.packageName}@${p.packageVersion}` : p.packageName,
   );
 
   const {
-    eventType,
+    eventType = UI_EVENT_TYPE,
     action,
     actionSubjectId,
     attributes: payloadAttributes,
   } = event.payload;
   const attributes = {
+    listenerVersion,
     sourceHierarchy: sources.join('.') || undefined,
     componentHierarchy: components.join('.') || undefined,
     packageHierarchy: packageHierarchy.join(',') || undefined,
@@ -89,11 +91,11 @@ export default (event: EventNextType): GasPayload | null => {
   if (event.payload) {
     if (eventType === UI_EVENT_TYPE) {
       return {
-        eventType: eventType,
+        eventType,
         source,
         actionSubject: getActionSubject(event),
         action,
-        actionSubjectId: actionSubjectId,
+        actionSubjectId,
         attributes,
         tags: Array.from(tags),
       } as any;
@@ -104,10 +106,11 @@ export default (event: EventNextType): GasPayload | null => {
       eventType === OPERATIONAL_EVENT_TYPE ||
       eventType === SCREEN_EVENT_TYPE
     ) {
-      // tslint:disable-next-line no-console
-      console.error(
+      logger.error(
         'Track, screen and operational events are currently not supported for atlaskit events',
       );
+    } else {
+      logger.error('Invalid event type', eventType);
     }
   }
 

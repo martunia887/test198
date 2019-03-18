@@ -24,6 +24,8 @@ const getPasteFiles = (clipboardData: DataTransfer) => {
   return [...items];
 };
 
+type FileEvent = ProgressEvent & { target: { result: string } };
+
 export class Converter {
   HAS_BASE64_FILE_SUPPORT = HAS_BASE64_FILE_SUPPORT;
   supportedTypes: string[];
@@ -56,21 +58,28 @@ export class Converter {
           errFn(file);
         };
 
-        const onLoadBinaryString = readerEvt => {
-          const binarySrc: string = btoa(readerEvt.target.result);
+        const onLoadBinaryString = (readerEvt: ProgressEvent) => {
+          const binarySrc: string = btoa(
+            (readerEvt as FileEvent).target.result,
+          );
           fn(`data:${mimeType};base64,${binarySrc}`);
         };
 
-        const onLoadDataUrl = readerEvt => {
-          fn(readerEvt.target.result);
+        const onLoadDataUrl = (readerEvt: ProgressEvent) => {
+          fn((readerEvt as FileEvent).target.result);
         };
 
         if ('readAsDataURL' in reader) {
           reader.onload = onLoadDataUrl;
           reader.readAsDataURL(file);
         } else {
-          reader.onload = onLoadBinaryString;
-          reader.readAsBinaryString(file);
+          // `readAsDataURL` exists on the Type so TS things this will never occur and
+          // marks `reader: never`. In reality, not all browsers support `readAsDataURL`
+          // hence we perform this check, and recast to appease Typechecking.
+          // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL#Browser_compatibility
+          const fileReader = reader as FileReader;
+          fileReader.onload = onLoadBinaryString;
+          fileReader.readAsBinaryString(file);
         }
       });
     }

@@ -53,10 +53,35 @@ export interface ScrollEvent {
 }
 
 export interface FilmstripViewProps {
+  /**  A **boolean**. Defaults to **false**.
+   *  When true, any change to the **offset** property will be animated.
+   * Having **animate=true** results in an awkward UX when changing the **offset** property before the
+   * animation finishes.
+   */
   animate?: boolean;
+  /** A **number**. Defaults to 0.
+   * Determines the visible portion of the filmstrip.
+   */
   offset?: number;
+  /** Any React **node** */
   children?: ReactNode;
+  /** A **function** called when the size of the filmstrip has been changed e.g. when mounted, after the window is resized or the children have changed.
+   * **Arguments:**
+   * - event:
+   * - width - A number. The visible width of the filmstrip;
+   * - offset - A number.
+   * - offsets: ChildOffset[];
+   * - minOffset - A number.
+   * - maxOffset - A number.
+   */
   onSize?: (event: SizeEvent) => void;
+  /** A **function** called when the user has indicated they wish to change the visible porition of the filmstrip e.g. clicked the left or right arrows, or scrolled the scroll wheel.
+   * **Arguments:**
+   * - event:
+   * - direction - Either **"left"** or **"right"**. The direction the user wants to move the filmstrip.
+   * - offset - A **number**. The desired offset.
+   * - animate - A **boolean**. Whether the change should be animated (this arg could probably do with a better name!)
+   */
   onScroll?: (event: ScrollEvent) => void;
 }
 
@@ -107,7 +132,7 @@ export class FilmstripView extends React.Component<
     windowWidth: 0,
   };
 
-  constructor(props) {
+  constructor(props: FilmstripViewProps) {
     super(props);
     try {
       this.mutationObserver = new MutationObserver(
@@ -233,16 +258,19 @@ export class FilmstripView extends React.Component<
     const { windowElement, bufferElement } = this;
     let bufferWidth = 0;
     let windowWidth = 0;
-    let childOffsets = [];
+    let childOffsets: ChildOffset[] = [];
 
     if (windowElement && bufferElement) {
       bufferWidth = bufferElement.getBoundingClientRect().width;
       windowWidth = windowElement.getBoundingClientRect().width;
 
       // we're calculating `left` based on `width` because `rect.left` can be a negative value after resizing the window (considered scrolled??)
-      const children = Array.prototype.slice.call(bufferElement.children, 0);
+      const children: Element[] = Array.prototype.slice.call(
+        bufferElement.children,
+        0,
+      );
       let left = 0;
-      childOffsets = children.map((child, index) => {
+      childOffsets = children.map((child: Element, index: number) => {
         const width = child.getBoundingClientRect().width;
 
         const offset = {
@@ -291,12 +319,12 @@ export class FilmstripView extends React.Component<
     );
   };
 
-  handleWindowElementChange = windowElement => {
+  handleWindowElementChange = (windowElement: HTMLElement) => {
     this.windowElement = windowElement;
     this.handleSizeChange();
   };
 
-  handleBufferElementChange = bufferElement => {
+  handleBufferElementChange = (bufferElement: HTMLElement) => {
     if (!bufferElement) {
       return;
     }
@@ -313,7 +341,7 @@ export class FilmstripView extends React.Component<
     this.handleSizeChange();
   };
 
-  handleLeftClick = event => {
+  handleLeftClick = (event: MouseEvent<HTMLDivElement>) => {
     // Stop the click event from bubling up and being handled by other components
     // See https://product-fabric.atlassian.net/browse/MSW-165
     event.stopPropagation();
@@ -330,7 +358,7 @@ export class FilmstripView extends React.Component<
     }
   };
 
-  handleRightClick = event => {
+  handleRightClick = (event: MouseEvent<HTMLDivElement>) => {
     // Stop the click event from bubling up and being handled by other components
     // See https://product-fabric.atlassian.net/browse/MSW-165
     event.stopPropagation();
@@ -408,7 +436,10 @@ export class FilmstripView extends React.Component<
     // trigger a "real" scroll event so lazily loaded cards realize they've been shown
     // note: we have to wait for the transition to end, otherwise the cards not visible when the scroll
     // event is triggered will be forever stuck in the loading screen (due to the lazy load)
-    setTimeout(() => this.triggerScrollEvent(), this.transitionDuration * 1000);
+    window.setTimeout(
+      () => this.triggerScrollEvent(),
+      this.transitionDuration * 1000,
+    );
   }
 
   render(): JSX.Element {

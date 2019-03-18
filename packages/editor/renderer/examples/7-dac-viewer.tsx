@@ -16,7 +16,7 @@ import Renderer from '../src/ui/Renderer';
 
 export interface State {
   value: string;
-  validator?: (...args) => any;
+  validator?: (...args: any[]) => any;
   fetchingSchema: boolean;
   err?: Error;
 }
@@ -81,13 +81,7 @@ export default class Example extends PureComponent<{}, State> {
       return <span dangerouslySetInnerHTML={{ __html: textMessage }} />;
     }
 
-    return (
-      <Renderer
-        document={json}
-        dataProviders={providerFactory}
-        useNewApplicationCard={true}
-      />
-    );
+    return <Renderer document={json} dataProviders={providerFactory} />;
   }
 
   componentDidMount() {

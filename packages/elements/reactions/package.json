@@ -1,33 +1,35 @@
 {
   "name": "@atlaskit/reactions",
-  "version": "12.0.10",
+  "version": "16.1.1",
   "config": {
     "access": "public"
   },
   "description": "Reactions component",
-  "main": "dist/es5/index.js",
-  "module": "dist/es2015/index.js",
-  "types": "dist/es5/index.d.ts",
+  "module": "index.js",
+  "types": "index.d.ts",
   "atlaskit:src": "src/index.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
   "dependencies": {
-    "@atlaskit/button": "^7.2.5",
-    "@atlaskit/emoji": "^35.0.0",
-    "@atlaskit/icon": "^11.3.0",
-    "@atlaskit/layer": "^3.1.1",
-    "@atlaskit/theme": "^3.2.2",
-    "@atlaskit/tooltip": "^9.2.1",
+    "@atlaskit/analytics-gas-types": "^4.0.1",
+    "@atlaskit/analytics-namespaced-context": "^3.0.1",
+    "@atlaskit/analytics-next": "^4.0.1",
+    "@atlaskit/analytics-next-types": "^4.0.0",
+    "@atlaskit/analytics-viewer": "^0.2.1",
+    "@atlaskit/button": "^11.0.2",
+    "@atlaskit/emoji": "^58.1.1",
+    "@atlaskit/icon": "^16.0.5",
+    "@atlaskit/layer": "^6.0.0",
+    "@atlaskit/theme": "^8.0.1",
+    "@atlaskit/tooltip": "^13.0.1",
+    "@atlaskit/util-service-support": "^4.0.1",
     "classnames": "^2.2.5",
     "react-transition-group": "^2.2.1",
     "tslib": "^1.8.0",
-    "typestyle": "^1.3.8"
+    "typestyle": "^1.4.4"
   },
   "peerDependencies": {
-    "react": "^16.3.0",
-    "react-dom": "^16.3.0"
+    "react": "^16.4.0",
+    "react-dom": "^16.4.2",
+    "react-intl": "^2.6.0"
   },
   "author": "Atlassian Pty Ltd",
   "maintainers": [
@@ -49,17 +51,28 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "@atlaskit/docs": "^3.0.4",
-    "@atlaskit/tooltip": "^9.2.1",
+    "@atlaskit/docs": "^7.0.1",
+    "@atlaskit/editor-test-helpers": "^8.0.2",
+    "@atlaskit/elements-test-helpers": "^0.4.1",
+    "@atlaskit/i18n-tools": "^0.5.0",
+    "@atlaskit/tooltip": "^13.0.1",
     "@atlaskit/util-common-test": "^2.4.2",
-    "@atlaskit/util-data-test": "^9.1.4",
+    "@atlaskit/util-data-test": "^11.1.1",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.7.0",
     "es6-promise": "^4.0.5",
-    "fetch-mock": "^5.12.1",
+    "fetch-mock": "^6.5.2",
+    "react": "^16.4.0",
+    "react-intl": "^2.6.0",
     "whatwg-fetch": "^2.0.3"
   },
   "repository": {
     "type": "git",
     "url": "https://bitbucket.org/atlassian/atlaskit-mk-2"
+  },
+  "scripts": {
+    "i18n:push": "i18n-tools push --resource reactions . --type ts",
+    "i18n:pull": "i18n-tools pull --resource reactions . --type ts"
   },
   "keywords": [
     "fabric",

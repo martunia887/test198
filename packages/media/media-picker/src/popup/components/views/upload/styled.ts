@@ -52,6 +52,7 @@ export const DropzoneContentWrapper: ComponentClass<
 export const DropzoneContainer: ComponentClass<
   HTMLAttributes<{}> & IsEmptyProps
 > = styled.div`
+  box-sizing: border-box;
   border: 2px dashed #cfd4db;
   border-image-source: url('${borderIcon}');
   border-image-slice: 2;
@@ -77,6 +78,7 @@ export const CardsWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
 export const CardWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   margin: 6px 0;
   margin-right: 12px;
+  outline: none;
 
   /* Cards are displayed in rows of 4, line up last card with edge of dropzone border */
   &:nth-child(4n) {
@@ -85,10 +87,17 @@ export const CardWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
 `;
 
 export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
   background-color: white;
   padding: 24px 24px 2px 24px;
+`;
+
+export const LoadingNextPageWrapper = styled.div`
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
 `;

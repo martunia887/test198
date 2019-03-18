@@ -1,62 +1,75 @@
-import { Observable } from 'rxjs';
-import { Context } from '@atlaskit/media-core';
-import { ContextConfig } from '../../media-store';
+import { of } from 'rxjs/observable/of';
+import { Context, ContextConfig, FileFetcher } from '@atlaskit/media-core';
 
-const defaultContextConfig = {
-  serviceHost: 'some-service-host',
-  authProvider: () =>
+const getDefaultContextConfig = () => ({
+  authProvider: jest.fn().mockReturnValue(() =>
     Promise.resolve({
       clientId: 'some-client-id',
       token: 'some-token',
+      baseUrl: 'some-service-host',
     }),
-};
+  ),
+});
 export const fakeContext = (
   stubbedContext: any = {},
-  config: ContextConfig = defaultContextConfig,
+  config: ContextConfig = getDefaultContextConfig(),
 ): Context => {
   const returns = (value: any) => jest.fn().mockReturnValue(value);
-  const getMediaItemProvider = returns({
-    observable: returns(Observable.of('nothing')),
-  });
-
-  const getMediaCollectionProvider = returns({
-    observable: returns(Observable.of('nothing')),
-  });
-  const getDataUriService = returns({
-    fetchOriginalDataUri: returns(Promise.resolve('fake-original-data-uri')),
-    fetchImageDataUri: returns(Promise.resolve('fake-image-data-uri')),
-  });
-  const addLinkItem = returns({
-    observable: returns(Observable.of('nothing')),
-  });
-  const getUrlPreviewProvider = returns({
-    observable: returns(Observable.of('nothing')),
-  });
-  const getLocalPreview = jest.fn();
-  const setLocalPreview = jest.fn();
-  const removeLocalPreview = jest.fn();
-  const refreshCollection = jest.fn();
-  const getBlobService = jest.fn();
-  const uploadFile = jest.fn();
+  const getFile = jest.fn().mockReturnValue(of({}));
+  const collection = {
+    getItems: returns(of([])),
+    loadNextPage: jest.fn(),
+  } as any;
+  const getImage = jest.fn() as any;
+  const getImageUrl = jest.fn().mockResolvedValue('some-image-url');
+  const getImageMetadata = jest.fn();
+  const touchFiles = jest.fn();
+  const downloadBinary = jest.fn();
+  const file = {
+    getFileState: getFile,
+    downloadBinary,
+    upload: jest.fn(),
+    getArtifactURL: jest.fn(),
+    touchFiles,
+    getCurrentState: jest.fn(),
+  } as FileFetcher;
   const defaultContext: Context = {
-    getBlobService,
-    getLocalPreview,
-    setLocalPreview,
-    removeLocalPreview,
-    getMediaItemProvider,
-    getMediaCollectionProvider,
-    getDataUriService,
-    addLinkItem,
-    getUrlPreviewProvider,
-    refreshCollection,
-    uploadFile,
+    getImageMetadata,
+    getImage,
+    getImageUrl,
     config,
+    collection,
+    file,
   };
 
   const wrappedStubbedContext: any = {};
   Object.keys(stubbedContext).forEach(methodName => {
     wrappedStubbedContext[methodName] = returns(stubbedContext[methodName]);
   });
+
+  if (stubbedContext.file) {
+    Object.keys(stubbedContext.file).forEach(methodName => {
+      wrappedStubbedContext.file[methodName] = returns(
+        stubbedContext.file[methodName],
+      );
+    });
+  }
+
+  if (stubbedContext.collection) {
+    Object.keys(stubbedContext.collection).forEach(methodName => {
+      wrappedStubbedContext.collection[methodName] = returns(
+        stubbedContext.collection[methodName],
+      );
+    });
+  }
+
+  if (stubbedContext.context) {
+    Object.keys(stubbedContext.context).forEach(methodName => {
+      wrappedStubbedContext.context[methodName] = returns(
+        stubbedContext.context[methodName],
+      );
+    });
+  }
 
   return {
     ...defaultContext,

@@ -1,9 +1,19 @@
 // @flow
 import React from 'react';
 import { md, Props, code } from '@atlaskit/docs';
+import SectionMessage from '@atlaskit/section-message';
 
 export default md`
   # Concepts
+
+  ${(
+    <SectionMessage appearance="error">
+      <p>
+        <strong>Note: @atlaskit/navigation is now deprecated.</strong>
+      </p>
+      <p>We recommend upgrading to @atlaskit/navigation-next</p>
+    </SectionMessage>
+  )}
 
   The navigation package is not designed to be a single component, but instead
   a composable navigation layout to sit at the far left of your app, with links
@@ -106,6 +116,6 @@ export default md`
   `}
   
 
-  ${<Props props={require('!!extract-react-types-loader!../src/')} />}
+  ${<Props props={require('!!extract-react-types-loader!../src')} />}
 
 `;

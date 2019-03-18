@@ -1,3 +1,4 @@
+import { Schema } from 'prosemirror-model';
 import {
   p,
   blockquote,
@@ -38,9 +39,13 @@ import {
   subsup,
   textColor,
   text,
+  inlineCard,
+  blockCard,
+  status,
 } from './schema-builder';
 
-export const createText: Function = txt => schema => text(txt, schema);
+export const createText: Function = (txt: string) => (schema: Schema) =>
+  text(txt, schema);
 
 export const pmNodeFactory: object = {
   doc,
@@ -68,21 +73,35 @@ export const pmNodeFactory: object = {
     }),
   image: () => img({ src: 'src/testsource.png' }),
   date: () => date({ timestamp: '121220121212' }),
-  table: content => table()(content),
+  status: () =>
+    status({
+      color: 'yellow',
+      localId: 'fake-status',
+      text: 'In progress',
+    }),
+  table: (content: any) => table()(content),
   tableCell: td({ colspan: 1, rowspan: 1 }),
   tableHeader: th({ colspan: 1, rowspan: 1 }),
   tableRow: tr,
   mediaSingle: mediaSingle({ layout: 'center' }),
   mediaGroup,
   media,
-  extension: content =>
-    extension({ extensionKey: '123', extensionType: 'blockExtension' })(
-      content,
-    ),
-  bodiedExtension: content =>
-    bodiedExtension({ extensionKey: '123', extensionType: 'bodiedExtension' })(
-      content,
-    ),
+  extension: (content: any) =>
+    extension({
+      extensionKey: '123',
+      extensionType: 'blockExtension',
+      layout: 'default',
+    })(content),
+  bodiedExtension: (content: any) =>
+    bodiedExtension({
+      extensionKey: '123',
+      extensionType: 'bodiedExtension',
+      layout: 'default',
+    })(content),
+  inlineCard: () =>
+    inlineCard({ url: 'https://product-fabric.atlassian.net/browse/ED-1' }),
+  blockCard: () =>
+    blockCard({ url: 'https://product-fabric.atlassian.net/browse/ED-1' }),
 };
 
 export const pmNodeBuilder: object = {
@@ -110,6 +129,11 @@ export const pmNodeBuilder: object = {
   mention: mention({ id: 'fakeMentionId' })(),
   image: img({ src: 'src/fakeimagesource.png' }),
   date: date({ timestamp: '121220121212' }),
+  status: status({
+    color: 'yellow',
+    localId: 'fake-status',
+    text: 'In progress',
+  }),
   table: table()(
     tr(th({ colspan: 1, rowspan: 1 })(p('fake table header'))),
     tr(td({ colspan: 1, rowspan: 1 })(p('fake table row'))),
@@ -149,6 +173,9 @@ export const pmNodeBuilder: object = {
     text: 'fake card',
     title: { text: 'fake card title' },
   })(),
+  inlineCard: inlineCard({
+    url: 'https://product-fabric.atlassian.net/browse/ED-1',
+  }),
 };
 
 export const pmMarkBuilder: object = {

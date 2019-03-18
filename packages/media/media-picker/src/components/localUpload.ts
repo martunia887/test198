@@ -1,8 +1,5 @@
 import { Context } from '@atlaskit/media-core';
-import {
-  UploadService,
-  UploadServiceFactory,
-} from '../service/uploadServiceFactory';
+import { UploadService } from '../service/types';
 import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
@@ -13,33 +10,29 @@ import {
   UploadStatusUpdateEventPayload,
 } from '../domain/uploadEvent';
 import { UploadComponent } from './component';
-import { MediaPickerContext } from '../domain/context';
 import { UploadParams } from '../domain/config';
-
-export interface LocalUploadConfig {
-  uploadParams: UploadParams;
-  useNewUploadService?: boolean;
-}
+import { NewUploadServiceImpl } from '../service/newUploadServiceImpl';
+import { LocalUploadConfig } from './types';
 
 export class LocalUploadComponent<
   M extends UploadEventPayloadMap = UploadEventPayloadMap
-> extends UploadComponent<M> {
+> extends UploadComponent<M> implements LocalUploadComponent {
   protected readonly uploadService: UploadService;
-  readonly context: Context;
-  config: LocalUploadConfig;
+  protected readonly context: Context;
+  protected config: LocalUploadConfig;
 
-  constructor(
-    analyticsContext: MediaPickerContext,
-    context: Context,
-    config: LocalUploadConfig,
-  ) {
-    super(analyticsContext);
+  constructor(context: Context, config: LocalUploadConfig) {
+    super();
+    const tenantUploadParams = config.uploadParams;
 
     this.context = context;
-    this.uploadService = UploadServiceFactory.create(
+
+    const { shouldCopyFileToRecents = true } = config;
+
+    this.uploadService = new NewUploadServiceImpl(
       this.context,
-      config.uploadParams || { collection: '' },
-      config.useNewUploadService,
+      tenantUploadParams,
+      shouldCopyFileToRecents,
     );
     this.config = config;
     this.uploadService.on('files-added', this.onFilesAdded);

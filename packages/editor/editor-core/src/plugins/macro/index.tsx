@@ -4,6 +4,7 @@ import { MacroProvider } from './types';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { setMacroProvider } from './actions';
 import { Dispatch } from '../../event-dispatcher';
+import { PMPluginFactoryParams } from '../../types';
 
 export * from './types';
 export * from './actions';
@@ -40,8 +41,8 @@ export const createPlugin = (
       if (view.dom.parentNode) {
         providerFactory.subscribe(
           'macroProvider',
-          (name, provider: Promise<MacroProvider>) =>
-            setMacroProvider(provider)(view),
+          (name, provider?: Promise<MacroProvider>) =>
+            provider && setMacroProvider(provider)(view),
         );
       }
       return {};
@@ -52,8 +53,8 @@ export default {
   pmPlugins() {
     return [
       {
-        rank: 2310,
-        plugin: ({ dispatch, providerFactory }) =>
+        name: 'macro',
+        plugin: ({ dispatch, providerFactory }: PMPluginFactoryParams) =>
           createPlugin(dispatch, providerFactory),
       },
     ];

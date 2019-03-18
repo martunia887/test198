@@ -1,36 +1,72 @@
 import {
   defaultCollectionName,
-  defaultServiceHost,
   defaultMediaPickerAuthProvider,
   userAuthProvider,
   mediaMock,
 } from '@atlaskit/media-test-helpers';
-
 import * as React from 'react';
+import { Component } from 'react';
 import Button from '@atlaskit/button';
 import { ContextFactory } from '@atlaskit/media-core';
 
 import { MediaPicker } from '../src';
+import { Popup } from '../index';
 
 mediaMock.enable();
 
 const context = ContextFactory.create({
-  serviceHost: defaultServiceHost,
   authProvider: defaultMediaPickerAuthProvider,
-  userAuthProvider: userAuthProvider,
+  userAuthProvider,
 });
 
-const popup = MediaPicker('popup', context, {
-  container: document.body,
-  uploadParams: {
-    collection: defaultCollectionName,
-  },
-});
+export type Event = {
+  readonly name: string;
+  readonly payload: any;
+};
 
-popup.show();
+export type Props = {};
 
-export default () => (
-  <Button id="show" onClick={() => popup.show()}>
-    Show
-  </Button>
-);
+export type State = {
+  readonly events: Event[];
+  readonly popup?: Popup;
+};
+
+export default class Example extends Component<Props, State> {
+  state: State = {
+    events: [],
+  };
+
+  async componentDidMount() {
+    const popup = await MediaPicker('popup', context, {
+      uploadParams: {
+        collection: defaultCollectionName,
+      },
+    });
+
+    popup.show();
+
+    popup.onAny((event, payload) => {
+      const { events } = this.state;
+      this.setState({
+        events: [...events, { name: event, payload }],
+      });
+    });
+
+    this.setState({ popup });
+  }
+
+  render() {
+    const { events, popup } = this.state;
+    return (
+      <div>
+        <Button id="show" onClick={() => (popup ? popup.show() : null)}>
+          Show
+        </Button>
+        <div>
+          <div>Events:</div>
+          <pre id="events">{JSON.stringify(events, null, 2)}</pre>
+        </div>
+      </div>
+    );
+  }
+}

@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import isEqual from 'lodash.isequal';
 import { code, md } from '@atlaskit/docs';
+import { instrumentedComponents } from '../src/AnalyticsEventMap';
 
 type InstrumentedItem = {
   packageName: string,
   component: string,
-  context: { component: string },
+  actionSubject: string,
   prop: string,
   payload: Object,
 };
@@ -21,7 +21,9 @@ const scrubRepeatedInfo = (
     ...item,
     packageName: item.packageName !== prev.packageName ? item.packageName : '',
     component: item.component !== prev.component ? item.component : '',
-    context: !isEqual(item.context, prev.context) ? item.context : undefined,
+    actionSubject:
+      item.actionSubject !== prev.actionSubject ? item.actionSubject : '',
+    key: `${item.packageName}-${item.component}-${item.prop}`,
   };
 };
 
@@ -31,37 +33,38 @@ const InstrumentedTable = ({ packages }: { packages: InstrumentedItem[] }) => (
       <tr>
         <th>Package</th>
         <th>Component</th>
-        <th>Context</th>
+        <th>Action Subject</th>
         <th>Prop</th>
-        <th>Payload</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
       {packages
         .map(scrubRepeatedInfo)
-        .map(({ packageName, context, component, prop, payload }) => (
-          <tr key={packageName}>
-            <td>{packageName}</td>
-            <td>{component}</td>
-            <td>{context ? JSON.stringify(context) : ''}</td>
-            <td>{prop}</td>
-            <td>{JSON.stringify(payload)}</td>
-          </tr>
-        ))}
+        .map(
+          ({ key, packageName, actionSubject, component, prop, payload }) => (
+            <tr key={key}>
+              <td>{packageName}</td>
+              <td>{component}</td>
+              <td>{actionSubject}</td>
+              <td>{prop}</td>
+              <td>{payload.action}</td>
+            </tr>
+          ),
+        )}
     </tbody>
   </table>
 );
 
 export default md`
+Many of our components support analytics out of the box. These components create
+analytics events and hand them to you. This puts you in control of firing, listening
+and recording these events in which ever way you like.
   ## Usage
-
-  Many of our components support analytics out of the box. These components create
-  analytics events and hand them to you. This puts you in control of firing, listening
-  and recording these events in which ever way you like.
 
   Let's look at a simple component to understand how to use Button's click analytics.
 
-  ##### SaveButton.js
+  ### SaveButton.js
 ${code`
 import Button from '@atlaskit/button';
 
@@ -70,13 +73,13 @@ const SaveButton = ({ onClick }) => (
 );
 `}
 
-  Button provides you a [UIAnalyticsEvent](#UIAnalyticsEvent) as the last arg
+  Button provides you a [UIAnalyticsEvent](/packages/core/analytics-next/docs/reference#UIAnalyticsEvent) as the last arg
   to the onClick hander. This is the pattern used for all callback props that
   support analytics.
 
   Now you have the event, it is up to you to fire it.
 
-  ##### SaveButton.js
+  ### SaveButton.js
 ${code`
 import Button from '@atlaskit/button';
 
@@ -98,7 +101,7 @@ const SaveButton = ({ onClick }) => (
 
   The next step is to set up a listener which receives the events.
 
-  #### App.js
+  ### App.js
 ${code`
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import SaveButton from './SaveButton';
@@ -117,29 +120,17 @@ const App = () => (
 
   That's it! Below are some links to handy resources.
 
-  * [More information on UIAnalyticsEvent](/mk-2/packages/core/analytics-next/docs/reference#UIAnalyticsEvent)
+  * [More information on UIAnalyticsEvent](/packages/core/analytics-next/docs/reference#UIAnalyticsEvent)
   * [The list of instrumented components](#InstrumentedComponents)
-  * [Adding extra information to an analytics event](/mk-2/packages/core/analytics-next/docs/concepts#adding-more-information-to-an-event)
-  * [Analytics component reference](/mk-2/packages/core/analytics-next/docs/reference)
+  * [Adding extra information to an analytics event](/packages/core/analytics-next/docs/concepts#adding-more-information-to-an-event)
+  * [Analytics component reference](/packages/core/analytics-next/docs/reference)
 
   <a name="InstrumentedComponents"></a>
   ## Instrumented Components
 
-  This table shows all the component interactions that are instrumented. In addition to what is shown
-  in the "Context" column, all components include \`package\` and \`version\` in the context.
+  This table shows all the component interactions that are instrumented. All events 
+  additionally include \`packageName\` and \`packageVersion\` in their payloads.
 
-  ${(
-    <InstrumentedTable
-      packages={[
-        {
-          packageName: '@atlaskit/button',
-          component: 'Button',
-          context: { component: 'button' },
-          prop: 'onClick',
-          payload: { action: 'click' },
-        },
-      ]}
-    />
-  )}
+  ${<InstrumentedTable packages={instrumentedComponents} />}
 
 `;

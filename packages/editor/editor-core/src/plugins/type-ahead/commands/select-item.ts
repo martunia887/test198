@@ -1,14 +1,27 @@
-import { Selection, EditorState } from 'prosemirror-state';
+import { Selection, EditorState, NodeSelection } from 'prosemirror-state';
 import { Fragment, Node } from 'prosemirror-model';
 import { safeInsert } from 'prosemirror-utils';
+import { analyticsService } from '../../../analytics';
 import { Command } from '../../../types';
-import { isChromeWithSelectionBug } from '../../../utils';
+import {
+  isChromeWithSelectionBug,
+  normaliseNestedLayout,
+} from '../../../utils';
 import { pluginKey, ACTIONS } from '../pm-plugins/main';
 import { TypeAheadHandler, TypeAheadItem } from '../types';
-import { findQueryMark } from '../utils/find-query-mark';
+import { findTypeAheadQuery } from '../utils/find-query-mark';
 import { dismissCommand } from './dismiss';
 
-export const selectCurrentItem = (): Command => (state, dispatch) => {
+export type SelectItemMode =
+  | 'shift-enter'
+  | 'enter'
+  | 'space'
+  | 'selected'
+  | 'tab';
+
+export const selectCurrentItem = (
+  mode: SelectItemMode = 'selected',
+): Command => (state, dispatch) => {
   const { active, currentIndex, items, typeAheadHandler } = pluginKey.getState(
     state,
   );
@@ -23,10 +36,15 @@ export const selectCurrentItem = (): Command => (state, dispatch) => {
     );
   }
 
-  return selectItem(typeAheadHandler, items[currentIndex])(state, dispatch);
+  return selectItem(typeAheadHandler, items[currentIndex], mode)(
+    state,
+    dispatch,
+  );
 };
 
-export const selectSingleItemOrDismiss = (): Command => (state, dispatch) => {
+export const selectSingleItemOrDismiss = (
+  mode: SelectItemMode = 'selected',
+): Command => (state, dispatch) => {
   const { active, items, typeAheadHandler } = pluginKey.getState(state);
 
   if (!active || !typeAheadHandler || !typeAheadHandler.selectItem) {
@@ -34,11 +52,12 @@ export const selectSingleItemOrDismiss = (): Command => (state, dispatch) => {
   }
 
   if (items.length === 1) {
-    return selectItem(typeAheadHandler, items[0])(state, dispatch);
+    return selectItem(typeAheadHandler, items[0], mode)(state, dispatch);
   }
 
   if (!items || items.length === 0) {
-    return dismissCommand()(state, dispatch);
+    dismissCommand()(state, dispatch);
+    return false;
   }
 
   return false;
@@ -62,22 +81,47 @@ export const selectByIndex = (index: number): Command => (state, dispatch) => {
 export const selectItem = (
   handler: TypeAheadHandler,
   item: TypeAheadItem,
+  mode: SelectItemMode = 'selected',
 ): Command => (state, dispatch) => {
   return withTypeAheadQueryMarkPosition(state, (start, end) => {
-    const replaceWith = (node: Node) => {
+    const insert = (
+      maybeNode?: Node | Object | string,
+      opts: { selectInlineNode?: boolean } = {},
+    ) => {
       let tr = state.tr;
 
       tr = tr
         .setMeta(pluginKey, { action: ACTIONS.SELECT_CURRENT })
         .replaceWith(start, end, Fragment.empty);
 
-      /**
-       *
-       * Replacing a type ahead query mark with a block node.
-       *
-       */
-      if (node.isBlock) {
-        tr = safeInsert(node)(tr);
+      if (!maybeNode) {
+        return tr;
+      }
+
+      let node;
+      try {
+        node =
+          maybeNode instanceof Node
+            ? maybeNode
+            : typeof maybeNode === 'string'
+            ? state.schema.text(maybeNode)
+            : Node.fromJSON(state.schema, maybeNode);
+      } catch (e) {
+        // tslint:disable-next-line:no-console
+        console.error(e);
+        return tr;
+      }
+
+      if (node.isText) {
+        tr = tr.replaceWith(start, start, node);
+
+        /**
+         *
+         * Replacing a type ahead query mark with a block node.
+         *
+         */
+      } else if (node.isBlock) {
+        tr = safeInsert(normaliseNestedLayout(state, node))(tr);
 
         /**
          *
@@ -86,27 +130,42 @@ export const selectItem = (
          */
       } else if (node.isInline) {
         const fragment = Fragment.fromArray([node, state.schema.text(' ')]);
+
         tr = tr.replaceWith(start, start, fragment);
 
         // This problem affects Chrome v58-62. See: https://github.com/ProseMirror/prosemirror/issues/710
         if (isChromeWithSelectionBug) {
-          document.getSelection().empty();
+          const selection = document.getSelection();
+          if (selection) {
+            selection.empty();
+          }
         }
 
-        // Placing cursor after node + space.
-        tr = tr.setSelection(
-          Selection.near(tr.doc.resolve(start + fragment.size)),
-        );
+        if (opts.selectInlineNode) {
+          // Select inserted node
+          tr = tr.setSelection(NodeSelection.create(tr.doc, start));
+        } else {
+          // Placing cursor after node + space.
+          tr = tr.setSelection(
+            Selection.near(tr.doc.resolve(start + fragment.size)),
+          );
+        }
       }
 
-      dispatch(tr);
-      return true;
+      return tr;
     };
 
-    if (handler.selectItem(state, item, replaceWith) === false) {
+    analyticsService.trackEvent('atlassian.editor.typeahead.select', { mode });
+
+    const tr = handler.selectItem(state, item, insert, { mode });
+
+    if (tr === false) {
       return insertFallbackCommand(start, end)(state, dispatch);
     }
 
+    if (dispatch) {
+      dispatch(tr);
+    }
     return true;
   });
 };
@@ -117,7 +176,10 @@ export const insertFallbackCommand = (start: number, end: number): Command => (
 ) => {
   const { query, trigger } = pluginKey.getState(state);
   const node = state.schema.text(trigger + query);
-  dispatch(state.tr.replaceWith(start, end, node));
+
+  if (dispatch) {
+    dispatch(state.tr.replaceWith(start, end, node));
+  }
   return true;
 };
 
@@ -125,11 +187,9 @@ export const withTypeAheadQueryMarkPosition = (
   state: EditorState,
   cb: (start: number, end: number) => boolean,
 ) => {
-  const { doc } = state;
-  const { typeAheadQuery } = state.schema.marks;
-  const queryMark = findQueryMark(typeAheadQuery, doc, 0, doc.nodeSize - 2);
+  const queryMark = findTypeAheadQuery(state);
 
-  if (!queryMark) {
+  if (!queryMark || queryMark.start === -1) {
     return false;
   }
 

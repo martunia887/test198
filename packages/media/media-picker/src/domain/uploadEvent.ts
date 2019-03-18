@@ -1,8 +1,10 @@
-import { FileDetails } from '@atlaskit/media-core';
+import { MediaFile as MediaStoreMediaFile } from '@atlaskit/media-store';
 import { MediaProgress } from './progress';
 import { MediaError } from './error';
-import { Preview } from './preview';
-import { MediaFile, PublicMediaFile } from './file';
+import { Preview, isImagePreview } from './preview';
+import { MediaFile } from './file';
+
+export { isImagePreview };
 
 export type UploadsStartEventPayload = {
   readonly files: MediaFile[];
@@ -19,12 +21,12 @@ export type UploadStatusUpdateEventPayload = {
 };
 
 export type UploadProcessingEventPayload = {
-  readonly file: PublicMediaFile;
+  readonly file: MediaFile;
 };
 
 export type UploadEndEventPayload = {
-  readonly file: PublicMediaFile;
-  readonly public: FileDetails;
+  readonly file: MediaFile;
+  readonly public: Partial<MediaStoreMediaFile>; // TODO [MS-1446]: remove
 };
 
 export type UploadErrorEventPayload = {

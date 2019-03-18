@@ -1,35 +1,23 @@
 import { ITokenizer, Search, UnorderedSearchIndex } from 'js-search';
-
-import * as XRegExp from 'xregexp/src/xregexp'; // Not using 'xregexp' directly to only include what we use
-import * as XRegExpUnicodeBase from 'xregexp/src/addons/unicode-base';
-import * as XRegExpUnicodeScripts from 'xregexp/src/addons/unicode-scripts';
-import * as XRegExpUnicodeCategories from 'xregexp/src/addons/unicode-categories';
-
+import { CategoryId } from '../components/picker/categories';
 import { defaultCategories, frequentCategory } from '../constants';
+import {
+  getCategoryId,
+  isEmojiDescriptionWithVariations,
+} from '../type-helpers';
 import {
   EmojiDescription,
   EmojiSearchResult,
   OptionalEmojiDescription,
-  SearchSort,
   SearchOptions,
+  SearchSort,
 } from '../types';
-import { isEmojiDescriptionWithVariations } from '../type-helpers';
+import { tokenizerRegex } from './EmojiRepositoryRegex';
 import {
   createSearchEmojiComparator,
   createUsageOnlyEmojiComparator,
 } from './internal/Comparators';
 import { UsageFrequencyTracker } from './internal/UsageFrequencyTracker';
-
-XRegExpUnicodeBase(XRegExp);
-XRegExpUnicodeScripts(XRegExp);
-XRegExpUnicodeCategories(XRegExp);
-
-// \p{Han} => each chinese character is a separate token
-// \p{L}+[\p{Mn}|']*\p{L} => consecutive letters, including non spacing mark and apostrophe are a single token
-const tokenizerRegex = XRegExp.cache(
-  "\\p{Han}|[\\p{L}|\\p{N}]+[\\p{Mn}|']*\\p{L}*",
-  'gi',
-);
 
 type Token = {
   token: string;
@@ -38,11 +26,11 @@ type Token = {
 
 // FS-1097 - duplicated in mentions - extract at some point into a shared library
 class Tokenizer implements ITokenizer {
-  public static tokenize(text): string[] {
+  public tokenize(text: string): string[] {
     return this.tokenizeAsTokens(text).map(token => token.token);
   }
 
-  public static tokenizeAsTokens(text): Token[] {
+  public tokenizeAsTokens(text: string): Token[] {
     let match;
     let tokens: Token[] = [];
     tokenizerRegex.lastIndex = 0;
@@ -156,19 +144,22 @@ const findEmojiIndex = (
 
 export default class EmojiRepository {
   private emojis: EmojiDescription[];
-  private fullSearch: Search;
-  private shortNameMap: EmojiByKey;
-  private idMap: EmojiByKey;
-  private asciiMap: Map<string, EmojiDescription>;
-  private dynamicCategoryList: string[];
+  private fullSearch!: Search;
+  private shortNameMap!: EmojiByKey;
+  private idMap!: EmojiByKey;
+  private asciiMap!: Map<string, EmojiDescription>;
+  private dynamicCategoryList!: CategoryId[];
   private static readonly defaultEmojiWeight: number = 1000000;
 
   // protected to allow subclasses to access (for testing and storybooks).
-  protected usageTracker: UsageFrequencyTracker;
+  protected usageTracker!: UsageFrequencyTracker;
 
-  constructor(emojis: EmojiDescription[]) {
+  constructor(
+    emojis: EmojiDescription[],
+    usageTracker?: UsageFrequencyTracker,
+  ) {
     this.emojis = emojis;
-    this.initMembers();
+    this.initMembers(usageTracker);
   }
 
   /**
@@ -196,7 +187,7 @@ export default class EmojiRepository {
 
     const { nameQuery, asciiQuery } = splitQuery(query);
     if (nameQuery) {
-      filteredEmoji = this.fullSearch.search(nameQuery);
+      filteredEmoji = this.fullSearch.search(nameQuery) as EmojiDescription[];
 
       if (asciiQuery) {
         filteredEmoji = this.withAsciiMatch(asciiQuery, filteredEmoji);
@@ -238,7 +229,7 @@ export default class EmojiRepository {
     return this.asciiMap.get(asciiEmoji);
   }
 
-  findInCategory(categoryId: string): EmojiDescription[] {
+  findInCategory(categoryId: CategoryId): EmojiDescription[] {
     if (categoryId === frequentCategory) {
       return this.getFrequentlyUsed();
     } else {
@@ -277,7 +268,7 @@ export default class EmojiRepository {
     return emojiResult;
   }
 
-  getDynamicCategoryList(): string[] {
+  getDynamicCategoryList(): CategoryId[] {
     return this.dynamicCategoryList.slice();
   }
 
@@ -295,7 +286,7 @@ export default class EmojiRepository {
     // the frequent category will not appear until the usage has been tracked (avoiding the possibility of an empty
     // frequent category being shown in the picker).
     if (this.dynamicCategoryList.indexOf(frequentCategory) === -1) {
-      setTimeout(() => {
+      window.setTimeout(() => {
         this.dynamicCategoryList.push(frequentCategory);
       });
     }
@@ -307,7 +298,7 @@ export default class EmojiRepository {
       // Remove the deleted emojis from the internal list
       this.emojis.splice(deletedIndex, 1);
       // Reconstruct repository member variables
-      this.initMembers();
+      this.initMembers(this.usageTracker);
     }
   }
 
@@ -367,8 +358,8 @@ export default class EmojiRepository {
     return emojis;
   }
 
-  private initMembers(): void {
-    this.usageTracker = new UsageFrequencyTracker();
+  private initMembers(usageTracker?: UsageFrequencyTracker): void {
+    this.usageTracker = usageTracker || new UsageFrequencyTracker();
     this.initRepositoryMetadata();
     this.initSearchIndex();
   }
@@ -398,7 +389,7 @@ export default class EmojiRepository {
 
   private initSearchIndex(): void {
     this.fullSearch = new Search('id');
-    this.fullSearch.tokenizer = Tokenizer;
+    this.fullSearch.tokenizer = new Tokenizer();
     this.fullSearch.searchIndex = new UnorderedSearchIndex();
     this.fullSearch.addIndex('name');
     this.fullSearch.addIndex('shortName');
@@ -426,11 +417,12 @@ export default class EmojiRepository {
   }
 
   private addToDynamicCategories(emoji: EmojiDescription): void {
+    const category = getCategoryId(emoji);
     if (
-      defaultCategories.indexOf(emoji.category) === -1 &&
-      this.dynamicCategoryList.indexOf(emoji.category) === -1
+      defaultCategories.indexOf(category) === -1 &&
+      this.dynamicCategoryList.indexOf(category) === -1
     ) {
-      this.dynamicCategoryList.push(emoji.category);
+      this.dynamicCategoryList.push(category);
     }
   }
 }

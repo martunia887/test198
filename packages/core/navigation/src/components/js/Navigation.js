@@ -8,6 +8,20 @@ import React, {
   type ElementRef,
 } from 'react';
 import { getTheme } from '@atlaskit/theme';
+import {
+  withAnalyticsEvents,
+  withAnalyticsContext,
+  createAndFireEvent,
+  type WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import {
+  name as packageName,
+  version as packageVersion,
+} from '../../version.json';
+import {
+  navigationExpandedCollapsed,
+  type CollapseExpandTrigger,
+} from '../../utils/analytics';
 import GlobalNavigation from './GlobalNavigation';
 import ContainerNavigation from './ContainerNavigation';
 import NavigationFixedContainer from '../styled/NavigationFixedContainer';
@@ -46,6 +60,7 @@ type resizeObj = {
 };
 
 type Props = {
+  ...WithAnalyticsEventsProps,
   /** Elements to be displayed in the ContainerNavigationComponent */
   children?: Node,
   /** Theme object to be used to color the navigation container. */
@@ -132,7 +147,7 @@ type State = {
   resizeDelta: number,
 };
 
-export default class Navigation extends PureComponent<Props, State> {
+class Navigation extends PureComponent<Props, State> {
   static defaultProps = {
     drawers: [],
     globalPrimaryIconAppearance: 'round',
@@ -155,7 +170,7 @@ export default class Navigation extends PureComponent<Props, State> {
     super(props, context);
 
     const { containerTheme, globalTheme } = props;
-    // $FlowFixMe TEMPORARY
+    // $FlowFixMe  - theme is not found in props
     const { mode } = getTheme(props);
 
     this.state = {
@@ -180,7 +195,7 @@ export default class Navigation extends PureComponent<Props, State> {
       this.props.isOpen &&
       this.props.width === defaultWidth
     ) {
-      this.props.onResize({
+      this.onPropsResize({
         isOpen: true,
         width: globalOpenWidth(true) + containerOpenWidth,
       });
@@ -192,7 +207,7 @@ export default class Navigation extends PureComponent<Props, State> {
     // TODO work out why nextProps.theme.__ATLASKIT_THEME__.mode always returns the mode
     // that was applied at time of first page load.
 
-    // $FlowFixMe TEMPORARY
+    // $FlowFixMe - theme is not found in props
     const { mode } = getTheme(nextProps);
 
     const isTogglingIsOpen = this.props.isOpen !== nextProps.isOpen;
@@ -246,7 +261,18 @@ export default class Navigation extends PureComponent<Props, State> {
     });
   };
 
-  onResizeEnd = () => {
+  onPropsResize = (resizeState: resizeObj, trigger?: CollapseExpandTrigger) => {
+    const { createAnalyticsEvent, isOpen } = this.props;
+    if (trigger && resizeState.isOpen !== isOpen) {
+      navigationExpandedCollapsed(createAnalyticsEvent, {
+        isCollapsed: !resizeState.isOpen,
+        trigger,
+      });
+    }
+    this.props.onResize(resizeState);
+  };
+
+  onResizeEnd = (resizeDelta: number) => {
     const width = this.getRenderedWidth();
     const snappedWidth = this.getSnappedWidth(width);
 
@@ -261,7 +287,11 @@ export default class Navigation extends PureComponent<Props, State> {
         isResizing: false,
       },
       function callOnResizeAfterSetState() {
-        this.props.onResize(resizeState);
+        const resizerClicked = resizeDelta === 0;
+        this.onPropsResize(
+          resizeState,
+          resizerClicked ? undefined : 'resizerDrag',
+        );
       },
     );
   };
@@ -275,9 +305,13 @@ export default class Navigation extends PureComponent<Props, State> {
     return Math.max(minWidth, baselineWidth + this.state.resizeDelta);
   };
 
-  triggerResizeButtonHandler = (resizeState: resizeObj) => {
+  triggerResizeButtonHandler = (
+    resizeState: resizeObj,
+    resizerClick: boolean,
+  ) => {
     if (resizeState) {
-      this.props.onResize(resizeState);
+      const trigger = resizerClick ? 'resizerClick' : 'chevron';
+      this.onPropsResize(resizeState, trigger);
     }
   };
 
@@ -433,3 +467,36 @@ export default class Navigation extends PureComponent<Props, State> {
     );
   }
 }
+
+export { Navigation as NavigationWithoutAnalytics };
+const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
+
+export default withAnalyticsContext({
+  componentName: 'navigationSidebar',
+  packageName,
+  packageVersion,
+})(
+  withAnalyticsEvents({
+    onResize: createAndFireEventOnAtlaskit({
+      action: 'resized',
+      actionSubject: 'navigationSidebar',
+
+      attributes: {
+        componentName: 'navigation',
+        packageName,
+        packageVersion,
+      },
+    }),
+
+    onResizeStart: createAndFireEventOnAtlaskit({
+      action: 'resizeStarted',
+      actionSubject: 'navigationSidebar',
+
+      attributes: {
+        componentName: 'navigation',
+        packageName,
+        packageVersion,
+      },
+    }),
+  })(Navigation),
+);

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import Modal from '../src';
+import Modal, { ModalTransition } from '../src';
 
 const noop = () => {};
 
@@ -21,13 +21,13 @@ const Card = styled.div`
   padding: ${gridUnit * 2}px ${gridUnit}px;
   border-bottom: 1px solid ${colors.R200};
   ${({ isDraggable }) => !isDraggable} ${({ isHovering }) =>
-      isHovering &&
-      `
+  isHovering &&
+  `
         background: ${colors.R75};
         text-decoration: none;
     `} ${({ isActive }) =>
-      isActive &&
-      `
+  isActive &&
+  `
         background: ${colors.G300};
     `} &:focus {
     border-bottom-color: transparent;
@@ -100,7 +100,7 @@ class ItemLineCard extends Component<ItemLineCardProps, ItemLineCardState> {
     this.props.onClick(this.props.item, event);
   };
 
-  patchedHandlers = (dragHandleProps, snapshot) => {
+  patchedHandlers = dragHandleProps => {
     // The 'isActive' state is determined by the
     // draggable state, i.e. if isDragging then
     // the state is considered active. The below
@@ -114,25 +114,10 @@ class ItemLineCard extends Component<ItemLineCardProps, ItemLineCardState> {
         dragHandleProps.onMouseDown(event);
       }
     })();
-    const onMouseUp = (() => dragHandleProps.onMouseUp || noop)();
-    const onClick = (() => {
-      if (!dragHandleProps) {
-        return this.eventHandlers.onClick;
-      }
-
-      return event => {
-        dragHandleProps.onClick(event);
-        if (!snapshot.isDragging) {
-          this.eventHandlers.onClick(event);
-        }
-      };
-    })();
     return {
       ...dragHandleProps,
       ...this.eventHandlers,
-      onClick,
       onMouseDown,
-      onMouseUp,
     };
   };
 
@@ -156,9 +141,8 @@ class ItemLineCard extends Component<ItemLineCardProps, ItemLineCardState> {
               isDraggable: true,
               isDragging: snapshot.isDragging,
               ...provided.draggableProps,
-              ...this.patchedHandlers(provided.dragHandleProps, snapshot),
+              ...this.patchedHandlers(provided.dragHandleProps),
             })}
-            {provided.placeholder}
           </div>
         )}
       </Draggable>
@@ -241,6 +225,7 @@ class ItemLineCardGroup extends Component<ItemLineCardGroupProps> {
             this.renderCards({
               ref: provided.innerRef,
               isDraggingOver: snapshot.isDraggingOver,
+              ...provided.droppableProps,
             })
           }
         </Droppable>
@@ -281,9 +266,18 @@ class Wrapper extends Component<*, WrapperState> {
         {(isHovering, isActive, isFocused, item) => (
           <div>
             <span>{item.message}</span>
-            <span>isHovering={isHovering.toString()}</span>
-            <span>, isActive={isActive.toString()}</span>
-            <span>, isFocused={isFocused.toString()}</span>
+            <span>
+              isHovering=
+              {isHovering.toString()}
+            </span>
+            <span>
+              , isActive=
+              {isActive.toString()}
+            </span>
+            <span>
+              , isFocused=
+              {isFocused.toString()}
+            </span>
           </div>
         )}
       </ItemLineCardGroup>
@@ -312,11 +306,13 @@ export default class extends PureComponent<{}, State> {
           react-beautiful-dnd where ancestor elements with a transform property
           cause dragging position issues. See AK-4328.
         </p>
-        {isOpen && (
-          <Modal onClose={this.close}>
-            <Wrapper />
-          </Modal>
-        )}
+        <ModalTransition>
+          {isOpen && (
+            <Modal onClose={this.close}>
+              <Wrapper />
+            </Modal>
+          )}
+        </ModalTransition>
       </div>
     );
   }

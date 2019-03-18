@@ -24,69 +24,78 @@ export type CategoryId =
   | 'SYMBOLS'
   | 'FLAGS'
   | 'ATLASSIAN'
-  | 'USER_CUSTOM'
   | 'CUSTOM';
 
-export type CategoryMap = { [id in CategoryId]: CategoryDescription };
+export type CategoryGroupKey = CategoryId | 'USER_CUSTOM' | 'SEARCH';
 
-export const CategoryDescriptionMap: CategoryMap = {
+export type CategoryDescriptionMap = {
+  [key in CategoryGroupKey]: CategoryDescription
+};
+
+export const CategoryDescriptionMap: CategoryDescriptionMap = {
+  SEARCH: {
+    id: 'SEARCH',
+    name: 'categoriesSearchResults', // refers to i18n categoriesSearchResults key
+    icon: undefined,
+    order: 0,
+  },
   FREQUENT: {
     id: 'FREQUENT',
-    name: 'Frequent',
+    name: 'frequentCategory',
     icon: EmojiFrequentIcon,
     order: 1,
   },
   PEOPLE: {
     id: 'PEOPLE',
-    name: 'People',
+    name: 'peopleCategory',
     icon: EmojiPeopleIcon,
     order: 2,
   },
   NATURE: {
     id: 'NATURE',
-    name: 'Nature',
+    name: 'natureCategory',
     icon: EmojiNatureIcon,
     order: 3,
   },
   FOODS: {
     id: 'FOODS',
-    name: 'Food & Drink',
+    name: 'foodsCategory',
     icon: EmojiFoodIcon,
     order: 4,
   },
   ACTIVITY: {
     id: 'ACTIVITY',
-    name: 'Activity',
+    name: 'activityCategory',
     icon: EmojiActivityIcon,
     order: 5,
   },
   PLACES: {
     id: 'PLACES',
-    name: 'Travel & Places',
+    name: 'placesCategory',
     icon: EmojiTravelIcon,
     order: 6,
   },
   OBJECTS: {
     id: 'OBJECTS',
-    name: 'Objects',
+    name: 'objectsCategory',
     icon: EmojiObjectsIcon,
     order: 7,
   },
   SYMBOLS: {
     id: 'SYMBOLS',
-    name: 'Symbols',
+    name: 'symbolsCategory',
     icon: EmojiSymbolsIcon,
     order: 8,
   },
   FLAGS: {
     id: 'FLAGS',
-    name: 'Flags',
+    name: 'flagsCategory',
     icon: EmojiFlagsIcon,
     order: 9,
   },
   ATLASSIAN: {
     id: 'ATLASSIAN',
-    name: 'Productivity',
+    name: 'productivityCategory',
     icon: EmojiProductivityIcon,
     order: 10,
   },

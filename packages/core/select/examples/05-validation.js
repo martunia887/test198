@@ -1,35 +1,67 @@
 // @flow
 
-import React from 'react';
+import React, { Fragment } from 'react';
+import Form, { Field, ErrorMessage } from '@atlaskit/form';
 import { cities } from './common/data';
 import Select from '../src';
-import SelectWrapper from '../src/SelectWrapper'; // TEMP: waiting for @atlaskit/form support
 
+type ValidationState = 'default' | 'error' | 'success';
 const errorMsg = 'This field is required.';
-const successMsg = 'Great job selecting an option!';
+
+const validate = value => {
+  if (!value) {
+    return 'EMPTY';
+  }
+  return undefined;
+};
+
+const getValidationState = (error, valid): ValidationState => {
+  if (!error && !valid) {
+    return 'default';
+  } else if (valid === true) {
+    return 'success';
+  }
+  return 'error';
+};
 
 const ValidationExample = () => (
-  <div>
-    <SelectWrapper
-      id="error"
-      validationState="error"
-      validationMessage={errorMsg}
-    >
-      <Select options={cities} placeholder="Choose a City" />
-    </SelectWrapper>
-    <hr style={{ border: 0, margin: '1em 0' }} />
-    <SelectWrapper
-      id="success"
-      validationState="success"
-      validationMessage={successMsg}
-    >
-      <Select
-        options={cities}
-        defaultValue={cities[0]}
-        placeholder="Choose a City"
-      />
-    </SelectWrapper>
-  </div>
+  <Form onSubmit={data => console.log(data)}>
+    {({ formProps }) => (
+      <form {...formProps}>
+        <Field label="Failed Select" name="fail-city" validate={validate}>
+          {({ fieldProps, error, meta: { valid } }) => (
+            <Fragment>
+              <Select
+                {...fieldProps}
+                options={cities}
+                placeholder="Choose a City"
+                validationState={getValidationState(error, valid)}
+              />
+              {error === 'EMPTY' && <ErrorMessage>{errorMsg}</ErrorMessage>}
+            </Fragment>
+          )}
+        </Field>
+        <hr style={{ border: 0, margin: '1em 0' }} />
+        <Field
+          label="Successful Select"
+          helperText="This select is successful"
+          id="success"
+          name="success-city"
+          defaultValue={cities[0]}
+          validate={validate}
+        >
+          {({ fieldProps, error, meta: { valid } }) => (
+            <Select
+              {...fieldProps}
+              options={cities}
+              placeholder="Choose a City"
+              validationState={getValidationState(error, valid)}
+            />
+          )}
+        </Field>
+      </form>
+    )}
+  </Form>
 );
 
 export default ValidationExample;

@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { RankableTableBodyRow } from '../../styled/rankable/TableRow';
-import { RowPlaceholderCell } from '../../styled/rankable/RowPlaceholder';
 import type { HeadType, RowType } from '../../types';
 import withDimensions, {
   type WithDimensionsProps,
@@ -32,14 +31,13 @@ export class RankableTableRow extends Component<Props, {}> {
       isFixedSize,
       isRanking,
       refWidth,
-      refHeight,
       rowIndex,
       isRankingDisabled,
     } = this.props;
     const { cells, key, ...restRowProps } = row;
     const inlineStyles = inlineStylesIfRanking(isRanking, refWidth);
 
-    if (!row.key) {
+    if (typeof key !== 'string' && !isRankingDisabled) {
       throw new Error(
         'dynamic-table: ranking is not possible because table row does not have a key. Add the key to the row or disable ranking.',
       );
@@ -47,11 +45,11 @@ export class RankableTableRow extends Component<Props, {}> {
 
     return (
       <Draggable
-        draggableId={key}
+        draggableId={key || `${rowIndex}`}
         index={rowIndex}
         isDragDisabled={isRankingDisabled}
       >
-        {(provided, snapshot) => [
+        {(provided, snapshot) => (
           <RankableTableBodyRow
             {...restRowProps}
             {...provided.dragHandleProps}
@@ -60,13 +58,9 @@ export class RankableTableRow extends Component<Props, {}> {
             style={{ ...provided.draggableProps.style, ...inlineStyles }}
             isRanking={isRanking}
             isRankingItem={snapshot.isDragging}
-            // we have to pass key here, because array of two elements (RankableTableRow and placeholder) is returned
-            // without key we will get react-warning-keys exception
-            key={0}
           >
             {cells.map((cell, cellIndex) => {
               const headCell = (head || { cells: [] }).cells[cellIndex];
-
               return (
                 <TableCell
                   head={headCell}
@@ -77,22 +71,8 @@ export class RankableTableRow extends Component<Props, {}> {
                 />
               );
             })}
-          </RankableTableBodyRow>,
-
-          provided.placeholder ? (
-            // we have to pass key here, because array of two elements (RankableTableRow and placeholder) is returned
-            // without key we will get react-warning-keys exception
-            <tr key={1}>
-              <RowPlaceholderCell colSpan={cells.length}>
-                <div
-                  style={inlineStylesIfRanking(isRanking, refWidth, refHeight)}
-                >
-                  {provided.placeholder}
-                </div>
-              </RowPlaceholderCell>
-            </tr>
-          ) : null,
-        ]}
+          </RankableTableBodyRow>
+        )}
       </Draggable>
     );
   }

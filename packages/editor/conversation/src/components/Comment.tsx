@@ -1,63 +1,27 @@
-import * as React from 'react';
-import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import AkAvatar from '@atlaskit/avatar';
 import AkComment, {
-  CommentAuthor,
   CommentAction,
+  CommentAuthor,
   CommentTime,
 } from '@atlaskit/comment';
-import { Editor as AkEditor, EditorProps } from '@atlaskit/editor-core';
-import { WithProviders, ProviderFactory } from '@atlaskit/editor-common';
-import { ResourcedReactions } from '@atlaskit/reactions';
+import { WithProviders } from '@atlaskit/editor-common';
+import { ConnectedReactionsView } from '@atlaskit/reactions';
 import { ReactRenderer } from '@atlaskit/renderer';
+import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import * as React from 'react';
 import styled from 'styled-components';
-import Editor from './Editor';
-import { Comment as CommentType, User } from '../model';
-import CommentContainer from '../containers/Comment';
 import { HttpError } from '../api/HttpError';
-
-/**
- * Props which are passed down from the parent Conversation/Comment
- */
-export interface SharedProps {
-  user?: User;
-  comments?: CommentType[];
-
-  // Dispatch
-  onAddComment?: (
-    conversationId: string,
-    parentId: string,
-    value: any,
-    localId?: string,
-  ) => void;
-  onUpdateComment?: (
-    conversationId: string,
-    commentId: string,
-    value: any,
-  ) => void;
-  onDeleteComment?: (conversationId: string, commentId: string) => void;
-  onRevertComment?: (conversationId: string, commentId: string) => void;
-  onCancelComment?: (conversationId: string, commentId: string) => void;
-  onCancel?: () => void;
-  onHighlightComment?: (commentId: string) => void;
-
-  // Provider
-  dataProviders?: ProviderFactory;
-
-  // Event Hooks
-  onUserClick?: (user: User) => void;
-  onRetry?: (localId?: string) => void;
-
-  // Editor
-  renderEditor?: (Editor: typeof AkEditor, props: EditorProps) => JSX.Element;
-
-  containerId?: string;
-
-  isHighlighted?: boolean;
-  placeholder?: string;
-  disableScrollTo?: boolean;
-  allowFeedbackAndHelpButtons?: boolean;
-}
+import CommentContainer from '../containers/Comment';
+import {
+  actionSubjectIds,
+  AnalyticsEvent,
+  eventTypes,
+  fireEvent,
+  trackEventActions,
+} from '../internal/analytics';
+import { Comment as CommentType, User } from '../model';
+import Editor from './Editor';
+import { SharedProps } from './types';
 
 export interface Props extends SharedProps {
   conversationId: string;
@@ -87,6 +51,13 @@ const commentChanged = (oldComment: CommentType, newComment: CommentType) => {
   return false;
 };
 
+const userChanged = (
+  oldUser: User = { id: '' },
+  newUser: User = { id: '' },
+) => {
+  return oldUser.id !== newUser.id;
+};
+
 const Reactions: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   height: 20px;
   & > div {
@@ -95,7 +66,7 @@ const Reactions: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
 `;
 
 export default class Comment extends React.Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -105,17 +76,22 @@ export default class Comment extends React.Component<Props, State> {
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     const { isEditing, isReplying } = this.state;
-    const { isHighlighted } = this.props;
+    const { isHighlighted, portal } = this.props;
 
     if (
       nextState.isEditing !== isEditing ||
       nextState.isReplying !== isReplying ||
-      nextProps.isHighlighted !== isHighlighted
+      nextProps.isHighlighted !== isHighlighted ||
+      nextProps.portal !== portal
     ) {
       return true;
     }
 
     if (commentChanged(this.props.comment, nextProps.comment)) {
+      return true;
+    }
+
+    if (userChanged(this.props.user, nextProps.user)) {
       return true;
     }
 
@@ -143,7 +119,7 @@ export default class Comment extends React.Component<Props, State> {
   }
 
   private dispatch = (dispatch: string, ...args: any[]) => {
-    const handler = this.props[dispatch];
+    const handler = (this.props as any)[dispatch];
 
     if (handler) {
       handler.apply(handler, args);
@@ -154,16 +130,49 @@ export default class Comment extends React.Component<Props, State> {
     }
   };
 
-  private onReply = () => {
+  private onReply = (value: any, analyticsEvent: AnalyticsEvent) => {
+    const { objectId, containerId } = this.props;
+
+    fireEvent(analyticsEvent, {
+      actionSubjectId: actionSubjectIds.replyButton,
+      objectId,
+      containerId,
+    });
+
     this.setState({
       isReplying: true,
     });
   };
 
   private onSaveReply = async (value: any) => {
-    const { conversationId, comment } = this.props;
+    const {
+      conversationId,
+      comment: parentComment,
+      sendAnalyticsEvent,
+    } = this.props;
 
-    this.dispatch('onAddComment', conversationId, comment.commentId, value);
+    sendAnalyticsEvent({
+      actionSubjectId: actionSubjectIds.saveButton,
+    });
+
+    this.dispatch(
+      'onAddComment',
+      conversationId,
+      parentComment.commentId,
+      value,
+      undefined,
+      (id: string) => {
+        sendAnalyticsEvent({
+          actionSubjectId: id,
+          action: trackEventActions.created,
+          eventType: eventTypes.TRACK,
+          actionSubject: 'comment',
+          attributes: {
+            nestedDepth: (parentComment.nestedDepth || 0) + 1,
+          },
+        });
+      },
+    );
 
     this.setState({
       isReplying: false,
@@ -171,27 +180,92 @@ export default class Comment extends React.Component<Props, State> {
   };
 
   private onCancelReply = () => {
+    this.props.sendAnalyticsEvent({
+      actionSubjectId: actionSubjectIds.cancelButton,
+    });
+
     this.setState({
       isReplying: false,
     });
   };
 
-  private onDelete = () => {
-    const { conversationId, comment } = this.props;
+  private onDelete = (value: any, analyticsEvent: AnalyticsEvent) => {
+    const {
+      comment: { nestedDepth, commentId },
+      objectId,
+      containerId,
+      conversationId,
+      sendAnalyticsEvent,
+    } = this.props;
 
-    this.dispatch('onDeleteComment', conversationId, comment.commentId);
+    fireEvent(analyticsEvent, {
+      actionSubjectId: actionSubjectIds.deleteButton,
+      objectId,
+      containerId,
+    });
+
+    this.dispatch(
+      'onDeleteComment',
+      conversationId,
+      commentId,
+      (id: string) => {
+        sendAnalyticsEvent({
+          actionSubjectId: id,
+          action: trackEventActions.deleted,
+          eventType: eventTypes.TRACK,
+          actionSubject: 'comment',
+          attributes: {
+            nestedDepth: nestedDepth || 0,
+          },
+        });
+      },
+    );
   };
 
-  private onEdit = () => {
+  private onEdit = (value: any, analyticsEvent: AnalyticsEvent) => {
+    const { objectId, containerId } = this.props;
+
+    fireEvent(analyticsEvent, {
+      actionSubjectId: actionSubjectIds.editButton,
+      objectId,
+      containerId,
+    });
+
     this.setState({
       isEditing: true,
     });
   };
 
-  private onSaveEdit = async (value: any) => {
-    const { conversationId, comment } = this.props;
+  private handleCommentEditorChange = (value: any) => {
+    const { comment } = this.props;
 
-    this.dispatch('onUpdateComment', conversationId, comment.commentId, value);
+    this.dispatch('onEditorChange', value, comment.commentId);
+  };
+
+  private onSaveEdit = async (value: any) => {
+    const { conversationId, comment, sendAnalyticsEvent } = this.props;
+
+    sendAnalyticsEvent({
+      actionSubjectId: actionSubjectIds.saveButton,
+    });
+
+    this.dispatch(
+      'onUpdateComment',
+      conversationId,
+      comment.commentId,
+      value,
+      (id: string) => {
+        sendAnalyticsEvent({
+          actionSubjectId: id,
+          action: trackEventActions.updated,
+          eventType: eventTypes.TRACK,
+          actionSubject: 'comment',
+          attributes: {
+            nestedDepth: comment.nestedDepth || 0,
+          },
+        });
+      },
+    );
 
     this.setState({
       isEditing: false,
@@ -199,29 +273,50 @@ export default class Comment extends React.Component<Props, State> {
   };
 
   private onCancelEdit = () => {
+    this.props.sendAnalyticsEvent({
+      actionSubjectId: actionSubjectIds.cancelButton,
+    });
+
     this.setState({
       isEditing: false,
     });
   };
 
-  private onRequestCancel = () => {
-    const { comment, onCancel } = this.props;
+  private onRequestCancel = (value: any, analyticsEvent: AnalyticsEvent) => {
+    const { comment, onCancel, objectId, containerId } = this.props;
 
     // Invoke optional onCancel hook
     if (onCancel) {
       onCancel();
     }
 
+    fireEvent(analyticsEvent, {
+      actionSubjectId: actionSubjectIds.cancelFailedRequestButton,
+      objectId,
+      containerId,
+    });
+
     this.dispatch('onRevertComment', comment.conversationId, comment.commentId);
   };
 
-  private onRequestRetry = () => {
+  private onRequestRetry = (value: any, analyticsEvent: AnalyticsEvent) => {
     const { lastDispatch } = this.state;
-    const { onRetry, comment } = this.props;
+    const {
+      objectId,
+      containerId,
+      onRetry,
+      comment: { localId, isPlaceholder },
+    } = this.props;
 
-    if (onRetry && comment.isPlaceholder) {
-      return onRetry(comment.localId);
+    if (onRetry && isPlaceholder) {
+      return onRetry(localId);
     }
+
+    fireEvent(analyticsEvent, {
+      actionSubjectId: actionSubjectIds.retryFailedRequestButton,
+      objectId,
+      containerId,
+    });
 
     if (!lastDispatch) {
       return;
@@ -249,6 +344,9 @@ export default class Comment extends React.Component<Props, State> {
       renderEditor,
       disableScrollTo,
       allowFeedbackAndHelpButtons,
+      onEditorClose,
+      onEditorOpen,
+      portal,
     } = this.props;
     const { isEditing } = this.state;
 
@@ -264,6 +362,9 @@ export default class Comment extends React.Component<Props, State> {
           isEditing={isEditing}
           onSave={this.onSaveEdit}
           onCancel={this.onCancelEdit}
+          onClose={onEditorClose}
+          onOpen={onEditorOpen}
+          onChange={this.handleCommentEditorChange}
           dataProviders={dataProviders}
           user={user}
           renderEditor={renderEditor}
@@ -277,6 +378,8 @@ export default class Comment extends React.Component<Props, State> {
       <ReactRenderer
         document={comment.document.adf}
         dataProviders={dataProviders}
+        disableHeadingIDs={true}
+        portal={portal}
       />
     );
   }
@@ -296,8 +399,14 @@ export default class Comment extends React.Component<Props, State> {
       onRetry,
       onCancel,
       renderEditor,
+      objectId,
       containerId,
       disableScrollTo,
+      onEditorClose,
+      onEditorOpen,
+      onEditorChange,
+      sendAnalyticsEvent,
+      portal,
     } = this.props;
 
     if (!comments || comments.length === 0) {
@@ -313,6 +422,9 @@ export default class Comment extends React.Component<Props, State> {
         onAddComment={onAddComment}
         onUpdateComment={onUpdateComment}
         onDeleteComment={onDeleteComment}
+        onEditorClose={onEditorClose}
+        onEditorOpen={onEditorOpen}
+        onEditorChange={onEditorChange}
         onRevertComment={onRevertComment}
         onHighlightComment={onHighlightComment}
         onRetry={onRetry}
@@ -321,8 +433,11 @@ export default class Comment extends React.Component<Props, State> {
         dataProviders={dataProviders}
         renderComment={props => <Comment {...props} />}
         renderEditor={renderEditor}
+        objectId={objectId}
         containerId={containerId}
         disableScrollTo={disableScrollTo}
+        sendAnalyticsEvent={sendAnalyticsEvent}
+        portal={portal}
       />
     ));
   }
@@ -339,6 +454,8 @@ export default class Comment extends React.Component<Props, State> {
       renderEditor,
       disableScrollTo,
       allowFeedbackAndHelpButtons,
+      onEditorClose,
+      onEditorOpen,
     } = this.props;
 
     return (
@@ -347,6 +464,9 @@ export default class Comment extends React.Component<Props, State> {
         onCancel={this.onCancelReply}
         onSave={this.onSaveReply}
         dataProviders={dataProviders}
+        onOpen={onEditorOpen}
+        onClose={onEditorClose}
+        onChange={this.handleCommentEditorChange}
         user={user}
         renderEditor={renderEditor}
         disableScrollTo={disableScrollTo}
@@ -356,7 +476,7 @@ export default class Comment extends React.Component<Props, State> {
   }
 
   private getActions() {
-    const { comment, user, dataProviders, containerId } = this.props;
+    const { comment, user, dataProviders, objectId } = this.props;
     const { isEditing } = this.state;
     const canReply = !!user && !isEditing && !comment.deleted;
 
@@ -384,25 +504,25 @@ export default class Comment extends React.Component<Props, State> {
     }
 
     if (
-      containerId &&
+      objectId &&
       commentAri &&
       dataProviders &&
-      dataProviders.hasProvider('reactionsProvider') &&
+      dataProviders.hasProvider('reactionsStore') &&
       dataProviders.hasProvider('emojiProvider')
     ) {
       actions = [
         ...actions,
         <WithProviders
           key="reactions"
-          providers={['emojiProvider', 'reactionsProvider']}
+          providers={['emojiProvider', 'reactionsStore']}
           providerFactory={dataProviders}
-          renderNode={({ emojiProvider, reactionsProvider }) => (
+          renderNode={({ emojiProvider, reactionsStore }) => (
             <Reactions>
-              <ResourcedReactions
-                containerAri={containerId}
+              <ConnectedReactionsView
+                store={reactionsStore}
+                containerAri={objectId}
                 ari={commentAri}
                 emojiProvider={emojiProvider}
-                reactionsProvider={reactionsProvider}
               />
             </Reactions>
           )}

@@ -7,17 +7,17 @@ import { mention, emoji } from '@atlaskit/util-data-test';
 import { Editor } from '../src';
 import { Content } from '../example-helpers/styles';
 import imageUploadHandler from '../example-helpers/imageUpload';
-import { akColorN40 } from '@atlaskit/util-shared-styles';
+import { colors } from '@atlaskit/theme';
 
 const Boundary = styled.div`
-  border: 2px solid ${akColorN40};
+  border: 2px solid ${colors.N40};
   padding: 130px 60px 10px 40px;
 `;
 
 class CustomBoundryExample extends PureComponent<any, any> {
   state = { boundary: undefined };
 
-  handleBoundryRef = boundary => {
+  handleBoundryRef = (boundary: HTMLElement) => {
     this.setState({ boundary });
   };
 
@@ -35,6 +35,7 @@ class CustomBoundryExample extends PureComponent<any, any> {
           mentionProvider={props.mentionProvider}
           emojiProvider={props.emojiProvider}
           popupsBoundariesElement={this.state.boundary}
+          quickInsert={true}
         />
       </Boundary>
     );
@@ -46,7 +47,7 @@ class PortalExample extends PureComponent<any, any> {
     portal: undefined,
   };
 
-  handleRef = portal => {
+  handleRef = (portal: HTMLDivElement) => {
     this.setState({ portal });
   };
 
@@ -65,6 +66,7 @@ class PortalExample extends PureComponent<any, any> {
             mentionProvider={props.mentionProvider}
             emojiProvider={props.emojiProvider}
             popupsMountPoint={this.state.portal}
+            quickInsert={true}
           />
         </div>
         <div ref={this.handleRef} />
@@ -76,11 +78,11 @@ class PortalExample extends PureComponent<any, any> {
 class PortalWithCustomBoundaryExample extends PureComponent<any, any> {
   state = { portal: undefined, boundary: undefined };
 
-  handlePortalRef = portal => {
+  handlePortalRef = (portal: HTMLDivElement) => {
     this.setState({ portal });
   };
 
-  handleBoundryRef = boundary => {
+  handleBoundryRef = (boundary: HTMLDivElement) => {
     this.setState({ boundary });
   };
 
@@ -101,6 +103,7 @@ class PortalWithCustomBoundaryExample extends PureComponent<any, any> {
               emojiProvider={props.emojiProvider}
               popupsMountPoint={this.state.portal}
               popupsBoundariesElement={this.state.boundary}
+              quickInsert={true}
             />
           </div>
         </Boundary>
@@ -113,11 +116,11 @@ class PortalWithCustomBoundaryExample extends PureComponent<any, any> {
 class PortalInScrollContainerExample extends PureComponent<any, any> {
   state = { portal: undefined, boundary: undefined };
 
-  handlePortalRef = portal => {
+  handlePortalRef = (portal: HTMLDivElement) => {
     this.setState({ portal });
   };
 
-  handleBoundryRef = boundary => {
+  handleBoundryRef = (boundary: HTMLDivElement) => {
     this.setState({ boundary });
   };
 
@@ -130,7 +133,7 @@ class PortalInScrollContainerExample extends PureComponent<any, any> {
           overflow: 'scroll',
           height: 200,
           position: 'relative',
-          border: `1px solid ${akColorN40}`,
+          border: `1px solid ${colors.N40}`,
         }}
         ref={this.handleBoundryRef}
       >
@@ -145,6 +148,7 @@ class PortalInScrollContainerExample extends PureComponent<any, any> {
             emojiProvider={props.emojiProvider}
             popupsMountPoint={this.state.portal}
             popupsBoundariesElement={this.state.boundary}
+            quickInsert={true}
           />
         </div>
 
@@ -160,6 +164,7 @@ class PortalInScrollContainerExample extends PureComponent<any, any> {
           emojiProvider={props.emojiProvider}
           popupsMountPoint={this.state.portal}
           popupsBoundariesElement={this.state.boundary}
+          quickInsert={true}
         />
       </div>
     );
@@ -169,15 +174,15 @@ class PortalInScrollContainerExample extends PureComponent<any, any> {
 class JiraSidebarEditor extends PureComponent<any, any> {
   state = { portal: undefined, boundary: undefined, scrollable: undefined };
 
-  handlePortalRef = portal => {
+  handlePortalRef = (portal: HTMLDivElement) => {
     this.setState({ portal });
   };
 
-  handleBoundryRef = boundary => {
+  handleBoundryRef = (boundary: HTMLDivElement) => {
     this.setState({ boundary });
   };
 
-  handleScrollableRef = scrollable => {
+  handleScrollableRef = (scrollable: HTMLDivElement) => {
     this.setState({ scrollable });
   };
 
@@ -201,6 +206,7 @@ class JiraSidebarEditor extends PureComponent<any, any> {
                   popupsMountPoint={this.state.portal}
                   popupsBoundariesElement={this.state.boundary}
                   popupsScrollableElement={this.state.scrollable}
+                  quickInsert={true}
                 />
               </div>
             </div>
@@ -214,7 +220,8 @@ class JiraSidebarEditor extends PureComponent<any, any> {
 
 const CANCEL_ACTION = () => console.log('Cancel');
 const SAVE_ACTION = () => console.log('Save');
-const analyticsHandler = (actionName, props) => console.log(actionName, props);
+const analyticsHandler = (actionName: string, props?: {}) =>
+  console.log(actionName, props);
 
 const mentionProvider = new Promise<any>(resolve =>
   resolve(mention.storyData.resourceProvider),
@@ -238,6 +245,7 @@ export default function Example() {
             onSave={SAVE_ACTION}
             mentionProvider={mentionProvider}
             emojiProvider={emojiProvider}
+            quickInsert={true}
           />
         </div>
       </Content>
@@ -258,6 +266,7 @@ export default function Example() {
             onSave={SAVE_ACTION}
             mentionProvider={mentionProvider}
             emojiProvider={emojiProvider}
+            quickInsert={true}
           />
         </div>
       </Content>

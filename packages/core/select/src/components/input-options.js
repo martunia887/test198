@@ -1,12 +1,39 @@
 // @flow
 
 import React, { Component, type Element } from 'react';
-import styled from 'styled-components';
-import { components } from 'react-select';
 import RadioIcon from '@atlaskit/icon/glyph/radio';
 import CheckboxIcon from '@atlaskit/icon/glyph/checkbox';
-import { colors, themed } from '@atlaskit/theme';
+import { colors, themed, gridSize } from '@atlaskit/theme';
 import type { CommonProps, fn, InnerProps } from './types';
+
+const getPrimitiveStyles = props => {
+  const { cx, className, getStyles, isDisabled, isFocused, isSelected } = props;
+
+  const styles = {
+    alignItems: 'center',
+    backgroundColor: isFocused ? colors.N30 : 'transparent',
+    color: 'inherit',
+    display: 'flex ',
+    paddingBottom: 4,
+    paddingLeft: `${gridSize() * 2}px`,
+    paddingTop: 4,
+
+    ':active': {
+      backgroundColor: colors.B50,
+    },
+  };
+
+  const augmentedStyles = { ...getStyles('option', props), ...styles };
+  const bemClasses = {
+    option: true,
+    'option--is-disabled': isDisabled,
+    'option--is-focused': isFocused,
+    'option--is-selected': isSelected,
+  };
+
+  // maintain react-select API
+  return [augmentedStyles, cx(null, bemClasses, className)];
+};
 
 // maintains function shape
 const backgroundColor = themed({ light: colors.N40A, dark: colors.DN10 });
@@ -27,7 +54,7 @@ const getPrimaryColor = ({
   isFocused,
   isSelected,
   ...rest
-}: ControlProps): string => {
+}: ControlProps): string | number => {
   let color = backgroundColor;
   if (isDisabled && isSelected) {
     color = themed({ light: colors.B75, dark: colors.DN200 });
@@ -42,7 +69,7 @@ const getPrimaryColor = ({
   } else if (isSelected) {
     color = colors.blue;
   }
-  // $FlowFixMe: TEMPORARY
+  // $FlowFixMe - theme is not found in props
   return color(rest);
 };
 
@@ -52,7 +79,7 @@ const getSecondaryColor = ({
   isDisabled,
   isSelected,
   ...rest
-}: ControlProps): string => {
+}: ControlProps): string | number => {
   let color = themed({ light: colors.N0, dark: colors.DN10 });
 
   if (isDisabled && isSelected) {
@@ -62,7 +89,7 @@ const getSecondaryColor = ({
   } else if (!isSelected) {
     color = transparent;
   }
-  // $FlowFixMe: TEMPORARY
+  // $FlowFixMe - theme is not found in props
   return color(rest);
 };
 
@@ -86,29 +113,7 @@ class ControlOption extends Component<OptionProps, OptionState> {
   onMouseUp = () => this.setState({ isActive: false });
   onMouseLeave = () => this.setState({ isActive: false });
   render() {
-    const {
-      getStyles,
-      Icon,
-      isDisabled,
-      isFocused,
-      isSelected,
-      children,
-      innerProps,
-      ...rest
-    } = this.props;
-    const { isActive } = this.state;
-
-    // styles
-    let bg = 'transparent';
-    if (isFocused) bg = colors.N20;
-    if (isActive) bg = colors.B50;
-
-    const style = {
-      alignItems: 'center',
-      backgroundColor: bg,
-      color: 'inherit',
-      display: 'flex ',
-    };
+    const { getStyles, Icon, children, innerProps, ...rest } = this.props;
 
     // prop assignment
     const props: InnerProps = {
@@ -116,27 +121,31 @@ class ControlOption extends Component<OptionProps, OptionState> {
       onMouseDown: this.onMouseDown,
       onMouseUp: this.onMouseUp,
       onMouseLeave: this.onMouseLeave,
-      style,
     };
 
+    const [styles, classes] = getPrimitiveStyles({ getStyles, ...rest });
+
     return (
-      <components.Option
-        {...rest}
-        isDisabled={isDisabled}
-        isFocused={isFocused}
-        isSelected={isSelected}
-        getStyles={getStyles}
-        innerProps={props}
-      >
-        <Icon
-          primaryColor={getPrimaryColor({ ...this.props, ...this.state })}
-          secondaryColor={getSecondaryColor({ ...this.props, ...this.state })}
-        />
-        <Truncate>{children}</Truncate>
-      </components.Option>
+      <div css={styles} className={classes} {...props}>
+        <div css={iconWrapperCSS()}>
+          <Icon
+            primaryColor={getPrimaryColor({ ...this.props, ...this.state })}
+            secondaryColor={getSecondaryColor({ ...this.props, ...this.state })}
+          />
+        </div>
+        <div css={truncateCSS()}>{children}</div>
+      </div>
     );
   }
 }
+
+const iconWrapperCSS = () => ({
+  alignItems: 'center',
+  display: 'flex ',
+  flexShrink: 0,
+  paddingRight: '4px',
+});
+
 /* TODO:
   to be removed
   the label of an option in the menu
@@ -148,12 +157,12 @@ class ControlOption extends Component<OptionProps, OptionState> {
   by users who buy into radio / checkbox select.
 */
 
-const Truncate = styled.div`
-  text-overflow: ellipsis;
-  overflow-x: hidden;
-  flex: 1;
-  white-space: nowrap;
-`;
+const truncateCSS = () => ({
+  textOverflow: 'ellipsis',
+  overflowX: 'hidden',
+  flexGrow: 1,
+  whiteSpace: 'nowrap',
+});
 
 export const CheckboxOption = (props: any) => (
   <ControlOption Icon={CheckboxIcon} {...props} />

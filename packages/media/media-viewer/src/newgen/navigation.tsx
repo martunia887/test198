@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Identifier } from './domain';
+import { FileIdentifier } from '@atlaskit/media-core';
 import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/chevron-left-circle';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
 import { colors } from '@atlaskit/theme';
+import Button from '@atlaskit/button';
+import { Shortcut } from '@atlaskit/media-ui';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import {
   ArrowsWrapper,
   RightWrapper,
@@ -11,19 +15,25 @@ import {
   Arrow,
   hideControlsClassName,
 } from './styled';
-import { getSelectedIndex } from './util';
-import { Shortcut } from './shortcut';
+import { getSelectedIndex } from './utils';
+import { channel } from './analytics';
+import {
+  createNavigationEvent,
+  NavigationGasPayload,
+} from './analytics/navigation';
 
 export type NavigationDirection = 'prev' | 'next';
 
-export interface NavigationProps {
-  items: Identifier[];
-  selectedItem: Identifier;
-  onChange: (item: Identifier) => void;
-}
+export type NavigationProps = Readonly<{
+  items: FileIdentifier[];
+  selectedItem: FileIdentifier;
+  onChange: (item: FileIdentifier) => void;
+}> &
+  WithAnalyticsEventProps;
 
-export default class Navigation extends Component<NavigationProps, any> {
-  private navigate(direction: NavigationDirection) {
+export type NavigationSource = 'keyboard' | 'mouse';
+export class NavigationBase extends Component<NavigationProps, {}> {
+  private navigate(direction: NavigationDirection, source: NavigationSource) {
     return () => {
       const { onChange, items } = this.props;
       const { selectedIndex } = this;
@@ -33,10 +43,19 @@ export default class Navigation extends Component<NavigationProps, any> {
           : items[selectedIndex - 1];
 
       if (newItem) {
+        this.fireAnalytics(createNavigationEvent(direction, source, newItem));
         onChange(newItem);
       }
     };
   }
+
+  private fireAnalytics = (payload: NavigationGasPayload) => {
+    const { createAnalyticsEvent } = this.props;
+    if (createAnalyticsEvent) {
+      const ev = createAnalyticsEvent(payload);
+      ev.fire(channel);
+    }
+  };
 
   get selectedIndex() {
     const { items, selectedItem } = this.props;
@@ -54,20 +73,24 @@ export default class Navigation extends Component<NavigationProps, any> {
     const isLeftVisible = selectedIndex > 0;
     const isRightVisible = selectedIndex < items.length - 1;
 
-    const prev = this.navigate('prev');
-    const next = this.navigate('next');
+    const prev = (source: NavigationSource) => this.navigate('prev', source);
+    const next = (source: NavigationSource) => this.navigate('next', source);
 
     return (
-      <ArrowsWrapper className={hideControlsClassName}>
+      <ArrowsWrapper>
         <LeftWrapper>
           {isLeftVisible ? (
-            <Arrow>
-              <Shortcut keyCode={37} handler={prev} />
-              <ArrowLeftCircleIcon
-                onClick={prev}
-                primaryColor={colors.N800}
-                size="xlarge"
-                label="Previous"
+            <Arrow className={hideControlsClassName}>
+              <Shortcut keyCode={37} handler={prev('keyboard')} />
+              <Button
+                onClick={prev('mouse')}
+                iconBefore={
+                  <ArrowLeftCircleIcon
+                    primaryColor={colors.N800}
+                    size="xlarge"
+                    label="Previous"
+                  />
+                }
               />
             </Arrow>
           ) : null}
@@ -75,13 +98,17 @@ export default class Navigation extends Component<NavigationProps, any> {
 
         <RightWrapper>
           {isRightVisible ? (
-            <Arrow>
-              <Shortcut keyCode={39} handler={next} />
-              <ArrowRightCircleIcon
-                onClick={next}
-                primaryColor={colors.N800}
-                size="xlarge"
-                label="Next"
+            <Arrow className={hideControlsClassName}>
+              <Shortcut keyCode={39} handler={next('keyboard')} />
+              <Button
+                onClick={next('mouse')}
+                iconBefore={
+                  <ArrowRightCircleIcon
+                    primaryColor={colors.N800}
+                    size="xlarge"
+                    label="Next"
+                  />
+                }
               />
             </Arrow>
           ) : null}
@@ -90,3 +117,5 @@ export default class Navigation extends Component<NavigationProps, any> {
     );
   }
 }
+
+export const Navigation = withAnalyticsEvents({})(NavigationBase);

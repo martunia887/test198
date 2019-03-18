@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Component } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
+import { messages } from '@atlaskit/media-ui';
 import { Wrapper, InsertButton, CancelButton } from './styled';
 import { startImport, hidePopup } from '../../actions';
 import { SelectedItem, State } from '../../domain';
@@ -28,7 +30,7 @@ export class Footer extends Component<FooterProps> {
         onClick={onCancel}
         isDisabled={!canCancel}
       >
-        Cancel
+        <FormattedMessage {...messages.cancel} />
       </CancelButton>
     );
   }
@@ -45,11 +47,17 @@ export class Footer extends Component<FooterProps> {
 
     return (
       <InsertButton
+        className="e2e-insert-button"
         appearance="primary"
         onClick={onClick}
         isDisabled={!canInsert}
       >
-        {`Insert  ${itemCount} ${itemCount === 1 ? 'file' : 'files'}`}
+        <FormattedMessage
+          {...messages.insert_files}
+          values={{
+            0: itemCount,
+          }}
+        />
       </InsertButton>
     );
   }
@@ -80,8 +88,11 @@ const mapStateToProps = ({
 const mapDispatchToProps = (
   dispatch: Dispatch<State>,
 ): FooterDispatchProps => ({
-  onInsert: (selectedItems: SelectedItem[]) => dispatch(startImport()),
+  onInsert: () => dispatch(startImport()),
   onCancel: () => dispatch(hidePopup()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Footer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Footer);

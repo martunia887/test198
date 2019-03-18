@@ -19,7 +19,7 @@ export default class PubNubProtocol implements Protocol {
   private lastTimeToken?: string;
   private lastTimeTokenBeforeNetworkDisconnection?: string;
 
-  private config: PubNubProtocolConfig;
+  private config!: PubNubProtocolConfig;
 
   private connectionState: ConnectionState;
 
@@ -169,6 +169,7 @@ export default class PubNubProtocol implements Protocol {
   private onConnected() {
     logDebug('Connected');
     this.connectionState = ConnectionState.CONNECTED;
+    this.eventEmitter.emit(EventType.NETWORK_UP, {});
   }
 
   private onNetworkDown() {

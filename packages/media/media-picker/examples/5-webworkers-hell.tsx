@@ -4,7 +4,6 @@ import { Component } from 'react';
 import {
   mediaPickerAuthProvider,
   defaultMediaPickerCollectionName,
-  defaultServiceHost,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
 import { MediaPicker, Browser, BrowserConfig } from '../src';
@@ -22,22 +21,22 @@ export interface BrowserWrapperState {
 }
 
 class BrowserWrapper extends Component<{}, BrowserWrapperState> {
-  browserComponents: Browser[];
-  dropzoneContainer: HTMLDivElement;
+  browserComponents: Browser[] = [];
+  dropzoneContainer?: HTMLDivElement;
 
-  constructor(props) {
-    super(props);
-
+  constructor() {
+    super({});
     this.state = {
       previewsData: [],
     };
+  }
 
+  async componentDidMount() {
     this.browserComponents = (Array(5) as any).fill().map(this.createBrowse);
   }
 
-  createBrowse = () => {
+  createBrowse = async () => {
     const context = ContextFactory.create({
-      serviceHost: defaultServiceHost,
       authProvider: mediaPickerAuthProvider(),
     });
 
@@ -48,7 +47,7 @@ class BrowserWrapper extends Component<{}, BrowserWrapperState> {
         collection: defaultMediaPickerCollectionName,
       },
     };
-    const fileBrowser = MediaPicker('browser', context, browseConfig);
+    const fileBrowser = await MediaPicker('browser', context, browseConfig);
 
     fileBrowser.on('upload-preview-update', data => {
       this.setState({ previewsData: [...this.state.previewsData, data] });
@@ -57,7 +56,7 @@ class BrowserWrapper extends Component<{}, BrowserWrapperState> {
     return fileBrowser;
   };
 
-  onOpen = fileBrowser => () => {
+  onOpen = (fileBrowser: Browser) => () => {
     fileBrowser.browse();
   };
 
@@ -65,13 +64,7 @@ class BrowserWrapper extends Component<{}, BrowserWrapperState> {
     const { previewsData } = this.state;
 
     return previewsData.map((previewsData, index) => (
-      <UploadPreview
-        key={`${index}`}
-        fileId={previewsData.fileId}
-        isProcessed={previewsData.isProcessed}
-        preview={previewsData.preview}
-        uploadingProgress={previewsData.uploadingProgress}
-      />
+      <UploadPreview key={`${index}`} fileId={previewsData.fileId} />
     ));
   };
 

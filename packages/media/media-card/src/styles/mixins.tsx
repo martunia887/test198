@@ -1,5 +1,5 @@
 /* tslint:disable:variable-name */
-import { akBorderRadius } from '@atlaskit/util-shared-styles';
+import { borderRadius } from '@atlaskit/theme';
 import { CardAppearance } from '../index';
 import { defaultTransitionDuration } from './config';
 
@@ -33,8 +33,8 @@ export const centerSelf = `
 `;
 
 export const borderRadiusLeft = `
-  border-top-left-radius: ${akBorderRadius};
-  border-bottom-left-radius: ${akBorderRadius};
+  border-top-left-radius: ${borderRadius()};
+  border-bottom-left-radius: ${borderRadius()};
 `;
 
 export const spaceAround = `
@@ -47,7 +47,7 @@ export const transition = (propertyName = 'all') => `
   transition: ${propertyName} ${defaultTransitionDuration};
 `;
 
-export const hexToRgb = hex => {
+export const hexToRgb = (hex: any) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? `${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(
@@ -57,7 +57,8 @@ export const hexToRgb = hex => {
     : null;
 };
 
-export const rgba = (hex, opacity) => `rgba(${hexToRgb(hex)}, ${opacity})`;
+export const rgba = (hex: any, opacity: any) =>
+  `rgba(${hexToRgb(hex)}, ${opacity})`;
 
 export const capitalize = `
   &::first-letter {

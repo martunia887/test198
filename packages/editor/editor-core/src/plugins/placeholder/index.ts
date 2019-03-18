@@ -10,10 +10,14 @@ export function createPlaceholderDecoration(
   doc: Node,
   placeholderText: string,
 ): DecorationSet {
+  const placeholderDecoration = document.createElement('span');
+  placeholderDecoration.className = 'placeholder-decoration';
   const placeholderNode = document.createElement('span');
-  placeholderNode.className = 'placeholder-decoration';
-  placeholderNode.setAttribute('data-text', placeholderText);
-  return DecorationSet.create(doc, [Decoration.widget(1, placeholderNode)]);
+  placeholderNode.textContent = placeholderText;
+  placeholderDecoration.appendChild(placeholderNode);
+  return DecorationSet.create(doc, [
+    Decoration.widget(1, placeholderDecoration, { side: -1 }),
+  ]);
 }
 
 export function createPlugin(placeholderText?: string): Plugin | undefined {
@@ -93,7 +97,7 @@ const placeholderPlugin: EditorPlugin = {
   pmPlugins() {
     return [
       {
-        rank: 10000,
+        name: 'placeholder',
         plugin: ({ schema, props }) => createPlugin(props.placeholder),
       },
     ];

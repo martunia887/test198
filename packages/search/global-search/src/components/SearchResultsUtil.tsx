@@ -1,119 +1,92 @@
-import * as React from 'react';
-import { ComponentClass } from 'react';
-import {
-  PersonResult,
-  ContainerResult,
-  ResultBase,
-} from '@atlaskit/quick-search';
-import JiraIcon from '@atlaskit/icon/glyph/jira';
-import {
-  Result,
-  ResultType,
-  ResultContentType,
-  AnalyticsType,
-} from '../model/Result';
-import ObjectResult from './ObjectResult';
+export const ADVANCED_CONFLUENCE_SEARCH_RESULT_ID = 'search_confluence';
+export const ADVANCED_JIRA_SEARCH_RESULT_ID = 'search_jira';
+export const ADVANCED_PEOPLE_SEARCH_RESULT_ID = 'search_people';
 
-// Common properties that the quick-search Result component supports
-interface QuickSearchResult extends ComponentClass {
-  type: string;
-  name: string;
-  resultId: string;
-  href: string;
-  avatarUrl?: string;
-  containerName?: string;
-  objectKey?: string;
-  contentType?: ResultContentType;
+export enum JiraEntityTypes {
+  Projects = 'projects',
+  Issues = 'issues',
+  Boards = 'boards',
+  Filters = 'filters',
+  People = 'people',
 }
 
-function getResultComponent(resultType: ResultType): ComponentClass {
-  switch (resultType) {
-    case ResultType.Object: {
-      return ObjectResult;
-    }
-    case ResultType.Person: {
-      return PersonResult;
-    }
-    case ResultType.Container: {
-      return ContainerResult;
-    }
-    default: {
-      // Make the TS compiler verify that all enums have been matched
-      const _nonExhaustiveMatch: never = resultType;
-      throw new Error(
-        `Non-exhaustive match for result type: ${_nonExhaustiveMatch}`,
-      );
-    }
-  }
+export enum ConfluenceAdvancedSearchTypes {
+  Content = 'content',
+  People = 'people',
 }
 
-export function renderResults(results: Result[]) {
-  return results.map(result => {
-    const Result = getResultComponent(result.resultType) as ComponentClass<
-      QuickSearchResult
-    >;
+const JIRA_ADVANCED_SEARCH_URLS = {
+  [JiraEntityTypes.Issues]: query =>
+    `/secure/QuickSearch.jspa?searchString=${query}`,
+  [JiraEntityTypes.Boards]: query =>
+    `/secure/ManageRapidViews.jspa?contains=${query}`,
+  [JiraEntityTypes.Filters]: query =>
+    `/secure/ManageFilters.jspa?Search=Search&filterView=search&name=${query}`,
+  [JiraEntityTypes.Projects]: query => `/projects?contains=${query}`,
+  [JiraEntityTypes.People]: query => `/people/search?q=${query}`,
+};
 
-    return (
-      <Result
-        key={result.resultId}
-        resultId={result.resultId}
-        type={result.analyticsType}
-        name={result.name}
-        containerName={result.containerName}
-        href={result.href}
-        avatarUrl={result.avatarUrl}
-        objectKey={result.objectKey}
-        contentType={result.contentType}
-      />
-    );
-  });
+export const isAdvancedSearchResult = (resultId: string) =>
+  [
+    ADVANCED_CONFLUENCE_SEARCH_RESULT_ID,
+    ADVANCED_JIRA_SEARCH_RESULT_ID,
+    ADVANCED_PEOPLE_SEARCH_RESULT_ID,
+  ].some(advancedResultId => advancedResultId === resultId);
+
+export function getConfluenceAdvancedSearchLink(query?: string) {
+  const queryString = query ? `?queryString=${encodeURIComponent(query)}` : '';
+  return `/wiki/dosearchsite.action${queryString}`;
 }
 
-export interface AdvancedSearchItemProps {
-  query: string;
-  icon: JSX.Element;
-  text: string;
+export function getJiraAdvancedSearchUrl(
+  entityType: JiraEntityTypes,
+  query?: string,
+) {
+  const getUrl = JIRA_ADVANCED_SEARCH_URLS[entityType];
+  return getUrl(query || '');
 }
 
-export const searchConfluenceItem = (props: AdvancedSearchItemProps) => (
-  <ResultBase
-    href={`/wiki/dosearchsite.action?queryString=${encodeURIComponent(
-      props.query,
-    )}`}
-    icon={props.icon}
-    key="search_confluence"
-    resultId="search_confluence"
-    text={props.text}
-    type={AnalyticsType.AdvancedSearchConfluence}
-  />
-);
+export function redirectToConfluenceAdvancedSearch(query = '') {
+  // XPSRCH-891: this breaks SPA navigation. Consumer needs to pass in a redirect/navigate function.
+  window.location.assign(getConfluenceAdvancedSearchLink(query));
+}
 
-export const searchJiraItem = (query: string) => (
-  <ResultBase
-    href={`/issues/?jql=${encodeURIComponent(`text ~ "${query}"`)}`}
-    icon={<JiraIcon size="large" label="Search Jira" />}
-    key="search_jira"
-    resultId="search_jira"
-    text="Search for more Jira issues"
-    type={AnalyticsType.AdvancedSearchJira}
-  />
-);
-
-export const searchPeopleItem = (props: AdvancedSearchItemProps) => (
-  <ResultBase
-    href={`/home/people?q=${encodeURIComponent(props.query)}`}
-    icon={props.icon}
-    key="search_people"
-    resultId="search_people"
-    text={props.text}
-    type={AnalyticsType.AdvancedSearchPeople}
-  />
-);
+export function redirectToJiraAdvancedSearch(
+  entityType: JiraEntityTypes,
+  query = '',
+) {
+  window.location.assign(getJiraAdvancedSearchUrl(entityType, query));
+}
 
 export function take<T>(array: Array<T>, n: number) {
-  return array.slice(0, n);
+  return (array || []).slice(0, n);
 }
 
 export function isEmpty<T>(array: Array<T>) {
   return array.length === 0;
+}
+
+export function objectValues(object) {
+  return Object.keys(object || {}).map(key => object[key]);
+}
+/**
+ *
+ * Gracefully handle promise catch and returning default value
+ * @param promise promise to handle its catch block
+ * @param defaultValue value returned by the promise in case of error
+ * @param errorHandler function to be called in case of promise rejection
+ */
+export function handlePromiseError<T>(
+  promise: Promise<T>,
+  defaultValue: T,
+  errorHandler?: ((reason: any) => T | void),
+): Promise<T> {
+  return promise.catch(error => {
+    try {
+      if (errorHandler) {
+        errorHandler(error);
+      }
+    } catch (e) {}
+    return defaultValue;
+  });
 }

@@ -7,9 +7,14 @@ import {
   CardView,
   CardOnClickCallback,
 } from '@atlaskit/media-card';
-import { Context, ImageResizeMode } from '@atlaskit/media-core';
 import {
-  MediaType,
+  Context,
+  ImageResizeMode,
+  FileIdentifier,
+  ExternalImageIdentifier,
+} from '@atlaskit/media-core';
+import { MediaType } from '@atlaskit/adf-schema';
+import {
   withImageLoader,
   ImageStatus,
   // @ts-ignore
@@ -17,6 +22,7 @@ import {
   // @ts-ignore
   ImageLoaderState,
 } from '@atlaskit/editor-common';
+import { RendererAppearance } from './Renderer';
 
 export interface MediaProvider {
   viewContext?: Context;
@@ -36,14 +42,15 @@ export interface MediaCardProps {
   cardDimensions?: CardDimensions;
   resizeMode?: ImageResizeMode;
   appearance?: CardAppearance;
+  rendererAppearance?: RendererAppearance;
   occurrenceKey?: string;
   imageStatus?: ImageStatus;
   disableOverlay?: boolean;
+  useInlinePlayer?: boolean;
 }
 
 export interface State {
   context?: Context;
-  // externalStatus: CardStatus;
 }
 
 export class MediaCardInternal extends Component<MediaCardProps, State> {
@@ -64,7 +71,20 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
     });
   }
 
+  private renderLoadingCard = () => {
+    const { cardDimensions } = this.props;
+
+    return (
+      <CardView
+        status="loading"
+        mediaItemType="file"
+        dimensions={cardDimensions}
+      />
+    );
+  };
+
   private renderExternal() {
+    const { context } = this.state;
     const {
       cardDimensions,
       resizeMode,
@@ -74,17 +94,21 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
       disableOverlay,
     } = this.props;
 
+    if (imageStatus === 'loading' || !url) {
+      return this.renderLoadingCard();
+    }
+
+    const identifier: ExternalImageIdentifier = {
+      dataURI: url,
+      name: url,
+      mediaItemType: 'external-image',
+    };
+
     return (
-      <CardView
-        status={imageStatus || 'loading'}
-        dataURI={url}
+      <Card
+        context={context as any} // context is not really used when the type is external and we want to render the component asap
+        identifier={identifier}
         dimensions={cardDimensions}
-        metadata={
-          {
-            mediaType: 'image',
-            name: url,
-          } as any
-        }
         appearance={appearance}
         resizeMode={resizeMode}
         disableOverlay={disableOverlay}
@@ -99,30 +123,47 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
       id,
       type,
       collection,
+      occurrenceKey,
       cardDimensions,
       resizeMode,
-      appearance,
+      rendererAppearance,
       disableOverlay,
+      useInlinePlayer,
     } = this.props;
+    const isMobile = rendererAppearance === 'mobile';
+    const shouldPlayInline =
+      useInlinePlayer !== undefined ? useInlinePlayer : true;
+    const onCardClick =
+      eventHandlers && eventHandlers.media && eventHandlers.media.onClick;
+    const shouldOpenMediaViewer = !isMobile && !onCardClick;
 
     if (type === 'external') {
       return this.renderExternal();
     }
 
-    if (!context) {
+    if (type === 'link') {
+      return null;
+    }
+
+    if (!context || !id) {
+      return this.renderLoadingCard();
+    }
+
+    if (!id || type !== 'file') {
       return (
         <CardView
-          status="loading"
+          status="error"
           mediaItemType={type}
           dimensions={cardDimensions}
         />
       );
     }
 
-    let identifier: any = {
+    const identifier: FileIdentifier = {
       id,
-      mediaItemType: type,
+      mediaItemType: 'file',
       collectionName: collection,
+      occurrenceKey,
     };
 
     return (
@@ -130,12 +171,12 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
         identifier={identifier}
         context={context}
         dimensions={cardDimensions}
-        onClick={
-          eventHandlers && eventHandlers.media && eventHandlers.media.onClick
-        }
+        onClick={onCardClick}
         resizeMode={resizeMode}
-        appearance={appearance}
+        isLazy={!isMobile}
         disableOverlay={disableOverlay}
+        useInlinePlayer={isMobile ? false : shouldPlayInline}
+        shouldOpenMediaViewer={shouldOpenMediaViewer}
       />
     );
   }

@@ -1,13 +1,15 @@
 import { toggleMark } from 'prosemirror-commands';
 import {
   Fragment,
-  Mark,
+  Mark as PMMark,
   MarkType,
   Node,
   NodeType,
   ResolvedPos,
   Slice,
   Schema,
+  NodeRange,
+  Mark,
 } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import {
@@ -25,26 +27,28 @@ import {
   JSONNode,
 } from '@atlaskit/editor-json-transformer';
 import { FakeTextCursorSelection } from '../plugins/fake-text-cursor/cursor';
-import { stateKey as tableStateKey } from '../plugins/table/pm-plugins/main';
 import { hasParentNodeOfType } from 'prosemirror-utils';
 import { GapCursorSelection, Side } from '../plugins/gap-cursor/selection';
 
 export * from './document';
 export * from './action';
+export * from './step';
+export * from './mark';
 
-export {
-  default as ErrorReporter,
-  ErrorReportingHandler,
-} from './error-reporter';
 export { JSONDocNode, JSONNode };
 
 export { filterContentByType } from './filter';
+
+export const ZWSP = '\u200b';
 
 function validateNode(node: Node): boolean {
   return false;
 }
 
-function isMarkTypeCompatibleWithMark(markType: MarkType, mark: Mark): boolean {
+function isMarkTypeCompatibleWithMark(
+  markType: MarkType,
+  mark: PMMark,
+): boolean {
   return !mark.type.excludes(markType) && !markType.excludes(mark.type);
 }
 
@@ -55,18 +59,22 @@ function isMarkTypeAllowedInNode(
   return toggleMark(markType)(state);
 }
 
-function closest(node: HTMLElement | null, s: string): HTMLElement | null {
+function closest(
+  node: HTMLElement | null | undefined,
+  s: string,
+): HTMLElement | null {
   let el = node as HTMLElement;
   if (!el) {
     return null;
   }
-  if (!document.documentElement.contains(el)) {
+  if (!document.documentElement || !document.documentElement.contains(el)) {
     return null;
   }
   const matches = el.matches ? 'matches' : 'msMatchesSelector';
 
   do {
-    if (el[matches](s)) {
+    // @ts-ignore
+    if (el[matches] && el[matches](s)) {
       return el;
     }
     el = (el.parentElement || el.parentNode) as HTMLElement;
@@ -75,7 +83,10 @@ function closest(node: HTMLElement | null, s: string): HTMLElement | null {
 }
 
 export const isImage = (fileType?: string): boolean => {
-  return !!fileType && fileType.indexOf('image/') > -1;
+  return (
+    !!fileType &&
+    (fileType.indexOf('image/') > -1 || fileType.indexOf('video/') > -1)
+  );
 };
 
 export function canMoveUp(state: EditorState): boolean {
@@ -180,6 +191,10 @@ export function endPositionOfParent(resolvedPos: ResolvedPos): number {
   return resolvedPos.end(resolvedPos.depth) + 1;
 }
 
+export function getCursor(selection: Selection): ResolvedPos | undefined {
+  return (selection as TextSelection).$cursor || undefined;
+}
+
 /**
  * Check if a mark is allowed at the current selection / cursor based on a given state.
  * This method looks at both the currently active marks on the transaction, as well as
@@ -203,7 +218,7 @@ export function isMarkTypeAllowedInCurrentSelection(
     return false;
   }
 
-  let isCompatibleMarkType = mark =>
+  let isCompatibleMarkType = (mark: PMMark) =>
     isMarkTypeCompatibleWithMark(markType, mark);
 
   // Handle any new marks in the current transaction
@@ -237,7 +252,7 @@ export function isMarkTypeAllowedInCurrentSelection(
  * found that isn't of the specified type
  */
 export function isRangeOfType(
-  doc,
+  doc: Node,
   $from: ResolvedPos,
   $to: ResolvedPos,
   nodeType: NodeType,
@@ -262,10 +277,18 @@ export function canJoinDown(
   doc: any,
   nodeType: NodeType,
 ): boolean {
+  return checkNodeDown(selection, doc, node => node.type === nodeType);
+}
+
+export function checkNodeDown(
+  selection: Selection,
+  doc: Node,
+  filter: (node: Node) => boolean,
+): boolean {
   const res = doc.resolve(
     selection.$to.after(findAncestorPosition(doc, selection.$to).depth),
   );
-  return res.nodeAfter && res.nodeAfter.type === nodeType;
+  return res.nodeAfter ? filter(res.nodeAfter) : false;
 }
 
 export const setNodeSelection = (view: EditorView, pos: number) => {
@@ -321,7 +344,7 @@ export function canJoinUp(
  * Returns all top-level ancestor-nodes between $from and $to
  */
 export function getAncestorNodesBetween(
-  doc,
+  doc: Node,
   $from: ResolvedPos,
   $to: ResolvedPos,
 ): Node[] {
@@ -377,7 +400,7 @@ export function getAncestorNodesBetween(
  * The output will be two selection-groups. One within the ul and one with the two paragraphs.
  */
 export function getGroupsInRange(
-  doc,
+  doc: Node,
   $from: ResolvedPos,
   $to: ResolvedPos,
   isNodeValid: (node: Node) => boolean = validateNode,
@@ -451,7 +474,7 @@ export function findAncestorPosition(doc: Node, pos: any): any {
  * Determine if two positions have a common ancestor.
  */
 export function hasCommonAncestor(
-  doc,
+  doc: Node,
   $from: ResolvedPos,
   $to: ResolvedPos,
 ): boolean {
@@ -476,7 +499,12 @@ export function hasCommonAncestor(
 /**
  * Takes a selection $from and $to and lift all text nodes from their parents to document-level
  */
-export function liftSelection(tr, doc, $from: ResolvedPos, $to: ResolvedPos) {
+export function liftSelection(
+  tr: Transaction,
+  doc: Node,
+  $from: ResolvedPos,
+  $to: ResolvedPos,
+) {
   let startPos = $from.start($from.depth);
   let endPos = $to.end($to.depth);
   const target = Math.max(0, findAncestorPosition(doc, $from).depth - 1);
@@ -490,7 +518,7 @@ export function liftSelection(tr, doc, $from: ResolvedPos, $to: ResolvedPos) {
       const sel = new NodeSelection(res);
       const range = sel.$from.blockRange(sel.$to)!;
 
-      if (liftTarget(range) !== undefined) {
+      if (liftTarget(range as NodeRange) !== undefined) {
         tr.lift(range, target);
       }
     }
@@ -520,7 +548,7 @@ export function liftSiblingNodes(view: EditorView) {
   const blockStart = tr.doc.resolve($from.start($from.depth - 1));
   const blockEnd = tr.doc.resolve($to.end($to.depth - 1));
   const range = blockStart.blockRange(blockEnd)!;
-  view.dispatch(tr.lift(range, blockStart.depth - 1));
+  view.dispatch(tr.lift(range as NodeRange, blockStart.depth - 1));
 }
 
 /**
@@ -531,9 +559,10 @@ export function liftAndSelectSiblingNodes(view: EditorView): Transaction {
   const { $from, $to } = view.state.selection;
   const blockStart = tr.doc.resolve($from.start($from.depth - 1));
   const blockEnd = tr.doc.resolve($to.end($to.depth - 1));
-  const range = blockStart.blockRange(blockEnd)!;
+  // TODO: [ts30] handle void and null properly
+  const range = blockStart.blockRange(blockEnd) as NodeRange;
   tr.setSelection(new TextSelection(blockStart, blockEnd));
-  tr.lift(range, blockStart.depth - 1);
+  tr.lift(range as NodeRange, blockStart.depth - 1);
   return tr;
 }
 
@@ -579,7 +608,7 @@ export function arrayFrom(obj: any): any[] {
  * Returns the ancestor element of a particular type if exists or null
  */
 export function closestElement(
-  node: HTMLElement | null,
+  node: HTMLElement | null | undefined,
   s: string,
 ): HTMLElement | null {
   return closest(node, s);
@@ -599,7 +628,7 @@ export function moveLeft(view: EditorView) {
  * Function will create a list of wrapper blocks present in a selection.
  */
 function getSelectedWrapperNodes(state: EditorState): NodeType[] {
-  const nodes: any[] = [];
+  const nodes: Array<NodeType> = [];
   if (state.selection) {
     const { $from, $to } = state.selection;
     const {
@@ -663,7 +692,7 @@ export const isEmptyNode = (schema: Schema) => {
     mediaGroup,
     mediaSingle,
   } = schema.nodes;
-  const innerIsEmptyNode = (node: Node) => {
+  const innerIsEmptyNode = (node: Node): any => {
     switch (node.type) {
       case media:
       case mediaGroup:
@@ -704,9 +733,9 @@ export const isEmptyNode = (schema: Schema) => {
   return innerIsEmptyNode;
 };
 
-export const isTableCell = (state: EditorState) => {
-  const pluginState = tableStateKey.getState(state);
-  return !!(pluginState && pluginState.tableNode);
+export const insideTableCell = (state: EditorState) => {
+  const { tableCell, tableHeader } = state.schema.nodes;
+  return hasParentNodeOfType([tableCell, tableHeader])(state.selection);
 };
 
 export const isElementInTableCell = (
@@ -726,4 +755,93 @@ export const isInListItem = (state: EditorState): boolean => {
 
 export const hasOpenEnd = (slice: Slice): boolean => {
   return slice.openStart > 0 || slice.openEnd > 0;
+};
+
+export function filterChildrenBetween(
+  doc: Node,
+  from: number,
+  to: number,
+  predicate: (node: Node, pos: number, parent: Node) => boolean | undefined,
+) {
+  const results = [] as { node: Node; pos: number }[];
+  doc.nodesBetween(from, to, (node, pos, parent) => {
+    if (predicate(node, pos, parent)) {
+      results.push({ node, pos });
+    }
+  });
+  return results;
+}
+
+export function dedupe<T>(
+  list: T[] = [],
+  iteratee?: (p: T) => T[keyof T] | T,
+): T[] {
+  const transformed = iteratee ? list.map(iteratee) : list;
+
+  return transformed
+    .map((item, index, list) => (list.indexOf(item) === index ? item : null))
+    .reduce<T[]>(
+      (acc, item, index) => (!!item ? acc.concat(list[index]) : acc),
+      [],
+    );
+}
+
+export const isTextSelection = (
+  selection: Selection,
+): selection is TextSelection => selection instanceof TextSelection;
+
+/** Helper type for single arg function */
+type Func<A, B> = (a: A) => B;
+
+/**
+ * Compose 1 to n functions.
+ * @param func first function
+ * @param funcs additional functions
+ */
+export function compose<
+  F1 extends Func<any, any>,
+  FN extends Array<Func<any, any>>,
+  R extends FN extends []
+    ? F1
+    : FN extends [Func<infer A, any>]
+    ? (a: A) => ReturnType<F1>
+    : FN extends [any, Func<infer A, any>]
+    ? (a: A) => ReturnType<F1>
+    : FN extends [any, any, Func<infer A, any>]
+    ? (a: A) => ReturnType<F1>
+    : FN extends [any, any, any, Func<infer A, any>]
+    ? (a: A) => ReturnType<F1>
+    : FN extends [any, any, any, any, Func<infer A, any>]
+    ? (a: A) => ReturnType<F1>
+    : Func<any, ReturnType<F1>> // Doubtful we'd ever want to pipe this many functions, but in the off chance someone does, we can still infer the return type
+>(func: F1, ...funcs: FN): R {
+  const allFuncs = [func, ...funcs];
+  return function composed(raw: any) {
+    return allFuncs.reduceRight((memo, func) => func(memo), raw);
+  } as R;
+}
+
+export const normaliseNestedLayout = (state: EditorState, node: Node) => {
+  if (state.selection.$from.depth > 1) {
+    if (node.attrs.layout && node.attrs.layout !== 'default') {
+      return node.type.createChecked(
+        {
+          ...node.attrs,
+          layout: 'default',
+        },
+        node.content,
+        node.marks,
+      );
+    }
+
+    // If its a breakout layout, we can remove the mark
+    // Since default isn't a valid breakout mode.
+    const breakoutMark: Mark = state.schema.marks.breakout;
+    if (breakoutMark && breakoutMark.isInSet(node.marks)) {
+      const newMarks = breakoutMark.removeFromSet(node.marks);
+      return node.type.createChecked(node.attrs, node.content, newMarks);
+    }
+  }
+
+  return node;
 };

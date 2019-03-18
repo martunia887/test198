@@ -1,87 +1,100 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
-import { PluginKey } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
-import TextColourIcon from '@atlaskit/icon/glyph/editor/text-color';
-import { analyticsDecorator as analytics } from '../../../../analytics';
+import TextColorIcon from '@atlaskit/icon/glyph/editor/text-color';
+import { akEditorMenuZIndex } from '@atlaskit/editor-common';
+import { withAnalytics } from '../../../../analytics';
 import ToolbarButton from '../../../../ui/ToolbarButton';
 import ColorPalette from '../../../../ui/ColorPalette';
 import Dropdown from '../../../../ui/Dropdown';
-import { TextColorState } from '../../pm-plugins/main';
+import { TextColorPluginState } from '../../pm-plugins/main';
 import {
   TriggerWrapper,
   Separator,
   Wrapper,
   ExpandIconWrapper,
 } from './styles';
+import { EditorView } from 'prosemirror-view';
+import * as commands from '../../commands/change-color';
+
+export const messages = defineMessages({
+  textColor: {
+    id: 'fabric.editor.textColor',
+    defaultMessage: 'Text color',
+    description: '',
+  },
+});
+
+export interface State {
+  isOpen: boolean;
+}
 
 export interface Props {
+  pluginState: TextColorPluginState;
   editorView: EditorView;
-  pluginState: TextColorState;
-  disabled?: boolean;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
   isReducedSpacing?: boolean;
 }
 
-export interface State {
-  disabled?: boolean;
-  isOpen: boolean;
-  color?: string;
-}
-
-export const stateKey = new PluginKey('textColorPlugin');
-
-export default class ToolbarTextColor extends PureComponent<Props, State> {
+class ToolbarTextColor extends React.Component<
+  Props & InjectedIntlProps,
+  State
+> {
   state: State = {
     isOpen: false,
   };
 
-  componentDidMount() {
-    this.props.pluginState.subscribe(this.handlePluginStateChange);
-  }
-
-  componentWillUnmount() {
-    this.props.pluginState.unsubscribe(this.handlePluginStateChange);
-  }
+  changeColor = (color: string) =>
+    commands.changeColor(color)(
+      this.props.editorView.state,
+      this.props.editorView.dispatch,
+    );
 
   render() {
-    const { disabled, isOpen, color } = this.state;
+    const { isOpen } = this.state;
     const {
       popupsMountPoint,
       popupsBoundariesElement,
       popupsScrollableElement,
       isReducedSpacing,
-      pluginState: { palette, borderColorPalette },
+      pluginState,
+      intl: { formatMessage },
     } = this.props;
 
+    const labelTextColor = formatMessage(messages.textColor);
     return (
       <Wrapper>
         <Dropdown
           mountTo={popupsMountPoint}
           boundariesElement={popupsBoundariesElement}
           scrollableElement={popupsScrollableElement}
-          isOpen={isOpen && !disabled && !this.props.disabled}
+          isOpen={isOpen && !pluginState.disabled}
           onOpenChange={this.handleOpenChange}
           fitWidth={242}
           fitHeight={80}
+          zIndex={akEditorMenuZIndex}
           trigger={
             <ToolbarButton
               spacing={isReducedSpacing ? 'none' : 'default'}
-              disabled={disabled || this.props.disabled}
+              disabled={pluginState.disabled}
               selected={isOpen}
-              title="Text color"
+              title={labelTextColor}
               onClick={this.toggleOpen}
               iconBefore={
                 <TriggerWrapper>
-                  <TextColourIcon
-                    primaryColor={this.getIconColor()}
-                    label="Text color"
+                  <TextColorIcon
+                    primaryColor={
+                      this.getIconColor(
+                        pluginState.color,
+                        pluginState.defaultColor,
+                      ) || undefined
+                    }
+                    label={labelTextColor}
                   />
                   <ExpandIconWrapper>
-                    <ExpandIcon label="expand-dropdown-menu" />
+                    <ExpandIcon label={labelTextColor} />
                   </ExpandIconWrapper>
                 </TriggerWrapper>
               }
@@ -89,10 +102,10 @@ export default class ToolbarTextColor extends PureComponent<Props, State> {
           }
         >
           <ColorPalette
-            palette={palette}
-            onClick={this.toggleTextColor}
-            selectedColor={color}
-            borderColors={borderColorPalette}
+            palette={pluginState.palette}
+            onClick={color => this.changeTextColor(color, pluginState.disabled)}
+            selectedColor={pluginState.color}
+            borderColors={pluginState.borderColorPalette}
           />
         </Dropdown>
         <Separator />
@@ -100,42 +113,34 @@ export default class ToolbarTextColor extends PureComponent<Props, State> {
     );
   }
 
-  @analytics('atlassian.editor.format.textcolor.button')
-  private toggleTextColor = color => {
-    const { pluginState, editorView } = this.props;
-    if (!this.state.disabled) {
-      this.toggleOpen();
-      if (color === pluginState.defaultColor) {
-        return pluginState.removeTextColor(
-          editorView.state,
-          editorView.dispatch,
-        );
+  private changeTextColor = withAnalytics(
+    'atlassian.editor.format.textcolor.button',
+    (color: string, disabled: boolean) => {
+      if (!disabled) {
+        this.toggleOpen();
+        return this.changeColor(color);
       }
-      return pluginState.toggleTextColor(
-        editorView.state,
-        editorView.dispatch,
-        color,
-      );
-    }
-    return false;
-  };
+
+      return false;
+    },
+  );
 
   private toggleOpen = () => {
     this.handleOpenChange({ isOpen: !this.state.isOpen });
   };
 
-  private handleOpenChange = ({ isOpen }) => {
+  private handleOpenChange = ({ isOpen }: { isOpen: boolean }) => {
     this.setState({ isOpen });
   };
 
-  private handlePluginStateChange = (pluginState: TextColorState) => {
-    const { color, disabled } = pluginState;
-    this.setState({ color, disabled });
-  };
-
-  private getIconColor = (): string | undefined => {
-    const { isOpen, color } = this.state;
-    const isDefaultColor = this.props.pluginState.defaultColor === color;
+  private getIconColor = (
+    color?: string | null,
+    defaultColor?: string,
+  ): string | undefined | null => {
+    const { isOpen } = this.state;
+    const isDefaultColor = defaultColor === color;
     return isOpen || isDefaultColor ? undefined : color;
   };
 }
+
+export default injectIntl(ToolbarTextColor);

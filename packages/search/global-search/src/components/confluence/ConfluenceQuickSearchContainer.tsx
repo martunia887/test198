@@ -1,17 +1,45 @@
 import * as React from 'react';
+import {
+  injectIntl,
+  InjectedIntlProps,
+  FormattedHTMLMessage,
+} from 'react-intl';
 import { withAnalytics, FireAnalyticsEvent } from '@atlaskit/analytics';
-import * as uuid from 'uuid/v4';
-import GlobalQuickSearch from '../GlobalQuickSearch';
+import { CancelableEvent } from '@atlaskit/quick-search';
 import { ConfluenceClient } from '../../api/ConfluenceClient';
 import {
   CrossProductSearchClient,
-  Scope,
+  CrossProductSearchResults,
+  EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE,
+  ABTest,
 } from '../../api/CrossProductSearchClient';
-import { Result } from '../../model/Result';
+import { Scope } from '../../api/types';
+import { Result, ResultsWithTiming } from '../../model/Result';
 import { PeopleSearchClient } from '../../api/PeopleSearchClient';
-import renderSearchResults from './ConfluenceSearchResults';
-import settlePromises from '../../util/settle-promises';
-import { LinkComponent } from '../GlobalQuickSearchWrapper';
+import { SearchScreenCounter } from '../../util/ScreenCounter';
+import {
+  LinkComponent,
+  ReferralContextIdentifiers,
+  Logger,
+} from '../GlobalQuickSearchWrapper';
+import {
+  ConfluenceAdvancedSearchTypes,
+  redirectToConfluenceAdvancedSearch,
+  handlePromiseError,
+} from '../SearchResultsUtil';
+import { CreateAnalyticsEventFn } from '../analytics/types';
+import performanceNow from '../../util/performance-now';
+import QuickSearchContainer from '../common/QuickSearchContainer';
+import { messages } from '../../messages';
+import { sliceResults } from './ConfluenceSearchResultsMapper';
+import NoResultsState from './NoResultsState';
+import SearchResultsComponent from '../common/SearchResults';
+import { getConfluenceAdvancedSearchLink } from '../SearchResultsUtil';
+import AdvancedSearchGroup from './AdvancedSearchGroup';
+import {
+  mapRecentResultsToUIGroups,
+  mapSearchResultsToUIGroups,
+} from './ConfluenceSearchResultsMapper';
 
 export interface Props {
   crossProductSearchClient: CrossProductSearchClient;
@@ -19,98 +47,121 @@ export interface Props {
   confluenceClient: ConfluenceClient;
   firePrivateAnalyticsEvent?: FireAnalyticsEvent;
   linkComponent?: LinkComponent;
+  createAnalyticsEvent?: CreateAnalyticsEventFn;
+  referralContextIdentifiers?: ReferralContextIdentifiers;
+  isSendSearchTermsEnabled?: boolean;
+  useQuickNavForPeopleResults?: boolean;
+  useCPUSForPeopleResults?: boolean;
+  logger: Logger;
+  onAdvancedSearch?: (
+    e: CancelableEvent,
+    entity: string,
+    query: string,
+    searchSessionId: string,
+  ) => void;
 }
 
-export interface State {
-  query: string;
-  searchSessionId: string;
-  isLoading: boolean;
-  isError: boolean;
-  recentlyViewedPages: Result[];
-  recentlyViewedSpaces: Result[];
-  objectResults: Result[];
-  spaceResults: Result[];
-  peopleResults: Result[];
-}
-
+const LOGGER_NAME = 'AK.GlobalSearch.ConfluenceQuickSearchContainer';
 /**
- * Container/Stateful Component that handles the data fetching and state handling when the user interacts with Search.
+ * Container Component that handles the data fetching when the user interacts with Search.
  */
 export class ConfluenceQuickSearchContainer extends React.Component<
-  Props,
-  State
+  Props & InjectedIntlProps
 > {
-  constructor(props: Props) {
-    super(props);
+  screenCounters = {
+    preQueryScreenCounter: new SearchScreenCounter(),
+    postQueryScreenCounter: new SearchScreenCounter(),
+  };
 
-    this.state = {
-      isLoading: false,
-      isError: false,
-      query: '',
-      searchSessionId: uuid(), // unique id for search attribution
-      recentlyViewedPages: [],
-      recentlyViewedSpaces: [],
-      objectResults: [],
-      spaceResults: [],
-      peopleResults: [],
-    };
-  }
+  handleSearchSubmit = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    searchSessionId: string,
+  ) => {
+    const { onAdvancedSearch = () => {} } = this.props;
+    const target = event.target as HTMLInputElement;
+    const query = target.value;
+    let defaultPrevented = false;
 
-  handleSearch = (query: string) => {
-    this.setState({
-      query: query,
-    });
+    onAdvancedSearch(
+      Object.assign({}, event, {
+        preventDefault() {
+          defaultPrevented = true;
+          event.preventDefault();
+          event.stopPropagation();
+        },
+        stopPropagation() {},
+      }),
+      ConfluenceAdvancedSearchTypes.Content,
+      query,
+      searchSessionId,
+    );
 
-    if (query.length === 0) {
-      // reset search results so that internal state between query and results stays consistent
-      this.setState({
-        isError: false,
-        objectResults: [],
-        spaceResults: [],
-        peopleResults: [],
-      });
-    } else {
-      this.doSearch(query);
+    if (!defaultPrevented) {
+      redirectToConfluenceAdvancedSearch(query);
     }
   };
 
   async searchCrossProductConfluence(
     query: string,
-  ): Promise<Map<Scope, Result[]>> {
-    const results = await this.props.crossProductSearchClient.search(
-      query,
-      this.state.searchSessionId,
-      [Scope.ConfluencePageBlogAttachment, Scope.ConfluenceSpace],
-    );
+    sessionId: string,
+  ): Promise<CrossProductSearchResults> {
+    const {
+      crossProductSearchClient,
+      useCPUSForPeopleResults,
+      referralContextIdentifiers,
+    } = this.props;
 
-    if (this.state.query === query) {
-      this.setState({
-        objectResults: results.get(Scope.ConfluencePageBlogAttachment) || [],
-        spaceResults: results.get(Scope.ConfluenceSpace) || [],
-      });
+    let scopes = [Scope.ConfluencePageBlogAttachment, Scope.ConfluenceSpace];
+
+    if (useCPUSForPeopleResults) {
+      scopes.push(Scope.People);
     }
 
+    const referrerId =
+      referralContextIdentifiers && referralContextIdentifiers.searchReferrerId;
+
+    const results = await crossProductSearchClient.search(
+      query,
+      { sessionId, referrerId },
+      scopes,
+    );
     return results;
   }
 
-  async searchPeople(query: string): Promise<Result[]> {
-    const results = await this.props.peopleSearchClient.search(query);
+  async searchPeople(query: string, sessionId: string): Promise<Result[]> {
+    const {
+      useCPUSForPeopleResults,
+      useQuickNavForPeopleResults,
+      confluenceClient,
+      peopleSearchClient,
+    } = this.props;
 
-    if (this.state.query === query) {
-      this.setState({
-        peopleResults: results,
-      });
+    if (useQuickNavForPeopleResults) {
+      return handlePromiseError(
+        confluenceClient.searchPeopleInQuickNav(query, sessionId),
+        [],
+        this.handleSearchErrorAnalyticsThunk('search-people-quicknav'),
+      );
     }
 
-    return results;
+    // people results will be returned by xpsearch
+    if (useCPUSForPeopleResults) {
+      return Promise.resolve([]);
+    }
+
+    // fall back to directory search
+    return handlePromiseError(
+      peopleSearchClient.search(query),
+      [],
+      this.handleSearchErrorAnalyticsThunk('search-people'),
+    );
   }
 
   // TODO extract
-  handleSearchErrorAnalytics(source: string) {
-    return error => {
-      const { firePrivateAnalyticsEvent } = this.props;
-
-      if (firePrivateAnalyticsEvent) {
+  handleSearchErrorAnalytics(error, source: string): void {
+    const { firePrivateAnalyticsEvent } = this.props;
+    if (firePrivateAnalyticsEvent) {
+      try {
         firePrivateAnalyticsEvent(
           'atlassian.fabric.global-search.search-error',
           {
@@ -119,99 +170,200 @@ export class ConfluenceQuickSearchContainer extends React.Component<
             source: source,
           },
         );
+      } catch (e) {
+        this.props.logger.safeError(
+          LOGGER_NAME,
+          'Can not fire event atlassian.fabric.global-search.search-error',
+          e,
+        );
       }
-    };
+    }
   }
 
-  doSearch = async (query: string) => {
-    const confXpSearchPromise = this.searchCrossProductConfluence(query);
-    const searchPeoplePromise = this.searchPeople(query);
-
-    // trigger error analytics when a search fails
-    confXpSearchPromise.catch(this.handleSearchErrorAnalytics('confluence'));
-    searchPeoplePromise.catch(this.handleSearchErrorAnalytics('people'));
-
-    /*
-    * Handle error state
-    */
-    (async () => {
-      try {
-        await confXpSearchPromise;
-        this.setState({
-          isError: false,
-        });
-      } catch (e) {
-        this.setState({
-          isError: true,
-        });
-      }
-    })();
-
-    // handle loading state. true at the beginning, false only after all promises have settled.
-    (async () => {
-      try {
-        this.setState({
-          isLoading: true,
-        });
-
-        await settlePromises([confXpSearchPromise, searchPeoplePromise]);
-      } finally {
-        this.setState({
-          isLoading: false,
-        });
-      }
-    })();
+  handleSearchErrorAnalyticsThunk = (
+    source: string,
+  ): ((reason: any) => void) => error => {
+    this.handleSearchErrorAnalytics(error, source);
+    this.props.logger.safeError(
+      LOGGER_NAME,
+      `error in promise ${source}`,
+      error,
+    );
   };
 
-  handleMount = async () => {
-    const recentItemsPromise = this.props.confluenceClient.getRecentItems();
-    const recentSpacesPromise = this.props.confluenceClient.getRecentSpaces();
+  getSearchResults = (
+    query: string,
+    sessionId: string,
+    startTime: number,
+  ): Promise<ResultsWithTiming> => {
+    const { useCPUSForPeopleResults } = this.props;
 
-    this.setState({
-      recentlyViewedPages: await recentItemsPromise,
-      recentlyViewedSpaces: await recentSpacesPromise,
-    });
+    const confXpSearchPromise = handlePromiseError(
+      this.searchCrossProductConfluence(query, sessionId),
+      EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE,
+      this.handleSearchErrorAnalyticsThunk('xpsearch-confluence'),
+    );
+
+    const searchPeoplePromise = this.searchPeople(query, sessionId);
+
+    const mapPromiseToPerformanceTime = (p: Promise<any>) =>
+      p.then(() => performanceNow() - startTime);
+
+    return Promise.all<CrossProductSearchResults, Result[], number, number>([
+      confXpSearchPromise,
+      searchPeoplePromise,
+      mapPromiseToPerformanceTime(confXpSearchPromise),
+      mapPromiseToPerformanceTime(searchPeoplePromise),
+    ]).then(
+      ([
+        xpsearchResults,
+        peopleResults,
+        confSearchElapsedMs,
+        peopleElapsedMs,
+      ]) => ({
+        results: {
+          objects:
+            xpsearchResults.results.get(Scope.ConfluencePageBlogAttachment) ||
+            [],
+          spaces: xpsearchResults.results.get(Scope.ConfluenceSpace) || [],
+          people: useCPUSForPeopleResults
+            ? xpsearchResults.results.get(Scope.People) || []
+            : peopleResults,
+        },
+        timings: {
+          confSearchElapsedMs,
+          peopleElapsedMs,
+        },
+      }),
+    );
   };
 
-  retrySearch = () => {
-    this.handleSearch(this.state.query);
+  getAbTestData = (sessionId: string): Promise<ABTest | undefined> => {
+    return this.props.crossProductSearchClient.getAbTestData(
+      Scope.ConfluencePageBlog,
+      {
+        sessionId,
+      },
+    );
+  };
+
+  getRecentItems = (sessionId: string): Promise<ResultsWithTiming> => {
+    const { confluenceClient, peopleSearchClient } = this.props;
+
+    const recentActivityPromisesMap = {
+      'recent-confluence-items': confluenceClient.getRecentItems(sessionId),
+      'recent-confluence-spaces': confluenceClient.getRecentSpaces(sessionId),
+      'recent-people': peopleSearchClient.getRecentPeople(),
+    };
+
+    const recentActivityPromises: Promise<Result[]>[] = Object.keys(
+      recentActivityPromisesMap,
+    ).map(key =>
+      handlePromiseError(
+        recentActivityPromisesMap[key],
+        [],
+        this.handleSearchErrorAnalyticsThunk(key),
+      ),
+    );
+
+    return Promise.all(recentActivityPromises).then(
+      ([
+        recentlyViewedPages,
+        recentlyViewedSpaces,
+        recentlyInteractedPeople,
+      ]) => ({
+        results: {
+          objects: recentlyViewedPages,
+          spaces: recentlyViewedSpaces,
+          people: recentlyInteractedPeople,
+        },
+      }),
+    );
+  };
+
+  getSearchResultsComponent = ({
+    retrySearch,
+    latestSearchQuery,
+    isError,
+    searchResults,
+    isLoading,
+    recentItems,
+    keepPreQueryState,
+    searchSessionId,
+  }) => {
+    const { onAdvancedSearch = () => {} } = this.props;
+    return (
+      <SearchResultsComponent
+        query={latestSearchQuery}
+        isError={isError}
+        isLoading={isLoading}
+        retrySearch={retrySearch}
+        keepPreQueryState={keepPreQueryState}
+        searchSessionId={searchSessionId}
+        {...this.screenCounters}
+        referralContextIdentifiers={this.props.referralContextIdentifiers}
+        renderNoRecentActivity={() => (
+          <FormattedHTMLMessage
+            {...messages.no_recent_activity_body}
+            values={{ url: getConfluenceAdvancedSearchLink() }}
+          />
+        )}
+        renderAdvancedSearchGroup={(analyticsData?) => (
+          <AdvancedSearchGroup
+            key="advanced"
+            query={latestSearchQuery}
+            analyticsData={analyticsData}
+            onClick={(event, entity) =>
+              onAdvancedSearch(
+                event,
+                entity,
+                latestSearchQuery,
+                searchSessionId,
+              )
+            }
+          />
+        )}
+        getPreQueryGroups={() => mapRecentResultsToUIGroups(recentItems)}
+        getPostQueryGroups={() => mapSearchResultsToUIGroups(searchResults)}
+        renderNoResult={() => (
+          <NoResultsState
+            query={latestSearchQuery}
+            onClick={(event, entity) =>
+              onAdvancedSearch(
+                event,
+                entity,
+                latestSearchQuery,
+                searchSessionId,
+              )
+            }
+          />
+        )}
+      />
+    );
   };
 
   render() {
-    const { linkComponent } = this.props;
-    const {
-      query,
-      isLoading,
-      isError,
-      recentlyViewedPages,
-      recentlyViewedSpaces,
-      objectResults,
-      spaceResults,
-      peopleResults,
-    } = this.state;
+    const { linkComponent, isSendSearchTermsEnabled, logger } = this.props;
 
     return (
-      <GlobalQuickSearch
-        onMount={this.handleMount}
-        onSearch={this.handleSearch}
-        isLoading={isLoading}
-        query={query}
+      <QuickSearchContainer
+        placeholder={this.props.intl.formatMessage(
+          messages.confluence_search_placeholder,
+        )}
         linkComponent={linkComponent}
-      >
-        {renderSearchResults({
-          query,
-          isError,
-          isLoading,
-          retrySearch: this.retrySearch,
-          recentlyViewedPages,
-          recentlyViewedSpaces,
-          objectResults,
-          spaceResults,
-          peopleResults,
-        })}
-      </GlobalQuickSearch>
+        getSearchResultsComponent={this.getSearchResultsComponent}
+        getRecentItems={this.getRecentItems}
+        getSearchResults={this.getSearchResults}
+        getAbTestData={this.getAbTestData}
+        handleSearchSubmit={this.handleSearchSubmit}
+        isSendSearchTermsEnabled={isSendSearchTermsEnabled}
+        getDisplayedResults={sliceResults}
+        logger={logger}
+      />
     );
   }
 }
 
-export default withAnalytics(ConfluenceQuickSearchContainer, {}, {});
+export default injectIntl<Props>(
+  withAnalytics(ConfluenceQuickSearchContainer, {}, {}),
+);

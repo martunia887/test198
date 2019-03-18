@@ -1,5 +1,12 @@
-import * as Faker from 'faker';
+import * as uuid from 'uuid';
 import { MediaCollectionItem } from '@atlaskit/media-store';
+import {
+  getHackerNoun,
+  getPastDate,
+  fakeImage,
+  getFakeFileName,
+  getTextFileType,
+} from './mockData';
 
 import { mapDataUriToBlob } from '../../utils';
 
@@ -14,6 +21,7 @@ export type CreateCollectionItemOptions = {
   readonly collectionName?: string;
   readonly occurrenceKey?: string;
   readonly blob?: Blob;
+  readonly id?: string;
 };
 
 export function createCollectionItem({
@@ -22,22 +30,25 @@ export function createCollectionItem({
   collectionName,
   occurrenceKey,
   blob = new Blob(['Hello World'], { type: 'text/plain' }),
+  id,
 }: CreateCollectionItemOptions = {}): CollectionItem {
-  const extension = Faker.system.fileExt(blob.type);
+  const extension = getTextFileType();
   return {
-    id: Faker.random.uuid(),
-    insertedAt: Faker.date.past().valueOf(),
-    occurrenceKey: occurrenceKey || Faker.random.uuid(),
-    type: 'file',
+    id: id || uuid.v4(),
+    insertedAt: getPastDate().valueOf(),
+    occurrenceKey: occurrenceKey || uuid.v4(),
     details: {
-      name: name || Faker.system.commonFileName(extension, blob.type),
+      name: name || getFakeFileName(extension),
       size: blob.size,
       mimeType,
       processingStatus: 'succeeded',
       mediaType: 'image',
       artifacts: {},
+      representations: {
+        image: {},
+      },
     },
-    collectionName: collectionName || Faker.hacker.noun(),
-    blob: blob || mapDataUriToBlob(Faker.image.dataUri(320, 240)),
+    collectionName: collectionName || getHackerNoun(),
+    blob: blob || mapDataUriToBlob(fakeImage),
   };
 }

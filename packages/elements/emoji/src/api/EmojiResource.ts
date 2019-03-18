@@ -5,8 +5,9 @@ import {
   ServiceConfig,
   utils as serviceUtils,
 } from '@atlaskit/util-service-support';
-
+import { CategoryId } from '../components/picker/categories';
 import { selectedToneStorageKey } from '../constants';
+import { isMediaEmoji, isPromise, toEmojiId } from '../type-helpers';
 import {
   EmojiDescription,
   EmojiId,
@@ -14,12 +15,11 @@ import {
   EmojiSearchResult,
   EmojiUpload,
   OptionalEmojiDescription,
+  OptionalUser,
   SearchOptions,
   ToneSelection,
   User,
-  OptionalUser,
 } from '../types';
-import { isMediaEmoji, isPromise, toEmojiId } from '../type-helpers';
 import debug from '../util/logger';
 import EmojiLoader from './EmojiLoader';
 import EmojiRepository from './EmojiRepository';
@@ -174,7 +174,7 @@ export interface EmojiProvider
    * Used by Tone Selector to indicate to the provider that the user
    * has selected a skin tone preference that should be remembered
    */
-  setSelectedTone(tone: ToneSelection);
+  setSelectedTone(tone: ToneSelection): void;
 
   /**
    * Returns a list of all the non-standard categories with emojis in the EmojiRepository
@@ -208,7 +208,7 @@ export interface UploadingEmojiProvider extends EmojiProvider {
   /**
    * Allows the preloading of data (e.g. authentication tokens) to speed the uploading of emoji.
    */
-  prepareForUpload();
+  prepareForUpload(): Promise<void>;
 }
 
 /**
@@ -233,16 +233,18 @@ export interface LastQuery {
   options?: SearchOptions;
 }
 
-export class EmojiResource extends AbstractResource<
-  string,
-  EmojiSearchResult,
-  any,
-  undefined,
-  SearchOptions
-> implements EmojiProvider {
+export class EmojiResource
+  extends AbstractResource<
+    string,
+    EmojiSearchResult,
+    any,
+    undefined,
+    SearchOptions
+  >
+  implements EmojiProvider {
   protected recordConfig?: ServiceConfig;
   protected emojiRepository?: EmojiRepository;
-  protected lastQuery: LastQuery;
+  protected lastQuery?: LastQuery;
   protected activeLoaders: number = 0;
   protected retries: Map<Retry<any>, ResolveReject<any>> = new Map();
   protected siteEmojiResource?: SiteEmojiResource;
@@ -278,7 +280,7 @@ export class EmojiResource extends AbstractResource<
         });
     });
 
-    if (window.localStorage) {
+    if (typeof window !== 'undefined' && window.localStorage) {
       this.selectedTone = this.loadStoredTone();
     }
 
@@ -378,7 +380,7 @@ export class EmojiResource extends AbstractResource<
   }
 
   protected notifyResult(result: EmojiSearchResult): void {
-    if (result.query === this.lastQuery.query) {
+    if (this.lastQuery && result.query === this.lastQuery.query) {
       super.notifyResult(result);
     }
   }
@@ -487,7 +489,7 @@ export class EmojiResource extends AbstractResource<
     return this.retryIfLoading(() => this.findById(id), undefined);
   }
 
-  findInCategory(categoryId: string): Promise<EmojiDescription[]> {
+  findInCategory(categoryId: CategoryId): Promise<EmojiDescription[]> {
     if (this.isLoaded()) {
       return Promise.resolve(this.emojiRepository!.findInCategory(categoryId));
     }
@@ -578,7 +580,7 @@ export class EmojiResource extends AbstractResource<
     }
   }
 
-  calculateDynamicCategories(): Promise<string[]> {
+  calculateDynamicCategories(): Promise<CategoryId[]> {
     if (this.isLoaded()) {
       return Promise.resolve(this.emojiRepository!.getDynamicCategoryList());
     }
@@ -630,7 +632,7 @@ export default class UploadingEmojiResource extends EmojiResource
     });
   }
 
-  prepareForUpload() {
+  prepareForUpload(): Promise<void> {
     if (this.siteEmojiResource) {
       this.siteEmojiResource.prepareForUpload();
     }

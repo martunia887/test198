@@ -53,6 +53,16 @@ export const PreviewImageWrapper: ComponentClass<
   margin-right: 15px;
 `;
 
+export const InfoWrapper: ComponentClass<HTMLAttributes<{}>> = styled.pre`
+  position: absolute;
+  width: 160px;
+  color: black;
+  font-size: 12px;
+  top: 120px;
+  left: 0;
+  text-align: center;
+`;
+
 export const DropzoneContainer: ComponentClass<
   HTMLAttributes<{}> & ThemedOuterStyledProps<DropzoneContainerProps, {}>
 > = styled.div`
@@ -85,7 +95,7 @@ export const DropzoneContentWrapper: ComponentClass<
 export const PreviewsWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: flex;
   flex-flow: row wrap;
-  overflow: auto;
+  overflow: visible;
 `;
 
 export const PreviewsTitle: ComponentClass<HTMLAttributes<{}>> = styled.h1`
@@ -150,4 +160,15 @@ export const CardsWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
 
 export const CardItemWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: inline-block;
+`;
+
+export const SelectWrapper = styled.div`
+  width: 150px;
+`;
+export const OptionsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  justify-content: space-around;
+  width: 250px;
 `;

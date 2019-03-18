@@ -13,13 +13,7 @@ class MentionProviderImpl implements MentionProvider {
   isFiltering(query: string): boolean {
     return false;
   }
-  subscribe(
-    key: string,
-    callback?,
-    errCallback?,
-    infoCallback?,
-    allResultsCallback?,
-  ): void {}
+  subscribe(): void {}
   unsubscribe(key: string): void {}
 }
 
@@ -30,10 +24,8 @@ export function mobileEditor() {
         <WithEditorActions render={actions => <div />} />
         <Editor
           appearance="mobile"
-          allowTextFormatting={true}
-          allowMentions={true}
           mentionProvider={Promise.resolve(new MentionProviderImpl())}
-          onChange={editorView => this.setState({})}
+          quickInsert={true}
         />
       </div>
     </EditorContext>

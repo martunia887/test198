@@ -3,17 +3,17 @@ import plugin from './pm-plugins/main';
 import keymapPlugin from './pm-plugins/keymap';
 
 export { GapCursorSelection, Side } from './selection';
-export { setGapCursorForTopLevelBlocks } from './actions';
+export { setCursorForTopLevelBlocks } from './actions';
 
 export default {
   pmPlugins() {
     return [
       {
-        rank: 850,
+        name: 'gapCursorKeymap',
         plugin: ({ schema, props }) => keymapPlugin(),
       },
       {
-        rank: 860,
+        name: 'gapCursor',
         plugin: ({ schema, props }) => plugin,
       },
     ];

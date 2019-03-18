@@ -2,25 +2,28 @@ import {
   MediaPicker,
   MediaPickerComponent,
   MediaPickerComponents,
+  MediaFile,
   ComponentConfigs,
-  Popup,
-  Browser,
-  Dropzone,
-  Clipboard,
-  BinaryUploader,
-  UploadsStartEventPayload,
   UploadPreviewUpdateEventPayload,
-  UploadStatusUpdateEventPayload,
-  UploadProcessingEventPayload,
-  UploadErrorEventPayload,
   UploadEndEventPayload,
   UploadParams,
+  UploadErrorEventPayload,
+  ImagePreview,
+  isDropzone,
+  isClipboard,
+  isPopup,
+  isBinaryUploader,
+  isBrowser,
 } from '@atlaskit/media-picker';
 import { Context } from '@atlaskit/media-core';
 
-import { ErrorReportingHandler, isImage } from '../../utils';
-import { appendTimestamp } from './utils/media-common';
-import { MediaStateManager, MediaState, CustomMediaPicker } from './types';
+import { ErrorReportingHandler } from '@atlaskit/editor-common';
+
+import {
+  MediaState,
+  CustomMediaPicker,
+  MobileUploadEndEventPayload,
+} from './types';
 
 export type PickerType = keyof MediaPickerComponents | 'customMediaPicker';
 export type ExtendedComponentConfigs = ComponentConfigs & {
@@ -29,53 +32,68 @@ export type ExtendedComponentConfigs = ComponentConfigs & {
 
 export type PickerFacadeConfig = {
   context: Context;
-  stateManager: MediaStateManager;
   errorReporter: ErrorReportingHandler;
 };
 
+export type MediaStateEvent = MediaState;
+export type MediaStateEventListener = (evt: MediaStateEvent) => void;
+
+export type MediaStateEventSubscriber = ((
+  listener: MediaStateEventListener,
+) => void);
+export type NewMediaEvent = (
+  state: MediaState,
+  onStateChanged: MediaStateEventSubscriber,
+) => void;
+
 export default class PickerFacade {
   private picker: MediaPickerComponent | CustomMediaPicker;
-  private onStartListeners: Array<(states: MediaState[]) => void> = [];
   private onDragListeners: Array<Function> = [];
   private errorReporter: ErrorReportingHandler;
   private pickerType: PickerType;
-  private stateManager: MediaStateManager;
+  private onStartListeners: Array<NewMediaEvent> = [];
+  private eventListeners: Record<
+    string,
+    Array<MediaStateEventListener> | undefined
+  > = {};
 
   constructor(
     pickerType: PickerType,
-    config: PickerFacadeConfig,
-    pickerConfig?: ExtendedComponentConfigs[PickerType],
+    readonly config: PickerFacadeConfig,
+    readonly pickerConfig?: ExtendedComponentConfigs[PickerType],
+    readonly mediaPickerFactoryClass = MediaPicker,
   ) {
     this.pickerType = pickerType;
     this.errorReporter = config.errorReporter;
-    this.stateManager = config.stateManager;
+  }
 
+  async init(): Promise<PickerFacade> {
     let picker;
-    if (pickerType === 'customMediaPicker') {
-      picker = this.picker = pickerConfig as CustomMediaPicker;
+    if (this.pickerType === 'customMediaPicker') {
+      picker = this.picker = this.pickerConfig as CustomMediaPicker;
     } else {
-      picker = this.picker = MediaPicker(
-        pickerType,
-        config.context,
-        pickerConfig as any,
+      picker = this.picker = await this.mediaPickerFactoryClass(
+        this.pickerType,
+        this.config.context,
+        this.pickerConfig as any,
       );
     }
 
-    picker.on('uploads-start', this.handleUploadsStart);
-    picker.on('upload-preview-update', this.handleUploadPreviewUpdate);
-    picker.on('upload-processing', this.handleUploadProcessing);
-    picker.on('upload-status-update', this.handleUploadStatusUpdate);
-    picker.on('upload-error', this.handleUploadError);
-    picker.on('upload-end', this.handleUploadEnd);
+    (picker as any).on('upload-preview-update', this.handleUploadPreviewUpdate);
+    (picker as any).on('upload-processing', this.handleReady);
+    (picker as any).on('upload-error', this.handleUploadError);
+    (picker as any).on('mobile-upload-end', this.handleMobileUploadEnd);
 
-    if (picker instanceof Dropzone) {
-      picker.on('drag-enter', this.handleDragEnter);
-      picker.on('drag-leave', this.handleDragLeave);
+    if (isDropzone(picker)) {
+      (picker as any).on('drag-enter', this.handleDragEnter);
+      (picker as any).on('drag-leave', this.handleDragLeave);
     }
 
-    if (picker instanceof Dropzone || picker instanceof Clipboard) {
+    if (isDropzone(picker) || isClipboard(picker)) {
       picker.activate();
     }
+
+    return this;
   }
 
   get type() {
@@ -89,27 +107,24 @@ export default class PickerFacade {
       return;
     }
 
-    (picker as any).removeAllListeners('uploads-start');
     (picker as any).removeAllListeners('upload-preview-update');
-    (picker as any).removeAllListeners('upload-status-update');
     (picker as any).removeAllListeners('upload-processing');
     (picker as any).removeAllListeners('upload-error');
-    (picker as any).removeAllListeners('upload-end');
 
-    if (picker instanceof Dropzone) {
-      picker.removeAllListeners('drag-enter');
-      picker.removeAllListeners('drag-leave');
+    if (isDropzone(picker)) {
+      (picker as any).removeAllListeners('drag-enter');
+      (picker as any).removeAllListeners('drag-leave');
     }
 
     this.onStartListeners = [];
     this.onDragListeners = [];
 
     try {
-      if (picker instanceof Dropzone || picker instanceof Clipboard) {
+      if (isDropzone(picker) || isClipboard(picker)) {
         picker.deactivate();
       }
 
-      if (picker instanceof Popup || picker instanceof Browser) {
+      if (isPopup(picker) || isBrowser(picker)) {
         picker.teardown();
       }
     } catch (ex) {
@@ -121,9 +136,9 @@ export default class PickerFacade {
     this.picker.setUploadParams(params);
   }
 
-  onClose(cb): () => void {
+  onClose(cb: () => void): () => void {
     const { picker } = this;
-    if (picker instanceof Popup) {
+    if (isPopup(picker)) {
       picker.on('closed', cb);
 
       return () => picker.off('closed', cb);
@@ -134,73 +149,43 @@ export default class PickerFacade {
 
   activate() {
     const { picker } = this;
-    if (picker instanceof Dropzone || picker instanceof Clipboard) {
+    if (isDropzone(picker) || isClipboard(picker)) {
       picker.activate();
     }
   }
 
   deactivate() {
     const { picker } = this;
-    if (picker instanceof Dropzone || picker instanceof Clipboard) {
+    if (isDropzone(picker) || isClipboard(picker)) {
       picker.deactivate();
     }
   }
 
   show(): void {
-    if (this.picker instanceof Popup) {
+    if (isPopup(this.picker)) {
       try {
         this.picker.show();
       } catch (ex) {
         this.errorReporter.captureException(ex);
       }
-    } else if (this.picker instanceof Browser) {
+    } else if (isBrowser(this.picker)) {
       this.picker.browse();
     }
   }
 
   hide(): void {
-    if (this.picker instanceof Popup) {
+    if (isPopup(this.picker)) {
       this.picker.hide();
     }
   }
 
-  cancel(tempId: string): void {
-    if (this.picker instanceof Popup) {
-      const state = this.stateManager.getState(tempId);
-
-      if (!state || state.status === 'cancelled') {
-        return;
-      }
-
-      try {
-        this.picker.cancel(tempId);
-      } catch (e) {
-        // We're deliberately consuming a known Media Picker exception, as it seems that
-        // the picker has problems cancelling uploads before the popup picker has been shown
-        // TODO: remove after fixing https://jira.atlassian.com/browse/FIL-4161
-        if (
-          !/((popupIframe|cancelUpload).*?undefined)|(undefined.*?(popupIframe|cancelUpload))/.test(
-            `${e}`,
-          )
-        ) {
-          throw e;
-        }
-      }
-
-      this.stateManager.updateState(tempId, {
-        id: tempId,
-        status: 'cancelled',
-      });
-    }
-  }
-
   upload(url: string, fileName: string): void {
-    if (this.picker instanceof BinaryUploader) {
+    if (isBinaryUploader(this.picker)) {
       this.picker.upload(url, fileName);
     }
   }
 
-  onNewMedia(cb: (states: MediaState[]) => any) {
+  onNewMedia(cb: NewMediaEvent) {
     this.onStartListeners.push(cb);
   }
 
@@ -208,46 +193,37 @@ export default class PickerFacade {
     this.onDragListeners.push(cb);
   }
 
-  private generateTempId(id: string) {
-    return `temporary:${id}`;
-  }
-
-  private handleUploadsStart = (event: UploadsStartEventPayload) => {
-    const { files } = event;
-
-    const states = files.map(file => {
-      const state = this.stateManager.newState(file, 'uploading');
-      this.stateManager.updateState(state.id, state);
-      return state;
-    });
-
-    this.onStartListeners.forEach(cb => cb.call(cb, states));
-  };
-
-  private handleUploadStatusUpdate = (
-    event: UploadStatusUpdateEventPayload,
+  private handleUploadPreviewUpdate = (
+    event: UploadPreviewUpdateEventPayload,
   ) => {
-    const { file, progress } = event;
-    const tempId = this.generateTempId(file.id);
-    const currentState = this.stateManager.getState(tempId);
-    const currentStatus = (currentState && currentState.status) || 'unknown';
+    let { file, preview } = event;
+    const { dimensions, scaleFactor } = preview as ImagePreview;
 
-    this.stateManager.updateState(tempId, {
-      status:
-        currentStatus === 'unknown' || currentStatus === 'preview'
-          ? 'uploading'
-          : currentStatus,
-      progress: progress && progress.portion,
-    });
+    const state: MediaState = {
+      id: file.id,
+      fileName: file.name,
+      fileSize: file.size,
+      fileMimeType: file.type,
+      dimensions,
+      scaleFactor,
+    };
+
+    this.eventListeners[file.id] = [];
+    this.onStartListeners.forEach(cb =>
+      cb(state, evt => this.subscribeStateChanged(file, evt)),
+    );
   };
 
-  private handleUploadProcessing = (event: UploadProcessingEventPayload) => {
-    const { file } = event;
-    const tempId = this.generateTempId(file.id);
-    this.stateManager.updateState(tempId, {
-      status: 'processing',
-      publicId: file.publicId,
-    });
+  private subscribeStateChanged = (
+    file: MediaFile,
+    onStateChanged: MediaStateEventListener,
+  ) => {
+    const subscribers = this.eventListeners[file.id];
+    if (!subscribers) {
+      return;
+    }
+
+    subscribers.push(onStateChanged);
   };
 
   private handleUploadError = ({ error }: UploadErrorEventPayload) => {
@@ -260,43 +236,59 @@ export default class PickerFacade {
       return;
     }
 
-    const tempId = this.generateTempId(error.fileId);
-    this.stateManager.updateState(tempId, {
-      id: tempId,
-      status: 'error',
-      error: error && { description: error.description, name: error.name },
-    });
+    const listeners = this.eventListeners[error.fileId];
+    if (!listeners) {
+      return;
+    }
+
+    listeners.forEach(cb =>
+      cb({
+        id: error.fileId!,
+        status: 'error',
+        error: error && { description: error.description, name: error.name },
+      }),
+    );
+
+    // remove listeners
+    delete this.eventListeners[error.fileId];
   };
 
-  private handleUploadEnd = (event: UploadEndEventPayload) => {
+  private handleMobileUploadEnd = (event: MobileUploadEndEventPayload) => {
     const { file } = event;
 
-    const tempId = this.generateTempId(file.id);
-    this.stateManager.updateState(tempId, {
-      progress: 1,
-      ready: true,
-      status: 'ready',
-      publicId: file.publicId,
-    });
+    const listeners = this.eventListeners[file.id];
+    if (!listeners) {
+      return;
+    }
+
+    listeners.forEach(cb =>
+      cb({
+        id: file.id,
+        status: 'mobile-upload-end',
+        fileMimeType: file.type,
+        collection: file.collectionName,
+        publicId: file.publicId,
+      }),
+    );
   };
 
-  private handleUploadPreviewUpdate = (
-    event: UploadPreviewUpdateEventPayload,
-  ) => {
-    const { file, preview } = event;
-    const tempId = this.generateTempId(file.id);
+  private handleReady = (event: UploadEndEventPayload) => {
+    const { file } = event;
 
-    const updatedState = {
-      status: 'preview',
-      thumbnail: preview,
-      preview: true,
-    } as Partial<MediaState>;
-
-    // Add timestamp to image file names on paste @see ED-3584
-    if (this.pickerType === 'clipboard' && isImage(file.type)) {
-      updatedState.fileName = appendTimestamp(file.name, file.creationDate);
+    const listeners = this.eventListeners[file.id];
+    if (!listeners) {
+      return;
     }
-    this.stateManager.updateState(tempId, updatedState);
+
+    listeners.forEach(cb =>
+      cb({
+        id: file.id,
+        status: 'ready',
+      }),
+    );
+
+    // remove listeners
+    delete this.eventListeners[file.id];
   };
 
   private handleDragEnter = () => {

@@ -5,15 +5,13 @@ import { updatePopupUrls } from '../actions/updatePopupUrls';
 
 import { State } from '../domain';
 
-import { PopupUploadEventEmitter } from '../../components/popup';
-
-export default function(eventEmitter: PopupUploadEventEmitter) {
+export default function() {
   return (store: MiddlewareAPI<State>) => (next: Dispatch<State>) => (
     action: Action,
   ) => {
     if (isStartAppAction(action)) {
-      const { apiUrl, redirectUrl } = store.getState();
-      store.dispatch(updatePopupUrls({ apiUrl, redirectUrl }));
+      const { redirectUrl } = store.getState();
+      store.dispatch(updatePopupUrls({ redirectUrl }));
     }
     return next(action);
   };

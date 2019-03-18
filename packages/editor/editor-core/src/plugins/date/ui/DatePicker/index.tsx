@@ -1,25 +1,28 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import {
   Popup,
-  timestampToDate,
-  timestampToIso,
+  timestampToUTCDate,
+  timestampToIsoFormat,
+  akEditorFloatingDialogZIndex,
 } from '@atlaskit/editor-common';
 import Calendar from '@atlaskit/calendar';
-import { akColorN60A, akBorderRadius } from '@atlaskit/util-shared-styles';
+import { colors, borderRadius } from '@atlaskit/theme';
 import withOuterListeners from '../../../../ui/with-outer-listeners';
 import { DateType } from '../../index';
 
 const PopupWithListeners = withOuterListeners(Popup);
 
 const calendarStyle = {
-  padding: akBorderRadius,
-  borderRadius: akBorderRadius,
-  boxShadow: `0 4px 8px -2px ${akColorN60A}, 0 0 1px ${akColorN60A}`,
+  padding: borderRadius(),
+  borderRadius: borderRadius(),
+  boxShadow: `0 4px 8px -2px ${colors.N60A}, 0 0 1px ${colors.N60A}`,
+  backgroundColor: colors.N0,
 };
 
 export interface Props {
   element: HTMLElement | null;
-  onClickOutside: () => void;
+  closeDatePicker: () => void;
   onSelect: (date: DateType) => void;
 }
 
@@ -30,15 +33,21 @@ export interface State {
   selected: Array<string>;
 }
 
+type CalendarOnChange = {
+  day: number;
+  month: number;
+  year: number;
+};
+
 export default class DatePicker extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     const timestamp = props.element!.getAttribute('timestamp');
     if (timestamp) {
-      const { day, month, year } = timestampToDate(timestamp);
+      const { day, month, year } = timestampToUTCDate(timestamp);
       this.state = {
-        selected: [timestampToIso(timestamp)],
+        selected: [timestampToIsoFormat(timestamp)],
         day,
         month,
         year,
@@ -47,7 +56,7 @@ export default class DatePicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { element, onClickOutside, onSelect } = this.props;
+    const { element, closeDatePicker, onSelect } = this.props;
     const timestamp = element!.getAttribute('timestamp');
     if (!timestamp) {
       return null;
@@ -57,8 +66,11 @@ export default class DatePicker extends React.Component<Props, State> {
       <PopupWithListeners
         target={element!}
         offset={[0, 8]}
-        handleClickOutside={onClickOutside}
-        handleEscapeKeydown={onClickOutside}
+        fitHeight={327}
+        fitWidth={340}
+        handleClickOutside={closeDatePicker}
+        handleEscapeKeydown={closeDatePicker}
+        zIndex={akEditorFloatingDialogZIndex}
       >
         <Calendar
           onChange={this.handleChange}
@@ -71,7 +83,7 @@ export default class DatePicker extends React.Component<Props, State> {
     );
   }
 
-  private handleChange = ({ day, month, year }) => {
+  private handleChange = ({ day, month, year }: CalendarOnChange) => {
     this.setState({
       day,
       month,
@@ -80,8 +92,9 @@ export default class DatePicker extends React.Component<Props, State> {
   };
 
   private handleRef = (ref?: HTMLElement) => {
-    if (ref) {
-      ref.focus();
+    const elm = ref && (ReactDOM.findDOMNode(ref) as HTMLElement);
+    if (elm) {
+      elm.focus();
     }
   };
 }

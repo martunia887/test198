@@ -11,7 +11,7 @@ const mediaProvider = storyMediaProviderFactory();
 class DemoEditor extends React.PureComponent<any, State> {
   state: State = {};
 
-  private handleDropzoneRef = ref => {
+  private handleDropzoneRef = (ref: HTMLDivElement) => {
     this.setState({ dropzoneRef: ref });
   };
 
@@ -20,6 +20,7 @@ class DemoEditor extends React.PureComponent<any, State> {
     const editor = !dropzoneRef ? null : (
       <Editor
         appearance="comment"
+        quickInsert={true}
         media={{
           provider: mediaProvider,
           customDropzoneContainer: dropzoneRef,
@@ -50,7 +51,6 @@ class DemoEditor extends React.PureComponent<any, State> {
       </div>
     );
   }
-  11;
 }
 
 export default function Example() {
