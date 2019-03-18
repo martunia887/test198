@@ -1,10 +1,11 @@
-import { LocalUploadComponent } from './localUpload';
+import { ReactNode } from 'react';
+import { InjectedIntl } from 'react-intl';
 import { Context } from '@atlaskit/media-core';
+import { LocalUploadComponent } from './localUpload';
 import { AppProxyReactContext } from '../popup/components/app';
 import { Dropzone, UploadEventPayloadMap, UploadParams } from '..';
 import { UploadComponent, UploadEventEmitter } from './component';
 import { EventEmitter } from '../util/eventEmitter';
-import { InjectedIntl } from 'react-intl';
 
 export interface LocalUploadConfig {
   uploadParams: UploadParams; // This is tenant upload params
@@ -52,10 +53,17 @@ export interface Clipboard extends LocalUploadComponent {
   deactivate(): void;
 }
 
+export interface PopupPlugin {
+  name: string;
+  icon: ReactNode;
+  render: () => ReactNode;
+}
+
 export interface PopupConfig extends LocalUploadConfig {
   readonly container?: HTMLElement;
   readonly proxyReactContext?: AppProxyReactContext;
   readonly singleSelect?: boolean;
+  readonly plugins?: PopupPlugin[];
 }
 
 export interface PopupConstructor {

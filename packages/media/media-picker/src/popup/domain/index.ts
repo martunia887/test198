@@ -21,6 +21,7 @@ export {
 
 import { ImageCardModel } from '../tools/fetcher/fetcher';
 import { PopupConfig } from '../..';
+import { PopupPlugin } from 'src/components/types';
 
 export interface State {
   readonly redirectUrl: string;
@@ -43,6 +44,7 @@ export interface State {
   readonly deferredIdUpfronts: {
     [id: string]: { resolver: (id: string) => void; rejecter: Function };
   };
+  readonly plugins?: PopupPlugin[];
 }
 
 export type CancelUploadHandler = (uploadId: string) => void;

@@ -54,6 +54,7 @@ import { MediaPickerPopupWrapper, SidebarWrapper, ViewWrapper } from './styled';
 import {
   DropzoneDragEnterEventPayload,
   DropzoneDragLeaveEventPayload,
+  PopupPlugin,
 } from '../../components/types';
 
 export interface AppStateProps {
@@ -62,6 +63,7 @@ export interface AppStateProps {
   readonly tenantContext: Context;
   readonly userContext: Context;
   readonly config?: Partial<PopupConfig>;
+  readonly plugins?: PopupPlugin[];
 }
 
 export interface AppDispatchProps {
@@ -247,6 +249,9 @@ export class App extends Component<AppProps, AppState> {
   }
 
   private renderCurrentView(selectedServiceName: ServiceName): JSX.Element {
+    console.log({ selectedServiceName });
+    const { plugins = [] } = this.props;
+
     if (selectedServiceName === 'upload') {
       // We need to create a new context since Cards in recents view need user auth
       const { userContext } = this.props;
@@ -260,6 +265,14 @@ export class App extends Component<AppProps, AppState> {
     } else if (selectedServiceName === 'giphy') {
       return <GiphyView />;
     } else {
+      const selectedPlugin = plugins.find(
+        plugin => plugin.name === selectedServiceName,
+      );
+
+      if (selectedPlugin) {
+        return selectedPlugin.render();
+      }
+
       return <Browser />;
     }
   }
@@ -276,12 +289,14 @@ const mapStateToProps = ({
   tenantContext,
   userContext,
   config,
+  plugins,
 }: State): AppStateProps => ({
   selectedServiceName: view.service.name,
   isVisible: view.isVisible,
   config,
   tenantContext,
   userContext,
+  plugins,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): AppDispatchProps => ({

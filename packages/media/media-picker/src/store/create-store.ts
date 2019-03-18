@@ -48,8 +48,10 @@ export default (
     redirectUrl,
     tenantContext: tenantContext,
     userContext: userContext,
+    plugins: config.plugins,
     config,
   };
+
   return createStore(
     reducers,
     partialState,

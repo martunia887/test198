@@ -10,9 +10,11 @@ import { State } from '../../domain';
 import SidebarItem from './item/sidebarItem';
 import GiphySidebarItem from './item/giphySidebarItem';
 import { Wrapper, ServiceList, Separator, SeparatorLine } from './styled';
+import { PopupPlugin } from 'src/components/types';
 
 export interface SidebarStateProps {
   readonly selected: string;
+  readonly plugins?: PopupPlugin[];
 }
 
 export type SidebarProps = SidebarStateProps;
@@ -38,7 +40,20 @@ export class StatelessSidebar extends Component<SidebarProps> {
   }
 
   private getCloudPickingSidebarItems = () => {
-    const { selected } = this.props;
+    const { selected, plugins = [] } = this.props;
+    const pluginItems = plugins.map(({ name, icon }) => {
+      return (
+        <SidebarItem
+          key={name}
+          serviceName={name}
+          serviceFullName={name}
+          isActive={selected === name}
+        >
+          {icon}
+        </SidebarItem>
+      );
+    });
+    console.log(pluginItems);
     return [
       <Separator key="seperator">
         <SeparatorLine />
@@ -60,10 +75,12 @@ export class StatelessSidebar extends Component<SidebarProps> {
       >
         <GoogleDriveIcon label="google" />
       </SidebarItem>,
+      ...pluginItems,
     ];
   };
 }
 
 export default connect<SidebarStateProps, undefined, {}, State>(state => ({
   selected: state.view.service.name,
+  plugins: state.plugins,
 }))(StatelessSidebar);

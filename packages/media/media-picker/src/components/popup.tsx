@@ -36,6 +36,7 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
       uploadParams, // tenant
       proxyReactContext,
       singleSelect,
+      plugins,
     }: PopupConfig,
   ) {
     super();
@@ -56,11 +57,12 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
       ...defaultUploadParams,
       ...uploadParams,
     };
-
+    console.log(plugins);
     this.store = createStore(this, tenantContext, userContext, {
       proxyReactContext,
       singleSelect,
       uploadParams: tenantUploadParams,
+      plugins,
     });
 
     this.tenantUploadParams = tenantUploadParams;

@@ -36,4 +36,5 @@ export const ServiceName: ComponentClass<HTMLAttributes<{}>> = styled.div`
   margin-left: 10px;
   top: -1px;
   display: inline-block;
+  text-transform: capitalize;
 `;
