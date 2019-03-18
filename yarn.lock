@@ -1666,6 +1666,13 @@
     "@types/prop-types" "*"
     "@types/react" "*"
 
+"@types/react-youtube@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.yarnpkg.com/@types/react-youtube/-/react-youtube-7.6.1.tgz#5cc04110f721fb0766d69e0b233f56d6d20f9ec1"
+  integrity sha512-Or1oTR1pmMLkZR9X8UruVdWbrQ770a0L4v4PVUbz9ROSWVxsiQDsjvQTP+y/xA7f4SNCzDs5lguJ9cP2KBoLTw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^16.4.18":
   version "16.4.18"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.18.tgz#2e28a2e7f92d3fa7d6a65f2b73275c3e3138a13d"
@@ -6995,6 +7002,11 @@ fast-deep-equal@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz#c053477817c86b51daa853c81e059b733d023614"
 
+fast-deep-equal@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
+  integrity sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
+
 fast-diff@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.1.2.tgz#4b62c42b8e03de3f848460b639079920695d0154"
@@ -10342,6 +10354,11 @@ load-json-file@^5.1.0:
     pify "^3.0.0"
     strip-bom "^3.0.0"
 
+load-script@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/load-script/-/load-script-1.0.0.tgz#0491939e0bee5643ee494a7e3da3d2bac70c6ca4"
+  integrity sha1-BJGTngvuVkPuSUp+PaPSuscMbKQ=
+
 loader-runner@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.3.0.tgz#f482aea82d543e07921700d5a46ef26fdac6b8a2"
@@ -13310,6 +13327,15 @@ prop-types@^15.0.0, prop-types@^15.5.0, prop-types@^15.5.1, prop-types@^15.5.10,
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
+prop-types@^15.5.3:
+  version "15.7.2"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
+  integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.8.1"
+
 prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
@@ -13908,6 +13934,11 @@ react-is@^16.6.1:
   version "16.6.3"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.6.3.tgz#d2d7462fcfcbe6ec0da56ad69047e47e56e7eac0"
 
+react-is@^16.8.1:
+  version "16.8.4"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
+  integrity sha512-PVadd+WaUDOAciICm/J1waJaSvgq+4rHE/K70j0PFqKhkTBsPv/82UGQJNXAngz1fOQLLxI6z1sEDmJDQhCTAA==
+
 react-json-tree@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-json-tree/-/react-json-tree-0.11.0.tgz#f5b17e83329a9c76ae38be5c04fda3a7fd684a35"
@@ -14056,6 +14087,11 @@ react-test-renderer@^16.0.0-0, react-test-renderer@^16.3.0:
     prop-types "^15.6.0"
     react-is "^16.3.2"
 
+react-tiny-popover@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/react-tiny-popover/-/react-tiny-popover-3.4.2.tgz#ceee5662a3af64d4a9c3d46a28d71bb6f21738ee"
+  integrity sha512-3lH+GHvyJbjHNg14B7Md8bpUapQ5W3s8IdBFguODjrgEV1+LWrKOmVrpe8xhIQDOkgkiDfLwMVgsI7BQM9Udpg==
+
 react-transition-group@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-1.2.1.tgz#e11f72b257f921b213229a774df46612346c7ca6"
@@ -14098,6 +14134,15 @@ react-virtualized@^9.8.0:
     dom-helpers "^2.4.0 || ^3.0.0"
     loose-envify "^1.3.0"
     prop-types "^15.5.4"
+
+react-youtube@^7.9.0:
+  version "7.9.0"
+  resolved "https://registry.yarnpkg.com/react-youtube/-/react-youtube-7.9.0.tgz#cf513c253581e1e45aa412a77d03420dfd7f7ba7"
+  integrity sha512-2+nBF4qP8nStYEILIO1/SylKOCnnJUxuZm+qCeWA0eeZxnWZIIixfAeAqbzblwx5L1n/26ACocy3epm9Glox8w==
+  dependencies:
+    fast-deep-equal "^2.0.1"
+    prop-types "^15.5.3"
+    youtube-player "^5.5.1"
 
 react@^16.4.0:
   version "16.4.1"
@@ -15379,6 +15424,11 @@ sinon@^2.2.0:
     samsam "^1.1.3"
     text-encoding "0.6.4"
     type-detect "^4.0.0"
+
+sister@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/sister/-/sister-3.0.1.tgz#a36ba6a1d1e46415ba16cb4ecefe14cbd8d82d1f"
+  integrity sha512-aG41gNRHRRxPq52MpX4vtm9tapnr6ENmHUx8LMAJWCOplEMwXzh/dp5WIo52Wl8Zlc/VUyHLJ2snX0ck+Nma9g==
 
 sisteransi@^0.1.1:
   version "0.1.1"
@@ -18187,6 +18237,15 @@ yeoman-generator@^2.0.4:
 yn@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/yn/-/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
+
+youtube-player@^5.5.1:
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/youtube-player/-/youtube-player-5.5.2.tgz#052b86b1eabe21ff331095ffffeae285fa7f7cb5"
+  integrity sha512-ZGtsemSpXnDky2AUYWgxjaopgB+shFHgXVpiJFeNB5nWEugpW1KWYDaHKuLqh2b67r24GtP6HoSW5swvf0fFIQ==
+  dependencies:
+    debug "^2.6.6"
+    load-script "^1.0.0"
+    sister "^3.0.0"
 
 yup@^0.26.10:
   version "0.26.10"

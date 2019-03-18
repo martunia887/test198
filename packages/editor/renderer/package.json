@@ -23,12 +23,18 @@
     "@atlaskit/media-filmstrip": "^30.0.1",
     "@atlaskit/mention": "^17.1.1",
     "@atlaskit/smart-card": "^10.0.1",
+    "@atlaskit/spinner": "^10.0.1",
     "@atlaskit/status": "^0.7.1",
     "@atlaskit/task-decision": "^13.1.1",
     "@atlaskit/theme": "^8.0.1",
+    "@types/lodash.debounce": "^4.0.4",
+    "@types/react-youtube": "^7.6.1",
+    "lodash.debounce": "^4.0.8",
     "prosemirror-model": "^1.7.0",
     "raf-schd": "^2.1.0",
-    "react-loadable": "^5.1.0"
+    "react-loadable": "^5.1.0",
+    "react-tiny-popover": "^3.4.2",
+    "react-youtube": "^7.9.0"
   },
   "peerDependencies": {
     "@atlaskit/media-core": "^29.0.1",
