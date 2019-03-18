@@ -1,3 +1,6 @@
+import ReactDOMServer from 'react-dom/server';
+import * as React from 'react';
+import { ResourcedMention } from '@atlaskit/mention';
 import { NodeSpec, Node as PMNode } from 'prosemirror-model';
 
 export enum USER_TYPES {
@@ -65,7 +68,16 @@ export const mention: NodeSpec = {
     if (userType) {
       attrs['data-user-type'] = userType;
     }
-    return ['span', attrs, text];
+
+    // old way
+    // return ['span', attrs, text];
+
+    const dom = ReactDOMServer.renderToStaticMarkup(
+      <ResourcedMention text={text} {...attrs} />,
+    );
+    const dummyWrapper = document.createElement('span');
+    dummyWrapper.innerHTML = dom;
+    return dummyWrapper.firstChild;
   },
 };
 

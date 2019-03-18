@@ -403,15 +403,15 @@ function mentionPluginFactory(
         return newPluginState;
       },
     } as StateField<MentionPluginState>,
-    props: {
-      nodeViews: {
-        mention: ReactNodeView.fromComponent(
-          mentionNodeView,
-          portalProviderAPI,
-          { providerFactory, editorAppearance },
-        ),
-      },
-    },
+    // props: {
+    //   nodeViews: {
+    //     mention: ReactNodeView.fromComponent(
+    //       mentionNodeView,
+    //       portalProviderAPI,
+    //       { providerFactory, editorAppearance },
+    //     ),
+    //   },
+    // },
     view(editorView) {
       const providerHandler = (
         name: string,
