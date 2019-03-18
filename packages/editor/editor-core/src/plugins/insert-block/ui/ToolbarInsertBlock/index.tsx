@@ -152,6 +152,11 @@ export const messages = defineMessages({
     description:
       'Opens a menu of additional items that can be inserted into your document.',
   },
+  mediaSketch: {
+    id: 'fabric.editor.mediaSketch',
+    defaultMessage: 'Sketch',
+    description: '',
+  },
 });
 
 export interface Props {
