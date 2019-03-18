@@ -24,6 +24,10 @@ const validateInput = (label, value, name) => {
 };
 
 export default class NumberController extends FieldController {
+  constructor(config: *) {
+    super(config);
+    this.validateValue = config.validateValue || this.defaultValidation;
+  }
   getFilterGraphQL = ({ type, value }: *) => {
     // special case where the value is a tuple
     if (type === 'between') {
@@ -91,27 +95,35 @@ export default class NumberController extends FieldController {
 
   // Implementation
 
-  validateValue = ({ value }: *) => {
+  defaultValidation = ({ type, value }: *) => {
     let result = { message: null, isInvalid: false };
     const nameMap = { lt: 'to', gt: 'from' };
 
-    if (isObject(value)) {
-      // avoid invalidating the field before the second field has input
-      if (value.lt && value.gt) {
-        if (value.lt <= value.gt) {
-          return {
-            message:
-              'Invalid range; the second input must be greater than the first.',
-            isInvalid: true,
-          };
-        }
-
-        objectMap(value, (val, key) => {
-          const r = validateInput(this.label, val, nameMap[key]);
-          if (r.isInvalid) result = r;
-          return null;
-        });
+    if (type === 'is_not_set') {
+      return result;
+    } else if (isObject(value)) {
+      // make sure both values are present
+      if (value.lt === undefined || value.gt === undefined) {
+        return {
+          message: 'Both inputs are required.',
+          isInvalid: true,
+        };
       }
+
+      // check for a valid range
+      if (value.lt <= value.gt) {
+        return {
+          message:
+            'Invalid range; the second input must be greater than the first.',
+          isInvalid: true,
+        };
+      }
+
+      objectMap(value, (val, key) => {
+        const r = validateInput(this.label, val, nameMap[key]);
+        if (r.isInvalid) result = r;
+        return null;
+      });
     } else {
       result = validateInput(this.label, value);
     }

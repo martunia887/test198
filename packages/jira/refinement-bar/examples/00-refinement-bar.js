@@ -234,6 +234,24 @@ const FIELD_CONFIG = {
   description: {
     label: 'Description',
     type: TextFilter,
+    validateValue: ({ type, value }: *) => {
+      const INVALID_FIRST_CHARS = ['*', '?'];
+      const defaultReturn = { message: null, isInvalid: false };
+
+      if (type === 'is_not_set') {
+        return defaultReturn;
+      } else if (!value) {
+        return { message: 'Please provide some text.', isInvalid: true };
+      } else if (INVALID_FIRST_CHARS.includes(value.charAt(0))) {
+        return {
+          message:
+            "The '*' and '?' are not allowed as first character in a 'wildard' search.",
+          isInvalid: true,
+        };
+      }
+
+      return defaultReturn;
+    },
   },
   votes: {
     label: 'Votes',

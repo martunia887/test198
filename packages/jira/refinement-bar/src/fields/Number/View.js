@@ -6,13 +6,14 @@ import Input from '@atlaskit/textfield';
 import { Note } from '../../components/common';
 import { Group, Radio } from '../../components/InputGroup';
 import { DialogInner } from '../../components/Popup';
-import { isObject, isEmptyString, objectMap } from '../../utils';
+import { isEmptyString } from '../../utils';
 
 type Props = {
   storedValue: Object,
   field: Object,
   invalidMessage: Object,
   onChange: (*) => void,
+  closePopup: (*) => void,
 };
 type State = {
   single: string,
@@ -55,6 +56,7 @@ class NumberView extends PureComponent<Props, State> {
   onChangeCheckbox = (event: *) => {
     const { onChange } = this.props;
     const type = event.target.value;
+    const isNotSet = type === 'is_not_set';
     const isKeyboardEvent =
       event.nativeEvent.screenX === 0 && event.nativeEvent.screenY === 0;
 
@@ -64,24 +66,30 @@ class NumberView extends PureComponent<Props, State> {
       }
 
       // avoid creating an invalid state where '' === NaN
-      if (isEmptyString(this.state.single)) {
+      if (isEmptyString(this.state.single) && !isNotSet) {
         return;
       }
 
       const { gt, lt } = this.state;
-      const value = this.isBetween
-        ? makeValue({ gt, lt })
-        : makeValue(this.state.single);
+      let value = this.state.single;
+      if (this.isBetween) {
+        value = { gt, lt };
+      } else if (isNotSet) {
+        value = null;
+      }
+
       onChange({ type, value });
     });
   };
-  onChangeInput = ({ target: { name, value: val } }: *) => {
+  onChangeInput = (event: *) => {
+    const name = event.target.name;
+    const val = Number(event.target.value);
     const { onChange } = this.props;
     const { type } = this.state;
 
     this.setState({ [name]: val }, () => {
       const { gt, lt } = this.state;
-      const value = this.isBetween ? makeValue({ gt, lt }) : makeValue(val);
+      const value = this.isBetween ? { gt, lt } : val;
       onChange({ type, value });
     });
   };
@@ -163,19 +171,6 @@ class NumberView extends PureComponent<Props, State> {
     );
   }
 }
-
-// ==============================
-// Helpers
-// ==============================
-
-const makeValue = value => {
-  if (isObject(value)) {
-    // $FlowFixMe
-    return objectMap(value, v => parseFloat(v)); // TODO: should this be `parseInt()`?
-  }
-
-  return parseFloat(value);
-};
 
 // ==============================
 // Styled Components

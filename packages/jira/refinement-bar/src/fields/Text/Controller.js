@@ -4,6 +4,11 @@ import React from 'react';
 import FieldController from '../Controller';
 
 export default class TextController extends FieldController {
+  constructor(config: *) {
+    super(config);
+
+    this.validateValue = config.validateValue || this.defaultValidation;
+  }
   formatButtonLabel = ({ type, value }: *) => {
     const exact = type === 'is';
     const notset = type === 'is_not_set';
@@ -51,21 +56,15 @@ export default class TextController extends FieldController {
 
   // Implementation
 
-  validateValue = ({ value }: *) => {
-    const INVALID_FIRST_CHARS = ['*', '?'];
-    let message = null;
-    let isInvalid = false;
+  defaultValidation = ({ type, value }: *) => {
+    const defaultReturn = { message: null, isInvalid: false };
 
-    if (value === null) {
-      return { message, isInvalid };
+    if (type === 'is_not_set') {
+      return defaultReturn;
+    } else if (!value) {
+      return { message: 'Please provide some text.', isInvalid: true };
     }
 
-    if (INVALID_FIRST_CHARS.includes(value.charAt(0))) {
-      message =
-        "The '*' and '?' are not allowed as first character in a 'wildard' search.";
-      isInvalid = true;
-    }
-
-    return { message, isInvalid };
+    return defaultReturn;
   };
 }

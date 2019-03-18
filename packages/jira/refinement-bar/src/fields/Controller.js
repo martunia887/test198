@@ -12,6 +12,7 @@ export default class FieldController {
     this.label = config.label;
     this.note = config.note;
     this.type = config.type;
+    this.validateValue = config.validateValue || this.defaultValidation;
 
     if (!this.label) {
       throw new Error(`"${this.key}" requires a label.`);
@@ -27,5 +28,8 @@ export default class FieldController {
 
   getValue = (data: Object) => data[this.config.key] || '';
   getInitialValue: initialFnType = () => '';
-  validateValue: validateFnType = () => ({ message: null, isInvalid: false });
+  defaultValidation: validateFnType = () => ({
+    message: null,
+    isInvalid: false,
+  });
 }
