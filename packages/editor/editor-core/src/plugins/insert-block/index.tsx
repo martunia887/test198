@@ -148,6 +148,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
               layoutSectionEnabled={!!layoutState}
               mediaUploadsEnabled={mediaState && mediaState.allowsUploads}
               onShowMediaPicker={mediaState && mediaState.showMediaPicker}
+              onShowSketchTool={mediaState && mediaState.showSketchTool}
               mediaSupported={!!mediaState}
               imageUploadSupported={!!imageUpload}
               imageUploadEnabled={imageUpload && imageUpload.enabled}

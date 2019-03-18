@@ -1,7 +1,13 @@
 import * as assert from 'assert';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Node as PMNode, Schema, Node } from 'prosemirror-model';
+import {
+  Node as PMNode,
+  Schema,
+  Node,
+  NodeSpec,
+  NodeType,
+} from 'prosemirror-model';
 import { insertPoint } from 'prosemirror-transform';
 import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 import {
@@ -34,7 +40,7 @@ import PickerFacade, {
 import { MediaState, MediaProvider, MediaStateStatus } from '../types';
 import { insertMediaSingleNode } from '../utils/media-single';
 
-import { findDomRefAtPos } from 'prosemirror-utils';
+import { findDomRefAtPos, safeInsert } from 'prosemirror-utils';
 import {
   withAnalytics,
   ACTION_SUBJECT_ID,
@@ -81,6 +87,9 @@ export class MediaPluginState {
 
   public editingMediaSinglePos?: number;
   public showEditingDialog?: boolean;
+
+  public editingId?: string;
+  public editingCollection?: string;
 
   public editorAppearance: EditorAppearance;
   private removeOnCloseListener: () => void = () => {};
@@ -308,6 +317,23 @@ export class MediaPluginState {
     }
   };
 
+  showSketchTool = () => {
+    console.log('showSketchTool');
+    this.openMediaEditor();
+
+    // let mediaState: MediaSingleState;
+    // mediaState = {
+    //   dimensions: {width: 400, height: 400},
+    //   id: "dumb-fake-id-do-not-merge-to-master",
+    // }
+    // let collections = "asd";
+    // // create new media node
+    // const { state } = this.view;
+    // const mediaNode = createMediaSingleNode(state.schema, collections)(mediaState);
+
+    // annotate(this.view.state);
+  };
+
   showMediaPicker = () => {
     if (!this.popupPicker) {
       return;
@@ -394,15 +420,22 @@ export class MediaPluginState {
     const { state, dispatch } = this.view;
     const { mediaSingle } = state.schema.nodes;
 
-    if (
-      !(state.selection instanceof NodeSelection) ||
-      state.selection.node.type !== mediaSingle
-    ) {
-      return;
-    }
-
     this.editingMediaSinglePos = state.selection.from;
     this.showEditingDialog = true;
+
+    // keep stuff from selected mediaSingle
+    if (
+      state.selection instanceof NodeSelection &&
+      state.selection.node.type === mediaSingle
+    ) {
+      console.log('firstChild found');
+      this.editingId = state.selection.node.firstChild!.attrs.id;
+      this.editingCollection = state.selection.node.firstChild!.attrs.collection;
+    } else {
+      console.log('firstChild empty');
+      this.editingId = '';
+      this.editingCollection = this.collectionFromProvider();
+    }
 
     return withAnalytics({
       action: ACTION.CLICKED,
@@ -421,6 +454,8 @@ export class MediaPluginState {
 
   closeMediaEditor = () => {
     this.showEditingDialog = false;
+    this.editingId = '';
+    this.editingCollection = '';
     this.view.dispatch(this.view.state.tr.setMeta(stateKey, 'close-edit'));
   };
 
@@ -437,27 +472,49 @@ export class MediaPluginState {
 
     const mediaPos = this.editingMediaSinglePos + 1;
     const oldMediaNode = doc.nodeAt(mediaPos);
+    console.log('oldMediaNode', oldMediaNode);
+    console.log('fileIdentifier', fileIdentifier);
+    let tr;
     if (!oldMediaNode) {
-      return;
+      const newMediaNodeAttrs: MediaBaseAttributes = {
+        id: fileIdentifier.id as string,
+        collection: fileIdentifier.collectionName || '',
+        occurrenceKey: fileIdentifier.occurrenceKey,
+
+        width: dimensions.width,
+        height: dimensions.height,
+
+        __fileMimeType: 'image/sketch',
+      };
+      const mediaNode = schema.nodes.media!.createChecked(newMediaNodeAttrs);
+      const mediaSingle = (schema.nodes.mediaSingle! as NodeType).createChecked(
+        undefined,
+        mediaNode,
+      );
+      tr = state.tr.insert(mediaPos, mediaSingle);
+      console.log({ newMediaNodeAttrs });
+    } else {
+      const newMediaNodeAttrs: MediaBaseAttributes = {
+        ...oldMediaNode.attrs,
+
+        id: fileIdentifier.id as string,
+        collection:
+          fileIdentifier.collectionName || oldMediaNode.attrs.collection,
+        occurrenceKey: fileIdentifier.occurrenceKey,
+
+        width: dimensions.width,
+        height: dimensions.height,
+      };
+      console.log({ newMediaNodeAttrs });
+
+      tr = state.tr.replaceWith(
+        mediaPos,
+        mediaPos + oldMediaNode.nodeSize,
+        schema.nodes.media!.createChecked(newMediaNodeAttrs),
+      );
     }
 
-    const newMediaNodeAttrs: MediaBaseAttributes = {
-      ...oldMediaNode.attrs,
-
-      id: fileIdentifier.id as string,
-      collection:
-        fileIdentifier.collectionName || oldMediaNode.attrs.collection,
-      occurrenceKey: fileIdentifier.occurrenceKey,
-
-      width: dimensions.width,
-      height: dimensions.height,
-    };
-
-    const tr = state.tr.replaceWith(
-      mediaPos,
-      mediaPos + oldMediaNode.nodeSize,
-      schema.nodes.media!.createChecked(newMediaNodeAttrs),
-    );
+    // safeInsert(mediaSingle.createChecked([schema.nodes.media!.createChecked(newMediaNodeAttrs)]))
 
     this.editingMediaSinglePos = undefined;
     dispatch(tr.setMeta('addToHistory', false));
