@@ -792,18 +792,13 @@ export const getValidNode = (
 
         break;
       }
-    }
-
-    if (isDiff) {
-      switch (type) {
-        case 'blockDiff':
-        case 'inlineDiff': {
-          return {
-            type,
-            attrs,
-            content,
-          };
-        }
+      case 'blockDiff':
+      case 'inlineDiff': {
+        return {
+          type,
+          attrs,
+          content,
+        };
       }
     }
   }

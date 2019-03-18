@@ -33,7 +33,7 @@ export class DiffDemo extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      diffOnly: true,
+      diffOnly: false,
       showDiff: true,
       doc: 'simple',
     };

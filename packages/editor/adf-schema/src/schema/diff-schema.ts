@@ -1,5 +1,5 @@
-import { createSchema } from './create-schema';
 import { NodeSpec } from 'prosemirror-model';
+import { createSchema } from './create-schema';
 import { defaultSchema } from './default-schema';
 
 const inlineDiff: NodeSpec = {

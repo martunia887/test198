@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component } from 'react';
 import diffDocs from '../../diff';
-import { diffSchema } from '@atlaskit/editor-common';
+import { diffSchema } from '@atlaskit/adf-schema';
 
 import ReactRenderer from './';
 

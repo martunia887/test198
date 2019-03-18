@@ -15,6 +15,7 @@ export {
   confluenceSchemaWithMediaSingle,
 } from './confluence-schema';
 export { defaultSchema } from './default-schema';
+export { diffSchema } from './diff-schema';
 
 export {
   default as createJIRASchema,
