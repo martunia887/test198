@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Component } from 'react';
+import { Component, ReactNode } from 'react';
 import { Dispatch, Store } from 'redux';
 import { connect, Provider } from 'react-redux';
 import { IntlShape } from 'react-intl';
@@ -248,7 +248,7 @@ export class App extends Component<AppProps, AppState> {
     );
   }
 
-  private renderCurrentView(selectedServiceName: ServiceName): JSX.Element {
+  private renderCurrentView(selectedServiceName: ServiceName): ReactNode {
     console.log({ selectedServiceName });
     const { plugins = [] } = this.props;
 

@@ -8,7 +8,6 @@ import { MediaViewerDataSource } from '@atlaskit/media-viewer';
 import { FileIdentifier } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
 import Select from '@atlaskit/select';
-import ImageIcon from '@atlaskit/icon/glyph/image';
 import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
 import {
   MediaPicker,
@@ -16,7 +15,7 @@ import {
   MediaFile,
   Popup,
 } from '../src';
-import { PopupPlugin } from 'src/components/types';
+import { unsplashPlugin } from '../example-helpers/unsplashPlugin';
 
 const context = createUploadContext();
 
@@ -35,12 +34,6 @@ export interface State {
   dataSourceType: DataSourceType;
   popup?: Popup;
 }
-
-const unsplashPlugin: PopupPlugin = {
-  name: 'unsplash',
-  icon: <ImageIcon label="image-icon" />,
-  render: () => <div>UNSPLASH VIEW</div>,
-};
 
 export default class Example extends React.Component<{}, State> {
   state: State = { events: [], dataSourceType: 'list' };
