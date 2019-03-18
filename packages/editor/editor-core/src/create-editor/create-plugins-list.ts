@@ -244,7 +244,7 @@ export default function createPluginsList(
   }
 
   if (props.appearance === 'mobile') {
-    plugins.push(compositionPlugin);
+    // plugins.push(compositionPlugin);
   }
 
   return plugins;
