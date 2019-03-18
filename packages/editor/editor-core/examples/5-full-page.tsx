@@ -20,7 +20,7 @@ import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
 import { extensionHandlers } from '../example-helpers/extension-handlers';
 import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
-import { DevTools } from '../example-helpers/DevTools';
+// import { DevTools } from '../example-helpers/DevTools';
 import { TitleInput } from '../example-helpers/PageElements';
 import { EditorActions } from './../src';
 import withSentry from '../example-helpers/withSentry';
@@ -269,7 +269,7 @@ export default function Example(props: EditorProps & ExampleProps) {
   return (
     <EditorContext>
       <div style={{ height: '100%' }}>
-        <DevTools />
+        {/* <DevTools /> */}
         <ExampleEditor {...props} />
       </div>
     </EditorContext>
