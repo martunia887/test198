@@ -1,5 +1,6 @@
 import ReactDOMServer from 'react-dom/server';
 import * as React from 'react';
+import memoizeOne from 'memoize-one';
 import { ResourcedMention } from '@atlaskit/mention';
 import { NodeSpec, Node as PMNode } from 'prosemirror-model';
 
@@ -25,6 +26,17 @@ export interface MentionDefinition {
   type: 'mention';
   attrs: MentionAttributes;
 }
+
+const createMention = (props: any) => {
+  const dom = ReactDOMServer.renderToStaticMarkup(
+    <ResourcedMention {...props} />,
+  );
+  const dummyWrapper = document.createElement('span');
+  dummyWrapper.innerHTML = dom;
+  return dummyWrapper.firstChild as any;
+};
+
+const createMentionMemo = memoizeOne(createMention);
 
 export const mention: NodeSpec = {
   inline: true,
@@ -72,12 +84,7 @@ export const mention: NodeSpec = {
     // old way
     // return ['span', attrs, text];
 
-    const dom = ReactDOMServer.renderToStaticMarkup(
-      <ResourcedMention text={text} {...attrs} />,
-    );
-    const dummyWrapper = document.createElement('span');
-    dummyWrapper.innerHTML = dom;
-    return dummyWrapper.firstChild;
+    return createMentionMemo({ ...attrs, text });
   },
 };
 
