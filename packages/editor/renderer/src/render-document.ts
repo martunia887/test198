@@ -57,7 +57,7 @@ export const renderDocument = <T>(
 
   const { output: node, time: buildTreeTime } = withStopwatch<PMNode>(() => {
     const pmNode = schema.nodeFromJSON(validDoc);
-    if (isDiff) {
+    if (!isDiff) {
       pmNode.check();
     }
     return pmNode;

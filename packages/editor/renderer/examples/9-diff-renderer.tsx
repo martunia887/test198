@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DiffRenderer, Renderer } from '../src/ui';
-import { CheckboxStateless } from '@atlaskit/checkbox';
+// import { CheckboxStateless } from '@atlaskit/';
 import AkFieldRadioGroup from '@atlaskit/field-radio-group';
 import { diffDocs } from './helper/diff-data';
 
@@ -30,11 +30,11 @@ const items = [
 ];
 
 export class DiffDemo extends React.Component<{}, State> {
-  constructor(props) {
+  constructor(props: {}) {
     super(props);
     this.state = {
-      diffOnly: false,
-      showDiff: false,
+      diffOnly: true,
+      showDiff: true,
       doc: 'simple',
     };
   }
@@ -115,7 +115,7 @@ export class DiffDemo extends React.Component<{}, State> {
             borderLeft: '1px solid #EBECF0',
           }}
         >
-          <CheckboxStateless
+          {/* <CheckboxStateless
             label="Show diff"
             isChecked={showDiff}
             onChange={this.onShowDiffChange}
@@ -129,7 +129,7 @@ export class DiffDemo extends React.Component<{}, State> {
             items={items}
             label="Pick a document:"
             onRadioChange={this.setDocument}
-          />
+          /> */}
         </div>
       </div>
     );
