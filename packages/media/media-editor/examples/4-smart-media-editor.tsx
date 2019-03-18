@@ -13,6 +13,7 @@ interface State {
   showEditorVersion?: 'with-i18n' | 'without-i18n';
   showWithError: boolean;
   newFileIdentifier?: FileIdentifier;
+  isEmptySketch: boolean;
 }
 
 const context = createUploadContext();
@@ -20,16 +21,33 @@ const context = createUploadContext();
 class SmartMediaEditorExample extends React.Component<{}, State> {
   state: State = {
     showWithError: false,
+    isEmptySketch: false,
+  };
+
+  openEmptySmartEditor = () => () => {
+    this.setState({
+      showEditorVersion: 'without-i18n',
+      showWithError: false,
+      isEmptySketch: true,
+    });
   };
 
   openSmartEditor = (editorVersion: State['showEditorVersion']) => () => {
-    this.setState({ showEditorVersion: editorVersion, showWithError: false });
+    this.setState({
+      showEditorVersion: editorVersion,
+      showWithError: false,
+      isEmptySketch: false,
+    });
   };
 
   openSmartEditorWithError = (
     editorVersion: State['showEditorVersion'],
   ) => () => {
-    this.setState({ showEditorVersion: editorVersion, showWithError: true });
+    this.setState({
+      showEditorVersion: editorVersion,
+      showWithError: true,
+      isEmptySketch: false,
+    });
   };
 
   onFinish = () => {
@@ -43,21 +61,30 @@ class SmartMediaEditorExample extends React.Component<{}, State> {
     });
   };
 
-  private renderContent = (editorVersion: State['showEditorVersion']) => {
-    const { showWithError, showEditorVersion } = this.state;
+  private renderEditor = () => {
+    const { isEmptySketch, showWithError } = this.state;
+    let id = imageFileId.id;
+    if (showWithError) {
+      id = '🥳';
+    } else if (isEmptySketch) {
+      id = '';
+    }
 
-    const renderEditor = () => (
+    return (
       <SmartMediaEditor
         identifier={{
           ...imageFileId,
-          id: showWithError ? '🥳' : imageFileId.id,
+          id,
         }}
         context={context}
         onFinish={this.onFinish}
         onUploadStart={this.onUploadStart}
       />
     );
+  };
 
+  private renderContent = (editorVersion: State['showEditorVersion']) => {
+    const { showEditorVersion } = this.state;
     return (
       <div>
         <ButtonGroup>
@@ -70,7 +97,7 @@ class SmartMediaEditorExample extends React.Component<{}, State> {
         </ButtonGroup>
 
         {editorVersion && showEditorVersion === editorVersion
-          ? renderEditor()
+          ? this.renderEditor()
           : null}
       </div>
     );
@@ -80,6 +107,9 @@ class SmartMediaEditorExample extends React.Component<{}, State> {
     const { newFileIdentifier } = this.state;
     return (
       <div>
+        <h3>Sketch</h3>
+        <Button onClick={this.openEmptySmartEditor()}>Open Empty sketch</Button>
+
         <h3>With i18n</h3>
         <I18NWrapper>{this.renderContent('with-i18n')}</I18NWrapper>
 

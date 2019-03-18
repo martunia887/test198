@@ -13,6 +13,9 @@ import { injectIntl, InjectedIntlProps } from 'react-intl';
 import ErrorView from './editorView/errorView/errorView';
 import { Dimensions } from '../common';
 
+export const TRANSPARENT_1PX_IMAGE =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
 export interface SmartMediaEditorProps {
   identifier: FileIdentifier;
   context: Context;
@@ -74,6 +77,13 @@ export class SmartMediaEditor extends React.Component<
     const { context } = this.props;
     const { collectionName, occurrenceKey } = identifier;
     const id = await identifier.id;
+    if (id === '') {
+      this.setState({
+        imageUrl: TRANSPARENT_1PX_IMAGE,
+      });
+      return;
+    }
+
     const getFileSubscription = context.file
       .getFileState(id, { collectionName, occurrenceKey })
       .subscribe({

@@ -6,11 +6,13 @@ import { Tool, Color, Dimensions, ShapeParameters } from '../../common';
 import { messages } from '@atlaskit/media-ui';
 import Toolbar, { tools } from './toolbar/toolbar';
 import { EditorContainer } from './styles';
+import { TRANSPARENT_1PX_IMAGE } from '../smartMediaEditor';
 
 const DEFAULT_WIDTH = 845;
 const DEFAULT_HEIGHT = 530;
 export const TOOLBAR_HEIGHT = 64;
 const TRANSPARENT_COLOR = { red: 0, green: 0, blue: 0, alpha: 0 };
+const WHITE_COLOR = { red: 255, green: 255, blue: 255, alpha: 1 };
 
 // Properties' names in the local storage
 const propertyColor = 'media-editor-color';
@@ -26,6 +28,7 @@ export interface EditorViewProps {
 }
 
 export interface EditorViewState {
+  readonly isEmptySketch: boolean;
   readonly dimensions: Dimensions;
   readonly color: Color;
   readonly lineWidth: number;
@@ -46,19 +49,25 @@ class EditorView extends Component<
     color: { red: 0xbf, green: 0x26, blue: 0x00 },
     lineWidth: 8,
     tool: 'arrow',
+    isEmptySketch: false,
   };
 
   componentDidMount() {
     if (!this.rootDiv) {
       return;
     }
+    const { imageUrl } = this.props;
     const rect = this.rootDiv.getBoundingClientRect();
     const dimensions = {
       width: rect.width || DEFAULT_WIDTH,
       height: (rect.height || DEFAULT_HEIGHT) - TOOLBAR_HEIGHT,
     };
 
-    this.setState({ dimensions });
+    let isEmptySketch = false;
+    if (imageUrl === TRANSPARENT_1PX_IMAGE) {
+      isEmptySketch = true;
+    }
+    this.setState({ dimensions, isEmptySketch });
     this.loadProperties();
   }
 
@@ -89,13 +98,14 @@ class EditorView extends Component<
     };
 
     const { imageUrl, onAnyEdit } = this.props;
-    const { dimensions, color, lineWidth, tool } = this.state;
+    const { dimensions, color, lineWidth, tool, isEmptySketch } = this.state;
+    const backgroundColor = isEmptySketch ? WHITE_COLOR : TRANSPARENT_COLOR;
 
     return (
       <MediaEditor
         imageUrl={imageUrl}
         dimensions={dimensions}
-        backgroundColor={TRANSPARENT_COLOR}
+        backgroundColor={backgroundColor}
         shapeParameters={{ color, lineWidth, addShadow: true }}
         tool={tool}
         onAnyEdit={onAnyEdit}
