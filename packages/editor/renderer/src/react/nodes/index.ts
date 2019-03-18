@@ -33,6 +33,7 @@ import TableHeader from './tableHeader';
 import TableRow from './tableRow';
 import UnknownBlock from './unknownBlock';
 import * as Loadable from 'react-loadable';
+import { InlineDiff, BlockDiff } from './inlineDiff';
 
 const DecisionItem = Loadable({
   loader: () =>
@@ -134,6 +135,8 @@ export const nodeToReact: { [key: string]: React.ComponentType<any> } = {
   tableHeader: TableHeader,
   tableRow: TableRow,
   unknownBlock: UnknownBlock,
+  inlineDiff: InlineDiff,
+  blockDiff: BlockDiff,
 };
 
 export const toReact = (node: Node): React.ComponentType<any> => {

@@ -39,6 +39,7 @@ export interface Props {
   allowDynamicTextSizing?: boolean;
   maxHeight?: number;
   truncated?: boolean;
+  isDiff?: boolean;
 }
 
 export default class Renderer extends PureComponent<Props, {}> {
@@ -96,6 +97,7 @@ export default class Renderer extends PureComponent<Props, {}> {
       allowDynamicTextSizing,
       maxHeight,
       truncated,
+      isDiff,
     } = this.props;
 
     try {
@@ -104,6 +106,7 @@ export default class Renderer extends PureComponent<Props, {}> {
         this.serializer,
         schema || defaultSchema,
         adfStage,
+        isDiff,
       );
 
       if (onComplete) {

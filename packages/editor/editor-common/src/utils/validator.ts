@@ -80,8 +80,9 @@ export const getValidDocument = (
   doc: ADDoc,
   schema: Schema = defaultSchema,
   adfStage: ADFStage = 'final',
+  isDiff?: boolean,
 ): ADDoc | null => {
-  const node = getValidNode(doc as ADNode, schema, adfStage);
+  const node = getValidNode(doc as ADNode, schema, adfStage, isDiff);
 
   if (node.type === 'doc') {
     node.content = wrapInlineNodes(node.content);
@@ -101,8 +102,9 @@ export const getValidContent = (
   content: ADNode[],
   schema: Schema = defaultSchema,
   adfStage: ADFStage = 'final',
+  isDiff?: boolean,
 ): ADNode[] => {
-  return content.map(node => getValidNode(node, schema, adfStage));
+  return content.map(node => getValidNode(node, schema, adfStage, isDiff));
 };
 
 const TEXT_COLOR_PATTERN = /^#[0-9a-f]{6}$/i;
@@ -214,6 +216,7 @@ export const getValidNode = (
   originalNode: ADNode,
   schema: Schema = defaultSchema,
   adfStage: ADFStage = 'final',
+  isDiff?: boolean,
 ): ADNode => {
   const { attrs, marks, text, type } = originalNode;
   let { content } = originalNode;
@@ -226,7 +229,7 @@ export const getValidNode = (
   };
 
   if (content) {
-    node.content = content = getValidContent(content, schema, adfStage);
+    node.content = content = getValidContent(content, schema, adfStage, isDiff);
   }
 
   // If node type doesn't exist in schema, make it an unknown node
@@ -789,7 +792,20 @@ export const getValidNode = (
 
         break;
       }
+      case 'blockDiff':
+      case 'inlineDiff': {
+        return {
+          type,
+          attrs,
+          content,
+        };
+      }
     }
+
+    // if (isDiff) {
+    //   switch (type) {
+    //   }
+    // }
   }
 
   return getValidUnknownNode(node);
