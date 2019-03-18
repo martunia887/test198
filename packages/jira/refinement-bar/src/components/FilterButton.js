@@ -10,12 +10,13 @@ import Tooltip from '@atlaskit/tooltip';
 import { ClearButton } from './common';
 
 export const FilterButton = forwardRef(
-  ({ children, field, isInvalid, onRemove, value, ...rest }, ref) => {
+  ({ children, field, isInvalid, isSelected, onClick, onRemove }, ref) => {
     return onRemove ? (
       <ButtonWrapper>
         <Button
           appearance={isInvalid ? 'warning' : 'default'}
-          {...rest}
+          isSelected={isSelected}
+          onClick={onClick}
           ref={ref}
           hasIcon
         >
@@ -24,21 +25,23 @@ export const FilterButton = forwardRef(
 
         <Tooltip content="Clear filter" position="top">
           <ClearButton
-            isSelected={rest.isSelected && !isInvalid}
+            isSelected={isSelected && !isInvalid}
             onClick={onRemove}
             label={`Clear ${field.label} filter`}
           />
         </Tooltip>
       </ButtonWrapper>
     ) : (
-      <Button {...rest} ref={ref}>
+      <Button isSelected={isSelected} onClick={onClick} ref={ref}>
         {children}
       </Button>
     );
   },
 );
 
-// styled components
+// ==============================
+// Styled Components
+// ==============================
 
 const appearances = ({ appearance, isSelected }) => {
   const styles = {

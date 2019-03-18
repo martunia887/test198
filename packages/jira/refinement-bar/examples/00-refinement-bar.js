@@ -4,6 +4,7 @@
 import React from 'react';
 import querystring from 'querystring';
 import { jsx } from '@emotion/core';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 
 import { cloneObj, objectMap } from '../src/utils';
 import {
@@ -65,25 +66,30 @@ class RefinementBarExample extends React.Component {
 
   render() {
     return (
-      <RefinementBarProvider
-        fieldConfig={FIELD_CONFIG}
-        irremovableKeys={['search', 'issue-assignee', 'issue-type']}
-        onChange={this.onChange}
-        value={this.state.value}
+      <AnalyticsListener
+        channel="atlaskit"
+        onEvent={({ payload }) => console.log('Analytics Event:', payload)}
       >
-        <div style={{ padding: 40 }}>
-          <RefinementBarConsumer>{encodeQuery}</RefinementBarConsumer>
-          <RefinementBarUI />
-          <RefinementBarConsumer>
-            {({ value }) => (
-              <>
-                <Heading>Values</Heading>
-                <Pre>{Object.entries(value).map(dataMap)}</Pre>
-              </>
-            )}
-          </RefinementBarConsumer>
-        </div>
-      </RefinementBarProvider>
+        <RefinementBarProvider
+          fieldConfig={FIELD_CONFIG}
+          irremovableKeys={['search', 'issue-assignee', 'issue-type']}
+          onChange={this.onChange}
+          value={this.state.value}
+        >
+          <div style={{ padding: 40 }}>
+            <RefinementBarConsumer>{encodeQuery}</RefinementBarConsumer>
+            <RefinementBarUI />
+            <RefinementBarConsumer>
+              {({ value }) => (
+                <>
+                  <Heading>Values</Heading>
+                  <Pre>{Object.entries(value).map(dataMap)}</Pre>
+                </>
+              )}
+            </RefinementBarConsumer>
+          </div>
+        </RefinementBarProvider>
+      </AnalyticsListener>
     );
   }
 }

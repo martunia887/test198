@@ -20,10 +20,17 @@ import {
   RefinementBarProvider,
   withRefinementBarContext,
 } from './ContextProvider';
-import { cloneObj } from '../utils';
 import Popup, { DialogInner } from './Popup';
 import { FilterButton } from './FilterButton';
 import { FilterManager } from './FilterManager';
+
+import { cloneObj, objectMap } from '../utils';
+import {
+  createAndFire,
+  defaultAttributes,
+  withAnalyticsContext,
+  withAnalyticsEvents,
+} from '../analytics';
 
 type Props = {
   tempContextFromProps: Object,
@@ -57,6 +64,7 @@ class ActualRefinementBar extends PureComponent<Props, State> {
   filterOptions: Array<Object>;
   showLessRef: ElementRef<*> = createRef();
   showMoreRef: ElementRef<*> = createRef();
+  analyticsTimer: number;
 
   // Required until atlaskit upgrades to react >= 16.6 😞
   // eslint-disable-next-line camelcase
@@ -73,6 +81,50 @@ class ActualRefinementBar extends PureComponent<Props, State> {
   };
   closePopup = () => {
     this.setState({ activePopupKey: null });
+  };
+
+  // ==============================
+  // Analytics
+  // ==============================
+
+  handleIdleAnalyticsEvent = values => {
+    clearTimeout(this.analyticsTimer);
+
+    // NOTE: Five seconds is arbitrary. Our assumption is that it's enough time
+    // to ensure the user has "committed" to a search/filter.
+    const idleDuration = 5000;
+    const { createAnalyticsEvent } = this.props;
+
+    this.analyticsTimer = setTimeout(() => {
+      // NOTE: we must avoid personally identifiable information, so the payload
+      // SHOULD NOT contain any actual values.
+      const filters = objectMap(values, (val, key) => {
+        const field = this.ctx.fieldConfig[key];
+        const filterType = field.type.name;
+
+        // Augment where possible with additional data related to the filter
+        // type. For example, number may be greater than / less than etc.
+        let additionalData = null;
+        switch (filterType) {
+          case 'Number':
+          case 'Text':
+            additionalData = { type: val.type };
+            break;
+          default:
+        }
+
+        return {
+          filterType,
+          additionalData,
+        };
+      });
+
+      createAndFire({
+        action: 'idle-submit',
+        attributes: defaultAttributes,
+        filters,
+      })(createAnalyticsEvent);
+    }, idleDuration);
   };
 
   // ==============================
@@ -130,6 +182,7 @@ class ActualRefinementBar extends PureComponent<Props, State> {
       const data = values[key];
       const meta = { action: 'update', key, data };
 
+      this.handleIdleAnalyticsEvent(values);
       this.ctx.onChange(values, meta);
     };
 
@@ -157,7 +210,6 @@ class ActualRefinementBar extends PureComponent<Props, State> {
 
     const fieldUI = ({ scheduleUpdate }) => {
       const extra = scheduleUpdate ? { ...config, scheduleUpdate } : config;
-      console.log('makeField', key);
 
       return (
         <Field
@@ -339,7 +391,9 @@ const Group = forwardRef(({ children }: *, ref) => {
 // Main Export
 // ==============================
 
-export const RefinementBarUI = withRefinementBarContext(ActualRefinementBar);
+export const RefinementBarUI = withAnalyticsContext(defaultAttributes)(
+  withAnalyticsEvents()(withRefinementBarContext(ActualRefinementBar)),
+);
 
 // ==============================
 // Put it together
