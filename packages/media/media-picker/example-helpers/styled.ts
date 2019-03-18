@@ -147,12 +147,29 @@ export const OptionsWrapper = styled.div`
   width: 250px;
 `;
 export const ResultsWrapper = styled.div`
-  overflow: auto;
-
   > div {
     display: inline-block;
     width: auto;
     height: auto;
     margin: 10px;
+  }
+`;
+
+export const UnsplashWrapper = styled.div`
+  overflow: auto;
+`;
+
+export const UnsplashHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+
+  label {
+    display: none;
+  }
+
+  > div {
+    flex: initial;
   }
 `;

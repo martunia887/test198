@@ -57,7 +57,7 @@ export class PopupImpl extends UploadComponent<PopupUploadEventPayloadMap>
       ...defaultUploadParams,
       ...uploadParams,
     };
-    console.log(plugins);
+
     this.store = createStore(this, tenantContext, userContext, {
       proxyReactContext,
       singleSelect,

@@ -10,7 +10,7 @@ import {
   ObjectType,
 } from '@atlaskit/analytics-next-types';
 
-import { ServiceName, State } from '../domain';
+import { ServiceName, State, ServiceFile } from '../domain';
 
 import { BinaryUploaderImpl as MpBinary } from '../../components/binary';
 import { BrowserImpl as MpBrowser } from '../../components/browser';
@@ -56,6 +56,7 @@ import {
   DropzoneDragLeaveEventPayload,
   PopupPlugin,
 } from '../../components/types';
+import { fileClick } from '../actions/fileClick';
 
 export interface AppStateProps {
   readonly selectedServiceName: ServiceName;
@@ -82,6 +83,10 @@ export interface AppDispatchProps {
   readonly onDropzoneDragIn: (fileCount: number) => void;
   readonly onDropzoneDragOut: (fileCount: number) => void;
   readonly onDropzoneDropIn: (fileCount: number) => void;
+  readonly onFileClick: (
+    serviceFile: ServiceFile,
+    serviceName: ServiceName,
+  ) => void;
 }
 
 export interface AppProxyReactContext {
@@ -250,7 +255,7 @@ export class App extends Component<AppProps, AppState> {
 
   private renderCurrentView(selectedServiceName: ServiceName): ReactNode {
     console.log({ selectedServiceName });
-    const { plugins = [] } = this.props;
+    const { plugins = [], onFileClick } = this.props;
 
     if (selectedServiceName === 'upload') {
       // We need to create a new context since Cards in recents view need user auth
@@ -270,7 +275,11 @@ export class App extends Component<AppProps, AppState> {
       );
 
       if (selectedPlugin) {
-        return selectedPlugin.render();
+        return selectedPlugin.render({
+          fileClick(serviceFile: ServiceFile, serviceName: ServiceName) {
+            onFileClick(serviceFile, serviceName);
+          },
+        });
       }
 
       return <Browser />;
@@ -318,6 +327,8 @@ const mapDispatchToProps = (dispatch: Dispatch<State>): AppDispatchProps => ({
   onDropzoneDragOut: (fileCount: number) =>
     dispatch(dropzoneDragOut(fileCount)),
   onDropzoneDropIn: (fileCount: number) => dispatch(dropzoneDropIn(fileCount)),
+  onFileClick: (serviceFile, serviceName) =>
+    dispatch(fileClick(serviceFile, serviceName)),
 });
 
 export default connect<AppStateProps, AppDispatchProps, AppOwnProps, State>(
