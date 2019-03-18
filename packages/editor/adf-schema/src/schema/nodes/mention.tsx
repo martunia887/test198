@@ -29,7 +29,9 @@ export interface MentionDefinition {
 
 const createMention = (props: any) => {
   const dom = ReactDOMServer.renderToStaticMarkup(
-    <ResourcedMention {...props} />,
+    <span {...props}>
+      <ResourcedMention {...props} />
+    </span>,
   );
   const dummyWrapper = document.createElement('span');
   dummyWrapper.innerHTML = dom;
