@@ -67,6 +67,22 @@ const InsertLine = (css?: string) => `
   }
 `;
 
+const InsertColumnLine = () => `
+  ${InsertLine(`
+    width: 2px;
+    left: 9px;
+    top: ${tableInsertColumnButtonSize - 2}px;
+  `)}
+`;
+
+const InsertRowLine = () => `
+  ${InsertLine(`
+    height: 2px;
+    top: 8px;
+    left: ${tableInsertColumnButtonSize - 2}px;
+  `)}
+`;
+
 const InsertMarker = (css?: string) => `
   .${ClassName.CONTROLS_INSERT_MARKER} {
     background-color: ${tableBorderColor};
@@ -315,11 +331,7 @@ export const tableStyles = css`
     }
     :not(.${ClassName.IS_RESIZING}) .${ClassName.CONTROLS_INSERT_COLUMN} {
       ${InsertButtonHover()}
-      ${InsertLine(`
-        width: 2px;
-        left: 9px;
-        top: ${tableInsertColumnButtonSize - 2}px;
-      `)}
+      ${InsertColumnLine()}
     }
     .${ClassName.ROW_CONTROLS},
     .${ClassName.CONTROLS_INSERT_ROW} {
@@ -331,11 +343,7 @@ export const tableStyles = css`
     }
     :not(.${ClassName.IS_RESIZING}) .${ClassName.CONTROLS_INSERT_ROW} {
       ${InsertButtonHover()}
-      ${InsertLine(`
-        height: 2px;
-        top: 8px;
-        left: ${tableInsertColumnButtonSize - 2}px;
-      `)}
+      ${InsertRowLine()}
     }
 
     /* Corner controls */
