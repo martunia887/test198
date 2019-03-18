@@ -232,6 +232,7 @@ const renderAnnotationButton = (
   pluginState: MediaPluginState,
   intl: InjectedIntl,
 ) => {
+  console.log('renderAnnotationButton');
   return (view?: EditorView, idx?: number) => {
     const selectedContainer = pluginState.selectedMediaContainerNode();
     if (!selectedContainer) {

@@ -112,6 +112,7 @@ export default {
     'table',
     'mediaSingle',
     'media',
+    'mediaSketch',
     'tableHeader',
     'decisionList',
     'tableRow',
