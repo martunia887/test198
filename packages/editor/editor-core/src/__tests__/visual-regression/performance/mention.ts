@@ -26,14 +26,14 @@ describe('Performance: mentions', () => {
   describe('Mentions', async () => {
     it('can insert a media single inside a bullet list', async () => {
       await page.tracing.start({
-        path: '/Users/ahixon/src/atlaskit-mk-2/profile-crimes.json',
+        path: '/Users/ahixon/src/atlaskit-mk-2/profile-crimes-no-cellview.json',
         screenshots: true,
       });
 
       await page.type(selectors.editor, '* ');
       await page.waitForSelector('ul');
       await page.type(selectors.editor, 'this ');
-      await insertMention(page, 'Carolyn');
+      // await insertMention(page, 'Carolyn');
 
       await page.keyboard.press('Enter');
 

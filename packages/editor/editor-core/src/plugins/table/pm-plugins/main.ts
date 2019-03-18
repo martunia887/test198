@@ -247,8 +247,8 @@ export const createPlugin = (
 
       nodeViews: {
         table: createTableView(portalProviderAPI, dynamicTextSizing),
-        tableCell: createCellView(portalProviderAPI, appearance),
-        tableHeader: createCellView(portalProviderAPI, appearance),
+        // tableCell: createCellView(portalProviderAPI, appearance),
+        // tableHeader: createCellView(portalProviderAPI, appearance),
       },
 
       handleDOMEvents: {

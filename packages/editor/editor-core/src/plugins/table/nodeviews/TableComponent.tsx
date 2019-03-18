@@ -139,6 +139,19 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     }
   }
 
+  shouldComponentUpdate(nextProps: ComponentProps, nextState: TableState) {
+    return (
+      // nextProps.node !== this.props.node ||
+      nextProps.getPos !== this.props.getPos ||
+      nextProps.containerWidth !== this.props.containerWidth ||
+      nextProps.contentDOM !== this.props.contentDOM ||
+      nextProps.width !== this.props.width ||
+      nextState.parentWidth !== this.state.parentWidth ||
+      nextState.scroll !== this.state.scroll ||
+      nextState.tableContainerWidth !== this.state.tableContainerWidth
+    );
+  }
+
   render() {
     const {
       view,
