@@ -21,8 +21,12 @@ const withDefaultTheme = <P: {}, C: ComponentType<P>>(
       'Component'})`;
 
     render() {
-      const theme = this.props.theme || defaultTheme;
-      return <WrappedComponent theme={theme} {...this.props} />;
+      // TODO: investigate just using defaultProps
+      const tempTheme = Object.keys(this.props.theme).length
+        ? this.props.theme
+        : defaultTheme;
+
+      return <WrappedComponent {...this.props} theme={tempTheme} />;
     }
   };
 
@@ -31,8 +35,9 @@ const defaultGlobalTheme: GlobalTheme = { mode: light };
 
 export const withContentTheme = <P: {}, C: ComponentType<P>>(
   WrappedComponent: C,
-): ThemeWrappedComp<C> =>
-  withTheme(withDefaultTheme(WrappedComponent, defaultContentTheme));
+): ThemeWrappedComp<C> => {
+  return withTheme(withDefaultTheme(WrappedComponent, defaultContentTheme));
+};
 
 export const withGlobalTheme = <P: {}, C: ComponentType<P>>(
   WrappedComponent: C,
