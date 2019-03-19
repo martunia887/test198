@@ -223,7 +223,7 @@ export class MediaEditor extends React.Component<
   };
 
   private loadEngine(): void {
-    const { imageUrl } = this.props;
+    const { imageUrl, dimensions } = this.props;
 
     DefaultImageProvider.create(
       () => urlImageLoader(imageUrl),
@@ -235,6 +235,8 @@ export class MediaEditor extends React.Component<
           return;
         }
         this.setState({ isImageLoaded: true });
+        imageProvider.backImage.width = dimensions.width;
+        imageProvider.backImage.height = dimensions.height;
 
         // Creating components for the engine
         const outputSize = MediaEditor.toOutputSize(this.props);
