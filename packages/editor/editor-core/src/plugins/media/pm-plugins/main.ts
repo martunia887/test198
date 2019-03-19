@@ -1,13 +1,7 @@
 import * as assert from 'assert';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {
-  Node as PMNode,
-  Schema,
-  Node,
-  NodeSpec,
-  NodeType,
-} from 'prosemirror-model';
+import { Node as PMNode, Schema, Node, NodeType } from 'prosemirror-model';
 import { insertPoint } from 'prosemirror-transform';
 import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 import {
@@ -15,6 +9,7 @@ import {
   NodeSelection,
   Plugin,
   PluginKey,
+  Transaction,
 } from 'prosemirror-state';
 import { Context, FileIdentifier } from '@atlaskit/media-core';
 import { UploadParams } from '@atlaskit/media-picker';
@@ -318,20 +313,7 @@ export class MediaPluginState {
   };
 
   showSketchTool = () => {
-    console.log('showSketchTool');
     this.openMediaEditor();
-
-    // let mediaState: MediaSingleState;
-    // mediaState = {
-    //   dimensions: {width: 400, height: 400},
-    //   id: "dumb-fake-id-do-not-merge-to-master",
-    // }
-    // let collections = "asd";
-    // // create new media node
-    // const { state } = this.view;
-    // const mediaNode = createMediaSingleNode(state.schema, collections)(mediaState);
-
-    // annotate(this.view.state);
   };
 
   showMediaPicker = () => {
@@ -428,11 +410,9 @@ export class MediaPluginState {
       state.selection instanceof NodeSelection &&
       state.selection.node.type === mediaSingle
     ) {
-      console.log('firstChild found');
       this.editingId = state.selection.node.firstChild!.attrs.id;
       this.editingCollection = state.selection.node.firstChild!.attrs.collection;
     } else {
-      console.log('firstChild empty');
       this.editingId = '';
       this.editingCollection = this.collectionFromProvider();
     }
@@ -472,10 +452,10 @@ export class MediaPluginState {
 
     const mediaPos = this.editingMediaSinglePos + 1;
     const oldMediaNode = doc.nodeAt(mediaPos);
-    console.log('oldMediaNode', oldMediaNode);
-    console.log('fileIdentifier', fileIdentifier);
-    let tr;
+    let tr: Transaction = state.tr;
+
     if (!oldMediaNode) {
+      // Sketch
       const newMediaNodeAttrs: MediaBaseAttributes = {
         id: fileIdentifier.id as string,
         collection: fileIdentifier.collectionName || '',
@@ -491,9 +471,9 @@ export class MediaPluginState {
         undefined,
         mediaNode,
       );
-      tr = state.tr.insert(mediaPos, mediaSingle);
-      console.log({ newMediaNodeAttrs });
+      tr = safeInsert(mediaSingle, mediaPos)(tr);
     } else {
+      // Existing media
       const newMediaNodeAttrs: MediaBaseAttributes = {
         ...oldMediaNode.attrs,
 
@@ -505,7 +485,6 @@ export class MediaPluginState {
         width: dimensions.width,
         height: dimensions.height,
       };
-      console.log({ newMediaNodeAttrs });
 
       tr = state.tr.replaceWith(
         mediaPos,
@@ -513,8 +492,6 @@ export class MediaPluginState {
         schema.nodes.media!.createChecked(newMediaNodeAttrs),
       );
     }
-
-    // safeInsert(mediaSingle.createChecked([schema.nodes.media!.createChecked(newMediaNodeAttrs)]))
 
     this.editingMediaSinglePos = undefined;
     dispatch(tr.setMeta('addToHistory', false));

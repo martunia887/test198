@@ -277,7 +277,7 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
     toolbarOption.unmount();
   });
 
-  it('should have 1 child elements if mediaSupported and mediaUploadsEnabled is defined and equals true', async () => {
+  it('should have 2 child elements if mediaSupported and mediaUploadsEnabled is defined and equals true', async () => {
     const { editorView } = editor(doc(p('text')));
     const toolbarOption = mountWithIntl(
       <ToolbarInsertBlock
@@ -288,7 +288,7 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
         isReducedSpacing={false}
       />,
     );
-    expect(toolbarOption.find(ToolbarButton).length).toEqual(1);
+    expect(toolbarOption.find(ToolbarButton).length).toEqual(2);
     toolbarOption.unmount();
   });
 
