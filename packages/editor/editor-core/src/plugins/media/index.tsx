@@ -1,5 +1,6 @@
 import * as React from 'react';
 import EditorImageIcon from '@atlaskit/icon/glyph/editor/image';
+import MediaServicesBrushIcon from '@atlaskit/icon/glyph/media-services/brush';
 import { media, mediaGroup, mediaSingle } from '@atlaskit/adf-schema';
 import {
   EditorPlugin,
@@ -202,6 +203,19 @@ const mediaPlugin = (
             attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
             eventType: EVENT_TYPE.UI,
           });
+        },
+      },
+      {
+        title: formatMessage(messages.sketch),
+        priority: 400,
+        keywords: ['draw', 'sketch', 'scribble', 'drawing'],
+        icon: () => (
+          <MediaServicesBrushIcon label={formatMessage(messages.sketch)} />
+        ),
+        action(insert, state) {
+          const pluginState = pluginKey.getState(state);
+          pluginState.openMediaEditor();
+          return insert('');
         },
       },
     ],
