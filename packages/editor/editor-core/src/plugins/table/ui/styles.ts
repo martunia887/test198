@@ -57,32 +57,6 @@ export const tableInsertColumnButtonTopOffset = 22;
 
 const isIE11 = browser.ie_version === 11;
 
-const InsertLine = (css?: string) => `
-  .${ClassName.CONTROLS_INSERT_LINE} {
-    background: ${tableBorderSelectedColor};
-    display: none;
-    position: absolute;
-    z-index: ${akEditorUnitZIndex};
-    ${css}
-  }
-`;
-
-const InsertColumnLine = () => `
-  ${InsertLine(`
-    width: 2px;
-    left: 9px;
-    top: ${tableInsertColumnButtonSize - 2}px;
-  `)}
-`;
-
-const InsertRowLine = () => `
-  ${InsertLine(`
-    height: 2px;
-    top: 8px;
-    left: ${tableInsertColumnButtonSize - 2}px;
-  `)}
-`;
-
 const InsertMarker = (css?: string) => `
   .${ClassName.CONTROLS_INSERT_MARKER} {
     background-color: ${tableBorderColor};
@@ -172,9 +146,6 @@ const InsertButton = () => `
       box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
       color: ${N300};
     `)}
-  }
-  .${ClassName.CONTROLS_INSERT_LINE} {
-    display: none;
   }
 `;
 
@@ -304,19 +275,24 @@ export const tableStyles = css`
         height: ${tableInsertColumnButtonSize}px;
         width: ${tableInsertColumnButtonSize}px;
         z-index: ${akEditorSmallZIndex};
-        &:hover .${ClassName.CONTROLS_INSERT_LINE} {
-          display: flex;
-        }
       }
       .${ClassName.CONTROLS_INSERT_COLUMN} {
         top: -${tableInsertColumnButtonTopOffset}px;
-        right: -${tableInsertColumnButtonSize / 2}px;
       }
       .${ClassName.CONTROLS_INSERT_ROW} {
         top: 2px;
         left: -${tableDeleteButtonSize + 2}px;
       }
     }
+
+    .${ClassName.COLUMN_CONTROLS} .${ClassName.CONTROLS_INSERT_COLUMN} {
+      right: -${tableInsertColumnButtonSize / 2}px;
+    }
+
+    .${ClassName.CORNER_CONTROLS} .${ClassName.CONTROLS_INSERT_COLUMN} {
+      right: -3px;
+    }
+
     :not(.${ClassName.IS_RESIZING}) .${ClassName.COLUMN_CONTROLS},
     :not(.${ClassName.IS_RESIZING}) .${ClassName.CORNER_CONTROLS} {
       ${ DeleteButtonHover()}
@@ -331,7 +307,6 @@ export const tableStyles = css`
     }
     :not(.${ClassName.IS_RESIZING}) .${ClassName.CONTROLS_INSERT_COLUMN} {
       ${InsertButtonHover()}
-      ${InsertColumnLine()}
     }
     .${ClassName.ROW_CONTROLS},
     .${ClassName.CONTROLS_INSERT_ROW} {
@@ -343,7 +318,6 @@ export const tableStyles = css`
     }
     :not(.${ClassName.IS_RESIZING}) .${ClassName.CONTROLS_INSERT_ROW} {
       ${InsertButtonHover()}
-      ${InsertRowLine()}
     }
 
     /* Corner controls */

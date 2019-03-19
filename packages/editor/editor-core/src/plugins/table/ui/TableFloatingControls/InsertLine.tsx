@@ -1,13 +1,40 @@
 import * as React from 'react';
-import { akEditorTableNumberColumnWidth } from '@atlaskit/editor-common';
+import styled from 'styled-components';
+import {
+  akEditorTableNumberColumnWidth,
+  akEditorUnitZIndex,
+} from '@atlaskit/editor-common';
 import { TableCssClassName as ClassName } from '../../types';
-import { tableToolbarSize } from '../styles';
+import {
+  tableToolbarSize,
+  tableBorderSelectedColor,
+  tableInsertColumnButtonSize,
+} from '../styles';
 import { closestElement } from '../../../../utils/';
 
 export interface Props {
-  type: 'row' | 'column';
   tableRef: HTMLElement;
+  className?: string;
+  type?: 'row' | 'column';
 }
+
+const InsertLineBasic = styled.div`
+  background: ${tableBorderSelectedColor};
+  position: absolute;
+  z-index: ${akEditorUnitZIndex};
+`;
+
+const InsertColumnLineStyled = styled(InsertLineBasic)`
+  width: 2px;
+  left: 9px;
+  top: ${tableInsertColumnButtonSize - 2}px;
+`;
+
+const InsertRowLineStyled = styled(InsertLineBasic)`
+  height: 2px;
+  top: 8px;
+  left: ${tableInsertColumnButtonSize - 2}px;
+`;
 
 const getInsertLineHeight = (tableRef: HTMLElement) => {
   // The line gets height 100% from the table,
@@ -46,15 +73,26 @@ const getInsertLineWidth = (tableRef: HTMLElement) => {
   );
 };
 
-const InsertLine = ({ tableRef, type }: Props) => (
-  <div
-    className={ClassName.CONTROLS_INSERT_LINE}
-    style={
-      type === 'row'
-        ? { width: getInsertLineWidth(tableRef) }
-        : { height: getInsertLineHeight(tableRef) }
-    }
+const ColumnLine = ({ tableRef, className }: Props) => (
+  <InsertColumnLineStyled
+    className={className}
+    style={{ height: getInsertLineHeight(tableRef) }}
   />
 );
+
+const RowLine = ({ tableRef, className }: Props) => (
+  <InsertRowLineStyled
+    className={className}
+    style={{ width: getInsertLineWidth(tableRef) }}
+  />
+);
+
+const InsertLine = ({ tableRef, type, className }: Props) => {
+  if (type === 'row') {
+    return <RowLine tableRef={tableRef} className={className} />;
+  }
+
+  return <ColumnLine tableRef={tableRef} className={className} />;
+};
 
 export default InsertLine;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { SyntheticEvent } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import Tooltip from '@atlaskit/tooltip';
@@ -31,6 +32,16 @@ const shortcutTooltip = (message: string, shortcut?: string) => (
   </span>
 );
 
+const Wrapper = styled.div`
+  .${ClassName.CONTROLS_INSERT_LINE} {
+    display: none;
+  }
+
+  &:hover .${ClassName.CONTROLS_INSERT_LINE} {
+    display: flex;
+  }
+`;
+
 const InsertButton = ({
   onMouseDown,
   index,
@@ -39,7 +50,7 @@ const InsertButton = ({
   type,
   intl: { formatMessage },
 }: ButtonProps & InjectedIntlProps) => (
-  <div
+  <Wrapper
     data-index={index}
     className={`${ClassName.CONTROLS_INSERT_BUTTON_WRAP} ${
       type === 'row'
@@ -71,12 +82,16 @@ const InsertButton = ({
               </svg>
             </button>
           </div>
-          <InsertLine type={type} tableRef={tableRef} />
+          <InsertLine
+            className={ClassName.CONTROLS_INSERT_LINE}
+            type={type}
+            tableRef={tableRef}
+          />
         </>
       </Tooltip>
     )}
     <div className={ClassName.CONTROLS_INSERT_MARKER} />
-  </div>
+  </Wrapper>
 );
 
 export default injectIntl(InsertButton);
