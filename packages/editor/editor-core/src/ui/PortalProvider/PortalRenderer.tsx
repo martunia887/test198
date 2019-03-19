@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { RenderFunction, PortalRendererState, Portal } from './types';
-import PortalProviderAPI from './PortalProviderApi';
+import PortalProviderAPI from './PortalProviderAPI';
 
 type RenderPortalProps = { render: RenderFunction; container: HTMLElement };
 const RenderPortal = ({ render, container }: RenderPortalProps) => {

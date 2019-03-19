@@ -1,5 +1,5 @@
 import * as React from 'react';
-import PortalProviderAPI from './PortalProviderApi';
+import PortalProviderAPI from './PortalProviderAPI';
 import { PortalProviderProps } from './types';
 
 export default class PortalProvider extends React.Component<

@@ -35,6 +35,7 @@ export default class PortalProviderAPI extends EventDispatcher {
     if (bucket) {
       this.emit(`update:bucket:${bucket.id}`, bucket.toArray());
     }
+    console.log(this.buckets);
   };
 
   // TODO: until https://product-fabric.atlassian.net/browse/ED-5013
