@@ -67,7 +67,7 @@ export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
           dimensions: Dimensions,
         ) => {
           mediaState.closeMediaEditor();
-          mediaState.replaceEditingMedia(newFileIdentifier, dimensions);
+          mediaState.finishedEditingMedia(newFileIdentifier, dimensions);
         }}
         onFinish={mediaState.closeMediaEditor}
       />
@@ -214,7 +214,7 @@ const mediaPlugin = (
         ),
         action(insert, state) {
           const pluginState = pluginKey.getState(state);
-          pluginState.openMediaEditor();
+          pluginState.showDrawingTool();
           return insert('');
         },
       },

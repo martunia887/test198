@@ -402,7 +402,6 @@ export class MediaPluginState {
     const { state, dispatch } = this.view;
     const { mediaSingle } = state.schema.nodes;
 
-    this.editingMediaSinglePos = state.selection.from;
     this.showEditingDialog = true;
 
     // keep stuff from selected mediaSingle
@@ -410,9 +409,11 @@ export class MediaPluginState {
       state.selection instanceof NodeSelection &&
       state.selection.node.type === mediaSingle
     ) {
+      this.editingMediaSinglePos = state.selection.from;
       this.editingId = state.selection.node.firstChild!.attrs.id;
       this.editingCollection = state.selection.node.firstChild!.attrs.collection;
     } else {
+      this.editingMediaSinglePos = undefined;
       this.editingId = '';
       this.editingCollection = this.collectionFromProvider();
     }
@@ -442,58 +443,76 @@ export class MediaPluginState {
   replaceEditingMedia = (
     fileIdentifier: FileIdentifier,
     dimensions: Dimensions,
-  ) => {
-    if (typeof this.editingMediaSinglePos !== 'number') {
-      return;
-    }
-
-    const { state, dispatch } = this.view;
-    const { doc, schema } = state;
-
-    const mediaPos = this.editingMediaSinglePos + 1;
+  ): Transaction<any> => {
+    const { state } = this.view;
+    const { schema, doc } = state;
+    const mediaPos = this.editingMediaSinglePos! + 1;
     const oldMediaNode = doc.nodeAt(mediaPos);
-    let tr: Transaction = state.tr;
-
     if (!oldMediaNode) {
-      // Drawing
-      const newMediaNodeAttrs: MediaBaseAttributes = {
-        id: fileIdentifier.id as string,
-        collection: fileIdentifier.collectionName || '',
-        occurrenceKey: fileIdentifier.occurrenceKey,
-
-        width: dimensions.width,
-        height: dimensions.height,
-
-        __fileMimeType: 'image/drawing',
-      };
-      const mediaNode = schema.nodes.media!.createChecked(newMediaNodeAttrs);
-      const mediaSingle = (schema.nodes.mediaSingle! as NodeType).createChecked(
-        undefined,
-        mediaNode,
-      );
-      tr = safeInsert(mediaSingle, mediaPos)(tr);
-    } else {
-      // Existing media
-      const newMediaNodeAttrs: MediaBaseAttributes = {
-        ...oldMediaNode.attrs,
-
-        id: fileIdentifier.id as string,
-        collection:
-          fileIdentifier.collectionName || oldMediaNode.attrs.collection,
-        occurrenceKey: fileIdentifier.occurrenceKey,
-
-        width: dimensions.width,
-        height: dimensions.height,
-      };
-
-      tr = state.tr.replaceWith(
-        mediaPos,
-        mediaPos + oldMediaNode.nodeSize,
-        schema.nodes.media!.createChecked(newMediaNodeAttrs),
-      );
+      return state.tr;
     }
 
-    this.editingMediaSinglePos = undefined;
+    // Existing media
+    const newMediaNodeAttrs: MediaBaseAttributes = {
+      ...oldMediaNode.attrs,
+
+      id: fileIdentifier.id as string,
+      collection:
+        fileIdentifier.collectionName || oldMediaNode.attrs.collection,
+      occurrenceKey: fileIdentifier.occurrenceKey,
+
+      width: dimensions.width,
+      height: dimensions.height,
+    };
+
+    const mediaSingle = schema.nodes.media!.createChecked(newMediaNodeAttrs);
+    return state.tr.replaceWith(
+      mediaPos,
+      mediaPos + oldMediaNode.nodeSize,
+      mediaSingle,
+    );
+  };
+
+  insertEditingMedia = (
+    fileIdentifier: FileIdentifier,
+    dimensions: Dimensions,
+  ): Transaction<any> => {
+    const { state } = this.view;
+    const { schema } = state;
+    const mediaPos = state.selection.from + 1;
+
+    // Drawing
+    const newMediaNodeAttrs: MediaBaseAttributes = {
+      id: fileIdentifier.id as string,
+      collection: fileIdentifier.collectionName || '',
+      occurrenceKey: fileIdentifier.occurrenceKey,
+
+      width: dimensions.width,
+      height: dimensions.height,
+
+      __fileMimeType: 'image/drawing',
+    };
+    const mediaNode = schema.nodes.media!.createChecked(newMediaNodeAttrs);
+    const mediaSingle = (schema.nodes.mediaSingle! as NodeType).createChecked(
+      undefined,
+      mediaNode,
+    );
+    return safeInsert(mediaSingle, mediaPos)(state.tr);
+  };
+
+  finishedEditingMedia = (
+    fileIdentifier: FileIdentifier,
+    dimensions: Dimensions,
+  ) => {
+    const { dispatch } = this.view;
+
+    let tr: Transaction;
+    if (typeof this.editingMediaSinglePos === 'number') {
+      tr = this.replaceEditingMedia(fileIdentifier, dimensions);
+    } else {
+      tr = this.insertEditingMedia(fileIdentifier, dimensions);
+    }
+
     dispatch(tr.setMeta('addToHistory', false));
   };
 
