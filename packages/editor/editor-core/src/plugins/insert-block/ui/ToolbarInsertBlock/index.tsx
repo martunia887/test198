@@ -91,10 +91,10 @@ export const messages = defineMessages({
     defaultMessage: 'Files & images',
     description: 'Insert one or more files or images',
   },
-  sketch: {
-    id: 'fabric.editor.sketch',
-    defaultMessage: 'Sketch',
-    description: 'Insert a new drawing/sketch',
+  drawing: {
+    id: 'fabric.editor.drawing',
+    defaultMessage: 'Drawing',
+    description: 'Insert a new drawing (picture/sketch)',
   },
   image: {
     id: 'fabric.editor.image',
@@ -195,7 +195,7 @@ export interface Props {
   macroProvider?: MacroProvider | null;
   insertMenuItems?: InsertMenuCustomItem[];
   onShowMediaPicker?: () => void;
-  onShowSketchTool?: () => void;
+  onShowDrawingTool?: () => void;
   onInsertBlockType?: (name: string) => Command;
   onInsertMacroFromMacroBrowser?: (
     macroProvider: MacroProvider,
@@ -581,6 +581,15 @@ class ToolbarInsertBlock extends React.PureComponent<
       });
     }
 
+    if (mediaSupported && mediaUploadsEnabled) {
+      const labelDrawing = formatMessage(messages.drawing);
+      items.push({
+        content: labelDrawing,
+        value: { name: 'drawing' },
+        elemBefore: <MediaServicesBrushIcon label={labelDrawing} />,
+      });
+    }
+
     if (placeholderTextEnabled) {
       const labelPlaceholderText = formatMessage(messages.placeholderText);
       items.push({
@@ -619,15 +628,6 @@ class ToolbarInsertBlock extends React.PureComponent<
         content: labelViewMore,
         value: { name: 'macro' },
         elemBefore: <EditorMoreIcon label={labelViewMore} />,
-      });
-    }
-
-    if (mediaSupported && mediaUploadsEnabled) {
-      const labelSketch = formatMessage(messages.sketch);
-      items.push({
-        content: labelSketch,
-        value: { name: 'sketch' },
-        elemBefore: <MediaServicesBrushIcon label={labelSketch} />,
       });
     }
 
@@ -726,10 +726,10 @@ class ToolbarInsertBlock extends React.PureComponent<
     },
   );
 
-  private openSketchTool = () => {
-    const { onShowSketchTool } = this.props;
-    if (onShowSketchTool) {
-      onShowSketchTool();
+  private openDrawingTool = () => {
+    const { onShowDrawingTool } = this.props;
+    if (onShowDrawingTool) {
+      onShowDrawingTool();
     }
   };
 
@@ -862,8 +862,8 @@ class ToolbarInsertBlock extends React.PureComponent<
       case 'media':
         this.openMediaPicker();
         break;
-      case 'sketch':
-        this.openSketchTool();
+      case 'drawing':
+        this.openDrawingTool();
         break;
       case 'mention':
         this.insertMention!();

@@ -206,11 +206,11 @@ const mediaPlugin = (
         },
       },
       {
-        title: formatMessage(messages.sketch),
+        title: formatMessage(messages.drawing),
         priority: 400,
-        keywords: ['draw', 'sketch', 'scribble', 'drawing'],
+        keywords: ['sketch', 'scribble', 'drawing', 'paint'],
         icon: () => (
-          <MediaServicesBrushIcon label={formatMessage(messages.sketch)} />
+          <MediaServicesBrushIcon label={formatMessage(messages.drawing)} />
         ),
         action(insert, state) {
           const pluginState = pluginKey.getState(state);
