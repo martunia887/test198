@@ -2,33 +2,27 @@ import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
 import { EditorView } from 'prosemirror-view';
 import { Selection } from 'prosemirror-state';
-import { isCellSelection, getSelectionRect } from 'prosemirror-utils';
-import { browser } from '@atlaskit/editor-common';
-
+import { getSelectionRect } from 'prosemirror-utils';
 import { INPUT_METHOD } from '../../../../analytics';
 import {
   hoverColumns,
-  selectColumn,
   clearHoverSelection,
 } from '../../../actions';
 import {
   insertColumnWithAnalytics,
   deleteColumnsWithAnalytics,
 } from '../../../actions-with-analytics';
-import { TableCssClassName as ClassName } from '../../../types';
 import {
   isSelectionUpdated,
   getColumnsWidths,
   isColumnDeleteButtonVisible,
   getColumnDeleteButtonParams,
-  isColumnInsertButtonVisible,
   getColumnsParams,
-  getColumnClassNames,
-  ColumnParams,
 } from '../../../utils';
-import tableMessages from '../../messages';
-import InsertButton from '../InsertButton';
+import { TableCssClassName as ClassName } from '../../../types';
 import DeleteButton from '../DeleteButton';
+import tableMessages from '../../messages';
+import ColumnControlsButton from './ColumnControlsButton';
 
 export interface Props {
   editorView: EditorView;
@@ -76,14 +70,7 @@ export default class ColumnControls extends Component<Props, any> {
   }
 
   render() {
-    const {
-      editorView,
-      tableRef,
-      insertColumnButtonIndex,
-      hoveredColumns,
-      isInDanger,
-      isResizing,
-    } = this.props;
+    const { editorView, tableRef } = this.props;
     if (!tableRef || !tableRef.querySelector('tr')) {
       return null;
     }
@@ -100,56 +87,7 @@ export default class ColumnControls extends Component<Props, any> {
       <div className={ClassName.COLUMN_CONTROLS}>
         <div className={ClassName.COLUMN_CONTROLS_INNER}>
           <>
-            {columnsParams.map(
-              ({ startIndex, endIndex, width }: ColumnParams) => (
-                <div
-                  className={`${
-                    ClassName.COLUMN_CONTROLS_BUTTON_WRAP
-                  } ${getColumnClassNames(
-                    startIndex,
-                    selection,
-                    hoveredColumns,
-                    isInDanger,
-                    isResizing,
-                  )}`}
-                  key={startIndex}
-                  style={{ width }}
-                  onMouseDown={e => e.preventDefault()}
-                >
-                  <button
-                    type="button"
-                    className={ClassName.CONTROLS_BUTTON}
-                    onMouseDown={() => this.selectColumn(startIndex)}
-                    onMouseOver={() => this.hoverColumns([startIndex])}
-                    onMouseOut={this.clearHoverSelection}
-                  >
-                    {!isCellSelection(selection) && (
-                      <>
-                        <div
-                          className={ClassName.CONTROLS_BUTTON_OVERLAY}
-                          data-index={startIndex}
-                        />
-                        <div
-                          className={ClassName.CONTROLS_BUTTON_OVERLAY}
-                          data-index={endIndex}
-                        />
-                      </>
-                    )}
-                  </button>
-                  {isColumnInsertButtonVisible(endIndex, selection) && (
-                    <InsertButton
-                      type="column"
-                      tableRef={tableRef}
-                      index={endIndex}
-                      showInsertButton={
-                        !isResizing && insertColumnButtonIndex === endIndex
-                      }
-                      onMouseDown={() => this.insertColumn(endIndex)}
-                    />
-                  )}
-                </div>
-              ),
-            )}
+            {columnsParams.map(ColumnControlsButton(this.props))}
             {isColumnDeleteButtonVisible(selection) && deleteBtnParams && (
               <DeleteButton
                 key="delete"
@@ -180,16 +118,6 @@ export default class ColumnControls extends Component<Props, any> {
     this.clearHoverSelection();
   };
 
-  private selectColumn = (column: number) => {
-    const { editorView } = this.props;
-    const { state, dispatch } = editorView;
-    // fix for issue ED-4665
-    if (browser.ie_version === 11) {
-      (editorView.dom as HTMLElement).blur();
-    }
-    selectColumn(column)(state, dispatch);
-  };
-
   private hoverColumns = (columns: number[], danger?: boolean) => {
     const { state, dispatch } = this.props.editorView;
     hoverColumns(columns, danger)(state, dispatch);
@@ -198,10 +126,5 @@ export default class ColumnControls extends Component<Props, any> {
   private clearHoverSelection = () => {
     const { state, dispatch } = this.props.editorView;
     clearHoverSelection(state, dispatch);
-  };
-
-  private insertColumn = (column: number) => {
-    const { state, dispatch } = this.props.editorView;
-    insertColumnWithAnalytics(INPUT_METHOD.BUTTON, column)(state, dispatch);
   };
 }

@@ -73,14 +73,14 @@ const getInsertLineWidth = (tableRef: HTMLElement) => {
   );
 };
 
-const ColumnLine = ({ tableRef, className }: Props) => (
+export const ColumnLine = ({ tableRef, className }: Props) => (
   <InsertColumnLineStyled
     className={className}
     style={{ height: getInsertLineHeight(tableRef) }}
   />
 );
 
-const RowLine = ({ tableRef, className }: Props) => (
+export const RowLine = ({ tableRef, className }: Props) => (
   <InsertRowLineStyled
     className={className}
     style={{ width: getInsertLineWidth(tableRef) }}
