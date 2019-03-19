@@ -8,6 +8,7 @@ import {
   HiddenTextHelperDiv,
   SupplementaryCanvas,
   SpinnerWrapper,
+  SketchBackground,
 } from './styled';
 import { Engine } from '../engine/engine';
 import {
@@ -33,6 +34,11 @@ import { DefaultToolbar } from '../engine/components/toolbar';
 import { DefaultKeyboardInput } from '../engine/components/keyboardInput';
 import { DefaultImageReceiver } from '../engine/components/imageReceiver';
 import { DefaultShapeDeleter } from '../engine/components/shapeDeleter';
+
+export const DEFAULT_WIDTH = 845;
+export const DEFAULT_HEIGHT = 530;
+export const TOOLBAR_HEIGHT = 64;
+export const DEFAULT_RATIO = DEFAULT_HEIGHT / DEFAULT_WIDTH;
 
 export type ImageGetter = (format?: string) => ExportedImage;
 
@@ -61,6 +67,7 @@ export interface MediaEditorProps {
   onError: ErrorHandler;
   onShapeParametersChanged: ShapeParametersChangedHandler;
   onAnyEdit?: () => void;
+  isEmptySketch?: boolean;
 }
 
 export interface MediaEditorState {
@@ -179,19 +186,35 @@ export class MediaEditor extends React.Component<
     </SpinnerWrapper>
   );
 
+  private get sketchDimensions() {
+    const { dimensions } = this.props;
+    const sketchDimensions = {
+      width: DEFAULT_WIDTH,
+      height: DEFAULT_HEIGHT - TOOLBAR_HEIGHT,
+    };
+    if (dimensions.height < sketchDimensions.height) {
+      const extraPadding = 10;
+      sketchDimensions.width =
+        (dimensions.height - extraPadding) / DEFAULT_RATIO;
+      sketchDimensions.height = dimensions.height - extraPadding;
+    }
+    if (dimensions.width < sketchDimensions.width) {
+      const extraPadding = 20;
+      sketchDimensions.height =
+        (dimensions.width - extraPadding) * DEFAULT_RATIO;
+      sketchDimensions.width = dimensions.width - extraPadding;
+    }
+    return sketchDimensions;
+  }
+
   render() {
     const { isImageLoaded } = this.state;
-    const { dimensions } = this.props;
-    const width = `${dimensions.width}px`;
-    const height = `${dimensions.height}px`;
+    const { dimensions, isEmptySketch } = this.props;
 
     return (
-      <MediaEditorContainer style={{ width, height }}>
+      <MediaEditorContainer style={dimensions}>
         {!isImageLoaded ? this.renderSpinner() : null}
-        <OutputArea
-          innerRef={this.handleOutputAreaInnerRef}
-          style={{ width, height }}
-        >
+        <OutputArea innerRef={this.handleOutputAreaInnerRef} style={dimensions}>
           <SupplementaryCanvas
             innerRef={this.handleSupplementaryCanvasInnerRef}
           />
@@ -204,11 +227,13 @@ export class MediaEditor extends React.Component<
           <HiddenTextHelperDiv
             innerRef={this.handleHiddenTextHelperDivInnerRef}
           />
-
+          {isEmptySketch ? (
+            <SketchBackground style={this.sketchDimensions} />
+          ) : null}
           <DrawingCanvas
             onClick={this.onCanvasClick}
             innerRef={this.handleDrawingCanvasInnerRef}
-            style={{ width, height }}
+            style={dimensions}
           />
         </OutputArea>
       </MediaEditorContainer>
@@ -223,7 +248,7 @@ export class MediaEditor extends React.Component<
   };
 
   private loadEngine(): void {
-    const { imageUrl, dimensions } = this.props;
+    const { imageUrl, isEmptySketch } = this.props;
 
     DefaultImageProvider.create(
       () => urlImageLoader(imageUrl),
@@ -235,8 +260,12 @@ export class MediaEditor extends React.Component<
           return;
         }
         this.setState({ isImageLoaded: true });
-        imageProvider.backImage.width = dimensions.width;
-        imageProvider.backImage.height = dimensions.height;
+
+        if (isEmptySketch) {
+          const sketchDimensions = this.sketchDimensions;
+          imageProvider.backImage.width = sketchDimensions.width;
+          imageProvider.backImage.height = sketchDimensions.height;
+        }
 
         // Creating components for the engine
         const outputSize = MediaEditor.toOutputSize(this.props);

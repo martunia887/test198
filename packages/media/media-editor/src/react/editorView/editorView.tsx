@@ -1,18 +1,21 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { MediaEditor, LoadParameters } from '../mediaEditor';
+import {
+  MediaEditor,
+  LoadParameters,
+  DEFAULT_WIDTH,
+  DEFAULT_HEIGHT,
+  TOOLBAR_HEIGHT,
+} from '../mediaEditor';
 import { Tool, Color, Dimensions, ShapeParameters } from '../../common';
 import { messages } from '@atlaskit/media-ui';
 import Toolbar, { tools } from './toolbar/toolbar';
 import { EditorContainer } from './styles';
 import { TRANSPARENT_1PX_IMAGE } from '../smartMediaEditor';
 
-const DEFAULT_WIDTH = 845;
-const DEFAULT_HEIGHT = 530;
-export const TOOLBAR_HEIGHT = 64;
 const TRANSPARENT_COLOR = { red: 0, green: 0, blue: 0, alpha: 0 };
-const WHITE_COLOR = { red: 255, green: 255, blue: 255, alpha: 1 };
+// const WHITE_COLOR = { red: 255, green: 255, blue: 255, alpha: 1 };
 
 // Properties' names in the local storage
 const propertyColor = 'media-editor-color';
@@ -52,22 +55,23 @@ class EditorView extends Component<
     isEmptySketch: false,
   };
 
+  static getDerivedStateFromProps({ imageUrl }: EditorViewProps) {
+    return {
+      isEmptySketch: imageUrl === TRANSPARENT_1PX_IMAGE,
+    };
+  }
+
   componentDidMount() {
     if (!this.rootDiv) {
       return;
     }
-    const { imageUrl } = this.props;
     const rect = this.rootDiv.getBoundingClientRect();
     const dimensions = {
       width: rect.width || DEFAULT_WIDTH,
       height: (rect.height || DEFAULT_HEIGHT) - TOOLBAR_HEIGHT,
     };
 
-    let isEmptySketch = false;
-    if (imageUrl === TRANSPARENT_1PX_IMAGE) {
-      isEmptySketch = true;
-    }
-    this.setState({ dimensions, isEmptySketch });
+    this.setState({ dimensions });
     this.loadProperties();
   }
 
@@ -99,13 +103,14 @@ class EditorView extends Component<
 
     const { imageUrl, onAnyEdit } = this.props;
     const { dimensions, color, lineWidth, tool, isEmptySketch } = this.state;
-    const backgroundColor = isEmptySketch ? WHITE_COLOR : TRANSPARENT_COLOR;
+    // const backgroundColor = isEmptySketch ? WHITE_COLOR : TRANSPARENT_COLOR;
 
     return (
       <MediaEditor
+        isEmptySketch={isEmptySketch}
         imageUrl={imageUrl}
         dimensions={dimensions}
-        backgroundColor={backgroundColor}
+        backgroundColor={TRANSPARENT_COLOR}
         shapeParameters={{ color, lineWidth, addShadow: true }}
         tool={tool}
         onAnyEdit={onAnyEdit}
