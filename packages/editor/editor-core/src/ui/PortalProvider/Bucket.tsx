@@ -14,6 +14,12 @@ export class Bucket<T> {
   }
 
   add(id: string, data: T): void | Error {
+    if (this.data.has(id)) {
+      // Updating data
+      this.data.set(id, data);
+      return;
+    }
+
     if (this.isFull) {
       throw new Error('Bucket is full.');
     }
