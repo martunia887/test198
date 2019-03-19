@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import { createPortal } from 'react-dom';
-import { RenderFunction, PortalRendererState, Portals, Portal } from './types';
+import { RenderFunction, PortalRendererState, Portal } from './types';
 import PortalProviderAPI from './PortalProviderApi';
 
 type RenderPortalProps = { render: RenderFunction; container: HTMLElement };

@@ -7,6 +7,7 @@ import {
 } from '../../../ui/PortalProvider';
 
 const Component = () => <div>My component</div>;
+const uniqueId = 'uniqueId';
 
 describe.skip('PortalProvider', () => {
   let place: HTMLElement;
@@ -32,7 +33,7 @@ describe.skip('PortalProvider', () => {
       />,
     );
 
-    portalProviderAPI!.render(Component, place);
+    portalProviderAPI!.render(Component, place, uniqueId);
     wrapper.update();
 
     expect(wrapper.find(Component).length).toBe(1);
@@ -49,8 +50,8 @@ describe.skip('PortalProvider', () => {
       />,
     );
 
-    portalProviderAPI!.render(Component, place);
-    portalProviderAPI!.render(Component, place2);
+    portalProviderAPI!.render(Component, place, uniqueId);
+    portalProviderAPI!.render(Component, place2, uniqueId);
     wrapper.update();
     expect(wrapper.find(Component).length).toBe(2);
   });
@@ -66,10 +67,10 @@ describe.skip('PortalProvider', () => {
       />,
     );
 
-    portalProviderAPI!.render(Component, place);
+    portalProviderAPI!.render(Component, place, uniqueId);
     wrapper.update();
 
-    portalProviderAPI!.remove(place);
+    portalProviderAPI!.remove(place, uniqueId);
     wrapper.update();
 
     expect(wrapper.find(Component).length).toBe(0);
