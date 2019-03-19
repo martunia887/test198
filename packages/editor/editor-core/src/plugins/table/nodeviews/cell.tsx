@@ -4,7 +4,10 @@ import { Node as PmNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
 import { setCellAttrs } from '@atlaskit/adf-schema';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
-import ReactNodeView, { ForwardRef } from '../../../nodeviews/ReactNodeView';
+import ReactNodeView, {
+  ForwardRef,
+  ReactNodeViewOneshot,
+} from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import ToolbarButton from '../../../ui/ToolbarButton';
 import WithPluginState from '../../../ui/WithPluginState';
@@ -88,7 +91,7 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
 
 const CellComponent = Cell;
 
-class CellView extends ReactNodeView {
+class CellView extends ReactNodeViewOneshot {
   private cell: HTMLElement | undefined;
 
   constructor(props: CellViewProps) {
@@ -124,33 +127,35 @@ class CellView extends ReactNodeView {
     // nodeview does not re-render on selection changes
     // so we trigger render manually to hide/show contextual menu button when `targetCellPosition` is updated
     return (
-      // <WithPluginState
-      //   plugins={{
-      //     pluginState: pluginKey,
-      //     tableResizingPluginState: tableResizingPluginKey,
-      //     editorDisabledPlugin: editorDisabledPluginKey,
-      //   }}
-      //   editorView={props.view}
-      //   render={({
-      //     pluginState,
-      //     tableResizingPluginState,
-      //     editorDisabledPlugin,
-      //   }: {
-      //     pluginState: TablePluginState;
-      //     tableResizingPluginState: ResizeState;
-      //     editorDisabledPlugin: EditorDisabledPluginState;
-      //   }) => (
-      <CellComponent
-        forwardRef={forwardRef}
-        withCursor={true}
-        isResizing={false}
-        isContextualMenuOpen={false}
-        view={props.view}
-        appearance={props.appearance}
-        disabled={false}
+      <WithPluginState
+        plugins={{
+          pluginState: pluginKey,
+          tableResizingPluginState: tableResizingPluginKey,
+          editorDisabledPlugin: editorDisabledPluginKey,
+        }}
+        editorView={props.view}
+        render={({
+          pluginState,
+          tableResizingPluginState,
+          editorDisabledPlugin,
+        }: {
+          pluginState: TablePluginState;
+          tableResizingPluginState: ResizeState;
+          editorDisabledPlugin: EditorDisabledPluginState;
+        }) => (
+          <CellComponent
+            forwardRef={forwardRef}
+            withCursor={this.getPos() === pluginState.targetCellPosition}
+            isResizing={
+              !!tableResizingPluginState && !!tableResizingPluginState.dragging
+            }
+            isContextualMenuOpen={!!pluginState.isContextualMenuOpen}
+            view={props.view}
+            appearance={props.appearance}
+            disabled={(editorDisabledPlugin || {}).editorDisabled}
+          />
+        )}
       />
-      //   )}
-      // />
     );
   }
 

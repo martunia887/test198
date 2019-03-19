@@ -190,3 +190,16 @@ export default class ReactNodeView implements NodeView {
       ).init();
   }
 }
+
+export class ReactNodeViewOneshot extends ReactNodeView {
+  didRender = false;
+
+  update(node: PMNode, decos: Array<Decoration>) {
+    if (!this.didRender) {
+      this.didRender = true;
+      return super.update(node, decos);
+    }
+
+    return true;
+  }
+}

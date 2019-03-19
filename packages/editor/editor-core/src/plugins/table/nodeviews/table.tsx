@@ -8,6 +8,7 @@ import { EditorView, NodeView } from 'prosemirror-view';
 import ReactNodeView, {
   ForwardRef,
   getPosHandler,
+  ReactNodeViewOneshot,
 } from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { generateColgroup } from '../utils';
@@ -57,7 +58,7 @@ const toDOM = (node: PmNode, props: Props) => {
   ] as DOMOutputSpec;
 };
 
-export default class TableView extends ReactNodeView {
+export default class TableView extends ReactNodeViewOneshot {
   private table: HTMLElement | undefined;
   private observer?: MutationObserver;
 
