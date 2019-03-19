@@ -72,8 +72,11 @@ export class BucketArray<T> {
 
   getBucketContaining(id: string): Bucket<T> | null {
     return this.reduce<Bucket<T> | null>((prev, current) => {
-      return null;
-    });
+      if (current.has(id)) {
+        return current;
+      }
+      return prev;
+    }, null);
   }
 
   add(id: string, data: T): Bucket<T> {
