@@ -104,10 +104,15 @@ export const createPlugin = (
           const { pos, deleted } = tr.mapping.mapResult(
             pluginState.targetCellPosition,
           );
-          pluginState = {
-            ...pluginState,
-            targetCellPosition: deleted ? undefined : pos,
-          };
+
+          if (pos !== pluginState.targetCellPosition || deleted) {
+            pluginState = {
+              ...pluginState,
+              targetCellPosition: deleted ? undefined : pos,
+            };
+
+            console.warn('new plugin state');
+          }
         }
 
         switch (meta.action) {
@@ -247,8 +252,8 @@ export const createPlugin = (
 
       nodeViews: {
         table: createTableView(portalProviderAPI, dynamicTextSizing),
-        // tableCell: createCellView(portalProviderAPI, appearance),
-        // tableHeader: createCellView(portalProviderAPI, appearance),
+        tableCell: createCellView(portalProviderAPI, appearance),
+        tableHeader: createCellView(portalProviderAPI, appearance),
       },
 
       handleDOMEvents: {

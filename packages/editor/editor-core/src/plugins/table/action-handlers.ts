@@ -160,17 +160,22 @@ export const handleDocOrSelectionChanged = (tr: Transaction) => (
   );
 
   if (
-    pluginState.tableNode !== tableNode ||
+    // pluginState.tableNode !== tableNode ||
     pluginState.targetCellPosition !== targetCellPosition ||
     hoverDecoration.length
   ) {
+    console.error('new plugin state from handleDoc...', {
+      // tableNode: pluginState.tableNode !== tableNode,
+      targetCellPosition: pluginState.targetCellPosition !== targetCellPosition,
+      hoverDecoration: hoverDecoration.length,
+    });
     const nextPluginState = {
       ...pluginState,
       ...defaultTableSelection,
       // @see: https://product-fabric.atlassian.net/browse/ED-3796
       decorationSet: pluginState.decorationSet.remove(hoverDecoration),
       targetCellPosition,
-      tableNode,
+      // tableNode,
     };
     dispatch(pluginKey, nextPluginState);
     return nextPluginState;

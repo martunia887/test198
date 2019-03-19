@@ -4,6 +4,7 @@ import { EditorView } from 'prosemirror-view';
 import * as PropTypes from 'prop-types';
 import { EventDispatcher } from '../../event-dispatcher';
 import EditorActions from '../../actions';
+import { colorSame } from '../../../../../media/media-editor/src/util';
 
 export interface State {
   [name: string]: any;

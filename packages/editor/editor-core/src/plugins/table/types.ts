@@ -32,7 +32,7 @@ export interface TablePluginState {
   targetCellPosition?: number;
   // controls need to be re-rendered when table content changes
   // e.g. when pressing enter inside of a cell, it creates a new p and we need to update row controls
-  tableNode?: PmNode;
+  // tableNode?: PmNode;
   tableRef?: HTMLElement;
   tableFloatingToolbarTarget?: HTMLElement;
   isContextualMenuOpen?: boolean;

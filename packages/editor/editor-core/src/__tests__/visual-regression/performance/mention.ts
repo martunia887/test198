@@ -26,7 +26,8 @@ describe('Performance: mentions', () => {
   describe('Mentions', async () => {
     it('can insert a media single inside a bullet list', async () => {
       await page.tracing.start({
-        path: '/Users/ahixon/src/atlaskit-mk-2/profile-crimes-no-cellview.json',
+        path:
+          '/Users/ahixon/src/atlaskit-mk-2/profile-crimes-something-cellview.json',
         screenshots: true,
       });
 

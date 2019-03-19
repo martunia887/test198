@@ -56,11 +56,11 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
       isResizing,
       isContextualMenuOpen,
       forwardRef,
-      intl: { formatMessage },
       disabled,
       appearance,
     } = this.props;
-    const labelCellOptions = formatMessage(messages.cellOptions);
+    // const labelCellOptions = formatMessage(messages.cellOptions);
+    const labelCellOptions = messages.cellOptions.defaultMessage;
 
     return (
       <div className={ClassName.CELL_NODEVIEW_WRAPPER} ref={forwardRef}>
@@ -86,7 +86,7 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
   };
 }
 
-const CellComponent = injectIntl(Cell);
+const CellComponent = Cell;
 
 class CellView extends ReactNodeView {
   private cell: HTMLElement | undefined;
@@ -124,48 +124,47 @@ class CellView extends ReactNodeView {
     // nodeview does not re-render on selection changes
     // so we trigger render manually to hide/show contextual menu button when `targetCellPosition` is updated
     return (
-      <WithPluginState
-        plugins={{
-          pluginState: pluginKey,
-          tableResizingPluginState: tableResizingPluginKey,
-          editorDisabledPlugin: editorDisabledPluginKey,
-        }}
-        editorView={props.view}
-        render={({
-          pluginState,
-          tableResizingPluginState,
-          editorDisabledPlugin,
-        }: {
-          pluginState: TablePluginState;
-          tableResizingPluginState: ResizeState;
-          editorDisabledPlugin: EditorDisabledPluginState;
-        }) => (
-          <CellComponent
-            forwardRef={forwardRef}
-            withCursor={this.getPos() === pluginState.targetCellPosition}
-            isResizing={
-              !!tableResizingPluginState && !!tableResizingPluginState.dragging
-            }
-            isContextualMenuOpen={!!pluginState.isContextualMenuOpen}
-            view={props.view}
-            appearance={props.appearance}
-            disabled={(editorDisabledPlugin || {}).editorDisabled}
-          />
-        )}
+      // <WithPluginState
+      //   plugins={{
+      //     pluginState: pluginKey,
+      //     tableResizingPluginState: tableResizingPluginKey,
+      //     editorDisabledPlugin: editorDisabledPluginKey,
+      //   }}
+      //   editorView={props.view}
+      //   render={({
+      //     pluginState,
+      //     tableResizingPluginState,
+      //     editorDisabledPlugin,
+      //   }: {
+      //     pluginState: TablePluginState;
+      //     tableResizingPluginState: ResizeState;
+      //     editorDisabledPlugin: EditorDisabledPluginState;
+      //   }) => (
+      <CellComponent
+        forwardRef={forwardRef}
+        withCursor={true}
+        isResizing={false}
+        isContextualMenuOpen={false}
+        view={props.view}
+        appearance={props.appearance}
+        disabled={false}
       />
+      //   )}
+      // />
     );
   }
 
   ignoreMutation(record: MutationRecord) {
     // @see https://github.com/ProseMirror/prosemirror/issues/862
-    const target = record.target as HTMLElement;
-    if (
-      record.attributeName === 'class' ||
-      (target && closestElement(target, `.${ClassName.CELL_NODEVIEW_WRAPPER}`))
-    ) {
-      return true;
-    }
-    return false;
+    // const target = record.target as HTMLElement;
+    // if (
+    //   record.attributeName === 'class' ||
+    //   (target && closestElement(target, `.${ClassName.CELL_NODEVIEW_WRAPPER}`))
+    // ) {
+    //   return true;
+    // }
+    // return false;
+    return true;
   }
 }
 
