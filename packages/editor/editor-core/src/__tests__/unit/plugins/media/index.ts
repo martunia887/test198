@@ -1411,7 +1411,7 @@ describe('Media plugin', () => {
       );
     });
 
-    it.only('adds the editing media node (drawing) even if selection changes', async () => {
+    it('adds the editing media node (drawing) even if selection changes', async () => {
       const { pluginState, editorView, refs } = editor(
         doc(p('hello {<>}world')),
       );
