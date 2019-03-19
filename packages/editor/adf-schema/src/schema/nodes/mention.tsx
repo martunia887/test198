@@ -27,15 +27,14 @@ export interface MentionDefinition {
   attrs: MentionAttributes;
 }
 
-const createMention = (props: any) => {
+const createMention = (props: any, wrapperType = 'span') => {
   const dom = ReactDOMServer.renderToStaticMarkup(
-    <span {...props}>
-      <ResourcedMention {...props} />
-    </span>,
+    <ResourcedMention {...props} />,
   );
-  const dummyWrapper = document.createElement('span');
-  dummyWrapper.innerHTML = dom;
-  return dummyWrapper.firstChild as any;
+  const wrapper = document.createElement(wrapperType);
+  wrapper.setAttribute('contenteditable', 'false');
+  wrapper.innerHTML = dom;
+  return wrapper;
 };
 
 const createMentionMemo = memoizeOne(createMention);
@@ -73,20 +72,20 @@ export const mention: NodeSpec = {
     },
   ],
   toDOM(node) {
-    const { id, accessLevel, text, userType } = node.attrs;
-    const attrs: any = {
-      'data-mention-id': id,
-      'data-access-level': accessLevel,
-      contenteditable: 'false',
-    };
-    if (userType) {
-      attrs['data-user-type'] = userType;
-    }
+    const { id, accessLevel, text } = node.attrs;
+    // const attrs: any = {
+    //   'data-mention-id': id,
+    //   'data-access-level': accessLevel,
+    //   contenteditable: 'false',
+    // };
+    // if (userType) {
+    //   attrs['data-user-type'] = userType;
+    // }
 
     // old way
     // return ['span', attrs, text];
 
-    return createMentionMemo({ ...attrs, text });
+    return createMentionMemo({ text, id, accessLevel });
   },
 };
 

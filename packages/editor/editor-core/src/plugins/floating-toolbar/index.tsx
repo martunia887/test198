@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { Plugin, PluginKey, Selection } from 'prosemirror-state';
 import { findDomRefAtPos, findSelectedNodeOfType } from 'prosemirror-utils';
 import { Popup, ProviderFactory } from '@atlaskit/editor-common';
 
@@ -16,12 +16,12 @@ import {
 } from '../editor-disabled';
 
 const getRelevantConfig = (
-  view: EditorView,
+  selection: Selection<any>,
   configs: Array<FloatingToolbarConfig>,
 ): FloatingToolbarConfig | undefined => {
   // node selections always take precedence, see if
   const selectedConfig = configs.find(
-    config => !!findSelectedNodeOfType(config.nodeType)(view.state.selection),
+    config => !!findSelectedNodeOfType(config.nodeType)(selection),
   );
 
   if (selectedConfig) {
@@ -41,7 +41,7 @@ const getRelevantConfig = (
   });
 
   // search up the tree from selection
-  const { $from } = view.state.selection;
+  const { $from } = selection;
   for (let i = $from.depth; i > 0; i--) {
     const node = $from.node(i);
 
@@ -89,20 +89,17 @@ const floatingToolbarPlugin: EditorPlugin = {
     return (
       <WithPluginState
         plugins={{
-          floatingToolbarConfigs: pluginKey,
+          floatingToolbarConfig: pluginKey,
           editorDisabledPlugin: editorDisabledPluginKey,
         }}
         render={({
           editorDisabledPlugin,
-          floatingToolbarConfigs,
+          floatingToolbarConfig,
         }: {
-          floatingToolbarConfigs?: Array<FloatingToolbarConfig>;
+          floatingToolbarConfig: FloatingToolbarConfig;
           editorDisabledPlugin: EditorDisabledPluginState;
         }) => {
-          const relevantConfig =
-            floatingToolbarConfigs &&
-            getRelevantConfig(editorView, floatingToolbarConfigs);
-          if (relevantConfig) {
+          if (floatingToolbarConfig) {
             const {
               title,
               getDomRef = getDomRefFromSelection,
@@ -111,7 +108,7 @@ const floatingToolbarPlugin: EditorPlugin = {
               className = '',
               height,
               width,
-            } = relevantConfig;
+            } = floatingToolbarConfig;
             const targetRef = getDomRef(editorView);
 
             if (targetRef && !(editorDisabledPlugin || {}).editorDisabled) {
@@ -165,7 +162,7 @@ export const pluginKey = new PluginKey('floatingToolbarPluginKey');
 
 function floatingToolbarPluginFactory(options: {
   floatingToolbarHandlers: Array<FloatingToolbarHandler>;
-  dispatch: Dispatch<Array<FloatingToolbarConfig> | undefined>;
+  dispatch: Dispatch<FloatingToolbarConfig | undefined>;
   reactContext: () => { [key: string]: any };
   providerFactory: ProviderFactory;
 }) {
@@ -183,12 +180,22 @@ function floatingToolbarPluginFactory(options: {
       },
       apply(tr, pluginState, oldState, newState) {
         const { intl } = reactContext();
-        const newPluginState = floatingToolbarHandlers
+        const activeConfigs = floatingToolbarHandlers
           .map(handler => handler(newState, intl, providerFactory))
           .filter(Boolean) as Array<FloatingToolbarConfig>;
 
-        dispatch(pluginKey, newPluginState);
-        return newPluginState;
+        const relevantConfig =
+          activeConfigs && getRelevantConfig(newState.selection, activeConfigs);
+
+        if (
+          (relevantConfig && relevantConfig.title) !==
+          (pluginState && pluginState.title)
+        ) {
+          dispatch(pluginKey, relevantConfig);
+          return relevantConfig;
+        }
+
+        return pluginState;
       },
     },
   });
