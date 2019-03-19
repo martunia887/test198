@@ -1,4 +1,1107 @@
 export const diffDocs = {
+  demo: {
+    oldDocument: {
+      version: 1,
+      type: 'doc',
+      content: [
+        {
+          type: 'heading',
+          attrs: {
+            level: 1,
+          },
+          content: [
+            {
+              type: 'text',
+              text: 'Super ultra mega great ADF diffing demo!',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text:
+                'Hello there! This document is supposed to demonstrate our awesome ADF diffing!!!',
+            },
+          ],
+        },
+        {
+          type: 'orderedList',
+          content: [
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'This',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'structured',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'ol list',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'demonstrates',
+                    },
+                  ],
+                },
+                {
+                  type: 'orderedList',
+                  content: [
+                    {
+                      type: 'listItem',
+                      content: [
+                        {
+                          type: 'paragraph',
+                          content: [
+                            {
+                              type: 'text',
+                              text: 'changes',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: 'listItem',
+                      content: [
+                        {
+                          type: 'paragraph',
+                          content: [
+                            {
+                              type: 'text',
+                              text: 'of',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: 'listItem',
+                      content: [
+                        {
+                          type: 'paragraph',
+                          content: [
+                            {
+                              type: 'text',
+                              text: 'structures',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'status',
+              attrs: {
+                text: 'done',
+                color: 'red',
+                localId: '2825a361-f98a-4723-b2fa-bc4266525d90',
+              },
+            },
+            {
+              type: 'text',
+              text: ' - status card change should be visible too',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'How',
+              marks: [
+                {
+                  type: 'subsup',
+                  attrs: {
+                    type: 'sup',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'text',
+              text: ' ',
+            },
+            {
+              type: 'text',
+              text: 'about',
+              marks: [
+                {
+                  type: 'em',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              text: ' ',
+            },
+            {
+              type: 'text',
+              text: 'font',
+              marks: [
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              text: ' ',
+            },
+            {
+              type: 'text',
+              text: 'styling',
+              marks: [
+                {
+                  type: 'subsup',
+                  attrs: {
+                    type: 'sub',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'text',
+              text: '?',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'Emoji! ',
+            },
+          ],
+        },
+        {
+          type: 'panel',
+          attrs: {
+            panelType: 'warning',
+          },
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'Panel and its status too!',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'table',
+          attrs: {
+            isNumberColumnEnabled: false,
+            layout: 'default',
+          },
+          content: [
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableHeader',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Name',
+                          marks: [
+                            {
+                              type: 'strong',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableHeader',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Email',
+                          marks: [
+                            {
+                              type: 'strong',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableHeader',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Status',
+                          marks: [
+                            {
+                              type: 'strong',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Oscar Wallhult',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'owallhult@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'No',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Someone else',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'hello@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'No',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Another person',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'yeye@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Yes',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'THE LAST PERSON',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'yeye@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Yes',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'codeBlock',
+          content: [
+            {
+              type: 'text',
+              text: "if (false) {\n console.log('hello world!'); \n}",
+            },
+          ],
+        },
+      ],
+    },
+    newDocument: {
+      version: 1,
+      type: 'doc',
+      content: [
+        {
+          type: 'heading',
+          attrs: {
+            level: 1,
+          },
+          content: [
+            {
+              type: 'text',
+              text: 'ADF diff demonstration',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text:
+                'Hello there! This sentence is supposed to demonstrate ADF differ.',
+            },
+          ],
+        },
+        {
+          type: 'orderedList',
+          content: [
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'This',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'structured',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'list',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'demonstrates',
+                    },
+                  ],
+                },
+                {
+                  type: 'orderedList',
+                  content: [
+                    {
+                      type: 'listItem',
+                      content: [
+                        {
+                          type: 'paragraph',
+                          content: [
+                            {
+                              type: 'text',
+                              text: 'changes',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: 'listItem',
+                      content: [
+                        {
+                          type: 'paragraph',
+                          content: [
+                            {
+                              type: 'text',
+                              text: 'of',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: 'listItem',
+                      content: [
+                        {
+                          type: 'paragraph',
+                          content: [
+                            {
+                              type: 'text',
+                              text: 'complex',
+                            },
+                          ],
+                        },
+                        {
+                          type: 'orderedList',
+                          content: [
+                            {
+                              type: 'listItem',
+                              content: [
+                                {
+                                  type: 'paragraph',
+                                  content: [
+                                    {
+                                      type: 'text',
+                                      text: 'structures',
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'status',
+              attrs: {
+                text: 'todo',
+                color: 'green',
+                localId: '2825a361-f98a-4723-b2fa-bc4266525d90',
+              },
+            },
+            {
+              type: 'text',
+              text: ' - status card change should be visible too',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'How ',
+            },
+            {
+              type: 'text',
+              text: 'about',
+              marks: [
+                {
+                  type: 'em',
+                },
+                {
+                  type: 'strong',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              text: ' ',
+            },
+            {
+              type: 'text',
+              text: 'font',
+              marks: [
+                {
+                  type: 'underline',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              text: ' ',
+            },
+            {
+              type: 'text',
+              text: 'styling',
+              marks: [
+                {
+                  type: 'subsup',
+                  attrs: {
+                    type: 'sup',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'text',
+              text: '?',
+            },
+          ],
+        },
+        {
+          type: 'panel',
+          attrs: {
+            panelType: 'success',
+          },
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'Panel too!',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'table',
+          attrs: {
+            isNumberColumnEnabled: false,
+            layout: 'default',
+          },
+          content: [
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableHeader',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Name',
+                          marks: [
+                            {
+                              type: 'strong',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableHeader',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Email',
+                          marks: [
+                            {
+                              type: 'strong',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableHeader',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Status',
+                          marks: [
+                            {
+                              type: 'strong',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Oscar Wallhult',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'owallhult@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'No',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Someone else!',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'hello@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'No',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Banana',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'yeye@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Yes',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Another person',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'yeye@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Yes',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'THE LAST PERSON',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'yeye@atlassian.com',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: {},
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Yes',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'codeBlock',
+          content: [
+            {
+              type: 'text',
+              text: "if (true) {\n console.log('hello'); \n}",
+            },
+          ],
+        },
+      ],
+    },
+  },
   complex: {
     newDocument: {
       type: 'doc',
@@ -1844,35 +2947,6 @@ export const diffDocs = {
             },
           ],
         },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text:
-                'My name is Oscar and I would like to talk to you about some stuff.',
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec posuere purus enim, lacinia volutpat dolor vestibulum nec. In viverra vulputate augue, sit amet porta mi tincidunt et. Maecenas feugiat diam sit amet arcu convallis efficitur. Quisque consequat vel nunc vel mollis. In interdum nisl ac convallis condimentum. Aliquam luctus, arcu nec porta pharetra, neque tellus scelerisque metus, sit amet viverra arcu odio nec mauris. Donec porta augue vitae tincidunt placerat.',
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Good bye!',
-            },
-          ],
-        },
       ],
     },
     newDocument: {
@@ -1880,61 +2954,14 @@ export const diffDocs = {
       type: 'doc',
       content: [
         {
-          type: 'paragraph',
+          type: 'heading',
+          attrs: {
+            level: 1,
+          },
           content: [
             {
               type: 'text',
-              text: 'Well hello there, mate!',
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'My name is Oscar and I would like to talk to you about ',
-            },
-            {
-              type: 'text',
-              text: 'some',
-              marks: [
-                {
-                  type: 'strong',
-                },
-              ],
-            },
-            {
-              type: 'text',
-              text: ' stuff. Bla bla bla, and bla bla bla.',
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec posuere purus enim, lacinia volutpat dolor vestibulum nec. In viverra vulputate augue, sit amet porta mi tincidunt et. Maecenas feugiat diam sit amet arcu convallis efficitur. Quisque consequat vel nunc vel mollis. In interdum nisl ac convallis condimentum. Aliquam luctus, arcu nec porta pharetra, neque tellus scelerisque metus, sit amet viverra arcu odio nec mauris. Donec porta augue vitae tincidunt placerat.',
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Good bye!',
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Yes.. lorem ipsum',
+              text: 'Hello world',
             },
           ],
         },
@@ -2006,7 +3033,7 @@ export const diffDocs = {
           content: [
             {
               type: 'text',
-              text: "if (true) {\n console.log('hello'); \n}",
+              text: "if (false) {\n console.log('hello world!'); \n}",
             },
           ],
         },

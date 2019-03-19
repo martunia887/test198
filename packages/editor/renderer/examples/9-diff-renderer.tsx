@@ -1,41 +1,75 @@
 import * as React from 'react';
-import { DiffRenderer, Renderer } from '../src/ui';
-// import { CheckboxStateless } from '@atlaskit/button';
-// import AkFieldRadioGroup from '@atlaskit/field-radio-group';
+import { DiffRenderer } from '../src/ui';
 import { diffDocs } from './helper/diff-data';
+import { ToggleStateless } from '@atlaskit/toggle';
+import Select from '@atlaskit/select';
+import {
+  Editor,
+  WithEditorActions,
+  EditorContext,
+} from '@atlaskit/editor-core';
 
 export interface State {
   diffOnly?: boolean;
   showDiff?: boolean;
   doc: string;
+  newDocument: object;
+  oldDocument: object;
 }
+
+const editorSettings = {
+  allowCodeBlocks: { enableKeybindingsForIDE: true },
+  allowLists: true,
+  allowTextColor: true,
+  allowTables: { advanced: true },
+  allowBreakout: true,
+  allowJiraIssue: true,
+  allowUnsupportedContent: true,
+  allowPanel: true,
+  allowExtension: { allowBreakout: true },
+  allowRule: true,
+  allowDate: true,
+  allowLayouts: { allowBreakout: true },
+  allowTextAlignment: true,
+  allowIndentation: true,
+  allowDynamicTextSizing: true,
+  allowTemplatePlaceholders: { allowInserting: true },
+  allowStatus: true,
+};
 
 const items = [
   {
-    name: 'doc',
     value: 'simple',
     label: 'Simple',
     defaultSelected: true,
   },
   {
-    name: 'doc',
     value: 'table',
     label: 'Table',
   },
   {
-    name: 'doc',
     value: 'lists',
     label: 'Lists',
+  },
+  {
+    value: 'demo',
+    label: 'Demo',
+  },
+  {
+    value: 'simple2',
+    label: 'Simple 2',
   },
 ];
 
 export class DiffDemo extends React.Component<{}, State> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       diffOnly: false,
       showDiff: true,
-      doc: 'simple',
+      doc: 'demo',
+      oldDocument: diffDocs['demo'].oldDocument,
+      newDocument: diffDocs['demo'].newDocument,
     };
   }
 
@@ -51,15 +85,16 @@ export class DiffDemo extends React.Component<{}, State> {
     });
   };
 
-  setDocument = (evt: any) => {
+  setDocument = (doc: string) => {
     this.setState({
-      doc: evt.target.value,
+      doc: doc,
+      oldDocument: diffDocs[doc].oldDocument,
+      newDocument: diffDocs[doc].newDocument,
     });
   };
 
   renderDiff() {
-    const { diffOnly, showDiff, doc } = this.state;
-    const { oldDocument, newDocument } = diffDocs[doc];
+    const { diffOnly, showDiff } = this.state;
     if (!showDiff) {
       return null;
     }
@@ -76,17 +111,25 @@ export class DiffDemo extends React.Component<{}, State> {
       >
         <strong>Diff</strong>
         <DiffRenderer
-          oldDocument={oldDocument}
-          newDocument={newDocument}
+          oldDocument={this.state.oldDocument}
+          newDocument={this.state.newDocument}
           diffOnly={diffOnly}
         />
       </div>
     );
   }
 
+  private oldDocChanged = async editorActions => {
+    const adf = await editorActions.getValue();
+    this.setState({ oldDocument: adf });
+  };
+  private newDocChanged = async editorActions => {
+    const adf = await editorActions.getValue();
+    this.setState({ newDocument: adf });
+  };
+
   render() {
-    const { diffOnly, showDiff, doc } = this.state;
-    const { oldDocument, newDocument } = diffDocs[doc];
+    const { diffOnly, showDiff } = this.state;
     return (
       <div style={{ display: 'flex' }}>
         <div
@@ -99,37 +142,64 @@ export class DiffDemo extends React.Component<{}, State> {
           }}
         >
           <strong>Old Document</strong>
-          <Renderer document={oldDocument} />
+          <EditorContext>
+            <WithEditorActions
+              render={actions => (
+                <Editor
+                  defaultValue={this.state.oldDocument}
+                  {...editorSettings}
+                  onChange={() => this.oldDocChanged(actions)}
+                />
+              )}
+            />
+          </EditorContext>
         </div>
         {this.renderDiff()}
         <div style={{ flex: '1 1 0' }}>
           <strong>New Document</strong>
-          <Renderer document={newDocument} />
+          <EditorContext>
+            <WithEditorActions
+              render={actions => (
+                <Editor
+                  defaultValue={this.state.newDocument}
+                  {...editorSettings}
+                  onChange={() => this.newDocChanged(actions)}
+                />
+              )}
+            />
+          </EditorContext>
         </div>
         <div
           style={{
             boxSizing: 'border-box',
             padding: '10px',
             marginLeft: '10px',
-            width: '150px',
+            width: '200px',
             borderLeft: '1px solid #EBECF0',
           }}
         >
-          {/* <CheckboxStateless
-            label="Show diff"
+          <ToggleStateless
             isChecked={showDiff}
             onChange={this.onShowDiffChange}
-          />
-          <CheckboxStateless
-            label="Changes only"
-            isChecked={diffOnly}
+          />{' '}
+          Show diff
+          <br />
+          <br />
+          <ToggleStateless
+            isChecked={!diffOnly}
             onChange={this.onDiffOnlyChange}
-          /> */}
-          {/* <AkFieldRadioGroup
-            items={items}
-            label="Pick a document:"
-            onRadioChange={this.setDocument}
-          /> */}
+          />{' '}
+          {diffOnly ? 'Changes only' : 'Whole document'}
+          <br />
+          <br />
+          Pick a document:
+          <Select
+            options={items}
+            onChange={({ value }: { value: string }) => {
+              this.setDocument(value);
+            }}
+            defaultValue={items.find(opt => opt.value === this.state.doc)}
+          />
         </div>
       </div>
     );

@@ -21,6 +21,7 @@ import tableRow from './nodes/table-row';
 import text from './nodes/text';
 import unknownBlock from './nodes/unknown-block';
 import status from './nodes/status';
+import { inlineDiff, blockDiff } from './nodes/inline-diff';
 
 import code from './marks/code';
 import em from './marks/em';
@@ -61,6 +62,8 @@ export const nodeSerializers: { [key: string]: NodeSerializer } = {
   text,
   unknownBlock,
   status,
+  inlineDiff,
+  blockDiff,
 };
 
 export const markSerializers: { [key: string]: MarkSerializer } = {

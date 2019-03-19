@@ -14,7 +14,7 @@ const serializeNode = (node: PMNode, serializedHTML?: string): string => {
   }
 
   const attrs = node.type.name === 'table' ? getTableAttrs(node) : node.attrs;
-
+  console.log(nodeSerializers, node.type.name);
   return nodeSerializers[node.type.name]({
     attrs,
     marks: node.marks,

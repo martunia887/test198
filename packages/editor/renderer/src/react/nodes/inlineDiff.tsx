@@ -1,10 +1,4 @@
 import * as React from 'react';
-import // akBorderRadius,
-// akGridSizeUnitless,
-// akColorG50,
-// akColorG300,
-// akColorR300,
-'@atlaskit/util-shared-styles';
 import styled from 'styled-components';
 
 const diffColor = {
@@ -33,7 +27,12 @@ const StyledDiff = styled.span`
 const StyledBlockDiff = styled.div`
   ${diffBackground} ${diffStyle} border-radius: 3px;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 3px;
+  margin: 1px 0;
+
+  & div {
+    margin: 0 !important;
+  }
 `;
 
 export interface Props {
@@ -42,12 +41,18 @@ export interface Props {
 
 export function InlineDiff(props: Props & React.Props<any>) {
   const { diffType } = props;
-  return <StyledDiff diffType={diffType}>{props.children}</StyledDiff>;
+  return (
+    <StyledDiff className="inlineDiff" diffType={diffType}>
+      {props.children}
+    </StyledDiff>
+  );
 }
 
 export function BlockDiff(props: Props & React.Props<any>) {
   const { diffType } = props;
   return (
-    <StyledBlockDiff diffType={diffType}>{props.children}</StyledBlockDiff>
+    <StyledBlockDiff className="blockDiff" diffType={diffType}>
+      {props.children}
+    </StyledBlockDiff>
   );
 }

@@ -6,7 +6,11 @@ import {
   taskDecision,
 } from '@atlaskit/util-data-test';
 import { CardEvent } from '@atlaskit/media-card';
-import { defaultSchema, ActionMarkAction } from '@atlaskit/adf-schema';
+import {
+  defaultSchema,
+  ActionMarkAction,
+  diffSchema,
+} from '@atlaskit/adf-schema';
 import {
   CardSurroundings,
   ProviderFactory,
@@ -274,12 +278,19 @@ export default class RendererDemo extends React.Component<
 
     try {
       const doc = JSON.parse(this.state.input);
-      const html = renderDocument<string>(doc, this.emailSerializer).result;
+      const html = renderDocument<string>(
+        doc,
+        this.emailSerializer,
+        diffSchema,
+        undefined,
+        true,
+      ).result;
 
       if (this.emailRef && this.emailRef.contentDocument && html) {
         this.emailRef.contentDocument.body.innerHTML = html;
       }
     } catch (ex) {
+      console.log(ex);
       // pass
     }
   }
