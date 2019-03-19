@@ -53,7 +53,7 @@ export class StatelessSidebar extends Component<SidebarProps> {
         </SidebarItem>
       );
     });
-    console.log(pluginItems);
+
     return [
       <Separator key="seperator">
         <SeparatorLine />

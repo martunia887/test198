@@ -1,3 +1,4 @@
+// TODO: Move this file somewhere else
 import * as React from 'react';
 import ImageIcon from '@atlaskit/icon/glyph/image';
 import Unsplash, { SearchResponse } from 'unsplash-client';
@@ -7,16 +8,22 @@ import { PopupPlugin, PopupPluginActions } from '../src/components/types';
 import { Component } from 'react';
 import { Card } from '@atlaskit/media-card';
 import { ExternalImageIdentifier } from '@atlaskit/media-core';
-import { UnsplashHeader, UnsplashWrapper, ResultsWrapper } from './styled';
+import {
+  SpinnerWrapper,
+  UnsplashHeader,
+  UnsplashWrapper,
+  ResultsWrapper,
+} from './styled';
+import { SelectedItem } from '../src/popup/domain';
 
 export interface UnsplashViewState {
   results: SearchResponse[];
-  selectedResults: string[];
   query: string;
 }
 
 export interface UnsplashViewProps {
   actions: PopupPluginActions;
+  selectedItems: SelectedItem[];
 }
 
 const client = new Unsplash(
@@ -26,16 +33,19 @@ const client = new Unsplash(
 class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
   state: UnsplashViewState = {
     results: [],
-    selectedResults: [],
     query: '',
   };
 
-  async componentDidMount() {
-    const results = await client.random();
+  static randomResults: SearchResponse[] = [];
 
-    this.setState({
-      results,
-    });
+  async componentDidMount() {
+    if (UnsplashView.randomResults.length) {
+      return;
+    }
+
+    const randomResults = await client.random();
+    UnsplashView.randomResults = randomResults;
+    this.forceUpdate();
   }
 
   search = async () => {
@@ -49,32 +59,19 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
 
   onCardClick = (id: string) => () => {
     const { actions } = this.props;
-    const { selectedResults } = this.state;
-    const index = selectedResults.indexOf(id);
-
-    if (index === -1) {
-      selectedResults.push(id);
-    } else {
-      selectedResults.splice(index, 1);
-    }
-
-    actions.fileClick(
-      {
-        id,
-        mimeType: 'image/png',
-        date: new Date().getTime(),
-        name: id,
-        size: 0,
-        upfrontId: Promise.resolve(id),
-      },
-      'unsplash',
-    );
-
-    this.setState({ selectedResults });
+    const item = {
+      id,
+      mimeType: 'image/png',
+      date: new Date().getTime(),
+      name: id,
+      size: 0,
+      upfrontId: Promise.resolve(id),
+    };
+    actions.fileClick(item, 'unsplash');
   };
 
-  renderResults = () => {
-    const { results, selectedResults } = this.state;
+  renderResults = (results: SearchResponse[]) => {
+    const { selectedItems } = this.props;
     const resultsContent = results.map(result => {
       const { id } = result;
       const identifier: ExternalImageIdentifier = {
@@ -82,8 +79,9 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
         mediaItemType: 'external-image',
         name: id,
       };
-      const selected = !!selectedResults.find(
-        selectedResult => selectedResult === id,
+      const selected = !!selectedItems.find(
+        selectedItem =>
+          selectedItem.id === id && selectedItem.serviceName === 'unsplash',
       );
 
       return (
@@ -91,7 +89,7 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
           selectable
           selected={selected}
           key={id}
-          context={{} as any}
+          context={{} as any} // Context is not needed for external images
           identifier={identifier}
           onClick={this.onCardClick(id)}
         />
@@ -107,9 +105,22 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
     this.setState({ query }, this.search);
   };
 
+  renderLoading = () => {
+    return (
+      <SpinnerWrapper>
+        <Spinner />
+      </SpinnerWrapper>
+    );
+  };
+
   render() {
     const { results, query } = this.state;
-    const content = !results.length ? <Spinner /> : this.renderResults();
+    const resultsToRender = results.length
+      ? results
+      : UnsplashView.randomResults;
+    const content = resultsToRender.length
+      ? this.renderResults(resultsToRender)
+      : this.renderLoading();
 
     return (
       <UnsplashWrapper>
@@ -130,5 +141,7 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
 export const unsplashPlugin: PopupPlugin = {
   name: 'unsplash',
   icon: <ImageIcon label="image-icon" />,
-  render: actions => <UnsplashView actions={actions} />,
+  render: (actions, selectedItems) => (
+    <UnsplashView actions={actions} selectedItems={selectedItems} />
+  ),
 };

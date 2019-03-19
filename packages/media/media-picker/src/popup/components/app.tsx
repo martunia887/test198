@@ -10,7 +10,7 @@ import {
   ObjectType,
 } from '@atlaskit/analytics-next-types';
 
-import { ServiceName, State, ServiceFile } from '../domain';
+import { ServiceName, State, ServiceFile, SelectedItem } from '../domain';
 
 import { BinaryUploaderImpl as MpBinary } from '../../components/binary';
 import { BrowserImpl as MpBrowser } from '../../components/browser';
@@ -63,6 +63,7 @@ export interface AppStateProps {
   readonly isVisible: boolean;
   readonly tenantContext: Context;
   readonly userContext: Context;
+  readonly selectedItems: SelectedItem[];
   readonly config?: Partial<PopupConfig>;
   readonly plugins?: PopupPlugin[];
 }
@@ -254,8 +255,7 @@ export class App extends Component<AppProps, AppState> {
   }
 
   private renderCurrentView(selectedServiceName: ServiceName): ReactNode {
-    console.log({ selectedServiceName });
-    const { plugins = [], onFileClick } = this.props;
+    const { plugins = [], onFileClick, selectedItems } = this.props;
 
     if (selectedServiceName === 'upload') {
       // We need to create a new context since Cards in recents view need user auth
@@ -275,11 +275,13 @@ export class App extends Component<AppProps, AppState> {
       );
 
       if (selectedPlugin) {
-        return selectedPlugin.render({
+        const actions = {
           fileClick(serviceFile: ServiceFile, serviceName: ServiceName) {
             onFileClick(serviceFile, serviceName);
           },
-        });
+        };
+
+        return selectedPlugin.render(actions, selectedItems);
       }
 
       return <Browser />;
@@ -299,6 +301,7 @@ const mapStateToProps = ({
   userContext,
   config,
   plugins,
+  selectedItems,
 }: State): AppStateProps => ({
   selectedServiceName: view.service.name,
   isVisible: view.isVisible,
@@ -306,6 +309,7 @@ const mapStateToProps = ({
   tenantContext,
   userContext,
   plugins,
+  selectedItems,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<State>): AppDispatchProps => ({

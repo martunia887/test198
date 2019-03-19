@@ -6,7 +6,7 @@ import { AppProxyReactContext } from '../popup/components/app';
 import { Dropzone, UploadEventPayloadMap, UploadParams } from '..';
 import { UploadComponent, UploadEventEmitter } from './component';
 import { EventEmitter } from '../util/eventEmitter';
-import { ServiceFile, ServiceName } from 'src/popup/domain';
+import { ServiceFile, ServiceName, SelectedItem } from 'src/popup/domain';
 
 export interface LocalUploadConfig {
   uploadParams: UploadParams; // This is tenant upload params
@@ -59,7 +59,10 @@ export interface PopupPluginActions {
 export interface PopupPlugin {
   name: string;
   icon: ReactNode;
-  render: (actions: PopupPluginActions) => ReactNode;
+  render: (
+    actions: PopupPluginActions,
+    selectedItems: SelectedItem[],
+  ) => ReactNode;
 }
 
 export interface PopupConfig extends LocalUploadConfig {
