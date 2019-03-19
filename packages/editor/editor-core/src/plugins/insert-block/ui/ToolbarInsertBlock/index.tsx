@@ -94,7 +94,7 @@ export const messages = defineMessages({
   sketch: {
     id: 'fabric.editor.sketch',
     defaultMessage: 'Sketch',
-    description: 'Add a quick sketch',
+    description: 'Insert a new drawing/sketch',
   },
   image: {
     id: 'fabric.editor.image',
