@@ -161,15 +161,14 @@ class CellView extends ReactNodeViewOneshot {
 
   ignoreMutation(record: MutationRecord) {
     // @see https://github.com/ProseMirror/prosemirror/issues/862
-    // const target = record.target as HTMLElement;
-    // if (
-    //   record.attributeName === 'class' ||
-    //   (target && closestElement(target, `.${ClassName.CELL_NODEVIEW_WRAPPER}`))
-    // ) {
-    //   return true;
-    // }
-    // return false;
-    return true;
+    const target = record.target as HTMLElement;
+    if (
+      record.attributeName === 'class' ||
+      (target && closestElement(target, `.${ClassName.CELL_NODEVIEW_WRAPPER}`))
+    ) {
+      return true;
+    }
+    return false;
   }
 }
 
