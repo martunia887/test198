@@ -133,6 +133,7 @@ export class BucketArray<T> {
         if (current.id === position) {
           return current;
         }
+        return prev;
       });
     }
     return this.buckets[position as number];
