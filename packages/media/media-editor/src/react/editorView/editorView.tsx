@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import { messages } from '@atlaskit/media-ui';
+import { ThemeProvider } from 'styled-components';
 import {
   MediaEditor,
   LoadParameters,
@@ -9,12 +11,9 @@ import {
   TOOLBAR_HEIGHT,
 } from '../mediaEditor';
 import { Tool, Color, Dimensions, ShapeParameters } from '../../common';
-import { messages } from '@atlaskit/media-ui';
 import Toolbar, { tools } from './toolbar/toolbar';
 import { EditorContainer } from './styles';
 import { isEmptySketchDummyImage } from '../../util';
-// @ts-ignore
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
 
 const TRANSPARENT_COLOR = { red: 0, green: 0, blue: 0, alpha: 0 };
 
@@ -84,14 +83,14 @@ class EditorView extends Component<
     const refHandler = (div: HTMLDivElement) => {
       this.rootDiv = div;
     };
-
+    const theme = { __ATLASKIT_THEME__: { mode: 'dark' } };
     return (
-      <AtlaskitThemeProvider mode="dark">
+      <ThemeProvider theme={theme}>
         <EditorContainer innerRef={refHandler}>
           {this.renderEditor()}
           {this.renderToolbar()}
         </EditorContainer>
-      </AtlaskitThemeProvider>
+      </ThemeProvider>
     );
   }
 
