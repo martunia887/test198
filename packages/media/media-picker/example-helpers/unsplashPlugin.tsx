@@ -2,17 +2,11 @@
 import * as React from 'react';
 import ImageIcon from '@atlaskit/icon/glyph/image';
 import Unsplash, { SearchResponse } from 'unsplash-client';
-import Spinner from '@atlaskit/spinner';
 import FieldText from '@atlaskit/field-text';
 import { Component } from 'react';
 import { Card } from '@atlaskit/media-card';
 import { ExternalImageIdentifier } from '@atlaskit/media-core';
-import {
-  SpinnerWrapper,
-  UnsplashHeader,
-  UnsplashWrapper,
-  ResultsWrapper,
-} from './styled';
+import { UnsplashHeader, UnsplashWrapper, ResultsWrapper } from './styled';
 import { SelectedItem } from '../src/popup/domain';
 import {
   MediaPickerPlugin,
@@ -39,7 +33,7 @@ export interface UnsplashFileMetadata {
 export const PLUGIN_NAME = 'unsplash';
 
 const client = new Unsplash(
-  '92b5d374817b9aeb2a89198a23fe12fdbe89a38518d5fc13adbddf95d28c2778',
+  'd163333f8d2e6d983ea0ad71774a15092e4aff97b99058cdd12f1ba3f42d09fe',
 );
 
 class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
@@ -55,7 +49,7 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
       return;
     }
 
-    const randomResults = await client.random();
+    const randomResults = await client.random(20);
     UnsplashView.randomResults = randomResults;
     this.forceUpdate();
   }
@@ -122,18 +116,12 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
     this.setState({ query }, this.search);
   };
 
-  renderLoading = () => {
-    return (
-      <SpinnerWrapper>
-        <Spinner />
-      </SpinnerWrapper>
-    );
-  };
-
   get resultsToRender() {
     const { results } = this.state;
     return results.length ? results : UnsplashView.randomResults;
   }
+
+  onFileClick = (item: BrickItem) => this.onCardClick(item.id)();
 
   renderBricks = () => {
     const { selectedItems } = this.props;
@@ -157,16 +145,13 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
         items={items}
         selectedItems={selectedItems}
         pluginName={PLUGIN_NAME}
+        onFileClick={this.onFileClick}
       />
     );
   };
 
   render() {
     const { query } = this.state;
-    // const { resultsToRender } = this;
-    // const content = resultsToRender.length
-    //   ? this.renderResults(resultsToRender)
-    //   : this.renderLoading();
     const content = this.renderBricks();
 
     return (
@@ -189,7 +174,7 @@ export const unsplashPlugin: MediaPickerPlugin = {
   name: PLUGIN_NAME,
   // type: 'external' | 'media', // TODO: plugin v2
   icon: <ImageIcon label="image-icon" />,
-  // TODO: potentially rename into (actions, state: {selectedItems: SelectedItems})
+  // TODO: rename into (actions, state: {selectedItems: SelectedItems})
   render: (actions, selectedItems) => (
     <UnsplashView actions={actions} selectedItems={selectedItems} />
   ),

@@ -1,27 +1,17 @@
 import * as React from 'react';
 import { Component } from 'react';
-// import * as debounce from 'lodash.debounce';
-// import FieldText from '@atlaskit/field-text';
-// import Button from '@atlaskit/button';
-// import Spinner from '@atlaskit/spinner';
+import { ExternalImageIdentifier } from '@atlaskit/media-core';
 import { Card } from '@atlaskit/media-card';
-// import { ImageCardModel } from '../../../tools/fetcher/fetcher';
-
+import Spinner from '@atlaskit/spinner';
 import {
   Container,
-  Title,
   GridCell,
   WarningContainer,
-  // WarningIconWrapper,
-  WarningImage,
 } from '../popup/components/views/giphy/styles';
-
-// import { errorIcon } from '../../../../icons';
 import { SelectedItem } from '../popup/domain';
-// import { errorIcon } from '../icons';
 import { BricksLayout } from '../popup/components/views/giphy/bricksGrid';
 import gridCellScaler from '../popup/tools/gridCellScaler';
-import { ExternalImageIdentifier } from '@atlaskit/media-core';
+import { SpinnerWrapper } from './styled';
 
 const NUMBER_OF_COLUMNS = 4;
 const GAP_SIZE = 5;
@@ -33,52 +23,19 @@ export interface BrickItem extends ExternalImageIdentifier {
 }
 
 export type BricksViewProps = {
-  // hasError: boolean;
-  // isLoading: boolean;
-  // TODO: extend ExternalImageIdentifier by adding "id"
   items: BrickItem[];
   selectedItems: SelectedItem[];
   pluginName: string;
-  // TODO: dimensions need to come within the identifier
-  // onCardClick(item: ImageCardModel, upfrontId: Promise<string>): void;
-  totalResultCount?: number;
+  onFileClick(item: BrickItem): void;
 };
 
-export interface BricksViewState {
-  query: string;
-}
-
-export class BricksView extends Component<BricksViewProps, BricksViewState> {
-  // private searchChangeHandler: (e: FormEvent<HTMLInputElement>) => void;
-
-  state: BricksViewState = {
-    query: '',
-  };
-
-  // componentDidUpdate({
-  //   onSearchQueryChange: oldOnSearchQueryChange,
-  // }: BricksViewProps) {
-  //   const { onSearchQueryChange: newOnSearchQueryChange } = this.props;
-
-  //   if (oldOnSearchQueryChange !== newOnSearchQueryChange) {
-  //     this.createSearchChangeHandler();
-  //   }
-  // }
-
+export class BricksView extends Component<BricksViewProps, {}> {
   render() {
-    // const { query } = this.state;
-
     return (
-      // TODO: rename
-      <Container id="mediapicker-giphy-container">
-        <Title>Bricks!</Title>
-        {/* <FieldText
-          label=""
-          placeholder={formatMessage(messages.search_all_gifs)}
-          onChange={this.searchChangeHandler}
-          shouldFitContainer={true}
-          value={query}
-        /> */}
+      <Container
+        style={{ height: 'auto', overflowY: 'hidden' }}
+        id="mediapicker-bricks-container"
+      >
         {this.getContent()}
       </Container>
     );
@@ -88,63 +45,40 @@ export class BricksView extends Component<BricksViewProps, BricksViewState> {
     const { items } = this.props;
 
     if (items.length === 0) {
-      return this.renderEmptyState();
+      return this.renderLoading();
     }
 
     return this.renderSearchResults();
   };
 
-  // private renderError = () => {
-  //   return (
-  //     <WarningContainer>
-  //       <WarningIconWrapper>{errorIcon}</WarningIconWrapper>
-  //     </WarningContainer>
-  //   );
-  // };
+  private renderLoading = () => {
+    return (
+      <SpinnerWrapper>
+        <Spinner />
+      </SpinnerWrapper>
+    );
+  };
 
   private renderEmptyState = () => {
-    // const { query } = this.state;
-
     // The GIF used in this error state is too large to store as a data URI (> 3.2 MB)
-    return (
-      <WarningContainer>
-        <WarningImage src="https://media1.giphy.com/media/10YK5Hh53nC3dK/200w.gif" />
-      </WarningContainer>
-    );
+    return <WarningContainer>EMPTY</WarningContainer>;
   };
 
   private renderSearchResults = () => {
     const { items } = this.props;
-    // const { isLoading, cardModels, totalResultCount } = this.props;
-
-    // const isThereAreMoreResults =
-    //   totalResultCount === undefined ||
-    //   cardModels.length < totalResultCount - 1;
-    // const shouldShowLoadMoreButton = isLoading || isThereAreMoreResults;
-
-    // const loadMoreButton =
-    //   shouldShowLoadMoreButton && this.renderLoadMoreButton();
-
-    return (
-      <div>
-        {this.renderMasonaryLayout(items)}
-        {/* {loadMoreButton} */}
-      </div>
-    );
+    return <div>{this.renderMasonaryLayout(items)}</div>;
   };
 
   private renderMasonaryLayout = (items: BrickItem[]) => {
     if (items.length === 0) {
       return null;
     }
-    // const {dimensions: actualDimensions, pluginName, selectedItems} = this.props;
+    const { pluginName, selectedItems } = this.props;
     const cards = items.map((item, i) => {
-      // TODO: get id
-      // const selected = selectedItems.some(
-      //   item => item.id === identifier.id && item.serviceName === pluginName,
-      // );
-      const { dimensions: actualDimensions, dataURI } = item;
-      const selected = false;
+      const { dimensions: actualDimensions, dataURI, name, id } = item;
+      const selected = selectedItems.some(
+        item => item.id === id && item.serviceName === pluginName,
+      );
       const dimensions = gridCellScaler({
         ...actualDimensions,
         gapSize: GAP_SIZE,
@@ -153,8 +87,8 @@ export class BricksView extends Component<BricksViewProps, BricksViewState> {
       });
       const identifier: ExternalImageIdentifier = {
         dataURI,
+        name,
         mediaItemType: 'external-image',
-        // name
       };
       return (
         <GridCell key={`${i}-metadata.id`} width={dimensions.width}>
@@ -164,7 +98,7 @@ export class BricksView extends Component<BricksViewProps, BricksViewState> {
             dimensions={dimensions}
             selectable={true}
             selected={selected}
-            onClick={this.createClickHandler(identifier)}
+            onClick={this.createClickHandler(item)}
           />
         </GridCell>
       );
@@ -172,7 +106,7 @@ export class BricksView extends Component<BricksViewProps, BricksViewState> {
 
     return (
       <BricksLayout
-        id="mediapicker-gif-layout"
+        id="mediapicker-bricks-layout"
         sizes={[{ columns: NUMBER_OF_COLUMNS, gutter: GAP_SIZE }]}
       >
         {cards}
@@ -180,51 +114,9 @@ export class BricksView extends Component<BricksViewProps, BricksViewState> {
     );
   };
 
-  // private renderLoadMoreButton = () => {
-  //   const { isLoading } = this.props;
-  //   const iconAfter = isLoading ? <Spinner /> : undefined;
+  private createClickHandler = (item: BrickItem) => () => {
+    const { onFileClick } = this.props;
 
-  //   return (
-  //     <ButtonContainer>
-  //       <Button
-  //         onClick={this.handleLoadMoreButtonClick}
-  //         isDisabled={isLoading}
-  //         iconAfter={iconAfter}
-  //       >
-  //         <FormattedMessage {...messages.load_more_gifs} />
-  //       </Button>
-  //     </ButtonContainer>
-  //   );
-  // };
-
-  // private createSearchChangeHandler = () => {
-  //   const { onSearchQueryChange } = this.props;
-  //   const debouncedOnSearchQueryChange = debounce(onSearchQueryChange, 1000);
-
-  //   return (e: FormEvent<HTMLInputElement>) => {
-  //     const query: string = e.currentTarget.value;
-  //     this.setState({
-  //       query,
-  //     });
-
-  //     debouncedOnSearchQueryChange(query);
-  //   };
-  // };
-
-  private createClickHandler = (identifier: ExternalImageIdentifier) => () => {
-    console.log('createClickHandler', identifier);
-    // const { onCardClick } = this.props;
-
-    // onCardClick(cardModel);
+    onFileClick(item);
   };
-
-  // private handleLoadMoreButtonClick = () => {
-  //   const { onLoadMoreButtonClick } = this.props;
-  //   onLoadMoreButtonClick(this.state.query, true);
-  // };
-
-  // private handleRetryButtonClick = () => {
-  //   const { onSearchQueryChange } = this.props;
-  //   onSearchQueryChange(this.state.query);
-  // };
 }
