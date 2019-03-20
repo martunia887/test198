@@ -258,6 +258,12 @@ export class SmartMediaEditor extends React.Component<
     });
   };
 
+  private clickShellNotPass = (e: React.SyntheticEvent<HTMLDivElement>) => {
+    // Stop click from propagating back to the editor.
+    // Without it editor will get focus and apply all the key events
+    e.stopPropagation();
+  };
+
   renderLoading = () => {
     return (
       <SpinnerWrapper>
@@ -296,7 +302,7 @@ export class SmartMediaEditor extends React.Component<
       : this.renderLoading();
 
     return (
-      <Blanket>
+      <Blanket onClick={this.clickShellNotPass}>
         {this.renderDeleteConfirmation()}
         <Shortcut keyCode={27} handler={this.onCancel} />
         {content}
