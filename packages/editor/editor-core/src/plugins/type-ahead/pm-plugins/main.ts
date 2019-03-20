@@ -336,6 +336,7 @@ export function defaultActionHandler({
 
   try {
     const { intl } = reactContext();
+    console.log({ intl });
     typeAheadItems = typeAheadHandler.getItems(
       query,
       state,

@@ -44,7 +44,7 @@ export interface ToolbarProps {
   editorActions?: EditorActions;
   eventDispatcher: EventDispatcher;
   providerFactory: ProviderFactory;
-  appearance: EditorAppearance;
+  appearance?: EditorAppearance;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;

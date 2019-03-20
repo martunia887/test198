@@ -24,6 +24,8 @@ import { DevTools } from '../example-helpers/DevTools';
 import { TitleInput } from '../example-helpers/PageElements';
 import { EditorActions } from './../src';
 import withSentry from '../example-helpers/withSentry';
+import { FullPage } from '../src/full-page';
+import { EditorPresetCXHTML } from '../src/presets/cxhtml';
 
 /**
  * +-------------------------------+
@@ -150,83 +152,9 @@ class ExampleEditorComponent extends React.Component<
       <Wrapper>
         <Content>
           <SmartCardProvider>
-            <Editor
-              appearance="full-page"
-              analyticsHandler={analyticsHandler}
-              allowAnalyticsGASV3={true}
-              quickInsert={{ provider: Promise.resolve(quickInsertProvider) }}
-              allowCodeBlocks={{ enableKeybindingsForIDE: true }}
-              allowLists={true}
-              allowTextColor={true}
-              allowTables={{
-                advanced: true,
-              }}
-              allowBreakout={true}
-              allowJiraIssue={true}
-              allowUnsupportedContent={true}
-              allowPanel={true}
-              allowExtension={{
-                allowBreakout: true,
-              }}
-              allowRule={true}
-              allowDate={true}
-              allowLayouts={{
-                allowBreakout: true,
-              }}
-              allowTextAlignment={true}
-              allowIndentation={true}
-              allowDynamicTextSizing={true}
-              allowTemplatePlaceholders={{ allowInserting: true }}
-              UNSAFE_cards={{
-                provider: Promise.resolve(cardProvider),
-              }}
-              allowStatus={true}
-              {...providers}
-              media={{
-                provider: mediaProvider,
-                allowMediaSingle: true,
-                allowResizing: true,
-                allowAnnotation: true,
-              }}
-              placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
-              shouldFocus={false}
-              disabled={this.state.disabled}
-              defaultValue={
-                (localStorage &&
-                  localStorage.getItem('fabric.editor.example.full-page')) ||
-                undefined
-              }
-              contentComponents={
-                <WithEditorActions
-                  // tslint:disable-next-line:jsx-no-lambda
-                  render={actions => (
-                    <TitleInput
-                      value={this.state.title}
-                      onChange={this.handleTitleChange}
-                      // tslint:disable-next-line:jsx-no-lambda
-                      innerRef={this.handleTitleRef}
-                      onFocus={this.handleTitleOnFocus}
-                      onBlur={this.handleTitleOnBlur}
-                      onKeyDown={(e: KeyboardEvent) => {
-                        this.onKeyPressed(e, actions);
-                      }}
-                    />
-                  )}
-                />
-              }
-              primaryToolbarComponents={
-                <WithEditorActions
-                  // tslint:disable-next-line:jsx-no-lambda
-                  render={actions => (
-                    <SaveAndCancelButtons editorActions={actions} />
-                  )}
-                />
-              }
-              onSave={SAVE_ACTION}
-              insertMenuItems={customInsertMenuItems}
-              extensionHandlers={extensionHandlers}
-              {...this.props}
-            />
+            <EditorPresetCXHTML>
+              <FullPage />
+            </EditorPresetCXHTML>
           </SmartCardProvider>
         </Content>
       </Wrapper>
@@ -275,3 +203,81 @@ export default function Example(props: EditorProps & ExampleProps) {
     </EditorContext>
   );
 }
+
+// <Editor
+//   appearance="full-page"
+//   analyticsHandler={analyticsHandler}
+//   allowAnalyticsGASV3={true}
+//   quickInsert={{ provider: Promise.resolve(quickInsertProvider) }}
+//   allowCodeBlocks={{ enableKeybindingsForIDE: true }}
+//   allowLists={true}
+//   allowTextColor={true}
+//   allowTables={{
+//     advanced: true,
+//   }}
+//   allowBreakout={true}
+//   allowJiraIssue={true}
+//   allowUnsupportedContent={true}
+//   allowPanel={true}
+//   allowExtension={{
+//     allowBreakout: true,
+//   }}
+//   allowRule={true}
+//   allowDate={true}
+//   allowLayouts={{
+//     allowBreakout: true,
+//   }}
+//   allowTextAlignment={true}
+//   allowIndentation={true}
+//   allowDynamicTextSizing={true}
+//   allowTemplatePlaceholders={{ allowInserting: true }}
+//   UNSAFE_cards={{
+//     provider: Promise.resolve(cardProvider),
+//   }}
+//   allowStatus={true}
+//   {...providers}
+//   media={{
+//     provider: mediaProvider,
+//     allowMediaSingle: true,
+//     allowResizing: true,
+//     allowAnnotation: true,
+//   }}
+//   placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
+//   shouldFocus={false}
+//   disabled={this.state.disabled}
+//   defaultValue={
+//     (localStorage &&
+//       localStorage.getItem('fabric.editor.example.full-page')) ||
+//     undefined
+//   }
+//   contentComponents={
+//     <WithEditorActions
+//       // tslint:disable-next-line:jsx-no-lambda
+//       render={actions => (
+//         <TitleInput
+//           value={this.state.title}
+//           onChange={this.handleTitleChange}
+//           // tslint:disable-next-line:jsx-no-lambda
+//           innerRef={this.handleTitleRef}
+//           onFocus={this.handleTitleOnFocus}
+//           onBlur={this.handleTitleOnBlur}
+//           onKeyDown={(e: KeyboardEvent) => {
+//             this.onKeyPressed(e, actions);
+//           }}
+//         />
+//       )}
+//     />
+//   }
+//   primaryToolbarComponents={
+//     <WithEditorActions
+//       // tslint:disable-next-line:jsx-no-lambda
+//       render={actions => (
+//         <SaveAndCancelButtons editorActions={actions} />
+//       )}
+//     />
+//   }
+//   onSave={SAVE_ACTION}
+//   insertMenuItems={customInsertMenuItems}
+//   extensionHandlers={extensionHandlers}
+//   {...this.props}
+// />

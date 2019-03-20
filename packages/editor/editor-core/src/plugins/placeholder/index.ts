@@ -93,15 +93,15 @@ export function createPlugin(placeholderText?: string): Plugin | undefined {
   });
 }
 
-const placeholderPlugin: EditorPlugin = {
+const placeholderPlugin = (placeholder: string): EditorPlugin => ({
   pmPlugins() {
     return [
       {
         name: 'placeholder',
-        plugin: ({ schema, props }) => createPlugin(props.placeholder),
+        plugin: ({ schema, props }) => createPlugin(placeholder),
       },
     ];
   },
-};
+});
 
 export default placeholderPlugin;
