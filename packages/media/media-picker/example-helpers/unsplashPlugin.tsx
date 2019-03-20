@@ -19,6 +19,7 @@ import {
   PluginActions,
   PluginFile,
 } from '../src/domain/plugin';
+import { BricksView, BrickItem } from '../src/plugins/bricksPluginView';
 
 export interface UnsplashViewState {
   results: SearchResponse[];
@@ -134,12 +135,39 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
     return results.length ? results : UnsplashView.randomResults;
   }
 
+  renderBricks = () => {
+    const { selectedItems } = this.props;
+    const { resultsToRender } = this;
+    const items: BrickItem[] = resultsToRender.map(result => {
+      const identifier: BrickItem = {
+        id: result.id,
+        mediaItemType: 'external-image',
+        dataURI: result.urls.regular,
+        dimensions: {
+          height: result.height,
+          width: result.width,
+        },
+      };
+
+      return identifier;
+    });
+
+    return (
+      <BricksView
+        items={items}
+        selectedItems={selectedItems}
+        pluginName={PLUGIN_NAME}
+      />
+    );
+  };
+
   render() {
     const { query } = this.state;
-    const { resultsToRender } = this;
-    const content = resultsToRender.length
-      ? this.renderResults(resultsToRender)
-      : this.renderLoading();
+    // const { resultsToRender } = this;
+    // const content = resultsToRender.length
+    //   ? this.renderResults(resultsToRender)
+    //   : this.renderLoading();
+    const content = this.renderBricks();
 
     return (
       <UnsplashWrapper>
@@ -161,6 +189,7 @@ export const unsplashPlugin: MediaPickerPlugin = {
   name: PLUGIN_NAME,
   // type: 'external' | 'media', // TODO: plugin v2
   icon: <ImageIcon label="image-icon" />,
+  // TODO: potentially rename into (actions, state: {selectedItems: SelectedItems})
   render: (actions, selectedItems) => (
     <UnsplashView actions={actions} selectedItems={selectedItems} />
   ),

@@ -21,7 +21,7 @@ export {
 
 import { ImageCardModel } from '../tools/fetcher/fetcher';
 import { PopupConfig } from '../..';
-import { PopupPlugin } from 'src/components/types';
+import { MediaPickerPlugin } from '../../domain/plugin';
 
 export interface State {
   readonly redirectUrl: string;
@@ -44,7 +44,7 @@ export interface State {
   readonly deferredIdUpfronts: {
     [id: string]: { resolver: (id: string) => void; rejecter: Function };
   };
-  readonly plugins?: PopupPlugin[];
+  readonly plugins?: MediaPickerPlugin[];
 }
 
 export type CancelUploadHandler = (uploadId: string) => void;

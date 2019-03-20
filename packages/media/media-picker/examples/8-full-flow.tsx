@@ -19,7 +19,7 @@ import {
   unsplashPlugin,
   UnsplashFileMetadata,
 } from '../example-helpers/unsplashPlugin';
-import { PluginItemPayload } from 'src/domain/plugin';
+import { PluginItemPayload } from '../src/domain/plugin';
 
 const context = createUploadContext();
 

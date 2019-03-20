@@ -294,7 +294,7 @@ export class App extends Component<AppProps, AppState> {
             onFileClick(serviceFile, pluginName);
           },
         };
-
+        // TODO: wrap into <PluginWrapper> to ensures right height + proper overflow
         return selectedPlugin.render(actions, selectedItems);
       }
 

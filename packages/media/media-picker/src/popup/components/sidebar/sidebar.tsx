@@ -10,11 +10,11 @@ import { State } from '../../domain';
 import SidebarItem from './item/sidebarItem';
 import GiphySidebarItem from './item/giphySidebarItem';
 import { Wrapper, ServiceList, Separator, SeparatorLine } from './styled';
-import { PopupPlugin } from 'src/components/types';
+import { MediaPickerPlugin } from 'src/domain/plugin';
 
 export interface SidebarStateProps {
   readonly selected: string;
-  readonly plugins?: PopupPlugin[];
+  readonly plugins?: MediaPickerPlugin[];
 }
 
 export type SidebarProps = SidebarStateProps;
