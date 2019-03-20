@@ -7,6 +7,7 @@
         "@babel/preset-env": "^7.3.0",
         "@babel/preset-react": "^7.0.0",
         "babel-loader": "^8.0.2",
+        "bolt": "^0.22.1",
         "express": "^4.16.4",
         "react": "^16.4.0",
         "react-dom": "^16.4.2",

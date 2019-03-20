@@ -9,6 +9,7 @@ const Button = require('@atlaskit/button').default;
 
 const sheet = new ServerStyleSheet();
 const app = express();
+require('./utils/renderExamplesToString');
 
 app.use(express.static('./'));
 
