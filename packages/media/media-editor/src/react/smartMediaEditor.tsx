@@ -8,13 +8,10 @@ import Spinner from '@atlaskit/spinner';
 import { intlShape, IntlProvider } from 'react-intl';
 import EditorView from './editorView/editorView';
 import { Blanket, SpinnerWrapper } from './styled';
-import { fileToBase64 } from '../util';
+import { fileToBase64, WHITE_1PX_IMAGE } from '../util';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import ErrorView from './editorView/errorView/errorView';
 import { Dimensions } from '../common';
-
-export const TRANSPARENT_1PX_IMAGE =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
 export interface SmartMediaEditorProps {
   identifier: FileIdentifier;
@@ -79,7 +76,7 @@ export class SmartMediaEditor extends React.Component<
     const id = await identifier.id;
     if (id === '') {
       this.setState({
-        imageUrl: TRANSPARENT_1PX_IMAGE,
+        imageUrl: WHITE_1PX_IMAGE,
       });
       return;
     }

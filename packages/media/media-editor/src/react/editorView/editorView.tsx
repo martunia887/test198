@@ -12,10 +12,9 @@ import { Tool, Color, Dimensions, ShapeParameters } from '../../common';
 import { messages } from '@atlaskit/media-ui';
 import Toolbar, { tools } from './toolbar/toolbar';
 import { EditorContainer } from './styles';
-import { TRANSPARENT_1PX_IMAGE } from '../smartMediaEditor';
+import { isEmptySketchDummyImage } from '../../util';
 
 const TRANSPARENT_COLOR = { red: 0, green: 0, blue: 0, alpha: 0 };
-// const WHITE_COLOR = { red: 255, green: 255, blue: 255, alpha: 1 };
 
 // Properties' names in the local storage
 const propertyColor = 'media-editor-color';
@@ -57,7 +56,7 @@ class EditorView extends Component<
 
   static getDerivedStateFromProps({ imageUrl }: EditorViewProps) {
     return {
-      isEmptySketch: imageUrl === TRANSPARENT_1PX_IMAGE,
+      isEmptySketch: isEmptySketchDummyImage(imageUrl),
     };
   }
 
@@ -103,7 +102,6 @@ class EditorView extends Component<
 
     const { imageUrl, onAnyEdit } = this.props;
     const { dimensions, color, lineWidth, tool, isEmptySketch } = this.state;
-    // const backgroundColor = isEmptySketch ? WHITE_COLOR : TRANSPARENT_COLOR;
 
     return (
       <MediaEditor

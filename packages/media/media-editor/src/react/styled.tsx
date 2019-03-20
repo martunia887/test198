@@ -32,14 +32,6 @@ export const OutputArea: ComponentClass<
 `;
 OutputArea.displayName = 'OutputArea';
 
-export const SketchBackground = styled.div`
-  background: white;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-`;
-
 export const DrawingCanvas: ComponentClass<
   CanvasHTMLAttributes<{}> & ThemedOuterStyledProps<{}, {}>
 > = styled.canvas`

@@ -1,4 +1,7 @@
 // Describes the position of a fragment on the whole bitmap
+
+import { isEmptySketchDummyImage } from '../../../util';
+
 export type FragmentPosition = {
   x: number;
   y: number;
@@ -54,14 +57,29 @@ export class BitmapFragment {
     supplementaryCanvas: HTMLCanvasElement,
   ): WebGLTexture {
     const { width, height, x, y } = this.position;
-
     // Draw the fragment on the supplementary canvas
     supplementaryCanvas.width = width;
     supplementaryCanvas.height = height;
     const context = supplementaryCanvas.getContext(
       '2d',
     ) as CanvasRenderingContext2D;
-    context.drawImage(image, x, y, width, height, 0, 0, width, height);
+    let sourceWidth = width;
+    let sourceHeight = height;
+    if (isEmptySketchDummyImage(image.src)) {
+      sourceWidth = 1;
+      sourceHeight = 1;
+    }
+    context.drawImage(
+      image,
+      x,
+      y,
+      sourceWidth,
+      sourceHeight,
+      0,
+      0,
+      width,
+      height,
+    );
 
     // Create the texture
     const gl = this.gl;

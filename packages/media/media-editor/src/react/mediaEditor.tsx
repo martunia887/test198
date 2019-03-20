@@ -8,7 +8,6 @@ import {
   HiddenTextHelperDiv,
   SupplementaryCanvas,
   SpinnerWrapper,
-  SketchBackground,
 } from './styled';
 import { Engine } from '../engine/engine';
 import {
@@ -186,30 +185,9 @@ export class MediaEditor extends React.Component<
     </SpinnerWrapper>
   );
 
-  private get sketchDimensions() {
-    const { dimensions } = this.props;
-    const sketchDimensions = {
-      width: DEFAULT_WIDTH,
-      height: DEFAULT_HEIGHT - TOOLBAR_HEIGHT,
-    };
-    if (dimensions.height < sketchDimensions.height) {
-      const extraPadding = 10;
-      sketchDimensions.width =
-        (dimensions.height - extraPadding) / DEFAULT_RATIO;
-      sketchDimensions.height = dimensions.height - extraPadding;
-    }
-    if (dimensions.width < sketchDimensions.width) {
-      const extraPadding = 20;
-      sketchDimensions.height =
-        (dimensions.width - extraPadding) * DEFAULT_RATIO;
-      sketchDimensions.width = dimensions.width - extraPadding;
-    }
-    return sketchDimensions;
-  }
-
   render() {
     const { isImageLoaded } = this.state;
-    const { dimensions, isEmptySketch } = this.props;
+    const { dimensions } = this.props;
 
     return (
       <MediaEditorContainer style={dimensions}>
@@ -227,9 +205,6 @@ export class MediaEditor extends React.Component<
           <HiddenTextHelperDiv
             innerRef={this.handleHiddenTextHelperDivInnerRef}
           />
-          {isEmptySketch ? (
-            <SketchBackground style={this.sketchDimensions} />
-          ) : null}
           <DrawingCanvas
             onClick={this.onCanvasClick}
             innerRef={this.handleDrawingCanvasInnerRef}
@@ -248,7 +223,7 @@ export class MediaEditor extends React.Component<
   };
 
   private loadEngine(): void {
-    const { imageUrl, isEmptySketch } = this.props;
+    const { imageUrl, dimensions, isEmptySketch } = this.props;
 
     DefaultImageProvider.create(
       () => urlImageLoader(imageUrl),
@@ -262,9 +237,8 @@ export class MediaEditor extends React.Component<
         this.setState({ isImageLoaded: true });
 
         if (isEmptySketch) {
-          const sketchDimensions = this.sketchDimensions;
-          imageProvider.backImage.width = sketchDimensions.width;
-          imageProvider.backImage.height = sketchDimensions.height;
+          imageProvider.backImage.width = dimensions.width;
+          imageProvider.backImage.height = dimensions.height;
         }
 
         // Creating components for the engine
