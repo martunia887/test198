@@ -129,7 +129,6 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
     const items: BrickItem[] = resultsToRender.map(result => {
       const identifier: BrickItem = {
         id: result.id,
-        mediaItemType: 'external-image',
         dataURI: result.urls.regular,
         dimensions: {
           height: result.height,

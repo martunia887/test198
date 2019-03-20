@@ -3,11 +3,7 @@ import { Component } from 'react';
 import { ExternalImageIdentifier } from '@atlaskit/media-core';
 import { Card } from '@atlaskit/media-card';
 import Spinner from '@atlaskit/spinner';
-import {
-  Container,
-  GridCell,
-  WarningContainer,
-} from '../popup/components/views/giphy/styles';
+import { Container, GridCell } from '../popup/components/views/giphy/styles';
 import { SelectedItem } from '../popup/domain';
 import { BricksLayout } from '../popup/components/views/giphy/bricksGrid';
 import gridCellScaler from '../popup/tools/gridCellScaler';
@@ -17,9 +13,11 @@ const NUMBER_OF_COLUMNS = 4;
 const GAP_SIZE = 5;
 const CONTAINER_WIDTH = 677;
 
-export interface BrickItem extends ExternalImageIdentifier {
-  id: string;
-  dimensions: { width: number; height: number };
+export interface BrickItem {
+  readonly id: string;
+  readonly dimensions: { width: number; height: number };
+  readonly dataURI: string;
+  readonly name?: string;
 }
 
 export type BricksViewProps = {
@@ -57,11 +55,6 @@ export class BricksView extends Component<BricksViewProps, {}> {
         <Spinner />
       </SpinnerWrapper>
     );
-  };
-
-  private renderEmptyState = () => {
-    // The GIF used in this error state is too large to store as a data URI (> 3.2 MB)
-    return <WarningContainer>EMPTY</WarningContainer>;
   };
 
   private renderSearchResults = () => {
