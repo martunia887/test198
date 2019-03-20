@@ -18,7 +18,12 @@ import {
   TextDirection,
   Tool,
 } from '../common';
-import { colorSame, colorWithAlphaSame, dimensionsSame } from '../util';
+import {
+  colorSame,
+  colorWithAlphaSame,
+  dimensionsSame,
+  isEmptySketchDummyImage,
+} from '../util';
 
 import {
   DefaultDrawingArea,
@@ -34,10 +39,9 @@ import { DefaultKeyboardInput } from '../engine/components/keyboardInput';
 import { DefaultImageReceiver } from '../engine/components/imageReceiver';
 import { DefaultShapeDeleter } from '../engine/components/shapeDeleter';
 
-export const DEFAULT_WIDTH = 845;
-export const DEFAULT_HEIGHT = 530;
+export const DEFAULT_WIDTH = 1275;
+export const DEFAULT_HEIGHT = 800;
 export const TOOLBAR_HEIGHT = 64;
-export const DEFAULT_RATIO = DEFAULT_HEIGHT / DEFAULT_WIDTH;
 
 export type ImageGetter = (format?: string) => ExportedImage;
 
@@ -66,7 +70,6 @@ export interface MediaEditorProps {
   onError: ErrorHandler;
   onShapeParametersChanged: ShapeParametersChangedHandler;
   onAnyEdit?: () => void;
-  isEmptySketch?: boolean;
 }
 
 export interface MediaEditorState {
@@ -223,7 +226,7 @@ export class MediaEditor extends React.Component<
   };
 
   private loadEngine(): void {
-    const { imageUrl, dimensions, isEmptySketch } = this.props;
+    const { imageUrl, dimensions } = this.props;
 
     DefaultImageProvider.create(
       () => urlImageLoader(imageUrl),
@@ -236,7 +239,7 @@ export class MediaEditor extends React.Component<
         }
         this.setState({ isImageLoaded: true });
 
-        if (isEmptySketch) {
+        if (isEmptySketchDummyImage(imageUrl)) {
           imageProvider.backImage.width = dimensions.width;
           imageProvider.backImage.height = dimensions.height;
         }

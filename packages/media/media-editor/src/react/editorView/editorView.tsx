@@ -13,7 +13,6 @@ import {
 import { Tool, Color, Dimensions, ShapeParameters } from '../../common';
 import Toolbar, { tools } from './toolbar/toolbar';
 import { EditorContainer } from './styles';
-import { isEmptySketchDummyImage } from '../../util';
 
 const TRANSPARENT_COLOR = { red: 0, green: 0, blue: 0, alpha: 0 };
 
@@ -31,7 +30,6 @@ export interface EditorViewProps {
 }
 
 export interface EditorViewState {
-  readonly isEmptySketch: boolean;
   readonly dimensions: Dimensions;
   readonly color: Color;
   readonly lineWidth: number;
@@ -52,14 +50,7 @@ class EditorView extends Component<
     color: { red: 0xbf, green: 0x26, blue: 0x00 },
     lineWidth: 8,
     tool: 'arrow',
-    isEmptySketch: false,
   };
-
-  static getDerivedStateFromProps({ imageUrl }: EditorViewProps) {
-    return {
-      isEmptySketch: isEmptySketchDummyImage(imageUrl),
-    };
-  }
 
   componentDidMount() {
     if (!this.rootDiv) {
@@ -104,11 +95,10 @@ class EditorView extends Component<
     };
 
     const { imageUrl, onAnyEdit } = this.props;
-    const { dimensions, color, lineWidth, tool, isEmptySketch } = this.state;
+    const { dimensions, color, lineWidth, tool } = this.state;
 
     return (
       <MediaEditor
-        isEmptySketch={isEmptySketch}
         imageUrl={imageUrl}
         dimensions={dimensions}
         backgroundColor={TRANSPARENT_COLOR}
