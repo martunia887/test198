@@ -1,0 +1,1 @@
+- Add the ability for making a simple drawing in the editor
