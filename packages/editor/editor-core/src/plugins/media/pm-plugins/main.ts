@@ -489,8 +489,6 @@ export class MediaPluginState {
 
       width: dimensions.width,
       height: dimensions.height,
-
-      __fileMimeType: 'image/drawing',
     };
     const mediaNode = schema.nodes.media!.createChecked(newMediaNodeAttrs);
     const mediaSingle = (schema.nodes.mediaSingle! as NodeType).createChecked(

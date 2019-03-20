@@ -15,6 +15,7 @@ import { EditorContainer } from './styles';
 import { isEmptySketchDummyImage } from '../../util';
 
 const TRANSPARENT_COLOR = { red: 0, green: 0, blue: 0, alpha: 0 };
+// const WHITE_COLOR = { red: 255, green: 255, blue: 255, alpha: 1 };
 
 // Properties' names in the local storage
 const propertyColor = 'media-editor-color';
@@ -102,6 +103,7 @@ class EditorView extends Component<
 
     const { imageUrl, onAnyEdit } = this.props;
     const { dimensions, color, lineWidth, tool, isEmptySketch } = this.state;
+    // const backgroundColor = isEmptySketch ? WHITE_COLOR : TRANSPARENT_COLOR;
 
     return (
       <MediaEditor

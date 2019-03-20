@@ -1333,7 +1333,7 @@ describe('Media plugin', () => {
       await pluginState.setMediaProvider(mediaProvider);
       setNodeSelection(editorView, 0);
       pluginState.openMediaEditor();
-      pluginState.replaceEditingMedia(
+      pluginState.finishedEditingMedia(
         {
           id: 'media2',
           collectionName: 'collection2',
@@ -1383,7 +1383,7 @@ describe('Media plugin', () => {
       insertText(editorView, 'add', refs['<>']);
 
       // should replace the old one
-      pluginState.replaceEditingMedia(
+      pluginState.finishedEditingMedia(
         {
           id: 'media2',
           collectionName: 'collection2',
@@ -1407,6 +1407,46 @@ describe('Media plugin', () => {
             })(),
           ),
           p('hello {<>}addworld'),
+        ),
+      );
+    });
+
+    it('adds the editing media node (drawing) even if selection changes', async () => {
+      const { pluginState, editorView, refs } = editor(
+        doc(p('hello {<>}world')),
+      );
+
+      await pluginState.setMediaProvider(mediaProvider);
+      pluginState.openMediaEditor();
+
+      // move selection to paragraph
+      insertText(editorView, 'add', refs['<>']);
+
+      // should replace the old one
+      pluginState.finishedEditingMedia(
+        {
+          id: 'media',
+          collectionName: 'collection',
+          mediaItemType: 'file',
+        },
+        {
+          height: 100,
+          width: 200,
+        },
+      );
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          p('hello {<>}addworld'),
+          mediaSingle({ layout: 'center' })(
+            media({
+              id: 'media',
+              type: 'file',
+              collection: 'collection',
+              height: 100,
+              width: 200,
+            })(),
+          ),
         ),
       );
     });
