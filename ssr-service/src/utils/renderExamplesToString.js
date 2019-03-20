@@ -18,8 +18,9 @@ async function renderExampleToString() {
 
   for (const avatarExample of avatarExamples) {
     const example = path.join(avatar.dir, 'examples', avatarExample);
-    // $StringLitteral
+    // $StringLitteral;
     const exampleContent = require(example).default;
+    console.log({ example });
     console.log({ exampleContent });
   }
   // write to a cache folder

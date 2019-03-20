@@ -1,5 +1,7 @@
 // @flow
 
+require('@babel/polyfill');
+
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
 const express = require('express');
