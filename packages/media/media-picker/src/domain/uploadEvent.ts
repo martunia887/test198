@@ -3,6 +3,7 @@ import { MediaProgress } from './progress';
 import { MediaError } from './error';
 import { Preview, isImagePreview } from './preview';
 import { MediaFile } from './file';
+import { PluginItemPayload } from './plugin';
 
 export { isImagePreview };
 
@@ -35,6 +36,7 @@ export type UploadErrorEventPayload = {
 };
 
 export type UploadEventPayloadMap = {
+  readonly 'plugin-items-inserted': PluginItemPayload[];
   readonly 'uploads-start': UploadsStartEventPayload;
   readonly 'upload-preview-update': UploadPreviewUpdateEventPayload;
   readonly 'upload-status-update': UploadStatusUpdateEventPayload;

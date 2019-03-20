@@ -94,7 +94,8 @@ export type ServiceName =
   | 'google'
   | 'dropbox'
   | 'upload'
-  | 'giphy';
+  | 'giphy'
+  | string;
 
 export const isRemoteCloudAccount = (serviceName: ServiceName): boolean => {
   return serviceName === 'google' || serviceName === 'dropbox';
@@ -147,6 +148,7 @@ export interface ServiceFile {
   readonly size: number;
   readonly date: number;
   readonly occurrenceKey?: string;
+  readonly metadata?: any;
 }
 
 export interface SelectedItem extends ServiceFile {

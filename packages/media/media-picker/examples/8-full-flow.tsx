@@ -5,7 +5,7 @@ import {
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier, ExternalImageIdentifier } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
 import Select from '@atlaskit/select';
 import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
@@ -15,7 +15,11 @@ import {
   MediaFile,
   Popup,
 } from '../src';
-import { unsplashPlugin } from '../example-helpers/unsplashPlugin';
+import {
+  unsplashPlugin,
+  UnsplashFileMetadata,
+} from '../example-helpers/unsplashPlugin';
+import { PluginItemPayload } from 'src/domain/plugin';
 
 const context = createUploadContext();
 
@@ -25,12 +29,13 @@ const dataSourceOptions = [
 ];
 
 export type TenantFileRecord = {
-  id: string;
+  id?: string;
+  src?: string;
   occurrenceKey?: string;
 };
 export type DataSourceType = 'collection' | 'list';
 export interface State {
-  events: Array<TenantFileRecord>;
+  events: TenantFileRecord[];
   dataSourceType: DataSourceType;
   popup?: Popup;
 }
@@ -44,6 +49,25 @@ export default class Example extends React.Component<{}, State> {
         collection: defaultCollectionName,
       },
       plugins: [unsplashPlugin],
+    });
+
+    popup.on('plugin-items-inserted', (items: PluginItemPayload[]) => {
+      const { events } = this.state;
+      const newEvents: TenantFileRecord[] = items.map(item => {
+        if (item.pluginName === 'unsplash') {
+          const metadata: UnsplashFileMetadata = item.pluginFile.metadata;
+
+          return {
+            src: metadata.src,
+          };
+        }
+
+        return {};
+      });
+
+      this.setState({
+        events: [...events, ...newEvents],
+      });
     });
 
     popup.on('uploads-start', (payload: { files: MediaFile[] }) => {
@@ -85,7 +109,7 @@ export default class Example extends React.Component<{}, State> {
     const { dataSourceType, events } = this.state;
     const list: FileIdentifier[] = events.map(event => {
       const identifier: FileIdentifier = {
-        id: event.id,
+        id: event.id!,
         occurrenceKey: event.occurrenceKey || '',
         mediaItemType: 'file',
       };
@@ -102,12 +126,25 @@ export default class Example extends React.Component<{}, State> {
     const { events } = this.state;
 
     return events.map((fileRecord, key) => {
-      const identifier: FileIdentifier = {
-        id: fileRecord.id,
-        mediaItemType: 'file',
-        collectionName: defaultCollectionName,
-        occurrenceKey: fileRecord.occurrenceKey,
-      };
+      let identifier: FileIdentifier | ExternalImageIdentifier | undefined;
+
+      if (fileRecord.id) {
+        identifier = {
+          id: fileRecord.id,
+          mediaItemType: 'file',
+          collectionName: defaultCollectionName,
+          occurrenceKey: fileRecord.occurrenceKey,
+        };
+      } else if (fileRecord.src) {
+        identifier = {
+          mediaItemType: 'external-image',
+          dataURI: fileRecord.src,
+        };
+      }
+
+      if (!identifier) {
+        return null;
+      }
 
       return (
         <div key={key} style={{ display: 'inline-block', margin: '10px' }}>

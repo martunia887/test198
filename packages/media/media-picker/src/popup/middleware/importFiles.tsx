@@ -188,6 +188,11 @@ export const touchSelectedFiles = (
   tenantContext.file.touchFiles(touchFileDescriptors, tenantCollection);
 };
 
+const isKnowServiceName = ({ serviceName }: SelectedItem) =>
+  ['recent_files', 'google', 'dropbox', 'upload', 'giphy'].indexOf(
+    serviceName,
+  ) > -1;
+
 export async function importFiles(
   eventEmitter: PopupUploadEventEmitter,
   store: Store<State>,
@@ -199,12 +204,15 @@ export async function importFiles(
   store.dispatch(hidePopup());
 
   const auth = await userContext.config.authProvider();
-  const selectedUploadFiles = selectedItems.map(item =>
-    mapSelectedItemToSelectedUploadFile(item, tenantCollection),
+  const selectedUploadFiles = selectedItems
+    .filter(isKnowServiceName)
+    .map(item => mapSelectedItemToSelectedUploadFile(item, tenantCollection));
+  const selectedPluginItems = selectedItems.filter(
+    item => !isKnowServiceName(item),
   );
 
   touchSelectedFiles(selectedUploadFiles, store);
-
+  eventEmitter.emitPluginItemsInserted(selectedPluginItems);
   eventEmitter.emitUploadsStart(
     selectedUploadFiles.map(({ file, touchFileDescriptor }) =>
       copyMediaFileForUpload(file, touchFileDescriptor.fileId),

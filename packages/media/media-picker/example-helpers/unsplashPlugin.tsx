@@ -4,7 +4,6 @@ import ImageIcon from '@atlaskit/icon/glyph/image';
 import Unsplash, { SearchResponse } from 'unsplash-client';
 import Spinner from '@atlaskit/spinner';
 import FieldText from '@atlaskit/field-text';
-import { PopupPlugin, PopupPluginActions } from '../src/components/types';
 import { Component } from 'react';
 import { Card } from '@atlaskit/media-card';
 import { ExternalImageIdentifier } from '@atlaskit/media-core';
@@ -15,6 +14,11 @@ import {
   ResultsWrapper,
 } from './styled';
 import { SelectedItem } from '../src/popup/domain';
+import {
+  MediaPickerPlugin,
+  PluginActions,
+  PluginFile,
+} from '../src/domain/plugin';
 
 export interface UnsplashViewState {
   results: SearchResponse[];
@@ -22,9 +26,16 @@ export interface UnsplashViewState {
 }
 
 export interface UnsplashViewProps {
-  actions: PopupPluginActions;
+  actions: PluginActions;
   selectedItems: SelectedItem[];
 }
+
+export interface UnsplashFileMetadata {
+  src: string;
+  srcFull: string;
+}
+
+export const PLUGIN_NAME = 'unsplash';
 
 const client = new Unsplash(
   '92b5d374817b9aeb2a89198a23fe12fdbe89a38518d5fc13adbddf95d28c2778',
@@ -58,16 +69,21 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
   };
 
   onCardClick = (id: string) => () => {
+    const { resultsToRender } = this;
     const { actions } = this.props;
-    const item = {
-      id,
-      mimeType: 'image/png',
-      date: new Date().getTime(),
-      name: id,
-      size: 0,
-      upfrontId: Promise.resolve(id),
+    const selectedResult = resultsToRender.find(result => result.id === id);
+    if (!selectedResult) {
+      return;
+    }
+    const metadata: UnsplashFileMetadata = {
+      src: selectedResult.urls.regular,
+      srcFull: selectedResult.urls.full,
     };
-    actions.fileClick(item, 'unsplash');
+    const item: PluginFile = {
+      id,
+      metadata,
+    };
+    actions.fileClick(item, PLUGIN_NAME);
   };
 
   renderResults = (results: SearchResponse[]) => {
@@ -81,7 +97,7 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
       };
       const selected = !!selectedItems.find(
         selectedItem =>
-          selectedItem.id === id && selectedItem.serviceName === 'unsplash',
+          selectedItem.id === id && selectedItem.serviceName === PLUGIN_NAME,
       );
 
       return (
@@ -113,11 +129,14 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
     );
   };
 
+  get resultsToRender() {
+    const { results } = this.state;
+    return results.length ? results : UnsplashView.randomResults;
+  }
+
   render() {
-    const { results, query } = this.state;
-    const resultsToRender = results.length
-      ? results
-      : UnsplashView.randomResults;
+    const { query } = this.state;
+    const { resultsToRender } = this;
     const content = resultsToRender.length
       ? this.renderResults(resultsToRender)
       : this.renderLoading();
@@ -138,8 +157,9 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
   }
 }
 
-export const unsplashPlugin: PopupPlugin = {
-  name: 'unsplash',
+export const unsplashPlugin: MediaPickerPlugin = {
+  name: PLUGIN_NAME,
+  // type: 'external' | 'media', // TODO: plugin v2
   icon: <ImageIcon label="image-icon" />,
   render: (actions, selectedItems) => (
     <UnsplashView actions={actions} selectedItems={selectedItems} />

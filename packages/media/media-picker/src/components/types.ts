@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { InjectedIntl } from 'react-intl';
 import { Context } from '@atlaskit/media-core';
 import { LocalUploadComponent } from './localUpload';
@@ -6,7 +5,7 @@ import { AppProxyReactContext } from '../popup/components/app';
 import { Dropzone, UploadEventPayloadMap, UploadParams } from '..';
 import { UploadComponent, UploadEventEmitter } from './component';
 import { EventEmitter } from '../util/eventEmitter';
-import { ServiceFile, ServiceName, SelectedItem } from 'src/popup/domain';
+import { MediaPickerPlugin } from '../domain/plugin';
 
 export interface LocalUploadConfig {
   uploadParams: UploadParams; // This is tenant upload params
@@ -53,23 +52,12 @@ export interface Clipboard extends LocalUploadComponent {
   activate(): Promise<void>;
   deactivate(): void;
 }
-export interface PopupPluginActions {
-  fileClick: (serviceFile: ServiceFile, serviceName: ServiceName) => void;
-}
-export interface PopupPlugin {
-  name: string;
-  icon: ReactNode;
-  render: (
-    actions: PopupPluginActions,
-    selectedItems: SelectedItem[],
-  ) => ReactNode;
-}
 
 export interface PopupConfig extends LocalUploadConfig {
   readonly container?: HTMLElement;
   readonly proxyReactContext?: AppProxyReactContext;
   readonly singleSelect?: boolean;
-  readonly plugins?: PopupPlugin[];
+  readonly plugins?: MediaPickerPlugin[];
 }
 
 export interface PopupConstructor {

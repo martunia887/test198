@@ -54,9 +54,13 @@ import { MediaPickerPopupWrapper, SidebarWrapper, ViewWrapper } from './styled';
 import {
   DropzoneDragEnterEventPayload,
   DropzoneDragLeaveEventPayload,
-  PopupPlugin,
 } from '../../components/types';
 import { fileClick } from '../actions/fileClick';
+import {
+  MediaPickerPlugin,
+  PluginActions,
+  PluginFile,
+} from '../../domain/plugin';
 
 export interface AppStateProps {
   readonly selectedServiceName: ServiceName;
@@ -65,7 +69,7 @@ export interface AppStateProps {
   readonly userContext: Context;
   readonly selectedItems: SelectedItem[];
   readonly config?: Partial<PopupConfig>;
-  readonly plugins?: PopupPlugin[];
+  readonly plugins?: MediaPickerPlugin[];
 }
 
 export interface AppDispatchProps {
@@ -275,9 +279,19 @@ export class App extends Component<AppProps, AppState> {
       );
 
       if (selectedPlugin) {
-        const actions = {
-          fileClick(serviceFile: ServiceFile, serviceName: ServiceName) {
-            onFileClick(serviceFile, serviceName);
+        const actions: PluginActions = {
+          fileClick(pluginFile: PluginFile, pluginName: string) {
+            const serviceFile: ServiceFile = {
+              id: pluginFile.id,
+              date: new Date().getTime(),
+              mimeType: '',
+              name: '',
+              size: 0,
+              upfrontId: Promise.resolve(pluginFile.id),
+              metadata: pluginFile.metadata,
+            };
+            // TODO sanitize serviceName `plugin-serviceName`
+            onFileClick(serviceFile, pluginName);
           },
         };
 
