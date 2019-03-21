@@ -74,6 +74,7 @@ export const TableCssClassName = {
   CONTROLS_INSERT_BUTTON_WRAP: `${clPrefix}controls__insert-button-wrap`,
   CONTROLS_INSERT_LINE: `${clPrefix}controls__insert-line`,
   CONTROLS_DRAG_AND_DROP_LINE: `${clPrefix}controls__insert-drag-and-drop-line`,
+  CONTROLS_DRAG_AND_DROP_LINE_ACTIVATED: `${clPrefix}controls__insert-drag-and-drop-line-activated`,
   CONTROLS_BUTTON_OVERLAY: `${clPrefix}controls__button-overlay`,
   LAYOUT_BUTTON: `${clPrefix}layout-button`,
 

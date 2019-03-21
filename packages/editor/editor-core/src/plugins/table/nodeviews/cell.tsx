@@ -97,9 +97,8 @@ class CellView extends ReactNodeView {
 
   createDomRef() {
     const { tableCell } = this.view.state.schema.nodes;
-    this.cell = document.createElement(
-      `t${this.node.type === tableCell ? 'd' : 'h'}`,
-    );
+    const type = this.node.type === tableCell ? 'td' : 'th';
+    this.cell = document.createElement(type);
     return this.cell;
   }
 
