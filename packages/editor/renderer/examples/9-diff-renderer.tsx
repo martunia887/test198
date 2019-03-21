@@ -7,7 +7,9 @@ import {
   Editor,
   WithEditorActions,
   EditorContext,
+  EditorActions,
 } from '@atlaskit/editor-core';
+import { debounce } from 'throttle-debounce';
 
 export interface State {
   diffOnly?: boolean;
@@ -44,6 +46,14 @@ const items = [
     defaultSelected: true,
   },
   {
+    value: 'simple2',
+    label: 'Simple 2',
+  },
+  {
+    value: 'complex',
+    label: 'Full document',
+  },
+  {
     value: 'table',
     label: 'Table',
   },
@@ -55,21 +65,21 @@ const items = [
     value: 'demo',
     label: 'Demo',
   },
-  {
-    value: 'simple2',
-    label: 'Simple 2',
-  },
 ];
+const defaultValue = 'simple2';
 
 export class DiffDemo extends React.Component<{}, State> {
+  oldEditorActions: EditorActions;
+  newEditorActions: EditorActions;
+
   constructor(props: any) {
     super(props);
     this.state = {
       diffOnly: false,
       showDiff: true,
-      doc: 'demo',
-      oldDocument: diffDocs['demo'].oldDocument,
-      newDocument: diffDocs['demo'].newDocument,
+      doc: defaultValue,
+      oldDocument: diffDocs[defaultValue].oldDocument,
+      newDocument: diffDocs[defaultValue].newDocument,
     };
   }
 
@@ -85,12 +95,16 @@ export class DiffDemo extends React.Component<{}, State> {
     });
   };
 
-  setDocument = (doc: string) => {
-    this.setState({
+  setDocument = async (doc: string) => {
+    await this.setState({
       doc: doc,
       oldDocument: diffDocs[doc].oldDocument,
       newDocument: diffDocs[doc].newDocument,
     });
+    if (this.oldEditorActions && this.newEditorActions) {
+      this.oldEditorActions.replaceDocument(this.state.oldDocument);
+      this.newEditorActions.replaceDocument(this.state.newDocument);
+    }
   };
 
   renderDiff() {
@@ -119,87 +133,90 @@ export class DiffDemo extends React.Component<{}, State> {
     );
   }
 
-  private oldDocChanged = async editorActions => {
+  private oldDocChanged = debounce(200, async editorActions => {
     const adf = await editorActions.getValue();
     this.setState({ oldDocument: adf });
-  };
-  private newDocChanged = async editorActions => {
+  });
+  private newDocChanged = debounce(200, async editorActions => {
     const adf = await editorActions.getValue();
     this.setState({ newDocument: adf });
-  };
+  });
 
   render() {
     const { diffOnly, showDiff } = this.state;
     return (
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div
           style={{
-            flex: '1 1 0',
-            boxSizing: 'border-box',
-            padding: '0 10px 0 0',
-            margin: '0 10px 0 0',
-            borderRight: '1px solid #EBECF0',
-          }}
-        >
-          <strong>Old Document</strong>
-          <EditorContext>
-            <WithEditorActions
-              render={actions => (
-                <Editor
-                  defaultValue={this.state.oldDocument}
-                  {...editorSettings}
-                  onChange={() => this.oldDocChanged(actions)}
-                />
-              )}
-            />
-          </EditorContext>
-        </div>
-        {this.renderDiff()}
-        <div style={{ flex: '1 1 0' }}>
-          <strong>New Document</strong>
-          <EditorContext>
-            <WithEditorActions
-              render={actions => (
-                <Editor
-                  defaultValue={this.state.newDocument}
-                  {...editorSettings}
-                  onChange={() => this.newDocChanged(actions)}
-                />
-              )}
-            />
-          </EditorContext>
-        </div>
-        <div
-          style={{
-            boxSizing: 'border-box',
             padding: '10px',
-            marginLeft: '10px',
-            width: '200px',
-            borderLeft: '1px solid #EBECF0',
+            flexDirection: 'row',
           }}
         >
+          Pick a document:{' '}
+          <span style={{ width: '200px', display: 'inline-block' }}>
+            <Select
+              options={items}
+              onChange={({ value }: { value: string }) => {
+                this.setDocument(value);
+              }}
+              defaultValue={items.find(opt => opt.value === this.state.doc)}
+            />
+          </span>{' '}
           <ToggleStateless
             isChecked={showDiff}
             onChange={this.onShowDiffChange}
           />{' '}
-          Show diff
-          <br />
-          <br />
+          Show diff{' '}
           <ToggleStateless
             isChecked={!diffOnly}
             onChange={this.onDiffOnlyChange}
           />{' '}
           {diffOnly ? 'Changes only' : 'Whole document'}
-          <br />
-          <br />
-          Pick a document:
-          <Select
-            options={items}
-            onChange={({ value }: { value: string }) => {
-              this.setDocument(value);
+        </div>
+        <div style={{ display: 'flex', flex: 1 }}>
+          <div
+            style={{
+              flex: '1',
+              boxSizing: 'border-box',
+              padding: '0 10px 0 0',
+              margin: '0 10px 0 0',
+              borderRight: '1px solid #EBECF0',
             }}
-            defaultValue={items.find(opt => opt.value === this.state.doc)}
-          />
+          >
+            <strong>Old Document</strong>
+            <EditorContext>
+              <WithEditorActions
+                render={actions => {
+                  this.oldEditorActions = actions;
+                  return (
+                    <Editor
+                      defaultValue={this.state.oldDocument}
+                      {...editorSettings}
+                      onChange={() => this.oldDocChanged(actions)}
+                    />
+                  );
+                }}
+              />
+            </EditorContext>
+          </div>
+          {this.renderDiff()}
+          <div style={{ flex: '1' }}>
+            <strong>New Document</strong>
+            <EditorContext>
+              <WithEditorActions
+                render={actions => {
+                  this.newEditorActions = actions;
+                  return (
+                    <Editor
+                      defaultValue={this.state.newDocument}
+                      {...editorSettings}
+                      onChange={() => this.newDocChanged(actions)}
+                    />
+                  );
+                }}
+              />
+            </EditorContext>
+          </div>
         </div>
       </div>
     );

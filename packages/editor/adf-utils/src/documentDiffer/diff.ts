@@ -16,7 +16,12 @@ export interface DiffOptions {
   diffOnly?: boolean;
 }
 
-const scalarizeNode = (node, scalarizeContent = false) => {
+enum DiffType {
+  insert = 'insert',
+  delete = 'delete',
+}
+
+const scalarizeNode = (node: any, scalarizeContent = false) => {
   return hash({
     ...node,
     content:
@@ -26,16 +31,16 @@ const scalarizeNode = (node, scalarizeContent = false) => {
   });
 };
 
-const scalarize = (arr, scalarizeContent = false) => {
-  return arr.map(node => scalarizeNode(node, scalarizeContent));
+const scalarize = (arr: any, scalarizeContent = false) => {
+  return arr.map((node: any) => scalarizeNode(node, scalarizeContent));
 };
 
-const isDiff = n =>
+const isDiff = (n: any) =>
   n.type === 'blockDiff' ||
   n.type === 'inlineDiff' ||
   (n.content && n.content.some(isDiff));
 
-const diffReducer = (acc, current) => {
+const diffReducer = (acc: any, current: any) => {
   const { type, content } = current;
 
   if (isDiff(current)) {
@@ -45,9 +50,9 @@ const diffReducer = (acc, current) => {
           ...current,
           content: [
             ...content.filter(
-              n =>
+              (n: any) =>
                 n.type === 'tableRow' &&
-                n.content.some(c => c.type === 'tableHeader'),
+                n.content.some((c: any) => c.type === 'tableHeader'),
             ),
             ...content.filter(isDiff),
           ],
@@ -64,7 +69,7 @@ const diffReducer = (acc, current) => {
   return acc;
 };
 
-const mapNode = (n, diffType) => {
+const mapNode = (n: any, diffType: DiffType) => {
   const { type, content } = n;
   switch (type) {
     case 'tableRow':
@@ -72,7 +77,7 @@ const mapNode = (n, diffType) => {
     case 'tableHeader':
       return {
         ...n,
-        content: content.map(c => mapNode(c, diffType)),
+        content: content.map((c: any) => mapNode(c, diffType)),
       };
   }
 
@@ -85,28 +90,30 @@ const mapNode = (n, diffType) => {
   };
 };
 
-const getTextValue = n => {
+const getTextValue = (n: any) => {
   return (n.text || n.attrs.text || n.attrs.shortName).split('');
   // return n.text || n.attrs.text || n.attrs.shortName;
 };
 
-const getTextValue2 = (acc, n, index) => {
+const getTextValue2 = (acc: any, n: any, index: number) => {
   // acc = [
   //   ...acc,
   //   ...(n.text || n.attrs.text || n.attrs.shortName).split('')
   // ];
 
-  (n.text || n.attrs.text || n.attrs.shortName).split('').forEach(text => {
-    acc.push({
-      text,
-      index,
+  (n.text || n.attrs.text || n.attrs.shortName)
+    .split('')
+    .forEach((text: string) => {
+      acc.push({
+        text,
+        index,
+      });
     });
-  });
 
   return acc;
 };
 
-const inlineReducer = (nodes, node) => {
+const inlineReducer = (nodes: any, node: any) => {
   const lastNode = nodes[nodes.length - 1];
 
   if (!lastNode) {
@@ -119,8 +126,8 @@ const inlineReducer = (nodes, node) => {
 
   if (
     node.type === 'text' &&
-    (!newMarks.some(mark => oldMarks.indexOf(mark) === -1) &&
-      !oldMarks.some(mark => newMarks.indexOf(mark) === -1))
+    (!newMarks.some((mark: any) => oldMarks.indexOf(mark) === -1) &&
+      !oldMarks.some((mark: any) => newMarks.indexOf(mark) === -1))
   ) {
     lastNode.text = `${lastNode.text}${node.text}`;
   } else {
@@ -131,18 +138,18 @@ const inlineReducer = (nodes, node) => {
 };
 
 const diffInlineContent = (
-  content1,
-  content2,
-  options: DiffOptions = {},
+  content1: any,
+  content2: any,
+  // options: DiffOptions = {},
   scalarizeContent = false,
 ) => {
   const node1: any[] = [];
   const node2: any[] = [];
 
-  content1.forEach(n => {
+  content1.forEach((n: any) => {
     if (n.type === 'text') {
       const { marks } = n;
-      n.text.split(/\b/g).forEach(text => {
+      n.text.split(/\b/g).forEach((text: any) => {
         node1.push({
           type: 'text',
           text,
@@ -154,10 +161,10 @@ const diffInlineContent = (
     }
   });
 
-  content2.forEach(n => {
+  content2.forEach((n: any) => {
     if (n.type === 'text') {
       const { marks } = n;
-      n.text.split(/\b/g).forEach(text => {
+      n.text.split(/\b/g).forEach((text: any) => {
         node2.push({
           type: 'text',
           text,
@@ -179,14 +186,14 @@ const diffInlineContent = (
   const seq = new SequenceMatcher(null, one, two);
   const opcodes = seq.getOpcodes();
 
-  opcodes.forEach((code, index) => {
+  opcodes.forEach((code: any) => {
     const [op, i1, i2, j1, j2] = code;
 
     const oldNodes = a.slice(i1, i2);
     const newNodes = b.slice(j1, j2);
 
-    const oldContent = {};
-    oldNodes.forEach(({ text, index }) => {
+    const oldContent: any = {};
+    oldNodes.forEach(({ text, index }: { text: string; index: number }) => {
       if (oldContent[index]) {
         oldContent[index].text += text;
       } else {
@@ -197,8 +204,8 @@ const diffInlineContent = (
       }
     });
 
-    const newContent = {};
-    newNodes.forEach(({ text, index }) => {
+    const newContent: any = {};
+    newNodes.forEach(({ text, index }: { text: string; index: number }) => {
       if (newContent[index]) {
         newContent[index].text += text;
       } else {
@@ -219,33 +226,41 @@ const diffInlineContent = (
 
         result = [
           ...resultBefore,
-          ...fixedOld.reduce(inlineReducer, []).map(n => mapNode(n, 'delete')),
-          ...fixedNew.reduce(inlineReducer, []).map(n => mapNode(n, 'insert')),
+          ...fixedOld
+            .reduce(inlineReducer, [])
+            .map((n: any) => mapNode(n, DiffType.delete)),
+          ...fixedNew
+            .reduce(inlineReducer, [])
+            .map((n: any) => mapNode(n, DiffType.insert)),
           ...resultAfter,
         ];
 
         break;
       }
 
-      case 'insert': {
+      case DiffType.insert: {
         const resultBefore = result.splice(0, j1 + 1);
         const resultAfter = result.splice(fixedNew.length);
 
         result = [
           ...resultBefore,
-          ...fixedNew.reduce(inlineReducer, []).map(n => mapNode(n, 'insert')),
+          ...fixedNew
+            .reduce(inlineReducer, [])
+            .map((n: any) => mapNode(n, DiffType.insert)),
           ...resultAfter,
         ];
         break;
       }
 
-      case 'delete': {
+      case DiffType.delete: {
         const resultBefore = result.splice(0, i1 + 1);
         const resultAfter = result.splice(i1);
 
         result = [
           ...resultBefore,
-          ...fixedOld.reduce(inlineReducer, []).map(n => mapNode(n, 'delete')),
+          ...fixedOld
+            .reduce(inlineReducer, [])
+            .map((n: any) => mapNode(n, DiffType.delete)),
           ...resultAfter,
         ];
 
@@ -256,7 +271,7 @@ const diffInlineContent = (
         const resultBefore = result.splice(0, j1 + 1);
         const resultAfter = result.splice(fixedNew.length);
 
-        const mapped = fixedNew.map((node, i) => {
+        const mapped = fixedNew.map((node: any, i: number) => {
           const lastNode = fixedOld[i];
 
           if (!lastNode) {
@@ -268,8 +283,8 @@ const diffInlineContent = (
 
           if (
             node.type === 'text' &&
-            (newMarks.some(mark => oldMarks.indexOf(mark) === -1) ||
-              oldMarks.some(mark => newMarks.indexOf(mark) === -1))
+            (newMarks.some((mark: any) => oldMarks.indexOf(mark) === -1) ||
+              oldMarks.some((mark: any) => newMarks.indexOf(mark) === -1))
           ) {
             return {
               type: 'inlineDiff',
@@ -296,8 +311,8 @@ const diffInlineContent = (
 };
 
 const diffContent = (
-  node1,
-  node2,
+  node1: any,
+  node2: any,
   options: DiffOptions = {},
   scalarizeContent = false,
 ) => {
@@ -311,7 +326,7 @@ const diffContent = (
 
   const processed: any[] = [];
 
-  opcodes.forEach((code, index) => {
+  opcodes.forEach((code: any) => {
     const [op, i1, i2, j1, j2] = code;
 
     switch (op) {
@@ -323,8 +338,8 @@ const diffContent = (
 
         result = [
           ...resultBefore,
-          ...nodesToDelete.map(n => mapNode(n, 'delete')),
-          ...nodesToInsert.map(n => mapNode(n, 'insert')),
+          ...nodesToDelete.map((n: any) => mapNode(n, DiffType.delete)),
+          ...nodesToInsert.map((n: any) => mapNode(n, DiffType.insert)),
           ...resultAfter,
         ];
 
@@ -335,7 +350,7 @@ const diffContent = (
         const firstNodes = node1.slice(i1, i2);
         const secondNodes = node2.slice(j1, j2);
 
-        let mapped = firstNodes.reduce((map, n, index) => {
+        let mapped = firstNodes.reduce((map: any, n: any, index: number) => {
           const { type, content } = n;
 
           if (content) {
@@ -361,7 +376,7 @@ const diffContent = (
                 map.push({
                   type: 'blockDiff',
                   attrs: {
-                    diffType: 'insert',
+                    diffType: DiffType.insert,
                   },
                   content: secondContent,
                 });
@@ -382,7 +397,7 @@ const diffContent = (
                 //     console.log({row});
                 //     return row;
                 //   } else {
-                //     return mapNode(row, 'insert');
+                //     return mapNode(row, DiffType.insert);
                 //   }
 
                 //   return row;
@@ -409,7 +424,7 @@ const diffContent = (
                   content: diffInlineContent(
                     content,
                     secondContent,
-                    options,
+                    // options,
                     false,
                   ),
                 });
@@ -425,7 +440,7 @@ const diffContent = (
                   map.push({
                     type: 'blockDiff',
                     attrs: {
-                      diffType: 'delete',
+                      diffType: DiffType.delete,
                     },
                     content: [
                       {
@@ -438,7 +453,7 @@ const diffContent = (
                   map.push({
                     type: 'blockDiff',
                     attrs: {
-                      diffType: 'insert',
+                      diffType: DiffType.insert,
                     },
                     content: [
                       {
@@ -473,19 +488,19 @@ const diffContent = (
         break;
       }
 
-      case 'insert': {
+      case DiffType.insert: {
         const nodesToInsert = node2.slice(j1, j2);
         const resultBefore = result.splice(0, j1 + 1);
         const resultAfter = result.splice(j2);
 
         result = [
           ...resultBefore,
-          ...nodesToInsert.map(n => {
+          ...nodesToInsert.map((n: any) => {
             if (processed.indexOf(scalarizeNode(n, true)) !== -1) {
               return n;
             }
 
-            return mapNode(n, 'insert');
+            return mapNode(n, DiffType.insert);
           }),
           ...resultAfter,
         ];
@@ -493,14 +508,14 @@ const diffContent = (
         break;
       }
 
-      case 'delete': {
+      case DiffType.delete: {
         const nodesToDelete = node1.slice(i1, i2);
         const resultBefore = result.splice(0, i1 + 1);
         const resultAfter = result.splice(i1);
 
         result = [
           ...resultBefore,
-          ...nodesToDelete.map(n => mapNode(n, 'delete')),
+          ...nodesToDelete.map((n: any) => mapNode(n, DiffType.delete)),
           ...resultAfter,
         ];
       }
@@ -514,7 +529,11 @@ const diffContent = (
   return result;
 };
 
-const diffDocs = (oldDoc, newDoc, options: DiffOptions = {}) => {
+export const diffDocs = (
+  oldDoc: any,
+  newDoc: any,
+  options: DiffOptions = {},
+) => {
   if (oldDoc.type !== 'doc' || newDoc.type !== 'doc') {
     // TODO: Throw error?
     return;
@@ -536,5 +555,3 @@ const diffDocs = (oldDoc, newDoc, options: DiffOptions = {}) => {
     content,
   };
 };
-
-export default diffDocs;

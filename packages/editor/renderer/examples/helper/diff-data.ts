@@ -2971,69 +2971,14 @@ export const diffDocs = {
   simple2: {
     oldDocument: {
       type: 'doc',
-      version: 13,
+      version: 1,
       content: [
         {
           type: 'paragraph',
           content: [
             {
               type: 'text',
-              text: 'yo',
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Hello World!',
-            },
-            {
-              type: 'text',
-              text: 'My name is ',
-            },
-            {
-              type: 'mention',
-              attrs: {
-                text: '@oscar',
-                id: '@oscar',
-              },
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Testing testing',
-            },
-          ],
-        },
-        {
-          type: 'panel',
-          attrs: {
-            panelType: 'info',
-          },
-          content: [
-            {
-              type: 'paragraph',
-              content: [
-                {
-                  type: 'text',
-                  text: "Don't do this!",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'codeBlock',
-          content: [
-            {
-              type: 'text',
-              text: "if (false) {\n console.log('hello world!'); \n}",
+              text: 'a',
             },
           ],
         },
@@ -3048,67 +2993,7 @@ export const diffDocs = {
           content: [
             {
               type: 'text',
-              text: 'yo',
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Hello ',
-            },
-            {
-              type: 'text',
-              text: 'World!',
-              marks: [{ type: 'strong' }],
-            },
-            {
-              type: 'text',
-              text: 'My name is ',
-            },
-            {
-              type: 'mention',
-              attrs: {
-                text: '@oscar',
-                id: '@oscar',
-              },
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Testing testing',
-            },
-          ],
-        },
-        {
-          type: 'panel',
-          attrs: {
-            panelType: 'warning',
-          },
-          content: [
-            {
-              type: 'paragraph',
-              content: [
-                {
-                  type: 'text',
-                  text: "Don't do this!",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'codeBlock',
-          content: [
-            {
-              type: 'text',
-              text: "if (true) {\n console.log('hello'); \n}",
+              text: 'b',
             },
           ],
         },
