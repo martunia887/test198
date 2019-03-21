@@ -221,6 +221,14 @@ export const diffDocs = {
               type: 'text',
               text: 'Emoji! ',
             },
+            {
+              type: 'emoji',
+              attrs: {
+                shortName: ':grinning:',
+                id: '1f600',
+                text: '😀',
+              },
+            },
           ],
         },
         {
@@ -746,6 +754,23 @@ export const diffDocs = {
             {
               type: 'text',
               text: '?',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'Emoji! ',
+            },
+            {
+              type: 'emoji',
+              attrs: {
+                shortName: ':joy:',
+                id: '1f602',
+                text: '😂',
+              },
             },
           ],
         },

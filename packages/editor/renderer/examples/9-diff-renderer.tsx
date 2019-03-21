@@ -10,14 +10,23 @@ import {
   EditorActions,
 } from '@atlaskit/editor-core';
 import { debounce } from 'throttle-debounce';
+import { emoji } from '@atlaskit/util-data-test';
 
 export interface State {
   diffOnly?: boolean;
   showDiff?: boolean;
+  showAdf?: boolean;
   doc: string;
   newDocument: object;
   oldDocument: object;
 }
+
+const emojiProvider = emoji.storyData.getEmojiResource({
+  uploadSupported: true,
+  currentUser: {
+    id: emoji.storyData.loggedUser,
+  },
+});
 
 const editorSettings = {
   allowCodeBlocks: { enableKeybindingsForIDE: true },
@@ -37,6 +46,7 @@ const editorSettings = {
   allowDynamicTextSizing: true,
   allowTemplatePlaceholders: { allowInserting: true },
   allowStatus: true,
+  emojiProvider: emojiProvider,
 };
 
 const items = [
@@ -77,6 +87,7 @@ export class DiffDemo extends React.Component<{}, State> {
     this.state = {
       diffOnly: false,
       showDiff: true,
+      showAdf: false,
       doc: defaultValue,
       oldDocument: diffDocs[defaultValue].oldDocument,
       newDocument: diffDocs[defaultValue].newDocument,
@@ -95,6 +106,12 @@ export class DiffDemo extends React.Component<{}, State> {
     });
   };
 
+  onShowAdf = () => {
+    this.setState({
+      showAdf: !this.state.showAdf,
+    });
+  };
+
   setDocument = async (doc: string) => {
     await this.setState({
       doc: doc,
@@ -108,7 +125,7 @@ export class DiffDemo extends React.Component<{}, State> {
   };
 
   renderDiff() {
-    const { diffOnly, showDiff } = this.state;
+    const { diffOnly, showDiff, showAdf } = this.state;
     if (!showDiff) {
       return null;
     }
@@ -116,11 +133,8 @@ export class DiffDemo extends React.Component<{}, State> {
     return (
       <div
         style={{
-          flex: '1 1 0',
-          boxSizing: 'border-box',
-          padding: '0 10px 0 0',
-          margin: '0 10px 0 0',
-          borderRight: '1px solid #EBECF0',
+          width: '33%',
+          padding: '0 5px',
         }}
       >
         <strong>Diff</strong>
@@ -128,6 +142,7 @@ export class DiffDemo extends React.Component<{}, State> {
           oldDocument={this.state.oldDocument}
           newDocument={this.state.newDocument}
           diffOnly={diffOnly}
+          showAdf={showAdf}
         />
       </div>
     );
@@ -143,12 +158,11 @@ export class DiffDemo extends React.Component<{}, State> {
   });
 
   render() {
-    const { diffOnly, showDiff } = this.state;
+    const { diffOnly, showDiff, showAdf } = this.state;
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', margin: '5px' }}>
         <div
           style={{
-            padding: '10px',
             flexDirection: 'row',
           }}
         >
@@ -172,15 +186,13 @@ export class DiffDemo extends React.Component<{}, State> {
             onChange={this.onDiffOnlyChange}
           />{' '}
           {diffOnly ? 'Changes only' : 'Whole document'}
+          <ToggleStateless isChecked={showAdf} onChange={this.onShowAdf} /> Show
+          ADF
         </div>
         <div style={{ display: 'flex', flex: 1 }}>
           <div
             style={{
-              flex: '1',
-              boxSizing: 'border-box',
-              padding: '0 10px 0 0',
-              margin: '0 10px 0 0',
-              borderRight: '1px solid #EBECF0',
+              width: '33%',
             }}
           >
             <strong>Old Document</strong>
@@ -200,7 +212,7 @@ export class DiffDemo extends React.Component<{}, State> {
             </EditorContext>
           </div>
           {this.renderDiff()}
-          <div style={{ flex: '1' }}>
+          <div style={{ width: '33%' }}>
             <strong>New Document</strong>
             <EditorContext>
               <WithEditorActions

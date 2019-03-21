@@ -19,6 +19,7 @@ export interface DiffOptions {
 enum DiffType {
   insert = 'insert',
   delete = 'delete',
+  change = 'change',
 }
 
 const scalarizeNode = (node: any, scalarizeContent = false) => {
@@ -91,7 +92,7 @@ const mapNode = (n: any, diffType: DiffType) => {
 };
 
 const getTextValue = (n: any) => {
-  return (n.text || n.attrs.text || n.attrs.shortName).split('');
+  return ((n.attrs && n.attrs.shortName) || n.text || n.attrs.text).split('');
   // return n.text || n.attrs.text || n.attrs.shortName;
 };
 
@@ -101,7 +102,7 @@ const getTextValue2 = (acc: any, n: any, index: number) => {
   //   ...(n.text || n.attrs.text || n.attrs.shortName).split('')
   // ];
 
-  (n.text || n.attrs.text || n.attrs.shortName)
+  ((n.attrs && n.attrs.shortName) || n.text || n.attrs.text)
     .split('')
     .forEach((text: string) => {
       acc.push({
@@ -289,7 +290,7 @@ const diffInlineContent = (
             return {
               type: 'inlineDiff',
               attrs: {
-                diffType: 'change',
+                diffType: DiffType.change,
               },
               content: [node],
             };

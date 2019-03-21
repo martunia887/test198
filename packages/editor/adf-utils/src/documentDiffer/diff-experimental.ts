@@ -1,24 +1,20 @@
-import differ, { DiffArray } from 'deep-diff';
+import { DiffArray, diff } from 'deep-diff';
 
 enum DiffTypes {
   insert = 'insert',
   delete = 'delete',
 }
 
-const diffDocs = (
-  oldDoc: { content: object },
-  newDoc: { content: object },
-  options: any,
-) => {
+const diffDocs = (oldDoc: { content: object }, newDoc: { content: object }) => {
   // TODO faster clone
   const oldContent = JSON.parse(JSON.stringify(oldDoc));
   const newContent = JSON.parse(JSON.stringify(newDoc));
   const content = JSON.parse(JSON.stringify(newDoc));
-  const differences = differ.diff(oldContent, newContent);
+  const differences = diff(oldContent, newContent);
 
   if (!differences) return content;
 
-  differences.forEach(change => {
+  differences.forEach((change: any) => {
     try {
       switch (change.kind) {
         case 'A': // Array modification
