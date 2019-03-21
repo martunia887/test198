@@ -1,7 +1,6 @@
 // TODO: Move this file somewhere else
 import * as React from 'react';
-import ImageIcon from '@atlaskit/icon/glyph/image';
-import Unsplash, { SearchResponse } from 'unsplash-client';
+import PersonCircleIcon from '@atlaskit/icon/glyph/person-circle';
 import FieldText from '@atlaskit/field-text';
 import { Component } from 'react';
 import { UnsplashHeader, UnsplashWrapper } from './styled';
@@ -13,12 +12,13 @@ import {
 } from '../src/domain/plugin';
 import { BricksView, BrickItem } from '../src/plugins/bricksPluginView';
 
-export interface UnsplashViewState {
-  results: SearchResponse[];
+export type EmojiResult = { [key: string]: string };
+export interface RobohashViewState {
+  results: EmojiResult;
   query: string;
 }
 
-export interface UnsplashViewProps {
+export interface RobohashViewProps {
   actions: PluginActions;
   selectedItems: SelectedItem[];
 }
@@ -28,49 +28,59 @@ export interface UnsplashFileMetadata {
   srcFull: string;
 }
 
-export const PLUGIN_NAME = 'unsplash';
+export const PLUGIN_NAME = 'robohash';
+const maxVisibleResults = 30;
+const random = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
 
-const client = new Unsplash(
-  'd163333f8d2e6d983ea0ad71774a15092e4aff97b99058cdd12f1ba3f42d09fe',
-);
+class RobohashView extends Component<RobohashViewProps, RobohashViewState> {
+  static allResults?: EmojiResult = undefined;
 
-class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
-  state: UnsplashViewState = {
-    results: [],
+  state: RobohashViewState = {
+    results: {},
     query: '',
   };
 
-  static randomResults: SearchResponse[] = [];
-
   async componentDidMount() {
-    if (UnsplashView.randomResults.length) {
-      return;
-    }
-
-    const randomResults = await client.random(20);
-    UnsplashView.randomResults = randomResults;
-    this.forceUpdate();
+    this.search();
   }
 
   search = async () => {
     const { query } = this.state;
-    const results = await client.search(query);
+    const results = RobohashView.allResults
+      ? RobohashView.allResults
+      : ((await (await fetch(
+          'https://api.github.com/emojis',
+        )).json()) as EmojiResult);
+
+    if (!RobohashView.allResults) {
+      RobohashView.allResults = results;
+    }
+
+    const keys = Object.keys(results).filter(key => key.indexOf(query) > -1);
+    const visibleResults: { [key: string]: string } = {};
+
+    keys.forEach((key, index) => {
+      if (index <= maxVisibleResults) {
+        visibleResults[key] = results[key];
+      }
+    });
 
     this.setState({
-      results,
+      results: visibleResults,
     });
   };
 
   onCardClick = (id: string) => () => {
-    const { resultsToRender } = this;
+    const { results } = this.state;
     const { actions } = this.props;
-    const selectedResult = resultsToRender.find(result => result.id === id);
+    const selectedResult = Object.keys(results).find(key => key === id);
     if (!selectedResult) {
       return;
     }
-    const metadata: UnsplashFileMetadata = {
-      src: selectedResult.urls.regular,
-      srcFull: selectedResult.urls.full,
+    const metadata = {
+      key: selectedResult,
+      src: results[selectedResult],
     };
     const item: PluginFile = {
       id,
@@ -85,23 +95,19 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
     this.setState({ query }, this.search);
   };
 
-  get resultsToRender() {
-    const { results } = this.state;
-    return results.length ? results : UnsplashView.randomResults;
-  }
-
   onFileClick = (item: BrickItem) => this.onCardClick(item.id)();
 
   renderBricks = () => {
     const { selectedItems } = this.props;
-    const { resultsToRender } = this;
-    const items: BrickItem[] = resultsToRender.map(result => {
+    const { results } = this.state;
+    const items: BrickItem[] = Object.keys(results).map(key => {
       const identifier: BrickItem = {
-        id: result.id,
-        dataURI: result.urls.regular,
+        id: key,
+        dataURI: results[key],
+        name: key,
         dimensions: {
-          height: result.height,
-          width: result.width,
+          height: random(250, 200),
+          width: random(150, 100),
         },
       };
 
@@ -125,7 +131,7 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
     return (
       <UnsplashWrapper>
         <UnsplashHeader>
-          <h2>Unsplash</h2>
+          <h2>Robohasher</h2>
           <FieldText
             placeholder=""
             onChange={this.onQueryChange}
@@ -138,12 +144,10 @@ class UnsplashView extends Component<UnsplashViewProps, UnsplashViewState> {
   }
 }
 
-export const unsplashPlugin: MediaPickerPlugin = {
+export const emojiPlugin: MediaPickerPlugin = {
   name: PLUGIN_NAME,
-  // type: 'external' | 'media', // TODO: plugin v2
-  icon: <ImageIcon label="image-icon" />,
-  // TODO: rename into (actions, state: {selectedItems: SelectedItems})
+  icon: <PersonCircleIcon label="person-icon" />,
   render: (actions, selectedItems) => (
-    <UnsplashView actions={actions} selectedItems={selectedItems} />
+    <RobohashView actions={actions} selectedItems={selectedItems} />
   ),
 };

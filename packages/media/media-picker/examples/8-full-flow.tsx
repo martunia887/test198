@@ -20,6 +20,8 @@ import {
   UnsplashFileMetadata,
 } from '../example-helpers/unsplashPlugin';
 import { PluginItemPayload } from '../src/domain/plugin';
+import { emojiPlugin } from '../example-helpers/emojiPlugin';
+import { AIPlugin } from '../example-helpers/AIPlugin';
 
 const context = createUploadContext();
 
@@ -48,14 +50,21 @@ export default class Example extends React.Component<{}, State> {
       uploadParams: {
         collection: defaultCollectionName,
       },
-      plugins: [unsplashPlugin],
+      plugins: [unsplashPlugin, emojiPlugin, AIPlugin],
     });
 
     popup.on('plugin-items-inserted', (items: PluginItemPayload[]) => {
       const { events } = this.state;
       const newEvents: TenantFileRecord[] = items.map(item => {
-        if (item.pluginName === 'unsplash') {
+        const { pluginName } = item;
+        if (pluginName === 'unsplash') {
           const metadata: UnsplashFileMetadata = item.pluginFile.metadata;
+
+          return {
+            src: metadata.src,
+          };
+        } else if (pluginName === 'emoji') {
+          const metadata = item.pluginFile.metadata;
 
           return {
             src: metadata.src,
