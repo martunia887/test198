@@ -18,7 +18,7 @@ import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
 } from '@atlaskit/editor-test-helpers';
-import * as Clock from 'react-live-clock';
+import Clock from 'react-live-clock';
 
 import { document } from './story-data';
 import {

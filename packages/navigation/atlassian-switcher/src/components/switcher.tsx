@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Messages } from 'react-intl';
-import * as isEqual from 'lodash.isequal';
+import isEqual from 'lodash.isequal';
 
 import {
   SwitcherWrapper,
