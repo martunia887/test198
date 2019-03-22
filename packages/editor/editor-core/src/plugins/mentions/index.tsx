@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import uuid from 'uuid';
 import { Schema, Node, Fragment } from 'prosemirror-model';
 import { EditorState, Plugin, PluginKey, StateField } from 'prosemirror-state';

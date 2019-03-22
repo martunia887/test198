@@ -1,4 +1,4 @@
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 
 class FakeKeyboardEvent {
   constructor(_: string, __: any) {}

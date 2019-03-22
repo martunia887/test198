@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import * as React from 'react';
+import React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
 import Editor, { EditorProps } from './../src/editor';

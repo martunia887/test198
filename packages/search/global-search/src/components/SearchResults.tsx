@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import SearchError from './SearchError';
 
 export interface Props {

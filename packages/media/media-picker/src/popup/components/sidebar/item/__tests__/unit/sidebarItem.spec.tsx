@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { ServiceIcon, Wrapper, ServiceName } from '../../styled';
 import { changeService } from '../../../../../actions';
 import {

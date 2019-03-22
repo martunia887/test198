@@ -1,6 +1,6 @@
 import { name } from '../../../version.json';
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { Plugin } from 'prosemirror-state';
 import WidthDetector from '@atlaskit/width-detector';
 import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';

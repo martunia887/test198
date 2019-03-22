@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import Button from '@atlaskit/button';
 import SectionMessage from '@atlaskit/section-message';

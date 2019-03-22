@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button, { ButtonGroup } from '../src';
 
 const Row = (props: React.HTMLProps<HTMLDivElement>) => (

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Badge from '@atlaskit/badge';
 import Lozenge from '@atlaskit/lozenge';
 import Tooltip from '@atlaskit/tooltip';

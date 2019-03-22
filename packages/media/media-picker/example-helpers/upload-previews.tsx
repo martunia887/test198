@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { UploadPreview } from './upload-preview';
 import { LocalUploadComponent } from '../src/components/localUpload';
 import { UploadsStartEventPayload } from '../src';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Demo } from '../example-helpers/DemoPage';
 import { MOCK_USERS } from '../example-helpers/MockData';
 import {

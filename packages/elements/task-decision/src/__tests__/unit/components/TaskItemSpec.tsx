@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as sinon from 'sinon';
+import React from 'react';
+import sinon from 'sinon';
 import { mount } from 'enzyme';
 import FabricAnalyticsListener, {
   AnalyticsWebClient,

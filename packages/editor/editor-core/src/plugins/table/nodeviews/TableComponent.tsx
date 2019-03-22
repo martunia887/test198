@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import rafSchedule from 'raf-schd';
 import { Node as PmNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';

@@ -1,6 +1,6 @@
 /* tslint:disable:no-console */
 
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import FieldRadioGroup from '@atlaskit/field-radio-group';
 import {
@@ -18,7 +18,7 @@ import {
 import { ImageResizeMode, MediaItemType } from '@atlaskit/media-core';
 import Toggle from '@atlaskit/toggle';
 import Slider from '@atlaskit/field-range';
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 import { CardView } from '../src/root/cardView';
 import { CardAppearance, CardStatus, CardDimensions, CardAction } from '../src';
 import {

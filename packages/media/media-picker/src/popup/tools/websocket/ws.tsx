@@ -1,4 +1,4 @@
-import * as url from 'url';
+import url from 'url';
 import { Auth } from '@atlaskit/media-core';
 
 import { randomInt } from '../randomInt';

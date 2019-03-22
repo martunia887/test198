@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as React from 'react';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import { createSchema, doc } from '@atlaskit/adf-schema';

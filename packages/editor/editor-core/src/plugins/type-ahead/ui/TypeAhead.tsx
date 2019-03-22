@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { EditorView } from 'prosemirror-view';
 import { borderRadius, colors, gridSize, math } from '@atlaskit/theme';

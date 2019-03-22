@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ResultBase, ResultBaseProps } from '@atlaskit/quick-search';
 
 import Return from '../assets/Return';

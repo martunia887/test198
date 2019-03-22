@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@atlaskit/button';
 import SearchError from '../../components/SearchError';
 import { mountWithIntl } from './helpers/_intl-enzyme-test-helper';

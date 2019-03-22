@@ -1,5 +1,5 @@
 import { Server } from 'kakapo';
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 import { createApiRouter, createMediaPlaygroundRouter } from './routers';
 import {
   createDatabase,

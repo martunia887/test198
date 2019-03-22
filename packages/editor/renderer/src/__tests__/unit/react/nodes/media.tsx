@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { MediaType } from '@atlaskit/adf-schema';
 import { Card } from '@atlaskit/media-card';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import {
   createAndFireEvent,

@@ -4,7 +4,7 @@ import {
   userAuthProvider,
   mediaMock,
 } from '@atlaskit/media-test-helpers';
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import Button from '@atlaskit/button';
 import { ContextFactory } from '@atlaskit/media-core';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage as FormattedMessageNamespace } from 'react-intl';
 
 import DiscoverFilledGlyph from '@atlaskit/icon/glyph/discover-filled';

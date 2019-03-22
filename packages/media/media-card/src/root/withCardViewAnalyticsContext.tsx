@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { FileDetails, MediaItemType } from '@atlaskit/media-core';
 

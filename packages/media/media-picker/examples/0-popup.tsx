@@ -1,7 +1,7 @@
 /* tslint:disable:no-console */
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { ContextFactory } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
 import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';

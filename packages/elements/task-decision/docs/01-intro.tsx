@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
 import TaskDecisionExample from '../examples/00-decision-item';
 const TaskDecisionSource = require('!!raw-loader!../examples/00-decision-item');

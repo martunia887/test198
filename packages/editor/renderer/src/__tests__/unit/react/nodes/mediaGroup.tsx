@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { mount, shallow } from 'enzyme';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { imageFileId, genericFileId } from '@atlaskit/media-test-helpers';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
 import {

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { createStorybookContext } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
 import { FileIdentifier, Identifier } from '@atlaskit/media-core';

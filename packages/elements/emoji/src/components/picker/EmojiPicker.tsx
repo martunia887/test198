@@ -1,5 +1,5 @@
 import { FireAnalyticsEvent, withAnalytics } from '@atlaskit/analytics';
-import * as React from 'react';
+import React from 'react';
 import { ComponentClass } from 'react';
 import { EmojiProvider } from '../../api/EmojiResource';
 import { OnEmojiEvent } from '../../types';

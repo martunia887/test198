@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import EditorCodeIcon from '@atlaskit/icon/glyph/editor/code';
 import { codeBlock } from '@atlaskit/adf-schema';

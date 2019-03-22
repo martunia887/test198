@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import XRegExp from 'xregexp';
 
 const getArrayElement = (args: any, index: number): any | undefined =>

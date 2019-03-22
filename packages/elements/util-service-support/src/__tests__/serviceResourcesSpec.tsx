@@ -1,4 +1,4 @@
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 
 import { AbstractResource } from '../serviceResources';
 import { OnProviderChange } from '../types';

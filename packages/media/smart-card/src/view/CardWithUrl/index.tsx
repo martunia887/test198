@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import LazyRender from 'react-lazily-render';
 import { CardLinkView } from '@atlaskit/media-ui';
 import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';

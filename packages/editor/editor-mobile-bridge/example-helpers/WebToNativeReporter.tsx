@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { toNativeBridge } from '../src/editor/web-to-native';
 
 export interface LogItem {

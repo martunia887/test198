@@ -1,5 +1,5 @@
 import { AnalyticsViewerContainer } from '@atlaskit/analytics-viewer';
-import * as React from 'react';
+import React from 'react';
 import { ReactionClient } from '../../src';
 import { MockReactionsClient } from '../../src/client/MockReactionsClient';
 import {

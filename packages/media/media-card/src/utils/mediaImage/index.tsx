@@ -1,8 +1,8 @@
 /**
  * Only used internally ATM
  */
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Component, CSSProperties } from 'react';
 import { getCssFromImageOrientation, isRotated } from '@atlaskit/media-ui';
 import { ImageComponent } from './styled';

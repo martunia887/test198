@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { EventHandlers } from '@atlaskit/editor-common';
 import Action from '../../../../react/marks/action';

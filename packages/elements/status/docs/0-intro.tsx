@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
 import StatusExample from '../examples/00-simple-status';
 const StatusSource = require('!!raw-loader!../examples/00-simple-status');

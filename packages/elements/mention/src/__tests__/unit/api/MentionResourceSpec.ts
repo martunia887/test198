@@ -1,8 +1,8 @@
 import { SecurityOptions } from '@atlaskit/util-service-support';
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
 
-import * as fetchMock from 'fetch-mock';
-import * as queryString from 'query-string';
+import fetchMock from 'fetch-mock';
+import queryString from 'query-string';
 import MentionResource, {
   MentionResourceConfig,
 } from '../../../api/MentionResource';

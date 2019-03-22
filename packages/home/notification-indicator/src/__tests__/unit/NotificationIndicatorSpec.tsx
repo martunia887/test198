@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 
 import Badge from '@atlaskit/badge';
 import {

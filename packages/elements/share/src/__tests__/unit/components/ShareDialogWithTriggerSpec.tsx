@@ -5,7 +5,7 @@ mockPopper();
 import InlineDialog from '@atlaskit/inline-dialog';
 import { mountWithIntl, shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import { shallow, ShallowWrapper, ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { messages } from '../../../i18n';
 import {

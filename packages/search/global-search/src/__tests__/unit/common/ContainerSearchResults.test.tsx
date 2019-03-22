@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormattedHTMLMessage } from 'react-intl';
 import uuid from 'uuid/v4';
 import { shallowWithIntl } from '../helpers/_intl-enzyme-test-helper';

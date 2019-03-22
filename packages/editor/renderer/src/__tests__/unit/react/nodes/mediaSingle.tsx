@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { imageFileId } from '@atlaskit/media-test-helpers';
 import Media from '../../../../react/nodes/media';

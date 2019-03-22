@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { RendererContext } from '..';
 import { renderNodes, Serializer } from '../..';
 import { ADNode, ExtensionHandlers } from '@atlaskit/editor-common';

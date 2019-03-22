@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { gridSize, math } from '@atlaskit/theme';
 import { getLoadingStyle } from './utils';
 

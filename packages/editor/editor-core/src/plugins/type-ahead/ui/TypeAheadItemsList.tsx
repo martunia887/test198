@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import Item, { ItemGroup, itemThemeNamespace } from '@atlaskit/item';
 import { colors, themed } from '@atlaskit/theme';

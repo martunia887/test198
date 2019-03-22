@@ -1,4 +1,4 @@
-import * as chai from 'chai';
+import chai from 'chai';
 import { expect } from 'chai';
 import assert from 'assert';
 import { Node as PMNode, Schema } from 'prosemirror-model';

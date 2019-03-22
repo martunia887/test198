@@ -2,7 +2,7 @@ import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { waitUntil } from '@atlaskit/util-common-test';
 import { mention } from '@atlaskit/util-data-test';
 import { ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { InjectedIntlProps } from 'react-intl';
 import MentionItem from '../../../components/MentionItem';
 import MentionList, { Props, State } from '../../../components/MentionList';

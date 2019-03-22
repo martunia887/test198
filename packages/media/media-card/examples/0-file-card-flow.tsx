@@ -1,5 +1,5 @@
 /* tslint:disable:no-console */
-import * as React from 'react';
+import React from 'react';
 import { Component, SyntheticEvent } from 'react';
 import {
   defaultCollectionName,

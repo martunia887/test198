@@ -1,7 +1,7 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { PureComponent } from 'react';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Spinner from '@atlaskit/spinner';
 import { Popup } from '@atlaskit/editor-common';
 import Button, { ButtonGroup } from '@atlaskit/button';

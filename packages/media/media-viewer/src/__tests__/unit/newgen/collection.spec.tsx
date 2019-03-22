@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { Context, FileIdentifier } from '@atlaskit/media-core';

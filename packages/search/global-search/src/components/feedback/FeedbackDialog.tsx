@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ModalPromise from './ModalWrapper';
 import FieldTextArea from '@atlaskit/field-text-area';
 import sendFeedback from './feedback-client';

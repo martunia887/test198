@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import LayoutTwoEqualIcon from '@atlaskit/icon/glyph/editor/layout-two-equal';
 import { layoutSection, layoutColumn } from '@atlaskit/adf-schema';
 import { EditorPlugin } from '../../types';

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as H from 'history';
+import React from 'react';
+import H from 'history';
 import { match } from 'react-router';
 import styled from 'styled-components';
 import { Link } from '../components/WrappedLink';

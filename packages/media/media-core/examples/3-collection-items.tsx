@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { createUserContext } from '@atlaskit/media-test-helpers';
 import { Subscription } from 'rxjs/Subscription';

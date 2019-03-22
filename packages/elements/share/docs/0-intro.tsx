@@ -1,6 +1,6 @@
 import { md } from '@atlaskit/docs';
 import SectionMessage from '@atlaskit/section-message';
-import * as React from 'react';
+import React from 'react';
 
 export default md`
 ${(

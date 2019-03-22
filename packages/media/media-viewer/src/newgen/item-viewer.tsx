@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Context, FileState, FileIdentifier } from '@atlaskit/media-core';
 import { FormattedMessage } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';

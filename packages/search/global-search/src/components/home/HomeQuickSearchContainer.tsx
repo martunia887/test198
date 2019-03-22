@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { withAnalytics, FireAnalyticsEvent } from '@atlaskit/analytics';
 import uuid from 'uuid/v4';
 import GlobalQuickSearch from '../GlobalQuickSearch';

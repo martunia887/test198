@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { themed, colors } from '@atlaskit/theme';
 import Button, { ButtonGroup, themeNamespace, ButtonAppearances } from '../src';

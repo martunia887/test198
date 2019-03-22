@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { code, md, Props, Example } from '@atlaskit/docs';
 
 const newConversationSource = `import { Conversation, ConversationResource } from '@atlaskit/conversation';

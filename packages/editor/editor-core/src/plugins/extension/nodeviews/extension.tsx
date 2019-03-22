@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { EditorView, NodeView } from 'prosemirror-view';
 import { Node as PmNode } from 'prosemirror-model';
 import { ProviderFactory, ExtensionHandlers } from '@atlaskit/editor-common';

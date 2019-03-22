@@ -1,5 +1,5 @@
 import AkFieldBase from '@atlaskit/field-base';
-import * as React from 'react';
+import React from 'react';
 import { ChangeEvent, ChangeEventHandler, PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { EmojiUpload, Message } from '../../types';

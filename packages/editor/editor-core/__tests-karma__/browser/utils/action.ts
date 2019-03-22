@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,

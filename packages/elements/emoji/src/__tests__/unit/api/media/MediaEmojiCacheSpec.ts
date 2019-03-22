@@ -1,5 +1,5 @@
 import { waitUntil } from '@atlaskit/util-common-test';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import MediaEmojiCache, {
   BrowserCacheStrategy,
   EmojiCacheStrategy,

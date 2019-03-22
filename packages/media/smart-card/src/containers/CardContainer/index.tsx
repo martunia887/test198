@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Context from '../../providers/SmartCardContext';
 import { Client, ObjectState } from '../../client';
 import {

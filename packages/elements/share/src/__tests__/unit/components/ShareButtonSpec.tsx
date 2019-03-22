@@ -1,7 +1,7 @@
 import Button from '@atlaskit/button';
 import ShareIcon from '@atlaskit/icon/glyph/share';
 import { mount, shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { Props, ShareButton } from '../../../components/ShareButton';
 
 const noop = () => {};

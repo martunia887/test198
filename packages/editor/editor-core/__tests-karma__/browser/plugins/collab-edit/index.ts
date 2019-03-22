@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { TextSelection } from 'prosemirror-state';
 import { createEditorFactory } from '@atlaskit/editor-test-helpers';
 import collabEdit, {

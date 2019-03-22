@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
 import { emoji, emojiQuery } from '@atlaskit/adf-schema';
 import { WithProviders, Providers } from '@atlaskit/editor-common';

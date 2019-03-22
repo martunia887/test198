@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
 import { findParentNode } from 'prosemirror-utils';

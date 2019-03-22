@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import HorizontalRuleIcon from '@atlaskit/icon/glyph/editor/divider';
 import { rule } from '@atlaskit/adf-schema';
 import { EditorPlugin } from '../../types';

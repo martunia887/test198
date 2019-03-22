@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import xregexpTransfomerPlugin from '../../transformers/xregexpTransformer';
 
 const transpileModule = (source: string): any =>

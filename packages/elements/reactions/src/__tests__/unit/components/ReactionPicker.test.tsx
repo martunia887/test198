@@ -2,7 +2,7 @@ import { EmojiPicker, EmojiProvider } from '@atlaskit/emoji';
 import EditorMoreIcon from '@atlaskit/icon/glyph/editor/more';
 import { emoji } from '@atlaskit/util-data-test';
 import { mountWithIntl, shallowWithIntl } from '@atlaskit/editor-test-helpers';
-import * as React from 'react';
+import React from 'react';
 import { EmojiButton } from '../../../components/EmojiButton';
 import { ReactionPicker } from '../../../components/ReactionPicker';
 import { Selector } from '../../../components/Selector';

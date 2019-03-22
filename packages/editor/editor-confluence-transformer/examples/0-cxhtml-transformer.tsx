@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { pd } from 'pretty-data';
 import Button, { ButtonGroup } from '@atlaskit/button';

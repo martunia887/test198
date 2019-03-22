@@ -1,6 +1,6 @@
 import { name } from '../../../version.json';
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import Editor from '../../../editor';
 import CollapsedEditor from '../../../ui/CollapsedEditor';
 import ChromeCollapsed from '../../../ui/ChromeCollapsed';

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { QuickSearch, ResultItemGroup, PersonResult } from '../..';
 import AkSearch from '../../components/Search/Search';
 import ResultItem from '../../components/ResultItem/ResultItem';

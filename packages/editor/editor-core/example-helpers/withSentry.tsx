@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as Sentry from '@sentry/browser';
+import React from 'react';
+import Sentry from '@sentry/browser';
 
 function withSentry(Child) {
   return class WrappedComponent extends React.Component {

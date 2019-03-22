@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { CardLoading } from '../../utils/cardLoading';
 import { Card as CardType } from './index';
 import { CardProps } from '../..';

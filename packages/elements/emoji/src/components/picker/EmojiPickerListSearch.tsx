@@ -1,6 +1,6 @@
 import AkFieldBase from '@atlaskit/field-base';
 import SearchIcon from '@atlaskit/icon/glyph/search';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Styles } from '../../types';

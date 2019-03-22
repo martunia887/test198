@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { SingleValueContainer } from '../../../components/SingleValueContainer';
 import { SizeableAvatar } from '../../../components/SizeableAvatar';
 import { testUser } from '../_testUtils';

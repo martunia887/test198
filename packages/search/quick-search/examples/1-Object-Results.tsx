@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Avatar from '@atlaskit/avatar';
 import { randomJiraIconUrl, randomConfluenceIconUrl } from './utils/mockData';
 import { ObjectResult, ResultItemGroup } from '../src';

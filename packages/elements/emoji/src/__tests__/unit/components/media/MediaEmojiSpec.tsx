@@ -1,6 +1,6 @@
 import { waitUntil } from '@atlaskit/util-common-test';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
-import * as React from 'react';
+import React from 'react';
 import { EmojiProvider } from '../../../../api/EmojiResource';
 import { CachingMediaEmoji } from '../../../../components/common/CachingEmoji';
 import Emoji from '../../../../components/common/Emoji';

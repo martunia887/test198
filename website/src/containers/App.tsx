@@ -1,7 +1,7 @@
 import { ModalTransition } from '@atlaskit/modal-dialog';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import GlobalTheme from '@atlaskit/theme';
-import * as React from 'react';
+import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
 import styled, { injectGlobal } from 'styled-components';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import applyDevTools from 'prosemirror-dev-tools';
 import { WithEditorActions } from '../src';
 

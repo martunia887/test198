@@ -1,7 +1,7 @@
 import { shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import FieldTextArea from '@atlaskit/field-text-area';
 import { Field } from '@atlaskit/form';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { CommentField, Props } from '../../../components/CommentField';
 import { messages } from '../../../i18n';

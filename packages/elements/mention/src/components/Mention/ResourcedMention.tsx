@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MentionProvider } from '../../api/MentionResource';
 import { MentionEventHandler } from '../../types';
 import Mention from './';

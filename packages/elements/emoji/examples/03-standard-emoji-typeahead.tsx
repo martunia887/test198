@@ -1,5 +1,5 @@
 import { layers } from '@atlaskit/theme';
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import {
   getEmojiResource,

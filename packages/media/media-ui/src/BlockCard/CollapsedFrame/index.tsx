@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Wrappper } from './styled';
 
 export interface CollapsedFrameProps {

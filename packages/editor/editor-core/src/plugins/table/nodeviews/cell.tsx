@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { Node as PmNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';

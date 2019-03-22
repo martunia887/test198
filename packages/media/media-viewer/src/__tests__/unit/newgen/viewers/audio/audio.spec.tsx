@@ -1,7 +1,7 @@
 import * as util from '../../../../../newgen/utils';
 const constructAuthTokenUrlSpy = jest.spyOn(util, 'constructAuthTokenUrl');
 
-import * as React from 'react';
+import React from 'react';
 import { createContext } from '../../../_stubs';
 import { Auth, ProcessedFileState } from '@atlaskit/media-core';
 import {

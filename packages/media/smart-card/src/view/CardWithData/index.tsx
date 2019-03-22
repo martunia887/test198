@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { CardAppearance } from '../Card/types';
 import {
   BlockCardResolvedView,

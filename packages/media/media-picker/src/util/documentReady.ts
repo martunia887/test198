@@ -1,4 +1,4 @@
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 // https://gist.github.com/dragosh/e9baf2d7bf3673a98c91
 const checkDomReady = (): Promise<{} | void> => {
   if (document.readyState === 'complete') {

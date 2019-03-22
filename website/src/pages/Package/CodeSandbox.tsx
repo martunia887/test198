@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import CodeSandboxer from 'react-codesandboxer';
 import { replaceSrc } from '@atlaskit/docs';
 

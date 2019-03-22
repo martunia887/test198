@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import createStub from 'raf-stub/lib';
 import { browser } from '../../src';
 

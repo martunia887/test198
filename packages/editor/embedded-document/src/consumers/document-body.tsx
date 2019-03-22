@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import { EditorProps } from '@atlaskit/editor-core';
 import { RendererProps } from '@atlaskit/renderer';

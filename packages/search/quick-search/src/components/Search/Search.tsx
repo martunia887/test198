@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import FieldBase from '@atlaskit/field-base';
 import {
   SearchBox,

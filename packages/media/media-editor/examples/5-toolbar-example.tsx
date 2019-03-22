@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
 import Toolbar from '../src/react/editorView/toolbar/toolbar';

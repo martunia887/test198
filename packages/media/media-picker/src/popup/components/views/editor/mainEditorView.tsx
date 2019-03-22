@@ -1,6 +1,6 @@
 import { EditorView } from '@atlaskit/media-editor';
 import { deselectItem } from '../../../actions/deselectItem';
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 

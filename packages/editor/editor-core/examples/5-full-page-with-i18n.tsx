@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import enMessages from '../src/i18n/en';
 import languages from '../src/i18n/languages';

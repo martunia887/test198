@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { tableEditing } from 'prosemirror-tables';
 import { createTable } from 'prosemirror-utils';
 import TableIcon from '@atlaskit/icon/glyph/editor/table';

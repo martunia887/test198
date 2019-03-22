@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import MediaServicesButtonOptionIcon from '@atlaskit/icon/glyph/media-services/button-option';
 import { OptionsIconWrapper } from './styles';

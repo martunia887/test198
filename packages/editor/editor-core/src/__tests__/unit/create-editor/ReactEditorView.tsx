@@ -1,6 +1,6 @@
 import { name } from '../../../version.json';
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { TextSelection } from 'prosemirror-state';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {

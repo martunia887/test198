@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import withDeprecationWarnings from './withDeprecationWarnings';
 import Group, { GroupItem } from '../styled/ButtonGroup';
 import { ButtonAppearances } from '../types';

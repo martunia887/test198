@@ -1,5 +1,5 @@
 import { mount, ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { waitUntil } from '@atlaskit/util-common-test';
 import Tooltip from '@atlaskit/tooltip';
 

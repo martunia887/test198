@@ -1,5 +1,5 @@
 import { code, Example, md, Props } from '@atlaskit/docs';
-import * as React from 'react';
+import React from 'react';
 
 export default md`
   This is the platform field for selecting users. On top of that you can also select [Teams](https://developer.atlassian.com/platform/teams/overview/what-are-teams/).

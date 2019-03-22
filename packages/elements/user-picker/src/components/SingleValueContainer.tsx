@@ -1,5 +1,5 @@
 import { components } from '@atlaskit/select';
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { SizeableAvatar } from './SizeableAvatar';
 import { BORDER_PADDING } from './styles';

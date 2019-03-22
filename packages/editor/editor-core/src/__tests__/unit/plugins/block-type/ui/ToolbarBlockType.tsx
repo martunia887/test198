@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Item from '@atlaskit/item';
 import AkButton from '@atlaskit/button';
 import {

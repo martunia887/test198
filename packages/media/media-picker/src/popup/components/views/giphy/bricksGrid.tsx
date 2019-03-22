@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 
 // We need to import Bricks in both ways because the way they create the dist doesn't play well with TS

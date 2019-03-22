@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { EditorView } from 'prosemirror-view';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';

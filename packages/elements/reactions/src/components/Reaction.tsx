@@ -3,7 +3,7 @@ import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import { EmojiProvider, ResourcedEmoji } from '@atlaskit/emoji';
 import { borderRadius, colors } from '@atlaskit/theme';
 import cx from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, SyntheticEvent } from 'react';
 import { style } from 'typestyle';
 import {

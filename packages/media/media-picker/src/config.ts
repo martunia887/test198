@@ -1,4 +1,4 @@
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 
 export interface AppConfig {
   readonly version: number;

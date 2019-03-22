@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { GlobalQuickSearch } from '../src/index';
 import { Config } from '../src/api/configureSearchClients';
 import withNavigation from '../example-helpers/withNavigation';

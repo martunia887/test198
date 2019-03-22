@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ButtonAppearances } from '../types';
 import { PropsPasser, PropsOf } from '@atlaskit/type-helpers';
 

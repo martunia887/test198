@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ProcessedFileState, Context, FileState } from '@atlaskit/media-core';
 import AudioIcon from '@atlaskit/icon/glyph/media-services/audio';
 import { constructAuthTokenUrl } from '../utils';

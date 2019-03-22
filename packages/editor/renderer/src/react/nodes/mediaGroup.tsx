@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ReactElement, PureComponent } from 'react';
 import { CardEvent, defaultImageCardDimensions } from '@atlaskit/media-card';
 import {

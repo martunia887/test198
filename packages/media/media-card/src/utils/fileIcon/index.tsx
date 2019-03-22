@@ -1,5 +1,5 @@
 /* tslint:disable:variable-name */
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { MediaTypeIcon } from '../mediaTypeIcon';
 import { FileTypeIcon } from './styled';

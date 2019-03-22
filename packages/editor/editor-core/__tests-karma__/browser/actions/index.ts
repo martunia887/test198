@@ -1,6 +1,6 @@
-import * as chai from 'chai';
+import chai from 'chai';
 import { expect } from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { createEditorFactory, chaiPlugin } from '@atlaskit/editor-test-helpers';
 import {
   doc,

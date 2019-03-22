@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Item from '@atlaskit/item';
 import { EmojiPicker as AkEmojiPicker } from '@atlaskit/emoji';
 import { emoji as emojiData } from '@atlaskit/util-data-test';

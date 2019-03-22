@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Schema } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';

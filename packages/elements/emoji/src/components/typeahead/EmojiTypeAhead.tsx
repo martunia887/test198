@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ComponentClass } from 'react';
 import { EmojiProvider } from '../../api/EmojiResource';
 import { RelativePosition } from '../../types';

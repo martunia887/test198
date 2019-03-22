@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { shallow, mount } from 'enzyme';
 import Paragraph from '../../../../react/nodes/paragraph';
 

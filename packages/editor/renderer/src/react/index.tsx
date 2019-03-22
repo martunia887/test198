@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { ComponentType, Consumer, Provider } from 'react';

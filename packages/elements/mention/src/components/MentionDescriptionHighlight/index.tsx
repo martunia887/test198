@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { UserType } from '../../types';
 import { DescriptionHighlightProps } from './types';
 import UserMentionDescriptionHighlight from './UserMentionDescriptionHighlight';

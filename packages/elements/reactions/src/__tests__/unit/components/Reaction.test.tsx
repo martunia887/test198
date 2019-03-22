@@ -8,7 +8,7 @@ import {
 import { waitUntil } from '@atlaskit/util-common-test';
 import { emoji } from '@atlaskit/util-data-test';
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { FlashAnimation } from '../../../components/FlashAnimation';
 import { Reaction, ReactionOnClick } from '../../../components/Reaction';
 import { ReactionTooltip } from '../../../components/ReactionTooltip';

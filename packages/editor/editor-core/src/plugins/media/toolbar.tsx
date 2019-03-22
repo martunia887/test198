@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { InjectedIntl, defineMessages } from 'react-intl';
 import { EditorState, NodeSelection } from 'prosemirror-state';
 import { removeSelectedNode, hasParentNodeOfType } from 'prosemirror-utils';

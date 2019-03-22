@@ -1,5 +1,5 @@
 import { Link as BaseLink } from 'react-router-dom';
-import * as React from 'react';
+import React from 'react';
 import { LocationDescriptor } from 'history';
 
 export interface LinkProps {

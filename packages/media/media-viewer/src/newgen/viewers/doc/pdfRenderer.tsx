@@ -1,6 +1,6 @@
-import * as React from 'react';
-import * as PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
-import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+import React from 'react';
+import PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
+import pdfjsLib from 'pdfjs-dist/build/pdf';
 import { injectGlobal } from 'styled-components';
 import { ZoomControls } from '../../zoomControls';
 import { PDFWrapper } from '../../styled';

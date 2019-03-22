@@ -1,6 +1,6 @@
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
-import * as React from 'react';
+import React from 'react';
 import {
   ErrorCallback,
   InfoCallback,

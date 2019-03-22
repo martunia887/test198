@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Result } from '../../model/Result';
 import { isEmpty } from '../SearchResultsUtil';
 import NoResultsState from './NoResultsState';

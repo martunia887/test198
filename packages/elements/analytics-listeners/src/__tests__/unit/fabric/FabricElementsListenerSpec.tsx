@@ -6,7 +6,7 @@ import {
 } from '@atlaskit/analytics-next';
 import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import {
   createComponentWithAnalytics,
   createComponentWithAttributesWithAnalytics,

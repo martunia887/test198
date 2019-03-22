@@ -1,5 +1,5 @@
 import { Mark, Node as PMNode } from 'prosemirror-model';
-import * as fs from 'fs';
+import fs from 'fs';
 
 export const readFilesSync = (path: string) => {
   return fs.readdirSync(path).reduce(

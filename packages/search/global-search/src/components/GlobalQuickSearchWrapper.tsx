@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import memoizeOne from 'memoize-one';
 import { CancelableEvent } from '@atlaskit/quick-search';
 import HomeQuickSearchContainer from './home/HomeQuickSearchContainer';

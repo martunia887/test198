@@ -1,5 +1,5 @@
 import Select, { CreatableSelect } from '@atlaskit/select';
-import * as React from 'react';
+import React from 'react';
 import { UserPickerProps } from '../types';
 import { BaseUserPicker } from './BaseUserPicker';
 import { getStyles } from './styles';

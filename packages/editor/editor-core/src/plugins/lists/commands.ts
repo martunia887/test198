@@ -14,8 +14,8 @@ import {
 } from 'prosemirror-state';
 import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 import { EditorView } from 'prosemirror-view';
-import * as baseCommand from 'prosemirror-commands';
-import * as baseListCommand from 'prosemirror-schema-list';
+import baseCommand from 'prosemirror-commands';
+import baseListCommand from 'prosemirror-schema-list';
 import {
   hasParentNodeOfType,
   findPositionOfNodeBefore,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ChromeCollapsed from '../../ui/ChromeCollapsed';
 import * as EditorImports from '../../';
 

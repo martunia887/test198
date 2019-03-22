@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { CardLoading } from '../utils/cardLoading';
 import { CardViewOwnProps, CardView as CardViewType } from './cardView';
 

@@ -4,7 +4,7 @@ jest.mock('react-lazily-render', () => {
   };
 });
 
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { Card } from '../..';
 import { from } from 'rxjs/observable/from';

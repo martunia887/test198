@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { md, code, Example, Props } from '@atlaskit/docs';
 
 import { Hr } from './shared';

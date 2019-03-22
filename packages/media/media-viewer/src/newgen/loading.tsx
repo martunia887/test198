@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AkSpinner from '@atlaskit/spinner';
 
 export const Spinner: React.StatelessComponent<{}> = ({}) => (

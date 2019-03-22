@@ -2,8 +2,8 @@ import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { ReactWrapper } from 'enzyme';
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
 
-import * as fetchMock from 'fetch-mock';
-import * as React from 'react';
+import fetchMock from 'fetch-mock';
+import React from 'react';
 import MentionResource from '../../../api/MentionResource';
 import { MentionPicker, Props, State } from '../../../components/MentionPicker';
 import { MentionsResult } from '../../../types';

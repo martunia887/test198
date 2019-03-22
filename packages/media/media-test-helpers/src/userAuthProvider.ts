@@ -1,4 +1,4 @@
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 import { ClientBasedAuth, Context, ContextFactory } from '@atlaskit/media-core';
 
 export const userAuthProviderBaseURL = 'https://dt-api.dev.atl-paas.net';

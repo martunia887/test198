@@ -1,8 +1,8 @@
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import { waitUntil } from '@atlaskit/util-common-test';
 import { mount, MountRendererProps } from 'enzyme';
-import * as PropTypes from 'prop-types';
-import * as React from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import EmojiResource from '../../../../api/EmojiResource';
 import CachingEmoji, {
   CachingMediaEmoji,

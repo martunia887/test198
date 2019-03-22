@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import RecentList from './LinkAddToolbar';
 import { ProviderFactory, WithProviders } from '@atlaskit/editor-common';
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { md } from '@atlaskit/docs';
 import { colors } from '@atlaskit/theme';
 

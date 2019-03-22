@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Avatar from '@atlaskit/avatar';
 import { getPersonAvatarUrl } from './utils/mockData';
 import { PersonResult, ResultItemGroup } from '../src';

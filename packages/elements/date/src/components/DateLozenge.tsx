@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { borderRadius, colors, themed } from '@atlaskit/theme';
 import styled from 'styled-components';
 

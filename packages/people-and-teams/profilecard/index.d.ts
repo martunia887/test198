@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, SyntheticEvent } from 'react';
 
 export class AkProfileClient {

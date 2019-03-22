@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MentionStyle } from './styles';
 import { NoAccessTooltip } from '../NoAccessTooltip';
 import { isRestricted, MentionType, MentionEventHandler } from '../../types';

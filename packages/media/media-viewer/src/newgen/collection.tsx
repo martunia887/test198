@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Context, FileIdentifier } from '@atlaskit/media-core';
 import { Outcome, MediaViewerFeatureFlags } from './domain';
 import ErrorMessage, { createError, MediaViewerError } from './error';

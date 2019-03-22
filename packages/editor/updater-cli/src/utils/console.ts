@@ -1,4 +1,4 @@
-import * as readline from 'readline';
+import readline from 'readline';
 import chalk from 'chalk';
 
 export function prompt(message: string): Promise<boolean> {

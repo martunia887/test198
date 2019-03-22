@@ -1,6 +1,6 @@
 import { shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import { ShallowWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 
 // TODO remove this when we upgrade enzyme to 3.8
 export const renderProp = <P, S>(

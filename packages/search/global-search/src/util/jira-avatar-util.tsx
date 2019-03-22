@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import BoardIcon from '@atlaskit/icon/glyph/board';
 import IssueIcon from '@atlaskit/icon/glyph/issue';

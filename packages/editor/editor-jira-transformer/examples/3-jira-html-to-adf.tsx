@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import EditorTaskIcon from '@atlaskit/icon/glyph/editor/task';
 import EditorDecisionIcon from '@atlaskit/icon/glyph/editor/decision';

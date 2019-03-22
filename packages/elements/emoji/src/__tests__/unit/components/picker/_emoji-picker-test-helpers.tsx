@@ -3,7 +3,7 @@ import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { waitUntil } from '@atlaskit/util-common-test';
 import { MockEmojiResourceConfig } from '@atlaskit/util-data-test';
 import { ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import Emoji from '../../../../components/common/Emoji';
 import EmojiDeletePreview from '../../../../components/common/EmojiDeletePreview';
 import EmojiErrorMessage from '../../../../components/common/EmojiErrorMessage';

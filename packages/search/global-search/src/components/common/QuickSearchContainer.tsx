@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import uuid from 'uuid/v4';
 import { LinkComponent, Logger } from '../GlobalQuickSearchWrapper';
 import GlobalQuickSearch from '../GlobalQuickSearch';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
 import DateStyledExample from '../examples/01-date-with-style';
 import CustomColorExample from '../examples/00-custom-colors';

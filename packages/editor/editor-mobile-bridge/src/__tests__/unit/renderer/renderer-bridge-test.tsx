@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import MobileRenderer from '../../../renderer/mobile-renderer-element';
 
 const initialDocument = JSON.stringify({

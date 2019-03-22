@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import DefaultTaskIcon from '@atlaskit/icon-object/glyph/task/16';
 import JiraTaskIcon from '@atlaskit/icon-object/glyph/task/16';

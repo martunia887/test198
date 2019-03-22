@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ResourcedTaskItem, TaskItem } from '@atlaskit/task-decision';
 import { taskDecision } from '@atlaskit/util-data-test';
 import { ProviderFactory } from '@atlaskit/editor-common';

@@ -1,8 +1,8 @@
 /* tslint:disable:no-bitwise */
-import * as ts from 'typescript';
+import ts from 'typescript';
 import { writeFileSync } from 'fs';
 import { resolve, join } from 'path';
-import * as prettier from 'prettier';
+import prettier from 'prettier';
 import mkdirp from 'mkdirp';
 
 import JSONSchemaNode, {

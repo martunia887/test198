@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Editor, { EditorProps } from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
 import WithEditorActions from './../src/ui/WithEditorActions';

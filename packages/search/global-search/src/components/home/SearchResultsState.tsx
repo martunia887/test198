@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ResultItemGroup } from '@atlaskit/quick-search';
 import { ConfluenceIcon } from '@atlaskit/logo';
 import PeopleIcon from '@atlaskit/icon/glyph/people';

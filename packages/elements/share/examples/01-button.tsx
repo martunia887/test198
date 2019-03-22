@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ShareButton } from '../src/components/ShareButton';
 
 const noop = () => {};

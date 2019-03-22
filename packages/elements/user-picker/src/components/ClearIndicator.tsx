@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { components } from '@atlaskit/select';
 import Tooltip from '@atlaskit/tooltip';
 import { isPopupUserPickerByProps } from './utils';

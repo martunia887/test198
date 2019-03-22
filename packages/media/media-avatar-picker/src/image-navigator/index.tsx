@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import { gridSize } from '@atlaskit/theme';
@@ -15,7 +15,7 @@ import {
   Vector2,
   messages,
 } from '@atlaskit/media-ui';
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 import {
   Container,
   SliderContainer,

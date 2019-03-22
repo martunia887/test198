@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Color, Tool } from '../common';
 import { ToolbarContainer } from './styled';
 import { ColorButton, LineWidthButton, ToolButton } from './toolbarButtons';

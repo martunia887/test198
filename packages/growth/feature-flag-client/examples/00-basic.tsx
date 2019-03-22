@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import FeatureFlagClient from '../src/index';
 import { ExposureEvent } from '../src/types';
 

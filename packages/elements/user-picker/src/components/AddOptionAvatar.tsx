@@ -1,6 +1,6 @@
 import { Skeleton } from '@atlaskit/icon';
 import InviteTeamIcon from '@atlaskit/icon/glyph/invite-team';
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const AddOptionAvatarWrapper = styled.span`

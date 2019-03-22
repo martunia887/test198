@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { HttpError } from '../src/api/MentionResource';
 import MentionList from '../src/components/MentionList';
 import { IntlProvider } from 'react-intl';

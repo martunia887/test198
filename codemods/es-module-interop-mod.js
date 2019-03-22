@@ -35,13 +35,7 @@ export default function transformer(file, api) {
         path.value.specifiers.length > 0 &&
         path.value.specifiers[0].type === 'ImportNamespaceSpecifier',
     )
-    .filter(path => {
-      try {
-        return typeof require(path.value.source.value) === 'function';
-      } catch (err) {
-        return false;
-      }
-    })
+    .filter(path => !path.value.source.value.startsWith('.'))
     .forEach(path => {
       j(path).replaceWith(() => {
         const newDec = j.importDeclaration(

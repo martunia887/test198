@@ -1,6 +1,6 @@
 import { LocalUploadComponent } from './localUpload';
 import { Context } from '@atlaskit/media-core';
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 import { Browser, BrowserConfig } from './types';
 
 export class BrowserImpl extends LocalUploadComponent implements Browser {

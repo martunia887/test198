@@ -1,4 +1,4 @@
-import * as fm from 'fetch-mock';
+import fm from 'fetch-mock';
 
 const context = 'Document';
 const googleDefinitionId = 'google';

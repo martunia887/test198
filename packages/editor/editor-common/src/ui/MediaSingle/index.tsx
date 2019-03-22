@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import Wrapper from './styled';
 import classnames from 'classnames';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage, MessageValue } from 'react-intl';
 import { messages } from '../components/i18n';
 

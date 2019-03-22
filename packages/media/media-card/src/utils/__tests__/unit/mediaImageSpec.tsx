@@ -1,5 +1,5 @@
 jest.mock('@atlaskit/media-ui');
-import * as React from 'react';
+import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { getCssFromImageOrientation, isRotated } from '@atlaskit/media-ui';
 import { MediaImage, MediaImageProps, MediaImageState } from '../../mediaImage';

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { ReactWrapper } from 'enzyme';
-import * as jsc from 'jsverify';
+import jsc from 'jsverify';
 import Button from '@atlaskit/button';
 import {
   createMouseEvent,

@@ -1,8 +1,8 @@
 import { Context, ContextFactory } from '@atlaskit/media-core';
 import { Store } from 'redux';
-import * as React from 'react';
+import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
-import * as exenv from 'exenv';
+import exenv from 'exenv';
 import App, { AppProxyReactContext } from '../popup/components/app';
 import { cancelUpload } from '../popup/actions/cancelUpload';
 import { showPopup } from '../popup/actions/showPopup';

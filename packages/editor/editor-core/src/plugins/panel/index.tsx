@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import InfoIcon from '@atlaskit/icon/glyph/editor/info';
 import EditorWarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import EditorErrorIcon from '@atlaskit/icon/glyph/editor/error';

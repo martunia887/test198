@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import { PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { EventDispatcher } from '../../event-dispatcher';
 import EditorActions from '../../actions';
 

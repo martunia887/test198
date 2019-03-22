@@ -4,7 +4,7 @@ jest.mock('react-lazily-render', () => {
   };
 });
 
-import * as React from 'react';
+import React from 'react';
 import { CardWithUrlContent } from '../';
 import { mount } from 'enzyme';
 import { Client } from '../../../client';

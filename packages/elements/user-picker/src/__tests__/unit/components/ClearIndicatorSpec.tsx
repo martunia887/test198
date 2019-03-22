@@ -1,7 +1,7 @@
 import { components } from '@atlaskit/select';
 import Tooltip from '@atlaskit/tooltip';
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { ClearIndicator } from '../../../components/ClearIndicator';
 
 describe('ClearIndicator', () => {

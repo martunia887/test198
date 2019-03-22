@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import TaskItem from '../../../../components/TaskItem';
 import TaskList from '../../../../components/TaskList';
 import {

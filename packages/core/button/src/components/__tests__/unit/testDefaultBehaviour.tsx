@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import Spinner from '@atlaskit/spinner';
 import { AtlassianIcon } from '@atlaskit/logo';
 

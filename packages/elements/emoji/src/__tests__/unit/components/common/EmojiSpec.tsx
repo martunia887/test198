@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import Tooltip from '@atlaskit/tooltip';
 import Button from '@atlaskit/button';
 import * as styles from '../../../../components/common/styles';

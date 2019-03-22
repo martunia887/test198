@@ -1,4 +1,4 @@
-import * as namedColors from 'css-color-names';
+import namedColors from 'css-color-names';
 
 /**
  * We're avoding importing these colors from @atlaskit/theme since we

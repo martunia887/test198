@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { withFeedbackButton } from '../src/index';
 import { GlobalQuickSearch, Props } from '../src';
 import withNavigation from '../example-helpers/withNavigation';

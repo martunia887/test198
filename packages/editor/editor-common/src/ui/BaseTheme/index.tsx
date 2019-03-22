@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { fontSize } from '@atlaskit/theme';
 import { WidthConsumer, Breakpoints } from '../WidthProvider';

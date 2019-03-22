@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Renderer from './../src/renderer/mobile-renderer-element';
 

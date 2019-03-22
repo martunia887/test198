@@ -1,6 +1,6 @@
 import Spinner from '@atlaskit/spinner';
 import classNames from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { MouseEvent, PureComponent } from 'react';
 import { emojiTypeAheadMaxHeight } from '../../shared-styles';
 import { toEmojiId } from '../../type-helpers';

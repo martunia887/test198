@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, ReactInstance } from 'react';
-import * as ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import { PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Popup } from '@atlaskit/editor-common';

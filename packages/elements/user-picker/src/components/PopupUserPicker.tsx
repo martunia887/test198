@@ -1,5 +1,5 @@
 import { PopupSelect } from '@atlaskit/select';
-import * as React from 'react';
+import React from 'react';
 import { PopupUserPickerProps } from '../types';
 import { getPopupComponents } from './components';
 import { getPopupStyles } from './styles';

@@ -1,6 +1,6 @@
 import { FieldTextStateless } from '@atlaskit/field-text';
 import { gridSize } from '@atlaskit/theme';
-import * as React from 'react';
+import React from 'react';
 import { FormEvent, PureComponent } from 'react';
 import styled from 'styled-components';
 import ColorPalette from './internal/color-palette';
