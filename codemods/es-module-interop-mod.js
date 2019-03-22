@@ -21,6 +21,8 @@ const importsToFix = [
   'mkdirp',
   'lorem-ipsum',
   'ora',
+  'fetchMock',
+  'lodash.debounce',
 ];
 // Press ctrl+space for code completion
 export default function transformer(file, api) {
