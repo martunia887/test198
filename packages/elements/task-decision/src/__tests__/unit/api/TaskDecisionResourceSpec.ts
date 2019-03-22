@@ -1,5 +1,5 @@
 import URLSearchParams from 'url-search-params';
-import * as fetchMock from 'fetch-mock/src/client';
+import * as fetchMock from 'fetch-mock';
 import { waitUntil } from '@atlaskit/util-common-test';
 
 import {

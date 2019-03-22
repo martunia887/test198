@@ -1,4 +1,4 @@
-import * as fetchMock from 'fetch-mock/src/client';
+import * as fetchMock from 'fetch-mock';
 import {
   ItemStateManager,
   ACTION_STATE_CHANGED_FPS_EVENT,

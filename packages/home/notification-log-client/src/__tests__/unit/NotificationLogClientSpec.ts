@@ -1,4 +1,4 @@
-import * as fetchMock from 'fetch-mock/src/client';
+import * as fetchMock from 'fetch-mock';
 import { version as npmPackageVersion } from '../../version.json';
 import {
   NotificationLogClient,
