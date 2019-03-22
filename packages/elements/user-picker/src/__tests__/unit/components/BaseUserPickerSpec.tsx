@@ -2,7 +2,7 @@ import { AnalyticsListener } from '@atlaskit/analytics-next';
 import Select from '@atlaskit/select';
 import { ReactWrapper } from 'enzyme';
 import { mountWithIntl, shallowWithIntl } from 'enzyme-react-intl';
-import * as debounce from 'lodash.debounce';
+import debounce from 'lodash.debounce';
 import * as React from 'react';
 import { BaseUserPicker } from '../../../components/BaseUserPicker';
 import {
