@@ -1,5 +1,4 @@
-//@flow
-
+/* eslint-disable flowtype/require-valid-file-annotation */
 const importsToFix = [
   'uuid/v4',
   'react-loadable',
@@ -24,7 +23,7 @@ const importsToFix = [
   'fetchMock',
   'lodash.debounce',
 ];
-// Press ctrl+space for code completion
+
 export default function transformer(file, api) {
   const j = api.jscodeshift;
 
