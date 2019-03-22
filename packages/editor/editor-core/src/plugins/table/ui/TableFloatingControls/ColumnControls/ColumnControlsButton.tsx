@@ -64,6 +64,7 @@ const drop = (columnsParamsTarget: ColumnParams, editorView: EditorView) => (
 ) => {
   e.preventDefault();
   e.stopPropagation();
+  e.stopImmediatePropagation();
   // @ts-ignore
   const data = e.dataTransfer.getData('text');
 
@@ -80,6 +81,12 @@ const drop = (columnsParamsTarget: ColumnParams, editorView: EditorView) => (
   }
 
   const { state, dispatch } = editorView;
+  console.log('drop');
+  console.log(
+    columnsParamsOrigin.startIndex,
+    columnsParamsTarget.startIndex,
+    state.tr.doc.toString(),
+  );
   const tr = moveColumn(
     columnsParamsOrigin.startIndex,
     columnsParamsTarget.startIndex,
