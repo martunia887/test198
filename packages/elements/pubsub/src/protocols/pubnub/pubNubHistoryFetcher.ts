@@ -1,4 +1,4 @@
-import * as PubNub from 'pubnub';
+import PubNub from 'pubnub';
 import {
   FetchMessagesResponse,
   FetchMessagesStatus,

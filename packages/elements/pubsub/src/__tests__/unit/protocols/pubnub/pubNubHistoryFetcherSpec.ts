@@ -1,5 +1,5 @@
 jest.mock('pubnub');
-import * as Pubnub from 'pubnub';
+import Pubnub from 'pubnub';
 import HistoryFetcher from '../../../../protocols/pubnub/pubNubHistoryFetcher';
 
 const mockPubNub = {
