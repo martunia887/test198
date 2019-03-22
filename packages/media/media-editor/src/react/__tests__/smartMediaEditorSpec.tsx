@@ -6,7 +6,7 @@ import {
   expectToEqual,
   fakeContext,
 } from '@atlaskit/media-test-helpers';
-import * as uuid from 'uuid';
+import uuid from 'uuid';
 import { Shortcut } from '@atlaskit/media-ui';
 import ModalDialog from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';

@@ -3,7 +3,7 @@ import Button from '@atlaskit/button';
 import styled from 'styled-components';
 import { MediaStore } from '../src';
 import { createUploadContext } from '../../media-test-helpers';
-import * as uuid from 'uuid';
+import uuid from 'uuid';
 
 const Wrapper = styled.div`
   height: 100%;

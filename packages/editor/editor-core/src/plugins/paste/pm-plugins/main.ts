@@ -7,7 +7,7 @@ import { closeHistory } from 'prosemirror-history';
 import { hasParentNodeOfType } from 'prosemirror-utils';
 import { MarkdownTransformer } from '@atlaskit/editor-markdown-transformer';
 import { analyticsService } from '../../../analytics';
-import * as clipboard from '../../../utils/clipboard';
+import clipboard from '../../../utils/clipboard';
 import { EditorAppearance } from '../../../types';
 import {
   insertMediaAsMediaSingle,

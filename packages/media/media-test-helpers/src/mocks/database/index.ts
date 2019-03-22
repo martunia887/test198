@@ -1,7 +1,7 @@
 import { ClientBasedAuth } from '@atlaskit/media-core';
 import { MediaStore, MediaCollection } from '@atlaskit/media-store';
 import { Database } from 'kakapo';
-import * as uuid from 'uuid';
+import uuid from 'uuid';
 
 import { getFakeFileName, fakeImage } from './mockData';
 import { mapDataUriToBlob } from '../../utils';

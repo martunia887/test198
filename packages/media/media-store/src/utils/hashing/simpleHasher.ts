@@ -1,4 +1,4 @@
-import * as Rusha from 'rusha';
+import Rusha from 'rusha';
 
 import { Hasher } from './hasher';
 

@@ -12,7 +12,7 @@ import {
   FileState,
 } from '@atlaskit/media-core';
 import { TouchedFiles } from '@atlaskit/media-store';
-import * as uuid from 'uuid';
+import uuid from 'uuid';
 import { asMock, fakeContext } from '@atlaskit/media-test-helpers';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs';

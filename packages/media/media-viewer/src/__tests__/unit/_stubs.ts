@@ -1,4 +1,4 @@
-import * as events from 'events';
+import events from 'events';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import {

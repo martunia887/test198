@@ -1,7 +1,7 @@
 jest.mock('rusha');
 
-import * as uuid from 'uuid';
-import * as Rusha from 'rusha';
+import uuid from 'uuid';
+import Rusha from 'rusha';
 
 import { WorkerHasher } from '../../workerHasher';
 
