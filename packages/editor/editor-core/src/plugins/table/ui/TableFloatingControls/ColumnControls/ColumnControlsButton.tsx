@@ -1,4 +1,4 @@
-import React, { DragEvent, RefObject } from 'react';
+import React, { DragEvent, MouseEvent, RefObject } from 'react';
 import styled from 'styled-components';
 import { EditorView } from 'prosemirror-view';
 import { Selection } from 'prosemirror-state';
@@ -138,7 +138,7 @@ const dragme = (
   columnsParams: ColumnParams,
   dropzoneRef: RefObject<HTMLDivElement>,
 ) => (e: DragEvent<HTMLElement>) => {
-  e.stopPropagation();
+  console.log('arrastei');
   const { current } = dropzoneRef;
 
   const crt = document.querySelector(`#bolacha-${columnsParams.startIndex}`);
@@ -160,7 +160,11 @@ const hoverColumnsWrapper = (
   hoverColumns(columns)(state, dispatch);
 };
 
-const selectColumnWrapper = (column: number, editorView: EditorView) => () => {
+const selectColumnWrapper = (column: number, editorView: EditorView) => (
+  e: MouseEvent,
+) => {
+  console.log('cliquei');
+  e.preventDefault();
   const { state, dispatch } = editorView;
   // fix for issue ED-4665
   if (browser.ie_version === 11) {
@@ -228,7 +232,8 @@ const ColumnControlsButton = (props: Props) => ({
       >
         <button
           className={ClassName.CONTROLS_BUTTON}
-          onMouseDown={selectColumnWrapper(startIndex, editorView)}
+          // onMouseDown={selectColumnWrapper(startIndex, editorView)}
+          onMouseUp={selectColumnWrapper(startIndex, editorView)}
           onMouseOver={hoverColumnsWrapper([startIndex], editorView)}
           onMouseOut={clearHoverSelectionWrapper(editorView)}
         >

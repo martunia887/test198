@@ -185,6 +185,19 @@ const DeleteButtonHover = () => `
 `;
 
 export const tableStyles = css`
+
+  .bolacha {
+    height: 100vh;
+    width: 100%;
+    background-color: transparent;
+    display: block;
+  }
+
+
+
+
+
+
   .${ClassName.LAYOUT_BUTTON} button {
     background: ${N20A};
     color: ${N300};
