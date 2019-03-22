@@ -37,9 +37,7 @@ export default function transformer(file, api) {
     )
     .filter(path => {
       try {
-        return (
-          typeof require(path.value.specifiers[0].local.name) === 'function'
-        );
+        return typeof require(path.value.source.value) === 'function';
       } catch (err) {
         return false;
       }
