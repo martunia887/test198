@@ -30,17 +30,20 @@ export default function transformer(file, api) {
   return j(file.source)
     .find(j.ImportDeclaration)
 
-    .filter(path =>
-      importsToFix.find(importPath => {
-        return (
-          path.value.source !== 'react' &&
-          path.value.source.value.startsWith(importPath)
-        );
-      }),
-    )
     .filter(
-      path => path.value.specifiers[0].type === 'ImportNamespaceSpecifier',
+      path =>
+        path.value.specifiers.length > 0 &&
+        path.value.specifiers[0].type === 'ImportNamespaceSpecifier',
     )
+    .filter(path => {
+      try {
+        return (
+          typeof require(path.value.specifiers[0].local.name) === 'function'
+        );
+      } catch (err) {
+        return false;
+      }
+    })
     .forEach(path => {
       j(path).replaceWith(() => {
         const newDec = j.importDeclaration(
