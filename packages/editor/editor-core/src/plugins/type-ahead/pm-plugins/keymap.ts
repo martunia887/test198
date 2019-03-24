@@ -98,17 +98,17 @@ export function keymapPlugin(): Plugin {
     list,
   );
 
-  keymaps.bindKeymapWithCommand(
-    keymaps.space.common!,
-    (state: EditorState, dispatch) => {
-      const pluginState = pluginKey.getState(state);
-      if (pluginState && pluginState.active) {
-        return selectSingleItemOrDismiss('space')(state, dispatch);
-      }
-      return false;
-    },
-    list,
-  );
+  // keymaps.bindKeymapWithCommand(
+  //   keymaps.space.common!,
+  //   (state: EditorState, dispatch) => {
+  //     const pluginState = pluginKey.getState(state);
+  //     if (pluginState && pluginState.active) {
+  //       return selectSingleItemOrDismiss('space')(state, dispatch);
+  //     }
+  //     return false;
+  //   },
+  //   list,
+  // );
 
   return keymap(list);
 }

@@ -314,6 +314,7 @@ export function defaultActionHandler({
   }
 
   const textContent = nodeBefore.textContent || '';
+  
   const trigger = typeAheadMark.attrs.trigger.replace(
     /([^\x00-\xFF]|[\s\n])+/g,
     '',

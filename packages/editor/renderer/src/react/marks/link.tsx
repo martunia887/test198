@@ -27,6 +27,8 @@ const StyledYT = styled.div`
   }
 `;
 
+
+// Detect the kind of link etc -> leave this to smart links people
 const extractYoutubeVideoId = (href: string): string => {
   const videoId = /^.*youtube.com\/watch\?v=(\w+).*$/.exec(href);
   return videoId ? videoId[1] : '';
@@ -96,17 +98,27 @@ export class LinkPreviewPane extends React.Component<
   }
 }
 
-export default class Link extends React.Component<
-  {
-    children?: any;
-    href: string;
-    target?: string;
-    eventHandlers?: EventHandlers;
-  } & React.Props<any>,
-  {
-    isPopoverOpen: boolean;
+
+interface LinkProps extends React.Props<any> {
+  children?: any;
+  href: string;
+  inlinePreview?: boolean;
+  target?: string;
+  eventHandlers?: EventHandlers;
+}
+
+interface LinkState {
+  isPopoverOpen: boolean;
+}
+
+export default class Link extends React.Component<LinkProps, LinkState> {
+
+  constructor(props: any) {
+    super(props)
+    this.closePreview = this.closePreview.bind(this)
+    this.openPreview = this.openPreview.bind(this)
   }
-> {
+
   state = {
     isPopoverOpen: false,
   };
@@ -118,12 +130,12 @@ export default class Link extends React.Component<
     this.setState({ isPopoverOpen: false });
   }
 
-  debouncedOpenPreview = debounce(this.openPreview, 250);
-
   openPreview() {
     clearTimeout(this.closeTimeout);
     this.setState({ isPopoverOpen: true });
   }
+  
+  debouncedOpenPreview = debounce(this.openPreview, 150);
 
   render() {
     const { href, target, eventHandlers } = this.props;
@@ -156,7 +168,7 @@ export default class Link extends React.Component<
             <LinkPreviewPane href={href} link={this} />
           </ArrowContainer>
         )}
-        onClickOutside={() => this.setState({ isPopoverOpen: false })}
+        onClickOutside={this.closePreview}
       >
         <StyledAnchor
           onClick={e => {
@@ -171,6 +183,9 @@ export default class Link extends React.Component<
           {...anchorProps}
         >
           {this.props.children}
+
+          {/* <br />
+          {this.props.inlinePreview? <LinkPreviewPane href={href} link={this} /> : ''} */}
         </StyledAnchor>
       </Popover>
     );

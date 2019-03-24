@@ -50,6 +50,7 @@ import {
   annotationPlugin,
   compositionPlugin,
   analyticsPlugin,
+  youtubePlugin,
 } from '../plugins';
 
 /**
@@ -92,6 +93,8 @@ export default function createPluginsList(
   if (props.allowBreakout && props.appearance === 'full-page') {
     plugins.push(breakoutPlugin);
   }
+
+  plugins.push(youtubePlugin);
 
   if (props.allowTextAlignment) {
     plugins.push(alignment);

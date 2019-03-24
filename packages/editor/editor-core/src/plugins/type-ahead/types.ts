@@ -32,20 +32,22 @@ export type TypeAheadSelectItem = (
   },
 ) => Transaction | false;
 
+export type GetItemsHandler =(
+  query: string,
+  editorState: EditorState,
+  intl: InjectedIntl,
+  meta: {
+    prevActive: boolean;
+    queryChanged: boolean;
+  },
+  tr: Transaction,
+  dipatch: Dispatch,
+) => Array<TypeAheadItem> | Promise<Array<TypeAheadItem>>;
+
 export type TypeAheadHandler = {
   trigger: string;
   customRegex?: string;
-  getItems: (
-    query: string,
-    editorState: EditorState,
-    intl: InjectedIntl,
-    meta: {
-      prevActive: boolean;
-      queryChanged: boolean;
-    },
-    tr: Transaction,
-    dipatch: Dispatch,
-  ) => Array<TypeAheadItem> | Promise<Array<TypeAheadItem>>;
+  getItems: GetItemsHandler
   selectItem: TypeAheadSelectItem;
   dismiss?: (state: EditorState) => void;
 };

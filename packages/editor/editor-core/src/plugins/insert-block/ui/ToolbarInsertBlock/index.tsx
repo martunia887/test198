@@ -105,6 +105,11 @@ export const messages = defineMessages({
     defaultMessage: 'Emoji',
     description: 'Insert an emoticon or smiley :-)',
   },
+  youtube: {
+    id: 'fabric.editor.youtube',
+    defaultMessage: 'Video Search',
+    description: 'Insert a youtube video!',
+  },
   table: {
     id: 'fabric.editor.table',
     defaultMessage: 'Table',

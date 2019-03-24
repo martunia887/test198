@@ -24,6 +24,7 @@ import { placeholderTextStyles } from '../../plugins/placeholder-text/styles';
 import { tasksAndDecisionsStyles } from '../../plugins/tasks-and-decisions/ui/styles';
 import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
+import { youtubeStyles } from '../../plugins/youtube/styles';
 
 const ContentStyles: ComponentClass<
   HTMLAttributes<{}> & { theme: any }
@@ -103,7 +104,8 @@ const ContentStyles: ComponentClass<
   ${gridStyles}
   ${linkStyles}
   ${blockMarksSharedStyles}
-
+  ${youtubeStyles}
+  
   .panelView-content-wrap {
     box-sizing: border-box;
   }

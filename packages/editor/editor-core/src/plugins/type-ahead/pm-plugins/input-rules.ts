@@ -54,6 +54,14 @@ export function inputRulePlugin(
         trigger,
       });
 
+
+      // Thanks :  Vijay Sutrave
+      if(trigger.length > 1) {
+        // const textNode = state.doc.nodeAt(state.selection.from - 1);
+        // const nodeBefore = state.selection.$from.nodeBefore;
+        return tr.replaceRangeWith(state.selection.from - trigger.length, state.selection.from,  schema.text(trigger, [mark, ...marks]))
+      }
+
       return tr.replaceSelectionWith(
         schema.text(trigger, [mark, ...marks]),
         false,

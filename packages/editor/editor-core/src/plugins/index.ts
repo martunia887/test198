@@ -52,3 +52,4 @@ export { default as indentationPlugin } from './indentation';
 export { default as annotationPlugin } from './annotation';
 export { default as compositionPlugin } from './composition';
 export { default as analyticsPlugin } from './analytics';
+export { default as youtubePlugin } from './youtube/index';
