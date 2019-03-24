@@ -113,7 +113,6 @@ const mediaPlugin = (
         name: 'media',
         plugin: ({
           schema,
-          props,
           dispatch,
           eventDispatcher,
           providerFactory,
@@ -124,30 +123,28 @@ const mediaPlugin = (
           createPlugin(
             schema,
             {
+              provider: (options || {}).provider,
               providerFactory,
               nodeViews: {
-                mediaGroup: ReactMediaGroupNode(
-                  portalProviderAPI,
-                  props.appearance,
-                ),
+                mediaGroup: ReactMediaGroupNode(portalProviderAPI, 'full-page'),
                 mediaSingle: ReactMediaSingleNode(
                   portalProviderAPI,
                   eventDispatcher,
-                  props.appearance,
+                  'full-page',
                 ),
               },
               errorReporter,
-              uploadErrorHandler: props.uploadErrorHandler,
-              waitForMediaUpload: props.waitForMediaUpload,
+              uploadErrorHandler: () => {},
+              waitForMediaUpload: false,
               customDropzoneContainer:
                 options && options.customDropzoneContainer,
               customMediaPicker: options && options.customMediaPicker,
-              appearance: props.appearance,
+              appearance: 'full-page',
               allowResizing: !!(options && options.allowResizing),
             },
             reactContext,
             dispatch,
-            props.appearance,
+            'full-page',
           ),
       },
       {

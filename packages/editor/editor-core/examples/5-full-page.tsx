@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 
-import Editor, { EditorProps } from './../src/editor';
+// import Editor, { EditorProps } from './../src/editor';
+import { EditorProps } from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
 import WithEditorActions from './../src/ui/WithEditorActions';
 import {
-  cardProvider,
+  // cardProvider,
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
   macroProvider,
@@ -17,8 +18,8 @@ import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import { EmojiProvider } from '@atlaskit/emoji';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 
-import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
-import { extensionHandlers } from '../example-helpers/extension-handlers';
+// import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
+// import { extensionHandlers } from '../example-helpers/extension-handlers';
 import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
 import { DevTools } from '../example-helpers/DevTools';
 import { TitleInput } from '../example-helpers/PageElements';
@@ -152,8 +153,40 @@ class ExampleEditorComponent extends React.Component<
       <Wrapper>
         <Content>
           <SmartCardProvider>
-            <EditorPresetCXHTML>
-              <FullPage />
+            <EditorPresetCXHTML
+              mentionProvider={mention.storyData.resourceProvider}
+              mediaProvider={mediaProvider}
+            >
+              <FullPage
+                placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
+                onSave={SAVE_ACTION}
+                contentComponents={
+                  <WithEditorActions
+                    // tslint:disable-next-line:jsx-no-lambda
+                    render={actions => (
+                      <TitleInput
+                        value={this.state.title}
+                        onChange={this.handleTitleChange}
+                        // tslint:disable-next-line:jsx-no-lambda
+                        innerRef={this.handleTitleRef}
+                        onFocus={this.handleTitleOnFocus}
+                        onBlur={this.handleTitleOnBlur}
+                        onKeyDown={(e: KeyboardEvent) => {
+                          this.onKeyPressed(e, actions);
+                        }}
+                      />
+                    )}
+                  />
+                }
+                primaryToolbarComponents={
+                  <WithEditorActions
+                    // tslint:disable-next-line:jsx-no-lambda
+                    render={actions => (
+                      <SaveAndCancelButtons editorActions={actions} />
+                    )}
+                  />
+                }
+              />
             </EditorPresetCXHTML>
           </SmartCardProvider>
         </Content>
@@ -217,7 +250,7 @@ export default function Example(props: EditorProps & ExampleProps) {
 //   }}
 //   allowBreakout={true}
 //   allowJiraIssue={true}
-//   allowUnsupportedContent={true}
+//   allowUnsupportedContent={true} ???
 //   allowPanel={true}
 //   allowExtension={{
 //     allowBreakout: true,
@@ -227,10 +260,10 @@ export default function Example(props: EditorProps & ExampleProps) {
 //   allowLayouts={{
 //     allowBreakout: true,
 //   }}
-//   allowTextAlignment={true}
+//   allowTextAlignment={true} ???
 //   allowIndentation={true}
 //   allowDynamicTextSizing={true}
-//   allowTemplatePlaceholders={{ allowInserting: true }}
+//   allowTemplatePlaceholders={{ allowInserting: true }} ???
 //   UNSAFE_cards={{
 //     provider: Promise.resolve(cardProvider),
 //   }}

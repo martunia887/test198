@@ -40,6 +40,7 @@ const codeBlockPlugin = (options: CodeBlockOptions = {}): EditorPlugin => ({
       },
     ];
   },
+
   pluginsOptions: {
     quickInsert: ({ formatMessage }) => [
       {

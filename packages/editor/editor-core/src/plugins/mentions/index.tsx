@@ -55,6 +55,7 @@ import { TypeAheadItem } from '../type-ahead/types';
 
 const mentionsPlugin = (
   createAnalyticsEvent?: CreateUIAnalyticsEventSignature,
+  mentionProvider?: MentionProvider,
 ): EditorPlugin => {
   let sessionId = uuid();
   const fireEvent = <T extends AnalyticsEventPayload>(payload: T): void => {
@@ -75,13 +76,14 @@ const mentionsPlugin = (
       return [
         {
           name: 'mention',
-          plugin: ({ providerFactory, dispatch, portalProviderAPI, props }) =>
+          plugin: ({ providerFactory, dispatch, portalProviderAPI }) =>
             mentionPluginFactory(
               dispatch,
               providerFactory,
               portalProviderAPI,
               fireEvent,
-              props.appearance,
+              'full-page',
+              mentionProvider,
             ),
         },
       ];
@@ -365,6 +367,7 @@ function mentionPluginFactory(
   portalProviderAPI: PortalProviderAPI,
   fireEvent: (payload: any) => void,
   editorAppearance?: EditorAppearance,
+  maybeMentionProvider?: MentionProvider,
 ) {
   let mentionProvider: MentionProvider;
 
@@ -372,7 +375,7 @@ function mentionPluginFactory(
     key: mentionPluginKey,
     state: {
       init() {
-        return {};
+        return { mentionProvider: maybeMentionProvider };
       },
       apply(tr, pluginState) {
         const { action, params } = tr.getMeta(mentionPluginKey) || {
@@ -479,6 +482,23 @@ function mentionPluginFactory(
         }
         return;
       };
+
+      if (maybeMentionProvider) {
+        maybeMentionProvider.subscribe(
+          'mentionPlugin',
+          (mentions, query, stats) => {
+            setResults(mentions)(editorView.state, editorView.dispatch);
+
+            fireEvent(
+              buildTypeAheadRenderedPayload(
+                stats && stats.duration,
+                mentions.map(mention => mention.id),
+                query || '',
+              ),
+            );
+          },
+        );
+      }
 
       providerFactory.subscribe('mentionProvider', providerHandler);
       providerFactory.subscribe('contextIdentifierProvider', providerHandler);

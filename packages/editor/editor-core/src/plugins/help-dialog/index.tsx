@@ -59,8 +59,7 @@ const helpDialog: EditorPlugin = {
     return [
       {
         name: 'helpDialog',
-        plugin: ({ dispatch, props: { legacyImageUploadProvider } }) =>
-          createPlugin(dispatch, !!legacyImageUploadProvider),
+        plugin: ({ dispatch }) => createPlugin(dispatch, false),
       },
       {
         name: 'helpDialogKeymap',

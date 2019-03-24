@@ -45,8 +45,7 @@ const blockType: EditorPlugin = {
     return [
       {
         name: 'blockType',
-        plugin: ({ props, dispatch }) =>
-          createPlugin(dispatch, props.appearance),
+        plugin: ({ dispatch }) => createPlugin(dispatch),
       },
       {
         name: 'blockTypeInputRule',

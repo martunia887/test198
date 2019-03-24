@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { MouseEvent } from 'react';
 import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
 import { akEditorMenuZIndex } from '@atlaskit/editor-common';
@@ -126,9 +125,6 @@ export default class Editor extends React.Component<
   private appearance: EditorAppearance = 'full-page';
   private scrollContainer: HTMLElement | undefined;
   private scheduledKeylineUpdate: number | undefined;
-
-  stopPropagation = (event: MouseEvent<HTMLDivElement>) =>
-    event.stopPropagation();
 
   scrollContainerRef = (ref: HTMLElement | null) => {
     const previousScrollContainer = this.scrollContainer;

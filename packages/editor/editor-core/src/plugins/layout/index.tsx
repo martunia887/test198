@@ -27,7 +27,7 @@ export default {
     return [
       {
         name: 'layout',
-        plugin: ({ props }) => createLayoutPlugin(props.allowLayouts),
+        plugin: () => createLayoutPlugin(),
       },
     ];
   },

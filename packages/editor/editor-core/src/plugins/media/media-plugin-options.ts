@@ -3,8 +3,10 @@ import { EditorView, NodeView } from 'prosemirror-view';
 import { ProviderFactory, ErrorReporter } from '@atlaskit/editor-common';
 import { MediaState, CustomMediaPicker } from './types';
 import { EditorAppearance } from '../../types/editor-props';
+import { MediaProvider } from '.';
 
 export type MediaPluginOptions = {
+  provider?: Promise<MediaProvider>;
   providerFactory: ProviderFactory;
   nodeViews: {
     [name: string]: (

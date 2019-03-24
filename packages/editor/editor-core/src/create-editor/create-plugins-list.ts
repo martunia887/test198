@@ -69,7 +69,7 @@ export function getDefaultPluginsList(
     pastePlugin,
     basePlugin,
     blockTypePlugin,
-    placeholderPlugin,
+    placeholderPlugin(props.placeholder),
     clearMarksOnChangeToEmptyDocumentPlugin,
     hyperlinkPlugin,
     textFormattingPlugin(props.textFormatting || {}),

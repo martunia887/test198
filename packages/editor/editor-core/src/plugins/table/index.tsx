@@ -64,34 +64,26 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
     return [
       {
         name: 'table',
-        plugin: ({
-          props: { allowTables, appearance, allowDynamicTextSizing },
-          eventDispatcher,
-          dispatch,
-          portalProviderAPI,
-        }) => {
+        plugin: ({ eventDispatcher, dispatch, portalProviderAPI }) => {
           return createPlugin(
             dispatch,
             portalProviderAPI,
             eventDispatcher,
-            pluginConfig(allowTables),
-            appearance,
-            allowDynamicTextSizing,
+            pluginConfig(options),
+            'full-page',
+            true,
           );
         },
       },
       {
         name: 'tablePMColResizing',
-        plugin: ({
-          dispatch,
-          props: { allowTables, allowDynamicTextSizing },
-        }) => {
-          const { allowColumnResizing } = pluginConfig(allowTables);
+        plugin: ({ dispatch }) => {
+          const { allowColumnResizing } = pluginConfig(options);
           return allowColumnResizing
             ? createFlexiResizingPlugin(dispatch, {
                 handleWidth: HANDLE_WIDTH,
                 cellMinWidth: tableCellMinWidth,
-                dynamicTextSizing: allowDynamicTextSizing,
+                dynamicTextSizing: true,
               } as ColumnResizingPlugin)
             : undefined;
         },

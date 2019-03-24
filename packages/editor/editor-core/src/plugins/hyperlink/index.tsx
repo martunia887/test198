@@ -34,7 +34,7 @@ const hyperlinkPlugin: EditorPlugin = {
       },
       {
         name: 'hyperlinkKeymap',
-        plugin: ({ schema, props }) => createKeymapPlugin(schema, props),
+        plugin: () => createKeymapPlugin(),
       },
     ];
   },

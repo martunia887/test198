@@ -107,11 +107,15 @@ export class MediaPluginState {
       'Editor: unable to init media plugin - media or mediaGroup/mediaSingle node absent in schema',
     );
 
-    options.providerFactory.subscribe(
-      'mediaProvider',
-      (name, provider?: Promise<MediaProvider>) =>
-        this.setMediaProvider(provider),
-    );
+    if (options.provider) {
+      this.setMediaProvider(options.provider);
+    } else {
+      options.providerFactory.subscribe(
+        'mediaProvider',
+        (name, provider?: Promise<MediaProvider>) =>
+          this.setMediaProvider(provider),
+      );
+    }
 
     this.errorReporter = options.errorReporter || new ErrorReporter();
   }
@@ -784,16 +788,12 @@ export class MediaPluginState {
 
 const createDropPlaceholder = (editorAppearance?: EditorAppearance) => {
   const dropPlaceholder = document.createElement('div');
-  if (editorAppearance === 'full-page') {
-    ReactDOM.render(
-      React.createElement(DropPlaceholder, { type: 'single' } as {
-        type: PlaceholderType;
-      }),
-      dropPlaceholder,
-    );
-  } else {
-    ReactDOM.render(React.createElement(DropPlaceholder), dropPlaceholder);
-  }
+  ReactDOM.render(
+    React.createElement(DropPlaceholder, { type: 'single' } as {
+      type: PlaceholderType;
+    }),
+    dropPlaceholder,
+  );
   return dropPlaceholder;
 };
 

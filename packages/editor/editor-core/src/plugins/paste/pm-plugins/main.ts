@@ -50,10 +50,7 @@ md.enable([
 // @see https://product-fabric.atlassian.net/browse/ED-3097
 md.use(linkify);
 
-export function createPlugin(
-  schema: Schema,
-  editorAppearance?: EditorAppearance,
-) {
+export function createPlugin(schema: Schema) {
   const atlassianMarkDownParser = new MarkdownTransformer(schema, md);
 
   return new Plugin({

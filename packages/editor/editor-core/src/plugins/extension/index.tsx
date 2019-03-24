@@ -20,14 +20,8 @@ const extensionPlugin: EditorPlugin = {
     return [
       {
         name: 'extension',
-        plugin: ({ props, dispatch, providerFactory, portalProviderAPI }) =>
-          createPlugin(
-            dispatch,
-            providerFactory,
-            props.extensionHandlers || {},
-            portalProviderAPI,
-            props.allowExtension,
-          ),
+        plugin: ({ dispatch, providerFactory, portalProviderAPI }) =>
+          createPlugin(dispatch, providerFactory, {}, portalProviderAPI),
       },
     ];
   },

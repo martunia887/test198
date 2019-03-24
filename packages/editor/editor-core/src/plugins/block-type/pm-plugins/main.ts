@@ -91,27 +91,8 @@ const detectBlockType = (
 export const pluginKey = new PluginKey('blockTypePlugin');
 export const createPlugin = (
   dispatch: (eventName: string | PluginKey, data: any) => void,
-  appearance?: EditorAppearance,
 ) => {
   return new Plugin({
-    appendTransaction(
-      transactions: Transaction[],
-      oldState: EditorState,
-      newState: EditorState,
-    ): Transaction | void {
-      if (appearance === 'comment') {
-        const pos = newState.doc.resolve(newState.doc.content.size - 1);
-        const lastNode = pos.node(1);
-        const { paragraph } = newState.schema.nodes;
-        if (lastNode && lastNode.isBlock && lastNode.type !== paragraph) {
-          return newState.tr.insert(
-            newState.doc.content.size,
-            newState.schema.nodes.paragraph.create(),
-          );
-        }
-      }
-    },
-
     state: {
       init(config, state: EditorState) {
         const availableBlockTypes = TEXT_BLOCK_TYPES.filter(blockType =>

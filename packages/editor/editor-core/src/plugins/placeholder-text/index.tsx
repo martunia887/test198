@@ -132,8 +132,7 @@ const placeholderTextPlugin = (
     return [
       {
         name: 'placeholderText',
-        plugin: ({ schema, props, dispatch }) =>
-          createPlugin(dispatch, options),
+        plugin: ({ dispatch }) => createPlugin(dispatch, options),
       },
     ];
   },
