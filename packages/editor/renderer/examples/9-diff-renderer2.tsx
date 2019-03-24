@@ -197,7 +197,7 @@ export class DiffDemo extends React.Component<{}, State> {
           <div
             style={{
               overflow: 'hidden',
-              width: '33%',
+              width: '50%',
             }}
           >
             <strong>Old Document</strong>
@@ -215,14 +215,6 @@ export class DiffDemo extends React.Component<{}, State> {
                 }}
               />
             </EditorContext>
-          </div>
-          {this.renderDiff()}
-          <div
-            style={{
-              overflow: 'hidden',
-              width: '33%',
-            }}
-          >
             <strong>New Document</strong>
             <EditorContext>
               <WithEditorActions
@@ -239,6 +231,7 @@ export class DiffDemo extends React.Component<{}, State> {
               />
             </EditorContext>
           </div>
+          {this.renderDiff()}
         </div>
       </div>
     );

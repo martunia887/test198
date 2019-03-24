@@ -78,7 +78,15 @@ const mapNode = (n: any, diffType: DiffType) => {
     case 'tableHeader':
       return {
         ...n,
-        content: content.map((c: any) => mapNode(c, diffType)),
+        content: content.map((c: any) => ({
+          ...c,
+          attrs: {
+            background:
+              diffType === DiffType.delete
+                ? 'rgba(255, 86, 48, .3)'
+                : 'rgba(54, 179, 126, .3)',
+          },
+        })),
       };
   }
 

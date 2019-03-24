@@ -22,7 +22,20 @@ export const diffDocs = {
             {
               type: 'text',
               text:
-                'Hello there! This document is supposed to demonstrate our awesome ADF diffing!!!',
+                'Hello there! This sentence is supposed to demonstrate ADF differ.',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'mention',
+              attrs: {
+                id: '1',
+                text: '@Jon Foe',
+                accessLevel: '',
+              },
             },
           ],
         },
@@ -556,6 +569,19 @@ export const diffDocs = {
               type: 'text',
               text:
                 'Hello there! This sentence is supposed to demonstrate ADF differ.',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'mention',
+              attrs: {
+                id: '1',
+                text: '@Jon Foe',
+                accessLevel: '',
+              },
             },
           ],
         },
