@@ -12,14 +12,14 @@ import {
 import { Theme, ThemeTokens } from '../theme';
 import { TextAreaWrapper } from '../styled';
 import TextareaElement from './TextAreaElement';
-import { withDefaultProps, PropsOf } from '@atlaskit/type-helpers';
 
-export type Props = {
+export interface Props {
   /**
    * controls the appearance of the field.
    * subtle shows styling on hover.
    * none prevents all field styling.
    */
+  // tempo: number;
   appearance: 'standard' | 'subtle' | 'none';
   /** Set whether the fields should expand to fill available horizontal space. */
   isCompact?: boolean;
@@ -70,40 +70,27 @@ export type Props = {
    * same effect.
    */
   forwardedRef?: (e: HTMLTextAreaElement | null) => void;
-};
-type State = {
-  isFocused: boolean;
-};
+}
 
-const defaultProps: Pick<
-  Props,
-  | 'resize'
-  | 'appearance'
-  | 'isCompact'
-  | 'isReadOnly'
-  | 'isRequired'
-  | 'isDisabled'
-  | 'isInvalid'
-  | 'isMonospaced'
-  | 'minimumRows'
-  | 'maxHeight'
-  | 'theme'
-  | 'forwardedRef'
-> = {
-  resize: 'smart',
-  appearance: 'standard',
-  isCompact: false,
-  isRequired: false,
-  isReadOnly: false,
-  isDisabled: false,
-  isInvalid: false,
-  isMonospaced: false,
-  minimumRows: 1,
-  maxHeight: '50vh',
-  forwardedRef: () => {},
-};
+interface State {
+  isFocused: boolean;
+}
 
 class TextAreaWithoutForwardRef extends React.Component<Props, State> {
+  static defaultProps = {
+    resize: 'smart',
+    appearance: 'standard',
+    isCompact: false,
+    isRequired: false,
+    isReadOnly: false,
+    isDisabled: false,
+    isInvalid: false,
+    isMonospaced: false,
+    minimumRows: 1,
+    maxHeight: '50vh',
+    forwardedRef: () => {},
+  };
+
   state = {
     isFocused: false,
   };
@@ -186,24 +173,21 @@ class TextAreaWithoutForwardRef extends React.Component<Props, State> {
   }
 }
 
-const DefaultedTextAreaWithoutForwardRef = withDefaultProps(
-  defaultProps,
-  TextAreaWithoutForwardRef,
+const TextArea = React.forwardRef<HTMLTextAreaElement, Partial<Props>>(
+  (props, ref) => (
+    // Once Extract React Types is fixed to read from default exports we can
+    // move textareaRef instantiation to after the spread.
+    // as of now we do this to reduce the chance of users being misled into a breaking configuration
+    // by our documentat.
+    <TextAreaWithoutForwardRef
+      forwardedRef={ref as Props['forwardedRef']}
+      {...props}
+    />
+  ),
 );
 
-// $ExpectError flow-bin v0.74.0 doesn't know about forwardRef.
-const TextArea = React.forwardRef((props, ref) => (
-  // Once Extract React Types is fixed to read from default exports we can
-  // move textareaRef instantiation to after the spread.
-  // as of now we do this to reduce the chance of users being misled into a breaking configuration
-  // by our documentat.
-  <DefaultedTextAreaWithoutForwardRef
-    forwardedRef={ref as Props['forwardedRef']}
-    {...props}
-  />
-)) as typeof DefaultedTextAreaWithoutForwardRef;
-
 export { TextArea as TextAreaWithoutAnalytics };
+
 const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
 
 export default withAnalyticsContext({
@@ -215,23 +199,20 @@ export default withAnalyticsContext({
     onBlur: createAndFireEventOnAtlaskit({
       action: 'blurred',
       actionSubject: 'textArea',
-
       attributes: {
         componentName: 'textArea',
         packageName,
         packageVersion,
       },
     }),
-
     onFocus: createAndFireEventOnAtlaskit({
       action: 'focused',
       actionSubject: 'textArea',
-
       attributes: {
         componentName: 'textArea',
         packageName,
         packageVersion,
       },
     }),
-  })(TextArea as React.ComponentClass<PropsOf<typeof TextArea>>),
+  })(TextArea),
 );

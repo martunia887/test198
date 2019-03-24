@@ -19,13 +19,13 @@ export type PropsOf<C> = C extends new (props: infer P) => React.Component
 
 export const withDefaultProps = <P, DP extends Partial<P>>(
   defaultProps: DP,
-  Component: React.ComponentClass<P>,
+  Component: React.ComponentType<P>,
 ) => {
   type NonDefaultProps = Omit<P, keyof Shared<P, DP>>;
   type DefaultedProps = Omit<P, keyof NonDefaultProps>;
   type Props = Partial<DefaultedProps> & NonDefaultProps;
   Component.defaultProps = defaultProps;
-  return (Component as any) as React.ComponentClass<Props>;
+  return (Component as any) as React.ComponentType<Props>;
 };
 
 export type ResultantProps<InjectedProps, P extends InjectedProps> = Omit<
@@ -65,20 +65,20 @@ export type ResultantProps<InjectedProps, P extends InjectedProps> = Omit<
  * };
  */
 export type PropsPasser<Extra extends object = {}> = <
-  C extends React.ComponentClass
+  C extends React.ComponentType
 >(
   Component: C,
-) => React.ComponentClass<PropsOf<C> & Extra>;
+) => React.ComponentType<PropsOf<C> & Extra>;
 
 /**
  * This type is used for HOC's that inject props into the provided component in
  * such a way that the resultant component does not accept those props any more
  */
 export type PropsInjector<InjectedProps extends object> = <
-  C extends React.ComponentClass<any>
+  C extends React.ComponentType<any>
 >(
   Component: C,
-) => React.ComponentClass<
+) => React.ComponentType<
   Omit<PropsOf<C>, keyof Shared<InjectedProps, PropsOf<C>>>
 >;
 
@@ -100,7 +100,7 @@ export type PropsInjector<InjectedProps extends object> = <
  *    === ({a: number} & { data: bool } ) | ( {b: string} & { data: bool } )
  */
 export type SumPropsInjector<InjectedProps extends object> = <
-  C extends React.ComponentClass<any>
+  C extends React.ComponentType<any>
 >(
   Component: C,
-) => React.ComponentClass<PropsOf<C> & InjectedProps>;
+) => React.ComponentType<PropsOf<C> & InjectedProps>;

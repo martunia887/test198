@@ -20,7 +20,6 @@
     "@atlaskit/analytics-next": "^4.0.1",
     "@atlaskit/analytics-next-types": "^4.0.1",
     "@atlaskit/theme": "^8.0.1",
-    "@atlaskit/type-helpers": "^3.0.2",
     "tslib": "^1.8.0"
   },
   "peerDependencies": {
