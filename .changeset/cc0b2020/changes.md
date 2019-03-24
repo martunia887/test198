@@ -1,0 +1,1 @@
+- Default prop types now work as expected without withDefaultProps helper
