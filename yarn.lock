@@ -1626,6 +1626,13 @@
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/@types/react-intl/-/react-intl-2.3.8.tgz#de56b21b67e39df24bc0fc7e67b437976b666919"
 
+"@types/react-lazyload@^2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@types/react-lazyload/-/react-lazyload-2.3.2.tgz#8b0381bf3a45cee6efaec6b09bacce9d9b9a6c2a"
+  integrity sha512-v7tAhSUE00gSM63VKhbcKqNoKFm8jfcVSMV6ONaz6a7CjpVDIlGdTZ/VPdysjJNkGXAr/MzmzqBQNjvcn9J2gg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-loadable@^5.4.1":
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/@types/react-loadable/-/react-loadable-5.4.1.tgz#bc76978c6d9039e5808797b5ee35f6ae18b7329f"
@@ -13926,6 +13933,11 @@ react-lazily-render@^1.1.0:
   resolved "https://registry.yarnpkg.com/react-lazily-render/-/react-lazily-render-1.1.0.tgz#bd831961040503bfd9e852b990fd44561090ff09"
   dependencies:
     scrollparent "^2.0.1"
+
+react-lazyload@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-lazyload/-/react-lazyload-2.5.0.tgz#7ed20bf0408dc684c10e808060e51d904cc0ab8d"
+  integrity sha512-RkEwpJDqEUVkXodxBXAI/UDyGYUBTZCU9kdG0Lwmg8BIv8zDvP+exFwUzc7wP4HX6n33CCsz+cjG2FpwdRoxpw==
 
 react-live-clock@^2.0.2:
   version "2.0.2"

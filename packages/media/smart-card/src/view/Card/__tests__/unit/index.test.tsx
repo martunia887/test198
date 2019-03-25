@@ -1,6 +1,6 @@
-jest.mock('react-lazily-render', () => {
+jest.mock('react-lazyload', () => {
   return {
-    default: (data: any) => data.content,
+    default: (data: any) => data.children,
   };
 });
 
