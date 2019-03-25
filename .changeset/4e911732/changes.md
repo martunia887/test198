@@ -1,0 +1,1 @@
+- changed library used for lazily loading smart cards
