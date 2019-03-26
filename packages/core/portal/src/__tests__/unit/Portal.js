@@ -29,7 +29,7 @@ test('should create a portal', () => {
 test('should use z-index to stack nested portals', () => {
   wrapper = mount(
     <App>
-      <Portal>
+      <Portal zIndex={0}>
         <div>back</div>
         <Portal zIndex={1}>
           <div>front</div>

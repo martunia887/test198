@@ -7,8 +7,8 @@ import { canUseDOM } from 'exenv';
 type Props = {
   /* Children to render in the React Portal. */
   children: Node,
-  /* The z-index of the DOM container element. */
-  zIndex: number,
+  /* The z-index of the DOM container element. Defaults to no z-index attribute. */
+  zIndex?: number,
 };
 
 type State = {
@@ -16,10 +16,12 @@ type State = {
   portalIsMounted: boolean,
 };
 
-const createContainer = (zIndex: number) => {
+const createContainer = (zIndex?: number) => {
   const container = document.createElement('div');
   container.setAttribute('class', 'atlaskit-portal');
-  container.setAttribute('style', `z-index: ${zIndex};`);
+  if (zIndex !== undefined) {
+    container.setAttribute('style', `z-index: ${zIndex};`);
+  }
   return container;
 };
 
@@ -48,10 +50,6 @@ const portalParent = () => {
 // 3. Ensures DOM the container creates it's own stacking context
 
 class Portal extends React.Component<Props, State> {
-  static defaultProps = {
-    zIndex: 0,
-  };
-
   state = {
     container: canUseDOM ? createContainer(this.props.zIndex) : undefined,
     portalIsMounted: false,
