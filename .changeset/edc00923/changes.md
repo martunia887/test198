@@ -1,0 +1,1 @@
+- Portal will not set z-index attribute when no z-index prop is passed. The previous behaviour defaulted to a z-index of 0.
