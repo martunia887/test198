@@ -18,6 +18,7 @@ export default class FieldController {
       throw new Error(`"${this.key}" requires a label.`);
     }
   }
+  validateValue: validateFnType;
   config: Object;
   key: string;
   label: string;

@@ -68,3 +68,10 @@ export const objectMap = (object: X, mapFn: (any, string) => any) => {
     return res;
   }, {});
 };
+
+// String Helpers
+// ------------------------------
+
+export const stringCompare = (a: any, b: any): boolean => {
+  return JSON.stringify(a) === JSON.stringify(b);
+};

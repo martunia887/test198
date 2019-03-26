@@ -24,7 +24,7 @@ import Popup, { DialogInner } from './Popup';
 import { FilterButton } from './FilterButton';
 import { FilterManager } from './FilterManager';
 
-import { cloneObj, objectMap } from '../utils';
+import { cloneObj, objectMap, stringCompare } from '../utils';
 import {
   createAndFire,
   defaultAttributes,
@@ -33,6 +33,7 @@ import {
 } from '../analytics';
 
 type Props = {
+  createAnalyticsEvent: (*) => any,
   tempContextFromProps: Object,
 };
 type State = {
@@ -63,8 +64,8 @@ class ActualRefinementBar extends PureComponent<Props, State> {
   ctx: Object;
   filterOptions: Array<Object>;
   showLessRef: ElementRef<*> = createRef();
-  showMoreRef: ElementRef<*> = createRef();
-  analyticsTimer: number;
+  showAllRef: ElementRef<*> = createRef();
+  analyticsTimer: TimeoutID;
 
   // Required until atlaskit upgrades to react >= 16.6 😞
   // eslint-disable-next-line camelcase
@@ -152,6 +153,16 @@ class ActualRefinementBar extends PureComponent<Props, State> {
       this.ctx.onChange(values, { action: 'remove', key });
     });
   };
+  handleFieldClear = async (key: string) => {
+    const field = this.ctx.fieldConfig[key];
+    const value = field.getInitialValue();
+    const values = cloneObj(this.state.values, { add: { [key]: value } });
+
+    this.setState({ values }, () => {
+      this.handleIdleAnalyticsEvent(values);
+      this.ctx.onChange(values, { action: 'clear', key });
+    });
+  };
   handleFieldChange = (key: string) => (value: *) => {
     const { fieldConfig } = this.ctx;
     const oldInvalid = this.state.invalid;
@@ -194,8 +205,9 @@ class ActualRefinementBar extends PureComponent<Props, State> {
     const Field = type.view;
     const invalidMessage = this.state.invalid[key];
     const isInvalid = Boolean(invalidMessage);
-    const storedValue = this.ctx.value[key] || field.getInitialValue();
-    const localValue = this.state.values[key] || field.getInitialValue();
+    const initialValue = field.getInitialValue();
+    const storedValue = this.ctx.value[key] || initialValue;
+    const localValue = this.state.values[key] || initialValue;
     const hasPopup = typeof field.formatButtonLabel === 'function';
     const popupIsOpen = this.state.activePopupKey === key;
 
@@ -239,10 +251,10 @@ class ActualRefinementBar extends PureComponent<Props, State> {
             isInvalid={isInvalid}
             isSelected={isOpen}
             onClick={onClick}
-            onRemove={
-              config.isRemovable
-                ? event => this.handleFieldRemove(key, event)
-                : null
+            onClear={
+              stringCompare(storedValue, initialValue)
+                ? null
+                : () => this.handleFieldClear(key)
             }
             ref={ref}
             value={storedValue.value}
@@ -275,14 +287,14 @@ class ActualRefinementBar extends PureComponent<Props, State> {
   getFilterValue = memo(keys => {
     return keys.map(this.mapKeyToOption);
   });
-  showMore = isExpanded => () => {
+  showAll = isExpanded => () => {
     this.setState({ isExpanded }, () => {
       // NOTE: focus is managed manually here because the show/hide buttons are
       // removed from the DOM and the user should stay focused _somewhere_ in
       // the refinement bar
       const target = isExpanded
         ? this.showLessRef.current
-        : this.showMoreRef.current;
+        : this.showAllRef.current;
 
       if (target && typeof target.focus === 'function') {
         target.focus();
@@ -299,7 +311,7 @@ class ActualRefinementBar extends PureComponent<Props, State> {
   render() {
     const { irremovableKeys, selectedKeys } = this.ctx;
     const { activePopupKey, isExpanded } = this.state;
-    const FILTER_POPUP_KEY = 'filter-menu';
+    const FILTER_POPUP_KEY = '__refinement-bar-more-menu__';
 
     return (
       <Group>
@@ -309,13 +321,13 @@ class ActualRefinementBar extends PureComponent<Props, State> {
         {/* Show More/Less Control */}
         {!isExpanded && selectedKeys.length ? (
           <Button
-            innerRef={applyRefs(this.showMoreRef)}
-            onClick={this.showMore(true)}
+            innerRef={applyRefs(this.showAllRef)}
+            onClick={this.showAll(true)}
             iconAfter={
               <Badge appearance="primary">{selectedKeys.length}</Badge>
             }
           >
-            Show More
+            Show All
           </Button>
         ) : null}
 
@@ -332,7 +344,7 @@ class ActualRefinementBar extends PureComponent<Props, State> {
               isSelected={isOpen}
               onClick={onClick}
             >
-              Add Filter
+              More
             </Button>
           )}
         >
@@ -352,7 +364,7 @@ class ActualRefinementBar extends PureComponent<Props, State> {
           <Button
             innerRef={applyRefs(this.showLessRef)}
             appearance="subtle-link"
-            onClick={this.showMore(false)}
+            onClick={this.showAll(false)}
           >
             Show Less
           </Button>
@@ -379,7 +391,7 @@ const Group = forwardRef(({ children }: *, ref) => {
       }}
     >
       {childArray.map((child, idx) => (
-        <div css={{ margin: gutter }} key={child.key || idx}>
+        <div css={{ margin: gutter, minWidth: 0 }} key={child.key || idx}>
           {child}
         </div>
       ))}

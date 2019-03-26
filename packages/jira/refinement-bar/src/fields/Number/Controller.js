@@ -52,7 +52,7 @@ export default class NumberController extends FieldController {
       ? Object.values(value).join(' and ')
       : value;
 
-    if (!this.hasValue({ value })) {
+    if (!this.hasValue({ type, value })) {
       return this.label;
     }
 
@@ -64,6 +64,18 @@ export default class NumberController extends FieldController {
     );
   };
 
+  hasValue = ({ type, value }: Object) => {
+    if (type === 'is_not_set') return true;
+
+    let bool = typeof value === 'number';
+    if (isObject(value)) {
+      Object.values(value).forEach(v => {
+        bool = typeof v === 'number';
+      });
+    }
+
+    return bool;
+  };
   getInitialValue = () => ({
     type: 'is',
     value: '',

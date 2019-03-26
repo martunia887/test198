@@ -36,6 +36,7 @@ class RefinementBarExample extends React.Component {
         this.removeValue(meta.key);
         break;
       case 'update':
+      case 'clear':
         this.updateValue(value);
         break;
       default:
