@@ -31,6 +31,7 @@ import {
   withMediaClient,
   WithOptionalMediaClientProps,
 } from '@atlaskit/media-client';
+import { hoverDecoration } from '../base/pm-plugins/decoration';
 
 export type IconMap = Array<
   { value: string; icon: React.ComponentClass<any> } | { value: 'separator' }
@@ -173,13 +174,13 @@ interface AnnotationToolbarProps extends WithOptionalMediaClientProps {
   view?: EditorView;
 }
 
-class AnnotationToolbar extends React.Component<AnnotationToolbarProps> {
+export class AnnotationToolbar extends React.Component<AnnotationToolbarProps> {
   state = {
     isImage: false,
   };
 
   async componentDidMount() {
-    this.checkIsImage();
+    await this.checkIsImage();
   }
 
   componentWillReceiveProps({
@@ -308,6 +309,8 @@ export const floatingToolbar = (
         type: 'button',
         appearance: 'danger',
         icon: RemoveIcon,
+        onMouseEnter: hoverDecoration(true),
+        onMouseLeave: hoverDecoration(false),
         title: intl.formatMessage(commonMessages.remove),
         onClick: remove,
       },
