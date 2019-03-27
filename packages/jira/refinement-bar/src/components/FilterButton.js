@@ -2,15 +2,27 @@
 /** @jsx jsx */
 
 // $FlowFixMe
-import { forwardRef } from 'react';
+import { forwardRef, type Node } from 'react';
 import { jsx } from '@emotion/core';
 import { borderRadius, colors, gridSize } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
 
 import { ClearButton } from './common';
 
+type Props = {
+  children: Node,
+  field: Object,
+  isInvalid: boolean,
+  isSelected: boolean,
+  onClick: (*) => void,
+  onClear: (*) => void,
+};
+
 export const FilterButton = forwardRef(
-  ({ children, field, isInvalid, isSelected, onClick, onClear }, ref) => {
+  (
+    { children, field, isInvalid, isSelected, onClick, onClear }: Props,
+    ref,
+  ) => {
     return onClear ? (
       <ButtonWrapper>
         <Button
@@ -75,6 +87,7 @@ const appearances = ({ appearance, isSelected }) => {
   return styles[appearance];
 };
 
+// eslint-disable-next-line react/no-multi-comp
 const Button = forwardRef(
   ({ appearance, hasIcon, isSelected, ...props }: *, ref) => {
     const dynamic = appearances({ appearance, isSelected });

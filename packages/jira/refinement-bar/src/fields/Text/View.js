@@ -13,9 +13,7 @@ type Props = {
   closePopup: (*) => void,
   field: Object,
   invalidMessage: string,
-  isRemovable: boolean,
   onChange: (*) => void,
-  onRemove: (*) => void,
   storedValue: Object,
 };
 type State = {

@@ -9,7 +9,7 @@ import {
   createRef,
   type ElementRef,
 } from 'react';
-import memo from 'memoize-one';
+import memoize from 'memoize-one';
 import { applyRefs } from 'apply-ref';
 import { jsx } from '@emotion/core';
 import Badge from '@atlaskit/badge';
@@ -284,7 +284,7 @@ class ActualRefinementBar extends PureComponent<Props, State> {
       default:
     }
   };
-  getFilterValue = memo(keys => {
+  getFilterValue = memoize(keys => {
     return keys.map(this.mapKeyToOption);
   });
   showAll = isExpanded => () => {
@@ -378,6 +378,7 @@ class ActualRefinementBar extends PureComponent<Props, State> {
 // Styled Components
 // ==============================
 
+// eslint-disable-next-line react/no-multi-comp
 const Group = forwardRef(({ children }: *, ref) => {
   const gutter = 4;
   const childArray = Children.toArray(children).filter(Boolean); // filter out null and undefined children

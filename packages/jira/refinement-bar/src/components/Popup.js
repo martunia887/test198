@@ -168,6 +168,7 @@ function isEscapeEvent(e) {
 // Styled Components
 // ==============================
 
+// eslint-disable-next-line react/no-multi-comp
 export const Blanket = forwardRef(({ allowClose, ...props }: *, ref) => (
   <div
     ref={ref}
@@ -184,6 +185,7 @@ export const Blanket = forwardRef(({ allowClose, ...props }: *, ref) => (
     {...props}
   />
 ));
+// eslint-disable-next-line react/no-multi-comp
 export const Dialog = forwardRef((props: *, ref) => {
   const shadow = colors.N40A;
   return (
@@ -199,6 +201,7 @@ export const Dialog = forwardRef((props: *, ref) => {
     />
   );
 });
+// eslint-disable-next-line react/no-multi-comp
 export const DialogInner = forwardRef(
   ({ isPadded, maxWidth, minWidth, ...props }: *, ref) => (
     <div

@@ -14,6 +14,7 @@ module.exports = {
         './packages/core/drawer',
         './packages/core/global-navigation',
         './packages/core/select',
+        './packages/jira/refinement-bar',
       ],
       plugins: [['emotion', { hoist: true }]],
     },

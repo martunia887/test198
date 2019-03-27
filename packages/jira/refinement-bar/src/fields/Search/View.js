@@ -94,6 +94,8 @@ const SearchIndicator = (props: *) => (
     <SearchIcon label="Submit" />
   </div>
 );
+
+// eslint-disable-next-line react/no-multi-comp
 const Input = forwardRef((props, ref) => {
   return (
     <input
