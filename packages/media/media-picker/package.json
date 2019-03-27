@@ -25,7 +25,6 @@
     "@atlaskit/icon": "^16.0.5",
     "@atlaskit/media-card": "^57.0.2",
     "@atlaskit/media-editor": "^31.0.2",
-    "@atlaskit/media-store": "^11.0.1",
     "@atlaskit/media-ui": "^10.0.1",
     "@atlaskit/modal-dialog": "^8.0.2",
     "@atlaskit/spinner": "^10.0.1",

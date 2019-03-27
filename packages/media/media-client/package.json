@@ -25,12 +25,12 @@
     "uuid-validate": "^0.0.3"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.1.0",
-    "@atlaskit/button": "^11.0.2",
+    "@atlaskit/build-utils": "^2.2.0",
+    "@atlaskit/button": "^11.0.5",
     "@atlaskit/docs": "^7.0.1",
     "@atlaskit/media-card": "^57.0.2",
-    "@atlaskit/media-core": "^27.0.1",
-    "@atlaskit/media-test-helpers": "^21.0.1",
+    "@atlaskit/media-core": "^29.0.1",
+    "@atlaskit/media-test-helpers": "^21.0.2",
     "@types/fetch-mock": "^6.0.3",
     "fetch-mock": "^6.5.2",
     "react-dom": "^16.4.2",
@@ -38,7 +38,7 @@
     "whatwg-fetch": "^2.0.3"
   },
   "peerDependencies": {
-    "@atlaskit/media-core": "^27.0.1",
+    "@atlaskit/media-core": "^29.0.1",
     "styled-components": "^3.2.6",
     "react": "^16.4.0",
     "rxjs": "^5.5.0"
