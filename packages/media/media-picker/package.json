@@ -24,6 +24,7 @@
     "@atlaskit/flag": "^10.0.1",
     "@atlaskit/icon": "^16.0.5",
     "@atlaskit/media-card": "^57.0.2",
+    "@atlaskit/media-client": "^1.0.0",
     "@atlaskit/media-editor": "^31.0.2",
     "@atlaskit/media-ui": "^10.0.1",
     "@atlaskit/modal-dialog": "^8.0.2",
