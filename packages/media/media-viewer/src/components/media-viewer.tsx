@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { MediaViewer as MediaViewerNextGen } from '../newgen/media-viewer';
 import { ItemSource } from '../newgen/domain';
 import { BaseMediaViewerProps } from './types';
-import { withMediaClient, WithMediaClientProps } from '@atlaskit/media-client';
+import { WithMediaClientProps } from '@atlaskit/media-client';
 
 export interface MediaViewerState {}
 
@@ -69,5 +69,3 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
     }
   }
 }
-
-export default withMediaClient(MediaViewer);
