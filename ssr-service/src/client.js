@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
 import reactDOM from 'react-dom';
-import Button from '@atlaskit/button';
+import App from './components/App';
 
-reactDOM.hydrate(<Button>Test</Button>, document.getElementById('root'));
+reactDOM.hydrate(<App />, document.getElementById('root'));

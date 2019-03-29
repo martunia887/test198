@@ -265,6 +265,8 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.0.0",
+    "@emotion/core": "^10.0.10",
+    "@emotion/styled": "^10.0.10",
     "@sentry/browser": "^4.6.3",
     "@types/bricks.js": "^1.8.0",
     "@types/bytes": "^2.4.33",

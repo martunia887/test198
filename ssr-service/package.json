@@ -1,18 +1,21 @@
 {
     "name": "ssr-service",
     "version": "0.0.0",
-    "scripts":{
-      "dev": "webpack --watch:",
-      "build": "webpack",
-      "server": "node dist/server.js",
-      "server:watch": "nodemon dist/server.js"
+    "scripts": {
+        "dev": "webpack --watch:",
+        "build": "webpack",
+        "server": "node dist/server.js",
+        "server:watch": "nodemon dist/server.js"
     },
     "dependencies": {
+        "@atlaskit/avatar": "^15.0.1",
         "@atlaskit/button": "^11.0.2",
         "@babel/core": "^7.1.0",
         "@babel/polyfill": "^7.0.0",
         "@babel/preset-env": "^7.3.0",
         "@babel/preset-react": "^7.0.0",
+        "@emotion/core": "^10.0.10",
+        "@emotion/styled": "^10.0.10",
         "babel-loader": "^8.0.2",
         "bolt": "^0.22.1",
         "express": "^4.16.4",

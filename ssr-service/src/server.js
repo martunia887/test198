@@ -3,23 +3,22 @@
 require('@babel/polyfill');
 
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
+import express from 'express';
+import React from 'react';
+import reactDOM from 'react-dom/server';
+import App from './components/App.js';
 
-const express = require('express');
-const React = require('react');
-const reactDOM = require('react-dom/server');
-const Button = require('@atlaskit/button').default;
-
-const sheet = new ServerStyleSheet();
 const app = express();
-require('./utils/renderExamplesToString');
+const sheet = new ServerStyleSheet();
+//require('./utils/renderExamplesToString');
 
 app.use(express.static('./'));
 
 app.get('/', (req, res) => {
-  console.log(reactDOM.renderToString(<div>{<Button>Test</Button>}</div>));
+  //console.log(reactDOM.renderToString(<App />));
   const html1 = reactDOM.renderToString(
     <StyleSheetManager sheet={sheet.instance}>
-      <Button>Test</Button>
+      <App />
     </StyleSheetManager>,
   );
   const styleTags = sheet.getStyleTags();
