@@ -1,4 +1,4 @@
-import DuplicateLimitedQueue, { QueueOptions } from './DuplicateLimitedQueue';
+import DuplicateLimitedQueue, { QueueOptions } from './_DuplicateLimitedQueue';
 import debug from './util/logger';
 
 /**

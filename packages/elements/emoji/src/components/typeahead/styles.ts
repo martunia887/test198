@@ -7,7 +7,7 @@ import {
   noDialogContainerBorderColor,
   noDialogContainerBorderRadius,
   noDialogContainerBoxShadow,
-} from '../../shared-styles';
+} from '../../_shared-styles';
 
 export const selected = 'emoji-typeahead-selected';
 

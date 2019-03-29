@@ -23,7 +23,7 @@ import {
   isSpriteServiceRepresentation,
   convertImageToMediaRepresentation,
   buildEmojiDescriptionWithAltRepresentation,
-} from '../type-helpers';
+} from '../_type-helpers';
 import debug from '../util/logger';
 
 export interface EmojiLoaderConfig extends ServiceConfig {

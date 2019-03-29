@@ -14,12 +14,12 @@ import {
   analyticsEmojiPrefix,
   customCategory,
   frequentCategory,
-} from '../../constants';
+} from '../../_constants';
 import {
   containsEmojiId,
   isPromise /*, isEmojiIdEqual, isEmojiLoaded*/,
   isEmojiDescription,
-} from '../../type-helpers';
+} from '../../_type-helpers';
 import {
   EmojiDescription,
   EmojiId,

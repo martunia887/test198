@@ -6,7 +6,7 @@ import {
   isEmojiDescription,
   isMediaEmoji,
   isPromise,
-} from '../../type-helpers';
+} from '../../_type-helpers';
 import { EmojiDescription, EmojiId } from '../../types';
 import debug from '../../util/logger';
 import Emoji, { Props as EmojiProps } from './Emoji';

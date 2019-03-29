@@ -8,7 +8,7 @@ import {
 } from '../../types';
 import EmojiButton from './EmojiButton';
 import { FireAnalyticsEvent, withAnalytics } from '@atlaskit/analytics';
-import { analyticsEmojiPrefix } from '../../constants';
+import { analyticsEmojiPrefix } from '../../_constants';
 
 export interface Props {
   emoji: EmojiDescriptionWithVariations;

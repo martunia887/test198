@@ -2,8 +2,8 @@ import * as pWaitFor from 'p-wait-for';
 import EmojiRepository, {
   getEmojiVariation,
 } from '../../../api/EmojiRepository';
-import { customCategory, customType } from '../../../constants';
-import { containsEmojiId, toEmojiId } from '../../../type-helpers';
+import { customCategory, customType } from '../../../_constants';
+import { containsEmojiId, toEmojiId } from '../../../_type-helpers';
 import { EmojiDescription, SearchSort } from '../../../types';
 import {
   emojis as allEmojis,

@@ -1,6 +1,6 @@
 import { borderRadius, colors } from '@atlaskit/theme';
-import { defaultEmojiHeight } from '../../constants';
-import { akEmojiSelectedBackgroundColor } from '../../shared-styles';
+import { defaultEmojiHeight } from '../../_constants';
+import { akEmojiSelectedBackgroundColor } from '../../_shared-styles';
 import { style } from 'typestyle';
 
 export const selected = 'emoji-common-selected';

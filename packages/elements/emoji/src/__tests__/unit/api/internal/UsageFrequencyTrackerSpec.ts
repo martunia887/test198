@@ -3,7 +3,7 @@ import {
   Gateway,
   UsageFrequencyTracker,
 } from '../../../../api/internal/UsageFrequencyTracker';
-import DuplicateLimitedQueue from '../../../../DuplicateLimitedQueue';
+import DuplicateLimitedQueue from '../../../../_DuplicateLimitedQueue';
 import { grinEmoji, generateSkinVariation } from '../../_test-data';
 
 /**

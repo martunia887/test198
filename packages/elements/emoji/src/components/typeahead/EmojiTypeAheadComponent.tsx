@@ -3,8 +3,8 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { EmojiProvider, OnEmojiProviderChange } from '../../api/EmojiResource';
-import { defaultListLimit } from '../../constants';
-import { toEmojiId } from '../../type-helpers';
+import { defaultListLimit } from '../../_constants';
+import { toEmojiId } from '../../_type-helpers';
 import {
   EmojiDescription,
   EmojiSearchResult,

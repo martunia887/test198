@@ -23,8 +23,8 @@ import {
   defaultCategories,
   frequentCategory,
   selectedToneStorageKey,
-} from '../../../../constants';
-import { isMessagesKey } from '../../../../type-helpers';
+} from '../../../../_constants';
+import { isMessagesKey } from '../../../../_type-helpers';
 import { EmojiDescription, OptionalEmojiDescription } from '../../../../types';
 import {
   getEmojiResourcePromise,

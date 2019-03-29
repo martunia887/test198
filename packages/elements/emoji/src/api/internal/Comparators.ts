@@ -1,5 +1,5 @@
-import { MAX_ORDINAL } from '../../constants';
-import { isEmojiVariationDescription } from '../../type-helpers';
+import { MAX_ORDINAL } from '../../_constants';
+import { isEmojiVariationDescription } from '../../_type-helpers';
 import { EmojiDescription } from '../../types';
 
 /**

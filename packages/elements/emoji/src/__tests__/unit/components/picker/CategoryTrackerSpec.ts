@@ -1,6 +1,6 @@
 import { List as VirtualList } from 'react-virtualized/dist/commonjs/List';
 import CategoryTracker from '../../../../components/picker/CategoryTracker';
-import { defaultCategories } from '../../../../constants';
+import { defaultCategories } from '../../../../_constants';
 
 describe('CategoryTracker', () => {
   describe('getRow', () => {

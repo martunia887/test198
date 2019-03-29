@@ -6,7 +6,7 @@ import ResourcedEmojiControl, {
   getRealEmojiResource,
 } from '../example-helpers/demo-resource-control';
 import { onSelection } from '../example-helpers';
-import { emojiPickerHeight } from '../src/constants';
+import { emojiPickerHeight } from '../src/_constants';
 
 const getPicker = () => (
   <div style={{ padding: '10px' }}>

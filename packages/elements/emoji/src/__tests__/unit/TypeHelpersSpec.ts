@@ -2,7 +2,7 @@ import {
   buildEmojiDescriptionWithAltRepresentation,
   convertMediaToImageEmoji,
   convertMediaToImageRepresentation,
-} from '../../type-helpers';
+} from '../../_type-helpers';
 import {
   EmojiDescriptionWithVariations,
   MediaApiRepresentation,

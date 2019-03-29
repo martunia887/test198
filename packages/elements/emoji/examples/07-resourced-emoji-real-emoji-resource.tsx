@@ -6,8 +6,8 @@ import ResourcedEmojiControl, {
 } from '../example-helpers/demo-resource-control';
 import { EmojiProvider, OnEmojiProviderChange } from '../src/api/EmojiResource';
 import ResourcedEmoji from '../src/components/common/ResourcedEmoji';
-import { customCategory } from '../src/constants';
-import { toEmojiId } from '../src/type-helpers';
+import { customCategory } from '../src/_constants';
+import { toEmojiId } from '../src/_type-helpers';
 import { EmojiDescription, EmojiSearchResult } from '../src/types';
 
 const customFilter = (emoji: EmojiDescription) =>

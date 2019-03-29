@@ -6,8 +6,8 @@ import {
   utils as serviceUtils,
 } from '@atlaskit/util-service-support';
 import { CategoryId } from '../components/picker/categories';
-import { selectedToneStorageKey } from '../constants';
-import { isMediaEmoji, isPromise, toEmojiId } from '../type-helpers';
+import { selectedToneStorageKey } from '../_constants';
+import { isMediaEmoji, isPromise, toEmojiId } from '../_type-helpers';
 import {
   EmojiDescription,
   EmojiId,

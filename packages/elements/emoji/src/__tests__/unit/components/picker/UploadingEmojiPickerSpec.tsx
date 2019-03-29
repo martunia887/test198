@@ -15,7 +15,7 @@ import {
   customCategory,
   customTitle,
   userCustomTitle,
-} from '../../../../constants';
+} from '../../../../_constants';
 import * as ImageUtil from '../../../../util/image';
 import {
   createPngFile,

@@ -1,4 +1,4 @@
-import DuplicateLimitedQueue from '../../DuplicateLimitedQueue';
+import DuplicateLimitedQueue from '../../_DuplicateLimitedQueue';
 
 describe('DuplicateLimitedQueue', () => {
   describe('initialisation', () => {

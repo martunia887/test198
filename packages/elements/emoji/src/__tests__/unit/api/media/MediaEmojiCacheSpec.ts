@@ -7,8 +7,8 @@ import MediaEmojiCache, {
 } from '../../../../api/media/MediaEmojiCache';
 import MediaImageLoader from '../../../../api/media/MediaImageLoader';
 import TokenManager from '../../../../api/media/TokenManager';
-import { frequentCategory } from '../../../../constants';
-import { isPromise } from '../../../../type-helpers';
+import { frequentCategory } from '../../../../_constants';
+import { isPromise } from '../../../../_type-helpers';
 import { EmojiDescriptionWithVariations } from '../../../../types';
 import {
   createTokenManager,

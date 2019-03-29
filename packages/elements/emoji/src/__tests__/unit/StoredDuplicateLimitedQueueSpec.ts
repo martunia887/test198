@@ -2,7 +2,7 @@ import * as sinon from 'sinon';
 
 import StoredDuplicateLimitedQueue, {
   StoredQueueOptions,
-} from '../../StoredDuplicateLimitedQueue';
+} from '../../_StoredDuplicateLimitedQueue';
 
 describe('StoredDuplicateLimitedQueue', () => {
   const storagePrefix = 'monkey.trousers';

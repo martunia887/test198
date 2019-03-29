@@ -2,8 +2,8 @@ import {
   denormaliseEmojiServiceResponse,
   shouldUseAltRepresentation,
 } from '../../../api/EmojiUtils';
-import { customCategory } from '../../../constants';
-import { isEmojiVariationDescription } from '../../../type-helpers';
+import { customCategory } from '../../../_constants';
+import { isEmojiVariationDescription } from '../../../_type-helpers';
 import {
   EmojiDescription,
   EmojiServiceDescription,

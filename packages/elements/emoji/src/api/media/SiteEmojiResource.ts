@@ -18,7 +18,7 @@ import {
   isMediaEmoji,
   convertImageToMediaRepresentation,
   isLoadedMediaEmoji,
-} from '../../type-helpers';
+} from '../../_type-helpers';
 import MediaEmojiCache from './MediaEmojiCache';
 import {
   denormaliseEmojiServiceResponse,

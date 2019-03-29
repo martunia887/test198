@@ -1,6 +1,6 @@
 import { messages } from './components/i18n';
 import { CategoryId } from './components/picker/categories';
-import { customCategory, dataURLPrefix } from './constants';
+import { customCategory, dataURLPrefix } from './_constants';
 import {
   EmojiDescription,
   EmojiDescriptionWithVariations,
