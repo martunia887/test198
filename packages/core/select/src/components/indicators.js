@@ -6,7 +6,7 @@ import Spinner from '@atlaskit/spinner';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import DownIcon from '@atlaskit/icon/glyph/hipchat/chevron-down';
 
-// indicators
+// Indicators
 export const ClearIndicator = (props: any) => (
   <components.ClearIndicator {...props}>
     <SelectClearIcon size="small" primaryColor="inherit" />
