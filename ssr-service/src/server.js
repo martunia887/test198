@@ -44,7 +44,7 @@ const html = (text, styleTags) => `
 </head>
 <body>
 <div id="root">${text}</div>
-<script src="/client.js"></script>
+<script src="/dist/client.js"></script>
 </body>
 </html>
 `;

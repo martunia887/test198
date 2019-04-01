@@ -1,13 +1,17 @@
 // @flow
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
+const akConfig = require('@atlaskit/webpack-config');
+
+/**
+ * We need to transpile AK modules using AK config*/
 
 module.exports = [
   {
     mode: 'development',
     entry: './src/client.js',
     output: {
-      filename: 'client.js',
+      filename: 'dist/client.js',
       path: path.join(__dirname),
     },
     module: {

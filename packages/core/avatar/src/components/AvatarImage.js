@@ -128,6 +128,7 @@ export default class AvatarImage extends PureComponent<Props, State> {
       cache[this.props.src] = true;
     }
     this.handleLoad(false);
+    console.log('test', `LOADED: ${this.props.src}`);
   };
 
   handleLoadError = () => {
@@ -140,6 +141,8 @@ export default class AvatarImage extends PureComponent<Props, State> {
     const showDefault = !isLoading && (!src || hasError);
     const imageUrl: ?string =
       src && (!isLoading || cache[src] || !canUseDOM) ? src : null;
+    // const imageUrl: ?string = src && (!isLoading || cache[src]|| this.props.renderMethod === "src_to_server") ? src : null;
+
     return showDefault ? (
       <DefaultImage
         appearance={appearance}
