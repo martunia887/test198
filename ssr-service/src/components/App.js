@@ -20,25 +20,19 @@ const AvatarWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const renderAvatars = (
-  numTimes = 20,
-  componentName = 'default',
-  renderMethod,
-) =>
-  repeat(numTimes, (_, i) => (
-    <Avatar
-      key={i}
-      size="xlarge"
-      src={`https://api.adorable.io/avatars/285/${componentName}_${i +
-        2}_@adorable.png`}
-      renderMethod={renderMethod}
-    />
-  ));
-
 class App extends React.Component {
   handleClick = () => {
     this.forceUpdate();
   };
+  renderAvatars = (numTimes = 20, componentName = 'default', renderMethod) =>
+    repeat(numTimes, (_, i) => (
+      <Avatar
+        key={i}
+        size="xlarge"
+        src={`https://api.adorable.io/avatars/285/${componentName}_${i}_@adorable.png`}
+        alternateSSRMethod={renderMethod}
+      />
+    ));
   render() {
     return (
       <AppWrapper>
@@ -47,12 +41,12 @@ class App extends React.Component {
         </button>
         <section>
           <h1>Method 1</h1>
-          <AvatarWrapper>{renderAvatars()}</AvatarWrapper>
+          <AvatarWrapper>{this.renderAvatars()}</AvatarWrapper>
         </section>
         <section>
           <h1>Method 2</h1>
           <AvatarWrapper>
-            {renderAvatars(20, 'method2', 'src_to_server')}
+            {this.renderAvatars(20, 'method2', true)}
           </AvatarWrapper>
         </section>
       </AppWrapper>

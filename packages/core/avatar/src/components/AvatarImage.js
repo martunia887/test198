@@ -63,6 +63,7 @@ type Props = {
   size: SizeType,
   alt?: string,
   src?: string,
+  alternateSSRMethod?: boolean,
 };
 
 type State = {|
@@ -138,10 +139,19 @@ export default class AvatarImage extends PureComponent<Props, State> {
   render() {
     const { alt, src, appearance, size } = this.props;
     const { hasError, isLoading } = this.state;
-    const showDefault = !isLoading && (!src || hasError);
-    const imageUrl: ?string =
+    // const showDefault = !isLoading && (!src || hasError);
+    const showDefault =
+      (isLoading && this.props.alternateSSRMethod) || hasError || !src;
+
+    const defaultImageUrl: ?string =
       src && (!isLoading || cache[src] || !canUseDOM) ? src : null;
-    // const imageUrl: ?string = src && (!isLoading || cache[src]|| this.props.renderMethod === "src_to_server") ? src : null;
+
+    const alternateSSRMethodUrl: ?string =
+      src && (!isLoading || cache[src]) ? src : null;
+
+    const imageUrl = this.props.alternateSSRMethod
+      ? alternateSSRMethodUrl
+      : defaultImageUrl;
 
     return showDefault ? (
       <DefaultImage

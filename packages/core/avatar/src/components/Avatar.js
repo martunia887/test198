@@ -186,6 +186,7 @@ class Avatar extends Component<AvatarPropTypes> {
               appearance={appearance}
               size={size}
               src={src}
+              alternateSSRMethod={this.props.alternateSSRMethod}
             />
           </Inner>
           {this.renderIcon()}

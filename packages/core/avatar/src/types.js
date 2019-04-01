@@ -79,6 +79,9 @@ export type AvatarPropTypesBase = {
 
   /** The theme that should be applied to the avatar. */
   theme?: ThemeProp<ThemeTokens, ThemeProps>,
+
+  /** Whether or not to use alternate method of SSR*/
+  alternateSSRMethod?: boolean,
 };
 
 export type AvatarPropTypes = AvatarPropTypesBase & {
