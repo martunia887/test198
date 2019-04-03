@@ -2,7 +2,12 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Popup, akEditorFloatingDialogZIndex } from '@atlaskit/editor-common';
 import { colors, borderRadius, gridSize } from '@atlaskit/theme';
-import { StatusPicker as AkStatusPicker, Color } from '@atlaskit/status';
+
+// TODO: leave as is?
+//import { StatusPicker as AkStatusPicker, Color } from '@atlaskit/status';
+import { Color } from '@atlaskit/status/element';
+import { StatusPicker as AkStatusPicker } from '@atlaskit/status/picker';
+
 import { dropShadow } from '../../../ui/styles';
 import withOuterListeners from '../../../ui/with-outer-listeners';
 import { DEFAULT_STATUS } from '../actions';
