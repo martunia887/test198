@@ -43,16 +43,16 @@
     "id": "atlaskit.navigation.main",
     "name": "main",
     "stats": {
-      "size": 55312,
-      "gzipSize": 11896
+      "size": 55742,
+      "gzipSize": 12007
     }
   },
   {
     "id": "combined.main",
     "name": "main",
     "stats": {
-      "size": 448814,
-      "gzipSize": 120704
+      "size": 449192,
+      "gzipSize": 120825
     }
   }
 ]
