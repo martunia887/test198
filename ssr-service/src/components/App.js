@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import Avatar from '@atlaskit/avatar';
 import styled from '@emotion/styled';
@@ -33,22 +34,25 @@ class App extends React.Component {
         alternateSSRMethod={renderMethod}
       />
     ));
+  renderMethod1 = () => (
+    <section>
+      <h1>Method 1: Pass `imgUrl` to server</h1>
+      <AvatarWrapper>{this.renderAvatars()}</AvatarWrapper>
+    </section>
+  );
+  renderMethod2 = () => (
+    <section>
+      <h1>Method 2: Don't pass `imgUrl` to server</h1>
+      <AvatarWrapper>{this.renderAvatars(20, 'method2', true)}</AvatarWrapper>
+    </section>
+  );
   render() {
     return (
       <AppWrapper>
         <button style={{ padding: '10px' }} onClick={this.handleClick}>
           Force Update
         </button>
-        <section>
-          <h1>Method 1</h1>
-          <AvatarWrapper>{this.renderAvatars()}</AvatarWrapper>
-        </section>
-        <section>
-          <h1>Method 2</h1>
-          <AvatarWrapper>
-            {this.renderAvatars(20, 'method2', true)}
-          </AvatarWrapper>
-        </section>
+        {this.renderMethod2()}
       </AppWrapper>
     );
   }

@@ -139,9 +139,7 @@ export default class AvatarImage extends PureComponent<Props, State> {
   render() {
     const { alt, src, appearance, size } = this.props;
     const { hasError, isLoading } = this.state;
-    // const showDefault = !isLoading && (!src || hasError);
-    const showDefault =
-      (isLoading && this.props.alternateSSRMethod) || hasError || !src;
+    const showDefault = !isLoading && (!src || hasError);
 
     const defaultImageUrl: ?string =
       src && (!isLoading || cache[src] || !canUseDOM) ? src : null;
