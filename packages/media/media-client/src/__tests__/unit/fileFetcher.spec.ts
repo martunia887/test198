@@ -1,6 +1,6 @@
-jest.mock('@atlaskit/media-core');
-import { authToOwner, Auth, AuthProvider } from '@atlaskit/media-core';
-import { MediaStore, ResponseFileItem } from '../..';
+import { Auth, AuthProvider } from '@atlaskit/media-core';
+import { ResponseFileItem } from '../..';
+import * as MediaClientModule from '../..';
 import * as uuid from 'uuid';
 import { FileFetcher, getItemsFromKeys } from '../../client/file-fetcher';
 import {
@@ -45,6 +45,7 @@ describe('FileFetcher', () => {
     });
     const mediaStore = {
       getFileBinaryURL: jest.fn(),
+      copyFileWithToken: jest.fn(),
       getItems: jest.fn().mockReturnValue(itemsResponse),
     } as any;
     const fileFetcher = new FileFetcher(mediaStore);
@@ -53,6 +54,10 @@ describe('FileFetcher', () => {
 
     return { fileFetcher, mediaStore, items, itemsResponse };
   };
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
   describe('downloadBinary()', () => {
     let appendChild: jest.SpyInstance<any>;
@@ -170,13 +175,15 @@ describe('FileFetcher', () => {
 
   describe('copyFile', () => {
     it('should call mediaStore.copyFileWithToken', async () => {
+      const MediaStoreSpy = jest.spyOn(MediaClientModule, 'MediaStore');
       const { items, fileFetcher } = setup();
-      const copyFileWithToken = jest.fn().mockResolvedValue({ data: {} });
-      asMock(MediaStore).mockImplementation(() => ({
-        copyFileWithToken,
-      }));
-
-      asMock(authToOwner).mockImplementation((owner: any) => owner);
+      const copyFileWithTokenMock = jest.fn().mockResolvedValue({ data: {} });
+      MediaStoreSpy.mockImplementation(
+        () =>
+          ({
+            copyFileWithToken: copyFileWithTokenMock,
+          } as any),
+      );
 
       const owner: Auth = {
         asapIssuer: 'asapIssuer',
@@ -196,7 +203,7 @@ describe('FileFetcher', () => {
         authProvider: userAuthProvider,
       };
       await fileFetcher.copyFile(source, destination);
-      expectFunctionToHaveBeenCalledWith(copyFileWithToken, [
+      expectFunctionToHaveBeenCalledWith(copyFileWithTokenMock, [
         {
           sourceFile: {
             id: items[0].id,
@@ -208,6 +215,9 @@ describe('FileFetcher', () => {
           collection: 'recents',
         },
       ]);
+      expect(MediaStoreSpy).toHaveBeenCalledWith({
+        authProvider: destination.authProvider,
+      });
     });
   });
 });
