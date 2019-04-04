@@ -13,7 +13,7 @@
   ],
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
-    "@atlaskit/media-store": "^11.0.3",
+    "@atlaskit/media-client": "^1.0.0",
     "tslib": "^1.8.0"
   },
   "peerDependencies": {
@@ -24,10 +24,12 @@
   "devDependencies": {
     "@atlaskit/docs": "^7.0.1",
     "@atlaskit/field-text": "^8.0.1",
+    "@atlaskit/media-core": "^29.0.1",
     "@atlaskit/media-test-helpers": "^21.1.0",
     "@atlaskit/select": "^8.0.3",
     "@atlaskit/spinner": "^10.0.1",
     "@atlaskit/theme": "^8.0.1",
+    "@atlaskit/type-helpers": "^3.0.2",
     "enzyme": "^3.7.0"
   }
 }

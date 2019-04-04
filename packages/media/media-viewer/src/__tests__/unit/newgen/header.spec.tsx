@@ -135,7 +135,7 @@ describe('<Header />', () => {
       const element = mount(
         <Header
           intl={fakeIntl}
-          context={{} as any}
+          mediaClient={{} as any}
           identifier={externalIdentifierWithName}
         />,
       );
@@ -148,7 +148,7 @@ describe('<Header />', () => {
       const element = mount(
         <Header
           intl={fakeIntl}
-          context={{} as any}
+          mediaClient={{} as any}
           identifier={externalIdentifier}
         />,
       );

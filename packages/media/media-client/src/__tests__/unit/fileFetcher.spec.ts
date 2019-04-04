@@ -1,6 +1,6 @@
 jest.mock('@atlaskit/media-core');
 import { authToOwner, Auth, AuthProvider } from '@atlaskit/media-core';
-import { MediaStore, ResponseFileItem, FileItem } from '../..';
+import { MediaStore, ResponseFileItem } from '../..';
 import * as uuid from 'uuid';
 import { FileFetcher, getItemsFromKeys } from '../../client/file-fetcher';
 import {

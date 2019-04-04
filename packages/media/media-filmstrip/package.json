@@ -17,6 +17,7 @@
   "dependencies": {
     "@atlaskit/icon": "^16.0.5",
     "@atlaskit/media-card": "^59.0.0",
+    "@atlaskit/media-client": "^1.0.0",
     "@atlaskit/theme": "^8.0.1",
     "debounce": "^1.0.0",
     "tslib": "^1.8.0"

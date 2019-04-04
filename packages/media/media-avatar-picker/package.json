@@ -19,6 +19,7 @@
     "@atlaskit/button": "^11.0.2",
     "@atlaskit/field-range": "^6.0.1",
     "@atlaskit/icon": "^16.0.5",
+    "@atlaskit/media-client": "^1.0.0",
     "@atlaskit/media-ui": "^10.1.0",
     "@atlaskit/modal-dialog": "^8.0.2",
     "@atlaskit/spinner": "^10.0.1",
@@ -27,7 +28,6 @@
     "tslib": "^1.8.0"
   },
   "peerDependencies": {
-    "@atlaskit/media-core": "^29.1.0",
     "react": "^16.4.0",
     "react-intl": "^2.6.0",
     "styled-components": "^3.2.6"
@@ -35,7 +35,6 @@
   "devDependencies": {
     "@atlaskit/build-utils": "^2.1.0",
     "@atlaskit/docs": "^7.0.1",
-    "@atlaskit/media-core": "^29.1.0",
     "@atlaskit/media-test-helpers": "^21.1.0",
     "@atlaskit/page": "^9.0.1",
     "@types/enzyme": "^3.1.15",

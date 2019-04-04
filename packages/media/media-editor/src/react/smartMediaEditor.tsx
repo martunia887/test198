@@ -154,8 +154,8 @@ export class SmartMediaEditor extends React.Component<
 
   copyFileToUserCollection = async (fileId: string) => {
     const {
-      context: {
-        config: { userAuthProvider, authProvider },
+      mediaClient: {
+        mediaClientConfig: { userAuthProvider, authProvider },
         file,
       },
       identifier: { collectionName },

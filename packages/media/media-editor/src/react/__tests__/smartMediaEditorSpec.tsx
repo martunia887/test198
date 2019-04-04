@@ -5,7 +5,6 @@ import {
   expectFunctionToHaveBeenCalledWith,
   expectToEqual,
   fakeMediaClient,
-  getDefaultContextConfig,
 } from '@atlaskit/media-test-helpers';
 import * as uuid from 'uuid';
 import { Shortcut } from '@atlaskit/media-ui';
@@ -173,7 +172,9 @@ describe('Smart Media Editor', () => {
 
   describe('onSave callback', () => {
     let resultingFileStateObservable: ReplaySubject<FileState>;
-    const callEditorViewOnSaveWithCustomContext = (customContext: Context) => {
+    const callEditorViewOnSaveWithCustomMediaClient = (
+      mediaClient: MediaClient,
+    ) => {
       resultingFileStateObservable = new ReplaySubject<FileState>(1);
       const touchedFiles: TouchedFiles = {
         created: [
@@ -196,17 +197,17 @@ describe('Smart Media Editor', () => {
       let userAuthProvider: AuthProvider;
       beforeEach(async () => {
         await forFileToBeProcessed();
-        const defaultConfig = getDefaultContextConfig();
-        userAuthProvider = jest.fn() as any;
-        const config = {
-          ...defaultConfig,
-          userAuthProvider,
-        };
-        context = fakeContext({}, config);
+        // const defaultConfig = getDefaultContextConfig();
+        // userAuthProvider = jest.fn() as any;
+        // const config = {
+        //   ...defaultConfig,
+        //   userAuthProvider,
+        // };
+        // context = fakeContext({}, config);
         component.setProps({
-          context,
+          mediaClient,
         });
-        callEditorViewOnSaveWithCustomContext(context);
+        callEditorViewOnSaveWithCustomMediaClient(mediaClient);
       });
 
       it('should call context.file.copyFile', async () => {
@@ -220,12 +221,12 @@ describe('Smart Media Editor', () => {
           representations: {},
         });
         await new Promise(resolve => setTimeout(resolve, 0));
-        expect(context.file.copyFile).toHaveBeenCalledTimes(1);
-        expectFunctionToHaveBeenCalledWith(context.file.copyFile, [
+        expect(mediaClient.file.copyFile).toHaveBeenCalledTimes(1);
+        expectFunctionToHaveBeenCalledWith(mediaClient.file.copyFile, [
           {
             id: 'uuid1',
             collection: fileIdentifier.collectionName,
-            authProvider: context.config.authProvider,
+            authProvider: mediaClient.mediaClientConfig.authProvider,
           },
           {
             collection: 'recents',
@@ -239,7 +240,7 @@ describe('Smart Media Editor', () => {
     describe('when EditorView calls onSave without userAuthProvider', () => {
       beforeEach(async () => {
         await forFileToBeProcessed();
-        callEditorViewOnSaveWithCustomContext(context);
+        callEditorViewOnSaveWithCustomMediaClient(mediaClient);
       });
 
       it('should upload a file', async () => {

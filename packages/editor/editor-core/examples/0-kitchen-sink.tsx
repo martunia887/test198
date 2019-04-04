@@ -378,7 +378,8 @@ class FullPageRendererExample extends React.Component<Props, State> {
                               adfStage="stage0"
                               dataProviders={this.dataProviders}
                               extensionHandlers={extensionHandlers}
-                              eventHandlers={this.legacyMediaEventHandlers()} // @ts-ignore
+                              eventHandlers={this.legacyMediaEventHandlers()}
+                              // @ts-ignore
                               appearance={this.state.appearance}
                             />
                           </SmartCardProvider>

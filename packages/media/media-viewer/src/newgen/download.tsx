@@ -6,7 +6,6 @@ import {
   FileState,
   isErrorFileState,
   MediaClient,
-  FileIdentifier,
   Identifier,
   isExternalImageIdentifier,
 } from '@atlaskit/media-client';

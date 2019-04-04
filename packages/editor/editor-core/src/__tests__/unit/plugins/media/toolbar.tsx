@@ -38,6 +38,8 @@ import {
   stateKey,
 } from '../../../../plugins/media/pm-plugins/main';
 import Button from '../../../../plugins/floating-toolbar/ui/Button';
+import { MediaClient } from '@atlaskit/media-client';
+import { asMock, fakeMediaClient } from '@atlaskit/media-test-helpers';
 
 describe('media', () => {
   const createEditor = createEditorFactory<MediaPluginState>();
@@ -277,16 +279,15 @@ describe('media', () => {
     });
 
     describe('image annotation', () => {
-      const mockMediaContext = {
-        file: {
-          getCurrentState: jest.fn(() => {
-            return Promise.resolve({
-              status: 'success',
-              mediaType: 'image',
-            });
-          }),
-        },
-      };
+      let mockMediaClient: MediaClient;
+
+      beforeEach(() => {
+        mockMediaClient = fakeMediaClient();
+        asMock(mockMediaClient.file.getCurrentState).mockResolvedValue({
+          status: 'success',
+          mediaType: 'image',
+        });
+      });
 
       it('has an AnnotationToolbar custom toolbar element', async () => {
         const { editorView, pluginState } = editor(docWithMediaSingle);
@@ -315,13 +316,13 @@ describe('media', () => {
       it('renders an annotate button when an image is selected', async () => {
         const toolbar = shallow(
           <AnnotationToolbar
-            viewContext={mockMediaContext as any}
+            mediaClient={mockMediaClient}
             id="1234"
             intl={intl}
           />,
         );
 
-        await mockMediaContext.file.getCurrentState();
+        await mockMediaClient.file.getCurrentState('');
 
         expect(
           toolbar
@@ -339,14 +340,14 @@ describe('media', () => {
 
         const toolbar = shallow(
           <AnnotationToolbar
-            viewContext={mockMediaContext as any}
+            mediaClient={mockMediaClient}
             id="1234"
             intl={intl}
             view={editorView}
           />,
         );
 
-        await mockMediaContext.file.getCurrentState();
+        await mockMediaClient.file.getCurrentState('');
 
         toolbar.find(Button).simulate('click');
         expect(createAnalyticsEvent).toHaveBeenCalledWith({
