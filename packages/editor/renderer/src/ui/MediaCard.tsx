@@ -87,9 +87,36 @@ export class MediaCardInternal extends Component<MediaCardProps> {
     );
   }
 
+  /**
+   * We want to call provided `eventHandlers.media.onClick` when it's provided,
+   * but we also don't want to call it when it's a video and inline video player is enabled.
+   * This is due to consumers normally process this onClick call by opening media viewer and
+   * we don't want that to happened described above text.
+   */
+  private getOnCardClickCallback = (isInlinePlayer: boolean) => {
+    const { eventHandlers } = this.props;
+    if (eventHandlers && eventHandlers.media && eventHandlers.media.onClick) {
+      return ((result, analyticsEvent) => {
+        const isVideo =
+          result.mediaItemDetails &&
+          result.mediaItemDetails.mediaType === 'video';
+        const isVideoWithInlinePlayer = isInlinePlayer && isVideo;
+        if (
+          !isVideoWithInlinePlayer &&
+          eventHandlers &&
+          eventHandlers.media &&
+          eventHandlers.media.onClick
+        ) {
+          eventHandlers.media.onClick(result, analyticsEvent);
+        }
+      }) as CardOnClickCallback;
+    }
+
+    return undefined;
+  };
+
   render() {
     const {
-      eventHandlers,
       id,
       type,
       collection,
@@ -103,8 +130,10 @@ export class MediaCardInternal extends Component<MediaCardProps> {
     const isMobile = rendererAppearance === 'mobile';
     const shouldPlayInline =
       useInlinePlayer !== undefined ? useInlinePlayer : true;
-    const onCardClick =
-      eventHandlers && eventHandlers.media && eventHandlers.media.onClick;
+    const isInlinePlayer = isMobile ? false : shouldPlayInline;
+
+    const onCardClick = this.getOnCardClickCallback(isInlinePlayer);
+
     const shouldOpenMediaViewer = !isMobile && !onCardClick;
 
     if (type === 'external') {
@@ -144,7 +173,7 @@ export class MediaCardInternal extends Component<MediaCardProps> {
         resizeMode={resizeMode}
         isLazy={!isMobile}
         disableOverlay={disableOverlay}
-        useInlinePlayer={isMobile ? false : shouldPlayInline}
+        useInlinePlayer={isInlinePlayer}
         shouldOpenMediaViewer={shouldOpenMediaViewer}
       />
     );

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { WithMediaClientProps } from '@atlaskit/media-client';
-import { FileIdentifier } from '@atlaskit/media-client';
+import { WithMediaClientProps, Identifier } from '@atlaskit/media-client';
 import { ItemViewer } from './item-viewer';
 import { MediaViewerFeatureFlags } from './domain';
 import { HeaderWrapper, hideControlsClassName, ListWrapper } from './styled';
@@ -11,16 +10,16 @@ import Header from './header';
 
 export type Props = Readonly<{
   onClose?: () => void;
-  onNavigationChange?: (selectedItem: FileIdentifier) => void;
+  onNavigationChange?: (selectedItem: Identifier) => void;
   showControls?: () => void;
   featureFlags?: MediaViewerFeatureFlags;
-  defaultSelectedItem: FileIdentifier;
-  items: FileIdentifier[];
+  defaultSelectedItem: Identifier;
+  items: Identifier[];
 }> &
   WithMediaClientProps;
 
 export type State = {
-  selectedItem: FileIdentifier;
+  selectedItem: Identifier;
   previewCount: number;
 };
 
@@ -35,9 +34,10 @@ export class List extends React.Component<Props, State> {
     return this.renderContent(items);
   }
 
-  renderContent(items: FileIdentifier[]) {
+  renderContent(items: Identifier[]) {
     const { mediaClient, onClose, featureFlags, showControls } = this.props;
     const { selectedItem } = this.state;
+
     if (getSelectedIndex(items, selectedItem) < 0) {
       return <ErrorMessage error={createError('idNotFound')} />;
     } else {
@@ -68,7 +68,7 @@ export class List extends React.Component<Props, State> {
     }
   }
 
-  onNavigationChange = (selectedItem: FileIdentifier) => {
+  onNavigationChange = (selectedItem: Identifier) => {
     const { onNavigationChange, showControls } = this.props;
     if (onNavigationChange) {
       onNavigationChange(selectedItem);

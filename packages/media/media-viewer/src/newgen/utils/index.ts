@@ -3,6 +3,8 @@ import {
   MediaClient,
   MediaCollectionItem,
   FileIdentifier,
+  Identifier,
+  isFileIdentifier,
 } from '@atlaskit/media-client';
 import { stringify } from 'query-string';
 
@@ -74,12 +76,21 @@ export const toIdentifier = (
 };
 
 export const getSelectedIndex = (
-  items: FileIdentifier[],
-  selectedItem: FileIdentifier,
+  items: Identifier[],
+  selectedItem: Identifier,
 ) => {
-  return items.findIndex(
-    item =>
-      item.id === selectedItem.id &&
-      item.occurrenceKey === selectedItem.occurrenceKey,
-  );
+  return items.findIndex(item => {
+    if (isFileIdentifier(item) && isFileIdentifier(selectedItem)) {
+      return (
+        item.id === selectedItem.id &&
+        item.occurrenceKey === selectedItem.occurrenceKey
+      );
+    }
+
+    if (!isFileIdentifier(item) && !isFileIdentifier(selectedItem)) {
+      return item.dataURI === selectedItem.dataURI;
+    }
+
+    return false;
+  });
 };

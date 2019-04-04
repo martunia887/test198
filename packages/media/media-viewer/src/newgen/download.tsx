@@ -7,6 +7,8 @@ import {
   isErrorFileState,
   MediaClient,
   FileIdentifier,
+  Identifier,
+  isExternalImageIdentifier,
 } from '@atlaskit/media-client';
 import Button from '@atlaskit/button';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
@@ -69,20 +71,27 @@ export const ErrorViewDownloadButton = (
 
 export type ToolbarDownloadButtonProps = Readonly<{
   state: FileState;
-  identifier: FileIdentifier;
+  identifier: Identifier;
 }> &
   WithMediaClientProps;
 
 export const ToolbarDownloadButton = (props: ToolbarDownloadButtonProps) => {
-  const downloadEvent = downloadButtonEvent(props.state);
+  const { state, mediaClient, identifier } = props;
+  const downloadEvent = downloadButtonEvent(state);
+
+  // TODO [MS-1731]: make it work for external files as well
+  if (isExternalImageIdentifier(identifier)) {
+    return null;
+  }
+
   return (
     <DownloadButton
       analyticsPayload={downloadEvent}
       appearance={'toolbar' as any}
       onClick={createItemDownloader(
-        props.state,
-        props.mediaClient,
-        props.identifier.collectionName,
+        state,
+        mediaClient,
+        identifier.collectionName,
       )}
       iconBefore={downloadIcon}
     />

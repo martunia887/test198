@@ -3,6 +3,8 @@ import {
   MediaCollectionItem,
   WithMediaClientProps,
   FileIdentifier,
+  Identifier,
+  isExternalImageIdentifier,
 } from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
 import { Outcome, MediaViewerFeatureFlags } from './domain';
@@ -13,7 +15,7 @@ import { Spinner } from './loading';
 
 export type Props = Readonly<{
   onClose?: () => void;
-  defaultSelectedItem?: FileIdentifier;
+  defaultSelectedItem?: Identifier;
   showControls?: () => void;
   featureFlags?: MediaViewerFeatureFlags;
   collectionName: string;
@@ -121,7 +123,7 @@ export class Collection extends React.Component<Props, State> {
     );
   }
 
-  private onNavigationChange = (item: FileIdentifier) => {
+  private onNavigationChange = (item: Identifier) => {
     const { mediaClient, collectionName, pageSize } = this.props;
     if (this.shouldLoadNext(item)) {
       mediaClient.collection.loadNextPage(collectionName, {
@@ -130,7 +132,10 @@ export class Collection extends React.Component<Props, State> {
     }
   };
 
-  private shouldLoadNext(selectedItem: FileIdentifier): boolean {
+  private shouldLoadNext(selectedItem: Identifier): boolean {
+    if (isExternalImageIdentifier(selectedItem)) {
+      return false;
+    }
     const { items } = this.state;
     return items.match({
       pending: () => false,

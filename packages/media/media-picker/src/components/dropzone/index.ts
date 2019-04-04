@@ -44,9 +44,8 @@ export class DropzoneImpl
         }
       })
       .then(() => {
-        this.deactivate(); // in case we call activate twice in a row
-        this.container.addEventListener('dragover', this.onDragOver, false);
-        this.container.addEventListener('dragleave', this.onDragLeave, false);
+        this.removeContainerListeners(); // in case we call activate twice in a row
+        this.addContainerListeners();
         this.addDropzone();
       });
   }
@@ -64,9 +63,18 @@ export class DropzoneImpl
     this.uploadService.addFiles(filesArray);
   };
 
-  public deactivate(): void {
+  private removeContainerListeners = () => {
     this.container.removeEventListener('dragover', this.onDragOver, false);
     this.container.removeEventListener('dragleave', this.onDragLeave, false);
+  };
+
+  private addContainerListeners = () => {
+    this.container.addEventListener('dragover', this.onDragOver, false);
+    this.container.addEventListener('dragleave', this.onDragLeave, false);
+  };
+
+  public deactivate(): void {
+    this.removeContainerListeners();
     this.removeDropzone();
   }
 
@@ -76,6 +84,9 @@ export class DropzoneImpl
 
   private removeDropzone() {
     this.container.removeEventListener('drop', this.onFileDropped);
+    if (this.instance) {
+      this.instance.remove();
+    }
   }
 
   private onDragOver = (e: DragEvent): void => {

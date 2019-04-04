@@ -20,7 +20,6 @@ import {
   tdCursor,
   tdEmpty,
   code_block,
-  storyMediaProviderFactory,
   randomId,
   sleep,
   insertText,
@@ -43,15 +42,14 @@ import tablePlugin from '../../../../plugins/table';
 import quickInsertPlugin from '../../../../plugins/quick-insert';
 import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-single';
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
-import { temporaryMedia, temporaryMediaGroup } from './_utils';
-
-const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
-
-const getFreshMediaProvider = () =>
-  storyMediaProviderFactory({
-    collectionName: testCollectionName,
-    includeUserAuthProvider: true,
-  });
+import {
+  temporaryMedia,
+  temporaryMediaGroup,
+  getFreshMediaProvider,
+  waitForAllPickersInitialised,
+  testCollectionName,
+  temporaryFileId,
+} from './_utils';
 
 const pdfFile = {
   id: `${randomId()}`,
@@ -70,11 +68,10 @@ describe('Media plugin', () => {
   const createEditor = createEditorFactory<MediaPluginState>();
 
   const mediaProvider = getFreshMediaProvider();
-  const temporaryFileId = `temporary:${randomId()}`;
   const providerFactory = ProviderFactory.create({ mediaProvider });
 
   let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
-  const mediaPluginOptions = dropzoneContainer => ({
+  const mediaPluginOptions = (dropzoneContainer: HTMLElement) => ({
     provider: mediaProvider,
     allowMediaSingle: true,
     customDropzoneContainer: dropzoneContainer,
@@ -124,14 +121,6 @@ describe('Media plugin', () => {
     );
 
     return mediaNodeWithPos!.getPos();
-  };
-
-  const waitForAllPickersInitialised = async (
-    pluginState: MediaPluginState,
-  ) => {
-    while (pluginState.pickers.length < 4) {
-      await new Promise(resolve => resolve());
-    }
   };
 
   afterAll(() => {

@@ -5,6 +5,7 @@ import { publishReplay } from 'rxjs/operators/publishReplay';
 import * as uuid from 'uuid/v4';
 import * as Dataloader from 'dataloader';
 import * as isValidId from 'uuid-validate';
+import { AuthProvider, authToOwner } from '@atlaskit/media-core';
 import {
   MediaStore,
   UploadableFile,
@@ -21,6 +22,9 @@ import {
   GetFileOptions,
   mapMediaItemToFileState,
   fileStreamsCache,
+  MediaFile,
+  MediaStoreCopyFileWithTokenBody,
+  MediaStoreCopyFileWithTokenParams,
 } from '..';
 import { getMediaTypeFromUploadableFile } from '../utils/getMediaTypeFromUploadableFile';
 import { convertBase64ToBlob } from '../utils/convertBase64ToBlob';
@@ -58,6 +62,16 @@ export const getItemsFromKeys = (
 interface DataloaderKey {
   id: string;
   collection?: string;
+}
+
+export interface SourceFile {
+  id: string;
+  collection?: string;
+  authProvider: AuthProvider;
+}
+
+export interface CopyDestination extends MediaStoreCopyFileWithTokenParams {
+  authProvider: AuthProvider;
 }
 
 type DataloaderResult = MediaCollectionItemFullDetails | undefined;
@@ -339,5 +353,42 @@ export class FileFetcher {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  public async copyFile(
+    source: SourceFile,
+    destination: CopyDestination,
+  ): Promise<MediaFile> {
+    const { authProvider, collection: sourceCollection, id } = source;
+    const {
+      authProvider: destinationAuthProvider,
+      collection: destinationCollectionName,
+      replaceFileId,
+      occurrenceKey,
+    } = destination;
+
+    const mediaStore = new MediaStore({
+      authProvider: destinationAuthProvider,
+    });
+
+    const owner = authToOwner(
+      await authProvider({ collectionName: sourceCollection }),
+    );
+
+    const body: MediaStoreCopyFileWithTokenBody = {
+      sourceFile: {
+        id,
+        collection: sourceCollection,
+        owner,
+      },
+    };
+
+    const params: MediaStoreCopyFileWithTokenParams = {
+      collection: destinationCollectionName,
+      replaceFileId,
+      occurrenceKey,
+    };
+
+    return (await mediaStore.copyFileWithToken(body, params)).data;
   }
 }

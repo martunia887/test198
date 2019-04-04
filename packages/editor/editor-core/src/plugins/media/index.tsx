@@ -1,5 +1,4 @@
 import * as React from 'react';
-import EditorImageIcon from '@atlaskit/icon/glyph/editor/image';
 import { media, mediaGroup, mediaSingle } from '@atlaskit/adf-schema';
 import {
   EditorPlugin,
@@ -33,6 +32,7 @@ import {
 } from '../analytics';
 import WithPluginState from '../../ui/WithPluginState';
 import { MediaClientConfigContext } from '@atlaskit/media-core';
+import { IconImages } from '../quick-insert/assets';
 
 export { MediaState, MediaProvider, CustomMediaPicker };
 
@@ -51,6 +51,10 @@ export interface MediaSingleOptions {
 }
 
 export const renderSmartMediaEditor = (mediaState: MediaPluginState) => {
+  if (!mediaState) {
+    return null;
+  }
+
   const node = mediaState.selectedMediaContainerNode();
   if (!node) {
     return null;
@@ -124,6 +128,7 @@ const mediaPlugin = (
           errorReporter,
           portalProviderAPI,
           reactContext,
+          dispatchAnalyticsEvent,
         }: PMPluginFactoryParams) =>
           createPlugin(
             schema,
@@ -152,12 +157,10 @@ const mediaPlugin = (
             reactContext,
             dispatch,
             props.appearance,
+            dispatchAnalyticsEvent,
           ),
       },
-      {
-        name: 'mediaKeymap',
-        plugin: ({ schema }: PMPluginFactoryParams) => keymapPlugin(),
-      },
+      { name: 'mediaKeymap', plugin: () => keymapPlugin() },
     ].concat(
       options && options.allowMediaSingle
         ? {
@@ -196,10 +199,11 @@ const mediaPlugin = (
     quickInsert: ({ formatMessage }) => [
       {
         title: formatMessage(messages.filesAndImages),
+        description: formatMessage(messages.filesAndImagesDescription),
         priority: 400,
         keywords: ['media'],
         icon: () => (
-          <EditorImageIcon label={formatMessage(messages.filesAndImages)} />
+          <IconImages label={formatMessage(messages.filesAndImages)} />
         ),
         action(insert, state) {
           const pluginState = pluginKey.getState(state);
