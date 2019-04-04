@@ -9,6 +9,7 @@ const babelPolyfill = require.resolve('@babel/polyfill');
 const customEventPolyfill = require.resolve('custom-event-polyfill');
 const entry = require.resolve('./entry');
 const browserFetcher = puppeteer.createBrowserFetcher();
+const moduleResolveMapBuilder = require('@atlaskit/multi-entry-tools/module-resolve-map-builder');
 
 const webpackConfig = {
   mode: 'development',
@@ -35,6 +36,7 @@ const webpackConfig = {
     ],
   },
   resolve: {
+    mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
     alias: {
       sinon: 'sinon/pkg/sinon',
@@ -78,7 +80,13 @@ async function getKarmaConfig({ cwd, watch, browserstack }) {
   process.env.CHROME_BIN = revisionInfo.executablePath;
 
   const aliases = await getAliases(cwd);
-  webpackConfig.resolve.alias = { ...aliases, ...webpackConfig.resolve.alias };
+  webpackConfig.resolve.alias = {
+    ...aliases,
+    ...webpackConfig.resolve.alias,
+    ...(await moduleResolveMapBuilder()),
+  };
+
+  delete webpackConfig.resolve.alias['@atlaskit/theme'];
 
   const config = {
     port: 9876,

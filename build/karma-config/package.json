@@ -10,6 +10,7 @@
   "author": "Atlassian Pty Ltd",
   "license": "Apache-2.0",
   "dependencies": {
+    "@atlaskit/multi-entry-tools": "^0.0.1",
     "@babel/polyfill": "^7.0.0",
     "chai": "^4.1.2",
     "custom-event-polyfill": "^0.3.0",
