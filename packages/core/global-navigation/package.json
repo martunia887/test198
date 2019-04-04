@@ -31,12 +31,12 @@
     "emotion": "^9.1.1",
     "emotion-theming": "^9.0.0",
     "prop-types": "^15.5.10",
-    "react-dom": "^16.4.2",
+    "react-dom": "^16.8.0",
     "react-transition-group": "^2.2.1",
     "url-parse": "^1.4.3"
   },
   "peerDependencies": {
-    "react": "^16.4.0"
+    "react": "^16.8.0"
   },
   "devDependencies": {
     "@atlaskit/analytics-listeners": "^5.0.0",

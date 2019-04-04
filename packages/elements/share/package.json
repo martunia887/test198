@@ -33,7 +33,7 @@
     "@atlaskit/user-picker": "^3.1.1",
     "@atlaskit/util-service-support": "^4.0.1",
     "memoize-one": "^3.0.1",
-    "react": "^16.4.0",
+    "react": "^16.8.0",
     "react-intl": "^2.6.0",
     "styled-components": "^3.2.6"
   },
@@ -47,7 +47,7 @@
     "@atlaskit/util-data-test": "^11.1.1",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
-    "react": "^16.4.0",
+    "react": "^16.8.0",
     "react-intl": "^2.6.0"
   },
   "scripts": {

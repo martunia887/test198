@@ -25,10 +25,10 @@
     "ui"
   ],
   "devDependencies": {
-    "react": "^16.4.0"
+    "react": "^16.8.0"
   },
   "peerDependencies": {
-    "react": "^16.4.0"
+    "react": "^16.8.0"
   },
   "dependencies": {
     "@atlaskit/type-helpers": "^3.0.1"
