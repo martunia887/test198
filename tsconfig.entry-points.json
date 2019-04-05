@@ -1939,22 +1939,6 @@
         "../../people-and-teams/profilecard/src/messages",
         "./packages/people-and-teams/profilecard/src/messages"
       ],
-      "@atlaskit/profilecard/profilecard-resourced": [
-        "../../people-and-teams/profilecard/src/profilecard-resourced",
-        "./packages/people-and-teams/profilecard/src/profilecard-resourced"
-      ],
-      "@atlaskit/profilecard/profilecard-trigger": [
-        "../../people-and-teams/profilecard/src/profilecard-trigger",
-        "./packages/people-and-teams/profilecard/src/profilecard-trigger"
-      ],
-      "@atlaskit/profilecard/profilecard": [
-        "../../people-and-teams/profilecard/src/profilecard",
-        "./packages/people-and-teams/profilecard/src/profilecard"
-      ],
-      "@atlaskit/profilecard/relative-date": [
-        "../../people-and-teams/profilecard/src/relative-date",
-        "./packages/people-and-teams/profilecard/src/relative-date"
-      ],
       "@atlaskit/profilecard/types": [
         "../../people-and-teams/profilecard/src/types",
         "./packages/people-and-teams/profilecard/src/types"
