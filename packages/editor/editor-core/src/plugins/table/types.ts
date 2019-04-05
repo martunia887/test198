@@ -20,6 +20,7 @@ export interface PluginConfig {
   stickToolbarToBottom?: boolean;
   permittedLayouts?: PermittedLayoutsDescriptor;
   allowControls?: boolean;
+  UNSAFE_allowDefaultMarks?: boolean;
 }
 
 export interface TablePluginState {

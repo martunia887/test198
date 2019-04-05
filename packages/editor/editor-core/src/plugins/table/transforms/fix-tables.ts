@@ -1,7 +1,7 @@
-import { Transaction } from 'prosemirror-state';
+import { Transaction, Selection } from 'prosemirror-state';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { TableLayout } from '@atlaskit/adf-schema';
+import { TableLayout, tableHeaderDefaultMarks } from '@atlaskit/adf-schema';
 import {
   akEditorWideLayoutWidth,
   akEditorDefaultLayoutWidth,
@@ -69,11 +69,50 @@ export const removeExtraneousColumnWidths = (
   return tr;
 };
 
-export const fixTables = (tr: Transaction): Transaction => {
+export const applyDefaultHeaderMarks = (
+  node: PMNode,
+  basePos: number,
+  tr: Transaction,
+) => {
+  const { schema } = tr.doc.type;
+  const { tableHeader } = schema.nodes;
+  tr = replaceCells(tr, node, basePos, cell => {
+    if (cell.type === tableHeader && !cell.attrs.defaultMarks) {
+      return cell.type.createChecked(
+        {
+          ...cell.attrs,
+          defaultMarks: tableHeaderDefaultMarks,
+        },
+        cell.content,
+        cell.marks,
+      );
+    }
+
+    return cell;
+  });
+
+  if (tr.docChanged) {
+    tr = tr.setSelection(Selection.near(tr.doc.resolve(basePos)));
+  }
+
+  return tr;
+};
+
+export const fixTables = (
+  tr: Transaction,
+  allowDefaultMarks?: boolean,
+): Transaction => {
   tr.doc.descendants((node, pos) => {
     if (node.type.name === 'table') {
       // in the unlikely event of having to fix multiple tables at the same time
       tr = removeExtraneousColumnWidths(node, tr.mapping.map(pos), tr);
+      /**
+       * This is less than ideal, but since we can't really FF NodeSpec's
+       * we apply default header marks here.
+       */
+      if (allowDefaultMarks) {
+        tr = applyDefaultHeaderMarks(node, tr.mapping.map(pos), tr);
+      }
     }
   });
   return tr;

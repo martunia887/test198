@@ -54,12 +54,17 @@ import { AnalyticsHandler } from '../../../../analytics';
 describe('table plugin', () => {
   const createEditor = createEditorFactory<TablePluginState>();
 
-  const editor = (doc: any, trackEvent: AnalyticsHandler = () => {}) => {
+  const editor = (
+    doc: any,
+    trackEvent: AnalyticsHandler = () => {},
+    extraTableOptions: PluginConfig = {},
+  ) => {
     const tableOptions = {
       allowNumberColumn: true,
       allowHeaderRow: true,
       allowHeaderColumn: true,
       permittedLayouts: 'all',
+      ...extraTableOptions,
     } as PluginConfig;
 
     return createEditor({
@@ -430,13 +435,7 @@ describe('table plugin', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
-            table()(
-              tr(
-                td({ defaultMarks: [] })(p('')),
-                td({ defaultMarks: [] })(p('')),
-              ),
-              tr(tdEmpty, tdEmpty),
-            ),
+            table()(tr(td()(p('')), td()(p(''))), tr(tdEmpty, tdEmpty)),
           ),
         );
       });
@@ -453,10 +452,7 @@ describe('table plugin', () => {
           expect(editorView.state.doc).toEqualDocument(
             doc(
               p('text'),
-              table()(
-                tr(thEmpty, td({ defaultMarks: [] })(p(''))),
-                tr(thEmpty, tdEmpty),
-              ),
+              table()(tr(thEmpty, td()(p(''))), tr(thEmpty, tdEmpty)),
             ),
           );
         });
@@ -499,10 +495,7 @@ describe('table plugin', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
-            table()(
-              tr(td({ defaultMarks: [] })(p('')), tdEmpty),
-              tr(td({ defaultMarks: [] })(p('')), tdEmpty),
-            ),
+            table()(tr(td()(p('')), tdEmpty), tr(td()(p('')), tdEmpty)),
           ),
         );
       });
@@ -516,10 +509,7 @@ describe('table plugin', () => {
           expect(editorView.state.doc).toEqualDocument(
             doc(
               p('text'),
-              table()(
-                tr(thEmpty, thEmpty),
-                tr(td({ defaultMarks: [] })(p('')), tdEmpty),
-              ),
+              table()(tr(thEmpty, thEmpty), tr(td()(p('')), tdEmpty)),
             ),
           );
         });

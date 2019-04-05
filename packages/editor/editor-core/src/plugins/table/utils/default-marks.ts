@@ -3,8 +3,11 @@ import { Mark } from 'prosemirror-model';
 import { findParentNodeOfType } from 'prosemirror-utils';
 import { isEmptyNode } from '../../../utils/document';
 
-export const applyDefaultMarks = (tr: Transaction) => {
-  if (!tr.selection.empty) {
+export const applyDefaultMarks = (
+  tr: Transaction,
+  allowDefaultMarks?: boolean,
+) => {
+  if (!tr.selection.empty || !allowDefaultMarks) {
     return tr;
   }
 

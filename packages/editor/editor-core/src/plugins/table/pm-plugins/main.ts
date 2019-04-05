@@ -194,16 +194,28 @@ export const createPlugin = (
       const tr = transactions.find(tr => tr.getMeta('uiEvent') === 'cut');
       if (tr) {
         // "fixTables" removes empty rows as we don't allow that in schema
-        return applyDefaultMarks(fixTables(handleCut(tr, oldState, newState)));
+        return applyDefaultMarks(
+          fixTables(
+            handleCut(tr, oldState, newState),
+            pluginConfig.UNSAFE_allowDefaultMarks,
+          ),
+          pluginConfig.UNSAFE_allowDefaultMarks,
+        );
       }
       if (transactions.find(tr => tr.docChanged)) {
-        return applyDefaultMarks(fixTables(newState.tr));
+        return applyDefaultMarks(
+          fixTables(newState.tr, pluginConfig.UNSAFE_allowDefaultMarks),
+          pluginConfig.UNSAFE_allowDefaultMarks,
+        );
       }
       if (transactions.find(tr => tr.selectionSet)) {
-        return applyDefaultMarks(normalizeSelection(newState.tr));
+        return applyDefaultMarks(
+          normalizeSelection(newState.tr),
+          pluginConfig.UNSAFE_allowDefaultMarks,
+        );
       }
       const storedMarkTransaction = transactions.find(tr => tr.storedMarksSet);
-      if (storedMarkTransaction) {
+      if (storedMarkTransaction && pluginConfig.UNSAFE_allowDefaultMarks) {
         return saveDefaultMarksInCellNode(storedMarkTransaction);
       }
     },

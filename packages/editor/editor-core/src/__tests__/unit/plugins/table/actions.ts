@@ -27,7 +27,10 @@ import {
   handleCut,
   toggleHeaderColumn,
 } from '../../../../plugins/table/actions';
-import { TablePluginState } from '../../../../plugins/table/types';
+import {
+  TablePluginState,
+  PluginConfig,
+} from '../../../../plugins/table/types';
 import tablesPlugin from '../../../../plugins/table';
 import panelPlugin from '../../../../plugins/panel';
 import {
@@ -38,11 +41,14 @@ import {
 describe('table plugin: actions', () => {
   const createEditor = createEditorFactory<TablePluginState>();
 
-  const editor = (doc: any) =>
+  const editor = (doc: any, tableOptions: PluginConfig = {}) =>
     createEditor({
       doc,
       editorPlugins: [tablesPlugin(), panelPlugin],
       pluginKey,
+      editorProps: {
+        allowTables: tableOptions,
+      },
     });
 
   describe('transformSliceToAddTableHeaders', () => {

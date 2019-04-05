@@ -215,14 +215,7 @@ export const toggleHeaderRow: Command = (state, dispatch) => {
     const from = tr.mapping.map(table.start + map.map[column]);
     const cell = table.node.child(0).child(column);
 
-    tr.setNodeMarkup(from, type, {
-      ...cell.attrs,
-      defaultMarks: toggleDefaultMarksHeaders(
-        cell,
-        tableHeader,
-        isHeaderRowEnabled,
-      ),
-    });
+    tr.setNodeMarkup(from, type, cell.attrs);
   }
 
   if (dispatch) {
@@ -256,14 +249,7 @@ export const toggleHeaderColumn: Command = (state, dispatch) => {
     const cell = tr.doc.nodeAt(cellPos);
 
     if (cell) {
-      tr.setNodeMarkup(cellPos, type, {
-        ...cell.attrs,
-        defaultMarks: toggleDefaultMarksHeaders(
-          cell,
-          tableHeader,
-          isHeaderColumnEnabled,
-        ),
-      });
+      tr.setNodeMarkup(cellPos, type, cell.attrs);
     }
   });
 
