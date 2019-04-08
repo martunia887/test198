@@ -41,6 +41,7 @@ type PastePayloadAttributes = {
   pasteSize: number;
   type: PasteType;
   content: PasteContent;
+  domainName?: string;
   source: PasteSource;
 };
 
@@ -88,13 +89,17 @@ const nodeToActionSubjectId: { [name: string]: PASTE_ACTION_SUBJECT_ID } = {
   taskList: ACTION_SUBJECT_ID.PASTE_TASK_LIST,
 };
 
-function getContent(state: EditorState, slice: Slice): PasteContent {
+function getContentAndDomain(
+  state: EditorState,
+  slice: Slice,
+): { content: PasteContent; domainName?: string } {
   const {
     schema: {
       nodes: { paragraph },
       marks: { link },
     },
   } = state;
+  let domainName: string | undefined;
   const nodeOrMarkName = new Set<string>();
   slice.content.forEach((node: Node) => {
     if (node.type === paragraph && node.content.size === 0) {
@@ -104,8 +109,23 @@ function getContent(state: EditorState, slice: Slice): PasteContent {
 
     if (node.type === paragraph) {
       if (node.rangeHasMark(0, node.nodeSize - 2, link)) {
-        // Check node contain link
         nodeOrMarkName.add('url');
+
+        // Look for domain name in link mark once
+        if (!domainName) {
+          node.nodesBetween(0, node.nodeSize - 2, (node: Node) => {
+            try {
+              const linkMark = node.marks.find(mark => mark.type === link);
+              if (linkMark && linkMark.attrs.href) {
+                const url = new URL(linkMark.attrs.href);
+                if (url.hostname) {
+                  domainName = url.hostname;
+                }
+                return false; // do not look further
+              }
+            } catch (e) {}
+          });
+        }
         return;
       }
     }
@@ -113,17 +133,20 @@ function getContent(state: EditorState, slice: Slice): PasteContent {
   });
 
   if (nodeOrMarkName.size > 1) {
-    return PasteContents.mixed;
+    return { content: PasteContents.mixed };
   }
 
   if (nodeOrMarkName.size === 0) {
-    return PasteContents.uncategorized;
+    return { content: PasteContents.uncategorized };
   }
 
   const type = nodeOrMarkName.values().next().value;
   const pasteContent = contentToPasteContent[type];
 
-  return pasteContent ? pasteContent : PasteContents.uncategorized;
+  return {
+    content: pasteContent ? pasteContent : PasteContents.uncategorized,
+    domainName,
+  };
 }
 
 function getActionSubjectId(view: EditorView): PASTE_ACTION_SUBJECT_ID {
@@ -214,13 +237,14 @@ export function createPasteAnalyticsPayload(
   }
 
   const pasteSize = slice.size;
-  const content = getContent(view.state, slice);
+  const { content, domainName } = getContentAndDomain(view.state, slice);
 
   return createPastePayload(actionSubjectId, {
     type: pasteContext.type,
     pasteSize,
     content,
     source,
+    domainName,
   });
 }
 
