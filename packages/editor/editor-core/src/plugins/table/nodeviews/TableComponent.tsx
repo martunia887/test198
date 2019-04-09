@@ -225,6 +225,12 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
         data-title={node.attrs.title}
         data-id={node.attrs.id}
       >
+        <div
+          className={classnames(ClassName.TABLE_TITLE)}
+          onClick={this.showTitleMenu}
+        >
+          {node.attrs.title}
+        </div>
         {allowControls && rowControls}
         <div
           className={classnames(ClassName.TABLE_NODE_WRAPPER)}
@@ -343,6 +349,14 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
 
   private updateParentWidth = (width?: number) => {
     this.setState({ parentWidth: width });
+  };
+
+  private showTitleMenu = (event: any) => {
+    event.stopPropagation();
+
+    const { view } = this.props;
+    const position = this.props.getPos();
+    updateTitleTarget(event.target, position)(view.state, view.dispatch);
   };
 
   private scaleTableDebounced = rafSchedule(scaleTable);
