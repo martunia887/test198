@@ -28,12 +28,12 @@ export default defineMessages({
   },
   reference: {
     id: 'fabric.editor.reference',
-    defaultMessage: 'Link to another table',
+    defaultMessage: 'Live data',
     description: 'Links a column to records from another table',
   },
   formatting: {
     id: 'fabric.editor.formatting',
-    defaultMessage: 'Formatting',
+    defaultMessage: 'Format',
     description: 'Applies formatting rules to your table',
   },
   filter: {

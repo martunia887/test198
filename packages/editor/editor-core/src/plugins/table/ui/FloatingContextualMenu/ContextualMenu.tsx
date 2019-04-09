@@ -143,13 +143,13 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
 
     if (hasParentNodeOfType(state.schema.nodes.tableHeader)(state.selection)) {
       items.push({
-        content: formatMessage(tableMessages.filter),
-        value: { name: 'filter' },
+        content: formatMessage(tableMessages.reference),
+        value: { name: 'reference' },
       });
 
       items.push({
-        content: formatMessage(tableMessages.reference),
-        value: { name: 'reference' },
+        content: formatMessage(tableMessages.filter),
+        value: { name: 'filter' },
       });
 
       items.push({
