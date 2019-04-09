@@ -5,7 +5,7 @@ import { colors, borderRadius, gridSize } from '@atlaskit/theme';
 import {
   StatusPicker as AkStatusPicker,
   ColorType as Color,
-} from '@atlaskit/status/picker';
+} from '@atlaskit/status';
 
 import { dropShadow } from '../../../ui/styles';
 import withOuterListeners from '../../../ui/with-outer-listeners';

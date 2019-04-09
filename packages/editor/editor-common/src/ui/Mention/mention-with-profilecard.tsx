@@ -2,8 +2,8 @@ import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 import { PureComponent, ReactInstance } from 'react';
 import { MentionUserType as UserType } from '@atlaskit/adf-schema';
-import { MentionProvider } from '@atlaskit/mention/resource';
-import { ResourcedMention } from '@atlaskit/mention/element';
+import { MentionProvider } from '@atlaskit/mention';
+import { ResourcedMention } from '@atlaskit/mention';
 
 import { ProfilecardProvider } from './types';
 import ProfileCard, { ProfileCardAction } from '@atlaskit/profilecard';
