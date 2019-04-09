@@ -8,7 +8,7 @@ import { findParentNodeOfType, getCellsInColumn } from 'prosemirror-utils';
 
 import { ReferenceProvider } from '../../refs/provider';
 import { getPluginState as getTablePluginState } from '../../table/pm-plugins/main';
-import { addPushRef, setDatabase } from '../actions';
+import { addPushRef, setDatabase, setDocumentId } from '../actions';
 // import { handleSetProvider } from '../action-handlers';
 
 export const pluginKey = new PluginKey('refsServerPlugin');
@@ -21,6 +21,7 @@ export interface RefsServerPluginState {
   localRefs: Obj;
   pullRefs: Obj<PullRef>;
   pushRefs: PushRefs;
+  docId?: string;
   database?: firebase.database.Database;
 }
 
@@ -36,6 +37,7 @@ const FIREBASE_CONFIG = {
 export enum REFS_SERVER_ACTIONS {
   ADD_PUSH_REF,
   SET_DATABASE,
+  SET_DOCUMENT_ID,
 }
 
 // const hasIdAndTitle = (attrs?: {
@@ -129,9 +131,9 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
         if (tr.docChanged) {
           const tableState = getTablePluginState(oldState);
           if (tableState && tableState.editorHasFocus && tableState.tableNode) {
-            const { id } = tableState.tableNode.attrs;
-            const colRef = pluginState.pushRefs[id];
-            if (colRef) {
+            const { id: tableId } = tableState.tableNode.attrs;
+            const columnId = pluginState.pushRefs[tableId];
+            if (columnId) {
               const { schema, selection } = newState;
               const cell = findParentNodeOfType(schema.nodes.tableCell)(
                 selection,
@@ -142,8 +144,17 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
                 const cells = getCellsInColumn(columnIndex)(selection);
                 if (cells && cells.length > 1) {
                   const header = cells[0];
-                  if (colRef === header.node.attrs.id) {
-                    console.log('Release the 🐙');
+                  const { database, docId } = pluginState;
+                  if (columnId === header.node.attrs.id && database && docId) {
+                    const value = cells.map(({ node }) =>
+                      node.content.toJSON(),
+                    );
+                    // TODO: Move to Pub Sub service
+                    database.ref(`updates/${docId}`).set({
+                      tableId,
+                      columnId,
+                      value,
+                    });
                   }
                 }
               }
@@ -151,7 +162,7 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
           }
         }
 
-        const { pushRefs, database } = data;
+        const { docId, pushRefs, database } = data;
         switch (meta.action) {
           case REFS_SERVER_ACTIONS.SET_DATABASE:
             return {
@@ -162,6 +173,7 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
           case REFS_SERVER_ACTIONS.ADD_PUSH_REF:
             return {
               ...pluginState,
+              docId,
               pushRefs: { ...pluginState.pushRefs, ...pushRefs },
             };
         }
@@ -170,29 +182,47 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
       },
     },
     view: view => {
-      const { state, dispatch } = view;
-      let docRef: firebase.database.Reference;
+      let docsRef: firebase.database.Reference;
+      let updatesRef: firebase.database.Reference;
+      let referencesRef: firebase.database.Reference;
 
       firebase.initializeApp(FIREBASE_CONFIG);
       // firebase.database.enableLogging(true);
       const database = firebase.database();
-      setDatabase(database)(state, dispatch);
 
       const providerHandler = async (
         _,
         $provider: Promise<ReferenceProvider>,
       ) => {
         const provider = await $provider;
-
         const docId = provider.getDocumentId();
-        if (docRef) {
-          docRef.off('value');
-        }
-        docRef = database.ref(`docs/${docId}`);
 
-        docRef.on('value', snapshot => {
+        setDatabase(database)(view.state, view.dispatch);
+
+        if (docsRef) {
+          docsRef.off('value');
+        }
+        if (updatesRef) {
+          updatesRef.off('value');
+        }
+        if (referencesRef) {
+          referencesRef.off('value');
+        }
+
+        docsRef = database.ref(`docs/${docId}`);
+        updatesRef = database.ref(`updates/${docId}`);
+        referencesRef = database.ref(`updates/${docId}`);
+
+        docsRef.on('value', snapshot => {
           if (snapshot) {
-            addPushRef(snapshot.val())(state, dispatch);
+            addPushRef(docId, snapshot.val())(view.state, view.dispatch);
+          }
+        });
+
+        updatesRef.on('value', snapshot => {
+          if (snapshot) {
+            console.log(snapshot.val());
+            // addPushRef(docId, snapshot.val())(view.state, view.dispatch);
           }
         });
       };
@@ -207,8 +237,14 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
           if (providerFactory) {
             providerFactory.unsubscribe('referenceProvider', providerHandler);
           }
-          if (docRef) {
-            docRef.off('value');
+          if (docsRef) {
+            docsRef.off('value');
+          }
+          if (updatesRef) {
+            updatesRef.off('value');
+          }
+          if (referencesRef) {
+            referencesRef.off('value');
           }
         },
       };

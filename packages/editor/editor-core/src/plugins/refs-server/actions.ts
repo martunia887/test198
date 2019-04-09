@@ -2,7 +2,7 @@ import * as firebase from 'firebase/app';
 
 import { REFS_SERVER_ACTIONS, pluginKey, PushRefs } from './pm-plugins/main';
 
-export const addPushRef = (pushRefs: PushRefs) => (
+export const addPushRef = (docId: string, pushRefs: PushRefs) => (
   state,
   dispatch,
 ): boolean => {
@@ -10,7 +10,7 @@ export const addPushRef = (pushRefs: PushRefs) => (
     state.tr
       .setMeta(pluginKey, {
         action: REFS_SERVER_ACTIONS.ADD_PUSH_REF,
-        data: { pushRefs },
+        data: { docId, pushRefs },
       })
       .setMeta('addToHistory', false),
   );
