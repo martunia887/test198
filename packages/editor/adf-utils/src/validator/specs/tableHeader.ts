@@ -75,22 +75,6 @@ export default {
           optional: true,
         },
         background: { type: 'string', optional: true },
-        defaultMarks: {
-          type: 'array',
-          items: [
-            [
-              'em',
-              'code',
-              'strike',
-              'strong',
-              'underline',
-              'subsup',
-              'textColor',
-            ],
-          ],
-          forceContentValidation: true,
-          optional: true,
-        },
         isFormatted: { type: 'boolean', optional: true },
       },
       optional: true,

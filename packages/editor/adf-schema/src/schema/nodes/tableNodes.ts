@@ -44,7 +44,6 @@ const getCellAttrs = (dom: HTMLElement, defaultValues: CellAttributes = {}) => {
       backgroundColor && backgroundColor !== defaultValues['background']
         ? backgroundColor
         : undefined,
-    defaultMarks,
     isFormatted: Boolean(dom.getAttribute('data-is-formatted')),
   };
 
@@ -67,7 +66,6 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     rowspan?: number;
     style?: string;
     'data-colwidth'?: string;
-    'data-default-marks'?: string;
     'data-id'?: string;
     'data-reference'?: string;
     'data-formatting'?: string;
@@ -109,10 +107,6 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     }
   } else {
     attrs.style = `${attrs.style || ''}background-color: none;`;
-  }
-
-  if (node.attrs.defaultMarks) {
-    attrs['data-default-marks'] = JSON.stringify(node.attrs.defaultMarks);
   }
 
   if (node.type.name === 'tableHeader') {
@@ -256,13 +250,6 @@ export interface CellAttributes {
   rowspan?: number;
   colwidth?: number[];
   background?: string;
-  /**
-   * @stage 0
-   * @forceContentValidation true
-   */
-  defaultMarks?: Array<
-    Em | Strong | Code | Strike | SubSup | Underline | TextColor
-  >;
   isFormatted?: boolean;
 }
 
@@ -362,7 +349,6 @@ const cellAttrs = {
   rowspan: { default: 1 },
   colwidth: { default: null },
   background: { default: null },
-  defaultMarks: { default: null },
   id: { default: null },
   reference: { default: null },
   isFormatted: { default: false },
