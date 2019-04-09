@@ -1,6 +1,9 @@
-import { TableHeaderDefinition, CellAttributes } from '@atlaskit/adf-schema';
+import {
+  TableHeaderDefinition,
+  HeaderCellAttributes,
+} from '@atlaskit/adf-schema';
 
-export const tableHeader = (attrs?: CellAttributes) => (
+export const tableHeader = (attrs?: HeaderCellAttributes) => (
   ...content: TableHeaderDefinition['content']
 ): TableHeaderDefinition => ({
   type: 'tableHeader',

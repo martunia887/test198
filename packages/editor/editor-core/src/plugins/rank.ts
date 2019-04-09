@@ -70,6 +70,8 @@ export default {
     'helpDialogKeymap',
     'macro',
     'extension',
+    'slider',
+    'uniqueIds',
     'layout',
     'date',
     'dateKeymap',
@@ -127,6 +129,7 @@ export default {
     'layoutColumn',
     'inlineCard',
     'blockCard',
+    'slider',
   ],
   marks: [
     // Inline marks

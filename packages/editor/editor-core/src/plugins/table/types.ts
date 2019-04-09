@@ -39,6 +39,9 @@ export interface TablePluginState {
   isInDanger?: boolean;
   insertColumnButtonIndex?: number;
   insertRowButtonIndex?: number;
+  isReferenceMenuOpen?: boolean;
+  isFormattingMenuOpen?: boolean;
+  isFilterMenuOpen?: boolean;
 }
 
 export interface ColumnResizingPlugin {
@@ -111,4 +114,16 @@ export const TableCssClassName = {
   TABLE_CELL_NODE_WRAPPER: 'tableCellView-content-wrap',
 
   TOP_LEFT_CELL: 'table > tbody > tr:nth-child(2) > td:nth-child(1)',
+
+  // NEW CLASSNAMES
+  MENU_WRAP: `${clPrefix}menu-wrap`,
+  MENU_TITLE: `${clPrefix}menu-title`,
+  MENU_DESCRIPTION: `${clPrefix}menu-description`,
+  SECTION: `${clPrefix}section`,
+  BUTTONS_WRAP: `${clPrefix}buttons-wrap`,
+  RULE_WRAP: `${clPrefix}rule-wrap`,
+  FORMATTING_MENU_WRAP: `${clPrefix}formatting-menu-wrap`,
+  FORMATTING_BUTTONS_WRAP: `${clPrefix}formatting-buttons-wrap`,
+  FORMATTING_COLOR_PICKER_BUTTON: `${clPrefix}formatting-color-picker-button`,
+  FORMATTING_COLOR_PICKER: `${clPrefix}formatting-color-picker`,
 };

@@ -41,6 +41,8 @@ const tableAttributes = (node: PmNode) => {
     'data-number-column': node.attrs.isNumberColumnEnabled,
     'data-layout': node.attrs.layout,
     'data-autosize': node.attrs.__autoSize,
+    'data-id': node.attrs.id,
+    'data-title': node.attrs.title,
   };
 };
 

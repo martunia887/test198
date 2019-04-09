@@ -891,3 +891,44 @@ export const autoSizeTable = (
   view.dispatch(fixAutoSizedTable(view, node, table, basePos, opts));
   return true;
 };
+
+export const toggleReferenceMenu: Command = (state, dispatch): boolean => {
+  if (dispatch) {
+    dispatch(
+      state.tr
+        .setMeta(pluginKey, {
+          action: ACTIONS.TOGGLE_REFERENCE_MENU,
+        })
+        .setMeta('addToHistory', false),
+    );
+  }
+  return true;
+};
+
+export const toggleFormattingMenu: Command = (state, dispatch): boolean => {
+  if (dispatch) {
+    dispatch(
+      state.tr
+        .setMeta(pluginKey, {
+          action: ACTIONS.TOGGLE_FORMATTING_MENU,
+        })
+        .setMeta('addToHistory', false),
+    );
+  }
+
+  return true;
+};
+
+export const toggleFilterMenu: Command = (state, dispatch): boolean => {
+  if (dispatch) {
+    dispatch(
+      state.tr
+        .setMeta(pluginKey, {
+          action: ACTIONS.TOGGLE_FILTER_MENU,
+        })
+        .setMeta('addToHistory', false),
+    );
+  }
+
+  return true;
+};

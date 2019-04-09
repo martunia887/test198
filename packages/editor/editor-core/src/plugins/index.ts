@@ -52,3 +52,5 @@ export { default as indentationPlugin } from './indentation';
 export { default as annotationPlugin } from './annotation';
 export { default as compositionPlugin } from './composition';
 export { default as analyticsPlugin } from './analytics';
+export { default as sliderPlugin } from './slider';
+export { default as uniqueIdsPlugin } from './unique-ids';

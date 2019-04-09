@@ -38,6 +38,7 @@ import { PlaceholderDefinition as Placeholder } from './placeholder';
 import { InlineCardDefinition as InlineCard } from './inline-card';
 import { BlockCardDefinition as BlockCard } from './block-card';
 import { LayoutSectionDefinition as LayoutSection } from './layout-section';
+import { SliderDefinition as Slider } from './slider';
 
 // Marks
 import { LinkDefinition as Link } from '../marks/link';
@@ -180,7 +181,8 @@ export type InlineAtomic =
   | Date
   | Placeholder
   | InlineCard
-  | Status;
+  | Status
+  | Slider;
 
 /**
  * @name inline_node

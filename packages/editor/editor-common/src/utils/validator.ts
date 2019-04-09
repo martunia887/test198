@@ -724,7 +724,10 @@ export const getValidNode = (
           return {
             type,
             content,
-            attrs,
+            attrs: {
+              ...attrs,
+              localId: (attrs && attrs.localId) || uuid(),
+            },
           };
         }
         break;
@@ -788,6 +791,9 @@ export const getValidNode = (
         }
 
         break;
+      }
+      case 'slider': {
+        return { type, attrs };
       }
     }
   }

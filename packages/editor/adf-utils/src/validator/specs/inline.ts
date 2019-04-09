@@ -7,6 +7,7 @@ export default [
   'status',
   'placeholder',
   'inlineCard',
+  'slider',
   'formatted_text_inline',
   'code_inline',
 ];

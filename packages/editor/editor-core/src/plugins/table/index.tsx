@@ -18,6 +18,8 @@ import {
 import { getToolbarConfig } from './toolbar';
 import { ColumnResizingPlugin } from './types';
 import FloatingContextualMenu from './ui/FloatingContextualMenu';
+import FormattingMenu from './ui/FormattingMenu';
+import FilterMenu from './ui/FilterMenu';
 import { isLayoutSupported } from './utils';
 import {
   addAnalytics,
@@ -150,6 +152,20 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
                   }
                 />
               )}
+              <FormattingMenu
+                editorView={editorView}
+                mountPoint={popupsMountPoint}
+                boundariesElement={popupsBoundariesElement}
+                targetCellPosition={pluginState.targetCellPosition}
+                isOpen={pluginState.isFormattingMenuOpen}
+              />
+              <FilterMenu
+                editorView={editorView}
+                mountPoint={popupsMountPoint}
+                boundariesElement={popupsBoundariesElement}
+                targetCellPosition={pluginState.targetCellPosition}
+                isOpen={pluginState.isFilterMenuOpen}
+              />
             </>
           );
         }}

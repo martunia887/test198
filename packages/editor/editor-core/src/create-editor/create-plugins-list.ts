@@ -50,6 +50,8 @@ import {
   annotationPlugin,
   compositionPlugin,
   analyticsPlugin,
+  sliderPlugin,
+  uniqueIdsPlugin,
 } from '../plugins';
 
 /**
@@ -203,6 +205,10 @@ export default function createPluginsList(
     plugins.push(layoutPlugin);
   }
 
+  if (props.allowSlider) {
+    plugins.push(sliderPlugin);
+  }
+
   if (props.UNSAFE_cards) {
     plugins.push(cardPlugin);
   }
@@ -233,6 +239,7 @@ export default function createPluginsList(
     plugins.push(annotationPlugin);
   }
 
+  plugins.push(uniqueIdsPlugin);
   plugins.push(gapCursorPlugin);
   plugins.push(gridPlugin);
   plugins.push(submitEditorPlugin);

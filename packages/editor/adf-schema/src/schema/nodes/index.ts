@@ -68,6 +68,7 @@ export {
   tableBackgroundBorderColors,
   tableBackgroundColorNames,
   CellAttributes,
+  HeaderCellAttributes,
   Layout as TableLayout,
   calcTableColumnWidths,
   TableDefinition,
@@ -75,6 +76,8 @@ export {
   TableHeader as TableHeaderDefinition,
   TableRow as TableRowDefinition,
   setCellAttrs,
+  FormattingMarks as TableFormattingMarks,
+  Condition as TableCondition,
 } from './tableNodes';
 export {
   applicationCard,
@@ -106,3 +109,4 @@ export { blockCard, CardAttributes, BlockCardDefinition } from './block-card';
 export { unsupportedBlock } from './unsupported-block';
 export { unsupportedInline } from './unsupported-inline';
 export { status, StatusDefinition } from './status';
+export { slider, SliderDefinition, SliderAttributes } from './slider';

@@ -186,6 +186,9 @@ export const handleToggleContextualMenu = (
   const nextPluginState = {
     ...pluginState,
     isContextualMenuOpen: !pluginState.isContextualMenuOpen,
+    isReferenceMenuOpen: false,
+    isFormattingMenuOpen: false,
+    isFilterMenuOpen: false,
   };
   dispatch(pluginKey, nextPluginState);
   return nextPluginState;
@@ -222,6 +225,45 @@ export const handleHideInsertColumnOrRowButton = (
     ...pluginState,
     insertColumnButtonIndex: undefined,
     insertRowButtonIndex: undefined,
+  };
+  dispatch(pluginKey, nextPluginState);
+  return nextPluginState;
+};
+
+export const handleToggleReferenceMenu = (
+  pluginState: TablePluginState,
+  dispatch: Dispatch,
+): TablePluginState => {
+  const nextPluginState = {
+    ...pluginState,
+    isContextualMenuOpen: false,
+    isReferenceMenuOpen: !pluginState.isReferenceMenuOpen,
+  };
+  dispatch(pluginKey, nextPluginState);
+  return nextPluginState;
+};
+
+export const handleToggleFormattingMenu = (
+  pluginState: TablePluginState,
+  dispatch: Dispatch,
+): TablePluginState => {
+  const nextPluginState = {
+    ...pluginState,
+    isContextualMenuOpen: false,
+    isFormattingMenuOpen: !pluginState.isFormattingMenuOpen,
+  };
+  dispatch(pluginKey, nextPluginState);
+  return nextPluginState;
+};
+
+export const handleToggleFilterMenu = (
+  pluginState: TablePluginState,
+  dispatch: Dispatch,
+): TablePluginState => {
+  const nextPluginState = {
+    ...pluginState,
+    isContextualMenuOpen: false,
+    isFilterMenuOpen: !pluginState.isFilterMenuOpen,
   };
   dispatch(pluginKey, nextPluginState);
   return nextPluginState;

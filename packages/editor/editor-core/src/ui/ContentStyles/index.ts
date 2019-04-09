@@ -26,6 +26,7 @@ import { placeholderTextStyles } from '../../plugins/placeholder-text/styles';
 import { tasksAndDecisionsStyles } from '../../plugins/tasks-and-decisions/ui/styles';
 import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
+import { sliderStyles } from '../../plugins/slider/ui/styles';
 
 import {
   akEditorDeleteBackground,
@@ -94,6 +95,7 @@ const ContentStyles: ComponentClass<
     }
   }
 
+  ${sliderStyles}
   ${blocktypeStyles}
   ${textFormattingStyles}
   ${placeholderTextStyles}

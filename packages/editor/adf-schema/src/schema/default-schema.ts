@@ -44,6 +44,7 @@ export const defaultSchema: Schema = createSchema({
     'layoutColumn',
     'inlineCard',
     'blockCard',
+    'slider',
     'unsupportedBlock',
     'unsupportedInline',
   ],

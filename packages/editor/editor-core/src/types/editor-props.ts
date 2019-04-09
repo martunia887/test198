@@ -153,6 +153,8 @@ export interface EditorProps {
         menuDisabled: boolean;
       };
 
+  allowSlider?: boolean;
+
   allowDynamicTextSizing?: boolean;
 
   // Enable text alignment support inside `heading` and `paragraph`

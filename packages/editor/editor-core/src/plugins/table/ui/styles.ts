@@ -13,6 +13,7 @@ import {
 } from '@atlaskit/editor-common';
 import { scrollbarStyles } from '../../../ui/styles';
 import { TableCssClassName as ClassName } from '../types';
+import { tableNewStyles } from './newStyles';
 
 const {
   N40A,
@@ -656,6 +657,8 @@ export const tableStyles = css`
       pointer-events: none;
     }
   }
+
+  ${tableNewStyles}
 `;
 
 export const tableFullPageEditorStyles = css`

@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import { splitCell, Rect } from 'prosemirror-tables';
+import { hasParentNodeOfType } from 'prosemirror-utils';
 import { colors } from '@atlaskit/theme';
 import {
   tableBackgroundColorPalette,
@@ -15,6 +16,9 @@ import {
   hoverRows,
   clearHoverSelection,
   toggleContextualMenu,
+  toggleReferenceMenu,
+  toggleFormattingMenu,
+  toggleFilterMenu,
 } from '../../actions';
 import { TableCssClassName as ClassName } from '../../types';
 import { contextualMenuDropdownWidth } from '../styles';
@@ -136,6 +140,24 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       intl: { formatMessage },
     } = this.props;
     const items: any[] = [];
+
+    if (hasParentNodeOfType(state.schema.nodes.tableHeader)(state.selection)) {
+      items.push({
+        content: formatMessage(tableMessages.filter),
+        value: { name: 'filter' },
+      });
+
+      items.push({
+        content: formatMessage(tableMessages.reference),
+        value: { name: 'reference' },
+      });
+
+      items.push({
+        content: formatMessage(tableMessages.formatting),
+        value: { name: 'formatting' },
+      });
+    }
+
     const { isSubmenuOpen } = this.state;
     if (allowBackgroundColor) {
       const node =
@@ -231,6 +253,15 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     const { state, dispatch } = editorView;
 
     switch (item.value.name) {
+      case 'reference':
+        toggleReferenceMenu(state, dispatch);
+        break;
+      case 'formatting':
+        toggleFormattingMenu(state, dispatch);
+        break;
+      case 'filter':
+        toggleFilterMenu(state, dispatch);
+        break;
       case 'merge':
         mergeCellsWithAnalytics()(state, dispatch);
         this.toggleOpen();

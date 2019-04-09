@@ -62,6 +62,7 @@ export { default as blockCard } from './blockCard';
 export { default as inlineCard } from './inlineCard';
 export { default as layoutColumn } from './layoutColumn';
 export { default as layoutSection } from './layoutSection';
+export { default as slider } from './slider';
 export { default as block_content } from './block_content';
 export { default as tableCell_content } from './tableCell_content';
 export { default as extension_content } from './extension_content';

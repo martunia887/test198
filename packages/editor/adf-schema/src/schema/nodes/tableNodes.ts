@@ -18,6 +18,7 @@ import {
   T75,
   Y75,
 } from '../../utils/colors';
+import { uuid } from '../../utils';
 import { TableCellContent } from './doc';
 
 const akEditorTableNumberColumnWidth = 42;
@@ -35,15 +36,29 @@ const getCellAttrs = (dom: HTMLElement, defaultValues: CellAttributes = {}) => {
     backgroundColor = rgbToHex(backgroundColor);
   }
 
-  return {
+  const attrs = {
     colspan,
     rowspan: Number(dom.getAttribute('rowspan') || 1),
-    colwidth: width && width.length === colspan ? width : null,
+    colwidth: width && width.length === colspan ? width : undefined,
     background:
       backgroundColor && backgroundColor !== defaultValues['background']
         ? backgroundColor
-        : null,
+        : undefined,
+    defaultMarks,
+    isFormatted: Boolean(dom.getAttribute('data-is-formatted')),
   };
+
+  if (dom.nodeName === 'TH') {
+    return {
+      ...attrs,
+      id: uuid.generate(),
+      reference: dom.getAttribute('data-reference') || null,
+      formatting: JSON.parse(dom.getAttribute('data-formatting') || '{}'),
+      filter: JSON.parse(dom.getAttribute('data-filter') || '{}'),
+    };
+  }
+
+  return attrs;
 };
 
 export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
@@ -52,6 +67,12 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     rowspan?: number;
     style?: string;
     'data-colwidth'?: string;
+    'data-default-marks'?: string;
+    'data-id'?: string;
+    'data-reference'?: string;
+    'data-formatting'?: string;
+    'data-is-formatted'?: boolean;
+    'data-filter'?: string;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -86,7 +107,29 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
 
       attrs.style = `${attrs.style || ''}background-color: ${color};`;
     }
+  } else {
+    attrs.style = `${attrs.style || ''}background-color: none;`;
   }
+
+  if (node.attrs.defaultMarks) {
+    attrs['data-default-marks'] = JSON.stringify(node.attrs.defaultMarks);
+  }
+
+  if (node.type.name === 'tableHeader') {
+    attrs['data-id'] = node.attrs.id;
+
+    if (node.attrs.reference) {
+      attrs['data-reference'] = node.attrs.reference;
+    }
+    if (node.attrs.formatting) {
+      attrs['data-formatting'] = JSON.stringify(node.attrs.formatting);
+    }
+    if (node.attrs.filter) {
+      attrs['data-filter'] = JSON.stringify(node.attrs.filter);
+    }
+  }
+
+  attrs['data-is-formatted'] = node.attrs.isFormatted;
 
   return attrs;
 };
@@ -151,10 +194,22 @@ export function calcTableColumnWidths(node: PmNode): number[] {
 
 export type Layout = 'default' | 'full-width' | 'wide';
 
+export type Condition =
+  | 'is'
+  | 'is_not'
+  | 'contains'
+  | 'does_not_contain'
+  | 'is_empty'
+  | 'is_not_empty';
+
+export type FormattingMarks = 'strong' | 'em' | 'underline' | 'strike';
+
 export interface TableAttributes {
   isNumberColumnEnabled?: boolean;
   layout?: Layout;
   __autoSize?: boolean;
+  id?: string;
+  title?: string;
 }
 
 /**
@@ -174,6 +229,7 @@ export interface TableDefinition {
  */
 export interface TableRow {
   type: 'tableRow';
+  attrs?: TableRowAttributes;
   content: Array<TableHeader | TableCell>;
 }
 
@@ -191,7 +247,7 @@ export interface TableCell {
  */
 export interface TableHeader {
   type: 'tableHeader';
-  attrs?: CellAttributes;
+  attrs?: HeaderCellAttributes;
   content: TableCellContent;
 }
 
@@ -200,6 +256,37 @@ export interface CellAttributes {
   rowspan?: number;
   colwidth?: number[];
   background?: string;
+  /**
+   * @stage 0
+   * @forceContentValidation true
+   */
+  defaultMarks?: Array<
+    Em | Strong | Code | Strike | SubSup | Underline | TextColor
+  >;
+  isFormatted?: boolean;
+}
+
+export interface HeaderCellAttributes extends CellAttributes {
+  id?: string;
+  reference?: string;
+  formatting?: {
+    rules: Array<{
+      condition: Condition;
+      value: string;
+    }>;
+    marks: FormattingMarks[];
+  };
+  filter?: {
+    rules: Array<{
+      condition: Condition;
+      value: string;
+      reference?: string;
+    }>;
+  };
+}
+
+export interface TableRowAttributes {
+  isFiltered?: boolean;
 }
 
 // TODO: Fix any, potential issue. ED-5048
@@ -209,6 +296,8 @@ export const table: any = {
     isNumberColumnEnabled: { default: false },
     layout: { default: 'default' },
     __autoSize: { default: false },
+    id: { default: null },
+    title: { default: null },
   },
   tableRole: 'table',
   isolating: true,
@@ -222,6 +311,8 @@ export const table: any = {
           dom.getAttribute('data-number-column') === 'true' ? true : false,
         layout: dom.getAttribute('data-layout') || 'default',
         __autoSize: dom.getAttribute('data-autosize') === 'true' ? true : false,
+        id: uuid.generate(),
+        title: dom.getAttribute('data-title') || null,
       }),
     },
   ],
@@ -247,9 +338,22 @@ export const tableToJSON = (node: PmNode) => ({
 export const tableRow = {
   content: '(tableCell | tableHeader)+',
   tableRole: 'row',
-  parseDOM: [{ tag: 'tr' }],
-  toDOM() {
-    return ['tr', 0];
+  attrs: {
+    isFiltered: { default: false },
+  },
+  parseDOM: [
+    {
+      tag: 'tr',
+      getAttrs: (dom: Element) => ({
+        isFiltered: dom.getAttribute('data-is-filtered') || false,
+      }),
+    },
+  ],
+  toDOM(node: PmNode) {
+    const attrs = {
+      'data-is-filtered': node.attrs.isFiltered,
+    };
+    return ['tr', attrs, 0];
   },
 };
 
@@ -258,6 +362,10 @@ const cellAttrs = {
   rowspan: { default: 1 },
   colwidth: { default: null },
   background: { default: null },
+  defaultMarks: { default: null },
+  id: { default: null },
+  reference: { default: null },
+  isFormatted: { default: false },
 };
 
 export const tableCell = {
@@ -298,7 +406,13 @@ export const toJSONTableCell = (node: PmNode) => ({
 export const tableHeader = {
   content:
     '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle  | applicationCard | decisionList | taskList | blockCard | extension)+',
-  attrs: cellAttrs,
+  attrs: {
+    ...cellAttrs,
+    id: { default: null },
+    reference: { default: null },
+    formatting: { default: null },
+    filter: { default: null },
+  },
   tableRole: 'header_cell',
   isolating: true,
   marks: 'alignment',

@@ -22,6 +22,9 @@ import {
   handleShowInsertColumnButton,
   handleShowInsertRowButton,
   handleHideInsertColumnOrRowButton,
+  handleToggleReferenceMenu,
+  handleToggleFormattingMenu,
+  handleToggleFilterMenu,
 } from '../action-handlers';
 import {
   handleMouseDown,
@@ -35,6 +38,7 @@ import {
 import { findControlsHoverDecoration } from '../utils';
 import { fixTables } from '../transforms';
 import { TableCssClassName as ClassName } from '../types';
+import { applyFormatting, applyFilter } from '../utils';
 
 export const pluginKey = new PluginKey('tablePlugin');
 
@@ -56,6 +60,9 @@ export enum ACTIONS {
   SHOW_INSERT_COLUMN_BUTTON,
   SHOW_INSERT_ROW_BUTTON,
   HIDE_INSERT_COLUMN_OR_ROW_BUTTON,
+  TOGGLE_REFERENCE_MENU,
+  TOGGLE_FORMATTING_MENU,
+  TOGGLE_FILTER_MENU,
 }
 
 let isBreakoutEnabled: boolean | undefined;
@@ -157,6 +164,15 @@ export const createPlugin = (
           case ACTIONS.TOGGLE_CONTEXTUAL_MENU:
             return handleToggleContextualMenu(pluginState, dispatch);
 
+          case ACTIONS.TOGGLE_REFERENCE_MENU:
+            return handleToggleReferenceMenu(pluginState, dispatch);
+
+          case ACTIONS.TOGGLE_FORMATTING_MENU:
+            return handleToggleFormattingMenu(pluginState, dispatch);
+
+          case ACTIONS.TOGGLE_FILTER_MENU:
+            return handleToggleFilterMenu(pluginState, dispatch);
+
           case ACTIONS.SHOW_INSERT_COLUMN_BUTTON:
             return handleShowInsertColumnButton(insertColumnButtonIndex)(
               pluginState,
@@ -195,7 +211,7 @@ export const createPlugin = (
         return fixTables(handleCut(tr, oldState, newState));
       }
       if (transactions.find(tr => tr.docChanged)) {
-        return fixTables(newState.tr);
+        return applyFilter(applyFormatting(fixTables(newState.tr)));
       }
     },
     view: (editorView: EditorView) => {

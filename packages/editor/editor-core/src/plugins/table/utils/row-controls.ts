@@ -2,6 +2,7 @@ import {
   getSelectionRect,
   isRowSelected,
   isTableSelected,
+  findTable,
 } from 'prosemirror-utils';
 import { Selection } from 'prosemirror-state';
 import { CellSelection } from 'prosemirror-tables';
@@ -106,6 +107,24 @@ export const getRowsParams = (
   return rows;
 };
 
+const isRowFiltered = (index: number) => (selection: Selection): boolean => {
+  const table = findTable(selection);
+  if (table) {
+    for (let rowIndex = 0; rowIndex < table.node.childCount; rowIndex++) {
+      if (rowIndex !== index) {
+        continue;
+      }
+
+      const row = table.node.child(rowIndex);
+      if (row.attrs.isFiltered) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
 export const getRowClassNames = (
   index: number,
   selection: Selection,
@@ -122,6 +141,9 @@ export const getRowClassNames = (
     if (isInDanger) {
       classNames.push('danger');
     }
+  }
+  if (isRowFiltered(index)(selection)) {
+    classNames.push('filtered');
   }
   return classNames.join(' ');
 };

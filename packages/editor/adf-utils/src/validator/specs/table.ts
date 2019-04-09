@@ -9,6 +9,8 @@ export default {
           values: ['wide', 'full-width', 'default'],
           optional: true,
         },
+        id: { type: 'string', optional: true },
+        title: { type: 'string', optional: true },
       },
       optional: true,
     },

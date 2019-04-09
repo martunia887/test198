@@ -198,6 +198,16 @@ export const messages = defineMessages({
     description:
       'Inserts an item representing the status of an activity to task.',
   },
+  slider: {
+    id: 'fabric.editor.slider',
+    defaultMessage: 'Slider',
+    description: 'Inserts an item representing the range slider.',
+  },
+  sliderDescription: {
+    id: 'fabric.editor.slider',
+    defaultMessage: 'Create a range slider',
+    description: 'Inserts an item representing the range slider.',
+  },
   viewMore: {
     id: 'fabric.editor.viewMore',
     defaultMessage: 'View more',

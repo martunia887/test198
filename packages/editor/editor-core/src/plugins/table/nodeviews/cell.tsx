@@ -35,9 +35,9 @@ export type CellProps = {
   forwardRef: (ref: HTMLElement | null) => void;
   withCursor: boolean;
   isResizing?: boolean;
-  isContextualMenuOpen: boolean;
+  isContextMenuEnabled: boolean;
   disabled: boolean;
-  isContextMenuEnabled?: boolean;
+  isMenuOpen?: boolean;
 };
 
 class Cell extends React.Component<CellProps & InjectedIntlProps> {
@@ -45,7 +45,7 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
     return (
       this.props.withCursor !== nextProps.withCursor ||
       this.props.isResizing !== nextProps.isResizing ||
-      this.props.isContextualMenuOpen !== nextProps.isContextualMenuOpen
+      this.props.isMenuOpen !== nextProps.isMenuOpen
     );
   }
 
@@ -53,7 +53,7 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
     const {
       withCursor,
       isResizing,
-      isContextualMenuOpen,
+      isMenuOpen,
       forwardRef,
       intl: { formatMessage },
       disabled,
@@ -68,7 +68,7 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
             <ToolbarButton
               className={ClassName.CONTEXTUAL_MENU_BUTTON}
               disabled={isResizing}
-              selected={isContextualMenuOpen}
+              selected={isMenuOpen}
               title={labelCellOptions}
               onClick={this.handleClick}
               iconBefore={<ExpandIcon label={labelCellOptions} />}
@@ -149,6 +149,11 @@ class CellView extends ReactNodeView {
             isContextMenuEnabled={props.isContextMenuEnabled}
             view={props.view}
             disabled={(editorDisabledPlugin || {}).editorDisabled}
+            isMenuOpen={
+              !!pluginState.isContextualMenuOpen ||
+              !!pluginState.isReferenceMenuOpen ||
+              !!pluginState.isFormattingMenuOpen
+            }
           />
         )}
       />
