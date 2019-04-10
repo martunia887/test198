@@ -27,6 +27,10 @@ export const tableNewStyles = css`
     }
   }
 
+  .${ClassName.LIVE_DATA_MENU_ITEM} {
+    border-top: 1px solid ${colors.N40};
+  }
+
   .${ClassName.SORT_SUBMENU_LABEL} {
     color: ${colors.B300};
     position: absolute;

@@ -33,7 +33,7 @@ export default defineMessages({
   },
   formatting: {
     id: 'fabric.editor.formatting',
-    defaultMessage: 'Format',
+    defaultMessage: 'Conditional formatting',
     description: 'Applies formatting rules to your table',
   },
   filter: {
