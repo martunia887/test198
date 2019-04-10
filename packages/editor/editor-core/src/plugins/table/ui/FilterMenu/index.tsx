@@ -17,7 +17,7 @@ import {
 import Button from '@atlaskit/button';
 import FieldText from '@atlaskit/field-text';
 import FieldRange from '@atlaskit/field-range';
-import { CheckboxSelect } from '@atlaskit/select';
+import { Checkbox } from '@atlaskit/checkbox';
 import { TableCssClassName as ClassName } from '../../types';
 import { toggleFilterMenu } from '../../actions';
 import withOuterListeners from '../../../../ui/with-outer-listeners';
@@ -25,22 +25,26 @@ import { closestElement } from '../../../../utils';
 import { contextualMenuTriggerSize } from '../styles';
 import { getCellValue } from '../../utils';
 
-const DROPDOWN_WIDTH = 250;
+const DROPDOWN_WIDTH = 220;
 const PopupWithOutsideListeners = withOuterListeners(Popup);
 
 const getDefaultState = () => ({
   filter: [],
   editing: false,
+  searchValue: '',
 });
 
-const doesCellValueMatchTheFilter = (
+const isFilteredOut = (
   filter: Array<string | number> | null,
   cellValue: string,
 ) => {
   if (!filter) {
     return false;
   }
-  let isFiltered = filter.length ? true : false;
+  if (!filter.length) {
+    return true;
+  }
+  let isFiltered = true;
   filter.forEach(filterValue => {
     if (
       (typeof filterValue === 'string' &&
@@ -65,6 +69,7 @@ export interface FilterMenuProps {
 export interface FilterMenuState {
   filter: string[];
   editing: boolean;
+  searchValue: string;
 }
 
 export interface Item {
@@ -126,18 +131,23 @@ export default class FilterMenu extends React.Component<
       return null;
     }
 
-    const options = this.getOptions();
+    let options = this.getOptions();
     if (!options) {
       return null;
     }
     const isColumnOfNumbers = !!options.filter(option =>
       Number(option.value) ? true : false,
     ).length;
+    const { searchValue } = this.state;
 
     const min = Math.min(...options.map(option => Number(option.value)));
     const max = Math.max(...options.map(option => Number(option.value)));
-
-    console.log({ min, max });
+    const selectedOptions = options
+      .filter(option => option.isSelected)
+      .map(item => item.value);
+    const visibleOptions = options.filter(item =>
+      searchValue ? item.value.indexOf(searchValue) > -1 : true,
+    );
 
     return (
       <PopupWithOutsideListeners
@@ -156,7 +166,7 @@ export default class FilterMenu extends React.Component<
         forcePlacement={true}
       >
         <div
-          className={`${ClassName.MENU_WRAP} ${ClassName.FORMATTING_MENU_WRAP}`}
+          className={`${ClassName.MENU_WRAP} ${ClassName.FILTER_MENU_WRAP}`}
           style={{ width: DROPDOWN_WIDTH }}
         >
           {isColumnOfNumbers ? (
@@ -167,7 +177,11 @@ export default class FilterMenu extends React.Component<
                   placeholder="Search"
                   isLabelHidden
                   shouldFitContainer
-                  onChange={this.handleRangeOnChange}
+                  onChange={event =>
+                    this.applyFilter([
+                      Number((event.target as HTMLInputElement).value),
+                    ])
+                  }
                 />
               </div>
               <div className={`${ClassName.FILTER_RANGE_WRAP}`}>
@@ -189,16 +203,60 @@ export default class FilterMenu extends React.Component<
               </div>
             </div>
           ) : (
-            <CheckboxSelect
-              className="checkbox-select"
-              classNamePrefix="filter"
-              options={options}
-              defaultValue={options.filter(option => !option.isSelected)}
-              placeholder="Search"
-              onChange={this.handleOnChange}
-              autoFocus
-              menuIsOpen
-            />
+            <div>
+              <div style={{ marginBottom: '10px' }}>
+                <FieldText
+                  autoFocus
+                  placeholder="Search"
+                  isLabelHidden
+                  shouldFitContainer
+                  onKeyDown={event => {
+                    if (event.key === 'Enter' && visibleOptions) {
+                      this.toggleCheckbox(
+                        selectedOptions,
+                        visibleOptions[0].value,
+                      );
+                    }
+                  }}
+                  onChange={event => {
+                    const value = (event.target as HTMLInputElement).value;
+                    this.setState({ searchValue: value });
+                  }}
+                />
+              </div>
+              {!searchValue && (
+                <Checkbox
+                  value="select-all"
+                  label="select all"
+                  isChecked={selectedOptions.length === options.length}
+                  onChange={(event: any) => {
+                    const isAllSelected = options
+                      ? selectedOptions.length === options.length
+                      : false;
+                    let filter: string[];
+
+                    if (isAllSelected) {
+                      filter = [];
+                    } else {
+                      filter = options ? options.map(item => item.value) : [];
+                    }
+                    this.applyFilter(filter);
+                  }}
+                  name="filter-checkbox"
+                />
+              )}
+              {visibleOptions.map(option => (
+                <Checkbox
+                  value={option.value}
+                  label={option.label}
+                  isChecked={option.isSelected}
+                  onChange={(event: any) => {
+                    this.toggleCheckbox(selectedOptions, option.value);
+                  }}
+                  name="filter-checkbox"
+                />
+              ))}
+            </div>
           )}
         </div>
       </PopupWithOutsideListeners>
@@ -224,6 +282,16 @@ export default class FilterMenu extends React.Component<
     this.dismiss();
   };
 
+  private toggleCheckbox = (selectedOptions: string[], optionValue: string) => {
+    let filter;
+    if (selectedOptions.indexOf(optionValue) > -1) {
+      filter = selectedOptions.filter(value => value !== optionValue);
+    } else {
+      filter = [...selectedOptions, optionValue];
+    }
+    this.applyFilter(filter);
+  };
+
   private getOptions = (): Item[] | null => {
     const { state } = this.props.editorView;
     const table = findTable(state.selection);
@@ -247,8 +315,8 @@ export default class FilterMenu extends React.Component<
     const nodes: PMNode[] = [];
 
     // getting content of each cell
-    cells.forEach(cellPos => {
-      const cell = state.doc.nodeAt(cellPos + table.start);
+    cells.forEach(pos => {
+      const cell = state.doc.nodeAt(pos + table.start);
       if (!cell) {
         return;
       }
@@ -279,14 +347,9 @@ export default class FilterMenu extends React.Component<
       return {
         label,
         value,
-        isSelected: doesCellValueMatchTheFilter(headerCell.attrs.filter, value),
+        isSelected: !isFilteredOut(headerCell.attrs.filter, value),
       };
     });
-  };
-
-  private handleOnChange = (selectedItems: Item[]) => {
-    const filter = selectedItems.map(item => item.value);
-    this.applyFilter(filter);
   };
 
   private applyFilter = (filter: Array<string | number>) => {
@@ -324,7 +387,7 @@ export default class FilterMenu extends React.Component<
       if (row) {
         tr.setNodeMarkup(row.pos, row.node.type, {
           ...row.node.attrs,
-          isFiltered: doesCellValueMatchTheFilter(filter, cellValue),
+          isFiltered: isFilteredOut(filter, cellValue),
         });
       }
     });
@@ -342,11 +405,6 @@ export default class FilterMenu extends React.Component<
   };
 
   private handleOnSliderChange = (value: number) => {
-    this.applyFilter([value]);
-  };
-
-  private handleRangeOnChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const value = Number((event.target as HTMLInputElement).value);
     this.applyFilter([value]);
   };
 

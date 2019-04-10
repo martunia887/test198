@@ -131,4 +131,5 @@ export const TableCssClassName = {
   FORMATTING_COLOR_PICKER: `${clPrefix}formatting-color-picker`,
   FILTER_RANGE_WRAP: `${clPrefix}filter-range-wrap`,
   FILTER_RANGE_MINMAX_WRAP: `${clPrefix}filter-range-minmax-wrap`,
+  FILTER_MENU_WRAP: `${clPrefix}filter-menu-wrap`,
 };

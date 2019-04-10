@@ -16,6 +16,17 @@ export const tableNewStyles = css`
     align-items: center;
   }
 
+  .${ClassName.FILTER_MENU_WRAP} {
+    label {
+      display: flex;
+      align-items: center;
+      padding: 2px 0;
+    }
+    label:hover {
+      background: ${colors.N30};
+    }
+  }
+
   /* Sub menu (reference, formatting) */
   .${ClassName.MENU_WRAP} {
     background: white;
