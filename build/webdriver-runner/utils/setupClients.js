@@ -13,45 +13,43 @@ if (!process.env.BITBUCKET_BRANCH && process.env.USER) {
 }
 
 function setBrowserStackClients() /*: Array<?Object>*/ {
-  const RESOLUTION = '1920x1080';
   let launchers = {
     chrome: {
       os: 'Windows',
       os_version: '10',
       browserName: 'chrome',
       browser_version: '71.0',
-      resolution: RESOLUTION,
+      resolution: '1440x900',
     },
     firefox: {
       os: 'Windows',
       os_version: '10',
       browserName: 'firefox',
       browser_version: '64.0',
-      resolution: RESOLUTION,
-      'browserstack.geckodriver': '0.22.0',
-      'browserstack.use_w3c': 'true',
+      resolution: '1440x900',
     },
     ie: {
       os: 'Windows',
       os_version: '10',
       browserName: 'ie',
       browser_version: '11',
-      resolution: RESOLUTION,
+      resolution: '1440x900',
     },
     safari: {
       os: 'OS X',
-      os_version: 'High Sierra',
-      browserName: 'Safari',
-      browser_version: '11.0',
-      resolution: RESOLUTION,
+      os_version: 'Mojave',
+      browserName: 'safari',
+      browser_version: '12.0',
+      resolution: '1920x1080',
     },
-    edge: {
-      os: 'Windows',
-      os_version: '10',
-      browserName: 'edge',
-      browser_version: '17',
-      resolution: RESOLUTION,
-    },
+    // @see https://github.com/webdriverio/webdriverio/issues/3324
+    // edge: {
+    //   os: 'Windows',
+    //   os_version: '10',
+    //   browserName: 'edge',
+    //   browser_version: '18',
+    //   resolution: '1440x900',
+    // },
   };
   if (process.env.LANDKID) {
     delete launchers.safari;
@@ -63,7 +61,7 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
   const launchKeys = Object.keys(launchers);
   const options = launchKeys.map(launchKey => {
     const option = {
-      desiredCapabilities: {
+      capabilities: {
         os: launchers[launchKey].os,
         os_version: launchers[launchKey].os_version,
         browserName: launchers[launchKey].browserName,
@@ -74,20 +72,16 @@ function setBrowserStackClients() /*: Array<?Object>*/ {
         'browserstack.debug': true,
         'browserstack.idleTimeout': 300,
         'browserstack.localIdentifier': commit,
-        resolution: launchers[launchKey].resolution,
       },
       host: 'hub.browserstack.com',
       port: 80,
       user: process.env.BROWSERSTACK_USERNAME,
       key: process.env.BROWSERSTACK_KEY,
       waitforTimeout: 3000,
+      logLevel: 'warn',
     };
-    const driver = webdriverio.remote(option);
-    return {
-      browserName: launchers[launchKey].browserName,
-      driver: driver,
-      isReady: false,
-    };
+
+    return { driverOptions: option };
   });
 
   return options;
@@ -98,18 +92,15 @@ function setLocalClients() /*: Array<?Object>*/ {
   let isHeadless = process.env.HEADLESS !== 'false';
   // Keep only chrome for watch mode
   if (process.env.WATCH === 'true') isHeadless === 'false';
-  const windowSize = '--window-size=1920,1200';
   const options = {
     port,
-    desiredCapabilities: {
+    capabilities: {
       browserName: 'chrome',
-      chromeOptions: isHeadless
-        ? { args: ['--headless', windowSize] }
-        : { args: [windowSize] },
+      chromeOptions: isHeadless ? { args: ['--headless'] } : { args: [] },
     },
   };
-  const driver = webdriverio.remote(options);
-  return [{ browserName: 'chrome', driver: driver, isReady: false }];
+
+  return [{ driverOptions: options }];
 }
 
 module.exports = { setLocalClients, setBrowserStackClients };
