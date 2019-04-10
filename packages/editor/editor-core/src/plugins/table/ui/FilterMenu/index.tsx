@@ -48,7 +48,8 @@ const isFilteredOut = (
   filter.forEach(filterValue => {
     if (
       (typeof filterValue === 'string' &&
-        cellValue.indexOf(filterValue) > -1) ||
+        cellValue.toLocaleLowerCase().indexOf(filterValue.toLocaleLowerCase()) >
+          -1) ||
       (typeof filterValue === 'number' && Number(cellValue) >= filterValue)
     ) {
       isFiltered = false;
@@ -132,6 +133,7 @@ export default class FilterMenu extends React.Component<
     }
 
     let options = this.getOptions();
+    console.log({ options });
     if (!options) {
       return null;
     }
@@ -148,6 +150,7 @@ export default class FilterMenu extends React.Component<
     const visibleOptions = options.filter(item =>
       searchValue ? item.value.indexOf(searchValue) > -1 : true,
     );
+    console.log({ visibleOptions });
     const step = min < 1 ? 0.1 : 10;
 
     return (
