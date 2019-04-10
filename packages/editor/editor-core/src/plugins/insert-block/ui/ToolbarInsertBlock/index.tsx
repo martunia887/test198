@@ -136,6 +136,17 @@ export const messages = defineMessages({
     defaultMessage: 'Table',
     description: 'Inserts a table in the document',
   },
+  summaryTable: {
+    id: 'fabric.editor.summaryTable',
+    defaultMessage: 'Summary table',
+    description:
+      'Inserts a table that summarises information from another document',
+  },
+  summaryTableDescription: {
+    id: 'fabric.editor.summaryTable',
+    defaultMessage: 'Summarize info from another document',
+    description: 'Summarize info from another document',
+  },
   tableDescription: {
     id: 'fabric.editor.table.description',
     defaultMessage: 'Insert a table',

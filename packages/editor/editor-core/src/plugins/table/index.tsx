@@ -31,8 +31,13 @@ import {
   EVENT_TYPE,
 } from '../analytics';
 import { tooltip, toggleTable } from '../../keymaps';
-import { IconTable } from '../quick-insert/assets';
+import {
+  IconTable,
+  IconSummaryTable,
+  IconLiveTable,
+} from '../quick-insert/assets';
 import { pluginKey as referencePluginKey } from '../refs/pm-plugins/main';
+import { QuickInsertItem } from '../quick-insert/types';
 
 export const HANDLE_WIDTH = 6;
 
@@ -188,25 +193,60 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
   },
 
   pluginsOptions: {
-    quickInsert: ({ formatMessage }) => [
-      {
-        title: formatMessage(messages.table),
-        description: formatMessage(messages.tableDescription),
-        priority: 600,
-        keyshortcut: tooltip(toggleTable),
-        icon: () => <IconTable label={formatMessage(messages.table)} />,
-        action(insert, state) {
-          const tr = insert(createTable(state.schema));
-          return addAnalytics(tr, {
-            action: ACTION.INSERTED,
-            actionSubject: ACTION_SUBJECT.DOCUMENT,
-            actionSubjectId: ACTION_SUBJECT_ID.TABLE,
-            attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
-            eventType: EVENT_TYPE.TRACK,
-          });
+    quickInsert: ({ formatMessage }) => {
+      const customTableType: QuickInsertItem[] = [
+        {
+          title: 'OKR detail',
+          description: 'by Agnes Ro',
+          icon: () => (
+            <IconLiveTable label={formatMessage(messages.summaryTable)} />
+          ),
+          action() {
+            return false;
+          },
+          keywords: ['table'],
         },
-      },
-    ],
+      ];
+
+      return [
+        ...customTableType,
+        {
+          title: formatMessage(messages.table),
+          description: formatMessage(messages.tableDescription),
+          priority: 600,
+          keyshortcut: tooltip(toggleTable),
+          icon: () => <IconTable label={formatMessage(messages.table)} />,
+          action(insert, state) {
+            const tr = insert(createTable(state.schema));
+            return addAnalytics(tr, {
+              action: ACTION.INSERTED,
+              actionSubject: ACTION_SUBJECT.DOCUMENT,
+              actionSubjectId: ACTION_SUBJECT_ID.TABLE,
+              attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
+              eventType: EVENT_TYPE.TRACK,
+            });
+          },
+        },
+        {
+          title: formatMessage(messages.summaryTable),
+          description: formatMessage(messages.summaryTableDescription),
+          priority: 601,
+          icon: () => (
+            <IconSummaryTable label={formatMessage(messages.summaryTable)} />
+          ),
+          action(insert, state) {
+            const tr = insert(createTable(state.schema));
+            return addAnalytics(tr, {
+              action: ACTION.INSERTED,
+              actionSubject: ACTION_SUBJECT.DOCUMENT,
+              actionSubjectId: ACTION_SUBJECT_ID.TABLE,
+              attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
+              eventType: EVENT_TYPE.TRACK,
+            });
+          },
+        },
+      ];
+    },
     floatingToolbar: getToolbarConfig,
   },
 });

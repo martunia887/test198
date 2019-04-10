@@ -100,6 +100,16 @@ export const IconTable = Loadable({
   loading: () => null,
 });
 
+export const IconSummaryTable = Loadable({
+  loader: () => import('./summary-table').then(module => module.default),
+  loading: () => null,
+});
+
+export const IconLiveTable = Loadable({
+  loader: () => import('./live-table').then(module => module.default),
+  loading: () => null,
+});
+
 export const IconFallback = Loadable({
   loader: () => import('./fallback').then(module => module.default),
   loading: () => null,

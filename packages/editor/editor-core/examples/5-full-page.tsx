@@ -155,7 +155,8 @@ class ExampleEditorComponent extends React.Component<
               analyticsHandler={analyticsHandler}
               allowAnalyticsGASV3={true}
               allowSlider={true}
-              quickInsert={{ provider: Promise.resolve(quickInsertProvider) }}
+              // quickInsert={{ provider: Promise.resolve(quickInsertProvider) }}
+              quickInsert={true}
               allowCodeBlocks={{ enableKeybindingsForIDE: true }}
               allowLists={true}
               allowTextColor={true}
