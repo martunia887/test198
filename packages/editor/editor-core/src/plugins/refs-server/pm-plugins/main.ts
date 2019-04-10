@@ -3,11 +3,12 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { findParentNodeOfType, getCellsInColumn } from 'prosemirror-utils';
+// import { findParentNodeOfType, getCellsInColumn } from 'prosemirror-utils';
 // import { traverse } from '@atlaskit/adf-utils';
 
 import { ReferenceProvider } from '../../refs/provider';
 import { getPluginState as getTablePluginState } from '../../table/pm-plugins/main';
+import { getPluginState as getRefsPluginState } from '../../refs/pm-plugins/main';
 import { addPushRef, setDatabase } from '../actions';
 // import { handleSetProvider } from '../action-handlers';
 
@@ -122,32 +123,38 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
 
         return { localRefs, pushRefs, pullRefs };
       },
-      apply(tr, pluginState: RefsServerPluginState, oldState, newState) {
+      apply(tr, pluginState: RefsServerPluginState, _, newState) {
         const meta = tr.getMeta(pluginKey) || {};
         const data = meta.data || {};
 
         if (tr.docChanged) {
-          const tableState = getTablePluginState(oldState);
-          if (tableState && tableState.editorHasFocus && tableState.tableNode) {
+          const tableState = getTablePluginState(newState);
+          if (tableState && tableState.tableNode) {
             const { id } = tableState.tableNode.attrs;
-            const colRef = pluginState.pushRefs[id];
-            if (colRef) {
-              const { schema, selection } = newState;
-              const cell = findParentNodeOfType(schema.nodes.tableCell)(
-                selection,
-              );
-              if (cell) {
-                const $pos = newState.doc.resolve(cell.pos);
-                const columnIndex = $pos.index($pos.depth);
-                const cells = getCellsInColumn(columnIndex)(selection);
-                if (cells && cells.length > 1) {
-                  const header = cells[0];
-                  if (colRef === header.node.attrs.id) {
-                    console.log('Release the 🐙');
-                  }
-                }
+            if (id) {
+              const refsPluginState = getRefsPluginState(newState);
+              if (refsPluginState.provider) {
+                refsPluginState.provider.updateTable(id, tableState.tableNode);
               }
             }
+            // const colRef = pluginState.pushRefs[id];
+            // if (colRef) {
+            //   const { schema, selection } = newState;
+            //   const cell = findParentNodeOfType(schema.nodes.tableCell)(
+            //     selection,
+            //   );
+            //   if (cell) {
+            //     const $pos = newState.doc.resolve(cell.pos);
+            //     const columnIndex = $pos.index($pos.depth);
+            //     const cells = getCellsInColumn(columnIndex)(selection);
+            //     if (cells && cells.length > 1) {
+            //       const header = cells[0];
+            //       if (colRef === header.node.attrs.id) {
+            //         console.log('Release the 🐙');
+            //       }
+            //     }
+            //   }
+            // }
           }
         }
 

@@ -71,7 +71,8 @@ export const linkTable: Command = (state, dispatch) => {
   if (dispatch) {
     const pluginState = getPluginState(state);
     if (pluginState.provider) {
-      pluginState.provider.addTable(node);
+      const { node: newTable } = findTable(tr.selection)!;
+      pluginState.provider.addTable(newTable);
     }
     dispatch(tr);
   }

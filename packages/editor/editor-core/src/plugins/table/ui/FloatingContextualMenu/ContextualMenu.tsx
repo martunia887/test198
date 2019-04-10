@@ -215,52 +215,6 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     const { isBackgroundMenuOpen, isSortMenuOpen } = this.state;
     const items: any[] = [];
 
-    if (hasParentNodeOfType(state.schema.nodes.tableHeader)(state.selection)) {
-      items.push({
-        content: formatMessage(tableMessages.reference),
-        value: { name: 'reference' },
-      });
-
-      items.push({
-        content: formatMessage(tableMessages.filter),
-        value: { name: 'filter' },
-      });
-
-      items.push({
-        content: formatMessage(tableMessages.formatting),
-        value: { name: 'formatting' },
-      });
-
-      items.push({
-        content: formatMessage(tableMessages.sort),
-        value: { name: 'sort' },
-        elemAfter: (
-          <div className={ClassName.SORT_SUBMENU} ref={this.handleSubMenuRef}>
-            <div className={ClassName.SORT_SUBMENU_LABEL}>
-              {this.getSortLabel()}
-            </div>
-            {isSortMenuOpen && (
-              <div>
-                <DropdownMenu
-                  mountTo={mountPoint}
-                  items={this.createSortItems()}
-                  isOpen={true}
-                  onOpenChange={this.handleOpenChange}
-                  onItemActivated={this.onSortMenuItemActivated}
-                  onMouseEnter={this.handleItemMouseEnter}
-                  onMouseLeave={this.handleItemMouseLeave}
-                  fitHeight={100}
-                  offset={[12, -23]}
-                  fitWidth={contextualMenuDropdownWidth}
-                  boundariesElement={boundariesElement}
-                />
-              </div>
-            )}
-          </div>
-        ),
-      });
-    }
-
     if (allowBackgroundColor) {
       const node =
         isOpen && targetCellPosition
@@ -346,6 +300,53 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       value: { name: 'clear' },
       elemAfter: <Shortcut>⌫</Shortcut>,
     });
+
+    if (hasParentNodeOfType(state.schema.nodes.tableHeader)(state.selection)) {
+      items.push({
+        content: formatMessage(tableMessages.reference),
+        value: { name: 'reference' },
+        className: ClassName.LIVE_DATA_MENU_ITEM,
+      });
+
+      items.push({
+        content: formatMessage(tableMessages.filter),
+        value: { name: 'filter' },
+      });
+
+      items.push({
+        content: formatMessage(tableMessages.sort),
+        value: { name: 'sort' },
+        elemAfter: (
+          <div className={ClassName.SORT_SUBMENU} ref={this.handleSubMenuRef}>
+            <div className={ClassName.SORT_SUBMENU_LABEL}>
+              {this.getSortLabel()}
+            </div>
+            {isSortMenuOpen && (
+              <div>
+                <DropdownMenu
+                  mountTo={mountPoint}
+                  items={this.createSortItems()}
+                  isOpen={true}
+                  onOpenChange={this.handleOpenChange}
+                  onItemActivated={this.onSortMenuItemActivated}
+                  onMouseEnter={this.handleItemMouseEnter}
+                  onMouseLeave={this.handleItemMouseLeave}
+                  fitHeight={100}
+                  offset={[12, -23]}
+                  fitWidth={contextualMenuDropdownWidth}
+                  boundariesElement={boundariesElement}
+                />
+              </div>
+            )}
+          </div>
+        ),
+      });
+
+      items.push({
+        content: formatMessage(tableMessages.formatting),
+        value: { name: 'formatting' },
+      });
+    }
 
     return items.length ? [{ items }] : null;
   };

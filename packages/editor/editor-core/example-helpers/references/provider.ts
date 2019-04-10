@@ -13,11 +13,20 @@ const referenceProvider: ReferenceProvider = {
   },
 
   addTable: (table: PmNode) => {
+    console.log(
+      `%c addTable: ${table.attrs.id}`,
+      'color: green; font-weight: bold;',
+    );
     mem[table.attrs.id] = table;
     return true;
   },
 
   updateTable: (tableId: string, table: PmNode) => {
+    console.log(
+      `%c updateTable: ${table.attrs.id}. title: ${table.attrs.title}`,
+      'color: yellow; font-weight: bold;',
+    );
+
     if (mem[tableId]) {
       mem[tableId] = table;
       return true;

@@ -134,4 +134,5 @@ export const TableCssClassName = {
   FILTER_MENU_WRAP: `${clPrefix}filter-menu-wrap`,
   SORT_SUBMENU: `${clPrefix}sort-menu-wrap`,
   SORT_SUBMENU_LABEL: `${clPrefix}sort-menu-label`,
+  LIVE_DATA_MENU_ITEM: `${clPrefix}live-date-menu-item`,
 };

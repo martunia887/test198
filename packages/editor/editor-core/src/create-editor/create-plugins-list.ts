@@ -81,8 +81,6 @@ export function getDefaultPluginsList(
     typeAheadPlugin,
     unsupportedContentPlugin,
     editorDisabledPlugin,
-    refsPlugin,
-    refsServerPlugin,
   ]);
 }
 
@@ -243,7 +241,10 @@ export default function createPluginsList(
     plugins.push(annotationPlugin);
   }
 
-  // plugins.push(uniqueIdsPlugin);
+  // Needs to be after Table
+  plugins.push(refsPlugin);
+  plugins.push(refsServerPlugin);
+
   plugins.push(gapCursorPlugin);
   plugins.push(gridPlugin);
   plugins.push(submitEditorPlugin);
