@@ -1,6 +1,9 @@
 import assert from 'assert';
 import { EditorState } from 'prosemirror-state';
-import { REFS_ACTIONS, pluginKey } from './pm-plugins/main';
+import { uuid } from '@atlaskit/adf-schema';
+import { findTable } from 'prosemirror-utils';
+
+import { REFS_ACTIONS, pluginKey, getPluginState } from './pm-plugins/main';
 import { Command, CommandDispatch } from '../../types';
 import { ReferenceProvider } from './provider';
 
@@ -52,6 +55,26 @@ export const setReferenceProvider = (
       })
       .setMeta('addToHistory', false),
   );
+
+  return true;
+};
+
+export const linkTable: Command = (state, dispatch) => {
+  const { tr } = state;
+  const { node, pos } = findTable(state.selection)!;
+
+  tr.setNodeMarkup(pos, state.schema.nodes.table, {
+    ...node.attrs,
+    id: uuid.generate(),
+  });
+
+  if (dispatch) {
+    const pluginState = getPluginState(state);
+    if (pluginState.provider) {
+      pluginState.provider.addTable(node);
+    }
+    dispatch(tr);
+  }
 
   return true;
 };

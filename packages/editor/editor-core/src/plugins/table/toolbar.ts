@@ -10,7 +10,8 @@ import {
   pluginKey as tableResizingPluginKey,
   ResizeState,
 } from './pm-plugins/table-resizing/index';
-import { hoverTable, clearHoverSelection, linkTable } from './actions';
+import { hoverTable, clearHoverSelection } from './actions';
+import { linkTable } from '../../plugins/refs/actions';
 import {
   checkIfHeaderRowEnabled,
   checkIfHeaderColumnEnabled,
@@ -99,7 +100,7 @@ export const getToolbarConfig: FloatingToolbarHandler = (
           onClick: linkTable,
           selected: tableState.tableNode.attrs.id,
           disabled: !!resizeState && !!resizeState.dragging,
-          title: 'Link',
+          title: 'Make into table template',
         },
         {
           type: 'separator',

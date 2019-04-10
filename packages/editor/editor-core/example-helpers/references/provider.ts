@@ -1,74 +1,39 @@
+import { Node as PmNode } from 'prosemirror-model';
 import { uuid } from '@atlaskit/adf-schema';
 import { ReferenceProvider } from '../../src/plugins/refs/provider';
 
-// array of tables available for referencing
-const tables = [
-  {
-    id: 'table-1',
-    title: 'T-shirts',
-    columns: [
-      {
-        id: 'column-1',
-        title: 'Colour',
-      },
-      {
-        id: 'column-2',
-        title: 'Brand',
-      },
-      {
-        id: 'column-3',
-        title: 'Size',
-      },
-    ],
-  },
-];
-
-// each item is the content of each cell in the selected column in the referenced table
-const values = [
-  {
-    type: 'paragraph',
-    content: [
-      {
-        type: 'text',
-        text: 'Brand',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    content: [
-      {
-        type: 'text',
-        text: 'Nike',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    content: [
-      {
-        type: 'text',
-        text: 'Adidas',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    content: [
-      {
-        type: 'text',
-        text: 'Puma',
-      },
-    ],
-  },
-];
+const mem: { [key: string]: PmNode } = {};
 
 const referenceProvider: ReferenceProvider = {
+  getTableReferences: async () => {
+    return Object.keys(mem).map(id => ({
+      id,
+      title: mem[id].attrs.title || 'Untitled',
+    }));
+  },
+
+  addTable: (table: PmNode) => {
+    mem[table.attrs.id] = table;
+    return true;
+  },
+
+  updateTable: (tableId: string, table: PmNode) => {
+    if (mem[tableId]) {
+      mem[tableId] = table;
+      return true;
+    }
+    return false;
+  },
+
+  getTable: async (tableId: string) => {
+    return mem[tableId];
+  },
+
   getReferences: () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         // TODO: Fix the type
-        resolve(tables as any);
+        resolve({} as any);
       }, 1000);
     });
   },
@@ -76,7 +41,7 @@ const referenceProvider: ReferenceProvider = {
   getValues: () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(values);
+        resolve({} as any);
       }, 1000);
     });
   },

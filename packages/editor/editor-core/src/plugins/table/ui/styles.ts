@@ -681,18 +681,40 @@ export const tableFullPageEditorStyles = css`
   .${ClassName.TABLE_TITLE} {
     position: absolute;
     top: 18px;
+    left: 8px;
     color: ${N90};
     font-size: 90%;
     font-weight: bold;
     height: 24px;
-    width: calc(100% - 16px);
+    width: calc(100% - 18px);
     padding: 8px;
     z-index: ${akEditorSmallZIndex};
-    border: 1px solid ${N20};
+    border: 1px solid ${N30};
+    border-bottom: none;
 
     &:hover {
       background: ${N20};
       border-radius: 5px;
+    }
+
+    svg {
+      width: 30px;
+      height: 30px;
+      margin-top: -3px;
+    }
+
+    div[contenteditable] {
+      width: calc(100% - 48px);
+      position: absolute;
+      top: 0;
+      left: 48px;
+      height: 41px;
+      display: flex;
+      align-items: center;
+
+      &:focus, &:active {
+        outline: 0px solid transparent;
+      }
     }
   }
  

@@ -8,14 +8,20 @@ export const getCellValue = (cell: PMNode) => {
     return null;
   }
   const node = cell.firstChild.firstChild;
+  let value;
   switch (node.type.name) {
     case 'slider':
-      return node.attrs.value;
+      value = node.attrs.value;
+      break;
     case 'status':
-      return node.attrs.text;
+      value = node.attrs.text;
+      break;
     default:
-      return cell.textContent;
+      value = cell.textContent;
+      break;
   }
+
+  return value.toLocaleLowerCase();
 };
 
 export const applyFormatting = (tr: Transaction) => {
@@ -143,9 +149,6 @@ export const applyFormatting = (tr: Transaction) => {
 const getReferenceValue = (reference: string, tr: Transaction) => {
   let value = null;
   tr.doc.descendants((node: PMNode) => {
-    if (node.type.name === 'slider') {
-      console.log({ attrs: node.attrs, reference });
-    }
     if (node.attrs && node.attrs.title === reference) {
       value = node.attrs.value;
     }
@@ -187,12 +190,11 @@ export const applyFilter = (tr: Transaction) => {
 
             // looping through applied rules to check if the value of each cell in that column
             // matches to applied rule
-            console.log({ rules: filter.rules });
             filter.rules.forEach((rule: any) => {
               const compareValue = rule.useAsReference
                 ? getReferenceValue(rule.value, tr)
                 : rule.value;
-              console.log({ compareValue, cellValue });
+
               if (rule.condition === 'is_empty' && !cellValue) {
                 rowIndexesToFilter[rowIndex] = true;
               } else if (rule.condition === 'is_not_empty' && !!cellValue) {

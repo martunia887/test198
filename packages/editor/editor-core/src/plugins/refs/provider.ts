@@ -1,4 +1,4 @@
-import { ADNode } from '@atlaskit/editor-common';
+import { Node as PmNode } from 'prosemirror-model';
 
 export interface Reference {
   id: string;
@@ -15,10 +15,12 @@ export interface TableReference {
 }
 
 export interface ReferenceProvider {
-  getValues: (reference?: string) => Promise<ADNode[]>;
+  getValues: (reference?: string) => Promise<PmNode[]>;
   getReferences: () => Promise<Reference[]>;
   getDocumentId: () => string;
 
   getTableReferences: () => Promise<Array<TableReference>>;
-  addTableReference: (table: TableReference) => void;
+  addTable: (table: PmNode) => boolean;
+  updateTable: (tableId: string, table: PmNode) => boolean;
+  getTable: (tableId: string) => Promise<PmNode>;
 }
