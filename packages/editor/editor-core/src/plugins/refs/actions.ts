@@ -7,23 +7,25 @@ export const updateTitleTarget = (
   titleMenuTarget?: HTMLElement,
   nodePosition?: number,
 ): Command => (state, dispatch) => {
-  dispatch(
-    state.tr
-      .setMeta(pluginKey, {
-        action: REFS_ACTIONS.UPDATE_TITLE_TARGET,
-        data: {
-          titleMenuTarget,
-          nodePosition,
-        },
-      })
-      .setMeta('addToHistory', false),
-  );
+  if (dispatch) {
+    dispatch(
+      state.tr
+        .setMeta(pluginKey, {
+          action: REFS_ACTIONS.UPDATE_TITLE_TARGET,
+          data: {
+            titleMenuTarget,
+            nodePosition,
+          },
+        })
+        .setMeta('addToHistory', false),
+    );
+  }
   return true;
 };
 
 export const setReferenceProvider = (
   provider: Promise<ReferenceProvider>,
-) => async (state, dispatch): Promise<boolean> => {
+) => async (state: any, dispatch: any) => {
   let resolvedProvider: ReferenceProvider | null;
   try {
     resolvedProvider = await provider;

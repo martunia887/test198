@@ -19,6 +19,7 @@ import { getToolbarConfig } from './toolbar';
 import { ColumnResizingPlugin } from './types';
 import FloatingContextualMenu from './ui/FloatingContextualMenu';
 import FormattingMenu from './ui/FormattingMenu';
+import RefsMenu from './ui/RefsMenu';
 import FilterMenu from './ui/FilterMenu';
 import { isLayoutSupported } from './utils';
 import {
@@ -31,6 +32,7 @@ import {
 } from '../analytics';
 import { tooltip, toggleTable } from '../../keymaps';
 import { IconTable } from '../quick-insert/assets';
+import { pluginKey as referencePluginKey } from '../refs/pm-plugins/main';
 
 export const HANDLE_WIDTH = 6;
 
@@ -122,6 +124,7 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
         plugins={{
           pluginState: pluginKey,
           tableResizingPluginState: tableResizingPluginKey,
+          referencePluginState: referencePluginKey,
         }}
         render={_ => {
           const { state } = editorView;
@@ -129,6 +132,7 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
           const tableResizingPluginState = tableResizingPluginKey.getState(
             state,
           );
+          const referencePluginState = referencePluginKey.getState(state);
           return (
             <>
               <FloatingContextualMenu
@@ -150,6 +154,16 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
                     !!tableResizingPluginState &&
                     !!tableResizingPluginState.dragging
                   }
+                />
+              )}
+              {referencePluginState.provider && (
+                <RefsMenu
+                  editorView={editorView}
+                  mountPoint={popupsMountPoint}
+                  boundariesElement={popupsBoundariesElement}
+                  targetCellPosition={pluginState.targetCellPosition}
+                  isOpen={pluginState.isReferenceMenuOpen}
+                  provider={referencePluginState.provider}
                 />
               )}
               <FormattingMenu
