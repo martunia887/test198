@@ -932,3 +932,55 @@ export const toggleFilterMenu: Command = (state, dispatch): boolean => {
 
   return true;
 };
+
+export const insertSummaryTable = (
+  tables: Array<PMNode>,
+  state: EditorState,
+) => {
+  const headerRows: Map<string, PMNode> = new Map();
+  const { tableHeader, tableCell, table, tableRow } = state.schema.nodes;
+
+  tables.forEach((table: PMNode) => {
+    table.content.forEach(row => {
+      row.content.forEach(cell => {
+        if (cell.type === tableHeader) {
+          headerRows.set(cell.textContent, cell);
+        }
+      });
+    });
+  });
+
+  if (!headerRows.size) {
+    return;
+  }
+
+  let tableRows: Array<PMNode> = [
+    tableRow.createAndFill(undefined, Array.from(headerRows.values())),
+  ];
+
+  const headerArray = Array.from(headerRows.keys());
+  tables.forEach((table: PMNode) => {
+    let rowCells: Array<PMNode | undefined> = Array.from({
+      length: headerRows.size,
+    });
+    table.content.forEach(row => {
+      let rowTitle: string;
+      row.content.forEach(cell => {
+        if (cell.type === tableHeader) {
+          rowTitle = cell.textContent;
+        } else {
+          const idx = headerArray.indexOf(rowTitle);
+          rowCells[idx] = cell;
+        }
+      });
+    });
+    tableRows.push(
+      tableRow.createAndFill(
+        undefined,
+        rowCells.map(cell => cell || tableCell.createAndFill()),
+      ),
+    );
+  });
+
+  return table.createAndFill(undefined, tableRows);
+};

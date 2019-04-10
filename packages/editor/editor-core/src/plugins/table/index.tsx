@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { tableEditing } from 'prosemirror-tables';
 import { createTable } from 'prosemirror-utils';
+import { Node as PMNode } from 'prosemirror-model';
 import { tableCellMinWidth } from '@atlaskit/editor-common';
 import { table, tableCell, tableHeader, tableRow } from '@atlaskit/adf-schema';
 
@@ -38,6 +39,7 @@ import {
 } from '../quick-insert/assets';
 import { pluginKey as referencePluginKey } from '../refs/pm-plugins/main';
 import { QuickInsertItem } from '../quick-insert/types';
+import { insertSummaryTable } from './actions';
 
 export const HANDLE_WIDTH = 6;
 
@@ -235,7 +237,319 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
             <IconSummaryTable label={formatMessage(messages.summaryTable)} />
           ),
           action(insert, state) {
-            const tr = insert(createTable(state.schema));
+            const tables: Array<PMNode> = [
+              PMNode.fromJSON(state.schema, {
+                type: 'table',
+                attrs: {
+                  isNumberColumnEnabled: false,
+                  layout: 'default',
+                  __autoSize: false,
+                  id: 'b886a638-0e9b-4c1f-be5c-93d4a58a95f1',
+                  title: null,
+                },
+                content: [
+                  {
+                    type: 'tableRow',
+                    attrs: { isFiltered: false },
+                    content: [
+                      {
+                        type: 'tableHeader',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          id: 'b24f51f0-7b76-4bea-a1bc-bcff6a156748',
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Foo' }],
+                          },
+                        ],
+                      },
+                      {
+                        type: 'tableCell',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          id: '9271840a-5bdc-46d3-b1f8-52cf4bfa3c54',
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Three' }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'tableRow',
+                    attrs: { isFiltered: false },
+                    content: [
+                      {
+                        type: 'tableHeader',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          id: 'fe752373-b5a2-4091-af9c-bced1e06920b',
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Bar' }],
+                          },
+                        ],
+                      },
+                      {
+                        type: 'tableCell',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          id: '884edda6-0089-411d-a737-8d825f7cba57',
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'One' }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'tableRow',
+                    attrs: { isFiltered: false },
+                    content: [
+                      {
+                        type: 'tableHeader',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          id: 'e66e1392-7aba-498b-a3dc-e9afd977104b',
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Baz' }],
+                          },
+                        ],
+                      },
+                      {
+                        type: 'tableCell',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          id: 'bf976def-aefa-4bb7-8eb1-1bd80416d1be',
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Two' }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              }),
+              PMNode.fromJSON(state.schema, {
+                type: 'table',
+                attrs: {
+                  isNumberColumnEnabled: false,
+                  layout: 'default',
+                  __autoSize: false,
+                  id: '5b83932f-c52b-4801-b3af-a050c9128b20',
+                  title: null,
+                },
+                content: [
+                  {
+                    type: 'tableRow',
+                    attrs: { isFiltered: false },
+                    content: [
+                      {
+                        type: 'tableHeader',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Alex' }],
+                          },
+                        ],
+                      },
+                      {
+                        type: 'tableCell',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Bravo' }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'tableRow',
+                    attrs: { isFiltered: false },
+                    content: [
+                      {
+                        type: 'tableHeader',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Foo' }],
+                          },
+                        ],
+                      },
+                      {
+                        type: 'tableCell',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Five' }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: 'tableRow',
+                    attrs: { isFiltered: false },
+                    content: [
+                      {
+                        type: 'tableHeader',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [{ type: 'text', text: 'Baz' }],
+                          },
+                        ],
+                      },
+                      {
+                        type: 'tableCell',
+                        attrs: {
+                          colspan: 1,
+                          rowspan: 1,
+                          colwidth: null,
+                          background: null,
+                          reference: null,
+                          isFormatted: false,
+                          formatting: null,
+                          filter: null,
+                          sort: null,
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [
+                              {
+                                type: 'emoji',
+                                attrs: {
+                                  shortName: ':slight_smile:',
+                                  id: '1f642',
+                                  text: '🙂',
+                                },
+                              },
+                              { type: 'text', text: ' ' },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              }),
+            ];
+            const tr = insert(insertSummaryTable(tables, state));
             return addAnalytics(tr, {
               action: ACTION.INSERTED,
               actionSubject: ACTION_SUBJECT.DOCUMENT,
