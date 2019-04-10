@@ -249,7 +249,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
                   onMouseEnter={this.handleItemMouseEnter}
                   onMouseLeave={this.handleItemMouseLeave}
                   fitHeight={100}
-                  offset={[13, -23]}
+                  offset={[12, -23]}
                   fitWidth={contextualMenuDropdownWidth}
                   boundariesElement={boundariesElement}
                 />
