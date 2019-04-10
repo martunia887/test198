@@ -52,6 +52,7 @@ import {
   analyticsPlugin,
   sliderPlugin,
   uniqueIdsPlugin,
+  refsPlugin,
 } from '../plugins';
 
 /**
@@ -79,6 +80,7 @@ export function getDefaultPluginsList(
     typeAheadPlugin,
     unsupportedContentPlugin,
     editorDisabledPlugin,
+    refsPlugin,
   ]);
 }
 

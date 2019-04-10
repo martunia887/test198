@@ -17,7 +17,7 @@ import { getParentNodeWidth } from '../pm-plugins/table-resizing/utils';
 
 import { TablePluginState, TableCssClassName as ClassName } from '../types';
 import classnames from 'classnames';
-const isIE11 = browser.ie_version === 11;
+import { updateTitleTarget } from '../../refs/actions';
 
 import { Props } from './table';
 import {
@@ -31,6 +31,7 @@ import {
 import { autoSizeTable } from '../actions';
 import { WidthPluginState } from '../../width';
 
+const isIE11 = browser.ie_version === 11;
 export interface ComponentProps extends Props {
   view: EditorView;
   node: PmNode;

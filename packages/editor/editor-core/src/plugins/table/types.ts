@@ -104,6 +104,19 @@ export const TableCssClassName = {
 
   CELL_NODEVIEW_WRAPPER: `${clPrefix}cell-nodeview-wrapper`,
 
+  TABLE_PARENT_CONTAINER: `${clPrefix}table-parent-container`,
+  TABLE_TITLE: `${clPrefix}table-title`,
+  MENU_WRAP: `${clPrefix}menu-wrap`,
+  MENU_TITLE: `${clPrefix}menu-title`,
+  MENU_DESCRIPTION: `${clPrefix}menu-description`,
+  SECTION: `${clPrefix}section`,
+  BUTTONS_WRAP: `${clPrefix}buttons-wrap`,
+  RULE_WRAP: `${clPrefix}rule-wrap`,
+  FORMATTING_MENU_WRAP: `${clPrefix}formatting-menu-wrap`,
+  FORMATTING_BUTTONS_WRAP: `${clPrefix}formatting-buttons-wrap`,
+  FORMATTING_COLOR_PICKER_BUTTON: `${clPrefix}formatting-color-picker-button`,
+  FORMATTING_COLOR_PICKER: `${clPrefix}formatting-color-picker`,
+
   // come from prosemirror-table
   COLUMN_RESIZE_HANDLE: 'column-resize-handle',
   SELECTED_CELL: 'selectedCell',

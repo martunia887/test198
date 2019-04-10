@@ -13,7 +13,7 @@ import {
 } from '../consts';
 import { PanelSharedCssClassName } from './panel';
 
-export const tableMarginTop = 24;
+export const tableMarginTop = 75;
 export const tableMarginBottom = 16;
 export const tableMarginSides = 8;
 export const tableCellMinWidth = 48;

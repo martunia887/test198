@@ -54,3 +54,4 @@ export { default as compositionPlugin } from './composition';
 export { default as analyticsPlugin } from './analytics';
 export { default as sliderPlugin } from './slider';
 export { default as uniqueIdsPlugin } from './unique-ids';
+export { default as refsPlugin } from './refs';

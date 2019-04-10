@@ -27,6 +27,7 @@ import { tasksAndDecisionsStyles } from '../../plugins/tasks-and-decisions/ui/st
 import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
 import { sliderStyles } from '../../plugins/slider/ui/styles';
+import { refsStyles } from '../../plugins/refs/ui/styles';
 
 import {
   akEditorDeleteBackground,
@@ -115,6 +116,7 @@ const ContentStyles: ComponentClass<
   ${gridStyles}
   ${linkStyles}
   ${blockMarksSharedStyles}
+  ${refsStyles}
 
   /** Global selector for extensions, as .danger tag is assigned to root level node which is unaccessible from triggered child node **/
   /* Danger when nested node */

@@ -676,6 +676,95 @@ export const tableFullPageEditorStyles = css`
       background: ${tableCellDeleteColor};
     }
   }
+
+  /* =============== TABLE TITLE ================== */
+  .${ClassName.TABLE_TITLE} {
+    position: absolute;
+    top: 18px;
+    color: ${N90};
+    font-size: 90%;
+    font-weight: bold;
+    height: 24px;
+    width: calc(100% - 16px);
+    padding: 8px;
+    z-index: ${akEditorSmallZIndex};
+    border: 1px solid ${N20};
+
+    &:hover {
+      background: ${N20};
+      border-radius: 5px;
+    }
+  }
+ 
+  /* Sub menu (reference, formatting) */
+  .${ClassName.MENU_WRAP} {
+    background: white;
+    box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
+    border-radius: ${borderRadius()}px;
+    padding: 10px;
+    width: 220px;
+    position: absolute;
+ 
+    &.${ClassName.FORMATTING_MENU_WRAP} {
+      width: 320px;
+    }
+ 
+    .${ClassName.MENU_TITLE} {
+      text-align: center;
+    }
+    .${ClassName.MENU_DESCRIPTION} {
+      color: ${N90};
+      font-size: 90%;
+      line-height: 1.5;
+    }
+    .${ClassName.SECTION} {
+      margin-bottom: 10px;
+    }
+    .${ClassName.BUTTONS_WRAP} {
+      text-align: right;
+ 
+      button + button {
+        margin-left: 10px;
+      }
+    }
+    .${ClassName.RULE_WRAP} {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .${ClassName.FORMATTING_BUTTONS_WRAP} {
+      display: flex;
+      > button {
+        margin-right: 10px;
+      }
+      > button:last-child {
+        margin-right: 0;
+      }
+ 
+      button > span > span {
+        margin: 0px !important;
+        padding: 0px !important;
+      }
+    }
+    .${ClassName.FORMATTING_COLOR_PICKER_BUTTON} {
+      display: block;
+      border: 1px solid ${N90};
+      border-radius: ${borderRadius()}px;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      margin: 0;
+    }
+    .${ClassName.FORMATTING_COLOR_PICKER} {
+      position: absolute;
+      width: 144px;
+      padding: 6px 0;
+      background: white;
+      box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
+      border-radius: ${borderRadius()}px;
+      z-index: 10;
+    }
+  }
 `;
 
 export const tableCommentEditorStyles = css`
@@ -724,4 +813,5 @@ export const tablePopupStyles = css`
       color: ${N90};
     }
   }
+
 `;
