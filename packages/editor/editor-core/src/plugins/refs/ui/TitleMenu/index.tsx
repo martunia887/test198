@@ -36,7 +36,8 @@ export default class TitleMenu extends React.Component<
     const { editorView, nodePosition } = this.props;
     if (typeof nodePosition === 'number') {
       const node = editorView.state.doc.nodeAt(nodePosition);
-      if (node && !this.state.value) {
+      const { value } = this.state;
+      if (node && !value && value !== node.attrs.title) {
         this.setState({
           value: node.attrs.title,
         });
