@@ -31,6 +31,8 @@ import {
 import { autoSizeTable } from '../actions';
 import { WidthPluginState } from '../../width';
 
+import { IconLiveTable } from '../../quick-insert/assets';
+
 const isIE11 = browser.ie_version === 11;
 export interface ComponentProps extends Props {
   view: EditorView;
@@ -226,13 +228,16 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
       >
         {node.attrs.id && (
           <div
+            contentEditable={false}
             className={classnames(ClassName.TABLE_TITLE)}
             onClick={this.showTitleMenu}
           >
-            {node.attrs.title}
+            <IconLiveTable />
+            <div contentEditable={true}>{node.attrs.title}</div>
           </div>
         )}
-        {allowControls && rowControls}
+
+        {node.attrs.id === null && allowControls && rowControls}
         <div
           className={classnames(ClassName.TABLE_NODE_WRAPPER)}
           ref={elem => {
@@ -243,7 +248,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
             }
           }}
         >
-          {allowControls && columnControls}
+          {node.attrs.id === null && allowControls && columnControls}
         </div>
         <div
           ref={elem => {

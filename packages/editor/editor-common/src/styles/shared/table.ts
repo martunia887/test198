@@ -13,7 +13,7 @@ import {
 } from '../consts';
 import { PanelSharedCssClassName } from './panel';
 
-export const tableMarginTop = 75;
+export const tableMarginTop = 24;
 export const tableMarginBottom = 16;
 export const tableMarginSides = 8;
 export const tableCellMinWidth = 48;
@@ -50,6 +50,11 @@ const tableSharedStyle = css`
     padding-left: ${akEditorTableNumberColumnWidth - 1}px;
   }
   /* avoid applying styles to nested tables (possible via extensions) */
+  .${TableSharedCssClassName.TABLE_CONTAINER} > table[data-id],
+  .${TableSharedCssClassName.TABLE_NODE_WRAPPER} > table[data-id] {
+    margin: 50px ${tableMarginSides}px 0;
+  }
+
   .${TableSharedCssClassName.TABLE_CONTAINER} > table,
   .${TableSharedCssClassName.TABLE_NODE_WRAPPER} > table {
     border-collapse: collapse;
