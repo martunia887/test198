@@ -29,8 +29,16 @@ export type QuickInsertOptions =
 
 export type QuickInsertHandler =
   | Array<QuickInsertItem>
-  | ((intl: InjectedIntl) => Array<QuickInsertItem>);
+  | ((
+      intl: InjectedIntl,
+      setItems: SetQuickInsertItems,
+    ) => Array<QuickInsertItem>);
 
 export type IconProps = {
   label?: string;
 };
+
+export type SetQuickInsertItems = (
+  id: string,
+  items: QuickInsertItem[],
+) => void;

@@ -8,6 +8,7 @@ import {
   QuickInsertItem,
   QuickInsertProvider,
   QuickInsertHandler,
+  SetQuickInsertItems,
 } from './types';
 import { find } from './search';
 import {
@@ -27,8 +28,8 @@ const quickInsertPlugin: EditorPlugin = {
     return [
       {
         name: 'quickInsert', // It's important that this plugin is above TypeAheadPlugin
-        plugin: ({ providerFactory }) =>
-          quickInsertPluginFactory(quickInsert, providerFactory),
+        plugin: ({ providerFactory, reactContext }) =>
+          quickInsertPluginFactory(quickInsert, providerFactory, reactContext),
       },
     ];
   },
@@ -57,7 +58,7 @@ const quickInsertPlugin: EditorPlugin = {
           });
         }
         const quickInsertState = pluginKey.getState(state);
-        const defaultItems = processItems(quickInsertState.items, intl);
+        const defaultItems = quickInsertState.items;
         const defaultSearch = () => find(query, defaultItems);
 
         if (quickInsertState.provider) {
@@ -90,12 +91,16 @@ const quickInsertPlugin: EditorPlugin = {
 export default quickInsertPlugin;
 
 const itemsCache: Record<string, Array<QuickInsertItem>> = {};
-const processItems = (items: Array<QuickInsertHandler>, intl: InjectedIntl) => {
+const processItems = (
+  items: Array<QuickInsertHandler>,
+  intl: InjectedIntl,
+  setItems: SetQuickInsertItems,
+) => {
   if (!itemsCache[intl.locale]) {
     itemsCache[intl.locale] = items.reduce(
       (acc: Array<QuickInsertItem>, item) => {
         if (typeof item === 'function') {
-          return acc.concat(item(intl));
+          return acc.concat(item(intl, setItems));
         }
         return acc.concat(item);
       },
@@ -117,29 +122,57 @@ export const setProvider = (
   provider: Promise<Array<QuickInsertItem>>,
 ): Command => (state, dispatch) => {
   if (dispatch) {
-    dispatch(state.tr.setMeta(pluginKey, provider));
+    dispatch(state.tr.setMeta(pluginKey, { provider }));
   }
   return true;
 };
 
+export const setItems = (items: Array<QuickInsertItem>): Command => (
+  state,
+  dispatch,
+) => {
+  if (dispatch) {
+    dispatch(state.tr.setMeta(pluginKey, { items }));
+  }
+  return true;
+};
+
+const mergeExtraItems = (
+  items: QuickInsertItem[],
+  extra: Map<string, QuickInsertItem[]>,
+) => {
+  // return items.concat(...extra);
+  let merged = [...items];
+  for (const subitems of extra.values()) {
+    merged = merged.concat(...subitems);
+  }
+
+  return merged;
+};
+
 function quickInsertPluginFactory(
-  quickInsertItems: Array<QuickInsertHandler>,
+  quickInsertHandlers: Array<QuickInsertHandler>,
   providerFactory: ProviderFactory,
+  reactContext: () => { [key: string]: any },
 ) {
   return new Plugin({
     key: pluginKey,
     state: {
       init() {
+        const handlers = quickInsertHandlers || [];
         return {
-          items: quickInsertItems || [],
+          handlers,
+          items: undefined,
         };
       },
 
       apply(tr, pluginState) {
-        const provider = tr.getMeta(pluginKey);
-        if (provider) {
-          return { ...pluginState, provider };
+        const newPluginState = tr.getMeta(pluginKey);
+        if (newPluginState) {
+          const newState = { ...pluginState, ...newPluginState };
+          return newState;
         }
+
         return pluginState;
       },
     },
@@ -160,7 +193,33 @@ function quickInsertPluginFactory(
 
       providerFactory.subscribe('quickInsertProvider', providerHandler);
 
+      const extraItems: Map<string, QuickInsertItem[]> = new Map();
+
       return {
+        update(view) {
+          const pluginState = pluginKey.getState(view.state);
+          if (pluginState && !pluginState.items) {
+            console.log('doing fetch of quickInsert items');
+            const { intl } = reactContext();
+            const items = processItems(
+              pluginState.handlers,
+              intl,
+              (id, item) => {
+                console.log('updated quickInsert item set for', id);
+                extraItems.set(id, item);
+                setItems(mergeExtraItems(items, extraItems))(
+                  view.state,
+                  view.dispatch,
+                );
+              },
+            );
+
+            setItems(mergeExtraItems(items, extraItems))(
+              view.state,
+              view.dispatch,
+            );
+          }
+        },
         destroy() {
           providerFactory.unsubscribe('quickInsertProvider', providerHandler);
         },

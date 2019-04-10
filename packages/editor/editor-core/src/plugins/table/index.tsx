@@ -197,7 +197,7 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
   },
 
   pluginsOptions: {
-    quickInsert: ({ formatMessage }) => {
+    quickInsert: ({ formatMessage }, setItems) => {
       const customTableType: QuickInsertItem[] = [
         {
           title: 'OKR detail',
@@ -213,8 +213,12 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
         },
       ];
 
+      setTimeout(() => {
+        console.log('setting new quickinsert value');
+        setItems('alexIsKing', customTableType);
+      }, 500);
+
       return [
-        ...customTableType,
         {
           title: formatMessage(messages.table),
           description: formatMessage(messages.tableDescription),
