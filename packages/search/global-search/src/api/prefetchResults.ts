@@ -1,4 +1,4 @@
-import { ConfluenceRecentsMap, JiraResultsMap, Result } from '../model/Result';
+import { ConfluenceRecentsMap, JiraResult, Result } from '../model/Result';
 import configureSearchClients from './configureSearchClients';
 import { ConfluenceClient } from './ConfluenceClient';
 import { ABTest } from './CrossProductSearchClient';
@@ -14,7 +14,7 @@ export interface ConfluencePrefetchedResults extends CommonPrefetchedResults {
 }
 
 export interface JiraPrefetchedResults extends CommonPrefetchedResults {
-  jiraRecentItemsPromise: Promise<JiraResultsMap>;
+  jiraRecentItemsPromise: Promise<JiraResult[]>;
 }
 
 export type GlobalSearchPrefetchedResults =
@@ -60,5 +60,32 @@ export const getConfluencePrefetchedData = (
       },
     ),
     recentPeoplePromise: peopleSearchClient.getRecentPeople(),
+  };
+};
+
+export const getJiraPrefetchedData = (
+  cloudId: string,
+  jiraUrl?: string,
+): JiraPrefetchedResults => {
+  const config = jiraUrl
+    ? {
+        jiraUrl,
+      }
+    : {};
+  const { jiraClient, crossProductSearchClient } = configureSearchClients(
+    cloudId,
+    config,
+  );
+  return {
+    jiraRecentItemsPromise: jiraClient.getRecentItems(
+      PREFETCH_SEARCH_SESSION_ID,
+    ),
+    abTestPromise: crossProductSearchClient.getAbTestData(
+      Scope.ConfluencePageBlogAttachment,
+      {
+        sessionId: PREFETCH_SEARCH_SESSION_ID,
+      },
+    ),
+    recentPeoplePromise: Promise.resolve([]), // TODO: Link issue key for people in Jira here
   };
 };

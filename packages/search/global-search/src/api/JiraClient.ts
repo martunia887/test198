@@ -97,7 +97,7 @@ type JiraRecentItem = {
     | JiraRecentFilterAttributes;
 };
 
-type JiraMyPermissionsResponse = {
+export type JiraMyPermissionsResponse = {
   permissions: {
     USER_PICKER?: {
       havePermission: boolean;

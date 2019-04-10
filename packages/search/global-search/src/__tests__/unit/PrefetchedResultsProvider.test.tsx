@@ -8,43 +8,82 @@ import {
   // @ts-ignore (additional export from mocked version)
   confluenceRecentItemsPromise,
   // @ts-ignore (additional export from mocked version)
+  jiraRecentItemsPromise,
+  // @ts-ignore (additional export from mocked version)
   abTestPromise,
   // @ts-ignore (additional export from mocked version)
   recentPeoplePromise,
   getConfluencePrefetchedData,
+  getJiraPrefetchedData,
 } from '../../api/prefetchResults';
 import { QuickSearchContext } from '../../api/types';
 
 jest.mock('../../api/prefetchResults');
 
-function render(context: QuickSearchContext, childComponent: JSX.Element) {
-  return mount(
-    <PrefetchedResultsProvider context={context} cloudId="cloudId">
-      {childComponent}
-    </PrefetchedResultsProvider>,
-  );
-}
-
 describe('PrefetchedResultsProvider', () => {
-  describe('confluence', () => {
-    const context = 'confluence';
-    let prefetchedResultsHelper: jest.Mock;
+  let prefetchedResultsHelper: jest.Mock;
 
-    beforeEach(() => {
-      prefetchedResultsHelper = jest.fn();
-      const child = (
+  function mockPrefetchWithContext(context: QuickSearchContext) {
+    return mount(
+      <PrefetchedResultsProvider context={context} cloudId="cloudId">
         <GlobalSearchPreFetchContext.Consumer>
           {({ prefetchedResults }) => {
             prefetchedResultsHelper(prefetchedResults);
             return <div />;
           }}
         </GlobalSearchPreFetchContext.Consumer>
-      );
+      </PrefetchedResultsProvider>,
+    );
+  }
 
-      render(context, child);
+  beforeEach(() => {
+    prefetchedResultsHelper = jest.fn();
+  });
+
+  describe('common', () => {
+    const contexts: {
+      commonContext: QuickSearchContext;
+      getFn: (_: any) => void;
+      promise: Promise<any>;
+    }[] = [
+      {
+        commonContext: 'jira',
+        getFn: getJiraPrefetchedData,
+        promise: jiraRecentItemsPromise,
+      },
+      {
+        commonContext: 'confluence',
+        getFn: getConfluencePrefetchedData,
+        promise: confluenceRecentItemsPromise,
+      },
+    ];
+
+    contexts.forEach(({ commonContext, getFn, promise }) => {
+      it('should get ab test prefetch data', async () => {
+        mockPrefetchWithContext(commonContext);
+        await promise;
+
+        expect(getFn).toHaveBeenCalled();
+        expect(prefetchedResultsHelper.mock.calls[1][0].abTestPromise).toEqual(
+          abTestPromise,
+        );
+      });
+
+      it('should get recent people prefetch data', async () => {
+        mockPrefetchWithContext(commonContext);
+        await promise;
+
+        expect(getFn).toHaveBeenCalled();
+        expect(
+          prefetchedResultsHelper.mock.calls[1][0].recentPeoplePromise,
+        ).toEqual(recentPeoplePromise);
+      });
     });
+  });
 
+  describe('confluence', () => {
     it('should get confluence prefetch data', async () => {
+      mockPrefetchWithContext('confluence');
       await confluenceRecentItemsPromise;
 
       expect(getConfluencePrefetchedData).toHaveBeenCalled();
@@ -52,23 +91,17 @@ describe('PrefetchedResultsProvider', () => {
         prefetchedResultsHelper.mock.calls[1][0].confluenceRecentItemsPromise,
       ).toEqual(confluenceRecentItemsPromise);
     });
+  });
 
-    it('should get ab test prefetch data', async () => {
-      await confluenceRecentItemsPromise;
+  describe('jira', () => {
+    it('should get jira prefetch data', async () => {
+      mockPrefetchWithContext('jira');
+      await jiraRecentItemsPromise;
 
-      expect(getConfluencePrefetchedData).toHaveBeenCalled();
-      expect(prefetchedResultsHelper.mock.calls[1][0].abTestPromise).toEqual(
-        abTestPromise,
-      );
-    });
-
-    it('should get recent people prefetch data', async () => {
-      await confluenceRecentItemsPromise;
-
-      expect(getConfluencePrefetchedData).toHaveBeenCalled();
+      expect(getJiraPrefetchedData).toHaveBeenCalled();
       expect(
-        prefetchedResultsHelper.mock.calls[1][0].recentPeoplePromise,
-      ).toEqual(recentPeoplePromise);
+        prefetchedResultsHelper.mock.calls[1][0].jiraRecentItemsPromise,
+      ).toEqual(jiraRecentItemsPromise);
     });
   });
 });
