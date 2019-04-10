@@ -208,6 +208,7 @@ export default class Editor extends React.Component<EditorProps, {}> {
       presenceProvider,
       macroProvider,
       legacyImageUploadProvider,
+      referenceProvider,
       media,
       collabEdit,
       quickInsert,
@@ -251,6 +252,8 @@ export default class Editor extends React.Component<EditorProps, {}> {
         quickInsert.provider,
       );
     }
+
+    this.providerFactory.setProvider('referenceProvider', referenceProvider);
   }
 
   handleSave = (view: EditorView): void => {

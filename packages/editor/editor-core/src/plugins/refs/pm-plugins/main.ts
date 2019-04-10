@@ -66,8 +66,13 @@ export const createPlugin = (
     },
     key: pluginKey,
     view: (view: EditorView) => {
-      const providerHandler = (name, provider: Promise<ReferenceProvider>) => {
-        setReferenceProvider(provider)(view.state, view.dispatch);
+      const providerHandler = (
+        _: string,
+        provider?: Promise<ReferenceProvider>,
+      ) => {
+        if (provider) {
+          setReferenceProvider(provider)(view.state, view.dispatch);
+        }
       };
       // make sure editable DOM node is mounted
       if (view.dom.parentNode) {
@@ -87,7 +92,7 @@ export const createPlugin = (
         const { schema, selection } = state;
         let decorations: Decoration[] = [];
 
-        state.doc.descendants((node, pos) => {
+        state.doc.descendants(node => {
           if (node.type === schema.nodes.table) {
             const columns = getCellsInRow(0)(selection);
             if (columns) {
