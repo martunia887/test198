@@ -50,7 +50,6 @@ const getCellAttrs = (dom: HTMLElement, defaultValues: CellAttributes = {}) => {
   if (dom.nodeName === 'TH') {
     return {
       ...attrs,
-      id: uuid.generate(),
       reference: dom.getAttribute('data-reference') || null,
       formatting: JSON.parse(dom.getAttribute('data-formatting') || '{}'),
       filter: JSON.parse(dom.getAttribute('data-filter') || '{}'),
@@ -67,7 +66,6 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     rowspan?: number;
     style?: string;
     'data-colwidth'?: string;
-    'data-id'?: string;
     'data-reference'?: string;
     'data-formatting'?: string;
     'data-is-formatted'?: boolean;
@@ -112,8 +110,6 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
   }
 
   if (node.type.name === 'tableHeader') {
-    attrs['data-id'] = node.attrs.id;
-
     if (node.attrs.reference) {
       attrs['data-reference'] = node.attrs.reference;
     }
@@ -260,7 +256,6 @@ export interface CellAttributes {
 }
 
 export interface HeaderCellAttributes extends CellAttributes {
-  id?: string;
   reference?: string;
   formatting?: {
     rules: Array<{
@@ -350,10 +345,11 @@ const cellAttrs = {
   rowspan: { default: 1 },
   colwidth: { default: null },
   background: { default: null },
-  id: { default: null },
   reference: { default: null },
   isFormatted: { default: false },
   formatting: { default: null },
+  filter: { default: null },
+  sort: { default: null },
 };
 
 export const tableCell = {
@@ -396,7 +392,6 @@ export const tableHeader = {
     '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle  | applicationCard | decisionList | taskList | blockCard | extension)+',
   attrs: {
     ...cellAttrs,
-    id: { default: null },
     reference: { default: null },
     formatting: { default: null },
     filter: { default: null },

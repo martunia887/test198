@@ -3,7 +3,6 @@ export default {
     type: { type: 'enum', values: ['tableHeader'] },
     attrs: {
       props: {
-        id: { type: 'string', optional: true },
         reference: { type: 'string', optional: true },
         formatting: {
           props: {
