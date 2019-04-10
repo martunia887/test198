@@ -6,7 +6,7 @@ export const exampleDocument = {
       type: 'table',
       attrs: {
         isNumberColumnEnabled: false,
-        layout: 'wide',
+        layout: 'default',
         id: '10382e65-4c39-466f-947f-01415c999e92',
       },
       content: [
@@ -19,7 +19,7 @@ export const exampleDocument = {
             {
               type: 'tableHeader',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -36,7 +36,7 @@ export const exampleDocument = {
             {
               type: 'tableHeader',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -53,7 +53,7 @@ export const exampleDocument = {
             {
               type: 'tableHeader',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -70,7 +70,7 @@ export const exampleDocument = {
             {
               type: 'tableHeader',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -95,7 +95,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -112,7 +112,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -139,7 +139,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -165,7 +165,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -190,7 +190,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -207,7 +207,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -224,7 +224,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -250,7 +250,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -275,7 +275,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -292,7 +292,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -309,7 +309,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -335,7 +335,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -360,7 +360,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -377,7 +377,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -394,7 +394,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -420,7 +420,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -445,7 +445,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -462,7 +462,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -479,7 +479,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -505,7 +505,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -530,7 +530,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -547,7 +547,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -564,7 +564,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -586,7 +586,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -611,7 +611,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -628,7 +628,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -645,7 +645,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -667,7 +667,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -692,7 +692,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -709,7 +709,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -726,7 +726,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -748,7 +748,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -773,7 +773,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -790,7 +790,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -807,7 +807,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -833,7 +833,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
@@ -858,7 +858,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [258],
               },
               content: [
                 {
@@ -875,7 +875,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [304],
+                colwidth: [256],
               },
               content: [
                 {
@@ -892,7 +892,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [176],
+                colwidth: [123],
               },
               content: [
                 {
@@ -914,7 +914,7 @@ export const exampleDocument = {
             {
               type: 'tableCell',
               attrs: {
-                colwidth: [175],
+                colwidth: [122],
               },
               content: [
                 {
