@@ -54,6 +54,7 @@ const getCellAttrs = (dom: HTMLElement, defaultValues: CellAttributes = {}) => {
       reference: dom.getAttribute('data-reference') || null,
       formatting: JSON.parse(dom.getAttribute('data-formatting') || '{}'),
       filter: JSON.parse(dom.getAttribute('data-filter') || '{}'),
+      sort: JSON.parse(dom.getAttribute('data-sort') || '{}'),
     };
   }
 
@@ -71,6 +72,7 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     'data-formatting'?: string;
     'data-is-formatted'?: boolean;
     'data-filter'?: string;
+    'data-sort'?: string;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -121,6 +123,8 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     if (node.attrs.filter) {
       attrs['data-filter'] = JSON.stringify(node.attrs.filter);
     }
+
+    attrs['data-sort'] = JSON.stringify(node.attrs.sort);
   }
 
   attrs['data-is-formatted'] = node.attrs.isFormatted;
@@ -198,6 +202,8 @@ export type Condition =
 
 export type FormattingMarks = 'strong' | 'em' | 'underline' | 'strike';
 
+export type Sort = 'a-z' | 'z-a';
+
 export interface TableAttributes {
   isNumberColumnEnabled?: boolean;
   layout?: Layout;
@@ -264,6 +270,7 @@ export interface HeaderCellAttributes extends CellAttributes {
     marks: FormattingMarks[];
   };
   filter?: { label: string; value: string }[];
+  sort?: Sort;
 }
 
 export interface TableRowAttributes {
@@ -347,7 +354,6 @@ const cellAttrs = {
   reference: { default: null },
   isFormatted: { default: false },
   formatting: { default: null },
-  filter: { default: null },
 };
 
 export const tableCell = {
@@ -394,6 +400,7 @@ export const tableHeader = {
     reference: { default: null },
     formatting: { default: null },
     filter: { default: null },
+    sort: { default: null },
   },
   tableRole: 'header_cell',
   isolating: true,

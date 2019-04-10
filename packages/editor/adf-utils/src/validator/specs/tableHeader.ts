@@ -41,32 +41,13 @@ export default {
           optional: true,
         },
         filter: {
-          props: {
-            rules: {
-              type: 'array',
-              items: [
-                {
-                  props: {
-                    condition: {
-                      type: 'enum',
-                      values: [
-                        'is',
-                        'is_not',
-                        'contains',
-                        'does_not_contain',
-                        'is_empty',
-                        'is_not_empty',
-                      ],
-                    },
-                    value: { type: 'string' },
-                    reference: { type: 'string', optional: true },
-                  },
-                },
-              ],
-            },
-          },
+          type: 'array',
+          items: [
+            { props: { label: { type: 'string' }, value: { type: 'string' } } },
+          ],
           optional: true,
         },
+        sort: { type: 'enum', values: ['a-z', 'z-a'], optional: true },
         colspan: { type: 'number', optional: true },
         rowspan: { type: 'number', optional: true },
         colwidth: {

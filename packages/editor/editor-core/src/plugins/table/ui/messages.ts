@@ -41,4 +41,9 @@ export default defineMessages({
     defaultMessage: 'Filter',
     description: 'Applies filtering rules to your table',
   },
+  sort: {
+    id: 'fabric.editor.sort',
+    defaultMessage: 'Sort',
+    description: 'Sort your table',
+  },
 });

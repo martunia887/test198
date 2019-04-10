@@ -78,6 +78,7 @@ export {
   setCellAttrs,
   FormattingMarks as TableFormattingMarks,
   Condition as TableCondition,
+  Sort as TableSort,
 } from './tableNodes';
 export {
   applicationCard,

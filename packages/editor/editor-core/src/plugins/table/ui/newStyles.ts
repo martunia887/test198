@@ -27,6 +27,23 @@ export const tableNewStyles = css`
     }
   }
 
+  .${ClassName.SORT_SUBMENU_LABEL} {
+    color: ${colors.B300};
+    position: absolute;
+    font-size: 12px;
+    width: 50px;
+    right: 5px;
+
+    &::after {
+      content: '›';
+      display: inline-block;
+      width: 1px;
+      position: absolute;
+      right: 12px;
+      color: ${N90};
+    }
+  }
+
   /* Sub menu (reference, formatting) */
   .${ClassName.MENU_WRAP} {
     background: white;

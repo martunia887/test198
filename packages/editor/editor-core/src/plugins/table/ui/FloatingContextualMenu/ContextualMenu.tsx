@@ -2,12 +2,20 @@ import * as React from 'react';
 import { Component } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
-import { splitCell, Rect } from 'prosemirror-tables';
-import { hasParentNodeOfType } from 'prosemirror-utils';
+import { Node as PMNode } from 'prosemirror-model';
+import { splitCell, Rect, TableMap } from 'prosemirror-tables';
+import {
+  hasParentNodeOfType,
+  findTable,
+  getCellsInRow,
+} from 'prosemirror-utils';
+import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
+
 import { colors } from '@atlaskit/theme';
 import {
   tableBackgroundColorPalette,
   tableBackgroundBorderColors,
+  TableSort,
 } from '@atlaskit/adf-schema';
 import { canMergeCells } from '../../transforms';
 import { getPluginState } from '../../pm-plugins/main';
@@ -38,6 +46,7 @@ import {
   insertColumnWithAnalytics,
 } from '../../actions-with-analytics';
 import { closestElement } from '../../../../utils';
+import { getCellValue } from '../../utils';
 
 export const messages = defineMessages({
   cellBackground: {
@@ -76,17 +85,46 @@ export interface Props {
 }
 
 export interface State {
-  isSubmenuOpen: boolean;
+  isBackgroundMenuOpen: boolean;
+  isSortMenuOpen: boolean;
+  sort: TableSort | null;
 }
 
 class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
   state: State = {
-    isSubmenuOpen: false,
+    isBackgroundMenuOpen: false,
+    isSortMenuOpen: false,
+    sort: null,
   };
 
   static defaultProps = {
     boundariesElement: document.body,
   };
+
+  // getting tableHeader cell sort
+  componentDidUpdate(nextProps: Props, nextState: State) {
+    const { targetCellPosition, editorView, isOpen } = nextProps;
+    const { isSortMenuOpen } = nextState;
+    const { state } = editorView;
+
+    if (
+      targetCellPosition &&
+      (isSortMenuOpen !== this.state.isSortMenuOpen ||
+        isOpen !== this.props.isOpen)
+    ) {
+      const cell = state.doc.nodeAt(targetCellPosition);
+      if (!cell) {
+        return;
+      }
+      const { sort } = cell.attrs;
+      if (sort && sort !== this.state.sort) {
+        this.setState(() => ({
+          ...this.state,
+          sort,
+        }));
+      }
+    }
+  }
 
   render() {
     const { isOpen, mountPoint, offset, boundariesElement } = this.props;
@@ -129,6 +167,38 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     }
   };
 
+  private createSortItems = () => {
+    const items: any[] = [];
+
+    items.push({
+      content: 'Sort A → Z',
+      value: { name: 'a-z' },
+      elemAfter:
+        this.state.sort !== 'a-z' ? null : (
+          <EditorDoneIcon
+            primaryColor={colors.B400}
+            size="small"
+            label="test question"
+          />
+        ),
+    });
+
+    items.push({
+      content: 'Sort Z → A',
+      value: { name: 'z-a' },
+      elemAfter:
+        this.state.sort !== 'z-a' ? null : (
+          <EditorDoneIcon
+            primaryColor={colors.B400}
+            size="small"
+            label="test question"
+          />
+        ),
+    });
+
+    return [{ items }];
+  };
+
   private createItems = () => {
     const {
       allowMergeCells,
@@ -136,9 +206,12 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       editorView: { state },
       targetCellPosition,
       isOpen,
+      boundariesElement,
+      mountPoint,
       selectionRect,
       intl: { formatMessage },
     } = this.props;
+    const { isBackgroundMenuOpen, isSortMenuOpen } = this.state;
     const items: any[] = [];
 
     if (hasParentNodeOfType(state.schema.nodes.tableHeader)(state.selection)) {
@@ -156,9 +229,37 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
         content: formatMessage(tableMessages.formatting),
         value: { name: 'formatting' },
       });
+
+      items.push({
+        content: formatMessage(tableMessages.sort),
+        value: { name: 'sort' },
+        elemAfter: (
+          <div className={ClassName.SORT_SUBMENU} ref={this.handleSubMenuRef}>
+            <div className={ClassName.SORT_SUBMENU_LABEL}>
+              {this.getSortLabel()}
+            </div>
+            {isSortMenuOpen && (
+              <div>
+                <DropdownMenu
+                  mountTo={mountPoint}
+                  items={this.createSortItems()}
+                  isOpen={true}
+                  onOpenChange={this.handleOpenChange}
+                  onItemActivated={this.onSortMenuItemActivated}
+                  onMouseEnter={this.handleItemMouseEnter}
+                  onMouseLeave={this.handleItemMouseLeave}
+                  fitHeight={100}
+                  offset={[13, -23]}
+                  fitWidth={contextualMenuDropdownWidth}
+                  boundariesElement={boundariesElement}
+                />
+              </div>
+            )}
+          </div>
+        ),
+      });
     }
 
-    const { isSubmenuOpen } = this.state;
     if (allowBackgroundColor) {
       const node =
         isOpen && targetCellPosition
@@ -175,7 +276,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
               className={ClassName.CONTEXTUAL_MENU_ICON}
               style={{ background }}
             />
-            {isSubmenuOpen && (
+            {isBackgroundMenuOpen && (
               <div
                 className={ClassName.CONTEXTUAL_SUBMENU}
                 ref={this.handleSubMenuRef}
@@ -246,6 +347,90 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     });
 
     return items.length ? [{ items }] : null;
+  };
+
+  private getSortLabel = () => {
+    const { targetCellPosition, editorView } = this.props;
+    if (targetCellPosition) {
+      const cell = editorView.state.doc.nodeAt(targetCellPosition);
+      if (cell) {
+        const { sort } = cell.attrs;
+
+        if (sort === 'a-z') {
+          return 'A → Z';
+        }
+        if (sort === 'z-a') {
+          return 'Z → A';
+        }
+      }
+    }
+
+    return null;
+  };
+
+  private onSortMenuItemActivated = ({ item }: { item: any }) => {
+    const { editorView } = this.props;
+    const { state, dispatch } = editorView;
+    const table = findTable(state.selection);
+    const { targetCellPosition } = this.props;
+    if (!targetCellPosition || !table) {
+      return null;
+    }
+    const headerCell = state.doc.nodeAt(targetCellPosition);
+    if (!headerCell) {
+      return null;
+    }
+    const { tr } = state;
+    const map = TableMap.get(table.node);
+    const rect = map.findCell(targetCellPosition - table.start);
+    const sort = item.value.name === this.state.sort ? null : item.value.name;
+
+    if (sort) {
+      const rows: PMNode[] = [];
+      for (let i = 1; i < table.node.childCount; i++) {
+        const row = table.node.child(i);
+        rows.push(row);
+      }
+      rows.sort((rowA, rowB) => {
+        const cellA = rowA.child(rect.left);
+        const cellB = rowB.child(rect.left);
+        let valueA = getCellValue(cellA);
+        let valueB = getCellValue(cellB);
+        const isColumnOfNumbers = Number(valueA) && Number(valueB);
+        if (isColumnOfNumbers) {
+          valueA = Number(valueA);
+          valueB = Number(valueB);
+        }
+        if (sort === 'a-z') {
+          return valueA > valueB ? 1 : -1;
+        } else {
+          return valueA < valueB ? 1 : -1;
+        }
+      });
+
+      // header row
+      rows.unshift(table.node.child(0));
+
+      tr.replaceWith(
+        table.pos,
+        table.pos + table.node.nodeSize,
+        table.node.type.createChecked(table.node.attrs, rows, table.node.marks),
+      );
+    }
+
+    // update sort attr for all header cells (remove sort for all columns except the current one)
+    const columns = getCellsInRow(0)(state.selection);
+    if (columns) {
+      columns.forEach((cell, columnIndex) => {
+        tr.setNodeMarkup(cell.pos, cell.node.type, {
+          ...cell.node.attrs,
+          sort: columnIndex === rect.left ? sort : null,
+        });
+      });
+    }
+
+    dispatch(tr);
+    this.setState({ isSortMenuOpen: false, sort });
   };
 
   private onMenuItemActivated = ({ item }: { item: any }) => {
@@ -321,7 +506,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     toggleContextualMenu(state, dispatch);
     if (!isOpen) {
       this.setState({
-        isSubmenuOpen: false,
+        isBackgroundMenuOpen: false,
       });
     }
   };
@@ -331,7 +516,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       editorView: { state, dispatch },
     } = this.props;
     toggleContextualMenu(state, dispatch);
-    this.setState({ isSubmenuOpen: false });
+    this.setState({ isBackgroundMenuOpen: false });
   };
 
   private handleItemMouseEnter = ({ item }: { item: any }) => {
@@ -341,8 +526,14 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     } = this.props;
 
     if (item.value.name === 'background') {
-      if (!this.state.isSubmenuOpen) {
-        this.setState({ isSubmenuOpen: true });
+      if (!this.state.isBackgroundMenuOpen) {
+        this.setState({ isBackgroundMenuOpen: true });
+      }
+    }
+
+    if (item.value.name === 'sort') {
+      if (!this.state.isSortMenuOpen) {
+        this.setState({ isSortMenuOpen: true });
       }
     }
 
@@ -359,7 +550,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
 
   private handleItemMouseLeave = ({ item }: { item: any }) => {
     const { state, dispatch } = this.props.editorView;
-    if (item.value.name === 'background') {
+    if (item.value.name === 'background' || item.value.name === 'sort') {
       this.closeSubmenu();
     }
     if (
@@ -371,8 +562,8 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
   };
 
   private closeSubmenu = () => {
-    if (this.state.isSubmenuOpen) {
-      this.setState({ isSubmenuOpen: false });
+    if (this.state.isBackgroundMenuOpen || this.state.isSortMenuOpen) {
+      this.setState({ isBackgroundMenuOpen: false, isSortMenuOpen: false });
     }
   };
 

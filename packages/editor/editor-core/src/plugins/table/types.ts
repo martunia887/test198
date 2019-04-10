@@ -132,4 +132,6 @@ export const TableCssClassName = {
   FILTER_RANGE_WRAP: `${clPrefix}filter-range-wrap`,
   FILTER_RANGE_MINMAX_WRAP: `${clPrefix}filter-range-minmax-wrap`,
   FILTER_MENU_WRAP: `${clPrefix}filter-menu-wrap`,
+  SORT_SUBMENU: `${clPrefix}sort-menu-wrap`,
+  SORT_SUBMENU_LABEL: `${clPrefix}sort-menu-label`,
 };

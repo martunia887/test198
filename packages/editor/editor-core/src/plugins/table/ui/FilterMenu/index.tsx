@@ -227,7 +227,7 @@ export default class FilterMenu extends React.Component<
               {!searchValue && (
                 <Checkbox
                   value="select-all"
-                  label="select all"
+                  label="Select all"
                   isChecked={selectedOptions.length === options.length}
                   onChange={(event: any) => {
                     const isAllSelected = options
