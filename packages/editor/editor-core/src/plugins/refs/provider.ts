@@ -3,10 +3,10 @@ import { ADNode } from '@atlaskit/editor-common';
 export interface Reference {
   id: string;
   title: string;
-  columns?: {
+  columns?: Array<{
     id: string;
     title: string;
-  };
+  }>;
 }
 
 export interface ReferenceProvider {
