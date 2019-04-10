@@ -321,36 +321,52 @@ export default class FilterMenu extends React.Component<
       if (!cell) {
         return;
       }
-      nodes.push(((cell.firstChild!.content as any).content || [null])[0]);
+      if (cell.firstChild && cell.firstChild.content) {
+        const content = (cell.firstChild!.content as any).content;
+        if (content[0]) {
+          nodes.push(content[0]);
+        }
+      }
     });
 
-    return nodes.map((node: PMNode) => {
-      let label;
-      let value;
-      switch (node.type.name) {
-        case 'text':
-          label = value = node.textContent;
-          break;
-        case 'status':
-          label = (
-            <Status
-              text={node.attrs.text}
-              color={node.attrs.color}
-              localId={uuid()}
-            />
-          );
-          value = node.attrs.text;
-          break;
-        default:
-          label = value = node.textContent;
-          break;
-      }
-      return {
-        label,
-        value,
-        isSelected: !isFilteredOut(headerCell.attrs.filter, value),
-      };
-    });
+    if (nodes.length < cells.length) {
+      return null;
+    }
+
+    return (
+      nodes
+        .map((node: PMNode) => {
+          let label;
+          let value;
+          switch (node.type.name) {
+            case 'text':
+              label = value = node.textContent;
+              break;
+            case 'status':
+              label = (
+                <Status
+                  text={node.attrs.text}
+                  color={node.attrs.color}
+                  localId={uuid()}
+                />
+              );
+              value = node.attrs.text;
+              break;
+            default:
+              label = value = node.textContent;
+              break;
+          }
+          return {
+            label,
+            value,
+            isSelected: !isFilteredOut(headerCell.attrs.filter, value),
+          };
+        })
+        // filter out non-unique items
+        .filter((node, index, self) => {
+          return self.map(item => item.value).indexOf(node.value) === index;
+        })
+    );
   };
 
   private applyFilter = (filter: Array<string | number>) => {

@@ -4,19 +4,18 @@ import { Transaction } from 'prosemirror-state';
 import { TableMap } from 'prosemirror-tables';
 
 export const getCellValue = (cell: PMNode) => {
-  const node = cell.firstChild!.firstChild;
-  if (node) {
-    switch (node.type.name) {
-      case 'slider':
-        return node.attrs.value;
-      case 'status':
-        return node.attrs.text;
-      default:
-        return cell.textContent;
-    }
+  if (!cell.firstChild || !cell.firstChild.firstChild) {
+    return null;
   }
-
-  return cell.textContent;
+  const node = cell.firstChild.firstChild;
+  switch (node.type.name) {
+    case 'slider':
+      return node.attrs.value;
+    case 'status':
+      return node.attrs.text;
+    default:
+      return cell.textContent;
+  }
 };
 
 export const applyFormatting = (tr: Transaction) => {
