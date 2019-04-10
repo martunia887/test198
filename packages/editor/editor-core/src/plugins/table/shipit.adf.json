@@ -1,0 +1,143 @@
+{
+  "type": "table",
+  "attrs": {
+    "isNumberColumnEnabled": false,
+    "layout": "default",
+    "id": "e4458abb-cd45-4577-a5b8-97e2712da7b6",
+    "title": "OKR detail"
+  },
+  "content": [
+    {
+      "type": "tableRow",
+      "attrs": {
+        "isFiltered": false
+      },
+      "content": [
+        {
+          "type": "tableHeader",
+          "attrs": {},
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Project"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableCell",
+          "attrs": {},
+          "content": [
+            {
+              "type": "paragraph",
+              "content": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tableRow",
+      "attrs": {
+        "isFiltered": false
+      },
+      "content": [
+        {
+          "type": "tableHeader",
+          "attrs": {},
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Goal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableCell",
+          "attrs": {},
+          "content": [
+            {
+              "type": "paragraph",
+              "content": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tableRow",
+      "attrs": {
+        "isFiltered": false
+      },
+      "content": [
+        {
+          "type": "tableHeader",
+          "attrs": {},
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Status"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableCell",
+          "attrs": {},
+          "content": [
+            {
+              "type": "paragraph",
+              "content": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tableRow",
+      "attrs": {
+        "isFiltered": false
+      },
+      "content": [
+        {
+          "type": "tableHeader",
+          "attrs": {},
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "OKR"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "tableCell",
+          "attrs": {},
+          "content": [
+            {
+              "type": "paragraph",
+              "content": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { tableEditing } from 'prosemirror-tables';
 import { createTable } from 'prosemirror-utils';
-import { Node as PMNode } from 'prosemirror-model';
+import { Node as PMNode, Schema } from 'prosemirror-model';
 import { tableCellMinWidth } from '@atlaskit/editor-common';
 import { table, tableCell, tableHeader, tableRow } from '@atlaskit/adf-schema';
 
@@ -40,6 +40,8 @@ import {
 import { pluginKey as referencePluginKey } from '../refs/pm-plugins/main';
 import { QuickInsertItem } from '../quick-insert/types';
 import { insertSummaryTable } from './actions';
+import okrTable from './shipit.adf.json';
+import { processRawValue } from '../../utils';
 
 export const HANDLE_WIDTH = 6;
 
@@ -203,8 +205,9 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
           icon: () => (
             <IconLiveTable label={formatMessage(messages.summaryTable)} />
           ),
-          action() {
-            return false;
+          action(insert, state) {
+            const table = (state.schema as Schema).nodeFromJSON(okrTable);
+            return insert(table);
           },
           keywords: ['table'],
         },
