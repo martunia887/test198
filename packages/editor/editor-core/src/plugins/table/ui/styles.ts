@@ -703,21 +703,23 @@ export const tableFullPageEditorStyles = css`
       margin-top: -3px;
     }
 
-    div[contenteditable] {
-      width: calc(100% - 48px);
+    .pm-table-title {
+      width: calc(100% - 50px);
       position: absolute;
       top: 0;
       left: 48px;
-      height: 41px;
+      height: 39px;
       display: flex;
       align-items: center;
+      border: none;
+      font-size: inherit;
 
       &:focus, &:active {
         outline: 0px solid transparent;
       }
     }
   }
- 
+
   /* Sub menu (reference, formatting) */
   .${ClassName.MENU_WRAP} {
     background: white;
@@ -726,11 +728,11 @@ export const tableFullPageEditorStyles = css`
     padding: 10px;
     width: 220px;
     position: absolute;
- 
+
     &.${ClassName.FORMATTING_MENU_WRAP} {
       width: 320px;
     }
- 
+
     .${ClassName.MENU_TITLE} {
       text-align: center;
     }
@@ -744,7 +746,7 @@ export const tableFullPageEditorStyles = css`
     }
     .${ClassName.BUTTONS_WRAP} {
       text-align: right;
- 
+
       button + button {
         margin-left: 10px;
       }
@@ -762,7 +764,7 @@ export const tableFullPageEditorStyles = css`
       > button:last-child {
         margin-right: 0;
       }
- 
+
       button > span > span {
         margin: 0px !important;
         padding: 0px !important;

@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import rafSchedule from 'raf-schd';
 // import { findParentNodeOfType, getCellsInColumn } from 'prosemirror-utils';
 // import { traverse } from '@atlaskit/adf-utils';
 
@@ -127,36 +128,30 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
         const meta = tr.getMeta(pluginKey) || {};
         const data = meta.data || {};
 
-        if (tr.docChanged) {
-          const tableState = getTablePluginState(newState);
-          if (tableState && tableState.tableNode) {
-            const { id } = tableState.tableNode.attrs;
-            if (id) {
-              const refsPluginState = getRefsPluginState(newState);
-              if (refsPluginState.provider) {
-                refsPluginState.provider.updateTable(id, tableState.tableNode);
-              }
-            }
-            // const colRef = pluginState.pushRefs[id];
-            // if (colRef) {
-            //   const { schema, selection } = newState;
-            //   const cell = findParentNodeOfType(schema.nodes.tableCell)(
-            //     selection,
-            //   );
-            //   if (cell) {
-            //     const $pos = newState.doc.resolve(cell.pos);
-            //     const columnIndex = $pos.index($pos.depth);
-            //     const cells = getCellsInColumn(columnIndex)(selection);
-            //     if (cells && cells.length > 1) {
-            //       const header = cells[0];
-            //       if (colRef === header.node.attrs.id) {
-            //         console.log('Release the 🐙');
-            //       }
-            //     }
-            //   }
-            // }
-          }
-        }
+        // if (tr.docChanged) {
+        // const tableState = getTablePluginState(newState);
+
+        // if (tableState && tableState.tableNode) {
+        // const colRef = pluginState.pushRefs[id];
+        // if (colRef) {
+        //   const { schema, selection } = newState;
+        //   const cell = findParentNodeOfType(schema.nodes.tableCell)(
+        //     selection,
+        //   );
+        //   if (cell) {
+        //     const $pos = newState.doc.resolve(cell.pos);
+        //     const columnIndex = $pos.index($pos.depth);
+        //     const cells = getCellsInColumn(columnIndex)(selection);
+        //     if (cells && cells.length > 1) {
+        //       const header = cells[0];
+        //       if (colRef === header.node.attrs.id) {
+        //         console.log('Release the 🐙');
+        //       }
+        //     }
+        //   }
+        // }
+        // }
+        // }
 
         const { pushRefs, database } = data;
         switch (meta.action) {
@@ -210,7 +205,33 @@ export const createPlugin = (providerFactory: ProviderFactory) =>
         providerFactory.subscribe('referenceProvider', providerHandler as any);
       }
 
+      const updateTableDebounced = rafSchedule(
+        (refsPluginState: any, id: string, tableState: any) => {
+          refsPluginState.provider.updateTable(id, tableState.tableNode);
+        },
+      );
+
       return {
+        update(view, prevState) {
+          const prevTableState = getTablePluginState(prevState);
+          const tableState = getTablePluginState(view.state);
+          if (
+            tableState &&
+            prevTableState &&
+            tableState.editorHasFocus &&
+            tableState.tableRef &&
+            tableState.tableNode &&
+            prevTableState.tableNode !== tableState.tableNode
+          ) {
+            const { id } = tableState.tableNode.attrs;
+            if (id) {
+              const refsPluginState = getRefsPluginState(view.state);
+              if (refsPluginState.provider) {
+                updateTableDebounced(refsPluginState, id, tableState);
+              }
+            }
+          }
+        },
         destroy() {
           if (providerFactory) {
             // TODO: Fix type later. Promise<void> x void

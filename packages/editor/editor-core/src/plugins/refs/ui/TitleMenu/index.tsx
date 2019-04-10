@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
+import { findTable } from 'prosemirror-utils';
 import {
   Popup,
   akEditorFloatingOverlapPanelZIndex,
 } from '@atlaskit/editor-common';
 import { updateTitleTarget } from '../../actions';
 import { RefsCssClassName as ClassName } from '../../consts';
+import { getPluginState as getRefsPluginState } from '../../../refs/pm-plugins/main';
 
 export interface TitleMenuProps {
   editorView: EditorView;
@@ -93,14 +95,24 @@ export default class TitleMenu extends React.Component<
     if (!node) {
       return;
     }
-    dispatch(
-      state.tr.setNodeMarkup(nodePosition, node.type, {
-        ...node.attrs,
-        title: this.state.value,
-      }),
-    );
 
-    this.setState({ value: '' });
+    const tr = state.tr.setNodeMarkup(nodePosition, node.type, {
+      ...node.attrs,
+      title: this.state.value,
+    });
+
+    const refsState = getRefsPluginState(editorView.state);
+
+    if (refsState.provider) {
+      const { node: newTable } = findTable(tr.selection)!;
+      refsState.provider.updateTable(newTable.attrs.id, newTable);
+    }
+
+    dispatch(tr);
+
+    this.setState({
+      value: '',
+    });
     updateTitleTarget()(editorView.state, dispatch);
   };
 

@@ -233,7 +233,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
             onClick={this.showTitleMenu}
           >
             <IconLiveTable />
-            <div contentEditable={true}>{node.attrs.title}</div>
+            <div className="pm-table-title">{node.attrs.title}</div>
           </div>
         )}
 
