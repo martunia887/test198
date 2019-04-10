@@ -63,6 +63,7 @@ export enum ACTIONS {
   TOGGLE_REFERENCE_MENU,
   TOGGLE_FORMATTING_MENU,
   TOGGLE_FILTER_MENU,
+  LINK,
 }
 
 let isBreakoutEnabled: boolean | undefined;

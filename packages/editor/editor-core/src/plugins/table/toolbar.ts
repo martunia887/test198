@@ -1,5 +1,6 @@
 import { defineMessages } from 'react-intl';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
+import LinkIcon from '@atlaskit/icon/glyph/editor/link';
 
 import commonMessages from '../../messages';
 import { FloatingToolbarHandler } from '../floating-toolbar/types';
@@ -9,7 +10,7 @@ import {
   pluginKey as tableResizingPluginKey,
   ResizeState,
 } from './pm-plugins/table-resizing/index';
-import { hoverTable, clearHoverSelection } from './actions';
+import { hoverTable, clearHoverSelection, linkTable } from './actions';
 import {
   checkIfHeaderRowEnabled,
   checkIfHeaderColumnEnabled,
@@ -91,6 +92,14 @@ export const getToolbarConfig: FloatingToolbarHandler = (
               hidden: !pluginConfig.allowNumberColumn,
             },
           ],
+        },
+        {
+          type: 'button',
+          icon: LinkIcon,
+          onClick: linkTable,
+          selected: tableState.tableNode.attrs.id,
+          disabled: !!resizeState && !!resizeState.dragging,
+          title: 'Link',
         },
         {
           type: 'separator',

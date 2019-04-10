@@ -16,7 +16,6 @@ import { TableCssClassName as ClassName } from '../../types';
 import { pluginKey } from '../../pm-plugins/main';
 import { toggleReferenceMenu } from '../../actions';
 import withOuterListeners from '../../../../ui/with-outer-listeners';
-import { closestElement } from '../../../../utils';
 import { ReferenceProvider, Reference } from '../../../refs/provider';
 import { EditorState } from 'prosemirror-state';
 

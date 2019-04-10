@@ -51,7 +51,7 @@ import {
   compositionPlugin,
   analyticsPlugin,
   sliderPlugin,
-  uniqueIdsPlugin,
+  // uniqueIdsPlugin,
   refsPlugin,
   refsServerPlugin,
 } from '../plugins';
@@ -243,7 +243,7 @@ export default function createPluginsList(
     plugins.push(annotationPlugin);
   }
 
-  plugins.push(uniqueIdsPlugin);
+  // plugins.push(uniqueIdsPlugin);
   plugins.push(gapCursorPlugin);
   plugins.push(gridPlugin);
   plugins.push(submitEditorPlugin);

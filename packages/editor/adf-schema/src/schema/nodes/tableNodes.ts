@@ -18,7 +18,6 @@ import {
   T75,
   Y75,
 } from '../../utils/colors';
-import { uuid } from '../../utils';
 import { TableCellContent } from './doc';
 
 const akEditorTableNumberColumnWidth = 42;
@@ -294,7 +293,7 @@ export const table: any = {
           dom.getAttribute('data-number-column') === 'true' ? true : false,
         layout: dom.getAttribute('data-layout') || 'default',
         __autoSize: dom.getAttribute('data-autosize') === 'true' ? true : false,
-        id: uuid.generate(),
+        id: dom.getAttribute('data-id') || null,
         title: dom.getAttribute('data-title') || null,
       }),
     },
@@ -304,6 +303,7 @@ export const table: any = {
       'data-number-column': node.attrs.isNumberColumnEnabled,
       'data-layout': node.attrs.layout,
       'data-autosize': node.attrs.__autoSize,
+      'data-id': node.attrs.id,
     };
     return ['table', attrs, ['tbody', 0]];
   },

@@ -30,7 +30,7 @@ import {
   selectColumn as selectColumnTransform,
   selectRow as selectRowTransform,
 } from 'prosemirror-utils';
-import { TableLayout } from '@atlaskit/adf-schema';
+import { uuid, TableLayout } from '@atlaskit/adf-schema';
 import { getPluginState, pluginKey, ACTIONS } from './pm-plugins/main';
 import {
   checkIfHeaderRowEnabled,
@@ -983,4 +983,20 @@ export const insertSummaryTable = (
   });
 
   return table.createAndFill(undefined, tableRows);
+};
+
+export const linkTable: Command = (state, dispatch) => {
+  const { tr } = state;
+  const { node, pos } = findTable(state.selection)!;
+
+  tr.setNodeMarkup(pos, state.schema.nodes.table, {
+    ...node.attrs,
+    id: uuid.generate(),
+  });
+
+  if (dispatch) {
+    dispatch(tr);
+  }
+
+  return true;
 };

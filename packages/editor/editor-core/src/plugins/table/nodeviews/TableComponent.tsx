@@ -214,9 +214,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
 
     return (
       <div
-        style={{
-          width: this.state.tableContainerWidth,
-        }}
+        style={{ width: this.state.tableContainerWidth }}
         className={classnames(ClassName.TABLE_CONTAINER, {
           [ClassName.WITH_CONTROLS]: tableActive,
           'less-padding': width < akEditorMobileBreakoutPoint,
@@ -226,12 +224,14 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
         data-title={node.attrs.title}
         data-id={node.attrs.id}
       >
-        <div
-          className={classnames(ClassName.TABLE_TITLE)}
-          onClick={this.showTitleMenu}
-        >
-          {node.attrs.title}
-        </div>
+        {node.attrs.id && (
+          <div
+            className={classnames(ClassName.TABLE_TITLE)}
+            onClick={this.showTitleMenu}
+          >
+            {node.attrs.title}
+          </div>
+        )}
         {allowControls && rowControls}
         <div
           className={classnames(ClassName.TABLE_NODE_WRAPPER)}
