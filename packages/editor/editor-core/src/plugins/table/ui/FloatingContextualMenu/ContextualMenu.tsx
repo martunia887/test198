@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
+import { Selection } from 'prosemirror-state';
 import { splitCell, Rect, TableMap } from 'prosemirror-tables';
 import {
   hasParentNodeOfType,
@@ -429,6 +430,14 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       });
     }
 
+    const sel = Selection.findFrom(
+      state.doc.resolve(targetCellPosition),
+      1,
+      true,
+    );
+    if (sel) {
+      tr.setSelection(sel);
+    }
     dispatch(tr);
     this.setState({ isSortMenuOpen: false, sort });
   };

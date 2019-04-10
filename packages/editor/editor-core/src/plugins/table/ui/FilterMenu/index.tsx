@@ -148,6 +148,7 @@ export default class FilterMenu extends React.Component<
     const visibleOptions = options.filter(item =>
       searchValue ? item.value.indexOf(searchValue) > -1 : true,
     );
+    const step = min < 1 ? 0.1 : 10;
 
     return (
       <PopupWithOutsideListeners
@@ -193,7 +194,7 @@ export default class FilterMenu extends React.Component<
                   value={this.getRangeValue() || min}
                   min={min}
                   max={max}
-                  step={10}
+                  step={step}
                   onChange={this.handleOnSliderChange}
                 />
               </div>
