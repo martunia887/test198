@@ -38,7 +38,7 @@ import {
 import { findControlsHoverDecoration } from '../utils';
 import { fixTables } from '../transforms';
 import { TableCssClassName as ClassName } from '../types';
-import { applyFormatting, applyFilter } from '../utils';
+import { applyFormatting } from '../utils';
 
 export const pluginKey = new PluginKey('tablePlugin');
 
@@ -211,7 +211,7 @@ export const createPlugin = (
         return fixTables(handleCut(tr, oldState, newState));
       }
       if (transactions.find(tr => tr.docChanged)) {
-        return applyFilter(applyFormatting(fixTables(newState.tr)));
+        return applyFormatting(fixTables(newState.tr));
       }
     },
     view: (editorView: EditorView) => {

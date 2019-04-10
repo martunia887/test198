@@ -263,13 +263,7 @@ export interface HeaderCellAttributes extends CellAttributes {
     }>;
     marks: FormattingMarks[];
   };
-  filter?: {
-    rules: Array<{
-      condition: Condition;
-      value: string;
-      reference?: string;
-    }>;
-  };
+  filter?: { label: string; value: string }[];
 }
 
 export interface TableRowAttributes {

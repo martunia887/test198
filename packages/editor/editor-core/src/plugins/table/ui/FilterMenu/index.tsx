@@ -1,32 +1,53 @@
 import * as React from 'react';
+import uuid from 'uuid';
 import {
   findDomRefAtPos,
-  findCellRectClosestToPos,
-  getCellsInColumn,
+  findTable,
+  findParentNodeOfTypeClosestToPos,
 } from 'prosemirror-utils';
+import { TableMap } from 'prosemirror-tables';
+import { EditorView } from 'prosemirror-view';
+import { EditorState } from 'prosemirror-state';
+import { Node as PMNode } from 'prosemirror-model';
+import { Status } from '@atlaskit/status';
 import {
   Popup,
   akEditorFloatingOverlapPanelZIndex,
   akEditorTableToolbarSize,
 } from '@atlaskit/editor-common';
-import { uuid } from '@atlaskit/adf-schema';
-import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
-import Select from '@atlaskit/select';
-import Button from '@atlaskit/button';
-import { Checkbox } from '@atlaskit/checkbox';
-import TextField from '@atlaskit/field-text';
+import { CheckboxSelect } from '@atlaskit/select';
 import { TableCssClassName as ClassName } from '../../types';
 import { toggleFilterMenu } from '../../actions';
 import withOuterListeners from '../../../../ui/with-outer-listeners';
 import { closestElement } from '../../../../utils';
 import { contextualMenuTriggerSize } from '../styles';
-import { FilterMenuProps, Rule, FilterMenuState } from './types';
+import { getCellValue } from '../../utils';
 
+const DROPDOWN_WIDTH = 250;
 const PopupWithOutsideListeners = withOuterListeners(Popup);
 
 const getDefaultState = () => ({
-  rules: [],
+  filter: [],
 });
+
+export interface FilterMenuProps {
+  editorView: EditorView;
+  isOpen: boolean;
+  targetCellPosition?: number;
+  mountPoint?: HTMLElement;
+  boundariesElement?: HTMLElement;
+  scrollableElement?: HTMLElement;
+}
+
+export interface FilterMenuState {
+  filter: string[];
+}
+
+export interface Item {
+  label: string | React.ReactNode;
+  value: string;
+  isSelected: boolean;
+}
 
 export default class FilterMenu extends React.Component<
   FilterMenuProps,
@@ -49,7 +70,7 @@ export default class FilterMenu extends React.Component<
       const { filter } = cell.attrs;
       if (filter) {
         this.setState({
-          rules: filter.rules,
+          filter,
         });
       } else {
         this.setState(getDefaultState());
@@ -80,6 +101,11 @@ export default class FilterMenu extends React.Component<
       return null;
     }
 
+    const options = this.getCellsValues(editorView.state);
+    if (!options) {
+      return null;
+    }
+    const selectedOptions = options.filter(option => !option.isSelected);
     return (
       <PopupWithOutsideListeners
         alignX="right"
@@ -88,7 +114,7 @@ export default class FilterMenu extends React.Component<
         mountTo={mountPoint}
         offset={[-contextualMenuTriggerSize / 2, akEditorTableToolbarSize - 1]}
         fitHeight={200}
-        fitWidth={320}
+        fitWidth={DROPDOWN_WIDTH}
         boundariesElement={boundariesElement}
         scrollableElement={scrollableElement}
         zIndex={akEditorFloatingOverlapPanelZIndex}
@@ -98,112 +124,129 @@ export default class FilterMenu extends React.Component<
       >
         <div
           className={`${ClassName.MENU_WRAP} ${ClassName.FORMATTING_MENU_WRAP}`}
+          style={{ width: DROPDOWN_WIDTH }}
         >
-          <div className={`${ClassName.MENU_TITLE} ${ClassName.SECTION}`}>
-            Filtering
-          </div>
-          <div className={`${ClassName.MENU_DESCRIPTION} ${ClassName.SECTION}`}>
-            Choose the filtering condition for the current column
-          </div>
-          {this.state.rules.map(rule => (
-            <div key={rule.id} className={`${ClassName.SECTION}`}>
-              <div className={`${ClassName.RULE_WRAP}`}>
-                <div style={{ width: 165 }}>
-                  <Select
-                    options={CONDITION_ITEMS}
-                    placeholder="Condition"
-                    defaultValue={CONDITION_ITEMS.find(
-                      item => item.value === rule.condition,
-                    )}
-                    onChange={(item: any) =>
-                      this.handleOnChange(item.value, rule.id, 'condition')
-                    }
-                  />
-                </div>
-                <div style={{ width: 100, flex: 'initial' }}>
-                  <TextField
-                    isLabelHidden
-                    onChange={event =>
-                      this.handleOnChange(
-                        (event.target as HTMLInputElement).value,
-                        rule.id,
-                        'value',
-                      )
-                    }
-                    value={rule.value}
-                  />
-                </div>
-                <Button
-                  onClick={event => this.deleteRule(rule.id)}
-                  iconBefore={<EditorCloseIcon label="Detele rule" />}
-                />
-              </div>
-              <div className={`${ClassName.SECTION}`}>
-                <Checkbox
-                  label="Reference value"
-                  onChange={(event: any) =>
-                    this.handleOnChange(
-                      (event.target as HTMLInputElement).checked,
-                      rule.id,
-                      'useAsReference',
-                    )
-                  }
-                  isChecked={!!rule.useAsReference}
-                  value={!!rule.useAsReference}
-                />
-              </div>
-            </div>
-          ))}
-          <div className={ClassName.SECTION}>
-            <Button onClick={this.addNewRule} shouldFitContainer>
-              Add new rule
-            </Button>
-          </div>
-          <div className={ClassName.BUTTONS_WRAP}>
-            <Button onClick={this.dismiss}>Cancel</Button>
-            <Button appearance="primary" onClick={this.handleSave}>
-              Save
-            </Button>
-          </div>
+          <CheckboxSelect
+            className="checkbox-select"
+            classNamePrefix="filter"
+            options={options}
+            defaultValue={selectedOptions}
+            placeholder="Search"
+            onChange={this.handleOnChange}
+            autoFocus
+            menuIsOpen
+          />
         </div>
       </PopupWithOutsideListeners>
     );
   }
 
-  private handleOnChange = (
-    value: string | boolean,
-    ruleId: string,
-    fieldName: string,
-  ) => {
-    const rules: Rule[] = [];
-    this.state.rules.forEach(rule => {
-      const newRule: any = { ...rule };
-      if (rule.id === ruleId) {
-        newRule[fieldName] = value;
+  private getCellsValues = (state: EditorState): Item[] | null => {
+    const table = findTable(state.selection);
+    const { targetCellPosition } = this.props;
+    if (!targetCellPosition || !table) {
+      return null;
+    }
+
+    const map = TableMap.get(table.node);
+    const headerCell = state.doc.nodeAt(targetCellPosition);
+    if (!headerCell) {
+      return null;
+    }
+    const rect = map.findCell(targetCellPosition - table.start);
+    const cells = map.cellsInRect({
+      left: rect.left,
+      right: rect.left + 1,
+      top: 1,
+      bottom: map.height,
+    });
+    const nodes: PMNode[] = [];
+
+    // getting content of each cell
+    cells.forEach(cellPos => {
+      const cell = state.doc.nodeAt(cellPos + table.start);
+      if (!cell) {
+        return;
       }
-      rules.push(newRule);
+      nodes.push(((cell.firstChild!.content as any).content || [null])[0]);
     });
-    console.log({ rules });
-    this.setState({
-      rules,
+
+    return nodes.map((node: PMNode) => {
+      let label;
+      let value;
+      switch (node.type.name) {
+        case 'text':
+          label = value = node.textContent;
+          break;
+        case 'status':
+          label = (
+            <Status
+              text={node.attrs.text}
+              color={node.attrs.color}
+              localId={uuid()}
+            />
+          );
+          value = node.attrs.text;
+          break;
+        default:
+          label = value = node.textContent;
+          break;
+      }
+      return {
+        label,
+        value,
+        isSelected: doesCellValueMatchTheFilter(headerCell.attrs.filter, value),
+      };
     });
   };
 
-  private deleteRule = (ruleId: string) => {
-    this.setState({
-      rules: this.state.rules.filter(rule => rule.id !== ruleId),
+  private handleOnChange = (selectedItems: Item[]) => {
+    const { editorView } = this.props;
+    const { state, dispatch } = editorView;
+    const table = findTable(state.selection);
+    const { targetCellPosition } = this.props;
+    if (!targetCellPosition || !table) {
+      return null;
+    }
+    const headerCell = state.doc.nodeAt(targetCellPosition);
+    if (!headerCell) {
+      return null;
+    }
+    const { tr } = state;
+    const filter = selectedItems.map(item => item.value);
+    const map = TableMap.get(table.node);
+    const rect = map.findCell(targetCellPosition - table.start);
+    const cells = map.cellsInRect({
+      left: rect.left,
+      right: rect.left + 1,
+      top: 1,
+      bottom: map.height,
     });
-  };
+    cells.forEach(pos => {
+      const cellPos = pos + table.start;
+      const cell = state.doc.nodeAt(cellPos);
+      if (!cell) {
+        return;
+      }
+      const cellValue = getCellValue(cell);
+      const row = findParentNodeOfTypeClosestToPos(
+        tr.doc.resolve(cellPos),
+        state.schema.nodes.tableRow,
+      );
+      if (row) {
+        tr.setNodeMarkup(row.pos, row.node.type, {
+          ...row.node.attrs,
+          isFiltered: doesCellValueMatchTheFilter(filter, cellValue),
+        });
+      }
+    });
 
-  private addNewRule = () => {
-    this.setState({
-      rules: [
-        ...this.state.rules,
-        {
-          id: String(uuid.generate()),
-        },
-      ],
-    });
+    dispatch(
+      tr.setNodeMarkup(targetCellPosition, headerCell.type, {
+        ...headerCell.attrs,
+        filter,
+      }),
+    );
   };
 
   private dismiss = () => {
@@ -224,61 +267,20 @@ export default class FilterMenu extends React.Component<
     }
     this.dismiss();
   };
-
-  private handleSave = () => {
-    const { editorView } = this.props;
-    const { state, dispatch } = editorView;
-    const { selection } = state;
-    const rect = findCellRectClosestToPos(selection.$from);
-    if (!rect) {
-      return false;
-    }
-    const cells = getCellsInColumn(rect.left)(selection);
-    if (!cells) {
-      return;
-    }
-    // header cell
-    const { node, pos } = cells[0];
-    const { rules } = this.state;
-    const filter = {
-      rules,
-    };
-
-    dispatch(
-      state.tr.setNodeMarkup(pos, node.type, {
-        ...node.attrs,
-        filter,
-      }),
-    );
-
-    this.dismiss();
-    return true;
-  };
 }
 
-export const CONDITION_ITEMS = [
-  {
-    label: 'contains...',
-    value: 'contains',
-  },
-  {
-    label: 'does not contain...',
-    value: 'does_not_contain',
-  },
-  {
-    label: 'is...',
-    value: 'is',
-  },
-  {
-    label: 'is not...',
-    value: 'is_not',
-  },
-  {
-    label: 'is empty',
-    value: 'is_empty',
-  },
-  {
-    label: 'is not empty',
-    value: 'is_not_empty',
-  },
-];
+export const doesCellValueMatchTheFilter = (
+  filter: string[] | null,
+  cellValue: string,
+) => {
+  if (!filter) {
+    return false;
+  }
+  let isFiltered = filter.length ? true : false;
+  filter.forEach(filterValue => {
+    if (cellValue.indexOf(filterValue) > -1) {
+      isFiltered = false;
+    }
+  });
+  return isFiltered;
+};
