@@ -366,6 +366,8 @@ const cellAttrs = {
   id: { default: null },
   reference: { default: null },
   isFormatted: { default: false },
+  formatting: { default: null },
+  filter: { default: null },
 };
 
 export const tableCell = {
