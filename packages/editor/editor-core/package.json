@@ -73,6 +73,7 @@
     "@types/react-loadable": "^5.4.1",
     "classnames": "^2.2.5",
     "eventemitter2": "^4.1.0",
+    "firebase": "^5.9.3",
     "linkify-it": "^2.0.3",
     "markdown-it": "^8.4.0",
     "prop-types": "^15.5.10",
