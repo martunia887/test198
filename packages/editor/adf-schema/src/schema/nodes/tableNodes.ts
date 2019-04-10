@@ -383,7 +383,7 @@ export const toJSONTableCell = (node: PmNode) => ({
   attrs: (Object.keys(node.attrs) as Array<keyof CellAttributes>).reduce<
     Record<string, any>
   >((obj, key) => {
-    if (cellAttrs[key].default !== node.attrs[key]) {
+    if (cellAttrs[key] && cellAttrs[key].default !== node.attrs[key]) {
       obj[key] = node.attrs[key];
     }
 
