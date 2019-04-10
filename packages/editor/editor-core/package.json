@@ -38,6 +38,7 @@
     "@atlaskit/editor-json-transformer": "^5.0.2",
     "@atlaskit/editor-markdown-transformer": "^3.0.3",
     "@atlaskit/emoji": "^59.2.0",
+    "@atlaskit/field-range": "^6.0.2",
     "@atlaskit/field-text": "^8.0.1",
     "@atlaskit/icon": "^16.0.5",
     "@atlaskit/item": "^9.0.0",

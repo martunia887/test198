@@ -10,6 +10,11 @@ export const tableNewStyles = css`
   .${ClassName.ROW_CONTROLS_BUTTON_WRAP}.filtered {
     display: none;
   }
+  .${ClassName.FILTER_RANGE_WRAP}, .${ClassName.FILTER_RANGE_MINMAX_WRAP} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   /* Sub menu (reference, formatting) */
   .${ClassName.MENU_WRAP} {

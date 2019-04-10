@@ -7,7 +7,6 @@ import {
 } from 'prosemirror-utils';
 import { TableMap } from 'prosemirror-tables';
 import { EditorView } from 'prosemirror-view';
-import { EditorState } from 'prosemirror-state';
 import { Node as PMNode } from 'prosemirror-model';
 import { Status } from '@atlaskit/status';
 import {
@@ -15,6 +14,9 @@ import {
   akEditorFloatingOverlapPanelZIndex,
   akEditorTableToolbarSize,
 } from '@atlaskit/editor-common';
+import Button from '@atlaskit/button';
+import FieldText from '@atlaskit/field-text';
+import FieldRange from '@atlaskit/field-range';
 import { CheckboxSelect } from '@atlaskit/select';
 import { TableCssClassName as ClassName } from '../../types';
 import { toggleFilterMenu } from '../../actions';
@@ -28,7 +30,28 @@ const PopupWithOutsideListeners = withOuterListeners(Popup);
 
 const getDefaultState = () => ({
   filter: [],
+  editing: false,
 });
+
+const doesCellValueMatchTheFilter = (
+  filter: Array<string | number> | null,
+  cellValue: string,
+) => {
+  if (!filter) {
+    return false;
+  }
+  let isFiltered = filter.length ? true : false;
+  filter.forEach(filterValue => {
+    if (
+      (typeof filterValue === 'string' &&
+        cellValue.indexOf(filterValue) > -1) ||
+      (typeof filterValue === 'number' && Number(cellValue) >= filterValue)
+    ) {
+      isFiltered = false;
+    }
+  });
+  return isFiltered;
+};
 
 export interface FilterMenuProps {
   editorView: EditorView;
@@ -41,6 +64,7 @@ export interface FilterMenuProps {
 
 export interface FilterMenuState {
   filter: string[];
+  editing: boolean;
 }
 
 export interface Item {
@@ -70,6 +94,7 @@ export default class FilterMenu extends React.Component<
       const { filter } = cell.attrs;
       if (filter) {
         this.setState({
+          ...this.state,
           filter,
         });
       } else {
@@ -101,11 +126,19 @@ export default class FilterMenu extends React.Component<
       return null;
     }
 
-    const options = this.getCellsValues(editorView.state);
+    const options = this.getOptions();
     if (!options) {
       return null;
     }
-    const selectedOptions = options.filter(option => !option.isSelected);
+    const isColumnOfNumbers = !!options.filter(option =>
+      Number(option.value) ? true : false,
+    ).length;
+
+    const min = Math.min(...options.map(option => Number(option.value)));
+    const max = Math.max(...options.map(option => Number(option.value)));
+
+    console.log({ min, max });
+
     return (
       <PopupWithOutsideListeners
         alignX="right"
@@ -126,22 +159,73 @@ export default class FilterMenu extends React.Component<
           className={`${ClassName.MENU_WRAP} ${ClassName.FORMATTING_MENU_WRAP}`}
           style={{ width: DROPDOWN_WIDTH }}
         >
-          <CheckboxSelect
-            className="checkbox-select"
-            classNamePrefix="filter"
-            options={options}
-            defaultValue={selectedOptions}
-            placeholder="Search"
-            onChange={this.handleOnChange}
-            autoFocus
-            menuIsOpen
-          />
+          {isColumnOfNumbers ? (
+            <div>
+              <div style={{ marginBottom: '20px' }}>
+                <FieldText
+                  autoFocus
+                  placeholder="Search"
+                  isLabelHidden
+                  shouldFitContainer
+                  onChange={this.handleRangeOnChange}
+                />
+              </div>
+              <div className={`${ClassName.FILTER_RANGE_WRAP}`}>
+                <div>Range</div>
+                <Button onClick={this.handleOnEdit}>Edit</Button>
+              </div>
+              <div>
+                <FieldRange
+                  value={this.getRangeValue() || min}
+                  min={min}
+                  max={max}
+                  step={10}
+                  onChange={this.handleOnSliderChange}
+                />
+              </div>
+              <div className={`${ClassName.FILTER_RANGE_MINMAX_WRAP}`}>
+                <div>{min}</div>
+                <div>{max}</div>
+              </div>
+            </div>
+          ) : (
+            <CheckboxSelect
+              className="checkbox-select"
+              classNamePrefix="filter"
+              options={options}
+              defaultValue={options.filter(option => !option.isSelected)}
+              placeholder="Search"
+              onChange={this.handleOnChange}
+              autoFocus
+              menuIsOpen
+            />
+          )}
         </div>
       </PopupWithOutsideListeners>
     );
   }
 
-  private getCellsValues = (state: EditorState): Item[] | null => {
+  private dismiss = () => {
+    const { state, dispatch } = this.props.editorView;
+    toggleFilterMenu(state, dispatch);
+    this.setState(getDefaultState());
+  };
+
+  private handleClickOutside = (event: React.SyntheticEvent) => {
+    const target = event.target as HTMLElement;
+    if (
+      closestElement(target, `.${ClassName.MENU_WRAP}`) ||
+      target.getAttribute('role') === 'option' ||
+      !document.contains(target)
+    ) {
+      event.preventDefault();
+      return false;
+    }
+    this.dismiss();
+  };
+
+  private getOptions = (): Item[] | null => {
+    const { state } = this.props.editorView;
     const table = findTable(state.selection);
     const { targetCellPosition } = this.props;
     if (!targetCellPosition || !table) {
@@ -201,6 +285,11 @@ export default class FilterMenu extends React.Component<
   };
 
   private handleOnChange = (selectedItems: Item[]) => {
+    const filter = selectedItems.map(item => item.value);
+    this.applyFilter(filter);
+  };
+
+  private applyFilter = (filter: Array<string | number>) => {
     const { editorView } = this.props;
     const { state, dispatch } = editorView;
     const table = findTable(state.selection);
@@ -213,7 +302,6 @@ export default class FilterMenu extends React.Component<
       return null;
     }
     const { tr } = state;
-    const filter = selectedItems.map(item => item.value);
     const map = TableMap.get(table.node);
     const rect = map.findCell(targetCellPosition - table.start);
     const cells = map.cellsInRect({
@@ -249,38 +337,31 @@ export default class FilterMenu extends React.Component<
     );
   };
 
-  private dismiss = () => {
-    const { state, dispatch } = this.props.editorView;
-    toggleFilterMenu(state, dispatch);
-    this.setState(getDefaultState());
+  private handleOnEdit = () => {
+    this.setState({ editing: !this.state.editing });
   };
 
-  private handleClickOutside = (event: React.SyntheticEvent) => {
-    const target = event.target as HTMLElement;
-    if (
-      closestElement(target, `.${ClassName.MENU_WRAP}`) ||
-      target.getAttribute('role') === 'option' ||
-      !document.contains(target)
-    ) {
-      event.preventDefault();
-      return false;
+  private handleOnSliderChange = (value: number) => {
+    this.applyFilter([value]);
+  };
+
+  private handleRangeOnChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const value = Number((event.target as HTMLInputElement).value);
+    this.applyFilter([value]);
+  };
+
+  private getRangeValue = (): number | null => {
+    const { editorView } = this.props;
+    const { state } = editorView;
+    const table = findTable(state.selection);
+    const { targetCellPosition } = this.props;
+    if (!targetCellPosition || !table) {
+      return null;
     }
-    this.dismiss();
+    const headerCell = state.doc.nodeAt(targetCellPosition);
+    if (!headerCell) {
+      return null;
+    }
+    return headerCell.attrs.filter ? Number(headerCell.attrs.filter[0]) : null;
   };
 }
-
-export const doesCellValueMatchTheFilter = (
-  filter: string[] | null,
-  cellValue: string,
-) => {
-  if (!filter) {
-    return false;
-  }
-  let isFiltered = filter.length ? true : false;
-  filter.forEach(filterValue => {
-    if (cellValue.indexOf(filterValue) > -1) {
-      isFiltered = false;
-    }
-  });
-  return isFiltered;
-};
