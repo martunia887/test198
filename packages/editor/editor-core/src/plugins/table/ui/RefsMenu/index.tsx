@@ -140,7 +140,7 @@ export default class RefsMenu extends React.Component<
                 className={`${ClassName.MENU_DESCRIPTION} ${ClassName.SECTION}`}
               >
                 Choose the column on the {`"${this.getSelectedTable().title}"`}
-                table that youâ€™d like to look up
+                table that you'd like to look up
               </div>
               <div className={ClassName.SECTION}>
                 <Select
@@ -181,10 +181,7 @@ export default class RefsMenu extends React.Component<
 
   private handleClickOutside = (event: React.SyntheticEvent) => {
     const target = event.target as HTMLElement;
-    if (
-      closestElement(target, `.${ClassName.MENU_WRAP}`) ||
-      target.getAttribute('role') === 'option'
-    ) {
+    if (target.id.startsWith('react-select')) {
       event.preventDefault();
       return false;
     }
@@ -245,7 +242,7 @@ export default class RefsMenu extends React.Component<
     if (!this.state.tables) {
       return [];
     }
-    return toSelectItems([this.getSelectedTable().columns]);
+    return toSelectItems(this.getSelectedTable().columns);
   };
 
   private getSelectedTable = () => {
