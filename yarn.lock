@@ -9,10 +9,25 @@
     "@atlaskit/util-service-support" "^2.0.1"
     tslib "^1.7.1"
 
+"@atlaskit/analytics-next-types@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@atlaskit/analytics-next-types/-/analytics-next-types-4.0.1.tgz#e5aa085a1a4c59cf76cb10c8d6851c40c1c7aa8f"
+  integrity sha512-cedCxCkPY0R6XvlPOM1zzff3H54r9SLMr++8YNxg/fkcemsuxGS/8+vPWq8IxcvertQjs6w3u/t2rwPOVbloRQ==
+  dependencies:
+    "@atlaskit/type-helpers" "^3.0.1"
+
 "@atlaskit/analytics-next@^2.1.8":
   version "2.1.9"
   resolved "https://registry.yarnpkg.com/@atlaskit/analytics-next/-/analytics-next-2.1.9.tgz#5820e74b0d00aa7822f92554ad62bdaa30804fed"
   dependencies:
+    prop-types "^15.5.10"
+
+"@atlaskit/analytics-next@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@atlaskit/analytics-next/-/analytics-next-4.0.2.tgz#bfc117eda02aa384d9af10c8ea6087e857b3667c"
+  integrity sha512-P80C5KIfdat2JAJ/121EoCUDOR0B7zJS79KoOj6ZvvPP9JCnbCVESsuwGUE/P+0DNlMM6IuMmbIicGGXP/LmrA==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
     prop-types "^15.5.10"
 
 "@atlaskit/app-switcher@^8.0.1":
@@ -39,6 +54,20 @@
     "@atlaskit/item" "^7.0.4"
     "@atlaskit/theme" "^4.0.3"
     "@atlaskit/tooltip" "^10.3.1"
+
+"@atlaskit/button@^11.0.5":
+  version "11.0.8"
+  resolved "https://registry.yarnpkg.com/@atlaskit/button/-/button-11.0.8.tgz#baccbae800b84820e030ff4c7e871a16023a63c3"
+  integrity sha512-vEouoQGc2awJ3bs+ogatyf79NXGj9/Dop/efP6mYHAnF6l1adsezd15mi3063DTqztkvhPnyKTTBrIelacz24Q==
+  dependencies:
+    "@atlaskit/analytics-next" "^4.0.2"
+    "@atlaskit/analytics-next-types" "^4.0.1"
+    "@atlaskit/spinner" "10.0.4"
+    "@atlaskit/theme" "^8.1.4"
+    "@atlaskit/type-helpers" "^3.0.2"
+    "@babel/runtime" "^7.0.0"
+    "@types/react-router-dom" "^4.3.1"
+    tslib "^1.8.0"
 
 "@atlaskit/button@^8.2.2", "@atlaskit/button@^8.2.5":
   version "8.2.7"
@@ -85,6 +114,15 @@
     babel-runtime "^6.26.0"
     uuid "^3.1.0"
 
+"@atlaskit/icon@^16.0.6":
+  version "16.0.7"
+  resolved "https://registry.yarnpkg.com/@atlaskit/icon/-/icon-16.0.7.tgz#986e8be122117ca0951296ba5b89c65ed8837e1d"
+  integrity sha512-QuFPND7aay6k4NAMEvdMoLqVRW7tlsNhGhrt4ruz3Gm+Hm3pErNhpDhP3omegr2YHnbPVk/BtLVcEv2a9LIH2w==
+  dependencies:
+    "@atlaskit/theme" "^8.0.1"
+    "@babel/runtime" "^7.0.0"
+    uuid "^3.1.0"
+
 "@atlaskit/item@^7.0.4", "@atlaskit/item@^7.0.5", "@atlaskit/item@^7.0.8":
   version "7.0.8"
   resolved "https://registry.yarnpkg.com/@atlaskit/item/-/item-7.0.8.tgz#324dfb81ce5f7e17955b5044e5c461c6e5ced030"
@@ -124,6 +162,26 @@
     "@atlaskit/util-shared-styles" "^2.10.3"
     babel-runtime "^6.26.0"
 
+"@atlaskit/pagination@^10.0.2":
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/@atlaskit/pagination/-/pagination-10.0.2.tgz#5aff3ce0abce27b641110333690ffa3468f5336d"
+  integrity sha512-CGQNMltxrXkTOdW5ywMGnizzKiHz0QI0cVfAexx3OcSjH+kyN58PbkTVZJIyUPPiJFl/BanJhwt3T++v6fYyeQ==
+  dependencies:
+    "@atlaskit/analytics-next" "^4.0.2"
+    "@atlaskit/button" "^11.0.5"
+    "@atlaskit/icon" "^16.0.6"
+    "@atlaskit/theme" "^8.0.1"
+    "@babel/runtime" "^7.0.0"
+
+"@atlaskit/spinner@10.0.4":
+  version "10.0.4"
+  resolved "https://registry.yarnpkg.com/@atlaskit/spinner/-/spinner-10.0.4.tgz#5ec6cfbf1f25381b80aa1bde0120746adff0b943"
+  integrity sha512-QRXuF2BxEVRSy/aGyBkM07z6Jq8ESQkio70Cv2gHJKCTYHjmlK9xos6tH5+q+5qfeayr3GM+IZI3yV8uaWmpFg==
+  dependencies:
+    "@atlaskit/theme" "^8.1.4"
+    "@babel/runtime" "^7.0.0"
+    react-transition-group "^2.2.1"
+
 "@atlaskit/spinner@8.0.0", "@atlaskit/spinner@^8.0.0":
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/@atlaskit/spinner/-/spinner-8.0.0.tgz#bd075c7e001bc5f153a8897b82f2d77f1ddad715"
@@ -138,6 +196,15 @@
   dependencies:
     prop-types "^15.5.10"
 
+"@atlaskit/theme@^8.0.1", "@atlaskit/theme@^8.1.4":
+  version "8.1.4"
+  resolved "https://registry.yarnpkg.com/@atlaskit/theme/-/theme-8.1.4.tgz#ebe33b2ed53f438e7324cef65067dcadd0c91e56"
+  integrity sha512-fJObPb5RVuA5+db3I7uI+kXlDqhucruaq9I4Ky6zpXKjirXlfHEKy0z151KvdqqPD2eY6XDy8c6q3KcDI9b1og==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    exenv "^1.2.2"
+    prop-types "^15.5.10"
+
 "@atlaskit/tooltip@^10.2.1", "@atlaskit/tooltip@^10.3.1":
   version "10.3.1"
   resolved "https://registry.yarnpkg.com/@atlaskit/tooltip/-/tooltip-10.3.1.tgz#9d305b850929fca49e42f345df03b1e958692287"
@@ -146,6 +213,13 @@
     "@atlaskit/theme" "^4.0.4"
     react-deprecate "^0.1.0"
     react-transition-group "^2.2.1"
+
+"@atlaskit/type-helpers@^3.0.1", "@atlaskit/type-helpers@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@atlaskit/type-helpers/-/type-helpers-3.0.2.tgz#d6da9a3367c177fad05d159db330d2e388ede90e"
+  integrity sha512-7QHB0Uegq2PBtLiA1VTt3pxI+KQijXWLLvWKRM/4LxgQC/dWXYuiMm7HfIY88gGWarg3cpOVUZKMU4CvbfT/5g==
+  dependencies:
+    react "^16.4.0"
 
 "@atlaskit/util-common-test@^2.4.2":
   version "2.4.2"
