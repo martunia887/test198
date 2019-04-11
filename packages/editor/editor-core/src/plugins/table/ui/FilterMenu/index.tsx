@@ -29,7 +29,7 @@ const DROPDOWN_WIDTH = 220;
 const PopupWithOutsideListeners = withOuterListeners(Popup);
 
 const getDefaultState = () => ({
-  filter: [],
+  filter: null,
   editing: false,
   searchValue: '',
 });
@@ -66,7 +66,7 @@ export interface FilterMenuProps {
 }
 
 export interface FilterMenuState {
-  filter: string[];
+  filter: string[] | null;
   editing: boolean;
   searchValue: string;
 }
@@ -87,25 +87,25 @@ export default class FilterMenu extends React.Component<
   }
 
   // getting tableHeader cell filter
-  componentDidUpdate(nextProps: FilterMenuProps) {
-    const { targetCellPosition, isOpen, editorView } = nextProps;
-    const { state } = editorView;
-    if (targetCellPosition && isOpen !== this.props.isOpen) {
-      const cell = state.doc.nodeAt(targetCellPosition);
-      if (!cell) {
-        return;
-      }
-      const { filter } = cell.attrs;
-      if (filter) {
-        this.setState({
-          ...this.state,
-          filter,
-        });
-      } else {
-        this.setState(getDefaultState());
-      }
-    }
-  }
+  // componentDidUpdate(nextProps: FilterMenuProps) {
+  //   const { targetCellPosition, isOpen, editorView } = nextProps;
+  //   const { state } = editorView;
+  //   if (targetCellPosition && isOpen !== this.props.isOpen) {
+  //     const cell = state.doc.nodeAt(targetCellPosition);
+  //     if (!cell) {
+  //       return;
+  //     }
+  //     const { filter } = cell.attrs;
+  //     if (filter) {
+  //       this.setState({
+  //         ...this.state,
+  //         filter,
+  //       });
+  //     } else {
+  //       this.setState(getDefaultState());
+  //     }
+  //   }
+  // }
 
   render() {
     const {
