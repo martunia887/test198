@@ -42,6 +42,7 @@ import { QuickInsertItem } from '../quick-insert/types';
 import { insertSummaryTable } from './actions';
 import okrTable from './shipit.adf.json';
 import { processRawValue } from '../../utils';
+import { ReferenceProvider } from '../refs/provider';
 
 export const HANDLE_WIDTH = 6;
 
@@ -197,26 +198,34 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
   },
 
   pluginsOptions: {
-    quickInsert: ({ formatMessage }, setItems) => {
-      const customTableType: QuickInsertItem[] = [
-        {
-          title: 'OKR detail',
-          description: 'by Agnes Ro',
-          icon: () => (
-            <IconLiveTable label={formatMessage(messages.summaryTable)} />
-          ),
-          action(insert, state) {
-            const table = (state.schema as Schema).nodeFromJSON(okrTable);
-            return insert(table);
-          },
-          keywords: ['table'],
-        },
-      ];
+    quickInsert: ({ formatMessage }, setItems, providerFactory) => {
+      const providerHandler = async (
+        _: string,
+        $provider: Promise<ReferenceProvider>,
+      ) => {
+        const provider = await $provider;
+        provider.on('update:title', async () => {
+          const refs = await provider.getTableReferences();
+          setItems(
+            'alexIsKing',
+            refs.map(ref => {
+              return {
+                title: ref.title,
+                description: 'by Agnes Ro',
+                icon: () => (
+                  <IconLiveTable label={formatMessage(messages.summaryTable)} />
+                ),
+                action: (insert: any) => {
+                  return insert(provider.getTable(ref.id));
+                },
+                keywords: ['table'],
+              };
+            }),
+          );
+        });
+      };
 
-      setTimeout(() => {
-        console.log('setting new quickinsert value');
-        setItems('alexIsKing', customTableType);
-      }, 500);
+      providerFactory.subscribe('referenceProvider', providerHandler as any);
 
       return [
         {

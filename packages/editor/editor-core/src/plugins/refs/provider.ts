@@ -14,6 +14,8 @@ export interface TableReference {
   title: string;
 }
 
+type Events = 'add' | 'update' | 'update:title';
+
 export interface ReferenceProvider {
   getValues: (reference?: string) => Promise<PmNode[]>;
   getReferences: () => Promise<Reference[]>;
@@ -22,5 +24,7 @@ export interface ReferenceProvider {
   getTableReferences: () => Promise<Array<TableReference>>;
   addTable: (table: PmNode) => boolean;
   updateTable: (tableId: string, table: PmNode) => boolean;
-  getTable: (tableId: string) => Promise<PmNode>;
+  getTable: (tableId: string) => PmNode;
+
+  on: (eventName: Events, callback: Function) => void;
 }

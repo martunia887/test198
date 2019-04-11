@@ -3,8 +3,13 @@ import { uuid } from '@atlaskit/adf-schema';
 import { ReferenceProvider } from '../../src/plugins/refs/provider';
 
 const mem: { [key: string]: PmNode } = {};
+const handlers = { 'update:title': [] };
 
 const referenceProvider: ReferenceProvider = {
+  on: (eventName, callback) => {
+    (handlers as any)[eventName].push(callback);
+  },
+
   getTableReferences: async () => {
     return Object.keys(mem).map(id => ({
       id,
@@ -28,13 +33,17 @@ const referenceProvider: ReferenceProvider = {
     );
 
     if (mem[tableId]) {
+      const oldTable = mem[tableId];
       mem[tableId] = table;
+      if (oldTable.attrs.title !== table.attrs.title) {
+        handlers['update:title'].forEach((fn: any) => fn());
+      }
       return true;
     }
     return false;
   },
 
-  getTable: async (tableId: string) => {
+  getTable: (tableId: string) => {
     return mem[tableId];
   },
 

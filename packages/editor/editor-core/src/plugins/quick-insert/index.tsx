@@ -95,12 +95,13 @@ const processItems = (
   items: Array<QuickInsertHandler>,
   intl: InjectedIntl,
   setItems: SetQuickInsertItems,
+  providerFactory: ProviderFactory,
 ) => {
   if (!itemsCache[intl.locale]) {
     itemsCache[intl.locale] = items.reduce(
       (acc: Array<QuickInsertItem>, item) => {
         if (typeof item === 'function') {
-          return acc.concat(item(intl, setItems));
+          return acc.concat(item(intl, setItems, providerFactory));
         }
         return acc.concat(item);
       },
@@ -212,6 +213,7 @@ function quickInsertPluginFactory(
                   view.dispatch,
                 );
               },
+              providerFactory,
             );
 
             setItems(mergeExtraItems(items, extraItems))(

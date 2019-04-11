@@ -1,6 +1,7 @@
 import { InjectedIntl } from 'react-intl';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { Node } from 'prosemirror-model';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { TypeAheadItem } from '../type-ahead/types';
 
 export type QuickInsertActionInsert = (
@@ -32,6 +33,7 @@ export type QuickInsertHandler =
   | ((
       intl: InjectedIntl,
       setItems: SetQuickInsertItems,
+      providerFactory: ProviderFactory,
     ) => Array<QuickInsertItem>);
 
 export type IconProps = {
