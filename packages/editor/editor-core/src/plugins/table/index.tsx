@@ -48,6 +48,7 @@ import { insertSummaryTable } from './actions';
 import okrTable from './shipit.adf.json';
 import { processRawValue } from '../../utils';
 import { ReferenceProvider } from '../refs/provider';
+import { EditorState } from 'prosemirror-state';
 
 export const HANDLE_WIDTH = 6;
 
@@ -220,10 +221,15 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
                 icon: () => (
                   <IconLiveTable label={formatMessage(messages.summaryTable)} />
                 ),
-                action: (insert: any) => {
+                action: (insert: any, state: EditorState<any>) => {
                   const table = provider.getTable(ref.id);
-                  const newTable = table.copy(table.content);
-                  newTable.attrs.id = uuid.generate();
+                  const newTable = state.schema.nodes.table.createChecked(
+                    {
+                      ...table.attrs,
+                      id: uuid.generate(),
+                    },
+                    table.content,
+                  );
                   provider.addTable(newTable);
                   return insert(newTable);
                 },
