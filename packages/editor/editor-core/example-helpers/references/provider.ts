@@ -47,6 +47,10 @@ const referenceProvider: ReferenceProvider = {
     return mem[tableId];
   },
 
+  getTables: () => {
+    return Object.keys(mem).map(k => mem[k]);
+  },
+
   getReferences: () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {

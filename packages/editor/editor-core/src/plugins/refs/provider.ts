@@ -25,6 +25,7 @@ export interface ReferenceProvider {
   addTable: (table: PmNode) => boolean;
   updateTable: (tableId: string, table: PmNode) => boolean;
   getTable: (tableId: string) => PmNode;
+  getTables: () => Array<PmNode>;
 
   on: (eventName: Events, callback: Function) => void;
 }
