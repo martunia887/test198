@@ -38,12 +38,10 @@ const isFilteredOut = (
   filter: Array<string | number> | null,
   cellValue: string,
 ) => {
-  if (!filter) {
-    return false;
-  }
-  if (!filter.length) {
+  if (!filter || !filter.length) {
     return true;
   }
+
   let isFiltered = true;
   filter.forEach(filterValue => {
     if (
@@ -133,7 +131,7 @@ export default class FilterMenu extends React.Component<
     }
 
     let options = this.getOptions();
-    console.log({ options });
+
     if (!options) {
       return null;
     }
@@ -150,7 +148,7 @@ export default class FilterMenu extends React.Component<
     const visibleOptions = options.filter(item =>
       searchValue ? item.value.indexOf(searchValue) > -1 : true,
     );
-    console.log({ visibleOptions });
+
     const step = min < 1 ? 0.1 : 10;
 
     return (
@@ -194,7 +192,7 @@ export default class FilterMenu extends React.Component<
               </div>
               <div>
                 <FieldRange
-                  value={this.getRangeValue() || min}
+                  value={this.getRangeValue() || max}
                   min={min}
                   max={max}
                   step={step}
@@ -407,7 +405,7 @@ export default class FilterMenu extends React.Component<
       if (row) {
         tr.setNodeMarkup(row.pos, row.node.type, {
           ...row.node.attrs,
-          isFiltered: isFilteredOut(filter, cellValue),
+          isFiltered: !isFilteredOut(filter, cellValue),
         });
       }
     });
