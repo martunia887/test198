@@ -3,7 +3,7 @@ import { uuid } from '@atlaskit/adf-schema';
 import { ReferenceProvider } from '../../src/plugins/refs/provider';
 
 const mem: { [key: string]: PmNode } = {};
-const handlers = { 'update:title': [] };
+const handlers = { 'update:title': [], update: [] };
 
 const referenceProvider: ReferenceProvider = {
   on: (eventName, callback) => {
@@ -37,7 +37,10 @@ const referenceProvider: ReferenceProvider = {
       mem[tableId] = table;
       if (oldTable.attrs.title !== table.attrs.title) {
         handlers['update:title'].forEach((fn: any) => fn());
+        return true;
       }
+
+      handlers['update'].forEach((fn: any) => fn());
       return true;
     }
     return false;

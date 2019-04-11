@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { tableEditing } from 'prosemirror-tables';
 import { createTable } from 'prosemirror-utils';
-import { Node as PMNode, Schema } from 'prosemirror-model';
 import { tableCellMinWidth } from '@atlaskit/editor-common';
-import { table, tableCell, tableHeader, tableRow } from '@atlaskit/adf-schema';
+import {
+  table,
+  tableCell,
+  tableHeader,
+  tableRow,
+  uuid,
+} from '@atlaskit/adf-schema';
 
 import LayoutButton from './ui/LayoutButton';
 import { EditorPlugin } from '../../types';
@@ -216,7 +221,11 @@ const tablesPlugin = (options?: PluginConfig | boolean): EditorPlugin => ({
                   <IconLiveTable label={formatMessage(messages.summaryTable)} />
                 ),
                 action: (insert: any) => {
-                  return insert(provider.getTable(ref.id));
+                  const table = provider.getTable(ref.id);
+                  const newTable = table.copy(table.content);
+                  newTable.attrs.id = uuid.generate();
+                  provider.addTable(newTable);
+                  return insert(newTable);
                 },
                 keywords: ['table'],
               };
