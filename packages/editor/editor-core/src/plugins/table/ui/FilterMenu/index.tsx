@@ -38,7 +38,7 @@ const isFilteredOut = (
   filter: Array<string | number> | null,
   cellValue: string,
 ) => {
-  if (!filter || !filter.length) {
+  if (!filter) {
     return true;
   }
 
@@ -286,10 +286,14 @@ export default class FilterMenu extends React.Component<
 
   private toggleCheckbox = (selectedOptions: string[], optionValue: string) => {
     let filter;
+
     if (selectedOptions.indexOf(optionValue) > -1) {
       filter = selectedOptions.filter(value => value !== optionValue);
     } else {
       filter = [...selectedOptions, optionValue];
+    }
+    if (!filter.length) {
+      filter = null;
     }
     this.applyFilter(filter);
   };
@@ -370,7 +374,7 @@ export default class FilterMenu extends React.Component<
     );
   };
 
-  private applyFilter = (filter: Array<string | number>) => {
+  private applyFilter = (filter: Array<string | number> | null) => {
     const { editorView } = this.props;
     const { state, dispatch } = editorView;
     const table = findTable(state.selection);
@@ -405,7 +409,7 @@ export default class FilterMenu extends React.Component<
       if (row) {
         tr.setNodeMarkup(row.pos, row.node.type, {
           ...row.node.attrs,
-          isFiltered: !isFilteredOut(filter, cellValue),
+          isFiltered: filter ? isFilteredOut(filter, cellValue) : false,
         });
       }
     });
