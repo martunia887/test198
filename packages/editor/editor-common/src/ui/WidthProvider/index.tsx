@@ -42,7 +42,7 @@ export class WidthProvider extends React.Component<WidthProviderProps, {}> {
         >
           {width => {
             // TODO: add rafSchedule here
-            if (width !== undefined) {
+            if (width) {
               return (
                 <Provider value={createWidthContext(width)}>
                   {this.props.children}

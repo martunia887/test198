@@ -31,6 +31,14 @@ export type Logger = {
 export type ReferralContextIdentifiers = {
   searchReferrerId: string;
   currentContentId: string;
+  currentContainerId?: string;
+};
+
+export type JiraApplicationPermission = {
+  hasCoreAccess: boolean;
+  hasSoftwareAccess: boolean;
+  hasServiceDeskAccess: boolean;
+  hasOpsAccess: boolean;
 };
 
 export type AdvancedSearchEvent = {
@@ -144,6 +152,12 @@ export interface Props {
    * controls where to retrieve prequery results either from aggregator or directly from the product
    */
   enablePreQueryFromAggregator?: boolean;
+
+  /**
+   * detemrine jira application permission like software or servicedesk acess
+   * optional because it is passed only for jira
+   */
+  appPermission?: JiraApplicationPermission;
 }
 
 /**
@@ -252,6 +266,7 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
               logger,
               disableJiraPreQueryPeopleSearch,
               enablePreQueryFromAggregator,
+              appPermission,
             } = this.props;
 
             return (
@@ -268,6 +283,7 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
                 logger={logger}
                 onAdvancedSearch={this.onAdvancedSearch}
                 enablePreQueryFromAggregator={enablePreQueryFromAggregator}
+                appPermission={appPermission}
               />
             );
           }}
