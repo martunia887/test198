@@ -18,6 +18,7 @@ export { default as hyperlinkPlugin } from './hyperlink';
 export { default as imageUploadPlugin } from './image-upload';
 export { default as insertBlockPlugin } from './insert-block';
 export { default as jiraIssuePlugin } from './jira-issue';
+export { default as colourPickerPlugin } from './colour-picker';
 export { default as layoutPlugin } from './layout';
 export { default as listsPlugin } from './lists';
 export { default as macroPlugin } from './macro';

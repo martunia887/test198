@@ -6,6 +6,7 @@ import {
   blockTypePlugin,
   clearMarksOnChangeToEmptyDocumentPlugin,
   codeBlockPlugin,
+  colourPickerPlugin,
   collabEditPlugin,
   confluenceInlineComment,
   datePlugin,
@@ -248,6 +249,10 @@ export default function createPluginsList(
 
   if (props.appearance !== 'mobile') {
     plugins.push(quickInsertPlugin);
+  }
+
+  if (props.allowColourPicker) {
+    plugins.push(colourPickerPlugin);
   }
 
   return plugins;

@@ -165,6 +165,9 @@ export interface EditorProps {
   // Enable indentation support for `heading` and `paragraph`
   allowIndentation?: boolean;
 
+  // Enable colour picker widget support for hex code colours. eg. `#ff0000`
+  allowColourPicker?: boolean;
+
   // Set to enable the quick insert menu i.e. '/' key trigger.
   // You can also provide your own insert menu options that will be shown in addition to the enabled
   // editor features e.g. Confluence uses this to provide its macros.
