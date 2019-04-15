@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import assert from 'assert';
 import { EditorView } from 'prosemirror-view';
 import { SmartMediaEditor } from '@atlaskit/media-editor';
 import { ProviderFactory } from '@atlaskit/editor-common';

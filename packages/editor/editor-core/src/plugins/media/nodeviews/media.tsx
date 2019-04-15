@@ -14,7 +14,7 @@ import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   Card,
   CardDimensions,
-  CardView,
+  CardLoading,
   CardEventHandler,
   CardOnClickCallback,
 } from '@atlaskit/media-card';
@@ -117,7 +117,7 @@ class MediaNode extends Component<MediaNodeProps & ImageLoaderProps> {
       : true;
 
     if (type !== 'external' && !isMobileReady) {
-      return <CardView status="loading" dimensions={cardDimensions} />;
+      return <CardLoading dimensions={cardDimensions} />;
     }
 
     const identifier: Identifier =

@@ -1,3 +1,8 @@
+jest.mock('uuid/v4', () => ({
+  __esModule: true, // this property makes it work
+  default: jest.fn(),
+}));
+
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import {
@@ -6,7 +11,6 @@ import {
   expectToEqual,
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
-import * as uuid from 'uuid';
 import { Shortcut } from '@atlaskit/media-ui';
 import ModalDialog from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
@@ -73,8 +77,7 @@ describe('Smart Media Editor', () => {
       />,
     );
 
-    jest
-      .spyOn(uuid, 'v4')
+    (uuidV4 as jest.Mock<{}>)
       .mockReturnValueOnce('uuid1')
       .mockReturnValueOnce('uuid2')
       .mockReturnValueOnce('uuid3')
@@ -82,6 +85,7 @@ describe('Smart Media Editor', () => {
   });
 
   afterEach(() => {
+    (uuidV4 as jest.Mock<{}>).mockReset();
     jest.restoreAllMocks();
   });
 

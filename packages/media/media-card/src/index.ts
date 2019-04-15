@@ -14,13 +14,6 @@ import { MediaViewerDataSource } from '@atlaskit/media-viewer';
 // the only components we expose to consumers is Card and CardView
 export { default as Card } from './root/card/cardLoader';
 
-export { CardView } from './root/cardViewLoader';
-
-export {
-  CardViewState,
-  CardViewOwnProps as CardViewProps,
-} from './root/cardView';
-
 export * from './actions';
 
 export type CardStatus =
@@ -144,5 +137,5 @@ export interface CardState {
   error?: Error;
 }
 
-export { defaultImageCardDimensions } from './utils';
+export { defaultImageCardDimensions, CardLoading, CardError } from './utils';
 export { ImageResizeMode } from '@atlaskit/media-client';

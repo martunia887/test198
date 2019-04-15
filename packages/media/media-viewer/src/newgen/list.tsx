@@ -3,8 +3,6 @@ import { WithMediaClientProps, Identifier } from '@atlaskit/media-client';
 import { ItemViewer } from './item-viewer';
 import { MediaViewerFeatureFlags } from './domain';
 import { HeaderWrapper, hideControlsClassName, ListWrapper } from './styled';
-import { getSelectedIndex } from './utils';
-import ErrorMessage, { createError } from './error';
 import { Navigation } from './navigation';
 import Header from './header';
 
@@ -31,6 +29,7 @@ export class List extends React.Component<Props, State> {
 
   render() {
     const { items } = this.props;
+
     return this.renderContent(items);
   }
 
@@ -38,34 +37,30 @@ export class List extends React.Component<Props, State> {
     const { mediaClient, onClose, featureFlags, showControls } = this.props;
     const { selectedItem } = this.state;
 
-    if (getSelectedIndex(items, selectedItem) < 0) {
-      return <ErrorMessage error={createError('idNotFound')} />;
-    } else {
-      return (
-        <ListWrapper>
-          <HeaderWrapper className={hideControlsClassName}>
-            <Header
-              mediaClient={mediaClient}
-              identifier={selectedItem}
-              onClose={onClose}
-            />
-          </HeaderWrapper>
-          <ItemViewer
-            featureFlags={featureFlags}
+    return (
+      <ListWrapper>
+        <HeaderWrapper className={hideControlsClassName}>
+          <Header
             mediaClient={mediaClient}
             identifier={selectedItem}
-            showControls={showControls}
             onClose={onClose}
-            previewCount={this.state.previewCount}
           />
-          <Navigation
-            items={items}
-            selectedItem={selectedItem}
-            onChange={this.onNavigationChange}
-          />
-        </ListWrapper>
-      );
-    }
+        </HeaderWrapper>
+        <ItemViewer
+          featureFlags={featureFlags}
+          mediaClient={mediaClient}
+          identifier={selectedItem}
+          showControls={showControls}
+          onClose={onClose}
+          previewCount={this.state.previewCount}
+        />
+        <Navigation
+          items={items}
+          selectedItem={selectedItem}
+          onChange={this.onNavigationChange}
+        />
+      </ListWrapper>
+    );
   }
 
   onNavigationChange = (selectedItem: Identifier) => {

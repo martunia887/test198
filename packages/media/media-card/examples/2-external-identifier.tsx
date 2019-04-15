@@ -7,7 +7,7 @@ import {
 } from '@atlaskit/media-test-helpers';
 import { MediaClientConfigContext } from '@atlaskit/media-core';
 import { ExternalImageIdentifier } from '@atlaskit/media-client';
-import { Card, CardView } from '../src';
+import { Card } from '../src';
 import { ExternalIdentifierWrapper } from '../example-helpers/styled';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
@@ -38,10 +38,6 @@ class Example extends Component {
           <div>
             <h2>File identifier</h2>
             <Card identifier={imageFileId} />
-          </div>
-          <div>
-            <h2>CardView</h2>
-            <CardView status="complete" dataURI={atlassianLogoUrl} />
           </div>
         </MediaClientConfigContext.Provider>
       </ExternalIdentifierWrapper>

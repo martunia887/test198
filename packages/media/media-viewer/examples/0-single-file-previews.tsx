@@ -25,15 +25,13 @@ import {
 } from '../example-helpers';
 import { MediaViewer } from '../src';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
 import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 
-const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
-  const { payload } = analyticsEvent;
-  console.log('EVENT:', payload);
+const handleEvent = (/*analyticsEvent: UIAnalyticsEventInterface*/) => {
+  // instrument here...
 };
 
 export type State = {

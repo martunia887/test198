@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CardLoading } from '../../utils/cardLoading';
+import { CardLoading } from '../../utils/lightCards';
 import {
   withMediaClient,
   WithOptionalMediaClientProps,

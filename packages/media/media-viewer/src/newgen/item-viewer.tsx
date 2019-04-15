@@ -14,7 +14,7 @@ import { VideoViewer } from './viewers/video';
 import { DocViewer } from './viewers/doc';
 import { Spinner } from './loading';
 import { Subscription } from 'rxjs/Subscription';
-import * as deepEqual from 'deep-equal';
+import deepEqual from 'deep-equal';
 import ErrorMessage, {
   createError,
   MediaViewerError,
@@ -105,6 +105,20 @@ export class ItemViewerBase extends React.Component<Props, State> {
     });
   };
 
+  private onCanPlay = (fileState: FileState) => () => {
+    if (fileState.status === 'processed') {
+      this.fireAnalytics(mediaFileLoadSucceededEvent(fileState));
+    }
+  };
+
+  private onError = (fileState: FileState) => () => {
+    if (fileState.status === 'processed') {
+      this.fireAnalytics(
+        mediaFileLoadFailedEvent(fileState.id, 'Playback failed', fileState),
+      );
+    }
+  };
+
   private renderFileState(item: FileState) {
     if (item.status === 'error') {
       return this.renderError('previewFailed', item);
@@ -137,6 +151,8 @@ export class ItemViewerBase extends React.Component<Props, State> {
           <AudioViewer
             showControls={showControls}
             featureFlags={featureFlags}
+            onCanPlay={this.onCanPlay(item)}
+            onError={this.onError(item)}
             {...viewerProps}
           />
         );
@@ -145,6 +161,8 @@ export class ItemViewerBase extends React.Component<Props, State> {
           <VideoViewer
             showControls={showControls}
             featureFlags={featureFlags}
+            onCanPlay={this.onCanPlay(item)}
+            onError={this.onError(item)}
             {...viewerProps}
           />
         );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { Filmstrip, FilmstripView, FilmstripProps, FilmstripItem } from '../..';
-import { Card } from '@atlaskit/media-card';
+import { Card, CardLoading } from '@atlaskit/media-card';
 import { Identifier } from '@atlaskit/media-client';
 
 describe('<Filmstrip />', () => {

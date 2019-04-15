@@ -9,7 +9,7 @@ import {
   isExternalImageIdentifier,
 } from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
-import * as deepEqual from 'deep-equal';
+import deepEqual from 'deep-equal';
 import { messages, toHumanReadableMediaSize } from '@atlaskit/media-ui';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { Outcome } from './domain';

@@ -3,6 +3,11 @@ jest.mock('../../../util/getPreviewFromImage');
 
 import { AuthProvider, MediaClientConfig, Auth } from '@atlaskit/media-core';
 
+jest.mock('uuid/v4', () => ({
+  __esModule: true, // this property makes it work
+  default: jest.fn().mockReturnValue('some-scope'),
+}));
+
 import {
   UploadableFile,
   MediaClient,
@@ -10,7 +15,7 @@ import {
   FileState,
 } from '@atlaskit/media-client';
 import { TouchedFiles } from '@atlaskit/media-client';
-import * as uuid from 'uuid';
+import uuidV4 from 'uuid/v4';
 import { asMock, fakeMediaClient } from '@atlaskit/media-test-helpers';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs';
@@ -125,8 +130,7 @@ describe('UploadService', () => {
     (getPreviewModule.getPreviewFromBlob as any).mockReturnValue(
       Promise.resolve(),
     );
-    jest
-      .spyOn(uuid, 'v4')
+    (uuidV4 as jest.Mock<{}>)
       .mockReturnValueOnce('uuid1')
       .mockReturnValueOnce('uuid2')
       .mockReturnValueOnce('uuid3')

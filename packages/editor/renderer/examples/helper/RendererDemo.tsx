@@ -28,7 +28,7 @@ import {
   RendererAppearance,
 } from '../../src/ui/Renderer';
 
-import { AkProfileClient, modifyResponse } from '@atlaskit/profilecard';
+import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
 
 import { EmailSerializer, renderDocument, TextSerializer } from '../../src';
 
@@ -37,7 +37,7 @@ import { MediaClientConfigContext } from '@atlaskit/media-core';
 
 const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;
 const MockProfileClient = getMockProfileClientUtil(
-  AkProfileClient,
+  ProfileClient,
   modifyResponse,
 );
 
@@ -303,7 +303,7 @@ export default class RendererDemo extends React.Component<
     }
   }
 
-  private toggleTruncated(e: React.MouseEvent<HTMLButtonElement>) {
+  private toggleTruncated(e: React.MouseEvent<HTMLElement>) {
     this.setState(prevState => ({
       truncated: !prevState.truncated,
     }));
@@ -352,7 +352,7 @@ export default class RendererDemo extends React.Component<
           <Button
             appearance={'link'}
             spacing={'none'}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+            onClick={(e: React.MouseEvent<HTMLElement>) =>
               this.toggleTruncated(e)
             }
           >

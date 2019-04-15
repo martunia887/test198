@@ -9,6 +9,7 @@ import { ReactRenderer } from '@atlaskit/renderer';
 import { colors } from '@atlaskit/theme';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { MediaClientConfigContext } from '@atlaskit/media-core';
+import { AtlaskitThemeProvider } from '@atlaskit/theme';
 
 import enMessages from '../src/i18n/en';
 import languages from '../src/i18n/languages';
@@ -61,6 +62,11 @@ const Controls = styled.div`
   button {
     margin-left: 1em;
   }
+
+  .theme-select {
+    margin-left: 1em;
+    width: 140px;
+  }
 `;
 
 const appearanceOptions = [
@@ -94,6 +100,13 @@ const docs = [
   { label: 'Example document', value: 'example-document.ts' },
   { label: 'With huge table', value: 'example-doc-with-huge-table.ts' },
   { label: 'With table', value: 'example-doc-with-table.ts' },
+];
+
+type Theme = 'light' | 'dark';
+
+const themes: { label: string; value: Theme }[] = [
+  { label: 'Light Theme', value: 'light' },
+  { label: 'Dark Theme', value: 'dark' },
 ];
 
 const formatAppearanceOption = (
@@ -161,7 +174,17 @@ export type State = {
   errors: Array<Error>;
   showErrors: boolean;
   waitingToValidate: boolean;
+  theme: Theme;
 };
+
+function getInitialTheme(): Theme {
+  if (typeof window !== 'undefined') {
+    // Retaining the preferred theme per browser session to aid development workflows.
+    const preferredTheme = window.sessionStorage.getItem('theme') as Theme;
+    return preferredTheme ? preferredTheme : themes[0].value;
+  }
+  return themes[0].value;
+}
 
 class FullPageRendererExample extends React.Component<Props, State> {
   private getJSONFromStorage = (key: string, fallback: any = undefined) => {
@@ -192,6 +215,7 @@ class FullPageRendererExample extends React.Component<Props, State> {
     errors: [],
     showErrors: false,
     waitingToValidate: false,
+    theme: getInitialTheme(),
   };
 
   private dataProviders = ProviderFactory.create({
@@ -201,6 +225,12 @@ class FullPageRendererExample extends React.Component<Props, State> {
 
   private inputRef: HTMLTextAreaElement | null;
   private popupMountPoint: HTMLElement | null;
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevState.theme !== this.state.theme) {
+      window.sessionStorage.setItem('theme', this.state.theme);
+    }
+  }
 
   showHideADF = () =>
     this.setState(state => ({
@@ -275,6 +305,19 @@ class FullPageRendererExample extends React.Component<Props, State> {
                       display: 'flex',
                     }}
                   >
+                    <Select
+                      formatOptionLabel={formatAppearanceOption}
+                      options={themes}
+                      onChange={(opt: any) =>
+                        this.setState({ theme: opt.value })
+                      }
+                      spacing="compact"
+                      defaultValue={themes.find(
+                        opt => opt.value === this.state.theme,
+                      )}
+                      className="theme-select"
+                      styles={selectStyles}
+                    />
                     <Button onClick={this.switchEditorOrientation}>
                       Display {!this.state.vertical ? 'Vertical' : 'Horizontal'}
                     </Button>
@@ -333,25 +376,27 @@ class FullPageRendererExample extends React.Component<Props, State> {
                       locale={this.getLocalTag(locale)}
                       messages={messages}
                     >
-                      <KitchenSinkEditor
-                        actions={actions}
-                        adf={this.state.adf}
-                        disabled={this.state.disabled}
-                        appearance={this.state.appearance}
-                        popupMountPoint={this.popupMountPoint || undefined}
-                        onDocumentChanged={this.onDocumentChanged}
-                        onDocumentValidated={this.onDocumentValidated}
-                        primaryToolbarComponents={
-                          <React.Fragment>
-                            <LanguagePicker
-                              languages={languages}
-                              locale={locale}
-                              onChange={this.loadLocale}
-                            />
-                            <SaveAndCancelButtons editorActions={actions} />
-                          </React.Fragment>
-                        }
-                      />
+                      <AtlaskitThemeProvider mode={this.state.theme}>
+                        <KitchenSinkEditor
+                          actions={actions}
+                          adf={this.state.adf}
+                          disabled={this.state.disabled}
+                          appearance={this.state.appearance}
+                          popupMountPoint={this.popupMountPoint || undefined}
+                          onDocumentChanged={this.onDocumentChanged}
+                          onDocumentValidated={this.onDocumentValidated}
+                          primaryToolbarComponents={
+                            <React.Fragment>
+                              <LanguagePicker
+                                languages={languages}
+                                locale={locale}
+                                onChange={this.loadLocale}
+                              />
+                              <SaveAndCancelButtons editorActions={actions} />
+                            </React.Fragment>
+                          }
+                        />
+                      </AtlaskitThemeProvider>
                     </IntlProvider>
                   </div>
                 </EditorColumn>
