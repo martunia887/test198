@@ -18,20 +18,19 @@ interface PluginState {
   hashCodes: HashCode[];
 }
 
-// TODO: const rx = /#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/g;
 const rx = /#([A-Fa-f0-9]{6})/g;
 
 // returns a list of hashCodes for each instance (eg. #ff0000) within the document.
 const getHashCodes = (node: PMNode, pos: number): HashCode[] => {
   const hashCodes: HashCode[] = [];
   node.forEach((child, offset) => {
-    const totalOffset = pos + offset;
+    const totalOffset = pos + offset + 1;
     if (child.isText) {
       let result: RegExpExecArray | null;
       while ((result = rx.exec(child.textContent)) !== null) {
         hashCodes.push({
           active: false,
-          pos: totalOffset + rx.lastIndex - result[0].length + 1,
+          pos: totalOffset + rx.lastIndex - result[0].length - 1,
           value: result[0],
         });
       }
