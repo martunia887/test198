@@ -69,6 +69,7 @@ export default function mobileEditor(props) {
       }}
       allowPanel={true}
       allowCodeBlocks={true}
+      allowConfluenceInlineComment={true}
       allowTables={{
         allowControls: false,
       }}
