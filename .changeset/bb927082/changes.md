@@ -1,0 +1,1 @@
+- added inviteToEditButton prop to collab-edit/ui/Avatars
