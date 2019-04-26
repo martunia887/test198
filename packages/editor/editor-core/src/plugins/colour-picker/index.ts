@@ -162,6 +162,7 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
             oldHashCode => oldHashCode.pos == hashCode.pos,
           );
           if (existingHashCode) {
+            //update existing hashcode
             if (
               existingHashCode.input &&
               existingHashCode.input.value != hashCode.value
@@ -173,6 +174,7 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
             );
             return { ...existingHashCode, value: hashCode.value };
           } else {
+            // add a new hashcode
             const { dom, input } = renderDecoration(hashCode);
             updateChangeEvent(hashCode, (e: Event) => onchange(hashCode, e));
             return { ...hashCode, dom, input };
@@ -192,7 +194,7 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
         // calculate the updated state
         const set = mappedSet
           .remove(removeDecorations)
-          .add(transaction.before, newDecorations);
+          .add(transaction.doc, newDecorations);
         return { set, hashCodes };
       },
     },
