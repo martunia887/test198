@@ -51,11 +51,6 @@ describe('collab-edit | Avatars', () => {
 
   describe('when inviteToEditButton is provided', () => {
     it('should render inviteToEditButton', () => {
-      // class CustomButton extends React.Component {
-      //   render() {
-      //     return <button />;
-      //   }
-      // }
       const CustomButton = () => <button />;
 
       const { editorView } = editor(doc(p('text')));
