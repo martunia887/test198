@@ -91,8 +91,7 @@ function updateChangeEvent(
     hashCode.input.removeEventListener('change', hashCode.changeListener);
   }
   hashCode.input.addEventListener('change', onchange);
-  hashCode.changeListener = onchange;
-  return hashCode;
+  return { ...hashCode, changeListener: onchange };
 }
 
 const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
@@ -163,11 +162,10 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
           );
           if (existingHashCode) {
             //update existing hashcode
-            if (
-              existingHashCode.input &&
-              existingHashCode.input.value != hashCode.value
-            ) {
-              existingHashCode.input.value = hashCode.value;
+            const { input, dom } = existingHashCode;
+            if (input && dom && input.value != hashCode.value) {
+              input.value = hashCode.value;
+              dom.style.backgroundColor = hashCode.value;
             }
             updateChangeEvent(existingHashCode, (e: Event) =>
               onchange(existingHashCode, e),
@@ -175,9 +173,10 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
             return { ...existingHashCode, value: hashCode.value };
           } else {
             // add a new hashcode
-            const { dom, input } = renderDecoration(hashCode);
-            updateChangeEvent(hashCode, (e: Event) => onchange(hashCode, e));
-            return { ...hashCode, dom, input };
+            const newHashCode = { ...hashCode, ...renderDecoration(hashCode) };
+            return updateChangeEvent(newHashCode, (e: Event) =>
+              onchange(newHashCode, e),
+            );
           }
         });
         // find all decorations that need to be added this transaction

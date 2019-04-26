@@ -8,7 +8,7 @@ export const colourPickerStyles = css`
       display: inline-block;
       position: relative;
       padding: 0px;
-      margin: 0px 3px -4px 1px;
+      margin: 0px 2px -4px 2px;
       width: 17px;
       height: 17px;
       border: solid 1px grey;
