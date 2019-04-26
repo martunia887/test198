@@ -15,6 +15,7 @@ export const colourPickerStyles = css`
       border-radius: 3px;
       cursor: pointer;
       transition: box-shadow 0.4s;
+      pointer-events: auto;
 
       &:hover {
         box-shadow: 0 0 4px grey;

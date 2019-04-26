@@ -14,6 +14,7 @@ type HashCode = {
   value: string;
   dom?: HTMLDivElement;
   input?: HTMLInputElement;
+  changeListener?: (e: Event) => any;
 };
 
 interface PluginState {
@@ -58,7 +59,6 @@ const mapHashCodes = (mapping: Mapping, hashCodes: HashCode[]): HashCode[] =>
 // Renders and returns the colour blob element
 const renderDecoration = (
   hashCode: HashCode,
-  oninput: (e: Event) => any,
 ): { dom: HTMLDivElement; input: HTMLInputElement } => {
   const input = document.createElement('input');
   input.type = 'color';
@@ -73,12 +73,27 @@ const renderDecoration = (
     e.preventDefault();
     e.stopPropagation();
   });
-  input.addEventListener('change', e => {
-    dom.style.backgroundColor = input.value;
-    oninput(e);
-  });
+  input.addEventListener(
+    'change',
+    e => (dom.style.backgroundColor = input.value),
+  );
   return { dom, input };
 };
+
+function updateChangeEvent(
+  hashCode: HashCode,
+  onchange: (e: Event) => any,
+): HashCode {
+  if (!hashCode.input) {
+    return hashCode;
+  }
+  if (hashCode.changeListener) {
+    hashCode.input.removeEventListener('change', hashCode.changeListener);
+  }
+  hashCode.input.addEventListener('change', onchange);
+  hashCode.changeListener = onchange;
+  return hashCode;
+}
 
 const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
   let onchange: (hashCode: HashCode, e: Event) => any;
@@ -106,8 +121,11 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
       init(_, state: EditorState): PluginState {
         const hashCodes = getHashCodes(state.doc, 0).map(hashCode => ({
           ...hashCode,
-          ...renderDecoration(hashCode, (e: Event) => onchange(hashCode, e)),
+          ...renderDecoration(hashCode),
         }));
+        hashCodes.forEach(hashCode =>
+          updateChangeEvent(hashCode, (e: Event) => onchange(hashCode, e)),
+        );
         const set = DecorationSet.create(
           state.doc,
           hashCodes.map(hashCode =>
@@ -150,14 +168,14 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
             ) {
               existingHashCode.input.value = hashCode.value;
             }
+            updateChangeEvent(existingHashCode, (e: Event) =>
+              onchange(existingHashCode, e),
+            );
             return { ...existingHashCode, value: hashCode.value };
           } else {
-            return {
-              ...hashCode,
-              ...renderDecoration(hashCode, (e: Event) =>
-                onchange(hashCode, e),
-              ),
-            };
+            const { dom, input } = renderDecoration(hashCode);
+            updateChangeEvent(hashCode, (e: Event) => onchange(hashCode, e));
+            return { ...hashCode, dom, input };
           }
         });
         // find all decorations that need to be added this transaction
