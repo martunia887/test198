@@ -38,6 +38,7 @@
   "devDependencies": {
     "@atlaskit/build-utils": "^2.0.0",
     "@atlaskit/checkbox": "^6.0.4",
+    "@atlaskit/contentful": "^0.0.1",
     "@atlaskit/docs": "^7.0.3",
     "@atlaskit/icon": "^16.0.9",
     "@atlaskit/logo": "^10.0.4",
