@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { borderRadius } from '@atlaskit/theme';
+import { ShareDialogContainer } from '@atlaskit/share';
 
 import Editor from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
@@ -72,6 +73,53 @@ const SaveAndCancelButtons = (props: { editorActions: EditorActions }) => (
       Close
     </Button>
   </ButtonGroup>
+);
+
+const shareClient = {
+  getConfig: () =>
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve({
+          allowComment: true,
+          allowedDomains: [],
+          mode: 'ANYONE',
+        });
+      }, 1000);
+    }),
+  share: () =>
+    new Promise(resolve => {
+      setTimeout(
+        () =>
+          resolve({
+            shareRequestId: 'c41e33e5-e622-4b38-80e9-a623c6e54cdd',
+          }),
+        3000,
+      );
+    }),
+};
+
+const mockOriginTracing = {
+  id: 'id',
+  addToUrl: (l: string) => `${l}&atlOrigin=mockAtlOrigin`,
+  toAnalyticsAttributes: () => ({
+    originIdGenerated: 'id',
+    originProduct: 'product',
+  }),
+};
+
+const InviteToEditButton = (
+  <ShareDialogContainer
+    cloudId="cloudId"
+    client={shareClient}
+    loadUserOptions={() => []}
+    originTracingFactory={() => mockOriginTracing}
+    productId="confluence"
+    shareAri="ari"
+    shareContentType="draft"
+    shareLink={window && window.location.href}
+    shareTitle="title"
+    showFlags={() => {}}
+  />
 );
 
 interface DropzoneEditorWrapperProps {
@@ -153,7 +201,7 @@ export default class Example extends React.Component<Props> {
                     contextIdentifierProvider={storyContextIdentifierProviderFactory()}
                     collabEdit={{
                       provider: collabEditProvider('rick'),
-                      inviteToEditHandler: this.inviteToEditHandler,
+                      inviteToEditButton: InviteToEditButton,
                     }}
                     placeholder="Write something..."
                     shouldFocus={false}

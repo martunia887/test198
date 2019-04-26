@@ -14,6 +14,7 @@ import { getAvatarColor } from '../utils';
 import ToolbarButton from '../../../ui/ToolbarButton';
 
 export interface Props {
+  inviteToEditButton?: React.ReactNode;
   inviteToEditHandler?: (event: React.MouseEvent<HTMLElement>) => void;
   isInviteToEditButtonSelected?: boolean;
   editorView?: EditorView;
@@ -124,6 +125,31 @@ function Item(props: any) {
 }
 export default class Avatars extends React.Component<Props, any> {
   private onAvatarClick = () => {};
+  private renderInviteToEditButton = () => {
+    const {
+      inviteToEditButton,
+      inviteToEditHandler,
+      isInviteToEditButtonSelected,
+    } = this.props;
+
+    if (inviteToEditButton) {
+      return <InviteTeamWrapper>{inviteToEditButton}</InviteTeamWrapper>;
+    }
+
+    return (
+      inviteToEditHandler && (
+        <InviteTeamWrapper>
+          <ToolbarButton
+            onClick={inviteToEditHandler}
+            selected={isInviteToEditButtonSelected}
+            title="Invite to edit"
+            titlePosition="bottom"
+            iconBefore={<InviteTeamIcon label="Invite to edit" />}
+          />
+        </InviteTeamWrapper>
+      )
+    );
+  };
   private renderAvatars = (state: { data?: PluginState }) => {
     if (!state.data) {
       return null;
@@ -154,17 +180,7 @@ export default class Avatars extends React.Component<Props, any> {
           data={avatars}
           onAvatarClick={this.onAvatarClick}
         />
-        {this.props.inviteToEditHandler && (
-          <InviteTeamWrapper>
-            <ToolbarButton
-              onClick={this.props.inviteToEditHandler}
-              selected={this.props.isInviteToEditButtonSelected}
-              title="Invite to edit"
-              titlePosition="bottom"
-              iconBefore={<InviteTeamIcon label="Invite to edit" />}
-            />
-          </InviteTeamWrapper>
-        )}
+        {this.renderInviteToEditButton()}
       </AvatarContainer>
     );
   };
