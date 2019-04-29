@@ -1,43 +1,10 @@
 import * as React from 'react';
-import { md, Example, Props, code } from '@atlaskit/docs';
-import { Overview } from '@atlaskit/contentful';
+import { md, Props } from '@atlaskit/docs';
+import Page from '@atlaskit/contentful';
 
 export default md`
 
- ${<Overview entryId="5Jf6g7swQdmlP4VFmLxs2u" />}
-
-  ## Usage
-
-  ${code`import Button, { ButtonGroup } from '@atlaskit/button';`}
-
-  ${(
-    <Example
-      packageName="@atlaskit/button"
-      Component={require('../examples/10-Button').default}
-      title="Basic Button"
-      source={require('!!raw-loader!../examples/10-Button')}
-    />
-  )}
-
-  ${(
-    <Example
-      packageName="@atlaskit/button"
-      Component={require('../examples/30-Appearances').default}
-      title="Your Appearance Options"
-      source={require('!!raw-loader!../examples/30-Appearances')}
-    />
-  )}
-
-  #### You can also use button groups:
-
-  ${(
-    <Example
-      packageName="@atlaskit/button"
-      Component={require('../examples/20-ButtonGroup').default}
-      title="Simple Button Group"
-      source={require('!!raw-loader!../examples/20-ButtonGroup')}
-    />
-  )}
+  ${<Page slug="button" />}
 
   ${(
     <Props
