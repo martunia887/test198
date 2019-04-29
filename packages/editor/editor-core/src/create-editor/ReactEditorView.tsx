@@ -85,31 +85,6 @@ export interface EditorViewProps {
   ) => void;
 }
 
-// class ParagraphView {
-//   dom: any;
-//   // contentDOM: any;
-
-//   constructor(node: PMNode) {
-//     this.dom = document.createElement("p");
-//     this.update(node);
-//   }
-
-//   update(node: PMNode) {
-//     if (node.type.name != "paragraph") {
-//       return false;
-//     }
-//     console.log(node.);
-//     var text = document.createTextNode("test");
-//     this.dom.appendChild(text);
-//     if (node.content.size > 0) {
-//       this.dom.classList.remove("empty");
-//     } else {
-//       this.dom.classList.add("empty");
-//     }
-//     return true
-//   }
-// }
-
 export default class ReactEditorView<T = {}> extends React.Component<
   EditorViewProps & T
 > {
@@ -423,9 +398,6 @@ export default class ReactEditorView<T = {}> extends React.Component<
       // Disables the contentEditable attribute of the editor if the editor is disabled
       editable: _state => !this.props.editorProps.disabled,
       attributes: { 'data-gramm': 'false' },
-      // nodeViews: {
-      //   paragraph(node: PMNode) { return new ParagraphView(node) }
-      // },
     };
   };
 
