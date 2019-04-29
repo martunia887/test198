@@ -7,14 +7,15 @@ export const colourPickerStyles = css`
     .ProseMirror-colour-picker {
       display: inline-block;
       position: relative;
+      vertical-align: middle;
       padding: 0px;
-      margin: 0px 2px -4px 2px;
-      width: 17px;
-      height: 17px;
+      margin: -3px 2px 0;
+      width: 15px;
+      height: 15px;
       border: solid 1px grey;
       border-radius: 3px;
       cursor: pointer;
-      transition: box-shadow 0.4s;
+      transition: box-shadow 0.2s;
       pointer-events: auto;
 
       &:hover {

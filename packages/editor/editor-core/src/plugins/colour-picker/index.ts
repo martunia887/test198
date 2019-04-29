@@ -112,6 +112,7 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
             ),
           ),
         200,
+        { leading: true },
       );
       return {};
     },
