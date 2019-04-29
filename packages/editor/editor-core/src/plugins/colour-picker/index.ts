@@ -142,7 +142,7 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
         const removeDecorations = oldHashCodes.reduce<Decoration[]>(
           (acc, oldHashCode) => {
             const existingHashCode = newHashCodes.find(
-              hashCode => hashCode.pos == oldHashCode.pos,
+              hashCode => hashCode.pos === oldHashCode.pos,
             );
             if (!existingHashCode) {
               const decorations = mappedSet.find(
@@ -158,12 +158,12 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
         // generate an updated list of hashCodes, rendering new ones and updating existing decorations as required
         const hashCodes = newHashCodes.map(hashCode => {
           const existingHashCode = oldHashCodes.find(
-            oldHashCode => oldHashCode.pos == hashCode.pos,
+            oldHashCode => oldHashCode.pos === hashCode.pos,
           );
           if (existingHashCode) {
-            //update existing hashcode
+            // update existing hashcode
             const { input, dom } = existingHashCode;
-            if (input && dom && input.value != hashCode.value) {
+            if (input && dom && input.value !== hashCode.value) {
               input.value = hashCode.value;
               dom.style.backgroundColor = hashCode.value;
             }
