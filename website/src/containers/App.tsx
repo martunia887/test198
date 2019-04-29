@@ -61,6 +61,7 @@ class ScrollToTop extends React.Component<ScrollToTopProps> {
   }
 }
 
+// @ts-ignore
 const contentfulClient = new ContentfulClient({
   accessToken:
     '95bf5ee614c37fd601762ddc27aabce558745f0c49cd92de12b379f702ca3206',
@@ -111,9 +112,13 @@ export default class App extends React.Component<{}, State> {
     }
   };
   render() {
+    const ContentfulProviderTemp = (props: any) => {
+      // @ts-ignore
+      return <ContentfulProvider {...props} />;
+    };
     return (
       <GlobalTheme.Provider value={() => ({ mode: this.state.mode })}>
-        <ContentfulProvider client={contentfulClient}>
+        <ContentfulProviderTemp client={contentfulClient}>
           <BrowserRouter>
             <AnalyticsListeners>
               <Route>
@@ -233,7 +238,7 @@ export default class App extends React.Component<{}, State> {
               </Switch>
             </AnalyticsListeners>
           </BrowserRouter>
-        </ContentfulProvider>
+        </ContentfulProviderTemp>
       </GlobalTheme.Provider>
     );
   }

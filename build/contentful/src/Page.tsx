@@ -7,10 +7,16 @@ interface Props {
   slug: string;
 }
 
+interface QueryProps {
+  data: any;
+  error: string;
+  loading: boolean;
+}
+
 export default ({ slug }: Props) => {
   return (
     <Query contentType="componentPage" query={{ 'fields.slug[in]': slug }}>
-      {({ data, error, loading }) => {
+      {({ data, error, loading }: QueryProps) => {
         if ((!data && !error) || loading) {
           return null;
         }
@@ -31,7 +37,7 @@ export default ({ slug }: Props) => {
           <React.Fragment>
             <Overview description={page.overview.fields.description} />
             {page.variants &&
-              page.variants.map(variant => (
+              page.variants.map((variant: any) => (
                 <Variant
                   key={variant.sys.id}
                   title={variant.fields.title}
