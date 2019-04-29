@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import ReactMarkdown from 'react-markdown';
 
 const OverviewComponent = styled.div`
   white-space: pre-wrap;
@@ -11,5 +12,9 @@ interface Props {
 }
 
 export default ({ description }: Props) => {
-  return <OverviewComponent>{description}</OverviewComponent>;
+  return (
+    <OverviewComponent>
+      <ReactMarkdown source={description} />
+    </OverviewComponent>
+  );
 };

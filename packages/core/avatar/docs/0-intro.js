@@ -2,7 +2,7 @@
 import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
 import SectionMessage from '@atlaskit/section-message';
-import { Overview } from '@atlaskit/contentful';
+import Page from '@atlaskit/contentful';
 
 export default md`
   ${(
@@ -20,7 +20,7 @@ export default md`
     </SectionMessage>
   )}
 
-  ${<Overview entryId="64oPjCWyt5peofx6Xs4Nmn" />}
+  ${<Page slug="avatar" />}
 
   ## Usage
 

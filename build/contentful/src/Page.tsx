@@ -30,13 +30,14 @@ export default ({ slug }: Props) => {
         return (
           <React.Fragment>
             <Overview description={page.overview.fields.description} />
-            {page.variants.map(variant => (
-              <Variant
-                key={variant.sys.id}
-                title={variant.fields.title}
-                description={variant.fields.description}
-              />
-            ))}
+            {page.variants &&
+              page.variants.map(variant => (
+                <Variant
+                  key={variant.sys.id}
+                  title={variant.fields.title}
+                  description={variant.fields.description}
+                />
+              ))}
           </React.Fragment>
         );
       }}
