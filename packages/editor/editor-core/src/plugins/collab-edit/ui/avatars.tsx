@@ -124,6 +124,15 @@ function Item(props: any) {
   );
 }
 export default class Avatars extends React.Component<Props, any> {
+  componentDidMount() {
+    const { inviteToEditButton, inviteToEditHandler } = this.props;
+
+    if (inviteToEditButton && inviteToEditHandler) {
+      console.warn(
+        '`inviteToEditButton` prop and `inviteToEditHandler` prop are both given but exclusive. `inviteToEditHandler` will be ignored.',
+      );
+    }
+  }
   private onAvatarClick = () => {};
   private renderInviteToEditButton = () => {
     const {
