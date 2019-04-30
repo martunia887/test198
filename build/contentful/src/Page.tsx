@@ -5,6 +5,10 @@ import Variant from './Variant';
 
 interface Props {
   slug: string;
+  createExample: (
+    title: string,
+    exampleFileName: string,
+  ) => React.ComponentType<any>;
 }
 
 interface QueryProps {
@@ -13,7 +17,7 @@ interface QueryProps {
   loading: boolean;
 }
 
-export default ({ slug }: Props) => {
+export default ({ slug, createExample }: Props) => {
   return (
     <Query contentType="componentPage" query={{ 'fields.slug[in]': slug }}>
       {({ data, error, loading }: QueryProps) => {
@@ -42,6 +46,7 @@ export default ({ slug }: Props) => {
                   key={variant.sys.id}
                   title={variant.fields.title}
                   description={variant.fields.description}
+                  createExample={createExample}
                 />
               ))}
           </React.Fragment>

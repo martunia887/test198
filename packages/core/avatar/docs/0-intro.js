@@ -3,6 +3,7 @@ import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
 import SectionMessage from '@atlaskit/section-message';
 import Page from '@atlaskit/contentful';
+import createExample from './components/createExample';
 
 export default md`
   ${(
@@ -20,7 +21,7 @@ export default md`
     </SectionMessage>
   )}
 
-  ${<Page slug="avatar" />}
+  ${<Page slug="avatar" createExample={createExample} />}
 
   ## Usage
 

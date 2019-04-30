@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 import ReactMarkdown from 'react-markdown';
 import { gridSize } from '@atlaskit/theme';
-import { Example } from '@atlaskit/docs';
 
 const VariantTitle = styled.h2`
   padding-bottom: ${gridSize()}px;
@@ -16,9 +15,13 @@ const VariantDescription = styled.div`
 interface Props {
   title: string;
   description: string;
+  createExample: (
+    title: string,
+    exampleFileName: string,
+  ) => React.ComponentType<any>;
 }
 
-export default ({ title, description }: Props) => {
+export default ({ title, description, createExample }: Props) => {
   const exampleFileName = title
     .replace(/\b\w/g, (l: string) => l.toUpperCase())
     .replace(/\s/g, '');
@@ -29,16 +32,7 @@ export default ({ title, description }: Props) => {
       <VariantDescription>
         <ReactMarkdown source={description} />
       </VariantDescription>
-      <Example
-        packageName="@atlaskit/button"
-        Component={
-          require('../../../packages/core/button/examples/' + exampleFileName)
-            .default
-        }
-        title={title}
-        source={require('!!raw-loader!../../../packages/core/button/examples/' +
-          exampleFileName)}
-      />
+      {createExample(title, exampleFileName)}
     </React.Fragment>
   );
 };
