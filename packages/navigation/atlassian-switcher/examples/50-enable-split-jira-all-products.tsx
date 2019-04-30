@@ -41,7 +41,6 @@ class JiraSwitcherExample extends React.Component {
             product="jira"
             cloudId="some-cloud-id"
             triggerXFlow={this.onTriggerXFlow}
-            enableSplitJira={true}
           />
         </Drawer>
         <Button type="button" onClick={this.openDrawer}>

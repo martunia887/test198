@@ -406,7 +406,6 @@ export default class GlobalNavigation extends Component<
       product,
       cloudId,
       /* eslint-disable camelcase */
-      experimental_enableSplitJira,
       experimental_enableExpandLink,
       /* eslint-enable camelcase */
     } = this.props;
@@ -416,7 +415,6 @@ export default class GlobalNavigation extends Component<
         product={product}
         triggerXFlow={this.triggerXFlow}
         /* eslint-disable camelcase */
-        enableSplitJira={experimental_enableSplitJira}
         enableExpandLink={experimental_enableExpandLink}
         /* eslint-enable camelcase */
       />
