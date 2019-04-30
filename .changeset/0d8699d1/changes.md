@@ -1,0 +1,1 @@
+- Optional colour picker plugin for editor
