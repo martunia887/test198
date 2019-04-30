@@ -1,12 +1,11 @@
 // @flow
 import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
+import Page from '@atlaskit/contentful';
+import createExample from './components/createExample';
 
 export default md`
-
-The \`Presence\` component is the status dot. In most cases, you will not need to use
-the presence component directly, as passing string values of 'presence' to \`Avatar\` will
-use the selected presence. Presence is displayed at the bottom right of the avatar.
+${<Page slug="presence" createExample={createExample} />}
 
 ## Usage
 

@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
+import Page from '@atlaskit/contentful';
+import createExample from './components/createExample';
 
 export default md`
-
-The \`Skeleton\`component is used for loading states. 
+${<Page slug="avatar-skeleton" createExample={createExample} />}
 
 ## Usage
 

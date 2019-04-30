@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
+import Page from '@atlaskit/contentful';
+import createExample from './components/createExample';
 
 export default md`
-\`AvatarItem\` is a wrapper designed to go around \`Avatar\`, when th avatar
-will be displayed alongside text, such as a name and status.
+${<Page slug="avatar-item" createExample={createExample} />}
 
 ## Usage
 

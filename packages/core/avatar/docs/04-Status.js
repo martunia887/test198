@@ -1,12 +1,11 @@
 // @flow
 import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
+import Page from '@atlaskit/contentful';
+import createExample from './components/createExample';
 
 export default md`
-
-\`Status\` Indicates contextual information by showing a small icon on the avatar. In most
-cases, you can pass the string of the status you want directly to avatar instead
-of using this component directly.
+${<Page slug="status" createExample={createExample} />}
 
 ## Usage
 

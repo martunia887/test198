@@ -21,6 +21,8 @@ export default md`
     </SectionMessage>
   )}
 
+  ${<br />}
+
   ${<Page slug="avatar" createExample={createExample} />}
 
   ## Usage
