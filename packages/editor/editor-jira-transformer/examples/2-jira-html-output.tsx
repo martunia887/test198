@@ -61,7 +61,6 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
                     allowCodeBlocks={true}
                     allowLists={true}
                     allowRule={true}
-                    allowColourPicker={true}
                     disabled={disabled}
                     mentionProvider={Promise.resolve(
                       mention.storyData.resourceProvider,

@@ -74,7 +74,6 @@ class TransformerPanels extends React.PureComponent<Props, State> {
             allowLists={true}
             allowRule={true}
             allowTables={true}
-            allowColourPicker={true}
             emojiProvider={emojiProvider}
             mentionProvider={mentionProvider}
             contentTransformerProvider={schema =>
