@@ -5,10 +5,7 @@ import Variant from './Variant';
 
 interface Props {
   slug: string;
-  createExample: (
-    title: string,
-    exampleFileName: string,
-  ) => React.ComponentType<any>;
+  createExample: (title: string, exampleFileName: string) => React.ReactNode;
 }
 
 interface QueryProps {

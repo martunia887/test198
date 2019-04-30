@@ -5,7 +5,7 @@ import { Example } from '@atlaskit/docs';
 export default (title: string, exampleFileName: string) => {
   return (
     <Example
-      packageName="@atlaskit/button"
+      packageName="@atlaskit/avatar"
       // $FlowFixMe - Calls to require() should use string literal
       Component={require(`../../variants/${exampleFileName}`).default} // eslint-disable-line
       title={title}

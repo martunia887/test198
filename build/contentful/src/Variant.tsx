@@ -15,10 +15,7 @@ const VariantDescription = styled.div`
 interface Props {
   title: string;
   description: string;
-  createExample: (
-    title: string,
-    exampleFileName: string,
-  ) => React.ComponentType<any>;
+  createExample: (title: string, exampleFileName: string) => React.ReactNode;
 }
 
 export default ({ title, description, createExample }: Props) => {
