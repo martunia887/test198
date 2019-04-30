@@ -5,7 +5,7 @@ import Page from '@atlaskit/contentful';
 import createExample from './components/createExample';
 
 export default md`
-${<Page slug="presence" createExample={createExample} />}
+${<Page slug="avatar-presence" createExample={createExample} />}
 
 ## Usage
 
