@@ -12,7 +12,7 @@ export const pluginKey = new PluginKey('colourPickerPlugin');
 type HashCode = {
   pos: number;
   value: string;
-  dom?: HTMLDivElement;
+  div?: HTMLDivElement;
   input?: HTMLInputElement;
   changeListener?: (e: Event) => any;
 };
@@ -59,15 +59,15 @@ const mapHashCodes = (mapping: Mapping, hashCodes: HashCode[]): HashCode[] =>
 // Renders and returns the colour blob element
 const renderDecoration = (
   hashCode: HashCode,
-): { dom: HTMLDivElement; input: HTMLInputElement } => {
+): { div: HTMLDivElement; input: HTMLInputElement } => {
   const input = document.createElement('input');
   input.type = 'color';
   input.value = hashCode.value;
 
-  const dom = document.createElement('div');
-  dom.className = 'ProseMirror-colour-picker';
-  dom.style.backgroundColor = hashCode.value;
-  dom.appendChild(input);
+  const div = document.createElement('div');
+  div.className = 'ProseMirror-colour-picker';
+  div.style.backgroundColor = hashCode.value;
+  div.appendChild(input);
 
   input.addEventListener('input', e => {
     e.preventDefault();
@@ -75,9 +75,9 @@ const renderDecoration = (
   });
   input.addEventListener(
     'change',
-    e => (dom.style.backgroundColor = input.value),
+    e => (div.style.backgroundColor = input.value),
   );
-  return { dom, input };
+  return { div, input };
 };
 
 function updateChangeEvent(
@@ -119,17 +119,22 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
 
     state: {
       init(_, state: EditorState): PluginState {
-        const hashCodes = getHashCodes(state.doc, 0).map(hashCode => ({
-          ...hashCode,
-          ...renderDecoration(hashCode),
-        }));
-        hashCodes.forEach(hashCode =>
-          updateChangeEvent(hashCode, (e: Event) => onchange(hashCode, e)),
-        );
+        const hashCodes = getHashCodes(state.doc, 0)
+          .map(hashCode => ({
+            ...hashCode,
+            ...renderDecoration(hashCode),
+          }))
+          .map(hashCode =>
+            updateChangeEvent(hashCode, (e: Event) => onchange(hashCode, e)),
+          );
         const set = DecorationSet.create(
           state.doc,
-          hashCodes.map(hashCode =>
-            Decoration.widget(hashCode.pos, hashCode.dom),
+          hashCodes.reduce<Decoration[]>(
+            (acc, hashCode) =>
+              hashCode.div
+                ? [...acc, Decoration.widget(hashCode.pos, hashCode.div)]
+                : acc,
+            [],
           ),
         );
         return { set, hashCodes };
@@ -163,15 +168,18 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
           );
           if (existingHashCode) {
             // update existing hashcode
-            const { input, dom } = existingHashCode;
-            if (input && dom && input.value !== hashCode.value) {
+            const { input, div } = existingHashCode;
+            if (input && div && input.value !== hashCode.value) {
               input.value = hashCode.value;
-              dom.style.backgroundColor = hashCode.value;
+              div.style.backgroundColor = hashCode.value;
             }
-            updateChangeEvent(existingHashCode, (e: Event) =>
-              onchange(existingHashCode, e),
+            const updatedHashCode = {
+              ...existingHashCode,
+              value: hashCode.value,
+            };
+            return updateChangeEvent(updatedHashCode, (e: Event) =>
+              onchange(updatedHashCode, e),
             );
-            return { ...existingHashCode, value: hashCode.value };
           } else {
             // add a new hashcode
             const newHashCode = { ...hashCode, ...renderDecoration(hashCode) };
@@ -184,8 +192,8 @@ const createPlugin: PMPluginFactory = ({ portalProviderAPI }) => {
         const newDecorations = hashCodes.reduce<Decoration[]>(
           (acc, hashCode) => {
             const decorations = mappedSet.find(hashCode.pos, hashCode.pos);
-            if (decorations.length === 0 && hashCode.dom) {
-              return [...acc, Decoration.widget(hashCode.pos, hashCode.dom)];
+            if (decorations.length === 0 && hashCode.div) {
+              return [...acc, Decoration.widget(hashCode.pos, hashCode.div)];
             }
             return acc;
           },
