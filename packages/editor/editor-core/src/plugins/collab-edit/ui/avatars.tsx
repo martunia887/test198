@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import styled, { keyframes } from 'styled-components';
 import { EditorView } from 'prosemirror-view';
 import Avatar from '@atlaskit/avatar';
@@ -12,6 +13,7 @@ import { EventDispatcher } from '../../../event-dispatcher';
 import { pluginKey as collabEditPluginKey, PluginState } from '../plugin';
 import { getAvatarColor } from '../utils';
 import ToolbarButton from '../../../ui/ToolbarButton';
+import messages from '../../../messages';
 
 export interface Props {
   inviteToEditButton?: React.ReactNode;
@@ -25,7 +27,7 @@ const AvatarContainer = styled.div`
   margin-right: ${gridSize()}px;
   display: flex;
   align-items: center;
-  div:last-child > button {
+  div:last-child button.invite-to-edit {
     border-radius: 50%;
     height: 32px;
     width: 32px;
@@ -149,9 +151,10 @@ export default class Avatars extends React.Component<Props, any> {
       inviteToEditHandler && (
         <InviteTeamWrapper>
           <ToolbarButton
+            className="invite-to-edit"
             onClick={inviteToEditHandler}
             selected={isInviteToEditButtonSelected}
-            title="Invite to edit"
+            title={<FormattedMessage {...messages.inviteToEditButtonTitle} />}
             titlePosition="bottom"
             iconBefore={<InviteTeamIcon label="Invite to edit" />}
           />

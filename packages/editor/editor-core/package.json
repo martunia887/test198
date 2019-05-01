@@ -46,6 +46,7 @@
     "@atlaskit/mention": "^17.6.8",
     "@atlaskit/modal-dialog": "^8.0.9",
     "@atlaskit/select": "^8.1.1",
+    "@atlaskit/share": "^0.3.15",
     "@atlaskit/smart-card": "^10.4.2",
     "@atlaskit/spinner": "^10.0.7",
     "@atlaskit/status": "^0.8.3",

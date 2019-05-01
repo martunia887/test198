@@ -28,6 +28,9 @@ import { extensionHandlers } from '../example-helpers/extension-handlers';
 import { TitleInput } from '../example-helpers/PageElements';
 import { EditorActions } from '../src';
 
+import InviteTeamIcon from '@atlaskit/icon/glyph/editor/add';
+import ToolbarButton from '../src/ui/ToolbarButton';
+
 export const Content = styled.div`
   padding: 0 20px;
   height: 100vh;
@@ -114,6 +117,16 @@ const InviteToEditButton = (
     loadUserOptions={() => []}
     originTracingFactory={() => mockOriginTracing}
     productId="confluence"
+    renderCustomTriggerButton={({ isSelected, onClick }: any): any => (
+      <ToolbarButton
+        className="invite-to-edit"
+        onClick={onClick}
+        selected={isSelected}
+        title="Invite to edit"
+        titlePosition="bottom"
+        iconBefore={<InviteTeamIcon label="Invite to edit" />}
+      />
+    )}
     shareAri="ari"
     shareContentType="draft"
     shareLink={window && window.location.href}
