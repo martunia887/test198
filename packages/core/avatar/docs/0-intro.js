@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
-import { md, Example, Props, code } from '@atlaskit/docs';
-import SectionMessage from '@atlaskit/section-message';
+import { md, Props } from '@atlaskit/docs';
 import Page from '@atlaskit/contentful';
 import createExample from './components/createExample';
 
