@@ -1,5 +1,20 @@
 # @atlaskit/media-ui
 
+## 10.1.11
+- [patch] [682279973f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/682279973f):
+
+  - Changed Unauthorized and Errored inline view for smart cards to be text only and added color theming for smart link titles
+
+## 10.1.10
+- [patch] [1a18876567](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1a18876567):
+
+  - Changed behaviour so that icon and first 8 characters of a smart link no longer break when wrapping.
+
+## 10.1.9
+- [patch] [d3cad2622e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d3cad2622e):
+
+  - Removes babel-runtime in favour of @babel/runtime
+
 ## 10.1.8
 - [patch] [687f535a12](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/687f535a12):
 
