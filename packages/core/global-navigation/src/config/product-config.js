@@ -192,6 +192,11 @@ export default function generateProductConfig(
     searchDrawerContents,
     getSearchRef,
 
+    globalInviteTooltip,
+    onGlobalInviteClick,
+    globalInviteDrawerContents,
+    getGlobalInviteRef,
+
     onStarredClick,
     starredTooltip,
     starredDrawerContents,
@@ -248,6 +253,12 @@ export default function generateProductConfig(
       onSearchClick || (searchDrawerContents && openDrawer('search')),
       searchTooltip,
       { getRef: getSearchRef },
+    ),
+    globalInvite: configFactory(
+      onGlobalInviteClick ||
+        (globalInviteDrawerContents && openDrawer('globalInvite')),
+      globalInviteTooltip,
+      { getRef: getGlobalInviteRef },
     ),
     starred: configFactory(
       onStarredClick || (starredDrawerContents && openDrawer('starred')),

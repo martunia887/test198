@@ -135,6 +135,7 @@ const HelpDropdown = () => (
 
 class GlobalNavWithDrawers extends Component<Props, State> {
   state = {
+    isGlobalInviteDrawerOpen: false,
     isCreateModalOpen: false,
     isSearchDrawerOpen: false,
   };
@@ -162,8 +163,15 @@ class GlobalNavWithDrawers extends Component<Props, State> {
 
   openSearchDrawer = () => this.setState({ isSearchDrawerOpen: true });
 
+  openGlobalInviteDrawer = () =>
+    this.setState({ isGlobalInviteDrawerOpen: true });
+
   closeSearchDrawer = () => {
     this.setState({ isSearchDrawerOpen: false });
+  };
+
+  closeGlobalInviteDrawer = () => {
+    this.setState({ isGlobalInviteDrawerOpen: false });
   };
 
   secondaryAction = ({ target }: Object) => console.log(target.innerText);
@@ -181,6 +189,13 @@ class GlobalNavWithDrawers extends Component<Props, State> {
     <DrawerContent
       drawerTitle="Controlled Search drawer"
       drawerBody="Can be controlled by passing the onSearchClick prop"
+    />
+  );
+
+  renderGlobalInviteDrawerContents = () => (
+    <DrawerContent
+      drawerTitle="Controlled Global Invite drawer"
+      drawerBody="Can be controlled by passing the onGlobalInviteClick prop"
     />
   );
 
@@ -243,6 +258,14 @@ class GlobalNavWithDrawers extends Component<Props, State> {
           onSearchDrawerClose={this.closeSearchDrawer}
           onSearchDrawerCloseComplete={this.onCloseComplete}
           shouldSearchDrawerUnmountOnExit={unmountOnExit}
+          // GlobalInvite
+          onGlobalInviteClick={this.openGlobalInviteDrawer}
+          globalInviteTooltip="Global Invite (\)"
+          isGlobalInviteDrawerOpen={this.state.isGlobalInviteDrawerOpen}
+          globalInviteDrawerContents={this.renderGlobalInviteDrawerContents}
+          onGlobalInviteDrawerClose={this.closeGlobalInviteDrawer}
+          onGlobalInviteDrawerCloseComplete={this.onCloseComplete}
+          shouldGlobalInviteDrawerUnmountOnExit={unmountOnExit}
           // Notifications
           notificationDrawerContents={this.renderNotificationDrawerContents}
           onNotificationDrawerOpen={onNotificationDrawerOpen}

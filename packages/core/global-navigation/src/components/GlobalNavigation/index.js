@@ -32,6 +32,7 @@ type GlobalNavigationState = {
   [any]: boolean, // Need an indexer property to appease flow for is${capitalisedDrawerName}Open
   isCreateDrawerOpen: boolean,
   isSearchDrawerOpen: boolean,
+  isGlobalInviteDrawerOpen: boolean,
   isNotificationDrawerOpen: boolean,
   isStarredDrawerOpen: boolean,
   isSettingsDrawerOpen: boolean,
@@ -50,6 +51,9 @@ export default class GlobalNavigation extends Component<
   drawers: {
     [DrawerName]: DrawerInstanceState,
   } = {
+    globalInvite: {
+      isControlled: false,
+    },
     search: {
       isControlled: false,
     },
@@ -77,6 +81,7 @@ export default class GlobalNavigation extends Component<
   static defaultProps = {
     enableAtlassianSwitcher: false,
     createDrawerWidth: 'wide',
+    globalInviteDrawerWidth: 'wide',
     searchDrawerWidth: 'wide',
     notificationDrawerWidth: 'wide',
     starredDrawerWidth: 'wide',
@@ -88,6 +93,7 @@ export default class GlobalNavigation extends Component<
 
     this.state = {
       isCreateDrawerOpen: false,
+      isGlobalInviteDrawerOpen: false,
       isSearchDrawerOpen: false,
       isNotificationDrawerOpen: false,
       isStarredDrawerOpen: false,
@@ -349,20 +355,27 @@ export default class GlobalNavigation extends Component<
       ? this.state
       : this.props;
 
-    const navItems: NavItem[] = Object.keys(productConfig).map(item => ({
-      ...(productConfig[item]
-        ? {
-            ...(item === 'notification' && this.isNotificationInbuilt
-              ? { id: 'notifications', badge }
-              : {}),
-            ...defaultConfig[item],
-            ...productConfig[item],
-            ...(item === 'notification'
-              ? { id: 'notifications', badgeCount }
-              : {}),
-          }
-        : null),
-    }));
+    const navItems: NavItem[] = Object.keys(productConfig).map(item => {
+      // console.log(item)
+      // console.log(productConfig[item])
+      // console.log(defaultConfig[item])
+      return {
+        ...(productConfig[item]
+          ? {
+              ...(item === 'notification' && this.isNotificationInbuilt
+                ? { id: 'notifications', badge }
+                : {}),
+              ...defaultConfig[item],
+              ...productConfig[item],
+              ...(item === 'notification'
+                ? { id: 'notifications', badgeCount }
+                : {}),
+            }
+          : null),
+      };
+    });
+
+    console.log(navItems);
 
     return {
       primaryItems: navItems
@@ -435,7 +448,7 @@ export default class GlobalNavigation extends Component<
   render() {
     // TODO: Look into memoizing this to avoid memory bloat
     const { primaryItems, secondaryItems } = this.constructNavItems();
-
+    // console.log(primaryItems);
     return (
       <NavigationAnalyticsContext
         data={{

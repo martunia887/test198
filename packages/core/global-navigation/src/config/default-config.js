@@ -2,6 +2,7 @@
 
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import CreateIcon from '@atlaskit/icon/glyph/add';
+import InviteTeamIcon from '@atlaskit/icon/glyph/invite-team';
 import StarLargeIcon from '@atlaskit/icon/glyph/star-large';
 import NotificationIcon from '@atlaskit/icon/glyph/notification';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
@@ -42,6 +43,14 @@ export default function generateDefaultConfig(): DefaultConfigShape {
       rank: 4,
       tooltip: 'Create',
       id: 'create',
+    },
+    globalInvite: {
+      icon: InviteTeamIcon,
+      label: 'Global Invite',
+      section: 'primary',
+      rank: 5,
+      tooltip: 'Global Invite',
+      id: 'globalInvite',
     },
     // ==============  secondary section  ==============
     notification: {

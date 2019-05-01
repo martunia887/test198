@@ -45,12 +45,14 @@ class DropdownItem extends Component<DropdownItemProps, DropdownItemState> {
 }
 
 const ItemComponent = (props: GlobalNavItemData) => {
+  console.log(props);
   const {
     dropdownItems: DropdownItems,
     itemComponent: CustomItemComponent,
     badgeCount,
     ...itemProps
   } = props;
+  // console.log(CustomItemComponent)
   if (CustomItemComponent) {
     return <CustomItemComponent {...itemProps} />;
   }

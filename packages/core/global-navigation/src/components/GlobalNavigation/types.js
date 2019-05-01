@@ -64,6 +64,26 @@ export type GlobalNavDrawerProps = {
 
   /** A prop to take control over the opening and closing of drawer. NOTE:
    * GlobalNavigation controls the drawer behaviour by default. */
+  isGlobalInviteDrawerOpen?: boolean,
+  /** The contents of the search drawer. This is ignored if onSearchClick is
+   * passed. */
+  globalInviteDrawerContents?: ComponentType<*>,
+  /** The width of the search drawer. This is "wide" by default. */
+  globalInviteDrawerWidth?: DrawerWidth,
+  /** A callback function which will be called when the search drawer is opened.
+   * */
+  onGlobalInviteDrawerOpen?: () => void,
+  /** A callback function which will be called when the search drawer is closed.
+   * */
+  onGlobalInviteDrawerClose?: () => void,
+  /** A callback function which will be fired when the search drawer has finished its close transition. **/
+  onGlobalInviteDrawerCloseComplete?: (node: HTMLElement) => void,
+  /** A prop to decide if the contents of the drawer should unmount on drawer
+   * close. It is true by default. */
+  shouldGlobalInviteDrawerUnmountOnExit?: boolean,
+
+  /** A prop to take control over the opening and closing of drawer. NOTE:
+   * GlobalNavigation controls the drawer behaviour by default. */
   isNotificationDrawerOpen?: boolean,
   /** The contents of the notifications drawer. */
   notificationDrawerContents?: ComponentType<*>,
@@ -165,6 +185,14 @@ export type GlobalNavigationProps = {
   /** A function to get ref of the search icon */
   getSearchRef?: (node: NonStringRef<'div'>) => void,
 
+  /** A callback function which will be called when the product logo item is
+   * clicked. If this is passed, the drawer does not show up. */
+  onGlobalInviteClick?: ?() => void,
+  /** The text to display in the tooltip for the search drawer item. */
+  globalInviteTooltip?: string,
+  /** A function to get ref of the search icon */
+  getGlobalInviteRef?: (node: NonStringRef<'div'>) => void,
+
   /** The component to render the app switcher. */
   appSwitcherComponent?: ComponentType<*>, // AppSwitcher component
   /** The text to display in the tooltip for the app switcher item. */
@@ -236,6 +264,7 @@ export type GlobalNavigationProps = {
 
 export type DrawerName =
   | 'search'
+  | 'globalInvite'
   | 'notification'
   | 'starred'
   | 'create'
