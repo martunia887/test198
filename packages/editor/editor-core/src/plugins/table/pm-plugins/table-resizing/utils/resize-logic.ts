@@ -169,14 +169,32 @@ function stackSpace(
 
   while (candidates.length && amount) {
     // search for most (or least) free space in candidates
-    const candidateIdx = findNextFreeColumn(candidates, amount);
+    let candidateIdx = findNextFreeColumn(candidates, amount);
     if (candidateIdx === -1) {
-      // no free space remains
+      // stack to the right -> growing the dragging column and go overflow
+      if (amount > 0) {
+        return {
+          state: {
+            ...state,
+            cols: [
+              ...state.cols.slice(0, destIdx),
+              {
+                ...state.cols[destIdx],
+                width: state.cols[destIdx].width + amount,
+              },
+              ...state.cols.slice(destIdx + 1),
+            ],
+          },
+          remaining: amount,
+        };
+      }
+
+      // stacking to the left, if no free space remains
       break;
     }
 
-    const column = candidates.find(col => col.index === candidateIdx)!;
-    if (getFreeSpace(column) <= 0) {
+    const column = candidates.find(col => col.index === candidateIdx);
+    if (!column || getFreeSpace(column) <= 0) {
       // no more columns with free space remain
       break;
     }
