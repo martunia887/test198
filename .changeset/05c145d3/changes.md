@@ -1,0 +1,1 @@
+- Update the purple color for info to grey

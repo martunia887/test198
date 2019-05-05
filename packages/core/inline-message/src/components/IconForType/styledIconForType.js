@@ -16,7 +16,7 @@ type themedType = (appearance: Props) => (string: string) => string;
 const getBaseColor: themedType = themed('appearance', {
   connectivity: { light: colors.B400, dark: colors.B100 },
   confirmation: { light: colors.G300, dark: colors.G300 },
-  info: { light: colors.P300, dark: colors.P300 },
+  info: { light: colors.N100, dark: colors.N100 },
   warning: { light: colors.Y300, dark: colors.Y300 },
   error: { light: colors.R400, dark: colors.R400 },
 });
@@ -24,7 +24,7 @@ const getBaseColor: themedType = themed('appearance', {
 const getHoverColor: themedType = themed('appearance', {
   connectivity: { light: colors.B300, dark: colors.B75 },
   confirmation: { light: colors.G200, dark: colors.G200 },
-  info: { light: colors.P200, dark: colors.P200 },
+  info: { light: colors.N300, dark: colors.N300 },
   warning: { light: colors.Y200, dark: colors.Y200 },
   error: { light: colors.R300, dark: colors.R300 },
 });
