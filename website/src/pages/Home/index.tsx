@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { gridSize, math, colors } from '@atlaskit/theme';
 import Cards from './Cards';
-import { TABLET_BREAKPOINT_MIN } from './config';
+import { TABLET_BREAKPOINT_MIN } from '../../constants';
 import '../../../public/css/charlie-display-font.less';
 
 const fonts =
