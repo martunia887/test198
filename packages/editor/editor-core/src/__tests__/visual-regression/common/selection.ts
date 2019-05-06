@@ -4,7 +4,6 @@ import {
   tableSelectors,
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
-import { animationFrame } from '../../__helpers/page-objects/_editor';
 import { EditorTestCardProvider } from '../../../../../editor-test-helpers';
 
 describe('Danger for nested elements', () => {
@@ -12,7 +11,6 @@ describe('Danger for nested elements', () => {
   const cardProvider = new EditorTestCardProvider();
 
   describe(`Full page`, () => {
-    const threshold = 0.01;
     beforeAll(async () => {
       // @ts-ignore
       page = global.page;
@@ -28,17 +26,16 @@ describe('Danger for nested elements', () => {
         },
       });
       await clickFirstCell(page);
-      await animationFrame(page);
     });
 
     afterEach(async () => {
-      await animationFrame(page);
-      await snapshot(page, threshold);
+      await snapshot(page);
     });
 
     it(`should show danger for table and all nested elements`, async () => {
       await page.waitForSelector(tableSelectors.removeTable);
       await page.hover(tableSelectors.removeTable);
+      await page.waitForSelector(tableSelectors.tooltip);
       await page.waitForSelector(tableSelectors.removeDanger);
     });
   });

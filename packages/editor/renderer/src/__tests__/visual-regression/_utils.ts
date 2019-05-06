@@ -1,4 +1,7 @@
-import { getExampleUrl } from '@atlaskit/visual-regression/helper';
+import {
+  compareScreenShot,
+  getExampleUrl,
+} from '@atlaskit/visual-regression/helper';
 import { Props } from '../../ui/Renderer';
 import { Page } from 'puppeteer';
 
@@ -36,6 +39,7 @@ export const deviceViewPorts = {
 export async function snapshot(
   page: Page,
   tolerance?: number,
+  screenshotOptions?: { useUnsafeThreshold?: boolean },
   selector = '#RendererOutput',
 ) {
   const renderer = await page.$(selector);
@@ -49,16 +53,7 @@ export async function snapshot(
     image = await page.screenshot();
   }
 
-  if (tolerance) {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot({
-      failureThreshold: `${tolerance}`,
-      failureThresholdType: 'percent',
-    });
-    return;
-  }
-  // @ts-ignore
-  expect(image).toMatchProdImageSnapshot();
+  compareScreenShot(image, tolerance, screenshotOptions);
 }
 
 export type RendererPropsOverrides = { [T in keyof Props]?: Props[T] } & {

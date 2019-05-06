@@ -20,7 +20,7 @@ describe('Snapshot Test: Full Width', () => {
           allowDynamicTextSizing: true,
           document,
         });
-        await snapshot(page, 0.01);
+        await snapshot(page);
       });
     },
   );

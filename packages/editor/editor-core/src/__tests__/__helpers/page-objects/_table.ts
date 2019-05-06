@@ -57,6 +57,7 @@ export const tableSelectors = {
   tableTh: 'table th',
   cellBackgroundText: 'Cell background',
   cellBackgroundSubmenuSelector: `.${ClassName.CONTEXTUAL_SUBMENU}`,
+  tooltip: `.atlaskit-portal`,
 };
 // insert table from menu
 export const insertTable = async (page: any) => {

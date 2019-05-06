@@ -8,6 +8,10 @@
 const glob = require('glob');
 const pageSelector = '#examples';
 
+// Minimum threshold chosen to be as close to 0 as possible.
+// Small tolerance allowed as comparison library occasionally has false positives
+export const MINIMUM_THRESHOLD = 0.001;
+
 async function disableAllSideEffects(
   page /*: any */,
   allowSideEffects /*: Object */ = {},
@@ -121,7 +125,11 @@ async function waitForLoadedBackgroundImages(
   rootSelector /*:string*/ = '*',
   timeoutMs /*:number*/ = 30000,
 ) {
-  return await page
+  if (rootSelector !== '*') {
+    await page.waitFor(rootSelector);
+  }
+
+  await page
     .evaluate(
       (selector /*:string*/, raceTimeout /*:number*/) => {
         const urlSrcRegex = /url\(\s*?['"]?\s*?(\S+?)\s*?["']?\s*?\)/i;
@@ -227,6 +235,30 @@ async function validateExampleLoaded(page /*:any*/) {
   });
 }
 
+async function compareScreenShot(
+  screenshot /*:any*/,
+  tolerance = MINIMUM_THRESHOLD,
+  screenshotOptions = {},
+) {
+  if (tolerance >= 1) {
+    throw new Error(
+      'Snapshot tolerance should be a decimal in the range [0.0, 1.0)',
+    );
+  } else if (
+    tolerance > MINIMUM_THRESHOLD &&
+    !screenshotOptions.useUnsafeThreshold
+  ) {
+    throw new Error(
+      `Snapshot tolerances greater than minimum threshold (${MINIMUM_THRESHOLD}) are considered unsafe. To use an unsafe threshold, set 'screenshotOptions.useUnsafeThreshold' to true.`,
+    );
+  }
+
+  expect(screenshot).toMatchProdImageSnapshot({
+    failureThreshold: `${tolerance}`,
+    failureThresholdType: 'percent',
+  });
+}
+
 // get all examples from the code sync
 function getAllExamplesSync() /*: Array<Object> */ {
   return glob
@@ -265,6 +297,7 @@ module.exports = {
   waitForLoadedBackgroundImages,
   takeScreenShot,
   takeElementScreenShot,
+  compareScreenShot,
   getExampleUrl,
   loadExampleUrl,
   disableAllAnimations,

@@ -54,7 +54,6 @@ describe('Snapshot Test: Media', () => {
 
   describe('comment editor', () => {
     let page: any;
-    const threshold = 0.02;
     beforeEach(async () => {
       // @ts-ignore
       page = global.page;
@@ -75,20 +74,20 @@ describe('Snapshot Test: Media', () => {
       await snapshot(page);
 
       await pressKey(page, 'ArrowUp');
-      await snapshot(page, threshold);
+      await snapshot(page);
     });
 
     it('renders selection ring around media group items', async () => {
       await snapshot(page);
 
       await pressKey(page, ['ArrowLeft', 'ArrowLeft']);
-      await snapshot(page, threshold);
+      await snapshot(page);
 
       await pressKey(page, 'ArrowLeft');
-      await snapshot(page, threshold);
+      await snapshot(page);
 
       await pressKey(page, 'ArrowLeft');
-      await snapshot(page, threshold);
+      await snapshot(page);
     });
   });
 });

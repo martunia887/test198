@@ -20,7 +20,7 @@ describe('Floating toolbars:', () => {
 
   afterEach(async () => {
     // currently set high need to revisit
-    await snapshot(page, 0.02);
+    await snapshot(page);
   });
 
   it('should render the table toolbar', async () => {

@@ -10,6 +10,6 @@ describe.skip('Code breakout:', () => {
     await initFullPageEditorWithAdf(page, adf, Device.LaptopMDPI);
     await page.waitForSelector(selectors.codeContent);
     await page.click(selectors.codeContent);
-    await snapshot(page, 0.001);
+    await snapshot(page);
   });
 });

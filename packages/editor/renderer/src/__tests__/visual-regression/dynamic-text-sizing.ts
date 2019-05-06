@@ -1,6 +1,7 @@
 import { snapshot, mountRenderer, goToRendererTestingExample } from './_utils';
 import { document } from './__fixtures__/document-without-media';
 import { Page } from 'puppeteer';
+import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
 
 describe('Snapshot Test: Dynamic Text Sizing', () => {
   let page: Page;
@@ -23,7 +24,12 @@ describe('Snapshot Test: Dynamic Text Sizing', () => {
         allowDynamicTextSizing: true,
         document,
       });
-      await snapshot(page, 0.01);
+      await waitForLoadedBackgroundImages(
+        page,
+        '.emoji-common-emoji-sprite',
+        10000,
+      );
+      await snapshot(page);
     });
   });
 });

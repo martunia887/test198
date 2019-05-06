@@ -1,3 +1,5 @@
+import { Page } from 'puppeteer';
+import { MINIMUM_THRESHOLD } from '@atlaskit/visual-regression/helper';
 import {
   snapshot,
   deviceViewPorts,
@@ -8,7 +10,6 @@ import {
 import adf from '../../../../examples/helper/media-resize-layout.adf.json';
 import { selectors as mediaSelectors } from '../../__helpers/page-objects/_media';
 import { selectors as rendererSelectors } from '../../__helpers/page-objects/_renderer';
-import { Page } from 'puppeteer';
 
 const devices = [
   Device.LaptopHiDPI,
@@ -41,7 +42,12 @@ describe('Snapshot Test: Media', () => {
           await page.waitForSelector(mediaSelectors.errorLoading); // In test should show overlay error
 
           await page.waitForSelector(rendererSelectors.document);
-          await snapshot(page, 0.01, rendererSelectors.document);
+          await snapshot(
+            page,
+            MINIMUM_THRESHOLD,
+            {},
+            rendererSelectors.document,
+          );
         });
       });
     });

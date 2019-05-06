@@ -20,22 +20,21 @@ describe('Table context menu: merge-split cells', () => {
     firstCell: string,
     lastCell: string,
   ) => {
-    const threshold = 0.04;
     await page.click(firstCell);
     await pressKeyDown(page, 'Shift');
     await page.click(lastCell);
     await pressKeyUp(page, 'Shift');
     await page.waitForSelector(tableSelectors.selectedCell);
     await clickCellOptions(page);
-    await snapshot(page, threshold);
+    await snapshot(page);
     await selectCellOption(page, tableSelectors.mergeCellsText);
-    await snapshot(page, threshold);
+    await snapshot(page);
     await page.waitForSelector(firstCell);
     await page.click(firstCell);
     await clickCellOptions(page);
-    await snapshot(page, threshold);
+    await snapshot(page);
     await selectCellOption(page, tableSelectors.splitCellText);
-    await snapshot(page, threshold);
+    await snapshot(page);
   };
 
   beforeAll(async () => {

@@ -11,7 +11,6 @@ describe('Delete in table:', () => {
   let page: any;
 
   describe(`Full page`, () => {
-    const threshold = 0.01;
     beforeAll(async () => {
       // @ts-ignore
       page = global.page;
@@ -24,7 +23,7 @@ describe('Delete in table:', () => {
     });
 
     afterEach(async () => {
-      await snapshot(page, threshold);
+      await snapshot(page);
     });
 
     it('should show danger when hovers on remove for row', async () => {
@@ -46,6 +45,7 @@ describe('Delete in table:', () => {
     it(`should show danger when hovers to remove table`, async () => {
       await page.waitForSelector(tableSelectors.removeTable);
       await page.hover(tableSelectors.removeTable);
+      await page.waitForSelector(tableSelectors.tooltip);
       await page.waitForSelector(tableSelectors.removeDanger);
     });
   });

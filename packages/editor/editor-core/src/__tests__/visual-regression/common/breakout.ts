@@ -28,6 +28,6 @@ describe('Columns:', () => {
     await clickOnColumn(page, columnNumber);
     await scrollToColumn(page, columnNumber, offset);
 
-    await snapshot(page, 0.02);
+    await snapshot(page);
   });
 });

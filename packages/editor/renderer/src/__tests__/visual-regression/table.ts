@@ -4,8 +4,8 @@ import {
   mountRenderer,
   animationFrame,
 } from './_utils';
-import { wideTableResized } from './__fixtures__/document-tables';
-import * as tableWithShadowAdf from './__fixtures__/table-with-shadow.adf.json';
+import * as wideTableResized from './__fixtures__/document-tables-adf.json';
+import * as tableWithShadowAdf from './__fixtures__/table-with-shadow-adf.json';
 import { Page } from 'puppeteer';
 
 describe('Snapshot Test: Table scaling', () => {
@@ -25,7 +25,7 @@ describe('Snapshot Test: Table scaling', () => {
     });
 
     await animationFrame(page);
-    await snapshot(page, 0.002);
+    await snapshot(page);
   });
 
   it(`should not overlap inline comments dialog`, async () => {
@@ -55,6 +55,6 @@ describe('Snapshot Test: Table scaling', () => {
     await page.addStyleTag({ content: css });
 
     await animationFrame(page);
-    await snapshot(page, 0.002);
+    await snapshot(page);
   });
 });

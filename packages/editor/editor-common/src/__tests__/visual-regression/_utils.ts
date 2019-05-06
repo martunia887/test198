@@ -1,4 +1,5 @@
 import {
+  compareScreenShot,
   getExampleUrl,
   loadExampleUrl,
 } from '@atlaskit/visual-regression/helper';
@@ -32,6 +33,7 @@ export const loadFullPageEditorWithAdf = async (page: any, adf: any) => {
 export const snapshot = async (
   page: any,
   tolerance?: number,
+  screenshotOptions?: { useUnsafeThreshold?: boolean },
   selector = '.akEditor',
 ) => {
   const editor = await page.$(selector);
@@ -45,14 +47,5 @@ export const snapshot = async (
     image = await page.screenshot();
   }
 
-  if (tolerance !== undefined) {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot({
-      failureThreshold: `${tolerance}`,
-      failureThresholdType: 'percent',
-    });
-  } else {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot();
-  }
+  compareScreenShot(image, tolerance, screenshotOptions);
 };

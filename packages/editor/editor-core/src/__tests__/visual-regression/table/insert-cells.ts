@@ -10,7 +10,6 @@ import { animationFrame } from '../../__helpers/page-objects/_editor';
 
 describe('Snapshot Test: table insert/delete', () => {
   let page: any;
-  const tolerance = 0.01;
   beforeAll(async () => {
     // @ts-ignore
     page = global.page;
@@ -22,7 +21,7 @@ describe('Snapshot Test: table insert/delete', () => {
   });
 
   afterEach(async () => {
-    await snapshot(page, tolerance);
+    await snapshot(page);
   });
 
   // adding tolerance since tool tips can show from time to time

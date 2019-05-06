@@ -1,4 +1,5 @@
 import { Page } from 'puppeteer';
+import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
 import { goToRendererTestingExample, mountRenderer, snapshot } from './_utils';
 import { layoutWithDefaultBreakoutMark } from './__fixtures__/document-with-layout-default-breakout';
 import * as layout2Col from '../__fixtures__/layout-2-columns.adf.json';
@@ -43,7 +44,12 @@ describe('Snapshot Test: Layouts', () => {
         document: layoutWithDefaultBreakoutMark,
         appearance: 'full-page',
       });
-      await snapshot(page, 0.02);
+      await waitForLoadedBackgroundImages(
+        page,
+        '.emoji-common-emoji-sprite',
+        10000,
+      );
+      await snapshot(page);
     });
   });
 });

@@ -28,7 +28,6 @@ import { EditorTestCardProvider } from '../../../../../editor-test-helpers';
 describe('Lists', () => {
   let page: any;
   const cardProvider = new EditorTestCardProvider();
-  const threshold = 0.01;
 
   beforeAll(async () => {
     // @ts-ignore
@@ -37,7 +36,7 @@ describe('Lists', () => {
 
   afterEach(async () => {
     await animationFrame(page);
-    await snapshot(page, threshold);
+    await snapshot(page);
   });
 
   it('should render card toolbar on click when its nested inside lists', async () => {
