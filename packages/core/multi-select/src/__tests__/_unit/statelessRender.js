@@ -10,7 +10,7 @@ import SearchIcon from '@atlaskit/icon/glyph/search';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import Spinner from '@atlaskit/spinner';
 
-import { MultiSelectStateless } from '../../';
+import { MultiSelectStateless } from '../..';
 import { SelectWrapper } from '../../styled/Stateless';
 import InitialLoading from '../../styled/InitialLoading';
 import NoMatches from '../../styled/NoMatch';
@@ -19,7 +19,7 @@ import Footer from '../../components/Footer';
 import FooterDiv from '../../styled/Footer';
 import type { GroupType } from '../../types';
 
-import { name } from '../../../package.json';
+import { name } from '../../version.json';
 
 describe(`${name} - stateless`, () => {
   const animStub = window.cancelAnimationFrame;

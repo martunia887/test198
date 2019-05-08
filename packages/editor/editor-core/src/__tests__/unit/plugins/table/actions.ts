@@ -6,7 +6,7 @@ import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   doc,
   p,
-  createEditor,
+  createEditorFactory,
   table,
   tr,
   td,
@@ -17,19 +17,16 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import {
   transformSliceToAddTableHeaders,
-  deleteColumns,
-  deleteRows,
-  deleteSelectedColumns,
-  deleteSelectedRows,
-  emptyMultipleCells,
+  clearMultipleCells,
   setMultipleCellAttrs,
   toggleContextualMenu,
   setEditorFocus,
   setTableRef,
   selectColumn,
   selectRow,
-  handleCut,
+  toggleHeaderColumn,
 } from '../../../../plugins/table/actions';
+import { handleCut } from '../../../../plugins/table/event-handlers';
 import { TablePluginState } from '../../../../plugins/table/types';
 import tablesPlugin from '../../../../plugins/table';
 import panelPlugin from '../../../../plugins/panel';
@@ -39,8 +36,10 @@ import {
 } from '../../../../plugins/table/pm-plugins/main';
 
 describe('table plugin: actions', () => {
+  const createEditor = createEditorFactory<TablePluginState>();
+
   const editor = (doc: any) =>
-    createEditor<TablePluginState>({
+    createEditor({
       doc,
       editorPlugins: [tablesPlugin(), panelPlugin],
       pluginKey,
@@ -188,112 +187,7 @@ describe('table plugin: actions', () => {
     });
   });
 
-  describe('#deleteColumns', () => {
-    it('should delete columns by indexes', () => {
-      const { editorView } = editor(
-        doc(p('text'), table()(tr(tdCursor, td({})(p('c1')), td({})(p('c2'))))),
-      );
-      const { state, dispatch } = editorView;
-      deleteColumns([0, 1])(state, dispatch);
-      expect(editorView.state.doc).toEqualDocument(
-        doc(p('text'), table()(tr(td()(p('c2'))))),
-      );
-    });
-  });
-
-  describe('#deleteSelectedColumns', () => {
-    describe('when some of the columns are merged', () => {
-      it('should delete columns and update colspans of cells DOM nodes', () => {
-        const { editorView } = editor(
-          doc(
-            p('text'),
-            table()(
-              tr(td({ colspan: 2 })(p('{<>}c1')), td({})(p('c2'))),
-              tr(td({})(p('c3')), td({})(p('c4')), td({})(p('c5'))),
-            ),
-          ),
-        );
-        const { state, dispatch } = editorView;
-        selectColumn(0)(state, dispatch);
-        deleteSelectedColumns(editorView.state, dispatch);
-        expect(editorView.state.doc).toEqualDocument(
-          doc(
-            p('text'),
-            table()(
-              tr(td({ colspan: 1 })(p('c2'))),
-              tr(td({ colspan: 1 })(p('c5'))),
-            ),
-          ),
-        );
-        const cells = editorView.dom.querySelectorAll('td');
-        for (let i = 0, count = cells.length; i < count; i++) {
-          const cell = cells[i] as HTMLElement;
-          expect(cell.getAttribute('colspan')).not.toEqual('2');
-        }
-        editorView.destroy();
-      });
-    });
-  });
-
-  describe('#deleteSelectedRows', () => {
-    describe('when some of the rows are merged', () => {
-      it('should delete rows and update rowspans of cells DOM nodes', () => {
-        const { editorView } = editor(
-          doc(
-            p('text'),
-            table()(
-              tr(td({ rowspan: 2 })(p('{<>}c1')), td({})(p('c2'))),
-              tr(td({})(p('c3'))),
-              tr(td({})(p('c4')), td({})(p('c5')), td({})(p('c6'))),
-            ),
-          ),
-        );
-        const { state, dispatch } = editorView;
-        selectRow(0)(state, dispatch);
-        deleteSelectedRows(editorView.state, dispatch);
-        expect(editorView.state.doc).toEqualDocument(
-          doc(
-            p('text'),
-            table()(
-              tr(
-                td({ rowspan: 1 })(p('c4')),
-                td({ rowspan: 1 })(p('c5')),
-                td({ rowspan: 1 })(p('c6')),
-              ),
-            ),
-          ),
-        );
-        const cells = editorView.dom.querySelectorAll('td');
-        for (let i = 0, count = cells.length; i < count; i++) {
-          const cell = cells[i] as HTMLElement;
-          expect(cell.getAttribute('rowspan')).not.toEqual('2');
-        }
-        editorView.destroy();
-      });
-    });
-  });
-
-  describe('#deleteRows', () => {
-    it('should delete rows by indexes', () => {
-      const { editorView } = editor(
-        doc(
-          p('text'),
-          table()(
-            tr(td()(p('c1')), td()(p('c2'))),
-            tr(td()(p('c3')), td()(p('c4'))),
-            tr(td()(p('c5')), td()(p('c6'))),
-          ),
-        ),
-      );
-      const { state, dispatch } = editorView;
-      deleteRows([0, 1])(state, dispatch);
-      expect(editorView.state.doc).toEqualDocument(
-        doc(p('text'), table()(tr(td()(p('c5')), td()(p('c6'))))),
-      );
-    });
-  });
-
-  describe('#emptyMultipleCells', () => {
+  describe('#clearMultipleCells', () => {
     it('should empty selected cells', () => {
       const { editorView } = editor(
         doc(
@@ -306,7 +200,7 @@ describe('table plugin: actions', () => {
       );
       const { state, dispatch } = editorView;
       selectColumn(0)(state, dispatch);
-      emptyMultipleCells(0)(editorView.state, dispatch);
+      clearMultipleCells()(editorView.state, dispatch);
       expect(editorView.state.doc).toEqualDocument(
         doc(p('text'), table()(tr(tdEmpty, tdEmpty), tr(tdEmpty, tdEmpty))),
       );
@@ -323,7 +217,7 @@ describe('table plugin: actions', () => {
         ),
       );
       const { state, dispatch } = editorView;
-      emptyMultipleCells(state.selection.$from.pos)(editorView.state, dispatch);
+      clearMultipleCells(state.selection.$from.pos)(editorView.state, dispatch);
 
       expect(editorView.state.doc).toEqualDocument(
         doc(
@@ -347,13 +241,16 @@ describe('table plugin: actions', () => {
       );
       const { state, dispatch } = editorView;
       selectColumn(0)(state, dispatch);
-      setMultipleCellAttrs({ colspan: 2 }, 0)(editorView.state, dispatch);
+      setMultipleCellAttrs({ background: 'purple' }, 0)(
+        editorView.state,
+        dispatch,
+      );
       expect(editorView.state.doc).toEqualDocument(
         doc(
           p('text'),
           table()(
-            tr(td({ colspan: 2 })(p('c1')), td()(p('c2'))),
-            tr(td({ colspan: 2 })(p('c3')), td()(p('c4'))),
+            tr(td({ background: 'purple' })(p('c1')), td()(p('c2'))),
+            tr(td({ background: 'purple' })(p('c3')), td()(p('c4'))),
           ),
         ),
       );
@@ -447,6 +344,43 @@ describe('table plugin: actions', () => {
   });
 
   describe('#handleCut', () => {
+    describe('when the entire table is selected', () => {
+      it('should remove the table', () => {
+        const { editorView, refs } = editor(
+          doc(
+            table()(
+              tr(
+                td()(p('{from}a1')),
+                td()(p('a2')),
+                td()(p('a3')),
+                td()(p('{cursorPos}a4')),
+              ),
+              tr(
+                td()(p('b1')),
+                td()(p('b2')),
+                td()(p('b3')),
+                td()(p('{to}b4')),
+              ),
+            ),
+          ),
+        );
+        const { state, dispatch } = editorView;
+        const sel = new CellSelection(
+          state.doc.resolve(refs.from - 2),
+          state.doc.resolve(refs.to - 2),
+        );
+        dispatch(state.tr.setSelection(sel as any));
+        const oldState = editorView.state;
+        dispatch(
+          oldState.tr.setSelection(
+            new TextSelection(oldState.doc.resolve(refs.cursorPos)),
+          ),
+        );
+        const newTr = handleCut(oldState.tr, oldState, editorView.state);
+        expect(newTr.doc).toEqualDocument(doc(p('')));
+      });
+    });
+
     describe('when selected columns are cut', () => {
       it('should remove those columns', () => {
         const { editorView, refs } = editor(
@@ -491,7 +425,6 @@ describe('table plugin: actions', () => {
             ),
           ),
         );
-        editorView.destroy();
       });
     });
 
@@ -531,8 +464,35 @@ describe('table plugin: actions', () => {
             ),
           ),
         );
-        editorView.destroy();
       });
+    });
+  });
+
+  describe('#toggleHeaderColumn', () => {
+    it('should convert all cells including rowspans to table headers', () => {
+      const { editorView } = editor(
+        doc(
+          table()(
+            tr(td()(p('c1')), td()(p('c2'))),
+            tr(td({ rowspan: 2 })(p('c3')), td()(p('c4'))),
+            tr(td()(p('c6'))),
+            tr(td()(p('c7')), td()(p('c8'))),
+          ),
+        ),
+      );
+      const { state, dispatch } = editorView;
+      toggleHeaderColumn(state, dispatch);
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          table()(
+            tr(th()(p('c1')), td()(p('c2'))),
+            tr(th({ rowspan: 2 })(p('c3')), td()(p('c4'))),
+            tr(td()(p('c6'))),
+            tr(th()(p('c7')), td()(p('c8'))),
+          ),
+        ),
+      );
     });
   });
 });

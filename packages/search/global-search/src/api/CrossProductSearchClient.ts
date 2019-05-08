@@ -14,6 +14,12 @@ import {
 } from '@atlaskit/util-service-support';
 import { Scope, ConfluenceItem, JiraItem, PersonItem } from './types';
 
+export const DEFAULT_AB_TEST: ABTest = Object.freeze({
+  experimentId: 'default',
+  abTestId: 'default',
+  controlId: 'default',
+});
+
 export type CrossProductSearchResults = {
   results: Map<Scope, Result[]>;
   abTest?: ABTest;
@@ -32,6 +38,10 @@ export interface CrossProductSearchResponse {
   scopes: ScopeResult[];
 }
 
+export interface CrossProductExperimentResponse {
+  scopes: Experiment[];
+}
+
 export type SearchItem = ConfluenceItem | JiraItem | PersonItem;
 
 export interface ABTest {
@@ -47,25 +57,34 @@ export interface ScopeResult {
   abTest?: ABTest; // in case of an error abTest will be undefined
 }
 
+export interface Experiment {
+  id: Scope;
+  error?: string;
+  abTest: ABTest;
+}
+
+export interface PrefetchedData {
+  abTest: Promise<ABTest> | undefined;
+}
+
 export interface CrossProductSearchClient {
   search(
     query: string,
     searchSession: SearchSession,
     scopes: Scope[],
-    resultLimit?: Number,
+    queryVersion?: number,
+    resultLimit?: number,
   ): Promise<CrossProductSearchResults>;
 
-  getAbTestData(
-    scope: Scope,
-    searchSession: SearchSession,
-  ): Promise<ABTest | undefined>;
+  getAbTestData(scope: Scope): Promise<ABTest>;
 }
 
-export default class CrossProductSearchClientImpl
+export default class CachingCrossProductSearchClientImpl
   implements CrossProductSearchClient {
   private serviceConfig: ServiceConfig;
   private cloudId: string;
-  private addSessionIdToJiraResult;
+  private addSessionIdToJiraResult?: boolean;
+  private abTestDataCache: { [scope: string]: Promise<ABTest> };
 
   // result limit per scope
   private readonly RESULT_LIMIT = 10;
@@ -74,55 +93,77 @@ export default class CrossProductSearchClientImpl
     url: string,
     cloudId: string,
     addSessionIdToJiraResult?: boolean,
+    prefetchedAbTestResult?: Promise<ABTest>,
   ) {
     this.serviceConfig = { url: url };
     this.cloudId = cloudId;
     this.addSessionIdToJiraResult = addSessionIdToJiraResult;
+    this.abTestDataCache = {};
   }
 
   public async search(
     query: string,
     searchSession: SearchSession,
     scopes: Scope[],
-    resultLimit?: Number,
+    queryVersion?: number,
+    resultLimit?: number,
   ): Promise<CrossProductSearchResults> {
-    const response = await this.makeRequest(
-      query.trim(),
-      scopes,
-      searchSession,
-      resultLimit,
-    );
-    return this.parseResponse(response, searchSession.sessionId);
-  }
+    const path = 'quicksearch/v1';
 
-  public async getAbTestData(
-    scope: Scope,
-    searchSession: SearchSession,
-  ): Promise<ABTest | undefined> {
-    const response = await this.makeRequest('', [scope], searchSession);
-    const parsedResponse = this.parseResponse(
-      response,
-      searchSession.sessionId,
-    );
-    return Promise.resolve(parsedResponse.abTest);
-  }
+    const modelParams = [
+      {
+        '@type': 'queryParams',
+        queryVersion,
+      },
+    ];
 
-  private async makeRequest(
-    query: string,
-    scopes: Scope[],
-    searchSession: SearchSession,
-    resultLimit?: Number,
-  ): Promise<CrossProductSearchResponse> {
     const body = {
       query: query,
       cloudId: this.cloudId,
       limit: resultLimit || this.RESULT_LIMIT,
       scopes: scopes,
-      searchSession,
+      ...(queryVersion !== undefined ? { modelParams: modelParams } : {}),
     };
 
+    const response = await this.makeRequest<CrossProductSearchResponse>(
+      path,
+      body,
+    );
+    return this.parseResponse(response, searchSession.sessionId);
+  }
+
+  public async getAbTestData(scope: Scope): Promise<ABTest> {
+    if (this.abTestDataCache[scope]) {
+      return this.abTestDataCache[scope];
+    }
+
+    const path = 'experiment/v1';
+    const body = {
+      cloudId: this.cloudId,
+      scopes: [scope],
+    };
+
+    const response = await this.makeRequest<CrossProductExperimentResponse>(
+      path,
+      body,
+    );
+
+    const scopeWithAbTest: Experiment | undefined = response.scopes.find(
+      s => s.id === scope,
+    );
+
+    const abTestPromise = scopeWithAbTest
+      ? Promise.resolve(scopeWithAbTest.abTest)
+      : Promise.resolve(DEFAULT_AB_TEST);
+
+    this.abTestDataCache[scope] = abTestPromise;
+
+    return abTestPromise;
+  }
+
+  private async makeRequest<T>(path: string, body: object): Promise<T> {
     const options: RequestServiceOptions = {
-      path: 'quicksearch/v1',
+      path,
       requestInit: {
         method: 'POST',
         headers: {
@@ -132,10 +173,7 @@ export default class CrossProductSearchClientImpl
       },
     };
 
-    return utils.requestService<CrossProductSearchResponse>(
-      this.serviceConfig,
-      options,
-    );
+    return utils.requestService<T>(this.serviceConfig, options);
   }
 
   /**

@@ -1,6 +1,6 @@
 // @flow
 
-import { shallow } from 'enzyme';
+import { render, mount } from 'enzyme';
 import React from 'react';
 import Tooltip from '@atlaskit/tooltip';
 import GlobalNavigationItemPrimitive from '../../primitives';
@@ -9,15 +9,17 @@ const styles = () => ({
   itemBase: {},
 });
 
-// Required to dive inside the withGlobalTheme HOC
-const shallowDive = node => shallow(node).dive();
-
 describe('GlobalNavigationItemPrimitive', () => {
   let defaultProps;
+  let defaultDataset;
+
   beforeEach(() => {
     jest.resetModules();
     defaultProps = {
       isFocused: false,
+    };
+    defaultDataset = {
+      'data-test-id': 'GlobalNavigationItem',
     };
   });
 
@@ -36,7 +38,7 @@ describe('GlobalNavigationItemPrimitive', () => {
   });
 
   it('should render an anchor when an href prop is passed', () => {
-    const wrapper = shallowDive(
+    const wrapper = mount(
       <GlobalNavigationItemPrimitive
         {...defaultProps}
         styles={styles}
@@ -46,16 +48,15 @@ describe('GlobalNavigationItemPrimitive', () => {
     const anchor = wrapper.find('a[href="www.example.com"]');
     expect(anchor).toHaveLength(1);
     expect(anchor.props()).toEqual({
+      ...defaultDataset,
       children: null,
       className: expect.any(String),
       href: 'www.example.com',
     });
-
-    expect(wrapper).toMatchSnapshot();
   });
 
   it('should render a button when an onClick prop is passed', () => {
-    const wrapper = shallowDive(
+    const wrapper = mount(
       <GlobalNavigationItemPrimitive
         {...defaultProps}
         styles={styles}
@@ -68,9 +69,8 @@ describe('GlobalNavigationItemPrimitive', () => {
       children: null,
       className: expect.any(String),
       onClick: expect.any(Function),
+      ...defaultDataset,
     });
-
-    expect(wrapper).toMatchSnapshot();
   });
 
   it('should render a CustomComponent when a component prop is passed', () => {
@@ -80,7 +80,7 @@ describe('GlobalNavigationItemPrimitive', () => {
       </button>
     );
     const onClick = () => {};
-    const wrapper = shallowDive(
+    const wrapper = mount(
       <GlobalNavigationItemPrimitive
         {...defaultProps}
         component={MyComponent}
@@ -97,6 +97,7 @@ describe('GlobalNavigationItemPrimitive', () => {
       children: null,
       className: expect.any(String),
       component: MyComponent,
+      dataset: defaultDataset,
       id: 'my-id',
       isSelected: false,
       label: 'my-label',
@@ -104,17 +105,16 @@ describe('GlobalNavigationItemPrimitive', () => {
       size: 'large',
       styles,
     });
-
-    expect(wrapper).toMatchSnapshot();
   });
 
   it('should render a span if neither an href, onClick or component prop is passed', () => {
-    const wrapper = shallowDive(
+    const wrapper = mount(
       <GlobalNavigationItemPrimitive {...defaultProps} styles={styles} />,
     );
     const span = wrapper.find('span');
     expect(span).toHaveLength(1);
     expect(span.props()).toEqual({
+      ...defaultDataset,
       children: null,
       className: expect.any(String),
     });
@@ -123,7 +123,7 @@ describe('GlobalNavigationItemPrimitive', () => {
   it('should render badge and icon when badge and icon props are passed', () => {
     const MyBadge = () => <div id="badge" />;
     const MyIcon = () => <div id="icon" />;
-    const wrapper = shallowDive(
+    const wrapper = mount(
       <GlobalNavigationItemPrimitive
         {...defaultProps}
         styles={styles}
@@ -137,8 +137,31 @@ describe('GlobalNavigationItemPrimitive', () => {
     expect(wrapper.find(MyIcon)).toHaveLength(1);
   });
 
+  [
+    { subject: 'the default element', selector: 'span', props: {} },
+    { subject: 'an anchor', selector: 'a', props: { href: '/' } },
+    { subject: 'a button', selector: 'button', props: { onClick: jest.fn() } },
+  ].forEach(({ selector, subject, props }) => {
+    it(`should apply a custom dataset to ${subject} when dataset is provided`, () => {
+      expect(
+        render(
+          <GlobalNavigationItemPrimitive
+            {...defaultProps}
+            {...props}
+            dataset={{ 'data-foo': 'foo', 'data-bar': 'bar' }}
+          />,
+        )
+          .find(selector)
+          .data(),
+      ).toEqual({
+        foo: 'foo',
+        bar: 'bar',
+      });
+    });
+  });
+
   it('should render a tooltip when a tooltip prop is passed', () => {
-    const wrapper = shallowDive(
+    const wrapper = mount(
       <GlobalNavigationItemPrimitive
         {...defaultProps}
         component={({ className, children, onClick }) => (
@@ -154,7 +177,7 @@ describe('GlobalNavigationItemPrimitive', () => {
   });
 
   it('should render a tooltip without text if element is selected', () => {
-    const wrapper = shallowDive(
+    const wrapper = mount(
       <GlobalNavigationItemPrimitive
         {...defaultProps}
         component={() => <button id="customComponent" />}

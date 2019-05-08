@@ -7,7 +7,7 @@ import { Popup, ProviderFactory } from '@atlaskit/editor-common';
 import {
   doc,
   p,
-  createEditor,
+  createEditorFactory,
   emoji,
   code_block,
 } from '@atlaskit/editor-test-helpers';
@@ -32,6 +32,8 @@ const grinEmojiId = {
 };
 
 describe('@atlaskit/editor-core/ui/ToolbarEmojiPicker', () => {
+  const createEditor = createEditorFactory();
+
   const providerFactory = ProviderFactory.create({ emojiProvider });
   const editor = (doc: any, analyticsHandler = () => {}) =>
     createEditor({
@@ -303,7 +305,7 @@ describe('@atlaskit/editor-core/ui/ToolbarEmojiPicker', () => {
       />,
     );
     const picker = toolbarEmojiPicker.instance() as ToolbarEmojiPicker;
-    picker.handleEscape({ keyCode: 27 });
+    picker.handleEscape({ keyCode: 27 } as KeyboardEvent);
     expect(toolbarEmojiPicker.find(AkEmojiPicker)).toHaveLength(0);
     toolbarEmojiPicker.unmount();
   });

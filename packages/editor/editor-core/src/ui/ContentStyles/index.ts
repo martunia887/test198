@@ -2,9 +2,13 @@ import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
 import {
   editorFontSize,
+  whitespaceSharedStyles,
   paragraphSharedStyles,
+  listsSharedStyles,
   indentationSharedStyles,
   blockMarksSharedStyles,
+  shadowSharedStyle,
+  inlineNodeSharedStyle,
 } from '@atlaskit/editor-common';
 import { telepointerStyle } from '../../plugins/collab-edit/styles';
 import { gapCursorStyles } from '../../plugins/gap-cursor/styles';
@@ -25,6 +29,12 @@ import { tasksAndDecisionsStyles } from '../../plugins/tasks-and-decisions/ui/st
 import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
 
+import {
+  akEditorDeleteBackground,
+  akEditorDeleteBorder,
+  akEditorDeleteBorderBoldSize,
+} from '@atlaskit/editor-common';
+
 const ContentStyles: ComponentClass<
   HTMLAttributes<{}> & { theme: any }
 > = styled.div`
@@ -37,13 +47,15 @@ const ContentStyles: ComponentClass<
   }
 
   .ProseMirror {
-    word-wrap: break-word;
-    white-space: pre-wrap;
     outline: none;
     font-size: ${editorFontSize}px;
 
+    ${whitespaceSharedStyles};
     ${paragraphSharedStyles};
-    ${indentationSharedStyles}
+    ${listsSharedStyles};
+    ${indentationSharedStyles};
+    ${shadowSharedStyle};
+    ${inlineNodeSharedStyle};
   }
 
   .ProseMirror-hideselection *::selection {
@@ -62,7 +74,15 @@ const ContentStyles: ComponentClass<
     outline: 2px solid #8cf;
   }
 
-  .inlineCardView-content-wrap,
+  .inlineCardView-content-wrap {
+    /* cursor disappears left hand side in ff */
+    padding-left: 1px;
+
+    max-width: calc(100% - 20px);
+    vertical-align: top;
+    word-break: break-all;
+  }
+
   .blockCardView-content-wrap {
     display: inline-block;
   }
@@ -98,6 +118,23 @@ const ContentStyles: ComponentClass<
   ${linkStyles}
   ${blockMarksSharedStyles}
 
+  /** Global selector for extensions, as .danger tag is assigned to root level node which is unaccessible from triggered child node **/
+  /* Danger when nested node */
+  .danger .extension-container {
+    background: rgb(255, 189, 173, 0.5); /* R75 with 50% opactiy */
+    transition: opacity 0s;
+  }
+
+  /* Danger when top level node */
+  .danger > span > .extension-container {
+    background: ${akEditorDeleteBackground};
+    .extension-overlay {
+      box-shadow: inset 0px 0px 0px ${akEditorDeleteBorderBoldSize}px ${akEditorDeleteBorder} !important;
+      opacity: 1;
+      transition: opacity 0s;
+    }
+  }
+
   .panelView-content-wrap {
     box-sizing: border-box;
   }
@@ -121,6 +158,10 @@ const ContentStyles: ComponentClass<
 
   .fabric-editor-align-center {
     text-align: center;
+  }
+
+  .hyperlink-floating-toolbar {
+    padding: 0;
   }
 
 `;

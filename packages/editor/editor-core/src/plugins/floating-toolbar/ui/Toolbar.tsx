@@ -3,7 +3,7 @@ import { Component } from 'react';
 import styled from 'styled-components';
 
 import { ButtonGroup } from '@atlaskit/button';
-import { borderRadius, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize, colors, themed } from '@atlaskit/theme';
 
 import { FloatingToolbarItem } from '../types';
 import { compareArrays } from '../utils';
@@ -11,6 +11,10 @@ import Button from './Button';
 import Dropdown from './Dropdown';
 import Select, { SelectOption } from './Select';
 import Separator from './Separator';
+import Input from './Input';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { EditorView } from 'prosemirror-view';
+import { DispatchAnalyticsEvent } from '../../analytics';
 
 const akGridSize = gridSize();
 
@@ -20,10 +24,15 @@ export interface Props {
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
+  providerFactory?: ProviderFactory;
+  className?: string;
+  focusEditor?: () => void;
+  editorView?: EditorView;
+  dispatchAnalyticsEvent?: DispatchAnalyticsEvent;
 }
 
 const ToolbarContainer = styled.div`
-  background-color: white;
+  background-color: ${themed({ light: 'white', dark: colors.DN70 })};
   border-radius: ${borderRadius()}px;
   box-shadow: 0 0 1px rgba(9, 30, 66, 0.31),
     0 4px 8px -2px rgba(9, 30, 66, 0.25);
@@ -42,10 +51,13 @@ export default class Toolbar extends Component<Props> {
   render() {
     const {
       items,
+      dispatchAnalyticsEvent,
       dispatchCommand,
       popupsMountPoint,
       popupsBoundariesElement,
       popupsScrollableElement,
+      className,
+      editorView,
     } = this.props;
     if (!items.length) {
       return null;
@@ -58,6 +70,7 @@ export default class Toolbar extends Component<Props> {
       <ToolbarContainer
         aria-label="Floating Toolbar"
         hasCompactLeftPadding={firstElementIsSelect}
+        className={className}
       >
         <ButtonGroup>
           {items
@@ -70,8 +83,10 @@ export default class Toolbar extends Component<Props> {
                     <Button
                       key={idx}
                       title={item.title}
+                      href={item.href}
                       icon={<ButtonIcon label={item.title} />}
                       appearance={item.appearance}
+                      target={item.target}
                       onClick={() => dispatchCommand(item.onClick)}
                       onMouseEnter={() => dispatchCommand(item.onMouseEnter)}
                       onMouseLeave={() => dispatchCommand(item.onMouseLeave)}
@@ -80,13 +95,30 @@ export default class Toolbar extends Component<Props> {
                     />
                   );
 
+                case 'input':
+                  return (
+                    <Input
+                      key={idx}
+                      mountPoint={popupsMountPoint}
+                      boundariesElement={popupsBoundariesElement}
+                      defaultValue={item.defaultValue}
+                      placeholder={item.placeholder}
+                      onSubmit={value => dispatchCommand(item.onSubmit(value))}
+                      onBlur={value => dispatchCommand(item.onBlur(value))}
+                    />
+                  );
+
+                case 'custom': {
+                  return item.render(editorView, idx, dispatchAnalyticsEvent);
+                }
+
                 case 'dropdown':
                   const DropdownIcon = item.icon;
                   return (
                     <Dropdown
                       key={idx}
                       title={item.title}
-                      icon={<DropdownIcon label={item.title} />}
+                      icon={DropdownIcon && <DropdownIcon label={item.title} />}
                       dispatchCommand={dispatchCommand}
                       options={item.options}
                       hideExpandIcon={item.hideExpandIcon}

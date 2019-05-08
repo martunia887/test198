@@ -10,12 +10,15 @@ import {
   ImageLoaderProps,
 } from '@atlaskit/editor-common';
 import { FullPagePadding } from '../../ui/Renderer/style';
-import { RendererAppearance } from '../../ui/Renderer';
+import { RendererAppearance } from '../../ui/Renderer/types';
 import { MediaProps } from './media';
 
 export interface Props {
   children: ReactElement<any>;
   layout: MediaSingleLayout;
+  width?: number;
+  allowDynamicTextSizing?: boolean;
+  rendererAppearance: RendererAppearance;
 }
 
 export interface State {
@@ -36,21 +39,19 @@ const ExtendedUIMediaSingle = styled(UIMediaSingle)`
       : ``} transition: all 0.1s linear;
 `;
 
-export default class MediaSingle extends Component<
-  {
-    layout: MediaSingleLayout;
-    width?: number;
-    allowDynamicTextSizing?: boolean;
-    rendererAppearance: RendererAppearance;
-  },
-  State
-> {
-  constructor(props) {
+export default class MediaSingle extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {}; // Need to initialize with empty state.
   }
 
-  private onExternalImageLoaded = ({ width, height }) => {
+  private onExternalImageLoaded = ({
+    width,
+    height,
+  }: {
+    width: number;
+    height: number;
+  }) => {
     this.setState({
       width,
       height,
@@ -95,19 +96,26 @@ export default class MediaSingle extends Component<
             height: `${cardHeight}px`,
           };
 
+          const isFullWidth = this.props.rendererAppearance === 'full-width';
+
+          const nonFullWidthSize =
+            containerWidth - padding >= akEditorFullPageMaxWidth
+              ? this.props.allowDynamicTextSizing
+                ? mapBreakpointToLayoutMaxWidth(breakpoint)
+                : akEditorFullPageMaxWidth
+              : containerWidth - padding;
+
+          const lineLength = isFullWidth
+            ? containerWidth - padding
+            : nonFullWidthSize;
+
           return (
             <ExtendedUIMediaSingle
               layout={props.layout}
               width={width}
               height={height}
               containerWidth={containerWidth}
-              lineLength={
-                containerWidth - padding >= akEditorFullPageMaxWidth
-                  ? this.props.allowDynamicTextSizing
-                    ? mapBreakpointToLayoutMaxWidth(breakpoint)
-                    : akEditorFullPageMaxWidth
-                  : containerWidth - padding
-              }
+              lineLength={lineLength}
               pctWidth={props.width}
             >
               {React.cloneElement(child, {

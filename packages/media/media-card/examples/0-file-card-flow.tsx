@@ -1,4 +1,3 @@
-/* tslint:disable:no-console */
 import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
 import {
@@ -18,8 +17,12 @@ import {
   createUploadContext,
 } from '@atlaskit/media-test-helpers';
 import Button from '@atlaskit/button';
-import { Card, FileIdentifier, OnLoadingChangeState } from '../src';
-import { UploadController, FileState } from '@atlaskit/media-core';
+import { Card, OnLoadingChangeState } from '../src';
+import {
+  UploadController,
+  FileIdentifier,
+  FileState,
+} from '@atlaskit/media-core';
 import { Observable } from 'rxjs/Observable';
 import {
   CardWrapper,

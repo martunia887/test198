@@ -4,7 +4,7 @@ import { Node as PmNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
 import { setCellAttrs } from '@atlaskit/adf-schema';
 import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
-import ReactNodeView from '../../../nodeviews/ReactNodeView';
+import ReactNodeView, { ForwardRef } from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import ToolbarButton from '../../../ui/ToolbarButton';
 import WithPluginState from '../../../ui/WithPluginState';
@@ -13,10 +13,9 @@ import { pluginKey } from '../pm-plugins/main';
 import {
   pluginKey as tableResizingPluginKey,
   ResizeState,
-} from '../pm-plugins/table-resizing/index';
+} from '../pm-plugins/table-resizing';
 import { toggleContextualMenu } from '../actions';
 import { TableCssClassName as ClassName, TablePluginState } from '../types';
-import { EditorAppearance } from '../../../types';
 import { closestElement } from '../../../utils';
 import {
   EditorDisabledPluginState,
@@ -28,7 +27,7 @@ export interface CellViewProps {
   view: EditorView;
   portalProviderAPI: PortalProviderAPI;
   getPos: () => number;
-  appearance?: EditorAppearance;
+  isContextMenuEnabled?: boolean;
 }
 
 export type CellProps = {
@@ -38,11 +37,11 @@ export type CellProps = {
   isResizing?: boolean;
   isContextualMenuOpen: boolean;
   disabled: boolean;
-  appearance?: EditorAppearance;
+  isContextMenuEnabled?: boolean;
 };
 
 class Cell extends React.Component<CellProps & InjectedIntlProps> {
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: CellProps & InjectedIntlProps) {
     return (
       this.props.withCursor !== nextProps.withCursor ||
       this.props.isResizing !== nextProps.isResizing ||
@@ -58,13 +57,13 @@ class Cell extends React.Component<CellProps & InjectedIntlProps> {
       forwardRef,
       intl: { formatMessage },
       disabled,
-      appearance,
+      isContextMenuEnabled,
     } = this.props;
     const labelCellOptions = formatMessage(messages.cellOptions);
 
     return (
       <div className={ClassName.CELL_NODEVIEW_WRAPPER} ref={forwardRef}>
-        {withCursor && !disabled && appearance !== 'mobile' && (
+        {isContextMenuEnabled && withCursor && !disabled && (
           <div className={ClassName.CONTEXTUAL_MENU_BUTTON_WRAP}>
             <ToolbarButton
               className={ClassName.CONTEXTUAL_MENU_BUTTON}
@@ -109,17 +108,18 @@ class CellView extends ReactNodeView {
     return { dom };
   }
 
-  setDomAttrs(node) {
+  setDomAttrs(node: PmNode) {
     const { cell } = this;
     if (cell) {
       const attrs = setCellAttrs(node, cell);
-      Object.keys(attrs).forEach(attr => {
-        cell.setAttribute(attr, attrs[attr]);
+      (Object.keys(attrs) as Array<keyof typeof attrs>).forEach(attr => {
+        let attrValue = attrs[attr];
+        cell.setAttribute(attr, String(attrValue));
       });
     }
   }
 
-  render(props, forwardRef) {
+  render(props: CellViewProps, forwardRef: ForwardRef) {
     // nodeview does not re-render on selection changes
     // so we trigger render manually to hide/show contextual menu button when `targetCellPosition` is updated
     return (
@@ -146,8 +146,8 @@ class CellView extends ReactNodeView {
               !!tableResizingPluginState && !!tableResizingPluginState.dragging
             }
             isContextualMenuOpen={!!pluginState.isContextualMenuOpen}
+            isContextMenuEnabled={props.isContextMenuEnabled}
             view={props.view}
-            appearance={props.appearance}
             disabled={(editorDisabledPlugin || {}).editorDisabled}
           />
         )}
@@ -170,13 +170,13 @@ class CellView extends ReactNodeView {
 
 export const createCellView = (
   portalProviderAPI: PortalProviderAPI,
-  appearance?: EditorAppearance,
-) => (node, view, getPos): NodeView => {
+  isContextMenuEnabled?: boolean,
+) => (node: PmNode, view: EditorView, getPos: () => number): NodeView => {
   return new CellView({
     node,
     view,
     getPos,
     portalProviderAPI,
-    appearance,
+    isContextMenuEnabled,
   }).init();
 };

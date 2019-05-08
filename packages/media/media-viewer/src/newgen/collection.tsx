@@ -1,6 +1,11 @@
 import * as React from 'react';
-import { Context } from '@atlaskit/media-core';
-import { Outcome, Identifier, MediaViewerFeatureFlags } from './domain';
+import {
+  Context,
+  FileIdentifier,
+  Identifier,
+  isExternalImageIdentifier,
+} from '@atlaskit/media-core';
+import { Outcome, MediaViewerFeatureFlags } from './domain';
 import ErrorMessage, { createError, MediaViewerError } from './error';
 import { List } from './list';
 import { Subscription } from 'rxjs/Subscription';
@@ -123,6 +128,9 @@ export class Collection extends React.Component<Props, State> {
   };
 
   private shouldLoadNext(selectedItem: Identifier): boolean {
+    if (isExternalImageIdentifier(selectedItem)) {
+      return false;
+    }
     const { items } = this.state;
     return items.match({
       pending: () => false,
@@ -132,8 +140,12 @@ export class Collection extends React.Component<Props, State> {
     });
   }
 
-  private isLastItem(selectedItem: Identifier, items: MediaCollectionItem[]) {
+  private isLastItem(
+    selectedItem: FileIdentifier,
+    items: MediaCollectionItem[],
+  ) {
     const lastItem = items[items.length - 1];
+
     const isLastItem =
       selectedItem.id === lastItem.id &&
       selectedItem.occurrenceKey === lastItem.occurrenceKey;

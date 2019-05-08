@@ -17,7 +17,7 @@ import {
       editor.name
     } editor`,
     { skip: ['edge', 'ie', 'safari'] },
-    async client => {
+    async (client: any, testName: string) => {
       const sample = new Page(client);
       const linkText1 = 'https://www.google.com';
       await sample.goto(clipboardHelper);
@@ -31,18 +31,18 @@ import {
       await sample.waitForSelector(editor.placeholder);
       await sample.click(editor.placeholder);
       await sample.waitForSelector(editable);
-      await sample.paste(editable);
+      await sample.paste();
       await sample.type(editable, '.');
-      await sample.type(editable, 'Return');
+      await sample.keys(['Return']);
 
       // paste link into list
       await sample.type(editable, '* ');
       await sample.waitForSelector('li');
-      await sample.paste(editable);
+      await sample.paste();
 
       await sample.waitForSelector('a');
       const doc = await sample.$eval(editable, getDocFromElement);
-      expect(doc).toMatchDocSnapshot();
+      expect(doc).toMatchCustomDocSnapshot(testName);
     },
   );
 });

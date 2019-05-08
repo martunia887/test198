@@ -4,13 +4,16 @@ import {
   QuickSearch,
   ResultItemGroup,
   ContainerResult,
+  ContainerResultProps,
   PersonResult,
+  PersonResultProps,
   ObjectResult,
+  ObjectResultProps,
 } from '../../src';
 
 type DataShape = {
   title: string;
-  items: Array<any>;
+  items: (ContainerResultProps | PersonResultProps | ObjectResultProps)[];
 };
 
 const data: DataShape[] = [
@@ -28,35 +31,37 @@ const data: DataShape[] = [
   },
 ];
 
-const availableResultTypes = {
+const availableResultTypes: { [key: string]: React.ComponentClass<any> } = {
   person: PersonResult,
   object: ObjectResult,
   container: ContainerResult,
 };
 
-const mapResultsDataToComponents = resultData => {
+const mapResultsDataToComponents = (resultData: DataShape[]) => {
   if (!resultData || !resultData.length) {
     return 'Nothin` to see here';
   }
 
-  return resultData.map(group => (
+  return resultData.map((group: DataShape) => (
     <ResultItemGroup title={group.title} key={group.title}>
       {group.items.map(props => {
-        const Result = availableResultTypes[props.type];
+        const Result: React.ComponentClass = availableResultTypes[props.type!];
         return Result ? <Result key={props.resultId} {...props} /> : null;
       })}
     </ResultItemGroup>
   ));
 };
 
-function contains(string, query) {
+function contains(string: string, query: string) {
   return string.toLowerCase().indexOf(query.toLowerCase()) > -1;
 }
 
 function searchData(query: string): DataShape[] {
   const results = data
     .map(({ title, items }) => {
-      const filteredItems = items.filter(item => contains(item.name, query));
+      const filteredItems = items.filter(item =>
+        contains(item.name as string, query),
+      );
       return { title, items: filteredItems };
     })
     .filter(group => group.items.length);

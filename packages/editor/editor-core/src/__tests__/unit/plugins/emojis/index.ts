@@ -3,7 +3,7 @@ import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { emoji as emojiNode } from '@atlaskit/adf-schema';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import {
-  createEditor,
+  createEditorFactory,
   sendKeyToPm,
   blockquote,
   br,
@@ -16,10 +16,13 @@ import {
   code,
   createEvent,
   spyOnReturnValue,
+  insertText,
 } from '@atlaskit/editor-test-helpers';
+import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
 import { emojiPluginKey } from '../../../../plugins/emoji/pm-plugins/main';
 import emojiPlugin from '../../../../plugins/emoji';
 import listPlugin from '../../../../plugins/lists';
+import quickInsertPlugin from '../../../../plugins/quick-insert';
 
 const { testData } = emojiData;
 
@@ -40,15 +43,23 @@ const evilburnsEmojiId = {
 };
 
 describe('emojis', () => {
+  const createEditor = createEditorFactory();
+
   const event = createEvent('event');
   const providerFactory = ProviderFactory.create({ emojiProvider });
-  const editor = (doc: any) =>
-    createEditor({
+  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+
+  const editor = (doc: any, extraPlugins: any[] = []) => {
+    createAnalyticsEvent = jest.fn().mockReturnValue({ fire() {} });
+    return createEditor({
       doc,
-      editorPlugins: [emojiPlugin, listPlugin],
+      editorProps: { allowAnalyticsGASV3: true },
+      editorPlugins: [emojiPlugin, listPlugin, ...extraPlugins],
       providerFactory,
       pluginKey: emojiPluginKey,
+      createAnalyticsEvent,
     });
+  };
 
   const forceUpdate = (editorView: any) => {
     editorView.updateState(editorView.state);
@@ -65,7 +76,6 @@ describe('emojis', () => {
         forceUpdate(editorView); // Force update to ensure active query.
         sendKeyToPm(editorView, 'ArrowUp');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should be ignored if there is no active query', () => {
@@ -76,7 +86,6 @@ describe('emojis', () => {
 
         sendKeyToPm(editorView, 'ArrowUp');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should call "onSelectPrevious" which should return false by default', () => {
@@ -90,7 +99,6 @@ describe('emojis', () => {
         sendKeyToPm(editorView, 'ArrowUp');
         expect(spy).toBeCalled();
         expect(spy.returnValue).toBe(false);
-        editorView.destroy();
       });
     });
 
@@ -104,7 +112,6 @@ describe('emojis', () => {
         forceUpdate(editorView); // Force update to ensure active query.
         sendKeyToPm(editorView, 'ArrowDown');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should be ignored if there is no active query', () => {
@@ -115,7 +122,6 @@ describe('emojis', () => {
 
         sendKeyToPm(editorView, 'ArrowDown');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should call "onSelectNext" which should return false by default', () => {
@@ -129,7 +135,6 @@ describe('emojis', () => {
         sendKeyToPm(editorView, 'ArrowDown');
         expect(spy).toBeCalled();
         expect(spy.returnValue).toBe(false);
-        editorView.destroy();
       });
     });
 
@@ -143,7 +148,6 @@ describe('emojis', () => {
         forceUpdate(editorView); // Force update to ensure active query.
         sendKeyToPm(editorView, 'Enter');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should be ignored if there is no active query', () => {
@@ -154,7 +158,6 @@ describe('emojis', () => {
 
         sendKeyToPm(editorView, 'Enter');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should call "onSelectCurrent" which should return false by default', () => {
@@ -170,7 +173,6 @@ describe('emojis', () => {
         sendKeyToPm(editorView, 'Enter');
         expect(spy).toHaveBeenCalledWith('Enter');
         expect(spy.returnValue).toBe(false);
-        editorView.destroy();
       });
     });
 
@@ -184,7 +186,6 @@ describe('emojis', () => {
         forceUpdate(editorView); // Force update to ensure active query.
         sendKeyToPm(editorView, 'Shift-Enter');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should be ignored if there is no active query', () => {
@@ -195,7 +196,6 @@ describe('emojis', () => {
 
         sendKeyToPm(editorView, 'Shift-Enter');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should call "onSelectCurrent" which should return false by default', () => {
@@ -211,7 +211,6 @@ describe('emojis', () => {
         sendKeyToPm(editorView, 'Shift-Enter');
         expect(spy).toHaveBeenCalledWith('Shift-Enter');
         expect(spy.returnValue).toBe(false);
-        editorView.destroy();
       });
     });
 
@@ -225,7 +224,6 @@ describe('emojis', () => {
         forceUpdate(editorView); // Force update to ensure active query.
         sendKeyToPm(editorView, 'Space');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should be ignored if there is no active query', () => {
@@ -236,7 +234,6 @@ describe('emojis', () => {
 
         sendKeyToPm(editorView, 'Space');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should call "trySelectCurrentWithSpace" which should return false', () => {
@@ -252,7 +249,6 @@ describe('emojis', () => {
         expect(spy).toBeCalled();
         expect(spy.returnValue).toBe(false);
         expect(spyOnSpaceTyped).toBeCalled();
-        editorView.destroy();
       });
 
       it('should call "insertEmoji" if there is only 1 result', () => {
@@ -279,7 +275,6 @@ describe('emojis', () => {
           ':grin',
         );
         expect(spyOnSpaceTyped).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should call "dismiss" if the query is empty', () => {
@@ -290,7 +285,6 @@ describe('emojis', () => {
 
         sendKeyToPm(editorView, 'Space');
         expect(spy).toBeCalled();
-        editorView.destroy();
       });
     });
 
@@ -304,7 +298,6 @@ describe('emojis', () => {
         forceUpdate(editorView); // Force update to ensure active query.
         sendKeyToPm(editorView, 'Esc');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should be ignored if there is no active query', () => {
@@ -315,7 +308,6 @@ describe('emojis', () => {
 
         sendKeyToPm(editorView, 'Esc');
         expect(spy).not.toBeCalled();
-        editorView.destroy();
       });
 
       it('should call "dismiss" which should return true by default', () => {
@@ -333,7 +325,6 @@ describe('emojis', () => {
         // onDismiss handler should be called
         expect(spyOnDismiss).toBeCalled();
         expect(spy.returnValue).toBe(true);
-        editorView.destroy();
       });
     });
   });
@@ -351,7 +342,6 @@ describe('emojis', () => {
       expect((editorView.state.doc.nodeAt(1) as PMNode).type.spec).toEqual(
         emojiNode,
       );
-      editorView.destroy();
     });
 
     it('should insert a space after the emoji-node', () => {
@@ -362,7 +352,6 @@ describe('emojis', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(p(emoji(grinEmojiId)(), ' ')),
       );
-      editorView.destroy();
     });
 
     it('should allow inserting multiple emojis next to each other', () => {
@@ -375,7 +364,6 @@ describe('emojis', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(p(emoji(grinEmojiId)(), ' ', emoji(evilburnsEmojiId)(), ' ')),
       );
-      editorView.destroy();
     });
 
     it('should allow inserting emoji on new line after hard break', () => {
@@ -388,7 +376,6 @@ describe('emojis', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(p(br(), emoji(grinEmojiId)(), ' ')),
       );
-      editorView.destroy();
     });
 
     it('should not break list into two when inserting emoji inside list item', () => {
@@ -409,7 +396,6 @@ describe('emojis', () => {
           ),
         ),
       );
-      editorView.destroy();
     });
 
     it('should insert only 1 emoji at a time inside blockqoute', () => {
@@ -427,7 +413,6 @@ describe('emojis', () => {
         emojiNode,
       );
       expect(editorView.state.doc.nodeAt(10)).toBe(null);
-      editorView.destroy();
     });
   });
 
@@ -449,7 +434,6 @@ describe('emojis', () => {
         const { plugin, pluginState, editorView } = editor(doc(p('te{<>}xt')));
         plugin.props.handleDOMEvents!.focus(editorView, event);
         expect(pluginState.focused).toEqual(true);
-        editorView.destroy();
       });
     });
 
@@ -458,7 +442,22 @@ describe('emojis', () => {
         const { plugin, pluginState, editorView } = editor(doc(p('te{<>}xt')));
         plugin.props.handleDOMEvents!.blur(editorView, event);
         expect(pluginState.focused).toEqual(false);
-        editorView.destroy();
+      });
+    });
+  });
+
+  describe('quick insert', () => {
+    it('should trigger emoji typeahead invoked analytics event', async () => {
+      const { editorView, sel } = editor(doc(p('{<>}')), [quickInsertPlugin]);
+      insertText(editorView, '/Emoji', sel);
+      sendKeyToPm(editorView, 'Enter');
+
+      expect(createAnalyticsEvent).toHaveBeenCalledWith({
+        action: 'invoked',
+        actionSubject: 'typeAhead',
+        actionSubjectId: 'emojiTypeAhead',
+        attributes: { inputMethod: 'quickInsert' },
+        eventType: 'ui',
       });
     });
   });

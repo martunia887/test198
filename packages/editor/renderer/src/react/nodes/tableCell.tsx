@@ -3,10 +3,12 @@ import {
   hexToRgba,
   akEditorTableCellBackgroundOpacity,
 } from '@atlaskit/editor-common';
+import { CellAttributes } from '@atlaskit/adf-schema';
 
-// tslint:disable-next-line:variable-name
-const TableCell = props => {
-  let style = {};
+type Props = CellAttributes & { children?: React.ReactNode };
+
+const TableCell = (props: Props) => {
+  const style: any = {};
   if (props.background) {
     // we do this when doing toDOM, so do here as well
     const color = hexToRgba(
@@ -16,8 +18,18 @@ const TableCell = props => {
     style['background-color'] = color;
   }
 
+  const attrs: any = {};
+  if (props.colwidth) {
+    attrs['data-colwidth'] = props.colwidth.join(',');
+  }
+
   return (
-    <td style={style} rowSpan={props.rowspan} colSpan={props.colspan}>
+    <td
+      style={style}
+      rowSpan={props.rowspan}
+      colSpan={props.colspan}
+      {...attrs}
+    >
       {props.children}
     </td>
   );

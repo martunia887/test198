@@ -1,4 +1,5 @@
 import { Slice, Mark, Node, NodeType, Schema } from 'prosemirror-model';
+import { PasteSource } from '../analytics';
 
 export function isPastedFromWord(html?: string): boolean {
   return !!html && html.indexOf('urn:schemas-microsoft-com:office:word') >= 0;
@@ -32,7 +33,7 @@ export const isSingleLine = (text: string): boolean => {
   return !!text && text.trim().split('\n').length === 1;
 };
 
-export function getPasteSource(event: ClipboardEvent): string {
+export function getPasteSource(event: ClipboardEvent): PasteSource {
   const html = event.clipboardData.getData('text/html');
 
   if (isPastedFromDropboxPaper(html)) {
@@ -51,11 +52,11 @@ export function getPasteSource(event: ClipboardEvent): string {
     return 'fabric-editor';
   }
 
-  return 'other';
+  return 'uncategorized';
 }
 
 // TODO: Write JEST tests for this part
-export function isCode(str) {
+export function isCode(str: string) {
   const lines = str.split(/\r?\n|\r/);
   if (3 > lines.length) {
     return false;
@@ -96,7 +97,7 @@ export function isCode(str) {
 
 // @see https://product-fabric.atlassian.net/browse/ED-3159
 // @see https://github.com/markdown-it/markdown-it/issues/38
-export function escapeLinks(text) {
+export function escapeLinks(text: string) {
   return text.replace(/(\[([^\]]+)\]\()?((https?|ftp):\/\/[^\s]+)/g, str => {
     return str.match(/^(https?|ftp):\/\/[^\s]+$/) ? `<${str}>` : str;
   });

@@ -1,15 +1,28 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 import { MediaType, ImageResizeMode } from '@atlaskit/media-core';
+import { Ellipsify, MediaImage } from '@atlaskit/media-ui';
+import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
 
 import { CardDimensions, CardStatus } from '../../index';
 import { CardAction } from '../../actions';
 
-import { UploadingView } from '../../utils/uploadingView';
-import { CardContent } from './cardContent';
 import { CardOverlay } from './cardOverlay';
-import { Wrapper } from './styled';
+import {
+  PlayIconWrapper,
+  Wrapper,
+  ProgressBarWrapper,
+  Body,
+  CardActionsWrapper,
+  Overlay,
+  ProgressWrapper,
+  Title,
+} from './styled';
 import { isLoadingImage } from '../../utils/isLoadingImage';
+import { CardLoading } from '../../utils/lightCards/cardLoading';
+import { shouldDisplayImageThumbnail } from '../../utils/shouldDisplayImageThumbnail';
+import { ProgressBar } from '../../utils/progressBar';
+import CardActions from '../../utils/cardActions';
 
 export interface FileCardImageViewProps {
   readonly mediaName?: string;
@@ -29,7 +42,7 @@ export interface FileCardImageViewProps {
 
   readonly error?: ReactNode;
 
-  readonly actions?: Array<CardAction>;
+  readonly actions?: CardAction[];
   readonly onRetry?: () => void;
   readonly previewOrientation?: number;
 }
@@ -40,16 +53,6 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
     disableOverlay: false,
   };
 
-  private isDownloadingOrProcessing() {
-    const { status, dataURI, mediaType } = this.props;
-
-    return (
-      status === 'loading' ||
-      status === 'processing' ||
-      isLoadingImage(mediaType, dataURI)
-    );
-  }
-
   render() {
     const { disableOverlay, selectable, selected, mediaType } = this.props;
     return (
@@ -59,27 +62,38 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
         selected={selected}
         mediaType={mediaType}
       >
-        {this.getCardContents()}
+        {this.renderCardContents()}
       </Wrapper>
     );
   }
 
-  private getCardContents = (): Array<JSX.Element> | JSX.Element => {
+  private renderCardContents = (): Array<JSX.Element> | JSX.Element => {
     const { status } = this.props;
 
-    switch (status) {
-      case 'error':
-        return this.getErrorContents();
-      case 'failed-processing':
-        return this.getFailedContents();
-      case 'uploading':
-        return this.getUploadingContents();
-      default:
-        return this.getSuccessCardContents();
+    if (status === 'error') {
+      return this.renderErrorContents();
+    } else if (status === 'failed-processing') {
+      return this.renderFailedContents();
     }
+
+    if (this.isImageNotReadyForDisplay) {
+      return this.renderLoadingContents();
+    }
+
+    return this.renderSuccessCardContents();
   };
 
-  private getErrorContents = (): JSX.Element => {
+  private renderLoadingContents = () => {
+    return (
+      <div className="wrapper">
+        <div className="img-wrapper">
+          <CardLoading />
+        </div>
+      </div>
+    );
+  };
+
+  private renderErrorContents = (): JSX.Element => {
     const {
       error,
       mediaName,
@@ -105,7 +119,7 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
     );
   };
 
-  private getFailedContents = () => {
+  private renderFailedContents = () => {
     const { mediaName, mediaType, actions, fileSize } = this.props;
 
     return (
@@ -123,27 +137,7 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
     );
   };
 
-  private getUploadingContents = (): JSX.Element => {
-    const { actions, mediaName, progress, dataURI, selectable } = this.props;
-
-    const overlay = selectable ? this.createUploadingCardOverlay() : null;
-
-    return (
-      <div className="wrapper">
-        <div className="img-wrapper">
-          <UploadingView
-            title={mediaName}
-            progress={progress || 0}
-            dataURI={dataURI}
-            actions={actions}
-          />
-        </div>
-        {overlay}
-      </div>
-    );
-  };
-
-  private createUploadingCardOverlay = (): JSX.Element => {
+  private renderUploadingCardOverlay = (): JSX.Element => {
     const { mediaType, dataURI, selectable, selected } = this.props;
     const isPersistent = mediaType === 'doc' || !dataURI;
 
@@ -156,37 +150,89 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
     );
   };
 
-  private getSuccessCardContents = (): JSX.Element => {
-    const {
-      mediaType,
-      dataURI,
-      disableOverlay,
-      previewOrientation,
-    } = this.props;
-    const overlay =
-      this.isDownloadingOrProcessing() || disableOverlay
-        ? null
-        : this.createSuccessCardOverlay();
+  private renderPlayButton = () => {
+    const { mediaType } = this.props;
+    if (mediaType !== 'video') {
+      return null;
+    }
+
+    return (
+      <PlayIconWrapper>
+        <VidPlayIcon label="play" size="large" />
+      </PlayIconWrapper>
+    );
+  };
+
+  private renderMediaImage = () => {
+    const { dataURI, mediaType, previewOrientation } = this.props;
+    if (shouldDisplayImageThumbnail(dataURI, mediaType)) {
+      return (
+        <MediaImage
+          dataURI={dataURI}
+          crop={this.isCropped}
+          stretch={this.isStretched}
+          previewOrientation={previewOrientation}
+        />
+      );
+    }
+    return null;
+  };
+
+  private renderProgressBar = () => {
+    const { mediaName, progress, actions, status } = this.props;
+
+    if (status !== 'uploading') {
+      return null;
+    }
+
+    return (
+      <ProgressBarWrapper>
+        <Overlay>
+          <Title>
+            <Ellipsify text={mediaName || ''} lines={2} />
+          </Title>
+          <Body>
+            <ProgressWrapper>
+              <ProgressBar progress={progress} />
+            </ProgressWrapper>
+            <CardActionsWrapper>
+              {actions ? (
+                <CardActions actions={actions} triggerColor="white" />
+              ) : null}
+            </CardActionsWrapper>
+          </Body>
+        </Overlay>
+      </ProgressBarWrapper>
+    );
+  };
+
+  private renderSuccessCardContents = (): JSX.Element => {
+    const { disableOverlay, selectable, status } = this.props;
+
+    let overlay: JSX.Element | null = null;
+    if (!disableOverlay) {
+      if (status === 'uploading') {
+        if (selectable) {
+          overlay = this.renderUploadingCardOverlay();
+        }
+      } else {
+        overlay = this.renderSuccessCardOverlay();
+      }
+    }
 
     return (
       <div className="wrapper">
         <div className="img-wrapper">
-          <CardContent
-            loading={this.isDownloadingOrProcessing()}
-            mediaItemType="file"
-            mediaType={mediaType}
-            dataURI={dataURI}
-            crop={this.isCropped}
-            stretch={this.isStretched}
-            previewOrientation={previewOrientation}
-          />
+          {this.renderMediaImage()}
+          {this.renderProgressBar()}
+          {this.renderPlayButton()}
         </div>
         {overlay}
       </div>
     );
   };
 
-  private createSuccessCardOverlay = (): JSX.Element => {
+  private renderSuccessCardOverlay = (): JSX.Element => {
     const {
       mediaName,
       mediaType,
@@ -211,13 +257,27 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
     );
   };
 
-  get isCropped() {
+  private get isImageNotReadyForDisplay() {
+    const { status, dataURI, mediaType } = this.props;
+
+    if (dataURI) {
+      return false;
+    }
+
+    return (
+      status === 'loading' ||
+      status === 'processing' ||
+      isLoadingImage(mediaType, dataURI)
+    );
+  }
+
+  private get isCropped() {
     const { resizeMode } = this.props;
 
     return resizeMode === 'crop';
   }
 
-  get isStretched() {
+  private get isStretched() {
     const { resizeMode } = this.props;
 
     return resizeMode === 'stretchy-fit';

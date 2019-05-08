@@ -1,59 +1,71 @@
+import { snapshot, Appearance, initEditorWithAdf, Device } from '../_utils';
 import {
-  initEditor,
-  snapshot,
   insertMedia,
-  setupMediaMocksProviders,
-  editable,
-} from '../_utils';
+  scrollToMedia,
+} from '../../__helpers/page-objects/_media';
+import { clickEditableContent } from '../../__helpers/page-objects/_editor';
+import { pressKey } from '../../__helpers/page-objects/_keyboard';
 
 describe('Snapshot Test: Media', () => {
-  // TODO: fix this for fullpage editor mode
-  describe.skip('full page editor', () => {
-    let page;
-    beforeAll(async () => {
+  describe('full page editor', () => {
+    let page: any;
+    beforeEach(async () => {
       // @ts-ignore
       page = global.page;
 
-      await initEditor(page, 'full-page-with-toolbar');
-      await page.setViewport({ width: 1920, height: 1080 });
-      await setupMediaMocksProviders(page);
+      await initEditorWithAdf(page, {
+        appearance: Appearance.fullPage,
+        device: Device.LaptopHiDPI,
+      });
 
       // click into the editor
-      await page.waitForSelector(editable);
-      await page.click(editable);
+      await clickEditableContent(page);
 
       // insert single media item
       await insertMedia(page);
+      // Move mouse out of the page to not create fake cursor
+      await page.mouse.move(-1, -1);
     });
 
-    it('renders selection ring around media (via up)', async () => {
-      await snapshot(page);
-      await page.keyboard.down('ArrowUp');
+    it('should renders selection ring around media (via up)', async () => {
+      await pressKey(page, 'ArrowUp');
+      await scrollToMedia(page);
       await snapshot(page);
     });
 
-    it('renders selection ring around media (via gap cursor)', async () => {
-      await page.keyboard.down('ArrowLeft');
-      await page.keyboard.down('ArrowLeft');
+    it('should render right side gap cursor (via arrow left)', async () => {
+      await pressKey(page, 'ArrowLeft');
+      await scrollToMedia(page);
       await snapshot(page);
+    });
 
-      await page.keyboard.down('ArrowLeft');
+    it('renders selection ring around media (via 2 arrow left)', async () => {
+      await pressKey(page, ['ArrowLeft', 'ArrowLeft']);
+      await scrollToMedia(page);
+      await snapshot(page);
+    });
+
+    it('should render left side gap cursor ( via 3 arrow left)', async () => {
+      await pressKey(page, ['ArrowLeft', 'ArrowLeft', 'ArrowLeft']);
+      await scrollToMedia(page);
       await snapshot(page);
     });
   });
 
   describe('comment editor', () => {
-    let page;
+    let page: any;
+    const threshold = 0.02;
     beforeEach(async () => {
       // @ts-ignore
       page = global.page;
 
-      await initEditor(page, 'comment');
-      await setupMediaMocksProviders(page);
+      await initEditorWithAdf(page, {
+        appearance: Appearance.comment,
+        device: Device.LaptopHiDPI,
+      });
 
       // click into the editor
-      await page.waitForSelector(editable);
-      await page.click(editable);
+      await clickEditableContent(page);
 
       // insert 3 media items
       await insertMedia(page, ['one.svg', 'two.svg', 'three.svg']);
@@ -62,22 +74,21 @@ describe('Snapshot Test: Media', () => {
     it('renders selection ring around last media group item (via up)', async () => {
       await snapshot(page);
 
-      await page.keyboard.down('ArrowUp');
-      await snapshot(page);
+      await pressKey(page, 'ArrowUp');
+      await snapshot(page, threshold);
     });
 
     it('renders selection ring around media group items', async () => {
       await snapshot(page);
 
-      await page.keyboard.down('ArrowLeft');
-      await page.keyboard.down('ArrowLeft');
-      await snapshot(page);
+      await pressKey(page, ['ArrowLeft', 'ArrowLeft']);
+      await snapshot(page, threshold);
 
-      await page.keyboard.down('ArrowLeft');
-      await snapshot(page);
+      await pressKey(page, 'ArrowLeft');
+      await snapshot(page, threshold);
 
-      await page.keyboard.down('ArrowLeft');
-      await snapshot(page);
+      await pressKey(page, 'ArrowLeft');
+      await snapshot(page, threshold);
     });
   });
 });

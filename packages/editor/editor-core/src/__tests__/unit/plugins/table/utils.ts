@@ -1,8 +1,7 @@
-import { isTableSelected } from 'prosemirror-utils';
 import {
   doc,
   p,
-  createEditor,
+  createEditorFactory,
   table,
   tr,
   td,
@@ -28,8 +27,10 @@ import tablesPlugin from '../../../../plugins/table';
 import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
 
 describe('table plugin: utils', () => {
+  const createEditor = createEditorFactory<TablePluginState>();
+
   const editor = (doc: any) =>
-    createEditor<TablePluginState>({
+    createEditor({
       doc,
       editorPlugins: [tablesPlugin()],
       pluginKey,
@@ -47,12 +48,14 @@ describe('table plugin: utils', () => {
             ),
           ),
         );
-        const columnsWidths = getColumnsWidths(editorView);
+        const columnsWidths = getColumnsWidths(
+          editorView.state,
+          editorView.domAtPos.bind(editorView),
+        );
         columnsWidths.forEach(width => {
           expect(typeof width).toEqual('number');
           expect(width > 0).toBe(true);
         });
-        editorView.destroy();
       });
     });
 
@@ -68,36 +71,14 @@ describe('table plugin: utils', () => {
               ),
             ),
           );
-          const columnsWidths = getColumnsWidths(editorView);
+          const columnsWidths = getColumnsWidths(
+            editorView.state,
+            editorView.domAtPos.bind(editorView),
+          );
           columnsWidths.forEach(width => {
             expect(typeof width).toEqual('number');
             expect(width > 0).toBe(true);
           });
-          editorView.destroy();
-        });
-      });
-      describe('when merged column does not have cells', () => {
-        it('should return an array of columns widths where widths of merged columns === undefined', () => {
-          // column 2 doesn't have any cells here
-          const { editorView } = editor(
-            doc(
-              p('text'),
-              table()(
-                tr(td({ colspan: 2 })(p('a1')), td({})(p('a3'))),
-                tr(td({ colspan: 2 })(p('b1')), td({})(p('b3'))),
-              ),
-            ),
-          );
-          const columnsWidths = getColumnsWidths(editorView);
-          columnsWidths.forEach((width, index) => {
-            if (index === 1) {
-              expect(typeof width).toEqual('undefined');
-            } else {
-              expect(typeof width).toEqual('number');
-              expect(width > 0).toBe(true);
-            }
-          });
-          editorView.destroy();
         });
       });
     });
@@ -121,7 +102,6 @@ describe('table plugin: utils', () => {
           expect(typeof height).toEqual('number');
           expect(height > 0).toBe(true);
         });
-        editorView.destroy();
       });
     });
 
@@ -144,7 +124,6 @@ describe('table plugin: utils', () => {
             expect(typeof height).toEqual('number');
             expect(height > 0).toBe(true);
           });
-          editorView.destroy();
         });
       });
     });
@@ -161,7 +140,6 @@ describe('table plugin: utils', () => {
             isColumnInsertButtonVisible(i, editorView.state.selection),
           ).toBe(true);
         }
-        editorView.destroy();
       });
     });
     describe('when selection is a CellSelection', () => {
@@ -183,7 +161,6 @@ describe('table plugin: utils', () => {
               isColumnInsertButtonVisible(i, editorView.state.selection),
             ).toBe(true);
           }
-          editorView.destroy();
         });
       });
 
@@ -205,7 +182,6 @@ describe('table plugin: utils', () => {
               isColumnInsertButtonVisible(i, editorView.state.selection),
             ).toBe(true);
           }
-          editorView.destroy();
         });
       });
 
@@ -233,7 +209,6 @@ describe('table plugin: utils', () => {
               ).toBe(true);
             }
           }
-          editorView.destroy();
         });
       });
       describe('when three columns are selected', () => {
@@ -254,7 +229,6 @@ describe('table plugin: utils', () => {
               isColumnInsertButtonVisible(i, editorView.state.selection),
             ).toBe(true);
           }
-          editorView.destroy();
         });
       });
       describe('when table is selected', () => {
@@ -275,7 +249,6 @@ describe('table plugin: utils', () => {
               isColumnInsertButtonVisible(i, editorView.state.selection),
             ).toBe(true);
           }
-          editorView.destroy();
         });
       });
     });
@@ -299,7 +272,6 @@ describe('table plugin: utils', () => {
             true,
           );
         }
-        editorView.destroy();
       });
     });
     describe('when selection is a CellSelection', () => {
@@ -321,7 +293,6 @@ describe('table plugin: utils', () => {
               isRowInsertButtonVisible(i, editorView.state.selection),
             ).toBe(true);
           }
-          editorView.destroy();
         });
       });
 
@@ -343,7 +314,6 @@ describe('table plugin: utils', () => {
               isRowInsertButtonVisible(i, editorView.state.selection),
             ).toBe(true);
           }
-          editorView.destroy();
         });
       });
 
@@ -371,7 +341,6 @@ describe('table plugin: utils', () => {
               ).toBe(true);
             }
           }
-          editorView.destroy();
         });
       });
       describe('when three rows are selected', () => {
@@ -393,7 +362,6 @@ describe('table plugin: utils', () => {
               isRowInsertButtonVisible(i, editorView.state.selection),
             ).toBe(true);
           }
-          editorView.destroy();
         });
       });
       describe('when table is elected', () => {
@@ -414,7 +382,6 @@ describe('table plugin: utils', () => {
               isRowInsertButtonVisible(i, editorView.state.selection),
             ).toBe(true);
           }
-          editorView.destroy();
         });
       });
     });
@@ -429,7 +396,6 @@ describe('table plugin: utils', () => {
         expect(isColumnDeleteButtonVisible(editorView.state.selection)).toBe(
           false,
         );
-        editorView.destroy();
       });
     });
     describe('when selection is a CellSelection', () => {
@@ -449,7 +415,6 @@ describe('table plugin: utils', () => {
           expect(isColumnDeleteButtonVisible(editorView.state.selection)).toBe(
             false,
           );
-          editorView.destroy();
         });
       });
       describe('when a column is selected', () => {
@@ -468,7 +433,6 @@ describe('table plugin: utils', () => {
           expect(isColumnDeleteButtonVisible(editorView.state.selection)).toBe(
             true,
           );
-          editorView.destroy();
         });
       });
       describe('when table is selected', () => {
@@ -487,7 +451,6 @@ describe('table plugin: utils', () => {
           expect(isColumnDeleteButtonVisible(editorView.state.selection)).toBe(
             false,
           );
-          editorView.destroy();
         });
       });
     });
@@ -502,7 +465,6 @@ describe('table plugin: utils', () => {
         expect(isRowDeleteButtonVisible(editorView.state.selection)).toBe(
           false,
         );
-        editorView.destroy();
       });
     });
     describe('when selection is a CellSelection', () => {
@@ -522,7 +484,6 @@ describe('table plugin: utils', () => {
           expect(isRowDeleteButtonVisible(editorView.state.selection)).toBe(
             false,
           );
-          editorView.destroy();
         });
       });
       describe('when a row is selected', () => {
@@ -541,7 +502,6 @@ describe('table plugin: utils', () => {
           expect(isRowDeleteButtonVisible(editorView.state.selection)).toBe(
             true,
           );
-          editorView.destroy();
         });
       });
       describe('when table is selected', () => {
@@ -560,7 +520,6 @@ describe('table plugin: utils', () => {
           expect(isRowDeleteButtonVisible(editorView.state.selection)).toBe(
             false,
           );
-          editorView.destroy();
         });
       });
     });
@@ -579,7 +538,6 @@ describe('table plugin: utils', () => {
             editorView.state.selection,
           ),
         ).toBe(null);
-        editorView.destroy();
       });
     });
     describe('when selection is a CellSelection and 3 columns are selected', () => {
@@ -603,42 +561,6 @@ describe('table plugin: utils', () => {
           )!;
           expect(indexes).toEqual([0, 1, 2]);
           expect(left > 0).toBe(true);
-          editorView.destroy();
-        });
-      });
-      describe('columnsWidths = [100, ,150, ,200]', () => {
-        it('should return indexes = [0, 2]', () => {
-          const { editorView } = editor(
-            doc(
-              p('text'),
-              table()(
-                tr(
-                  td({ colspan: 2 })(p('{<cell}a1')),
-                  td({ colspan: 2 })(p('')),
-                  tdEmpty,
-                ),
-                tr(
-                  td({ colspan: 2 })(p('')),
-                  td({ colspan: 2 })(p('')),
-                  tdEmpty,
-                ),
-                tr(
-                  td({ colspan: 2 })(p('')),
-                  td({ colspan: 2 })(p('{cell>}c3')),
-                  tdEmpty,
-                ),
-              ),
-            ),
-          );
-
-          const columnsWidths = [100, , 150, , 200];
-          const { indexes, left } = getColumnDeleteButtonParams(
-            columnsWidths,
-            editorView.state.selection,
-          )!;
-          expect(indexes).toEqual([0, 2]);
-          expect(left > 0).toBe(true);
-          editorView.destroy();
         });
       });
     });
@@ -661,7 +583,6 @@ describe('table plugin: utils', () => {
         expect(
           getRowDeleteButtonParams(rowsHeights, editorView.state.selection),
         ).toBe(null);
-        editorView.destroy();
       });
     });
     describe('when selection is a CellSelection and 3 rows are selected', () => {
@@ -686,7 +607,6 @@ describe('table plugin: utils', () => {
           )!;
           expect(indexes).toEqual([0, 1, 2]);
           expect(top > 0).toBe(true);
-          editorView.destroy();
         });
       });
       describe('rowsHeights = [100, ,150, ,200]', () => {
@@ -717,7 +637,6 @@ describe('table plugin: utils', () => {
           )!;
           expect(indexes).toEqual([0, 2]);
           expect(top > 0).toBe(true);
-          editorView.destroy();
         });
       });
     });
@@ -847,7 +766,6 @@ describe('table plugin: utils', () => {
             false,
           );
           expect(classNames).toBe('');
-          editorView.destroy();
         });
       });
       describe('when a column is selected', () => {
@@ -970,7 +888,6 @@ describe('table plugin: utils', () => {
             false,
           );
           expect(classNames).toBe('');
-          editorView.destroy();
         });
       });
       describe('when a row is selected', () => {
@@ -1018,80 +935,6 @@ describe('table plugin: utils', () => {
               expect(classNames.indexOf('danger') > -1).toBe(true);
             });
           });
-        });
-      });
-    });
-  });
-
-  describe('#normalizeSelection', () => {
-    describe('when table has non-rectangular column CellSelection', () => {
-      describe('when first column is selected', () => {
-        it('should create a rectangular CellSelection', () => {
-          const { editorView } = editor(
-            doc(
-              p('text'),
-              table()(
-                tr(td({})(p('{<cell}a1')), tdEmpty),
-                tr(td({ colspan: 2 })(p('b1'))),
-                tr(td({})(p('{cell>}c1')), tdEmpty),
-              ),
-            ),
-          );
-
-          expect(isTableSelected(editorView.state.selection)).toBe(true);
-        });
-      });
-      describe('when second column is selected', () => {
-        it('should create a rectangular CellSelection', () => {
-          const { editorView } = editor(
-            doc(
-              p('text'),
-              table()(
-                tr(tdEmpty, td({})(p('{<cell}a1'))),
-                tr(td({ colspan: 2 })(p('b1'))),
-                tr(tdEmpty, td({})(p('{cell>}c1'))),
-              ),
-            ),
-          );
-
-          expect(isTableSelected(editorView.state.selection)).toBe(true);
-        });
-      });
-    });
-
-    describe('when table has non-rectangular rpw CellSelection', () => {
-      describe('when first row is selected', () => {
-        it('should create a rectangular CellSelection', () => {
-          const { editorView } = editor(
-            doc(
-              p('text'),
-              table()(
-                tr(
-                  td({})(p('{<cell}a1')),
-                  td({ rowspan: 2 })(p('a2')),
-                  td({})(p('{cell>}a3')),
-                ),
-                tr(tdEmpty, tdEmpty),
-              ),
-            ),
-          );
-
-          expect(isTableSelected(editorView.state.selection)).toBe(true);
-        });
-      });
-      describe('when second row is selected', () => {
-        it('should create a rectangular CellSelection', () => {
-          const { editorView } = editor(
-            doc(
-              p('text'),
-              table()(
-                tr(tdEmpty, td({ rowspan: 2 })(p('a2')), tdEmpty),
-                tr(td({})(p('{<cell}b1')), td({})(p('{cell>}b3'))),
-              ),
-            ),
-          );
-
-          expect(isTableSelected(editorView.state.selection)).toBe(true);
         });
       });
     });

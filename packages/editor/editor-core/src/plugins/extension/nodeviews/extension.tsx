@@ -5,6 +5,8 @@ import { ProviderFactory, ExtensionHandlers } from '@atlaskit/editor-common';
 import { ReactNodeView } from '../../../nodeviews';
 import Extension from '../ui/Extension';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
+import { ForwardRef } from '../../../nodeviews/ReactNodeView';
+import { ZeroWidthSpace } from '../../../utils';
 
 export interface Props {
   node: PmNode;
@@ -13,10 +15,11 @@ export interface Props {
 }
 
 class ExtensionNode extends ReactNodeView {
-  ignoreMutation(mutation) {
+  ignoreMutation(mutation: MutationRecord) {
     // Extensions can perform async operations that will change the DOM.
-    // To avoid having their tree rebuilt, we need to ignore the mutation.
-    return true;
+    // To avoid having their tree rebuilt, we need to ignore the mutation
+    // if its not a layout, we need to give children a chance to recalc
+    return mutation.attributeName !== 'data-layout';
   }
 
   getContentDOM() {
@@ -29,15 +32,24 @@ class ExtensionNode extends ReactNodeView {
     return { dom };
   }
 
-  render(props, forwardRef) {
+  render(
+    props: {
+      providerFactory: ProviderFactory;
+      extensionHandlers: ExtensionHandlers;
+    },
+    forwardRef: ForwardRef,
+  ) {
     return (
-      <Extension
-        editorView={this.view}
-        node={this.node}
-        providerFactory={props.providerFactory}
-        handleContentDOMRef={forwardRef}
-        extensionHandlers={props.extensionHandlers}
-      />
+      <span>
+        <Extension
+          editorView={this.view}
+          node={this.node}
+          providerFactory={props.providerFactory}
+          handleContentDOMRef={forwardRef}
+          extensionHandlers={props.extensionHandlers}
+        />
+        {this.node.type.name === 'inlineExtension' && ZeroWidthSpace}
+      </span>
     );
   }
 }

@@ -9,6 +9,8 @@ import {
   BaseTheme,
   WidthProvider,
 } from '@atlaskit/editor-common';
+import { Context as CardContext } from '@atlaskit/smart-card';
+
 import { getUiComponent } from './create-editor';
 import EditorActions from './actions';
 import { EditorProps } from './types/editor-props';
@@ -17,8 +19,7 @@ import { EventDispatcher } from './event-dispatcher';
 import EditorContext from './ui/EditorContext';
 import { WithCreateAnalyticsEvent } from './ui/WithCreateAnalyticsEvent';
 import { PortalProvider, PortalRenderer } from './ui/PortalProvider';
-import { nextMajorVersion } from './version';
-import { Context as CardContext } from '@atlaskit/smart-card';
+import { nextMajorVersion } from './version-wrapper';
 import { createContextAdapter } from './nodeviews';
 
 export * from './types';
@@ -32,9 +33,10 @@ type Context = {
 const ContextAdapter = createContextAdapter({
   card: CardContext,
 });
+
 export default class Editor extends React.Component<EditorProps, {}> {
   static defaultProps: EditorProps = {
-    appearance: 'message',
+    appearance: 'comment',
     disabled: false,
     extensionHandlers: {},
   };
@@ -88,7 +90,7 @@ export default class Editor extends React.Component<EditorProps, {}> {
     }
   }
 
-  private deprecationWarnings(props) {
+  private deprecationWarnings(props: EditorProps) {
     const nextVersion = nextMajorVersion();
     const deprecatedProperties = {
       mediaProvider: {
@@ -131,12 +133,15 @@ export default class Editor extends React.Component<EditorProps, {}> {
       },
     };
 
-    Object.keys(deprecatedProperties).forEach(property => {
+    (Object.keys(deprecatedProperties) as Array<
+      keyof typeof deprecatedProperties
+    >).forEach(property => {
       if (props.hasOwnProperty(property)) {
-        const meta = deprecatedProperties[property];
+        const meta: { type?: string; message?: string } =
+          deprecatedProperties[property];
         const type = meta.type || 'enabled by default';
 
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.warn(
           `${property} property is deprecated. ${meta.message ||
             ''} [Will be ${type} in editor-core@${nextVersion}]`,
@@ -144,18 +149,11 @@ export default class Editor extends React.Component<EditorProps, {}> {
       }
     });
 
-    if (!props.hasOwnProperty('appearance')) {
-      // tslint:disable-next-line:no-console
-      console.warn(
-        `The default appearance is changing from "message" to "comment", to main current behaviour use <Editor appearance="message" />. [Will be changed in editor-core@${nextVersion}]`,
-      );
-    }
-
     if (
       props.hasOwnProperty('quickInsert') &&
       typeof props.quickInsert === 'boolean'
     ) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.warn(
         `quickInsert property is deprecated. [Will be enabled by default in editor-core@${nextVersion}]`,
       );
@@ -164,9 +162,9 @@ export default class Editor extends React.Component<EditorProps, {}> {
     if (
       props.hasOwnProperty('allowTables') &&
       typeof props.allowTables !== 'boolean' &&
-      !props.allowTables.advanced
+      (!props.allowTables || !props.allowTables.advanced)
     ) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.warn(
         `Advanced table options are deprecated (except isHeaderRowRequired) to continue using advanced table features use - <Editor allowTables={{ advanced: true }} /> [Will be changed in editor-core@${nextVersion}]`,
       );
@@ -213,6 +211,7 @@ export default class Editor extends React.Component<EditorProps, {}> {
       media,
       collabEdit,
       quickInsert,
+      autoformattingProvider,
       UNSAFE_cards,
     } = props;
     this.providerFactory.setProvider('emojiProvider', emojiProvider);
@@ -246,6 +245,11 @@ export default class Editor extends React.Component<EditorProps, {}> {
     if (UNSAFE_cards && UNSAFE_cards.provider) {
       this.providerFactory.setProvider('cardProvider', UNSAFE_cards.provider);
     }
+
+    this.providerFactory.setProvider(
+      'autoformattingProvider',
+      autoformattingProvider,
+    );
 
     if (quickInsert && typeof quickInsert !== 'boolean') {
       this.providerFactory.setProvider(
@@ -300,20 +304,30 @@ export default class Editor extends React.Component<EditorProps, {}> {
                         providerFactory={this.providerFactory}
                         onEditorCreated={this.onEditorCreated}
                         onEditorDestroyed={this.onEditorDestroyed}
+                        allowAnalyticsGASV3={this.props.allowAnalyticsGASV3}
                         disabled={this.props.disabled}
-                        render={({ editor, view, eventDispatcher, config }) => (
+                        render={({
+                          editor,
+                          view,
+                          eventDispatcher,
+                          config,
+                          dispatchAnalyticsEvent,
+                        }) => (
                           <BaseTheme
                             dynamicTextSizing={
-                              this.props.allowDynamicTextSizing
+                              this.props.allowDynamicTextSizing &&
+                              this.props.appearance !== 'full-width'
                             }
                           >
                             <Component
+                              appearance={this.props.appearance!}
                               disabled={this.props.disabled}
                               editorActions={this.editorActions}
                               editorDOMElement={editor}
                               editorView={view}
                               providerFactory={this.providerFactory}
                               eventDispatcher={eventDispatcher}
+                              dispatchAnalyticsEvent={dispatchAnalyticsEvent}
                               maxHeight={this.props.maxHeight}
                               onSave={
                                 this.props.onSave ? this.handleSave : undefined

@@ -12,7 +12,7 @@ import type { Props } from '../types';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../version.json';
 import { Container } from './styled';
 
 class InlineDialog extends Component<Props, {}> {
@@ -28,6 +28,7 @@ class InlineDialog extends Component<Props, {}> {
   };
 
   containerRef: ?HTMLElement = null;
+
   triggerRef: ?HTMLElement = null;
 
   componentDidUpdate(prevProps: Props) {
@@ -48,7 +49,7 @@ class InlineDialog extends Component<Props, {}> {
     }
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     if (typeof window === 'undefined') return;
 
     window.removeEventListener('click', this.handleClickOutside);
@@ -61,7 +62,7 @@ class InlineDialog extends Component<Props, {}> {
 
     const container: ?HTMLElement = this.containerRef;
     const trigger: ?HTMLElement = this.triggerRef;
-    const target: HTMLElement = event.target;
+    const { target } = event;
 
     // exit if we click outside but on the trigger — it can handle the clicks itself
     if (trigger && trigger.contains(target)) return;

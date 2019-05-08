@@ -7,12 +7,14 @@ const jest = require('jest');
 const meow = require('meow');
 
 const webpack = require('./utils/webpack');
-const reportTestFailures = require('./reporting');
+const reporting = require('./reporting');
+
+const LONG_RUNNING_TESTS_THRESHOLD_SECS = 60;
 
 /*
  * function main() to
  * start and stop webpack-dev-server, selenium-standalone-server, browserstack connections
- * and run and wait for webdriver tests complete
+ * and run and wait for webdriver tests complete.
  *
  * By default the tests are running headlessly, set HEADLESS=false if you want to run them directly on real browsers.
  * if WATCH= true, by default, it will start chrome.
@@ -43,11 +45,21 @@ async function runJest(testPaths) {
       _: testPaths || cli.input,
       maxWorkers,
       watch: !!process.env.WATCH,
+      watchPathIgnorePatterns: [
+        '\\/node_modules\\/',
+        '.+\\/__tests__\\/(?!integration)',
+        '.+\\/__tests-karma__\\/',
+        '.+\\/__snapshots__\\/',
+        '.+\\/__image_snapshots__\\/',
+      ],
       passWithNoTests: true,
       updateSnapshot: cli.flags.updateSnapshot,
+      // https://product-fabric.atlassian.net/browse/BUILDTOOLS-108
+      // ci: process.env.CI,
     },
     [process.cwd()],
   );
+
   return status.results;
 }
 
@@ -84,24 +96,52 @@ async function rerunFailedTests(result) {
 
 function runTestsWithRetry() {
   return new Promise(async resolve => {
-    let code = 0;
     let results;
+    let code = 0;
     try {
       results = await runJest();
-      code = getExitCode(results);
-      // Only retry and report results in CI.
-      if (code !== 0 && process.env.CI) {
-        reportTestFailures(results, 'atlaskit.qa.integration_test.failure');
-        results = await rerunFailedTests(results);
-        code = getExitCode(results);
+      const perfStats = results.testResults
+        .filter(result => {
+          const timeTaken =
+            (result.perfStats.end - result.perfStats.start) / 3600;
+          return timeTaken > LONG_RUNNING_TESTS_THRESHOLD_SECS;
+        })
+        .map(result => {
+          return {
+            testFilePath: result.testFilePath.replace(process.cwd(), ''),
+            timeTaken: +(
+              (result.perfStats.end - result.perfStats.start) /
+              3600
+            ).toFixed(2),
+          };
+        });
+
+      if (perfStats.length) {
+        await reporting.reportLongRunningTests(
+          perfStats,
+          LONG_RUNNING_TESTS_THRESHOLD_SECS,
+        );
       }
 
-      /**
-       * If the run succeeds,
-       * log the previously failed tests to indicate flakiness
-       */
-      if (code === 0 && process.env.CI) {
-        reportTestFailures(results, 'atlaskit.qa.integration_test.flakiness');
+      code = getExitCode(results);
+      console.log('initalTestExitStatus', code);
+      // Only retry and report results in CI.
+      if (code !== 0 && process.env.CI) {
+        results = await rerunFailedTests(results);
+
+        code = getExitCode(results);
+        /**
+         * If the re-run succeeds,
+         * log the previously failed tests to indicate flakiness
+         */
+        if (code === 0) {
+          await reporting.reportInconsistency(results);
+        } else {
+          await reporting.reportFailure(
+            results,
+            'atlaskit.qa.integration_test.failure',
+          );
+        }
       }
     } catch (err) {
       console.error(err.toString());

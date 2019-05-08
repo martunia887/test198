@@ -1,5 +1,57 @@
 # @atlaskit/color-picker
 
+## 0.5.0
+- [minor] [7c17b35107](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7c17b35107):
+
+  - Updates react and react-dom peer dependencies to react@^16.8.0 and react-dom@^16.8.0. To use this package, please ensure you use at least this version of react and react-dom.
+
+## 0.4.3
+- [patch] [50cbf86910](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/50cbf86910):
+
+  - removes the undesirable grey background on Safari
+
+## 0.4.2
+- Updated dependencies [9c0b4744be](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9c0b4744be):
+  - @atlaskit/docs@7.0.3
+  - @atlaskit/icon@16.0.9
+  - @atlaskit/section-message@2.0.3
+  - @atlaskit/select@8.1.1
+  - @atlaskit/theme@8.1.7
+
+## 0.4.1
+- [patch] [1bcaa1b991](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1bcaa1b991):
+
+  - Add npmignore for index.ts to prevent some jest tests from resolving that instead of index.js
+
+## 0.4.0
+- [minor] [32f743afc5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/32f743afc5):
+
+  - Enable noImplicitAny for @atlaskit/color-picker
+
+## 0.3.0
+- [minor] [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+
+  - Dropped ES5 distributables from the typescript packages
+
+## 0.2.6
+- Updated dependencies [76299208e6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/76299208e6):
+  - @atlaskit/icon@16.0.4
+  - @atlaskit/docs@7.0.0
+  - @atlaskit/analytics-next@4.0.0
+  - @atlaskit/section-message@2.0.0
+  - @atlaskit/select@8.0.0
+  - @atlaskit/theme@8.0.0
+
+## 0.2.5
+- [patch] [f5482d0018](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f5482d0018):
+
+  - taking advantage of the new target function for PopupSelect
+
+## 0.2.4
+- [patch] [06713e0a0c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/06713e0a0c):
+
+  - popup select "target" is now a function that must resolve to a node
+
 ## 0.2.3
 - Updated dependencies [d7ef59d432](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d7ef59d432):
   - @atlaskit/docs@6.0.1

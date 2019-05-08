@@ -7,7 +7,7 @@ import AkComment, {
 import { WithProviders } from '@atlaskit/editor-common';
 import { ConnectedReactionsView } from '@atlaskit/reactions';
 import { ReactRenderer } from '@atlaskit/renderer';
-import * as distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
+import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import * as React from 'react';
 import styled from 'styled-components';
 import { HttpError } from '../api/HttpError';
@@ -66,7 +66,7 @@ const Reactions: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
 `;
 
 export default class Comment extends React.Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -76,12 +76,13 @@ export default class Comment extends React.Component<Props, State> {
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     const { isEditing, isReplying } = this.state;
-    const { isHighlighted } = this.props;
+    const { isHighlighted, portal } = this.props;
 
     if (
       nextState.isEditing !== isEditing ||
       nextState.isReplying !== isReplying ||
-      nextProps.isHighlighted !== isHighlighted
+      nextProps.isHighlighted !== isHighlighted ||
+      nextProps.portal !== portal
     ) {
       return true;
     }
@@ -118,7 +119,7 @@ export default class Comment extends React.Component<Props, State> {
   }
 
   private dispatch = (dispatch: string, ...args: any[]) => {
-    const handler = this.props[dispatch];
+    const handler = (this.props as any)[dispatch];
 
     if (handler) {
       handler.apply(handler, args);
@@ -130,10 +131,11 @@ export default class Comment extends React.Component<Props, State> {
   };
 
   private onReply = (value: any, analyticsEvent: AnalyticsEvent) => {
-    const { containerId } = this.props;
+    const { objectId, containerId } = this.props;
 
     fireEvent(analyticsEvent, {
       actionSubjectId: actionSubjectIds.replyButton,
+      objectId,
       containerId,
     });
 
@@ -159,7 +161,7 @@ export default class Comment extends React.Component<Props, State> {
       parentComment.commentId,
       value,
       undefined,
-      id => {
+      (id: string) => {
         sendAnalyticsEvent({
           actionSubjectId: id,
           action: trackEventActions.created,
@@ -190,6 +192,7 @@ export default class Comment extends React.Component<Props, State> {
   private onDelete = (value: any, analyticsEvent: AnalyticsEvent) => {
     const {
       comment: { nestedDepth, commentId },
+      objectId,
       containerId,
       conversationId,
       sendAnalyticsEvent,
@@ -197,27 +200,34 @@ export default class Comment extends React.Component<Props, State> {
 
     fireEvent(analyticsEvent, {
       actionSubjectId: actionSubjectIds.deleteButton,
+      objectId,
       containerId,
     });
 
-    this.dispatch('onDeleteComment', conversationId, commentId, id => {
-      sendAnalyticsEvent({
-        actionSubjectId: id,
-        action: trackEventActions.deleted,
-        eventType: eventTypes.TRACK,
-        actionSubject: 'comment',
-        attributes: {
-          nestedDepth: nestedDepth || 0,
-        },
-      });
-    });
+    this.dispatch(
+      'onDeleteComment',
+      conversationId,
+      commentId,
+      (id: string) => {
+        sendAnalyticsEvent({
+          actionSubjectId: id,
+          action: trackEventActions.deleted,
+          eventType: eventTypes.TRACK,
+          actionSubject: 'comment',
+          attributes: {
+            nestedDepth: nestedDepth || 0,
+          },
+        });
+      },
+    );
   };
 
   private onEdit = (value: any, analyticsEvent: AnalyticsEvent) => {
-    const { containerId } = this.props;
+    const { objectId, containerId } = this.props;
 
     fireEvent(analyticsEvent, {
       actionSubjectId: actionSubjectIds.editButton,
+      objectId,
       containerId,
     });
 
@@ -244,7 +254,7 @@ export default class Comment extends React.Component<Props, State> {
       conversationId,
       comment.commentId,
       value,
-      id => {
+      (id: string) => {
         sendAnalyticsEvent({
           actionSubjectId: id,
           action: trackEventActions.updated,
@@ -273,7 +283,7 @@ export default class Comment extends React.Component<Props, State> {
   };
 
   private onRequestCancel = (value: any, analyticsEvent: AnalyticsEvent) => {
-    const { comment, onCancel, containerId } = this.props;
+    const { comment, onCancel, objectId, containerId } = this.props;
 
     // Invoke optional onCancel hook
     if (onCancel) {
@@ -282,6 +292,7 @@ export default class Comment extends React.Component<Props, State> {
 
     fireEvent(analyticsEvent, {
       actionSubjectId: actionSubjectIds.cancelFailedRequestButton,
+      objectId,
       containerId,
     });
 
@@ -291,6 +302,7 @@ export default class Comment extends React.Component<Props, State> {
   private onRequestRetry = (value: any, analyticsEvent: AnalyticsEvent) => {
     const { lastDispatch } = this.state;
     const {
+      objectId,
       containerId,
       onRetry,
       comment: { localId, isPlaceholder },
@@ -302,6 +314,7 @@ export default class Comment extends React.Component<Props, State> {
 
     fireEvent(analyticsEvent, {
       actionSubjectId: actionSubjectIds.retryFailedRequestButton,
+      objectId,
       containerId,
     });
 
@@ -333,6 +346,7 @@ export default class Comment extends React.Component<Props, State> {
       allowFeedbackAndHelpButtons,
       onEditorClose,
       onEditorOpen,
+      portal,
     } = this.props;
     const { isEditing } = this.state;
 
@@ -365,32 +379,13 @@ export default class Comment extends React.Component<Props, State> {
         document={comment.document.adf}
         dataProviders={dataProviders}
         disableHeadingIDs={true}
+        portal={portal}
       />
     );
   }
 
   private renderComments() {
-    const {
-      comments,
-      conversationId,
-      user,
-      onUserClick,
-      dataProviders,
-      onAddComment,
-      onUpdateComment,
-      onDeleteComment,
-      onRevertComment,
-      onHighlightComment,
-      onRetry,
-      onCancel,
-      renderEditor,
-      containerId,
-      disableScrollTo,
-      onEditorClose,
-      onEditorOpen,
-      onEditorChange,
-      sendAnalyticsEvent,
-    } = this.props;
+    const { comment, comments, ...otherCommentProps } = this.props;
 
     if (!comments || comments.length === 0) {
       return null;
@@ -400,25 +395,8 @@ export default class Comment extends React.Component<Props, State> {
       <CommentContainer
         key={child.localId}
         comment={child}
-        user={user}
-        conversationId={conversationId}
-        onAddComment={onAddComment}
-        onUpdateComment={onUpdateComment}
-        onDeleteComment={onDeleteComment}
-        onEditorClose={onEditorClose}
-        onEditorOpen={onEditorOpen}
-        onEditorChange={onEditorChange}
-        onRevertComment={onRevertComment}
-        onHighlightComment={onHighlightComment}
-        onRetry={onRetry}
-        onCancel={onCancel}
-        onUserClick={onUserClick}
-        dataProviders={dataProviders}
         renderComment={props => <Comment {...props} />}
-        renderEditor={renderEditor}
-        containerId={containerId}
-        disableScrollTo={disableScrollTo}
-        sendAnalyticsEvent={sendAnalyticsEvent}
+        {...otherCommentProps}
       />
     ));
   }
@@ -457,7 +435,7 @@ export default class Comment extends React.Component<Props, State> {
   }
 
   private getActions() {
-    const { comment, user, dataProviders, containerId } = this.props;
+    const { comment, user, dataProviders, objectId } = this.props;
     const { isEditing } = this.state;
     const canReply = !!user && !isEditing && !comment.deleted;
 
@@ -485,7 +463,7 @@ export default class Comment extends React.Component<Props, State> {
     }
 
     if (
-      containerId &&
+      objectId &&
       commentAri &&
       dataProviders &&
       dataProviders.hasProvider('reactionsStore') &&
@@ -501,7 +479,7 @@ export default class Comment extends React.Component<Props, State> {
             <Reactions>
               <ConnectedReactionsView
                 store={reactionsStore}
-                containerAri={containerId}
+                containerAri={objectId}
                 ari={commentAri}
                 emojiProvider={emojiProvider}
               />
@@ -514,16 +492,30 @@ export default class Comment extends React.Component<Props, State> {
     return actions;
   }
 
-  private handleTimeClick = () => {
+  private handleTimeClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const { comment, onHighlightComment, disableScrollTo } = this.props;
 
     if (!disableScrollTo && comment && onHighlightComment) {
-      onHighlightComment(comment.commentId);
+      onHighlightComment(event, comment.commentId);
     }
   };
 
+  private renderAuthor() {
+    const { comment, onUserClick } = this.props;
+    const { createdBy } = comment;
+
+    return (
+      <CommentAuthor
+        onClick={onUserClick && this.handleUserClick(createdBy)}
+        href={onUserClick ? '#' : createdBy.profileUrl}
+      >
+        {createdBy && createdBy.name}
+      </CommentAuthor>
+    );
+  }
+
   render() {
-    const { comment, onUserClick, isHighlighted, disableScrollTo } = this.props;
+    const { comment, isHighlighted, disableScrollTo } = this.props;
     const { createdBy, state: commentState, error } = comment;
     const errorProps: {
       actions?: any[];
@@ -560,20 +552,7 @@ export default class Comment extends React.Component<Props, State> {
     return (
       <AkComment
         id={commentId}
-        author={
-          // Render with onClick/href if they're supplied
-          onUserClick || createdBy.profileUrl ? (
-            <CommentAuthor
-              onClick={this.handleUserClick(createdBy)}
-              href={createdBy.profileUrl || '#'}
-            >
-              {createdBy && createdBy.name}
-            </CommentAuthor>
-          ) : (
-            // Otherwise just render text
-            <CommentAuthor>{createdBy && createdBy.name}</CommentAuthor>
-          )
-        }
+        author={this.renderAuthor()}
         avatar={
           <AkAvatar
             src={createdBy && createdBy.avatarUrl}
@@ -582,6 +561,7 @@ export default class Comment extends React.Component<Props, State> {
             enableTooltip={true}
           />
         }
+        type={createdBy && createdBy.type}
         time={
           <CommentTime
             onClick={this.handleTimeClick}

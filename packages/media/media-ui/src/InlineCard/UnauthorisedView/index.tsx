@@ -3,6 +3,7 @@ import { IconAndTitleLayout } from '../IconAndTitleLayout';
 import Button from '@atlaskit/button';
 import { truncateUrlForErrorView } from '../utils';
 import { Frame } from '../Frame';
+import { colors } from '@atlaskit/theme';
 
 export interface InlineCardUnauthorizedViewProps {
   /** The url to display */
@@ -20,7 +21,7 @@ export interface InlineCardUnauthorizedViewProps {
 export class InlineCardUnauthorizedView extends React.Component<
   InlineCardUnauthorizedViewProps
 > {
-  handleConnectAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
+  handleConnectAccount = (event: React.MouseEvent<HTMLElement>) => {
     const { onAuthorise } = this.props;
     event.preventDefault();
     event.stopPropagation();
@@ -31,12 +32,20 @@ export class InlineCardUnauthorizedView extends React.Component<
     const { url, icon, onClick, isSelected, onAuthorise } = this.props;
     return (
       <Frame onClick={onClick} isSelected={isSelected}>
-        <IconAndTitleLayout icon={icon} title={truncateUrlForErrorView(url)} />
+        <IconAndTitleLayout
+          icon={icon}
+          title={truncateUrlForErrorView(url)}
+          titleColor={colors.N500}
+        />
         {!onAuthorise ? (
           ''
         ) : (
           <>
-            {' - '}
+            {/* 
+              NB: a non-breaking hyphen - hyphentation should be
+              handled by the browser, not us.
+            */}
+            {` \u2011 `}
             <Button
               spacing="none"
               appearance="link"

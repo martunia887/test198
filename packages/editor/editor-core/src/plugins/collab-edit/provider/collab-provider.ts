@@ -263,7 +263,7 @@ export class CollabProvider implements CollabEditProvider {
   /**
    * Subscribe to events emitted by this provider
    */
-  on(evt: CollabEvent, handler: (...args) => void) {
+  on(evt: CollabEvent, handler: (...args: any) => void) {
     this.eventEmitter.on(evt, handler);
     return this;
   }
@@ -271,8 +271,16 @@ export class CollabProvider implements CollabEditProvider {
   /**
    * Unsubscribe from events emitted by this provider
    */
-  off(evt: CollabEvent, handler: (...args) => void) {
+  off(evt: CollabEvent, handler: (...args: any) => void) {
     this.eventEmitter.off(evt, handler);
+    return this;
+  }
+
+  /**
+   * Unsubscribe from all events emitted by this provider.
+   */
+  unsubscribeAll(evt: CollabEvent) {
+    this.eventEmitter.removeAllListeners(evt);
     return this;
   }
 }

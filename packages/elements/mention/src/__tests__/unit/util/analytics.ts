@@ -1,9 +1,9 @@
-import { ELEMENTS_CHANNEL } from '../../../constants';
+import { ELEMENTS_CHANNEL } from '../../../_constants';
 import { fireAnalyticsMentionTypeaheadEvent } from '../../../util/analytics';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../../../package.json';
+} from '../../../version.json';
 
 describe('Util Analytics', () => {
   const createAnalyticsEventMock = jest.fn();

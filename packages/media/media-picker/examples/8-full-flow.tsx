@@ -3,67 +3,101 @@ import {
   defaultCollectionName,
   createUploadContext,
 } from '@atlaskit/media-test-helpers';
-import { Card, FileIdentifier, CardEvent } from '@atlaskit/media-card';
-import { MediaViewer, MediaViewerItem } from '@atlaskit/media-viewer';
-import { FileDetails } from '@atlaskit/media-core';
+import { Card } from '@atlaskit/media-card';
+import { MediaViewerDataSource } from '@atlaskit/media-viewer';
+import { FileIdentifier } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
 import Select from '@atlaskit/select';
 import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
-import { MediaPicker } from '../src';
+import {
+  MediaPicker,
+  UploadPreviewUpdateEventPayload,
+  MediaFile,
+  Popup,
+} from '../src';
 
 const context = createUploadContext();
 
-const popup = MediaPicker('popup', context, {
-  uploadParams: {
-    collection: defaultCollectionName,
-  },
-});
 const dataSourceOptions = [
   { label: 'List', value: 'list' },
   { label: 'Collection', value: 'collection' },
 ];
-popup.show();
 
 export type TenantFileRecord = {
-  id: Promise<string>;
+  id: string;
   occurrenceKey?: string;
 };
 export type DataSourceType = 'collection' | 'list';
 export interface State {
   events: Array<TenantFileRecord>;
-  selectedItem?: MediaViewerItem;
   dataSourceType: DataSourceType;
+  popup?: Popup;
 }
 
 export default class Example extends React.Component<{}, State> {
   state: State = { events: [], dataSourceType: 'list' };
 
-  componentDidMount() {
-    popup.on('uploads-start', payload => {
+  async componentDidMount() {
+    const popup = await MediaPicker('popup', context, {
+      uploadParams: {
+        collection: defaultCollectionName,
+      },
+    });
+
+    context.on('file-added', file => {
+      console.log('on file-added', file);
+    });
+
+    popup.on('uploads-start', (payload: { files: MediaFile[] }) => {
       const { events } = this.state;
+      payload.files.forEach(file => {
+        file.upfrontId.then(id => {
+          console.log('PUBLIC: uploads-start', file.id, id);
+        });
+      });
 
       this.setState({
         events: [
           ...events,
           ...payload.files.map(file => ({
-            id: file.upfrontId,
+            id: file.id,
             occurrenceKey: file.occurrenceKey,
           })),
         ],
       });
     });
+
+    popup.on('upload-preview-update', this.onUploadPreviewUpdate);
+    this.setState({ popup });
+
+    popup.show();
   }
 
-  private onCardClick = (occurrenceKey: string = '') => (event: CardEvent) => {
-    if (event.mediaItemDetails) {
-      this.setState({
-        selectedItem: {
-          id: (event.mediaItemDetails as FileDetails).id,
-          occurrenceKey,
-          type: 'file',
-        },
-      });
-    }
+  private onUploadPreviewUpdate = async (
+    event: UploadPreviewUpdateEventPayload,
+  ) => {
+    console.log(
+      'PUBLIC: upload-preview-update',
+      event.file.id,
+      await event.file.upfrontId,
+    );
+  };
+
+  private getMediaViewerDataSource = (): MediaViewerDataSource => {
+    const { dataSourceType, events } = this.state;
+    const list: FileIdentifier[] = events.map(event => {
+      const identifier: FileIdentifier = {
+        id: event.id,
+        occurrenceKey: event.occurrenceKey || '',
+        mediaItemType: 'file',
+      };
+
+      return identifier;
+    });
+
+    return dataSourceType === 'collection'
+      ? { collectionName: defaultCollectionName }
+      : { list };
   };
 
   private renderCards = () => {
@@ -86,15 +120,12 @@ export default class Example extends React.Component<{}, State> {
               width: 200,
               height: 200,
             }}
-            onClick={this.onCardClick(identifier.occurrenceKey)}
+            shouldOpenMediaViewer={true}
+            mediaViewerDataSource={this.getMediaViewerDataSource()}
           />
         </div>
       );
     });
-  };
-
-  private onCloseMediaViewer = () => {
-    this.setState({ selectedItem: undefined });
   };
 
   private onDataSourceChange = (event: { value: DataSourceType }) => {
@@ -103,31 +134,17 @@ export default class Example extends React.Component<{}, State> {
     });
   };
 
-  private renderMediaViewer = () => {
-    const { dataSourceType, selectedItem } = this.state;
-    if (!selectedItem) {
-      return null;
-    }
-    const dataSource =
-      dataSourceType === 'collection'
-        ? { collectionName: defaultCollectionName }
-        : { list: [selectedItem] };
-    return (
-      <MediaViewer
-        context={context}
-        selectedItem={selectedItem}
-        dataSource={dataSource}
-        collectionName={defaultCollectionName}
-        onClose={this.onCloseMediaViewer}
-      />
-    );
-  };
-
   render() {
+    const { popup } = this.state;
+
     return (
-      <>
+      <React.Fragment>
         <OptionsWrapper>
-          <Button appearance="primary" id="show" onClick={() => popup.show()}>
+          <Button
+            appearance="primary"
+            id="show"
+            onClick={() => (popup ? popup.show() : null)}
+          >
             Show
           </Button>
           <SelectWrapper>
@@ -139,8 +156,7 @@ export default class Example extends React.Component<{}, State> {
           </SelectWrapper>
         </OptionsWrapper>
         <div>{this.renderCards()}</div>
-        {this.renderMediaViewer()}
-      </>
+      </React.Fragment>
     );
   }
 }

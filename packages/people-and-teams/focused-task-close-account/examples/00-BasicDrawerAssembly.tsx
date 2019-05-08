@@ -18,9 +18,13 @@ const submitButton = (
   </Button>
 );
 
+const preferenceSelection = () => {
+  // do nothing
+};
+
 export default function Example() {
   return (
-    <>
+    <React.Fragment>
       <h1>See code</h1>
       <IntlProvider locale="en">
         <FocusedTaskCloseAccount
@@ -32,12 +36,16 @@ export default function Example() {
               isCurrentUser
               user={catherineHirons}
             />,
-            <DeleteUserContentPreviewScreen user={catherineHirons} />,
+            <DeleteUserContentPreviewScreen
+              user={catherineHirons}
+              isCurrentUser
+              preferenceSelection={preferenceSelection}
+            />,
           ]}
           submitButton={submitButton}
           learnMoreLink={''}
         />
       </IntlProvider>
-    </>
+    </React.Fragment>
   );
 }

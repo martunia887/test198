@@ -12,7 +12,7 @@ import collapseRangeHelper from '../util/collapseRange';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../version.json';
 import { type PaginationPropTypes } from '../types';
 
 type StateType = {
@@ -117,9 +117,8 @@ class Pagination extends Component<PaginationPropTypes, StateType> {
     const { components, pages, i18n } = this.props;
     const { selectedIndex } = this.state;
     const props = {
-      ariaLabel: i18n.prev,
+      'aria-label': i18n.prev,
       pages,
-      selectedIndex,
     };
 
     return (
@@ -137,8 +136,7 @@ class Pagination extends Component<PaginationPropTypes, StateType> {
     const { components, pages, i18n } = this.props;
     const { selectedIndex } = this.state;
     const props = {
-      ariaLabel: i18n.next,
-      selectedIndex,
+      'aria-label': i18n.next,
       pages,
     };
     return (

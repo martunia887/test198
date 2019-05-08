@@ -12,22 +12,21 @@ import {
 // behaviour is OS specific:
 // windows moves to next paragraph up
 // osx moves to top of document
-const moveUp = (page, selector) => {
+const moveUp = async (page: any, selector: string) => {
   let keys;
-  if (page.browser.desiredCapabilities.os === 'Windows') {
+  if (page.browser.capabilities.os === 'Windows') {
     keys = ['Control', 'ArrowUp'];
   } else {
     keys = ['Command', 'ArrowUp'];
   }
-  return page.browser.addValue(selector, keys);
+  await page.browser.keys(keys);
+  return page.browser.keys(keys[0]);
 };
 
 BrowserTestCase(
   `inline-2.ts: pasting an link then typing still converts to inline card`,
-  {
-    skip: ['ie', 'safari'],
-  },
-  async client => {
+  { skip: ['edge', 'ie', 'firefox', 'safari', 'chrome'] },
+  async (client: any, testName: string) => {
     let browser = new Page(client);
 
     // copy stuff to clipboard
@@ -46,7 +45,7 @@ BrowserTestCase(
     await browser.type(editable, 'hello have a link ');
 
     // paste the link
-    await browser.paste(editable);
+    await browser.paste();
 
     // type some text around it
     await browser.type(editable, 'more typing');
@@ -54,6 +53,6 @@ BrowserTestCase(
     await browser.type(editable, 'more typing ');
 
     const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchDocSnapshot();
+    expect(doc).toMatchCustomDocSnapshot(testName);
   },
 );

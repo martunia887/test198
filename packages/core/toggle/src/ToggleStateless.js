@@ -1,5 +1,5 @@
 // @flow
-import uuid from 'uuid';
+import { uid } from 'react-uid';
 import React, { Component } from 'react';
 import {
   withAnalyticsEvents,
@@ -8,10 +8,7 @@ import {
 } from '@atlaskit/analytics-next';
 import CloseIcon from '@atlaskit/icon/glyph/cross';
 import ConfirmIcon from '@atlaskit/icon/glyph/check';
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../package.json';
+import { name as packageName, version as packageVersion } from './version.json';
 import { Handle, IconWrapper, Inner, Input, Label, Slide } from './styled';
 import defaultBaseProps from './defaultBaseProps';
 import type { StatelessProps, DefaultBaseProps } from './types';
@@ -41,10 +38,12 @@ class ToggleStateless extends Component<StatelessProps, State> {
     });
     this.props.onBlur(event);
   };
+
   handleFocus = (event: Event) => {
     this.setState({ isFocused: true });
     this.props.onFocus(event);
   };
+
   handleChange = (event: Event) => {
     if (this.props.isDisabled) {
       return;
@@ -63,7 +62,7 @@ class ToggleStateless extends Component<StatelessProps, State> {
       size,
     };
     const Icon = isChecked ? ConfirmIcon : CloseIcon;
-    const id = uuid();
+    const id = uid({ id: this.constructor.name });
 
     return (
       <Label size={size} isDisabled={isDisabled} htmlFor={id}>

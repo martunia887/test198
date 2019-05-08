@@ -1,21 +1,43 @@
 import * as React from 'react';
-import { v4 as uuid } from 'uuid';
+import uuidV4 from 'uuid/v4';
 import { Subscription } from 'rxjs/Subscription';
-import { Context, UploadableFile } from '@atlaskit/media-core';
-import { FileIdentifier } from '@atlaskit/media-card';
+import {
+  intlShape,
+  IntlProvider,
+  injectIntl,
+  InjectedIntlProps,
+} from 'react-intl';
+
+import { Context, UploadableFile, FileIdentifier } from '@atlaskit/media-core';
 import { messages, Shortcut } from '@atlaskit/media-ui';
+import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
-import { intlShape, IntlProvider } from 'react-intl';
+
 import EditorView from './editorView/editorView';
 import { Blanket, SpinnerWrapper } from './styled';
 import { fileToBase64 } from '../util';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
 import ErrorView from './editorView/errorView/errorView';
+import { Dimensions } from '../common';
+
+export const convertFileNameToPng = (fileName?: string) => {
+  if (!fileName) {
+    return 'annotated-image.png';
+  }
+  if (fileName.endsWith('.png')) {
+    return fileName;
+  } else {
+    if (fileName.lastIndexOf('.') === 0 || fileName.lastIndexOf('.') === -1) {
+      return `${fileName}.png`;
+    } else {
+      return `${fileName.substring(0, fileName.lastIndexOf('.'))}.png`;
+    }
+  }
+};
 
 export interface SmartMediaEditorProps {
   identifier: FileIdentifier;
   context: Context;
-  onUploadStart: (identifier: FileIdentifier) => void;
+  onUploadStart: (identifier: FileIdentifier, dimensions: Dimensions) => void;
   onFinish: () => void;
 }
 
@@ -23,6 +45,8 @@ export interface SmartMediaEditorState {
   hasError: boolean;
   errorMessage?: any;
   imageUrl?: string;
+  hasBeenEdited: boolean;
+  closeIntent: boolean;
 }
 
 export class SmartMediaEditor extends React.Component<
@@ -32,6 +56,8 @@ export class SmartMediaEditor extends React.Component<
   fileName?: string;
   state: SmartMediaEditorState = {
     hasError: false,
+    hasBeenEdited: false,
+    closeIntent: false,
   };
   getFileSubscription?: Subscription;
   uploadFileSubscription?: Subscription;
@@ -73,19 +99,31 @@ export class SmartMediaEditor extends React.Component<
       .getFileState(id, { collectionName, occurrenceKey })
       .subscribe({
         next: async state => {
-          if (state.status === 'processed') {
-            const { name } = state;
-            this.fileName = name;
-            this.setImageUrl(identifier);
-            setTimeout(() => getFileSubscription.unsubscribe(), 0);
-          } else if (state.status === 'error') {
+          if (state.status === 'error') {
             this.onError(state.message);
             setTimeout(() => getFileSubscription.unsubscribe(), 0);
-          } else if (state.preview) {
-            const base64ImageUrl = await fileToBase64(state.preview.blob);
-            this.setState({
-              imageUrl: base64ImageUrl,
-            });
+            return;
+          }
+
+          const { name, preview, status } = state;
+          this.fileName = name;
+
+          if (status === 'processed') {
+            this.setRemoteImageUrl(identifier);
+            setTimeout(() => getFileSubscription.unsubscribe(), 0);
+          } else if (preview) {
+            const { value } = await preview;
+            if (value instanceof Blob) {
+              const imageUrl = await fileToBase64(value);
+              this.setState({
+                imageUrl,
+              });
+            } else {
+              this.setState({
+                imageUrl: value,
+              });
+            }
+
             setTimeout(() => getFileSubscription.unsubscribe(), 0);
           }
         },
@@ -96,7 +134,7 @@ export class SmartMediaEditor extends React.Component<
     this.getFileSubscription = getFileSubscription;
   };
 
-  setImageUrl = async (identifier: FileIdentifier) => {
+  setRemoteImageUrl = async (identifier: FileIdentifier) => {
     const { context } = this.props;
     const id = await identifier.id;
     const imageUrl = await context.getImageUrl(id, {
@@ -108,7 +146,31 @@ export class SmartMediaEditor extends React.Component<
     });
   };
 
-  private onSave = (imageData: string) => {
+  copyFileToUserCollection = async (fileId: string) => {
+    const {
+      context: {
+        config: { userAuthProvider, authProvider },
+        file,
+      },
+      identifier: { collectionName },
+    } = this.props;
+
+    if (userAuthProvider) {
+      const source = {
+        id: fileId,
+        collection: collectionName,
+        authProvider,
+      };
+      const destination = {
+        collection: 'recents',
+        authProvider: userAuthProvider,
+        occurrenceKey: uuidV4(),
+      };
+      await file.copyFile(source, destination);
+    }
+  };
+
+  private onSave = (imageData: string, dimensions: Dimensions) => {
     const { fileName } = this;
     const {
       context,
@@ -118,18 +180,20 @@ export class SmartMediaEditor extends React.Component<
       intl: { formatMessage },
     } = this.props;
 
-    const { collectionName, occurrenceKey } = identifier;
+    const { collectionName } = identifier;
     const uploadableFile: UploadableFile = {
       content: imageData,
       collection: collectionName,
-      name: fileName,
+      name: convertFileNameToPng(fileName),
     };
-    const id = uuid();
+    const id = uuidV4();
+    const occurrenceKey = uuidV4();
     const touchedFiles = context.file.touchFiles(
       [
         {
           fileId: id,
           collection: collectionName,
+          occurrenceKey,
         },
       ],
       collectionName,
@@ -152,6 +216,7 @@ export class SmartMediaEditor extends React.Component<
       next: fileState => {
         if (fileState.status === 'processing') {
           onFinish();
+          this.copyFileToUserCollection(fileState.id);
           setTimeout(() => uploadingFileStateSubscription.unsubscribe(), 0);
         } else if (
           fileState.status === 'failed-processing' ||
@@ -166,13 +231,70 @@ export class SmartMediaEditor extends React.Component<
       id,
       collectionName,
       mediaItemType: 'file',
+      occurrenceKey,
     };
-    onUploadStart(newFileIdentifier);
+    onUploadStart(newFileIdentifier, dimensions);
+  };
+
+  private onAnyEdit = () => {
+    const { hasBeenEdited } = this.state;
+    if (!hasBeenEdited) {
+      this.setState({ hasBeenEdited: true });
+    }
+  };
+
+  private closeConfirmationDialog = () => {
+    this.setState({ closeIntent: false });
+  };
+
+  private closeAnyway = () => {
+    const { onFinish } = this.props;
+    onFinish();
+    this.closeConfirmationDialog();
+  };
+
+  private renderDeleteConfirmation = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    const { closeIntent } = this.state;
+
+    if (closeIntent) {
+      const actions = [
+        {
+          text: formatMessage(messages.annotate_confirmation_close_anyway),
+          onClick: this.closeAnyway,
+        },
+        {
+          text: formatMessage(messages.cancel),
+          onClick: this.closeConfirmationDialog,
+        },
+      ];
+      return (
+        <ModalTransition>
+          <ModalDialog
+            width="small"
+            appearance="danger"
+            heading={formatMessage(messages.annotate_confirmation_heading)}
+            actions={actions}
+            onClose={this.closeConfirmationDialog}
+          >
+            {formatMessage(messages.annotate_confirmation_content)}
+          </ModalDialog>
+        </ModalTransition>
+      );
+    }
+    return null;
   };
 
   onCancel = () => {
-    const { onFinish } = this.props;
-    onFinish();
+    const { hasBeenEdited } = this.state;
+    if (hasBeenEdited) {
+      this.setState({ closeIntent: true });
+    } else {
+      const { onFinish } = this.props;
+      onFinish();
+    }
   };
 
   onError = (error: any) => {
@@ -180,6 +302,12 @@ export class SmartMediaEditor extends React.Component<
       hasError: true,
       errorMessage: error,
     });
+  };
+
+  private clickShellNotPass = (e: React.SyntheticEvent<HTMLDivElement>) => {
+    // Stop click from propagating back to the editor.
+    // Without it editor will get focus and apply all the key events
+    e.stopPropagation();
   };
 
   renderLoading = () => {
@@ -197,6 +325,7 @@ export class SmartMediaEditor extends React.Component<
         onSave={this.onSave}
         onCancel={this.onCancel}
         onError={this.onError}
+        onAnyEdit={this.onAnyEdit}
       />
     );
   };
@@ -211,6 +340,7 @@ export class SmartMediaEditor extends React.Component<
 
   render() {
     const { imageUrl, hasError, errorMessage } = this.state;
+
     const content = hasError
       ? this.renderError(errorMessage)
       : imageUrl
@@ -218,7 +348,8 @@ export class SmartMediaEditor extends React.Component<
       : this.renderLoading();
 
     return (
-      <Blanket>
+      <Blanket onClick={this.clickShellNotPass}>
+        {this.renderDeleteConfirmation()}
         <Shortcut keyCode={27} handler={this.onCancel} />
         {content}
       </Blanket>

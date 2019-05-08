@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { status } from '@atlaskit/adf-schema';
-import LabelIcon from '@atlaskit/icon/glyph/label';
 import { findDomRefAtPos } from 'prosemirror-utils';
 import { EditorPlugin } from '../../types';
-import createStatusPlugin, { StatusState, pluginKey } from './plugin';
+import createStatusPlugin, {
+  StatusState,
+  pluginKey,
+  StatusType,
+} from './plugin';
 import WithPluginState from '../../ui/WithPluginState';
 import StatusPicker from './ui/statusPicker';
 import { commitStatusPicker, updateStatus, createStatus } from './actions';
+import { keymapPlugin } from './keymap';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
+import { IconStatus } from '../quick-insert/assets';
 
 const baseStatusPlugin = (): EditorPlugin => ({
   nodes() {
@@ -19,6 +25,7 @@ const baseStatusPlugin = (): EditorPlugin => ({
         name: 'status',
         plugin: createStatusPlugin,
       },
+      { name: 'statusKeymap', plugin: keymapPlugin },
     ];
   },
 
@@ -31,7 +38,7 @@ const baseStatusPlugin = (): EditorPlugin => ({
         }}
         render={({ statusState = {} as StatusState }) => {
           const { showStatusPickerAt } = statusState;
-          if (showStatusPickerAt === null) {
+          if (typeof showStatusPickerAt !== 'number') {
             return null;
           }
 
@@ -57,10 +64,10 @@ const baseStatusPlugin = (): EditorPlugin => ({
               defaultText={text}
               defaultColor={color}
               defaultLocalId={localId}
-              onSelect={status => {
+              onSelect={(status: StatusType) => {
                 updateStatus(status)(editorView);
               }}
-              onTextChanged={status => {
+              onTextChanged={(status: StatusType) => {
                 updateStatus(status)(editorView);
               }}
               closeStatusPicker={() => {
@@ -77,14 +84,6 @@ const baseStatusPlugin = (): EditorPlugin => ({
   },
 });
 
-const createQuickInsertMenuItem = () => ({
-  title: 'Status',
-  priority: 700,
-  keywords: ['lozenge'],
-  icon: () => <LabelIcon label="Status" />,
-  action: createStatus(),
-});
-
 export interface StatusOptions {
   menuDisabled: boolean;
 }
@@ -97,7 +96,16 @@ const decorateWithPluginOptions = (
     return plugin;
   }
   plugin.pluginsOptions = {
-    quickInsert: [createQuickInsertMenuItem()],
+    quickInsert: ({ formatMessage }) => [
+      {
+        title: formatMessage(messages.status),
+        description: formatMessage(messages.statusDescription),
+        priority: 700,
+        keywords: ['lozenge'],
+        icon: () => <IconStatus label={formatMessage(messages.status)} />,
+        action: createStatus(),
+      },
+    ],
   };
   return plugin;
 };

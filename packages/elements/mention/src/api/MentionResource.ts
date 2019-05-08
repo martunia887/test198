@@ -69,8 +69,11 @@ export type MentionContextIdentifier = {
 
 export interface MentionProvider
   extends ResourceProvider<MentionDescription[]> {
-  filter(query?: string): void;
-  recordMentionSelection(mention: MentionDescription): void;
+  filter(query?: string, contextIdentifier?: MentionContextIdentifier): void;
+  recordMentionSelection(
+    mention: MentionDescription,
+    contextIdentifier?: MentionContextIdentifier,
+  ): void;
   shouldHighlightMention(mention: MentionDescription): boolean;
   isFiltering(query: string): boolean;
 }
@@ -130,7 +133,7 @@ class AbstractResource<Result> implements ResourceProvider<Result> {
 
 class AbstractMentionResource extends AbstractResource<MentionDescription[]>
   implements MentionProvider {
-  shouldHighlightMention(mention: MentionDescription): boolean {
+  shouldHighlightMention(_mention: MentionDescription): boolean {
     return false;
   }
 
@@ -140,11 +143,11 @@ class AbstractMentionResource extends AbstractResource<MentionDescription[]>
   }
 
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
-  recordMentionSelection(mention: MentionDescription): void {
+  recordMentionSelection(_mention: MentionDescription): void {
     // Do nothing
   }
 
-  isFiltering(query: string): boolean {
+  isFiltering(_query: string): boolean {
     return false;
   }
 
@@ -222,7 +225,7 @@ class AbstractMentionResource extends AbstractResource<MentionDescription[]>
 /**
  * Provides a Javascript API
  */
-class MentionResource extends AbstractMentionResource {
+export class MentionResource extends AbstractMentionResource {
   private config: MentionResourceConfig;
   private lastReturnedSearch: number;
   private activeSearches: Set<string>;
@@ -230,13 +233,7 @@ class MentionResource extends AbstractMentionResource {
   constructor(config: MentionResourceConfig) {
     super();
 
-    if (!config.url) {
-      throw new Error('config.url is a required parameter');
-    }
-
-    if (!config.securityProvider) {
-      config.securityProvider = emptySecurityProvider;
-    }
+    this.verifyMentionConfig(config);
 
     this.config = config;
     this.lastReturnedSearch = 0;
@@ -307,6 +304,20 @@ class MentionResource extends AbstractMentionResource {
     return this.activeSearches.has(query);
   }
 
+  protected updateActiveSearches(query: string): void {
+    this.activeSearches.add(query);
+  }
+
+  protected verifyMentionConfig(config: MentionResourceConfig) {
+    if (!config.url) {
+      throw new Error('config.url is a required parameter');
+    }
+
+    if (!config.securityProvider) {
+      config.securityProvider = emptySecurityProvider;
+    }
+  }
+
   private initialState(
     contextIdentifier?: MentionContextIdentifier,
   ): Promise<MentionsResult> {
@@ -337,7 +348,7 @@ class MentionResource extends AbstractMentionResource {
    * @param contextIdentifier
    * @returns Promise
    */
-  private remoteInitialState(
+  protected remoteInitialState(
     contextIdentifier?: MentionContextIdentifier,
   ): Promise<MentionsResult> {
     const queryParams: KeyValues = this.getQueryParams(contextIdentifier);
@@ -360,7 +371,7 @@ class MentionResource extends AbstractMentionResource {
     };
   }
 
-  private remoteSearch(
+  protected remoteSearch(
     query: string,
     contextIdentifier?: MentionContextIdentifier,
   ): Promise<MentionsResult> {
@@ -382,7 +393,7 @@ class MentionResource extends AbstractMentionResource {
     result: MentionsResult,
     query: string,
   ): MentionsResult {
-    const mentions = result.mentions.map((mention, index) => {
+    const mentions = result.mentions.map(mention => {
       let lozenge: string | undefined;
       if (isAppMention(mention)) {
         lozenge = mention.userType;
@@ -396,7 +407,7 @@ class MentionResource extends AbstractMentionResource {
     return { ...result, mentions, query: result.query || query };
   }
 
-  private recordSelection(
+  protected recordSelection(
     mention: MentionDescription,
     contextIdentifier?: MentionContextIdentifier,
   ): Promise<void> {

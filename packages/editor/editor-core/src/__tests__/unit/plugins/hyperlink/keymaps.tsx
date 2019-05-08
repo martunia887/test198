@@ -1,5 +1,5 @@
 import {
-  createEditor,
+  createEditorFactory,
   doc,
   p,
   a as link,
@@ -14,13 +14,21 @@ import {
   InsertStatus,
   stateKey,
 } from '../../../../plugins/hyperlink/pm-plugins/main';
+import quickInsertPlugin from '../../../../plugins/quick-insert';
+import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
 
 describe('hyperlink - keymap', () => {
-  const editor = (doc: any, editorProps = {}) =>
-    createEditor({
+  const createEditor = createEditorFactory();
+  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+
+  const editor = (doc: any, editorProps = {}) => {
+    createAnalyticsEvent = jest.fn().mockReturnValue({ fire() {} });
+    return createEditor({
       doc,
-      editorProps,
+      editorProps: { ...editorProps, allowAnalyticsGASV3: true },
+      createAnalyticsEvent,
     });
+  };
 
   describe('Enter keypress', () => {
     describe('when possible link text is at the end', () => {
@@ -153,7 +161,7 @@ describe('hyperlink - keymap', () => {
   });
 
   describe('Cmd-k keypress', () => {
-    it('should open floating toolbar for non-message editor', () => {
+    it('should open floating toolbar for editor', () => {
       const { editorView } = editor(doc(p('{<}text{>}')));
       sendKeyToPm(editorView, 'Mod-k');
       expect(stateKey.getState(editorView.state)).toEqual(
@@ -167,9 +175,9 @@ describe('hyperlink - keymap', () => {
       );
     });
 
-    it('should not work for message editor', () => {
-      const { editorView } = editor(doc(p('{<}text{>}')), {
-        appearance: 'message',
+    it('should not open floating toolbar if incompatible mark is selected', () => {
+      const { editorView } = editor(doc(p(code('te{<>}xt'))), {
+        appearance: 'comment',
       });
       sendKeyToPm(editorView, 'Mod-k');
       expect(stateKey.getState(editorView.state)).toEqual(
@@ -179,16 +187,18 @@ describe('hyperlink - keymap', () => {
       );
     });
 
-    it('should not open floating toolbar if incompatible mark is selected', () => {
-      const { editorView } = editor(doc(p(code('te{<>}xt'))), {
-        appearance: 'message',
+    it('should trigger link typeahead invoked analytics event', () => {
+      const { editorView } = editor(doc(p('{<>}')), {
+        editorPlugins: [quickInsertPlugin],
       });
       sendKeyToPm(editorView, 'Mod-k');
-      expect(stateKey.getState(editorView.state)).toEqual(
-        expect.objectContaining({
-          activeLinkMark: undefined,
-        }) as HyperlinkState,
-      );
+      expect(createAnalyticsEvent).toHaveBeenCalledWith({
+        action: 'invoked',
+        actionSubject: 'typeAhead',
+        actionSubjectId: 'linkTypeAhead',
+        attributes: { inputMethod: 'shortcut' },
+        eventType: 'ui',
+      });
     });
   });
 });

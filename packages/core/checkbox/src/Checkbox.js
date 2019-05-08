@@ -9,15 +9,13 @@ import {
 import { ThemeProvider } from 'styled-components';
 import CheckboxIcon from './CheckboxIcon';
 
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../package.json';
+import { name as packageName, version as packageVersion } from './version.json';
 import {
   HiddenCheckbox,
   Label,
   LabelText,
   CheckboxWrapper,
+  RequiredIndicator,
 } from './styled/Checkbox';
 import { type CheckboxProps } from './types';
 
@@ -38,6 +36,7 @@ class Checkbox extends Component<CheckboxProps, State> {
     defaultChecked: false,
     isIndeterminate: false,
   };
+
   state: State = {
     isActive: false,
     isFocused: false,
@@ -48,7 +47,9 @@ class Checkbox extends Component<CheckboxProps, State> {
         ? this.props.isChecked
         : this.props.defaultChecked,
   };
+
   checkbox: ?HTMLInputElement;
+
   actionKeys = [' '];
 
   componentDidMount() {
@@ -91,6 +92,7 @@ class Checkbox extends Component<CheckboxProps, State> {
   blur = () => {
     if (this.checkbox && this.checkbox.blur) this.checkbox.blur();
   };
+
   focus = () => {
     if (this.checkbox && this.checkbox.focus) this.checkbox.focus();
   };
@@ -103,10 +105,15 @@ class Checkbox extends Component<CheckboxProps, State> {
       isActive: this.state.isMouseDown && this.state.isActive,
       isFocused: false,
     });
+
   onFocus = () => this.setState({ isFocused: true });
+
   onMouseLeave = () => this.setState({ isActive: false, isHovered: false });
+
   onMouseEnter = () => this.setState({ isHovered: true });
+
   onMouseUp = () => this.setState({ isActive: false, isMouseDown: false });
+
   onMouseDown = () => this.setState({ isActive: true, isMouseDown: true });
 
   onKeyDown = (event: KeyboardEvent) => {
@@ -114,6 +121,7 @@ class Checkbox extends Component<CheckboxProps, State> {
       this.setState({ isActive: true });
     }
   };
+
   onKeyUp = (event: KeyboardEvent) => {
     if (this.actionKeys.includes(event.key)) {
       this.setState({ isActive: false });
@@ -129,7 +137,9 @@ class Checkbox extends Component<CheckboxProps, State> {
       name,
       value,
       onChange,
-      ...props
+      isRequired,
+      defaultChecked,
+      ...rest
     } = this.props;
     const isChecked = this.getProp('isChecked');
     const { isFocused, isActive, isHovered } = this.state;
@@ -137,7 +147,6 @@ class Checkbox extends Component<CheckboxProps, State> {
     return (
       <ThemeProvider theme={emptyTheme}>
         <Label
-          {...props}
           isDisabled={isDisabled}
           onMouseDown={this.onMouseDown}
           onMouseEnter={this.onMouseEnter}
@@ -157,6 +166,8 @@ class Checkbox extends Component<CheckboxProps, State> {
               value={value}
               name={name}
               innerRef={r => (this.checkbox = r)} // eslint-disable-line
+              required={isRequired}
+              {...rest}
             />
             <CheckboxIcon
               isChecked={isChecked}
@@ -171,7 +182,12 @@ class Checkbox extends Component<CheckboxProps, State> {
               label=""
             />
           </CheckboxWrapper>
-          <LabelText>{label}</LabelText>
+          <LabelText>
+            {label}
+            {isRequired && (
+              <RequiredIndicator aria-hidden="true">*</RequiredIndicator>
+            )}
+          </LabelText>
         </Label>
       </ThemeProvider>
     );

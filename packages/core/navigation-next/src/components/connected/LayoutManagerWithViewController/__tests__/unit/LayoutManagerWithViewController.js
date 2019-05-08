@@ -34,7 +34,7 @@ describe('LayoutManagerWithViewController', () => {
       <NavigationProvider cache={false} isDebugEnabled={false}>
         <LayoutManagerWithViewController
           globalNavigation={GlobalNavigationComponent}
-          firstSkeletonToRender={'product'}
+          firstSkeletonToRender="product"
           {...defaultProps}
         >
           <div />
@@ -102,6 +102,9 @@ describe('LayoutManagerWithViewController', () => {
 
     expect(containerSkeletonEl.find(SkeletonContainerView)).toHaveLength(1);
     expect(containerSkeletonEl.find(SkeletonContainerView).props()).toEqual({
+      dataset: {
+        'data-test-id': 'ContextualNavigationSkeleton',
+      },
       type: 'product',
     });
   });

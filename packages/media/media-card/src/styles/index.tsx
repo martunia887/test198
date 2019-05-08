@@ -1,9 +1,7 @@
-/* tslint:disable:variable-name */
-
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass } from 'react';
-import { akFontFamily } from '@atlaskit/util-shared-styles';
+import { fontFamily } from '@atlaskit/theme';
 import { fadeIn } from '@atlaskit/media-ui';
 
 export * from './config';
@@ -13,7 +11,7 @@ export * from './animations';
 
 export const Root: ComponentClass<HTMLAttributes<{}>> = styled.div`
   box-sizing: border-box;
-  font-family: ${akFontFamily};
+  font-family: ${fontFamily()};
 
   * {
     box-sizing: border-box;

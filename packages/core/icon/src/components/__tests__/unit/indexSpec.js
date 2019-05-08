@@ -4,10 +4,10 @@ import { mount, shallow } from 'enzyme';
 
 import path from 'path';
 import fs from 'fs';
-import { name } from '../../../../package.json';
+import { name } from '../../../version.json';
 import { size } from '../../Icon';
 import BookIcon from '../../../../glyph/book';
-import DefaultIcon, { metadata, size as defaultSize } from '../../../../src';
+import DefaultIcon, { metadata, size as defaultSize } from '../../..';
 
 // List all files in a directory in Node.js recursively in a synchronous fashion
 const walkSync = (dir: string, filelist: string[]) => {
@@ -281,6 +281,7 @@ describe(name, () => {
         'person',
         'portfolio',
         'preferences',
+        'premium',
         'presence-active',
         'presence-busy',
         'presence-unavailable',
@@ -412,7 +413,7 @@ describe(name, () => {
       // * renaming an icon is a breaking change
       //
       // If we were to auto-generate this list, then renaming, adding or removing would NOT
-      // break any tests and thus not hint the developer at what kind of change he/she is making
+      // break any tests and thus not hint the developer at what kind of change they are making
     });
 
     describe('bundle', () => {

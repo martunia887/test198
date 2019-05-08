@@ -4,7 +4,10 @@ import PluginSlot from '../PluginSlot';
 import WithPluginState from '../WithPluginState';
 import ContentStyles from '../ContentStyles';
 import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
-import { pluginKey as maxContentSizePluginKey } from '../../plugins/max-content-size';
+import {
+  pluginKey as maxContentSizePluginKey,
+  MaxContentSizePluginState,
+} from '../../plugins/max-content-size';
 import { scrollbarStyles } from '../styles';
 import WithFlash from '../WithFlash';
 
@@ -13,7 +16,6 @@ export interface ChromelessEditorProps {
   maxHeight?: number;
 }
 
-// tslint:disable-next-line:variable-name
 const ChromelessEditor: any = styled.div`
   line-height: 20px;
   height: auto;
@@ -36,7 +38,6 @@ const ChromelessEditor: any = styled.div`
 `;
 ChromelessEditor.displayName = 'ChromelessEditor';
 
-// tslint:disable-next-line:variable-name
 const ContentArea = styled(ContentStyles)``;
 ContentArea.displayName = 'ContentArea';
 
@@ -49,7 +50,11 @@ export default class Editor extends React.Component<
   private appearance: EditorAppearance = 'chromeless';
   private containerElement: HTMLElement | undefined;
 
-  private renderChrome = ({ maxContentSize }) => {
+  private renderChrome = ({
+    maxContentSize,
+  }: {
+    maxContentSize: MaxContentSizePluginState;
+  }) => {
     const {
       editorDOMElement,
       editorView,
@@ -63,6 +68,7 @@ export default class Editor extends React.Component<
       popupsBoundariesElement,
       popupsScrollableElement,
       disabled,
+      dispatchAnalyticsEvent,
     } = this.props;
     const maxContentSizeReached =
       maxContentSize && maxContentSize.maxContentSizeReached;
@@ -71,7 +77,9 @@ export default class Editor extends React.Component<
       <WithFlash animate={maxContentSizeReached}>
         <ChromelessEditor
           maxHeight={maxHeight}
-          innerRef={ref => (this.containerElement = ref)}
+          innerRef={(ref: HTMLElement | undefined) =>
+            (this.containerElement = ref)
+          }
         >
           <ContentArea>
             {customContentComponents}
@@ -87,6 +95,7 @@ export default class Editor extends React.Component<
               popupsScrollableElement={popupsScrollableElement}
               containerElement={this.containerElement}
               disabled={!!disabled}
+              dispatchAnalyticsEvent={dispatchAnalyticsEvent}
             />
             {editorDOMElement}
           </ContentArea>

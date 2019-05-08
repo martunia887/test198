@@ -1,14 +1,10 @@
 {
   "name": "@atlaskit/notification-indicator",
-  "version": "4.1.2",
+  "version": "7.0.0",
   "description": "A wrapped React component used to display whether user has any new notifications.",
-  "main": "dist/es5/index.js",
   "atlaskit:src": "src/index.ts",
-  "module": "dist/es2015/index.js",
-  "types": "dist/es5/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "module": "index.js",
+  "types": "index.d.ts",
   "author": "Atlassian Pty Ltd",
   "maintainers": [
     "Notifications Platform",
@@ -16,19 +12,19 @@
     "Shaun Esther"
   ],
   "dependencies": {
-    "@atlaskit/badge": "^9.2.2",
-    "@atlaskit/notification-log-client": "^3.1.1",
-    "@atlaskit/analytics-next": "^3.1.2",
-    "tslib": "^1.8.0"
+    "@atlaskit/analytics-next": "^5.0.0",
+    "@atlaskit/badge": "^12.0.0",
+    "@atlaskit/notification-log-client": "^4.0.4",
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^6.0.0",
+    "@atlaskit/docs": "^8.0.0",
     "enzyme": "^3.7.0",
     "sinon": "^2.2.0"
   },
   "peerDependencies": {
-    "react": "^16.4.0",
-    "react-dom": "^16.4.2"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2"
 }

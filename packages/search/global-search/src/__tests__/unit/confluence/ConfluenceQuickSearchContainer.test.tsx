@@ -21,7 +21,10 @@ import {
   EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE,
   SearchSession,
   ABTest,
+  DEFAULT_AB_TEST,
 } from '../../../api/CrossProductSearchClient';
+import * as SearchUtils from '../../../components/SearchResultsUtil';
+
 import { mockLogger } from '../mocks/_mockLogger';
 
 const sessionId = 'sessionId';
@@ -33,6 +36,7 @@ function render(partialProps?: Partial<Props>) {
     peopleSearchClient: noResultsPeopleSearchClient,
     useQuickNavForPeopleResults: false,
     useCPUSForPeopleResults: false,
+    fasterSearchFFEnabled: false,
     logger,
     ...partialProps,
   };
@@ -84,6 +88,33 @@ describe('ConfluenceQuickSearchContainer', () => {
     });
   });
 
+  it('should call cross product search client with correct query version', async () => {
+    const searchSpy = jest.spyOn(noResultsCrossProductSearchClient, 'search');
+    const dummyQueryVersion = 123;
+
+    const wrapper = render({
+      confluenceClient: noResultsConfluenceClient,
+      crossProductSearchClient: noResultsCrossProductSearchClient,
+    });
+
+    const quickSearchContainer = wrapper.find(QuickSearchContainer);
+    (quickSearchContainer.props() as QuickSearchContainerProps).getSearchResults(
+      'query',
+      sessionId,
+      100,
+      dummyQueryVersion,
+    );
+
+    expect(searchSpy).toHaveBeenCalledWith(
+      'query',
+      expect.any(Object),
+      expect.any(Array),
+      dummyQueryVersion,
+    );
+
+    searchSpy.mockRestore();
+  });
+
   it('should return ab test data', async () => {
     const abTest: ABTest = {
       abTestId: 'abTestId',
@@ -127,6 +158,7 @@ describe('ConfluenceQuickSearchContainer', () => {
       'query',
       sessionId,
       100,
+      0,
     );
 
     expect(searchResults).toMatchObject({
@@ -153,7 +185,7 @@ describe('ConfluenceQuickSearchContainer', () => {
     });
   });
 
-  it('should use CPUs for people results when enabled', async () => {
+  it('should use CPUS for people results when enabled', async () => {
     const wrapper = render({
       useCPUSForPeopleResults: true,
       crossProductSearchClient: {
@@ -170,8 +202,8 @@ describe('ConfluenceQuickSearchContainer', () => {
 
           return Promise.resolve(EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE);
         },
-        getAbTestData(scope: Scope, searchSession: SearchSession) {
-          return Promise.resolve(undefined);
+        getAbTestData(scope: Scope) {
+          return Promise.resolve(DEFAULT_AB_TEST);
         },
       },
     });
@@ -181,6 +213,7 @@ describe('ConfluenceQuickSearchContainer', () => {
       'query',
       sessionId,
       100,
+      0,
     );
 
     expect(searchResults.results.people).toEqual([
@@ -209,6 +242,7 @@ describe('ConfluenceQuickSearchContainer', () => {
       'query',
       sessionId,
       100,
+      0,
     );
 
     expect(searchResults.results.people).toEqual([
@@ -223,5 +257,74 @@ describe('ConfluenceQuickSearchContainer', () => {
         resultId: expect.any(String),
       }),
     ]);
+  });
+
+  describe('Advanced Search callback', () => {
+    let redirectSpy: jest.SpyInstance<(query?: string) => void>;
+    let originalWindowAssign = window.location.assign;
+
+    beforeEach(() => {
+      window.location.assign = jest.fn();
+      redirectSpy = jest.spyOn(
+        SearchUtils,
+        'redirectToConfluenceAdvancedSearch',
+      );
+    });
+
+    afterEach(() => {
+      redirectSpy.mockReset();
+      redirectSpy.mockRestore();
+      window.location.assign = originalWindowAssign;
+    });
+
+    const mountComponent = (spy: jest.Mock<{}>) => {
+      const wrapper = render({
+        onAdvancedSearch: spy,
+      });
+      const quickSearchContainer = wrapper.find(QuickSearchContainer);
+
+      const props = quickSearchContainer.props();
+      expect(props).toHaveProperty('handleSearchSubmit');
+
+      return (props as any)['handleSearchSubmit'];
+    };
+    const mockEvent = () => ({
+      preventDefault: jest.fn(),
+      stopPropagation: jest.fn(),
+      target: {
+        value: 'query',
+      },
+    });
+    const mockSearchSessionId = 'someSearchSessionId';
+
+    it('should call onAdvancedSearch call', () => {
+      const spy = jest.fn();
+      const handleSearchSubmit = mountComponent(spy);
+      const mockedEvent = mockEvent();
+      handleSearchSubmit(mockedEvent, mockSearchSessionId);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          preventDefault: expect.any(Function),
+        }),
+        'content',
+        'query',
+        mockSearchSessionId,
+      );
+      expect(mockedEvent.preventDefault).toHaveBeenCalledTimes(0);
+      expect(mockedEvent.stopPropagation).toHaveBeenCalledTimes(0);
+      expect(redirectSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call redriect', () => {
+      const spy = jest.fn(e => e.preventDefault());
+      const handleSearchSubmit = mountComponent(spy);
+      const mockedEvent = mockEvent();
+      handleSearchSubmit(mockedEvent, mockSearchSessionId);
+
+      expect(mockedEvent.preventDefault).toHaveBeenCalledTimes(1);
+      expect(mockedEvent.stopPropagation).toHaveBeenCalledTimes(1);
+      expect(redirectSpy).toHaveBeenCalledTimes(0);
+    });
   });
 });

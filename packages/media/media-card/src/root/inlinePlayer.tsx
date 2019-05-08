@@ -1,17 +1,22 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Context } from '@atlaskit/media-core';
+import {
+  Context,
+  FileIdentifier,
+  FileState,
+  MediaFileArtifacts,
+} from '@atlaskit/media-core';
 import { Subscription } from 'rxjs/Subscription';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
-import { FileIdentifier } from './domain';
 import { InlinePlayerWrapper } from './styled';
 import { CardDimensions, defaultImageCardDimensions } from '..';
-import { CardLoading } from '../utils/cardLoading';
+import { CardLoading } from '../utils/lightCards/cardLoading';
 
 export interface InlinePlayerProps {
   identifier: FileIdentifier;
   context: Context;
   dimensions: CardDimensions;
+  selected?: boolean;
   onError?: (error: Error) => void;
   onClick?: () => void;
 }
@@ -19,6 +24,25 @@ export interface InlinePlayerProps {
 export interface InlinePlayerState {
   fileSrc?: string;
 }
+
+export const getPreferredVideoArtifact = (
+  fileState: FileState,
+): keyof MediaFileArtifacts | undefined => {
+  if (fileState.status === 'processed' || fileState.status === 'processing') {
+    const { artifacts } = fileState;
+    if (!artifacts) {
+      return undefined;
+    }
+
+    return artifacts['video_1280.mp4']
+      ? 'video_1280.mp4'
+      : artifacts['video_640.mp4']
+      ? 'video_640.mp4'
+      : undefined;
+  }
+
+  return undefined;
+};
 
 export class InlinePlayer extends Component<
   InlinePlayerProps,
@@ -42,26 +66,27 @@ export class InlinePlayer extends Component<
       .subscribe({
         next: async state => {
           if (state.status !== 'error' && state.preview) {
-            const { blob } = state.preview;
+            const { value } = await state.preview;
 
-            if (blob.type.indexOf('video/') === 0) {
-              const fileSrc = URL.createObjectURL(state.preview.blob);
+            if (value instanceof Blob && value.type.indexOf('video/') === 0) {
+              const fileSrc = URL.createObjectURL(value);
               this.setState({ fileSrc });
               window.setTimeout(this.unsubscribe, 0);
               return;
             }
           }
 
-          if (state.status === 'processed') {
+          if (state.status === 'processed' || state.status === 'processing') {
+            const artifactName = getPreferredVideoArtifact(state);
             const { artifacts } = state;
+            if (!artifactName || !artifacts) {
+              return;
+            }
 
             try {
-              const preferedArtifact = artifacts['video_1280.mp4']
-                ? 'video_1280.mp4'
-                : 'video_640.mp4';
               const fileSrc = await context.file.getArtifactURL(
                 artifacts,
-                preferedArtifact,
+                artifactName,
                 collectionName,
               );
 
@@ -111,15 +136,19 @@ export class InlinePlayer extends Component<
   };
 
   render() {
-    const { onClick, dimensions } = this.props;
+    const { onClick, dimensions, selected } = this.props;
     const { fileSrc } = this.state;
 
     if (!fileSrc) {
-      return <CardLoading mediaItemType="file" dimensions={dimensions} />;
+      return <CardLoading dimensions={dimensions} />;
     }
 
     return (
-      <InlinePlayerWrapper style={this.getStyle()} onClick={onClick}>
+      <InlinePlayerWrapper
+        style={this.getStyle()}
+        selected={selected}
+        onClick={onClick}
+      >
         <CustomMediaPlayer
           type="video"
           src={fileSrc}

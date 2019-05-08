@@ -3,7 +3,7 @@ const warnOnce = (() => {
     if (window.hasWarnedAboutJsdomFixtures) {
       return;
     }
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.warn(
       'Warning! Test depends on DOM selection API which is not supported in JSDOM/Node environment.',
     );
@@ -30,6 +30,13 @@ const rangeFixture = {
   getClientRects: () => [],
   getBoundingClientRect: () => clientRectFixture,
 };
+
+Object.defineProperty(rangeFixture, 'commonAncestorContainer', {
+  enumerable: true,
+  get: () => {
+    return document.body;
+  },
+});
 
 if (typeof window !== 'undefined') {
   window.getSelection = () => {

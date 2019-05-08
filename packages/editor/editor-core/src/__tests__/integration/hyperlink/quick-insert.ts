@@ -10,20 +10,21 @@ import {
 
 BrowserTestCase(
   'quick-insert.ts: Insert hyperlink via quick insert',
-  { skip: ['ie', 'edge', 'safari', 'firefox'] },
-  async client => {
+  { skip: ['ie', 'edge', 'safari'] },
+  async (client: any, testName: string) => {
     const browser = new Page(client);
 
     await browser.goto(fullpage.path);
     await browser.waitForSelector(editable);
     await browser.click(editable);
-    await quickInsert(browser, 'Hyperlink');
+    await quickInsert(browser, 'Link');
 
     await browser.waitForSelector(linkToolbar);
-    await browser.type(linkToolbar, ['atlassian.com', 'Return']);
+    await browser.type(linkToolbar, ['google.com']);
+    await browser.keys(['Return']);
     await browser.waitForSelector('a');
 
     const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchDocSnapshot();
+    expect(doc).toMatchCustomDocSnapshot(testName);
   },
 );

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import EditorQuoteIcon from '@atlaskit/icon/glyph/editor/quote';
 import { heading, blockquote, hardBreak } from '@atlaskit/adf-schema';
 import { EditorPlugin, AllowedBlockTypes } from '../../types';
 import { ToolbarSize } from '../../ui/Toolbar';
@@ -8,9 +7,19 @@ import keymapPlugin from './pm-plugins/keymap';
 import inputRulePlugin from './pm-plugins/input-rule';
 import ToolbarBlockType from './ui/ToolbarBlockType';
 import WithPluginState from '../../ui/WithPluginState';
-import { setBlockType } from './commands';
+import { setBlockTypeWithAnalytics } from './commands';
 import { messages } from './types';
 import { NodeSpec } from 'prosemirror-model';
+import {
+  addAnalytics,
+  INPUT_METHOD,
+  ACTION_SUBJECT_ID,
+  EVENT_TYPE,
+  ACTION_SUBJECT,
+  ACTION,
+} from '../analytics';
+import { toggleBlockQuote, tooltip } from '../../keymaps';
+import { IconQuote } from '../quick-insert/assets';
 
 interface BlockTypeNode {
   name: AllowedBlockTypes;
@@ -64,8 +73,11 @@ const blockType: EditorPlugin = {
     eventDispatcher,
   }) {
     const isSmall = toolbarSize < ToolbarSize.XL;
-    const boundSetBlockType = name =>
-      setBlockType(name)(editorView.state, editorView.dispatch);
+    const boundSetBlockType = (name: string) =>
+      setBlockTypeWithAnalytics(name, INPUT_METHOD.TOOLBAR)(
+        editorView.state,
+        editorView.dispatch,
+      );
 
     return (
       <WithPluginState
@@ -96,17 +108,27 @@ const blockType: EditorPlugin = {
     quickInsert: ({ formatMessage }) => [
       {
         title: formatMessage(messages.blockquote),
+        description: formatMessage(messages.blockquoteDescription),
         priority: 1300,
-        icon: () => (
-          <EditorQuoteIcon label={formatMessage(messages.blockquote)} />
-        ),
+        keyshortcut: tooltip(toggleBlockQuote),
+        icon: () => <IconQuote label={formatMessage(messages.blockquote)} />,
         action(insert, state) {
-          return insert(
+          const tr = insert(
             state.schema.nodes.blockquote.createChecked(
               {},
               state.schema.nodes.paragraph.createChecked(),
             ),
           );
+
+          return addAnalytics(tr, {
+            action: ACTION.FORMATTED,
+            actionSubject: ACTION_SUBJECT.TEXT,
+            eventType: EVENT_TYPE.TRACK,
+            actionSubjectId: ACTION_SUBJECT_ID.FORMAT_BLOCK_QUOTE,
+            attributes: {
+              inputMethod: INPUT_METHOD.QUICK_INSERT,
+            },
+          });
         },
       },
     ],

@@ -1,16 +1,15 @@
-import * as classNames from 'classnames';
+import Spinner from '@atlaskit/spinner';
+import classNames from 'classnames';
 import * as React from 'react';
 import { MouseEvent, PureComponent } from 'react';
-import Spinner from '@atlaskit/spinner';
-
-import * as styles from './styles';
-import { emojiTypeAheadMaxHeight } from '../../shared-styles';
-import EmojiItem from './EmojiTypeAheadItem';
-import Scrollable from '../common/Scrollable';
+import { emojiTypeAheadMaxHeight } from '../../util/shared-styles';
+import { toEmojiId } from '../../util/type-helpers';
 import { EmojiDescription, EmojiId, OnEmojiEvent } from '../../types';
 import debug from '../../util/logger';
-import { mouseLocation, actualMouseMove, Position } from '../../util/mouse';
-import { toEmojiId } from '../../type-helpers';
+import { actualMouseMove, mouseLocation, Position } from '../../util/mouse';
+import Scrollable from '../common/Scrollable';
+import EmojiItem from './EmojiTypeAheadItem';
+import * as styles from './styles';
 
 function wrapIndex(emojis: EmojiDescription[], index: number): number {
   const len = emojis.length;
@@ -52,15 +51,15 @@ interface ItemReferences {
 }
 
 export default class EmojiTypeAheadList extends PureComponent<Props, State> {
-  private lastMousePosition: Position;
-  private scrollable: Scrollable;
-  private items: ItemReferences;
+  private lastMousePosition?: Position;
+  private scrollable?: Scrollable | null;
+  private items!: ItemReferences;
 
   static defaultProps = {
     onEmojiSelected: () => {},
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -165,7 +164,7 @@ export default class EmojiTypeAheadList extends PureComponent<Props, State> {
 
   private selectIndexOnHover = (
     emojiId: EmojiId,
-    emoji: EmojiDescription | undefined,
+    _emoji: EmojiDescription | undefined,
     event?: React.SyntheticEvent<any>,
   ) => {
     // TODO: fix this
@@ -200,7 +199,6 @@ export default class EmojiTypeAheadList extends PureComponent<Props, State> {
                 selected={this.isSelectedEmoji(emoji, idx)}
                 onMouseMove={this.selectIndexOnHover}
                 onSelection={this.itemSelected}
-                // tslint:disable-next-line:jsx-no-lambda
                 ref={ref => {
                   if (ref) {
                     this.items[key] = ref;
@@ -261,7 +259,7 @@ export default class EmojiTypeAheadList extends PureComponent<Props, State> {
     );
   }
 
-  private handleScrollableRef = ref => {
+  private handleScrollableRef = (ref: Scrollable | null) => {
     this.scrollable = ref;
   };
 }

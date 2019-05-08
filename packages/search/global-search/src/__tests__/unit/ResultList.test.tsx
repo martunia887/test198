@@ -164,13 +164,17 @@ it('should avoid duplicate result keys', () => {
   const objectKey = wrapper.find(ObjectResultComponent).key();
   const personKey = wrapper.find(PersonResultComponent).key();
 
-  expect(containerKey).toBe('confluence-space-resultId');
-  expect(objectKey).toBe('confluence-page-resultId');
-  expect(personKey).toBe('person-resultId');
+  expect(containerKey).toEqual(
+    expect.stringMatching('confluence-space-resultId_*'),
+  );
+  expect(objectKey).toEqual(
+    expect.stringMatching('confluence-page-resultId_*'),
+  );
+  expect(personKey).toEqual(expect.stringMatching('person-resultId'));
 });
 
 describe('Jira Avatar default Icons', () => {
-  let spy;
+  let spy: jest.SpyInstance<(contentType: ContentType) => JSX.Element | null>;
   beforeEach(() => {
     spy = jest.spyOn(JiraAvatarUtil, 'getDefaultAvatar');
     spy.mockReturnValue(BoardIcon);

@@ -5,10 +5,11 @@ import { PortalProviderAPI } from '../ui/PortalProvider';
 
 export type getPosHandler = () => number;
 export type ReactComponentProps = { [key: string]: any };
+export type ForwardRef = (node: HTMLElement | null) => void;
 
 export default class ReactNodeView implements NodeView {
   private domRef?: HTMLElement;
-  private contentDOMWrapper: Node | null;
+  private contentDOMWrapper?: Node;
   private reactComponent?: React.ComponentType<any>;
   private portalProviderAPI: PortalProviderAPI;
   private hasContext: boolean;
@@ -66,7 +67,7 @@ export default class ReactNodeView implements NodeView {
     // something gets messed up during mutation processing inside of a
     // nodeView if DOM structure has nested plain "div"s, it doesn't see the
     // difference between them and it kills the nodeView
-    this.domRef.className = `${this.node.type.name}View-content-wrap`;
+    this.domRef.classList.add(`${this.node.type.name}View-content-wrap`);
 
     this.renderReactComponent(() =>
       this.render(this.reactComponentProps, this.handleRef),
@@ -97,9 +98,9 @@ export default class ReactNodeView implements NodeView {
     return undefined;
   }
 
-  handleRef = (node: HTMLElement | undefined) => this._handleRef(node);
+  handleRef = (node: HTMLElement | null) => this._handleRef(node);
 
-  private _handleRef(node: HTMLElement | undefined) {
+  private _handleRef(node: HTMLElement | null) {
     const contentDOM = this.contentDOMWrapper || this.contentDOM;
 
     // move the contentDOM node inside the inner reference after rendering
@@ -110,7 +111,7 @@ export default class ReactNodeView implements NodeView {
 
   render(
     props: ReactComponentProps,
-    forwardRef?: (node: HTMLElement) => void,
+    forwardRef?: ForwardRef,
   ): React.ReactElement<any> | null {
     return this.reactComponent ? (
       <this.reactComponent

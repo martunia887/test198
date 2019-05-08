@@ -1,6 +1,9 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import { editable, getDocFromElement, fullpageWithImport } from '../_helpers';
+import { editable, getDocFromElement, fullpage } from '../_helpers';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 
 const baseADF = {
   version: 1,
@@ -28,8 +31,8 @@ const baseADF = {
             id: 'a559980d-cd47-43e2-8377-27359fcb905f',
             type: 'file',
             collection: 'MediaServicesSample',
-            width: '2378',
-            height: '628',
+            width: 2378,
+            height: 628,
           },
         },
       ],
@@ -47,8 +50,8 @@ const baseADF = {
             id: 'a559980d-cd47-43e2-8377-27359fcb905f',
             type: 'file',
             collection: 'MediaServicesSample',
-            width: '2378',
-            height: '628',
+            width: 2378,
+            height: 628,
           },
         },
       ],
@@ -66,8 +69,8 @@ const baseADF = {
             id: 'a559980d-cd47-43e2-8377-27359fcb905f',
             type: 'file',
             collection: 'MediaServicesSample',
-            width: '2378',
-            height: '628',
+            width: 2378,
+            height: 628,
           },
         },
       ],
@@ -79,42 +82,33 @@ const baseADF = {
   ],
 };
 
-const adfInputSelector = '.adf-input';
-const importAdfBtnSelector = '.import-adf';
-
 BrowserTestCase(
   'copy-mediaSingle-replacement.ts: Copies and pastes mediaSingle on fullpage',
   { skip: ['edge', 'ie', 'safari'] },
-  async client => {
-    const browser = new Page(client);
-    await browser.goto(fullpageWithImport.path);
-
-    // load ADF
-    await browser.browser.execute(
-      (selector, value) => {
-        (document.querySelector(selector)! as HTMLInputElement).value = value;
+  async (client: any, testCase: string) => {
+    const page = await goToEditorTestingExample(client);
+    await mountEditor(page, {
+      appearance: fullpage.appearance,
+      defaultValue: JSON.stringify(baseADF),
+      media: {
+        allowMediaSingle: true,
       },
-      adfInputSelector,
-      JSON.stringify(baseADF),
-    );
-
-    await browser.click(importAdfBtnSelector);
-    await browser.waitForSelector(editable);
+    });
 
     // select the middle one and copy it
     //
     // uses .overlay since these error without being signed into Media Services
     // use the .wrapper selector if we're able to resolve the image
-    await browser.waitForSelector('.ProseMirror :nth-child(3) .overlay');
-    await browser.click('.ProseMirror :nth-child(3) .overlay');
-    await browser.copy(editable);
+    await page.waitForSelector('.ProseMirror :nth-child(3) .wrapper');
+    await page.click('.ProseMirror :nth-child(3) .wrapper');
+    await page.copy(editable);
 
     // select the last one and replace it
-    await browser.waitForSelector('.ProseMirror :nth-child(4) .overlay');
-    await browser.click('.ProseMirror :nth-child(4) .overlay');
-    await browser.paste(editable);
+    await page.waitForSelector('.ProseMirror :nth-child(4) .wrapper');
+    await page.click('.ProseMirror :nth-child(4) .wrapper');
+    await page.paste(editable);
 
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchDocSnapshot();
+    const doc = await page.$eval(editable, getDocFromElement);
+    expect(doc).toMatchCustomDocSnapshot(testCase);
   },
 );

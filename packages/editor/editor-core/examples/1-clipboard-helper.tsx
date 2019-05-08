@@ -9,7 +9,7 @@ export interface State {
 export default class ClipboardHelper extends React.Component<{}, State> {
   state = { value: '' };
 
-  handleChange = e => {
+  handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.setState({ value: e.target.value });
   };
   clearValue = () => {
@@ -17,7 +17,6 @@ export default class ClipboardHelper extends React.Component<{}, State> {
   };
 
   copyAs = (dataType = 'text/plain') => {
-    // tslint:disable-next-line:no-var-keyword
     var dt = new Clipboard.DT();
     dt.setData(dataType, this.state.value);
     Clipboard.write(dt);

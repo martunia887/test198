@@ -7,12 +7,12 @@ import {
   CardEvent,
   CardAction,
   CardEventHandler,
-  FileIdentifier,
 } from '@atlaskit/media-card';
 import {
   Context,
-  MediaItem,
+  FileItem,
   FileDetails,
+  FileIdentifier,
   getMediaTypeFromMimeType,
 } from '@atlaskit/media-core';
 import Spinner from '@atlaskit/spinner';
@@ -23,7 +23,7 @@ import EditorInfoIcon from '@atlaskit/icon/glyph/error';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import { messages, InfiniteScroll } from '@atlaskit/media-ui';
-import { Browser } from '../../../../components/browser';
+import { Browser } from '../../../../components/types';
 import { isWebGLAvailable } from '../../../tools/webgl';
 import { Dropzone } from './dropzone';
 import { fileClick } from '../../../actions/fileClick';
@@ -170,39 +170,42 @@ export class StatelessUploadView extends Component<
     const closeDialog = () => {
       this.setState({ deletionCandidate: undefined });
     };
-    if (deletionCandidate) {
-      const { id, occurrenceKey, userFileId } = deletionCandidate;
-      const actions = [
-        {
-          text: 'Delete permanently',
-          onClick: () => {
-            removeFileFromRecents(id, occurrenceKey, userFileId);
-            closeDialog();
-          },
-        },
-        {
-          text: 'Cancel',
-          onClick: () => {
-            closeDialog();
-          },
-        },
-      ];
-      return (
-        <ModalTransition>
-          <ModalDialog
-            width="small"
-            appearance="danger"
-            heading="Delete forever?"
-            actions={actions}
-            onClose={closeDialog}
-          >
-            This file is about to be permanently deleted. Once you delete, it's
-            gone for good.
-          </ModalDialog>
-        </ModalTransition>
-      );
+
+    if (!deletionCandidate) {
+      return null;
     }
-    return null;
+
+    const { id, occurrenceKey, userFileId } = deletionCandidate;
+    const actions = [
+      {
+        text: 'Delete permanently',
+        onClick: () => {
+          removeFileFromRecents(id, occurrenceKey, userFileId);
+          closeDialog();
+        },
+      },
+      {
+        text: 'Cancel',
+        onClick: () => {
+          closeDialog();
+        },
+      },
+    ];
+
+    return (
+      <ModalTransition>
+        <ModalDialog
+          width="small"
+          appearance="danger"
+          heading="Delete forever?"
+          actions={actions}
+          onClose={closeDialog}
+        >
+          This file is about to be permanently deleted. Once you delete, it's
+          gone for good.
+        </ModalDialog>
+      </ModalTransition>
+    );
   };
 
   private onThresholdReachedListener = () => {
@@ -411,7 +414,7 @@ export class StatelessUploadView extends Component<
       }
     };
 
-    const editHandler: CardEventHandler = (mediaItem?: MediaItem) => {
+    const editHandler: CardEventHandler = (mediaItem?: FileItem) => {
       if (mediaItem && mediaItem.type === 'file') {
         const { id, name } = mediaItem.details;
 

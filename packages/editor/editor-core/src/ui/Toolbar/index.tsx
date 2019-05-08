@@ -1,11 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { EditorView } from 'prosemirror-view';
-import SizeDetector from '@atlaskit/size-detector';
+import WidthDetector from '@atlaskit/width-detector';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { EditorAppearance, ToolbarUIComponentFactory } from '../../types';
 import { EventDispatcher } from '../../event-dispatcher';
 import EditorActions from '../../actions';
+import { DispatchAnalyticsEvent } from '../../plugins/analytics';
+import { isFullPage } from '../../utils/is-full-page';
 
 const ToolbarComponentsWrapper = styled.div`
   display: flex;
@@ -49,15 +51,17 @@ export interface ToolbarProps {
   popupsScrollableElement?: HTMLElement;
   disabled: boolean;
   width?: number;
+  dispatchAnalyticsEvent?: DispatchAnalyticsEvent;
 }
 
 export interface ToolbarInnerProps extends ToolbarProps {
   toolbarSize: ToolbarSize;
   isToolbarReducedSpacing: boolean;
+  isReducedSpacing?: boolean;
 }
 
 export class ToolbarInner extends React.Component<ToolbarInnerProps> {
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: ToolbarInnerProps) {
     return (
       nextProps.toolbarSize !== this.props.toolbarSize ||
       nextProps.disabled !== this.props.disabled ||
@@ -84,6 +88,7 @@ export class ToolbarInner extends React.Component<ToolbarInnerProps> {
       toolbarSize,
       disabled,
       isToolbarReducedSpacing,
+      dispatchAnalyticsEvent,
     } = this.props;
 
     if (!items || !items.length) {
@@ -107,6 +112,7 @@ export class ToolbarInner extends React.Component<ToolbarInnerProps> {
             toolbarSize,
             isToolbarReducedSpacing,
             containerElement: undefined,
+            dispatchAnalyticsEvent,
           });
           return element && React.cloneElement(element, props);
         })}
@@ -115,10 +121,13 @@ export class ToolbarInner extends React.Component<ToolbarInnerProps> {
   }
 }
 
-const toolbarSizesForAppearance = (appearance?: string) =>
-  appearance === 'full-page' ? toolbarSizesFullPage : toolbarSizes;
+const toolbarSizesForAppearance = (appearance?: EditorAppearance) =>
+  isFullPage(appearance) ? toolbarSizesFullPage : toolbarSizes;
 
-const widthToToolbarSize = (toolbarWidth: number, appearance?: string) => {
+const widthToToolbarSize = (
+  toolbarWidth: number,
+  appearance?: EditorAppearance,
+) => {
   return (
     toolbarSizesForAppearance(appearance).find(
       ({ width }) => toolbarWidth > width,
@@ -142,9 +151,11 @@ export function Toolbar(props: ToolbarProps) {
 export default function ToolbarWithSizeDetector(props: ToolbarProps) {
   return (
     <div style={{ width: '100%', minWidth: '254px' }}>
-      <SizeDetector>
-        {({ width }) => <Toolbar {...props} width={width} />}
-      </SizeDetector>
+      <WidthDetector>
+        {width =>
+          width === undefined ? null : <Toolbar {...props} width={width} />
+        }
+      </WidthDetector>
     </div>
   );
 }

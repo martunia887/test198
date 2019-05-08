@@ -1,6 +1,6 @@
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-import 'whatwg-fetch';
-import * as fetchMock from 'fetch-mock';
+
+import fetchMock from 'fetch-mock';
 import { Client, MAX_RETRY, RETRY_STEP_IN_MILLISECONDS } from '../../client';
 import { EventType, Protocol } from '../../types';
 
@@ -242,7 +242,7 @@ describe('Client', () => {
           const handler = protocol.on.mock.calls[1][1];
           protocol.subscribe.mockReset();
 
-          function callAccessDeniedHandler(iteration) {
+          function callAccessDeniedHandler(iteration: number) {
             if (iteration > MAX_RETRY) {
               expect(protocol.subscribe).toHaveBeenCalledTimes(MAX_RETRY);
               done();

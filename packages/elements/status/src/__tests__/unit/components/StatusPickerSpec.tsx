@@ -1,8 +1,8 @@
+import { shallowWithIntl } from '@atlaskit/editor-test-helpers';
+import { FieldTextStateless } from '@atlaskit/field-text';
 import * as React from 'react';
 import { StatusPicker } from '../../..';
-import { FieldTextStateless } from '@atlaskit/field-text';
 import ColorPalette from '../../../components/internal/color-palette';
-import { shallowWithIntl } from 'enzyme-react-intl';
 
 describe('StatusPicker', () => {
   it('should render color palette', () => {
@@ -42,6 +42,10 @@ describe('StatusPicker', () => {
       'In progress',
     );
     expect(component.find(FieldTextStateless).prop('innerRef')).toBeDefined();
+    expect(component.find(FieldTextStateless).prop('autoComplete')).toBe('off');
+    expect(component.find(FieldTextStateless).prop('isSpellCheckEnabled')).toBe(
+      false,
+    );
   });
 
   it('should pass onColorClick handler prop to color palette', () => {

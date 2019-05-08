@@ -1,6 +1,6 @@
 import { browser } from '@atlaskit/editor-common';
 import {
-  createEditor,
+  createEditorFactory,
   a as link,
   blockquote,
   code_block,
@@ -8,6 +8,11 @@ import {
   doc,
   em,
   h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
   subsup,
   li,
   ol,
@@ -24,14 +29,23 @@ import codeBlockPlugin from '../../../../plugins/code-block';
 import textColorPlugin from '../../../../plugins/text-color';
 import listPlugin from '../../../../plugins/lists';
 import panelPlugin from '../../../../plugins/panel';
-import { clearFormatting } from '../../../../plugins/text-formatting/commands/clear-formatting';
+import {
+  clearFormatting,
+  clearFormattingWithAnalytics,
+} from '../../../../plugins/text-formatting/commands/clear-formatting';
 import { checkFormattingIsPresent } from '../../../../plugins/text-formatting/utils';
+import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('clear-formatting', () => {
+  const createEditor = createEditorFactory();
+  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+
   const editor = (
     doc: any,
     { trackEvent }: { trackEvent: () => void } = { trackEvent: () => {} },
   ) => {
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
     const editor = createEditor({
       doc,
       editorPlugins: [
@@ -42,7 +56,9 @@ describe('clear-formatting', () => {
       ],
       editorProps: {
         analyticsHandler: trackEvent,
+        allowAnalyticsGASV3: true,
       },
+      createAnalyticsEvent,
     });
     const pluginState = clearFormattingPluginKey.getState(
       editor.editorView.state,
@@ -75,11 +91,11 @@ describe('clear-formatting', () => {
       expect(pluginState.formattingIsPresent).toBe(true);
     });
 
-    it('should be true if panel is present', () => {
+    it('should be false if panel is present', () => {
       const { pluginState } = editor(
         doc(p('paragraph'), panel()(p('panel{<>}node'))),
       );
-      expect(pluginState.formattingIsPresent).toBe(true);
+      expect(pluginState.formattingIsPresent).toBe(false);
     });
 
     it('should be false if no marks or formatted blocks are present', () => {
@@ -92,14 +108,12 @@ describe('clear-formatting', () => {
 
       clearFormatting()(editorView.state, editorView.dispatch);
       expect(checkFormattingIsPresent(editorView.state)).toBe(false);
-      editorView.destroy();
     });
 
     it('should be false if all present blocks are cleared', () => {
       const { editorView } = editor(doc(code_block({})('code{<>}block')));
       clearFormatting()(editorView.state, editorView.dispatch);
       expect(checkFormattingIsPresent(editorView.state)).toBe(false);
-      editorView.destroy();
     });
   });
 
@@ -118,8 +132,6 @@ describe('clear-formatting', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(p(nodeType('t'), 'ex', nodeType('t'))),
         );
-
-        editorView.destroy();
       });
     });
 
@@ -131,8 +143,6 @@ describe('clear-formatting', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(p(blackText('t'), 'ex', blackText('t'))),
       );
-
-      editorView.destroy();
     });
 
     it('should remove heading blocks if present', () => {
@@ -140,8 +150,6 @@ describe('clear-formatting', () => {
 
       clearFormatting()(editorView.state, editorView.dispatch);
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
-
-      editorView.destroy();
     });
 
     it('should remove superscript if present', () => {
@@ -150,7 +158,6 @@ describe('clear-formatting', () => {
       );
       clearFormatting()(editorView.state, editorView.dispatch);
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
-      editorView.destroy();
     });
 
     it('should remove blockquote if present', () => {
@@ -158,17 +165,15 @@ describe('clear-formatting', () => {
 
       clearFormatting()(editorView.state, editorView.dispatch);
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
-
-      editorView.destroy();
     });
 
-    it('should remove panel if present', () => {
-      const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
+    it('should not remove panel if present', () => {
+      const { editorView } = editor(doc(panel()(p(code('{<}text{>}')))));
 
       clearFormatting()(editorView.state, editorView.dispatch);
-      expect(editorView.state.doc).toEqualDocument(doc(p('text')));
-
-      editorView.destroy();
+      expect(editorView.state.doc).toEqualDocument(
+        doc(panel()(p('{<}text{>}'))),
+      );
     });
 
     it('should remove superscript if present', () => {
@@ -178,8 +183,6 @@ describe('clear-formatting', () => {
 
       clearFormatting()(editorView.state, editorView.dispatch);
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
-
-      editorView.destroy();
     });
 
     it('should remove subscript if present', () => {
@@ -189,8 +192,6 @@ describe('clear-formatting', () => {
 
       clearFormatting()(editorView.state, editorView.dispatch);
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
-
-      editorView.destroy();
     });
 
     it('should not remove link if present', () => {
@@ -202,8 +203,6 @@ describe('clear-formatting', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(p(link({ href: 'http://www.atlassian.com' })('text'))),
       );
-
-      editorView.destroy();
     });
 
     it('should not remove ordered list item if present', () => {
@@ -211,8 +210,105 @@ describe('clear-formatting', () => {
 
       clearFormatting()(editorView.state, editorView.dispatch);
       expect(editorView.state.doc).toEqualDocument(doc(ol(li(p('text')))));
+    });
 
-      editorView.destroy();
+    describe('Analytics GAS V3', () => {
+      function createClearFormattingPayloadWithAttributes(attributes: object) {
+        return {
+          action: 'formatted',
+          actionSubject: 'text',
+          actionSubjectId: 'clearFormatting',
+          eventType: 'track',
+          attributes,
+        };
+      }
+      const inputMethodToolbar = INPUT_METHOD.TOOLBAR;
+      [
+        { formattingName: 'strong', nodeType: strong },
+        { formattingName: 'italic', nodeType: em },
+        { formattingName: 'underline', nodeType: underline },
+        { formattingName: 'code', nodeType: code },
+        { formattingName: 'strike', nodeType: strike },
+        { formattingName: 'subsup', nodeType: subsup({ type: 'sub' }) },
+        { formattingName: 'subsup', nodeType: subsup({ type: 'sup' }) },
+        { formattingName: 'color', nodeType: textColor({ color: '#FFFFFF' }) },
+      ].forEach(({ formattingName, nodeType }) => {
+        it(`should create analytics with ${formattingName} format cleared`, () => {
+          const { editorView } = editor(doc(p(nodeType('t{<}ex{>}t'))));
+
+          clearFormattingWithAnalytics(inputMethodToolbar)(
+            editorView.state,
+            editorView.dispatch,
+          );
+
+          expect(createAnalyticsEvent).toHaveBeenCalledWith(
+            createClearFormattingPayloadWithAttributes({
+              inputMethod: inputMethodToolbar,
+              formattingCleared: [formattingName],
+            }),
+          );
+        });
+      });
+
+      // Check headings events have been created
+      [
+        { level: 1, nodeType: h1 },
+        { level: 2, nodeType: h2 },
+        { level: 3, nodeType: h3 },
+        { level: 4, nodeType: h4 },
+        { level: 5, nodeType: h5 },
+        { level: 6, nodeType: h6 },
+      ].forEach(({ level, nodeType }) => {
+        it(`should create analytics for heading format cleared, if has heading level ${level}`, () => {
+          const { editorView } = editor(doc(nodeType('t{<}ex{>}t')));
+
+          clearFormattingWithAnalytics(inputMethodToolbar)(
+            editorView.state,
+            editorView.dispatch,
+          );
+
+          expect(createAnalyticsEvent).toHaveBeenCalledWith(
+            createClearFormattingPayloadWithAttributes({
+              inputMethod: inputMethodToolbar,
+              formattingCleared: ['heading'],
+            }),
+          );
+        });
+      });
+
+      it(`should create analytics for codeBlock format cleared`, () => {
+        const { editorView } = editor(
+          doc(code_block({ language: 'java' })('t{<}ex{>}t')),
+        );
+
+        clearFormattingWithAnalytics(inputMethodToolbar)(
+          editorView.state,
+          editorView.dispatch,
+        );
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith(
+          createClearFormattingPayloadWithAttributes({
+            inputMethod: inputMethodToolbar,
+            formattingCleared: ['codeBlock'],
+          }),
+        );
+      });
+
+      it(`should create analytics for block quote format cleared`, () => {
+        const { editorView } = editor(doc(blockquote(p('t{<}ex{>}t'))));
+
+        clearFormattingWithAnalytics(inputMethodToolbar)(
+          editorView.state,
+          editorView.dispatch,
+        );
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith(
+          createClearFormattingPayloadWithAttributes({
+            inputMethod: inputMethodToolbar,
+            formattingCleared: ['blockquote'],
+          }),
+        );
+      });
     });
   });
 
@@ -234,7 +330,6 @@ describe('clear-formatting', () => {
       expect(trackEvent).toHaveBeenCalledWith(
         'atlassian.editor.format.clear.keyboard',
       );
-      editorView.destroy();
     });
   });
 });

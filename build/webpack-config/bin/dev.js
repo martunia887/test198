@@ -14,9 +14,11 @@ DirectoryWatcher.prototype.setDirectory = function(
   type,
 ) {
   // Any new files created under src/ will trigger a rebuild when in watch mode
-  // If we are just adding snapshots, we can safely ignore those
+  // If we are just adding snapshots or updating tests, we can safely ignore those
   if (directoryPath.includes('__snapshots__')) return;
   if (directoryPath.includes('__image_snapshots__')) return;
+  if (directoryPath.includes('__tests__')) return;
+  if (directoryPath.includes('__tests-karma__')) return;
   if (!directoryPath.includes('node_modules')) {
     _oldSetDirectory.call(this, directoryPath, exist, initial, type);
   }
@@ -29,53 +31,76 @@ const minimatch = require('minimatch');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const historyApiFallback = require('connect-history-api-fallback');
-const createConfig = require('../config');
+const ora = require('ora');
+const chalk = require('chalk');
+const createWebpackConfig = require('../config');
 const utils = require('../config/utils');
 const { print, devServerBanner, errorMsg } = require('../banner');
+let HOST = 'localhost';
+let disableHostCheck = false;
 
-const HOST = 'localhost';
+if (process.env.VISUAL_REGRESSION) {
+  HOST = '0.0.0.0';
+  disableHostCheck = true;
+}
+
 const PORT = +process.env.ATLASKIT_DEV_PORT || 9000;
 const stats = require('../config/statsOptions');
 
 async function runDevServer() {
-  const [workspacesGlobRaw = ''] = process.argv.slice(2);
+  const workspaceGlobs = process.argv
+    .slice(2)
+    .filter(arg => !arg.startsWith('--')) // in case we ever pass other flags to this script
+    .map(arg => arg.replace(/["']/g, '')); // remove all quotes (users add them to prevent early glob expansion)
   const report = !!process.argv.find(arg => arg.startsWith('--report'));
-  const workspacesGlob = workspacesGlobRaw.startsWith('--')
-    ? ''
-    : workspacesGlobRaw.replace(/^['"](.+)['"]$/, '$1'); // Unwrap string from quotes
+
   const mode = 'development';
   const websiteEnv = 'local';
   const projectRoot = (await bolt.getProject({ cwd: process.cwd() })).dir;
   const workspaces = await bolt.getWorkspaces();
 
-  const filteredWorkspaces = workspacesGlob
+  const filteredWorkspaces = workspaceGlobs.length
     ? workspaces.filter(ws =>
-        minimatch(ws.dir, workspacesGlob, { matchBase: true }),
+        workspaceGlobs.some(glob =>
+          minimatch(ws.dir, glob, { matchBase: true }),
+        ),
       )
-    : workspaces;
+    : workspaces; // if no globs were passed, we'll use all workspaces.
 
-  const globs = workspacesGlob
-    ? utils.createWorkspacesGlob(filteredWorkspaces, projectRoot)
-    : utils.createDefaultGlob();
+  let globs =
+    workspaceGlobs.length > 0
+      ? utils.createWorkspacesGlob(filteredWorkspaces, projectRoot)
+      : utils.createDefaultGlob();
+
+  /* At the moment, the website and webpack folders do not build a package and it is not possible to test it.
+  ** The current workaround, we build another package that builds the homepage and indirectly test the website.
+  ** We picked the package polyfills:
+   - the package is internal.
+   - no integration tests will be added.
+   - changes to the package will not impact the build system.
+  */
+  if (['website', 'webpack'].indexOf(globs) === -1) {
+    globs = globs.map(glob =>
+      glob
+        .replace('website', 'packages/core/polyfills')
+        .replace('build/webpack-config', 'packages/core/polyfills'),
+    );
+  }
 
   if (!globs.length) {
-    print(
-      errorMsg({
-        title: 'Nothing to run',
-        msg: `Pattern "${workspacesGlob}" doesn't match anything.`,
-      }),
+    console.info(
+      `${workspaceGlobs.toString()}: Nothing to run or pattern does not match!`,
     );
-
-    process.exit(2);
+    process.exit(0);
   }
 
   print(
     devServerBanner({
-      workspacesGlob,
       workspaces: filteredWorkspaces,
+      workspacesGlob: workspaceGlobs.toString(),
       port: PORT,
       host: HOST,
-      isAll: !workspacesGlob,
+      isAll: !(workspaceGlobs.length > 0),
     }),
   );
 
@@ -83,7 +108,7 @@ async function runDevServer() {
   // Creating webpack instance
   //
 
-  const config = createConfig({
+  const config = await createWebpackConfig({
     globs,
     mode,
     websiteEnv,
@@ -96,20 +121,28 @@ async function runDevServer() {
   // Starting Webpack Dev Server
   //
 
+  const spinner = ora(chalk.cyan('Starting webpack dev server')).start();
+
   const server = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
     compress: true,
 
     historyApiFallback: true,
+    disableHostCheck,
 
     overlay: true,
     stats,
   });
 
   return new Promise((resolve, reject) => {
+    compiler.hooks.done.tap('done', () => {
+      spinner.succeed(chalk.cyan('Compiled packages!'));
+    });
+
     server.listen(PORT, HOST, err => {
       if (err) {
-        console.log(err.stack || err);
+        spinner.fail();
+        console.log(chalk.red(err.stack || err));
         return reject(1);
       }
 

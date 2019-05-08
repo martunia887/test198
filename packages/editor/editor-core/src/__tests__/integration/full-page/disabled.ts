@@ -1,63 +1,46 @@
-import * as assert from 'assert';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 
 import { fullpageDisabled } from '../_helpers';
 
-async function assertThrowsAsync(fn, regExp) {
-  let f = () => {};
-  try {
-    await fn();
-  } catch (e) {
-    f = () => {
-      throw e;
-    };
-  } finally {
-    assert.throws(f, regExp);
-  }
-}
+// TODO: fix expect condition or find a way to fetch error from api
+BrowserTestCase(
+  "disabled.ts: Shouldn't be able to type in the disabled editor",
+  { skip: ['edge', 'ie', 'firefox', 'safari', 'chrome'] },
+  async (client: any) => {
+    const browser = new Page(client);
+    await browser.goto(fullpageDisabled.path);
+
+    return expect(
+      browser.click(fullpageDisabled.placeholder),
+    ).rejects.toThrowError('unknown error: Element is not clickable at point');
+  },
+);
 
 BrowserTestCase(
-  "disabled.ts: Shouldn't be able to click in the disabled editor",
-  { skip: ['edge', 'ie', 'firefox', 'safari'] },
-  async client => {
+  "disabled.ts: Shouldn't be able to type in a panel",
+  { skip: ['edge', 'ie', 'firefox', 'safari', 'chrome'] },
+  async (client: any) => {
     const browser = new Page(client);
     await browser.goto(fullpageDisabled.path);
     await browser.waitForSelector(fullpageDisabled.placeholder);
 
-    await assertThrowsAsync(
-      async () => await browser.click(fullpageDisabled.placeholder),
-      err => err.message.includes('Element is not clickable at point'),
+    const elem = browser.$$('.ak-editor-panel__content');
+    return expect(elem.click()).rejects.toThrowError(
+      'unknown error: Element is not clickable at point',
     );
   },
 );
 
 BrowserTestCase(
-  "disabled.ts: Shouldn't be able to click in a panel",
-  { skip: ['edge', 'ie', 'firefox', 'safari'] },
-  async client => {
+  "disabled.ts: Shouldn't be able to type in a table",
+  { skip: ['edge', 'ie', 'firefox', 'safari', 'chrome'] },
+  async (client: any) => {
     const browser = new Page(client);
     await browser.goto(fullpageDisabled.path);
     await browser.waitForSelector(fullpageDisabled.placeholder);
-
-    await assertThrowsAsync(
-      async () => await browser.click('.ak-editor-panel__content'),
-      err => err.message.includes('Element is not clickable at point'),
-    );
-  },
-);
-
-BrowserTestCase(
-  "disabled.ts: Shouldn't be able to click in a table",
-  { skip: ['edge', 'ie', 'firefox', 'safari'] },
-  async client => {
-    const browser = new Page(client);
-    await browser.goto(fullpageDisabled.path);
-    await browser.waitForSelector(fullpageDisabled.placeholder);
-
-    await assertThrowsAsync(
-      async () => await browser.click('.pm-table-cell-nodeview-content-dom'),
-      err => err.message.includes('Element is not clickable at point'),
-    );
+    return expect(
+      await browser.click('.pm-table-cell-nodeview-content-dom'),
+    ).rejects.toThrowError('unknown error: Element is not clickable at point');
   },
 );

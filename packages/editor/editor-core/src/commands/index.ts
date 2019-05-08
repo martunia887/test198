@@ -8,12 +8,22 @@ import {
 import {
   EditorState,
   NodeSelection,
+  Selection,
   TextSelection,
   Transaction,
 } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
 import { canMoveDown, canMoveUp } from '../utils';
 import { Command } from '../types';
 import { EditorView } from 'prosemirror-view';
+import {
+  withAnalytics,
+  EVENT_TYPE,
+  ACTION,
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+} from '../plugins/analytics';
+import { AlignmentState } from '../plugins/alignment/pm-plugins/main';
 
 export function preventDefault(): Command {
   return function(state, dispatch) {
@@ -48,6 +58,13 @@ export function insertNewLine(): Command {
     return false;
   };
 }
+
+export const insertNewLineWithAnalytics = withAnalytics({
+  action: ACTION.INSERTED,
+  actionSubject: ACTION_SUBJECT.TEXT,
+  actionSubjectId: ACTION_SUBJECT_ID.LINE_BREAK,
+  eventType: EVENT_TYPE.TRACK,
+})(insertNewLine());
 
 export function insertRule(): Command {
   return function(state, dispatch) {
@@ -204,7 +221,10 @@ export interface Command {
   ): boolean;
 }
 
-export const changeImageAlignment = (align): Command => (state, dispatch) => {
+export const changeImageAlignment = (align?: AlignmentState): Command => (
+  state,
+  dispatch,
+) => {
   const { from, to } = state.selection;
 
   const tr = state.tr;
@@ -235,51 +255,79 @@ export const changeImageAlignment = (align): Command => (state, dispatch) => {
  */
 export const toggleBlockMark = <T = object>(
   markType: MarkType,
-  getAttrs: ((prevAttrs?: T) => T | undefined | false),
+  getAttrs: ((prevAttrs?: T, node?: PMNode) => T | undefined | false),
   allowedBlocks?:
     | Array<NodeType>
     | ((schema: Schema, node: PMNode, parent: PMNode) => boolean),
 ): Command => (state, dispatch) => {
-  const { from, to } = state.selection;
-
   let markApplied = false;
   const tr = state.tr;
 
-  state.doc.nodesBetween(from, to, (node, pos, parent) => {
-    if (!node.type.isBlock) {
-      return false;
-    }
-
-    if (
-      (!allowedBlocks ||
-        (Array.isArray(allowedBlocks)
-          ? allowedBlocks.indexOf(node.type) > -1
-          : allowedBlocks(state.schema, node, parent))) &&
-      parent.type.allowsMarkType(markType)
-    ) {
-      const oldMarks = node.marks.filter(mark => mark.type === markType);
-      const newAttrs = getAttrs(
-        oldMarks.length ? (oldMarks[0].attrs as T) : undefined,
-      );
-
-      if (newAttrs !== undefined) {
-        tr.setNodeMarkup(
-          pos,
-          node.type,
-          node.attrs,
-          node.marks
-            .filter(mark => !markType.excludes(mark.type))
-            .concat(newAttrs === false ? [] : markType.create(newAttrs)),
-        );
-        markApplied = true;
+  const toggleBlockMarkOnRange = (
+    from: number,
+    to: number,
+    tr: Transaction,
+  ) => {
+    state.doc.nodesBetween(from, to, (node, pos, parent) => {
+      if (!node.type.isBlock) {
+        return false;
       }
-    }
-  });
+
+      if (
+        (!allowedBlocks ||
+          (Array.isArray(allowedBlocks)
+            ? allowedBlocks.indexOf(node.type) > -1
+            : allowedBlocks(state.schema, node, parent))) &&
+        parent.type.allowsMarkType(markType)
+      ) {
+        const oldMarks = node.marks.filter(mark => mark.type === markType);
+
+        const prevAttrs = oldMarks.length
+          ? (oldMarks[0].attrs as T)
+          : undefined;
+        const newAttrs = getAttrs(prevAttrs, node);
+
+        if (newAttrs !== undefined) {
+          tr.setNodeMarkup(
+            pos,
+            node.type,
+            node.attrs,
+            node.marks
+              .filter(mark => !markType.excludes(mark.type))
+              .concat(newAttrs === false ? [] : markType.create(newAttrs)),
+          );
+          markApplied = true;
+        }
+      }
+    });
+  };
+
+  if (state.selection instanceof CellSelection) {
+    state.selection.forEachCell((cell, pos) => {
+      toggleBlockMarkOnRange(pos, pos + cell.nodeSize, tr);
+    });
+  } else {
+    const { from, to } = state.selection;
+    toggleBlockMarkOnRange(from, to, tr);
+  }
 
   if (markApplied && tr.docChanged) {
     if (dispatch) {
       dispatch(tr.scrollIntoView());
     }
+    return true;
+  }
+
+  return false;
+};
+
+export const clearEditorContent: Command = (state, dispatch) => {
+  const tr = state.tr;
+  tr.replace(0, state.doc.nodeSize - 2);
+  tr.setSelection(Selection.atStart(tr.doc));
+
+  if (dispatch) {
+    dispatch(tr);
     return true;
   }
 

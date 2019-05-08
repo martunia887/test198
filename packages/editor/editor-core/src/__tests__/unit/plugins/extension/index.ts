@@ -1,6 +1,6 @@
 import {
   doc,
-  createEditor,
+  createEditorFactory,
   p as paragraph,
   bodiedExtension,
   extension,
@@ -35,6 +35,8 @@ const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 const temporaryFileId = `temporary:${randomId()}`;
 
 describe('extension', () => {
+  const createEditor = createEditorFactory();
+
   const editor = (doc: any) => {
     return createEditor({
       doc,
@@ -49,6 +51,22 @@ describe('extension', () => {
   };
 
   const extensionAttrs = bodiedExtensionData[1].attrs;
+
+  describe('when extension is selected', () => {
+    it('should delete the bodied extension', () => {
+      const { editorView } = editor(
+        doc(bodiedExtension(extensionAttrs)(paragraph('a{<>}'))),
+      );
+
+      const nodeSelection = new NodeSelection(editorView.state.doc.resolve(0));
+
+      editorView.dispatch(editorView.state.tr.setSelection(nodeSelection));
+
+      removeExtension()(editorView.state, editorView.dispatch);
+
+      expect(editorView.state.doc).toEqualDocument(doc(paragraph('')));
+    });
+  });
 
   describe('when cursor is in between two paragraphs in an extension', () => {
     it("shouldn't create a new extension node on Enter", () => {
@@ -239,7 +257,6 @@ describe('extension', () => {
             mediaSingle({ layout: 'center' })(
               media({
                 id: temporaryFileId,
-                __key: temporaryFileId,
                 type: 'file',
                 collection: testCollectionName,
                 __fileMimeType: 'image/png',
@@ -293,7 +310,6 @@ describe('extension', () => {
       )!;
       expect(node).toBeDefined();
       expect(node!.attrs.layout).toBe('full-width');
-      editorView.destroy();
     });
 
     it('respects the layout attribute', () => {
@@ -314,8 +330,6 @@ describe('extension', () => {
       expect(getExtensionElement.getAttribute('data-layout')).toBe(
         'full-width',
       );
-
-      editorView.destroy();
     });
 
     it('sets the data-layout attribute on the extension DOM element', () => {
@@ -338,8 +352,6 @@ describe('extension', () => {
       expect(getExtensionElement.getAttribute('data-layout')).toBe(
         'full-width',
       );
-
-      editorView.destroy();
     });
 
     it('sets layout attributes uniquely on extension elements', () => {
@@ -377,7 +389,6 @@ describe('extension', () => {
       expect(getSecondExtensionElement.getAttribute('data-layout')).toBe(
         'full-width',
       );
-      editorView.destroy();
     });
   });
 });

@@ -14,7 +14,7 @@ import { gridSize } from '@atlaskit/theme';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../version.json';
 import Wrapper, {
   Content,
   SpinnerContainer,
@@ -125,10 +125,11 @@ class Droplist extends Component<Props, void> {
   };
 
   dropContentRef: HTMLElement;
+
   triggerRef: HTMLElement;
 
   handleEsc = (event: KeyboardEvent): void => {
-    if (event.key === 'Escape' && this.props.isOpen) {
+    if ((event.key === 'Escape' || event.key === 'Esc') && this.props.isOpen) {
       this.close(event);
     }
   };

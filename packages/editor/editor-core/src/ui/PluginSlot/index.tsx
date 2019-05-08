@@ -5,6 +5,8 @@ import { ProviderFactory } from '@atlaskit/editor-common';
 import { EditorAppearance, UIComponentFactory } from '../../types';
 import { EventDispatcher } from '../../event-dispatcher';
 import EditorActions from '../../actions';
+import { DispatchAnalyticsEvent } from '../../plugins/analytics';
+import { whichTransitionEvent } from '../../utils';
 
 const PluginsComponentsWrapper = styled.div`
   display: flex;
@@ -22,6 +24,8 @@ export interface Props {
   popupsScrollableElement?: HTMLElement;
   containerElement: HTMLElement | undefined;
   disabled: boolean;
+  dispatchAnalyticsEvent?: DispatchAnalyticsEvent;
+  contentArea?: HTMLElement;
 }
 
 export default class PluginSlot extends React.Component<Props, any> {
@@ -38,6 +42,7 @@ export default class PluginSlot extends React.Component<Props, any> {
       containerElement,
       disabled,
     } = this.props;
+
     return !(
       nextProps.editorView === editorView &&
       nextProps.editorActions === editorActions &&
@@ -52,6 +57,41 @@ export default class PluginSlot extends React.Component<Props, any> {
     );
   }
 
+  componentDidMount() {
+    this.addModeChangeListener(this.props.contentArea);
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.props.contentArea !== nextProps.contentArea) {
+      this.addModeChangeListener(nextProps.contentArea);
+    }
+  }
+
+  componentWillUnmount() {
+    const { contentArea } = this.props;
+    if (contentArea) {
+      contentArea.removeEventListener(
+        whichTransitionEvent(),
+        this.forceComponentUpdate,
+      );
+    }
+  }
+
+  forceComponentUpdate = (): void => this.forceUpdate();
+
+  addModeChangeListener = (contentArea?: HTMLElement) => {
+    if (contentArea) {
+      /**
+       * Update the plugin components once the transition
+       * to full width / default mode completes
+       */
+      contentArea.addEventListener(
+        whichTransitionEvent(),
+        this.forceComponentUpdate,
+      );
+    }
+  };
+
   render() {
     const {
       items,
@@ -65,6 +105,7 @@ export default class PluginSlot extends React.Component<Props, any> {
       popupsScrollableElement,
       containerElement,
       disabled,
+      dispatchAnalyticsEvent,
     } = this.props;
 
     if (!items || !editorView) {
@@ -80,6 +121,7 @@ export default class PluginSlot extends React.Component<Props, any> {
             editorActions: editorActions as EditorActions,
             eventDispatcher: eventDispatcher as EventDispatcher,
             providerFactory,
+            dispatchAnalyticsEvent,
             appearance,
             popupsMountPoint,
             popupsBoundariesElement,

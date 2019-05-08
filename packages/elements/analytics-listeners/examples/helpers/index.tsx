@@ -1,20 +1,30 @@
-import { EventType } from '@atlaskit/analytics-gas-types';
+import {
+  EventType,
+  GasPurePayload,
+  GasPureScreenEventPayload,
+} from '@atlaskit/analytics-gas-types';
 import {
   createAndFireEvent,
   withAnalyticsEvents,
+  WithAnalyticsEventProps,
 } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import Button from '@atlaskit/button';
 import * as React from 'react';
 import { FabricChannel } from '../../src/types';
 
 export type OwnProps = {
-  onClick: (e) => void;
+  onClick: (e: React.SyntheticEvent) => void;
 };
 
 export type Props = WithAnalyticsEventProps & OwnProps;
 
-const CustomButton = ({ onClick, text }) => (
+const CustomButton = ({
+  onClick,
+  text,
+}: {
+  onClick: React.MouseEventHandler<HTMLDivElement>;
+  text?: string;
+}) => (
   <div id="dummy" onClick={onClick} style={{ paddingBottom: 12 }}>
     <Button>{text || 'Test'}</Button>
   </div>
@@ -96,7 +106,7 @@ const componentChannels = {
 
 export const createComponentWithAnalytics = (
   channel: FabricChannel,
-): React.ComponentClass<OwnProps> =>
+): React.ComponentType<OwnProps> =>
   withAnalyticsEvents({
     onClick: createAndFireEvent(channel)({
       action: 'someAction',
@@ -107,7 +117,7 @@ export const createComponentWithAnalytics = (
 
 export const createComponentWithAttributesWithAnalytics = (
   channel: FabricChannel,
-): React.ComponentClass<OwnProps> =>
+): React.ComponentType<OwnProps> =>
   withAnalyticsEvents({
     onClick: createAndFireEvent(channel)({
       action: 'someAction',
@@ -125,7 +135,7 @@ export const createComponentWithAttributesWithAnalytics = (
 export const createTaggedComponentWithAnalytics = (
   channel: FabricChannel,
   tag: string,
-): React.ComponentClass<OwnProps> =>
+): React.ComponentType<OwnProps> =>
   withAnalyticsEvents({
     onClick: createAndFireEvent(channel)({
       action: 'someAction',
@@ -137,7 +147,7 @@ export const createTaggedComponentWithAnalytics = (
 
 export const IncorrectEventType = (
   channel: FabricChannel,
-): React.ComponentClass<OwnProps> =>
+): React.ComponentType<OwnProps> =>
   withAnalyticsEvents({
     onClick: createAndFireEvent(channel)({
       action: 'someAction',
@@ -146,7 +156,25 @@ export const IncorrectEventType = (
     }),
   })(componentChannels[channel]);
 
-export const createButtonWithAnalytics = (payload, channel: FabricChannel) =>
+export const createButtonWithAnalytics = (
+  payload: GasPurePayload,
+  channel: FabricChannel,
+) =>
   withAnalyticsEvents({
     onClick: createAndFireEvent(channel)(payload),
   })(MyButton);
+
+export const createAnalyticsWebClientMock = () => ({
+  sendUIEvent: (event: GasPurePayload) => {
+    console.log('sendUIEvent: ', event);
+  },
+  sendOperationalEvent: (event: GasPurePayload) => {
+    console.log('sendOperationalEvent: ', event);
+  },
+  sendTrackEvent: (event: GasPurePayload) => {
+    console.log('sendTrackEvent: ', event);
+  },
+  sendScreenEvent: (event: GasPureScreenEventPayload) => {
+    console.log('sendScreenEvent: ', event);
+  },
+});

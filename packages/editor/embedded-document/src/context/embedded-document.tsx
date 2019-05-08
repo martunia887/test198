@@ -3,14 +3,15 @@ import { Component, ReactElement } from 'react';
 import styled from 'styled-components';
 import { Actions, Context, Mode, State } from './context';
 import { getProvider, Provider, ProviderProps } from '../provider';
+import { Document } from '../model';
+import { akEditorGutterPadding } from '../../../editor-common';
 
 export const akEditorFullPageMaxWidth = 680;
-const GUTTER_PADDING = 32;
 const Content = styled.div`
   line-height: 24px;
   height: 100%;
   width: 100%;
-  max-width: ${akEditorFullPageMaxWidth + GUTTER_PADDING * 2}px;
+  max-width: ${akEditorFullPageMaxWidth + akEditorGutterPadding * 2}px;
   padding-top: 50px;
   margin: 0 auto;
   display: flex;
@@ -159,7 +160,7 @@ export default class EmbeddedDocument extends Component<Props, State> {
     }
   };
 
-  private setDocumentState = doc => {
+  private setDocumentState = (doc: Document | null) => {
     if (doc) {
       this.setState({
         isLoading: false,
@@ -168,7 +169,7 @@ export default class EmbeddedDocument extends Component<Props, State> {
     } else {
       this.setState({
         isLoading: false,
-        hasError: true,
+        mode: 'edit',
       });
     }
   };

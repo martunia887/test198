@@ -23,7 +23,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../version.json';
 
 import type {
   PositionType,
@@ -142,9 +142,14 @@ class Tooltip extends Component<Props, State> {
   };
 
   wrapperRef: HTMLElement | null;
+
   targetRef: HTMLElement | null;
+
   fakeMouseElement: FakeMouseElement | null;
-  cancelPendingSetState = () => {}; // set in mouseover/mouseout handlers
+
+  cancelPendingSetState = () => {};
+
+  // set in mouseover/mouseout handlers
   state = {
     immediatelyHide: false,
     immediatelyShow: false,
@@ -263,6 +268,7 @@ class Tooltip extends Component<Props, State> {
       immediatelyHide,
     } = this.state;
     return (
+      /* eslint-disable jsx-a11y/mouse-events-have-key-events */
       <Fragment>
         <TargetContainer
           onClick={this.handleMouseClick}
@@ -283,25 +289,25 @@ class Tooltip extends Component<Props, State> {
           </NodeResolver>
         </TargetContainer>
         {renderTooltip && this.targetRef && this.fakeMouseElement ? (
-          <Popper
-            referenceElement={
-              // https://github.com/FezVrasta/react-popper#usage-without-a-reference-htmlelement
-              // We are using a popper technique to pass in a faked element when we use mouse.
-              // This is fine.
-              // $FlowFixMe
-              position === 'mouse' ? this.fakeMouseElement : this.targetRef
-            }
-            placement={position === 'mouse' ? mousePosition : position}
-          >
-            {({ ref, style, placement }) => (
-              <Animation
-                immediatelyShow={immediatelyShow}
-                immediatelyHide={immediatelyHide}
-                onExited={() => this.setState({ renderTooltip: false })}
-                in={isVisible}
-              >
-                {getAnimationStyles => (
-                  <Portal zIndex={layers.tooltip()}>
+          <Portal zIndex={layers.tooltip()}>
+            <Popper
+              referenceElement={
+                // https://github.com/FezVrasta/react-popper#usage-without-a-reference-htmlelement
+                // We are using a popper technique to pass in a faked element when we use mouse.
+                // This is fine.
+                // $FlowFixMe
+                position === 'mouse' ? this.fakeMouseElement : this.targetRef
+              }
+              placement={position === 'mouse' ? mousePosition : position}
+            >
+              {({ ref, style, placement }) => (
+                <Animation
+                  immediatelyShow={immediatelyShow}
+                  immediatelyHide={immediatelyHide}
+                  onExited={() => this.setState({ renderTooltip: false })}
+                  in={isVisible}
+                >
+                  {getAnimationStyles => (
                     <TooltipContainer
                       innerRef={ref}
                       style={{
@@ -312,13 +318,14 @@ class Tooltip extends Component<Props, State> {
                     >
                       {content}
                     </TooltipContainer>
-                  </Portal>
-                )}
-              </Animation>
-            )}
-          </Popper>
+                  )}
+                </Animation>
+              )}
+            </Popper>
+          </Portal>
         ) : null}
       </Fragment>
+      /* eslint-enable */
     );
   }
 }

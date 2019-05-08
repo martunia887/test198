@@ -10,7 +10,6 @@ export interface WithOutsideClickProps {
   handleEnterKeydown?: SimpleEventHandler;
 }
 
-// tslint:disable:next-line variable-name
 export default function withOuterListeners<P>(
   Component: ComponentClass<P> | StatelessComponent<P>,
 ): ComponentClass<P & WithOutsideClickProps> {
@@ -48,7 +47,7 @@ export default function withOuterListeners<P>(
       }
     };
 
-    handleKeydown = evt => {
+    handleKeydown = (evt: KeyboardEvent) => {
       if (evt.code === 'Escape' && this.props.handleEscapeKeydown) {
         (this.props.handleEscapeKeydown as SimpleEventHandler)(evt);
       } else if (evt.code === 'Enter' && this.props.handleEnterKeydown) {

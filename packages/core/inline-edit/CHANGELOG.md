@@ -1,5 +1,123 @@
 # @atlaskit/inline-edit
 
+## 10.0.0
+- [major] [7c17b35107](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7c17b35107):
+
+  - Updates react and react-dom peer dependencies to react@^16.8.0 and react-dom@^16.8.0. To use this package, please ensure you use at least this version of react and react-dom.
+
+## 9.0.5
+- Updated dependencies [dd95622388](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/dd95622388):
+- Updated dependencies [6cdf11238d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6cdf11238d):
+  - @atlaskit/form@5.2.10
+  - @atlaskit/textarea@1.0.0
+  - @atlaskit/textfield@1.0.0
+
+## 9.0.4
+- [patch] [458331c958](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/458331c958):
+
+  - Added index.ts to .npmignore to prevent jest tests resolving that instead of index.js
+
+## 9.0.3
+- [patch] [0a4ccaafae](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0a4ccaafae):
+
+  - Bump tslib
+
+## 9.0.2
+- [patch] [074c382946](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/074c382946):
+
+  - Add isRequired prop, remove duplicate defaultProps in code (internal change only) and add padding to examples on website to prevent unnecessary scrollbar
+
+## 9.0.1
+- Updated dependencies [9c0b4744be](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9c0b4744be):
+  - @atlaskit/docs@7.0.3
+  - @atlaskit/button@12.0.3
+  - @atlaskit/form@5.2.7
+  - @atlaskit/icon@16.0.9
+  - @atlaskit/inline-dialog@10.0.4
+  - @atlaskit/select@8.1.1
+  - @atlaskit/tag@7.0.2
+  - @atlaskit/textarea@0.4.4
+  - @atlaskit/textfield@0.4.4
+  - @atlaskit/theme@8.1.7
+
+## 9.0.0
+- [major] [71e2d2cb3c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/71e2d2cb3c):
+
+  - **Breaking:** this version is a major overhaul of the package. Check out the [upgrade
+    guide in the Atlaskit website](https://atlaskit.atlassian.com/packages/core/inline-edit/docs/upgrade-guide)
+    for more information.
+    - **New API:** The exposed named exports are now InlineEdit and InlineEditableTextfield.
+    These components are built to be standalone, not used within a Form, but updating data
+    individually. The props API for each of these components is similar in some ways, but
+    simplified and clarified.
+      - InlineEdit is a controlled component which receives a read view and an edit view as
+      props, and facilitates the changing of editing state. It is designed to be simple but
+      flexible.
+      - InlineEditableTextfield is a component which abstracts away most of the complexity
+      of the InlineEdit component and simply switches between a single line of text and a
+      textfield.
+    - **Underlying technical improvements:**
+      - This new version supports the use of Textfield and Textarea components (as an
+      improvement over the soon-to-be deprecated Field-text and Field-text-area components).
+      - This new version includes validation with an inline dialog which is not loaded if a
+      validate function is not provided, improving performance.
+  - **Typescript:** Inline Edit is now written in Typescript. The props are exported as
+  Typescript types. This also means we are dropping support for Flow in this component.
+
+## 8.0.2
+- Updated dependencies [1e826b2966](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1e826b2966):
+  - @atlaskit/docs@7.0.2
+  - @atlaskit/analytics-next@4.0.3
+  - @atlaskit/field-radio-group@5.0.2
+  - @atlaskit/field-text@8.0.2
+  - @atlaskit/icon@16.0.8
+  - @atlaskit/multi-select@12.0.2
+  - @atlaskit/theme@8.1.6
+  - @atlaskit/button@12.0.0
+
+## 8.0.1
+- Updated dependencies [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+  - @atlaskit/docs@7.0.1
+  - @atlaskit/analytics-next@4.0.1
+  - @atlaskit/field-radio-group@5.0.1
+  - @atlaskit/field-text@8.0.1
+  - @atlaskit/icon@16.0.5
+  - @atlaskit/multi-select@12.0.1
+  - @atlaskit/theme@8.0.1
+  - @atlaskit/button@11.0.0
+
+## 8.0.0
+- [major] [76299208e6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/76299208e6):
+
+  - Drop ES5 from all the flow modules
+
+  ### Dropping CJS support in all @atlaskit packages
+
+  As a breaking change, all @atlaskit packages will be dropping cjs distributions and will only distribute esm. This means all distributed code will be transpiled, but will still contain `import` and
+  `export` declarations.
+
+  The major reason for doing this is to allow us to support multiple entry points in packages, e.g:
+
+  ```js
+  import colors from `@atlaskit/theme/colors`;
+  ```
+
+  Previously this was sort of possible for consumers by doing something like:
+
+  ```js
+  import colors from `@atlaskit/theme/dist/esm/colors`;
+  ```
+
+  This has a couple of issues. 1, it treats the file system as API making internal refactors harder, we have to worry about how consumers might be using things that aren't *actually* supposed to be used. 2. We are unable to do this *internally* in @atlaskit packages. This leads to lots of packages bundling all of theme, just to use a single color, especially in situations where tree shaking fails.
+
+  To support being able to use multiple entrypoints internally, we unfortunately cannot have multiple distributions as they would need to have very different imports from of their own internal dependencies.
+
+  ES Modules are widely supported by all modern bundlers and can be worked around in node environments.
+
+  We may choose to revisit this solution in the future if we find any unintended condequences, but we see this as a pretty sane path forward which should lead to some major bundle size decreases, saner API's and simpler package architecture.
+
+  Please reach out to #fabric-build (if in Atlassian) or create an issue in [Design System Support](https://ecosystem.atlassian.net/secure/CreateIssue.jspa?pid=24670) (for external) if you have any questions or queries about this.
+
 ## 7.1.8
 - Updated dependencies [d7ef59d432](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d7ef59d432):
   - @atlaskit/docs@6.0.1

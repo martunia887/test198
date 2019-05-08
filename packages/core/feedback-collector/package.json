@@ -1,52 +1,48 @@
 {
   "name": "@atlaskit/feedback-collector",
-  "version": "2.0.3",
+  "version": "4.0.0",
   "config": {
     "access": "public"
   },
   "description": "A component that collects feedback across Atlassian products.",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "index.js",
   "atlaskit:src": "src/index.js",
   "sideEffects": false,
-  "files": [
-    "dist",
-    "src"
-  ],
   "dependencies": {
-    "@atlaskit/button": "^10.1.2",
-    "@atlaskit/checkbox": "^5.0.11",
-    "@atlaskit/flag": "^9.1.9",
-    "@atlaskit/form": "^5.1.2",
-    "@atlaskit/icon": "^16.0.0",
-    "@atlaskit/modal-dialog": "^7.2.1",
-    "@atlaskit/select": "^6.1.19",
-    "@atlaskit/textarea": "^0.2.3",
-    "@atlaskit/theme": "^7.0.1",
+    "@atlaskit/button": "^13.0.0",
+    "@atlaskit/checkbox": "^7.0.0",
+    "@atlaskit/flag": "^11.0.0",
+    "@atlaskit/form": "^6.0.0",
+    "@atlaskit/icon": "^17.0.0",
+    "@atlaskit/modal-dialog": "^9.0.0",
+    "@atlaskit/select": "^9.0.0",
+    "@atlaskit/textarea": "^2.0.0",
+    "@atlaskit/theme": "^9.0.0",
     "@babel/runtime": "^7.0.0",
     "lodash.truncate": "^4.4.2"
   },
   "devDependencies": {
     "@atlaskit/build-utils": "^2.0.1",
-    "@atlaskit/docs": "^6.0.1",
-    "@atlaskit/global-navigation": "^5.5.2",
-    "@atlaskit/logo": "^9.2.6",
-    "@atlaskit/navigation-next": "^4.1.2",
-    "@atlaskit/section-message": "^1.0.16",
-    "axios": "^0.17.1",
+    "@atlaskit/button": "^13.0.0",
+    "@atlaskit/docs": "^8.0.0",
+    "@atlaskit/global-navigation": "^7.0.0",
+    "@atlaskit/logo": "^11.0.0",
+    "@atlaskit/navigation-next": "^6.0.0",
+    "@atlaskit/ssr": "^0.1.0",
+    "axios": "^0.18.0",
     "enzyme": "^3.7.0",
-    "react-dom": "^16.4.2"
+    "react-dom": "^16.8.0"
   },
   "peerDependencies": {
-    "@atlaskit/button": "^10.1.2",
-    "react": "^16.4.0",
+    "react": "^16.8.0",
     "styled-components": "^3.2.6"
   },
   "author": "Atlassian Pty. Ltd",
   "maintainers": [
     "Eric S",
     "Carla B",
-    "Raja B"
+    "Sean C",
+    "Ajay M"
   ],
   "atlaskit": {
     "name": "Feedback Collector"

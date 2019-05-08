@@ -9,7 +9,7 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../version.json';
 import { Container, IndicatorButton, IndicatorDiv } from '../styled/Dots';
 
 type Props = {
@@ -32,8 +32,11 @@ type Props = {
 };
 
 class ProgressDots extends Component<Props, {}> {
-  props: Props; // eslint-disable-line react/sort-comp
+  props: Props;
+
+  // eslint-disable-line react/sort-comp
   tablist: { children: Array<HTMLElement> };
+
   static defaultProps = {
     appearance: 'default',
     ariaControls: 'panel',
@@ -41,11 +44,13 @@ class ProgressDots extends Component<Props, {}> {
     size: 'default',
     spacing: 'comfortable',
   };
+
   componentDidMount() {
     if (this.props.onSelect) {
       document.addEventListener('keydown', this.handleKeyDown, false);
     }
   }
+
   componentWillUnmount() {
     if (this.props.onSelect) {
       document.removeEventListener('keydown', this.handleKeyDown);

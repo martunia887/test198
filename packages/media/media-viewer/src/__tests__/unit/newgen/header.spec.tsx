@@ -1,29 +1,35 @@
-declare var window: any;
 import * as util from '../../../newgen/utils';
 const constructAuthTokenUrlSpy = jest.spyOn(util, 'constructAuthTokenUrl');
 
 import * as React from 'react';
 import { Observable } from 'rxjs';
 import { ReactWrapper, mount } from 'enzyme';
-import { MediaItemType, MediaType, FileState } from '@atlaskit/media-core';
+import { MediaType, FileState, Identifier } from '@atlaskit/media-core';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
 import { fakeIntl } from '@atlaskit/media-test-helpers';
 import { createContext } from '../_stubs';
 import { Header, State as HeaderState } from '../../../newgen/header';
-import { FeedbackButton } from '../../../newgen/feedback-button';
 import { MetadataFileName, MetadataSubText } from '../../../newgen/styled';
 import { LeftHeader } from '../../../newgen/styled';
 
-const identifier = {
+const identifier: Identifier = {
   id: 'some-id',
   occurrenceKey: 'some-custom-occurrence-key',
-  type: 'file' as MediaItemType,
+  mediaItemType: 'file',
 };
-
-const identifier2 = {
+const externalIdentifierWithName: Identifier = {
+  dataURI: 'some-external-src',
+  name: 'some-name',
+  mediaItemType: 'external-image',
+};
+const externalIdentifier: Identifier = {
+  dataURI: 'some-external-src',
+  mediaItemType: 'external-image',
+};
+const identifier2: Identifier = {
   id: 'some-id-2',
   occurrenceKey: 'some-custom-occurrence-key',
-  type: 'file' as MediaItemType,
+  mediaItemType: 'file',
 };
 
 const processedImageState: FileState = {
@@ -34,6 +40,9 @@ const processedImageState: FileState = {
   name: 'my image',
   size: 0,
   artifacts: {},
+  representations: {
+    image: {},
+  },
 };
 
 describe('<Header />', () => {
@@ -106,6 +115,33 @@ describe('<Header />', () => {
   });
 
   describe('Metadata', () => {
+    it('should work with external image identifier', () => {
+      const element = mount(
+        <Header
+          intl={fakeIntl}
+          context={{} as any}
+          identifier={externalIdentifierWithName}
+        />,
+      );
+
+      expect(element.find(MetadataFileName).text()).toEqual('some-name');
+      expect(element.find(MetadataSubText).text()).toEqual('image');
+    });
+
+    it('should default to dataURI as name when no name is passed in a external image identifier', () => {
+      const element = mount(
+        <Header
+          intl={fakeIntl}
+          context={{} as any}
+          identifier={externalIdentifier}
+        />,
+      );
+
+      expect(element.find(MetadataFileName).text()).toEqual(
+        'some-external-src',
+      );
+    });
+
     describe('File collectionName', () => {
       it('shows the title when loaded', () => {
         const context = createContext({
@@ -147,6 +183,9 @@ describe('<Header />', () => {
           name: 'my item',
           size: 12222222,
           artifacts: {},
+          representations: {
+            image: {},
+          },
         };
         const context = createContext({
           getFileState: () => Observable.of(testItem),
@@ -251,45 +290,12 @@ describe('<Header />', () => {
     });
   });
 
-  describe('Feedback button', () => {
-    let jquery: any;
-
-    beforeEach(() => {
-      jquery = window.jQuery;
-    });
-
-    afterEach(() => {
-      window.jQuery = jquery;
-    });
-
-    it('should not show the feedback button if jQuery is not found in window object', () => {
-      const context = createContext({
-        getFileState: () => Observable.of(processedImageState),
-      });
-      const el = mount(
-        <Header intl={fakeIntl} context={context} identifier={identifier} />,
-      );
-      expect(el.find(FeedbackButton).html()).toBeNull();
-    });
-
-    it('should show the feedback button if jQuery is found in window object', () => {
-      const context = createContext({
-        getFileState: () => Observable.of(processedImageState),
-      });
-      window.jQuery = {};
-      const el = mount(
-        <Header intl={fakeIntl} context={context} identifier={identifier} />,
-      );
-      expect(el.find(FeedbackButton).html()).not.toBeNull();
-    });
-  });
-
   describe('Download button', () => {
     const assertDownloadButton = (
       el: ReactWrapper<any, any>,
       enabled: boolean,
     ) => {
-      expect(el.find({ type: 'button', isDisabled: !enabled })).toHaveLength(1);
+      expect(el.find({ isDisabled: !enabled }).find('button')).toHaveLength(1);
       expect(el.find(DownloadIcon)).toHaveLength(1);
     };
 

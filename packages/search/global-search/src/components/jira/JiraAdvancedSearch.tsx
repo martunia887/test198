@@ -1,26 +1,25 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import Button from '@atlaskit/button';
 import { gridSize } from '@atlaskit/theme';
 import styled from 'styled-components';
-import SearchIcon from '@atlaskit/icon/glyph/search';
-import DropdownMenu, {
-  DropdownItemGroup,
-  DropdownItem,
-} from '@atlaskit/dropdown-menu';
+import { CancelableEvent } from '@atlaskit/quick-search';
 import { messages } from '../../messages';
-import AdvancedSearchResult from '../AdvancedSearchResult';
-import { AnalyticsType } from '../../model/Result';
 import {
   getJiraAdvancedSearchUrl,
   JiraEntityTypes,
-  ADVANCED_JIRA_SEARCH_RESULT_ID,
 } from '../SearchResultsUtil';
+import { JiraApplicationPermission } from '../GlobalQuickSearchWrapper';
 
+type onAdvancedSearchClick = (
+  e: CancelableEvent,
+  entity: JiraEntityTypes,
+) => void;
 export interface Props {
   query: string;
-  showKeyboardLozenge?: boolean;
-  showSearchIcon?: boolean;
   analyticsData?: object;
+  onClick?: onAdvancedSearchClick;
+  appPermission?: JiraApplicationPermission;
 }
 
 interface State {
@@ -28,16 +27,23 @@ interface State {
 }
 
 const TextContainer = styled.div`
-  padding: ${gridSize()}px 0;
   margin-right: ${gridSize()}px;
+  height: ${3 * gridSize()}px;
+  line-height: ${3 * gridSize()}px;
+  white-space: nowrap;
 `;
 
 const Container = styled.div`
+  margin: ${1.5 * gridSize()}px;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: left;
 `;
 
+const ButtonWrapper = styled.div`
+  margin-right: ${0.5 * gridSize()}px;
+`;
 const itemI18nKeySuffix = [
   JiraEntityTypes.Issues,
   JiraEntityTypes.Boards,
@@ -47,95 +53,46 @@ const itemI18nKeySuffix = [
 ];
 
 const getI18nItemName = (i18nKeySuffix: string) => {
-  const id = `jira_advanced_search_${i18nKeySuffix}`;
+  const id = `jira_advanced_search_${i18nKeySuffix}` as keyof typeof messages;
   return <FormattedMessage {...messages[id]} />;
 };
 
 export default class JiraAdvancedSearch extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.enrichedAnalyticsData = props.analyticsData;
-  }
-  static defaultProps = {
-    showKeyboardLozenge: false,
-    showSearchIcon: false,
-  };
-
   state = {
     entity: JiraEntityTypes.Issues,
   };
 
-  renderDropdownItems = () =>
-    itemI18nKeySuffix.map(item => (
-      <DropdownItem
-        href={getJiraAdvancedSearchUrl(item, this.props.query)}
-        onClick={() => (this.selectedItem = item)}
-        key={item}
-      >
-        {getI18nItemName(item)}
-      </DropdownItem>
-    ));
-
-  selectedItem?: JiraEntityTypes;
-  enrichedAnalyticsData?: object;
+  renderLinks = () =>
+    itemI18nKeySuffix
+      .filter(
+        key =>
+          !this.props.appPermission ||
+          key !== JiraEntityTypes.Boards ||
+          (this.props.appPermission &&
+            this.props.appPermission.hasSoftwareAccess),
+      )
+      .map(item => (
+        <ButtonWrapper key={`btnwrapper_${item}`}>
+          <Button
+            key={`btn_${item}`}
+            spacing="compact"
+            onMouseEnter={e => e.stopPropagation()}
+            onClick={e => this.props.onClick && this.props.onClick(e, item)}
+            href={getJiraAdvancedSearchUrl(item, this.props.query)}
+          >
+            {getI18nItemName(item)}
+          </Button>
+        </ButtonWrapper>
+      ));
 
   render() {
-    const { query, showKeyboardLozenge, showSearchIcon } = this.props;
-
     return (
-      <AdvancedSearchResult
-        href={getJiraAdvancedSearchUrl(this.state.entity, query)}
-        key={`search-jira-${Date.now()}`}
-        resultId={ADVANCED_JIRA_SEARCH_RESULT_ID}
-        text={
-          <Container>
-            <TextContainer>
-              <FormattedMessage {...messages.jira_advanced_search} />
-            </TextContainer>
-            <span
-              onClick={e => {
-                if (this.selectedItem) {
-                  this.setState({
-                    entity: this.selectedItem,
-                  });
-                  this.enrichedAnalyticsData = {
-                    ...this.props.analyticsData,
-                    contentType: this.selectedItem,
-                  };
-                  this.selectedItem = undefined;
-                } else {
-                  // we need to cancel on click event on the dropdown to stop navigation
-                  e.preventDefault();
-                  e.stopPropagation();
-                }
-              }}
-            >
-              <DropdownMenu
-                trigger={getI18nItemName(this.state.entity)}
-                triggerType="button"
-                shouldFlip={false}
-                position="right bottom"
-              >
-                <DropdownItemGroup>
-                  {this.renderDropdownItems()}
-                </DropdownItemGroup>
-              </DropdownMenu>
-            </span>
-          </Container>
-        }
-        icon={
-          showSearchIcon ? (
-            <SearchIcon size="medium" label="Advanced search" />
-          ) : (
-            undefined
-          )
-        }
-        type={AnalyticsType.AdvancedSearchJira}
-        showKeyboardLozenge={showKeyboardLozenge}
-        // lazily pass analytics data because the analytic event fired as part of onclick handle
-        // i.e. before the component update the new state, so can not add contentType from state
-        analyticsData={() => this.enrichedAnalyticsData}
-      />
+      <Container>
+        <TextContainer>
+          <FormattedMessage {...messages.jira_advanced_search} />
+        </TextContainer>
+        {this.renderLinks()}
+      </Container>
     );
   }
 }

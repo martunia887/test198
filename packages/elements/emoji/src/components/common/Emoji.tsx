@@ -1,26 +1,25 @@
-import * as classNames from 'classnames';
+import Button from '@atlaskit/button';
+import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
+import { colors } from '@atlaskit/theme';
+import Tooltip from '@atlaskit/tooltip';
+import classNames from 'classnames';
 import * as React from 'react';
 import { MouseEvent, SyntheticEvent } from 'react';
-import Tooltip from '@atlaskit/tooltip';
-import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
-import Button from '@atlaskit/button';
-import { colors } from '@atlaskit/theme';
-
-import * as styles from './styles';
+import { shouldUseAltRepresentation } from '../../api/EmojiUtils';
+import { deleteEmojiLabel } from '../../util/constants';
 import {
   isImageRepresentation,
   isMediaRepresentation,
   isSpriteRepresentation,
   toEmojiId,
-} from '../../type-helpers';
+} from '../../util/type-helpers';
 import {
   EmojiDescription,
   OnEmojiEvent,
   SpriteRepresentation,
 } from '../../types';
-import { deleteEmojiLabel } from '../../constants';
 import { leftClick } from '../../util/mouse';
-import { shouldUseAltRepresentation } from '../../api/EmojiUtils';
+import * as styles from './styles';
 
 export interface Props {
   /**
@@ -105,7 +104,7 @@ const handleMouseMove = (props: Props, event: MouseEvent<any>) => {
   }
 };
 
-const handleDelete = (props: Props, event) => {
+const handleDelete = (props: Props, event: SyntheticEvent) => {
   const { emoji, onDelete } = props;
   if (onDelete) {
     onDelete(toEmojiId(emoji), emoji, event);
@@ -179,11 +178,9 @@ const renderAsSprite = (props: Props) => {
   return (
     <span
       className={classNames(classes)}
-      // tslint:disable-next-line:jsx-no-lambda
       onMouseDown={event => {
         handleMouseDown(props, event);
       }}
-      // tslint:disable-next-line:jsx-no-lambda
       onMouseMove={event => {
         handleMouseMove(props, event);
       }}
@@ -252,7 +249,7 @@ const renderAsImage = (props: Props) => {
               size="small"
             />
           }
-          onClick={event => handleDelete(props, event)}
+          onClick={(event: SyntheticEvent) => handleDelete(props, event)}
           appearance="subtle-link"
           spacing="none"
         />
@@ -269,7 +266,7 @@ const renderAsImage = (props: Props) => {
     };
   }
 
-  const onError = event => {
+  const onError = (event: SyntheticEvent<HTMLImageElement>) => {
     handleImageError(props, event);
   };
 
@@ -289,11 +286,9 @@ const renderAsImage = (props: Props) => {
   return (
     <span
       className={classNames(classes)}
-      // tslint:disable-next-line:jsx-no-lambda
       onMouseDown={event => {
         handleMouseDown(props, event);
       }}
-      // tslint:disable-next-line:jsx-no-lambda
       onMouseMove={event => {
         handleMouseMove(props, event);
       }}
@@ -311,7 +306,6 @@ const renderAsImage = (props: Props) => {
   );
 };
 
-// tslint:disable-next-line:variable-name
 export const Emoji = (props: Props) => {
   const { emoji } = props;
   if (isSpriteRepresentation(emoji.representation)) {

@@ -1,13 +1,16 @@
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
 import { messages as insertBlockMessages } from '../../plugins/insert-block/ui/ToolbarInsertBlock';
 import { ToolbarFeatures } from '../../../example-helpers/ToolsDrawer';
+import { EditorAppearance } from '../../types';
+import { pluginKey as tableResizingPluginKey } from '../../plugins/table/pm-plugins/table-resizing';
+import messages from '../../messages';
 
 /**
  * This function will in browser context. Make sure you call `toJSON` otherwise you will get:
  * unknown error: Maximum call stack size exceeded
  * And, don't get too fancy with it ;)
  */
-export const getDocFromElement = el => el.pmViewDesc.node.toJSON();
+export const getDocFromElement = (el: any) => el.pmViewDesc.node.toJSON();
 export const editable = '.ProseMirror';
 export const LONG_WAIT_FOR = 5000;
 export const typeAheadPicker = '.fabric-editor-typeahead';
@@ -15,54 +18,66 @@ export const lozenge = '[data-mention-id="0"]';
 export const linkToolbar =
   '[placeholder="Paste link or search recently viewed"]';
 
-export const insertMention = async (browser, query: string) => {
+export const insertMention = async (browser: any, query: string) => {
   await browser.type(editable, '@');
   await browser.waitForSelector(typeAheadPicker);
   await browser.type(editable, query);
-  await browser.type(editable, 'Return');
+  await browser.keys(['Return']);
 };
 
-export const gotoEditor = async browser => {
+export const gotoEditor = async (browser: any) => {
   await browser.goto(fullpage.path);
   await browser.waitForSelector(fullpage.placeholder);
   await browser.click(fullpage.placeholder);
   await browser.waitForSelector(editable);
 };
 
-export const insertMentionUsingClick = async (browser, mentionId: string) => {
+export const insertMentionUsingClick = async (
+  browser: any,
+  mentionId: string,
+) => {
   await browser.type(editable, '@');
   await browser.waitForSelector(typeAheadPicker);
   await browser.isVisible(`div[data-mention-id="${mentionId}"`);
   await browser.click(`div[data-mention-id="${mentionId}"`);
 };
 
-export const comment = {
+interface EditorHelper {
+  name: string;
+  appearance: EditorAppearance;
+  path: string;
+  placeholder: string;
+}
+
+export const comment: EditorHelper = {
   name: 'comment',
+  appearance: 'comment',
   path: getExampleUrl('editor', 'editor-core', 'comment'),
   placeholder: '[placeholder="What do you want to say?"]',
 };
 
-export const fullpage = {
+export const fullpage: EditorHelper = {
   name: 'fullpage',
+  appearance: 'full-page',
   path: getExampleUrl('editor', 'editor-core', 'full-page-with-toolbar'),
   placeholder: '.ProseMirror',
 };
 
-export const fullpageDisabled = {
+export const fullpageDisabled: EditorHelper = {
   name: 'fullpage-disabled',
-  path: getExampleUrl('editor', 'editor-core', 'full-page-with-content'),
+  appearance: 'full-page',
+  path: getExampleUrl(
+    'editor',
+    'editor-core',
+    'full-page-with-content-disabled-flexi-tables',
+  ),
   placeholder: '.ProseMirror',
 };
 
-export const fullpageWithImport = {
+export const fullpageWithImport: EditorHelper = {
   name: 'fullpage-with-import',
+  appearance: 'full-page',
   path: getExampleUrl('editor', 'editor-core', 'full-page-with-adf-import'),
-  placeholder: '.ProseMirror',
-};
-
-export const message = {
-  name: 'message',
-  path: getExampleUrl('editor', 'editor-core', 'message'),
   placeholder: '.ProseMirror',
 };
 
@@ -82,7 +97,7 @@ export const copyAsHTMLButton = '.copy-as-html';
 export const mediaInsertDelay = 1000;
 
 const mediaPickerMock = '.mediaPickerMock';
-export const setupMediaMocksProviders = async browser => {
+export const setupMediaMocksProviders = async (browser: any) => {
   // enable the media picker mock
   await browser.waitForSelector(mediaPickerMock);
   await browser.click(mediaPickerMock);
@@ -98,7 +113,10 @@ export const setupMediaMocksProviders = async browser => {
 /**
  * Toggles a given feature on a page with a toolbar.
  */
-export const toggleFeature = async (browser, name: keyof ToolbarFeatures) => {
+export const toggleFeature = async (
+  browser: any,
+  name: keyof ToolbarFeatures,
+) => {
   const selector = `.toggleFeature-${name}`;
   await browser.waitForSelector(selector);
   await browser.click(selector);
@@ -108,7 +126,7 @@ export const toggleFeature = async (browser, name: keyof ToolbarFeatures) => {
  * Enables or disables a given feature on a page with a toolbar.
  */
 export const setFeature = async (
-  browser,
+  browser: any,
   name: keyof ToolbarFeatures,
   enable: boolean,
 ) => {
@@ -124,12 +142,12 @@ export const setFeature = async (
 /**
  * Re-renders the current editor on a page with a toolbar.
  */
-export const rerenderEditor = async browser => {
+export const rerenderEditor = async (browser: any) => {
   await browser.click('.reloadEditorButton');
 };
 
 export const insertMedia = async (
-  browser,
+  browser: any,
   filenames = ['one.svg'],
   fileSelector = 'div=%s',
 ) => {
@@ -164,7 +182,7 @@ export const insertMedia = async (
   const mediaCardCount = get$$Length(existingMediaCards) + filenames.length;
 
   // Workaround - we need to use different wait methods depending on where we are running.
-  if (browser.browser.desiredCapabilities) {
+  if (browser.browser.capabilities) {
     await browser.browser.waitUntil(async () => {
       const mediaCards = await browser.$$(mediaCardSelector);
 
@@ -177,11 +195,11 @@ export const insertMedia = async (
       );
     });
   } else {
-    await browser.evaluate(() => {
+    browser.evaluate(() => {
       window.scrollBy(0, window.innerHeight);
     });
     await browser.waitFor(
-      (mediaCardSelector, mediaCardCount) => {
+      (mediaCardSelector: any, mediaCardCount: any) => {
         const mediaCards = document.querySelectorAll(mediaCardSelector);
         return mediaCards.length === mediaCardCount;
       },
@@ -195,7 +213,7 @@ export const insertMedia = async (
 /**
  * We use $$ in the context of selenium and puppeteer, which return different results.
  */
-const get$$Length = result => {
+const get$$Length = (result: any) => {
   if (Array.isArray(result)) {
     // Puppeteer result
     return result.length;
@@ -205,37 +223,64 @@ const get$$Length = result => {
   }
 };
 
+/**
+ * Insert a block using the menu item
+ * @param browser Webdriver browser
+ * @param menuTitle Search pattern (placeholder or aria-label)
+ * @param tagName Tag to look
+ * @param mainToolbar Flag to look the menu in the main toolbar instead of insert menu
+ */
 export const insertBlockMenuItem = async (
-  browser,
-  menuTitle,
+  browser: any,
+  menuTitle: string,
   tagName = 'span',
+  mainToolbar = false,
 ) => {
-  const openInsertBlockMenuSelector = `[aria-label="${
-    insertBlockMessages.insertMenu.defaultMessage
-  }"]`;
+  let menuSelector: string;
+  if (mainToolbar) {
+    menuSelector = `[aria-label="${menuTitle}"]`;
+  } else {
+    // Open insert menu and try to look the menu there
+    const openInsertBlockMenuSelector = `[aria-label="${
+      insertBlockMessages.insertMenu.defaultMessage
+    }"]`;
 
-  await browser.click(openInsertBlockMenuSelector);
+    await browser.click(openInsertBlockMenuSelector);
 
-  const menuSelector = `${tagName}=${menuTitle}`;
+    menuSelector = `${tagName}=${menuTitle}`;
+  }
+
   await browser.waitForSelector(menuSelector);
   await browser.click(menuSelector);
 };
 
-export const changeSelectedNodeLayout = async (page, layoutName) => {
+export const changeSelectedNodeLayout = async (
+  page: any,
+  layoutName: string,
+) => {
   const buttonSelector = `div[aria-label="Floating Toolbar"] span[aria-label="${layoutName}"]`;
   await page.waitForSelector(buttonSelector, 3000);
   await page.click(buttonSelector);
 };
 
-/**
- * When using quick insert, `insertTitle` should match exactly to the typeahead wording.
- * We need to filter down the typeahead, as we select the first result.
- * Edge appears to have a problem with await browser.browser.waitUntil().
- * The statement at the bottom of the async function returns `firstInsertText && firstInsertText.startsWith(firstTitleWord)`
- * Even when this is true the waitUntil doesn’t return.
- */
+export const toggleBreakout = async (page: any, times: number) => {
+  const timesArray = Array.from({ length: times });
 
-export const quickInsert = async (browser, insertTitle) => {
+  const breakoutSelector = [
+    messages.layoutFixedWidth.defaultMessage,
+    messages.layoutWide.defaultMessage,
+    messages.layoutFullWidth.defaultMessage,
+  ]
+    .map(label => `[aria-label="${label}"]`)
+    .join();
+
+  for (let _iter of timesArray) {
+    await page.waitForSelector(breakoutSelector);
+    await page.click(breakoutSelector);
+  }
+};
+
+export const quickInsert = async (browser: any, insertTitle: string) => {
   await browser.type(editable, `/${insertTitle.split(' ')[0]}`);
   await browser.waitForSelector('div[aria-label="Popup"]');
   await browser.waitForSelector(
@@ -255,7 +300,105 @@ export const forEach = async (
   }
 };
 
-export const insertMenuItem = async (browser, title) => {
+export const insertMenuItem = async (browser: any, title: string) => {
   await browser.waitForSelector(`button span[aria-label="${title}"]`);
   await browser.click(`button span[aria-label="${title}"]`);
+};
+
+export const currentSelectedEmoji = '.emoji-typeahead-selected';
+export const typeahead = '.ak-emoji-typeahead-list';
+
+export const insertEmoji = async (browser: any, query: string) => {
+  await browser.type(editable, ':');
+  await browser.waitForSelector(typeahead);
+  await browser.type(editable, query);
+  await browser.type(editable, ':');
+};
+
+export const insertEmojiBySelect = async (browser: any, select: string) => {
+  await browser.type(editable, ':');
+  await browser.waitForSelector(typeahead);
+  await browser.type(editable, [select]);
+  await browser.isVisible(`span=:${select}:`);
+  await browser.click(`span=:${select}:`);
+};
+
+export const currentSelectedEmojiShortName = async (browser: any) => {
+  return await browser.getProperty(currentSelectedEmoji, 'data-emoji-id');
+};
+
+export const highlightEmojiInTypeahead = async (
+  browser: any,
+  emojiShortName: string,
+  depth = 5,
+) => {
+  for (let i = 0; i < depth; i++) {
+    let selectedEmojiShortName = await currentSelectedEmojiShortName(browser);
+    if (selectedEmojiShortName === `:${emojiShortName}:`) {
+      break;
+    }
+    await browser.keys(['ArrowDown']);
+  }
+};
+
+export const emojiItem = (emojiShortName: string): string => {
+  return `span[shortname=":${emojiShortName}:"]`;
+};
+
+interface ResizeOptions {
+  cellHandlePos: number;
+  // TODO could make this an array, to simulate dragging back and forth.
+  resizeWidth: number;
+  startX?: number;
+}
+
+export const resizeColumn = async (page: any, resizeOptions: ResizeOptions) => {
+  await page.browser.execute(
+    (
+      tableResizingPluginKey: any,
+      resizeWidth: any,
+      cellHandlePos: any,
+      startX: any,
+    ) => {
+      const view = (window as any).__editorView;
+
+      if (!view) {
+        return;
+      }
+
+      view.dispatch(
+        view.state.tr.setMeta(tableResizingPluginKey, {
+          setHandle: cellHandlePos,
+        }),
+      );
+
+      view.dom.dispatchEvent(new MouseEvent('mousedown', { clientX: startX }));
+
+      // Visually resize table
+      for (
+        let i = Math.min(0, resizeWidth);
+        i < Math.max(0, resizeWidth);
+        i++
+      ) {
+        window.dispatchEvent(
+          new MouseEvent('mousemove', { clientX: startX + i }),
+        );
+      }
+
+      // Trigger table resizing finish handlers
+      window.dispatchEvent(
+        new MouseEvent('mouseup', { clientX: startX + resizeWidth }),
+      );
+    },
+    tableResizingPluginKey,
+    resizeOptions.resizeWidth,
+    resizeOptions.cellHandlePos,
+    resizeOptions.startX || 600,
+  );
+};
+
+export const animationFrame = async (page: any) => {
+  await page.browser.executeAsync((done: (time: number) => void) => {
+    window.requestAnimationFrame(done);
+  });
 };

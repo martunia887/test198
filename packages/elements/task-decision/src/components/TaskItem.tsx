@@ -4,8 +4,10 @@ import { CheckBoxWrapper } from '../styled/TaskItem';
 
 import Item from './Item';
 import { Appearance, ContentRef, User } from '../types';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventProps,
+} from '@atlaskit/analytics-next';
 import { createAndFireEventInElementsChannel } from '../analytics';
 
 export interface Props {
@@ -17,8 +19,6 @@ export interface Props {
   placeholder?: string;
   showPlaceholder?: boolean;
   appearance?: Appearance;
-  participants?: User[];
-  showParticipants?: boolean;
   creator?: User;
   lastUpdater?: User;
   disabled?: boolean;
@@ -37,7 +37,7 @@ export class TaskItem extends PureComponent<
 
   private checkBoxId: string;
 
-  constructor(props) {
+  constructor(props: Props & WithAnalyticsEventProps) {
     super(props);
     this.checkBoxId = getCheckBoxId(props.taskId);
   }
@@ -48,7 +48,7 @@ export class TaskItem extends PureComponent<
     }
   }
 
-  handleOnChange = (evt: React.SyntheticEvent<HTMLInputElement>) => {
+  handleOnChange = (_evt: React.SyntheticEvent<HTMLInputElement>) => {
     const { onChange, taskId, isDone, createAnalyticsEvent } = this.props;
     const newIsDone = !isDone;
     if (onChange) {
@@ -87,7 +87,6 @@ export class TaskItem extends PureComponent<
       isDone,
       contentRef,
       children,
-      participants,
       placeholder,
       showPlaceholder,
       disabled,
@@ -102,8 +101,9 @@ export class TaskItem extends PureComponent<
           onChange={this.handleOnChange}
           checked={!!isDone}
           disabled={!!disabled}
+          suppressHydrationWarning={true}
         />
-        <label htmlFor={this.checkBoxId} />
+        <label htmlFor={this.checkBoxId} suppressHydrationWarning={true} />
       </CheckBoxWrapper>
     );
 
@@ -112,7 +112,6 @@ export class TaskItem extends PureComponent<
         appearance={appearance}
         contentRef={contentRef}
         icon={icon}
-        participants={participants}
         placeholder={placeholder}
         showPlaceholder={showPlaceholder}
         attribution={this.getAttributionText()}
@@ -125,5 +124,5 @@ export class TaskItem extends PureComponent<
 
 // This is to ensure that the "type" is exported, as it gets lost and not exported along with TaskItem after
 // going through the high order component.
-// tslint:disable-next-line:variable-name
+
 export default withAnalyticsEvents()(TaskItem);

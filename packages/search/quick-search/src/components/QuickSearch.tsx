@@ -107,6 +107,8 @@ export type Props = {
   firePrivateAnalyticsEvent?: FireAnalyticsEvent;
   /** React component to be used for rendering links */
   linkComponent?: React.ComponentType<any>;
+  /** The elements to render to the right of the search input. */
+  inputControls?: React.ReactNode;
 };
 
 export type State = {
@@ -126,7 +128,7 @@ export class QuickSearch extends React.Component<Props, State> {
     value: '',
   };
 
-  inputSearchRef: React.Ref<any>;
+  inputSearchRef?: React.Ref<any>;
   flatResults: Array<ResultBase> = [];
   hasSearchQueryEventFired: boolean = false;
   hasKeyDownEventFired: boolean = false;
@@ -378,13 +380,21 @@ export class QuickSearch extends React.Component<Props, State> {
           });
         }
 
+        let preventDefault = false;
         if (result.props.onClick) {
           result.props.onClick({
             resultId: result.props.resultId,
             type: result.props.type,
+            event: Object.assign({}, event, {
+              preventDefault() {
+                preventDefault = true;
+              },
+              stopPropagation() {},
+            }),
           });
         }
-        if (result.props.href) {
+
+        if (result.props.href && !preventDefault) {
           window.location.assign(result.props.href);
         }
       }
@@ -412,6 +422,7 @@ export class QuickSearch extends React.Component<Props, State> {
     return (
       <AkSearch
         isLoading={this.props.isLoading}
+        inputControls={this.props.inputControls}
         onBlur={this.handleSearchBlur}
         onInput={this.props.onSearchInput}
         onKeyDown={this.handleSearchKeyDown}

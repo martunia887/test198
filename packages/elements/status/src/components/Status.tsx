@@ -5,8 +5,8 @@ import {
   WithAnalyticsEventProps,
   CreateUIAnalyticsEventSignature,
   UIAnalyticsEventInterface,
-} from '@atlaskit/analytics-next-types';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+  withAnalyticsEvents,
+} from '@atlaskit/analytics-next';
 import { createStatusAnalyticsAndFire } from './analytics';
 import { ANALYTICS_HOVER_DELAY } from './constants';
 
@@ -39,11 +39,11 @@ export type Props = OwnProps & WithAnalyticsEventProps;
 class StatusInternal extends PureComponent<Props, any> {
   private hoverStartTime: number = 0;
 
-  private handleMouseEnter = (e: React.MouseEvent<HTMLSpanElement>) => {
+  private handleMouseEnter = (_e: React.MouseEvent<HTMLSpanElement>) => {
     this.hoverStartTime = Date.now();
   };
 
-  private handleMouseLeave = (e: React.MouseEvent<HTMLSpanElement>) => {
+  private handleMouseLeave = (_e: React.MouseEvent<HTMLSpanElement>) => {
     const { onHover } = this.props;
     const delay = Date.now() - this.hoverStartTime;
 
@@ -83,7 +83,6 @@ class StatusInternal extends PureComponent<Props, any> {
   }
 }
 
-// tslint:disable-next-line:variable-name
 export const Status: React.ComponentClass<OwnProps> = withAnalyticsEvents({
   onClick: (
     createEvent: CreateUIAnalyticsEventSignature,

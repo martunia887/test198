@@ -1,4 +1,5 @@
 import { SyntheticEvent } from 'react';
+import { messages } from './components/i18n';
 import { CategoryId } from './components/picker/categories';
 
 export type CategoryId = CategoryId;
@@ -167,13 +168,17 @@ export interface EmojiResponse {
 
 export interface CategoryDescription {
   id: string;
-  name: string;
+  name: keyof typeof messages;
   icon: any;
   order: number;
 }
 
 export interface OnToneSelected {
   (variation: number): void;
+}
+
+export interface OnToneSelectorCancelled {
+  (): void;
 }
 
 export interface OnEmojiEvent<T = any> {

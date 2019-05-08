@@ -39,19 +39,14 @@ export interface TablePluginState {
   isInDanger?: boolean;
   insertColumnButtonIndex?: number;
   insertRowButtonIndex?: number;
-}
-
-export interface CellRect {
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
+  isFullWidthModeEnabled?: boolean;
 }
 
 export interface ColumnResizingPlugin {
   handleWidth?: number;
   cellMinWidth?: number;
   lastColumnResizable?: boolean;
+  dynamicTextSizing?: boolean;
 }
 
 export const TableDecorations = {

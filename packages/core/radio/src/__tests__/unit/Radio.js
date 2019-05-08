@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { mount, shallow } from 'enzyme';
 import { RadioWithoutAnalytics as Radio } from '../../Radio';
-import { name } from '../../../package.json';
+import { name } from '../../version.json';
 
 describe(name, () => {
   describe('Radio', () => {
@@ -74,6 +74,10 @@ describe(name, () => {
 
       describe('value prop', () => {
         expectPropReflectedToInput('value', 'value', 'value-val');
+      });
+
+      describe('passing all the extra props passed down to hidden radio input', () => {
+        expectPropReflectedToInput('data-foo', 'data-foo', 'radio-bar');
       });
     });
   });

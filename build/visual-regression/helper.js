@@ -6,13 +6,72 @@
  */
 
 const glob = require('glob');
-const path = require('path');
-const fs = require('fs-extra');
 const pageSelector = '#examples';
 
+async function disableAllSideEffects(
+  page /*: any */,
+  allowSideEffects /*: Object */ = {},
+) {
+  if (!allowSideEffects.cursor) {
+    await disableCaretCursor(page);
+  }
+  if (!allowSideEffects.animation) {
+    await disableAllAnimations(page);
+  }
+  if (!allowSideEffects.transition) {
+    await disableAllTransitions(page);
+  }
+  if (!allowSideEffects.scroll) {
+    await disableScrollBehavior(page);
+  }
+}
+
+async function disableCaretCursor(page /*: any */) {
+  const css = `
+  * {
+    caret-color: transparent;
+  }
+  `;
+  await page.addStyleTag({ content: css });
+}
+
+async function disableAllTransitions(page /*: any */) {
+  const css = `
+  *, *:after, *:before {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
+  `;
+  await page.addStyleTag({ content: css });
+}
+
+async function disableAllAnimations(page /*: any */) {
+  const css = `
+  *, *:after, *:before {
+    animation: none !important;
+  }
+  `;
+  await page.addStyleTag({ content: css });
+}
+
+async function disableScrollBehavior(page /*: any */) {
+  const css = `
+  * {
+    scroll-behavior: auto !important;
+  }
+  `;
+  await page.addStyleTag({ content: css });
+}
+
 async function takeScreenShot(page /*:any*/, url /*:string*/) {
-  await page.goto(url);
+  await page.goto(url, { waitUntil: 'networkidle0' });
+  await disableAllAnimations(page);
+  await disableAllTransitions(page);
+  await disableCaretCursor(page);
   await page.waitForSelector(pageSelector);
+
   return page.screenshot();
 }
 
@@ -58,4 +117,9 @@ module.exports = {
   takeScreenShot,
   takeElementScreenShot,
   getExampleUrl,
+  disableAllAnimations,
+  disableAllTransitions,
+  disableCaretCursor,
+  disableScrollBehavior,
+  disableAllSideEffects,
 };

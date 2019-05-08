@@ -3,13 +3,12 @@ import { findParentDomRefOfType } from 'prosemirror-utils';
 import { EditorView, DecorationSet } from 'prosemirror-view';
 import { browser } from '@atlaskit/editor-common';
 import { PluginConfig, TablePluginState } from '../types';
-import { EditorAppearance } from '../../../types';
 import { Dispatch } from '../../../event-dispatcher';
 import { createTableView } from '../nodeviews/table';
 import { createCellView } from '../nodeviews/cell';
 import { EventDispatcher } from '../../../event-dispatcher';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import { setTableRef, clearHoverSelection, handleCut } from '../actions';
+import { setTableRef, clearHoverSelection } from '../actions';
 import {
   handleSetFocus,
   handleSetTableRef,
@@ -32,12 +31,10 @@ import {
   handleFocus,
   handleClick,
   handleTripleClick,
+  handleCut,
 } from '../event-handlers';
-import {
-  findControlsHoverDecoration,
-  fixTables,
-  normalizeSelection,
-} from '../utils';
+import { findControlsHoverDecoration } from '../utils';
+import { fixTables } from '../transforms';
 import { TableCssClassName as ClassName } from '../types';
 
 export const pluginKey = new PluginKey('tablePlugin');
@@ -62,14 +59,27 @@ export enum ACTIONS {
   HIDE_INSERT_COLUMN_OR_ROW_BUTTON,
 }
 
+let isBreakoutEnabled: boolean | undefined;
+let wasBreakoutEnabled: boolean | undefined;
+let isDynamicTextSizingEnabled: boolean | undefined;
+let isFullWidthModeEnabled: boolean | undefined;
+
 export const createPlugin = (
   dispatch: Dispatch,
   portalProviderAPI: PortalProviderAPI,
   eventDispatcher: EventDispatcher,
   pluginConfig: PluginConfig,
-  appearance?: EditorAppearance,
-) =>
-  new Plugin({
+  isContextMenuEnabled?: boolean,
+  dynamicTextSizing?: boolean,
+  breakoutEnabled?: boolean,
+  previousBreakoutEnabled?: boolean,
+  fullWidthModeEnabled?: boolean,
+) => {
+  wasBreakoutEnabled = previousBreakoutEnabled;
+  isBreakoutEnabled = breakoutEnabled;
+  isDynamicTextSizingEnabled = dynamicTextSizing;
+  isFullWidthModeEnabled = fullWidthModeEnabled;
+  return new Plugin({
     state: {
       init: (): TablePluginState => {
         return {
@@ -78,6 +88,7 @@ export const createPlugin = (
           insertRowButtonIndex: undefined,
           decorationSet: DecorationSet.empty,
           ...defaultTableSelection,
+          isFullWidthModeEnabled,
         };
       },
       apply(
@@ -196,9 +207,6 @@ export const createPlugin = (
       if (transactions.find(tr => tr.docChanged)) {
         return fixTables(newState.tr);
       }
-      if (transactions.find(tr => tr.selectionSet)) {
-        return normalizeSelection(newState.tr);
-      }
     },
     view: (editorView: EditorView) => {
       const domAtPos = editorView.domAtPos.bind(editorView);
@@ -251,9 +259,15 @@ export const createPlugin = (
       },
 
       nodeViews: {
-        table: createTableView(portalProviderAPI),
-        tableCell: createCellView(portalProviderAPI, appearance),
-        tableHeader: createCellView(portalProviderAPI, appearance),
+        table: (node, view, getPos) =>
+          createTableView(node, view, getPos, portalProviderAPI, {
+            isBreakoutEnabled,
+            wasBreakoutEnabled,
+            dynamicTextSizing: isDynamicTextSizingEnabled,
+            isFullWidthModeEnabled,
+          }),
+        tableCell: createCellView(portalProviderAPI, isContextMenuEnabled),
+        tableHeader: createCellView(portalProviderAPI, isContextMenuEnabled),
       },
 
       handleDOMEvents: {
@@ -268,6 +282,7 @@ export const createPlugin = (
       handleTripleClick,
     },
   });
+};
 
 export const getPluginState = (state: EditorState) => {
   return pluginKey.getState(state);

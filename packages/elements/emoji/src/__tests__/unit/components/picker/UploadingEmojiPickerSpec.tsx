@@ -11,12 +11,11 @@ import { messages } from '../../../../components/i18n';
 import EmojiPickerCategoryHeading from '../../../../components/picker/EmojiPickerCategoryHeading';
 import EmojiPickerList from '../../../../components/picker/EmojiPickerList';
 import {
-  analyticsEmojiPrefix,
   customCategory,
   customTitle,
   userCustomTitle,
-} from '../../../../constants';
-import {} from '../../../../types';
+} from '../../../../util/constants';
+import { EmojiDescription } from '../../../../types';
 import * as ImageUtil from '../../../../util/image';
 import {
   createPngFile,
@@ -30,28 +29,40 @@ import {
 } from '../../_test-data';
 import * as commonHelper from '../common/_common-test-helpers';
 import * as helper from './_emoji-picker-test-helpers';
+import { ReactWrapper } from 'enzyme';
+import {
+  deleteBeginEvent,
+  deleteCancelEvent,
+  deleteConfirmEvent,
+  selectedFileEvent,
+  uploadBeginButton,
+  uploadCancelButton,
+  uploadConfirmButton,
+  uploadFailedEvent,
+  uploadSucceededEvent,
+} from '../../../../util/analytics';
 
 describe('<UploadingEmojiPicker />', () => {
-  let firePrivateAnalyticsEvent;
+  let onEvent: jest.SpyInstance;
 
-  const safeFindCustomEmojiButton = async component => {
+  const safeFindCustomEmojiButton = async (component: ReactWrapper) => {
     await waitUntil(() => commonHelper.customEmojiButtonVisible(component));
     return commonHelper.findCustomEmojiButton(component);
   };
 
-  const uploadPreviewShown = component => {
+  const uploadPreviewShown = (component: ReactWrapper) => {
     const uploadPreview = helper.findUploadPreview(component);
     expect(uploadPreview).toHaveLength(1);
 
     const uploadPreviewEmoji = uploadPreview.find(Emoji);
     // Should show two emoji in EmojiUploadPrevew
     expect(uploadPreviewEmoji).toHaveLength(2);
-    let emoji = uploadPreviewEmoji.at(0).prop('emoji');
+    const emoji: EmojiDescription = uploadPreviewEmoji.at(0).prop('emoji');
     expect(emoji.shortName).toEqual(':cheese_burger:');
-    expect(emoji.representation.imagePath).toEqual(pngDataURL);
+    expect((emoji.representation as any).imagePath).toEqual(pngDataURL);
   };
 
-  const typeEmojiName = component => {
+  const typeEmojiName = (component: ReactWrapper) => {
     const nameInput = helper.findEmojiNameInput(component);
     nameInput.simulate('focus');
     nameInput.simulate('change', {
@@ -65,12 +76,12 @@ describe('<UploadingEmojiPicker />', () => {
   };
 
   beforeEach(async () => {
-    firePrivateAnalyticsEvent = jest.fn();
+    onEvent = jest.fn();
   });
 
   describe('upload', () => {
-    let consoleError;
-    let emojiProvider;
+    let consoleError: jest.SpyInstance;
+    let emojiProvider: Promise<any>;
 
     beforeEach(() => {
       consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -99,12 +110,18 @@ describe('<UploadingEmojiPicker />', () => {
       consoleError.mockRestore();
     });
 
-    const navigateToUploadPreview = async providerPromise => {
-      const component = await helper.setupPicker({
-        emojiProvider: providerPromise,
-        hideToneSelector: true,
-        firePrivateAnalyticsEvent,
-      });
+    const navigateToUploadPreview = async (
+      providerPromise: Promise<any>,
+      onEvent: any,
+    ) => {
+      const component = await helper.setupPicker(
+        {
+          emojiProvider: providerPromise,
+          hideToneSelector: true,
+        },
+        undefined,
+        onEvent,
+      );
 
       await providerPromise;
       await helper.showCategory(customCategory, component, customTitle);
@@ -168,11 +185,15 @@ describe('<UploadingEmojiPicker />', () => {
     });
 
     it('Upload main flow interaction', async () => {
-      const component = await helper.setupPicker({
-        emojiProvider,
-        hideToneSelector: true,
-        firePrivateAnalyticsEvent,
-      });
+      onEvent = jest.fn();
+      const component = await helper.setupPicker(
+        {
+          emojiProvider,
+          hideToneSelector: true,
+        },
+        undefined,
+        onEvent,
+      );
       const provider = await emojiProvider;
       await helper.showCategory(customCategory, component, customTitle);
 
@@ -235,23 +256,33 @@ describe('<UploadingEmojiPicker />', () => {
       // "add custom emoji" button should appear
       await safeFindCustomEmojiButton(component);
 
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.trigger`,
-        {},
+      expect(onEvent).toHaveBeenCalled();
+
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadBeginButton(),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.file.selected`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: selectedFileEvent(),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.start`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadConfirmButton({ retry: false }),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenLastCalledWith(
-        `${analyticsEmojiPrefix}.upload.successful`,
-        {
-          duration: expect.any(Number),
-        },
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: uploadSucceededEvent({
+            duration: expect.any(Number),
+          }),
+        }),
+        'fabric-elements',
       );
     });
 
@@ -263,7 +294,6 @@ describe('<UploadingEmojiPicker />', () => {
       const component = await helper.setupPicker({
         emojiProvider,
         hideToneSelector: true,
-        firePrivateAnalyticsEvent,
       });
       await emojiProvider;
       await helper.showCategory(customCategory, component, customTitle);
@@ -299,7 +329,6 @@ describe('<UploadingEmojiPicker />', () => {
       const component = await helper.setupPicker({
         emojiProvider,
         hideToneSelector: true,
-        firePrivateAnalyticsEvent,
       });
       await emojiProvider;
       await helper.showCategory(customCategory, component, customTitle);
@@ -413,11 +442,14 @@ describe('<UploadingEmojiPicker />', () => {
     });
 
     it('Upload cancel interaction', async () => {
-      const component = await helper.setupPicker({
-        emojiProvider,
-        hideToneSelector: true,
-        firePrivateAnalyticsEvent,
-      });
+      const component = await helper.setupPicker(
+        {
+          emojiProvider,
+          hideToneSelector: true,
+        },
+        undefined,
+        onEvent,
+      );
       const provider = await emojiProvider;
       await helper.showCategory(customCategory, component, customTitle);
 
@@ -461,17 +493,23 @@ describe('<UploadingEmojiPicker />', () => {
       const uploads = provider.getUploads();
       expect(uploads).toHaveLength(0);
 
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.trigger`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadBeginButton(),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.file.selected`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: selectedFileEvent(),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenLastCalledWith(
-        `${analyticsEmojiPrefix}.upload.cancel`,
-        {},
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: uploadCancelButton(),
+        }),
+        'fabric-elements',
       );
     });
 
@@ -480,11 +518,14 @@ describe('<UploadingEmojiPicker />', () => {
         .spyOn(MockEmojiResource.prototype, 'uploadCustomEmoji')
         .mockImplementation(() => Promise.reject(new Error('upload error')));
 
-      const component = await helper.setupPicker({
-        emojiProvider,
-        hideToneSelector: true,
-        firePrivateAnalyticsEvent,
-      });
+      const component = await helper.setupPicker(
+        {
+          emojiProvider,
+          hideToneSelector: true,
+        },
+        undefined,
+        onEvent,
+      );
 
       const provider = await emojiProvider;
       await helper.showCategory(customCategory, component, customTitle);
@@ -548,25 +589,38 @@ describe('<UploadingEmojiPicker />', () => {
       uploads = provider.getUploads();
       expect(uploads).toHaveLength(0);
 
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.trigger`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadBeginButton(),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.file.selected`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: selectedFileEvent(),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.start`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadConfirmButton({ retry: false }),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.upload.failed`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadFailedEvent({
+            duration: expect.any(Number),
+            reason: expect.any(String),
+          }),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenLastCalledWith(
-        `${analyticsEmojiPrefix}.upload.cancel`,
-        {},
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: uploadCancelButton(),
+        }),
+        'fabric-elements',
       );
       spy.mockReset();
     });
@@ -576,7 +630,7 @@ describe('<UploadingEmojiPicker />', () => {
         .spyOn(MockEmojiResource.prototype, 'uploadCustomEmoji')
         .mockImplementation(() => Promise.reject(new Error('upload error')));
 
-      const component = await navigateToUploadPreview(emojiProvider);
+      const component = await navigateToUploadPreview(emojiProvider, onEvent);
       const provider = await emojiProvider;
 
       // add emoji
@@ -604,14 +658,45 @@ describe('<UploadingEmojiPicker />', () => {
       retryButton.simulate('click');
       // wait for upload
       await waitUntil(() => provider.getUploads().length > 0);
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadConfirmButton({ retry: false }),
+        }),
+        'fabric-elements',
+      );
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadFailedEvent({
+            duration: expect.any(Number),
+            reason: expect.any(String),
+          }),
+        }),
+        'fabric-elements',
+      );
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadConfirmButton({ retry: true }),
+        }),
+        'fabric-elements',
+      );
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: uploadSucceededEvent({
+            duration: expect.any(Number),
+          }),
+        }),
+        'fabric-elements',
+      );
     });
   });
 
   describe('delete', () => {
     let getUserProvider;
-    let emojiProvider;
-    let component;
+    let emojiProvider: Promise<any>;
+    let component: ReactWrapper;
+    let onEvent: jest.SpyInstance;
     beforeEach(async () => {
+      onEvent = jest.fn();
       // Initialise repository with clone of siteEmojis
       const repository = new EmojiRepository(
         JSON.parse(JSON.stringify([mediaEmoji, siteEmojiFoo])),
@@ -621,14 +706,18 @@ describe('<UploadingEmojiPicker />', () => {
           currentUser: { id: 'hulk' },
         });
       emojiProvider = getUserProvider();
-      component = await helper.setupPicker({ emojiProvider });
+      component = await helper.setupPicker(
+        { emojiProvider },
+        undefined,
+        onEvent,
+      );
     });
 
     // Click delete button on user emoji in picker
-    const openDeletePrompt = component =>
+    const openDeletePrompt = (component: ReactWrapper) =>
       component.find(CrossCircleIcon).simulate('click');
     // Click 'Remove' in delete preview
-    const clickRemove = component =>
+    const clickRemove = (component: ReactWrapper) =>
       component
         .find(EmojiDeletePreview)
         .find('button')
@@ -647,6 +736,38 @@ describe('<UploadingEmojiPicker />', () => {
       clickRemove(component);
       // Delete called with user custom emoji
       expect(spy).toHaveBeenCalledWith(siteEmojiFoo);
+    });
+
+    it('fires analytics for confirmed deletion path', async () => {
+      openDeletePrompt(component);
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: deleteBeginEvent({ emojiId: siteEmojiFoo.id }),
+        }),
+        'fabric-elements',
+      );
+      clickRemove(component);
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: deleteConfirmEvent({ emojiId: siteEmojiFoo.id }),
+        }),
+        'fabric-elements',
+      );
+    });
+
+    it('fires analytics for deletion cancel', async () => {
+      openDeletePrompt(component);
+      component
+        .find(EmojiDeletePreview)
+        .find('button')
+        .at(1)
+        .simulate('click');
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: deleteCancelEvent({ emojiId: siteEmojiFoo.id }),
+        }),
+        'fabric-elements',
+      );
     });
 
     it('closes the delete preview onCancel', async () => {

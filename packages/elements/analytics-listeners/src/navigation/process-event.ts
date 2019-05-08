@@ -2,8 +2,8 @@
  * Inspired by analytics-web-react
  */
 
-import * as last from 'lodash.last';
-import * as merge from 'lodash.merge';
+import last from 'lodash.last';
+import merge from 'lodash.merge';
 
 import {
   DEFAULT_SOURCE,
@@ -22,8 +22,8 @@ import {
   getComponents,
 } from './extract-data-from-event';
 import Logger from '../helpers/logger';
-import { version as listenerVersion } from '../../package.json';
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
+import { version as listenerVersion } from '../version.json';
+import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next';
 
 const NAVIGATION_TAG = 'navigation';
 

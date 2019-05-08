@@ -11,6 +11,7 @@ import {
 import { GasPayload, EventType } from '@atlaskit/analytics-gas-types';
 import { CreateAnalyticsEventFn } from '../components/analytics/types';
 import { ABTest } from '../api/CrossProductSearchClient';
+import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
 
 const fireGasEvent = (
   createAnalyticsEvent: CreateAnalyticsEventFn | undefined,
@@ -44,8 +45,13 @@ const fireGasEvent = (
 export function firePreQueryShownEvent(
   eventAttributes: ShownAnalyticsAttributes,
   elapsedMs: number,
+  renderTimeMs: number,
   searchSessionId: string,
   createAnalyticsEvent: CreateAnalyticsEventFn,
+  abTest: ABTest,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
+  experimentRequestDurationMs?: number,
+  retrievedFromAggregator?: boolean,
 ) {
   fireGasEvent(
     createAnalyticsEvent,
@@ -55,8 +61,13 @@ export function firePreQueryShownEvent(
     'ui',
     {
       preQueryRequestDurationMs: elapsedMs,
+      experimentRequestDurationMs,
+      renderTimeMs,
       searchSessionId: searchSessionId,
+      referralContextIdentifiers,
       ...eventAttributes,
+      retrievedFromAggregator,
+      ...abTest,
     },
   );
 }
@@ -87,6 +98,7 @@ const getQueryAttributes = (query: string): Object => {
     wordCount:
       sanitizedQuery.length > 0 ? sanitizedQuery.split(/\s/).length : 0,
     queryHash: sanitizedQuery ? hash(sanitizedQuery) : '',
+    isNonZeroNumericQuery: !!+sanitizedQuery,
   };
 };
 
@@ -138,6 +150,8 @@ export function firePostQueryShownEvent(
   searchSessionId: string,
   query: string,
   createAnalyticsEvent: CreateAnalyticsEventFn,
+  abTest: ABTest,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
 ) {
   const event = createAnalyticsEvent();
 
@@ -152,9 +166,11 @@ export function firePostQueryShownEvent(
       ...getQueryAttributes(query),
       postQueryRequestDurationMs: elapsedMs,
       searchSessionId,
+      referralContextIdentifiers,
       ...otherPerformanceTimings,
       ...resultsDetails,
       ...DEFAULT_GAS_ATTRIBUTES,
+      ...abTest,
     },
   };
   event.update(payload).fire(DEFAULT_GAS_CHANNEL);
@@ -170,6 +186,7 @@ const transformSearchResultEventData = (eventData: SearchResultEvent) => ({
   containerId: sanitizeContainerId(eventData.containerId),
   resultCount: eventData.resultCount,
   experimentId: eventData.experimentId,
+  isRecentResult: eventData.isRecentResult,
 });
 
 const hash = (str: string): string =>
@@ -187,6 +204,7 @@ export interface SearchResultEvent {
   containerId?: string;
   resultCount?: string;
   experimentId?: string;
+  isRecentResult?: boolean;
 }
 
 export interface KeyboardControlEvent extends SearchResultEvent {
@@ -210,13 +228,14 @@ export interface AdvancedSearchSelectedEvent extends SelectedSearchResultEvent {
 export type AnalyticsNextEvent = {
   payload: GasPayload;
   context: Array<any>;
-  update: (GasPayload) => AnalyticsNextEvent;
-  fire: (string) => AnalyticsNextEvent;
+  update: (payload: GasPayload) => AnalyticsNextEvent;
+  fire: (string: string) => AnalyticsNextEvent;
 };
 
 export function fireSelectedSearchResult(
   eventData: SelectedSearchResultEvent,
   searchSessionId: string,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
   createAnalyticsEvent?: CreateAnalyticsEventFn,
 ) {
   const { method, newTab, query, queryVersion } = eventData;
@@ -234,6 +253,7 @@ export function fireSelectedSearchResult(
       searchSessionId: searchSessionId,
       newTab,
       ...transformSearchResultEventData(eventData),
+      referralContextIdentifiers,
     },
   );
 }
@@ -241,6 +261,7 @@ export function fireSelectedSearchResult(
 export function fireSelectedAdvancedSearch(
   eventData: AdvancedSearchSelectedEvent,
   searchSessionId: string,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
   createAnalyticsEvent?: CreateAnalyticsEventFn,
 ) {
   const { method, newTab, query, queryVersion } = eventData;
@@ -260,6 +281,7 @@ export function fireSelectedAdvancedSearch(
       ...getQueryAttributes(query),
       wasOnNoResultsScreen: eventData.wasOnNoResultsScreen || false,
       ...transformSearchResultEventData(eventData),
+      referralContextIdentifiers,
     },
   );
 }
@@ -267,6 +289,7 @@ export function fireSelectedAdvancedSearch(
 export function fireHighlightedSearchResult(
   eventData: KeyboardControlEvent,
   searchSessionId: string,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
   createAnalyticsEvent?: CreateAnalyticsEventFn,
 ) {
   const { key } = eventData;
@@ -280,6 +303,7 @@ export function fireHighlightedSearchResult(
       searchSessionId: searchSessionId,
       ...transformSearchResultEventData(eventData),
       key,
+      referralContextIdentifiers,
     },
   );
 }

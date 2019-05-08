@@ -1,5 +1,19 @@
 # @atlaskit/webpack-config
 
+## 2.0.10
+- Updated dependencies [7c17b35107](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7c17b35107):
+  - @atlaskit/visual-regression@0.1.0
+
+## 2.0.9
+- [patch] [3b48f804d7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3b48f804d7):
+
+  - Prefer atlaskit:src over module when building
+
+## 2.0.8
+- [patch] [0744bd168d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0744bd168d):
+
+  - Prefer atlaskit:src over module when building
+
 ## 2.0.7
 - [patch] [1b9e213](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1b9e213):
 

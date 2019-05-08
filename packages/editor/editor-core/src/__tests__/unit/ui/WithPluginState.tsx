@@ -1,21 +1,27 @@
-import { name } from '../../../../package.json';
+import { name } from '../../../version.json';
 import { mount } from 'enzyme';
 import * as React from 'react';
 import { Plugin, PluginKey } from 'prosemirror-state';
-import { createEditor, doc, p } from '@atlaskit/editor-test-helpers';
+import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
 import WithPluginState from '../../../ui/WithPluginState';
 import { EditorPlugin } from '../../../types/editor-plugin';
-import { EventDispatcher, createDispatch } from '../../../event-dispatcher';
+import {
+  EventDispatcher,
+  createDispatch,
+  Dispatch,
+} from '../../../event-dispatcher';
 import EditorActions from '../../../actions';
 import EditorContext from '../../../ui/EditorContext';
 
 describe(name, () => {
+  const createEditor = createEditorFactory();
+
   const pluginKey = new PluginKey('plugin');
   const pluginKey2 = new PluginKey('plugin2');
 
-  const setTimeoutPromise = (cb, delay) =>
+  const setTimeoutPromise = (cb: Function, delay: number) =>
     new Promise(resolve => window.setTimeout(() => resolve(cb()), delay));
-  const createPlugin = (state, key): EditorPlugin => {
+  const createPlugin = (state: any, key: PluginKey): EditorPlugin => {
     return {
       pmPlugins() {
         return [
@@ -39,8 +45,8 @@ describe(name, () => {
     };
   };
 
-  let eventDispatcher;
-  let dispatch;
+  let eventDispatcher: EventDispatcher;
+  let dispatch: Dispatch;
 
   beforeEach(() => {
     eventDispatcher = new EventDispatcher();
@@ -143,7 +149,7 @@ describe(name, () => {
         this.cb({ a: 1 });
       },
 
-      subscribe(cb) {
+      subscribe(cb: (param?: any) => {}) {
         this.cb = cb;
       },
       unsubscribe: jest.fn(),

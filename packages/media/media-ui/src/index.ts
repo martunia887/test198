@@ -8,7 +8,6 @@ export * from './LinkView';
 export { Ellipsify, EllipsifyProps } from './ellipsify';
 export { toHumanReadableMediaSize } from './humanReadableSize';
 export * from './mixins';
-
 export * from './common';
 export * from './camera';
 export * from './messages';
@@ -22,4 +21,6 @@ export * from './customMediaPlayer/timeRange';
 export * from './classNames';
 export * from './shortcut';
 export * from './formatDuration';
-export { default as theme } from './theme';
+export { default as MediaButton } from './MediaButton';
+export { default as ModalSpinner } from './modalSpinner';
+export * from './mediaImage';

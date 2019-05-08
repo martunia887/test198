@@ -1,27 +1,28 @@
+import AkButton from '@atlaskit/button';
+import AddIcon from '@atlaskit/icon/glyph/add';
+import classNames from 'classnames';
 import * as React from 'react';
 import { PureComponent } from 'react';
-import * as classNames from 'classnames';
-
-import AddIcon from '@atlaskit/icon/glyph/add';
-import AkButton from '@atlaskit/button';
-import * as styles from './styles';
-import EmojiButton from '../../components/common/EmojiButton';
+import { FormattedMessage } from 'react-intl';
 import CachingEmoji from '../../components/common/CachingEmoji';
-import ToneSelector from './ToneSelector';
+import EmojiButton from '../../components/common/EmojiButton';
 import {
   EmojiDescription,
   EmojiDescriptionWithVariations,
   OnToneSelected,
+  OnToneSelectorCancelled,
   ToneSelection,
 } from '../../types';
 import { messages } from '../i18n';
-import { FormattedMessage } from 'react-intl';
+import * as styles from './styles';
+import ToneSelector from './ToneSelector';
 
 export interface Props {
   emoji?: EmojiDescription;
   toneEmoji?: EmojiDescriptionWithVariations;
   selectedTone?: ToneSelection;
   onToneSelected?: OnToneSelected;
+  onToneSelectorCancelled?: OnToneSelectorCancelled;
   uploadEnabled?: boolean;
   onOpenUpload?: () => void;
 }
@@ -41,7 +42,7 @@ export default class EmojiPreview extends PureComponent<Props, State> {
     });
   };
 
-  onToneSelected = toneValue => {
+  onToneSelected = (toneValue: number) => {
     this.setState({
       selectingTone: false,
     });
@@ -52,6 +53,13 @@ export default class EmojiPreview extends PureComponent<Props, State> {
   };
 
   onMouseLeave = () => {
+    const { selectingTone } = this.state;
+    const { onToneSelectorCancelled } = this.props;
+
+    if (selectingTone && onToneSelectorCancelled) {
+      onToneSelectorCancelled();
+    }
+
     this.setState({
       selectingTone: false,
     });
@@ -83,7 +91,6 @@ export default class EmojiPreview extends PureComponent<Props, State> {
       <div className={styles.buttons}>
         <EmojiButton
           emoji={previewEmoji}
-          // tslint:disable-next-line:jsx-no-lambda
           onSelected={() => this.onToneButtonClick()}
           selectOnHover={true}
         />

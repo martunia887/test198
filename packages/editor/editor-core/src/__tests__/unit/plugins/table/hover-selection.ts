@@ -7,7 +7,7 @@ import {
 import {
   doc,
   p,
-  createEditor,
+  createEditorFactory,
   table,
   tr,
   tdEmpty,
@@ -28,14 +28,19 @@ import { TablePluginState } from '../../../../plugins/table/types';
 import tablesPlugin from '../../../../plugins/table';
 
 describe('table hover selection plugin', () => {
+  const createEditor = createEditorFactory<TablePluginState>();
+
   const editor = (doc: any) =>
-    createEditor<TablePluginState>({
+    createEditor({
       doc,
       editorPlugins: [tablesPlugin()],
       pluginKey,
     });
 
-  const getTableDecorations = (editorView: EditorView, cells) => {
+  const getTableDecorations = (
+    editorView: EditorView,
+    cells: Array<{ pos: number }>,
+  ) => {
     const { decorationSet }: { decorationSet: DecorationSet } = getPluginState(
       editorView.state,
     );

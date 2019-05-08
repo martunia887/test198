@@ -35,6 +35,13 @@ const spyOnComponentDidUpdate = () => {
   return spy;
 };
 
+const findAnalyticsEvent = (eventSpy: jest.Mock<{}>, actionSubject: string) => {
+  const [event] = eventSpy.mock.calls.find(
+    ([event]) => event.payload.actionSubject === actionSubject,
+  );
+  return event;
+};
+
 const CONFLUENCE_RECENT_ITEMS = [
   {
     id: 'confluence-object-result',
@@ -71,7 +78,13 @@ const JIRA_RECENT_ITEMS = [
   },
 ];
 
-const getRecentItems = product =>
+const AB_TEST_DATA = {
+  experimentId: 'default',
+  controlId: 'control-id',
+  abTestId: 'abTest_default',
+};
+
+const getRecentItems = (product: string) =>
   product === 'jira' ? JIRA_RECENT_ITEMS : CONFLUENCE_RECENT_ITEMS;
 
 ['confluence', 'jira'].forEach(product => {
@@ -102,7 +115,7 @@ const getRecentItems = product =>
       inputFocus(false);
     };
 
-    const renderComponent = onEvent => {
+    const renderComponent = (onEvent: jest.Mock<{}>) => {
       return mount(
         <AnalyticsListener onEvent={onEvent} channel="fabric-elements">
           <BasicNavigation
@@ -113,6 +126,7 @@ const getRecentItems = product =>
                   context={product as Props['context']}
                   referralContextIdentifiers={{
                     currentContentId: '123',
+                    currentContainerId: '456',
                     searchReferrerId: '123',
                   }}
                 />
@@ -139,7 +153,8 @@ const getRecentItems = product =>
 
       it('should trigger globalSearchDrawer', async () => {
         expect(onEventSpy).toBeCalled();
-        const event = onEventSpy.mock.calls[1][0];
+        const event = findAnalyticsEvent(onEventSpy, 'globalSearchDrawer');
+
         validateEvent(
           event,
           getGlobalSearchDrawerEvent({
@@ -154,22 +169,19 @@ const getRecentItems = product =>
         const event = onEventSpy.mock.calls[2][0];
         validateEvent(
           event,
-          getPreQuerySearchResultsEvent(getRecentItems(product)),
+          getPreQuerySearchResultsEvent(getRecentItems(product), AB_TEST_DATA),
         );
       });
 
       it('should trigger experiment exposure event', () => {
         expect(onEventSpy).toBeCalled();
-        const event = onEventSpy.mock.calls[0][0];
+        const event = findAnalyticsEvent(onEventSpy, 'quickSearchExperiment');
+
         validateEvent(
           event,
           getExperimentExposureEvent({
             searchSessionId: expect.any(String),
-            abTest: {
-              experimentId: 'experiment-1',
-              controlId: 'control-id',
-              abTestId: 'abtest-id',
-            },
+            abTest: AB_TEST_DATA,
           }),
         );
       });
@@ -182,7 +194,10 @@ const getRecentItems = product =>
         inputBlur();
       });
 
-      const keyPress = (key: 'ArrowUp' | 'ArrowDown' | 'Enter', withShift?) => {
+      const keyPress = (
+        key: 'ArrowUp' | 'ArrowDown' | 'Enter',
+        withShift?: undefined,
+      ) => {
         const input = wrapper.find('input');
         expect(input.length).toBe(1);
         input.simulate('keyDown', {
@@ -233,7 +248,7 @@ const getRecentItems = product =>
                 globalIndex: index + 1,
                 indexWithinSection: index % (count - 2),
                 sectionIndex: Math.floor(index / (count - 2)),
-                resultCount: 18,
+                resultCount: 17,
                 sectionId: 'recent-jira',
                 type: index >= 7 ? 'jira-board' : 'jira-issue',
               }),
@@ -260,11 +275,13 @@ const getRecentItems = product =>
                   type: undefined,
                 }
               : {
-                  globalIndex: 17,
-                  resultCount: 18, // 14 + 3 advanced (1 top + 2 bottom)
-                  sectionIndex: undefined, // advanced results is not a section
-                  sectionId: 'advanced-search-jira',
-                  type: undefined,
+                  // got jira no advanced results in results count, new design advanced is not part of result list
+                  globalIndex: 16,
+                  resultCount: 17,
+                  sectionIndex: 2,
+                  indexWithinSection: 2,
+                  sectionId: 'recent-person',
+                  type: 'person',
                 }),
           }),
         );
@@ -272,7 +289,7 @@ const getRecentItems = product =>
 
       it('should trigger advanced result selected', () => {
         const results = wrapper.find(ResultBase);
-        const expectedResultsCount = product === 'confluence' ? 16 : 18;
+        const expectedResultsCount = product === 'confluence' ? 16 : 17;
         expect(results.length).toBe(expectedResultsCount);
         const advancedSearchResult = results.last();
         advancedSearchResult.simulate('click', {
@@ -290,18 +307,24 @@ const getRecentItems = product =>
                 resultCount: 14, // does not include advanced search links
               }
             : {
-                actionSubjectId: 'advanced_search_jira',
-                resultContentId: 'search_jira',
-                sectionId: 'advanced-search-jira',
-                globalIndex: 17,
+                actionSubjectId: 'navigationItem',
+                sectionIndex: 2,
                 resultCount: 16, // does not include advanced search links
+                globalIndex: 16,
+                indexWithinSection: 2,
+                sectionId: 'recent-person',
+                type: 'person',
+                newTab: true,
+                trigger: 'click',
               };
-        validateEvent(event, getAdvancedSearchLinkSelectedEvent(payload));
+        product === 'confluence'
+          ? validateEvent(event, getAdvancedSearchLinkSelectedEvent(payload))
+          : validateEvent(event, getResultSelectedEvent(payload));
       });
 
       it('should trigger result selected', () => {
         const results = wrapper.find(ResultBase);
-        const expectedResultsCount = product === 'confluence' ? 16 : 18;
+        const expectedResultsCount = product === 'confluence' ? 16 : 17;
         expect(results.length).toBe(expectedResultsCount);
         const result = results.at(10);
         result.simulate('click', {
@@ -357,7 +380,7 @@ const getRecentItems = product =>
             : {
                 sectionId: 'recent-jira',
                 globalIndex: 1,
-                resultCount: 18, // include advanced search links
+                resultCount: 17, // include advanced search links
                 sectionIndex: 0,
                 indexWithinSection: 0,
                 trigger: 'returnKey',
@@ -391,6 +414,11 @@ const getRecentItems = product =>
                     id: 'jira-object-result',
                     hasContainerId: true,
                     resultsCount: 8,
+                  },
+                  {
+                    id: 'JiraIssueAdvancedSearch',
+                    hasContainerId: false,
+                    resultsCount: 1,
                   },
                   {
                     id: 'jira-project-result',
@@ -465,6 +493,7 @@ const getRecentItems = product =>
             getPostQuerySearchResultsEvent(
               expectedResults.postQueryResults,
               expectedResults.postQueryResultsTimings,
+              AB_TEST_DATA,
             ),
           );
         });
@@ -510,7 +539,10 @@ const getRecentItems = product =>
             const event = onEventSpy.mock.calls[2][0];
             validateEvent(
               event,
-              getPreQuerySearchResultsEvent(getRecentItems(product)),
+              getPreQuerySearchResultsEvent(
+                getRecentItems(product),
+                AB_TEST_DATA,
+              ),
             );
           });
         });

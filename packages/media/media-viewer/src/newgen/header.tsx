@@ -6,12 +6,14 @@ import {
   MediaType,
   ProcessedFileState,
   ProcessingFileState,
+  Identifier,
+  isExternalImageIdentifier,
 } from '@atlaskit/media-core';
 import { Subscription } from 'rxjs/Subscription';
-import * as deepEqual from 'deep-equal';
+import deepEqual from 'deep-equal';
 import { messages, toHumanReadableMediaSize } from '@atlaskit/media-ui';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
-import { Outcome, Identifier } from './domain';
+import { Outcome } from './domain';
 import {
   Header as HeaderWrapper,
   LeftHeader,
@@ -24,7 +26,6 @@ import {
   hideControlsClassName,
 } from './styled';
 import { MediaTypeIcon } from './media-type-icon';
-import { FeedbackButton } from './feedback-button';
 import { MediaViewerError, createError } from './error';
 import {
   ToolbarDownloadButton,
@@ -66,10 +67,31 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
   }
 
   private init(props: Props) {
-    this.setState(initialState, () => {
+    this.setState(initialState, async () => {
       const { context, identifier } = props;
+
+      if (isExternalImageIdentifier(identifier)) {
+        const { name = identifier.dataURI } = identifier;
+        // Simulate a processing file state to render right metadata
+        const fileState: ProcessingFileState = {
+          status: 'processing',
+          id: name,
+          mediaType: 'image',
+          mimeType: 'image/',
+          name,
+          representations: {},
+          size: 0,
+        };
+
+        this.setState({
+          item: Outcome.successful(fileState),
+        });
+        return;
+      }
+      const id =
+        typeof identifier.id === 'string' ? identifier.id : await identifier.id;
       this.subscription = context.file
-        .getFileState(identifier.id, {
+        .getFileState(id, {
           collectionName: identifier.collectionName,
         })
         .subscribe({
@@ -107,10 +129,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
     return (
       <HeaderWrapper className={hideControlsClassName}>
         <LeftHeader>{this.renderMetadata()}</LeftHeader>
-        <RightHeader>
-          <FeedbackButton />
-          {this.renderDownload()}
-        </RightHeader>
+        <RightHeader>{this.renderDownload()}</RightHeader>
       </HeaderWrapper>
     );
   }

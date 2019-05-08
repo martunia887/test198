@@ -8,32 +8,33 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 import { ReactRenderer } from '@atlaskit/renderer';
 import { colors } from '@atlaskit/theme';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import Toggle from '@atlaskit/toggle';
 
 import enMessages from '../src/i18n/en';
 import languages from '../src/i18n/languages';
 import WithEditorActions from './../src/ui/WithEditorActions';
-import Editor from './../src/editor';
 import {
   SaveAndCancelButtons,
   providers,
   mediaProvider,
-  analyticsHandler,
-  quickInsertProvider,
   LOCALSTORAGE_defaultDocKey,
 } from './5-full-page';
 import LanguagePicker from '../example-helpers/LanguagePicker';
 import EditorContext from './../src/ui/EditorContext';
 import { EditorAppearance } from '../src/types';
 import { EditorActions } from '../src';
-import {
-  cardProvider,
-  customInsertMenuItems,
-} from '@atlaskit/editor-test-helpers';
+
 import { extensionHandlers } from '../example-helpers/extension-handlers';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
-import { validator, ErrorCallback, Entity } from '@atlaskit/adf-utils';
 import ErrorReport, { Error } from '../example-helpers/ErrorReport';
-import { EditorView } from 'prosemirror-view';
+import KitchenSinkEditor from '../example-helpers/KitchenSinkEditor';
+import withSentry from '../example-helpers/withSentry';
+import {
+  LOCALSTORAGE_defaultMode,
+  DEFAULT_MODE,
+  FULL_WIDTH_MODE,
+} from '../example-helpers/example-constants';
 
 const Container = styled.div`
   display: flex;
@@ -65,6 +66,11 @@ const Controls = styled.div`
   button {
     margin-left: 1em;
   }
+
+  .theme-select {
+    margin-left: 1em;
+    width: 140px;
+  }
 `;
 
 const appearanceOptions = [
@@ -80,16 +86,6 @@ const appearanceOptions = [
     description:
       'should be used for things like comments where you have a field input but require a toolbar & save/cancel buttons',
   },
-  {
-    label: 'Message',
-    value: 'message',
-    description: 'used for Stride; has now been deprecated.',
-  },
-  // {
-  //   label: 'Inline comment',
-  //   value: 'inline-comment',
-  //   description: 'should be used for inline comments; no toolbar is displayed',
-  // },
   // {
   //   label: 'Chromeless',
   //   value: 'chromeless',
@@ -110,7 +106,17 @@ const docs = [
   { label: 'With table', value: 'example-doc-with-table.ts' },
 ];
 
-const formatAppearanceOption = (option, { context }) => {
+type Theme = 'light' | 'dark';
+
+const themes: { label: string; value: Theme }[] = [
+  { label: 'Light Theme', value: 'light' },
+  { label: 'Dark Theme', value: 'dark' },
+];
+
+const formatAppearanceOption = (
+  option: { label: string; description?: string },
+  { context }: { context: string },
+) => {
   if (context === 'menu') {
     return (
       <div
@@ -138,12 +144,12 @@ const formatAppearanceOption = (option, { context }) => {
 };
 
 const selectStyles = {
-  menu(styles) {
+  menu(styles: {}) {
     return { ...styles, zIndex: 9999 };
   },
 };
 
-export const Textarea: any = styled.textarea`
+export const Textarea = styled.textarea`
   box-sizing: border-box;
   border: 1px solid lightgray;
   font-family: monospace;
@@ -155,8 +161,6 @@ export const Textarea: any = styled.textarea`
 
 const LOCALSTORAGE_orientationKey =
   'fabric.editor.example.kitchen-sink.orientation';
-
-const VALIDATION_TIMEOUT = 500;
 
 export type Props = {};
 export type State = {
@@ -174,11 +178,20 @@ export type State = {
   errors: Array<Error>;
   showErrors: boolean;
   waitingToValidate: boolean;
+  theme: Theme;
+  fullWidthMode: boolean;
 };
-export default class FullPageRendererExample extends React.Component<
-  Props,
-  State
-> {
+
+function getInitialTheme(): Theme {
+  if (typeof window !== 'undefined') {
+    // Retaining the preferred theme per browser session to aid development workflows.
+    const preferredTheme = window.sessionStorage.getItem('theme') as Theme;
+    return preferredTheme ? preferredTheme : themes[0].value;
+  }
+  return themes[0].value;
+}
+
+class FullPageRendererExample extends React.Component<Props, State> {
   private getJSONFromStorage = (key: string, fallback: any = undefined) => {
     const localADF = (localStorage && localStorage.getItem(key)) || undefined;
 
@@ -207,18 +220,24 @@ export default class FullPageRendererExample extends React.Component<
     errors: [],
     showErrors: false,
     waitingToValidate: false,
+    theme: getInitialTheme(),
+    fullWidthMode:
+      localStorage.getItem(LOCALSTORAGE_defaultMode) === FULL_WIDTH_MODE,
   };
 
-  private quickInsertProviderPromise = Promise.resolve(quickInsertProvider);
-  private cardProviderPromise = Promise.resolve(cardProvider);
   private dataProviders = ProviderFactory.create({
     ...providers,
     mediaProvider,
   });
 
-  private inputRef: HTMLTextAreaElement | null;
-  private popupMountPoint: HTMLElement | null;
-  private validatorTimeout?: number;
+  private inputRef?: HTMLTextAreaElement | null;
+  private popupMountPoint?: HTMLElement | null;
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevState.theme !== this.state.theme) {
+      window.sessionStorage.setItem('theme', this.state.theme);
+    }
+  }
 
   showHideADF = () =>
     this.setState(state => ({
@@ -245,6 +264,30 @@ export default class FullPageRendererExample extends React.Component<
     );
   };
 
+  private legacyMediaEventHandlers = () => ({
+    media: {
+      onClick: () => {
+        // eslint-disable-next-line no-console
+        console.log('legacy event handler click!');
+      },
+    },
+  });
+
+  private toggleFullWidthMode = () => {
+    this.setState(
+      prevState => ({
+        appearance:
+          prevState.appearance === 'full-width' ? 'full-page' : 'full-width',
+      }),
+      () => {
+        localStorage.setItem(
+          LOCALSTORAGE_defaultMode,
+          this.state.fullWidthMode ? FULL_WIDTH_MODE : DEFAULT_MODE,
+        );
+      },
+    );
+  };
+
   render() {
     const { locale, messages } = this.state;
     return (
@@ -252,12 +295,6 @@ export default class FullPageRendererExample extends React.Component<
         <WithEditorActions
           render={actions => (
             <div>
-              <div
-                ref={ref => (this.popupMountPoint = ref)}
-                style={{
-                  zIndex: 9999,
-                }}
-              />
               <Controls>
                 <Select
                   formatOptionLabel={formatAppearanceOption}
@@ -265,7 +302,7 @@ export default class FullPageRendererExample extends React.Component<
                   defaultValue={appearanceOptions.find(
                     opt => opt.value === this.state.appearance,
                   )}
-                  onChange={opt => {
+                  onChange={(opt: { value: EditorAppearance }) => {
                     this.setState({
                       appearance: opt.value,
                     });
@@ -278,7 +315,7 @@ export default class FullPageRendererExample extends React.Component<
                     <Select
                       formatOptionLabel={formatAppearanceOption}
                       options={docs}
-                      onChange={opt => this.loadDocument(opt, actions)}
+                      onChange={(opt: any) => this.loadDocument(opt, actions)}
                       placeholder="Load an example document..."
                       styles={selectStyles}
                     />
@@ -290,6 +327,36 @@ export default class FullPageRendererExample extends React.Component<
                       display: 'flex',
                     }}
                   >
+                    <div
+                      style={{
+                        minWidth: '200px',
+                        padding: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Toggle
+                        size="large"
+                        isChecked={this.state.appearance === 'full-width'}
+                        onChange={this.toggleFullWidthMode}
+                        label="Full Width Mode"
+                      />
+                      <span>Full Width Mode</span>
+                    </div>
+
+                    <Select
+                      formatOptionLabel={formatAppearanceOption}
+                      options={themes}
+                      onChange={(opt: any) =>
+                        this.setState({ theme: opt.value })
+                      }
+                      spacing="compact"
+                      defaultValue={themes.find(
+                        opt => opt.value === this.state.theme,
+                      )}
+                      className="theme-select"
+                      styles={selectStyles}
+                    />
                     <Button onClick={this.switchEditorOrientation}>
                       Display {!this.state.vertical ? 'Vertical' : 'Horizontal'}
                     </Button>
@@ -333,77 +400,53 @@ export default class FullPageRendererExample extends React.Component<
                 }}
               >
                 <EditorColumn vertical={this.state.vertical}>
-                  <IntlProvider
-                    locale={this.getLocalTag(locale)}
-                    messages={messages}
+                  <div
+                    className="popups-wrapper"
+                    style={{ position: 'relative' }}
                   >
-                    <SmartCardProvider>
-                      <Editor
-                        appearance={this.state.appearance}
-                        analyticsHandler={analyticsHandler}
-                        quickInsert={{
-                          provider: this.quickInsertProviderPromise,
-                        }}
-                        allowCodeBlocks={{ enableKeybindingsForIDE: true }}
-                        allowLists={true}
-                        allowTextColor={true}
-                        allowTables={{
-                          advanced: true,
-                        }}
-                        allowBreakout={true}
-                        allowJiraIssue={true}
-                        allowUnsupportedContent={true}
-                        allowPanel={true}
-                        allowExtension={{
-                          allowBreakout: true,
-                        }}
-                        allowRule={true}
-                        allowDate={true}
-                        allowLayouts={{
-                          allowBreakout: true,
-                        }}
-                        allowTextAlignment={true}
-                        allowTemplatePlaceholders={{ allowInserting: true }}
-                        UNSAFE_cards={{
-                          provider: this.cardProviderPromise,
-                        }}
-                        allowStatus={true}
-                        {...providers}
-                        media={{
-                          provider: mediaProvider,
-                          allowMediaSingle: true,
-                          allowResizing: true,
-                        }}
-                        insertMenuItems={customInsertMenuItems}
-                        extensionHandlers={extensionHandlers}
-                        placeholder="Type something here, and watch it render to the side!"
-                        shouldFocus={true}
-                        defaultValue={this.state.adf}
-                        disabled={this.state.disabled}
-                        onChange={() => this.onEditorChange(actions)}
-                        popupsMountPoint={this.popupMountPoint || undefined}
-                        primaryToolbarComponents={
-                          <>
-                            <LanguagePicker
-                              languages={languages}
-                              locale={locale}
-                              onChange={this.loadLocale}
-                            />
-                            <SaveAndCancelButtons editorActions={actions} />
-                          </>
-                        }
-                      />
-                    </SmartCardProvider>
-                  </IntlProvider>
+                    <div
+                      className="popups"
+                      ref={ref => (this.popupMountPoint = ref)}
+                      style={{
+                        zIndex: 9999,
+                      }}
+                    />
+                    <IntlProvider
+                      locale={this.getLocalTag(locale)}
+                      messages={messages}
+                    >
+                      <AtlaskitThemeProvider mode={this.state.theme}>
+                        <KitchenSinkEditor
+                          actions={actions}
+                          adf={this.state.adf}
+                          disabled={this.state.disabled}
+                          appearance={this.state.appearance}
+                          popupMountPoint={this.popupMountPoint || undefined}
+                          onDocumentChanged={this.onDocumentChanged}
+                          onDocumentValidated={this.onDocumentValidated}
+                          primaryToolbarComponents={
+                            <React.Fragment>
+                              <LanguagePicker
+                                languages={languages}
+                                locale={locale}
+                                onChange={this.loadLocale}
+                              />
+                              <SaveAndCancelButtons editorActions={actions} />
+                            </React.Fragment>
+                          }
+                        />
+                      </AtlaskitThemeProvider>
+                    </IntlProvider>
+                  </div>
                 </EditorColumn>
                 <Column>
                   {!this.state.showADF ? (
                     <div
                       style={{
-                        paddingTop:
-                          this.state.appearance === 'full-page'
-                            ? '132px'
-                            : undefined,
+                        padding: '0 32px',
+                        paddingTop: this.state.appearance.match('full-')
+                          ? '132px'
+                          : undefined,
                       }}
                     >
                       <IntlProvider
@@ -416,6 +459,7 @@ export default class FullPageRendererExample extends React.Component<
                             adfStage="stage0"
                             dataProviders={this.dataProviders}
                             extensionHandlers={extensionHandlers}
+                            eventHandlers={this.legacyMediaEventHandlers()}
                             // @ts-ignore
                             appearance={this.state.appearance}
                           />
@@ -448,7 +492,7 @@ export default class FullPageRendererExample extends React.Component<
     );
   }
 
-  private importADF = actions => {
+  private importADF = (actions: EditorActions) => {
     if (!this.inputRef) {
       return;
     }
@@ -460,7 +504,10 @@ export default class FullPageRendererExample extends React.Component<
     });
   };
 
-  private loadDocument = async (opt, actions: EditorActions) => {
+  private loadDocument = async (
+    opt: { value: string | null },
+    actions: EditorActions,
+  ) => {
     if (opt.value === null) {
       actions.clear();
       return;
@@ -472,57 +519,22 @@ export default class FullPageRendererExample extends React.Component<
     actions.replaceDocument(adf, false);
   };
 
-  private onEditorChange = async (editorActions: EditorActions) => {
-    const adf = await editorActions.getValue();
+  private onDocumentChanged = (adf: any) => {
     this.setState({ adf, adfInput: JSON.stringify(adf, null, 2) });
 
-    // prepare to validate
-    const editorView = editorActions._privateGetEditorView();
-    if (!editorView) {
-      return;
-    }
-
-    if (this.validatorTimeout) {
-      window.clearTimeout(this.validatorTimeout);
-    }
-
-    this.validatorTimeout = window.setTimeout(
-      () => this.validateDocument(editorView),
-      VALIDATION_TIMEOUT,
-    );
-
+    // run dat validation spinner
     if (!this.state.waitingToValidate) {
       this.setState({ waitingToValidate: true });
     }
   };
 
-  private validateDocument = (editorView: EditorView) => {
-    if (!this.state.adf) {
-      return;
-    }
-
-    const marks = Object.keys(editorView.state.schema.marks);
-    const nodes = Object.keys(editorView.state.schema.nodes);
-    const errors: Array<Error> = [];
-
-    const errorCb: ErrorCallback = (entity, error) => {
-      errors.push({
-        entity,
-        error,
-      });
-
-      return entity;
-    };
-
-    validator(nodes, marks, {
-      mode: 'loose',
-      allowPrivateAttributes: true,
-    })(this.state.adf as Entity, errorCb);
-
-    this.setState({ errors, waitingToValidate: false });
+  private onDocumentValidated = (errors?: Array<Error>) => {
+    this.setState({ errors: errors || [], waitingToValidate: false });
   };
 
-  private handleInputChange = event => {
+  private handleInputChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     this.setState({ adfInput: event.target.value });
     // the user loads the ADF via the load button; we just update the
     // state of the textarea here
@@ -539,3 +551,5 @@ export default class FullPageRendererExample extends React.Component<
 
   private getLocalTag = (locale: string) => locale.substring(0, 2);
 }
+
+export default withSentry(FullPageRendererExample);

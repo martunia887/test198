@@ -2,7 +2,7 @@ import { ProviderFactory } from '@atlaskit/editor-common';
 import { emoji as emojiData } from '@atlaskit/util-data-test';
 import {
   insertText,
-  createEditor,
+  createEditorFactory,
   doc,
   p,
   code,
@@ -11,6 +11,7 @@ import {
   mention,
   code_block,
 } from '@atlaskit/editor-test-helpers';
+import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
 import { emojiPluginKey } from '../../../../plugins/emoji/pm-plugins/main';
 import emojiPlugin from '../../../../plugins/emoji';
 import codeBlockPlugin from '../../../../plugins/code-block';
@@ -19,15 +20,22 @@ import mentionsPlugin from '../../../../plugins/mentions';
 const emojiProvider = emojiData.testData.getEmojiResourcePromise();
 
 describe('emojis - input rules', () => {
-  const providerFactory = ProviderFactory.create({ emojiProvider });
+  const createEditor = createEditorFactory();
 
-  const editor = (doc: any) =>
-    createEditor({
+  const providerFactory = ProviderFactory.create({ emojiProvider });
+  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+
+  const editor = (doc: any) => {
+    createAnalyticsEvent = jest.fn().mockReturnValue({ fire() {} });
+    return createEditor({
       doc,
+      editorProps: { allowAnalyticsGASV3: true },
       editorPlugins: [emojiPlugin, codeBlockPlugin(), mentionsPlugin()],
       providerFactory,
       pluginKey: emojiPluginKey,
+      createAnalyticsEvent,
     });
+  };
 
   const assert = (what: string, expected: boolean, docContents?: any) => {
     const { editorView, pluginState, sel, refs } = editor(
@@ -38,7 +46,6 @@ describe('emojis - input rules', () => {
     const { emojiQuery } = editorView.state.schema.marks;
     const cursorFocus = editorView.state.selection.$to.nodeBefore!;
     expect(!!emojiQuery.isInSet(cursorFocus.marks)).toEqual(expected);
-    editorView.destroy();
   };
 
   it('should replace a standalone ":" with emoji-query-mark', () => {
@@ -95,5 +102,19 @@ describe('emojis - input rules', () => {
 
   it('should replace a ":" when preceded by an opening round bracket', () => {
     assert('(:', true);
+  });
+
+  it('should trigger emoji typeahead invoked analytics event when replace ":"', async () => {
+    const { editorView, sel, pluginState } = editor(doc(p('{<>}')));
+    (pluginState as any).emojiProvider = true;
+    insertText(editorView, ':', sel);
+
+    expect(createAnalyticsEvent).toHaveBeenCalledWith({
+      action: 'invoked',
+      actionSubject: 'typeAhead',
+      actionSubjectId: 'emojiTypeAhead',
+      attributes: { inputMethod: 'keyboard' },
+      eventType: 'ui',
+    });
   });
 });

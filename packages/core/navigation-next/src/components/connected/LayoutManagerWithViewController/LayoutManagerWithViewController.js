@@ -15,12 +15,14 @@ const LayoutManagerWithViewController = ({
   customComponents,
   experimental_flyoutOnHover,
   experimental_alternateFlyoutBehaviour,
+  experimental_fullWidthFlyout,
   globalNavigation,
   onExpandStart,
   onExpandEnd,
   onCollapseStart,
   onCollapseEnd,
   getRefs,
+  topOffset,
 }: LayoutManagerWithViewControllerProps) => {
   return (
     <AsyncLayoutManagerWithViewController
@@ -34,6 +36,7 @@ const LayoutManagerWithViewController = ({
       experimental_alternateFlyoutBehaviour={
         !!experimental_alternateFlyoutBehaviour
       }
+      experimental_fullWidthFlyout={!!experimental_fullWidthFlyout}
       globalNavigation={globalNavigation}
       containerSkeleton={() =>
         firstSkeletonToRender ? (
@@ -42,6 +45,7 @@ const LayoutManagerWithViewController = ({
       }
       itemsRenderer={ItemsRenderer}
       firstSkeletonToRender={firstSkeletonToRender}
+      topOffset={topOffset}
     >
       {children}
     </AsyncLayoutManagerWithViewController>

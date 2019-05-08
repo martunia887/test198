@@ -1,9 +1,16 @@
-import { EditorState, Plugin, PluginKey, Selection } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
+import {
+  EditorState,
+  Plugin,
+  PluginKey,
+  Selection,
+  Transaction,
+} from 'prosemirror-state';
 import { Color as ColorType } from '@atlaskit/status';
-import StatusNodeView from './nodeviews/status';
-import { ReactNodeView } from '../../nodeviews';
+import statusNodeView from './nodeviews/status';
 import { PMPluginFactory } from '../../types';
+import { ZeroWidthSpace } from '../../utils';
+import { mayGetStatusNodeAt, isEmptyStatus } from './utils';
 
 export const pluginKey = new PluginKey('statusPlugin');
 
@@ -45,7 +52,11 @@ export class SelectionChange {
   }
 }
 
-const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
+const createPlugin: PMPluginFactory = ({
+  dispatch,
+  portalProviderAPI,
+  props: { appearance },
+}) =>
   new Plugin({
     state: {
       init: () => ({
@@ -56,12 +67,14 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
       }),
       apply(tr, state: StatusState, editorState) {
         const meta = tr.getMeta(pluginKey);
-
         const nodeAtSelection = tr.doc.nodeAt(tr.selection.from);
+
         if (
           state.showStatusPickerAt &&
           (!nodeAtSelection ||
-            nodeAtSelection.type !== editorState.schema.nodes.status)
+            nodeAtSelection.type !== editorState.schema.nodes.status ||
+            // note: Status node has to==from+1 so from==to is positioned just before the Status node and StatusPicker should be dismissed
+            tr.selection.from === tr.selection.to)
         ) {
           let newState = {
             ...state,
@@ -84,6 +97,7 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
             }
           }
           let newState = { ...state, ...meta, selectedStatus };
+
           dispatch(pluginKey, newState);
           return newState;
         }
@@ -94,6 +108,7 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
           );
 
           const newState = {
+            ...state,
             showStatusPickerAt: deleted ? null : pos,
             selectedStatus: null,
           };
@@ -104,17 +119,69 @@ const createPlugin: PMPluginFactory = ({ dispatch, portalProviderAPI }) =>
             return newState;
           }
         }
-
         return state;
       },
+    },
+    appendTransaction: (
+      transactions: Transaction[],
+      oldEditorState: EditorState,
+      newEditorState: EditorState,
+    ) => {
+      let changed = false;
+      let tr = newEditorState.tr;
+
+      // user leaves the StatusPicker with empty text and selects a new node
+      if (transactions.find(tr => tr.selectionSet)) {
+        let oldStatus = mayGetStatusNodeAt(oldEditorState.selection);
+        let newStatus = mayGetStatusNodeAt(newEditorState.selection);
+        if (
+          oldStatus &&
+          ((newStatus && oldStatus.localId !== newStatus.localId) || !newStatus)
+        ) {
+          if (isEmptyStatus(oldStatus)) {
+            const pos = oldEditorState.selection.from;
+            tr.delete(tr.mapping.map(pos), tr.mapping.map(pos + 1));
+            changed = true;
+          }
+        }
+      }
+      return changed ? tr : undefined;
     },
     key: pluginKey,
     props: {
       nodeViews: {
-        status: ReactNodeView.fromComponent(StatusNodeView, portalProviderAPI),
+        status: statusNodeView(portalProviderAPI, appearance),
+      },
+      decorations(state: EditorState) {
+        const { tr } = state;
+        const nodeAtSelection = tr.doc.nodeAt(tr.selection.from);
+
+        if (
+          appearance !== 'mobile' &&
+          nodeAtSelection &&
+          nodeAtSelection.type === state.schema.nodes.status
+        ) {
+          const delayedNodeRendering = () => {
+            return document.createTextNode(ZeroWidthSpace);
+          };
+
+          const decoration = Decoration.widget(
+            tr.selection.from,
+            delayedNodeRendering,
+            {
+              side: 1,
+              key: '#status-zero-width-char-decoration',
+            },
+          );
+
+          const { doc } = state;
+          return DecorationSet.create(doc, [decoration]);
+        }
+
+        return null;
       },
     },
-    view: (view: EditorView) => {
+    view: (_view: EditorView) => {
       return {
         update: (view: EditorView, prevState: EditorState) => {
           const newSelection = view.state.selection;

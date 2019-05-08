@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import { Component } from 'react';
 import {
@@ -12,7 +12,7 @@ import { MediaPicker, Browser, UploadParams, BrowserConfig } from '../src';
 import { PopupHeader, PopupContainer } from '../example-helpers/styled';
 import { UploadPreviews } from '../example-helpers/upload-previews';
 import { AuthEnvironment } from '../example-helpers/types';
-import { ContextFactory } from '@atlaskit/media-core';
+import { ContextFactory, FileState } from '@atlaskit/media-core';
 
 export interface BrowserWrapperState {
   collectionName: string;
@@ -28,11 +28,11 @@ class BrowserWrapper extends Component<{}, BrowserWrapperState> {
     collectionName: defaultMediaPickerCollectionName,
   };
 
-  componentWillMount() {
-    this.createBrowse();
+  async componentWillMount() {
+    await this.createBrowse();
   }
 
-  createBrowse() {
+  async createBrowse() {
     const context = ContextFactory.create({
       authProvider: mediaPickerAuthProvider(),
     });
@@ -47,12 +47,17 @@ class BrowserWrapper extends Component<{}, BrowserWrapperState> {
     if (this.state.fileBrowser) {
       this.state.fileBrowser.teardown();
     }
-    const fileBrowser = MediaPicker('browser', context, browseConfig);
+    const fileBrowser = await MediaPicker('browser', context, browseConfig);
 
+    context.on('file-added', this.onFileAdded);
     this.setState({
       fileBrowser,
     });
   }
+
+  onFileAdded = (fileState: FileState) => {
+    console.log('onFileAdded', fileState);
+  };
 
   onOpen = () => {
     const { fileBrowser } = this.state;

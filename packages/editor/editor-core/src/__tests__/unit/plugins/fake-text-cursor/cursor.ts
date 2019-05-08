@@ -3,7 +3,7 @@ import { DecorationSet } from 'prosemirror-view';
 import { Slice } from 'prosemirror-model';
 import {
   doc,
-  createEditor,
+  createEditorFactory,
   p as paragraph,
 } from '@atlaskit/editor-test-helpers';
 import {
@@ -15,7 +15,8 @@ import {
 } from '../../../../plugins/fake-text-cursor/cursor';
 
 describe('FakeTextCursor -> Cursor', () => {
-  const editor = doc => createEditor({ doc });
+  const createEditor = createEditorFactory();
+  const editor = (doc: any) => createEditor({ doc });
 
   describe('addFakeTextCursor', () => {
     it('should add placeholder cursor', () => {
@@ -25,7 +26,6 @@ describe('FakeTextCursor -> Cursor', () => {
       expect(
         editorView.state.selection instanceof FakeTextCursorSelection,
       ).toEqual(true);
-      editorView.destroy();
     });
   });
 
@@ -38,7 +38,6 @@ describe('FakeTextCursor -> Cursor', () => {
       ).toEqual(true);
       removeFakeTextCursor(editorView.state, editorView.dispatch);
       expect(editorView.state.selection instanceof TextSelection).toEqual(true);
-      editorView.destroy();
     });
   });
 
@@ -47,7 +46,6 @@ describe('FakeTextCursor -> Cursor', () => {
       const { editorView } = editor(doc(paragraph('{<>}')));
       const decoration = drawFakeTextCursor(editorView.state);
       expect(decoration).toEqual(null);
-      editorView.destroy();
     });
 
     it('should return DecorationSet if selection is of type FakeTextCursor', () => {
@@ -55,7 +53,6 @@ describe('FakeTextCursor -> Cursor', () => {
       addFakeTextCursor(editorView.state, editorView.dispatch);
       const decoration = drawFakeTextCursor(editorView.state);
       expect(decoration instanceof DecorationSet).toEqual(true);
-      editorView.destroy();
     });
   });
 

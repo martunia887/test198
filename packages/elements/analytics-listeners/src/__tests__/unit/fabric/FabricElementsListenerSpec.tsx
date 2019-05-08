@@ -3,8 +3,8 @@ import {
   AnalyticsContext,
   AnalyticsListener,
   withAnalyticsEvents,
+  WithAnalyticsEventProps,
 } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import { mount } from 'enzyme';
 import * as React from 'react';
 import {
@@ -16,7 +16,9 @@ import {
 import FabricElementsListener, {
   ELEMENTS_TAG,
 } from '../../../fabric/FabricElementsListener';
+import Logger from '../../../helpers/logger';
 import { AnalyticsWebClient, FabricChannel } from '../../../types';
+import { createLoggerMock } from '../../_testUtils';
 
 const DummyCompWithAttributesWithAnalytics = createComponentWithAttributesWithAnalytics(
   FabricChannel.elements,
@@ -30,7 +32,7 @@ const DummyTaggedElementsComp = createTaggedComponentWithAnalytics(
 
 describe('<FabricElementsListener />', () => {
   let analyticsWebClientMock: AnalyticsWebClient;
-  let loggerMock;
+  let loggerMock: Logger;
 
   beforeEach(() => {
     analyticsWebClientMock = {
@@ -39,16 +41,11 @@ describe('<FabricElementsListener />', () => {
       sendTrackEvent: jest.fn(),
       sendScreenEvent: jest.fn(),
     };
-    loggerMock = {
-      debug: jest.fn(),
-      info: jest.fn(),
-      warn: jest.fn(),
-      error: jest.fn(),
-    };
+    loggerMock = createLoggerMock();
   });
 
   const fireAndVerifySentEvent = (
-    Component: React.ComponentClass<OwnProps>,
+    Component: React.ComponentType<OwnProps>,
     expectedEvent: any,
   ) => {
     const compOnClick = jest.fn();
@@ -153,7 +150,7 @@ describe('<FabricElementsListener />', () => {
         }
       }
 
-      const DummyComponentWithAnalytics: React.ComponentClass<{}> = withAnalyticsEvents(
+      const DummyComponentWithAnalytics: React.ComponentType<{}> = withAnalyticsEvents(
         {},
       )(DummyComponent);
 
@@ -226,6 +223,34 @@ describe('<FabricElementsListener />', () => {
               </FabricElementsListener>
             </AnalyticsContext>
           </AnalyticsContext>,
+        );
+
+        component
+          .find(DummyComponent)
+          .find('div')
+          .simulate('click');
+
+        expect(analyticsWebClientMock.sendUIEvent).toBeCalledWith(
+          expect.objectContaining({
+            action: 'some-action',
+            actionSubject: 'some-component',
+            source: 'issue',
+          }),
+        );
+      });
+
+      it('should use more specific context', () => {
+        const component = mount(
+          <FabricElementsListener
+            client={analyticsWebClientMock}
+            logger={loggerMock}
+          >
+            <AnalyticsContext data={{ source: 'jira' }}>
+              <AnalyticsContext data={{ source: 'issue' }}>
+                <DummyComponentWithAnalytics />
+              </AnalyticsContext>
+            </AnalyticsContext>
+          </FabricElementsListener>,
         );
 
         component

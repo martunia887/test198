@@ -1,4 +1,4 @@
-import { name } from '../../../../../package.json';
+import { name } from '../../../../version.json';
 import { createSchema } from '../../../../../';
 import { fromHTML, toHTML, textWithMarks } from '../../../../../test-helpers';
 
@@ -18,7 +18,7 @@ describe(`${name}/schema textColor mark`, () => {
       schema.marks.textColor.create(testColorObj1),
     ]);
     expect(toHTML(node, schema)).toEqual(
-      '<span style="color: rgb(151, 160, 175);">foo</span>',
+      `<span style="color: ${testColorObj1.color}">foo</span>`,
     );
   });
 });

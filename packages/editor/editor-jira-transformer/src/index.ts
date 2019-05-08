@@ -38,7 +38,7 @@ export class JIRATransformer implements Transformer<string> {
   private schema: Schema;
   private customEncoders: JIRACustomEncoders;
   private mediaContextInfo?: MediaContextInfo;
-  private doc: Document;
+  private doc!: Document;
 
   constructor(
     schema: Schema,
@@ -373,9 +373,12 @@ export class JIRATransformer implements Transformer<string> {
           if (list instanceof HTMLElement && list.tagName === 'UL') {
             list.setAttribute('type', 'circle');
 
-            [].forEach.call(list.querySelectorAll('ul'), ul => {
-              ul.setAttribute('type', 'square');
-            });
+            [].forEach.call(
+              list.querySelectorAll('ul'),
+              (ul: HTMLUListElement) => {
+                ul.setAttribute('type', 'square');
+              },
+            );
           }
 
           elem.appendChild(list);

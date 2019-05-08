@@ -32,6 +32,31 @@ const items: Array<QuickInsertItem> = [
     },
   },
   {
+    title: 'Inline async extension',
+    icon: () => <DevIcon label="dev" />,
+    action(insert) {
+      return insert({
+        type: 'inlineExtension',
+        attrs: {
+          extensionType: 'com.atlassian.confluence.macro.core',
+          extensionKey: 'inline-async-eh',
+          text: 'Inline extension demo',
+          parameters: {
+            macroParams: {},
+            macroMetadata: {
+              placeholder: [
+                {
+                  data: { url: '' },
+                  type: 'icon',
+                },
+              ],
+            },
+          },
+        },
+      });
+    },
+  },
+  {
     title: 'Block extension',
     icon: () => <DevIcon label="dev" />,
     action(insert) {
@@ -41,6 +66,99 @@ const items: Array<QuickInsertItem> = [
           extensionType: 'com.atlassian.confluence.macro.core',
           extensionKey: 'block-eh',
           text: 'Block extension demo',
+          parameters: {
+            macroParams: {},
+            macroMetadata: {
+              placeholder: [
+                {
+                  data: { url: '' },
+                  type: 'icon',
+                },
+              ],
+            },
+          },
+        },
+      });
+    },
+  },
+  {
+    title: 'Full width Block extension',
+    icon: () => <DevIcon label="dev" />,
+    action(insert) {
+      return insert({
+        type: 'extension',
+        attrs: {
+          extensionType: 'com.atlassian.confluence.macro.core',
+          extensionKey: 'block-layout-eh',
+          text: 'Full width block extension demo',
+          layout: 'full-width',
+          parameters: {
+            macroParams: {},
+            macroMetadata: {
+              placeholder: [
+                {
+                  data: { url: '' },
+                  type: 'icon',
+                },
+              ],
+            },
+          },
+        },
+      });
+    },
+  },
+  {
+    title: 'Minimum width extension',
+    icon: () => <DevIcon label="dev" />,
+    action(insert) {
+      return insert({
+        type: 'extension',
+        attrs: {
+          extensionType: 'com.atlassian.confluence.macro.core',
+          extensionKey: 'block-layout-eh',
+          text: 'Minimum width block extension demo',
+          parameters: {
+            style: { minWidth: 400 },
+          },
+        },
+      });
+    },
+  },
+  {
+    title: 'iframe Block extension',
+    icon: () => <DevIcon label="dev" />,
+    action(insert) {
+      return insert({
+        type: 'extension',
+        attrs: {
+          extensionType: 'com.atlassian.confluence.macro.core',
+          extensionKey: 'block-iframe-eh',
+          text: 'Full width block extension demo',
+          parameters: {
+            macroParams: {},
+            macroMetadata: {
+              placeholder: [
+                {
+                  data: { url: '' },
+                  type: 'icon',
+                },
+              ],
+            },
+          },
+        },
+      });
+    },
+  },
+  {
+    title: 'jql table block extension',
+    icon: () => <DevIcon label="dev" />,
+    action(insert) {
+      return insert({
+        type: 'extension',
+        attrs: {
+          extensionType: 'com.atlassian.confluence.macro.core',
+          extensionKey: 'jql-table',
+          text: 'JQL table block extension demo',
           parameters: {
             macroParams: {},
             macroMetadata: {

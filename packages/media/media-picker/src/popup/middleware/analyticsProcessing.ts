@@ -1,9 +1,11 @@
 import { MiddlewareAPI, Dispatch, Action } from 'redux';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { UIAnalyticsEventHandlerSignature } from '@atlaskit/analytics-next-types';
+import {
+  UIAnalyticsEvent,
+  UIAnalyticsEventHandlerSignature,
+} from '@atlaskit/analytics-next';
 
 import { State } from '../domain';
-import { version, name } from '../../../package.json';
+import { version, name } from '../../version.json';
 
 import analyticsActionHandlers, { Payload } from './analyticsHandlers';
 

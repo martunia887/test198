@@ -7,8 +7,8 @@ import {
 import {
   name as packageName,
   version as packageVersion,
-} from '../../../../package.json';
-import '../../../components/Dots';
+} from '../../../version.json';
+import '../../Dots';
 
 // This is a global mock for this file that will mock all components wrapped with analytics
 // and replace them with an empty SFC that returns null. This includes components imported

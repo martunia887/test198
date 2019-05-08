@@ -1,9 +1,9 @@
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 import styled from 'styled-components';
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { colors, borderRadius } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme';
 
 import Editor from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
@@ -24,21 +24,10 @@ import { collabEditProvider } from '../example-helpers/mock-collab-provider';
 import { EmojiProvider } from '@atlaskit/emoji';
 import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
 import { extensionHandlers } from '../example-helpers/extension-handlers';
+import { TitleInput } from '../example-helpers/PageElements';
+import { EditorActions } from '../src';
 
-export const TitleInput: any = styled.input`
-  border: none;
-  outline: none;
-  font-size: 2.07142857em;
-  margin: 0 0 21px;
-  padding: 0;
-
-  &::placeholder {
-    color: ${colors.N80};
-  }
-`;
-TitleInput.displayName = 'TitleInput';
-
-export const Content: any = styled.div`
+export const Content = styled.div`
   padding: 0 20px;
   height: 100vh;
   background: #fff;
@@ -64,11 +53,10 @@ export const Column = styled.div`
   flex: 1 1 0;
 `;
 
-const analyticsHandler = (actionName, props) => console.log(actionName, props);
-const inviteToEditHandler = (event: Event) =>
-  console.log('invite to edit clicked');
+const analyticsHandler = (actionName: string, props?: {}) =>
+  console.log(actionName, props);
 
-const SaveAndCancelButtons = props => (
+const SaveAndCancelButtons = (props: { editorActions: EditorActions }) => (
   <ButtonGroup>
     <Button
       appearance="primary"
@@ -96,7 +84,7 @@ class DropzoneEditorWrapper extends React.Component<
 > {
   dropzoneContainer: HTMLElement | null = null;
 
-  handleRef = node => {
+  handleRef = (node: HTMLElement) => {
     this.dropzoneContainer = node;
     this.forceUpdate();
   };
@@ -114,13 +102,9 @@ class DropzoneEditorWrapper extends React.Component<
 
 const mediaProvider1 = storyMediaProviderFactory();
 const mediaProvider2 = storyMediaProviderFactory();
-
 export type Props = {};
-export type State = { isInviteToEditButtonSelected: boolean };
 
-export default class Example extends React.Component<Props, State> {
-  state = { isInviteToEditButtonSelected: false };
-
+export default class Example extends React.Component<Props> {
   render() {
     return (
       <div>
@@ -132,6 +116,7 @@ export default class Example extends React.Component<Props, State> {
                   <Editor
                     appearance="full-page"
                     analyticsHandler={analyticsHandler}
+                    allowAnalyticsGASV3={true}
                     allowCodeBlocks={true}
                     allowLayouts={true}
                     allowLists={true}
@@ -169,17 +154,12 @@ export default class Example extends React.Component<Props, State> {
                     collabEdit={{
                       provider: collabEditProvider('rick'),
                       inviteToEditHandler: this.inviteToEditHandler,
-                      isInviteToEditButtonSelected: this.state
-                        .isInviteToEditButtonSelected,
                     }}
                     placeholder="Write something..."
                     shouldFocus={false}
                     quickInsert={true}
                     contentComponents={
-                      <TitleInput
-                        placeholder="Give this page a title..."
-                        innerRef={ref => ref && ref.focus()}
-                      />
+                      <TitleInput innerRef={ref => ref && ref.focus()} />
                     }
                     primaryToolbarComponents={
                       <WithEditorActions
@@ -232,19 +212,18 @@ export default class Example extends React.Component<Props, State> {
                     mentionProvider={Promise.resolve(
                       mention.storyData.resourceProvider,
                     )}
+                    taskDecisionProvider={Promise.resolve(
+                      taskDecision.getMockTaskDecisionResource(),
+                    )}
                     collabEdit={{
                       provider: collabEditProvider('morty'),
-                      inviteToEditHandler,
-                      isInviteToEditButtonSelected: false,
+                      inviteToEditHandler: this.inviteToEditHandler,
                     }}
                     placeholder="Write something..."
                     shouldFocus={false}
                     quickInsert={true}
                     contentComponents={
-                      <TitleInput
-                        placeholder="Give this page a title..."
-                        innerRef={ref => ref && ref.focus()}
-                      />
+                      <TitleInput innerRef={ref => ref && ref.focus()} />
                     }
                     primaryToolbarComponents={
                       <WithEditorActions
@@ -266,10 +245,7 @@ export default class Example extends React.Component<Props, State> {
     );
   }
 
-  private inviteToEditHandler = (event: Event) => {
-    this.setState({
-      isInviteToEditButtonSelected: !this.state.isInviteToEditButtonSelected,
-    });
-    console.log('target', event.target);
+  private inviteToEditHandler = (event: React.MouseEvent<HTMLElement>) => {
+    console.log("'Invite to event' clicked");
   };
 }

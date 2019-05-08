@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 
 import * as React from 'react';
 import { Component } from 'react';
@@ -7,21 +7,13 @@ import {
   videoFileDetails,
   imageFileDetails,
   audioFileDetails,
-  emptyLinkDetails,
   docFileDetails,
   unknownFileDetails,
-  genericLinkDetails,
   smallImage,
   smallTransparentImage,
   tallImage,
   wideImage,
   wideTransparentImage,
-  imageLinkDetails,
-  erroredLinkDetails,
-  longLinkDetails,
-  transparentLinkDetails,
-  linkNoImageDetails,
-  noTitleLinkDetails,
 } from '@atlaskit/media-test-helpers';
 import { ImageResizeMode, MediaItemType } from '@atlaskit/media-core';
 import Toggle from '@atlaskit/toggle';
@@ -101,14 +93,6 @@ export const generateStoriesForEditableCards = () => {
     fileAudio: audioFileDetails,
     fileDoc: docFileDetails,
     fileUnknown: unknownFileDetails,
-    genericLink: genericLinkDetails,
-    emptyLink: emptyLinkDetails,
-    imageLink: imageLinkDetails,
-    longLink: longLinkDetails,
-    transparentLink: transparentLinkDetails,
-    noImageLink: linkNoImageDetails,
-    erroredLink: erroredLinkDetails,
-    noTitleLink: noTitleLinkDetails,
   };
   const getStateFromLocalStorage = (): EditableCardState | null => {
     if (!exenv.canUseDOM) {

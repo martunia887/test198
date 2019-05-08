@@ -8,6 +8,7 @@ import { customCategory, customType } from './utils';
 import {
   mockNonUploadingEmojiResourceFactory,
   mockEmojiResourceFactory,
+  MockEmojiResourceConfig,
 } from './MockEmojiResource';
 
 export const spriteEmoji = {
@@ -161,9 +162,8 @@ declare var require: {
   <T>(path: string): T;
 };
 
-// tslint:disable-next-line:no-var-requires
 export const standardServiceEmojis = require('../json-data/test-emoji-standard.json') as any; // EmojiServiceResponse
-// tslint:disable-next-line:no-var-requires
+
 export const atlassianServiceEmojis = require('../json-data/test-emoji-atlassian.json') as any; // EmojiServiceResponse
 export const siteServiceEmojis = () => ({
   emojis: [mediaServiceEmoji],
@@ -172,7 +172,7 @@ export const siteServiceEmojis = () => ({
   },
 });
 
-export const filterToSearchable = emojis => {
+export const filterToSearchable = (emojis: EmojiDescription[]) => {
   return emojis.filter(emoji => emoji.searchable);
 };
 
@@ -228,11 +228,14 @@ export const congoFlagEmoji = defaultEmojiRepository.findByShortName(
   ':flag_cg:',
 );
 
-export const getNonUploadingEmojiResourcePromise = (config?) =>
-  mockNonUploadingEmojiResourceFactory(newEmojiRepository(), config);
+export const getNonUploadingEmojiResourcePromise = (
+  config?: MockEmojiResourceConfig,
+) => mockNonUploadingEmojiResourceFactory(newEmojiRepository(), config);
 
-export const getEmojiResourcePromise = (config?) =>
+export const getEmojiResourcePromise = (config?: MockEmojiResourceConfig) =>
   mockEmojiResourceFactory(newEmojiRepository(), config);
 
-export const getEmojiResourcePromiseFromRepository = (repo, config?) =>
-  mockEmojiResourceFactory(repo, config);
+export const getEmojiResourcePromiseFromRepository = (
+  repo: EmojiRepository,
+  config?: MockEmojiResourceConfig,
+) => mockEmojiResourceFactory(repo, config);

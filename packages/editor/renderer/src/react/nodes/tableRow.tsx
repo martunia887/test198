@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { RendererCssClassName } from '../../consts';
 
-// tslint:disable-next-line:variable-name
-const TableRow = props => {
+type Props = {
+  isNumberColumnEnabled?: number;
+  index?: number;
+  children?: React.ReactNode;
+};
+
+const TableRow = (props: Props) => {
   return (
     <tr>
       {props.isNumberColumnEnabled && (
@@ -12,4 +17,5 @@ const TableRow = props => {
     </tr>
   );
 };
+
 export default TableRow;

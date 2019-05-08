@@ -9,7 +9,7 @@ import AKTooltip from '@atlaskit/tooltip';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../version.json';
 import ItemWrapper from '../styled/BreadcrumbsItem';
 import Button from '../styled/Button';
 import Separator from '../styled/Separator';
@@ -43,11 +43,13 @@ type State = {
 };
 
 class BreadcrumbsItem extends Component<Props, State> {
-  props: Props; // eslint-disable-line react/sort-comp
+  props: Props;
+
+  // eslint-disable-line react/sort-comp
   button: ?HTMLButtonElement;
 
   static defaultProps = {
-    component: '',
+    component: undefined,
     hasSeparator: false,
     href: '#',
     truncationWidth: 0,
@@ -72,7 +74,7 @@ class BreadcrumbsItem extends Component<Props, State> {
 
   updateOverflow() {
     const { truncationWidth } = this.props;
-    const button = this.button;
+    const { button } = this;
     if (truncationWidth && button) {
       // We need to find the DOM node for the button component in order to measure its size.
       const el = ReactDOM.findDOMNode(button); // eslint-disable-line react/no-find-dom-node

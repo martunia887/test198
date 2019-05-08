@@ -1,4 +1,4 @@
-import { name } from '../../../../../package.json';
+import { name } from '../../../../version.json';
 import { createSchema } from '../../../../..';
 import { toHTML, fromHTML } from '../../../../../test-helpers';
 
@@ -15,7 +15,10 @@ describe(`${name}/schema taskList node`, () => {
   });
 
   it('matches <ol data-task-list-local-id>', () => {
-    const doc = fromHTML('<ol data-task-list-local-id>', schema);
+    const doc = fromHTML(
+      '<ol data-node-type="actionList" data-task-list-local-id>',
+      schema,
+    );
     const taskList = doc.firstChild!;
     expect(taskList.type.name).toEqual('taskList');
     expect(taskList.attrs.localId).not.toEqual(undefined);

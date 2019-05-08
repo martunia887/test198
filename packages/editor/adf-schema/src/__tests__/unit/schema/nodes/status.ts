@@ -1,8 +1,7 @@
-import { name } from '../../../../../package.json';
+import { name } from '../../../../version.json';
 import { schema, toDOM, fromHTML } from '../../../../../test-helpers';
 import { status } from '../../../../../src';
-
-const localIdRegex = /[a-f0-9]{8}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{4}\-[a-f0-9]{12}/;
+import { StatusLocalIdRegex } from '@atlaskit/editor-test-helpers';
 
 describe(`${name}/schema status node`, () => {
   describe('parse html', () => {
@@ -33,7 +32,7 @@ describe(`${name}/schema status node`, () => {
       expect(node.attrs).toMatchObject({
         text: 'In progress',
         color,
-        localId: expect.stringMatching(localIdRegex),
+        localId: expect.stringMatching(StatusLocalIdRegex),
         style,
       });
 
@@ -58,8 +57,7 @@ describe(`${name}/schema status node`, () => {
       expect(node.attrs).toMatchObject({
         text: 'In progress',
         color,
-        localId: expect.stringMatching(localIdRegex),
-        style: null,
+        localId: expect.stringMatching(StatusLocalIdRegex),
       });
     });
   });
@@ -96,7 +94,7 @@ describe(`${name}/schema status node`, () => {
       expect(parsedNode.attrs).toMatchObject({
         text: 'In progress',
         color: 'blue',
-        localId: expect.stringMatching(localIdRegex),
+        localId: expect.stringMatching(StatusLocalIdRegex),
         style: 'bold',
       });
 
@@ -115,7 +113,7 @@ describe(`${name}/schema status node`, () => {
       expect(dom.textContent).toEqual(attrs.text);
       expect(dom.getAttribute('data-color')).toEqual(attrs.color);
       expect(dom.getAttribute('data-local-id')).toEqual(attrs.localId);
-      expect(dom.getAttribute('data-style')).toEqual(null);
+      expect(dom.getAttribute('data-style')).toEqual('');
     });
   });
 });

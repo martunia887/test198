@@ -1,5 +1,159 @@
 # @atlaskit/modal-dialog
 
+## 9.0.0
+- [major] [7c17b35107](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7c17b35107):
+
+  - Updates react and react-dom peer dependencies to react@^16.8.0 and react-dom@^16.8.0. To use this package, please ensure you use at least this version of react and react-dom.
+
+## 8.0.9
+- Updated dependencies [6cdf11238d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6cdf11238d):
+- Updated dependencies [5b6b4d6a0f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5b6b4d6a0f):
+  - @atlaskit/form@5.2.10
+  - @atlaskit/textfield@1.0.0
+  - @atlaskit/portal@1.0.0
+
+## 8.0.8
+- Updated dependencies [38dab947e6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/38dab947e6):
+  - @atlaskit/blanket@9.0.0
+
+## 8.0.7
+- Updated dependencies [9c0b4744be](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9c0b4744be):
+  - @atlaskit/docs@7.0.3
+  - @atlaskit/avatar@15.0.4
+  - @atlaskit/blanket@8.0.3
+  - @atlaskit/button@12.0.3
+  - @atlaskit/checkbox@6.0.4
+  - @atlaskit/field-radio-group@5.0.3
+  - @atlaskit/field-text@8.0.3
+  - @atlaskit/form@5.2.7
+  - @atlaskit/icon@16.0.9
+  - @atlaskit/inline-dialog@10.0.4
+  - @atlaskit/select@8.1.1
+  - @atlaskit/textfield@0.4.4
+  - @atlaskit/theme@8.1.7
+
+## 8.0.6
+- Updated dependencies [1e826b2966](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1e826b2966):
+  - @atlaskit/docs@7.0.2
+  - @atlaskit/analytics-next@4.0.3
+  - @atlaskit/avatar@15.0.3
+  - @atlaskit/blanket@8.0.2
+  - @atlaskit/checkbox@6.0.3
+  - @atlaskit/field-radio-group@5.0.2
+  - @atlaskit/field-text@8.0.2
+  - @atlaskit/form@5.2.5
+  - @atlaskit/icon@16.0.8
+  - @atlaskit/inline-dialog@10.0.3
+  - @atlaskit/portal@0.3.1
+  - @atlaskit/select@8.0.5
+  - @atlaskit/textfield@0.4.3
+  - @atlaskit/theme@8.1.6
+  - @atlaskit/button@12.0.0
+
+## 8.0.5
+- [patch] [cc8378fcd4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cc8378fcd4):
+
+  - Modal-dialog has been migrated from styled-components to Emotion (v10)
+  - styled-components is no longer a peer-dependency
+  - Render props Body, Header, Footer and Container continue to get styles applied via className
+  - Fixes an issue with modal contents that re-rendered on resize
+  - Fixes an issue with forms losing state
+  - SSR now works out of the box
+
+  ### Warning
+
+  Emotion 10 does not provide support for [Enzyme shallow rendering](https://airbnb.io/enzyme/docs/api/shallow.html). This is due to the fact that uses it's own [JSX pragma](https://emotion.sh/docs/css-prop#jsx-pragma) to support the [CSS prop](https://emotion.sh/docs/css-prop). The pragma internally wraps components and attaches a sibling style tag. Consequently, these implementation details may now be visible as conflicts in your snapshot tests and may be the cause of test failures for cases that reach into modal-dialog.
+
+  If you are using Enzyme to test components dependent on Modal-Dialog, you may need to replace calls to [shallow()](https://airbnb.io/enzyme/docs/api/shallow.html) with a call to [mount()](https://airbnb.io/enzyme/docs/api/mount.html) instead.
+
+  For more information please see: [Migrating to Emotion 10](https://emotion.sh/docs/migrating-to-emotion-10)
+
+## 8.0.4
+- Updated dependencies [ce4e1b4780](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ce4e1b4780):
+  - @atlaskit/portal@0.3.0
+
+## 8.0.3
+- Updated dependencies [8eff47cacb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8eff47cacb):
+  - @atlaskit/form@5.2.3
+  - @atlaskit/textfield@0.4.0
+
+## 8.0.2
+- Updated dependencies [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+  - @atlaskit/docs@7.0.1
+  - @atlaskit/analytics-next@4.0.1
+  - @atlaskit/avatar@15.0.1
+  - @atlaskit/blanket@8.0.1
+  - @atlaskit/checkbox@6.0.1
+  - @atlaskit/field-radio-group@5.0.1
+  - @atlaskit/field-text@8.0.1
+  - @atlaskit/form@5.2.1
+  - @atlaskit/icon@16.0.5
+  - @atlaskit/inline-dialog@10.0.1
+  - @atlaskit/portal@0.2.1
+  - @atlaskit/select@8.0.3
+  - @atlaskit/textfield@0.3.1
+  - @atlaskit/theme@8.0.1
+  - @atlaskit/button@11.0.0
+
+## 8.0.1
+- [patch] [0f764dbd7c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0f764dbd7c):
+
+  - Modal-dialog no longer shows unnecessary scrollbars in modern browsers
+
+## 8.0.0
+- [major] [76299208e6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/76299208e6):
+
+  - Drop ES5 from all the flow modules
+
+  ### Dropping CJS support in all @atlaskit packages
+
+  As a breaking change, all @atlaskit packages will be dropping cjs distributions and will only distribute esm. This means all distributed code will be transpiled, but will still contain `import` and
+  `export` declarations.
+
+  The major reason for doing this is to allow us to support multiple entry points in packages, e.g:
+
+  ```js
+  import colors from `@atlaskit/theme/colors`;
+  ```
+
+  Previously this was sort of possible for consumers by doing something like:
+
+  ```js
+  import colors from `@atlaskit/theme/dist/esm/colors`;
+  ```
+
+  This has a couple of issues. 1, it treats the file system as API making internal refactors harder, we have to worry about how consumers might be using things that aren't *actually* supposed to be used. 2. We are unable to do this *internally* in @atlaskit packages. This leads to lots of packages bundling all of theme, just to use a single color, especially in situations where tree shaking fails.
+
+  To support being able to use multiple entrypoints internally, we unfortunately cannot have multiple distributions as they would need to have very different imports from of their own internal dependencies.
+
+  ES Modules are widely supported by all modern bundlers and can be worked around in node environments.
+
+  We may choose to revisit this solution in the future if we find any unintended condequences, but we see this as a pretty sane path forward which should lead to some major bundle size decreases, saner API's and simpler package architecture.
+
+  Please reach out to #fabric-build (if in Atlassian) or create an issue in [Design System Support](https://ecosystem.atlassian.net/secure/CreateIssue.jspa?pid=24670) (for external) if you have any questions or queries about this.
+
+## 7.3.0
+- [minor] [f26a3d0235](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f26a3d0235):
+
+  - Added media queries to make Modal Dialogs Responsive
+
+## 7.2.4
+- Updated dependencies [e9b824bf86](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e9b824bf86):
+  - @atlaskit/form@5.1.7
+  - @atlaskit/textfield@0.2.0
+
+## 7.2.3
+- [patch] [06713e0a0c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/06713e0a0c):
+
+  - popup select "target" is now a function that must resolve to a node
+
+## 7.2.2
+- [patch] [a7670c1488](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a7670c1488):
+
+  - Enabling handling focus in model-dialog by rendering component in model-dialog only after portal in model-dialog is attached to DOM.
+- Updated dependencies [27cacd44ab](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/27cacd44ab):
+  - @atlaskit/portal@0.1.0
+
 ## 7.2.1
 - Updated dependencies [d7ef59d432](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d7ef59d432):
   - @atlaskit/docs@6.0.1

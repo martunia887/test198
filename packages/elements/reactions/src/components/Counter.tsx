@@ -1,5 +1,5 @@
 import { colors } from '@atlaskit/theme';
-import * as cx from 'classnames';
+import cx from 'classnames';
 import * as React from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { keyframes, style } from 'typestyle';
@@ -66,7 +66,7 @@ export class Counter extends React.PureComponent<Props, State> {
     className: undefined,
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       previous: undefined,

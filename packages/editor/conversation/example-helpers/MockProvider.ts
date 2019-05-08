@@ -53,7 +53,9 @@ const RESPONSE_MESSAGES = {
 
 export const getDataProviderFactory = (onlyInclude: string[] = []) => {
   const dataProviderFactory = new ProviderFactory();
-  Object.keys(MockDataProviders).forEach(provider => {
+  (Object.keys(MockDataProviders) as Array<
+    keyof typeof MockDataProviders
+  >).forEach(provider => {
     if (onlyInclude.length === 0 || onlyInclude.indexOf(provider) !== -1) {
       dataProviderFactory.setProvider(provider, MockDataProviders[provider]);
     }
@@ -63,7 +65,7 @@ export const getDataProviderFactory = (onlyInclude: string[] = []) => {
 
 export class MockProvider extends AbstractConversationResource {
   private config: ConversationResourceConfig;
-  private responseCode: number;
+  private responseCode: keyof typeof RESPONSE_MESSAGES;
 
   constructor(config: ConversationResourceConfig) {
     super();
@@ -74,7 +76,7 @@ export class MockProvider extends AbstractConversationResource {
   }
 
   /**
-   * Retrieve the IDs (and meta-data) for all conversations associated with the container ID.
+   * Retrieve the IDs (and meta-data) for all conversations associated with the object ID.
    */
   async getConversations(): Promise<Conversation[]> {
     const { dispatch } = this;
@@ -87,18 +89,20 @@ export class MockProvider extends AbstractConversationResource {
   }
 
   /**
-   * Creates a new Conversation and associates it with the containerId provided.
+   * Creates a new Conversation and associates it with the objectId provided.
    */
   async create(
     localId: string,
-    containerId: string,
     value: any,
     meta: any,
+    objectId: string,
+    containerId?: string,
   ): Promise<Conversation> {
     const conversationId = <string>uuid.generate();
 
     const result = {
       conversationId,
+      objectId,
       containerId,
       localId,
       comments: [this.createComment(conversationId, conversationId, value)],
@@ -271,7 +275,7 @@ export class MockProvider extends AbstractConversationResource {
     return user;
   }
 
-  updateResponseCode = (code: number): void => {
+  updateResponseCode = (code: keyof typeof RESPONSE_MESSAGES): void => {
     this.responseCode = code;
   };
 }

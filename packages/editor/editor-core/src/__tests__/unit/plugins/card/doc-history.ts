@@ -1,7 +1,7 @@
 jest.mock('prosemirror-history');
 import { closeHistory } from 'prosemirror-history';
 
-import { doc, createEditor, p, a } from '@atlaskit/editor-test-helpers';
+import { doc, createEditorFactory, p, a } from '@atlaskit/editor-test-helpers';
 
 import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
 import cardPlugin from '../../../../plugins/card';
@@ -10,8 +10,11 @@ import {
   setProvider,
   queueCards,
 } from '../../../../plugins/card/pm-plugins/actions';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('card', () => {
+  const createEditor = createEditorFactory();
+
   const editor = (doc: any) => {
     return createEditor({
       doc,
@@ -77,6 +80,8 @@ describe('card', () => {
                 url: href,
                 pos: editorView.state.selection.from,
                 appearance: 'inline',
+                compareLinkText: true,
+                source: INPUT_METHOD.CLIPBOARD,
               },
             ])(editorView.state.tr),
           );

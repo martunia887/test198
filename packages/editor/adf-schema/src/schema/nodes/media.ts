@@ -40,9 +40,6 @@ export interface MediaBaseAttributes {
   __fileMimeType?: string | null;
   // For JIRA
   __displayType?: DisplayType | null;
-
-  // Need this until there is actual "upfront" media ID
-  __key?: string | null;
 }
 
 export interface MediaAttributes extends MediaBaseAttributes {
@@ -70,10 +67,10 @@ export const defaultAttrs: DefaultAttributes<
   __fileSize: { default: null },
   __fileMimeType: { default: null },
   __displayType: { default: null },
-  __key: { default: null },
 };
 
 export const media: NodeSpec = {
+  selectable: true,
   attrs: defaultAttrs as any,
   parseDOM: [
     {
@@ -94,6 +91,14 @@ export const media: NodeSpec = {
         // Need to do validation & type conversion manually
         if (attrs.__fileSize) {
           attrs.__fileSize = +attrs.__fileSize;
+        }
+
+        if (typeof attrs.width !== 'undefined' && !isNaN(attrs.width)) {
+          attrs.width = Number(attrs.width);
+        }
+
+        if (typeof attrs.height !== 'undefined' && !isNaN(attrs.height)) {
+          attrs.height = Number(attrs.height);
         }
 
         return attrs;
@@ -181,6 +186,10 @@ export const toJSON = (node: PMNode) => ({
         optionalAttributes.indexOf(key) > -1 &&
         (node.attrs[key] === null || node.attrs[key] === '')
       ) {
+        return obj;
+      }
+      if (['width', 'height'].indexOf(key) !== -1) {
+        obj[key] = Number(node.attrs[key]);
         return obj;
       }
       obj[key] = node.attrs[key];

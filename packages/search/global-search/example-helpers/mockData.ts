@@ -1,7 +1,10 @@
 import { GraphqlResponse, SearchResult } from '../src/api/PeopleSearchClient';
 import { RecentItemsResponse } from '../src/api/RecentSearchClient';
 import { QuickNavResult } from '../src/api/ConfluenceClient';
-import { CrossProductSearchResponse } from '../src/api/CrossProductSearchClient';
+import {
+  CrossProductSearchResponse,
+  CrossProductExperimentResponse,
+} from '../src/api/CrossProductSearchClient';
 import {
   Scope,
   ConfluenceItem,
@@ -16,7 +19,7 @@ import {
   generateRandomJiraFilter,
   generateRandomJiraProject,
 } from './mockJira';
-import * as uuid from 'uuid/v4';
+import uuid from 'uuid/v4';
 
 const DUMMY_BASE_URL = 'http://localhost';
 
@@ -134,7 +137,7 @@ export const getMockJobTitle = () => pickRandom(mockJobTitles);
 export const getMockJobType = () => pickRandom(mockJobTypes);
 export const getMockLastName = () => pickRandom(mockLastNames);
 
-const getDateWithOffset = offset => {
+const getDateWithOffset = (offset: number) => {
   let time = new Date();
   time.setTime(time.getTime() + offset);
   return time;
@@ -277,6 +280,9 @@ export function makeCrossProductSearchData(
       content: {
         id: uuid(),
         type: i % 3 ? 'blogpost' : 'page',
+        space: {
+          id: '123',
+        },
       },
       container: {
         title: title,
@@ -397,6 +403,47 @@ export function makeCrossProductSearchData(
       ],
     };
   };
+}
+
+export function makeCrossProductExperimentData(
+  experimentId: string,
+): (scopeNames: string[]) => CrossProductExperimentResponse {
+  const abTest = {
+    experimentId,
+    controlId: 'control-id',
+    abTestId: `abTest_${experimentId}`,
+  };
+
+  const allScopes = [
+    {
+      id: Scope.ConfluencePageBlog,
+      abTest,
+    },
+    {
+      id: Scope.ConfluencePageBlogAttachment,
+      abTest,
+    },
+    {
+      id: Scope.JiraIssue,
+      abTest,
+    },
+    {
+      id: Scope.JiraBoardProjectFilter,
+      abTest,
+    },
+    {
+      id: Scope.ConfluenceSpace,
+      abTest,
+    },
+    {
+      id: Scope.People,
+      abTest,
+    },
+  ];
+
+  return (scopeNames: string[]) => ({
+    scopes: allScopes.filter(scope => scopeNames.includes(scope.id)),
+  });
 }
 
 export function makePeopleSearchData(

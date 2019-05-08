@@ -1,37 +1,37 @@
 import * as React from 'react';
-import EditorImageIcon from '@atlaskit/icon/glyph/editor/image';
 import { media, mediaGroup, mediaSingle } from '@atlaskit/adf-schema';
-import { EditorPlugin } from '../../types';
+import {
+  EditorPlugin,
+  EditorAppearance,
+  PMPluginFactoryParams,
+} from '../../types';
 import {
   stateKey as pluginKey,
   createPlugin,
   MediaState,
-  MediaStateManager,
-  DefaultMediaStateManager,
-  MediaPluginState,
 } from './pm-plugins/main';
 import keymapMediaSinglePlugin from './pm-plugins/keymap-media-single';
 import keymapPlugin from './pm-plugins/keymap';
 import ToolbarMedia from './ui/ToolbarMedia';
-import MediaSingleEdit from './ui/MediaSingleEdit';
 import { ReactMediaGroupNode } from './nodeviews/mediaGroup';
 import { ReactMediaSingleNode } from './nodeviews/mediaSingle';
 import { CustomMediaPicker, MediaProvider } from './types';
-import WithPluginState from '../../ui/WithPluginState';
-import { akEditorFullPageMaxWidth } from '@atlaskit/editor-common';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import {
-  pluginKey as editorDisabledPluginKey,
-  EditorDisabledPluginState,
-} from '../editor-disabled';
+import { floatingToolbar } from './toolbar';
 
-export {
-  MediaState,
-  MediaStateManager,
-  DefaultMediaStateManager,
-  MediaProvider,
-  CustomMediaPicker,
-};
+import {
+  addAnalytics,
+  ACTION,
+  ACTION_SUBJECT,
+  INPUT_METHOD,
+  EVENT_TYPE,
+  ACTION_SUBJECT_ID,
+} from '../analytics';
+import WithPluginState from '../../ui/WithPluginState';
+import { IconImages } from '../quick-insert/assets';
+import CustomSmartMediaEditor from './ui/CustomSmartMediaEditor';
+
+export { MediaState, MediaProvider, CustomMediaPicker };
 
 export interface MediaOptions {
   provider?: Promise<MediaProvider>;
@@ -40,13 +40,17 @@ export interface MediaOptions {
   customDropzoneContainer?: HTMLElement;
   customMediaPicker?: CustomMediaPicker;
   allowResizing?: boolean;
+  allowAnnotation?: boolean;
 }
 
 export interface MediaSingleOptions {
   disableLayout?: boolean;
 }
 
-const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
+const mediaPlugin = (
+  options?: MediaOptions,
+  appearance?: EditorAppearance,
+): EditorPlugin => ({
   nodes() {
     return [
       { name: 'mediaGroup', node: mediaGroup },
@@ -81,7 +85,8 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
           errorReporter,
           portalProviderAPI,
           reactContext,
-        }) =>
+          dispatchAnalyticsEvent,
+        }: PMPluginFactoryParams) =>
           createPlugin(
             schema,
             {
@@ -95,6 +100,7 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
                   portalProviderAPI,
                   eventDispatcher,
                   props.appearance,
+                  props.appearance === 'full-width',
                 ),
               },
               errorReporter,
@@ -109,9 +115,10 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
             reactContext,
             dispatch,
             props.appearance,
+            dispatchAnalyticsEvent,
           ),
       },
-      { name: 'mediaKeymap', plugin: ({ schema }) => keymapPlugin() },
+      { name: 'mediaKeymap', plugin: () => keymapPlugin() },
     ].concat(
       options && options.allowMediaSingle
         ? {
@@ -122,70 +129,25 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
     );
   },
 
-  contentComponent({ editorView, appearance }) {
-    if (!options) {
-      return null;
-    }
-
-    const { allowMediaSingle } = options;
-    let disableLayout: boolean | undefined;
-    if (typeof allowMediaSingle === 'object') {
-      disableLayout = allowMediaSingle.disableLayout;
-    }
-
-    if (
-      (typeof allowMediaSingle === 'boolean' && allowMediaSingle === false) ||
-      (typeof disableLayout === 'boolean' && disableLayout === true)
-    ) {
-      return null;
-    }
-
+  contentComponent({ editorView }) {
     return (
       <WithPluginState
         editorView={editorView}
         plugins={{
           mediaState: pluginKey,
-          disabled: editorDisabledPluginKey,
         }}
-        render={({
-          mediaState,
-          disabled,
-        }: {
-          mediaState: MediaPluginState;
-          disabled: EditorDisabledPluginState;
-        }) => {
-          const { element: target, layout } = mediaState;
-          const node = mediaState.selectedMediaContainerNode();
-          const isFullPage = appearance === 'full-page';
-          const allowBreakout = !!(
-            node &&
-            node.type === mediaSingle &&
-            node.firstChild!.attrs &&
-            node.firstChild!.attrs.width > akEditorFullPageMaxWidth &&
-            isFullPage
-          );
-          const allowLayout = isFullPage && !!mediaState.isLayoutSupported();
-          const { allowResizing } = mediaState.getMediaOptions();
-          return (
-            <MediaSingleEdit
-              pluginState={mediaState}
-              allowBreakout={allowBreakout}
-              allowLayout={allowLayout}
-              layout={layout}
-              target={target}
-              allowResizing={allowResizing}
-              editorDisabled={disabled.editorDisabled}
-            />
-          );
-        }}
+        render={({ mediaState }) => (
+          <CustomSmartMediaEditor mediaState={mediaState} />
+        )}
       />
     );
   },
 
-  secondaryToolbarComponent({ editorView, disabled }) {
+  secondaryToolbarComponent({ editorView, eventDispatcher, disabled }) {
     return (
       <ToolbarMedia
         editorView={editorView}
+        eventDispatcher={eventDispatcher}
         pluginKey={pluginKey}
         isDisabled={disabled}
         isReducedSpacing={true}
@@ -197,18 +159,35 @@ const mediaPlugin = (options?: MediaOptions): EditorPlugin => ({
     quickInsert: ({ formatMessage }) => [
       {
         title: formatMessage(messages.filesAndImages),
+        description: formatMessage(messages.filesAndImagesDescription),
         priority: 400,
         keywords: ['media'],
         icon: () => (
-          <EditorImageIcon label={formatMessage(messages.filesAndImages)} />
+          <IconImages label={formatMessage(messages.filesAndImages)} />
         ),
         action(insert, state) {
           const pluginState = pluginKey.getState(state);
           pluginState.showMediaPicker();
-          return insert('');
+          const tr = insert('');
+          return addAnalytics(tr, {
+            action: ACTION.OPENED,
+            actionSubject: ACTION_SUBJECT.PICKER,
+            actionSubjectId: ACTION_SUBJECT_ID.PICKER_CLOUD,
+            attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
+            eventType: EVENT_TYPE.UI,
+          });
         },
       },
     ],
+
+    floatingToolbar: (state, intl) =>
+      floatingToolbar(
+        state,
+        intl,
+        options && options.allowResizing,
+        options && options.allowAnnotation,
+        appearance,
+      ),
   },
 });
 

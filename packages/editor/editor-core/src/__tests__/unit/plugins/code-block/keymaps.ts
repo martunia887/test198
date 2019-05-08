@@ -1,5 +1,5 @@
 import {
-  createEditor,
+  createEditorFactory,
   sendKeyToPm,
   doc,
   p,
@@ -7,16 +7,34 @@ import {
   li,
   code_block,
   breakout,
+  table,
+  tr,
+  td,
+  tdEmpty,
+  layoutSection,
+  layoutColumn,
 } from '@atlaskit/editor-test-helpers';
-import codeBlockPlugin from '../../../../plugins/code-block';
-import breakoutPlugin from '../../../../plugins/breakout';
-import listPlugin from '../../../../plugins/lists';
+import {
+  codeBlockPlugin,
+  breakoutPlugin,
+  listsPlugin,
+  tablesPlugin,
+  layoutPlugin,
+} from '../../../../plugins';
 
 describe('codeBlock - keymaps', () => {
+  const createEditor = createEditorFactory();
+
   const editor = (doc: any) =>
     createEditor({
       doc,
-      editorPlugins: [codeBlockPlugin(), breakoutPlugin, listPlugin],
+      editorPlugins: [
+        codeBlockPlugin(),
+        breakoutPlugin,
+        listsPlugin,
+        tablesPlugin(),
+        layoutPlugin,
+      ],
     });
 
   describe('Enter keypress', () => {
@@ -28,7 +46,6 @@ describe('codeBlock - keymaps', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(code_block()('codeBlock\n')),
         );
-        editorView.destroy();
       });
     });
 
@@ -43,7 +60,6 @@ describe('codeBlock - keymaps', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(breakout({ mode: 'wide' })(code_block()('codeBlock\n\n'))),
         );
-        editorView.destroy();
       });
     });
 
@@ -55,7 +71,6 @@ describe('codeBlock - keymaps', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(code_block()('\ncodeBlock\n')),
         );
-        editorView.destroy();
       });
 
       it('it should not exit code block if selection is at the end', () => {
@@ -65,7 +80,6 @@ describe('codeBlock - keymaps', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(code_block()('codeBlock\n\n')),
         );
-        editorView.destroy();
       });
     });
   });
@@ -78,7 +92,6 @@ describe('codeBlock - keymaps', () => {
 
       sendKeyToPm(editorView, 'Backspace');
       expect(editorView.state.doc).toEqualDocument(doc(p()));
-      editorView.destroy();
     });
 
     it('should remove the code block if the cursor is at the beginning of the code block - 2', () => {
@@ -86,7 +99,6 @@ describe('codeBlock - keymaps', () => {
 
       sendKeyToPm(editorView, 'Backspace');
       expect(editorView.state.doc).toEqualDocument(doc(p('Hello')));
-      editorView.destroy();
     });
 
     describe('when codeblock is nested inside list item', () => {
@@ -95,7 +107,6 @@ describe('codeBlock - keymaps', () => {
 
         sendKeyToPm(editorView, 'Backspace');
         expect(editorView.state.doc).toEqualDocument(doc(ul(li(p('Hello')))));
-        editorView.destroy();
       });
     });
 
@@ -104,7 +115,6 @@ describe('codeBlock - keymaps', () => {
 
       sendKeyToPm(editorView, 'Backspace');
       expect(editorView.state.doc).toEqualDocument(doc(p('const x = 10;')));
-      editorView.destroy();
     });
 
     it('should not remove the code block if selection is not empty ', () => {
@@ -114,7 +124,38 @@ describe('codeBlock - keymaps', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(code_block()('const x = 1;')),
       );
-      editorView.destroy();
+    });
+
+    it('should remove empty code block if it is inside of a table', () => {
+      const { editorView } = editor(
+        doc(table()(tr(td()(code_block()('{<>}'))))),
+      );
+
+      const expectedDoc = doc(table()(tr(tdEmpty)));
+
+      sendKeyToPm(editorView, 'Backspace');
+      expect(editorView.state.doc).toEqualDocument(expectedDoc);
+    });
+
+    it('should remove empty code block if it is inside of a layoutColumn', () => {
+      const { editorView } = editor(
+        doc(
+          layoutSection(
+            layoutColumn({ width: 50 })(code_block()('{<>}')),
+            layoutColumn({ width: 50 })(p('')),
+          ),
+        ),
+      );
+
+      const expectedDoc = doc(
+        layoutSection(
+          layoutColumn({ width: 50 })(p('')),
+          layoutColumn({ width: 50 })(p('')),
+        ),
+      );
+
+      sendKeyToPm(editorView, 'Backspace');
+      expect(editorView.state.doc).toEqualDocument(expectedDoc);
     });
   });
 });

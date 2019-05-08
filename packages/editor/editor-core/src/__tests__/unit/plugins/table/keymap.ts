@@ -8,7 +8,7 @@ import {
 } from 'prosemirror-utils';
 import {
   doc,
-  createEditor,
+  createEditorFactory,
   sendKeyToPm,
   table,
   thCursor,
@@ -34,20 +34,35 @@ import {
   rulePlugin,
   listsPlugin,
 } from '../../../../plugins';
+import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
+import { AnalyticsHandler } from '../../../../analytics';
 
 describe('table keymap', () => {
-  const editor = (doc: any, trackEvent = () => {}) =>
-    createEditor<TablePluginState>({
+  const createEditor = createEditorFactory<TablePluginState>();
+
+  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let trackEvent: AnalyticsHandler;
+  let editorView: EditorView;
+
+  const editor = (doc: any, trackEvent: AnalyticsHandler = () => {}) => {
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    return createEditor({
       doc,
       editorPlugins: [tablesPlugin()],
       editorProps: {
         analyticsHandler: trackEvent,
+        allowAnalyticsGASV3: true,
       },
       pluginKey,
+      createAnalyticsEvent,
     });
+  };
 
-  const editorWithPlugins = (doc: any, trackEvent = () => {}) =>
-    createEditor<TablePluginState>({
+  const editorWithPlugins = (
+    doc: any,
+    trackEvent: AnalyticsHandler = () => {},
+  ) =>
+    createEditor({
       doc,
       editorPlugins: [
         tablesPlugin(),
@@ -64,8 +79,6 @@ describe('table keymap', () => {
       },
       pluginKey,
     });
-
-  let trackEvent;
 
   beforeEach(() => {
     trackEvent = jest.fn();
@@ -88,7 +101,6 @@ describe('table keymap', () => {
         expect(trackEvent).toHaveBeenCalledWith(
           'atlassian.editor.format.table.next_cell.keyboard',
         );
-        editorView.destroy();
       });
     });
 
@@ -109,7 +121,6 @@ describe('table keymap', () => {
         expect(trackEvent).toHaveBeenCalledWith(
           'atlassian.editor.format.table.next_cell.keyboard',
         );
-        editorView.destroy();
       });
     });
 
@@ -126,7 +137,6 @@ describe('table keymap', () => {
         expect(trackEvent).toHaveBeenCalledWith(
           'atlassian.editor.format.table.next_cell.keyboard',
         );
-        editorView.destroy();
       });
     });
 
@@ -148,7 +158,6 @@ describe('table keymap', () => {
         expect(trackEvent).toHaveBeenCalledWith(
           'atlassian.editor.format.table.next_cell.keyboard',
         );
-        editorView.destroy();
       });
     });
 
@@ -170,9 +179,8 @@ describe('table keymap', () => {
         expect(editorView.state.selection.$from.pos).toEqual(32);
         expect(editorView.state.selection.empty).toEqual(true);
         expect(trackEvent).toHaveBeenCalledWith(
-          'atlassian.editor.format.table.next_cell.keyboard',
+          'atlassian.editor.format.table.row.keyboard',
         );
-        editorView.destroy();
       });
     });
   });
@@ -191,7 +199,6 @@ describe('table keymap', () => {
         expect(trackEvent).toHaveBeenCalledWith(
           'atlassian.editor.format.table.previous_cell.keyboard',
         );
-        editorView.destroy();
       });
     });
 
@@ -213,7 +220,6 @@ describe('table keymap', () => {
         expect(trackEvent).toHaveBeenCalledWith(
           'atlassian.editor.format.table.previous_cell.keyboard',
         );
-        editorView.destroy();
       });
     });
 
@@ -235,23 +241,8 @@ describe('table keymap', () => {
         expect(editorView.state.selection.$from.pos).toEqual(4);
         expect(editorView.state.selection.empty).toEqual(true);
         expect(trackEvent).toHaveBeenCalledWith(
-          'atlassian.editor.format.table.previous_cell.keyboard',
+          'atlassian.editor.format.table.row.keyboard',
         );
-        editorView.destroy();
-      });
-    });
-
-    describe('Shift-Alt-T keypress', () => {
-      it('should insert 3x3 table', () => {
-        const tableNode = table()(
-          tr(thEmpty, thEmpty, thEmpty),
-          tr(tdEmpty, tdEmpty, tdEmpty),
-          tr(tdEmpty, tdEmpty, tdEmpty),
-        );
-        const { editorView } = editor(doc(p('{<>}')));
-        sendKeyToPm(editorView, 'Shift-Alt-T');
-        expect(editorView.state.doc).toEqualDocument(doc(tableNode));
-        editorView.destroy();
       });
     });
   });
@@ -270,7 +261,6 @@ describe('table keymap', () => {
 
         sendKeyToPm(editorView, 'Backspace');
         expect(editorView.state.selection.$from.pos).toEqual(nextPos);
-        editorView.destroy();
       });
 
       const backspace = (view: EditorView) => {
@@ -299,7 +289,7 @@ describe('table keymap', () => {
           return;
         }
 
-        if (!pmNodeBuilder[nodeName]) {
+        if (!(pmNodeBuilder as Record<string, any>)[nodeName]) {
           return;
         }
 
@@ -307,7 +297,7 @@ describe('table keymap', () => {
           const { editorView, refs } = editorWithPlugins(
             doc(
               table()(tr(tdEmpty, td({})(p('hello{nextPos}')))),
-              pmNodeBuilder[nodeName],
+              (pmNodeBuilder as Record<string, any>)[nodeName],
             ),
           );
           const { nextPos } = refs;
@@ -338,7 +328,6 @@ describe('table keymap', () => {
 
           sendKeyToPm(editorView, 'Backspace');
           expect(editorView.state.selection.$from.pos).toEqual(nextPos);
-          editorView.destroy();
         });
       });
     });
@@ -370,7 +359,6 @@ describe('table keymap', () => {
           'atlassian.editor.format.table.delete_content.keyboard',
         );
         expect(editorView.state.selection.$from.pos).toEqual(12);
-        editorView.destroy();
       });
     });
 
@@ -410,7 +398,6 @@ describe('table keymap', () => {
           expect(editorView.state.selection.$from.pos).toEqual(
             [8, 19, 30][index],
           );
-          editorView.destroy();
         });
       });
 
@@ -451,7 +438,6 @@ describe('table keymap', () => {
           expect(editorView.state.selection.$from.pos).toEqual(
             [18, 23, 28][index],
           );
-          editorView.destroy();
         });
       });
     });
@@ -472,7 +458,6 @@ describe('table keymap', () => {
         expect(editorView.state.selection.$to.pos).toEqual(
           editorView.state.doc.content.size,
         );
-        editorView.destroy();
       });
     });
 
@@ -490,7 +475,6 @@ describe('table keymap', () => {
         expect(editorView.state.selection.$to.pos).toEqual(
           editorView.state.doc.content.size,
         );
-        editorView.destroy();
       });
     });
   });
@@ -506,8 +490,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(tdEmpty, tdEmpty), tr(tdCursor, td()(p('text'))))),
       );
-
-      editorView.destroy();
     });
 
     it('should not add row before when cursor in table header', () => {
@@ -518,8 +500,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(thCursor, thEmpty))),
       );
-
-      editorView.destroy();
     });
 
     it('should not add row before when selected table header', () => {
@@ -531,8 +511,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(thEmpty, thEmpty))),
       );
-
-      editorView.destroy();
     });
 
     it('should add row after any table row', () => {
@@ -543,8 +521,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(tdCursor, tdEmpty), tr(tdEmpty, tdEmpty))),
       );
-
-      editorView.destroy();
     });
 
     it('should add row after table header', () => {
@@ -555,8 +531,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(thCursor, thEmpty), tr(tdEmpty, tdEmpty))),
       );
-
-      editorView.destroy();
     });
 
     it('should add column before any table column', () => {
@@ -567,8 +541,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(tdEmpty, tdCursor, tdEmpty))),
       );
-
-      editorView.destroy();
     });
 
     it('should not add column before when cursor in table header', () => {
@@ -579,8 +551,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(thCursor, thEmpty))),
       );
-
-      editorView.destroy();
     });
 
     it('should not add column before when selected table header', () => {
@@ -592,8 +562,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(thEmpty, thEmpty))),
       );
-
-      editorView.destroy();
     });
 
     it('should add column after any table column', () => {
@@ -604,8 +572,6 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(tdCursor, tdEmpty, tdEmpty))),
       );
-
-      editorView.destroy();
     });
 
     it('should add column after table header', () => {
@@ -616,8 +582,32 @@ describe('table keymap', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(table()(tr(thCursor, thEmpty, thEmpty))),
       );
+    });
+  });
 
-      editorView.destroy();
+  describe('Shift-Alt-T keypress', () => {
+    beforeEach(() => {
+      ({ editorView } = editor(doc(p())));
+      sendKeyToPm(editorView, 'Shift-Alt-T');
+    });
+
+    it('should insert 3x3 table', () => {
+      const tableNode = table()(
+        tr(thEmpty, thEmpty, thEmpty),
+        tr(tdEmpty, tdEmpty, tdEmpty),
+        tr(tdEmpty, tdEmpty, tdEmpty),
+      );
+      expect(editorView.state.doc).toEqualDocument(doc(tableNode));
+    });
+
+    it('should dispatch analytics event', () => {
+      expect(createAnalyticsEvent).toHaveBeenCalledWith({
+        action: 'inserted',
+        actionSubject: 'document',
+        actionSubjectId: 'table',
+        attributes: { inputMethod: 'shortcut' },
+        eventType: 'track',
+      });
     });
   });
 });

@@ -1,32 +1,33 @@
 declare var global: any; // we need define an interface for the Node global object when overwriting global objects, in this case FileReader
-import * as util from '../../../src/util';
+import * as util from '../../util';
 const fileSizeMbSpy = jest.spyOn(util, 'fileSizeMb');
 import * as React from 'react';
 import Spinner from '@atlaskit/spinner';
 import Button from '@atlaskit/button';
 import { Ellipsify, Camera, Rectangle } from '@atlaskit/media-ui';
+import * as MediaUI from '@atlaskit/media-ui';
 import ImageNavigator, {
   ImageNavigator as ImageNavigatorView,
   CONTAINER_INNER_SIZE,
   containerRect,
   Props as ImageNavigatorProps,
-} from '../../../src/image-navigator';
-import { MAX_SIZE_MB } from '../../../src/avatar-picker-dialog';
+} from '../../image-navigator';
+import { MAX_SIZE_MB } from '../../avatar-picker-dialog';
 import {
   ImageUploader,
   DragZone,
   DragZoneImage,
   DragZoneText,
   PaddedBreak,
-} from '../../../src/image-navigator/styled';
-import { ImageCropper } from '../../../src/image-cropper';
+} from '../../image-navigator/styled';
+import { ImageCropper } from '../../image-cropper';
 import Slider from '@atlaskit/field-range';
 import {
   createMouseEvent,
   smallImage,
   mountWithIntlContext,
 } from '@atlaskit/media-test-helpers';
-import { errorIcon } from '../../../src/image-navigator/images';
+import { errorIcon } from '../../image-navigator/images';
 import { ReactWrapper } from 'enzyme';
 
 describe('Image navigator', () => {
@@ -38,6 +39,8 @@ describe('Image navigator', () => {
   let onImageError: () => void;
   let onImageUploaded: () => void;
   let isLoading: boolean;
+  let getOrientation: jest.SpyInstance;
+  let fileToDataURI: jest.SpyInstance;
 
   const setup = (props?: Partial<ImageNavigatorProps>) => {
     return mountWithIntlContext(
@@ -57,6 +60,8 @@ describe('Image navigator', () => {
   };
 
   beforeEach(() => {
+    getOrientation = jest.spyOn(MediaUI, 'getOrientation');
+    fileToDataURI = jest.spyOn(MediaUI, 'fileToDataURI');
     onImageLoaded = jest.fn();
     onPositionChanged = jest.fn();
     onSizeChanged = jest.fn();
@@ -64,6 +69,10 @@ describe('Image navigator', () => {
     onImageError = jest.fn();
     onImageUploaded = jest.fn();
     isLoading = false;
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   describe('with an imageSource', () => {
@@ -330,11 +339,20 @@ describe('Image navigator', () => {
         FileReaderSpy.mockRestore();
       });
 
-      it('should set imageFile state with the image', () => {
+      it('should set data-uri, image itself and orientation into state', async () => {
+        const orientationPromise = Promise.resolve(7);
+        const fileToDataURIPromise = Promise.resolve('some-data-uri');
+        getOrientation.mockReturnValue(orientationPromise);
+        fileToDataURI.mockReturnValue(fileToDataURIPromise);
+
         const { onDrop } = viewComponent.find(DragZone).props();
 
-        onDrop!(mockDropEvent(droppedImage));
+        onDrop(mockDropEvent(droppedImage));
+        await orientationPromise;
+        await fileToDataURIPromise;
         expect(viewComponent.state('imageFile')).toBe(droppedImage);
+        expect(viewComponent.state('fileImageSource')).toBe('some-data-uri');
+        expect(viewComponent.state('imageOrientation')).toBe(7);
         expect(onImageUploaded).toHaveBeenCalledWith(droppedImage);
       });
 

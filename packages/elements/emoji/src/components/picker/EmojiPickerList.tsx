@@ -1,9 +1,9 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { List as VirtualList } from 'react-virtualized/dist/commonjs/List';
-import { customCategory, userCustomTitle } from '../../constants';
+import { customCategory, userCustomTitle } from '../../util/constants';
 import {
   EmojiDescription,
   EmojiId,
@@ -93,14 +93,14 @@ export default class EmojiPickerVirtualList extends PureComponent<
     onSearch: () => {},
   };
 
-  private allEmojiGroups: EmojiGroup[];
+  private allEmojiGroups!: EmojiGroup[];
   private activeCategoryId: CategoryId | undefined | null;
   private virtualItems: VirtualItem<any>[] = [];
   private categoryTracker: CategoryTracker = new CategoryTracker();
 
-  context: EmojiContext;
+  context!: EmojiContext;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.buildEmojiGroupedByCategory(props.emojis, props.currentUser);
@@ -140,7 +140,7 @@ export default class EmojiPickerVirtualList extends PureComponent<
     }
   };
 
-  private onSearch = e => {
+  private onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (this.props.onSearch) {
       this.props.onSearch(e.target.value);
     }
@@ -194,7 +194,7 @@ export default class EmojiPickerVirtualList extends PureComponent<
     return items;
   };
 
-  private buildVirtualItems = (props: Props, state: State): void => {
+  private buildVirtualItems = (props: Props, _state: State): void => {
     const { emojis, loading, query } = props;
 
     let items: Items.VirtualItem<any>[] = [];
@@ -305,8 +305,10 @@ export default class EmojiPickerVirtualList extends PureComponent<
       {} as CategoryKeyToGroup,
     );
 
-    this.allEmojiGroups = Object.keys(categoryToGroupMap)
-      .map(key => categoryToGroupMap[key])
+    this.allEmojiGroups = (Object.keys(
+      categoryToGroupMap,
+    ) as CategoryGroupKey[])
+      .map((key: CategoryGroupKey) => categoryToGroupMap[key])
       .map(group => {
         if (group.category !== 'FREQUENT') {
           group.emojis.sort(byOrder);
@@ -321,7 +323,9 @@ export default class EmojiPickerVirtualList extends PureComponent<
       const root = this.refs.root as HTMLDivElement;
       const display = root.style.display;
       root.style.display = 'none';
-      // tslint:disable-next-line:no-unused-expression no-unused-variable we need to access offset to force repaint
+
+      // we need to access offset to force repaint
+      // eslint-disable-next-line no-unused-expressions
       root.offsetHeight;
       root.style.display = display;
     }
@@ -331,7 +335,7 @@ export default class EmojiPickerVirtualList extends PureComponent<
    * Checks if list is showing a new CategoryId
    * to inform selector to change active category
    */
-  private checkCategoryIdChange = indexes => {
+  private checkCategoryIdChange = (indexes: { startIndex: number }) => {
     const { startIndex } = indexes;
 
     // FS-1844 Fix a rendering problem when scrolling to the top
@@ -356,8 +360,9 @@ export default class EmojiPickerVirtualList extends PureComponent<
     }
   };
 
-  private rowSize = ({ index }) => this.virtualItems[index].height;
-  private renderRow = context =>
+  private rowSize = ({ index }: { index: number }) =>
+    this.virtualItems[index].height;
+  private renderRow = (context: Items.VirtualRenderContext) =>
     virtualItemRenderer(this.virtualItems, context);
 
   render() {

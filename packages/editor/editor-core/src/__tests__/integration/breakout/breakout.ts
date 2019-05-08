@@ -1,99 +1,124 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
-  fullpage,
-  editable,
-  insertBlockMenuItem,
-} from '../_helpers';
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
+import { getDocFromElement, editable } from '../_helpers';
 
 import { messages } from '../../../plugins/block-type/types';
 import commonMessages from '../../../messages';
 
-const wideBreakoutButtonQuery = `div[aria-label="CodeBlock floating controls"] [aria-label="${
+const wideBreakoutButtonQuery = `div[aria-label="${
   commonMessages.layoutWide.defaultMessage
 }"]`;
-const fullWidthBreakoutButtonQuery = `div[aria-label="CodeBlock floating controls"] [aria-label="${
+const fullWidthBreakoutButtonQuery = `div[aria-label="${
   commonMessages.layoutFullWidth.defaultMessage
 }"]`;
-const centerBreakoutButtonQuery = `div[aria-label="CodeBlock floating controls"] [aria-label="${
+const centerBreakoutButtonQuery = `div[aria-label="${
   commonMessages.layoutFixedWidth.defaultMessage
 }"]`;
 
 BrowserTestCase(
   'breakout: should be able to switch to wide mode',
   { skip: [] },
-  async client => {
-    const page = new Page(client);
-    await page.goto(fullpage.path);
-    await page.waitForSelector(fullpage.placeholder);
-    await page.click(fullpage.placeholder);
+  async (client: any, testName: string) => {
+    const page = await goToEditorTestingExample(client);
 
-    await insertBlockMenuItem(page, messages.codeblock.defaultMessage);
+    await mountEditor(page, {
+      appearance: 'full-page',
+      allowCodeBlocks: true,
+      allowBreakout: true,
+    });
+
+    await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
 
     // Switch to wide breakout mode
     await page.waitForSelector(wideBreakoutButtonQuery);
     await page.click(wideBreakoutButtonQuery);
-    expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    expect(
+      await page.$eval(editable, getDocFromElement),
+    ).toMatchCustomDocSnapshot(testName);
   },
 );
 
 BrowserTestCase(
   'breakout: should be able to switch to full-width mode',
   { skip: [] },
-  async client => {
-    const page = new Page(client);
-    await page.goto(fullpage.path);
-    await page.waitForSelector(fullpage.placeholder);
-    await page.click(fullpage.placeholder);
+  async (client: any, testName: string) => {
+    const page = await goToEditorTestingExample(client);
 
-    await insertBlockMenuItem(page, messages.codeblock.defaultMessage);
+    await mountEditor(page, {
+      appearance: 'full-page',
+      allowCodeBlocks: true,
+      allowBreakout: true,
+    });
+
+    await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
 
     // Switch to full-width breakout mode
+    await page.waitForSelector(wideBreakoutButtonQuery);
+    await page.click(wideBreakoutButtonQuery);
     await page.waitForSelector(fullWidthBreakoutButtonQuery);
     await page.click(fullWidthBreakoutButtonQuery);
-    expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    expect(
+      await page.$eval(editable, getDocFromElement),
+    ).toMatchCustomDocSnapshot(testName);
   },
 );
 
 BrowserTestCase(
   'breakout: should be able to switch to center mode back',
-  { skip: [] },
-  async client => {
-    const page = new Page(client);
-    await page.goto(fullpage.path);
-    await page.waitForSelector(fullpage.placeholder);
-    await page.click(fullpage.placeholder);
+  { skip: ['ie'] },
+  async (client: any, testName: string) => {
+    const page = await goToEditorTestingExample(client);
 
-    await insertBlockMenuItem(page, messages.codeblock.defaultMessage);
+    await mountEditor(page, {
+      appearance: 'full-page',
+      allowCodeBlocks: true,
+      allowBreakout: true,
+    });
+
+    await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
 
     // Switch to wide breakout mode
     await page.waitForSelector(wideBreakoutButtonQuery);
     await page.click(wideBreakoutButtonQuery);
 
-    // Disable breakout
+    await page.waitForSelector(fullWidthBreakoutButtonQuery);
+    await page.click(fullWidthBreakoutButtonQuery);
+
+    await page.waitForSelector(centerBreakoutButtonQuery);
     await page.click(centerBreakoutButtonQuery);
-    expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    expect(
+      await page.$eval(editable, getDocFromElement),
+    ).toMatchCustomDocSnapshot(testName);
   },
 );
 
+// TODO: https://product-fabric.atlassian.net/browse/ED-6802
+// skipped on ie
 BrowserTestCase(
   'breakout: should be able to delete last character inside a "wide" codeBlock preserving the node',
-  { skip: [] },
-  async client => {
-    const page = new Page(client);
-    await page.goto(fullpage.path);
-    await page.waitForSelector(fullpage.placeholder);
-    await page.click(fullpage.placeholder);
+  { skip: ['ie'] },
+  async (client: any, testName: string) => {
+    const page = await goToEditorTestingExample(client);
 
-    await insertBlockMenuItem(page, messages.codeblock.defaultMessage);
+    await mountEditor(page, {
+      appearance: 'full-page',
+      allowCodeBlocks: true,
+      allowBreakout: true,
+    });
+
+    await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
 
     // Switch to wide breakout mode
     await page.waitForSelector(wideBreakoutButtonQuery);
     await page.click(wideBreakoutButtonQuery);
 
     await page.type(editable, 'a');
-    await page.type(editable, 'Backspace');
-    expect(await page.$eval(editable, getDocFromElement)).toMatchDocSnapshot();
+    await page.keys('Backspace');
+    expect(
+      await page.$eval(editable, getDocFromElement),
+    ).toMatchCustomDocSnapshot(testName);
   },
 );

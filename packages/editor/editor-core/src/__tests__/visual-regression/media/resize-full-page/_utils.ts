@@ -1,159 +1,187 @@
 import {
-  initEditor,
-  insertMedia,
-  setupMediaMocksProviders,
-  editable,
-  rerenderEditor,
-  setFeature,
+  initEditorWithAdf,
+  Appearance,
+  initFullPageEditorWithAdf,
+  snapshot,
 } from '../../_utils';
 import {
+  getEditorWidth,
+  typeInEditor,
+} from '../../../__helpers/page-objects/_editor';
+import {
+  insertMedia,
+  resizeMediaInPositionWithSnapshot,
+  clickMediaInPosition,
+  changeMediaLayout,
+  MediaLayout,
+  MediaResizeSide,
   TestPageConfig,
-  resizeWithSnapshots,
-  layoutAvailable,
-} from '../_utils';
-import { mediaSingleLayouts } from '../layouts';
+  scrollToMedia,
+  isLayoutAvailable,
+  waitForMediaToBeLoaded,
+} from '../../../__helpers/page-objects/_media';
+import * as layout2Col from '../../common/__fixtures__/basic-columns.adf.json';
 
 export function createResizeFullPageForConfig(config: TestPageConfig) {
   describe('Snapshot Test: Media', () => {
     describe('full page editor', () => {
-      let page;
+      let page: any;
 
       beforeAll(async () => {
         // @ts-ignore
         page = global.page;
-        await initEditor(page, 'full-page-with-toolbar');
-        await setFeature(page, 'imageResizing', true);
-        await setupMediaMocksProviders(page);
       });
 
       // run the suite of tests for each viewport/prop combination
-
       const {
         dynamicTextSizing,
         viewport: { width, height },
       } = config;
 
-      describe(`at ${width}x${height} ${
+      describe(`at ${width}x${height}, without allow resizing, ${
         dynamicTextSizing ? 'with' : 'without'
-      } dynamic text sizing`, async () => {
-        let editorWidth;
-
-        beforeAll(async () => {
-          // setup the editor/viewport config
-          await page.setViewport({ width, height });
-          await setFeature(page, 'dynamicTextSizing', dynamicTextSizing);
-        });
-
+      } dynamic text sizing`, () => {
         beforeEach(async () => {
-          // clear the editor after each test
-          await rerenderEditor(page);
-          editorWidth = await page.$eval(editable, el => el.clientWidth);
+          // setup the editor
+          await initEditorWithAdf(page, {
+            appearance: Appearance.fullPage,
+            viewport: { width, height },
+            editorProps: {
+              media: {
+                allowResizing: false,
+              },
+              allowDynamicTextSizing: dynamicTextSizing,
+            },
+          });
         });
 
-        if (layoutAvailable('wide', width)) {
+        if (isLayoutAvailable(MediaLayout.wide, width)) {
           it('can make an image wide', async () => {
             // `insertMedia` etc are in each test so we don't load up
             // the mediapicker for tests that don't end up running in beforeEach
             await insertMedia(page);
-            await page.click('.media-single');
-            await page.waitForSelector('.mediaSingle-resize-handle-right');
-            await resizeWithSnapshots(page, 300);
+            await clickMediaInPosition(page, 0);
+            await changeMediaLayout(page, MediaLayout.wide);
+            await clickMediaInPosition(page, 0);
+            await scrollToMedia(page);
+            await snapshot(page);
           });
         }
 
-        if (layoutAvailable('full-width', width)) {
+        if (isLayoutAvailable(MediaLayout.fullWidth, width)) {
           it('can make an image full-width', async () => {
             await insertMedia(page);
-            await page.click('.media-single');
-            await page.waitForSelector('.mediaSingle-resize-handle-right');
-            await resizeWithSnapshots(page, 600);
+            await clickMediaInPosition(page, 0);
+            await changeMediaLayout(page, MediaLayout.fullWidth);
+            await clickMediaInPosition(page, 0);
+            await scrollToMedia(page);
+            await snapshot(page);
           });
         }
+      });
+
+      describe(`at ${width}x${height} ${
+        dynamicTextSizing ? 'with' : 'without'
+      } dynamic text sizing`, async () => {
+        let editorWidth: number;
+
+        beforeEach(async () => {
+          // setup the editor
+          await initEditorWithAdf(page, {
+            appearance: Appearance.fullPage,
+            viewport: { width, height },
+            editorProps: {
+              allowDynamicTextSizing: dynamicTextSizing,
+            },
+          });
+
+          editorWidth = await getEditorWidth(page);
+        });
 
         describe('center layout', () => {
           [2, 6, 10].forEach(cols => {
             it(`can make an image ${cols} columns wide`, async () => {
-              await insertMedia(page);
-              await page.click('.media-single');
-              await page.waitForSelector('.mediaSingle-resize-handle-right');
+              const distance = -((editorWidth / 2) * ((12 - cols) / 12));
 
-              // images resize inwards towards the middle
-              await resizeWithSnapshots(
-                page,
-                -((editorWidth / 2) * ((12 - cols) / 12)),
-              );
+              await insertMedia(page);
+              await scrollToMedia(page);
+
+              await resizeMediaInPositionWithSnapshot(page, 0, distance);
             });
           });
         });
 
         describe('wrap-left layout', () => {
-          [1, 2, 6, 10, 11].forEach(cols => {
+          [2, 6, 10].forEach(cols => {
             it(`can make an wrap-left image ${cols} columns wide`, async () => {
+              const distance = -((editorWidth / 12) * (12 - cols));
+
               await insertMedia(page);
-              await page.click('.media-single');
+              await scrollToMedia(page);
+              await clickMediaInPosition(page, 0);
+              await changeMediaLayout(page, MediaLayout.wrapLeft);
 
-              // change layout
-              const layoutButton = `[aria-label="${
-                mediaSingleLayouts['wrap-left']
-              }"]`;
-              await page.waitForSelector(layoutButton);
-              await page.click(layoutButton);
-
-              await page.waitForSelector(`.media-single.image-wrap-left`);
-
-              // resize from right handle
-              await page.waitForSelector('.mediaSingle-resize-handle-right');
-
-              await resizeWithSnapshots(
-                page,
-                -((editorWidth / 12) * (12 - cols)),
-              );
+              await resizeMediaInPositionWithSnapshot(page, 0, distance);
             });
           });
         });
 
         describe('wrap-right layout', () => {
-          [1, 2, 6, 10, 11].forEach(cols => {
+          [2, 6, 10].forEach(cols => {
             it(`can make an wrap-right image ${cols} columns wide`, async () => {
+              const distance = (editorWidth / 12) * (12 - cols);
               await insertMedia(page);
-              await page.click('.media-single');
+              await scrollToMedia(page);
+              await clickMediaInPosition(page, 0);
+              await changeMediaLayout(page, MediaLayout.wrapRight);
 
-              // change layout
-              const layoutButton = `[aria-label="${
-                mediaSingleLayouts['wrap-right']
-              }"]`;
-              await page.waitForSelector(layoutButton);
-              await page.click(layoutButton);
-
-              await page.waitForSelector(`.media-single.image-wrap-right`);
-
-              // resize from left handle
-              await page.waitForSelector('.mediaSingle-resize-handle-left');
-              await resizeWithSnapshots(
+              await resizeMediaInPositionWithSnapshot(
                 page,
-                (editorWidth / 12) * (12 - cols),
-                'left',
+                0,
+                distance,
+                MediaResizeSide.left,
               );
             });
           });
         });
 
         describe('lists', () => {
-          [2, 6, 10, 12].forEach(cols => {
+          [2, 6, 10].forEach(cols => {
             it(`can make an image in a list ${cols} columns wide`, async () => {
-              await page.click(editable);
-              await page.type(editable, '* ');
+              const distance = -((editorWidth / 12) * (12 - cols));
 
+              await typeInEditor(page, '* ');
               await insertMedia(page);
-              await page.click('.media-single');
+              await scrollToMedia(page);
 
-              await page.waitForSelector('.mediaSingle-resize-handle-right');
-              await resizeWithSnapshots(
-                page,
-                -((editorWidth / 12) * (12 - cols)),
-              );
+              await resizeMediaInPositionWithSnapshot(page, 0, distance);
             });
           });
+        });
+      });
+
+      describe('in columns', () => {
+        it(`can resize images inside a column`, async () => {
+          await initFullPageEditorWithAdf(
+            page,
+            layout2Col,
+            undefined,
+            undefined,
+            {
+              allowLayouts: {
+                allowBreakout: true,
+                UNSAFE_addSidebarLayouts: true,
+              },
+            },
+          );
+
+          const editorWidth = await getEditorWidth(page);
+
+          const distance = -((editorWidth / 12) * 10);
+
+          await insertMedia(page);
+          await waitForMediaToBeLoaded(page);
+          await resizeMediaInPositionWithSnapshot(page, 0, distance);
         });
       });
     });

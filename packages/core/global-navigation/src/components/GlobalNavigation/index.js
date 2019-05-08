@@ -7,10 +7,13 @@ import { NotificationIndicator } from '@atlaskit/notification-indicator';
 import { NotificationLogClient } from '@atlaskit/notification-log-client';
 import { GlobalNav } from '@atlaskit/navigation-next';
 import Drawer from '@atlaskit/drawer';
+import AtlassianSwitcher, {
+  AtlassianSwitcherPrefetchTrigger,
+} from '@atlaskit/atlassian-switcher';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../../package.json';
+} from '../../version.json';
 import generateDefaultConfig from '../../config/default-config';
 import generateProductConfig from '../../config/product-config';
 import ItemComponent from '../ItemComponent';
@@ -18,7 +21,7 @@ import ScreenTracker from '../ScreenTracker';
 import { analyticsIdMap, fireDrawerDismissedEvents } from './analytics';
 import NotificationDrawerContents from '../../platform-integration';
 
-import type { NavItem } from '../../config/types';
+import type { GlobalNavItemData, NavItem } from '../../config/types';
 import type { GlobalNavigationProps, DrawerName } from './types';
 
 const noop = () => {};
@@ -31,7 +34,10 @@ type GlobalNavigationState = {
   isSearchDrawerOpen: boolean,
   isNotificationDrawerOpen: boolean,
   isStarredDrawerOpen: boolean,
+  isHelpDrawerOpen: boolean,
+  isRecentDrawerOpen: boolean,
   isSettingsDrawerOpen: boolean,
+  isAtlassianSwitcherDrawerOpen: boolean,
   notificationCount: number,
 };
 
@@ -55,14 +61,37 @@ export default class GlobalNavigation extends Component<
     starred: {
       isControlled: false,
     },
+    help: {
+      isControlled: false,
+    },
     settings: {
       isControlled: false,
     },
     create: {
       isControlled: false,
     },
+    recent: {
+      isControlled: false,
+    },
+    atlassianSwitcher: {
+      isControlled: false,
+    },
   };
+
   isNotificationInbuilt = false;
+
+  shouldRenderAtlassianSwitcher = false;
+
+  static defaultProps = {
+    enableAtlassianSwitcher: false,
+    createDrawerWidth: 'wide',
+    searchDrawerWidth: 'wide',
+    notificationDrawerWidth: 'wide',
+    starredDrawerWidth: 'wide',
+    helpDrawerWidth: 'wide',
+    settingsDrawerWidth: 'wide',
+    recentDrawerWidth: 'wide',
+  };
 
   constructor(props: GlobalNavigationProps) {
     super(props);
@@ -72,7 +101,10 @@ export default class GlobalNavigation extends Component<
       isSearchDrawerOpen: false,
       isNotificationDrawerOpen: false,
       isStarredDrawerOpen: false,
+      isHelpDrawerOpen: false,
       isSettingsDrawerOpen: false,
+      isRecentDrawerOpen: false,
+      isAtlassianSwitcherDrawerOpen: false,
       notificationCount: 0,
     };
 
@@ -98,14 +130,18 @@ export default class GlobalNavigation extends Component<
 
     const {
       cloudId,
+      enableAtlassianSwitcher,
       fabricNotificationLogUrl,
       notificationDrawerContents,
+      product,
     } = this.props;
     this.isNotificationInbuilt = !!(
       !notificationDrawerContents &&
       cloudId &&
       fabricNotificationLogUrl
     );
+    this.shouldRenderAtlassianSwitcher =
+      enableAtlassianSwitcher && cloudId && product;
   }
 
   componentDidUpdate(prevProps: GlobalNavigationProps) {
@@ -133,14 +169,18 @@ export default class GlobalNavigation extends Component<
 
     const {
       cloudId,
+      enableAtlassianSwitcher,
       fabricNotificationLogUrl,
       notificationDrawerContents,
+      product,
     } = this.props;
     this.isNotificationInbuilt = !!(
       !notificationDrawerContents &&
       cloudId &&
       fabricNotificationLogUrl
     );
+    this.shouldRenderAtlassianSwitcher =
+      enableAtlassianSwitcher && cloudId && product;
   }
 
   onCountUpdating = (
@@ -241,6 +281,7 @@ export default class GlobalNavigation extends Component<
   closeDrawer = (drawerName: DrawerName) => (
     event: SyntheticMouseEvent<*> | SyntheticKeyboardEvent<*>,
     analyticsEvent: UIAnalyticsEvent,
+    trigger?: string,
   ) => {
     const capitalisedDrawerName = this.getCapitalisedDrawerName(drawerName);
     let onCloseCallback = noop;
@@ -249,8 +290,7 @@ export default class GlobalNavigation extends Component<
       onCloseCallback = this.props[`on${capitalisedDrawerName}Close`];
     }
 
-    fireDrawerDismissedEvents(drawerName, analyticsEvent);
-
+    fireDrawerDismissedEvents(drawerName, analyticsEvent, trigger);
     // Update the state only if it's a controlled drawer.
     // componentDidMount takes care of the uncontrolled drawers
     if (this.drawers[drawerName].isControlled) {
@@ -264,6 +304,21 @@ export default class GlobalNavigation extends Component<
       // invoke callback in both cases
       onCloseCallback();
     }
+  };
+
+  CustomizedItemComponent = (props: GlobalNavItemData) => {
+    if (
+      this.shouldRenderAtlassianSwitcher &&
+      props.id === 'atlassianSwitcher'
+    ) {
+      return (
+        <AtlassianSwitcherPrefetchTrigger cloudId={this.props.cloudId}>
+          <ItemComponent {...props} />
+        </AtlassianSwitcherPrefetchTrigger>
+      );
+    }
+
+    return <ItemComponent {...props} />;
   };
 
   renderNotificationBadge = () => {
@@ -339,6 +394,56 @@ export default class GlobalNavigation extends Component<
     };
   };
 
+  triggerXFlow = (
+    productKey: string,
+    sourceComponent: string,
+    event: SyntheticMouseEvent<*> | SyntheticKeyboardEvent<*>,
+    analyticsEvent: UIAnalyticsEvent,
+  ) => {
+    const { triggerXFlow } = this.props;
+    this.closeDrawer('atlassianSwitcher')(event, analyticsEvent, 'xFlow');
+    if (triggerXFlow) {
+      triggerXFlow(productKey, sourceComponent);
+    }
+  };
+
+  renderAtlassianSwitcherDrawerContents = () => {
+    const {
+      product,
+      cloudId,
+      /* eslint-disable camelcase */
+      experimental_enableSplitJira,
+      experimental_enableExpandLink,
+      /* eslint-enable camelcase */
+    } = this.props;
+    return (
+      <AtlassianSwitcher
+        cloudId={cloudId}
+        product={product}
+        triggerXFlow={this.triggerXFlow}
+        /* eslint-disable camelcase */
+        enableSplitJira={experimental_enableSplitJira}
+        enableExpandLink={experimental_enableExpandLink}
+        /* eslint-enable camelcase */
+      />
+    );
+  };
+
+  getDrawerContents = (drawerName: DrawerName) => {
+    switch (drawerName) {
+      case 'atlassianSwitcher':
+        return this.shouldRenderAtlassianSwitcher
+          ? this.renderAtlassianSwitcherDrawerContents
+          : null;
+      case 'notification':
+        return this.isNotificationInbuilt
+          ? this.renderNotificationDrawerContents
+          : this.props.notificationDrawerContents;
+      default:
+        return this.props[`${drawerName}DrawerContents`];
+    }
+  };
+
   render() {
     // TODO: Look into memoizing this to avoid memory bloat
     const { primaryItems, secondaryItems } = this.constructNavItems();
@@ -353,7 +458,7 @@ export default class GlobalNavigation extends Component<
       >
         <Fragment>
           <GlobalNav
-            itemComponent={ItemComponent}
+            itemComponent={this.CustomizedItemComponent}
             primaryItems={primaryItems}
             secondaryItems={secondaryItems}
           />
@@ -365,16 +470,12 @@ export default class GlobalNavigation extends Component<
               `should${capitalisedDrawerName}UnmountOnExit`
             ];
 
-            const DrawerContents =
-              drawerName === 'notification' && this.isNotificationInbuilt
-                ? this.renderNotificationDrawerContents
-                : this.props[`${drawerName}DrawerContents`];
+            const DrawerContents = this.getDrawerContents(drawerName);
 
             if (!DrawerContents) {
               return null;
             }
 
-            const width = this.props[`${drawerName}DrawerWidth`] || 'wide';
             const onCloseComplete = this.props[
               `on${capitalisedDrawerName}CloseComplete`
             ];
@@ -386,7 +487,11 @@ export default class GlobalNavigation extends Component<
                 onClose={this.closeDrawer(drawerName)}
                 onCloseComplete={onCloseComplete}
                 shouldUnmountOnExit={shouldUnmountOnExit}
-                width={width}
+                width={
+                  drawerName === 'atlassianSwitcher'
+                    ? 'narrow'
+                    : this.props[`${drawerName}DrawerWidth`]
+                }
               >
                 <ScreenTracker
                   name={analyticsIdMap[drawerName]}

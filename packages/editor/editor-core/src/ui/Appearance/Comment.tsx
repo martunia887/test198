@@ -7,8 +7,14 @@ import PluginSlot from '../PluginSlot';
 import WithPluginState from '../WithPluginState';
 import ContentStyles from '../ContentStyles';
 import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
-import { pluginKey as maxContentSizePluginKey } from '../../plugins/max-content-size';
-import { stateKey as mediaPluginKey } from '../../plugins/media/pm-plugins/main';
+import {
+  pluginKey as maxContentSizePluginKey,
+  MaxContentSizePluginState,
+} from '../../plugins/max-content-size';
+import {
+  stateKey as mediaPluginKey,
+  MediaPluginState,
+} from '../../plugins/media/pm-plugins/main';
 import { ClickAreaBlock } from '../Addon';
 import { tableCommentEditorStyles } from '../../plugins/table/ui/styles';
 import WithFlash from '../WithFlash';
@@ -18,7 +24,7 @@ import {
 } from '@atlaskit/editor-common';
 import WidthEmitter from '../WidthEmitter';
 import { GRID_GUTTER } from '../../plugins/grid';
-import * as classnames from 'classnames';
+import classnames from 'classnames';
 
 export interface CommentEditorProps {
   isMaxContentSizeReached?: boolean;
@@ -27,7 +33,6 @@ export interface CommentEditorProps {
 const CommentEditorMargin = 14;
 const CommentEditorSmallerMargin = 8;
 
-// tslint:disable-next-line:variable-name
 const CommentEditor: any = styled.div`
   display: flex;
   flex-direction: column;
@@ -55,7 +60,6 @@ const CommentEditor: any = styled.div`
 CommentEditor.displayName = 'CommentEditor';
 const TableControlsPadding = 16;
 
-// tslint:disable-next-line:variable-name
 const MainToolbar = styled.div`
   position: relative;
   align-items: center;
@@ -75,7 +79,6 @@ const MainToolbar = styled.div`
 `;
 MainToolbar.displayName = 'MainToolbar';
 
-// tslint:disable-next-line:variable-name
 const MainToolbarCustomComponentsSlot = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -89,7 +92,6 @@ const MainToolbarCustomComponentsSlot = styled.div`
 `;
 MainToolbarCustomComponentsSlot.displayName = 'MainToolbar';
 
-// tslint:disable-next-line:variable-name
 const ContentArea = styled(ContentStyles)`
   flex-grow: 1;
   overflow-x: hidden;
@@ -114,7 +116,6 @@ const ContentArea = styled(ContentStyles)`
 `;
 ContentArea.displayName = 'ContentArea';
 
-// tslint:disable-next-line:variable-name
 const SecondaryToolbar = styled.div`
   box-sizing: border-box;
   justify-content: flex-end;
@@ -147,7 +148,13 @@ export default class Editor extends React.Component<
     }
   };
 
-  private renderChrome = ({ maxContentSize, mediaState }) => {
+  private renderChrome = ({
+    maxContentSize,
+    mediaState,
+  }: {
+    maxContentSize: MaxContentSizePluginState;
+    mediaState: MediaPluginState;
+  }) => {
     const {
       editorDOMElement,
       editorView,
@@ -166,6 +173,7 @@ export default class Editor extends React.Component<
       onSave,
       onCancel,
       disabled,
+      dispatchAnalyticsEvent,
     } = this.props;
     const maxContentSizeReached =
       maxContentSize && maxContentSize.maxContentSizeReached;
@@ -184,6 +192,7 @@ export default class Editor extends React.Component<
               popupsBoundariesElement={popupsBoundariesElement}
               popupsScrollableElement={popupsScrollableElement}
               disabled={!!disabled}
+              dispatchAnalyticsEvent={dispatchAnalyticsEvent}
             />
             <MainToolbarCustomComponentsSlot>
               {customPrimaryToolbarComponents}
@@ -204,6 +213,7 @@ export default class Editor extends React.Component<
                       editorView={editorView}
                       editorActions={editorActions}
                       eventDispatcher={eventDispatcher}
+                      dispatchAnalyticsEvent={dispatchAnalyticsEvent}
                       providerFactory={providerFactory}
                       appearance={this.appearance}
                       items={contentComponents}
