@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lozenge - Type Definitions should match auto-generated types from generate-react-types 1`] = `
+"declare module '@atlaskit/lozenge' {
+
+}"
+`;
