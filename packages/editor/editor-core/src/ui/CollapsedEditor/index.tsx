@@ -8,7 +8,7 @@ export interface Props {
   children?: any;
   isExpanded?: boolean;
 
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
   onExpand?: () => void;
 }
 
@@ -49,7 +49,7 @@ export default class CollapsedEditor extends React.Component<Props, State> {
     if (!this.props.isExpanded) {
       return (
         <ChromeCollapsed
-          onFocus={this.props.onFocus}
+          onClick={this.props.onClick}
           text={this.props.placeholder}
         />
       );

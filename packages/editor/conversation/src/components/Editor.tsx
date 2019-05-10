@@ -119,7 +119,7 @@ export default class Editor extends React.Component<Props, State> {
     }
   }
 
-  private onFocus = () =>
+  private onClick = () =>
     this.setState(prevState => ({ isExpanded: !prevState.isExpanded }));
 
   private onCancel = () => {
@@ -207,7 +207,7 @@ export default class Editor extends React.Component<Props, State> {
         <CollapsedEditor
           placeholder={placeholder}
           isExpanded={this.state.isExpanded}
-          onFocus={this.onFocus}
+          onClick={this.onClick}
         >
           {renderEditor ? (
             renderEditor(AkEditor, defaultProps)

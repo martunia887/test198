@@ -4,13 +4,13 @@ import { Input } from './styles';
 
 export interface Props {
   text?: string;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
 export default class ChromeCollapsed extends PureComponent<Props, {}> {
   private input?: HTMLElement;
 
-  private focusHandler = (evt: React.FocusEvent<HTMLInputElement>) => {
+  private clickHandler = (evt: React.MouseEvent<HTMLInputElement>) => {
     /**
      * We need this magic for FireFox.
      * The reason we need it is, when, in FireFox, we have focus inside input,
@@ -21,8 +21,8 @@ export default class ChromeCollapsed extends PureComponent<Props, {}> {
       this.input.blur();
     }
 
-    if (this.props.onFocus) {
-      this.props.onFocus(evt);
+    if (this.props.onClick) {
+      this.props.onClick(evt);
     }
   };
 
@@ -36,7 +36,7 @@ export default class ChromeCollapsed extends PureComponent<Props, {}> {
     return (
       <Input
         innerRef={this.handleInputRef}
-        onFocus={this.focusHandler}
+        onClick={this.clickHandler}
         placeholder={placeholder}
       />
     );
