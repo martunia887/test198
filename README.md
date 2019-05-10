@@ -79,7 +79,6 @@ When upgrading an Atlaskit component, all changelogs can be found in the [Atlask
 
 ```sh
 git clone git@bitbucket.org:atlassian/atlaskit-mk-2.git
-yarn
 ```
 
 You're now ready to start developing in Atlaskit!
