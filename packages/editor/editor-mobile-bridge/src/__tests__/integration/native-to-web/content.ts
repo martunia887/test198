@@ -14,7 +14,7 @@ import { invalidAdf } from './__fixtures__/invalid-adf';
 BrowserTestCase(
   `Can properly set content when given invalid nodes`,
   { skip },
-  async (client: any, testName: string) => {
+  async (client: any) => {
     const browser = new Page(client);
 
     await navigateOrClear(browser, editor.path);
@@ -22,6 +22,6 @@ BrowserTestCase(
     await callNativeBridge(browser, 'setContent', JSON.stringify(invalidAdf));
 
     const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    expect(doc).toMatchDocSnapshot();
   },
 );

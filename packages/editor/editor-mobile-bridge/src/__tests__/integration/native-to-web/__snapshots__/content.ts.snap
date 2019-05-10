@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Can properly set content when given invalid nodes 1`] = `
+exports[`properly set content when given invalid nodes Can properly set content when given invalid nodes 1`] = `
 Object {
   "content": Array [
     Object {
