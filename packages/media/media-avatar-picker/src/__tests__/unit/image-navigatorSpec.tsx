@@ -4,10 +4,11 @@ const fileSizeMbSpy = jest.spyOn(util, 'fileSizeMb');
 import * as React from 'react';
 import Spinner from '@atlaskit/spinner';
 import Button from '@atlaskit/button';
-import { Ellipsify, Camera, Rectangle } from '@atlaskit/media-ui';
+import { Ellipsify, Camera, Rectangle, Vector2 } from '@atlaskit/media-ui';
 import ImageNavigator, {
   ImageNavigator as ImageNavigatorView,
   CONTAINER_INNER_SIZE,
+  containerPadding,
   containerRect,
   Props as ImageNavigatorProps,
 } from '../../image-navigator';
@@ -413,6 +414,82 @@ describe('Image navigator', () => {
 
     it('should not display image cropper', () => {
       expect(component.find(ImageCropper)).toHaveLength(0);
+    });
+  });
+
+  describe('exportImagePos', () => {
+    /**
+     * These tests covers the fix for HOT-87089,
+     * tracked by MS-1935.
+     *
+     * Yes. Some of the test details are hacky (modifying state directly etc).
+     * While "impure" this allows the tests to focus on assertions for hot fix,
+     * and not get bogged down with component lifecycles.
+     * By updating state directly and calling a few key methods directly we can test exported crop values easily.
+     *
+     * A followup issue MS-398 fixes the zooming and panning,
+     * so relax - these tests and code are short lived.
+     */
+    const defaultTestImageWidth = 200;
+    const defaultTestImageHeight = 100;
+
+    const setup = (
+      imagePosX: number = containerPadding.x,
+      imagePosY: number = containerPadding.y,
+      imageWidth: number = defaultTestImageWidth,
+      imageHeight: number = defaultTestImageHeight,
+    ) => {
+      const stub = jest.fn();
+      const component = new ImageNavigatorView(
+        {
+          imageSource: 'some-src',
+          onImageLoaded: stub,
+          onPositionChanged: stub,
+          onSizeChanged: stub,
+          onRemoveImage: stub,
+          errorMessage: stub as any,
+          onImageError: stub,
+          onImageUploaded: stub,
+          intl: {} as any,
+        },
+        {},
+      );
+      const scale = component.calculateMinScale(imageWidth, imageHeight);
+      component.state = {
+        ...component.state,
+        camera: new Camera(
+          containerRect,
+          new Rectangle(imageWidth, imageHeight),
+        ),
+        scale,
+        minScale: scale,
+        imagePos: {
+          x: imagePosX,
+          y: imagePosY,
+        } as Vector2,
+      };
+      return component;
+    };
+
+    it('should export 0,0 for non-dragged image', () => {
+      const component = setup();
+      const pos = component.exportImagePos();
+      expect(pos).toEqual({
+        x: 0,
+        y: 0,
+      });
+    });
+
+    it('should export positive values when image panned', () => {
+      const component = setup(
+        defaultTestImageWidth * -1 + containerPadding.x,
+        containerPadding.y,
+      );
+      const pos = component.exportImagePos();
+      expect(pos).toEqual({
+        x: 100,
+        y: 0,
+      });
     });
   });
 });

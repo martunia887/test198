@@ -12,6 +12,7 @@ import {
   Ellipsify,
   Camera,
   Rectangle,
+  Bounds,
   Vector2,
   messages,
 } from '@atlaskit/media-ui';
@@ -138,11 +139,10 @@ export class ImageNavigator extends Component<
   };
 
   onMouseUp = () => {
-    const { imagePos, scale } = this.state;
     this.setState({
       isDragging: false,
     });
-    this.exportImagePos(imagePos.scaled(scale).map(Math.round));
+    this.exportImagePos();
   };
 
   /**
@@ -173,7 +173,7 @@ export class ImageNavigator extends Component<
 
     const haveRenderedImage = !!camera.originalImg.width;
     if (haveRenderedImage) {
-      this.exportImagePos(constrainedPos.scaled(1 / constrainedScale));
+      this.exportImagePos();
       this.exportSize(constrainedScale);
     }
   };
@@ -222,15 +222,24 @@ export class ImageNavigator extends Component<
     this.props.onSizeChanged(size);
   }
 
-  exportImagePos(pos: Vector2): void {
-    const { scale } = this.state;
-    const exported = pos
-      .scaled(scale)
-      .sub(containerPadding)
-      .scaled(1.0 / scale)
-      .map(Math.abs)
-      .map(Math.round);
-    this.props.onPositionChanged(exported.x, exported.y);
+  exportImagePos() {
+    const { imagePos, camera, scale } = this.state;
+    const {
+      originalImg: { width: imageWidth, height: imageHeight },
+    } = camera;
+    const margin = containerPadding.x;
+    const imageBounds = new Bounds(
+      imagePos.x - margin,
+      imagePos.y - margin,
+      imageWidth * scale,
+      imageHeight * scale,
+    );
+    const hPos = Math.abs(imageBounds.left) / imageBounds.width;
+    const vPos = Math.abs(imageBounds.top) / imageBounds.height;
+    const localX = Math.round(imageWidth * hPos);
+    const localY = Math.round(imageHeight * vPos);
+    this.props.onPositionChanged(localX, localY);
+    return { x: localX, y: localY };
   }
 
   validateFile(imageFile: File): string | null {
