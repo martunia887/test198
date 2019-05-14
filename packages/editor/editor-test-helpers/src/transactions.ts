@@ -8,10 +8,10 @@ import { RefsNode, Refs, coerce, offsetRefs } from './schema-builder';
 export function insertText(
   view: EditorView,
   text: string,
-  from: number,
+  from?: number,
   to?: number,
 ) {
-  let pos = from;
+  let pos = typeof from === 'number' ? from : view.state.selection.from;
 
   text.split('').forEach((character, index) => {
     if (
@@ -28,8 +28,9 @@ export function insertText(
 
 export type BuilderContent = (schema: Schema) => RefsNode | RefsNode[];
 
-const processText = (schema, content: Array<string>) => coerce(content, schema);
-const processNodeMark = (schema, content: BuilderContent) => {
+const processText = (schema: Schema, content: Array<string>) =>
+  coerce(content, schema);
+const processNodeMark = (schema: Schema, content: BuilderContent) => {
   const nodes = content(schema);
   const refs = ([] as RefsNode[])
     .concat(nodes)

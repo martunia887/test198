@@ -1,4 +1,9 @@
-import { createEditor, doc, p, status } from '@atlaskit/editor-test-helpers';
+import {
+  createEditorFactory,
+  doc,
+  p,
+  status,
+} from '@atlaskit/editor-test-helpers';
 import statusPlugin from '../../../../plugins/status';
 import { pluginKey } from '../../../../plugins/status/plugin';
 import {
@@ -7,8 +12,11 @@ import {
   setStatusPickerAt,
   updateStatus,
 } from '../../../../plugins/status/actions';
+import { EditorView } from 'prosemirror-view';
 
 describe('status plugin: actions', () => {
+  const createEditor = createEditorFactory();
+
   const editor = (doc: any) => {
     return createEditor({
       doc,
@@ -118,7 +126,7 @@ describe('status plugin: actions', () => {
         localId: '666',
       })(editorView);
 
-      expect(editorView.state.doc).toEqualDocument(
+      expect(editorView.state.tr.doc).toEqualDocument(
         doc(
           p(
             '',
@@ -273,7 +281,7 @@ describe('status plugin: actions', () => {
   });
 
   describe('picker autofocus', () => {
-    const insert = editorView => node => {
+    const insert = (editorView: EditorView) => (node: any) => {
       const { tr, selection } = editorView.state;
       tr.insert(selection.from, node);
       return tr;

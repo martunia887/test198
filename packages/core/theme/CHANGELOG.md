@@ -1,5 +1,125 @@
 # @atlaskit/theme
 
+## 9.0.1
+- [patch] [d5f0e7d767](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d5f0e7d767):
+
+  - Adds missing type def to typings for the /component.ts entrypoint
+
+## 9.0.0
+- [major] [7c17b35107](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7c17b35107):
+
+  - Updates react and react-dom peer dependencies to react@^16.8.0 and react-dom@^16.8.0. To use this package, please ensure you use at least this version of react and react-dom.
+
+## 8.1.9
+- [patch] [e0e3fabf8e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e0e3fabf8e):
+
+  - Change button to use theme's multiple entry points. This should reduce the bundle size of button
+
+## 8.1.8
+- [patch] [453838d3c5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/453838d3c5):
+
+  - Removes an import which referes to the old entry point of this component. Bundle size should now be slightly smaller
+
+## 8.1.7
+- [patch] [9c0b4744be](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9c0b4744be):
+
+  - Crucial bugfix: Fixes problem where default theme was undefined in production builds. This caused styles to not be applied to components.
+
+## 8.1.6
+- Updated dependencies [1e826b2966](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1e826b2966):
+  - @atlaskit/docs@7.0.2
+  - @atlaskit/section-message@2.0.2
+  - @atlaskit/button@12.0.0
+
+## 8.1.5
+- [patch] [9ac668e13d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9ac668e13d):
+
+  - Release math js as a module
+
+## 8.1.4
+- [patch] [4368278bb4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4368278bb4):
+
+  - Added components entry point allowing consumers to pull in just what they need out of theme (smaller bundle sizes!)
+
+  ```
+  import { N500, N0 } from '@atlaskit/theme/colors';
+  import { focusRing } from '@atlaskit/theme/constants';
+  import { withTheme } from '@atlaskit/theme/components';
+  ```
+
+## 8.1.3
+- [patch] [b4732a178b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b4732a178b):
+
+  - Fixing incorrect z-index for navigation-next and inline dialog
+
+## 8.1.2
+- [patch] [0f17bb7c20](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0f17bb7c20):
+
+  - Theme TypeScript annotations are now exported as a module declaration.
+
+## 8.1.1
+- [patch] [7fe933beaa](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7fe933beaa):
+
+  - Adds missing typescript annotations
+
+## 8.1.0
+- [minor] [a561af5fc6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a561af5fc6):
+
+  - Theme now exports top-level type definition for TS users
+
+## 8.0.2
+- [patch] [5150860405](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5150860405):
+
+  - Updates Theme.Context prop type definiton
+
+## 8.0.1
+- Updated dependencies [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+  - @atlaskit/docs@7.0.1
+  - @atlaskit/section-message@2.0.1
+  - @atlaskit/button@11.0.0
+
+## 8.0.0
+- [major] [76299208e6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/76299208e6):
+
+  - Drop ES5 from all the flow modules
+
+  ### Dropping CJS support in all @atlaskit packages
+
+  As a breaking change, all @atlaskit packages will be dropping cjs distributions and will only distribute esm. This means all distributed code will be transpiled, but will still contain `import` and
+  `export` declarations.
+
+  The major reason for doing this is to allow us to support multiple entry points in packages, e.g:
+
+  ```js
+  import colors from `@atlaskit/theme/colors`;
+  ```
+
+  Previously this was sort of possible for consumers by doing something like:
+
+  ```js
+  import colors from `@atlaskit/theme/dist/esm/colors`;
+  ```
+
+  This has a couple of issues. 1, it treats the file system as API making internal refactors harder, we have to worry about how consumers might be using things that aren't *actually* supposed to be used. 2. We are unable to do this *internally* in @atlaskit packages. This leads to lots of packages bundling all of theme, just to use a single color, especially in situations where tree shaking fails.
+
+  To support being able to use multiple entrypoints internally, we unfortunately cannot have multiple distributions as they would need to have very different imports from of their own internal dependencies.
+
+  ES Modules are widely supported by all modern bundlers and can be worked around in node environments.
+
+  We may choose to revisit this solution in the future if we find any unintended condequences, but we see this as a pretty sane path forward which should lead to some major bundle size decreases, saner API's and simpler package architecture.
+
+  Please reach out to #fabric-build (if in Atlassian) or create an issue in [Design System Support](https://ecosystem.atlassian.net/secure/CreateIssue.jspa?pid=24670) (for external) if you have any questions or queries about this.
+
+## 7.0.5
+- [patch] [b46504d2e4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b46504d2e4):
+
+  - Fixed example docs
+
+## 7.0.4
+- [patch] [1a98f74](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1a98f74):
+
+  - Added the missing unit to box-shadow for focus ring styles
+
 ## 7.0.3
 - [patch] [899fac7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/899fac7):
 

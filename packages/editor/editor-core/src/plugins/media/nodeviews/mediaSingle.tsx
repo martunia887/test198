@@ -1,26 +1,35 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { Node as PMNode } from 'prosemirror-model';
-import { EditorView, NodeView } from 'prosemirror-view';
-import { MediaSingleLayout } from '@atlaskit/adf-schema';
-import { MediaSingle, WithProviders } from '@atlaskit/editor-common';
+import { EditorView, Decoration } from 'prosemirror-view';
+import {
+  MediaSingleLayout,
+  MediaAttributes,
+  ExternalMediaAttributes,
+} from '@atlaskit/adf-schema';
+import {
+  MediaSingle,
+  WithProviders,
+  DEFAULT_IMAGE_HEIGHT,
+  DEFAULT_IMAGE_WIDTH,
+  browser,
+} from '@atlaskit/editor-common';
 import { CardEvent } from '@atlaskit/media-card';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { stateKey, MediaPluginState } from '../pm-plugins/main';
-import ReactNodeView from '../../../nodeviews/ReactNodeView';
+import { SelectionBasedNodeView } from '../../../nodeviews/ReactNodeView';
 import MediaItem from './media';
 import WithPluginState from '../../../ui/WithPluginState';
 import { pluginKey as widthPluginKey } from '../../width';
-import { stateKey as reactNodeViewStateKey } from '../../../plugins/base/pm-plugins/react-nodeview';
 import { setNodeSelection } from '../../../utils';
 import ResizableMediaSingle from '../ui/ResizableMediaSingle';
 import { createDisplayGrid } from '../../../plugins/grid';
 import { EventDispatcher } from '../../../event-dispatcher';
-import { MediaStateStatus } from '../types';
+import { MediaProvider } from '../types';
 import { EditorAppearance } from '../../../types';
-
-const DEFAULT_WIDTH = 250;
-const DEFAULT_HEIGHT = 200;
+import { Context } from '@atlaskit/media-core';
+import { PortalProviderAPI } from '../../../ui/PortalProvider';
+import { NodeSelection } from 'prosemirror-state';
 
 export interface MediaSingleNodeProps {
   node: PMNode;
@@ -31,12 +40,14 @@ export interface MediaSingleNodeProps {
   getPos: () => number;
   lineLength: number;
   editorAppearance: EditorAppearance;
+  mediaProvider?: Promise<MediaProvider>;
+  fullWidthMode?: boolean;
 }
 
 export interface MediaSingleNodeState {
   width?: number;
   height?: number;
-  lastMediaStatus?: MediaStateStatus;
+  viewContext?: Context;
 }
 
 export default class MediaSingleNode extends Component<
@@ -48,43 +59,88 @@ export default class MediaSingleNode extends Component<
   state = {
     height: undefined,
     width: undefined,
-    lastMediaStatus: undefined,
+    viewContext: undefined,
   };
 
-  constructor(props) {
+  constructor(props: MediaSingleNodeProps) {
     super(props);
     this.mediaPluginState = stateKey.getState(
       this.props.view.state,
     ) as MediaPluginState;
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (
-      this.props.node.attrs.width !== nextProps.node.attrs.width ||
-      this.props.selected() !== nextProps.selected() ||
-      this.props.node.attrs.layout !== nextProps.node.attrs.layout ||
-      this.props.width !== nextProps.width ||
-      this.props.lineLength !== nextProps.lineLength ||
-      this.props.getPos !== nextProps.getPos ||
-      this.mediaChildHasUpdated(nextProps) ||
-      this.hasMediaStateUpdated(nextProps)
-    ) {
-      return true;
+  async componentDidMount() {
+    const mediaProvider = await this.props.mediaProvider;
+    if (mediaProvider) {
+      const viewContext = await mediaProvider.viewContext;
+      this.setState({
+        viewContext,
+      });
     }
-    return false;
+    const updatedDimensions = await this.getRemoteDimensions();
+    if (updatedDimensions) {
+      this.mediaPluginState.updateMediaNodeAttrs(
+        updatedDimensions.id,
+        {
+          height: updatedDimensions.height,
+          width: updatedDimensions.width,
+        },
+        true,
+      );
+    }
   }
 
-  componentDidUpdate() {
-    const { layout } = this.props.node.attrs;
-    if (this.props.selected()) {
-      this.mediaPluginState.updateLayout(layout);
+  async getRemoteDimensions(): Promise<
+    false | { id: string; height: number; width: number }
+  > {
+    const mediaProvider = await this.props.mediaProvider;
+    const { firstChild } = this.props.node;
+    if (!mediaProvider || !firstChild) {
+      return false;
     }
-    this.setState({
-      lastMediaStatus: this.getMediaNodeStatus(this.props.node.firstChild),
+    const { height, type, width } = firstChild.attrs as
+      | MediaAttributes
+      | ExternalMediaAttributes;
+    if (type === 'external') {
+      return false;
+    }
+    const { id, collection } = firstChild.attrs as MediaAttributes;
+    if (height && width) {
+      return false;
+    }
+
+    // can't fetch remote dimensions on mobile, so we'll default them
+    if (this.props.editorAppearance === 'mobile') {
+      return {
+        id,
+        height: DEFAULT_IMAGE_HEIGHT,
+        width: DEFAULT_IMAGE_WIDTH,
+      };
+    }
+
+    const viewContext = await mediaProvider.viewContext;
+    const state = await viewContext.getImageMetadata(id, {
+      collection,
     });
+
+    if (!state || !state.original) {
+      return false;
+    }
+
+    return {
+      id,
+      height: state.original.height || DEFAULT_IMAGE_HEIGHT,
+      width: state.original.width || DEFAULT_IMAGE_WIDTH,
+    };
   }
 
-  private onExternalImageLoaded = ({ width, height }) => {
+  private onExternalImageLoaded = ({
+    width,
+    height,
+  }: {
+    width: number;
+    height: number;
+  }) => {
     this.setState(
       {
         width,
@@ -96,40 +152,11 @@ export default class MediaSingleNode extends Component<
     );
   };
 
-  private getMediaNodeStatus = (childNode?: PMNode | null) => {
-    if (childNode) {
-      const state = this.mediaPluginState.getMediaNodeState(
-        childNode.attrs.__key,
-      );
-      return state && state.status;
-    }
-    return undefined;
-  };
-
-  private hasMediaStateUpdated = (nextProps: MediaSingleNodeProps) => {
-    return (
-      this.getMediaNodeStatus(nextProps.node.firstChild) !==
-      this.state.lastMediaStatus
-    );
-  };
-
-  private mediaChildHasUpdated = nextProps => {
-    if (!this.props.node.firstChild || !nextProps.node.firstChild) {
-      return false;
-    }
-
-    return (
-      this.props.node.firstChild.attrs.collection !==
-        nextProps.node.firstChild.attrs.collection ||
-      this.props.node.firstChild.attrs.id !== nextProps.node.firstChild.attrs.id
-    );
-  };
-
   selectMediaSingle = ({ event }: CardEvent) => {
     // We need to call "stopPropagation" here in order to prevent the browser from navigating to
     // another URL if the media node is wrapped in a link mark.
     event.stopPropagation();
-    setNodeSelection(this.props.view, this.props.getPos() + 1);
+    setNodeSelection(this.props.view, this.props.getPos());
   };
 
   updateSize = (width: number | null, layout: MediaSingleLayout) => {
@@ -154,9 +181,8 @@ export default class MediaSingleNode extends Component<
       node,
       view: { state },
       editorAppearance,
+      fullWidthMode,
     } = this.props;
-
-    const { lastMediaStatus } = this.state;
 
     const { layout, width: mediaSingleWidth } = node.attrs;
     const childNode = node.firstChild!;
@@ -167,31 +193,27 @@ export default class MediaSingleNode extends Component<
       const { width: stateWidth, height: stateHeight } = this.state;
 
       if (width === null) {
-        width = stateWidth || DEFAULT_WIDTH;
+        width = stateWidth || DEFAULT_IMAGE_WIDTH;
       }
 
       if (height === null) {
-        height = stateHeight || DEFAULT_HEIGHT;
+        height = stateHeight || DEFAULT_IMAGE_HEIGHT;
       }
     }
 
-    const isLoading = lastMediaStatus ? lastMediaStatus !== 'ready' : false;
-    let canResize = !!this.mediaPluginState.options.allowResizing && !isLoading;
+    let canResize = !!this.mediaPluginState.options.allowResizing;
 
     const pos = getPos();
     if (pos) {
       const $pos = state.doc.resolve(pos);
-      const { table, layoutSection } = state.schema.nodes;
-      const disabledNode = !!findParentNodeOfTypeClosestToPos($pos, [
-        table,
-        layoutSection,
-      ]);
+      const { table } = state.schema.nodes;
+      const disabledNode = !!findParentNodeOfTypeClosestToPos($pos, [table]);
       canResize = canResize && !disabledNode;
     }
 
     if (width === null || height === null) {
-      width = DEFAULT_WIDTH;
-      height = DEFAULT_HEIGHT;
+      width = DEFAULT_IMAGE_WIDTH;
+      height = DEFAULT_IMAGE_HEIGHT;
     }
 
     const cardWidth = this.props.width;
@@ -205,7 +227,6 @@ export default class MediaSingleNode extends Component<
       layout,
       width,
       height,
-      isLoading,
 
       containerWidth: this.props.width,
       lineLength: this.props.lineLength,
@@ -213,34 +234,29 @@ export default class MediaSingleNode extends Component<
     };
 
     const MediaChild = (
-      <WithProviders
-        providers={['mediaProvider']}
-        providerFactory={this.mediaPluginState.options.providerFactory}
-        renderNode={({ mediaProvider }) => {
-          return (
-            <MediaItem
-              node={childNode}
-              view={this.props.view}
-              getPos={this.props.getPos}
-              cardDimensions={cardDimensions}
-              mediaProvider={mediaProvider}
-              selected={selected()}
-              onClick={this.selectMediaSingle}
-              onExternalImageLoaded={this.onExternalImageLoaded}
-              editorAppearance={editorAppearance}
-            />
-          );
-        }}
+      <MediaItem
+        node={childNode}
+        view={this.props.view}
+        getPos={this.props.getPos}
+        cardDimensions={cardDimensions}
+        viewContext={this.state.viewContext}
+        selected={selected()}
+        onClick={this.selectMediaSingle}
+        onExternalImageLoaded={this.onExternalImageLoaded}
+        editorAppearance={editorAppearance}
       />
     );
 
     return canResize ? (
       <ResizableMediaSingle
         {...props}
+        view={this.props.view}
         getPos={getPos}
+        fullWidthMode={fullWidthMode}
         updateSize={this.updateSize}
         displayGrid={createDisplayGrid(this.props.eventDispatcher)}
         gridSize={12}
+        viewContext={this.state.viewContext}
         state={this.props.view.state}
         appearance={this.mediaPluginState.options.appearance}
         selected={this.props.selected()}
@@ -253,42 +269,128 @@ export default class MediaSingleNode extends Component<
   }
 }
 
-class MediaSingleNodeView extends ReactNodeView {
-  render(props, forwardRef) {
-    const { eventDispatcher, editorAppearance } = this.reactComponentProps;
+class MediaSingleNodeView extends SelectionBasedNodeView {
+  lastOffsetLeft = 0;
+  forceViewUpdate = false;
+
+  createDomRef(): HTMLElement {
+    const domRef = document.createElement('div');
+    if (browser.chrome) {
+      // workaround Chrome bug in https://product-fabric.atlassian.net/browse/ED-5379
+      // see also: https://github.com/ProseMirror/prosemirror/issues/884
+      domRef.contentEditable = 'true';
+    }
+    return domRef;
+  }
+
+  viewShouldUpdate(nextNode: PMNode) {
+    if (this.forceViewUpdate) {
+      this.forceViewUpdate = false;
+      return true;
+    }
+
+    if (this.node.attrs !== nextNode.attrs) {
+      return true;
+    }
+
+    return super.viewShouldUpdate(nextNode);
+  }
+
+  getNodeMediaId(node: PMNode): string | undefined {
+    if (node.firstChild) {
+      return node.firstChild.attrs.id;
+    }
+    return undefined;
+  }
+
+  update(
+    node: PMNode,
+    decorations: Decoration[],
+    isValidUpdate?: (currentNode: PMNode, newNode: PMNode) => boolean,
+  ) {
+    if (!isValidUpdate) {
+      isValidUpdate = (currentNode, newNode) =>
+        this.getNodeMediaId(currentNode) === this.getNodeMediaId(newNode);
+    }
+    return super.update(node, decorations, isValidUpdate);
+  }
+
+  render() {
+    const {
+      eventDispatcher,
+      editorAppearance,
+      fullWidthMode,
+    } = this.reactComponentProps;
+    const mediaPluginState = stateKey.getState(
+      this.view.state,
+    ) as MediaPluginState;
+
     return (
-      <WithPluginState
-        editorView={this.view}
-        plugins={{
-          width: widthPluginKey,
-          reactNodeViewState: reactNodeViewStateKey,
-        }}
-        render={({ width, reactNodeViewState }) => {
+      <WithProviders
+        providers={['mediaProvider']}
+        providerFactory={mediaPluginState.options.providerFactory}
+        renderNode={({ mediaProvider }) => {
           return (
-            <MediaSingleNode
-              width={width.width}
-              lineLength={width.lineLength}
-              node={this.node}
-              getPos={this.getPos}
-              view={this.view}
-              selected={() => this.getPos() + 1 === reactNodeViewState}
-              eventDispatcher={eventDispatcher}
-              editorAppearance={editorAppearance}
+            <WithPluginState
+              editorView={this.view}
+              plugins={{
+                width: widthPluginKey,
+              }}
+              render={({ width }) => {
+                const { selection } = this.view.state;
+                const isSelected = () =>
+                  this.isSelectionInsideNode(selection.from, selection.to) ||
+                  (selection instanceof NodeSelection &&
+                    selection.from === this.getPos());
+
+                return (
+                  <MediaSingleNode
+                    width={width.width}
+                    lineLength={width.lineLength}
+                    node={this.node}
+                    getPos={this.getPos}
+                    mediaProvider={mediaProvider}
+                    view={this.view}
+                    fullWidthMode={fullWidthMode}
+                    selected={isSelected}
+                    eventDispatcher={eventDispatcher}
+                    editorAppearance={editorAppearance}
+                  />
+                );
+              }}
             />
           );
         }}
       />
     );
   }
+
+  ignoreMutation() {
+    // DOM has changed; recalculate if we need to re-render
+    if (this.dom) {
+      const offsetLeft = this.dom.offsetLeft;
+
+      if (offsetLeft !== this.lastOffsetLeft) {
+        this.lastOffsetLeft = offsetLeft;
+        this.forceViewUpdate = true;
+
+        this.update(this.node, [], () => true);
+      }
+    }
+
+    return true;
+  }
 }
 
 export const ReactMediaSingleNode = (
-  portalProviderAPI,
-  eventDispatcher,
-  editorAppearance,
-) => (node: PMNode, view: EditorView, getPos: () => number): NodeView => {
+  portalProviderAPI: PortalProviderAPI,
+  eventDispatcher: EventDispatcher,
+  editorAppearance?: EditorAppearance,
+  fullWidthMode?: boolean,
+) => (node: PMNode, view: EditorView, getPos: () => number) => {
   return new MediaSingleNodeView(node, view, getPos, portalProviderAPI, {
     eventDispatcher,
     editorAppearance,
+    fullWidthMode,
   }).init();
 };

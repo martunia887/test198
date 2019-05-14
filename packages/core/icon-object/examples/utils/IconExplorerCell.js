@@ -42,12 +42,15 @@ type Props = {
 
 class IconExplorerCell extends Component<Props, { isModalOpen: boolean }> {
   props: Props;
+
   state = {
     isModalOpen: false,
   };
 
   ref: ?ElementRef<typeof FieldTextStateless>;
+
   input: ?HTMLInputElement;
+
   importCodeField: ?HTMLElement;
 
   setInputRef = (ref: ?ElementRef<typeof FieldTextStateless>) => {
@@ -95,12 +98,14 @@ class IconExplorerCell extends Component<Props, { isModalOpen: boolean }> {
         {this.state.isModalOpen ? (
           <Modal
             onClose={this.closeModal}
-            header={() => (
-              <IconModalHeader>
-                <Icon label={props.componentName} size="medium" />
-                {props.componentName}
-              </IconModalHeader>
-            )}
+            components={{
+              Header: () => (
+                <IconModalHeader>
+                  <Icon label={props.componentName} size="medium" />
+                  {props.componentName}
+                </IconModalHeader>
+              ),
+            }}
             actions={[
               {
                 text: 'Copy',

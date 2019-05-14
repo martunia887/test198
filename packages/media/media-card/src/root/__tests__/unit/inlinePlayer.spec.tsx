@@ -2,21 +2,30 @@ import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { Observable } from 'rxjs';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
-import { InlinePlayer, InlinePlayerProps } from '../../../root/inlinePlayer';
-import { FileIdentifier } from '../../../root/domain';
-import { CardLoading } from '../../../utils';
+import { MediaFileArtifacts } from '@atlaskit/media-store';
+import { FileIdentifier, FileState } from '@atlaskit/media-core';
+import {
+  InlinePlayer,
+  InlinePlayerProps,
+  getPreferredVideoArtifact,
+} from '../../../root/inlinePlayer';
+import { CardLoading } from '../../../utils/lightCards/cardLoading';
 import { InlinePlayerWrapper } from '../../../root/styled';
 
 describe('<InlinePlayer />', () => {
-  const setup = (props?: Partial<InlinePlayerProps>) => {
+  const defaultArtifact: MediaFileArtifacts = {
+    'video_1280.mp4': { processingStatus: 'succeeded', url: '' },
+  };
+  const setup = (
+    props?: Partial<InlinePlayerProps>,
+    artifacts: MediaFileArtifacts = defaultArtifact,
+  ) => {
     const context = {
       file: {
         getFileState: jest.fn().mockReturnValue(
           Observable.of({
             status: 'processed',
-            artifacts: {
-              'video_1280.mp4': {},
-            },
+            artifacts,
           }),
         ),
         getArtifactURL: jest.fn().mockReturnValue('some-url'),
@@ -83,15 +92,14 @@ describe('<InlinePlayer />', () => {
   });
 
   it('should use local preview if available', async () => {
+    const blob = new Blob([], { type: 'video/mp4' });
     const context = {
       file: {
         getFileState: jest.fn().mockReturnValue(
           Observable.of({
             status: 'uploading',
             preview: {
-              blob: {
-                type: 'video/mp4',
-              },
+              value: blob,
             },
           }),
         ),
@@ -100,6 +108,7 @@ describe('<InlinePlayer />', () => {
     const { component } = setup({ context });
 
     await update(component);
+
     expect(component.find(CustomMediaPlayer).prop('src')).toEqual(
       'mock result of URL.createObjectURL()',
     );
@@ -111,10 +120,81 @@ describe('<InlinePlayer />', () => {
     await update(component);
     expect(context.file.getArtifactURL).toBeCalledTimes(1);
     expect(context.file.getArtifactURL).toBeCalledWith(
-      { 'video_1280.mp4': {} },
+      {
+        'video_1280.mp4': {
+          processingStatus: 'succeeded',
+          url: '',
+        },
+      },
       'video_1280.mp4',
       'some-collection',
     );
     expect(component.find(CustomMediaPlayer).prop('src')).toEqual('some-url');
+  });
+
+  it('should use sd artifact if hd one is not present', async () => {
+    const { component, context } = setup(undefined, {
+      'video_640.mp4': {
+        processingStatus: 'succeeded',
+        url: '',
+      },
+    });
+
+    await update(component);
+    expect(context.file.getArtifactURL).toBeCalledTimes(1);
+    expect(context.file.getArtifactURL).toBeCalledWith(
+      {
+        'video_640.mp4': {
+          processingStatus: 'succeeded',
+          url: '',
+        },
+      },
+      'video_640.mp4',
+      'some-collection',
+    );
+    expect(component.find(CustomMediaPlayer).prop('src')).toEqual('some-url');
+  });
+
+  describe('getPreferredVideoArtifact()', () => {
+    it('should return hd artifact if present', () => {
+      const state = {
+        status: 'processed',
+        artifacts: {
+          'video_1280.mp4': {},
+          'video_640.mp4': {},
+        },
+      };
+
+      expect(getPreferredVideoArtifact(state as FileState)).toEqual(
+        'video_1280.mp4',
+      );
+    });
+
+    it('should fallback to sd artifact if hd is not present', () => {
+      const state = {
+        status: 'processed',
+        artifacts: {
+          'audio.mp3': {},
+          'video_640.mp4': {},
+        },
+      };
+
+      expect(getPreferredVideoArtifact(state as FileState)).toEqual(
+        'video_640.mp4',
+      );
+    });
+
+    it('should work with processing status', () => {
+      const state = {
+        status: 'processing',
+        artifacts: {
+          'video_1280.mp4': {},
+        },
+      };
+
+      expect(getPreferredVideoArtifact(state as FileState)).toEqual(
+        'video_1280.mp4',
+      );
+    });
   });
 });

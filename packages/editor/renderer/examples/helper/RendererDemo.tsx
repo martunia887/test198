@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+/* eslint-disable no-console */
 import * as React from 'react';
 import {
   profilecard as profilecardUtils,
@@ -6,11 +6,12 @@ import {
   taskDecision,
 } from '@atlaskit/util-data-test';
 import { CardEvent } from '@atlaskit/media-card';
-import { defaultSchema } from '@atlaskit/adf-schema';
+import { defaultSchema, ActionMarkAction } from '@atlaskit/adf-schema';
 import {
   CardSurroundings,
   ProviderFactory,
   ExtensionHandlers,
+  EventHandlers,
 } from '@atlaskit/editor-common';
 import Button from '@atlaskit/button';
 import {
@@ -19,27 +20,27 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import * as Clock from 'react-live-clock';
 
-import { document } from './story-data';
+import { document as storyDataDocument } from './story-data';
 import {
   default as Renderer,
   Props as RendererProps,
-  RendererAppearance,
 } from '../../src/ui/Renderer';
 
-import { AkProfileClient, modifyResponse } from '@atlaskit/profilecard';
+import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
 
 import { EmailSerializer, renderDocument, TextSerializer } from '../../src';
 
 import Sidebar, { getDefaultShowSidebarState } from './NavigationNext';
+import { RendererAppearance } from '../../src/ui/Renderer/types';
 
 const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;
 const MockProfileClient = getMockProfileClientUtil(
-  AkProfileClient,
+  ProfileClient,
   modifyResponse,
 );
 
 const mentionProvider = Promise.resolve({
-  shouldHighlightMention(mention) {
+  shouldHighlightMention(mention: { id: string }) {
     return mention.id === 'ABCDE-ABCDE-ABCDE-ABCDE';
   },
 });
@@ -134,7 +135,7 @@ const extensionHandlers: ExtensionHandlers = {
   },
 };
 
-const eventHandlers = {
+const eventHandlers: EventHandlers = {
   mention: {
     onClick: () => console.log('onMentionClick'),
     onMouseEnter: () => console.log('onMentionMouseEnter'),
@@ -157,7 +158,8 @@ const eventHandlers = {
     },
   },
   action: {
-    onClick: event => console.log('onClick', '[react.MouseEvent]', event),
+    onClick: (event: ActionMarkAction) =>
+      console.log('onClick', '[react.MouseEvent]', event),
   },
 };
 
@@ -178,6 +180,7 @@ export interface DemoRendererState {
   portal?: HTMLElement;
   truncated: boolean;
   showSidebar: boolean;
+  shouldUseEventHandlers: boolean;
 }
 
 export default class RendererDemo extends React.Component<
@@ -187,17 +190,19 @@ export default class RendererDemo extends React.Component<
   textSerializer = new TextSerializer(defaultSchema);
   emailSerializer = new EmailSerializer();
   emailRef?: HTMLIFrameElement;
-  inputBox: HTMLTextAreaElement | null;
+  inputBox?: HTMLTextAreaElement | null;
+  emailTextareaRef?: any;
 
   constructor(props: DemoRendererProps) {
     super(props);
 
-    const doc = !!this.props.document ? this.props.document : document;
+    const doc = !!this.props.document ? this.props.document : storyDataDocument;
 
     this.state = {
       input: JSON.stringify(doc, null, 2),
       truncated: true,
       showSidebar: getDefaultShowSidebarState(false),
+      shouldUseEventHandlers: false,
     };
   }
 
@@ -228,7 +233,7 @@ export default class RendererDemo extends React.Component<
   render() {
     return (
       <Sidebar showSidebar={this.state.showSidebar}>
-        {additionalRendererProps => (
+        {(additionalRendererProps: object) => (
           <div ref="root" style={{ padding: 20 }}>
             <fieldset style={{ marginBottom: 20 }}>
               <legend>Input</legend>
@@ -250,6 +255,22 @@ export default class RendererDemo extends React.Component<
                 value={this.state.input}
               />
               <button onClick={this.toggleSidebar}>Toggle Sidebar</button>
+              <button onClick={this.toggleEventHandlers}>
+                Toggle Event handlers
+              </button>
+              {this.props.serializer === 'email' && (
+                <span>
+                  <button onClick={this.copyHTMLToClipboard}>
+                    Copy HTML to clipboard
+                  </button>
+                  <textarea
+                    style={{ width: '0px', height: '0px' }}
+                    ref={ref => {
+                      this.emailTextareaRef = ref;
+                    }}
+                  />
+                </span>
+              )}
             </fieldset>
             {this.renderRenderer(additionalRendererProps)}
             {this.renderText()}
@@ -271,19 +292,22 @@ export default class RendererDemo extends React.Component<
 
       if (this.emailRef && this.emailRef.contentDocument && html) {
         this.emailRef.contentDocument.body.innerHTML = html;
+        this.emailTextareaRef.value = html;
       }
     } catch (ex) {
+      console.error(ex);
       // pass
     }
   }
 
-  private toggleTruncated(e) {
+  private toggleTruncated(e: React.MouseEvent<HTMLElement>) {
     this.setState(prevState => ({
       truncated: !prevState.truncated,
     }));
   }
 
-  private renderRenderer(additionalRendererProps) {
+  private renderRenderer(additionalRendererProps: any) {
+    const { shouldUseEventHandlers } = this.state;
     if (this.props.serializer !== 'react') {
       return null;
     }
@@ -294,7 +318,9 @@ export default class RendererDemo extends React.Component<
       };
 
       if (this.props.withProviders) {
-        props.eventHandlers = eventHandlers;
+        props.eventHandlers = shouldUseEventHandlers
+          ? eventHandlers
+          : undefined;
         props.dataProviders = providerFactory;
       }
 
@@ -323,7 +349,9 @@ export default class RendererDemo extends React.Component<
           <Button
             appearance={'link'}
             spacing={'none'}
-            onClick={e => this.toggleTruncated(e)}
+            onClick={(e: React.MouseEvent<HTMLElement>) =>
+              this.toggleTruncated(e)
+            }
           >
             {this.state.truncated ? 'Expand text' : 'Collapse text'}
           </Button>
@@ -400,6 +428,18 @@ export default class RendererDemo extends React.Component<
 
   private toggleSidebar = () => {
     this.setState(prevState => ({ showSidebar: !prevState.showSidebar }));
+  };
+
+  private toggleEventHandlers = () => {
+    this.setState(prevState => ({
+      shouldUseEventHandlers: !prevState.shouldUseEventHandlers,
+    }));
+  };
+
+  private copyHTMLToClipboard = () => {
+    if (!this.emailTextareaRef) return;
+    this.emailTextareaRef.select();
+    document.execCommand('copy');
   };
 
   private onDocumentChange = () => {

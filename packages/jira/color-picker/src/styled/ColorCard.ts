@@ -17,13 +17,16 @@ const sharedColorContainerStyles = css`
   box-sizing: border-box;
   border-radius: ${borderRadius() * 2}px;
   transition: border-color 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38);
+  background-color: transparent;
   border-color: transparent;
   padding: 0;
   cursor: pointer;
   outline: none;
 `;
 
-export const ColorCardOption = styled.div<ColorCardProps>`
+export const ColorCardOption = styled.div<
+  ColorCardProps & JSX.IntrinsicElements['div']
+>`
   ${sharedColorContainerStyles};
 
   ${props => {
@@ -33,7 +36,9 @@ export const ColorCardOption = styled.div<ColorCardProps>`
   }};
 `;
 
-export const ColorCardButton = styled.button<ColorCardProps>`
+export const ColorCardButton = styled.button<
+  ColorCardProps & JSX.IntrinsicElements['button']
+>`
   ${sharedColorContainerStyles};
 
   &:focus {

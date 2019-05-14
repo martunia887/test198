@@ -5,6 +5,7 @@ import Button from '@atlaskit/button';
 import { truncateUrlForErrorView } from '../utils';
 import { Frame } from '../Frame';
 import { IconAndTitleLayout } from '../IconAndTitleLayout';
+import { AKIconWrapper } from '../Icon';
 
 export interface InlineCardErroredViewProps {
   /** The url to display */
@@ -12,7 +13,7 @@ export interface InlineCardErroredViewProps {
   /** The error message to display */
   message: string;
   /** The optional click handler */
-  onClick?: () => void;
+  onClick?: React.EventHandler<React.MouseEvent | React.KeyboardEvent>;
   /** What to do when a user clicks "Try again" button */
   onRetry?: () => void;
   /** A flag that determines whether the card is selected in edit mode. */
@@ -22,7 +23,7 @@ export interface InlineCardErroredViewProps {
 export class InlineCardErroredView extends React.Component<
   InlineCardErroredViewProps
 > {
-  handleRetry = (event: React.MouseEvent<HTMLButtonElement>) => {
+  handleRetry = (event: React.MouseEvent<HTMLElement>) => {
     const { onRetry } = this.props;
     if (onRetry) {
       event.preventDefault();
@@ -37,13 +38,16 @@ export class InlineCardErroredView extends React.Component<
       <Frame onClick={onClick} isSelected={isSelected}>
         <IconAndTitleLayout
           icon={
-            <ErrorIcon label="error" size="medium" primaryColor={colors.R300} />
+            <AKIconWrapper>
+              <ErrorIcon
+                label="error"
+                size="small"
+                primaryColor={colors.R300}
+              />
+            </AKIconWrapper>
           }
-          title={
-            <span style={{ color: colors.R300 }}>
-              {truncateUrlForErrorView(url) + ' - ' + message.trim()}
-            </span>
-          }
+          title={truncateUrlForErrorView(url) + ' - ' + message.trim()}
+          titleColor={colors.R300}
         />{' '}
         {onRetry && (
           <Button spacing="none" appearance="link" onClick={this.handleRetry}>

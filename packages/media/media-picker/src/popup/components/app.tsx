@@ -8,17 +8,14 @@ import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import {
   UIAnalyticsEventHandlerSignature,
   ObjectType,
-} from '@atlaskit/analytics-next-types';
+} from '@atlaskit/analytics-next';
 
 import { ServiceName, State } from '../domain';
 
-import {
-  BinaryUploader as MpBinary,
-  Browser as MpBrowser,
-  Dropzone as MpDropzone,
-  UploadParams,
-  PopupConfig,
-} from '../..';
+import { BrowserImpl as MpBrowser } from '../../components/browser';
+import { DropzoneImpl as MpDropzone } from '../../components/dropzone';
+import { ClipboardImpl as MpClipboard } from '../../components/clipboard';
+import { UploadParams, PopupConfig } from '../..';
 
 /* Components */
 import Footer from './footer/footer';
@@ -44,7 +41,6 @@ import { fileUploadError } from '../actions/fileUploadError';
 import { dropzoneDropIn } from '../actions/dropzoneDropIn';
 import { dropzoneDragIn } from '../actions/dropzoneDragIn';
 import { dropzoneDragOut } from '../actions/dropzoneDragOut';
-import { MediaPicker } from '../..';
 import PassContext from './passContext';
 import {
   UploadsStartEventPayload,
@@ -58,7 +54,8 @@ import { MediaPickerPopupWrapper, SidebarWrapper, ViewWrapper } from './styled';
 import {
   DropzoneDragEnterEventPayload,
   DropzoneDragLeaveEventPayload,
-} from '../../components/dropzone';
+} from '../../components/types';
+import { LocalUploadComponent } from '../../components/localUpload';
 
 export interface AppStateProps {
   readonly selectedServiceName: ServiceName;
@@ -107,7 +104,8 @@ export interface AppState {
 export class App extends Component<AppProps, AppState> {
   private readonly mpBrowser: MpBrowser;
   private readonly mpDropzone: MpDropzone;
-  private readonly mpBinary: MpBinary;
+  private readonly mpClipboard: MpClipboard;
+  private readonly localUploader: LocalUploadComponent;
 
   constructor(props: AppProps) {
     super(props);
@@ -137,11 +135,24 @@ export class App extends Component<AppProps, AppState> {
       cacheSize: tenantContext.config.cacheSize,
     });
 
-    this.mpBrowser = MediaPicker('browser', context, {
+    this.localUploader = new LocalUploadComponent(context, {
+      uploadParams: tenantUploadParams,
+      shouldCopyFileToRecents: false,
+    });
+
+    this.localUploader.on('uploads-start', onUploadsStart);
+    this.localUploader.on('upload-preview-update', onUploadPreviewUpdate);
+    this.localUploader.on('upload-status-update', onUploadStatusUpdate);
+    this.localUploader.on('upload-processing', onUploadProcessing);
+    this.localUploader.on('upload-end', onUploadEnd);
+    this.localUploader.on('upload-error', onUploadError);
+
+    this.mpBrowser = new MpBrowser(context, {
       uploadParams: tenantUploadParams,
       shouldCopyFileToRecents: false,
       multiple: true,
     });
+
     this.mpBrowser.on('uploads-start', onUploadsStart);
     this.mpBrowser.on('upload-preview-update', onUploadPreviewUpdate);
     this.mpBrowser.on('upload-status-update', onUploadStatusUpdate);
@@ -149,7 +160,7 @@ export class App extends Component<AppProps, AppState> {
     this.mpBrowser.on('upload-end', onUploadEnd);
     this.mpBrowser.on('upload-error', onUploadError);
 
-    this.mpDropzone = MediaPicker('dropzone', context, {
+    this.mpDropzone = new MpDropzone(context, {
       uploadParams: tenantUploadParams,
       shouldCopyFileToRecents: false,
       headless: true,
@@ -163,22 +174,23 @@ export class App extends Component<AppProps, AppState> {
     this.mpDropzone.on('upload-end', onUploadEnd);
     this.mpDropzone.on('upload-error', onUploadError);
 
-    this.mpBinary = MediaPicker('binary', context, {
+    this.mpClipboard = new MpClipboard(context, {
       uploadParams: tenantUploadParams,
       shouldCopyFileToRecents: false,
     });
-    this.mpBinary.on('uploads-start', onUploadsStart);
-    this.mpBinary.on('upload-preview-update', onUploadPreviewUpdate);
-    this.mpBinary.on('upload-status-update', onUploadStatusUpdate);
-    this.mpBinary.on('upload-processing', onUploadProcessing);
-    this.mpBinary.on('upload-end', onUploadEnd);
-    this.mpBinary.on('upload-error', onUploadError);
+
+    this.mpClipboard.on('uploads-start', onUploadsStart);
+    this.mpClipboard.on('upload-preview-update', onUploadPreviewUpdate);
+    this.mpClipboard.on('upload-status-update', onUploadStatusUpdate);
+    this.mpClipboard.on('upload-processing', onUploadProcessing);
+    this.mpClipboard.on('upload-end', onUploadEnd);
+    this.mpClipboard.on('upload-error', onUploadError);
 
     onStartApp({
       onCancelUpload: uploadId => {
         this.mpBrowser.cancel(uploadId);
         this.mpDropzone.cancel(uploadId);
-        this.mpBinary.cancel(uploadId);
+        this.localUploader.cancel(uploadId);
       },
     });
   }
@@ -205,14 +217,17 @@ export class App extends Component<AppProps, AppState> {
     if (isVisible !== this.props.isVisible) {
       if (isVisible) {
         this.mpDropzone.activate();
+        this.mpClipboard.activate();
       } else {
         this.mpDropzone.deactivate();
+        this.mpClipboard.deactivate();
       }
     }
   }
 
   componentWillUnmount(): void {
     this.mpDropzone.deactivate();
+    this.mpBrowser.teardown();
   }
 
   render() {
@@ -240,7 +255,7 @@ export class App extends Component<AppProps, AppState> {
                     <Footer />
                   </ViewWrapper>
                   <Dropzone isActive={isDropzoneActive} />
-                  <MainEditorView binaryUploader={this.mpBinary} />
+                  <MainEditorView localUploader={this.localUploader} />
                 </MediaPickerPopupWrapper>
               </PassContext>
             </ModalDialog>

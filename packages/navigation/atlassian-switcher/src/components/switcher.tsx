@@ -1,0 +1,265 @@
+import * as React from 'react';
+import { Messages } from 'react-intl';
+import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next';
+import isEqual from 'lodash.isequal';
+
+import {
+  SwitcherWrapper,
+  SwitcherItem,
+  Section,
+  ManageButton,
+  Skeleton,
+  ExpandLink,
+} from '../primitives';
+import { SwitcherItemType, RecentItemType } from '../utils/links';
+
+import {
+  analyticsAttributes,
+  NavigationAnalyticsContext,
+  SWITCHER_SUBJECT,
+  RenderTracker,
+} from '../utils/analytics';
+import now from '../utils/performance-now';
+import FormattedMessage from '../primitives/formatted-message';
+import TryLozenge from '../primitives/try-lozenge';
+import { TriggerXFlowCallback } from '../types';
+import { urlToHostname } from '../utils/url-to-hostname';
+
+type SwitcherProps = {
+  messages: Messages;
+  triggerXFlow: TriggerXFlowCallback;
+  isLoading: boolean;
+  licensedProductLinks: SwitcherItemType[];
+  suggestedProductLinks: SwitcherItemType[];
+  fixedLinks: SwitcherItemType[];
+  adminLinks: SwitcherItemType[];
+  recentLinks: RecentItemType[];
+  customLinks: SwitcherItemType[];
+  manageLink?: string;
+  expandLink?: string;
+};
+
+const getAnalyticsContext = (itemsCount: number) => ({
+  ...analyticsAttributes({
+    itemsCount,
+  }),
+});
+
+const getItemAnalyticsContext = (
+  index: number,
+  id: string | null,
+  type: string,
+  href: string,
+) => ({
+  ...analyticsAttributes({
+    groupItemIndex: index,
+    itemId: id,
+    itemType: type,
+    domain: urlToHostname(href),
+  }),
+});
+
+export default class Switcher extends React.Component<SwitcherProps> {
+  mountedAt?: number;
+
+  componentDidMount() {
+    this.mountedAt = now();
+  }
+
+  shouldComponentUpdate(nextProps: SwitcherProps) {
+    return !(isEqual(this.props, nextProps) as boolean);
+  }
+
+  timeSinceMounted(): number {
+    return this.mountedAt ? Math.round(now() - this.mountedAt) : 0;
+  }
+
+  triggerXFlow = (event: any, analyticsEvent: UIAnalyticsEventInterface) => {
+    const { triggerXFlow, suggestedProductLinks } = this.props;
+    if (suggestedProductLinks.length) {
+      triggerXFlow(
+        suggestedProductLinks[0].key,
+        'atlassian-switcher',
+        event,
+        analyticsEvent,
+      );
+    }
+  };
+
+  getExpandHref = (hostname: string) => {
+    const isStagingInstance = hostname.indexOf('.jira-dev.com') !== -1;
+    return `//start.${isStagingInstance ? 'stg.' : ''}atlassian.com`;
+  };
+
+  render() {
+    const {
+      messages,
+      expandLink,
+      licensedProductLinks,
+      suggestedProductLinks,
+      fixedLinks,
+      adminLinks,
+      recentLinks,
+      customLinks,
+      manageLink,
+      isLoading,
+    } = this.props;
+
+    /**
+     * It is essential that switchToLinks reflects the order corresponding nav items
+     * are rendered below in the 'Switch to' section.
+     */
+    const switchToLinks = [
+      ...licensedProductLinks,
+      ...suggestedProductLinks,
+      ...fixedLinks,
+      ...adminLinks,
+    ];
+
+    const itemsCount =
+      switchToLinks.length + recentLinks.length + customLinks.length;
+
+    const firstContentArrived = Boolean(licensedProductLinks.length);
+
+    return (
+      <NavigationAnalyticsContext data={getAnalyticsContext(itemsCount)}>
+        <SwitcherWrapper>
+          {firstContentArrived && (
+            <RenderTracker
+              subject={SWITCHER_SUBJECT}
+              data={{ duration: this.timeSinceMounted() }}
+            />
+          )}
+          <Section
+            sectionId="switchTo"
+            title={
+              expandLink ? (
+                <ExpandLink
+                  href={expandLink}
+                  title={<FormattedMessage {...messages.switchTo} />}
+                />
+              ) : (
+                <FormattedMessage {...messages.switchTo} />
+              )
+            }
+          >
+            {licensedProductLinks.map(item => (
+              <NavigationAnalyticsContext
+                key={item.key}
+                data={getItemAnalyticsContext(
+                  switchToLinks.indexOf(item),
+                  item.key,
+                  'product',
+                  item.href,
+                )}
+              >
+                <SwitcherItem
+                  icon={<item.Icon theme="product" />}
+                  href={item.href}
+                >
+                  {item.label}
+                </SwitcherItem>
+              </NavigationAnalyticsContext>
+            ))}
+            {suggestedProductLinks.map(item => (
+              <NavigationAnalyticsContext
+                key={item.key}
+                data={getItemAnalyticsContext(
+                  switchToLinks.indexOf(item),
+                  item.key,
+                  'try',
+                  item.href,
+                )}
+              >
+                <SwitcherItem
+                  icon={<item.Icon theme="product" />}
+                  onClick={this.triggerXFlow}
+                >
+                  {item.label}
+                  <TryLozenge>
+                    <FormattedMessage {...messages.try} />
+                  </TryLozenge>
+                </SwitcherItem>
+              </NavigationAnalyticsContext>
+            ))}
+            {fixedLinks.map(item => (
+              <NavigationAnalyticsContext
+                key={item.key}
+                data={getItemAnalyticsContext(
+                  switchToLinks.indexOf(item),
+                  item.key,
+                  'product',
+                  item.href,
+                )}
+              >
+                <SwitcherItem
+                  icon={<item.Icon theme="product" />}
+                  href={item.href}
+                >
+                  {item.label}
+                </SwitcherItem>
+              </NavigationAnalyticsContext>
+            ))}
+            {adminLinks.map(item => (
+              <NavigationAnalyticsContext
+                key={item.key}
+                data={getItemAnalyticsContext(
+                  switchToLinks.indexOf(item),
+                  item.key,
+                  'admin',
+                  item.href,
+                )}
+              >
+                <SwitcherItem
+                  icon={<item.Icon theme="admin" />}
+                  href={item.href}
+                >
+                  {item.label}
+                </SwitcherItem>
+              </NavigationAnalyticsContext>
+            ))}
+          </Section>
+          <Section
+            sectionId="recent"
+            title={<FormattedMessage {...messages.recent} />}
+          >
+            {recentLinks.map(
+              ({ key, label, href, type, description, Icon }, idx) => (
+                <NavigationAnalyticsContext
+                  key={key}
+                  data={getItemAnalyticsContext(idx, type, 'recent', href)}
+                >
+                  <SwitcherItem
+                    icon={<Icon theme="recent" />}
+                    description={description}
+                    href={href}
+                  >
+                    {label}
+                  </SwitcherItem>
+                </NavigationAnalyticsContext>
+              ),
+            )}
+          </Section>
+          <Section
+            sectionId="customLinks"
+            title={<FormattedMessage {...messages.more} />}
+          >
+            {customLinks.map(({ label, href, Icon }, idx) => (
+              // todo: id in SwitcherItem should be consumed from custom link resolver
+              <NavigationAnalyticsContext
+                key={idx + '.' + label}
+                data={getItemAnalyticsContext(idx, null, 'customLink', href)}
+              >
+                <SwitcherItem icon={<Icon theme="custom" />} href={href}>
+                  {label}
+                </SwitcherItem>
+              </NavigationAnalyticsContext>
+            ))}
+          </Section>
+          {isLoading && <Skeleton />}
+          {manageLink && <ManageButton href={manageLink} />}
+        </SwitcherWrapper>
+      </NavigationAnalyticsContext>
+    );
+  }
+}

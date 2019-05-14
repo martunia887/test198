@@ -5,11 +5,10 @@ import { Transformer } from '@atlaskit/editor-common';
 import {
   compose,
   getEditorValueWithMedia,
-  insertFileFromDataUrl as insertFileFromUrl,
   toJSON,
-  removeQueryMarksFromJSON,
   processRawValue,
 } from '../utils';
+import { sanitizeNode } from '../utils/filter/node-filter';
 import { EventDispatcher } from '../event-dispatcher';
 import { safeInsert } from 'prosemirror-utils';
 
@@ -26,7 +25,6 @@ export interface EditorActionsOptions {
   replaceDocument(rawValue: any): boolean;
   replaceSelection(rawValue: Node | Object | string): boolean;
   appendText(text: string): boolean;
-  insertFileFromDataUrl(url: string, filename: string): boolean;
 }
 
 export default class EditorActions implements EditorActionsOptions {
@@ -141,7 +139,7 @@ export default class EditorActions implements EditorActionsOptions {
     }
 
     return compose(
-      removeQueryMarksFromJSON,
+      sanitizeNode,
       toJSON,
     )(doc);
   }
@@ -217,14 +215,6 @@ export default class EditorActions implements EditorActionsOptions {
     const tr = state.tr.insertText(text).scrollIntoView();
     this.editorView.dispatch(tr);
 
-    return true;
-  }
-
-  insertFileFromDataUrl(url: string, filename: string): boolean {
-    if (!this.editorView) {
-      return false;
-    }
-    insertFileFromUrl(this.editorView.state, url, filename);
     return true;
   }
 }

@@ -20,6 +20,7 @@ describe('Snapshot Test', () => {
     //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
+
   it('Modal Basic example should match production example', async () => {
     const url = getExampleUrl(
       'core',
@@ -32,7 +33,9 @@ describe('Snapshot Test', () => {
     await page.goto(url);
     await page.waitForSelector(openModalBtn);
     await page.click(openModalBtn);
-    await page.waitFor(modalDialog);
+    await page.waitForSelector(modalDialog);
+    // We need to wait for the animation to finish.
+    await page.waitFor(1000);
 
     const image = await takeElementScreenShot(page, modalDialog);
     //$FlowFixMe

@@ -37,7 +37,7 @@ export const VolumeWrapper = styled.div`
 
   &:hover,
   &:active {
-    width: 159px;
+    width: 155px;
     transition: width 0.3s ease-out;
   }
 `;
@@ -176,6 +176,7 @@ export const CurrentTimeTooltip = styled.div`
   opacity: ${(props: CurrentTimeTooltipProps) =>
     props.isDragging ? '1' : '0'};
   transition: opacity 0.3s;
+  word-break: keep-all;
 `;
 
 export const TimeRangeWrapper = styled.div`

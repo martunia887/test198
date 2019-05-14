@@ -1,16 +1,17 @@
 import { AnalyticsViewerContainer } from '@atlaskit/analytics-viewer';
 import * as React from 'react';
+import { IntlProvider } from 'react-intl';
 import {
   assignToMe,
-  exampleUsers,
+  exampleOptions,
   filterUsers,
   unassigned,
 } from '../example-helpers';
-import { LoadOptions, OnInputChange, User } from '../src/types';
+import { LoadOptions, OnInputChange, OptionData } from '../src/types';
 
 type ChildrenProps = {
   loadUsers: LoadOptions;
-  users: User[];
+  options: OptionData[];
   onInputChange: OnInputChange;
 };
 
@@ -21,52 +22,58 @@ export type Props = {
 
 export class ExampleWrapper extends React.PureComponent<
   Props,
-  { users: User[] }
+  { options: OptionData[] }
 > {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
-      users: exampleUsers,
+      options: exampleOptions,
     };
   }
 
   private loadUsers = (searchText?: string) => {
     if (searchText && searchText.length > 0) {
-      return new Promise<User[]>(resolve => {
+      return new Promise<OptionData[]>(resolve => {
         window.setTimeout(() => resolve(filterUsers(searchText)), 1000);
       });
     }
     return [
       unassigned,
       assignToMe,
-      new Promise<User[]>(resolve => {
-        window.setTimeout(() => resolve(exampleUsers), 1000);
+      new Promise<OptionData[]>(resolve => {
+        window.setTimeout(() => resolve(exampleOptions), 1000);
       }),
     ];
   };
 
   private onInputChange = (searchText?: string) => {
     this.setState({
-      users:
+      options:
         searchText && searchText.length > 0
           ? filterUsers(searchText)
-          : exampleUsers,
+          : exampleOptions,
     });
   };
 
   render() {
     const { children, analytics } = this.props;
-    const { users } = this.state;
+    const { options } = this.state;
 
     const example = children({
-      users,
+      options,
       loadUsers: this.loadUsers,
       onInputChange: this.onInputChange,
     });
-    return analytics ? (
-      <AnalyticsViewerContainer>{example}</AnalyticsViewerContainer>
-    ) : (
-      example
+    return (
+      <IntlProvider locale="en">
+        <div>
+          {analytics ? (
+            <AnalyticsViewerContainer>{example}</AnalyticsViewerContainer>
+          ) : (
+            example
+          )}
+        </div>
+      </IntlProvider>
     );
   }
 }

@@ -148,6 +148,25 @@ describe('TextArea input focus', () => {
   });
 });
 
+describe('props', () => {
+  it('should pass all the extra props passed down to hidden input', () => {
+    const wrapper = mount(<TextArea data-foo="text-area-bar" />);
+    expect(wrapper.find('textarea').prop('data-foo')).toBe('text-area-bar');
+  });
+
+  it('should use forwardedRef prop when resize is smart', () => {
+    const spy = jest.fn();
+    mount(<TextArea resize="smart" forwardedRef={spy} />);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should use forwardedRef prop when resize is not smart', () => {
+    const spy = jest.fn();
+    mount(<TextArea resize="vertical" forwardedRef={spy} />);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('TextAreaWithAnalytics', () => {
   beforeEach(() => {
     jest.spyOn(global.console, 'warn');
@@ -160,9 +179,9 @@ describe('TextAreaWithAnalytics', () => {
 
   it('should mount without errors', () => {
     mount(<TextAreaWithAnalytics onChange={() => {}} />);
-    /* tslint:disable no-console */
+    /* eslint-disable no-console */
     expect(console.warn).not.toHaveBeenCalled();
     expect(console.error).not.toHaveBeenCalled();
-    /* tslint:disable no-console */
+    /* eslint-enable no-console */
   });
 });

@@ -1,8 +1,11 @@
 export default {
   plugins: [
+    'compositionPlugin',
     'inlineCursorTargetPlugin',
     'focusHandlerPlugin',
     'submitEditor',
+    'customAutoformatting',
+    'newlinePreserveMarksPlugin',
     'imageUpload',
     'imageUploadInputRule',
     'paste',
@@ -52,6 +55,7 @@ export default {
     'tableColResizing',
     'blockTypeKeyMap',
     'tableEditing',
+    'filterStepsPlugin',
     'pmCollab',
     'collab',
     'ruleInputRule',
@@ -82,6 +86,8 @@ export default {
     'maxContentSize',
     'multilineContent',
     'grid',
+    'scrollGutterPlugin',
+    'analytics',
   ],
   nodes: [
     'doc',
@@ -130,6 +136,7 @@ export default {
     'confluenceInlineComment',
     'em',
     'strong',
+    'textColor',
     'strike',
     'action',
     'subsup',
@@ -137,11 +144,11 @@ export default {
     'code',
     'typeAheadQuery',
     'emojiQuery',
-    'textColor',
 
     // Block marks
     'alignment',
     'breakout',
     'indentation',
+    'annotation',
   ],
 };

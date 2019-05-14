@@ -29,7 +29,7 @@ const webpackConfig = {
         options: {
           babelrc: true,
           rootMode: 'upward',
-          envName: 'production:cjs',
+          envName: 'production:esm',
         },
       },
     ],
@@ -39,6 +39,7 @@ const webpackConfig = {
     alias: {
       sinon: 'sinon/pkg/sinon',
     },
+    mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
   },
   externals: {
     'react/addons': true,
@@ -48,37 +49,18 @@ const webpackConfig = {
   },
 };
 
-async function getAliases(cwd) {
-  const results = await boltQuery({
-    cwd,
-    projectFiles: {
-      releases: 'releases/*.md',
-      patterns: 'patterns/**/*.{js,ts,tsx}',
-    },
-    workspaceFiles: {
-      docs: 'docs/**/*.{js,ts,tsx}',
-      examples: 'examples/**/*.{js,ts,tsx}',
-    },
-  });
-
-  return results.workspaces.reduce((acc, workspace) => {
-    if (workspace.pkg['atlaskit:src']) {
-      acc[workspace.pkg.name] = path.resolve(
-        workspace.dir,
-        workspace.pkg['atlaskit:src'],
-      );
-    }
-
-    return acc;
-  }, {});
-}
-
 async function getKarmaConfig({ cwd, watch, browserstack }) {
   const revisionInfo = await browserFetcher.download(ChromiumRevision);
   process.env.CHROME_BIN = revisionInfo.executablePath;
 
-  const aliases = await getAliases(cwd);
-  webpackConfig.resolve.alias = { ...aliases, ...webpackConfig.resolve.alias };
+  const moduleResolveMapBuilder = require('@atlaskit/multi-entry-tools/module-resolve-map-builder');
+
+  const alternativeEntries = await moduleResolveMapBuilder();
+
+  webpackConfig.resolve.alias = {
+    ...webpackConfig.resolve.alias,
+    ...alternativeEntries,
+  };
 
   const config = {
     port: 9876,
@@ -104,9 +86,15 @@ async function getKarmaConfig({ cwd, watch, browserstack }) {
     singleRun: !watch,
     concurrency: 20,
     reporters: ['mocha'],
-    browsers: [watch ? 'Chrome' : 'ChromeHeadless'],
+    browsers: [watch ? 'Chrome' : 'ChromeHeadlessNoSandbox'],
     mochaReporter: {
       showDiff: true,
+    },
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox'],
+      },
     },
     client: {
       mocha: {
@@ -123,27 +111,23 @@ async function getKarmaConfig({ cwd, watch, browserstack }) {
         os_version: '8.1',
         browser_version: '11',
       },
-      iphone: {
-        os: 'ios',
-        os_version: '11.0',
-        device: 'iPhone 8',
-        real_mobile: false,
-      },
       chrome_latest_osx: {
         browser: 'chrome',
         os: 'OS X',
         os_version: 'El Capitan',
+        browser_version: '74',
       },
       firefox_latest_windows: {
         browser: 'firefox',
         os: 'WINDOWS',
         os_version: '10',
+        browser_version: '66',
       },
       safari_latest: {
         browser: 'Safari',
         os: 'OS X',
-        os_version: 'High Sierra',
-        browser_version: '11.1',
+        os_version: 'Mojave',
+        browser_version: '12',
       },
       edge_latest: { browser: 'edge', os: 'WINDOWS', os_version: '10' },
     };

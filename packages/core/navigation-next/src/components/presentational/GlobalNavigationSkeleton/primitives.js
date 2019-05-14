@@ -13,6 +13,15 @@ const listBaseStyles = {
   width: '100%',
 };
 
+export type ContainerProps = {
+  styles: Object,
+};
+
+export const Container = (props: ContainerProps) => {
+  const { styles, ...rest } = props;
+  return <div css={styles} {...rest} />;
+};
+
 export const PrimaryItemsList = (props: *) => (
   <div css={{ ...listBaseStyles, paddingBottom: gridSize * 2 }} {...props} />
 );

@@ -4,7 +4,7 @@ import {
   code,
   p,
   strong,
-  createEditor,
+  createEditorFactory,
   panel,
   blockquote,
   h1,
@@ -27,6 +27,9 @@ import {
   isEmptyNode,
   dedupe,
   compose,
+  pipe,
+  closestElement,
+  isSelectionInsideLastNodeInDocument,
 } from '../../../utils';
 import mediaPlugin from '../../../plugins/media';
 import codeBlockPlugin from '../../../plugins/code-block';
@@ -34,8 +37,11 @@ import panelPlugin from '../../../plugins/panel';
 import listPlugin from '../../../plugins/lists';
 import mentionsPlugin from '../../../plugins/mentions';
 import tasksAndDecisionsPlugin from '../../../plugins/tasks-and-decisions';
+import { Node, Schema } from 'prosemirror-model';
 
 describe('@atlaskit/editore-core/utils', () => {
+  const createEditor = createEditorFactory();
+
   const editor = (doc: any) =>
     createEditor({
       doc,
@@ -48,6 +54,22 @@ describe('@atlaskit/editore-core/utils', () => {
         tasksAndDecisionsPlugin,
       ],
     });
+
+  describe('#closest', () => {
+    it('return first parentNode using query selector', () => {
+      const divSecondary = document.createElement('div');
+      divSecondary.setAttribute('id', 'secondary');
+
+      const div = document.createElement('div');
+      div.setAttribute('id', 'primary');
+      div.appendChild(divSecondary);
+      document.body.appendChild(div);
+
+      const result = closestElement(divSecondary, '#primary');
+      expect(result).toEqual(div);
+      div.remove();
+    });
+  });
 
   describe('#isMarkTypeAllowedInCurrentSelection', () => {
     describe('when the current node supports the given mark type', () => {
@@ -203,7 +225,7 @@ describe('@atlaskit/editore-core/utils', () => {
 
   describe('#isEmptyNode', () => {
     const { editorView } = editor(doc(p('')));
-    const checkEmptyNode = node =>
+    const checkEmptyNode = (node: (schema: Schema<any>) => Node) =>
       isEmptyNode(editorView.state.schema)(node(editorView.state.schema));
 
     it('should return true for empty paragraph', () => {
@@ -336,9 +358,9 @@ describe('@atlaskit/editore-core/utils', () => {
 
   describe('#dedupe', () => {
     it('should always return a new list', () => {
-      const l1 = [];
-      const l2 = ['a'];
-      const l3 = ['a', 'a'];
+      const l1: Array<string> = [];
+      const l2: Array<string> = ['a'];
+      const l3: Array<string> = ['a', 'a'];
       expect(dedupe(l1) !== l1).toBeTruthy();
       expect(dedupe(l2) !== l2).toBeTruthy();
       expect(dedupe(l3) !== l3).toBeTruthy();
@@ -424,6 +446,49 @@ describe('@atlaskit/editore-core/utils', () => {
     });
   });
 
+  describe('#pipe', () => {
+    it('pipes functions', () => {
+      const fn1 = (val: string) => `fn1(${val})`;
+      const fn2 = (val: string) => `fn2(${val})`;
+      const fn3 = (val: string) => `fn3(${val})`;
+
+      const pipedFunction = pipe(
+        fn1,
+        fn2,
+        fn3,
+      );
+
+      expect(pipedFunction('inner')).toBe('fn3(fn2(fn1(inner)))');
+    });
+
+    it('pipes functions with different initial type', () => {
+      const fn1 = (val: string, num: number) => `fn1(${val}-${num})`;
+      const fn2 = (val: string) => `fn2(${val})`;
+      const fn3 = (val: string) => `fn3(${val})`;
+      const pipedFunction = pipe(
+        fn1,
+        fn2,
+        fn3,
+      );
+
+      expect(pipedFunction('inner', 2)).toBe('fn3(fn2(fn1(inner-2)))');
+    });
+
+    it('pipes functions with different return value', () => {
+      const fn1 = (val: string) => Number.parseInt(val, 10);
+      const fn2 = (val: number) => ({ number: val, string: val.toString() });
+      const fn3 = (val: object) => `fn3(${JSON.stringify(val)})`;
+
+      const pipedFunction = pipe(
+        fn1,
+        fn2,
+        fn3,
+      );
+
+      expect(pipedFunction('2')).toBe('fn3({"number":2,"string":"2"})');
+    });
+  });
+
   describe('#compose', () => {
     it('should compose functions right to left', () => {
       const f1 = (a: string) => `#${a}`;
@@ -435,6 +500,27 @@ describe('@atlaskit/editore-core/utils', () => {
           f2,
         )('test'),
       ).toEqual('#!test');
+    });
+  });
+
+  describe('#isSelectionInsideLastNodeInDocument', () => {
+    it('should detect selection is inside last node in document', () => {
+      const { editorView } = editor(
+        doc(p('First Element'), p('{<>}Last Element')),
+      );
+
+      expect(
+        isSelectionInsideLastNodeInDocument(editorView.state.selection),
+      ).toBe(true);
+    });
+    it('should detect selection is not inside last element in the document', () => {
+      const { editorView } = editor(
+        doc(p('{<>}First Element'), p('Last Element')),
+      );
+
+      expect(
+        isSelectionInsideLastNodeInDocument(editorView.state.selection),
+      ).toBe(false);
     });
   });
 });

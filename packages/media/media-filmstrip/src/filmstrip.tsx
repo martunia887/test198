@@ -1,8 +1,6 @@
-/* tslint:disable variable-name */
 import * as React from 'react';
 import { Component } from 'react';
 import {
-  Identifier,
   Card,
   CardAction,
   CardOnClickCallback,
@@ -10,8 +8,9 @@ import {
   OnSelectChangeFunc,
   OnLoadingChangeFunc,
   defaultImageCardDimensions,
+  CardLoading,
 } from '@atlaskit/media-card';
-import { Context } from '@atlaskit/media-core';
+import { Context, Identifier } from '@atlaskit/media-core';
 import { FilmstripView } from './filmstripView';
 import { generateIdentifierKey } from './utils/generateIdentifierKey';
 
@@ -28,7 +27,7 @@ export interface FilmstripItem {
 
 export interface FilmstripProps {
   items: FilmstripItem[];
-  context: Context;
+  context?: Context;
 }
 
 export interface FilmstripState {
@@ -42,20 +41,29 @@ export class Filmstrip extends Component<FilmstripProps, FilmstripState> {
     offset: 0,
   };
 
-  private handleSize = ({ offset }) => this.setState({ offset });
-  private handleScroll = ({ animate, offset }) =>
+  private handleSize = ({ offset }: Pick<FilmstripState, 'offset'>) =>
+    this.setState({ offset });
+  private handleScroll = ({ animate, offset }: FilmstripState) =>
     this.setState({ animate, offset });
 
   private renderCards() {
     const { items, context } = this.props;
+
     const cards = items.map(item => {
       const key = generateIdentifierKey(item.identifier);
+
+      if (!context) {
+        return (
+          <CardLoading key={key} dimensions={defaultImageCardDimensions} />
+        );
+      }
 
       return (
         <Card
           key={key}
           context={context}
           dimensions={defaultImageCardDimensions}
+          useInlinePlayer={false}
           {...item}
         />
       );

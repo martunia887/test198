@@ -1,6 +1,7 @@
 import { Slice, Node, Schema } from 'prosemirror-model';
-import * as LinkifyIt from 'linkify-it';
+import LinkifyIt from 'linkify-it';
 import { mapSlice } from '../../utils/slice';
+import { isSafeUrl } from '@atlaskit/adf-schema';
 
 export const LINK_REGEXP = /(https?|ftp):\/\/[^\s]+/;
 
@@ -30,7 +31,7 @@ export function getLinkMatch(str: string): Match | LinkifyMatch | null {
   if (!str) {
     return null;
   }
-  let match = linkifyMatch(str);
+  let match: null | LinkifyMatch[] = linkifyMatch(str);
   if (!match.length) {
     match = linkify.match(str);
   }
@@ -47,7 +48,7 @@ export class LinkMatcher {
     if (str.endsWith(' ')) {
       const chunks = str.slice(0, str.length - 1).split(' ');
       const lastChunk = chunks[chunks.length - 1];
-      const links: Match[] = linkify.match(lastChunk);
+      const links: null | Match[] = linkify.match(lastChunk);
       if (links && links.length > 0) {
         const lastLink: Match = links[links.length - 1];
         lastLink.input = lastChunk;
@@ -62,45 +63,51 @@ export class LinkMatcher {
 /**
  * Adds protocol to url if needed.
  */
-export function normalizeUrl(url: string) {
-  if (LINK_REGEXP.test(url)) {
+export function normalizeUrl(url?: string | null) {
+  if (!url) {
+    return '';
+  }
+
+  if (isSafeUrl(url)) {
     return url;
   }
   const match = getLinkMatch(url);
-  return (match && match.url) || url;
+  return (match && match.url) || '';
 }
 
-export function linkifyContent(schema: Schema, slice: Slice): Slice {
-  return mapSlice(slice, (node, parent) => {
-    const isAllowedInParent = !parent || parent.type !== schema.nodes.codeBlock;
-    if (isAllowedInParent && node.isText) {
-      const linkified = [] as Node[];
-      const link = node.type.schema.marks['link'];
-      const text = node.text!;
-      const matches: any[] = findLinkMatches(text);
-      let pos = 0;
-      matches.forEach(match => {
-        if (match.start > 0) {
-          linkified.push(node.cut(pos, match.start));
+export function linkifyContent(schema: Schema): (slice: Slice) => Slice {
+  return (slice: Slice): Slice =>
+    mapSlice(slice, (node, parent) => {
+      const isAllowedInParent =
+        !parent || parent.type !== schema.nodes.codeBlock;
+      if (isAllowedInParent && node.isText) {
+        const linkified = [] as Node[];
+        const link = node.type.schema.marks['link'];
+        const text = node.text!;
+        const matches: any[] = findLinkMatches(text);
+        let pos = 0;
+        matches.forEach(match => {
+          if (match.start > 0) {
+            linkified.push(node.cut(pos, match.start));
+          }
+          linkified.push(
+            node
+              .cut(match.start, match.end)
+              .mark(
+                link
+                  .create({ href: normalizeUrl(match.href) })
+                  .addToSet(node.marks),
+              ),
+          );
+          pos = match.end;
+        });
+        if (pos < text.length) {
+          linkified.push(node.cut(pos));
         }
-        linkified.push(
-          node
-            .cut(match.start, match.end)
-            .mark(
-              link
-                .create({ href: normalizeUrl(match.href) })
-                .addToSet(node.marks),
-            ),
-        );
-        pos = match.end;
-      });
-      if (pos < text.length) {
-        linkified.push(node.cut(pos));
+        return linkified;
       }
-      return linkified;
-    }
-    return node;
-  });
+      return node;
+    });
 }
 
 interface LinkMatch {
@@ -112,7 +119,7 @@ interface LinkMatch {
 
 function findLinkMatches(text: string): LinkMatch[] {
   const matches: LinkMatch[] = [];
-  let linkMatches: Match[] = text && linkify.match(text);
+  let linkMatches: '' | null | Match[] = text && linkify.match(text);
   if (linkMatches && linkMatches.length > 0) {
     linkMatches.forEach(match => {
       matches.push({

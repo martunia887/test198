@@ -7,7 +7,7 @@ import {
 import {
   doc,
   p,
-  createEditor,
+  createEditorFactory,
   table,
   tr,
   tdEmpty,
@@ -19,7 +19,7 @@ import {
   hoverColumns,
   hoverRows,
   hoverTable,
-} from '../../../../plugins/table/actions';
+} from '../../../../plugins/table/commands';
 import {
   pluginKey,
   getPluginState,
@@ -28,14 +28,19 @@ import { TablePluginState } from '../../../../plugins/table/types';
 import tablesPlugin from '../../../../plugins/table';
 
 describe('table hover selection plugin', () => {
+  const createEditor = createEditorFactory<TablePluginState>();
+
   const editor = (doc: any) =>
-    createEditor<TablePluginState>({
+    createEditor({
       doc,
       editorPlugins: [tablesPlugin()],
       pluginKey,
     });
 
-  const getTableDecorations = (editorView: EditorView, cells) => {
+  const getTableDecorations = (
+    editorView: EditorView,
+    cells: Array<{ pos: number }>,
+  ) => {
     const { decorationSet }: { decorationSet: DecorationSet } = getPluginState(
       editorView.state,
     );
@@ -211,7 +216,7 @@ describe('table hover selection plugin', () => {
         ).toHaveLength(6);
 
         // reset hover selection plugin to an empty DecorationSet
-        clearHoverSelection(editorView.state, editorView.dispatch);
+        clearHoverSelection()(editorView.state, editorView.dispatch);
         expect(getPluginState(editorView.state).decorationSet).toEqual(
           DecorationSet.empty,
         );

@@ -78,9 +78,7 @@ function getData(parentItem: ?Object) {
 const tableTreeHelper = new TableTreeDataHelper({ key: 'id' });
 
 export default class WithDifferentChildComponent extends Component<*, *> {
-  state = {
-    items: [],
-  };
+  state = { items: [] };
 
   componentDidMount() {
     this.loadTableData();
@@ -115,17 +113,17 @@ export default class WithDifferentChildComponent extends Component<*, *> {
             page,
             hasChildren,
             children,
-            component: CutomComponent,
+            component: CustomComponent,
           }) =>
-            CutomComponent ? (
-              <CutomComponent
+            CustomComponent ? (
+              <CustomComponent
                 header="I am the header"
                 imageUrl={exampleImage}
               />
             ) : (
               <Row
-                expandLabel={'Expand'}
-                collapseLabel={'Collapse'}
+                expandLabel="Expand"
+                collapseLabel="Collapse"
                 itemId={numbering}
                 onExpand={this.loadTableData}
                 items={children}

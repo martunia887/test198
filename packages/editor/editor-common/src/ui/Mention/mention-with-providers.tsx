@@ -69,13 +69,14 @@ export default class MentionWithProviders extends PureComponent<Props, State> {
 
     const { profilecardProvider } = this.state;
 
-    const actionHandlers = {};
-    ['onClick', 'onMouseEnter', 'onMouseLeave'].forEach(handler => {
+    const actionHandlers: MentionEventHandlers = {} as any;
+    (['onClick', 'onMouseEnter', 'onMouseLeave'] as Array<
+      keyof MentionEventHandlers
+    >).forEach(handler => {
       actionHandlers[handler] =
         (eventHandlers && eventHandlers[handler]) || noop;
     });
 
-    // tslint:disable-next-line:variable-name
     const MentionComponent =
       profilecardProvider && GENERIC_USER_IDS.indexOf(id) === -1
         ? ResourcedMentionWithProfilecard
@@ -88,7 +89,7 @@ export default class MentionWithProviders extends PureComponent<Props, State> {
         accessLevel={accessLevel}
         userType={userType}
         mentionProvider={mentionProvider}
-        profilecardProvider={profilecardProvider}
+        profilecardProvider={profilecardProvider!}
         portal={portal}
         {...actionHandlers}
       />

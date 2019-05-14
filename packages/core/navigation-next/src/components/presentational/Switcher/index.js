@@ -122,16 +122,22 @@ const isEmpty = obj => Object.keys(obj).length === 0;
 
 class Switcher extends PureComponent<SwitcherProps, SwitcherState> {
   state = {
-    isOpen: false,
     mergedComponents: defaultComponents,
   };
+
   selectRef = React.createRef();
+
   targetRef: ElementRef<*>;
+
   targetWidth = 0;
+
   static defaultProps = {
     closeMenuOnCreate: true,
     components: {},
+    navWidth: CONTENT_NAV_WIDTH,
+    isNavResizing: false,
   };
+
   static getDerivedStateFromProps(props: SwitcherProps, state: SwitcherState) {
     const newState = {};
 
@@ -145,39 +151,32 @@ class Switcher extends PureComponent<SwitcherProps, SwitcherState> {
 
     return null;
   }
-  componentDidMount() {
-    this.setTargetWidth();
-  }
-  componentDidUpdate({ navWidth }: SwitcherProps) {
-    // reset the target width if the user has resized the navigation pane
-    if (navWidth !== this.props.navWidth) {
-      this.setTargetWidth();
+
+  componentDidUpdate({ isNavResizing }: SwitcherProps) {
+    if (
+      isNavResizing &&
+      this.selectRef.current &&
+      this.selectRef.current.state.isOpen
+    ) {
+      this.selectRef.current.close();
     }
   }
-  getTargetRef = (ref: ElementRef<*>) => {
-    this.targetRef = ref;
-  };
-  setTargetWidth = () => {
-    // best efforts if target ref fails
-    const defaultWidth = CONTENT_NAV_WIDTH - gridSize * 2;
 
-    this.targetWidth = this.targetRef
-      ? this.targetRef.clientWidth
-      : defaultWidth;
+  resolveTargetRef = (popupRef: ElementRef<*>) => (ref: HTMLElement) => {
+    // avoid thrashing fn calls
+    if (!this.targetRef && popupRef && ref) {
+      this.targetRef = ref;
+      popupRef(ref);
+    }
   };
-  handleOpen = () => {
-    this.setState({ isOpen: true });
-  };
-  handleClose = () => {
-    this.setState({ isOpen: false });
-  };
+
   getFooter = () => {
     const { closeMenuOnCreate, create, footer } = this.props;
 
     if (footer) return footer;
     if (!create) return null;
 
-    let onClick = create.onClick;
+    let { onClick } = create;
     if (closeMenuOnCreate) {
       onClick = e => {
         if (this.selectRef.current) {
@@ -189,9 +188,11 @@ class Switcher extends PureComponent<SwitcherProps, SwitcherState> {
 
     return <Footer text={create.text} onClick={onClick} />;
   };
+
   render() {
     const { create, options, target, ...props } = this.props;
-    const { isOpen, mergedComponents } = this.state;
+    const { mergedComponents } = this.state;
+    const targetWidth = this.props.navWidth - gridSize * 2;
 
     return (
       <PopupSelect
@@ -200,16 +201,14 @@ class Switcher extends PureComponent<SwitcherProps, SwitcherState> {
         isOptionSelected={isOptionSelected}
         footer={this.getFooter()}
         getOptionValue={getOptionValue}
-        onOpen={this.handleOpen}
-        onClose={this.handleClose}
         options={options}
-        maxMenuWidth={this.targetWidth}
-        minMenuWidth={this.targetWidth}
-        target={
-          <NodeResolver innerRef={this.getTargetRef}>
+        maxMenuWidth={targetWidth}
+        minMenuWidth={targetWidth}
+        target={({ ref, isOpen }) => (
+          <NodeResolver innerRef={this.resolveTargetRef(ref)}>
             {cloneElement(target, { isSelected: isOpen })}
           </NodeResolver>
-        }
+        )}
         {...props}
         styles={createStyles(this.props.styles)}
         components={mergedComponents}
@@ -222,6 +221,12 @@ export { Switcher as BaseSwitcher };
 
 export default (props: SwitcherBaseProps) => (
   <UIControllerSubscriber>
-    {({ state }) => <Switcher navWidth={state.productNavWidth} {...props} />}
+    {({ state }) => (
+      <Switcher
+        navWidth={state.productNavWidth}
+        isNavResizing={state.isResizing}
+        {...props}
+      />
+    )}
   </UIControllerSubscriber>
 );

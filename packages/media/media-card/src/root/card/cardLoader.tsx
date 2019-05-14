@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CardLoading } from '../../utils/cardLoading';
+import { CardLoading } from '../../utils/lightCards/cardLoading';
 import { Card as CardType } from './index';
 import { CardProps } from '../..';
 
@@ -18,7 +18,7 @@ export default class Card extends React.PureComponent<
     Card: Card.Card,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     if (!this.state.Card) {
       import(/* webpackChunkName:"@atlaskit-internal_Card" */
       './index').then(module => {
@@ -29,15 +29,10 @@ export default class Card extends React.PureComponent<
   }
 
   render() {
-    const { dimensions, identifier } = this.props;
+    const { dimensions } = this.props;
 
     if (!this.state.Card) {
-      return (
-        <CardLoading
-          dimensions={dimensions}
-          mediaItemType={identifier.mediaItemType}
-        />
-      );
+      return <CardLoading dimensions={dimensions} />;
     }
 
     return <this.state.Card {...this.props} />;

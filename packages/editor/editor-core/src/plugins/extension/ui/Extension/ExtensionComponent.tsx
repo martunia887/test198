@@ -43,7 +43,7 @@ export default class ExtensionComponent extends Component<Props, State> {
     this.mounted = false;
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     const { macroProvider } = nextProps;
 
     if (this.props.macroProvider !== macroProvider) {
@@ -91,7 +91,7 @@ export default class ExtensionComponent extends Component<Props, State> {
     }
   };
 
-  private handleSelectExtension = hasBody => {
+  private handleSelectExtension = (hasBody: boolean) => {
     const {
       state,
       state: { selection, schema },
@@ -121,7 +121,7 @@ export default class ExtensionComponent extends Component<Props, State> {
         return extensionContent;
       }
     } catch (e) {
-      /* tslint:disable-next-line:no-console */
+      // eslint-disable-next-line no-console
       console.error('Provided extension handler has thrown an error\n', e);
       /** We don't want this error to block renderer */
       /** We keep rendering the default content */
@@ -131,7 +131,7 @@ export default class ExtensionComponent extends Component<Props, State> {
 
   private handleExtension = (node: PMNode) => {
     const { extensionHandlers, editorView } = this.props;
-    const { extensionType, extensionKey, parameters } = node.attrs;
+    const { extensionType, extensionKey, parameters, text } = node.attrs;
     const isBodiedExtension = node.type.name === 'bodiedExtension';
 
     if (
@@ -151,7 +151,7 @@ export default class ExtensionComponent extends Component<Props, State> {
         extensionType,
         extensionKey,
         parameters,
-        content: node.content,
+        content: text,
       },
       editorView.state.doc,
     );

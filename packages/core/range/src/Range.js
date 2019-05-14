@@ -97,16 +97,16 @@ export default class Slider extends Component<Props, State> {
         <Theme.Consumer>
           {computedTheme => (
             <Input
-              {...rest}
               {...computedTheme}
               type="range"
               value={value}
-              onChange={this.handleChange}
               disabled={isDisabled}
               valuePercent={getPercentValue(value, min, max)}
               innerRef={r => {
                 this.range = r;
               }}
+              {...rest}
+              onChange={this.handleChange}
             />
           )}
         </Theme.Consumer>

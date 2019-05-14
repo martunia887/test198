@@ -1,14 +1,14 @@
 import { getCellsInTable, selectColumn, selectTable } from 'prosemirror-utils';
 import { CellSelection } from 'prosemirror-tables';
 import { Node as ProsemirrorNode, Fragment, Slice } from 'prosemirror-model';
-import { TextSelection } from 'prosemirror-state';
+import { TextSelection, Transaction } from 'prosemirror-state';
 // @ts-ignore
 import { __serializeForClipboard } from 'prosemirror-view';
 import {
   doc,
   p,
   defaultSchema,
-  createEditor,
+  createEditorFactory,
   table,
   tr,
   td,
@@ -29,19 +29,22 @@ import {
   transformSliceToRemoveOpenTable,
 } from '../../../../plugins/table/utils/paste';
 
-const array = (...args): Node[] => args.map(i => i(defaultSchema));
-const fragment = (...args) => Fragment.from(args.map(i => i(defaultSchema)));
+const array = (...args: any): Node[] => args.map((i: any) => i(defaultSchema));
+const fragment = (...args: any) =>
+  Fragment.from(args.map((i: any) => i(defaultSchema)));
 
 const selectCell = (cell: {
   pos: number;
   start: number;
   node: ProsemirrorNode;
-}) => tr => {
+}) => (tr: Transaction) => {
   const $anchor = tr.doc.resolve(cell.pos);
-  return tr.setSelection(new CellSelection($anchor, $anchor));
+  return tr.setSelection(new CellSelection($anchor, $anchor) as any);
 };
 
 describe('table plugin', () => {
+  const createEditor = createEditorFactory<TablePluginState>();
+
   const editor = (doc: any, trackEvent = () => {}) => {
     const tableOptions = {
       allowNumberColumn: true,
@@ -49,7 +52,7 @@ describe('table plugin', () => {
       allowHeaderColumn: true,
       permittedLayouts: 'all',
     } as PluginConfig;
-    return createEditor<TablePluginState>({
+    return createEditor({
       doc,
       editorPlugins: [tablesPlugin(tableOptions)],
       editorProps: {
@@ -167,7 +170,7 @@ describe('table plugin', () => {
             })(
               tr(th()(p('{<>}1')), th()(p('2')), th()(p('3'))),
               tr(
-                td({ background: 'rgba(255, 252, 242, 0.5)' })(p('4')),
+                td({ background: '#fffcf2' })(p('4')),
                 td({ background: '#fffcf7' })(p('5')),
                 td()(p('6')),
               ),
@@ -201,7 +204,7 @@ describe('table plugin', () => {
             table({ layout: 'wide' })(
               tr(th()(p('1')), th()(p('2')), th()(p('3'))),
               tr(
-                td({ background: 'rgba(255, 252, 242, 0.5)' })(p('4')),
+                td({ background: '#fffcf2' })(p('4')),
                 td({ background: '#fffcf7' })(p('5')),
                 td()(p('6')),
               ),
@@ -210,8 +213,8 @@ describe('table plugin', () => {
             table({ layout: 'wide' })(
               tr(th()(p('1')), th()(p('2')), th()(p('3'))),
               tr(
-                td({ background: 'rgba(255, 252, 242, 0.5)' })(p('4')),
-                td({ background: 'rgba(255, 252, 247, 0.5)' })(p('5')),
+                td({ background: '#fffcf2' })(p('4')),
+                td({ background: '#fffcf7' })(p('5')),
                 td()(p('6')),
               ),
               tr(td()(p('7')), td()(p('8')), td()(p('9'))),

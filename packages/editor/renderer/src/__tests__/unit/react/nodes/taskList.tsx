@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { mount, shallow } from 'enzyme';
 import { TaskList as AkTaskList } from '@atlaskit/task-decision';
-import FabricAnalyticsListener from '@atlaskit/analytics-listeners';
+import FabricAnalyticsListener, {
+  AnalyticsWebClient,
+} from '@atlaskit/analytics-listeners';
 import TaskList from '../../../../react/nodes/taskList';
 import TaskItem from '../../../../react/nodes/taskItem';
 
 describe('Renderer - React/Nodes/TaskList', () => {
-  let analyticsWebClientMock;
+  let analyticsWebClientMock: AnalyticsWebClient;
 
   beforeEach(() => {
     analyticsWebClientMock = {
@@ -17,11 +19,9 @@ describe('Renderer - React/Nodes/TaskList', () => {
     };
   });
 
-  it('should wrap content with <AkTaskList>-tag with start prop', () => {
+  it('shouldmatch rendered AkTaskList', () => {
     const text: any = 'This is a task list';
-    const taskListWrapper = shallow(<TaskList>{text}</TaskList>);
-    const taskList = taskListWrapper.childAt(0);
-    expect(taskListWrapper.is('div')).toEqual(true);
+    const taskList = shallow(<TaskList>{text}</TaskList>);
     expect(taskList.is(AkTaskList)).toEqual(true);
   });
 

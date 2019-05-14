@@ -56,16 +56,19 @@ interface FileProps {
   dataProviders?: ProviderFactory;
 }
 
-const containerId = 'container:abc:abc/1234567';
+const objectId = 'container:abc:abc/1234567';
 
 class File extends React.Component<FileProps, { addAt?: number }> {
-  constructor(props) {
+  constructor(props: FileProps) {
     super(props);
 
     this.state = {};
   }
 
-  private onLineClick = (evt, index) => {
+  private onLineClick = (
+    evt: React.MouseEvent<HTMLAnchorElement>,
+    index: number,
+  ) => {
     evt.preventDefault();
 
     this.setState({
@@ -96,7 +99,7 @@ class File extends React.Component<FileProps, { addAt?: number }> {
             dataProviders={dataProviders}
             isExpanded={false}
             meta={{ name, lineNumber: index }}
-            containerId={containerId}
+            objectId={objectId}
           />
         </ConvoWrapper>
       );
@@ -111,7 +114,7 @@ class File extends React.Component<FileProps, { addAt?: number }> {
             dataProviders={dataProviders}
             isExpanded={true}
             meta={{ name, lineNumber: index }}
-            containerId={containerId}
+            objectId={objectId}
           />
         </ConvoWrapper>
       );
@@ -153,13 +156,14 @@ class File extends React.Component<FileProps, { addAt?: number }> {
   }
 }
 
+type DemoProps = { provider: ResourceProvider; dataProviders: ProviderFactory };
 export class Demo extends React.Component<
-  { provider: ResourceProvider; dataProviders: ProviderFactory },
+  DemoProps,
   { conversations: any[]; selectedUser: User; responseCode: number }
 > {
   private unsubscribe: any;
 
-  constructor(props) {
+  constructor(props: DemoProps) {
     super(props);
 
     this.state = {
@@ -173,7 +177,7 @@ export class Demo extends React.Component<
     const { provider } = this.props;
     // First get a list of all conversations for this page
     try {
-      const conversations = await provider.getConversations(containerId);
+      const conversations = await provider.getConversations(objectId);
       this.setState({ conversations });
       this.unsubscribe = provider.subscribe(this.handleDispatch);
     } catch (err) {
@@ -238,7 +242,7 @@ export class Demo extends React.Component<
           provider={provider}
           dataProviders={dataProviders}
           id={conversation.conversationId}
-          containerId={containerId}
+          objectId={objectId}
         />
       </div>
     ));
@@ -324,7 +328,7 @@ export class Demo extends React.Component<
           <Conversation
             provider={provider}
             dataProviders={dataProviders}
-            containerId={containerId}
+            objectId={objectId}
           />
         ) : null}
         <File

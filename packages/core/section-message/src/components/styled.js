@@ -15,6 +15,10 @@ export const Container = styled.section`
   padding: ${math.multiply(gridSize, 2)}px;
 `;
 
+export const ContentContainer = styled.div`
+  flex-grow: 1;
+`;
+
 export const Title = styled.h1`
   margin: 0;
   ${typography.h500};
@@ -36,6 +40,8 @@ export const Actions = styled.ul`
 `;
 
 export const Action = styled.li`
+  align-items: center;
+  display: flex;
   margin: 0;
   & + &::before {
     color: ${colors.N500};

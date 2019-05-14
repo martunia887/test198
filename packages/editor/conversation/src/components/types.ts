@@ -34,7 +34,10 @@ export interface SharedProps {
   onRevertComment?: (conversationId: string, commentId: string) => void;
   onCancelComment?: (conversationId: string, commentId: string) => void;
   onCancel?: () => void;
-  onHighlightComment?: (commentId: string) => void;
+  onHighlightComment?: (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    commentId: string,
+  ) => void;
   onEditorOpen?: () => void;
   onEditorClose?: () => void;
   onEditorChange?: (
@@ -42,8 +45,9 @@ export interface SharedProps {
     value: any,
     conversationId: string,
     commentId: string | undefined,
-    containerId: string,
     meta: any,
+    objectId: string,
+    containerId?: string,
   ) => void;
 
   // Provider
@@ -52,10 +56,15 @@ export interface SharedProps {
   // Event Hooks
   onUserClick?: (user: User) => void;
   onRetry?: (localId?: string) => void;
+  onCommentPermalinkClick?: (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    commentId: string,
+  ) => void;
 
   // Editor
   renderEditor?: (Editor: typeof AkEditor, props: EditorProps) => JSX.Element;
 
+  objectId?: string;
   containerId?: string;
 
   isHighlighted?: boolean;
@@ -63,4 +72,6 @@ export interface SharedProps {
   disableScrollTo?: boolean;
   allowFeedbackAndHelpButtons?: boolean;
   sendAnalyticsEvent: SendAnalyticsEvent;
+
+  portal?: HTMLElement;
 }

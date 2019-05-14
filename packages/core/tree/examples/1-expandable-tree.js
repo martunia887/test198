@@ -42,20 +42,19 @@ export default class StaticTree extends Component<void, State> {
     onCollapse: (itemId: ItemId) => void,
   ) {
     if (item.hasChildren) {
+      /* eslint-disable jsx-a11y/click-events-have-key-events */
       return item.isExpanded ? (
-        <ChevronDownIcon
-          label=""
-          size="medium"
-          onClick={() => onCollapse(item.id)}
-        />
+        <div role="button" tabIndex="0" onClick={() => onCollapse(item.id)}>
+          <ChevronDownIcon label="" size="medium" />
+        </div>
       ) : (
-        <ChevronRightIcon
-          label=""
-          size="medium"
-          onClick={() => onExpand(item.id)}
-        />
+        <div role="button" tabIndex="0" onClick={() => onExpand(item.id)}>
+          <ChevronRightIcon label="" size="medium" />
+        </div>
       );
     }
+    /* eslint-enable jsx-a11y/click-events-have-key-events */
+
     return <Dot>&bull;</Dot>;
   }
 

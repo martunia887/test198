@@ -7,7 +7,7 @@ import {
 import { Action, Dispatch } from 'redux';
 import { State } from '../../../domain';
 import analyticsProcessing from '../../analyticsProcessing';
-import { mockStore } from '../../../mocks';
+import { mockStore } from '@atlaskit/media-test-helpers';
 import { showPopup } from '../../../actions/showPopup';
 import { editorShowImage } from '../../../actions/editorShowImage';
 import { searchGiphy } from '../../../actions';
@@ -26,7 +26,7 @@ import { GET_PREVIEW } from '../../../actions/getPreview';
 import { MediaFile } from '../../../../domain/file';
 import { buttonClickPayload, Payload } from '../../analyticsHandlers';
 import { fileUploadError } from '../../../actions/fileUploadError';
-import { UIAnalyticsEventHandlerSignature } from '@atlaskit/analytics-next-types';
+import { UIAnalyticsEventHandlerSignature } from '@atlaskit/analytics-next';
 
 type TestPayload = GasCorePayload & { action: string; attributes: {} };
 type UploadType = 'cloudMedia' | 'localMedia';
@@ -484,15 +484,11 @@ describe('analyticsProcessing middleware', () => {
     };
     verifyAnalyticsCall(
       fileUploadEnd({
-        file: {
-          ...testFile1,
-          publicId: 'pubid1',
-        },
+        file: testFile1,
         public: {
           id: 'id1',
           name: 'file1',
           size: 1,
-          creationDate: 1,
           mimeType: 'type1',
           mediaType: 'image',
           processingStatus: 'succeeded',
@@ -522,15 +518,11 @@ describe('analyticsProcessing middleware', () => {
             events: [
               {
                 data: {
-                  file: {
-                    ...testFile1,
-                    publicId: 'pubid1',
-                  },
+                  file: testFile1,
                   public: {
                     id: 'id1',
                     name: 'file1',
                     size: 1,
-                    creationDate: 1,
                     mimeType: testFile1.type,
                     mediaType: 'image',
                     processingStatus: 'succeeded',

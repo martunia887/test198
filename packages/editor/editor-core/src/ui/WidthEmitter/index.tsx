@@ -10,7 +10,7 @@ export interface Props {
 }
 
 export default class WidthEmitter extends Component<Props> {
-  private width: number;
+  private width?: number;
   private debounce: number | null = null;
 
   render() {
@@ -19,7 +19,7 @@ export default class WidthEmitter extends Component<Props> {
     );
   }
 
-  private broadcastWidth = width => {
+  private broadcastWidth = (width: number) => {
     const { editorView } = this.props;
     if (editorView && this.width !== width) {
       if (this.debounce) {

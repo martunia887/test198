@@ -126,7 +126,7 @@ export const bodiedExtension = (
     extensionType: string;
     parameters?: object;
   },
-  content,
+  content: Node | Array<Node>,
 ) => schema.nodes.bodiedExtension.createChecked(attrs, content);
 export const emoji = (attrs: {
   id?: string;
@@ -135,6 +135,8 @@ export const emoji = (attrs: {
 }) => schema.nodes.emoji.createChecked(attrs);
 export const confluenceInlineComment = (attrs: { reference: string }) =>
   markFactory(schema.marks.confluenceInlineComment, attrs ? attrs : {}, true);
+export const annotation = (attrs: { reference: string }) =>
+  markFactory(schema.marks.annotation, attrs ? attrs : {}, true);
 export const taskList = (attrs: { localId?: string } = {}) =>
   nodeFactory(schema.nodes.taskList, attrs);
 export const taskItem = (attrs: { localId?: string; state?: string } = {}) =>

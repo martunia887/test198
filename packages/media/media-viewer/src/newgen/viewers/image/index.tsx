@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { Context, MediaItem, FileState } from '@atlaskit/media-core';
+import {
+  Context,
+  FileItem,
+  FileState,
+  isImageRepresentationReady,
+} from '@atlaskit/media-core';
 import { getOrientation } from '@atlaskit/media-ui';
 import { Outcome } from '../../domain';
 import { createError, MediaViewerError } from '../../error';
@@ -22,7 +27,7 @@ export interface ImageViewerContent {
   orientation?: number;
 }
 
-function processedFileStateToMediaItem(file: FileState): MediaItem {
+function processedFileStateToMediaItem(file: FileState): FileItem {
   return {
     type: 'file',
     details: {
@@ -55,9 +60,10 @@ export class ImageViewer extends BaseViewer<
     }
 
     try {
-      let imagePreview: Blob | undefined;
       let orientation = 1;
-      if (file.status === 'processed') {
+      let objectUrl: string;
+
+      if (isImageRepresentationReady(file)) {
         const item = processedFileStateToMediaItem(file);
         const controller =
           typeof AbortController !== 'undefined'
@@ -75,12 +81,17 @@ export class ImageViewer extends BaseViewer<
           controller,
         );
         this.cancelImageFetch = () => controller && controller.abort();
-        imagePreview = await response;
+        objectUrl = URL.createObjectURL(await response);
       } else {
         const { preview } = file;
         if (preview) {
-          imagePreview = preview.blob;
-          orientation = await getOrientation(imagePreview as File);
+          const { value } = await preview;
+          if (value instanceof Blob) {
+            orientation = await getOrientation(value as File);
+            objectUrl = URL.createObjectURL(value);
+          } else {
+            objectUrl = value;
+          }
         } else {
           this.setState({
             content: Outcome.pending(),
@@ -88,8 +99,6 @@ export class ImageViewer extends BaseViewer<
           return;
         }
       }
-
-      const objectUrl = URL.createObjectURL(imagePreview);
 
       this.setState({
         content: Outcome.successful({ objectUrl, orientation }),

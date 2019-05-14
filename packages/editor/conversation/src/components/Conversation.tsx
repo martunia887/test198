@@ -34,15 +34,17 @@ export interface Props extends SharedProps {
   id?: string;
   localId?: string;
   conversation?: ConversationType;
-  containerId: string;
+  objectId: string;
+  containerId?: string;
   showBeforeUnloadWarning?: boolean;
 
   // Dispatch
   onCreateConversation?: (
     localId: string,
-    containerId: string,
     value: any,
     meta: any,
+    objectId: string,
+    containerId?: string,
     onSuccess?: SuccessHandler,
   ) => void;
 
@@ -51,6 +53,8 @@ export interface Props extends SharedProps {
     [key: string]: any;
   };
   createAnalyticsEvent: createAnalyticsEvent;
+
+  portal?: HTMLElement;
 }
 
 export interface State {
@@ -68,6 +72,8 @@ export default class Conversation extends React.PureComponent<Props, State> {
 
   static defaultProps = {
     placeholder: 'What do you want to say?',
+    onEditorOpen: () => {},
+    onEditorClose: () => {},
   };
 
   /*
@@ -81,14 +87,14 @@ export default class Conversation extends React.PureComponent<Props, State> {
     @deprecated
   */
   sendEditorAnalyticsEvent: SendAnalyticsEvent = eventData => {
-    const { createAnalyticsEvent, containerId } = this.props;
+    const { createAnalyticsEvent, objectId, containerId } = this.props;
 
     const analyticsEvent = createAnalyticsEvent({
       actionSubject: 'editor',
       action: 'clicked',
     });
 
-    fireEvent(analyticsEvent, { containerId, ...eventData });
+    fireEvent(analyticsEvent, { objectId, containerId, ...eventData });
   };
 
   private renderComments() {
@@ -99,16 +105,17 @@ export default class Conversation extends React.PureComponent<Props, State> {
       onUpdateComment,
       onDeleteComment,
       onRevertComment,
-      onHighlightComment,
       onUserClick,
       onCancel,
       user,
       dataProviders,
       renderEditor,
+      objectId,
       containerId,
       placeholder,
       disableScrollTo,
       allowFeedbackAndHelpButtons,
+      portal,
     } = this.props;
 
     if (!conversation) {
@@ -130,18 +137,20 @@ export default class Conversation extends React.PureComponent<Props, State> {
         onEditorOpen={this.onEditorOpen}
         onEditorClose={this.onEditorClose}
         onEditorChange={this.handleEditorChange}
-        onHighlightComment={onHighlightComment}
+        onHighlightComment={this.onHighlightComment}
         onRetry={this.onRetry(comment.document)}
         onCancel={onCancel}
         onUserClick={onUserClick}
         dataProviders={dataProviders}
         renderComment={props => <Comment {...props} />}
         renderEditor={renderEditor}
+        objectId={objectId}
         containerId={containerId}
         placeholder={placeholder}
         disableScrollTo={disableScrollTo}
         sendAnalyticsEvent={this.sendEditorAnalyticsEvent}
         allowFeedbackAndHelpButtons={allowFeedbackAndHelpButtons}
+        portal={portal}
       />
     ));
   }
@@ -154,13 +163,6 @@ export default class Conversation extends React.PureComponent<Props, State> {
     if (this.props.onCancel) {
       this.props.onCancel();
     }
-  };
-
-  private onOpen = () => {
-    this.sendEditorAnalyticsEvent({
-      actionSubjectId: actionSubjectIds.createCommentInput,
-    });
-    this.onEditorOpen();
   };
 
   private renderConversationsEditor() {
@@ -185,7 +187,7 @@ export default class Conversation extends React.PureComponent<Props, State> {
           isExpanded={isExpanded}
           onSave={this.onSave}
           onCancel={this.onCancel}
-          onOpen={this.onOpen}
+          onOpen={this.onEditorOpen}
           onClose={this.onEditorClose}
           onChange={this.handleEditorChange}
           dataProviders={dataProviders}
@@ -212,6 +214,7 @@ export default class Conversation extends React.PureComponent<Props, State> {
     retry?: boolean,
   ) => {
     const {
+      objectId,
       containerId,
       id,
       localId,
@@ -228,7 +231,7 @@ export default class Conversation extends React.PureComponent<Props, State> {
     }
 
     if (!id && !commentLocalId && onCreateConversation) {
-      onCreateConversation(localId!, containerId, value, meta, id => {
+      onCreateConversation(localId!, value, meta, objectId, containerId, id => {
         this.sendEditorAnalyticsEvent({
           actionSubjectId: id,
           eventType: eventTypes.TRACK,
@@ -267,20 +270,59 @@ export default class Conversation extends React.PureComponent<Props, State> {
         openEditorCount: this.state.openEditorCount - 1,
       });
     }
+
+    if (typeof this.props.onEditorClose === 'function') {
+      this.props.onEditorClose();
+    }
   };
 
   private onEditorOpen = () => {
+    this.sendEditorAnalyticsEvent({
+      actionSubjectId: actionSubjectIds.createCommentInput,
+    });
+
     this.setState({
       openEditorCount: this.state.openEditorCount + 1,
     });
+
+    if (typeof this.props.onEditorOpen === 'function') {
+      this.props.onEditorOpen();
+    }
+  };
+
+  private onHighlightComment = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    commentId: string,
+  ) => {
+    if (typeof this.props.onHighlightComment === 'function') {
+      this.props.onHighlightComment(event, commentId);
+      if (typeof this.props.onCommentPermalinkClick === 'function') {
+        this.props.onCommentPermalinkClick(event, commentId);
+      }
+    }
   };
 
   private handleEditorChange = (value: any, commentId?: string) => {
-    const { id, localId, containerId, onEditorChange, meta } = this.props;
+    const {
+      id,
+      localId,
+      onEditorChange,
+      meta,
+      objectId,
+      containerId,
+    } = this.props;
 
     if (onEditorChange) {
       const isLocal = !id;
-      onEditorChange(isLocal, value, localId!, commentId, containerId, meta);
+      onEditorChange(
+        isLocal,
+        value,
+        localId!,
+        commentId,
+        meta,
+        objectId,
+        containerId,
+      );
     }
   };
 

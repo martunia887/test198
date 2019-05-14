@@ -23,6 +23,12 @@ export const MOCK_USERS: User[] = [
     avatarUrl: 'https://api.adorable.io/avatars/80/awesomeperson.png',
   },
   {
+    id: 'ari:cloud:identity::user/3f000e23-3588-4e5d-aa4b-99mock_user10',
+    name: 'Former User',
+    avatarUrl: 'https://api.adorable.io/avatars/80/formeruser.png',
+    type: 'Deactivated',
+  },
+  {
     id: '',
     name: 'Undefined',
   },
@@ -140,7 +146,7 @@ export const mockReplyComment: Comment = {
 
 export const mockConversation: Conversation = {
   conversationId: 'mock-conversation',
-  containerId: 'ari:cloud:platform::conversation/demo',
+  objectId: 'ari:cloud:platform::conversation/demo',
   comments: [mockComment, mockReplyComment],
   meta: {},
   localId: 'local-conversation',
@@ -148,7 +154,7 @@ export const mockConversation: Conversation = {
 
 export const mockInlineConversation: Conversation = {
   conversationId: 'mock-inline-conversation',
-  containerId: 'ari:cloud:platform::conversation/demo',
+  objectId: 'ari:cloud:platform::conversation/demo',
   comments: [mockInlineComment],
   meta: { name: 'main.js', lineNumber: 3 },
 };
@@ -158,7 +164,7 @@ export const generateMockConversation = (): Conversation => {
   return {
     meta: {},
     conversationId,
-    containerId: 'ari:cloud:platform::conversation/demo',
+    objectId: 'ari:cloud:platform::conversation/demo',
     comments: Array.from({ length: 3 }).map(() => {
       const commentId = <string>uuid.generate();
 
@@ -168,7 +174,7 @@ export const generateMockConversation = (): Conversation => {
         commentId: commentId,
         conversationId,
         createdBy:
-          MOCK_USERS[Math.floor(Math.random() * 10) % (MOCK_USERS.length - 2)],
+          MOCK_USERS[Math.floor(Math.random() * 10) % (MOCK_USERS.length - 1)],
         createdAt: Date.now(),
         document: {
           adf: {
@@ -182,6 +188,7 @@ export const generateMockConversation = (): Conversation => {
                     type: 'text',
                     text:
                       MESSAGES[
+                        // eslint-disable-next-line no-bitwise
                         Math.floor(Math.random() * MESSAGES.length) &
                           MESSAGES.length
                       ],

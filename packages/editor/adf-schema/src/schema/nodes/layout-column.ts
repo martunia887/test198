@@ -47,13 +47,15 @@ export const layoutColumn: NodeSpec = {
     },
   ],
   toDOM(node) {
-    const attrs = { 'data-layout-column': 'true' };
+    const attrs: Record<string, string> = {
+      'data-layout-column': 'true',
+    };
     const { width } = node.attrs;
     if (width) {
       attrs['style'] = `flex-basis: ${width}%`;
       attrs['data-column-width'] = width;
     }
 
-    return ['div', attrs, 0];
+    return ['div', attrs, ['div', {}, 0]];
   },
 };

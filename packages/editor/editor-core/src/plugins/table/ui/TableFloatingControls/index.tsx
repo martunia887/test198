@@ -7,7 +7,7 @@ import CornerControls from './CornerControls';
 import RowControls from './RowControls';
 import NumberColumn from './NumberColumn';
 import { isSelectionUpdated } from '../../utils';
-import { clearHoverSelection, hoverRows, selectRow } from '../../actions';
+import { clearHoverSelection, hoverRows, selectRow } from '../../commands';
 
 export interface Props {
   editorView: EditorView;
@@ -27,7 +27,7 @@ export interface Props {
 }
 
 export default class TableFloatingControls extends Component<Props> {
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: Props) {
     const {
       tableRef,
       isInDanger,
@@ -126,10 +126,10 @@ export default class TableFloatingControls extends Component<Props> {
       (editorView.dom as HTMLElement).blur();
     }
     selectRow(row)(state, dispatch);
-    clearHoverSelection(editorView.state, dispatch);
+    clearHoverSelection()(editorView.state, dispatch);
   };
 
-  private hoverRows = (rows, danger) => {
+  private hoverRows = (rows: Array<number>, danger?: boolean) => {
     const { state, dispatch } = this.props.editorView;
     hoverRows(rows, danger)(state, dispatch);
   };

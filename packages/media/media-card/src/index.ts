@@ -1,31 +1,20 @@
 import { MouseEvent } from 'react';
 import {
-  MediaItemDetails,
+  FileDetails,
   MediaType,
   FileProcessingStatus,
   Context,
+  Identifier,
   ImageResizeMode,
 } from '@atlaskit/media-core';
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
+import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next';
 
 import { CardAction } from './actions';
-import { Identifier } from './root/domain';
+import { MediaViewerDataSource } from '@atlaskit/media-viewer';
 
-// the only components we expose to consumers is Card and CardView
 export { default as Card } from './root/card/cardLoader';
 
-export { CardView } from './root/cardViewLoader';
-
-export {
-  CardViewState,
-  CardViewOwnProps as CardViewProps,
-} from './root/cardView';
-
-export * from './root/domain';
-
-export * from './actions';
-export { isUrlPreviewIdentifier } from './utils/identifier';
-// TODO: don't expose this directly https://jira.atlassian.com/browse/FIL-4396
+export { CardAction, CardEventHandler } from './actions';
 
 export type CardStatus =
   | 'uploading'
@@ -46,12 +35,12 @@ export interface CardDimensions {
 
 export interface CardEvent {
   event: MouseEvent<HTMLElement>;
-  mediaItemDetails?: MediaItemDetails;
+  mediaItemDetails?: FileDetails;
 }
 
 export interface OnSelectChangeFuncResult {
   selected: boolean;
-  mediaItemDetails?: MediaItemDetails;
+  mediaItemDetails?: FileDetails;
 }
 
 export interface OnSelectChangeFunc {
@@ -60,7 +49,7 @@ export interface OnSelectChangeFunc {
 
 export interface OnLoadingChangeState {
   readonly type: CardStatus;
-  readonly payload?: Error | MediaItemDetails;
+  readonly payload?: Error | FileDetails;
 }
 
 export interface OnLoadingChangeFunc {
@@ -110,7 +99,6 @@ export interface BaseAnalyticsContext {
   packageVersion: string; // string — in a format like '3.2.1'
   packageName: string;
   componentName: string;
-
   actionSubject: string; // ex. MediaCard
   actionSubjectId: string | null; // file/link id
 }
@@ -134,17 +122,22 @@ export interface CardProps extends SharedCardProps, CardEventProps {
   // only relevant to file card with image appearance
   readonly disableOverlay?: boolean;
   readonly useInlinePlayer?: boolean;
+  readonly shouldOpenMediaViewer?: boolean;
+  readonly mediaViewerDataSource?: MediaViewerDataSource;
 }
 
 export interface CardState {
   status: CardStatus;
   isCardVisible: boolean;
   previewOrientation: number;
-  readonly isPlayingFile: boolean;
-  metadata?: MediaItemDetails;
+  isPlayingFile: boolean;
+  mediaViewerSelectedItem?: Identifier;
+  metadata?: FileDetails;
   dataURI?: string;
   progress?: number;
-  readonly error?: Error;
+  error?: Error;
 }
 
-export { defaultImageCardDimensions } from './utils';
+export { CardLoading } from './utils/lightCards/cardLoading';
+export { CardError } from './utils/lightCards/cardError';
+export { defaultImageCardDimensions } from './utils/cardDimensions';

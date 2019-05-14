@@ -4,6 +4,8 @@ import {
   MediaStoreCopyFileWithTokenBody,
   MediaStoreCopyFileWithTokenParams,
 } from '@atlaskit/media-store';
+import { getFileStreamsCache, FileState } from '@atlaskit/media-core';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Fetcher } from '../tools/fetcher/fetcher';
 import {
   FinalizeUploadAction,
@@ -18,7 +20,7 @@ import {
 } from '../actions/sendUploadEvent';
 
 export default function(fetcher: Fetcher): Middleware {
-  return store => (next: Dispatch<State>) => action => {
+  return store => (next: Dispatch<State>) => (action: any) => {
     if (isFinalizeUploadAction(action)) {
       finalizeUpload(fetcher, store as any, action);
     }
@@ -40,7 +42,6 @@ export function finalizeUpload(
         ...source,
         owner,
       };
-
       const copyFileParams: CopyFileParams = {
         store,
         fetcher,
@@ -60,7 +61,7 @@ type CopyFileParams = {
   file: MediaFile;
   uploadId: string;
   sourceFile: SourceFile;
-  replaceFileId?: Promise<string>;
+  replaceFileId?: Promise<string> | string;
 };
 
 async function copyFile({
@@ -101,10 +102,7 @@ async function copyFile({
           event: {
             name: 'upload-processing',
             data: {
-              file: {
-                ...file,
-                publicId,
-              },
+              file,
             },
           },
           uploadId,
@@ -117,15 +115,43 @@ async function copyFile({
       return fetcher.pollFile(auth, publicId, collection);
     })
     .then(processedDestinationFile => {
+      const subject = getFileStreamsCache().get(
+        processedDestinationFile.id,
+      ) as ReplaySubject<FileState>;
+      // We need to cast to ReplaySubject and check for "next" method since the current
+      if (subject && subject.next) {
+        const subscription = subject.subscribe({
+          next(currentState) {
+            setTimeout(() => subscription.unsubscribe(), 0);
+            setTimeout(() => {
+              const {
+                artifacts,
+                mediaType,
+                mimeType,
+                name,
+                size,
+                representations,
+              } = processedDestinationFile;
+              subject.next({
+                ...currentState,
+                status: 'processed',
+                artifacts,
+                mediaType,
+                mimeType,
+                name,
+                size,
+                representations,
+              });
+            }, 0);
+          },
+        });
+      }
       return store.dispatch(
         sendUploadEvent({
           event: {
             name: 'upload-end',
             data: {
-              file: {
-                ...file,
-                publicId: processedDestinationFile.id,
-              },
+              file,
               public: processedDestinationFile,
             },
           },

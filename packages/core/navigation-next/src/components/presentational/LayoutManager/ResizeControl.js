@@ -82,7 +82,6 @@ type ButtonProps = {
   hasHighlight: boolean,
   innerRef: Ref<'button'>,
   isVisible: boolean,
-  onMouseOver: ?(SyntheticMouseEvent<>) => void,
   hitAreaSize: 'small' | 'large',
 };
 const Button = ({
@@ -90,7 +89,6 @@ const Button = ({
   hasHighlight,
   innerRef,
   isVisible,
-  onMouseOver,
   hitAreaSize,
   ...props
 }: ButtonProps) => (
@@ -137,7 +135,6 @@ const Button = ({
         position: 'absolute',
         ...(hitAreaSize === 'small' ? smallHitArea : largeHitArea),
       }}
-      onMouseOver={onMouseOver}
     />
     {children}
   </button>
@@ -193,6 +190,7 @@ type Props = {
   children: State => any,
   collapseToggleTooltipContent?: CollapseToggleTooltipContent,
   expandCollapseAffordanceRef: Ref<'button'>,
+  // eslint-disable-next-line react/no-unused-prop-types
   experimental_flyoutOnHover: boolean,
   flyoutIsOpen: boolean,
   isDisabled: boolean,
@@ -220,8 +218,11 @@ type State = {
 /* NOTE: experimental props use an underscore */
 class ResizeControl extends PureComponent<Props, State> {
   invalidDragAttempted = false;
+
   lastWidth: number;
+
   wrapper: HTMLElement;
+
   state = {
     delta: 0,
     didDragOpen: false,
@@ -271,6 +272,7 @@ class ResizeControl extends PureComponent<Props, State> {
   mouseEnterGrabArea = () => {
     this.setState({ mouseIsOverGrabArea: true });
   };
+
   mouseLeaveGrabArea = () => {
     this.setState({ mouseIsOverGrabArea: false });
   };
@@ -298,7 +300,7 @@ class ResizeControl extends PureComponent<Props, State> {
   initializeDrag = (event: MouseEvent) => {
     const { navigation } = this.props;
     const delta = event.pageX - this.state.initialX;
-    const isCollapsed = navigation.state.isCollapsed;
+    const { isCollapsed } = navigation.state;
 
     // only initialize when drag intention is "expand"
     if (isCollapsed && delta <= 0) {
@@ -364,6 +366,7 @@ class ResizeControl extends PureComponent<Props, State> {
       this.setState({ delta, width });
     }
   });
+
   handleResizeEnd = () => {
     const { navigation, createAnalyticsEvent } = this.props;
     const { delta, didDragOpen, isDragging, width: currentWidth } = this.state;
@@ -454,7 +457,6 @@ class ResizeControl extends PureComponent<Props, State> {
       <Button
         onClick={this.onResizerChevronClick}
         hitAreaSize={onMouseOverButtonBuffer ? 'large' : 'small'}
-        onMouseOver={!flyoutIsOpen ? onMouseOverButtonBuffer : null}
         // maintain styles when user is dragging
         isVisible={isCollapsed || mouseIsDown || mouseIsOverNavigation}
         hasHighlight={mouseIsDown || mouseIsOverGrabArea}
@@ -481,20 +483,22 @@ class ResizeControl extends PureComponent<Props, State> {
                   onMouseDown={this.handleResizeStart}
                 />
               )}
-              {collapseToggleTooltipContent ? (
-                <Tooltip
-                  content={makeTooltipNode(
-                    collapseToggleTooltipContent(isCollapsed),
-                  )}
-                  delay={600}
-                  hideTooltipOnClick
-                  position="right"
-                >
-                  {button}
-                </Tooltip>
-              ) : (
-                button
-              )}
+              <div onMouseOver={!flyoutIsOpen ? onMouseOverButtonBuffer : null}>
+                {collapseToggleTooltipContent ? (
+                  <Tooltip
+                    content={makeTooltipNode(
+                      collapseToggleTooltipContent(isCollapsed),
+                    )}
+                    delay={600}
+                    hideTooltipOnClick
+                    position="right"
+                  >
+                    {button}
+                  </Tooltip>
+                ) : (
+                  button
+                )}
+              </div>
             </Fragment>
           )}
         </Outer>

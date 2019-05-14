@@ -2,6 +2,7 @@ import {
   MentionPluginState,
   TextFormattingState,
   EditorActions,
+  Command,
   CustomMediaPicker,
   BlockTypeState,
   ListsState,
@@ -20,20 +21,31 @@ import {
   updateStatus,
   commitStatusPicker,
   insertBlockType,
+  setBlockType,
   createTable,
   insertTaskDecision,
   changeColor,
   TypeAheadItem,
   selectItem as selectTypeAheadItem,
+  insertLink,
+  isTextAtPos,
+  isLinkAtPos,
+  setLinkHref,
+  setLinkText,
+  clearEditorContent,
 } from '@atlaskit/editor-core';
 import { EditorView } from 'prosemirror-view';
+import { EditorState, Selection } from 'prosemirror-state';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import { Color as StatusColor } from '@atlaskit/status';
 
 import NativeToWebBridge from './bridge';
 import WebBridge from '../../web-bridge';
+import { ProseMirrorDOMChange } from '../../types';
+import { hasValue } from '../../utils';
 import { rejectPromise, resolvePromise } from '../../cross-platform-promise';
-import { setBlockType } from '../../../../editor-core/src/plugins/block-type/commands';
+
+import { version as packageVersion } from '../../version.json';
 
 export default class WebBridgeImpl extends WebBridge
   implements NativeToWebBridge {
@@ -42,11 +54,15 @@ export default class WebBridgeImpl extends WebBridge
   blockFormatBridgeState: BlockTypeState | null = null;
   listBridgeState: ListsState | null = null;
   mentionsPluginState: MentionPluginState | null = null;
-  editorView: EditorView | null = null;
+  editorView: EditorView & ProseMirrorDOMChange | null = null;
   transformer: JSONTransformer = new JSONTransformer();
   editorActions: EditorActions = new EditorActions();
   mediaPicker: CustomMediaPicker | undefined;
   mediaMap: Map<string, Function> = new Map();
+
+  currentVersion(): string {
+    return packageVersion;
+  }
 
   onBoldClicked() {
     if (this.textFormatBridgeState && this.editorView) {
@@ -65,26 +81,36 @@ export default class WebBridgeImpl extends WebBridge
       toggleUnderline()(this.editorView.state, this.editorView.dispatch);
     }
   }
+
   onCodeClicked() {
     if (this.textFormatBridgeState && this.editorView) {
       toggleCode()(this.editorView.state, this.editorView.dispatch);
     }
   }
+
   onStrikeClicked() {
     if (this.textFormatBridgeState && this.editorView) {
       toggleStrike()(this.editorView.state, this.editorView.dispatch);
     }
   }
+
   onSuperClicked() {
     if (this.textFormatBridgeState && this.editorView) {
       toggleSuperscript()(this.editorView.state, this.editorView.dispatch);
     }
   }
+
   onSubClicked() {
     if (this.textFormatBridgeState && this.editorView) {
       toggleSubscript()(this.editorView.state, this.editorView.dispatch);
     }
   }
+
+  onMentionSelect(mention: string) {}
+
+  onMentionPickerResult(result: string) {}
+
+  onMentionPickerDismissed() {}
 
   onStatusUpdate(text: string, color: StatusColor, uuid: string) {
     if (this.statusBridgeState && this.editorView) {
@@ -102,22 +128,59 @@ export default class WebBridgeImpl extends WebBridge
     }
   }
 
-  onMentionSelect(mention: string) {}
-
-  onMentionPickerResult(result: string) {}
-
-  onMentionPickerDismissed() {}
-
   setContent(content: string) {
-    if (this.editorActions) {
-      this.editorActions.replaceDocument(content, false);
+    // TODO: Re-enable (https://product-fabric.atlassian.net/browse/ED-6714)
+    // Prevent deletion of invalid marks. Temporary fix for inline comments being removed in the document.
+    // This is to prevent the validator running (which deletes invalid marks).
+    // Waiting on Confluence to change from confluenceInlineComment to annotation mark
+
+    // if (this.editorActions) {
+    //   this.editorActions.replaceDocument(content, false);
+    // }
+
+    if (this.editorView) {
+      const { state, dispatch } = this.editorView;
+      const tr = state.tr;
+      let parsedContent;
+      try {
+        parsedContent = JSON.parse(content);
+      } catch (e) {
+        return;
+      }
+
+      parsedContent = (parsedContent.content || []).map((child: any) => {
+        try {
+          return state.schema.nodeFromJSON(child);
+        } catch (e) {
+          return state.schema.nodes.unsupportedBlock.createChecked({
+            originalValue: child,
+          });
+        }
+      });
+
+      tr.setMeta('addToHistory', false);
+      tr.replaceWith(0, state.doc.nodeSize - 2, parsedContent);
+      tr.setSelection(Selection.atStart(tr.doc));
+      dispatch(tr);
+    }
+  }
+
+  clearContent() {
+    if (this.editorView) {
+      const { state, dispatch } = this.editorView;
+      clearEditorContent(state, dispatch);
     }
   }
 
   getContent(): string {
-    return this.editorView
-      ? JSON.stringify(this.transformer.encode(this.editorView.state.doc))
-      : '';
+    if (!this.editorView) {
+      return '';
+    }
+
+    // Flush DOM to apply current in flight composition.
+    this.flushDOM();
+
+    return JSON.stringify(this.transformer.encode(this.editorView.state.doc));
   }
 
   setTextFormattingStateAndSubscribe(state: TextFormattingState) {
@@ -136,35 +199,21 @@ export default class WebBridgeImpl extends WebBridge
 
       switch (eventName) {
         case 'upload-preview-update': {
-          const uploadPromise = new Promise(resolve => {
-            this.mediaMap.set(payload.file.id, resolve);
-          });
-          payload.file.upfrontId = uploadPromise;
           payload.preview = {
             dimensions: payload.file.dimensions,
           };
-          this.mediaPicker.emit(eventName, payload);
-
+          this.mediaPicker.emit('upload-preview-update', payload);
           return;
         }
         case 'upload-end': {
-          if (typeof payload.file.collectionName === 'string') {
-            /**
-             * We call this custom event instead of `upload-end` to set the collection
-             * As when emitting `upload-end`, the `ready` handler will usually fire before
-             * the `publicId` is resolved which causes a noop, resulting in bad ADF.
-             */
-            this.mediaPicker.emit('collection', payload);
-          }
-          const getUploadPromise = this.mediaMap.get(payload.file.id);
-          if (getUploadPromise) {
-            getUploadPromise!(payload.file.publicId);
-          }
+          /** emit a mobile-only event */
+          this.mediaPicker.emit('mobile-upload-end', payload);
           return;
         }
       }
     }
   }
+
   onPromiseResolved(uuid: string, payload: string) {
     resolvePromise(uuid, JSON.parse(payload));
   }
@@ -203,7 +252,49 @@ export default class WebBridgeImpl extends WebBridge
     }
   }
 
-  insertBlockType(type) {
+  onLinkUpdate(text: string, url: string) {
+    if (!this.editorView) {
+      return;
+    }
+
+    const { state, dispatch } = this.editorView;
+    const { from, to } = state.selection;
+
+    if (!isTextAtPos(from)(state)) {
+      insertLink(from, to, url, text)(state, dispatch);
+      return;
+    }
+
+    // if cursor is on link => modify the whole link
+    const { leftBound, rightBound } = isLinkAtPos(from)(state)
+      ? {
+          leftBound: from - state.doc.resolve(from).textOffset,
+          rightBound: undefined,
+        }
+      : { leftBound: from, rightBound: to };
+
+    [setLinkHref(url, leftBound, rightBound)]
+      .reduce(
+        (cmds, setLinkHrefCmd) =>
+          // if adding link => set link then set link text
+          // if removing link => execute the same reversed
+          hasValue(url)
+            ? [
+                setLinkHrefCmd,
+                setLinkText(text, leftBound, rightBound),
+                ...cmds,
+              ]
+            : [
+                setLinkText(text, leftBound, rightBound),
+                setLinkHrefCmd,
+                ...cmds,
+              ],
+        [] as Command[],
+      )
+      .forEach(cmd => cmd(this.editorView!.state, dispatch));
+  }
+
+  insertBlockType(type: string) {
     if (!this.editorView) {
       return;
     }
@@ -231,7 +322,7 @@ export default class WebBridgeImpl extends WebBridge
         return;
 
       default:
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(`${type} cannot be inserted as it's not supported`);
         return;
     }
@@ -242,12 +333,15 @@ export default class WebBridgeImpl extends WebBridge
       return;
     }
 
+    this.flushDOM();
+
     const { state, dispatch } = this.editorView;
     const item: TypeAheadItem = JSON.parse(payload);
 
     selectTypeAheadItem(
       {
-        selectItem: (state, item, insert) => {
+        // TODO export insert type from editor-core.
+        selectItem: (state: EditorState, item: TypeAheadItem, insert: any) => {
           if (type === 'mention') {
             const { id, name, nickname, accessLevel, userType } = item;
             const renderName = nickname ? nickname : name;
@@ -270,13 +364,47 @@ export default class WebBridgeImpl extends WebBridge
     )(state, dispatch);
   }
 
-  setFocus() {
-    if (!this.editorView || this.editorView.hasFocus()) {
+  setFocus(force: boolean) {
+    if (!this.editorView) {
       return false;
+    }
+    if (this.editorView.hasFocus() && force) {
+      /**
+       * Forcefully remove focus (we re-focus below), as in some scenarios native views make webview cursors invisble.
+       */
+      (this.editorView.dom as HTMLElement).blur();
     }
 
     this.editorView.focus();
     return true;
+  }
+
+  scrollToSelection(): void {
+    if (!this.editorView) {
+      return;
+    }
+
+    this.editorView.dispatch(this.editorView.state.tr.scrollIntoView());
+  }
+
+  flushDOM() {
+    if (!this.editorView) {
+      return false;
+    }
+
+    /**
+     * NOTE: `inDOMChange` is a private API, it's used as a workaround to forcefully apply current composition
+     * when integrators request the content. It doesn't break the users current composing so they may continue
+     * to compose the current item.
+     * @see ED-5924
+     */
+    const domChange = this.editorView.inDOMChange;
+    if (domChange && domChange.composing) {
+      domChange.finish(true);
+      return true;
+    }
+
+    return false;
   }
 
   getRootElement(): HTMLElement | null {

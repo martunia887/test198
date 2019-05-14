@@ -2,7 +2,7 @@ import { getObjectUrlFromFileState } from '../../../../newgen/utils/getObjectUrl
 import { FileState } from '@atlaskit/media-core';
 
 describe('getObjectUrlFromFileState()', () => {
-  it('should return an objectUrl if there is available preview in the state', () => {
+  it('should return an objectUrl if there is available preview in the state', async () => {
     const fileState: FileState = {
       status: 'processing',
       name: '',
@@ -11,16 +11,17 @@ describe('getObjectUrlFromFileState()', () => {
       mimeType: '',
       size: 1,
       preview: {
-        blob: new Blob(),
+        value: new Blob(),
       },
+      representations: {},
     };
 
-    expect(getObjectUrlFromFileState(fileState)).toEqual(
+    expect(await getObjectUrlFromFileState(fileState)).toEqual(
       'mock result of URL.createObjectURL()',
     );
   });
 
-  it('should return undefined if preview is not available', () => {
+  it('should return undefined if preview is not available', async () => {
     const errorState: FileState = {
       status: 'error',
       id: '',
@@ -33,9 +34,10 @@ describe('getObjectUrlFromFileState()', () => {
       mimeType: '',
       name: '',
       size: 1,
+      representations: {},
     };
 
-    expect(getObjectUrlFromFileState(errorState)).toBeUndefined();
-    expect(getObjectUrlFromFileState(processedState)).toBeUndefined();
+    expect(await getObjectUrlFromFileState(errorState)).toBeUndefined();
+    expect(await getObjectUrlFromFileState(processedState)).toBeUndefined();
   });
 });

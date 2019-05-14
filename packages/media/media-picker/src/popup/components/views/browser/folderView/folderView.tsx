@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import * as dateformat from 'dateformat'; // ToDo: FIL-3207 | replace dateformat library with native solution
-import * as filesize from 'filesize'; // ToDo: FIL-3208 | replace filesize library with native solution
+import dateformat from 'dateformat'; // ToDo: FIL-3207 | replace dateformat library with native solution
+import filesize from 'filesize'; // ToDo: FIL-3208 | replace filesize library with native solution
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import { changeCloudAccountFolder } from '../../../../actions/changeCloudAccountFolder';
 import { fetchNextCloudFilesPage } from '../../../../actions/fetchNextCloudFilesPage';
@@ -19,7 +19,6 @@ import {
   Path,
   SelectedItem,
   ServiceAccountLink,
-  ServiceAccountWithType,
   ServiceFile,
   ServiceFolder,
   ServiceFolderItem,
@@ -62,7 +61,6 @@ const getDateString = (timestamp?: number) => {
 
 export interface FolderViewerStateProps {
   readonly path: Path;
-  readonly accounts: ServiceAccountWithType[];
   readonly service: ServiceAccountLink;
   readonly items: ServiceFolderItem[];
   readonly selectedItems: SelectedItem[];
@@ -279,9 +277,8 @@ export default connect<
   {},
   State
 >(
-  ({ view, accounts, selectedItems }) => ({
+  ({ view, selectedItems }) => ({
     path: view.path,
-    accounts,
     service: view.service,
     items: view.items,
     selectedItems,

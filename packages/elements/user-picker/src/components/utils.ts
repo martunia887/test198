@@ -2,6 +2,8 @@ import memoizeOne from 'memoize-one';
 import { ReactChild, ReactElement } from 'react';
 import {
   AtlaskitSelectValue,
+  Email,
+  EmailType,
   Option,
   OptionData,
   Promisable,
@@ -11,12 +13,16 @@ import {
   UserType,
   Value,
 } from '../types';
+import { PopupSelect } from '@atlaskit/select';
 
 export const isUser = (option: OptionData): option is User =>
   option.type === undefined || option.type === UserType;
 
 export const isTeam = (option: OptionData): option is Team =>
   option.type === TeamType;
+
+export const isEmail = (option: OptionData): option is Email =>
+  option.type === EmailType;
 
 export const optionToSelectableOption = (option: OptionData): Option => ({
   label: option.name,
@@ -35,9 +41,7 @@ export const extractOptionValue = (value: AtlaskitSelectValue) => {
 };
 
 export const isIterable = (
-  a:
-    | Promisable<OptionData | OptionData[]>
-    | Iterable<Promisable<OptionData | OptionData[]>>,
+  a: any,
 ): a is Iterable<Promisable<OptionData | OptionData[]>> =>
   typeof a[Symbol.iterator] === 'function';
 
@@ -45,7 +49,16 @@ export const getOptions = memoizeOne((options: OptionData[]) =>
   options.map(optionToSelectableOption),
 );
 
-export const optionToSelectableOptions = memoizeOne((defaultValue: Value) => {
+export interface OptionToSelectableOptions {
+  (defaultValue: OptionData): Option;
+  (defaultValue: OptionData[]): Option[];
+  (defaultValue?: null): null;
+  (defaultValue?: Value): Option | Option[] | null | undefined;
+}
+
+export const optionToSelectableOptions: OptionToSelectableOptions = memoizeOne<
+  OptionToSelectableOptions
+>(((defaultValue: Value) => {
   if (!defaultValue) {
     return null;
   }
@@ -53,7 +66,7 @@ export const optionToSelectableOptions = memoizeOne((defaultValue: Value) => {
     return defaultValue.map(optionToSelectableOption);
   }
   return optionToSelectableOption(defaultValue);
-});
+}) as OptionToSelectableOptions);
 
 export const getAvatarSize = (
   appearance: string,
@@ -73,7 +86,7 @@ export const hasValue = (value?: string): value is string =>
   !!value && value.trim().length > 0;
 
 export const callCallback = <U extends any[], R>(
-  callback: ((...U) => R) | undefined,
+  callback: ((...U: U) => R) | undefined,
   ...args: U
 ): R | undefined => callback && callback(...args);
 
@@ -83,3 +96,10 @@ export const getAvatarUrl = (optionData: OptionData) => {
   }
   return undefined;
 };
+
+export const isPopupUserPickerByComponent = (
+  SelectComponent: React.ComponentClass<any>,
+) => SelectComponent === PopupSelect;
+
+export const isPopupUserPickerByProps = (selectProps: any) =>
+  selectProps.searchThreshold === -1;

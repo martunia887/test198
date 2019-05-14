@@ -8,9 +8,10 @@ import {
 } from '@atlaskit/media-test-helpers';
 import { Rectangle, Camera, Vector2 } from '@atlaskit/media-ui';
 import {
-  InteractiveImg,
+  InteractiveImgComponent,
   zoomLevelAfterResize,
   Props,
+  State,
 } from '../../../../../newgen/viewers/image/interactive-img';
 import { ZoomControls } from '../../../../../newgen/zoomControls';
 import { ImageWrapper, Img } from '../../../../../newgen/styled';
@@ -19,12 +20,14 @@ import { Outcome } from '../../../../../newgen/domain';
 
 function createFixture(props?: Partial<Props>) {
   const onClose = jest.fn();
-  const el = mountWithIntlContext(
-    <InteractiveImg
+  const onBlanketClicked = jest.fn();
+  const el = mountWithIntlContext<Props, State>(
+    <InteractiveImgComponent
       onLoad={jest.fn()}
       onError={jest.fn()}
       src={''}
       onClose={onClose}
+      onBlanketClicked={onBlanketClicked}
       {...props}
     />,
   );
@@ -34,10 +37,10 @@ function createFixture(props?: Partial<Props>) {
   const zoomLevel = new ZoomLevel(1);
 
   el.setState({
-    camera: Outcome.successful(camera),
+    camera: Outcome.successful(camera) as any,
     zoomLevel,
   });
-  return { el, onClose, camera, zoomLevel };
+  return { el, onClose, camera, zoomLevel, onBlanketClicked };
 }
 
 function clickZoomIn(el: ReactWrapper<any, any>) {
@@ -58,14 +61,13 @@ describe('InteractiveImg', () => {
   it('it allows zooming', async () => {
     const { el } = createFixture();
     expect(el.find(ZoomControls)).toHaveLength(1);
-
-    expect(el.state('zoomLevel').value).toEqual(1);
+    expect(el.state().zoomLevel.value).toEqual(1);
 
     clickZoomOut(el);
-    expect(el.state('zoomLevel').value).toBeLessThan(1);
+    expect(el.state().zoomLevel.value).toBeLessThan(1);
 
     clickZoomIn(el);
-    expect(el.state('zoomLevel').value).toEqual(1);
+    expect(el.state().zoomLevel.value).toEqual(1);
   });
 
   it('sets the correct width and height on the Img element', () => {
@@ -118,7 +120,8 @@ describe('InteractiveImg', () => {
       zoomLevel: actualZoomLevel,
       camera: { data: actualCamera },
     } = el.state();
-    expect(actualCamera.viewport).toEqual(newViewport);
+    expect(actualCamera).not.toBeUndefined();
+    expect(actualCamera!.viewport).toEqual(newViewport);
     expect(actualZoomLevel.value).toEqual(expectedZoomLevel.value);
   });
 
@@ -220,6 +223,14 @@ describe('InteractiveImg', () => {
     expect(el.find(Img)).not.toHaveStyleRule('image-rendering', 'pixelated');
     clickZoomIn(el);
     expect(el.find(Img)).toHaveStyleRule('image-rendering', 'pixelated');
+  });
+});
+
+describe('analytics', () => {
+  it('should raise onBlanketClicked when blanket clicked', () => {
+    const { el, onBlanketClicked } = createFixture();
+    el.find(ImageWrapper).simulate('click');
+    expect(onBlanketClicked).toHaveBeenCalled();
   });
 });
 

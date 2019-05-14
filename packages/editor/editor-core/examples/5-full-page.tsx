@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { colors } from '@atlaskit/theme';
 
 import Editor, { EditorProps } from './../src/editor';
 import EditorContext from './../src/ui/EditorContext';
@@ -12,6 +11,7 @@ import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
   macroProvider,
+  autoformattingProvider,
 } from '@atlaskit/editor-test-helpers';
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
@@ -22,20 +22,9 @@ import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
 import { extensionHandlers } from '../example-helpers/extension-handlers';
 import quickInsertProviderFactory from '../example-helpers/quick-insert-provider';
 import { DevTools } from '../example-helpers/DevTools';
+import { TitleInput } from '../example-helpers/PageElements';
 import { EditorActions } from './../src';
-
-export const TitleInput: any = styled.input`
-  border: none;
-  outline: none;
-  font-size: 2.07142857em;
-  margin: 0 0 21px;
-  padding: 0;
-
-  &::placeholder {
-    color: ${colors.N90};
-  }
-`;
-TitleInput.displayName = 'TitleInput';
+import withSentry from '../example-helpers/withSentry';
 
 /**
  * +-------------------------------+
@@ -49,51 +38,58 @@ TitleInput.displayName = 'TitleInput';
  */
 export const Wrapper: any = styled.div`
   box-sizing: border-box;
-  padding: 2px;
   height: calc(100vh - 32px);
 `;
 Wrapper.displayName = 'Wrapper';
 
 export const Content: any = styled.div`
-  padding: 0 20px;
+  padding: 0;
   height: 100%;
-  background: #fff;
   box-sizing: border-box;
 `;
 Content.displayName = 'Content';
 
-// tslint:disable-next-line:no-console
-export const analyticsHandler = (actionName, props) =>
+// eslint-disable-next-line no-console
+export const analyticsHandler = (actionName: string, props?: {}) =>
   console.log(actionName, props);
-// tslint:disable-next-line:no-console
+// eslint-disable-next-line no-console
 const SAVE_ACTION = () => console.log('Save');
 
 export const LOCALSTORAGE_defaultDocKey = 'fabric.editor.example.full-page';
 export const LOCALSTORAGE_defaultTitleKey =
   'fabric.editor.example.full-page.title';
 
-export const SaveAndCancelButtons = props => (
+export const SaveAndCancelButtons = (props: {
+  editorActions?: EditorActions;
+}) => (
   <ButtonGroup>
     <Button
-      tabIndex="-1"
+      tabIndex={-1}
       appearance="primary"
-      onClick={() =>
+      onClick={() => {
+        if (!props.editorActions) {
+          return;
+        }
+
         props.editorActions.getValue().then(value => {
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           console.log(value);
           localStorage.setItem(
             LOCALSTORAGE_defaultDocKey,
             JSON.stringify(value),
           );
-        })
-      }
+        });
+      }}
     >
       Publish
     </Button>
     <Button
-      tabIndex="-1"
+      tabIndex={-1}
       appearance="subtle"
       onClick={() => {
+        if (!props.editorActions) {
+          return;
+        }
         props.editorActions.clear();
         localStorage.removeItem(LOCALSTORAGE_defaultDocKey);
       }}
@@ -105,7 +101,7 @@ export const SaveAndCancelButtons = props => (
 
 export type State = { disabled: boolean; title: string };
 
-export const providers = {
+export const providers: any = {
   emojiProvider: emoji.storyData.getEmojiResource({
     uploadSupported: true,
     currentUser: {
@@ -119,6 +115,7 @@ export const providers = {
   contextIdentifierProvider: storyContextIdentifierProviderFactory(),
   activityProvider: Promise.resolve(new MockActivityResource()),
   macroProvider: Promise.resolve(macroProvider),
+  autoformattingProvider: Promise.resolve(autoformattingProvider),
 };
 
 export const mediaProvider = storyMediaProviderFactory({
@@ -131,7 +128,7 @@ export interface ExampleProps {
   onTitleChange?: (title: string) => void;
 }
 
-export class ExampleEditor extends React.Component<
+class ExampleEditorComponent extends React.Component<
   EditorProps & ExampleProps,
   State
 > {
@@ -141,7 +138,7 @@ export class ExampleEditor extends React.Component<
   };
 
   componentDidMount() {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log(`To try the macro paste handler, paste one of the following links:
 
   www.dumbmacro.com?paramA=CFE
@@ -157,6 +154,7 @@ export class ExampleEditor extends React.Component<
             <Editor
               appearance="full-page"
               analyticsHandler={analyticsHandler}
+              allowAnalyticsGASV3={true}
               quickInsert={{ provider: Promise.resolve(quickInsertProvider) }}
               allowCodeBlocks={{ enableKeybindingsForIDE: true }}
               allowLists={true}
@@ -175,9 +173,11 @@ export class ExampleEditor extends React.Component<
               allowDate={true}
               allowLayouts={{
                 allowBreakout: true,
+                UNSAFE_addSidebarLayouts: true,
               }}
               allowTextAlignment={true}
               allowIndentation={true}
+              allowDynamicTextSizing={true}
               allowTemplatePlaceholders={{ allowInserting: true }}
               UNSAFE_cards={{
                 provider: Promise.resolve(cardProvider),
@@ -188,8 +188,9 @@ export class ExampleEditor extends React.Component<
                 provider: mediaProvider,
                 allowMediaSingle: true,
                 allowResizing: true,
+                allowAnnotation: true,
               }}
-              placeholder="Write something..."
+              placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
               shouldFocus={false}
               disabled={this.state.disabled}
               defaultValue={
@@ -199,13 +200,10 @@ export class ExampleEditor extends React.Component<
               }
               contentComponents={
                 <WithEditorActions
-                  // tslint:disable-next-line:jsx-no-lambda
                   render={actions => (
                     <TitleInput
                       value={this.state.title}
                       onChange={this.handleTitleChange}
-                      placeholder="Give this page a title..."
-                      // tslint:disable-next-line:jsx-no-lambda
                       innerRef={this.handleTitleRef}
                       onFocus={this.handleTitleOnFocus}
                       onBlur={this.handleTitleOnBlur}
@@ -218,7 +216,6 @@ export class ExampleEditor extends React.Component<
               }
               primaryToolbarComponents={
                 <WithEditorActions
-                  // tslint:disable-next-line:jsx-no-lambda
                   render={actions => (
                     <SaveAndCancelButtons editorActions={actions} />
                   )}
@@ -264,6 +261,8 @@ export class ExampleEditor extends React.Component<
     }
   };
 }
+
+export const ExampleEditor = withSentry<EditorProps>(ExampleEditorComponent);
 
 export default function Example(props: EditorProps & ExampleProps) {
   return (

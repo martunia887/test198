@@ -1,12 +1,8 @@
 import { Node, Schema } from 'prosemirror-model';
-import { Transaction } from 'prosemirror-state';
-import {
-  validator,
-  Entity,
-  VALIDATION_ERRORS,
-  ValidationError,
-} from '@atlaskit/adf-utils';
+import { Transaction, Selection, EditorState } from 'prosemirror-state';
+import { validator, ADFEntity, ValidationError } from '@atlaskit/adf-utils';
 import { analyticsService } from '../analytics';
+import { ContentNodeWithPos } from 'prosemirror-utils';
 
 const FALSE_POSITIVE_MARKS = ['code', 'alignment', 'indentation'];
 
@@ -103,7 +99,7 @@ export function isEmptyDocument(node: Node): boolean {
 }
 
 function wrapWithUnsupported(
-  originalValue: Entity,
+  originalValue: ADFEntity,
   type: 'block' | 'inline' = 'block',
 ) {
   return {
@@ -113,15 +109,16 @@ function wrapWithUnsupported(
 }
 
 function fireAnalyticsEvent(
-  entity: Entity,
+  entity: ADFEntity,
   error: ValidationError,
   type: 'block' | 'inline' | 'mark' = 'block',
 ) {
-  const { code } = error;
+  const { code, meta } = error;
   analyticsService.trackEvent('atlassian.editor.unsupported', {
     name: entity.type || 'unknown',
     type,
     errorCode: code,
+    meta: meta && JSON.stringify(meta),
   });
 }
 
@@ -141,7 +138,7 @@ export function processRawValue(
     try {
       node = JSON.parse(value);
     } catch (e) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.error(`Error processing value: ${value} isn't a valid JSON`);
       return;
     }
@@ -150,7 +147,7 @@ export function processRawValue(
   }
 
   if (Array.isArray(node)) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error(
       `Error processing value: ${node} is an array, but it must be an object.`,
     );
@@ -161,7 +158,7 @@ export function processRawValue(
     const nodes = Object.keys(schema.nodes);
     const marks = Object.keys(schema.marks);
     const validate = validator(nodes, marks, { allowPrivateAttributes: true });
-    const emptyDoc: Entity = { type: 'doc', content: [] };
+    const emptyDoc: ADFEntity = { type: 'doc', content: [] };
 
     // ProseMirror always require a child under doc
     if (node.type === 'doc') {
@@ -178,13 +175,13 @@ export function processRawValue(
     }
 
     const { entity = emptyDoc } = validate(
-      node as Entity,
+      node as ADFEntity,
       (entity, error, options) => {
         // Remove any invalid marks
         if (marks.indexOf(entity.type) > -1) {
           if (
             !(
-              error.code === VALIDATION_ERRORS.INVALID_TYPE &&
+              error.code === 'INVALID_TYPE' &&
               FALSE_POSITIVE_MARKS.indexOf(entity.type) > -1
             )
           ) {
@@ -199,7 +196,7 @@ export function processRawValue(
          * And, also empty `text` node is not valid.
          */
         if (
-          error.code === VALIDATION_ERRORS.MISSING_PROPERTY &&
+          error.code === 'MISSING_PROPERTIES' &&
           entity.type === 'paragraph'
         ) {
           return { type: 'paragraph', content: [] };
@@ -207,7 +204,7 @@ export function processRawValue(
 
         // Can't fix it by wrapping
         // TODO: We can repair missing content like `panel` without a `paragraph`.
-        if (error.code === VALIDATION_ERRORS.INVALID_CONTENT_LENGTH) {
+        if (error.code === 'INVALID_CONTENT_LENGTH') {
           return entity;
         }
 
@@ -229,7 +226,7 @@ export function processRawValue(
     parsedDoc.check();
     return parsedDoc;
   } catch (e) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error(
       `Error processing value: "${JSON.stringify(node)}" – ${e.message}`,
     );
@@ -256,3 +253,50 @@ export const getStepRange = (
 
   return null;
 };
+
+/**
+ * Find the farthest node given a condition
+ * @param predicate Function to check the node
+ */
+export const findFarthestParentNode = (predicate: (node: Node) => boolean) => (
+  selection: Selection,
+): ContentNodeWithPos | null => {
+  const { $from } = selection;
+
+  let candidate: ContentNodeWithPos | null = null;
+
+  for (let i = $from.depth; i > 0; i--) {
+    const node = $from.node(i);
+    if (predicate(node)) {
+      candidate = {
+        pos: i > 0 ? $from.before(i) : 0,
+        start: $from.start(i),
+        depth: i,
+        node,
+      };
+    }
+  }
+  return candidate;
+};
+
+export const isSelectionEndOfParagraph = (state: EditorState): boolean =>
+  state.selection.$to.parent.type === state.schema.nodes.paragraph &&
+  state.selection.$to.pos === state.doc.resolve(state.selection.$to.pos).end();
+
+export function nodesBetweenChanged(
+  tr: Transaction,
+  f: (
+    node: Node<any>,
+    pos: number,
+    parent: Node<any>,
+    index: number,
+  ) => boolean | null | undefined | void,
+  startPos?: number,
+) {
+  const stepRange = getStepRange(tr);
+  if (!stepRange) {
+    return;
+  }
+
+  tr.doc.nodesBetween(stepRange.from, stepRange.to, f, startPos);
+}

@@ -1,9 +1,9 @@
-/* tslint:disable:no-bitwise */
+/* eslint-disable no-bitwise */
 import * as ts from 'typescript';
-import * as fs from 'fs';
-import * as path from 'path';
+import { writeFileSync } from 'fs';
+import { resolve, join } from 'path';
 import * as prettier from 'prettier';
-import * as mkdirp from 'mkdirp';
+import mkdirp from 'mkdirp';
 
 import JSONSchemaNode, {
   SchemaNode,
@@ -40,8 +40,8 @@ import {
 } from './utils';
 
 export default (
-  files,
-  flags,
+  files: string[],
+  flags: any,
   root = 'doc_node',
   description = 'Schema for Atlassian Document Format.',
 ) => {
@@ -60,46 +60,51 @@ export default (
   program.getSourceFiles().forEach(walk);
 
   waitForTicks()
-    .then(() => mkdirp(flags.outDir))
+    .then(() => mkdirp(flags.outDir, () => {}))
     .then(() => {
       const { outDir, stage } = flags;
-      const resolvedOutDir = path.resolve(outDir);
+      const resolvedOutDir = resolve(outDir);
       if (!isSpecMode()) {
         jsonSchema.markAsUsed(root);
         const outputFileName =
-          // tslint:disable-next-line:triple-equals
           stage != null ? `stage-${stage}.json` : 'full.json';
-        fs.writeFileSync(
-          path.join(resolvedOutDir, outputFileName),
+        writeFileSync(
+          join(resolvedOutDir, outputFileName),
           JSON.stringify(jsonSchema, null, 2) + '\n',
         );
       } else {
-        prettier.resolveConfig(process.cwd()).then(options => {
+        prettier.resolveConfig(process.cwd()).then(resolvedConfig => {
+          const options = {
+            parser: 'babylon',
+            ...resolvedConfig,
+          } as prettier.Options;
+
           const exports = [
             '// DO NOT MODIFY THIS FILE, USE `yarn generate:spec`',
           ];
+
           jsonSchema.definitions.forEach((def, name) => {
             const fileName = getPmName(name);
             exports.push(
               `export { default as ${fileName} } from './${fileName}';`,
             );
-            fs.writeFileSync(
-              path.join(resolvedOutDir, `${fileName}.ts`),
+            writeFileSync(
+              join(resolvedOutDir, `${fileName}.ts`),
               prettier.format(
                 `export default ${JSON.stringify(def.node.toSpec())}`,
-                options,
+                options!,
               ),
             );
           });
           // Generate index.ts with exports
-          fs.writeFileSync(
-            path.join(resolvedOutDir, 'index.ts'),
-            prettier.format(exports.join('\n'), options),
+          writeFileSync(
+            join(resolvedOutDir, 'index.ts'),
+            prettier.format(exports.join('\n'), options!),
           );
         });
       }
     })
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     .catch(console.error);
 
   function waitForTicks() {
@@ -145,18 +150,18 @@ export default (
     }
   }
 
-  function shouldExclude(stage: string | undefined) {
+  function shouldExclude(stage?: string) {
     return (
       (flags.stage === undefined && stage !== undefined) ||
       (flags.stage !== undefined &&
         stage !== undefined &&
-        stage !== flags.stage)
+        stage.toString() !== flags.stage)
     );
   }
 
   function getSchemaNodeFromType(
     type: ts.Type,
-    validators = {},
+    validators: any = {},
   ): SchemaNode | undefined {
     const typeId = (type as any).id;
     if (shouldExclude(validators['stage'])) {
@@ -245,7 +250,7 @@ export default (
             const propType = getTypeFromSymbol(checker, prop);
             const isRequired =
               (prop.getFlags() & ts.SymbolFlags.Optional) === 0;
-            const validators = getTags(prop.getJsDocTags());
+            const validators: any = getTags(prop.getJsDocTags());
             if (!shouldExclude(validators['stage'])) {
               // Remove it from validators otherwise it will end up as a property in ADF
               delete validators['stage'];

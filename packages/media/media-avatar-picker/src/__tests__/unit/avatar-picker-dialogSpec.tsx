@@ -1,22 +1,39 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import ModalDialog from '@atlaskit/modal-dialog';
+import ModalDialog, { ModalFooter } from '@atlaskit/modal-dialog';
 import Button from '@atlaskit/button';
-import { Avatar } from '../../../src/avatar-list';
-import { ImageNavigator, CONTAINER_SIZE } from '../../../src/image-navigator';
-import { PredefinedAvatarList } from '../../../src/predefined-avatar-list';
 import {
-  AvatarPickerDialog,
+  smallImage,
+  mountWithIntlContext,
+  asMock,
+} from '@atlaskit/media-test-helpers';
+import * as MediaUI from '@atlaskit/media-ui';
+import { Avatar } from '../../avatar-list';
+import { ImageNavigator, CONTAINER_SIZE } from '../../image-navigator';
+import { PredefinedAvatarList } from '../../predefined-avatar-list';
+import { AvatarPickerDialog } from '../../avatar-picker-dialog';
+import { DEFAULT_VISIBLE_PREDEFINED_AVATARS } from '../../avatar-picker-dialog/layout-const';
+import { PredefinedAvatarView } from '../../predefined-avatar-view';
+import {
+  Mode,
   AvatarPickerDialogProps,
   AvatarPickerDialogState,
-} from '../../../src/avatar-picker-dialog';
-import { DEFAULT_VISIBLE_PREDEFINED_AVATARS } from '../../../src/avatar-picker-dialog/layout-const';
-import { dataURItoFile, fileToDataURI } from '../../../src/util';
-import { smallImage, mountWithIntlContext } from '@atlaskit/media-test-helpers';
-import { PredefinedAvatarView } from '../../../src/predefined-avatar-view';
-import { Mode } from '../../../src';
+} from '../../avatar-picker-dialog/types';
 
 describe('Avatar Picker Dialog', () => {
+  let dataURItoFile: typeof MediaUI.dataURItoFile;
+  let fileFromDataURI: File;
+
+  beforeEach(() => {
+    dataURItoFile = jest.spyOn(MediaUI, 'dataURItoFile') as any;
+    fileFromDataURI = new File([], 'some-file-name');
+    asMock(dataURItoFile).mockReturnValue(fileFromDataURI);
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   const renderWithProps = (props: Partial<AvatarPickerDialogProps>) => {
     const component = mountWithIntlContext(
       <AvatarPickerDialog
@@ -38,43 +55,29 @@ describe('Avatar Picker Dialog', () => {
     return component;
   };
 
-  const newImage = dataURItoFile(smallImage);
-
   const updateComponentWithNewImage = (component: any) => {
     // get the handler which the ImageNavigator triggers when the image loads, fire it
     const { onImageLoaded } = component.find(ImageNavigator).props();
-    onImageLoaded(newImage, { x: 0, y: 0, size: CONTAINER_SIZE });
+    onImageLoaded(fileFromDataURI, { x: 0, y: 0, size: CONTAINER_SIZE });
     component.update();
   };
 
   const renderSaveButton = (props: Partial<AvatarPickerDialogProps> = {}) => {
-    const component = renderWithProps(props);
-    const { footer } = component.find(ModalDialog).props() as { footer: any };
-
-    return shallow(footer())
+    return renderWithProps(props)
+      .find(ModalFooter)
       .find(Button)
-      .find({ appearance: 'primary' });
+      .first();
   };
 
   it('when save button is clicked onImagePicked should be called', () => {
     const onImagePicked = jest.fn();
 
-    const component = renderWithProps({
+    renderSaveButton({
       onImagePicked,
       imageSource: smallImage,
-    });
+    }).simulate('click');
 
-    const { footer } = component.find(ModalDialog).props() as {
-      footer: any;
-    };
-
-    // click on the save button
-    shallow(footer())
-      .find(Button)
-      .find({ appearance: 'primary' })
-      .simulate('click');
-
-    expect(onImagePicked).toBeCalledWith(newImage, {
+    expect(onImagePicked).toBeCalledWith(fileFromDataURI, {
       x: 0,
       y: 0,
       size: CONTAINER_SIZE,
@@ -93,14 +96,10 @@ describe('Avatar Picker Dialog', () => {
     const croppedImgDataURI = 'data:image/meme;based64:w0w';
     component.instance()['exportCroppedImage'] = () => croppedImgDataURI;
 
-    const { footer } = component.find(ModalDialog).props() as {
-      footer: any;
-    };
-
-    // click on the save button
-    shallow(footer())
+    component
+      .find(ModalFooter)
       .find(Button)
-      .find({ appearance: 'primary' })
+      .first()
       .simulate('click');
 
     expect(onImagePickedDataURI).toBeCalledWith(croppedImgDataURI);
@@ -115,11 +114,10 @@ describe('Avatar Picker Dialog', () => {
     const { onAvatarSelected } = component.find(PredefinedAvatarList).props();
     onAvatarSelected(selectedAvatar);
 
-    const { footer } = component.find(ModalDialog).props() as { footer: any };
-    // click on the save button
-    shallow(footer())
+    component
+      .find(ModalFooter)
       .find(Button)
-      .find({ appearance: 'primary' })
+      .first()
       .simulate('click');
 
     expect(onAvatarPicked).toBeCalledWith(selectedAvatar);
@@ -199,7 +197,9 @@ describe('Avatar Picker Dialog', () => {
     const selectedAvatar: Avatar = { dataURI: 'http://an.avatar.com/123' };
     const avatars = [selectedAvatar];
     const component = renderWithProps({ avatars });
-    const { header } = component.find(ModalDialog).props() as { header: any };
+    const {
+      components: { Header: header },
+    } = component.find(ModalDialog).props() as { components: { Header: any } };
     const title = shallow(header()) as any;
 
     expect(title.props().children.props.defaultMessage).toBe(
@@ -214,7 +214,9 @@ describe('Avatar Picker Dialog', () => {
       avatars,
       title: 'test-title',
     });
-    const { header } = component.find(ModalDialog).props() as { header: any };
+    const {
+      components: { Header: header },
+    } = component.find(ModalDialog).props() as { components: { Header: any } };
     const title = shallow(header());
     expect(title.text()).toBe('test-title');
   });
@@ -222,58 +224,24 @@ describe('Avatar Picker Dialog', () => {
   it('should render default primary button text', () => {
     const selectedAvatar: Avatar = { dataURI: 'http://an.avatar.com/123' };
     const avatars = [selectedAvatar];
-    const component = renderWithProps({ avatars });
-    const { footer } = component.find(ModalDialog).props() as { footer: any };
-    const footerComponent = shallow(footer());
-    expect(
-      (footerComponent
-        .find(Button)
-        .at(0)
-        .props() as any).children.props.defaultMessage,
-    ).toBe('Save');
+    const component = renderSaveButton({ avatars });
+
+    expect((component.props() as any).children.props.defaultMessage).toBe(
+      'Save',
+    );
   });
 
   it('should by able to customise primary button text', () => {
     const selectedAvatar: Avatar = { dataURI: 'http://an.avatar.com/123' };
     const avatars = [selectedAvatar];
-    const component = renderWithProps({
+    const component = renderSaveButton({
       avatars,
       primaryButtonText: 'test-primary-text',
     });
-    const { footer } = component.find(ModalDialog).props() as { footer: any };
-    const footerComponent = shallow(footer());
-    expect(
-      (footerComponent
-        .find(Button)
-        .at(0)
-        .props() as React.Props<{}>).children,
-    ).toBe('test-primary-text');
-  });
 
-  it('should return same File when image source is provided by default', () => {
-    const onImagePicked = jest.fn();
-
-    const component = renderWithProps({
-      imageSource: smallImage,
-      onImagePicked,
-    });
-
-    const { footer } = component.find(ModalDialog).props() as {
-      footer: any;
-    };
-
-    shallow(footer())
-      .find(Button)
-      .find({ appearance: 'primary' })
-      .simulate('click');
-
-    const savedImage = onImagePicked.mock.calls[0][0];
-    expect(onImagePicked).toBeCalled();
-    expect(savedImage).toBeInstanceOf(File);
-
-    return fileToDataURI(savedImage).then(dataURI => {
-      expect(dataURI).toBe(smallImage);
-    });
+    expect((component.props() as React.Props<{}>).children).toBe(
+      'test-primary-text',
+    );
   });
 
   it('should clear selected image when cross clicked', () => {

@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.elements.json",
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",
@@ -9,5 +9,9 @@
     "./docs/**/*.tsx",
     "./examples/**/*.ts",
     "./examples/**/*.tsx"
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+    
+  }
 }

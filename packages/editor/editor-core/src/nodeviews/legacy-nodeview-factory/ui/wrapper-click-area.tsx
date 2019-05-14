@@ -38,7 +38,6 @@ interface State {
   selected: boolean;
 }
 
-// tslint:disable-next-line:variable-name
 export default function wrapComponentWithClickArea(
   ReactComponent: ReactComponentConstructor,
   inline?: boolean,
@@ -66,13 +65,13 @@ export default function wrapComponentWithClickArea(
     }
 
     private handleDocumentSelectionChange = (
-      anchorPos: number,
-      headPos: number,
+      fromPos: number,
+      toPos: number,
     ) => {
       const { getPos, onSelection } = this.props;
       const nodePos = getPos();
 
-      const selected = nodePos >= anchorPos && nodePos < headPos;
+      const selected = nodePos >= fromPos && nodePos < toPos;
 
       const oldSelected = this.state.selected;
       this.setState({ selected }, () => {

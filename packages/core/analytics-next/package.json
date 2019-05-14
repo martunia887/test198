@@ -1,20 +1,18 @@
 {
   "name": "@atlaskit/analytics-next",
-  "version": "3.1.2",
+  "version": "5.0.0",
   "description": "The 🆕 Atlaskit component analytics framework",
   "license": "Apache-2.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "index.js",
   "atlaskit:src": "src/index.js",
+  "types": "index.d.ts",
   "sideEffects": false,
-  "files": [
-    "dist"
-  ],
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Trey S",
-    "Alex R",
-    "Peter G"
+    "Sean C",
+    "Ajay M",
+    "Daniel D",
+    "Kang C"
   ],
   "atlaskit": {
     "name": "Analytics next",
@@ -23,20 +21,21 @@
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "babel-runtime": "^6.26.0",
     "prop-types": "^15.5.10"
   },
   "peerDependencies": {
-    "react": "^16.4.0"
+    "react": "^16.8.0"
   },
   "devDependencies": {
     "@atlaskit/build-utils": "^2.0.0",
-    "@atlaskit/button": "^10.1.1",
-    "@atlaskit/docs": "^6.0.0",
-    "@atlaskit/field-text": "^7.0.18",
+    "@atlaskit/button": "^13.0.0",
+    "@atlaskit/docs": "^8.0.0",
+    "@atlaskit/field-text": "^9.0.0",
+    "@atlaskit/ssr": "^0.1.0",
+    "@atlaskit/type-helpers": "^4.0.0",
     "enzyme": "^3.7.0",
     "lodash.isequal": "^4.5.0",
-    "react-dom": "^16.4.2",
+    "react-dom": "^16.8.0",
     "redux": "^3.7.2"
   }
 }

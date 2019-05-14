@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
-import { EditorView, NodeView } from 'prosemirror-view';
+import { EditorView, NodeView, Decoration } from 'prosemirror-view';
 import DecisionItem from '../ui/Decision';
-import { ReactNodeView } from '../../../nodeviews';
+import { ReactNodeView, ReactComponentProps } from '../../../nodeviews';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
+import WithPluginState from '../../../ui/WithPluginState';
+import {
+  stateKey as taskPluginKey,
+  TaskDecisionPluginState,
+} from '../pm-plugins/main';
 
 export interface Props {
   children?: React.ReactNode;
@@ -18,7 +23,7 @@ class Decision extends ReactNodeView {
 
   createDomRef() {
     const domRef = document.createElement('li');
-    domRef.style['list-style-type'] = 'none';
+    domRef.style['list-style-type' as any] = 'none';
     return domRef;
   }
 
@@ -26,16 +31,42 @@ class Decision extends ReactNodeView {
     return { dom: document.createElement('div') };
   }
 
-  render(props, forwardRef) {
+  render(_props: ReactComponentProps, forwardRef: any) {
     return (
-      <DecisionItem
-        contentRef={forwardRef}
-        showPlaceholder={this.isContentEmpty()}
+      <WithPluginState
+        plugins={{
+          taskDecisionPlugin: taskPluginKey,
+        }}
+        render={({
+          taskDecisionPlugin,
+        }: {
+          taskDecisionPlugin: TaskDecisionPluginState;
+        }) => {
+          let insideCurrentNode = false;
+          if (
+            taskDecisionPlugin &&
+            taskDecisionPlugin.currentTaskDecisionItem
+          ) {
+            insideCurrentNode = this.node.eq(
+              taskDecisionPlugin.currentTaskDecisionItem,
+            );
+          }
+          return (
+            <DecisionItem
+              contentRef={forwardRef}
+              showPlaceholder={!insideCurrentNode && this.isContentEmpty()}
+            />
+          );
+        }}
       />
     );
   }
 
-  update(node: PMNode, decorations) {
+  viewShouldUpdate() {
+    return false;
+  }
+
+  update(node: PMNode, decorations: Decoration[]) {
     /**
      * Returning false here when the previous content was empty – fixes an error where the editor fails to set selection
      * inside the contentDOM after a transaction. See ED-2374.
@@ -43,7 +74,7 @@ class Decision extends ReactNodeView {
     return super.update(
       node,
       decorations,
-      (currentNode, newNode) => !this.isContentEmpty(),
+      (_currentNode, _newNode) => !this.isContentEmpty(),
     );
   }
 }

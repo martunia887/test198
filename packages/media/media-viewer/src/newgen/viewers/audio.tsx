@@ -25,6 +25,8 @@ export type Props = Readonly<{
   previewCount: number;
   featureFlags?: MediaViewerFeatureFlags;
   showControls?: () => void;
+  onCanPlay?: () => void;
+  onError?: () => void;
 }>;
 
 export type State = BaseState<string> & {
@@ -71,7 +73,7 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
   };
 
   protected renderSuccessful(src: string) {
-    const { showControls, previewCount } = this.props;
+    const { showControls, previewCount, onCanPlay, onError } = this.props;
 
     const useCustomAudioPlayer = !isIE();
     const isAutoPlay = previewCount === 0;
@@ -85,6 +87,8 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
             src={src}
             isShortcutEnabled={true}
             showControls={showControls}
+            onCanPlay={onCanPlay}
+            onError={onError}
           />
         </CustomAudioPlayerWrapper>
       </AudioPlayer>
@@ -148,7 +152,7 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
           throw new Error('No audio artifacts found');
         }
       } else {
-        audioUrl = getObjectUrlFromFileState(item);
+        audioUrl = await getObjectUrlFromFileState(item);
         if (!audioUrl) {
           this.setState({
             content: Outcome.pending(),

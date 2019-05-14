@@ -10,6 +10,7 @@ import {
 } from '../../domain';
 
 import { mapAuthToAuthHeaders } from '../../domain/auth';
+import { MediaStore, MediaFile } from '@atlaskit/media-store';
 
 const METADATA_POLL_INTERVAL_MS = 2000;
 const giphyApiKey = 'lBOxhhz1BM62Y3JsK0iQv1pRYyOGUjR8';
@@ -61,12 +62,7 @@ export interface Fetcher {
     folderId: string,
     cursor?: string,
   ): Promise<ServiceFolder>;
-  pollFile(
-    auth: Auth,
-    fileId: string,
-    collection?: string,
-  ): Promise<FileDetails>;
-  getImage(auth: Auth, fileId: string, collection?: string): Promise<Blob>;
+  pollFile(auth: Auth, fileId: string, collection?: string): Promise<MediaFile>;
   getServiceList(auth: Auth): Promise<ServiceAccountWithType[]>;
   unlinkCloudAccount(auth: Auth, accountId: string): Promise<void>;
   fetchTrendingGifs(offset?: number): Promise<GiphyData>;
@@ -111,48 +107,28 @@ export class MediaApiFetcher implements Fetcher {
     auth: Auth,
     fileId: string,
     collection?: string,
-  ): Promise<FileDetails> {
-    return new Promise((resolve, reject) => {
-      return this.query(
-        `${fileStoreUrl(auth.baseUrl)}/file/${fileId}`,
-        'GET',
-        {
-          collection,
-        },
-        mapAuthToAuthHeaders(auth),
-      )
-        .then(toJson)
-        .then(({ data: file }) => {
-          if (
-            file.processingStatus === 'succeeded' ||
-            file.processingStatus === 'failed'
-          ) {
-            resolve(file);
-          } else {
-            window.setTimeout(() => {
-              this.pollFile(auth, fileId, collection).then(resolve, reject);
-            }, METADATA_POLL_INTERVAL_MS);
-          }
-        })
-        .catch(() => {
-          // this._handleUploadError('metadata_fetch_fail', JSON.stringify(err));
-          reject('metadata_fetch_fail');
-        });
+  ): Promise<MediaFile> {
+    const store = new MediaStore({
+      authProvider: () => Promise.resolve(auth),
     });
-  }
 
-  getImage(auth: Auth, fileId: string, collection?: string): Promise<Blob> {
-    const collectionName = collection ? `?collection=${collection}` : '';
-    const url = `${fileStoreUrl(
-      auth.baseUrl,
-    )}/file/${fileId}/image${collectionName}`;
-
-    return this.query(
-      url,
-      'GET',
-      { mode: 'full-fit' },
-      mapAuthToAuthHeaders(auth),
-    ).then(response => response.blob());
+    return new Promise(async (resolve, reject) => {
+      try {
+        const file = (await store.getFile(fileId, { collection })).data;
+        if (
+          file.processingStatus === 'succeeded' ||
+          file.processingStatus === 'failed'
+        ) {
+          resolve(file);
+        } else {
+          window.setTimeout(() => {
+            this.pollFile(auth, fileId, collection).then(resolve, reject);
+          }, METADATA_POLL_INTERVAL_MS);
+        }
+      } catch (e) {
+        reject('metadata_fetch_fail');
+      }
+    });
   }
 
   getServiceList(auth: Auth): Promise<ServiceAccountWithType[]> {
@@ -172,7 +148,7 @@ export class MediaApiFetcher implements Fetcher {
       'DELETE',
       {},
       mapAuthToAuthHeaders(auth),
-    ).then(toJson);
+    ).then(() => {});
   }
 
   stringifyParams(queryParams: {

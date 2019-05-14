@@ -1,23 +1,17 @@
 {
   "name": "@atlaskit/select",
-  "version": "6.1.17",
+  "version": "9.0.1",
   "description": "React component which allows selection of item(s) from a dropdown list.",
   "license": "Apache-2.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "index.js",
   "atlaskit:src": "src/index.js",
   "sideEffects": false,
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/single-select",
-  "files": [
-    "dist"
-  ],
   "author": "Atlassian Pty Ltd",
   "maintainers": [
     "Sean C",
-    "Charles L",
-    "Mike G",
-    "Joss M",
-    "Jed W"
+    "Ajay M",
+    "Charles L"
   ],
   "atlaskit": {
     "name": "Select",
@@ -25,38 +19,39 @@
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
-    "@atlaskit/analytics-next": "^3.1.2",
-    "@atlaskit/icon": "^15.0.2",
-    "@atlaskit/spinner": "^9.0.13",
-    "@atlaskit/theme": "^7.0.1",
+    "@atlaskit/analytics-next": "^5.0.0",
+    "@atlaskit/icon": "^17.0.0",
+    "@atlaskit/spinner": "^11.0.0",
+    "@atlaskit/theme": "^9.0.0",
     "@babel/runtime": "^7.0.0",
     "focus-trap": "^2.4.5",
     "memoize-one": "^3.0.1",
     "react-fast-compare": "^2.0.1",
     "react-node-resolver": "^1.0.1",
     "react-popper": "1.0.2",
-    "react-select": "~2.1.1",
+    "react-select": "^2.4.2",
     "react-transition-group": "^2.2.1",
     "shallow-equal": "^1.0.0"
   },
   "peerDependencies": {
-    "react": "^16.4.0",
-    "react-dom": "^16.4.2",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
     "@atlaskit/build-utils": "^2.0.0",
-    "@atlaskit/button": "^10.1.1",
-    "@atlaskit/checkbox": "^5.0.10",
-    "@atlaskit/docs": "^6.0.0",
-    "@atlaskit/form": "^5.0.0",
-    "@atlaskit/logo": "^9.2.6",
-    "@atlaskit/modal-dialog": "^7.1.1",
-    "@atlaskit/tooltip": "^12.1.13",
-    "@atlaskit/visual-regression": "^0.0.1",
+    "@atlaskit/button": "^13.0.0",
+    "@atlaskit/checkbox": "^7.0.0",
+    "@atlaskit/docs": "^8.0.0",
+    "@atlaskit/form": "^6.0.0",
+    "@atlaskit/logo": "^11.0.0",
+    "@atlaskit/modal-dialog": "^9.0.0",
+    "@atlaskit/ssr": "^0.1.0",
+    "@atlaskit/tooltip": "^14.0.0",
+    "@atlaskit/visual-regression": "^0.1.0",
     "@atlaskit/webdriver-runner": "^0.1.0",
     "enzyme": "^3.7.0",
-    "react-dom": "^16.4.2",
+    "react-dom": "^16.8.0",
     "react-value": "^0.2.0"
   }
 }

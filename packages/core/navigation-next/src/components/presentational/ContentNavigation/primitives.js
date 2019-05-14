@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Fragment, type Node } from 'react';
-import { keyframes } from 'emotion';
+import { css, keyframes } from '@emotion/core';
 import { colors } from '@atlaskit/theme';
 
 import {
@@ -56,7 +56,17 @@ const ProductNavigationPrimitiveBase = ({
   children,
   theme = { mode: light, context: 'product' },
 }: ProductNavigationPrimitiveBaseProps) => (
-  <div css={theme.mode.contentNav().product}>
+  <div
+    css={{
+      ...theme.mode.contentNav().product,
+      '&:not(:only-child)': {
+        // Setting z-index ensures ScrollHints stay below the container nav
+        // &:not(:only-child) sets it only when both container and product
+        // nav are rendered.
+        zIndex: -1,
+      },
+    }}
+  >
     <ScrollProvider>{children}</ScrollProvider>
   </div>
 );
@@ -106,9 +116,9 @@ const ContainerNavigationPrimitiveBase = ({
 
   return (
     <div
-      css={{
+      css={css`
+      ${{
         ...theme.mode.contentNav().container,
-        animationName,
         animationDuration: transitionDuration,
         animationFillMode: 'forwards',
         animationTimingFunction: transitionTimingFunction,
@@ -117,6 +127,8 @@ const ContainerNavigationPrimitiveBase = ({
         transitionTimingFunction,
         transform,
       }}
+      animation-name: ${animationName};
+      `}
     >
       <ScrollProvider>{children}</ScrollProvider>
     </div>

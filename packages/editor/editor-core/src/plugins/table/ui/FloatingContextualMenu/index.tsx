@@ -1,14 +1,23 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { EditorView } from 'prosemirror-view';
-import { findCellRectClosestToPos, isCellSelection } from 'prosemirror-utils';
-import { findDomRefAtPos, getSelectionRect } from 'prosemirror-utils';
+import { EditorState } from 'prosemirror-state';
+import {
+  findDomRefAtPos,
+  getSelectionRect,
+  findCellRectClosestToPos,
+  isCellSelection,
+} from 'prosemirror-utils';
 import {
   Popup,
   akEditorFloatingOverlapPanelZIndex,
 } from '@atlaskit/editor-common';
 import ContextualMenu from './ContextualMenu';
-import { contextualMenuTriggerSize, tablePopupStyles } from '../styles';
+import {
+  contextualMenuDropdownWidth,
+  contextualMenuTriggerSize,
+  tablePopupStyles,
+} from '../styles';
 import { pluginKey } from '../../pm-plugins/main';
 import { PluginConfig } from '../../types';
 
@@ -17,7 +26,7 @@ const MenuWrapper = styled.div`
 `;
 
 // offset of the contextual menu dropdown
-const calculateOffset = (targetCellRef, state) => {
+const calculateOffset = (targetCellRef: HTMLElement, state: EditorState) => {
   const { tableRef } = pluginKey.getState(state);
   let top = -contextualMenuTriggerSize;
 
@@ -29,7 +38,7 @@ const calculateOffset = (targetCellRef, state) => {
       top -= topDiff + 2;
     }
   }
-  return [1, top];
+  return [contextualMenuTriggerSize / 2, top];
 };
 
 export interface Props {
@@ -77,16 +86,20 @@ const FloatingContextualMenu = ({
       mountTo={mountPoint}
       boundariesElement={boundariesElement}
       scrollableElement={scrollableElement}
-      fitHeight={100}
-      fitWidth={200}
+      fitHeight={188}
+      fitWidth={contextualMenuDropdownWidth}
       // z-index value below is to ensure that this menu is above other floating menu
       // in table, but below floating dialogs like typeaheads, pickers, etc.
       zIndex={akEditorFloatingOverlapPanelZIndex}
+      forcePlacement={true}
     >
       <MenuWrapper>
         <ContextualMenu
           editorView={editorView}
-          offset={calculateOffset(targetCellRef, editorView.state)}
+          offset={calculateOffset(
+            targetCellRef as HTMLElement,
+            editorView.state,
+          )}
           isOpen={isOpen}
           targetCellPosition={targetCellPosition}
           allowMergeCells={pluginConfig!.allowMergeCells}

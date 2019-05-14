@@ -7,7 +7,7 @@ import {
   tr,
   tdEmpty,
   tdCursor,
-  createEditor,
+  createEditorFactory,
 } from '@atlaskit/editor-test-helpers';
 import tablesPlugin from '../../../../plugins/table';
 import codeBlockPlugin from '../../../../plugins/code-block';
@@ -21,6 +21,8 @@ import {
 } from '../../../../plugins/table/types';
 
 describe('TableView', () => {
+  const createEditor = createEditorFactory<TablePluginState>();
+
   const editor = (doc: any, trackEvent = () => {}) => {
     const tableOptions = {
       allowNumberColumn: true,
@@ -28,7 +30,7 @@ describe('TableView', () => {
       allowHeaderColumn: true,
       permittedLayouts: 'all',
     } as PluginConfig;
-    return createEditor<TablePluginState>({
+    return createEditor({
       doc,
       editorPlugins: [
         listPlugin,
@@ -60,8 +62,8 @@ describe('TableView', () => {
     const handleRefMock = sinon
       // @ts-ignore
       .stub(TableView.prototype, '_handleRef')
-      .callsFake(ref => {
-        window.setTimeout(ref => handleRefInnerMock.call(this, ref), 0);
+      .callsFake((ref: HTMLElement) => {
+        window.setTimeout(() => handleRefInnerMock.call(this, ref), 0);
       });
 
     // create the NodeView

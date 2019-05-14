@@ -1,20 +1,17 @@
 import * as React from 'react';
-import { MediaItemType } from '@atlaskit/media-core';
+import { Identifier, FileIdentifier } from '@atlaskit/media-core';
 import { Observable } from 'rxjs';
-import { List, Props } from '../../../newgen/list';
-import { ErrorMessage } from '../../../newgen/error';
+import { List, Props, State } from '../../../newgen/list';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
 import { ItemViewer } from '../../../newgen/item-viewer';
-import { Identifier } from '../../../newgen/domain';
-import Button from '@atlaskit/button';
 import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
 
 function createFixture(props: Partial<Props>) {
-  const items: Identifier[] = [];
-  const selectedItem = {
+  const items: FileIdentifier[] = [];
+  const selectedItem: Identifier = {
     id: '',
     occurrenceKey: '',
-    type: 'file' as MediaItemType,
+    mediaItemType: 'file',
   };
   const context = {
     file: {
@@ -26,7 +23,7 @@ function createFixture(props: Partial<Props>) {
         }),
     },
   } as any;
-  const el = mountWithIntlContext(
+  const el = mountWithIntlContext<Props, State>(
     <List
       items={items}
       defaultSelectedItem={selectedItem}
@@ -39,17 +36,17 @@ function createFixture(props: Partial<Props>) {
 }
 
 describe('<List />', () => {
-  const identifier = {
+  const identifier: Identifier = {
     id: 'some-id',
     occurrenceKey: 'some-custom-occurrence-key',
-    type: 'file' as MediaItemType,
+    mediaItemType: 'file',
   };
 
   it('should update navigation', () => {
-    const identifier2 = {
+    const identifier2: Identifier = {
       id: 'some-id-2',
       occurrenceKey: 'some-custom-occurrence-key',
-      type: 'file' as MediaItemType,
+      mediaItemType: 'file',
     };
     const el = createFixture({
       items: [identifier, identifier2],
@@ -58,28 +55,6 @@ describe('<List />', () => {
     expect(el.state().selectedItem).toMatchObject({ id: 'some-id' });
     el.find(ArrowRightCircleIcon).simulate('click');
     expect(el.state().selectedItem).toMatchObject({ id: 'some-id-2' });
-  });
-
-  it('should show an error if selected item is not found in the list', () => {
-    const list = [
-      {
-        id: 'some-id',
-        occurrenceKey: 'some-custom-occurrence-key',
-        type: 'file' as MediaItemType,
-      },
-    ];
-    const defaultSelectedItem = {
-      id: 'some-id-2',
-      occurrenceKey: 'some-custom-occurrence-key',
-      type: 'file' as MediaItemType,
-    };
-    const el = createFixture({ items: list, defaultSelectedItem });
-    const errorMessage = el.find(ErrorMessage);
-    expect(errorMessage).toHaveLength(1);
-    expect(errorMessage.text()).toContain(
-      'The selected item was not found on the list.',
-    );
-    expect(errorMessage.find(Button)).toHaveLength(0);
   });
 
   it('should show controls when navigation occurs', () => {

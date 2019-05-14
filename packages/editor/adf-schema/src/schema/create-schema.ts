@@ -5,18 +5,19 @@ import {
   link,
   em,
   strong,
+  textColor,
   strike,
   subsup,
   underline,
   code,
   emojiQuery,
   typeAheadQuery,
-  textColor,
   confluenceInlineComment,
   action,
   breakout,
   alignment,
   indentation,
+  annotation,
 } from './marks';
 
 import {
@@ -77,13 +78,16 @@ function addItems(
   /**
    * Add built-in Node / Mark specs
    */
-  const items = builtInItems.reduce((items, { name, spec }) => {
-    if (config.indexOf(name) !== -1) {
-      items[name] = customSpecs[name] || spec;
-    }
+  const items = builtInItems.reduce<Record<string, NodeSpec | MarkSpec>>(
+    (items, { name, spec }) => {
+      if (config.indexOf(name) !== -1) {
+        items[name] = customSpecs[name] || spec;
+      }
 
-    return items;
-  }, {});
+      return items;
+    },
+    {},
+  );
 
   /**
    * Add Custom Node / Mark specs
@@ -176,15 +180,16 @@ const marksInOrder: SchemaBuiltInItem[] = [
   { name: 'link', spec: link },
   { name: 'em', spec: em },
   { name: 'strong', spec: strong },
+  { name: 'textColor', spec: textColor },
   { name: 'strike', spec: strike },
   { name: 'subsup', spec: subsup },
   { name: 'underline', spec: underline },
   { name: 'code', spec: code },
   { name: 'emojiQuery', spec: emojiQuery },
   { name: 'typeAheadQuery', spec: typeAheadQuery },
-  { name: 'textColor', spec: textColor },
   { name: 'action', spec: action },
   { name: 'alignment', spec: alignment },
+  { name: 'annotation', spec: annotation },
   { name: 'confluenceInlineComment', spec: confluenceInlineComment },
   ...markGroupDeclarations,
   { name: 'breakout', spec: breakout },

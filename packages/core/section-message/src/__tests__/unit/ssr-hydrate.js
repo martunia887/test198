@@ -24,6 +24,7 @@ const App = () => (
     actions={[
       {
         href: 'https://en.wikipedia.org/wiki/Mary_Shelley',
+        key: 'mary',
         text: 'Mary',
       },
     ]}
@@ -46,5 +47,6 @@ test('should ssr then hydrate tag correctly', () => {
 
   ReactDOM.hydrate(<App />, elem);
 
+  // eslint-disable-next-line no-console
   expect(console.error).not.toBeCalled();
 });

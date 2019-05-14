@@ -9,13 +9,14 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 
 const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
+const moduleResolveMapBuilder = require('@atlaskit/multi-entry-tools/module-resolve-map-builder');
 
 const baseCacheDir = path.resolve(
   __dirname,
   '../../../node_modules/.cache-loader',
 );
 
-module.exports = function createWebpackConfig(
+module.exports = async function createWebpackConfig(
   {
     globs = createDefaultGlob(),
     mode = 'development',
@@ -113,7 +114,7 @@ module.exports = function createWebpackConfig(
         },
         {
           test: /\.js$/,
-          exclude: /node_modules/,
+          exclude: /node_modules|packages\/media\/media-editor\/src\/engine\/core\/binaries\/mediaEditor.js/,
           use: [
             {
               loader: 'thread-loader',
@@ -126,7 +127,7 @@ module.exports = function createWebpackConfig(
               options: {
                 babelrc: true,
                 rootMode: 'upward',
-                envName: 'production:cjs',
+                envName: 'production:esm',
                 cacheDirectory: path.resolve(baseCacheDir, 'babel'),
               },
             },
@@ -190,8 +191,11 @@ module.exports = function createWebpackConfig(
       ],
     },
     resolve: {
-      mainFields: ['module', 'atlaskit:src', 'browser', 'main'],
+      mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
       extensions: ['.js', '.ts', '.tsx'],
+      alias: {
+        ...(await moduleResolveMapBuilder()),
+      },
     },
     resolveLoader: {
       modules: [
@@ -279,7 +283,7 @@ function getOptimizations({ isProduction, noMinimizeFlag }) {
     parallel: Math.max(os.cpus().length - 1, 1),
     uglifyOptions: {
       compress: {
-        // Disabling following options speeds up minimization by 20 – 30s
+        // Disabling following options speeds up minimization by 20 - 30s
         // without any significant impact on a bundle size.
         arrows: false,
         booleans: false,

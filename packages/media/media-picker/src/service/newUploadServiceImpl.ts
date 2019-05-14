@@ -1,12 +1,11 @@
-import * as uuid from 'uuid';
+import uuidV4 from 'uuid/v4';
 import {
   Context,
   UploadableFile,
   MediaType,
-  FileDetails,
   getMediaTypeFromMimeType,
   ContextFactory,
-  fileStreamsCache,
+  getFileStreamsCache,
 } from '@atlaskit/media-core';
 import {
   MediaStore,
@@ -20,7 +19,7 @@ import {
 } from '@atlaskit/media-store';
 import { EventEmitter2 } from 'eventemitter2';
 import { map } from 'rxjs/operators/map';
-import { MediaFile, PublicMediaFile } from '../domain/file';
+import { MediaFile } from '../domain/file';
 
 import { RECENTS_COLLECTION } from '../popup/config';
 import { mapAuthToSourceFileOwner } from '../popup/domain/source-file';
@@ -119,8 +118,8 @@ export class NewUploadServiceImpl implements UploadService {
     })[] = [];
     for (let i = 0; i < files.length; i++) {
       touchFileDescriptors.push({
-        fileId: uuid.v4(),
-        occurrenceKey: uuid.v4(),
+        fileId: uuidV4(),
+        occurrenceKey: uuidV4(),
         collection,
       });
     }
@@ -172,7 +171,7 @@ export class NewUploadServiceImpl implements UploadService {
         let upfrontId = Promise.resolve(id);
 
         if (!shouldCopyFileToRecents) {
-          const tenantOccurrenceKey = uuid.v4();
+          const tenantOccurrenceKey = uuidV4();
           const { collection } = this.tenantUploadParams;
           const options = {
             collection,
@@ -217,7 +216,9 @@ export class NewUploadServiceImpl implements UploadService {
 
             if (state.status === 'processing') {
               subscription.unsubscribe();
-
+              if (shouldCopyFileToRecents) {
+                context.emit('file-added', state);
+              }
               this.onFileSuccess(cancellableFileUpload, id);
             }
           },
@@ -229,7 +230,7 @@ export class NewUploadServiceImpl implements UploadService {
         this.cancellableFilesUploads[id] = cancellableFileUpload;
         // Save observable in the cache
         // We want to save the observable without collection too, due consumers using cards without collection.
-        fileStreamsCache.set(id, observable);
+        getFileStreamsCache().set(id, observable);
         upfrontId.then(id => {
           // We assign the tenant id to the observable to not emit user id instead
           const tenantObservable = observable.pipe(
@@ -238,7 +239,7 @@ export class NewUploadServiceImpl implements UploadService {
               id,
             })),
           );
-          fileStreamsCache.set(id, tenantObservable);
+          getFileStreamsCache().set(id, tenantObservable);
         });
 
         return cancellableFileUpload;
@@ -334,25 +335,18 @@ export class NewUploadServiceImpl implements UploadService {
     const { mediaFile } = cancellableFileUpload;
 
     this.copyFileToUsersCollection(fileId)
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       .catch(console.log); // We intentionally swallow these errors
-
-    const publicMediaFile: PublicMediaFile = {
-      ...mediaFile,
-      publicId: fileId,
-    };
-
     this.emit('file-converting', {
-      file: publicMediaFile,
+      file: mediaFile,
     });
 
-    // TODO: fill extra available details? should we use this.context.getFile(publicId, {collectionName}) here?
-    const details: FileDetails = {
+    const details = {
       id: fileId,
     };
 
     this.emit('file-converted', {
-      file: publicMediaFile,
+      file: mediaFile,
       public: details,
     });
 

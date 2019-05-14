@@ -1,8 +1,9 @@
 import {
-  akEditorFullPageMaxWidth,
   akEditorBreakoutPadding,
   akEditorDefaultLayoutWidth,
   breakoutWideScaleRatio,
+  akEditorFullWidthLayoutWidth,
+  akEditorWideLayoutWidth,
 } from '../styles';
 import { getBreakpoint, mapBreakpointToLayoutMaxWidth } from '../ui';
 
@@ -14,13 +15,11 @@ export const calcBreakoutWidth = (
 
   switch (layout) {
     case 'full-width':
-      return effectiveFullWidth <= akEditorFullPageMaxWidth
-        ? '100%'
-        : `${effectiveFullWidth}px`;
+      return `${Math.min(effectiveFullWidth, akEditorFullWidthLayoutWidth)}px`;
     case 'wide':
       return calcWideWidth(containerWidth);
     default:
-      return 'inherit';
+      return '100%';
   }
 };
 
@@ -40,4 +39,25 @@ export const calcWideWidth = (
   return layoutMaxWidth > wideWidth
     ? fallback
     : `${Math.min(maxWidth, wideWidth)}px`;
+};
+
+export const absoluteBreakoutWidth = (
+  layout: 'full-width' | 'wide' | string,
+  containerWidth: number,
+) => {
+  const breakoutWidth = calcBreakoutWidth(layout, containerWidth);
+
+  // If it's percent, map to max layout size
+  if (breakoutWidth.endsWith('%')) {
+    switch (layout) {
+      case 'full-width':
+        return akEditorFullWidthLayoutWidth;
+      case 'wide':
+        return akEditorWideLayoutWidth;
+      default:
+        return mapBreakpointToLayoutMaxWidth(getBreakpoint(containerWidth));
+    }
+  }
+
+  return parseInt(breakoutWidth, 10);
 };

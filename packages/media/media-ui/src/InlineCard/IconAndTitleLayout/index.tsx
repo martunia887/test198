@@ -1,22 +1,53 @@
 import * as React from 'react';
-import { IconWrapper, OtherWrapper } from './styled';
+import {
+  IconTitleWrapper,
+  IconWrapper,
+  IconTitleHeadNoBreakWrapper,
+} from './styled';
+import { Icon } from '../Icon';
 
 export interface IconAndTitleLayoutProps {
-  icon?: React.ReactNode;
-  title: React.ReactNode;
+  icon?: string | React.ReactNode;
+  title: string;
   right?: React.ReactNode;
+  titleColor?: string;
 }
+
+const CHAR_LENGTH_BREAK_AT = 7;
 
 export class IconAndTitleLayout extends React.Component<
   IconAndTitleLayoutProps
 > {
+  renderIcon() {
+    const { icon } = this.props;
+    // We render two kinds of icons here:
+    // - Image: acquired from either DAC or Teamwork Platform Apps;
+    // - Atlaskit Icon: an Atlaskit SVG;
+    // Each of these are scaled down to 12x12.
+    if (icon) {
+      if (typeof icon === 'string') {
+        return <Icon src={icon} />;
+      } else {
+        return <IconWrapper>{icon}</IconWrapper>;
+      }
+    }
+    return null;
+  }
+
   render() {
-    const { icon, title, children } = this.props;
+    const { title, titleColor } = this.props;
+    const head = title.slice(0, CHAR_LENGTH_BREAK_AT);
+    const rest = title.slice(CHAR_LENGTH_BREAK_AT);
+
     return (
       <>
-        {icon && <IconWrapper>{icon}</IconWrapper>}
-        {title}
-        {children && <OtherWrapper>{children}</OtherWrapper>}
+        <IconTitleWrapper style={{ color: titleColor }}>
+          <IconTitleHeadNoBreakWrapper>
+            {this.renderIcon()}
+            {head}
+          </IconTitleHeadNoBreakWrapper>
+          {rest}
+        </IconTitleWrapper>
       </>
     );
   }

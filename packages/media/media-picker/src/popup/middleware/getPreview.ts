@@ -9,7 +9,7 @@ import {
 } from '../../domain/preview';
 
 export default function(): Middleware {
-  return store => (next: Dispatch<State>) => action => {
+  return store => (next: Dispatch<State>) => (action: any) => {
     if (isGetPreviewAction(action)) {
       getPreview(store as any, action);
     }
@@ -61,8 +61,9 @@ export async function getPreview(
           const preview = getPreviewFromMetadata(metadata);
           dispatchPreviewUpdate(store, action, preview);
         } else {
+          const blob = state.preview && (await state.preview);
           const preview: NonImagePreview = {
-            file: state.preview ? state.preview.blob : undefined,
+            file: state.preview && blob instanceof Blob ? blob : undefined,
           };
           dispatchPreviewUpdate(store, action, preview);
         }

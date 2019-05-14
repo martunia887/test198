@@ -3,7 +3,7 @@ import { Frame } from '../Frame';
 import Lozenge from '@atlaskit/lozenge';
 import { LozengeViewModel } from '../../common';
 import { IconAndTitleLayout } from '../IconAndTitleLayout';
-import { Icon } from '../Icon';
+import { LozengeWrapper } from '../IconAndTitleLayout/styled';
 
 export interface InlineCardResolvedViewProps {
   /** The optional con of the service (e.g. Dropbox/Asana/Google/etc) to display */
@@ -17,47 +17,35 @@ export interface InlineCardResolvedViewProps {
   /** The optional url */
   link?: string;
   /** The optional click handler */
-  onClick?: () => void;
+  onClick?: React.EventHandler<React.MouseEvent | React.KeyboardEvent>;
 }
 
 export class InlineCardResolvedView extends React.Component<
   InlineCardResolvedViewProps
 > {
-  renderIcon() {
-    const { icon } = this.props;
-    if (!icon) {
-      return null;
-    }
-
-    if (typeof icon === 'string') {
-      return <Icon src={icon} />;
-    }
-
-    return icon;
-  }
-
   renderLozenge() {
     const { lozenge } = this.props;
     if (!lozenge) {
       return null;
     }
     return (
-      <Lozenge
-        appearance={lozenge.appearance || 'default'}
-        isBold={lozenge.isBold}
-      >
-        {lozenge.text}
-      </Lozenge>
+      <LozengeWrapper>
+        <Lozenge
+          appearance={lozenge.appearance || 'default'}
+          isBold={lozenge.isBold}
+        >
+          {lozenge.text}
+        </Lozenge>
+      </LozengeWrapper>
     );
   }
 
   render() {
-    const { title, isSelected, onClick, link } = this.props;
+    const { title, isSelected, onClick, icon, link } = this.props;
     return (
       <Frame link={link} isSelected={isSelected} onClick={onClick}>
-        <IconAndTitleLayout icon={this.renderIcon()} title={title}>
-          {this.renderLozenge()}
-        </IconAndTitleLayout>
+        <IconAndTitleLayout icon={icon} title={title} />
+        {this.renderLozenge()}
       </Frame>
     );
   }

@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Fragment, Component } from 'react';
-import { css } from 'emotion';
 import Tooltip from '@atlaskit/tooltip';
 
 import { styleReducerNoOp, withGlobalTheme } from '../../../theme';
@@ -14,6 +13,9 @@ import type {
 
 class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> {
   static defaultProps = {
+    dataset: {
+      'data-test-id': 'GlobalNavigationItem',
+    },
     isActive: false,
     isHover: false,
     isSelected: false,
@@ -80,15 +82,26 @@ class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> 
   };
 
   renderChildren = (styles: GlobalItemStyles) => {
-    const { href, onClick, target, component: CustomComponent } = this.props;
+    const {
+      component: CustomComponent,
+      dataset,
+      href,
+      id,
+      onClick,
+      target,
+    } = this.props;
+    const globalID = id && `${id}GlobalItem`;
 
     let itemBase;
 
     if (CustomComponent) {
       itemBase = (
+        // CustomComponent needs a className prop. This prop is
+        // added after the emotion translation.
+        // $FlowFixMe
         <CustomComponent
           {...this.getGlobalItemExternalProps()}
-          className={css({ '&&': styles.itemBase })}
+          css={{ '&&': styles.itemBase }}
         >
           {this.renderIconAndBadge(styles.badgeWrapper)}
         </CustomComponent>
@@ -97,22 +110,29 @@ class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> 
       itemBase = (
         <a
           href={href}
+          id={globalID}
           onClick={onClick}
           target={target}
-          className={css({ '&&': styles.itemBase })}
+          css={{ '&&': styles.itemBase }}
+          {...dataset}
         >
           {this.renderIconAndBadge(styles.badgeWrapper)}
         </a>
       );
     } else if (onClick) {
       itemBase = (
-        <button onClick={onClick} className={css({ '&&': styles.itemBase })}>
+        <button
+          id={globalID}
+          onClick={onClick}
+          css={{ '&&': styles.itemBase }}
+          {...dataset}
+        >
           {this.renderIconAndBadge(styles.badgeWrapper)}
         </button>
       );
     } else {
       itemBase = (
-        <span className={css({ '&&': styles.itemBase })}>
+        <span id={globalID} css={{ '&&': styles.itemBase }} {...dataset}>
           {this.renderIconAndBadge(styles.badgeWrapper)}
         </span>
       );
@@ -132,7 +152,7 @@ class GlobalNavigationItemPrimitive extends Component<GlobalItemPrimitiveProps> 
         hideTooltipOnClick
         hideTooltipOnMouseDown
       >
-        <div className={css({ display: 'inline-block' })}>
+        <div css={{ display: 'inline-block' }}>
           {this.renderChildren(styles)}
         </div>
       </Tooltip>

@@ -1,7 +1,22 @@
-export * from './item';
+// WARNING! DO NOTE MOVE THIS EXPORT!
+// mediaState should be exported BEFORE StreamsCache import later because
+// StreamsCache will try to import mediaState from here.
+export { mediaState, CachedMediaState, StateDeferredValue } from './cache';
+
+// export * from './item';
+export {
+  MediaItemType,
+  FileItem,
+  FileProcessingStatus,
+  MediaArtifact,
+  Artifacts,
+  FileDetails,
+} from '@atlaskit/media-client';
+
 export {
   ClientBasedAuth,
   AsapBasedAuth,
+  ClientAltBasedAuth,
   Auth,
   isClientBasedAuth,
   isAsapBasedAuth,
@@ -9,15 +24,62 @@ export {
   AuthProvider,
   MediaApiConfig,
   ContextConfig,
+  MediaClientConfig,
+  authToOwner,
+} from './auth';
+
+export {
   UploadableFile,
   UploadFileCallbacks,
   UploadFileResult,
   UploadController,
   MediaType,
-} from '@atlaskit/media-store';
+  isPreviewableType,
+  TouchFileDescriptor,
+  MediaFileArtifacts,
+} from '@atlaskit/media-client';
+
+export { FileFetcher, FileFetcherImpl } from '@atlaskit/media-client';
 export * from './context/context';
-export * from './utils';
-export * from './fileState';
-export * from './utils/getMediaTypeFromMimeType';
-export * from './context/fileStreamCache';
-export type ImageResizeMode = 'crop' | 'fit' | 'full-fit' | 'stretchy-fit';
+
+// export * from './utils';
+export { isImageRemote } from '@atlaskit/media-client';
+
+// export * from './fileState';
+export {
+  FileStatus,
+  FilePreview,
+  PreviewOptions,
+  GetFileOptions,
+  UploadingFileState,
+  ProcessingFileState,
+  ProcessedFileState,
+  ProcessingFailedState,
+  ErrorFileState,
+  FileState,
+  isErrorFileState,
+  isImageRepresentationReady,
+  mapMediaFileToFileState,
+  mapMediaItemToFileState,
+} from '@atlaskit/media-client';
+
+// export * from './utils/getMediaTypeFromMimeType';
+export { getMediaTypeFromMimeType } from '@atlaskit/media-client';
+
+// export * from './context/fileStreamCache';
+import { FileState, StreamsCache } from '@atlaskit/media-client';
+export type FileStreamCache = StreamsCache<FileState>;
+export { getFileStreamsCache } from '@atlaskit/media-client';
+
+// export type ImageResizeMode = 'crop' | 'fit' | 'full-fit' | 'stretchy-fit';
+export { ImageResizeMode } from '@atlaskit/media-client';
+
+// export * from './identifier';
+export {
+  Identifier,
+  FileIdentifier,
+  ExternalImageIdentifier,
+  isFileIdentifier,
+  isExternalImageIdentifier,
+  isDifferentIdentifier,
+} from '@atlaskit/media-client';

@@ -1,7 +1,10 @@
 import { waitUntil } from '@atlaskit/util-common-test';
 import { mockNonUploadingEmojiResourceFactory } from '@atlaskit/util-data-test';
+import { ReactWrapper } from 'enzyme';
 import EmojiRepository from '../../../../api/EmojiRepository';
-import Emoji from '../../../../components/common/Emoji';
+import Emoji, {
+  Props as EmojiProps,
+} from '../../../../components/common/Emoji';
 import EmojiButton from '../../../../components/common/EmojiButton';
 import EmojiPlaceholder from '../../../../components/common/EmojiPlaceholder';
 import { messages } from '../../../../components/i18n';
@@ -9,17 +12,19 @@ import { CategoryDescriptionMap } from '../../../../components/picker/categories
 import CategorySelector, {
   sortCategories,
 } from '../../../../components/picker/CategorySelector';
+import ToneSelector from '../../../../components/common/ToneSelector';
+import EmojiPreview from '../../../../components/common/EmojiPreview';
 import { Props } from '../../../../components/picker/EmojiPicker';
 import EmojiPickerFooter from '../../../../components/picker/EmojiPickerFooter';
 import EmojiPickerList from '../../../../components/picker/EmojiPickerList';
 import {
-  analyticsEmojiPrefix,
   customCategory,
   customTitle,
   defaultCategories,
   frequentCategory,
   selectedToneStorageKey,
-} from '../../../../constants';
+} from '../../../../util/constants';
+import { isMessagesKey } from '../../../../util/type-helpers';
 import { EmojiDescription, OptionalEmojiDescription } from '../../../../types';
 import {
   getEmojiResourcePromise,
@@ -27,30 +32,44 @@ import {
   standardEmojis,
 } from '../../_test-data';
 import * as helper from './_emoji-picker-test-helpers';
+import {
+  openedPickerEvent,
+  closedPickerEvent,
+  categoryClickedEvent,
+  pickerClickedEvent,
+  pickerSearchedEvent,
+  toneSelectorOpenedEvent,
+  toneSelectedEvent,
+  toneSelectorClosedEvent,
+} from '../../../../util/analytics';
 
 describe('<EmojiPicker />', () => {
-  let firePrivateAnalyticsEvent;
+  let onEvent: jest.SpyInstance;
 
   const getUpdatedList = (component: any) =>
     component.update().find(EmojiPickerList);
 
   beforeEach(async () => {
-    firePrivateAnalyticsEvent = jest.fn();
+    onEvent = jest.fn();
   });
 
   describe('analytics for component lifecycle', () => {
     it('should fire analytics in componentWillMount/componentWillUnmount', async () => {
-      const component = await helper.setupPicker({
-        firePrivateAnalyticsEvent,
-      } as Props);
+      const component = await helper.setupPicker(undefined, undefined, onEvent);
       component.unmount();
-      expect(firePrivateAnalyticsEvent).toHaveBeenCalledWith(
-        `${analyticsEmojiPrefix}.open`,
-        {},
+      expect(onEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: openedPickerEvent(),
+        }),
+        'fabric-elements',
       );
-      expect(firePrivateAnalyticsEvent).toHaveBeenLastCalledWith(
-        `${analyticsEmojiPrefix}.close`,
-        {},
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: closedPickerEvent({
+            duration: expect.any(Number),
+          }),
+        }),
+        'fabric-elements',
       );
     });
   });
@@ -86,10 +105,13 @@ describe('<EmojiPicker />', () => {
 
       for (let i = 0; i < buttons.length; i++) {
         const button = buttons.at(i);
-        const expectedTitle =
-          messages[CategoryDescriptionMap[expectedCategories[i]].name]
-            .defaultMessage;
-        expect(button.prop('title')).toEqual(expectedTitle);
+        const messageKey = CategoryDescriptionMap[expectedCategories[i]].name;
+        expect(isMessagesKey(messageKey)).toBeTruthy();
+        if (isMessagesKey(messageKey)) {
+          expect(button.prop('title')).toEqual(
+            messages[messageKey].defaultMessage,
+          );
+        }
       }
     });
 
@@ -107,7 +129,7 @@ describe('<EmojiPicker />', () => {
 
     it('media emoji should render placeholder while loading', async () => {
       const mockConfig = {
-        promiseBuilder: (result, context) => {
+        promiseBuilder: (result: any, context: string) => {
           if (context === 'loadMediaEmoji') {
             // unresolved promise
             return new Promise(() => {});
@@ -153,9 +175,7 @@ describe('<EmojiPicker />', () => {
 
   describe('category', () => {
     it('selecting category should show that category', async () => {
-      const component = await helper.setupPicker({
-        firePrivateAnalyticsEvent,
-      } as Props);
+      const component = await helper.setupPicker(undefined, undefined, onEvent);
       // Update list until provider resolved and emojis comes in
       await waitUntil(() =>
         helper.emojisVisible(component, getUpdatedList(component)),
@@ -171,9 +191,11 @@ describe('<EmojiPicker />', () => {
         categoryId,
       );
       expect(emoji!.category).toEqual(categoryId);
-      expect(firePrivateAnalyticsEvent).toHaveBeenLastCalledWith(
-        `${analyticsEmojiPrefix}.category.select`,
-        { categoryName: categoryId },
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: categoryClickedEvent({ category: categoryId }),
+        }),
+        'fabric-elements',
       );
     });
 
@@ -253,14 +275,16 @@ describe('<EmojiPicker />', () => {
       // get Emoji with a particular property
       const displayedEmoji = list.find(Emoji);
 
-      displayedEmoji.forEach((node, index) => {
-        const props = node.props();
-        if (index < 8) {
-          expect(props.emoji.category).toEqual(frequentCategory);
-        } else {
-          expect(props.emoji.category).not.toEqual(frequentCategory);
-        }
-      });
+      displayedEmoji.forEach(
+        (node: ReactWrapper<EmojiProps>, index: number) => {
+          const props = node.props();
+          if (index < 8) {
+            expect(props.emoji.category).toEqual(frequentCategory);
+          } else {
+            expect(props.emoji.category).not.toEqual(frequentCategory);
+          }
+        },
+      );
     });
 
     it('adds non-standard categories to the selector dynamically based on whether they are populated with emojis', async () => {
@@ -278,12 +302,15 @@ describe('<EmojiPicker />', () => {
     it('selecting emoji should trigger onSelection', async () => {
       let selection: OptionalEmojiDescription;
       const clickOffset = 10;
-      const component = await helper.setupPicker({
-        firePrivateAnalyticsEvent,
-        onSelection: (emojiId, emoji) => {
-          selection = emoji;
-        },
-      } as Props);
+      const component = await helper.setupPicker(
+        {
+          onSelection: (_emojiId, emoji) => {
+            selection = emoji;
+          },
+        } as Props,
+        undefined,
+        onEvent,
+      );
 
       const list = getUpdatedList(component);
       const hoverButton = () => list.find(Emoji).at(clickOffset);
@@ -294,14 +321,17 @@ describe('<EmojiPicker />', () => {
       expect(selection).toBeDefined();
       expect(selection!.id).toEqual(helper.allEmojis[clickOffset].id);
 
-      expect(firePrivateAnalyticsEvent).toHaveBeenLastCalledWith(
-        `${analyticsEmojiPrefix}.item.select`,
+      expect(onEvent).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          emojiId: '1f431',
-          type: 'STANDARD',
-          queryLength: 0,
-          duration: expect.any(Number),
+          payload: pickerClickedEvent({
+            emojiId: '1f431',
+            category: 'NATURE',
+            type: 'STANDARD',
+            queryLength: 0,
+            duration: expect.any(Number),
+          }),
         }),
+        'fabric-elements',
       );
     });
 
@@ -310,7 +340,7 @@ describe('<EmojiPicker />', () => {
       const emojiResourcePromise = getEmojiResourcePromise();
       const clickOffset = 10;
       const component = await helper.setupPicker({
-        onSelection: (emojiId, emoji) => {
+        onSelection: (_emojiId, emoji) => {
           selection = emoji;
         },
         emojiProvider: emojiResourcePromise,
@@ -396,6 +426,34 @@ describe('<EmojiPicker />', () => {
         true,
       );
     });
+
+    it('searching should fire analytics', async () => {
+      const component = await helper.setupPicker(undefined, undefined, onEvent);
+      await waitUntil(() => helper.searchInputVisible(component));
+      // click search
+      const searchInput = helper.findSearchInput(component);
+      searchInput.simulate('focus');
+      // type "al"
+      searchInput.simulate('change', {
+        target: {
+          value: 'al',
+        },
+      });
+
+      await waitUntil(
+        () => helper.findEmoji(getUpdatedList(component)).length === 2,
+      );
+
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: pickerSearchedEvent({
+            queryLength: 2,
+            numMatches: 2,
+          }),
+        }),
+        'fabric-elements',
+      );
+    });
   });
 
   describe('skin tone selection', () => {
@@ -422,6 +480,86 @@ describe('<EmojiPicker />', () => {
       const footer = component.find(EmojiPickerFooter);
       const toneEmoji = footer.find(EmojiButton);
       expect(toneEmoji).toHaveLength(0);
+    });
+
+    it('should fire tone selected and not cancelled', async () => {
+      const onEvent = jest.fn();
+      const component = await helper.setupPicker(undefined, undefined, onEvent);
+      const list = getUpdatedList(component);
+
+      await waitUntil(() => helper.emojisVisible(component, list));
+      const hoverButton = list.find(Emoji).at(0);
+      hoverButton.simulate('mousemove');
+
+      const preview = component.find(EmojiPreview);
+      const toneEmoji = preview.find(EmojiButton);
+      const toneSelectorOpener = toneEmoji.prop('onSelected');
+      expect(toneSelectorOpener).toBeDefined();
+      toneSelectorOpener!();
+
+      await waitUntil(
+        () => component.update() && component.find(ToneSelector).length > 0,
+      );
+      expect(onEvent).toHaveBeenCalledTimes(2);
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: toneSelectorOpenedEvent({}),
+        }),
+        'fabric-elements',
+      );
+
+      const toneSelector = component.find(ToneSelector);
+      const toneButton = toneSelector
+        .find(EmojiButton)
+        .at(0)
+        .prop('onSelected');
+      expect(toneButton).toBeDefined();
+      toneButton!();
+
+      expect(onEvent).toHaveBeenCalledTimes(3);
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: toneSelectedEvent({ skinToneModifier: 'default' }),
+        }),
+        'fabric-elements',
+      );
+    });
+
+    it('should fire selector cancelled when no tone selected', async () => {
+      const onEvent = jest.fn();
+      const component = await helper.setupPicker(undefined, undefined, onEvent);
+      const list = getUpdatedList(component);
+
+      await waitUntil(() => helper.emojisVisible(component, list));
+      const hoverButton = list.find(Emoji).at(0);
+      hoverButton.simulate('mousemove');
+
+      const preview = component.find(EmojiPreview);
+      const toneEmoji = preview.find(EmojiButton);
+      const toneSelectorOpener = toneEmoji.prop('onSelected');
+      expect(toneSelectorOpener).toBeDefined();
+      toneSelectorOpener!();
+
+      await waitUntil(
+        () => component.update() && component.find(ToneSelector).length > 0,
+      );
+      expect(onEvent).toHaveBeenCalledTimes(2);
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: toneSelectorOpenedEvent({}),
+        }),
+        'fabric-elements',
+      );
+
+      preview.simulate('mouseleave');
+
+      expect(onEvent).toHaveBeenCalledTimes(3);
+      expect(onEvent).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          payload: toneSelectorClosedEvent(),
+        }),
+        'fabric-elements',
+      );
     });
 
     it('should display emojis without skin tone variations by default', async () => {

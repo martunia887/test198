@@ -12,16 +12,24 @@ import {
   ServiceConfig,
   utils,
 } from '@atlaskit/util-service-support';
-import { Scope, ConfluenceItem, JiraItem, PersonItem } from './types';
+import {
+  Scope,
+  ConfluenceItem,
+  JiraItem,
+  PersonItem,
+  QuickSearchContext,
+} from './types';
+import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
+
+export const DEFAULT_AB_TEST: ABTest = Object.freeze({
+  experimentId: 'default',
+  abTestId: 'default',
+  controlId: 'default',
+});
 
 export type CrossProductSearchResults = {
   results: Map<Scope, Result[]>;
   abTest?: ABTest;
-};
-
-export type SearchSession = {
-  sessionId: string;
-  referrerId?: string;
 };
 
 export const EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE: CrossProductSearchResults = {
@@ -30,6 +38,10 @@ export const EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE: CrossProductSearchResults = {
 
 export interface CrossProductSearchResponse {
   scopes: ScopeResult[];
+}
+
+export interface CrossProductExperimentResponse {
+  scopes: Experiment[];
 }
 
 export type SearchItem = ConfluenceItem | JiraItem | PersonItem;
@@ -47,25 +59,35 @@ export interface ScopeResult {
   abTest?: ABTest; // in case of an error abTest will be undefined
 }
 
+export interface Experiment {
+  id: Scope;
+  error?: string;
+  abTest: ABTest;
+}
+
+export interface PrefetchedData {
+  abTest: Promise<ABTest> | undefined;
+}
+
 export interface CrossProductSearchClient {
   search(
     query: string,
-    searchSession: SearchSession,
+    sessionId: string,
     scopes: Scope[],
-    resultLimit?: Number,
+    currentQuickSearchContext: QuickSearchContext,
+    queryVersion?: number | null,
+    resultLimit?: number | null,
+    referralContextIdentifiers?: ReferralContextIdentifiers,
   ): Promise<CrossProductSearchResults>;
-
-  getAbTestData(
-    scope: Scope,
-    searchSession: SearchSession,
-  ): Promise<ABTest | undefined>;
+  getAbTestData(scope: Scope): Promise<ABTest>;
 }
 
-export default class CrossProductSearchClientImpl
+export default class CachingCrossProductSearchClientImpl
   implements CrossProductSearchClient {
   private serviceConfig: ServiceConfig;
   private cloudId: string;
-  private addSessionIdToJiraResult;
+  private addSessionIdToJiraResult?: boolean;
+  private abTestDataCache: { [scope: string]: Promise<ABTest> };
 
   // result limit per scope
   private readonly RESULT_LIMIT = 10;
@@ -74,55 +96,94 @@ export default class CrossProductSearchClientImpl
     url: string,
     cloudId: string,
     addSessionIdToJiraResult?: boolean,
+    prefetchedAbTestResult?: { [scope: string]: Promise<ABTest> },
   ) {
     this.serviceConfig = { url: url };
     this.cloudId = cloudId;
     this.addSessionIdToJiraResult = addSessionIdToJiraResult;
+    this.abTestDataCache = prefetchedAbTestResult || {};
   }
 
   public async search(
     query: string,
-    searchSession: SearchSession,
+    sessionId: string,
     scopes: Scope[],
-    resultLimit?: Number,
+    currentQuickSearchContext: QuickSearchContext,
+    queryVersion?: number | null,
+    resultLimit?: number | null,
+    referralContextIdentifiers?: ReferralContextIdentifiers,
   ): Promise<CrossProductSearchResults> {
-    const response = await this.makeRequest(
-      query.trim(),
-      scopes,
-      searchSession,
-      resultLimit,
-    );
-    return this.parseResponse(response, searchSession.sessionId);
-  }
+    const path = 'quicksearch/v1';
 
-  public async getAbTestData(
-    scope: Scope,
-    searchSession: SearchSession,
-  ): Promise<ABTest | undefined> {
-    const response = await this.makeRequest('', [scope], searchSession);
-    const parsedResponse = this.parseResponse(
-      response,
-      searchSession.sessionId,
-    );
-    return Promise.resolve(parsedResponse.abTest);
-  }
+    const modelParams = [];
 
-  private async makeRequest(
-    query: string,
-    scopes: Scope[],
-    searchSession: SearchSession,
-    resultLimit?: Number,
-  ): Promise<CrossProductSearchResponse> {
+    if (queryVersion !== undefined && queryVersion !== null) {
+      modelParams.push({
+        '@type': 'queryParams',
+        queryVersion,
+      });
+    }
+
+    if (currentQuickSearchContext === 'jira') {
+      const containerId =
+        referralContextIdentifiers &&
+        referralContextIdentifiers.currentContainerId;
+
+      if (containerId !== undefined && containerId !== null) {
+        modelParams.push({
+          '@type': 'currentProject',
+          projectId: containerId,
+        });
+      }
+    }
+
     const body = {
       query: query,
       cloudId: this.cloudId,
       limit: resultLimit || this.RESULT_LIMIT,
       scopes: scopes,
-      searchSession,
+      ...(modelParams.length > 0 ? { modelParams: modelParams } : {}),
     };
 
+    const response = await this.makeRequest<CrossProductSearchResponse>(
+      path,
+      body,
+    );
+    return this.parseResponse(response, sessionId);
+  }
+
+  public async getAbTestData(scope: Scope): Promise<ABTest> {
+    if (this.abTestDataCache[scope]) {
+      return this.abTestDataCache[scope];
+    }
+
+    const path = 'experiment/v1';
+    const body = {
+      cloudId: this.cloudId,
+      scopes: [scope],
+    };
+
+    const response = await this.makeRequest<CrossProductExperimentResponse>(
+      path,
+      body,
+    );
+
+    const scopeWithAbTest: Experiment | undefined = response.scopes.find(
+      s => s.id === scope,
+    );
+
+    const abTestPromise = scopeWithAbTest
+      ? Promise.resolve(scopeWithAbTest.abTest)
+      : Promise.resolve(DEFAULT_AB_TEST);
+
+    this.abTestDataCache[scope] = abTestPromise;
+
+    return abTestPromise;
+  }
+
+  private async makeRequest<T>(path: string, body: object): Promise<T> {
     const options: RequestServiceOptions = {
-      path: 'quicksearch/v1',
+      path,
       requestInit: {
         method: 'POST',
         headers: {
@@ -132,10 +193,7 @@ export default class CrossProductSearchClientImpl
       },
     };
 
-    return utils.requestService<CrossProductSearchResponse>(
-      this.serviceConfig,
-      options,
-    );
+    return utils.requestService<T>(this.serviceConfig, options);
   }
 
   /**
@@ -178,18 +236,18 @@ export default class CrossProductSearchClientImpl
 }
 
 function mapPersonItemToResult(item: PersonItem): PersonResult {
-  const mention = item.nickName || item.displayName;
+  const mention = item.nickname || item.name;
 
   return {
     resultType: ResultType.PersonResult,
-    resultId: 'people-' + item.userId,
-    name: item.displayName,
-    href: '/people/' + item.userId,
-    avatarUrl: item.primaryPhoto,
+    resultId: 'people-' + item.account_id,
+    name: item.name,
+    href: '/people/' + item.account_id,
+    avatarUrl: item.picture,
     contentType: ContentType.Person,
     analyticsType: AnalyticsType.ResultPerson,
     mentionName: mention,
-    presenceMessage: item.title || '',
+    presenceMessage: item.job_title || '',
   };
 }
 

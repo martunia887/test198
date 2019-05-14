@@ -24,7 +24,8 @@ import { User } from '../model';
 
 export interface Props extends BaseProps {
   localId: string;
-  containerId: string;
+  objectId: string;
+  containerId?: string;
   dataProviders?: ProviderFactory;
   meta?: {
     [key: string]: any;
@@ -35,7 +36,7 @@ export interface Props extends BaseProps {
 }
 
 const mapStateToProps = (state: State, ownProps: Props) => {
-  const { id, localId, containerId } = ownProps;
+  const { id, localId, objectId, containerId } = ownProps;
   const conversation = getConversation(state, id || localId);
   const comments = getComments(state, id || localId);
   const user = getUser(state);
@@ -44,6 +45,7 @@ const mapStateToProps = (state: State, ownProps: Props) => {
     ...ownProps,
     conversation,
     comments,
+    objectId,
     containerId,
     user,
   };
@@ -88,7 +90,10 @@ const mapDispatchToProps = (
     dispatch(revertComment(conversationId, commentId, provider));
   },
 
-  onHighlightComment(commentId: string) {
+  onHighlightComment(
+    event: React.MouseEvent<HTMLAnchorElement>,
+    commentId: string,
+  ) {
     dispatch({ type: HIGHLIGHT_COMMENT, payload: { commentId } });
   },
 
@@ -98,18 +103,20 @@ const mapDispatchToProps = (
 
   onCreateConversation(
     localId: string,
-    containerId: string,
     value: any,
     meta: any,
+    objectId: string,
+    containerId?: string,
     onSuccess?: SuccessHandler,
   ) {
     dispatch(
       createConversation(
         localId,
-        containerId,
         value,
         meta,
         provider,
+        objectId,
+        containerId,
         onSuccess,
       ),
     );
@@ -120,8 +127,9 @@ const mapDispatchToProps = (
     value: any,
     conversationId: string,
     commentId: string | undefined,
-    containerId: string,
     meta: any,
+    objectId: string,
+    containerId?: string,
   ) {
     dispatch(
       saveDraft(
@@ -129,9 +137,10 @@ const mapDispatchToProps = (
         value,
         conversationId,
         commentId,
-        containerId,
         meta,
         provider,
+        objectId,
+        containerId,
       ),
     );
   },
@@ -146,7 +155,8 @@ const ResourcedConversation = withAnalyticsEvents()(
 
 export interface ContainerProps {
   id?: string;
-  containerId: string;
+  objectId: string;
+  containerId?: string;
   provider: ResourceProvider;
   dataProviders?: ProviderFactory;
   meta?: {
@@ -162,10 +172,12 @@ export interface ContainerProps {
   placeholder?: string;
   disableScrollTo?: boolean;
   allowFeedbackAndHelpButtons?: boolean;
+
+  portal?: HTMLElement;
 }
 
 class ConversationContainer extends React.Component<ContainerProps, any> {
-  constructor(props) {
+  constructor(props: ContainerProps) {
     super(props);
     this.state = {
       localId: props.id || uuid.generate(),
@@ -181,7 +193,7 @@ class ConversationContainer extends React.Component<ContainerProps, any> {
 
     return (
       <Provider store={store}>
-        <ResourcedConversation {...props} localId={localId} />
+        <ResourcedConversation {...props as any} localId={localId} />
       </Provider>
     );
   }

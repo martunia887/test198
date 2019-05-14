@@ -14,7 +14,7 @@ import { getAvatarColor } from '../utils';
 import ToolbarButton from '../../../ui/ToolbarButton';
 
 export interface Props {
-  inviteToEditHandler?: (event: Event) => void;
+  inviteToEditHandler?: (event: React.MouseEvent<HTMLElement>) => void;
   isInviteToEditButtonSelected?: boolean;
   editorView?: EditorView;
   eventDispatcher?: EventDispatcher;
@@ -53,7 +53,7 @@ const itemAppear = keyframes`
 }
 `;
 
-const animateAvatar = ({ shouldAnimate }) => {
+const animateAvatar = ({ shouldAnimate }: { shouldAnimate: boolean }) => {
   if (!shouldAnimate) {
     return;
   }
@@ -66,7 +66,7 @@ const animateAvatar = ({ shouldAnimate }) => {
   `;
 };
 
-const animateBadge = ({ shouldAnimate }) => {
+const animateBadge = ({ shouldAnimate }: { shouldAnimate: boolean }) => {
   if (!shouldAnimate) {
     return;
   }
@@ -123,8 +123,8 @@ function Item(props: any) {
   );
 }
 export default class Avatars extends React.Component<Props, any> {
-  private onAvatarClick = event => {};
-  private renderAvatars = state => {
+  private onAvatarClick = () => {};
+  private renderAvatars = (state: { data?: PluginState }) => {
     if (!state.data) {
       return null;
     }

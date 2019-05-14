@@ -1,54 +1,64 @@
+import { snapshot, initFullPageEditorWithAdf, Device } from '../_utils';
 import {
-  initEditor,
-  snapshot,
+  clickEditableContent,
+  typeInEditor,
+} from '../../__helpers/page-objects/_editor';
+import {
   insertMedia,
-  editable,
-  setupMediaMocksProviders,
-} from '../_utils';
+  waitForMediaToBeLoaded,
+  resizeMediaInPosition,
+  scrollToMedia,
+} from '../../__helpers/page-objects/_media';
+import * as panelList from './__fixtures__/panel-list-adf.json';
+import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Snapshot Test: Media', () => {
-  let page;
-  beforeAll(async () => {
+  let page: Page;
+  beforeEach(async () => {
     // @ts-ignore
     page = global.page;
-    await initEditor(page, 'full-page-with-toolbar');
-    await page.setViewport({ width: 1920, height: 1080 });
-    await setupMediaMocksProviders(page);
-
-    // click into the editor
-    await page.waitForSelector(editable);
-    await page.click(editable);
-
-    // prepare media
-    await setupMediaMocksProviders(page);
   });
 
-  afterEach(async () => {
-    const image = await page.screenshot();
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot();
-  });
-  // TODO: AK-5551
+  // TODO: Fix image resizing logic then unskip: https://product-fabric.atlassian.net/browse/ED-6853
   describe.skip('Lists', async () => {
+    beforeEach(async () => {
+      await initFullPageEditorWithAdf(page, {}, Device.LaptopHiDPI);
+      await clickEditableContent(page);
+    });
+
     it('can insert a media single inside a bullet list', async () => {
-      // type some text
-      await page.click(editable);
-      await page.type(editable, '* ');
+      await typeInEditor(page, '* ');
 
       // now we can insert media as necessary
       await insertMedia(page);
-      await page.waitForSelector('.media-card');
+      await scrollToMedia(page);
+      await waitForMediaToBeLoaded(page);
+
       await snapshot(page);
     });
 
     it('can insert a media single inside a numbered list', async () => {
       // type some text
-      await page.click(editable);
-      await page.type(editable, '1. ');
+      await typeInEditor(page, '1. ');
 
       // now we can insert media as necessary
       await insertMedia(page);
-      await page.waitForSelector('.media-card');
+      await scrollToMedia(page);
+      await waitForMediaToBeLoaded(page);
+
+      await snapshot(page);
+    });
+  });
+
+  // TODO: Convert to integration test (https://product-fabric.atlassian.net/browse/ED-6692)
+  describe('Lists in panels', async () => {
+    beforeEach(async () => {
+      await initFullPageEditorWithAdf(page, panelList, Device.LaptopHiDPI);
+      await clickEditableContent(page);
+    });
+
+    it('can be resized in a list in a panel', async () => {
+      await resizeMediaInPosition(page, 0, 300);
       await snapshot(page);
     });
   });

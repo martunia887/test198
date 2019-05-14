@@ -1,8 +1,10 @@
 import * as React from 'react';
+import SearchIcon from '@atlaskit/icon/glyph/search';
 import {
   ObjectResult as ObjectResultComponent,
   PersonResult as PersonResultComponent,
   ContainerResult as ContainerResultComponent,
+  ResultBase,
 } from '@atlaskit/quick-search';
 import { FormattedMessage } from 'react-intl';
 import { messages } from '../messages';
@@ -15,11 +17,13 @@ import {
   ConfluenceObjectResult,
   JiraProjectType,
   ContentType,
+  AnalyticsType,
 } from '../model/Result';
 import { SelectedIcon } from './styled';
 import { getAvatarForConfluenceObjectResult } from '../util/confluence-avatar-util';
 import { getDefaultAvatar } from '../util/jira-avatar-util';
 import DarkReturn from '../assets/DarkReturn';
+import Return from '../assets/Return';
 
 export interface Props {
   results: Result[];
@@ -98,17 +102,19 @@ export default class ResultList extends React.Component<Props> {
         ...this.props.analyticsData,
         contentType: result.contentType,
         resultId: result.resultId,
+        isRecentResult: !!result.isRecentResult,
       };
 
       // Make sure that key and resultId are unique across all search results
       const uniqueResultId = getUniqueResultId(result);
+      const uniqueKey = `${uniqueResultId}_${Date.now()}`; // same result might appear on two successive search
 
       switch (resultType) {
         case ResultType.ConfluenceObjectResult: {
           const confluenceResult = result as ConfluenceObjectResult;
           return (
             <ObjectResultComponent
-              key={uniqueResultId}
+              key={uniqueKey}
               resultId={uniqueResultId}
               name={confluenceResult.name}
               href={confluenceResult.href}
@@ -130,7 +136,7 @@ export default class ResultList extends React.Component<Props> {
 
           return (
             <ContainerResultComponent
-              key={uniqueResultId}
+              key={uniqueKey}
               resultId={uniqueResultId}
               name={jiraResult.name}
               href={jiraResult.href}
@@ -154,7 +160,7 @@ export default class ResultList extends React.Component<Props> {
 
           return (
             <ObjectResultComponent
-              key={uniqueResultId}
+              key={uniqueKey}
               resultId={uniqueResultId}
               name={jiraResult.name}
               href={jiraResult.href}
@@ -171,7 +177,7 @@ export default class ResultList extends React.Component<Props> {
           const containerResult = result as ContainerResult;
           return (
             <ContainerResultComponent
-              key={uniqueResultId}
+              key={uniqueKey}
               resultId={uniqueResultId}
               name={containerResult.name}
               href={containerResult.href}
@@ -187,7 +193,7 @@ export default class ResultList extends React.Component<Props> {
 
           return (
             <PersonResultComponent
-              key={uniqueResultId}
+              key={uniqueKey}
               resultId={uniqueResultId}
               name={personResult.name}
               href={personResult.href}
@@ -198,6 +204,20 @@ export default class ResultList extends React.Component<Props> {
               analyticsData={analyticsData}
               selectedIcon={selectedIcon}
               target="_blank"
+            />
+          );
+        }
+
+        case ResultType.JiraIssueAdvancedSearch: {
+          return (
+            <ResultBase
+              href={result.href}
+              resultId="jira-advanced-issue-search"
+              text={<FormattedMessage {...messages.jira_view_all_issues} />}
+              icon={<SearchIcon size="medium" label="View all issues" />}
+              type={AnalyticsType.LinkPostQueryAdvancedSearchJira}
+              key={uniqueKey}
+              elemAfter={<Return />}
             />
           );
         }

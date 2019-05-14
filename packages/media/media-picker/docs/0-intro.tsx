@@ -21,7 +21,6 @@ export default md`
     - [Dropzone](#dropzone)
     - [Clipboard](#clipboard)
     - [Browser](#browser)
-    - [Binary](#binary)
     - [Popup](#popup)
 
   <a name="working-with-the-library"></a>
@@ -51,7 +50,7 @@ export default md`
   browser.browse();
 `}
 
-  This little app will let the user browse a file on his hard drive and upload it by clicking the button.
+  This little app will let the user browse a file on their hard drive and upload it by clicking the button.
   The upload-end event provides the file selected/uploaded, with a new public id.
   You can read more detailed documentation of the MediaPickerBrowser component below.
 
@@ -67,7 +66,6 @@ export default md`
 
   First argument is a <_string_>. It defined what kind of picker will be created:
 
-  - **binary**: allows you to upload object of type File
   - **browser**: will open browser default file dialog for user to choose file from
   - **clipboard**: allows user to paste a file from clipboard
   - **dropzone**: allows user to drag and drop a file
@@ -293,31 +291,6 @@ export default md`
   **browse()** — Open a dialog with the files on the local drive. Allows multiple file uploads.
 
   ---
-  <a name="binary"></a>
-  ### Binary
-
-  Allows client app to upload a file without user interaction.
-
-  #### Usage
-
-  ${code`const context = ContextFactory.create({
-    authProvider: () =>
-      Promise.resolve({
-        clientId: 'your-app-client-id',
-        token: 'your-generated-token',
-        baseUrl: ''https://media-api.atlassian.io'
-      }),
-  });
-
-  const binary = MediaPicker('binary', context);
-  binary.on('upload-end', payload => {
-    console.log(payload.public);
-  });
-  binary.upload(
-    'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=',
-    'screen-capture.gif',
-  );
-  `}
 
   #### Methods
 

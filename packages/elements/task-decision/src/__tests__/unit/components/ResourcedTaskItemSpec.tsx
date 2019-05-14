@@ -1,24 +1,34 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
-import FabricAnalyticsListener from '@atlaskit/analytics-listeners';
+import { mount, ReactWrapper } from 'enzyme';
+import FabricAnalyticsListener, {
+  AnalyticsWebClient,
+} from '@atlaskit/analytics-listeners';
 import { waitUntil } from '@atlaskit/util-common-test';
 import ResourcedTaskItem from '../../../components/ResourcedTaskItem';
 import TaskItem from '../../../components/TaskItem';
-import Participants from '../../../components/Participants';
 import { getParticipants } from '../_test-data';
 import { Placeholder } from '../../../styled/Placeholder';
 import Item from '../../../components/Item';
+import { TaskDecisionProvider } from '../../../types';
+import { asMock } from '../_mock';
 
 describe('<ResourcedTaskItem/>', () => {
-  let provider;
-  let component;
-  let analyticsWebClientMock;
+  let provider: TaskDecisionProvider;
+  let component: ReactWrapper<ResourcedTaskItem>;
+  let analyticsWebClientMock: AnalyticsWebClient;
 
   beforeEach(() => {
     provider = {
       subscribe: jest.fn(),
       unsubscribe: jest.fn(),
       toggleTask: jest.fn(() => Promise.resolve(true)),
+
+      getDecisions: jest.fn(),
+      getTasks: jest.fn(),
+      getItems: jest.fn(),
+
+      unsubscribeRecentUpdates: jest.fn(),
+      notifyRecentUpdates: jest.fn(),
     };
     analyticsWebClientMock = {
       sendUIEvent: jest.fn(),
@@ -48,8 +58,8 @@ describe('<ResourcedTaskItem/>', () => {
   });
 
   it('should render callback with ref', () => {
-    let contentRef: HTMLElement | undefined;
-    const handleContentRef = ref => (contentRef = ref);
+    let contentRef: HTMLElement | null = null;
+    const handleContentRef = (ref: HTMLElement | null) => (contentRef = ref);
     component = mount(
       <ResourcedTaskItem
         taskId="task-id"
@@ -61,7 +71,7 @@ describe('<ResourcedTaskItem/>', () => {
       </ResourcedTaskItem>,
     );
     expect(component.find('b').length).toEqual(1);
-    expect(contentRef).not.toEqual(undefined);
+    expect(contentRef).not.toEqual(null);
     expect(contentRef!.textContent).toEqual('Hello world');
   });
 
@@ -97,9 +107,11 @@ describe('<ResourcedTaskItem/>', () => {
     );
     const input = component.find('input');
     input.simulate('change');
-    return waitUntil(() => provider.toggleTask.mock.calls.length).then(() => {
-      expect(spy).toHaveBeenCalled();
-    });
+    return waitUntil(() => asMock(provider.toggleTask).mock.calls.length).then(
+      () => {
+        expect(spy).toHaveBeenCalled();
+      },
+    );
   });
 
   it('should still toggle isDone of TaskItem onChange without objectAri or containerAri', () => {
@@ -133,7 +145,9 @@ describe('<ResourcedTaskItem/>', () => {
         Hello World
       </ResourcedTaskItem>,
     );
-    return waitUntil(() => provider.subscribe.mock.calls.length).then(() => {
+    return waitUntil(
+      () => (provider.subscribe as jest.Mock).mock.calls.length,
+    ).then(() => {
       expect(provider.subscribe).toBeCalled();
     });
   });
@@ -150,11 +164,11 @@ describe('<ResourcedTaskItem/>', () => {
         Hello World
       </ResourcedTaskItem>,
     );
-    return waitUntil(() => provider.subscribe.mock.calls.length)
+    return waitUntil(() => asMock(provider.subscribe).mock.calls.length)
       .then(() => {
         expect(provider.subscribe).toBeCalled();
         expect(component.find(TaskItem).prop('isDone')).toBe(false);
-        const subscribeCallback = provider.subscribe.mock.calls[0][1];
+        const subscribeCallback = asMock(provider.subscribe).mock.calls[0][1];
         subscribeCallback('DONE');
         component.update();
         return waitUntil(() => component.find(TaskItem).prop('isDone'));
@@ -176,9 +190,11 @@ describe('<ResourcedTaskItem/>', () => {
       </ResourcedTaskItem>,
     );
     component.find('input').simulate('change');
-    return waitUntil(() => provider.toggleTask.mock.calls.length).then(() => {
-      expect(provider.toggleTask).toBeCalled();
-    });
+    return waitUntil(() => asMock(provider.toggleTask).mock.calls.length).then(
+      () => {
+        expect(provider.toggleTask).toBeCalled();
+      },
+    );
   });
 
   it('should get lastUpdater name from provider if getCurrentUser is defined', () => {
@@ -199,7 +215,7 @@ describe('<ResourcedTaskItem/>', () => {
     );
     component.find('input').simulate('change');
     return waitUntil(
-      () => component.update() && provider.toggleTask.mock.calls.length,
+      () => component.update() && asMock(provider.toggleTask).mock.calls.length,
     ).then(() => {
       expect(component.find(TaskItem).prop('lastUpdater')).toEqual(user);
     });
@@ -223,7 +239,7 @@ describe('<ResourcedTaskItem/>', () => {
     );
     component.find('input').simulate('change');
     return waitUntil(
-      () => component.update() && provider.toggleTask.mock.calls.length,
+      () => component.update() && asMock(provider.toggleTask).mock.calls.length,
     ).then(() => {
       expect(component.find(Item).prop('attribution')).toEqual(
         `Completed by ${user.displayName}`,
@@ -250,11 +266,13 @@ describe('<ResourcedTaskItem/>', () => {
       </ResourcedTaskItem>,
     );
     component.find('input').simulate('change');
-    return waitUntil(() => provider.toggleTask.mock.calls.length).then(() => {
-      expect(component.find(Item).prop('attribution')).toEqual(
-        `Added by ${creator.displayName}`,
-      );
-    });
+    return waitUntil(() => asMock(provider.toggleTask).mock.calls.length).then(
+      () => {
+        expect(component.find(Item).prop('attribution')).toEqual(
+          `Added by ${creator.displayName}`,
+        );
+      },
+    );
   });
 
   it('should show Added By when checked if provider.getCurrentUser is undefined', () => {
@@ -272,47 +290,13 @@ describe('<ResourcedTaskItem/>', () => {
       </ResourcedTaskItem>,
     );
     component.find('input').simulate('change');
-    return waitUntil(() => provider.toggleTask.mock.calls.length).then(() => {
-      expect(component.find(Item).prop('attribution')).toEqual(
-        `Added by ${creator.displayName}`,
-      );
-    });
-  });
-
-  describe('participants', () => {
-    const participants = getParticipants(2);
-
-    it('participants not used for inline style item', () => {
-      const component = mount(
-        <ResourcedTaskItem
-          taskId="task-1"
-          objectAri="objectAri"
-          containerAri="containerAri"
-          taskDecisionProvider={Promise.resolve(provider)}
-          appearance="inline"
-          participants={participants}
-        />,
-      );
-      expect(component.find(Participants).length).toEqual(0);
-    });
-
-    it('participants used for card style item', () => {
-      const component = mount(
-        <ResourcedTaskItem
-          taskId="task-1"
-          objectAri="objectAri"
-          containerAri="containerAri"
-          taskDecisionProvider={Promise.resolve(provider)}
-          appearance="card"
-          participants={participants}
-        />,
-      );
-      const participantsComponents = component.find(Participants);
-      expect(participantsComponents.length).toEqual(1);
-      expect(participantsComponents.at(0).prop('participants')).toEqual(
-        participants,
-      );
-    });
+    return waitUntil(() => asMock(provider.toggleTask).mock.calls.length).then(
+      () => {
+        expect(component.find(Item).prop('attribution')).toEqual(
+          `Added by ${creator.displayName}`,
+        );
+      },
+    );
   });
 
   describe('showPlaceholder', () => {

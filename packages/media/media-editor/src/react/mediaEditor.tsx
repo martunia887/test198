@@ -1,12 +1,13 @@
 import * as React from 'react';
-
+import Spinner from '@atlaskit/spinner';
 import {
-  EditorContainer,
+  MediaEditorContainer,
   OutputArea,
   DrawingCanvas,
   HiddenTextArea,
   HiddenTextHelperDiv,
   SupplementaryCanvas,
+  SpinnerWrapper,
 } from './styled';
 import { Engine } from '../engine/engine';
 import {
@@ -17,7 +18,7 @@ import {
   TextDirection,
   Tool,
 } from '../common';
-import { colorSame, colorWithAlphaSame, dimensionsSame } from '../util';
+import { colorWithAlphaSame, dimensionsSame } from '../util';
 
 import {
   DefaultDrawingArea,
@@ -59,11 +60,19 @@ export interface MediaEditorProps {
   onLoad: LoadHandler;
   onError: ErrorHandler;
   onShapeParametersChanged: ShapeParametersChangedHandler;
+  onAnyEdit?: () => void;
+}
+
+export interface MediaEditorState {
+  isImageLoaded: boolean;
 }
 
 const defaultTextDirection = 'ltr';
 
-export class MediaEditor extends React.Component<MediaEditorProps, {}> {
+export class MediaEditor extends React.Component<
+  MediaEditorProps,
+  MediaEditorState
+> {
   private isUnmounted: boolean;
 
   // DOM elements that we need to create the engine
@@ -81,6 +90,9 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
   constructor(props: MediaEditorProps) {
     super(props);
     this.isUnmounted = false;
+    this.state = {
+      isImageLoaded: false,
+    };
   }
 
   componentDidMount() {
@@ -125,7 +137,7 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
       addShadow: prevAddShadow,
     } = prevProps.shapeParameters;
     if (this.toolbar) {
-      if (!colorSame(currColor, prevColor)) {
+      if (currColor !== prevColor) {
         this.toolbar.setColor(currColor);
       }
       if (currLineWidth !== prevLineWidth) {
@@ -161,17 +173,20 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
     this.canvas = canvas;
   };
 
+  private renderSpinner = () => (
+    <SpinnerWrapper>
+      <Spinner size="large" invertColor={true} />
+    </SpinnerWrapper>
+  );
+
   render() {
+    const { isImageLoaded } = this.state;
     const { dimensions } = this.props;
-    const width = `${dimensions.width}px`;
-    const height = `${dimensions.height}px`;
 
     return (
-      <EditorContainer style={{ width, height }}>
-        <OutputArea
-          innerRef={this.handleOutputAreaInnerRef}
-          style={{ width, height }}
-        >
+      <MediaEditorContainer style={dimensions}>
+        {!isImageLoaded ? this.renderSpinner() : null}
+        <OutputArea innerRef={this.handleOutputAreaInnerRef} style={dimensions}>
           <SupplementaryCanvas
             innerRef={this.handleSupplementaryCanvasInnerRef}
           />
@@ -184,15 +199,22 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
           <HiddenTextHelperDiv
             innerRef={this.handleHiddenTextHelperDivInnerRef}
           />
-
           <DrawingCanvas
+            onClick={this.onCanvasClick}
             innerRef={this.handleDrawingCanvasInnerRef}
-            style={{ width, height }}
+            style={dimensions}
           />
         </OutputArea>
-      </EditorContainer>
+      </MediaEditorContainer>
     );
   }
+
+  private onCanvasClick = () => {
+    const { onAnyEdit } = this.props;
+    if (onAnyEdit) {
+      onAnyEdit();
+    }
+  };
 
   private loadEngine(): void {
     const { imageUrl } = this.props;
@@ -206,6 +228,7 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
         if (this.isUnmounted || imageUrl !== this.props.imageUrl) {
           return;
         }
+        this.setState({ isImageLoaded: true });
 
         // Creating components for the engine
         const outputSize = MediaEditor.toOutputSize(this.props);
@@ -237,9 +260,9 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
             .direction as TextDirection) || defaultTextDirection;
 
         const config = {
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           onCoreError: (message: string) => {
-            // tslint:disable-next-line
+            // eslint-disable-next-line
             console.error(message);
           },
           shapeParameters,
@@ -255,7 +278,7 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
         };
 
         this.engine = new Engine(config);
-        const loadParameters = {
+        const loadParameters: LoadParameters = {
           imageGetter: (format?: string) => this.engine!.getBase64Image(format),
         };
 
@@ -268,6 +291,7 @@ export class MediaEditor extends React.Component<MediaEditorProps, {}> {
     if (this.engine) {
       this.engine.unload();
       delete this.engine;
+      this.setState({ isImageLoaded: false });
     }
   }
 

@@ -2,6 +2,8 @@ import { Mark } from 'prosemirror-model';
 import { Style } from './interfaces';
 import { markSerializers } from './serializers';
 
+export * from './table-util';
+
 export const createTag = (
   tagName: string,
   attrs?: { [key: string]: string | number | undefined },
@@ -16,7 +18,7 @@ export const createTag = (
       return;
     }
 
-    attrsList.push(`${key}="${String(value).replace(/"/g, '"')}"`);
+    attrsList.push(`${key}="${String(value).replace(/"/g, "'")}"`);
   });
 
   const attrsSerialized = attrsList.length ? ` ${attrsList.join(' ')}` : '';
@@ -32,14 +34,13 @@ export const serializeStyle = (style: Style): string => {
       return memo;
     }
 
-    const value = String(style[key]).replace(/"/g, '"');
+    const value = String(style[key]).replace(/"/g, "'");
     return (memo += `${key}: ${value};`);
   }, '');
 };
 
 export const applyMarks = (marks: Mark[], text: string): string => {
   let output = text;
-
   for (const mark of marks) {
     // ignore marks with unknown type
     if (markSerializers[mark.type.name]) {

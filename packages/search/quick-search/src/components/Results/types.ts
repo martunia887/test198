@@ -4,9 +4,16 @@ export type AnalyticsData = Object;
 export type ResultId = string | number;
 export type SelectedResultId = ResultId | null;
 
+export type CancelableEvent =
+  | KeyboardEvent
+  | MouseEvent
+  | React.KeyboardEvent<HTMLInputElement>
+  | React.MouseEvent<HTMLElement>;
+
 export type ResultData = {
   resultId: ResultId;
   type: string;
+  event: CancelableEvent;
 };
 
 export type CommonResultProps = {

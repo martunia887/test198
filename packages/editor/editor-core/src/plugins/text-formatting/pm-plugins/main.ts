@@ -1,8 +1,8 @@
 import { toggleMark } from 'prosemirror-commands';
 import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
 import { Dispatch } from '../../../event-dispatcher';
-import { markActive, anyMarkActive, deepEqual } from '../utils';
-import { createInlineCodeFromTextInput } from '../commands/text-formatting';
+import { markActive, anyMarkActive, shallowEqual } from '../utils';
+import { createInlineCodeFromTextInputWithAnalytics } from '../commands/text-formatting';
 import { EditorView } from 'prosemirror-view';
 import * as keymaps from '../../../keymaps';
 import * as commands from '../commands/text-formatting';
@@ -100,7 +100,7 @@ export const plugin = (dispatch: Dispatch) =>
         newState,
       ): TextFormattingState {
         const state = getTextFormattingState(newState);
-        if (!deepEqual(pluginState, state)) {
+        if (!shallowEqual(pluginState, state)) {
           dispatch(pluginKey, state);
           return state;
         }
@@ -115,8 +115,6 @@ export const plugin = (dispatch: Dispatch) =>
           return commands.moveRight()(state, dispatch);
         } else if (event.key === keymaps.moveLeft.common) {
           return commands.moveLeft(view)(state, dispatch);
-        } else if (event.key === keymaps.backspace.common) {
-          return commands.removeIgnoredNodes(view)(state, dispatch);
         }
         return false;
       },
@@ -127,7 +125,10 @@ export const plugin = (dispatch: Dispatch) =>
         text: string,
       ) {
         const { state, dispatch } = view;
-        return createInlineCodeFromTextInput(from, to, text)(state, dispatch);
+        return createInlineCodeFromTextInputWithAnalytics(from, to, text)(
+          state,
+          dispatch,
+        );
       },
     },
   });

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import { Provider, Card, Client } from '../src';
-import { mockMultipleCards } from '../mocks';
+import { mockMultipleCards } from '../examples-helpers';
 import Textarea from '@atlaskit/textarea';
 
 mockMultipleCards();
 
-const theClient = new Client({ cacheLifespan: 10 * 1000 });
+const theClient = new Client({ cacheLifespan: 10 * 1000 }, 'staging');
 
 type State = {
   urls: string;
@@ -95,7 +95,6 @@ dropbox.com/file/a`,
               </p>
               <Textarea
                 isMonospaced
-                autoFocus
                 minimumRows={10}
                 resize="none"
                 value={this.state.urls}

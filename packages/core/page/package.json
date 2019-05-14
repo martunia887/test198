@@ -1,41 +1,43 @@
 {
   "name": "@atlaskit/page",
-  "version": "8.0.12",
+  "version": "10.0.0",
   "description": "A component for building page layouts. Also includes the Grid and GridColumn components.",
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "license": "Apache-2.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "index.js",
   "atlaskit:src": "src/index.js",
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/grid",
   "sideEffects": false,
-  "files": [
-    "dist"
-  ],
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Trey S",
-    "Alex R",
-    "Peter G"
+    "Sean C",
+    "Ajay M",
+    "Daniel D",
+    "Kang C"
   ],
-  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "atlaskit": {
+    "name": "Page",
+    "team": "core"
+  },
   "dependencies": {
     "@babel/runtime": "^7.0.0"
   },
   "peerDependencies": {
-    "react": "^16.4.0",
+    "react": "^16.8.0",
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
-    "@atlaskit/banner": "^7.0.12",
+    "@atlaskit/banner": "^10.0.0",
     "@atlaskit/build-utils": "^2.0.0",
-    "@atlaskit/button": "^10.1.1",
-    "@atlaskit/docs": "^6.0.0",
-    "@atlaskit/logo": "^9.2.6",
-    "@atlaskit/navigation": "^33.3.8",
-    "@atlaskit/toggle": "^5.0.14",
-    "@atlaskit/visual-regression": "^0.0.1",
+    "@atlaskit/button": "^13.0.0",
+    "@atlaskit/docs": "^8.0.0",
+    "@atlaskit/logo": "^11.0.0",
+    "@atlaskit/navigation": "^35.0.0",
+    "@atlaskit/ssr": "^0.1.0",
+    "@atlaskit/toggle": "^7.0.0",
+    "@atlaskit/visual-regression": "^0.1.0",
     "enzyme": "^3.7.0",
-    "react-dom": "^16.4.2",
+    "react-dom": "^16.8.0",
     "react-lorem-component": "^0.12.2",
     "react-syntax-highlighter": "^10.0.1"
   },

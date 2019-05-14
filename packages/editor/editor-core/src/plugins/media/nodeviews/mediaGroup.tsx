@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import ReactNodeView from '../../../nodeviews/ReactNodeView';
+import ReactNodeView, { ForwardRef } from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { Filmstrip } from '@atlaskit/media-filmstrip';
 import {
   MediaPluginState,
   stateKey as mediaStateKey,
 } from '../pm-plugins/main';
-import { FileIdentifier } from '@atlaskit/media-card';
+import { Context, FileIdentifier } from '@atlaskit/media-core';
 import { setNodeSelection } from '../../../utils';
 import WithPluginState from '../../../ui/WithPluginState';
 import { stateKey as reactNodeViewStateKey } from '../../../plugins/base/pm-plugins/react-nodeview';
@@ -35,28 +35,42 @@ export type MediaGroupProps = {
   editorAppearance: EditorAppearance;
 };
 
-export default class MediaGroup extends React.Component<MediaGroupProps> {
+export interface MediaGroupState {
+  viewContext?: Context;
+}
+
+export default class MediaGroup extends React.Component<
+  MediaGroupProps,
+  MediaGroupState
+> {
   private mediaPluginState: MediaPluginState;
   private mediaNodes: PMNode[];
 
-  state = {
-    selected: null,
+  state: MediaGroupState = {
+    viewContext: undefined,
   };
 
-  constructor(props) {
+  constructor(props: MediaGroupProps) {
     super(props);
+    this.mediaNodes = [];
     this.mediaPluginState = mediaStateKey.getState(props.view.state);
     this.setMediaItems(props);
   }
 
-  componentWillReceiveProps(props) {
+  componentDidMount() {
+    this.updateMediaContext();
+  }
+
+  componentWillReceiveProps(props: MediaGroupProps) {
+    this.updateMediaContext();
     this.setMediaItems(props);
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: MediaGroupProps) {
     if (
       this.props.selected !== nextProps.selected ||
-      this.props.node !== nextProps.node
+      this.props.node !== nextProps.node ||
+      this.state.viewContext !== this.mediaPluginState.mediaContext
     ) {
       return true;
     }
@@ -64,13 +78,21 @@ export default class MediaGroup extends React.Component<MediaGroupProps> {
     return false;
   }
 
-  setMediaItems = props => {
+  updateMediaContext() {
+    const { viewContext } = this.state;
+    const { mediaContext } = this.mediaPluginState;
+    if (!viewContext && mediaContext) {
+      this.setState({
+        viewContext: mediaContext,
+      });
+    }
+  }
+
+  setMediaItems = (props: MediaGroupProps) => {
     const { node } = props;
     this.mediaNodes = [] as Array<PMNode>;
     node.forEach((item, childOffset) => {
-      this.mediaPluginState.mediaGroupNodes[
-        item.attrs.__key || item.attrs.id
-      ] = {
+      this.mediaPluginState.mediaGroupNodes[item.attrs.id] = {
         node: item,
         getPos: () => props.getPos() + childOffset + 1,
       };
@@ -78,13 +100,11 @@ export default class MediaGroup extends React.Component<MediaGroupProps> {
     });
   };
 
-  renderChildNodes = node => {
+  renderChildNodes = () => {
+    const { viewContext } = this.state;
     const items = this.mediaNodes.map((item, idx) => {
-      const getState = this.mediaPluginState.stateManager.getState(
-        item.attrs.__key || item.attrs.id,
-      );
       const identifier: FileIdentifier = {
-        id: getState ? getState.fileId : item.attrs.id,
+        id: item.attrs.id,
         mediaItemType: 'file',
         collectionName: item.attrs.collection,
       };
@@ -113,18 +133,16 @@ export default class MediaGroup extends React.Component<MediaGroupProps> {
       };
     });
 
-    return (
-      <Filmstrip items={items} context={this.mediaPluginState.mediaContext} />
-    );
+    return <Filmstrip items={items} context={viewContext} />;
   };
 
   render() {
-    return this.renderChildNodes(this.props.node);
+    return this.renderChildNodes();
   }
 }
 
 class MediaGroupNodeView extends ReactNodeView {
-  render(props, forwardRef) {
+  render(_props: any, forwardRef: ForwardRef) {
     const { editorAppearance } = this.reactComponentProps;
     return (
       <WithPluginState
@@ -166,7 +184,7 @@ class MediaGroupNodeView extends ReactNodeView {
 
 export const ReactMediaGroupNode = (
   portalProviderAPI: PortalProviderAPI,
-  editorAppearance: EditorAppearance,
+  editorAppearance?: EditorAppearance,
 ) => (node: PMNode, view: EditorView, getPos: () => number): NodeView => {
   return new MediaGroupNodeView(node, view, getPos, portalProviderAPI, {
     editorAppearance,

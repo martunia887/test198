@@ -1,9 +1,8 @@
 /* eslint-disable */
+import 'whatwg-fetch';
 import 'jest-styled-components';
-import snakeCase from 'snake-case';
 import { toMatchSnapshot } from 'jest-snapshot';
 import { configureToMatchImageSnapshot } from 'jest-image-snapshot';
-import * as emotion from 'emotion';
 import { createSerializer } from 'jest-emotion';
 import 'jest-localstorage-mock';
 
@@ -104,12 +103,6 @@ if (typeof window !== 'undefined' && !('cancelAnimationFrame' in window)) {
   };
 }
 
-function isNodeOrFragment(thing) {
-  // Using a simple `instanceof` check is intentionally avoided here to make
-  // this code agnostic to a specific instance of a Schema.
-  return thing && typeof thing.eq === 'function';
-}
-
 function transformDoc(fn) {
   return doc => {
     const walk = fn => node => {
@@ -126,6 +119,7 @@ function transformDoc(fn) {
 }
 
 const hasLocalId = type =>
+  type === 'status' ||
   type === 'taskItem' ||
   type === 'taskList' ||
   type === 'decisionItem' ||
@@ -137,7 +131,7 @@ const removeIdsFromDoc = transformDoc(node => {
    * @see https://regex101.com/r/FrYUen/1
    */
   if (node.type === 'media') {
-    return {
+    const replacedNode = {
       ...node,
       attrs: {
         ...node.attrs,
@@ -146,14 +140,18 @@ const removeIdsFromDoc = transformDoc(node => {
           '$11234-5678-abcd-efgh$3',
         ),
 
-        __key: node.attrs.__key.replace(
-          /(temporary:)?([a-z0-9\-]+)(:.*)?$/,
-          '$11234-5678-abcd-efgh$3',
-        ),
-
         __fileName: 'example.png',
       },
     };
+
+    if (node.attrs.__key) {
+      replacedNode.attrs.__key = node.attrs.__key.replace(
+        /(temporary:)?([a-z0-9\-]+)(:.*)?$/,
+        '$11234-5678-abcd-efgh$3',
+      );
+    }
+
+    return replacedNode;
   }
   if (hasLocalId(node.type)) {
     return {
@@ -235,6 +233,46 @@ expect.extend({
       message,
       name: 'toEqualDocument',
     };
+  },
+
+  /**
+   * The current toMatchSnapshot implementation is not deterministic
+   * with currentTestName, this is causing issues when we use on `it.concurrent`
+   * to avoid this issue we are sending the testCase by ourself.
+   *
+   * Issue: https://github.com/facebook/jest/issues/5801
+   */
+  toMatchCustomSnapshot(actual, testCase) {
+    const fakeThis = { ...this, currentTestName: testCase };
+    return toMatchSnapshot.call(fakeThis, actual);
+  },
+
+  /**
+   * The current toMatchDocSnapshot implementation is not deterministic
+   * with currentTestName, this is causing issues when we use on `it.concurrent`
+   * to avoid this issue we are sending the testCase by ourself.
+   *
+   * Issue: https://github.com/facebook/jest/issues/5801
+   */
+  toMatchCustomDocSnapshot(actual, testCase) {
+    const { snapshotState } = this;
+    // remove ids that may change from the document so snapshots are repeatable
+    const transformedDoc = removeIdsFromDoc(actual);
+
+    // since the test runner fires off multiple browsers for a single test, map each snapshot to the same one
+    // (otherwise we'll try to create as many snapshots as there are browsers)
+    const oldCounters = snapshotState._counters;
+    snapshotState._counters = Object.create(oldCounters, {
+      set: {
+        value: key => oldCounters.set(key, 1),
+      },
+      get: {
+        value: key => oldCounters.get(key),
+      },
+    });
+    const fakeThis = { ...this, currentTestName: testCase };
+    const ret = toMatchSnapshot.call(fakeThis, transformedDoc);
+    return ret;
   },
 
   toMatchDocSnapshot(actual) {
@@ -324,38 +362,27 @@ if (process.env.CI) {
   });
 }
 
-expect.addSnapshotSerializer(createSerializer(emotion));
+expect.addSnapshotSerializer(createSerializer());
 
 // set up for visual regression
 if (process.env.VISUAL_REGRESSION) {
-  const puppeteer = require('puppeteer');
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
 
   beforeAll(async () => {
-    // show browser when watch is enabled
-    const isWatch = process.env.WATCH === 'true';
-    let headless = true;
-    if (isWatch) {
-      headless = false;
-    }
-    global.browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-      ],
-    });
     global.page = await global.browser.newPage();
   }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
 
   afterAll(async () => {
-    await global.browser.close();
+    await global.page.close();
+    await global.browser.disconnect();
   });
 
-  // TODO tweak failureThreshold to provide best results
-  // TODO: A failureThreshold of 1 will pass tests that have > 2 percent failing pixels
+  // A failureThreshold of 1 will pass tests that have > 2 percent failing pixels
+  const customConfig = { threshold: 0.0 };
   const toMatchProdImageSnapshot = configureToMatchImageSnapshot({
-    customDiffConfig: { threshold: 0.3 },
+    customDiffConfig: customConfig,
+    failureThreshold: '20',
+    failureThresholdType: 'pixel',
     noColors: true,
   });
 

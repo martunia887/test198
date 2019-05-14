@@ -49,7 +49,7 @@ export default class WithPluginState extends React.Component<Props, State> {
   };
 
   state = {};
-  context: Context;
+  context!: Context;
 
   constructor(props: Props, context: Context) {
     super(props);
@@ -88,7 +88,7 @@ export default class WithPluginState extends React.Component<Props, State> {
     skipEqualityCheck?: boolean,
   ) => (pluginState: any) => {
     // skipEqualityCheck is being used for old plugins since they are mutating plugin state instead of creating a new one
-    if (this.state[propName] !== pluginState || skipEqualityCheck) {
+    if ((this.state as any)[propName] !== pluginState || skipEqualityCheck) {
       this.updateState({ [propName]: pluginState });
     }
   };
@@ -96,21 +96,22 @@ export default class WithPluginState extends React.Component<Props, State> {
   /**
    * Debounces setState calls in order to reduce number of re-renders caused by several plugin state changes.
    */
-  private updateState(stateSubset: State) {
+  private updateState = (stateSubset: State) => {
     this.notAppliedState = { ...this.notAppliedState, ...stateSubset };
 
     if (this.debounce) {
-      clearTimeout(this.debounce);
+      window.clearTimeout(this.debounce);
     }
 
     this.debounce = window.setTimeout(() => {
       if (this.hasBeenMounted) {
         this.setState(this.notAppliedState);
       }
+
       this.debounce = null;
       this.notAppliedState = {};
-    }, 10);
-  }
+    }, 0);
+  };
 
   private getPluginsStates(
     plugins: { [name: string]: PluginKey },
@@ -120,7 +121,7 @@ export default class WithPluginState extends React.Component<Props, State> {
       return {};
     }
 
-    return Object.keys(plugins).reduce((acc, propName) => {
+    return Object.keys(plugins).reduce<Record<string, any>>((acc, propName) => {
       const pluginKey = plugins[propName];
       if (!pluginKey) {
         return acc;
@@ -150,7 +151,7 @@ export default class WithPluginState extends React.Component<Props, State> {
         return;
       }
 
-      const pluginState = pluginsStates[propName];
+      const pluginState = (pluginsStates as any)[propName];
       const isPluginWithSubscribe = pluginState && pluginState.subscribe;
       const handler = this.handlePluginStateChange(
         propName,
@@ -163,7 +164,7 @@ export default class WithPluginState extends React.Component<Props, State> {
         eventDispatcher.on((pluginKey as any).key, handler);
       }
 
-      this.listeners[(pluginKey as any).key] = { handler, pluginKey };
+      (this.listeners as any)[(pluginKey as any).key] = { handler, pluginKey };
     });
   }
 
@@ -176,14 +177,14 @@ export default class WithPluginState extends React.Component<Props, State> {
     }
 
     Object.keys(this.listeners).forEach(key => {
-      const pluginState = this.listeners[key].pluginKey.getState(
+      const pluginState = (this.listeners as any)[key].pluginKey.getState(
         editorView.state,
       );
 
       if (pluginState && pluginState.unsubscribe) {
-        pluginState.unsubscribe(this.listeners[key].handler);
+        pluginState.unsubscribe((this.listeners as any)[key].handler);
       } else {
-        eventDispatcher.off(key, this.listeners[key].handler);
+        eventDispatcher.off(key, (this.listeners as any)[key].handler);
       }
     });
 

@@ -3,7 +3,6 @@ import { uuid } from '../../utils/uuid';
 
 /**
  * @name status_node
- * @stage 0
  */
 export interface StatusDefinition {
   type: 'status';
@@ -29,7 +28,7 @@ export const status: NodeSpec = {
     text: { default: '' },
     color: { default: '' },
     localId: { default: uuid.generate() },
-    style: { default: null },
+    style: { default: '' },
   },
   parseDOM: [
     {
@@ -39,7 +38,7 @@ export const status: NodeSpec = {
         return {
           text: dom.textContent!.replace(/\n/, '').trim(),
           color: dom.getAttribute('data-color'),
-          localId: dom.getAttribute('data-local-id') || uuid.generate(),
+          localId: uuid.generate(),
           style: dom.getAttribute('data-style'),
         };
       },
@@ -47,12 +46,12 @@ export const status: NodeSpec = {
   ],
   toDOM(node: PMNode) {
     const { text, color, localId, style } = node.attrs;
-
     const attrs = {
       'data-node-type': 'status',
       'data-color': color,
       'data-local-id': localId,
       'data-style': style,
+      contenteditable: 'false',
     };
     return ['span', attrs, text];
   },

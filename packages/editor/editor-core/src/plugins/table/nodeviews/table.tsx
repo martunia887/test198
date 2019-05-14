@@ -5,17 +5,23 @@ import {
   DOMSerializer,
 } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import { akEditorFullPageMaxWidth } from '@atlaskit/editor-common';
-import ReactNodeView from '../../../nodeviews/ReactNodeView';
+import ReactNodeView, {
+  ForwardRef,
+  getPosHandler,
+} from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import { parseDOMColumnWidths, generateColgroup } from '../utils';
+import { generateColgroup } from '../pm-plugins/table-resizing/utils';
 import TableComponent from './TableComponent';
 
 import WithPluginState from '../../../ui/WithPluginState';
 import { pluginKey as widthPluginKey } from '../../width';
 import { pluginKey, getPluginState } from '../pm-plugins/main';
 import { pluginKey as tableResizingPluginKey } from '../pm-plugins/table-resizing/index';
+import { contentWidth } from '../pm-plugins/table-resizing/utils';
+import { handleBreakoutContent } from '../pm-plugins/table-resizing/commands';
 import { pluginConfig as getPluginConfig } from '../index';
+import { TableCssClassName as ClassName } from '../types';
+import { closestElement } from '../../../utils';
 
 export interface Props {
   node: PmNode;
@@ -24,6 +30,11 @@ export interface Props {
   cellMinWidth?: number;
   portalProviderAPI: PortalProviderAPI;
   getPos: () => number;
+  options?: {
+    dynamicTextSizing?: boolean;
+    isBreakoutEnabled?: boolean;
+    isFullWidthModeEnabled?: boolean;
+  };
 }
 
 const tableAttributes = (node: PmNode) => {
@@ -52,9 +63,13 @@ const toDOM = (node: PmNode, props: Props) => {
 
 export default class TableView extends ReactNodeView {
   private table: HTMLElement | undefined;
+  private observer?: MutationObserver;
 
   constructor(props: Props) {
     super(props.node, props.view, props.getPos, props.portalProviderAPI, props);
+
+    const MutObserver = (window as any).MutationObserver;
+    this.observer = MutObserver && new MutObserver(this.handleMutation);
   }
 
   getContentDOM() {
@@ -65,23 +80,34 @@ export default class TableView extends ReactNodeView {
 
     if (rendered.dom) {
       this.table = rendered.dom as HTMLElement;
+
+      // Ignore mutation doesn't pick up children updates
+      // E.g. inserting a bodiless extension that renders
+      // arbitrary nodes (aka macros).
+      if (this.observer) {
+        this.observer.observe(rendered.dom, {
+          subtree: true,
+          childList: true,
+          attributes: true,
+        });
+      }
     }
 
     return rendered;
   }
 
-  setDomAttrs(node) {
+  setDomAttrs(node: PmNode) {
     if (!this.table) {
       return;
     }
 
     const attrs = tableAttributes(node);
-    Object.keys(attrs).forEach(attr => {
+    (Object.keys(attrs) as Array<keyof typeof attrs>).forEach(attr => {
       this.table!.setAttribute(attr, attrs[attr]);
     });
   }
 
-  render(props, forwardRef) {
+  render(props: Props, forwardRef: ForwardRef) {
     return (
       <WithPluginState
         plugins={{
@@ -97,85 +123,126 @@ export default class TableView extends ReactNodeView {
             node={this.node}
             width={pluginStates.containerWidth.width}
             contentDOM={forwardRef}
-            onComponentMount={this.componentDidMount}
           />
         )}
       />
     );
   }
 
-  componentDidMount = () => {
-    // When we get a table with an 'auto' attribute, we want to:
-    // 1. render with table-layout: auto
-    // 2. capture the column widths
-    // 3. set the column widths as attributes, and remove the 'auto' attribute,
-    //    so the table renders the same, but is now fixed-width
-    //
-    // This can be used to migrate table appearances from other sources that are
-    // usually rendered with 'auto'.
-    //
-    // We use this when migrating TinyMCE tables for Confluence, for example:
-    // https://pug.jira-dev.com/wiki/spaces/AEC/pages/3362882215/How+do+we+map+TinyMCE+tables+to+Fabric+tables
+  ignoreMutation() {
+    return true;
+  }
 
-    const { state, dispatch } = this.view;
-    const { tr } = state;
+  destroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+    super.destroy();
+  }
 
-    if (this.node.attrs.__autoSize) {
-      const basePos = this.getPos();
-      if (typeof basePos === 'undefined') {
-        return;
-      }
+  private resizeForBreakoutContent = (target: HTMLElement) => {
+    const { view } = this;
+    const elemOrWrapper =
+      closestElement(
+        target,
+        `.${ClassName.TABLE_HEADER_NODE_WRAPPER}, .${
+          ClassName.TABLE_CELL_NODE_WRAPPER
+        }`,
+      ) || target;
+    const { minWidth } = contentWidth(target, target);
 
-      const colWidths = parseDOMColumnWidths(this.contentDOM! as HTMLElement);
-
-      // overflow tables require all columns to be fixed width
-      const tableWidth = colWidths.dividedWidths.reduce(
-        (sum, val) => sum + val,
-        0,
-      );
-      const isOverflowTable = tableWidth > akEditorFullPageMaxWidth;
-
-      this.node.forEach((rowNode, rowOffset, i) => {
-        rowNode.forEach((colNode, colOffset, j) => {
-          const pos = rowOffset + colOffset + basePos + 2;
-
-          tr.setNodeMarkup(pos, undefined, {
-            ...colNode.attrs,
-            colwidth: colWidths
-              .width(j, colNode.attrs.colspan, !isOverflowTable)
-              .map(Math.round),
-          });
-        });
-      });
-
-      // clear autosizing on the table node
-      tr.setNodeMarkup(basePos, undefined, {
-        ...this.node.attrs,
-        __autoSize: false,
-      });
-
-      dispatch(tr.setMeta('addToHistory', false));
+    // This can also trigger for a non-resized table.
+    if (this.node && elemOrWrapper && elemOrWrapper.offsetWidth < minWidth) {
+      const cellPos = view.posAtDOM(elemOrWrapper, 0);
+      const domAtPos = view.domAtPos.bind(view);
+      const { state, dispatch } = view;
+      handleBreakoutContent(
+        elemOrWrapper as HTMLTableElement,
+        cellPos - 1,
+        this.getPos() + 1,
+        minWidth,
+        this.node,
+        domAtPos,
+      )(state, dispatch);
     }
   };
 
-  ignoreMutation(record: MutationRecord) {
-    return true;
-  }
+  private resizeForExtensionContent = (target: HTMLTableElement) => {
+    if (!this.node) {
+      return;
+    }
+    const { view } = this;
+    const elemOrWrapper = closestElement(
+      target,
+      '.inlineExtensionView-content-wrap, .extensionView-content-wrap',
+    );
+    if (!elemOrWrapper) {
+      return;
+    }
+    const container = closestElement(
+      target,
+      `.${ClassName.TABLE_HEADER_NODE_WRAPPER}, .${
+        ClassName.TABLE_CELL_NODE_WRAPPER
+      }`,
+    ) as HTMLTableElement;
+    if (!container) {
+      return;
+    }
+
+    if (container.offsetWidth < elemOrWrapper.offsetWidth) {
+      const domAtPos = view.domAtPos.bind(view);
+      const cellPos = view.posAtDOM(container, 0);
+      const { state, dispatch } = view;
+      handleBreakoutContent(
+        container,
+        cellPos - 1,
+        this.getPos() + 1,
+        elemOrWrapper.offsetWidth,
+        this.node,
+        domAtPos,
+      )(state, dispatch);
+    }
+  };
+
+  private handleMutation = (records: Array<MutationRecord>) => {
+    if (!records.length || !this.contentDOM) {
+      return;
+    }
+
+    const uniqueTargets: Set<HTMLElement> = new Set();
+    records.forEach(record => {
+      const target = record.target as HTMLTableElement;
+      // If we've seen this target already in this set of targets
+      // We dont need to reprocess.
+      if (!uniqueTargets.has(target)) {
+        this.resizeForBreakoutContent(target);
+        this.resizeForExtensionContent(target);
+        uniqueTargets.add(target);
+      }
+    });
+  };
 }
 
-export const createTableView = (portalProviderAPI: PortalProviderAPI) => (
-  node,
-  view,
-  getPos,
+export const createTableView = (
+  node: PmNode,
+  view: EditorView,
+  getPos: getPosHandler,
+  portalProviderAPI: PortalProviderAPI,
+  options: {
+    isBreakoutEnabled?: boolean;
+    wasBreakoutEnabled?: boolean;
+    dynamicTextSizing?: boolean;
+    isFullWidthModeEnabled?: boolean;
+  },
 ): NodeView => {
   const { pluginConfig } = getPluginState(view.state);
   const { allowColumnResizing } = getPluginConfig(pluginConfig);
-
   return new TableView({
     node,
     view,
     allowColumnResizing,
     portalProviderAPI,
     getPos,
+    options,
   }).init();
 };

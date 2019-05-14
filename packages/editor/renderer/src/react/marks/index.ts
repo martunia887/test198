@@ -1,5 +1,5 @@
 // @ts-ignore: Props needed for inferred type declaration
-import { ComponentClass, Props } from 'react';
+import { ComponentType, Props } from 'react';
 import { Mark } from 'prosemirror-model';
 
 import Code from './code';
@@ -14,11 +14,12 @@ import Action from './action';
 import Breakout from './breakout';
 import Alignment from './alignment';
 import Indentation from './indentation';
+import Annotation from './annotation';
 
 // Stage0
 import ConfluenceInlineComment from './confluence-inline-comment';
 
-export const markToReact = {
+export const markToReact: { [key: string]: ComponentType<any> } = {
   code: Code,
   em: Em,
   link: Link,
@@ -28,6 +29,7 @@ export const markToReact = {
   textColor: TextColor,
   underline: Underline,
   action: Action,
+  annotation: Annotation,
 
   // Stage0
   confluenceInlineComment: ConfluenceInlineComment,
@@ -36,7 +38,7 @@ export const markToReact = {
   indentation: Indentation,
 };
 
-export const toReact = (mark: Mark): ComponentClass<any> => {
+export const toReact = (mark: Mark): ComponentType<any> => {
   return markToReact[mark.type.name];
 };
 
@@ -51,4 +53,5 @@ export {
   Underline,
   Action,
   Breakout,
+  Annotation,
 };

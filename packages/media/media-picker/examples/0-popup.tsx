@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import { Component } from 'react';
 import * as PropTypes from 'prop-types';
@@ -34,7 +34,7 @@ import {
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
 } from '../src/domain/uploadEvent';
-import { PopupUploadEventPayloadMap } from '../src/components/popup';
+import { PopupUploadEventPayloadMap } from '../src/components/types';
 import { AuthEnvironment } from '../example-helpers/types';
 
 const context = createStorybookContext();
@@ -77,8 +77,8 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     getAtlaskitAnalyticsEventHandlers: PropTypes.func,
   };
 
-  componentDidMount() {
-    this.createPopup();
+  async componentDidMount() {
+    await this.createPopup();
   }
 
   componentWillUnmount() {
@@ -88,7 +88,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     }
   }
 
-  private createPopup(singleSelect: boolean = this.state.singleSelect) {
+  private async createPopup(singleSelect: boolean = this.state.singleSelect) {
     const { popup } = this.state;
     if (popup) {
       popup.removeAllListeners();
@@ -100,7 +100,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
       userAuthProvider,
     });
 
-    const newPopup = MediaPicker('popup', context, {
+    const newPopup = await MediaPicker('popup', context, {
       container: document.body,
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
@@ -128,6 +128,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
       const authStg = confirm(
         'It looks like you are not authorized in Staging. Press OK to authorize',
       );
+      // eslint-disable-next-line no-unused-expressions
       authStg
         ? window.open('https://id.stg.internal.atlassian.com', '_blank')
         : this.state.popup!.hide();
@@ -176,7 +177,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     const publicFile = publicFiles[data.file.id];
 
     if (publicFile) {
-      const publicId = data.file.publicId;
+      const publicId = data.file.id;
       publicFile.publicId = publicId;
 
       this.setState({

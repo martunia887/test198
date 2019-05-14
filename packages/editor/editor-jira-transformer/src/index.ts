@@ -38,7 +38,7 @@ export class JIRATransformer implements Transformer<string> {
   private schema: Schema;
   private customEncoders: JIRACustomEncoders;
   private mediaContextInfo?: MediaContextInfo;
-  private doc: Document;
+  private doc!: Document;
 
   constructor(
     schema: Schema,
@@ -356,6 +356,7 @@ export class JIRATransformer implements Transformer<string> {
   private encodeListItem(node: PMNode) {
     const elem = this.doc.createElement('li');
     if (node.content.childCount) {
+      let hasBlocks = false;
       node.content.forEach(childNode => {
         if (
           childNode.type === this.schema.nodes.bulletList ||
@@ -372,15 +373,23 @@ export class JIRATransformer implements Transformer<string> {
           if (list instanceof HTMLElement && list.tagName === 'UL') {
             list.setAttribute('type', 'circle');
 
-            [].forEach.call(list.querySelectorAll('ul'), ul => {
-              ul.setAttribute('type', 'square');
-            });
+            [].forEach.call(
+              list.querySelectorAll('ul'),
+              (ul: HTMLUListElement) => {
+                ul.setAttribute('type', 'square');
+              },
+            );
           }
 
           elem.appendChild(list);
-        } else {
+        } else if (childNode.type.name === 'paragraph' && !hasBlocks) {
           // Strip the paragraph node from the list item.
           elem.appendChild(this.encodeFragment((childNode as PMNode).content));
+        } else {
+          if (childNode.isBlock) {
+            hasBlocks = true;
+          }
+          elem.appendChild(this.encodeNode(childNode));
         }
       });
     }

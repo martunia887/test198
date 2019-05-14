@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { Node, Schema } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { EditorActionsOptions } from '../actions/index';
+import EditorActions from '../actions/index';
 
 import {
   Transformer,
@@ -29,12 +29,12 @@ import { CollabEditOptions } from '../plugins/collab-edit/types';
 import { CodeBlockOptions } from '../plugins/code-block';
 import { CardProvider, CardOptions } from '../plugins/card/types';
 import { QuickInsertOptions } from '../plugins/quick-insert/types';
+import { AutoformattingProvider } from '../plugins/custom-autoformat/types';
 
 export type EditorAppearance =
-  | 'message'
-  | 'inline-comment'
   | 'comment'
   | 'full-page'
+  | 'full-width'
   | 'chromeless'
   | 'mobile';
 
@@ -49,7 +49,7 @@ export type InsertMenuCustomItem = {
   elemAfter?: ReactComponents | string;
   isDisabled?: boolean;
   className?: string;
-  onClick?: (editorActions: EditorActionsOptions) => void;
+  onClick?: (editorActions: EditorActions) => void;
 };
 
 export type AllowedBlockTypes =
@@ -66,8 +66,6 @@ export interface EditorProps {
   /*
   Configure the display mode of the editor. Different modes may have different feature sets supported.
 
-  - `message` - editor which was used for Stride has now been deprecated.
-  - `inline-comment` - should be used for inline comments, no toolbar is displayed
   - `comment` - should be used for things like comments where you have a field input but require a toolbar & save/cancel buttons
   - `full-page` - should be used for a full page editor where it is the user focus of the page
   - `chromeless` - is essentially the `comment` editor but without the editor chrome, like toolbar & save/cancel buttons
@@ -82,7 +80,7 @@ export interface EditorProps {
   primaryToolbarComponents?: ReactComponents;
   secondaryToolbarComponents?: ReactComponents;
   addonToolbarComponents?: ReactComponents;
-
+  allowAnalyticsGASV3?: boolean;
   // Configure allowed blocks in the editor, currently only supports `heading`, `blockquote`, `hardBreak` and `codeBlock`.
   allowBlockType?: { exclude?: Array<AllowedBlockTypes> };
 
@@ -144,10 +142,12 @@ export interface EditorProps {
   allowInlineAction?: boolean;
 
   // Temporary flag to enable layouts while it's under development
+  // Use object form to enable breakout for layouts, and to enable the newer layouts - left sidebar & right sidebar
   allowLayouts?:
     | boolean
     | {
         allowBreakout: boolean;
+        UNSAFE_addSidebarLayouts?: boolean;
       };
 
   // Enable status, if menuDisabled is passed then plugin is enabled by default
@@ -195,6 +195,9 @@ export interface EditorProps {
   mentionProvider?: Promise<MentionProvider>;
   mediaProvider?: Promise<MediaProvider>;
 
+  // Allows you to define custom autoformatting rules.
+  autoformattingProvider?: Promise<AutoformattingProvider>;
+
   // This is temporary for Confluence. **Please do not use**.
   macroProvider?: Promise<MacroProvider>;
   cardProvider?: Promise<CardProvider>;
@@ -232,7 +235,7 @@ export interface EditorProps {
 
   // Set to add custom menu items to the insert (plus) menu dropdown.
   insertMenuItems?: InsertMenuCustomItem[];
-  editorActions?: EditorActionsOptions;
+  editorActions?: EditorActions;
 
   // Set for an on change callback.
   onChange?: (editorView: EditorView) => void;

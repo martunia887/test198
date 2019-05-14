@@ -1,7 +1,7 @@
 import { toggleMark } from 'prosemirror-commands';
 import {
   Fragment,
-  Mark,
+  Mark as PMMark,
   MarkType,
   Node,
   NodeType,
@@ -9,6 +9,7 @@ import {
   Slice,
   Schema,
   NodeRange,
+  Mark,
 } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import {
@@ -38,11 +39,16 @@ export { JSONDocNode, JSONNode };
 
 export { filterContentByType } from './filter';
 
+export const ZeroWidthSpace = '\u200b';
+
 function validateNode(node: Node): boolean {
   return false;
 }
 
-function isMarkTypeCompatibleWithMark(markType: MarkType, mark: Mark): boolean {
+function isMarkTypeCompatibleWithMark(
+  markType: MarkType,
+  mark: PMMark,
+): boolean {
   return !mark.type.excludes(markType) && !markType.excludes(mark.type);
 }
 
@@ -67,7 +73,8 @@ function closest(
   const matches = el.matches ? 'matches' : 'msMatchesSelector';
 
   do {
-    if (el[matches](s)) {
+    // @ts-ignore
+    if (el[matches] && el[matches](s)) {
       return el;
     }
     el = (el.parentElement || el.parentNode) as HTMLElement;
@@ -76,7 +83,10 @@ function closest(
 }
 
 export const isImage = (fileType?: string): boolean => {
-  return !!fileType && fileType.indexOf('image/') > -1;
+  return (
+    !!fileType &&
+    (fileType.indexOf('image/') > -1 || fileType.indexOf('video/') > -1)
+  );
 };
 
 export function canMoveUp(state: EditorState): boolean {
@@ -137,6 +147,15 @@ export function canMoveDown(state: EditorState): boolean {
   }
 
   return !atTheEndOfDoc(state);
+}
+
+export function isSelectionInsideLastNodeInDocument(
+  selection: Selection,
+): boolean {
+  const docNode = selection.$anchor.node(0);
+  const rootNode = selection.$anchor.node(1);
+
+  return docNode.lastChild === rootNode;
 }
 
 export function atTheEndOfDoc(state: EditorState): boolean {
@@ -208,7 +227,7 @@ export function isMarkTypeAllowedInCurrentSelection(
     return false;
   }
 
-  let isCompatibleMarkType = mark =>
+  let isCompatibleMarkType = (mark: PMMark) =>
     isMarkTypeCompatibleWithMark(markType, mark);
 
   // Handle any new marks in the current transaction
@@ -242,7 +261,7 @@ export function isMarkTypeAllowedInCurrentSelection(
  * found that isn't of the specified type
  */
 export function isRangeOfType(
-  doc,
+  doc: Node,
   $from: ResolvedPos,
   $to: ResolvedPos,
   nodeType: NodeType,
@@ -267,10 +286,18 @@ export function canJoinDown(
   doc: any,
   nodeType: NodeType,
 ): boolean {
+  return checkNodeDown(selection, doc, node => node.type === nodeType);
+}
+
+export function checkNodeDown(
+  selection: Selection,
+  doc: Node,
+  filter: (node: Node) => boolean,
+): boolean {
   const res = doc.resolve(
     selection.$to.after(findAncestorPosition(doc, selection.$to).depth),
   );
-  return res.nodeAfter && res.nodeAfter.type === nodeType;
+  return res.nodeAfter ? filter(res.nodeAfter) : false;
 }
 
 export const setNodeSelection = (view: EditorView, pos: number) => {
@@ -326,7 +353,7 @@ export function canJoinUp(
  * Returns all top-level ancestor-nodes between $from and $to
  */
 export function getAncestorNodesBetween(
-  doc,
+  doc: Node,
   $from: ResolvedPos,
   $to: ResolvedPos,
 ): Node[] {
@@ -382,7 +409,7 @@ export function getAncestorNodesBetween(
  * The output will be two selection-groups. One within the ul and one with the two paragraphs.
  */
 export function getGroupsInRange(
-  doc,
+  doc: Node,
   $from: ResolvedPos,
   $to: ResolvedPos,
   isNodeValid: (node: Node) => boolean = validateNode,
@@ -456,7 +483,7 @@ export function findAncestorPosition(doc: Node, pos: any): any {
  * Determine if two positions have a common ancestor.
  */
 export function hasCommonAncestor(
-  doc,
+  doc: Node,
   $from: ResolvedPos,
   $to: ResolvedPos,
 ): boolean {
@@ -481,7 +508,12 @@ export function hasCommonAncestor(
 /**
  * Takes a selection $from and $to and lift all text nodes from their parents to document-level
  */
-export function liftSelection(tr, doc, $from: ResolvedPos, $to: ResolvedPos) {
+export function liftSelection(
+  tr: Transaction,
+  doc: Node,
+  $from: ResolvedPos,
+  $to: ResolvedPos,
+) {
   let startPos = $from.start($from.depth);
   let endPos = $to.end($to.depth);
   const target = Math.max(0, findAncestorPosition(doc, $from).depth - 1);
@@ -591,6 +623,27 @@ export function closestElement(
   return closest(node, s);
 }
 
+/*
+ * From Modernizr
+ * Returns the kind of transitionevent available for the element
+ */
+export function whichTransitionEvent() {
+  const el = document.createElement('fakeelement');
+  const transitions = {
+    transition: 'transitionend',
+    OTransition: 'oTransitionEnd',
+    MozTransition: 'transitionend',
+    WebkitTransition: 'webkitTransitionEnd',
+  } as any;
+
+  let t: any;
+  for (t in transitions) {
+    if (el.style[t] !== undefined) {
+      return transitions[t];
+    }
+  }
+}
+
 export function moveLeft(view: EditorView) {
   const event = new CustomEvent('keydown', {
     bubbles: true,
@@ -669,7 +722,7 @@ export const isEmptyNode = (schema: Schema) => {
     mediaGroup,
     mediaSingle,
   } = schema.nodes;
-  const innerIsEmptyNode = (node: Node) => {
+  const innerIsEmptyNode = (node: Node): boolean => {
     switch (node.type) {
       case media:
       case mediaGroup:
@@ -710,7 +763,13 @@ export const isEmptyNode = (schema: Schema) => {
   return innerIsEmptyNode;
 };
 
-export const isTableCell = (state: EditorState) => {
+export const insideTable = (state: EditorState): Boolean => {
+  const { table, tableCell } = state.schema.nodes;
+
+  return hasParentNodeOfType([table, tableCell])(state.selection);
+};
+
+export const insideTableCell = (state: EditorState) => {
   const { tableCell, tableHeader } = state.schema.nodes;
   return hasParentNodeOfType([tableCell, tableHeader])(state.selection);
 };
@@ -751,7 +810,7 @@ export function filterChildrenBetween(
 
 export function dedupe<T>(
   list: T[] = [],
-  iteratee?: (T) => (keyof T) | T,
+  iteratee?: (p: T) => T[keyof T] | T,
 ): T[] {
   const transformed = iteratee ? list.map(iteratee) : list;
 
@@ -769,6 +828,7 @@ export const isTextSelection = (
 
 /** Helper type for single arg function */
 type Func<A, B> = (a: A) => B;
+type FuncN<A extends any[], B> = (...args: A) => B;
 
 /**
  * Compose 1 to n functions.
@@ -797,3 +857,73 @@ export function compose<
     return allFuncs.reduceRight((memo, func) => func(memo), raw);
   } as R;
 }
+
+export function pipe(): <R>(a: R) => R;
+
+export function pipe<F extends Function>(f: F): F;
+
+// one function
+export function pipe<F1 extends FuncN<any, any>>(
+  f1: F1,
+): (...args: Parameters<F1>) => ReturnType<F1>;
+
+// two function
+export function pipe<
+  F1 extends FuncN<any, any>,
+  F2 extends Func<ReturnType<F1>, any>
+>(f1: F1, f2: F2): (...args: Parameters<F1>) => ReturnType<F2>;
+
+// three function
+export function pipe<
+  F1 extends FuncN<any, any>,
+  F2 extends Func<ReturnType<F1>, any>,
+  F3 extends Func<ReturnType<F2>, any>
+>(f1: F1, f2: F2, f3: F3): (...args: Parameters<F1>) => ReturnType<F3>;
+// If needed add more than 3 function
+// Generic
+export function pipe<
+  F1 extends FuncN<any, any>,
+  F2 extends Func<ReturnType<F1>, any>,
+  F3 extends Func<ReturnType<F2>, any>,
+  FN extends Array<Func<any, any>>
+>(f1: F1, f2: F2, f3: F3, ...fn: FN): (...args: Parameters<F1>) => any;
+
+// rest
+export function pipe(...fns: Function[]) {
+  if (fns.length === 0) {
+    return (a: any) => a;
+  }
+
+  if (fns.length === 1) {
+    return fns[0];
+  }
+
+  return fns.reduce((prevFn, nextFn) => (...args: any[]) =>
+    nextFn(prevFn(...args)),
+  );
+}
+
+export const normaliseNestedLayout = (state: EditorState, node: Node) => {
+  if (state.selection.$from.depth > 1) {
+    if (node.attrs.layout && node.attrs.layout !== 'default') {
+      return node.type.createChecked(
+        {
+          ...node.attrs,
+          layout: 'default',
+        },
+        node.content,
+        node.marks,
+      );
+    }
+
+    // If its a breakout layout, we can remove the mark
+    // Since default isn't a valid breakout mode.
+    const breakoutMark: Mark = state.schema.marks.breakout;
+    if (breakoutMark && breakoutMark.isInSet(node.marks)) {
+      const newMarks = breakoutMark.removeFromSet(node.marks);
+      return node.type.createChecked(node.attrs, node.content, newMarks);
+    }
+  }
+
+  return node;
+};

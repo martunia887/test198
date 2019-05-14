@@ -1,5 +1,5 @@
 import {
-  createEditor,
+  createEditorFactory,
   doc,
   p,
   code_block,
@@ -13,7 +13,9 @@ import {
 } from '../../../../../plugins/code-block/ide-ux/line-handling';
 
 describe('IDE UX - Line Handling', () => {
-  const getState = doc =>
+  const createEditor = createEditorFactory();
+
+  const getState = (doc: any) =>
     createEditor({
       doc,
       editorProps: { allowCodeBlocks: { enableKeybindingsForIDE: true } },

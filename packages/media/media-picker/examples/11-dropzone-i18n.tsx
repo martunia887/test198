@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import { Component, RefObject } from 'react';
 import {
@@ -41,13 +41,13 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
     }
   }
 
-  createMediaPicker(reactContext: any) {
+  async createMediaPicker(reactContext: any) {
     if (!this.dropzoneRef.current) {
       return;
     }
 
     const context = createUploadContext();
-    const dropzone = MediaPicker('dropzone', context, {
+    const dropzone = await MediaPicker('dropzone', context, {
       container: this.dropzoneRef.current,
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
@@ -58,8 +58,8 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
     dropzone.activate();
   }
 
-  componentDidMount = () => {
-    this.createMediaPicker(this.context);
+  componentDidMount = async () => {
+    await this.createMediaPicker(this.context);
   };
 
   render() {

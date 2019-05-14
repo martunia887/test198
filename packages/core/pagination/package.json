@@ -1,44 +1,45 @@
 {
   "name": "@atlaskit/pagination",
-  "version": "9.0.1",
+  "version": "11.0.1",
   "description": "A react component to be used for pagination in components like tables.",
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "license": "Apache-2.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "module": "index.js",
   "atlaskit:src": "src/index.js",
   "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/pagination",
   "sideEffects": false,
-  "files": [
-    "dist"
-  ],
   "author": "Atlassian Pty Ltd",
   "maintainers": [
-    "Raja B",
-    "Ben C",
-    "Ajay M"
+    "Sean C",
+    "Ajay M",
+    "Daniel D",
+    "Kang C"
   ],
-  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "atlaskit": {
+    "name": "Pagination",
+    "team": "core"
+  },
   "dependencies": {
-    "@atlaskit/analytics-next": "^3.1.2",
-    "@atlaskit/button": "^10.1.1",
-    "@atlaskit/icon": "^15.0.2",
-    "@atlaskit/theme": "^7.0.1",
-    "@babel/runtime": "^7.0.0",
-    "babel-runtime": "^6.26.0"
+    "@atlaskit/analytics-next": "^5.0.0",
+    "@atlaskit/button": "^13.0.0",
+    "@atlaskit/icon": "^17.0.1",
+    "@atlaskit/theme": "^9.0.0",
+    "@babel/runtime": "^7.0.0"
   },
   "peerDependencies": {
-    "react": "^16.4.0",
+    "react": "^16.8.0",
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
     "@atlaskit/build-utils": "^2.0.0",
-    "@atlaskit/docs": "^6.0.0",
-    "@atlaskit/dynamic-table": "^10.0.22",
-    "@atlaskit/section-message": "^1.0.14",
-    "@atlaskit/visual-regression": "^0.0.1",
-    "exenv": "^1.2.2",
+    "@atlaskit/docs": "^8.0.0",
+    "@atlaskit/dynamic-table": "^13.0.0",
+    "@atlaskit/section-message": "^3.0.0",
+    "@atlaskit/ssr": "^0.1.0",
+    "@atlaskit/visual-regression": "^0.1.0",
     "enzyme": "^3.7.0",
-    "react-dom": "^16.4.2",
+    "exenv": "^1.2.2",
+    "react-dom": "^16.8.0",
     "react-router-dom": "^4.2.2"
   }
 }

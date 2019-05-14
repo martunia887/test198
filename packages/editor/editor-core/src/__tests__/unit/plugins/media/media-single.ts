@@ -3,8 +3,7 @@ import {
   p,
   mediaSingle,
   media,
-  randomId,
-  createEditor,
+  createEditorFactory,
 } from '@atlaskit/editor-test-helpers';
 
 import {
@@ -13,21 +12,25 @@ import {
 } from '../../../../plugins/media/utils/media-single';
 import { MediaState } from '../../../../plugins/media/pm-plugins/main';
 import mediaPlugin from '../../../../plugins/media';
+import {
+  temporaryFileId,
+  testCollectionName,
+  temporaryMediaWithDimensions,
+  temporaryMedia,
+} from './_utils';
 
 const createMediaState = (
   id: string,
-  width = 100,
-  height = 200,
+  width = 256,
+  height = 128,
 ): MediaState => ({
   id,
   status: 'preview',
   dimensions: { width, height },
-  fileId: Promise.resolve('hello'),
 });
 
 describe('media-single', () => {
-  const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
-  const temporaryFileId = `temporary:${randomId()}`;
+  const createEditor = createEditorFactory();
   const editor = (doc: any) =>
     createEditor({
       doc,
@@ -55,7 +58,6 @@ describe('media-single', () => {
             editorView,
             media({
               id: temporaryFileId,
-              __key: temporaryFileId,
               type: 'file',
               collection: testCollectionName,
               __fileMimeType: 'pdf',
@@ -73,7 +75,6 @@ describe('media-single', () => {
             editorView,
             media({
               id: temporaryFileId,
-              __key: temporaryFileId,
               type: 'file',
               collection: testCollectionName,
               __fileMimeType: 'image/png',
@@ -86,7 +87,6 @@ describe('media-single', () => {
               mediaSingle({ layout: 'center' })(
                 media({
                   id: temporaryFileId,
-                  __key: temporaryFileId,
                   type: 'file',
                   collection: testCollectionName,
                   __fileMimeType: 'image/png',
@@ -114,16 +114,7 @@ describe('media-single', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
-            mediaSingle({ layout: 'center' })(
-              media({
-                id: temporaryFileId,
-                __key: temporaryFileId,
-                type: 'file',
-                collection: testCollectionName,
-                width: 100,
-                height: 200,
-              })(),
-            ),
+            mediaSingle({ layout: 'center' })(temporaryMediaWithDimensions()),
             p(),
           ),
         );
@@ -148,31 +139,28 @@ describe('media-single', () => {
             mediaSingle({ layout: 'center' })(
               media({
                 id: temporaryFileId,
-                __key: temporaryFileId,
                 type: 'file',
                 collection: testCollectionName,
-                width: 100,
-                height: 200,
+                width: 256,
+                height: 128,
               })(),
             ),
             mediaSingle({ layout: 'center' })(
               media({
                 id: temporaryFileId + '1',
-                __key: temporaryFileId + '1',
                 type: 'file',
                 collection: testCollectionName,
-                width: 100,
-                height: 200,
+                width: 256,
+                height: 128,
               })(),
             ),
             mediaSingle({ layout: 'center' })(
               media({
                 id: temporaryFileId + '2',
-                __key: temporaryFileId + '2',
                 type: 'file',
                 collection: testCollectionName,
-                width: 100,
-                height: 200,
+                width: 256,
+                height: 128,
               })(),
             ),
             p('hello'),
@@ -194,16 +182,7 @@ describe('media-single', () => {
 
           expect(editorView.state.doc).toEqualDocument(
             doc(
-              mediaSingle({ layout: 'center' })(
-                media({
-                  id: temporaryFileId,
-                  __key: temporaryFileId,
-                  type: 'file',
-                  collection: testCollectionName,
-                  width: 100,
-                  height: 200,
-                })(),
-              ),
+              mediaSingle({ layout: 'center' })(temporaryMediaWithDimensions()),
               p(),
             ),
           );
@@ -223,16 +202,7 @@ describe('media-single', () => {
           expect(editorView.state.doc).toEqualDocument(
             doc(
               p('hello'),
-              mediaSingle({ layout: 'center' })(
-                media({
-                  id: temporaryFileId,
-                  __key: temporaryFileId,
-                  type: 'file',
-                  collection: testCollectionName,
-                  width: 100,
-                  height: 200,
-                })(),
-              ),
+              mediaSingle({ layout: 'center' })(temporaryMediaWithDimensions()),
               p(''),
             ),
           );
@@ -255,16 +225,7 @@ describe('media-single', () => {
             doc(
               p('hello'),
               p('world'),
-              mediaSingle({ layout: 'center' })(
-                media({
-                  id: temporaryFileId,
-                  __key: temporaryFileId,
-                  type: 'file',
-                  collection: testCollectionName,
-                  width: 100,
-                  height: 200,
-                })(),
-              ),
+              mediaSingle({ layout: 'center' })(temporaryMediaWithDimensions()),
               p(''),
             ),
           );
@@ -285,13 +246,53 @@ describe('media-single', () => {
         doc(
           p('text'),
           mediaSingle({ layout: 'center' })(
+            temporaryMediaWithDimensions(128, 64),
+          ),
+          p(),
+        ),
+      );
+    });
+
+    it('should create a media node with integer dimensions after scaleFactor', () => {
+      const { editorView } = editor(doc(p('text{<>}')));
+
+      insertMediaSingleNode(
+        editorView,
+        { ...createMediaState(temporaryFileId), scaleFactor: 2.2 },
+        testCollectionName,
+      );
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          p('text'),
+          mediaSingle({ layout: 'center' })(
+            temporaryMediaWithDimensions(116, 58),
+          ),
+          p(),
+        ),
+      );
+    });
+
+    it('should not set dimensions on media node if none defined', () => {
+      const { editorView } = editor(doc(p('text{<>}')));
+
+      insertMediaSingleNode(
+        editorView,
+        {
+          id: temporaryFileId,
+          status: 'preview',
+        },
+        testCollectionName,
+      );
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          p('text'),
+          mediaSingle({ layout: 'center' })(
             media({
               id: temporaryFileId,
-              __key: temporaryFileId,
               type: 'file',
               collection: testCollectionName,
-              width: 50,
-              height: 100,
             })(),
           ),
           p(),
@@ -302,17 +303,7 @@ describe('media-single', () => {
 
   it('should be able to show mediaSingle without height or width', () => {
     const { editorView } = editor(
-      doc(
-        p('text'),
-        mediaSingle()(
-          media({
-            id: temporaryFileId,
-            type: 'file',
-            collection: testCollectionName,
-          })(),
-        ),
-        p(),
-      ),
+      doc(p('text'), mediaSingle()(temporaryMedia), p()),
     );
 
     const mediaSingleDom = editorView.dom.querySelector('.media-single');

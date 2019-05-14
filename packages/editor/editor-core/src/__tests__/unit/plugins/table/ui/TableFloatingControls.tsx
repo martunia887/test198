@@ -5,7 +5,7 @@ import { DecorationSet } from 'prosemirror-view';
 import {
   doc,
   p,
-  createEditor,
+  createEditorFactory,
   table,
   tr,
   tdEmpty,
@@ -17,15 +17,17 @@ import {
   getPluginState,
 } from '../../../../../plugins/table/pm-plugins/main';
 import { TablePluginState } from '../../../../../plugins/table/types';
-import { hoverTable } from '../../../../../plugins/table/actions';
+import { hoverTable } from '../../../../../plugins/table/commands';
 import TableFloatingControls from '../../../../../plugins/table/ui/TableFloatingControls';
 import CornerControls from '../../../../../plugins/table/ui/TableFloatingControls/CornerControls';
 import RowControls from '../../../../../plugins/table/ui/TableFloatingControls/RowControls';
 import tablesPlugin from '../../../../../plugins/table';
 
 describe('TableFloatingControls', () => {
+  const createEditor = createEditorFactory<TablePluginState>();
+
   const editor = (doc: any) =>
-    createEditor<TablePluginState>({
+    createEditor({
       doc,
       editorPlugins: [tablesPlugin()],
       pluginKey: pluginKey,

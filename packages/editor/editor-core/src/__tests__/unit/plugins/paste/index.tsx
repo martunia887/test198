@@ -3,16 +3,22 @@ import {
   strong,
   em,
   doc,
+  blockquote,
   p,
+  h1,
   code,
   mediaGroup,
   media,
   mediaSingle,
-  createEditor,
+  panel,
+  createEditorFactory,
   dispatchPasteEvent,
   bodiedExtension,
   inlineExtension,
   a as link,
+  ol,
+  ul,
+  li,
   taskList,
   taskItem,
   decisionList,
@@ -20,43 +26,69 @@ import {
   insertText,
   table,
   tr,
+  th,
   td,
   tdCursor,
   hardBreak,
   a,
-  panel,
   MockMacroProvider,
+  createAnalyticsEventMock,
+  RefsNode,
+  sleep,
+  inlineCard,
 } from '@atlaskit/editor-test-helpers';
+import { TextSelection } from 'prosemirror-state';
 import mediaPlugin from '../../../../plugins/media';
 import codeBlockPlugin from '../../../../plugins/code-block';
 import extensionPlugin from '../../../../plugins/extension';
+import listPlugin from '../../../../plugins/lists';
 import tablesPlugin from '../../../../plugins/table';
-import macroPlugin, { setMacroProvider } from '../../../../plugins/macro';
+import macroPlugin, {
+  setMacroProvider,
+  MacroAttributes,
+} from '../../../../plugins/macro';
 import { uuid } from '@atlaskit/adf-schema';
 import tasksAndDecisionsPlugin from '../../../../plugins/tasks-and-decisions';
-import { panelPlugin } from '../../../../plugins';
+import { panelPlugin, cardPlugin } from '../../../../plugins';
+import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next';
+import { EditorView } from 'prosemirror-view';
+import {
+  PASTE_ACTION_SUBJECT_ID,
+  ACTION_SUBJECT_ID,
+} from '../../../../plugins/analytics';
+import { Schema } from 'prosemirror-model';
+import { CardProvider } from '../../../../plugins/card';
+import { EditorProps } from '../../../..';
 
 describe('paste plugins', () => {
-  const editor = (doc: any) =>
-    createEditor({
+  const createEditor = createEditorFactory();
+  let createAnalyticsEvent: jest.MockInstance<UIAnalyticsEventInterface>;
+  const editor = (doc: any, props: Partial<EditorProps> = {}) => {
+    createAnalyticsEvent = createAnalyticsEventMock();
+    const wrapper = createEditor({
       doc,
+      createAnalyticsEvent: createAnalyticsEvent as any,
+      editorProps: {
+        allowAnalyticsGASV3: true,
+        ...props,
+      },
       editorPlugins: [
         mediaPlugin({ allowMediaSingle: true }),
         macroPlugin,
         codeBlockPlugin(),
         extensionPlugin,
+        listPlugin,
+        panelPlugin,
         tasksAndDecisionsPlugin,
         tablesPlugin(),
-        panelPlugin,
+        cardPlugin,
       ],
     });
 
-  const messageEditor = (doc: any) =>
-    createEditor({
-      doc,
-      editorPlugins: [mediaPlugin(), codeBlockPlugin()],
-      editorProps: { appearance: 'message', allowPanel: true },
-    });
+    createAnalyticsEvent.mockClear();
+
+    return wrapper;
+  };
 
   describe('handlePaste', () => {
     const mediaHtml = (fileMimeType: string) => `
@@ -67,30 +99,7 @@ describe('paste plugins', () => {
       title="Attachment"
       data-file-mime-type="${fileMimeType}"></div>`;
 
-    describe('message editor', () => {
-      it('pastes', () => {
-        const { editorView } = messageEditor(doc(p('{<>}')));
-        dispatchPasteEvent(editorView, {
-          html: mediaHtml('image/jpeg'),
-        });
-        expect(editorView.state.doc).toEqualDocument(
-          doc(
-            p(),
-            mediaGroup(
-              media({
-                id: 'af9310df-fee5-459a-a968-99062ecbb756',
-                type: 'file',
-                collection: 'MediaServicesSample',
-                __fileMimeType: 'image/jpeg',
-              })(),
-            ),
-            p(),
-          ),
-        );
-      });
-    });
-
-    describe('non message editor', () => {
+    describe('editor', () => {
       describe('when message is a media image node', () => {
         it('paste as mediaSingle', () => {
           const { editorView } = editor(doc(p('{<>}')));
@@ -164,18 +173,281 @@ describe('paste plugins', () => {
       });
     });
 
-    it('should not create paragraph when plain text is copied in code-block', () => {
-      const { editorView } = editor(doc(code_block()('{<>}')));
-      dispatchPasteEvent(editorView, { plain: 'plain text' });
-      expect(editorView.state.doc).toEqualDocument(
-        doc(code_block()('plain text')),
-      );
+    describe('paste in code-block', () => {
+      it('should not create paragraph when plain text is copied in code-block', () => {
+        const { editorView } = editor(doc(code_block()('{<>}')));
+        dispatchPasteEvent(editorView, { plain: 'plain text' });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(code_block()('plain text')),
+        );
+      });
+
+      it('should create paragraph when plain text is not copied in code-block', () => {
+        const { editorView } = editor(doc(p('{<>}')));
+        dispatchPasteEvent(editorView, { plain: 'plain text' });
+        expect(editorView.state.doc).toEqualDocument(doc(p('plain text')));
+      });
     });
 
-    it('should create paragraph when plain text is not copied in code-block', () => {
-      const { editorView } = editor(doc(p('{<>}')));
-      dispatchPasteEvent(editorView, { plain: 'plain text' });
-      expect(editorView.state.doc).toEqualDocument(doc(p('plain text')));
+    describe('paste inline text', () => {
+      it('should preserve marks when pasting inline text into empty text selection', () => {
+        const { editorView } = editor(doc(p(strong(em('this is {<>}')))));
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em text</p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p(strong(em('this is strong em text{<>}')))),
+        );
+      });
+
+      it('should preserve marks when pasting inline text into text selection', () => {
+        const { editorView } = editor(
+          doc(p(strong(em('this is strong em text')))),
+        );
+        editorView.dispatch(
+          editorView.state.tr.setSelection(
+            TextSelection.create(editorView.state.doc, 1, 8),
+          ),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>this is another</p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p(strong(em('this is another strong em text')))),
+        );
+      });
+
+      it('should preserve marks when pasting inline text into action/decision', () => {
+        const { editorView } = editor(
+          doc(
+            decisionList({ localId: 'local-decision' })(
+              decisionItem({ localId: 'local-decision' })(
+                strong(em('this is a {<>}text')),
+              ),
+            ),
+          ),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em </p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            decisionList({ localId: 'local-decision' })(
+              decisionItem({ localId: 'local-decision' })(
+                strong(em('this is a strong em {<>}text')),
+              ),
+            ),
+          ),
+        );
+      });
+
+      it('should preserve marks when pasting inline text into panel', () => {
+        const { editorView } = editor(
+          doc(panel()(p(strong(em('this is a {<>}text'))))),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em </p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(panel()(p(strong(em('this is a strong em {<>}text'))))),
+        );
+      });
+
+      it('should preserve marks when pasting inline text into heading', () => {
+        const { editorView } = editor(
+          doc(h1(strong(em('this is a {<>}text')))),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em </p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(h1(strong(em('this is a strong em {<>}text')))),
+        );
+      });
+
+      it('should preserve marks when pasting inline text into list', () => {
+        const { editorView } = editor(
+          doc(ol(li(p(strong(em('this is a {<>}text')))))),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em </p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(ol(li(p(strong(em('this is a strong em {<>}text')))))),
+        );
+      });
+
+      it('should preserve marks + link when pasting URL', () => {
+        const href = 'http://www.google.com';
+        const { editorView } = editor(
+          doc(panel()(p(strong(em('this is a {<>}text'))))),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'><a href='http://www.google.com'>www.google.com</a></p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            panel()(
+              p(
+                strong(em('this is a ')),
+                link({ href })(strong(em('www.google.com'))),
+                strong(em('text')),
+              ),
+            ),
+          ),
+        );
+      });
+
+      it('should preserve marks + link when pasting plain text', () => {
+        const href = 'http://www.google.com';
+        const { editorView } = editor(
+          doc(p(link({ href })('www.google{<>}.com'))),
+        );
+        dispatchPasteEvent(editorView, {
+          html: "<meta charset='utf-8'><p data-pm-slice='1 1 []'>doc</p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p(link({ href })('www.googledoc.com'))),
+        );
+      });
+
+      it('should filter link mark when pasting URL into code mark', () => {
+        const { editorView } = editor(
+          doc(panel()(p(code('code line 1: {<>}')))),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'><a href='http://www.google.com'>www.google.com</a></p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(panel()(p(code('code line 1: www.google.com')))),
+        );
+      });
+    });
+
+    describe('paste paragraphs', () => {
+      it('should preserve marks when pasting paragraphs into empty text selection', () => {
+        const { editorView } = editor(doc(p(strong(em('this is {<>}')))));
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em text</p><p>this is another paragraph</p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            p(strong(em('this is strong em text{<>}'))),
+            p(strong(em('this is another paragraph'))),
+          ),
+        );
+      });
+
+      it('should preserve marks when pasting paragraphs into text selection', () => {
+        const { editorView } = editor(
+          doc(p(strong(em('this is strong em text')))),
+        );
+        editorView.dispatch(
+          editorView.state.tr.setSelection(
+            TextSelection.create(editorView.state.doc, 1, 8),
+          ),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>this is another</p><p>hello</p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            p(strong(em('this is another'))),
+            p(strong(em('hello strong em text'))),
+          ),
+        );
+      });
+
+      it('should preserve marks when pasting paragraphs into action/decision', () => {
+        const { editorView } = editor(
+          doc(
+            decisionList({ localId: 'local-decision' })(
+              decisionItem({ localId: 'local-decision' })(
+                strong(em('this is a {<>}text')),
+              ),
+            ),
+          ),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em </p><p>hello </p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            decisionList({ localId: 'local-decision' })(
+              decisionItem({ localId: 'local-decision' })(
+                strong(em('this is a strong em {<>}')),
+                hardBreak(),
+                strong(em('hello text')),
+              ),
+            ),
+          ),
+        );
+      });
+
+      it('should preserve marks when pasting paragraphs into panel', () => {
+        const { editorView } = editor(
+          doc(panel()(p(strong(em('this is a {<>}text'))))),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em </p><p>hello </p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            panel()(
+              p(strong(em('this is a strong em {<>}'))),
+              p(strong(em('hello text'))),
+            ),
+          ),
+        );
+      });
+
+      it('should preserve marks when pasting paragraphs into heading', () => {
+        const { editorView } = editor(
+          doc(h1(strong(em('this is a {<>}text')))),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em </p><p>hello </p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            h1(strong(em('this is a strong em {<>}'))),
+            p(strong(em('hello text'))),
+          ),
+        );
+      });
+
+      it('should preserve marks when pasting paragraphs into list', () => {
+        const { editorView } = editor(
+          doc(ol(li(p(strong(em('this is a {<>}text')))))),
+        );
+        dispatchPasteEvent(editorView, {
+          html:
+            "<meta charset='utf-8'><p data-pm-slice='1 1 []'>strong em </p><p>hello </p>",
+        });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            ol(
+              li(
+                p(strong(em('this is a strong em {<>}'))),
+                p(strong(em('hello text'))),
+              ),
+            ),
+          ),
+        );
+      });
     });
 
     describe('hyperlink as a plain text', () => {
@@ -454,6 +726,28 @@ describe('paste plugins', () => {
       },
     };
 
+    const extensionProps = (cardOptions = {}): Partial<EditorProps> => {
+      return {
+        macroProvider: Promise.resolve({
+          config: {},
+          openMacroBrowser: () => Promise.resolve({} as MacroAttributes),
+          autoConvert: () => {
+            return null;
+          },
+        }),
+        UNSAFE_cards: {
+          provider: Promise.resolve({
+            resolve: () =>
+              Promise.resolve({
+                type: 'inlineCard',
+                attrs: { url: 'https://jdog.jira-dev.com/browse/BENTO-3677' },
+              }),
+          } as CardProvider),
+          ...cardOptions,
+        },
+      };
+    };
+
     describe('should convert pasted content to inlineExtension (confluence macro)', () => {
       it('from plain text url', async () => {
         const macroProvider = Promise.resolve(new MockMacroProvider({}));
@@ -463,6 +757,45 @@ describe('paste plugins', () => {
         dispatchPasteEvent(editorView, {
           plain: 'http://www.dumbmacro.com?paramA=CFE',
         });
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p(inlineExtension(attrs)())),
+        );
+      });
+
+      it('inserts inline card when FF for resolving links over extensions is enabled', async () => {
+        const macroProvider = Promise.resolve(new MockMacroProvider({}));
+        const { editorView } = editor(
+          doc(p('{<>}')),
+          extensionProps({ resolveBeforeMacros: ['dumbMacro'] }),
+        );
+
+        await setMacroProvider(macroProvider)(editorView);
+
+        await dispatchPasteEvent(editorView, {
+          plain: 'https://jdog.jira-dev.com/browse/BENTO-3677',
+        });
+        await sleep(100);
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            p(
+              inlineCard({
+                url: 'https://jdog.jira-dev.com/browse/BENTO-3677',
+              })(),
+            ),
+          ),
+        );
+      });
+
+      it('inserts inlineExtension when FF for resolving links over extensions is disabled', async () => {
+        const macroProvider = Promise.resolve(new MockMacroProvider({}));
+        const { editorView } = editor(doc(p('{<>}')), extensionProps());
+
+        await setMacroProvider(macroProvider)(editorView);
+
+        await dispatchPasteEvent(editorView, {
+          plain: 'https://jdog.jira-dev.com/browse/BENTO-3677',
+        });
+        await sleep(100);
         expect(editorView.state.doc).toEqualDocument(
           doc(p(inlineExtension(attrs)())),
         );
@@ -549,6 +882,370 @@ describe('paste plugins', () => {
       dispatchPasteEvent(editorView, { html });
       expect(editorView.state.doc).toEqualDocument(
         doc(p('hello'), panel()(p('Inside panel')), p('world')),
+      );
+    });
+  });
+
+  describe('table copy-paste', () => {
+    it('should handle numbered table copied inside editor', () => {
+      const { editorView } = editor(doc(p('{<>}')));
+
+      const html = `<meta charset='utf-8'><table data-number-column="true" data-layout="default" data-autosize="false" data-pm-slice="1 1 []"><tbody><tr><th><p>One</p></th><th><p>Two</p></th></tr><tr><td><p>Three</p></td><td><p>Four</p></td></tr><tr><td><p>Five</p></td><td><p>Six</p></td></tr></tbody></table>`;
+
+      dispatchPasteEvent(editorView, { html });
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          table({ isNumberColumnEnabled: true })(
+            tr(th()(p('One')), th()(p('Two'))),
+            tr(td()(p('Three')), td()(p('Four'))),
+            tr(td()(p('Five')), td()(p('Six'))),
+          ),
+        ),
+      );
+    });
+
+    it('should handle numbered table copied from renderer', () => {
+      const { editorView } = editor(doc(p('{<>}')));
+
+      const html = `<meta charset='utf-8'><div class="pm-table-container " data-layout="default" style="margin: 0px auto 16px; padding: 0px; position: relative; box-sizing: border-box; transition: all 0.1s linear 0s; clear: both; color: rgb(23, 43, 77); font-family: -apple-system, system-ui, &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, &quot;Fira Sans&quot;, &quot;Droid Sans&quot;, &quot;Helvetica Neue&quot;, sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-style: initial; text-decoration-color: initial; width: inherit;"><div class="pm-table-wrapper" style="margin: 0px; padding: 0px; overflow-x: auto;"><table data-number-column="true" style="margin: 24px 0px 0px; border-collapse: collapse; width: 654px; border: 1px solid rgb(193, 199, 208); table-layout: fixed; font-size: 14px;"><colgroup style="box-sizing: border-box;"><col style="box-sizing: border-box; width: 42px;"><col style="box-sizing: border-box;"><col style="box-sizing: border-box;"></colgroup><tbody style="border-bottom: none; box-sizing: border-box;"><tr style="box-sizing: border-box;"><td class="ak-renderer-table-number-column" style="border-width: 1px 1px 0px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: center; box-sizing: border-box; min-width: 48px; height: 3em; vertical-align: top; background-clip: padding-box; background-color: rgb(244, 245, 247); width: 42px; color: rgb(107, 119, 140); font-size: 14px;"></td><th rowspan="1" colspan="1" style="border-width: 1px 0px 0px 1px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: left; vertical-align: top; box-sizing: border-box; min-width: 48px; height: 3em; background-clip: padding-box; background-color: rgb(244, 245, 247);"><p style="margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em; box-sizing: border-box;">One</p></th><th rowspan="1" colspan="1" style="border-width: 1px 0px 0px 1px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: left; vertical-align: top; box-sizing: border-box; min-width: 48px; height: 3em; background-clip: padding-box; background-color: rgb(244, 245, 247);"><p style="margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em; box-sizing: border-box;">Two</p></th></tr><tr style="box-sizing: border-box;"><td class="ak-renderer-table-number-column" style="border-width: 1px 1px 0px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: center; box-sizing: border-box; min-width: 48px; height: 3em; vertical-align: top; background-clip: padding-box; background-color: rgb(244, 245, 247); width: 42px; color: rgb(107, 119, 140); font-size: 14px;">1</td><td rowspan="1" colspan="1" style="border-width: 1px 0px 0px 1px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: left; box-sizing: border-box; min-width: 48px; height: 3em; vertical-align: top; background-clip: padding-box;"><p style="margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em; box-sizing: border-box;">Three</p></td><td rowspan="1" colspan="1" style="border-width: 1px 0px 0px 1px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: left; box-sizing: border-box; min-width: 48px; height: 3em; vertical-align: top; background-clip: padding-box;"><p style="margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em; box-sizing: border-box;">Four</p></td></tr><tr style="box-sizing: border-box;"><td class="ak-renderer-table-number-column" style="border-width: 1px 1px 0px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: center; box-sizing: border-box; min-width: 48px; height: 3em; vertical-align: top; background-clip: padding-box; background-color: rgb(244, 245, 247); width: 42px; color: rgb(107, 119, 140); font-size: 14px;">2</td><td rowspan="1" colspan="1" style="border-width: 1px 0px 0px 1px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: left; box-sizing: border-box; min-width: 48px; height: 3em; vertical-align: top; background-clip: padding-box;"><p style="margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em; box-sizing: border-box;">Five</p></td><td rowspan="1" colspan="1" style="border-width: 1px 0px 0px 1px; border-style: solid; border-color: rgb(193, 199, 208); border-image: initial; padding: 10px; text-align: left; box-sizing: border-box; min-width: 48px; height: 3em; vertical-align: top; background-clip: padding-box;"><p style="margin: 0px; padding: 0px; font-size: 1em; line-height: 1.714; font-weight: normal; letter-spacing: -0.005em; box-sizing: border-box;">Six</p></td></tr></tbody></table></div></div>`;
+
+      dispatchPasteEvent(editorView, { html });
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          table({ isNumberColumnEnabled: true })(
+            tr(th()(p('One')), th()(p('Two'))),
+            tr(td()(p('Three')), td()(p('Four'))),
+            tr(td()(p('Five')), td()(p('Six'))),
+          ),
+        ),
+      );
+    });
+  });
+
+  describe('analytics V3', () => {
+    function testAnalyticsPasteContentInside(
+      doc: (schema: Schema) => RefsNode,
+      actionSubjectId: PASTE_ACTION_SUBJECT_ID,
+    ) {
+      let editorView: EditorView;
+
+      const textPasteEvent = {
+        html: "<meta charset='utf-8'><p data-pm-slice='1 1 []'>hello world</p>",
+      };
+
+      const urlPasteEvent = {
+        html:
+          "<meta charset='utf-8'><p data-pm-slice='1 1 []'><a href='http://www.google.com'>www.google.com</a></p>",
+      };
+
+      const mixedPasteEvent = {
+        html:
+          "<meta charset='utf-8'><ul><li>Hello World</li></ul><p>Hello World</p",
+      };
+
+      const bulletListPasteEvent = {
+        html: "<meta charset='utf-8'><ul><li>Hello World</li></ul>",
+      };
+
+      const orderedListPasteEvent = {
+        html: "<meta charset='utf-8'><ol><li>Hello World</li></ol>",
+      };
+
+      const headingPasteEvent = {
+        html: "<meta charset='utf-8'><h1>Hello World</h1>",
+      };
+
+      const blockQuotePasteEvent = {
+        html:
+          "<meta charset='utf-8'><blockquote><p>Hello World</p></blockquote>",
+      };
+
+      const codePasteEvent = {
+        plain: 'code line 1\ncode line 2',
+        html: '<pre>code line 1\ncode line 2</pre>',
+      };
+
+      const mediaSinglePasteEvent = {
+        html: `<meta charset='utf-8'><div data-node-type="mediaSingle" data-layout="center" data-width=""><div data-id="9b5c6412-6de0-42cb-837f-bc08c24b4383" data-node-type="media" data-type="file" data-collection="MediaServicesSample" data-width="490" data-height="288" title="Attachment" style="display: inline-block; border-radius: 3px; background: #EBECF0; box-shadow: 0 1px 1px rgba(9, 30, 66, 0.2), 0 0 1px 0 rgba(9, 30, 66, 0.24);" data-file-name="image-20190325-222039.png" data-file-size="29502" data-file-mime-type="image/png"></div></div`,
+      };
+
+      const tablePasteEvent = {
+        html: `<meta charset='utf-8'><table><tbody><tr><td><p>asdasd</p></td></tr></tbody></table>`,
+      };
+
+      const decisionItemPasteEvent = {
+        text: '',
+        html: `<meta charset='utf-8'><ol data-node-type="decisionList" data-decision-list-local-id="2b1a545e-a76d-4b9a-b0a8-c5996e51e32f" style="list-style: none; padding-left: 0"><li data-decision-local-id="f9ad0cf0-42e6-4c62-8076-7981b3fab3f7" data-decision-state="DECIDED"></li></ol>`,
+      };
+
+      const taskItemPasteEvent = {
+        text: ' asdasdasd',
+        html: `<meta charset='utf-8'><ol data-node-type="actionList" data-task-list-local-id="c0060bd1-ee91-47e7-b55e-4f45bd2e0b0b" style="list-style: none; padding-left: 0"><li data-task-local-id="1803f18d-1fad-4998-81e4-644ed22f3929" data-task-state="TODO"> asdasdasd</li></ol>`,
+      };
+
+      beforeEach(() => {
+        ({ editorView } = editor(doc));
+      });
+
+      it('should create analytics event for paste paragraph', () => {
+        dispatchPasteEvent(editorView, textPasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'text',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste an url', () => {
+        dispatchPasteEvent(editorView, urlPasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'url',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a mixed event', () => {
+        dispatchPasteEvent(editorView, mixedPasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'mixed',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a bullet list', () => {
+        dispatchPasteEvent(editorView, bulletListPasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'bulletList',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste an ordered list', () => {
+        dispatchPasteEvent(editorView, orderedListPasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'orderedList',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a heading', () => {
+        dispatchPasteEvent(editorView, headingPasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'heading',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a code', () => {
+        dispatchPasteEvent(editorView, codePasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'codeBlock',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a blockquote', () => {
+        dispatchPasteEvent(editorView, blockQuotePasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'blockquote',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a media single', () => {
+        dispatchPasteEvent(editorView, mediaSinglePasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'mediaSingle',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a table', () => {
+        dispatchPasteEvent(editorView, tablePasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'table',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a decision list', () => {
+        dispatchPasteEvent(editorView, decisionItemPasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'decisionList',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+
+      it('should create analytics event for paste a task item', () => {
+        dispatchPasteEvent(editorView, taskItemPasteEvent);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'pasted',
+          actionSubject: 'document',
+          actionSubjectId: actionSubjectId,
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            content: 'taskItem',
+            inputMethod: 'keyboard',
+            source: 'uncategorized',
+            type: 'richText',
+          }),
+        });
+      });
+    }
+
+    describe('paste inside paragraph', () => {
+      testAnalyticsPasteContentInside(
+        doc(p('Five{<>}')),
+        ACTION_SUBJECT_ID.PASTE_PARAGRAPH,
+      );
+    });
+
+    describe('paste inside ordered list', () => {
+      testAnalyticsPasteContentInside(
+        doc(ol(li(p('Five{<>}')))),
+        ACTION_SUBJECT_ID.PASTE_ORDERED_LIST,
+      );
+    });
+
+    describe('paste inside bullet list', () => {
+      testAnalyticsPasteContentInside(
+        doc(ul(li(p('Five{<>}')))),
+        ACTION_SUBJECT_ID.PASTE_BULLET_LIST,
+      );
+    });
+
+    describe('paste inside heading', () => {
+      testAnalyticsPasteContentInside(
+        doc(h1('Five{<>}')),
+        ACTION_SUBJECT_ID.PASTE_HEADING,
+      );
+    });
+
+    describe('paste inside panel', () => {
+      testAnalyticsPasteContentInside(
+        doc(panel()(p('Five{<>}'))),
+        ACTION_SUBJECT_ID.PASTE_PANEL,
+      );
+    });
+
+    describe('paste inside blockquote', () => {
+      testAnalyticsPasteContentInside(
+        doc(blockquote(p('Five{<>}'))),
+        ACTION_SUBJECT_ID.PASTE_BLOCKQUOTE,
+      );
+    });
+
+    describe('paste inside table cell', () => {
+      testAnalyticsPasteContentInside(
+        doc(
+          table({ isNumberColumnEnabled: true })(
+            tr(th()(p('One')), th()(p('Two'))),
+            tr(td()(p('Th{<>}ree')), td()(p('Four'))),
+            tr(td()(p('Five')), td()(p('Six'))),
+          ),
+        ),
+        ACTION_SUBJECT_ID.PASTE_TABLE_CELL,
       );
     });
   });

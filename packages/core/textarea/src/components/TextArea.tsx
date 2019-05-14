@@ -8,7 +8,7 @@ import * as React from 'react';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../version.json';
 import { Theme, ThemeTokens } from '../theme';
 import { TextAreaWrapper } from '../styled';
 import TextareaElement from './TextAreaElement';
@@ -36,9 +36,9 @@ export type Props = {
   /** The maxheight of the textarea */
   maxHeight: string;
   /** The value of the text-area. */
-  value?: string | number;
+  value?: string;
   /** The default value of the text-area */
-  defaultValue?: string | number;
+  defaultValue?: string;
   /** Handler to be called when the input is blurred */
   onBlur?: React.FocusEventHandler<HTMLTextAreaElement>;
   /** Handler to be called when the input changes. */
@@ -69,7 +69,9 @@ export type Props = {
    * forwardRef, so you can also use the ref prop of this component to the
    * same effect.
    */
-  forwardedRef?: (e: HTMLTextAreaElement | null) => void;
+  forwardedRef?:
+    | React.RefObject<HTMLTextAreaElement>
+    | ((e: HTMLTextAreaElement | null) => void);
 };
 type State = {
   isFocused: boolean;
@@ -140,8 +142,7 @@ class TextAreaWithoutForwardRef extends React.Component<Props, State> {
       maxHeight,
       theme,
       forwardedRef,
-      defaultValue,
-      ...props
+      ...rest
     } = this.props;
 
     const { isFocused } = this.state;
@@ -156,6 +157,7 @@ class TextAreaWithoutForwardRef extends React.Component<Props, State> {
                   resize={resize}
                   maxHeight={maxHeight}
                   appearance={appearance}
+                  isCompact={isCompact}
                   isDisabled={isDisabled}
                   isReadOnly={isReadOnly}
                   isMonospaced={isMonospaced}
@@ -166,12 +168,12 @@ class TextAreaWithoutForwardRef extends React.Component<Props, State> {
                   {...tokens}
                 >
                   <TextareaElement
-                    {...props}
                     forwardedRef={forwardedRef}
                     resize={resize}
                     disabled={isDisabled}
                     readOnly={isReadOnly}
                     required={isRequired}
+                    {...rest}
                     onFocus={this.handleOnFocus}
                     onBlur={this.handleOnBlur}
                   />

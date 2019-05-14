@@ -7,10 +7,7 @@ import {
   withAnalyticsEvents,
 } from '@atlaskit/analytics-next';
 
-import {
-  name as packageName,
-  version as packageVersion,
-} from '../package.json';
+import { name as packageName, version as packageVersion } from './version.json';
 
 import RadioIcon from './RadioIcon';
 import { RadioInputWrapper, HiddenInput } from './styled/RadioInput';
@@ -50,24 +47,28 @@ class Radio extends Component<RadioProps, State> {
       this.props.onBlur(event);
     }
   };
+
   onFocus = (event: SyntheticInputEvent<*>) => {
     this.setState({ isFocused: true });
     if (this.props.onFocus) {
       this.props.onFocus(event);
     }
   };
+
   onMouseLeave = (event: SyntheticInputEvent<*>) => {
     this.setState({ isActive: false, isHovered: false });
     if (this.props.onMouseLeave) {
       this.props.onMouseLeave(event);
     }
   };
+
   onMouseEnter = (event: SyntheticInputEvent<*>) => {
     this.setState({ isHovered: true });
     if (this.props.onMouseEnter) {
       this.props.onMouseEnter(event);
     }
   };
+
   onMouseUp = (event: SyntheticInputEvent<*>) => {
     this.setState({ isActive: false, isMouseDown: false });
     if (this.props.onMouseUp) {
@@ -94,13 +95,12 @@ class Radio extends Component<RadioProps, State> {
       onChange,
       onInvalid,
       value,
-      ...props
+      ...rest
     } = this.props;
     const { isFocused, isHovered, isActive } = this.state;
 
     return (
       <Label
-        {...props}
         isDisabled={isDisabled}
         onMouseDown={this.onMouseDown}
         onMouseEnter={this.onMouseEnter}
@@ -120,6 +120,7 @@ class Radio extends Component<RadioProps, State> {
             required={isRequired}
             type="radio"
             value={value}
+            {...rest}
           />
           <RadioIcon
             isActive={isActive}

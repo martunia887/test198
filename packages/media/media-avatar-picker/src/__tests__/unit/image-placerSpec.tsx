@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
 import { Vector2, Rectangle, FileInfo } from '@atlaskit/media-ui';
-import { nextTick, mockCanvas } from '@atlaskit/media-test-helpers';
 import {
+  nextTick,
+  mockCanvas,
   mockLoadImage,
   mockLoadImageError,
   unMockLoadImage,
-} from '../../image-placer/test-helpers';
+} from '@atlaskit/media-test-helpers';
 
-jest.mock('../../image-placer/util', () => ({
+const mockImagePlacerUtil = {
   getCanvas: mockCanvas,
-}));
+};
+
+jest.mock('../../util', () => mockImagePlacerUtil);
 
 import {
   ImagePlacer,

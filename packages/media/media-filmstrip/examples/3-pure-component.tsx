@@ -1,8 +1,8 @@
-/* tslint:disable: variable-name */
 import * as React from 'react';
 import { HTMLAttributes, ComponentClass } from 'react';
 import styled from 'styled-components';
 import { FilmstripView } from '../src/filmstripView';
+import { FilmstripState } from '../src';
 
 export interface StoryProps {}
 
@@ -23,8 +23,9 @@ export class Story extends React.PureComponent<StoryProps, StoryState> {
     offset: 0,
   };
 
-  handleSizeChange = ({ offset }) => this.setState({ offset });
-  handleScrollChange = ({ offset, animate }) =>
+  handleSizeChange = ({ offset }: Pick<FilmstripState, 'offset'>) =>
+    this.setState({ offset });
+  handleScrollChange = ({ offset, animate }: FilmstripState) =>
     this.setState({ offset, animate });
 
   render() {

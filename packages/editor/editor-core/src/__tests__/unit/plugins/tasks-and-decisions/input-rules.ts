@@ -2,7 +2,7 @@ import {
   sendKeyToPm,
   insertText,
   compareSelection,
-  createEditor,
+  createEditorFactory,
   doc,
   blockquote,
   p,
@@ -27,8 +27,13 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import { taskDecision } from '@atlaskit/util-data-test';
 import { uuid } from '@atlaskit/adf-schema';
+import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
 
 describe('tasks and decisions - input rules', () => {
+  const createEditor = createEditorFactory();
+
+  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+
   beforeEach(() => {
     uuid.setStatic('local-uuid');
   });
@@ -37,8 +42,9 @@ describe('tasks and decisions - input rules', () => {
     uuid.setStatic(false);
   });
 
-  const editorFactory = (doc: any) =>
-    createEditor({
+  const editorFactory = (doc: any) => {
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    return createEditor({
       editorProps: {
         taskDecisionProvider: Promise.resolve(
           taskDecision.getMockTaskDecisionResource(),
@@ -46,9 +52,12 @@ describe('tasks and decisions - input rules', () => {
         allowTables: true,
         allowExtension: true,
         allowLayouts: true,
+        allowAnalyticsGASV3: true,
       },
       doc,
+      createAnalyticsEvent,
     });
+  };
 
   const scenarios = [
     {
@@ -260,6 +269,21 @@ describe('tasks and decisions - input rules', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(list(listProps)(item(itemProps)(br()))),
         );
+      });
+
+      it(`should fire v3 analytics event when ${name}List item added`, () => {
+        const { editorView, sel } = editorFactory(doc(p('{<>}')));
+        insertText(editorView, input, sel);
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'inserted',
+          actionSubject: 'document',
+          actionSubjectId: name,
+          attributes: expect.objectContaining({
+            inputMethod: 'autoformatting',
+          }),
+          eventType: 'track',
+        });
       });
     });
   });

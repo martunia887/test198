@@ -8,14 +8,15 @@ type Props = {
   /* Children to render in the React Portal. */
   children: Node,
   /* The z-index of the DOM container element. */
-  zIndex: number,
+  zIndex: number | string,
 };
 
 type State = {
   container: ?HTMLElement,
+  portalIsMounted: boolean,
 };
 
-const createContainer = (zIndex: number) => {
+const createContainer = (zIndex: number | string) => {
   const container = document.createElement('div');
   container.setAttribute('class', 'atlaskit-portal');
   container.setAttribute('style', `z-index: ${zIndex};`);
@@ -53,6 +54,7 @@ class Portal extends React.Component<Props, State> {
 
   state = {
     container: canUseDOM ? createContainer(this.props.zIndex) : undefined,
+    portalIsMounted: false,
   };
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -69,6 +71,7 @@ class Portal extends React.Component<Props, State> {
       portalParent().appendChild(container);
     }
   }
+
   componentDidMount() {
     const { container } = this.state;
     const { zIndex } = this.props;
@@ -80,7 +83,12 @@ class Portal extends React.Component<Props, State> {
       // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ container: newContainer });
     }
+    // eslint-disable-next-line react/no-did-mount-set-state
+    this.setState({
+      portalIsMounted: true,
+    });
   }
+
   componentWillUnmount() {
     const { container } = this.state;
     if (container) {
@@ -94,11 +102,12 @@ class Portal extends React.Component<Props, State> {
       }
     }
   }
+
   render() {
-    const { container } = this.state;
-    return container
+    const { container, portalIsMounted } = this.state;
+    return container && portalIsMounted
       ? ReactDOM.createPortal(this.props.children, container)
-      : this.props.children;
+      : null;
   }
 }
 

@@ -3,7 +3,6 @@
 import React, { Fragment, Component } from 'react';
 import AppSwitcher from '@atlaskit/app-switcher';
 import Button from '@atlaskit/button';
-import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { AkFieldRadioGroup as StatelessRadioGroup } from '@atlaskit/field-radio-group';
 import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
 import { AtlassianIcon } from '@atlaskit/logo';
@@ -13,8 +12,10 @@ import {
   LayoutManager,
   NavigationProvider,
 } from '@atlaskit/navigation-next';
+import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { ToggleStateless } from '@atlaskit/toggle';
 import Lorem from 'react-lorem-component';
+import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
 
 import GlobalNavigation from '../src';
 
@@ -101,6 +102,7 @@ const DrawerContent = ({
   <div>
     <h1>{drawerTitle}</h1>
     <div>{drawerBody}</div>
+
     <label htmlFor="textbox" css={{ display: 'block' }}>
       Type something in the textarea below and see if it is retained
     </label>
@@ -115,6 +117,7 @@ type State = {
 
 type Props = {
   createItemOpens: 'drawer' | 'modal',
+  helpItemOpens: 'drawer' | 'menu',
   notificationCount: number,
   onNotificationDrawerOpen: () => void,
   unmountOnExit: boolean,
@@ -190,6 +193,13 @@ class GlobalNavWithDrawers extends Component<Props, State> {
     />
   );
 
+  renderHelpDrawerContents = () => (
+    <DrawerContent
+      drawerTitle="Help drawer"
+      drawerBody="Can be controlled by passing the onHelpClick prop"
+    />
+  );
+
   renderNotificationDrawerContents = () => (
     <DrawerContent
       drawerTitle="Notification drawer"
@@ -204,6 +214,13 @@ class GlobalNavWithDrawers extends Component<Props, State> {
     />
   );
 
+  renderRecentDrawerContents = () => (
+    <DrawerContent
+      drawerTitle="Recent drawer"
+      drawerBody="Can be controlled by passing the onRecentClick prop"
+    />
+  );
+
   render() {
     const actions = [
       { text: 'Close', onClick: this.closeCreateModal },
@@ -212,6 +229,7 @@ class GlobalNavWithDrawers extends Component<Props, State> {
 
     const {
       createItemOpens,
+      helpItemOpens,
       notificationCount,
       onNotificationDrawerOpen,
       unmountOnExit,
@@ -251,12 +269,21 @@ class GlobalNavWithDrawers extends Component<Props, State> {
           // App switcher
           appSwitcherComponent={AppSwitcherComponent}
           appSwitcherTooltip="Switch apps..."
+          enableAtlassianSwitcher
           // Help
           helpItems={HelpDropdown}
+          helpDrawerContents={this.renderHelpDrawerContents}
+          onHelpDrawerCloseComplete={this.onCloseComplete}
+          shouldHelpDrawerUnmountOnExit={unmountOnExit}
+          enableHelpDrawer={helpItemOpens === 'drawer'}
           // Settings
           settingsDrawerContents={this.renderSettingsDrawerContents}
           onSettingsDrawerCloseComplete={this.onCloseComplete}
           shouldSettingsDrawerUnmountOnExit={unmountOnExit}
+          // Recent drawer
+          recentDrawerContents={this.renderRecentDrawerContents}
+          onRecentDrawerCloseComplete={this.onCloseComplete}
+          shouldRecentDrawerUnmountOnExit={unmountOnExit}
         />
         <ModalTransition>
           {this.state.isCreateModalOpen && (
@@ -276,6 +303,7 @@ class GlobalNavWithDrawers extends Component<Props, State> {
 
 type NavState = {
   createItemOpens: 'drawer' | 'modal',
+  helpItemOpens: 'drawer' | 'menu',
   notificationCount: number,
   shouldUnmountOnExit: boolean,
 };
@@ -285,12 +313,21 @@ type NavState = {
 export default class extends Component<{||}, NavState> {
   state = {
     createItemOpens: 'modal',
+    helpItemOpens: 'menu',
     notificationCount: DEFAULT_NOTIFICATION_COUNT,
     shouldUnmountOnExit: false,
   };
 
+  componentDidMount() {
+    mockEndpoints();
+  }
+
   handleCreateChange = (e: *) => {
     this.setState({ createItemOpens: e.currentTarget.value });
+  };
+
+  handleHelpChange = (e: *) => {
+    this.setState({ helpItemOpens: e.currentTarget.value });
   };
 
   toggleUnmountBehaviour = () => {
@@ -307,12 +344,14 @@ export default class extends Component<{||}, NavState> {
   renderGlobalNavigation = () => {
     const {
       createItemOpens,
+      helpItemOpens,
       notificationCount,
       shouldUnmountOnExit,
     } = this.state;
     return (
       <GlobalNavWithDrawers
         createItemOpens={createItemOpens}
+        helpItemOpens={helpItemOpens}
         notificationCount={notificationCount}
         onNotificationDrawerOpen={this.clearNotificationCount}
         unmountOnExit={shouldUnmountOnExit}
@@ -323,6 +362,7 @@ export default class extends Component<{||}, NavState> {
   render() {
     const {
       createItemOpens,
+      helpItemOpens,
       notificationCount,
       shouldUnmountOnExit,
     } = this.state;
@@ -350,6 +390,24 @@ export default class extends Component<{||}, NavState> {
                 ]}
                 label="Create item opens a:"
                 onRadioChange={this.handleCreateChange}
+              />
+            </div>
+            <div>
+              <StatelessRadioGroup
+                items={[
+                  {
+                    value: 'menu',
+                    label: 'Menu',
+                    isSelected: helpItemOpens === 'menu',
+                  },
+                  {
+                    value: 'drawer',
+                    label: 'Drawer',
+                    isSelected: helpItemOpens === 'drawer',
+                  },
+                ]}
+                label="Help opens a:"
+                onRadioChange={this.handleHelpChange}
               />
             </div>
             <div css={{ display: 'block', paddingTop: '1rem' }}>

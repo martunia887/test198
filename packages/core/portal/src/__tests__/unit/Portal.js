@@ -75,6 +75,19 @@ test('should create a new stacking context', () => {
   expect(container && container.style.getPropertyValue('display')).toBe('flex');
 });
 
+test('should accept a string for zIndex', () => {
+  wrapper = mount(
+    <App>
+      <Portal zIndex="unset">
+        <div>Hi</div>
+      </Portal>
+    </App>,
+  );
+  const elements = document.getElementsByClassName('atlaskit-portal');
+  expect(elements).toHaveLength(1);
+  expect(elements[0].style.getPropertyValue('z-index')).toBe('unset');
+});
+
 test('should clean up elements after unmount', () => {
   const Wrapper = ({ renderPortal }: { renderPortal: boolean }) => (
     <App>
@@ -91,4 +104,29 @@ test('should clean up elements after unmount', () => {
   expect(parent).toBeNull();
   const portal = document.querySelector('.atlaskit-portal');
   expect(portal).toBeNull();
+});
+
+test('portal mounts children only when it is attached to DOM', () => {
+  let DOMElement = null;
+  class ChildComponent extends React.Component<{}> {
+    componentDidMount() {
+      DOMElement = document.querySelector('body');
+    }
+
+    render() {
+      return <div>Hello World!!</div>;
+    }
+  }
+
+  const Wrapper = ({ renderPortal }: { renderPortal: boolean }) => (
+    <App>
+      {renderPortal && (
+        <Portal zIndex={500}>
+          <ChildComponent />
+        </Portal>
+      )}
+    </App>
+  );
+  wrapper = mount(<Wrapper renderPortal />);
+  expect(DOMElement).not.toBeNull();
 });

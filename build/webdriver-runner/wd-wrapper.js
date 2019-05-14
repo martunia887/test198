@@ -1,14 +1,10 @@
+const assert = require('assert').strict;
+
 /*
  * wrapper on top of webdriver-io apis to give a feel of puppeeteer api
  */
 
-//TODO :move this to a new npm-pkg
-const webdriverio = require('webdriverio');
 const WAIT_TIMEOUT = 5000;
-
-const TODO = () => {
-  throw new Error('To be implemented!');
-};
 
 export class JSHandle {
   constructor(client, selector) {
@@ -18,10 +14,6 @@ export class JSHandle {
 
   asElement() {
     return new ElementHandle(this.browser, this.selector);
-  }
-
-  getProperty(propertyName) {
-    return this.browser.getAttribute(this.selector, propertyName);
   }
 
   dispose = TODO;
@@ -61,54 +53,78 @@ export default class Page {
     return this.browser.url(url);
   }
 
-  title() {
-    return this.browser.getTitle();
+  async hover(selector) {
+    const elem = await this.browser.$(selector);
+    elem.moveTo();
+    await this.browser.pause(500);
   }
 
-  $(selector) {
-    return new ElementHandle(this.browser, selector);
+  async title() {
+    return await this.browser.getTitle();
   }
 
-  $$(selector) {
-    return this.browser.elements(selector);
+  async $(selector) {
+    const ele = await this.browser.$(selector);
+
+    return ele;
   }
 
-  $eval(selector, pageFunction) {
-    return this.browser
-      .execute(
-        `return (${pageFunction}(document.querySelector("${selector}")))`,
-      )
-      .then(obj => obj.value);
+  async $$(selector) {
+    const ele = await this.browser.$$(selector);
+    return ele;
   }
 
-  count(selector) {
-    return this.$$(selector).then(function(result) {
-      return result.value.length;
-    });
+  $eval(selector, pageFunction, param) {
+    return this.browser.execute(
+      `return (${pageFunction}(document.querySelector("${selector}"), ${JSON.stringify(
+        param,
+      )}))`,
+    );
+  }
+
+  async setValue(selector, text) {
+    const elem = await this.browser.$(selector);
+    return elem.setValue(text);
+  }
+
+  async count(selector) {
+    const result = await this.$$(selector);
+    return result.length;
   }
 
   async type(selector, text) {
+    const elem = await this.browser.$(selector);
     if (Array.isArray(text)) {
-      while (text.length > 1) {
-        let first = text.shift();
-        await this.browser.addValue(selector, first);
+      for (let t of text) {
+        await elem.addValue(t);
       }
-
-      return this.browser.addValue(selector, text[0]);
+    } else {
+      await elem.addValue(text);
     }
-    return this.browser.addValue(selector, text);
   }
 
-  setValue(selector, text) {
-    return this.browser.setValue(selector, text);
+  async clear(selector) {
+    const elem = await this.browser.$(selector);
+    return elem.clearValue();
   }
 
-  click(selector) {
-    return this.browser.click(selector);
+  async click(selector) {
+    try {
+      const elem = await this.browser.$(selector);
+      return elem.click();
+    } catch (e) {
+      return e;
+    }
   }
 
   keys(value) {
     return this.browser.keys(value);
+  }
+
+  async pressKey(key, x = 1) {
+    for (let i = 0; i < x; i++) {
+      await this.browser.keys(key);
+    }
   }
 
   debug() {
@@ -120,8 +136,9 @@ export default class Page {
     return this.browser.getCssProperty(selector, cssProperty);
   }
 
-  getLocation(selector, property) {
-    return this.browser.getLocation(selector, property);
+  async getLocation(selector, property) {
+    const elem = await this.browser.$(selector);
+    return elem.getLocation(selector, property);
   }
 
   url() {
@@ -136,21 +153,19 @@ export default class Page {
   close() {
     return this.browser.close();
   }
-  checkConsoleErrors() {
+
+  async checkConsoleErrors() {
     // Console errors can only be checked in Chrome
-    if (
-      this.browser.desiredCapabilities.browserName === 'chrome' &&
-      this.browser.log('browser').value
-    ) {
-      this.browser.logs('browser').value.forEach(val => {
-        assert.notEqual(
-          val.level,
-          'SEVERE',
-          `Those console errors :${val.message} are displayed`,
-        );
-      });
+    if (this.isBrowser('chrome')) {
+      const logs = await this.browser.getLogs('browser');
+      if (logs.value) {
+        logs.value.forEach(val => {
+          assert.notStrictEqual(val.level, 'SEVERE', `Error : ${val.message}`);
+        });
+      }
     }
   }
+
   backspace(selector) {
     this.browser.execute(selector => {
       return document
@@ -165,69 +180,145 @@ export default class Page {
   //  keyboard.up('Shift');
 
   //will need to have wrapper for these once moved to puppeteer
-  getText(selector) {
+  async getText(selector) {
     // replace with await page.evaluate(() => document.querySelector('p').textContent)
     // for puppteer
-    return this.browser.getText(selector);
+    const elem = await this.browser.$(selector);
+    return elem.getText();
   }
 
-  getCssProperty(selector, cssProperty) {
-    return this.browser.getCssProperty(selector, cssProperty);
+  async execute(func, ...args) {
+    return this.browser.execute(func, ...args);
   }
 
-  getElementSize(selector) {
-    return this.browser.getElementSize(selector);
+  getBrowserName() {
+    return this.browser.capabilities.browserName;
   }
 
-  getHTML(selector) {
-    return this.browser.getHTML(selector);
-  }
-  isEnabled(selector) {
-    return this.browser.isEnabled(selector);
-  }
-  isExisting(selector) {
-    return this.browser.isExisting(selector);
+  isBrowser(browserName) {
+    return this.getBrowserName() === browserName;
   }
 
-  isVisible(selector) {
-    return this.browser.isVisible(selector);
+  async getCssProperty(selector, cssProperty) {
+    const elem = this.browser.$(selector);
+    return elem.getCssProperty(selector, cssProperty);
   }
 
-  hasFocus(selector) {
-    return this.browser.hasFocus(selector);
+  async getElementSize(selector) {
+    const elem = this.browser.$(selector);
+    return elem.getSize(selector);
+  }
+
+  async getHTML(selector) {
+    const elem = await this.browser.$(selector);
+    return elem.getHTML(false);
+  }
+
+  async getProperty(selector, property) {
+    const elem = await this.browser.$(selector);
+    return elem.getProperty(property);
+  }
+
+  async isEnabled(selector) {
+    const elem = await this.browser.$(selector);
+    return elem.isEnabled();
+  }
+
+  async isExisting(selector) {
+    const elem = await this.browser.$(selector);
+    return elem.isExisting();
+  }
+
+  async isVisible(selector) {
+    return this.waitFor(selector);
+  }
+
+  async hasFocus(selector) {
+    const elem = await this.browser.$(selector);
+    return elem.isFocused();
   }
 
   log(type) {
     return this.browser.log(type);
   }
 
-  paste(selector) {
+  async paste() {
     let keys;
-    if (this.browser.desiredCapabilities.os === 'Windows') {
+    if (this.browser.capabilities.os === 'Windows') {
       keys = ['Control', 'v'];
-    } else if (this.browser.desiredCapabilities.browserName === 'chrome') {
+    } else if (this.isBrowser('chrome')) {
       // Workaround for https://bugs.chromium.org/p/chromedriver/issues/detail?id=30
       keys = ['Shift', 'Insert'];
     } else {
       keys = ['Command', 'v'];
     }
-    return this.browser.addValue(selector, keys);
+
+    await this.browser.keys(keys);
+    return this.browser.keys(keys[0]);
+  }
+
+  async copy(selector) {
+    let keys;
+    if (this.browser.capabilities.os === 'Windows') {
+      keys = ['Control', 'c'];
+    } else if (this.isBrowser('chrome')) {
+      // Workaround for https://bugs.chromium.org/p/chromedriver/issues/detail?id=30
+      keys = ['Control', 'Insert'];
+    } else {
+      keys = ['Command', 'c'];
+    }
+
+    if (
+      this.browser.capabilities.os === 'Windows' &&
+      this.isBrowser('chrome')
+    ) {
+      // For Windows we need to send a keyup signal to release Control key
+      // https://webdriver.io/docs/api/browser/keys.html
+      await this.browser.keys(keys);
+      return this.browser.keys('Control');
+    }
+
+    return this.browser.keys(keys);
+  }
+
+  // behaviour is OS specific:
+  // windows moves to next paragraph up
+  // osx moves to top of document
+  moveUp(selector) {
+    let control = 'Command';
+    if (this.browser.capabilities.os === 'Windows') {
+      control = 'Control';
+    }
+
+    const keys = [control, 'ArrowUp'];
+    if (this.isBrowser('chrome')) {
+      return this.type(selector, keys);
+    }
+
+    return this.browser.keys(keys);
   }
 
   // Wait
-  waitForSelector(selector, options = {}) {
-    return this.browser.waitForExist(selector, options.timeout || WAIT_TIMEOUT);
+  async waitForSelector(selector, options = {}, reverse = false) {
+    const elem = await this.browser.$(selector);
+    return elem.waitForExist(options.timeout || WAIT_TIMEOUT, reverse);
   }
 
-  waitForVisible(selector, options = {}) {
-    return this.browser.waitForVisible(
-      selector,
-      options.timeout || WAIT_TIMEOUT,
-    );
+  async waitForVisible(selector, options = {}) {
+    const elem = await this.browser.$(selector);
+
+    return elem.waitForDisplayed(options.timeout || WAIT_TIMEOUT);
+  }
+
+  async waitUntilContainsText(selector, text) {
+    await this.waitUntil(async () => {
+      const content = await this.getText(selector);
+      return content.indexOf(text) !== -1;
+    });
   }
 
   waitFor(selector, ms, reverse) {
-    return this.browser.waitForVisible(selector, ms, reverse);
+    return this.waitForSelector(selector, { timeout: ms }, reverse);
   }
 
   waitUntil(predicate) {
@@ -244,30 +335,18 @@ export default class Page {
   }
 
   mockDate(timestamp, timezoneOffset) {
-    return this.browser.execute(
+    this.browser.execute(
       (t, tz) => {
-        const _Date = Date;
+        const _Date = (window._Date = window.Date);
         const realDate = params => new _Date(params);
-        const mockedDate = new _Date(t);
+        let offset = 0;
 
         if (tz) {
-          const localDateOffset = new _Date().getTimezoneOffset() / 60;
-          const dateWithTimezoneOffset = new _Date(
-            t + (tz + localDateOffset) * 3600000,
-          );
-          const localDateMethods = [
-            'getFullYear',
-            'getYear',
-            'getMonth',
-            'getDate',
-            'getDay',
-            'getHours',
-            'getMinutes',
-          ];
-          localDateMethods.forEach(dateMethod => {
-            mockedDate[dateMethod] = () => dateWithTimezoneOffset[dateMethod]();
-          });
+          localDateOffset = new _Date(t).getTimezoneOffset() / 60;
+          offset = (tz + localDateOffset) * 3600000;
         }
+
+        const mockedDate = new _Date(t + offset);
 
         Date = function(...params) {
           if (params.length > 0) {
@@ -283,9 +362,19 @@ export default class Page {
       timestamp,
       timezoneOffset,
     );
+    return () => {
+      // Teardown function
+      this.browser.execute(() => {
+        window.Date = window._Date;
+      });
+    };
   }
-}
-//TODO: Maybe wrapping all functions?
-async function wrapper(fn) {
-  return fn;
+
+  async safariCompatibleTab() {
+    if (this.isBrowser('Safari')) {
+      await this.keys(['Alt', 'Tab']);
+    } else {
+      await this.keys(['Tab']);
+    }
+  }
 }

@@ -7,7 +7,7 @@ import {
   convertMediaToImageEmoji,
   isMediaRepresentation,
   isPromise,
-} from '../../type-helpers';
+} from '../../util/type-helpers';
 import MediaImageLoader from './MediaImageLoader';
 import debug from '../../util/logger';
 import TokenManager from './TokenManager';
@@ -191,7 +191,7 @@ export class MemoryCacheStrategy implements EmojiCacheStrategy {
  * Otherwise, they are loaded and returned via a promise.
  */
 export default class MediaEmojiCache {
-  protected cache: EmojiCacheStrategy;
+  protected cache?: EmojiCacheStrategy;
   protected waitingInitUrls: string[] = [];
   private cacheLoading: Promise<EmojiCacheStrategy> | undefined;
   private mediaImageLoader: MediaImageLoader;

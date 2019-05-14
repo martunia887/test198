@@ -42,17 +42,34 @@ export type ExperimentalFeatureFlags = {|
     set to true as well.
   */
   experimental_alternateFlyoutBehaviour: boolean,
+
+  /**
+    NOTE: This property is experimental and may be removed in a minor release.
+
+    Expands the flyout to custom width set by the user by resizing the nav,
+    rather the default flyout width.
+    This FF has no effect if experimental_flyoutOnHover is set to false.
+  */
+  experimental_fullWidthFlyout: boolean,
 |};
 
 export type GetRefs = ({
   expandCollapseAffordance: NonStringRef<'button'>,
 }) => void;
 
+type Dataset = { [name: string]: string | typeof undefined };
+
 export type ConnectedLayoutManagerProps = {
   /** Your page content. */
   children: Node,
   /** A component which will render the container navigation layer. */
   containerNavigation: ?ComponentType<{}>,
+  /** A map of data attributes applied to the global and contextual navigation elements. */
+  datasets?: {|
+    globalNavigation: Dataset,
+    contextualNavigation: Dataset,
+    navigation: Dataset,
+  |},
   /** A function to access the refs of some elements within the LayoutManager
    * component. */
   getRefs?: GetRefs,
@@ -64,6 +81,10 @@ export type ConnectedLayoutManagerProps = {
   collapseToggleTooltipContent: CollapseToggleTooltipContent,
   ...$Exact<CollapseListeners>,
   ...$Exact<ExperimentalFeatureFlags>,
+  /** The top offset value to be used in navigation */
+  topOffset?: number,
+  /** Internal prop which decides which view is active */
+  view?: Object | null,
 };
 
 export type LayoutManagerProps = {

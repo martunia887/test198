@@ -31,17 +31,20 @@ class MultiPopupSelectExample extends Component<*, State> {
     placeholder: 'Choose value...',
     controlShouldRenderValue: false,
   };
+
   componentWillMount() {
     this.setState(state => ({
       valuesString: state.values.map(v => v.label).join(', '),
     }));
   }
+
   onChange = (values: any) => {
     this.setState({
       values,
       valuesString: values.map(v => v.label).join(', '),
     });
   };
+
   toggleConfig = (event: any) => {
     console.log('toggled');
     this.setState({
@@ -77,11 +80,11 @@ class MultiPopupSelectExample extends Component<*, State> {
             closeMenuOnSelect={false}
             onChange={this.onChange}
             value={values}
-            target={
-              <Button iconAfter={<DownIcon />}>
+            target={({ ref }) => (
+              <Button innerRef={ref} iconAfter={<DownIcon />}>
                 {valuesString || placeholder}
               </Button>
-            }
+            )}
             isMulti
           />
         </p>

@@ -1,4 +1,7 @@
-import { getExampleUrl } from '@atlaskit/visual-regression/helper';
+import {
+  getExampleUrl,
+  loadExampleUrl,
+} from '@atlaskit/visual-regression/helper';
 
 export const DEFAULT_WIDTH = 800;
 export const DEFAULT_HEIGHT = 600;
@@ -6,18 +9,19 @@ export const DEFAULT_HEIGHT = 600;
 const adfInputSelector = '#adf-input';
 const importAdfBtnSelector = '#import-adf';
 
-export const loadFullPageEditorWithAdf = async (page, adf: Object) => {
+export const loadFullPageEditorWithAdf = async (page: any, adf: any) => {
   const url = getExampleUrl(
     'editor',
     'editor-core',
     'full-page-with-adf-import',
   );
-
-  await page.goto(url);
-
+  await loadExampleUrl(page, url);
+  await page.waitForSelector(adfInputSelector);
   await page.evaluate(
-    (adfInputSelector, adf) => {
-      document.querySelector(adfInputSelector).value = JSON.stringify(adf);
+    (adfInputSelector: string, adf: object) => {
+      (document as any).querySelector(adfInputSelector).value = JSON.stringify(
+        adf,
+      );
     },
     adfInputSelector,
     adf,
@@ -26,7 +30,7 @@ export const loadFullPageEditorWithAdf = async (page, adf: Object) => {
 };
 
 export const snapshot = async (
-  page,
+  page: any,
   tolerance?: number,
   selector = '.akEditor',
 ) => {

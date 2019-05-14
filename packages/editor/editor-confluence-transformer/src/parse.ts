@@ -5,6 +5,7 @@ import {
   acNameToEmoji,
   acShortcutToEmoji,
   tableBackgroundColorNames,
+  NameToEmoji,
 } from '@atlaskit/adf-schema';
 import {
   akEditorFullPageMaxWidth,
@@ -240,7 +241,7 @@ function converter(
           const acName = node.getAttribute('ac:name');
           const acShortcut = node.getAttribute('ac:shortcut');
           if (acName) {
-            emoji = acNameToEmoji(acName);
+            emoji = acNameToEmoji(acName as NameToEmoji);
           }
           if (acShortcut) {
             emoji = acShortcutToEmoji(acShortcut);
@@ -731,7 +732,7 @@ function convertTaskItem(schema: Schema, node: Element) {
     });
   }
 
-  const attrs = {};
+  const attrs: { localId?: string | null; state?: string } = {};
   if (id) {
     attrs['localId'] = id.textContent;
   }

@@ -2,8 +2,9 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component, Fragment, type Node } from 'react';
 import { findDOMNode } from 'react-dom';
-import uuid from 'uuid/v1';
+import { uid } from 'react-uid';
 import {
+  withAnalyticsContext,
   withAnalyticsEvents,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
@@ -14,7 +15,7 @@ import ExpandIcon from '@atlaskit/icon/glyph/chevron-down';
 import {
   name as packageName,
   version as packageVersion,
-} from '../../package.json';
+} from '../version.json';
 
 import DropdownItemFocusManager from './context/DropdownItemFocusManager';
 import DropdownItemClickManager from './context/DropdownItemClickManager';
@@ -48,6 +49,7 @@ class DropdownMenuStateless extends Component<
   triggerContainer: ?HTMLElement;
 
   sourceOfIsOpen: ?string;
+
   dropdownListPositioned: boolean = false;
 
   static defaultProps = {
@@ -68,7 +70,7 @@ class DropdownMenuStateless extends Component<
   };
 
   state = {
-    id: uuid(),
+    id: uid({ id: this.constructor.name }),
     autoFocusDropdownItems: false,
   };
 
@@ -295,9 +297,9 @@ class DropdownMenuStateless extends Component<
 
     const triggerProps = { ...triggerButtonProps };
     const defaultButtonProps = {
-      ariaControls: this.state.id,
-      ariaExpanded: isOpen,
-      ariaHaspopup: true,
+      'aria-controls': this.state.id,
+      'aria-expanded': isOpen,
+      'aria-haspopup': true,
       isSelected: isOpen,
     };
     if (!triggerProps.iconAfter && !triggerProps.iconBefore) {
@@ -494,15 +496,21 @@ class DropdownMenuStateless extends Component<
 export { DropdownMenuStateless as DropdownMenuStatelessWithoutAnalytics };
 const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
 
-export default withAnalyticsEvents({
-  onOpenChange: createAndFireEventOnAtlaskit({
-    action: 'toggled',
-    actionSubject: 'dropdownMenu',
+export default withAnalyticsContext({
+  componentName: 'dropdownMenu',
+  packageName,
+  packageVersion,
+})(
+  withAnalyticsEvents({
+    onOpenChange: createAndFireEventOnAtlaskit({
+      action: 'toggled',
+      actionSubject: 'dropdownMenu',
 
-    attributes: {
-      componentName: 'dropdownMenu',
-      packageName,
-      packageVersion,
-    },
-  }),
-})(DropdownMenuStateless);
+      attributes: {
+        componentName: 'dropdownMenu',
+        packageName,
+        packageVersion,
+      },
+    }),
+  })(DropdownMenuStateless),
+);

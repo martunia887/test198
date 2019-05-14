@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import {
   StoryList,
@@ -7,13 +7,15 @@ import {
   unknownFileId,
   errorFileId,
 } from '@atlaskit/media-test-helpers';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
 
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
+import {
+  AnalyticsListener,
+  UIAnalyticsEventInterface,
+} from '@atlaskit/analytics-next';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-
-import { Card, FileIdentifier } from '../src';
+import { FileIdentifier } from '@atlaskit/media-core';
+import { Card } from '../src';
 import { createApiCards, actions } from '../example-helpers';
 
 const context = createStorybookContext();

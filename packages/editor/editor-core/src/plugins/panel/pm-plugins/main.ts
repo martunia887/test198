@@ -1,10 +1,10 @@
 import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import {
   findParentDomRefOfType,
   findParentNodeOfType,
 } from 'prosemirror-utils';
 import { panelNodeView } from '../nodeviews/panel';
+import { Command, PMPluginFactoryParams } from '../../../types';
 
 export type PanelState = {
   element?: HTMLElement;
@@ -12,29 +12,23 @@ export type PanelState = {
   toolbarVisible?: boolean | undefined;
 };
 
-export const availablePanelType = [
-  'info',
-  'note',
-  'success',
-  'warning',
-  'error',
-];
-
 export const getPluginState = (state: EditorState): PanelState => {
   return pluginKey.getState(state);
 };
 
-export const setPluginState = (stateProps: Object) => (
-  state: EditorState,
-  dispatch: (tr) => void,
-): boolean => {
+export const setPluginState = (stateProps: Object): Command => (
+  state,
+  dispatch,
+) => {
   const pluginState = getPluginState(state);
-  dispatch(
-    state.tr.setMeta(pluginKey, {
-      ...pluginState,
-      ...stateProps,
-    }),
-  );
+  if (dispatch) {
+    dispatch(
+      state.tr.setMeta(pluginKey, {
+        ...pluginState,
+        ...stateProps,
+      }),
+    );
+  }
   return true;
 };
 
@@ -42,23 +36,20 @@ export type PanelStateSubscriber = (state: PanelState) => any;
 
 export const pluginKey = new PluginKey('panelPlugin');
 
-export const createPlugin = ({
-  portalProviderAPI,
-  dispatch,
-  providerFactory,
-}) =>
+export const createPlugin = ({ dispatch }: PMPluginFactoryParams) =>
   new Plugin({
     state: {
-      init(config, state: EditorState) {
+      init() {
         return {
           element: null,
           activePanelType: undefined,
           toolbarVisible: false,
         };
       },
-      apply(tr, pluginState: PanelState, oldState, newState) {
-        const nextPluginState = tr.getMeta(pluginKey);
-        if (nextPluginState) {
+      apply(tr, pluginState: PanelState) {
+        const maybeNextPluginState = tr.getMeta(pluginKey);
+        if (maybeNextPluginState) {
+          const nextPluginState = { ...pluginState, ...maybeNextPluginState };
           dispatch(pluginKey, nextPluginState);
           return nextPluginState;
         }
@@ -66,9 +57,9 @@ export const createPlugin = ({
       },
     },
     key: pluginKey,
-    view: (view: EditorView) => {
+    view: () => {
       return {
-        update: (view: EditorView, prevState: EditorState) => {
+        update: view => {
           const {
             state: {
               selection,
@@ -101,10 +92,10 @@ export const createPlugin = ({
     },
     props: {
       nodeViews: {
-        panel: panelNodeView(portalProviderAPI),
+        panel: panelNodeView(),
       },
       handleDOMEvents: {
-        blur(view: EditorView, event) {
+        blur(view) {
           const pluginState = getPluginState(view.state);
           if (pluginState.toolbarVisible) {
             setPluginState({

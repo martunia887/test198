@@ -1,6 +1,6 @@
 import removeFileFromRecents from '../../removeFileFromRecents';
 import { removeFileFromRecents as removeFileFromRecentsAction } from '../../../actions/removeFileFromRecents';
-import { mockState } from '../../../mocks';
+import { mockState } from '@atlaskit/media-test-helpers';
 import { State } from '../../../domain';
 
 const extraState: Partial<State> = {
@@ -46,14 +46,12 @@ const extraState: Partial<State> = {
         id: 'some-id',
         insertedAt: 42,
         occurrenceKey: 'some-other-occurrence-key',
-        type: 'file',
         details: {} as any,
       },
       {
         id: 'other-id',
         insertedAt: 42,
         occurrenceKey: 'some-other-occurrence-key',
-        type: 'file',
         details: {} as any,
       },
     ],

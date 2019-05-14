@@ -1,58 +1,60 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-import {
-  getDocFromElement,
-  comment,
-  fullpage,
-  editable,
-  insertBlockMenuItem,
-} from '../_helpers';
+import { getDocFromElement, editable } from '../_helpers';
 import { messages } from '../../../plugins/block-type/types';
+import { EditorAppearance } from '../../../types';
+import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
 
 const selectQuery =
   'div[aria-label="CodeBlock floating controls"] input[aria-autocomplete="list"]';
 const floatingToolbarLanguageSelector = 'div[aria-label="Floating Toolbar"]';
 
-[comment, fullpage].forEach(editor => {
+['comment', 'full-page'].forEach(editor => {
   // https://product-fabric.atlassian.net/browse/ED-5564
   // Fix wrong ADF for code block when language is selected
   BrowserTestCase(
-    `code-block: produces correct ADF after language change for ${editor.name}`,
+    `code-block: produces correct ADF after language change for ${editor}`,
     { skip: ['ie', 'safari'] },
-    async client => {
-      const page = new Page(client);
-      await page.goto(editor.path);
-      await page.waitForSelector(editor.placeholder);
-      await page.click(editor.placeholder);
+    async (client: any, testName: string) => {
+      const page = await goToEditorTestingExample(client);
 
-      await insertBlockMenuItem(page, messages.codeblock.defaultMessage);
+      await mountEditor(page, {
+        appearance: editor as EditorAppearance,
+        allowCodeBlocks: true,
+      });
+
+      await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
       await page.waitForSelector(selectQuery);
-      await page.type(selectQuery, ['javascript', 'Return']);
+      await page.type(selectQuery, ['javascript']);
+      await page.keys('Return');
 
       const doc = await page.$eval(editable, getDocFromElement);
-      expect(doc).toMatchDocSnapshot();
+      expect(doc).toMatchCustomDocSnapshot(testName);
     },
   );
 
   BrowserTestCase(
-    `code-block: code block language is preserved after floating toolbar loses and gains focus for ${
-      editor.name
-    }`,
+    `code-block: code block language is preserved after floating toolbar loses and gains focus for ${editor}`,
     { skip: ['ie', 'safari'] },
-    async client => {
-      const page = new Page(client);
-      await page.goto(editor.path);
-      await page.waitForSelector(editor.placeholder);
-      await page.click(editor.placeholder);
+    async (client: any, testName: string) => {
+      const page = await goToEditorTestingExample(client);
+
+      await mountEditor(page, {
+        appearance: editor as EditorAppearance,
+        allowCodeBlocks: true,
+      });
 
       // Insert code block
-      await insertBlockMenuItem(page, messages.codeblock.defaultMessage);
+      await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
       await page.waitForSelector(selectQuery);
       // Change code block language
-      await page.type(selectQuery, ['javascript', 'Return']);
+      await page.type(selectQuery, ['javascript']);
+      await page.keys('Return');
       await page.click(editable);
       // Unfocus code block (so floating toolbar hides)
-      await page.type(editable, ['ArrowRight', 'ArrowRight']);
+      await page.keys(['ArrowRight', 'ArrowRight']);
       await page.type(editable, 'test paragraph');
       // Focus code block again
       await page.click('pre');
@@ -64,26 +66,29 @@ const floatingToolbarLanguageSelector = 'div[aria-label="Floating Toolbar"]';
   );
 
   BrowserTestCase(
-    `code-block: code block selected language correctly changes when moving selection directly from one code block to another for ${
-      editor.name
-    }`,
+    `code-block: code block selected language correctly changes when moving selection directly from one code block to another for ${editor}`,
     { skip: ['ie', 'safari', 'edge'] },
-    async client => {
-      const page = new Page(client);
-      await page.goto(editor.path);
-      await page.waitForSelector(editor.placeholder);
-      await page.click(editor.placeholder);
+    async (client: any, testName: string) => {
+      const page = await goToEditorTestingExample(client);
+
+      await mountEditor(page, {
+        appearance: editor as EditorAppearance,
+        allowCodeBlocks: true,
+      });
+
       // Insert code block
-      await insertBlockMenuItem(page, messages.codeblock.defaultMessage);
+      await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
       await page.waitForSelector(selectQuery);
 
       // Change code block language
-      await page.type(selectQuery, ['javascript', 'Return']);
+      await page.type(selectQuery, ['javascript']);
+      await page.keys('Return');
       await page.click(editable);
       // Move out of code block
-      await page.type(editable, ['ArrowRight', 'Return']);
+      await page.keys('ArrowRight');
+      await page.keys('Return');
       // Insert a second code block
-      await insertBlockMenuItem(page, messages.codeblock.defaultMessage);
+      await page.click(`[aria-label="${messages.codeblock.defaultMessage}"]`);
 
       // Make sure the second code block doesn't have a language set.
       await page.waitForSelector(selectQuery);
@@ -92,7 +97,8 @@ const floatingToolbarLanguageSelector = 'div[aria-label="Floating Toolbar"]';
       );
       expect(secondCodeblockInitialLanguage.trim()).toEqual('Select language');
       // Set a language on the second code block
-      await page.type(selectQuery, ['Arduino', 'Return']);
+      await page.type(selectQuery, ['Arduino']);
+      await page.keys('Return');
 
       // Check that the language on the first code block is still the same
       await page.click('code[data-language="javascript"]');
@@ -119,7 +125,7 @@ const floatingToolbarLanguageSelector = 'div[aria-label="Floating Toolbar"]';
   BrowserTestCase(
     'code-block: code block selected language correctly changes when moving selection directly from one code block to another where one blocks selected is undefined',
     { skip: ['ie', 'safari'] },
-    async client => {
+    async (client: any, testName: string) => {
       const page = new Page(client);
       await page.goto(editor.path);
       await page.waitForSelector(editor.placeholder);

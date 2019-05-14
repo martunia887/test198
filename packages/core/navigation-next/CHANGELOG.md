@@ -1,5 +1,219 @@
 # @atlaskit/navigation-next
 
+## 6.0.1
+- [patch] [b98d0779a6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b98d0779a6):
+
+  - Fixes issue where the Switcher component opens with the wrong width
+
+## 6.0.0
+- [major] [7c17b35107](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7c17b35107):
+
+  - Updates react and react-dom peer dependencies to react@^16.8.0 and react-dom@^16.8.0. To use this package, please ensure you use at least this version of react and react-dom.
+
+## 5.1.7
+- [patch] [254dd9145a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/254dd9145a):
+
+  - Fixes performance bug in navigation-next caused that happebs during hover and resize
+
+## 5.1.6
+- [patch] [a81e516462](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a81e516462):
+
+  - Removes dev-dependency from dependencies
+
+## 5.1.5
+- Updated dependencies [9c0b4744be](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9c0b4744be):
+  - @atlaskit/docs@7.0.3
+  - @atlaskit/avatar@15.0.4
+  - @atlaskit/badge@11.0.1
+  - @atlaskit/button@12.0.3
+  - @atlaskit/drawer@3.0.7
+  - @atlaskit/dropdown-menu@7.0.6
+  - @atlaskit/field-base@12.0.2
+  - @atlaskit/global-navigation@6.2.9
+  - @atlaskit/icon@16.0.9
+  - @atlaskit/inline-dialog@10.0.4
+  - @atlaskit/logo@10.0.4
+  - @atlaskit/lozenge@7.0.2
+  - @atlaskit/modal-dialog@8.0.7
+  - @atlaskit/onboarding@7.0.4
+  - @atlaskit/section-message@2.0.3
+  - @atlaskit/select@8.1.1
+  - @atlaskit/spinner@10.0.7
+  - @atlaskit/toggle@6.0.4
+  - @atlaskit/tooltip@13.0.4
+  - @atlaskit/theme@8.1.7
+
+## 5.1.4
+- Updated dependencies [1e826b2966](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/1e826b2966):
+  - @atlaskit/docs@7.0.2
+  - @atlaskit/analytics-next@4.0.3
+  - @atlaskit/avatar@15.0.3
+  - @atlaskit/drawer@3.0.6
+  - @atlaskit/dropdown-menu@7.0.4
+  - @atlaskit/global-navigation@6.2.8
+  - @atlaskit/icon@16.0.8
+  - @atlaskit/inline-dialog@10.0.3
+  - @atlaskit/logo@10.0.3
+  - @atlaskit/modal-dialog@8.0.6
+  - @atlaskit/onboarding@7.0.3
+  - @atlaskit/section-message@2.0.2
+  - @atlaskit/select@8.0.5
+  - @atlaskit/spinner@10.0.5
+  - @atlaskit/theme@8.1.6
+  - @atlaskit/toggle@6.0.3
+  - @atlaskit/tooltip@13.0.3
+  - @atlaskit/analytics-listeners@5.0.3
+  - @atlaskit/button@12.0.0
+
+## 5.1.3
+- [patch] [a28eb04426](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a28eb04426):
+
+  - Migrates package from emotion 9 to emotion 10. No behaviour or API changes.
+
+## 5.1.2
+- [patch] [da6ef8b69a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/da6ef8b69a):
+
+  - Using new z-index values from theme
+
+## 5.1.1
+- Updated dependencies [c95557e3ff](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c95557e3ff):
+  - @atlaskit/global-navigation@6.2.2
+  - @atlaskit/badge@11.0.0
+
+## 5.1.0
+- [minor] [6d7faa9784](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6d7faa9784):
+
+  - Adds the ability to a function to access refs in navigation-next/GlobalItem. This function is exposed in GlobalNavigation for each of the items on GlobalNav in a prop called get<X>Ref, where X is product, create etc.
+
+## 5.0.1
+- Updated dependencies [9d5cc39394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9d5cc39394):
+  - @atlaskit/docs@7.0.1
+  - @atlaskit/analytics-next@4.0.1
+  - @atlaskit/avatar@15.0.1
+  - @atlaskit/drawer@3.0.1
+  - @atlaskit/dropdown-menu@7.0.1
+  - @atlaskit/global-navigation@6.1.1
+  - @atlaskit/icon@16.0.5
+  - @atlaskit/inline-dialog@10.0.1
+  - @atlaskit/logo@10.0.1
+  - @atlaskit/modal-dialog@8.0.2
+  - @atlaskit/onboarding@7.0.1
+  - @atlaskit/section-message@2.0.1
+  - @atlaskit/select@8.0.3
+  - @atlaskit/spinner@10.0.1
+  - @atlaskit/theme@8.0.1
+  - @atlaskit/toggle@6.0.1
+  - @atlaskit/tooltip@13.0.1
+  - @atlaskit/button@11.0.0
+  - @atlaskit/analytics-listeners@5.0.0
+  - @atlaskit/analytics-namespaced-context@3.0.0
+
+## 5.0.0
+- [major] [76299208e6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/76299208e6):
+
+  - Drop ES5 from all the flow modules
+
+  ### Dropping CJS support in all @atlaskit packages
+
+  As a breaking change, all @atlaskit packages will be dropping cjs distributions and will only distribute esm. This means all distributed code will be transpiled, but will still contain `import` and
+  `export` declarations.
+
+  The major reason for doing this is to allow us to support multiple entry points in packages, e.g:
+
+  ```js
+  import colors from `@atlaskit/theme/colors`;
+  ```
+
+  Previously this was sort of possible for consumers by doing something like:
+
+  ```js
+  import colors from `@atlaskit/theme/dist/esm/colors`;
+  ```
+
+  This has a couple of issues. 1, it treats the file system as API making internal refactors harder, we have to worry about how consumers might be using things that aren't *actually* supposed to be used. 2. We are unable to do this *internally* in @atlaskit packages. This leads to lots of packages bundling all of theme, just to use a single color, especially in situations where tree shaking fails.
+
+  To support being able to use multiple entrypoints internally, we unfortunately cannot have multiple distributions as they would need to have very different imports from of their own internal dependencies.
+
+  ES Modules are widely supported by all modern bundlers and can be worked around in node environments.
+
+  We may choose to revisit this solution in the future if we find any unintended condequences, but we see this as a pretty sane path forward which should lead to some major bundle size decreases, saner API's and simpler package architecture.
+
+  Please reach out to #fabric-build (if in Atlassian) or create an issue in [Design System Support](https://ecosystem.atlassian.net/secure/CreateIssue.jspa?pid=24670) (for external) if you have any questions or queries about this.
+
+## 4.5.0
+- [minor] [bfe0b36312](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bfe0b36312):
+
+  - added the topoffset height to navigation-next: layout manager
+
+## 4.4.1
+- [patch] [e71cc26e15](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e71cc26e15):
+
+  - Change padding-top of SectionHeading to margin-top
+
+## 4.4.0
+- [minor] [8ebfb7165d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8ebfb7165d):
+
+  - New props: topOffset - The top offset value to be used in navigation
+
+## 4.3.1
+- [patch] [5cf4e22048](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5cf4e22048):
+
+  - Fixes the issue where the switcher stayed open while navigation is being resized.
+  - Fixes the issue where collapse/expanding the navigation caused the Switcher to reset to it's default size.
+
+  [Jira ticket NAV-237](https://product-fabric.atlassian.net/browse/NAV-237)
+
+## 4.3.0
+- [minor] [f54655ac1a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f54655ac1a):
+
+  - Support custom data attributes
+
+## 4.2.3
+- Updated dependencies [06713e0a0c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/06713e0a0c):
+  - @atlaskit/inline-dialog@9.0.15
+  - @atlaskit/logo@9.2.7
+  - @atlaskit/modal-dialog@7.2.3
+  - @atlaskit/select@7.0.0
+
+## 4.2.2
+- [patch] [313f5283c5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/313f5283c5):
+
+  - Make the spacing after BackItem be defined using margin
+
+## 4.2.1
+- [patch] [967c9ed460](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/967c9ed460):
+
+  - Add IDs to all global nav items
+
+## 4.2.0
+- [minor] [092845e62c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/092845e62c):
+
+  * Fixes missing tooltip whenexperimental_alternateHoverBehaviouris set to true | [NAV-230](https://product-fabric.atlassian.net/browse/NAV-230)
+  * Fixes stacking order issue which causes some elements like InlineDialog to be chopped off when placed in the container Nav | [AK-5818](https://ecosystem.atlassian.net/browse/AK-5818)
+  * Add new FF to allow expand fly out to full width | [AK-5820](https://ecosystem.atlassian.net/servicedesk/customer/portal/24/AK-5820)
+
+## 4.1.2
+- Updated dependencies [d7ef59d432](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d7ef59d432):
+  - @atlaskit/docs@6.0.1
+  - @atlaskit/avatar@14.1.8
+  - @atlaskit/button@10.1.2
+  - @atlaskit/drawer@2.7.1
+  - @atlaskit/dropdown-menu@6.1.26
+  - @atlaskit/field-base@11.0.14
+  - @atlaskit/global-navigation@5.5.2
+  - @atlaskit/modal-dialog@7.2.1
+  - @atlaskit/onboarding@6.1.16
+  - @atlaskit/section-message@1.0.16
+  - @atlaskit/select@6.1.19
+  - @atlaskit/toggle@5.0.15
+  - @atlaskit/tooltip@12.1.15
+  - @atlaskit/icon@16.0.0
+
+## 4.1.1
+- [patch] [81b12c5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/81b12c5):
+
+  - Fixes GlobalNavigationSkeleton throwing TypeError when rendered in products with no globalNav theme
+
 ## 4.1.0
 - [minor] [86aaacd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/86aaacd):
 

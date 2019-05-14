@@ -1,4 +1,3 @@
-/* tslint:disable variable-name */
 import * as React from 'react';
 import {
   ReactNode,
@@ -9,7 +8,7 @@ import {
 } from 'react';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 import ArrowRight from '@atlaskit/icon/glyph/arrow-right';
-import * as debounce from 'debounce';
+import debounce from 'debounce';
 import {
   FilmStripViewWrapper,
   FilmStripListWrapper,
@@ -119,10 +118,10 @@ export class FilmstripView extends React.Component<
     offset: 0,
   };
 
-  bufferElement: HTMLElement;
-  windowElement: HTMLElement;
+  bufferElement?: HTMLElement;
+  windowElement?: HTMLElement;
 
-  mutationObserver: MutationObserver;
+  mutationObserver?: MutationObserver;
 
   childOffsets: ChildOffset[];
   previousOffset: number = 0;
@@ -132,8 +131,9 @@ export class FilmstripView extends React.Component<
     windowWidth: 0,
   };
 
-  constructor(props) {
+  constructor(props: FilmstripViewProps) {
     super(props);
+    this.childOffsets = [];
     try {
       this.mutationObserver = new MutationObserver(
         debounce(this.handleMutation, 30, true),
@@ -191,7 +191,7 @@ export class FilmstripView extends React.Component<
 
   initMutationObserver() {
     const { mutationObserver } = this;
-    if (mutationObserver) {
+    if (mutationObserver && this.bufferElement) {
       mutationObserver.disconnect();
       mutationObserver.observe(this.bufferElement, MUTATION_CONFIG);
     }
@@ -258,16 +258,19 @@ export class FilmstripView extends React.Component<
     const { windowElement, bufferElement } = this;
     let bufferWidth = 0;
     let windowWidth = 0;
-    let childOffsets = [];
+    let childOffsets: ChildOffset[] = [];
 
     if (windowElement && bufferElement) {
       bufferWidth = bufferElement.getBoundingClientRect().width;
       windowWidth = windowElement.getBoundingClientRect().width;
 
       // we're calculating `left` based on `width` because `rect.left` can be a negative value after resizing the window (considered scrolled??)
-      const children = Array.prototype.slice.call(bufferElement.children, 0);
+      const children: Element[] = Array.prototype.slice.call(
+        bufferElement.children,
+        0,
+      );
       let left = 0;
-      childOffsets = children.map((child, index) => {
+      childOffsets = children.map((child: Element, index: number) => {
         const width = child.getBoundingClientRect().width;
 
         const offset = {
@@ -316,12 +319,12 @@ export class FilmstripView extends React.Component<
     );
   };
 
-  handleWindowElementChange = windowElement => {
+  handleWindowElementChange = (windowElement: HTMLElement) => {
     this.windowElement = windowElement;
     this.handleSizeChange();
   };
 
-  handleBufferElementChange = bufferElement => {
+  handleBufferElementChange = (bufferElement: HTMLElement) => {
     if (!bufferElement) {
       return;
     }
@@ -338,7 +341,7 @@ export class FilmstripView extends React.Component<
     this.handleSizeChange();
   };
 
-  handleLeftClick = event => {
+  handleLeftClick = (event: MouseEvent<HTMLDivElement>) => {
     // Stop the click event from bubling up and being handled by other components
     // See https://product-fabric.atlassian.net/browse/MSW-165
     event.stopPropagation();
@@ -355,7 +358,7 @@ export class FilmstripView extends React.Component<
     }
   };
 
-  handleRightClick = event => {
+  handleRightClick = (event: MouseEvent<HTMLDivElement>) => {
     // Stop the click event from bubling up and being handled by other components
     // See https://product-fabric.atlassian.net/browse/MSW-165
     event.stopPropagation();

@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import { Component } from 'react';
 import {
@@ -10,7 +10,7 @@ import {
 import Button from '@atlaskit/button';
 import Toggle from '@atlaskit/toggle';
 import Spinner from '@atlaskit/spinner';
-import { ContextFactory } from '@atlaskit/media-core';
+import { ContextFactory, FileState } from '@atlaskit/media-core';
 import { MediaPicker, Dropzone } from '../src';
 import {
   DropzoneContainer,
@@ -64,7 +64,7 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
       });
   }
 
-  createDropzone() {
+  async createDropzone() {
     const { isConnectedToUsersCollection } = this.state;
     const dropzoneContext = isConnectedToUsersCollection
       ? context
@@ -73,12 +73,14 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
     if (this.state.dropzone) {
       this.state.dropzone.deactivate();
     }
-    const dropzone = MediaPicker('dropzone', dropzoneContext, {
+    const dropzone = await MediaPicker('dropzone', dropzoneContext, {
       container: this.dropzoneContainer,
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
       },
     });
+
+    dropzoneContext.on('file-added', this.onFileUploaded);
 
     dropzone.activate();
 
@@ -87,10 +89,14 @@ class DropzoneWrapper extends Component<{}, DropzoneWrapperState> {
     });
   }
 
-  saveDropzoneContainer = (element: HTMLDivElement) => {
+  onFileUploaded = (fileState: FileState) => {
+    console.log('onFileUploaded', fileState);
+  };
+
+  saveDropzoneContainer = async (element: HTMLDivElement) => {
     this.dropzoneContainer = element;
 
-    this.createDropzone();
+    await this.createDropzone();
     this.fetchLastItems();
   };
 

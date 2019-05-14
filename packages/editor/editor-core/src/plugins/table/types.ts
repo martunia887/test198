@@ -39,19 +39,61 @@ export interface TablePluginState {
   isInDanger?: boolean;
   insertColumnButtonIndex?: number;
   insertRowButtonIndex?: number;
+  isFullWidthModeEnabled?: boolean;
 }
 
-export interface CellRect {
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
-}
+export type TablePluginAction =
+  | { type: 'SET_EDITOR_FOCUS'; data: { editorHasFocus: boolean } }
+  | {
+      type: 'SET_TABLE_REF';
+      data: {
+        tableRef?: HTMLElement;
+        tableFloatingToolbarTarget?: HTMLElement;
+        tableNode?: PmNode;
+      };
+    }
+  | {
+      type: 'HOVER_ROWS';
+      data: {
+        decorationSet: DecorationSet;
+        hoveredRows: number[];
+        isInDanger?: boolean;
+      };
+    }
+  | {
+      type: 'HOVER_COLUMNS';
+      data: {
+        decorationSet: DecorationSet;
+        hoveredColumns: number[];
+        isInDanger?: boolean;
+      };
+    }
+  | {
+      type: 'HOVER_TABLE';
+      data: {
+        decorationSet: DecorationSet;
+        hoveredRows: number[];
+        hoveredColumns: number[];
+        isInDanger?: boolean;
+      };
+    }
+  | { type: 'CLEAR_HOVER_SELECTION'; data: { decorationSet: DecorationSet } }
+  | { type: 'SET_TARGET_CELL_POSITION'; data: { targetCellPosition?: number } }
+  | { type: 'SHOW_INSERT_ROW_BUTTON'; data: { insertRowButtonIndex: number } }
+  | {
+      type: 'SHOW_INSERT_COLUMN_BUTTON';
+      data: { insertColumnButtonIndex: number };
+    }
+  | {
+      type: 'HIDE_INSERT_COLUMN_OR_ROW_BUTTON';
+    }
+  | { type: 'TOGGLE_CONTEXTUAL_MENU' };
 
 export interface ColumnResizingPlugin {
   handleWidth?: number;
   cellMinWidth?: number;
   lastColumnResizable?: boolean;
+  dynamicTextSizing?: boolean;
 }
 
 export const TableDecorations = {
@@ -101,6 +143,7 @@ export const TableCssClassName = {
   IS_RESIZING: `${clPrefix}is-resizing`,
 
   CONTEXTUAL_SUBMENU: `${clPrefix}contextual-submenu`,
+  CONTEXTUAL_MENU_BUTTON_WRAP: `${clPrefix}contextual-menu-button-wrap`,
   CONTEXTUAL_MENU_BUTTON: `${clPrefix}contextual-menu-button`,
   CONTEXTUAL_MENU_ICON: `${clPrefix}contextual-submenu-icon`,
 

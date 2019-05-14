@@ -1,13 +1,14 @@
 import { InputRule } from 'prosemirror-inputrules';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { Mark as PMMark } from 'prosemirror-model';
 
 export type InputRuleWithHandler = InputRule & { handler: InputRuleHandler };
 
 export type InputRuleHandler = ((
   state: EditorState,
-  match,
-  start,
-  end,
+  match: Array<string>,
+  start: number,
+  end: number,
 ) => Transaction | null);
 
 export function defaultInputRuleHandler(
@@ -46,12 +47,13 @@ export function createInputRule(
 // This can be used in an input rule regex to be able to include or exclude such nodes.
 export const leafNodeReplacementCharacter = '\ufffc';
 
-// tslint:disable:no-bitwise
+/* eslint-disable no-bitwise */
 export const uuid = () =>
   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     const r = (Math.random() * 16) | 0;
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
   });
+/* eslint-enable no-bitwise */
 
 const hasUnsupportedMarkForBlockInputRule = (
   state: EditorState,
@@ -63,7 +65,7 @@ const hasUnsupportedMarkForBlockInputRule = (
     schema: { marks },
   } = state;
   let unsupportedMarksPresent = false;
-  const isUnsupportedMark = node =>
+  const isUnsupportedMark = (node: PMMark) =>
     node.type === marks.code ||
     node.type === marks.link ||
     node.type === marks.typeAheadQuery;
@@ -85,7 +87,7 @@ const hasUnsupportedMarkForInputRule = (
     schema: { marks },
   } = state;
   let unsupportedMarksPresent = false;
-  const isCodemark = node =>
+  const isCodemark = (node: PMMark) =>
     node.type === marks.code || node.type === marks.typeAheadQuery;
   doc.nodesBetween(start, end, node => {
     unsupportedMarksPresent =

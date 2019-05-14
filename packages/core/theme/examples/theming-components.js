@@ -42,8 +42,11 @@ class Button extends Component<Props, State> {
   state = {
     hover: false,
   };
+
   onMouseEnter = () => this.setState({ hover: true });
+
   onMouseLeave = () => this.setState({ hover: false });
+
   render() {
     return (
       <Theme.Provider value={this.props.theme}>
@@ -79,7 +82,7 @@ class Button extends Component<Props, State> {
 export default () => (
   <Fragment>
     <Button>Default</Button>
-    <Theme.Provider values={contextButtonTheme}>
+    <Theme.Provider value={contextButtonTheme}>
       <Button>Context</Button>
       <Button theme={propButtonTheme}>Custom</Button>
     </Theme.Provider>

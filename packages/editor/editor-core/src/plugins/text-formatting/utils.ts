@@ -1,6 +1,5 @@
 import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
-import { Mark, MarkType } from 'prosemirror-model';
+import { Mark as PMMark, MarkType } from 'prosemirror-model';
 import {
   FORMATTING_MARK_TYPES,
   FORMATTING_NODE_TYPES,
@@ -31,78 +30,13 @@ export const domIndex = function(node: Node | null): number | undefined {
   }
 };
 
-export const deepEqual = (obj1, obj2) => {
+export const shallowEqual = (obj1: any, obj2: any) => {
   for (let key in obj1) {
     if (obj1[key] !== obj2[key]) {
       return false;
     }
   }
   return true;
-};
-
-// Make sure the cursor isn't directly after one or more ignored
-// nodes, which will confuse the browser's cursor motion logic.
-export const removeIgnoredNodesLeft = (view: EditorView) => {
-  const sel = (view.root as any).getSelection();
-  let node = sel.anchorNode;
-  let offset = sel.anchorOffset;
-  let removeNode;
-  // TODO: un-ignore it
-  // @ts-ignore
-  let removeOffset;
-
-  if (!node) {
-    return;
-  }
-  for (;;) {
-    if (offset > 0) {
-      if (node.nodeType !== 1) {
-        // zero-width non-breaking space
-        if (
-          node.nodeType === 3 &&
-          node.nodeValue.charAt(offset - 1) === '\ufeff'
-        ) {
-          removeNode = node;
-          removeOffset = --offset;
-        } else {
-          break;
-        }
-      } else {
-        const before = node.childNodes[offset - 1];
-        if (isIgnorable(before)) {
-          removeNode = before;
-          removeOffset = --offset;
-        } else if (before.nodeType === 3) {
-          node = before;
-          offset = node.nodeValue.length;
-        } else {
-          break;
-        }
-      }
-    } else if (isBlockNode(node)) {
-      break;
-    } else {
-      let prev = node.previousSibling;
-      while (prev && isIgnorable(prev)) {
-        removeNode = node.parentNode;
-        removeOffset = domIndex(prev);
-        prev = prev.previousSibling;
-      }
-      if (!prev) {
-        node = node.parentNode;
-        if (node === view.dom) {
-          break;
-        }
-        offset = 0;
-      } else {
-        node = prev;
-        offset = nodeLen(node);
-      }
-    }
-  }
-  if (removeNode) {
-    removeNode.parentNode.removeChild(removeNode);
-  }
 };
 
 export const hasCode = (state: EditorState, pos: number): boolean => {
@@ -118,7 +52,7 @@ export const hasCode = (state: EditorState, pos: number): boolean => {
 /**
  * Determine if a mark (with specific attribute values) exists anywhere in the selection.
  */
-export const markActive = (state: EditorState, mark: Mark): boolean => {
+export const markActive = (state: EditorState, mark: PMMark): boolean => {
   const { from, to, empty } = state.selection;
   // When the selection is empty, only the active marks apply.
   if (empty) {

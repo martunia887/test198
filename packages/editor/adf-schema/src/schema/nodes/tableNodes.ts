@@ -1,7 +1,7 @@
 import { Node as PmNode } from 'prosemirror-model';
 import {
-  hexToRgba,
-  isHex,
+  isRgb,
+  rgbToHex,
   N20,
   B50,
   T50,
@@ -20,22 +20,29 @@ import {
 } from '../../utils/colors';
 import { TableCellContent } from './doc';
 
-const akEditorTableCellBackgroundOpacity = 0.5;
 const akEditorTableNumberColumnWidth = 42;
+const DEFAULT_TABLE_HEADER_CELL_BACKGROUND = N20.toLocaleLowerCase();
 
-const getCellAttrs = (dom: HTMLElement) => {
+const getCellAttrs = (dom: HTMLElement, defaultValues: CellAttributes = {}) => {
   const widthAttr = dom.getAttribute('data-colwidth');
   const width =
     widthAttr && /^\d+(,\d+)*$/.test(widthAttr)
       ? widthAttr.split(',').map(str => Number(str))
       : null;
   const colspan = Number(dom.getAttribute('colspan') || 1);
+  let { backgroundColor } = dom.style;
+  if (backgroundColor && isRgb(backgroundColor)) {
+    backgroundColor = rgbToHex(backgroundColor);
+  }
 
   return {
     colspan,
     rowspan: Number(dom.getAttribute('rowspan') || 1),
     colwidth: width && width.length === colspan ? width : null,
-    background: dom.style.backgroundColor || null,
+    background:
+      backgroundColor && backgroundColor !== defaultValues['background']
+        ? backgroundColor
+        : null,
   };
 };
 
@@ -44,6 +51,7 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     colspan?: number;
     rowspan?: number;
     style?: string;
+    'data-colwidth'?: string;
   } = {};
   const colspan = cell ? parseInt(cell.getAttribute('colspan') || '1', 10) : 1;
   const rowspan = cell ? parseInt(cell.getAttribute('rowspan') || '1', 10) : 1;
@@ -74,10 +82,7 @@ export const setCellAttrs = (node: PmNode, cell?: HTMLElement) => {
     if (ignored) {
       attrs.style = '';
     } else {
-      const color =
-        nodeType === 'tableCell' && isHex(background)
-          ? hexToRgba(background, akEditorTableCellBackgroundOpacity)
-          : background;
+      const color = isRgb(background) ? rgbToHex(background) : background;
 
       attrs.style = `${attrs.style || ''}background-color: ${color};`;
     }
@@ -119,10 +124,10 @@ export const tableBackgroundColorNames = new Map<string, string>();
 });
 
 export function calcTableColumnWidths(node: PmNode): number[] {
-  let tableColumnWidths = [];
+  let tableColumnWidths: Array<number> = [];
   const { isNumberColumnEnabled } = node.attrs;
 
-  node.forEach((rowNode, _, i) => {
+  node.forEach((rowNode, _) => {
     rowNode.forEach((colNode, _, j) => {
       let colwidth = colNode.attrs.colwidth || [0];
 
@@ -233,16 +238,14 @@ export const table: any = {
 export const tableToJSON = (node: PmNode) => ({
   attrs: Object.keys(node.attrs)
     .filter(key => !key.startsWith('__'))
-    .reduce((obj, key) => {
+    .reduce<typeof node.attrs>((obj, key) => {
       obj[key] = node.attrs[key];
       return obj;
     }, {}),
 });
 
-// We allow empty rows here to prevent ProseMirror from trying to "fix" the table by injecting cells in random places
-// Instead, we remove empty rows on our side in table plugin -> appendTransaction
 export const tableRow = {
-  content: '(tableCell | tableHeader)*',
+  content: '(tableCell | tableHeader)+',
   tableRole: 'row',
   parseDOM: [{ tag: 'tr' }],
   toDOM() {
@@ -265,6 +268,11 @@ export const tableCell = {
   marks: 'alignment',
   isolating: true,
   parseDOM: [
+    // Ignore number cell copied from renderer
+    {
+      tag: '.ak-renderer-table-number-column',
+      ignore: true,
+    },
     {
       tag: 'td',
       getAttrs: (dom: HTMLElement) => getCellAttrs(dom),
@@ -276,7 +284,9 @@ export const tableCell = {
 };
 
 export const toJSONTableCell = (node: PmNode) => ({
-  attrs: Object.keys(node.attrs).reduce((obj, key) => {
+  attrs: (Object.keys(node.attrs) as Array<keyof CellAttributes>).reduce<
+    Record<string, any>
+  >((obj, key) => {
     if (cellAttrs[key].default !== node.attrs[key]) {
       obj[key] = node.attrs[key];
     }
@@ -295,7 +305,8 @@ export const tableHeader = {
   parseDOM: [
     {
       tag: 'th',
-      getAttrs: (dom: HTMLElement) => getCellAttrs(dom),
+      getAttrs: (dom: HTMLElement) =>
+        getCellAttrs(dom, { background: DEFAULT_TABLE_HEADER_CELL_BACKGROUND }),
     },
   ],
   toDOM(node: PmNode) {

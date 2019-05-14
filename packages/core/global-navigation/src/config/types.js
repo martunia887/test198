@@ -38,8 +38,11 @@ export type DefaultConfigShape = {
   },
   help: DefaultItemShape,
   settings: DefaultItemShape,
+  atlassianSwitcher: DefaultItemShape,
   profile: DefaultItemShape,
 };
+
+type helpContent = ItemShape | DropdownItem;
 
 export type ProductConfigShape = {
   product: ?ItemShape,
@@ -50,8 +53,9 @@ export type ProductConfigShape = {
   appSwitcher: ?{
     itemComponent: ComponentType<*>,
   },
-  help: ?DropdownItem,
+  help: ?helpContent,
   settings: ?ItemShape,
+  atlassianSwitcher: ?ItemShape,
   profile: ?DropdownItem,
 };
 

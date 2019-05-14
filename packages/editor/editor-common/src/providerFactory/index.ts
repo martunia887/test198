@@ -1,4 +1,5 @@
 export { WithProviders } from './withProviders';
+export { Providers } from '../types';
 
 export type ProviderHandler = (name: string, provider?: Promise<any>) => void;
 
@@ -25,7 +26,7 @@ export default class ProviderFactory {
 
   setProvider(name: string, provider?: Promise<any>) {
     // Do not trigger notifyUpdate if provider is the same.
-    if (provider && this.providers.get(name) === provider) {
+    if (this.providers.get(name) === provider) {
       return;
     }
 

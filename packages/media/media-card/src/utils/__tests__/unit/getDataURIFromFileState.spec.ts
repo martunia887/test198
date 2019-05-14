@@ -5,9 +5,7 @@ jest.mock('video-snapshot', () => {
     }
     end() {}
   }
-  return {
-    default: FakeVideoSnapshot,
-  };
+  return FakeVideoSnapshot;
 });
 jest.mock('@atlaskit/media-ui');
 import { getOrientation } from '@atlaskit/media-ui';
@@ -32,8 +30,9 @@ describe('getDataURIFromFileState()', () => {
       mediaType: 'doc',
       mimeType: 'application/pdf',
       preview: {
-        blob: new File([], 'filename', { type: 'text/plain' }),
+        value: new File([], 'filename', { type: 'text/plain' }),
       },
+      representations: {},
     });
 
     expect(src).toBeUndefined();
@@ -49,7 +48,7 @@ describe('getDataURIFromFileState()', () => {
       mediaType: 'image',
       mimeType: 'image/jpg',
       preview: {
-        blob: new File([], 'filename', { type: 'image/png' }),
+        value: new File([], 'filename', { type: 'image/png' }),
       },
     });
 
@@ -65,9 +64,10 @@ describe('getDataURIFromFileState()', () => {
       mediaType: 'image',
       mimeType: 'image/png',
       preview: {
-        blob: new File([], 'filename', { type: 'video/mov' }),
+        value: new File([], 'filename', { type: 'video/mov' }),
       },
       artifacts: {},
+      representations: {},
     });
 
     expect(src).toEqual('video-preview');
@@ -87,7 +87,7 @@ describe('getDataURIFromFileState()', () => {
       mediaType: 'image',
       mimeType: 'image/jpg',
       preview: {
-        blob,
+        value: blob,
       },
     });
 

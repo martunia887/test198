@@ -1,14 +1,10 @@
-import { name } from '../../../../../package.json';
+import { name } from '../../../../version.json';
 import { schema, fromHTML, toHTML } from '../../../../../test-helpers';
 import { inlineNodes } from '../../../../schema/inline-nodes';
 
 describe(`${name}/schema unknownBlock node`, () => {
   describe('should be able to parse inline node', () => {
     inlineNodes.forEach(node => {
-      /**
-       * Skipping the test of "image" here as it currently breaks
-       * TODO: JEST-23 fix this test
-       */
       if (node === 'image') {
         return;
       }

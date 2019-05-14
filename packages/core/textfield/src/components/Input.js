@@ -1,39 +1,43 @@
 // @flow
 
 import React from 'react';
-import { InputWrapper } from '../styled';
 import type { InputProps } from '../types';
 
 export default ({
   appearance,
+  elemAfterInput,
+  elemBeforeInput,
   forwardedRef,
   isCompact,
   isDisabled,
   isFocused,
+  isHovered,
   isInvalid,
   isMonospaced,
   isReadOnly,
   isRequired,
+  onMouseDown,
+  onMouseEnter,
+  onMouseLeave,
   theme,
-  ...props
+  ...rest
 }: InputProps) => (
-  <InputWrapper
-    {...theme}
-    appearance={appearance}
-    isCompact={isCompact}
-    isDisabled={isDisabled}
-    isFocused={isFocused}
-    isMonospaced={isMonospaced}
-    isReadOnly={isReadOnly}
-    isRequired={isRequired}
-    isInvalid={isInvalid}
+  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+  <div
+    css={theme.container}
+    onMouseDown={onMouseDown}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
   >
+    {elemBeforeInput}
     <input
       ref={forwardedRef}
       disabled={isDisabled}
       readOnly={isReadOnly}
       required={isRequired}
-      {...props}
+      css={theme.input}
+      {...rest}
     />
-  </InputWrapper>
+    {elemAfterInput}
+  </div>
 );

@@ -1,6 +1,6 @@
 import { findTable } from 'prosemirror-utils';
 import {
-  createEditor,
+  createEditorFactory,
   doc,
   p,
   table,
@@ -26,10 +26,12 @@ import {
 } from '../../../../plugins/table/types';
 import layoutPlugin from '../../../../plugins/layout';
 import extensionPlugin from '../../../../plugins/extension';
-import { toggleTableLayout } from '../../../../plugins/table/actions';
+import { toggleTableLayout } from '../../../../plugins/table/commands';
 import { isLayoutSupported } from '../../../../plugins/table/utils';
 
 describe('table toolbar', () => {
+  const createEditor = createEditorFactory<TablePluginState>();
+
   const editor = (
     doc: any,
     permittedLayouts: PermittedLayoutsDescriptor = 'all',
@@ -40,7 +42,7 @@ describe('table toolbar', () => {
       allowHeaderColumn: true,
       permittedLayouts,
     };
-    return createEditor<TablePluginState>({
+    return createEditor({
       doc,
       editorPlugins: [
         tablesPlugin(tableOptions),
@@ -70,8 +72,6 @@ describe('table toolbar', () => {
 
       expect(node).toBeDefined();
       expect(node!.attrs.layout).toBe('wide');
-
-      editorView.destroy();
     });
 
     it('can set the data-layout attribute on the table DOM element', () => {
@@ -85,8 +85,6 @@ describe('table toolbar', () => {
       toggleTableLayout(editorView.state, editorView.dispatch);
       tableElement = editorView.dom.querySelector('table');
       expect(tableElement!.getAttribute('data-layout')).toBe('wide');
-
-      editorView.destroy();
     });
 
     it('applies the initial data-layout attribute on the table DOM element', () => {
@@ -99,8 +97,6 @@ describe('table toolbar', () => {
       const tableElement = tables[0];
 
       expect(tableElement.getAttribute('data-layout')).toBe('full-width');
-
-      editorView.destroy();
     });
 
     ['default', 'wide', 'full-width'].forEach(currentLayout => {
@@ -127,8 +123,8 @@ describe('table toolbar', () => {
               nextLayout = 'default';
               break;
           }
-          expect(tableNode.attrs.layout).toBe(nextLayout);
-          editorView.destroy();
+          expect(tableNode).toBeDefined();
+          expect(tableNode!.attrs.layout).toBe(nextLayout);
         });
       });
     });
@@ -143,8 +139,6 @@ describe('table toolbar', () => {
       const tableElement = tables[0];
 
       expect(tableElement.getAttribute('data-layout')).toBe('full-width');
-
-      editorView.destroy();
     });
   });
 

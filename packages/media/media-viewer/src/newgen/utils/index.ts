@@ -1,6 +1,11 @@
-import { Context, isClientBasedAuth } from '@atlaskit/media-core';
+import {
+  Context,
+  isClientBasedAuth,
+  FileIdentifier,
+  Identifier,
+  isFileIdentifier,
+} from '@atlaskit/media-core';
 import { stringify } from 'query-string';
-import { Identifier } from '../domain';
 import { MediaCollectionItem } from '@atlaskit/media-store';
 
 // We want to remove constructAuthTokenUrl and use mediaStore instead
@@ -59,22 +64,30 @@ function buildUrl(host: string, url: string, query: Object) {
 export const toIdentifier = (
   item: MediaCollectionItem,
   collectionName: string,
-): Identifier => {
+): FileIdentifier => {
   return {
     id: item.id,
-    type: item.type,
+    mediaItemType: 'file',
     occurrenceKey: item.occurrenceKey,
     collectionName,
   };
 };
 
+// TODO MS-1752 - current implementation makes viewer navigation to misbehave
+// if passed a file with the same id (with different occurrenceKeys) or with the same dataURI twice
 export const getSelectedIndex = (
   items: Identifier[],
   selectedItem: Identifier,
 ) => {
-  return items.findIndex(
-    item =>
-      item.id === selectedItem.id &&
-      item.occurrenceKey === selectedItem.occurrenceKey,
-  );
+  return items.findIndex(item => {
+    if (isFileIdentifier(item) && isFileIdentifier(selectedItem)) {
+      return item.id === selectedItem.id;
+    }
+
+    if (!isFileIdentifier(item) && !isFileIdentifier(selectedItem)) {
+      return item.dataURI === selectedItem.dataURI;
+    }
+
+    return false;
+  });
 };

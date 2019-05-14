@@ -7,8 +7,6 @@ export const Body = styled.div`
   text-align: center;
 `;
 
-// TODO: equivilant to H600, need to replace with mixin when available from
-// the @atlaskit/theme package
 export const Heading = styled.h4`
   color: inherit;
   font-size: 20px;
@@ -23,6 +21,10 @@ export const Image = styled.img`
   border-top-right-radius: ${borderRadius}px;
   height: auto;
   width: 100%;
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    border-radius: 0;
+  }
 `;
 export const Actions = styled.div`
   display: flex;

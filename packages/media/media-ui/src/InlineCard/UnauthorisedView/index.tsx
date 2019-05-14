@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Icon } from '../Icon';
 import { IconAndTitleLayout } from '../IconAndTitleLayout';
 import Button from '@atlaskit/button';
 import { truncateUrlForErrorView } from '../utils';
 import { Frame } from '../Frame';
+import { colors } from '@atlaskit/theme';
 
 export interface InlineCardUnauthorizedViewProps {
   /** The url to display */
@@ -11,7 +11,7 @@ export interface InlineCardUnauthorizedViewProps {
   /** The icon of the service (e.g. Dropbox/Asana/Google/etc) to display */
   icon?: string;
   /** The optional click handler */
-  onClick?: () => void;
+  onClick?: React.EventHandler<React.MouseEvent | React.KeyboardEvent>;
   /** What to do when a user hit "Try another account" button */
   onAuthorise?: () => void;
   /** A flag that determines whether the card is selected in edit mode. */
@@ -21,7 +21,7 @@ export interface InlineCardUnauthorizedViewProps {
 export class InlineCardUnauthorizedView extends React.Component<
   InlineCardUnauthorizedViewProps
 > {
-  handleConnectAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
+  handleConnectAccount = (event: React.MouseEvent<HTMLElement>) => {
     const { onAuthorise } = this.props;
     event.preventDefault();
     event.stopPropagation();
@@ -33,14 +33,19 @@ export class InlineCardUnauthorizedView extends React.Component<
     return (
       <Frame onClick={onClick} isSelected={isSelected}>
         <IconAndTitleLayout
-          icon={typeof icon === 'string' ? <Icon src={icon} /> : icon}
+          icon={icon}
           title={truncateUrlForErrorView(url)}
+          titleColor={colors.N500}
         />
         {!onAuthorise ? (
           ''
         ) : (
           <>
-            {' - '}
+            {/* 
+              NB: a non-breaking hyphen - hyphentation should be
+              handled by the browser, not us.
+            */}
+            {` \u2011 `}
             <Button
               spacing="none"
               appearance="link"

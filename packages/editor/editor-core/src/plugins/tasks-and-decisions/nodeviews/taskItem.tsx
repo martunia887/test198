@@ -1,12 +1,20 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
-import { EditorView, NodeView } from 'prosemirror-view';
+import { EditorView, NodeView, Decoration } from 'prosemirror-view';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
-import { ReactNodeView } from '../../../nodeviews';
+import {
+  AnalyticsListener,
+  UIAnalyticsEventInterface,
+  AnalyticsEventPayload,
+} from '@atlaskit/analytics-next';
+import { ReactNodeView, ReactComponentProps } from '../../../nodeviews';
 import TaskItem from '../ui/Task';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import WithPluginState from '../../../ui/WithPluginState';
+import {
+  stateKey as taskPluginKey,
+  TaskDecisionPluginState,
+} from '../pm-plugins/main';
 import {
   pluginKey as editorDisabledPluginKey,
   EditorDisabledPluginState,
@@ -44,14 +52,14 @@ class Task extends ReactNodeView {
    * cannot render the position and listSize into the
    * AnalyticsContext at initial render time.
    */
-  private addListAnalyticsData = event => {
+  private addListAnalyticsData = (event: UIAnalyticsEventInterface) => {
     try {
       const resolvedPos = this.view.state.doc.resolve(this.getPos());
       const position = resolvedPos.index();
       const listSize = resolvedPos.parent.childCount;
       const listLocalId = resolvedPos.parent.attrs.localId;
 
-      event.update(payload => {
+      event.update((payload: AnalyticsEventPayload) => {
         const { attributes = {}, actionSubject } = payload;
         if (actionSubject !== 'action') {
           // Not action related, ignore
@@ -76,7 +84,7 @@ class Task extends ReactNodeView {
 
   createDomRef() {
     const domRef = document.createElement('li');
-    domRef.style['list-style-type'] = 'none';
+    domRef.style['list-style-type' as any] = 'none';
     return domRef;
   }
 
@@ -84,7 +92,7 @@ class Task extends ReactNodeView {
     return { dom: document.createElement('div') };
   }
 
-  render(props, forwardRef) {
+  render(props: ReactComponentProps, forwardRef: any) {
     const { localId, state } = this.node.attrs;
 
     return (
@@ -95,28 +103,47 @@ class Task extends ReactNodeView {
         <WithPluginState
           plugins={{
             editorDisabledPlugin: editorDisabledPluginKey,
+            taskDecisionPlugin: taskPluginKey,
           }}
           render={({
             editorDisabledPlugin,
+            taskDecisionPlugin,
           }: {
             editorDisabledPlugin: EditorDisabledPluginState;
-          }) => (
-            <TaskItem
-              taskId={localId}
-              contentRef={forwardRef}
-              isDone={state === 'DONE'}
-              onChange={this.handleOnChange}
-              showPlaceholder={this.isContentEmpty()}
-              providers={props.providerFactory}
-              disabled={(editorDisabledPlugin || {}).editorDisabled}
-            />
-          )}
+            taskDecisionPlugin: TaskDecisionPluginState;
+          }) => {
+            let insideCurrentNode = false;
+            if (
+              taskDecisionPlugin &&
+              taskDecisionPlugin.currentTaskDecisionItem
+            ) {
+              insideCurrentNode = this.node.eq(
+                taskDecisionPlugin.currentTaskDecisionItem,
+              );
+            }
+
+            return (
+              <TaskItem
+                taskId={localId}
+                contentRef={forwardRef}
+                isDone={state === 'DONE'}
+                onChange={this.handleOnChange}
+                showPlaceholder={!insideCurrentNode && this.isContentEmpty()}
+                providers={props.providerFactory}
+                disabled={(editorDisabledPlugin || {}).editorDisabled}
+              />
+            );
+          }}
         />
       </AnalyticsListener>
     );
   }
 
-  update(node: PMNode, decorations) {
+  viewShouldUpdate() {
+    return false;
+  }
+
+  update(node: PMNode, decorations: Decoration[]) {
     /**
      * Returning false here when the previous content was empty fixes an error where the editor fails to set selection
      * inside the contentDOM after a transaction. See ED-2374.
@@ -127,7 +154,7 @@ class Task extends ReactNodeView {
     return super.update(
       node,
       decorations,
-      (currentNode, newNode) =>
+      (currentNode: PMNode, newNode: PMNode) =>
         !this.isContentEmpty() &&
         !!(currentNode.attrs.state === newNode.attrs.state),
     );

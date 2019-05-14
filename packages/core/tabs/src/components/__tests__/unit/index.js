@@ -8,7 +8,7 @@ import type {
   TabContentComponentProvided,
   TabItemComponentProvided,
 } from '../../../types';
-import { name } from '../../../../package.json';
+import { name } from '../../../version.json';
 
 const tabs = [
   { content: 'Tab 1 content', label: 'Tab 1 label' },
@@ -61,7 +61,7 @@ describe(name, () => {
           const wrapper = shallow(
             <Tabs
               tabs={tabs}
-              defaultSelected={'Tab 2 label'}
+              defaultSelected="Tab 2 label"
               isSelectedTest={isSelectedTest}
             />,
           );
@@ -95,7 +95,7 @@ describe(name, () => {
           const wrapper = shallow(
             <Tabs
               tabs={tabs}
-              selected={'Tab 2 label'}
+              selected="Tab 2 label"
               isSelectedTest={isSelectedTest}
             />,
           );

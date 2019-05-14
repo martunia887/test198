@@ -4,10 +4,12 @@ import { Wrapper } from './styled';
 export interface FrameViewProps {
   /** A flag that determines whether the card is selected in edit mode. */
   isSelected?: boolean;
+  /** A flag that determines whether the card needs a backgorund or not */
+  withoutBackground?: boolean;
   children?: React.ReactNode;
   link?: string;
   /** The optional click handler */
-  onClick?: () => void;
+  onClick?: React.EventHandler<React.MouseEvent | React.KeyboardEvent>;
 }
 
 export class Frame extends React.Component<FrameViewProps> {
@@ -16,7 +18,7 @@ export class Frame extends React.Component<FrameViewProps> {
     if (onClick) {
       event.preventDefault();
       event.stopPropagation();
-      onClick();
+      onClick(event);
     }
   };
 
@@ -28,17 +30,23 @@ export class Frame extends React.Component<FrameViewProps> {
     if (onClick) {
       event.preventDefault();
       event.stopPropagation();
-      onClick();
+      onClick(event);
     }
   };
 
   render() {
-    const { isSelected, children, onClick, link } = this.props;
+    const {
+      isSelected,
+      children,
+      onClick,
+      link,
+      withoutBackground,
+    } = this.props;
     const isInteractive = Boolean(onClick);
     return (
       <Wrapper
-        target="_blank"
         href={link}
+        withoutBackground={withoutBackground}
         isSelected={isSelected}
         isInteractive={isInteractive}
         tabIndex={isInteractive ? 0 : undefined}

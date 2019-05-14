@@ -1,4 +1,3 @@
-import Message from '../ui/Appearance/Message';
 import FullPage from '../ui/Appearance/FullPage';
 import Chromeless from '../ui/Appearance/Chromeless';
 import Comment from '../ui/Appearance/Comment';
@@ -9,12 +8,11 @@ import { EditorAppearance, EditorAppearanceComponentProps } from '../types';
 export default function getUiComponent(
   appearance: EditorAppearance,
 ): React.ComponentClass<EditorAppearanceComponentProps> {
-  appearance = appearance || 'message';
+  appearance = appearance || 'comment';
 
   switch (appearance) {
-    case 'message':
-      return Message;
     case 'full-page':
+    case 'full-width':
       return FullPage;
     case 'chromeless':
       return Chromeless;

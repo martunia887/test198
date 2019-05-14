@@ -1,56 +1,80 @@
 import {
-  initEditor,
-  clearEditor,
-  getSelectorForTableCell,
-  insertTable,
+  Device,
   snapshot,
-  insertMedia,
-  setupMediaMocksProviders,
+  initFullPageEditorWithAdf,
+  initCommentEditorWithAdf,
 } from '../_utils';
+import adf from './__fixtures__/table-with-blocks.adf.json';
+import {
+  setTableLayout,
+  getSelectorForTableCell,
+} from '../../__helpers/page-objects/_table';
+import {
+  waitForEmojis,
+  emojiReadySelector,
+} from '../../__helpers/page-objects/_emoji';
+import { waitForLoadedBackgroundImages } from '@atlaskit/visual-regression/helper';
 
-import { setTableLayout, insertColumn, focusTable } from './_table-utils';
-
-describe('Snapshot Test: table block alignment', () => {
-  let page;
+describe('Table with block looks correct for fullpage:', () => {
+  let page: any;
 
   beforeAll(async () => {
     // @ts-ignore
     page = global.page;
-    await initEditor(page, 'full-page-with-toolbar');
   });
 
-  beforeEach(async () => {
-    await page.setViewport({ width: 1280, height: 960 });
-    await clearEditor(page);
-    await setupMediaMocksProviders(page);
-    await insertTable(page);
-    await insertColumn(page);
-    await setTableLayout(page, 'wide');
-    await focusTable(page);
+  afterEach(async () => {
+    await waitForEmojis(page);
+    await waitForLoadedBackgroundImages(page, emojiReadySelector, 10000);
+    await snapshot(page, 0.01);
   });
 
-  test('Block elements should align at the top of the cell', async () => {
-    // Setup block elements in table.
-    const content = ['[] ', '<> ', '``` ', '/panel '];
-    for (let i = 1; i < 5; i++) {
-      const selector = `${getSelectorForTableCell({ row: 2, cell: i })} p`;
-      await page.click(selector);
-      await page.type(selector, content[i - 1], { delay: 100 });
-    }
+  it('default layout ', async () => {
+    await initFullPageEditorWithAdf(page, adf, Device.LaptopMDPI);
+    await page.click(getSelectorForTableCell({ row: 4, cell: 1 }));
+  });
 
-    // Text to align to
-    await page.click(getSelectorForTableCell({ row: 3, cell: 1 }));
-    await page.type(
-      getSelectorForTableCell({ row: 3, cell: 1 }),
-      'Alignment text, to align block elems to.',
-      { delay: 100 },
+  it('default layout with dark theme', async () => {
+    await initFullPageEditorWithAdf(
+      page,
+      adf,
+      Device.LaptopMDPI,
+      undefined,
+      undefined,
+      'dark',
     );
+    await page.click(getSelectorForTableCell({ row: 4, cell: 1 }));
+  });
 
-    // Image
-    await page.click(getSelectorForTableCell({ row: 3, cell: 2 }));
-    await insertMedia(page);
-    await page.waitForSelector('.img-wrapper');
+  it('wide layout ', async () => {
+    await initFullPageEditorWithAdf(page, adf, Device.LaptopMDPI);
+    await page.click(getSelectorForTableCell({ row: 4, cell: 1 }));
+    await setTableLayout(page, 'wide');
+    await page.click(getSelectorForTableCell({ row: 4, cell: 1 }));
+  });
 
-    await snapshot(page);
+  it('full-width layout ', async () => {
+    await initFullPageEditorWithAdf(page, adf, Device.LaptopHiDPI);
+    await page.click(getSelectorForTableCell({ row: 4, cell: 1 }));
+    await setTableLayout(page, 'full-width');
+    await page.click(getSelectorForTableCell({ row: 4, cell: 1 }));
+  });
+});
+
+describe('Table with block looks correct for comment:', () => {
+  let page: any;
+
+  beforeAll(async () => {
+    // @ts-ignore
+    page = global.page;
+  });
+
+  afterEach(async () => {
+    await snapshot(page, 0.01);
+  });
+
+  it('default layout ', async () => {
+    await initCommentEditorWithAdf(page, adf, Device.LaptopMDPI);
+    await page.click(getSelectorForTableCell({ row: 4, cell: 1 }));
   });
 });

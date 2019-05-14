@@ -43,12 +43,13 @@ export const markOrder = [
   'link',
   'em',
   'strong',
+  'textColor',
   'strike',
   'subsup',
   'underline',
   'code',
   'confluenceInlineComment',
-  'textColor',
+  'annotation',
 ];
 
 export const isSubSupType = (type: string): type is 'sub' | 'sup' => {
@@ -140,17 +141,17 @@ const flattenUnknownBlockTree = (
 };
 
 // null is Object, also maybe check obj.constructor == Object if we want to skip Class
-const isValidObject = obj => obj !== null && typeof obj === 'object';
-const isValidString = str => typeof str === 'string';
-const keysLen = obj => Object.keys(obj).length;
+const isValidObject = (obj: object) => obj !== null && typeof obj === 'object';
+const isValidString = (str: any): str is string => typeof str === 'string';
+const keysLen = (obj: object) => Object.keys(obj).length;
 
-const isValidIcon = icon =>
+const isValidIcon = (icon: any) =>
   isValidObject(icon) &&
   keysLen(icon) === 2 &&
   isValidString(icon.url) &&
   isValidString(icon.label);
 
-const isValidUser = user => {
+const isValidUser = (user: { id: string; icon: any }) => {
   const len = keysLen(user);
   return (
     isValidObject(user) &&
@@ -290,7 +291,7 @@ export const getValidNode = (
         }
         if (
           actions &&
-          actions.some(meta => {
+          actions.some((meta: any) => {
             const { key, title, target, parameters } = meta;
             if (key && !isValidString(key)) {
               return true;
@@ -320,7 +321,7 @@ export const getValidNode = (
         }
         if (
           details &&
-          details.some(meta => {
+          details.some((meta: any) => {
             const { badge, lozenge, users } = meta;
             if (badge && typeof badge.value !== 'number') {
               return true;
@@ -531,10 +532,11 @@ export const getValidNode = (
             attrs: {
               id: mentionId,
               text: mentionText,
+              accessLevel: '',
             },
           };
           if (mentionAccess) {
-            mentionNode.attrs['accessLevel'] = mentionAccess;
+            mentionNode.attrs.accessLevel = mentionAccess;
           }
 
           return mentionNode;
@@ -578,7 +580,7 @@ export const getValidNode = (
       case 'heading': {
         if (attrs) {
           const { level } = attrs;
-          const between = (x, a, b) => x >= a && x <= b;
+          const between = (x: number, a: number, b: number) => x >= a && x <= b;
           if (level && between(level, 1, 6)) {
             return marks
               ? {
@@ -904,6 +906,12 @@ export const getValidMark = (
   if (adfStage === 'stage0') {
     switch (type) {
       case 'confluenceInlineComment': {
+        return {
+          type,
+          attrs,
+        };
+      }
+      case 'annotation': {
         return {
           type,
           attrs,

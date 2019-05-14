@@ -23,7 +23,7 @@ const head: Head = {
       key: 'name',
       content: 'Name',
       isSortable: true,
-      width: 15,
+      width: 20,
     },
     {
       key: 'description',
@@ -37,7 +37,7 @@ const head: Head = {
       content: 'Latest',
       shouldTruncate: true,
       isSortable: false,
-      width: 20,
+      width: 15,
     },
     {
       key: 'team',
@@ -57,9 +57,9 @@ const head: Head = {
 };
 
 const renderRow = (
-  { name: packageName, description, maintainers, version },
-  { id },
-  groupId,
+  { name: packageName, description, maintainers, version }: any,
+  { id }: fs.Directory,
+  groupId: string,
 ) => {
   return {
     cells: [
@@ -105,7 +105,12 @@ const renderRow = (
       {
         content: (
           <RowCell>
-            {maintainers && maintainers.map(val => val.name || val).join(', ')}
+            {maintainers &&
+              maintainers
+                .map((val: string | { name: string }) =>
+                  typeof val === 'string' ? val : val.name,
+                )
+                .join(', ')}
           </RowCell>
         ),
       },
@@ -138,7 +143,6 @@ export default function PackagesList() {
         <Table
           head={head}
           rows={StatRows()}
-          isFixedSize
           defaultSortKey="name"
           defaultSortOrder="ASC"
         />
