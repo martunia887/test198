@@ -36,6 +36,7 @@ describe('Lists', () => {
 
   afterEach(async () => {
     await animationFrame(page);
+    await page.waitFor(1000);
     await snapshot(page);
   });
 
@@ -104,32 +105,32 @@ describe('Lists adjacent floated media', () => {
     await snapshot(page);
   });
 
+  /**
+   * Note:
+   * Be aware that these tests inject additional CSS which will persist
+   * on subsequent test runs.
+   * If you test doesn't require this CSS they should be added above this
+   * point in the test suite.
+   */
   it('action & decision lists should clear image', async () => {
     await initEditorWithAdf(page, {
       appearance: Appearance.fullPage,
       adf: floatsAdf2,
       device: Device.LaptopMDPI,
+      viewport: { width: 900, height: 1100 },
     });
     await visualiseListItemBoundingBoxes(page);
-    await page.setViewport({ width: 900, height: 1100 });
   });
 
-  /**
-   * Note:
-   * Be aware that these tests injects additional CSS which will persist
-   * on subsequent test runs.
-   * If you test doesn't require this CSS they should be added above this
-   * point in the test suite.
-   */
   it('ordered list should not overlap image', async () => {
     const orderedListFloatsAdf = floatsAdf;
     await initEditorWithAdf(page, {
       appearance: Appearance.fullPage,
       adf: orderedListFloatsAdf,
       device: Device.LaptopMDPI,
+      viewport: { width: 900, height: 1100 },
     });
     await visualiseListItemBoundingBoxes(page);
-    await page.setViewport({ width: 900, height: 1100 });
   });
 
   it('bullet list should not overlap image', async () => {
@@ -144,9 +145,9 @@ describe('Lists adjacent floated media', () => {
       appearance: Appearance.fullPage,
       adf: bulletListFloatsAdf,
       device: Device.LaptopMDPI,
+      viewport: { width: 900, height: 1100 },
     });
     await visualiseListItemBoundingBoxes(page);
-    await page.setViewport({ width: 900, height: 1100 });
   });
 });
 
