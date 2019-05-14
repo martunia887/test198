@@ -17,19 +17,18 @@ export interface LocalUploadComponent<
   setUploadParams(uploadParams: UploadParams): void;
 }
 
-export type BinaryConfig = LocalUploadConfig;
-
-export interface BinaryUploaderConstructor {
-  new (context: Context, config: BinaryConfig): BinaryUploader;
-}
-
-export interface BinaryUploader extends LocalUploadComponent {
-  upload(base64: string, name: string): void;
-}
-
 export interface BrowserConfig extends LocalUploadConfig {
   readonly multiple?: boolean;
   readonly fileExtensions?: Array<string>;
+}
+
+export interface BrowserConstructor {
+  new (context: Context, browserConfig: BrowserConfig): Browser;
+}
+
+export interface Browser extends LocalUploadComponent {
+  browse(): void;
+  teardown(): void;
 }
 
 export interface BrowserConstructor {

@@ -408,7 +408,7 @@ describe('Media plugin', () => {
     });
   });
 
-  it('should trigger analytics events for picking and clipboard', async () => {
+  /* it('should trigger analytics events for picking and clipboard', async () => {
     const { pluginState } = editor(doc(p('{<>}')));
     const spy = jest.fn();
     analyticsService.handler = spy as AnalyticsHandler;
@@ -448,7 +448,7 @@ describe('Media plugin', () => {
     expect(spy).toHaveBeenCalledWith('atlassian.editor.media.file.clipboard', {
       fileMimeType: 'file/test',
     });
-  });
+  }); */
 
   it('should trigger analytics events for picking and popup', async () => {
     const { pluginState } = editor(doc(p('{<>}')));

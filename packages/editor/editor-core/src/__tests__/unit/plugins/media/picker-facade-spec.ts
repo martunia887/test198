@@ -57,15 +57,7 @@ describe('Media PickerFacade', () => {
       ...commonSpies,
       teardown: jest.fn(),
       browse: jest.fn(),
-    },
-    binary: {
-      ...commonSpies,
-      upload: jest.fn(),
-    },
-    clipboard: {
-      ...commonSpies,
-      activate: jest.fn(),
-      deactivate: jest.fn(),
+      addFiles: jest.fn(),
     },
     popup: {
       ...commonSpies,
@@ -76,12 +68,7 @@ describe('Media PickerFacade', () => {
     },
   };
 
-  const pickerTypes: Array<PickerType> = [
-    'popup',
-    'binary',
-    'clipboard',
-    'browser',
-  ];
+  const pickerTypes: Array<PickerType> = ['popup', 'browser'];
 
   pickerTypes.forEach(pickerType => {
     describe(`Picker: ${pickerType}`, () => {
@@ -120,18 +107,18 @@ describe('Media PickerFacade', () => {
 
       it.skip(`listens to picker events`, () => {
         const fn = jasmine.any(Function);
-        expect(spies.on).toHaveBeenCalledTimes(
+        /* expect(spies.on).toHaveBeenCalledTimes(
           pickerType === 'clipboard' ? 6 : 4,
-        );
+        ); */
         expect(spies.on).toHaveBeenCalledWith('upload-preview-update', fn);
         expect(spies.on).toHaveBeenCalledWith('upload-processing', fn);
       });
 
       it.skip('removes listeners on destruction', () => {
         facade.destroy();
-        expect(spies.removeAllListeners).toHaveBeenCalledTimes(
+        /* expect(spies.removeAllListeners).toHaveBeenCalledTimes(
           pickerType === 'clipboard' ? 5 : 3,
-        );
+        ); */
         expect(spies.removeAllListeners).toHaveBeenCalledWith(
           'upload-preview-update',
         );
@@ -141,23 +128,24 @@ describe('Media PickerFacade', () => {
       });
 
       // Picker Specific Tests
-      if (pickerType === 'clipboard') {
+      /* if (pickerType === 'clipboard') {
         it(`should call picker's activate() during initialization`, () => {
           expect(spies.activate).toHaveBeenCalledTimes(1);
         });
-      }
+      } */
 
       if (pickerType === 'popup' || pickerType === 'browser') {
         it(`should call picker's teardown() on destruction`, () => {
           facade.destroy();
           expect(spies.teardown).toHaveBeenCalledTimes(1);
         });
-      } else if (pickerType === 'clipboard') {
+      }
+      /* else if (pickerType === 'clipboard') {
         it(`should call picker's deactivate() on destruction`, () => {
           facade.destroy();
           expect(spies.deactivate).toHaveBeenCalledTimes(1);
         });
-      }
+      } */
 
       if (pickerType === 'popup') {
         it(`should call picker's show() on destruction`, () => {
@@ -189,31 +177,21 @@ describe('Media PickerFacade', () => {
         });
       }
 
-      if (pickerType === 'clipboard') {
+      /* if (pickerType === 'clipboard') {
         it(`should call picker.activate when activate is called`, () => {
           spies.activate.mockClear();
           facade.activate();
           expect(spies.activate).toHaveBeenCalledTimes(1);
         });
-      }
+      } */
 
-      if (pickerType === 'clipboard') {
+      /* if (pickerType === 'clipboard') {
         it(`should call picker.deactivate when deactivate is called`, () => {
           spies.deactivate.mockClear();
           facade.deactivate();
           expect(spies.deactivate).toHaveBeenCalledTimes(1);
         });
-      }
-
-      if (pickerType === 'binary') {
-        it(`calls picker's upload() on destruction`, () => {
-          const url = 'https://atlassian.com/file.ext';
-          const fileName = 'file.ext';
-          facade.upload(url, fileName);
-          expect(spies.upload).toHaveBeenCalledTimes(1);
-          expect(spies.upload).toHaveBeenCalledWith(url, fileName);
-        });
-      }
+      } */
     });
   });
 });
