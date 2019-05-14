@@ -30,5 +30,5 @@ test('should ssr then hydrate toggle correctly', async () => {
       ),
   );
 
-  expect(mockCalls.length).toBe(0); // eslint-disable-line no-console
+  expect(mockCalls).toHaveLength(0); // eslint-disable-line no-console
 });

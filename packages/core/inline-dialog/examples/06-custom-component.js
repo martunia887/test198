@@ -9,7 +9,7 @@ type State = {
 
 const content = <div>Hello!</div>;
 
-const CustomContainer = ({ children, className }) => (
+const CustomContainer = () => (
   <div style={{ backgroundColor: 'red', minWidth: 800, height: 90 }} />
 );
 

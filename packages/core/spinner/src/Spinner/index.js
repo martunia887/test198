@@ -1,29 +1,29 @@
 // @flow
 
-import React, { Component } from "react";
-import styled from "styled-components";
+import React, { Component } from 'react';
+import styled from 'styled-components';
 
-import { SIZES_MAP, DEFAULT_SIZE, durations } from "./constants";
-import Container from "./styledContainer";
-import Svg from "./styledSvg";
-import type { SpinnerProps, SpinnerState } from "../types";
+import { SIZES_MAP, DEFAULT_SIZE, durations } from './constants';
+import Container from './styledContainer';
+import Svg from './styledSvg';
+import type { SpinnerProps, SpinnerState } from '../types';
 
 const Outer = styled.span`
   display: inline-block;
   vertical-align: middle;
 `;
-Outer.displayName = "Outer";
+Outer.displayName = 'Outer';
 
-type Mode = "hidden" | "visible";
+type Mode = 'hidden' | 'visible';
 type Machine = {
   hidden: {
     hidden: Function,
-    visible: Function
+    visible: Function,
   },
   visible: {
     hidden: Function,
-    visible: () => Promise<any>
-  }
+    visible: () => Promise<any>,
+  },
 };
 
 const noop = () => Promise.resolve();
@@ -32,11 +32,11 @@ export default class Spinner extends Component<SpinnerProps, SpinnerState> {
   static defaultProps = {
     delay: 100,
     invertColor: false,
-    size: "medium",
-    isCompleting: true
+    size: 'medium',
+    isCompleting: true,
   };
 
-  state = { phase: "OFF" };
+  state = { phase: 'OFF' };
 
   transitionNode: ?HTMLElement;
   /*
@@ -64,10 +64,15 @@ export default class Spinner extends Component<SpinnerProps, SpinnerState> {
 
     We're fairly sure that this can be simplified with hooks.
   */
+
   timeout = null;
-  currentMode: Mode = "hidden";
-  nextMode: Mode = "hidden";
+
+  currentMode: Mode = 'hidden';
+
+  nextMode: Mode = 'hidden';
+
   animationInProgress: boolean = false;
+
   machine: Machine = {
     hidden: {
       hidden: noop,
@@ -77,29 +82,29 @@ export default class Spinner extends Component<SpinnerProps, SpinnerState> {
         // trigger the entry animation, then set state to idle once the entry animation is done.
         return new Promise(resolve => {
           this.timeout = setTimeout(() => {
-            this.setState({ phase: "ENTER" });
+            this.setState({ phase: 'ENTER' });
             this.timeout = setTimeout(() => {
-              this.setState({ phase: "IDLE" });
+              this.setState({ phase: 'IDLE' });
               resolve();
             }, durations.inAnimation);
           }, delay);
         });
-      }
+      },
     },
     visible: {
       hidden: () => {
-        this.setState({ phase: "LEAVE" });
+        this.setState({ phase: 'LEAVE' });
         const { onComplete } = this.props;
         return new Promise(resolve => {
           this.timeout = setTimeout(() => {
-            this.setState({ phase: "OFF" });
+            this.setState({ phase: 'OFF' });
             if (onComplete) onComplete();
             resolve();
           }, durations.outAnimation);
         });
       },
-      visible: noop
-    }
+      visible: noop,
+    },
   };
 
   setMode(newMode: Mode) {
@@ -122,7 +127,7 @@ export default class Spinner extends Component<SpinnerProps, SpinnerState> {
 
   componentDidMount() {
     if (this.props.isCompleting) {
-      this.setMode("visible");
+      this.setMode('visible');
     }
   }
 
@@ -134,14 +139,14 @@ export default class Spinner extends Component<SpinnerProps, SpinnerState> {
 
   componentDidUpdate() {
     const { isCompleting } = this.props;
-    const newPhase = isCompleting ? "visible" : "hidden";
+    const newPhase = isCompleting ? 'visible' : 'hidden';
     this.setMode(newPhase);
   }
 
   validateSize = () => {
     const { size } = this.props;
     const spinnerSize = SIZES_MAP[size] || size;
-    return typeof spinnerSize === "number" ? spinnerSize : DEFAULT_SIZE;
+    return typeof spinnerSize === 'number' ? spinnerSize : DEFAULT_SIZE;
   };
 
   render() {
@@ -151,7 +156,7 @@ export default class Spinner extends Component<SpinnerProps, SpinnerState> {
 
     const strokeWidth = Math.round(size / 10);
     const strokeRadius = size / 2 - strokeWidth / 2;
-    return phase !== "OFF" ? (
+    return phase !== 'OFF' ? (
       <Outer>
         <Container phase={phase} size={size}>
           <Svg
