@@ -116,8 +116,7 @@ type ComposedGlobalNavigationProps = {
   view?: Object | null,
 };
 
-// Shallow comparision of props is sufficeint in this case
-export class ComposedGlobalNavigation extends PureComponent<ComposedGlobalNavigationProps> {
+export class ComposedGlobalNavigation extends Component<ComposedGlobalNavigationProps> {
   render() {
     const {
       containerNavigation,
