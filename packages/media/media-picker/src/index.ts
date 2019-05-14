@@ -52,10 +52,9 @@ export interface MediaPickerComponents {
 }
 
 export { UploadParams } from './domain/config';
-export { BrowserConfig, PopupConfig };
+export { BrowserConfig, PopupConfig, ClipboardConfig };
 export interface ComponentConfigs {
   browser: BrowserConfig;
-  clipboard: ClipboardConfig;
   popup: PopupConfig;
 }
 

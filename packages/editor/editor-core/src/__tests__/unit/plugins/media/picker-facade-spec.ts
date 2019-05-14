@@ -31,6 +31,7 @@ describe('Media PickerFacade', () => {
 
   // Spies
   const commonSpies: { [S in keyof MediaPickerComponent]: jest.Mock } = {
+    teardown: jest.fn(),
     addListener: jest.fn(),
     cancel: jest.fn(),
     emit: jest.fn(),

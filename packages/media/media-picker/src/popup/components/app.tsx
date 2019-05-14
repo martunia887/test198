@@ -194,15 +194,15 @@ export class App extends Component<AppProps, AppState> {
     onUploadsStart(payload);
   };
 
-  componentWillReceiveProps({ isVisible }: Readonly<AppProps>): void {
-    /* if (isVisible !== this.props.isVisible) {
+  /* componentWillReceiveProps({ isVisible }: Readonly<AppProps>): void {
+    if (isVisible !== this.props.isVisible) {
       if (isVisible) {
         this.mpClipboard.activate();
       } else {
         this.mpClipboard.deactivate();
       }
-    } */
-  }
+    }
+  } */
 
   componentWillUnmount(): void {
     this.mpBrowser.teardown();
