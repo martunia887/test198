@@ -123,7 +123,7 @@
     "clipboard-polyfill": "2.4.3",
     "diff": "^4.0.1",
     "enzyme": "^3.7.0",
-    "jest-sandbox": "^1.1.1",
+    "jest-sandbox": "^1.1.2",
     "jquery": "^3.2.1",
     "prosemirror-dev-tools": "^2.1.0",
     "raf-stub": "^2.0.1",

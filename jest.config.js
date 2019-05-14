@@ -35,6 +35,7 @@ const STEPS = Number(process.env.STEPS);
 
 const config = {
   testMatch: [`${__dirname}/**/__tests__/**/*.(js|tsx|ts)`],
+  testPathPattern: '/__tests__\\/(?!.js|tsx|ts)',
   // NOTE: all options with 'pattern' in the name are javascript regex's that will match if they match
   // anywhere in the string. Where-ever there are an array of patterns, jest simply 'or's all of them
   // i.e /\/__tests__\/_.*?|\/__tests__\/.*?\/_.*?|\/__tests__\/integration\//
@@ -68,7 +69,11 @@ const config = {
   },
   globals: {
     'ts-jest': {
-      tsConfigFile: './tsconfig.jest.json',
+      diagnostics: {
+        warnOnly: true,
+      },
+      isolatedModules: true,
+      tsConfig: './tsconfig.jest.json',
     },
     __BASEURL__: 'http://localhost:9000',
   },
@@ -78,8 +83,8 @@ const config = {
   },
   snapshotSerializers: ['enzyme-to-json/serializer'],
   setupFiles: ['./build/jest-config/setup.js'],
-  setupTestFrameworkScriptFile: `${__dirname}/jestFrameworkSetup.js`,
-  testResultsProcessor: 'jest-junit',
+  setupFilesAfterEnv: [`${__dirname}/jestFrameworkSetup.js`],
+  reporters: ['jest-junit'],
   testEnvironmentOptions: {
     // Need this to have jsdom loading images.
     resources: 'usable',
