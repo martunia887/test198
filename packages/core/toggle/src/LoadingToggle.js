@@ -2,10 +2,26 @@
 import React, { Component } from 'react';
 import Spinner from '@atlaskit/spinner';
 import ToggleBase from './ToggleBase';
+import defaultBaseProps from './defaultBaseProps';
 import { CheckedIcon, UncheckedIcon } from './Icons';
+import type { StatelessProps, DefaultBaseProps } from './types';
 
-export default class ToggleLoading extends Component<*, *> {
-  static defaultProps = {
+type SpinnerProps = {
+  delay?: number,
+  invertColor?: boolean,
+  size?: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | number,
+  isCompleting?: boolean,
+  onComplete?: () => mixed,
+};
+
+type Props = StatelessProps & {
+  spinnerProps: SpinnerProps,
+  showSpinner: boolean,
+};
+
+export default class LoadingToggle extends Component<Props> {
+  static defaultProps: DefaultBaseProps = {
+    ...defaultBaseProps,
     spinnerProps: {},
   };
 

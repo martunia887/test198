@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import Toggle, { ToggleLoading as LoadingToggle } from '../src';
+import Toggle, { LoadingToggle } from '../src';
 
 const fakeAPIRequest = shouldResolve => {
   return new Promise((resolve, reject) => {
