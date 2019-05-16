@@ -417,7 +417,7 @@ describe('Image navigator', () => {
     });
   });
 
-  describe('exportImagePos', () => {
+  describe('export coordinates', () => {
     /**
      * These tests covers the fix for HOT-87089,
      * tracked by MS-1935.
@@ -438,6 +438,7 @@ describe('Image navigator', () => {
       imagePosY: number = containerPadding.y,
       imageWidth: number = defaultTestImageWidth,
       imageHeight: number = defaultTestImageHeight,
+      forcedScale?: number,
     ) => {
       const stub = jest.fn();
       const component = new ImageNavigatorView(
@@ -454,7 +455,10 @@ describe('Image navigator', () => {
         },
         {},
       );
-      const scale = component.calculateMinScale(imageWidth, imageHeight);
+      const scale =
+        forcedScale === undefined
+          ? component.calculateMinScale(imageWidth, imageHeight)
+          : forcedScale;
       component.state = {
         ...component.state,
         camera: new Camera(
@@ -490,6 +494,25 @@ describe('Image navigator', () => {
         x: 100,
         y: 0,
       });
+    });
+
+    it('should export correct size values for non-zoomed image', () => {
+      const component = setup();
+      const size = component.exportSize();
+      expect(size).toEqual(defaultTestImageWidth / 2);
+    });
+
+    it('should export correct size values for panned image', () => {
+      const scale = 10;
+      const component = setup(
+        defaultTestImageWidth * -1 + containerPadding.x,
+        containerPadding.y,
+        defaultTestImageWidth,
+        defaultTestImageHeight,
+        scale,
+      );
+      const size = component.exportSize();
+      expect(size).toEqual(defaultTestImageWidth / scale);
     });
   });
 });

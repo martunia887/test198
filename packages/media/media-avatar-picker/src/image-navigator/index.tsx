@@ -174,7 +174,7 @@ export class ImageNavigator extends Component<
     const haveRenderedImage = !!camera.originalImg.width;
     if (haveRenderedImage) {
       this.exportImagePos();
-      this.exportSize(constrainedScale);
+      this.exportSize();
     }
   };
 
@@ -211,15 +211,19 @@ export class ImageNavigator extends Component<
     );
   }
 
-  exportSize(newScale: number): void {
-    const { width, height } = this.state.camera.originalImg;
-    // adjust cropped properties by scale value
-    const minSize = Math.min(width, height);
-    const size =
-      minSize < CONTAINER_SIZE
-        ? minSize
-        : Math.round(CONTAINER_INNER_SIZE / newScale);
+  exportSize() {
+    const { camera, scale } = this.state;
+    const {
+      originalImg: { width: imageNaturalWidth },
+    } = camera;
+    const imageScreenWidth = imageNaturalWidth * scale;
+    const imageToInnerContainerWidthProportion =
+      CONTAINER_INNER_SIZE / imageScreenWidth;
+    const size = Math.round(
+      imageNaturalWidth * imageToInnerContainerWidthProportion,
+    );
     this.props.onSizeChanged(size);
+    return size;
   }
 
   exportImagePos() {
