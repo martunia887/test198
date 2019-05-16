@@ -15,13 +15,13 @@ This project is bound by a [Code of Conduct](https://bitbucket.org/atlassian/atl
 
 ## Introduction
 
-Although it's our job to look after all the components in our repo, we rely heavily on contributions outside of our team to make Atlaskit great. At its core, our contrubution model is very much like contributing to any open source library, but because we get several contributions from within Atlassian from other teams, we have the ability to build on that model to help make inter-team contributions more efficient.
+Although it's our job to look after all the components in our repo, we rely heavily on contributions outside of our team to make Atlaskit great. At its core, our contribution model is very much like contributing to any open source library, but because we get several contributions from within Atlassian from other teams, we have the ability to build on that model to help make inter-team contributions more efficient.
 
 ## Open source contribution model
 
 If this is your first time or if you don't have permission to create a branch, follow the instructions under 'Become a contributor' in our [README.md](https://bitbucket.org/atlassian/atlaskit-mk-2/src) to [request permission on our public portal](https://ecosystem.atlassian.net/servicedesk/customer/portal/24).
 
-We want to keep this model very simple. At it's core, we make the assumptions that developers looking to contribute will look at the `README.md` and thus, be directed to the `CONTRIBUTING.md`. Even so, both of those files are widely known as convention in an open source project and developers will be able to direct themselves there.
+We want to keep this model very simple. At its core, we make the assumptions that developers looking to contribute will look at the `README.md` and thus, be directed to the `CONTRIBUTING.md`. Even so, both of those files are widely known as convention in an open source project and developers will be able to direct themselves there.
 
 The process consists of:
 
@@ -39,7 +39,7 @@ The inter-team model expands on the open source model to make this process more 
 
 ## Inter-team contribution model
 
-Like the open source model, the inter-team contribution model is kept as light as possible and is designed for compatibility with it so that, at worst, we can fallback to the open source model as teams in other timezones may not be able to meet as easily.
+Like the open source model, the inter-team contribution model is kept as light as possible and is designed for compatibility with it so that, at worst, we can fall back to the open source model as teams in other timezones may not be able to meet as easily.
 
 The different aspects of the inter-team contribution are the following:
 
