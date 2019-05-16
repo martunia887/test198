@@ -35,6 +35,7 @@ class Avatar extends Component<AvatarPropTypes> {
   static defaultProps = {
     appearance: 'circle',
     enableTooltip: true,
+    name: 'avatar',
     size: 'medium',
   };
 
