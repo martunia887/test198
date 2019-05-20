@@ -1,6 +1,7 @@
 // @ts-ignore: unused variable
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
+import { colors } from '@atlaskit/theme';
 
 export const colourPickerStyles = css`
   .ProseMirror {
@@ -12,15 +13,10 @@ export const colourPickerStyles = css`
       margin: -3px 2px 0;
       width: 15px;
       height: 15px;
-      border: solid 1px grey;
+      border: solid 1px ${colors.N40A};
       border-radius: 3px;
       cursor: pointer;
-      transition: box-shadow 0.2s;
       pointer-events: auto;
-
-      &:hover {
-        box-shadow: 0 0 4px grey;
-      }
 
       input[type='color'] {
         opacity: 0;
