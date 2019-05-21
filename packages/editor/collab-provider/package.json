@@ -1,0 +1,29 @@
+{
+  "name": "@atlaskit/collab-provider",
+  "version": "0.0.1",
+  "description": "Collab provider for the editor",
+  "license": "Apache-2.0",
+  "atlaskit:src": "src/index.ts",
+  "module": "index.js",
+  "types": "index.d.ts",
+  "sideEffects": false,
+  "author": "Atlassian Pty Ltd",
+  "maintainers": [
+    "Oscar W"
+  ],
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "atlaskit": {
+    "internal": true
+  },
+  "dependencies": {
+    "@atlaskit/editor-core": ">80",
+    "@types/prosemirror-collab": "^1.0.2",
+    "@types/prosemirror-state": "^1.2.0",
+    "@types/socket.io-client": "^1.4.32",
+    "eventemitter2": "^4.1.0",
+    "prosemirror-collab": "^1.0.0",
+    "prosemirror-state": "^1.2.2",
+    "socket.io-client": "^2.2.0",
+    "tslib": "^1.9.3"
+  }
+}
