@@ -14,9 +14,12 @@ export type ChannelEvent =
   | 'participant:left'
   | 'participant:updated'
   | 'participant:telepointer'
+  | 'participant:request-catchup'
+  | 'request:catchup'
   | 'steps:commit'
   | 'steps:accepted'
-  | 'steps:rejected';
+  | 'steps:rejected'
+  | 'title:changed';
 
 export interface Payload<T = any> {
   sessionId: string;
@@ -59,10 +62,25 @@ export class Channel extends Emitter<ChannelEvent> {
     this.socket.on('participant:left', this.onParticipantLeft);
     this.socket.on('participant:updated', this.onParticipantUpdated);
     this.socket.on('participant:telepointer', this.onParticipantTelepointer);
+    this.socket.on(
+      'participant:request-catchup',
+      this.onParticipantRequestCatchup,
+    );
     this.socket.on('steps:commit', this.onStepsReceived);
     this.socket.on('steps:accepted', this.onStepsAccepted);
     this.socket.on('steps:rejected', this.onStepsRejected);
+    this.socket.on('title:changed', this.onTitleChanged);
   }
+
+  disconnect() {
+    this.socket.disconnect();
+  }
+
+  private onParticipantRequestCatchup = (data: any) => {};
+
+  private onTitleChanged = (data: any) => {
+    this.emit('title:changed', data);
+  };
 
   private onConnect = () => {
     logger('Socket connected', this.socket.id);
@@ -124,7 +142,7 @@ export class Channel extends Emitter<ChannelEvent> {
     this.emit('steps:rejected', data);
   };
 
-  broadcast(type: string, data: any) {
+  broadcast(type: ChannelEvent, data: any) {
     if (!this.connected) {
       return;
     }

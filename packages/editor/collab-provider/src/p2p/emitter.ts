@@ -6,7 +6,7 @@ export class Emitter<T = any> {
   /**
    * Emit events to subscribers
    */
-  protected emit(evt: T, data: any) {
+  protected emit(evt: T, data?: any) {
     this.eventEmitter.emit(evt as any, data);
     return this;
   }

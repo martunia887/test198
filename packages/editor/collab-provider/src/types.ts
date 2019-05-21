@@ -6,7 +6,8 @@ export type CollabEvent =
   | 'presence'
   | 'error'
   | 'local-steps'
-  | 'editor-appearance';
+  | 'editor-appearance'
+  | 'titleChange';
 
 export interface SendableSelection {
   type: 'textSelection' | 'nodeSelection';

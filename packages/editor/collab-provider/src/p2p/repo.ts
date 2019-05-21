@@ -7,7 +7,9 @@ import { Emitter } from './emitter';
 
 const logger = createLogger('Repo', 'purple');
 
-export class StepRepository extends Emitter {
+export type RepoEvents = 'steps:added' | 'request:catchup';
+
+export class StepRepository extends Emitter<RepoEvents> {
   private channel: Channel;
   private queue: StepData[] = [];
   private queueTimeout?: number;
@@ -17,6 +19,7 @@ export class StepRepository extends Emitter {
   private _steps: any[];
 
   get version(): number {
+    // return getVersion(this.getState());
     return this._version;
   }
 
@@ -53,10 +56,28 @@ export class StepRepository extends Emitter {
     return this.steps.slice(fromVersion);
   }
 
+  getValidSteps(json: Array<any>) {
+    const { tr, schema } = this.getState();
+    return json
+      .map(step => Step.fromJSON(schema, step))
+      .filter(step => {
+        try {
+          tr.step(step);
+          return true;
+        } catch (err) {
+          return false;
+        }
+      });
+  }
+
   addSteps(steps: Array<any>, version: number, accepted?: boolean) {
     if (version !== this.version && !accepted) {
       return false;
     }
+
+    // if (!this.validSteps(steps)) {
+    //   return false;
+    // }
 
     steps.forEach(step => {
       this._steps.push(step);
@@ -170,5 +191,7 @@ export class StepRepository extends Emitter {
   private async catchup() {
     this.pauseQueue = true;
     logger(`Too far behind - need to catchup with leader.`);
+
+    this.emit('request:catchup');
   }
 }

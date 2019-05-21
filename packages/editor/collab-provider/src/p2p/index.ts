@@ -20,20 +20,35 @@ export interface Config {
 
 export class P2PCollabProvider extends Emitter<CollabEvent>
   implements CollabEditProvider {
-  private config: Config;
+  // private config: Config;
   private channel: Channel;
   private repo: StepRepository;
   private sid: string;
   private userId: string;
 
   private getState = (): any => {};
+  private title: string;
+
+  private isSending: boolean = false;
+  private debounced: number | undefined;
 
   private participants: Map<string, any> = new Map();
 
   constructor(config: Config) {
     super();
-    this.config = config;
+    // this.config = config;
     this.channel = new Channel(config);
+
+    window.addEventListener('offline', () => {
+      const left = Array.from(this.participants.values());
+      left.forEach(p => this.participants.delete(p.sessionId));
+      this.emit('presence', { left });
+      // const left = Array.from(this.participants.values()).filter(
+      //   p => (now - p.lastActive) / 1000 > 300,
+      // );
+      // left.forEach(p => this.participants.delete(p.sessionId));
+      // this.emit('presence', { joined, left });
+    });
   }
 
   initialize(getState: () => any): this {
@@ -43,10 +58,9 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
     this.userId = getState().plugins.find(
       (p: any) => p.key === 'collab$',
     ).spec.config.clientID;
-    this.repo = new StepRepository(this.userId, this.getState, this.channel).on(
-      'steps:added',
-      this.onStepsAdded,
-    );
+    this.repo = new StepRepository(this.userId, this.getState, this.channel)
+      .on('steps:added', this.onStepsAdded)
+      .on('request:catchup', this.onRequestCatchup);
 
     // Initialize editor with current document.
     const { doc, version } = this.repo;
@@ -64,10 +78,20 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
       .on('steps:commit', this.onStepsReceived)
       .on('steps:accepted', this.onStepsAccepted)
       .on('steps:rejected', this.onStepsRejected)
+      .on('title:changed', this.onTitleChanged)
       .connect();
 
     return this;
   }
+
+  private onRequestCatchup = () => {
+    this.channel.broadcast('participant:request-catchup', {});
+  };
+
+  private onTitleChanged = ({ data }: any) => {
+    this.title = data.title;
+    this.emit('titleChange', data.title);
+  };
 
   /**
    * Send steps
@@ -84,7 +108,25 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
     this.sendSteps(newState);
   }
 
+  private debounceSend() {
+    logger(`Debouncing...`);
+
+    if (this.debounced) {
+      clearTimeout(this.debounced);
+    }
+
+    this.debounced = window.setTimeout(() => {
+      logger(`Sending debounced steps..`);
+      this.sendSteps(this.getState());
+    }, 250);
+  }
+
   private sendSteps(state: EditorState<any>, localSteps?: Array<Step>) {
+    if (this.isSending) {
+      this.debounceSend();
+      return;
+    }
+
     const version = getVersion(state);
 
     // Don't send any steps before we're ready
@@ -104,6 +146,7 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
     logger(
       `Sending steps to leader. Version: ${version}, Steps: ${steps.length}`,
     );
+    this.isSending = true;
     const { userId } = this;
     this.channel.broadcast('steps:commit', {
       steps: steps.map(step => ({ ...step.toJSON(), userId })),
@@ -171,7 +214,11 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
       return;
     }
 
-    logger(`Resetting to latest from leader. ${version}`);
+    logger(`Resetting to latest from leader. ${version}`, {
+      dataVersion: data.version,
+      repoVersion: this.repo.version,
+      stateVersion: getVersion(this.getState()),
+    });
 
     // Get local unconfirmed steps
     const { steps: localSteps = [] } = sendableSteps(this.getState()) || {};
@@ -192,6 +239,8 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
         steps: mappedSteps.map(step => Step.fromJSON(schema, step)),
       });
     }
+
+    this.isSending = false;
   };
 
   /**
@@ -289,14 +338,24 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
     timestamp,
     data,
   }: Payload<StepData>) => {
-    logger(`Received steps from ${sessionId}`);
+    logger(`Received steps from ${sessionId}`, {
+      dataVersion: data.version,
+      repoVersion: this.repo.version,
+      stateVersion: getVersion(this.getState()),
+    });
 
     const { steps, version } = data;
 
-    if (this.repo.addSteps(steps, version)) {
+    if (
+      this.repo.addSteps(
+        steps,
+        version,
+        // (sessionId === this.sid && this.channel.isLeader)
+      )
+    ) {
       this.channel.broadcast('steps:accepted', {
         steps,
-        version: this.repo.version,
+        version: this.repo.version, // + steps.length,
       });
     } else {
       logger(
@@ -319,7 +378,15 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
     { sessionId, timestamp, data }: Payload<StepData>,
     forceApply?: boolean,
   ) => {
-    logger(`Steps accepted!`);
+    logger(`Steps accepted!`, {
+      dataVersion: data.version,
+      repoVersion: this.repo.version,
+      stateVersion: getVersion(this.getState()),
+    });
+
+    if (data.steps.some(s => s.userId === this.userId)) {
+      this.isSending = false;
+    }
 
     // TODO: Update parcipant based on timestamp?
     this.updateParticipant({ sessionId, timestamp });
@@ -334,7 +401,14 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
    */
   private onStepsRejected = ({ data }: Payload<StepData>) => {
     // return;
-    logger(`Applying steps from leader.`);
+    logger(`Applying steps from leader.`, {
+      dataVersion: data.version,
+      repoVersion: this.repo.version,
+      stateVersion: getVersion(this.getState()),
+    });
+
+    this.isSending = false;
+
     this.repo.processSteps(data, true);
   };
 
@@ -344,7 +418,19 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
   private onStepsAdded = ({ version, steps }: StepData) => {
     if (steps && steps.length) {
       const userIds = steps.map((step: any) => step.userId);
-      logger(`Steps Added`, steps);
+
+      if (userIds.some(u => u === this.userId)) {
+        this.isSending = false;
+      }
+
+      logger(`Steps Added`, {
+        userIds,
+        isSending: this.isSending,
+        steps,
+        version,
+        repoVersion: this.repo.version,
+        stateVersion: getVersion(this.getState()),
+      });
       this.emit('data', { json: steps, version, userIds });
 
       // If our step was accepted - send our telepointer again to make sure
@@ -359,12 +445,34 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
     }
   };
 
+  setTitle(title: string, broadcast: boolean = true) {
+    this.title = title;
+
+    if (broadcast) {
+      this.channel.broadcast('title:changed', { title });
+    }
+  }
+
+  async getFinalAcknowledgedState() {
+    return {
+      content: {
+        title: this.title,
+        adf: this.getState().doc.toJSON(),
+      },
+    };
+  }
+
+  disconnect() {
+    return this.unsubscribeAll();
+  }
+
   /**
    * Unsubscribe from all events emitted by this provider.
    */
   unsubscribeAll(evt?: CollabEvent) {
     super.unsubscribeAll(evt);
     this.channel.unsubscribeAll();
+    this.channel.disconnect();
     this.repo.unsubscribeAll();
     return this;
   }
