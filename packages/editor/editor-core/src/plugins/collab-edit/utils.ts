@@ -142,11 +142,11 @@ export const replaceDocument = (
     tr.setMeta('addToHistory', false);
     tr.replaceWith(0, state.doc.nodeSize - 2, content!);
     tr.setSelection(Selection.atStart(tr.doc));
+  }
 
-    if (typeof version !== undefined && (options && options.useNativePlugin)) {
-      const collabState = { version, unconfirmed: [] };
-      tr.setMeta('collab$', collabState);
-    }
+  if (typeof version !== undefined && (options && options.useNativePlugin)) {
+    const collabState = { version, unconfirmed: [] };
+    tr.setMeta('collab$', collabState);
   }
 
   return tr;
