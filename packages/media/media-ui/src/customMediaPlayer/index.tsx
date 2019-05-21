@@ -243,6 +243,7 @@ export class CustomMediaPlayer extends Component<
                 key="space-shortcut"
                 keyCode={keyCodes.space}
                 handler={this.shortcutHandler(toggleButtonAction)}
+                preventDefault={true}
               />,
               <Shortcut
                 key="m-shortcut"

@@ -8,9 +8,13 @@ export const keyCodes = {
 export interface ShortcutProps {
   keyCode: number;
   handler: () => void;
+  preventDefault?: boolean;
 }
-
 export class Shortcut extends Component<ShortcutProps, {}> {
+  defaultProps = {
+    preventDefault: false,
+  };
+
   componentDidMount() {
     this.init();
   }
@@ -24,8 +28,11 @@ export class Shortcut extends Component<ShortcutProps, {}> {
   }
 
   private keyHandler = (e: KeyboardEvent) => {
-    const { keyCode, handler } = this.props;
+    const { keyCode, handler, preventDefault } = this.props;
     if (e.keyCode === keyCode) {
+      if (preventDefault) {
+        e.preventDefault();
+      }
       handler();
     }
   };
