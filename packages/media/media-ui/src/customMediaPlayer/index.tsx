@@ -120,7 +120,13 @@ export class CustomMediaPlayer extends Component<
   shortcutHandler = (toggleButtonAction: ToggleButtonAction) => () => {
     const { showControls } = this.props;
 
-    toggleButtonAction();
+    // Will only play by shortcut if it was the last played.
+    if (
+      toggleButtonAction !== this.play ||
+      simultaneousPlayManager.isLastPlayed(this)
+    ) {
+      toggleButtonAction();
+    }
 
     if (showControls) {
       showControls();

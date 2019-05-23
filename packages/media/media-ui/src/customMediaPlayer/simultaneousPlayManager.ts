@@ -3,6 +3,7 @@ export interface Pausable {
 }
 
 let players: Pausable[] = [];
+let lastPlayed: Pausable;
 
 const findPlayer = (player: Pausable) =>
   players.find(somePlayer => somePlayer === player);
@@ -15,6 +16,8 @@ const removePlayer = (player: Pausable) => {
 
 export default {
   pauseOthers: (player: Pausable) => {
+    lastPlayed = player;
+
     players.forEach(otherPlayer => {
       if (otherPlayer !== player) {
         otherPlayer.pause();
@@ -29,4 +32,5 @@ export default {
   unsubscribe: (player: Pausable) => {
     removePlayer(player);
   },
+  isLastPlayed: (player: Pausable) => player === lastPlayed,
 };
