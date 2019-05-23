@@ -1,0 +1,35 @@
+{
+  "name": "@atlaskit/global-navigation-next",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "atlaskit:src": "src/index.ts",
+  "module": "index.js",
+  "types": "index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "i18n:push": "i18n-tools push --resource atlassian-switcher . --type ts",
+    "i18n:pull": "rm -rf ./src/i18n && i18n-tools pull --resource atlassian-switcher . --type ts"
+  },
+  "author": "Atlassian Pty Ltd",
+  "description": "The new global navigation",
+  "maintainers": [],
+  "atlaskit": {
+    "name": "Global Navigation Next",
+    "team": "navigation"
+  },
+  "dependencies": {
+    "@atlaskit/analytics-namespaced-context": "^4.1.0",
+    "@atlaskit/theme": "^9.0.1",
+    "@emotion/core": "^10.0.9"
+  },
+  "devDependencies": {
+    "@atlaskit/docs": "^8.0.0",
+    "@atlaskit/logo": "^12.0.0",
+    "jest-emotion": "^10.0.10",
+    "react": "^16.8.0",
+    "react-intl": "^2.6.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
+  }
+}

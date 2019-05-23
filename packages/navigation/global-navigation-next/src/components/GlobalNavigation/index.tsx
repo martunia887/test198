@@ -1,26 +1,33 @@
-// @flow
-
-import React, { Component } from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
+import * as React from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+
+import getStyles from './styles';
 
 // import {
 //   FirstPrimaryItemWrapper,
 //   PrimaryItemsList,
 //   SecondaryItemsList,
 // } from './primitives';
-import type { HorizontalGlobalNavProps } from './types';
+import { GlobalNavigationProps } from './types';
 
-export default class HorizontalGlobalNav extends Component<HorizontalGlobalNavProps> {
+export default class GlobalNavigation extends React.Component<
+  GlobalNavigationProps
+> {
   render() {
     const {
       // itemComponent: ItemComponent,
       // primaryItems,
       // secondaryItems,
-      theme,
+      // productLogo: ProductLogo,
+      productWordmark: ProductWordmark,
     } = this.props;
-    const wrapperStyles = theme.mode.horizontalGlobalNav({
-      topOffset: theme.topOffset,
-    });
+    const wrapperStyles = getStyles();
+
+    // theme.mode.horizontalGlobalNav({
+    //   topOffset: theme.topOffset,
+    // });
 
     return (
       <NavigationAnalyticsContext
@@ -30,6 +37,7 @@ export default class HorizontalGlobalNav extends Component<HorizontalGlobalNavPr
         }}
       >
         <div css={wrapperStyles}>
+          <ProductWordmark />
           {/* <PrimaryItemsList>
             <NavigationAnalyticsContext
               data={{ attributes: { navigationIconGrouping: 'primary' } }}

@@ -1,0 +1,1 @@
+export const HORIZONTAL_GLOBAL_NAV_HEIGHT = 60;

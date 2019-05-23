@@ -16,14 +16,12 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { Label } from '@atlaskit/field-base';
 import { ToggleStateless } from '@atlaskit/toggle';
+import GlobalNavigationNext from '@atlaskit/global-navigation-next';
 
+import { JiraSoftwareWordmark } from '@atlaskit/logo';
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';
 
-import {
-  DefaultGlobalNavigation,
-  LinkItem,
-  ProjectSwitcher,
-} from './shared/components';
+import { LinkItem, ProjectSwitcher } from './shared/components';
 import RootViews from './shared/views/root';
 import ContainerViews from './shared/views/container';
 
@@ -33,6 +31,10 @@ import {
   DashboardsView,
   SearchIssuesView,
 } from './shared/routes';
+
+const GlobalNav = () => (
+  <GlobalNavigationNext productWordmark={JiraSoftwareWordmark} />
+);
 
 export default class App extends Component<
   {},
@@ -88,7 +90,7 @@ export default class App extends Component<
               isAlternateFlyoutBehaviourEnabled
             }
             experimental_fullWidthFlyout={isFullWitdhFlyoutEnabled}
-            globalNavigation={DefaultGlobalNavigation}
+            globalNavigation={GlobalNav}
           >
             <div style={{ padding: 40 }}>
               <RootViews />

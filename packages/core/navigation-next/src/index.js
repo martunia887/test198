@@ -11,9 +11,6 @@ export {
 
 export { default as GlobalNav } from './components/presentational/GlobalNav';
 export {
-  default as HorizontalGlobalNav,
-} from './components/presentational/HorizontalGlobalNav';
-export {
   default as GlobalNavigationSkeleton,
 } from './components/presentational/GlobalNavigationSkeleton';
 export { default as Group } from './components/presentational/Group';
