@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 
 type State = {};
 type Props = {
-  label: string;
+  label?: string;
   size?: 'small' | 'medium' | 'large' | 'xlarge';
   onClick?: (e: MouseEvent) => void;
   primaryColor?: string;

@@ -1,3 +1,8 @@
 {
-  "extends": "./tsconfig.media.json"
+  "extends": "./tsconfig.media.json",
+  "files": [
+    "./typings/atlaskit.d.ts",
+    "./typings/react-node-resolver.d.ts",
+    "./typings/shallow-equal.d.ts",
+  ]
 }
