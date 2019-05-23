@@ -6,6 +6,7 @@ import chromatism from 'chromatism';
 
 import globalItemStyles from '../components/presentational/GlobalItem/styles';
 import globalNavStyles from '../components/presentational/GlobalNav/styles';
+import horizontalGlobalNavStyles from '../components/presentational/HorizontalGlobalNav/styles';
 import contentNavStyles from '../components/presentational/ContentNavigation/styles';
 import itemStyles from '../components/presentational/Item/styles';
 import headingStyles from '../components/presentational/GroupHeading/styles';
@@ -16,6 +17,10 @@ import skeletonItemStyles from '../components/presentational/SkeletonItem/styles
 import type { Mode, ContextColors } from './types';
 
 type Args = {
+  global: {
+    background: string,
+    text: string,
+  },
   product: {
     background: string,
     text: string,
@@ -92,14 +97,16 @@ const getContextColors = ({ background, text }): ContextColors => {
   };
 };
 
-export default ({ product }: Args): Mode => {
+export default ({ global, product }: Args): Mode => {
   const modeColors = {
+    global: getContextColors(global),
     product: getContextColors(product),
   };
 
   return {
     globalItem: globalItemStyles(modeColors),
     globalNav: globalNavStyles(modeColors),
+    horizontalGlobalNav: horizontalGlobalNavStyles(modeColors),
     contentNav: contentNavStyles(modeColors),
     heading: headingStyles(modeColors),
     item: itemStyles(modeColors),
