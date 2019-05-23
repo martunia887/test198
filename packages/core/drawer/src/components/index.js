@@ -116,6 +116,7 @@ export class DrawerBase extends Component<DrawerProps> {
       width,
       shouldUnmountOnExit,
       onCloseComplete,
+      openFromRight = false,
     } = this.props;
     return (
       <Portal zIndex="unset">
@@ -130,6 +131,7 @@ export class DrawerBase extends Component<DrawerProps> {
               in={isOpen}
               onClose={this.handleBackButtonClick}
               onCloseComplete={onCloseComplete}
+              openFromRight={openFromRight}
               width={width}
               shouldUnmountOnExit={shouldUnmountOnExit}
             >
