@@ -290,5 +290,16 @@ describe('<CustomMediaPlayer />', () => {
       setup({ isAutoPlay: true });
       expect(simultaneousPlayManager.pauseOthers).toHaveBeenCalledTimes(1);
     });
+
+    it('should pause other players after requesting full screen', () => {
+      const { component } = setup({ isAutoPlay: true });
+
+      component
+        .find(Button)
+        .last()
+        .simulate('click');
+
+      expect(simultaneousPlayManager.pauseOthers).toHaveBeenCalledTimes(1);
+    });
   });
 });
