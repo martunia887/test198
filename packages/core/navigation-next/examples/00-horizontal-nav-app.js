@@ -16,9 +16,9 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { Label } from '@atlaskit/field-base';
 import { ToggleStateless } from '@atlaskit/toggle';
-import GlobalNavigationNext from '@atlaskit/global-navigation-next';
+import GlobalNavigation from '@atlaskit/global-navigation-next';
 
-import { JiraSoftwareWordmark } from '@atlaskit/logo';
+import { JiraSoftwareWordmark, JiraSoftwareIcon } from '@atlaskit/logo';
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';
 
 import { LinkItem, ProjectSwitcher } from './shared/components';
@@ -33,7 +33,39 @@ import {
 } from './shared/routes';
 
 const GlobalNav = () => (
-  <GlobalNavigationNext productWordmark={JiraSoftwareWordmark} />
+  <GlobalNavigation
+    product={{
+      icon: JiraSoftwareIcon,
+      wordmark: JiraSoftwareWordmark,
+    }}
+    help={{}}
+    notifications={{}}
+    settings={{}}
+    primaryItems={[
+      { id: 'home', text: 'Home', href: '#' },
+      {
+        id: 'projects',
+        text: 'Projects',
+        onClick: () => {
+          console.log('Projects clicked');
+        },
+      },
+      {
+        id: 'issues',
+        text: 'Issues & Filters',
+        onClick: () => {
+          console.log('Issues clicked');
+        },
+      },
+      {
+        id: 'dashboards',
+        text: 'Dashboards',
+        onClick: () => {
+          console.log('Dashboards clicked');
+        },
+      },
+    ]}
+  />
 );
 
 export default class App extends Component<
