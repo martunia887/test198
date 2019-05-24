@@ -8,16 +8,17 @@ import Avatar from '@atlaskit/avatar';
 import getStyles from './styles';
 
 import { ProductHome } from './ProductHome';
-import PrimaryItem from '../PrimaryItem';
+import Item from '../Item';
 import { GlobalNavigationProps } from './types';
 import PlatformServices from './PlatformServices';
+import Create from './Create';
 
 export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   static defaultProps = {
     primaryItems: [],
   };
   render() {
-    const { primaryItems, product } = this.props;
+    const { create, primaryItems, product } = this.props;
     const styles = getStyles();
 
     return (
@@ -34,10 +35,11 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                 <div css={styles.left}>
                   <ProductHome {...product} width={width} />
                   {primaryItems.map(props => (
-                    <PrimaryItem key={props.id} {...props} />
+                    <Item key={props.id} {...props} />
                   ))}
                 </div>
                 <div css={styles.right}>
+                  {create && <Create {...create} width={width} />}
                   <PlatformServices {...this.props} />
                   <Avatar />
                 </div>

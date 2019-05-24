@@ -1,6 +1,7 @@
 import React from 'react';
 import { ProductProps } from './types';
-import { Outer } from './primitives';
+import { Outer } from './styled';
+import { PRODUCT_HOME_BREAKPOINT } from '../../../common/constants';
 
 type Props = ProductProps & {
   width?: number;
@@ -13,7 +14,11 @@ export const ProductHome = ({
 }: Props) => {
   return (
     <Outer>
-      {width && width < 1280 ? <Icon size="small" /> : <Wordmark />}
+      {width && width < PRODUCT_HOME_BREAKPOINT ? (
+        <Icon size="small" />
+      ) : (
+        <Wordmark />
+      )}
     </Outer>
   );
 };

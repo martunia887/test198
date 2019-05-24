@@ -102,7 +102,6 @@ export type ContextColors = {
 };
 
 export type ModeColors = {
-  global: ContextColors,
   product: ContextColors,
 };
 

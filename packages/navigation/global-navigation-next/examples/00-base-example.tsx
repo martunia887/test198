@@ -1,6 +1,50 @@
-import * as React from 'react';
+import React, { Fragment } from 'react';
+import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { JiraSoftwareIcon, JiraSoftwareWordmark } from '@atlaskit/logo';
 import GlobalNavigation from '../src';
+
+const ProjectsContent = () => (
+  <Fragment>
+    <DropdownItemGroup title="Favourite Projects">
+      <DropdownItem>Mobile Research</DropdownItem>
+      <DropdownItem>IT Services</DropdownItem>
+    </DropdownItemGroup>
+    <DropdownItemGroup title="Recent Projects">
+      <DropdownItem>Engineering Leadership</DropdownItem>
+      <DropdownItem>BAU</DropdownItem>
+      <DropdownItem>Hardware Support</DropdownItem>
+      <DropdownItem>New Features</DropdownItem>
+      <DropdownItem>SAS</DropdownItem>
+    </DropdownItemGroup>
+  </Fragment>
+);
+
+const IssuesContent = () => (
+  <Fragment>
+    <DropdownItemGroup title="Recent Issues">
+      <DropdownItem>Issue One</DropdownItem>
+      <DropdownItem>Issue Two</DropdownItem>
+    </DropdownItemGroup>
+    <DropdownItemGroup>
+      <DropdownItem>View all recent issues</DropdownItem>
+    </DropdownItemGroup>
+    <DropdownItemGroup title="Filters">
+      <DropdownItem>Filter One</DropdownItem>
+      <DropdownItem>Filter Two</DropdownItem>
+    </DropdownItemGroup>
+  </Fragment>
+);
+
+const DashboardsContent = () => (
+  <Fragment>
+    <DropdownItemGroup>
+      <DropdownItem>System Dashboard</DropdownItem>
+    </DropdownItemGroup>
+    <DropdownItemGroup>
+      <DropdownItem>View all dashboards</DropdownItem>
+    </DropdownItemGroup>
+  </Fragment>
+);
 
 export default class BaseExample extends React.Component {
   state = {
@@ -21,6 +65,10 @@ export default class BaseExample extends React.Component {
   render() {
     return (
       <GlobalNavigation
+        create={{
+          onClick: () => console.log('Create clicked'),
+          text: 'Create',
+        }}
         product={{
           icon: JiraSoftwareIcon,
           wordmark: JiraSoftwareWordmark,
@@ -31,6 +79,7 @@ export default class BaseExample extends React.Component {
         primaryItems={[
           { id: 'home', text: 'Home', href: '#' },
           {
+            dropdownContent: ProjectsContent,
             id: 'projects',
             text: 'Projects',
             onClick: () => {
@@ -38,6 +87,7 @@ export default class BaseExample extends React.Component {
             },
           },
           {
+            dropdownContent: IssuesContent,
             id: 'issues',
             text: 'Issues & Filters',
             onClick: () => {
@@ -45,6 +95,7 @@ export default class BaseExample extends React.Component {
             },
           },
           {
+            dropdownContent: DashboardsContent,
             id: 'dashboards',
             text: 'Dashboards',
             onClick: () => {
