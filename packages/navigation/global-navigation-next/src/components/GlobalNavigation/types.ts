@@ -1,10 +1,24 @@
 import { ProductProps } from './ProductHome/types';
 import { CreateProps } from './Create/types';
-import { PlatformServicesProps } from './PlatformServices';
 import Item from '../Item';
+
+interface SecondaryItemProps {
+  /**
+   * Is the dropdown/drawer open? This is set in controlled mode.
+   * Leave it unset to have state controlled by the Item.
+   */
+  isOpen?: boolean;
+  onClick?: () => void;
+  onClose?: () => void;
+  drawerContent?: React.ComponentType<{}>;
+  dropdownContent?: React.ComponentType<{}>;
+}
 
 export type GlobalNavigationProps = {
   create?: CreateProps;
   product: ProductProps;
   primaryItems: JSX.LibraryManagedAttributes<typeof Item, Item['props']>[];
-} & PlatformServicesProps;
+  notifications?: {};
+  help?: SecondaryItemProps;
+  settings?: SecondaryItemProps;
+};

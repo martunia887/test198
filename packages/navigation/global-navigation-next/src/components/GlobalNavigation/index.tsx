@@ -10,15 +10,26 @@ import getStyles from './styles';
 import { ProductHome } from './ProductHome';
 import Item from '../Item';
 import { GlobalNavigationProps } from './types';
-import PlatformServices from './PlatformServices';
 import Create from './Create';
+
+import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
+import NotificationIcon from '@atlaskit/icon/glyph/notification';
+import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
+import SettingsIcon from '@atlaskit/icon/glyph/settings';
 
 export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   static defaultProps = {
     primaryItems: [],
   };
   render() {
-    const { create, primaryItems, product } = this.props;
+    const {
+      create,
+      help,
+      notifications,
+      primaryItems,
+      product,
+      settings,
+    } = this.props;
     const styles = getStyles();
 
     return (
@@ -30,7 +41,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
       >
         <div>
           <WidthDetector containerStyle={styles.outer}>
-            {width => (
+            {(width: number | undefined) => (
               <Fragment>
                 <div css={styles.left}>
                   <ProductHome {...product} width={width} />
@@ -40,7 +51,27 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                 </div>
                 <div css={styles.right}>
                   {create && <Create {...create} width={width} />}
-                  <PlatformServices {...this.props} />
+                  <AppSwitcherIcon label="Switch to..." />
+                  {notifications && <NotificationIcon label="Notifications" />}
+                  {settings && (
+                    <Item
+                      appearance="secondary"
+                      {...settings}
+                      text={<SettingsIcon label="Settings" />}
+                    />
+                  )}
+                  {help && (
+                    <Item
+                      appearance="secondary"
+                      {...help}
+                      text={
+                        <QuestionCircleIcon
+                          label="Help"
+                          secondaryColor={styles.outer.fill}
+                        />
+                      }
+                    />
+                  )}
                   <Avatar />
                 </div>
               </Fragment>
