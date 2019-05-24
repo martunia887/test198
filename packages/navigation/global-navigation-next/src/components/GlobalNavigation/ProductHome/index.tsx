@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProductProps } from '../../types';
+import { ProductProps } from './types';
 import { Outer } from './primitives';
 
 type Props = ProductProps & {

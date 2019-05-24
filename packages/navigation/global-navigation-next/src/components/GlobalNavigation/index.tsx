@@ -7,7 +7,7 @@ import Avatar from '@atlaskit/avatar';
 
 import getStyles from './styles';
 
-import { ProductHome } from '../ProductHome';
+import { ProductHome } from './ProductHome';
 import PrimaryItem from '../PrimaryItem';
 import { GlobalNavigationProps } from './types';
 import PlatformServices from './PlatformServices';
