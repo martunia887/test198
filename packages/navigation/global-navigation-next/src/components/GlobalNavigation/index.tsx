@@ -36,6 +36,8 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                   {primaryItems.map(props => (
                     <PrimaryItem key={props.id} {...props} />
                   ))}
+                </div>
+                <div css={styles.right}>
                   <PlatformServices {...this.props} />
                   <Avatar />
                 </div>

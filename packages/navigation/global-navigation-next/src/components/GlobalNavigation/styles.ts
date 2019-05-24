@@ -29,4 +29,9 @@ export default () => ({
     alignItems: 'center',
     display: 'flex',
   },
+  right: {
+    alignItems: 'center',
+    display: 'flex',
+    right: gridSize * 4,
+  },
 });

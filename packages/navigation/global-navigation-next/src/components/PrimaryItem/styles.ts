@@ -20,6 +20,11 @@ export const getStyles = (props: PrimaryItemProps) => ({
     userSelect: 'none',
     borderRadius: 3,
     display: 'flex',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    ':hover,:focus': {
+      backgroundColor: colors.B400,
+    },
   },
   contentWrapper: {},
 });
