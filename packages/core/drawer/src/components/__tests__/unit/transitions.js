@@ -9,7 +9,7 @@ describe('Drawer Transitions', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = mount(<Slide in test="some-test-data" />);
+      wrapper = mount(<Slide openFromRight={false} in test="some-test-data" />);
     });
 
     it('should use the default styles to start the animation', () => {
@@ -43,14 +43,18 @@ describe('Drawer Transitions', () => {
     });
 
     it('should update "unmountOnExit"', () => {
-      const { unmountOnExit } = mount(<Slide in shouldUnmountOnExit={false} />);
+      const { unmountOnExit } = mount(
+        <Slide openFromRight={false} in shouldUnmountOnExit={false} />,
+      );
 
       expect(unmountOnExit).toBeFalsy();
     });
 
     it('should pass onExited to the Transition', () => {
       const onExited = jest.fn();
-      const slide = mount(<Slide in onExited={onExited} />);
+      const slide = mount(
+        <Slide openFromRight={false} in onExited={onExited} />,
+      );
 
       expect(slide.find('Transition').props()).toMatchObject({ onExited });
     });
@@ -60,7 +64,7 @@ describe('Drawer Transitions', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = mount(<Fade in test="some-test-data" />);
+      wrapper = mount(<Fade openFromRight={false} in test="some-test-data" />);
     });
 
     it('should use the default styles to start the animation', () => {
@@ -95,7 +99,7 @@ describe('Drawer Transitions', () => {
 
     it('should pass onExited to the Transition', () => {
       const onExited = jest.fn();
-      const fade = mount(<Fade in onExited={onExited} />);
+      const fade = mount(<Fade openFromRight={false} in onExited={onExited} />);
 
       expect(fade.find('Transition').props()).toMatchObject({ onExited });
     });

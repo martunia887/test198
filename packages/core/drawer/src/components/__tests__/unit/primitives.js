@@ -11,6 +11,7 @@ const DrawerContent = () => <code>Drawer contents</code>;
 
 describe('Drawer primitive', () => {
   const commonProps = {
+    openFromRight: false,
     width: 'wide',
     in: true,
     shouldUnmountOnExit: false,
