@@ -10,6 +10,8 @@ export type PrimaryItemProps = {
   component?: ComponentType<ItemRenderComponentProps>;
   /** A map of data attributes applied to the rendered item. */
   dataset?: Dataset;
+  /** Content to render in a dropdown */
+  dropdownContent?: ComponentType<{}>;
   /** An href which this Item links to. If this prop is provided the Item will
    * render as an <a>. */
   href?: string;

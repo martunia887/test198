@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React, { ElementType } from 'react';
+import PrimaryDropdownItem from '../PrimaryDropdownItem';
 import { PrimaryItemProps } from './types';
 import { getStyles } from './styles';
 
@@ -17,6 +18,7 @@ export default class PrimaryItem extends React.Component<PrimaryItemProps> {
     const {
       component: CustomComponent,
       dataset,
+      dropdownContent,
       href,
       onClick,
       target,
@@ -29,6 +31,9 @@ export default class PrimaryItem extends React.Component<PrimaryItemProps> {
 
     if (CustomComponent) {
       ItemComponent = CustomComponent;
+      itemProps = this.props;
+    } else if (dropdownContent) {
+      ItemComponent = PrimaryDropdownItem;
       itemProps = this.props;
     } else if (href) {
       ItemComponent = 'a';
