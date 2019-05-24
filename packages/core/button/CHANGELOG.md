@@ -1,5 +1,11 @@
 # @atlaskit/button
 
+## 12.0.8
+- [hotfix] fixes style error and changes spinner to a caret version.
+
+## 12.0.7
+- BROKEN RELEASE. DO NOT USE.
+
 ## 12.0.6
 - [patch] [e0e3fabf8e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e0e3fabf8e):
 
