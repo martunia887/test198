@@ -26,6 +26,7 @@
     "@atlaskit/media-test-helpers": "^23.0.0",
     "@atlaskit/smart-card": "^11.0.0",
     "enzyme": "^3.7.0",
+    "mutationobserver-shim": "^0.3.3",
     "prosemirror-commands": "^1.0.7",
     "prosemirror-keymap": "^1.0.1",
     "prosemirror-model": "^1.7.0",

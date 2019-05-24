@@ -1,5 +1,8 @@
 import { EditorView } from 'prosemirror-view';
 
+// Import polyfills
+import 'mutationobserver-shim'; // window.MutationObserver
+
 export class NullSelectionReader {
   constructor(private warnOnce: () => void) {}
 
@@ -41,7 +44,7 @@ export default (editorView: any) => {
 
       // eslint-disable-next-line no-console
       console.warn(
-        'Warning! Test depends on DOM selection API which is not supported in JSDOM/Node environment.',
+        "Warning! Test depends on DOM selection API and MutationObserver API which aren't supported in JSDOM/Node environment.",
       );
 
       (window as any).hasWarnedAboutJsdomFixtures = true;
