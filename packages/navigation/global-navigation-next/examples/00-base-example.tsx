@@ -65,6 +65,10 @@ export default class BaseExample extends React.Component {
   render() {
     return (
       <GlobalNavigation
+        create={{
+          onClick: () => console.log('Create clicked'),
+          text: 'Create',
+        }}
         product={{
           icon: JiraSoftwareIcon,
           wordmark: JiraSoftwareWordmark,

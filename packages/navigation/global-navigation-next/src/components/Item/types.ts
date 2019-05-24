@@ -2,7 +2,9 @@ import { ComponentType, ReactNode } from 'react';
 
 export type Dataset = { [name: string]: string | typeof undefined };
 
-export type PrimaryItemProps = {
+export type ItemProps = {
+  /** Whether the item should look like a primary or secondary item */
+  appearance: 'primary' | 'secondary';
   /** A custom component to render instead of the default wrapper component.
    * Could used to render a router Link, for example. The component will be
    * provided with a className, children and onClick props, which should be passed on to the
@@ -27,7 +29,7 @@ export type PrimaryItemProps = {
   text: ReactNode;
 };
 
-export type ItemRenderComponentProps = PrimaryItemProps & {
+export type ItemRenderComponentProps = ItemProps & {
   children: Node;
   className: string;
 };

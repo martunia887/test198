@@ -2,11 +2,12 @@
 import { jsx } from '@emotion/core';
 import React, { ElementType } from 'react';
 import PrimaryDropdownItem from '../PrimaryDropdownItem';
-import { PrimaryItemProps } from './types';
+import { ItemProps } from './types';
 import { getStyles } from './styles';
 
-export default class PrimaryItem extends React.Component<PrimaryItemProps> {
+export default class Item extends React.Component<ItemProps> {
   static defaultProps = {
+    appearance: 'primary',
     dataset: {
       'data-test-id': 'NavigationItem',
     },
@@ -16,6 +17,7 @@ export default class PrimaryItem extends React.Component<PrimaryItemProps> {
 
   render() {
     const {
+      appearance,
       component: CustomComponent,
       dataset,
       dropdownContent,
@@ -27,7 +29,7 @@ export default class PrimaryItem extends React.Component<PrimaryItemProps> {
     const styles = getStyles(this.props);
 
     let ItemComponent: ElementType = 'div';
-    let itemProps: Partial<PrimaryItemProps> = { dataset };
+    let itemProps: Partial<ItemProps> = { dataset };
 
     if (CustomComponent) {
       ItemComponent = CustomComponent;
@@ -49,8 +51,8 @@ export default class PrimaryItem extends React.Component<PrimaryItemProps> {
     }
 
     return (
-      <ItemComponent css={{ '&&': styles.itemBase }} {...itemProps}>
-        <div css={styles.contentWrapper}>{text}</div>
+      <ItemComponent css={{ '&&': styles.itemBase[appearance] }} {...itemProps}>
+        {text}
       </ItemComponent>
     );
   }
