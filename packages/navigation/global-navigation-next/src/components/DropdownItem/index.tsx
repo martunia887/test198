@@ -9,7 +9,13 @@ import getStyles from './styles';
 export default class DropdownItem extends React.Component<DropdownItemProps> {
   static defaultProps = {};
 
-  onOpenChange = ({isOpen, event}: {isOpen: boolean; event: React.MouseEvent<HTMLElement>;}) => {
+  onOpenChange = ({
+    isOpen,
+    event,
+  }: {
+    isOpen: boolean;
+    event: React.MouseEvent<HTMLElement>;
+  }) => {
     if (isOpen) {
       if (this.props.onClick) {
         this.props.onClick(event);
@@ -19,7 +25,7 @@ export default class DropdownItem extends React.Component<DropdownItemProps> {
         this.props.onClose(event);
       }
     }
-  }
+  };
   render() {
     const {
       appearance,
@@ -29,7 +35,8 @@ export default class DropdownItem extends React.Component<DropdownItemProps> {
       isOpen,
     } = this.props;
 
-    const DropdownComponent = isOpen === undefined ? Dropdown : DropdownMenuStateless;
+    const DropdownComponent =
+      isOpen === undefined ? Dropdown : DropdownMenuStateless;
 
     const styles = getStyles();
     return (
