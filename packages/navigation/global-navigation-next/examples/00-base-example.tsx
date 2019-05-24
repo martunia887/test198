@@ -1,7 +1,13 @@
 import React, { Fragment } from 'react';
+import AtlassianSwitcher from '@atlaskit/atlassian-switcher';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { JiraSoftwareIcon, JiraSoftwareWordmark } from '@atlaskit/logo';
 import GlobalNavigation from '../src';
+import { IntlProvider } from 'react-intl';
+
+import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
+
+mockEndpoints('jira');
 
 const HelpContent = () => (
   <Fragment>
@@ -57,6 +63,18 @@ const DashboardsContent = () => (
   </Fragment>
 );
 
+const WrappedSwitcher = () => {
+  return (
+    <IntlProvider>
+      <AtlassianSwitcher
+        product="jira"
+        cloudId="some-cloud-id"
+        triggerXFlow={() => undefined}
+      />
+    </IntlProvider>
+  );
+};
+
 interface ExampleState {
   isHelpOpen: boolean;
   isSettingsOpen: boolean;
@@ -95,6 +113,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
   render() {
     return (
       <GlobalNavigation
+        appSwitcherComponent={WrappedSwitcher}
         create={{
           onClick: () => console.log('Create clicked'),
           text: 'Create',
