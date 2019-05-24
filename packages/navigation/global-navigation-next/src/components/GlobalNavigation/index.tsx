@@ -1,35 +1,24 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import * as React from 'react';
+import { Component, Fragment } from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import WidthDetector from '@atlaskit/width-detector';
 import Avatar from '@atlaskit/avatar';
 
 import getStyles from './styles';
 
-// import {
-//   FirstPrimaryItemWrapper,
-//   PrimaryItemsList,
-//   SecondaryItemsList,
-// } from './primitives';
+import { ProductHome } from './ProductHome';
+import PrimaryItem from '../PrimaryItem';
 import { GlobalNavigationProps } from './types';
 import PlatformServices from './PlatformServices';
 
-export default class GlobalNavigation extends React.Component<
-  GlobalNavigationProps
-> {
+export default class GlobalNavigation extends Component<GlobalNavigationProps> {
+  static defaultProps = {
+    primaryItems: [],
+  };
   render() {
-    const {
-      // itemComponent: ItemComponent,
-      // primaryItems,
-      // secondaryItems,
-      // productLogo: ProductLogo,
-      productWordmark: ProductWordmark,
-    } = this.props;
-    const wrapperStyles = getStyles();
-
-    // theme.mode.horizontalGlobalNav({
-    //   topOffset: theme.topOffset,
-    // });
+    const { primaryItems, product } = this.props;
+    const styles = getStyles();
 
     return (
       <NavigationAnalyticsContext
@@ -38,59 +27,23 @@ export default class GlobalNavigation extends React.Component<
           componentName: 'globalNav',
         }}
       >
-        <div css={wrapperStyles}>
-          <ProductWordmark />
-          {/* <PrimaryItemsList>
-            <NavigationAnalyticsContext
-              data={{ attributes: { navigationIconGrouping: 'primary' } }}
-            >
+        <div>
+          <WidthDetector containerStyle={styles.outer}>
+            {width => (
               <Fragment>
-                {primaryItems.map((props, index) => {
-                  // Render the first item with a margin beneath it and a large icon
-                  if (!index) {
-                    const { icon: Icon, ...rest } = props;
-                    return (
-                      <FirstPrimaryItemWrapper key={props.id}>
-                        <ItemComponent
-                          {...rest}
-                          icon={provided => <Icon {...provided} size="large" />}
-                          size="large"
-                          index={index}
-                        />
-                      </FirstPrimaryItemWrapper>
-                    );
-                  }
-                  return (
-                    <ItemComponent
-                      {...props}
-                      key={props.id}
-                      size="small"
-                      index={index}
-                    />
-                  );
-                })}
+                <div css={styles.left}>
+                  <ProductHome {...product} width={width} />
+                  {primaryItems.map(props => (
+                    <PrimaryItem key={props.id} {...props} />
+                  ))}
+                </div>
+                <div css={styles.right}>
+                  <PlatformServices {...this.props} />
+                  <Avatar />
+                </div>
               </Fragment>
-            </NavigationAnalyticsContext>
-          </PrimaryItemsList>
-
-          <SecondaryItemsList>
-            <NavigationAnalyticsContext
-              data={{ attributes: { navigationIconGrouping: 'secondary' } }}
-            >
-              <Fragment>
-                {secondaryItems.map((props, index) => (
-                  <ItemComponent
-                    {...props}
-                    key={props.id}
-                    size="small"
-                    index={index}
-                  />
-                ))}
-              </Fragment>
-            </NavigationAnalyticsContext>
-          </SecondaryItemsList> */}
-          <PlatformServices {...this.props} />
-          <Avatar />
+            )}
+          </WidthDetector>
         </div>
       </NavigationAnalyticsContext>
     );

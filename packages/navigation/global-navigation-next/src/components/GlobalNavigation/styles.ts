@@ -1,12 +1,12 @@
+import { CSSProperties } from 'react';
 // @flow
 
 import { colors, gridSize as gridSizeFn } from '@atlaskit/theme';
 import { HORIZONTAL_GLOBAL_NAV_HEIGHT } from '../../common/constants';
-import { CSSObject } from '@emotion/core';
 
 const gridSize = gridSizeFn();
 
-const baseStyles: CSSObject = {
+const baseStyles: CSSProperties = {
   alignItems: 'center',
   boxSizing: 'border-box',
   display: 'flex',
@@ -19,8 +19,19 @@ const baseStyles: CSSObject = {
 };
 
 export default () => ({
-  ...baseStyles,
-  backgroundColor: colors.B300,
-  color: colors.N0,
-  fill: colors.B300,
+  outer: {
+    ...baseStyles,
+    backgroundColor: colors.B300,
+    color: colors.N0,
+    fill: colors.B300,
+  },
+  left: {
+    alignItems: 'center',
+    display: 'flex',
+  },
+  right: {
+    alignItems: 'center',
+    display: 'flex',
+    right: gridSize * 4,
+  },
 });
