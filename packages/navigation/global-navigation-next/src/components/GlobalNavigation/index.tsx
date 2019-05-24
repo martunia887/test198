@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
+import Avatar from '@atlaskit/avatar';
 
 import getStyles from './styles';
 
@@ -11,6 +12,7 @@ import getStyles from './styles';
 //   SecondaryItemsList,
 // } from './primitives';
 import { GlobalNavigationProps } from './types';
+import PlatformServices from './PlatformServices';
 
 export default class GlobalNavigation extends React.Component<
   GlobalNavigationProps
@@ -87,6 +89,8 @@ export default class GlobalNavigation extends React.Component<
               </Fragment>
             </NavigationAnalyticsContext>
           </SecondaryItemsList> */}
+          <PlatformServices {...this.props} />
+          <Avatar />
         </div>
       </NavigationAnalyticsContext>
     );

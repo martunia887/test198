@@ -18,6 +18,7 @@ export type DrawerPrimitiveProps = BaseProps & {
   in: boolean,
   onClose?: (SyntheticMouseEvent<*>) => void,
   onCloseComplete?: (node: HTMLElement) => void,
+  openFromRight: boolean,
   shouldUnmountOnExit?: boolean,
 };
 
@@ -36,6 +37,10 @@ export type DrawerProps = BaseProps & {
       Callback function that will be called when the drawer is displayed and `keydown` event is triggered.
     */
   onKeyDown?: (SyntheticKeyboardEvent<*>) => void,
+  /**
+      Open the drawer from the right-hand side of the screen
+   */
+  openFromRight?: boolean,
   /** Controls if the drawer is open or close */
   isOpen: boolean,
   /** Boolean that controls if drawer should be retained/discarded */

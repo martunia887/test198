@@ -1,6 +1,7 @@
 // @flow
 
 import { ComponentType } from 'react';
+import { PlatformServicesProps } from './PlatformServices';
 
 // type ItemDataShape = {
 //   ...$Exact<ElementConfig<typeof GlobalItem>>,
@@ -20,4 +21,4 @@ export type GlobalNavigationProps = {
    * bar.
    */
   // primaryItems: any[];
-};
+} & PlatformServicesProps;

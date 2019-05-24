@@ -19,6 +19,13 @@ export default class BaseExample extends React.Component {
   };
 
   render() {
-    return <GlobalNavigation productWordmark={JiraSoftwareWordmark} />;
+    return (
+      <GlobalNavigation
+        productWordmark={JiraSoftwareWordmark}
+        help={{}}
+        notifications={{}}
+        settings={{}}
+      />
+    );
   }
 }
