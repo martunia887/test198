@@ -7,6 +7,7 @@ const baseStyles = {
   background: 'none',
   border: 'none',
   borderRadius: 3,
+  boxSizing: 'border-box',
   textDecoration: 'none',
   cursor: 'pointer',
   ':hover,:focus': {
@@ -35,6 +36,7 @@ export const getStyles = (props: ItemProps) => ({
     secondary: {
       ...baseStyles,
       color: colors.B50,
+      display: 'inline-flex',
       height: gridSize * 4,
       padding: gridSize / 2,
     },

@@ -3,6 +3,17 @@ import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { JiraSoftwareIcon, JiraSoftwareWordmark } from '@atlaskit/logo';
 import GlobalNavigation from '../src';
 
+const HelpContent = () => (
+  <Fragment>
+    <DropdownItemGroup>
+      <DropdownItem>Help</DropdownItem>
+    </DropdownItemGroup>
+    <DropdownItemGroup>
+      <DropdownItem>Me</DropdownItem>
+    </DropdownItemGroup>
+  </Fragment>
+);
+
 const ProjectsContent = () => (
   <Fragment>
     <DropdownItemGroup title="Favourite Projects">
@@ -46,20 +57,39 @@ const DashboardsContent = () => (
   </Fragment>
 );
 
-export default class BaseExample extends React.Component {
+interface ExampleState {
+  isHelpOpen: boolean;
+  isSettingsOpen: boolean;
+}
+
+export default class BaseExample extends React.Component<{}, ExampleState> {
   state = {
-    isDrawerOpen: true,
+    isHelpOpen: false,
+    isSettingsOpen: false,
   };
 
-  openDrawer = () =>
-    this.setState({
-      isDrawerOpen: true,
-    });
+  onHelpClick = () => {
+    this.setState(state => ({
+      isHelpOpen: !state.isHelpOpen,
+    }));
+  };
 
-  onClose = () => {
+  onHelpClose = () => {
     this.setState({
-      isDrawerOpen: false,
+      isHelpOpen: false,
     });
+  };
+
+  onSettingsClose = () => {
+    this.setState({
+      isSettingsOpen: false,
+    });
+  };
+
+  onSettingsClick = () => {
+    this.setState(state => ({
+      isSettingsOpen: !state.isSettingsOpen,
+    }));
   };
 
   render() {
@@ -73,9 +103,19 @@ export default class BaseExample extends React.Component {
           icon: JiraSoftwareIcon,
           wordmark: JiraSoftwareWordmark,
         }}
-        help={{}}
+        help={{
+          dropdownContent: HelpContent,
+          isOpen: this.state.isHelpOpen,
+          onClose: this.onHelpClose,
+          onClick: this.onHelpClick,
+        }}
         notifications={{}}
-        settings={{}}
+        settings={{
+          isOpen: this.state.isSettingsOpen,
+          onClose: this.onSettingsClose,
+          onClick: this.onSettingsClick,
+          drawerContent: () => <div>settings</div>,
+        }}
         primaryItems={[
           { id: 'home', text: 'Home', href: '#' },
           {

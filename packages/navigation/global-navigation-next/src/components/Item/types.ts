@@ -12,6 +12,8 @@ export type ItemProps = {
   component?: ComponentType<ItemRenderComponentProps>;
   /** A map of data attributes applied to the rendered item. */
   dataset?: Dataset;
+  /** Content to render in a drawer */
+  drawerContent?: ComponentType<{}>;
   /** Content to render in a dropdown */
   dropdownContent?: ComponentType<{}>;
   /** An href which this Item links to. If this prop is provided the Item will
@@ -19,10 +21,14 @@ export type ItemProps = {
   href?: string;
   /** A unique identifier for the item. Used for analytics. */
   id?: string;
+  /** Whether this drawer/dropdown should be open or not */
+  isOpen?: boolean;
   /** Whether this Item should display as being selected. */
   isSelected: boolean;
   /** A handler which will be called when the Item is clicked. */
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  /** A handler which will be called when the drawer/dropdown is closed. */
+  onClose?: (e: React.MouseEvent<HTMLElement>) => void;
   /** The HTML target attribute. Will only be used if href is also set. */
   target?: string;
   /** A string or Node to render as the main content of the Item. */

@@ -1,9 +1,10 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React, { ElementType } from 'react';
-import PrimaryDropdownItem from '../PrimaryDropdownItem';
+import DropdownItem from '../DropdownItem';
 import { ItemProps } from './types';
 import { getStyles } from './styles';
+import DrawerItem from '../DrawerItem';
 
 export default class Item extends React.Component<ItemProps> {
   static defaultProps = {
@@ -20,6 +21,7 @@ export default class Item extends React.Component<ItemProps> {
       appearance,
       component: CustomComponent,
       dataset,
+      drawerContent,
       dropdownContent,
       href,
       onClick,
@@ -34,8 +36,11 @@ export default class Item extends React.Component<ItemProps> {
     if (CustomComponent) {
       ItemComponent = CustomComponent;
       itemProps = this.props;
+    } else if (drawerContent) {
+      ItemComponent = DrawerItem;
+      itemProps = this.props;
     } else if (dropdownContent) {
-      ItemComponent = PrimaryDropdownItem;
+      ItemComponent = DropdownItem;
       itemProps = this.props;
     } else if (href) {
       ItemComponent = 'a';

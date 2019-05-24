@@ -8,12 +8,24 @@ import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
 
 import getStyles from './styles';
+import Item from '../../Item';
 
+interface SecondaryItemProps {
+  /**
+   * Is the dropdown/drawer open? This is set in controlled mode.
+   * Leave it unset to have state controlled by the Item.
+   */
+  isOpen?: boolean;
+  onClick?: () => void;
+  onClose?: () => void;
+  drawerContent?: React.ComponentType<{}>;
+  dropdownContent?: React.ComponentType<{}>;
+}
 export interface PlatformServicesProps {
   // switcher always on
   notifications?: {};
-  help?: {};
-  settings?: {};
+  help?: SecondaryItemProps;
+  settings?: SecondaryItemProps;
 }
 
 export default class PlatformServices extends React.Component<
@@ -21,13 +33,29 @@ export default class PlatformServices extends React.Component<
 > {
   render() {
     const { notifications, help, settings } = this.props;
+    const wrapperStyles = getStyles();
     return (
-      <div css={getStyles()}>
+      <div css={wrapperStyles}>
         <AppSwitcherIcon label="Switch to..." />
         {notifications && <NotificationIcon label="Notifications" />}
-        {settings && <SettingsIcon label="Settings" />}
+        {settings && (
+          <Item
+            appearance="secondary"
+            {...settings}
+            text={<SettingsIcon label="Settings" />}
+          />
+        )}
         {help && (
-          <QuestionCircleIcon label="Help" secondaryColor={getStyles().fill} />
+          <Item
+            appearance="secondary"
+            {...help}
+            text={
+              <QuestionCircleIcon
+                label="Help"
+                secondaryColor={wrapperStyles.fill}
+              />
+            }
+          />
         )}
       </div>
     );

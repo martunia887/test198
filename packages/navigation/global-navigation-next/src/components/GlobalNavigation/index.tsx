@@ -30,7 +30,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
       >
         <div>
           <WidthDetector containerStyle={styles.outer}>
-            {width => (
+            {(width: number | undefined) => (
               <Fragment>
                 <div css={styles.left}>
                   <ProductHome {...product} width={width} />

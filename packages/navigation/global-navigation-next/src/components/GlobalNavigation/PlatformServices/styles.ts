@@ -7,6 +7,7 @@ const gridSize = gridSizeFn();
 const baseStyles: CSSObject = {
   alignItems: 'center',
   boxSizing: 'border-box',
+  display: 'flex',
   flexShrink: 0,
   justifyContent: 'space-between',
   paddingLeft: gridSize * 2,
