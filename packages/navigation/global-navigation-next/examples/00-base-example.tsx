@@ -25,6 +25,9 @@ export default class BaseExample extends React.Component {
           icon: JiraSoftwareIcon,
           wordmark: JiraSoftwareWordmark,
         }}
+        help={{}}
+        notifications={{}}
+        settings={{}}
         primaryItems={[
           { id: 'home', text: 'Home', href: '#' },
           {

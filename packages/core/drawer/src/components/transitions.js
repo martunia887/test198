@@ -15,6 +15,7 @@ type TransitionProps = {
   children?: Node,
   component?: ComponentType<*> | string,
   onExited?: (node: HTMLElement) => void,
+  openFromRight: boolean,
   shouldUnmountOnExit?: boolean,
   in: boolean,
 };
@@ -95,14 +96,19 @@ export const Fade = ({ ...props }: TransitionProps) => (
 
 export const Slide = ({
   shouldUnmountOnExit = true,
+  openFromRight,
   ...props
 }: TransitionProps) => (
   <TransitionHandler
+    openFromRight={openFromRight}
     defaultStyles={{
       transition:
         `transform ${transitionDurationMs}ms ${transitionTimingFunction}, ` +
         `width ${transitionDurationMs}ms ${transitionTimingFunction}`,
-      transform: 'translate3d(-100%,0,0)',
+      transform: !openFromRight
+        ? 'translate3d(-100%,0,0)'
+        : 'translate3d(100%,0,0)',
+      flexDirection: !openFromRight ? 'row' : 'row-reverse',
     }}
     transitionStyles={{
       // Unset transform so we do not create a new stacking context for fixed-position children - NAV-159

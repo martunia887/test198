@@ -24,9 +24,11 @@ const widths: { [DrawerWidth]: string | number } = {
 const Wrapper = ({
   width = 'narrow',
   shouldUnmountOnExit,
+  openFromRight,
   ...props
 }: {
   children?: Node,
+  openFromRight: boolean,
   shouldUnmountOnExit?: boolean,
   width: $PropertyType<DrawerPrimitiveProps, 'width'>,
 }) => {
@@ -36,12 +38,13 @@ const Wrapper = ({
         backgroundColor: colors.N0,
         display: 'flex',
         height: '100vh',
-        left: 0,
         overflow: 'hidden',
         position: 'fixed',
         top: 0,
         width: widths[width],
         zIndex: layers.blanket() + 1,
+        left: openFromRight ? undefined : 0,
+        right: openFromRight ? 0 : undefined,
       }}
       {...props}
     />
@@ -81,7 +84,10 @@ const Sidebar = props => {
   );
 };
 
-type IconWrapperProps = { onClick?: (SyntheticMouseEvent<*>) => void };
+type IconWrapperProps = {
+  openFromRight: boolean,
+  onClick?: (SyntheticMouseEvent<*>) => void,
+};
 const IconWrapper = (props: IconWrapperProps) => (
   <button
     type="button"
@@ -108,6 +114,7 @@ const IconWrapper = (props: IconWrapperProps) => (
         backgroundColor: props.onClick ? colors.B50 : null,
         outline: 0,
       },
+      transform: props.openFromRight ? 'rotate(180deg)' : '',
     }}
     {...props}
   />
@@ -120,14 +127,20 @@ export default class DrawerPrimitive extends Component<DrawerPrimitiveProps> {
       icon: Icon,
       onClose,
       onCloseComplete,
+      openFromRight,
       ...props
     } = this.props;
-
     return (
-      <Slide component={Wrapper} onExited={onCloseComplete} {...props}>
-        <Sidebar>
+      <Slide
+        component={Wrapper}
+        onExited={onCloseComplete}
+        openFromRight={openFromRight}
+        {...props}
+      >
+        <Sidebar openFromRight={openFromRight}>
           <IconWrapper
             onClick={onClose}
+            openFromRight={openFromRight}
             data-test-selector="DrawerPrimitiveSidebarCloseButton"
           >
             {Icon ? <Icon size="large" /> : <ArrowLeft />}

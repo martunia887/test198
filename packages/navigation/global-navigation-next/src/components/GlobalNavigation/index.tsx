@@ -3,17 +3,14 @@ import { jsx } from '@emotion/core';
 import { Component, Fragment } from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import WidthDetector from '@atlaskit/width-detector';
+import Avatar from '@atlaskit/avatar';
 
 import getStyles from './styles';
 
-// import {
-//   FirstPrimaryItemWrapper,
-//   PrimaryItemsList,
-//   SecondaryItemsList,
-// } from './primitives';
-import { GlobalNavigationProps } from '../../types';
 import { ProductHome } from '../ProductHome';
 import PrimaryItem from '../PrimaryItem';
+import { GlobalNavigationProps } from './types';
+import PlatformServices from './PlatformServices';
 
 export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   static defaultProps = {
@@ -39,6 +36,8 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                   {primaryItems.map(props => (
                     <PrimaryItem key={props.id} {...props} />
                   ))}
+                  <PlatformServices {...this.props} />
+                  <Avatar />
                 </div>
               </Fragment>
             )}

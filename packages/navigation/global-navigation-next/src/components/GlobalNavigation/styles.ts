@@ -10,7 +10,6 @@ const baseStyles: CSSProperties = {
   alignItems: 'center',
   boxSizing: 'border-box',
   display: 'flex',
-  flexDirection: 'row',
   flexShrink: 0,
   justifyContent: 'space-between',
   paddingLeft: gridSize * 2,
