@@ -88,7 +88,7 @@ type IconWrapperProps = {
   openFromRight: boolean,
   onClick?: (SyntheticMouseEvent<*>) => void,
 };
-const IconWrapper = (props: IconWrapperProps) => (
+const IconWrapper = ({ openFromRight, ...props }: IconWrapperProps) => (
   <button
     type="button"
     css={{
@@ -114,7 +114,7 @@ const IconWrapper = (props: IconWrapperProps) => (
         backgroundColor: props.onClick ? colors.B50 : null,
         outline: 0,
       },
-      transform: props.openFromRight ? 'rotate(180deg)' : '',
+      transform: openFromRight ? 'rotate(180deg)' : '',
     }}
     {...props}
   />
@@ -137,7 +137,7 @@ export default class DrawerPrimitive extends Component<DrawerPrimitiveProps> {
         openFromRight={openFromRight}
         {...props}
       >
-        <Sidebar openFromRight={openFromRight}>
+        <Sidebar>
           <IconWrapper
             onClick={onClose}
             openFromRight={openFromRight}
