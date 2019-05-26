@@ -48,9 +48,9 @@ export default class DrawerItem extends React.Component<
     } = this.props;
     return (
       <Fragment>
-        <div className={className} onClick={this.onClick}>
+        <button className={className} onClick={this.onClick}>
           {children}
-        </div>
+        </button>
         <Drawer
           openFromRight
           isOpen={this.isControlled ? isOpen : this.state.isOpen}

@@ -44,14 +44,14 @@ export default class DropdownItem extends React.Component<DropdownItemProps> {
         isOpen={isOpen}
         onOpenChange={this.onOpenChange}
         trigger={
-          <div className={className} css={styles.outer}>
+          <button className={className} css={styles.outer}>
             {children}
             {appearance === 'primary' && (
               <div css={styles.chevronWrapper}>
                 <ChevronDownIcon label="" />
               </div>
             )}
-          </div>
+          </button>
         }
       >
         <DropdownContent />

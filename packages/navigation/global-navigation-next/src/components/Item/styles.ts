@@ -39,6 +39,7 @@ export const getStyles = (props: ItemProps) => ({
       display: 'inline-flex',
       height: gridSize * 4,
       padding: gridSize / 2,
+      marginLeft: gridSize / 2,
     },
   },
   contentWrapper: {},
