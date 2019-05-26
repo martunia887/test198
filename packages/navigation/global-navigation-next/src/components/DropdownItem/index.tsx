@@ -31,6 +31,7 @@ export default class DropdownItem extends React.Component<DropdownItemProps> {
       appearance,
       children,
       className,
+      component: CustomComponent,
       dropdownContent: DropdownContent,
       isOpen,
     } = this.props;
@@ -39,19 +40,24 @@ export default class DropdownItem extends React.Component<DropdownItemProps> {
       isOpen === undefined ? Dropdown : DropdownMenuStateless;
 
     const styles = getStyles();
+
     return (
       <DropdownComponent
         isOpen={isOpen}
         onOpenChange={this.onOpenChange}
         trigger={
-          <button className={className} css={styles.outer}>
-            {children}
-            {appearance === 'primary' && (
-              <div css={styles.chevronWrapper}>
-                <ChevronDownIcon label="" />
-              </div>
-            )}
-          </button>
+          CustomComponent ? (
+            <CustomComponent {...this.props} />
+          ) : (
+            <button className={className} css={styles.outer}>
+              {children}
+              {appearance === 'primary' && (
+                <div css={styles.chevronWrapper}>
+                  <ChevronDownIcon label="" />
+                </div>
+              )}
+            </button>
+          )
         }
       >
         <DropdownContent />

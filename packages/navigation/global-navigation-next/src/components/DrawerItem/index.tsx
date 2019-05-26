@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import React, { Fragment } from 'react';
+import React, { ElementType, Fragment } from 'react';
 import { DrawerItemProps, DrawerItemState } from './types';
 import Drawer from '@atlaskit/drawer';
 
@@ -43,14 +43,26 @@ export default class DrawerItem extends React.Component<
     const {
       children, // trigger
       className,
+      component,
       drawerContent: DrawerContent,
       isOpen,
     } = this.props;
+
+    let ItemComponent: ElementType = 'button';
+    let itemProps: Partial<DrawerItemProps> = {
+      className,
+      onClick: this.onClick,
+    };
+    if (component) {
+      ItemComponent = component;
+      itemProps = {
+        ...this.props,
+        onClick: this.onClick,
+      };
+    }
     return (
       <Fragment>
-        <button className={className} onClick={this.onClick}>
-          {children}
-        </button>
+        <ItemComponent {...itemProps}>{children}</ItemComponent>
         <Drawer
           openFromRight
           isOpen={this.isControlled ? isOpen : this.state.isOpen}
