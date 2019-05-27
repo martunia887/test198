@@ -1,7 +1,8 @@
-import { SearchProps } from './Search/types';
-import { ProductProps } from './ProductHome/types';
-import { CreateProps } from './Create/types';
 import Item from '../Item';
+import { CreateProps } from './Create/types';
+import { NotificationsProps } from './Notifications/types';
+import { ProductProps } from './ProductHome/types';
+import { SearchProps } from './Search/types';
 
 export interface SecondaryItemProps {
   /**
@@ -21,7 +22,7 @@ export type GlobalNavigationProps = {
   product: ProductProps;
   search: SearchProps;
   primaryItems: JSX.LibraryManagedAttributes<typeof Item, Item['props']>[];
-  notifications?: {};
+  notifications?: NotificationsProps;
   help?: SecondaryItemProps;
   settings?: SecondaryItemProps;
 };

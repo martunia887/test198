@@ -24,7 +24,7 @@ export type ItemProps = {
   /** Whether this drawer/dropdown should be open or not */
   isOpen?: boolean;
   /** Whether this Item should display as being selected. */
-  isSelected: boolean;
+  isSelected?: boolean;
   /** A handler which will be called when the Item is clicked. */
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   /** A handler which will be called when the drawer/dropdown is closed. */
