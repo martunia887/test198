@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type ElementRef } from 'react';
+import React, { type ElementRef, type Node } from 'react';
 import { layers } from '@atlaskit/theme';
 
 export const LayoutContainer = ({ topOffset, ...props }: *) => {
@@ -15,6 +15,24 @@ export const LayoutContainer = ({ topOffset, ...props }: *) => {
     />
   );
 };
+
+export const HorizontalGlobalNavContainer = ({
+  children,
+  topOffset,
+}: {
+  children: Node,
+  topOffset: number,
+}) => (
+  <div
+    css={{
+      position: 'fixed',
+      top: topOffset,
+      zIndex: layers.navigation() + 1,
+    }}
+  >
+    {children}
+  </div>
+);
 
 export const NavigationContainer = ({ topOffset, innerRef, ...props }: *) => (
   <div
