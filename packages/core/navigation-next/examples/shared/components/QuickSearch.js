@@ -16,7 +16,7 @@ import {
   personData,
   containerData,
   makeAutocompleteData,
-} from './mockData';
+} from './helpers/quick-search-mock-data';
 
 type DataShape = {
   title: string,
@@ -38,7 +38,7 @@ const data: DataShape[] = [
   },
 ];
 
-const availableResultTypes: { [key: string]: React.ComponentClass<any> } = {
+const availableResultTypes = {
   person: PersonResult,
   object: ObjectResult,
   container: ContainerResult,
@@ -52,7 +52,7 @@ const mapResultsDataToComponents = (resultData: DataShape[]) => {
   return resultData.map((group: DataShape) => (
     <ResultItemGroup title={group.title} key={group.title}>
       {group.items.map(props => {
-        const Result: React.ComponentClass = availableResultTypes[props.type];
+        const Result = availableResultTypes[props.type];
         return Result ? <Result key={props.resultId} {...props} /> : null;
       })}
     </ResultItemGroup>
@@ -150,7 +150,7 @@ export default class BasicQuickSearch extends React.Component<Props, State> {
     });
   };
 
-  onSearchInput = ({ target }: React.FormEvent<HTMLInputElement>) => {
+  onSearchInput = ({ target }: { target: any }) => {
     const query = target.value;
     this.search(query);
     if (this.props.isAutocompleteEnabled) {

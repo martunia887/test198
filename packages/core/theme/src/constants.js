@@ -37,8 +37,8 @@ export const noFocusRing = () => `
 
 export const layers = {
   card: () => 100,
-  dialog: () => 300,
   navigation: () => 200,
+  dialog: () => 300,
   layer: () => 400,
   blanket: () => 500,
   modal: () => 510,

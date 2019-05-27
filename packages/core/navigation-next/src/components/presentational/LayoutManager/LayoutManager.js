@@ -10,7 +10,11 @@ import {
 import PageContent from '../PageContent';
 import ResizeTransition from '../ResizeTransition';
 import ResizeControl from './ResizeControl';
-import { LayoutContainer, NavigationContainer } from './primitives';
+import {
+  LayoutContainer,
+  NavigationContainer,
+  HorizontalGlobalNavContainer,
+} from './primitives';
 import type { LayoutManagerProps } from './types';
 import { ContainerNavigationMask } from '../ContentNavigation/primitives';
 import {
@@ -23,6 +27,7 @@ import {
   CONTENT_NAV_WIDTH_FLYOUT,
   FLYOUT_DELAY,
   ALTERNATE_FLYOUT_DELAY,
+  HORIZONTAL_GLOBAL_NAV_HEIGHT,
 } from '../../../common/constants';
 import RenderBlocker from '../../common/RenderBlocker';
 import { LayoutEventListener } from './LayoutEvent';
@@ -120,18 +125,6 @@ export default class LayoutManager extends Component<
     this.pageRef = ref;
   };
 
-  getTopOffset = () => {
-    /* eslint-disable camelcase */
-    const { topOffset, experimental_horizontalGlobalNav } = this.props;
-
-    if (experimental_horizontalGlobalNav && topOffset === 0) {
-      // Internally override this to 60px if using horizontal global nav and not specifying a top offset
-      return 60;
-    }
-    return topOffset;
-    /* eslint-enable camelcase */
-  };
-
   mouseOutFlyoutArea = ({ currentTarget, relatedTarget }: *) => {
     if (currentTarget.contains(relatedTarget)) return;
     clearTimeout(this.flyoutMouseOverTimeout);
@@ -181,7 +174,7 @@ export default class LayoutManager extends Component<
     this.setState({ itemIsDragging: false });
   };
 
-  renderNavigation = ({ renderContentNav }) => {
+  renderNavigation = ({ renderContentNav }: { renderContentNav: boolean }) => {
     const {
       datasets,
       navigationUIController,
@@ -196,6 +189,7 @@ export default class LayoutManager extends Component<
       globalNavigation,
       containerNavigation,
       productNavigation,
+      topOffset,
       view,
     } = this.props;
     const { flyoutIsOpen, mouseIsOverNavigation, itemIsDragging } = this.state;
@@ -213,7 +207,9 @@ export default class LayoutManager extends Component<
     const dataset = datasets ? datasets.navigation : {};
 
     const GlobalNavigation = globalNavigation;
-    const topOffset = this.getTopOffset();
+    const navContainerTopOffset = EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV
+      ? HORIZONTAL_GLOBAL_NAV_HEIGHT + topOffset
+      : topOffset;
 
     return (
       <LayoutEventListener
@@ -235,9 +231,11 @@ export default class LayoutManager extends Component<
         >
           <Fragment>
             {EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV && (
-              <GlobalNavigation
-                datasets={datasets ? datasets.globalNavigation : {}}
-              />
+              <HorizontalGlobalNavContainer topOffset={this.props.topOffset}>
+                <GlobalNavigation
+                  datasets={datasets ? datasets.globalNavigation : {}}
+                />
+              </HorizontalGlobalNavContainer>
             )}
             {renderContentNav && (
               <ResizeTransition
@@ -261,7 +259,7 @@ export default class LayoutManager extends Component<
                   return (
                     <NavigationContainer
                       {...dataset}
-                      topOffset={topOffset}
+                      topOffset={navContainerTopOffset}
                       innerRef={this.getContainerRef}
                       onMouseEnter={this.mouseEnter}
                       onMouseOver={
@@ -317,7 +315,7 @@ export default class LayoutManager extends Component<
                                     containerNavigation={containerNavigation}
                                     datasets={datasets}
                                     globalNavigation={globalNavigation}
-                                    topOffset={topOffset}
+                                    topOffset={navContainerTopOffset}
                                     experimental_alternateFlyoutBehaviour={
                                       EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
                                     }
@@ -358,7 +356,7 @@ export default class LayoutManager extends Component<
     );
   };
 
-  renderPageContent = ({ renderContentNav }) => {
+  renderPageContent = ({ renderContentNav }: { renderContentNav: boolean }) => {
     const {
       // eslint-disable-next-line camelcase
       experimental_horizontalGlobalNav: EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV,
@@ -377,6 +375,11 @@ export default class LayoutManager extends Component<
     } = navigationUIController.state;
 
     const leftOffset = EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV ? 0 : undefined;
+    // This offset should just be the global nav height, as the topOffset prop has already been applied
+    // to layout manager content via a margin
+    const topOffset = EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV
+      ? HORIZONTAL_GLOBAL_NAV_HEIGHT
+      : 0;
 
     return (
       <PageContent
@@ -389,7 +392,7 @@ export default class LayoutManager extends Component<
         onExpandEnd={onExpandEnd}
         onCollapseStart={onCollapseStart}
         onCollapseEnd={onCollapseEnd}
-        topOffset={this.getTopOffset()}
+        topOffset={topOffset}
         leftOffset={leftOffset}
         noContentNav={!renderContentNav}
       >
@@ -399,12 +402,11 @@ export default class LayoutManager extends Component<
   };
 
   render() {
-    const topOffset = this.getTopOffset();
     const renderContentNav = this.props.experimental_horizontalGlobalNav
       ? Boolean(this.props.containerNavigation)
       : true;
     return (
-      <LayoutContainer topOffset={topOffset}>
+      <LayoutContainer topOffset={this.props.topOffset}>
         {this.renderNavigation({ renderContentNav })}
         {this.renderPageContent({ renderContentNav })}
       </LayoutContainer>

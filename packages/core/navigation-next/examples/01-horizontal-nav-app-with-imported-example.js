@@ -14,10 +14,7 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
 
-import { Label } from '@atlaskit/field-base';
-import { ToggleStateless } from '@atlaskit/toggle';
-// import GlobalNavigation from '@atlaskit/global-navigation-next';
-// import { JiraSoftwareWordmark, JiraSoftwareIcon } from '@atlaskit/logo';
+// $FlowFixMe - ts module and relative import?
 import BaseGlobalNavigationExample from '../../../navigation/global-navigation-next/examples/00-base-example';
 
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';
@@ -33,60 +30,15 @@ import {
   SearchIssuesView,
 } from './shared/routes';
 
-export default class App extends Component<
-  {},
-  {
-    isDebugEnabled: boolean,
-    isFlyoutAvailable: boolean,
-    isAlternateFlyoutBehaviourEnabled: boolean,
-    isFullWidthFlyoutEnabled: boolean,
-  },
-> {
-  state = {
-    isDebugEnabled: true,
-    isFlyoutAvailable: true,
-    isAlternateFlyoutBehaviourEnabled: true,
-    isFullWidthFlyoutEnabled: false,
-  };
-
-  onDebugToggle = () => {
-    this.setState(state => ({ isDebugEnabled: !state.isDebugEnabled }));
-  };
-
-  onFlyoutToggle = () => {
-    this.setState(state => ({ isFlyoutAvailable: !state.isFlyoutAvailable }));
-  };
-
-  onAlternateBehaviourToggle = () => {
-    this.setState(state => ({
-      isAlternateFlyoutBehaviourEnabled: !state.isAlternateFlyoutBehaviourEnabled,
-    }));
-  };
-
-  onFullWidthFlyoutToggle = () => {
-    this.setState(state => ({
-      isFullWidthFlyoutEnabled: !state.isFullWidthFlyoutEnabled,
-    }));
-  };
-
+export default class App extends Component<{}> {
   render() {
-    const {
-      isDebugEnabled,
-      isFlyoutAvailable,
-      isAlternateFlyoutBehaviourEnabled,
-      isFullWidthFlyoutEnabled,
-    } = this.state;
-
     return (
       <MemoryRouter>
-        <NavigationProvider isDebugEnabled={isDebugEnabled}>
+        <NavigationProvider>
           <LayoutManagerWithViewController
             customComponents={{ LinkItem, ProjectSwitcher }}
-            experimental_flyoutOnHover={isFlyoutAvailable}
-            experimental_alternateFlyoutBehaviour={
-              isAlternateFlyoutBehaviourEnabled
-            }
-            experimental_fullWidthFlyout={isFullWidthFlyoutEnabled}
+            experimental_flyoutOnHover
+            experimental_alternateFlyoutBehaviour
             experimental_horizontalGlobalNav
             globalNavigation={BaseGlobalNavigationExample}
           >
@@ -99,31 +51,6 @@ export default class App extends Component<
                 <Route path="/issues/search" component={SearchIssuesView} />
                 <Route path="/" component={DashboardsView} />
               </Switch>
-
-              <p>
-                The search drawer can be opened via the <kbd>/</kbd> keyboard
-                shortcut.
-              </p>
-              <Label label="Toggle flyout on hover (experimental)" />
-              <ToggleStateless
-                isChecked={isFlyoutAvailable}
-                onChange={this.onFlyoutToggle}
-              />
-              <Label label="Toggle alternate hover behaviour (experimental)" />
-              <ToggleStateless
-                isChecked={isAlternateFlyoutBehaviourEnabled}
-                onChange={this.onAlternateBehaviourToggle}
-              />
-              <Label label="Toggle full width flyout (experimental)" />
-              <ToggleStateless
-                isChecked={isFullWidthFlyoutEnabled}
-                onChange={this.onFullWidthFlyoutToggle}
-              />
-              <Label label="Toggle debug logger" />
-              <ToggleStateless
-                isChecked={isDebugEnabled}
-                onChange={this.onDebugToggle}
-              />
             </div>
           </LayoutManagerWithViewController>
         </NavigationProvider>

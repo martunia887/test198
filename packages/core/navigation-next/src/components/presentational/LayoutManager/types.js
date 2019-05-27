@@ -89,7 +89,7 @@ export type ConnectedLayoutManagerProps = {
   ...$Exact<CollapseListeners>,
   ...$Exact<ExperimentalFeatureFlags>,
   /** The top offset value to be used in navigation */
-  topOffset?: number,
+  topOffset: number,
   /** Internal prop which decides which view is active */
   view?: Object | null,
 };

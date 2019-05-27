@@ -35,21 +35,15 @@ import {
 export default class App extends Component<
   {},
   {
-    isDebugEnabled: boolean,
     isFlyoutAvailable: boolean,
     isAlternateFlyoutBehaviourEnabled: boolean,
     isFullWidthFlyoutEnabled: boolean,
   },
 > {
   state = {
-    isDebugEnabled: true,
     isFlyoutAvailable: true,
     isAlternateFlyoutBehaviourEnabled: true,
     isFullWidthFlyoutEnabled: false,
-  };
-
-  onDebugToggle = () => {
-    this.setState(state => ({ isDebugEnabled: !state.isDebugEnabled }));
   };
 
   onFlyoutToggle = () => {
@@ -70,7 +64,6 @@ export default class App extends Component<
 
   render() {
     const {
-      isDebugEnabled,
       isFlyoutAvailable,
       isAlternateFlyoutBehaviourEnabled,
       isFullWidthFlyoutEnabled,
@@ -78,7 +71,7 @@ export default class App extends Component<
 
     return (
       <MemoryRouter>
-        <NavigationProvider isDebugEnabled={isDebugEnabled}>
+        <NavigationProvider>
           <LayoutManagerWithViewController
             customComponents={{ LinkItem, ProjectSwitcher }}
             experimental_flyoutOnHover={isFlyoutAvailable}
@@ -100,10 +93,6 @@ export default class App extends Component<
                 <Route path="/" component={DashboardsView} />
               </Switch>
 
-              <p>
-                The search drawer can be opened via the <kbd>/</kbd> keyboard
-                shortcut.
-              </p>
               <Label label="Toggle flyout on hover (experimental)" />
               <ToggleStateless
                 isChecked={isFlyoutAvailable}
@@ -118,11 +107,6 @@ export default class App extends Component<
               <ToggleStateless
                 isChecked={isFullWidthFlyoutEnabled}
                 onChange={this.onFullWidthFlyoutToggle}
-              />
-              <Label label="Toggle debug logger" />
-              <ToggleStateless
-                isChecked={isDebugEnabled}
-                onChange={this.onDebugToggle}
               />
             </div>
           </LayoutManagerWithViewController>

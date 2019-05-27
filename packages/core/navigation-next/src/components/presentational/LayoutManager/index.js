@@ -23,6 +23,7 @@ export default class ConnectedLayoutManager extends Component<ConnectedLayoutMan
     experimental_alternateFlyoutBehaviour: false,
     experimental_fullWidthFlyout: false,
     experimental_horizontalGlobalNav: false,
+    topOffset: 0,
   };
 
   render() {
