@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
 // @flow
 
-import { colors, gridSize as gridSizeFn } from '@atlaskit/theme';
+import { colors, gridSize as gridSizeFn, layers } from '@atlaskit/theme';
 import { HORIZONTAL_GLOBAL_NAV_HEIGHT } from '../../common/constants';
 
 const gridSize = gridSizeFn();
@@ -16,6 +16,7 @@ const baseStyles: CSSProperties = {
   paddingRight: gridSize * 2,
   height: HORIZONTAL_GLOBAL_NAV_HEIGHT,
   width: '100vw',
+  zIndex: layers.navigation() + 1,
 };
 
 export default () => ({
