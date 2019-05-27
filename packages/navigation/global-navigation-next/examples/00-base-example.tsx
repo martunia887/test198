@@ -99,6 +99,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           onClick: () => console.log('Create clicked'),
           text: 'Create',
         }}
+        search={{
+          drawerContent: () => <div>quick search</div>,
+          text: 'Search',
+        }}
         product={{
           icon: JiraSoftwareIcon,
           wordmark: JiraSoftwareWordmark,

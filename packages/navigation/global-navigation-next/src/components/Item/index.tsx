@@ -33,14 +33,14 @@ export default class Item extends React.Component<ItemProps> {
     let ItemComponent: ElementType = 'div';
     let itemProps: Partial<ItemProps> = { dataset };
 
-    if (CustomComponent) {
-      ItemComponent = CustomComponent;
-      itemProps = this.props;
-    } else if (drawerContent) {
+    if (drawerContent) {
       ItemComponent = DrawerItem;
       itemProps = this.props;
     } else if (dropdownContent) {
       ItemComponent = DropdownItem;
+      itemProps = this.props;
+    } else if (CustomComponent) {
+      ItemComponent = CustomComponent;
       itemProps = this.props;
     } else if (href) {
       ItemComponent = 'a';

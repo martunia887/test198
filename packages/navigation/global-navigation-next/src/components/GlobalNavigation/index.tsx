@@ -16,6 +16,7 @@ import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
 import NotificationIcon from '@atlaskit/icon/glyph/notification';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
+import Search from './Search';
 
 export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   static defaultProps = {
@@ -24,6 +25,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   render() {
     const {
       create,
+      search,
       help,
       notifications,
       primaryItems,
@@ -51,6 +53,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                 </div>
                 <div css={styles.right}>
                   {create && <Create {...create} width={width} />}
+                  {search && <Search {...search} width={width} />}
                   <AppSwitcherIcon label="Switch to..." />
                   {notifications && <NotificationIcon label="Notifications" />}
                   {settings && (
