@@ -28,7 +28,8 @@ import {
   BacklogView,
   ProjectsView,
   DashboardsView,
-  SearchIssuesView,
+  IssuesView,
+  FiltersView,
 } from './shared/routes';
 
 export default class App extends Component<
@@ -94,7 +95,8 @@ export default class App extends Component<
               <Switch>
                 <Route path="/projects/:projectId" component={BacklogView} />
                 <Route path="/projects" component={ProjectsView} />
-                <Route path="/issues/search" component={SearchIssuesView} />
+                <Route path="/issues/:issueId" component={IssuesView} />
+                <Route path="/filters/:filterId" component={FiltersView} />
                 <Route path="/" component={DashboardsView} />
               </Switch>
 

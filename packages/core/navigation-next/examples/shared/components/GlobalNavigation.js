@@ -5,9 +5,15 @@ import { Link } from 'react-router-dom';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import GlobalNavigation from '@atlaskit/global-navigation-next';
 import { JiraSoftwareWordmark, JiraSoftwareIcon } from '@atlaskit/logo';
+import Bug16Icon from '@atlaskit/icon-object/glyph/bug/16';
+import Story16Icon from '@atlaskit/icon-object/glyph/story/16';
 import StarFilledIcon from '@atlaskit/icon/glyph/star-filled';
 import ShipIcon from '@atlaskit/icon/glyph/ship';
 import { colors } from '@atlaskit/theme';
+
+const IssueKey = ({ children }) => (
+  <span css={{ color: colors.B400, marginRight: 8 }}>{children}</span>
+);
 
 export const WrappedLink = ({
   href,
@@ -84,30 +90,48 @@ const ProjectsContent = ({ closeDropdown }: any) => (
   </Fragment>
 );
 
-const IssuesContent = () => (
+const IssuesContent = ({ closeDropdown }: any) => (
   <Fragment>
     <DropdownItemGroup title="Recent Issues">
-      <DropdownItem>Issue One</DropdownItem>
-      <DropdownItem>Issue Two</DropdownItem>
+      <DropdownLink
+        href="/issues/nav-1"
+        elemBefore={<Story16Icon />}
+        onClick={closeDropdown}
+      >
+        <IssueKey>NAV-1</IssueKey>Add quick search
+      </DropdownLink>
+      <DropdownLink
+        href="/issues/nav-2"
+        elemBefore={<Bug16Icon />}
+        onClick={closeDropdown}
+      >
+        <IssueKey>NAV-2</IssueKey>Dont re-render 1000 times
+      </DropdownLink>
     </DropdownItemGroup>
     <DropdownItemGroup>
-      <DropdownItem>View all recent issues</DropdownItem>
+      <DropdownLink href="/issues/recent" onClick={closeDropdown}>
+        View all recent issues
+      </DropdownLink>
     </DropdownItemGroup>
     <DropdownItemGroup title="Filters">
-      <DropdownItem>Filter One</DropdownItem>
-      <DropdownItem>Filter Two</DropdownItem>
+      <DropdownLink href="/filters/my-open-issues" onClick={closeDropdown}>
+        My open issues
+      </DropdownLink>
+      <DropdownLink href="/filters/reported-by-me" onClick={closeDropdown}>
+        Reported by me
+      </DropdownLink>
     </DropdownItemGroup>
   </Fragment>
 );
 
-const DashboardsContent = () => (
+const DashboardsContent = ({ closeDropdown }: any) => (
   <Fragment>
-    <DropdownItemGroup>
-      <DropdownItem>System Dashboard</DropdownItem>
-    </DropdownItemGroup>
-    <DropdownItemGroup>
-      <DropdownItem>View all dashboards</DropdownItem>
-    </DropdownItemGroup>
+    <DropdownLink href="/" onClick={closeDropdown}>
+      System Dashboard
+    </DropdownLink>
+    <DropdownLink href="/" onClick={closeDropdown}>
+      View all dashboards
+    </DropdownLink>
   </Fragment>
 );
 
