@@ -60,6 +60,7 @@
     "@atlaskit/lozenge": "^8.0.0",
     "@atlaskit/modal-dialog": "^9.0.0",
     "@atlaskit/onboarding": "^8.0.0",
+    "@atlaskit/quick-search": "^7.3.0",
     "@atlaskit/section-message": "^3.0.0",
     "@atlaskit/ssr": "^0.1.0",
     "@atlaskit/toggle": "^7.0.0",
@@ -72,6 +73,7 @@
     "react-async-component": "^2.0.0",
     "react-dom": "^16.8.0",
     "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2"
+    "react-router-dom": "^4.2.2",
+    "uuid": "^3.1.0"
   }
 }

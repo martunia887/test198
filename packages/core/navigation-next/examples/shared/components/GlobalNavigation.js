@@ -11,6 +11,8 @@ import StarFilledIcon from '@atlaskit/icon/glyph/star-filled';
 import ShipIcon from '@atlaskit/icon/glyph/ship';
 import { colors } from '@atlaskit/theme';
 
+import BasicQuickSearch from './QuickSearch';
+
 const IssueKey = ({ children }) => (
   <span css={{ color: colors.B400, marginRight: 8 }}>{children}</span>
 );
@@ -181,7 +183,7 @@ export default class WrappedGlobalNavigation extends React.Component<
           text: 'Create',
         }}
         search={{
-          drawerContent: () => <div>quick search</div>,
+          drawerContent: () => <BasicQuickSearch />,
           text: 'Search',
         }}
         product={{
