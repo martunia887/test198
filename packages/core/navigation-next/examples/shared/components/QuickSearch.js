@@ -16,7 +16,7 @@ import {
   personData,
   containerData,
   makeAutocompleteData,
-} from './mockData';
+} from './helpers/quick-search-mock-data';
 
 type DataShape = {
   title: string,

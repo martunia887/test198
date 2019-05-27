@@ -1,7 +1,9 @@
 // @flow
 
 import React, { Fragment } from 'react';
+import { IntlProvider } from 'react-intl';
 import { Link } from 'react-router-dom';
+import AtlassianSwitcher from '@atlaskit/atlassian-switcher';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import GlobalNavigation from '@atlaskit/global-navigation-next';
 import { JiraSoftwareWordmark, JiraSoftwareIcon } from '@atlaskit/logo';
@@ -11,7 +13,11 @@ import StarFilledIcon from '@atlaskit/icon/glyph/star-filled';
 import ShipIcon from '@atlaskit/icon/glyph/ship';
 import { colors } from '@atlaskit/theme';
 
+import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
+
 import BasicQuickSearch from './QuickSearch';
+
+mockEndpoints('jira');
 
 const IssueKey = ({ children }) => (
   <span css={{ color: colors.B400, marginRight: 8 }}>{children}</span>
@@ -49,6 +55,18 @@ const DropdownLink = props => {
       onClick={() => console.log('clicked')}
       {...props}
     />
+  );
+};
+
+const WrappedSwitcher = () => {
+  return (
+    <IntlProvider>
+      <AtlassianSwitcher
+        product="jira"
+        cloudId="some-cloud-id"
+        triggerXFlow={() => undefined}
+      />
+    </IntlProvider>
   );
 };
 
@@ -178,6 +196,7 @@ export default class WrappedGlobalNavigation extends React.Component<
   render() {
     return (
       <GlobalNavigation
+        appSwitcherComponent={WrappedSwitcher}
         create={{
           onClick: () => console.log('Create clicked'),
           text: 'Create',
