@@ -7,6 +7,21 @@ import React from 'react';
 import { getExamplesFor } from '@atlaskit/build-utils/getExamples';
 import ReactDOMServer from 'react-dom/server';
 
+/* Mock fetch-mock and its node-fetch dependency to return the non-browser versions of the module as they break in SSR. */
+jest.mock('fetch-mock', () => {
+  // Require the original module to not be mocked...
+  const originalModule = jest.requireActual('fetch-mock/src/server');
+
+  return originalModule;
+});
+
+jest.mock('node-fetch', () => {
+  // Require the original module to not be mocked...
+  const originalModule = jest.requireActual('node-fetch/lib/index');
+
+  return originalModule;
+});
+
 const examplesWithDomOrBrowser = [
   '0-navigation-app',
   '12-async-load-layout-manager',
