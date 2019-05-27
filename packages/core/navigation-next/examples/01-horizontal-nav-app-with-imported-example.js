@@ -16,8 +16,8 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { Label } from '@atlaskit/field-base';
 import { ToggleStateless } from '@atlaskit/toggle';
-// import GlobalNavigation from '@atlaskit/global-navigation-next';
-// import { JiraSoftwareWordmark, JiraSoftwareIcon } from '@atlaskit/logo';
+
+// $FlowFixMe - ts module and relative import?
 import BaseGlobalNavigationExample from '../../../navigation/global-navigation-next/examples/00-base-example';
 
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';

@@ -181,7 +181,7 @@ export default class LayoutManager extends Component<
     this.setState({ itemIsDragging: false });
   };
 
-  renderNavigation = ({ renderContentNav }) => {
+  renderNavigation = ({ renderContentNav }: { renderContentNav: boolean }) => {
     const {
       datasets,
       navigationUIController,
@@ -358,7 +358,7 @@ export default class LayoutManager extends Component<
     );
   };
 
-  renderPageContent = ({ renderContentNav }) => {
+  renderPageContent = ({ renderContentNav }: { renderContentNav: boolean }) => {
     const {
       // eslint-disable-next-line camelcase
       experimental_horizontalGlobalNav: EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV,

@@ -34,7 +34,7 @@ export default class PageContent extends PureComponent<PageProps> {
   renderPageWrapper = ({
     disableInteraction = false,
     transitionStyle = {},
-  } = {}) => {
+  }: { disableInteraction: boolean, transitionStyle: Object } = {}) => {
     const { children, innerRef, leftOffset, topOffset } = this.props;
     return (
       <PageWrapper
