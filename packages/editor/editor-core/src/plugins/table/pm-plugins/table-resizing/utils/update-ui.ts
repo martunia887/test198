@@ -2,16 +2,10 @@ import { EditorState } from 'prosemirror-state';
 import { findDomRefAtPos } from 'prosemirror-utils';
 import { akEditorTableToolbarSize } from '@atlaskit/editor-common';
 import { TableCssClassName as ClassName } from '../../../types';
-import { getPluginState } from '../../main';
-import { getColumnsWidths } from '../../../utils';
 import { closestElement } from '../../../../../utils';
 import { updateRightShadow } from '../../../nodeviews/TableComponent';
 import { pluginKey as resizePluginKey } from '../plugin';
 import { getPluginState as getMainPluginState } from '../../main';
-import { closestElement } from '../../../../../utils';
-import { updateRightShadow } from '../../../nodeviews/TableComponent';
-import { getPluginState } from '../plugin';
-import { pointsAtCell } from './misc';
 
 export const updateControls = (state: EditorState) => {
   const { tableRef } = getMainPluginState(state);
