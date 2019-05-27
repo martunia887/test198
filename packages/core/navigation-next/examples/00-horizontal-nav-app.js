@@ -16,9 +16,10 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { Label } from '@atlaskit/field-base';
 import { ToggleStateless } from '@atlaskit/toggle';
-import GlobalNavigation from '@atlaskit/global-navigation-next';
+// import GlobalNavigation from '@atlaskit/global-navigation-next';
+// import { JiraSoftwareWordmark, JiraSoftwareIcon } from '@atlaskit/logo';
+import BaseGlobalNavigationExample from '../../../navigation/global-navigation-next/examples/00-base-example';
 
-import { JiraSoftwareWordmark, JiraSoftwareIcon } from '@atlaskit/logo';
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';
 
 import { LinkItem, ProjectSwitcher } from './shared/components';
@@ -32,56 +33,20 @@ import {
   SearchIssuesView,
 } from './shared/routes';
 
-const GlobalNav = () => (
-  <GlobalNavigation
-    product={{
-      icon: JiraSoftwareIcon,
-      wordmark: JiraSoftwareWordmark,
-    }}
-    help={{}}
-    notifications={{}}
-    settings={{}}
-    primaryItems={[
-      { id: 'home', text: 'Home', href: '#' },
-      {
-        id: 'projects',
-        text: 'Projects',
-        onClick: () => {
-          console.log('Projects clicked');
-        },
-      },
-      {
-        id: 'issues',
-        text: 'Issues & Filters',
-        onClick: () => {
-          console.log('Issues clicked');
-        },
-      },
-      {
-        id: 'dashboards',
-        text: 'Dashboards',
-        onClick: () => {
-          console.log('Dashboards clicked');
-        },
-      },
-    ]}
-  />
-);
-
 export default class App extends Component<
   {},
   {
     isDebugEnabled: boolean,
     isFlyoutAvailable: boolean,
     isAlternateFlyoutBehaviourEnabled: boolean,
-    isFullWitdhFlyoutEnabled: boolean,
+    isFullWidthFlyoutEnabled: boolean,
   },
 > {
   state = {
     isDebugEnabled: true,
     isFlyoutAvailable: true,
     isAlternateFlyoutBehaviourEnabled: true,
-    isFullWitdhFlyoutEnabled: false,
+    isFullWidthFlyoutEnabled: false,
   };
 
   onDebugToggle = () => {
@@ -100,7 +65,7 @@ export default class App extends Component<
 
   onFullWidthFlyoutToggle = () => {
     this.setState(state => ({
-      isFullWitdhFlyoutEnabled: !state.isFullWitdhFlyoutEnabled,
+      isFullWidthFlyoutEnabled: !state.isFullWidthFlyoutEnabled,
     }));
   };
 
@@ -109,7 +74,7 @@ export default class App extends Component<
       isDebugEnabled,
       isFlyoutAvailable,
       isAlternateFlyoutBehaviourEnabled,
-      isFullWitdhFlyoutEnabled,
+      isFullWidthFlyoutEnabled,
     } = this.state;
 
     return (
@@ -121,8 +86,9 @@ export default class App extends Component<
             experimental_alternateFlyoutBehaviour={
               isAlternateFlyoutBehaviourEnabled
             }
-            experimental_fullWidthFlyout={isFullWitdhFlyoutEnabled}
-            globalNavigation={GlobalNav}
+            experimental_fullWidthFlyout={isFullWidthFlyoutEnabled}
+            experimental_horizontalGlobalNav
+            globalNavigation={BaseGlobalNavigationExample}
           >
             <div style={{ padding: 40 }}>
               <RootViews />
@@ -150,7 +116,7 @@ export default class App extends Component<
               />
               <Label label="Toggle full width flyout (experimental)" />
               <ToggleStateless
-                isChecked={isFullWitdhFlyoutEnabled}
+                isChecked={isFullWidthFlyoutEnabled}
                 onChange={this.onFullWidthFlyoutToggle}
               />
               <Label label="Toggle debug logger" />

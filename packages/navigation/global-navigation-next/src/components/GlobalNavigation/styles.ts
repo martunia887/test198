@@ -24,6 +24,7 @@ export default () => ({
     backgroundColor: colors.B300,
     color: colors.N0,
     fill: colors.B300,
+    position: 'absolute',
   },
   left: {
     alignItems: 'center',
