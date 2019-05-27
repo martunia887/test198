@@ -46,10 +46,6 @@ export default class App extends Component<
     isFullWidthFlyoutEnabled: false,
   };
 
-  onDebugToggle = () => {
-    this.setState(state => ({ isDebugEnabled: !state.isDebugEnabled }));
-  };
-
   onFlyoutToggle = () => {
     this.setState(state => ({ isFlyoutAvailable: !state.isFlyoutAvailable }));
   };

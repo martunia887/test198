@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 /*
  * Routing and Server Side Rendering
@@ -76,37 +76,39 @@ export default class App extends Component<
     return (
       <MemoryRouter>
         <NavigationProvider>
-          <WarningBanner isOpen={isBannerOpen} />
-          <LayoutManagerWithViewController
-            customComponents={{ LinkItem, ProjectSwitcher }}
-            experimental_flyoutOnHover
-            experimental_alternateFlyoutBehaviour
-            experimental_horizontalGlobalNav
-            globalNavigation={BaseGlobalNavigationExample}
-            topOffset={topOffset}
-          >
-            <div
-              style={{
-                padding: 40,
-                height: 2000,
-                marginTop: isBannerOpen ? BANNER_HEIGHT : 0,
-              }}
+          <Fragment>
+            <WarningBanner isOpen={isBannerOpen} />
+            <LayoutManagerWithViewController
+              customComponents={{ LinkItem, ProjectSwitcher }}
+              experimental_flyoutOnHover
+              experimental_alternateFlyoutBehaviour
+              experimental_horizontalGlobalNav
+              globalNavigation={BaseGlobalNavigationExample}
+              topOffset={topOffset}
             >
-              <RootViews />
-              <ContainerViews />
-              <Switch>
-                <Route path="/projects/:projectId" component={BacklogView} />
-                <Route path="/projects" component={ProjectsView} />
-                <Route path="/issues/search" component={SearchIssuesView} />
-                <Route path="/" component={DashboardsView} />
-              </Switch>
-              <Label label="Toggle banner" />
-              <ToggleStateless
-                isChecked={isBannerOpen}
-                onChange={this.onBannerToggle}
-              />
-            </div>
-          </LayoutManagerWithViewController>
+              <div
+                style={{
+                  padding: 40,
+                  height: 2000,
+                  marginTop: isBannerOpen ? BANNER_HEIGHT : 0,
+                }}
+              >
+                <RootViews />
+                <ContainerViews />
+                <Switch>
+                  <Route path="/projects/:projectId" component={BacklogView} />
+                  <Route path="/projects" component={ProjectsView} />
+                  <Route path="/issues/search" component={SearchIssuesView} />
+                  <Route path="/" component={DashboardsView} />
+                </Switch>
+                <Label label="Toggle banner" />
+                <ToggleStateless
+                  isChecked={isBannerOpen}
+                  onChange={this.onBannerToggle}
+                />
+              </div>
+            </LayoutManagerWithViewController>
+          </Fragment>
         </NavigationProvider>
       </MemoryRouter>
     );
