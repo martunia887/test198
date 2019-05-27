@@ -83,14 +83,14 @@ export function createPlugin(
           const { state } = view;
           if (pluginKey.getState(state).dragging) {
             const domAtPos = view.domAtPos.bind(view);
-            updateControls(state, domAtPos);
+            updateControls(state);
             updateResizeHandle(state, domAtPos);
           }
           return false;
         },
         mouseleave(view) {
           handleMouseLeave(view);
-          updateControls(view.state, view.domAtPos.bind(view));
+          updateControls(view.state);
           return true;
         },
         mousedown(view, event) {

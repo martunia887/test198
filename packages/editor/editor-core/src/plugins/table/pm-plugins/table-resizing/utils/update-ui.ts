@@ -7,12 +7,14 @@ import { getColumnsWidths } from '../../../utils';
 import { closestElement } from '../../../../../utils';
 import { updateRightShadow } from '../../../nodeviews/TableComponent';
 import { pluginKey as resizePluginKey } from '../plugin';
+import { getPluginState as getMainPluginState } from '../../main';
+import { closestElement } from '../../../../../utils';
+import { updateRightShadow } from '../../../nodeviews/TableComponent';
+import { getPluginState } from '../plugin';
+import { pointsAtCell } from './misc';
 
-export const updateControls = (
-  state: EditorState,
-  domAtPos: (pos: number) => { node: Node; offset: number },
-) => {
-  const { tableRef } = getPluginState(state);
+export const updateControls = (state: EditorState) => {
+  const { tableRef } = getMainPluginState(state);
   if (!tableRef) {
     return;
   }
@@ -20,6 +22,7 @@ export const updateControls = (
   if (!tr) {
     return;
   }
+  const cols = tr.children;
   const wrapper = tableRef.parentElement;
   if (!(wrapper && wrapper.parentElement)) {
     return;
@@ -36,11 +39,16 @@ export const updateControls = (
     ClassName.NUMBERED_COLUMN_BUTTON,
   );
 
-  const columnsWidths = getColumnsWidths(state, domAtPos);
+  const getWidth = (element: HTMLElement): number => {
+    const rect = element.getBoundingClientRect();
+    return rect ? rect.width : element.offsetWidth;
+  };
+
   // update column controls width on resize
   for (let i = 0, count = columnControls.length; i < count; i++) {
-    if (columnsWidths[i]) {
-      columnControls[i].style.width = `${columnsWidths[i]}px`;
+    if (cols[i]) {
+      columnControls[i].style.width = `${getWidth(cols[i] as HTMLElement) +
+        1}px`;
     }
   }
   // update rows controls height on resize
