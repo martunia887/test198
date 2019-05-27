@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type ElementRef } from 'react';
+import React, { Component, type ElementRef, Fragment } from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 
 import {
@@ -77,6 +77,7 @@ export default class LayoutManager extends Component<
     experimental_flyoutOnHover: false,
     experimental_alternateFlyoutBehaviour: false,
     experimental_fullWidthFlyout: false,
+    experimental_horizontalGlobalNav: false,
   };
 
   static getDerivedStateFromProps(props: LayoutManagerProps, state: State) {
@@ -117,6 +118,18 @@ export default class LayoutManager extends Component<
 
   getPageRef = (ref: ElementRef<*>) => {
     this.pageRef = ref;
+  };
+
+  getTopOffset = () => {
+    /* eslint-disable camelcase */
+    const { topOffset, experimental_horizontalGlobalNav } = this.props;
+
+    if (experimental_horizontalGlobalNav && topOffset === 0) {
+      // Internally override this to 60px if using horizontal global nav and not specifying a top offset
+      return 60;
+    }
+    return topOffset;
+    /* eslint-enable camelcase */
   };
 
   mouseOutFlyoutArea = ({ currentTarget, relatedTarget }: *) => {
@@ -168,7 +181,7 @@ export default class LayoutManager extends Component<
     this.setState({ itemIsDragging: false });
   };
 
-  renderNavigation = () => {
+  renderNavigation = ({ renderContentNav }) => {
     const {
       datasets,
       navigationUIController,
@@ -178,8 +191,8 @@ export default class LayoutManager extends Component<
       experimental_alternateFlyoutBehaviour: EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR,
       // eslint-disable-next-line camelcase
       experimental_fullWidthFlyout: EXPERIMENTAL_FULL_WIDTH_FLYOUT,
+      experimental_horizontalGlobalNav: EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV,
       collapseToggleTooltipContent,
-      topOffset,
       globalNavigation,
       containerNavigation,
       productNavigation,
@@ -199,6 +212,9 @@ export default class LayoutManager extends Component<
 
     const dataset = datasets ? datasets.navigation : {};
 
+    const GlobalNavigation = globalNavigation;
+    const topOffset = this.getTopOffset();
+
     return (
       <LayoutEventListener
         onItemDragStart={this.onItemDragStart}
@@ -217,116 +233,135 @@ export default class LayoutManager extends Component<
             packageVersion,
           }}
         >
-          <ResizeTransition
-            from={[CONTENT_NAV_WIDTH_COLLAPSED]}
-            in={!isCollapsed || flyoutIsOpen}
-            properties={['width']}
-            to={[flyoutIsOpen ? flyoutWidth : productNavWidth]}
-            userIsDragging={isResizing}
-            // only apply listeners to the NAV resize transition
-            productNavWidth={productNavWidth}
-          >
-            {({ transitionStyle, transitionState }) => {
-              const onMouseOut =
-                isCollapsed && EXPERIMENTAL_FLYOUT_ON_HOVER && flyoutIsOpen
-                  ? this.mouseOutFlyoutArea
-                  : null;
-              const onMouseOver =
-                isCollapsed && EXPERIMENTAL_FLYOUT_ON_HOVER && !flyoutIsOpen
-                  ? this.mouseOverFlyoutArea
-                  : null;
-              return (
-                <NavigationContainer
-                  {...dataset}
-                  topOffset={topOffset}
-                  innerRef={this.getContainerRef}
-                  onMouseEnter={this.mouseEnter}
-                  onMouseOver={
-                    EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR ? onMouseOver : null
-                  }
-                  onMouseOut={onMouseOut}
-                  onMouseLeave={this.mouseLeave}
-                >
-                  <ResizeControl
-                    collapseToggleTooltipContent={collapseToggleTooltipContent}
-                    expandCollapseAffordanceRef={
-                      this.nodeRefs.expandCollapseAffordance
-                    }
-                    // eslint-disable-next-line camelcase
-                    experimental_flyoutOnHover={EXPERIMENTAL_FLYOUT_ON_HOVER}
-                    isDisabled={isResizeDisabled}
-                    flyoutIsOpen={flyoutIsOpen}
-                    isGrabAreaDisabled={itemIsDragging}
-                    mouseIsOverNavigation={mouseIsOverNavigation}
-                    onMouseOverButtonBuffer={
-                      EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
-                        ? this.closeFlyout
-                        : null
-                    }
-                    mutationRefs={[
-                      { ref: this.pageRef, property: 'padding-left' },
-                      { ref: this.productNavRef, property: 'width' },
-                    ]}
-                    navigation={navigationUIController}
-                  >
-                    {({ width }) => {
-                      return (
-                        <ContainerNavigationMask
-                          disableInteraction={itemIsDragging}
-                          onMouseOver={
-                            EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
-                              ? null
-                              : onMouseOver
-                          }
-                        >
-                          <RenderBlocker
-                            blockOnChange
-                            itemIsDragging={itemIsDragging}
-                          >
-                            <ComposedGlobalNavigation
-                              containerNavigation={containerNavigation}
-                              datasets={datasets}
-                              globalNavigation={globalNavigation}
-                              topOffset={topOffset}
-                              experimental_alternateFlyoutBehaviour={
+          <Fragment>
+            {EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV && (
+              <GlobalNavigation
+                datasets={datasets ? datasets.globalNavigation : {}}
+              />
+            )}
+            {renderContentNav && (
+              <ResizeTransition
+                from={[CONTENT_NAV_WIDTH_COLLAPSED]}
+                in={!isCollapsed || flyoutIsOpen}
+                properties={['width']}
+                to={[flyoutIsOpen ? flyoutWidth : productNavWidth]}
+                userIsDragging={isResizing}
+                // only apply listeners to the NAV resize transition
+                productNavWidth={productNavWidth}
+              >
+                {({ transitionStyle, transitionState }) => {
+                  const onMouseOut =
+                    isCollapsed && EXPERIMENTAL_FLYOUT_ON_HOVER && flyoutIsOpen
+                      ? this.mouseOutFlyoutArea
+                      : null;
+                  const onMouseOver =
+                    isCollapsed && EXPERIMENTAL_FLYOUT_ON_HOVER && !flyoutIsOpen
+                      ? this.mouseOverFlyoutArea
+                      : null;
+                  return (
+                    <NavigationContainer
+                      {...dataset}
+                      topOffset={topOffset}
+                      innerRef={this.getContainerRef}
+                      onMouseEnter={this.mouseEnter}
+                      onMouseOver={
+                        EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
+                          ? onMouseOver
+                          : null
+                      }
+                      onMouseOut={onMouseOut}
+                      onMouseLeave={this.mouseLeave}
+                    >
+                      <ResizeControl
+                        collapseToggleTooltipContent={
+                          collapseToggleTooltipContent
+                        }
+                        expandCollapseAffordanceRef={
+                          this.nodeRefs.expandCollapseAffordance
+                        }
+                        // eslint-disable-next-line camelcase
+                        experimental_flyoutOnHover={
+                          EXPERIMENTAL_FLYOUT_ON_HOVER
+                        }
+                        isDisabled={isResizeDisabled}
+                        flyoutIsOpen={flyoutIsOpen}
+                        isGrabAreaDisabled={itemIsDragging}
+                        mouseIsOverNavigation={mouseIsOverNavigation}
+                        onMouseOverButtonBuffer={
+                          EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
+                            ? this.closeFlyout
+                            : null
+                        }
+                        mutationRefs={[
+                          { ref: this.pageRef, property: 'padding-left' },
+                          { ref: this.productNavRef, property: 'width' },
+                        ]}
+                        navigation={navigationUIController}
+                      >
+                        {({ width }) => {
+                          return (
+                            <ContainerNavigationMask
+                              disableInteraction={itemIsDragging}
+                              onMouseOver={
                                 EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
+                                  ? null
+                                  : onMouseOver
                               }
-                              closeFlyout={this.closeFlyout}
-                              view={view}
-                            />
+                            >
+                              <RenderBlocker
+                                blockOnChange
+                                itemIsDragging={itemIsDragging}
+                              >
+                                {!EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV && (
+                                  <ComposedGlobalNavigation
+                                    containerNavigation={containerNavigation}
+                                    datasets={datasets}
+                                    globalNavigation={globalNavigation}
+                                    topOffset={topOffset}
+                                    experimental_alternateFlyoutBehaviour={
+                                      EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
+                                    }
+                                    closeFlyout={this.closeFlyout}
+                                    view={view}
+                                  />
+                                )}
 
-                            <ComposedContainerNavigation
-                              containerNavigation={containerNavigation}
-                              datasets={datasets}
-                              experimental_flyoutOnHover={
-                                EXPERIMENTAL_FLYOUT_ON_HOVER
-                              }
-                              expand={navigationUIController.expand}
-                              productNavigation={productNavigation}
-                              transitionState={transitionState}
-                              transitionStyle={transitionStyle}
-                              isCollapsed={isCollapsed}
-                              isResizing={isResizing}
-                              getNavRef={this.getNavRef}
-                              width={width}
-                              view={view}
-                            />
-                          </RenderBlocker>
-                        </ContainerNavigationMask>
-                      );
-                    }}
-                  </ResizeControl>
-                </NavigationContainer>
-              );
-            }}
-          </ResizeTransition>
+                                <ComposedContainerNavigation
+                                  containerNavigation={containerNavigation}
+                                  datasets={datasets}
+                                  experimental_flyoutOnHover={
+                                    EXPERIMENTAL_FLYOUT_ON_HOVER
+                                  }
+                                  expand={navigationUIController.expand}
+                                  productNavigation={productNavigation}
+                                  transitionState={transitionState}
+                                  transitionStyle={transitionStyle}
+                                  isCollapsed={isCollapsed}
+                                  isResizing={isResizing}
+                                  getNavRef={this.getNavRef}
+                                  width={width}
+                                  view={view}
+                                />
+                              </RenderBlocker>
+                            </ContainerNavigationMask>
+                          );
+                        }}
+                      </ResizeControl>
+                    </NavigationContainer>
+                  );
+                }}
+              </ResizeTransition>
+            )}
+          </Fragment>
         </NavigationAnalyticsContext>
       </LayoutEventListener>
     );
   };
 
-  renderPageContent = () => {
+  renderPageContent = ({ renderContentNav }) => {
     const {
+      // eslint-disable-next-line camelcase
+      experimental_horizontalGlobalNav: EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV,
       navigationUIController,
       onExpandStart,
       onExpandEnd,
@@ -341,6 +376,8 @@ export default class LayoutManager extends Component<
       productNavWidth,
     } = navigationUIController.state;
 
+    const leftOffset = EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV ? 0 : undefined;
+
     return (
       <PageContent
         flyoutIsOpen={flyoutIsOpen}
@@ -352,6 +389,9 @@ export default class LayoutManager extends Component<
         onExpandEnd={onExpandEnd}
         onCollapseStart={onCollapseStart}
         onCollapseEnd={onCollapseEnd}
+        topOffset={this.getTopOffset()}
+        leftOffset={leftOffset}
+        noContentNav={!renderContentNav}
       >
         {children}
       </PageContent>
@@ -359,11 +399,14 @@ export default class LayoutManager extends Component<
   };
 
   render() {
-    const { topOffset } = this.props;
+    const topOffset = this.getTopOffset();
+    const renderContentNav = this.props.experimental_horizontalGlobalNav
+      ? Boolean(this.props.containerNavigation)
+      : true;
     return (
       <LayoutContainer topOffset={topOffset}>
-        {this.renderNavigation()}
-        {this.renderPageContent()}
+        {this.renderNavigation({ renderContentNav })}
+        {this.renderPageContent({ renderContentNav })}
       </LayoutContainer>
     );
   }

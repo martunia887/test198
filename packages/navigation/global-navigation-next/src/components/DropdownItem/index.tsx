@@ -1,13 +1,24 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React from 'react';
-import Dropdown, { DropdownMenuStateless } from '@atlaskit/dropdown-menu';
+import { DropdownMenuStateless } from '@atlaskit/dropdown-menu';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
 import { DropdownItemProps } from './types';
 import getStyles from './styles';
 
-export default class DropdownItem extends React.Component<DropdownItemProps> {
+type State = {
+  isDropdownOpen: boolean;
+};
+
+export default class DropdownItem extends React.Component<
+  DropdownItemProps,
+  State
+> {
   static defaultProps = {};
+
+  state = {
+    isDropdownOpen: false,
+  };
 
   onOpenChange = ({
     isOpen,
@@ -17,15 +28,22 @@ export default class DropdownItem extends React.Component<DropdownItemProps> {
     event: React.MouseEvent<HTMLElement>;
   }) => {
     if (isOpen) {
+      this.setState({ isDropdownOpen: true });
       if (this.props.onClick) {
         this.props.onClick(event);
       }
     } else {
+      this.setState({ isDropdownOpen: false });
       if (this.props.onClose) {
         this.props.onClose(event);
       }
     }
   };
+
+  onCloseDropdown = () => {
+    this.setState({ isDropdownOpen: false });
+  };
+
   render() {
     const {
       appearance,
@@ -36,14 +54,14 @@ export default class DropdownItem extends React.Component<DropdownItemProps> {
       isOpen,
     } = this.props;
 
-    const DropdownComponent =
-      isOpen === undefined ? Dropdown : DropdownMenuStateless;
+    const isDropdownOpen =
+      isOpen === undefined ? this.state.isDropdownOpen : isOpen;
 
     const styles = getStyles();
 
     return (
-      <DropdownComponent
-        isOpen={isOpen}
+      <DropdownMenuStateless
+        isOpen={isDropdownOpen}
         onOpenChange={this.onOpenChange}
         trigger={
           CustomComponent ? (
@@ -60,8 +78,8 @@ export default class DropdownItem extends React.Component<DropdownItemProps> {
           )
         }
       >
-        <DropdownContent />
-      </DropdownComponent>
+        <DropdownContent closeDropdown={this.onCloseDropdown} />
+      </DropdownMenuStateless>
     );
   }
 }

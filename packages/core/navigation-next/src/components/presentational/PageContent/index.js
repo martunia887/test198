@@ -19,13 +19,39 @@ type PageProps = {
   isResizing: boolean,
   isCollapsed: boolean,
   productNavWidth: number,
+  topOffset: number,
+  leftOffset: number,
+  noContentNav: boolean,
 };
 
 export default class PageContent extends PureComponent<PageProps> {
+  static defaultProps = {
+    leftOffset: GLOBAL_NAV_WIDTH,
+    topOffset: 0,
+    noContentNav: false,
+  };
+
+  renderPageWrapper = ({
+    disableInteraction = false,
+    transitionStyle = {},
+  } = {}) => {
+    const { children, innerRef, leftOffset, topOffset } = this.props;
+    return (
+      <PageWrapper
+        disableInteraction={disableInteraction}
+        innerRef={innerRef}
+        leftOffset={leftOffset}
+        topOffset={topOffset}
+        style={transitionStyle}
+      >
+        {children}
+      </PageWrapper>
+    );
+  };
+
   render() {
     const {
       flyoutIsOpen,
-      innerRef,
       isResizing,
       isCollapsed,
       productNavWidth,
@@ -33,8 +59,11 @@ export default class PageContent extends PureComponent<PageProps> {
       onExpandEnd,
       onCollapseStart,
       onCollapseEnd,
+      noContentNav,
     } = this.props;
-    return (
+    return noContentNav ? (
+      this.renderPageWrapper()
+    ) : (
       <ResizeTransition
         from={[CONTENT_NAV_WIDTH_COLLAPSED]}
         in={!isCollapsed}
@@ -49,16 +78,12 @@ export default class PageContent extends PureComponent<PageProps> {
         onCollapseStart={onCollapseStart}
         onCollapseEnd={onCollapseEnd}
       >
-        {({ transitionStyle, transitionState }) => (
-          <PageWrapper
-            disableInteraction={isResizing || isTransitioning(transitionState)}
-            innerRef={innerRef}
-            offset={GLOBAL_NAV_WIDTH}
-            style={transitionStyle}
-          >
-            {this.props.children}
-          </PageWrapper>
-        )}
+        {({ transitionStyle, transitionState }) =>
+          this.renderPageWrapper({
+            disableInteraction: isResizing || isTransitioning(transitionState),
+            transitionStyle,
+          })
+        }
       </ResizeTransition>
     );
   }
