@@ -4,6 +4,7 @@ import { EditorView } from 'prosemirror-view';
 import * as PropTypes from 'prop-types';
 import { EventDispatcher } from '../../event-dispatcher';
 import EditorActions from '../../actions';
+import rafSchedule from 'raf-schd';
 
 export interface State {
   [name: string]: any;
@@ -100,17 +101,17 @@ export default class WithPluginState extends React.Component<Props, State> {
     this.notAppliedState = { ...this.notAppliedState, ...stateSubset };
 
     if (this.debounce) {
-      window.clearTimeout(this.debounce);
+      window.cancelAnimationFrame(this.debounce);
     }
 
-    this.debounce = window.setTimeout(() => {
+    this.debounce = window.requestAnimationFrame(() => {
       if (this.hasBeenMounted) {
         this.setState(this.notAppliedState);
       }
 
       this.debounce = null;
       this.notAppliedState = {};
-    }, 0);
+    });
   };
 
   private getPluginsStates(
