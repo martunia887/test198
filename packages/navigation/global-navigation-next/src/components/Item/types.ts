@@ -15,7 +15,7 @@ export type ItemProps = {
   /** Content to render in a drawer */
   drawerContent?: ComponentType<{}>;
   /** Content to render in a dropdown */
-  dropdownContent?: ComponentType<{}>;
+  dropdownContent?: ComponentType<{ closeDropdown?: () => void }>;
   /** An href which this Item links to. If this prop is provided the Item will
    * render as an <a>. */
   href?: string;

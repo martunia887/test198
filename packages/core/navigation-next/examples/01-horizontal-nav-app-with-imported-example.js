@@ -16,13 +16,15 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { Label } from '@atlaskit/field-base';
 import { ToggleStateless } from '@atlaskit/toggle';
+// import GlobalNavigation from '@atlaskit/global-navigation-next';
+// import { JiraSoftwareWordmark, JiraSoftwareIcon } from '@atlaskit/logo';
+import BaseGlobalNavigationExample from '../../../navigation/global-navigation-next/examples/00-base-example';
 
 import { LayoutManagerWithViewController, NavigationProvider } from '../src';
 
 import { LinkItem, ProjectSwitcher } from './shared/components';
 import RootViews from './shared/views/root';
 import ContainerViews from './shared/views/container';
-import GlobalNavigation from './shared/components/GlobalNavigation';
 
 import {
   BacklogView,
@@ -86,7 +88,7 @@ export default class App extends Component<
             }
             experimental_fullWidthFlyout={isFullWidthFlyoutEnabled}
             experimental_horizontalGlobalNav
-            globalNavigation={GlobalNavigation}
+            globalNavigation={BaseGlobalNavigationExample}
           >
             <div style={{ padding: 40 }}>
               <RootViews />
