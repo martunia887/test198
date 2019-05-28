@@ -6,8 +6,16 @@ import GlobalNavigation from '../src';
 import { IntlProvider } from 'react-intl';
 
 import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
+import { mockNotificationsEndpoint } from './helpers/mock-notifications-endpoint';
+
+const CLOUD_ID = 'some-cloud-id';
+const FABRIC_NOTIFICATION_LOG_URL = '/gateway/api/notification-log/';
 
 mockEndpoints('jira');
+mockNotificationsEndpoint(
+  `/gateway/api/notification-log/api/2/notifications/count/unseen?cloudId=${CLOUD_ID}`,
+  3,
+);
 
 const HelpContent = () => (
   <Fragment>
@@ -98,6 +106,22 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     });
   };
 
+  onNotificationsClick = () => {
+    console.log('notifications click');
+
+    // Notification URL is unreachable from the examples.
+    // Hence setting it to root
+    // Wait for the drawer to open and mount the iframe.
+    setTimeout(() => {
+      const iframe: HTMLIFrameElement | null = document.querySelector(
+        'iFrame[title="Notifications"]',
+      );
+      if (iframe) {
+        iframe.src = '/';
+      }
+    });
+  };
+
   onSettingsClose = () => {
     this.setState({
       isSettingsOpen: false,
@@ -132,7 +156,22 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           onClose: this.onHelpClose,
           onClick: this.onHelpClick,
         }}
-        notifications={{}}
+        notifications={{
+          badge: {
+            type: 'builtin',
+            fabricNotificationLogUrl: FABRIC_NOTIFICATION_LOG_URL,
+            cloudId: CLOUD_ID,
+          },
+          // badge: {
+          //   type: 'provided',
+          //   count: 3,
+          // },
+          drawerContent: 'builtin',
+          // drawerContent: () => <div>custom drawer content</div>,
+          locale: 'en',
+          onClick: this.onNotificationsClick,
+          product: 'jira',
+        }}
         settings={{
           isOpen: this.state.isSettingsOpen,
           onClose: this.onSettingsClose,

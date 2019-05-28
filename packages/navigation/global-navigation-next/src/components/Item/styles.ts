@@ -8,6 +8,7 @@ const baseStyles = {
   border: 'none',
   borderRadius: 3,
   boxSizing: 'border-box',
+  position: 'relative',
   textDecoration: 'none',
   cursor: 'pointer',
   ':hover,:focus': {
