@@ -1,8 +1,5 @@
 import { EditorView } from 'prosemirror-view';
 
-// Import polyfills
-import 'mutationobserver-shim'; // window.MutationObserver
-
 export class NullSelectionReader {
   constructor(private warnOnce: () => void) {}
 

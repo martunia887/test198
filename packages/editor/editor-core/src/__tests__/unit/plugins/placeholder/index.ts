@@ -158,17 +158,6 @@ describe('placeholder', () => {
   });
 
   describe('on mobile', () => {
-    /**
-     * Note:
-     *
-     * These tests require a polyfill for the DOMObserver API (e.g. `mutationobserver-shim`)
-     * which JSDom doesn't natively support, because `prosemirror-view` envokes it internally
-     * when resolving `composition` events.
-     *
-     * Failure to patch will result in the following error:
-     * `TypeError: Cannot read property 'takeRecords' of undefined DOMObserver.flush`
-     */
-
     // Ensure the placeholder value is removed as soon as input (via composition) begins
     it('disappears when a compositionstart event occurs', async () => {
       const { editorView } = editor(doc(p()));
