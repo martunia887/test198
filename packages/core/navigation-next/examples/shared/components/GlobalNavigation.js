@@ -3,6 +3,7 @@
 import React, { Fragment } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Link } from 'react-router-dom';
+import Avatar from '@atlaskit/avatar';
 import AtlassianSwitcher from '@atlaskit/atlassian-switcher';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import GlobalNavigation from '@atlaskit/global-navigation-next';
@@ -16,6 +17,7 @@ import { colors } from '@atlaskit/theme';
 import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
 
 import BasicQuickSearch from './QuickSearch';
+import { getAvatarUrl } from './helpers/avatar-data-url';
 
 mockEndpoints('jira');
 
@@ -70,13 +72,31 @@ const WrappedSwitcher = () => {
   );
 };
 
+const ProfileContent = () => (
+  <Fragment>
+    <DropdownItemGroup title="JimJim">
+      <DropdownItem>Profile</DropdownItem>
+      <DropdownItem>Give feedback</DropdownItem>
+      <DropdownItem>Personal settings</DropdownItem>
+      <DropdownItem>My Reminders</DropdownItem>
+      <DropdownItem>Log out</DropdownItem>
+    </DropdownItemGroup>
+  </Fragment>
+);
+
 const HelpContent = () => (
   <Fragment>
-    <DropdownItemGroup>
-      <DropdownItem>Help</DropdownItem>
+    <DropdownItemGroup title="Help">
+      <DropdownItem>Atlassian Documentation</DropdownItem>
+      <DropdownItem>Atlassian Community</DropdownItem>
+      <DropdownItem>What's New</DropdownItem>
+      <DropdownItem>Get Jira Mobile</DropdownItem>
+      <DropdownItem>Keyboard shortcuts</DropdownItem>
+      <DropdownItem>About Jira</DropdownItem>
     </DropdownItemGroup>
-    <DropdownItemGroup>
-      <DropdownItem>Me</DropdownItem>
+    <DropdownItemGroup title="Legal">
+      <DropdownItem>Terms of use</DropdownItem>
+      <DropdownItem>Privacy Policy</DropdownItem>
     </DropdownItemGroup>
   </Fragment>
 );
@@ -228,6 +248,10 @@ export default class WrappedGlobalNavigation extends React.Component<
           locale: 'en',
           onClick: this.onNotificationsClick,
           product: 'jira',
+        }}
+        profile={{
+          text: <Avatar src={getAvatarUrl()} />,
+          dropdownContent: ProfileContent,
         }}
         settings={{
           isOpen: this.state.isSettingsOpen,
