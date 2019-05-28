@@ -118,6 +118,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
       );
       if (iframe) {
         iframe.src = '/';
+        iframe.srcdoc = 'notifications drawer iframe';
       }
     });
   };
