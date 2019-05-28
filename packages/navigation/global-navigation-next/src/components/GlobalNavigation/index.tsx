@@ -13,7 +13,7 @@ import { ProductHome } from './ProductHome';
 import Search from './Search';
 import getStyles from './styles';
 import { GlobalNavigationProps } from './types';
-import Account from './Account';
+import Profile from './Profile';
 
 export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   static defaultProps = {
@@ -21,7 +21,6 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   };
   render() {
     const {
-      account,
       appSwitcherComponent: AppSwitcherComponent,
       create,
       search,
@@ -29,6 +28,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
       notifications,
       primaryItems,
       product,
+      profile,
       settings,
     } = this.props;
     const styles = getStyles();
@@ -78,7 +78,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                       }
                     />
                   )}
-                  <Account {...account} />
+                  <Profile {...profile} />
                 </div>
               </Fragment>
             )}

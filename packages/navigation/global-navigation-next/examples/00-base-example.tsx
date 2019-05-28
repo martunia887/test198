@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import AtlassianSwitcher from '@atlaskit/atlassian-switcher';
+import Avatar from '@atlaskit/avatar';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { JiraSoftwareIcon, JiraSoftwareWordmark } from '@atlaskit/logo';
 import GlobalNavigation from '../src';
@@ -18,7 +19,7 @@ mockNotificationsEndpoint(
   3,
 );
 
-const AccountContent = () => (
+const ProfileContent = () => (
   <Fragment>
     <DropdownItemGroup title="JimJim">
       <DropdownItem>Profile</DropdownItem>
@@ -198,9 +199,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
         }}
-        account={{
-          imgSrc: getAvatarUrl(),
-          dropdownContent: AccountContent,
+        // profile={{}} // signed-out behaviour
+        profile={{
+          text: <Avatar src={getAvatarUrl()} />,
+          dropdownContent: ProfileContent,
         }}
         primaryItems={[
           { id: 'home', text: 'Home', href: '#' },

@@ -1,9 +1,9 @@
 import Item from '../Item';
-import { AccountProps } from './Account/types';
 import { CreateProps } from './Create/types';
 import { NotificationsProps } from './Notifications/types';
 import { ProductProps } from './ProductHome/types';
 import { SearchProps } from './Search/types';
+import { ProfileProps } from './Profile/types';
 
 export interface SecondaryItemProps {
   /**
@@ -18,7 +18,6 @@ export interface SecondaryItemProps {
 }
 
 export type GlobalNavigationProps = {
-  account: AccountProps;
   appSwitcherComponent: React.ComponentType;
   create?: CreateProps;
   product: ProductProps;
@@ -27,4 +26,5 @@ export type GlobalNavigationProps = {
   notifications?: NotificationsProps;
   help?: SecondaryItemProps;
   settings?: SecondaryItemProps;
+  profile: ProfileProps;
 };

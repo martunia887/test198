@@ -42,7 +42,7 @@ export const getStyles = (props: ItemProps) => ({
       padding: gridSize / 2,
       marginLeft: gridSize / 2,
     },
-    account: {
+    profile: {
       ...baseStyles,
       color: colors.B50,
       display: 'inline-flex',
