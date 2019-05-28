@@ -63,6 +63,7 @@ export default class DropdownItem extends React.Component<
       <DropdownMenuStateless
         isOpen={isDropdownOpen}
         onOpenChange={this.onOpenChange}
+        position={appearance === 'primary' ? 'top left' : 'top right'}
         trigger={
           CustomComponent ? (
             <CustomComponent {...this.props} />

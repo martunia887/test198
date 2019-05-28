@@ -7,6 +7,7 @@ import { IntlProvider } from 'react-intl';
 
 import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
 import { mockNotificationsEndpoint } from './helpers/mock-notifications-endpoint';
+import { getAvatarUrl } from './helpers/avatar-data-url';
 
 const CLOUD_ID = 'some-cloud-id';
 const FABRIC_NOTIFICATION_LOG_URL = '/gateway/api/notification-log/';
@@ -17,13 +18,31 @@ mockNotificationsEndpoint(
   3,
 );
 
+const AccountContent = () => (
+  <Fragment>
+    <DropdownItemGroup title="JimJim">
+      <DropdownItem>Profile</DropdownItem>
+      <DropdownItem>Give feedback</DropdownItem>
+      <DropdownItem>Personal settings</DropdownItem>
+      <DropdownItem>My Reminders</DropdownItem>
+      <DropdownItem>Log out</DropdownItem>
+    </DropdownItemGroup>
+  </Fragment>
+);
+
 const HelpContent = () => (
   <Fragment>
-    <DropdownItemGroup>
-      <DropdownItem>Help</DropdownItem>
+    <DropdownItemGroup title="Help">
+      <DropdownItem>Atlassian Documentation</DropdownItem>
+      <DropdownItem>Atlassian Community</DropdownItem>
+      <DropdownItem>What's New</DropdownItem>
+      <DropdownItem>Get Jira Mobile</DropdownItem>
+      <DropdownItem>Keyboard shortcuts</DropdownItem>
+      <DropdownItem>About Jira</DropdownItem>
     </DropdownItemGroup>
-    <DropdownItemGroup>
-      <DropdownItem>Me</DropdownItem>
+    <DropdownItemGroup title="Legal">
+      <DropdownItem>Terms of use</DropdownItem>
+      <DropdownItem>Privacy Policy</DropdownItem>
     </DropdownItemGroup>
   </Fragment>
 );
@@ -178,6 +197,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           onClose: this.onSettingsClose,
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
+        }}
+        account={{
+          imgSrc: getAvatarUrl(),
+          dropdownContent: AccountContent,
         }}
         primaryItems={[
           { id: 'home', text: 'Home', href: '#' },

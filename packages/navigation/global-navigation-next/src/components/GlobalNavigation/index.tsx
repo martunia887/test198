@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
-import Avatar from '@atlaskit/avatar';
 import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
@@ -14,6 +13,7 @@ import { ProductHome } from './ProductHome';
 import Search from './Search';
 import getStyles from './styles';
 import { GlobalNavigationProps } from './types';
+import Account from './Account';
 
 export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   static defaultProps = {
@@ -21,6 +21,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   };
   render() {
     const {
+      account,
       appSwitcherComponent: AppSwitcherComponent,
       create,
       search,
@@ -77,7 +78,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                       }
                     />
                   )}
-                  <Avatar />
+                  <Account {...account} />
                 </div>
               </Fragment>
             )}
