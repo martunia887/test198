@@ -18,7 +18,7 @@ export interface SecondaryItemProps {
 }
 
 export type GlobalNavigationProps = {
-  appSwitcherComponent: React.ComponentType;
+  appSwitcherComponent?: React.ComponentType;
   create?: CreateProps;
   product: ProductProps;
   search: SearchProps;

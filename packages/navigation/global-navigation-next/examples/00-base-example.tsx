@@ -159,6 +159,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     return (
       <GlobalNavigation
         appSwitcherComponent={WrappedSwitcher}
+        // appSwitcherComponent={undefined} // no switcher behaviour
         create={{
           onClick: () => console.log('Create clicked'),
           text: 'Create',
