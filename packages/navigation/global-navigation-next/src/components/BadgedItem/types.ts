@@ -1,4 +1,5 @@
-import { ItemProps, ItemRenderComponentProps } from '../Item/types';
+import Item from '../Item';
+import { ItemRenderComponentProps } from '../Item/types';
 
 export type Dataset = { [name: string]: string | typeof undefined };
 
@@ -24,7 +25,10 @@ export type Badge =
       component: React.ComponentType<{}>;
     };
 
-export type BadgedItemProps = ItemProps & {
+export type BadgedItemProps = JSX.LibraryManagedAttributes<
+  typeof Item,
+  Item['props']
+> & {
   badge?: Badge;
   /** We compose the BadgedItem from an Item, and we use this prop already. */
   component?: undefined;

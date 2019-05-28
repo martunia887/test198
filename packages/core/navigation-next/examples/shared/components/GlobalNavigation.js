@@ -181,6 +181,10 @@ export default class WrappedGlobalNavigation extends React.Component<
     });
   };
 
+  onNotificationsClick = () => {
+    console.log('notifications clicked');
+  };
+
   onSettingsClose = () => {
     this.setState({
       isSettingsOpen: false,
@@ -215,7 +219,16 @@ export default class WrappedGlobalNavigation extends React.Component<
           onClose: this.onHelpClose,
           onClick: this.onHelpClick,
         }}
-        notifications={{}}
+        notifications={{
+          badge: {
+            type: 'provided',
+            count: 3,
+          },
+          drawerContent: () => <div>notifications</div>,
+          locale: 'en',
+          onClick: this.onNotificationsClick,
+          product: 'jira',
+        }}
         settings={{
           isOpen: this.state.isSettingsOpen,
           onClose: this.onSettingsClose,
