@@ -1,1 +1,0 @@
-Change media-card to use multi entry points of theme
