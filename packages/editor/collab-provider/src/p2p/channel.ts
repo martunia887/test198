@@ -34,7 +34,7 @@ export interface StepData {
 
 export class Channel extends Emitter<ChannelEvent> {
   private config: Config;
-  private socket: SocketIOClient.Socket;
+  private socket: SocketIOClient.Socket | undefined;
   private leader: string | undefined;
   private connected: boolean = false;
 
@@ -73,6 +73,10 @@ export class Channel extends Emitter<ChannelEvent> {
   }
 
   disconnect() {
+    if (!this.socket) {
+      return;
+    }
+
     this.socket.disconnect();
   }
 
@@ -83,6 +87,10 @@ export class Channel extends Emitter<ChannelEvent> {
   };
 
   private onConnect = () => {
+    if (!this.socket) {
+      return;
+    }
+
     logger('Socket connected', this.socket.id);
     this.connected = true;
     this.emit('connected', { sid: this.socket.id });
@@ -143,7 +151,7 @@ export class Channel extends Emitter<ChannelEvent> {
   };
 
   broadcast(type: ChannelEvent, data: any) {
-    if (!this.connected) {
+    if (!this.connected || !this.socket) {
       return;
     }
 

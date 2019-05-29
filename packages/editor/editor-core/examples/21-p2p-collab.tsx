@@ -110,14 +110,8 @@ export default class Example extends Component<any, State> {
             allowIndentation={true}
             allowTextColor={true}
             allowTables={{
-              allowColumnResizing: true,
-              allowMergeCells: true,
-              allowNumberColumn: true,
-              allowBackgroundColor: true,
-              allowHeaderRow: true,
-              allowHeaderColumn: true,
-              permittedLayouts: 'all',
-              stickToolbarToBottom: true,
+              advanced: true,
+              allowColumnSorting: true,
             }}
             allowTemplatePlaceholders={{ allowInserting: true }}
             media={{

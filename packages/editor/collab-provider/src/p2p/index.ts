@@ -22,12 +22,12 @@ export class P2PCollabProvider extends Emitter<CollabEvent>
   implements CollabEditProvider {
   // private config: Config;
   private channel: Channel;
-  private repo: StepRepository;
-  private sid: string;
-  private userId: string;
+  private repo!: StepRepository;
+  private sid!: string;
+  private userId!: string;
 
   private getState = (): any => {};
-  private title: string;
+  private title!: string;
 
   private isSending: boolean = false;
   private debounced: number | undefined;
