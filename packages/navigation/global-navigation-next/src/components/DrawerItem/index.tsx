@@ -46,6 +46,7 @@ export default class DrawerItem extends React.Component<
       component,
       drawerContent: DrawerContent,
       isOpen,
+      onCloseComplete,
     } = this.props;
 
     let ItemComponent: ElementType = 'button';
@@ -67,6 +68,7 @@ export default class DrawerItem extends React.Component<
           openFromRight
           isOpen={this.isControlled ? isOpen : this.state.isOpen}
           onClose={this.closeDrawer}
+          onCloseComplete={onCloseComplete}
         >
           <DrawerContent />
         </Drawer>

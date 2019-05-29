@@ -114,6 +114,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     isSettingsOpen: false,
   };
 
+  onAppSwitcherCloseComplete = () => {
+    console.log('app switcher close complete');
+  };
+
   onHelpClick = () => {
     this.setState(state => ({
       isHelpOpen: !state.isHelpOpen,
@@ -143,6 +147,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     }, 50);
   };
 
+  onNotificationsCloseComplete = () => {
+    console.log('notifications close completed');
+  };
+
   onSettingsClose = () => {
     this.setState({
       isSettingsOpen: false,
@@ -161,6 +169,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
         appSwitcher={{
           drawerContent: WrappedSwitcher,
           tooltip: 'Switch to...',
+          onCloseComplete: this.onAppSwitcherCloseComplete,
         }}
         // appSwitcherComponent={undefined} // no switcher behaviour
         create={{
@@ -196,6 +205,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           // drawerContent: () => <div>custom drawer content</div>,
           locale: 'en',
           onClick: this.onNotificationsClick,
+          onCloseComplete: this.onNotificationsCloseComplete,
           product: 'jira',
           tooltip: 'Notifications',
         }}
