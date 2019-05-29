@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/core';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 
 import Blog16Icon from '@atlaskit/icon-object/glyph/blog/16';
 import Branch16Icon from '@atlaskit/icon-object/glyph/branch/16';

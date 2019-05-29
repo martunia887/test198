@@ -4,7 +4,8 @@
 // $FlowFixMe
 import { forwardRef, type Node } from 'react';
 import { jsx } from '@emotion/core';
-import { borderRadius, colors, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 import Tooltip from '@atlaskit/tooltip';
 
 import { ClearButton } from './common';

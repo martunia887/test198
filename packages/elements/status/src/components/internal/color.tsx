@@ -1,5 +1,5 @@
 import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
-import { colors } from '@atlaskit/theme';
+import { N900, N0, N50 } from '@atlaskit/theme/colors';
 import * as React from 'react';
 import {
   ButtonHTMLAttributes,
@@ -16,10 +16,10 @@ import { Color as ColorType } from '../Status';
 const Button: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`
   height: 24px;
   width: 24px;
-  background: ${colors.N900};
+  background: ${N900};
   padding: 0;
   border-radius: 4px;
-  border: 1px solid ${colors.N0};
+  border: 1px solid ${N0};
   cursor: pointer;
   display: block;
   box-sizing: border-box;
@@ -34,7 +34,7 @@ const ButtonWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
   padding: 1px;
   border-radius: 6px;
   &:hover {
-    border: 1px solid ${colors.N50};
+    border: 1px solid ${N50};
   }
 `;
 

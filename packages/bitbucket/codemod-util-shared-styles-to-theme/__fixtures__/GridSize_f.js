@@ -1,6 +1,6 @@
 // @flow
 import { akGridSize, akGridSizeUnitless } from "@atlaskit/util-shared-styles";
-import { colors } from "@atlaskit/theme";
+import * as colors from "@atlaskit/theme/colors";
 import styled, { css } from "styled-components";
 const ComponentA = styled.div`
   padding: ${akGridSize};
@@ -18,9 +18,12 @@ const ComponentB = styled.div`
     `};
   `};
 `;
+
 //////
 // @flow
-import { colors, gridSize } from "@atlaskit/theme";
+import { gridSize } from "@atlaskit/theme/constants";
+
+import * as colors from "@atlaskit/theme/colors";
 import styled, { css } from "styled-components";
 const ComponentA = styled.div`
   padding: ${gridSize()}px;

@@ -10,7 +10,7 @@ const MyDiv = styled.p`
 //////
 // @flow
 import IssueIcon from "@atlaskit/icon/glyph/issue";
-import { borderRadius } from "@atlaskit/theme";
+import { borderRadius } from "@atlaskit/theme/constants";
 import styled from "styled-components";
 
 const MyDiv = styled.p`

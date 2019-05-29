@@ -1,9 +1,9 @@
 import {
   codeFontFamily,
   layers,
-  colors,
   fontSize as defaultFontSize,
-} from '@atlaskit/theme';
+} from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 
 const {
   B100,

@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { Identifier } from '@atlaskit/media-core';
 import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/chevron-left-circle';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
-import { colors } from '@atlaskit/theme';
+import { N800 } from '@atlaskit/theme/colors';
 import { MediaButton } from '@atlaskit/media-ui';
 import { Shortcut } from '@atlaskit/media-ui';
 import {
@@ -88,7 +88,7 @@ export class NavigationBase extends Component<NavigationProps, {}> {
                 onClick={prev('mouse')}
                 iconBefore={
                   <ArrowLeftCircleIcon
-                    primaryColor={colors.N800}
+                    primaryColor={N800}
                     size="xlarge"
                     label="Previous"
                   />
@@ -106,7 +106,7 @@ export class NavigationBase extends Component<NavigationProps, {}> {
                 onClick={next('mouse')}
                 iconBefore={
                   <ArrowRightCircleIcon
-                    primaryColor={colors.N800}
+                    primaryColor={N800}
                     size="xlarge"
                     label="Next"
                   />

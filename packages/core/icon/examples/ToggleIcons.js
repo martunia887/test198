@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N400, N0, R300, B300 } from '@atlaskit/theme/colors';
 import Button from '@atlaskit/button';
 import CheckboxIcon from '../glyph/checkbox';
 import RadioIcon from '../glyph/radio';
@@ -9,16 +9,16 @@ const toggleableIcons = [['checkbox', CheckboxIcon], ['radio', RadioIcon]];
 
 const styles = {
   iconChecked: {
-    color: colors.N400,
-    fill: colors.N0,
+    color: N400,
+    fill: N0,
   },
   iconUnchecked: {
-    color: colors.N400,
-    fill: colors.N400,
+    color: N400,
+    fill: N400,
   },
   iconReverse: {
-    color: colors.R300,
-    fill: colors.B300,
+    color: R300,
+    fill: B300,
   },
 };
 

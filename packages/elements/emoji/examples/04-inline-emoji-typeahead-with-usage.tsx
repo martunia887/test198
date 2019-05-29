@@ -1,4 +1,4 @@
-import { layers } from '@atlaskit/theme';
+import { layers } from '@atlaskit/theme/constants';
 import * as React from 'react';
 import { Component } from 'react';
 import {

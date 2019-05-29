@@ -1,0 +1,1 @@
+Changed all the imports of theme to use the alternative entry points

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Skeleton as SkeletonAvatar } from '@atlaskit/avatar';
-import { gridSize as gridSizeFn } from '@atlaskit/theme';
+import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 
 type WrapperProps = {
   isAvatarHidden?: boolean,

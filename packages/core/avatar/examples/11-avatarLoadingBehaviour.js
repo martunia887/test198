@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import Button from '@atlaskit/button';
 import { Note } from '../examples-util/helpers';
 import Avatar from '../src';

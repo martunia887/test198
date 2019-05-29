@@ -11,7 +11,7 @@ import Lorem from 'react-lorem-component';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import Tooltip from '@atlaskit/tooltip';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 
 import SecondaryActions from './utils/confluence-example/SecondaryActions';
 import Navigation, {

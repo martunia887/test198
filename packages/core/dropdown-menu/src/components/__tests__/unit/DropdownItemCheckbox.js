@@ -4,7 +4,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import PropTypes from 'prop-types';
 import CheckboxIcon from '@atlaskit/icon/glyph/checkbox';
-import { colors } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 import Item from '@atlaskit/item';
 import { KEY_ENTER, KEY_SPACE } from '../../../util/keys';
 

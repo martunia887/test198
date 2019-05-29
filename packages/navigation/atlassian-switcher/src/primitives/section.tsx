@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { gridSize, typography } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { h100 } from '@atlaskit/theme/typography';
 import styled from 'styled-components';
 import {
   analyticsAttributes,
@@ -12,7 +13,7 @@ const SectionContainer = styled.section`
 `;
 
 const SectionTitle = styled.h1`
-  ${typography.h100};
+  ${h100};
   text-transform: uppercase;
   margin-bottom: ${gridSize()}px;
   margin-left: ${gridSize()}px;

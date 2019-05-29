@@ -1,6 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { gridSize, fontSize, colors, math } from '@atlaskit/theme';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
+import { link, linkHover } from '@atlaskit/theme/colors';
+import { divide } from '@atlaskit/theme/math';
 import {
   buttonWidthUnitless,
   maxTextWidth,
@@ -12,8 +14,8 @@ const COMMON_STYLES = css`
   font-size: ${fontSize}px;
   font-weight: normal;
   line-height: 1;
-  margin-left: ${math.divide(gridSize, 2)}px;
-  margin-right: ${math.divide(gridSize, 2)}px;
+  margin-left: ${divide(gridSize, 2)}px;
+  margin-right: ${divide(gridSize, 2)}px;
   padding: 2px 0;
   max-width: ${({ isRemovable }) =>
     isRemovable
@@ -37,7 +39,7 @@ const getFocusedStyles = ({ isFocused, color, ...rest }) => {
     `;
   if (isFocused)
     return css`
-      color: ${colors.link(rest)};
+      color: ${link(rest)};
     `;
   return null;
 };
@@ -47,7 +49,7 @@ export const linkStyles = css`
   color === 'standard' ? 'none' : 'underline'};
 
   &:hover {
-    color: ${colors.linkHover};
+    color: ${linkHover};
     ${({ color }) =>
       color === 'standard'
         ? ''

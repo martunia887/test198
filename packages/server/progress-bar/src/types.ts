@@ -1,4 +1,4 @@
-import { ThemeProp } from '@atlaskit/theme';
+import * as ThemeProp from '@atlaskit/theme/ThemeProp';
 
 export type ThemeProps = {
   value: string | number;

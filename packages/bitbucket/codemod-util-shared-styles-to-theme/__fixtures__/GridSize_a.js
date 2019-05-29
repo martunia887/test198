@@ -8,7 +8,7 @@ const MyDiv = styled.div`
 `;
 //////
 // @flow
-import { gridSize } from "@atlaskit/theme";
+import { gridSize } from "@atlaskit/theme/constants";
 import styled from "styled-components";
 
 const blah = gridSize();

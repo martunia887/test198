@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled';
 import Lorem from 'react-lorem-component';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 
 import { WIDTH_ENUM } from '../src/shared-variables';
 import ModalDialog, { ModalTransition } from '../src';

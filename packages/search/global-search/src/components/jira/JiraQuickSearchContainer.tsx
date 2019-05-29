@@ -5,7 +5,7 @@ import {
   FormattedHTMLMessage,
 } from 'react-intl';
 import styled from 'styled-components';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import { withAnalytics } from '@atlaskit/analytics';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 import { CancelableEvent } from '@atlaskit/quick-search';

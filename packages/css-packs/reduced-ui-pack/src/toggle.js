@@ -1,5 +1,7 @@
 //@flow
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+
+import { N80, G300, B100 } from '@atlaskit/theme/colors';
 import dataUri from './utils/data-uri';
 import evaluateInner from './utils/evaluate-inner';
 
@@ -27,7 +29,7 @@ export default evaluateInner`
   }
   .ak-field-toggle > label {
     background-clip: content-box;
-    background-color: ${colors.N80};
+    background-color: ${N80};
     background-image: ${dataUri(
       'internal/toggle/check-enabled.svg',
     )}, ${dataUri('internal/toggle/cross-enabled.svg')};
@@ -57,7 +59,7 @@ export default evaluateInner`
     top: 0;
   }
   .ak-field-toggle > input:checked + label {
-    background-color: ${colors.G300};
+    background-color: ${G300};
   }
   .ak-field-toggle > input:disabled + label {
     background-color: ${toggleBgUncheckedDisabled};
@@ -80,7 +82,7 @@ export default evaluateInner`
     outline: none;
   }
   .ak-field-toggle > input:focus + label {
-    border-color: ${colors.B100};
+    border-color: ${B100};
   }
   .ak-field-toggle__size-large > label {
     background-position: ${togglePadding * 2.5}px ${togglePadding *

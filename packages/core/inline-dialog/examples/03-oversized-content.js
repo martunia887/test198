@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { colors } from '@atlaskit/theme';
+import { G300, Y300 } from '@atlaskit/theme/colors';
 import InlineDialog from '../src';
 
 const centeredContainerStyles = {
@@ -9,7 +9,7 @@ const centeredContainerStyles = {
 };
 
 const targetStyles = {
-  background: colors.G300,
+  background: G300,
   padding: '10px',
 };
 
@@ -22,7 +22,7 @@ const scrollContainer = {
 const oversizedStyles = {
   height: '2000px',
   width: '2000px',
-  background: colors.Y300,
+  background: Y300,
 };
 
 const dialogContent = (

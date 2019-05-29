@@ -3,7 +3,7 @@
 
 import { PureComponent } from 'react';
 import { jsx } from '@emotion/core';
-import { colors } from '@atlaskit/theme';
+import { primary } from '@atlaskit/theme/colors';
 
 import { BaseSelect, selectComponents } from './Select';
 
@@ -19,7 +19,7 @@ const ClearOption = ({ children, innerProps, isFocused }: *) => (
   <div
     css={{
       boxSizing: 'border-box',
-      color: colors.primary(),
+      color: primary(),
       cursor: 'pointer',
       fontSize: 'inherit',
       padding: '8px 12px',

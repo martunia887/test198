@@ -7,7 +7,7 @@ import {
 } from '@atlaskit/editor-core';
 
 // @ts-ignore
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import { toNativeBridge } from './web-to-native';
 import WebBridgeImpl from './native-to-web';
 import MobilePicker from './MobileMediaPicker';
@@ -29,7 +29,7 @@ import { cardClient, cardProvider } from '../providers/cardProvider';
 const params = parseLocationSearch();
 // @ts-ignore
 // eslint-disable-next-line no-redeclare
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 
 export const bridge: WebBridgeImpl = ((window as any).bridge = new WebBridgeImpl());
 

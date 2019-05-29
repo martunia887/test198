@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, type Node } from 'react';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import {
   DropdownItemGroup,
   DropdownItem,

@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { borderRadius, colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { borderRadius } from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 import styled from 'styled-components';
 
 export type Color = 'grey' | 'red' | 'blue' | 'green' | 'purple' | 'yellow';

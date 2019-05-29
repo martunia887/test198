@@ -1,11 +1,11 @@
 // @flow
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { B50 } from '@atlaskit/theme/colors';
 import { Radio } from '../src';
 
 const Tr = styled.tr`
-  background-color: ${p => (p.isChecked ? colors.B50 : 'transparent')};
+  background-color: ${p => (p.isChecked ? B50 : 'transparent')};
   transition: background-color 200ms ease-in-out;
 `;
 

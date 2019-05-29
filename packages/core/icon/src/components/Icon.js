@@ -2,7 +2,7 @@
 import React, { Component, type Node } from 'react';
 import styled from 'styled-components';
 import uuid from 'uuid';
-import { colors } from '@atlaskit/theme';
+import { background } from '@atlaskit/theme/colors';
 import { sizes } from '../constants';
 
 const getSize = props => {
@@ -15,7 +15,7 @@ const getSize = props => {
 export const IconWrapper = styled.span`
   ${getSize} color: ${p => p.primaryColor || 'currentColor'};
   display: inline-block;
-  fill: ${p => p.secondaryColor || colors.background};
+  fill: ${p => p.secondaryColor || background};
   flex-shrink: 0;
   line-height: 1;
 

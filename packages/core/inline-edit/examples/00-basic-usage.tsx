@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Textfield from '@atlaskit/textfield';
-import { gridSize, fontSize } from '@atlaskit/theme';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
 
 import InlineEdit from '../src';
 

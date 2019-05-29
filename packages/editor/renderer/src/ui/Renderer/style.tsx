@@ -1,13 +1,13 @@
 import { HTMLAttributes } from 'react';
 import styled from 'styled-components';
+import { themed } from '@atlaskit/theme/components';
 import {
-  colors,
   gridSize,
   fontFamily,
   fontSize,
   borderRadius,
-  themed,
-} from '@atlaskit/theme';
+} from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 import {
   tableSharedStyle,
   columnLayoutSharedStyle,

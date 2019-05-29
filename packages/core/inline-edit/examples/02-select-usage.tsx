@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Select from '@atlaskit/select';
 import Group from '@atlaskit/tag-group';
 import Tag from '@atlaskit/tag';
-import { gridSize, fontSize } from '@atlaskit/theme';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
 
 import InlineEdit from '../src';
 

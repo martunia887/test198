@@ -1,6 +1,9 @@
 // @flow
 import styled from 'styled-components';
-import { borderRadius, colors, gridSize, math, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
+import { divide } from '@atlaskit/theme/math';
 
 function lockSelectedColor(normal) {
   const selected = { light: colors.B400, dark: colors.B100 };
@@ -87,7 +90,7 @@ export const NavItem = styled.div`
   cursor: pointer;
   line-height: 1.8;
   margin: 0;
-  padding: ${math.divide(gridSize, 2)}px ${gridSize}px;
+  padding: ${divide(gridSize, 2)}px ${gridSize}px;
   position: relative;
   white-space: nowrap;
   overflow: hidden;

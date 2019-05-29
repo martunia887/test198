@@ -1,19 +1,14 @@
 // @flow
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
-import { colors } from '@atlaskit/theme';
+import { N800, B500, N20, N0 } from '@atlaskit/theme/colors';
 import Avatar from '../src';
 import { Code, Note } from '../examples-util/helpers';
 import nucleusImage from '../examples-util/nucleus.png';
 import { avatarUrl } from '../examples-util/data';
 import type { PresenceType, StatusType } from '../src/types';
 
-const exampleColors: string[] = [
-  colors.N800,
-  colors.B500,
-  colors.N20,
-  colors.N0,
-];
+const exampleColors: string[] = [N800, B500, N20, N0];
 
 const presences: Array<PresenceType> = ['focus', 'online', 'offline', 'busy'];
 const statuses: Array<StatusType> = ['approved', 'locked', 'declined'];

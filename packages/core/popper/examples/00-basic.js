@@ -3,7 +3,8 @@ import React from 'react';
 import Button from '@atlaskit/button';
 import Lorem from 'react-lorem-component';
 import styled from 'styled-components';
-import { elevation, borderRadius } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { e300 } from '@atlaskit/theme/elevation';
 
 import { Manager, Reference, Popper } from '../src';
 
@@ -16,7 +17,7 @@ const Popup = styled.div`
   margin: 2px 0;
   transition: opacity 200ms ease-in-out;
   opacity: ${p => (p.outOfBoundaries ? 0 : 1)};
-  ${elevation.e300};
+  ${e300};
 `;
 
 export default () => (

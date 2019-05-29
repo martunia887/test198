@@ -1,6 +1,8 @@
 // @flow
 
-import GlobalTheme from '@atlaskit/theme';
+import GlobalTheme from '@atlaskit/theme/components';
+
+import GlobalTheme from '@atlaskit/theme/constants';
 import React, { Component } from 'react';
 import {
   withAnalyticsEvents,

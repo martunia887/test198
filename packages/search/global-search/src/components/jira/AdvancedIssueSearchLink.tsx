@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ResultBase } from '@atlaskit/quick-search';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import styled from 'styled-components';
 import { messages } from '../../messages';

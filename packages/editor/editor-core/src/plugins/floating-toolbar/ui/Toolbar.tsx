@@ -3,7 +3,9 @@ import { Component } from 'react';
 import styled from 'styled-components';
 
 import { ButtonGroup } from '@atlaskit/button';
-import { borderRadius, gridSize, colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import { DN70 } from '@atlaskit/theme/colors';
 
 import { FloatingToolbarItem } from '../types';
 import { compareArrays } from '../utils';
@@ -32,7 +34,7 @@ export interface Props {
 }
 
 const ToolbarContainer = styled.div`
-  background-color: ${themed({ light: 'white', dark: colors.DN70 })};
+  background-color: ${themed({ light: 'white', dark: DN70 })};
   border-radius: ${borderRadius()}px;
   box-shadow: 0 0 1px rgba(9, 30, 66, 0.31),
     0 4px 8px -2px rgba(9, 30, 66, 0.25);

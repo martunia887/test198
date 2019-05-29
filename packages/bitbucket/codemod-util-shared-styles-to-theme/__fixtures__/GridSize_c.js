@@ -9,9 +9,12 @@ export const EventContainer = styled.div`
   display: flex;
   margin-bottom: ${akGridSizeUnitless * 2}px;
 `;
+
 //////
 // @flow
-import { gridSize, typography } from "@atlaskit/theme";
+import { gridSize } from "@atlaskit/theme/constants";
+
+import * as typography from "@atlaskit/theme/typography";
 import styled from "styled-components";
 
 export const EventContainer = styled.div`

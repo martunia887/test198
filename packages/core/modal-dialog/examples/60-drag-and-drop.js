@@ -3,7 +3,7 @@
 import React, { Component, PureComponent, type Node } from 'react';
 import styled from '@emotion/styled';
 import Button from '@atlaskit/button';
-import { colors } from '@atlaskit/theme';
+import { Y75, R200, R75, G300 } from '@atlaskit/theme/colors';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Modal, { ModalTransition } from '../src';
 
@@ -12,23 +12,23 @@ const noop = () => {};
 const gridUnit = 4;
 
 const Card = styled.div`
-  background: ${colors.Y75};
+  background: ${Y75};
   border-radius: 3px;
   cursor: ${({ isDragging }) => (isDragging ? 'grabbing' : 'pointer')};
   display: flex;
   position: relative;
   height: ${gridUnit * 5}px;
   padding: ${gridUnit * 2}px ${gridUnit}px;
-  border-bottom: 1px solid ${colors.R200};
+  border-bottom: 1px solid ${R200};
   ${({ isDraggable }) => !isDraggable} ${({ isHovering }) =>
   isHovering &&
   `
-        background: ${colors.R75};
+        background: ${R75};
         text-decoration: none;
     `} ${({ isActive }) =>
   isActive &&
   `
-        background: ${colors.G300};
+        background: ${G300};
     `} &:focus {
     border-bottom-color: transparent;
     z-index: 1;

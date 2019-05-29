@@ -2,7 +2,9 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import { gridSize, colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N0, DN10, N50, DN70, N30, B75 } from '@atlaskit/theme/colors';
 
 export const CheckBoxWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
   flex: 0 0 16px;
@@ -29,12 +31,12 @@ export const CheckBoxWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
       cursor: pointer;
 
       &::after {
-        background: ${themed({ light: colors.N0, dark: colors.DN10 })}
+        background: ${themed({ light: N0, dark: DN10 })}
         background-size: 16px;
         border-radius: 3px;
         border-style: solid;
         border-width: 1px;
-        border-color: ${themed({ light: colors.N50, dark: colors.DN70 })}
+        border-color: ${themed({ light: N50, dark: DN70 })}
         box-sizing: border-box;
         content: '';
         height: 16px;
@@ -47,7 +49,7 @@ export const CheckBoxWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
       }
     }
     &:not([disabled]) + label:hover::after {
-      background: ${themed({ light: colors.N30, dark: colors.B75 })}
+      background: ${themed({ light: N30, dark: B75 })}
       transition: border 0.2s ease-in-out;
     }
     &[disabled] + label {

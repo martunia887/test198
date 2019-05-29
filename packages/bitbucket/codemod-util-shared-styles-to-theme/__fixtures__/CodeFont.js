@@ -1,20 +1,23 @@
 // @flow
 import { akCodeFontFamily as codeFont } from "@atlaskit/util-shared-styles";
-import { colors } from "@atlaskit/theme";
+import { N0 } from "@atlaskit/theme/colors";
 import styled from "styled-components";
 
 export const SourceLine = styled.td`
-  background-color: ${colors.N0};
+  background-color: ${N0};
   font-family: ${codeFont};
   vertical-align: top;
 `;
+
 //////
 // @flow
-import { colors, codeFontFamily } from "@atlaskit/theme";
+import { codeFontFamily } from "@atlaskit/theme/constants";
+
+import * as colors from "@atlaskit/theme/colors";
 import styled from "styled-components";
 
 export const SourceLine = styled.td`
-  background-color: ${colors.N0};
+  background-color: ${N0};
   font-family: ${codeFontFamily()};
   vertical-align: top;
 `;

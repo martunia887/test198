@@ -27,7 +27,7 @@ z-index: ${akZIndexFlag};
 //////
 // @flow
 import styled from "styled-components";
-import { layers } from "@atlaskit/theme";
+import { layers } from "@atlaskit/theme/constants";
 
 const blah = layers.card();
 const MyCard = styled.div`

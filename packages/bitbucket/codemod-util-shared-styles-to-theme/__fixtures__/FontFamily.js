@@ -1,20 +1,23 @@
 // @flow
 import { akFontFamily as font } from "@atlaskit/util-shared-styles";
-import { colors } from "@atlaskit/theme";
+import { N0 } from "@atlaskit/theme/colors";
 import styled from "styled-components";
 
 export const SourceLine = styled.td`
-  background-color: ${colors.N0};
+  background-color: ${N0};
   font-family: ${font};
   vertical-align: top;
 `;
+
 //////
 // @flow
-import { colors, fontFamily } from "@atlaskit/theme";
+import { fontFamily } from "@atlaskit/theme/constants";
+
+import * as colors from "@atlaskit/theme/colors";
 import styled from "styled-components";
 
 export const SourceLine = styled.td`
-  background-color: ${colors.N0};
+  background-color: ${N0};
   font-family: ${fontFamily()};
   vertical-align: top;
 `;

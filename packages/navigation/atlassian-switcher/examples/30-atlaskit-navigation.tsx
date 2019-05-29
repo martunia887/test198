@@ -3,7 +3,7 @@ import AtlassianIcon from '@atlaskit/icon/glyph/atlassian';
 import Navigation, { AkGlobalItem } from '@atlaskit/navigation';
 import Tooltip from '@atlaskit/tooltip';
 import SwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
-import { colors } from '@atlaskit/theme';
+import { N0, N800 } from '@atlaskit/theme/colors';
 import AkDrawer from '@atlaskit/drawer';
 import { mockEndpoints, REQUEST_MEDIUM } from './helpers/mock-endpoints';
 import { withAnalyticsLogger, withIntlProvider } from './helpers';
@@ -57,8 +57,8 @@ class ConfluenceSwitcherExample extends React.Component {
               <SwitcherIcon
                 label="Switch apps"
                 size="medium"
-                primaryColor={colors.N0}
-                secondaryColor={colors.N800}
+                primaryColor={N0}
+                secondaryColor={N800}
               />
             </Tooltip>
           </AkGlobalItem>,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TextArea from '@atlaskit/textarea';
-import { gridSize, fontSize } from '@atlaskit/theme';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
 
 import InlineEdit from '../src';
 import styled from 'styled-components';

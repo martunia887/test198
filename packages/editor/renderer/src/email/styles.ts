@@ -1,4 +1,4 @@
-import { fontFamily, fontSize } from '@atlaskit/theme';
+import { fontFamily, fontSize } from '@atlaskit/theme/constants';
 import { paragraphStyles } from './nodes/paragraph';
 import { listItemStyles } from './nodes/list-item';
 import { codeBlockStyles } from './nodes/code-block';

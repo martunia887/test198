@@ -15,7 +15,7 @@ import {
   gridMediumMaxWidth,
   akEditorGutterPadding,
 } from '@atlaskit/editor-common';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import {
   LAYOUT_OFFSET,
   LAYOUT_SECTION_MARGIN,

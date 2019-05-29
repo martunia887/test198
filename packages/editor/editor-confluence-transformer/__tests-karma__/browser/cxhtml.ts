@@ -59,7 +59,7 @@ import {
   CONFLUENCE_LANGUAGE_MAP as LANGUAGE_MAP,
 } from '../../src';
 import { mapPanelTypeToPm } from '../../src/utils';
-import { colors } from '@atlaskit/theme';
+import { G50, B50, R50 } from '@atlaskit/theme/colors';
 
 chai.use(chaiPlugin);
 
@@ -776,11 +776,11 @@ describe('ConfluenceTransformer: encode - parse:', () => {
               td({ colwidth: [table2ColumnPx[0]] })(p(hardBreak())),
               td({
                 colwidth: [table2ColumnPx[1]],
-                background: colors.G50.toLowerCase(),
+                background: G50.toLowerCase(),
               })(p('5')),
               td({
                 colwidth: [table2ColumnPx[2]],
-                background: colors.G50.toLowerCase(),
+                background: G50.toLowerCase(),
               })(p('6')),
             ),
             tr(
@@ -788,11 +788,11 @@ describe('ConfluenceTransformer: encode - parse:', () => {
               td({ colwidth: [table2ColumnPx[0]] })(p(hardBreak())),
               td({
                 colwidth: [table2ColumnPx[1]],
-                background: colors.B50.toLowerCase(),
+                background: B50.toLowerCase(),
               })(p(hardBreak())),
               td({
                 colwidth: [table2ColumnPx[2]],
-                background: colors.B50.toLowerCase(),
+                background: B50.toLowerCase(),
               })(p(hardBreak())),
             ),
             tr(
@@ -814,17 +814,13 @@ describe('ConfluenceTransformer: encode - parse:', () => {
               td({ colwidth: [table2ColumnPx[2]] })(p(hardBreak())),
             ),
             tr(
-              td({ colwidth: [42], background: colors.R50.toLowerCase() })(
-                p('6'),
-              ),
+              td({ colwidth: [42], background: R50.toLowerCase() })(p('6')),
               td({ colwidth: [table2ColumnPx[0]] })(p(hardBreak())),
               td({ colwidth: [table2ColumnPx[1]] })(p(hardBreak())),
               td({ colwidth: [table2ColumnPx[2]] })(p(hardBreak())),
             ),
             tr(
-              td({ colwidth: [42], background: colors.R50.toLowerCase() })(
-                p('7'),
-              ),
+              td({ colwidth: [42], background: R50.toLowerCase() })(p('7')),
               td({ colwidth: [table2ColumnPx[0]] })(p(hardBreak())),
               td({ colwidth: [table2ColumnPx[1]] })(p(hardBreak())),
               td({ colwidth: [table2ColumnPx[2]] })(p(hardBreak())),

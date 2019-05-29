@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 
 const highlights = {
   blue: colors.B300,

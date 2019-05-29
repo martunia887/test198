@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N40, B100 } from '@atlaskit/theme/colors';
 
 import InlineEdit from '../src';
 
@@ -15,7 +16,7 @@ const EditView = styled.input`
   font-weight: inherit;
   line-height: inherit;
   box-sizing: border-box;
-  border: 2px solid ${colors.N40};
+  border: 2px solid ${N40};
   border-radius: 3px;
   padding: ${gridSize()}px ${gridSize()}px;
   outline: none;
@@ -24,7 +25,7 @@ const EditView = styled.input`
   height: 48px;
 
   :focus {
-    border-color: ${colors.B100};
+    border-color: ${B100};
   }
 `;
 

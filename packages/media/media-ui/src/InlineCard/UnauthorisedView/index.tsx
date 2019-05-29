@@ -3,7 +3,7 @@ import { IconAndTitleLayout } from '../IconAndTitleLayout';
 import Button from '@atlaskit/button';
 import { truncateUrlForErrorView } from '../utils';
 import { Frame } from '../Frame';
-import { colors } from '@atlaskit/theme';
+import { N500 } from '@atlaskit/theme/colors';
 import { messages } from '../../messages';
 import { FormattedMessage } from 'react-intl';
 
@@ -37,7 +37,7 @@ export class InlineCardUnauthorizedView extends React.Component<
         <IconAndTitleLayout
           icon={icon}
           title={truncateUrlForErrorView(url)}
-          titleColor={colors.N500}
+          titleColor={N500}
         />
         {!onAuthorise ? (
           ''

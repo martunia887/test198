@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { AtlasKitThemeProvider } from '@atlaskit/theme';
+import * as AtlasKitThemeProvider from '@atlaskit/theme/AtlasKitThemeProvider';
 import { AkCodeBlock } from '../src';
 
 const exampleCodeBlock = `  // React component

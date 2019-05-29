@@ -1,7 +1,8 @@
 // @flow
 
 import React, { Component, type Node } from 'react';
-import { colors, layers, gridSize } from '@atlaskit/theme';
+import { layers, gridSize } from '@atlaskit/theme/constants';
+import { N0, N500, N30A, B50 } from '@atlaskit/theme/colors';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 
 import { Slide } from './transitions';
@@ -33,7 +34,7 @@ const Wrapper = ({
   return (
     <div
       css={{
-        backgroundColor: colors.N0,
+        backgroundColor: N0,
         display: 'flex',
         height: '100vh',
         left: 0,
@@ -67,7 +68,7 @@ const Sidebar = props => {
       css={{
         alignItems: 'center',
         boxSizing: 'border-box',
-        color: colors.N500,
+        color: N500,
         display: 'flex',
         flexShrink: 0,
         flexDirection: 'column',
@@ -102,10 +103,10 @@ const IconWrapper = (props: IconWrapperProps) => (
       width: 5 * gridSize(),
 
       '&:hover': {
-        backgroundColor: props.onClick ? colors.N30A : null,
+        backgroundColor: props.onClick ? N30A : null,
       },
       '&:active': {
-        backgroundColor: props.onClick ? colors.B50 : null,
+        backgroundColor: props.onClick ? B50 : null,
         outline: 0,
       },
     }}

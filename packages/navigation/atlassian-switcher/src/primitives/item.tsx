@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import Item, { itemThemeNamespace } from '@atlaskit/item';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import {
   createAndFireNavigationEvent,
   withAnalyticsEvents,

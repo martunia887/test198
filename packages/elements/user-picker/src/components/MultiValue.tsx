@@ -7,7 +7,7 @@ import { messages } from './i18n';
 import { SizeableAvatar } from './SizeableAvatar';
 import { getAvatarUrl, isEmail } from './utils';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { B100 } from '@atlaskit/theme/colors';
 
 export const scrollToValue = (
   valueContainer: HTMLDivElement,
@@ -26,7 +26,7 @@ export const scrollToValue = (
 const TagContainer = styled.div`
   button {
     &:focus {
-      box-shadow: 0 0 0 2px ${colors.B100};
+      box-shadow: 0 0 0 2px ${B100};
     }
   }
 `;

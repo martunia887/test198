@@ -5,7 +5,9 @@ import styled, { ThemeProvider } from 'styled-components';
 import { darken, mix } from 'polished';
 
 import Avatar from '@atlaskit/avatar';
-import { colors, gridSize, math } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N30, N80, N900 } from '@atlaskit/theme/colors';
+import { multiply } from '@atlaskit/theme/math';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 
 import type { ItemTheme } from '../src/types';
@@ -83,10 +85,10 @@ type Props = {
 
 export default class ItemThemeDemo extends Component<Props, {}> {
   static defaultProps = {
-    backgroundColor: colors.N30,
+    backgroundColor: N30,
     padding: gridSize(),
-    secondaryTextColor: colors.N80,
-    textColor: colors.N900,
+    secondaryTextColor: N80,
+    textColor: N900,
   };
 
   render() {
@@ -139,5 +141,5 @@ export default class ItemThemeDemo extends Component<Props, {}> {
 
 const Root = styled.div`
   background-color: ${props => props.background};
-  margin: ${math.multiply(gridSize, 3)}px 0;
+  margin: ${multiply(gridSize, 3)}px 0;
 `;

@@ -1,8 +1,9 @@
 // @flow
 import styled from 'styled-components';
-import { colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { N300 } from '@atlaskit/theme/colors';
 
-const ThemeColor = themed({ light: colors.N300, dark: colors.N300 });
+const ThemeColor = themed({ light: N300, dark: N300 });
 
 const BreadcrumbsContainer = styled.div`
   color: ${ThemeColor};

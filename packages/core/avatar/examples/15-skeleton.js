@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { colors } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 
 import { Skeleton } from '../src';
 import { Block, Gap } from '../examples-util/helpers';

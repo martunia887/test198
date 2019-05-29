@@ -1,7 +1,8 @@
 // @ts-ignore: unused variable
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N40, B200, N50 } from '@atlaskit/theme/colors';
 import {
   columnLayoutSharedStyle,
   gridMediumMaxWidth,
@@ -26,7 +27,7 @@ export const layoutStyles = css`
       & > * {
         flex: 1;
         min-width: 0;
-        border: 1px solid ${colors.N40};
+        border: 1px solid ${N40};
         border-radius: 5px;
 
         > div {
@@ -49,11 +50,11 @@ export const layoutStyles = css`
         * Helps visualise when 'selectNodeBackwards' selects the node for deletion
         */
       &.ProseMirror-selectednode > * {
-        border-color: ${colors.B200};
+        border-color: ${B200};
       }
       /* Shows the border when cursor is inside a layout */
       &.selected > * {
-        border-color: ${colors.N50};
+        border-color: ${N50};
       }
 
       &.selected.danger > [data-layout-column] {

@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { colors } from '@atlaskit/theme';
+import { N100 } from '@atlaskit/theme/colors';
 import Tabs from '../src';
 import { Content } from './shared';
 
@@ -11,7 +11,7 @@ export default () => (
       width: 400,
       height: 200,
       margin: '16px auto',
-      border: `1px dashed ${colors.N100}`,
+      border: `1px dashed ${N100}`,
       display: 'flex',
     }}
   >

@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { colors } from '@atlaskit/theme';
+import { B400, B300 } from '@atlaskit/theme/colors';
 import { EventHandlers } from '@atlaskit/editor-common';
 import styled from 'styled-components';
 
 import { getEventHandler } from '../../utils';
 
 const StyledAnchor = styled.a`
-  color: ${colors.B400};
+  color: ${B400};
 
   &:hover {
-    color: ${colors.B300};
+    color: ${B300};
     text-decoration: underline;
   }
 `;

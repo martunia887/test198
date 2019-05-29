@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors } from '@atlaskit/theme';
+import { R400 } from '@atlaskit/theme/colors';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Flag, { FlagGroup } from '../src';
 
@@ -7,7 +7,7 @@ export default () => (
   <FlagGroup>
     <Flag
       appearance="error"
-      icon={<ErrorIcon label="Error" secondaryColor={colors.R400} />}
+      icon={<ErrorIcon label="Error" secondaryColor={R400} />}
       id="error"
       key="error"
       title="We couldn't connect"

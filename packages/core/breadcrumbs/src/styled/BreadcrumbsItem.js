@@ -1,6 +1,6 @@
 // @flow
 import styled from 'styled-components';
-import { gridSize, fontSize } from '@atlaskit/theme';
+import { gridSize, fontSize } from '@atlaskit/theme/constants';
 
 const height = (gridSize() * 3) / parseInt(fontSize(), 10);
 

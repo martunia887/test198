@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import { HashRouter, Link, Route, Switch } from 'react-router-dom';
 import Pagination from '../src';
 

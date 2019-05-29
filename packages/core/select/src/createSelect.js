@@ -3,7 +3,8 @@ import React, { Component, type ComponentType, type ElementRef } from 'react';
 import { mergeStyles, makeAnimated } from 'react-select';
 import memoizeOne from 'memoize-one';
 import isEqual from 'react-fast-compare';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 
 import * as defaultComponents from './components';
 

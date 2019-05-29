@@ -18,7 +18,8 @@ import {
   type PopperProps,
   type PopperChildrenProps,
 } from 'react-popper';
-import { colors, gridSize, layers } from '@atlaskit/theme';
+import { gridSize, layers } from '@atlaskit/theme/constants';
+import { N40A } from '@atlaskit/theme/colors';
 import { jsx } from '@emotion/core';
 
 import { isEmptyObj } from '../utils';
@@ -196,7 +197,7 @@ export const Blanket = forwardRef(({ allowClose, ...props }: *, ref) => (
 ));
 // eslint-disable-next-line react/no-multi-comp
 export const Dialog = forwardRef((props: *, ref) => {
-  const shadow = colors.N40A;
+  const shadow = N40A;
   return (
     <div
       ref={ref}

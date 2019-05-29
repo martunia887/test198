@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { colors, elevation, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
+import { e100 } from '@atlaskit/theme/elevation';
 import { ComponentType } from 'react';
 
 interface IconBaseProps {
@@ -14,7 +16,7 @@ const IconBase = styled.div<IconBaseProps>`
   width: ${4 * gridSize()}px;
   height: ${4 * gridSize()}px;
   border-radius: ${gridSize()}px;
-  ${elevation.e100};
+  ${e100};
   background-color: ${({ bgColor }) => bgColor}
   overflow: hidden;
 `;

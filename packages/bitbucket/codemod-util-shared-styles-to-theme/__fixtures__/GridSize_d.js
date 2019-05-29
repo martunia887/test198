@@ -4,6 +4,6 @@ import styled from "styled-components";
 const padding = akGridSize; // "8px"
 //////
 // @flow
-import { gridSize } from "@atlaskit/theme";
+import { gridSize } from "@atlaskit/theme/constants";
 import styled from "styled-components";
 const padding = `${gridSize()}px`; // "8px"

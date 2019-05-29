@@ -9,12 +9,15 @@ const Fonty = styled.div`
   font-size: ${gridSizePx};
   ${typo.h100};
 `;
+
 //////
 // @flow
-import { gridSize, typography } from "@atlaskit/theme";
+import { gridSize } from "@atlaskit/theme/constants";
+
+import { h100 } from "@atlaskit/theme/typography";
 import styled from "styled-components";
 const gridSizePx = `${gridSize()}px`;
 const Fonty = styled.div`
   font-size: ${gridSizePx};
-  ${typography.h100()};
+  ${h100()};
 `;

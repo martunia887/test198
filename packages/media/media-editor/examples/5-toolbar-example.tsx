@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
-import { colors } from '@atlaskit/theme';
+import { G300 } from '@atlaskit/theme/colors';
 import { ThemeProvider } from 'styled-components';
 import Toolbar from '../src/react/editorView/toolbar/toolbar';
 import { Theme as ButtonTheme } from '@atlaskit/button';
@@ -16,7 +16,7 @@ interface State {
 
 class ToolbarExample extends React.Component<{}, State> {
   state: State = {
-    color: colors.G300,
+    color: G300,
     lineWidth: 8,
     tool: 'arrow',
   };

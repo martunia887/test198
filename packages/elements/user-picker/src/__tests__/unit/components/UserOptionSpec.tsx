@@ -1,4 +1,4 @@
-import { colors } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import {

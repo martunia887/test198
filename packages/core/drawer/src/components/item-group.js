@@ -2,7 +2,10 @@
 
 import React, { type Node } from 'react';
 import { ItemGroup } from '@atlaskit/item';
-import { fontSizeSmall, gridSize as gridSizeFn } from '@atlaskit/theme';
+import {
+  fontSizeSmall,
+  gridSize as gridSizeFn,
+} from '@atlaskit/theme/constants';
 
 type Props = {
   /** React Elements to be displayed within the group. This should generally be

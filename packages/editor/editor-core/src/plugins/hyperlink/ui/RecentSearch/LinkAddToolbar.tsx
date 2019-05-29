@@ -17,7 +17,7 @@ import {
 } from '../../../analytics';
 import EditorAlignLeftIcon from '@atlaskit/icon/glyph/editor/align-left';
 import LinkIcon from '@atlaskit/icon/glyph/link';
-import { colors } from '@atlaskit/theme';
+import { N80, N30 } from '@atlaskit/theme/colors';
 import { normalizeUrl } from '../../utils';
 import Tooltip from '@atlaskit/tooltip';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
@@ -50,12 +50,12 @@ const InputWrapper = `
 const ClearText = styled.span`
   cursor: pointer;
   padding-right: 8px;
-  color: ${colors.N80};
+  color: ${N80};
 `;
 
 const TextInputWrapper = styled.div`
   ${InputWrapper}
-  border-top: 1px solid ${colors.N30}
+  border-top: 1px solid ${N30}
 `;
 
 const UrlInputWrapper = styled.div`
@@ -64,7 +64,7 @@ const UrlInputWrapper = styled.div`
 
 const IconWrapper = styled.span`
   padding: 10px;
-  color: ${colors.N80};
+  color: ${N80};
   padding: 4px 8px;
   width: 18px;
 `;

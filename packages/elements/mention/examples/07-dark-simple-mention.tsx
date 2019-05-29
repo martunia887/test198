@@ -4,7 +4,7 @@ import {
   UIAnalyticsEventInterface,
 } from '@atlaskit/analytics-next';
 // @ts-ignore
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import * as React from 'react';
 import { onMentionEvent } from '../example-helpers/index';
 import Mention from '../src/components/Mention';

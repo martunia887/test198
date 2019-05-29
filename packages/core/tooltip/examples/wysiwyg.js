@@ -10,12 +10,13 @@ import LinkIcon from '@atlaskit/icon/glyph/editor/link';
 import BulletListIcon from '@atlaskit/icon/glyph/editor/bullet-list';
 import NumberListIcon from '@atlaskit/icon/glyph/editor/number-list';
 import CodeIcon from '@atlaskit/icon/glyph/editor/code';
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N20, N40 } from '@atlaskit/theme/colors';
 
 import Tooltip from '../src';
 
 const Toolbar = styled.div`
-  background-color: ${colors.N20};
+  background-color: ${N20};
   border-radius: ${borderRadius}px;
   display: flex;
   padding: 5px;
@@ -30,7 +31,7 @@ const Action = styled.div`
   width: 36px;
 
   &:hover {
-    background-color: ${colors.N40};
+    background-color: ${N40};
   }
 `;
 

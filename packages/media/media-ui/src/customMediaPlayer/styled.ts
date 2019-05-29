@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { R300 } from '@atlaskit/theme/colors';
 
 export interface MutedIndicatorProps {
   isMuted: boolean;
@@ -130,7 +130,7 @@ export const VolumeToggleWrapper = styled.div`
   button {
     width: 36px;
     color: ${({ isMuted }: MutedIndicatorProps) =>
-      isMuted ? `${colors.R300} !important;` : ''};
+      isMuted ? `${R300} !important;` : ''};
   }
 `;
 
@@ -145,7 +145,7 @@ export const MutedIndicator = styled.div`
   position: absolute;
   top: 5px;
   left: 9px;
-  background: ${colors.R300};
+  background: ${R300};
   transform: rotate(32deg) translateY(10px);
   opacity: 0;
   pointer-events: none;

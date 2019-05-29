@@ -1,5 +1,5 @@
 import { AVATAR_SIZES, BORDER_WIDTH } from '@atlaskit/avatar';
-import { colors } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 import memoizeOne from 'memoize-one';
 import { getAvatarSize } from './utils';
 

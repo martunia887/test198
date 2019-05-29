@@ -1,5 +1,7 @@
 //@flow
-import { colors, fontSizeSmall } from '@atlaskit/theme';
+import { fontSizeSmall } from '@atlaskit/theme/constants';
+
+import * as colors from '@atlaskit/theme/colors';
 import evaluateInner from './utils/evaluate-inner';
 
 const lozengeBorderRadius = '3px';

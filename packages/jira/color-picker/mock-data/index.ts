@@ -1,28 +1,28 @@
-import { colors } from '@atlaskit/theme';
+import { P200, B200, G200, T200, Y200, R200 } from '@atlaskit/theme/colors';
 
 export const simplePalette = [
   {
     label: 'Purple',
-    value: colors.P200,
+    value: P200,
   },
   {
     label: 'Blue',
-    value: colors.B200,
+    value: B200,
   },
   {
     label: 'Green',
-    value: colors.G200,
+    value: G200,
   },
   {
     label: 'Teal',
-    value: colors.T200,
+    value: T200,
   },
   {
     label: 'Yellow',
-    value: colors.Y200,
+    value: Y200,
   },
   {
     label: 'Red',
-    value: colors.R200,
+    value: R200,
   },
 ];

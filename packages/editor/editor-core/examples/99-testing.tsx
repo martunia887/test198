@@ -19,7 +19,7 @@ import { SaveAndCancelButtons } from './5-full-page';
 import { TitleInput } from '../example-helpers/PageElements';
 import mediaMockServer from '../example-helpers/media-mock';
 // @ts-ignore
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 
 function createMediaMockEnableOnce() {
   let enabled = false;

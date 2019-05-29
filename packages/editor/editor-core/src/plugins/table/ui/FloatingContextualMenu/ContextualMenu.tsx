@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import { splitCell, Rect } from 'prosemirror-tables';
-import { colors } from '@atlaskit/theme';
+import { N500 } from '@atlaskit/theme/colors';
 import {
   tableBackgroundColorPalette,
   tableBackgroundBorderColors,
@@ -164,7 +164,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
                   borderColors={tableBackgroundBorderColors}
                   onClick={this.setColor}
                   selectedColor={background}
-                  checkMarkColor={colors.N500}
+                  checkMarkColor={N500}
                 />
               </div>
             )}

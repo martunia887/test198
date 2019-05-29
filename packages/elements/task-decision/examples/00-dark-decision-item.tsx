@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 // @ts-ignore
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import DecisionItem from '../src/components/DecisionItem';
 import { dumpRef, document } from '../example-helpers/story-utils';
 

@@ -1,6 +1,6 @@
 // @flow
 
-import { type ThemeProp } from '@atlaskit/theme';
+import * as ThemeProp from '@atlaskit/theme/ThemeProp';
 import React, { Component } from 'react';
 import { Input } from './styled';
 import { Theme, type ThemeTokens } from './theme';

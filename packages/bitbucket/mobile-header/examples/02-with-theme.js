@@ -1,6 +1,6 @@
 // @flow
 
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';

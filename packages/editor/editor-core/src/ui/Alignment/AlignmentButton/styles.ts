@@ -2,14 +2,14 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ButtonHTMLAttributes, ComponentClass } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N0, N50 } from '@atlaskit/theme/colors';
 
 export const Button: ComponentClass<ButtonHTMLAttributes<{}>> = styled.button`
   height: 26px;
   width: 26px;
   padding: 0;
   border-radius: 4px;
-  border: 1px solid ${colors.N0};
+  border: 1px solid ${N0};
   cursor: pointer;
   display: block;
 `;
@@ -23,6 +23,6 @@ export const ButtonWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
   padding: 1px;
   border-radius: 6px;
   &:hover {
-    border: 1px solid ${colors.N50};
+    border: 1px solid ${N50};
   }
 `;

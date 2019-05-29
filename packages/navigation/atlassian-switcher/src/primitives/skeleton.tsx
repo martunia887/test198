@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { N20 } from '@atlaskit/theme/colors';
 import Section from './section';
 import SwitcherItem from './item';
 
 const IconSkeleton = styled.div`
-  background-color: ${colors.N20};
+  background-color: ${N20};
   display: inline-block;
   width: 32px;
   height: 32px;
@@ -13,7 +13,7 @@ const IconSkeleton = styled.div`
 `;
 
 const LineSkeleton = styled.div`
-  background-color: ${colors.N20};
+  background-color: ${N20};
   display: inline-block;
   width: 98px;
   height: 10px;

@@ -4,7 +4,8 @@ import {
 } from '@atlaskit/analytics-next';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { ResourcedEmoji } from '@atlaskit/emoji/element';
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N30A, N400 } from '@atlaskit/theme/colors';
 import cx from 'classnames';
 import * as React from 'react';
 import { PureComponent, SyntheticEvent } from 'react';
@@ -21,8 +22,8 @@ import { ReactionTooltip } from './ReactionTooltip';
 import { isLeftClick } from './utils';
 
 const akBorderRadius = `${borderRadius()}px`;
-const akColorN30A = colors.N30A;
-const akColorN400 = colors.N400;
+const akColorN30A = N30A;
+const akColorN400 = N400;
 
 const emojiStyle = style({
   transformOrigin: 'center center 0',

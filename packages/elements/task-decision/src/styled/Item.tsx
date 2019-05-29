@@ -2,7 +2,9 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import { borderRadius, gridSize, colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import { N30A, DN50, DN60, N200 } from '@atlaskit/theme/colors';
 
 const akGridSize = gridSize();
 
@@ -32,8 +34,8 @@ export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
     transition: box-shadow 0.2s ease-in-out;
   }
 
-  background-color: ${themed({ light: colors.N30A, dark: colors.DN50 })};
-  border: 1px solid: ${themed({ light: 'none', dark: colors.DN60 })};
+  background-color: ${themed({ light: N30A, dark: DN50 })};
+  border: 1px solid: ${themed({ light: 'none', dark: DN60 })};
 `;
 
 export const ParticipantWrapper: ComponentClass<
@@ -45,7 +47,7 @@ export const ParticipantWrapper: ComponentClass<
 export const AttributionWrapper: ComponentClass<
   HTMLAttributes<{}>
 > = styled.div`
-  color: ${colors.N200};
+  color: ${N200};
   margin-top: ${akGridSize}px;
   font-size: 12px;
   font-weight: 500;

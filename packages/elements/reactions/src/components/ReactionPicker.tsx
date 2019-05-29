@@ -2,7 +2,8 @@ import { EmojiId } from '@atlaskit/emoji/types';
 import { EmojiPicker } from '@atlaskit/emoji/picker';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import Layer from '@atlaskit/layer';
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N0, N50A, N60A } from '@atlaskit/theme/colors';
 import cx from 'classnames';
 import * as React from 'react';
 import { PureComponent } from 'react';
@@ -13,9 +14,9 @@ import { Trigger } from './Trigger';
 import { ReactionSource } from '../types';
 
 const akBorderRadius = `${borderRadius()}px`;
-const akColorN0 = colors.N0;
-const akColorN50A = colors.N50A;
-const akColorN60A = colors.N60A;
+const akColorN0 = N0;
+const akColorN50A = N50A;
+const akColorN60A = N60A;
 
 export interface Props {
   emojiProvider: Promise<EmojiProvider>;

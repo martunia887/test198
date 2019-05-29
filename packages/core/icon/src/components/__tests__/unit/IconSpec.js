@@ -2,7 +2,7 @@
 import React, { Component, type Node } from 'react';
 import { mount, render } from 'enzyme';
 
-import { colors } from '@atlaskit/theme';
+import { background } from '@atlaskit/theme/colors';
 import { name } from '../../../version.json';
 import Icon, { size } from '../../..';
 import { IconWrapper } from '../../Icon';
@@ -160,7 +160,7 @@ describe(name, () => {
 
         expect(iconWrapper).toHaveStyleRule(
           'fill',
-          colors.background(props).toString(),
+          background(props).toString(),
         );
       });
       it('can be changed to a hex value', () => {

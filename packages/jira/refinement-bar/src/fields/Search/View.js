@@ -4,7 +4,8 @@
 // $FlowFixMe "there is no `forwardRef` export in `react`"
 import { createRef, forwardRef, PureComponent } from 'react';
 import { jsx } from '@emotion/core';
-import { borderRadius, colors, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import { N400, N20A, N30A, N40A } from '@atlaskit/theme/colors';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 
 import { ClearButton, HiddenSubmitButton } from '../../components/common';
@@ -81,7 +82,7 @@ const SearchIndicator = (props: *) => (
       background: 0,
       border: 0,
       borderRadius: borderRadius(),
-      color: colors.N400,
+      color: N400,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -108,10 +109,10 @@ const Input = forwardRef((props, ref) => {
       ref={ref}
       css={{
         background: 0,
-        backgroundColor: colors.N20A,
+        backgroundColor: N20A,
         border: 0,
         borderRadius: borderRadius(),
-        color: colors.N400,
+        color: N400,
         fontSize: 'inherit',
         lineHeight: 1.3,
         padding: `${gridSize()}px ${gridSize() * 1.5}px`,
@@ -121,10 +122,10 @@ const Input = forwardRef((props, ref) => {
           'background-color 150ms, width 200ms cubic-bezier(0.2, 0.0, 0.0, 1)',
 
         ':hover': {
-          backgroundColor: colors.N30A,
+          backgroundColor: N30A,
         },
         ':focus, :active': {
-          backgroundColor: colors.N40A,
+          backgroundColor: N40A,
         },
       }}
       {...props}

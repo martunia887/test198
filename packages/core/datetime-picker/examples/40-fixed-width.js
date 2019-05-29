@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Label } from '@atlaskit/field-base';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import { DatePicker, DateTimePicker, TimePicker } from '../src';
 
 export default () => {

@@ -1,6 +1,7 @@
 import { HTMLAttributes, ComponentClass } from 'react';
 import styled, { css } from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N30, N50 } from '@atlaskit/theme/colors';
 
 const akGridSize = gridSize() + 'px';
 
@@ -16,7 +17,7 @@ export const ButtonGroup: ComponentClass<
 `;
 
 export const Separator: ComponentClass<HTMLAttributes<{}>> = styled.span`
-  background: ${colors.N30};
+  background: ${N30};
   width: 1px;
   height: 24px;
   display: inline-block;
@@ -97,7 +98,7 @@ export const scrollbarStyles = `
 `;
 
 export const Shortcut = styled.small`
-  color: ${colors.N50};
+  color: ${N50};
   margin-top: 0;
 `;
 

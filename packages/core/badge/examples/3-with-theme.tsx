@@ -1,4 +1,4 @@
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import * as React from 'react';
 import Badge from '../src';
 

@@ -1,4 +1,5 @@
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 import { defaultEmojiHeight } from '../../util/constants';
 import { akEmojiSelectedBackgroundColor } from '../../util/shared-styles';
 import { style } from 'typestyle';

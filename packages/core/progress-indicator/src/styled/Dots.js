@@ -1,7 +1,8 @@
 // @flow
 
 import styled, { css } from 'styled-components';
-import { colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import * as colors from '@atlaskit/theme/colors';
 
 const colorMap = {
   default: themed({ light: colors.N50, dark: colors.DN70 }),

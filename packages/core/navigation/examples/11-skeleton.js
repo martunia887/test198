@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import Page from '@atlaskit/page';
 import Toggle from '@atlaskit/toggle';
 import SingleSelect from '@atlaskit/single-select';
-import { colors } from '@atlaskit/theme';
+import { T300, P500, P400 } from '@atlaskit/theme/colors';
 
 import { Skeleton, presetThemes, createGlobalTheme } from '../src';
 
@@ -42,11 +42,11 @@ const themes = {
   custom: {
     globalTheme: {
       ...presetThemes.global,
-      ...createGlobalTheme(colors.T300, colors.P500),
+      ...createGlobalTheme(T300, P500),
     },
     containerTheme: {
       ...presetThemes.global,
-      ...createGlobalTheme(colors.T300, colors.P400),
+      ...createGlobalTheme(T300, P400),
     },
   },
 };

@@ -7,7 +7,7 @@ import Avatar from '@atlaskit/avatar';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import InlineDialog from '@atlaskit/inline-dialog';
-import { colors } from '@atlaskit/theme';
+import { subtleText, R400, N30 } from '@atlaskit/theme/colors';
 
 import ModalDialog, { ModalFooter, ModalTransition } from '../src';
 
@@ -21,7 +21,7 @@ const H4 = styled.h4`
 
 const Hint = styled.span`
   align-items: center;
-  color: ${colors.subtleText};
+  color: ${subtleText};
   cursor: help;
   display: flex;
 `;
@@ -40,11 +40,7 @@ const Header = ({ onClose }: { onClose: Function }) => (
   <div style={headerStyles}>
     <span style={{ position: 'absolute', right: 0, top: 4 }}>
       <Button onClick={onClose} appearance="link">
-        <CrossIcon
-          label="Close Modal"
-          primaryColor={colors.R400}
-          size="small"
-        />
+        <CrossIcon label="Close Modal" primaryColor={R400} size="small" />
       </Button>
     </span>
   </div>
@@ -52,7 +48,7 @@ const Header = ({ onClose }: { onClose: Function }) => (
 
 const bodyStyles = {
   padding: 90,
-  backgroundColor: colors.N30,
+  backgroundColor: N30,
   overflowY: 'auto',
   overflowX: 'hidden',
 };

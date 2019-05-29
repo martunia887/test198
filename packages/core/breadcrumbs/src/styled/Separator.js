@@ -1,9 +1,10 @@
 // @flow
 import styled from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N100 } from '@atlaskit/theme/colors';
 
 const ThemeColor = {
-  text: colors.N100,
+  text: N100,
 };
 
 const Separator = styled.div`

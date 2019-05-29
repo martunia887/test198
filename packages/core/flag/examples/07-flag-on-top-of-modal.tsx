@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors } from '@atlaskit/theme';
+import { G300 } from '@atlaskit/theme/colors';
 import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
 import Flag, { FlagGroup } from '../src';
 
@@ -8,7 +8,7 @@ export default () => (
     <FlagGroup>
       <Flag
         description="I should be above the modal dialog"
-        icon={<SuccessIcon primaryColor={colors.G300} label="Info" />}
+        icon={<SuccessIcon primaryColor={G300} label="Info" />}
         id="1"
         key="1"
         title="I am a Flag"

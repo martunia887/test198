@@ -8,8 +8,8 @@ export const MyContainer = styled.div`
 //////
 // @flow
 import IssueIcon from "@atlaskit/icon/glyph/issue";
-import { colors } from "@atlaskit/theme";
+import { N30 } from "@atlaskit/theme/colors";
 
 export const MyContainer = styled.div`
-  color: ${colors.N30};
+  color: ${N30};
 `;

@@ -1,12 +1,12 @@
 // @flow
 import styled, { css, keyframes } from 'styled-components';
+import { themed } from '@atlaskit/theme/components';
 import {
-  colors,
   gridSize as akGridSize,
   layers as akLayers,
-  themed,
-  typography,
-} from '@atlaskit/theme';
+} from '@atlaskit/theme/constants';
+import { N20, DN10, N100A } from '@atlaskit/theme/colors';
+import { h500 } from '@atlaskit/theme/typography';
 
 const gridSize = akGridSize();
 
@@ -49,7 +49,7 @@ export const MobilePageHeader = styled.header`
 
 export const MobilePageHeaderContent = styled.div`
   align-items: center;
-  background-color: ${themed({ light: colors.N20, dark: colors.DN10 })};
+  background-color: ${themed({ light: N20, dark: DN10 })};
   box-sizing: border-box;
   display: flex;
   height: ${mobileHeaderHeight}px;
@@ -73,7 +73,7 @@ const opacityOut = keyframes`
 // @atlaskit/blanket has a z-index *higher* than @atlaskit/navigation,
 // so we can't display the AK blanket underneath the navigation.
 export const FakeBlanket = styled.div`
-  background: ${colors.N100A};
+  background: ${N100A};
   bottom: 0;
   left: 0;
   position: fixed;
@@ -87,7 +87,7 @@ export const FakeBlanket = styled.div`
 export const PageHeading = styled.h1`
   flex-grow: 1;
   margin-left: ${gridSize}px;
-  ${typography.h500};
+  ${h500};
   && {
     margin-top: 0;
   }

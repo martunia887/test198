@@ -24,7 +24,7 @@ const myColors = [
 //////
 // @flow
 import IssueIcon from "@atlaskit/icon/glyph/issue";
-import { colors } from "@atlaskit/theme";
+import * as colors from "@atlaskit/theme/colors";
 
 const myColors = [
   colors.N800,

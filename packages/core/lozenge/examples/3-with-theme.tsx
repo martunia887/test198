@@ -1,4 +1,4 @@
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import React from 'react';
 import Lozenge from '../src';
 

@@ -1,6 +1,6 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { N60A } from '@atlaskit/theme/colors';
 import { getThemeStyle, themeNamespace } from '../util/theme';
 
 const getItemState = stateName => ({ theme }) => {
@@ -57,8 +57,8 @@ const getInteractiveStyles = ({
 }) => {
   if (isDragging) {
     return css`
-      ${getItemState('dragging')} box-shadow: 0 4px 8px -2px ${colors.N60A},
-        0 0 1px ${colors.N60A};
+      ${getItemState('dragging')} box-shadow: 0 4px 8px -2px ${N60A},
+        0 0 1px ${N60A};
     `;
   }
 

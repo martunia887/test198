@@ -1,6 +1,7 @@
 // @ts-ignore: unused variable
 import { css, Styles, StyledComponentClass } from 'styled-components';
-import { borderRadius, colors, fontSize } from '@atlaskit/theme';
+import { borderRadius, fontSize } from "@atlaskit/theme/constants";
+import * as colors from "@atlaskit/theme/colors";
 import {
   browser,
   tableMarginTop,

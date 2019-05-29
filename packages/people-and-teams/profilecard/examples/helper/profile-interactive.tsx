@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 // @ts-ignore
 import uid from 'uid';
 import styled from 'styled-components';
+
 // @ts-ignore
-import { AtlasKitThemeProvider, colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+
+import * as AtlasKitThemeProvider from '@atlaskit/theme/AtlasKitThemeProvider';
+import { N800, N0 } from '@atlaskit/theme/colors';
 import { profiles } from '../../mock-helpers';
 import { ProfileCard } from '../../src';
 
@@ -11,7 +15,7 @@ import { StatusType, StatusModifiedDateType } from '../../src/types';
 
 const StoryWrapper = styled.div`
   label {
-    color: ${themed({ light: colors.N800, dark: colors.N0 })};
+    color: ${themed({ light: N800, dark: N0 })};
     margin-right: 10px;
     -webkit-user-select: none;
   }

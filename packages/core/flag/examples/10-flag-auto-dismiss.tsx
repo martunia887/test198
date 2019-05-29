@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
-import { colors, gridSize, math } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { R400, N500, N0, G400, Y200 } from '@atlaskit/theme/colors';
+import { multiply } from '@atlaskit/theme/math';
 import SuccessIcon from '@atlaskit/icon/glyph/check-circle';
 import { AutoDismissFlag, FlagGroup } from '../src';
 import { AppearanceTypes } from '../src/types';
@@ -13,11 +15,11 @@ const appearances: AppearanceTypes[] = [
   'warning',
 ];
 const color = {
-  error: colors.R400,
-  info: colors.N500,
-  normal: colors.N0,
-  success: colors.G400,
-  warning: colors.Y200,
+  error: R400,
+  info: N500,
+  normal: N0,
+  success: G400,
+  warning: Y200,
 };
 
 type State = {
@@ -50,7 +52,7 @@ export default class AutoDismissExample extends Component<void, State> {
   render() {
     return (
       <div>
-        <p style={{ padding: `${math.multiply(gridSize, 2).toString()}px` }}>
+        <p style={{ padding: `${multiply(gridSize, 2).toString()}px` }}>
           <Button appearance="primary" onClick={this.addFlag}>
             Add another Flag
           </Button>

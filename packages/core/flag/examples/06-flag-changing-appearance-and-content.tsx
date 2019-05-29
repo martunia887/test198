@@ -1,7 +1,8 @@
 import React, { ChangeEvent, Component } from 'react';
 import styled from 'styled-components';
 import Spinner from '@atlaskit/spinner';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { R400, G400, Y200 } from '@atlaskit/theme/colors';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
 import FieldRadioGroup from '@atlaskit/field-radio-group';
@@ -54,7 +55,7 @@ export default class ConnectionDemo extends Component<any, State> {
   getIcon = () => {
     switch (this.state.appearance) {
       case 'error':
-        return <ErrorIcon label="" secondaryColor={colors.R400} />;
+        return <ErrorIcon label="" secondaryColor={R400} />;
       case 'info':
         return (
           <SpinnerContainer>
@@ -62,11 +63,11 @@ export default class ConnectionDemo extends Component<any, State> {
           </SpinnerContainer>
         );
       case 'success':
-        return <SuccessIcon label="" secondaryColor={colors.G400} />;
+        return <SuccessIcon label="" secondaryColor={G400} />;
       case 'warning':
-        return <WarningIcon label="" secondaryColor={colors.Y200} />;
+        return <WarningIcon label="" secondaryColor={Y200} />;
       default:
-        return <SuccessIcon label="" secondaryColor={colors.G400} />;
+        return <SuccessIcon label="" secondaryColor={G400} />;
     }
   };
 

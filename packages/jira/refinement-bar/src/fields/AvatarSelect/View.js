@@ -3,7 +3,7 @@
 
 import { jsx } from '@emotion/core';
 import Avatar from '@atlaskit/avatar';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import Select from '../Select/View';
 
 // do NOT assign directly; a new component must be created to avoid inheritence

@@ -3,7 +3,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import RadioIcon from '@atlaskit/icon/glyph/radio';
-import { colors } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 import Item from '@atlaskit/item';
 
 import { KEY_ENTER, KEY_SPACE } from '../../../util/keys';

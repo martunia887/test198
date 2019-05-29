@@ -2,7 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { B200 } from '@atlaskit/theme/colors';
 import {
   timestampToString,
   timestampToTaskContext,
@@ -16,7 +17,7 @@ const SelectableDate = styled(Date)`
     display: 'relative';
     &::before {
       content: '';
-      border: 2px solid ${colors.B200};
+      border: 2px solid ${B200};
       display: 'absolute';
       background: transparent;
       border-radius: ${borderRadius()}px;

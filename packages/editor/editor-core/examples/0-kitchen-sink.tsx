@@ -6,9 +6,9 @@ import Button from '@atlaskit/button';
 
 import { IntlProvider, addLocaleData } from 'react-intl';
 import { ReactRenderer } from '@atlaskit/renderer';
-import { colors } from '@atlaskit/theme';
+import { N30, N50 } from '@atlaskit/theme/colors';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import Toggle from '@atlaskit/toggle';
 import { extensionHandlers } from '@atlaskit/editor-test-helpers';
 
@@ -51,12 +51,12 @@ const EditorColumn: React.ComponentClass<
   flex: 1;
   ${p =>
     p.vertical
-      ? `border-right: 1px solid ${colors.N30}; min-height: 85vh`
-      : `border-bottom: 1px solid ${colors.N30}`};
+      ? `border-right: 1px solid ${N30}; min-height: 85vh`
+      : `border-bottom: 1px solid ${N30}`};
 `;
 
 const Controls = styled.div`
-  border-bottom: 1px dashed ${colors.N50};
+  border-bottom: 1px dashed ${N50};
   padding: 1em;
 
   h5 {

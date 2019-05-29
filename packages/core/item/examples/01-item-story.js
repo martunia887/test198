@@ -7,7 +7,8 @@ import Arrow from '@atlaskit/icon/glyph/arrow-right';
 import Avatar from '@atlaskit/avatar';
 import Lozenge from '@atlaskit/lozenge';
 import Tooltip from '@atlaskit/tooltip';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { P75, P400, N500, N0, N40 } from '@atlaskit/theme/colors';
 import Item from '../src';
 import {
   DropImitation,
@@ -64,16 +65,16 @@ export default class ItemStory extends Component<{}, {}> {
             <ItemThemeDemo
               title="Purple with less padding"
               padding={gridSize() * 0.75}
-              backgroundColor={colors.P75}
-              secondaryTextColor={colors.P400}
-              focusColor={colors.N500}
+              backgroundColor={P75}
+              secondaryTextColor={P400}
+              focusColor={N500}
             />
             <ItemThemeDemo
               title="Dark with more padding and light text"
               padding={gridSize() * 2}
-              backgroundColor={colors.N500}
-              textColor={colors.N0}
-              secondaryTextColor={colors.N40}
+              backgroundColor={N500}
+              textColor={N0}
+              secondaryTextColor={N40}
             />
           </GroupsWrapper>
         </div>

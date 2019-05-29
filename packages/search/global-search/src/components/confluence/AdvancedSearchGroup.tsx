@@ -3,7 +3,8 @@ import Icon from '@atlaskit/icon';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
-import { gridSize, math } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { multiply } from '@atlaskit/theme/math';
 import { CancelableEvent } from '@atlaskit/quick-search';
 import { messages } from '../../messages';
 import StickyFooter from '../common/StickyFooter';
@@ -13,7 +14,7 @@ import PeopleIconGlyph from '../../assets/PeopleIconGlyph';
 import { ConfluenceAdvancedSearchTypes } from '../SearchResultsUtil';
 
 const PeopleSearchWrapper = styled.div`
-  margin-top: ${math.multiply(gridSize, 3)}px;
+  margin-top: ${multiply(gridSize, 3)}px;
 `;
 
 export interface Props {

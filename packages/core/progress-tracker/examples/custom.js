@@ -1,7 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N800 } from '@atlaskit/theme/colors';
 import { Link, BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { ProgressTracker } from '../src';
@@ -58,7 +58,7 @@ type CustomProgressTrackerLinkStageAdditionalProps = {
 };
 
 const StyledLink = styled(Link)`
-  color: ${colors.N800};
+  color: ${N800};
 `;
 
 class CustomProgressTrackerLink extends PureComponent<Props> {

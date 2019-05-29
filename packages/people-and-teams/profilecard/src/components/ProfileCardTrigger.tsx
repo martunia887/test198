@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Popper } from '@atlaskit/popper';
 import Portal from '@atlaskit/portal';
-import { layers } from '@atlaskit/theme';
+import { layers } from '@atlaskit/theme/constants';
 // @ts-ignore
 import NodeResolver from 'react-node-resolver';
 

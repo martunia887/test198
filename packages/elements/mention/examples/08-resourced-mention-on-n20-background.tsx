@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AnalyticsListener } from '@atlaskit/analytics';
-import { colors } from '@atlaskit/theme';
+import { N20 } from '@atlaskit/theme/colors';
 import debug from '../src/util/logger';
 import { onMentionEvent } from '../example-helpers/index';
 import {
@@ -11,7 +11,7 @@ import ResourcedMention from '../src/components/Mention/ResourcedMention';
 import { IntlProvider } from 'react-intl';
 
 const style = {
-  backgroundColor: colors.N20,
+  backgroundColor: N20,
   width: '100%',
   padding: '20px',
 };

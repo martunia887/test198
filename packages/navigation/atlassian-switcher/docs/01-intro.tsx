@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { md } from '@atlaskit/docs';
-import { colors } from '@atlaskit/theme';
+import { Y75, Y200 } from '@atlaskit/theme/colors';
 
 const Warning = (p: { children: React.ReactNode }) => (
   <div
     style={{
-      backgroundColor: colors.Y75,
-      boxShadow: `-4px 0 0 ${colors.Y200}`,
+      backgroundColor: Y75,
+      boxShadow: `-4px 0 0 ${Y200}`,
       marginBottom: '1.4em',
       padding: '1em 1.2em',
     }}

@@ -1,4 +1,5 @@
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import * as colors from '@atlaskit/theme/colors';
 import * as React from 'react';
 import { ComponentClass, HTMLAttributes } from 'react';
 import styled from 'styled-components';

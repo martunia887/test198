@@ -5,7 +5,8 @@ import React, { type Node } from 'react';
 import { jsx } from '@emotion/core';
 import Select, { CheckboxOption } from '@atlaskit/select';
 import SearchIcon from '@atlaskit/icon/glyph/editor/search';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N30A, N100 } from '@atlaskit/theme/colors';
 import Spinner from '@atlaskit/spinner';
 
 import noResultsIcon from '../assets/no-results-icon.png';
@@ -28,7 +29,7 @@ const Control = ({ children, innerProps, innerRef }: *) => (
   <div
     ref={innerRef}
     css={{
-      boxShadow: `0 2px 0 ${colors.N30A}`,
+      boxShadow: `0 2px 0 ${N30A}`,
       display: 'flex',
       padding: 4,
     }}
@@ -62,7 +63,7 @@ const Text = (props: *) => (
     css={{
       fontWeight: 500,
       fontSize: '0.85rem',
-      color: colors.N100,
+      color: N100,
       marginTop: gridSize() * 2,
     }}
     {...props}

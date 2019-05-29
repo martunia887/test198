@@ -3,12 +3,13 @@
 
 import { jsx } from '@emotion/core';
 import CloseIcon from '@atlaskit/icon/glyph/editor/close';
-import { borderRadius, colors } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N200, N400, N400A, N30A } from '@atlaskit/theme/colors';
 
 export const Note = (props: *) => (
   <div
     css={{
-      color: colors.N200,
+      color: N200,
       fontSize: '0.75rem',
       marginTop: '0.5em',
     }}
@@ -41,7 +42,7 @@ export const ClearButton = ({ label, isSelected, ...props }: *) => {
         background: 0,
         border: 0,
         borderRadius: borderRadius() / 2,
-        color: isSelected ? 'white' : colors.N400,
+        color: isSelected ? 'white' : N400,
         cursor: 'pointer',
         height: size,
         lineHeight: 1,
@@ -56,7 +57,7 @@ export const ClearButton = ({ label, isSelected, ...props }: *) => {
         width: size,
 
         ':hover, :focus': {
-          backgroundColor: isSelected ? colors.N400A : colors.N30A,
+          backgroundColor: isSelected ? N400A : N30A,
           opacity: 1,
         },
       }}

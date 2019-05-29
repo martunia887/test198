@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { colors } from '@atlaskit/theme';
+import { R300 } from '@atlaskit/theme/colors';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Button from '@atlaskit/button';
 import { truncateUrlForErrorView } from '../utils';
@@ -41,15 +41,11 @@ export class InlineCardErroredView extends React.Component<
         <IconAndTitleLayout
           icon={
             <AKIconWrapper>
-              <ErrorIcon
-                label="error"
-                size="small"
-                primaryColor={colors.R300}
-              />
+              <ErrorIcon label="error" size="small" primaryColor={R300} />
             </AKIconWrapper>
           }
           title={truncateUrlForErrorView(url) + ' - ' + message.trim()}
-          titleColor={colors.R300}
+          titleColor={R300}
         />{' '}
         {onRetry && (
           <Button spacing="none" appearance="link" onClick={this.handleRetry}>

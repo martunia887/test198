@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { N200 } from '@atlaskit/theme/colors';
 
 export const ResultItemGroupHeader = styled.div`
   display: flex;
@@ -22,14 +23,14 @@ export const ResultItemAfterWrapper = styled.div`
 `;
 
 export const ResultItemCaption = styled.span`
-  color: ${colors.N200};
+  color: ${N200};
   font-size: 12px;
   margin-left: ${gridSize()}px;
 `;
 
 export const ResultItemSubText = styled.span`
   font-size: 12px;
-  color: ${colors.N200};
+  color: ${N200};
 `;
 
 export const ResultItemIcon = styled.div`

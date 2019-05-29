@@ -1,5 +1,7 @@
 //@flow
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+
+import { N900 } from '@atlaskit/theme/colors';
 import css from './utils/evaluate-inner';
 
 const grid = gridSize() / 2;
@@ -22,7 +24,7 @@ export default css`
   button[data-ak-tooltip]:hover::after,
   a[href][data-ak-tooltip]:focus::after,
   button[data-ak-tooltip]:focus::after {
-    background-color: ${colors.N900};
+    background-color: ${N900};
     border-radius: ${borderRadius};
     box-sizing: border-box;
     color: ${fontColor};

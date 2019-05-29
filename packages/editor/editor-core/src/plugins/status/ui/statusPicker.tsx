@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Popup, akEditorFloatingDialogZIndex } from '@atlaskit/editor-common';
-import { colors, borderRadius, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import { N0 } from '@atlaskit/theme/colors';
 import {
   StatusPicker as AkStatusPicker,
   ColorType as Color,
@@ -46,7 +47,7 @@ export interface State {
 }
 
 const PickerContainer = styled.div`
-  background: ${colors.N0};
+  background: ${N0};
   padding: ${gridSize()}px 0;
   border-radius: ${borderRadius()}px;
   ${dropShadow};

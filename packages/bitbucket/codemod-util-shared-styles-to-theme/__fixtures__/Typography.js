@@ -14,7 +14,7 @@ const VariousSizes = styled.div`
 `;
 //////
 // @flow
-import { typography } from "@atlaskit/theme";
+import * as typography from "@atlaskit/theme/typography";
 import styled from "styled-components";
 const VariousSizes = styled.div`
   ${typography.h100()};

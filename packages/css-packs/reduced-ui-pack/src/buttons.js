@@ -1,5 +1,5 @@
 //@flow
-import { colors } from '@atlaskit/theme';
+import * as colors from '@atlaskit/theme/colors';
 import evaluateInner from './utils/evaluate-inner';
 
 /**

@@ -2,14 +2,14 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N30 } from '@atlaskit/theme/colors';
 
 export const TriggerWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: flex;
 `;
 
 export const Separator: ComponentClass<HTMLAttributes<{}>> = styled.span`
-  background: ${colors.N30};
+  background: ${N30};
   width: 1px;
   height: 24px;
   display: inline-block;

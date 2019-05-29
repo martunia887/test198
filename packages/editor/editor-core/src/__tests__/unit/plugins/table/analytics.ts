@@ -13,7 +13,7 @@ import {
   td,
 } from '@atlaskit/editor-test-helpers';
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
-import { colors } from '@atlaskit/theme';
+import { B50 } from '@atlaskit/theme/colors';
 
 import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
 import {
@@ -310,7 +310,7 @@ describe('Table analytic events', () => {
         ),
       );
 
-      setColorWithAnalytics(colors.B50)(editorView.state, editorView.dispatch);
+      setColorWithAnalytics(B50)(editorView.state, editorView.dispatch);
     });
 
     it('should fire v2 analytics', () => {

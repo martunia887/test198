@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N300, B500 } from '@atlaskit/theme/colors';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';
 import BookIcon from '../glyph/book';
@@ -11,8 +11,8 @@ import ArrowRightIcon from '../glyph/arrow-right';
 
 const ColorDiv = styled.div`
   align-items: center;
-  color: ${props => (props.isColorFlipped ? colors.N300 : 'white')};
-  background-color: ${props => (props.isColorFlipped ? 'white' : colors.B500)};
+  color: ${props => (props.isColorFlipped ? N300 : 'white')};
+  background-color: ${props => (props.isColorFlipped ? 'white' : B500)};
   display: flex;
   flex-wrap: wrap;
   height: 100%;

@@ -1,4 +1,4 @@
-import { fontFamily, fontSize } from '@atlaskit/theme';
+import { fontFamily, fontSize } from '@atlaskit/theme/constants';
 
 import { Fragment, Node as PMNode, Schema } from 'prosemirror-model';
 

@@ -1,5 +1,6 @@
 import { css } from 'styled-components';
-import { gridSize, math } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
+import { divide } from '@atlaskit/theme/math';
 import { ASC, DESC } from '../internal/constants';
 import { arrow } from '../theme';
 import { SortOrderType } from '../types';
@@ -101,7 +102,7 @@ export const arrowsStyle = (props: {
 
 export const cellStyle = css`
   border: none;
-  padding: ${math.divide(gridSize, 2)}px ${gridSize}px;
+  padding: ${divide(gridSize, 2)}px ${gridSize}px;
   text-align: left;
 
   &:first-child {
