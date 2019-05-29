@@ -1,0 +1,1 @@
+Change all the theme imports in media-card to use the multi entry points of theme

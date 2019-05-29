@@ -13,7 +13,7 @@ import {
   UIAnalyticsEventInterface,
 } from '@atlaskit/analytics-next';
 // @ts-ignore
-import { AtlaskitThemeProvider } from '@atlaskit/theme';
+import { AtlaskitThemeProvider } from '@atlaskit/theme/components';
 import { FileIdentifier } from '@atlaskit/media-core';
 import { Card } from '../src';
 import { createApiCards, actions } from '../example-helpers';
