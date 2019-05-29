@@ -133,14 +133,14 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     // Hence setting it to root
     // Wait for the drawer to open and mount the iframe.
     setTimeout(() => {
-      const iframe: HTMLIFrameElement | null = document.querySelector(
+      const iframes: NodeListOf<HTMLIFrameElement> = document.querySelectorAll(
         'iFrame[title="Notifications"]',
       );
-      if (iframe) {
+      iframes.forEach(iframe => {
         iframe.src = '/';
         iframe.srcdoc = 'notifications drawer iframe';
-      }
-    });
+      });
+    }, 50);
   };
 
   onSettingsClose = () => {
@@ -158,7 +158,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
   render() {
     return (
       <GlobalNavigation
-        appSwitcherComponent={WrappedSwitcher}
+        appSwitcher={{
+          drawerContent: WrappedSwitcher,
+          tooltip: 'Switch to...',
+        }}
         // appSwitcherComponent={undefined} // no switcher behaviour
         create={{
           onClick: () => console.log('Create clicked'),
@@ -177,6 +180,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           isOpen: this.state.isHelpOpen,
           onClose: this.onHelpClose,
           onClick: this.onHelpClick,
+          tooltip: 'Help',
         }}
         notifications={{
           badge: {
@@ -193,12 +197,14 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           locale: 'en',
           onClick: this.onNotificationsClick,
           product: 'jira',
+          tooltip: 'Notifications',
         }}
         settings={{
           isOpen: this.state.isSettingsOpen,
           onClose: this.onSettingsClose,
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
+          tooltip: 'Settings',
         }}
         // profile={{
         //   href: '/login',
@@ -207,6 +213,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
         profile={{
           text: <Avatar src={getAvatarUrl()} />,
           dropdownContent: ProfileContent,
+          tooltip: 'Your profile and settings',
         }}
         primaryItems={[
           { id: 'home', text: 'Home', href: '#' },

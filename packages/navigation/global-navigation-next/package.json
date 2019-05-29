@@ -28,6 +28,7 @@
     "@atlaskit/notification-indicator": "^7.0.0",
     "@atlaskit/notification-log-client": "^4.0.4",
     "@atlaskit/theme": "^9.0.1",
+    "@atlaskit/tooltip": "^14.0.0",
     "@atlaskit/width-detector": "^2.0.0",
     "@emotion/core": "^10.0.9",
     "url-parse": "^1.4.3"

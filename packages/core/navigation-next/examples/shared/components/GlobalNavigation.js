@@ -220,7 +220,10 @@ export default class WrappedGlobalNavigation extends React.Component<
   render() {
     return (
       <GlobalNavigation
-        appSwitcherComponent={WrappedSwitcher}
+        appSwitcher={{
+          drawerContent: WrappedSwitcher,
+          tooltip: 'Switch to...',
+        }}
         create={{
           onClick: () => console.log('Create clicked'),
           text: 'Create',
@@ -238,6 +241,7 @@ export default class WrappedGlobalNavigation extends React.Component<
           isOpen: this.state.isHelpOpen,
           onClose: this.onHelpClose,
           onClick: this.onHelpClick,
+          tooltip: 'Help',
         }}
         notifications={{
           badge: {
@@ -248,16 +252,19 @@ export default class WrappedGlobalNavigation extends React.Component<
           locale: 'en',
           onClick: this.onNotificationsClick,
           product: 'jira',
+          tooltip: 'Notifications',
         }}
         profile={{
           text: <Avatar src={getAvatarUrl()} />,
           dropdownContent: ProfileContent,
+          tooltip: 'Your profile and settings',
         }}
         settings={{
           isOpen: this.state.isSettingsOpen,
           onClose: this.onSettingsClose,
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
+          tooltip: 'Settings',
         }}
         primaryItems={[
           { id: 'home', text: 'Home', href: '/', component: WrappedLink },

@@ -15,10 +15,11 @@ export interface SecondaryItemProps {
   onClose?: () => void;
   drawerContent?: React.ComponentType<{}>;
   dropdownContent?: React.ComponentType<{}>;
+  tooltip?: Item['props']['tooltip'];
 }
 
 export type GlobalNavigationProps = {
-  appSwitcherComponent?: React.ComponentType;
+  appSwitcher?: SecondaryItemProps;
   create?: CreateProps;
   product: ProductProps;
   search: SearchProps;

@@ -33,6 +33,8 @@ export type ItemProps = {
   target?: string;
   /** A string or Node to render as the main content of the Item. */
   text: ReactNode;
+  /** A string to render as a tooltip */
+  tooltip?: string;
 };
 
 export type ItemRenderComponentProps = ItemProps & {

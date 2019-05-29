@@ -21,7 +21,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   };
   render() {
     const {
-      appSwitcherComponent: AppSwitcherComponent,
+      appSwitcher,
       create,
       search,
       help,
@@ -53,10 +53,10 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                 <div css={styles.right}>
                   {create && <Create {...create} width={width} />}
                   {search && <Search {...search} width={width} />}
-                  {AppSwitcherComponent && (
+                  {appSwitcher && (
                     <Item
                       appearance="secondary"
-                      drawerContent={AppSwitcherComponent}
+                      {...appSwitcher}
                       text={<AppSwitcherIcon label="Switch to..." />}
                     />
                   )}

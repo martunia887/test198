@@ -13,4 +13,5 @@ export interface NotificationsProps {
   locale?: string;
   onClick: () => void;
   product: string;
+  tooltip?: string;
 }
