@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { HTMLAttributes, ComponentClass } from 'react';
 import { fontFamily } from '@atlaskit/theme';
@@ -23,7 +23,9 @@ export const cardShadow = `
 `;
 
 export const FadeinImage: ComponentClass<HTMLAttributes<{}>> = styled.div`
-  ${fadeIn};
+  ${css`
+    ${fadeIn}
+  `};
 `;
 
 export default Root;

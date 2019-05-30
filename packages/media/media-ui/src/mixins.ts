@@ -1,4 +1,4 @@
-import { keyframes } from 'styled-components';
+import { css, keyframes } from 'styled-components';
 import { borderRadius as akBorderRadius } from '@atlaskit/theme';
 
 export const ellipsis = (maxWidth: string | number = '100%') => {
@@ -55,5 +55,5 @@ export const fadeInKeyframe = keyframes`
 `;
 
 export const fadeIn = `
-  animation: ${fadeInKeyframe} .3s ${easeInOutCubic};
+  animation: ${fadeInKeyframe} 0.3s ${easeInOutCubic};
 `;

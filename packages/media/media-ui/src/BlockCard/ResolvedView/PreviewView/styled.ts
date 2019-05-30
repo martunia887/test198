@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { HTMLAttributes, ComponentClass } from 'react';
 import { colors } from '@atlaskit/theme';
@@ -11,8 +11,11 @@ export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   height: 0;
   padding-bottom: 56.25%;
   color: ${colors.N40A};
-  ${borderRadius} background-color: ${colors.N30};
-  ${fadeIn};
+  ${borderRadius};
+  background-color: ${colors.N30};
+  ${css`
+    ${fadeIn}
+  `};
 `;
 
 export const IconWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
