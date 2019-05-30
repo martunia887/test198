@@ -205,6 +205,14 @@ export default class WrappedGlobalNavigation extends React.Component<
     console.log('notifications clicked');
   };
 
+  onNotificationsCloseComplete = () => {
+    console.log('notifications close completed');
+  };
+
+  onSearchCloseComplete = () => {
+    console.log('search close completed');
+  };
+
   onSettingsClose = () => {
     this.setState({
       isSettingsOpen: false,
@@ -217,12 +225,21 @@ export default class WrappedGlobalNavigation extends React.Component<
     }));
   };
 
+  onSettingsCloseComplete = () => {
+    console.log('settings close completed');
+  };
+
+  onSwitcherCloseComplete = () => {
+    console.log('switcher close completed');
+  };
+
   render() {
     return (
       <GlobalNavigation
         appSwitcher={{
           drawerContent: WrappedSwitcher,
           tooltip: 'Switch to...',
+          onDrawerCloseComplete: this.onSwitcherCloseComplete,
         }}
         create={{
           onClick: () => console.log('Create clicked'),
@@ -231,6 +248,7 @@ export default class WrappedGlobalNavigation extends React.Component<
         search={{
           drawerContent: () => <BasicQuickSearch />,
           text: 'Search',
+          onDrawerCloseComplete: this.onSearchCloseComplete,
         }}
         product={{
           icon: JiraSoftwareIcon,
@@ -251,6 +269,7 @@ export default class WrappedGlobalNavigation extends React.Component<
           drawerContent: () => <div>notifications</div>,
           locale: 'en',
           onClick: this.onNotificationsClick,
+          onDrawerCloseComplete: this.onNotificationsCloseComplete,
           product: 'jira',
           tooltip: 'Notifications',
         }}
@@ -264,6 +283,7 @@ export default class WrappedGlobalNavigation extends React.Component<
           onClose: this.onSettingsClose,
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
+          onDrawerCloseComplete: this.onSettingsCloseComplete,
           tooltip: 'Settings',
         }}
         primaryItems={[

@@ -25,6 +25,7 @@ export default class Search extends Component<Props> {
       isOpen,
       onClick,
       onClose,
+      onDrawerCloseComplete,
       drawerContent,
       dropdownContent,
       width,
@@ -38,6 +39,7 @@ export default class Search extends Component<Props> {
         onClick={onClick}
         isOpen={isOpen}
         onClose={onClose}
+        onDrawerCloseComplete={onDrawerCloseComplete}
         drawerContent={drawerContent}
         dropdownContent={dropdownContent}
         text={fullWidth ? text : <SearchIcon label={text} />}
