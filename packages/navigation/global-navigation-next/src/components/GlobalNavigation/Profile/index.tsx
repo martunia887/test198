@@ -10,8 +10,8 @@ const Profile = (props: ProfileProps) => {
     return (
       <Item
         appearance="secondary"
-        href="/login"
         text={<SignInIcon label="Log in" />}
+        {...props}
       />
     );
   }

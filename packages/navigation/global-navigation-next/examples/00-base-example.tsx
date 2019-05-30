@@ -200,7 +200,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
         }}
-        // profile={{}} // signed-out behaviour
+        // profile={{
+        //   href: '/login',
+        //   text: 'Custom sign in text',
+        // }}
         profile={{
           text: <Avatar src={getAvatarUrl()} />,
           dropdownContent: ProfileContent,
