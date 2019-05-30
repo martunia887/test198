@@ -35,18 +35,10 @@ class ItemComponentWithBadge extends React.Component<
   }
 
   render() {
-    const {
-      badge,
-      children,
-      className,
-      component,
-      isSelected,
-      drawerContent,
-      ...props
-    } = this.props;
+    const { badge, children, className, onClick } = this.props;
     return (
       // Set z-index: 1 to let the badge (if any) overlap other items.
-      <button className={className} style={{ zIndex: 1 }} {...props}>
+      <button className={className} style={{ zIndex: 1 }} onClick={onClick}>
         {children}
         <div css={getStyles().badgePositioner}>{this.renderBadge(badge)}</div>
       </button>
