@@ -41,10 +41,30 @@ declare module '@atlaskit/lozenge' {
   declare module.exports: any;
 }
 
+declare module '@atlaskit/modal-dialog' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/page' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/pagination' {
+  declare module.exports: any;
+}
+
 declare module '@atlaskit/section-message' {
   declare module.exports: any;
 }
 
 declare module '@atlaskit/textarea' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/radio' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/portal' {
   declare module.exports: any;
 }
