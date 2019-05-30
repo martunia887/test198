@@ -57,7 +57,11 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                     <Item
                       appearance="secondary"
                       {...appSwitcher}
-                      text={<AppSwitcherIcon label="Switch to..." />}
+                      text={
+                        <AppSwitcherIcon
+                          label={appSwitcher.tooltip || 'Switch to...'}
+                        />
+                      }
                     />
                   )}
                   {notifications && <Notifications {...notifications} />}
@@ -65,7 +69,9 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                     <Item
                       appearance="secondary"
                       {...settings}
-                      text={<SettingsIcon label="Settings" />}
+                      text={
+                        <SettingsIcon label={settings.tooltip || 'Settings'} />
+                      }
                     />
                   )}
                   {help && (
@@ -74,7 +80,7 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                       {...help}
                       text={
                         <QuestionCircleIcon
-                          label="Help"
+                          label={help.tooltip || 'Help'}
                           secondaryColor={styles.outer.fill}
                         />
                       }

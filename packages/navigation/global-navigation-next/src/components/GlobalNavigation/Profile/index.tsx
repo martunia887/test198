@@ -10,7 +10,7 @@ const Profile = (props: ProfileProps) => {
     return (
       <Item
         appearance="secondary"
-        text={<SignInIcon label="Log in" />}
+        text={<SignInIcon label={props.tooltip || 'Log in'} />}
         {...props}
       />
     );

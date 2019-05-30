@@ -208,7 +208,8 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
         }}
         // profile={{
         //   href: '/login',
-        //   text: 'Custom sign in text',
+        //   text: <div>Custom sign in text</div>,
+        //   tooltip: 'Sign in',
         // }}
         profile={{
           text: <Avatar src={getAvatarUrl()} />,
