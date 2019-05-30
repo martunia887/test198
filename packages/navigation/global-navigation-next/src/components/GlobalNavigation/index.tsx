@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
-import Avatar from '@atlaskit/avatar';
 import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
 import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
@@ -14,6 +13,7 @@ import { ProductHome } from './ProductHome';
 import Search from './Search';
 import getStyles from './styles';
 import { GlobalNavigationProps } from './types';
+import Profile from './Profile';
 
 export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   static defaultProps = {
@@ -21,13 +21,14 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
   };
   render() {
     const {
-      appSwitcherComponent: AppSwitcherComponent,
+      appSwitcher,
       create,
       search,
       help,
       notifications,
       primaryItems,
       product,
+      profile,
       settings,
     } = this.props;
     const styles = getStyles();
@@ -52,17 +53,25 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                 <div css={styles.right}>
                   {create && <Create {...create} width={width} />}
                   {search && <Search {...search} width={width} />}
-                  <Item
-                    appearance="secondary"
-                    drawerContent={AppSwitcherComponent}
-                    text={<AppSwitcherIcon label="Switch to..." />}
-                  />
+                  {appSwitcher && (
+                    <Item
+                      appearance="secondary"
+                      {...appSwitcher}
+                      text={
+                        <AppSwitcherIcon
+                          label={appSwitcher.tooltip || 'Switch to...'}
+                        />
+                      }
+                    />
+                  )}
                   {notifications && <Notifications {...notifications} />}
                   {settings && (
                     <Item
                       appearance="secondary"
                       {...settings}
-                      text={<SettingsIcon label="Settings" />}
+                      text={
+                        <SettingsIcon label={settings.tooltip || 'Settings'} />
+                      }
                     />
                   )}
                   {help && (
@@ -71,13 +80,13 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
                       {...help}
                       text={
                         <QuestionCircleIcon
-                          label="Help"
+                          label={help.tooltip || 'Help'}
                           secondaryColor={styles.outer.fill}
                         />
                       }
                     />
                   )}
-                  <Avatar />
+                  <Profile {...profile} />
                 </div>
               </Fragment>
             )}

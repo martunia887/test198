@@ -3,6 +3,7 @@ import { CreateProps } from './Create/types';
 import { NotificationsProps } from './Notifications/types';
 import { ProductProps } from './ProductHome/types';
 import { SearchProps } from './Search/types';
+import { ProfileProps } from './Profile/types';
 
 export interface SecondaryItemProps {
   /**
@@ -12,12 +13,14 @@ export interface SecondaryItemProps {
   isOpen?: boolean;
   onClick?: () => void;
   onClose?: () => void;
+  onDrawerCloseComplete?: () => void;
   drawerContent?: React.ComponentType<{}>;
   dropdownContent?: React.ComponentType<{}>;
+  tooltip?: Item['props']['tooltip'];
 }
 
 export type GlobalNavigationProps = {
-  appSwitcherComponent: React.ComponentType;
+  appSwitcher?: SecondaryItemProps;
   create?: CreateProps;
   product: ProductProps;
   search: SearchProps;
@@ -25,4 +28,5 @@ export type GlobalNavigationProps = {
   notifications?: NotificationsProps;
   help?: SecondaryItemProps;
   settings?: SecondaryItemProps;
+  profile: ProfileProps;
 };

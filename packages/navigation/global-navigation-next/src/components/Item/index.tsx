@@ -1,4 +1,5 @@
 /** @jsx jsx */
+import Tooltip from '@atlaskit/tooltip';
 import { jsx } from '@emotion/core';
 import React, { ElementType } from 'react';
 import DropdownItem from '../DropdownItem';
@@ -27,6 +28,7 @@ export default class Item extends React.Component<ItemProps> {
       onClick,
       target,
       text,
+      tooltip,
     } = this.props;
     const styles = getStyles(this.props);
 
@@ -57,7 +59,7 @@ export default class Item extends React.Component<ItemProps> {
 
     return (
       <ItemComponent css={{ '&&': styles.itemBase[appearance] }} {...itemProps}>
-        {text}
+        {tooltip ? <Tooltip content={tooltip}>{text}</Tooltip> : text}
       </ItemComponent>
     );
   }

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import AtlassianSwitcher from '@atlaskit/atlassian-switcher';
+import Avatar from '@atlaskit/avatar';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import { JiraSoftwareIcon, JiraSoftwareWordmark } from '@atlaskit/logo';
 import GlobalNavigation from '../src';
@@ -7,6 +8,7 @@ import { IntlProvider } from 'react-intl';
 
 import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
 import { mockNotificationsEndpoint } from './helpers/mock-notifications-endpoint';
+import { getAvatarUrl } from './helpers/avatar-data-url';
 
 const CLOUD_ID = 'some-cloud-id';
 const FABRIC_NOTIFICATION_LOG_URL = '/gateway/api/notification-log/';
@@ -17,13 +19,31 @@ mockNotificationsEndpoint(
   3,
 );
 
+const ProfileContent = () => (
+  <Fragment>
+    <DropdownItemGroup title="JimJim">
+      <DropdownItem>Profile</DropdownItem>
+      <DropdownItem>Give feedback</DropdownItem>
+      <DropdownItem>Personal settings</DropdownItem>
+      <DropdownItem>My Reminders</DropdownItem>
+      <DropdownItem>Log out</DropdownItem>
+    </DropdownItemGroup>
+  </Fragment>
+);
+
 const HelpContent = () => (
   <Fragment>
-    <DropdownItemGroup>
-      <DropdownItem>Help</DropdownItem>
+    <DropdownItemGroup title="Help">
+      <DropdownItem>Atlassian Documentation</DropdownItem>
+      <DropdownItem>Atlassian Community</DropdownItem>
+      <DropdownItem>What's New</DropdownItem>
+      <DropdownItem>Get Jira Mobile</DropdownItem>
+      <DropdownItem>Keyboard shortcuts</DropdownItem>
+      <DropdownItem>About Jira</DropdownItem>
     </DropdownItemGroup>
-    <DropdownItemGroup>
-      <DropdownItem>Me</DropdownItem>
+    <DropdownItemGroup title="Legal">
+      <DropdownItem>Terms of use</DropdownItem>
+      <DropdownItem>Privacy Policy</DropdownItem>
     </DropdownItemGroup>
   </Fragment>
 );
@@ -94,6 +114,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     isSettingsOpen: false,
   };
 
+  onAppSwitcherCloseComplete = () => {
+    console.log('app switcher close completed');
+  };
+
   onHelpClick = () => {
     this.setState(state => ({
       isHelpOpen: !state.isHelpOpen,
@@ -113,14 +137,26 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     // Hence setting it to root
     // Wait for the drawer to open and mount the iframe.
     setTimeout(() => {
-      const iframe: HTMLIFrameElement | null = document.querySelector(
+      const iframes: NodeListOf<HTMLIFrameElement> = document.querySelectorAll(
         'iFrame[title="Notifications"]',
       );
-      if (iframe) {
+      iframes.forEach(iframe => {
         iframe.src = '/';
         iframe.srcdoc = 'notifications drawer iframe';
-      }
-    });
+      });
+    }, 50);
+  };
+
+  onNotificationsCloseComplete = () => {
+    console.log('notifications close completed');
+  };
+
+  onSearchCloseComplete = () => {
+    console.log('search close completed');
+  };
+
+  onSettingsCloseComplete = () => {
+    console.log('settings close completed');
   };
 
   onSettingsClose = () => {
@@ -138,7 +174,12 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
   render() {
     return (
       <GlobalNavigation
-        appSwitcherComponent={WrappedSwitcher}
+        appSwitcher={{
+          drawerContent: WrappedSwitcher,
+          tooltip: 'Switch to...',
+          onDrawerCloseComplete: this.onAppSwitcherCloseComplete,
+        }}
+        // appSwitcherComponent={undefined} // no switcher behaviour
         create={{
           onClick: () => console.log('Create clicked'),
           text: 'Create',
@@ -146,6 +187,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
         search={{
           drawerContent: () => <div>quick search</div>,
           text: 'Search',
+          onDrawerCloseComplete: this.onSearchCloseComplete,
         }}
         product={{
           icon: JiraSoftwareIcon,
@@ -156,6 +198,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           isOpen: this.state.isHelpOpen,
           onClose: this.onHelpClose,
           onClick: this.onHelpClick,
+          tooltip: 'Help',
         }}
         notifications={{
           badge: {
@@ -171,13 +214,27 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           // drawerContent: () => <div>custom drawer content</div>,
           locale: 'en',
           onClick: this.onNotificationsClick,
+          onDrawerCloseComplete: this.onNotificationsCloseComplete,
           product: 'jira',
+          tooltip: 'Notifications',
         }}
         settings={{
           isOpen: this.state.isSettingsOpen,
           onClose: this.onSettingsClose,
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
+          onDrawerCloseComplete: this.onSettingsCloseComplete,
+          tooltip: 'Settings',
+        }}
+        // profile={{
+        //   href: '/login',
+        //   text: <div>Custom sign in text</div>,
+        //   tooltip: 'Sign in',
+        // }}
+        profile={{
+          text: <Avatar src={getAvatarUrl()} />,
+          dropdownContent: ProfileContent,
+          tooltip: 'Your profile and settings',
         }}
         primaryItems={[
           { id: 'home', text: 'Home', href: '#' },

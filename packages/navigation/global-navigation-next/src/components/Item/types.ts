@@ -3,8 +3,8 @@ import { ComponentType, ReactNode } from 'react';
 export type Dataset = { [name: string]: string | typeof undefined };
 
 export type ItemProps = {
-  /** Whether the item should look like a primary or secondary item */
-  appearance: 'primary' | 'secondary';
+  /** Whether the item should look like a primary or secondary item. Profile is a variant of secondary. */
+  appearance: 'primary' | 'secondary' | 'profile';
   /** A custom component to render instead of the default wrapper component.
    * Could used to render a router Link, for example. The component will be
    * provided with a className, children and onClick props, which should be passed on to the
@@ -29,10 +29,14 @@ export type ItemProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   /** A handler which will be called when the drawer/dropdown is closed. */
   onClose?: (e: React.MouseEvent<HTMLElement>) => void;
+  /** A handler which will be called when the drawer is finished closing. */
+  onDrawerCloseComplete?: () => void;
   /** The HTML target attribute. Will only be used if href is also set. */
   target?: string;
   /** A string or Node to render as the main content of the Item. */
   text: ReactNode;
+  /** A string to render as a tooltip */
+  tooltip?: string;
 };
 
 export type ItemRenderComponentProps = ItemProps & {

@@ -12,5 +12,7 @@ export interface NotificationsProps {
   dropdownContent?: React.ComponentType<{}>;
   locale?: string;
   onClick: () => void;
+  onDrawerCloseComplete?: () => void;
   product: string;
+  tooltip?: string;
 }

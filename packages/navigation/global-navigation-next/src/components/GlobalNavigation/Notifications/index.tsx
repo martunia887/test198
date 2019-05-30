@@ -45,7 +45,7 @@ export default class Notifications extends Component<NotificationsProps> {
     return (
       <BadgedItem
         appearance="secondary"
-        text={<NotificationIcon label="Notifications" />}
+        text={<NotificationIcon label={props.tooltip || 'Notifications'} />}
         badge={resolvedBadge}
         drawerContent={drawer}
         {...props}

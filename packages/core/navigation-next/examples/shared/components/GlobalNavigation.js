@@ -3,6 +3,7 @@
 import React, { Fragment } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Link } from 'react-router-dom';
+import Avatar from '@atlaskit/avatar';
 import AtlassianSwitcher from '@atlaskit/atlassian-switcher';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
 import GlobalNavigation from '@atlaskit/global-navigation-next';
@@ -16,6 +17,7 @@ import { colors } from '@atlaskit/theme';
 import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
 
 import BasicQuickSearch from './QuickSearch';
+import { getAvatarUrl } from './helpers/avatar-data-url';
 
 mockEndpoints('jira');
 
@@ -70,13 +72,31 @@ const WrappedSwitcher = () => {
   );
 };
 
+const ProfileContent = () => (
+  <Fragment>
+    <DropdownItemGroup title="JimJim">
+      <DropdownItem>Profile</DropdownItem>
+      <DropdownItem>Give feedback</DropdownItem>
+      <DropdownItem>Personal settings</DropdownItem>
+      <DropdownItem>My Reminders</DropdownItem>
+      <DropdownItem>Log out</DropdownItem>
+    </DropdownItemGroup>
+  </Fragment>
+);
+
 const HelpContent = () => (
   <Fragment>
-    <DropdownItemGroup>
-      <DropdownItem>Help</DropdownItem>
+    <DropdownItemGroup title="Help">
+      <DropdownItem>Atlassian Documentation</DropdownItem>
+      <DropdownItem>Atlassian Community</DropdownItem>
+      <DropdownItem>What's New</DropdownItem>
+      <DropdownItem>Get Jira Mobile</DropdownItem>
+      <DropdownItem>Keyboard shortcuts</DropdownItem>
+      <DropdownItem>About Jira</DropdownItem>
     </DropdownItemGroup>
-    <DropdownItemGroup>
-      <DropdownItem>Me</DropdownItem>
+    <DropdownItemGroup title="Legal">
+      <DropdownItem>Terms of use</DropdownItem>
+      <DropdownItem>Privacy Policy</DropdownItem>
     </DropdownItemGroup>
   </Fragment>
 );
@@ -185,6 +205,14 @@ export default class WrappedGlobalNavigation extends React.Component<
     console.log('notifications clicked');
   };
 
+  onNotificationsCloseComplete = () => {
+    console.log('notifications close completed');
+  };
+
+  onSearchCloseComplete = () => {
+    console.log('search close completed');
+  };
+
   onSettingsClose = () => {
     this.setState({
       isSettingsOpen: false,
@@ -197,10 +225,22 @@ export default class WrappedGlobalNavigation extends React.Component<
     }));
   };
 
+  onSettingsCloseComplete = () => {
+    console.log('settings close completed');
+  };
+
+  onSwitcherCloseComplete = () => {
+    console.log('switcher close completed');
+  };
+
   render() {
     return (
       <GlobalNavigation
-        appSwitcherComponent={WrappedSwitcher}
+        appSwitcher={{
+          drawerContent: WrappedSwitcher,
+          tooltip: 'Switch to...',
+          onDrawerCloseComplete: this.onSwitcherCloseComplete,
+        }}
         create={{
           onClick: () => console.log('Create clicked'),
           text: 'Create',
@@ -208,6 +248,7 @@ export default class WrappedGlobalNavigation extends React.Component<
         search={{
           drawerContent: () => <BasicQuickSearch />,
           text: 'Search',
+          onDrawerCloseComplete: this.onSearchCloseComplete,
         }}
         product={{
           icon: JiraSoftwareIcon,
@@ -218,6 +259,7 @@ export default class WrappedGlobalNavigation extends React.Component<
           isOpen: this.state.isHelpOpen,
           onClose: this.onHelpClose,
           onClick: this.onHelpClick,
+          tooltip: 'Help',
         }}
         notifications={{
           badge: {
@@ -227,13 +269,22 @@ export default class WrappedGlobalNavigation extends React.Component<
           drawerContent: () => <div>notifications</div>,
           locale: 'en',
           onClick: this.onNotificationsClick,
+          onDrawerCloseComplete: this.onNotificationsCloseComplete,
           product: 'jira',
+          tooltip: 'Notifications',
+        }}
+        profile={{
+          text: <Avatar src={getAvatarUrl()} />,
+          dropdownContent: ProfileContent,
+          tooltip: 'Your profile and settings',
         }}
         settings={{
           isOpen: this.state.isSettingsOpen,
           onClose: this.onSettingsClose,
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
+          onDrawerCloseComplete: this.onSettingsCloseComplete,
+          tooltip: 'Settings',
         }}
         primaryItems={[
           { id: 'home', text: 'Home', href: '/', component: WrappedLink },
