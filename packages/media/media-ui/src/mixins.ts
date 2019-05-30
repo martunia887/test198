@@ -1,4 +1,4 @@
-import { css, keyframes } from 'styled-components';
+import { keyframes } from 'styled-components';
 import { borderRadius as akBorderRadius } from '@atlaskit/theme';
 
 export const ellipsis = (maxWidth: string | number = '100%') => {
