@@ -114,6 +114,10 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     isSettingsOpen: false,
   };
 
+  onAppSwitcherCloseComplete = () => {
+    console.log('app switcher close completed');
+  };
+
   onHelpClick = () => {
     this.setState(state => ({
       isHelpOpen: !state.isHelpOpen,
@@ -143,6 +147,18 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
     }, 50);
   };
 
+  onNotificationsCloseComplete = () => {
+    console.log('notifications close completed');
+  };
+
+  onSearchCloseComplete = () => {
+    console.log('search close completed');
+  };
+
+  onSettingsCloseComplete = () => {
+    console.log('settings close completed');
+  };
+
   onSettingsClose = () => {
     this.setState({
       isSettingsOpen: false,
@@ -161,6 +177,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
         appSwitcher={{
           drawerContent: WrappedSwitcher,
           tooltip: 'Switch to...',
+          onDrawerCloseComplete: this.onAppSwitcherCloseComplete,
         }}
         // appSwitcherComponent={undefined} // no switcher behaviour
         create={{
@@ -170,6 +187,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
         search={{
           drawerContent: () => <div>quick search</div>,
           text: 'Search',
+          onDrawerCloseComplete: this.onSearchCloseComplete,
         }}
         product={{
           icon: JiraSoftwareIcon,
@@ -196,6 +214,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           // drawerContent: () => <div>custom drawer content</div>,
           locale: 'en',
           onClick: this.onNotificationsClick,
+          onDrawerCloseComplete: this.onNotificationsCloseComplete,
           product: 'jira',
           tooltip: 'Notifications',
         }}
@@ -204,6 +223,7 @@ export default class BaseExample extends React.Component<{}, ExampleState> {
           onClose: this.onSettingsClose,
           onClick: this.onSettingsClick,
           drawerContent: () => <div>settings</div>,
+          onDrawerCloseComplete: this.onSettingsCloseComplete,
           tooltip: 'Settings',
         }}
         // profile={{

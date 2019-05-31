@@ -13,6 +13,7 @@ export interface SecondaryItemProps {
   isOpen?: boolean;
   onClick?: () => void;
   onClose?: () => void;
+  onDrawerCloseComplete?: () => void;
   drawerContent?: React.ComponentType<{}>;
   dropdownContent?: React.ComponentType<{}>;
   tooltip?: Item['props']['tooltip'];

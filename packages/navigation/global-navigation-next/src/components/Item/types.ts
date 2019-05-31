@@ -29,6 +29,8 @@ export type ItemProps = {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   /** A handler which will be called when the drawer/dropdown is closed. */
   onClose?: (e: React.MouseEvent<HTMLElement>) => void;
+  /** A handler which will be called when the drawer is finished closing. */
+  onDrawerCloseComplete?: () => void;
   /** The HTML target attribute. Will only be used if href is also set. */
   target?: string;
   /** A string or Node to render as the main content of the Item. */
