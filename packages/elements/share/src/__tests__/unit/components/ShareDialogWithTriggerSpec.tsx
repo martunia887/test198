@@ -1,5 +1,6 @@
 import { shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import InlineDialog from '@atlaskit/inline-dialog';
+import Aktooltip from '@atlaskit/tooltip';
 import ShareIcon from '@atlaskit/icon/glyph/share';
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
@@ -17,7 +18,13 @@ import { defaultConfig } from '../../../components/ShareDialogContainer';
 import { ShareData, ShareForm } from '../../../components/ShareForm';
 import { ConfigResponse } from '../../../clients/ShareServiceClient';
 import { messages } from '../../../i18n';
-import { DialogPlacement, ADMIN_NOTIFIED, OBJECT_SHARED } from '../../../types';
+import {
+  DialogPlacement,
+  RenderCustomTriggerButton,
+  TooltipPosition,
+  ADMIN_NOTIFIED,
+  OBJECT_SHARED,
+} from '../../../types';
 import mockPopper from '../_mockPopper';
 mockPopper();
 
@@ -427,7 +434,10 @@ describe('ShareDialogWithTrigger', () => {
         defaultValue: mockShareData,
         shareError: new Error('unable to share'),
       });
-      wrapper.find('div').simulate('keydown', escapeKeyDownEvent);
+      wrapper
+        .dive()
+        .find('div')
+        .simulate('keydown', escapeKeyDownEvent);
       expect(escapeKeyDownEvent.stopPropagation).toHaveBeenCalledTimes(1);
       expect((wrapper.state() as State).isDialogOpen).toBeFalsy();
       expect((wrapper.state() as State).ignoreIntermediateState).toBeTruthy();
@@ -462,7 +472,10 @@ describe('ShareDialogWithTrigger', () => {
         shareError: new Error('unable to share'),
       };
       wrapper.setState(state);
-      wrapper.find('div').simulate('keydown', escapeKeyDownEvent);
+      wrapper
+        .dive()
+        .find('div')
+        .simulate('keydown', escapeKeyDownEvent);
       expect(escapeKeyDownEvent.stopPropagation).not.toHaveBeenCalled();
       expect(wrapper.state() as State).toMatchObject(state);
     });
@@ -491,7 +504,10 @@ describe('ShareDialogWithTrigger', () => {
         defaultValue: mockShareData,
         shareError: new Error('unable to share'),
       });
-      wrapper.find('div').simulate('keydown', escapeKeyDownEvent);
+      wrapper
+        .dive()
+        .find('div')
+        .simulate('keydown', escapeKeyDownEvent);
       expect(escapeKeyDownEvent.stopPropagation).toHaveBeenCalledTimes(1);
       expect((wrapper.state() as State).isDialogOpen).toBeFalsy();
       expect((wrapper.state() as State).ignoreIntermediateState).toBeTruthy();
@@ -657,6 +673,80 @@ describe('ShareDialogWithTrigger', () => {
           type: OBJECT_SHARED,
         },
       ]);
+    });
+
+    describe('Aktooltip', () => {
+      it('should be rendered if the props.triggerButtonStyle is `icon-only`', () => {
+        expect(wrapper.dive().find(Aktooltip)).toHaveLength(1);
+        expect(
+          wrapper
+            .dive()
+            .find(Aktooltip)
+            .find(ShareButton),
+        ).toHaveLength(1);
+
+        wrapper.setProps({ triggerButtonStyle: 'icon-with-text' });
+        expect(wrapper.dive().find(Aktooltip)).toHaveLength(0);
+        expect(wrapper.dive().find(ShareButton)).toHaveLength(1);
+
+        wrapper.setProps({ triggerButtonStyle: 'text-only' });
+        expect(wrapper.dive().find(Aktooltip)).toHaveLength(0);
+        expect(wrapper.dive().find(ShareButton)).toHaveLength(1);
+
+        const MockCustomButton = () => <button />;
+        const renderCustomTriggerButton: RenderCustomTriggerButton = ({
+          onClick = () => {},
+        }) => <MockCustomButton />;
+
+        wrapper.setProps({
+          triggerButtonStyle: 'icon-only',
+          renderCustomTriggerButton,
+        });
+
+        expect(wrapper.dive().find(Aktooltip)).toHaveLength(1);
+        expect(
+          wrapper
+            .dive()
+            .find(Aktooltip)
+            .find(MockCustomButton),
+        ).toHaveLength(1);
+      });
+
+      it('should digest props.triggerButtonTooltipText as content and props.triggerButtonTooltipPosition as position', () => {
+        expect(
+          (wrapper
+            .dive()
+            .find(Aktooltip)
+            .props() as any).content,
+        ).toEqual('Share');
+        expect(
+          (wrapper
+            .dive()
+            .find(Aktooltip)
+            .props() as any).position,
+        ).toEqual('top');
+
+        const customTooltipText = 'Custom Share';
+        const customTooltipPosition: TooltipPosition = 'mouse';
+
+        wrapper.setProps({
+          triggerButtonTooltipText: customTooltipText,
+          triggerButtonTooltipPosition: customTooltipPosition,
+        });
+
+        expect(
+          (wrapper
+            .dive()
+            .find(Aktooltip)
+            .props() as any).content,
+        ).toEqual('Custom Share');
+        expect(
+          (wrapper
+            .dive()
+            .find(Aktooltip)
+            .props() as any).position,
+        ).toEqual('mouse');
+      });
     });
   });
 });

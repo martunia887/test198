@@ -18,6 +18,7 @@ import {
   RenderCustomTriggerButton,
   ShareButtonStyle,
   ShareResponse,
+  TooltipPosition,
 } from '../types';
 import MessagesIntlProvider from './MessagesIntlProvider';
 import { ShareDialogWithTrigger } from './ShareDialogWithTrigger';
@@ -90,6 +91,10 @@ export type Props = {
   triggerButtonAppearance?: ButtonAppearances;
   /** Style of the share modal trigger button */
   triggerButtonStyle?: ShareButtonStyle;
+  /** Custom text of the tooltip on share modal trigger button */
+  triggerButtonTooltipText?: string;
+  /** Position of the tooltip on share modal trigger button */
+  triggerButtonTooltipPosition?: TooltipPosition;
 };
 
 export type State = {
@@ -258,6 +263,8 @@ export class ShareDialogContainer extends React.Component<Props, State> {
       showFlags,
       triggerButtonAppearance,
       triggerButtonStyle,
+      triggerButtonTooltipText,
+      triggerButtonTooltipPosition,
     } = this.props;
     const { isFetchingConfig, shareOrigin } = this.state;
     const copyLink = formatCopyLink(this.state.copyLinkOrigin!, shareLink);
@@ -279,6 +286,8 @@ export class ShareDialogContainer extends React.Component<Props, State> {
           showFlags={showFlags}
           triggerButtonAppearance={triggerButtonAppearance}
           triggerButtonStyle={triggerButtonStyle}
+          triggerButtonTooltipText={triggerButtonTooltipText}
+          triggerButtonTooltipPosition={triggerButtonTooltipPosition}
         />
       </MessagesIntlProvider>
     );

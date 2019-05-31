@@ -6,6 +6,7 @@ import {
 } from '@atlaskit/analytics-next';
 import { ButtonAppearances } from '@atlaskit/button';
 import InlineDialog from '@atlaskit/inline-dialog';
+import Aktooltip from '@atlaskit/tooltip';
 import { LoadOptions } from '@atlaskit/user-picker';
 import ShareIcon from '@atlaskit/icon/glyph/share';
 import * as React from 'react';
@@ -62,9 +63,16 @@ export type Props = {
   shareOrigin?: OriginTracing | null;
   shouldCloseOnEscapePress?: boolean;
   showFlags: (flags: Array<Flag>) => void;
+  triggerButtonTooltipText?: string;
+  triggerButtonTooltipPosition?: string;
   triggerButtonAppearance?: ButtonAppearances;
   triggerButtonStyle?: ShareButtonStyle;
 };
+
+const ShareButtonWrapper = styled.div`
+  display: inline-flex;
+  outline: none;
+`;
 
 const InlineDialogFormWrapper = styled.div`
   width: 352px;
@@ -87,6 +95,7 @@ class ShareDialogWithTriggerInternal extends React.Component<
     isDisabled: false,
     dialogPlacement: 'bottom-end' as 'bottom-end',
     shouldCloseOnEscapePress: true,
+    triggerButtonTooltipPosition: 'top' as 'top',
     triggerButtonAppearance: 'subtle' as 'subtle',
     triggerButtonStyle: 'icon-only' as 'icon-only',
   };
@@ -259,28 +268,84 @@ class ShareDialogWithTriggerInternal extends React.Component<
     this.createAndFireEvent(copyShareLink(this.start, this.props.shareOrigin));
   };
 
-  render() {
-    const { isDialogOpen, isSharing, shareError, defaultValue } = this.state;
+  renderShareTriggerButton = () => {
+    const { isDialogOpen } = this.state;
     const {
       intl: { formatMessage },
-      copyLink,
-      dialogPlacement,
       isDisabled,
-      isFetchingConfig,
-      loadUserOptions,
-      shareFormTitle,
-      config,
+      renderCustomTriggerButton,
+      triggerButtonTooltipText,
+      triggerButtonTooltipPosition,
       triggerButtonAppearance,
       triggerButtonStyle,
     } = this.props;
 
+    let button: React.ReactNode = (
+      <ShareButton
+        appearance={triggerButtonAppearance}
+        text={
+          triggerButtonStyle !== 'icon-only' ? (
+            <FormattedMessage {...messages.shareTriggerButtonText} />
+          ) : null
+        }
+        onClick={this.onTriggerClick}
+        iconBefore={
+          triggerButtonStyle !== 'text-only' ? (
+            <ShareIcon
+              label={formatMessage(messages.shareTriggerButtonIconLabel)}
+            />
+          ) : (
+            undefined
+          )
+        }
+        isSelected={isDialogOpen}
+        isDisabled={isDisabled}
+      />
+    );
+
+    if (renderCustomTriggerButton) {
+      const { shareError } = this.state;
+      button = renderCustomTriggerButton({
+        error: shareError,
+        isSelected: isDialogOpen,
+        onClick: this.onTriggerClick,
+      });
+    }
+
+    if (triggerButtonStyle === 'icon-only') {
+      button = (
+        <Aktooltip
+          content={
+            triggerButtonTooltipText ||
+            formatMessage(messages.shareTriggerButtonTooltipText)
+          }
+          position={triggerButtonTooltipPosition}
+        >
+          {button}
+        </Aktooltip>
+      );
+    }
+
+    return button;
+  };
+
+  render() {
+    const { isDialogOpen, isSharing, shareError, defaultValue } = this.state;
+    const {
+      copyLink,
+      dialogPlacement,
+      isFetchingConfig,
+      loadUserOptions,
+      shareFormTitle,
+      config,
+    } = this.props;
+
     // for performance purposes, we may want to have a lodable content i.e. ShareForm
     return (
-      <div
+      <ShareButtonWrapper
         tabIndex={0}
         onKeyDown={this.handleKeyDown}
-        style={{ outline: 'none' }}
-        ref={this.containerRef}
+        innerRef={this.containerRef}
       >
         <InlineDialog
           content={
@@ -306,36 +371,9 @@ class ShareDialogWithTriggerInternal extends React.Component<
           onClose={this.handleCloseDialog}
           placement={dialogPlacement}
         >
-          {this.props.renderCustomTriggerButton ? (
-            this.props.renderCustomTriggerButton({
-              error: shareError,
-              isSelected: isDialogOpen,
-              onClick: this.onTriggerClick,
-            })
-          ) : (
-            <ShareButton
-              appearance={triggerButtonAppearance}
-              text={
-                triggerButtonStyle !== 'icon-only' ? (
-                  <FormattedMessage {...messages.shareTriggerButtonText} />
-                ) : null
-              }
-              onClick={this.onTriggerClick}
-              iconBefore={
-                triggerButtonStyle !== 'text-only' ? (
-                  <ShareIcon
-                    label={formatMessage(messages.shareTriggerButtonIconLabel)}
-                  />
-                ) : (
-                  undefined
-                )
-              }
-              isSelected={isDialogOpen}
-              isDisabled={isDisabled}
-            />
-          )}
+          {this.renderShareTriggerButton()}
         </InlineDialog>
-      </div>
+      </ShareButtonWrapper>
     );
   }
 }

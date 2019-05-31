@@ -115,9 +115,18 @@ const triggerButtonStyleOptions = [
   { label: 'text-only', value: 'text-only' },
 ];
 
+const triggerButtonTooltipPositionOptions = [
+  { label: 'top', value: 'top' },
+  { label: 'left', value: 'left' },
+  { label: 'bottom', value: 'bottom' },
+  { label: 'right', value: 'right' },
+  { label: 'mouse', value: 'mouse' },
+];
+
 type ExampleState = {
   customButton: boolean;
   customTitle: boolean;
+  customTooltipText: boolean;
   dialogPlacement: string;
   escapeOnKeyPress: boolean;
 };
@@ -134,12 +143,15 @@ export default class Example extends React.Component<{}, State> {
     allowedDomains: ['atlassian.com'],
     customButton: false,
     customTitle: false,
+    customTooltipText: false,
     dialogPlacement: dialogPlacementOptions[0].value as 'bottom-end',
     escapeOnKeyPress: true,
     mode: modeOptions[0].value as ConfigResponseMode,
     triggerButtonAppearance: triggerButtonAppearanceOptions[0]
       .value as 'subtle',
     triggerButtonStyle: triggerButtonStyleOptions[0].value as 'icon-only',
+    triggerButtonTooltipPosition: triggerButtonTooltipPositionOptions[0]
+      .value as 'top',
   };
 
   key: number = 0;
@@ -178,11 +190,13 @@ export default class Example extends React.Component<{}, State> {
       allowedDomains,
       customButton,
       customTitle,
+      customTooltipText,
       dialogPlacement,
       escapeOnKeyPress,
       mode,
       triggerButtonAppearance,
       triggerButtonStyle,
+      triggerButtonTooltipPosition,
     } = this.state;
 
     this.key++;
@@ -213,6 +227,10 @@ export default class Example extends React.Component<{}, State> {
                   showFlags={showFlags}
                   triggerButtonAppearance={triggerButtonAppearance}
                   triggerButtonStyle={triggerButtonStyle}
+                  triggerButtonTooltipText={
+                    customTooltipText ? 'Custom Tooltip Text' : undefined
+                  }
+                  triggerButtonTooltipPosition={triggerButtonTooltipPosition}
                 />
               </WrapperWithMarginTop>
               <h4>Options</h4>
@@ -253,6 +271,15 @@ export default class Example extends React.Component<{}, State> {
                     isChecked={customTitle}
                     onChange={() =>
                       this.setState({ customTitle: !customTitle })
+                    }
+                  />
+                </WrapperWithMarginTop>
+                <WrapperWithMarginTop>
+                  Custom Trigger Button Tooltip Text
+                  <Toggle
+                    isChecked={customTooltipText}
+                    onChange={() =>
+                      this.setState({ customTooltipText: !customTooltipText })
                     }
                   />
                 </WrapperWithMarginTop>
@@ -301,6 +328,21 @@ export default class Example extends React.Component<{}, State> {
                     options={triggerButtonAppearanceOptions}
                     onChange={(option: any) =>
                       this.setState({ triggerButtonAppearance: option.value })
+                    }
+                  />
+                </WrapperWithMarginTop>
+                <WrapperWithMarginTop>
+                  Trigger Button Tooltip Position
+                  <Select
+                    value={{
+                      label: triggerButtonTooltipPosition,
+                      value: triggerButtonTooltipPosition,
+                    }}
+                    options={triggerButtonTooltipPositionOptions}
+                    onChange={(option: any) =>
+                      this.setState({
+                        triggerButtonTooltipPosition: option.value,
+                      })
                     }
                   />
                 </WrapperWithMarginTop>
