@@ -1,6 +1,7 @@
 //@flow
 /* eslint-disable no-console */
 const fs = require('fs');
+const jsdom = require('jsdom');
 
 const { CHANGED_PACKAGES } = process.env;
 const { COVERAGE_PACKAGES } = process.env;
@@ -80,10 +81,6 @@ const config = {
   setupFiles: ['./build/jest-config/setup.js'],
   setupTestFrameworkScriptFile: `${__dirname}/jestFrameworkSetup.js`,
   testResultsProcessor: 'jest-junit',
-  testEnvironmentOptions: {
-    // Need this to have jsdom loading images.
-    resources: 'usable',
-  },
   coverageReporters: ['lcov', 'html', 'text-summary'],
   collectCoverage: false,
   collectCoverageFrom: [],
@@ -92,6 +89,9 @@ const config = {
   globalTeardown: undefined,
   // Jest's default test environment 'jsdom' uses JSDOM 11 to support Node 6. Here we upgrade to JSDOM 14, which supports Node >= 8
   testEnvironment: 'jest-environment-jsdom-fourteen',
+  testEnvironmentOptions: {
+    resources: new jsdom.ResourceLoader(),
+  },
 };
 
 // If the CHANGED_PACKAGES variable is set, we parse it to get an array of changed packages and only
