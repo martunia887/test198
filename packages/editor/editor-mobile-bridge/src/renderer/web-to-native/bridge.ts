@@ -8,11 +8,19 @@ export interface LinkBridge {
   onLinkClick(url: string);
 }
 
-export default interface WebBridge extends LinkBridge, TaskDecisionBridge {}
+export interface MediaBridge {
+  onMediaClick(mediaId: string, occurrenceKey?: string | null): void;
+}
+
+export default interface WebBridge
+  extends LinkBridge,
+    TaskDecisionBridge,
+    MediaBridge {}
 
 export interface RendererBridges {
   linkBridge?: LinkBridge;
   taskDecisionBridge?: TaskDecisionBridge;
+  mediaBridge?: MediaBridge;
 }
 
 export type RendererPluginBridges = keyof RendererBridges;

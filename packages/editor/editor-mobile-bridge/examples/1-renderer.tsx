@@ -1,5 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+
 import Renderer from './../src/renderer/mobile-renderer-element';
 
 export const Wrapper: any = styled.div`
@@ -18,7 +20,12 @@ Wrapper.displayName = 'Wrapper';
 export default function Example() {
   return (
     <Wrapper>
-      <Renderer />
+      <Renderer
+        mediaProvider={storyMediaProviderFactory({
+          collectionName: 'InitialCollectionForTesting',
+          includeUserAuthProvider: true,
+        })}
+      />
     </Wrapper>
   );
 }
