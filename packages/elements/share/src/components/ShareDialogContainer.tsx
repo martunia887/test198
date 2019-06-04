@@ -129,11 +129,7 @@ export class ShareDialogContainer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    if (props.client) {
-      this.client = props.client;
-    } else {
-      this.client = new ShareServiceClient();
-    }
+    this.client = props.client || new ShareServiceClient();
 
     this.state = {
       copyLinkOrigin: null,
@@ -154,10 +150,7 @@ export class ShareDialogContainer extends React.Component<Props, State> {
     // memorization is recommended on React doc, but here the Origin Tracing does not reply on shareLink
     // in getDerivedStateFormProps it makes shareLink as determinant of renewal to stand out better
     // ***
-    if (
-      prevState.prevShareLink ||
-      prevState.prevShareLink !== nextProps.shareLink
-    ) {
+    if (prevState.prevShareLink !== nextProps.shareLink) {
       return {
         copyLinkOrigin: nextProps.originTracingFactory(),
         prevShareLink: nextProps.shareLink,
