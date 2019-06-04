@@ -7,7 +7,7 @@ export default md`
   
   ## Usage
 
-  ${code`import { AkCode, AkCodeBlock } from '@atlaskit/code`}
+  ${code`import { AkCode, AkCodeBlock } from '@atlaskit/code';`}
 
   ${(
     <Example
