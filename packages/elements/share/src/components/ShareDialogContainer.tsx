@@ -155,7 +155,9 @@ export class ShareDialogContainer extends React.Component<Props, State> {
     // in getDerivedStateFormProps it makes shareLink as determinant of renewal to stand out better
     // ***
     if (
-      prevState.prevShareLink ||
+      // this capture the initial state
+      !prevState.prevShareLink ||
+      // and this capture any share link changes
       prevState.prevShareLink !== nextProps.shareLink
     ) {
       return {

@@ -126,11 +126,23 @@ describe('ShareDialogContainer', () => {
     expect(wrapper.state().config).toEqual(defaultConfig);
   });
 
-  it('should call props.originTracingFactory if shareLink prop is updated', () => {
+  it('should call props.originTracingFactory only if shareLink prop is updated', () => {
     mockOriginTracingFactory.mockReset();
+
+    const originalCopyLinkOrigin: OriginTracing = wrapper.state()
+      .copyLinkOrigin;
+
     wrapper.setProps({ shareLink: 'new-share-link' });
     expect(wrapper.state().prevShareLink).toEqual('new-share-link');
     expect(mockOriginTracingFactory).toHaveBeenCalledTimes(2);
+    expect(wrapper.state().copyLinkOrigin).not.toEqual(originalCopyLinkOrigin);
+
+    const updatedCopyLinkOrigin = wrapper.state().copyLinkOrigin;
+
+    wrapper.setProps({ shareLink: 'new-share-link' });
+    expect(wrapper.state().prevShareLink).toEqual('new-share-link');
+    expect(mockOriginTracingFactory).toHaveBeenCalledTimes(2);
+    expect(wrapper.state().copyLinkOrigin).toEqual(updatedCopyLinkOrigin);
   });
 
   it('should have default this.client if props.client is not given', () => {
