@@ -1,0 +1,1 @@
+fixed excessive atlorigin renewal in elements/share
