@@ -86,6 +86,8 @@ export type Props = {
    * This package has an opinion on showing flag(s) upon successful share, and Flag system is NOT provided. Instead, showFlag prop is available for this purpose.
    */
   showFlags: (flags: Array<Flag>) => void;
+  /** Text Label of the share submit button  */
+  submitButtonLabel?: React.ReactNode;
   /** Appearance of the share modal trigger button  */
   triggerButtonAppearance?: ButtonAppearances;
   /** Style of the share modal trigger button */
@@ -256,6 +258,7 @@ export class ShareDialogContainer extends React.Component<Props, State> {
       shareLink,
       shouldCloseOnEscapePress,
       showFlags,
+      submitButtonLabel,
       triggerButtonAppearance,
       triggerButtonStyle,
     } = this.props;
@@ -277,6 +280,7 @@ export class ShareDialogContainer extends React.Component<Props, State> {
           shareOrigin={shareOrigin}
           shouldCloseOnEscapePress={shouldCloseOnEscapePress}
           showFlags={showFlags}
+          submitButtonLabel={submitButtonLabel}
           triggerButtonAppearance={triggerButtonAppearance}
           triggerButtonStyle={triggerButtonStyle}
         />

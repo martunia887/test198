@@ -317,7 +317,7 @@ describe('ShareDialogWithTrigger', () => {
     });
   });
 
-  describe('shareFormTitle prop', () => {
+  describe('shareFormTitle, submitButtonLabel props', () => {
     it('should be passed to the ShareForm', () => {
       const wrapper: ShallowWrapper<
         Props & InjectedIntlProps
@@ -329,6 +329,7 @@ describe('ShareDialogWithTrigger', () => {
           onShareSubmit={mockOnShareSubmit}
           shareContentType="page"
           shareFormTitle="Share this page"
+          submitButtonLabel="Share Button Label"
           showFlags={mockShowFlags}
         />,
       )
@@ -342,7 +343,9 @@ describe('ShareDialogWithTrigger', () => {
         .prop('content') as any)
         .find(ShareForm)
         .props();
+
       expect(ShareFormProps.title).toEqual('Share this page');
+      expect(ShareFormProps.submitButtonLabel).toEqual('Share Button Label');
     });
   });
 

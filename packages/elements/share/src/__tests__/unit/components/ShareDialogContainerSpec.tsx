@@ -24,6 +24,7 @@ const mockShareAri = 'ari';
 const mockShareContentType = 'issue';
 const mockShareLink = 'share-link';
 const mockShareTitle = 'Share Title';
+const mockSubmitButtonLabel = 'Share Button Label';
 const mockTriggerButtonStyle = 'icon-with-text' as 'icon-with-text';
 const mockTriggerButtonAppearance = 'subtle';
 const mockCopyLink = 'copy-link';
@@ -83,6 +84,7 @@ beforeEach(() => {
       showFlags={mockShowFlags}
       formatCopyLink={mockFormatCopyLink}
       shouldCloseOnEscapePress={mockShouldCloseOnEscapePress}
+      submitButtonLabel={mockSubmitButtonLabel}
       triggerButtonAppearance={mockTriggerButtonAppearance}
       triggerButtonStyle={mockTriggerButtonStyle}
     />,
@@ -120,6 +122,9 @@ describe('ShareDialogContainer', () => {
     );
     expect(shareDialogWithTrigger.prop('config')).toEqual(
       wrapper.state().config,
+    );
+    expect(shareDialogWithTrigger.prop('submitButtonLabel')).toEqual(
+      mockSubmitButtonLabel,
     );
     expect(mockOriginTracingFactory).toHaveBeenCalledTimes(2);
     expect(mockClient.getConfig).toHaveBeenCalledTimes(0);

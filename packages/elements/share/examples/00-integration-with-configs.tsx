@@ -117,6 +117,7 @@ const triggerButtonStyleOptions = [
 
 type ExampleState = {
   customButton: boolean;
+  customSubmitButtonLabel: boolean;
   customTitle: boolean;
   dialogPlacement: string;
   escapeOnKeyPress: boolean;
@@ -133,6 +134,7 @@ export default class Example extends React.Component<{}, State> {
     allowComment: true,
     allowedDomains: ['atlassian.com'],
     customButton: false,
+    customSubmitButtonLabel: false,
     customTitle: false,
     dialogPlacement: dialogPlacementOptions[0].value as 'bottom-end',
     escapeOnKeyPress: true,
@@ -177,6 +179,7 @@ export default class Example extends React.Component<{}, State> {
       allowComment,
       allowedDomains,
       customButton,
+      customSubmitButtonLabel,
       customTitle,
       dialogPlacement,
       escapeOnKeyPress,
@@ -211,6 +214,9 @@ export default class Example extends React.Component<{}, State> {
                   shareTitle="My Share"
                   shouldCloseOnEscapePress={escapeOnKeyPress}
                   showFlags={showFlags}
+                  submitButtonLabel={
+                    customSubmitButtonLabel ? 'Custom Label' : undefined
+                  }
                   triggerButtonAppearance={triggerButtonAppearance}
                   triggerButtonStyle={triggerButtonStyle}
                 />
@@ -253,6 +259,17 @@ export default class Example extends React.Component<{}, State> {
                     isChecked={customTitle}
                     onChange={() =>
                       this.setState({ customTitle: !customTitle })
+                    }
+                  />
+                </WrapperWithMarginTop>
+                <WrapperWithMarginTop>
+                  Custom Share Submit Button Label
+                  <Toggle
+                    isChecked={customSubmitButtonLabel}
+                    onChange={() =>
+                      this.setState({
+                        customSubmitButtonLabel: !customSubmitButtonLabel,
+                      })
                     }
                   />
                 </WrapperWithMarginTop>

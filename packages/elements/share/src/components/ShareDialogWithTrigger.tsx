@@ -62,6 +62,7 @@ export type Props = {
   shareOrigin?: OriginTracing | null;
   shouldCloseOnEscapePress?: boolean;
   showFlags: (flags: Array<Flag>) => void;
+  submitButtonLabel?: React.ReactNode;
   triggerButtonAppearance?: ButtonAppearances;
   triggerButtonStyle?: ShareButtonStyle;
 };
@@ -269,6 +270,7 @@ class ShareDialogWithTriggerInternal extends React.Component<
       isFetchingConfig,
       loadUserOptions,
       shareFormTitle,
+      submitButtonLabel,
       config,
       triggerButtonAppearance,
       triggerButtonStyle,
@@ -298,6 +300,7 @@ class ShareDialogWithTriggerInternal extends React.Component<
                   config={config}
                   onLinkCopy={this.handleCopyLink}
                   isFetchingConfig={isFetchingConfig}
+                  submitButtonLabel={submitButtonLabel}
                 />
               </InlineDialogFormWrapper>
             </AnalyticsContext>
