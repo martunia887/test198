@@ -128,8 +128,7 @@ describe('ShareDialogContainer', () => {
 
   it('should call props.originTracingFactory only if shareLink prop is updated', () => {
     mockOriginTracingFactory.mockReset();
-    const originalCopyLinkOrigin: OriginTracing = wrapper.state()
-      .copyLinkOrigin;
+    const originalCopyLinkOrigin = wrapper.state().copyLinkOrigin;
 
     wrapper.setProps({ shareLink: 'new-share-link' });
     expect(wrapper.state().prevShareLink).toEqual('new-share-link');
