@@ -252,7 +252,7 @@ export class ShareDialogContainer extends React.Component<Props, State> {
       triggerButtonAppearance,
       triggerButtonStyle,
     } = this.props;
-    const { isFetchingConfig, shareOrigin } = this.state;
+    const { isFetchingConfig, shareOrigin, copyLinkOrigin } = this.state;
     const copyLink = formatCopyLink(this.state.copyLinkOrigin!, shareLink);
     return (
       <MessagesIntlProvider>
@@ -267,7 +267,8 @@ export class ShareDialogContainer extends React.Component<Props, State> {
           renderCustomTriggerButton={renderCustomTriggerButton}
           shareContentType={shareContentType}
           shareFormTitle={shareFormTitle}
-          shareOrigin={shareOrigin}
+          copyLinkOrigin={copyLinkOrigin}
+          mailShareOrigin={shareOrigin}
           shouldCloseOnEscapePress={shouldCloseOnEscapePress}
           showFlags={showFlags}
           triggerButtonAppearance={triggerButtonAppearance}
