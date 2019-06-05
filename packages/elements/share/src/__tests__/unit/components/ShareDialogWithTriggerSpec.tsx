@@ -21,37 +21,40 @@ import { DialogPlacement, ADMIN_NOTIFIED, OBJECT_SHARED } from '../../../types';
 import mockPopper from '../_mockPopper';
 mockPopper();
 
-let wrapper: ShallowWrapper<Props & InjectedIntlProps>;
-let mockOnShareSubmit: jest.Mock;
-const mockLoadOptions = () => [];
-const mockShowFlags: jest.Mock = jest.fn();
-const mockFetchConfig: jest.Mock = jest.fn().mockResolvedValue(defaultConfig);
-
-beforeEach(() => {
-  wrapper = shallowWithIntl<Props>(
-    <ShareDialogWithTrigger
-      copyLink="copyLink"
-      fetchConfig={mockFetchConfig}
-      loadUserOptions={mockLoadOptions}
-      onShareSubmit={mockOnShareSubmit}
-      shareContentType="page"
-      showFlags={mockShowFlags}
-    />,
-  )
-    .dive()
-    .dive()
-    .dive();
-});
-
-beforeAll(() => {
-  mockOnShareSubmit = jest.fn();
-});
-
-beforeEach(() => {
-  mockFetchConfig.mockReset();
-});
-
 describe('ShareDialogWithTrigger', () => {
+  let wrapper: ShallowWrapper<Props & InjectedIntlProps>;
+  let mockOnShareSubmit: jest.Mock;
+  const mockLoadOptions = () => [];
+  const mockShowFlags: jest.Mock = jest.fn();
+  const mockFetchConfig: jest.Mock = jest.fn().mockResolvedValue(defaultConfig);
+  function getCopyLink() {
+    return Promise.resolve('some-link');
+  }
+
+  beforeEach(() => {
+    wrapper = shallowWithIntl<Props>(
+      <ShareDialogWithTrigger
+        getCopyLink={getCopyLink}
+        fetchConfig={mockFetchConfig}
+        loadUserOptions={mockLoadOptions}
+        onShareSubmit={mockOnShareSubmit}
+        shareContentType="page"
+        showFlags={mockShowFlags}
+      />,
+    )
+      .dive()
+      .dive()
+      .dive();
+  });
+
+  beforeAll(() => {
+    mockOnShareSubmit = jest.fn();
+  });
+
+  beforeEach(() => {
+    mockFetchConfig.mockReset();
+  });
+
   describe('default', () => {
     it('should render', () => {
       expect(wrapper.find(InlineDialog).length).toBe(1);
@@ -97,7 +100,7 @@ describe('ShareDialogWithTrigger', () => {
         Props & InjectedIntlProps
       > = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           loadUserOptions={mockLoadOptions}
           onShareSubmit={mockOnShareSubmit}
@@ -133,7 +136,7 @@ describe('ShareDialogWithTrigger', () => {
       > = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
           triggerButtonStyle="icon-only"
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           loadUserOptions={mockLoadOptions}
           onShareSubmit={mockOnShareSubmit}
@@ -165,7 +168,7 @@ describe('ShareDialogWithTrigger', () => {
       > = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
           triggerButtonStyle="icon-with-text"
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           loadUserOptions={mockLoadOptions}
           onShareSubmit={mockOnShareSubmit}
@@ -197,7 +200,7 @@ describe('ShareDialogWithTrigger', () => {
       > = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
           triggerButtonStyle="text-only"
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           loadUserOptions={mockLoadOptions}
           onShareSubmit={mockOnShareSubmit}
@@ -229,7 +232,7 @@ describe('ShareDialogWithTrigger', () => {
       const defaultPlacement: string = 'bottom-end';
       wrapper = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           loadUserOptions={mockLoadOptions}
           onShareSubmit={mockOnShareSubmit}
@@ -256,7 +259,7 @@ describe('ShareDialogWithTrigger', () => {
       let isDisabled: boolean = false;
       wrapper = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           isDisabled={isDisabled}
           loadUserOptions={mockLoadOptions}
@@ -293,7 +296,7 @@ describe('ShareDialogWithTrigger', () => {
         Props & InjectedIntlProps
       > = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           loadUserOptions={mockLoadOptions}
           onShareSubmit={mockOnShareSubmit}
@@ -323,7 +326,7 @@ describe('ShareDialogWithTrigger', () => {
         Props & InjectedIntlProps
       > = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           loadUserOptions={mockLoadOptions}
           onShareSubmit={mockOnShareSubmit}
@@ -360,7 +363,7 @@ describe('ShareDialogWithTrigger', () => {
     it('should set the isDialogOpen state to false', () => {
       wrapper = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           loadUserOptions={mockLoadOptions}
           onShareSubmit={mockOnShareSubmit}
@@ -535,7 +538,7 @@ describe('ShareDialogWithTrigger', () => {
       };
       wrapper = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           onShareSubmit={mockOnSubmit}
           loadUserOptions={mockLoadOptions}
@@ -582,7 +585,7 @@ describe('ShareDialogWithTrigger', () => {
       wrapper = shallowWithIntl<Props>(
         <ShareDialogWithTrigger
           config={mockConfig}
-          copyLink="copyLink"
+          getCopyLink={getCopyLink}
           fetchConfig={mockFetchConfig}
           onShareSubmit={mockOnSubmit}
           loadUserOptions={mockLoadOptions}

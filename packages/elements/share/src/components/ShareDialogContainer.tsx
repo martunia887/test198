@@ -246,11 +246,11 @@ export class ShareDialogContainer extends React.Component<Props, State> {
     );
   }
 
-  getCopyLink = (): string => {
+  getCopyLink = (): Promise<string> => {
     const { formatCopyLink } = this.props;
     const shareLink = this.getRawLink();
     const copyLinkOrigin = this.getCopyLinkOriginTracing();
-    return formatCopyLink(copyLinkOrigin, shareLink);
+    return Promise.resolve(formatCopyLink(copyLinkOrigin, shareLink));
   };
 
   getEmailShareLink = (): string => {
@@ -275,11 +275,11 @@ export class ShareDialogContainer extends React.Component<Props, State> {
       <MessagesIntlProvider>
         <ShareDialogWithTrigger
           config={this.state.config}
-          copyLink={this.getCopyLink()}
           dialogPlacement={dialogPlacement}
           fetchConfig={this.fetchConfig}
           isFetchingConfig={isFetchingConfig}
           loadUserOptions={loadUserOptions}
+          getCopyLink={this.getCopyLink}
           onShareSubmit={this.handleSubmitShare}
           renderCustomTriggerButton={renderCustomTriggerButton}
           shareContentType={shareContentType}

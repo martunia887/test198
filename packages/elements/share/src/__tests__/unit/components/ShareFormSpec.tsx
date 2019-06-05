@@ -15,6 +15,12 @@ import { ConfigResponse, DialogContentState, ShareError } from '../../../types';
 import { renderProp } from '../_testUtils';
 
 describe('ShareForm', () => {
+  const mockLink = 'some-link';
+  function getCopyLink() {
+    return Promise.resolve(mockLink);
+  }
+  const loadOptions = jest.fn();
+
   it.each`
     allowComment | submitButtonLabel
     ${true}      | ${undefined}
@@ -23,8 +29,6 @@ describe('ShareForm', () => {
   `(
     'should render From with fields (allowComment $allowComment, submitButton $submitButtonLabel)',
     ({ allowComment, submitButtonLabel }) => {
-      const mockLink = 'link';
-      const loadOptions = jest.fn();
       const onShareClick = jest.fn();
       const config: ConfigResponse = {
         mode: 'EXISTING_USERS_ONLY',
@@ -32,7 +36,7 @@ describe('ShareForm', () => {
       };
       const component = shallow(
         <ShareForm
-          copyLink={mockLink}
+          getCopyLink={getCopyLink}
           loadOptions={loadOptions}
           onShareClick={onShareClick}
           title="some title"
@@ -79,7 +83,7 @@ describe('ShareForm', () => {
       });
       const copyLinkButton = footer.find(CopyLinkButton).dive();
       expect(copyLinkButton.length).toBe(1);
-      expect(copyLinkButton.prop('link')).toEqual(mockLink);
+      expect(copyLinkButton.prop('getCopyLink')).toEqual(getCopyLink);
 
       const helperMessage = form.find(HelperMessage);
       expect(helperMessage).toHaveLength(0);
@@ -88,10 +92,12 @@ describe('ShareForm', () => {
 
   describe('isSharing prop', () => {
     it('should set isLoading prop to true to the Send button', () => {
-      const mockLink = 'link';
-      const loadOptions = jest.fn();
       const wrapper = shallow(
-        <ShareForm copyLink={mockLink} loadOptions={loadOptions} isSharing />,
+        <ShareForm
+          getCopyLink={getCopyLink}
+          loadOptions={loadOptions}
+          isSharing
+        />,
       );
 
       const akForm = wrapper.find<any>(Form);
@@ -104,12 +110,10 @@ describe('ShareForm', () => {
     });
 
     it('should set appearance prop to "primary" and isLoading prop to true to the Send button, and hide the tooltip', () => {
-      const mockLink = 'link';
       const mockShareError: ShareError = { message: 'error' };
-      const loadOptions = jest.fn();
       const wrapper = shallow(
         <ShareForm
-          copyLink={mockLink}
+          getCopyLink={getCopyLink}
           loadOptions={loadOptions}
           shareError={mockShareError}
           isSharing
@@ -130,11 +134,9 @@ describe('ShareForm', () => {
 
   describe('isFetchingConfig prop', () => {
     it('should set isLoading prop to true to the UserPickerField', () => {
-      const mockLink = 'link';
-      const loadOptions = jest.fn();
       const wrapper = shallow(
         <ShareForm
-          copyLink={mockLink}
+          getCopyLink={getCopyLink}
           loadOptions={loadOptions}
           isFetchingConfig
         />,
@@ -155,8 +157,8 @@ describe('ShareForm', () => {
       const mockShareError: ShareError = { message: 'error' };
       const wrapper = shallow(
         <ShareForm
-          copyLink="link"
-          loadOptions={jest.fn()}
+          getCopyLink={getCopyLink}
+          loadOptions={loadOptions}
           shareError={mockShareError}
         />,
       );
@@ -187,8 +189,6 @@ describe('ShareForm', () => {
   });
 
   it('should set defaultValue', () => {
-    const mockLink = 'link';
-    const loadOptions = jest.fn();
     const defaultValue: DialogContentState = {
       users: [],
       comment: {
@@ -202,7 +202,7 @@ describe('ShareForm', () => {
     };
     const component = shallow(
       <ShareForm
-        copyLink={mockLink}
+        getCopyLink={getCopyLink}
         loadOptions={loadOptions}
         title="some title"
         defaultValue={defaultValue}

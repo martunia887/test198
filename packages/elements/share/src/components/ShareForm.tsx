@@ -75,10 +75,10 @@ export type ShareData = {
 export type Props = {
   capabilitiesInfoMessage?: React.ReactNode;
   config?: ConfigResponse;
-  copyLink: string;
   isSharing?: boolean;
   loadOptions?: LoadOptions;
-  onLinkCopy?: (link: string) => void;
+  getCopyLink: () => Promise<string>;
+  onCopyLink?: (link: string) => void;
   onShareClick?: (data: ShareData) => void;
   shareError?: ShareError;
   submitButtonLabel?: React.ReactNode;
@@ -147,8 +147,8 @@ class InternalForm extends React.PureComponent<InternalFormProps> {
       title,
       loadOptions,
       capabilitiesInfoMessage,
-      onLinkCopy,
-      copyLink,
+      getCopyLink,
+      onCopyLink,
       defaultValue,
       config,
       isFetchingConfig,
@@ -172,7 +172,7 @@ class InternalForm extends React.PureComponent<InternalFormProps> {
             )}
           </FormSection>
           <FormFooter>
-            <CopyLinkButton onLinkCopy={onLinkCopy} link={copyLink} />
+            <CopyLinkButton getCopyLink={getCopyLink} onCopyLink={onCopyLink} />
             {this.renderSubmitButton()}
           </FormFooter>
         </form>
