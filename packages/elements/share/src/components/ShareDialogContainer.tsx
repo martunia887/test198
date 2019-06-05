@@ -35,7 +35,7 @@ export type Props = {
   cloudId: string;
   /** Placement of the modal to the trigger button */
   dialogPlacement?: DialogPlacement;
-  /** Transform function to provide custom formatted copy link, a default memorized function is provided */
+  /** Transform function to provide custom formatted copy link, a default memoized function is provided */
   formatCopyLink: (origin: OriginTracing, link: string) => string;
   /** Function used to load users options asynchronously */
   loadUserOptions: LoadOptions;

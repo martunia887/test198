@@ -1,12 +1,21 @@
 # Common Share Component
 
-## Notable internal behavior
+## Important notes
 
-The share modal will **retains its state** until the user either:
+### Internal behavior
+
+The share modal will **retains its form state** until the user either:
 - triggers a share = share completed
 - presses Esc = share cancelled
 
-A click outside the modal will hide it, **but state will be retained** (share not cancelled).
+A click outside the modal will hide it, **but the form state will be retained** (share not cancelled).
+
+
+### SSR
+
+With SSR rendering, `window` is not available, hence some `window` checks here and there.
+
+To test SSR in JIRA, see `services/jira-frontend-ssr/README.md`.
 
 
 ## Decisions
