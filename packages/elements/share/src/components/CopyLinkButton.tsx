@@ -20,25 +20,21 @@ const MessageSpan = styled.span`
   text-indent: 6px;
 `;
 
-type InputProps = {
-  text: string;
-};
-
-export const HiddenInput = React.forwardRef<HTMLInputElement, InputProps>(
-  // we need a hidden input to reliably copy to clipboard across all browsers.
+// we need a hidden input to reliably copy to clipboard across all browsers.
+type HiddenInputProps = {};
+export const HiddenInput = React.forwardRef<HTMLInputElement, HiddenInputProps>(
   (props, ref) => (
     <input
       style={{ position: 'absolute', left: '-9999px' }}
       ref={ref}
-      value={props.text}
       readOnly
     />
   ),
 );
 
 export type Props = {
-  onLinkCopy?: (link: string) => void;
-  link: string;
+  onCopyLink?: (link: string) => void;
+  getCopyLink: () => Promise<string>;
 };
 
 export type State = {
@@ -51,7 +47,7 @@ export class CopyLinkButton extends React.Component<
   Props & InjectedIntlProps,
   State
 > {
-  private autoDismiss: number | undefined;
+  private autoDismiss?: ReturnType<typeof setTimeout>;
   private inputRef: React.RefObject<HTMLInputElement> = React.createRef();
 
   state = {
@@ -63,29 +59,34 @@ export class CopyLinkButton extends React.Component<
   }
 
   private clearAutoDismiss = () => {
-    if (this.autoDismiss && window) {
-      window.clearTimeout(this.autoDismiss);
+    if (this.autoDismiss) {
+      clearTimeout(this.autoDismiss);
       this.autoDismiss = undefined;
     }
   };
 
   private handleClick = () => {
-    if (this.inputRef.current) {
-      this.inputRef.current!.select();
-    }
-    document.execCommand('copy');
+    const { getCopyLink } = this.props;
+    getCopyLink().then(link => {
+      if (!this.inputRef.current) {
+        // should never happen...
+        throw new Error(`Internal error: missing inputRef!`);
+      }
 
-    if (this.props.onLinkCopy) {
-      this.props.onLinkCopy!(this.props.link);
-    }
+      this.inputRef.current.value = link;
+      this.inputRef.current.select();
+      document.execCommand('copy');
 
-    this.setState({ shouldShowCopiedMessage: true }, () => {
-      this.clearAutoDismiss();
-      this.autoDismiss =
-        window &&
-        window.setTimeout(() => {
+      if (this.props.onCopyLink) {
+        this.props.onCopyLink(link);
+      }
+
+      this.setState({ shouldShowCopiedMessage: true }, () => {
+        this.clearAutoDismiss();
+        this.autoDismiss = setTimeout(() => {
           this.setState({ shouldShowCopiedMessage: false });
         }, AUTO_DISMISS_SECONDS * 1000);
+      });
     });
   };
 
@@ -102,7 +103,7 @@ export class CopyLinkButton extends React.Component<
 
     return (
       <>
-        <HiddenInput ref={this.inputRef} text={this.props.link} />
+        <HiddenInput ref={this.inputRef} />
         <InlineDialog
           content={
             <MessageContainer>

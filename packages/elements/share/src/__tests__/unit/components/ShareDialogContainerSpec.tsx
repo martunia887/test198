@@ -98,14 +98,16 @@ describe('ShareDialogContainer', () => {
   it('should render', () => {
     const shareDialogWithTrigger = wrapper.find(ShareDialogWithTrigger);
     expect(shareDialogWithTrigger).toHaveLength(1);
-    expect(mockFormatCopyLink).toHaveBeenCalled();
+    expect(mockFormatCopyLink).not.toHaveBeenCalled(); // because lazy access
     expect(shareDialogWithTrigger.prop('triggerButtonAppearance')).toEqual(
       mockTriggerButtonAppearance,
     );
     expect(shareDialogWithTrigger.prop('triggerButtonStyle')).toEqual(
       mockTriggerButtonStyle,
     );
-    expect(shareDialogWithTrigger.prop('copyLink')).toEqual(mockCopyLink);
+    expect(shareDialogWithTrigger.prop('getCopyLink')).toEqual(
+      wrapper.instance().getCopyLink,
+    );
     expect(shareDialogWithTrigger.prop('dialogPlacement')).toEqual(
       mockDialogPlacement,
     );

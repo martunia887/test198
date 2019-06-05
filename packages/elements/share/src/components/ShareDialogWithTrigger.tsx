@@ -48,12 +48,12 @@ export type State = DialogState;
 export type Props = {
   config?: ConfigResponse;
   children?: RenderCustomTriggerButton;
-  copyLink: string;
   dialogPlacement?: DialogPlacement;
   fetchConfig: Function;
   isDisabled?: boolean;
   isFetchingConfig?: boolean;
   loadUserOptions?: LoadOptions;
+  getCopyLink: () => Promise<string>;
   onLinkCopy?: Function;
   onShareSubmit?: (shareContentState: DialogContentState) => Promise<any>;
   renderCustomTriggerButton?: RenderCustomTriggerButton;
@@ -270,7 +270,7 @@ class ShareDialogWithTriggerInternal extends React.Component<
     const { isDialogOpen, isSharing, shareError, defaultValue } = this.state;
     const {
       intl: { formatMessage },
-      copyLink,
+      getCopyLink,
       dialogPlacement,
       isDisabled,
       isFetchingConfig,
@@ -296,7 +296,6 @@ class ShareDialogWithTriggerInternal extends React.Component<
               <>
                 <InlineDialogFormWrapper>
                   <ShareForm
-                    copyLink={copyLink}
                     loadOptions={loadUserOptions}
                     isSharing={isSharing}
                     onShareClick={this.handleShareSubmit}
@@ -305,7 +304,8 @@ class ShareDialogWithTriggerInternal extends React.Component<
                     onDismiss={this.handleFormDismiss}
                     defaultValue={defaultValue}
                     config={config}
-                    onLinkCopy={this.handleCopyLink}
+                    getCopyLink={getCopyLink}
+                    onCopyLink={this.handleCopyLink}
                     isFetchingConfig={isFetchingConfig}
                   />
                 </InlineDialogFormWrapper>
