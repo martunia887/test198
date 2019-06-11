@@ -116,22 +116,22 @@ export default class WithPluginState extends React.Component<Props, State> {
   /**
    * Debounces setState calls in order to reduce number of re-renders caused by several plugin state changes.
    */
-  private updateState = (stateSubset: State) => {
-    this.notAppliedState = { ...this.notAppliedState, ...stateSubset };
+  // private updateState = (stateSubset: State) => {
+  //   this.notAppliedState = { ...this.notAppliedState, ...stateSubset };
 
-    if (this.debounce) {
-      window.clearTimeout(this.debounce);
-    }
+  //   if (this.debounce) {
+  //     window.clearTimeout(this.debounce);
+  //   }
 
-    this.debounce = window.setTimeout(() => {
-      if (this.hasBeenMounted) {
-        this.setState(this.notAppliedState);
-      }
+  //   this.debounce = window.setTimeout(() => {
+  //     if (this.hasBeenMounted) {
+  //       this.setState(this.notAppliedState);
+  //     }
 
-      this.debounce = null;
-      this.notAppliedState = {};
-    }, 0);
-  };
+  //     this.debounce = null;
+  //     this.notAppliedState = {};
+  //   }, 0);
+  // };
 
   private getPluginsStates(
     plugins: { [name: string]: PluginKey },
