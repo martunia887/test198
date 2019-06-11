@@ -1,4 +1,4 @@
-import { Plugin, PluginKey } from 'prosemirror-state';
+import { Plugin, PluginKey, EditorState } from 'prosemirror-state';
 import { EditorPlugin } from '../../types';
 import { Dispatch } from '../../event-dispatcher';
 
@@ -15,14 +15,15 @@ won't re-render when it changes.
 */
 export function createPlugin(
   dispatch: Dispatch<EditorDisabledPluginState>,
+  oldState?: EditorState,
 ): Plugin | undefined {
   return new Plugin({
     key: pluginKey,
     state: {
-      init: () =>
-        ({
+      init: (): EditorDisabledPluginState =>
+        (oldState && pluginKey.getState(oldState)) || {
           editorDisabled: false,
-        } as EditorDisabledPluginState),
+        },
       apply(tr, oldPluginState: EditorDisabledPluginState) {
         const newPluginState: EditorDisabledPluginState = tr.getMeta(pluginKey);
 
@@ -43,7 +44,7 @@ const editorDisabledPlugin: EditorPlugin = {
   pmPlugins: () => [
     {
       name: 'editorDisabled',
-      plugin: ({ dispatch }) => createPlugin(dispatch),
+      plugin: ({ dispatch, oldState }) => createPlugin(dispatch, oldState),
     },
   ],
 };
