@@ -355,6 +355,7 @@ describe('asExperiment', () => {
     describe('Variant but component is broken', () => {
       // eslint-disable-next-line react/require-render-return
       class BrokenComponent extends Component<{}> {
+        // eslint-disable-next-line react/require-render-return
         render() {
           throw new Error('Exploded');
         }

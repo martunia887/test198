@@ -1,7 +1,7 @@
 // @flow
 
-import AnalyticsEvent from './AnalyticsEvent';
-import UIAnalyticsEvent from './UIAnalyticsEvent';
+import type { AnalyticsEvent } from './AnalyticsEvent';
+import type { UIAnalyticsEvent } from './UIAnalyticsEvent';
 
 // Basic events
 export type AnalyticsEventPayload = {

@@ -31,6 +31,7 @@ export class VariantB extends Component<{ title: string }> {
 
 // eslint-disable-next-line react/require-render-return
 export class Broken extends Component<{}> {
+  // eslint-disable-next-line react/require-render-return
   render() {
     throw new Error('Threw on render');
   }
