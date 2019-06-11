@@ -40,7 +40,7 @@ export interface Props {
 export default class WithPluginState extends React.Component<Props, State> {
   private listeners = {};
   private debounce: number | null = null;
-  private notAppliedState = {};
+  // private notAppliedState = {};
   private isSubscribed = false;
   private hasBeenMounted = false;
 
