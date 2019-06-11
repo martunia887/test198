@@ -407,12 +407,23 @@ pipelines:
               after-script:
                 - yarn send:stepFailureEvents
           - step:
-              name: Running Non Editor Unit tests
+              name: Running Non Editor Unit tests - Jest 1 of 2 chunks
               script:
                 - source ./build-setup.sh
                 - git merge master --no-edit
                 - bolt install --pure-lockfile
-                - TEST_ONLY_PATTERN='!packages/editor' yarn test
+                - export TMPFILE=$(mktemp /tmp/jest.XXXXXX) && TEST_ONLY_PATTERN='!packages/editor' yarn --silent jest --listTests --json > $TMPFILE
+                - STEPS="2" STEP_IDX="0" PARALLELIZE_TESTS_FILE="$TMPFILE" yarn jest
+              after-script:
+                - yarn send:stepFailureEvents
+          - step:
+              name: Running Non Editor Unit tests - Jest 2 of 2 chunks
+              script:
+                - source ./build-setup.sh
+                - git merge master --no-edit
+                - bolt install --pure-lockfile
+                - export TMPFILE=$(mktemp /tmp/jest.XXXXXX) && TEST_ONLY_PATTERN='!packages/editor' yarn --silent jest --listTests --json > $TMPFILE
+                - STEPS="2" STEP_IDX="1" PARALLELIZE_TESTS_FILE="$TMPFILE" yarn jest
               after-script:
                 - yarn send:stepFailureEvents
           - step:
