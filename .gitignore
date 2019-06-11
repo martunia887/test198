@@ -48,3 +48,6 @@ dists/
 
 # allow using .envrc to automate local environment, exclude from CVS
 .envrc
+
+# ignore parcel caches
+.parcel-cache
