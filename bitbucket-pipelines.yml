@@ -413,7 +413,7 @@ pipelines:
                 - git merge master --no-edit
                 - bolt install --pure-lockfile
                 - export TMPFILE=$(mktemp /tmp/jest.XXXXXX) && TEST_ONLY_PATTERN='!packages/editor' yarn --silent jest --listTests --json > $TMPFILE
-                - STEPS="2" STEP_IDX="0" PARALLELIZE_TESTS_FILE="$TMPFILE" yarn jest
+                - STEPS="2" STEP_IDX="0" PARALLELIZE_TESTS_FILE="$TMPFILE" yarn jest --runInBand
               after-script:
                 - yarn send:stepFailureEvents
           - step:
@@ -423,7 +423,7 @@ pipelines:
                 - git merge master --no-edit
                 - bolt install --pure-lockfile
                 - export TMPFILE=$(mktemp /tmp/jest.XXXXXX) && TEST_ONLY_PATTERN='!packages/editor' yarn --silent jest --listTests --json > $TMPFILE
-                - STEPS="2" STEP_IDX="1" PARALLELIZE_TESTS_FILE="$TMPFILE" yarn jest
+                - STEPS="2" STEP_IDX="1" PARALLELIZE_TESTS_FILE="$TMPFILE" yarn jest --runInBand
               after-script:
                 - yarn send:stepFailureEvents
           - step:
