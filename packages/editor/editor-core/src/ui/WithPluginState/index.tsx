@@ -40,7 +40,7 @@ export interface Props {
 export default class WithPluginState extends React.Component<Props, State> {
   private listeners = {};
   private debounce: number | null = null;
-  // private notAppliedState = {};
+  private notAppliedState = {};
   private isSubscribed = false;
   private hasBeenMounted = false;
 
@@ -84,7 +84,7 @@ export default class WithPluginState extends React.Component<Props, State> {
   }
 
   private handlePluginStateChange = (
-    propName: string,
+    propName: keyof State,
     skipEqualityCheck?: boolean,
   ) => (pluginState: any) => {
     // skipEqualityCheck is being used for old plugins since they are mutating plugin state instead of creating a new one
@@ -94,16 +94,21 @@ export default class WithPluginState extends React.Component<Props, State> {
       window.clearTimeout(this.debounce);
     }
 
+    this.notAppliedState = { ...this.notAppliedState, [propName]: pluginState };
     this.debounce = window.setTimeout(() => {
       if (this.hasBeenMounted) {
-        this.setState(prevState => {
-          if (prevState[propName] !== pluginState || skipEqualityCheck) {
-            console.log('updating state...');
-            return { [propName]: pluginState };
-          }
+        this.setState(
+          prevState => {
+            if (prevState[propName] !== pluginState || skipEqualityCheck) {
+              return this.notAppliedState;
+            }
 
-          return null;
-        });
+            return null;
+          },
+          () => {
+            this.notAppliedState = {};
+          },
+        );
       }
     }, 0);
 
