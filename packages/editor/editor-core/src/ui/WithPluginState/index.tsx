@@ -88,9 +88,29 @@ export default class WithPluginState extends React.Component<Props, State> {
     skipEqualityCheck?: boolean,
   ) => (pluginState: any) => {
     // skipEqualityCheck is being used for old plugins since they are mutating plugin state instead of creating a new one
-    if ((this.state as any)[propName] !== pluginState || skipEqualityCheck) {
-      this.updateState({ [propName]: pluginState });
+    console.log({ state: this.state, pluginState, propName });
+
+    if (this.debounce) {
+      window.clearTimeout(this.debounce);
     }
+
+    this.debounce = window.setTimeout(() => {
+      if (this.hasBeenMounted) {
+        this.setState(prevState => {
+          if (prevState[propName] !== pluginState || skipEqualityCheck) {
+            console.log('updating state...');
+            return { [propName]: pluginState };
+          }
+
+          return null;
+        });
+      }
+    }, 0);
+
+    //   if ((this.state as any)[propName] !== pluginState || skipEqualityCheck) {
+
+    //     this.updateState({ [propName]: pluginState });
+    //   }
   };
 
   /**
