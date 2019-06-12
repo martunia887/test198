@@ -3,7 +3,6 @@
 import { colors } from '@atlaskit/theme';
 
 import modeGenerator from './modeGenerator';
-import { backgroundActive } from '@atlaskit/theme/src/colors';
 
 export const light = modeGenerator({
   product: {

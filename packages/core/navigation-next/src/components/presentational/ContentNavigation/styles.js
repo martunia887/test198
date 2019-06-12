@@ -1,7 +1,5 @@
 // @flow
 
-import { colors } from '@atlaskit/theme';
-
 import { CONTENT_NAV_WIDTH } from '../../../common/constants';
 
 import type { ModeColors } from '../../../theme/types';
