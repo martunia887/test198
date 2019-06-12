@@ -1,26 +1,38 @@
 [
   {
+    "team": "css packs",
+    "package": "@atlaskit/reduced-ui-pack",
+    "version": "12.0.1",
+    "dependent": true,
     "id": "src.main",
     "name": "main",
     "stats": {
-      "size": 50239,
-      "gzipSize": 8455
+      "size": 50288,
+      "gzipSize": 8450
     }
   },
   {
+    "team": "css packs",
+    "package": "@atlaskit/reduced-ui-pack",
+    "version": "12.0.1",
+    "dependent": true,
     "id": "node_modules.main",
     "name": "node_modules [main]",
     "stats": {
-      "size": 5093,
-      "gzipSize": 2127
+      "size": 5043,
+      "gzipSize": 2133
     }
   },
   {
+    "team": "css packs",
+    "package": "@atlaskit/reduced-ui-pack",
+    "version": "12.0.1",
+    "dependent": true,
     "id": "combined.main",
     "name": "main",
     "stats": {
-      "size": 54722,
-      "gzipSize": 10324
+      "size": 54721,
+      "gzipSize": 10316
     }
   }
 ]

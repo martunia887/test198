@@ -2,49 +2,49 @@
   {
     "team": "core",
     "package": "@atlaskit/lozenge",
-    "version": "9.0.0",
+    "version": "9.0.1",
     "dependent": true,
     "id": "src.main",
     "name": "main",
     "stats": {
       "size": 3973,
-      "gzipSize": 1557
+      "gzipSize": 1556
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/lozenge",
-    "version": "9.0.0",
+    "version": "9.0.1",
     "dependent": true,
     "id": "node_modules.main",
     "name": "node_modules [main]",
     "stats": {
-      "size": 19057,
-      "gzipSize": 7069
+      "size": 18959,
+      "gzipSize": 7048
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/lozenge",
-    "version": "9.0.0",
+    "version": "9.0.1",
     "dependent": true,
     "id": "atlaskit.core.main",
     "name": "main",
     "stats": {
-      "size": 12911,
-      "gzipSize": 3378
+      "size": 12439,
+      "gzipSize": 3347
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/lozenge",
-    "version": "9.0.0",
+    "version": "9.0.1",
     "dependent": true,
     "id": "combined.main",
     "name": "main",
     "stats": {
-      "size": 33636,
-      "gzipSize": 11035
+      "size": 33658,
+      "gzipSize": 11049
     }
   }
 ]

@@ -50,7 +50,7 @@
     "measure": "                             measure",
     "measure:changed": "                     node build/ci-scripts/get.changed.packages.since.master.js --spaceDelimited --only='packages' | xargs -n1 -P2 yarn measure --lint",
     "measure:dependents": "                  node build/ci-scripts/get.changed.packages.since.master.js --dependents='direct' --spaceDelimited --only='packages' | xargs -n1 -P2 yarn measure --lint",
-    "measure:updateSnapshot": "              node build/ci-scripts/get.changed.packages.since.master.js --spaceDelimited --only='packages' | xargs -n1 -P2 yarn measure --updateSnapshot",
+    "measure:updateSnapshot": "              node build/ci-scripts/get.changed.packages.since.master.js --spaceDelimited --dependents='direct' --only='packages' | xargs -n1 -P2 yarn measure --updateSnapshot",
     "website:start": "                       cd website && yarn start",
     "send:buildEvents": "                    node build/ci-scripts/sending.build.events.payload.js",
     "send:stepFailureEvents": "              node build/ci-scripts/sending.step.failure.events.payload.js",

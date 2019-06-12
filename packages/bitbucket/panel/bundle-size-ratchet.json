@@ -1,34 +1,50 @@
 [
   {
+    "team": "bitbucket",
+    "package": "@atlaskit/panel",
+    "version": "0.2.2",
+    "dependent": true,
     "id": "src.main",
     "name": "main",
     "stats": {
-      "size": 4769,
-      "gzipSize": 2044
+      "size": 4770,
+      "gzipSize": 2045
     }
   },
   {
+    "team": "bitbucket",
+    "package": "@atlaskit/panel",
+    "version": "0.2.2",
+    "dependent": true,
     "id": "node_modules.main",
     "name": "node_modules [main]",
     "stats": {
-      "size": 47097,
-      "gzipSize": 13829
+      "size": 50538,
+      "gzipSize": 14927
     }
   },
   {
+    "team": "bitbucket",
+    "package": "@atlaskit/panel",
+    "version": "0.2.2",
+    "dependent": true,
     "id": "atlaskit.core.main",
     "name": "main",
     "stats": {
-      "size": 46195,
-      "gzipSize": 12334
+      "size": 48317,
+      "gzipSize": 12726
     }
   },
   {
+    "team": "bitbucket",
+    "package": "@atlaskit/panel",
+    "version": "0.2.2",
+    "dependent": true,
     "id": "combined.main",
     "name": "main",
     "stats": {
-      "size": 96991,
-      "gzipSize": 27121
+      "size": 102653,
+      "gzipSize": 28608
     }
   }
 ]

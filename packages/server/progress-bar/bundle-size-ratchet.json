@@ -1,0 +1,50 @@
+[
+  {
+    "team": "server",
+    "package": "@atlaskit/progress-bar",
+    "version": "0.2.0",
+    "dependent": true,
+    "id": "src.main",
+    "name": "main",
+    "stats": {
+      "size": 4131,
+      "gzipSize": 1585
+    }
+  },
+  {
+    "team": "server",
+    "package": "@atlaskit/progress-bar",
+    "version": "0.2.0",
+    "dependent": true,
+    "id": "node_modules.main",
+    "name": "node_modules [main]",
+    "stats": {
+      "size": 19290,
+      "gzipSize": 7135
+    }
+  },
+  {
+    "team": "server",
+    "package": "@atlaskit/progress-bar",
+    "version": "0.2.0",
+    "dependent": true,
+    "id": "atlaskit.core.main",
+    "name": "main",
+    "stats": {
+      "size": 11730,
+      "gzipSize": 3270
+    }
+  },
+  {
+    "team": "server",
+    "package": "@atlaskit/progress-bar",
+    "version": "0.2.0",
+    "dependent": true,
+    "id": "combined.main",
+    "name": "main",
+    "stats": {
+      "size": 34184,
+      "gzipSize": 11209
+    }
+  }
+]

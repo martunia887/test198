@@ -2,49 +2,49 @@
   {
     "team": "core",
     "package": "@atlaskit/form",
-    "version": "6.0.4",
+    "version": "6.0.6",
     "dependent": true,
     "id": "src.main",
     "name": "main",
     "stats": {
-      "size": 12486,
+      "size": 12470,
       "gzipSize": 3836
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/form",
-    "version": "6.0.4",
+    "version": "6.0.6",
     "dependent": true,
     "id": "node_modules.main",
     "name": "node_modules [main]",
     "stats": {
-      "size": 22859,
-      "gzipSize": 7356
+      "size": 22763,
+      "gzipSize": 7363
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/form",
-    "version": "6.0.4",
+    "version": "6.0.6",
     "dependent": true,
     "id": "atlaskit.core.main",
     "name": "main",
     "stats": {
-      "size": 24176,
-      "gzipSize": 6494
+      "size": 24161,
+      "gzipSize": 6496
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/form",
-    "version": "6.0.4",
+    "version": "6.0.6",
     "dependent": true,
     "id": "combined.main",
     "name": "main",
     "stats": {
-      "size": 58578,
-      "gzipSize": 16487
+      "size": 58461,
+      "gzipSize": 16495
     }
   }
 ]

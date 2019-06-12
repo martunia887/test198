@@ -2,49 +2,49 @@
   {
     "team": "core",
     "package": "@atlaskit/modal-dialog",
-    "version": "10.0.3",
+    "version": "10.0.5",
     "dependent": true,
     "id": "src.main",
     "name": "main",
     "stats": {
-      "size": 20085,
-      "gzipSize": 5557
+      "size": 20056,
+      "gzipSize": 5568
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/modal-dialog",
-    "version": "10.0.3",
+    "version": "10.0.5",
     "dependent": true,
     "id": "node_modules.main",
     "name": "node_modules [main]",
     "stats": {
-      "size": 63897,
-      "gzipSize": 19818
+      "size": 65057,
+      "gzipSize": 20392
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/modal-dialog",
-    "version": "10.0.3",
+    "version": "10.0.5",
     "dependent": true,
     "id": "atlaskit.core.main",
     "name": "main",
     "stats": {
-      "size": 51691,
-      "gzipSize": 13516
+      "size": 51763,
+      "gzipSize": 13587
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/modal-dialog",
-    "version": "10.0.3",
+    "version": "10.0.5",
     "dependent": true,
     "id": "combined.main",
     "name": "main",
     "stats": {
-      "size": 133850,
-      "gzipSize": 37194
+      "size": 134942,
+      "gzipSize": 37722
     }
   }
 ]

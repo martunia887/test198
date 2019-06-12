@@ -1,34 +1,50 @@
 [
   {
+    "team": "people and teams",
+    "package": "@atlaskit/focused-task-close-account",
+    "version": "0.11.4",
+    "dependent": true,
     "id": "src.main",
     "name": "main",
     "stats": {
-      "size": 347598,
-      "gzipSize": 47420
+      "size": 347676,
+      "gzipSize": 47453
     }
   },
   {
+    "team": "people and teams",
+    "package": "@atlaskit/focused-task-close-account",
+    "version": "0.11.4",
+    "dependent": true,
     "id": "node_modules.main",
     "name": "node_modules [main]",
     "stats": {
-      "size": 151271,
-      "gzipSize": 45269
+      "size": 158766,
+      "gzipSize": 47721
     }
   },
   {
+    "team": "people and teams",
+    "package": "@atlaskit/focused-task-close-account",
+    "version": "0.11.4",
+    "dependent": true,
     "id": "atlaskit.core.main",
     "name": "main",
     "stats": {
-      "size": 104509,
-      "gzipSize": 27004
+      "size": 106942,
+      "gzipSize": 27641
     }
   },
   {
+    "team": "people and teams",
+    "package": "@atlaskit/focused-task-close-account",
+    "version": "0.11.4",
+    "dependent": true,
     "id": "combined.main",
     "name": "main",
     "stats": {
-      "size": 600254,
-      "gzipSize": 118085
+      "size": 610679,
+      "gzipSize": 121224
     }
   }
 ]

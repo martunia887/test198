@@ -2,49 +2,49 @@
   {
     "team": "core",
     "package": "@atlaskit/datetime-picker",
-    "version": "8.0.3",
+    "version": "8.0.5",
     "dependent": true,
     "id": "src.main",
     "name": "main",
     "stats": {
-      "size": 18444,
-      "gzipSize": 5651
+      "size": 18370,
+      "gzipSize": 5634
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/datetime-picker",
-    "version": "8.0.3",
+    "version": "8.0.5",
     "dependent": true,
     "id": "node_modules.main",
     "name": "node_modules [main]",
     "stats": {
-      "size": 221605,
-      "gzipSize": 64407
+      "size": 225221,
+      "gzipSize": 66040
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/datetime-picker",
-    "version": "8.0.3",
+    "version": "8.0.5",
     "dependent": true,
     "id": "atlaskit.core.main",
     "name": "main",
     "stats": {
-      "size": 70676,
-      "gzipSize": 18662
+      "size": 70697,
+      "gzipSize": 18668
     }
   },
   {
     "team": "core",
     "package": "@atlaskit/datetime-picker",
-    "version": "8.0.3",
+    "version": "8.0.5",
     "dependent": true,
     "id": "combined.main",
     "name": "main",
     "stats": {
-      "size": 308144,
-      "gzipSize": 86593
+      "size": 311861,
+      "gzipSize": 88210
     }
   }
 ]
