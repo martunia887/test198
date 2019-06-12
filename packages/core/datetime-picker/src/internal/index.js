@@ -33,10 +33,17 @@ export function padToTwo(number: number) {
   return number <= 99 ? `0${number}`.slice(-2) : `${number}`;
 }
 
-export const DropdownIndicator = ({
-  selectProps: { dropdownIndicatorIcon: Icon },
-}: { selectProps: { dropdownIndicatorIcon?: any } } = {}) =>
-  Icon ? <Icon /> : null;
+type DropdownIndicatorProps = {
+  selectProps: {
+    dropdownIndicatorIcon?: any,
+  },
+};
+
+export const DropdownIndicator = (props: DropdownIndicatorProps) => {
+  const Icon = props.selectProps.dropdownIndicatorIcon;
+
+  return Icon ? <Icon /> : null;
+};
 
 export function formatDateTimeZoneIntoIso(
   date: string,
