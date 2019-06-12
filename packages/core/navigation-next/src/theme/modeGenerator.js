@@ -18,11 +18,25 @@ import type { Mode, ContextColors } from './types';
 type Args = {
   container: {
     background: string,
+    backgroundSkeleton?: string,
+    backgroundInteract?: string,
+    backgroundHint?: string,
+    backgroundStatic?: string,
+    backgroundSeparator?: string,
     text: string,
+    textActive?: string,
+    textHeading?: string,
   },
   product: {
     background: string,
+    backgroundSkeleton?: string,
+    backgroundInteract?: string,
+    backgroundHint?: string,
+    backgroundStatic?: string,
+    backgroundSeparator?: string,
     text: string,
+    textActive?: string,
+    textHeading?: string,
   },
 };
 

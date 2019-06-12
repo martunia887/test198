@@ -8,8 +8,15 @@ const modeArgs = {
       hint: '#0F63E0',
       static: '#0B4BAA',
       interact: '#104493',
+      skeleton: '#0B4BAA',
+      separator: '#0B4BAA',
     },
-    text: { default: '#DEEBFF', subtle: '#5AAD91' },
+    text: {
+      default: '#DEEBFF',
+      subtle: '#5AAD91',
+      active: '#DEEBFF',
+      heading: '#5AAD91',
+    },
   },
   container: {
     background: {
@@ -17,8 +24,15 @@ const modeArgs = {
       hint: '#0F63E0',
       static: '#0B4BAA',
       interact: '#104493',
+      skeleton: '#0B4BAA',
+      separator: '#0B4BAA',
     },
-    text: { default: '#DEEBFF', subtle: '#5AAD91' },
+    text: {
+      default: '#DEEBFF',
+      subtle: '#5AAD91',
+      active: '#DEEBFF',
+      heading: '#5AAD91',
+    },
   },
 };
 
