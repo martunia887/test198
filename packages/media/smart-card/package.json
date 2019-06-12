@@ -19,9 +19,9 @@
   "dependencies": {
     "@atlaskit/analytics-gas-types": "^4.0.4",
     "@atlaskit/analytics-next": "^5.0.0",
-    "@atlaskit/icon": "^18.0.0",
-    "@atlaskit/icon-file-type": "^4.0.2",
-    "@atlaskit/icon-object": "^4.0.2",
+    "@atlaskit/icon": "^18.0.2",
+    "@atlaskit/icon-file-type": "^4.0.3",
+    "@atlaskit/icon-object": "^4.0.3",
     "@atlaskit/media-ui": "^11.2.8",
     "@atlaskit/outbound-auth-flow-client": "^2.0.2",
     "@atlaskit/theme": "^9.1.0",
