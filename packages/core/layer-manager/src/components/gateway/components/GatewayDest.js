@@ -1,7 +1,7 @@
 // @flow
 import { Component, type Node, type ElementType, createElement } from 'react';
 import PropTypes from 'prop-types';
-import type { GatewayRegistry } from './GatewayRegistry';
+import GatewayRegistry from './GatewayRegistry';
 
 type Props = {
   name: string,
