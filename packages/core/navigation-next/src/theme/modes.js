@@ -14,9 +14,11 @@ export const light = modeGenerator({
     textActive: colors.B400,
     textHeading: colors.N200,
     background: colors.N20,
-    backgroundActive: colors.N30A,
+    backgroundHint: colors.N30,
+    backgroundStatic: colors.N30,
     backgroundInteract: colors.B50,
     backgroundSkeleton: colors.N40,
+    backgroundSeparator: colors.N30A,
   },
 });
 

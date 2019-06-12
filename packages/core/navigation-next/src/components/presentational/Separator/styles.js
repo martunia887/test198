@@ -14,6 +14,6 @@ const baseStyles = {
 };
 
 export default ({ product, container }: ModeColors) => () => ({
-  container: { ...baseStyles, backgroundColor: container.background.active },
+  container: { ...baseStyles, backgroundColor: container.background.separator },
   product: { ...baseStyles, backgroundColor: product.background.static },
 });

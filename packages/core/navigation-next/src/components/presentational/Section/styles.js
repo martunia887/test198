@@ -79,7 +79,7 @@ export default ({ product, container }: ModeColors) => (
         ...baseStyles.wrapper,
         '&::before': {
           ...baseStyles.wrapper['&::before'],
-          backgroundColor: container.background.active,
+          backgroundColor: container.background.static,
         },
       },
       inner: {

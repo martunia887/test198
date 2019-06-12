@@ -90,9 +90,13 @@ export type ContextColors = {
      * Used as nav item selected background, separator background, ... */
     static: string,
     /**
-     * Active color, if not provided in arguments - interact
+     * Separator color, if not provided in arguments - static
      */
-    active: string,
+    separator: string,
+    /**
+     * Skeleton color, if not provided in arguments - static
+     */
+    skeleton: string,
   },
   text: {
     /**

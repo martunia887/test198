@@ -76,9 +76,11 @@ const getStatesBackground = (parts, modifier) =>
 
 const getContextColors = ({
   background,
-  backgroundActive,
   backgroundSkeleton,
   backgroundInteract,
+  backgroundHint,
+  backgroundStatic,
+  backgroundSeparator,
   text,
   textActive,
   textHeading,
@@ -100,10 +102,11 @@ const getContextColors = ({
   return {
     background: {
       default: background,
-      ...backgroundStates,
-      active: backgroundActive || backgroundStates.interact,
       skeleton: backgroundSkeleton || backgroundStates.static,
       interact: backgroundInteract || backgroundStates.interact,
+      hint: backgroundHint || backgroundStates.hint,
+      static: backgroundStatic || backgroundStates.static,
+      separator: backgroundSeparator || backgroundStates.static,
     },
     text: {
       default: text,
