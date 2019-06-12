@@ -1,5 +1,7 @@
 // @flow
 import React, { Component } from 'react';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import Items from './Items';
 import toItemId from '../utils/toItemId';
 import type { RenderFunction, RowData } from '../types';

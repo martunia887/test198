@@ -13,6 +13,8 @@ export { default as GlobalNav } from './components/presentational/GlobalNav';
 export {
   default as GlobalNavigationSkeleton,
 } from './components/presentational/GlobalNavigationSkeleton';
+// TODO: Add a ticket
+// eslint-disable-next-line
 export { default as Group } from './components/presentational/Group';
 export {
   default as GroupHeading,
@@ -55,9 +57,11 @@ export { default as GoToItem } from './components/connected/GoToItem';
 export {
   default as LayoutManagerWithViewController,
 } from './components/connected/LayoutManagerWithViewController';
+// eslint-disable-next-line
 export {
   default as AsyncLayoutManagerWithViewController,
 } from './components/connected/AsyncLayoutManagerWithViewController';
+// eslint-disable-next-line
 export { default as SortableGroup } from './components/connected/SortableGroup';
 export { default as SortableItem } from './components/connected/SortableItem';
 export {
@@ -75,10 +79,12 @@ export {
   ViewController,
   ViewControllerSubscriber,
   withNavigationViewController,
+  // eslint-disable-next-line
   viewReducerUtils,
 } from './view-controller';
 
 /** Renderer */
+// eslint-disable-next-line
 export { default as ItemsRenderer, TypedItemsRenderer } from './renderer';
 
 /** Theme */
@@ -102,10 +108,12 @@ export type {
   ThemeWrappedComp,
   WithContentThemeProps,
   ContentThemeWrappedComp,
+  // eslint-disable-next-line
   WithGlobalThemeProps,
+  // eslint-disable-next-line
   GlobalThemeWrappedComp,
 } from './theme/types';
-
+// eslint-disable-next-line
 export type {
   NavigationRendererItemType,
   LeafItemType,

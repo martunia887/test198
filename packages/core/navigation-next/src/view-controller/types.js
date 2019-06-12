@@ -2,6 +2,8 @@
 
 import type { ComponentType, ElementConfig } from 'react';
 import type { Diffable } from '../common/types';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import ViewController from './ViewController';
 
 export type ViewData = Array<{ [string]: any }>;

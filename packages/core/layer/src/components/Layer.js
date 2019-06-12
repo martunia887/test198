@@ -5,6 +5,8 @@ import rafSchedule from 'raf-schd';
 
 import Popper from 'popper.js';
 import ScrollBlock from './internal/ScrollBlock';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import {
   getFlipBehavior,
   positionPropToPopperPosition,

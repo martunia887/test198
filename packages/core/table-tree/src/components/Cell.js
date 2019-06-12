@@ -1,6 +1,8 @@
 // @flow
 import React, { Component } from 'react';
 import { Cell as StyledCell, OverflowContainer } from '../styled';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import withColumnWidth from './withColumnWidth';
 import type { CSSWidth } from '../types';
 

@@ -5,6 +5,8 @@ import ArrowRightCircleIcon from '@atlaskit/icon/glyph/arrow-right-circle';
 import Spinner from '@atlaskit/spinner';
 
 import { withNavigationViewController } from '../../../view-controller';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import ConnectedItem from '../ConnectedItem';
 
 import type { GoToItemProps } from './types';

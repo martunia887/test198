@@ -5,7 +5,8 @@ import type { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 
 import type { StyleReducer, WithGlobalThemeProps } from '../../../theme/types';
 import type { InteractionState } from '../InteractionStateManager/types';
-
+// TODO: Add a ticket
+// eslint-disable-next-line
 import GlobalItem from './index';
 
 type Size = 'large' | 'small';

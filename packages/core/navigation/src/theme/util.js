@@ -88,5 +88,6 @@ export const defaultGlobalTheme = (globalTheme?: Provided, mode?: string) => {
   }
   return globalTheme || global;
 };
-
+// TODO: Add a ticket
+// eslint-disable-next-line
 export { default as WithRootTheme } from './with-root-theme';

@@ -1,4 +1,5 @@
 // @flow
+// eslint-disable-next-line
 import { DEFAULT_THEME_MODE } from '../constants';
 import { type Theme, type ThemeProps } from '../types';
 

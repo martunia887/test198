@@ -9,6 +9,8 @@ import { Fade } from './Animation';
 import Clone from './Clone';
 import SpotlightDialog from './SpotlightDialog';
 import { SpotlightTransitionConsumer } from './SpotlightTransition';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import { type Props as SpotlightProps } from './Spotlight';
 
 export type Props = {

@@ -1,5 +1,7 @@
 // @flow
 import { css } from 'styled-components';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import { B100 } from './colors';
 
 export const FLATTENED = '__FLATTENED__';

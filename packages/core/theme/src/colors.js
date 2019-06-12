@@ -1,5 +1,5 @@
 // @flow
-
+// eslint-disable-next-line
 import themed from './utils/themed';
 import type { colorPaletteType } from './types';
 

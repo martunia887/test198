@@ -6,7 +6,7 @@ import React, {
   type ElementType,
 } from 'react';
 import PropTypes from 'prop-types';
-import { type CSSWidth } from '../types';
+import type { CSSWidth } from '../types';
 
 type Props = {
   children: Node, // eslint-disable-line react/no-unused-prop-types

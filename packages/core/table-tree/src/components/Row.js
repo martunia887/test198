@@ -17,6 +17,8 @@ import {
 } from '../version.json';
 import { TreeRowContainer } from '../styled';
 import Chevron from './Chevron';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import Cell from './Cell';
 import toItemId from '../utils/toItemId';
 import type { RowData, LoadableItems } from '../types';

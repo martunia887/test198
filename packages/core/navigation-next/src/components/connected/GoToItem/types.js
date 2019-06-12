@@ -2,6 +2,8 @@
 
 import type { ElementConfig } from 'react';
 import type { WithNavigationViewControllerProps } from '../../../view-controller/types';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import ConnectedItem from '../ConnectedItem';
 
 export type ExternalGoToItemProps = {

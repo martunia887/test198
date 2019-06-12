@@ -1,6 +1,8 @@
 // @flow
 import { Component, type Node, type ElementType, createElement } from 'react';
 import PropTypes from 'prop-types';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import GatewayRegistry from './GatewayRegistry';
 
 type Props = {

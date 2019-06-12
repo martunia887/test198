@@ -1,7 +1,8 @@
 // @flow
 
 import React, { Component } from 'react';
-
+// TODO: Add a ticket
+// eslint-disable-next-line
 import GoToItem from '../GoToItem';
 import PresentationalItem from '../../presentational/Item';
 import type { ConnectedItemProps } from './types';

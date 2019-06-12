@@ -1,5 +1,7 @@
 // @flow
 import React, { type ComponentType, type Node } from 'react';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import SpotlightInner from './SpotlightInner';
 import { SpotlightConsumer } from './SpotlightManager';
 import type { ActionsType } from '../types';

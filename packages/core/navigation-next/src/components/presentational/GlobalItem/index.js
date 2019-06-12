@@ -6,6 +6,8 @@ import { navigationItemClicked } from '../../../common/analytics';
 import InteractionStateManager from '../InteractionStateManager';
 import type { InteractionState } from '../InteractionStateManager/types';
 import { styleReducerNoOp, withGlobalTheme } from '../../../theme';
+// TODO: Add a ticket
+// eslint-disable-next-line
 import GlobalItemPrimitive from './primitives';
 import type { GlobalItemProps } from './types';
 
