@@ -18,3 +18,9 @@ export type GoToItemProps = {
   ...$Exact<WithNavigationViewControllerProps>,
   ...$Exact<ExternalGoToItemProps>,
 };
+
+export type AfterComponentProps = {
+  incomingView: { id: string },
+  spinnerDelay: number,
+  afterGoTo: string,
+};
