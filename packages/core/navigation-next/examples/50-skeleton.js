@@ -32,6 +32,10 @@ const customThemeMode = modeGenerator({
     text: colors.N0,
     background: colors.G500,
   },
+  container: {
+    text: colors.N0,
+    background: colors.G500,
+  },
 });
 
 const themeModes = { light, dark, settings, custom: customThemeMode };

@@ -11,6 +11,15 @@ const modeArgs = {
     },
     text: { default: '#DEEBFF', subtle: '#104493' },
   },
+  container: {
+    background: {
+      default: '#0065FF',
+      hint: '#0F63E0',
+      static: '#0B4BAA',
+      interact: '#104493',
+    },
+    text: { default: '#DEEBFF', subtle: '#104493' },
+  },
 };
 
 describe('Navigation Next: GroupHeading styles', () => {

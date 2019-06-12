@@ -280,6 +280,10 @@ const customMode = modeGenerator({
     text: colors.N0,
     background: colors.G500,
   },
+  container: {
+    text: colors.N0,
+    background: colors.G500,
+  },
 });
 
 export default () => (

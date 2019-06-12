@@ -33,14 +33,18 @@ describe('ContentNavigation primitives', () => {
       };
     });
 
-    it('should ALWAYS use the `light` theme', () => {
+    it('should use the `light` theme by default', () => {
       const wrapper = mount(
         <ContainerNavigation {...defaultProps}>
           <p>This is a text</p>
         </ContainerNavigation>,
       );
-
-      expect(wrapper.find('ThemeProvider').props().theme).toMatchObject({
+      expect(
+        wrapper
+          .find('ThemeProvider')
+          .props()
+          .theme({}),
+      ).toMatchObject({
         mode: light,
       });
     });
@@ -52,9 +56,12 @@ describe('ContentNavigation primitives', () => {
         </ContainerNavigation>,
       );
 
-      expect(wrapper.find('ThemeProvider').props().theme.context).toBe(
-        'container',
-      );
+      expect(
+        wrapper
+          .find('ThemeProvider')
+          .props()
+          .theme({}).context,
+      ).toBe('container');
     });
 
     it('should have scrollable effect', () => {

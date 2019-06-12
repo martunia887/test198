@@ -11,6 +11,15 @@ const modeArgs = {
     },
     text: { default: '#DEEBFF', subtle: '#5AAD91' },
   },
+  container: {
+    background: {
+      default: '#0065FF',
+      hint: '#0F63E0',
+      static: '#0B4BAA',
+      interact: '#104493',
+    },
+    text: { default: '#DEEBFF', subtle: '#5AAD91' },
+  },
 };
 
 const commonArgs = {

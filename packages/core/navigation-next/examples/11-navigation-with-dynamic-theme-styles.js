@@ -182,6 +182,10 @@ const customThemeMode = modeGenerator({
     text: colors.N0,
     background: colors.G300,
   },
+  container: {
+    text: colors.N0,
+    background: colors.G300,
+  },
 });
 
 type State = { shouldHideGlobalNavShadow: boolean };
