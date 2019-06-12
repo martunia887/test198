@@ -31,16 +31,16 @@ const baseStyles = {
 };
 
 // Light theme
-export default ({ product }: ModeColors) => () => ({
+export default ({ product, container }: ModeColors) => () => ({
   container: {
     wrapper: baseStyles.wrapper,
     before: {
       ...baseStyles.before,
-      backgroundColor: colors.N40,
+      backgroundColor: container.background.skeleton,
     },
     content: {
       ...baseStyles.content,
-      backgroundColor: colors.N40,
+      backgroundColor: container.background.skeleton,
     },
   },
   product: {

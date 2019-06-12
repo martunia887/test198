@@ -17,11 +17,11 @@ const baseStyles = {
   width: '100%',
 };
 
-export default ({ product }: ModeColors) => () => ({
+export default ({ product, container }: ModeColors) => () => ({
   container: {
     ...baseStyles,
-    backgroundColor: colors.N20,
-    color: colors.N500,
+    backgroundColor: container.background.default,
+    color: container.text.default,
   },
   product: {
     ...baseStyles,

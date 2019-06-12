@@ -140,7 +140,9 @@ const ContainerNavigationPrimitive = withContentTheme(
 );
 
 export const ContainerNavigationTheme = ({ children }: BaseNavigationTheme) => (
-  <ThemeProvider theme={{ mode: light, context: 'container' }}>
+  <ThemeProvider
+    theme={oldTheme => ({ mode: light, ...oldTheme, context: 'container' })}
+  >
     <Fragment>{children}</Fragment>
   </ThemeProvider>
 );

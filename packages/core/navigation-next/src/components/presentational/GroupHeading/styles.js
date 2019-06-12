@@ -36,10 +36,13 @@ type GroupHeadingModeColors = {
   container: any,
 };
 
-export default ({ product }: ModeColors) => (): GroupHeadingModeColors => ({
+export default ({
+  product,
+  container,
+}: ModeColors) => (): GroupHeadingModeColors => ({
   container: {
     ...baseStyles,
-    headingBase: { ...baseStyles.headingBase, color: colors.N200 },
+    headingBase: { ...baseStyles.headingBase, color: container.text.heading },
   },
   product: {
     ...baseStyles,

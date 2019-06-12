@@ -62,13 +62,25 @@ const ThemedComponents = ({ themeContext, themeMode }: any) => (
 const variations: Array<VariationCategory> = [
   {
     itemComponent: ThemedComponents,
-    title: 'Container light ',
+    title: 'Container "light"',
     themeContext: 'container',
     themeMode: light,
   },
   {
     itemComponent: ThemedComponents,
-    title: 'Product "light" ',
+    title: 'Container "dark"',
+    themeContext: 'container',
+    themeMode: dark,
+  },
+  {
+    itemComponent: ThemedComponents,
+    title: 'Container "settings"',
+    themeContext: 'container',
+    themeMode: settings,
+  },
+  {
+    itemComponent: ThemedComponents,
+    title: 'Product "light"',
     themeContext: 'product',
     themeMode: light,
   },
@@ -90,6 +102,7 @@ const variations: Array<VariationCategory> = [
     themeContext: 'product',
     themeMode: modeGenerator({
       product: { text: '#FFFEFE', background: '#BD2B25' },
+      container: { text: '#FFFEFE', background: '#BD2B25' },
     }),
   },
   {
@@ -98,6 +111,7 @@ const variations: Array<VariationCategory> = [
     themeContext: 'product',
     themeMode: modeGenerator({
       product: { text: '#FEFEEE', background: '#469EEF' },
+      container: { text: '#FEFEEE', background: '#469EEF' },
     }),
   },
   {
@@ -106,6 +120,7 @@ const variations: Array<VariationCategory> = [
     themeContext: 'product',
     themeMode: modeGenerator({
       product: { text: '#000000', background: '#F6C544' },
+      container: { text: '#000000', background: '#F6C544' },
     }),
   },
   {
@@ -114,6 +129,7 @@ const variations: Array<VariationCategory> = [
     themeContext: 'product',
     themeMode: modeGenerator({
       product: { text: '#222299', background: '#F9F9FB' },
+      container: { text: '#222299', background: '#F9F9FB' },
     }),
   },
   {
@@ -122,6 +138,7 @@ const variations: Array<VariationCategory> = [
     themeContext: 'product',
     themeMode: modeGenerator({
       product: { text: '#112222', background: '#9edcc6' },
+      container: { text: '#112222', background: '#9edcc6' },
     }),
   },
   {
@@ -130,6 +147,7 @@ const variations: Array<VariationCategory> = [
     themeContext: 'product',
     themeMode: modeGenerator({
       product: { text: '#FFFFFF', background: '#7E7F7E' },
+      container: { text: '#FFFFFF', background: '#7E7F7E' },
     }),
   },
   {
@@ -138,6 +156,7 @@ const variations: Array<VariationCategory> = [
     themeContext: 'product',
     themeMode: modeGenerator({
       product: { text: '#FFFFFF', background: '#5548b1' },
+      container: { text: '#FFFFFF', background: '#5548b1' },
     }),
   },
   {
@@ -146,6 +165,7 @@ const variations: Array<VariationCategory> = [
     themeContext: 'product',
     themeMode: modeGenerator({
       product: { text: '#EE1111', background: '#FFFFFF' },
+      container: { text: '#EE1111', background: '#FFFFFF' },
     }),
   },
 ];

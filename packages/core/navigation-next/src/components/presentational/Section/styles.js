@@ -68,7 +68,7 @@ const getBaseStyles = ({ alwaysShowScrollHint }: SectionPresentationProps) => ({
   },
 });
 
-export default ({ product }: ModeColors) => (
+export default ({ product, container }: ModeColors) => (
   props: SectionPresentationProps,
 ) => {
   const baseStyles = getBaseStyles(props);
@@ -79,14 +79,14 @@ export default ({ product }: ModeColors) => (
         ...baseStyles.wrapper,
         '&::before': {
           ...baseStyles.wrapper['&::before'],
-          backgroundColor: colors.N30A,
+          backgroundColor: container.background.active,
         },
       },
       inner: {
         ...baseStyles.inner,
         '&::before': {
           ...baseStyles.inner['&::before'],
-          backgroundColor: colors.N20,
+          backgroundColor: container.background.default,
         },
       },
     },

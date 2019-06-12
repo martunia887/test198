@@ -118,21 +118,17 @@ const getItemBackgroundColor = (
 };
 
 // Light theme
-export default ({ product }: ModeColors) => ({
+export default ({ product, container }: ModeColors) => ({
   isActive,
   isDragging,
   isHover,
   isSelected,
   spacing,
 }: ItemPresentationProps) => {
-  const containerTextColor = isActive || isSelected ? colors.B400 : colors.N500;
+  const containerTextColor =
+    isActive || isSelected ? container.text.active : container.text.default;
   const containerBackgroundColor = getItemBackgroundColor(
-    {
-      default: colors.N20,
-      hint: colors.N30,
-      interact: colors.B50,
-      static: colors.N30,
-    },
+    container.background,
     {
       isActive,
       isHover,
@@ -167,12 +163,12 @@ export default ({ product }: ModeColors) => ({
       subTextWrapper: {
         ...baseStyles.subTextWrapper,
         ...layoutStyles[spacing].subTextWrapper,
-        color: colors.N200,
+        color: container.text.subtle,
       },
       afterWrapper: {
         ...baseStyles.afterWrapper,
         ...layoutStyles[spacing].afterWrapper,
-        color: colors.N500,
+        color: container.text.default,
       },
     },
     product: {

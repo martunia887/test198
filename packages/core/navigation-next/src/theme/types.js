@@ -89,20 +89,33 @@ export type ContextColors = {
      * Generated color, either lighter or darker of default
      * Used as nav item selected background, separator background, ... */
     static: string,
+    /**
+     * Active color, if not provided in arguments - interact
+     */
+    active: string,
   },
   text: {
     /**
      * Color provided to the mode generator */
     default: string,
     /**
-     * Generated color, slighly faded out
+     * Generated color, slightly faded out
      * Used as nav item sub text color and group headings color */
     subtle: string,
+    /**
+     * Active color, if not provided in arguments - default
+     */
+    active: string,
+    /**
+     * Heading color, if not provided in arguments - subtle
+     */
+    heading: string,
   },
 };
 
 export type ModeColors = {
   product: ContextColors,
+  container: ContextColors,
 };
 
 /**

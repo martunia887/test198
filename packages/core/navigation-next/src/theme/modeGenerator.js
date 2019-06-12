@@ -16,6 +16,10 @@ import skeletonItemStyles from '../components/presentational/SkeletonItem/styles
 import type { Mode, ContextColors } from './types';
 
 type Args = {
+  container: {
+    background: string,
+    text: string,
+  },
   product: {
     background: string,
     text: string,
@@ -70,7 +74,15 @@ const getStatesBackground = (parts, modifier) =>
     return acc;
   }, {});
 
-const getContextColors = ({ background, text }): ContextColors => {
+const getContextColors = ({
+  background,
+  backgroundActive,
+  backgroundSkeleton,
+  backgroundInteract,
+  text,
+  textActive,
+  textHeading,
+}): ContextColors => {
   const bgParts = chromatism.convert(background).hsl;
   const vs = bgParts.l < 30 && bgParts.s < 50 ? -1 : 1;
   const textSubtle = chromatism.brightness(
@@ -83,18 +95,29 @@ const getContextColors = ({ background, text }): ContextColors => {
     static: { s: 8, l: -6 },
   };
 
+  const backgroundStates = getStatesBackground(bgParts, colorMod);
+
   return {
     background: {
       default: background,
-      ...getStatesBackground(bgParts, colorMod),
+      ...backgroundStates,
+      active: backgroundActive || backgroundStates.interact,
+      skeleton: backgroundSkeleton || backgroundStates.static,
+      interact: backgroundInteract || backgroundStates.interact,
     },
-    text: { default: text, subtle: textSubtle },
+    text: {
+      default: text,
+      subtle: textSubtle,
+      active: textActive || text,
+      heading: textHeading || textSubtle,
+    },
   };
 };
 
-export default ({ product }: Args): Mode => {
+export default ({ product, container }: Args): Mode => {
   const modeColors = {
     product: getContextColors(product),
+    container: getContextColors(container),
   };
 
   return {
