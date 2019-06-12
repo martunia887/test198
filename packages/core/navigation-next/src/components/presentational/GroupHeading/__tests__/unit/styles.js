@@ -15,7 +15,6 @@ const modeArgs = {
       default: '#DEEBFF',
       subtle: '#5AAD91',
       active: '#DEEBFF',
-      heading: '#5AAD91',
     },
   },
   container: {
@@ -31,7 +30,6 @@ const modeArgs = {
       default: '#DEEBFF',
       subtle: '#5AAD91',
       active: '#DEEBFF',
-      heading: '#5AAD91',
     },
   },
 };
@@ -39,6 +37,6 @@ const modeArgs = {
 describe('Navigation Next: GroupHeading styles', () => {
   it('should add the default background color into the items styles if element has no active states', () => {
     const styles = groupHeadingStyles(modeArgs)();
-    expect(styles.product.headingBase.color).toEqual('#104493');
+    expect(styles.product.headingBase.color).toEqual('#5AAD91');
   });
 });

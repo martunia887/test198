@@ -12,7 +12,7 @@ export const light = modeGenerator({
   container: {
     text: colors.N500,
     textActive: colors.B400,
-    textHeading: colors.N200,
+    textSubtle: colors.N200,
     background: colors.N20,
     backgroundHint: colors.N30,
     backgroundStatic: colors.N30,

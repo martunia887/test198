@@ -110,10 +110,6 @@ export type ContextColors = {
      * Active color, if not provided in arguments - default
      */
     active: string,
-    /**
-     * Heading color, if not provided in arguments - subtle
-     */
-    heading: string,
   },
 };
 

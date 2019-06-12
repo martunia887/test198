@@ -42,7 +42,7 @@ export default ({
 }: ModeColors) => (): GroupHeadingModeColors => ({
   container: {
     ...baseStyles,
-    headingBase: { ...baseStyles.headingBase, color: container.text.heading },
+    headingBase: { ...baseStyles.headingBase, color: container.text.subtle },
   },
   product: {
     ...baseStyles,

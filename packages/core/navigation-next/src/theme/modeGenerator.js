@@ -25,7 +25,7 @@ type Args = {
     backgroundSeparator?: string,
     text: string,
     textActive?: string,
-    textHeading?: string,
+    textSubtle?: string,
   },
   product: {
     background: string,
@@ -36,7 +36,7 @@ type Args = {
     backgroundSeparator?: string,
     text: string,
     textActive?: string,
-    textHeading?: string,
+    textSubtle?: string,
   },
 };
 
@@ -97,14 +97,16 @@ const getContextColors = ({
   backgroundSeparator,
   text,
   textActive,
-  textHeading,
+  textSubtle: baseTextSubtle,
 }): ContextColors => {
   const bgParts = chromatism.convert(background).hsl;
   const vs = bgParts.l < 30 && bgParts.s < 50 ? -1 : 1;
-  const textSubtle = chromatism.brightness(
-    1 + vs * 6,
-    chromatism.fade(4, background, text).hex[2],
-  ).hex;
+  const textSubtle =
+    baseTextSubtle ||
+    chromatism.brightness(
+      1 + vs * 6,
+      chromatism.fade(4, background, text).hex[2],
+    ).hex;
   const colorMod = colorMatrix.find(cm => cm.when(bgParts)) || {
     hint: { s: 0, l: 8 },
     interact: { s: 0, l: 4 },
@@ -126,7 +128,6 @@ const getContextColors = ({
       default: text,
       subtle: textSubtle,
       active: textActive || text,
-      heading: textHeading || textSubtle,
     },
   };
 };

@@ -15,7 +15,6 @@ const modeArgs = {
       default: '#DEEBFF',
       subtle: '#5AAD91',
       active: '#DEEBFF',
-      heading: '#5AAD91',
     },
   },
   container: {
@@ -31,7 +30,6 @@ const modeArgs = {
       default: '#DEEBFF',
       subtle: '#5AAD91',
       active: '#DEEBFF',
-      heading: '#5AAD91',
     },
   },
 };
