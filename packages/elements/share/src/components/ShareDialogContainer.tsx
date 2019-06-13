@@ -74,7 +74,7 @@ export type Props = {
   /** Any other unlisted type will have a default message of "Link shared"*/
   shareContentType: string;
   /** Link of the resource to be shared (should NOT includes origin tracing) */
-  shareLink: string;
+  shareLink?: string;
   /** Title of the resource to be shared that will be sent in notifications */
   shareTitle: string;
   /** Title of the share modal */
@@ -98,6 +98,7 @@ export type State = {
   config?: ConfigResponse;
   isFetchingConfig: boolean;
   shareActionCount: number;
+  currentPageUrl: string;
 };
 
 const memoizedFormatCopyLink: (
@@ -107,10 +108,9 @@ const memoizedFormatCopyLink: (
   (origin: OriginTracing, link: string): string => origin.addToUrl(link),
 );
 
-// This is a work around for an issue in extract-react-types
-// https://github.com/atlassian/extract-react-types/issues/59
-const getDefaultShareLink: () => string = () =>
-  window ? window.location!.href : '';
+function getCurrentPageUrl(): string {
+  return window.location.href;
+}
 
 /**
  * This component serves as a Provider to provide customizable implementations
@@ -121,7 +121,6 @@ export class ShareDialogContainer extends React.Component<Props, State> {
   private _isMounted = false;
 
   static defaultProps = {
-    shareLink: getDefaultShareLink(),
     formatCopyLink: memoizedFormatCopyLink,
   };
 
@@ -134,6 +133,7 @@ export class ShareDialogContainer extends React.Component<Props, State> {
       shareActionCount: 0,
       config: defaultConfig,
       isFetchingConfig: false,
+      currentPageUrl: getCurrentPageUrl(),
     };
   }
 
@@ -205,6 +205,12 @@ export class ShareDialogContainer extends React.Component<Props, State> {
       .catch((err: Error) => Promise.reject(err));
   };
 
+  handleDialogOpen = () => {
+    this.setState({
+      currentPageUrl: getCurrentPageUrl(),
+    });
+  };
+
   // ensure origin is re-generated if the link or the factory changes
   // separate memoization is needed since copy != form
   getUniqueCopyLinkOriginTracing = memoizeOne(
@@ -228,7 +234,8 @@ export class ShareDialogContainer extends React.Component<Props, State> {
 
   getRawLink(): string {
     const { shareLink } = this.props;
-    return shareLink;
+    const { currentPageUrl } = this.state;
+    return shareLink || currentPageUrl;
   }
 
   getCopyLinkOriginTracing(): OriginTracing {
@@ -282,6 +289,7 @@ export class ShareDialogContainer extends React.Component<Props, State> {
           fetchConfig={this.fetchConfig}
           isFetchingConfig={isFetchingConfig}
           loadUserOptions={loadUserOptions}
+          onDialogOpen={this.handleDialogOpen}
           getCopyLink={this.getCopyLink}
           onShareSubmit={this.handleSubmitShare}
           renderCustomTriggerButton={renderCustomTriggerButton}

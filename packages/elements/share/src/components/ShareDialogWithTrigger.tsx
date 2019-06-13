@@ -53,6 +53,7 @@ export type Props = {
   isDisabled?: boolean;
   isFetchingConfig?: boolean;
   loadUserOptions?: LoadOptions;
+  onDialogOpen?: () => void;
   getCopyLink: () => Promise<string>;
   onLinkCopy?: Function;
   onShareSubmit?: (shareContentState: DialogContentState) => Promise<any>;
@@ -196,15 +197,17 @@ class ShareDialogWithTriggerInternal extends React.Component<
     this.createAndFireEvent(buttonClicked());
 
     this.setState(
-      {
-        isDialogOpen: !this.state.isDialogOpen,
+      state => ({
+        isDialogOpen: !state.isDialogOpen,
         ignoreIntermediateState: false,
-      },
+      }),
       () => {
+        const { onDialogOpen } = this.props;
         const { isDialogOpen } = this.state;
         if (isDialogOpen) {
           this.start = Date.now();
           this.createAndFireEvent(screenEvent());
+          if (onDialogOpen) onDialogOpen();
 
           if (this.containerRef.current) {
             this.containerRef.current.focus();
