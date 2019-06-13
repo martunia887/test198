@@ -11,6 +11,7 @@ export default ({ id, annotationType, children }: Props) => (
     data-mark-type="annotation"
     data-mark-annotation-type={annotationType}
     data-id={id}
+    style={{ background: '#ffff0042' }}
   >
     {children}
   </span>

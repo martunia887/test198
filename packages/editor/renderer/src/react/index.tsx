@@ -84,6 +84,8 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   private headingIds: string[] = [];
   private allowDynamicTextSizing?: boolean;
 
+  private tokenCount: number = 0;
+
   constructor({
     providers,
     eventHandlers,
@@ -113,6 +115,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     props: any = {},
     target: any = Doc,
     key: string = 'root-0',
+    nodeInfo?: { isBlock: boolean; nodeSize: number },
     parentInfo?: { parentIsIncompleteTask: boolean },
   ): JSX.Element | null {
     // This makes sure that we reset internal state on re-render.
@@ -126,6 +129,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
           return this.serializeTextWrapper(node.content);
         }
 
+        const { isBlock, nodeSize } = node;
         let props;
 
         if (node.type.name === 'table') {
@@ -148,6 +152,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
           props,
           toReact(node),
           `${node.type.name}-${index}`,
+          { isBlock, nodeSize },
           pInfo,
         );
 
@@ -169,7 +174,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       },
     );
 
-    return this.renderNode(target, props, key, content);
+    return this.renderNode(target, props, key, content, nodeInfo);
   }
 
   private serializeTextWrapper(content: Node[]) {
@@ -199,9 +204,18 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     props: any,
     key: string,
     content: string | JSX.Element | any[] | null | undefined,
+    nodeInfo?: { isBlock: boolean; nodeSize: number },
   ): JSX.Element {
+    let isBlock;
+    let nodeSize;
+
+    if (nodeInfo) {
+      isBlock = nodeInfo.isBlock;
+      nodeSize = nodeInfo.nodeSize;
+    }
+
     return (
-      <NodeComponent key={key} {...props}>
+      <NodeComponent key={key} {...props} isBlock={isBlock} nodeSize={nodeSize}>
         {content}
       </NodeComponent>
     );

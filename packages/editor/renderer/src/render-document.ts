@@ -11,6 +11,7 @@ import { Node as PMNode, Schema, Fragment } from 'prosemirror-model';
 export interface RenderOutput<T> {
   result: T;
   stat: RenderOutputStat;
+  pmDoc?: PMNode<any>;
 }
 
 export interface RenderOutputStat {
@@ -63,14 +64,26 @@ export const renderDocument = <T>(
   // save build tree time to stats
   stat.buildTreeTime = buildTreeTime;
 
-  const { output: result, time: serializeTime } = withStopwatch<T | null>(() =>
-    serializer.serializeFragment(node.content),
+  const { output: result, time: serializeTime } = withStopwatch<T | null>(
+    () => {
+      // const { strong } = schema.marks;
+
+      // const s = new AddMarkStep(5, 10, strong.create());
+
+      // const b = s.apply(node);
+      // if (b.doc) {
+      //   return serializer.serializeFragment(b.doc.content);
+      // } else {
+      return serializer.serializeFragment(node.content);
+
+      // }
+    },
   );
 
   // save serialize tree time to stats
   stat.serializeTime = serializeTime;
 
-  return { result, stat };
+  return { result, stat, pmDoc: node };
 };
 
 export const renderNodes = <T>(

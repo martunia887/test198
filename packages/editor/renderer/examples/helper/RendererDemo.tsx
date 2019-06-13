@@ -366,7 +366,7 @@ export default class RendererDemo extends React.Component<
             &lt;Renderer&gt;
           </div>
           <div id="RendererOutput">
-            <Renderer {...props} />
+            <Renderer {...props} adfStage="stage0" />
           </div>
           {this.props.truncationEnabled ? expandButton : null}
           <div style={{ color: '#ccc', marginTop: '8px' }}>
