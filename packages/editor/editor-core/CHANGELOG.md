@@ -1,5 +1,27 @@
 # @atlaskit/editor-core
 
+## 112.13.0
+
+### Minor Changes
+
+- [minor][16875546e9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/16875546e9):
+
+  Add support to resolving mention names externally for collaborative editing
+
+### Patch Changes
+
+- [patch][a8d95a6f8d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a8d95a6f8d):
+
+  - remove mention text if CollabEditOptions.sanitizePrivateContent is true during copy/paste
+
+## 112.12.5
+
+### Patch Changes
+
+- [patch][0c438f1b71](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/0c438f1b71):
+
+  ED-7081: Fixes floating toolbars not displaying when switching to Full Width mode.
+
 ## 112.12.4
 
 ### Patch Changes
