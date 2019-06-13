@@ -234,7 +234,7 @@ export default function createPluginsList(
     }),
   );
 
-  if (props.allowConfluenceInlineComment) {
+  if (1) {
     plugins.push(annotationPlugin);
   }
 

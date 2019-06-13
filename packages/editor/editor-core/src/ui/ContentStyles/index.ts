@@ -148,6 +148,12 @@ const ContentStyles: ComponentClass<
   }
 
   /** Needed to override any cleared floats, e.g. image wrapping */
+
+  span.fabric-editor-annotation {
+    background-color: #f6c342;
+    display: inline-block;
+  }
+
   div.fabric-editor-block-mark[class^='fabric-editor-align'] {
     clear: none !important;
   }

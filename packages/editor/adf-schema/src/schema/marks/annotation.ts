@@ -39,10 +39,12 @@ export const annotation: MarkSpec = {
     return [
       'span',
       {
+        class: 'fabric-editor-annotation',
         'data-mark-type': 'annotation',
         'data-mark-annotation-type': node.attrs.annotationType,
         'data-id': node.attrs.id,
       },
+      0,
     ];
   },
 };

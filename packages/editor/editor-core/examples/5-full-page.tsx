@@ -32,6 +32,9 @@ import {
   DEFAULT_MODE,
   LOCALSTORAGE_defaultMode,
 } from '../example-helpers/example-constants';
+import { Popup } from '@atlaskit/editor-common';
+import Avatar, { AvatarItem } from '@atlaskit/avatar';
+import { FieldTextAreaStateless } from '@atlaskit/field-text-area';
 
 /**
  * +-------------------------------+
@@ -65,6 +68,142 @@ const SAVE_ACTION = () => console.log('Save');
 export const LOCALSTORAGE_defaultDocKey = 'fabric.editor.example.full-page';
 export const LOCALSTORAGE_defaultTitleKey =
   'fabric.editor.example.full-page.title';
+
+type AnnotationProps = {};
+
+export class ShowAnnotation extends React.Component<
+  AnnotationProps,
+  AnnotationState
+> {
+  state = {
+    commentValue: '',
+  };
+
+  constructor(props) {
+    super(props);
+  }
+
+  setValue = (e: any) => this.setState({ commentValue: e.target.value });
+
+  saveComment = () => {
+    const id = `annotation-${Math.random()}`;
+    window.localStorage.setItem(id, this.state.commentValue);
+    this.setState({ commentValue: '' });
+    this.props.onSuccess(id);
+  };
+
+  componentWillMount() {
+    this.setState({
+      commentVale: '',
+    });
+  }
+
+  getCommentValue(id: string) {
+    return (
+      window.localStorage.getItem(id) ||
+      'Easy! This is just a basic inline comments test!'
+    );
+  }
+
+  renderInsertComment() {
+    return (
+      <div
+        style={{
+          padding: '10px',
+        }}
+      >
+        <div style={{ paddingBottom: '10px' }}>
+          <FieldTextAreaStateless
+            onChange={this.setValue}
+            value={this.state.commentValue}
+            shouldFitContainer={true}
+            isLabelHidden={true}
+          />
+        </div>
+        <Button appearance="primary" onClick={this.saveComment}>
+          Save
+        </Button>
+      </div>
+    );
+  }
+
+  renderShowComment(id: string) {
+    return (
+      <div
+        style={{
+          padding: '10px',
+        }}
+      >
+        {this.getCommentValue(id)}
+      </div>
+    );
+  }
+
+  renderContent(actions, isSelection) {
+    if (actions && actions.type === 'EDIT') {
+      const mark = actions.node.marks.find(
+        item => item.attrs.annotationType === 'inlineComment',
+      );
+      return this.renderShowComment(mark.attrs.id);
+    }
+    return this.renderInsertComment();
+  }
+
+  getStyles = () => {
+    return this.props.actions || this.props.isSelection
+      ? {
+          backgroundColor: 'white',
+          minHeight: '100px',
+          width: '250px',
+          overflow: 'hidden',
+          padding: '5px',
+          border: '1px solid #e2e2e2',
+          transition: '200ms width ease-in',
+        }
+      : {
+          width: 0,
+          visibility: 'hidden',
+        };
+  };
+
+  render() {
+    const {
+      popupsMountPoint,
+      popupsBoundariesElement,
+      popupsScrollableElement,
+    } = this.props;
+    return (
+      <Popup
+        target={document.querySelectorAll('.ProseMirror')[0]}
+        alignY="start"
+        fitHeight={200}
+        fitWidth={200}
+        offset={[0, -80]}
+        alignX={'right'}
+        popupsMountPoint={popupsMountPoint}
+        boundariesElement={popupsBoundariesElement}
+        scrollableElement={popupsScrollableElement}
+        mountTo={popupsMountPoint}
+      >
+        <div style={this.getStyles()}>
+          <AvatarItem
+            avatar={
+              <Avatar
+                src="https://api.adorable.io/avatars/80/chaki@me.com.png"
+                presence={'online'}
+              />
+            }
+            key={'vsutrave@atlassian.com'}
+            onClick={console.log}
+            primaryText={'Vijay Sutrave'}
+            secondaryText={'vsutrave@atlassian.com'}
+          />
+          {this.renderContent(this.props.actions, this.props.isSelection)}
+        </div>
+      </Popup>
+    );
+  }
+}
 
 export const SaveAndCancelButtons = (props: {
   editorActions?: EditorActions;
@@ -208,6 +347,9 @@ class ExampleEditorComponent extends React.Component<
               allowTemplatePlaceholders={{ allowInserting: true }}
               UNSAFE_cards={{
                 provider: Promise.resolve(cardProvider),
+              }}
+              annotationProvider={{
+                component: ShowAnnotation,
               }}
               allowStatus={true}
               {...providers}

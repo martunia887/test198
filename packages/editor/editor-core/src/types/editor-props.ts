@@ -185,6 +185,9 @@ export interface EditorProps {
   uploadErrorHandler?: (state: MediaState) => void;
 
   activityProvider?: Promise<ActivityProvider>;
+
+  annotationProvider?: AnnotationProvider;
+
   collabEditProvider?: Promise<CollabEditProvider>;
   presenceProvider?: Promise<any>;
   emojiProvider?: Promise<EmojiProvider>;
