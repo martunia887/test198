@@ -1,6 +1,6 @@
 {
   "name": "@atlaskit/page-header",
-  "version": "7.0.6",
+  "version": "7.0.7-hotfix-for-jira.0",
   "description": "A React component that represents Header of an application page",
   "license": "Apache-2.0",
   "module": "index.js",
