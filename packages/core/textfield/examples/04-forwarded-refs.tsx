@@ -1,18 +1,16 @@
-// @flow
-
-import React, { Component, type ElementRef } from 'react';
+import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Textfield from '../src';
 
-type Props = {};
-type FormRef = {
-  focus: () => any,
-};
+interface Props {}
+interface FormRef {
+  focus: () => any;
+}
 
 class TextFieldExample extends Component<Props> {
   input: FormRef;
 
-  handleRef = (ref: ElementRef<*>) => {
+  handleRef = (ref: HTMLElement) => {
     this.input = ref;
   };
 

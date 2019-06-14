@@ -1,7 +1,5 @@
-// @flow
-
-import React from 'react';
-import type { InputProps } from '../types';
+import React, { CSSProperties } from 'react';
+import { InputProps } from '../types';
 
 export default ({
   appearance,

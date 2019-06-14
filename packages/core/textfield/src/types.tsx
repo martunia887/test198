@@ -1,88 +1,88 @@
-// @flow
+import { ThemeProp } from '@atlaskit/theme';
+import { ReactNode, SyntheticEvent, MouseEvent } from 'react';
+import { ThemeProps, ThemeTokens } from './theme';
 
-import type { ThemeProp } from '@atlaskit/theme';
-import type { Node } from 'react';
-import type { ThemeProps, ThemeTokens } from './theme';
-
-export type InputProps = {
+export interface InputProps {
   /** Controls the appearance of the field.
    * `subtle` shows styling on hover.
    * `none` hides all field styling.
    */
-  appearance?: 'standard' | 'none' | 'subtle',
+  appearance?: 'standard' | 'none' | 'subtle';
   /** Element after input in textfield. */
-  elemAfterInput?: Node,
+  elemAfterInput?: ReactNode;
   /** Element before input in textfield. */
-  elemBeforeInput?: Node,
+  elemBeforeInput?: ReactNode;
   /** Handler called when the input loses focus. */
-  onBlur?: (e: SyntheticEvent<HTMLInputElement>) => mixed,
+  onBlur?: (e: SyntheticEvent<HTMLInputElement>) => void;
   /** Handler called when the input receives focus. */
-  onFocus?: (e: SyntheticEvent<HTMLInputElement>) => mixed,
+  onFocus?: (e: SyntheticEvent<HTMLInputElement>) => void;
   /** Handler called when mouse is pressed down. */
-  onMouseDown: (e: SyntheticMouseEvent<*>) => mixed,
+  onMouseDown: (e: MouseEvent<HTMLElement>) => void;
   /** Handler called when mouse enters input. */
-  onMouseEnter: () => void,
+  onMouseEnter: () => void;
   /** Handler called when mouse leaves input. */
-  onMouseLeave: () => void,
+  onMouseLeave: () => void;
   /** Set whether the fields should expand to fill available horizontal space. */
-  isCompact?: boolean,
+  isCompact?: boolean;
   /** Sets the field as uneditable, with a changed hover state. */
-  isDisabled?: boolean,
+  isDisabled?: boolean;
   /** Sets styling to indicate that the input is focused. */
-  isFocused?: boolean,
+  isFocused?: boolean;
+  /** Sets styling to indicate that the input is hovered. */
+  isHovered?: boolean;
   /** Sets styling to indicate that the input is invalid */
-  isInvalid?: boolean,
+  isInvalid?: boolean;
   /** Sets content text value to monospace */
-  isMonospaced?: boolean,
+  isMonospaced?: boolean;
   /** If true, prevents the value of the input from being edited. */
-  isReadOnly?: boolean,
+  isReadOnly?: boolean;
   /** Add asterisk to label. Set required for form that the field is part of. */
-  isRequired?: boolean,
+  isRequired?: boolean;
   /** Forwarded ref */
-  forwardedRef: (?HTMLInputElement) => void,
-  theme: ThemeTokens,
-};
+  forwardedRef?: (ref: HTMLInputElement) => void;
+  theme: ThemeTokens;
+}
 
-export type TextFieldProps = {
+export interface TextFieldProps {
   /** Controls the appearance of the field.
    * `subtle` shows styling on hover.
    * `none` hides all field styling.
    */
-  appearance: 'standard' | 'none' | 'subtle',
+  appearance: 'standard' | 'none' | 'subtle';
   /** This prop is injected by analytics-next and has no use within textfield */
-  createAnalyticsEvent: (SyntheticEvent<>) => void,
+  createAnalyticsEvent: (e: SyntheticEvent<HTMLElement>) => void;
   /** Sets a default value as input value */
-  defaultValue?: string,
+  defaultValue?: string;
   /** Element after input in textfield. */
-  elemAfterInput?: Node,
+  elemAfterInput?: ReactNode;
   /** Element before input in textfield. */
-  elemBeforeInput?: Node,
+  elemBeforeInput?: ReactNode;
   /** Applies compact styling, making the field smaller */
-  isCompact: boolean,
+  isCompact: boolean;
   /** Sets the field as uneditable, with a changed hover state. */
-  isDisabled: boolean,
+  isDisabled: boolean;
   /** Sets styling to indicate that the input is focused. */
-  isFocused: boolean,
+  isFocused: boolean;
   /** Sets styling to indicate that the input is invalid */
-  isInvalid: boolean,
+  isInvalid: boolean;
   /** Sets content text value to monospace */
-  isMonospaced: boolean,
+  isMonospaced: boolean;
   /** If true, prevents the value of the input from being edited. */
-  isReadOnly?: boolean,
+  isReadOnly?: boolean;
   /** Set required for form that the field is part of. */
-  isRequired?: boolean,
+  isRequired?: boolean;
   /** Handler to be called when the input loses focus. */
-  onBlur?: (e: SyntheticEvent<HTMLInputElement>) => mixed,
+  onBlur?: (e: SyntheticEvent<HTMLInputElement>) => void;
   /** Handler to be called when the input receives focus. */
-  onFocus?: (e: SyntheticEvent<HTMLInputElement>) => mixed,
+  onFocus?: (e: SyntheticEvent<HTMLInputElement>) => void;
   /** Handler called when mouse is pressed down. */
-  onMouseDown: (e: SyntheticMouseEvent<*>) => mixed,
+  onMouseDown: (e: MouseEvent<HTMLElement>) => void;
   /** Sets maximum width of input */
-  width?: string | number,
+  width?: string | number;
   /** The value of the input. */
-  value?: string | number,
+  value?: string | number;
   /** This is an internal prop. Use "ref" prop to get a reference to input element. */
-  forwardedRef: (?HTMLInputElement) => void,
+  forwardedRef?: (ref: HTMLInputElement) => void;
   /** The theme the component should use. */
-  theme?: ThemeProp<ThemeTokens, ThemeProps>,
-};
+  theme?: ThemeProp<ThemeTokens, ThemeProps>;
+}

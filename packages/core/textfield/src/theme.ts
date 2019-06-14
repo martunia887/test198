@@ -1,5 +1,3 @@
-// @flow
-
 import {
   createTheme,
   codeFontFamily,
@@ -167,7 +165,7 @@ const getContainerBorderColor = ({
   };
 };
 
-const getPlaceholderColor = ({ isDisabled, mode }) => {
+const getPlaceholderColor = ({ isDisabled, mode }: ThemeProps) => {
   return isDisabled
     ? disabledRules[mode].textColor
     : componentTokens.placeholderTextColor[mode];
@@ -195,7 +193,7 @@ const getPlaceholderStyle = (props: ThemeProps) => ({
   },
 });
 
-const getMaxWidth = ({ width }) => {
+const getMaxWidth = ({ width }: ThemeProps) => {
   if (!width) return `100%`;
   switch (width) {
     case 'xsmall':
@@ -214,21 +212,21 @@ const getMaxWidth = ({ width }) => {
 };
 
 export type ThemeAppearance = 'subtle' | 'standard' | 'none';
-export type ThemeProps = {
-  appearance: ThemeAppearance,
-  isDisabled: boolean,
-  isInvalid: boolean,
-  isFocused: boolean,
-  isHovered: boolean,
-  isMonospaced: boolean,
-  isCompact: boolean,
-  mode: 'dark' | 'light',
-  width?: string | number,
-};
-export type ThemeTokens = {
-  container: Object,
-  input: Object,
-};
+export interface ThemeProps {
+  appearance: ThemeAppearance;
+  isDisabled: boolean;
+  isInvalid: boolean;
+  isFocused: boolean;
+  isHovered: boolean;
+  isMonospaced: boolean;
+  isCompact: boolean;
+  mode: 'dark' | 'light';
+  width?: string | number;
+}
+export interface ThemeTokens {
+  container: Object;
+  input: Object;
+}
 
 export const Theme = createTheme<ThemeTokens, ThemeProps>(props => ({
   container: {

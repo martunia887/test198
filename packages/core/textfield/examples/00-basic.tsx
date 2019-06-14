@@ -1,5 +1,3 @@
-// @flow
-
 import React, { Component } from 'react';
 import Textfield from '../src';
 
@@ -12,8 +10,10 @@ const eventResultStyle = {
   margin: '0.5em 0',
 };
 
-type Props = {};
-type State = {| eventResult: string |};
+interface Props {}
+interface State {
+  eventResult: string;
+}
 
 export default class TextfieldExample extends Component<Props, State> {
   state = {
@@ -21,7 +21,7 @@ export default class TextfieldExample extends Component<Props, State> {
       'Click into & out of the input above to trigger onBlur & onFocus.',
   };
 
-  handleOnChange = (e: any) => {
+  handleOnChange = (e: React.ChangeEvent<HTMLElement>) => {
     this.setState({
       eventResult: `onChange called with value: ${e.target.value}`,
     });

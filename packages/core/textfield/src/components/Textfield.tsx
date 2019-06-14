@@ -1,7 +1,5 @@
-// @flow
-
 import GlobalTheme from '@atlaskit/theme';
-import React, { Component } from 'react';
+import React, { Component, SyntheticEvent, MouseEvent } from 'react';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
@@ -14,12 +12,12 @@ import {
 
 import Input from './Input';
 import { Theme } from '../theme';
-import type { TextFieldProps } from '../types';
+import { TextFieldProps } from '../types';
 
-type State = {
-  isFocused: boolean,
-  isHovered: boolean,
-};
+interface State {
+  isFocused: boolean;
+  isHovered: boolean;
+}
 
 class Textfield extends Component<TextFieldProps, State> {
   static defaultProps = {
@@ -34,7 +32,7 @@ class Textfield extends Component<TextFieldProps, State> {
     isHovered: false,
   };
 
-  input: ?HTMLInputElement;
+  input?: HTMLInputElement;
 
   handleOnFocus = (e: SyntheticEvent<HTMLInputElement>) => {
     this.setState({ isFocused: true });
@@ -50,9 +48,8 @@ class Textfield extends Component<TextFieldProps, State> {
     }
   };
 
-  handleOnMouseDown = (e: SyntheticMouseEvent<*>) => {
+  handleOnMouseDown = (e: MouseEvent<HTMLElement>) => {
     /** Running e.preventDefault() on the INPUT prevents double click behaviour */
-    // $FlowFixMe - tagName does not exist in event.target
     if (e.target.tagName !== 'INPUT') {
       e.preventDefault();
     }
@@ -80,7 +77,7 @@ class Textfield extends Component<TextFieldProps, State> {
     }
   };
 
-  setInputRef = (input: ?HTMLInputElement) => {
+  setInputRef = (input: HTMLInputElement) => {
     this.input = input;
 
     const { forwardedRef } = this.props;
