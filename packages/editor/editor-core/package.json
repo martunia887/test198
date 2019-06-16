@@ -49,6 +49,7 @@
     "@atlaskit/media-picker": "^43.1.1",
     "@atlaskit/mention": "^18.3.2",
     "@atlaskit/modal-dialog": "^10.0.4",
+    "@atlaskit/prosemirror-redux": "^0.0.1",
     "@atlaskit/select": "^9.1.6",
     "@atlaskit/smart-card": "^11.1.6",
     "@atlaskit/spinner": "^12.0.1",

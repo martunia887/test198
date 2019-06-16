@@ -89,6 +89,7 @@ export default {
     'grid',
     'scrollGutterPlugin',
     'analytics',
+    'stateHandler',
   ],
   nodes: [
     'doc',

@@ -7,6 +7,7 @@ import { pluginFactory } from '../../../utils/plugin-state-factory';
 import { MediaEditorState, MediaEditorAction } from '../types';
 import { MediaProvider } from '../types';
 import { setMediaContext } from '../commands/media-editor';
+import { createConnectedPlugin } from '@atlaskit/prosemirror-redux';
 
 export const pluginKey = new PluginKey('mediaEditorPlugin');
 
@@ -75,36 +76,36 @@ const pluginView = (
   };
 };
 
-const { createPluginState, createCommand, getPluginState } = pluginFactory(
-  pluginKey,
-  reducer,
-  {
-    mapping: (tr, state) => {
-      if (!state.editor) {
-        return state;
-      }
+const {
+  createPluginSpec,
+  createCommand,
+  getPluginState,
+} = createConnectedPlugin(pluginKey, 'media-editor', reducer, {
+  mapping: (tr, state) => {
+    if (!state.editor) {
+      return state;
+    }
 
-      // remap the position of the editing media inside the state
-      return {
-        ...state,
-        editor: {
-          ...state.editor,
-          pos: tr.mapping.map(state.editor.pos),
-        },
-      };
-    },
+    // remap the position of the editing media inside the state
+    return {
+      ...state,
+      editor: {
+        ...state.editor,
+        pos: tr.mapping.map(state.editor.pos),
+      },
+    };
   },
-);
+});
 
-export const createPlugin = ({
-  dispatch,
-  providerFactory,
-}: PMPluginFactoryParams) => {
-  return new Plugin({
-    state: createPluginState(dispatch, {}),
-    key: pluginKey,
-    view: pluginView(providerFactory),
-  });
+export const createPlugin = ({ providerFactory }: PMPluginFactoryParams) => {
+  return new Plugin(
+    createPluginSpec(
+      {},
+      {
+        view: pluginView(providerFactory),
+      },
+    ),
+  );
 };
 
 export { createCommand, getPluginState };
