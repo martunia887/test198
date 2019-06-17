@@ -1,0 +1,1 @@
+Container menu applies theme instead always show light one
