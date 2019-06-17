@@ -47,3 +47,4 @@ export {
   AnnotationMarkDefinition,
   AnnotationMarkAttributes,
 } from './annotation';
+export { annotationQuery } from './annotation-query';

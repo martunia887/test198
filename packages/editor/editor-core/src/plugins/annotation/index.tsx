@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { EditorPlugin } from '../../types';
-import { annotation } from '@atlaskit/adf-schema';
+import { annotation, annotationQuery } from '@atlaskit/adf-schema';
 import { plugin, pluginKey, HyperlinkState } from './pm-plugins/main';
 import WithPluginState from '../../ui/WithPluginState';
-import { insertComment } from './commands';
+import { insertComment, removeComment, removeQueryMark } from './commands';
+import { findDomRefAtPos } from 'prosemirror-utils';
+import { getToolbarConfig } from './toolbar';
 
 const annotationPlugin: EditorPlugin = {
   marks() {
@@ -11,6 +13,10 @@ const annotationPlugin: EditorPlugin = {
       {
         name: 'annotation',
         mark: annotation,
+      },
+      {
+        name: 'annotationQuery',
+        mark: annotationQuery,
       },
     ];
   },
@@ -25,12 +31,7 @@ const annotationPlugin: EditorPlugin = {
     ];
   },
 
-  contentComponent({
-    popupsBoundariesElement,
-    popupsMountPoint,
-    popupsScrollableElement,
-    editorView,
-  }) {
+  contentComponent({ editorView }) {
     return (
       <WithPluginState
         plugins={{
@@ -38,21 +39,50 @@ const annotationPlugin: EditorPlugin = {
         }}
         render={({ pluginState }: { pluginState: HyperlinkState }) => {
           const Component = pluginState.component.component;
+          let element;
+          let markerRef;
+          if (pluginState.activeInlineComment) {
+            element = findDomRefAtPos(
+              editorView.state.selection.from,
+              editorView.domAtPos.bind(editorView),
+            );
+          } else if (pluginState.showAnnotationToolbar) {
+            element = findDomRefAtPos(
+              editorView.state.selection.from,
+              editorView.domAtPos.bind(editorView),
+            );
+          }
+
+          if (pluginState.activeInlineComment) {
+            const getMark = pluginState.activeInlineComment.node.marks.find(
+              (mark: Mark) => mark.attrs.annotationType === 'inlineComment',
+            );
+            markerRef = getMark && getMark.attrs.id;
+          }
+
           return pluginState.component.component ? (
             <Component
-              actions={pluginState.activeInlineComment}
-              isSelection={!!pluginState.activeText}
-              popupsMountPoint={popupsMountPoint}
-              boundariesElement={popupsBoundariesElement}
-              scrollableElement={popupsScrollableElement}
+              element={element}
+              markerRef={markerRef}
+              selection={!!pluginState.showAnnotationToolbar}
               onSuccess={(id: string) =>
                 insertComment(id)(editorView.state, editorView.dispatch)
+              }
+              onCancel={() =>
+                removeQueryMark()(editorView.state, editorView.dispatch)
+              }
+              onDelete={(id: string) =>
+                removeComment(id)(editorView.state, editorView.dispatch)
               }
             />
           ) : null;
         }}
       />
     );
+  },
+
+  pluginsOptions: {
+    floatingToolbar: getToolbarConfig,
   },
 };
 

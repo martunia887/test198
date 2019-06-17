@@ -69,7 +69,18 @@ export const LOCALSTORAGE_defaultDocKey = 'fabric.editor.example.full-page';
 export const LOCALSTORAGE_defaultTitleKey =
   'fabric.editor.example.full-page.title';
 
-type AnnotationProps = {};
+type AnnotationProps = {
+  rect: DOMRect;
+  selection: string;
+  onSuccess: (id: string) => void;
+  onDelete: (id: string) => void;
+  markerRef: string;
+  element: HTMLElement;
+};
+
+type AnnotationState = {
+  commentValue: string;
+};
 
 export class ShowAnnotation extends React.Component<
   AnnotationProps,
@@ -79,7 +90,7 @@ export class ShowAnnotation extends React.Component<
     commentValue: '',
   };
 
-  constructor(props) {
+  constructor(props: AnnotationProps) {
     super(props);
   }
 
@@ -94,7 +105,7 @@ export class ShowAnnotation extends React.Component<
 
   componentWillMount() {
     this.setState({
-      commentVale: '',
+      commentValue: '',
     });
   }
 
@@ -139,18 +150,16 @@ export class ShowAnnotation extends React.Component<
     );
   }
 
-  renderContent(actions, isSelection) {
-    if (actions && actions.type === 'EDIT') {
-      const mark = actions.node.marks.find(
-        item => item.attrs.annotationType === 'inlineComment',
-      );
-      return this.renderShowComment(mark.attrs.id);
+  renderContent(markerRef: string, isSelection: string) {
+    if (markerRef) {
+      return this.renderShowComment(markerRef);
     }
     return this.renderInsertComment();
   }
 
   getStyles = () => {
-    return this.props.actions || this.props.isSelection
+    const { rect } = this.props;
+    return this.props.markerRef || this.props.selection
       ? {
           backgroundColor: 'white',
           minHeight: '100px',
@@ -167,23 +176,13 @@ export class ShowAnnotation extends React.Component<
   };
 
   render() {
-    const {
-      popupsMountPoint,
-      popupsBoundariesElement,
-      popupsScrollableElement,
-    } = this.props;
     return (
       <Popup
-        target={document.querySelectorAll('.ProseMirror')[0]}
-        alignY="start"
+        target={this.props.element}
+        alignY="bottom"
         fitHeight={200}
         fitWidth={200}
-        offset={[0, -80]}
         alignX={'right'}
-        popupsMountPoint={popupsMountPoint}
-        boundariesElement={popupsBoundariesElement}
-        scrollableElement={popupsScrollableElement}
-        mountTo={popupsMountPoint}
       >
         <div style={this.getStyles()}>
           <AvatarItem
@@ -198,7 +197,7 @@ export class ShowAnnotation extends React.Component<
             primaryText={'Vijay Sutrave'}
             secondaryText={'vsutrave@atlassian.com'}
           />
-          {this.renderContent(this.props.actions, this.props.isSelection)}
+          {this.renderContent(this.props.markerRef, this.props.selection)}
         </div>
       </Popup>
     );

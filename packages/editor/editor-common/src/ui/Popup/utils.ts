@@ -11,6 +11,7 @@ export interface CalculatePositionParams {
   popup?: HTMLElement;
   offset: number[];
   stick?: boolean;
+  rect?: DOMRect;
 }
 
 export function isBody(elem: HTMLElement | Element): boolean {
@@ -364,6 +365,7 @@ export function calculatePosition({
   popup,
   offset,
   stick,
+  rect,
 }: CalculatePositionParams): Position {
   let position: Position = {};
 
@@ -388,7 +390,7 @@ export function calculatePosition({
     left: popupOffsetParentLeft,
     right: popupOffsetParentRight,
     height: popupOffsetParentHeight,
-  } = popupOffsetParent.getBoundingClientRect();
+  } = rect ? rect : popupOffsetParent.getBoundingClientRect();
 
   const {
     top: targetTop,

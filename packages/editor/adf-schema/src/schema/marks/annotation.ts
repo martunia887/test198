@@ -19,6 +19,7 @@ export type AnnotationType = 'inlineComment';
 
 export const annotation: MarkSpec = {
   inclusive: false,
+  group: 'annotation',
   excludes: '',
   attrs: {
     id: {

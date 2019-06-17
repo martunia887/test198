@@ -11,13 +11,6 @@ import { Dispatch } from '../../../event-dispatcher';
 import { shallowEqual } from '../../../plugins/text-formatting/utils';
 import { ReactElement } from 'react';
 
-export type InlineCommentAction = {
-  type: 'Insert' | 'Edit' | 'Hide';
-  id?: string;
-  offset?: { x: number; y: number };
-  component: AnnotationProvider;
-};
-
 export interface AnnotationProvider {
   component: ReactElement;
 }
@@ -233,10 +226,11 @@ const getActiveText = (
 };
 
 export interface HyperlinkState {
+  element?: HTMLElement;
   activeText?: string;
   activeInlineComment?: InlineCommentsToolbarState;
-  canInsertComment: boolean;
   component?: React.ReactElement | React.Component | JSXElementConstructor;
+  showAnnotationToolbar: boolean;
 }
 
 export const pluginKey = new PluginKey('annotationPlugin');
@@ -245,19 +239,16 @@ export const plugin = (dispatch: Dispatch, provider?: AnnotationProvider) =>
   new Plugin({
     state: {
       init(_, state: EditorState): HyperlinkState {
-        const canInsertComment = canLinkBeCreatedInRange(
-          state.selection.from,
-          state.selection.to,
-        )(state);
         return {
+          element: undefined,
           activeText: getActiveText(state.schema, state.selection),
-          canInsertComment,
           activeInlineComment: toState(
             undefined,
             LinkAction.SELECTION_CHANGE,
             state,
           ),
           component: provider,
+          showAnnotationToolbar: false,
         };
       },
       apply(
@@ -273,11 +264,8 @@ export const plugin = (dispatch: Dispatch, provider?: AnnotationProvider) =>
         if (tr.docChanged) {
           state = {
             ...state,
+            showAnnotationToolbar: action === 'INSERT_COMMENT',
             activeText: state.activeText,
-            canInsertComment: canLinkBeCreatedInRange(
-              newState.selection.from,
-              newState.selection.to,
-            )(newState),
             activeInlineComment: mapTransactionToState(
               state.activeInlineComment,
               tr,
@@ -289,7 +277,7 @@ export const plugin = (dispatch: Dispatch, provider?: AnnotationProvider) =>
           state = {
             ...state,
             activeText: state.activeText,
-            canInsertComment: true,
+            showAnnotationToolbar: action === 'INSERT_COMMENT',
             activeInlineComment: toState(
               state.activeInlineComment,
               action,
@@ -301,11 +289,9 @@ export const plugin = (dispatch: Dispatch, provider?: AnnotationProvider) =>
         if (tr.selectionSet) {
           state = {
             ...state,
+            element: window.getSelection().anchorNode.parentElement,
+            showAnnotationToolbar: action === 'INSERT_COMMENT',
             activeText: getActiveText(newState.schema, newState.selection),
-            canInsertComment: canLinkBeCreatedInRange(
-              newState.selection.from,
-              newState.selection.to,
-            )(newState),
             activeInlineComment: toState(
               state.activeInlineComment,
               LinkAction.SELECTION_CHANGE,

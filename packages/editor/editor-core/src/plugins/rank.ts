@@ -150,6 +150,7 @@ export default {
     'alignment',
     'breakout',
     'indentation',
+    'annotationQuery',
     'annotation',
   ],
 };

@@ -29,6 +29,7 @@ export interface Props {
   stick?: boolean;
   ariaLabel?: string;
   forcePlacement?: boolean;
+  rect?: DOMRect;
 }
 
 export interface State {
@@ -70,10 +71,11 @@ export default class Popup extends React.Component<Props, State> {
       alignY,
       stick,
       forcePlacement,
+      rect,
     } = props;
     const { popup } = state;
 
-    if (!target || !popup) {
+    if ((!target && !rect) || !popup) {
       return;
     }
 
@@ -97,6 +99,7 @@ export default class Popup extends React.Component<Props, State> {
       target,
       stick,
       offset: offset!,
+      rect,
     });
     position = onPositionCalculated ? onPositionCalculated(position) : position;
 
