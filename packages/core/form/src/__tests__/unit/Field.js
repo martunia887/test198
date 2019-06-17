@@ -4,7 +4,13 @@ import { mount } from 'enzyme';
 import Button from '@atlaskit/button';
 import FieldText from '@atlaskit/field-text';
 import TextField from '@atlaskit/textfield';
-import Form, { Field, HelperMessage, ErrorMessage, ValidMessage } from '../..';
+import Form, {
+  Field,
+  HelperMessage,
+  ErrorMessage,
+  ValidMessage,
+  FORM_ERROR,
+} from '../..';
 import { Label } from '../../styled/Field';
 
 export class WithState extends React.Component<
@@ -357,6 +363,27 @@ test('should never render with undefined fieldProp value', () => {
     expect(spy.mock.calls[1][0]).toMatchObject({
       fieldProps: { value: 'Joe Bloggs' },
     });
+  });
+});
+test('should pass through error in submitError parameter when FORM_ERROR key used in onSubmit', () => {
+  const wrapper = mount(
+    <Form
+      onSubmit={() => Promise.resolve({ [FORM_ERROR]: 'There was an error' })}
+    >
+      {({ formProps: { onSubmit }, submitError }) => (
+        <>
+          {submitError && <div id="submit-error">{submitError}</div>}
+          <Button onClick={onSubmit}>Submit</Button>
+        </>
+      )}
+    </Form>,
+  );
+  expect(wrapper.find('div#submit-error')).toHaveLength(0);
+  wrapper.find(Button).simulate('click');
+  return Promise.resolve().then(() => {
+    wrapper.update();
+    expect(wrapper.find('div#submit-error')).toHaveLength(1);
+    expect(wrapper.find('div#submit-error').text()).toBe('There was an error');
   });
 });
 

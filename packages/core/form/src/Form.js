@@ -21,6 +21,7 @@ type Props = {
     disabled: boolean,
     dirty: boolean,
     submitting: boolean,
+    submitError: any,
     getValues: () => ?Object,
   }) => Node,
   /* Called when the form is submitted without errors */
@@ -32,6 +33,7 @@ type Props = {
 type State = {
   dirty: boolean,
   submitting: boolean,
+  submitError: any,
 };
 
 const createFinalForm = (onSubmit, formRef) => {
@@ -78,6 +80,7 @@ class Form extends React.Component<Props, State> {
   state = {
     dirty: false,
     submitting: false,
+    submitError: false,
   };
 
   getValues = (): ?Object => {
@@ -86,12 +89,13 @@ class Form extends React.Component<Props, State> {
 
   componentDidMount() {
     this.unsubscribe = this.form.subscribe(
-      ({ submitting, dirty }) => {
-        this.setState({ submitting, dirty });
+      ({ submitting, dirty, submitError }) => {
+        this.setState({ submitting, dirty, submitError });
       },
       {
         dirty: true,
         submitting: true,
+        submitError: true,
       },
     );
   }
@@ -140,7 +144,7 @@ class Form extends React.Component<Props, State> {
 
   render() {
     const { isDisabled, children } = this.props;
-    const { dirty, submitting } = this.state;
+    const { dirty, submitting, submitError } = this.state;
     return (
       <FormContext.Provider value={this.registerField}>
         <IsDisabledContext.Provider value={isDisabled}>
@@ -152,6 +156,7 @@ class Form extends React.Component<Props, State> {
             },
             dirty,
             submitting,
+            submitError, // should this go in a meta object?
             disabled: isDisabled,
             getValues: this.getValues,
           })}
