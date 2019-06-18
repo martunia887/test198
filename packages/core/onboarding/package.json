@@ -4,8 +4,8 @@
   "description": "Highlight elements of the UI to the user and display a complementary dialog.",
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "license": "Apache-2.0",
-  "module": "index.js",
-  "atlaskit:src": "src/index.js",
+  "module": "index.ts",
+  "atlaskit:src": "src/index.ts",
   "sideEffects": false,
   "author": "Atlassian Pty Ltd",
   "maintainers": [
@@ -31,7 +31,8 @@
     "react-node-resolver": "^1.0.1",
     "react-scrolllock": "^3.0.2",
     "react-transition-group": "^2.2.1",
-    "scroll-into-view-if-needed": "^2.2.20"
+    "scroll-into-view-if-needed": "^2.2.20",
+    "tslib": "^1.9.3"
   },
   "peerDependencies": {
     "react": "^16.8.0",
