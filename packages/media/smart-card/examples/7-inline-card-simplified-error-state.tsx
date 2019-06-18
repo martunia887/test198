@@ -27,7 +27,6 @@ class ErroringCustomClient extends Client {
   }
 }
 
-const normalClient = new Client();
 const unAuthClient = new UnAuthCustomClient();
 const erroringClient = new ErroringCustomClient();
 

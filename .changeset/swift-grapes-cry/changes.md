@@ -1,0 +1,1 @@
+fix/SL-273: display error when smartlink receives invalid adf

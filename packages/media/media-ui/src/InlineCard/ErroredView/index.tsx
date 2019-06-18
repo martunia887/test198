@@ -37,11 +37,7 @@ export class InlineCardErroredView extends React.Component<
   getTitle(): string {
     const { url, message } = this.props;
     const msg = message.trim();
-    if (url) {
-      return truncateUrlForErrorView(url) + ' - ' + msg;
-    }
-
-    return msg;
+    return url ? `${truncateUrlForErrorView(url)} - ${msg}` : msg;
   }
 
   render() {
