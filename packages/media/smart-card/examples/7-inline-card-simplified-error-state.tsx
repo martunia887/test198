@@ -27,6 +27,7 @@ class ErroringCustomClient extends Client {
   }
 }
 
+const normalClient = new Client();
 const unAuthClient = new UnAuthCustomClient();
 const erroringClient = new ErroringCustomClient();
 
@@ -50,6 +51,17 @@ class Example extends React.Component {
               cacheOptions={{ maxLoadingDelay: 1000, maxAge: 15000 }}
             >
               <Card url="http://some.error.url" appearance="inline" />
+            </Provider>
+            <hr />
+            <h4>Error response</h4>
+            <Provider cacheOptions={{ maxLoadingDelay: 1000, maxAge: 15000 }}>
+              {/**
+               * NOTE: we're testing an error case that a bug in the editor
+               * causes for us - it _should_ be impossible for this to happen
+               * but due to some synchrony bugs it does happen.
+               * See CS-1114
+               */}
+              <Card url={(undefined as any) as string} appearance="inline" />
             </Provider>
           </GridColumn>
         </Grid>

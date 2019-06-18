@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { WithAnalyticsEventProps } from '@atlaskit/analytics-next';
-import { CardLinkView } from '@atlaskit/media-ui';
+import { CardLinkView, InlineCardErroredView } from '@atlaskit/media-ui';
 import LazilyRender from 'react-lazily-render-scroll-parent';
 
 import { CardWithUrl } from '../Card/types';
@@ -43,7 +43,14 @@ export class CardWithURLRenderer extends React.PureComponent<
       fireSmartLinkEvent(evt, createAnalyticsEvent);
 
     if (!url) {
-      throw new Error('@atlaskit/smart-card: url property is missing.');
+      // TODO: CS-1114 this error should be caught in the Editor and that should
+      // render "Unsupported Content". This is a fix until that's done.
+      return (
+        <InlineCardErroredView
+          isSelected={isSelected}
+          message="Unsupported Content"
+        />
+      );
     }
 
     return CardWithURLRenderer.CardContent !== null ? (

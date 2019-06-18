@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl';
 
 export interface InlineCardErroredViewProps {
   /** The url to display */
-  url: string;
+  url?: string;
   /** The error message to display */
   message: string;
   /** The optional click handler */
@@ -34,8 +34,18 @@ export class InlineCardErroredView extends React.Component<
     }
   };
 
+  getTitle(): string {
+    const { url, message } = this.props;
+    const msg = message.trim();
+    if (url) {
+      return truncateUrlForErrorView(url) + ' - ' + msg;
+    }
+
+    return msg;
+  }
+
   render() {
-    const { url, message, onClick, onRetry, isSelected } = this.props;
+    const { onClick, onRetry, isSelected } = this.props;
     return (
       <Frame onClick={onClick} isSelected={isSelected}>
         <IconAndTitleLayout
@@ -48,7 +58,7 @@ export class InlineCardErroredView extends React.Component<
               />
             </AKIconWrapper>
           }
-          title={truncateUrlForErrorView(url) + ' - ' + message.trim()}
+          title={this.getTitle()}
           titleColor={colors.R300}
         />{' '}
         {onRetry && (
