@@ -1,8 +1,16 @@
 import styled from 'styled-components';
-import { borderRadius, colors, gridSize, math, themed } from '@atlaskit/theme';
+import {
+  borderRadius,
+  colors,
+  gridSize,
+  math,
+  themed,
+  ThemeProps,
+} from '@atlaskit/theme';
 
 // dialog may not be smaller than 160px or larger than 600px
-const dialogWidth = ({ width }) => `${Math.min(Math.max(width, 160), 600)}px`;
+const dialogWidth = ({ width }: { width: number } & ThemeProps) =>
+  `${Math.min(Math.max(width, 160), 600)}px`;
 
 const borderColor = themed({
   light: colors.N60A,
@@ -12,14 +20,14 @@ const shadowColor = themed({
   light: colors.N50A,
   dark: colors.DN50A,
 });
-const boxShadow = props => {
+const boxShadow = (props: ThemeProps | undefined) => {
   const border = `0 0 1px ${borderColor(props)}`;
   const shadow = `0 4px 8px -2px ${shadowColor(props)}`;
 
   return [border, shadow].join(',');
 };
 
-export const FillScreen = styled.div`
+export const FillScreen = styled.div<{ scrollDistance: number }>`
   height: 100%;
   left: 0;
   overflow-y: auto;

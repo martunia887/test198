@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css, keyframes, InterpolationValue } from 'styled-components';
 import { colors, layers } from '@atlaskit/theme';
 
 // NOTE:
@@ -13,15 +13,24 @@ const pulseKeframes = keyframes`
 const animation = css`
   animation: ${pulseKeframes} 3000ms ${easing} infinite;
 `;
-const animationWithCheck = ({ pulse }) => (pulse ? animation : null);
 
-const backgroundColor = p =>
+type AnimationWithCheckFn = (
+  props: { pulse: boolean },
+) => InterpolationValue[] | null;
+
+const animationWithCheck: AnimationWithCheckFn = ({ pulse }) =>
+  pulse ? animation : null;
+
+const backgroundColor = (p: {
+  bgColor: React.CSSProperties['backgroundColor'];
+}) =>
   p.bgColor
     ? `
         background-color: ${p.bgColor};
       `
     : null;
-const borderRadius = p =>
+
+const borderRadius = (p: { radius: React.CSSProperties['borderRadius'] }) =>
   p.radius
     ? `
         border-radius: ${p.radius}px;
@@ -30,9 +39,13 @@ const borderRadius = p =>
 
 // IE11 and Edge: z-index needed because fixed position calculates z-index relative
 // to body insteadof nearest stacking context (Portal in our case).
-export const Div = styled.div`
+export const Div = styled.div<{
+  radius: React.CSSProperties['borderRadius'];
+  bgColor: React.CSSProperties['backgroundColor'];
+}>`
   z-index: ${layers.spotlight() + 1};
-  ${backgroundColor} ${borderRadius};
+  ${backgroundColor};
+  ${borderRadius};
 `;
 
 // fixed position holds the target in place if overflow/scroll is necessary
