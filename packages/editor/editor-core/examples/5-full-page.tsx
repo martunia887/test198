@@ -74,6 +74,7 @@ type AnnotationProps = {
   selection: string;
   onSuccess: (id: string) => void;
   onDelete: (id: string) => void;
+  onCancel: () => void;
   markerRef: string;
   element: HTMLElement;
 };
@@ -109,6 +110,12 @@ export class ShowAnnotation extends React.Component<
     });
   }
 
+  // componentDidUpdate(prevProps: AnnotationProps) {
+  //   if (this.props.selection && !prevProps.selection ) {
+  //     this.props.onCancel();
+  //   }
+  // }
+
   getCommentValue(id: string) {
     return (
       window.localStorage.getItem(id) ||
@@ -129,6 +136,7 @@ export class ShowAnnotation extends React.Component<
             value={this.state.commentValue}
             shouldFitContainer={true}
             isLabelHidden={true}
+            autoFocus={true}
           />
         </div>
         <Button appearance="primary" onClick={this.saveComment}>
@@ -158,7 +166,6 @@ export class ShowAnnotation extends React.Component<
   }
 
   getStyles = () => {
-    const { rect } = this.props;
     return this.props.markerRef || this.props.selection
       ? {
           backgroundColor: 'white',
@@ -172,17 +179,29 @@ export class ShowAnnotation extends React.Component<
       : {
           width: 0,
           visibility: 'hidden',
+          transition: '200ms width ease-in',
         };
   };
 
   render() {
     return (
       <Popup
-        target={this.props.element}
+        target={
+          this.props.element || document.querySelectorAll('.ProseMirror')[0]
+        }
         alignY="bottom"
         fitHeight={200}
         fitWidth={200}
         alignX={'right'}
+        offset={[
+          this.props.element &&
+            -(
+              window.innerWidth -
+              this.props.element.getBoundingClientRect().right -
+              50
+            ),
+          20,
+        ]}
       >
         <div style={this.getStyles()}>
           <AvatarItem
