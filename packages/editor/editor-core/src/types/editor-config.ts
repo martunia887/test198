@@ -1,6 +1,5 @@
 import { NodeSpec, MarkSpec } from 'prosemirror-model';
 import { NodeView } from 'prosemirror-view';
-import { Plugin } from 'prosemirror-state';
 import {
   UIComponentFactory,
   ToolbarUIComponentFactory,
@@ -20,11 +19,6 @@ export interface MarkConfig {
 export interface NodeViewConfig {
   name: string;
   nodeView: NodeView;
-}
-
-export interface PluginGroups {
-  reconfigurable: Array<Plugin>;
-  static: Array<Plugin>;
 }
 
 export interface EditorConfig {

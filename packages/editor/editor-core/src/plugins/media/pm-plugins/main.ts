@@ -113,12 +113,6 @@ export class MediaPluginState {
       'Editor: unable to init media plugin - media or mediaGroup/mediaSingle node absent in schema',
     );
 
-    options.providerFactory.subscribe(
-      'mediaProvider',
-      (_name, provider?: Promise<MediaProvider>) =>
-        this.setMediaProvider(provider),
-    );
-
     this.errorReporter = options.errorReporter || new ErrorReporter();
     this.dispatchAnalyticsEvent = dispatchAnalyticsEvent;
   }
@@ -362,6 +356,10 @@ export class MediaPluginState {
 
   setView(view: EditorView) {
     this.view = view;
+  }
+
+  setDestroyed(destroyed: boolean) {
+    this.destroyed = destroyed;
   }
 
   /**
@@ -733,6 +731,14 @@ export const createPlugin = (
       const pluginState = getMediaPluginState(view.state);
       pluginState.setView(view);
       pluginState.updateElement();
+
+      options.providerFactory.subscribe(
+        'mediaProvider',
+        (_name, provider?: Promise<MediaProvider>) => {
+          pluginState.setDestroyed(false);
+          pluginState.setMediaProvider(provider);
+        },
+      );
 
       return {
         update: () => {

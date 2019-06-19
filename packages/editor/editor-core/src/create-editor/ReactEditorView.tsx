@@ -48,7 +48,6 @@ import {
   createErrorReporter,
   createPMPlugins,
   initAnalytics,
-  groupPMPluginsByConfigurability,
 } from './create-editor';
 import { getDocStructure } from '../utils/document-logger';
 import { isFullPage } from '../utils/is-full-page';
@@ -217,7 +216,7 @@ export default class ReactEditorView<T = {}> extends React.Component<
     );
 
     const state = this.editorState;
-    const plugins = groupPMPluginsByConfigurability({
+    const plugins = createPMPlugins({
       schema: state.schema,
       dispatch: this.dispatch,
       errorReporter: this.errorReporter,
@@ -229,27 +228,9 @@ export default class ReactEditorView<T = {}> extends React.Component<
       portalProviderAPI: props.portalProviderAPI,
       reactContext: () => this.context,
       dispatchAnalyticsEvent: this.dispatchAnalyticsEvent,
-      reconfigurableOnly: true,
     });
 
-    const pluginConfig = {
-      schema: state.schema,
-      plugins: [...plugins.reconfigurable, ...plugins.static],
-      doc: state.doc,
-      selection: state.selection,
-    };
-
-    // const newState = EditorState.create(pluginConfig);
-
-    let newState = state;
-    plugins.reconfigurable.forEach(plugin => {
-      if (plugin.spec.state) {
-        // @ts-ignore
-        newState[plugin.key] = plugin.spec.state.init(pluginConfig, newState);
-      }
-    });
-
-    newState = newState.reconfigure(pluginConfig);
+    const newState = state.reconfigure({ plugins });
 
     // need to update the state first so when the view builds the nodeviews it is
     // using the latest plugins

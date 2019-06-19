@@ -25,7 +25,6 @@ export type PMPluginFactoryParams = {
   portalProviderAPI: PortalProviderAPI;
   reactContext: () => { [key: string]: any };
   dispatchAnalyticsEvent: DispatchAnalyticsEvent;
-  reconfigurableOnly?: boolean;
 };
 
 export type PMPluginCreateConfig = PMPluginFactoryParams & {
@@ -72,7 +71,6 @@ export type PluginsOptions = {
 
 export type PMPlugin = {
   name: string;
-  reconfigurable?: boolean;
   plugin: PMPluginFactory;
 };
 

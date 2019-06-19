@@ -66,7 +66,6 @@ const tablesPlugin = (disableBreakoutUI?: boolean): EditorPlugin => ({
     return [
       {
         name: 'table',
-        reconfigurable: true,
         plugin: ({ props, prevProps, dispatch, portalProviderAPI }) => {
           const { allowTables, appearance, allowDynamicTextSizing } = props;
           const isBreakoutEnabled = appearance === 'full-page';
