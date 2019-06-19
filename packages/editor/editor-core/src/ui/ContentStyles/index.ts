@@ -151,7 +151,6 @@ const ContentStyles: ComponentClass<
 
   span.fabric-editor-annotation {
     background-color: #f6c342;
-    display: inline-block;
   }
 
   div.fabric-editor-block-mark[class^='fabric-editor-align'] {

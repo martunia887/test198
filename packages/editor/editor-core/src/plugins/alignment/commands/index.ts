@@ -15,6 +15,7 @@ export const cascadeCommands = (cmds: Array<Command>) => (
   let shouldDispatch = false;
 
   const onDispatchAction = (tr: Transaction) => {
+    baseTr.setSelection(tr.selection);
     tr.steps.forEach(st => {
       baseTr.step(st);
     });

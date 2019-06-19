@@ -14,7 +14,7 @@ export const createAnnotationMark = (id: string): Command => (
   state,
   dispatch,
 ): boolean => {
-  const { tr } = state;
+  let { tr } = state;
   const { from, to } = state.selection;
   const annotationMark = state.schema.marks.annotation;
   tr.addMark(
@@ -23,6 +23,7 @@ export const createAnnotationMark = (id: string): Command => (
     annotationMark.create({ id, annotationType: 'inlineComment' }),
   );
   tr.setSelection(Selection.near(tr.doc.resolve(to)));
+
   if (dispatch) {
     dispatch(tr);
   }
@@ -37,7 +38,6 @@ export const setAnnotationQueryMarks = (): Command => (
   const { from, to } = state.selection;
   const annotationMark = state.schema.marks.annotationQuery;
   tr.addMark(from, to, annotationMark.create());
-  // tr.setSelection(Selection.near(tr.doc.resolve(to)));
   tr.setMeta(pluginKey, { type: 'INSERT_COMMENT' });
   if (dispatch) {
     dispatch(tr);
@@ -50,10 +50,13 @@ export const removeComment = (id: string): Command => (
   dispatch,
 ): boolean => {
   const { tr } = state;
-  const { from, to } = state.selection;
+  const { from, to, $from } = state.selection;
+  const pos = $from.pos - $from.textOffset;
   const annotationMark = state.schema.marks.annotation;
-  tr.removeMark(from, to, annotationMark);
-  tr.setSelection(Selection.near(tr.doc.resolve(to + 1)));
+  const $pos = state.doc.resolve(from);
+  const node = state.doc.nodeAt(from);
+  const rightBound = pos + node.nodeSize;
+  tr.removeMark(pos, rightBound, annotationMark);
 
   if (dispatch) {
     dispatch(tr);
@@ -63,11 +66,8 @@ export const removeComment = (id: string): Command => (
 
 export const removeQueryMark = (): Command => (state, dispatch): boolean => {
   const { tr } = state;
-  const { from, to } = state.selection;
   const annotationMark = state.schema.marks.annotationQuery;
-  tr.removeMark(from, to, annotationMark);
-
-  // tr.setSelection(Selection.near(tr.doc.resolve(to + 1)));
+  tr.removeMark(0, state.doc.nodeSize - 2, annotationMark);
   if (dispatch) {
     dispatch(tr);
   }

@@ -41,12 +41,10 @@ const annotationPlugin: EditorPlugin = {
           const Component = pluginState.component.component;
           let element;
           let markerRef;
-          if (pluginState.activeInlineComment) {
-            element = findDomRefAtPos(
-              editorView.state.selection.from,
-              editorView.domAtPos.bind(editorView),
-            );
-          } else if (pluginState.showAnnotationToolbar) {
+          if (
+            pluginState.activeInlineComment ||
+            pluginState.showAnnotationToolbar
+          ) {
             element = findDomRefAtPos(
               editorView.state.selection.from,
               editorView.domAtPos.bind(editorView),
@@ -65,9 +63,9 @@ const annotationPlugin: EditorPlugin = {
               element={element}
               markerRef={markerRef}
               selection={!!pluginState.showAnnotationToolbar}
-              onSuccess={(id: string) =>
-                insertComment(id)(editorView.state, editorView.dispatch)
-              }
+              onSuccess={(id: string) => {
+                insertComment(id)(editorView.state, editorView.dispatch);
+              }}
               onCancel={() =>
                 removeQueryMark()(editorView.state, editorView.dispatch)
               }

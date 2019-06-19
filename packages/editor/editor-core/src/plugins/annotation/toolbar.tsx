@@ -13,10 +13,7 @@ export const messages = defineMessages({
   },
 });
 
-export const getToolbarConfig: FloatingToolbarHandler = (
-  state,
-  { formatMessage },
-) => {
+export const getToolbarConfig: FloatingToolbarHandler = state => {
   const annotationState: HyperlinkState | undefined = pluginKey.getState(state);
   if (
     annotationState &&

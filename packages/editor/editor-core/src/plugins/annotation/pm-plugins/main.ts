@@ -265,7 +265,7 @@ export const plugin = (dispatch: Dispatch, provider?: AnnotationProvider) =>
           state = {
             ...state,
             showAnnotationToolbar: action === 'INSERT_COMMENT',
-            activeText: state.activeText,
+            activeText: getActiveText(newState.schema, newState.selection),
             activeInlineComment: mapTransactionToState(
               state.activeInlineComment,
               tr,
@@ -276,7 +276,7 @@ export const plugin = (dispatch: Dispatch, provider?: AnnotationProvider) =>
         if (action) {
           state = {
             ...state,
-            activeText: state.activeText,
+            activeText: getActiveText(newState.schema, newState.selection),
             showAnnotationToolbar: action === 'INSERT_COMMENT',
             activeInlineComment: toState(
               state.activeInlineComment,

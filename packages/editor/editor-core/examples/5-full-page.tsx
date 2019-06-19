@@ -35,6 +35,7 @@ import {
 import { Popup } from '@atlaskit/editor-common';
 import Avatar, { AvatarItem } from '@atlaskit/avatar';
 import { FieldTextAreaStateless } from '@atlaskit/field-text-area';
+import EditorRemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 
 /**
  * +-------------------------------+
@@ -104,17 +105,27 @@ export class ShowAnnotation extends React.Component<
     this.props.onSuccess(id);
   };
 
+  shouldComponentUpdate(
+    nextProps: AnnotationProps,
+    nextState: AnnotationState,
+  ) {
+    return (
+      this.props.element !== nextProps.element ||
+      this.state.commentValue !== nextState.commentValue
+    );
+  }
+
   componentWillMount() {
     this.setState({
       commentValue: '',
     });
   }
 
-  // componentDidUpdate(prevProps: AnnotationProps) {
-  //   if (this.props.selection && !prevProps.selection ) {
-  //     this.props.onCancel();
-  //   }
-  // }
+  componentDidUpdate(prevProps: AnnotationProps) {
+    if (!this.props.element && prevProps.element) {
+      this.props.onCancel();
+    }
+  }
 
   getCommentValue(id: string) {
     return (
@@ -137,6 +148,7 @@ export class ShowAnnotation extends React.Component<
             shouldFitContainer={true}
             isLabelHidden={true}
             autoFocus={true}
+            ref={(input: HTMLTextAreaElement) => input && input.focus()}
           />
         </div>
         <Button appearance="primary" onClick={this.saveComment}>
@@ -154,11 +166,20 @@ export class ShowAnnotation extends React.Component<
         }}
       >
         {this.getCommentValue(id)}
+        <div style={{ padding: '5px 0' }}>
+          <Button
+            appearance="subtle"
+            onClick={this.props.onDelete}
+            spacing="none"
+          >
+            <EditorRemoveIcon label="remove comment" />
+          </Button>
+        </div>
       </div>
     );
   }
 
-  renderContent(markerRef: string, isSelection: string) {
+  renderContent(markerRef: string) {
     if (markerRef) {
       return this.renderShowComment(markerRef);
     }
@@ -208,15 +229,14 @@ export class ShowAnnotation extends React.Component<
             avatar={
               <Avatar
                 src="https://api.adorable.io/avatars/80/chaki@me.com.png"
-                presence={'online'}
+                presence="online"
               />
             }
             key={'vsutrave@atlassian.com'}
-            onClick={console.log}
             primaryText={'Vijay Sutrave'}
             secondaryText={'vsutrave@atlassian.com'}
           />
-          {this.renderContent(this.props.markerRef, this.props.selection)}
+          {this.renderContent(this.props.markerRef)}
         </div>
       </Popup>
     );
