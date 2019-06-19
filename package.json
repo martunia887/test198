@@ -93,6 +93,7 @@
     "workspaces": [
       "build/*",
       "packages/*/*",
+      "parcel",
       "patterns",
       "website"
     ]
