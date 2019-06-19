@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Schema } from 'prosemirror-model';
-import { Plugin, EditorState } from 'prosemirror-state';
+import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { ProviderFactory, ErrorReporter } from '@atlaskit/editor-common';
 import { Dispatch, EventDispatcher } from '../event-dispatcher';
@@ -25,7 +25,7 @@ export type PMPluginFactoryParams = {
   portalProviderAPI: PortalProviderAPI;
   reactContext: () => { [key: string]: any };
   dispatchAnalyticsEvent: DispatchAnalyticsEvent;
-  oldState?: EditorState;
+  reconfigurableOnly?: boolean;
 };
 
 export type PMPluginCreateConfig = PMPluginFactoryParams & {

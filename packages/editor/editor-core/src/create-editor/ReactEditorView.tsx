@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { EditorState, Transaction, Selection } from 'prosemirror-state';
+import { EditorState, Transaction, Selection, Plugin } from 'prosemirror-state';
 import { EditorView, DirectEditorProps } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { intlShape } from 'react-intl';
@@ -228,21 +228,28 @@ export default class ReactEditorView<T = {}> extends React.Component<
       portalProviderAPI: props.portalProviderAPI,
       reactContext: () => this.context,
       dispatchAnalyticsEvent: this.dispatchAnalyticsEvent,
-      oldState: state,
+      reconfigurableOnly: true,
     });
 
-    const newState = EditorState.create({
+    const pluginConfig = {
       schema: state.schema,
       plugins,
       doc: state.doc,
       selection: state.selection,
+    };
+
+    plugins.forEach((plugin: Plugin) => {
+      if (plugin.spec.state) {
+        // @ts-ignore
+        state[plugin.key] = plugin.spec.state.init(pluginConfig, state);
+      }
     });
 
     // need to update the state first so when the view builds the nodeviews it is
     // using the latest plugins
-    this.view.updateState(newState);
+    this.view.updateState(state);
 
-    return this.view.update({ ...this.view.props, state: newState });
+    return this.view.update({ ...this.view.props, state });
   };
 
   /**

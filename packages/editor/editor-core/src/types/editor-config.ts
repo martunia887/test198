@@ -24,7 +24,11 @@ export interface NodeViewConfig {
 export interface EditorConfig {
   nodes: NodeConfig[];
   marks: MarkConfig[];
-  pmPlugins: { name: string; plugin: PMPluginFactory }[];
+  pmPlugins: {
+    name: string;
+    reconfigurable?: boolean;
+    plugin: PMPluginFactory;
+  }[];
   contentComponents: UIComponentFactory[];
   primaryToolbarComponents: ToolbarUIComponentFactory[];
   secondaryToolbarComponents: UIComponentFactory[];
