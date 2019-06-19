@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { EditorState, Transaction, Selection, Plugin } from 'prosemirror-state';
+import { EditorState, Transaction, Selection } from 'prosemirror-state';
 import { EditorView, DirectEditorProps } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { intlShape } from 'react-intl';
@@ -48,6 +48,7 @@ import {
   createErrorReporter,
   createPMPlugins,
   initAnalytics,
+  groupPMPluginsByConfigurability,
 } from './create-editor';
 import { getDocStructure } from '../utils/document-logger';
 import { isFullPage } from '../utils/is-full-page';
@@ -216,7 +217,7 @@ export default class ReactEditorView<T = {}> extends React.Component<
     );
 
     const state = this.editorState;
-    const plugins = createPMPlugins({
+    const plugins = groupPMPluginsByConfigurability({
       schema: state.schema,
       dispatch: this.dispatch,
       errorReporter: this.errorReporter,
@@ -233,23 +234,28 @@ export default class ReactEditorView<T = {}> extends React.Component<
 
     const pluginConfig = {
       schema: state.schema,
-      plugins,
+      plugins: [...plugins.reconfigurable, ...plugins.static],
       doc: state.doc,
       selection: state.selection,
     };
 
-    plugins.forEach((plugin: Plugin) => {
+    // const newState = EditorState.create(pluginConfig);
+
+    let newState = state;
+    plugins.reconfigurable.forEach(plugin => {
       if (plugin.spec.state) {
         // @ts-ignore
-        state[plugin.key] = plugin.spec.state.init(pluginConfig, state);
+        newState[plugin.key] = plugin.spec.state.init(pluginConfig, newState);
       }
     });
 
+    newState = newState.reconfigure(pluginConfig);
+
     // need to update the state first so when the view builds the nodeviews it is
     // using the latest plugins
-    this.view.updateState(state);
+    this.view.updateState(newState);
 
-    return this.view.update({ ...this.view.props, state });
+    return this.view.update({ ...this.view.props, state: newState });
   };
 
   /**

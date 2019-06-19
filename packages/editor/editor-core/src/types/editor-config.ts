@@ -1,9 +1,10 @@
 import { NodeSpec, MarkSpec } from 'prosemirror-model';
 import { NodeView } from 'prosemirror-view';
+import { Plugin } from 'prosemirror-state';
 import {
-  PMPluginFactory,
   UIComponentFactory,
   ToolbarUIComponentFactory,
+  PMPlugin,
 } from './editor-plugin';
 
 export interface NodeConfig {
@@ -21,14 +22,15 @@ export interface NodeViewConfig {
   nodeView: NodeView;
 }
 
+export interface PluginGroups {
+  reconfigurable: Array<Plugin>;
+  static: Array<Plugin>;
+}
+
 export interface EditorConfig {
   nodes: NodeConfig[];
   marks: MarkConfig[];
-  pmPlugins: {
-    name: string;
-    reconfigurable?: boolean;
-    plugin: PMPluginFactory;
-  }[];
+  pmPlugins: Array<PMPlugin>;
   contentComponents: UIComponentFactory[];
   primaryToolbarComponents: ToolbarUIComponentFactory[];
   secondaryToolbarComponents: UIComponentFactory[];

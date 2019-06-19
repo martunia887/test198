@@ -9,6 +9,7 @@ import {
   EditorConfig,
   PluginsOptions,
   PMPluginCreateConfig,
+  PluginGroups,
 } from '../types';
 import { name, version } from '../version-wrapper';
 import Ranks from '../plugins/rank';
@@ -172,6 +173,55 @@ export function createPMPlugins({
       }),
     )
     .filter(plugin => !!plugin) as Plugin[];
+}
+
+export function groupPMPluginsByConfigurability({
+  editorConfig,
+  schema,
+  props,
+  prevProps,
+  dispatch,
+  eventDispatcher,
+  providerFactory,
+  errorReporter,
+  portalProviderAPI,
+  reactContext,
+  dispatchAnalyticsEvent,
+}: PMPluginCreateConfig): PluginGroups {
+  return editorConfig.pmPlugins
+    .sort(sortByOrder('plugins'))
+    .reduce<PluginGroups>(
+      (acc, { plugin, reconfigurable }) => {
+        const createdPlugin = plugin({
+          schema,
+          props,
+          prevProps,
+          dispatch,
+          providerFactory,
+          errorReporter,
+          eventDispatcher,
+          portalProviderAPI,
+          reactContext,
+          dispatchAnalyticsEvent,
+        });
+
+        if (!createdPlugin) {
+          return acc;
+        }
+
+        if (reconfigurable) {
+          acc.reconfigurable.push(createdPlugin);
+        } else {
+          acc.static.push(createdPlugin);
+        }
+
+        return acc;
+      },
+      {
+        reconfigurable: [],
+        static: [],
+      },
+    );
 }
 
 export function createErrorReporter(
