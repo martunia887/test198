@@ -3,6 +3,9 @@ import * as React from 'react';
 import {
   ProviderFactory,
   WithCreateAnalyticsEvent,
+  ExtensionHandler,
+  ExtensionHandlers,
+  ExtensionParams,
 } from '@atlaskit/editor-common';
 import { MediaProvider as MediaProviderType } from '@atlaskit/editor-core';
 import { ReactRenderer, RendererProps } from '@atlaskit/renderer';
@@ -32,8 +35,10 @@ import { eventDispatcher } from './dispatcher';
 import { ObjectKey, TaskState } from '@atlaskit/task-decision';
 import { analyticsBridgeClient } from '../analytics-client';
 
-export interface MobileRendererProps extends RendererProps {
-  document: string;
+import { createPromise } from '../cross-platform-promise';
+
+export interface MobileRendererProps {
+  document?: string;
   mediaProvider?: Promise<MediaProviderType>;
   cardClient?: CardClient;
 }
@@ -52,6 +57,43 @@ const handleAnalyticsEvent = (
     event: JSON.stringify(event),
   });
 };
+export interface MacroRendererProps {
+  extension: ExtensionParams<any>;
+}
+
+export interface MacroRendererState {
+  content?: string;
+}
+
+class MacroComponent extends React.Component<
+  MacroRendererProps,
+  MacroRendererState
+> {
+  constructor(props: MacroRendererProps) {
+    super(props);
+
+    this.state = {
+      content: null,
+    };
+  }
+
+  componentDidMount() {
+    const ext = this.props.extension;
+    createPromise('renderMacro', JSON.stringify({ ext }))
+      .submit()
+      .then(result => {
+        this.setState(result);
+      });
+  }
+
+  render() {
+    if (this.state.content) {
+      return <div dangerouslySetInnerHTML={{ __html: this.state.content }} />;
+    } else {
+      return <div>LOADING...</div>;
+    }
+  }
+}
 
 export default class MobileRenderer extends React.Component<
   MobileRendererProps,
@@ -132,6 +174,19 @@ export default class MobileRenderer extends React.Component<
     });
   }
 
+  getExtensionHandlers(): ExtensionHandlers {
+    return {
+      'com.atlassian.confluence.macro.core': this.getMacroExtensionHandler(),
+    };
+  }
+
+  getMacroExtensionHandler(): ExtensionHandler<any> {
+    return extension => {
+      console.error('HERE');
+      return <MacroComponent extension={extension} />;
+    };
+  }
+
   render() {
     try {
       // If we haven't received a document yet, don't pass null.
@@ -197,6 +252,7 @@ export default class MobileRenderer extends React.Component<
                         onClick: this.onLinkClick,
                       },
                     }}
+                    extensionHandlers={this.getExtensionHandlers()}
                   />
                 </HeightObserver>
               </SmartCardProvider>

@@ -8,7 +8,7 @@
   "atlaskit:src": "src/index.ts",
   "scripts": {
     "start": "webpack --watch",
-    "debug": "webpack -d --watch",
+    "debug": "webpack -d --info-verbosity verbose --progress --watch",
     "build:dev": "webpack -d",
     "prebuild": "rm -rf dist && copy-pkg package.json tmp/package.json --only name,version,sideEffects && mv tmp/package.json src/version.json",
     "build": "webpack -p"
@@ -47,7 +47,8 @@
     "lodash.debounce": "^4.0.8",
     "prosemirror-history": "^1.0.2",
     "prosemirror-state": "^1.2.2",
-    "prosemirror-view": "^1.9.12"
+    "prosemirror-view": "^1.9.12",
+    "react-intl": "^2.6.0"
   },
   "peerDependencies": {
     "@atlaskit/media-core": "^31.0.1",
