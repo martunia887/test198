@@ -2,6 +2,7 @@
   "name": "@atlaskit/parcel",
   "private": true,
   "version": "5.1.6",
+  "main": "dist/index.js",
   "description": "",
   "license": "Apache-2.0",
   "author": "Atlassian Pty Ltd",
@@ -17,5 +18,10 @@
     "@atlaskit/theme/components": "@atlaskit/theme/src/components",
     "@atlaskit/theme/constants": "@atlaskit/theme/src/constants",
     "@atlaskit/theme/colors": "@atlaskit/theme/src/colors"
+  },
+  "targets": {
+    "main": {
+      "publicUrl": "/dist"
+    }
   }
 }
