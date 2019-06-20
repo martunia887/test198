@@ -8,7 +8,14 @@
   "dependencies": {
     "@atlaskit/avatar": "^16.0.2",
     "@atlaskit/css-reset": "^5.0.2",
+    "@atlaskit/navigation": "^35.1.6",
+    "@atlaskit/page": "^11.0.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
+  },
+  "alias": {
+    "@atlaskit/theme/components": "@atlaskit/theme/src/components",
+    "@atlaskit/theme/constants": "@atlaskit/theme/src/constants",
+    "@atlaskit/theme/colors": "@atlaskit/theme/src/colors"
   }
 }

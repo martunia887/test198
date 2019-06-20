@@ -8,21 +8,28 @@ import styled from 'styled-components';
 import { gridSize, math } from '@atlaskit/theme';
 import titleize from 'sentence-case';
 
-import Page, { Title } from '../website/src/components/Page';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
+import { Title } from '../website/src/components/Page';
 import MetaData from '../website/src/pages/package/MetaData';
 
-export default function PackagePage({ doc, pkg }) {
+export default function PackagePage({ doc, pkg, navigation }) {
   const title = titleize(pkg.name);
 
   return (
-    <Page>
+    <Page navigation={navigation}>
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Title>{title}</Title>
-      <MetaData packageName={pkg.name} packageSrc="#" />
-      <Sep />
-      {doc}
+      <Grid layout="fixed">
+        <GridColumn medium={12}>
+          <div style={{ paddingTop: '3rem' }}>
+            <Title>{title}</Title>
+            <MetaData packageName={pkg.name} packageSrc="#" />
+            <Sep />
+            {doc}
+          </div>
+        </GridColumn>
+      </Grid>
     </Page>
   );
 }
