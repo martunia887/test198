@@ -225,7 +225,7 @@
     "projector-karma": "projectorjs/projector-karma#e6bf8242b4785460f4840ce0817919c99614ada9",
     "projector-spawn": "^1.0.1",
     "promise-queue": "^2.2.5",
-    "prosemirror-dev-tools": "^2.1.0",
+    "prosemirror-dev-tools": "^2.1.1",
     "raw-loader": "^0.5.1",
     "react-addons-perf": "^15.3.2",
     "react-async-component": "^2.0.0",
