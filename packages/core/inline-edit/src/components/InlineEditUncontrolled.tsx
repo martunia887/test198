@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
 
 import {
   withAnalyticsEvents,
@@ -9,13 +8,14 @@ import {
 import Button from '@atlaskit/button';
 import ConfirmIcon from '@atlaskit/icon/glyph/check';
 import CancelIcon from '@atlaskit/icon/glyph/cross';
+import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Form, { Field } from '@atlaskit/form';
+import { colors } from '@atlaskit/theme';
 
 import {
   InlineEditUncontrolledProps,
   FieldChildProps,
   FormChildProps,
-  InlineDialogProps,
 } from '../types';
 import ButtonsWrapper from '../styled/ButtonsWrapper';
 import ButtonWrapper from '../styled/ButtonWrapper';
@@ -23,8 +23,10 @@ import ReadViewContentWrapper from '../styled/ReadViewContentWrapper';
 import ContentWrapper from '../styled/ContentWrapper';
 import EditButton from '../styled/EditButton';
 import ReadViewWrapper from '../styled/ReadViewWrapper';
-import InlineDialogChild from '../styled/InlineDialogChild';
+import ErrorDialog from '../styled/ErrorDialog';
+import ErrorMessage from '../styled/ErrorMessage';
 import HiddenButton from '../styled/HiddenButton';
+import ButtonsContainer from '../styled/ButtonsContainer';
 
 import {
   name as packageName,
@@ -38,13 +40,6 @@ interface State {
   wasFocusReceivedSinceLastBlur: boolean;
   preventFocusOnEditButton: boolean;
 }
-
-/** This means that InlineDialog is only loaded if necessary */
-const InlineDialog = Loadable<InlineDialogProps, {}>({
-  loader: () =>
-    import('@atlaskit/inline-dialog').then(module => module.default),
-  loading: () => null,
-});
 
 class InlineEditUncontrolled extends React.Component<
   InlineEditUncontrolledProps,
@@ -217,14 +212,17 @@ class InlineEditUncontrolled extends React.Component<
       isEditing,
       isRequired,
       label,
+      name,
+      onConfirm,
       validate,
     } = this.props;
     return (
       <Form
-        onSubmit={(data: { inlineEdit: any }) =>
+        onSubmit={async (data: Record<string, any>) => {
           // @ts-ignore - HOC passes analytics event
-          this.props.onConfirm(data.inlineEdit)
-        }
+          const error = await onConfirm(data[name], name);
+          return { [name]: error };
+        }}
       >
         {({
           formProps: { onKeyDown, onSubmit, ref: formRef },
@@ -241,16 +239,11 @@ class InlineEditUncontrolled extends React.Component<
           >
             {isEditing ? (
               <Field
-                name="inlineEdit"
+                name={name}
                 label={label}
                 defaultValue={defaultValue}
                 validate={validate}
                 isRequired={isRequired}
-                /**
-                 * This key is required so that value is reset when edit is
-                 * cancelled and defaultValue is ""
-                 */
-                key="edit-view"
               >
                 {({ fieldProps, error }: FieldChildProps) => (
                   <ContentWrapper
@@ -263,37 +256,31 @@ class InlineEditUncontrolled extends React.Component<
                     }
                     onFocus={this.onWrapperFocus}
                   >
-                    {validate && (
-                      <InlineDialog
-                        isOpen={fieldProps.isInvalid}
-                        content={<div id="error-message">{error}</div>}
-                        placement="right"
-                      >
-                        <InlineDialogChild />
-                      </InlineDialog>
-                    )}
                     {this.props.editView(fieldProps)}
-                    {!hideActionButtons ? (
-                      this.renderActionButtons()
-                    ) : (
-                      /** This is to allow Ctrl + Enter to submit without action buttons */
-                      <HiddenButton type="submit" />
-                    )}
+                    <ButtonsContainer>
+                      {error && (
+                        <ErrorDialog>
+                          <ErrorIcon label="Error" primaryColor={colors.R400} />
+                          <ErrorMessage>{error}</ErrorMessage>
+                        </ErrorDialog>
+                      )}
+                      {!hideActionButtons ? (
+                        this.renderActionButtons()
+                      ) : (
+                        /** This is to allow Ctrl + Enter to submit without action buttons */
+                        <HiddenButton type="submit" />
+                      )}
+                    </ButtonsContainer>
                   </ContentWrapper>
                 )}
               </Field>
             ) : (
               /** Field is used here only for the label */
               <Field
-                name="inlineEdit"
+                name={name}
                 label={label}
                 defaultValue=""
                 isRequired={isRequired}
-                /**
-                 * This key is required so that value is reset when edit is
-                 * cancelled and defaultValue is ""
-                 */
-                key="read-view"
               >
                 {() => this.renderReadView()}
               </Field>

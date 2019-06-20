@@ -16,7 +16,7 @@ const input = 'input[name="inlineEdit"]';
 const editButton = 'button[aria-label="Edit"]';
 const confirmButton = 'button[aria-label="Confirm"]';
 const cancelButton = 'button[aria-label="Cancel"]';
-const errorMessage = 'div#error-message';
+const errorMessage = 'span[aria-label="Error"]';
 const label = 'label';
 
 BrowserTestCase(

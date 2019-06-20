@@ -1,7 +1,6 @@
 import * as React from 'react';
 import TextField from '@atlaskit/textfield';
-import ErrorIcon from '@atlaskit/icon/glyph/error';
-import { colors, gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme';
 
 import InlineEdit from '../src';
 import ReadViewContainer from '../src/styled/ReadViewContainer';
@@ -23,10 +22,13 @@ export default class InlineEditExample extends React.Component<void, State> {
       resolve => {
         setTimeout(() => {
           if (value.length <= 6) {
-            resolve({ value, error: 'Enter a value longer than 6 characters' });
+            resolve({
+              value,
+              error: 'Enter a value longer than 6 characters.',
+            });
           }
           resolve(undefined);
-        }, 500);
+        }, 300);
       },
     ).then(validateObject => {
       if (validateObject && validateObject.value === this.validateValue) {
@@ -37,34 +39,28 @@ export default class InlineEditExample extends React.Component<void, State> {
   };
 
   onConfirm = (value: string) => {
+    if (value === 'Atlassian') {
+      return new Promise<string>(resolve => {
+        setTimeout(() => {
+          resolve('This is a submission validation error.');
+        }, 500);
+      });
+    }
     this.setState({
       editValue: value,
     });
+    return undefined;
   };
 
   render() {
     return (
-      <div style={{ padding: `${gridSize()}px ${gridSize()}px`, width: '50%' }}>
+      <div style={{ padding: `${gridSize()}px ${gridSize()}px` }}>
         <InlineEdit
+          name="example"
           defaultValue={this.state.editValue}
           label="Inline edit validation"
           editView={fieldProps => (
-            <TextField
-              {...fieldProps}
-              elemAfterInput={
-                fieldProps.isInvalid && (
-                  <div
-                    style={{
-                      paddingRight: `${gridSize() - 2}px`,
-                      lineHeight: '100%',
-                    }}
-                  >
-                    <ErrorIcon label="error" primaryColor={colors.R400} />
-                  </div>
-                )
-              }
-              autoFocus
-            />
+            <TextField {...fieldProps} autoFocus autoComplete="off" />
           )}
           readView={() => (
             <ReadViewContainer>

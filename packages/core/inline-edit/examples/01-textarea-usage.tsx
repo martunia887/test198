@@ -34,10 +34,10 @@ export default class InlineEditExample extends React.Component<void, State> {
       <div
         style={{
           padding: `${gridSize()}px ${gridSize()}px ${gridSize() * 6}px`,
-          width: '70%',
         }}
       >
         <InlineEdit
+          name="example"
           defaultValue={this.state.editValue}
           label="Inline edit textarea + keep edit view open on blur"
           editView={(fieldProps, ref) => (

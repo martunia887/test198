@@ -20,6 +20,7 @@ export default class InlineEditExample extends React.Component<void, State> {
         }}
       >
         <InlineEditableTextfield
+          name="example"
           defaultValue={this.state.editValue}
           label="Inline editable textfield"
           onConfirm={value => this.setState({ editValue: value })}

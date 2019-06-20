@@ -2,14 +2,12 @@ import * as React from 'react';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 interface CommonProps {
+  /** Name passed down to the input */
+  name: string;
   /** Label above the input. */
   label?: string;
   /** Validation function handled by final-form. */
-  validate?: (
-    value: any,
-    formState: {},
-    fieldState: {},
-  ) => string | void | Promise<string | void>;
+  validate?: (value: any) => string | void | Promise<string | void>;
 
   /** Set whether onConfirm should be called on blur. */
   keepEditViewOpenOnBlur?: boolean;
@@ -42,7 +40,12 @@ export interface InlineEditUncontrolledProps extends CommonProps {
    * Handler called editView is closed and changes are confirmed.
    * Field value is passed as an argument to this function.
    */
-  onConfirm: (value: any, analyticsEvent: UIAnalyticsEvent) => void;
+  onConfirm: (
+    value: any,
+    name: string,
+    analyticsEvent: UIAnalyticsEvent,
+  ) => string | void | Promise<string | void>;
+
   /** Handler called when checkmark is. */
   onCancel: () => void;
 }
@@ -59,7 +62,11 @@ export interface InlineEditProps extends CommonProps {
    * Handler called editView is closed and changes are confirmed.
    * Field value is passed as an argument to this function.
    */
-  onConfirm: (value: any, analyticsEvent: UIAnalyticsEvent) => void;
+  onConfirm: (
+    value: any,
+    name: string,
+    analyticsEvent: UIAnalyticsEvent,
+  ) => string | void | Promise<string | void>;
   /** The value shown in the editView when it is entered. Should be updated by onConfirm. */
   defaultValue: any;
   /** Determines whether isEditing begins as true. */
@@ -71,9 +78,13 @@ export interface InlineEditableTextfieldProps extends CommonProps {
    * Handler called editView is closed and changes are confirmed.
    * Field value is passed as an argument to this function.
    */
-  onConfirm: (value: string, analyticsEvent: UIAnalyticsEvent) => void;
+  onConfirm: (
+    value: string,
+    name: string,
+    analyticsEvent: UIAnalyticsEvent,
+  ) => string | void | Promise<string | void>;
   /** The value shown in the editView when it is entered. Should be updated by onConfirm. */
-  defaultValue: any;
+  defaultValue: string;
   /** Text shown in read view when value is an empty string. */
   placeholder: string;
   /** Determines whether isEditing begins as true. */

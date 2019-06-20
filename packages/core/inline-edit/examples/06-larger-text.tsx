@@ -26,6 +26,7 @@ export default class InlineEditExample extends React.Component {
         }}
       >
         <InlineEdit
+          name="example"
           defaultValue="Field value"
           onConfirm={() => {}}
           editView={fieldProps => (

@@ -25,11 +25,16 @@ class InlineEdit extends React.Component<InlineEditProps, State> {
     }
   }
 
-  onConfirm = (value: string, analyticsEvent: UIAnalyticsEvent) => {
-    this.setState({
-      isEditing: false,
-    });
-    this.props.onConfirm(value, analyticsEvent);
+  onConfirm = async (
+    value: string,
+    name: string,
+    analyticsEvent: UIAnalyticsEvent,
+  ) => {
+    const error = await this.props.onConfirm(value, name, analyticsEvent);
+    if (!error) {
+      this.setState({ isEditing: false });
+    }
+    return error;
   };
 
   onCancel = () => {

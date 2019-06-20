@@ -107,7 +107,7 @@ class AnalyticsContextConsumer extends Component<{
             : this.createAnalyticsEvent(eventCreator);
 
         if (providedCallback) {
-          providedCallback(...args, analyticsEvent);
+          return providedCallback(...args, analyticsEvent);
         }
       };
       return {
