@@ -32,6 +32,19 @@ export const enforceAttributes = (
   });
 };
 
+export const checkForReservedAttributes = obj => {
+  const keys = Object.keys(obj);
+  const reservedAttributes = ['flagKey', 'ruleId', 'reason', 'value'];
+
+  if (reservedAttributes.some(attribute => keys.includes(attribute))) {
+    throw new TypeError(
+      `exposureData contains a reserved attribute. Reserved attributes are: ${reservedAttributes.join(
+        ', ',
+      )}`,
+    );
+  }
+};
+
 const validateFlag: any = (flagKey: string, flag: FlagShape) => {
   if (isSimpleFlag(flag) || isFlagWithEvaluationDetails(flag)) {
     return true;
