@@ -1,0 +1,1 @@
+Email renderer snapshot is now smaller thanks to image stubs

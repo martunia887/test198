@@ -45,6 +45,35 @@ const render = (doc: any, withMockEnabled: boolean = false) => {
   };
 };
 
+// Stubs for images to prevent snapshot from getting too big.
+jest.mock('../static/icons/info', () => ({
+  info: 'image-base64-stub-info',
+}));
+jest.mock('../static/icons/note', () => ({
+  note: 'image-base64-stub-note',
+}));
+jest.mock('../static/icons/tip', () => ({
+  tip: 'image-base64-stub-tip',
+}));
+jest.mock('../static/icons/success', () => ({
+  success: 'image-base64-stub-success',
+}));
+jest.mock('../static/icons/warning', () => ({
+  warning: 'image-base64-stub-warning',
+}));
+jest.mock('../static/icons/error', () => ({
+  error: 'image-base64-stub-error',
+}));
+jest.mock('../static/icons/decision', () => ({
+  decision: 'image-base64-stub-decision',
+}));
+jest.mock('../static/icons/taskItemChecked', () => ({
+  taskItemChecked: 'image-base64-stub-taskItemChecked',
+}));
+jest.mock('../static/icons/taskItemUnchecked', () => ({
+  taskItemUnchecked: 'image-base64-stub-taskItemUnchecked',
+}));
+
 describe('Renderer - EmailSerializer', () => {
   it('should render nothing for image node', () => {
     const { result } = render(image);
