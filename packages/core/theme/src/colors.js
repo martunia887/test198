@@ -100,46 +100,46 @@ export const N700A = 'rgba(9, 30, 66, 0.89)';
 export const N800A = 'rgba(9, 30, 66, 0.95)';
 
 // Dark Mode Neutrals
-export const DN900 = '#E6EDFA';
-export const DN800 = '#DCE5F5';
-export const DN700 = '#CED9EB';
-export const DN600 = '#B8C7E0';
-export const DN500 = '#ABBBD6';
-export const DN400 = '#9FB0CC';
-export const DN300 = '#8C9CB8';
-export const DN200 = '#7988A3';
-export const DN100 = '#67758F';
-export const DN90 = '#56637A';
-export const DN80 = '#455166';
-export const DN70 = '#3B475C';
-export const DN60 = '#313D52';
-export const DN50 = '#283447';
-export const DN40 = '#202B3D';
-export const DN30 = '#1B2638';
-export const DN20 = '#121A29';
-export const DN10 = '#0E1624';
+export const DN900 = '#d9dde3';
+export const DN800 = '#c7ced6';
+export const DN700 = '#b5bec9';
+export const DN600 = '#a3aebd';
+export const DN500 = '#929fb0';
+export const DN400 = '#8392a5';
+export const DN300 = '#718298';
+export const DN200 = '#65758b';
+export const DN100 = '#5a697c';
+export const DN90 = '#515f70';
+export const DN80 = '#475262';
+export const DN70 = '#3f4855';
+export const DN60 = '#373f49';
+export const DN50 = '#2f353d';
+export const DN40 = '#262b31';
+export const DN30 = '#202328';
+export const DN20 = '#17191c';
+export const DN10 = '#101213';
 
 // ATTENTION: update the tints if you update this
-export const DN0 = '#0D1424';
+export const DN0 = '#090a0b';
 
 // Each dark tint is made of DN0 and an alpha channel
-export const DN800A = 'rgba(13, 20, 36, 0.06)';
-export const DN700A = 'rgba(13, 20, 36, 0.14)';
-export const DN600A = 'rgba(13, 20, 36, 0.18)';
-export const DN500A = 'rgba(13, 20, 36, 0.29)';
-export const DN400A = 'rgba(13, 20, 36, 0.36)';
-export const DN300A = 'rgba(13, 20, 36, 0.40)';
-export const DN200A = 'rgba(13, 20, 36, 0.47)';
-export const DN100A = 'rgba(13, 20, 36, 0.53)';
-export const DN90A = 'rgba(13, 20, 36, 0.63)';
-export const DN80A = 'rgba(13, 20, 36, 0.73)';
-export const DN70A = 'rgba(13, 20, 36, 0.78)';
-export const DN60A = 'rgba(13, 20, 36, 0.81)';
-export const DN50A = 'rgba(13, 20, 36, 0.85)';
-export const DN40A = 'rgba(13, 20, 36, 0.89)';
-export const DN30A = 'rgba(13, 20, 36, 0.92)';
-export const DN20A = 'rgba(13, 20, 36, 0.95)';
-export const DN10A = 'rgba(13, 20, 36, 0.97)';
+export const DN800A = 'rgba(9, 10, 11, 0.06)';
+export const DN700A = 'rgba(9, 10, 11, 0.14)';
+export const DN600A = 'rgba(9, 10, 11, 0.18)';
+export const DN500A = 'rgba(9, 10, 11, 0.29)';
+export const DN400A = 'rgba(9, 10, 11, 0.36)';
+export const DN300A = 'rgba(9, 10, 11, 0.40)';
+export const DN200A = 'rgba(9, 10, 11, 0.47)';
+export const DN100A = 'rgba(9, 10, 11, 0.53)';
+export const DN90A = 'rgba(9, 10, 11, 0.63)';
+export const DN80A = 'rgba(9, 10, 11, 0.73)';
+export const DN70A = 'rgba(9, 10, 11, 0.78)';
+export const DN60A = 'rgba(9, 10, 11, 0.81)';
+export const DN50A = 'rgba(9, 10, 11, 0.85)';
+export const DN40A = 'rgba(9, 10, 11, 0.89)';
+export const DN30A = 'rgba(9, 10, 11, 0.92)';
+export const DN20A = 'rgba(9, 10, 11, 0.95)';
+export const DN10A = 'rgba(9, 10, 11, 0.97)';
 
 // Themed colors
 export const background = themed({ light: N0, dark: DN30 });
