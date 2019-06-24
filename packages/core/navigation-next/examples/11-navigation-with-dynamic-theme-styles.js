@@ -221,6 +221,7 @@ export default class extends Component<{}, State> {
           >
             <Content />
             <Button
+              id="toggle-shadow"
               onClick={this.toggleShadowMode}
               css={{ marginLeft: '2rem' }}
             >
