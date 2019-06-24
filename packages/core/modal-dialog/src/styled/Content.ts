@@ -1,5 +1,4 @@
-import { css } from '@emotion/core';
-import styled from '@emotion/styled';
+import styled, { css } from 'styled-components';
 
 import { colors, gridSize, math, themed } from '@atlaskit/theme';
 import { flexMaxHeightIEFix } from '../utils/flex-max-height-ie-fix';
@@ -9,7 +8,10 @@ import { AppearanceType } from '../types';
 // ==============================
 const innerGutter = 16;
 const outerGutter = 20;
-const keylineColor = themed({ light: colors.N30, dark: colors.DN30 });
+const keylineColor = props => {
+  console.log('props', props);
+  return themed({ light: colors.N30, dark: colors.DN30 })(props);
+};
 export const keylineHeight = 2;
 
 // Wrapper

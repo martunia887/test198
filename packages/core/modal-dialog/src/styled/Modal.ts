@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 import { borderRadius, colors, themed, layers } from '@atlaskit/theme';
 import { WIDTH_ENUM, gutter, WidthNames } from '../shared-variables';
 
@@ -17,7 +17,7 @@ const boxShadow = ({ isChromeless }: { isChromeless?: boolean }) =>
 const dialogBgColor = ({ isChromeless }: { isChromeless?: boolean }) => {
   return isChromeless
     ? 'transparent'
-    : themed({ light: colors.N0, dark: colors.DN50 })();
+    : themed({ light: colors.N0, dark: colors.DN50 });
 };
 const maxDimensions = `calc(100% - ${gutter * 2}px)`;
 const maxHeightDimensions = `calc(100% - ${gutter * 2 - IEMaxHeightCalcPx}px)`;

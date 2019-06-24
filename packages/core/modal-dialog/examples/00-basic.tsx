@@ -2,6 +2,7 @@ import React from 'react';
 import Lorem from 'react-lorem-component';
 import Button from '@atlaskit/button';
 import Modal, { ModalTransition } from '../src';
+import GlobalTheme, { AtlaskitThemeProvider } from '@atlaskit/theme';
 
 interface State {
   isOpen: boolean;
@@ -23,17 +24,25 @@ export default class ExampleBasic extends React.PureComponent<{}, State> {
     ];
 
     return (
-      <div>
-        <Button onClick={this.open}>Open Modal</Button>
+      <AtlaskitThemeProvider mode={'dark'}>
+        <GlobalTheme.Provider value={() => ({ mode: 'dark' })}>
+          <div>
+            <Button onClick={this.open}>Open Modal</Button>
 
-        <ModalTransition>
-          {isOpen && (
-            <Modal actions={actions} onClose={this.close} heading="Modal Title">
-              <Lorem count={2} />
-            </Modal>
-          )}
-        </ModalTransition>
-      </div>
+            <ModalTransition>
+              {isOpen && (
+                <Modal
+                  actions={actions}
+                  onClose={this.close}
+                  heading="Modal Title"
+                >
+                  <Lorem count={2} />
+                </Modal>
+              )}
+            </ModalTransition>
+          </div>
+        </GlobalTheme.Provider>
+      </AtlaskitThemeProvider>
     );
   }
 }
