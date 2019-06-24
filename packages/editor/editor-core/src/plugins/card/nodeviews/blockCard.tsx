@@ -3,7 +3,8 @@ import { Node as PMNode } from 'prosemirror-model';
 import { Card } from '@atlaskit/smart-card';
 import * as PropTypes from 'prop-types';
 import { EditorView } from 'prosemirror-view';
-import { SmartCardProps } from './genericCard';
+import wrapComponentWithClickArea from '../../../nodeviews/legacy-nodeview-factory/ui/wrapper-click-area';
+import { stateKey as ReactNodeViewState } from '../../../plugins/base/pm-plugins/react-nodeview';
 
 export interface Props {
   children?: React.ReactNode;
@@ -12,7 +13,8 @@ export interface Props {
   view: EditorView;
   selected?: boolean;
 }
-export class BlockCard extends React.PureComponent<SmartCardProps> {
+
+class BlockCardNode extends React.Component<Props, {}> {
   onClick = () => {};
 
   static contextTypes = {
@@ -20,8 +22,12 @@ export class BlockCard extends React.PureComponent<SmartCardProps> {
   };
 
   render() {
-    const { node, selected, cardContext } = this.props;
+    const { node, selected } = this.props;
     const { url, data } = node.attrs;
+
+    const cardContext = this.context.contextAdapter
+      ? this.context.contextAdapter.card
+      : undefined;
 
     // render an empty span afterwards to get around Webkit bug
     // that puts caret in next editable text element
@@ -48,6 +54,18 @@ export class BlockCard extends React.PureComponent<SmartCardProps> {
           cardInner
         )}
       </div>
+    );
+  }
+}
+
+const ClickableBlockCard = wrapComponentWithClickArea(BlockCardNode);
+export default class WrappedInline extends React.PureComponent<Props, {}> {
+  render() {
+    return (
+      <ClickableBlockCard
+        {...this.props}
+        pluginState={ReactNodeViewState.getState(this.props.view.state)}
+      />
     );
   }
 }

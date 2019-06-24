@@ -30,13 +30,12 @@ export const blockCard: NodeSpec = {
   },
   parseDOM: [
     {
-      tag: 'a[data-block-card]',
+      tag: 'div[data-block-card]',
       getAttrs: dom => {
-        const anchor = dom as HTMLAnchorElement;
-        const data = anchor.getAttribute('data-card-data');
+        const data = (dom as HTMLElement).getAttribute('data-card-data');
 
         return {
-          url: anchor.getAttribute('href'),
+          url: (dom as HTMLElement).getAttribute('data-card-url'),
           data: data ? JSON.parse(data) : null,
         };
       },
@@ -45,9 +44,9 @@ export const blockCard: NodeSpec = {
   toDOM(node: PMNode) {
     const attrs = {
       'data-block-card': '',
-      href: node.attrs.url,
+      'data-card-url': node.attrs.url,
       'data-card-data': node.attrs.data ? JSON.stringify(node.attrs.data) : '',
     };
-    return ['a', attrs];
+    return ['div', attrs];
   },
 };

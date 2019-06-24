@@ -27,8 +27,8 @@ export interface Props {
 }
 
 class Task extends ReactNodeView {
-  private isContentEmpty(node: PMNode) {
-    return node.content.childCount === 0;
+  private isContentEmpty() {
+    return this.node.content.childCount === 0;
   }
 
   private handleOnChange = (taskId: string, isChecked: boolean) => {
@@ -128,9 +128,7 @@ class Task extends ReactNodeView {
                 contentRef={forwardRef}
                 isDone={state === 'DONE'}
                 onChange={this.handleOnChange}
-                showPlaceholder={
-                  !insideCurrentNode && this.isContentEmpty(this.node)
-                }
+                showPlaceholder={!insideCurrentNode && this.isContentEmpty()}
                 providers={props.providerFactory}
                 disabled={(editorDisabledPlugin || {}).editorDisabled}
               />
@@ -141,22 +139,23 @@ class Task extends ReactNodeView {
     );
   }
 
-  viewShouldUpdate(nextNode: PMNode) {
-    /**
-     * To ensure the placeholder is correctly toggled we need to allow react to re-render
-     * on first character insertion.
-     * Note: last character deletion is handled externally and automatically re-renders.
-     */
-    return this.isContentEmpty(this.node) && nextNode.content.childCount === 1;
+  viewShouldUpdate() {
+    return false;
   }
 
   update(node: PMNode, decorations: Decoration[]) {
+    /**
+     * Returning false here when the previous content was empty fixes an error where the editor fails to set selection
+     * inside the contentDOM after a transaction. See ED-2374.
+     *
+     * Returning false also when the task state has changed to force the checkbox to update. See ED-5107
+     */
+
     return super.update(
       node,
       decorations,
       (currentNode: PMNode, newNode: PMNode) =>
-        // Toggle the placeholder based on whether user input exists
-        !this.isContentEmpty(newNode) &&
+        !this.isContentEmpty() &&
         !!(currentNode.attrs.state === newNode.attrs.state),
     );
   }

@@ -1,18 +1,15 @@
-import { createTag } from '../create-tag';
-import { NodeSerializerOpts } from '../interfaces';
-import { N40, N300 } from '@atlaskit/adf-schema';
-import { createClassName } from '../styles/util';
+import { colors, gridSize } from '@atlaskit/theme';
 
-const className = createClassName('blockquote');
-export const styles = `
-.${className} {
-  border-left: 2px solid ${N40};
-  color: ${N300};
-  margin: 12px 0 0 0;
-  padding-left: 16px;
-}
-`;
+import { createTag, serializeStyle } from '../util';
+import { NodeSerializerOpts } from '../interfaces';
+
+const css = serializeStyle({
+  'border-left': `2px solid ${colors.N40}`,
+  color: colors.N300,
+  margin: `${gridSize() * 1.5}px 0 0 0`,
+  'padding-left': `${gridSize() * 2}px`,
+});
 
 export default function blockquote({ text }: NodeSerializerOpts) {
-  return createTag('blockquote', { class: className }, text);
+  return createTag('blockquote', { style: css }, text);
 }

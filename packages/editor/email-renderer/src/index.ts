@@ -1,18 +1,15 @@
-import { defaultSchema } from '@atlaskit/adf-schema';
+import { fontFamily, fontSize } from '@atlaskit/theme';
+
 import { Fragment, Node as PMNode, Schema } from 'prosemirror-model';
-import flow from 'lodash.flow';
-import property from 'lodash.property';
-import {
-  SerializeFragmentWithAttachmentsResult,
-  SerializerWithImages,
-} from './serializer';
-import { nodeSerializers } from './node-serializers';
+
+import { Serializer } from './serializer';
+import { nodeSerializers } from './serializers';
 import styles from './styles';
 import juice from 'juice';
-import { escapeHtmlString } from './escape-html-string';
-import { getImageProcessor } from './static';
-import { createClassName } from './styles/util';
-import { fontFamily, fontSize } from './styles/common';
+import { escapeHtmlString } from './util';
+import flow from 'lodash.flow';
+import property from 'lodash.property';
+import { defaultSchema } from '@atlaskit/adf-schema';
 
 const serializeNode = (
   node: PMNode,
@@ -62,7 +59,7 @@ const getAttrsFromParent = (
   return {};
 };
 
-const traverseTree = (fragment: Fragment, parent?: PMNode): any => {
+const traverseTree = (fragment: Fragment, parent?: PMNode): string => {
   let output = '';
   fragment.forEach((childNode, _offset, idx) => {
     if (childNode.isLeaf) {
@@ -77,61 +74,47 @@ const traverseTree = (fragment: Fragment, parent?: PMNode): any => {
 };
 
 export const commonStyle = {
-  'font-family': fontFamily,
-  'font-size': fontSize,
+  'font-family': fontFamily(),
+  'font-size': `${fontSize()}px`,
   'font-weight': 400,
   'line-height': '24px',
 };
 
-const wrapAdf = (content: any[]) => ({ version: 1, type: 'doc', content });
-
 const juicify = (html: string): string =>
-  juice(`<div class="${createClassName('wrapper')}">${html}</div>`, {
-    extraCss: styles,
-  });
+  juice(`<style>${styles}</style><div class="wrapper">${html}</div>`);
 
 // replace all CID image references with a fake image
-const stubImages = (isMockEnabled: boolean) => (
-  content: SerializeFragmentWithAttachmentsResult,
-) =>
+const stubImages = (isMockEnabled: boolean) => (content: string) =>
   isMockEnabled
-    ? {
-        result: content.result!.replace(
-          /src="cid:[\w-]*"/gi,
-          'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="',
-        ),
-        embeddedImages: content.embeddedImages,
-      }
+    ? content.replace(
+        /src="cid:[\w-]*"/gi,
+        'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="',
+      )
     : content;
-/**
- * EmailSerializer allows to disable/mock images via isImageStubEnabled flag.
- * The reason behind this is that in emails, images are embedded separately as inline attachemnts
- * and referenced via CID. However, when rendered in browser, this does not work and breaks the experience
- * when rendered in demo page, so we instead inline the image data.
- */
-export default class EmailSerializer implements SerializerWithImages<string> {
+
+export class EmailSerializer implements Serializer<string> {
+  /**
+   * Email serializer allows to disable/mock images.
+   * The reason behind this is the default behavior is that in email, images are embedded separately
+   * and refenreced via CID. When however rendered in browser, this does not work and breaks the experience
+   * when rendered in demo page.
+   */
   constructor(
     private schema: Schema = defaultSchema,
     private isImageStubEnabled = false,
   ) {}
 
-  serializeFragmentWithImages = flow(
+  serializeFragment: (fragment: Fragment) => string = flow(
     (fragment: Fragment) => fragment.toJSON(),
     JSON.stringify,
     escapeHtmlString,
     JSON.parse,
-    wrapAdf,
+    content => ({ version: 1, type: 'doc', content }),
     this.schema.nodeFromJSON,
     property('content'),
     traverseTree,
     juicify,
-    getImageProcessor(this.isImageStubEnabled),
     stubImages(this.isImageStubEnabled),
-  );
-
-  serializeFragment: (...args: any) => string = flow(
-    this.serializeFragmentWithImages,
-    property('result'),
   );
 
   static fromSchema(schema: Schema = defaultSchema): EmailSerializer {

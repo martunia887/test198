@@ -5,11 +5,7 @@ import { EditorView } from 'prosemirror-view';
 import BoldIcon from '@atlaskit/icon/glyph/editor/bold';
 import ItalicIcon from '@atlaskit/icon/glyph/editor/italic';
 import { withAnalytics } from '../../../../analytics';
-import {
-  toggleBold,
-  toggleItalic,
-  renderTooltipContent,
-} from '../../../../keymaps';
+import { toggleBold, toggleItalic, tooltip } from '../../../../keymaps';
 import { TextFormattingState } from '../../pm-plugins/main';
 import ToolbarButton from '../../../../ui/ToolbarButton';
 import { ButtonGroup } from '../../../../ui/styles';
@@ -67,7 +63,7 @@ class ToolbarTextFormatting extends PureComponent<Props & InjectedIntlProps> {
             onClick={this.handleBoldClick}
             selected={strongActive}
             disabled={disabled || strongDisabled}
-            title={renderTooltipContent(labelBold, toggleBold)}
+            title={tooltip(toggleBold, labelBold)}
             iconBefore={<BoldIcon label={labelBold} />}
           />
         )}
@@ -78,7 +74,7 @@ class ToolbarTextFormatting extends PureComponent<Props & InjectedIntlProps> {
             onClick={this.handleItalicClick}
             selected={emActive}
             disabled={disabled || emDisabled}
-            title={renderTooltipContent(labelItalic, toggleItalic)}
+            title={tooltip(toggleItalic, labelItalic)}
             iconBefore={<ItalicIcon label={labelItalic} />}
           />
         )}

@@ -14,7 +14,7 @@ export type Props = {
   selected?: boolean;
   spacing?: 'default' | 'compact' | 'none';
   target?: string;
-  title?: React.ReactNode;
+  title?: string;
   titlePosition?: string;
 } & Pick<ButtonProps, 'theme' | 'aria-label'>;
 

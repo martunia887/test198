@@ -12,11 +12,8 @@ import {
 } from '@atlaskit/adf-schema';
 
 import { NodeSerializerOpts } from '../interfaces';
-import { createTable, TableData } from '../table-util';
-import { createTag } from '../create-tag';
-import { serializeStyle } from '../serialize-style';
+import { createTable } from '../util';
 import { commonStyle } from '..';
-import { createContentId } from '../static';
 
 type PanelType = 'info' | 'note' | 'tip' | 'success' | 'warning' | 'error';
 
@@ -56,49 +53,26 @@ export default function panel({ attrs, text }: NodeSerializerOpts) {
 
   const innerTdCss = {
     ...commonStyle,
+    'border-radius': '3px',
+    '-webkit-border-radius': '3px',
+    '-moz-border-radius': '3px',
     'font-size': '14px',
     width: '100%',
-    padding: '1px 8px 1px 0',
+    padding: '1px 0px 1px 8px',
     margin: `0px`,
+    background: config[type] && config[type].background,
   };
 
   const outerTdCss = {
     ...commonStyle,
+    'border-radius': '3px',
     padding: '8px 0px 8px 0px',
+    '-webkit-border-radius': '3px',
+    '-moz-border-radius': '3px',
     margin: '0px',
     width: '100%',
   };
 
-  const panelIcon = createTag('img', {
-    style: serializeStyle({
-      width: '16px',
-      height: '16px',
-    }),
-    src: createContentId(type, 'icon'),
-  });
-
-  const iconTd: TableData = {
-    text: panelIcon,
-    style: {
-      'vertical-align': 'top',
-      width: '24px',
-      height: '24px',
-      padding: '12px 0px 0px 8px',
-    },
-  };
-
-  const textTd: TableData = {
-    text,
-    style: innerTdCss,
-  };
-
-  const innerTable = createTable([[iconTd, textTd]], {
-    background: config[type] && config[type].background,
-    'border-radius': '3px',
-    '-webkit-border-radius': '3px',
-    '-moz-border-radius': '3px',
-    'table-layout': 'fixed',
-    'line-height': '20px',
-  });
+  const innerTable = createTable([[{ style: innerTdCss, text }]]);
   return createTable([[{ style: outerTdCss, text: innerTable }]]);
 }

@@ -1,19 +1,18 @@
-import { createTag } from '../create-tag';
-import { createClassName } from '../styles/util';
+import { createTag } from '../util';
 import { NodeSerializerOpts } from '../interfaces';
 
-export const styles = `
-.${createClassName('ol')} {
+export const orderedListStyles = `
+ol {
   list-style-type: decimal;
   margin-top: 12px;
   margin-bottom: 12px;
 }
-.${createClassName('li')} > .${createClassName('ol')} {
+li > ol {
   margin-top: 0px;
   margin-bottom: 0px;
 }
 `;
 
 export default function orderedList({ text }: NodeSerializerOpts) {
-  return createTag('ol', { class: createClassName('ol') }, text);
+  return createTag('ol', {}, text);
 }

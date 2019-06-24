@@ -1,20 +1,17 @@
 import { MarkSerializerOpts } from '../interfaces';
-import { createTag } from '../create-tag';
-import { createClassName } from '../styles/util';
-import { codeFontFamily } from '../styles/common';
-import { N20 } from '@atlaskit/adf-schema';
+import { createTag, serializeStyle } from '../util';
+import { codeFontFamily } from '@atlaskit/theme';
 
-export const styles = `
-.${createClassName('mark-code')} {
-  background: ${N20};
-  color: rgb(23, 43, 77);
-  border-radius: 3px;
-  padding: 2px 4px;
-  font-size: 12px;
-  line-height: 24px;
-  font-family: ${codeFontFamily};
-}`;
+const css = serializeStyle({
+  background: 'rgb(244, 245, 247)',
+  color: 'rgb(23, 43, 77)',
+  'border-radius': '3px',
+  padding: '2px 4px',
+  'font-size': '12px',
+  'line-height': '24px',
+  'font-family': codeFontFamily(),
+});
 
 export default function code({ text }: MarkSerializerOpts) {
-  return createTag('code', { class: createClassName('mark-code') }, text);
+  return createTag('code', { style: css }, text);
 }

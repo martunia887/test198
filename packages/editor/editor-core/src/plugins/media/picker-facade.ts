@@ -9,6 +9,7 @@ import {
   UploadErrorEventPayload,
   isDropzone,
   isPopup,
+  isBrowser,
   isImagePreview,
   UploadProcessingEventPayload,
 } from '@atlaskit/media-picker';
@@ -125,7 +126,7 @@ export default class PickerFacade {
         picker.deactivate();
       }
 
-      if (isPopup(picker)) {
+      if (isPopup(picker) || isBrowser(picker)) {
         picker.teardown();
       }
     } catch (ex) {
@@ -171,6 +172,8 @@ export default class PickerFacade {
       } catch (ex) {
         this.errorReporter.captureException(ex);
       }
+    } else if (isBrowser(this.picker)) {
+      this.picker.browse();
     }
   }
 
@@ -196,7 +199,7 @@ export default class PickerFacade {
       ? preview
       : { dimensions: undefined, scaleFactor: undefined };
 
-    const state = {
+    const state: MediaState = {
       id: file.id,
       fileName: file.name,
       fileSize: file.size,

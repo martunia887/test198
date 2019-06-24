@@ -1,30 +1,27 @@
 import { NodeSerializerOpts } from '../interfaces';
-import { TableData, createTable } from '../table-util';
-import { createTag } from '../create-tag';
-import { serializeStyle } from '../serialize-style';
-import { N30 } from '@atlaskit/adf-schema';
-import { createContentId } from '../static';
+import { TableData, createTable, createTag, serializeStyle } from '../util';
+import { N30, N50, N0, B400 } from '@atlaskit/adf-schema';
 
 enum TaskState {
   TODO = 'TODO',
   DONE = 'DONE',
 }
 
-const icons: { [K in TaskState]: string } = {
-  TODO: createTag('img', {
-    style: serializeStyle({
-      width: '16px',
-      height: '16px',
-    }),
-    src: createContentId('taskItemUnchecked', 'icon'),
-  }),
-  DONE: createTag('img', {
-    style: serializeStyle({
-      width: '16px',
-      height: '16px',
-    }),
-    src: createContentId('taskItemChecked', 'icon'),
-  }),
+const whiteSpan = (text: string) =>
+  createTag(
+    'font',
+    {
+      color: N0,
+      style: serializeStyle({
+        'font-color': N0,
+      }),
+    },
+    text,
+  );
+
+const iconText: { [K in TaskState]: string } = {
+  TODO: whiteSpan('[]'),
+  DONE: `✓`,
 };
 
 interface TaskItemAttrs {
@@ -40,13 +37,41 @@ export default function taskItem({ attrs, text }: NodeSerializerOpts) {
 
   const state = (attrs as TaskItemAttrs).state;
 
+  const icon = createTable(
+    [
+      [
+        {
+          text: iconText[state],
+          style: {
+            'font-size': '12px',
+            'font-weight': '600',
+            'text-align': 'center',
+            'background-color': state === TaskState.DONE ? B400 : N0,
+            'border-radius': '3px',
+            'border-style': 'solid',
+            'border-width': state === TaskState.DONE ? '0px' : '1px',
+            'border-color': N50,
+            color: N0,
+            width: '16px',
+            height: '16px',
+            overflow: 'hidden',
+          },
+        },
+      ],
+    ],
+    {
+      'table-layout': 'fixed',
+      'line-height': state === TaskState.DONE ? '20px' : '18px',
+    },
+  );
+
   const iconTd: TableData = {
-    text: icons[state],
+    text: icon,
     style: {
       'vertical-align': 'top',
-      padding: '10px 0px 0px 8px',
-      width: '24px',
-      height: '24px',
+      padding: '8px',
+      width: '20px',
+      height: '20px',
     },
   };
 

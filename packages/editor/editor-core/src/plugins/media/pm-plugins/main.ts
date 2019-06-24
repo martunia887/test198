@@ -14,7 +14,10 @@ import { Context } from '@atlaskit/media-core';
 import { UploadParams } from '@atlaskit/media-picker';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 
-import { ErrorReporter } from '@atlaskit/editor-common';
+import {
+  ErrorReporter,
+  ContextIdentifierProvider,
+} from '@atlaskit/editor-common';
 
 import analyticsService from '../../../analytics/service';
 import { isImage } from '../../../utils';
@@ -74,6 +77,7 @@ export class MediaPluginState {
   private view!: EditorView;
   private destroyed = false;
   public mediaProvider?: MediaProvider;
+  private contextIdentifierProvider?: ContextIdentifierProvider;
   private errorReporter: ErrorReporter;
 
   public pickers: PickerFacade[] = [];
@@ -89,7 +93,6 @@ export class MediaPluginState {
   public editorAppearance: EditorAppearance;
   private removeOnCloseListener: () => void = () => {};
   private dispatchAnalyticsEvent?: DispatchAnalyticsEvent;
-  private openMediaPickerBrowser?: () => void;
 
   private reactContext: () => {};
 
@@ -120,9 +123,23 @@ export class MediaPluginState {
         this.setMediaProvider(provider),
     );
 
+    options.providerFactory.subscribe(
+      'contextIdentifierProvider',
+      this.onContextIdentifierProvider,
+    );
+
     this.errorReporter = options.errorReporter || new ErrorReporter();
     this.dispatchAnalyticsEvent = dispatchAnalyticsEvent;
   }
+
+  onContextIdentifierProvider = async (
+    _name: string,
+    provider?: Promise<ContextIdentifierProvider>,
+  ) => {
+    if (provider) {
+      this.contextIdentifierProvider = await provider;
+    }
+  };
 
   setMediaProvider = async (mediaProvider?: Promise<MediaProvider>) => {
     if (!mediaProvider) {
@@ -185,6 +202,7 @@ export class MediaPluginState {
       if (this.mediaProvider.uploadParams && this.uploadContext) {
         await this.initPickers(
           this.mediaProvider.uploadParams,
+          this.uploadContext,
           PickerFacade,
           this.reactContext,
         );
@@ -212,11 +230,6 @@ export class MediaPluginState {
       this.element = newElement;
     }
   }
-
-  hasUserAuthProvider = () =>
-    this.uploadContext &&
-    this.uploadContext.config &&
-    this.uploadContext.config.userAuthProvider;
 
   private getDomElement(domAtPos: EditorView['domAtPos']) {
     const { selection, schema } = this.view.state;
@@ -249,21 +262,31 @@ export class MediaPluginState {
     mediaState: MediaState,
     onMediaStateChanged: MediaStateEventSubscriber,
   ) => {
+    const mediaStateWithContext: MediaState = {
+      ...mediaState,
+      // TODO: check which contextIdentifierProvider prop we want here
+      contextId: this.contextIdentifierProvider
+        ? this.contextIdentifierProvider.objectId
+        : undefined,
+    };
+
     const collection = this.collectionFromProvider();
     if (collection === undefined) {
       return;
     }
 
     if (this.editorAppearance === 'mobile') {
-      this.mobileUploadComplete[mediaState.id] = false;
+      this.mobileUploadComplete[mediaStateWithContext.id] = false;
     }
 
     this.allUploadsFinished = false;
 
-    if (isMediaSingle(this.view.state.schema, mediaState.fileMimeType)) {
-      insertMediaSingleNode(this.view, mediaState, collection);
+    if (
+      isMediaSingle(this.view.state.schema, mediaStateWithContext.fileMimeType)
+    ) {
+      insertMediaSingleNode(this.view, mediaStateWithContext, collection);
     } else {
-      insertMediaGroupNode(this.view, [mediaState], collection);
+      insertMediaGroupNode(this.view, [mediaStateWithContext], collection);
     }
 
     // do events when media state changes
@@ -273,7 +296,7 @@ export class MediaPluginState {
     const isEndState = (state: MediaState) =>
       state.status && MEDIA_RESOLVED_STATES.indexOf(state.status) !== -1;
 
-    if (!isEndState(mediaState)) {
+    if (!isEndState(mediaStateWithContext)) {
       const updater = (promise: Promise<any>) => {
         // Chain the previous promise with a new one for this media item
         return new Promise<MediaState | null>(resolve => {
@@ -315,9 +338,6 @@ export class MediaPluginState {
   };
 
   showMediaPicker = () => {
-    if (this.openMediaPickerBrowser && !this.hasUserAuthProvider()) {
-      return this.openMediaPickerBrowser();
-    }
     if (!this.popupPicker) {
       return;
     }
@@ -325,10 +345,6 @@ export class MediaPluginState {
       this.dropzonePicker.deactivate();
     }
     this.popupPicker.show();
-  };
-
-  setBrowseFn = (browseFn: () => void) => {
-    this.openMediaPickerBrowser = browseFn;
   };
 
   /**
@@ -447,17 +463,18 @@ export class MediaPluginState {
 
   private async initPickers(
     uploadParams: UploadParams,
+    context: Context,
     Picker: typeof PickerFacade,
     reactContext: () => {},
   ) {
-    if (this.destroyed || !this.uploadContext) {
+    if (this.destroyed) {
       return;
     }
     const { errorReporter, pickers, pickerPromises } = this;
     // create pickers if they don't exist, re-use otherwise
     if (!pickers.length) {
       const pickerFacadeConfig: PickerFacadeConfig = {
-        context: this.uploadContext,
+        context,
         errorReporter,
       };
       const defaultPickerConfig = {
@@ -475,14 +492,14 @@ export class MediaPluginState {
         pickerPromises.push(customPicker);
         pickers.push((this.customPicker = await customPicker));
       } else {
-        let popupPicker: Promise<PickerFacade> | undefined;
-        if (this.hasUserAuthProvider()) {
-          popupPicker = new Picker(
-            'popup',
-            pickerFacadeConfig,
-            defaultPickerConfig,
-          ).init();
-        }
+        const popupPicker = new Picker(
+          // Fallback to browser picker for unauthenticated users
+          context.config && context.config.userAuthProvider
+            ? 'popup'
+            : 'browser',
+          pickerFacadeConfig,
+          defaultPickerConfig,
+        ).init();
 
         const dropzonePicker = new Picker('dropzone', pickerFacadeConfig, {
           container: this.options.customDropzoneContainer,
@@ -490,23 +507,16 @@ export class MediaPluginState {
           ...defaultPickerConfig,
         }).init();
 
-        if (popupPicker) {
-          pickerPromises.push(popupPicker, dropzonePicker);
-          pickers.push(
-            (this.popupPicker = await popupPicker),
-            (this.dropzonePicker = await dropzonePicker),
-          );
-        } else {
-          pickerPromises.push(dropzonePicker);
-          pickers.push((this.dropzonePicker = await dropzonePicker));
-        }
+        pickerPromises.push(popupPicker, dropzonePicker);
+        pickers.push(
+          (this.popupPicker = await popupPicker),
+          (this.dropzonePicker = await dropzonePicker),
+        );
 
         this.dropzonePicker.onDrag(this.handleDrag);
-        if (this.popupPicker) {
-          this.removeOnCloseListener = this.popupPicker.onClose(
-            this.onPopupPickerClose,
-          );
-        }
+        this.removeOnCloseListener = this.popupPicker.onClose(
+          this.onPopupPickerClose,
+        );
       }
 
       pickers.forEach(picker => {
@@ -755,6 +765,9 @@ export const createPlugin = (
       return {
         update: () => {
           pluginState.updateElement();
+        },
+        destroy: () => {
+          pluginState.destroy();
         },
       };
     },

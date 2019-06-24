@@ -30,7 +30,6 @@ export interface EditorActionsOptions {
 export default class EditorActions implements EditorActionsOptions {
   private editorView?: EditorView;
   private contentTransformer?: Transformer<any>;
-  private contentEncode?: Transformer<any>['encode'];
   private eventDispatcher?: EventDispatcher;
   private listeners: Array<ContextUpdateHandler> = [];
 
@@ -70,19 +69,12 @@ export default class EditorActions implements EditorActionsOptions {
         "Editor has already been registered! It's not allowed to re-register editor with the new Editor instance.",
       );
     }
-
-    if (this.contentTransformer) {
-      this.contentEncode = this.contentTransformer.encode.bind(
-        this.contentTransformer,
-      );
-    }
   }
 
   // This method needs to be public for EditorContext component.
   _privateUnregisterEditor(): void {
     this.editorView = undefined;
     this.contentTransformer = undefined;
-    this.contentEncode = undefined;
     this.eventDispatcher = undefined;
   }
 
@@ -142,9 +134,13 @@ export default class EditorActions implements EditorActionsOptions {
       return;
     }
 
+    if (this.contentTransformer) {
+      return this.contentTransformer.encode(doc);
+    }
+
     return compose(
       sanitizeNode,
-      this.contentEncode || toJSON,
+      toJSON,
     )(doc);
   }
 

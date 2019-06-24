@@ -30,13 +30,12 @@ export const inlineCard: NodeSpec = {
   },
   parseDOM: [
     {
-      tag: 'a[data-inline-card]',
+      tag: 'span[data-inline-card]',
       getAttrs: dom => {
-        const anchor = dom as HTMLAnchorElement;
-        const data = anchor.getAttribute('data-card-data');
+        const data = (dom as HTMLElement).getAttribute('data-card-data');
 
         return {
-          url: anchor.getAttribute('href'),
+          url: (dom as HTMLElement).getAttribute('data-card-url'),
           data: data ? JSON.parse(data) : null,
         };
       },
@@ -45,9 +44,9 @@ export const inlineCard: NodeSpec = {
   toDOM(node: PMNode) {
     const attrs = {
       'data-inline-card': '',
-      href: node.attrs.url,
+      'data-card-url': node.attrs.url,
       'data-card-data': node.attrs.data ? JSON.stringify(node.attrs.data) : '',
     };
-    return ['a', attrs, node.attrs.url];
+    return ['span', attrs];
   },
 };

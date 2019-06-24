@@ -1,4 +1,4 @@
-import { UIAEP, TrackAEP, OperationalAEP } from './events';
+import { UIAEP, TrackAEP } from './events';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -43,18 +43,6 @@ type EditorStartAEP = UIAEP<
   ACTION_SUBJECT.EDITOR,
   undefined,
   { platform: PLATFORMS.NATIVE | PLATFORMS.HYBRID | PLATFORMS.WEB }
->;
-
-type EditorPerfAEP = OperationalAEP<
-  ACTION.EDITOR_MOUNTED | ACTION.PROSEMIRROR_RENDERED,
-  ACTION_SUBJECT.EDITOR,
-  undefined,
-  {
-    duration: number;
-    startTime: number;
-    nodes?: Record<string, number>;
-    ttfb?: number;
-  }
 >;
 
 type EditorStopAEP = UIAEP<
@@ -165,5 +153,4 @@ export type GeneralEventPayload =
   | TypeAheadEmojiAEP
   | TypeAheadLinkAEP
   | TypeAheadMentionAEP
-  | FullWidthModeAEP
-  | EditorPerfAEP;
+  | FullWidthModeAEP;

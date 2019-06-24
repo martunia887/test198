@@ -1,6 +1,5 @@
 import { NodeSerializerOpts } from '../interfaces';
-import { createTag } from '../create-tag';
-import { serializeStyle } from '../serialize-style';
+import { createTag, serializeStyle } from '../util';
 import { N30, N50, N800 } from '@atlaskit/adf-schema';
 
 const innerStyle = serializeStyle({

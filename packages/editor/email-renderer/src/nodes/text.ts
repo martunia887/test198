@@ -1,4 +1,4 @@
-import { applyMarks } from '../apply-marks';
+import { applyMarks } from '../util';
 import { NodeSerializerOpts } from '../interfaces';
 
 export default function text({ marks, text }: NodeSerializerOpts) {

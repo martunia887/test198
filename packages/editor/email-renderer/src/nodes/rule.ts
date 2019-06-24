@@ -1,14 +1,11 @@
-import { N30 } from '@atlaskit/adf-schema';
-import { createTag } from '../create-tag';
-import { createClassName } from '../styles/util';
+import { colors } from '@atlaskit/theme';
+import { createTag, serializeStyle } from '../util';
 
-export const styles = `
-.${createClassName('rule')} {
-  border: none;
-  border-bottom: 1px solid ${N30};
-}
-`;
+const css = serializeStyle({
+  border: 'none',
+  'border-bottom': `1px solid ${colors.N30A}`,
+});
 
 export default function rule() {
-  return createTag('hr', { class: createClassName('rule') });
+  return createTag('hr', { style: css });
 }

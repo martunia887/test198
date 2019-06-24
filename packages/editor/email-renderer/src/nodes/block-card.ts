@@ -3,9 +3,7 @@ import {
   SmartCardWithDataAttributes,
   SmartCardWithUrlAttributes,
 } from '../interfaces';
-import { createTag } from '../create-tag';
-import { serializeStyle } from '../serialize-style';
-import { createTable } from '../table-util';
+import { createTag, serializeStyle, createTable } from '../util';
 
 const borderRadius = {
   'border-radius': '3px',

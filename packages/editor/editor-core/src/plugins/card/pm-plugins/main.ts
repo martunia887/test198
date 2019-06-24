@@ -3,7 +3,8 @@ import { CardProvider, CardPluginState, Request } from '../types';
 import reducer from './reducers';
 import { EditorView } from 'prosemirror-view';
 import { setProvider, resolveCard } from './actions';
-import { BlockCardNodeView, InlineCardNodeView } from '../nodeviews/index';
+import inlineCardNodeView from '../nodeviews/inlineCard';
+import blockCardNodeView from '../nodeviews/blockCard';
 import { replaceQueuedUrlWithCard } from './doc';
 import { CardNodeView } from '../nodeviews';
 import { PMPluginFactoryParams } from '../../../types';
@@ -140,14 +141,14 @@ export const createPlugin = ({
     props: {
       nodeViews: {
         inlineCard: CardNodeView.fromComponent(
-          InlineCardNodeView,
+          inlineCardNodeView,
           portalProviderAPI,
           {
             providerFactory,
           },
         ),
         blockCard: CardNodeView.fromComponent(
-          BlockCardNodeView,
+          blockCardNodeView,
           portalProviderAPI,
           {
             providerFactory,

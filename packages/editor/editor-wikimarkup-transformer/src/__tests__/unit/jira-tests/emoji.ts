@@ -1,19 +1,20 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
 import { doc, emoji, hardBreak, p } from '@atlaskit/editor-test-helpers';
-import {
-  adfEmojiItems,
-  wikiToAdfEmojiMapping,
-} from '../../../parser/tokenize/emoji';
+import { EmojiMapItem } from '../../../parser/tokenize/emoji';
+import { EMOJIS } from '../../../parser/tokenize/emoji';
 import { checkParseEncodeRoundTrips } from '../_test-helpers';
 
 // Nodes
 
 const findEmojiConfig = (markup: string) => {
-  const emojiId = wikiToAdfEmojiMapping[markup];
-  if (emojiId) {
-    return adfEmojiItems[emojiId];
-  }
-  throw new TypeError('No emoji found!');
+  const [emoji] = EMOJIS.reduce((acc: any[], emoji: EmojiMapItem) => {
+    if (emoji.markup.indexOf(markup) !== -1) {
+      return [...acc, emoji.adf];
+    }
+    return acc;
+  }, []);
+
+  return emoji;
 };
 
 describe('WikiMarkup Transformer', () => {

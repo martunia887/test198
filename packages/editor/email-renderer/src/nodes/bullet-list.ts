@@ -1,19 +1,18 @@
-import { createTag } from '../create-tag';
-import { createClassName } from '../styles/util';
+import { createTag } from '../util';
 import { NodeSerializerOpts } from '../interfaces';
 
-export const styles = `
-.${createClassName('ul')} {
+export const bulletListStyles = `
+ul {
   list-style-type: disc;
   margin-top: 12px;
   margin-bottom: 12px;
 }
-.${createClassName('li')} > .${createClassName('ul')} {
+li > ul {
   margin-top: 0px;
   margin-bottom: 0px;
 }
 `;
 
 export default function bulletList({ text }: NodeSerializerOpts) {
-  return createTag('ul', { class: createClassName('ul') }, text);
+  return createTag('ul', {}, text);
 }

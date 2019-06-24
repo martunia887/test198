@@ -24,6 +24,7 @@ export type CodeBlockDefinition = CodeBlockBaseDefinition & NoMark;
 
 /**
  * @name codeBlock_with_marks_node
+ * @stage 0
  */
 export type CodeBlockWithMarksDefinition = CodeBlockBaseDefinition &
   MarksObject<BreakoutMarkDefinition>;

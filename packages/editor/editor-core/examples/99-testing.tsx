@@ -21,8 +21,6 @@ import { TitleInput } from '../example-helpers/PageElements';
 import mediaMockServer from '../example-helpers/media-mock';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { withSidebarContainer } from '../example-helpers/SidebarContainer';
-import { MountOptions } from '../src/__tests__/visual-regression/_utils';
 
 function createMediaMockEnableOnce() {
   let enabled = false;
@@ -99,10 +97,9 @@ function createEditorWindowBindings(win: Window) {
 
   (window as any)['__mountEditor'] = (
     props: EditorProps = {},
-    options: MountOptions = {},
+    mode?: 'light' | 'dark',
   ) => {
     const target = document.getElementById('editor-container');
-    const { mode, withSidebar } = options;
 
     if (!target) {
       return;
@@ -155,10 +152,6 @@ function createEditorWindowBindings(win: Window) {
 
     if (mode && mode === 'dark') {
       Wrapper = withDarkMode<EditorProps>(Wrapper);
-    }
-
-    if (withSidebar) {
-      Wrapper = withSidebarContainer<EditorProps>(Wrapper);
     }
 
     ReactDOM.unmountComponentAtNode(target);

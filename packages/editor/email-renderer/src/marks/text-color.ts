@@ -1,5 +1,4 @@
-import { createTag } from '../create-tag';
-import { serializeStyle } from '../serialize-style';
+import { createTag, serializeStyle } from '../util';
 import { MarkSerializerOpts } from '../interfaces';
 
 export default function textColor({ mark, text }: MarkSerializerOpts) {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Schema } from 'prosemirror-model';
-import { Plugin } from 'prosemirror-state';
+import { Plugin, EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { ProviderFactory, ErrorReporter } from '@atlaskit/editor-common';
 import { Dispatch, EventDispatcher } from '../event-dispatcher';
@@ -25,6 +25,7 @@ export type PMPluginFactoryParams = {
   portalProviderAPI: PortalProviderAPI;
   reactContext: () => { [key: string]: any };
   dispatchAnalyticsEvent: DispatchAnalyticsEvent;
+  oldState?: EditorState;
 };
 
 export type PMPluginCreateConfig = PMPluginFactoryParams & {
@@ -69,11 +70,6 @@ export type PluginsOptions = {
   floatingToolbar?: FloatingToolbarHandler;
 };
 
-export type PMPlugin = {
-  name: string;
-  plugin: PMPluginFactory;
-};
-
 export interface EditorPlugin {
   /**
    * Name of a plugin, that other plugins can use to provide options to it.
@@ -88,7 +84,9 @@ export interface EditorPlugin {
   /**
    * List of ProseMirror-plugins. This is where we define which plugins will be added to EditorView (main-plugin, keybindings, input-rules, etc.).
    */
-  pmPlugins?: (pluginOptions?: any) => Array<PMPlugin>;
+  pmPlugins?: (
+    pluginOptions?: any,
+  ) => { name: string; plugin: PMPluginFactory }[];
 
   /**
    * List of Nodes to add to the schema.

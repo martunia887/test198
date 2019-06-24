@@ -20,7 +20,9 @@ export const layoutStyles = css`
   .ProseMirror {
     ${columnLayoutSharedStyle} [data-layout-section] {
       position: relative;
-      margin: ${gridSize() - 1}px -${LAYOUT_OFFSET}px 0;
+      width: calc(100% + ${LAYOUT_OFFSET * 2}px);
+      left: -${LAYOUT_OFFSET}px;
+      margin-top: ${gridSize() - 1}px;
 
       /* Inner cursor located 26px from left */
       & > * {

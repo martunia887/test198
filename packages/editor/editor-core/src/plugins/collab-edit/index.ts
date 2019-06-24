@@ -24,11 +24,12 @@ const collabEditPlugin = (
         : []),
       {
         name: 'collab',
-        plugin: ({ dispatch, providerFactory }) =>
+        plugin: ({ dispatch, providerFactory, oldState }) =>
           createPlugin(
             dispatch,
             providerFactory,
             options,
+            oldState,
             sanitizePrivateContent,
           ),
       },

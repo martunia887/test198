@@ -17,7 +17,6 @@ export interface Props {
   className?: string;
   lineLength: number;
   pctWidth?: number;
-  fullWidthMode?: boolean;
 }
 
 export default function MediaSingle({
@@ -30,7 +29,6 @@ export default function MediaSingle({
   pctWidth,
   lineLength,
   className,
-  fullWidthMode,
 }: Props) {
   const usePctWidth = pctWidth && layoutSupportsWidth(layout);
   if (pctWidth && usePctWidth) {
@@ -50,7 +48,6 @@ export default function MediaSingle({
       height={height}
       containerWidth={containerWidth}
       pctWidth={pctWidth}
-      fullWidthMode={fullWidthMode}
       className={classnames('media-single', `image-${layout}`, className, {
         'is-loading': isLoading,
         'media-wrapped': layout === 'wrap-left' || layout === 'wrap-right',

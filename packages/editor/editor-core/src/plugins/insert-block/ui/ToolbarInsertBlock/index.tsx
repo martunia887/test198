@@ -36,8 +36,6 @@ import {
   tooltip,
   findKeymapByDescription,
   addLink,
-  findShortcutByDescription,
-  renderTooltipContent,
 } from '../../../../keymaps';
 import { InsertMenuCustomItem, CommandDispatch } from '../../../../types';
 import DropdownMenu from '../../../../ui/DropdownMenu';
@@ -421,9 +419,6 @@ class ToolbarInsertBlock extends React.PureComponent<
     }
 
     const labelInsertMenu = formatMessage(messages.insertMenu);
-
-    findShortcutByDescription(messages.insertMenu.description);
-
     const toolbarButtonFactory = (disabled: boolean, items: Array<any>) => (
       <ToolbarButton
         ref={el => this.handleDropDownButtonRef(el, items)}
@@ -431,7 +426,7 @@ class ToolbarInsertBlock extends React.PureComponent<
         disabled={disabled}
         onClick={this.handleTriggerClick}
         spacing={isReducedSpacing ? 'none' : 'default'}
-        title={renderTooltipContent(labelInsertMenu, undefined, '/')}
+        title={`${labelInsertMenu} /`}
         iconBefore={
           <TriggerWrapper>
             <AddIcon label={labelInsertMenu} />
@@ -453,7 +448,7 @@ class ToolbarInsertBlock extends React.PureComponent<
             disabled={isDisabled || btn.isDisabled}
             iconBefore={btn.elemBefore}
             selected={btn.isActive}
-            title={renderTooltipContent(btn.content, undefined, btn.shortcut)}
+            title={btn.content + (btn.shortcut ? ' ' + btn.shortcut : '')}
             onClick={() => this.insertToolbarMenuItem(btn)}
           />
         ))}
