@@ -51,6 +51,7 @@ export const Title = styled.h4`
   line-height: 1;
   margin: 0;
   min-width: 0;
+  color: ${colors.heading};
 `;
 
 interface TitleTextProps {
