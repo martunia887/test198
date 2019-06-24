@@ -25,11 +25,11 @@ export const light = modeGenerator({
 export const dark = modeGenerator({
   product: {
     text: colors.DN500,
-    background: colors.DN10,
+    background: colors.DN0,
   },
   container: {
-    text: colors.DN500,
-    background: colors.DN10,
+    text: colors.DN600,
+    background: colors.DN20,
   },
 });
 
