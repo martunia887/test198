@@ -1,7 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import avatarIntro from '@atlaskit/avatar/examples/01-basicAvatar';
+import avatar1 from '@atlaskit/avatar/examples/01-basicAvatar';
+import avatar6 from '@atlaskit/avatar/examples/06-avatarCircle';
+import avatar11 from '@atlaskit/avatar/examples/11-avatarLoadingBehaviour';
+import avatar14 from '@atlaskit/avatar/examples/14-presenceSizeBehavior';
+
+import buttonIntro from '@atlaskit/button/examples/10-Button';
+
 import cssResetStyles from '@atlaskit/css-reset';
 import MenuIcon from '@atlaskit/icon/glyph/menu';
 import Navigation, {
@@ -30,8 +36,12 @@ const R300 = '#FF5630';
 
 const nameToData = {
   avatar: {
-    doc: avatarIntro(),
+    examples: [avatar1, avatar6, avatar11, avatar14],
     pkg: { name: '@atlaskit/avatar' },
+  },
+  button: {
+    examples: [buttonIntro],
+    pkg: { name: '@atlaskit/button' },
   },
 };
 
@@ -43,9 +53,13 @@ ReactDOM.render(
         component={({ match }) => {
           const data = nameToData[match.params.name];
           if (data) {
-            const { doc, pkg } = data;
+            const { examples, pkg } = data;
             return (
-              <PackagePage doc={doc} pkg={pkg} navigation={<WebsiteNav />} />
+              <PackagePage
+                examples={examples}
+                pkg={pkg}
+                navigation={<WebsiteNav />}
+              />
             );
           }
 
@@ -79,7 +93,15 @@ function WebsiteNav() {
       }
       containerHeaderComponent={PackagesHeader}
     >
-      <AkNavigationItem href="#/packages/avatar" text="Avatar" />
+      {Object.keys(nameToData).map(name => {
+        const [firstChar, ...rest] = Array.from(name);
+        return (
+          <AkNavigationItem
+            href={`#/packages/${name}`}
+            text={firstChar.toUpperCase() + rest.join('')}
+          />
+        );
+      })}
     </Navigation>
   );
 }
