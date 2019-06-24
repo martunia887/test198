@@ -6,7 +6,9 @@ import avatar6 from '@atlaskit/avatar/examples/06-avatarCircle';
 import avatar11 from '@atlaskit/avatar/examples/11-avatarLoadingBehaviour';
 import avatar14 from '@atlaskit/avatar/examples/14-presenceSizeBehavior';
 
-import buttonIntro from '@atlaskit/button/examples/10-Button';
+import button30 from '@atlaskit/button/examples/30-Appearances';
+import button38 from '@atlaskit/button/examples/38-MoreOptions';
+import button90 from '@atlaskit/button/examples/90-Theming';
 
 import cssResetStyles from '@atlaskit/css-reset';
 import MenuIcon from '@atlaskit/icon/glyph/menu';
@@ -40,7 +42,7 @@ const nameToData = {
     pkg: { name: '@atlaskit/avatar' },
   },
   button: {
-    examples: [buttonIntro],
+    examples: [button30, button38, button90],
     pkg: { name: '@atlaskit/button' },
   },
 };
