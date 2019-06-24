@@ -122,6 +122,11 @@ const fixColumnWidth = (
 };
 
 class Table extends React.Component<TableProps & OverflowShadowProps> {
+  constructor(props: any) {
+    super(props);
+    this.renderColgroup = this.renderColgroup.bind(this);
+  }
+
   render() {
     const { isNumberColumnEnabled, layout, children, renderWidth } = this.props;
 
@@ -150,7 +155,7 @@ class Table extends React.Component<TableProps & OverflowShadowProps> {
     );
   }
 
-  private renderColgroup = () => {
+  private renderColgroup() {
     let {
       columnWidths,
       layout,
@@ -231,7 +236,7 @@ class Table extends React.Component<TableProps & OverflowShadowProps> {
         })}
       </colgroup>
     );
-  };
+  }
 }
 
 const TableWithShadows = overflowShadow(Table, {

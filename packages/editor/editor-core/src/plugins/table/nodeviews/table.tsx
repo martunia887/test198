@@ -73,6 +73,10 @@ export default class TableView extends ReactNodeView {
 
     const MutObserver = (window as any).MutationObserver;
     this.observer = MutObserver && new MutObserver(this.handleMutation);
+
+    this.handleMutation = this.handleMutation.bind(this);
+    this.resizeForExtensionContent = this.resizeForExtensionContent.bind(this);
+    this.resizeForBreakoutContent = this.resizeForBreakoutContent.bind(this);
   }
 
   getContentDOM() {
@@ -143,7 +147,7 @@ export default class TableView extends ReactNodeView {
     super.destroy();
   }
 
-  private resizeForBreakoutContent = (target: HTMLElement) => {
+  private resizeForBreakoutContent(target: HTMLElement) {
     const { view } = this;
     const elemOrWrapper = closestElement(
       target,
@@ -167,9 +171,9 @@ export default class TableView extends ReactNodeView {
         domAtPos,
       )(state, dispatch);
     }
-  };
+  }
 
-  private resizeForExtensionContent = (target: HTMLTableElement) => {
+  private resizeForExtensionContent(target: HTMLTableElement) {
     if (!this.node) {
       return;
     }
@@ -204,9 +208,9 @@ export default class TableView extends ReactNodeView {
         domAtPos,
       )(state, dispatch);
     }
-  };
+  }
 
-  private handleMutation = (records: Array<MutationRecord>) => {
+  private handleMutation(records: Array<MutationRecord>) {
     if (!records.length || !this.contentDOM) {
       return;
     }
@@ -222,7 +226,7 @@ export default class TableView extends ReactNodeView {
         uniqueTargets.add(target);
       }
     });
-  };
+  }
 }
 
 export const createTableView = (

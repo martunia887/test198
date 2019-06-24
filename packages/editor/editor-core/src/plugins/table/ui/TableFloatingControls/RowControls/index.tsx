@@ -36,6 +36,14 @@ export interface Props {
 }
 
 export default class RowControls extends Component<Props, any> {
+  constructor(props: any) {
+    super(props);
+
+    this.clearHoverSelection = this.clearHoverSelection.bind(this);
+    this.insertRow = this.insertRow.bind(this);
+    this.deleteRows = this.deleteRows.bind(this);
+  }
+
   render() {
     const {
       editorView,
@@ -123,17 +131,17 @@ export default class RowControls extends Component<Props, any> {
     );
   }
 
-  private clearHoverSelection = () => {
+  private clearHoverSelection() {
     const { state, dispatch } = this.props.editorView;
     clearHoverSelection()(state, dispatch);
-  };
+  }
 
-  private insertRow = (row: number) => {
+  private insertRow(row: number) {
     const { state, dispatch } = this.props.editorView;
     insertRowWithAnalytics(INPUT_METHOD.BUTTON, row)(state, dispatch);
-  };
+  }
 
-  private deleteRows = () => {
+  private deleteRows() {
     const { state, dispatch } = this.props.editorView;
     const {
       pluginConfig: { isHeaderRowRequired },
@@ -148,5 +156,5 @@ export default class RowControls extends Component<Props, any> {
     }
 
     this.clearHoverSelection();
-  };
+  }
 }

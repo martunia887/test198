@@ -27,6 +27,12 @@ export interface Props {
 }
 
 export default class TableFloatingControls extends Component<Props> {
+  constructor(props: any) {
+    super(props);
+    this.selectRow = this.selectRow.bind(this);
+    this.hoverRows = this.hoverRows.bind(this);
+  }
+
   shouldComponentUpdate(nextProps: Props) {
     const {
       tableRef,
@@ -118,7 +124,7 @@ export default class TableFloatingControls extends Component<Props> {
     );
   }
 
-  private selectRow = (row: number, expand: boolean) => {
+  private selectRow(row: number, expand: boolean) {
     const { editorView } = this.props;
     const { state, dispatch } = editorView;
     // fix for issue ED-4665
@@ -126,10 +132,10 @@ export default class TableFloatingControls extends Component<Props> {
       (editorView.dom as HTMLElement).blur();
     }
     selectRow(row, expand)(state, dispatch);
-  };
+  }
 
-  private hoverRows = (rows: Array<number>, danger?: boolean) => {
+  private hoverRows(rows: Array<number>, danger?: boolean) {
     const { state, dispatch } = this.props.editorView;
     hoverRows(rows, danger)(state, dispatch);
-  };
+  }
 }

@@ -82,11 +82,6 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     const isFullWidthModeEnabled = options
       ? options.wasFullWidthModeEnabled
       : false;
-    this.layoutSize = this.tableNodeLayoutSize(node, containerWidth.width, {
-      dynamicTextSizing,
-      isFullWidthModeEnabled,
-    });
-
     // Disable inline table editing and resizing controls in Firefox
     // https://github.com/ProseMirror/prosemirror/issues/432
     if ('execCommand' in document) {
@@ -96,6 +91,27 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
         }
       });
     }
+
+    this.handleScroll = this.handleScroll.bind(this);
+    this.handleTableResizing = this.handleTableResizing.bind(this);
+    this.scaleTable = this.scaleTable.bind(this);
+    this.handleAutoSize = this.handleAutoSize.bind(this);
+    this.handleWindowResize = this.handleWindowResize.bind(this);
+    this.updateTableContainerWidth = this.updateTableContainerWidth.bind(this);
+    this.getParentNodeWidth = this.getParentNodeWidth.bind(this);
+    this.updateParentWidth = this.updateParentWidth.bind(this);
+    this.tableNodeLayoutSize = this.tableNodeLayoutSize.bind(this);
+
+    this.scaleTableDebounced = rafSchedule(this.scaleTable);
+    this.handleTableResizingDebounced = rafSchedule(this.handleTableResizing);
+    this.handleScrollDebounced = rafSchedule(this.handleScroll);
+    this.handleAutoSizeDebounced = rafSchedule(this.handleAutoSize);
+    this.handleWindowResizeDebounced = rafSchedule(this.handleWindowResize);
+
+    this.layoutSize = this.tableNodeLayoutSize(node, containerWidth.width, {
+      dynamicTextSizing,
+      isFullWidthModeEnabled,
+    });
   }
 
   componentDidMount() {
@@ -259,15 +275,15 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     );
   }
 
-  private handleScroll = (event: Event) => {
+  private handleScroll(event: Event) {
     if (!this.wrapper || event.target !== this.wrapper) {
       return;
     }
 
     this.setState({ scroll: this.wrapper.scrollLeft });
-  };
+  }
 
-  private handleTableResizing = () => {
+  private handleTableResizing() {
     const { node, containerWidth, options } = this.props;
     const prevNode = this.node!;
     const prevAttrs = prevNode.attrs;
@@ -309,12 +325,12 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     this.node = node;
     this.containerWidth = containerWidth;
     this.layoutSize = layoutSize;
-  };
+  }
 
-  private scaleTable = (scaleOptions: {
+  private scaleTable(scaleOptions: {
     layoutChanged: boolean;
     parentWidth?: number;
-  }) => {
+  }) {
     const { view, node, getPos, containerWidth, options } = this.props;
     const { state, dispatch } = view;
     const domAtPos = view.domAtPos.bind(view);
@@ -337,9 +353,9 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
       },
       domAtPos,
     )(state, dispatch);
-  };
+  }
 
-  private handleAutoSize = () => {
+  private handleAutoSize() {
     if (this.table) {
       const { view, node, getPos, options, containerWidth } = this.props;
 
@@ -348,9 +364,9 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
         containerWidth: containerWidth.width,
       });
     }
-  };
+  }
 
-  private handleWindowResize = () => {
+  private handleWindowResize() {
     const { node, containerWidth } = this.props;
 
     const layoutSize = this.tableNodeLayoutSize(node);
@@ -361,9 +377,9 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
 
     const parentWidth = this.getParentNodeWidth();
     this.frameId = this.scaleTableDebounced(parentWidth);
-  };
+  }
 
-  private updateTableContainerWidth = () => {
+  private updateTableContainerWidth() {
     const { node, containerWidth, options } = this.props;
 
     if (options && options.isBreakoutEnabled === false) {
@@ -392,36 +408,38 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
         tableContainerWidth,
       };
     });
-  };
+  }
 
-  private getParentNodeWidth = () =>
-    getParentNodeWidth(
+  private getParentNodeWidth() {
+    return getParentNodeWidth(
       this.props.getPos(),
       this.props.view.state,
       this.props.containerWidth,
       this.props.options && this.props.options.isFullWidthModeEnabled,
     );
+  }
 
-  private updateParentWidth = (width?: number) => {
+  private updateParentWidth(width?: number) {
     this.setState({ parentWidth: width });
-  };
+  }
 
-  private tableNodeLayoutSize = (
+  private tableNodeLayoutSize(
     node: PmNode,
     containerWidth?: number,
     options?: TableOptions,
-  ) =>
+  ) {
     getLayoutSize(
       node.attrs.layout,
       containerWidth || this.props.containerWidth.width,
       options || this.props.options || {},
     );
+  }
 
-  private scaleTableDebounced = rafSchedule(this.scaleTable);
-  private handleTableResizingDebounced = rafSchedule(this.handleTableResizing);
-  private handleScrollDebounced = rafSchedule(this.handleScroll);
-  private handleAutoSizeDebounced = rafSchedule(this.handleAutoSize);
-  private handleWindowResizeDebounced = rafSchedule(this.handleWindowResize);
+  private scaleTableDebounced() {}
+  private handleTableResizingDebounced() {}
+  private handleScrollDebounced() {}
+  private handleAutoSizeDebounced() {}
+  private handleWindowResizeDebounced() {}
 }
 
 export const updateRightShadow = (

@@ -42,6 +42,16 @@ export interface Props {
 }
 
 export default class ColumnControls extends Component<Props, any> {
+  constructor(props: any) {
+    super(props);
+
+    this.deleteColumns = this.deleteColumns.bind(this);
+    this.selectColumn = this.selectColumn.bind(this);
+    this.hoverColumns = this.hoverColumns.bind(this);
+    this.clearHoverSelection = this.clearHoverSelection.bind(this);
+    this.insertColumn = this.insertColumn.bind(this);
+  }
+
   shouldComponentUpdate(nextProps: Props) {
     const {
       tableRef,
@@ -170,7 +180,7 @@ export default class ColumnControls extends Component<Props, any> {
     );
   }
 
-  private deleteColumns = (event: SyntheticEvent) => {
+  private deleteColumns(event: SyntheticEvent) {
     event.preventDefault();
     const { state, dispatch } = this.props.editorView;
 
@@ -180,9 +190,9 @@ export default class ColumnControls extends Component<Props, any> {
     }
 
     this.clearHoverSelection();
-  };
+  }
 
-  private selectColumn = (column: number, expand: boolean) => {
+  private selectColumn(column: number, expand: boolean) {
     const { editorView } = this.props;
     const { state, dispatch } = editorView;
     // fix for issue ED-4665
@@ -190,20 +200,20 @@ export default class ColumnControls extends Component<Props, any> {
       (editorView.dom as HTMLElement).blur();
     }
     selectColumn(column, expand)(state, dispatch);
-  };
+  }
 
-  private hoverColumns = (columns: number[], danger?: boolean) => {
+  private hoverColumns(columns: number[], danger?: boolean) {
     const { state, dispatch } = this.props.editorView;
     hoverColumns(columns, danger)(state, dispatch);
-  };
+  }
 
-  private clearHoverSelection = () => {
+  private clearHoverSelection() {
     const { state, dispatch } = this.props.editorView;
     clearHoverSelection()(state, dispatch);
-  };
+  }
 
-  private insertColumn = (column: number) => {
+  private insertColumn(column: number) {
     const { state, dispatch } = this.props.editorView;
     insertColumnWithAnalytics(INPUT_METHOD.BUTTON, column)(state, dispatch);
-  };
+  }
 }

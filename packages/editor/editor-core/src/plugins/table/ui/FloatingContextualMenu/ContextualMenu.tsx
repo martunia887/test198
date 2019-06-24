@@ -85,6 +85,20 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     boundariesElement: document.body,
   };
 
+  constructor(props: any) {
+    super(props);
+
+    this.handleSubMenuRef = this.handleSubMenuRef.bind(this);
+    this.createItems = this.createItems.bind(this);
+    this.onMenuItemActivated = this.onMenuItemActivated.bind(this);
+    this.toggleOpen = this.toggleOpen.bind(this);
+    this.handleOpenChange = this.handleOpenChange.bind(this);
+    this.handleItemMouseEnter = this.handleItemMouseEnter.bind(this);
+    this.handleItemMouseLeave = this.handleItemMouseLeave.bind(this);
+    this.closeSubmenu = this.closeSubmenu.bind(this);
+    this.setColor = this.setColor.bind(this);
+  }
+
   render() {
     const { isOpen, mountPoint, offset, boundariesElement } = this.props;
     const items = this.createItems();
@@ -111,7 +125,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     );
   }
 
-  private handleSubMenuRef = (ref: HTMLDivElement | null) => {
+  private handleSubMenuRef(ref: HTMLDivElement | null) {
     const parent = closestElement(
       this.props.editorView.dom as HTMLElement,
       '.fabric-editor-popup-scroll-parent',
@@ -124,9 +138,9 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     if (rect.left + rect.width > boundariesRect.width) {
       ref.style.left = `-${rect.width}px`;
     }
-  };
+  }
 
-  private createItems = () => {
+  private createItems() {
     const {
       allowMergeCells,
       allowBackgroundColor,
@@ -225,9 +239,9 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     });
 
     return items.length ? [{ items }] : null;
-  };
+  }
 
-  private onMenuItemActivated = ({ item }: { item: any }) => {
+  private onMenuItemActivated({ item }: { item: any }) {
     const { editorView, selectionRect, targetCellPosition } = this.props;
     const { state, dispatch } = editorView;
 
@@ -281,9 +295,9 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
         this.toggleOpen();
         break;
     }
-  };
+  }
 
-  private toggleOpen = () => {
+  private toggleOpen() {
     const {
       isOpen,
       editorView: { state, dispatch },
@@ -294,17 +308,17 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
         isSubmenuOpen: false,
       });
     }
-  };
+  }
 
-  private handleOpenChange = () => {
+  private handleOpenChange() {
     const {
       editorView: { state, dispatch },
     } = this.props;
     toggleContextualMenu()(state, dispatch);
     this.setState({ isSubmenuOpen: false });
-  };
+  }
 
-  private handleItemMouseEnter = ({ item }: { item: any }) => {
+  private handleItemMouseEnter({ item }: { item: any }) {
     const {
       editorView: { state, dispatch },
       selectionRect,
@@ -325,9 +339,9 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     if (item.value.name === 'delete_row') {
       hoverRows(getSelectedRowIndexes(selectionRect), true)(state, dispatch);
     }
-  };
+  }
 
-  private handleItemMouseLeave = ({ item }: { item: any }) => {
+  private handleItemMouseLeave({ item }: { item: any }) {
     const { state, dispatch } = this.props.editorView;
     if (item.value.name === 'background') {
       this.closeSubmenu();
@@ -338,20 +352,20 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     ) {
       clearHoverSelection()(state, dispatch);
     }
-  };
+  }
 
-  private closeSubmenu = () => {
+  private closeSubmenu() {
     if (this.state.isSubmenuOpen) {
       this.setState({ isSubmenuOpen: false });
     }
-  };
+  }
 
-  private setColor = (color: string) => {
+  private setColor(color: string) {
     const { targetCellPosition, editorView } = this.props;
     const { state, dispatch } = editorView;
     setColorWithAnalytics(color, targetCellPosition)(state, dispatch);
     this.toggleOpen();
-  };
+  }
 }
 
 export default injectIntl(ContextualMenu);

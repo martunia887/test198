@@ -28,6 +28,17 @@ export interface Props {
 }
 
 export default class CornerControls extends Component<Props, any> {
+  constructor(props: any) {
+    super(props);
+
+    this.isActive = this.isActive.bind(this);
+    this.clearHoverSelection = this.clearHoverSelection.bind(this);
+    this.selectTable = this.selectTable.bind(this);
+    this.hoverTable = this.hoverTable.bind(this);
+    this.insertColumn = this.insertColumn.bind(this);
+    this.insertRow = this.insertRow.bind(this);
+  }
+
   render() {
     const {
       isInDanger,
@@ -80,7 +91,7 @@ export default class CornerControls extends Component<Props, any> {
     );
   }
 
-  private isActive = () => {
+  private isActive() {
     const { editorView, hoveredRows, isResizing } = this.props;
     const { selection } = editorView.state;
     const table = findTable(selection);
@@ -93,30 +104,30 @@ export default class CornerControls extends Component<Props, any> {
         hoveredRows.length === TableMap.get(table.node).height &&
         !isResizing)
     );
-  };
+  }
 
-  private clearHoverSelection = () => {
+  private clearHoverSelection() {
     const { state, dispatch } = this.props.editorView;
     clearHoverSelection()(state, dispatch);
-  };
+  }
 
-  private selectTable = () => {
+  private selectTable() {
     const { state, dispatch } = this.props.editorView;
     dispatch(selectTable(state.tr).setMeta('addToHistory', false));
-  };
+  }
 
-  private hoverTable = () => {
+  private hoverTable() {
     const { state, dispatch } = this.props.editorView;
     hoverTable()(state, dispatch);
-  };
+  }
 
-  private insertColumn = () => {
+  private insertColumn() {
     const { state, dispatch } = this.props.editorView;
     insertColumnWithAnalytics(INPUT_METHOD.BUTTON, 0)(state, dispatch);
-  };
+  }
 
-  private insertRow = () => {
+  private insertRow() {
     const { state, dispatch } = this.props.editorView;
     insertRowWithAnalytics(INPUT_METHOD.BUTTON, 0)(state, dispatch);
-  };
+  }
 }

@@ -29,6 +29,11 @@ class FloatingContextualButton extends React.Component<
   Props & InjectedIntlProps,
   any
 > {
+  constructor(props: any) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   render() {
     const {
       mountPoint,
@@ -75,11 +80,11 @@ class FloatingContextualButton extends React.Component<
     );
   }
 
-  handleClick = () => {
+  private handleClick() {
     const { state, dispatch } = this.props.editorView;
 
     toggleContextualMenu()(state, dispatch);
-  };
+  }
 }
 
 export default injectIntl(FloatingContextualButton);

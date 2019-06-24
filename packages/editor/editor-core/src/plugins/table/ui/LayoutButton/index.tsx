@@ -41,6 +41,11 @@ const getTitle = (layout: TableLayout) => {
 };
 
 class LayoutButton extends React.Component<Props & InjectedIntlProps, any> {
+  constructor(props: any) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   render() {
     const {
       intl: { formatMessage },
@@ -95,10 +100,10 @@ class LayoutButton extends React.Component<Props & InjectedIntlProps, any> {
     );
   }
 
-  private handleClick = () => {
+  private handleClick() {
     const { state, dispatch } = this.props.editorView;
     toggleTableLayoutWithAnalytics()(state, dispatch);
-  };
+  }
 }
 
 export default injectIntl(LayoutButton);

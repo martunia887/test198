@@ -19,6 +19,15 @@ export interface Props {
 }
 
 export default class NumberColumn extends Component<Props, any> {
+  constructor(props: any) {
+    super(props);
+
+    this.hoverRows = this.hoverRows.bind(this);
+    this.selectRow = this.selectRow.bind(this);
+    this.clearHoverSelection = this.clearHoverSelection.bind(this);
+    this.getClassNames = this.getClassNames.bind(this);
+  }
+
   render() {
     const { tableRef, hasHeaderRow } = this.props;
     const tbody = tableRef.querySelector('tbody');
@@ -47,13 +56,14 @@ export default class NumberColumn extends Component<Props, any> {
     );
   }
 
-  private hoverRows = (index: number) =>
-    this.props.tableActive ? this.props.hoverRows([index]) : null;
+  private hoverRows(index: number) {
+    return this.props.tableActive ? this.props.hoverRows([index]) : null;
+  }
 
-  private selectRow = (
+  private selectRow(
     index: number,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
+  ) {
     const { tableActive, editorView, selectRow } = this.props;
     // If selection is outside the table then first reset the selection inside table
     if (!tableActive && event.target && event.target instanceof Node) {
@@ -70,17 +80,17 @@ export default class NumberColumn extends Component<Props, any> {
       editorView.dispatch(tr.setSelection(newPos));
     }
     selectRow(index, event.shiftKey);
-  };
+  }
 
-  private clearHoverSelection = () => {
+  private clearHoverSelection() {
     const { tableActive, editorView } = this.props;
     if (tableActive) {
       const { state, dispatch } = editorView;
       clearHoverSelection()(state, dispatch);
     }
-  };
+  }
 
-  private getClassNames = (index: number) => {
+  private getClassNames(index: number) {
     const { hoveredRows, editorView, isInDanger, isResizing } = this.props;
     const isActive =
       isRowSelected(index)(editorView.state.selection) ||
@@ -90,5 +100,5 @@ export default class NumberColumn extends Component<Props, any> {
       isActive ? 'active' : '',
       isActive && isInDanger ? 'danger' : '',
     ].join(' ');
-  };
+  }
 }
