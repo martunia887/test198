@@ -500,7 +500,7 @@ exports[`Renderer - EmailSerializer should render decision list correctly with m
                     style="vertical-align: top;padding: 11px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-decision"
+                      src="decision-0b6f4b2a68be2f8c6bb77710b1b49535dafebc2b3bc5a409cacb8c08190c0f38"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -539,7 +539,7 @@ exports[`Renderer - EmailSerializer should render decision list correctly with m
                     style="vertical-align: top;padding: 11px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-decision"
+                      src="decision-0b6f4b2a68be2f8c6bb77710b1b49535dafebc2b3bc5a409cacb8c08190c0f38"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -564,7 +564,7 @@ Array [
   Object {
     "contentId": "cid:pfcs-generated-icon-decision",
     "contentType": "png",
-    "data": "image-base64-stub-decision",
+    "data": "decision-0b6f4b2a68be2f8c6bb77710b1b49535dafebc2b3bc5a409cacb8c08190c0f38",
   },
 ]
 `;
@@ -1311,7 +1311,7 @@ exports[`Renderer - EmailSerializer should render panels correctly with mock ena
                   style="vertical-align: top;width: 24px;height: 24px;padding: 12px 0px 0px 8px;"
                 >
                   <img
-                    src="image-base64-stub-info"
+                    src="info-5b814a996410f2c610abe1fbbb7352d2a3e00303b665f5a19f14e0efc46a3421"
                     style="width: 16px;height: 16px;"
                   />
                 </td>
@@ -1361,7 +1361,7 @@ exports[`Renderer - EmailSerializer should render panels correctly with mock ena
                   style="vertical-align: top;width: 24px;height: 24px;padding: 12px 0px 0px 8px;"
                 >
                   <img
-                    src="image-base64-stub-note"
+                    src="note-fc1f882f04be6fcfa687ad56d486c35c1f33e8467bdfcdf11b32097a2b11fc4d"
                     style="width: 16px;height: 16px;"
                   />
                 </td>
@@ -1411,7 +1411,7 @@ exports[`Renderer - EmailSerializer should render panels correctly with mock ena
                   style="vertical-align: top;width: 24px;height: 24px;padding: 12px 0px 0px 8px;"
                 >
                   <img
-                    src="image-base64-stub-tip"
+                    src="tip-84f7194d01ba14a3e65e4837fade71b550a9695334651f929b6c9f905e9a133c"
                     style="width: 16px;height: 16px;"
                   />
                 </td>
@@ -1461,7 +1461,7 @@ exports[`Renderer - EmailSerializer should render panels correctly with mock ena
                   style="vertical-align: top;width: 24px;height: 24px;padding: 12px 0px 0px 8px;"
                 >
                   <img
-                    src="image-base64-stub-success"
+                    src="success-5f65c49382bc2c238a42b46380fa860d4b20e827f7c2a374c049c31bf453dc2b"
                     style="width: 16px;height: 16px;"
                   />
                 </td>
@@ -1511,7 +1511,7 @@ exports[`Renderer - EmailSerializer should render panels correctly with mock ena
                   style="vertical-align: top;width: 24px;height: 24px;padding: 12px 0px 0px 8px;"
                 >
                   <img
-                    src="image-base64-stub-warning"
+                    src="warning-d7e63880cf8f3a7ec294fc6458e021cc1b3593e1d3631bb2fb25299a668e74c3"
                     style="width: 16px;height: 16px;"
                   />
                 </td>
@@ -1561,7 +1561,7 @@ exports[`Renderer - EmailSerializer should render panels correctly with mock ena
                   style="vertical-align: top;width: 24px;height: 24px;padding: 12px 0px 0px 8px;"
                 >
                   <img
-                    src="image-base64-stub-error"
+                    src="error-4758f8e2de1b05e1834faa5bc68aada66aa32aaf7295c62b3de30c9d43d141ed"
                     style="width: 16px;height: 16px;"
                   />
                 </td>
@@ -1596,32 +1596,32 @@ Array [
   Object {
     "contentId": "cid:pfcs-generated-icon-info",
     "contentType": "png",
-    "data": "image-base64-stub-info",
+    "data": "info-5b814a996410f2c610abe1fbbb7352d2a3e00303b665f5a19f14e0efc46a3421",
   },
   Object {
     "contentId": "cid:pfcs-generated-icon-note",
     "contentType": "png",
-    "data": "image-base64-stub-note",
+    "data": "note-fc1f882f04be6fcfa687ad56d486c35c1f33e8467bdfcdf11b32097a2b11fc4d",
   },
   Object {
     "contentId": "cid:pfcs-generated-icon-tip",
     "contentType": "png",
-    "data": "image-base64-stub-tip",
+    "data": "tip-84f7194d01ba14a3e65e4837fade71b550a9695334651f929b6c9f905e9a133c",
   },
   Object {
     "contentId": "cid:pfcs-generated-icon-success",
     "contentType": "png",
-    "data": "image-base64-stub-success",
+    "data": "success-5f65c49382bc2c238a42b46380fa860d4b20e827f7c2a374c049c31bf453dc2b",
   },
   Object {
     "contentId": "cid:pfcs-generated-icon-warning",
     "contentType": "png",
-    "data": "image-base64-stub-warning",
+    "data": "warning-d7e63880cf8f3a7ec294fc6458e021cc1b3593e1d3631bb2fb25299a668e74c3",
   },
   Object {
     "contentId": "cid:pfcs-generated-icon-error",
     "contentType": "png",
-    "data": "image-base64-stub-error",
+    "data": "error-4758f8e2de1b05e1834faa5bc68aada66aa32aaf7295c62b3de30c9d43d141ed",
   },
 ]
 `;
@@ -2149,7 +2149,7 @@ exports[`Renderer - EmailSerializer should render task list correctly with mock 
                     style="vertical-align: top;padding: 10px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-taskItemUnchecked"
+                      src="taskItemUnchecked-49eeeed294c361f194a0c7532a9fea5ed801e95f696d2f271274d96d1594fdc6"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -2188,7 +2188,7 @@ exports[`Renderer - EmailSerializer should render task list correctly with mock 
                     style="vertical-align: top;padding: 10px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-taskItemUnchecked"
+                      src="taskItemUnchecked-49eeeed294c361f194a0c7532a9fea5ed801e95f696d2f271274d96d1594fdc6"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -2233,7 +2233,7 @@ exports[`Renderer - EmailSerializer should render task list correctly with mock 
                     style="vertical-align: top;padding: 10px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-taskItemUnchecked"
+                      src="taskItemUnchecked-49eeeed294c361f194a0c7532a9fea5ed801e95f696d2f271274d96d1594fdc6"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -2277,7 +2277,7 @@ exports[`Renderer - EmailSerializer should render task list correctly with mock 
                     style="vertical-align: top;padding: 10px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-taskItemUnchecked"
+                      src="taskItemUnchecked-49eeeed294c361f194a0c7532a9fea5ed801e95f696d2f271274d96d1594fdc6"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -2318,7 +2318,7 @@ exports[`Renderer - EmailSerializer should render task list correctly with mock 
                     style="vertical-align: top;padding: 10px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-taskItemChecked"
+                      src="taskItemChecked-824889cb3ff64e07de59972449ac40a0b5a95f420a91eebc336a26a9fb9ff1c8"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -2357,7 +2357,7 @@ exports[`Renderer - EmailSerializer should render task list correctly with mock 
                     style="vertical-align: top;padding: 10px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-taskItemChecked"
+                      src="taskItemChecked-824889cb3ff64e07de59972449ac40a0b5a95f420a91eebc336a26a9fb9ff1c8"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -2402,7 +2402,7 @@ exports[`Renderer - EmailSerializer should render task list correctly with mock 
                     style="vertical-align: top;padding: 10px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-taskItemChecked"
+                      src="taskItemChecked-824889cb3ff64e07de59972449ac40a0b5a95f420a91eebc336a26a9fb9ff1c8"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -2446,7 +2446,7 @@ exports[`Renderer - EmailSerializer should render task list correctly with mock 
                     style="vertical-align: top;padding: 10px 0px 0px 8px;width: 24px;height: 24px;"
                   >
                     <img
-                      src="image-base64-stub-taskItemChecked"
+                      src="taskItemChecked-824889cb3ff64e07de59972449ac40a0b5a95f420a91eebc336a26a9fb9ff1c8"
                       style="width: 16px;height: 16px;"
                     />
                   </td>
@@ -2471,12 +2471,12 @@ Array [
   Object {
     "contentId": "cid:pfcs-generated-icon-taskItemUnchecked",
     "contentType": "png",
-    "data": "image-base64-stub-taskItemUnchecked",
+    "data": "taskItemUnchecked-49eeeed294c361f194a0c7532a9fea5ed801e95f696d2f271274d96d1594fdc6",
   },
   Object {
     "contentId": "cid:pfcs-generated-icon-taskItemChecked",
     "contentType": "png",
-    "data": "image-base64-stub-taskItemChecked",
+    "data": "taskItemChecked-824889cb3ff64e07de59972449ac40a0b5a95f420a91eebc336a26a9fb9ff1c8",
   },
 ]
 `;

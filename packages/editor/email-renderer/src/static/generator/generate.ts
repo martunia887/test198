@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 import rimraf from 'rimraf';
 import imageSources from './image-sources';
+import crypto from 'crypto';
 
 const coreIconSrc = resolve(__dirname, '../svg');
 const tempFolder = resolve(__dirname, './tmp');
@@ -53,15 +54,21 @@ const createIcons = () => {
 };
 
 const createIndividualIconModules = () => {
-  exportOpts.map(icon =>
+  exportOpts.map(icon => {
+    const imageData = readFileSync(icon.outputPath).toString('base64');
     writeFileSync(
       resolve(__dirname, `../icons/${icon.name}.ts`),
       `${generatedWarning}
-      export const ${icon.name} = 'data:image/png;base64,${readFileSync(
-        icon.outputPath,
-      ).toString('base64')}'`,
-    ),
-  );
+      export const ${icon.name} = 'data:image/png;base64,${imageData}'`,
+    );
+    const hash = crypto.createHash('sha256');
+    const hashedImageData = hash.update(imageData).digest('hex');
+    writeFileSync(
+      resolve(__dirname, `../icons/__mocks__/${icon.name}.ts`),
+      `${generatedWarning}
+      export const ${icon.name} = '${icon.name}-${hashedImageData}'`,
+    );
+  });
 };
 
 createIcons();
