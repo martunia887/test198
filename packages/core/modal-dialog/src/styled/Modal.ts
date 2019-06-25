@@ -7,6 +7,11 @@ import {
   IEMaxHeightCalcPx,
 } from '../utils/flex-max-height-ie-fix';
 
+interface DialogProps {
+  isChromeless?: boolean;
+  heightValue?: string | number;
+}
+
 const boxShadow = ({ isChromeless }: { isChromeless?: boolean }) =>
   isChromeless
     ? 'none'
@@ -14,10 +19,10 @@ const boxShadow = ({ isChromeless }: { isChromeless?: boolean }) =>
       0 0 0 1px ${colors.N30A}, 0 2px 1px ${colors.N30A},
       0 0 20px -6px ${colors.N60A}
     `;
-const dialogBgColor = ({ isChromeless }: { isChromeless?: boolean }) => {
-  return isChromeless
+const dialogBgColor = (props: DialogProps) => {
+  return props.isChromeless
     ? 'transparent'
-    : themed({ light: colors.N0, dark: colors.DN50 });
+    : themed({ light: colors.N0, dark: colors.DN50 })(props);
 };
 const maxDimensions = `calc(100% - ${gutter * 2}px)`;
 const maxHeightDimensions = `calc(100% - ${gutter * 2 - IEMaxHeightCalcPx}px)`;
@@ -113,11 +118,6 @@ export const PositionerRelative = styled.div`
     width: 100%;
   }
 `;
-
-interface DialogProps {
-  isChromeless?: boolean;
-  heightValue?: string | number;
-}
 export const Dialog = styled.div`
   ${(props: DialogProps) =>
     props.isChromeless
