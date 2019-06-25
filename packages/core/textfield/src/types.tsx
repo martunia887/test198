@@ -82,7 +82,7 @@ export interface TextFieldProps {
   /** The value of the input. */
   value?: string | number;
   /** This is an internal prop. Use "ref" prop to get a reference to input element. */
-  forwardedRef?: (ref: HTMLInputElement) => void;
+  forwardedRef: (ref?: HTMLInputElement) => void;
   /** The theme the component should use. */
   theme?: ThemeProp<ThemeTokens, ThemeProps>;
 }

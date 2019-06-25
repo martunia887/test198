@@ -2,20 +2,17 @@ import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Textfield from '../src';
 
-interface Props {}
-interface FormRef {
-  focus: () => any;
-}
-
-class TextFieldExample extends Component<Props> {
-  input: FormRef;
+class TextFieldExample extends Component<{}> {
+  input?: HTMLElement;
 
   handleRef = (ref: HTMLElement) => {
     this.input = ref;
   };
 
   handleFocus = () => {
-    this.input.focus();
+    if (this.input) {
+      this.input.focus();
+    }
   };
 
   render() {

@@ -97,6 +97,10 @@ declare module '@atlaskit/textarea' {
   declare module.exports: any;
 }
 
+declare module '@atlaskit/textfield' {
+  declare module.exports: any;
+}
+
 declare module '@atlaskit/tooltip' {
   declare module.exports: any;
 }

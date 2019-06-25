@@ -1,4 +1,4 @@
-import GlobalTheme from '@atlaskit/theme';
+import GlobalTheme, { GlobalThemeTokens } from '@atlaskit/theme';
 import React, { Component, SyntheticEvent, MouseEvent } from 'react';
 import {
   withAnalyticsEvents,
@@ -110,7 +110,7 @@ class Textfield extends Component<TextFieldProps, State> {
     return (
       <Theme.Provider value={theme}>
         <GlobalTheme.Consumer>
-          {({ mode }) => (
+          {({ mode }: GlobalThemeTokens) => (
             <Theme.Consumer
               appearance={appearance}
               mode={mode}
