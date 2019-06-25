@@ -3,7 +3,7 @@ import Button from '@atlaskit/button';
 import Textfield from '../src';
 
 class TextFieldExample extends Component<{}> {
-  input?: HTMLElement;
+  input: HTMLElement | null = null;
 
   handleRef = (ref: HTMLElement) => {
     this.input = ref;

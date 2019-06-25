@@ -32,7 +32,7 @@ class Textfield extends Component<TextFieldProps, State> {
     isHovered: false,
   };
 
-  input?: HTMLInputElement;
+  input: HTMLInputElement | null = null;
 
   handleOnFocus = (e: SyntheticEvent<HTMLInputElement>) => {
     this.setState({ isFocused: true });
