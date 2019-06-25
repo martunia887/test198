@@ -1,4 +1,5 @@
-import React, { CSSProperties } from 'react';
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/core';
 import { InputProps } from '../types';
 
 export default ({
@@ -20,9 +21,8 @@ export default ({
   theme,
   ...rest
 }: InputProps) => (
-  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
   <div
-    css={theme.container}
+    css={theme.container as CSSObject}
     onMouseDown={onMouseDown}
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
@@ -33,7 +33,7 @@ export default ({
       disabled={isDisabled}
       readOnly={isReadOnly}
       required={isRequired}
-      css={theme.input}
+      css={theme.input as CSSObject}
       {...rest}
     />
     {elemAfterInput}

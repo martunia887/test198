@@ -50,7 +50,8 @@ class Textfield extends Component<TextFieldProps, State> {
 
   handleOnMouseDown = (e: MouseEvent<HTMLElement>) => {
     /** Running e.preventDefault() on the INPUT prevents double click behaviour */
-    if (e.target.tagName !== 'INPUT') {
+    const target = e.target as HTMLInputElement;
+    if (target.tagName !== 'INPUT') {
       e.preventDefault();
     }
     if (
@@ -145,7 +146,6 @@ class Textfield extends Component<TextFieldProps, State> {
   }
 }
 
-// $ExpectError - flow 0.67 doesn't know about forwardRef
 const ForwardRefTextfield = React.forwardRef((props, ref) => (
   <Textfield {...props} forwardedRef={ref} />
 ));

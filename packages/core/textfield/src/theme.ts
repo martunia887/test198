@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react';
 import {
   createTheme,
   codeFontFamily,
@@ -224,8 +225,8 @@ export interface ThemeProps {
   width?: string | number;
 }
 export interface ThemeTokens {
-  container: Object;
-  input: Object;
+  container: CSSProperties;
+  input: CSSProperties;
 }
 
 export const Theme = createTheme<ThemeTokens, ThemeProps>(props => ({
