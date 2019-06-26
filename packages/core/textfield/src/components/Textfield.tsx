@@ -78,16 +78,15 @@ class Textfield extends Component<TextFieldProps, State> {
     }
   };
 
-  setInputRef = (input: HTMLInputElement) => {
-    this.input = input;
-
+  setInputRef = (ref: HTMLInputElement | null) => {
+    this.input = ref;
     const { forwardedRef } = this.props;
-
     if (forwardedRef && typeof forwardedRef === 'object') {
-      forwardedRef.current = input;
+      // @ts-ignore
+      forwardedRef.current = ref;
     }
     if (forwardedRef && typeof forwardedRef === 'function') {
-      forwardedRef(input);
+      forwardedRef(ref);
     }
   };
 
@@ -113,15 +112,15 @@ class Textfield extends Component<TextFieldProps, State> {
         <GlobalTheme.Consumer>
           {({ mode }: GlobalThemeTokens) => (
             <Theme.Consumer
-              appearance={appearance}
+              appearance={appearance || 'standard'}
               mode={mode}
               width={width}
-              isDisabled={isDisabled}
-              isCompact={isCompact}
-              isMonospaced={isMonospaced}
+              isDisabled={isDisabled || false}
+              isCompact={isCompact || false}
+              isMonospaced={isMonospaced || false}
               isFocused={isFocused}
               isHovered={isHovered}
-              isInvalid={isInvalid}
+              isInvalid={isInvalid || false}
             >
               {tokens => (
                 <Input
@@ -146,9 +145,14 @@ class Textfield extends Component<TextFieldProps, State> {
   }
 }
 
-const ForwardRefTextfield = React.forwardRef((props, ref) => (
-  <Textfield {...props} forwardedRef={ref} />
-));
+const ForwardRefTextfield = React.forwardRef<{}, TextFieldProps>(
+  (props, ref) => (
+    <Textfield
+      {...props}
+      forwardedRef={ref as TextFieldProps['forwardedRef']}
+    />
+  ),
+);
 
 export { ForwardRefTextfield as TextFieldWithoutAnalytics };
 const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');

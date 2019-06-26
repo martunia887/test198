@@ -1,5 +1,5 @@
 import { ThemeProp } from '@atlaskit/theme';
-import { ReactNode, SyntheticEvent, MouseEvent } from 'react';
+import { ReactNode, SyntheticEvent, MouseEvent, RefObject } from 'react';
 import { ThemeProps, ThemeTokens } from './theme';
 
 export interface InputProps {
@@ -39,7 +39,9 @@ export interface InputProps {
   /** Add asterisk to label. Set required for form that the field is part of. */
   isRequired?: boolean;
   /** Forwarded ref */
-  forwardedRef?: (ref: HTMLInputElement) => void;
+  forwardedRef?:
+    | RefObject<HTMLInputElement>
+    | ((e: HTMLInputElement | null) => void);
   theme: ThemeTokens;
 }
 
@@ -58,15 +60,15 @@ export interface TextFieldProps {
   /** Element before input in textfield. */
   elemBeforeInput?: ReactNode;
   /** Applies compact styling, making the field smaller */
-  isCompact: boolean;
+  isCompact?: boolean;
   /** Sets the field as uneditable, with a changed hover state. */
-  isDisabled: boolean;
+  isDisabled?: boolean;
   /** Sets styling to indicate that the input is focused. */
-  isFocused: boolean;
+  isFocused?: boolean;
   /** Sets styling to indicate that the input is invalid */
-  isInvalid: boolean;
+  isInvalid?: boolean;
   /** Sets content text value to monospace */
-  isMonospaced: boolean;
+  isMonospaced?: boolean;
   /** If true, prevents the value of the input from being edited. */
   isReadOnly?: boolean;
   /** Set required for form that the field is part of. */
@@ -82,7 +84,9 @@ export interface TextFieldProps {
   /** The value of the input. */
   value?: string | number;
   /** This is an internal prop. Use "ref" prop to get a reference to input element. */
-  forwardedRef: (ref?: HTMLInputElement) => void;
+  forwardedRef?:
+    | RefObject<HTMLInputElement>
+    | ((e: HTMLInputElement | null) => void);
   /** The theme the component should use. */
   theme?: ThemeProp<ThemeTokens, ThemeProps>;
 }
