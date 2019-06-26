@@ -3,7 +3,8 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import cssResetStyles from '@atlaskit/css-reset';
-import avatarIntro from '@atlaskit/avatar/examples/01-basicAvatar';
+// import avatarIntro from '@atlaskit/avatar/docs/0-intro';
+import avatarExample from '@atlaskit/avatar/examples/01-basicAvatar';
 import Navigation, {
   AkContainerTitle,
   presetThemes,
@@ -15,7 +16,7 @@ insertStyleSheetInHead(cssResetStyles);
 
 ReactDOM.render(
   <PackagePage
-    doc={avatarIntro()}
+    doc={avatarExample()}
     pkg={{ name: 'avatar' }}
     navigation={<Navigation />}
   />,
