@@ -71,7 +71,7 @@ async function getAcronyms() {
     const pageId = Confluence.getContentId();
     const hostname = Confluence.host.split('.')[0];
     const response = await fetch(
-      `https://d8045dd8.ngrok.io/a/${hostname}/${pageId}`,
+      `https://project-sa.dev.atl-paas.net/a/${hostname}/${pageId}`,
     );
     if (response.status === 200) {
       return await response.json();
