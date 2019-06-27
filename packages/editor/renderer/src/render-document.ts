@@ -66,6 +66,20 @@ function parseAcronyms(doc: any): any {
   } else return doc;
 }
 
+function getAcronyms() {
+  const Confluence = (window as any).Confluence;
+  if (Confluence) {
+    const pageId = Confluence.getContentId();
+    const hostname = Confluence.host.split('.')[0];
+    return fetch(`https://d8045dd8.ngrok.io/a/${hostname}/${pageId}`).then(
+      function(response) {
+        if (response.status !== 200) throw new Error('Something went wrong');
+        return response.json();
+      },
+    );
+  } else return Promise.reject('Not a confluence instance');
+}
+
 export const renderDocument = <T>(
   doc: any,
   serializer: Serializer<T>,
@@ -75,6 +89,14 @@ export const renderDocument = <T>(
   const stat: RenderOutputStat = { sanitizeTime: 0 };
 
   const parsedAcronyms = parseAcronyms(doc);
+
+  getAcronyms()
+    .then(function(data) {
+      console.log(data);
+    })
+    .catch(function(err) {
+      console.log('Fetch Error :-S', err);
+    });
 
   const { output: validDoc, time: sanitizeTime } = withStopwatch(() =>
     getValidDocument(parsedAcronyms, schema, adfStage),
