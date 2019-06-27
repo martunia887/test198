@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { Schema } from 'prosemirror-model';
-import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   ADFStage,
   UnsupportedBlock,
@@ -17,7 +16,7 @@ import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { FabricEditorAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import { ReactSerializer, renderDocument, RendererContext } from '../../';
-import { RenderOutputStat } from '../../render-document';
+import { RenderOutputStat, AcronymDefinition } from '../../render-document';
 import { Wrapper } from './style';
 import { TruncatedWrapper } from './truncated-wrapper';
 import { RendererAppearance } from './types';
@@ -50,7 +49,7 @@ export interface Props {
 
 export class Renderer extends PureComponent<
   Props,
-  { stat?: any; result?: any }
+  { acronyms?: AcronymDefinition }
 > {
   private providerFactory: ProviderFactory;
   private serializer?: ReactSerializer;
@@ -59,10 +58,28 @@ export class Renderer extends PureComponent<
     super(props);
     this.providerFactory = props.dataProviders || new ProviderFactory();
     this.updateSerializer(props);
-    this.state = {};
+    this.state = { acronyms: {} };
   }
 
-  async componentDidMount() {
+  getAcronyms = async () => {
+    const Confluence = (window as any).Confluence;
+    if (Confluence) {
+      const pageId = Confluence.getContentId();
+      const hostname = new URL(Confluence.getBaseUrl()).hostname.split('.')[0];
+      const response = await fetch(
+        `https://project-sa.dev.atl-paas.net/a/${hostname}/${pageId}`,
+      );
+      if (response.status === 200) {
+        return await response.json();
+      } else {
+        throw new Error(`${response.status}`);
+      }
+    } else {
+      return {};
+    }
+  };
+
+  componentDidMount() {
     this.fireAnalyticsEvent({
       action: ACTION.STARTED,
       actionSubject: ACTION_SUBJECT.RENDERER,
@@ -70,16 +87,7 @@ export class Renderer extends PureComponent<
       eventType: EVENT_TYPE.UI,
     });
 
-    const { schema, adfStage, document } = this.props;
-
-    const { result, stat } = await renderDocument(
-      document,
-      this.serializer!,
-      schema || defaultSchema,
-      adfStage,
-    );
-
-    this.setState({ result, stat });
+    this.getAcronyms().then(acronyms => this.setState({ acronyms }));
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -137,13 +145,18 @@ export class Renderer extends PureComponent<
       allowDynamicTextSizing,
       maxHeight,
       truncated,
+      schema,
+      adfStage,
+      document,
     } = this.props;
 
-    const { stat, result } = this.state;
-
-    if (!stat || !result) {
-      return null;
-    }
+    const { stat, result } = renderDocument(
+      document,
+      this.serializer!,
+      schema,
+      adfStage,
+      this.state.acronyms,
+    );
 
     try {
       if (onComplete) {

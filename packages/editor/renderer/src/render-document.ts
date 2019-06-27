@@ -51,7 +51,7 @@ function doTheAcronymBaby(text: string, acronyms: AcronymDefinition) {
     .join('');
 }
 
-interface AcronymDefinition {
+export interface AcronymDefinition {
   [key: string]: [
     {
       description: string;
@@ -74,34 +74,16 @@ function parseAcronyms(doc: any, acronyms: AcronymDefinition): any {
   } else return doc;
 }
 
-async function getAcronyms() {
-  const Confluence = (window as any).Confluence;
-  if (Confluence) {
-    const pageId = Confluence.getContentId();
-    const hostname = new URL(Confluence.getBaseUrl()).hostname.split('.')[0];
-    const response = await fetch(
-      `https://project-sa.dev.atl-paas.net/a/${hostname}/${pageId}`,
-    );
-    if (response.status === 200) {
-      return await response.json();
-    } else {
-      throw new Error(`${response.status}`);
-    }
-  } else {
-    return {};
-  }
-}
-
-export const renderDocument = async <T>(
+export const renderDocument = <T>(
   doc: any,
   serializer: Serializer<T>,
   schema: Schema = defaultSchema,
   adfStage: ADFStage = 'final',
-): Promise<RenderOutput<T | null>> => {
+  acronyms: AcronymDefinition = {},
+): RenderOutput<T | null> => {
   const stat: RenderOutputStat = { sanitizeTime: 0 };
 
-  const acronyms = await getAcronyms();
-  const parsedAcronyms = await parseAcronyms(doc, acronyms);
+  const parsedAcronyms = parseAcronyms(doc, acronyms);
 
   const { output: validDoc, time: sanitizeTime } = withStopwatch(() =>
     getValidDocument(parsedAcronyms, schema, adfStage),
