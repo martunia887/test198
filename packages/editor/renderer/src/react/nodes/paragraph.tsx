@@ -11,18 +11,19 @@ export default function Paragraph({ children }: React.Props<{}>) {
     newChildren = children.map(innerChild =>
       (innerChild as Array<any>)!.map(child =>
         typeof child === 'string'
-          ? child.split(/\b([A-Z]{2,})\b/g).map(textPart =>
-              (textPart as string).match(/[A-Z]{2,}/) ? (
-                <Tooltip
-                  content={`this is going to be expanded into an acronym ${textPart}`}
-                  tag="span"
-                >
-                  <span>{textPart}</span>
-                </Tooltip>
-              ) : (
-                textPart
-              ),
-            )
+          ? child.split(/(\[.*?\]\(.*?\))/g).map(textPart => {
+              const acronym = (textPart as string).match(/(?<=\[).*?(?=\])/);
+              const expansion = (textPart as string).match(/(?<=\().*?(?=\))/);
+              if (acronym && expansion) {
+                return (
+                  <Tooltip content={expansion[0]} tag="span">
+                    <span>{acronym[0]}</span>
+                  </Tooltip>
+                );
+              } else {
+                return textPart;
+              }
+            })
           : child,
       ),
     );
