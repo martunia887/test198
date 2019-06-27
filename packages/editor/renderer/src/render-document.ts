@@ -69,7 +69,7 @@ async function getAcronyms() {
   const Confluence = (window as any).Confluence;
   if (Confluence) {
     const pageId = Confluence.getContentId();
-    const hostname = Confluence.host.split('.')[0];
+    const hostname = new URL(Confluence.getBaseUrl()).hostname.split('.')[0];
     const response = await fetch(
       `https://project-sa.dev.atl-paas.net/a/${hostname}/${pageId}`,
     );
@@ -79,13 +79,7 @@ async function getAcronyms() {
       throw new Error(`${response.status}`);
     }
   } else {
-    return {
-      ACR: {
-        definition:
-          "Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I'm in a transitional period so I don't wanna kill you",
-        url: 'https://slipsum.com/',
-      },
-    };
+    return {};
   }
 }
 
