@@ -12,13 +12,13 @@ export default function Paragraph({ children }: React.Props<{}>) {
       (innerChild as Array<any>)!.map(child =>
         typeof child === 'string'
           ? child.split(/(\[.*?\]\(.*?\))/g).map(textPart => {
-              const acronym = (textPart as string).match(/(?<=\[).*?(?=\])/);
-              const expansion = (textPart as string).match(/(?<=\().*?(?=\))/);
+              const acronym = (textPart as string).match(/\[.*?\]/g);
+              const expansion = (textPart as string).match(/\(.*?\)/g);
               if (acronym && expansion) {
                 return (
-                  <Tooltip content={expansion[0]} tag="span">
+                  <Tooltip content={expansion[0].slice(1, -1)} tag="span">
                     <span style={{ textDecoration: 'underline dashed' }}>
-                      {acronym[0]}
+                      {acronym[0].slice(1, -1)}
                     </span>
                   </Tooltip>
                 );
