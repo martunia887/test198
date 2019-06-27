@@ -38,7 +38,7 @@ const withStopwatch = <T>(cb: () => T): ResultWithTime<T> => {
 function matchWord(word: string, acronyms: AcronymDefinition) {
   const found = acronyms[word];
   if (found && found.length > 0) {
-    return `[${word}](${found[0].definition})`;
+    return `[${word}](${found[0].description}|${found[0].source})`;
   } else {
     return word;
   }
@@ -54,8 +54,8 @@ function doTheAcronymBaby(text: string, acronyms: AcronymDefinition) {
 interface AcronymDefinition {
   [key: string]: [
     {
-      definition: string;
-      url: string;
+      description: string;
+      source: string;
     }
   ];
 }
