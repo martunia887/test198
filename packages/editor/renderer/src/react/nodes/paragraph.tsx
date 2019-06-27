@@ -17,7 +17,9 @@ export default function Paragraph({ children }: React.Props<{}>) {
               if (acronym && expansion) {
                 return (
                   <Tooltip content={expansion[0]} tag="span">
-                    <span>{acronym[0]}</span>
+                    <span style={{ textDecoration: 'underline dashed' }}>
+                      {acronym[0]}
+                    </span>
                   </Tooltip>
                 );
               } else {
