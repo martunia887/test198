@@ -1,25 +1,36 @@
+import React from 'react';
 import styled, { css } from 'styled-components';
 import { colors, gridSize } from '@atlaskit/theme';
 
 const inputRightPadding = gridSize() * 2;
 
+const theme = {
+  borderBottom: {
+    light: colors.B200,
+    dark: colors.DN80,
+  },
+};
+
 export const SearchBox = styled.div`
   position: sticky;
   top: 0;
   z-index: 1; /* required to keep the search box on top of icons in results when sticky */
-  background-color: ${colors.N0};
-  color: ${colors.N500};
+  background-color: ${colors.background};
+  color: ${colors.text};
   display: flex;
   height: 36px;
   z-index: 10;
 `;
+
+// @ts-ignore
+const getBorderBottom = (props: any) => theme[props.mode || 'light'];
 
 export const SearchFieldBaseOuter = styled.div`
   display: flex;
   flex: 1;
   margin-right: auto;
   padding-bottom: 2px;
-  border-bottom: 2px solid ${colors.B200};
+  border-bottom: 2px solid ${getBorderBottom};
 `;
 
 export const SearchFieldBaseInner = styled.div`
@@ -62,7 +73,7 @@ export const getPlaceholderColor = css`
 export const SearchInput = styled.input`
   background-color: transparent;
   border: 0;
-  color: ${colors.N500};
+  color: ${colors.text};
   flex-grow: 1;
   font-size: 1.4em;
   outline: 0;

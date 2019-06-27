@@ -9,6 +9,7 @@ import {
   SearchInputControlsContainer,
   SearchInputTypeAhead,
 } from './styled';
+import GlobalTheme from '@atlaskit/theme';
 
 export const controlKeys = [
   'ArrowUp',
@@ -85,38 +86,42 @@ export default class Search extends React.PureComponent<Props> {
     return (
       <SearchInner>
         <SearchBox>
-          <SearchFieldBaseOuter>
-            <FieldBase
-              appearance="none"
-              isFitContainerWidthEnabled
-              isPaddingDisabled
-              isLoading={isLoading}
-            >
-              <SearchFieldBaseInner>
-                {autocomplete && (
-                  <SearchInputTypeAhead
-                    spellCheck={false}
-                    type="text"
-                    value={`${autocomplete}`}
-                    readOnly
-                    tabIndex={-1}
-                  />
-                )}
-                <SearchInput
-                  autoFocus
-                  innerRef={this.setInputRef}
-                  onBlur={onBlur}
-                  onInput={onInput}
-                  placeholder={placeholder}
-                  spellCheck={false}
-                  type="text"
-                  value={value}
-                  onChange={() => {}} // Suppresses the console warning, we handle onChange by using onKeyDown instead.
-                  onKeyDown={this.onInputKeyDown}
-                />
-              </SearchFieldBaseInner>
-            </FieldBase>
-          </SearchFieldBaseOuter>
+          <GlobalTheme.Consumer>
+            {({ mode }: { mode: string }) => (
+              <SearchFieldBaseOuter mode={mode}>
+                <FieldBase
+                  appearance="none"
+                  isFitContainerWidthEnabled
+                  isPaddingDisabled
+                  isLoading={isLoading}
+                >
+                  <SearchFieldBaseInner>
+                    {autocomplete && (
+                      <SearchInputTypeAhead
+                        spellCheck={false}
+                        type="text"
+                        value={`${autocomplete}`}
+                        readOnly
+                        tabIndex={-1}
+                      />
+                    )}
+                    <SearchInput
+                      autoFocus
+                      innerRef={this.setInputRef}
+                      onBlur={onBlur}
+                      onInput={onInput}
+                      placeholder={placeholder}
+                      spellCheck={false}
+                      type="text"
+                      value={value}
+                      onChange={() => {}} // Suppresses the console warning, we handle onChange by using onKeyDown instead.
+                      onKeyDown={this.onInputKeyDown}
+                    />
+                  </SearchFieldBaseInner>
+                </FieldBase>
+              </SearchFieldBaseOuter>
+            )}
+          </GlobalTheme.Consumer>
           {this.renderInputControls()}
         </SearchBox>
         {children}

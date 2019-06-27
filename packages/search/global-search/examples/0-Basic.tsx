@@ -3,6 +3,7 @@ import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
 import { GlobalQuickSearch } from '../src';
 import withNavigation from '../example-helpers/withNavigation';
+import GlobalTheme, { AtlaskitThemeProvider } from '@atlaskit/theme';
 
 const GlobalQuickSearchWrapper = withNavigation(GlobalQuickSearch);
 
@@ -26,9 +27,13 @@ export default class GlobalQuickSearchExample extends React.Component {
 
   render() {
     return (
-      <AnalyticsListener onEvent={logEvent} channel="fabric-elements">
-        <GlobalQuickSearchWrapper />
-      </AnalyticsListener>
+      <AtlaskitThemeProvider mode={'dark'}>
+        <GlobalTheme.Provider value={() => ({ mode: 'dark' })}>
+          <AnalyticsListener onEvent={logEvent} channel="fabric-elements">
+            <GlobalQuickSearchWrapper />
+          </AnalyticsListener>
+        </GlobalTheme.Provider>
+      </AtlaskitThemeProvider>
     );
   }
 }
