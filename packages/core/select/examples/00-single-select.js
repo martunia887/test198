@@ -1,11 +1,13 @@
 // @flow
 import React from 'react';
 import Select from '../src';
+import Button from '@atlaskit/button';
 import GlobalTheme, { AtlaskitThemeProvider } from '@atlaskit/theme';
 
 const SingleExample = () => (
   <AtlaskitThemeProvider mode={'dark'}>
     <GlobalTheme.Provider value={() => ({ mode: 'dark' })}>
+      <Button>New button</Button>
       <Select
         className="single-select"
         classNamePrefix="react-select"

@@ -106,9 +106,10 @@ type Props = ReactSelectProps & {
 };
 
 const theme = {
-  background: { light: colors.N20, dark: colors.DN50 },
-  backgroundFocused: { light: colors.N0, dark: colors.DN30 },
-  backgroundActive: { light: colors.N30, dark: colors.DN70 },
+  background: { light: colors.N20, dark: colors.DN70 },
+  backgroundFocused: { light: colors.N0, dark: colors.DN20 },
+  backgroundActive: { light: colors.N30, dark: colors.DN60 },
+  backgroundHover: { light: colors.N0, dark: colors.DN20 },
   text: { light: colors.N500, dark: colors.DN600 },
   singleValue: { light: colors.N800, dark: colors.DN800 },
   multiValueBackground: { light: colors.N40, dark: colors.DN60 },
@@ -116,6 +117,7 @@ const theme = {
   textActive: { light: colors.B400, dark: colors.DN300 },
   textSelected: { light: colors.N0, dark: colors.DN30 },
   textSubtle: { light: colors.N100, dark: colors.DN100 },
+  optionBackground: { light: colors.N20, dark: colors.DN50 },
   optionBgSelected: { light: colors.N500, dark: colors.DN600 },
   optionBgFocused: { light: colors.N30, dark: colors.DN70 },
   indicator: { light: colors.N70, dark: colors.DN90 },
@@ -172,7 +174,7 @@ function baseStyles(validationState, isCompact, mode) {
           cursor: 'pointer',
           backgroundColor: isFocused
             ? theme.backgroundFocused[mode]
-            : theme.backgroundActive[mode],
+            : theme.backgroundHover[mode],
           borderColor: borderColorHover,
         },
         '::-webkit-scrollbar-thumb:hover': {
@@ -219,7 +221,7 @@ function baseStyles(validationState, isCompact, mode) {
       };
     },
     option: (css, { isFocused, isSelected }) => {
-      const color = isSelected ? theme.textSelected[mode] : null;
+      const color = isSelected ? theme.textSelected[mode] : theme.text[mode];
 
       let backgroundColor;
       if (isSelected) backgroundColor = theme.optionBgSelected[mode];
@@ -230,11 +232,14 @@ function baseStyles(validationState, isCompact, mode) {
         paddingBottom: '6px',
         backgroundColor,
         color,
+        ':hover': {
+          color,
+        },
       };
     },
     menu: css => ({
       ...css,
-      background: theme.background[mode],
+      background: theme.optionBackground[mode],
     }),
     placeholder: css => ({ ...css, color: colors.N100 }),
     singleValue: (css, { isDisabled }) => ({
