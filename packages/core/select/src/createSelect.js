@@ -3,7 +3,7 @@ import React, { Component, type ComponentType, type ElementRef } from 'react';
 import { mergeStyles, makeAnimated } from 'react-select';
 import memoizeOne from 'memoize-one';
 import isEqual from 'react-fast-compare';
-import { colors, gridSize } from '@atlaskit/theme';
+import GlobalTheme, { colors, gridSize } from '@atlaskit/theme';
 
 import * as defaultComponents from './components';
 
@@ -105,18 +105,39 @@ type Props = ReactSelectProps & {
   validationState?: ValidationState,
 };
 
-function baseStyles(validationState, isCompact) {
+const theme = {
+  background: { light: colors.N20, dark: colors.DN50 },
+  backgroundFocused: { light: colors.N0, dark: colors.DN30 },
+  backgroundActive: { light: colors.N30, dark: colors.DN70 },
+  text: { light: colors.N500, dark: colors.DN600 },
+  singleValue: { light: colors.N800, dark: colors.DN800 },
+  multiValueBackground: { light: colors.N40, dark: colors.DN60 },
+  multiValueRemoveBackground: { light: colors.R75, dark: colors.R300 },
+  textActive: { light: colors.B400, dark: colors.DN300 },
+  textSelected: { light: colors.N0, dark: colors.DN30 },
+  textSubtle: { light: colors.N100, dark: colors.DN100 },
+  optionBgSelected: { light: colors.N500, dark: colors.DN600 },
+  optionBgFocused: { light: colors.N30, dark: colors.DN70 },
+  indicator: { light: colors.N70, dark: colors.DN90 },
+  indicatorHover: { light: colors.N200, dark: colors.DN200 },
+};
+
+function baseStyles(validationState, isCompact, mode) {
   return {
     control: (css, { isFocused, isDisabled }) => {
-      let borderColor = isFocused ? colors.B100 : colors.N20;
-      let backgroundColor = isFocused ? colors.N0 : colors.N20;
+      let borderColor = isFocused ? colors.B100 : theme.background[mode];
+      let backgroundColor = isFocused
+        ? theme.backgroundFocused[mode]
+        : theme.background[mode];
       if (isDisabled) {
-        backgroundColor = colors.N20;
+        backgroundColor = theme.backgroundFocused[mode];
       }
       if (validationState === 'error') borderColor = colors.R400;
       if (validationState === 'success') borderColor = colors.G400;
 
-      let borderColorHover = isFocused ? colors.B100 : colors.N30;
+      let borderColorHover = isFocused
+        ? colors.B100
+        : theme.backgroundActive[mode];
       if (validationState === 'error') borderColorHover = colors.R400;
       if (validationState === 'success') borderColorHover = colors.G400;
 
@@ -149,7 +170,9 @@ function baseStyles(validationState, isCompact) {
             backgroundColor: 'rgba(0,0,0,0.2)',
           },
           cursor: 'pointer',
-          backgroundColor: isFocused ? colors.N0 : colors.N30,
+          backgroundColor: isFocused
+            ? theme.backgroundFocused[mode]
+            : theme.backgroundActive[mode],
           borderColor: borderColorHover,
         },
         '::-webkit-scrollbar-thumb:hover': {
@@ -164,13 +187,13 @@ function baseStyles(validationState, isCompact) {
     }),
     clearIndicator: css => ({
       ...css,
-      color: colors.N70,
+      color: theme.indicator[mode],
       paddingLeft: '2px',
       paddingRight: '2px',
       paddingBottom: isCompact ? 0 : 6,
       paddingTop: isCompact ? 0 : 6,
       ':hover': {
-        color: colors.N500,
+        color: theme.text[mode],
       },
     }),
     loadingIndicator: css => ({
@@ -179,9 +202,9 @@ function baseStyles(validationState, isCompact) {
       paddingTop: isCompact ? 0 : 6,
     }),
     dropdownIndicator: (css, { isDisabled }) => {
-      let color = colors.N500;
+      let color = theme.text[mode];
       if (isDisabled) {
-        color = colors.N70;
+        color = theme.indicator[mode];
       }
       return {
         ...css,
@@ -191,16 +214,16 @@ function baseStyles(validationState, isCompact) {
         paddingLeft: '2px',
         paddingRight: '2px',
         ':hover': {
-          color: colors.N200,
+          color: theme.indicatorHover[mode],
         },
       };
     },
     option: (css, { isFocused, isSelected }) => {
-      const color = isSelected ? colors.N0 : null;
+      const color = isSelected ? theme.textSelected[mode] : null;
 
       let backgroundColor;
-      if (isSelected) backgroundColor = colors.N500;
-      else if (isFocused) backgroundColor = colors.N30;
+      if (isSelected) backgroundColor = theme.optionBgSelected[mode];
+      else if (isFocused) backgroundColor = theme.optionBgFocused[mode];
       return {
         ...css,
         paddingTop: '6px',
@@ -209,10 +232,14 @@ function baseStyles(validationState, isCompact) {
         color,
       };
     },
+    menu: css => ({
+      ...css,
+      background: theme.background[mode],
+    }),
     placeholder: css => ({ ...css, color: colors.N100 }),
     singleValue: (css, { isDisabled }) => ({
       ...css,
-      color: isDisabled ? colors.N70 : colors.N800,
+      color: isDisabled ? theme.indicator[mode] : theme.singleValue[mode],
       lineHeight: `${gridSize() * 2}px`, // 16px
     }),
     menuList: css => ({
@@ -223,14 +250,15 @@ function baseStyles(validationState, isCompact) {
     multiValue: css => ({
       ...css,
       borderRadius: '2px',
-      backgroundColor: colors.N40,
-      color: colors.N500,
+      backgroundColor: theme.multiValueBackground[mode],
+      color: theme.text[mode],
       maxWidth: '100%',
     }),
     multiValueLabel: css => ({
       ...css,
       padding: '2px',
       paddingRight: '2px',
+      color: theme.text[mode],
     }),
     multiValueRemove: (css, { isFocused }) => ({
       ...css,
@@ -241,7 +269,7 @@ function baseStyles(validationState, isCompact) {
       borderRadius: '0px 2px 2px 0px',
       ':hover': {
         color: colors.R400,
-        backgroundColor: colors.R75,
+        backgroundColor: theme.multiValueRemoveBackground[mode],
       },
     }),
   };
@@ -320,13 +348,20 @@ export default function createSelect(WrappedComponent: ComponentType<*>) {
 
       // props must be spread first to stop `components` being overridden
       return (
-        <WrappedComponent
-          ref={this.onSelectRef}
-          isMulti={isMulti}
-          {...props}
-          components={this.components}
-          styles={mergeStyles(baseStyles(validationState, isCompact), styles)}
-        />
+        <GlobalTheme.Consumer>
+          {({ mode }) => (
+            <WrappedComponent
+              ref={this.onSelectRef}
+              isMulti={isMulti}
+              {...props}
+              components={this.components}
+              styles={mergeStyles(
+                baseStyles(validationState, isCompact, mode),
+                styles,
+              )}
+            />
+          )}
+        </GlobalTheme.Consumer>
       );
     }
   };
