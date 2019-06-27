@@ -53,7 +53,7 @@ function doTheAcronymBaby(text: string) {
 }
 
 function parseAcronyms(doc: any): any {
-  if (doc.type == 'text') {
+  if (doc.type === 'text') {
     return {
       ...doc,
       text: doTheAcronymBaby(doc.text),
