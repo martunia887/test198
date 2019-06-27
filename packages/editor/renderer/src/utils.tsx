@@ -1,7 +1,9 @@
+import * as React from 'react';
 import { Schema } from 'prosemirror-model';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import { Transformer, ADNode, EventHandlers } from '@atlaskit/editor-common';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
+import Tooltip from '@atlaskit/tooltip';
 import { Node as PMNode } from 'prosemirror-model';
 
 function createEncoder<T>(parser: Transformer<T>, encoder: Transformer<any>) {
@@ -36,4 +38,30 @@ export const getEventHandler = (
     eventHandlers[type] &&
     (eventHandlers as any)[type][eventName]
   );
+};
+
+export const deepMapAcronyms = (children: any): any => {
+  if (Array.isArray(children)) {
+    return children.map(child => deepMapAcronyms(child));
+  } else if (typeof children === 'string') {
+    return children.split(/(\[.*?\]\(.*?\))/g).map(textPart => {
+      const acronym = (textPart as string).match(/\[.*?\]/g);
+      const descAndSource = (textPart as string).match(/\(.*?\)/g);
+      if (acronym && descAndSource) {
+        const description = descAndSource[0].slice(1, -1).split('|')[0];
+        //const source = descAndSource[0].slice(1, -1).split('|')[1];
+        return (
+          <Tooltip content={description} tag="span">
+            <span style={{ textDecoration: 'underline dashed' }}>
+              {acronym[0].slice(1, -1)}
+            </span>
+          </Tooltip>
+        );
+      } else {
+        return textPart;
+      }
+    });
+  } else {
+    return children;
+  }
 };

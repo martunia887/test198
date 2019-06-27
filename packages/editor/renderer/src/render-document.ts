@@ -46,7 +46,7 @@ function matchWord(word: string, acronyms: AcronymDefinition) {
 
 function doTheAcronymBaby(text: string, acronyms: AcronymDefinition) {
   return text
-    .split(/\b(\w+)\b/)
+    .split(new RegExp(`\\b(${Object.keys(acronyms).join('|')})\\b`))
     .map((word: string) => matchWord(word, acronyms))
     .join('');
 }

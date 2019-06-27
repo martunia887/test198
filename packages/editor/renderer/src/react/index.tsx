@@ -5,7 +5,7 @@ import { ComponentType, Consumer, Provider } from 'react';
 import { Fragment, Mark, MarkType, Node, Schema } from 'prosemirror-model';
 
 import { Serializer } from '../';
-import { getText } from '../utils';
+import { getText, deepMapAcronyms } from '../utils';
 import { RendererAppearance } from '../ui/Renderer/types';
 
 import {
@@ -215,7 +215,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   ) {
     return (
       <MarkComponent key={key} {...props}>
-        {content}
+        {deepMapAcronyms(content)}
       </MarkComponent>
     );
   }
