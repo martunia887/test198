@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import Button from '@atlaskit/button';
 import Drawer from '../src';
+import GlobalTheme, { AtlaskitThemeProvider } from '@atlaskit/theme';
 
 type State = {
   isDrawerOpen: boolean,
@@ -31,19 +32,23 @@ export default class DrawersExample extends Component<{}, State> {
 
   render() {
     return (
-      <div css={{ padding: '2rem' }}>
-        <Drawer
-          onClose={this.onClose}
-          onCloseComplete={this.onCloseComplete}
-          isOpen={this.state.isDrawerOpen}
-          width="wide"
-        >
-          <code>Drawer contents</code>
-        </Drawer>
-        <Button id="open-drawer" type="button" onClick={this.openDrawer}>
-          Open drawer
-        </Button>
-      </div>
+      <AtlaskitThemeProvider mode={'dark'}>
+        <GlobalTheme.Provider value={() => ({ mode: 'dark' })}>
+          <div css={{ padding: '2rem' }}>
+            <Drawer
+              onClose={this.onClose}
+              onCloseComplete={this.onCloseComplete}
+              isOpen={this.state.isDrawerOpen}
+              width="wide"
+            >
+              <code>Drawer contents</code>
+            </Drawer>
+            <Button id="open-drawer" type="button" onClick={this.openDrawer}>
+              Open drawer
+            </Button>
+          </div>
+        </GlobalTheme.Provider>
+      </AtlaskitThemeProvider>
     );
   }
 }

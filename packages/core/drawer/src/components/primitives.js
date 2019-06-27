@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, type Node } from 'react';
-import { colors, layers, gridSize } from '@atlaskit/theme';
+import GlobalTheme, { colors, layers, gridSize } from '@atlaskit/theme';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 
 import { Slide } from './transitions';
@@ -31,20 +31,24 @@ const Wrapper = ({
   width: $PropertyType<DrawerPrimitiveProps, 'width'>,
 }) => {
   return (
-    <div
-      css={{
-        backgroundColor: colors.N0,
-        display: 'flex',
-        height: '100vh',
-        left: 0,
-        overflow: 'hidden',
-        position: 'fixed',
-        top: 0,
-        width: widths[width],
-        zIndex: layers.blanket() + 1,
-      }}
-      {...props}
-    />
+    <GlobalTheme.Consumer>
+      {({ mode }) => (
+        <div
+          css={{
+            backgroundColor: mode === 'dark' ? colors.DN30 : colors.N0,
+            display: 'flex',
+            height: '100vh',
+            left: 0,
+            overflow: 'hidden',
+            position: 'fixed',
+            top: 0,
+            width: widths[width],
+            zIndex: layers.blanket() + 1,
+          }}
+          {...props}
+        />
+      )}
+    </GlobalTheme.Consumer>
   );
 };
 
@@ -63,21 +67,25 @@ const Content = props => (
 
 const Sidebar = props => {
   return (
-    <div
-      css={{
-        alignItems: 'center',
-        boxSizing: 'border-box',
-        color: colors.N500,
-        display: 'flex',
-        flexShrink: 0,
-        flexDirection: 'column',
-        height: '100vh',
-        paddingBottom: 2 * gridSize(),
-        paddingTop: 3 * gridSize(),
-        width: 8 * gridSize(),
-      }}
-      {...props}
-    />
+    <GlobalTheme.Consumer>
+      {({ mode }) => (
+        <div
+          css={{
+            alignItems: 'center',
+            boxSizing: 'border-box',
+            color: mode === 'dark' ? colors.DN600 : colors.N500,
+            display: 'flex',
+            flexShrink: 0,
+            flexDirection: 'column',
+            height: '100vh',
+            paddingBottom: 2 * gridSize(),
+            paddingTop: 3 * gridSize(),
+            width: 8 * gridSize(),
+          }}
+          {...props}
+        />
+      )}
+    </GlobalTheme.Consumer>
   );
 };
 
