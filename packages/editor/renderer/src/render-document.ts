@@ -47,9 +47,9 @@ function matchWord(word: string) {
 
 function doTheAcronymBaby(text: string) {
   return text
-    .split(' ')
+    .split(/\b(\w+)\b/)
     .map((word: string) => matchWord(word))
-    .join(' ');
+    .join('');
 }
 
 function parseAcronyms(doc: any): any {
