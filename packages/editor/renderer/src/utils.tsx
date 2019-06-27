@@ -48,7 +48,10 @@ export const deepMapAcronyms = (children: any): any => {
       const acronym = (textPart as string).match(/\[.*?\]/g);
       const descAndSource = (textPart as string).match(/\(.*?\)/g);
       if (acronym && descAndSource) {
-        const description = descAndSource[0].slice(1, -1).split('|')[0];
+        const description = Buffer.from(
+          descAndSource[0].slice(1, -1).split('|')[0],
+          'base64',
+        ).toString();
         //const source = descAndSource[0].slice(1, -1).split('|')[1];
         return (
           <Tooltip content={description} tag="span">
