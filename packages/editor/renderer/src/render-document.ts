@@ -8,6 +8,9 @@ import {
 } from '@atlaskit/editor-common';
 import { Node as PMNode, Schema, Fragment } from 'prosemirror-model';
 
+import acronymList from './acronyms-list.json';
+console.log(acronymList);
+
 export interface RenderOutput<T> {
   result: T;
   stat: RenderOutputStat;
@@ -35,6 +38,34 @@ const withStopwatch = <T>(cb: () => T): ResultWithTime<T> => {
   return { output, time };
 };
 
+function matchWord(word: string) {
+  const found = acronymList[word];
+  if (found instanceof Array && found.length)
+    return `[${word}](${found[0].definition})`;
+  else return word;
+}
+
+function doTheAcronymBaby(text: string) {
+  return text
+    .split(' ')
+    .map((word: string) => matchWord(word))
+    .join(' ');
+}
+
+function parseAcronyms(doc: any): any {
+  if (doc.type == 'text') {
+    return {
+      ...doc,
+      text: doTheAcronymBaby(doc.text),
+    };
+  } else if (doc.content instanceof Array) {
+    return {
+      ...doc,
+      content: doc.content.map((node: any) => parseAcronyms(node)),
+    };
+  } else return doc;
+}
+
 export const renderDocument = <T>(
   doc: any,
   serializer: Serializer<T>,
@@ -43,8 +74,10 @@ export const renderDocument = <T>(
 ): RenderOutput<T | null> => {
   const stat: RenderOutputStat = { sanitizeTime: 0 };
 
+  const parsedAcronyms = parseAcronyms(doc);
+
   const { output: validDoc, time: sanitizeTime } = withStopwatch(() =>
-    getValidDocument(doc, schema, adfStage),
+    getValidDocument(parsedAcronyms, schema, adfStage),
   );
 
   // save sanitize time to stats
