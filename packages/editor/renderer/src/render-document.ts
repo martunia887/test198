@@ -8,9 +8,6 @@ import {
 } from '@atlaskit/editor-common';
 import { Node as PMNode, Schema, Fragment } from 'prosemirror-model';
 
-import acronymList from './acronyms-list.json';
-console.log(acronymList);
-
 export interface RenderOutput<T> {
   result: T;
   stat: RenderOutputStat;
@@ -38,65 +35,70 @@ const withStopwatch = <T>(cb: () => T): ResultWithTime<T> => {
   return { output, time };
 };
 
-function matchWord(word: string) {
-  const found = acronymList[word];
-  if (found instanceof Array && found.length)
-    return `[${word}](${found[0].definition})`;
-  else return word;
+function matchWord(word: string, acronyms: { [key: string]: any }) {
+  const found: any = acronyms[word];
+  if (found) {
+    return `[${word}](${found.definition})`;
+  } else {
+    return word;
+  }
 }
 
-function doTheAcronymBaby(text: string) {
+function doTheAcronymBaby(text: string, acronyms: { [key: string]: any }) {
   return text
     .split(/\b(\w+)\b/)
-    .map((word: string) => matchWord(word))
+    .map((word: string) => matchWord(word, acronyms))
     .join('');
 }
 
-function parseAcronyms(doc: any): any {
+function parseAcronyms(doc: any, acronyms: { [key: string]: any }): any {
   if (doc.type === 'text') {
     return {
       ...doc,
-      text: doTheAcronymBaby(doc.text),
+      text: doTheAcronymBaby(doc.text, acronyms),
     };
   } else if (doc.content instanceof Array) {
     return {
       ...doc,
-      content: doc.content.map((node: any) => parseAcronyms(node)),
+      content: doc.content.map((node: any) => parseAcronyms(node, acronyms)),
     };
   } else return doc;
 }
 
-function getAcronyms() {
+async function getAcronyms() {
   const Confluence = (window as any).Confluence;
   if (Confluence) {
     const pageId = Confluence.getContentId();
     const hostname = Confluence.host.split('.')[0];
-    return fetch(`https://d8045dd8.ngrok.io/a/${hostname}/${pageId}`).then(
-      function(response) {
-        if (response.status !== 200) throw new Error('Something went wrong');
-        return response.json();
-      },
+    const response = await fetch(
+      `https://d8045dd8.ngrok.io/a/${hostname}/${pageId}`,
     );
-  } else return Promise.reject('Not a confluence instance');
+    if (response.status === 200) {
+      return await response.json();
+    } else {
+      throw new Error(`${response.status}`);
+    }
+  } else {
+    return {
+      ACR: {
+        definition:
+          "Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I'm in a transitional period so I don't wanna kill you",
+        url: 'https://slipsum.com/',
+      },
+    };
+  }
 }
 
-export const renderDocument = <T>(
+export const renderDocument = async <T>(
   doc: any,
   serializer: Serializer<T>,
   schema: Schema = defaultSchema,
   adfStage: ADFStage = 'final',
-): RenderOutput<T | null> => {
+): Promise<RenderOutput<T | null>> => {
   const stat: RenderOutputStat = { sanitizeTime: 0 };
 
-  const parsedAcronyms = parseAcronyms(doc);
-
-  getAcronyms()
-    .then(function(data) {
-      console.log(data);
-    })
-    .catch(function(err) {
-      console.log('Fetch Error :-S', err);
-    });
+  const acronyms = await getAcronyms();
+  const parsedAcronyms = await parseAcronyms(doc, acronyms);
 
   const { output: validDoc, time: sanitizeTime } = withStopwatch(() =>
     getValidDocument(parsedAcronyms, schema, adfStage),

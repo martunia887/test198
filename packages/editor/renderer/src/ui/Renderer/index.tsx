@@ -48,7 +48,10 @@ export interface Props {
   createAnalyticsEvent?: CreateUIAnalyticsEventSignature;
 }
 
-export class Renderer extends PureComponent<Props, {}> {
+export class Renderer extends PureComponent<
+  Props,
+  { stat?: any; result?: any }
+> {
   private providerFactory: ProviderFactory;
   private serializer?: ReactSerializer;
 
@@ -56,15 +59,27 @@ export class Renderer extends PureComponent<Props, {}> {
     super(props);
     this.providerFactory = props.dataProviders || new ProviderFactory();
     this.updateSerializer(props);
+    this.state = {};
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.fireAnalyticsEvent({
       action: ACTION.STARTED,
       actionSubject: ACTION_SUBJECT.RENDERER,
       attributes: { platform: PLATFORM.WEB },
       eventType: EVENT_TYPE.UI,
     });
+
+    const { schema, adfStage, document } = this.props;
+
+    const { result, stat } = await renderDocument(
+      document,
+      this.serializer!,
+      schema || defaultSchema,
+      adfStage,
+    );
+
+    this.setState({ result, stat });
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -117,24 +132,20 @@ export class Renderer extends PureComponent<Props, {}> {
 
   render() {
     const {
-      document,
       onComplete,
-      schema,
       appearance,
-      adfStage,
       allowDynamicTextSizing,
       maxHeight,
       truncated,
     } = this.props;
 
-    try {
-      const { result, stat } = renderDocument(
-        document,
-        this.serializer!,
-        schema || defaultSchema,
-        adfStage,
-      );
+    const { stat, result } = this.state;
 
+    if (!stat || !result) {
+      return null;
+    }
+
+    try {
       if (onComplete) {
         onComplete(stat);
       }
