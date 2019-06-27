@@ -35,23 +35,32 @@ const withStopwatch = <T>(cb: () => T): ResultWithTime<T> => {
   return { output, time };
 };
 
-function matchWord(word: string, acronyms: { [key: string]: any }) {
-  const found: any = acronyms[word];
-  if (found) {
-    return `[${word}](${found.definition})`;
+function matchWord(word: string, acronyms: AcronymDefinition) {
+  const found = acronyms[word];
+  if (found && found.length > 0) {
+    return `[${word}](${found[0].definition})`;
   } else {
     return word;
   }
 }
 
-function doTheAcronymBaby(text: string, acronyms: { [key: string]: any }) {
+function doTheAcronymBaby(text: string, acronyms: AcronymDefinition) {
   return text
     .split(/\b(\w+)\b/)
     .map((word: string) => matchWord(word, acronyms))
     .join('');
 }
 
-function parseAcronyms(doc: any, acronyms: { [key: string]: any }): any {
+interface AcronymDefinition {
+  [key: string]: [
+    {
+      definition: string;
+      url: string;
+    }
+  ];
+}
+
+function parseAcronyms(doc: any, acronyms: AcronymDefinition): any {
   if (doc.type === 'text') {
     return {
       ...doc,
