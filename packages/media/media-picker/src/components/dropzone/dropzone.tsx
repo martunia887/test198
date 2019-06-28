@@ -34,10 +34,6 @@ export class Dropzone extends LocalUploadComponentReact<
 > {
   private uiActive: boolean = false;
 
-  constructor(props: DropzoneProps) {
-    super(props);
-  }
-
   private getContainer(): HTMLElement {
     const {
       config: { container },

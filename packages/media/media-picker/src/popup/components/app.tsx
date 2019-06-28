@@ -57,7 +57,6 @@ import {
 import { Clipboard } from '../../components/clipboard/clipboard';
 import { Dropzone } from '../../components/dropzone/dropzone';
 import { Browser as BrowserComponent } from '../../components/browser/browser';
-import { LocalUploadComponent } from '../../components/localUpload';
 
 export interface AppStateProps {
   readonly selectedServiceName: ServiceName;
@@ -108,22 +107,10 @@ export class App extends Component<AppProps, AppState> {
   private readonly componentMediaClient: MediaClient;
   private browserRef = React.createRef<BrowserComponent>();
   private dropzoneRef = React.createRef<Dropzone>();
-  private readonly localUploader: LocalUploadComponent;
 
   constructor(props: AppProps) {
     super(props);
-    const {
-      onStartApp,
-      onUploadsStart,
-      onUploadPreviewUpdate,
-      onUploadStatusUpdate,
-      onUploadProcessing,
-      onUploadEnd,
-      onUploadError,
-      tenantMediaClient,
-      userMediaClient,
-      tenantUploadParams,
-    } = props;
+    const { onStartApp, tenantMediaClient, userMediaClient } = props;
 
     this.state = {
       isDropzoneActive: false,
@@ -140,18 +127,6 @@ export class App extends Component<AppProps, AppState> {
 
     this.componentMediaClient = mediaClient;
 
-    this.localUploader = new LocalUploadComponent(mediaClient, {
-      uploadParams: tenantUploadParams,
-      shouldCopyFileToRecents: false,
-    });
-
-    this.localUploader.on('uploads-start', onUploadsStart);
-    this.localUploader.on('upload-preview-update', onUploadPreviewUpdate);
-    this.localUploader.on('upload-status-update', onUploadStatusUpdate);
-    this.localUploader.on('upload-processing', onUploadProcessing);
-    this.localUploader.on('upload-end', onUploadEnd);
-    this.localUploader.on('upload-error', onUploadError);
-
     onStartApp({
       onCancelUpload: uploadId => {
         this.browserRef &&
@@ -160,7 +135,7 @@ export class App extends Component<AppProps, AppState> {
         this.dropzoneRef &&
           this.dropzoneRef.current &&
           this.dropzoneRef.current.cancel(uploadId);
-        this.localUploader.cancel(uploadId);
+        // this.localUploader.cancel(uploadId);
       },
     });
   }

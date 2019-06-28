@@ -85,10 +85,6 @@ export class LocalUploadComponentReact<
     this.uploadService.cancel(uniqueIdentifier);
   };
 
-  public setUploadParams(uploadParams: UploadParams): void {
-    this.uploadService.setUploadParams(uploadParams);
-  }
-
   private onFilesAdded = ({ files }: UploadsStartEventPayload): void => {
     this.uploadComponent.emitUploadsStart(files);
   };

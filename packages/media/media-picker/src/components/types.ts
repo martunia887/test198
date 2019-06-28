@@ -1,20 +1,10 @@
-import { LocalUploadComponent } from './localUpload';
-import { MediaClient } from '@atlaskit/media-client';
 import { AppProxyReactContext } from '../popup/components/app';
-import { UploadEventPayloadMap, UploadParams } from '..';
-import { UploadComponent, UploadEventEmitter } from './component';
-import { EventEmitter } from '../util/eventEmitter';
+import { UploadParams, UploadEventPayloadMap } from '..';
+import { UploadEventEmitter } from './component';
 
 export interface LocalUploadConfig {
   uploadParams: UploadParams; // This is tenant upload params
   shouldCopyFileToRecents?: boolean;
-}
-
-export interface LocalUploadComponent<
-  M extends UploadEventPayloadMap = UploadEventPayloadMap
-> extends UploadComponent<M> {
-  cancel(uniqueIdentifier?: string): void;
-  setUploadParams(uploadParams: UploadParams): void;
 }
 
 export interface BrowserConfig extends LocalUploadConfig {
@@ -22,51 +12,12 @@ export interface BrowserConfig extends LocalUploadConfig {
   readonly fileExtensions?: Array<string>;
 }
 
-export interface BrowserConstructor {
-  new (mediaClient: MediaClient, browserConfig: BrowserConfig): Browser;
-}
-
-export interface Browser extends LocalUploadComponent {
-  browse(): void;
-  teardown(): void;
-}
-
 export interface ClipboardConfig extends LocalUploadConfig {}
-
-export interface ClipboardConstructor {
-  new (mediaClient: MediaClient, clipboardConfig: ClipboardConfig): Clipboard;
-}
-export interface Clipboard extends LocalUploadComponent {
-  activate(): Promise<void>;
-  deactivate(): void;
-}
 
 export interface PopupConfig extends LocalUploadConfig {
   readonly container?: HTMLElement;
   readonly proxyReactContext?: AppProxyReactContext;
   readonly singleSelect?: boolean;
-}
-
-export interface PopupConstructor {
-  new (mediaClient: MediaClient, config: PopupConfig): Popup;
-}
-
-export type PopupUploadEventPayloadMap = UploadEventPayloadMap & {
-  readonly closed: undefined;
-};
-
-export interface PopupUploadEventEmitter extends UploadEventEmitter {
-  emitClosed(): void;
-}
-export interface Popup
-  extends UploadEventEmitter,
-    EventEmitter<PopupUploadEventPayloadMap> {
-  show(): Promise<void>;
-  cancel(uniqueIdentifier?: string | Promise<string>): Promise<void>;
-  teardown(): void;
-  hide(): void;
-  setUploadParams(uploadParams: UploadParams): void;
-  emitClosed(): void;
 }
 
 export interface DropzoneConfig extends LocalUploadConfig {
@@ -87,4 +38,8 @@ export type DropzoneUploadEventPayloadMap = UploadEventPayloadMap & {
   readonly drop: undefined;
   readonly 'drag-enter': DropzoneDragEnterEventPayload;
   readonly 'drag-leave': DropzoneDragLeaveEventPayload;
+};
+
+export type PopupUploadEventPayloadMap = UploadEventPayloadMap & {
+  readonly closed: undefined;
 };

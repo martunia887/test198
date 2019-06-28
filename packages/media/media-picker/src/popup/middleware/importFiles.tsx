@@ -25,11 +25,11 @@ import { WsProvider } from '../tools/websocket/wsProvider';
 import { WsConnectionHolder } from '../tools/websocket/wsConnectionHolder';
 import { RemoteUploadActivity } from '../tools/websocket/upload/remoteUploadActivity';
 import { MediaFile, copyMediaFileForUpload } from '../../domain/file';
-import { PopupUploadEventEmitter } from '../../components/types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { setUpfrontIdDeferred } from '../actions/setUpfrontIdDeferred';
 import { WsNotifyMetadata } from '../tools/websocket/wsMessageData';
 import { getPreviewFromMetadata } from '../../domain/preview';
+import { UploadEventEmitter } from 'src/components/component';
 export interface RemoteFileItem extends SelectedItem {
   accountId: string;
   publicId: string;
@@ -85,7 +85,7 @@ const mapSelectedItemToSelectedUploadFile = (
 });
 
 export function importFilesMiddleware(
-  eventEmitter: PopupUploadEventEmitter,
+  eventEmitter: UploadEventEmitter,
   wsProvider: WsProvider,
 ): Middleware {
   return store => (next: Dispatch<State>) => (action: any) => {
