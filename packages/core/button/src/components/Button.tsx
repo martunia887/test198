@@ -19,6 +19,7 @@ import InnerWrapper from './InnerWrapper';
 import IconWrapper from './IconWrapper';
 import LoadingSpinner from './LoadingSpinner';
 import { ButtonProps, ThemeMode, ThemeProps, ThemeTokens } from '../types';
+import { getButtonStyles, getSpinnerStyles } from './getStyles';
 
 export type ButtonState = {
   isHover: boolean;
@@ -35,7 +36,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     isSelected: false,
     shouldFitContainer: false,
     spacing: 'default',
-    theme: (current, props) => current(props),
     type: 'button',
   };
 
@@ -133,10 +133,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
       isSelected = false,
       shouldFitContainer = false,
       spacing = 'default',
-      theme = (
-        current: (props: ThemeProps) => ThemeTokens,
-        props: ThemeProps,
-      ) => current(props),
+      theme,
       ...rest
     } = this.props;
 
@@ -161,6 +158,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
       }
       return styles;
     };
+    const state = mapAttributesToState(attributes);
 
     return (
       <Theme.Provider value={theme}>
@@ -168,65 +166,72 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
           {({ mode }: { mode: ThemeMode }) => (
             <Theme.Consumer
               mode={mode}
-              state={mapAttributesToState(attributes)}
               iconIsOnlyChild={iconIsOnlyChild}
               {...this.props}
             >
-              {({ buttonStyles, spinnerStyles }) => (
-                <StyledButton
-                  {...filterProps(rest, StyledButton)}
-                  ref={this.getComposedRefs(this.button, consumerRef)}
-                  onMouseEnter={this.onMouseEnter}
-                  onMouseLeave={this.onMouseLeave}
-                  onMouseDown={this.onMouseDown}
-                  onMouseUp={this.onMouseUp}
-                  onFocus={this.onFocus}
-                  onBlur={this.onBlur}
-                  disabled={isDisabled}
-                  className={className}
-                  css={specifiers(buttonStyles)}
-                >
-                  <InnerWrapper
-                    onClick={this.onInnerClick}
-                    fit={!!shouldFitContainer}
+              {themeTokens =>
+                console.log('ATTRIBUTES', attributes) || (
+                  <StyledButton
+                    {...filterProps(rest, StyledButton)}
+                    ref={this.getComposedRefs(this.button, consumerRef)}
+                    onMouseEnter={this.onMouseEnter}
+                    onMouseLeave={this.onMouseLeave}
+                    onMouseDown={this.onMouseDown}
+                    onMouseUp={this.onMouseUp}
+                    onFocus={this.onFocus}
+                    onBlur={this.onBlur}
+                    disabled={isDisabled}
+                    className={className}
+                    css={specifiers(
+                      getButtonStyles({
+                        state,
+                        ...this.props,
+                        theme: themeTokens,
+                      }),
+                    )}
                   >
-                    {isLoading && (
-                      <LoadingSpinner
-                        spacing={spacing}
-                        appearance={appearance}
-                        isSelected={isSelected}
-                        isDisabled={isDisabled}
-                        styles={spinnerStyles}
-                      />
-                    )}
-                    {iconBefore && (
-                      <IconWrapper
-                        isLoading={isLoading}
-                        spacing={spacing}
-                        isOnlyChild={iconIsOnlyChild}
-                        icon={iconBefore}
-                      />
-                    )}
-                    {children && (
-                      <Content
-                        isLoading={isLoading}
-                        followsIcon={!!iconBefore}
-                        spacing={spacing}
-                      >
-                        {children}
-                      </Content>
-                    )}
-                    {iconAfter && (
-                      <IconWrapper
-                        isLoading={isLoading}
-                        spacing={spacing}
-                        isOnlyChild={iconIsOnlyChild}
-                        icon={iconAfter}
-                      />
-                    )}
-                  </InnerWrapper>
-                </StyledButton>
-              )}
+                    <InnerWrapper
+                      onClick={this.onInnerClick}
+                      fit={!!shouldFitContainer}
+                    >
+                      {isLoading && (
+                        <LoadingSpinner
+                          spacing={spacing}
+                          appearance={appearance}
+                          isSelected={isSelected}
+                          isDisabled={isDisabled}
+                          styles={getSpinnerStyles()}
+                        />
+                      )}
+                      {iconBefore && (
+                        <IconWrapper
+                          isLoading={isLoading}
+                          spacing={spacing}
+                          isOnlyChild={iconIsOnlyChild}
+                          icon={iconBefore}
+                        />
+                      )}
+                      {children && (
+                        <Content
+                          isLoading={isLoading}
+                          followsIcon={!!iconBefore}
+                          spacing={spacing}
+                        >
+                          {children}
+                        </Content>
+                      )}
+                      {iconAfter && (
+                        <IconWrapper
+                          isLoading={isLoading}
+                          spacing={spacing}
+                          isOnlyChild={iconIsOnlyChild}
+                          icon={iconAfter}
+                        />
+                      )}
+                    </InnerWrapper>
+                  </StyledButton>
+                )
+              }
             </Theme.Consumer>
           )}
         </GlobalTheme.Consumer>

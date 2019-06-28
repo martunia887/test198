@@ -2,13 +2,6 @@ import { createTheme } from '@atlaskit/theme/components';
 import * as colors from '@atlaskit/theme/colors';
 import { hex2rgba } from './components/utils';
 import { ThemeProps, ThemeTokens, ThemeMode, ThemeFallbacks } from './types';
-import { getButtonStyles, getSpinnerStyles } from './components/getStyles';
-
-export const fallbacks: ThemeFallbacks = {
-  background: { light: colors.N20A, dark: colors.DN70 },
-  color: { light: colors.N400, dark: colors.DN400 },
-  textDecoration: { light: 'none', dark: 'none' },
-};
 
 export const baseTheme = {
   // Default appearance
@@ -64,7 +57,6 @@ export const baseTheme = {
       focusSelected: { light: colors.N700, dark: colors.N20 },
     },
   },
-
   boxShadowColor: {
     default: {
       focus: { light: hex2rgba(colors.B200, 0.6), dark: colors.B75 },
@@ -110,7 +102,6 @@ export const baseTheme = {
       },
     },
   },
-
   color: {
     default: {
       default: { light: colors.N400, dark: colors.DN400 },
@@ -163,16 +154,31 @@ export const baseTheme = {
   },
 };
 
+export const fallbacks: ThemeFallbacks = {
+  background: { light: colors.N20A, dark: colors.DN70 },
+  color: { light: colors.N400, dark: colors.DN400 },
+  textDecoration: { light: 'none', dark: 'none' },
+};
+
 export function applyPropertyStyle(
   property: string,
   {
+    theme,
     appearance = 'default',
     state = 'default',
     mode = 'light',
-  }: { appearance?: string; state?: string; mode?: ThemeMode },
-  theme: any,
+    ...rest
+  }: {
+    theme: { [string]: any };
+    appearance?: string;
+    state?: string;
+    mode?: ThemeMode;
+  },
 ) {
   const propertyStyles = theme[property];
+  console.log(appearance, state, mode);
+  console.log(propertyStyles);
+  console.log(rest);
   if (!propertyStyles) {
     return 'initial';
   }
@@ -200,7 +206,4 @@ export function applyPropertyStyle(
   return stateStyles[mode] || appearanceStyles.default[mode];
 }
 
-export const Theme = createTheme<ThemeTokens, ThemeProps>(themeProps => ({
-  buttonStyles: getButtonStyles(themeProps),
-  spinnerStyles: getSpinnerStyles(),
-}));
+export const Theme = createTheme(baseTheme);

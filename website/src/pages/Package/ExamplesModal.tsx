@@ -133,7 +133,7 @@ function ExampleNavigation({
                       fs.normalize(filePath.replace('examples/', '')),
                     );
                   }}
-                  theme={(current, props) => {
+                  styles={(current, props) => {
                     const { buttonStyles, ...rest } = current(props);
                     return {
                       buttonStyles: {
