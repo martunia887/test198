@@ -152,7 +152,8 @@ const ForwardRefTextfield = React.forwardRef<{}, TextFieldProps>(
       forwardedRef={ref as TextFieldProps['forwardedRef']}
     />
   ),
-);
+) as any;
+ForwardRefTextfield.displayName = 'TextField';
 
 export { ForwardRefTextfield as TextFieldWithoutAnalytics };
 const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');

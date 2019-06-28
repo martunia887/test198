@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import Textfield from '../../Textfield';
+import { TextFieldWithoutAnalytics as Textfield } from '../../Textfield';
 
 describe('Textfield', () => {
   test('should show defaults', () => {
@@ -110,6 +110,7 @@ describe('Textfield', () => {
         const focusSpy = jest.fn();
         const wrapper = mount(<Textfield onFocus={focusSpy} />);
         expect(focusSpy).toHaveBeenCalledTimes(0);
+        // @ts-ignore
         wrapper.find('input').prop('onFocus')();
         expect(focusSpy).toHaveBeenCalledTimes(1);
       });
@@ -149,7 +150,7 @@ test('textfield ref should be an input', () => {
   mount(
     <div>
       <Textfield
-        ref={input => {
+        ref={(input: HTMLInputElement) => {
           ref = input;
         }}
       />
