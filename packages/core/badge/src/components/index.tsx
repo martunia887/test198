@@ -1,9 +1,15 @@
-import GlobalTheme, { ThemeProp, GlobalThemeTokens } from '@atlaskit/theme';
+import GlobalTheme, { GlobalThemeTokens } from '@atlaskit/theme';
 import * as React from 'react';
 
 import Container from './Container';
 import Format from './Format';
-import { Theme, ThemeAppearance, ThemeProps, ThemeTokens } from '../theme';
+import {
+  Theme,
+  ThemeAppearance,
+  ThemeProps,
+  ThemeTokens,
+  ThemeProp,
+} from '../theme';
 
 export interface BadgeProps {
   /** Affects the visual style of the badge. */

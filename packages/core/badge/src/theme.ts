@@ -11,6 +11,11 @@ export type ThemeAppearance =
 
 export type ThemeMode = 'dark' | 'light';
 
+export type ThemeProp<ThemeTokens, ThemeProps> = (
+  themeFn: (ThemeProps: ThemeProps) => ThemeTokens,
+  themeProps: ThemeProps,
+) => ThemeTokens;
+
 export interface ThemeProps {
   appearance: ThemeAppearance;
   mode: ThemeMode;
