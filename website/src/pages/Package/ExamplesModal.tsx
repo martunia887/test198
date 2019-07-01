@@ -133,16 +133,14 @@ function ExampleNavigation({
                       fs.normalize(filePath.replace('examples/', '')),
                     );
                   }}
-                  styles={(current, props) => {
-                    const { buttonStyles, ...rest } = current(props);
-                    return {
-                      buttonStyles: {
-                        ...buttonStyles,
+                  styles={{
+                    button: (current, props) => {
+                      return {
+                        ...current,
                         width: '100%',
                         margin: '2px 0 0 0',
-                      },
-                      ...rest,
-                    };
+                      };
+                    },
                   }}
                 >
                   {fs.titleize(file.id)}

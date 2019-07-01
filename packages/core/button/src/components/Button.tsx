@@ -21,6 +21,11 @@ import LoadingSpinner from './LoadingSpinner';
 import { ButtonProps, ThemeMode, ThemeProps, ThemeTokens } from '../types';
 import { getButtonStyles, getSpinnerStyles } from './getStyles';
 
+const defaultStyles = {
+  button: getButtonStyles,
+  spinner: getSpinnerStyles,
+};
+
 export type ButtonState = {
   isHover: boolean;
   isActive: boolean;
@@ -56,6 +61,12 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
       this.button.focus();
     }
   }
+
+  getStyles = (key, state) => {
+    const { styles } = this.props;
+    const baseStyles = defaultStyles[key](state);
+    return styles && styles[key] ? styles[key](baseStyles, state) : baseStyles;
+  };
 
   isInteractive = () => !this.props.isDisabled && !this.props.isLoading;
 
@@ -138,6 +149,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     } = this.props;
 
     const attributes = { ...this.state, isSelected, isDisabled };
+    const state = mapAttributesToState(attributes);
 
     const StyledButton: React.ReactType = CustomComponent || this.getElement();
 
@@ -158,7 +170,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
       }
       return styles;
     };
-    const state = mapAttributesToState(attributes);
 
     return (
       <Theme.Provider value={theme}>
@@ -183,7 +194,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     disabled={isDisabled}
                     className={className}
                     css={specifiers(
-                      getButtonStyles({
+                      this.getStyles('button', {
                         state,
                         ...this.props,
                         theme: themeTokens,
@@ -200,7 +211,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                           appearance={appearance}
                           isSelected={isSelected}
                           isDisabled={isDisabled}
-                          styles={getSpinnerStyles()}
+                          styles={this.getStyles('spinner')}
                         />
                       )}
                       {iconBefore && (

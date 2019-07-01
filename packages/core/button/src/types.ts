@@ -60,6 +60,11 @@ export type OnlyButtonProps = {
   onFocus?: React.FocusEventHandler<HTMLElement>;
   /** Set the amount of padding in the button */
   spacing?: Spacing;
+  /** Set custom styles */
+  styles?: {
+    button: (prevStyles, ctx) => {};
+    spinner: (prevStyles, ctx) => {};
+  };
   /** Pass target down to a link within the button component, if a href is provided */
   target?: string;
   /** Option to fit button width to its parent width */
