@@ -15,16 +15,15 @@ interface ThemeProps {
 const ThemedButton = (props: ButtonProps) => (
   <Button
     {...props}
-    theme={(currentTheme, themeProps) => {
-      const { buttonStyles, ...rest } = currentTheme(themeProps);
-      return {
-        buttonStyles: {
-          ...buttonStyles,
+    styles={{
+      button: (current, props) => {
+        return {
+          ...current,
           ...baseStyles,
-          ...extract(customTheme, themeProps),
-        },
-        ...rest,
-      };
+          ...extract(customTheme, props),
+        };
+      },
+      spinner: current => ({ ...current }),
     }}
   />
 );
@@ -70,9 +69,7 @@ export default class extends Component {
           }}
         >
           <ButtonTheme.Provider
-            value={(current, props) =>
-              current({ ...props, mode: mode.value as any })
-            }
+            value={tokens => ({ ...tokens, mode: mode.value as any })}
           >
             <ButtonGroup>
               <Button>Default Button</Button>
