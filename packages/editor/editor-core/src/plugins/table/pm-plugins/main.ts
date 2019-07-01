@@ -26,6 +26,8 @@ import {
   handleClick,
   handleTripleClick,
   handleCut,
+  handleMouseMove,
+  handleMouseOut,
 } from '../event-handlers';
 import { findControlsHoverDecoration } from '../utils';
 import { fixTables } from '../transforms';
@@ -194,6 +196,8 @@ export const createPlugin = (
         mouseover: handleMouseOver,
         mouseleave: handleMouseLeave,
         click: handleClick,
+        mousemove: handleMouseMove,
+        mouseout: handleMouseOut,
       },
 
       handleTripleClick,

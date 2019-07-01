@@ -27,6 +27,7 @@ import {
   checkIfHeaderRowEnabled,
   checkIfHeaderColumnEnabled,
   isIsolating,
+  getControlsDecorations,
 } from '../utils';
 import { Command } from '../../../types';
 import { analyticsService } from '../../../analytics';
@@ -71,6 +72,7 @@ export const setTableRef = (ref?: HTMLElement | null) =>
           tableWrapperTarget,
           isHeaderRowEnabled: checkIfHeaderRowEnabled(state),
           isHeaderColumnEnabled: checkIfHeaderColumnEnabled(state),
+          decorationSet: getControlsDecorations(state),
         },
       };
     },

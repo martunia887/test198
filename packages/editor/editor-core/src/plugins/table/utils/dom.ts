@@ -1,14 +1,17 @@
 import { TableCssClassName as ClassName } from '../types';
 import { closestElement } from '../../../utils';
 
-export const isInsertColumnButton = (node: HTMLElement) => {
+export const isCellNode = (node: HTMLElement) => {
   const cl = node.classList;
   return (
-    cl.contains(ClassName.CONTROLS_INSERT_COLUMN) ||
-    closestElement(node, `.${ClassName.CONTROLS_INSERT_COLUMN}`) ||
-    (cl.contains(ClassName.CONTROLS_BUTTON_OVERLAY) &&
-      closestElement(node, `.${ClassName.COLUMN_CONTROLS}`))
+    cl.contains(ClassName.TABLE_CELL_NODE_WRAPPER) ||
+    cl.contains(ClassName.TABLE_HEADER_NODE_WRAPPER)
   );
+};
+
+export const isInsertColumnButton = (node: HTMLElement) => {
+  const cl = node.classList;
+  return cl.contains('TABLE_COLUMN_MOUSE_POSITION');
 };
 
 export const isInsertRowButton = (node: HTMLElement) => {

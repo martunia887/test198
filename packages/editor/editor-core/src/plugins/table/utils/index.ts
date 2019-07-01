@@ -4,7 +4,10 @@ export {
   normalizeSelection,
   isSelectionUpdated,
 } from './selection';
-export { findControlsHoverDecoration } from './decoration';
+export {
+  findControlsHoverDecoration,
+  getControlsDecorations,
+} from './decoration';
 export {
   isIsolating,
   containsHeaderColumn,
@@ -23,7 +26,12 @@ export {
   removeTableFromLastChild,
   transformSliceToRemoveOpenTable,
 } from './paste';
-export { isInsertColumnButton, isInsertRowButton, getIndex } from './dom';
+export {
+  isInsertColumnButton,
+  isInsertRowButton,
+  getIndex,
+  isCellNode,
+} from './dom';
 export {
   getColumnsWidths,
   isColumnDeleteButtonVisible,

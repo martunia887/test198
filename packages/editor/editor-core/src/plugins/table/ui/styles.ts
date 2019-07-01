@@ -104,6 +104,49 @@ const Button = (css?: string) => `
   ${css}
 `;
 
+const newHeaderButton = (css?: string) => `
+  background: ${tableToolbarColor};
+  border-top: 1px solid ${tableBorderColor};
+  border-left: 1px solid ${tableBorderColor};
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+
+  :focus {
+    outline: none;
+  }
+
+  ${css}
+`;
+
+const newHeaderButtonSelected = `
+  color: ${N0};
+  background-color: ${tableToolbarSelectedColor};
+  border-color: ${tableBorderSelectedColor};
+`;
+
+const columnControls = `
+  .TABLE_COLUMN_MOUSE_POSITION {
+    ${newHeaderButton(`
+      border-right: 1px solid ${tableBorderColor};
+      border-bottom: none;
+      height: ${tableToolbarSize}px;
+      width: calc(100% + 18px);
+      position: absolute;
+      top: -20px;
+      left: -9px;
+      cursor: pointer;
+    `)}
+  }
+
+  .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.SELECTED_CELL},
+  .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.HOVERED_CELL} {
+    & .TABLE_COLUMN_MOUSE_POSITION {
+      ${newHeaderButtonSelected};
+    }
+  }
+`;
+
 const HeaderButton = (css?: string) => `
   .${ClassName.CONTROLS_BUTTON} {
     background: ${tableToolbarColor};
@@ -294,23 +337,6 @@ export const tableStyles = css`
         z-index: ${akEditorUnitZIndex};
         position: relative;
       }
-      ${HeaderButton(`
-        border-right: 1px solid ${tableBorderColor};
-        border-bottom: none;
-        height: ${tableToolbarSize}px;
-        width: 100%;
-
-        .${ClassName.CONTROLS_BUTTON_OVERLAY} {
-          position: absolute;
-          width: 50%;
-          height: 30px;
-          bottom: 0;
-          right: 0;
-        }
-        .${ClassName.CONTROLS_BUTTON_OVERLAY}:first-child {
-          left: 0;
-        }
-      `)}
     }
     :not(.${ClassName.IS_RESIZING}) .${ClassName.COLUMN_CONTROLS} {
       ${HeaderButtonHover()}
@@ -551,7 +577,18 @@ export const tableStyles = css`
     /* Table */
     .${ClassName.TABLE_NODE_WRAPPER} > table {
       overflow: hidden;
+      overflow-y: visible;
       table-layout: fixed;
+
+      .${ClassName.TABLE_CELL_NODEVIEW_CONTENT_DOM} {
+        position: relative;
+
+        & > p {
+          margin-top: 0;
+        }
+      }
+
+      ${columnControls};
 
       .${ClassName.CELL_NODEVIEW_WRAPPER} {
         position: relative;

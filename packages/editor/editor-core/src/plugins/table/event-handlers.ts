@@ -23,12 +23,19 @@ import {
   isLastItemMediaGroup,
   closestElement,
 } from '../../utils/';
-import { isInsertColumnButton, isInsertRowButton, getIndex } from './utils';
+import {
+  isInsertColumnButton,
+  isInsertRowButton,
+  getIndex,
+  isCellNode,
+} from './utils';
 import {
   setEditorFocus,
   showInsertColumnButton,
   showInsertRowButton,
   hideInsertColumnOrRowButton,
+  hoverColumns,
+  clearHoverSelection,
 } from './commands';
 import { getPluginState } from './pm-plugins/main';
 import { getSelectedCellInfo } from './utils';
@@ -106,21 +113,62 @@ export const handleMouseOver = (
   const target = mouseEvent.target as HTMLElement;
 
   if (isInsertColumnButton(target)) {
-    return showInsertColumnButton(getIndex(target))(state, dispatch);
+    const index = getIndex(target);
+    return hoverColumns([index], false)(state, dispatch);
   }
+
   if (isInsertRowButton(target)) {
     return showInsertRowButton(getIndex(target))(state, dispatch);
   }
+
   const { insertColumnButtonIndex, insertRowButtonIndex } = getPluginState(
     state,
   );
+
   if (
     (typeof insertColumnButtonIndex !== 'undefined' ||
       typeof insertRowButtonIndex !== 'undefined') &&
-    hideInsertColumnOrRowButton()(state, dispatch)
+    isCellNode(target)
   ) {
-    return true;
+    return hideInsertColumnOrRowButton()(state, dispatch);
   }
+  return false;
+};
+
+export const handleMouseOut = (
+  view: EditorView,
+  mouseEvent: MouseEvent,
+): boolean => {
+  const target = mouseEvent.target as HTMLElement;
+  const { state, dispatch } = view;
+
+  if (isInsertColumnButton(target)) {
+    clearHoverSelection()(state, dispatch);
+  }
+
+  return false;
+};
+
+export const handleMouseMove = (
+  view: EditorView,
+  mouseEvent: MouseEvent,
+): boolean => {
+  const target = mouseEvent.target as HTMLElement;
+  const { state, dispatch } = view;
+
+  if (isInsertColumnButton(target)) {
+    const { insertColumnButtonIndex } = getPluginState(state);
+    const index = getIndex(target);
+    const colRect = target.getBoundingClientRect();
+    const x1 = mouseEvent.clientX - colRect.left;
+    const w = colRect.width;
+    const positionCol = index + Math.round(x1 / w);
+
+    if (positionCol !== insertColumnButtonIndex) {
+      return showInsertColumnButton(positionCol)(state, dispatch);
+    }
+  }
+
   return false;
 };
 
@@ -129,6 +177,7 @@ export const handleMouseLeave = (view: EditorView): boolean => {
   const { insertColumnButtonIndex, insertRowButtonIndex } = getPluginState(
     state,
   );
+
   if (
     (typeof insertColumnButtonIndex !== 'undefined' ||
       typeof insertRowButtonIndex !== 'undefined') &&

@@ -67,6 +67,7 @@ class FloatingInsertButton extends React.Component<
         : typeof insertRowButtonIndex !== 'undefined'
         ? 'row'
         : null;
+    console.log(type, insertColumnButtonIndex);
     if (!tableNode || !tableRef || !type) {
       return null;
     }
