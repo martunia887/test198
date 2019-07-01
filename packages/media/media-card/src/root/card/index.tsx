@@ -38,22 +38,6 @@ import { isBigger } from '../../utils/dimensionComparer';
 import { getCardStatus } from './getCardStatus';
 import { InlinePlayer } from '../inlinePlayer';
 
-import handleViewport from 'react-in-viewport';
-
-const Block = (props: { inViewport: boolean }) => {
-  const { inViewport, innerRef } = props;
-  const color = inViewport ? '#217ac0' : '#ff9800';
-  const text = inViewport ? 'In viewport' : 'Not in viewport';
-  return (
-    <div className="viewport-block" ref={innerRef}>
-      <h3>{text}</h3>
-      <div style={{ width: '400px', height: '300px', background: color }} />
-    </div>
-  );
-};
-
-const ViewportBlock = handleViewport(Block /** options: {}, config: {} **/);
-
 export class Card extends Component<CardProps, CardState> {
   private hasBeenMounted: boolean = false;
   private onClickPayload?: {
@@ -434,7 +418,13 @@ export class Card extends Component<CardProps, CardState> {
       disableOverlay,
       identifier,
     } = this.props;
-    const { progress, metadata, dataURI, previewOrientation } = this.state;
+    const {
+      progress,
+      metadata,
+      dataURI,
+      previewOrientation,
+      isCardVisible,
+    } = this.state;
     const { analyticsContext, onRetry, onClick, actions } = this;
     const status = getCardStatus(this.state, this.props);
     const card = (
@@ -462,13 +452,14 @@ export class Card extends Component<CardProps, CardState> {
     );
 
     return isLazy ? (
-      // <LazyContent placeholder={card} onRender={this.onCardInViewport}>
-      //   {card}
-      // </LazyContent>
-      <ViewportBlock
-        onEnterViewport={() => console.log('enter')}
-        onLeaveViewport={() => console.log('leave')}
-      />
+      <LazyContent
+        onEnterViewport={() => {
+          console.log('Enter!!!!');
+          this.onCardInViewport();
+        }}
+      >
+        {card}
+      </LazyContent>
     ) : (
       card
     );
@@ -493,9 +484,13 @@ export class Card extends Component<CardProps, CardState> {
   }
 
   onCardInViewport = () => {
-    this.setState({ isCardVisible: true }, () => {
-      const { identifier, mediaClient } = this.props;
-      this.subscribe(identifier, mediaClient);
-    });
+    const { isCardVisible } = this.state;
+    if (!isCardVisible) {
+      console.log('Updating!!!!');
+      this.setState({ isCardVisible: true }, () => {
+        const { identifier, mediaClient } = this.props;
+        this.subscribe(identifier, mediaClient);
+      });
+    }
   };
 }

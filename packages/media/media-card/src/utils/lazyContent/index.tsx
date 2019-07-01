@@ -1,27 +1,23 @@
 import * as React from 'react';
+import handleViewport from 'react-in-viewport';
 import { Wrapper } from './styled';
 
-export interface LazyContentProps {
-  placeholder?: JSX.Element;
-  children?: React.ReactNode;
-  onRender?: () => void;
+interface ReactInViewPortProps {
+  inViewport: boolean;
+  innerRef: any;
+  enterCount: number;
 }
 
-export interface LazyContentState {}
+export interface LazyContentProps extends ReactInViewPortProps {
+  children?: React.ReactNode;
+}
 
-export class LazyContent extends React.Component<
-  LazyContentProps,
-  LazyContentState
-> {
+export class LazyContentComponent extends React.Component<LazyContentProps> {
   render() {
-    const { children, placeholder, onRender } = this.props;
-    return (
-      <Wrapper
-        offset={300}
-        onRender={onRender}
-        placeholder={placeholder}
-        content={children}
-      />
-    );
+    const { innerRef } = this.props;
+
+    return <Wrapper ref={innerRef}>{this.props.children}</Wrapper>;
   }
 }
+
+export const LazyContent = handleViewport(LazyContentComponent);
