@@ -4,6 +4,7 @@ import React, { Fragment, type Node } from 'react';
 import { css, keyframes } from '@emotion/core';
 import { colors } from '@atlaskit/theme';
 
+import { UIControllerSubscriber } from '../../../ui-controller';
 import {
   transitionDuration,
   transitionTimingFunction,
@@ -30,18 +31,28 @@ import type {
  */
 
 const ScrollProvider = (props: any) => (
-  <div
-    css={{
-      boxSizing: 'border-box',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-      overflowX: 'hidden',
-      overflowY: 'auto',
-      width: '100%',
-    }}
-    {...props}
-  />
+  <UIControllerSubscriber>
+    {({ state }) => (
+      <div
+        css={{
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          width: '100%',
+          /* hides the contents visually rather than
+           * unmounting them when nav is collapsed */
+          opacity: state.isCollapsed ? 0 : 1,
+          transition: state.isCollapsed
+            ? `opacity 0s ease-out ${transitionDuration}`
+            : null,
+        }}
+        {...props}
+      />
+    )}
+  </UIControllerSubscriber>
 );
 
 /**
