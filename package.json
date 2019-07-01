@@ -496,6 +496,7 @@
     "react-focus-within": "^2.0.1",
     "react-ga": "^2.3.5",
     "react-helmet": "^5.2.0",
+    "react-in-viewport": "^0.0.38",
     "react-intl": "^2.6.0",
     "react-is": "^16.8.0",
     "react-lazily-render": "^1.2.0",
