@@ -5,6 +5,10 @@ import { MentionDescription, OnMentionEvent } from '../../types';
 import uniqueId from '../../util/id';
 import debug from '../../util/logger';
 import MentionList from '../MentionList';
+import { MentionListStyle } from '../MentionList/styles';
+import MentionSpotlight, {
+  shouldShowMentionSpotlight,
+} from '../MentionSpotlight';
 
 function applyPresence(mentions: MentionDescription[], presences: PresenceMap) {
   const updatedMentions: MentionDescription[] = [];
@@ -52,10 +56,12 @@ export default class ResourcedMentionList extends React.PureComponent<
 > {
   private subscriberKey: string;
   private mentionListRef?: MentionList | null;
+  private showMentionsSpotlight: boolean;
 
   constructor(props: Props) {
     super(props);
     this.subscriberKey = uniqueId('ak-resourced-mention-list');
+    this.showMentionsSpotlight = true; // todo - fix by reading configs
     this.state = {
       resourceError: undefined,
       mentions: [],
@@ -175,6 +181,13 @@ export default class ResourcedMentionList extends React.PureComponent<
     if (shouldFilter) {
       newResourceProvider.filter(newQuery);
     }
+
+    this.showMentionsSpotlight = shouldShowMentionSpotlight(
+      this.showMentionsSpotlight,
+      2,
+      queryChanged,
+      newQuery,
+    );
   }
 
   private refreshPresences(mentions: MentionDescription[]) {
@@ -221,14 +234,27 @@ export default class ResourcedMentionList extends React.PureComponent<
 
   render() {
     const { mentions, resourceError } = this.state;
+    // const {queryChanged} = this
 
     return (
-      <MentionList
-        mentions={mentions}
-        resourceError={resourceError}
-        onSelection={this.notifySelection}
-        ref={this.handleMentionListRef}
-      />
+      <>
+        <MentionListStyle empty={false}>
+          This is the message we wanbt to show for Team Mentions
+        </MentionListStyle>
+
+        <MentionSpotlight
+          showComponent={this.showMentionsSpotlight}
+          createTeamLink="123"
+          onClose={() => console.log('On close callback')}
+        />
+
+        <MentionList
+          mentions={mentions}
+          resourceError={resourceError}
+          onSelection={this.notifySelection}
+          ref={this.handleMentionListRef}
+        />
+      </>
     );
   }
 }
