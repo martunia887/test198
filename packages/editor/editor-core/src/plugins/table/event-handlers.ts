@@ -36,7 +36,10 @@ import {
   hideInsertColumnOrRowButton,
   hoverColumns,
   clearHoverSelection,
+  selectColumn,
+  clearColumnsAndRowsSelection,
 } from './commands';
+import { TableCssClassName as ClassName } from './types';
 import { getPluginState } from './pm-plugins/main';
 import { getSelectedCellInfo } from './utils';
 import { deleteColumns, deleteRows } from './transforms';
@@ -58,10 +61,19 @@ export const handleFocus = (view: EditorView, event: Event): boolean => {
   return false;
 };
 
-export const handleClick = (view: EditorView, event: Event): boolean => {
+export const handleMouseDown = (_: EditorView, event: MouseEvent): boolean => {
+  // // Ignore any `mousedown` `event` from numbered column buttons
+  // // PM end up changing selection during shift selection if not prevented
+  return !!(
+    event.target &&
+    event.target instanceof HTMLElement &&
+    event.target.classList.contains(ClassName.NUMBERED_COLUMN_BUTTON)
+  );
+};
+
+export const handleClick = (view: EditorView, event: MouseEvent): boolean => {
   const element = event.target as HTMLElement;
   const table = findTable(view.state.selection)!;
-
   /**
    * Check if the table cell with an image is clicked
    * and its not the image itself
@@ -102,7 +114,14 @@ export const handleClick = (view: EditorView, event: Event): boolean => {
     dispatch(tr);
     setNodeSelection(view, posInTable + table.pos);
   }
-  return true;
+
+  const { state } = view;
+  if (isInsertColumnButton(element)) {
+    const index = getIndex(element);
+    return selectColumn(index, event.shiftKey)(state, dispatch);
+  }
+
+  return clearColumnsAndRowsSelection()(state, dispatch);
 };
 
 export const handleMouseOver = (

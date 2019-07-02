@@ -24,6 +24,12 @@ export default (
     case 'SET_TARGET_CELL_POSITION':
       return { ...pluginState, ...action.data, isContextualMenuOpen: false };
 
+    case 'SELECT_COLUMN':
+      return { ...pluginState, ...action.data, isContextualMenuOpen: false };
+
+    case 'CLEAR_COLUMNS_AND_ROWS_SELECTION':
+      return { ...pluginState, ...action.data, selectedColumns: [] };
+
     case 'TOGGLE_CONTEXTUAL_MENU':
       return {
         ...pluginState,

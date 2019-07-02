@@ -127,23 +127,78 @@ const newHeaderButtonSelected = `
 
 const columnControls = `
   .TABLE_COLUMN_MOUSE_POSITION {
-    ${newHeaderButton(`
-      border-right: 1px solid ${tableBorderColor};
-      border-bottom: none;
-      height: ${tableToolbarSize}px;
-      width: calc(100% + 18px);
-      position: absolute;
-      top: -20px;
-      left: -9px;
-      cursor: pointer;
-    `)}
+    cursor: pointer;
+    position: absolute;
+    width: calc(100% + 18px);
+    left: -9px;
+    top: -34px;
+    height: 25px;
+
+    &::after {
+      content: ' ';
+
+      ${newHeaderButton(`
+        border-right: 1px solid ${tableBorderColor};
+        border-bottom: none;
+        height: ${tableToolbarSize}px;
+        width: 100%;
+        position: absolute;
+        top: 14px;
+        left: 0px;
+        z-index: 10;
+      `)}
+    }
   }
 
-  .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.SELECTED_CELL},
-  .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.HOVERED_CELL} {
-    & .TABLE_COLUMN_MOUSE_POSITION {
+  .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.COLUMN_SELECTED},
+  .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.HOVERED_COLUMN} {
+    & .TABLE_COLUMN_MOUSE_POSITION::after {
       ${newHeaderButtonSelected};
     }
+  }
+
+  .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.HOVERED_COLUMN}.danger {
+    & .TABLE_COLUMN_MOUSE_POSITION::after {
+      background-color: ${tableToolbarDeleteColor};
+      border: 1px solid ${tableBorderDeleteColor};
+      border-bottom: none;
+      z-index: 100;
+    }
+  }
+`;
+
+const selectedCell = `
+  .${ClassName.SELECTED_CELL},
+  .${ClassName.COLUMN_SELECTED} {
+    position: relative;
+    border: 1px solid ${tableBorderSelectedColor};
+  }
+
+  /* Give selected cells a blue overlay */
+  .${ClassName.SELECTED_CELL}::after,
+  .${ClassName.COLUMN_SELECTED}::after {
+    z-index: ${akEditorSmallZIndex};
+    position: absolute;
+    content: '';
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: ${tableCellSelectedColor};
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .${ClassName.HOVERED_CELL} {
+    position: relative;
+    border: 1px solid ${tableBorderSelectedColor};
+  }
+  .${ClassName.SELECTED_CELL}.danger,
+  .${ClassName.HOVERED_CELL}.danger {
+    border: 1px solid ${tableBorderDeleteColor};
+  }
+  .${ClassName.SELECTED_CELL}.danger::after {
+    background: ${tableCellDeleteColor};
   }
 `;
 
@@ -589,40 +644,10 @@ export const tableStyles = css`
       }
 
       ${columnControls};
+      ${selectedCell};
 
       .${ClassName.CELL_NODEVIEW_WRAPPER} {
         position: relative;
-      }
-
-      .${ClassName.SELECTED_CELL} {
-        position: relative;
-        border: 1px solid ${tableBorderSelectedColor};
-      }
-      /* Give selected cells a blue overlay */
-      .${ClassName.SELECTED_CELL}::after {
-        z-index: ${akEditorSmallZIndex};
-        position: absolute;
-        content: '';
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        background: ${tableCellSelectedColor};
-        opacity: 0.3;
-        pointer-events: none;
-      }
-    }
-    :not(.${ClassName.IS_RESIZING}) .${ClassName.TABLE_NODE_WRAPPER} > table {
-      .${ClassName.HOVERED_CELL} {
-        position: relative;
-        border: 1px solid ${tableBorderSelectedColor};
-      }
-      .${ClassName.SELECTED_CELL}.danger,
-      .${ClassName.HOVERED_CELL}.danger {
-        border: 1px solid ${tableBorderDeleteColor};
-      }
-      .${ClassName.SELECTED_CELL}.danger::after {
-        background: ${tableCellDeleteColor};
       }
     }
     .${ClassName.COLUMN_CONTROLS_WRAPPER},

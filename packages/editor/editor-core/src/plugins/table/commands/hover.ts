@@ -18,11 +18,18 @@ import { findControlsHoverDecoration } from '../utils';
 export const createControlsHoverDecoration = (
   cells: Cell[],
   danger?: boolean,
+  type?: 'row' | 'column',
 ): Decoration[] =>
   cells.map(cell => {
     const classes = [ClassName.HOVERED_CELL];
     if (danger) {
       classes.push('danger');
+    }
+
+    if (type === 'row') {
+      classes.push(ClassName.HOVERED_ROW);
+    } else if (type === 'column') {
+      classes.push(ClassName.HOVERED_COLUMN);
     }
 
     return Decoration.node(
@@ -49,11 +56,12 @@ const getUpdatedDecorationSet = (
   state: EditorState<any>,
   cells: Cell[],
   isInDanger?: boolean,
+  type?: 'row' | 'column',
 ) =>
   updateDecorations(
     state.doc,
     getPluginState(state).decorationSet,
-    cells.length ? createControlsHoverDecoration(cells, isInDanger) : [],
+    cells.length ? createControlsHoverDecoration(cells, isInDanger, type) : [],
     findControlsHoverDecoration,
   );
 
@@ -72,7 +80,12 @@ export const hoverColumns = (hoveredColumns: number[], isInDanger?: boolean) =>
       return {
         type: 'HOVER_COLUMNS',
         data: {
-          decorationSet: getUpdatedDecorationSet(state, cells, isInDanger),
+          decorationSet: getUpdatedDecorationSet(
+            state,
+            cells,
+            isInDanger,
+            'column',
+          ),
           hoveredColumns,
           isInDanger,
         },
@@ -92,7 +105,12 @@ export const hoverRows = (hoveredRows: number[], isInDanger?: boolean) =>
       return {
         type: 'HOVER_ROWS',
         data: {
-          decorationSet: getUpdatedDecorationSet(state, cells, isInDanger),
+          decorationSet: getUpdatedDecorationSet(
+            state,
+            cells,
+            isInDanger,
+            'row',
+          ),
           hoveredRows,
           isInDanger,
         },

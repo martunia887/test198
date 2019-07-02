@@ -7,6 +7,8 @@ export {
 export {
   findControlsHoverDecoration,
   getControlsDecorations,
+  getColumnSelectedDecoration,
+  removeColumnsAndRowsSelection,
 } from './decoration';
 export {
   isIsolating,

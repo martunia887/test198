@@ -40,6 +40,7 @@ export interface TablePluginState {
   decorationSet: DecorationSet;
   editorHasFocus?: boolean;
   hoveredColumns: number[];
+  selectedColumns: number[];
   hoveredRows: number[];
   pluginConfig: PluginConfig;
   isHeaderColumnEnabled: boolean;
@@ -97,6 +98,18 @@ export type TablePluginAction =
     }
   | { type: 'CLEAR_HOVER_SELECTION'; data: { decorationSet: DecorationSet } }
   | { type: 'SET_TARGET_CELL_POSITION'; data: { targetCellPosition?: number } }
+  | {
+      type: 'CLEAR_COLUMNS_AND_ROWS_SELECTION';
+      data: { decorationSet: DecorationSet };
+    }
+  | {
+      type: 'SELECT_COLUMN';
+      data: {
+        decorationSet: DecorationSet;
+        selectedColumns: number[];
+        targetCellPosition?: number;
+      };
+    }
   | { type: 'SHOW_INSERT_ROW_BUTTON'; data: { insertRowButtonIndex: number } }
   | {
       type: 'SHOW_INSERT_COLUMN_BUTTON';
@@ -132,6 +145,7 @@ export const TableCssClassName = {
   COLUMN_CONTROLS: `${tablePrefixSelector}-column-controls`,
   COLUMN_CONTROLS_INNER: `${tablePrefixSelector}-column-controls__inner`,
   COLUMN_CONTROLS_BUTTON_WRAP: `${tablePrefixSelector}-column-controls__button-wrap`,
+  COLUMN_SELECTED: `${tablePrefixSelector}-column-selected`,
 
   ROW_CONTROLS_WRAPPER: `${tablePrefixSelector}-row-controls-wrapper`,
   ROW_CONTROLS: `${tablePrefixSelector}-row-controls`,
@@ -166,6 +180,8 @@ export const TableCssClassName = {
   NUMBERED_COLUMN_BUTTON: `${tablePrefixSelector}-numbered-column__button`,
 
   HOVERED_CELL: `${tablePrefixSelector}-hovered-cell`,
+  HOVERED_ROW: `${tablePrefixSelector}-hovered-row`,
+  HOVERED_COLUMN: `${tablePrefixSelector}-hovered-column`,
   WITH_CONTROLS: `${tablePrefixSelector}-with-controls`,
   RESIZING_PLUGIN: `${tablePrefixSelector}-resizing-plugin`,
   RESIZE_CURSOR: `${tablePrefixSelector}-resize-cursor`,

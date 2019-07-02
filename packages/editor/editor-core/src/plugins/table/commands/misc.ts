@@ -6,7 +6,7 @@ import {
   TableMap,
   CellSelection,
 } from 'prosemirror-tables';
-import { EditorView } from 'prosemirror-view';
+import { EditorView, DecorationSet } from 'prosemirror-view';
 import { Node as PMNode, Slice, Schema } from 'prosemirror-model';
 import {
   findTable,
@@ -22,12 +22,14 @@ import {
   selectRow as selectRowTransform,
   ContentNodeWithPos,
 } from 'prosemirror-utils';
-import { createCommand } from '../pm-plugins/main';
+import { createCommand, getPluginState } from '../pm-plugins/main';
 import {
   checkIfHeaderRowEnabled,
   checkIfHeaderColumnEnabled,
   isIsolating,
   getControlsDecorations,
+  getColumnSelectedDecoration,
+  removeColumnsAndRowsSelection,
 } from '../utils';
 import { Command } from '../../../types';
 import { analyticsService } from '../../../analytics';
@@ -64,6 +66,7 @@ export const setTableRef = (ref?: HTMLElement | null) =>
       const tableWrapperTarget =
         closestElement(tableRef, `.${ClassName.TABLE_NODE_WRAPPER}`) ||
         undefined;
+
       return {
         type: 'SET_TABLE_REF',
         data: {
@@ -72,7 +75,9 @@ export const setTableRef = (ref?: HTMLElement | null) =>
           tableWrapperTarget,
           isHeaderRowEnabled: checkIfHeaderRowEnabled(state),
           isHeaderColumnEnabled: checkIfHeaderColumnEnabled(state),
-          decorationSet: getControlsDecorations(state),
+          decorationSet: tableRef
+            ? getControlsDecorations(state)
+            : DecorationSet.empty,
         },
       };
     },
@@ -329,16 +334,39 @@ export const selectColumn = (column: number, expand?: boolean) =>
   createCommand(
     state => {
       let targetCellPosition;
+      const pluginState = getPluginState(state);
+      let selectedColumns = pluginState.selectedColumns || [];
       const cells = getCellsInColumn(column)(state.tr.selection);
       if (cells && cells.length) {
         targetCellPosition = cells[0].pos;
       }
 
-      return { type: 'SET_TARGET_CELL_POSITION', data: { targetCellPosition } };
+      if (expand) {
+        selectedColumns = [...selectedColumns, column];
+      } else {
+        selectedColumns = [column];
+      }
+
+      return {
+        type: 'SELECT_COLUMN',
+        data: {
+          selectedColumns,
+          targetCellPosition,
+          decorationSet: getColumnSelectedDecoration(state, cells, expand),
+        },
+      };
     },
     tr =>
       selectColumnTransform(column, expand)(tr).setMeta('addToHistory', false),
   );
+
+export const clearColumnsAndRowsSelection = () =>
+  createCommand(state => ({
+    type: 'CLEAR_COLUMNS_AND_ROWS_SELECTION',
+    data: {
+      decorationSet: removeColumnsAndRowsSelection(state),
+    },
+  }));
 
 export const selectRow = (row: number, expand?: boolean) =>
   createCommand(

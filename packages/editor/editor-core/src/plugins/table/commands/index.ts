@@ -32,4 +32,5 @@ export {
   transformSliceToAddTableHeaders,
   triggerUnlessTableHeader,
   addBoldInEmptyHeaderCells,
+  clearColumnsAndRowsSelection,
 } from './misc';

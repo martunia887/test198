@@ -2,15 +2,10 @@ import * as React from 'react';
 import { Component, SyntheticEvent } from 'react';
 import { EditorView } from 'prosemirror-view';
 import { Selection } from 'prosemirror-state';
-import { isCellSelection, getSelectionRect } from 'prosemirror-utils';
-import { browser } from '@atlaskit/editor-common';
+import { getSelectionRect } from 'prosemirror-utils';
 
 import { INPUT_METHOD } from '../../../../analytics';
-import {
-  hoverColumns,
-  selectColumn,
-  clearHoverSelection,
-} from '../../../commands';
+import { hoverColumns, clearHoverSelection } from '../../../commands';
 import { deleteColumnsWithAnalytics } from '../../../commands-with-analytics';
 import { TableCssClassName as ClassName } from '../../../types';
 import {
@@ -104,7 +99,6 @@ export default class ColumnControls extends Component<Props, any> {
                 )}`}
                 key={startIndex}
                 style={{ width }}
-                onMouseDown={e => e.preventDefault()}
               >
                 <div className={ClassName.CONTROLS_INSERT_MARKER} />
               </div>
@@ -137,16 +131,6 @@ export default class ColumnControls extends Component<Props, any> {
     }
 
     this.clearHoverSelection();
-  };
-
-  private selectColumn = (column: number, expand: boolean) => {
-    const { editorView } = this.props;
-    const { state, dispatch } = editorView;
-    // fix for issue ED-4665
-    if (browser.ie_version === 11) {
-      (editorView.dom as HTMLElement).blur();
-    }
-    selectColumn(column, expand)(state, dispatch);
   };
 
   private hoverColumns = (columns: number[], danger?: boolean) => {
