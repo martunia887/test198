@@ -14,7 +14,6 @@ import {
   ELEMENTS_CHANNEL,
 } from '@atlaskit/mention/resource';
 import { MentionItem } from '@atlaskit/mention/item';
-import MentionSpotlight from '../../../../../elements/mention/src/components/MentionSpotlight';
 import { TeamMember } from '@atlaskit/mention/team-resource';
 import { mention } from '@atlaskit/adf-schema';
 import {
