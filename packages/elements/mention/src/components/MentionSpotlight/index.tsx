@@ -1,76 +1,48 @@
 import * as React from 'react';
 
 export interface Props {
-  // optional only because I don't want the parent components that's using this to care about handling null queries,
-  // both parents of this  ( ResourcedMentionList & editor-core/plugins/mentions) accept nullable query strings
-  query?: String;
-  // I could compute the following with in the component it self, but the parents have already computed this,
-  // no point in doing the same task twice
-  // queryChanged: boolean;
-  createTeamLink: String;
-  /** Spotlight will disappear after user types this many characters */
-  queryLengthToHideSpotlight: number;
-}
-
-export interface State {
+  /** Decides whether component should be rendered or not. This logic could have been implemented by passing
+   * `query` as a prop and checking whether it changed. But `editor-core` does not update props, it always
+   * remounts a new instance. So that approach will not work in `editor-core`. So calculating show/hide state
+   * should be done external to this component (use function `shouldShowMentionSpotlight` at the end of this file)
+   */
   showComponent: boolean;
+  createTeamLink: string;
+  /** Callback to track the event where user click on x icon */
+  onClose: () => void;
 }
 
-export default class MentionSpotlight extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      showComponent: true,
-    };
-  }
-
-  componentDidUpdate(prevProps: Props, prevState: State, snapshot) {
-    console.log('componentDidUpdate');
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    const { query, queryLengthToHideSpotlight } = nextProps;
-    const { showComponent } = this.state;
-
-    const queryChanged = query !== this.props.query;
-
-    console.log('componentWillReceiveProps', {
-      query,
-      queryLengthToHideSpotlight,
-      showComponent,
-      queryChanged,
-    });
-
-    // Do not try to hide the component if the component is already hidden
-    // Do not try to hide the component if the query hasn't changed
-    if (showComponent && queryChanged) {
-      if (query && query.length >= queryLengthToHideSpotlight) {
-        this.setState({
-          showComponent: false,
-        });
-      }
-    }
-  }
-
-  hideComponent = () => {
-    console.log('Hide component called');
-
-    this.setState({
-      showComponent: false,
-    });
-  };
-
+export default class MentionSpotlight extends React.Component<Props, {}> {
   render() {
-    const { showComponent } = this.state;
-    console.log('render-showComponent', showComponent);
+    const { showComponent, onClose } = this.props;
 
-    if (!showComponent) return null;
+    if (!showComponent) {
+      return null;
+    }
 
     return (
       <>
         <div>I am SPOTLIGHT!</div>
-        <div onClick={this.hideComponent}>CLOSE</div>
+        <div onClick={onClose}>CLOSE</div>
       </>
     );
   }
 }
+
+export const shouldShowMentionSpotlight = (
+  componentIsShownNow: boolean,
+  queryLengthToHideSpotlight: number,
+  queryChanged: boolean,
+  query?: String,
+) => {
+  // Do not try to hide the component if the component is already hidden
+  // Do not try to hide the component if the query hasn't changed
+  if (componentIsShownNow && queryChanged) {
+    if (query && query.length >= queryLengthToHideSpotlight) {
+      return false;
+    }
+  }
+
+  // keep the component visibility as it is
+  return componentIsShownNow;
+};

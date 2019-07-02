@@ -21,6 +21,9 @@ import {
   ProviderFactory,
   ContextIdentifierProvider,
 } from '@atlaskit/editor-common';
+import MentionSpotlight, {
+  shouldShowMentionSpotlight,
+} from '../../../../../elements/mention/src/components/MentionSpotlight';
 
 import { analyticsService } from '../../analytics';
 import { EditorPlugin, Command, EditorAppearance } from '../../types';
@@ -202,15 +205,19 @@ const mentionsPlugin = (
               mention,
             }),
           );
-
           arra.unshift({
             title: 'Hi',
             render: () => {
               return (
                 <MentionSpotlight
-                  query={query}
+                  showComponent={shouldShowMentionSpotlight(
+                    true,
+                    1,
+                    queryChanged,
+                    query,
+                  )}
                   createTeamLink="qqqq"
-                  queryLengthToHideSpotlight={1}
+                  onClose={() => console.log('On close callback')}
                 />
               );
             },
