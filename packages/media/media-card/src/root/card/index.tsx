@@ -452,14 +452,7 @@ export class Card extends Component<CardProps, CardState> {
     );
 
     return isLazy ? (
-      <LazyContent
-        onEnterViewport={() => {
-          console.log('Enter!!!!');
-          this.onCardInViewport();
-        }}
-      >
-        {card}
-      </LazyContent>
+      <LazyContent onEnterViewport={this.onCardInViewport}>{card}</LazyContent>
     ) : (
       card
     );
@@ -486,7 +479,6 @@ export class Card extends Component<CardProps, CardState> {
   onCardInViewport = () => {
     const { isCardVisible } = this.state;
     if (!isCardVisible) {
-      console.log('Updating!!!!');
       this.setState({ isCardVisible: true }, () => {
         const { identifier, mediaClient } = this.props;
         this.subscribe(identifier, mediaClient);
