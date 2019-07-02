@@ -14,6 +14,7 @@ import {
   ELEMENTS_CHANNEL,
 } from '@atlaskit/mention/resource';
 import { MentionItem } from '@atlaskit/mention/item';
+import MentionSpotlight from '../../../../../elements/mention/src/components/MentionSpotlight';
 import { TeamMember } from '@atlaskit/mention/team-resource';
 import { mention } from '@atlaskit/adf-schema';
 import {
@@ -187,7 +188,7 @@ const mentionsPlugin = (
             pluginState.mentionProvider.filter(query || '', mentionContext);
           }
 
-          return mentions.map(
+          const arra = mentions.map(
             (mention: MentionDescription): TypeAheadItem => ({
               title: mention.id,
               render: ({ isSelected, onClick, onHover }) => (
@@ -201,6 +202,21 @@ const mentionsPlugin = (
               mention,
             }),
           );
+
+          arra.unshift({
+            title: 'Hi',
+            render: () => {
+              return (
+                <MentionSpotlight
+                  query={query}
+                  createTeamLink="qqqq"
+                  queryLengthToHideSpotlight={1}
+                />
+              );
+            },
+          });
+
+          return arra;
         },
         selectItem(state, item, insert, { mode }) {
           const { schema } = state;

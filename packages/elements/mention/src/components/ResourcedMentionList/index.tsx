@@ -5,6 +5,8 @@ import { MentionDescription, OnMentionEvent } from '../../types';
 import uniqueId from '../../util/id';
 import debug from '../../util/logger';
 import MentionList from '../MentionList';
+import { MentionListStyle } from '../MentionList/styles';
+import MentionSpotlight from '../MentionSpotlight';
 
 function applyPresence(mentions: MentionDescription[], presences: PresenceMap) {
   const updatedMentions: MentionDescription[] = [];
@@ -221,14 +223,27 @@ export default class ResourcedMentionList extends React.PureComponent<
 
   render() {
     const { mentions, resourceError } = this.state;
+    // const {queryChanged} = this
 
     return (
-      <MentionList
-        mentions={mentions}
-        resourceError={resourceError}
-        onSelection={this.notifySelection}
-        ref={this.handleMentionListRef}
-      />
+      <>
+        <MentionListStyle empty={false}>
+          This is the message we wanbt to show for Team Mentions
+        </MentionListStyle>
+
+        <MentionSpotlight
+          query={this.props.query}
+          createTeamLink="123"
+          queryLengthToHideSpotlight={2}
+        />
+
+        <MentionList
+          mentions={mentions}
+          resourceError={resourceError}
+          onSelection={this.notifySelection}
+          ref={this.handleMentionListRef}
+        />
+      </>
     );
   }
 }
