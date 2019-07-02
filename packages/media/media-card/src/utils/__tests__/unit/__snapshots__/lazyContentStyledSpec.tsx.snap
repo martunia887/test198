@@ -6,7 +6,7 @@ exports[`Lazy Content styled should override LazilyRender with a 100% dimensions
   height: 100%;
 }
 
-<LazilyRender
+<div
   className="c0"
 />
 `;
