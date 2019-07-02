@@ -1,4 +1,5 @@
 import * as React from 'react';
+import 'intersection-observer';
 import handleViewport from 'react-in-viewport';
 import { Wrapper } from './styled';
 
@@ -20,4 +21,8 @@ export class LazyContentComponent extends React.Component<LazyContentProps> {
   }
 }
 
-export const LazyContent = handleViewport(LazyContentComponent);
+export const LazyContent = handleViewport(
+  LazyContentComponent,
+  {},
+  { disconnectOnLeave: true },
+);
