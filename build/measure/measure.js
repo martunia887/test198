@@ -231,16 +231,6 @@ module.exports = async function main(
       `${packageName}-bundle-size.json`,
     );
 
-    if (process.env.CI) {
-      await downloadFromS3(masterStatsFolder, 'master', packageName);
-    } else {
-      await downloadFromS3ForLocal(masterStatsFolder, 'master', packageName);
-    }
-
-    const results = getBundleCheckResult(masterStatsFilePath, stats);
-    chalk.cyan(`Writing current build stats to "${currentStatsFilePath}"`);
-    fWriteStats(currentStatsFilePath, results.statsWithDiff);
-
     if (updateSnapshot) {
       // Store file into folder for S3
       fWriteStats(masterStatsFilePath, stats);
@@ -248,7 +238,17 @@ module.exports = async function main(
         // upload to s3 masterStats
         uploadToS3(masterStatsFilePath, 'master');
       }
+    } else {
+      if (process.env.CI) {
+        await downloadFromS3(masterStatsFolder, 'master', packageName);
+      } else {
+        await downloadFromS3ForLocal(masterStatsFolder, 'master', packageName);
+      }
     }
+
+    const results = getBundleCheckResult(masterStatsFilePath, stats);
+    chalk.cyan(`Writing current build stats to "${currentStatsFilePath}"`);
+    fWriteStats(currentStatsFilePath, results.statsWithDiff);
   } // closing s3
 
   // TODO: replace after changes to flow are complete
@@ -274,7 +274,7 @@ module.exports = async function main(
     // TODO: remove this write once the flow is switched
     fWriteStats(prevStatsPath, stats);
   } else if (results.statsExceededSizeLimit.length && isLint) {
-    throw new Error(`âœ– Module "${packageName}" has exceeded size limit!`);
+    throw new Error(`✖ – Module "${packageName}" has exceeded size limit!`);
   }
 
   // TODO: return success always after switching the flow

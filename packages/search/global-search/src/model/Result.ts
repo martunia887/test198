@@ -20,6 +20,7 @@ export enum JiraProjectType {
 export interface Results<T = Result> {
   items: T[];
   totalSize: number;
+  numberOfCurrentItems?: number;
 }
 
 export type PeopleResults = Results<PersonResult>;
@@ -47,15 +48,9 @@ export interface Result {
   // used to indicate the result came from the recently viewed FE cache
   isRecentResult?: boolean;
 }
-/**
- * Map of String keys and Array of results value, but can be empty as well
- */
-export interface GenericResultMap<T = Result> {
-  [key: string]: T[];
-}
 
 export type ResultsWithTiming<
-  T extends ConfluenceResultsMap | GenericResultMap
+  T extends ConfluenceResultsMap | JiraResultsMap
 > = {
   results: T;
   timings?: {
@@ -65,6 +60,7 @@ export type ResultsWithTiming<
 };
 
 export interface ConfluenceResultsMap {
+  [key: string]: PeopleResults | ConfluenceObjectResults | Results;
   people: PeopleResults;
   objects: ConfluenceObjectResults;
   spaces: Results;
@@ -76,11 +72,11 @@ export interface ConfluenceRecentsMap {
   people: PeopleResults;
 }
 
-export interface JiraResultsMap extends GenericResultMap {
-  issues: Result[];
-  boards: Result[];
-  projects: Result[];
-  filters: Result[];
+export interface JiraResultsMap {
+  [key: string]: Result[];
+  objects: Result[];
+  containers: Result[];
+  people: Result[];
 }
 
 export interface ConfluenceObjectResult extends Result {

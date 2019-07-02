@@ -1,5 +1,34 @@
 # @atlaskit/global-navigation
 
+## 7.3.0
+
+### Minor Changes
+
+- [minor][2258719b5f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2258719b5f):
+
+  Add enableUserCentricProducts to Switcher. Remove enableExpandLink.
+
+  The expand link is now displayed when user-centric mode is enabled,
+  and the amount of products to display exceeds the threshold of 5.
+
+  To upgrade: Delete any references to enableExpandLink/experimental_enableExpandLink
+
+## 7.2.6
+
+### Patch Changes
+
+- [patch][4615439434](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4615439434):
+
+  index.ts will now be ignored when publishing to npm
+
+## 7.2.5
+
+### Patch Changes
+
+- [patch][ad35073d36](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ad35073d36):
+
+  Update Atlassian Switcher rank
+
 ## 7.2.4
 
 - Updated dependencies [cfc3c8adb3](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cfc3c8adb3):

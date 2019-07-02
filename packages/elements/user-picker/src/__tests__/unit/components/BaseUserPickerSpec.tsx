@@ -6,6 +6,7 @@ import * as debounce from 'lodash.debounce';
 import * as React from 'react';
 import { BaseUserPicker } from '../../../components/BaseUserPicker';
 import { getComponents } from '../../../components/components';
+import * as analytics from '../../../analytics';
 import {
   optionToSelectableOption,
   optionToSelectableOptions,
@@ -384,6 +385,70 @@ describe('BaseUserPicker', () => {
         expect(debounce).toHaveBeenCalledWith(expect.any(Function), 200);
       });
     });
+
+    describe('with session id', () => {
+      let analyticsSpy: jest.SpyInstance;
+      beforeEach(() => {
+        analyticsSpy = jest.spyOn(analytics, 'startSession').mockReturnValue({
+          id: 'random-session-id',
+        });
+      });
+
+      afterEach(() => {
+        analyticsSpy.mockRestore();
+      });
+
+      it('should pass sessionId to load option', () => {
+        const loadOptions = jest.fn(() => Promise.resolve(options));
+        const component = mountWithIntl(getBasePicker({ loadOptions }));
+        const input = component.find('input');
+        input.simulate('focus');
+        expect(loadOptions).toHaveBeenCalledWith(
+          undefined,
+          'random-session-id',
+        );
+      });
+
+      const testData = [
+        {
+          callback: jest.fn(),
+          payload: ['random-session-id'],
+          prop: 'onFocus',
+          toString: () => 'onFocus',
+        },
+        {
+          callback: jest.fn(),
+          payload: ['random-session-id'],
+          prop: 'onBlur',
+          toString: () => 'onBlur',
+        },
+        {
+          callback: jest.fn(),
+          payload: ['random-session-id'],
+          prop: 'onClose',
+          toString: () => 'onClose',
+        },
+        {
+          callback: jest.fn(),
+          payload: ['search', 'random-session-id'],
+          prop: 'onInputChange',
+          propParams: ['search', { action: 'input-change' }],
+          toString: () => 'onInputChange',
+        },
+      ];
+
+      test.each(testData)(
+        'should pass session id %s',
+        ({ callback, payload, prop, propParams = [] }) => {
+          const component = mountWithIntl(
+            getBasePicker({ [prop]: callback, open: true }),
+          );
+          const input = component.find(Select);
+          input.props()[prop](...propParams);
+          expect(callback).toHaveBeenCalledWith(...payload);
+        },
+      );
+    });
   });
 
   describe('with defaultOptions', () => {
@@ -497,7 +562,7 @@ describe('BaseUserPicker', () => {
         search: 'test',
       });
 
-      expect(loadOptions).toHaveBeenCalledWith('test');
+      expect(loadOptions).toHaveBeenCalledWith('test', expect.any(String));
     });
   });
 
