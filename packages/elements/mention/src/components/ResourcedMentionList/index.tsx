@@ -5,7 +5,6 @@ import { MentionDescription, OnMentionEvent } from '../../types';
 import uniqueId from '../../util/id';
 import debug from '../../util/logger';
 import MentionList from '../MentionList';
-import { MentionListStyle } from '../MentionList/styles';
 import MentionSpotlight, {
   shouldShowMentionSpotlight,
 } from '../MentionSpotlight';
@@ -61,7 +60,7 @@ export default class ResourcedMentionList extends React.PureComponent<
   constructor(props: Props) {
     super(props);
     this.subscriberKey = uniqueId('ak-resourced-mention-list');
-    this.showMentionsSpotlight = true; // todo - fix by reading configs
+    this.showMentionsSpotlight = true;
     this.state = {
       resourceError: undefined,
       mentions: [],
@@ -238,10 +237,6 @@ export default class ResourcedMentionList extends React.PureComponent<
 
     return (
       <>
-        <MentionListStyle empty={false}>
-          This is the message we wanbt to show for Team Mentions
-        </MentionListStyle>
-
         <MentionSpotlight
           showComponent={this.showMentionsSpotlight}
           createTeamLink="123"
