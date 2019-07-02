@@ -23,6 +23,6 @@ export class LazyContentComponent extends React.Component<LazyContentProps> {
 
 export const LazyContent = handleViewport(
   LazyContentComponent,
-  {},
+  {}, // currently option rootMargin does not work properly to obtain a loading offset. Omited for now
   { disconnectOnLeave: true },
 );
