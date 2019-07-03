@@ -13,7 +13,9 @@ const mockEvents = {
 };
 const mockAuthFlow = jest.fn();
 
-jest.mock('react-lazily-render', () => (data: any) => data.content);
+jest.mock('../CardWithUrl/lazily-content', () => ({
+  LazyContent: (data: any) => data.children,
+}));
 jest.mock('react-transition-group/Transition', () => (data: any) =>
   data.children,
 );

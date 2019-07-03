@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MouseEvent, KeyboardEvent } from 'react';
-import LazilyRender from 'react-lazily-render';
+import { LazyContent } from './lazily-content';
 import { CardLinkView } from '@atlaskit/media-ui';
 
 import { CardWithUrlContentProps } from './types';
@@ -12,11 +12,10 @@ import { InlineCard } from '../InlineCard';
 import { useSmartLink } from '../../state';
 
 export function LazyCardWithUrlContent(props: CardWithUrlContentProps) {
-  const { appearance, isSelected, container, url } = props;
+  const { isSelected, url } = props;
   return (
-    <LazilyRender
-      offset={100}
-      component={appearance === 'inline' ? 'span' : 'div'}
+    <LazyContent
+      onEnterViewport={() => console.log('enter')}
       placeholder={
         <CardLinkView
           isSelected={isSelected}
@@ -24,9 +23,9 @@ export function LazyCardWithUrlContent(props: CardWithUrlContentProps) {
           link={url}
         />
       }
-      scrollContainer={container}
-      content={<CardWithUrlContent {...props} />}
-    />
+    >
+      <CardWithUrlContent {...props} />
+    </LazyContent>
   );
 }
 
