@@ -162,7 +162,13 @@ class Modal extends React.Component<Props, State> {
               isEnabled={stackIndex === 0 && isOpen}
               autoFocus={autoFocus}
             >
-              <Blanket isTinted onBlanketClicked={this.handleOverlayClick} />
+              {components && components.Blanket ? (
+                <components.Blanket
+                  onBlanketClicked={this.handleOverlayClick}
+                />
+              ) : (
+                <Blanket isTinted onBlanketClicked={this.handleOverlayClick} />
+              )}
               <Positioner
                 style={slide}
                 scrollBehavior={scrollBehavior}

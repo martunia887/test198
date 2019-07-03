@@ -46,7 +46,12 @@ import {
   UploadEndEventPayload,
   UploadErrorEventPayload,
 } from '../../domain/uploadEvent';
-import { MediaPickerPopupWrapper, SidebarWrapper, ViewWrapper } from './styled';
+import {
+  DropzoneContainer,
+  MediaPickerPopupWrapper,
+  SidebarWrapper,
+  ViewWrapper,
+} from './styled';
 import {
   DropzoneDragEnterEventPayload,
   DropzoneDragLeaveEventPayload,
@@ -58,6 +63,7 @@ import { Clipboard } from '../../components/clipboard/clipboard';
 import { Dropzone } from '../../components/dropzone/dropzone';
 import { Browser as BrowserComponent } from '../../components/browser/browser';
 import { LocalUploadComponent } from '../../components/localUpload';
+import Blanket from '@atlaskit/blanket';
 
 export interface AppStateProps {
   readonly selectedServiceName: ServiceName;
@@ -180,10 +186,29 @@ export class App extends Component<AppProps, AppState> {
   };
 
   saveDropzoneContainer = (instance: HTMLElement) => {
+    console.log('saveDropzoneContainer', instance);
+    if (this.state.modalDialogContainer) {
+      return;
+    }
+
     this.setState({
       modalDialogContainer: instance,
     });
   };
+
+  // saveDropzoneContainer2 = (instance: HTMLElement) => {
+  //   this.setState({
+  //     modalDialogContainer2: instance,
+  //   });
+  // };
+
+  Blanket = (props: any) => (
+    <DropzoneContainer
+      {...props}
+      onClick={props.onBlanketClicked}
+      innerRef={this.saveDropzoneContainer}
+    />
+  );
 
   render() {
     const {
@@ -199,9 +224,16 @@ export class App extends Component<AppProps, AppState> {
       <ModalTransition>
         {isVisible && (
           <Provider store={store}>
-            <ModalDialog onClose={onClose} width="x-large" isChromeless={true}>
+            <ModalDialog
+              components={{ Blanket: this.Blanket }}
+              onClose={onClose}
+              width="x-large"
+              isChromeless={true}
+            >
               <PassContext store={store} proxyReactContext={proxyReactContext}>
-                <MediaPickerPopupWrapper innerRef={this.saveDropzoneContainer}>
+                {/* <Blanket ref={this.saveDropzoneContainer} /> */}
+                {/* <DropzoneContainer innerRef={this.saveDropzoneContainer2} /> */}
+                <MediaPickerPopupWrapper>
                   <SidebarWrapper>
                     <Sidebar />
                   </SidebarWrapper>
@@ -214,6 +246,8 @@ export class App extends Component<AppProps, AppState> {
                 </MediaPickerPopupWrapper>
                 {this.renderClipboard()}
                 {this.renderDropZone()}
+                {/* {this.renderDropZone2()} */}
+                {/* </Blanket> */}
               </PassContext>
             </ModalDialog>
           </Provider>
@@ -297,6 +331,8 @@ export class App extends Component<AppProps, AppState> {
       container: modalDialogContainer,
     };
 
+    console.log('renderDropZone', modalDialogContainer);
+
     return (
       <Dropzone
         ref={this.dropzoneRef}
@@ -313,6 +349,46 @@ export class App extends Component<AppProps, AppState> {
       />
     );
   };
+  // private renderDropZone2 = () => {
+  //   const {
+  //     onUploadPreviewUpdate,
+  //     onUploadStatusUpdate,
+  //     onUploadProcessing,
+  //     onUploadEnd,
+  //     onUploadError,
+  //     tenantUploadParams,
+  //   } = this.props;
+
+  //   const { modalDialogContainer2 } = this.state;
+
+  //   if (!modalDialogContainer2) {
+  //     return null;
+  //   }
+
+  //   const config: DropzoneConfig = {
+  //     uploadParams: tenantUploadParams,
+  //     shouldCopyFileToRecents: false,
+  //     container: modalDialogContainer2,
+  //   };
+
+  //   console.log('renderDropZone2', modalDialogContainer2)
+
+  //   return (
+  //     <Dropzone
+  //       ref={this.dropzoneRef}
+  //       mediaClient={this.componentMediaClient}
+  //       config={config}
+  //       onUploadsStart={this.onDrop}
+  //       onPreviewUpdate={onUploadPreviewUpdate}
+  //       onStatusUpdate={onUploadStatusUpdate}
+  //       onProcessing={onUploadProcessing}
+  //       onEnd={onUploadEnd}
+  //       onError={onUploadError}
+  //       onDragEnter={this.onDragEnter}
+  //       onDragLeave={this.onDragLeave}
+  //     />
+  //   );
+  // };
 }
 
 const mapStateToProps = ({

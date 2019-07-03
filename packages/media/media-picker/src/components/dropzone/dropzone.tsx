@@ -46,9 +46,10 @@ export class Dropzone extends LocalUploadComponentReact<
   }
 
   public componentDidMount() {
-    const { onCancelFn } = this.props;
-    this.removeContainerListeners(this.getContainer()); // in case we call activate twice in a row?
-    this.addContainerListeners(this.getContainer());
+    const { onCancelFn, config } = this.props;
+    console.log('componentDidMount', config.container);
+    // this.removeContainerListeners(this.getContainer()); // in case we call activate twice in a row?
+    this.addContainerListeners(config.container);
     if (onCancelFn) {
       onCancelFn(this.cancel);
     }
@@ -59,6 +60,7 @@ export class Dropzone extends LocalUploadComponentReact<
   }
 
   public componentWillReceiveProps(nextProps: DropzoneProps): void {
+    console.log('componentWillReceiveProps');
     const {
       config: { container: newContainer },
     } = nextProps;
@@ -76,14 +78,18 @@ export class Dropzone extends LocalUploadComponentReact<
   private addContainerListeners = (
     container: HTMLElement = this.getContainer(),
   ) => {
-    container.addEventListener('dragover', this.onDragOver, false);
-    container.addEventListener('dragleave', this.onDragLeave, false);
+    // const useCapture = container !== document.body;
+    const useCapture = false;
+    console.log('addContainerListeners', container, useCapture);
+    container.addEventListener('dragover', this.onDragOver, useCapture);
+    container.addEventListener('dragleave', this.onDragLeave, useCapture);
     container.addEventListener('drop', this.onFileDropped);
   };
 
   private removeContainerListeners = (
     container: HTMLElement = this.getContainer(),
   ) => {
+    // TODO: do we need capture?
     container.removeEventListener('dragover', this.onDragOver, false);
     container.removeEventListener('dragleave', this.onDragLeave, false);
     container.removeEventListener('drop', this.onFileDropped);
@@ -93,6 +99,7 @@ export class Dropzone extends LocalUploadComponentReact<
     e.preventDefault();
 
     if (e.dataTransfer && dragContainsFiles(e)) {
+      e.stopPropagation();
       const dataTransfer = e.dataTransfer;
       let allowed;
 
@@ -109,6 +116,7 @@ export class Dropzone extends LocalUploadComponentReact<
 
   private onDragLeave = (e: DragEvent): void => {
     if (e.dataTransfer) {
+      e.stopPropagation();
       e.preventDefault();
       let length = 0;
       if (dragContainsFiles(e)) {

@@ -41,6 +41,7 @@ export interface WrapperProps {
     Footer?: React.ElementType;
     Body?: React.ElementType;
     Container?: React.ElementType;
+    Blanket?: React.ElementType;
   };
   /**
     Deprecated, use components prop: Component to render the body of the modal, replaces the internal implementation.
