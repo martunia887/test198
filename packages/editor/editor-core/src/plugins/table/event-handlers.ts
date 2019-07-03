@@ -61,14 +61,18 @@ export const handleFocus = (view: EditorView, event: Event): boolean => {
   return false;
 };
 
-export const handleMouseDown = (_: EditorView, event: MouseEvent): boolean => {
-  // // Ignore any `mousedown` `event` from numbered column buttons
-  // // PM end up changing selection during shift selection if not prevented
-  return !!(
-    event.target &&
-    event.target instanceof HTMLElement &&
-    event.target.classList.contains(ClassName.NUMBERED_COLUMN_BUTTON)
-  );
+export const handleMouseDown = (
+  view: EditorView,
+  event: MouseEvent,
+): boolean => {
+  const element = event.target as HTMLElement;
+  const { state, dispatch } = view;
+
+  if (!isInsertColumnButton(element)) {
+    return clearColumnsAndRowsSelection()(state, dispatch);
+  }
+
+  return false;
 };
 
 export const handleClick = (view: EditorView, event: MouseEvent): boolean => {
@@ -121,7 +125,7 @@ export const handleClick = (view: EditorView, event: MouseEvent): boolean => {
     return selectColumn(index, event.shiftKey)(state, dispatch);
   }
 
-  return clearColumnsAndRowsSelection()(state, dispatch);
+  return false;
 };
 
 export const handleMouseOver = (
