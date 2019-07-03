@@ -15,7 +15,6 @@ export function LazyCardWithUrlContent(props: CardWithUrlContentProps) {
   const { isSelected, url } = props;
   return (
     <LazyContent
-      onEnterViewport={() => console.log('enter')}
       placeholder={
         <CardLinkView
           isSelected={isSelected}
