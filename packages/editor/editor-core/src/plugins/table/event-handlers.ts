@@ -61,7 +61,7 @@ export const handleFocus = (view: EditorView, event: Event): boolean => {
   return false;
 };
 
-export const handleMouseDown = (_: EditorView, event: MouseEvent): boolean =>
+export const handleMouseDown = (_: EditorView, event: Event): boolean =>
   !!// Ignore any `mousedown` `event` from numbered column buttons
   // PM end up changing selection during shift selection if not prevented
   (
