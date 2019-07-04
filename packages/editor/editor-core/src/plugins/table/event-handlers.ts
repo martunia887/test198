@@ -175,7 +175,7 @@ export const handleMouseOut = (
 
 export const handleMouseMove = (
   view: EditorView,
-  mouseEvent: MouseEvent,
+  mouseEvent: Event,
 ): boolean => {
   const target = mouseEvent.target as HTMLElement;
   const { state, dispatch } = view;
@@ -184,7 +184,7 @@ export const handleMouseMove = (
     const { insertColumnButtonIndex } = getPluginState(state);
     const index = getIndex(target);
     const colRect = target.getBoundingClientRect();
-    const x1 = mouseEvent.clientX - colRect.left;
+    const x1 = (mouseEvent as MouseEvent).clientX - colRect.left;
     const w = colRect.width;
     const positionCol = index + Math.round(x1 / w);
 

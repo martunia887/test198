@@ -133,6 +133,7 @@ const tablesPlugin = (disableBreakoutUI?: boolean): EditorPlugin => ({
             pluginState &&
             pluginState.pluginConfig &&
             pluginState.pluginConfig.allowControls;
+          const selectedColumns = pluginState.selectedColumns || [];
 
           return (
             <>
@@ -145,7 +146,7 @@ const tablesPlugin = (disableBreakoutUI?: boolean): EditorPlugin => ({
                   isContextualMenuOpen={pluginState.isContextualMenuOpen}
                 />
               )}
-              {allowControls && (
+              {allowControls && !selectedColumns.length && (
                 <FloatingInsertButton
                   tableNode={pluginState.tableNode}
                   tableRef={pluginState.tableRef}
