@@ -644,12 +644,16 @@ export const tableStyles = css`
       }
 
       ${columnControls};
-      ${selectedCell};
 
       .${ClassName.CELL_NODEVIEW_WRAPPER} {
         position: relative;
       }
     }
+
+    :not(.${ClassName.IS_RESIZING}) .${ClassName.TABLE_NODE_WRAPPER} > table {
+      ${selectedCell};
+    }
+
     .${ClassName.COLUMN_CONTROLS_WRAPPER},
     .${ClassName.ROW_CONTROLS_WRAPPER} {
       position: absolute;
@@ -683,7 +687,7 @@ export const tableStyles = css`
       width: 2px;
       pointer-events: none;
       background-color: ${tableBorderSelectedColor};
-      z-index: ${akEditorUnitZIndex};
+      z-index: ${akEditorUnitZIndex + 100};
     }
   }
 

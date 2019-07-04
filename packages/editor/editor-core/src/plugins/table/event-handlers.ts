@@ -61,23 +61,26 @@ export const handleFocus = (view: EditorView, event: Event): boolean => {
   return false;
 };
 
-export const handleMouseDown = (
-  view: EditorView,
-  event: MouseEvent,
-): boolean => {
+export const handleMouseDown = (_: EditorView, event: MouseEvent): boolean =>
+  !!// Ignore any `mousedown` `event` from numbered column buttons
+  // PM end up changing selection during shift selection if not prevented
+  (
+    event.target &&
+    event.target instanceof HTMLElement &&
+    (event.target.classList.contains(ClassName.CONTROLS_BUTTON) ||
+      event.target.classList.contains(ClassName.NUMBERED_COLUMN_BUTTON))
+  );
+
+export const handleClick = (view: EditorView, event: MouseEvent): boolean => {
   const element = event.target as HTMLElement;
+  const table = findTable(view.state.selection)!;
+
   const { state, dispatch } = view;
 
   if (!isInsertColumnButton(element)) {
     return clearColumnsAndRowsSelection()(state, dispatch);
   }
 
-  return false;
-};
-
-export const handleClick = (view: EditorView, event: MouseEvent): boolean => {
-  const element = event.target as HTMLElement;
-  const table = findTable(view.state.selection)!;
   /**
    * Check if the table cell with an image is clicked
    * and its not the image itself
@@ -102,7 +105,6 @@ export const handleClick = (view: EditorView, event: MouseEvent): boolean => {
   const posInTable = map.map[cellIndex + 1];
 
   const {
-    dispatch,
     state: {
       tr,
       schema: {
@@ -119,7 +121,6 @@ export const handleClick = (view: EditorView, event: MouseEvent): boolean => {
     setNodeSelection(view, posInTable + table.pos);
   }
 
-  const { state } = view;
   if (isInsertColumnButton(element)) {
     const index = getIndex(element);
     return selectColumn(index, event.shiftKey)(state, dispatch);
