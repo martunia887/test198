@@ -223,7 +223,7 @@ export class Card extends Component<CardProps, CardState> {
           }
 
           this.notifyStateChange({
-            metadata,
+            metadata: { ...metadata, id: resolvedId },
             status,
             progress,
             dataURI,
