@@ -126,7 +126,7 @@ const newHeaderButtonSelected = `
 `;
 
 const columnControls = `
-  .TABLE_COLUMN_MOUSE_POSITION {
+  .${ClassName.COLUMN_CONTROLS_DECORATION} {
     cursor: pointer;
     position: absolute;
     width: calc(100% + 18px);
@@ -152,13 +152,13 @@ const columnControls = `
 
   .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.COLUMN_SELECTED},
   .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.HOVERED_COLUMN} {
-    & .TABLE_COLUMN_MOUSE_POSITION::after {
+    & .${ClassName.COLUMN_CONTROLS_DECORATION}::after {
       ${newHeaderButtonSelected};
     }
   }
 
   .${ClassName.TABLE_HEADER_NODE_WRAPPER}.${ClassName.HOVERED_COLUMN}.danger {
-    & .TABLE_COLUMN_MOUSE_POSITION::after {
+    & .${ClassName.COLUMN_CONTROLS_DECORATION}::after {
       background-color: ${tableToolbarDeleteColor};
       border: 1px solid ${tableBorderDeleteColor};
       border-bottom: none;

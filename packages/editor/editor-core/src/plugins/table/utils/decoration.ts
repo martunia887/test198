@@ -42,7 +42,7 @@ export const getControlsDecorations = (state: EditorState): DecorationSet => {
       cell.pos + 1,
       () => {
         const element = document.createElement('div');
-        element.classList.add('TABLE_COLUMN_MOUSE_POSITION');
+        element.classList.add(ClassName.COLUMN_CONTROLS_DECORATION);
         element.classList.add(ClassName.CONTROLS_BUTTON);
         element.dataset.index = `${index}`;
 

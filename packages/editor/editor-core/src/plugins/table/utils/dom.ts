@@ -11,7 +11,7 @@ export const isCellNode = (node: HTMLElement) => {
 
 export const isInsertColumnButton = (node: HTMLElement) => {
   const cl = node.classList;
-  return cl.contains('TABLE_COLUMN_MOUSE_POSITION');
+  return cl.contains(ClassName.COLUMN_CONTROLS_DECORATION);
 };
 
 export const isInsertRowButton = (node: HTMLElement) => {

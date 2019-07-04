@@ -143,6 +143,7 @@ export const TableCssClassName = {
 
   COLUMN_CONTROLS_WRAPPER: `${tablePrefixSelector}-column-controls-wrapper`,
   COLUMN_CONTROLS: `${tablePrefixSelector}-column-controls`,
+  COLUMN_CONTROLS_DECORATION: `${tablePrefixSelector}-column-controls-decoration`,
   COLUMN_CONTROLS_INNER: `${tablePrefixSelector}-column-controls__inner`,
   COLUMN_CONTROLS_BUTTON_WRAP: `${tablePrefixSelector}-column-controls__button-wrap`,
   COLUMN_SELECTED: `${tablePrefixSelector}-column-selected`,
