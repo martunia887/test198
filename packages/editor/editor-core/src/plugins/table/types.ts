@@ -41,6 +41,7 @@ export interface TablePluginState {
   editorHasFocus?: boolean;
   hoveredColumns: number[];
   selectedColumns: number[];
+  anchorSelectedColumnIndex?: number;
   hoveredRows: number[];
   pluginConfig: PluginConfig;
   isHeaderColumnEnabled: boolean;
@@ -108,6 +109,7 @@ export type TablePluginAction =
         decorationSet: DecorationSet;
         selectedColumns: number[];
         targetCellPosition?: number;
+        anchorSelectedColumnIndex?: number;
       };
     }
   | { type: 'SHOW_INSERT_ROW_BUTTON'; data: { insertRowButtonIndex: number } }

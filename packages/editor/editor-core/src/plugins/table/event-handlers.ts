@@ -61,15 +61,18 @@ export const handleFocus = (view: EditorView, event: Event): boolean => {
   return false;
 };
 
-export const handleMouseDown = (_: EditorView, event: Event): boolean =>
-  !!// Ignore any `mousedown` `event` from numbered column buttons
+export const handleMouseDown = (_: EditorView, event: Event): boolean => {
+  const a = !!// Ignore any `mousedown` `event` from numbered column buttons
   // PM end up changing selection during shift selection if not prevented
   (
     event.target &&
     event.target instanceof HTMLElement &&
-    (event.target.classList.contains(ClassName.CONTROLS_BUTTON) ||
-      event.target.classList.contains(ClassName.NUMBERED_COLUMN_BUTTON))
+    event.target.classList.contains(ClassName.NUMBERED_COLUMN_BUTTON)
   );
+
+  console.log(a);
+  return a;
+};
 
 export const handleClick = (view: EditorView, event: MouseEvent): boolean => {
   const element = event.target as HTMLElement;

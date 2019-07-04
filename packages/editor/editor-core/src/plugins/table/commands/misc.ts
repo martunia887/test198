@@ -330,21 +330,36 @@ export const setMultipleCellAttrs = (
   return false;
 };
 
-export const selectColumn = (column: number, expand?: boolean) =>
+export const selectColumn = (columnSelectedIndex: number, expand?: boolean) =>
   createCommand(
     state => {
-      let targetCellPosition;
       const pluginState = getPluginState(state);
-      let selectedColumns = pluginState.selectedColumns || [];
-      const cells = getCellsInColumn(column)(state.tr.selection);
+      const cells = getCellsInColumn(columnSelectedIndex)(state.tr.selection);
+      let targetCellPosition;
+      let anchorColumn;
+
+      if (!pluginState.selectedColumns || !pluginState.selectedColumns.length) {
+        anchorColumn = columnSelectedIndex;
+      } else {
+        anchorColumn =
+          pluginState.anchorSelectedColumnIndex || columnSelectedIndex;
+      }
+
       if (cells && cells.length) {
         targetCellPosition = cells[0].pos;
       }
 
+      let selectedColumns = [];
       if (expand) {
-        selectedColumns = [...selectedColumns, column];
+        for (
+          let i = Math.min(columnSelectedIndex, anchorColumn);
+          i < Math.max(columnSelectedIndex, anchorColumn) + 1;
+          i++
+        ) {
+          selectedColumns.push(i);
+        }
       } else {
-        selectedColumns = [column];
+        selectedColumns = [columnSelectedIndex];
       }
 
       return {
@@ -352,12 +367,16 @@ export const selectColumn = (column: number, expand?: boolean) =>
         data: {
           selectedColumns,
           targetCellPosition,
-          decorationSet: getColumnSelectedDecoration(state, cells, expand),
+          anchorSelectedColumnIndex: anchorColumn,
+          decorationSet: getColumnSelectedDecoration(state, selectedColumns),
         },
       };
     },
     tr =>
-      selectColumnTransform(column, expand)(tr).setMeta('addToHistory', false),
+      selectColumnTransform(columnSelectedIndex, expand)(tr).setMeta(
+        'addToHistory',
+        false,
+      ),
   );
 
 export const clearColumnsAndRowsSelection = () =>

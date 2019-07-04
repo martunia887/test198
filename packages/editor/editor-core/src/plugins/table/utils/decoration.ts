@@ -1,7 +1,11 @@
 import { Node as PmNode } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
-import { getCellsInRow, ContentNodeWithPos } from 'prosemirror-utils';
+import {
+  getCellsInRow,
+  getCellsInColumn,
+  ContentNodeWithPos,
+} from 'prosemirror-utils';
 import { TableDecorations, TableCssClassName as ClassName } from '../types';
 import { getPluginState } from '../pm-plugins/main';
 
@@ -64,10 +68,25 @@ export const getControlsDecorations = (state: EditorState): DecorationSet => {
 
 export const getColumnSelectedDecoration = (
   state: EditorState,
-  cells?: ContentNodeWithPos[],
-  expand?: boolean,
+  columnIndexes: number[],
 ): DecorationSet => {
   const pluginState = getPluginState(state);
+
+  const cells: ContentNodeWithPos[] = columnIndexes
+    .reduce(
+      (acc, columnIndex) => {
+        const cellsInColumn = getCellsInColumn(columnIndex)(state.tr.selection);
+
+        if (cellsInColumn) {
+          acc.push(cellsInColumn);
+        }
+
+        return acc;
+      },
+      [] as ContentNodeWithPos[][],
+    )
+    .reduce((acc, val) => acc.concat(val), []);
+
   const decs = (cells || []).map((cell, index) => {
     return Decoration.node(
       cell.pos,
@@ -80,16 +99,13 @@ export const getColumnSelectedDecoration = (
       },
     );
   });
-  let decorationSet = pluginState.decorationSet;
 
-  if (!expand) {
-    decorationSet = updateDecorations(
-      state.doc,
-      decorationSet,
-      [],
-      findDecorationByKey('TABLE_COLUMN_SELECTED_'),
-    );
-  }
+  const decorationSet = updateDecorations(
+    state.doc,
+    pluginState.decorationSet,
+    [],
+    findDecorationByKey('TABLE_COLUMN_SELECTED_'),
+  );
 
   return updateDecorations(
     state.doc,
