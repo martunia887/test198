@@ -305,27 +305,20 @@ export const getAdministrationLinks = (
 export const getSuggestedProductLink = (
   licenseInformationData: LicenseInformationResponse,
 ): SwitcherItemType[] => {
-  const productLinks = [];
-
-  if (!getProductIsActive(licenseInformationData, ProductKey.CONFLUENCE)) {
-    productLinks.push(
-      getProductLink(
-        ProductKey.CONFLUENCE,
-        licenseInformationData.products[ProductKey.CONFLUENCE],
+  const productLinks: Array<SwitcherItemType> = [];
+  [
+    ProductKey.CONFLUENCE,
+    ProductKey.JIRA_SERVICE_DESK,
+    ProductKey.JIRA_SOFTWARE,
+  ]
+    .filter(
+      productKey => !getProductIsActive(licenseInformationData, productKey),
+    )
+    .map(productKey =>
+      productLinks.push(
+        getProductLink(productKey, licenseInformationData.products[productKey]),
       ),
     );
-  }
-  if (
-    !getProductIsActive(licenseInformationData, ProductKey.JIRA_SERVICE_DESK)
-  ) {
-    productLinks.push(
-      getProductLink(
-        ProductKey.JIRA_SERVICE_DESK,
-        licenseInformationData.products[ProductKey.JIRA_SERVICE_DESK],
-      ),
-    );
-  }
-
   return productLinks;
 };
 

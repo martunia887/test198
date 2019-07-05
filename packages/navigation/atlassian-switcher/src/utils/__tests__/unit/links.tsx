@@ -180,7 +180,16 @@ describe('utils/links', () => {
       expect(result.length).toEqual(1);
       expect(result[0]).toHaveProperty('key', 'confluence.ondemand');
     });
-    it('should offer Jira Service Desk if Confluence is active', () => {
+    it('should offer Jira Software if inactive', () => {
+      const licenseInformation = generateLicenseInformation([
+        'confluence.ondemand',
+        'jira-servicedesk.ondemand',
+      ]);
+      const result = getSuggestedProductLink(licenseInformation);
+      expect(result.length).toEqual(1);
+      expect(result[0]).toHaveProperty('key', 'jira-software.ondemand');
+    });
+    it('should offer Jira Service Desk if inactive', () => {
       const licenseInformation = generateLicenseInformation([
         'jira-software.ondemand',
         'confluence.ondemand',
@@ -189,17 +198,19 @@ describe('utils/links', () => {
       expect(result.length).toEqual(1);
       expect(result[0]).toHaveProperty('key', 'jira-servicedesk.ondemand');
     });
-    it('should offer both Confluence and Jira Service Desk if both are not active', () => {
+    it('should offer Confluence, Jira Software and Jira Service Desk if inactive', () => {
       const licenseInformation = generateLicenseInformation([]);
       const result = getSuggestedProductLink(licenseInformation);
-      expect(result).toHaveLength(2);
+      expect(result).toHaveLength(3);
       expect(result[0]).toHaveProperty('key', 'confluence.ondemand');
       expect(result[1]).toHaveProperty('key', 'jira-servicedesk.ondemand');
+      expect(result[2]).toHaveProperty('key', 'jira-software.ondemand');
     });
-    it('should return empty array if Confluence and JSD are active', () => {
+    it('should return empty array if Confluence, Jira Software and Jira Service Desk are active', () => {
       const licenseInformation = generateLicenseInformation([
         'jira-servicedesk.ondemand',
         'confluence.ondemand',
+        'jira-software.ondemand',
       ]);
       const result = getSuggestedProductLink(licenseInformation);
       expect(result).toEqual([]);
