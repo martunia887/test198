@@ -325,6 +325,17 @@ export const getSuggestedProductLink = (
       ),
     );
   }
+  console.log()
+  if (
+    !getProductIsActive(licenseInformationData, ProductKey.JIRA_SERVICE_DESK)
+  ) {
+    productLinks.push(
+      getProductLink(
+        ProductKey.JIRA_SOFTWARE,
+        licenseInformationData.products[ProductKey.JIRA_SOFTWARE],
+      ),
+    );
+  }
 
   return productLinks;
 };
