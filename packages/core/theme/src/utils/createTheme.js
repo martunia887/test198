@@ -31,7 +31,7 @@ const pipe = (first: ThemeFn, second: ThemeFn) => {
 export function createTheme(defaultTheme: ThemeTokens): Theme {
   const unary = t => t;
   const ThemeCtx = createContext(unary);
-  function Provider({ value: vfn = unary, children }) {
+  function Provider({ value: vfn, children }) {
     return (
       <ThemeCtx.Consumer>
         {tfn => {
