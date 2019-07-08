@@ -19,7 +19,6 @@ import {
   transformToCodeBlockAction,
 } from '../commands/transform-to-code-block';
 import { insertBlock } from '../commands/insert-block';
-import { safeInsert } from 'prosemirror-utils';
 import {
   addAnalytics,
   INPUT_METHOD,
@@ -32,6 +31,7 @@ import {
 } from '../../analytics';
 
 import { HeadingLevelsAndNormalText } from '../types';
+import { safeInsert } from '../../../utils/insert';
 
 const MAX_HEADING_LEVEL = 6;
 
