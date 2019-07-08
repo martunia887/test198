@@ -8,7 +8,7 @@ const mockMediaViewer = {
 };
 jest.mock('../../../newgen/analytics/media-viewer', () => mockMediaViewer);
 
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { Subject } from 'rxjs/Subject';
 import Button from '@atlaskit/button';

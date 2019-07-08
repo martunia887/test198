@@ -2,7 +2,7 @@
 // > If you use the old drawer and add it into the new one it will work properly
 // > but using @atlaskit/drawer it's not working properly
 
-import * as React from 'react';
+import React from 'react';
 import { AkSearchDrawer } from '@atlaskit/navigation';
 import Drawer from '@atlaskit/drawer';
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';

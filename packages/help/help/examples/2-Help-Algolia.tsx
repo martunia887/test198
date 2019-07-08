@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import algoliasearch from 'algoliasearch';
 import Page from '@atlaskit/page';
 

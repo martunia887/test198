@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component, UIEvent } from 'react';
 import debounce from 'lodash.debounce';
 

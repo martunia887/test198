@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@atlaskit/button';
 import { ProcessedFileState } from '@atlaskit/media-client';
 import { BaseProps, BaseViewer } from '../../../../newgen/viewers/base-viewer';

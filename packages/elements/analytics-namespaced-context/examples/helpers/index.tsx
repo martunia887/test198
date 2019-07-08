@@ -3,7 +3,7 @@ import {
   withAnalyticsEvents,
   WithAnalyticsEventProps,
 } from '@atlaskit/analytics-next';
-import * as React from 'react';
+import React from 'react';
 
 export type Props = WithAnalyticsEventProps & {
   text?: string;

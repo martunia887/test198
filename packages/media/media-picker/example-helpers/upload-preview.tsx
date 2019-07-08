@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PreviewImageWrapper, InfoWrapper } from './styled';
 import { PreviewData } from './types';
 import { Card } from '@atlaskit/media-card';

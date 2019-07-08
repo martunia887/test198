@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { createAndFire, withAnalyticsEvents } from '../analytics';
 import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
 import Tooltip from '@atlaskit/tooltip';

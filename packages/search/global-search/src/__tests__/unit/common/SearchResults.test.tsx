@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { shallow } from 'enzyme';
 import SearchResults, { Props } from '../../../components/common/SearchResults';
 import SearchError from '../../../components/SearchError';

@@ -2,7 +2,7 @@ import {
   AnalyticsListener,
   UIAnalyticsEventInterface,
 } from '@atlaskit/analytics-next';
-import * as React from 'react';
+import React from 'react';
 import { onMentionEvent } from '../example-helpers/index';
 import Mention from '../src/components/Mention';
 import { ELEMENTS_CHANNEL } from '../src/_constants';

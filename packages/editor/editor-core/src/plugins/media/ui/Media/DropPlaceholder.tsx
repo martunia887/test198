@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { colors, borderRadius } from '@atlaskit/theme';
 import DocumentFilledIcon from '@atlaskit/icon/glyph/document-filled';

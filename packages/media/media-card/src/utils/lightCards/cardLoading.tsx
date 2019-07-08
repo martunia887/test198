@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import FileIcon from '@atlaskit/icon/glyph/file';
 import { getDimensionsWithDefault } from './getDimensionsWithDefault';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { shallow } from 'enzyme';
 import { FileDetails } from '@atlaskit/media-client';
 import { FormattedMessage } from 'react-intl';

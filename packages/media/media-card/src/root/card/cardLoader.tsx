@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { WithContextOrMediaClientConfigProps } from '@atlaskit/media-client';
 import { CardProps, CardLoading } from '../..';
 

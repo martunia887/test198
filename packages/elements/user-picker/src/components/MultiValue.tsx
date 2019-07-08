@@ -1,5 +1,5 @@
 import Tag from '@atlaskit/tag';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Option, UserPickerProps } from '../types';
 import { AddOptionAvatar } from './AddOptionAvatar';

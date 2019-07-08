@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { taskDecision, emoji } from '@atlaskit/util-data-test';

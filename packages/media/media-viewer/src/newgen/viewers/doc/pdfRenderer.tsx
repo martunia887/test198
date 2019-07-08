@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import * as PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import { injectGlobal } from 'styled-components';

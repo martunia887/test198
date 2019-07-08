@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import baseItem, { withItemClick, withItemFocus } from '@atlaskit/item';
 
 import {

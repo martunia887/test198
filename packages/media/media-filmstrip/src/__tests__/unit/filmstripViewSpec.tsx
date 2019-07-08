@@ -1,6 +1,6 @@
 declare var global: any; // we need define an interface for the Node global object when overwriting global objects, in this case MutationObserver
 declare var window: any;
-import * as React from 'react';
+import React from 'react';
 import { shallow, CommonWrapper } from 'enzyme';
 import { FilmstripView, LeftArrow, RightArrow } from '../../filmstripView';
 import {

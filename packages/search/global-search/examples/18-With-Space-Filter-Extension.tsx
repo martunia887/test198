@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
 import withNavigation from '../example-helpers/withNavigation';
 import { GlobalQuickSearch } from '../src';

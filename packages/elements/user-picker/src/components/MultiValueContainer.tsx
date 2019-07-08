@@ -1,5 +1,5 @@
 import { components } from '@atlaskit/select';
-import * as React from 'react';
+import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 import { messages } from './i18n';

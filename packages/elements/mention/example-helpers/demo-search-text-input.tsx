@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ChangeEventHandler, Component, FocusEventHandler } from 'react';
 import uuid from 'uuid/v1';
 

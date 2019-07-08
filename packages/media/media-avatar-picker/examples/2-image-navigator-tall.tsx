@@ -1,5 +1,5 @@
 // eslint-disable-line no-console
-import * as React from 'react';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { tallImage } from '@atlaskit/media-test-helpers';
 import ImageNavigator from '../src/image-navigator';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { colors } from '@atlaskit/theme';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Button from '@atlaskit/button';

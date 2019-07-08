@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { withAnalytics, FireAnalyticsEvent } from '@atlaskit/analytics';
 import { ResultData, SelectedResultId, ResultId } from './Results/types';
 import AkSearch from './Search/Search';

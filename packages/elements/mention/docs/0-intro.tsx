@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   md,
   Props,
@@ -14,7 +14,7 @@ const MentionProps = require('!!extract-react-types-loader!../src/components/Men
 
 export default md`
   ${<AtlassianInternalWarning />}
-  
+
   The main purpose of the mention component is to provide a mention picker for choosing users to mention within a text field or editor.
 
   It includes support for rest based searching and custom search implementations.

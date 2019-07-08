@@ -4,7 +4,7 @@ import { EmojiProvider } from '@atlaskit/emoji/resource';
 import Layer from '@atlaskit/layer';
 import { borderRadius, colors } from '@atlaskit/theme';
 import cx from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import * as ReactDOM from 'react-dom';
 import { style } from 'typestyle';

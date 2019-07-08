@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import Spinner from '@atlaskit/spinner';
 import RecentList from '../../../../../../plugins/hyperlink/ui/RecentSearch/RecentList';

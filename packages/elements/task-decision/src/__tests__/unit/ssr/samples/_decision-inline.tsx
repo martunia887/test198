@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import DecisionItem from '../../../../components/DecisionItem';
 import DecisionList from '../../../../components/DecisionList';
 import { dumpRef } from '../../../../../example-helpers/story-utils';

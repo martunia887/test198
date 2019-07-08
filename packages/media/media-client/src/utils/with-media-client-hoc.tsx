@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Context, MediaClientConfig } from '@atlaskit/media-core';
 import { MediaClient } from '../client/media-client';
 import { Omit, XOR } from '@atlaskit/type-helpers';

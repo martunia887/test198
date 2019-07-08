@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import {
   ObjectResult as ObjectResultComponent,

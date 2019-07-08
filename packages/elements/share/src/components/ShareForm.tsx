@@ -4,7 +4,7 @@ import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { colors, typography } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
 import { LoadOptions, OptionData } from '@atlaskit/user-picker';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
 import { messages } from '../i18n';
@@ -38,7 +38,7 @@ export const FromWrapper = styled.div`
   [class^='FormHeader__FormHeaderWrapper'] {
     h1 {
       ${typography.h500()}
-      
+
       > span {
         /* jira has a class override font settings on h1 > span in gh-custom-field-pickers.css */
         font-size: inherit !important;

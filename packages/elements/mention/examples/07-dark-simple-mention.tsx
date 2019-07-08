@@ -4,7 +4,7 @@ import {
 } from '@atlaskit/analytics-next';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import * as React from 'react';
+import React from 'react';
 import { onMentionEvent } from '../example-helpers/index';
 import Mention from '../src/components/Mention';
 import { ELEMENTS_CHANNEL } from '../src/_constants';

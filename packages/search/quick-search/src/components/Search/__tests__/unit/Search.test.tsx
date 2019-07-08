@@ -1,5 +1,5 @@
 import { mount, shallow, ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import FieldBase from '@atlaskit/field-base';
 import Search from '../../Search';
 

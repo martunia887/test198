@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { Identifier } from '@atlaskit/media-client';
 import { Card, OnSelectChangeFunc } from '../src';

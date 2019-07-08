@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ObjectResult } from '@atlaskit/quick-search';
 import * as colors from '@atlaskit/theme/colors';
 import DocumentFilledIcon from '@atlaskit/icon/glyph/document-filled';

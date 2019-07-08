@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AnalyticsListener as AnalyticsNextListener } from '@atlaskit/analytics-next';
 import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
 import styled from 'styled-components';

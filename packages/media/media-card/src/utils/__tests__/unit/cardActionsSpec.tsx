@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';

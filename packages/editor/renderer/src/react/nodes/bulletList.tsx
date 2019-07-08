@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { bulletListSelector } from '@atlaskit/adf-schema';
 
 export default function BulletList(props: React.Props<any>) {

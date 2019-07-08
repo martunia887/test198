@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 type IconSize = 'small' | 'medium' | 'large' | 'xlarge';
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, ReactInstance } from 'react';
 import * as ReactDOM from 'react-dom';
 import { PluginKey } from 'prosemirror-state';

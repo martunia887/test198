@@ -1,5 +1,5 @@
 import AkButton from '@atlaskit/button';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { customCategory } from '../../util/constants';

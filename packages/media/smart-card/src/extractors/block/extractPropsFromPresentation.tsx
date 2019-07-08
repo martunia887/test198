@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { BlockCardResolvedViewProps } from '@atlaskit/media-ui';
 import { extractPropsFromDocument } from './extractPropsFromDocument';

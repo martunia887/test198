@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import FormattedMessage from '../primitives/formatted-message';
 import styled from 'styled-components';
 import Button from '@atlaskit/button';

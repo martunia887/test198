@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { makeConfluenceObjectResult } from './_test-util';
 import { ContentType } from '../../../src/model/Result';
 import FileTypes24File24ImageIcon from '@atlaskit/icon-file-type/glyph/image/24';

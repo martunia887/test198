@@ -1,7 +1,7 @@
 jest.mock('../../isRetina');
 jest.mock('../../getElementDimension');
 
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { shallow } from 'enzyme';
 import { getDataURIDimension } from '../../getDataURIDimension';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import throttle from 'lodash.throttle';
 import now from '../utils/performance-now';
 import { prefetchAll } from '../providers/instance-data-providers';

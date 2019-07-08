@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { EmojiProvider } from '../src/resource';
 import { ResourcedEmoji } from '../src/element';

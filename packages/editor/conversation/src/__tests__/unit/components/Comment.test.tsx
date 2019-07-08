@@ -2,7 +2,7 @@ import AkAvatar from '@atlaskit/avatar';
 import AkComment, { CommentAction, CommentAuthor } from '@atlaskit/comment';
 import { ConnectedReactionsView } from '@atlaskit/reactions';
 import { mount, shallow, ReactWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import {
   mockComment,
   mockInlineComment,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   md,
   Example,
@@ -11,7 +11,7 @@ export default md`
   ${<AtlassianInternalWarning />}
 
   This is a barebones quick-search component that can render different types of search results.
-  
+
   ## Usage
   ${code`import { QuickSearch, ObjectResult, ContainerResult, ResultItemGroup } from '@atlaskit/quick-search';
 
@@ -25,11 +25,11 @@ export default md`
       >
         // render search results:
         <ResultItemGroup title="Issues">
-          <ObjectResult name="Fix this and that" objectKey="JRA-123" /> 
-          <ObjectResult name="More stuff" objectKey="JRA-124" /> 
+          <ObjectResult name="Fix this and that" objectKey="JRA-123" />
+          <ObjectResult name="More stuff" objectKey="JRA-124" />
         </ResultItemGroup>
         <ResultItemGroup title="Spaces">
-          <ContainerResult name="Search and Smarts" /> 
+          <ContainerResult name="Search and Smarts" />
         </ResultItemGroup>
       </QuickSearch>
     );

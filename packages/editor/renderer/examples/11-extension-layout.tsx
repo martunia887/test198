@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';

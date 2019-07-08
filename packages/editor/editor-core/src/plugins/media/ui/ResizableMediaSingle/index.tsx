@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import { MediaClientConfig } from '@atlaskit/media-core';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import CachingConfluenceClient from '../../api/CachingConfluenceClient';
 import {
   // @ts-ignore (additional export from mocked version)

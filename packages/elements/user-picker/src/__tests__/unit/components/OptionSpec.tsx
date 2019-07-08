@@ -1,6 +1,6 @@
 import { components } from '@atlaskit/select';
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { EmailOption } from '../../../components/EmailOption';
 import { Option, OptionProps } from '../../../components/Option';
 import { TeamOption } from '../../../components/TeamOption';

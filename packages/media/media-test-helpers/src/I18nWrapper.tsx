@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component, ReactElement } from 'react';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import { locales, languages } from '@atlaskit/media-ui';

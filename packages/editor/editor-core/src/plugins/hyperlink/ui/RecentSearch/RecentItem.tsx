@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { HTMLAttributes, ComponentClass } from 'react';
 import styled from 'styled-components';
 import { ActivityItem } from '@atlaskit/activity';

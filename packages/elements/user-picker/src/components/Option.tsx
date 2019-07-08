@@ -1,5 +1,5 @@
 import { components } from '@atlaskit/select';
-import * as React from 'react';
+import React from 'react';
 import { Option as OptionType } from '../types';
 import { EmailOption } from './EmailOption';
 import { TeamOption } from './TeamOption';

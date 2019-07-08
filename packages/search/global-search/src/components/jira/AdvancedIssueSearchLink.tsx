@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ResultBase } from '@atlaskit/quick-search';
 import { gridSize } from '@atlaskit/theme';

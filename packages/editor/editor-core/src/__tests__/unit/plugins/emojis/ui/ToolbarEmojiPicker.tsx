@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import EmojiIcon from '@atlaskit/icon/glyph/editor/emoji';
 import { EmojiPicker as AkEmojiPicker } from '@atlaskit/emoji';
 import { emoji as emojiTestData } from '@atlaskit/util-data-test';

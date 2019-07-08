@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, ReactNode } from 'react';
 import ListWrapper from '../styled/ListWrapper';
 

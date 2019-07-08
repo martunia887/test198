@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component, ComponentClass, HTMLAttributes } from 'react';
 import styled from 'styled-components';
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 export default function Blockquote(props: React.Props<any>) {
   return <blockquote>{props.children}</blockquote>;
 }

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import TeamMentionResource from '../src/api/TeamMentionResource';
 import { MentionResourceConfig } from '../src/api/MentionResource';
 

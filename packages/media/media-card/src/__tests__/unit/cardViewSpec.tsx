@@ -6,7 +6,7 @@ jest.mock('../../../src/utils/shouldDisplayImageThumbnail', () => ({
   shouldDisplayImageThumbnail: jest.fn(() => true),
 }));
 
-import * as React from 'react';
+import React from 'react';
 
 import { shallow, mount } from 'enzyme';
 import { FileDetails } from '@atlaskit/media-client';

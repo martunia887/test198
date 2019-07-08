@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ResultData } from '@atlaskit/quick-search';
 import AdvancedSearchResult from './AdvancedSearchResult';
 import { ADVANCED_PEOPLE_SEARCH_RESULT_ID } from './SearchResultsUtil';

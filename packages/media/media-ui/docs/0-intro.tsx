@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   md,
   code,
@@ -138,7 +138,7 @@ export default md`
         props={require('!!extract-react-types-loader!../src/BlockCard/UnauthorisedView')}
       />
     )}
-    
+
 
 `;
 // TODO: Add props for each subviews using Props from extract react-type

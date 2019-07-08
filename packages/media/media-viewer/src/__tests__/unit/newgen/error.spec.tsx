@@ -8,7 +8,7 @@ const mockItemViewer = {
 };
 jest.mock('../../../newgen/analytics/item-viewer', () => mockItemViewer);
 
-import * as React from 'react';
+import React from 'react';
 import { mount } from 'enzyme';
 import { ErrorMessage, createError } from '../../../newgen/error';
 import Button from '@atlaskit/button';

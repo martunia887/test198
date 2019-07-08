@@ -9,7 +9,7 @@ import {
 import { waitUntil } from '@atlaskit/util-common-test';
 import { emoji } from '@atlaskit/util-data-test';
 import { mount, shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { EmojiButton } from '../../../components/EmojiButton';
 import { hasSelector } from '../_test-utils';
 

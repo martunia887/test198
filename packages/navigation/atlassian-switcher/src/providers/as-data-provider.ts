@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   NAVIGATION_CHANNEL,
   OPERATIONAL_EVENT_TYPE,

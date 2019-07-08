@@ -1,5 +1,5 @@
 // Simple component which wraps stories and creates a styled list out of it
-import * as React from 'react';
+import React from 'react';
 import { Component, ReactNode, CSSProperties } from 'react';
 
 interface UnitStyle {

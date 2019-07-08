@@ -6,7 +6,7 @@ jest.mock('../../../../plugins/media/commands/media-editor', () => ({
   uploadAnnotation: jest.fn(() => mockUploadAnnotationCommand),
 }));
 
-import * as React from 'react';
+import React from 'react';
 
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import { FileIdentifier } from '@atlaskit/media-client';

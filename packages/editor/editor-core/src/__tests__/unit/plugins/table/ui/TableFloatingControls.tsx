@@ -1,5 +1,5 @@
 import { shallow, mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { DecorationSet } from 'prosemirror-view';
 
 import {

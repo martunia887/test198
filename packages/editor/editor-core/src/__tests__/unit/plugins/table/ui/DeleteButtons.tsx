@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 
 import DeleteButton from '../../../../../plugins/table/ui/TableFloatingControls/DeleteButton';

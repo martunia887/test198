@@ -6,7 +6,7 @@ import {
   ErrorViewDownloadButton,
   DownloadButton,
 } from '../../../newgen/download';
-import * as React from 'react';
+import React from 'react';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { MediaViewerError } from '../../../newgen/error';
 import {

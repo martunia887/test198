@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Fragment, Node } from 'prosemirror-model';
 
 import Blockquote from './blockquote';

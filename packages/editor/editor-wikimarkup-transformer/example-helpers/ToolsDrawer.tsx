@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mention } from '@atlaskit/util-data-test';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import { WikiMarkupTransformer } from '../src';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MentionDescription, OnMentionEvent } from '../../types';
 import debug from '../../util/logger';
 import { actualMouseMove, mouseLocation, Position } from '../../util/mouse';

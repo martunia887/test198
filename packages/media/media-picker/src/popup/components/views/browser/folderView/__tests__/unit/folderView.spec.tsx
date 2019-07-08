@@ -1,6 +1,6 @@
 import AkButton from '@atlaskit/button';
 import { ShallowWrapper, shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 
 import { FolderViewer, FolderViewerProps } from '../../folderView';
 import { ServiceFile } from '../../../../../../domain';

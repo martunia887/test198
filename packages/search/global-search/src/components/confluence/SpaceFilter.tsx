@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Checkbox from '@atlaskit/checkbox/Checkbox';
 import Avatar from '@atlaskit/avatar/index';
 import baseItem, { withItemFocus } from '@atlaskit/item';

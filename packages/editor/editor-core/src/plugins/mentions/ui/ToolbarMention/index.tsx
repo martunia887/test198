@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import { EditorView } from 'prosemirror-view';
 import MentionIcon from '@atlaskit/icon/glyph/editor/mention';

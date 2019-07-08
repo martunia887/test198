@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@atlaskit/button';
 import Drawer from '@atlaskit/drawer';
 import { mockEndpoints, REQUEST_MEDIUM } from './helpers/mock-endpoints';

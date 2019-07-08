@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { EmojiId, OnEmojiEvent, OptionalEmojiDescription } from '../../types';
 import { EmojiProvider } from '../../api/EmojiResource';

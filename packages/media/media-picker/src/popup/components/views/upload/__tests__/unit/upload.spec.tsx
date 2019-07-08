@@ -1,6 +1,6 @@
 import { mount, ReactWrapper } from 'enzyme';
 import { IntlProvider } from 'react-intl';
-import * as React from 'react';
+import React from 'react';
 import { RefObject } from 'react';
 import { Provider } from 'react-redux';
 import Spinner from '@atlaskit/spinner';

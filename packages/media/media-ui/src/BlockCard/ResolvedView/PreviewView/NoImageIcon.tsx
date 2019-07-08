@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 // TODO: This file should be removed as soon as we get the new Icons in @atlaskit/icon
 // MD-33

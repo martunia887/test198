@@ -2,7 +2,7 @@ jest.mock('../../../components/styles', () => ({
   getPopupStyles: jest.fn(),
 }));
 
-import * as React from 'react';
+import React from 'react';
 import { PopupSelect } from '@atlaskit/select';
 import { shallowWithIntl } from 'enzyme-react-intl';
 import { getPopupStyles } from '../../../components/styles';

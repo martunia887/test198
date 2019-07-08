@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Icon from '@atlaskit/icon';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import { FormattedMessage } from 'react-intl';

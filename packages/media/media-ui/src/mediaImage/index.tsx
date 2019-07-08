@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Component, CSSProperties } from 'react';
 import { getCssFromImageOrientation, isRotated } from '..';
@@ -189,7 +189,7 @@ export class MediaImage extends Component<MediaImageProps, MediaImageState> {
 
       To combat this we will not make height: 100% but use ratio of an image.
       In this case imgRatio is now 0.75 (after flipping)
-      
+
       New math will look like this:
       (orig img height) -> (scaled down img height)
       750px             -> (0.75 x 200px) = 150px (since `height: 75%`)

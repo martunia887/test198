@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { md, code, Example, AtlassianInternalWarning } from '@atlaskit/docs';
 
 import dropzone from './dropzone.png';
@@ -9,7 +9,7 @@ const CreateImage = (filename: string) => <img src={filename} />;
 
 export default md`
   ${<AtlassianInternalWarning />}
-  
+
   # Documentation
 
   ## Table of contents
@@ -33,7 +33,7 @@ export default md`
   Let's take the **Browser** component as an example and see how to write a simple file uploading app around it.
   The easiest integration may look like this:
 
-  
+
   ${code`import { MediaPicker } from '@atlaskit/media-picker';
 
   const authProvider = (context) => Promise.resolve({

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ComponentType } from 'react';
 import FeedbackButton from './FeedbackButton';
 import FeedbackCollector, { FeedbackFlag } from '@atlaskit/feedback-collector';

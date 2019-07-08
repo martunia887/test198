@@ -1,5 +1,5 @@
 // For version "3.0.0"
-import * as React from 'react';
+import React from 'react';
 import { PropsInjector, SumPropsInjector } from '@atlaskit/type-helpers';
 
 /*

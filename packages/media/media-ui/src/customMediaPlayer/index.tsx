@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import PlayIcon from '@atlaskit/icon/glyph/vid-play';
 import PauseIcon from '@atlaskit/icon/glyph/vid-pause';

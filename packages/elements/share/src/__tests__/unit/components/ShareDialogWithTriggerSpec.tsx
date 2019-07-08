@@ -2,7 +2,7 @@ import { shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import ShareIcon from '@atlaskit/icon/glyph/share';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { shallow, ShallowWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage, InjectedIntlProps } from 'react-intl';
 import { ConfigResponse } from '../../../clients/ShareServiceClient';
 import ShareButton, {

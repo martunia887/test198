@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import JiraSwitcher from './jira-switcher';
 import ConfluenceSwitcher from './confluence-switcher';
 import GenericSwitcher from './generic-switcher';

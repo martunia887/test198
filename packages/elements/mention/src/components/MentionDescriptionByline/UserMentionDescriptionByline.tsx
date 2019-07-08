@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DescriptionBylineProps } from './types';
 import { renderHighlight } from '../MentionItem/MentionHighlightHelpers';
 import { DescriptionBylineStyle } from './styles';

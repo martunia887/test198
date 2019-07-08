@@ -1,5 +1,5 @@
 declare module '@atlaskit/theme/components' {
-  import * as React from 'react';
+  import React from 'react';
 
   export type GlobalThemeTokens = {
     mode: 'dark' | 'light';

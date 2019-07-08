@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import memoizeOne from 'memoize-one';
 import { PopupSelect } from '@atlaskit/select';
 import Trigger from './Trigger';

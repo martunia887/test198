@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { GenericErrorVisualStyle } from './styles';
 
 export interface Props {

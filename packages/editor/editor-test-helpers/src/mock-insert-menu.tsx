@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { bodiedExtensionData } from './mock-extension-data';
 import DevIcon from '@atlaskit/icon/glyph/editor/code';
 

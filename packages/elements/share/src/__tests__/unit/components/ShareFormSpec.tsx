@@ -3,7 +3,7 @@ import Form, { FormFooter, FormSection, HelperMessage } from '@atlaskit/form';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Tooltip from '@atlaskit/tooltip';
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { CommentField } from '../../../components/CommentField';
 import CopyLinkButton from '../../../components/CopyLinkButton';

@@ -6,7 +6,7 @@ import {
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import Tooltip from '@atlaskit/tooltip';
 import cx from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent, SyntheticEvent } from 'react';
 import { keyframes, style } from 'typestyle';
 import { EmojiButton } from './EmojiButton';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Observable } from 'rxjs';
 import { ReactWrapper } from 'enzyme';
 import { MediaType, FileState, Identifier } from '@atlaskit/media-client';

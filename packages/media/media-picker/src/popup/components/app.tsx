@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { Dispatch, Store } from 'redux';
 import { connect, Provider } from 'react-redux';

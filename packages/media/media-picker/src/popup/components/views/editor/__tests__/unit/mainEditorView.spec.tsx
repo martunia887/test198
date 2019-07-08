@@ -1,4 +1,4 @@
-import * as React from 'react'; // eslint-disable-line
+import React from 'react'; // eslint-disable-line
 import { Component } from 'react';
 import { shallow } from 'enzyme';
 import { EditorView } from '@atlaskit/media-editor';

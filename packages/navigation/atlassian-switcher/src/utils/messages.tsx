@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { defineMessages } from 'react-intl';
 import FormattedMessage from '../primitives/formatted-message';
 

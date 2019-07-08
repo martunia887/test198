@@ -3,7 +3,7 @@ jest.mock('react-transition-group/Transition', () => (data: any) =>
   data.children,
 );
 
-import * as React from 'react';
+import React from 'react';
 import { useEffect, useState, ReactNode, FC } from 'react';
 import CardClient from '../../client';
 import { Card } from '../Card';

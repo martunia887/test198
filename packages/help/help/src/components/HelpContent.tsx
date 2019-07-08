@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ArrowleftIcon from '@atlaskit/icon/glyph/arrow-left';
 
 import { injectIntl, InjectedIntlProps } from 'react-intl';

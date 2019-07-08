@@ -1,5 +1,5 @@
 declare module 'react-lorem-component' {
-  import * as React from 'react';
+  import React from 'react';
   export interface LoremProps {
     count: number | string;
   }

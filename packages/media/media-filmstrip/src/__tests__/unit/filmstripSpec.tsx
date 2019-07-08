@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { shallow } from 'enzyme';
 import { Filmstrip, FilmstripView, FilmstripProps, FilmstripItem } from '../..';
 import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';

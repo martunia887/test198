@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Identifier, FileIdentifier } from '@atlaskit/media-client';
 import { Observable } from 'rxjs';
 import { List, Props, State } from '../../../newgen/list';

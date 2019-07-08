@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Inline from './inline';
 
 export default function Paragraph({ children }: React.Props<{}>) {

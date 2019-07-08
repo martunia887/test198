@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { floatingToolbar } from '../../../../plugins/media/toolbar';
 import {
   AnnotationToolbar,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ssr } from '@atlaskit/ssr';
 // @ts-ignore FS-3905

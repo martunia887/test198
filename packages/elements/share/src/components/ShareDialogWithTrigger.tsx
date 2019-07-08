@@ -8,7 +8,7 @@ import { ButtonAppearances } from '@atlaskit/button';
 import ShareIcon from '@atlaskit/icon/glyph/share';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { LoadOptions } from '@atlaskit/user-picker';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import { messages } from '../i18n';

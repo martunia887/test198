@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { shallow, mount, ReactWrapper } from 'enzyme';
 import Button from '@atlaskit/button';
 import Avatar from '@atlaskit/avatar';

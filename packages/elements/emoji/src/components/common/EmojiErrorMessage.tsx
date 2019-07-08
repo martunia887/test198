@@ -1,5 +1,5 @@
 import ErrorIcon from '@atlaskit/icon/glyph/error';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import { Message } from '../../types';
 import Tooltip from '@atlaskit/tooltip';

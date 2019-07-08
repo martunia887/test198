@@ -1,5 +1,5 @@
 declare module '@atlaskit/theme/constants' {
-  import * as React from 'react';
+  import React from 'react';
 
   export const borderRadius: () => number;
   export const codeFontFamily: () => string;

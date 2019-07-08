@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Component } from 'react';
 import { MediaButton } from '@atlaskit/media-ui';
 import ZoomOutIcon from '@atlaskit/icon/glyph/media-services/zoom-out';

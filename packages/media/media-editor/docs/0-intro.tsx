@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   md,
   code,
@@ -9,7 +9,7 @@ import {
 
 export default md`
   ${<AtlassianInternalWarning />}
-  
+
   This component provides a way to do image annotations.
 
   ## Usage
@@ -25,7 +25,7 @@ export default md`
     />
   );
   `}
-  
+
     ${(
       <Example
         Component={require('../examples/4-smart-media-editor').default}
@@ -33,7 +33,7 @@ export default md`
         source={require('!!raw-loader!../examples/4-smart-media-editor')}
       />
     )}
-  
+
   ${(
     <Props
       heading="Media Editor Props"

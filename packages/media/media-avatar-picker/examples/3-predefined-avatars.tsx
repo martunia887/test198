@@ -1,5 +1,5 @@
 // eslint-disable-line no-console
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Avatar } from '../src';
 import { AvatarList } from '../src/avatar-list';

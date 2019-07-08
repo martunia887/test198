@@ -7,7 +7,7 @@ jest.mock('../../../components/utils', () => ({
 import { shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import { ErrorMessage, Field, HelperMessage } from '@atlaskit/form';
 import UserPicker, { OptionData } from '@atlaskit/user-picker';
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   Props,

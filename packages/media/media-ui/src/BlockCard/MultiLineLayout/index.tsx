@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Wrapper, Left, Middle, Right } from './styled';
 
 export interface MultiLineLayoutProps {

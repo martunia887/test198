@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { WithAnalyticsEventProps } from '@atlaskit/analytics-next';
 import { CardLinkView } from '@atlaskit/media-ui';
 

@@ -1,6 +1,6 @@
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { mount } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import {
   createComponentWithAnalytics,
   createTaggedComponentWithAnalytics,

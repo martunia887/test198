@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { LocaleAndMessagesIntlProvider } from '../example-helpers/LocaleIntlProvider';
 import SearchError from '../src/components/SearchError';
 

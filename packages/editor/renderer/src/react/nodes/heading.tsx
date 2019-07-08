@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Inline from './inline';
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ResultItemGroup, CancelableEvent } from '@atlaskit/quick-search';
 import Button from '@atlaskit/button';
 import { messages } from '../../messages';

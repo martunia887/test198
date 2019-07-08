@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AnalyticsEventFiredOnMount from '../analytics/AnalyticsEventFiredOnMount';
 import { buildScreenEvent, Screen } from '../../util/analytics-util';
 import { ScreenCounter } from '../../util/ScreenCounter';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import SpaceFilter from '../../../components/confluence/SpaceFilter';
 import { shallow } from 'enzyme';
 

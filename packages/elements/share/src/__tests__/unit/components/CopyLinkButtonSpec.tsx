@@ -6,7 +6,7 @@ import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { ReactWrapper } from 'enzyme';
 import { mountWithIntl } from '@atlaskit/editor-test-helpers';
-import * as React from 'react';
+import React from 'react';
 import { InjectedIntlProps } from 'react-intl';
 import CopyLinkButton, {
   AUTO_DISMISS_MS,

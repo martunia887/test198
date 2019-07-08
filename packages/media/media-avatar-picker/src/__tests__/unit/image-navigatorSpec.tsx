@@ -1,7 +1,7 @@
 declare var global: any; // we need define an interface for the Node global object when overwriting global objects, in this case FileReader
 import * as util from '../../util';
 const fileSizeMbSpy = jest.spyOn(util, 'fileSizeMb');
-import * as React from 'react';
+import React from 'react';
 import Spinner from '@atlaskit/spinner';
 import Button from '@atlaskit/button';
 import { Ellipsify } from '@atlaskit/media-ui';

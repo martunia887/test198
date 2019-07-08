@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Spinner from '@atlaskit/spinner';
 import { CollapsedFrame } from '../CollapsedFrame';
 import { minWidth, maxWidth } from '../dimensions';

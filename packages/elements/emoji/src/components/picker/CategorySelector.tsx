@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import * as React from 'react';
+import React from 'react';
 import { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { defaultCategories } from '../../util/constants';

@@ -7,7 +7,7 @@
  * Copied from https://github.com/yahoo/react-intl/wiki/Testing-with-React-Intl
  */
 
-import * as React from 'react';
+import React from 'react';
 import { IntlProvider, intlShape } from 'react-intl';
 import { mount, shallow } from 'enzyme';
 import { getMessagesForLocale } from '../../../util/i18n-util';

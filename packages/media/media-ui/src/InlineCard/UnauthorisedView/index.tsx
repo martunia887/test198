@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IconAndTitleLayout } from '../IconAndTitleLayout';
 import Button from '@atlaskit/button';
 import { truncateUrlForErrorView } from '../utils';
@@ -43,7 +43,7 @@ export class InlineCardUnauthorizedView extends React.Component<
           ''
         ) : (
           <>
-            {/* 
+            {/*
               NB: a non-breaking hyphen - hyphentation should be
               handled by the browser, not us.
             */}

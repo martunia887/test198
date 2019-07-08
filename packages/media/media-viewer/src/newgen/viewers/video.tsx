@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MediaClient, FileState } from '@atlaskit/media-client';
 import { getArtifactUrl } from '@atlaskit/media-store';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';

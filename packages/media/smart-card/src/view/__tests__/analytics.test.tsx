@@ -22,7 +22,7 @@ jest.doMock('@atlaskit/outbound-auth-flow-client', () => ({
   auth: mockAuthFlow,
 }));
 
-import * as React from 'react';
+import React from 'react';
 import CardClient from '../../client';
 import { Card } from '../Card';
 import { Provider } from '../..';

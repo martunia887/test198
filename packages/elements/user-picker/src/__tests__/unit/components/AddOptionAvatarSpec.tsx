@@ -1,6 +1,6 @@
 import InviteTeamIcon from '@atlaskit/icon/glyph/invite-team';
 import { shallow } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 import {
   AddOptionAvatar,
   AddOptionAvatarProps,

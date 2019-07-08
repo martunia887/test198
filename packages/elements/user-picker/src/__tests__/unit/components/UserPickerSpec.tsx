@@ -12,7 +12,7 @@ jest.mock('../../../components/components', () => ({
 
 import Select, { CreatableSelect } from '@atlaskit/select';
 import { shallowWithIntl } from 'enzyme-react-intl';
-import * as React from 'react';
+import React from 'react';
 import { getComponents } from '../../../components/components';
 import { getCreatableProps } from '../../../components/creatable';
 import { getStyles } from '../../../components/styles';

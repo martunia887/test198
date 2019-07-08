@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@atlaskit/button';
 import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
 import Drawer, { DrawerItemTheme } from '@atlaskit/drawer';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AudioCircleIcon from '@atlaskit/icon/glyph/audio-circle';
 import { ResultBase, ResultItemGroup } from '../src';
 

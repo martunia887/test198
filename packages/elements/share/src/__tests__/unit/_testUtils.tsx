@@ -1,6 +1,6 @@
 import { shallowWithIntl } from '@atlaskit/editor-test-helpers';
 import { ShallowWrapper } from 'enzyme';
-import * as React from 'react';
+import React from 'react';
 
 // TODO remove once TypeScript 3.5 is available in Ak
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;

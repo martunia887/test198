@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Popup } from '@atlaskit/editor-common';
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
 import EditIcon from '@atlaskit/icon/glyph/editor/edit';

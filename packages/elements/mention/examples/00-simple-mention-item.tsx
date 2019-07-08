@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { MentionItem } from '../src/item';
 import { generateMentionItem, onSelection } from '../example-helpers';

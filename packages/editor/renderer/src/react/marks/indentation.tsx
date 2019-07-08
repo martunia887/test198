@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IndentationMarkAttributes } from '@atlaskit/adf-schema';
 
 interface Props extends IndentationMarkAttributes {

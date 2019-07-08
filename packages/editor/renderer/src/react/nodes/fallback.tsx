@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { EventHandlers } from '@atlaskit/editor-common';
 import { getEventHandler } from '../../utils';
 
