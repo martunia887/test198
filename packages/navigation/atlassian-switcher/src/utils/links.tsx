@@ -305,8 +305,7 @@ export const getAdministrationLinks = (
 export const getSuggestedProductLink = (
   licenseInformationData: LicenseInformationResponse,
 ): SwitcherItemType[] => {
-  const productLinks: Array<SwitcherItemType> = [];
-  [
+  const productLinks: Array<SwitcherItemType> = [
     ProductKey.CONFLUENCE,
     ProductKey.JIRA_SERVICE_DESK,
     ProductKey.JIRA_SOFTWARE,
@@ -315,9 +314,7 @@ export const getSuggestedProductLink = (
       productKey => !getProductIsActive(licenseInformationData, productKey),
     )
     .map(productKey =>
-      productLinks.push(
-        getProductLink(productKey, licenseInformationData.products[productKey]),
-      ),
+      getProductLink(productKey, licenseInformationData.products[productKey]),
     );
   return productLinks;
 };
