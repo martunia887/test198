@@ -232,9 +232,10 @@ export const getProductLink = (
   if (productKey === ProductKey.OPSGENIE) {
     // Prefer applicationUrl provided by license information (TCS)
     // Fallback to hard-coded URL
-    const href = productLicenseInformation.applicationUrl
-      ? productLicenseInformation.applicationUrl
-      : productLinkProperties.href;
+    const href =
+      productLicenseInformation && productLicenseInformation.applicationUrl
+        ? productLicenseInformation.applicationUrl
+        : productLinkProperties.href;
 
     return {
       key: productKey,
@@ -322,6 +323,20 @@ export const getSuggestedProductLink = (
       getProductLink(
         ProductKey.JIRA_SERVICE_DESK,
         licenseInformationData.products[ProductKey.JIRA_SERVICE_DESK],
+      ),
+    );
+  }
+
+  if (
+    getProductIsActive(licenseInformationData, ProductKey.JIRA_SOFTWARE) &&
+    getProductIsActive(licenseInformationData, ProductKey.JIRA_SERVICE_DESK) &&
+    getProductIsActive(licenseInformationData, ProductKey.CONFLUENCE) &&
+    !getProductIsActive(licenseInformationData, ProductKey.OPSGENIE)
+  ) {
+    productLinks.push(
+      getProductLink(
+        ProductKey.OPSGENIE,
+        licenseInformationData.products[ProductKey.OPSGENIE],
       ),
     );
   }
