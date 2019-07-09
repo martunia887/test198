@@ -31,7 +31,7 @@ export {
   QuickInsertItem,
 } from './plugins/quick-insert/types';
 
-// Used in mobile bridge
+// Used in mobile bridge...
 export { stateKey as mediaPluginKey } from './plugins/media/pm-plugins/main';
 export {
   default as mentionPlugin,
