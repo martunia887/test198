@@ -15,7 +15,7 @@ import { androidComposeStart, androidComposeEnd } from '../../_utils';
 
 import { EditorViewWithComposition } from '../../../../types';
 
-describe('mentions on mobile', () => {
+describe('Mentions on mobile', () => {
   const createEditor = createEditorFactory<TypeAheadPluginState>();
 
   const editor = (
