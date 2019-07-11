@@ -26,7 +26,7 @@
     "@atlaskit/icon": "^19.0.0",
     "@atlaskit/item": "^10.0.5",
     "@atlaskit/theme": "^9.1.1",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "array-find": "^1.0.0",
     "prop-types": "^15.5.10",
     "react-uid": "^2.2.0"

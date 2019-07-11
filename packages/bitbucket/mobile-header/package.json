@@ -20,7 +20,7 @@
     "@atlaskit/button": "^13.0.9",
     "@atlaskit/icon": "^19.0.0",
     "@atlaskit/theme": "^9.0.0",
-    "@babel/runtime": "^7.0.0"
+    "@babel/runtime": "~7.4.5"
   },
   "peerDependencies": {
     "react": "^16.8.0",

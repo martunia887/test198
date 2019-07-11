@@ -35,7 +35,7 @@
     "@atlaskit/field-text-area": "^6.0.2",
     "@atlaskit/icon": "^19.0.0",
     "@atlaskit/theme": "^9.1.1",
-    "@babel/runtime": "^7.0.0"
+    "@babel/runtime": "~7.4.5"
   },
   "devDependencies": {
     "@atlaskit/build-utils": "^2.0.0",

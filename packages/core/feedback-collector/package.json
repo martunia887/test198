@@ -18,7 +18,7 @@
     "@atlaskit/select": "^9.1.10",
     "@atlaskit/textarea": "^2.0.0",
     "@atlaskit/theme": "^9.1.1",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "lodash.truncate": "^4.4.2"
   },
   "devDependencies": {

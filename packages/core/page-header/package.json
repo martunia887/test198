@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@atlaskit/theme": "^9.0.0",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "tslib": "^1.9.3"
   },
   "peerDependencies": {

@@ -24,7 +24,7 @@
     "@atlaskit/analytics-next": "^5.0.0",
     "@atlaskit/icon": "^19.0.0",
     "@atlaskit/theme": "^9.1.0",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "@emotion/core": "^10.0.9",
     "emotion-theming": "^10.0.7",
     "tslib": "^1.9.3"

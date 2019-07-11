@@ -28,7 +28,7 @@
     "@atlaskit/inline-dialog": "^12.0.3",
     "@atlaskit/textfield": "^2.0.3",
     "@atlaskit/theme": "^9.0.0",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "react-loadable": "^5.1.0",
     "tslib": "^1.9.3"
   },

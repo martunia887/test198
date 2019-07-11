@@ -22,7 +22,7 @@
   "dependencies": {
     "@atlaskit/page": "^11.0.2",
     "@atlaskit/theme": "^9.1.1",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "react-router-dom": "^4.2.2",
     "react-transition-group": "^2.2.1"
   },

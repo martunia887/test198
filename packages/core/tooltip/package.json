@@ -25,7 +25,7 @@
     "@atlaskit/popper": "^2.0.0",
     "@atlaskit/portal": "^3.0.7",
     "@atlaskit/theme": "^9.0.0",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "flushable": "^1.0.0",
     "react-node-resolver": "^1.0.1",
     "react-transition-group": "^2.2.1",

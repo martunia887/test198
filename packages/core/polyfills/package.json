@@ -25,6 +25,6 @@
     "@atlaskit/docs": "^8.0.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0"
+    "@babel/runtime": "~7.4.5"
   }
 }

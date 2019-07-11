@@ -23,6 +23,6 @@
     "jscodeshift-helper": "^1.1.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0"
+    "@babel/runtime": "~7.4.5"
   }
 }

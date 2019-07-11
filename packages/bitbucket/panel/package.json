@@ -19,7 +19,7 @@
     "@atlaskit/icon": "^19.0.0",
     "@atlaskit/size-detector": "^8.0.0",
     "@atlaskit/theme": "^9.0.0",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "react-animate-height": "^2.0.5",
     "react-focus-within": "^2.0.1"
   },

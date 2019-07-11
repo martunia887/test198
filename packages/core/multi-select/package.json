@@ -28,7 +28,7 @@
     "@atlaskit/tag": "^8.0.5",
     "@atlaskit/tag-group": "^8.0.1",
     "@atlaskit/theme": "^9.1.1",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "classnames": "^2.2.5",
     "uuid": "^3.1.0"
   },

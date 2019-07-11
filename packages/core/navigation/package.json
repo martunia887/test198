@@ -30,7 +30,7 @@
     "@atlaskit/size-detector": "^8.0.1",
     "@atlaskit/theme": "^9.1.1",
     "@atlaskit/tooltip": "^15.0.2",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "chromatism": "^2.6.0",
     "es6-object-assign": "^1.1.0",
     "keycode": "^2.1.7",

@@ -23,7 +23,7 @@
     "@atlaskit/icon": "^19.0.0",
     "@atlaskit/spinner": "^12.0.1",
     "@atlaskit/theme": "^9.1.1",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "prop-types": "^15.5.10"

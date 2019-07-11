@@ -27,7 +27,7 @@
     "@atlaskit/popper": "^2.0.1",
     "@atlaskit/select": "^9.1.8",
     "@atlaskit/theme": "^9.1.1",
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "~7.4.5",
     "date-fns": "^1.30.1",
     "lodash.pick": "^4.4.0",
     "react-scrolllock": "^3.0.2"
