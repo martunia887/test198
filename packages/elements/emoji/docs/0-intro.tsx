@@ -60,7 +60,7 @@ export default md`
   ### Note:
 
   Don't forget to add polyfills for fetch, ES6 & ES7 to your product build if you want to target older browsers.
-  We recommend the use of [babel-preset-env](https://babeljs.io/docs/plugins/preset-env/) & [babel-polyfill](https://babeljs.io/docs/usage/polyfill/)
+  We recommend the use of [@babel/preset-env](https://www.npmjs.com/package/@babel/preset-env) & [core-js@3](https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md)
 
   The examples includes a set of stories for running against a live server. See 'Real Emoji Resource'.
 

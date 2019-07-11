@@ -5,8 +5,7 @@ const ChromiumRevision = require('puppeteer/package.json').puppeteer
 
 const boltQuery = require('bolt-query');
 const path = require('path');
-// FIXME: Replace with core-js approach...
-// const babelPolyfill = require.resolve('@babel/polyfill');
+const coreJsPolyfill = require.resolve('core-js/stable');
 const customEventPolyfill = require.resolve('custom-event-polyfill');
 const entry = require.resolve('./entry');
 const browserFetcher = puppeteer.createBrowserFetcher();
@@ -65,7 +64,7 @@ async function getKarmaConfig({ cwd, watch, browserstack }) {
 
   const config = {
     port: 9876,
-    files: [/*babelPolyfill, */ customEventPolyfill, entry],
+    files: [coreJsPolyfill, customEventPolyfill, entry],
     basePath: cwd,
     colors: true,
     frameworks: ['mocha', 'chai'],

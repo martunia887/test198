@@ -2,7 +2,7 @@
 
 **This module has been deprecated**
 
-Instead we now recommend Atlaskit consumers to support fetch, ES6 & ES7 using babel-preset-env & babel-polyfill.
+Instead we now recommend Atlaskit consumers to support fetch, ES6 & ES7 using @babel/preset-env & core-js@3.
 The supported browser-list most Atlassian products use is:
 
 ```

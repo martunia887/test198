@@ -30,7 +30,7 @@ module.exports = {
   env: {
     'production:cjs': {
       plugins: [
-        '@babel/transform-runtime',
+        ['@babel/transform-runtime', { corejs: 3 }],
         ['styled-components', { minify: false }],
         'transform-dynamic-import',
       ],
@@ -44,7 +44,7 @@ module.exports = {
     },
     'production:esm': {
       plugins: [
-        '@babel/transform-runtime',
+        ['@babel/transform-runtime', { corejs: 3 }],
         ['styled-components', { minify: false }],
       ],
       presets: [['@babel/env', { modules: false }]],
@@ -58,7 +58,10 @@ module.exports = {
     test: {
       presets: ['@babel/env'],
       // There is no @babel/ scoped transform for this plugin
-      plugins: ['transform-dynamic-import', '@babel/transform-runtime'],
+      plugins: [
+        'transform-dynamic-import',
+        ['@babel/transform-runtime', { corejs: 3 }],
+      ],
     },
   },
 };

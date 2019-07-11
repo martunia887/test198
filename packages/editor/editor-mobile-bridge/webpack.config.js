@@ -79,6 +79,32 @@ module.exports = async function createWebpackConfig() {
             babelrc: true,
             rootMode: 'upward',
             envName: 'production:esm',
+            // Overrides the default/root browserlist (which focuses on desktop)
+            // with a mobile specific list (which we use to contextually apply polyfills)
+            presets: [
+              [
+                '@babel/env',
+                {
+                  debug: true, // FIXME: temp...
+                  modules: false,
+                  // Conditionally compile in polyfills for legacy mobiles
+                  useBuiltIns: 'usage',
+                  corejs: 3,
+                  targets: {
+                    // Targetting mobile browsers with > 1% global market share.
+                    // https://browserl.ist/
+                    browsers: [
+                      'last 2 iOS versions',
+                      'last 2 ChromeAndroid versions',
+                      'last 2 FirefoxAndroid versions',
+                      'last 2 OperaMini versions',
+                      'last 2 UCAndroid versions',
+                      'samsung >= 9.2',
+                    ],
+                  },
+                },
+              ],
+            ],
           },
         },
         {
