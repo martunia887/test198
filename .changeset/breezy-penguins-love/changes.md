@@ -1,0 +1,1 @@
+Decrease image preview size to 1920x1080 pixels
