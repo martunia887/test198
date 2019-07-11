@@ -271,12 +271,14 @@ module.exports = async function main(
   }
 
   if (updateSnapshot) {
-    // TODO: remove this write once the flow is switched
     fWriteStats(prevStatsPath, stats);
-  } else if (results.statsExceededSizeLimit.length && isLint) {
+  } else if (results.statsExceededSizeLimit.length && isLint && !s3) {
     throw new Error(`✖ – Module "${packageName}" has exceeded size limit!`);
   }
 
-  // TODO: return success always after switching the flow
-  return results.passedBundleSizeCheck ? 1 : 0;
+  if (s3) {
+    return 0;
+  } else {
+    return results.passedBundleSizeCheck ? 1 : 0;
+  }
 };
