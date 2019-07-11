@@ -23,7 +23,6 @@ const defaults: CheckboxIconDefaults = {
     component: Icon,
   },
 };
-
 export default class CheckboxIcon extends Component<CheckboxIconProps, {}> {
   static defaultProps = {
     primaryColor: 'inherit',

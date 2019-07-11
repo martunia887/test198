@@ -260,6 +260,56 @@ export interface ComponentTokens {
 }
 
 export interface ThemeIconTokens {
+=======
+}
+interface LabelTokens {
+  textColor: {
+    rest: ModeValue;
+    disabled: ModeValue;
+  };
+  spacing: {
+    top: string;
+    right: string;
+    bottom: string;
+    left: string;
+  };
+}
+
+export interface IconTokens {
+  borderWidth: string;
+  borderColor: {
+    rest: ModeValue;
+    disabled: ModeValue;
+    checked: ModeValue;
+    active: ModeValue;
+    invalid: ModeValue;
+    focused: ModeValue;
+    hovered: ModeValue;
+  };
+  boxColor: {
+    rest: ModeValue;
+    disabled: ModeValue;
+    active: ModeValue;
+    hoveredAndChecked: ModeValue;
+    hovered: ModeValue;
+    checked: ModeValue;
+  };
+  tickColor: {
+    rest: ModeValue;
+    disabledAndChecked: ModeValue;
+    activeAndChecked: ModeValue;
+    checked: ModeValue;
+  };
+  size: 'small' | 'medium' | 'large';
+}
+
+export interface ComponentTokens {
+  label: LabelTokens;
+  icon: IconTokens;
+}
+
+export interface EvaluatedIconTokens {
+>>>>>>> 56f01cf1a3... fix checkbox type definitions
   borderWidth: string;
   borderColor: {
     rest: string;
@@ -392,3 +442,28 @@ export interface RequiredIndicatorProps
   extends React.HTMLProps<HTMLSpanElement> {
   tokens: ThemeTokens;
 }
+
+export interface EvaluatedLabelTokens {
+  textColor: {
+    rest: string;
+    disabled: string;
+  };
+  spacing: {
+    bottom: string;
+    right: string;
+    left: string;
+    top: string;
+  };
+}
+
+export interface EvaluatedTokens {
+  label: EvaluatedLabelTokens;
+  icon: EvaluatedIconTokens;
+}
+
+export interface ThemeProps {
+  tokens: ComponentTokens;
+  mode: string;
+}
+
+export interface ThemeTokens extends EvaluatedTokens {}

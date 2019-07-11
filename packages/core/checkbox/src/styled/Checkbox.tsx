@@ -1,6 +1,7 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
-import { colors, themed, math, gridSize } from '@atlaskit/theme';
+import { jsx } from '@emotion/core';
+import { colors, math, gridSize } from '@atlaskit/theme';
+import { EvaluatedTokens, EvaluatedIconTokens } from '../types';
 import React from 'react';
 
 export const HiddenCheckbox = React.forwardRef((
@@ -23,8 +24,11 @@ export const HiddenCheckbox = React.forwardRef((
   />
 ));
 
+<<<<<<< HEAD
 const disabledColor = themed({ light: colors.N80, dark: colors.N80 });
 
+=======
+>>>>>>> 56f01cf1a3... fix checkbox type definitions
 interface Props {
   isActive?: boolean;
   isChecked?: boolean | unknown;
@@ -33,10 +37,12 @@ interface Props {
   isInvalid?: boolean;
   isHovered?: boolean;
   rest?: any;
+  tokens: EvaluatedTokens;
 }
 
 interface LabelProps extends React.HTMLProps<HTMLLabelElement> {
   isDisabled?: boolean;
+  tokens: EvaluatedTokens;
 }
 export const Label = ({ isDisabled, ...rest }: LabelProps) => (
   <label
@@ -54,34 +60,46 @@ export const Label = ({ isDisabled, ...rest }: LabelProps) => (
   />
 );
 
-const activeBorder = iconTokens => ({
+const disabledBorder = (iconTokens: EvaluatedIconTokens) => ({
+  stroke: iconTokens.borderColor.disabled,
+  strokeWidth: iconTokens.borderWidth,
+});
+
+const activeBorder = (iconTokens: EvaluatedIconTokens) => ({
   stroke: iconTokens.borderColor.active,
   strokeWidth: '2px',
 });
 
-const checkedBorder = iconTokens => ({
+const checkedBorder = (iconTokens: EvaluatedIconTokens) => ({
   stroke: iconTokens.borderColor.checked,
   strokeWidth: '2px',
 });
 
-const focusBorder = iconTokens => ({
+const focusBorder = (iconTokens: EvaluatedIconTokens) => ({
   stroke: iconTokens.borderColor.focused,
   strokeWidth: '2px;',
 });
 
-const invalidBorder = iconTokens => ({
+const invalidBorder = (iconTokens: EvaluatedIconTokens) => ({
   stroke: iconTokens.borderColor.invalid,
   strokeWidth: '2px;',
 });
 
+<<<<<<< HEAD
 const border = ({ isHovered, tokens: { icon }, ...rest }: Props) => css`
   stroke: ${isHovered ? icon.borderColor.hovered : icon.borderColor.rest};
   stroke-width: 2px;
 `;
+=======
+const border = ({ isHovered, tokens: { icon } }: Props) => ({
+  stroke: isHovered ? icon.borderColor.hovered : icon.borderColor.rest,
+  strokeWidth: icon.borderWidth,
+});
+>>>>>>> 56f01cf1a3... fix checkbox type definitions
 
 const getBorderColor = ({ tokens, ...props }: Props) => {
   if (props.isDisabled) {
-    return tokens.icon.borderColor.disabled;
+    return disabledBorder(tokens.icon);
   }
   if (props.isActive) {
     return activeBorder(tokens.icon);
@@ -104,7 +122,6 @@ const getTickColor = (props: Props) => {
     isDisabled,
     isActive,
     tokens: { icon },
-    ...rest
   } = props;
 
   let color = icon.tickColor.checked;
@@ -112,7 +129,7 @@ const getTickColor = (props: Props) => {
   if (isDisabled && isChecked) {
     color = icon.tickColor.disabledAndChecked;
   } else if (isActive && isChecked && !isDisabled) {
-    color = icon.tickColor.isActiveAndChecked;
+    color = icon.tickColor.activeAndChecked;
   } else if (!isChecked) {
     color = icon.tickColor.rest;
   }
@@ -126,7 +143,6 @@ const getBoxColor = (props: Props) => {
     isActive,
     isHovered,
     tokens: { icon },
-    ...rest
   } = props;
   // set the default
   let color = icon.boxColor.rest;
@@ -145,7 +161,17 @@ const getBoxColor = (props: Props) => {
   return color;
 };
 
+<<<<<<< HEAD
 export const LabelText = (props: { children: React.ReactNode }) => (
+=======
+export const LabelText = ({
+  tokens,
+  ...rest
+}: {
+  tokens: EvaluatedTokens;
+  children: React.ReactNode;
+}) => (
+>>>>>>> 56f01cf1a3... fix checkbox type definitions
   <span
     css={css`
       padding: 6px 4px;
@@ -166,6 +192,7 @@ export const CheckboxWrapper = (props: { children: React.ReactNode }) => (
 );
 
 interface IconProps extends React.HTMLProps<HTMLLabelElement> {
+  tokens: EvaluatedTokens;
   isChecked?: boolean;
   isDisabled?: boolean;
   isActive?: boolean;
@@ -201,7 +228,9 @@ export const IconWrapper = ({ children, ...props }: IconProps) => (
   />
 );
 
-export const RequiredIndicator = (props: Props) => (
+interface RequiredIndicatorProps extends React.HTMLProps<HTMLSpanElement> {}
+
+export const RequiredIndicator = (props: RequiredIndicatorProps) => (
   <span
     css={{
       color: colors.R400,
