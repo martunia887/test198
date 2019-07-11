@@ -104,8 +104,8 @@ describe('ImageViewer', () => {
     expect(mediaClient.getImage).toHaveBeenCalledWith(
       'some-id',
       expect.objectContaining({
-        width: 4096,
-        height: 4096,
+        width: 1920,
+        height: 1080,
         mode: 'fit',
         allowAnimated: true,
         collection: 'some-collection',

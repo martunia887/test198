@@ -72,8 +72,8 @@ export class ImageViewer extends BaseViewer<
         const response = mediaClient.getImage(
           item.details.id,
           {
-            width: 4096,
-            height: 4096,
+            width: 1920,
+            height: 1080,
             mode: 'fit',
             allowAnimated: true,
             collection: collectionName,
