@@ -1,5 +1,194 @@
 # @atlaskit/editor-core
 
+## 112.33.0
+
+### Minor Changes
+
+- [minor][13ca42c394](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/13ca42c394):
+
+  # use getAuthFromContext from media when a file if pasted from a different collection
+
+  Now products can provide auth using **getAuthFromContext** on MediaClientConfig:
+
+  ```
+  import {MediaClientConfig} from '@atlaskit/media-core'
+  import Editor from '@atlaskit/editor-core'
+
+  const viewMediaClientConfig: MediaClientConfig = {
+    authProvider // already exists
+    getAuthFromContext(contextId: string) {
+      // here products can return auth for external pages.
+      // in case of copy & paste on Confluence, they can provide read token for
+      // files on the source collection
+    }
+  }
+  const mediaProvider: = {
+    viewMediaClientConfig
+  }
+
+  <Editor {...otherNonRelatedProps} media={{provider: mediaProvider}} />
+  ```
+
+## 112.32.0
+
+### Minor Changes
+
+- [minor][f60618b0f0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f60618b0f0):
+
+  ED-5844 Adding media link UI to editor
+
+## 112.31.2
+
+### Patch Changes
+
+- [patch][96bb8c8f70](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/96bb8c8f70):
+
+  Create viewMediaClientConfig & uploadMediaClientConfig on Editor if they are missing
+
+## 112.31.1
+
+### Patch Changes
+
+- [patch][428874c03b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/428874c03b):
+
+  ED-7166: Lists can now be toggled inside panels
+
+## 112.31.0
+
+### Minor Changes
+
+- [minor][e9cdfa5aed](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e9cdfa5aed):
+
+  ED-7188: Full width mode is now centre aligned.
+
+## 112.30.0
+
+### Minor Changes
+
+- [minor][4a22a774a6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4a22a774a6):
+
+  AUX-36 Add update support for extension handler
+
+## 112.29.0
+
+### Minor Changes
+
+- [minor][e754b5f85e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e754b5f85e):
+
+  Media Picker Dropone component is now migrated to React.
+
+  - Previous vanilla js API:
+
+  ```
+  // instantiation
+  const dropzone = await new MediaPicker('dropzone', context, pickerConfig).init();
+
+  // subscribe to upload events
+  dropzone.on('uploads-start', onUploadsStart);
+  dropzone.on('upload-preview-update', onUploadPreviewUpdate);
+  dropzone.on('upload-status-update', onUploadStatusUpdate);
+  dropzone.on('upload-processing', onUploadProcessing);
+  dropzone.on('upload-end', onUploadEnd);
+  dropzone.on('upload-error', onUploadError);
+  ```
+
+
+    // activate/deactivate dropone
+    dropzone.activate();
+    dropzone.deactivate();
+
+    // cancel ongoing upload
+    dropzone.cancel(uploadId);
+
+    // when we want to dispose the component
+    dropzone.teardown();
+    ```
+
+    - New React API:
+
+    ```
+    class DropzoneConsumer extends React.Component {
+      render() {
+        return (
+          <Dropzone
+            config={config}
+            context={context}
+            onProcessing={onProcessing}
+            onError={onError}
+            onPreviewUpdate={onPreviewUpdate}
+          />
+        )
+      }
+    }
+    ```
+
+    Notes on new API:
+
+    - old `MediaPicker` constructor does not recieve `pickerType` as first parameter anymore, since the only component left to migrate to react is `popup`.
+    Meaning that if before we were doing:
+     ```
+     new MediaPicker('popup', context, config)
+     ```
+    now we will need to just do
+     ```
+     new MediaPicker(context, config)
+     ```
+
+    - No need to explicitly teardown the component. Unmounting the component will do the work
+
+    - `onCancelFn` is a workaround to cancel an ongoing upload. Refer to its type definitions for more info. Before we were saving a ref and calling `ref.cancel()`.
+
+    Basically if we render `Dropzone` component in isolation (meaning, not inside another react component), we will need to do something like:
+
+    ```
+    const saveCancelUploadFn = (cancel) => this.cancelUpload = cancel;
+
+    ...
+
+    <Dropzone
+      onCancelFn={(cancel) => saveCancelUploadFn(cancel)}
+      config={config}
+      context={context}
+      onProcessing={onProcessing}
+      onError={onError}
+      onPreviewUpdate={onPreviewUpdate}
+    />
+    ```
+
+    At a later point we will just need to call `this.cancelUpload` function in that example, in order to cancel an ongoing upload if needed.
+
+## 112.28.2
+
+### Patch Changes
+
+- [patch][216a679624](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/216a679624):
+
+  ED-7212 Add cleanup to the macroProvider such that it unsubscribes on destroy
+
+## 112.28.1
+
+### Patch Changes
+
+- [patch][6504d78bf2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6504d78bf2):
+
+  [ED-7167] Improve table performance, extracting the InsertButton position logic from row & column controls to prosemirror event handles
+
+## 112.28.0
+
+### Minor Changes
+
+- [minor][efb8f04952](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/efb8f04952):
+
+  ED-5657 Add keyboard shortcuts for lists on Windows (number & bullet)
+
+## 112.27.1
+
+### Patch Changes
+
+- [patch][e80e60b358](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e80e60b358):
+
+  FM-2123: fixed double @ insertion on mention composition (Android)
+
 ## 112.27.0
 
 ### Minor Changes
