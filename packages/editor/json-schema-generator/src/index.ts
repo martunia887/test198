@@ -75,7 +75,8 @@ export default (
       } else {
         prettier.resolveConfig(process.cwd()).then(resolvedConfig => {
           const options = {
-            parser: 'babylon',
+            // Uses @babel/parser (formerly babylon)
+            parser: 'babel',
             ...resolvedConfig,
           } as prettier.Options;
 
