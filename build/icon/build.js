@@ -73,7 +73,14 @@ module.exports = function(config /*: Config */) {
             // Transpile the component code
             .then(componentCode =>
               babel.transform(componentCode, {
-                presets: ['@babel/env', '@babel/react', '@babel/flow'],
+                presets: [
+                  [
+                    '@babel/env',
+                    { modules: false, useBuiltIns: 'usage', corejs: 3 },
+                  ],
+                  '@babel/react',
+                  '@babel/flow',
+                ],
               }),
             )
             .then(({ code }) =>
