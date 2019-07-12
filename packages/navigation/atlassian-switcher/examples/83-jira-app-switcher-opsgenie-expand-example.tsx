@@ -34,10 +34,6 @@ class JiraSwitcherExample extends React.Component {
                 billingPeriod: 'ANNUAL',
                 state: 'ACTIVE',
               },
-              'confluence.ondemand': {
-                billingPeriod: 'ANNUAL',
-                state: 'ACTIVE',
-              },
             },
           },
         };

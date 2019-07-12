@@ -327,10 +327,17 @@ export const getSuggestedProductLink = (
     );
   }
 
+  const productsToCheck = new Set<string>([
+    ProductKey.JIRA_SOFTWARE,
+    ProductKey.JIRA_SERVICE_DESK,
+    ProductKey.CONFLUENCE,
+  ]);
+  const installedProductCount = Object.keys(
+    licenseInformationData.products,
+  ).filter(key => productsToCheck.has(key)).length;
+
   if (
-    getProductIsActive(licenseInformationData, ProductKey.JIRA_SOFTWARE) &&
-    getProductIsActive(licenseInformationData, ProductKey.JIRA_SERVICE_DESK) &&
-    getProductIsActive(licenseInformationData, ProductKey.CONFLUENCE) &&
+    installedProductCount >= 2 &&
     !getProductIsActive(licenseInformationData, ProductKey.OPSGENIE)
   ) {
     productLinks.push(
