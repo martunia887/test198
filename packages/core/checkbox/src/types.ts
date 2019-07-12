@@ -308,8 +308,8 @@ export interface ComponentTokens {
   icon: IconTokens;
 }
 
-export interface EvaluatedIconTokens {
->>>>>>> 56f01cf1a3... fix checkbox type definitions
+
+export interface ThemeIconTokens {
   borderWidth: string;
   borderColor: {
     rest: string;
@@ -443,7 +443,7 @@ export interface RequiredIndicatorProps
   tokens: ThemeTokens;
 }
 
-export interface EvaluatedLabelTokens {
+export interface ThemeLabelTokens {
   textColor: {
     rest: string;
     disabled: string;
@@ -456,14 +456,12 @@ export interface EvaluatedLabelTokens {
   };
 }
 
-export interface EvaluatedTokens {
-  label: EvaluatedLabelTokens;
-  icon: EvaluatedIconTokens;
+export interface ThemeTokens {
+  label: ThemeLabelTokens;
+  icon: ThemeIconTokens;
 }
 
 export interface ThemeProps {
   tokens: ComponentTokens;
   mode: string;
 }
-
-export interface ThemeTokens extends EvaluatedTokens {}
