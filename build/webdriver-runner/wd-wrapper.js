@@ -161,6 +161,7 @@ export default class Page {
   async checkConsoleErrors() {
     // Console errors can only be checked in Chrome
     if (this.isBrowser('chrome')) {
+      console.log(await this.browser);
       const logs = await this.browser.getLogs('browser');
       if (logs.length) {
         logs.forEach(val => {

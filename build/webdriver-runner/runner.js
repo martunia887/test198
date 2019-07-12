@@ -31,7 +31,7 @@ const launchClient = client => {
     return client.driver;
   }
 
-  client.options.capabilities.name = filename;
+  isBrowserStack ? (client.options.capabilities.name = filename) : '';
   const init = webdriverio.remote(client.options);
   client.queue = new Queue(1, 100);
 

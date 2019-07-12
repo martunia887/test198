@@ -9,7 +9,7 @@ const chromedriver = require('chromedriver');
  */
 
 const port = 9515;
-const args = ['--url-base=wd/hub', `--port=${port}`];
+const args = ['--url-base=wd/hub', `--port=${port}`, '--enable-logging'];
 
 async function startServer() {
   chromedriver.start(args);
