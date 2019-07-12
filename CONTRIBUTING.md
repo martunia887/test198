@@ -187,8 +187,7 @@ bolt start button modal-dialog
 
 ## Writing new code
 
-All new code should be written using either [Flow](https://flow.org) (and
-[Babel](http://babeljs.io/)) or [TypeScript](http://www.typescriptlang.org/).
+All new code should be written using [TypeScript](http://www.typescriptlang.org/).
 
 If you need to create a new package, simply create a directory for the package
 and start putting files in the correct location (most things are based on file
@@ -230,20 +229,23 @@ bolt workspaces <add/remove/upgrade> <dep>[@<version>] [--dev/peer/etc]
 
 ## Type checking your code
 
-We use both [Flow](https://flow.org/) and
-[TypeScript](http://www.typescriptlang.org/) inside of Atlaskit. Each package
+We use both [TypeScript](http://www.typescriptlang.org/)
+and [Flow](https://flow.org/) inside of Atlaskit. Each package
 uses one or the other depending on the team that owns the package.
 
 Be sure to setup IDE integrations for both so you get the full benefits out of
 them.
 
 - Atom: [IDE](https://ide.atom.io/)
-- Sublime: [Flow](https://flow.org/en/docs/editors/sublime-text/),
-  [TypeScript](https://github.com/Microsoft/TypeScript-Sublime-Plugin)
-- Vim: [Flow](https://flow.org/en/docs/editors/vim/),
-  [TypeScript](https://github.com/leafgarland/typescript-vim)
-- VSCode: [Flow](https://flow.org/en/docs/editors/vscode/), TypeScript
-  (built-in)
+- Sublime: [TypeScript](https://github.com/Microsoft/TypeScript-Sublime-Plugin)
+- Vim: [TypeScript](https://github.com/leafgarland/typescript-vim)
+- VSCode: TypeScript (built-in)
+
+When working on older modules, the following integrations will be of benefit:
+
+- Sublime: [Flow](https://flow.org/en/docs/editors/sublime-text/)
+- Vim: [Flow](https://flow.org/en/docs/editors/vim/)
+- VSCode: [Flow](https://flow.org/en/docs/editors/vscode/)
 
 If you want to run both type checkers on all files from the command line you can
 run:
