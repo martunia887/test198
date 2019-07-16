@@ -28,6 +28,7 @@ const defaults: CheckboxDefaults = {
     attributesFn: () => ({}),
   },
 };
+file into smaller component files in an elements folder
 
 interface State {
   isActive: boolean;
