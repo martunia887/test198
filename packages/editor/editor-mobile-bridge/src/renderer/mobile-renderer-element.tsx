@@ -36,6 +36,7 @@ import { ObjectKey, TaskState } from '@atlaskit/task-decision';
 import { analyticsBridgeClient } from '../analytics-client';
 
 import { createPromise } from '../cross-platform-promise';
+import { extensionToADF } from './helpers';
 
 export interface MobileRendererProps {
   document?: string;
@@ -62,7 +63,7 @@ export interface MacroRendererProps {
 }
 
 export interface MacroRendererState {
-  content?: string;
+  content?: string | null;
 }
 
 class MacroComponent extends React.Component<
@@ -79,9 +80,18 @@ class MacroComponent extends React.Component<
 
   componentDidMount() {
     const ext = this.props.extension;
-    createPromise('renderMacro', JSON.stringify({ ext }))
+    const adf = extensionToADF(ext);
+    const contentId = '960561171'; // https://product-fabric.atlassian.net/wiki/spaces/~speachey/pages/960561171/Single+macro
+
+    const dataToSend = {
+      contentId,
+      adf,
+    };
+
+    createPromise('customLegacyMacro', JSON.stringify(dataToSend))
       .submit()
       .then(result => {
+        console.log('=== result of promise', result);
         this.setState(result);
       });
   }
@@ -90,7 +100,7 @@ class MacroComponent extends React.Component<
     if (this.state.content) {
       return <div dangerouslySetInnerHTML={{ __html: this.state.content }} />;
     } else {
-      return <div>LOADING...</div>;
+      return <div>Ahoy</div>;
     }
   }
 }
@@ -182,7 +192,6 @@ export default class MobileRenderer extends React.Component<
 
   getMacroExtensionHandler(): ExtensionHandler<any> {
     return extension => {
-      console.error('HERE');
       return <MacroComponent extension={extension} />;
     };
   }
