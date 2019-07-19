@@ -28,7 +28,7 @@ export function extensionToADF(node) {
 
   // confluence needs to be updated to get rid of bodyType as per
   // https://product-fabric.atlassian.net/wiki/spaces/E/pages/252351342/Splitting+Extension+node+into+three+nodes
-  // but for now, the beackend requires it to be sent
+  // but for now, the backend requires it to be sent
   adf.attrs.bodyType = 'none';
 
   if (type === 'bodiedExtension') {
