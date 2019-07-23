@@ -493,6 +493,7 @@ pipelines:
           name: Deploy branch build dists
           script:
             - source ./build-setup.sh
+            - echo "$BITBUCKET_COMMIT"
             - bolt install --pure-lockfile
             - yarn build
             - export CHANGED_PACKAGES=$(node build/ci-scripts/get.changed.packages.since.master.js)
