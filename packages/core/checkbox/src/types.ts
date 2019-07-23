@@ -98,6 +98,7 @@ export type CheckboxIconOverrides = Pick<
  *
  **/
 
+
 export interface CheckboxIconProps {
   /** Sets the checkbox icon active state. */
   isActive?: boolean;
@@ -146,6 +147,7 @@ export interface CheckboxIconProps {
  **/
 
 export interface CheckboxProps extends WithAnalyticsEventsProps {
+
   /** Sets whether the checkbox begins checked. */
   defaultChecked?: boolean;
   /** id assigned to input */

@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { jsx, InterpolationWithTheme } from '@emotion/core';
 import { ThemeTokens, ThemeIconTokens } from '../types';
 import React from 'react';
 
@@ -200,7 +200,14 @@ export const CheckboxWrapper = (props: { children: React.ReactNode }) => (
 interface IconProps extends React.HTMLProps<HTMLLabelElement> {
 =======
 export interface IconProps extends React.HTMLProps<HTMLLabelElement> {
+<<<<<<< HEAD
 >>>>>>> a01ca0307a... separate out checkbox.tsx file into smaller component files in an elements folder:packages/core/checkbox/src/elements/IconWrapper.tsx
+=======
+  getStyles: (
+    key: 'iconWrapper',
+    props: Pick<Props, Exclude<keyof Props, 'getStyles'>>,
+  ) => InterpolationWithTheme<any>;
+>>>>>>> 9f4f583f11... implement styles prop and getStyles fns
   tokens: ThemeTokens;
   isChecked?: boolean;
   isDisabled?: boolean;
@@ -210,30 +217,31 @@ export interface IconProps extends React.HTMLProps<HTMLLabelElement> {
   isInvalid?: boolean;
 }
 
-export default ({ children, ...props }: IconProps) => (
-  <span
-    css={{
-      lineHeight: 0,
-      flexShrink: 0,
-      color: getBoxColor(props),
-      fill: getTickColor(props),
-      transition: 'all 0.2s ease-in-out;',
+export const iconWrapperCSS = (
+  props: IconProps,
+): InterpolationWithTheme<any> => ({
+  lineHeight: 0,
+  flexShrink: 0,
+  color: getBoxColor(props),
+  fill: getTickColor(props),
+  transition: 'all 0.2s ease-in-out;',
 
-      /* This is adding a property to the inner svg, to add a border to the checkbox */
-      '& rect:first-of-type': {
-        transition: 'stroke 0.2s ease-in-out;',
-        ...getBorderColor(props),
-      },
+  /* This is adding a property to the inner svg, to add a border to the checkbox */
+  '& rect:first-of-type': {
+    transition: 'stroke 0.2s ease-in-out;',
+    ...getBorderColor(props),
+  },
 
-      /**
-       * Need to set the Icon component wrapper to flex to avoid a scrollbar bug which
-       * happens when checkboxes are flex items in a parent with overflow.
-       * See AK-6321 for more details.
-       **/
-      '> span': {
-        display: 'flex',
-      },
-    }}
-    children={children}
-  />
+  /**
+   * Need to set the Icon component wrapper to flex to avoid a scrollbar bug which
+   * happens when checkboxes are flex items in a parent with overflow.
+   * See AK-6321 for more details.
+   **/
+  '> span': {
+    display: 'flex',
+  },
+});
+
+export default ({ getStyles, children, ...props }: IconProps) => (
+  <span css={getStyles('iconWrapper', props)} children={children} />
 );
