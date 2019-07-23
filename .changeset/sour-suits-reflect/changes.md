@@ -1,0 +1,1 @@
+Fix media-editor copy step in build
