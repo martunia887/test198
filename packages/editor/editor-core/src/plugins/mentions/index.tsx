@@ -15,8 +15,8 @@ import {
   ELEMENTS_CHANNEL,
 } from '@atlaskit/mention/resource';
 import {
-  MentionSpotlight,
-  MentionSpotlightController,
+  TeamMentionSpotlight,
+  TeamMentionSpotlightController,
 } from '@atlaskit/mention';
 import { MentionItem } from '@atlaskit/mention/item';
 import { TeamMember } from '@atlaskit/mention/team-resource';
@@ -163,15 +163,17 @@ const mentionsPlugin = (
             provider &&
             (provider as TeamMentionProvider).mentionTypeaheadSpotlightEnabled
           ) {
-            const enabledViaLocalStorage = MentionSpotlightController.isSpotlightEnabled();
+            const enabledViaLocalStorage = TeamMentionSpotlightController.isSpotlightEnabled();
             if (
               (provider as TeamMentionProvider).mentionTypeaheadSpotlightEnabled() &&
               enabledViaLocalStorage
             ) {
               return (
-                <MentionSpotlight
+                <TeamMentionSpotlight
                   createTeamLink="/people/search#createTeam"
-                  onClose={() => MentionSpotlightController.registerClosed()} // todo - TEAMS-605 - this needs to replaced by a proper function when implementing analytics
+                  onClose={() =>
+                    TeamMentionSpotlightController.registerClosed()
+                  } // todo - TEAMS-605 - this needs to replaced by a proper function when implementing analytics
                 />
               );
             }
@@ -290,7 +292,7 @@ const mentionsPlugin = (
           sessionId = uuid();
 
           if (mentionProvider && isTeamType(userType)) {
-            MentionSpotlightController.registerTeamMention();
+            TeamMentionSpotlightController.registerTeamMention();
 
             return insert(
               buildNodesForTeamMention(

@@ -1,6 +1,6 @@
 import TeamMentionSpotlightController from '../../../components/TeamMentionSpotlight/TeamMentionSpotlightController';
 
-describe('MentionSpotlightController', () => {
+describe('TeamMentionSpotlightController', () => {
   beforeEach(() => {
     localStorage.clear();
   });

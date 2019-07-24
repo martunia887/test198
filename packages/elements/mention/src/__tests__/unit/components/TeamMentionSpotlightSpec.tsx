@@ -22,7 +22,7 @@ let mockRegisterRender = jest.fn();
 let mockRegisterCreateLinkClick = jest.fn();
 
 jest.mock(
-  '../../../components/MentionSpotlight/MentionSpotlightController',
+  '../../../components/TeamMentionSpotlight/TeamMentionSpotlightController',
   () => ({
     __esModule: true,
     default: {
@@ -32,7 +32,7 @@ jest.mock(
   }),
 );
 
-describe('MentionSpotlight', () => {
+describe('TeamMentionSpotlight', () => {
   it('Should call onCall callback when the x is clicked', () => {
     const onClose = jest.fn();
     const spotlight = render({ onClose: onClose });

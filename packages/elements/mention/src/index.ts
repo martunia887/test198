@@ -69,8 +69,8 @@ export {
   MentionPicker,
   Mention,
   ResourcedMention,
-  TeamMentionSpotlight as MentionSpotlight,
-  TeamMentionSpotlightController as MentionSpotlightController,
+  TeamMentionSpotlight,
+  TeamMentionSpotlightController,
   // Functions
   isSpecialMention,
   isResolvingMentionProvider,
