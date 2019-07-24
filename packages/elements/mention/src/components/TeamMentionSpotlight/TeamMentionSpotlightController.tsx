@@ -19,7 +19,7 @@ const DISABLED_LOCAL_STORAGE: TeamMentionState = {
 
 const MAX_SEEN_LIMIT = 5;
 
-export default class MentionSpotlightController {
+export default class TeamMentionSpotlightController {
   // Note - not a simple look up to avoid showing it to users that have local storage disabled
   private static readFromLocalStorage(): TeamMentionState {
     try {
@@ -56,26 +56,26 @@ export default class MentionSpotlightController {
   }
 
   private static markAsDone = () => {
-    const item = MentionSpotlightController.readFromLocalStorage();
+    const item = TeamMentionSpotlightController.readFromLocalStorage();
     item.dontShow = true;
-    MentionSpotlightController.saveToLocalStorage(item);
+    TeamMentionSpotlightController.saveToLocalStorage(item);
   };
 
   static isSpotlightEnabled = () => {
-    const item = MentionSpotlightController.readFromLocalStorage();
+    const item = TeamMentionSpotlightController.readFromLocalStorage();
     return item.seenCount < MAX_SEEN_LIMIT && !item.dontShow;
   };
 
   static registerRender = () => {
-    const item = MentionSpotlightController.readFromLocalStorage();
+    const item = TeamMentionSpotlightController.readFromLocalStorage();
     item.seenCount += 1;
     if (item.seenCount > MAX_SEEN_LIMIT) {
       item.dontShow = true;
     }
-    MentionSpotlightController.saveToLocalStorage(item);
+    TeamMentionSpotlightController.saveToLocalStorage(item);
   };
 
-  static registerCreateLinkClick = MentionSpotlightController.markAsDone;
-  static registerTeamMention = MentionSpotlightController.markAsDone;
-  static registerClosed = MentionSpotlightController.markAsDone;
+  static registerCreateLinkClick = TeamMentionSpotlightController.markAsDone;
+  static registerTeamMention = TeamMentionSpotlightController.markAsDone;
+  static registerClosed = TeamMentionSpotlightController.markAsDone;
 }

@@ -4,11 +4,13 @@ import { shallow } from 'enzyme';
 import { noop } from '@babel/types';
 import Button from '@atlaskit/button';
 
-import MentionSpotlight, { Props } from '../../../components/MentionSpotlight';
+import TeamMentionSpotlight, {
+  Props,
+} from '../../../components/TeamMentionSpotlight';
 
 function render(props: Partial<Props>) {
   return mountWithIntl(
-    <MentionSpotlight
+    <TeamMentionSpotlight
       createTeamLink="somelink"
       onClose={() => noop}
       {...props}
@@ -59,7 +61,7 @@ describe('MentionSpotlight', () => {
   it('should not show the highlight if the spotlight has been closed by the user', () => {
     const onClose = jest.fn();
     const spotlight = shallow(
-      <MentionSpotlight createTeamLink="somelink" onClose={onClose} />,
+      <TeamMentionSpotlight createTeamLink="somelink" onClose={onClose} />,
     );
 
     spotlight.setState({

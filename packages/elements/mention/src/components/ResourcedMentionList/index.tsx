@@ -5,8 +5,8 @@ import { MentionDescription, OnMentionEvent } from '../../types';
 import uniqueId from '../../util/id';
 import debug from '../../util/logger';
 import MentionList from '../MentionList';
-import MentionSpotlight from '../MentionSpotlight';
-import MentionSpotlightController from '../MentionSpotlight/MentionSpotlightController';
+import TeamMentionSpotlight from '../TeamMentionSpotlight';
+import TeamMentionSpotlightController from '../TeamMentionSpotlight/TeamMentionSpotlightController';
 
 function applyPresence(mentions: MentionDescription[], presences: PresenceMap) {
   const updatedMentions: MentionDescription[] = [];
@@ -223,13 +223,13 @@ export default class ResourcedMentionList extends React.PureComponent<
   };
 
   private closeHighlight = () => {
-    MentionSpotlightController.registerClosed();
+    TeamMentionSpotlightController.registerClosed();
   };
 
   private mentionsHighlight = () => {
     const { mentions } = this.state;
     const { isTeamMentionHighlightEnabled } = this.props;
-    const enabledViaLocalStorage = MentionSpotlightController.isSpotlightEnabled();
+    const enabledViaLocalStorage = TeamMentionSpotlightController.isSpotlightEnabled();
 
     const shouldShow =
       enabledViaLocalStorage &&
@@ -241,7 +241,7 @@ export default class ResourcedMentionList extends React.PureComponent<
     }
 
     return (
-      <MentionSpotlight
+      <TeamMentionSpotlight
         createTeamLink="/people/search#createTeam"
         onClose={this.closeHighlight}
       />

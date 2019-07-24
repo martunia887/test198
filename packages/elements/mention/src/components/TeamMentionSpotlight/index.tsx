@@ -3,7 +3,7 @@ import React from 'react';
 import Button from '@atlaskit/button';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 import Tooltip from '@atlaskit/tooltip';
-import MentionSpotlightController from './MentionSpotlightController';
+import TeamMentionSpotlightController from './TeamMentionSpotlightController';
 
 import {
   SpotlightTitle,
@@ -26,7 +26,10 @@ export interface State {
 const ICON_URL =
   'https://ptc-directory-sited-static.us-east-1.prod.public.atl-paas.net/teams/avatars/2.svg';
 
-export default class MentionSpotlight extends React.Component<Props, State> {
+export default class TeamMentionSpotlight extends React.Component<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -34,11 +37,11 @@ export default class MentionSpotlight extends React.Component<Props, State> {
     };
   }
   componentDidMount() {
-    MentionSpotlightController.registerRender();
+    TeamMentionSpotlightController.registerRender();
   }
 
   onClick = () => {
-    MentionSpotlightController.registerCreateLinkClick();
+    TeamMentionSpotlightController.registerCreateLinkClick();
   };
 
   onCloseClick = () => {
