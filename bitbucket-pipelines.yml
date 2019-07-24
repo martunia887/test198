@@ -500,6 +500,7 @@ pipelines:
             # Change into a glob pattern (removing brackets, spaces and quotes).
             - export CHANGED_PACKAGES_GLOB=$(echo "$CHANGED_PACKAGES" | sed 's/[][" ]//g')
             # We add in the exta brances and a trailing comma in case we only have one package
+            - node run.js
             - bolt ws exec --only-fs="{$CHANGED_PACKAGES_GLOB,}" -- npm pack
             - mkdir -p dists/
             - node build/ci-scripts/copy.built.tgzs.to.dists.dir.js
