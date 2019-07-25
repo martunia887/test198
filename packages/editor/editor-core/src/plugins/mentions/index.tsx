@@ -173,7 +173,7 @@ const mentionsPlugin = (
                   createTeamLink="/people/search#createTeam"
                   onClose={() =>
                     TeamMentionSpotlightController.registerClosed()
-                  } // todo - TEAMS-605 - this needs to replaced by a proper function when implementing analytics
+                  } // todo - TEAMS-605 - use a proper function here which sends both analytics and register the close as well
                 />
               );
             }

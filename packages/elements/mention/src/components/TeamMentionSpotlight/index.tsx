@@ -51,9 +51,9 @@ export default class TeamMentionSpotlight extends React.Component<
 
   render() {
     const { createTeamLink } = this.props;
-    const { isSpotlightClosed: isHighlightClosed } = this.state;
+    const { isSpotlightClosed } = this.state;
 
-    if (isHighlightClosed) {
+    if (isSpotlightClosed) {
       return null;
     }
 
@@ -100,6 +100,7 @@ export default class TeamMentionSpotlight extends React.Component<
                     iconBefore={<EditorCloseIcon label="Close" size="medium" />}
                     onClick={this.onCloseClick}
                     spacing="none"
+                    css=""
                   />
                 </Tooltip>
               )}
