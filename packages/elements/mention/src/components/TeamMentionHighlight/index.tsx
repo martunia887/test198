@@ -6,10 +6,10 @@ import Tooltip from '@atlaskit/tooltip';
 import TeamMentionHighlightController from './TeamMentionHighlightController';
 
 import {
-  SpotlightTitle,
-  SpotlightCloseTooltip,
-  SpotlightDescription,
-  SpotlightDescriptionLink,
+  HighlightTitle,
+  TeamMentionHighlightCloseTooltip,
+  TeamMentionHighlightDescription,
+  TeamMentionHighlightDescriptionLink,
 } from '../../util/i18n';
 import * as Styled from './styles';
 
@@ -20,7 +20,7 @@ export interface Props {
 }
 
 export interface State {
-  isSpotlightClosed: boolean;
+  isHighlightClosed: boolean;
 }
 
 const ICON_URL =
@@ -33,7 +33,7 @@ export default class TeamMentionHighlight extends React.Component<
   constructor(props: Props) {
     super(props);
     this.state = {
-      isSpotlightClosed: false,
+      isHighlightClosed: false,
     };
   }
   componentDidMount() {
@@ -45,15 +45,15 @@ export default class TeamMentionHighlight extends React.Component<
   };
 
   onCloseClick = () => {
-    this.setState({ isSpotlightClosed: true });
+    this.setState({ isHighlightClosed: true });
     this.props.onClose();
   };
 
   render() {
     const { createTeamLink } = this.props;
-    const { isSpotlightClosed } = this.state;
+    const { isHighlightClosed } = this.state;
 
-    if (isSpotlightClosed) {
+    if (isHighlightClosed) {
       return null;
     }
 
@@ -66,15 +66,15 @@ export default class TeamMentionHighlight extends React.Component<
           <Styled.Section>
             <Styled.Heading>
               <Styled.Title>
-                <SpotlightTitle />
+                <HighlightTitle />
               </Styled.Title>
             </Styled.Heading>
             <Styled.Body>
-              <SpotlightDescription>
+              <TeamMentionHighlightDescription>
                 {description => (
                   <p>
                     {description}
-                    <SpotlightDescriptionLink>
+                    <TeamMentionHighlightDescriptionLink>
                       {linkText => (
                         <a
                           href={createTeamLink}
@@ -85,14 +85,14 @@ export default class TeamMentionHighlight extends React.Component<
                           {linkText}
                         </a>
                       )}
-                    </SpotlightDescriptionLink>
+                    </TeamMentionHighlightDescriptionLink>
                   </p>
                 )}
-              </SpotlightDescription>
+              </TeamMentionHighlightDescription>
             </Styled.Body>
           </Styled.Section>
           <Styled.Actions>
-            <SpotlightCloseTooltip>
+            <TeamMentionHighlightCloseTooltip>
               {tooltip => (
                 <Tooltip content={tooltip} position="bottom">
                   <Button
@@ -104,7 +104,7 @@ export default class TeamMentionHighlight extends React.Component<
                   />
                 </Tooltip>
               )}
-            </SpotlightCloseTooltip>
+            </TeamMentionHighlightCloseTooltip>
           </Styled.Actions>
         </Styled.Content>
       </Styled.Card>

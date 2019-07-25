@@ -164,7 +164,7 @@ const mentionsPlugin = (
             (provider as TeamMentionProvider)
               .mentionTypeaheadTeamHighlightEnabled
           ) {
-            const enabledViaLocalStorage = TeamMentionHighlightController.isSpotlightEnabled();
+            const enabledViaLocalStorage = TeamMentionHighlightController.isHighlightEnabled();
             if (
               (provider as TeamMentionProvider).mentionTypeaheadTeamHighlightEnabled() &&
               enabledViaLocalStorage

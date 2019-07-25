@@ -65,7 +65,7 @@ describe('TeamMentionHighlight', () => {
     );
 
     highlight.setState({
-      isSpotlightClosed: true,
+      isHighlightClosed: true,
     });
 
     expect(highlight).toMatchObject({});

@@ -30,13 +30,13 @@ export const DefaultAdvisedAction = noPropFormatter(
 );
 export const LoginAgain = noPropFormatter(messages.loginAgain);
 export const DifferentText = noPropFormatter(messages.differentText);
-export const SpotlightTitle = noPropFormatter(messages.spotlightTitle);
-export const SpotlightCloseTooltip = noPropFormatter(
-  messages.spotlightCloseButtonToolTip,
+export const HighlightTitle = noPropFormatter(messages.highlightTitle);
+export const TeamMentionHighlightCloseTooltip = noPropFormatter(
+  messages.highlightCloseButtonToolTip,
 );
-export const SpotlightDescription = noPropFormatter(
-  messages.spotlightDescription,
+export const TeamMentionHighlightDescription = noPropFormatter(
+  messages.highlightDescription,
 );
-export const SpotlightDescriptionLink = noPropFormatter(
-  messages.spotlightDescriptionLink,
+export const TeamMentionHighlightDescriptionLink = noPropFormatter(
+  messages.highlightDescriptionLink,
 );

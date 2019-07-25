@@ -136,7 +136,7 @@ export const resourceProviderWithInfoHints = new MentionResourceWithInfoHints({
   maxWait: 25,
 });
 
-export const resourceProviderWithSpotlight = new MentionResource({
+export const resourceProviderWithHighlight = new MentionResource({
   minWait: 10,
   maxWait: 25,
   enableTeamMentionHighlight: true,

@@ -61,7 +61,7 @@ export default class TeamMentionHighlightController {
     TeamMentionHighlightController.saveToLocalStorage(item);
   };
 
-  static isSpotlightEnabled = () => {
+  static isHighlightEnabled = () => {
     const item = TeamMentionHighlightController.readFromLocalStorage();
     return item.seenCount < MAX_SEEN_LIMIT && !item.dontShow;
   };

@@ -282,16 +282,16 @@ describe('TeamMentionResourceSpec', () => {
       expect(resource.mentionTypeaheadTeamHighlightEnabled()).toBe(false);
     });
     it('should return true when enabled', () => {
-      const withSpotlightResource = new TeamMentionResource(
+      const withMentionHighlightResource = new TeamMentionResource(
         apiUserMentionConfig,
         {
           ...apiTeamMentionConfig,
           teamHighlightEnabled: true,
         },
       );
-      expect(withSpotlightResource.mentionTypeaheadTeamHighlightEnabled()).toBe(
-        true,
-      );
+      expect(
+        withMentionHighlightResource.mentionTypeaheadTeamHighlightEnabled(),
+      ).toBe(true);
     });
   });
 });

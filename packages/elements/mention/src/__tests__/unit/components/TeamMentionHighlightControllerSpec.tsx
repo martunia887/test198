@@ -6,7 +6,7 @@ describe('TeamMentionHighlightController', () => {
   });
 
   it('should return viewable when going from scratch', () => {
-    const isEnabled = TeamMentionHighlightController.isSpotlightEnabled();
+    const isEnabled = TeamMentionHighlightController.isHighlightEnabled();
     expect(isEnabled).toBe(true);
   });
 
@@ -17,30 +17,30 @@ describe('TeamMentionHighlightController', () => {
     TeamMentionHighlightController.registerRender();
     TeamMentionHighlightController.registerRender();
 
-    const isEnabledFour = TeamMentionHighlightController.isSpotlightEnabled();
+    const isEnabledFour = TeamMentionHighlightController.isHighlightEnabled();
     expect(isEnabledFour).toBe(true);
 
     // Fifth is not
     TeamMentionHighlightController.registerRender();
-    const isEnabledFive = TeamMentionHighlightController.isSpotlightEnabled();
+    const isEnabledFive = TeamMentionHighlightController.isHighlightEnabled();
     expect(isEnabledFive).toBe(false);
   });
 
   it('should not be viewable after closing dialog', () => {
     TeamMentionHighlightController.registerClosed();
-    const isEnabled = TeamMentionHighlightController.isSpotlightEnabled();
+    const isEnabled = TeamMentionHighlightController.isHighlightEnabled();
     expect(isEnabled).toBe(false);
   });
 
   it('should not be viewable after making a team mention', () => {
     TeamMentionHighlightController.registerTeamMention();
-    const isEnabled = TeamMentionHighlightController.isSpotlightEnabled();
+    const isEnabled = TeamMentionHighlightController.isHighlightEnabled();
     expect(isEnabled).toBe(false);
   });
 
   it('should not be viewable after creating a team', () => {
     TeamMentionHighlightController.registerCreateLinkClick();
-    const isEnabled = TeamMentionHighlightController.isSpotlightEnabled();
+    const isEnabled = TeamMentionHighlightController.isHighlightEnabled();
     expect(isEnabled).toBe(false);
   });
 
@@ -50,7 +50,7 @@ describe('TeamMentionHighlightController', () => {
     TeamMentionHighlightController.registerCreateLinkClick();
     TeamMentionHighlightController.registerRender();
 
-    const isEnabled = TeamMentionHighlightController.isSpotlightEnabled();
+    const isEnabled = TeamMentionHighlightController.isHighlightEnabled();
     expect(isEnabled).toBe(false);
   });
 });
