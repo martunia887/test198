@@ -381,7 +381,7 @@ export function defaultActionHandler({
     queryStarted: Date.now(),
     upKeyCount: 0,
     downKeyCount: 0,
-    teamMentionHighlight: teamMentionHighlight,
+    teamMentionHighlight,
   };
 
   dispatch(pluginKey, newPluginState);
