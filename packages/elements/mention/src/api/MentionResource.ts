@@ -41,7 +41,7 @@ export interface MentionResourceConfig extends ServiceConfig {
 
 export interface TeamMentionResourceConfig extends MentionResourceConfig {
   teamLinkResolver?: (teamId: string) => string;
-  teamSpotlightEnabled?: boolean;
+  teamHighlightEnabled?: boolean;
 }
 
 export interface ResourceProvider<Result> {
@@ -88,7 +88,7 @@ export interface MentionProvider
 }
 
 export interface TeamMentionProvider extends MentionProvider {
-  mentionTypeaheadSpotlightEnabled: () => boolean;
+  mentionTypeaheadTeamHighlightEnabled: () => boolean;
 }
 
 /**

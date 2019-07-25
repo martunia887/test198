@@ -349,8 +349,8 @@ export function defaultActionHandler({
       dispatch,
     );
 
-    if (typeAheadHandler.getSpotlight) {
-      spotlight = typeAheadHandler.getSpotlight(state);
+    if (typeAheadHandler.getTeamMentionHighlight) {
+      spotlight = typeAheadHandler.getTeamMentionHighlight(state);
     }
 
     if (pluginState.itemsLoader) {

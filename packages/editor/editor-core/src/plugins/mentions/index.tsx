@@ -15,8 +15,8 @@ import {
   ELEMENTS_CHANNEL,
 } from '@atlaskit/mention/resource';
 import {
-  TeamMentionSpotlight,
-  TeamMentionSpotlightController,
+  TeamMentionHighlight,
+  TeamMentionHighlightController,
 } from '@atlaskit/mention';
 import { MentionItem } from '@atlaskit/mention/item';
 import { TeamMember } from '@atlaskit/mention/team-resource';
@@ -156,23 +156,24 @@ const mentionsPlugin = (
         // Custom regex must have a capture group around trigger
         // so it's possible to use it without needing to scan through all triggers again
         customRegex: '\\(?(@)',
-        getSpotlight: (state: EditorState) => {
+        getTeamMentionHighlight: (state: EditorState) => {
           const pluginState = getMentionPluginState(state);
           const provider = pluginState.mentionProvider;
           if (
             provider &&
-            (provider as TeamMentionProvider).mentionTypeaheadSpotlightEnabled
+            (provider as TeamMentionProvider)
+              .mentionTypeaheadTeamHighlightEnabled
           ) {
-            const enabledViaLocalStorage = TeamMentionSpotlightController.isSpotlightEnabled();
+            const enabledViaLocalStorage = TeamMentionHighlightController.isSpotlightEnabled();
             if (
-              (provider as TeamMentionProvider).mentionTypeaheadSpotlightEnabled() &&
+              (provider as TeamMentionProvider).mentionTypeaheadTeamHighlightEnabled() &&
               enabledViaLocalStorage
             ) {
               return (
-                <TeamMentionSpotlight
+                <TeamMentionHighlight
                   createTeamLink="/people/search#createTeam"
                   onClose={() =>
-                    TeamMentionSpotlightController.registerClosed()
+                    TeamMentionHighlightController.registerClosed()
                   } // todo - TEAMS-605 - use a proper function here which sends both analytics and register the close as well
                 />
               );
@@ -292,7 +293,7 @@ const mentionsPlugin = (
           sessionId = uuid();
 
           if (mentionProvider && isTeamType(userType)) {
-            TeamMentionSpotlightController.registerTeamMention();
+            TeamMentionHighlightController.registerTeamMention();
 
             return insert(
               buildNodesForTeamMention(

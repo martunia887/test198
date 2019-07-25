@@ -4,13 +4,13 @@ import { shallow } from 'enzyme';
 import { noop } from '@babel/types';
 import Button from '@atlaskit/button';
 
-import TeamMentionSpotlight, {
+import TeamMentionHighlight, {
   Props,
-} from '../../../components/TeamMentionSpotlight';
+} from '../../../components/TeamMentionHighlight';
 
 function render(props: Partial<Props>) {
   return mountWithIntl(
-    <TeamMentionSpotlight
+    <TeamMentionHighlight
       createTeamLink="somelink"
       onClose={() => noop}
       {...props}
@@ -22,7 +22,7 @@ let mockRegisterRender = jest.fn();
 let mockRegisterCreateLinkClick = jest.fn();
 
 jest.mock(
-  '../../../components/TeamMentionSpotlight/TeamMentionSpotlightController',
+  '../../../components/TeamMentionHighlight/TeamMentionHighlightController',
   () => ({
     __esModule: true,
     default: {
@@ -32,12 +32,12 @@ jest.mock(
   }),
 );
 
-describe('TeamMentionSpotlight', () => {
+describe('TeamMentionHighlight', () => {
   it('Should call onCall callback when the x is clicked', () => {
     const onClose = jest.fn();
-    const spotlight = render({ onClose: onClose });
+    const highlight = render({ onClose: onClose });
 
-    spotlight.find(Button).simulate('click');
+    highlight.find(Button).simulate('click');
 
     expect(onClose).toHaveBeenCalled();
   });
@@ -51,23 +51,23 @@ describe('TeamMentionSpotlight', () => {
 
   it('Should register link on click', () => {
     const onClose = jest.fn();
-    const spotlight = render({ onClose: onClose });
+    const highlight = render({ onClose: onClose });
 
-    spotlight.find('a').simulate('click');
+    highlight.find('a').simulate('click');
 
     expect(mockRegisterCreateLinkClick).toHaveBeenCalled();
   });
 
-  it('should not show the highlight if the spotlight has been closed by the user', () => {
+  it('should not show the highlight if the highlight has been closed by the user', () => {
     const onClose = jest.fn();
-    const spotlight = shallow(
-      <TeamMentionSpotlight createTeamLink="somelink" onClose={onClose} />,
+    const highlight = shallow(
+      <TeamMentionHighlight createTeamLink="somelink" onClose={onClose} />,
     );
 
-    spotlight.setState({
+    highlight.setState({
       isSpotlightClosed: true,
     });
 
-    expect(spotlight).toMatchObject({});
+    expect(highlight).toMatchObject({});
   });
 });

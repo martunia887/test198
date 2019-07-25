@@ -57,9 +57,9 @@ export default class TeamMentionResource extends MentionResource
     }
   }
 
-  // todo - TEAMS-590 : enable/disable the spotlight based on Feature Flags and other conditions
-  mentionTypeaheadSpotlightEnabled = () =>
-    this.teamMentionConfig.teamSpotlightEnabled || false;
+  // todo - TEAMS-590 : enable/disable the team mention highlight based on Feature Flags and other conditions
+  mentionTypeaheadTeamHighlightEnabled = () =>
+    this.teamMentionConfig.teamHighlightEnabled || false;
 
   /**
    * Returns the initial mention display list before a search is performed for the specified
