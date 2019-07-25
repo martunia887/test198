@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React from 'react';
 import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
-import { InterpolationWithTheme } from '@emotion/core';
 
 export type ButtonAppearances =
   | 'default'
@@ -11,18 +10,7 @@ export type ButtonAppearances =
   | 'subtle-link'
   | 'warning';
 
-// HtmlAttributes = AllHTMLAttributes - OnlyButtonProps
-// We do this so onClick, and other props that overlap with html attributes,
-// have the type defined in OnlyButtonProps.
-type HtmlAttributes = Pick<
-  React.AllHTMLAttributes<HTMLElement>,
-  Exclude<
-    keyof React.AllHTMLAttributes<HTMLElement>,
-    keyof OnlyButtonProps | 'css'
-  >
-> & { css?: InterpolationWithTheme<any> };
-
-export type OnlyButtonProps = {
+export interface OnlyButtonProps {
   /** The base styling to apply to the button */
   appearance?: ButtonAppearances;
   /** Set the button to autofocus on mount */
@@ -75,9 +63,15 @@ export type OnlyButtonProps = {
   ) => ThemeTokens;
 
   children?: React.ReactNode;
-};
+}
 
-export type ButtonProps = HtmlAttributes & OnlyButtonProps;
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+
+export type ButtonProps = OnlyButtonProps &
+  Omit<
+    React.HTMLProps<HTMLButtonElement>,
+    keyof OnlyButtonProps | 'ref' | 'css'
+  >;
 
 export type Spacing = 'compact' | 'default' | 'none';
 
