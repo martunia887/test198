@@ -1,0 +1,1 @@
+Button's props are not correctly merged with HTMLAttributes
