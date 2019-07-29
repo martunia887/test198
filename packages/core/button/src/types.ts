@@ -4,6 +4,8 @@ import {
   WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 import { InterpolationWithTheme } from '@emotion/core';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { Omit } from '@atlaskit/type-helpers';
 
 export type ButtonAppearances =
   | 'default'
@@ -14,18 +16,7 @@ export type ButtonAppearances =
   | 'subtle-link'
   | 'warning';
 
-// HtmlAttributes = AllHTMLAttributes - OnlyButtonProps
-// We do this so onClick, and other props that overlap with html attributes,
-// have the type defined in OnlyButtonProps.
-type HtmlAttributes = Pick<
-  React.AllHTMLAttributes<HTMLElement>,
-  Exclude<
-    keyof React.AllHTMLAttributes<HTMLElement>,
-    keyof OnlyButtonProps | 'css'
-  >
-> & { css?: InterpolationWithTheme<any> };
-
-export type OnlyButtonProps = {
+export interface OnlyButtonProps {
   /** The base styling to apply to the button */
   appearance?: ButtonAppearances;
   /** Set the button to autofocus on mount */
@@ -35,7 +26,7 @@ export type OnlyButtonProps = {
   /** A custom component to use instead of the default button */
   component?: React.ElementType<any>;
   /** Internal use only. Please use `ref` to forward refs */
-  consumerRef?: React.Ref<HTMLElement>;
+  consumerRef?: React.Ref<HTMLButtonElement>;
   /** Provides a url for buttons being used as a link */
   href?: string;
   /** Places an icon within the button, after the button's text */
@@ -78,7 +69,7 @@ export type OnlyButtonProps = {
   ) => ThemeTokens;
 
   children?: React.ReactNode;
-};
+}
 
 export type ButtonProps = HtmlAttributes &
   OnlyButtonProps &
