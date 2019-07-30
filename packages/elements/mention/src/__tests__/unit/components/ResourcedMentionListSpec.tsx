@@ -7,7 +7,7 @@ import ResourcedMentionList, {
 } from '../../../components/ResourcedMentionList';
 
 let mockRegisterClosed = jest.fn();
-let mockIsSpotlightEnabled = jest.fn();
+let mockIsHighlightEnabled = jest.fn();
 
 jest.mock(
   '../../../components/TeamMentionHighlight/TeamMentionHighlightController',
@@ -15,7 +15,7 @@ jest.mock(
     __esModule: true,
     default: {
       registerClosed: () => mockRegisterClosed(),
-      isSpotlightEnabled: () => mockIsSpotlightEnabled(),
+      isHighlightEnabled: () => mockIsHighlightEnabled(),
     },
   }),
 );
@@ -35,7 +35,7 @@ describe('ResourcedMentionList', () => {
   }
 
   it('should show the highlight if conditions are just right', () => {
-    mockIsSpotlightEnabled.mockReturnValue(true);
+    mockIsHighlightEnabled.mockReturnValue(true);
     const element = render({ isTeamMentionHighlightEnabled: true });
     element.setState({ mentions: [{ id: 'someUser' }] });
 
@@ -44,7 +44,7 @@ describe('ResourcedMentionList', () => {
   });
 
   it('should not show the highlight if there are no users', () => {
-    mockIsSpotlightEnabled.mockReturnValue(true);
+    mockIsHighlightEnabled.mockReturnValue(true);
     const element = render({ isTeamMentionHighlightEnabled: true });
     element.setState({ mentions: [] });
 
@@ -53,7 +53,7 @@ describe('ResourcedMentionList', () => {
   });
 
   it('should not show the highlight if the spotlight flag is disabled', () => {
-    mockIsSpotlightEnabled.mockReturnValue(true);
+    mockIsHighlightEnabled.mockReturnValue(true);
     const element = render({ isTeamMentionHighlightEnabled: false });
     element.setState({ mentions: [{ id: 'someUser' }] });
 
@@ -62,7 +62,7 @@ describe('ResourcedMentionList', () => {
   });
 
   it('should not show the highlight if the user has opted out', () => {
-    mockIsSpotlightEnabled.mockReturnValue(false);
+    mockIsHighlightEnabled.mockReturnValue(false);
     const element = render({ isTeamMentionHighlightEnabled: true });
     element.setState({ mentions: [{ id: 'someUser' }] });
 
@@ -71,7 +71,7 @@ describe('ResourcedMentionList', () => {
   });
 
   it('should register a closed event when users closes', () => {
-    mockIsSpotlightEnabled.mockReturnValue(true);
+    mockIsHighlightEnabled.mockReturnValue(true);
     const element = render({ isTeamMentionHighlightEnabled: true });
     element.setState({ mentions: [{ id: 'someUser' }] });
 
