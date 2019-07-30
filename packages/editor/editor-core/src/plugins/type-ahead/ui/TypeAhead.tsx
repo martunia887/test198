@@ -32,7 +32,7 @@ export type TypeAheadProps = {
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
-  teamMentionHighlight?: JSX.Element | null;
+  highlight?: JSX.Element | null;
 };
 
 export function TypeAhead({
@@ -45,7 +45,7 @@ export function TypeAhead({
   popupsMountPoint,
   popupsBoundariesElement,
   popupsScrollableElement,
-  teamMentionHighlight,
+  highlight: teamMentionHighlight,
 }: TypeAheadProps) {
   if (!active || !anchorElement || !items || !items.length) {
     return null;
