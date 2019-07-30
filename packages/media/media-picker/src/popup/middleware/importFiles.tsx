@@ -172,6 +172,11 @@ export const getTenantFileState = (store: Store<State>) =>
       selectedFile.id,
     );
 
+    console.log('importFiles.txt selectedFileId', selectedFileId);
+    console.log(
+      'importFiles.txt touchFileDescriptor.fileId',
+      touchFileDescriptor.fileId,
+    );
     const clientFileObservable = getFileStreamsCache().get(selectedFileId);
     if (clientFileObservable) {
       // Even though there is await here we will wait mostly for 1 tick, since

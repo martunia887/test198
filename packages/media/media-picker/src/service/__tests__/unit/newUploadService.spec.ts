@@ -699,7 +699,7 @@ describe('UploadService', () => {
       expect(userMediaClient!.file.upload).toHaveBeenCalledTimes(1);
     });
 
-    it('should populate fileStreamsCache once we have the upfront id', async () => {
+    it('should populate fileStreamsCache with tenant file state once we have the upfront id', async () => {
       const { uploadService } = setup(undefined, {
         collection: 'some-collection',
       });
@@ -708,5 +708,7 @@ describe('UploadService', () => {
       expect(fileStreamCacheSpy).toHaveBeenCalledTimes(1);
       expect(fileStreamCacheSpy.mock.calls[0][0]).toBe('uuid1');
     });
+
+    // TODO add more tests
   });
 });
