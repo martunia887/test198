@@ -1,0 +1,1 @@
+TEAMS-618 : Rename Mention Typeahead spotlight component to Team Mention Highlight
