@@ -93,7 +93,7 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
           allowStatus={true}
           {...providers}
           mentionProvider={Promise.resolve(
-            mention.storyData.resourceProviderWithSpotlight,
+            mention.storyData.resourceProviderWithHighlight,
           )} // enable spotlight only for kitchen sink example
           media={{
             provider: mediaProvider,
