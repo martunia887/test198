@@ -1,1 +1,0 @@
-TEAMS-618: Rename Spotlight component
