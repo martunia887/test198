@@ -49,6 +49,8 @@ export enum Product {
 
 export enum Feature {
   enableUserCentricProducts = 'enableUserCentricProducts',
+  disableCustomLinks = 'disableCustomLinks',
+  disableRecentContainers = 'disableRecentContainers',
   xflow = 'xflow',
 }
 
