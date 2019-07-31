@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { publishReplay } from 'rxjs/operators/publishReplay';
@@ -25,6 +25,7 @@ import {
   MediaStoreCopyFileWithTokenBody,
   MediaStoreCopyFileWithTokenParams,
   mapMediaFileToFileState,
+  observableToPromise,
 } from '..';
 import isValidId from 'uuid-validate';
 import { getMediaTypeFromUploadableFile } from '../utils/getMediaTypeFromUploadableFile';
@@ -78,7 +79,7 @@ export interface CopyDestination extends MediaStoreCopyFileWithTokenParams {
 type DataloaderResult = MediaCollectionItemFullDetails | undefined;
 
 export interface FileFetcher {
-  getFileState(id: string, options?: GetFileOptions): Observable<FileState>;
+  getFileState(id: string, options?: GetFileOptions): ReplaySubject<FileState>;
   getArtifactURL(
     artifacts: MediaFileArtifacts,
     artifactName: keyof MediaFileArtifacts,
@@ -92,7 +93,7 @@ export interface FileFetcher {
     file: UploadableFile,
     controller?: UploadController,
     uploadableFileUpfrontIds?: UploadableFileUpfrontIds,
-  ): Observable<FileState>;
+  ): ReplaySubject<FileState>;
   downloadBinary(
     id: string,
     name?: string,
@@ -157,11 +158,15 @@ export class FileFetcherImpl implements FileFetcher {
   public getFileState(
     id: string,
     options?: GetFileOptions,
-  ): Observable<FileState> {
+  ): ReplaySubject<FileState> {
+    const subject = new ReplaySubject<FileState>(1);
     if (!isValidId(id)) {
-      return Observable.create((observer: Observer<FileState>) => {
-        observer.error(`${id} is not a valid file id`);
-      });
+      subject.error(`${id} is not a valid file id`);
+
+      return subject;
+      // return Observable.create((observer: Observer<FileState>) => {
+      //   observer.error(`${id} is not a valid file id`);
+      // });
     }
 
     return getFileStreamsCache().getOrInsert(id, () => {
@@ -199,7 +204,9 @@ export class FileFetcherImpl implements FileFetcher {
   private createDownloadFileStream = (
     id: string,
     collection?: string,
-  ): Observable<FileState> => {
+  ): ReplaySubject<FileState> => {
+    const subject = new ReplaySubject<FileState>(1);
+    subject.complete;
     return Observable.create(async (observer: Observer<FileState>) => {
       let timeoutId: number;
 
@@ -268,7 +275,7 @@ export class FileFetcherImpl implements FileFetcher {
     file: UploadableFile,
     controller?: UploadController,
     uploadableFileUpfrontIds?: UploadableFileUpfrontIds,
-  ): Observable<FileState> {
+  ): ReplaySubject<FileState> {
     if (typeof file.content === 'string') {
       file.content = convertBase64ToBlob(file.content);
     }
@@ -422,13 +429,16 @@ export class FileFetcherImpl implements FileFetcher {
     };
 
     const copiedFile = (await mediaStore.copyFileWithToken(body, params)).data;
-    const copiedFileObservable = new ReplaySubject<FileState>(1);
+    // const existingFileObservable = getFileStreamsCache().get(copiedFile.id);
+    // const existingFileState = existingFileObservable ? await observableToPromise(existingFileObservable) : undefined;
+    // const copiedFileObservable = new ReplaySubject<FileState>(1);
     const copiedFileState: FileState = mapMediaFileToFileState({
       data: copiedFile,
     });
 
-    copiedFileObservable.next(copiedFileState);
-    getFileStreamsCache().set(copiedFile.id, copiedFileObservable);
+    // copiedFileObservable.next({...existingFileState, ...copiedFileState});
+    // getFileStreamsCache().set(copiedFile.id, copiedFileObservable);
+    getFileStreamsCache().extend(copiedFile.id, copiedFileState);
 
     return copiedFile;
   }

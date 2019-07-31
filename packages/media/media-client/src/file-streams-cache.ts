@@ -1,7 +1,8 @@
 import { LRUCache } from 'lru-fast';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 import { FileState } from './models/file-state';
 import { observableToPromise } from './utils/observableToPromise';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 export class StreamsCache<T> {
   constructor(
@@ -9,14 +10,14 @@ export class StreamsCache<T> {
       string,
       { promise: Promise<T>; resolve: Function; value?: T }
     >,
-    private readonly streams: LRUCache<string, Observable<T>>,
+    private readonly streams: LRUCache<string, ReplaySubject<T>>,
   ) {}
 
   has(id: string): boolean {
     return !!this.streams.find(id);
   }
 
-  set(id: string, stream: Observable<T>) {
+  set(id: string, stream: ReplaySubject<T>) {
     this.streams.set(id, stream);
     const deferred = this.stateDeferreds.get(id);
 
@@ -27,7 +28,24 @@ export class StreamsCache<T> {
     }
   }
 
-  get(id: string): Observable<T> | undefined {
+  async extend(id: string, value: T) {
+    const existingObservable = this.get(id);
+    const newStateObservable = new ReplaySubject<T>(1);
+    let existingState: T | undefined;
+
+    if (existingObservable) {
+      existingState = await observableToPromise(existingObservable);
+    }
+
+    newStateObservable.next({
+      ...existingState,
+      ...value,
+    });
+
+    this.set(id, newStateObservable);
+  }
+
+  get(id: string): ReplaySubject<T> | undefined {
     return this.streams.get(id);
   }
 
@@ -48,7 +66,7 @@ export class StreamsCache<T> {
     return promise;
   }
 
-  getOrInsert(id: string, callback: () => Observable<T>): Observable<T> {
+  getOrInsert(id: string, callback: () => ReplaySubject<T>): ReplaySubject<T> {
     if (!this.has(id)) {
       this.set(id, callback());
     }
