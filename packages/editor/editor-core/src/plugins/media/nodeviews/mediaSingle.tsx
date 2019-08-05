@@ -64,7 +64,9 @@ export default class MediaSingleNode extends Component<
   componentWillReceiveProps(nextProps: MediaSingleNodeProps) {
     if (nextProps.mediaProvider !== this.props.mediaProvider) {
       this.setViewMediaClientConfig(nextProps);
+      this.mediaNodeUpdater = new MediaNodeUpdater(nextProps);
     }
+    this.mediaNodeUpdater.updateFileAttrs();
   }
 
   setViewMediaClientConfig = async (props: MediaSingleNodeProps) => {

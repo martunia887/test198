@@ -10,7 +10,7 @@ import {
   getViewMediaClientConfigFromMediaProvider,
   getUploadMediaClientConfigFromMediaProvider,
 } from '../utils/media-common';
-import { getMediaClient } from '@atlaskit/media-client';
+import { getMediaClient, FileState } from '@atlaskit/media-client';
 
 export type RemoteDimensions = { id: string; height: number; width: number };
 export class MediaNodeUpdater {
@@ -35,6 +35,40 @@ export class MediaNodeUpdater {
       {
         __contextId: objectId,
         contextId: objectId,
+      },
+      true,
+    )(this.props.view.state, this.props.view.dispatch);
+  };
+
+  updateFileAttrs = async () => {
+    const attrs = this.getAttrs();
+    const mediaProvider = await this.props.mediaProvider;
+
+    if (!mediaProvider || !mediaProvider.uploadParams || !attrs || !attrs.id) {
+      return;
+    }
+
+    const viewMediaClientConfig = await getViewMediaClientConfigFromMediaProvider(
+      mediaProvider,
+    );
+    const mediaClient = getMediaClient({
+      mediaClientConfig: viewMediaClientConfig,
+    });
+
+    const fileState: FileState = await mediaClient.file.getCurrentState(
+      attrs.id,
+    );
+
+    if (!fileState || fileState.status === 'error') {
+      return;
+    }
+
+    updateMediaNodeAttrs(
+      attrs.id,
+      {
+        __fileName: fileState.name,
+        __fileMimeType: fileState.mimeType,
+        __fileSize: fileState.size,
       },
       true,
     )(this.props.view.state, this.props.view.dispatch);
