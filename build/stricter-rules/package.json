@@ -1,0 +1,10 @@
+{
+  "name": "@atlaskit/stricter-rules",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "description": "Stricter rules for Atlaskit repository.",
+  "devDependencies": {
+    "path-is-inside": "^1.0.2"
+  }
+}
