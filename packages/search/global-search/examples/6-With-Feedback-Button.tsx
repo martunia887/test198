@@ -1,10 +1,13 @@
 import * as React from 'react';
-import StorybookQuickSearch from '../example-helpers/StorybookQuickSearch';
+import { GlobalQuickSearch } from '../src';
+import withNavigation from '../example-helpers/withNavigation';
+
+const GlobalQuickSearchWithNavigation = withNavigation(GlobalQuickSearch);
 
 export default class extends React.Component {
   render() {
     return (
-      <StorybookQuickSearch
+      <GlobalQuickSearchWithNavigation
         showFeedbackCollector={true}
         feedbackCollectorProps={{
           name: 'abcdef',

@@ -4,9 +4,17 @@ import { setupMocks, teardownMocks } from '../example-helpers/mockApis';
 import { GlobalQuickSearch } from '../src';
 import withNavigation from '../example-helpers/withNavigation';
 
-const GlobalQuickSearchWrapper = withNavigation(GlobalQuickSearch);
+const GlobalQuickSearchInNavigation = withNavigation(GlobalQuickSearch);
 
-const logEvent = (event: any) => {
+const logEvent = (event: {
+  payload: {
+    eventType?: any;
+    action?: any;
+    actionSubject?: any;
+    actionSubjectId?: any;
+    attributes?: any;
+  };
+}) => {
   const { eventType, action, actionSubject, actionSubjectId } = event.payload;
   console.debug(
     `${eventType} | ${action} ${actionSubject} ${actionSubjectId}`,
@@ -15,7 +23,7 @@ const logEvent = (event: any) => {
   );
 };
 
-export default class GlobalQuickSearchExample extends React.Component {
+export default class extends React.Component {
   componentWillMount() {
     setupMocks();
   }
@@ -27,7 +35,7 @@ export default class GlobalQuickSearchExample extends React.Component {
   render() {
     return (
       <AnalyticsListener onEvent={logEvent} channel="fabric-elements">
-        <GlobalQuickSearchWrapper />
+        <GlobalQuickSearchInNavigation />
       </AnalyticsListener>
     );
   }

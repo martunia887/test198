@@ -1,7 +1,13 @@
 const COMMON_EVENT_DATA = {
   clone: expect.any(Function),
   fire: expect.any(Function),
-  context: expect.any(Array),
+  context: expect.arrayContaining([
+    {
+      componentName: 'navigationSidebar',
+      packageName: '@atlaskit/navigation',
+      packageVersion: expect.any(String),
+    },
+  ]),
 };
 
 export function validateEvent(actual: any, expected: any) {

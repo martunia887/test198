@@ -1,13 +1,10 @@
-import {
-  GraphqlResponse,
-  SearchResult,
-} from '../../src/api/PeopleSearchClient';
+import { GraphqlResponse, SearchResult } from '../src/api/PeopleSearchClient';
 import {
   CrossProductSearchResponse,
   CrossProductExperimentResponse,
   Filter,
   SpaceFilter,
-} from '../../src/api/CrossProductSearchClient';
+} from '../src/api/CrossProductSearchClient';
 import {
   Scope,
   ConfluenceItem,
@@ -16,7 +13,7 @@ import {
   JiraItemV2,
   PersonItem,
   UrsPersonItem,
-} from '../../src/api/types';
+} from '../src/api/types';
 import {
   generateRandomJiraIssue,
   generateRandomJiraBoard,
@@ -432,7 +429,7 @@ export function makeCrossProductExperimentData(
   const abTest = {
     experimentId,
     controlId: 'control-id',
-    abTestId: 'default',
+    abTestId: `abTest_${experimentId}`,
   };
 
   const allScopes = [

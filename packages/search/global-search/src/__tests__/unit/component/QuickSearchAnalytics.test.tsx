@@ -4,11 +4,12 @@ import {
   setupMocks,
   teardownMocks,
   ZERO_DELAY_CONFIG,
-} from '../../../../example-helpers/mocks/mockApis';
+} from '../../../../example-helpers/mockApis';
 import { GlobalQuickSearch, Props } from '../../..';
 import { QuickSearchContainer } from '../../../components/common/QuickSearchContainer';
 import { ABTestProvider } from '../../../components/AbTestProvider';
-import LocaleIntlProvider from '../../../../example-helpers/components/LocaleIntlProvider';
+import BasicNavigation from '../../../../example-helpers/BasicNavigation';
+import LocaleIntlProvider from '../../../../example-helpers/LocaleIntlProvider';
 import { ResultBase } from '@atlaskit/quick-search';
 
 import { mount, ReactWrapper } from 'enzyme';
@@ -119,7 +120,7 @@ const JIRA_RECENT_ITEMS = [
 const AB_TEST_DATA = {
   experimentId: 'default',
   controlId: 'control-id',
-  abTestId: 'default',
+  abTestId: 'abTest_default',
 };
 
 const getRecentItems = (product: string) =>
@@ -163,17 +164,21 @@ const getRecentItems = (product: string) =>
     const renderComponent = (onEvent: jest.Mock<{}>) => {
       const wrapper = mount(
         <AnalyticsListener onEvent={onEvent} channel="fabric-elements">
-          <LocaleIntlProvider locale="en">
-            <GlobalQuickSearch
-              cloudId="cloudId"
-              context={product as Props['context']}
-              referralContextIdentifiers={{
-                currentContentId: '123',
-                currentContainerId: '456',
-                searchReferrerId: '123',
-              }}
-            />
-          </LocaleIntlProvider>
+          <BasicNavigation
+            searchDrawerContent={
+              <LocaleIntlProvider locale="en">
+                <GlobalQuickSearch
+                  cloudId="cloudId"
+                  context={product as Props['context']}
+                  referralContextIdentifiers={{
+                    currentContentId: '123',
+                    currentContainerId: '456',
+                    searchReferrerId: '123',
+                  }}
+                />
+              </LocaleIntlProvider>
+            }
+          />
         </AnalyticsListener>,
       );
 

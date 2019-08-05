@@ -27,7 +27,14 @@ export default class GlobalQuickSearchExample extends React.Component {
   render() {
     return (
       <AnalyticsListener onEvent={logEvent} channel="fabric-elements">
-        <GlobalQuickSearchWrapper />
+        <GlobalQuickSearchWrapper
+          appPermission={{
+            hasSoftwareAccess: false,
+            hasCoreAccess: true,
+            hasOpsAccess: true,
+            hasServiceDeskAccess: true,
+          }}
+        />
       </AnalyticsListener>
     );
   }

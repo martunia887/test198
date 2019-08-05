@@ -14,7 +14,7 @@ import {
   permissionResponseWithoutUserPickerPermission,
   permissionResponseWithUserPickerPermission,
 } from './jiraPermissionResponse';
-import { ScopeResult } from '../../src/api/CrossProductSearchClient';
+import { ScopeResult } from '../src/api/CrossProductSearchClient';
 
 type Request = string;
 
@@ -193,11 +193,6 @@ export function setupMocks(configOverrides: Partial<MocksConfig> = {}) {
   });
   mockJiraApi(config.jiraRecentDelay, config.canSearchUsers);
   mockAutocompleteApi(config.autocompleteDelay, autocompleteMockData);
-}
-
-export function setupAllRequestFailedMocks() {
-  fetchMock.get('*', 400);
-  fetchMock.post('*', 400);
 }
 
 export function teardownMocks() {

@@ -275,7 +275,7 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
         spaces,
       });
 
-      if (preventEventDefault && e) {
+      if (preventEventDefault) {
         e.preventDefault();
         e.stopPropagation();
       }

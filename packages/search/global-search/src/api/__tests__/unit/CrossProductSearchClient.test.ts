@@ -21,7 +21,7 @@ import {
   generateRandomJiraBoard,
   generateRandomJiraFilter,
   generateRandomJiraProject,
-} from '../../../../example-helpers/mocks/mockJira';
+} from '../../../../example-helpers/mockJira';
 import {
   buildJiraModelParams,
   buildConfluenceModelParams,
