@@ -3,7 +3,7 @@ const path = require('path');
 
 const pathIsInside = require('path-is-inside');
 
-const trimNodeModules = filenames =>
+const trimNodeModules = (filenames /*: Array<string> */) =>
   filenames.filter(f => !f.includes(`${path.sep}node_modules${path.sep}`));
 
 /**
@@ -27,7 +27,7 @@ module.exports = {
         let pkg;
         try {
           // eslint-disable-next-line import/no-dynamic-require
-          pkg = require(filename);
+          pkg = require(`${filename}`);
         } catch (e) {
           if (e.code === 'MODULE_NOT_FOUND') {
             error.push(`Could not resolve ${filename}`);
@@ -41,9 +41,10 @@ module.exports = {
         filterDependents(Object.keys(dependencies), rootPath).reduce(
           (acc, curr) => {},
         );
-
         Object.entries(pkg.dependencies || {}).forEach(dep => {
           // Look through dependency tree starting from pkg rootPath
+          // console.log(dep, filename, rootPath)
+          // process.exit(1)
           // Find an import of dep
           // Once found, return
           // Otherwise append error
