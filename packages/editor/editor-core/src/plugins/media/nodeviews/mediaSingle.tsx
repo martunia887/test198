@@ -61,12 +61,13 @@ export default class MediaSingleNode extends Component<
     viewMediaClientConfig: undefined,
   };
 
-  componentWillReceiveProps(nextProps: MediaSingleNodeProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps: MediaSingleNodeProps) {
     if (nextProps.mediaProvider !== this.props.mediaProvider) {
-      this.setViewMediaClientConfig(nextProps);
+      await this.setViewMediaClientConfig(nextProps);
       this.mediaNodeUpdater = new MediaNodeUpdater(nextProps);
     }
-    this.mediaNodeUpdater.updateFileAttrs();
+
+    await this.mediaNodeUpdater.updateFileAttrs();
   }
 
   setViewMediaClientConfig = async (props: MediaSingleNodeProps) => {
