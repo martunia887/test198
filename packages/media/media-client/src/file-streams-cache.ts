@@ -41,8 +41,12 @@ export class StreamsCache<T> {
     if (deferred) {
       return deferred.promise;
     }
+
     const promise = new Promise<T>(resolve => {
-      this.stateDeferreds.set(id, { promise, resolve });
+      // we need to wait for the next tick since "promise" wont be available yet
+      setTimeout(() => {
+        this.stateDeferreds.set(id, { promise, resolve });
+      }, 0);
     });
 
     return promise;
