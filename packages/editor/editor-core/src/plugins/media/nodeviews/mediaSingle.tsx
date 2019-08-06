@@ -253,7 +253,17 @@ export default class MediaSingleNode extends Component<
   }
 }
 
-class MediaSingleNodeView extends SelectionBasedNodeView {
+interface MediaSingleNodeViewProps {
+  editorAppearance: any;
+  eventDispatcher: any;
+  fullWidthMode: any;
+  providerFactory: any;
+  mediaOptions: any;
+}
+
+class MediaSingleNodeView extends SelectionBasedNodeView<
+  MediaSingleNodeViewProps
+> {
   lastOffsetLeft = 0;
   forceViewUpdate = false;
 
