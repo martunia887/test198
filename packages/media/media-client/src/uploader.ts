@@ -43,8 +43,14 @@ const createProbingFunction = (
 };
 
 const createUploadingFunction = (store: MediaStore, collection?: string) => {
-  return (chunk: Chunk) =>
+  let firstChunk = true;
+  return (chunk: Chunk) => {
+    if (firstChunk) {
+      // do the Analytics, baby
+    }
+    firstChunk = false;
     store.uploadChunk(chunk.hash, chunk.blob, collection);
+  };
 };
 
 const createProcessingFunction = (
