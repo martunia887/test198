@@ -1,5 +1,27 @@
 # @atlaskit/editor-core
 
+## 112.41.1
+
+- Updated dependencies [4e8f6f609f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4e8f6f609f):
+  - @atlaskit/media-picker@46.0.0
+  - @atlaskit/media-test-helpers@24.3.4
+
+## 112.41.0
+
+### Minor Changes
+
+- [minor][9b83fdea35](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9b83fdea35):
+
+  TEAMS-618 : Rename Team mention spotlight to Team Mention Highlight
+
+## 112.40.2
+
+### Patch Changes
+
+- [patch][fe1a882fbb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/fe1a882fbb):
+
+  TEAMS-602 : Can pass the team creation link from confluence as an optional parameter to the Team Mention Spotlight
+
 ## 112.40.1
 
 ### Patch Changes

@@ -70,6 +70,7 @@ const defaultProps = {
   referralContextIdentifiers: defaultReferralContext,
   getPreQueryDisplayedResults: jest.fn(mapToResultGroup),
   getPostQueryDisplayedResults: jest.fn(mapToResultGroup),
+  advancedSearchId: 'product_advanced_search',
   features: DEFAULT_FEATURES,
 };
 
@@ -413,6 +414,24 @@ describe('QuickSearchContainer', () => {
         isError: false,
       });
       assertPostQueryAnalytics(query, searchResults, { spaces: true });
+    });
+
+    it('should be able to retry search with same query', async () => {
+      const query = 'query';
+      const wrapper = await renderAndWait();
+      await search(
+        wrapper,
+        query,
+        Promise.reject(new Error('something wrong')),
+      );
+
+      expect(getSearchResults).toHaveBeenCalledTimes(1);
+
+      (wrapper.instance() as QuickSearchContainer<
+        ConfluenceResultsMap
+      >).retrySearch();
+
+      expect(getSearchResults).toHaveBeenCalledTimes(2);
     });
 
     it('should handle error', async () => {
