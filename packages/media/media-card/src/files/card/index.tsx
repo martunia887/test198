@@ -12,7 +12,13 @@ import { CardAction } from '../../actions';
 import { FileCardImageView } from '../cardImageView';
 import { toHumanReadableMediaSize } from '../../utils';
 
-export interface FileCardProps extends SharedCardProps {
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventProps,
+} from '@atlaskit/analytics-next';
+import { createAndFireCustomEventOnMedia } from '../../utils/analyticsUtils';
+
+export interface FileCardOwnProps extends SharedCardProps {
   readonly status: CardStatus;
   readonly details?: FileDetails;
   readonly dataURI?: string;
@@ -24,8 +30,10 @@ export interface FileCardProps extends SharedCardProps {
   readonly previewOrientation?: number;
 }
 
-export class FileCard extends Component<FileCardProps, {}> {
-  static defaultProps: Partial<FileCardProps> = {
+export type FileCardBaseProps = FileCardOwnProps & WithAnalyticsEventProps;
+
+export class FileCardBase extends Component<FileCardBaseProps, {}> {
+  static defaultProps: Partial<FileCardBaseProps> = {
     actions: [],
   };
 
@@ -93,6 +101,15 @@ export class FileCard extends Component<FileCardProps, {}> {
     return actions.map((action: CardAction) => ({
       ...action,
       handler: () => {
+        createAndFireCustomEventOnMedia(
+          {
+            action: 'clicked',
+            label: action.label,
+            details,
+          },
+          this.props.createAnalyticsEvent,
+        );
+
         action.handler({ type: 'file', details });
       },
     }));
@@ -103,3 +120,5 @@ export class FileCard extends Component<FileCardProps, {}> {
     return status === 'error';
   }
 }
+
+export const FileCard = withAnalyticsEvents<FileCardOwnProps>()(FileCardBase);

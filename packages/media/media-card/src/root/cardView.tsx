@@ -7,7 +7,6 @@ import {
 } from '@atlaskit/media-client';
 import {
   withAnalyticsEvents,
-  createAndFireEvent,
   WithAnalyticsEventProps,
 } from '@atlaskit/analytics-next';
 
@@ -31,6 +30,7 @@ import { getElementDimension } from '../utils/getElementDimension';
 import { Wrapper } from './styled';
 
 import { WithCardViewAnalyticsContext } from './withCardViewAnalyticsContext';
+import { createAndFireEventOnMedia } from '../utils/analyticsUtils';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
@@ -206,7 +206,6 @@ export class CardViewBase extends React.Component<
   };
 }
 
-const createAndFireEventOnMedia = createAndFireEvent('media');
 /**
  * With this CardView class constructor version `createAnalyticsEvent` props is supplied for you, so
  * when creating instance of that class you don't need to worry about it.
