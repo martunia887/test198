@@ -19,6 +19,7 @@ module.exports = {
     // })),
     'no-unused-dependencies': {
       level: 'error',
+      config: {},
     },
   },
 };
