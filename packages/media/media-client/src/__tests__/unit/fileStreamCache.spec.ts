@@ -41,5 +41,33 @@ describe('StreamsCache', () => {
         id: '2',
       });
     });
+
+    it('should handle subsequent calls consistently', async () => {
+      const cache = new StreamsCache(new Map(), new LRUCache(10));
+      const subject = new ReplaySubject(1);
+      const state1 = cache.getCurrentState('2');
+      const state2 = cache.getCurrentState('2');
+      const state3 = cache.getCurrentState('2');
+
+      setTimeout(() => {
+        subject.next({ id: '2' });
+      }, 10);
+
+      setTimeout(() => {
+        cache.set('2', subject as Observable<any>);
+      }, 30);
+
+      expect(await Promise.all([state1, state2, state3])).toEqual([
+        {
+          id: '2',
+        },
+        {
+          id: '2',
+        },
+        {
+          id: '2',
+        },
+      ]);
+    });
   });
 });

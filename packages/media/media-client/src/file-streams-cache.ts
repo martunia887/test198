@@ -7,10 +7,12 @@ export class StreamsCache<T> {
   constructor(
     private readonly stateDeferreds: Map<
       string,
-      { promise: Promise<T>; resolve: Function; value?: T }
+      { promise: Promise<T>; value?: T }
     >,
     private readonly streams: LRUCache<string, Observable<T>>,
   ) {}
+
+  private stateResolvers: Map<string, Function> = new Map();
 
   has(id: string): boolean {
     return !!this.streams.find(id);
@@ -18,11 +20,11 @@ export class StreamsCache<T> {
 
   set(id: string, stream: Observable<T>) {
     this.streams.set(id, stream);
-    const deferred = this.stateDeferreds.get(id);
+    const resolve = this.stateResolvers.get(id);
 
-    if (deferred) {
+    if (resolve) {
       observableToPromise(stream).then(state => {
-        deferred.resolve(state);
+        resolve(state);
       });
     }
   }
@@ -31,7 +33,7 @@ export class StreamsCache<T> {
     return this.streams.get(id);
   }
 
-  getCurrentState(id: string): Promise<T> {
+  getCurrentState = (id: string): Promise<T> => {
     const state = this.get(id);
 
     if (state) {
@@ -41,12 +43,15 @@ export class StreamsCache<T> {
     if (deferred) {
       return deferred.promise;
     }
+
     const promise = new Promise<T>(resolve => {
-      this.stateDeferreds.set(id, { promise, resolve });
+      this.stateResolvers.set(id, resolve);
     });
 
+    this.stateDeferreds.set(id, { promise });
+
     return promise;
-  }
+  };
 
   getOrInsert(id: string, callback: () => Observable<T>): Observable<T> {
     if (!this.has(id)) {
