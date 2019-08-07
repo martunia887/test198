@@ -42,7 +42,6 @@
     "@atlaskit/textarea": "^2.1.4",
     "@atlaskit/theme": "^9.0.0",
     "@babel/polyfill": "^7.0.0",
-    "@types/prosemirror-view": "^1.9.0",
     "enzyme": "^3.7.0",
     "prosemirror-state": "^1.2.2",
     "prosemirror-view": "^1.9.12"
@@ -63,6 +62,7 @@
     "@atlaskit/textfield": "^2.0.0",
     "@atlaskit/util-data-test": "^12.6.2",
     "@atlaskit/webdriver-runner": "^0.1.0",
+    "@types/prosemirror-view": "^1.9.0",
     "ajv": "^4.11.3",
     "babel-loader": "^8.0.2",
     "copy-pkg": "^1.0.0",

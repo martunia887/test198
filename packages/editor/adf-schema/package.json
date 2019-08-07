@@ -26,10 +26,6 @@
     "team": "editor"
   },
   "dependencies": {
-    "@types/linkify-it": "^2.0.4",
-    "@types/prosemirror-model": "^1.5.0",
-    "@types/prosemirror-state": "^1.2.0",
-    "@types/prosemirror-view": "^1.9.0",
     "css-color-names": "0.0.4",
     "linkify-it": "^2.0.3",
     "prosemirror-model": "^1.7.0",
@@ -40,6 +36,10 @@
     "@atlaskit/editor-json-transformer": "^6.2.3",
     "@atlaskit/editor-test-helpers": "^9.11.3",
     "@atlaskit/json-schema-generator": "^2.1.1",
+    "@types/linkify-it": "^2.0.4",
+    "@types/prosemirror-model": "^1.5.0",
+    "@types/prosemirror-state": "^1.2.0",
+    "@types/prosemirror-view": "^1.9.0",
     "ajv": "^4.11.3",
     "axios": "^0.18.0",
     "json-schema-diff-validator": "^0.3.0"
