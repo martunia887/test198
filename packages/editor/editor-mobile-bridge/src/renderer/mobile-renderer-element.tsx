@@ -80,7 +80,7 @@ class MacroComponent extends React.Component<
 
   componentDidMount() {
     const ext = this.props.extension;
-    const adf = extensionToADF(ext);
+    const adf = JSON.stringify(extensionToADF(ext));
     const contentId = '960561171'; // https://product-fabric.atlassian.net/wiki/spaces/~speachey/pages/960561171/Single+macro
 
     const dataToSend = {
@@ -91,7 +91,8 @@ class MacroComponent extends React.Component<
     createPromise('customLegacyMacro', JSON.stringify(dataToSend))
       .submit()
       .then(result => {
-        console.log('=== result of promise', result);
+        console.log('=== result of promise');
+        console.log(result);
         this.setState(result);
       });
   }
