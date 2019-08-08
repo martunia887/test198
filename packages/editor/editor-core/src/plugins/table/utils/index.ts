@@ -42,6 +42,7 @@ export {
   getColumnOrRowIndex,
   getMousePositionHorizontalRelativeByElement,
   getMousePositionVerticalRelativeByElement,
+  updateResizeHandles,
 } from './dom';
 export {
   getColumnsWidths,
@@ -56,5 +57,6 @@ export {
   getRowsParams,
   getRowClassNames,
   RowParams,
+  copyPreviousRow,
 } from './row-controls';
 export { getSelectedTableInfo, getSelectedCellInfo } from './analytics';
