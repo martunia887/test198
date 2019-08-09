@@ -1,7 +1,12 @@
 // @flow
 
 import React, { Component } from 'react';
+import { IntlProvider, addLocaleData } from 'react-intl';
 import Calendar from '../src';
+
+import('react-intl/locale-data/es').then(localeData => {
+  addLocaleData(localeData.default); // like here for example
+});
 
 const log = msg => e => console.log(msg, e);
 
@@ -48,24 +53,26 @@ export default class ControlledCalendar extends Component<{}, State> {
 
   render() {
     return (
-      <Calendar
-        disabled={this.state.disabled}
-        previouslySelected={this.state.previouslySelected}
-        selected={this.state.selected}
-        day={this.state.day}
-        month={this.state.month}
-        year={this.state.year}
-        innerProps={{
-          style: {
-            border: '1px solid red',
-            display: 'inline-block',
-          },
-        }}
-        onBlur={log('blur')}
-        onChange={this.handleChange}
-        onFocus={log('focus')}
-        onSelect={this.handleSelect}
-      />
+      <IntlProvider locale="es">
+        <Calendar
+          disabled={this.state.disabled}
+          previouslySelected={this.state.previouslySelected}
+          selected={this.state.selected}
+          day={this.state.day}
+          month={this.state.month}
+          year={this.state.year}
+          innerProps={{
+            style: {
+              border: '1px solid red',
+              display: 'inline-block',
+            },
+          }}
+          onBlur={log('blur')}
+          onChange={this.handleChange}
+          onFocus={log('focus')}
+          onSelect={this.handleSelect}
+        />
+      </IntlProvider>
     );
   }
 }

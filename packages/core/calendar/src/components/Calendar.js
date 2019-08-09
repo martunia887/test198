@@ -1,5 +1,6 @@
 // @flow
 
+import { injectIntl, type InjectedIntl } from 'react-intl';
 import { Calendar as CalendarBase } from 'calendar-base';
 import pick from 'lodash.pick';
 import React, { Component } from 'react';
@@ -13,7 +14,7 @@ import {
   name as packageName,
   version as packageVersion,
 } from '../version.json';
-import { dateToString, getShortDayName, makeArrayFromNumber } from '../util';
+import { dateToString, getI18nThingy } from '../util';
 import DateComponent from './Date';
 import Heading from './Heading';
 import {
@@ -38,6 +39,7 @@ const monthsPerYear = 12;
 
 type Handler = (e: any) => void;
 type Props = {
+  intl: InjectedIntl,
   /** The number of the day currently focused. Places border around the date. 0 highlights no date. */
   day?: number,
   /** Default for `day`. */
@@ -416,6 +418,8 @@ class Calendar extends Component<Props, State> {
 
     const announceId = getUniqueId('announce');
 
+    const i18n = getI18nThingy(this.props.intl);
+
     return (
       <div
         {...innerProps}
@@ -439,7 +443,7 @@ class Calendar extends Component<Props, State> {
           tabIndex={0}
         >
           <Heading
-            month={mappedState.month}
+            monthString={i18n.getMonthsLong()[mappedState.month - 1]}
             year={mappedState.year}
             handleClickNext={this.handleClickNext}
             handleClickPrev={this.handleClickPrev}
@@ -447,8 +451,8 @@ class Calendar extends Component<Props, State> {
           <CalendarTable role="presentation">
             <CalendarThead>
               <tr>
-                {makeArrayFromNumber(daysPerWeek).map(i => (
-                  <CalendarTh key={i}>{getShortDayName(i)}</CalendarTh>
+                {i18n.getDaysShort().map(shortDay => (
+                  <CalendarTh key={shortDay}>{shortDay}</CalendarTh>
                 ))}
               </tr>
             </CalendarThead>
@@ -464,7 +468,9 @@ class Calendar extends Component<Props, State> {
   }
 }
 
-export { Calendar as CalendarWithoutAnalytics };
+const IntlCalendar = injectIntl(Calendar);
+
+export { IntlCalendar as CalendarWithoutAnalytics };
 const createAndFireEventOnAtlaskit = createAndFireEvent('atlaskit');
 
 export default withAnalyticsContext({
@@ -494,5 +500,5 @@ export default withAnalyticsContext({
         packageVersion,
       },
     }),
-  })(Calendar),
+  })(IntlCalendar),
 );

@@ -1,5 +1,6 @@
 // @flow
 
+import type { InjectedIntl } from 'react-intl';
 import type { DateObj } from '../types';
 
 type DateToStringOptions = {
@@ -65,4 +66,22 @@ export function makeArrayFromNumber(i: number): Array<number> {
     arr.push(a);
   }
   return arr;
+}
+
+// formatDate
+// formatTime
+// getWeekdays
+// getMonths
+
+export function getI18nThingy(intl: InjectedIntl) {
+  return {
+    getDaysShort: () =>
+      [1, 2, 3, 4, 5, 6, 7].map(day =>
+        intl.formatDate(new Date(2019, 6, day), { weekday: 'short' }),
+      ),
+    getMonthsLong: () =>
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(month =>
+        intl.formatDate(new Date(2019, month, 1), { month: 'long' }),
+      ),
+  };
 }
