@@ -69,7 +69,7 @@ export interface StatelessProps extends WithAnalyticsEventsProps {
 }
 
 export interface StatefulProps extends WithAnalyticsEventsProps {
-  caption?: Node | string;
+  caption?: React.ReactNode;
   head?: HeadType;
   rows?: Array<RowType>;
   emptyView?: React.ReactElement<any>;
