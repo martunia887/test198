@@ -70,12 +70,17 @@ export default class ResizableMediaSingle extends React.Component<
       return;
     }
     const getMediaNode = this.props.state.doc.nodeAt($pos.pos + 1);
+    if (!getMediaNode) {
+      return;
+    }
+
     const mediaClient = getMediaClient({
       mediaClientConfig: viewMediaClientConfig,
     });
-    const state = await mediaClient.file.getCurrentState(
-      getMediaNode!.attrs.id,
-    );
+    const mediaAttrs = getMediaNode.attrs;
+    const state = await mediaClient.file.getCurrentState(mediaAttrs.id, {
+      collectionName: mediaAttrs.collection,
+    });
     if (state && state.status !== 'error' && state.mediaType === 'image') {
       this.setState({
         isVideoFile: false,
