@@ -88,13 +88,22 @@ class MacroComponent extends React.Component<
       adf,
     };
 
-    createPromise('customLegacyMacro', JSON.stringify(dataToSend))
+    createPromise('customConfigurationMacro')
       .submit()
       .then(result => {
         console.log('=== result of promise');
-        console.log(result);
+        console.log(JSON.stringify(result));
+        this.contentId = result as number;
         this.setState(result);
       });
+
+    // createPromise('customLegacyMacro', JSON.stringify(dataToSend))
+    //   .submit()
+    //   .then(result => {
+    //     console.log('=== result of promise');
+    //     console.log(result);
+    //     this.setState(result);
+    //   });
   }
 
   render() {
