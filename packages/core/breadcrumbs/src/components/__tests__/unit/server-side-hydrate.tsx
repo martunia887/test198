@@ -11,7 +11,7 @@ const mockConsoleListener = jest
   .mockImplementation(() => {});
 
 beforeEach(() => {
-  jest.setTimeout(10000);
+  jest.setTimeout(60000);
 });
 
 afterEach(() => {

@@ -6,7 +6,7 @@ import { ssr } from '@atlaskit/ssr';
 import waitForExpect from 'wait-for-expect';
 
 beforeEach(() => {
-  jest.setTimeout(10000);
+  jest.setTimeout(60000);
 });
 
 jest.mock('popper.js', () => {

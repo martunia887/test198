@@ -8,7 +8,7 @@ import { ssr } from '@atlaskit/ssr';
 jest.spyOn(global.console, 'error').mockImplementation(() => {});
 
 beforeEach(() => {
-  jest.setTimeout(10000);
+  jest.setTimeout(60000);
 });
 
 afterEach(() => {
