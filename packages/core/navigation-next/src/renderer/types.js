@@ -52,6 +52,7 @@ export type SectionProps<T> = {|
   ...$Exact<WithoutChildren<ElementConfig<typeof Section>>>,
   ...$Exact<SharedGroupTypeProps<T>>,
   ...$Exact<SectionKey>,
+  backItem?: BackItem | null,
 |};
 
 export type SortableContextProps<T> = {|
@@ -74,6 +75,7 @@ export type MenuSectionProps<T> = {|
   ...$Exact<WithoutChildren<ElementConfig<typeof MenuSection>>>,
   ...$Exact<SharedGroupTypeProps<T>>,
   ...$Exact<SectionKey>,
+  backItem?: BackItem | null,
 |};
 
 export type GroupHeadingProps = {|

@@ -131,6 +131,7 @@ const Section = <T: TypeShape>({
   nestedGroupKey,
   parentId,
   shouldGrow,
+  backItem,
 }: SectionProps<T>) =>
   items.length ? (
     <SectionComponent
@@ -139,6 +140,7 @@ const Section = <T: TypeShape>({
       key={nestedGroupKey}
       parentId={parentId}
       shouldGrow={shouldGrow}
+      backItem={backItem}
     >
       {({ className }) => (
         <div className={className}>
@@ -177,12 +179,14 @@ const MenuSection = <T: TypeShape>({
   items,
   nestedGroupKey,
   parentId,
+  backItem,
 }: MenuSectionProps<T>) => (
   <MenuSectionComponent
     alwaysShowScrollHint={alwaysShowScrollHint}
     id={id}
     key={nestedGroupKey}
     parentId={parentId}
+    backItem={backItem}
   >
     {({ className }) => (
       <div className={className}>

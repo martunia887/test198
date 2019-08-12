@@ -115,6 +115,7 @@ Array [
 exports[`navigation-next view renderer MenuSection should render the MenuSection UI component 1`] = `
 <MenuSection
   alwaysShowScrollHint={false}
+  backItem={null}
   id="menu"
 >
   <Component />

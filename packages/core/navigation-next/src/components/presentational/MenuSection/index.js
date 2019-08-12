@@ -11,16 +11,24 @@ const gridSize = gridSizeFn();
 export default class MenuSection extends Component<MenuSectionProps> {
   static defaultProps = {
     alwaysShowScrollHint: false,
+    backItem: null,
   };
 
   render() {
-    const { alwaysShowScrollHint, id, children, parentId } = this.props;
+    const {
+      alwaysShowScrollHint,
+      id,
+      children,
+      parentId,
+      backItem,
+    } = this.props;
     return (
       <Section
         id={id}
         parentId={parentId}
         alwaysShowScrollHint={alwaysShowScrollHint}
         shouldGrow
+        backItem={backItem}
       >
         {({ css }) => {
           const menuCss = {

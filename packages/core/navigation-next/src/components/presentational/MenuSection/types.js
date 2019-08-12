@@ -2,6 +2,7 @@
 
 import type { Node } from 'react';
 import type { RenderProvided } from '../Section/types';
+import BackItem from '../../connected/BackItem';
 
 // TODO: Fix extract-react-types to handle TupleTypeAnnotation so we can use this type instead
 // export type MenuSectionProps = Pick<
@@ -25,4 +26,8 @@ export type MenuSectionProps = {
    * This prop is only applied if shouldGrow = true, since it only applies to
    * sections which can scroll. */
   alwaysShowScrollHint: boolean,
+  /** Whether a sicker back button is rendered.
+   * the sticky back button should not scroll with the rest of the menu items
+   * but it ought to animate with the rest of the menu items seamlessly */
+  backItem?: BackItem | null,
 };

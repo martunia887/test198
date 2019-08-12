@@ -28,7 +28,7 @@ const getBaseStyles = ({ alwaysShowScrollHint }: SectionPresentationProps) => ({
     '&::before': {
       borderRadius: 1,
       content: "''",
-      display: 'block',
+      display: alwaysShowScrollHint ? 'none' : 'block',
       flex: 0,
       height: `${scrollHintHeight}px`,
       left: `${scrollHintSpacing}px`,

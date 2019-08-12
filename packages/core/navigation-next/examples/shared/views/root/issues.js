@@ -13,17 +13,18 @@ const getItems = () => [
     id: 'root/issues:header',
     items: [
       { type: 'Wordmark', wordmark: JiraWordmarkLogo, id: 'jira-wordmark' },
-      {
-        type: 'BackItem',
-        goTo: 'root/index',
-        id: 'back',
-        text: 'Back to Jira',
-      },
     ],
     type: 'HeaderSection',
   },
   {
     id: 'root/issues:menu',
+    backItem: {
+      type: 'BackItem',
+      goTo: 'root/index',
+      id: 'back',
+      text: 'Back to Jira',
+    },
+
     items: [
       {
         type: 'SectionHeading',

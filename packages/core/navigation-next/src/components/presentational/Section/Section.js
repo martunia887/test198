@@ -9,7 +9,20 @@ import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-conte
 import { transitionDurationMs } from '../../../common/constants';
 import getAnimationStyles from './getAnimationStyles';
 import type { SectionProps, SectionState } from './types';
+import BackItem from '../../connected/BackItem';
+import type { BackItemProps } from '../../connected/BackItem/types';
 
+type StickyBackItemProps = {
+  backItem: { ...BackItemProps, type: string },
+};
+
+const StickyBackItem = (props: StickyBackItemProps) => {
+  const { backItem } = props;
+  if (backItem && backItem.type === 'BackItem') {
+    return <BackItem {...backItem} />;
+  }
+  return null;
+};
 /** The below components are exported for testing purposes only. */
 type StyledComponentProps = { children: Node };
 export const StaticTransitionGroup = (props: StyledComponentProps) => (
@@ -57,12 +70,13 @@ export default class Section extends PureComponent<SectionProps, SectionState> {
 
   render() {
     const {
-      alwaysShowScrollHint,
       id,
       children,
       shouldGrow,
       styles: styleReducer,
       theme,
+      backItem,
+      alwaysShowScrollHint,
     } = this.props;
 
     const { mode, context } = theme;
@@ -100,30 +114,38 @@ export default class Section extends PureComponent<SectionProps, SectionState> {
                 }}
               >
                 <ClassNames>
-                  {({ css: getClassName }) =>
-                    shouldGrow ? (
-                      <ScrollableWrapper
-                        css={css`
-                          ${styles.wrapper}
+                  {({ css: getClassName }) => {
+                    return (
+                      <>
+                        {' '}
+                        {shouldGrow ? (
+                          <ScrollableWrapper
+                            css={css`
+                              ${styles.wrapper}
                           ${animationStyles}
-                        `}
-                      >
-                        <ScrollableInner css={styles.inner}>
-                          {children({
-                            className: getClassName(styles.children),
-                            css: styles.children,
-                          })}
-                        </ScrollableInner>
-                      </ScrollableWrapper>
-                    ) : (
-                      <StaticWrapper css={animationStyles}>
-                        {children({
-                          className: getClassName(styles.children),
-                          css: styles.children,
-                        })}
-                      </StaticWrapper>
-                    )
-                  }
+                            `}
+                          >
+                            <>
+                              <StickyBackItem backItem={backItem} />
+                              <ScrollableInner css={styles.inner}>
+                                {children({
+                                  className: getClassName(styles.children),
+                                  css: styles.children,
+                                })}
+                              </ScrollableInner>
+                            </>
+                          </ScrollableWrapper>
+                        ) : (
+                          <StaticWrapper css={animationStyles}>
+                            {children({
+                              className: getClassName(styles.children),
+                              css: styles.children,
+                            })}
+                          </StaticWrapper>
+                        )}
+                      </>
+                    );
+                  }}
                 </ClassNames>
               </NavigationAnalyticsContext>
             );

@@ -1,7 +1,7 @@
 // @flow
 
 import type { Node } from 'react';
-
+import BackItem from '../../connected/BackItem';
 import type { StyleReducer, WithContentThemeProps } from '../../../theme/types';
 
 export type RenderProvided = {
@@ -35,6 +35,9 @@ export type ConnectedSectionProps = {|
   /** A function which will be passed the default styles object for the Section
    * and should return a new styles object. */
   styles: StyleReducer,
+  /** A sticky back button that does not scroll with the rest of the menu items
+   * but animate with the menu items*/
+  backItem?: BackItem | null,
 |};
 
 export type SectionProps = {|

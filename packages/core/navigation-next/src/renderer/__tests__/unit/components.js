@@ -122,6 +122,7 @@ describe('navigation-next view renderer', () => {
         children: expect.any(Function),
         id: 'menu',
         parentId: 'foo',
+        backItem: null,
       });
     });
 

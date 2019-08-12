@@ -3,6 +3,7 @@
 exports[`MenuSection should render Section with correct props 1`] = `
 <Section
   alwaysShowScrollHint={false}
+  backItem={null}
   shouldGrow={true}
   styles={[Function]}
 >
