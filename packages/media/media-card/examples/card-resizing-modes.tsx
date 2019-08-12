@@ -8,6 +8,7 @@ import {
 } from '@atlaskit/media-test-helpers';
 
 import { Card } from '../src';
+import { AnalyticsMediaListener } from './exampleUtils';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const defaultCards = [
@@ -136,7 +137,7 @@ const fullFitCards = [
   },
 ];
 
-export default () => (
+const Example = () => (
   <div>
     <h3>Default</h3>
     <StoryList>{defaultCards}</StoryList>
@@ -147,4 +148,10 @@ export default () => (
     <h3>Full Fit</h3>
     <StoryList>{fullFitCards}</StoryList>
   </div>
+);
+
+export default () => (
+  <AnalyticsMediaListener>
+    <Example />
+  </AnalyticsMediaListener>
 );

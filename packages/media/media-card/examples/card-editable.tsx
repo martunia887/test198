@@ -13,6 +13,7 @@ import {
   EditableCardOptions,
   EditableCardContent,
 } from '../example-helpers/styled';
+import { AnalyticsMediaListener } from './exampleUtils';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 
@@ -193,4 +194,8 @@ class EditableCard extends Component<{}, EditableCardState> {
   }
 }
 
-export default () => <EditableCard />;
+export default () => (
+  <AnalyticsMediaListener>
+    <EditableCard />
+  </AnalyticsMediaListener>
+);

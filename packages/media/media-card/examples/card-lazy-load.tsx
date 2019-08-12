@@ -6,6 +6,7 @@ import {
   genericFileId,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '../src';
+import { AnalyticsMediaListener } from './exampleUtils';
 
 const GradientBackground: React.ComponentClass<
   React.HTMLAttributes<{}>
@@ -47,4 +48,8 @@ class Example extends React.Component<{}, {}> {
   }
 }
 
-export default () => <Example />;
+export default () => (
+  <AnalyticsMediaListener>
+    <Example />
+  </AnalyticsMediaListener>
+);

@@ -7,6 +7,7 @@ import {
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
 import { FileIdentifier, MediaClient } from '@atlaskit/media-client';
+import { AnalyticsMediaListener } from './exampleUtils';
 
 const mediaClientConfig = {
   authProvider: mediaPickerAuthProvider('asap'),
@@ -146,4 +147,8 @@ class Example extends React.Component<{}, State> {
   }
 }
 
-export default () => <Example />;
+export default () => (
+  <AnalyticsMediaListener>
+    <Example />
+  </AnalyticsMediaListener>
+);

@@ -15,6 +15,7 @@ import {
 
 import { Card } from '../src';
 import { createApiCards, actions } from '../example-helpers';
+import { AnalyticsMediaListener } from './exampleUtils';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 // standard
@@ -162,7 +163,7 @@ const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
   console.log('Received event:', { payload, context });
 };
 
-export default () => (
+const Example = () => (
   <AnalyticsListener channel="media" onEvent={handleEvent}>
     <div>
       <h1 style={{ margin: '10px 20px' }}>File cards</h1>
@@ -193,4 +194,10 @@ export default () => (
       </div>
     </div>
   </AnalyticsListener>
+);
+
+export default () => (
+  <AnalyticsMediaListener>
+    <Example />
+  </AnalyticsMediaListener>
 );

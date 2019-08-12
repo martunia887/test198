@@ -11,11 +11,12 @@ import {
   InlineCardVideoWrapper,
   InlineCardVideoWrapperItem,
 } from '../example-helpers/styled';
+import { AnalyticsMediaListener } from './exampleUtils';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const onClick = () => console.log('onClick');
 
-export default () => (
+const Example = () => (
   <InlineCardVideoWrapper>
     <InlineCardVideoWrapperItem>
       <h1>video large [disableOverlay=true] width=500 height=300</h1>
@@ -116,4 +117,10 @@ export default () => (
       />
     </InlineCardVideoWrapperItem>
   </InlineCardVideoWrapper>
+);
+
+export default () => (
+  <AnalyticsMediaListener>
+    <Example />
+  </AnalyticsMediaListener>
 );

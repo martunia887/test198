@@ -17,6 +17,7 @@ import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { FileIdentifier } from '@atlaskit/media-client';
 import { Card } from '../src';
 import { createApiCards, actions } from '../example-helpers';
+import { AnalyticsMediaListener } from './exampleUtils';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 // standard
@@ -164,7 +165,7 @@ const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
   console.log('Received event:', { payload, context });
 };
 
-export default () => (
+const Example = () => (
   <AtlaskitThemeProvider mode={'dark'}>
     <AnalyticsListener channel="media" onEvent={handleEvent}>
       <div>
@@ -197,4 +198,10 @@ export default () => (
       </div>
     </AnalyticsListener>
   </AtlaskitThemeProvider>
+);
+
+export default () => (
+  <AnalyticsMediaListener>
+    <Example />
+  </AnalyticsMediaListener>
 );

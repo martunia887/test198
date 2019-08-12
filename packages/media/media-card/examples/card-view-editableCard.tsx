@@ -37,6 +37,7 @@ import {
   CardPreviewWrapper,
 } from '../example-helpers/styled';
 import { defaultImageCardDimensions } from '../src/utils/cardDimensions';
+import { AnalyticsMediaListener } from './exampleUtils';
 
 const appearanceOptions = [
   { value: 'auto', label: 'Auto' },
@@ -580,4 +581,10 @@ export const generateStoriesForEditableCards = () => {
   return <EditableCard />;
 };
 
-export default () => generateStoriesForEditableCards();
+const Example = () => generateStoriesForEditableCards();
+
+export default () => (
+  <AnalyticsMediaListener>
+    <Example />
+  </AnalyticsMediaListener>
+);
