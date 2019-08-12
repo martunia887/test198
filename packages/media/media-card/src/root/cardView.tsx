@@ -208,13 +208,17 @@ export class CardViewBase extends React.Component<
     }
   };
 
-  private onMenuToggle = (attrs: { isOpen: boolean }) => {
+  private triggerAnalyticsEvent(
+    action: string,
+    actionSubject: sting,
+    actionSubjectId: string,
+  ) {
     const { metadata: mediaItemDetails, createAnalyticsEvent } = this.props;
     createAnalyticsEvent &&
       createAnalyticsEvent({
-        action: 'clicked',
-        actionSubject: 'button',
-        actionSubjectId: 'mediaCardDropDownMenu',
+        action,
+        actionSubject,
+        actionSubjectId,
         fileAttributes: mediaItemDetails && {
           fileMediatype: mediaItemDetails.mediaType,
           fileMediaName: mediaItemDetails.name,
@@ -224,6 +228,10 @@ export class CardViewBase extends React.Component<
           // fileSize?: ,
         },
       }).fire(FabricChannel.media);
+  }
+
+  private onMenuToggle = (_attrs: { isOpen: boolean }) => {
+    this.triggerAnalyticsEvent('clicked', 'button', 'mediaCardDropDownMenu');
   };
 }
 
