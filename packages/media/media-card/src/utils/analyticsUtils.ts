@@ -1,5 +1,6 @@
 import { BaseAnalyticsContext } from '../index';
 import { version, name } from '../version.json';
+import { MediaType } from '@atlaskit/media-client';
 
 export const getBaseAnalyticsContext = (
   componentName: any,
@@ -11,3 +12,20 @@ export const getBaseAnalyticsContext = (
   actionSubject: 'MediaCard',
   actionSubjectId,
 });
+
+export interface AnalyticsEventPayolad {
+  action: string;
+  actionSubject: string;
+  actionSubjectId: string;
+  attributes: {
+    fileAttributes: MediaAnalyticsFileAttributes;
+  };
+}
+
+export interface MediaAnalyticsFileAttributes {
+  fileSource: string;
+  fileMediatype?: MediaType;
+  fileId?: string;
+  fileStatus?: 'original' | 'converted';
+  fileSize?: number;
+}

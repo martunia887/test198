@@ -419,13 +419,14 @@ describe('CardView', () => {
       action: 'clicked',
       actionSubject: 'button',
       actionSubjectId: 'mediaCardDropDownMenu',
-      fileAttributes: {
-        fileMediatype: file.mediaType,
-        fileId: file.id,
-        fileSource: 'mediaCard',
-        fileSize: file.size,
-        // fileMediaSubtitle?: ,
-        // fileStatus?:  ,
+      attributes: {
+        fileAttributes: {
+          fileMediatype: file.mediaType,
+          fileId: file.id,
+          fileSource: 'mediaCard',
+          fileSize: file.size,
+          // fileStatus?:  ,
+        },
       },
     });
   });
