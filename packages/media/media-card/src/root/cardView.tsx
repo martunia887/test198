@@ -221,7 +221,7 @@ export class CardViewBase extends React.Component<
         actionSubjectId,
         fileAttributes: mediaItemDetails && {
           fileMediatype: mediaItemDetails.mediaType,
-          fileMediaName: mediaItemDetails.name,
+          fileId: mediaItemDetails.id,
           fileSource: 'mediaCard',
           fileSize: mediaItemDetails.size,
           // fileMediaSubtitle?: ,

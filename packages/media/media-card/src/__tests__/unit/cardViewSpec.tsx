@@ -421,7 +421,7 @@ describe('CardView', () => {
       actionSubjectId: 'mediaCardDropDownMenu',
       fileAttributes: {
         fileMediatype: file.mediaType,
-        fileMediaName: file.name,
+        fileId: file.id,
         fileSource: 'mediaCard',
         fileSize: file.size,
         // fileMediaSubtitle?: ,
