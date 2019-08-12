@@ -43,6 +43,7 @@ export interface CardOverlayProps {
 
   actions?: Array<CardAction>;
   icon?: string;
+  onMenuToggle?: (attrs: { isOpen: boolean }) => void;
 }
 
 export interface CardOverlayState {
@@ -180,7 +181,9 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
   }
 
   onMenuToggle = (attrs: { isOpen: boolean }) => {
+    const { onMenuToggle } = this.props;
     this.setState({ isMenuExpanded: attrs.isOpen });
+    onMenuToggle && onMenuToggle(attrs);
   };
 
   removeBtnClick(handler: CardEventHandler) {

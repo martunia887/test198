@@ -45,6 +45,7 @@ export interface FileCardImageViewProps {
   readonly actions?: CardAction[];
   readonly onRetry?: () => void;
   readonly previewOrientation?: number;
+  readonly onMenuToggle?: (attrs: { isOpen: boolean }) => void;
 }
 
 export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
@@ -101,6 +102,7 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
       onRetry,
       actions,
       fileSize,
+      onMenuToggle,
     } = this.props;
 
     return (
@@ -114,13 +116,20 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
           onRetry={onRetry}
           actions={actions}
           subtitle={fileSize}
+          onMenuToggle={onMenuToggle}
         />
       </>
     );
   };
 
   private renderFailedContents = () => {
-    const { mediaName, mediaType, actions, fileSize } = this.props;
+    const {
+      mediaName,
+      mediaType,
+      actions,
+      fileSize,
+      onMenuToggle,
+    } = this.props;
 
     return (
       <>
@@ -132,13 +141,20 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
           mediaType={mediaType}
           actions={actions}
           subtitle={fileSize}
+          onMenuToggle={onMenuToggle}
         />
       </>
     );
   };
 
   private renderUploadingCardOverlay = (): JSX.Element => {
-    const { mediaType, dataURI, selectable, selected } = this.props;
+    const {
+      mediaType,
+      dataURI,
+      selectable,
+      selected,
+      onMenuToggle,
+    } = this.props;
     const isPersistent = mediaType === 'doc' || !dataURI;
 
     return (
@@ -146,6 +162,7 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
         persistent={isPersistent}
         selectable={selectable}
         selected={selected}
+        onMenuToggle={onMenuToggle}
       />
     );
   };
@@ -241,6 +258,7 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
       selectable,
       selected,
       actions,
+      onMenuToggle,
     } = this.props;
     const isPersistent = mediaType === 'doc' || !dataURI;
 
@@ -253,6 +271,7 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
         mediaType={mediaType}
         subtitle={fileSize}
         actions={actions}
+        onMenuToggle={onMenuToggle}
       />
     );
   };
