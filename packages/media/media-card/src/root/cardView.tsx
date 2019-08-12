@@ -210,7 +210,7 @@ export class CardViewBase extends React.Component<
 
   private triggerAnalyticsEvent(
     action: string,
-    actionSubject: sting,
+    actionSubject: string,
     actionSubjectId: string,
   ) {
     const { metadata: mediaItemDetails, createAnalyticsEvent } = this.props;
@@ -223,9 +223,9 @@ export class CardViewBase extends React.Component<
           fileMediatype: mediaItemDetails.mediaType,
           fileMediaName: mediaItemDetails.name,
           fileSource: 'mediaCard',
+          fileSize: mediaItemDetails.size,
           // fileMediaSubtitle?: ,
           // fileStatus?:  ,
-          // fileSize?: ,
         },
       }).fire(FabricChannel.media);
   }

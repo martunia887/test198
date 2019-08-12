@@ -63,4 +63,16 @@ describe('CardOverlay', () => {
     retryComponent.simulate('click');
     expect(onRetry).toHaveBeenCalled();
   });
+
+  it('should trigger provided onMenuToggle callblack', () => {
+    const onMenuToggle = jest.fn();
+    const card = shallow(
+      <CardOverlay persistent={true} onMenuToggle={onMenuToggle} />,
+    );
+    const triggerToggle = card.find(CardActionsView).props().onToggle;
+    const attrs = { isOpen: true };
+    triggerToggle!(attrs);
+    expect(onMenuToggle).toBeCalledTimes(1);
+    expect(onMenuToggle).toBeCalledWith(attrs);
+  });
 });
