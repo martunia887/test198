@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 beforeEach(() => {
-  jest.setTimeout(20000);
+  jest.setTimeout(60000);
 });
 
 // TODO: failing due to whatwg-fetch issues. Re-enable once fixed
