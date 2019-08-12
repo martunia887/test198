@@ -590,3 +590,44 @@ pipelines:
                 - .masterBundleSize/**
               caches:
                 - node
+
+
+    # TODO: Remove when investigation is finished.
+    custom-unit-test:
+      - parallel:
+          - step:
+              name: Non Editor Unit Tests 1
+              script:
+                - source ./build-setup.sh
+                - bolt install --pure-lockfile
+                - TEST_ONLY_PATTERN='!packages/editor' yarn test
+          - step:
+              name: Non Editor Unit Tests 2
+              script:
+                - source ./build-setup.sh
+                - bolt install --pure-lockfile
+                - TEST_ONLY_PATTERN='!packages/editor' yarn test
+          - step:
+              name: Non Editor Unit Tests 3
+              script:
+                - source ./build-setup.sh
+                - bolt install --pure-lockfile
+                - TEST_ONLY_PATTERN='!packages/editor' yarn test
+          - step:
+              name: Non Editor Unit Tests 4
+              script:
+                - source ./build-setup.sh
+                - bolt install --pure-lockfile
+                - TEST_ONLY_PATTERN='!packages/editor' yarn test
+          - step:
+              name: Non Editor Unit Tests 5
+              script:
+                - source ./build-setup.sh
+                - bolt install --pure-lockfile
+                - TEST_ONLY_PATTERN='!packages/editor' yarn test
+          - step:
+              name: Non Editor Unit Tests 6
+              script:
+                - source ./build-setup.sh
+                - bolt install --pure-lockfile
+                - TEST_ONLY_PATTERN='!packages/editor' yarn test
