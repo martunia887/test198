@@ -8,12 +8,11 @@ import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-conte
 
 import { transitionDurationMs } from '../../../common/constants';
 import getAnimationStyles from './getAnimationStyles';
-import type { SectionProps, SectionState } from './types';
+import type { SectionProps, SectionState, BackItemType } from './types';
 import BackItem from '../../connected/BackItem';
-import type { BackItemProps } from '../../connected/BackItem/types';
 
 type StickyBackItemProps = {
-  backItem: { ...BackItemProps, type: string },
+  backItem: BackItemType,
 };
 
 const StickyBackItem = (props: StickyBackItemProps) => {

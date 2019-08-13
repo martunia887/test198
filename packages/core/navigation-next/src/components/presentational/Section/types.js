@@ -1,7 +1,7 @@
 // @flow
 
 import type { Node } from 'react';
-import BackItem from '../../connected/BackItem';
+import type { BackItemProps } from '../../connected/BackItem/types';
 import type { StyleReducer, WithContentThemeProps } from '../../../theme/types';
 
 export type RenderProvided = {
@@ -17,6 +17,11 @@ export type SectionPresentationProps = {
    * sections which can scroll. */
   alwaysShowScrollHint: boolean,
 };
+
+export type BackItemType = {
+  ...BackItemProps,
+  type: string,
+} | null;
 
 export type ConnectedSectionProps = {|
   ...$Exact<SectionPresentationProps>,
@@ -37,7 +42,7 @@ export type ConnectedSectionProps = {|
   styles: StyleReducer,
   /** A sticky back button that does not scroll with the rest of the menu items
    * but animate with the menu items*/
-  backItem?: BackItem | null,
+  backItem?: BackItemType,
 |};
 
 export type SectionProps = {|
