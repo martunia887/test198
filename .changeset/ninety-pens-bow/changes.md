@@ -1,0 +1,1 @@
+Sends analytics when Media Card Dropdown Menu is being clicked

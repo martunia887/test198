@@ -33,6 +33,20 @@ describe('FileCard', () => {
     expect(fileCardView.props()).toMatchObject(expectedProps);
   });
 
+  it('should render cardFileView with onMenuToggle passed through to props', function() {
+    const onMenuToggle = (attrs: { isOpen: boolean }) => {};
+
+    const expectedProps = {
+      onMenuToggle,
+    };
+
+    const card = shallow(<FileCard onMenuToggle={onMenuToggle} />);
+
+    const fileCardView = card.find(FileCardImageView);
+    expect(fileCardView.length).toEqual(1);
+    expect(fileCardView.props()).toMatchObject(expectedProps);
+  });
+
   it('should render fileCardView with dataUri when passed', () => {
     const fakeDataUri: string = 'l33tdatauri';
 

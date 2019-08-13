@@ -21,6 +21,7 @@ describe('FileCardImageView', () => {
   let mediaType: FileCardImageViewProps['mediaType'];
   let actions: FileCardImageViewProps['actions'];
   let fileSize: FileCardImageViewProps['fileSize'];
+  const onMenuToggle = (attrs: { isOpen: boolean }) => {};
 
   beforeEach(() => {
     onRetry = jest.fn();
@@ -78,6 +79,7 @@ describe('FileCardImageView', () => {
           mediaType={mediaType}
           actions={actions}
           fileSize={fileSize}
+          onMenuToggle={onMenuToggle}
         />,
       );
     });
@@ -95,6 +97,7 @@ describe('FileCardImageView', () => {
         mediaType,
         actions,
         subtitle: fileSize,
+        onMenuToggle,
       });
     });
   });
@@ -111,6 +114,7 @@ describe('FileCardImageView', () => {
           mediaType={mediaType}
           actions={actions}
           fileSize={fileSize}
+          onMenuToggle={onMenuToggle}
         />,
       );
     });
@@ -127,6 +131,7 @@ describe('FileCardImageView', () => {
         mediaType,
         actions,
         subtitle: fileSize,
+        onMenuToggle,
       });
     });
   });
@@ -179,6 +184,7 @@ describe('FileCardImageView', () => {
           fileSize={fileSize}
           actions={actions}
           mediaName={mediaName}
+          onMenuToggle={onMenuToggle}
         />,
       );
       expectToEqual(card.find(CardOverlay).props(), {
@@ -189,6 +195,7 @@ describe('FileCardImageView', () => {
         mediaType: 'doc',
         subtitle: fileSize,
         actions,
+        onMenuToggle,
       });
     });
 
@@ -203,6 +210,7 @@ describe('FileCardImageView', () => {
           fileSize={fileSize}
           actions={actions}
           mediaName={mediaName}
+          onMenuToggle={onMenuToggle}
         />,
       );
       expectToEqual(card.find(CardOverlay).props(), {
@@ -213,6 +221,7 @@ describe('FileCardImageView', () => {
         mediaType: 'image',
         subtitle: fileSize,
         actions,
+        onMenuToggle,
       });
     });
   });
@@ -252,6 +261,7 @@ describe('FileCardImageView', () => {
         fileSize={fileSize}
         actions={actions}
         mediaName={mediaName}
+        onMenuToggle={onMenuToggle}
       />,
     );
     expectToEqual(card.find(CardOverlay).props(), {
@@ -260,6 +270,7 @@ describe('FileCardImageView', () => {
       selected: false,
       mediaName: '',
       actions: [],
+      onMenuToggle,
     });
   });
 
@@ -273,6 +284,7 @@ describe('FileCardImageView', () => {
         fileSize={fileSize}
         actions={actions}
         mediaName={mediaName}
+        onMenuToggle={onMenuToggle}
       />,
     );
     expectToEqual(card.find(CardOverlay).props(), {
@@ -281,6 +293,7 @@ describe('FileCardImageView', () => {
       selected: false,
       mediaName: '',
       actions: [],
+      onMenuToggle,
     });
   });
 

@@ -32,6 +32,9 @@ import { Wrapper } from './styled';
 
 import { WithCardViewAnalyticsContext } from './withCardViewAnalyticsContext';
 
+import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { AnalyticsEventPayolad } from '../utils/analyticsUtils';
+
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
   readonly mediaItemType?: MediaItemType;
@@ -187,6 +190,7 @@ export class CardViewBase extends React.Component<
         disableOverlay={disableOverlay}
         mediaItemType={mediaItemType}
         previewOrientation={previewOrientation}
+        onMenuToggle={this.onMenuToggle}
       />
     );
   };
@@ -204,9 +208,40 @@ export class CardViewBase extends React.Component<
       onMouseEnter({ event, mediaItemDetails });
     }
   };
+
+  private triggerAnalyticsEvent(
+    action: string,
+    actionSubject: string,
+    actionSubjectId: string,
+  ) {
+    const { metadata: mediaItemDetails, createAnalyticsEvent } = this.props;
+    const payload: AnalyticsEventPayolad = {
+      action,
+      actionSubject,
+      actionSubjectId,
+      attributes: {
+        fileAttributes: {
+          fileSource: 'mediaCard',
+          fileMediatype: mediaItemDetails && mediaItemDetails.mediaType,
+          fileId: mediaItemDetails && mediaItemDetails.id,
+          fileSize: mediaItemDetails && mediaItemDetails.size,
+          // fileStatus:  ,
+        },
+      },
+    };
+    createAnalyticsEvent &&
+      createAnalyticsEvent(payload).fire(FabricChannel.media);
+  }
+
+  private onMenuToggle = (attrs: { isOpen: boolean }) => {
+    // Will catch any event that opens the menu, not just click
+    if (attrs.isOpen) {
+      this.triggerAnalyticsEvent('clicked', 'button', 'mediaCardDropDownMenu');
+    }
+  };
 }
 
-const createAndFireEventOnMedia = createAndFireEvent('media');
+const createAndFireEventOnMedia = createAndFireEvent(FabricChannel.media);
 /**
  * With this CardView class constructor version `createAnalyticsEvent` props is supplied for you, so
  * when creating instance of that class you don't need to worry about it.

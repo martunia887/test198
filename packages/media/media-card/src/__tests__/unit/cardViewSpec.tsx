@@ -15,6 +15,7 @@ import {
   AnalyticsListener,
   UIAnalyticsEventInterface,
 } from '@atlaskit/analytics-next';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
 import {
   mountWithIntlContext,
   expectToEqual,
@@ -272,7 +273,10 @@ describe('CardView', () => {
       label: 'Click me',
     };
     const card = mount(
-      <AnalyticsListener channel="media" onEvent={analyticsEventHandler}>
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsEventHandler}
+      >
         <CardView
           status="processing"
           actions={[cardAction]}
@@ -320,7 +324,10 @@ describe('CardView', () => {
     const clickHandler = jest.fn();
     const analyticsEventHandler = jest.fn();
     const card = mountWithIntlContext(
-      <AnalyticsListener channel="media" onEvent={analyticsEventHandler}>
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsEventHandler}
+      >
         <CardView status="error" onClick={clickHandler} />
       </AnalyticsListener>,
     );
@@ -359,7 +366,10 @@ describe('CardView', () => {
     const clickHandler = jest.fn();
     const analyticsEventHandler = jest.fn();
     const card = mount(
-      <AnalyticsListener channel="media" onEvent={analyticsEventHandler}>
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsEventHandler}
+      >
         <CardView status="loading" metadata={file} onClick={clickHandler} />
       </AnalyticsListener>,
     );
@@ -385,5 +395,57 @@ describe('CardView', () => {
     });
 
     expectToEqual(card.find(Wrapper).props().shouldUsePointerCursor, false);
+  });
+
+  it('should fire "clicked" analytics event when Menu is opened', () => {
+    const analyticsEventHandler = jest.fn();
+
+    const element = mount(
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsEventHandler}
+      >
+        <CardView metadata={file} />
+      </AnalyticsListener>,
+    );
+    const triggerToggle = element.find(FileCard).props().onMenuToggle;
+    const attrs = { isOpen: true };
+    triggerToggle!(attrs);
+    const eventInterface = analyticsEventHandler.mock.calls[0][0];
+
+    expect(analyticsEventHandler).toHaveBeenCalledTimes(1);
+
+    expect(eventInterface.payload).toEqual({
+      action: 'clicked',
+      actionSubject: 'button',
+      actionSubjectId: 'mediaCardDropDownMenu',
+      attributes: {
+        fileAttributes: {
+          fileMediatype: file.mediaType,
+          fileId: file.id,
+          fileSource: 'mediaCard',
+          fileSize: file.size,
+          // fileStatus?:  ,
+        },
+      },
+    });
+  });
+
+  it('should not fire "clicked" analytics event when is Menu closed', () => {
+    const analyticsEventHandler = jest.fn();
+
+    const element = mount(
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsEventHandler}
+      >
+        <CardView metadata={file} />
+      </AnalyticsListener>,
+    );
+    const triggerToggle = element.find(FileCard).props().onMenuToggle;
+    const attrs = { isOpen: false };
+    triggerToggle!(attrs);
+
+    expect(analyticsEventHandler).toHaveBeenCalledTimes(0);
   });
 });

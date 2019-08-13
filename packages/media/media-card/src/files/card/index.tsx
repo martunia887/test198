@@ -22,6 +22,7 @@ export interface FileCardProps extends SharedCardProps {
   readonly disableOverlay?: boolean;
   readonly mediaItemType?: MediaItemType;
   readonly previewOrientation?: number;
+  readonly onMenuToggle?: (attrs: { isOpen: boolean }) => void;
 }
 
 export class FileCard extends Component<FileCardProps, {}> {
@@ -47,6 +48,7 @@ export class FileCard extends Component<FileCardProps, {}> {
       disableOverlay,
       mediaItemType,
       previewOrientation,
+      onMenuToggle,
     } = this.props;
     const defaultDetails: FileDetails = {
       id: '',
@@ -80,6 +82,7 @@ export class FileCard extends Component<FileCardProps, {}> {
         actions={this._getActions()}
         disableOverlay={disableOverlay}
         previewOrientation={previewOrientation}
+        onMenuToggle={onMenuToggle}
       />
     );
   }
