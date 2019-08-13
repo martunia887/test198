@@ -1,0 +1,1 @@
+Update typing for dynamic table caption
