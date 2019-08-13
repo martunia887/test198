@@ -233,8 +233,11 @@ export class CardViewBase extends React.Component<
       createAnalyticsEvent(payload).fire(FabricChannel.media);
   }
 
-  private onMenuToggle = (_attrs: { isOpen: boolean }) => {
-    this.triggerAnalyticsEvent('clicked', 'button', 'mediaCardDropDownMenu');
+  private onMenuToggle = (attrs: { isOpen: boolean }) => {
+    // Will catch any event that opens the menu, not just click
+    if (attrs.isOpen) {
+      this.triggerAnalyticsEvent('clicked', 'button', 'mediaCardDropDownMenu');
+    }
   };
 }
 

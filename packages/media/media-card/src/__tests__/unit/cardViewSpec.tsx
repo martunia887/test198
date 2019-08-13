@@ -397,7 +397,7 @@ describe('CardView', () => {
     expectToEqual(card.find(Wrapper).props().shouldUsePointerCursor, false);
   });
 
-  it('should fire "clicked" analytics event on Menu Toggle', () => {
+  it('should fire "clicked" analytics event when Menu is opened', () => {
     const analyticsEventHandler = jest.fn();
 
     const element = mount(
@@ -429,5 +429,23 @@ describe('CardView', () => {
         },
       },
     });
+  });
+
+  it('should not fire "clicked" analytics event when is Menu closed', () => {
+    const analyticsEventHandler = jest.fn();
+
+    const element = mount(
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsEventHandler}
+      >
+        <CardView metadata={file} />
+      </AnalyticsListener>,
+    );
+    const triggerToggle = element.find(FileCard).props().onMenuToggle;
+    const attrs = { isOpen: false };
+    triggerToggle!(attrs);
+
+    expect(analyticsEventHandler).toHaveBeenCalledTimes(0);
   });
 });
