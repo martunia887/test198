@@ -31,7 +31,7 @@ import {
   CardsWrapper,
   CardState,
 } from '../example-helpers/styled';
-import { AnalyticsMediaListener } from './exampleUtils';
+import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = createUploadMediaClientConfig();
 const mediaClient = new MediaClient(mediaClientConfig);

@@ -7,7 +7,7 @@ import {
   defaultCollectionName,
 } from '@atlaskit/media-test-helpers';
 import { FileIdentifier, MediaClient } from '@atlaskit/media-client';
-import { AnalyticsMediaListener } from './exampleUtils';
+import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = {
   authProvider: mediaPickerAuthProvider('asap'),

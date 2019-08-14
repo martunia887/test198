@@ -13,7 +13,7 @@ import {
   MediaViewerExampleWrapper,
   MediaViewerExampleColumn,
 } from '../example-helpers/styled';
-import { AnalyticsMediaListener } from './exampleUtils';
+import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const mediaViewerDataSource: MediaViewerDataSource = {

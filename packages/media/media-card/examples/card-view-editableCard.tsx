@@ -37,7 +37,7 @@ import {
   CardPreviewWrapper,
 } from '../example-helpers/styled';
 import { defaultImageCardDimensions } from '../src/utils/cardDimensions';
-import { AnalyticsMediaListener } from './exampleUtils';
+import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const appearanceOptions = [
   { value: 'auto', label: 'Auto' },

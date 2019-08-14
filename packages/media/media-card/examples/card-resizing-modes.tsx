@@ -8,7 +8,7 @@ import {
 } from '@atlaskit/media-test-helpers';
 
 import { Card } from '../src';
-import { AnalyticsMediaListener } from './exampleUtils';
+import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const defaultCards = [

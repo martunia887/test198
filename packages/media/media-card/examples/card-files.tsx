@@ -15,7 +15,7 @@ import {
 
 import { Card } from '../src';
 import { createApiCards, actions } from '../example-helpers';
-import { AnalyticsMediaListener } from './exampleUtils';
+import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 // standard

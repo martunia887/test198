@@ -10,7 +10,7 @@ import { CardAction, CardStatus, CardEvent } from '../src';
 import { MediaType } from '@atlaskit/media-store';
 import { CardView } from '../src/root/cardView';
 import { FileDetails } from '@atlaskit/media-client';
-import { AnalyticsMediaListener } from './exampleUtils';
+import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const CardWrapper = styled.div`
   width: 150px;

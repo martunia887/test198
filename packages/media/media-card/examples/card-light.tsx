@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { CardLoading, CardError } from '../src';
 import { StoryList } from '../../media-test-helpers';
-import { AnalyticsMediaListener } from './exampleUtils';
+import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const divStyle = {
   width: '100px',
