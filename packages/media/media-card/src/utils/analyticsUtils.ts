@@ -14,6 +14,7 @@ export const getBaseAnalyticsContext = (
 });
 
 export interface AnalyticsEventPayolad {
+  eventType: MediaAnalyticsEventType;
   action: string;
   actionSubject: string;
   actionSubjectId: string;
@@ -29,3 +30,5 @@ export interface MediaAnalyticsFileAttributes {
   fileStatus?: 'original' | 'converted';
   fileSize?: number;
 }
+
+export type MediaAnalyticsEventType = 'ui' | 'operational';

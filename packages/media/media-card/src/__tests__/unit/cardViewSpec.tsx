@@ -416,6 +416,7 @@ describe('CardView', () => {
     expect(analyticsEventHandler).toHaveBeenCalledTimes(1);
 
     expect(eventInterface.payload).toEqual({
+      eventType: 'ui',
       action: 'clicked',
       actionSubject: 'button',
       actionSubjectId: 'mediaCardDropDownMenu',

@@ -33,7 +33,10 @@ import { Wrapper } from './styled';
 import { WithCardViewAnalyticsContext } from './withCardViewAnalyticsContext';
 
 import { FabricChannel } from '@atlaskit/analytics-listeners';
-import { AnalyticsEventPayolad } from '../utils/analyticsUtils';
+import {
+  AnalyticsEventPayolad,
+  MediaAnalyticsEventType,
+} from '../utils/analyticsUtils';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
@@ -210,12 +213,14 @@ export class CardViewBase extends React.Component<
   };
 
   private triggerAnalyticsEvent(
+    eventType: MediaAnalyticsEventType,
     action: string,
     actionSubject: string,
     actionSubjectId: string,
   ) {
     const { metadata: mediaItemDetails, createAnalyticsEvent } = this.props;
     const payload: AnalyticsEventPayolad = {
+      eventType,
       action,
       actionSubject,
       actionSubjectId,
@@ -235,7 +240,12 @@ export class CardViewBase extends React.Component<
   private onMenuToggle = (attrs: { isOpen: boolean }) => {
     // Will catch any event that opens the menu, not just click
     if (attrs.isOpen) {
-      this.triggerAnalyticsEvent('clicked', 'button', 'mediaCardDropDownMenu');
+      this.triggerAnalyticsEvent(
+        'ui',
+        'clicked',
+        'button',
+        'mediaCardDropDownMenu',
+      );
     }
   };
 }
