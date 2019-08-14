@@ -36,7 +36,7 @@ if (!global.WEBSITE_ENV) {
 afterEach(() => {
   process.on('unhandledRejection', reason => {
     console.log('REJECTION', reason);
-    process.exit(1);
+    expect(reason).toBe('');
   });
 });
 
