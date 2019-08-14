@@ -3,7 +3,6 @@
 exports[`HeaderSection should render Section with correct props 1`] = `
 <Section
   alwaysShowScrollHint={false}
-  backItem={null}
   shouldGrow={false}
   styles={[Function]}
 >
