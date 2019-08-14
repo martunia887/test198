@@ -57,6 +57,7 @@ export interface OnLoadingChangeFunc {
 }
 
 export interface SharedCardProps {
+  readonly identifier: Identifier;
   readonly appearance?: CardAppearance;
   readonly dimensions?: CardDimensions;
 
@@ -115,7 +116,6 @@ export interface CardViewAnalyticsContext extends BaseAnalyticsContext {
 
 export interface CardProps extends SharedCardProps, CardEventProps {
   readonly mediaClient: MediaClient;
-  readonly identifier: Identifier;
   readonly isLazy?: boolean;
   readonly resizeMode?: ImageResizeMode;
 

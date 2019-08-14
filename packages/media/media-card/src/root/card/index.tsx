@@ -441,6 +441,7 @@ export class Card extends Component<CardProps, CardState> {
           progress={progress}
           onRetry={onRetry}
           previewOrientation={previewOrientation}
+          identifier={identifier}
         />
       </AnalyticsContext>
     );

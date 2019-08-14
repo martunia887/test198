@@ -31,6 +31,7 @@ import { getElementDimension } from '../utils/getElementDimension';
 import { Wrapper } from './styled';
 
 import { WithCardViewAnalyticsContext } from './withCardViewAnalyticsContext';
+import { GasPayload } from '../../../../elements/analytics-gas-types/src';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
@@ -68,6 +69,41 @@ export class CardViewBase extends React.Component<
   CardViewState
 > {
   state: CardViewState = {};
+
+  myRef: React.RefObject<any>;
+
+  // so the idea is the following, we add a listener for each of the cards
+  // and then check if the triggered listener is from the card in current selection
+  onCopyListener(ev: ClipboardEvent) {
+    const selection = window.getSelection();
+
+    if (
+      this.myRef.current instanceof Node &&
+      selection.containsNode(this.myRef.current, false)
+    ) {
+      this.fireAnalytics();
+    }
+  }
+
+  constructor(props: CardViewBaseProps) {
+    super(props);
+    this.myRef = React.createRef();
+    this.onCopyListener = this.onCopyListener.bind(this);
+    this.fireAnalytics = this.fireAnalytics.bind(this);
+    document.addEventListener('copy', this.onCopyListener);
+  }
+
+  fireAnalytics() {
+    const { createAnalyticsEvent, identifier } = this.props;
+    if (createAnalyticsEvent && identifier) {
+      createAnalyticsEvent({
+        eventType: 'ui',
+        action: 'copied',
+        actionSubject: 'file',
+        attributes: { identifier },
+      } as GasPayload).fire('media');
+    }
+  }
 
   componentDidMount() {
     this.saveElementWidth();
@@ -147,6 +183,8 @@ export class CardViewBase extends React.Component<
         dimensions={wrapperDimensions}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
+        innerRef={this.myRef}
+        onCopy={this.fireAnalytics} // if selection is empty (i.e. the card itself is selected) the main listener will not be triggered
       >
         {this.renderFile()}
       </Wrapper>
