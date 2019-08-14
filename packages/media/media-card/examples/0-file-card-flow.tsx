@@ -31,7 +31,6 @@ import {
   CardsWrapper,
   CardState,
 } from '../example-helpers/styled';
-import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = createUploadMediaClientConfig();
 const mediaClient = new MediaClient(mediaClientConfig);
@@ -180,8 +179,4 @@ class Example extends Component<ComponentProps, ComponentState> {
   }
 }
 
-export default () => (
-  <AnalyticsMediaListener>
-    <Example />
-  </AnalyticsMediaListener>
-);
+export default () => <Example />;

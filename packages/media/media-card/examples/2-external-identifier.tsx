@@ -8,7 +8,6 @@ import {
 import { ExternalImageIdentifier } from '@atlaskit/media-client';
 import { Card } from '../src';
 import { ExternalIdentifierWrapper } from '../example-helpers/styled';
-import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const externalIdentifierWithName: ExternalImageIdentifier = {
@@ -51,8 +50,4 @@ class Example extends Component {
   }
 }
 
-export default () => (
-  <AnalyticsMediaListener>
-    <Example />
-  </AnalyticsMediaListener>
-);
+export default () => <Example />;

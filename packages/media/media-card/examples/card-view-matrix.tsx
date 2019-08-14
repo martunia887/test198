@@ -10,7 +10,6 @@ import { CardAction, CardStatus, CardEvent } from '../src';
 import { MediaType } from '@atlaskit/media-store';
 import { CardView } from '../src/root/cardView';
 import { FileDetails } from '@atlaskit/media-client';
-import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const CardWrapper = styled.div`
   width: 150px;
@@ -221,8 +220,4 @@ class Example extends React.Component<{}, State> {
     );
   };
 }
-export default () => (
-  <AnalyticsMediaListener>
-    <Example />
-  </AnalyticsMediaListener>
-);
+export default () => <Example />;

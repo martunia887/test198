@@ -13,7 +13,6 @@ import {
   MediaViewerExampleWrapper,
   MediaViewerExampleColumn,
 } from '../example-helpers/styled';
-import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 const mediaViewerDataSource: MediaViewerDataSource = {
@@ -87,8 +86,4 @@ class Example extends Component<{}, {}> {
   }
 }
 
-export default () => (
-  <AnalyticsMediaListener>
-    <Example />
-  </AnalyticsMediaListener>
-);
+export default () => <Example />;

@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { CardLoading, CardError } from '../src';
 import { StoryList } from '../../media-test-helpers';
-import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const divStyle = {
   width: '100px',
@@ -40,17 +39,11 @@ const resizedCards = [
   },
 ];
 
-const Example = () => (
+export default () => (
   <div>
     <h3>Default size</h3>
     <StoryList>{defaultCards}</StoryList>
     <h3>50x50 size</h3>
     <StoryList>{resizedCards}</StoryList>
   </div>
-);
-
-export default () => (
-  <AnalyticsMediaListener>
-    <Example />
-  </AnalyticsMediaListener>
 );

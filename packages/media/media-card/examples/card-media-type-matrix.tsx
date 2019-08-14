@@ -10,7 +10,6 @@ import {
 } from '@atlaskit/media-test-helpers';
 
 import { Card } from '../src';
-import { AnalyticsMediaListener } from '../example-helpers/analyticsMediaListener';
 
 const mediaClientConfig = createStorybookMediaClientConfig();
 // file cards
@@ -30,7 +29,7 @@ const unknownFileCard = (
   <Card mediaClientConfig={mediaClientConfig} identifier={unknownFileId} />
 );
 
-const Example = () => (
+export default () => (
   <div style={{ margin: '40px' }}>
     <h1>Media type matrix</h1>
     <Matrix>
@@ -75,10 +74,4 @@ const Example = () => (
       </tbody>
     </Matrix>
   </div>
-);
-
-export default () => (
-  <AnalyticsMediaListener>
-    <Example />
-  </AnalyticsMediaListener>
 );
