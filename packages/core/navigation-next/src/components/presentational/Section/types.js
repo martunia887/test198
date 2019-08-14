@@ -21,7 +21,7 @@ export type SectionPresentationProps = {
 export type BackItemType = {
   ...BackItemProps,
   type: string,
-} | null;
+};
 
 export type ConnectedSectionProps = {|
   ...$Exact<SectionPresentationProps>,

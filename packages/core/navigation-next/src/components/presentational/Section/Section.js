@@ -125,7 +125,9 @@ export default class Section extends PureComponent<SectionProps, SectionState> {
                             `}
                           >
                             <>
-                              <StickyBackItem backItem={backItem} />
+                              {backItem && (
+                                <StickyBackItem backItem={backItem} />
+                              )}
                               <ScrollableInner css={styles.inner}>
                                 {children({
                                   className: getClassName(styles.children),

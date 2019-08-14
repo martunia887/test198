@@ -13,7 +13,6 @@ export default class Section extends Component<ConnectedSectionProps> {
     alwaysShowScrollHint: false,
     shouldGrow: false,
     styles: styleReducerNoOp,
-    backItem: null,
   };
 
   render() {
