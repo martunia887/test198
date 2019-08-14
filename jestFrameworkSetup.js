@@ -32,9 +32,12 @@ if (!global.WEBSITE_ENV) {
   global.WEBSITE_ENV = 'local';
 }
 
-// Node promise rejection are now logged for debbugging
-process.on('unhandledRejection', reason => {
-  console.log('REJECTION', reason);
+// Node promise rejection are now failing tests.
+afterEach(() => {
+  process.on('unhandledRejection', reason => {
+    console.log('REJECTION', reason);
+    process.exit(1);
+  });
 });
 
 // We need to ensure that each test has at least one assertion.
