@@ -107,6 +107,10 @@ export class CardViewBase extends React.Component<
     document.addEventListener('copy', this.onCopyListener);
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('copy', this.onCopyListener);
+  }
+
   componentWillReceiveProps(nextProps: CardViewBaseProps) {
     const { selected: currSelected } = this.props;
     const { selectable: nextSelectable, selected: nextSelected } = nextProps;
