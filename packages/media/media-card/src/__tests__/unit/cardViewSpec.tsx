@@ -425,7 +425,6 @@ describe('CardView', () => {
           fileId: file.id,
           fileSource: 'mediaCard',
           fileSize: file.size,
-          // fileStatus?:  ,
         },
       },
     });
