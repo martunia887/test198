@@ -64,6 +64,7 @@ export interface MacroRendererProps {
 
 export interface MacroRendererState {
   content?: string | null;
+  contentId?: number | null;
 }
 
 class MacroComponent extends React.Component<
@@ -92,9 +93,12 @@ class MacroComponent extends React.Component<
       .submit()
       .then(result => {
         console.log('=== result of promise');
-        console.log(JSON.stringify(result));
-        this.contentId = result as number;
-        this.setState(result);
+        var resultObj = JSON.parse(JSON.stringify(result));
+        console.log(resultObj.contentId as number);
+        this.setState({
+          content: this.state.content,
+          contentId: resultObj.contentId as number,
+        });
       });
 
     // createPromise('customLegacyMacro', JSON.stringify(dataToSend))
