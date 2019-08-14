@@ -54,6 +54,10 @@ describe('CardView', () => {
   ) =>
     shallow(
       <CardViewBase
+        identifier={{
+          id: '1',
+          mediaItemType: 'file',
+        }}
         mediaItemType={'file'}
         createAnalyticsEvent={createAnalyticsEventMock}
         status="loading"
