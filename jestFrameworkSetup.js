@@ -32,11 +32,11 @@ if (!global.WEBSITE_ENV) {
   global.WEBSITE_ENV = 'local';
 }
 
-beforeEach(() => {
+beforeEach(done => {
   // Node promise rejection are now failing tests.
   process.on('unhandledRejection', reason => {
     console.log('REJECTION', reason);
-    expect(reason).toBe('');
+    done.fail(reason);
   });
 });
 
