@@ -32,10 +32,12 @@ if (!global.WEBSITE_ENV) {
   global.WEBSITE_ENV = 'local';
 }
 
-// Node promise rejection are now failing tests.
-process.on('unhandledRejection', reason => {
-  console.log('REJECTION', reason);
-  expect(reason).toBe('');
+beforeEach(() => {
+  // Node promise rejection are now failing tests.
+  process.on('unhandledRejection', reason => {
+    console.log('REJECTION', reason);
+    expect(reason).toBe('');
+  });
 });
 
 // We need to ensure that each test has at least one assertion.
