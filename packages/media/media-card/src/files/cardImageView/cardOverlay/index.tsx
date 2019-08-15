@@ -27,6 +27,11 @@ import {
   Metadata,
   ErrorWrapper,
 } from './styled';
+import {
+  WithAnalyticsEventProps,
+  withAnalyticsEvents,
+} from '@atlaskit/analytics-next';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
 
 export interface CardOverlayProps {
   mediaType?: MediaType;
@@ -50,7 +55,12 @@ export interface CardOverlayState {
   isMenuExpanded: boolean;
 }
 
-export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
+type CardOverlayBaseProps = CardOverlayProps & WithAnalyticsEventProps;
+
+export class CardOverlayBase extends Component<
+  CardOverlayBaseProps,
+  CardOverlayState
+> {
   static defaultProps = {
     actions: [],
     mediaName: '',
@@ -181,9 +191,24 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
   }
 
   onMenuToggle = (attrs: { isOpen: boolean }) => {
-    const { onMenuToggle } = this.props;
+    const { createAnalyticsEvent } = this.props;
     this.setState({ isMenuExpanded: attrs.isOpen });
-    onMenuToggle && onMenuToggle(attrs);
+    if (createAnalyticsEvent && attrs.isOpen) {
+      const eventType = 'ui';
+      const action = 'clicked';
+      const actionSubject = 'button';
+      const actionSubjectId = 'mediaCardDropDownMenu';
+      const event = createAnalyticsEvent({
+        eventType,
+        action,
+        actionSubject,
+        actionSubjectId,
+        attributes: {
+          payloadPartOfAttributes: {},
+        },
+      });
+      event.fire(FabricChannel.media);
+    }
   };
 
   removeBtnClick(handler: CardEventHandler) {
@@ -194,3 +219,7 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
     };
   }
 }
+
+export const CardOverlay = withAnalyticsEvents<CardOverlayBaseProps>()(
+  CardOverlayBase,
+);
