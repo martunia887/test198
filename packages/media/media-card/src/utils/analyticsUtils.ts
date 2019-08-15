@@ -18,6 +18,7 @@ export type AnalyticsEventPayolad = GasCorePayload & {
   action: string;
   attributes: GasCorePayload['attributes'] & {
     fileAttributes: MediaAnalyticsFileAttributes;
+    label?: string;
   };
 };
 

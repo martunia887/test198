@@ -24,6 +24,7 @@ import {
   CardView,
   CardViewBase,
   CardViewOwnProps,
+  formatAnalyticsEventActionLabel,
 } from '../../../src/root/cardView';
 import { FileCard } from '../../../src/files';
 import { Wrapper } from '../../../src/root/styled';
@@ -447,5 +448,72 @@ describe('CardView', () => {
     triggerToggle!(attrs);
 
     expect(analyticsEventHandler).toHaveBeenCalledTimes(0);
+  });
+
+  it.only('should trigger analytics event when an action handler is called', () => {
+    const analyticsEventHandler = jest.fn();
+    const cardAction1: CardAction = {
+      handler: () => {},
+      label: 'Click me 1',
+    };
+    const cardAction2: CardAction = {
+      handler: () => {},
+      label: 'Click me 2',
+    };
+    const card = mount(
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsEventHandler}
+      >
+        <CardView actions={[cardAction1, cardAction2]} metadata={{ ...file }} />
+      </AnalyticsListener>,
+    );
+
+    card
+      .find(FileCard)
+      .props()
+      .actions![0].handler();
+    card
+      .find(FileCard)
+      .props()
+      .actions![1].handler();
+
+    expect(analyticsEventHandler).toHaveBeenCalledTimes(2);
+
+    const eventInterface1 = analyticsEventHandler.mock.calls[0][0];
+
+    expect(eventInterface1.payload).toEqual({
+      eventType: 'ui',
+      action: 'clicked',
+      actionSubject: 'button',
+      actionSubjectId: formatAnalyticsEventActionLabel(cardAction1.label),
+      attributes: {
+        fileAttributes: {
+          fileMediatype: file.mediaType,
+          fileId: file.id,
+          fileSource: 'mediaCard',
+          fileSize: file.size,
+        },
+        label: cardAction1.label,
+      },
+    });
+
+    const eventInterface2 = analyticsEventHandler.mock.calls[1][0];
+
+    expect(eventInterface2.payload).toEqual({
+      eventType: 'ui',
+      action: 'clicked',
+      actionSubject: 'button',
+      actionSubjectId: formatAnalyticsEventActionLabel(cardAction2.label),
+      attributes: {
+        fileAttributes: {
+          fileMediatype: file.mediaType,
+          fileId: file.id,
+          fileSource: 'mediaCard',
+          fileSize: file.size,
+        },
+        label: cardAction2.label,
+      },
+    });
   });
 });

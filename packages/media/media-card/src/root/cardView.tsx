@@ -4,6 +4,7 @@ import {
   MediaItemType,
   FileDetails,
   ImageResizeMode,
+  FileItem,
 } from '@atlaskit/media-client';
 import {
   withAnalyticsEvents,
@@ -18,6 +19,7 @@ import {
   OnSelectChangeFuncResult,
   CardDimensionValue,
   CardOnClickCallback,
+  CardAction,
 } from '../index';
 import { FileCard } from '../files';
 import { breakpointSize } from '../utils/breakpoint';
@@ -35,6 +37,18 @@ import { WithCardViewAnalyticsContext } from './withCardViewAnalyticsContext';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { AnalyticsEventPayolad } from '../utils/analyticsUtils';
 import { EventType } from '@atlaskit/analytics-gas-types';
+
+export const formatAnalyticsEventActionLabel = (word?: string) =>
+  word
+    ? 'mediaCard' +
+      word
+        .split(/\s/)
+        .map(
+          (substr: string) =>
+            substr.charAt(0).toUpperCase() + substr.slice(1).toLowerCase(),
+        )
+        .join('')
+    : 'mediaCardUnlabelledAction';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
@@ -167,7 +181,6 @@ export class CardViewBase extends React.Component<
       resizeMode,
       appearance,
       dimensions,
-      actions,
       selectable,
       selected,
       disableOverlay,
@@ -185,7 +198,7 @@ export class CardViewBase extends React.Component<
         resizeMode={resizeMode}
         appearance={appearance}
         dimensions={dimensions}
-        actions={actions}
+        actions={this.getActions()}
         selectable={selectable}
         selected={selected}
         disableOverlay={disableOverlay}
@@ -215,6 +228,7 @@ export class CardViewBase extends React.Component<
     action: string,
     actionSubject: string,
     actionSubjectId: string,
+    label?: string,
   ) {
     const { metadata: mediaItemDetails, createAnalyticsEvent } = this.props;
     const payload: AnalyticsEventPayolad = {
@@ -229,6 +243,7 @@ export class CardViewBase extends React.Component<
           fileId: mediaItemDetails && mediaItemDetails.id,
           fileSize: mediaItemDetails && mediaItemDetails.size,
         },
+        ...(label ? { label } : {}),
       },
     };
     createAnalyticsEvent &&
@@ -246,6 +261,24 @@ export class CardViewBase extends React.Component<
       );
     }
   };
+
+  private getActions(): Array<CardAction> {
+    const { actions = [] } = this.props;
+
+    return actions.map((action: CardAction) => ({
+      ...action,
+      handler: (item?: FileItem, event?: Event) => {
+        this.triggerAnalyticsEvent(
+          'ui',
+          'clicked',
+          'button',
+          formatAnalyticsEventActionLabel(action.label),
+          action.label,
+        );
+        action.handler(item, event);
+      },
+    }));
+  }
 }
 
 const createAndFireEventOnMedia = createAndFireEvent(FabricChannel.media);
