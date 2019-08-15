@@ -1,6 +1,7 @@
 import { BaseAnalyticsContext } from '../index';
 import { version, name } from '../version.json';
 import { MediaType } from '@atlaskit/media-client';
+import { GasCorePayload } from '@atlaskit/analytics-gas-types';
 
 export const getBaseAnalyticsContext = (
   componentName: any,
@@ -13,15 +14,12 @@ export const getBaseAnalyticsContext = (
   actionSubjectId,
 });
 
-export interface AnalyticsEventPayolad {
-  eventType: MediaAnalyticsEventType;
+export type AnalyticsEventPayolad = GasCorePayload & {
   action: string;
-  actionSubject: string;
-  actionSubjectId: string;
-  attributes: {
+  attributes: GasCorePayload['attributes'] & {
     fileAttributes: MediaAnalyticsFileAttributes;
   };
-}
+};
 
 export interface MediaAnalyticsFileAttributes {
   fileSource: string;
@@ -30,5 +28,3 @@ export interface MediaAnalyticsFileAttributes {
   fileStatus?: 'original' | 'converted';
   fileSize?: number;
 }
-
-export type MediaAnalyticsEventType = 'ui' | 'operational';

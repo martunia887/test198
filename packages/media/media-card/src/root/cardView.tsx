@@ -33,10 +33,8 @@ import { Wrapper } from './styled';
 import { WithCardViewAnalyticsContext } from './withCardViewAnalyticsContext';
 
 import { FabricChannel } from '@atlaskit/analytics-listeners';
-import {
-  AnalyticsEventPayolad,
-  MediaAnalyticsEventType,
-} from '../utils/analyticsUtils';
+import { AnalyticsEventPayolad } from '../utils/analyticsUtils';
+import { EventType } from '@atlaskit/analytics-gas-types';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
@@ -213,7 +211,7 @@ export class CardViewBase extends React.Component<
   };
 
   private triggerAnalyticsEvent(
-    eventType: MediaAnalyticsEventType,
+    eventType: EventType,
     action: string,
     actionSubject: string,
     actionSubjectId: string,
