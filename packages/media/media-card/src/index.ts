@@ -1,8 +1,6 @@
 import { MouseEvent } from 'react';
 import {
   FileDetails,
-  MediaType,
-  FileProcessingStatus,
   MediaClient,
   Identifier,
   ImageResizeMode,
@@ -74,43 +72,6 @@ export interface CardEventProps {
   readonly onMouseEnter?: (result: CardEvent) => void;
   readonly onSelectChange?: OnSelectChangeFunc;
   readonly onLoadingChange?: OnLoadingChangeFunc;
-}
-
-export interface AnalyticsFileAttributes {
-  fileMediatype?: MediaType;
-  fileMimetype?: string;
-  fileStatus?: FileProcessingStatus;
-  fileSize?: number;
-}
-
-export interface AnalyticsLinkAttributes {
-  linkDomain: string;
-}
-
-export interface AnalyticsViewAttributes {
-  viewPreview: boolean;
-  viewActionmenu: boolean;
-  viewSize?: CardAppearance;
-}
-
-export interface BaseAnalyticsContext {
-  // These fields are requested to be in all UI events. See guidelines:
-  // https://extranet.atlassian.com/display/PData/UI+Events
-  packageVersion: string; // string — in a format like '3.2.1'
-  packageName: string;
-  componentName: string;
-  actionSubject: string; // ex. MediaCard
-  actionSubjectId: string | null; // file/link id
-}
-
-export interface CardAnalyticsContext extends BaseAnalyticsContext {}
-
-export interface CardViewAnalyticsContext extends BaseAnalyticsContext {
-  loadStatus: 'fail' | 'loading_metadata' | 'uploading' | 'complete';
-  type: 'file' | 'link' | 'smart' | 'external-image';
-  viewAttributes: AnalyticsViewAttributes;
-  fileAttributes?: AnalyticsFileAttributes;
-  linkAttributes?: AnalyticsLinkAttributes;
 }
 
 export interface CardProps extends SharedCardProps, CardEventProps {

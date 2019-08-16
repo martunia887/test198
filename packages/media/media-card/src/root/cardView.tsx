@@ -9,6 +9,7 @@ import {
   withAnalyticsEvents,
   createAndFireEvent,
   WithAnalyticsEventProps,
+  AnalyticsContext,
 } from '@atlaskit/analytics-next';
 
 import {
@@ -30,7 +31,8 @@ import { getCSSUnitValue } from '../utils/getCSSUnitValue';
 import { getElementDimension } from '../utils/getElementDimension';
 import { Wrapper } from './styled';
 
-import { WithCardViewAnalyticsContext } from './withCardViewAnalyticsContext';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
+import getAnalyticsContext from '../utils/analytics';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
@@ -206,7 +208,7 @@ export class CardViewBase extends React.Component<
   };
 }
 
-const createAndFireEventOnMedia = createAndFireEvent('media');
+const createAndFireEventOnMedia = createAndFireEvent(FabricChannel.media);
 /**
  * With this CardView class constructor version `createAnalyticsEvent` props is supplied for you, so
  * when creating instance of that class you don't need to worry about it.
@@ -232,18 +234,16 @@ export class CardView extends React.Component<CardViewOwnProps, CardViewState> {
   }
 
   render() {
+    const { metadata } = this.props;
     const mediaItemType = this.mediaItemType;
 
     return (
-      <WithCardViewAnalyticsContext
-        {...this.props}
-        mediaItemType={mediaItemType}
-      >
+      <AnalyticsContext data={getAnalyticsContext(metadata)}>
         <CardViewWithAnalyticsEvents
           {...this.props}
           mediaItemType={mediaItemType}
         />
-      </WithCardViewAnalyticsContext>
+      </AnalyticsContext>
     );
   }
 }

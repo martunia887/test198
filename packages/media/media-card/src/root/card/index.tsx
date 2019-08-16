@@ -8,20 +8,15 @@ import {
   FileIdentifier,
   isPreviewableType,
   isFileIdentifier,
-  isExternalImageIdentifier,
   isDifferentIdentifier,
   isImageRepresentationReady,
 } from '@atlaskit/media-client';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
-import {
-  AnalyticsContext,
-  UIAnalyticsEventInterface,
-} from '@atlaskit/analytics-next';
+import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next';
 import { Subscription } from 'rxjs/Subscription';
 import { IntlProvider } from 'react-intl';
 import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
 import {
-  CardAnalyticsContext,
   CardAction,
   CardDimensions,
   CardProps,
@@ -30,7 +25,6 @@ import {
 } from '../..';
 import { CardView } from '../cardView';
 import { LazyContent } from '../../utils/lazyContent';
-import { getBaseAnalyticsContext } from '../../utils/analyticsUtils';
 import { getDataURIDimension } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
@@ -262,15 +256,6 @@ export class Card extends Component<CardProps, CardState> {
     this.subscribe(identifier, mediaClient);
   };
 
-  get analyticsContext(): CardAnalyticsContext {
-    const { identifier } = this.props;
-    const id = isExternalImageIdentifier(identifier)
-      ? 'external-image'
-      : identifier.id;
-
-    return getBaseAnalyticsContext('Card', id);
-  }
-
   get actions(): CardAction[] {
     const { actions = [], identifier } = this.props;
     const { status, metadata } = this.state;
@@ -419,30 +404,28 @@ export class Card extends Component<CardProps, CardState> {
       identifier,
     } = this.props;
     const { progress, metadata, dataURI, previewOrientation } = this.state;
-    const { analyticsContext, onRetry, onClick, actions } = this;
+    const { onRetry, onClick, actions } = this;
     const status = getCardStatus(this.state, this.props);
     const card = (
-      <AnalyticsContext data={analyticsContext}>
-        <CardView
-          status={status}
-          metadata={metadata}
-          dataURI={dataURI}
-          mediaItemType={identifier.mediaItemType}
-          appearance={appearance}
-          resizeMode={resizeMode}
-          dimensions={dimensions}
-          actions={actions}
-          selectable={selectable}
-          selected={selected}
-          onClick={onClick}
-          onMouseEnter={onMouseEnter}
-          onSelectChange={onSelectChange}
-          disableOverlay={disableOverlay}
-          progress={progress}
-          onRetry={onRetry}
-          previewOrientation={previewOrientation}
-        />
-      </AnalyticsContext>
+      <CardView
+        status={status}
+        metadata={metadata}
+        dataURI={dataURI}
+        mediaItemType={identifier.mediaItemType}
+        appearance={appearance}
+        resizeMode={resizeMode}
+        dimensions={dimensions}
+        actions={actions}
+        selectable={selectable}
+        selected={selected}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onSelectChange={onSelectChange}
+        disableOverlay={disableOverlay}
+        progress={progress}
+        onRetry={onRetry}
+        previewOrientation={previewOrientation}
+      />
     );
 
     return isLazy ? (

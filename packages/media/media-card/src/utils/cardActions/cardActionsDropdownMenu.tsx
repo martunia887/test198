@@ -9,6 +9,11 @@ import DropdownMenu, {
 
 import { CardAction } from '../../actions';
 import { CardActionButton } from './styled';
+import {
+  WithAnalyticsEventProps,
+  withAnalyticsEvents,
+} from '@atlaskit/analytics-next';
+import { createAndFireMediaAnalyticsEvent } from '../analytics';
 
 export type CardActionsDropdownMenuProps = {
   readonly actions: CardAction[];
@@ -17,16 +22,32 @@ export type CardActionsDropdownMenuProps = {
   readonly onOpenChange?: (attrs: { isOpen: boolean }) => void;
 };
 
-export class CardActionsDropdownMenu extends Component<
-  CardActionsDropdownMenuProps
+class CardActionsDropdownMenuBase extends Component<
+  CardActionsDropdownMenuProps & WithAnalyticsEventProps
 > {
+  onOpenChange = (attrs: { isOpen: boolean }) => {
+    const { createAnalyticsEvent, onOpenChange } = this.props;
+    if (attrs.isOpen) {
+      createAndFireMediaAnalyticsEvent(
+        {
+          eventType: 'ui',
+          action: 'clicked',
+          actionSubject: 'button',
+          actionSubjectId: 'mediaCardDropDownMenu',
+        },
+        createAnalyticsEvent,
+      );
+    }
+    onOpenChange && onOpenChange(attrs);
+  };
+
   render(): JSX.Element | null {
-    const { actions, triggerColor, onOpenChange } = this.props;
+    const { actions, triggerColor } = this.props;
 
     if (actions.length > 0) {
       return (
         <DropdownMenu
-          onOpenChange={onOpenChange}
+          onOpenChange={this.onOpenChange}
           trigger={
             <CardActionButton style={{ color: triggerColor }}>
               <MoreIcon label="more" />
@@ -47,3 +68,7 @@ export class CardActionsDropdownMenu extends Component<
     }
   }
 }
+
+export const CardActionsDropdownMenu = withAnalyticsEvents<
+  CardActionsDropdownMenuProps & WithAnalyticsEventProps
+>()(CardActionsDropdownMenuBase);

@@ -30,7 +30,7 @@ import { breakpointSize } from '../../../src/utils/breakpoint';
 
 import { shouldDisplayImageThumbnail } from '../../../src/utils/shouldDisplayImageThumbnail';
 
-import { CardViewAnalyticsContext, CardAction } from '../../../src/index';
+import { CardAction } from '../../../src/index';
 
 describe('CardView', () => {
   const file: FileDetails = {
@@ -289,9 +289,7 @@ describe('CardView', () => {
       analyticsEventHandler.mock.calls[0][0];
     expect(actualEvent.payload).toEqual({ action: 'clicked' });
     expect(actualEvent.context && actualEvent.context.length).toEqual(1);
-    const actualContext =
-      actualEvent.context &&
-      (actualEvent.context[0] as CardViewAnalyticsContext);
+    const actualContext = actualEvent.context && actualEvent.context[0];
     expect(actualContext).not.toBeUndefined();
     if (actualContext) {
       expect(actualContext.fileAttributes).toEqual({
@@ -332,9 +330,7 @@ describe('CardView', () => {
       analyticsEventHandler.mock.calls[0][0];
     expect(actualEvent.payload).toEqual({ action: 'clicked' });
     expect(actualEvent.context && actualEvent.context.length).toEqual(1);
-    const actualContext =
-      actualEvent.context &&
-      (actualEvent.context[0] as CardViewAnalyticsContext);
+    const actualContext = actualEvent.context && actualEvent.context[0];
     expect(actualContext).not.toBeUndefined();
     if (actualContext) {
       expect(actualContext.fileAttributes).toBeUndefined();
