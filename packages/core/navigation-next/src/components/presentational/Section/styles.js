@@ -18,7 +18,10 @@ const isWebkit =
   window.navigator.userAgent.indexOf('AppleWebKit') >= 0;
 const scrollBarSize = isGecko || isWebkit ? 0 : 30;
 
-const getBaseStyles = ({ alwaysShowScrollHint }: SectionPresentationProps) => ({
+const getBaseStyles = ({
+  alwaysShowScrollHint,
+  allowNestedScroll,
+}: SectionPresentationProps) => ({
   wrapper: {
     height: '100%',
     overflow: 'hidden',
@@ -83,12 +86,21 @@ const getBaseStyles = ({ alwaysShowScrollHint }: SectionPresentationProps) => ({
       zIndex: 2,
     },
   },
+
+  nestedScrollWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
   // These styles are passed to the children function for the consumer to
   // apply
   children: {
     boxSizing: 'border-box',
     paddingLeft: `${gridSize * 2}px`,
     paddingRight: `${gridSize * 2}px`,
+    display: allowNestedScroll ? 'flex' : 'block',
+    flexDirection: allowNestedScroll ? 'column' : 'none',
+    minHeight: allowNestedScroll ? '100%' : 'none',
   },
 });
 

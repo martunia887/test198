@@ -125,6 +125,7 @@ const SortableGroup = <T: TypeShape>({
 // Section
 const Section = <T: TypeShape>({
   alwaysShowScrollHint = false,
+  allowNestedScroll,
   customComponents,
   id,
   items,
@@ -139,6 +140,7 @@ const Section = <T: TypeShape>({
       key={nestedGroupKey}
       parentId={parentId}
       shouldGrow={shouldGrow}
+      allowNestedScroll={allowNestedScroll}
     >
       {({ className }) => (
         <div className={className}>
@@ -177,12 +179,16 @@ const MenuSection = <T: TypeShape>({
   items,
   nestedGroupKey,
   parentId,
+  shouldGrow,
+  allowNestedScroll,
 }: MenuSectionProps<T>) => (
   <MenuSectionComponent
     alwaysShowScrollHint={alwaysShowScrollHint}
     id={id}
     key={nestedGroupKey}
     parentId={parentId}
+    shouldGrow={shouldGrow}
+    allowNestedScroll={allowNestedScroll}
   >
     {({ className }) => (
       <div className={className}>

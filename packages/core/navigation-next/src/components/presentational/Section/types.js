@@ -16,6 +16,7 @@ export type SectionPresentationProps = {
    * This prop is only applied if shouldGrow = true, since it only applies to
    * sections which can scroll. */
   alwaysShowScrollHint: boolean,
+  allowNestedScroll: boolean,
 };
 
 export type ConnectedSectionProps = {|
