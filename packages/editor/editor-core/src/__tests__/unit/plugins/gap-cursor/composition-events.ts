@@ -20,8 +20,8 @@ const deleteContentBackward = (view: EditorView) => {
     }),
   );
 };
-
-describe('gap-cursor: composition events', () => {
+// TODO: Explore node rejection
+describe.skip('gap-cursor: composition events', () => {
   const createEditor = createEditorFactory();
 
   const editor = (doc: any, trackEvent?: () => {}) =>
