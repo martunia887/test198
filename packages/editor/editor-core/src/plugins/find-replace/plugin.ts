@@ -32,7 +32,7 @@ export const getInitialState = (): FindReplaceInitialState => ({
 // todo: will we need to remap positions?
 export const {
   createCommand: createFindReplaceCommand,
-  getPluginState: getFindReplacepluginStae,
+  getPluginState: getFindReplacePluginState,
   createPluginState: createFindReplacePluginState,
 } = pluginFactory<FindReplaceState, FindReplaceAction, FindReplaceInitialState>(
   findReplacePluginKey,
@@ -45,7 +45,7 @@ export const createPlugin = (dispatch: Dispatch) =>
     state: createFindReplacePluginState(dispatch, getInitialState()),
     props: {
       decorations(state) {
-        const pluginState = getFindReplacepluginStae(state);
+        const pluginState = getFindReplacePluginState(state);
         if (pluginState.active && pluginState.searchWord) {
           // search document text for matches
           // todo: how to make this as performant as possible?
