@@ -90,14 +90,15 @@ const getBaseStyles = ({
   nestedScrollWrapper: {
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
   },
 
   // These styles are passed to the children function for the consumer to
   // apply
   children: {
     boxSizing: 'border-box',
-    paddingLeft: `${gridSize * 2}px`,
-    paddingRight: `${gridSize * 2}px`,
+    paddingLeft: allowNestedScroll ? 0 : `${gridSize * 2}px`,
+    paddingRight: allowNestedScroll ? 0 : `${gridSize * 2}px`,
     display: allowNestedScroll ? 'flex' : 'block',
     flexDirection: allowNestedScroll ? 'column' : 'none',
     minHeight: allowNestedScroll ? '100%' : 'none',

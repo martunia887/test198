@@ -17,6 +17,7 @@ import GroupComponent from '../components/presentational/Group';
 import GroupHeadingComponent from '../components/presentational/GroupHeading';
 import HeaderSectionComponent from '../components/presentational/HeaderSection';
 import MenuSectionComponent from '../components/presentational/MenuSection';
+import MenuSectionWithNestedScrollComponent from '../components/presentational/MenuSectionWithNestedScroll';
 import SectionComponent from '../components/presentational/Section';
 import SectionHeadingComponent from '../components/presentational/SectionHeading';
 import Separator from '../components/presentational/Separator';
@@ -37,6 +38,7 @@ import type {
   HeaderSectionProps,
   ItemsRendererProps,
   MenuSectionProps,
+  MenuSectionWithNestedScrollProps,
   SectionHeadingProps,
   SectionProps,
   SortableContextProps,
@@ -179,16 +181,12 @@ const MenuSection = <T: TypeShape>({
   items,
   nestedGroupKey,
   parentId,
-  shouldGrow,
-  allowNestedScroll,
 }: MenuSectionProps<T>) => (
   <MenuSectionComponent
     alwaysShowScrollHint={alwaysShowScrollHint}
     id={id}
     key={nestedGroupKey}
     parentId={parentId}
-    shouldGrow={shouldGrow}
-    allowNestedScroll={allowNestedScroll}
   >
     {({ className }) => (
       <div className={className}>
@@ -196,6 +194,30 @@ const MenuSection = <T: TypeShape>({
       </div>
     )}
   </MenuSectionComponent>
+);
+
+const MenuSectionWithNestedScroll = <T: TypeShape>({
+  alwaysShowScrollHint,
+  customComponents,
+  id,
+  items,
+  nestedGroupKey,
+  parentId,
+  allowNestedScroll,
+}: MenuSectionWithNestedScrollProps<T>) => (
+  <MenuSectionWithNestedScrollComponent
+    alwaysShowScrollHint={alwaysShowScrollHint}
+    id={id}
+    key={nestedGroupKey}
+    parentId={parentId}
+    allowNestedScroll={allowNestedScroll}
+  >
+    {({ className }) => (
+      <div className={className}>
+        <TypedItemsRenderer items={items} customComponents={customComponents} />
+      </div>
+    )}
+  </MenuSectionWithNestedScrollComponent>
 );
 
 const SortableContext = <T: TypeShape>({
@@ -277,6 +299,7 @@ const groupComponents = {
   Group,
   HeaderSection,
   MenuSection,
+  MenuSectionWithNestedScroll,
   Section,
   SortableContext,
   SortableGroup,
@@ -321,6 +344,15 @@ const renderGroupComponent = <T: empty>(
     const { type, ...compProps } = props;
     element = (
       <SortableContext
+        key={key}
+        {...compProps}
+        customComponents={customComponents}
+      />
+    );
+  } else if (props.type === 'MenuSectionWithNestedScroll') {
+    const { type, ...compProps } = props;
+    element = (
+      <MenuSectionWithNestedScroll
         key={key}
         {...compProps}
         customComponents={customComponents}

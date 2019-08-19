@@ -8,19 +8,29 @@ import type { MenuSectionProps } from './types';
 
 const gridSize = gridSizeFn();
 
-export default class MenuSection extends Component<MenuSectionProps> {
+export default class MenuSectionWithNestedScroll extends Component<MenuSectionProps> {
   static defaultProps = {
     alwaysShowScrollHint: false,
+    shouldGrow: false,
   };
 
   render() {
-    const { alwaysShowScrollHint, id, children, parentId } = this.props;
+    const {
+      alwaysShowScrollHint,
+      id,
+      children,
+      parentId,
+      shouldGrow,
+      allowNestedScroll,
+    } = this.props;
+
     return (
       <Section
         id={id}
         parentId={parentId}
         alwaysShowScrollHint={alwaysShowScrollHint}
-        shouldGrow
+        shouldGrow={shouldGrow}
+        allowNestedScroll={allowNestedScroll}
       >
         {({ css }) => {
           const menuCss = {

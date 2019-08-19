@@ -7,6 +7,7 @@ import Group from '../components/presentational/Group';
 import GroupHeading from '../components/presentational/GroupHeading';
 import HeaderSection from '../components/presentational/HeaderSection';
 import MenuSection from '../components/presentational/MenuSection';
+import MenuSectionWithNestedScroll from '../components/presentational/MenuSectionWithNestedScroll';
 import Section from '../components/presentational/Section';
 import SectionHeading from '../components/presentational/SectionHeading';
 import Separator from '../components/presentational/Separator';
@@ -76,6 +77,11 @@ export type MenuSectionProps<T> = {|
   ...$Exact<SectionKey>,
 |};
 
+export type MenuSectionWithNestedScrollProps<T> = {|
+  ...$Exact<WithoutChildren<ElementConfig<typeof MenuSectionWithNestedScroll>>>,
+  ...$Exact<SharedGroupTypeProps<T>>,
+  ...$Exact<SectionKey>,
+|};
 export type GroupHeadingProps = {|
   ...$Exact<WithoutChildren<ElementConfig<typeof GroupHeading>>>,
   text: string,
@@ -171,6 +177,11 @@ export type GroupType<T> = {|
 export type HeaderSectionType<T> = {|
   +type: 'HeaderSection',
   ...$Exact<HeaderSectionProps<T>>,
+|};
+
+export type MenuSectionWithNestedScrollType<T> = {|
+  +type: 'MenuSectionWithNestedScroll',
+  ...$Exact<MenuSectionWithNestedScrollProps<T>>,
 |};
 
 export type MenuSectionType<T> = {|

@@ -20,7 +20,7 @@ const getItems = () => [
     id: 'root/issues:menu',
     nestedGroupKey: 'menu',
     parentId: 'root/index:menu',
-    type: 'MenuSection',
+    type: 'MenuSectionWithNestedScroll',
     shouldGrow: false,
     alwaysShowScrollHint: true,
     allowNestedScroll: true,

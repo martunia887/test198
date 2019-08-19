@@ -86,6 +86,8 @@ export default class Section extends PureComponent<SectionProps, SectionState> {
         component={
           shouldGrow
             ? ScrollableTransitionGroup
+            : allowNestedScroll
+            ? StaticTransitionGroup
             : StaticTransitionGroupWithNestedScroll
         }
         appear
