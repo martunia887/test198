@@ -4,6 +4,7 @@ import keymapPlugin from './keymap';
 import { EditorPlugin } from '../../types';
 import FindReplace from './ui/FindReplace';
 import WithPluginState from '../../ui/WithPluginState';
+import { cancelSearch, find } from './commands';
 
 // todo: any options needed?
 export const findReplacePlugin = (): EditorPlugin => ({
@@ -24,13 +25,20 @@ export const findReplacePlugin = (): EditorPlugin => ({
     isToolbarReducedSpacing,
     editorView,
   }) {
+    const { state, dispatch } = editorView;
+    const handleCancel = () => {
+      cancelSearch()(state, dispatch);
+    };
+    const handleFind = (keyword?: string) => {
+      find(keyword)(state, dispatch);
+    };
+
     return (
       <WithPluginState
         plugins={{
           findReplaceState: findReplacePluginKey,
         }}
         render={({ findReplaceState }): any => {
-          // todo: do i want to pass down editor view? instead have callbacks
           return (
             <FindReplace
               findReplaceState={findReplaceState}
@@ -38,7 +46,8 @@ export const findReplacePlugin = (): EditorPlugin => ({
               popupsMountPoint={popupsMountPoint}
               popupsScrollableElement={popupsScrollableElement}
               isReducedSpacing={isToolbarReducedSpacing}
-              editorView={editorView}
+              onCancel={handleCancel}
+              onFind={handleFind}
             />
           );
         }}

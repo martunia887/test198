@@ -6,8 +6,6 @@ import Textfield from '@atlaskit/textfield';
 import { FindReplaceState } from '../plugin';
 import ToolbarButton from '../../../ui/ToolbarButton';
 import Dropdown from '../../../ui/Dropdown';
-import { EditorView } from 'prosemirror-view';
-import { cancelSearch, find } from '../commands';
 
 const ToolbarButtonWrapper = styled.div`
   display: flex;
@@ -28,7 +26,8 @@ const Wrapper = styled.div`
 
 type Props = {
   findReplaceState: FindReplaceState;
-  editorView: EditorView;
+  onCancel: () => void;
+  onFind: (keyword?: string) => void;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
@@ -51,13 +50,11 @@ class FindReplace extends React.Component<Props, State> {
   };
 
   private cancel = () => {
-    const { state, dispatch } = this.props.editorView;
-    cancelSearch()(state, dispatch);
+    this.props.onCancel();
   };
 
   private find = (keyword?: string) => {
-    const { state, dispatch } = this.props.editorView;
-    find(keyword)(state, dispatch);
+    this.props.onFind(keyword);
   };
 
   render() {
