@@ -1,4 +1,4 @@
-import { FindReplaceState, getInitialState } from '.';
+import { FindReplaceState, getInitialState } from './plugin';
 import { FindReplaceActionTypes, FindReplaceAction } from './actions';
 
 const reducer = (
