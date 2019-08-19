@@ -433,7 +433,7 @@ pipelines:
                 - source ./build-setup.sh
                 - git merge master --no-edit
                 - bolt install --frozen-lockfile
-                - yarn TEST_ONLY_PATTERN='packages/editor' jest --maxWorkers=50%
+                - TEST_ONLY_PATTERN='packages/editor' yarn jest --maxWorkers=50%
                 # This script acts like a unit test to check changes to @atlaskit/adf-schema.
                 - node build/ci-scripts/run.if.package.changed.js @atlaskit/adf-schema -- yarn build:adf-schema:checkuptodate
                 - yarn test:editor-mobile-bridge:ios
