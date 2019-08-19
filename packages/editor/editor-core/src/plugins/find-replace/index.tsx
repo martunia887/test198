@@ -22,6 +22,7 @@ export const findReplacePlugin = (): EditorPlugin => ({
     popupsMountPoint,
     popupsScrollableElement,
     isToolbarReducedSpacing,
+    editorView,
   }) {
     return (
       <WithPluginState
@@ -29,6 +30,7 @@ export const findReplacePlugin = (): EditorPlugin => ({
           findReplaceState: findReplacePluginKey,
         }}
         render={({ findReplaceState }): any => {
+          // todo: do i want to pass down editor view? instead have callbacks
           return (
             <FindReplace
               findReplaceState={findReplaceState}
@@ -36,6 +38,7 @@ export const findReplacePlugin = (): EditorPlugin => ({
               popupsMountPoint={popupsMountPoint}
               popupsScrollableElement={popupsScrollableElement}
               isReducedSpacing={isToolbarReducedSpacing}
+              editorView={editorView}
             />
           );
         }}

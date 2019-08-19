@@ -2,21 +2,30 @@ import { EditorState, TextSelection } from 'prosemirror-state';
 import { createFindReplaceCommand } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 
-export const find = () =>
+export const find = (keyword?: string) =>
   createFindReplaceCommand((state: EditorState) => {
     const { selection } = state;
 
-    if (selection instanceof TextSelection && !selection.empty) {
+    if (!keyword && selection instanceof TextSelection && !selection.empty) {
+      keyword = getSelectedText(selection);
+    }
+
+    if (keyword) {
       // if user has selected text, set that as the keyword
       return {
         type: FindReplaceActionTypes.FIND,
-        searchWord: getSelectedText(selection),
+        searchWord: keyword,
       };
     }
 
     return {
       type: FindReplaceActionTypes.ACTIVATE,
     };
+  });
+
+export const cancelSearch = () =>
+  createFindReplaceCommand({
+    type: FindReplaceActionTypes.CANCEL,
   });
 
 const getSelectedText = (selection: TextSelection): string => {
