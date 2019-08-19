@@ -15,16 +15,6 @@ type StyledComponentProps = { children: Node };
 export const StaticTransitionGroup = (props: StyledComponentProps) => (
   <div css={{ position: 'relative' }} {...props} />
 );
-
-export const StaticTransitionGroupWithNestedScroll = (
-  props: StyledComponentProps,
-) => (
-  <div
-    css={{ position: 'relative', display: 'flex', minHeight: '86px' }}
-    {...props}
-  />
-);
-
 export const ScrollableTransitionGroup = (props: StyledComponentProps) => (
   <div
     css={{
@@ -35,9 +25,9 @@ export const ScrollableTransitionGroup = (props: StyledComponentProps) => (
     {...props}
   />
 );
-export const ScrollableWrapper = (props: StyledComponentProps) => {
-  return <div {...props} />;
-};
+export const ScrollableWrapper = (props: StyledComponentProps) => (
+  <div {...props} />
+);
 export const ScrollableInner = (props: StyledComponentProps) => (
   <div {...props} />
 );
@@ -68,7 +58,6 @@ export default class Section extends PureComponent<SectionProps, SectionState> {
   render() {
     const {
       alwaysShowScrollHint,
-      allowNestedScroll,
       id,
       children,
       shouldGrow,
@@ -78,17 +67,13 @@ export default class Section extends PureComponent<SectionProps, SectionState> {
 
     const { mode, context } = theme;
     const styles = styleReducer(
-      mode.section({ alwaysShowScrollHint, allowNestedScroll })[context],
+      mode.section({ alwaysShowScrollHint })[context],
     );
 
     return (
       <TransitionGroup
         component={
-          shouldGrow
-            ? ScrollableTransitionGroup
-            : allowNestedScroll
-            ? StaticTransitionGroup
-            : StaticTransitionGroupWithNestedScroll
+          shouldGrow ? ScrollableTransitionGroup : StaticTransitionGroup
         }
         appear
       >
@@ -131,14 +116,7 @@ export default class Section extends PureComponent<SectionProps, SectionState> {
                         </ScrollableInner>
                       </ScrollableWrapper>
                     ) : (
-                      <StaticWrapper
-                        css={css`
-                          ${allowNestedScroll
-                            ? styles.nestedScrollWrapper
-                            : {}}
-                          ${animationStyles}
-                        `}
-                      >
+                      <StaticWrapper css={animationStyles}>
                         {children({
                           className: getClassName(styles.children),
                           css: styles.children,
