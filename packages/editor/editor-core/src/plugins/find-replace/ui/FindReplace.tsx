@@ -6,6 +6,8 @@ import Textfield from '@atlaskit/textfield';
 import { FindReplaceState } from '../plugin';
 import ToolbarButton from '../../../ui/ToolbarButton';
 import Dropdown from '../../../ui/Dropdown';
+import { EditorView } from 'prosemirror-view';
+import { cancelSearch, find } from '../commands';
 
 const ToolbarButtonWrapper = styled.div`
   display: flex;
@@ -26,40 +28,36 @@ const Wrapper = styled.div`
 
 type Props = {
   findReplaceState: FindReplaceState;
+  editorView: EditorView;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
   isReducedSpacing?: boolean;
 };
 
-type State = {
-  isOpen: boolean;
-};
+type State = {};
 
 class FindReplace extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      isOpen: props.findReplaceState.active,
-    };
-  }
-
   private toggleOpen = () => {
-    this.handleOpenChange({ isOpen: !this.state.isOpen });
-  };
-
-  private handleOpenChange = ({ isOpen }: { isOpen: boolean }) => {
-    this.setState({ isOpen });
-  };
-
-  private hide = () => {
-    if (this.state.isOpen === true) {
-      this.setState({ isOpen: false });
+    if (this.props.findReplaceState.active) {
+      this.cancel();
+    } else {
+      this.find();
     }
   };
 
+  private handleFindChange = ({ target }: { target: HTMLInputElement }) => {
+    this.find(target.value);
+  };
+
   private cancel = () => {
-    // todo: this
+    const { state, dispatch } = this.props.editorView;
+    cancelSearch()(state, dispatch);
+  };
+
+  private find = (keyword?: string) => {
+    const { state, dispatch } = this.props.editorView;
+    find(keyword)(state, dispatch);
   };
 
   render() {
@@ -75,11 +73,7 @@ class FindReplace extends React.Component<Props, State> {
       isReducedSpacing,
       findReplaceState,
     } = this.props;
-    const { searchWord, replaceWord } = findReplaceState;
-    const { isOpen } = this.state;
-
-    // todo: set open according to state
-    // todo: update state when close/cancel
+    const { searchWord, replaceWord, active } = findReplaceState;
 
     return (
       <ToolbarButtonWrapper>
@@ -87,14 +81,13 @@ class FindReplace extends React.Component<Props, State> {
           mountTo={popupsMountPoint}
           boundariesElement={popupsBoundariesElement}
           scrollableElement={popupsScrollableElement}
-          isOpen={this.state.isOpen}
+          isOpen={active}
           handleEscapeKeydown={this.cancel}
           fitWidth={242}
-          fitHeight={80}
           trigger={
             <ToolbarButton
               spacing={isReducedSpacing ? 'none' : 'default'}
-              selected={isOpen}
+              selected={active}
               title={title}
               iconBefore={<EditorSearchIcon label={title} />}
               onClick={this.toggleOpen}
@@ -108,12 +101,15 @@ class FindReplace extends React.Component<Props, State> {
               placeholder={find}
               defaultValue={searchWord}
               autoFocus
+              autoComplete="off"
+              onChange={this.handleFindChange}
             />
             <label htmlFor="replace">Replace</label>
             <Textfield
               name="replace"
               placeholder={replace}
               defaultValue={replaceWord}
+              autoComplete="off"
             />
           </Wrapper>
         </Dropdown>
