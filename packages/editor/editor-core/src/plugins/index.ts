@@ -50,3 +50,4 @@ export { default as annotationPlugin } from './annotation';
 export { default as analyticsPlugin } from './analytics';
 export { default as customAutoformatPlugin } from './custom-autoformat';
 export { default as feedbackDialogPlugin } from './feedback-dialog';
+export { default as findReplacePlugin } from './find-replace';
