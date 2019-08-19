@@ -94,6 +94,7 @@ export default {
     'scrollGutterPlugin',
     'analytics',
     'history',
+    'findReplace',
   ],
   nodes: [
     'doc',

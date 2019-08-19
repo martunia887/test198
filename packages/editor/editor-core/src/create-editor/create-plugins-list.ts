@@ -369,5 +369,7 @@ export default function createPluginsList(
     plugins.push(scrollIntoViewPlugin());
   }
 
+  plugins.push(findReplacePlugin());
+
   return plugins;
 }
