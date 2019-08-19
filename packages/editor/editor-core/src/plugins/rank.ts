@@ -90,6 +90,7 @@ export default {
     'grid',
     'scrollGutterPlugin',
     'analytics',
+    'findReplace',
   ],
   nodes: [
     'doc',

@@ -83,7 +83,6 @@ export function getDefaultPluginsList(props: EditorProps): EditorPlugin[] {
     submitEditorPlugin(),
     fakeTextCursorPlugin(),
     floatingToolbarPlugin(),
-    findReplacePlugin(),
   ];
 }
 
@@ -322,6 +321,8 @@ export default function createPluginsList(
   if (!isMobile) {
     plugins.push(quickInsertPlugin());
   }
+
+  plugins.push(findReplacePlugin());
 
   return plugins;
 }
