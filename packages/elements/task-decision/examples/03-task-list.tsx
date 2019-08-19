@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ReactRenderer as Renderer } from '@atlaskit/renderer';
-import TaskList from '../src/components/TaskList';
-import TaskItem from '../src/components/TaskItem';
+import { TaskList, TaskItem } from '../src';
 import {
   dumpRef,
   document,

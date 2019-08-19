@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { HttpError } from '../src/api/MentionResource';
-import MentionList from '../src/components/MentionList';
+import MentionList from '../src';
 import { IntlProvider } from 'react-intl';
 
 const resourceError = new Error('monkey trousers');

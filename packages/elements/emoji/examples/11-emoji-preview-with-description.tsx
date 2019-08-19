@@ -1,5 +1,5 @@
 import * as React from 'react';
-import EmojiPreview from '../src/components/common/EmojiPreview';
+import EmojiPreview from '../src';
 import { emojiPickerWidth } from '../src/util/constants';
 
 const emoji = {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import EmojiUploader from '../src/components/uploader/EmojiUploader';
+import EmojiUploader from '../src';
 
 import { getEmojiResource, loggedUser, lorem } from '../example-helpers';
 import { EmojiProvider } from '../src/resource';

@@ -6,7 +6,7 @@ import { onMentionEvent } from '../example-helpers/index';
 import { mockMentionData as mentionData } from '../src/__tests__/unit/_test-helpers';
 import { mention } from '@atlaskit/util-data-test';
 import { ELEMENTS_CHANNEL } from '../src/_constants';
-import ResourcedMention from '../src/components/Mention/ResourcedMention';
+import ResourcedMention from '../src';
 import { IntlProvider } from 'react-intl';
 
 const style = {
