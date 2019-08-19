@@ -95,6 +95,8 @@ export const copy = makeKeyMapWithCommon('Copy', 'Mod-c');
 export const paste = makeKeyMapWithCommon('Paste', 'Mod-v');
 export const altPaste = makeKeyMapWithCommon('Paste', 'Mod-Shift-v');
 
+export const find = makeKeyMapWithCommon('Find', 'Mod-f');
+
 const arrowKeysMap: Record<string, string> = {
   // for reference: https://wincent.com/wiki/Unicode_representations_of_modifier_keys
   ARROWLEFT: '\u2190',

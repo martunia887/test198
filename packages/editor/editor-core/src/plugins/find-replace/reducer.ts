@@ -15,7 +15,7 @@ const reducer = (
 
     case FindReplaceActionTypes.FIND: {
       const isNewWord =
-        state.searchWord && state.searchWord !== action.searchWord;
+        action.searchWord && state.searchWord !== action.searchWord;
       if (isNewWord) {
         return {
           ...state,
@@ -25,6 +25,7 @@ const reducer = (
       } else {
         return {
           ...state,
+          searchWord: '',
           index: state.index + 1, // todo: handle wrap around
         };
       }

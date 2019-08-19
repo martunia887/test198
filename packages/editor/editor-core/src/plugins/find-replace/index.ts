@@ -3,6 +3,7 @@ import { PluginKey, Plugin } from 'prosemirror-state';
 import reducer from './reducer';
 import { Dispatch } from '../../event-dispatcher';
 import { FindReplaceAction } from './actions';
+import keymapPlugin from './keymap';
 import { EditorPlugin } from 'src/types';
 
 export interface FindReplaceState {
@@ -35,6 +36,10 @@ const findReplacePluginStateFactory = pluginFactory<
   FindReplaceInitialState
 >(findReplacePluginKey, reducer);
 
+export const {
+  createCommand: createFindReplaceCommand,
+} = findReplacePluginStateFactory;
+
 export const createPlugin = (dispatch: Dispatch) =>
   new Plugin({
     state: findReplacePluginStateFactory.createPluginState(
@@ -49,6 +54,10 @@ export const findReplacePlugin = (): EditorPlugin => ({
   pmPlugins() {
     return [
       { name: 'findReplace', plugin: ({ dispatch }) => createPlugin(dispatch) },
+      {
+        name: 'findReplaceKeymap',
+        plugin: () => keymapPlugin(),
+      },
     ];
   },
 });
