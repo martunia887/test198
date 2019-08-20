@@ -1,14 +1,12 @@
 import React, { ReactNode, Component } from 'react';
-import withAnalyticsEvents, {
-  WithAnalyticsEventsProps,
-} from './withAnalyticsEvents';
-import AnalyticsContext from './AnalyticsContext';
+import { withAnalyticsEvents } from './next/withAnalyticsEvents';
+import { AnalyticsContextProvider as AnalyticsContext } from './next/AnalyticsContextProvider';
 
 type AnalyticsErrorBoundaryErrorInfo = {
   componentStack: string;
 };
 
-export interface AnalyticsErrorBoundaryProps extends WithAnalyticsEventsProps {
+export interface AnalyticsErrorBoundaryProps {
   /** React component to be wrapped */
   children: ReactNode;
   channel: string;

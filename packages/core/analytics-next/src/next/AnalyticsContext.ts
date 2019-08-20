@@ -1,0 +1,6 @@
+import React from 'react';
+
+export const AnalyticsContext = React.createContext({
+  getAtlaskitAnalyticsContext: () => [],
+  getAtlaskitAnalyticsEventHandlers: () => [],
+});
