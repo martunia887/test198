@@ -3,12 +3,13 @@ import { findDOMNode } from 'react-dom';
 import { PureComponent, ReactInstance } from 'react';
 import { MentionUserType as UserType } from '@atlaskit/adf-schema';
 import { MentionProvider, ResourcedMention } from '@atlaskit/mention';
-
-import { ProfilecardProvider } from './types';
+import {
+  MentionEventHandler,
+  Popup,
+  withOuterListeners,
+} from '@atlaskit/editor-common';
 import ProfileCard, { ProfileCardAction } from '@atlaskit/profilecard';
-import { MentionEventHandler } from '../EventHandlers';
-import Popup from '../Popup';
-import withOuterListeners from '../with-outer-listeners';
+import { ProfilecardProvider } from './types';
 
 const ProfilecardResourcedWithListeners = withOuterListeners(ProfileCard);
 

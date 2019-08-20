@@ -3,8 +3,8 @@ import { PureComponent } from 'react';
 import { MentionProvider } from '@atlaskit/mention/resource';
 import { ResourcedMention } from '@atlaskit/mention/element';
 import { MentionUserType as UserType } from '@atlaskit/adf-schema';
+import { MentionEventHandlers } from '@atlaskit/editor-common';
 
-import { MentionEventHandlers } from '../EventHandlers';
 import ResourcedMentionWithProfilecard from './mention-with-profilecard';
 import { ProfilecardProvider } from './types';
 

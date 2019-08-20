@@ -20,7 +20,6 @@ export {
   snapToGrid,
 } from './MediaSingle/grid';
 
-export { default as Mention } from './Mention';
 export {
   default as Popup,
   findOverflowScrollParent,

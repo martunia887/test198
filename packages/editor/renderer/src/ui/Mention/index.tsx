@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { MentionUserType as UserType } from '@atlaskit/adf-schema';
+import {
+  ProviderFactory,
+  WithProviders,
+  MentionEventHandlers,
+} from '@atlaskit/editor-common';
 import { PureComponent } from 'react';
 import MentionWithProviders from './mention-with-providers';
-
-import { MentionEventHandlers } from '../EventHandlers';
 import { ProfilecardProvider } from './types';
-import {
-  default as ProviderFactory,
-  WithProviders,
-} from '../../providerFactory';
 
 export interface MentionProps {
   id: string;
