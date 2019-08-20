@@ -2,9 +2,9 @@ import * as React from 'react';
 import { createPlugin, findReplacePluginKey } from './plugin';
 import keymapPlugin from './keymap';
 import { EditorPlugin } from '../../types';
-import FindReplace from './ui/FindReplace';
 import WithPluginState from '../../ui/WithPluginState';
 import { cancelSearch, find } from './commands';
+import FindReplaceToolbarButton from './ui/FindReplaceToolbarButton';
 
 // todo: any options needed?
 export const findReplacePlugin = (): EditorPlugin => ({
@@ -40,7 +40,7 @@ export const findReplacePlugin = (): EditorPlugin => ({
         }}
         render={({ findReplaceState }): any => {
           return (
-            <FindReplace
+            <FindReplaceToolbarButton
               findReplaceState={findReplaceState}
               popupsBoundariesElement={popupsBoundariesElement}
               popupsMountPoint={popupsMountPoint}
