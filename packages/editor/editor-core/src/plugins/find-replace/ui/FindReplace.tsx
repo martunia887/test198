@@ -1,122 +1,17 @@
 import * as React from 'react';
 import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl';
 import styled from 'styled-components';
-import EditorSearchIcon from '@atlaskit/icon/glyph/editor/search';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 import Textfield from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
-import { FindReplaceState } from '../plugin';
-import ToolbarButton from '../../../ui/ToolbarButton';
-import Dropdown from '../../../ui/Dropdown';
-
-const ToolbarButtonWrapper = styled.div`
-  display: flex;
-  flex: 1 1 auto;
-  justify-content: flex-end;
-  padding: 0 8px;
-`;
 
 const Wrapper = styled.div`
-  padding: 0 4px;
   display: flex;
   flex-direction: column;
 `;
 
-type Props = {
-  findReplaceState: FindReplaceState;
-  onCancel: () => void;
-  onFind: (keyword?: string) => void;
-  popupsMountPoint?: HTMLElement;
-  popupsBoundariesElement?: HTMLElement;
-  popupsScrollableElement?: HTMLElement;
-  isReducedSpacing?: boolean;
-};
-
-type State = {};
-
-class FindReplace extends React.Component<Props, State> {
-  private toggleOpen = () => {
-    if (this.props.findReplaceState.active) {
-      this.cancel();
-    } else {
-      this.find();
-    }
-  };
-
-  private handleFindChange = (
-    event: React.SyntheticEvent<HTMLInputElement>,
-  ) => {
-    this.find(event.target.value);
-  };
-  private handleReplaceChange = (
-    event: React.SyntheticEvent<HTMLInputElement>,
-  ) => {};
-
-  private cancel = () => {
-    this.props.onCancel();
-  };
-
-  private find = (keyword?: string) => {
-    this.props.onFind(keyword);
-  };
-
-  render() {
-    // todo: get these from i18n
-    const title = 'Find & Replace';
-
-    const {
-      popupsMountPoint,
-      popupsBoundariesElement,
-      popupsScrollableElement,
-      isReducedSpacing,
-      findReplaceState,
-    } = this.props;
-    const { searchWord, replaceWord, active } = findReplaceState;
-
-    return (
-      <ToolbarButtonWrapper>
-        <Dropdown
-          mountTo={popupsMountPoint}
-          boundariesElement={popupsBoundariesElement}
-          scrollableElement={popupsScrollableElement}
-          isOpen={active}
-          handleEscapeKeydown={this.cancel}
-          fitWidth={352}
-          trigger={
-            <ToolbarButton
-              spacing={isReducedSpacing ? 'none' : 'default'}
-              selected={active}
-              title={title}
-              iconBefore={<EditorSearchIcon label={title} />}
-              onClick={this.toggleOpen}
-            />
-          }
-        >
-          <Wrapper>
-            <FindReplaceContent
-              searchWord={searchWord}
-              replaceWord={replaceWord}
-              onFindChange={this.handleFindChange}
-              onReplaceChange={this.handleReplaceChange}
-            />
-          </Wrapper>
-        </Dropdown>
-      </ToolbarButtonWrapper>
-    );
-  }
-}
-
-interface ContentState {
-  state: 'empty' | 'find' | 'replace';
-}
-
-const DoubleContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const ContentWrapper = styled.div`
+const SectionWrapper = styled.div`
   display: flex;
   align-items: center;
 
@@ -131,11 +26,10 @@ const Count = styled.span`
   flex: 0 0 auto;
 `;
 
-// todo: .ProseMirror hr styles - use these here?
 const Rule = styled.hr`
   width: calc(100% - 16px);
   border: none;
-  background-color: rgba(9, 30, 66, 0.08);
+  background-color: ${colors.N30A};
   margin: 4px;
   height: 1px;
   border-radius: 1px;
@@ -145,131 +39,141 @@ const FindReplaceButton = styled(Button)`
   flex: 0 0 auto;
 `;
 
-interface ContentProps {
+export interface FindReplaceProps {
   searchWord?: string;
   replaceWord?: string;
-  onFindChange: (event: React.SyntheticEvent<HTMLInputElement>) => void;
-  onReplaceChange: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+  onFindChange: (searchWord?: string) => void;
+  onReplace: (replaceWith?: string) => void;
+  onReplaceAll: (replaceWith?: string) => void;
 }
 
-class FindReplaceContent extends React.Component<ContentProps, ContentState> {
-  state: ContentState = {
-    state: 'empty',
+export interface FindReplaceState {
+  componentState: 'empty' | 'find' | 'replace';
+}
+
+class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
+  state: FindReplaceState = {
+    componentState: 'empty',
   };
 
-  // todo: detect initial state properly
-
-  componentWillReceiveProps(newProps: ContentProps) {
-    if (newProps.searchWord) {
-      this.setState({ state: 'find' });
+  constructor(props: FindReplaceProps) {
+    super(props);
+    if (props.searchWord) {
+      this.state = {
+        componentState: 'find',
+      };
     }
   }
 
+  componentWillReceiveProps(newProps: FindReplaceProps) {
+    if (newProps.searchWord && this.state.componentState === 'empty') {
+      this.setState({ componentState: 'find' });
+    } else if (!newProps.searchWord) {
+      this.setState({ componentState: 'empty' });
+    }
+  }
+
+  clearSearch = () => {
+    this.props.onFindChange();
+  };
+
+  handleFindChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.onFindChange(event.target.value);
+  };
+
   handleReplaceClick = () => {
-    this.setState({ state: 'replace' });
+    this.setState({ componentState: 'replace' });
+    this.props.onReplace();
   };
 
   handleReplaceAllClick = () => {
-    // todo: something
+    this.props.onReplaceAll();
   };
 
-  render() {
+  renderFindSection = (
+    match?: { idx: number; total: number },
+    showReplaceBtn?: boolean,
+  ) => {
     // todo: get these from i18n
     const find = 'Find in document';
-    const replace = 'Replace';
-    const replaceAll = 'Replace all';
-    const replaceWith = 'Replace with';
     const clear = 'Clear search';
+    const replace = 'Replace';
 
-    const {
-      searchWord,
-      replaceWord,
-      onFindChange,
-      onReplaceChange,
-    } = this.props;
-    const { state } = this.state;
-    // todo: count for real
-    // todo: clear functionality
+    const { searchWord } = this.props;
 
-    if (state === 'empty') {
-      return (
-        <ContentWrapper>
-          <Textfield
-            name="find"
-            appearance="none"
-            placeholder={find}
-            defaultValue={searchWord}
-            autoFocus
-            autoComplete="off"
-            onChange={onFindChange}
-          />
-          <FindReplaceButton
-            appearance="subtle"
-            iconBefore={<EditorCloseIcon label={clear} />}
-            spacing="none"
-          />
-        </ContentWrapper>
-      );
-    }
-    if (state === 'find') {
-      return (
-        <ContentWrapper>
-          <Textfield
-            name="find"
-            appearance="none"
-            placeholder={find}
-            defaultValue={searchWord}
-            autoFocus
-            autoComplete="off"
-            onChange={onFindChange}
-          />
-          <Count>1 of 4</Count>
+    return (
+      <SectionWrapper>
+        <Textfield
+          name="find"
+          appearance="none"
+          placeholder={find}
+          value={searchWord}
+          autoFocus
+          autoComplete="off"
+          onChange={this.handleFindChange}
+        />
+        {match && (
+          <Count>
+            {match.idx} of {match.total}
+          </Count>
+        )}
+        {showReplaceBtn && (
           <FindReplaceButton onClick={this.handleReplaceClick}>
             {replace}
           </FindReplaceButton>
-          <FindReplaceButton
-            appearance="subtle"
-            spacing="none"
-            iconBefore={<EditorCloseIcon label={clear} />}
-          />
-        </ContentWrapper>
-      );
+        )}
+        <FindReplaceButton
+          appearance="subtle"
+          iconBefore={<EditorCloseIcon label={clear} />}
+          spacing="none"
+          onClick={this.clearSearch}
+        />
+      </SectionWrapper>
+    );
+  };
+
+  renderReplaceSection = () => {
+    // todo: get these from i18n
+    const replaceAll = 'Replace all';
+    const replaceWith = 'Replace with';
+
+    const { replaceWord } = this.props;
+
+    return (
+      <SectionWrapper>
+        <Textfield
+          name="replace"
+          appearance="none"
+          placeholder={replaceWith}
+          defaultValue={replaceWord}
+          autoComplete="off"
+        />
+        <FindReplaceButton onClick={this.handleReplaceAllClick}>
+          {replaceAll}
+        </FindReplaceButton>
+      </SectionWrapper>
+    );
+  };
+
+  render() {
+    const { componentState: state } = this.state;
+
+    // todo: count for real
+    // todo: align to right as per design
+
+    if (state === 'empty') {
+      return this.renderFindSection();
+    }
+    if (state === 'find') {
+      return this.renderFindSection({ idx: 1, total: 4 }, true);
     }
     if (state === 'replace') {
       return (
-        <DoubleContentWrapper>
-          <ContentWrapper>
-            <Textfield
-              name="find"
-              appearance="none"
-              placeholder={find}
-              defaultValue={searchWord}
-              autoFocus
-              autoComplete="off"
-              onChange={onFindChange}
-            />
-            <Count>1 of 4</Count>
-            <FindReplaceButton
-              appearance="subtle"
-              spacing="none"
-              iconBefore={<EditorCloseIcon label={clear} />}
-            />
-          </ContentWrapper>
+        <Wrapper>
+          {this.renderFindSection({ idx: 1, total: 4 })}
           <Rule />
-          <ContentWrapper>
-            <Textfield
-              name="replace"
-              appearance="none"
-              placeholder={replaceWith}
-              defaultValue={replaceWord}
-              autoComplete="off"
-              onChange={onReplaceChange}
-            />
-            <FindReplaceButton onClick={this.handleReplaceAllClick}>
-              {replaceAll}
-            </FindReplaceButton>
-          </ContentWrapper>
-        </DoubleContentWrapper>
+          {this.renderReplaceSection()}
+        </Wrapper>
       );
     }
 
