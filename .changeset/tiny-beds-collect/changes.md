@@ -1,0 +1,1 @@
+Bumping memoize-one to latest version
