@@ -1,6 +1,7 @@
 import { EditorState, TextSelection } from 'prosemirror-state';
 import { createFindReplaceCommand } from './plugin';
 import { FindReplaceActionTypes } from './actions';
+import { Match } from './types';
 
 export const find = (keyword?: string) =>
   createFindReplaceCommand((state: EditorState) => {
@@ -10,16 +11,19 @@ export const find = (keyword?: string) =>
       keyword = getSelectedText(selection);
     }
 
-    if (keyword) {
-      // if user has selected text, set that as the keyword
+    if (!keyword) {
       return {
-        type: FindReplaceActionTypes.FIND,
-        searchWord: keyword,
+        type: FindReplaceActionTypes.ACTIVATE,
       };
     }
 
+    const matches = findMatches(state, keyword);
+
+    // if user has selected text, set that as the keyword
     return {
-      type: FindReplaceActionTypes.ACTIVATE,
+      type: FindReplaceActionTypes.FIND,
+      searchWord: keyword,
+      matches,
     };
   });
 
@@ -48,3 +52,23 @@ const getSelectedText = (selection: TextSelection): string => {
   }
   return text;
 };
+
+function findMatches(state: EditorState, searchText: string): Match[] {
+  let matches: Match[] = [];
+  const searchTextLength = searchText.length;
+  state.doc.descendants((node, pos) => {
+    // Optimisation get string representation of top-level nodes and only recurse if match
+    if (node.type === state.schema.nodes.text) {
+      let index = node.textContent.indexOf(searchText);
+
+      while (index !== -1) {
+        // Find the next substring from the end of the first, so that they don't overlap
+        const end = index + searchTextLength;
+        // Add the substring index to the position of the node
+        matches.push({ start: pos + index, end: pos + end });
+        index = node.textContent.indexOf(searchText, end);
+      }
+    }
+  });
+  return matches;
+}

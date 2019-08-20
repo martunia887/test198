@@ -5,12 +5,15 @@ import { pluginFactory } from '../../utils/plugin-state-factory';
 import reducer from './reducer';
 import { Dispatch } from '../../event-dispatcher';
 import { FindReplaceAction } from './actions';
+import { Match } from './types';
 
 export interface FindReplaceState {
+  /** Whether find/replace is active, i.e. displayed */
   active: boolean;
   searchWord: string;
   replaceWord: string;
   index: number;
+  matches: Match[];
 }
 
 export interface FindReplaceInitialState {
@@ -18,6 +21,7 @@ export interface FindReplaceInitialState {
   searchWord: '';
   replaceWord: '';
   index: 0;
+  matches: [];
 }
 
 export const findReplacePluginKey = new PluginKey('findReplace');
@@ -27,6 +31,7 @@ export const getInitialState = (): FindReplaceInitialState => ({
   searchWord: '',
   replaceWord: '',
   index: 0,
+  matches: [],
 });
 
 // todo: will we need to remap positions?
@@ -49,12 +54,14 @@ export const createPlugin = (dispatch: Dispatch) =>
         if (pluginState.active && pluginState.searchWord) {
           // search document text for matches
           // todo: how to make this as performant as possible?
-
-          return DecorationSet.create(state.doc, [
-            Decoration.inline(state.selection.from, state.selection.to, {
-              style: `background-color: ${colors.P75};`,
-            }),
-          ]);
+          return DecorationSet.create(
+            state.doc,
+            pluginState.matches.map(({ start, end }) =>
+              Decoration.inline(start, end, {
+                style: `background-color: ${colors.P75};`,
+              }),
+            ),
+          );
         }
       },
     },

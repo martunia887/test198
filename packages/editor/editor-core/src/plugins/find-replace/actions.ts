@@ -1,3 +1,5 @@
+import { Match } from './types';
+
 export enum FindReplaceActionTypes {
   ACTIVATE = 'ACTIVATE',
   FIND = 'FIND',
@@ -13,6 +15,7 @@ export interface Activate {
 export interface Find {
   type: FindReplaceActionTypes.FIND;
   searchWord: string;
+  matches: Match[];
 }
 
 export interface Replace {
