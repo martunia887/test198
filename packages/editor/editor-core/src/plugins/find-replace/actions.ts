@@ -18,6 +18,7 @@ export interface Find {
   type: FindReplaceActionTypes.FIND;
   findText: string;
   matches: Match[];
+  index: number;
 }
 
 export interface FindNext {

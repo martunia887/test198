@@ -1,4 +1,4 @@
-import { PluginKey, Plugin } from 'prosemirror-state';
+import { PluginKey, Plugin, TextSelection } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { colors } from '@atlaskit/theme';
 import { pluginFactory } from '../../utils/plugin-state-factory';
@@ -10,9 +10,13 @@ import { Match } from './types';
 export interface FindReplaceState {
   /** Whether find/replace is active, i.e. displayed */
   active: boolean;
+  /** Search keyword */
   findText: string;
+  /** Text to replace with */
   replaceWord: string;
+  /** Index of selected word in array of matches, this gets updated as user finds next/prev */
   index: number;
+  /** Positions of find results */
   matches: Match[];
 }
 
@@ -34,7 +38,6 @@ export const getInitialState = (): FindReplaceInitialState => ({
   matches: [],
 });
 
-// todo: will we need to remap positions?
 export const {
   createCommand: createFindReplaceCommand,
   getPluginState: getFindReplacePluginState,
@@ -52,17 +55,33 @@ export const createPlugin = (dispatch: Dispatch) =>
       decorations(state) {
         const pluginState = getFindReplacePluginState(state);
         if (pluginState.active && pluginState.findText) {
-          // search document text for matches
-          // todo: how to make this as performant as possible?
+          const selectedIndex = pluginState.index;
           return DecorationSet.create(
             state.doc,
-            pluginState.matches.map(({ start, end }) =>
+            pluginState.matches.map(({ start, end }, index) =>
               Decoration.inline(start, end, {
-                style: `background-color: ${colors.P75};`,
+                style: `background-color: ${
+                  index === selectedIndex ? colors.P100 : colors.P75
+                };`,
               }),
             ),
           );
         }
       },
+    },
+    appendTransaction(transactions, oldState, newState) {
+      // todo: is this really the best performance wise?
+      const pluginState = getFindReplacePluginState(newState);
+      if (pluginState.matches) {
+        const oldPluginState = getFindReplacePluginState(oldState);
+        if (pluginState.index !== oldPluginState.index) {
+          const selected = pluginState.matches[pluginState.index];
+          if (selected) {
+            return newState.tr.setSelection(
+              TextSelection.create(newState.doc, selected.start, selected.end),
+            );
+          }
+        }
+      }
     },
   });
