@@ -239,6 +239,7 @@ export class ExampleEditorComponent extends React.Component<
                   component: ExampleInlineCommentComponent,
                 }}
                 allowStatus={true}
+                allowFindReplace={true}
                 allowNestedTasks
                 {...providers}
                 media={{

@@ -369,7 +369,9 @@ export default function createPluginsList(
     plugins.push(scrollIntoViewPlugin());
   }
 
-  plugins.push(findReplacePlugin());
+  if (props.allowFindReplace) {
+    plugins.push(findReplacePlugin());
+  }
 
   return plugins;
 }

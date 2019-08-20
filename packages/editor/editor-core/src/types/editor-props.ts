@@ -177,6 +177,9 @@ export interface EditorProps {
    */
   autoScrollIntoView?: boolean;
 
+  // Enable find/replace functionality within the editor
+  allowFindReplace?: boolean;
+
   // Set to enable the quick insert menu i.e. '/' key trigger.
   // You can also provide your own insert menu options that will be shown in addition to the enabled
   // editor features e.g. Confluence uses this to provide its macros.
