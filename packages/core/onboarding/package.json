@@ -27,7 +27,7 @@
     "@atlaskit/portal": "^3.0.7",
     "@atlaskit/theme": "^9.1.1",
     "@babel/runtime": "^7.0.0",
-    "memoize-one": "^3.0.1",
+    "memoize-one": "5.1.0-beta.4",
     "react-focus-lock": "^1.19.1",
     "react-node-resolver": "^1.0.1",
     "react-scrolllock": "^3.0.2",
