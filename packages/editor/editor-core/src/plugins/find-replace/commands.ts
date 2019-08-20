@@ -1,5 +1,5 @@
 import { EditorState, TextSelection } from 'prosemirror-state';
-import { createFindReplaceCommand } from './plugin';
+import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
 
@@ -7,6 +7,7 @@ export const find = (keyword?: string) =>
   createFindReplaceCommand((state: EditorState) => {
     const { selection } = state;
 
+    // if user has selected text, set that as the keyword
     if (selection instanceof TextSelection && !selection.empty) {
       // TODO: Handle this properly when we update selection on find next/prev
       keyword = getSelectedText(selection);
@@ -14,11 +15,15 @@ export const find = (keyword?: string) =>
 
     const matches = keyword ? findMatches(state, keyword) : [];
 
-    // if user has selected text, set that as the keyword
+    // todo: this is always 1, get selection pos or store
+    let selectionPos = selection.from;
+    const index = matches.findIndex(match => match.start > selectionPos) || 0;
+
     return {
       type: FindReplaceActionTypes.FIND,
       findText: keyword || '',
       matches,
+      index,
     };
   });
 

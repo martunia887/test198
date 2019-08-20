@@ -10,7 +10,7 @@ const reducer = (
       return {
         ...state,
         active: true,
-        index: 0, // todo: handle wrap around
+        index: action.index,
         matches: action.matches,
         findText: action.findText,
       };
