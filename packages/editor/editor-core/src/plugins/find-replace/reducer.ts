@@ -11,7 +11,7 @@ const reducer = (
       return {
         ...state,
         active: true,
-        searchWord: '',
+        // searchWord: '',
         index: 0,
       };
 
@@ -23,13 +23,16 @@ const reducer = (
           ...state,
           active: true,
           searchWord: action.searchWord,
+          // TODO: Should be the first result after selection
           index: 0,
+          matches: action.matches,
         };
       } else {
         return {
           ...state,
           active: true,
           index: state.index + 1, // todo: handle wrap around
+          matches: action.matches,
         };
       }
     }
