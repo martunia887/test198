@@ -7,18 +7,14 @@ import {
 } from '@atlaskit/media-client';
 import {
   withAnalyticsEvents,
-  createAndFireEvent,
-  WithAnalyticsEventProps,
-  AnalyticsContext,
+  UIAnalyticsEventInterface,
 } from '@atlaskit/analytics-next';
 
 import {
   SharedCardProps,
   CardStatus,
-  CardEvent,
   OnSelectChangeFuncResult,
   CardDimensionValue,
-  CardOnClickCallback,
 } from '../index';
 import { FileCard } from '../files';
 import { breakpointSize } from '../utils/breakpoint';
@@ -31,18 +27,20 @@ import { getCSSUnitValue } from '../utils/getCSSUnitValue';
 import { getElementDimension } from '../utils/getElementDimension';
 import { Wrapper } from './styled';
 
-import { FabricChannel } from '@atlaskit/analytics-listeners';
-import getAnalyticsContext from '../utils/analytics';
+import { createAndFireEventOnMedia } from '../utils/analytics';
 
-export interface CardViewOwnProps extends SharedCardProps {
+export interface CardViewProps extends SharedCardProps {
   readonly status: CardStatus;
   readonly mediaItemType?: MediaItemType;
   readonly metadata?: FileDetails;
   readonly resizeMode?: ImageResizeMode;
 
   readonly onRetry?: () => void;
-  readonly onClick?: CardOnClickCallback;
-  readonly onMouseEnter?: (result: CardEvent) => void;
+  readonly onClick?: (
+    event: React.MouseEvent<HTMLDivElement>,
+    analyticsEvent?: UIAnalyticsEventInterface,
+  ) => void;
+  readonly onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void;
   readonly onSelectChange?: (result: OnSelectChangeFuncResult) => void;
 
   // FileCardProps
@@ -56,26 +54,25 @@ export interface CardViewState {
   elementWidth?: number;
 }
 
-export type CardViewBaseProps = CardViewOwnProps &
-  WithAnalyticsEventProps & {
-    readonly mediaItemType: MediaItemType;
-  };
-
 /**
  * This is classic vanilla CardView class. To create an instance of class one would need to supply
  * `createAnalyticsEvent` prop to satisfy it's Analytics Events needs.
  */
 export class CardViewBase extends React.Component<
-  CardViewBaseProps,
+  CardViewProps,
   CardViewState
 > {
+  static defaultProps: Partial<CardViewProps> = {
+    appearance: 'auto',
+  };
+
   state: CardViewState = {};
 
   componentDidMount() {
     this.saveElementWidth();
   }
 
-  componentWillReceiveProps(nextProps: CardViewBaseProps) {
+  componentWillReceiveProps(nextProps: CardViewProps) {
     const { selected: currSelected } = this.props;
     const { selectable: nextSelectable, selected: nextSelected } = nextProps;
 
@@ -134,8 +131,13 @@ export class CardViewBase extends React.Component<
   }
 
   render() {
-    const { onClick, onMouseEnter } = this;
-    const { dimensions, appearance, mediaItemType } = this.props;
+    const {
+      dimensions,
+      appearance,
+      mediaItemType,
+      onClick,
+      onMouseEnter,
+    } = this.props;
     const shouldUsePointerCursor = mediaItemType === 'file';
     const wrapperDimensions = dimensions
       ? dimensions
@@ -192,58 +194,13 @@ export class CardViewBase extends React.Component<
       />
     );
   };
-
-  private onClick = (event: MouseEvent<HTMLDivElement>) => {
-    const { onClick, metadata: mediaItemDetails } = this.props;
-    if (onClick) {
-      onClick({ event, mediaItemDetails });
-    }
-  };
-
-  private onMouseEnter = (event: MouseEvent<HTMLDivElement>) => {
-    const { onMouseEnter, metadata: mediaItemDetails } = this.props;
-    if (onMouseEnter) {
-      onMouseEnter({ event, mediaItemDetails });
-    }
-  };
 }
 
-const createAndFireEventOnMedia = createAndFireEvent(FabricChannel.media);
-/**
- * With this CardView class constructor version `createAnalyticsEvent` props is supplied for you, so
- * when creating instance of that class you don't need to worry about it.
- */
-export const CardViewWithAnalyticsEvents = withAnalyticsEvents<
-  CardViewBaseProps
->({
-  onClick: createAndFireEventOnMedia({ action: 'clicked' }),
+export const CardView = withAnalyticsEvents<CardViewProps>({
+  onClick: createAndFireEventOnMedia({
+    eventType: 'ui',
+    action: 'clicked',
+    actionSubject: 'mediaCard',
+    actionSubjectId: 'mediaCardCardView',
+  }),
 })(CardViewBase);
-
-/**
- * This if final version of CardView that is exported to the consumer. This version wraps everything
- * with Analytics Context information so that all the Analytics Events created anywhere inside CardView
- * will have it automatically.
- */
-export class CardView extends React.Component<CardViewOwnProps, CardViewState> {
-  static defaultProps: Partial<CardViewOwnProps> = {
-    appearance: 'auto',
-  };
-
-  private get mediaItemType(): MediaItemType {
-    return 'file';
-  }
-
-  render() {
-    const { metadata } = this.props;
-    const mediaItemType = this.mediaItemType;
-
-    return (
-      <AnalyticsContext data={getAnalyticsContext(metadata)}>
-        <CardViewWithAnalyticsEvents
-          {...this.props}
-          mediaItemType={mediaItemType}
-        />
-      </AnalyticsContext>
-    );
-  }
-}

@@ -9,7 +9,11 @@ import {
   version as packageVersion,
   name as packageName,
 } from '../version.json';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
+import {
+  CreateUIAnalyticsEventSignature,
+  CreateAndFireEventFunction,
+  createAndFireEvent,
+} from '@atlaskit/analytics-next';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
 
 export interface MediaCardAnalyticsFileAttributes {
@@ -85,4 +89,11 @@ export function createAndFireMediaAnalyticsEvent(
     const event = createAnalyticsEvent(payload);
     event.fire(FabricChannel.media);
   }
+}
+
+export function createAndFireEventOnMedia(
+  basePayload: MediaCardAnalyticsPayoladBase,
+): ReturnType<CreateAndFireEventFunction> {
+  const payload = createPayload(basePayload);
+  return createAndFireEvent(FabricChannel.media)(payload);
 }

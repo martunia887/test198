@@ -19,11 +19,7 @@ import {
   mountWithIntlContext,
   expectToEqual,
 } from '@atlaskit/media-test-helpers';
-import {
-  CardView,
-  CardViewBase,
-  CardViewOwnProps,
-} from '../../../src/root/cardView';
+import { CardView, CardViewProps } from '../../../src/root/cardView';
 import { FileCard } from '../../../src/files';
 import { Wrapper } from '../../../src/root/styled';
 import { breakpointSize } from '../../../src/utils/breakpoint';
@@ -49,11 +45,11 @@ describe('CardView', () => {
   });
 
   const shallowCardViewBaseElement = (
-    props: Partial<CardViewOwnProps>,
+    props: Partial<CardViewProps>,
     renderOptions = {},
   ) =>
     shallow(
-      <CardViewBase
+      <CardView
         mediaItemType={'file'}
         createAnalyticsEvent={createAnalyticsEventMock}
         status="loading"

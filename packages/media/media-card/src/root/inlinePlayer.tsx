@@ -11,6 +11,11 @@ import { CustomMediaPlayer, InactivityDetector } from '@atlaskit/media-ui';
 import { InlinePlayerWrapper } from './styled';
 import { CardDimensions, defaultImageCardDimensions } from '..';
 import { CardLoading } from '../utils/lightCards/cardLoading';
+import {
+  withAnalyticsEvents,
+  UIAnalyticsEventInterface,
+} from '@atlaskit/analytics-next';
+import { createAndFireEventOnMedia } from '../utils/analytics';
 
 export interface InlinePlayerProps {
   identifier: FileIdentifier;
@@ -18,7 +23,10 @@ export interface InlinePlayerProps {
   dimensions: CardDimensions;
   selected?: boolean;
   onError?: (error: Error) => void;
-  onClick?: () => void;
+  onClick?: (
+    event: React.MouseEvent<HTMLDivElement>,
+    analyticsEvent?: UIAnalyticsEventInterface,
+  ) => void;
 }
 
 export interface InlinePlayerState {
@@ -44,7 +52,7 @@ export const getPreferredVideoArtifact = (
   return undefined;
 };
 
-export class InlinePlayer extends Component<
+export class InlinePlayerBase extends Component<
   InlinePlayerProps,
   InlinePlayerState
 > {
@@ -194,3 +202,12 @@ export class InlinePlayer extends Component<
     );
   }
 }
+
+export const InlinePlayer = withAnalyticsEvents<InlinePlayerProps>({
+  onClick: createAndFireEventOnMedia({
+    eventType: 'ui',
+    action: 'clicked',
+    actionSubject: 'mediaCard',
+    actionSubjectId: 'mediaCardInlinePlayer',
+  }),
+})(InlinePlayerBase);

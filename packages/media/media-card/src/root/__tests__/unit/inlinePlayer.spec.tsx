@@ -15,6 +15,7 @@ import {
   InlinePlayerProps,
   getPreferredVideoArtifact,
   InlinePlayerState,
+  InlinePlayerBase,
 } from '../../../root/inlinePlayer';
 import { CardLoading } from '../../../utils/lightCards/cardLoading';
 import { InlinePlayerWrapper } from '../../../root/styled';
@@ -66,6 +67,7 @@ describe('<InlinePlayer />', () => {
       <InlinePlayer
         mediaClient={mediaClient}
         identifier={identifier}
+        dimensions={{}}
         {...props}
       />,
     );
@@ -201,7 +203,7 @@ describe('<InlinePlayer />', () => {
     const { component, mediaClient } = setup();
 
     await update(component);
-    const instance = component.instance() as InlinePlayer;
+    const instance = component.instance() as InlinePlayerBase;
     instance.onDownloadClick();
     await nextTick();
     expect(mediaClient.file.downloadBinary).toBeCalledTimes(1);
