@@ -24,6 +24,8 @@ export interface FindReplaceToolbarButtonProps {
   findReplaceState: FindReplaceState;
   onCancel: () => void;
   onFind: (keyword?: string) => void;
+  onReplace: (replaceWith: string) => void;
+  onReplaceAll: (replaceWith: string) => void;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
@@ -48,10 +50,6 @@ class FindReplaceToolbarButton extends React.PureComponent<
   find = (keyword?: string) => {
     this.props.onFind(keyword);
   };
-
-  handleReplace = (replaceWith?: string) => {};
-
-  handleReplaceAll = (replaceWith?: string) => {};
 
   render() {
     // todo: get these from i18n
@@ -90,8 +88,8 @@ class FindReplaceToolbarButton extends React.PureComponent<
               searchWord={searchWord}
               replaceWord={replaceWord}
               onFindChange={this.find}
-              onReplace={this.handleReplace}
-              onReplaceAll={this.handleReplaceAll}
+              onReplace={this.props.onReplace}
+              onReplaceAll={this.props.onReplaceAll}
             />
           </Wrapper>
         </Dropdown>

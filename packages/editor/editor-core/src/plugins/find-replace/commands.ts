@@ -23,6 +23,18 @@ export const find = (keyword?: string) =>
     };
   });
 
+export const replace = (replaceWith: string) =>
+  createFindReplaceCommand({
+    type: FindReplaceActionTypes.REPLACE,
+    replaceWord: replaceWith,
+  });
+
+export const replaceAll = (replaceWith: string) =>
+  createFindReplaceCommand({
+    type: FindReplaceActionTypes.REPLACE_ALL,
+    replaceWord: replaceWith,
+  });
+
 export const cancelSearch = () =>
   createFindReplaceCommand({
     type: FindReplaceActionTypes.CANCEL,

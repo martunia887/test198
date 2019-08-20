@@ -322,7 +322,9 @@ export default function createPluginsList(
     plugins.push(quickInsertPlugin());
   }
 
-  plugins.push(findReplacePlugin());
+  if (props.allowFindReplace) {
+    plugins.push(findReplacePlugin());
+  }
 
   return plugins;
 }

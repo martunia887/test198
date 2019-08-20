@@ -216,6 +216,7 @@ class ExampleEditorComponent extends React.Component<
                 component: ExampleInlineCommentComponent,
               }}
               allowStatus={true}
+              allowFindReplace={true}
               {...providers}
               media={{
                 provider: mediaProvider,

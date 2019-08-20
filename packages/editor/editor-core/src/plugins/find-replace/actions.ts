@@ -2,6 +2,7 @@ export enum FindReplaceActionTypes {
   ACTIVATE = 'ACTIVATE',
   FIND = 'FIND',
   REPLACE = 'REPLACE',
+  REPLACE_ALL = 'REPLACE_ALL',
   CANCEL = 'CANCEL',
 }
 
@@ -16,7 +17,11 @@ export interface Find {
 
 export interface Replace {
   type: FindReplaceActionTypes.REPLACE;
-  searchWord: string;
+  replaceWord: string;
+}
+
+export interface ReplaceAll {
+  type: FindReplaceActionTypes.REPLACE_ALL;
   replaceWord: string;
 }
 
@@ -24,4 +29,4 @@ export interface Cancel {
   type: FindReplaceActionTypes.CANCEL;
 }
 
-export type FindReplaceAction = Activate | Find | Replace | Cancel;
+export type FindReplaceAction = Activate | Find | Replace | ReplaceAll | Cancel;

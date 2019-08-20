@@ -29,18 +29,19 @@ const reducer = (
         return {
           ...state,
           active: true,
-          searchWord: '',
           index: state.index + 1, // todo: handle wrap around
         };
       }
     }
 
     case FindReplaceActionTypes.REPLACE:
+    case FindReplaceActionTypes.REPLACE_ALL:
+      // todo: both of these properly
+      // handle jumping to next selection for single replace
+      // update count/index for both
       return {
         ...state,
         replaceWord: action.replaceWord,
-        // jump to next occurence
-        index: state.index + 1, // todo: handle wrap around & no more words left
       };
 
     case FindReplaceActionTypes.CANCEL:
