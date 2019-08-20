@@ -7,22 +7,17 @@ export const find = (keyword?: string) =>
   createFindReplaceCommand((state: EditorState) => {
     const { selection } = state;
 
-    if (!keyword && selection instanceof TextSelection && !selection.empty) {
+    if (selection instanceof TextSelection && !selection.empty) {
+      // TODO: Handle this properly when we update selection on find next/prev
       keyword = getSelectedText(selection);
     }
 
-    if (!keyword) {
-      return {
-        type: FindReplaceActionTypes.ACTIVATE,
-      };
-    }
-
-    const matches = findMatches(state, keyword);
+    const matches = keyword ? findMatches(state, keyword) : [];
 
     // if user has selected text, set that as the keyword
     return {
       type: FindReplaceActionTypes.FIND,
-      searchWord: keyword,
+      findText: keyword || '',
       matches,
     };
   });

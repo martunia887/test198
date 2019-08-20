@@ -10,7 +10,7 @@ import { Match } from './types';
 export interface FindReplaceState {
   /** Whether find/replace is active, i.e. displayed */
   active: boolean;
-  searchWord: string;
+  findText: string;
   replaceWord: string;
   index: number;
   matches: Match[];
@@ -18,7 +18,7 @@ export interface FindReplaceState {
 
 export interface FindReplaceInitialState {
   active: false;
-  searchWord: '';
+  findText: '';
   replaceWord: '';
   index: 0;
   matches: [];
@@ -28,7 +28,7 @@ export const findReplacePluginKey = new PluginKey('findReplace');
 
 export const getInitialState = (): FindReplaceInitialState => ({
   active: false,
-  searchWord: '',
+  findText: '',
   replaceWord: '',
   index: 0,
   matches: [],
@@ -51,7 +51,7 @@ export const createPlugin = (dispatch: Dispatch) =>
     props: {
       decorations(state) {
         const pluginState = getFindReplacePluginState(state);
-        if (pluginState.active && pluginState.searchWord) {
+        if (pluginState.active && pluginState.findText) {
           // search document text for matches
           // todo: how to make this as performant as possible?
           return DecorationSet.create(
