@@ -309,7 +309,6 @@
     "@types/lodash.sample": "^4.2.4",
     "@types/lodash.some": "^4.6.6",
     "@types/markdown-it": "^0.0.7",
-    "@types/memoize-one": "^3.0.1",
     "@types/meow": "^5.0.0",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^11.11.7",
