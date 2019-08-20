@@ -42,6 +42,7 @@ const FindReplaceButton = styled(Button)`
 export interface FindReplaceProps {
   findText?: string;
   replaceWord?: string;
+  count: { index: number; total: number };
   onFindChange: (findText?: string) => void;
   onFindNext: () => void;
   onFindPrev: () => void;
@@ -111,13 +112,14 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
   };
 
   renderFindSection = (
-    match?: { idx: number; total: number },
+    match?: { index: number; total: number },
     showReplaceBtn?: boolean,
   ) => {
     // todo: get these from i18n
     const find = 'Find in document';
     const clear = 'Clear search';
     const replace = 'Replace';
+    const noResultsFound = 'No results found';
 
     const { findText } = this.props;
 
@@ -135,7 +137,9 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
         />
         {match && (
           <Count>
-            {match.idx} of {match.total}
+            {match.total === 0
+              ? noResultsFound
+              : `${match.index + 1} of ${match.total}`}
           </Count>
         )}
         {showReplaceBtn && (
@@ -180,20 +184,20 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
 
   render() {
     const { componentState: state } = this.state;
+    const { count } = this.props;
 
-    // todo: count for real
     // todo: align to right as per design
 
     if (state === 'empty') {
       return this.renderFindSection();
     }
     if (state === 'find') {
-      return this.renderFindSection({ idx: 1, total: 4 }, true);
+      return this.renderFindSection(count, true);
     }
     if (state === 'replace') {
       return (
         <Wrapper>
-          {this.renderFindSection({ idx: 1, total: 4 })}
+          {this.renderFindSection(count)}
           <Rule />
           {this.renderReplaceSection()}
         </Wrapper>
