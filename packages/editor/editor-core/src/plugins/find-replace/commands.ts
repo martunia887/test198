@@ -3,9 +3,10 @@ import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
 
-export const find = (keyword?: string) =>
+export const find = (keyword?: string, findFromPos?: number) =>
   createFindReplaceCommand((state: EditorState) => {
     const { selection } = state;
+    const pluginState = getFindReplacePluginState(state);
 
     // if user has selected text, set that as the keyword
     if (selection instanceof TextSelection && !selection.empty) {
@@ -15,9 +16,13 @@ export const find = (keyword?: string) =>
 
     const matches = keyword ? findMatches(state, keyword) : [];
 
-    // todo: this is always 1, get selection pos or store
-    let selectionPos = selection.from;
-    const index = matches.findIndex(match => match.start > selectionPos) || 0;
+    let { index } = pluginState;
+    if (findFromPos !== undefined) {
+      index = Math.max(
+        matches.findIndex(match => match.start >= findFromPos),
+        0,
+      );
+    }
 
     return {
       type: FindReplaceActionTypes.FIND,
