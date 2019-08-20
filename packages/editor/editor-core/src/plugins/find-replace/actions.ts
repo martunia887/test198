@@ -3,6 +3,8 @@ import { Match } from './types';
 export enum FindReplaceActionTypes {
   ACTIVATE = 'ACTIVATE',
   FIND = 'FIND',
+  FIND_NEXT = 'FIND_NEXT',
+  FIND_PREV = 'FIND_PREV',
   REPLACE = 'REPLACE',
   REPLACE_ALL = 'REPLACE_ALL',
   CANCEL = 'CANCEL',
@@ -14,8 +16,16 @@ export interface Activate {
 
 export interface Find {
   type: FindReplaceActionTypes.FIND;
-  searchWord: string;
+  findText: string;
   matches: Match[];
+}
+
+export interface FindNext {
+  type: FindReplaceActionTypes.FIND_NEXT;
+}
+
+export interface FindPrev {
+  type: FindReplaceActionTypes.FIND_PREV;
 }
 
 export interface Replace {
@@ -32,4 +42,11 @@ export interface Cancel {
   type: FindReplaceActionTypes.CANCEL;
 }
 
-export type FindReplaceAction = Activate | Find | Replace | ReplaceAll | Cancel;
+export type FindReplaceAction =
+  | Activate
+  | Find
+  | FindNext
+  | FindPrev
+  | Replace
+  | ReplaceAll
+  | Cancel;

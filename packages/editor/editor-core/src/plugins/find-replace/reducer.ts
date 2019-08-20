@@ -6,35 +6,28 @@ const reducer = (
   action: FindReplaceAction,
 ): FindReplaceState => {
   switch (action.type) {
-    case FindReplaceActionTypes.ACTIVATE:
-      // todo: is it better to remember previous details or not?
+    case FindReplaceActionTypes.FIND: {
       return {
         ...state,
         active: true,
-        // searchWord: '',
-        index: 0,
+        index: 0, // todo: handle wrap around
+        matches: action.matches,
+        findText: action.findText,
       };
+    }
 
-    case FindReplaceActionTypes.FIND: {
-      const isNewWord =
-        action.searchWord && state.searchWord !== action.searchWord;
-      if (isNewWord) {
-        return {
-          ...state,
-          active: true,
-          searchWord: action.searchWord,
-          // TODO: Should be the first result after selection
-          index: 0,
-          matches: action.matches,
-        };
-      } else {
-        return {
-          ...state,
-          active: true,
-          index: state.index + 1, // todo: handle wrap around
-          matches: action.matches,
-        };
-      }
+    case FindReplaceActionTypes.FIND_NEXT: {
+      return {
+        ...state,
+        index: (state.index + 1) % state.matches.length,
+      };
+    }
+
+    case FindReplaceActionTypes.FIND_PREV: {
+      return {
+        ...state,
+        index: (state.index - 1 + state.matches.length) % state.matches.length,
+      };
     }
 
     case FindReplaceActionTypes.REPLACE:

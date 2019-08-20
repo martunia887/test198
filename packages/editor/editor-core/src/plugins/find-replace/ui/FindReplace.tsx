@@ -40,9 +40,9 @@ const FindReplaceButton = styled(Button)`
 `;
 
 export interface FindReplaceProps {
-  searchWord?: string;
+  findText?: string;
   replaceWord?: string;
-  onFindChange: (searchWord?: string) => void;
+  onFindChange: (findText?: string) => void;
   onReplace: (replaceWith: string) => void;
   onReplaceAll: (replaceWith: string) => void;
 }
@@ -59,15 +59,15 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
     super(props);
 
     this.state = {
-      componentState: props.searchWord ? 'find' : 'empty',
+      componentState: props.findText ? 'find' : 'empty',
       replaceWord: props.replaceWord || '',
     };
   }
 
   componentWillReceiveProps(newProps: FindReplaceProps) {
-    if (newProps.searchWord && this.state.componentState === 'empty') {
+    if (newProps.findText && this.state.componentState === 'empty') {
       this.setState({ componentState: 'find' });
-    } else if (!newProps.searchWord) {
+    } else if (!newProps.findText) {
       this.setState({ componentState: 'empty', replaceWord: '' });
     }
 
@@ -90,7 +90,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
 
   handleFindKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      this.props.onFindChange(this.props.searchWord);
+      this.props.onFindChange(this.props.findText);
     }
   };
 
@@ -117,7 +117,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
     const clear = 'Clear search';
     const replace = 'Replace';
 
-    const { searchWord } = this.props;
+    const { findText } = this.props;
 
     return (
       <SectionWrapper>
@@ -125,7 +125,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
           name="find"
           appearance="none"
           placeholder={find}
-          value={searchWord}
+          value={findText}
           autoFocus
           autoComplete="off"
           onChange={this.handleFindChange}
