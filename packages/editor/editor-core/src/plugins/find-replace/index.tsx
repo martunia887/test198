@@ -36,19 +36,19 @@ export const findReplacePlugin = (): EditorPlugin => ({
     const handleCancel = () => {
       cancelSearch()(state, dispatch);
     };
-    const handleFind = (keyword?: string) => {
-      find(keyword)(state, dispatch);
+    const handleFind = (keyword?: string, findFromPos?: number) => {
+      find(keyword, findFromPos)(state, dispatch);
     };
-    const handleFindNext = (keyword?: string) => {
+    const handleFindNext = () => {
       findNext()(state, dispatch);
     };
-    const handleFindPrev = (keyword?: string) => {
+    const handleFindPrev = () => {
       findPrev()(state, dispatch);
     };
-    const handleReplace = (replaceWith?: string) => {
+    const handleReplace = (replaceWith: string) => {
       replace(replaceWith)(state, dispatch);
     };
-    const handleReplaceAll = (replaceWith?: string) => {
+    const handleReplaceAll = (replaceWith: string) => {
       replaceAll(replaceWith)(state, dispatch);
     };
 
@@ -61,6 +61,7 @@ export const findReplacePlugin = (): EditorPlugin => ({
           return (
             <FindReplaceToolbarButton
               findReplaceState={findReplaceState}
+              editorView={editorView}
               popupsBoundariesElement={popupsBoundariesElement}
               popupsMountPoint={popupsMountPoint}
               popupsScrollableElement={popupsScrollableElement}
