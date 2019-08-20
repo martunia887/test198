@@ -3,7 +3,14 @@ import { createPlugin, findReplacePluginKey } from './plugin';
 import keymapPlugin from './keymap';
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
-import { cancelSearch, find, replace, replaceAll } from './commands';
+import {
+  cancelSearch,
+  find,
+  replace,
+  replaceAll,
+  findNext,
+  findPrev,
+} from './commands';
 import FindReplaceToolbarButton from './ui/FindReplaceToolbarButton';
 
 // todo: any options needed?
@@ -32,6 +39,12 @@ export const findReplacePlugin = (): EditorPlugin => ({
     const handleFind = (keyword?: string) => {
       find(keyword)(state, dispatch);
     };
+    const handleFindNext = (keyword?: string) => {
+      findNext()(state, dispatch);
+    };
+    const handleFindPrev = (keyword?: string) => {
+      findPrev()(state, dispatch);
+    };
     const handleReplace = (replaceWith?: string) => {
       replace(replaceWith)(state, dispatch);
     };
@@ -54,6 +67,8 @@ export const findReplacePlugin = (): EditorPlugin => ({
               isReducedSpacing={isToolbarReducedSpacing}
               onCancel={handleCancel}
               onFind={handleFind}
+              onFindNext={handleFindNext}
+              onFindPrev={handleFindPrev}
               onReplace={handleReplace}
               onReplaceAll={handleReplaceAll}
             />

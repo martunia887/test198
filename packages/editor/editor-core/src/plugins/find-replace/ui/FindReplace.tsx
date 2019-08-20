@@ -43,6 +43,8 @@ export interface FindReplaceProps {
   findText?: string;
   replaceWord?: string;
   onFindChange: (findText?: string) => void;
+  onFindNext: () => void;
+  onFindPrev: () => void;
   onReplace: (replaceWith: string) => void;
   onReplaceAll: (replaceWith: string) => void;
 }
@@ -90,7 +92,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
 
   handleFindKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      this.props.onFindChange(this.props.findText);
+      this.props.onFindNext();
     }
   };
 

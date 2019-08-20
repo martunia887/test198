@@ -22,6 +22,16 @@ export const find = (keyword?: string) =>
     };
   });
 
+export const findNext = () =>
+  createFindReplaceCommand({
+    type: FindReplaceActionTypes.FIND_NEXT,
+  });
+
+export const findPrev = () =>
+  createFindReplaceCommand({
+    type: FindReplaceActionTypes.FIND_PREV,
+  });
+
 export const replace = (replaceWith: string) =>
   createFindReplaceCommand({
     type: FindReplaceActionTypes.REPLACE,
