@@ -54,15 +54,19 @@ export type FindReplaceComponentState = 'empty' | 'find' | 'replace';
 export interface FindReplaceState {
   componentState: FindReplaceComponentState;
   replaceText: string;
+  findInputValue: string;
 }
 
 class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
+  private findTextfieldRef = React.createRef<HTMLInputElement>();
+
   constructor(props: FindReplaceProps) {
     super(props);
 
     this.state = {
       componentState: props.findText ? 'find' : 'empty',
       replaceText: props.replaceText || '',
+      findInputValue: props.findText || '',
     };
   }
 
@@ -71,6 +75,15 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
       this.setState({ componentState: 'find' });
     } else if (!newProps.findText) {
       this.setState({ componentState: 'empty', replaceText: '' });
+    }
+
+    // findText could have been updated from outside this component, for example
+    // if a user double clicks to highlight a word and then hits cmd+f
+    if (newProps.findText && newProps.findText !== this.state.findInputValue) {
+      this.setState({ findInputValue: newProps.findText });
+      if (this.findTextfieldRef.current) {
+        this.findTextfieldRef.current.value = newProps.findText;
+      }
     }
 
     if (newProps.replaceText) {
@@ -87,6 +100,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
   };
 
   handleFindChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ findInputValue: event.target.value });
     this.props.onFindChange(event.target.value);
   };
 
@@ -133,6 +147,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
           appearance="none"
           placeholder={find}
           defaultValue={findText}
+          ref={this.findTextfieldRef}
           autoFocus
           autoComplete="off"
           onChange={this.handleFindChange}
