@@ -6,8 +6,6 @@ import { FindReplaceState } from '../plugin';
 import ToolbarButton from '../../../ui/ToolbarButton';
 import Dropdown from '../../../ui/Dropdown';
 import FindReplace from './FindReplace';
-import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 
 const ToolbarButtonWrapper = styled.div`
   display: flex;
@@ -24,17 +22,16 @@ const Wrapper = styled.div`
 
 export interface FindReplaceToolbarButtonProps {
   findReplaceState: FindReplaceState;
-  editorView: EditorView;
+  popupsMountPoint?: HTMLElement;
+  popupsBoundariesElement?: HTMLElement;
+  popupsScrollableElement?: HTMLElement;
+  isReducedSpacing?: boolean;
   onCancel: () => void;
   onFind: (keyword?: string, findFromPos?: number) => void;
   onFindNext: () => void;
   onFindPrev: () => void;
   onReplace: (replaceWith: string) => void;
   onReplaceAll: (replaceWith: string) => void;
-  popupsMountPoint?: HTMLElement;
-  popupsBoundariesElement?: HTMLElement;
-  popupsScrollableElement?: HTMLElement;
-  isReducedSpacing?: boolean;
 }
 
 class FindReplaceToolbarButton extends React.PureComponent<
@@ -53,7 +50,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
   };
 
   find = (keyword?: string) => {
-    this.props.onFind(keyword, this.props.editorView.state.selection.from);
+    this.props.onFind(keyword);
   };
 
   render() {

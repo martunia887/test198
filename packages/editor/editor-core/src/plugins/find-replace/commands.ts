@@ -3,26 +3,27 @@ import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
 
-export const find = (keyword?: string, findFromPos?: number) =>
+export const find = (keyword?: string) =>
   createFindReplaceCommand((state: EditorState) => {
     const { selection } = state;
-    const pluginState = getFindReplacePluginState(state);
 
     // if user has selected text, set that as the keyword
-    if (selection instanceof TextSelection && !selection.empty) {
+    if (
+      keyword === undefined &&
+      selection instanceof TextSelection &&
+      !selection.empty
+    ) {
       // TODO: Handle this properly when we update selection on find next/prev
       keyword = getSelectedText(selection);
     }
 
     const matches = keyword ? findMatches(state, keyword) : [];
 
-    let { index } = pluginState;
-    if (findFromPos !== undefined) {
-      index = Math.max(
-        matches.findIndex(match => match.start >= findFromPos),
-        0,
-      );
-    }
+    const selectionPos = selection.from;
+    const index = Math.max(
+      matches.findIndex(match => match.start >= selectionPos),
+      0,
+    );
 
     return {
       type: FindReplaceActionTypes.FIND,
