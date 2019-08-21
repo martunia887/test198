@@ -41,7 +41,7 @@ const FindReplaceButton = styled(Button)`
 
 export interface FindReplaceProps {
   findText?: string;
-  replaceWord?: string;
+  replaceText?: string;
   count: { index: number; total: number };
   onFindChange: (findText?: string) => void;
   onFindNext: () => void;
@@ -54,7 +54,7 @@ export type FindReplaceComponentState = 'empty' | 'find' | 'replace';
 
 export interface FindReplaceState {
   componentState: FindReplaceComponentState;
-  replaceWord: string;
+  replaceText: string;
 }
 
 class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
@@ -63,7 +63,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
 
     this.state = {
       componentState: props.findText ? 'find' : 'empty',
-      replaceWord: props.replaceWord || '',
+      replaceText: props.replaceText || '',
     };
   }
 
@@ -71,11 +71,11 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
     if (newProps.findText && this.state.componentState === 'empty') {
       this.setState({ componentState: 'find' });
     } else if (!newProps.findText) {
-      this.setState({ componentState: 'empty', replaceWord: '' });
+      this.setState({ componentState: 'empty', replaceText: '' });
     }
 
-    if (newProps.replaceWord) {
-      this.setState({ replaceWord: newProps.replaceWord });
+    if (newProps.replaceText) {
+      this.setState({ replaceText: newProps.replaceText });
     }
   }
 
@@ -98,17 +98,17 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
   };
 
   handleReplaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ replaceWord: event.target.value });
+    this.setState({ replaceText: event.target.value });
   };
 
   handleReplaceKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      this.props.onReplace(this.state.replaceWord);
+      this.props.onReplace(this.state.replaceText);
     }
   };
 
   handleReplaceAllClick = () => {
-    this.props.onReplaceAll(this.state.replaceWord);
+    this.props.onReplaceAll(this.state.replaceText);
   };
 
   renderFindSection = (
@@ -162,7 +162,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
     const replaceAll = 'Replace all';
     const replaceWith = 'Replace with';
 
-    const { replaceWord } = this.state;
+    const { replaceText } = this.state;
 
     return (
       <SectionWrapper>
@@ -170,7 +170,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
           name="replace"
           appearance="none"
           placeholder={replaceWith}
-          defaultValue={replaceWord}
+          defaultValue={replaceText}
           autoComplete="off"
           onChange={this.handleReplaceChange}
           onKeyDown={this.handleReplaceKeyDown}

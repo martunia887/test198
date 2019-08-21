@@ -37,7 +37,7 @@ const reducer = (
       // update count/index for both
       return {
         ...state,
-        replaceWord: action.replaceWord,
+        replaceText: action.replaceText,
       };
 
     case FindReplaceActionTypes.CANCEL:

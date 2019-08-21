@@ -31,12 +31,12 @@ export interface FindPrev {
 
 export interface Replace {
   type: FindReplaceActionTypes.REPLACE;
-  replaceWord: string;
+  replaceText: string;
 }
 
 export interface ReplaceAll {
   type: FindReplaceActionTypes.REPLACE_ALL;
-  replaceWord: string;
+  replaceText: string;
 }
 
 export interface Cancel {
