@@ -13,7 +13,7 @@ export interface FindReplaceState {
   /** Search keyword */
   findText: string;
   /** Text to replace with */
-  replaceWord: string;
+  replaceText: string;
   /** Index of selected word in array of matches, this gets updated as user finds next/prev */
   index: number;
   /** Positions of find results */
@@ -23,7 +23,7 @@ export interface FindReplaceState {
 export interface FindReplaceInitialState {
   active: false;
   findText: '';
-  replaceWord: '';
+  replaceText: '';
   index: 0;
   matches: [];
 }
@@ -33,7 +33,7 @@ export const findReplacePluginKey = new PluginKey('findReplace');
 export const getInitialState = (): FindReplaceInitialState => ({
   active: false,
   findText: '',
-  replaceWord: '',
+  replaceText: '',
   index: 0,
   matches: [],
 });

@@ -64,7 +64,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
       isReducedSpacing,
       findReplaceState,
     } = this.props;
-    const { findText, replaceWord, active, index, matches } = findReplaceState;
+    const { findText, replaceText, active, index, matches } = findReplaceState;
 
     return (
       <ToolbarButtonWrapper>
@@ -88,7 +88,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
           <Wrapper>
             <FindReplace
               findText={findText}
-              replaceWord={replaceWord}
+              replaceText={replaceText}
               count={{ index, total: matches.length }}
               onFindChange={this.find}
               onFindNext={this.props.onFindNext}

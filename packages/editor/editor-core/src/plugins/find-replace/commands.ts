@@ -46,13 +46,13 @@ export const findPrev = () =>
 export const replace = (replaceWith: string) =>
   createFindReplaceCommand({
     type: FindReplaceActionTypes.REPLACE,
-    replaceWord: replaceWith,
+    replaceText: replaceWith,
   });
 
 export const replaceAll = (replaceWith: string) =>
   createFindReplaceCommand({
     type: FindReplaceActionTypes.REPLACE_ALL,
-    replaceWord: replaceWith,
+    replaceText: replaceWith,
   });
 
 export const cancelSearch = () =>
@@ -73,7 +73,7 @@ function findMatches(state: EditorState, searchText: string): Match[] {
   let matches: Match[] = [];
   const searchTextLength = searchText.length;
   state.doc.descendants((node, pos) => {
-    // Optimisation get string representation of top-level nodes and only recurse if match
+    // TODO: Optimisation get string representation of top-level nodes and only recurse if match
     if (node.type === state.schema.nodes.text) {
       let index = node.textContent.indexOf(searchText);
 
