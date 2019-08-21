@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createPlugin, findReplacePluginKey } from './plugin';
 import keymapPlugin from './keymap';
-import { EditorPlugin } from '../../types';
+import { EditorPlugin, Command } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
 import {
   cancelSearch,
@@ -32,24 +32,28 @@ export const findReplacePlugin = (): EditorPlugin => ({
     isToolbarReducedSpacing,
     editorView,
   }) {
-    const { state, dispatch } = editorView;
-    const handleCancel = () => {
-      cancelSearch()(state, dispatch);
+    const fireCommand = (cmd: Command) => {
+      const { state, dispatch } = editorView;
+      cmd(state, dispatch);
     };
-    const handleFind = (keyword?: string, findFromPos?: number) => {
-      find(keyword, findFromPos)(state, dispatch);
+
+    const handleCancel = () => {
+      fireCommand(cancelSearch());
+    };
+    const handleFind = (keyword?: string) => {
+      fireCommand(find(keyword));
     };
     const handleFindNext = () => {
-      findNext()(state, dispatch);
+      fireCommand(findNext());
     };
     const handleFindPrev = () => {
-      findPrev()(state, dispatch);
+      fireCommand(findPrev());
     };
     const handleReplace = (replaceWith: string) => {
-      replace(replaceWith)(state, dispatch);
+      fireCommand(replace(replaceWith));
     };
     const handleReplaceAll = (replaceWith: string) => {
-      replaceAll(replaceWith)(state, dispatch);
+      fireCommand(replaceAll(replaceWith));
     };
 
     return (
@@ -61,7 +65,6 @@ export const findReplacePlugin = (): EditorPlugin => ({
           return (
             <FindReplaceToolbarButton
               findReplaceState={findReplaceState}
-              editorView={editorView}
               popupsBoundariesElement={popupsBoundariesElement}
               popupsMountPoint={popupsMountPoint}
               popupsScrollableElement={popupsScrollableElement}
