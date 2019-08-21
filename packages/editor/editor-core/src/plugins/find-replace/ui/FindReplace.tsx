@@ -84,10 +84,7 @@ class FindReplace extends React.PureComponent<
     // findText could have been updated from outside this component, for example
     // if a user double clicks to highlight a word and then hits cmd+f
     if (newProps.findText && newProps.findText !== this.state.findInputValue) {
-      this.setState({ findInputValue: newProps.findText });
-      if (this.findTextfieldRef.current) {
-        this.findTextfieldRef.current.value = newProps.findText;
-      }
+      this.updateFindTextfieldValue(newProps.findText);
     }
 
     if (newProps.replaceText) {
@@ -99,7 +96,15 @@ class FindReplace extends React.PureComponent<
     }
   }
 
+  updateFindTextfieldValue = (value: string) => {
+    this.setState({ findInputValue: value });
+    if (this.findTextfieldRef.current) {
+      this.findTextfieldRef.current.value = value;
+    }
+  };
+
   clearSearch = () => {
+    this.updateFindTextfieldValue('');
     this.props.onFindChange();
   };
 
