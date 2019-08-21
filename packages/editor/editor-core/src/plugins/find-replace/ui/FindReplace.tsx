@@ -129,7 +129,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
           name="find"
           appearance="none"
           placeholder={find}
-          value={findText}
+          defaultValue={findText}
           autoFocus
           autoComplete="off"
           onChange={this.handleFindChange}
@@ -170,7 +170,7 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
           name="replace"
           appearance="none"
           placeholder={replaceWith}
-          value={replaceWord}
+          defaultValue={replaceWord}
           autoComplete="off"
           onChange={this.handleReplaceChange}
           onKeyDown={this.handleReplaceKeyDown}
