@@ -24,6 +24,7 @@ export interface FindReplaceState {
 
 export interface FindReplaceInitialState {
   active: false;
+  shouldFocus: false;
   findText: '';
   replaceText: '';
   index: 0;
