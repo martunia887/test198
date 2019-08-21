@@ -71,6 +71,7 @@ export const mapRecentResultsToUIGroups = (
   const { people, objects, spaces } = attachConfluenceContextIdentifiers(
     searchSessionId,
     sliced,
+    features.awcTaskSessionClient,
   );
 
   return [
@@ -109,6 +110,7 @@ export const mapSearchResultsToUIGroups = (
   const { people, objects, spaces } = attachConfluenceContextIdentifiers(
     searchSessionId,
     sliced,
+    features.awcTaskSessionClient,
   );
 
   return [

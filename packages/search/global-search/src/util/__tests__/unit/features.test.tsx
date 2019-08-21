@@ -1,5 +1,6 @@
 import { createFeatures, FeaturesParameters } from '../../features';
 import { ABTest, DEFAULT_AB_TEST } from '../../../api/CrossProductSearchClient';
+import { noopTaskSessionClient } from '../../../util/AnalyticsWebClientTaskSessionHelper';
 
 describe('features', () => {
   const abTestData = (experimentId: string, abTestId: string): ABTest => ({
@@ -15,6 +16,7 @@ describe('features', () => {
     enablePreQueryFromAggregator: false,
     isAutocompleteEnabled: false,
     isNavAutocompleteEnabled: false,
+    awcTaskSessionClient: noopTaskSessionClient,
   };
 
   it('returns expected value for isInFasterSearchExperiment when in faster-search experiment', () => {

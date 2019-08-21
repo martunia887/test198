@@ -63,7 +63,11 @@ export const mapRecentResultsToUIGroups = (
 ): ResultsGroup[] => {
   const withSessionId =
     recentlyViewedObjects !== null
-      ? attachJiraContextIdentifiers(searchSessionId, recentlyViewedObjects)
+      ? attachJiraContextIdentifiers(
+          searchSessionId,
+          recentlyViewedObjects,
+          features.awcTaskSessionClient,
+        )
       : recentlyViewedObjects;
 
   const {
@@ -109,7 +113,11 @@ export const mapSearchResultsToUIGroups = (
 ): ResultsGroup[] => {
   const withSessionId =
     searchResultsObjects !== null
-      ? attachJiraContextIdentifiers(searchSessionId, searchResultsObjects)
+      ? attachJiraContextIdentifiers(
+          searchSessionId,
+          searchResultsObjects,
+          features.awcTaskSessionClient,
+        )
       : searchResultsObjects;
 
   const {

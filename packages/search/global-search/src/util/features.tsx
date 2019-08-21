@@ -1,6 +1,10 @@
 import { ABTest, DEFAULT_AB_TEST } from '../api/CrossProductSearchClient';
 import memoizeOne from 'memoize-one';
 import deepEqual from 'deep-equal';
+import {
+  AWCTaskSessionClient,
+  noopTaskSessionClient,
+} from './AnalyticsWebClientTaskSessionHelper';
 
 const FASTER_SEARCH_EXPERIMENT = 'faster-search';
 const SEARCH_EXTENSIONS_EXPERIMENT = 'search-extensions-simple';
@@ -25,6 +29,7 @@ export interface CommonFeatures {
   abTest: ABTest;
   searchExtensionsEnabled: boolean;
   complexSearchExtensionsEnabled: boolean;
+  awcTaskSessionClient: AWCTaskSessionClient;
 }
 
 export interface ConfluenceFeatures extends CommonFeatures {
@@ -47,6 +52,7 @@ export const DEFAULT_FEATURES: ConfluenceFeatures & JiraFeatures = {
   searchExtensionsEnabled: false,
   isInFasterSearchExperiment: false,
   abTest: DEFAULT_AB_TEST,
+  awcTaskSessionClient: noopTaskSessionClient,
 };
 
 export interface FeaturesParameters {
@@ -56,6 +62,7 @@ export interface FeaturesParameters {
   enablePreQueryFromAggregator: boolean;
   isAutocompleteEnabled: boolean;
   isNavAutocompleteEnabled: boolean;
+  awcTaskSessionClient: AWCTaskSessionClient;
 }
 
 export const createFeatures: (
@@ -68,6 +75,7 @@ export const createFeatures: (
     enablePreQueryFromAggregator,
     isAutocompleteEnabled,
     isNavAutocompleteEnabled,
+    awcTaskSessionClient,
   }) => {
     return {
       abTest,
@@ -81,6 +89,7 @@ export const createFeatures: (
       complexSearchExtensionsEnabled: isInSearchExtensionsComplexExperiment(
         abTest,
       ),
+      awcTaskSessionClient,
     };
   },
   deepEqual,

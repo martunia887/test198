@@ -12,6 +12,7 @@ import {
 } from '../../ConfluenceSearchResultsMapper';
 import { ConfluenceResultsMap, ResultsGroup } from '../../../../model/Result';
 import { ConfluenceFeatures } from '../../../../util/features';
+import { noopTaskSessionClient } from '../../../../util/AnalyticsWebClientTaskSessionHelper';
 
 type TestParam = {
   desc: string;
@@ -33,6 +34,7 @@ const features: ConfluenceFeatures = {
   isAutocompleteEnabled: false,
   complexSearchExtensionsEnabled: false,
   isNavAutocompleteEnabled: false,
+  awcTaskSessionClient: noopTaskSessionClient,
 };
 
 const searchSessionId = 'searchSessionId';

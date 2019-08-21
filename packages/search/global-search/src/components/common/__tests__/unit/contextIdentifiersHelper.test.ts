@@ -1,6 +1,7 @@
 import {
   attachConfluenceContextIdentifiers,
   attachJiraContextIdentifiers,
+  AWC_SEARCH_SESSION_ID_TASK_NAME,
 } from '../../contextIdentifiersHelper';
 import {
   AnalyticsType,
@@ -10,6 +11,10 @@ import {
   Result,
   JiraResultsMap,
 } from '../../../../model/Result';
+import {
+  noopTaskSessionClient,
+  AWCTaskSessionClient,
+} from '../../../../util/AnalyticsWebClientTaskSessionHelper';
 
 const searchSessionId = 'searchSessionId';
 
@@ -104,6 +109,7 @@ describe('searchSessionUtils', () => {
     const { objects, spaces, people } = attachConfluenceContextIdentifiers(
       searchSessionId,
       confluenceBaseResults,
+      noopTaskSessionClient,
     );
 
     expect(objects.items.map(o => o.href)).toEqual([
@@ -119,6 +125,7 @@ describe('searchSessionUtils', () => {
     const { objects, containers, people } = attachJiraContextIdentifiers(
       searchSessionId,
       getJiraBaseResults(),
+      noopTaskSessionClient,
     );
 
     expect(objects.map(o => o.href)).toEqual([
@@ -134,6 +141,7 @@ describe('searchSessionUtils', () => {
     const { objects, containers, people } = attachJiraContextIdentifiers(
       searchSessionId,
       getJiraBaseResults({ containerId: undefined }),
+      noopTaskSessionClient,
     );
 
     expect(objects.map(o => o.href)).toEqual([
@@ -143,5 +151,55 @@ describe('searchSessionUtils', () => {
       'http://localhost/?searchSessionId=searchSessionId&searchContentType=project&searchObjectId=resultId',
     ]);
     expect(people.map(o => o.href)).toEqual(['http://localhost/']);
+  });
+
+  describe('works with awc task sessions', () => {
+    let formatFn: jest.Mock;
+    let createTaskSessionFn: jest.Mock;
+    let taskSessionClient: AWCTaskSessionClient;
+
+    beforeEach(() => {
+      formatFn = jest.fn(url => url);
+      createTaskSessionFn = jest.fn();
+      taskSessionClient = {
+        ...noopTaskSessionClient,
+        createTaskSessionWithProvidedId: createTaskSessionFn,
+        formatTaskSessionQueryString: formatFn,
+      };
+    });
+
+    it('works for conflunece', () => {
+      attachConfluenceContextIdentifiers(
+        searchSessionId,
+        confluenceBaseResults,
+        taskSessionClient,
+      );
+
+      expect(createTaskSessionFn).toBeCalledWith(
+        AWC_SEARCH_SESSION_ID_TASK_NAME,
+        searchSessionId,
+      );
+      expect(formatFn).toHaveBeenCalledWith({
+        taskSessions: ['searchSessionId'],
+        uri: 'http://localhost/?search_id=searchSessionId',
+      });
+    });
+
+    it('works for jira', () => {
+      attachJiraContextIdentifiers(
+        searchSessionId,
+        getJiraBaseResults({ containerId: undefined }),
+        taskSessionClient,
+      );
+
+      expect(createTaskSessionFn).toBeCalledWith(
+        AWC_SEARCH_SESSION_ID_TASK_NAME,
+        searchSessionId,
+      );
+      expect(formatFn).toHaveBeenCalledWith({
+        taskSessions: ['searchSessionId'],
+        uri: 'http://localhost/?searchSessionId=searchSessionId',
+      });
+    });
   });
 });

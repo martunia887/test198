@@ -25,6 +25,10 @@ import {
   FeedbackCollectorProps,
 } from './feedback/withFeedbackButton';
 import FeaturesProvider from './FeaturesProvider';
+import {
+  AWCTaskSessionClient,
+  noopTaskSessionClient,
+} from '../util/AnalyticsWebClientTaskSessionHelper';
 
 const DEFAULT_NOOP_LOGGER: Logger = {
   safeInfo() {},
@@ -201,6 +205,11 @@ export interface Props {
    * Props to pass down to the feedback collector
    */
   feedbackCollectorProps?: FeedbackCollectorProps;
+
+  /**
+   * An object with functions for handling task sessions, see taskSessionStore in the Analytics Web Client
+   */
+  awcTaskSessionClient: AWCTaskSessionClient;
 }
 
 const ConfluenceContainerWithFeedback = withFeedbackButton(
@@ -213,6 +222,7 @@ const ConfluenceContainerWithFeedback = withFeedbackButton(
 export default class GlobalQuickSearchWrapper extends React.Component<Props> {
   static defaultProps = {
     logger: DEFAULT_NOOP_LOGGER,
+    awcTaskSessionClient: noopTaskSessionClient,
   };
 
   private makeConfig() {
@@ -288,6 +298,7 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
       useUrsForBootstrapping,
       isAutocompleteEnabled,
       isNavAutocompleteEnabled,
+      awcTaskSessionClient,
     } = this.props;
 
     return createFeatures({
@@ -297,6 +308,7 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
       enablePreQueryFromAggregator: !!enablePreQueryFromAggregator,
       isAutocompleteEnabled: !!isAutocompleteEnabled,
       isNavAutocompleteEnabled: !!isNavAutocompleteEnabled,
+      awcTaskSessionClient,
     });
   }
 

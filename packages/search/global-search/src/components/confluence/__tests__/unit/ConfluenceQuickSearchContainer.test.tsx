@@ -46,6 +46,7 @@ import { mockLogger } from '../../../../__tests__/unit/mocks/_mockLogger';
 import { ReferralContextIdentifiers } from '../../../GlobalQuickSearchWrapper';
 import { ConfluenceFeatures } from '../../../../util/features';
 import { shallow } from 'enzyme';
+import { noopTaskSessionClient } from '../../../../util/AnalyticsWebClientTaskSessionHelper';
 
 const sessionId = 'sessionId';
 const referralContextIdentifiers: ReferralContextIdentifiers = {
@@ -61,6 +62,7 @@ const DEFAULT_FEATURES: ConfluenceFeatures = {
   isAutocompleteEnabled: false,
   complexSearchExtensionsEnabled: false,
   isNavAutocompleteEnabled: false,
+  awcTaskSessionClient: noopTaskSessionClient,
 };
 
 function render(partialProps?: Partial<Props>) {

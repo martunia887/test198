@@ -5,9 +5,12 @@ import {
 } from '../../model/Result';
 import { JiraResultQueryParams } from '../../api/types';
 import { addQueryParam } from '../../util/url-utils';
+import { AWCTaskSessionClient } from '../../util/AnalyticsWebClientTaskSessionHelper';
 
 const CONFLUENCE_SEARCH_SESSION_ID_PARAM_NAME = 'search_id';
 const JIRA_SEARCH_SESSION_ID_PARAM_NAME = 'searchSessionId';
+
+export const AWC_SEARCH_SESSION_ID_TASK_NAME = 'searchSessionId';
 
 /**
  * Apply the given function to the specified keys in the supplied ResultMap
@@ -83,9 +86,20 @@ const mapConfluenceResultMap = (
 const attachSearchSessionIdToResult = (
   searchSessionId: string,
   searchSessionIdParamName: string,
+  taskSessionClient: AWCTaskSessionClient,
 ) => (result: Result) => {
   let href = result.href;
   href = addQueryParam(href, searchSessionIdParamName, searchSessionId);
+
+  taskSessionClient.createTaskSessionWithProvidedId(
+    AWC_SEARCH_SESSION_ID_TASK_NAME,
+    searchSessionId,
+  );
+
+  href = taskSessionClient.formatTaskSessionQueryString({
+    uri: href,
+    taskSessions: [AWC_SEARCH_SESSION_ID_TASK_NAME],
+  });
 
   return {
     ...result,
@@ -96,11 +110,13 @@ const attachSearchSessionIdToResult = (
 export const attachConfluenceContextIdentifiers = (
   searchSessionId: string,
   results: ConfluenceResultsMap,
+  taskSessionClient: AWCTaskSessionClient,
 ): ConfluenceResultsMap => {
   return mapConfluenceResultMap(
     attachSearchSessionIdToResult(
       searchSessionId,
       CONFLUENCE_SEARCH_SESSION_ID_PARAM_NAME,
+      taskSessionClient,
     ),
     ['objects', 'spaces'],
     results,
@@ -110,10 +126,12 @@ export const attachConfluenceContextIdentifiers = (
 export const attachJiraContextIdentifiers = (
   searchSessionId: string,
   results: JiraResultsMap,
+  taskSessionClient: AWCTaskSessionClient,
 ) => {
   const attachSearchSessionId = attachSearchSessionIdToResult(
     searchSessionId,
     JIRA_SEARCH_SESSION_ID_PARAM_NAME,
+    taskSessionClient,
   );
 
   const attachJiraContext = (result: Result) => {
