@@ -1,4 +1,4 @@
-import { colors } from '@atlaskit/theme';
+import { N400 } from '@atlaskit/theme/colors';
 import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
 import { headingsSharedStyles } from '@atlaskit/editor-common';
@@ -29,7 +29,6 @@ export const KeyboardShortcut: ComponentClass<
     selected?: boolean;
   }
 > = styled(Shortcut)`
-  ${props =>
-    props.selected ? `color: ${colors.N400};` : ''}
+  ${props => (props.selected ? `color: ${N400};` : '')}
   margin-left: 16px;
 `;

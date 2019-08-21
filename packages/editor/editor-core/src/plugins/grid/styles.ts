@@ -1,6 +1,6 @@
 // @ts-ignore: unused variable
 import { css, Styles, StyledComponentClass } from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { N30A, B200 } from '@atlaskit/theme/colors';
 import { akEditorGridLineZIndex } from '@atlaskit/editor-common';
 
 export const GRID_GUTTER = 12;
@@ -22,7 +22,7 @@ export const gridStyles = css`
   }
 
   .gridLine {
-    border-left: 1px solid ${colors.N30A};
+    border-left: 1px solid ${N30A};
     display: inline-block;
     box-sizing: border-box;
     height: 100%;
@@ -37,6 +37,6 @@ export const gridStyles = css`
   }
 
   .highlight {
-    border-left: 1px solid ${colors.B200};
+    border-left: 1px solid ${B200};
   }
 `;

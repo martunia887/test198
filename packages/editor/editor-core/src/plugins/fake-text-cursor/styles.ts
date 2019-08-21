@@ -1,7 +1,7 @@
 // @ts-ignore: unused variable
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { B75 } from '@atlaskit/theme/colors';
 
 export const fakeCursorStyles = css`
   .ProseMirror {
@@ -25,7 +25,7 @@ export const fakeCursorStyles = css`
       display: inline;
       pointer-events: none;
       position: relative;
-      background-color: ${colors.B75};
+      background-color: ${B75};
     }
   }
 `;

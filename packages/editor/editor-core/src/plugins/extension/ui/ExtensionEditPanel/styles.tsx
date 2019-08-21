@@ -2,7 +2,8 @@ import styled from 'styled-components';
 // @ts-ignore: unused variable
 // prettier-ignore
 import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import { colors, borderRadius } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N30 } from '@atlaskit/theme/colors';
 
 export const Toolbar: ComponentClass<HTMLAttributes<{}>> = styled.div`
   background: white;
@@ -13,7 +14,7 @@ export const Toolbar: ComponentClass<HTMLAttributes<{}>> = styled.div`
 `;
 
 export const Separator: ComponentClass<HTMLAttributes<{}>> = styled.span`
-  border-left: 1px solid ${colors.N30};
+  border-left: 1px solid ${N30};
   width: 1px;
   display: inline-block;
   margin: 0 5px;

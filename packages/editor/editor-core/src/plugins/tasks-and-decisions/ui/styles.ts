@@ -1,7 +1,7 @@
 // @ts-ignore: unused variable
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
-import { fontSize } from '@atlaskit/theme';
+import { fontSize } from '@atlaskit/theme/constants';
 import { akEditorTableCellMinWidth } from '@atlaskit/editor-common';
 
 export const tasksAndDecisionsStyles = css`

@@ -1,9 +1,10 @@
 import styled, { css } from 'styled-components';
-import { colors, borderRadius } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
+import { N20, B400 } from '@atlaskit/theme/colors';
 
 export const BackgroundWrapper = styled.div<{ maxWidth: number }>`
   height: 2px;
-  background-color: ${colors.N20};
+  background-color: ${N20};
   border: transparent;
   border-radius: ${borderRadius()}px;
   ${({ maxWidth }: { maxWidth: number }) =>
@@ -29,7 +30,7 @@ export type LoaderProps = {
 };
 
 export const LoaderStyle = styled.div<LoaderProps>`
-  background-color: ${colors.B400};
+  background-color: ${B400};
   height: 2px;
   border: transparent;
   border-radius: ${borderRadius()}px;
