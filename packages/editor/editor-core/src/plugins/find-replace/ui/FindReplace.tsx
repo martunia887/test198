@@ -93,7 +93,11 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
 
   handleFindKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      this.props.onFindNext();
+      if (event.shiftKey) {
+        this.props.onFindPrev();
+      } else {
+        this.props.onFindNext();
+      }
     }
   };
 
