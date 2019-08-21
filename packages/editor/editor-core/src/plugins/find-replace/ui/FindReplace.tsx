@@ -42,6 +42,7 @@ export interface FindReplaceProps {
   findText?: string;
   replaceText?: string;
   count: { index: number; total: number };
+  shouldFocus: boolean;
   onFindChange: (findText?: string) => void;
   onFindNext: () => void;
   onFindPrev: () => void;
@@ -57,7 +58,10 @@ export interface FindReplaceState {
   findInputValue: string;
 }
 
-class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
+class FindReplace extends React.PureComponent<
+  FindReplaceProps,
+  FindReplaceState
+> {
   private findTextfieldRef = React.createRef<HTMLInputElement>();
 
   constructor(props: FindReplaceProps) {
@@ -88,6 +92,10 @@ class FindReplace extends React.Component<FindReplaceProps, FindReplaceState> {
 
     if (newProps.replaceText) {
       this.setState({ replaceText: newProps.replaceText });
+    }
+
+    if (newProps.shouldFocus && this.findTextfieldRef.current) {
+      this.findTextfieldRef.current.select();
     }
   }
 

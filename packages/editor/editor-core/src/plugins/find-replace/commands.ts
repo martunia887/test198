@@ -1,29 +1,37 @@
-import { EditorState, TextSelection } from 'prosemirror-state';
+import { EditorState, TextSelection, Selection } from 'prosemirror-state';
 import { createFindReplaceCommand } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
+
+export const activate = () =>
+  createFindReplaceCommand((state: EditorState) => {
+    const { selection } = state;
+    let findText: string | undefined;
+    let matches: Match[] | undefined;
+    let index: number | undefined;
+
+    // if user has selected text, set that as the keyword
+    if (selection instanceof TextSelection && !selection.empty) {
+      // TODO: Handle this properly when we update selection on find next/prev - is this still a valid comment?
+      findText = getSelectedText(selection);
+      matches = findMatches(state, findText);
+      index = findSearchIndex(selection, matches);
+    }
+
+    return {
+      type: FindReplaceActionTypes.ACTIVATE,
+      findText,
+      matches,
+      index,
+    };
+  });
 
 export const find = (keyword?: string) =>
   createFindReplaceCommand((state: EditorState) => {
     const { selection } = state;
 
-    // if user has selected text, set that as the keyword
-    if (
-      keyword === undefined &&
-      selection instanceof TextSelection &&
-      !selection.empty
-    ) {
-      // TODO: Handle this properly when we update selection on find next/prev
-      keyword = getSelectedText(selection);
-    }
-
     const matches = keyword ? findMatches(state, keyword) : [];
-
-    const selectionPos = selection.from;
-    const index = Math.max(
-      matches.findIndex(match => match.start >= selectionPos),
-      0,
-    );
+    const index = findSearchIndex(selection, matches);
 
     return {
       type: FindReplaceActionTypes.FIND,
@@ -87,4 +95,9 @@ function findMatches(state: EditorState, searchText: string): Match[] {
     }
   });
   return matches;
+}
+
+function findSearchIndex(selection: Selection, matches: Match[]): number {
+  const selectionPos = selection.from;
+  return Math.max(matches.findIndex(match => match.start >= selectionPos), 0);
 }

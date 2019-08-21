@@ -26,7 +26,7 @@ export interface FindReplaceToolbarButtonProps {
   popupsScrollableElement?: HTMLElement;
   isReducedSpacing?: boolean;
   onCancel: () => void;
-  onFind: (keyword?: string, findFromPos?: number) => void;
+  onFind: (keyword?: string) => void;
   onFindNext: () => void;
   onFindPrev: () => void;
   onReplace: (replaceWith: string) => void;
@@ -63,7 +63,14 @@ class FindReplaceToolbarButton extends React.PureComponent<
       isReducedSpacing,
       findReplaceState,
     } = this.props;
-    const { findText, replaceText, active, index, matches } = findReplaceState;
+    const {
+      findText,
+      replaceText,
+      active,
+      index,
+      matches,
+      shouldFocus,
+    } = findReplaceState;
 
     return (
       <ToolbarButtonWrapper>
@@ -89,6 +96,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
               findText={findText}
               replaceText={replaceText}
               count={{ index, total: matches.length }}
+              shouldFocus={shouldFocus}
               onFindChange={this.find}
               onFindNext={this.props.onFindNext}
               onFindPrev={this.props.onFindPrev}

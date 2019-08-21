@@ -6,29 +6,29 @@ const reducer = (
   action: FindReplaceAction,
 ): FindReplaceState => {
   switch (action.type) {
-    case FindReplaceActionTypes.FIND: {
+    case FindReplaceActionTypes.ACTIVATE:
+    case FindReplaceActionTypes.FIND:
       return {
         ...state,
         active: true,
-        index: action.index,
-        matches: action.matches,
-        findText: action.findText,
+        shouldFocus: action.type === FindReplaceActionTypes.ACTIVATE,
+        findText:
+          action.findText !== undefined ? action.findText : state.findText,
+        matches: action.matches || state.matches,
+        index: action.index !== undefined ? action.index : state.index,
       };
-    }
 
-    case FindReplaceActionTypes.FIND_NEXT: {
+    case FindReplaceActionTypes.FIND_NEXT:
       return {
         ...state,
         index: (state.index + 1) % state.matches.length,
       };
-    }
 
-    case FindReplaceActionTypes.FIND_PREV: {
+    case FindReplaceActionTypes.FIND_PREV:
       return {
         ...state,
         index: (state.index - 1 + state.matches.length) % state.matches.length,
       };
-    }
 
     case FindReplaceActionTypes.REPLACE:
     case FindReplaceActionTypes.REPLACE_ALL:
