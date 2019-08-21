@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
 import Textfield from '@atlaskit/textfield';

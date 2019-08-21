@@ -1,5 +1,5 @@
 import { EditorState, TextSelection } from 'prosemirror-state';
-import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
+import { createFindReplaceCommand } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { defineMessages, InjectedIntlProps, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import EditorSearchIcon from '@atlaskit/icon/glyph/editor/search';
 import { FindReplaceState } from '../plugin';
