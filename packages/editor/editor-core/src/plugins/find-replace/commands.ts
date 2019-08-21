@@ -2,6 +2,7 @@ import { EditorState, TextSelection, Selection } from 'prosemirror-state';
 import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
+import { findMatches } from './utils';
 
 export const activate = () =>
   createFindReplaceCommand((state: EditorState) => {
@@ -14,7 +15,7 @@ export const activate = () =>
     if (selection instanceof TextSelection && !selection.empty) {
       // TODO: Handle this properly when we update selection on find next/prev - is this still a valid comment?
       findText = getSelectedText(selection);
-      matches = findMatches(state, findText);
+      matches = findMatches(state.doc, findText);
       index = findSearchIndex(selection, matches);
     }
 
@@ -30,7 +31,7 @@ export const find = (keyword?: string) =>
   createFindReplaceCommand((state: EditorState) => {
     const { selection } = state;
 
-    const matches = keyword ? findMatches(state, keyword) : [];
+    const matches = keyword ? findMatches(state.doc, keyword) : [];
     const index = findSearchIndex(selection, matches);
 
     return {
@@ -83,26 +84,6 @@ const getSelectedText = (selection: TextSelection): string => {
   }
   return text;
 };
-
-function findMatches(state: EditorState, searchText: string): Match[] {
-  let matches: Match[] = [];
-  const searchTextLength = searchText.length;
-  state.doc.descendants((node, pos) => {
-    // TODO: Optimisation get string representation of top-level nodes and only recurse if match
-    if (node.type === state.schema.nodes.text) {
-      let index = node.textContent.indexOf(searchText);
-
-      while (index !== -1) {
-        // Find the next substring from the end of the first, so that they don't overlap
-        const end = index + searchTextLength;
-        // Add the substring index to the position of the node
-        matches.push({ start: pos + index, end: pos + end });
-        index = node.textContent.indexOf(searchText, end);
-      }
-    }
-  });
-  return matches;
-}
 
 function findSearchIndex(selection: Selection, matches: Match[]): number {
   const selectionPos = selection.from;
