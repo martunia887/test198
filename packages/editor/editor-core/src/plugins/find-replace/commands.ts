@@ -1,5 +1,5 @@
 import { EditorState, TextSelection, Selection } from 'prosemirror-state';
-import { createFindReplaceCommand } from './plugin';
+import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
 
@@ -51,11 +51,18 @@ export const findPrev = () =>
     type: FindReplaceActionTypes.FIND_PREV,
   });
 
-export const replace = (replaceWith: string) =>
-  createFindReplaceCommand({
-    type: FindReplaceActionTypes.REPLACE,
-    replaceText: replaceWith,
-  });
+export const replace = (replaceText: string) =>
+  createFindReplaceCommand(
+    {
+      type: FindReplaceActionTypes.REPLACE,
+      replaceText,
+    },
+    (tr, state) => {
+      const pluginState = getFindReplacePluginState(state);
+      const replacePos = pluginState.matches[pluginState.index];
+      return tr.insertText(replaceText, replacePos.start, replacePos.end);
+    },
+  );
 
 export const replaceAll = (replaceWith: string) =>
   createFindReplaceCommand({
