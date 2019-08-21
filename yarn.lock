@@ -12163,10 +12163,10 @@ mem@^4.0.0:
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
 
-memoize-one@5.1.0-beta.5:
-  version "5.1.0-beta.5"
-  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.0-beta.5.tgz#438b4c58cbf1a9f23ce6d04f0633c328daecf197"
-  integrity sha512-QS9ULbGG4sr6Xl0b81RfVUUxXbd40BfdAbuhkK0lc+FXCb+bE63CkM8lp96Kud5wtc3aWbTIMdD63oSWYiz2nQ==
+memoize-one@5.1.0-beta.6:
+  version "5.1.0-beta.6"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.0-beta.6.tgz#e2c4109c02e4479a6f4874648549c72885a70104"
+  integrity sha512-iQe4FX/rOoOKBaKRCdS3KpwH1KERxW/TMn9Y6hC+rEZzc3ePXHwm4P2l1Us2YF1VQxY/ZSeywAcK2a9HzyJ7qQ==
 
 memoize-one@^4.0.3:
   version "4.0.3"
