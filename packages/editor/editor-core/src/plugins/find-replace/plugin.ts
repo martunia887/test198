@@ -1,4 +1,4 @@
-import { PluginKey, Plugin, TextSelection } from 'prosemirror-state';
+import { PluginKey, Plugin, Transaction } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { colors } from '@atlaskit/theme';
 import { pluginFactory } from '../../utils/plugin-state-factory';
@@ -6,6 +6,7 @@ import reducer from './reducer';
 import { Dispatch } from '../../event-dispatcher';
 import { FindReplaceAction } from './actions';
 import { Match } from './types';
+import { findMatches } from './utils';
 
 export interface FindReplaceState {
   /** Whether find/replace is active, i.e. displayed */
@@ -42,6 +43,55 @@ export const getInitialState = (): FindReplaceInitialState => ({
   matches: [],
 });
 
+// Extracted so that source maps works there seems to be a bug with generic parameters of pluginFactory that treats the args as unbreakpointable
+const onDocChangedFn = (
+  tr: Transaction,
+  pluginState: FindReplaceState,
+): FindReplaceState => {
+  if (pluginState.active && pluginState.findText) {
+    const matches = findMatches(tr.doc, pluginState.findText);
+    // const mappedMatches = pluginState.matches
+    //   .map(match => ({
+    //     start: tr.mapping.map(match.start),
+    //     end: tr.mapping.map(match.end),
+    //   }))
+    //   // Deleted text is mapped to the same start and end node
+    //   .filter(match => match.end > match.start);
+
+    // let newMatches: Match[] = [];
+    // const diffStart = tr.doc.content.findDiffStart(tr.before.content);
+    // const diffEnd = tr.doc.content.findDiffEnd(tr.before);
+    // if (diffStart && diffEnd) {
+    //   const addSlice = tr.doc.slice(diffStart, diffEnd.a);
+
+    //   // go through add slice - findMatches -> add
+    //   newMatches = findMatches(
+    //     addSlice.content,
+    //     pluginState.findText,
+    //     diffStart,
+    //   );
+    //   // TODO: Handle case where adding part of match adds a new match
+
+    //   if (!Number.isNaN(diffEnd.b)) {
+    //     const delSlice = tr.doc.slice(diffStart, diffEnd.b);
+    //   }
+    // }
+
+    // // TODO: Replace sort with something less overkill
+    // const matches = [...mappedMatches, ...newMatches].sort(
+    //   (a, b) => a.start - b.start,
+    // );
+
+    // does any matches fall in delSlice range -> del
+
+    return {
+      ...pluginState,
+      matches,
+    };
+  }
+  return pluginState;
+};
+
 export const {
   createCommand: createFindReplaceCommand,
   getPluginState: getFindReplacePluginState,
@@ -50,19 +100,7 @@ export const {
   findReplacePluginKey,
   reducer,
   {
-    mapping: (tr, pluginState) => {
-      if (tr.docChanged && pluginState.matches.length > 0) {
-        const newMatches = pluginState.matches.map(match => ({
-          start: tr.mapping.map(match.start),
-          end: tr.mapping.map(match.end),
-        }));
-        return {
-          ...pluginState,
-          matches: newMatches,
-        };
-      }
-      return pluginState;
-    },
+    onDocChanged: onDocChangedFn,
   },
 );
 
