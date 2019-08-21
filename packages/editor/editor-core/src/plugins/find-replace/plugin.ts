@@ -49,6 +49,21 @@ export const {
 } = pluginFactory<FindReplaceState, FindReplaceAction, FindReplaceInitialState>(
   findReplacePluginKey,
   reducer,
+  {
+    mapping: (tr, pluginState) => {
+      if (tr.docChanged && pluginState.matches.length > 0) {
+        const newMatches = pluginState.matches.map(match => ({
+          start: tr.mapping.map(match.start),
+          end: tr.mapping.map(match.end),
+        }));
+        return {
+          ...pluginState,
+          matches: newMatches,
+        };
+      }
+      return pluginState;
+    },
+  },
 );
 
 export const createPlugin = (dispatch: Dispatch) =>
@@ -72,20 +87,5 @@ export const createPlugin = (dispatch: Dispatch) =>
           );
         }
       },
-    },
-    appendTransaction(transactions, oldState, newState) {
-      // todo: is this really the best performance wise?
-      const pluginState = getFindReplacePluginState(newState);
-      if (pluginState.matches) {
-        const oldPluginState = getFindReplacePluginState(oldState);
-        if (pluginState.index !== oldPluginState.index) {
-          const selected = pluginState.matches[pluginState.index];
-          if (selected) {
-            return newState.tr.setSelection(
-              TextSelection.create(newState.doc, selected.start, selected.end),
-            );
-          }
-        }
-      }
     },
   });
