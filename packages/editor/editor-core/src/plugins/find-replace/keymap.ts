@@ -1,10 +1,10 @@
 import { keymap } from 'prosemirror-keymap';
 import * as keymaps from '../../keymaps';
-import { find } from './commands';
+import { find, activate } from './commands';
 import { Command } from '../../types';
 
 const findText = (): Command => (state, dispatch) => {
-  find()(state, dispatch);
+  activate()(state, dispatch);
   return true;
 };
 

@@ -10,6 +10,8 @@ import { Match } from './types';
 export interface FindReplaceState {
   /** Whether find/replace is active, i.e. displayed */
   active: boolean;
+  /** Whether we should set focus into and select all text of find textfield */
+  shouldFocus: boolean;
   /** Search keyword */
   findText: string;
   /** Text to replace with */
@@ -32,6 +34,7 @@ export const findReplacePluginKey = new PluginKey('findReplace');
 
 export const getInitialState = (): FindReplaceInitialState => ({
   active: false,
+  shouldFocus: false,
   findText: '',
   replaceText: '',
   index: 0,

@@ -12,6 +12,9 @@ export enum FindReplaceActionTypes {
 
 export interface Activate {
   type: FindReplaceActionTypes.ACTIVATE;
+  findText?: string;
+  matches?: Match[];
+  index?: number;
 }
 
 export interface Find {
