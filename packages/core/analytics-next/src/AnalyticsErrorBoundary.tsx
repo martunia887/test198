@@ -1,6 +1,6 @@
 import React, { ReactNode, Component } from 'react';
-import { withAnalyticsEvents } from './next/withAnalyticsEvents';
-import { AnalyticsContextProvider as AnalyticsContext } from './next/AnalyticsContextProvider';
+import withAnalyticsEvents from './withAnalyticsEvents';
+import { AnalyticsContextProvider as AnalyticsContext } from './AnalyticsContextProvider';
 
 type AnalyticsErrorBoundaryErrorInfo = {
   componentStack: string;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AnalyticsContext from './AnalyticsContext';
+import { AnalyticsContextProvider } from './AnalyticsContextProvider';
 
 export interface WithContextProps {
   analyticsContext?: Record<string, any>;
@@ -24,9 +24,9 @@ const withAnalyticsContext = (defaultData?: any) => <Props, Component>(
       };
 
       return (
-        <AnalyticsContext data={analyticsData}>
+        <AnalyticsContextProvider data={analyticsData}>
           <WrappedComponent {...rest} ref={ref} />
-        </AnalyticsContext>
+        </AnalyticsContextProvider>
       );
     },
   );

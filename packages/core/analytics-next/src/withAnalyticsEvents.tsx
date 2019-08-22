@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Omit } from '@atlaskit/type-helpers';
 import { CreateUIAnalyticsEvent, CreateEventMap } from './types';
-import AnalyticsContextConsumer from './AnalyticsContextConsumer';
+import { useAnalytics } from './useAnalytics';
 
 export interface WithAnalyticsEventsProps {
   /**
@@ -24,22 +24,19 @@ const withAnalyticsEvents = (createEventMap?: CreateEventMap) => <
   >;
 
   const WithAnalyticsEvents = React.forwardRef<any, WrappedProps>(
-    (props, ref) => (
-      <AnalyticsContextConsumer<WrappedProps>
-        createEventMap={createEventMap}
-        wrappedComponentProps={props}
-      >
-        {({ createAnalyticsEvent, patchedEventProps }) => (
-          <WrappedComponent
-            {...props}
-            {...patchedEventProps}
-            createAnalyticsEvent={createAnalyticsEvent}
-            // @ts-ignore
-            ref={ref}
-          />
-        )}
-      </AnalyticsContextConsumer>
-    ),
+    (props, ref) => {
+      const { createAnalyticsEvent, patchedEventProps } = useAnalytics<
+        WrappedProps
+      >(createEventMap, props);
+      return (
+        <WrappedComponent
+          {...props}
+          {...patchedEventProps}
+          createAnalyticsEvent={createAnalyticsEvent}
+          ref={ref}
+        />
+      );
+    },
   );
 
   // @ts-ignore

@@ -1,8 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, FC, ReactNode, Children } from 'react';
 
 import { AnalyticsContext } from './AnalyticsContext';
 
-export const AnalyticsContextProvider = ({ children, data }) => {
+interface Props {
+  children: ReactNode;
+  /** Arbitrary data. Any events created below this component in the tree will
+   * have this added as an item in their context array. */
+  data: unknown;
+}
+
+export const AnalyticsContextProvider: FC<Props> = ({ children, data }) => {
   const {
     getAtlaskitAnalyticsContext,
     getAtlaskitAnalyticsEventHandlers,
@@ -17,7 +24,7 @@ export const AnalyticsContextProvider = ({ children, data }) => {
         getAtlaskitAnalyticsEventHandlers,
       }}
     >
-      {children}
+      {Children.only(children)}
     </AnalyticsContext.Provider>
   );
 };

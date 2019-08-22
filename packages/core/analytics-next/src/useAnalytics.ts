@@ -1,38 +1,41 @@
-import React, { useEffect, useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { AnalyticsContext } from './AnalyticsContext';
-import UIAnalyticsEvent from '../UIAnalyticsEvent';
+import {
+  CreateEventMap,
+  CreateUIAnalyticsEvent,
+  AnalyticsEventCreator,
+} from './types';
+import UIAnalyticsEvent from './UIAnalyticsEvent';
+import { AnalyticsEventPayload } from './AnalyticsEvent';
 
-let originalEventProps = {};
-let patchedEventProps = {};
+type UseAnalyticsHook = {
+  createAnalyticsEvent: CreateUIAnalyticsEvent;
+  patchedEventProps: CreateEventMap;
+};
 
-export const useAnalytics = (
-  createEventMap = {},
-  wrappedComponentProps = {},
-) => {
+let originalEventProps: CreateEventMap = {};
+let patchedEventProps: CreateEventMap = {};
+
+export function useAnalytics<Props extends Record<string, any>>(
+  createEventMap: CreateEventMap = {},
+  wrappedComponentProps: Props,
+): UseAnalyticsHook {
   const {
     getAtlaskitAnalyticsEventHandlers,
     getAtlaskitAnalyticsContext,
   } = useContext(AnalyticsContext);
 
-  useEffect(() => {
-    originalEventProps = {};
-    patchedEventProps = {};
-
-    return () => {
-      originalEventProps = {};
-      patchedEventProps = {};
-    };
-  }, []);
-
-  const createAnalyticsEvent = payload =>
+  const createAnalyticsEvent = (
+    payload: AnalyticsEventPayload,
+  ): UIAnalyticsEvent =>
     new UIAnalyticsEvent({
       context: getAtlaskitAnalyticsContext(),
       handlers: getAtlaskitAnalyticsEventHandlers(),
       payload,
     });
 
-  const mapCreateEventsToProps = (changedPropNames, props) =>
+  const mapCreateEventsToProps = (changedPropNames: string[], props: Props) =>
     changedPropNames.reduce((modified, propCallbackName) => {
       const eventCreator = createEventMap[propCallbackName];
       const providedCallback = props[propCallbackName];
@@ -41,10 +44,13 @@ export const useAnalytics = (
         return modified;
       }
 
-      const modifiedCallback = (...args) => {
+      const modifiedCallback = (...args: any[]) => {
         const analyticsEvent =
           typeof eventCreator === 'function'
-            ? eventCreator(createAnalyticsEvent, props)
+            ? (eventCreator as AnalyticsEventCreator)(
+                createAnalyticsEvent,
+                props,
+              )
             : createAnalyticsEvent(eventCreator);
 
         if (providedCallback) {
@@ -58,7 +64,7 @@ export const useAnalytics = (
       };
     }, {});
 
-  const updatePatchedEventProps = props => {
+  const updatePatchedEventProps = (props: Props): CreateEventMap => {
     const changedPropCallbacks = Object.keys(createEventMap).filter(
       p => originalEventProps[p] !== props[p],
     );
@@ -75,10 +81,19 @@ export const useAnalytics = (
     return patchedEventProps;
   };
 
-  const patchedEventProps = updatePatchedEventProps(wrappedComponentProps);
+  useEffect(() => {
+    Object.keys(createEventMap).forEach(p => {
+      originalEventProps[p] = wrappedComponentProps[p];
+    });
+
+    patchedEventProps = mapCreateEventsToProps(
+      Object.keys(createEventMap),
+      wrappedComponentProps,
+    );
+  }, []);
 
   return {
     createAnalyticsEvent,
-    patchedEventProps,
+    patchedEventProps: updatePatchedEventProps(wrappedComponentProps),
   };
-};
+}
