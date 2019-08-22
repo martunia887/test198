@@ -43,6 +43,12 @@ const reducer = (
 
     case FindReplaceActionTypes.CANCEL:
       return getInitialState();
+
+    case FindReplaceActionTypes.UNFOCUS:
+      return {
+        ...state,
+        shouldFocus: false,
+      };
   }
 
   return state;

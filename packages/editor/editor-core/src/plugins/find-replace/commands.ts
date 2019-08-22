@@ -98,6 +98,11 @@ export const cancelSearch = () =>
     type: FindReplaceActionTypes.CANCEL,
   });
 
+export const unfocus = () =>
+  createFindReplaceCommand({
+    type: FindReplaceActionTypes.UNFOCUS,
+  });
+
 const getSelectedText = (selection: TextSelection): string => {
   let text = '';
   const selectedContent = selection.content().content;

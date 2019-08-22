@@ -43,6 +43,7 @@ export interface FindReplaceProps {
   replaceText?: string;
   count: { index: number; total: number };
   shouldFocus: boolean;
+  onFindBlur: () => void;
   onFindChange: (findText?: string) => void;
   onFindNext: () => void;
   onFindPrev: () => void;
@@ -175,6 +176,7 @@ class FindReplace extends React.PureComponent<
           autoComplete="off"
           onChange={this.handleFindChange}
           onKeyDown={this.handleFindKeyDown}
+          onBlur={this.props.onFindBlur}
         />
         {match && (
           <Count>

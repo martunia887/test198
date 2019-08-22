@@ -10,6 +10,7 @@ import {
   replaceAll,
   findNext,
   findPrev,
+  unfocus,
 } from './commands';
 import FindReplaceToolbarButton from './ui/FindReplaceToolbarButton';
 
@@ -55,6 +56,9 @@ export const findReplacePlugin = (): EditorPlugin => ({
     const handleReplaceAll = (replaceWith: string) => {
       fireCommand(replaceAll(replaceWith));
     };
+    const handleFindBlur = () => {
+      fireCommand(unfocus());
+    };
 
     return (
       <WithPluginState
@@ -74,6 +78,7 @@ export const findReplacePlugin = (): EditorPlugin => ({
               popupsMountPoint={popupsMountPoint}
               popupsScrollableElement={popupsScrollableElement}
               isReducedSpacing={isToolbarReducedSpacing}
+              onFindBlur={handleFindBlur}
               onCancel={handleCancel}
               onFind={handleFind}
               onFindNext={handleFindNext}
