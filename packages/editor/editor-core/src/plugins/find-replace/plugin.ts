@@ -87,6 +87,7 @@ const onDocChangedFn = (
     return {
       ...pluginState,
       matches,
+      shouldFocus: false,
     };
   }
   return pluginState;
