@@ -2,6 +2,7 @@ import React, { useContext, FC } from 'react';
 
 import { AnalyticsReactContext } from './AnalyticsReactContext';
 import UIAnalyticsEvent, { UIAnalyticsEventHandler } from './UIAnalyticsEvent';
+import { AnalyticsReactContextReconciler } from './AnalyticsReactContextReconciler';
 
 type Props = {
   children?: React.ReactNode;
@@ -35,7 +36,9 @@ const AnalyticsListener: FC<Props> = ({ onEvent, channel, children }) => {
         getAtlaskitAnalyticsEventHandlers: getAnalyticsEventHandlers,
       }}
     >
-      {children}
+      <AnalyticsReactContextReconciler>
+        {children}
+      </AnalyticsReactContextReconciler>
     </AnalyticsReactContext.Provider>
   );
 };
