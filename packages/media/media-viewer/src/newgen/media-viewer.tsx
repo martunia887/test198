@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { ComponentClass, SyntheticEvent } from 'react';
-import { Context, Identifier } from '@atlaskit/media-core';
+import { SyntheticEvent } from 'react';
+import { MediaClient, Identifier } from '@atlaskit/media-client';
 import { IntlProvider, intlShape } from 'react-intl';
 import { Shortcut } from '@atlaskit/media-ui';
 import {
   withAnalyticsEvents,
-  WithAnalyticsEventProps,
+  WithAnalyticsEventsProps,
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 import { mediaViewerModalEvent } from './analytics/media-viewer';
@@ -25,9 +25,9 @@ export type Props = {
   onClose?: () => void;
   selectedItem?: Identifier;
   featureFlags?: MediaViewerFeatureFlags;
-  context: Context;
+  mediaClient: MediaClient;
   itemSource: ItemSource;
-} & WithAnalyticsEventProps;
+} & WithAnalyticsEventsProps;
 
 export class MediaViewerComponent extends React.Component<Props, {}> {
   static contextTypes = {
@@ -92,13 +92,7 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
   }
 
   private renderContent() {
-    const {
-      selectedItem,
-      context,
-      onClose,
-      itemSource,
-      featureFlags,
-    } = this.props;
+    const { selectedItem, mediaClient, onClose, itemSource } = this.props;
     const defaultSelectedItem = selectedItem;
 
     if (itemSource.kind === 'COLLECTION') {
@@ -107,9 +101,8 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
           pageSize={itemSource.pageSize}
           defaultSelectedItem={defaultSelectedItem}
           collectionName={itemSource.collectionName}
-          context={context}
+          mediaClient={mediaClient}
           onClose={onClose}
-          featureFlags={featureFlags}
         />
       );
     } else if (itemSource.kind === 'ARRAY') {
@@ -120,9 +113,8 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
         <List
           defaultSelectedItem={defaultSelectedItem || firstItem}
           items={items}
-          context={context}
+          mediaClient={mediaClient}
           onClose={onClose}
-          featureFlags={featureFlags}
         />
       );
     } else {
@@ -131,6 +123,4 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
   }
 }
 
-export const MediaViewer = withAnalyticsEvents()(
-  MediaViewerComponent,
-) as ComponentClass<Props>;
+export const MediaViewer = withAnalyticsEvents()(MediaViewerComponent);

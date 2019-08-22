@@ -78,11 +78,16 @@ describe('<QuickSearch />', () => {
 
     it('should support non-component children', () => {
       render({ children: 'child' });
+      // Modified as per BUILDTOOLS-220: expect.hasAssertions(), please modify accordingly.
+      expect(wrapper.children).toBeDefined();
       /* Expect that no errors occur while parsing children */
     });
 
     it('should support non-component grandchildren', () => {
       render({ children: <div>grandchild</div> });
+      // Modified as per BUILDTOOLS-220: expect.hasAssertions(), please modify accordingly.
+      expect(wrapper.find('div').exists()).toBe(true);
+      expect(wrapper.find('div').children).toBeDefined();
       /* Expect that no errors occur while parsing children */
     });
   });
@@ -218,11 +223,14 @@ describe('<QuickSearch />', () => {
   });
 
   describe('Keyboard controls', () => {
-    let originalWindowAssign: { (url: string): void };
+    let originalWindowLocation = window.location;
     let locationAssignSpy: jest.Mock<{}>;
 
     beforeAll(() => {
-      originalWindowAssign = window.location.assign;
+      delete window.location;
+      window.location = Object.assign({}, window.location, {
+        assign: jest.fn(),
+      });
     });
 
     beforeEach(() => {
@@ -231,7 +239,7 @@ describe('<QuickSearch />', () => {
     });
 
     afterAll(() => {
-      window.location.assign = originalWindowAssign;
+      window.location = originalWindowLocation;
     });
     it('should select the first result on first DOWN keystroke', () => {
       wrapper

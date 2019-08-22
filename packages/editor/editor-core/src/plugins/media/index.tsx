@@ -10,12 +10,17 @@ import {
   createPlugin,
   MediaState,
 } from './pm-plugins/main';
+import {
+  createPlugin as createMediaEditorPlugin,
+  pluginKey as mediaEditorPluginKey,
+} from './pm-plugins/media-editor';
 import keymapMediaSinglePlugin from './pm-plugins/keymap-media-single';
 import keymapPlugin from './pm-plugins/keymap';
+import linkingPlugin from './pm-plugins/linking';
 import ToolbarMedia from './ui/ToolbarMedia';
 import { ReactMediaGroupNode } from './nodeviews/mediaGroup';
 import { ReactMediaSingleNode } from './nodeviews/mediaSingle';
-import { CustomMediaPicker, MediaProvider } from './types';
+import { CustomMediaPicker, MediaProvider, MediaEditorState } from './types';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { floatingToolbar } from './toolbar';
 
@@ -27,10 +32,10 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
 } from '../analytics';
-import WithPluginState from '../../ui/WithPluginState';
 import { IconImages } from '../quick-insert/assets';
-import CustomSmartMediaEditor from './ui/CustomSmartMediaEditor';
-import ClipboardMediaPickerWrapper from './ui/ClipboardMediaPickerWrapper';
+import WithPluginState from '../../ui/WithPluginState';
+import MediaEditor from './ui/MediaEditor';
+import { MediaPickerComponents } from './ui/MediaPicker';
 
 export { MediaState, MediaProvider, CustomMediaPicker };
 export { insertMediaSingleNode } from './utils/media-single';
@@ -43,6 +48,7 @@ export interface MediaOptions {
   customMediaPicker?: CustomMediaPicker;
   allowResizing?: boolean;
   allowAnnotation?: boolean;
+  allowLinking?: boolean;
 }
 
 export interface MediaSingleOptions {
@@ -75,7 +81,7 @@ const mediaPlugin = (
   },
 
   pmPlugins() {
-    return [
+    const pmPlugins = [
       {
         name: 'media',
         plugin: ({
@@ -123,31 +129,67 @@ const mediaPlugin = (
           ),
       },
       { name: 'mediaKeymap', plugin: () => keymapPlugin() },
-    ].concat(
-      options && options.allowMediaSingle
-        ? {
-            name: 'mediaSingleKeymap',
-            plugin: ({ schema, props }) =>
-              keymapMediaSinglePlugin(schema, props.appearance),
-          }
-        : [],
-    );
+    ];
+
+    if (options && options.allowMediaSingle) {
+      pmPlugins.push({
+        name: 'mediaSingleKeymap',
+        plugin: ({ schema, props }) =>
+          keymapMediaSinglePlugin(schema, props.appearance),
+      });
+    }
+
+    if (options && options.allowAnnotation) {
+      pmPlugins.push({ name: 'mediaEditor', plugin: createMediaEditorPlugin });
+    }
+
+    if (options && options.allowLinking) {
+      pmPlugins.push({
+        name: 'mediaLinking',
+        plugin: ({ dispatch }: PMPluginFactoryParams) =>
+          linkingPlugin(dispatch),
+      });
+    }
+
+    return pmPlugins;
   },
 
-  contentComponent({ editorView }) {
+  contentComponent({ editorView, eventDispatcher }) {
+    // render MediaEditor separately because it doesn't depend on media plugin state
+    // so we can utilise EventDispatcher-based rerendering
+    const mediaEditor =
+      options && options.allowAnnotation ? (
+        <WithPluginState
+          editorView={editorView}
+          plugins={{ mediaEditorState: mediaEditorPluginKey }}
+          eventDispatcher={eventDispatcher}
+          render={({
+            mediaEditorState,
+          }: {
+            mediaEditorState: MediaEditorState;
+          }) => (
+            <MediaEditor
+              mediaEditorState={mediaEditorState}
+              view={editorView}
+            />
+          )}
+        />
+      ) : null;
+
     return (
-      <WithPluginState
-        editorView={editorView}
-        plugins={{
-          mediaState: pluginKey,
-        }}
-        render={({ mediaState }) => (
-          <>
-            <CustomSmartMediaEditor mediaState={mediaState} />
-            <ClipboardMediaPickerWrapper mediaState={mediaState} />
-          </>
-        )}
-      />
+      <>
+        <WithPluginState
+          editorView={editorView}
+          plugins={{
+            mediaState: pluginKey,
+          }}
+          render={({ mediaState }) => (
+            <MediaPickerComponents mediaState={mediaState} />
+          )}
+        />
+
+        {mediaEditor}
+      </>
     );
   },
 
@@ -188,14 +230,14 @@ const mediaPlugin = (
       },
     ],
 
-    floatingToolbar: (state, intl) =>
-      floatingToolbar(
-        state,
-        intl,
-        options && options.allowResizing,
-        options && options.allowAnnotation,
+    floatingToolbar: (state, intl, providerFactory) =>
+      floatingToolbar(state, intl, {
+        providerFactory,
         appearance,
-      ),
+        allowResizing: options && options.allowResizing,
+        allowAnnotation: options && options.allowAnnotation,
+        allowLinking: options && options.allowLinking,
+      }),
   },
 });
 

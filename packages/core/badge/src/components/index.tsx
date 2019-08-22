@@ -1,5 +1,7 @@
-import GlobalTheme, { ThemeProp, GlobalThemeTokens } from '@atlaskit/theme';
-import * as React from 'react';
+import GlobalTheme from '@atlaskit/theme/components';
+import { ThemeProp } from '@atlaskit/theme/components';
+import { GlobalThemeTokens } from '@atlaskit/theme/components';
+import React from 'react';
 
 import Container from './Container';
 import Format from './Format';
@@ -45,7 +47,6 @@ export default class Badge extends React.Component<BadgeProps> {
     children: 0,
     max: 99,
     onValueUpdated: () => {},
-    value: undefined,
   };
 
   // TODO This can be removed when we remove support for onValueUpdated.

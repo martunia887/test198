@@ -3,13 +3,15 @@
 import Calendar from '@atlaskit/calendar';
 import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 import Select, { mergeStyles } from '@atlaskit/select';
-import { borderRadius, colors, layers, elevation } from '@atlaskit/theme';
+import { borderRadius, layers } from '@atlaskit/theme/constants';
+import { N20, B100 } from '@atlaskit/theme/colors';
+import { e200 } from '@atlaskit/theme/elevation';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import { format, isValid, parse, getDaysInMonth } from 'date-fns';
+import { format, isValid, parse, lastDayOfMonth } from 'date-fns';
 import pick from 'lodash.pick';
 import React, { Component, type Node, type ElementRef } from 'react';
 import styled from 'styled-components';
@@ -99,10 +101,10 @@ function getValidDate(iso: string) {
 }
 
 const StyledMenu = styled.div`
-  background-color: ${colors.N20};
+  background-color: ${N20};
   border-radius: ${borderRadius()}px;
   z-index: ${layers.dialog};
-  ${elevation.e200};
+  ${e200};
 `;
 
 const Menu = ({ selectProps, innerProps }: Object) => (
@@ -192,12 +194,25 @@ class DatePicker extends Component<Props, State> {
     const [year, month, date] = iso.split('-');
     let newIso = iso;
 
-    const lastDayInMonth = getDaysInMonth(
-      new Date(parseInt(year, 10), parseInt(month, 10) - 1),
-    );
+    const parsedDate: number = parseInt(date, 10);
+    const parsedMonth: number = parseInt(month, 10);
+    const parsedYear: number = parseInt(year, 10);
 
-    if (parseInt(lastDayInMonth, 10) < parseInt(date, 10)) {
-      newIso = `${year}-${month}-${lastDayInMonth}`;
+    const lastDayInMonth: number = lastDayOfMonth(
+      new Date(
+        parsedYear,
+        parsedMonth - 1, // This needs to be -1, because the Date constructor expects an index of the given month
+      ),
+    ).getDate();
+
+    const parsedLastDayInMonth: number = parseInt(lastDayInMonth, 10);
+
+    if (parsedLastDayInMonth < parsedDate) {
+      newIso = `${year}-${padToTwo(parsedMonth)}-${padToTwo(
+        parsedLastDayInMonth,
+      )}`;
+    } else {
+      newIso = `${year}-${padToTwo(parsedMonth)}-${padToTwo(parsedDate)}`;
     }
 
     this.setState({ view: newIso });
@@ -330,7 +345,7 @@ class DatePicker extends Component<Props, State> {
   };
 
   getSubtleControlStyles = (isOpen: boolean) => ({
-    border: `2px solid ${isOpen ? colors.B100 : `transparent`}`,
+    border: `2px solid ${isOpen ? B100 : `transparent`}`,
     backgroundColor: 'transparent',
     padding: '1px',
   });

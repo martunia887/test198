@@ -3,11 +3,11 @@ import {
   FileDetails,
   MediaType,
   FileProcessingStatus,
-  Context,
+  MediaClient,
   Identifier,
   ImageResizeMode,
-} from '@atlaskit/media-core';
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next';
+} from '@atlaskit/media-client';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 import { CardAction } from './actions';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
@@ -66,7 +66,7 @@ export interface SharedCardProps {
 }
 
 export interface CardOnClickCallback {
-  (result: CardEvent, analyticsEvent?: UIAnalyticsEventInterface): void;
+  (result: CardEvent, analyticsEvent?: UIAnalyticsEvent): void;
 }
 
 export interface CardEventProps {
@@ -114,7 +114,7 @@ export interface CardViewAnalyticsContext extends BaseAnalyticsContext {
 }
 
 export interface CardProps extends SharedCardProps, CardEventProps {
-  readonly context: Context;
+  readonly mediaClient: MediaClient;
   readonly identifier: Identifier;
   readonly isLazy?: boolean;
   readonly resizeMode?: ImageResizeMode;

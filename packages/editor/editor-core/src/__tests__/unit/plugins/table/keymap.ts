@@ -24,23 +24,13 @@ import {
 
 import { pluginKey } from '../../../../plugins/table/pm-plugins/main';
 import { TablePluginState } from '../../../../plugins/table/types';
-import {
-  tablesPlugin,
-  extensionPlugin,
-  tasksAndDecisionsPlugin,
-  codeBlockPlugin,
-  mediaPlugin,
-  panelPlugin,
-  rulePlugin,
-  listsPlugin,
-} from '../../../../plugins';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { AnalyticsHandler } from '../../../../analytics';
 
 describe('table keymap', () => {
   const createEditor = createEditorFactory<TablePluginState>();
 
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
   let trackEvent: AnalyticsHandler;
   let editorView: EditorView;
 
@@ -48,10 +38,10 @@ describe('table keymap', () => {
     createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
     return createEditor({
       doc,
-      editorPlugins: [tablesPlugin()],
       editorProps: {
         analyticsHandler: trackEvent,
         allowAnalyticsGASV3: true,
+        allowTables: true,
       },
       pluginKey,
       createAnalyticsEvent,
@@ -64,18 +54,16 @@ describe('table keymap', () => {
   ) =>
     createEditor({
       doc,
-      editorPlugins: [
-        tablesPlugin(),
-        rulePlugin,
-        listsPlugin,
-        panelPlugin,
-        mediaPlugin({ allowMediaSingle: true }),
-        codeBlockPlugin(),
-        tasksAndDecisionsPlugin,
-        extensionPlugin,
-      ],
       editorProps: {
         analyticsHandler: trackEvent,
+        allowExtension: true,
+        allowTables: true,
+        allowRule: true,
+        allowLists: true,
+        allowPanel: true,
+        allowCodeBlocks: true,
+        allowTasksAndDecisions: true,
+        media: { allowMediaSingle: true },
       },
       pluginKey,
     });
@@ -333,7 +321,7 @@ describe('table keymap', () => {
     });
 
     describe('when table is selected', () => {
-      it('should empty table cells and move cursor to the last selected cell', () => {
+      it('should empty table cells and move cursor to the first selected cell', () => {
         const { editorView } = editor(
           doc(
             table()(
@@ -358,14 +346,14 @@ describe('table keymap', () => {
         expect(trackEvent).toHaveBeenCalledWith(
           'atlassian.editor.format.table.delete_content.keyboard',
         );
-        expect(editorView.state.selection.$from.pos).toEqual(12);
+        expect(editorView.state.selection.$from.pos).toEqual(4);
       });
     });
 
     [0, 1, 2].forEach(index => {
       describe(`when row ${index + 1} is selected`, () => {
         it(`should empty cells in the row ${index +
-          1} and move cursor to the last selected cell`, () => {
+          1} and move cursor to the first selected cell`, () => {
           const { editorView } = editor(
             doc(
               table()(
@@ -396,7 +384,7 @@ describe('table keymap', () => {
             'atlassian.editor.format.table.delete_content.keyboard',
           );
           expect(editorView.state.selection.$from.pos).toEqual(
-            [8, 19, 30][index],
+            [4, 15, 26][index],
           );
         });
       });
@@ -436,7 +424,7 @@ describe('table keymap', () => {
             'atlassian.editor.format.table.delete_content.keyboard',
           );
           expect(editorView.state.selection.$from.pos).toEqual(
-            [18, 23, 28][index],
+            [4, 8, 12][index],
           );
         });
       });

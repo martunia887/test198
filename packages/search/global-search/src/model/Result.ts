@@ -17,6 +17,16 @@ export enum JiraProjectType {
   Ops = 'ops',
 }
 
+export interface Results<T = Result> {
+  items: T[];
+  totalSize: number;
+  numberOfCurrentItems?: number;
+}
+
+export type PeopleResults = Results<PersonResult>;
+
+export type ConfluenceObjectResults = Results<ConfluenceObjectResult>;
+
 export interface Result {
   resultId: string;
   // main text to show
@@ -37,38 +47,38 @@ export interface Result {
   key?: string;
   // used to indicate the result came from the recently viewed FE cache
   isRecentResult?: boolean;
-}
-/**
- * Map of String keys and Array of results value, but can be empty as well
- */
-export interface GenericResultMap<T = Result> {
-  [key: string]: T[];
+  // optional key of object, such as the issue key
+  objectKey?: string;
 }
 
-export type ResultsWithTiming = {
-  results: GenericResultMap;
+export type ResultsWithTiming<
+  T extends ConfluenceResultsMap | JiraResultsMap
+> = {
+  results: T;
   timings?: {
     [key: string]: number | string;
   };
   abTest?: ABTest;
 };
 
-export interface ConfluenceResultsMap extends GenericResultMap {
+export interface ConfluenceResultsMap {
+  [key: string]: PeopleResults | ConfluenceObjectResults | Results;
+  people: PeopleResults;
+  objects: ConfluenceObjectResults;
+  spaces: Results;
+}
+
+export interface ConfluenceRecentsMap {
+  objects: ConfluenceObjectResults;
+  spaces: Results;
+  people: PeopleResults;
+}
+
+export interface JiraResultsMap {
+  [key: string]: Result[];
+  objects: Result[];
+  containers: Result[];
   people: Result[];
-  objects: Result[];
-  spaces: Result[];
-}
-
-export interface ConfluenceRecentsMap extends GenericResultMap {
-  objects: Result[];
-  spaces: Result[];
-}
-
-export interface JiraResultsMap extends GenericResultMap {
-  issues: Result[];
-  boards: Result[];
-  projects: Result[];
-  filters: Result[];
 }
 
 export interface ConfluenceObjectResult extends Result {
@@ -77,11 +87,14 @@ export interface ConfluenceObjectResult extends Result {
   contentType: ContentType;
   resultType: ResultType.ConfluenceObjectResult;
   iconClass?: string;
+  friendlyLastModified: string | undefined;
 }
 
 export type ResultsGroup = {
   items: Result[];
   key: string;
+  showTotalSize: boolean;
+  totalSize: number;
   title?: FormattedMessage.MessageDescriptor;
 };
 

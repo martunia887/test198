@@ -1,18 +1,35 @@
 import { EditorState } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+import { TableMap } from 'prosemirror-tables';
 import { findDomRefAtPos } from 'prosemirror-utils';
-import { akEditorTableToolbarSize } from '@atlaskit/editor-common';
+import {
+  akEditorTableToolbarSize,
+  tableResizeHandleWidth,
+} from '@atlaskit/editor-common';
 import { TableCssClassName as ClassName } from '../../../types';
 import { getPluginState as getMainPluginState } from '../../main';
-import { getColumnsWidths } from '../../../utils';
 import { closestElement } from '../../../../../utils';
-import { pointsAtCell } from '../utils';
-import { updateRightShadow } from '../../../nodeviews/TableComponent';
-import { getPluginState } from '../plugin';
+import { updateOverflowShadows } from '../../../nodeviews/TableComponent';
+import { pointsAtCell, domCellAround, edgeCell } from './misc';
 
-export const updateControls = (
-  state: EditorState,
-  domAtPos: (pos: number) => { node: Node; offset: number },
-) => {
+function getHeights(
+  children: NodeListOf<HTMLElement>,
+): Array<number | undefined> {
+  const heights: Array<number | undefined> = [];
+  for (let i = 0, count = children.length; i < count; i++) {
+    const child: HTMLElement = children[i] as HTMLElement;
+    if (child) {
+      const rect = child.getBoundingClientRect();
+      const height = rect ? rect.height : child.offsetHeight;
+      heights[i] = height;
+    } else {
+      heights[i] = undefined;
+    }
+  }
+  return heights;
+}
+
+export const updateControls = (state: EditorState) => {
   const { tableRef } = getMainPluginState(state);
   if (!tableRef) {
     return;
@@ -26,9 +43,6 @@ export const updateControls = (
     return;
   }
 
-  const columnControls = wrapper.querySelectorAll<HTMLElement>(
-    `.${ClassName.COLUMN_CONTROLS_BUTTON_WRAP}`,
-  );
   const rows = tableRef.querySelectorAll('tr');
   const rowControls = wrapper.parentElement.querySelectorAll<HTMLElement>(
     `.${ClassName.ROW_CONTROLS_BUTTON_WRAP}`,
@@ -37,29 +51,28 @@ export const updateControls = (
     ClassName.NUMBERED_COLUMN_BUTTON,
   );
 
-  const columnsWidths = getColumnsWidths(state, domAtPos);
-  // update column controls width on resize
-  for (let i = 0, count = columnControls.length; i < count; i++) {
-    if (columnsWidths[i]) {
-      columnControls[i].style.width = `${columnsWidths[i]}px`;
-    }
-  }
+  const rowHeights = getHeights(rows);
+
   // update rows controls height on resize
   for (let i = 0, count = rowControls.length; i < count; i++) {
-    if (rows[i]) {
-      rowControls[i].style.height = `${getHeight(rows[i]) + 1}px`;
+    const height = rowHeights[i];
+    if (height) {
+      rowControls[i].style.height = `${height + 1}px`;
 
       if (numberedRows.length) {
-        numberedRows[i].style.height = `${getHeight(rows[i]) + 1}px`;
+        numberedRows[i].style.height = `${height + 1}px`;
       }
     }
   }
 
-  updateRightShadow(
+  updateOverflowShadows(
     wrapper,
     tableRef,
     wrapper.parentElement.querySelector<HTMLElement>(
       `.${ClassName.TABLE_RIGHT_SHADOW}`,
+    ),
+    wrapper.parentElement.querySelector<HTMLElement>(
+      `.${ClassName.TABLE_LEFT_SHADOW}`,
     ),
   );
 };
@@ -103,8 +116,8 @@ export const createResizeHandle = (
 export const updateResizeHandle = (
   state: EditorState,
   domAtPos: (pos: number) => { node: Node; offset: number },
+  resizeHandlePos: number,
 ) => {
-  const { resizeHandlePos } = getPluginState(state);
   if (
     resizeHandlePos === null ||
     !pointsAtCell(state.doc.resolve(resizeHandlePos))
@@ -140,7 +153,35 @@ export const updateResizeHandle = (
   return;
 };
 
-function getHeight(element: HTMLElement): number {
-  const rect = element.getBoundingClientRect();
-  return rect ? rect.height : element.offsetHeight;
-}
+export const getResizeCellPos = (
+  view: EditorView,
+  event: MouseEvent,
+  lastColumnResizable: boolean,
+): number | null => {
+  const { state } = view;
+  const target = domCellAround(event.target as HTMLElement | null);
+  let cellPos: number | null = null;
+
+  if (target) {
+    const { left, right } = target.getBoundingClientRect();
+    if (event.clientX - left <= tableResizeHandleWidth) {
+      cellPos = edgeCell(view, event, 'left', tableResizeHandleWidth);
+    } else if (right - event.clientX <= tableResizeHandleWidth) {
+      cellPos = edgeCell(view, event, 'right', tableResizeHandleWidth);
+    }
+  }
+
+  if (!lastColumnResizable && cellPos !== null) {
+    const $cell = state.doc.resolve(cellPos);
+    const map = TableMap.get($cell.node(-1));
+    const start = $cell.start(-1);
+    const columnIndex =
+      map.colCount($cell.pos - start) + $cell.nodeAfter!.attrs.colspan - 1;
+
+    if (columnIndex === map.width - 1) {
+      return null;
+    }
+  }
+
+  return cellPos;
+};

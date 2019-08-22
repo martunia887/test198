@@ -2,6 +2,7 @@ import * as React from 'react';
 import rafSchedule from 'raf-schd';
 import { Node as PmNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
+import { isTableSelected } from 'prosemirror-utils';
 import {
   browser,
   calcTableWidth,
@@ -9,12 +10,10 @@ import {
 } from '@atlaskit/editor-common';
 
 import TableFloatingControls from '../ui/TableFloatingControls';
-import ColumnControls from '../ui/TableFloatingControls/ColumnControls';
 
 import { getPluginState } from '../pm-plugins/main';
 import { scaleTable } from '../pm-plugins/table-resizing';
 import {
-  getParentNodeWidth,
   getLayoutSize,
   insertColgroupFromNode as recreateResizeColsByNode,
   updateControls,
@@ -28,16 +27,15 @@ import {
 import classnames from 'classnames';
 const isIE11 = browser.ie_version === 11;
 
-import { Props } from './table';
+import { Props, TableOptions } from './table';
 import {
   containsHeaderRow,
-  checkIfHeaderColumnEnabled,
-  checkIfHeaderRowEnabled,
   tablesHaveDifferentColumnWidths,
   tablesHaveDifferentNoOfColumns,
 } from '../utils';
 import { autoSizeTable } from '../commands';
 import { WidthPluginState } from '../../width';
+import { getParentNodeWidth } from '../../../utils/node-width';
 
 export interface ComponentProps extends Props {
   view: EditorView;
@@ -67,15 +65,28 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
   private wrapper?: HTMLDivElement | null;
   private table?: HTMLTableElement | null;
   private rightShadow?: HTMLDivElement | null;
+  private leftShadow?: HTMLDivElement | null;
   private frameId?: number;
   private node?: PmNode;
   private containerWidth?: WidthPluginState;
+  private layoutSize?: number;
 
   constructor(props: ComponentProps) {
     super(props);
+    const { options, containerWidth, node } = props;
 
-    this.node = props.node;
-    this.containerWidth = props.containerWidth;
+    this.node = node;
+    this.containerWidth = containerWidth;
+
+    // store table size using previous full-width mode so can detect if it has changed
+    const dynamicTextSizing = options ? options.dynamicTextSizing : false;
+    const isFullWidthModeEnabled = options
+      ? options.wasFullWidthModeEnabled
+      : false;
+    this.layoutSize = this.tableNodeLayoutSize(node, containerWidth.width, {
+      dynamicTextSizing,
+      isFullWidthModeEnabled,
+    });
 
     // Disable inline table editing and resizing controls in Firefox
     // https://github.com/ProseMirror/prosemirror/issues/432
@@ -122,7 +133,12 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
   }
 
   componentDidUpdate(prevProps: ComponentProps) {
-    updateRightShadow(this.wrapper, this.table, this.rightShadow);
+    updateOverflowShadows(
+      this.wrapper,
+      this.table,
+      this.rightShadow,
+      this.leftShadow,
+    );
 
     if (this.props.node.attrs.__autoSize) {
       // Wait for next tick to handle auto sizing, gives the browser time to do layout calc etc.
@@ -136,7 +152,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
       ) {
         const { view } = this.props;
         recreateResizeColsByNode(this.table, this.props.node);
-        updateControls(view.state, view.domAtPos.bind(view));
+        updateControls(view.state);
       }
 
       this.frameId = this.handleTableResizingDebounced(prevProps);
@@ -157,27 +173,15 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     } = pluginState;
 
     // doesn't work well with WithPluginState
-    const {
-      isInDanger,
-      hoveredColumns,
-      hoveredRows,
-      insertColumnButtonIndex,
-      insertRowButtonIndex,
-    } = getPluginState(view.state);
+    const { isInDanger, hoveredRows } = getPluginState(view.state);
 
     const tableRef = this.table || undefined;
     const tableActive = this.table === pluginState.tableRef;
     const isResizing =
       !!tableResizingPluginState && !!tableResizingPluginState.dragging;
-    const { scroll } = this.state;
 
     const rowControls = [
-      <div
-        key={0}
-        className={`${ClassName.ROW_CONTROLS_WRAPPER} ${
-          scroll > 0 ? ClassName.TABLE_LEFT_SHADOW : ''
-        }`}
-      >
+      <div key={0} className={`${ClassName.ROW_CONTROLS_WRAPPER}`}>
         <TableFloatingControls
           editorView={view}
           tableRef={tableRef}
@@ -186,30 +190,12 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
           isInDanger={isInDanger}
           isResizing={isResizing}
           isNumberColumnEnabled={node.attrs.isNumberColumnEnabled}
-          isHeaderColumnEnabled={checkIfHeaderColumnEnabled(view.state)}
-          isHeaderRowEnabled={checkIfHeaderRowEnabled(view.state)}
+          isHeaderRowEnabled={pluginState.isHeaderRowEnabled}
+          isHeaderColumnEnabled={pluginState.isHeaderColumnEnabled}
           hasHeaderRow={containsHeaderRow(view.state, node)}
           // pass `selection` and `tableHeight` to control re-render
           selection={view.state.selection}
           tableHeight={tableRef ? tableRef.offsetHeight : undefined}
-          insertColumnButtonIndex={insertColumnButtonIndex}
-          insertRowButtonIndex={insertRowButtonIndex}
-        />
-      </div>,
-    ];
-
-    const columnControls = [
-      <div key={0} className={ClassName.COLUMN_CONTROLS_WRAPPER}>
-        <ColumnControls
-          editorView={view}
-          tableRef={tableRef}
-          hoveredColumns={hoveredColumns}
-          isInDanger={isInDanger}
-          isResizing={isResizing}
-          // pass `selection` and `numberOfColumns` to control re-render
-          selection={view.state.selection}
-          numberOfColumns={node.firstChild!.childCount}
-          insertColumnButtonIndex={insertColumnButtonIndex}
         />
       </div>,
     ];
@@ -221,12 +207,20 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
         }}
         className={classnames(ClassName.TABLE_CONTAINER, {
           [ClassName.WITH_CONTROLS]: tableActive,
+          [ClassName.HOVERED_DELETE_BUTTON]: isInDanger,
+          [ClassName.TABLE_SELECTED]: isTableSelected(view.state.selection),
           'less-padding': width < akEditorMobileBreakoutPoint,
         })}
         data-number-column={node.attrs.isNumberColumnEnabled}
         data-layout={node.attrs.layout}
       >
         {allowControls && rowControls}
+        <div
+          ref={elem => {
+            this.leftShadow = elem;
+          }}
+          className={ClassName.TABLE_LEFT_SHADOW}
+        />
         <div
           className={classnames(ClassName.TABLE_NODE_WRAPPER)}
           ref={elem => {
@@ -236,9 +230,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
               this.table = elem.querySelector('table');
             }
           }}
-        >
-          {allowControls && columnControls}
-        </div>
+        />
         <div
           ref={elem => {
             this.rightShadow = elem;
@@ -258,8 +250,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
   };
 
   private handleTableResizing = () => {
-    const { node, containerWidth } = this.props;
-    const prevWidth = this.containerWidth!.width;
+    const { node, containerWidth, options } = this.props;
     const prevNode = this.node!;
     const prevAttrs = prevNode.attrs;
 
@@ -272,8 +263,11 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     const parentWidthChanged =
       parentWidth && parentWidth !== this.state.parentWidth;
 
-    const currentLayoutSize = this.tableNodeLayoutSize(node);
-    const prevLayoutSize = this.tableNodeLayoutSize(prevNode, prevWidth);
+    const layoutSize = this.tableNodeLayoutSize(
+      node,
+      containerWidth.width,
+      options,
+    );
 
     if (
       // Breakout mode/layout changed
@@ -287,7 +281,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
       tablesHaveDifferentNoOfColumns(node, prevNode) ||
       // This last check is also to cater for dynamic text sizing changing the 'default' layout width
       // Usually happens on window resize.
-      currentLayoutSize !== prevLayoutSize
+      layoutSize !== this.layoutSize
     ) {
       this.scaleTable({ parentWidth, layoutChanged });
       this.updateParentWidth(parentWidth);
@@ -296,6 +290,7 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     this.updateTableContainerWidth();
     this.node = node;
     this.containerWidth = containerWidth;
+    this.layoutSize = layoutSize;
   };
 
   private scaleTable = (scaleOptions: {
@@ -393,11 +388,15 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     this.setState({ parentWidth: width });
   };
 
-  private tableNodeLayoutSize = (node: PmNode, containerWidth?: number) =>
+  private tableNodeLayoutSize = (
+    node: PmNode,
+    containerWidth?: number,
+    options?: TableOptions,
+  ) =>
     getLayoutSize(
       node.attrs.layout,
       containerWidth || this.props.containerWidth.width,
-      this.props.options || {},
+      options || this.props.options || {},
     );
 
   private scaleTableDebounced = rafSchedule(this.scaleTable);
@@ -407,15 +406,22 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
   private handleWindowResizeDebounced = rafSchedule(this.handleWindowResize);
 }
 
-export const updateRightShadow = (
+export const updateOverflowShadows = (
   wrapper?: HTMLElement | null,
   table?: HTMLElement | null,
   rightShadow?: HTMLElement | null,
+  leftShadow?: HTMLElement | null,
 ) => {
-  if (table && wrapper && rightShadow) {
-    const diff = table.offsetWidth - wrapper.offsetWidth;
-    rightShadow.style.display =
-      diff > 0 && diff > wrapper.scrollLeft ? 'block' : 'none';
+  // Right shadow
+  if (table && wrapper) {
+    if (rightShadow) {
+      const diff = table.offsetWidth - wrapper.offsetWidth;
+      rightShadow.style.display =
+        diff > 0 && diff > wrapper.scrollLeft ? 'block' : 'none';
+    }
+    if (leftShadow) {
+      leftShadow.style.display = wrapper.scrollLeft > 0 ? 'block' : 'none';
+    }
   }
   return;
 };

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import DynamicTableStateless from './Stateless';
 import { SortOrderType, StatefulProps, RankEnd, RowType } from '../types';
 import { reorderRows } from '../internal/helpers';
@@ -96,6 +96,7 @@ export default class DynamicTable extends React.Component<
       rowsPerPage,
       paginationi18n,
       onRankStart,
+      onPageRowsUpdate,
     } = this.props;
 
     return (
@@ -118,6 +119,7 @@ export default class DynamicTable extends React.Component<
         isRankingDisabled={isRankingDisabled}
         onRankEnd={this.onRankEnd}
         onRankStart={onRankStart}
+        onPageRowsUpdate={onPageRowsUpdate}
       />
     );
   }

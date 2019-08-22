@@ -6,11 +6,26 @@ export default (
   action: TablePluginAction,
 ): TablePluginState => {
   switch (action.type) {
+    case 'TOGGLE_HEADER_COLUMN':
+      return {
+        ...pluginState,
+        isHeaderColumnEnabled: !pluginState.isHeaderColumnEnabled,
+      };
+
+    case 'TOGGLE_HEADER_ROW':
+      return {
+        ...pluginState,
+        isHeaderRowEnabled: !pluginState.isHeaderRowEnabled,
+      };
+
     case 'CLEAR_HOVER_SELECTION':
       return { ...pluginState, ...action.data, ...defaultTableSelection };
 
     case 'SET_TARGET_CELL_POSITION':
       return { ...pluginState, ...action.data, isContextualMenuOpen: false };
+
+    case 'SET_TABLE_LAYOUT':
+      return { ...pluginState, ...action.data };
 
     case 'TOGGLE_CONTEXTUAL_MENU':
       return {
@@ -24,7 +39,12 @@ export default (
       ) {
         return pluginState;
       }
-      return { ...pluginState, ...action.data };
+
+      return {
+        ...pluginState,
+        ...action.data,
+        insertColumnButtonIndex: undefined, // We need to assure that column is not shown
+      };
 
     case 'SHOW_INSERT_COLUMN_BUTTON':
       if (
@@ -33,7 +53,11 @@ export default (
       ) {
         return pluginState;
       }
-      return { ...pluginState, ...action.data };
+      return {
+        ...pluginState,
+        ...action.data,
+        insertRowButtonIndex: undefined, // We need to assure that row is not shown
+      };
 
     case 'HIDE_INSERT_COLUMN_OR_ROW_BUTTON':
       if (

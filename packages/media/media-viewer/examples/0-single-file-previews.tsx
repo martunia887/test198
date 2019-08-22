@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {
-  createStorybookContext,
   externalImageIdentifier,
+  defaultCollectionName,
+  createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
-import { Identifier } from '@atlaskit/media-core';
+import { Identifier } from '@atlaskit/media-client';
 import { ButtonList, Container, Group } from '../example-helpers/styled';
 import {
   archiveItem,
@@ -20,15 +21,15 @@ import {
   videoLargeFileItem,
   videoProcessingFailedItem,
   wideImageItem,
-  defaultCollectionName,
+  verticalImageItem,
   videoSquareFileIdItem,
 } from '../example-helpers';
 import { MediaViewer } from '../src';
 import { AnalyticsListener } from '@atlaskit/analytics-next';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 
-const handleEvent = (/*analyticsEvent: UIAnalyticsEventInterface*/) => {
+const handleEvent = (/*analyticsEvent: UIAnalyticsEvent*/) => {
   // instrument here...
 };
 
@@ -49,7 +50,11 @@ export default class Example extends React.Component<{}, State> {
     return (
       <div>
         <h4>{title}</h4>
-        <Card identifier={identifier} context={context} onClick={onClick} />
+        <Card
+          identifier={identifier}
+          mediaClientConfig={mediaClientConfig}
+          onClick={onClick}
+        />
       </div>
     );
   };
@@ -66,6 +71,7 @@ export default class Example extends React.Component<{}, State> {
               <li>{this.createItem(imageItem, 'Picture')}</li>
               <li>{this.createItem(smallImageItem, 'Icon')}</li>
               <li>{this.createItem(wideImageItem, 'Wide')}</li>
+              <li>{this.createItem(verticalImageItem, 'Vertical')}</li>
               <li>{this.createItem(largeImageItem, 'Large')}</li>
             </ButtonList>
           </Group>
@@ -115,7 +121,7 @@ export default class Example extends React.Component<{}, State> {
           {selectedIdentifier && (
             <AnalyticsListener channel="media" onEvent={handleEvent}>
               <MediaViewer
-                context={context}
+                mediaClientConfig={mediaClientConfig}
                 selectedItem={selectedIdentifier}
                 dataSource={{ list: [selectedIdentifier] }}
                 collectionName={defaultCollectionName}

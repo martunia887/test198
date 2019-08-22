@@ -3,17 +3,19 @@ import { ComponentType } from 'react';
 import FeedbackButton from './FeedbackButton';
 import FeedbackCollector, { FeedbackFlag } from '@atlaskit/feedback-collector';
 import { FlagGroup } from '@atlaskit/flag';
+import { FeaturesProviderProps, injectFeatures } from '../FeaturesProvider';
 
 const EMBEDDABLE_KEY = '85dc6027-c074-4800-ba54-4ecb844b29f8';
 const REQUEST_TYPE_ID = '182';
+const FEEDBACK_CONTEXT_CF = 'customfield_10047';
 
 export interface FeedbackCollectorProps {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
 }
 
 export interface InjectedInputControlProps {
-  inputControls?: JSX.Element;
+  inputControls: JSX.Element | undefined;
 }
 
 interface State {
@@ -21,11 +23,13 @@ interface State {
   displayFlag: boolean;
 }
 
-export default function withFeedbackButton<P>(
-  WrappedComponent: ComponentType<P & InjectedInputControlProps>,
-): ComponentType<P & FeedbackCollectorProps> {
-  return class WithFeedbackButton extends React.Component<
-    P & FeedbackCollectorProps,
+export function withFeedbackButton<P extends InjectedInputControlProps>(
+  WrappedComponent: ComponentType<P>,
+) {
+  class WithFeedbackButton extends React.Component<
+    Pick<P, Exclude<keyof P, keyof InjectedInputControlProps>> &
+      FeedbackCollectorProps &
+      FeaturesProviderProps,
     State
   > {
     static displayName = `WithFeedbackButton(${WrappedComponent.displayName ||
@@ -53,10 +57,17 @@ export default function withFeedbackButton<P>(
     render() {
       const { isOpen, displayFlag } = this.state;
 
-      const { name, email } = this.props;
+      const {
+        name,
+        email,
+        features: {
+          abTest: { experimentId, abTestId },
+        },
+      } = this.props;
+      const feedbackContext = `experimentId: ${experimentId}, abTestId: ${abTestId}`;
 
       return (
-        <div>
+        <>
           <WrappedComponent
             {...this.props}
             inputControls={this.renderFeedbackButton()}
@@ -69,6 +80,12 @@ export default function withFeedbackButton<P>(
               name={name}
               requestTypeId={REQUEST_TYPE_ID}
               embeddableKey={EMBEDDABLE_KEY}
+              additionalFields={[
+                {
+                  id: FEEDBACK_CONTEXT_CF,
+                  value: feedbackContext,
+                },
+              ]}
             />
           )}
 
@@ -77,8 +94,10 @@ export default function withFeedbackButton<P>(
               <FeedbackFlag />
             </FlagGroup>
           )}
-        </div>
+        </>
       );
     }
-  };
+  }
+
+  return injectFeatures(WithFeedbackButton);
 }

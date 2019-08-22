@@ -1,17 +1,21 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
 import {
-  Context,
+  MediaClient,
   FileState,
   MediaType,
   ProcessedFileState,
   ProcessingFileState,
   Identifier,
   isExternalImageIdentifier,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
 import deepEqual from 'deep-equal';
-import { messages, toHumanReadableMediaSize } from '@atlaskit/media-ui';
+import {
+  hideControlsClassName,
+  messages,
+  toHumanReadableMediaSize,
+} from '@atlaskit/media-ui';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { Outcome } from './domain';
 import {
@@ -23,7 +27,6 @@ import {
   MedatadataTextWrapper,
   MetadataIconWrapper,
   MetadataFileName,
-  hideControlsClassName,
 } from './styled';
 import { MediaTypeIcon } from './media-type-icon';
 import { MediaViewerError, createError } from './error';
@@ -34,7 +37,7 @@ import {
 
 export type Props = {
   readonly identifier: Identifier;
-  readonly context: Context;
+  readonly mediaClient: MediaClient;
   readonly onClose?: () => void;
 };
 
@@ -68,7 +71,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
 
   private init(props: Props) {
     this.setState(initialState, async () => {
-      const { context, identifier } = props;
+      const { mediaClient, identifier } = props;
 
       if (isExternalImageIdentifier(identifier)) {
         const { name = identifier.dataURI } = identifier;
@@ -90,7 +93,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
       }
       const id =
         typeof identifier.id === 'string' ? identifier.id : await identifier.id;
-      this.subscription = context.file
+      this.subscription = mediaClient.file
         .getFileState(id, {
           collectionName: identifier.collectionName,
         })
@@ -111,7 +114,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
 
   private renderDownload = () => {
     const { item } = this.state;
-    const { identifier, context } = this.props;
+    const { identifier, mediaClient } = this.props;
     return item.match({
       pending: () => DisabledToolbarDownloadButton,
       failed: () => DisabledToolbarDownloadButton,
@@ -119,7 +122,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
         <ToolbarDownloadButton
           state={item}
           identifier={identifier}
-          context={context}
+          mediaClient={mediaClient}
         />
       ),
     });
@@ -199,7 +202,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
   private needsReset(propsA: Props, propsB: Props) {
     return (
       !deepEqual(propsA.identifier, propsB.identifier) ||
-      propsA.context !== propsB.context
+      propsA.mediaClient !== propsB.mediaClient
     );
   }
 

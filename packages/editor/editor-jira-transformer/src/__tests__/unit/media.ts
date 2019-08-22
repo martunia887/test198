@@ -4,6 +4,7 @@ import {
   mediaGroup,
   mediaSingle,
   media,
+  p,
 } from '@atlaskit/editor-test-helpers';
 import {
   checkParse,
@@ -196,6 +197,26 @@ describe('JIRATransformer', () => {
         ),
       );
 
+      checkParse(
+        'Converts a paragraph with mixed text and media content',
+        schema,
+        [
+          `<p>dgdsfg <span class="image-wrap" style=""><a><jira-attachment-thumbnail url="HOST/secure/thumbnail/10000/some_image.jpg?default=false" jira-url="HOST/secure/thumbnail/10000/some_image.jpg" filename="Some Image.jpg"><img src="HOST/servicedesk/customershim/secure/thumbnail/10000/some_image.jpg?fromIssue=10001" data-attachment-name="Some Image.jpg" data-attachment-type="thumbnail" data-media-services-id="42" data-media-services-type="file" style="border: 0px solid black"></jira-attachment-thumbnail></a></span> </p>`,
+        ],
+        doc(
+          p('dgdsfg '),
+          mediaGroup(
+            media({
+              id: '42',
+              type: 'file',
+              collection: '',
+              __fileName: 'Some Image.jpg',
+              __displayType: 'thumbnail',
+            })(),
+          ),
+        ),
+      );
+
       checkEncode(
         'thumbnail type (uploadContext)',
         schema,
@@ -266,6 +287,7 @@ describe('JIRATransformer', () => {
           () => transformer.parse(`<p>${fragment1}</p>`),
           'JIRATransformer.parse() should not throw exception',
         );
+        expect(() => transformer.parse(`<p>${fragment1}</p>`)).not.toThrow();
       });
 
       it('should not throw error when trying to parse media groups within non-media schema', () => {
@@ -279,6 +301,7 @@ describe('JIRATransformer', () => {
             ),
           'JIRATransformer.parse() should not throw exception',
         );
+        expect(() => transformer.parse(`<p>${fragment1}</p>`)).not.toThrow();
       });
     });
 

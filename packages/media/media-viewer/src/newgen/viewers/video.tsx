@@ -1,25 +1,27 @@
 import * as React from 'react';
-import { Context, ProcessedFileState, FileState } from '@atlaskit/media-core';
+import { MediaClient, FileState } from '@atlaskit/media-client';
 import { getArtifactUrl } from '@atlaskit/media-store';
-import { CustomMediaPlayer } from '@atlaskit/media-ui';
-import { constructAuthTokenUrl } from '../utils';
-import { Outcome, MediaViewerFeatureFlags } from '../domain';
+import {
+  CustomMediaPlayer,
+  WithShowControlMethodProp,
+} from '@atlaskit/media-ui';
+import { Outcome } from '../domain';
 import { Video, CustomVideoPlayerWrapper } from '../styled';
 import { isIE } from '../utils/isIE';
 import { createError, MediaViewerError } from '../error';
 import { BaseState, BaseViewer } from './base-viewer';
 import { getObjectUrlFromFileState } from '../utils/getObjectUrlFromFileState';
 
-export type Props = Readonly<{
-  item: FileState;
-  context: Context;
-  collectionName?: string;
-  featureFlags?: MediaViewerFeatureFlags;
-  showControls?: () => void;
-  previewCount: number;
-  onCanPlay?: () => void;
-  onError?: () => void;
-}>;
+export type Props = Readonly<
+  {
+    item: FileState;
+    mediaClient: MediaClient;
+    collectionName?: string;
+    previewCount: number;
+    onCanPlay?: () => void;
+    onError?: () => void;
+  } & WithShowControlMethodProp
+>;
 
 export type State = BaseState<string> & {
   isHDActive: boolean;
@@ -76,21 +78,19 @@ export class VideoViewer extends BaseViewer<string, Props, State> {
   }
 
   protected async init(isHDActive: boolean = this.state.isHDActive) {
-    const { context, item, collectionName } = this.props;
+    const { mediaClient, item, collectionName } = this.props;
 
     try {
       let contentUrl: string | undefined;
       if (item.status === 'processed') {
         const preferHd = isHDActive && isHDAvailable(item);
-        const artifactUrl = getVideoArtifactUrl(item, preferHd);
-        if (!artifactUrl) {
-          throw new Error(`No video artifacts found`);
-        }
-        contentUrl = await constructAuthTokenUrl(
-          artifactUrl,
-          context,
+
+        contentUrl = await mediaClient.file.getArtifactURL(
+          item.artifacts,
+          preferHd ? hdArtifact : sdArtifact,
           collectionName,
         );
+
         if (!contentUrl) {
           throw new Error(`No video artifacts found`);
         }
@@ -123,12 +123,4 @@ function isHDAvailable(file: FileState): boolean {
     return false;
   }
   return !!getArtifactUrl(file.artifacts, hdArtifact);
-}
-
-function getVideoArtifactUrl(
-  file: ProcessedFileState,
-  preferHd?: boolean,
-): string | undefined {
-  const artifactName = preferHd ? hdArtifact : sdArtifact;
-  return getArtifactUrl(file.artifacts, artifactName);
 }

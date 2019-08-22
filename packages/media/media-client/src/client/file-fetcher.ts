@@ -24,10 +24,12 @@ import {
   MediaFile,
   MediaStoreCopyFileWithTokenBody,
   MediaStoreCopyFileWithTokenParams,
+  mapMediaFileToFileState,
 } from '..';
 import isValidId from 'uuid-validate';
 import { getMediaTypeFromUploadableFile } from '../utils/getMediaTypeFromUploadableFile';
 import { convertBase64ToBlob } from '../utils/convertBase64ToBlob';
+import { observableToPromise } from '../utils/observableToPromise';
 
 const POLLING_INTERVAL = 1000;
 const maxNumberOfItemsPerCall = 100;
@@ -97,11 +99,12 @@ export interface FileFetcher {
     name?: string,
     collectionName?: string,
   ): Promise<void>;
-  getCurrentState(id: string): Promise<FileState>;
+  getCurrentState(id: string, options?: GetFileOptions): Promise<FileState>;
   copyFile(
     source: SourceFile,
     destination: CopyDestination,
   ): Promise<MediaFile>;
+  getFileBinaryURL(id: string, collectionName?: string): Promise<string>;
 }
 
 export class FileFetcherImpl implements FileFetcher {
@@ -174,8 +177,8 @@ export class FileFetcherImpl implements FileFetcher {
     });
   }
 
-  getCurrentState(id: string): Promise<FileState> {
-    return getFileStreamsCache().getCurrentState(id);
+  getCurrentState(id: string, options?: GetFileOptions): Promise<FileState> {
+    return observableToPromise(this.getFileState(id, options));
   }
 
   public getArtifactURL(
@@ -188,6 +191,10 @@ export class FileFetcherImpl implements FileFetcher {
       artifactName,
       collectionName,
     );
+  }
+
+  getFileBinaryURL(id: string, collectionName?: string): Promise<string> {
+    return this.mediaStore.getFileBinaryURL(id, collectionName);
   }
 
   private createDownloadFileStream = (
@@ -394,11 +401,9 @@ export class FileFetcherImpl implements FileFetcher {
       replaceFileId,
       occurrenceKey,
     } = destination;
-
     const mediaStore = new MediaStore({
       authProvider: destinationAuthProvider,
     });
-
     const owner = authToOwner(
       await authProvider({ collectionName: sourceCollection }),
     );
@@ -417,6 +422,15 @@ export class FileFetcherImpl implements FileFetcher {
       occurrenceKey,
     };
 
-    return (await mediaStore.copyFileWithToken(body, params)).data;
+    const copiedFile = (await mediaStore.copyFileWithToken(body, params)).data;
+    const copiedFileObservable = new ReplaySubject<FileState>(1);
+    const copiedFileState: FileState = mapMediaFileToFileState({
+      data: copiedFile,
+    });
+
+    copiedFileObservable.next(copiedFileState);
+    getFileStreamsCache().set(copiedFile.id, copiedFileObservable);
+
+    return copiedFile;
   }
 }

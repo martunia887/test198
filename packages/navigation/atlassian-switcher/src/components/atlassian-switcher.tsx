@@ -3,7 +3,13 @@ import JiraSwitcher from './jira-switcher';
 import ConfluenceSwitcher from './confluence-switcher';
 import GenericSwitcher from './generic-switcher';
 import ErrorBoundary from './error-boundary';
-import { TriggerXFlowCallback, FeatureFlagProps, Product } from '../types';
+import {
+  TriggerXFlowCallback,
+  DiscoverMoreCallback,
+  FeatureFlagProps,
+  Product,
+  RecommendationsFeatureFlags,
+} from '../types';
 import IntlProvider from './intl-provider';
 import messages from '../utils/messages';
 import {
@@ -17,8 +23,10 @@ import mapPropsToFeatures from '../utils/map-props-to-features';
 
 type AtlassianSwitcherProps = {
   product: string;
-  cloudId: string;
-  triggerXFlow: TriggerXFlowCallback;
+  cloudId?: string;
+  triggerXFlow?: TriggerXFlowCallback;
+  onDiscoverMoreClicked?: DiscoverMoreCallback;
+  recommendationsFeatureFlags?: RecommendationsFeatureFlags;
 } & Partial<FeatureFlagProps>;
 
 const getAnalyticsContext = (attributes: object) => ({
@@ -31,7 +39,7 @@ const getAnalyticsContext = (attributes: object) => ({
 const AtlassianSwitcher = (props: AtlassianSwitcherProps) => {
   const { product } = props;
 
-  let Switcher: React.ReactType;
+  let Switcher: React.ElementType;
   switch (product) {
     case Product.JIRA:
       Switcher = JiraSwitcher;

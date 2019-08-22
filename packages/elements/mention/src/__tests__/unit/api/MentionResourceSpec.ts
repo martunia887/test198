@@ -272,6 +272,7 @@ describe('MentionResource', () => {
           throw new Error('listener should not be called');
         },
         () => {
+          expect(true).toBe(true);
           done();
         },
       );
@@ -432,6 +433,24 @@ describe('MentionResource', () => {
         true,
       );
       expect(resource.shouldHighlightMention({ id: 'abcd-abcd' })).toBe(false);
+    });
+  });
+
+  describe('#ResolvingMentionProvider', () => {
+    it('should not support mention name resolving without supplying MentionNameResolver', () => {
+      const resource = new MentionResource(apiConfig);
+      expect(resource.supportsMentionNameResolving()).toEqual(false);
+    });
+
+    it('should support mention name resolving when supplying MentionNameResolver', () => {
+      const resource = new MentionResource({
+        ...apiConfig,
+        mentionNameResolver: {
+          cacheName: jest.fn(),
+          lookupName: jest.fn(),
+        },
+      });
+      expect(resource.supportsMentionNameResolving()).toEqual(true);
     });
   });
 });

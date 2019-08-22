@@ -58,6 +58,7 @@ export const SearchIssuesView = () => (
 
 export const IssuesView = ({ match }: any) => (
   <Fragment>
+    <SetActiveView id="container/project/index" />
     <h1>Issue - {match && match.params && match.params.issueId}</h1>
     <p>Issue content</p>
   </Fragment>
@@ -65,6 +66,7 @@ export const IssuesView = ({ match }: any) => (
 
 export const FiltersView = ({ match }: any) => (
   <Fragment>
+    <SetActiveView id="root/issues" />
     <h1>Filter - {match && match.params && match.params.filterId}</h1>
     <p>Filter content</p>
   </Fragment>

@@ -4,11 +4,11 @@ import {
   MediaItemType,
   FileDetails,
   ImageResizeMode,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import {
   withAnalyticsEvents,
   createAndFireEvent,
-  WithAnalyticsEventProps,
+  WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 
 import {
@@ -55,7 +55,7 @@ export interface CardViewState {
 }
 
 export type CardViewBaseProps = CardViewOwnProps &
-  WithAnalyticsEventProps & {
+  WithAnalyticsEventsProps & {
     readonly mediaItemType: MediaItemType;
   };
 

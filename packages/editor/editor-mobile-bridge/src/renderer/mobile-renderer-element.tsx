@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { MediaProvider as MediaProviderType } from '@atlaskit/editor-core';
 import { ReactRenderer } from '@atlaskit/renderer';
 
 import RendererBridgeImpl from './native-to-web/implementation';
@@ -18,6 +19,7 @@ import { ObjectKey, TaskState } from '@atlaskit/task-decision';
 
 export interface MobileRendererProps {
   document?: string;
+  mediaProvider?: Promise<MediaProviderType>;
 }
 
 export interface MobileRendererState {
@@ -46,7 +48,7 @@ export default class MobileRenderer extends React.Component<
     const taskDecisionProvider = TaskDecisionProvider(this.handleToggleTask);
 
     this.providerFactory = ProviderFactory.create({
-      mediaProvider: MediaProvider,
+      mediaProvider: props.mediaProvider || MediaProvider,
       mentionProvider: Promise.resolve(MentionProvider),
       taskDecisionProvider: Promise.resolve(taskDecisionProvider),
       emojiProvider: Promise.resolve(EmojiProvider),
@@ -91,9 +93,11 @@ export default class MobileRenderer extends React.Component<
       if (!this.state.document) {
         return null;
       }
-
+      // Temporarily opting out of the default oauth2 flow for phase 1 of Smart Links
+      // See https://product-fabric.atlassian.net/browse/FM-2149 for details.
+      const authFlow = 'disabled';
       return (
-        <SmartCardProvider client={cardClient}>
+        <SmartCardProvider client={cardClient} authFlow={authFlow}>
           <ReactRenderer
             onComplete={() => {
               if (
@@ -119,6 +123,29 @@ export default class MobileRenderer extends React.Component<
                 onClick: (event, url) => {
                   event.preventDefault();
                   this.onLinkClick(url);
+                },
+              },
+              media: {
+                onClick: (result: any, analyticsEvent?: any) => {
+                  const { mediaItemDetails } = result;
+                  // Media details only exist once resolved. Not available during loading/pending state.
+                  if (mediaItemDetails) {
+                    const mediaId = mediaItemDetails.id;
+                    // We don't have access to the occurrence key at this point so native will default to the first instance for now.
+                    // https://product-fabric.atlassian.net/browse/FM-1984
+                    const occurrenceKey: string | null = null;
+                    toNativeBridge.call('mediaBridge', 'onMediaClick', {
+                      mediaId,
+                      occurrenceKey,
+                    });
+                  }
+                },
+              },
+              mention: {
+                onClick: (profileId: string, alias: string) => {
+                  toNativeBridge.call('mentionBridge', 'onMentionClick', {
+                    profileId,
+                  });
                 },
               },
               smartCard: {
