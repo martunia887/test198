@@ -32,8 +32,7 @@ export const activate = () =>
         index,
       };
     },
-    (tr: Transaction, state: EditorState) =>
-      tr.setSelection(Selection.atStart(tr.doc)),
+    (tr: Transaction) => tr.setSelection(Selection.atStart(tr.doc)),
   );
 
 export const find = (keyword?: string) =>

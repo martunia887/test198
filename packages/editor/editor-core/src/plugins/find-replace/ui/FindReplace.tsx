@@ -74,6 +74,10 @@ class FindReplace extends React.PureComponent<
     };
   }
 
+  componentDidMount() {
+    this.focusFindTextfield();
+  }
+
   componentWillReceiveProps(newProps: FindReplaceProps) {
     if (newProps.findText && this.state.componentState === 'empty') {
       this.setState({ componentState: 'find' });
@@ -91,8 +95,8 @@ class FindReplace extends React.PureComponent<
       this.setState({ replaceText: newProps.replaceText });
     }
 
-    if (newProps.shouldFocus && this.findTextfieldRef.current) {
-      this.findTextfieldRef.current.select();
+    if (newProps.shouldFocus) {
+      this.focusFindTextfield();
     }
   }
 
@@ -100,6 +104,12 @@ class FindReplace extends React.PureComponent<
     this.setState({ findInputValue: value });
     if (this.findTextfieldRef.current) {
       this.findTextfieldRef.current.value = value;
+    }
+  };
+
+  focusFindTextfield = () => {
+    if (this.findTextfieldRef.current) {
+      this.findTextfieldRef.current.select();
     }
   };
 
