@@ -32,6 +32,9 @@ export {
   WithAnalyticsEventsProps,
 } from './withAnalyticsEvents';
 
+// useAnalytics React hook
+export { useAnalytics } from './useAnalytics';
+
 // Helper functions
 export { default as createAndFireEvent } from './createAndFireEvent';
 export { default as cleanProps } from './cleanProps';
