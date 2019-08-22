@@ -1,14 +1,14 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { AnalyticsContext as AnalyticsContextProvider } from '../..';
-import { AnalyticsContext } from '../../AnalyticsContext';
+import { AnalyticsReactContext } from '../..';
 
 interface Context {
   getAtlaskitAnalyticsContext: () => any;
 }
 
 const ContextConsumer = (props: { onClick: (context: any) => void }) => (
-  <AnalyticsContext.Consumer>
+  <AnalyticsReactContext.Consumer>
     {({ getAtlaskitAnalyticsContext }) => {
       const onClick = () => {
         const analyticsContext = getAtlaskitAnalyticsContext();
@@ -16,7 +16,7 @@ const ContextConsumer = (props: { onClick: (context: any) => void }) => (
       };
       return <button onClick={onClick} />;
     }}
-  </AnalyticsContext.Consumer>
+  </AnalyticsReactContext.Consumer>
 );
 
 it('should render', () => {

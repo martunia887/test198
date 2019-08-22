@@ -1,12 +1,12 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { AnalyticsListener } from '../..';
-import { AnalyticsContext } from '../../AnalyticsContext';
+import { AnalyticsReactContext } from '../../AnalyticsReactContext';
 
 type Handlers = Array<() => any>;
 
 const ContextConsumer = (props: { onClick: (handlers: Handlers) => void }) => (
-  <AnalyticsContext.Consumer>
+  <AnalyticsReactContext.Consumer>
     {({ getAtlaskitAnalyticsEventHandlers }) => {
       const onClick = () => {
         const eventHandlers = getAtlaskitAnalyticsEventHandlers();
@@ -14,7 +14,7 @@ const ContextConsumer = (props: { onClick: (handlers: Handlers) => void }) => (
       };
       return <button onClick={onClick} />;
     }}
-  </AnalyticsContext.Consumer>
+  </AnalyticsReactContext.Consumer>
 );
 
 it('should render', () => {

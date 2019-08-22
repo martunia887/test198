@@ -1,11 +1,13 @@
 import React from 'react';
 
-interface AnalyticsContextInterface {
+interface AnalyticsReactContextInterface {
   getAtlaskitAnalyticsContext(): any[];
   getAtlaskitAnalyticsEventHandlers(): any[];
 }
 
-export const AnalyticsContext = React.createContext<AnalyticsContextInterface>({
+export const AnalyticsReactContext = React.createContext<
+  AnalyticsReactContextInterface
+>({
   getAtlaskitAnalyticsContext: () => [],
   getAtlaskitAnalyticsEventHandlers: () => [],
 });

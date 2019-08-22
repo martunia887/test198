@@ -1,6 +1,6 @@
 import React, { useContext, FC } from 'react';
 
-import { AnalyticsContext } from './AnalyticsContext';
+import { AnalyticsReactContext } from './AnalyticsReactContext';
 import UIAnalyticsEvent, { UIAnalyticsEventHandler } from './UIAnalyticsEvent';
 
 type Props = {
@@ -16,7 +16,7 @@ const AnalyticsListener: FC<Props> = ({ onEvent, channel, children }) => {
   const {
     getAtlaskitAnalyticsContext,
     getAtlaskitAnalyticsEventHandlers: getParentEventHandlers,
-  } = useContext(AnalyticsContext);
+  } = useContext(AnalyticsReactContext);
 
   const getAnalyticsEventHandlers = () => {
     const handler: UIAnalyticsEventHandler = (event, eventChannel) => {
@@ -29,14 +29,14 @@ const AnalyticsListener: FC<Props> = ({ onEvent, channel, children }) => {
   };
 
   return (
-    <AnalyticsContext.Provider
+    <AnalyticsReactContext.Provider
       value={{
         getAtlaskitAnalyticsContext,
         getAtlaskitAnalyticsEventHandlers: getAnalyticsEventHandlers,
       }}
     >
       {children}
-    </AnalyticsContext.Provider>
+    </AnalyticsReactContext.Provider>
   );
 };
 
