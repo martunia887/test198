@@ -177,16 +177,22 @@ export class MediaNodeUpdater {
         authProvider: uploadMediaClientConfig.authProvider,
         occurrenceKey: uuidV4(),
       };
-      const mediaFile = await mediaClient.file.copyFile(source, destination);
+      const mediaFileStateObservable = await mediaClient.file.copyFile(
+        source,
+        destination,
+      );
 
-      updateMediaNodeAttrs(
-        source.id,
-        {
-          id: mediaFile.id,
-          collection: currentCollectionName,
-        },
-        true,
-      )(this.props.view.state, this.props.view.dispatch);
+      const subscription = mediaFileStateObservable.subscribe(fileState => {
+        updateMediaNodeAttrs(
+          source.id,
+          {
+            id: fileState.id,
+            collection: currentCollectionName,
+          },
+          true,
+        )(this.props.view.state, this.props.view.dispatch);
+        setTimeout(() => subscription.unsubscribe(), 0);
+      });
     }
   };
 }

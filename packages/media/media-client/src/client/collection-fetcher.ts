@@ -8,7 +8,7 @@ import {
   FileDetails,
   getFileStreamsCache,
 } from '..';
-import { FileFetcher } from './file-fetcher';
+import { FileFetcherImpl } from './file-fetcher';
 
 export interface MediaCollectionFileItemDetails extends FileDetails {
   occurrenceKey: string;
@@ -43,7 +43,9 @@ const createCacheEntry = (): CollectionCacheEntry => ({
 });
 
 export class CollectionFetcher {
-  constructor(readonly mediaStore: MediaStore, readonly file: FileFetcher) {}
+  constructor(readonly mediaStore: MediaStore) {}
+
+  file = new FileFetcherImpl(this.mediaStore);
 
   private populateCache(items: MediaCollectionItem[], collectionName: string) {
     items.forEach(item => {

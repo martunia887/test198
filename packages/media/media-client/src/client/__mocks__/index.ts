@@ -7,8 +7,8 @@ export class MediaClient {
   public readonly file: FileFetcher;
 
   constructor(readonly config: MediaClientConfig) {
+    this.collection = new CollectionFetcher({} as any);
     this.file = new FileFetcherImpl({} as any);
-    this.collection = new CollectionFetcher({} as any, this.file);
   }
 
   public getImage = jest.fn();
