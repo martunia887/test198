@@ -66,40 +66,6 @@ const handleDocChanged = (
       }
     }
 
-    // const mappedMatches = pluginState.matches
-    //   .map(match => ({
-    //     start: tr.mapping.map(match.start),
-    //     end: tr.mapping.map(match.end),
-    //   }))
-    //   // Deleted text is mapped to the same start and end node
-    //   .filter(match => match.end > match.start);
-
-    // let newMatches: Match[] = [];
-    // const diffStart = tr.doc.content.findDiffStart(tr.before.content);
-    // const diffEnd = tr.doc.content.findDiffEnd(tr.before);
-    // if (diffStart && diffEnd) {
-    //   const addSlice = tr.doc.slice(diffStart, diffEnd.a);
-
-    //   // go through add slice - findMatches -> add
-    //   newMatches = findMatches(
-    //     addSlice.content,
-    //     pluginState.findText,
-    //     diffStart,
-    //   );
-    //   // TODO: Handle case where adding part of match adds a new match
-
-    //   if (!Number.isNaN(diffEnd.b)) {
-    //     const delSlice = tr.doc.slice(diffStart, diffEnd.b);
-    //   }
-    // }
-
-    // // TODO: Replace sort with something less overkill
-    // const matches = [...mappedMatches, ...newMatches].sort(
-    //   (a, b) => a.start - b.start,
-    // );
-
-    // does any matches fall in delSlice range -> del
-
     return {
       ...pluginState,
       matches,
