@@ -7,7 +7,6 @@ import Dataloader from 'dataloader';
 import {
   AuthProvider,
   authToOwner,
-  UploadingFileState,
   getMediaTypeFromMimeType,
 } from '@atlaskit/media-core';
 import {
@@ -26,7 +25,6 @@ import {
   GetFileOptions,
   mapMediaItemToFileState,
   getFileStreamsCache,
-  MediaFile,
   MediaStoreCopyFileWithTokenBody,
   MediaStoreCopyFileWithTokenParams,
 } from '..';
@@ -70,7 +68,7 @@ interface DataloaderKey {
   collection?: string;
 }
 
-export interface SourceFile {
+export interface CopySourceFile {
   id: string;
   collection?: string;
   authProvider: AuthProvider;
@@ -105,7 +103,7 @@ export interface FileFetcher {
   ): Promise<void>;
   getCurrentState(id: string, options?: GetFileOptions): Promise<FileState>;
   copyFile(
-    source: SourceFile,
+    source: CopySourceFile,
     destination: CopyDestination,
     options?: GetFileOptions,
   ): Promise<Observable<FileState>>;
@@ -178,7 +176,6 @@ export class FileFetcherImpl implements FileFetcher {
       );
 
       fileStream$.connect();
-      fileStream$.subscribe(console.log);
 
       return fileStream$;
     });
@@ -427,7 +424,7 @@ export class FileFetcherImpl implements FileFetcher {
   }
 
   public async copyFile(
-    source: SourceFile,
+    source: CopySourceFile,
     destination: CopyDestination,
     options?: GetFileOptions,
   ): Promise<Observable<FileState>> {

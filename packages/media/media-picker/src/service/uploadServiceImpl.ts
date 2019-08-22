@@ -3,18 +3,13 @@ import {
   UploadableFile,
   MediaType,
   getMediaTypeFromMimeType,
-  getFileStreamsCache,
   MediaClient,
   globalMediaEventEmitter,
   FilePreview,
 } from '@atlaskit/media-client';
 import {
   MediaStore,
-  MediaStoreCopyFileWithTokenBody,
   UploadController,
-  MediaStoreCopyFileWithTokenParams,
-  MediaStoreResponse,
-  MediaFile as MediaStoreMediaFile,
   TouchFileDescriptor,
   UploadableFileUpfrontIds,
 } from '@atlaskit/media-store';
@@ -22,7 +17,6 @@ import { EventEmitter2 } from 'eventemitter2';
 import { MediaFile } from '../domain/file';
 
 import { RECENTS_COLLECTION } from '../popup/config';
-import { mapAuthToSourceFileOwner } from '../popup/domain/source-file';
 import { getPreviewFromImage } from '../util/getPreviewFromImage';
 import { UploadParams } from '..';
 import { SmartMediaProgress } from '../domain/progress';
@@ -34,10 +28,7 @@ import {
 } from './types';
 import { LocalFileSource, LocalFileWithSource } from '../service/types';
 import { getPreviewFromBlob } from '../util/getPreviewFromBlob';
-import {
-  SourceFile,
-  CopyDestination,
-} from '../../../media-client/src/client/file-fetcher';
+import { CopySourceFile, CopyDestination } from '@atlaskit/media-client';
 
 export interface CancellableFileUpload {
   mediaFile: MediaFile;
@@ -375,7 +366,7 @@ export class UploadServiceImpl implements UploadService {
     }
     const { collection: sourceCollection } = tenantUploadParams;
     const { authProvider: tenantAuthProvider } = this.tenantMediaClient.config;
-    const sourceFile: SourceFile = {
+    const sourceFile: CopySourceFile = {
       authProvider: tenantAuthProvider,
       collection: sourceCollection,
       id: sourceFileId,

@@ -76,10 +76,6 @@ export class GenericEventEmitter<M extends EventPayloadMap<P>, P = any>
   }
 
   emit<E extends keyof M>(event: E, payload: M[E]): boolean {
-    console.log({
-      event,
-      payload,
-    });
     return this.emitter.emit(event, payload);
   }
 }

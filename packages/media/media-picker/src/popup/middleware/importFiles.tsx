@@ -1,7 +1,5 @@
 import uuid from 'uuid/v4';
 import { Store, Dispatch, Middleware } from 'redux';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { map } from 'rxjs/operators/map';
 import {
   TouchFileDescriptor,
   FileState,

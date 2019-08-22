@@ -101,7 +101,12 @@ export {
 
 export type ImageResizeMode = 'crop' | 'fit' | 'full-fit' | 'stretchy-fit';
 
-export { FileFetcherImpl, FileFetcher } from './client/file-fetcher';
+export {
+  FileFetcherImpl,
+  FileFetcher,
+  CopySourceFile,
+  CopyDestination,
+} from './client/file-fetcher';
 export { CollectionFetcher } from './client/collection-fetcher';
 export { MediaClient } from './client/media-client';
 
