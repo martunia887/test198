@@ -48,8 +48,8 @@ export class UploadComponent<M extends UploadEventPayloadMap>
 
   emitUploadError(file: MediaFile, error: MediaError): void {
     this.emit('upload-error', {
-      file: file,
-      error: error,
+      file,
+      error,
     });
   }
 }

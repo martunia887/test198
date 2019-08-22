@@ -75,6 +75,7 @@ export default class PickerFacade {
 
     (picker as any).on('upload-preview-update', this.handleUploadPreviewUpdate);
     (picker as any).on('upload-processing', this.handleReady);
+    (picker as any).on('upload-end', this.handleReady);
     (picker as any).on('upload-error', this.handleUploadError);
     (picker as any).on('mobile-upload-end', this.handleMobileUploadEnd);
 

@@ -365,21 +365,26 @@ export class UploadServiceImpl implements UploadService {
       return Promise.resolve();
     }
     const { collection: sourceCollection } = tenantUploadParams;
-    const { authProvider: tenantAuthProvider } = this.tenantMediaClient.config;
-    const sourceFile: CopySourceFile = {
+    const {
       authProvider: tenantAuthProvider,
-      collection: sourceCollection,
-      id: sourceFileId,
-    };
-    const destination: CopyDestination = {
-      authProvider: tenantMediaClient.config.userAuthProvider!,
-      collection: RECENTS_COLLECTION,
-      occurrenceKey: uuidV4(),
-    };
-    if (userMediaClient) {
-      userMediaClient.file.copyFile(sourceFile, destination, {
-        preview: { filePreview: preview },
-      });
+      userAuthProvider,
+    } = this.tenantMediaClient.config;
+    if (userAuthProvider) {
+      const sourceFile: CopySourceFile = {
+        authProvider: tenantAuthProvider,
+        collection: sourceCollection,
+        id: sourceFileId,
+      };
+      const destination: CopyDestination = {
+        authProvider: userAuthProvider,
+        collection: RECENTS_COLLECTION,
+        occurrenceKey: uuidV4(),
+      };
+      if (userMediaClient) {
+        userMediaClient.file.copyFile(sourceFile, destination, {
+          preview: { filePreview: preview },
+        });
+      }
     }
   }
 }

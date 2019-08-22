@@ -176,6 +176,7 @@ export class FileFetcherImpl implements FileFetcher {
       );
 
       fileStream$.connect();
+      fileStream$.subscribe(fileState => console.log('fileState', fileState));
 
       return fileStream$;
     });
@@ -459,7 +460,7 @@ export class FileFetcherImpl implements FileFetcher {
     const copiedFile = (await mediaStore.copyFileWithToken(body, params)).data;
     return this.getFileState(copiedFile.id, {
       ...options,
-      collectionName: destinationCollectionName,
+      collectionName: destination.collection,
     });
   }
 }

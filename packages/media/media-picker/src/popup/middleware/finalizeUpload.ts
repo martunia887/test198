@@ -67,12 +67,9 @@ async function copyFile({
 }: CopyFileParams) {
   const { tenantMediaClient, config } = store.getState();
   const collection = config.uploadParams && config.uploadParams.collection;
-  const mediaClient = new MediaClient({
-    authProvider: tenantMediaClient.config.authProvider,
-  });
 
   try {
-    const tenantSubject = await mediaClient.file.copyFile(
+    const tenantSubject = await tenantMediaClient.file.copyFile(
       {
         authProvider: tenantMediaClient.config.userAuthProvider!,
         collection: sourceFile.collection,
@@ -85,7 +82,6 @@ async function copyFile({
         replaceFileId: replaceFileId ? await replaceFileId : undefined,
       },
     );
-
     tenantSubject.subscribe({
       next: fileState => {
         if (fileState.status === 'processing') {

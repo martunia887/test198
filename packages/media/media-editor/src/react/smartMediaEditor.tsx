@@ -171,7 +171,9 @@ export class SmartMediaEditor extends React.Component<
         authProvider: userAuthProvider,
         occurrenceKey: uuidV4(),
       };
-      await file.copyFile(source, destination);
+      await new MediaClient({
+        authProvider: userAuthProvider,
+      }).file.copyFile(source, destination);
     }
   };
 

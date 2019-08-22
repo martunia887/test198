@@ -177,9 +177,6 @@ export const touchSelectedFiles = (
 
       tenantMediaClient.emit('file-added', fileState);
       globalMediaEventEmitter.emit('file-added', fileState);
-      tenantMediaClient.file.getFileState(id, {
-        preview: { filePreview: preview },
-      });
     },
   );
 
