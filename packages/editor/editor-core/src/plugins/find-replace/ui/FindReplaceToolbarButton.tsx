@@ -31,6 +31,7 @@ export interface FindReplaceToolbarButtonProps {
   shouldFocus: boolean;
   onCancel: () => void;
   onFind: (keyword?: string) => void;
+  onFindBlur: () => void;
   onFindNext: () => void;
   onFindPrev: () => void;
   onReplace: (replaceWith: string) => void;
@@ -98,6 +99,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
               replaceText={replaceText}
               count={{ index, total: numMatches }}
               shouldFocus={shouldFocus}
+              onFindBlur={this.props.onFindBlur}
               onFindChange={this.find}
               onFindNext={this.props.onFindNext}
               onFindPrev={this.props.onFindPrev}

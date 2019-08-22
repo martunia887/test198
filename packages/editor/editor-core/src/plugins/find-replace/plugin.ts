@@ -104,7 +104,6 @@ const handleDocChanged = (
       ...pluginState,
       matches,
       index,
-      shouldFocus: false,
     };
   }
   return pluginState;

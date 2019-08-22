@@ -8,6 +8,7 @@ export enum FindReplaceActionTypes {
   REPLACE = 'REPLACE',
   REPLACE_ALL = 'REPLACE_ALL',
   CANCEL = 'CANCEL',
+  UNFOCUS = 'UNFOCUS',
 }
 
 export interface Activate {
@@ -48,6 +49,10 @@ export interface Cancel {
   type: FindReplaceActionTypes.CANCEL;
 }
 
+export interface Unfocus {
+  type: FindReplaceActionTypes.UNFOCUS;
+}
+
 export type FindReplaceAction =
   | Activate
   | Find
@@ -55,4 +60,5 @@ export type FindReplaceAction =
   | FindPrev
   | Replace
   | ReplaceAll
-  | Cancel;
+  | Cancel
+  | Unfocus;
