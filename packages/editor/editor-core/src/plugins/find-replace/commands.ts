@@ -73,11 +73,24 @@ export const replace = (replaceText: string) =>
     },
   );
 
-export const replaceAll = (replaceWith: string) =>
-  createFindReplaceCommand({
-    type: FindReplaceActionTypes.REPLACE_ALL,
-    replaceText: replaceWith,
-  });
+export const replaceAll = (replaceText: string) =>
+  createFindReplaceCommand(
+    {
+      type: FindReplaceActionTypes.REPLACE_ALL,
+      replaceText: replaceText,
+    },
+    (tr, state) => {
+      const pluginState = getFindReplacePluginState(state);
+      pluginState.matches.forEach(match => {
+        tr.insertText(
+          replaceText,
+          tr.mapping.map(match.start),
+          tr.mapping.map(match.end),
+        );
+      });
+      return tr;
+    },
+  );
 
 export const cancelSearch = () =>
   createFindReplaceCommand({
