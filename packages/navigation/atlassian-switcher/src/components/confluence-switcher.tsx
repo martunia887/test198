@@ -7,38 +7,59 @@ import {
 } from '../providers/confluence-data-providers';
 import CommonDataProvider from '../providers/common-data-provider';
 import { mapResultsToSwitcherProps } from '../utils/map-results-to-switcher-props';
-import { FeatureFlagProps } from '../types';
+import {
+  FeatureMap,
+  AvailableProductsResponse,
+  RecommendationsFeatureFlags,
+  DiscoverMoreCallback,
+  TriggerXFlowCallback,
+} from '../types';
+import { ProviderResult } from '../providers/as-data-provider';
+import { AvailableProductsProvider } from '../providers/products-data-provider';
 
 type ConfluenceSwitcherProps = {
   cloudId: string;
   messages: Messages;
-  features: FeatureFlagProps;
-  triggerXFlow: (productKey: string, sourceComponent: string) => void;
+  features: FeatureMap;
+  triggerXFlow: TriggerXFlowCallback;
+  onDiscoverMoreClicked: DiscoverMoreCallback;
+  recommendationsFeatureFlags?: RecommendationsFeatureFlags;
 };
 
 export default (props: ConfluenceSwitcherProps) => (
-  <CustomLinksProvider>
+  <CustomLinksProvider disableCustomLinks={props.features.disableCustomLinks}>
     {customLinks => (
-      <CommonDataProvider cloudId={props.cloudId}>
-        {providerResults => {
-          const {
-            showManageLink,
-            ...switcherLinks
-          } = mapResultsToSwitcherProps(
-            props.cloudId,
-            { customLinks, ...providerResults },
-            { ...props.features, xflow: false },
-          );
+      <AvailableProductsProvider
+        isUserCentric={props.features.enableUserCentricProducts}
+      >
+        {(availableProducts: ProviderResult<AvailableProductsResponse>) => (
+          <CommonDataProvider
+            cloudId={props.cloudId}
+            isUserCentric={props.features.enableUserCentricProducts}
+            disableRecentContainers={props.features.disableRecentContainers}
+          >
+            {providerResults => {
+              const {
+                showManageLink,
+                ...switcherLinks
+              } = mapResultsToSwitcherProps(
+                props.cloudId,
+                { customLinks, ...providerResults },
+                props.features,
+                availableProducts,
+              );
 
-          return (
-            <Switcher
-              {...props}
-              {...switcherLinks}
-              manageLink={showManageLink ? MANAGE_HREF : undefined}
-            />
-          );
-        }}
-      </CommonDataProvider>
+              return (
+                <Switcher
+                  {...props}
+                  {...switcherLinks}
+                  manageLink={showManageLink ? MANAGE_HREF : undefined}
+                />
+              );
+            }}
+          </CommonDataProvider>
+        )}
+      </AvailableProductsProvider>
     )}
   </CustomLinksProvider>
 );

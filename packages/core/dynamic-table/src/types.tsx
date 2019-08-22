@@ -1,5 +1,8 @@
-import * as React from 'react';
-import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import React from 'react';
+import {
+  UIAnalyticsEvent,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 
 export interface RowCellType {
   key?: string | number;
@@ -12,7 +15,7 @@ export interface I18nShape {
   next: string;
 }
 
-export interface StatelessProps {
+export interface StatelessProps extends WithAnalyticsEventsProps {
   caption?: React.ReactNode;
   /** Object describing the column headings */
   head?: HeadType;
@@ -31,6 +34,8 @@ export interface StatelessProps {
   onSetPage?: (page: number, UIAnalyticsEvent?: UIAnalyticsEvent) => void;
   /** Called when a column is sorted. Provides information about what was sorted and an analytics event. */
   onSort?: (data: any, UIAnalyticsEvent?: UIAnalyticsEvent) => void;
+  /** Called after body table render when visible table rows change with table rows given. */
+  onPageRowsUpdate?: (pageRows: Array<RowType>) => void;
   /** The current page number */
   page?: number;
   defaultPage?: number;
@@ -46,7 +51,7 @@ export interface StatelessProps {
   paginationi18n?: I18nShape;
 }
 
-export interface StatefulProps {
+export interface StatefulProps extends WithAnalyticsEventsProps {
   caption?: Node | string;
   head?: HeadType;
   rows?: Array<RowType>;
@@ -57,6 +62,7 @@ export interface StatefulProps {
   rowsPerPage?: number;
   onSetPage?: (page: number, UIAnalyticsEvent?: UIAnalyticsEvent) => void;
   onSort?: (data: any, UIAnalyticsEvent?: UIAnalyticsEvent) => void;
+  onPageRowsUpdate?: (pageRows: Array<RowType>) => void;
   page?: number;
   defaultPage?: number;
   sortKey?: string;

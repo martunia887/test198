@@ -55,6 +55,13 @@ export type ExperimentalFeatureFlags = {|
   /**
     NOTE: This property is experimental and may be removed in a minor release.
 
+    Hides the product and container nav visually rather than unmounting it
+    when nav is collapsed.
+  */
+  experimental_hideNavVisuallyOnCollapse: boolean,
+  /**
+    NOTE: This property is experimental and may be removed in a minor release.
+
     Changes layout manager to accomodate horizontal global navigation across the top of the page.
   */
   experimental_horizontalGlobalNav: boolean,
@@ -90,6 +97,9 @@ export type ConnectedLayoutManagerProps = {
   ...$Exact<ExperimentalFeatureFlags>,
   /** The top offset value to be used in navigation */
   topOffset: number,
+
+  /** Boolean value to control the shadow on GlobalNavigation */
+  shouldHideGlobalNavShadow?: boolean,
   /** Internal prop which decides which view is active */
   view?: Object | null,
 };

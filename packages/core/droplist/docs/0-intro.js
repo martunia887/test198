@@ -1,8 +1,17 @@
 // @flow
 import React from 'react';
 import { md, Example, Props, code } from '@atlaskit/docs';
+import SectionMessage from '@atlaskit/section-message';
 
 export default md`
+${(
+  <SectionMessage
+    appearance="warning"
+    title="Note: @atlaskit/droplist is deprecated."
+  >
+    This is an internal component and should not be used directly.
+  </SectionMessage>
+)}
 
 An internal base component for implementing dropdown and select components.
 
@@ -33,7 +42,7 @@ import DropList, {
     <Example
       packageName="@atlaskit/droplist"
       Component={require('../examples/01-bound-example').default}
-      title="With Label"
+      title="Bound Example"
       source={require('!!raw-loader!../examples/01-bound-example')}
     />
   )}

@@ -32,7 +32,7 @@ class ProfilecardTrigger extends React.Component<
     customElevation: 'e200',
   };
 
-  targetRef?: HTMLElement | null;
+  targetRef?: HTMLElement;
 
   _isMounted: boolean = false;
   showDelay: number = this.props.trigger === 'click' ? 0 : 500;
@@ -103,7 +103,7 @@ class ProfilecardTrigger extends React.Component<
     clearTimeout(this.hideTimer);
   }
 
-  clientFetchProfile() {
+  clientFetchProfile = () => {
     const { cloudId, userId } = this.props;
 
     this.setState({
@@ -119,7 +119,7 @@ class ProfilecardTrigger extends React.Component<
         err => this.handleClientError(err),
       )
       .catch(err => this.handleClientError(err));
-  }
+  };
 
   handleClientSuccess(res: ProfileCardClientData) {
     if (!this._isMounted) {

@@ -2,7 +2,7 @@ import {
   MediaItemType,
   FileDetails,
   ExternalImageIdentifier,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import {
   defaultCollectionName as collectionName,
   onlyAnimatedGifsCollectionName,
@@ -79,6 +79,12 @@ export const wideImageFileId = {
 
 export const largeImageFileId = {
   id: '0607a6a8-b2ec-49a7-b6d3-d767cb49e844',
+  mediaItemType: fileType,
+  collectionName,
+};
+
+export const verticalImageFileId = {
+  id: 'f9235f5a-d582-4740-8611-ebf3feaf28b6',
   mediaItemType: fileType,
   collectionName,
 };

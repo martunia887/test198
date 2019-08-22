@@ -5,58 +5,80 @@ import {
   getLicensedProductLinks,
   getRecentLinkItems,
   getSuggestedProductLink,
+  SwitcherItemType,
+  getAvailableProductLinks,
 } from './links';
 import {
   isComplete,
   isError,
-  isLoading,
   ProviderResult,
+  Status,
+  hasLoaded,
 } from '../providers/as-data-provider';
 import {
   CustomLinksResponse,
+  FeatureMap,
   LicenseInformationResponse,
   RecentContainersResponse,
+  AvailableProductsResponse,
+  ProductLicenseInformation,
+  WorklensProductType,
+  ProductKey,
+  RecommendationsEngineResponse,
 } from '../types';
 import { createCollector } from './create-collector';
 
-function getExpandLink(
-  licenseInformation: ProviderResults['licenseInformation'],
-) {
-  if (licenseInformation === undefined || isError(licenseInformation)) {
-    return '//start.atlassian.com';
+function collectAvailableProductLinks(
+  cloudId: string | null | undefined,
+  availableProducts?: ProviderResult<AvailableProductsResponse>,
+  productTopItemVariation?: string,
+): SwitcherItemType[] | undefined {
+  if (availableProducts) {
+    if (isError(availableProducts)) {
+      return [];
+    }
+    if (isComplete(availableProducts)) {
+      return getAvailableProductLinks(
+        availableProducts.data,
+        cloudId,
+        productTopItemVariation,
+      );
+    }
+    return;
   }
-  if (isComplete(licenseInformation)) {
-    const isStagingInstance =
-      licenseInformation.data.hostname.indexOf('.jira-dev.com') !== -1;
-    return `//start.${isStagingInstance ? 'stg.' : ''}atlassian.com`;
-  }
+  return;
 }
 
 function collectProductLinks(
-  cloudId: string,
   licenseInformation: ProviderResults['licenseInformation'],
-  enableSplitJira: boolean,
-) {
+): SwitcherItemType[] | undefined {
   if (isError(licenseInformation)) {
     return [];
   }
 
   if (isComplete(licenseInformation)) {
-    return getLicensedProductLinks(licenseInformation.data, enableSplitJira);
+    return getLicensedProductLinks(licenseInformation.data);
   }
 }
 
 function collectSuggestedLinks(
   licenseInformation: ProviderResults['licenseInformation'],
+  productRecommendations: ProviderResults['productRecommendations'],
   isXFlowEnabled: ProviderResults['isXFlowEnabled'],
 ) {
   if (isError(isXFlowEnabled) || isError(licenseInformation)) {
     return [];
   }
-
-  if (isComplete(licenseInformation) && isComplete(isXFlowEnabled)) {
+  if (
+    isComplete(licenseInformation) &&
+    isComplete(isXFlowEnabled) &&
+    isComplete(productRecommendations)
+  ) {
     return isXFlowEnabled.data
-      ? getSuggestedProductLink(licenseInformation.data)
+      ? getSuggestedProductLink(
+          licenseInformation.data,
+          productRecommendations.data,
+        )
       : [];
   }
 }
@@ -70,9 +92,9 @@ function collectCanManageLinks(
 }
 
 function collectAdminLinks(
-  cloudId: string,
   managePermission: ProviderResults['managePermission'],
   addProductsPermission: ProviderResults['addProductsPermission'],
+  isDiscoverMoreForEveryoneEnabled: boolean,
 ) {
   if (isError(managePermission) || isError(addProductsPermission)) {
     return [];
@@ -80,15 +102,20 @@ function collectAdminLinks(
 
   if (isComplete(managePermission) && isComplete(addProductsPermission)) {
     if (managePermission.data || addProductsPermission.data) {
-      return getAdministrationLinks(managePermission.data);
+      return getAdministrationLinks(
+        managePermission.data,
+        isDiscoverMoreForEveryoneEnabled,
+      );
     }
 
     return [];
   }
 }
 
-export function collectFixedProductLinks() {
-  return getFixedProductLinks();
+export function collectFixedProductLinks(
+  isDiscoverMoreForEveryoneEnabled: boolean,
+): SwitcherItemType[] {
+  return getFixedProductLinks(isDiscoverMoreForEveryoneEnabled);
 }
 
 function collectRecentLinks(
@@ -127,18 +154,80 @@ interface ProviderResults {
   managePermission: ProviderResult<boolean>;
   addProductsPermission: ProviderResult<boolean>;
   isXFlowEnabled: ProviderResult<boolean>;
+  productRecommendations: ProviderResult<RecommendationsEngineResponse>;
 }
 
-interface SwitcherFeatures {
-  xflow: boolean;
-  enableSplitJira: boolean;
-  enableExpandLink: boolean;
+function asLegacyProductKey(
+  worklensProductType: WorklensProductType,
+): ProductKey | undefined {
+  switch (worklensProductType) {
+    case WorklensProductType.BITBUCKET:
+      return undefined; // not used in legacy code
+    case WorklensProductType.CONFLUENCE:
+      return ProductKey.CONFLUENCE;
+    case WorklensProductType.JIRA_BUSINESS:
+      return ProductKey.JIRA_CORE;
+    case WorklensProductType.JIRA_SERVICE_DESK:
+      return ProductKey.JIRA_SERVICE_DESK;
+    case WorklensProductType.JIRA_SOFTWARE:
+      return ProductKey.JIRA_SOFTWARE;
+    case WorklensProductType.OPSGENIE:
+      return ProductKey.OPSGENIE;
+    default:
+      throw new Error(`unmapped worklensProductType ${worklensProductType}`);
+  }
+}
+
+/** Convert the new AvailableProductsResponse to legacy LicenseInformationResponse type */
+function asLicenseInformationProviderResult(
+  availableProductsProvider: ProviderResult<AvailableProductsResponse>,
+  cloudId: string,
+): ProviderResult<LicenseInformationResponse> {
+  switch (availableProductsProvider.status) {
+    case Status.LOADING: // intentional fallthrough
+    case Status.ERROR:
+      return availableProductsProvider;
+    case Status.COMPLETE:
+      const site = availableProductsProvider.data.sites.find(
+        site => site.cloudId === cloudId,
+      );
+      if (!site) {
+        return {
+          status: Status.ERROR,
+          data: null,
+          error: new Error(
+            `could not find site in availableProducts for cloudId ${cloudId}`,
+          ),
+        };
+      }
+      return {
+        status: Status.COMPLETE,
+        data: {
+          hostname: site.url,
+          products: site.availableProducts.reduce(
+            (acc: { [key: string]: ProductLicenseInformation }, product) => {
+              const legacyProductKey = asLegacyProductKey(product.productType);
+              if (legacyProductKey) {
+                acc[legacyProductKey] = {
+                  state: 'ACTIVE', // everything is ACTIVE
+                  // applicationUrl: '', // not required
+                  // billingPeriod: 'ANNUAL' // not required
+                };
+              }
+              return acc;
+            },
+            {},
+          ),
+        },
+      };
+  }
 }
 
 export function mapResultsToSwitcherProps(
-  cloudId: string,
+  cloudId: string | null | undefined,
   results: ProviderResults,
-  features: SwitcherFeatures,
+  features: FeatureMap,
+  availableProducts: ProviderResult<AvailableProductsResponse>,
 ) {
   const collect = createCollector();
 
@@ -149,42 +238,70 @@ export function mapResultsToSwitcherProps(
     addProductsPermission,
     customLinks,
     recentContainers,
+    productRecommendations,
   } = results;
-
   if (isError(licenseInformation)) {
     throw licenseInformation.error;
   }
+  const resolvedLicenseInformation: ProviderResult<LicenseInformationResponse> =
+    features.enableUserCentricProducts && cloudId
+      ? asLicenseInformationProviderResult(availableProducts, cloudId)
+      : licenseInformation;
+
+  const hasLoadedLicenseInformation = hasLoaded(resolvedLicenseInformation);
+  const hasLoadedAdminLinks =
+    hasLoaded(managePermission) && hasLoaded(addProductsPermission);
+  const hasLoadedSuggestedProducts = features.xflow
+    ? hasLoaded(productRecommendations) && hasLoaded(isXFlowEnabled)
+    : true;
 
   return {
-    expandLink: features.enableExpandLink
-      ? getExpandLink(licenseInformation)
-      : '',
     licensedProductLinks: collect(
-      collectProductLinks(
-        cloudId,
-        licenseInformation,
-        features.enableSplitJira,
-      ),
+      features.enableUserCentricProducts
+        ? collectAvailableProductLinks(
+            cloudId,
+            availableProducts,
+            features.productTopItemVariation,
+          )
+        : collectProductLinks(licenseInformation),
       [],
     ),
     suggestedProductLinks: features.xflow
-      ? collect(collectSuggestedLinks(licenseInformation, isXFlowEnabled), [])
+      ? collect(
+          collectSuggestedLinks(
+            resolvedLicenseInformation,
+            productRecommendations,
+            isXFlowEnabled,
+          ),
+          [],
+        )
       : [],
-    fixedLinks: collect(collectFixedProductLinks(), []),
+    fixedLinks: collect(
+      collectFixedProductLinks(features.isDiscoverMoreForEveryoneEnabled),
+      [],
+    ),
     adminLinks: collect(
-      collectAdminLinks(cloudId, managePermission, addProductsPermission),
+      collectAdminLinks(
+        managePermission,
+        addProductsPermission,
+        features.isDiscoverMoreForEveryoneEnabled,
+      ),
       [],
     ),
     recentLinks: collect(
-      collectRecentLinks(recentContainers, licenseInformation),
+      collectRecentLinks(recentContainers, resolvedLicenseInformation),
       [],
     ),
     customLinks: collect(
-      collectCustomLinks(customLinks, licenseInformation),
+      collectCustomLinks(customLinks, resolvedLicenseInformation),
       [],
     ),
 
     showManageLink: collect(collectCanManageLinks(managePermission), false),
-    isLoading: isLoading(licenseInformation),
+    hasLoaded:
+      hasLoadedLicenseInformation &&
+      hasLoadedAdminLinks &&
+      hasLoadedSuggestedProducts,
+    hasLoadedCritical: hasLoadedLicenseInformation,
   };
 }

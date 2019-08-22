@@ -1,5 +1,7 @@
+import { waitForTooltip } from '@atlaskit/visual-regression/helper';
 import { snapshot, initFullPageEditorWithAdf, Device } from '../_utils';
 import adf from './__fixtures__/full-width-table.adf.json';
+import tableWithFirstColumnMerged from './__fixtures__/table-3x3-with-two-cells-merged-on-first-row.adf.json';
 import {
   tableSelectors,
   clickFirstCell,
@@ -11,7 +13,6 @@ describe('Delete in table:', () => {
   let page: any;
 
   describe(`Full page`, () => {
-    const threshold = 0.01;
     beforeAll(async () => {
       // @ts-ignore
       page = global.page;
@@ -24,7 +25,7 @@ describe('Delete in table:', () => {
     });
 
     afterEach(async () => {
-      await snapshot(page, threshold);
+      await snapshot(page);
     });
 
     it('should show danger when hovers on remove for row', async () => {
@@ -46,7 +47,28 @@ describe('Delete in table:', () => {
     it(`should show danger when hovers to remove table`, async () => {
       await page.waitForSelector(tableSelectors.removeTable);
       await page.hover(tableSelectors.removeTable);
+      await waitForTooltip(page);
       await page.waitForSelector(tableSelectors.removeDanger);
+    });
+
+    describe('with cell merged', () => {
+      beforeEach(async () => {
+        await initFullPageEditorWithAdf(
+          page,
+          tableWithFirstColumnMerged,
+          Device.LaptopHiDPI,
+        );
+        await clickFirstCell(page);
+        await animationFrame(page);
+      });
+
+      it('should show danger when hovers to remove column', async () => {
+        await page.waitForSelector(tableSelectors.firstColumnControl);
+        await page.click(tableSelectors.firstColumnControl);
+        await page.waitForSelector(tableSelectors.removeColumnButton);
+        await page.hover(tableSelectors.removeColumnButton);
+        await page.waitForSelector(tableSelectors.removeDanger);
+      });
     });
   });
 });

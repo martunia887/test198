@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { md, Example, code } from '@atlaskit/docs';
+import { md, Example, code, AtlassianInternalWarning } from '@atlaskit/docs';
 import SectionMessage from '@atlaskit/section-message';
 import SimpleEmojiExample from '../examples/00-simple-emoji';
 
 const SimpleEmojiSource = require('!!raw-loader!../examples/00-simple-emoji');
 
 export default md`
+  ${<AtlassianInternalWarning />}
+
   The main purpose of the emoji package is to provide multiple components for selecting from a list of provided emojis and rendering them.
 
   It includes support for adding a custom set of emojis from a specified provider and uploading images as emojis to a service.
@@ -82,6 +84,7 @@ export default md`
       title="Props can not be displayed for the time being."
       actions={[
         {
+          key: '1',
           href:
             'https://bitbucket.org/atlassian/atlaskit-mk-2/src/master/packages/elements/emoji/src/components/common/Emoji.tsx',
           text: 'Emoji Props',

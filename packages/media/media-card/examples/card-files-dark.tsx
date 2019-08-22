@@ -2,23 +2,20 @@
 import * as React from 'react';
 import {
   StoryList,
-  createStorybookContext,
+  createStorybookMediaClientConfig,
   imageFileId,
   unknownFileId,
   errorFileId,
 } from '@atlaskit/media-test-helpers';
 
-import {
-  AnalyticsListener,
-  UIAnalyticsEventInterface,
-} from '@atlaskit/analytics-next';
+import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 // @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
 import { Card } from '../src';
 import { createApiCards, actions } from '../example-helpers';
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 // standard
 const successIdentifier: FileIdentifier = imageFileId;
 const standardCards = [
@@ -27,7 +24,7 @@ const standardCards = [
     content: (
       <Card
         identifier={successIdentifier}
-        context={context}
+        mediaClientConfig={mediaClientConfig}
         appearance="image"
       />
     ),
@@ -39,7 +36,11 @@ const errorCards = [
   {
     title: 'Image',
     content: (
-      <Card identifier={errorFileId} context={context} appearance="image" />
+      <Card
+        identifier={errorFileId}
+        mediaClientConfig={mediaClientConfig}
+        appearance="image"
+      />
     ),
   },
 ];
@@ -50,7 +51,7 @@ const menuCards = [
     content: (
       <Card
         identifier={successIdentifier}
-        context={context}
+        mediaClientConfig={mediaClientConfig}
         appearance="image"
         actions={actions}
       />
@@ -66,7 +67,11 @@ const noThumbnailCards = [
   {
     title: 'Image',
     content: (
-      <Card identifier={unknownFileId} context={context} appearance="image" />
+      <Card
+        identifier={unknownFileId}
+        mediaClientConfig={mediaClientConfig}
+        appearance="image"
+      />
     ),
   },
 ];
@@ -79,7 +84,7 @@ const lazyLoadCards = [
       <Card
         isLazy={true}
         identifier={successIdentifier}
-        context={context}
+        mediaClientConfig={mediaClientConfig}
         appearance="image"
       />
     ),
@@ -90,7 +95,7 @@ const lazyLoadCards = [
       <Card
         isLazy={false}
         identifier={successIdentifier}
-        context={context}
+        mediaClientConfig={mediaClientConfig}
         appearance="image"
       />
     ),
@@ -104,7 +109,7 @@ const noHoverStateCards = [
     content: (
       <Card
         identifier={successIdentifier}
-        context={context}
+        mediaClientConfig={mediaClientConfig}
         appearance="image"
         disableOverlay={true}
       />
@@ -115,7 +120,7 @@ const noHoverStateCards = [
     content: (
       <Card
         identifier={successIdentifier}
-        context={context}
+        mediaClientConfig={mediaClientConfig}
         appearance="image"
         disableOverlay={true}
         selectable={true}
@@ -134,14 +139,24 @@ const fileWithNoCollection: FileIdentifier = {
 const collectionConfigCards = [
   {
     title: 'Standalone file (NO collection)',
-    content: <Card identifier={fileWithNoCollection} context={context} />,
+    content: (
+      <Card
+        identifier={fileWithNoCollection}
+        mediaClientConfig={mediaClientConfig}
+      />
+    ),
   },
   {
     title: 'File within collection',
-    content: <Card identifier={successIdentifier} context={context} />,
+    content: (
+      <Card
+        identifier={successIdentifier}
+        mediaClientConfig={mediaClientConfig}
+      />
+    ),
   },
 ];
-const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
+const handleEvent = (analyticsEvent: UIAnalyticsEvent) => {
   const { payload, context } = analyticsEvent;
   console.log('Received event:', { payload, context });
 };

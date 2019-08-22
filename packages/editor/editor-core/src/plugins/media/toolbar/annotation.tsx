@@ -1,21 +1,56 @@
 import * as React from 'react';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
-import { Context } from '@atlaskit/media-core';
+import { MediaClientConfig } from '@atlaskit/media-core';
+import { getMediaClient } from '@atlaskit/media-client';
 import { EditorView } from 'prosemirror-view';
 import { defineMessages, InjectedIntl } from 'react-intl';
+
 import { Command } from '../../../types';
 import Button from '../../floating-toolbar/ui/Button';
 import Separator from '../../floating-toolbar/ui/Separator';
-import { MediaPluginState, stateKey } from '../pm-plugins/main';
 
-const annotate: Command = state => {
+import { MediaPluginState, stateKey } from '../pm-plugins/main';
+import { openMediaEditor } from '../commands/media-editor';
+
+import {
+  withAnalytics,
+  ACTION_SUBJECT_ID,
+  ACTION_SUBJECT,
+  ACTION,
+  EVENT_TYPE,
+} from '../../../plugins/analytics';
+
+const annotate: Command = (state, dispatch) => {
   const pluginState: MediaPluginState | undefined = stateKey.getState(state);
   if (!pluginState) {
     return false;
   }
 
-  pluginState.openMediaEditor();
-  return true;
+  const { mediaSingle } = state.schema.nodes;
+  const selected = pluginState.selectedMediaContainerNode();
+  if (!selected || selected.type !== mediaSingle) {
+    return false;
+  }
+
+  const {
+    id,
+    collection: collectionName,
+    occurrenceKey,
+  } = selected.firstChild!.attrs;
+
+  return withAnalytics({
+    action: ACTION.CLICKED,
+    actionSubject: ACTION_SUBJECT.MEDIA,
+    actionSubjectId: ACTION_SUBJECT_ID.ANNOTATE_BUTTON,
+    eventType: EVENT_TYPE.UI,
+  })(
+    openMediaEditor(state.selection.from + 1, {
+      id,
+      collectionName,
+      mediaItemType: 'file',
+      occurrenceKey,
+    }),
+  )(state, dispatch);
 };
 
 export const messages = defineMessages({
@@ -28,7 +63,7 @@ export const messages = defineMessages({
 });
 
 type AnnotationToolbarProps = {
-  viewContext: Context;
+  viewMediaClientConfig: MediaClientConfig;
   id: string;
   intl: InjectedIntl;
   view?: EditorView;
@@ -44,9 +79,10 @@ export class AnnotationToolbar extends React.Component<AnnotationToolbarProps> {
   }
 
   async checkIsImage() {
-    const state = await this.props.viewContext.file.getCurrentState(
-      this.props.id,
-    );
+    const mediaClient = getMediaClient({
+      mediaClientConfig: this.props.viewMediaClientConfig,
+    });
+    const state = await mediaClient.file.getCurrentState(this.props.id);
 
     if (state && state.status !== 'error' && state.mediaType === 'image') {
       this.setState({
@@ -105,7 +141,7 @@ export const renderAnnotationButton = (
     return (
       <AnnotationToolbar
         key={idx}
-        viewContext={pluginState.mediaContext!}
+        viewMediaClientConfig={pluginState.mediaClientConfig!}
         id={selectedContainer.firstChild!.attrs.id}
         view={view}
         intl={intl}

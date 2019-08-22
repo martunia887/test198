@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import Lozenge from '@atlaskit/lozenge';
+import Lozenge, { ThemeAppearance } from '@atlaskit/lozenge';
 import {
-  WithAnalyticsEventProps,
-  CreateUIAnalyticsEventSignature,
-  UIAnalyticsEventInterface,
+  WithAnalyticsEventsProps,
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
   withAnalyticsEvents,
 } from '@atlaskit/analytics-next';
 import { createStatusAnalyticsAndFire } from './analytics';
@@ -13,7 +13,7 @@ import { ANALYTICS_HOVER_DELAY } from './constants';
 export type Color = 'neutral' | 'purple' | 'blue' | 'red' | 'yellow' | 'green';
 export type StatusStyle = 'bold' | 'subtle';
 
-const colorToLozengeAppearanceMap: { [K in Color]: string } = {
+const colorToLozengeAppearanceMap: { [K in Color]: ThemeAppearance } = {
   neutral: 'default',
   purple: 'new',
   blue: 'inprogress',
@@ -34,7 +34,7 @@ export interface OwnProps {
   onHover?: () => void;
 }
 
-export type Props = OwnProps & WithAnalyticsEventProps;
+export type Props = OwnProps & WithAnalyticsEventsProps;
 
 class StatusInternal extends PureComponent<Props, any> {
   private hoverStartTime: number = 0;
@@ -83,11 +83,11 @@ class StatusInternal extends PureComponent<Props, any> {
   }
 }
 
-export const Status: React.ComponentClass<OwnProps> = withAnalyticsEvents({
+export const Status = withAnalyticsEvents({
   onClick: (
-    createEvent: CreateUIAnalyticsEventSignature,
+    createEvent: CreateUIAnalyticsEvent,
     props: Props,
-  ): UIAnalyticsEventInterface => {
+  ): UIAnalyticsEvent => {
     const { localId } = props;
     return createStatusAnalyticsAndFire(createEvent)({
       action: 'clicked',
@@ -98,9 +98,9 @@ export const Status: React.ComponentClass<OwnProps> = withAnalyticsEvents({
     });
   },
   onHover: (
-    createEvent: CreateUIAnalyticsEventSignature,
+    createEvent: CreateUIAnalyticsEvent,
     props: Props,
-  ): UIAnalyticsEventInterface => {
+  ): UIAnalyticsEvent => {
     const { localId } = props;
     return createStatusAnalyticsAndFire(createEvent)({
       action: 'hovered',
@@ -110,4 +110,4 @@ export const Status: React.ComponentClass<OwnProps> = withAnalyticsEvents({
       },
     });
   },
-})(StatusInternal) as React.ComponentClass<OwnProps>;
+})(StatusInternal);

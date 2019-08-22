@@ -6,7 +6,7 @@ import {
   TableMap,
   CellSelection,
 } from 'prosemirror-tables';
-import { EditorView } from 'prosemirror-view';
+import { EditorView, DecorationSet } from 'prosemirror-view';
 import { Node as PMNode, Slice, Schema } from 'prosemirror-model';
 import {
   findTable,
@@ -22,8 +22,14 @@ import {
   selectRow as selectRowTransform,
   ContentNodeWithPos,
 } from 'prosemirror-utils';
-import { createCommand } from '../pm-plugins/main';
-import { checkIfHeaderRowEnabled, isIsolating } from '../utils';
+import { createCommand, getPluginState } from '../pm-plugins/main';
+import {
+  checkIfHeaderRowEnabled,
+  checkIfHeaderColumnEnabled,
+  isIsolating,
+  updatePluginStateDecorations,
+  createColumnControlsDecoration,
+} from '../utils';
 import { Command } from '../../../types';
 import { analyticsService } from '../../../analytics';
 import { outdentList } from '../../lists/commands';
@@ -36,7 +42,7 @@ import {
 import { fixAutoSizedTable } from '../transforms';
 import { INPUT_METHOD } from '../../analytics';
 import { insertRowWithAnalytics } from '../commands-with-analytics';
-import { TableCssClassName as ClassName } from '../types';
+import { TableCssClassName as ClassName, TableDecorations } from '../types';
 // #endregion
 
 // #region Constants
@@ -48,7 +54,9 @@ const TAB_BACKWARD_DIRECTION = -1;
 export const setEditorFocus = (editorHasFocus: boolean) =>
   createCommand({
     type: 'SET_EDITOR_FOCUS',
-    data: { editorHasFocus },
+    data: {
+      editorHasFocus,
+    },
   });
 
 export const setTableRef = (ref?: HTMLElement | null) =>
@@ -59,12 +67,31 @@ export const setTableRef = (ref?: HTMLElement | null) =>
       const tableWrapperTarget =
         closestElement(tableRef, `.${ClassName.TABLE_NODE_WRAPPER}`) ||
         undefined;
+      const layout = tableNode ? tableNode.attrs.layout : undefined;
+      const {
+        pluginConfig: { allowControls = true },
+      } = getPluginState(state);
+
+      let decorationSet = DecorationSet.empty;
+
+      if (allowControls && tableRef) {
+        decorationSet = updatePluginStateDecorations(
+          state,
+          createColumnControlsDecoration(state.selection),
+          TableDecorations.COLUMN_CONTROLS_DECORATIONS,
+        );
+      }
+
       return {
         type: 'SET_TABLE_REF',
         data: {
           tableRef,
           tableNode,
           tableWrapperTarget,
+          layout: layout || 'default',
+          isHeaderRowEnabled: checkIfHeaderRowEnabled(state),
+          isHeaderColumnEnabled: checkIfHeaderColumnEnabled(state),
+          decorationSet,
         },
       };
     },
@@ -317,7 +344,7 @@ export const setMultipleCellAttrs = (
   return false;
 };
 
-export const selectColumn = (column: number) =>
+export const selectColumn = (column: number, expand?: boolean) =>
   createCommand(
     state => {
       let targetCellPosition;
@@ -328,10 +355,11 @@ export const selectColumn = (column: number) =>
 
       return { type: 'SET_TARGET_CELL_POSITION', data: { targetCellPosition } };
     },
-    tr => selectColumnTransform(column)(tr).setMeta('addToHistory', false),
+    tr =>
+      selectColumnTransform(column, expand)(tr).setMeta('addToHistory', false),
   );
 
-export const selectRow = (row: number) =>
+export const selectRow = (row: number, expand?: boolean) =>
   createCommand(
     state => {
       let targetCellPosition;
@@ -342,7 +370,7 @@ export const selectRow = (row: number) =>
 
       return { type: 'SET_TARGET_CELL_POSITION', data: { targetCellPosition } };
     },
-    tr => selectRowTransform(row)(tr).setMeta('addToHistory', false),
+    tr => selectRowTransform(row, expand)(tr).setMeta('addToHistory', false),
   );
 
 export const showInsertColumnButton = (columnIndex: number) =>

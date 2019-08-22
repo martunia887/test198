@@ -13,7 +13,7 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import { colors } from '@atlaskit/theme';
+import { B100 } from '@atlaskit/theme/colors';
 
 import {
   name as packageName,
@@ -181,7 +181,7 @@ class TimePicker extends Component<Props, State> {
       const { parseInputValue, timeFormat } = this.props;
       // TODO parseInputValue doesn't accept `timeFormat` as an function arg yet...
       const value =
-        format(parseInputValue(inputValue, timeFormat), 'HH:mma') || '';
+        format(parseInputValue(inputValue, timeFormat), 'HH:mm') || '';
       this.setState({ value });
       this.props.onChange(value);
     } else {
@@ -221,7 +221,7 @@ class TimePicker extends Component<Props, State> {
     if (selectStyles.control) return {};
     return {
       border: `2px solid ${
-        this.getState().isFocused ? `${colors.B100}` : `transparent`
+        this.getState().isFocused ? `${B100}` : `transparent`
       }`,
       backgroundColor: 'transparent',
       padding: '1px',

@@ -1,3 +1,5 @@
+import { globalMediaEventEmitter } from '@atlaskit/media-client';
+const globalEmitSpy = jest.spyOn(globalMediaEventEmitter, 'emit');
 import {
   mockStore,
   mockWsConnectionHolder,
@@ -37,7 +39,11 @@ import {
   SendUploadEventActionPayload,
 } from '../../../actions/sendUploadEvent';
 import { SCALE_FACTOR_DEFAULT } from '../../../../util/getPreviewFromImage';
-import { getFileStreamsCache, FileState } from '@atlaskit/media-core';
+import {
+  getFileStreamsCache,
+  FileState,
+  UploadingFileState,
+} from '@atlaskit/media-client';
 import { ReplaySubject, Observable } from 'rxjs';
 
 describe('importFiles middleware', () => {
@@ -49,13 +55,11 @@ describe('importFiles middleware', () => {
   const defaultOptions: SetupOptions = {
     withSelectedItems: true,
   };
-  const upfrontId = Promise.resolve('1');
   const makeFileData = (index: number) => ({
     id: `some-selected-item-id-${index}`,
     name: `picture${index}.jpg`,
     mimeType: 'image/jpg',
     size: 42 + index,
-    upfrontId,
     occurrenceKey: `occurrence-key-${index}`,
   });
 
@@ -87,20 +91,14 @@ describe('importFiles middleware', () => {
       // Each LocalUpload will have a list of events with one of them being uploads-start,
       // and each of those events will contain all UploadFiles.
       for (let i = 1; i <= total; i++) {
-        const {
-          id,
-          name,
-          mimeType: type,
-          size,
-          upfrontId,
-          occurrenceKey,
-        } = makeFileData(i);
+        const { id, name, mimeType: type, size, occurrenceKey } = makeFileData(
+          i,
+        );
         files.push({
           id,
           name,
           type,
           size,
-          upfrontId,
           creationDate: todayDate,
           occurrenceKey,
         });
@@ -133,9 +131,6 @@ describe('importFiles middleware', () => {
         name: 'upload-end',
         data: {
           file,
-          public: {
-            id: `some-public-id-${index}`,
-          },
         },
       };
 
@@ -143,8 +138,6 @@ describe('importFiles middleware', () => {
         file: {
           metadata: {
             ...makeFileData(index),
-            userUpfrontId: Promise.resolve(''),
-            userOccurrenceKey: Promise.resolve(''),
           },
         },
         events: [
@@ -258,7 +251,6 @@ describe('importFiles middleware', () => {
             type: 'image/jpg',
             size: 43,
             creationDate: todayDate,
-            upfrontId,
             occurrenceKey: 'occurrence-key-1',
           },
           {
@@ -267,7 +259,6 @@ describe('importFiles middleware', () => {
             type: 'image/jpg',
             size: 45,
             creationDate: todayDate,
-            upfrontId,
             occurrenceKey: 'occurrence-key-3',
           },
           {
@@ -276,7 +267,6 @@ describe('importFiles middleware', () => {
             type: 'image/jpg',
             size: 46,
             creationDate: todayDate,
-            upfrontId,
             occurrenceKey: 'occurrence-key-4',
           },
           {
@@ -285,7 +275,6 @@ describe('importFiles middleware', () => {
             type: 'image/jpg',
             size: 47,
             creationDate: expect.any(Number),
-            upfrontId,
             occurrenceKey: 'occurrence-key-5',
           },
         ]);
@@ -315,7 +304,6 @@ describe('importFiles middleware', () => {
                 type: 'image/jpg',
                 size: 46,
                 creationDate: todayDate,
-                upfrontId,
                 occurrenceKey: 'occurrence-key-4',
               },
               RECENTS_COLLECTION,
@@ -363,7 +351,6 @@ describe('importFiles middleware', () => {
                 type: 'image/jpg',
                 size: 46,
                 creationDate: todayDate,
-                upfrontId,
                 occurrenceKey: 'occurrence-key-4',
               },
               expectUUID,
@@ -481,9 +468,9 @@ describe('importFiles middleware', () => {
         )(action);
 
         window.setTimeout(() => {
-          const { tenantContext } = store.getState();
-          expect(tenantContext.file.touchFiles).toBeCalledTimes(1);
-          expect(tenantContext.file.touchFiles).toBeCalledWith(
+          const { tenantMediaClient } = store.getState();
+          expect(tenantMediaClient.file.touchFiles).toBeCalledTimes(1);
+          expect(tenantMediaClient.file.touchFiles).toBeCalledWith(
             [
               {
                 collection: 'tenant-collection',
@@ -513,7 +500,7 @@ describe('importFiles middleware', () => {
       });
     });
 
-    it('should emit file-added in the tenant context', done => {
+    it('should emit file-added in tenant mediaClient and globalMediaEventEmitter', done => {
       const { eventEmitter, mockWsProvider, store, nextDispatch } = setup();
 
       importFilesMiddleware(eventEmitter, mockWsProvider)(store)(nextDispatch)(
@@ -521,10 +508,8 @@ describe('importFiles middleware', () => {
       );
 
       window.setTimeout(() => {
-        const { tenantContext } = store.getState();
-
-        expect(tenantContext.emit).toBeCalledTimes(4);
-        expect(tenantContext.emit).lastCalledWith('file-added', {
+        const { tenantMediaClient } = store.getState();
+        const fileState = {
           id: expectUUID,
           mediaType: 'image',
           mimeType: 'image/jpg',
@@ -533,7 +518,12 @@ describe('importFiles middleware', () => {
           representations: {},
           size: 47,
           status: 'processing',
-        });
+        };
+
+        expect(globalEmitSpy).toBeCalledTimes(4);
+        expect(globalEmitSpy).lastCalledWith('file-added', fileState);
+        expect(tenantMediaClient.emit).toBeCalledTimes(4);
+        expect(tenantMediaClient.emit).lastCalledWith('file-added', fileState);
         done();
       });
     });
@@ -560,7 +550,6 @@ describe('importFiles middleware', () => {
       name: '',
       size: 1,
       type: 'image/png',
-      upfrontId: Promise.resolve(''),
     };
     it('should add file preview for Giphy files', done => {
       const selectedFiles: SelectedUploadFile[] = [
@@ -660,9 +649,9 @@ describe('importFiles middleware', () => {
         async next(state) {
           if (state.status !== 'error') {
             await state.preview;
-            const { userContext } = store.getState();
-            expect(userContext.getImage).toBeCalledTimes(1);
-            expect(userContext.getImage).toBeCalledWith('id-1', {
+            const { userMediaClient } = store.getState();
+            expect(userMediaClient.getImage).toBeCalledTimes(1);
+            expect(userMediaClient.getImage).toBeCalledWith('id-1', {
               collection: RECENTS_COLLECTION,
               width: 1920,
               height: 1080,
@@ -670,6 +659,77 @@ describe('importFiles middleware', () => {
             });
             done();
           }
+        },
+      });
+    });
+    it('should set value of public file id to be new file state', done => {
+      const selectedFiles: SelectedUploadFile[] = [
+        {
+          file,
+          serviceName: 'upload',
+          touchFileDescriptor: {
+            fileId: 'id-foo-1',
+          },
+        },
+      ];
+      const store = mockStore();
+      touchSelectedFiles(selectedFiles, store);
+      const observable = getFileStreamsCache().get('id-foo-1');
+
+      observable!.subscribe({
+        async next(state) {
+          if (state.status !== 'error') {
+            expect(await state.id).toEqual('id-foo-1');
+            done();
+          }
+        },
+      });
+    });
+
+    it('should reuse existing user file state for tenant id', done => {
+      const userFile: MediaFile = {
+        id: 'user-id',
+        creationDate: 1,
+        name: 'some_file_name',
+        size: 1,
+        type: 'image/png',
+      };
+      const selectedFiles: SelectedUploadFile[] = [
+        {
+          file: userFile,
+          serviceName: 'upload',
+          touchFileDescriptor: {
+            fileId: 'tenant-upfront-id',
+          },
+        },
+      ];
+
+      const subject = new ReplaySubject<Partial<FileState>>(1);
+      subject.next({
+        id: 'user-id',
+        status: 'uploading',
+        name: 'some_file_name',
+        progress: 0.5,
+        preview: {
+          value: 'some-existing-preview',
+        },
+      });
+      getFileStreamsCache().set('user-id', subject as Observable<FileState>);
+
+      const store = mockStore();
+      touchSelectedFiles(selectedFiles, store);
+      const observable = getFileStreamsCache().get('tenant-upfront-id');
+
+      observable!.subscribe({
+        async next(state) {
+          const fileState = state as UploadingFileState;
+          // we want to make sure that existing file properties are present
+          expect(fileState.name).toEqual('some_file_name');
+          expect(fileState.progress).toEqual(0.5);
+          expect(await fileState.preview).toEqual({
+            value: 'some-existing-preview',
+          });
+          done();
         },
       });
     });

@@ -13,6 +13,17 @@ import { CreateAnalyticsEventFn } from '../components/analytics/types';
 import { ABTest } from '../api/CrossProductSearchClient';
 import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
 
+function stripUGC(referralContextIdentifiers?: ReferralContextIdentifiers) {
+  if (referralContextIdentifiers) {
+    const {
+      searchReferrerId,
+      currentContentId,
+      currentContainerId,
+    } = referralContextIdentifiers;
+    return { searchReferrerId, currentContentId, currentContainerId };
+  }
+}
+
 const fireGasEvent = (
   createAnalyticsEvent: CreateAnalyticsEventFn | undefined,
   action: string,
@@ -23,7 +34,7 @@ const fireGasEvent = (
   nonPrivacySafeAttributes?: object | null,
 ): void => {
   if (createAnalyticsEvent) {
-    const event = createAnalyticsEvent();
+    const event = createAnalyticsEvent({});
     const payload: GasPayload = {
       action,
       actionSubject,
@@ -50,7 +61,6 @@ export function firePreQueryShownEvent(
   createAnalyticsEvent: CreateAnalyticsEventFn,
   abTest: ABTest,
   referralContextIdentifiers?: ReferralContextIdentifiers,
-  experimentRequestDurationMs?: number,
   retrievedFromAggregator?: boolean,
 ) {
   fireGasEvent(
@@ -61,10 +71,9 @@ export function firePreQueryShownEvent(
     'ui',
     {
       preQueryRequestDurationMs: elapsedMs,
-      experimentRequestDurationMs,
       renderTimeMs,
       searchSessionId: searchSessionId,
-      referralContextIdentifiers,
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
       ...eventAttributes,
       retrievedFromAggregator,
       ...abTest,
@@ -148,11 +157,12 @@ export function firePostQueryShownEvent(
   timings: PerformanceTiming,
   searchSessionId: string,
   query: string,
+  filtersApplied: { [filterType: string]: boolean },
   createAnalyticsEvent: CreateAnalyticsEventFn,
   abTest: ABTest,
   referralContextIdentifiers?: ReferralContextIdentifiers,
 ) {
-  const event = createAnalyticsEvent();
+  const event = createAnalyticsEvent({});
 
   const { elapsedMs, ...otherPerformanceTimings } = timings;
   const payload: GasPayload = {
@@ -163,9 +173,10 @@ export function firePostQueryShownEvent(
     source: DEFAULT_GAS_SOURCE,
     attributes: {
       ...getQueryAttributes(query),
+      filtersApplied,
       postQueryRequestDurationMs: elapsedMs,
       searchSessionId,
-      referralContextIdentifiers,
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
       ...otherPerformanceTimings,
       ...resultsDetails,
       ...DEFAULT_GAS_ATTRIBUTES,
@@ -252,7 +263,7 @@ export function fireSelectedSearchResult(
       searchSessionId: searchSessionId,
       newTab,
       ...transformSearchResultEventData(eventData),
-      referralContextIdentifiers,
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
     },
   );
 }
@@ -280,7 +291,7 @@ export function fireSelectedAdvancedSearch(
       ...getQueryAttributes(query),
       wasOnNoResultsScreen: eventData.wasOnNoResultsScreen || false,
       ...transformSearchResultEventData(eventData),
-      referralContextIdentifiers,
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
     },
   );
 }
@@ -302,7 +313,62 @@ export function fireHighlightedSearchResult(
       searchSessionId: searchSessionId,
       ...transformSearchResultEventData(eventData),
       key,
-      referralContextIdentifiers,
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
+    },
+  );
+}
+
+export function fireShowMoreButtonClickEvent(
+  searchSessionId: string,
+  currentSize: number,
+  totalResultSize: number,
+  buttonIdentifier: string,
+  pageSize: number,
+  createAnalyticsEvent?: CreateAnalyticsEventFn,
+) {
+  fireGasEvent(
+    createAnalyticsEvent,
+    'clicked',
+    'button',
+    buttonIdentifier,
+    'ui',
+    {
+      searchSessionId,
+      currentSize,
+      totalResultSize,
+      pageSize,
+    },
+  );
+}
+
+export function fireMoreFiltersButtonClickEvent(
+  searchSessionId: string,
+  createAnalyticsEvent?: CreateAnalyticsEventFn,
+) {
+  fireGasEvent(
+    createAnalyticsEvent,
+    'clicked',
+    'button',
+    'showMoreFilters',
+    'ui',
+    {
+      searchSessionId,
+    },
+  );
+}
+
+export function fireSpaceFilterShownEvent(
+  searchSessionId: string,
+  createAnalyticsEvent?: CreateAnalyticsEventFn,
+) {
+  fireGasEvent(
+    createAnalyticsEvent,
+    'shown',
+    'filter',
+    'spaceFilterButton',
+    'ui',
+    {
+      searchSessionId,
     },
   );
 }

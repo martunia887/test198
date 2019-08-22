@@ -16,7 +16,7 @@ import { taskDecision } from '@atlaskit/util-data-test';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { uuid } from '@atlaskit/adf-schema';
 import Button from '@atlaskit/button';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 import { pluginKey as blockTypePluginKey } from '../../../../../plugins/block-type/pm-plugins/main';
 import {
@@ -40,17 +40,17 @@ import {
   INPUT_METHOD,
   DispatchAnalyticsEvent,
 } from '../../../../../plugins/analytics';
-import tablesPlugin from '../../../../../plugins/table';
 import { AnalyticsHandler } from '../../../../../analytics';
-import { ReactWrapper } from 'enzyme';
+import { ReactWrapper, mount } from 'enzyme';
 import { EditorView } from 'prosemirror-view';
 import { InsertMenuCustomItem } from '../../../../../types';
+import { TooltipShortcut } from '../../../../../keymaps';
 
 const emojiProvider = emojiData.testData.getEmojiResourcePromise();
 
 const mediaProvider: Promise<MediaProvider> = Promise.resolve({
-  viewContext: Promise.resolve({} as any),
-  uploadContext: Promise.resolve({} as any),
+  viewMediaClientConfig: {} as any,
+  uploadMediaClientConfig: {} as any,
 });
 
 const providerFactory = ProviderFactory.create({ mediaProvider });
@@ -65,7 +65,9 @@ const getToolbarButton = (
 ): ReactWrapper =>
   toolbarOption
     .find(ToolbarButton)
-    .filterWhere(n => n.prop('title')!.indexOf(title) > -1)
+    .filterWhere(
+      toolbarButton => toolbarButton.find('Icon').prop('label') === title,
+    )
     .find(Button);
 
 const getInsertMenuButton = (
@@ -107,11 +109,11 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
   let pluginState: any;
   let toolbarOption: ReactWrapper;
   let analyticsHandlerSpy: jest.Mock<AnalyticsHandler>;
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
   let dispatchAnalyticsSpy: jest.SpyInstance<DispatchAnalyticsEvent>;
   let dispatchSpy: jest.SpyInstance;
 
-  const editor = (doc: any, editorPlugins?: any[]) => {
+  const editor = (doc: any) => {
     createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
     return createEditor({
       doc,
@@ -123,12 +125,12 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
         allowLists: true,
         allowPanel: true,
         allowRule: true,
+        allowTables: true,
         allowAnalyticsGASV3: true,
         taskDecisionProvider: Promise.resolve(
           taskDecision.getMockTaskDecisionResource(),
         ),
       },
-      editorPlugins,
       providerFactory,
       createAnalyticsEvent,
     });
@@ -170,6 +172,42 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
       availableWrapperBlockTypes: pluginState.availableWrapperBlockTypes,
     });
     expect(toolbarOption.find(ToolbarButton).prop('disabled')).toEqual(true);
+  });
+
+  describe('tooltip with shortcut', () => {
+    [
+      { toolbarProps: { mentionsSupported: true }, result: '/' },
+      {
+        toolbarProps: { tableSupported: true, buttons: 2 },
+        result: 'Shift+Alt+T',
+      },
+    ].forEach(({ toolbarProps, result }) => {
+      describe('render the tooltip with shortcut', () => {
+        let tooltipContent: ReactWrapper;
+
+        beforeEach(() => {
+          buildToolbar(toolbarProps);
+          tooltipContent = mount(
+            <div>
+              {toolbarOption
+                .find(ToolbarButton)
+                .first()
+                .prop('title')}
+            </div>,
+          );
+        });
+
+        afterEach(() => {
+          if (tooltipContent) {
+            tooltipContent.unmount();
+          }
+        });
+
+        it(`the shortcut ${result} is displayed with a background`, () => {
+          expect(tooltipContent.find(TooltipShortcut).text()).toEqual(result);
+        });
+      });
+    });
   });
 
   describe('custom items', () => {
@@ -383,7 +421,7 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
 
       describe('click table option', () => {
         beforeEach(() => {
-          ({ editorView } = editor(doc(p('text')), [tablesPlugin()]));
+          ({ editorView } = editor(doc(p('text'))));
           buildToolbarForMenu({ tableSupported: true });
           menu.clickButton(messages.table.defaultMessage, toolbarOption);
         });

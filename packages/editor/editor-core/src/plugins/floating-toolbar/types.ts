@@ -19,8 +19,8 @@ export type AlignType = 'left' | 'center' | 'right';
 export type FloatingToolbarButton<T> = {
   type: 'button';
   title: string;
-  showTitle?: boolean;
   onClick: T;
+  showTitle?: boolean;
   onMouseEnter?: T;
   onMouseLeave?: T;
   icon?: Icon;
@@ -104,6 +104,7 @@ export interface FloatingToolbarConfig {
   height?: number;
   width?: number;
   offset?: [number, number];
+  forcePlacement?: boolean;
 }
 
 export type FloatingToolbarHandler = (

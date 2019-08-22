@@ -6,6 +6,7 @@ import FullScreenIconOn from '@atlaskit/icon/glyph/vid-full-screen-on';
 import FullScreenIconOff from '@atlaskit/icon/glyph/vid-full-screen-off';
 import SoundIcon from '@atlaskit/icon/glyph/hipchat/outgoing-sound';
 import HDIcon from '@atlaskit/icon/glyph/vid-hd-circle';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
 import MediaButton from '../MediaButton';
 import Spinner from '@atlaskit/spinner';
 import MediaPlayer, {
@@ -41,18 +42,20 @@ import {
 } from './fullscreen';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { messages } from '../messages';
+import simultaneousPlayManager from './simultaneousPlayManager';
+import { WithShowControlMethodProp } from '../types';
 
-export interface CustomMediaPlayerProps {
+export interface CustomMediaPlayerProps extends WithShowControlMethodProp {
   readonly type: 'audio' | 'video';
   readonly src: string;
   readonly isHDActive?: boolean;
   readonly onHDToggleClick?: () => void;
   readonly isHDAvailable?: boolean;
-  readonly showControls?: () => void;
   readonly isAutoPlay: boolean;
   readonly isShortcutEnabled?: boolean;
   readonly onCanPlay?: () => void;
   readonly onError?: () => void;
+  readonly onDownloadClick?: () => void;
 }
 
 export interface CustomMediaPlayerState {
@@ -61,11 +64,19 @@ export interface CustomMediaPlayerState {
 
 export type ToggleButtonAction = () => void;
 
+export type CustomMediaPlayerActions = {
+  play: () => void;
+  pause: () => void;
+};
+
+const toolbar: any = 'toolbar';
+
 export class CustomMediaPlayer extends Component<
   CustomMediaPlayerProps & InjectedIntlProps,
   CustomMediaPlayerState
 > {
   videoWrapperRef?: HTMLElement;
+  private actions?: CustomMediaPlayerActions;
 
   state: CustomMediaPlayerState = {
     isFullScreenEnabled: false,
@@ -76,6 +87,12 @@ export class CustomMediaPlayer extends Component<
       vendorify('fullscreenchange', false),
       this.onFullScreenChange,
     );
+
+    simultaneousPlayManager.subscribe(this);
+
+    if (this.props.isAutoPlay) {
+      simultaneousPlayManager.pauseOthers(this);
+    }
   }
 
   componentWillUnmount() {
@@ -83,6 +100,7 @@ export class CustomMediaPlayer extends Component<
       vendorify('fullscreenchange', false),
       this.onFullScreenChange,
     );
+    simultaneousPlayManager.unsubscribe(this);
   }
 
   onFullScreenChange = () => {
@@ -123,7 +141,7 @@ export class CustomMediaPlayer extends Component<
     const secondaryColor = isHDActive ? colors.white : colors.DN60;
     return (
       <MediaButton
-        appearance={'toolbar' as any}
+        appearance={toolbar}
         onClick={onHDToggleClick}
         iconBefore={
           <HDIcon
@@ -142,7 +160,7 @@ export class CustomMediaPlayer extends Component<
         <VolumeToggleWrapper isMuted={isMuted}>
           <MutedIndicator isMuted={isMuted} />
           <MediaButton
-            appearance={'toolbar' as any}
+            appearance={toolbar}
             onClick={actions.toggleMute}
             iconBefore={<SoundIcon label="volume" />}
           />
@@ -184,9 +202,24 @@ export class CustomMediaPlayer extends Component<
 
     return (
       <MediaButton
-        appearance={'toolbar' as any}
+        appearance={toolbar}
         onClick={this.onFullScreenClick}
         iconBefore={icon}
+      />
+    );
+  };
+
+  renderDownloadButton = () => {
+    const { onDownloadClick } = this.props;
+    if (!onDownloadClick) {
+      return;
+    }
+
+    return (
+      <MediaButton
+        appearance={toolbar}
+        onClick={onDownloadClick}
+        iconBefore={<DownloadIcon label="download" />}
       />
     );
   };
@@ -196,6 +229,28 @@ export class CustomMediaPlayer extends Component<
       <Spinner invertColor size="large" />
     </SpinnerWrapper>
   );
+
+  private setActions(actions: VideoActions) {
+    // Actions are being sent constantly while the video is playing,
+    // though play and pause functions are always the same objects
+    if (!this.actions) {
+      const { play, pause } = actions;
+      this.actions = { play, pause };
+    }
+  }
+
+  public pause = () => {
+    if (this.actions) {
+      this.actions.pause();
+    }
+  };
+
+  private play = () => {
+    if (this.actions) {
+      this.actions.play();
+    }
+    simultaneousPlayManager.pauseOthers(this);
+  };
 
   render() {
     const {
@@ -207,6 +262,7 @@ export class CustomMediaPlayer extends Component<
       onCanPlay,
       onError,
     } = this.props;
+
     return (
       <CustomVideoWrapper innerRef={this.saveVideoWrapperRef}>
         <MediaPlayer
@@ -217,6 +273,8 @@ export class CustomMediaPlayer extends Component<
           onError={onError}
         >
           {(video, videoState, actions) => {
+            this.setActions(actions);
+
             const {
               status,
               currentTime,
@@ -230,10 +288,10 @@ export class CustomMediaPlayer extends Component<
             ) : (
               <PlayIcon label={formatMessage(messages.pause)} />
             );
-            const toggleButtonAction = isPlaying ? actions.pause : actions.play;
+            const toggleButtonAction = isPlaying ? this.pause : this.play;
             const button = (
               <MediaButton
-                appearance={'toolbar' as any}
+                appearance={toolbar}
                 iconBefore={toggleButtonIcon}
                 onClick={toggleButtonAction}
               />
@@ -277,6 +335,7 @@ export class CustomMediaPlayer extends Component<
                       </CurrentTime>
                       {this.renderHDButton()}
                       {this.renderFullScreenButton()}
+                      {this.renderDownloadButton()}
                     </RightControls>
                   </TimebarWrapper>
                 </ControlsWrapper>

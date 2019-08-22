@@ -8,13 +8,17 @@ import * as clipboard from '../../../utils/clipboard';
 import { transformSliceForMedia } from '../../media/utils/media-single';
 import linkify from '../linkify-md-plugin';
 import { escapeLinks } from '../util';
+import { linkifyContent } from '../../hyperlink/utils';
 import { transformSliceToRemoveOpenBodiedExtension } from '../../extension/actions';
 import { transformSliceToRemoveOpenLayoutNodes } from '../../layout/utils';
-import { linkifyContent } from '../../hyperlink/utils';
 import { pluginKey as tableStateKey } from '../../table/pm-plugins/main';
-import { transformSliceToRemoveOpenTable } from '../../table/utils';
+import {
+  transformSliceToRemoveOpenTable,
+  transformSliceToCorrectEmptyTableCells,
+  transformSliceToFixHardBreakProblemOnCopyFromCell,
+} from '../../table/utils';
 import { transformSliceToAddTableHeaders } from '../../table/commands';
-import { handleMacroAutoConvert } from '../handlers';
+import { handleMacroAutoConvert, handleMention } from '../handlers';
 import {
   transformSliceToJoinAdjacentCodeBlocks,
   transformSingleLineCodeBlockToCodeMark,
@@ -32,7 +36,10 @@ import {
 import { PasteTypes } from '../../analytics';
 import { insideTable } from '../../../utils';
 import { CardOptions } from '../../card';
-
+import {
+  transformSliceToCorrectMediaWrapper,
+  unwrapNestedMediaElements,
+} from '../../media/utils/media-common';
 export const stateKey = new PluginKey('pastePlugin');
 
 export const md = MarkdownIt('zero', { html: false });
@@ -55,7 +62,11 @@ function isHeaderRowRequired(state: EditorState) {
   return tableState && tableState.pluginConfig.isHeaderRowRequired;
 }
 
-export function createPlugin(schema: Schema, cardOptions?: CardOptions) {
+export function createPlugin(
+  schema: Schema,
+  cardOptions?: CardOptions,
+  sanitizePrivateContent?: boolean,
+) {
   const atlassianMarkDownParser = new MarkdownTransformer(schema, md);
 
   function getMarkdownSlice(
@@ -193,7 +204,6 @@ export function createPlugin(schema: Schema, cardOptions?: CardOptions) {
         if (isRichText) {
           // linkify the text where possible
           slice = linkifyContent(state.schema)(slice);
-
           // run macro autoconvert prior to other conversions
           if (
             handleMacroAutoConvert(text, slice, cardOptions)(
@@ -246,6 +256,14 @@ export function createPlugin(schema: Schema, cardOptions?: CardOptions) {
         return false;
       },
       transformPasted(slice) {
+        if (sanitizePrivateContent) {
+          slice = handleMention(slice, schema);
+        }
+
+        slice = transformSliceToFixHardBreakProblemOnCopyFromCell(
+          slice,
+          schema,
+        );
         /** If a partial paste of table, paste only table's content */
         slice = transformSliceToRemoveOpenTable(slice, schema);
 
@@ -260,6 +278,10 @@ export function createPlugin(schema: Schema, cardOptions?: CardOptions) {
         slice = transformSliceToJoinAdjacentCodeBlocks(slice);
 
         slice = transformSingleLineCodeBlockToCodeMark(slice, schema);
+
+        slice = transformSliceToCorrectMediaWrapper(slice, schema);
+
+        slice = transformSliceToCorrectEmptyTableCells(slice, schema);
 
         if (
           slice.content.childCount &&
@@ -282,6 +304,11 @@ export function createPlugin(schema: Schema, cardOptions?: CardOptions) {
           html = html.replace(/white-space:pre/g, '');
           html = html.replace(/white-space:pre-wrap/g, '');
         }
+
+        if (html.indexOf('<img ') >= 0) {
+          html = unwrapNestedMediaElements(html);
+        }
+
         return html;
       },
     },

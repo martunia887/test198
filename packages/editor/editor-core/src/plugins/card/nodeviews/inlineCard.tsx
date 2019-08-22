@@ -1,24 +1,15 @@
 import * as React from 'react';
 import { EventHandler, MouseEvent, KeyboardEvent } from 'react';
 import * as PropTypes from 'prop-types';
-import { Node as PMNode } from 'prosemirror-model';
-import { Card } from '@atlaskit/smart-card';
+import { Card as SmartCard } from '@atlaskit/smart-card';
 import { findOverflowScrollParent } from '@atlaskit/editor-common';
 
-import { EditorView } from 'prosemirror-view';
-import wrapComponentWithClickArea from '../../../nodeviews/legacy-nodeview-factory/ui/wrapper-click-area';
-import { stateKey as ReactNodeViewState } from '../../../plugins/base/pm-plugins/react-nodeview';
 import { ZeroWidthSpace } from '../../../utils';
+import { SmartCardProps, Card } from './genericCard';
+import UnsupportedInlineNode from '../../unsupported-content/nodeviews/unsupported-inline';
+import { SelectionBasedNodeView } from '../../../nodeviews/ReactNodeView';
 
-export interface Props {
-  children?: React.ReactNode;
-  node: PMNode;
-  getPos: () => number;
-  view: EditorView;
-  selected?: boolean;
-}
-
-export class InlineCardNode extends React.PureComponent<Props> {
+export class InlineCardComponent extends React.PureComponent<SmartCardProps> {
   private scrollContainer?: HTMLElement;
   private onClick: EventHandler<MouseEvent | KeyboardEvent> = () => {};
 
@@ -33,18 +24,14 @@ export class InlineCardNode extends React.PureComponent<Props> {
   }
 
   render() {
-    const { node, selected } = this.props;
+    const { node, selected, cardContext } = this.props;
     const { url, data } = node.attrs;
-
-    const cardContext = this.context.contextAdapter
-      ? this.context.contextAdapter.card
-      : undefined;
 
     const card = (
       <span>
         <span>{ZeroWidthSpace}</span>
         <span className="card">
-          <Card
+          <SmartCard
             url={url}
             data={data}
             appearance="inline"
@@ -66,14 +53,15 @@ export class InlineCardNode extends React.PureComponent<Props> {
   }
 }
 
-const ClickableInlineCard = wrapComponentWithClickArea(InlineCardNode, true);
+const WrappedInlineCard = Card(InlineCardComponent, UnsupportedInlineNode);
 
-export default class WrappedInline extends React.PureComponent<Props, {}> {
+export class InlineCard extends SelectionBasedNodeView {
   render() {
     return (
-      <ClickableInlineCard
-        {...this.props}
-        pluginState={ReactNodeViewState.getState(this.props.view.state)}
+      <WrappedInlineCard
+        node={this.node}
+        selected={this.insideSelection()}
+        view={this.view}
       />
     );
   }

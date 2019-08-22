@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
-import { Card } from '@atlaskit/smart-card';
+import { Card as SmartCard } from '@atlaskit/smart-card';
 import * as PropTypes from 'prop-types';
 import { EditorView } from 'prosemirror-view';
-import wrapComponentWithClickArea from '../../../nodeviews/legacy-nodeview-factory/ui/wrapper-click-area';
-import { stateKey as ReactNodeViewState } from '../../../plugins/base/pm-plugins/react-nodeview';
+import { SmartCardProps, Card } from './genericCard';
+import UnsupportedBlockNode from '../../unsupported-content/nodeviews/unsupported-block';
+import { SelectionBasedNodeView } from '../../../nodeviews/ReactNodeView';
 
 export interface Props {
   children?: React.ReactNode;
   node: PMNode;
-  getPos: () => number;
+  getPos?: () => number;
   view: EditorView;
   selected?: boolean;
 }
-
-class BlockCardNode extends React.Component<Props, {}> {
+export class BlockCardComponent extends React.PureComponent<SmartCardProps> {
   onClick = () => {};
 
   static contextTypes = {
@@ -22,18 +22,14 @@ class BlockCardNode extends React.Component<Props, {}> {
   };
 
   render() {
-    const { node, selected } = this.props;
+    const { node, selected, cardContext } = this.props;
     const { url, data } = node.attrs;
-
-    const cardContext = this.context.contextAdapter
-      ? this.context.contextAdapter.card
-      : undefined;
 
     // render an empty span afterwards to get around Webkit bug
     // that puts caret in next editable text element
     const cardInner = (
       <>
-        <Card
+        <SmartCard
           url={url}
           data={data}
           appearance="block"
@@ -58,13 +54,15 @@ class BlockCardNode extends React.Component<Props, {}> {
   }
 }
 
-const ClickableBlockCard = wrapComponentWithClickArea(BlockCardNode);
-export default class WrappedInline extends React.PureComponent<Props, {}> {
+const WrappedBlockCard = Card(BlockCardComponent, UnsupportedBlockNode);
+
+export class BlockCard extends SelectionBasedNodeView {
   render() {
     return (
-      <ClickableBlockCard
-        {...this.props}
-        pluginState={ReactNodeViewState.getState(this.props.view.state)}
+      <WrappedBlockCard
+        node={this.node}
+        selected={this.insideSelection()}
+        view={this.view}
       />
     );
   }

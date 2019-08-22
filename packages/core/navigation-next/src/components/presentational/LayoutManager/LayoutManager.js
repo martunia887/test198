@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type ElementRef, Fragment } from 'react';
+import React, { Component, Fragment, type ElementRef } from 'react';
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 
 import {
@@ -11,9 +11,9 @@ import PageContent from '../PageContent';
 import ResizeTransition from '../ResizeTransition';
 import ResizeControl from './ResizeControl';
 import {
+  HorizontalGlobalNavContainer,
   LayoutContainer,
   NavigationContainer,
-  HorizontalGlobalNavContainer,
 } from './primitives';
 import type { LayoutManagerProps } from './types';
 import { ContainerNavigationMask } from '../ContentNavigation/primitives';
@@ -23,10 +23,10 @@ import {
 } from './nav-components';
 
 import {
+  ALTERNATE_FLYOUT_DELAY,
   CONTENT_NAV_WIDTH_COLLAPSED,
   CONTENT_NAV_WIDTH_FLYOUT,
   FLYOUT_DELAY,
-  ALTERNATE_FLYOUT_DELAY,
   HORIZONTAL_GLOBAL_NAV_HEIGHT,
 } from '../../../common/constants';
 import RenderBlocker from '../../common/RenderBlocker';
@@ -68,21 +68,23 @@ export default class LayoutManager extends Component<
     collapseToggleTooltipContent: defaultTooltipContent,
     datasets: {
       contextualNavigation: {
-        'data-test-id': 'ContextualNavigation',
+        'data-testid': 'ContextualNavigation',
       },
       globalNavigation: {
-        'data-test-id': 'GlobalNavigation',
+        'data-testid': 'GlobalNavigation',
       },
       navigation: {
-        'data-test-id': 'Navigation',
+        'data-testid': 'Navigation',
       },
     },
     topOffset: 0,
+    shouldHideGlobalNavShadow: false,
     // eslint-disable-next-line camelcase
-    experimental_flyoutOnHover: false,
     experimental_alternateFlyoutBehaviour: false,
+    experimental_flyoutOnHover: false,
     experimental_fullWidthFlyout: false,
     experimental_horizontalGlobalNav: false,
+    experimental_hideNavVisuallyOnCollapse: false,
   };
 
   static getDerivedStateFromProps(props: LayoutManagerProps, state: State) {
@@ -179,17 +181,21 @@ export default class LayoutManager extends Component<
       datasets,
       navigationUIController,
       // eslint-disable-next-line camelcase
-      experimental_flyoutOnHover: EXPERIMENTAL_FLYOUT_ON_HOVER,
-      // eslint-disable-next-line camelcase
       experimental_alternateFlyoutBehaviour: EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR,
       // eslint-disable-next-line camelcase
+      experimental_flyoutOnHover: EXPERIMENTAL_FLYOUT_ON_HOVER,
+      // eslint-disable-next-line camelcase
       experimental_fullWidthFlyout: EXPERIMENTAL_FULL_WIDTH_FLYOUT,
+      // eslint-disable-next-line camelcase
+      experimental_hideNavVisuallyOnCollapse: EXPERIMENTAL_HIDE_NAV_VISUALLY_ON_COLLAPSE,
+      // eslint-disable-next-line camelcase
       experimental_horizontalGlobalNav: EXPERIMENTAL_HORIZONTAL_GLOBAL_NAV,
       collapseToggleTooltipContent,
+      topOffset,
+      shouldHideGlobalNavShadow,
       globalNavigation,
       containerNavigation,
       productNavigation,
-      topOffset,
       view,
     } = this.props;
     const { flyoutIsOpen, mouseIsOverNavigation, itemIsDragging } = this.state;
@@ -296,7 +302,7 @@ export default class LayoutManager extends Component<
                         ]}
                         navigation={navigationUIController}
                       >
-                        {({ width }) => {
+                        {({ width, mouseIsOverGrabArea, mouseIsDown }) => {
                           return (
                             <ContainerNavigationMask
                               disableInteraction={itemIsDragging}
@@ -315,11 +321,24 @@ export default class LayoutManager extends Component<
                                     containerNavigation={containerNavigation}
                                     datasets={datasets}
                                     globalNavigation={globalNavigation}
-                                    topOffset={navContainerTopOffset}
+                                    topOffset={topOffset}
+                                    shouldHideGlobalNavShadow={
+                                      shouldHideGlobalNavShadow
+                                    }
                                     experimental_alternateFlyoutBehaviour={
                                       EXPERIMENTAL_ALTERNATE_FLYOUT_BEHAVIOUR
                                     }
                                     closeFlyout={this.closeFlyout}
+                                    mouseIsOverGrabArea={mouseIsOverGrabArea}
+                                    mouseIsOverNavigation={
+                                      mouseIsOverNavigation
+                                    }
+                                    width={width}
+                                    transitionState={transitionState}
+                                    isResizing={isResizing}
+                                    isCollapsed={isCollapsed}
+                                    mouseIsDown={mouseIsDown}
+                                    flyoutIsOpen={flyoutIsOpen}
                                     view={view}
                                   />
                                 )}
@@ -329,6 +348,9 @@ export default class LayoutManager extends Component<
                                   datasets={datasets}
                                   experimental_flyoutOnHover={
                                     EXPERIMENTAL_FLYOUT_ON_HOVER
+                                  }
+                                  experimental_hideNavVisuallyOnCollapse={
+                                    !!EXPERIMENTAL_HIDE_NAV_VISUALLY_ON_COLLAPSE
                                   }
                                   expand={navigationUIController.expand}
                                   productNavigation={productNavigation}
@@ -385,16 +407,16 @@ export default class LayoutManager extends Component<
       <PageContent
         flyoutIsOpen={flyoutIsOpen}
         innerRef={this.getPageRef}
-        isResizing={isResizing}
         isCollapsed={isCollapsed}
-        productNavWidth={productNavWidth}
+        isResizing={isResizing}
+        leftOffset={leftOffset}
+        noContentNav={!renderContentNav}
         onExpandStart={onExpandStart}
         onExpandEnd={onExpandEnd}
         onCollapseStart={onCollapseStart}
         onCollapseEnd={onCollapseEnd}
+        productNavWidth={productNavWidth}
         topOffset={topOffset}
-        leftOffset={leftOffset}
-        noContentNav={!renderContentNav}
       >
         {children}
       </PageContent>
@@ -402,11 +424,14 @@ export default class LayoutManager extends Component<
   };
 
   render() {
-    const renderContentNav = this.props.experimental_horizontalGlobalNav
-      ? Boolean(this.props.containerNavigation)
-      : true;
+    const {
+      containerNavigation,
+      experimental_horizontalGlobalNav: isHorizontal,
+      topOffset,
+    } = this.props;
+    const renderContentNav = isHorizontal ? Boolean(containerNavigation) : true;
     return (
-      <LayoutContainer topOffset={this.props.topOffset}>
+      <LayoutContainer topOffset={topOffset}>
         {this.renderNavigation({ renderContentNav })}
         {this.renderPageContent({ renderContentNav })}
       </LayoutContainer>

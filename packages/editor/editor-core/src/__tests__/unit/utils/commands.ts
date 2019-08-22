@@ -1,3 +1,4 @@
+import { ProviderFactory } from '@atlaskit/editor-common';
 import {
   filter,
   isNthParentOfType,
@@ -21,8 +22,11 @@ import {
   subsup,
   insertText,
   sendKeyToPm,
+  tdEmpty,
+  code,
+  emoji,
+  mention,
 } from '@atlaskit/editor-test-helpers';
-import { tablesPlugin, listsPlugin } from '../../../plugins';
 import { Command } from '../../../types';
 
 describe('utils -> commands', () => {
@@ -135,7 +139,7 @@ describe('utils -> commands', () => {
   describe('isNthParentOfType', () => {
     const { editorView } = createEditor({
       doc: table()(tr(td()(p('hel{<>}lo')))),
-      editorPlugins: [tablesPlugin()],
+      editorProps: { allowTables: true },
     });
 
     it('returns true for paragraph at selection depth', () => {
@@ -214,7 +218,7 @@ describe('utils -> commands', () => {
       it('returns true with selection at start', () => {
         const { editorView } = createEditor({
           doc: doc(table()(tr(td()(p('{<>}hello'))))),
-          editorPlugins: [tablesPlugin()],
+          editorProps: { allowTables: true },
         });
 
         expect(isEmptySelectionAtStart(editorView.state)).toBe(true);
@@ -223,7 +227,7 @@ describe('utils -> commands', () => {
       it('returns false with selection at end', () => {
         const { editorView } = createEditor({
           doc: doc(table()(tr(td()(p('hello{<>}'))))),
-          editorPlugins: [tablesPlugin()],
+          editorProps: { allowTables: true },
         });
 
         expect(isEmptySelectionAtStart(editorView.state)).toBe(false);
@@ -232,7 +236,7 @@ describe('utils -> commands', () => {
       it('returns false with selection at middle', () => {
         const { editorView } = createEditor({
           doc: doc(table()(tr(td()(p('he{<>}llo'))))),
-          editorPlugins: [tablesPlugin()],
+          editorProps: { allowTables: true },
         });
 
         expect(isEmptySelectionAtStart(editorView.state)).toBe(false);
@@ -263,7 +267,7 @@ describe('utils -> commands', () => {
       it('returns true with selection in first', () => {
         const { editorView } = createEditor({
           doc: doc(ul(li(p('{<>}hello'), p('world')))),
-          editorPlugins: [listsPlugin],
+          editorProps: { allowLists: true },
         });
 
         expect(isFirstChildOfParent(editorView.state)).toBe(true);
@@ -272,7 +276,7 @@ describe('utils -> commands', () => {
       it('returns false with selection in second', () => {
         const { editorView } = createEditor({
           doc: doc(ul(li(p('hello'), p('wo{<>}rld')))),
-          editorPlugins: [listsPlugin],
+          editorProps: { allowLists: true },
         });
 
         expect(isFirstChildOfParent(editorView.state)).toBe(false);
@@ -283,7 +287,7 @@ describe('utils -> commands', () => {
       it('returns true with selection in start of second li', () => {
         const { editorView } = createEditor({
           doc: doc(ul(li(p('first')), li(p('{<>}hello')))),
-          editorPlugins: [listsPlugin],
+          editorProps: { allowLists: true },
         });
 
         expect(isFirstChildOfParent(editorView.state)).toBe(true);
@@ -292,7 +296,7 @@ describe('utils -> commands', () => {
       it('returns true with selection in first p of first nested li', () => {
         const { editorView } = createEditor({
           doc: doc(ul(li(p('first'), ul(li(p('{<>}hello'), p('world')))))),
-          editorPlugins: [listsPlugin],
+          editorProps: { allowLists: true },
         });
 
         expect(isFirstChildOfParent(editorView.state)).toBe(true);
@@ -301,7 +305,7 @@ describe('utils -> commands', () => {
       it('returns false with selection in second p of first nested li', () => {
         const { editorView } = createEditor({
           doc: doc(ul(li(p('first'), ul(li(p('hello'), p('{<>}world')))))),
-          editorPlugins: [listsPlugin],
+          editorProps: { allowLists: true },
         });
 
         expect(isFirstChildOfParent(editorView.state)).toBe(false);
@@ -317,7 +321,7 @@ describe('utils -> commands', () => {
               ),
             ),
           ),
-          editorPlugins: [listsPlugin],
+          editorProps: { allowLists: true },
         });
 
         expect(isFirstChildOfParent(editorView.state)).toBe(true);
@@ -329,7 +333,7 @@ describe('utils -> commands', () => {
     it('finds a split in a balanced tree', () => {
       const { editorView } = createEditor({
         doc: doc(ul(li(p('first')), li(p('{<>}second')))),
-        editorPlugins: [listsPlugin],
+        editorProps: { allowLists: true },
       });
 
       const { $from } = editorView.state.selection;
@@ -348,7 +352,7 @@ describe('utils -> commands', () => {
     it('finds a split in an unbalanced tree above', () => {
       const { editorView } = createEditor({
         doc: doc(ul(li(p('first'), ul(li(p('nested')))), li(p('{<>}second')))),
-        editorPlugins: [listsPlugin],
+        editorProps: { allowLists: true },
       });
 
       const { $from } = editorView.state.selection;
@@ -372,7 +376,7 @@ describe('utils -> commands', () => {
             li(p('second'), p('nested'), ul(li(p('{<>}child')))),
           ),
         ),
-        editorPlugins: [listsPlugin],
+        editorProps: { allowLists: true },
       });
 
       const { $from } = editorView.state.selection;
@@ -388,7 +392,7 @@ describe('utils -> commands', () => {
     it('does not search across isolating boundaries', () => {
       const { editorView } = createEditor({
         doc: doc(table()(tr(td()(p('{<>}hey'))))),
-        editorPlugins: [tablesPlugin(), listsPlugin],
+        editorProps: { allowLists: true, allowTables: true },
       });
 
       const { $from } = editorView.state.selection;
@@ -399,11 +403,161 @@ describe('utils -> commands', () => {
   });
 
   describe('toggleMark', () => {
+    const helgaMention = mention({ id: '1234', text: '@helga' });
+    const grinningEmoji = emoji({ shortName: ':grinning:', text: '😀' });
     const editor = (doc: any) => {
       return createEditor({
         doc,
+        editorProps: {
+          mentionProvider: new Promise(() => {}),
+          emojiProvider: new Promise(() => {}),
+          allowTables: true,
+        },
+        providerFactory: ProviderFactory.create({
+          emojiProvider: new Promise(() => {}),
+        }),
       });
     };
+
+    describe('on mentions and emojis', () => {
+      it('enables code mark', () => {
+        const { editorView } = editor(
+          doc(
+            p('{<}hey', helgaMention(), grinningEmoji()),
+            p(helgaMention(), grinningEmoji()),
+            p('hey', grinningEmoji(), '{>}'),
+          ),
+        );
+
+        toggleMark(editorView.state.schema.marks.code)(
+          editorView.state,
+          editorView.dispatch,
+        );
+
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p(code('hey@helga😀')), p(code('@helga😀')), p(code('hey😀'))),
+        );
+      });
+    });
+
+    describe('in cell selection', () => {
+      describe('with mentions and emojis', () => {
+        it('enables code mark', () => {
+          const { editorView } = editor(
+            doc(
+              table()(
+                tr(td()(p('{<cell}hey', grinningEmoji())), tdEmpty, tdEmpty),
+                tr(td()(p('hey', helgaMention())), tdEmpty, tdEmpty),
+                tr(
+                  td()(p('{cell>}', helgaMention(), grinningEmoji())),
+                  tdEmpty,
+                  tdEmpty,
+                ),
+              ),
+            ),
+          );
+
+          toggleMark(editorView.state.schema.marks.code)(
+            editorView.state,
+            editorView.dispatch,
+          );
+
+          expect(editorView.state.doc).toEqualDocument(
+            doc(
+              table()(
+                tr(td()(p(code('hey😀'))), tdEmpty, tdEmpty),
+                tr(td()(p(code('hey@helga'))), tdEmpty, tdEmpty),
+                tr(td()(p(code('@helga😀'))), tdEmpty, tdEmpty),
+              ),
+            ),
+          );
+        });
+      });
+
+      it('enables code mark', () => {
+        const { editorView } = createEditor({
+          doc: doc(
+            table()(
+              tr(td()(p('{<cell}hey')), tdEmpty, tdEmpty),
+              tr(td()(p('hey')), tdEmpty, tdEmpty),
+              tr(td()(p('{cell>}hey')), tdEmpty, tdEmpty),
+            ),
+          ),
+          editorProps: { allowTables: true },
+        });
+
+        toggleMark(editorView.state.schema.marks.code)(
+          editorView.state,
+          editorView.dispatch,
+        );
+
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            table()(
+              tr(td()(p(code('hey'))), tdEmpty, tdEmpty),
+              tr(td()(p(code('hey'))), tdEmpty, tdEmpty),
+              tr(td()(p(code('hey'))), tdEmpty, tdEmpty),
+            ),
+          ),
+        );
+      });
+
+      it('enables the bold mark', () => {
+        const { editorView } = createEditor({
+          doc: doc(
+            table()(
+              tr(td()(p('{<cell}hey')), tdEmpty, tdEmpty),
+              tr(td()(p('hey')), tdEmpty, tdEmpty),
+              tr(td()(p('{cell>}hey')), tdEmpty, tdEmpty),
+            ),
+          ),
+          editorProps: { allowTables: true },
+        });
+
+        toggleMark(editorView.state.schema.marks.strong)(
+          editorView.state,
+          editorView.dispatch,
+        );
+
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            table()(
+              tr(td()(p(strong('hey'))), tdEmpty, tdEmpty),
+              tr(td()(p(strong('hey'))), tdEmpty, tdEmpty),
+              tr(td()(p(strong('hey'))), tdEmpty, tdEmpty),
+            ),
+          ),
+        );
+      });
+
+      it('removes the bold mark when only part of the selection has the mark', () => {
+        const { editorView } = createEditor({
+          doc: doc(
+            table()(
+              tr(td({})(p('{<cell}a1')), tdEmpty, tdEmpty),
+              tr(tdEmpty, tdEmpty, td({})(p(strong('{cell>}b3')))),
+              tr(tdEmpty, tdEmpty, tdEmpty),
+            ),
+          ),
+          editorProps: { allowTables: true },
+        });
+
+        toggleMark(editorView.state.schema.marks.strong)(
+          editorView.state,
+          editorView.dispatch,
+        );
+
+        expect(editorView.state.doc).toEqualDocument(
+          doc(
+            table()(
+              tr(td({})(p('{<cell}a1')), tdEmpty, tdEmpty),
+              tr(tdEmpty, tdEmpty, td({})(p('b3{cell>}'))),
+              tr(tdEmpty, tdEmpty, tdEmpty),
+            ),
+          ),
+        );
+      });
+    });
 
     it('enables the bold mark', () => {
       const { editorView } = editor(doc(p('{<}text', hardBreak(), 'here{>}')));

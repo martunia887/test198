@@ -7,13 +7,7 @@ import {
 } from 'prosemirror-state';
 import { Node as PmNode } from 'prosemirror-model';
 import { TableMap, cellAround, CellSelection } from 'prosemirror-tables';
-import {
-  findTable,
-  getCellsInRow,
-  getCellsInColumn,
-  getSelectionRect,
-  removeTable,
-} from 'prosemirror-utils';
+import { findTable, getSelectionRect, removeTable } from 'prosemirror-utils';
 import { browser } from '@atlaskit/editor-common';
 
 import { analyticsService } from '../../analytics';
@@ -23,24 +17,35 @@ import {
   ACTION_SUBJECT,
   EVENT_TYPE,
 } from '../analytics';
-import { Command } from '../../types';
 import {
   isElementInTableCell,
   setNodeSelection,
   isLastItemMediaGroup,
   closestElement,
 } from '../../utils/';
-import { isInsertColumnButton, isInsertRowButton, getIndex } from './utils';
+import {
+  isCell,
+  isInsertRowButton,
+  isColumnControlsDecorations,
+  isTableControlsButton,
+  isRowControlsButton,
+  isCornerButton,
+  getColumnOrRowIndex,
+  getMousePositionHorizontalRelativeByElement,
+  getMousePositionVerticalRelativeByElement,
+} from './utils';
 import {
   setEditorFocus,
   showInsertColumnButton,
   showInsertRowButton,
   hideInsertColumnOrRowButton,
+  selectColumn,
+  hoverColumns,
+  clearHoverSelection,
 } from './commands';
 import { getPluginState } from './pm-plugins/main';
 import { getSelectedCellInfo } from './utils';
 import { deleteColumns, deleteRows } from './transforms';
-import { TableCssClassName as ClassName } from './types';
 
 export const handleBlur = (view: EditorView, event: Event): boolean => {
   const { state, dispatch } = view;
@@ -63,6 +68,12 @@ export const handleClick = (view: EditorView, event: Event): boolean => {
   const element = event.target as HTMLElement;
   const table = findTable(view.state.selection)!;
 
+  if (event instanceof MouseEvent && isColumnControlsDecorations(element)) {
+    const [startIndex] = getColumnOrRowIndex(element);
+    const { state, dispatch } = view;
+
+    return selectColumn(startIndex, event.shiftKey)(state, dispatch);
+  }
   /**
    * Check if the table cell with an image is clicked
    * and its not the image itself
@@ -113,15 +124,73 @@ export const handleMouseOver = (
   const { state, dispatch } = view;
   const target = mouseEvent.target as HTMLElement;
 
-  if (isInsertColumnButton(target)) {
-    return showInsertColumnButton(getIndex(target))(state, dispatch);
-  }
   if (isInsertRowButton(target)) {
-    return showInsertRowButton(getIndex(target))(state, dispatch);
+    const [startIndex, endIndex] = getColumnOrRowIndex(target);
+
+    const positionRow =
+      getMousePositionVerticalRelativeByElement(mouseEvent as MouseEvent) ===
+      'bottom'
+        ? endIndex
+        : startIndex;
+    return showInsertRowButton(positionRow)(state, dispatch);
   }
+
+  if (isCell(target) || isCornerButton(target)) {
+    return hideInsertColumnOrRowButton()(state, dispatch);
+  }
+
+  if (isColumnControlsDecorations(target)) {
+    const [startIndex] = getColumnOrRowIndex(target);
+    const { state, dispatch } = view;
+
+    return hoverColumns([startIndex], false)(state, dispatch);
+  }
+
+  return false;
+};
+
+// Ignore any `mousedown` `event` from control and numbered column buttons
+// PM end up changing selection during shift selection if not prevented
+export const handleMouseDown = (_: EditorView, event: Event) => {
+  const isControl = !!(
+    event.target &&
+    event.target instanceof HTMLElement &&
+    (isColumnControlsDecorations(event.target) ||
+      isRowControlsButton(event.target))
+  );
+
+  if (isControl) {
+    event.preventDefault();
+  }
+
+  return isControl;
+};
+
+export const handleMouseOut = (
+  view: EditorView,
+  mouseEvent: Event,
+): boolean => {
+  const target = mouseEvent.target as HTMLElement;
+
+  if (isColumnControlsDecorations(target)) {
+    const { state, dispatch } = view;
+    return clearHoverSelection()(state, dispatch);
+  }
+
+  return false;
+};
+
+export const handleMouseLeave = (view: EditorView, event: Event): boolean => {
+  const { state, dispatch } = view;
   const { insertColumnButtonIndex, insertRowButtonIndex } = getPluginState(
     state,
   );
+
+  const target = event.target as HTMLElement;
+  if (isTableControlsButton(target)) {
+    return true;
+  }
+
   if (
     (typeof insertColumnButtonIndex !== 'undefined' ||
       typeof insertRowButtonIndex !== 'undefined') &&
@@ -132,18 +201,41 @@ export const handleMouseOver = (
   return false;
 };
 
-export const handleMouseLeave = (view: EditorView): boolean => {
-  const { state, dispatch } = view;
-  const { insertColumnButtonIndex, insertRowButtonIndex } = getPluginState(
-    state,
-  );
-  if (
-    (typeof insertColumnButtonIndex !== 'undefined' ||
-      typeof insertRowButtonIndex !== 'undefined') &&
-    hideInsertColumnOrRowButton()(state, dispatch)
-  ) {
-    return true;
+export const handleMouseMove = (view: EditorView, event: Event) => {
+  const element = event.target as HTMLElement;
+
+  if (isColumnControlsDecorations(element)) {
+    const { state, dispatch } = view;
+    const { insertColumnButtonIndex } = getPluginState(state);
+    const [startIndex, endIndex] = getColumnOrRowIndex(element);
+
+    const positionColumn =
+      getMousePositionHorizontalRelativeByElement(event as MouseEvent) ===
+      'right'
+        ? endIndex
+        : startIndex;
+
+    if (positionColumn !== insertColumnButtonIndex) {
+      return showInsertColumnButton(positionColumn)(state, dispatch);
+    }
   }
+
+  if (isRowControlsButton(element)) {
+    const { state, dispatch } = view;
+    const { insertRowButtonIndex } = getPluginState(state);
+    const [startIndex, endIndex] = getColumnOrRowIndex(element);
+
+    const positionRow =
+      getMousePositionVerticalRelativeByElement(event as MouseEvent) ===
+      'bottom'
+        ? endIndex
+        : startIndex;
+
+    if (positionRow !== insertRowButtonIndex) {
+      return showInsertRowButton(positionRow)(state, dispatch);
+    }
+  }
+
   return false;
 };
 
@@ -172,17 +264,6 @@ export function handleTripleClick(view: EditorView, pos: number) {
 
   return false;
 }
-export const handleMouseDown = (view: EditorView, event: Event): boolean => {
-  const { state, dispatch } = view;
-
-  // shift-selecting table rows/columns
-  if (handleShiftSelection(event as MouseEvent)(state, dispatch)) {
-    return true;
-  }
-
-  return false;
-};
-
 export const handleCut = (
   oldTr: Transaction,
   oldState: EditorState,
@@ -254,53 +335,4 @@ export const handleCut = (
   }
 
   return tr;
-};
-
-export const handleShiftSelection = (event: MouseEvent): Command => (
-  state,
-  dispatch,
-) => {
-  if (!(state.selection instanceof CellSelection) || !event.shiftKey) {
-    return false;
-  }
-  const { selection } = state;
-  if (selection.isRowSelection() || selection.isColSelection()) {
-    const selector = selection.isRowSelection()
-      ? `.${ClassName.ROW_CONTROLS_BUTTON_WRAP}`
-      : `.${ClassName.COLUMN_CONTROLS_BUTTON_WRAP}`;
-    const button = closestElement(event.target as HTMLElement, selector);
-    if (!button) {
-      return false;
-    }
-
-    const buttons = document.querySelectorAll(selector);
-    const index = Array.from(buttons).indexOf(button);
-    const rect = getSelectionRect(selection)!;
-    const startCells = selection.isRowSelection()
-      ? getCellsInRow(index >= rect.bottom ? rect.top : rect.bottom - 1)(
-          selection,
-        )
-      : getCellsInColumn(index >= rect.right ? rect.left : rect.right - 1)(
-          selection,
-        );
-    const endCells = selection.isRowSelection()
-      ? getCellsInRow(index)(selection)
-      : getCellsInColumn(index)(selection);
-    if (startCells && endCells) {
-      event.stopPropagation();
-      event.preventDefault();
-
-      if (dispatch) {
-        dispatch(
-          state.tr.setSelection(new CellSelection(
-            state.doc.resolve(startCells[startCells.length - 1].pos),
-            state.doc.resolve(endCells[0].pos),
-          ) as any),
-        );
-      }
-      return true;
-    }
-  }
-
-  return false;
 };

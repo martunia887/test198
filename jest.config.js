@@ -55,6 +55,10 @@ const config = {
   watchPathIgnorePatterns: [
     '\\/packages\\/core\\/navigation-next\\/[^\\/]*\\.js$',
   ],
+  watchPlugins: [
+    'jest-watch-typeahead/filename',
+    'jest-watch-typeahead/testname',
+  ],
   modulePathIgnorePatterns: ['/__fixtures__/', './node_modules', '/dist/'],
   // don't transform any files under node_modules except @atlaskit/* and react-syntax-highlighter (it
   // uses dynamic imports which are not valid in node)
@@ -77,8 +81,8 @@ const config = {
     '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/fileMock.js',
   },
   snapshotSerializers: ['enzyme-to-json/serializer'],
-  setupFiles: ['./build/jest-config/setup.js'],
-  setupTestFrameworkScriptFile: `${__dirname}/jestFrameworkSetup.js`,
+  setupFiles: ['./build/jest-config/setup.js', 'jest-canvas-mock'],
+  setupFilesAfterEnv: [`${__dirname}/jestFrameworkSetup.js`],
   testResultsProcessor: 'jest-junit',
   testEnvironmentOptions: {
     // Need this to have jsdom loading images.
@@ -90,7 +94,8 @@ const config = {
   coverageThreshold: {},
   globalSetup: undefined,
   globalTeardown: undefined,
-  testEnvironment: 'jsdom',
+  // Jest's default test environment 'jsdom' uses JSDOM 11 to support Node 6. Here we upgrade to JSDOM 14, which supports Node >= 8
+  testEnvironment: 'jest-environment-jsdom-fourteen',
 };
 
 // If the CHANGED_PACKAGES variable is set, we parse it to get an array of changed packages and only

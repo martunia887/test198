@@ -1,3 +1,4 @@
+import createStub from 'raf-stub';
 import {
   doc,
   createEditorFactory,
@@ -6,23 +7,20 @@ import {
   insertText,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next';
-import quickInsertPlugin from '../../../../plugins/quick-insert';
-import taskAndDecisionPlugin from '../../../../plugins/tasks-and-decisions';
-import floatingToolbarPlugin from '../../../../plugins/floating-toolbar';
-import * as HyperlinkPlugin from '../../../../plugins/hyperlink';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import * as Toolbar from '../../../../plugins/hyperlink/Toolbar';
 import { FloatingToolbarHandler } from '../../../../plugins/floating-toolbar/types';
+import { EditorProps } from '../../../../types';
 
 describe('hyperlink', () => {
   const createEditor = createEditorFactory();
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
 
-  const editor = (doc: any, editorPlugins?: any[]) => {
+  const editor = (doc: any, editorProps: EditorProps = {}) => {
     createAnalyticsEvent = jest.fn().mockReturnValue({ fire() {} });
     return createEditor({
       doc,
-      editorProps: { allowAnalyticsGASV3: true },
-      editorPlugins,
+      editorProps: { allowAnalyticsGASV3: true, ...editorProps },
       createAnalyticsEvent,
     });
   };
@@ -61,7 +59,7 @@ describe('hyperlink', () => {
 
   describe('quick insert', () => {
     it('should trigger link typeahead invoked analytics event', async () => {
-      const { editorView, sel } = editor(doc(p('{<>}')), [quickInsertPlugin]);
+      const { editorView, sel } = editor(doc(p('{<>}')));
       insertText(editorView, '/Link', sel);
       sendKeyToPm(editorView, 'Enter');
 
@@ -76,26 +74,36 @@ describe('hyperlink', () => {
   });
 
   describe('floating toolbar', () => {
+    let waitForAnimationFrame: any;
     let getFloatingToolbarSpy: jest.SpyInstance<
       FloatingToolbarHandler | undefined
     >;
+
     beforeAll(() => {
-      getFloatingToolbarSpy = jest.spyOn(
-        HyperlinkPlugin.default.pluginsOptions!,
-        'floatingToolbar',
-      );
+      let stub = createStub();
+      waitForAnimationFrame = stub.flush;
+      jest.spyOn(window, 'requestAnimationFrame').mockImplementation(stub.add);
+      getFloatingToolbarSpy = jest.spyOn(Toolbar, 'getToolbarConfig');
     });
 
     beforeEach(() => {
       getFloatingToolbarSpy.mockClear();
+      ((window.requestAnimationFrame as any) as jest.SpyInstance<
+        any
+      >).mockClear();
     });
 
     afterAll(() => {
+      ((window.requestAnimationFrame as any) as jest.SpyInstance<
+        any
+      >).mockRestore();
       getFloatingToolbarSpy.mockRestore();
     });
 
     it('should only add text, paragraph and heading, if no task/decision in schema', () => {
       editor(doc(p(a({ href: 'google.com' })('web{<>}site'))));
+
+      waitForAnimationFrame();
 
       expect(getFloatingToolbarSpy).toHaveLastReturnedWith(
         expect.objectContaining({
@@ -109,10 +117,11 @@ describe('hyperlink', () => {
     });
 
     it('should include task and decision items from node type, if they exist in schema', () => {
-      editor(doc(p(a({ href: 'google.com' })('web{<>}site'))), [
-        taskAndDecisionPlugin,
-        floatingToolbarPlugin,
-      ]);
+      editor(doc(p(a({ href: 'google.com' })('web{<>}site'))), {
+        allowTasksAndDecisions: true,
+      });
+
+      waitForAnimationFrame();
 
       expect(getFloatingToolbarSpy).toHaveLastReturnedWith(
         expect.objectContaining({

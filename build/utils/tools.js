@@ -38,12 +38,11 @@ async function getPackagesInfo(cwd /*: string */) {
       let hasKarmaDep = !!allDependencies.karma;
 
       let isTypeScriptCLI = tsConfigCliExists;
-      let isTypeScript =
-        tsConfigExists && !isTypeScriptCLI && !isWebsitePackage; // The website does not need to be built
+      let isTypeScript = tsConfigExists && !isWebsitePackage; // The website does not need to be built
 
       let isBabel = srcExists && !isTypeScript && !isWebsitePackage;
       let isFlow = isBabel || isWebsitePackage;
-      let isESLint = isBabel || isWebsitePackage;
+      let isESLint = srcExists || isWebsitePackage || !isBrowserPackage;
 
       let isKarma = testBrowserExists || hasKarmaDep;
       let isBrowserStack = isKarma;
