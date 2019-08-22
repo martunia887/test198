@@ -157,7 +157,6 @@ export const touchSelectedFiles = (
   selectedUploadFiles.forEach(
     ({ file: selectedFile, serviceName, touchFileDescriptor }) => {
       const id = touchFileDescriptor.fileId;
-      const selectedFileId = selectedFile.id;
 
       const mediaType = getMediaTypeFromMimeType(selectedFile.type);
       const preview = getPreviewByService(
@@ -180,25 +179,9 @@ export const touchSelectedFiles = (
 
       tenantMediaClient.emit('file-added', fileState);
       globalMediaEventEmitter.emit('file-added', fileState);
-
-      const existingFileState = getFileStreamsCache().get(selectedFileId);
-
-      // if we already have a fileState in the cache, we re use it for the new id, otherwise we create a new one
-      if (existingFileState) {
-        // We assign the tenant id to the observable to not emit user id instead
-        const tenantFile = existingFileState.pipe(
-          map(file => ({
-            ...file,
-            id,
-            preview: fileState.preview,
-          })),
-        );
-        getFileStreamsCache().set(id, tenantFile);
-      } else {
-        const subject = new ReplaySubject<FileState>(1);
-        subject.next(fileState);
-        getFileStreamsCache().set(id, subject);
-      }
+      tenantMediaClient.file.getFileState(id, {
+        preview: { filePreview: preview },
+      });
     },
   );
 

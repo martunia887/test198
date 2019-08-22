@@ -14,18 +14,21 @@ export type FileStatus =
   | 'error'
   | 'failed-processing';
 export interface FilePreview {
-  value: Blob | string; // TODO: probably rename into "value"?
+  value: Blob | string;
   originalDimensions?: {
     width: number;
     height: number;
   };
 }
-export interface PreviewOptions {}
+export interface PreviewOptions {
+  filePreview?: FilePreview | Promise<FilePreview>;
+}
 export interface GetFileOptions {
   preview?: PreviewOptions;
   collectionName?: string;
   occurrenceKey?: string;
 }
+
 export interface UploadingFileState {
   status: 'uploading';
   id: string;

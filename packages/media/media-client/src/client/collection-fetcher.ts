@@ -4,14 +4,11 @@ import {
   MediaStore,
   MediaStoreGetCollectionItemsParams,
   MediaCollectionItem,
-  MediaCollectionItemFullDetails,
-  MediaFile,
-  FileState,
-  mapMediaFileToFileState,
   FileItem,
   FileDetails,
   getFileStreamsCache,
 } from '..';
+import { FileFetcher } from './file-fetcher';
 
 export interface MediaCollectionFileItemDetails extends FileDetails {
   occurrenceKey: string;
@@ -46,32 +43,14 @@ const createCacheEntry = (): CollectionCacheEntry => ({
 });
 
 export class CollectionFetcher {
-  constructor(readonly mediaStore: MediaStore) {}
+  constructor(readonly mediaStore: MediaStore, readonly file: FileFetcher) {}
 
-  private createFileStateObserver(
-    id: string,
-    details: MediaCollectionItemFullDetails,
-  ): Observable<FileState> {
-    const subject = new ReplaySubject<FileState>(1);
-    const mediaFile: MediaFile = {
-      id,
-      ...details,
-    };
-    const fileState = mapMediaFileToFileState({ data: mediaFile });
-
-    subject.next(fileState);
-
-    return subject;
-  }
-
-  private populateCache(items: MediaCollectionItem[]) {
+  private populateCache(items: MediaCollectionItem[], collectionName: string) {
     items.forEach(item => {
-      const fileStream = this.createFileStateObserver(
-        item.id,
-        item.details as MediaCollectionItemFullDetails,
-      );
-
-      getFileStreamsCache().set(item.id, fileStream);
+      this.file.getFileState(item.id, {
+        collectionName,
+        occurrenceKey: item.occurrenceKey,
+      });
     });
   }
 
@@ -106,7 +85,7 @@ export class CollectionFetcher {
       .then(items => {
         const { contents, nextInclusiveStartKey } = items.data;
 
-        this.populateCache(contents);
+        this.populateCache(contents, collectionName);
         // It's hard to merge two together, so we just take what's came from the server.
         // Since we load only one page > 2 pages will be ditched from the cache.
         collection.items = items.data.contents;
@@ -153,7 +132,7 @@ export class CollectionFetcher {
       details: 'full',
     });
     const { contents, nextInclusiveStartKey } = response.data;
-    this.populateCache(contents);
+    this.populateCache(contents, collectionName);
     const newItems = response.data.contents;
     const items = [...currentItems, ...newItems];
 

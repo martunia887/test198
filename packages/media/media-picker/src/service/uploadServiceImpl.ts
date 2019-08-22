@@ -6,6 +6,7 @@ import {
   getFileStreamsCache,
   MediaClient,
   globalMediaEventEmitter,
+  FilePreview,
 } from '@atlaskit/media-client';
 import {
   MediaStore,
@@ -33,6 +34,10 @@ import {
 } from './types';
 import { LocalFileSource, LocalFileWithSource } from '../service/types';
 import { getPreviewFromBlob } from '../util/getPreviewFromBlob';
+import {
+  SourceFile,
+  CopyDestination,
+} from '../../../media-client/src/client/file-fetcher';
 
 export interface CancellableFileUpload {
   mediaFile: MediaFile;
@@ -193,7 +198,7 @@ export class UploadServiceImpl implements UploadService {
                 mediaClient.emit('file-added', state);
                 globalMediaEventEmitter.emit('file-added', state);
               }
-              this.onFileSuccess(cancellableFileUpload, id);
+              this.onFileSuccess(cancellableFileUpload, id, state.preview);
             }
           },
           error: error => {
@@ -202,9 +207,6 @@ export class UploadServiceImpl implements UploadService {
         });
 
         this.cancellableFilesUploads[id] = cancellableFileUpload;
-        // Save observable in the cache
-        // We want to save the observable without collection too, due consumers using cards without collection.
-        getFileStreamsCache().set(id, observable);
 
         return cancellableFileUpload;
       },
@@ -295,10 +297,11 @@ export class UploadServiceImpl implements UploadService {
   private readonly onFileSuccess = async (
     cancellableFileUpload: CancellableFileUpload,
     fileId: string,
+    preview?: FilePreview | Promise<FilePreview>,
   ) => {
     const { mediaFile } = cancellableFileUpload;
 
-    this.copyFileToUsersCollection(fileId)
+    this.copyFileToUsersCollection(fileId, preview)
       // eslint-disable-next-line no-console
       .catch(console.log); // We intentionally swallow these errors
     this.emit('file-converting', {
@@ -356,36 +359,36 @@ export class UploadServiceImpl implements UploadService {
 
   // This method copies the file from the "tenant collection" to the "user collection" (recents).
   // that means we need "tenant auth" as input and "user auth" as output
-  private copyFileToUsersCollection(
+  private async copyFileToUsersCollection(
     sourceFileId: string,
-  ): Promise<MediaStoreResponse<MediaStoreMediaFile> | void> {
+    preview?: FilePreview | Promise<FilePreview>,
+  ): Promise<void> {
     const {
       shouldCopyFileToRecents,
       userMediaStore,
       tenantUploadParams,
+      userMediaClient,
+      tenantMediaClient,
     } = this;
     if (!shouldCopyFileToRecents || !userMediaStore) {
       return Promise.resolve();
     }
     const { collection: sourceCollection } = tenantUploadParams;
     const { authProvider: tenantAuthProvider } = this.tenantMediaClient.config;
-    return tenantAuthProvider({ collectionName: sourceCollection }).then(
-      auth => {
-        const body: MediaStoreCopyFileWithTokenBody = {
-          sourceFile: {
-            id: sourceFileId,
-            collection: sourceCollection,
-            owner: {
-              ...mapAuthToSourceFileOwner(auth),
-            },
-          },
-        };
-        const params: MediaStoreCopyFileWithTokenParams = {
-          collection: RECENTS_COLLECTION,
-        };
-
-        return userMediaStore.copyFileWithToken(body, params);
-      },
-    );
+    const sourceFile: SourceFile = {
+      authProvider: tenantAuthProvider,
+      collection: sourceCollection,
+      id: sourceFileId,
+    };
+    const destination: CopyDestination = {
+      authProvider: tenantMediaClient.config.userAuthProvider!,
+      collection: RECENTS_COLLECTION,
+      occurrenceKey: uuidV4(),
+    };
+    if (userMediaClient) {
+      userMediaClient.file.copyFile(sourceFile, destination, {
+        preview: { filePreview: preview },
+      });
+    }
   }
 }

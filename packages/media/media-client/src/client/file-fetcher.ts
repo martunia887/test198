@@ -4,7 +4,12 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { publishReplay } from 'rxjs/operators/publishReplay';
 import uuid from 'uuid/v4';
 import Dataloader from 'dataloader';
-import { AuthProvider, authToOwner } from '@atlaskit/media-core';
+import {
+  AuthProvider,
+  authToOwner,
+  UploadingFileState,
+  getMediaTypeFromMimeType,
+} from '@atlaskit/media-core';
 import {
   MediaStore,
   UploadableFile,
@@ -24,7 +29,6 @@ import {
   MediaFile,
   MediaStoreCopyFileWithTokenBody,
   MediaStoreCopyFileWithTokenParams,
-  mapMediaFileToFileState,
 } from '..';
 import isValidId from 'uuid-validate';
 import { getMediaTypeFromUploadableFile } from '../utils/getMediaTypeFromUploadableFile';
@@ -103,7 +107,8 @@ export interface FileFetcher {
   copyFile(
     source: SourceFile,
     destination: CopyDestination,
-  ): Promise<MediaFile>;
+    options?: GetFileOptions,
+  ): Promise<Observable<FileState>>;
   getFileBinaryURL(id: string, collectionName?: string): Promise<string>;
 }
 
@@ -167,11 +172,13 @@ export class FileFetcherImpl implements FileFetcher {
 
     return getFileStreamsCache().getOrInsert(id, () => {
       const collection = options && options.collectionName;
+      const preview = options && options.preview && options.preview.filePreview;
       const fileStream$ = publishReplay<FileState>(1)(
-        this.createDownloadFileStream(id, collection),
+        this.createDownloadFileStream(id, collection, preview),
       );
 
       fileStream$.connect();
+      fileStream$.subscribe(console.log);
 
       return fileStream$;
     });
@@ -200,6 +207,7 @@ export class FileFetcherImpl implements FileFetcher {
   private createDownloadFileStream = (
     id: string,
     collection?: string,
+    preview?: FilePreview | Promise<FilePreview>,
   ): Observable<FileState> => {
     return Observable.create(async (observer: Observer<FileState>) => {
       let timeoutId: number;
@@ -208,14 +216,42 @@ export class FileFetcherImpl implements FileFetcher {
         try {
           const response = await this.dataloader.load({ id, collection });
 
+          let fileState: FileState;
           if (!response) {
-            return;
+            const mimeType = preview
+              ? ((await preview).value as Blob).type
+              : '';
+            const size = preview ? ((await preview).value as Blob).size : 0;
+            const mediaType = getMediaTypeFromMimeType(mimeType);
+            fileState = {
+              status: 'uploading',
+              id,
+              preview,
+              mimeType,
+              mediaType,
+              size,
+              name: '',
+              progress: 0,
+            };
+          } else {
+            const state = mapMediaItemToFileState(id, response);
+            if (
+              state.status !== 'error' &&
+              state.status !== 'failed-processing'
+            ) {
+              fileState = {
+                ...state,
+                preview,
+              };
+            } else {
+              fileState = state;
+            }
           }
-
-          const fileState = mapMediaItemToFileState(id, response);
           observer.next(fileState);
-
-          if (fileState.status === 'processing') {
+          if (
+            fileState.status === 'processing' ||
+            fileState.status === 'uploading'
+          ) {
             timeoutId = window.setTimeout(fetchFile, POLLING_INTERVAL);
           } else {
             observer.complete();
@@ -393,7 +429,8 @@ export class FileFetcherImpl implements FileFetcher {
   public async copyFile(
     source: SourceFile,
     destination: CopyDestination,
-  ): Promise<MediaFile> {
+    options?: GetFileOptions,
+  ): Promise<Observable<FileState>> {
     const { authProvider, collection: sourceCollection, id } = source;
     const {
       authProvider: destinationAuthProvider,
@@ -423,14 +460,9 @@ export class FileFetcherImpl implements FileFetcher {
     };
 
     const copiedFile = (await mediaStore.copyFileWithToken(body, params)).data;
-    const copiedFileObservable = new ReplaySubject<FileState>(1);
-    const copiedFileState: FileState = mapMediaFileToFileState({
-      data: copiedFile,
+    return this.getFileState(copiedFile.id, {
+      ...options,
+      collectionName: destinationCollectionName,
     });
-
-    copiedFileObservable.next(copiedFileState);
-    getFileStreamsCache().set(copiedFile.id, copiedFileObservable);
-
-    return copiedFile;
   }
 }

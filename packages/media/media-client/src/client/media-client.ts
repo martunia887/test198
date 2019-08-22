@@ -22,8 +22,8 @@ export class MediaClient {
       authProvider: mediaClientConfig.authProvider,
     });
     this.config = mediaClientConfig;
-    this.collection = new CollectionFetcher(this.mediaStore);
     this.file = new FileFetcherImpl(this.mediaStore);
+    this.collection = new CollectionFetcher(this.mediaStore, this.file);
     this.eventEmitter = new EventEmitter2();
   }
 

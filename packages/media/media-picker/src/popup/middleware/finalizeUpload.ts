@@ -14,6 +14,7 @@ import { MediaFile } from '../../domain/file';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { resetView } from '../actions';
 import { UploadEndEvent } from '../../domain/uploadEvent';
+import { MediaClient } from '../../../../media-client/src';
 
 export default function(): Middleware {
   return store => (next: Dispatch<State>) => (action: any) => {
@@ -66,22 +67,23 @@ async function copyFile({
 }: CopyFileParams) {
   const { tenantMediaClient, config } = store.getState();
   const collection = config.uploadParams && config.uploadParams.collection;
-  const mediaStore = new MediaStore({
+  const mediaClient = new MediaClient({
     authProvider: tenantMediaClient.config.authProvider,
   });
-  const body: MediaStoreCopyFileWithTokenBody = {
-    sourceFile,
-  };
-  const params: MediaStoreCopyFileWithTokenParams = {
-    collection,
-    replaceFileId: replaceFileId ? await replaceFileId : undefined,
-    occurrenceKey: file.occurrenceKey,
-  };
 
   try {
-    const destinationFile = await mediaStore.copyFileWithToken(body, params);
-    const tenantSubject = tenantMediaClient.file.getFileState(
-      destinationFile.data.id,
+    const tenantSubject = await mediaClient.file.copyFile(
+      {
+        authProvider: tenantMediaClient.config.userAuthProvider!,
+        collection: sourceFile.collection,
+        id: sourceFile.id,
+      },
+      {
+        authProvider: tenantMediaClient.config.authProvider,
+        collection,
+        occurrenceKey: file.occurrenceKey,
+        replaceFileId: replaceFileId ? await replaceFileId : undefined,
+      },
     );
 
     tenantSubject.subscribe({
