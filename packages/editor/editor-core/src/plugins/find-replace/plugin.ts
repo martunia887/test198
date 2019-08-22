@@ -47,7 +47,6 @@ export const getInitialState = (): FindReplaceInitialState => ({
   matches: [],
 });
 
-// Extracted so that source maps works there seems to be a bug with generic parameters of pluginFactory that treats the args as unbreakpointable
 const handleDocChanged = (
   tr: Transaction,
   pluginState: FindReplaceState,
@@ -84,9 +83,7 @@ export const {
 } = pluginFactory<FindReplaceState, FindReplaceAction, FindReplaceInitialState>(
   findReplacePluginKey,
   reducer,
-  {
-    onDocChanged: handleDocChanged,
-  },
+  { onDocChanged: handleDocChanged },
 );
 
 export const createPlugin = (dispatch: Dispatch) =>
@@ -103,7 +100,7 @@ export const createPlugin = (dispatch: Dispatch) =>
             pluginState.matches.map(({ start, end }, index) =>
               Decoration.inline(start, end, {
                 style: `background-color: ${
-                  index === selectedIndex ? colors.B100 : colors.B75
+                  index === selectedIndex ? colors.Y200 : colors.Y100
                 };`,
               }),
             ),
