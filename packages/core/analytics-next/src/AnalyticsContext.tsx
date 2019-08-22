@@ -1,6 +1,7 @@
 import React, { useContext, FC, ReactNode, Children } from 'react';
 
 import { AnalyticsReactContext } from './AnalyticsReactContext';
+import { AnalyticsReactContextReconciler } from './AnalyticsReactContextReconciler';
 
 interface Props {
   children: ReactNode;
@@ -24,7 +25,9 @@ export const AnalyticsContext: FC<Props> = ({ children, data }) => {
         getAtlaskitAnalyticsEventHandlers,
       }}
     >
-      {Children.only(children)}
+      <AnalyticsReactContextReconciler>
+        {Children.only(children)}
+      </AnalyticsReactContextReconciler>
     </AnalyticsReactContext.Provider>
   );
 };
