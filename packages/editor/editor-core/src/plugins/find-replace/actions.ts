@@ -15,6 +15,7 @@ export interface Activate {
   findText?: string;
   matches?: Match[];
   index?: number;
+  selectionPos: number;
 }
 
 export interface Find {
@@ -22,6 +23,7 @@ export interface Find {
   findText: string;
   matches: Match[];
   index: number;
+  selectionPos: number;
 }
 
 export interface FindNext {
