@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import EditorSearchIcon from '@atlaskit/icon/glyph/editor/search';
-import { FindReplaceState } from '../plugin';
 import ToolbarButton from '../../../ui/ToolbarButton';
 import Dropdown from '../../../ui/Dropdown';
 import FindReplace from './FindReplace';
@@ -20,11 +19,16 @@ const Wrapper = styled.div`
 `;
 
 export interface FindReplaceToolbarButtonProps {
-  findReplaceState: FindReplaceState;
+  active: boolean;
+  findText: string;
+  index: number;
+  isReducedSpacing?: boolean;
+  numMatches: number;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
-  isReducedSpacing?: boolean;
+  replaceText: string;
+  shouldFocus: boolean;
   onCancel: () => void;
   onFind: (keyword?: string) => void;
   onFindNext: () => void;
@@ -37,7 +41,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
   FindReplaceToolbarButtonProps
 > {
   toggleOpen = () => {
-    if (this.props.findReplaceState.active) {
+    if (this.props.active) {
       this.cancel();
     } else {
       this.find();
@@ -61,16 +65,13 @@ class FindReplaceToolbarButton extends React.PureComponent<
       popupsBoundariesElement,
       popupsScrollableElement,
       isReducedSpacing,
-      findReplaceState,
-    } = this.props;
-    const {
       findText,
       replaceText,
       active,
       index,
-      matches,
+      numMatches,
       shouldFocus,
-    } = findReplaceState;
+    } = this.props;
 
     return (
       <ToolbarButtonWrapper>
@@ -95,7 +96,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
             <FindReplace
               findText={findText}
               replaceText={replaceText}
-              count={{ index, total: matches.length }}
+              count={{ index, total: numMatches }}
               shouldFocus={shouldFocus}
               onFindChange={this.find}
               onFindNext={this.props.onFindNext}

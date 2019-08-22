@@ -64,7 +64,12 @@ export const findReplacePlugin = (): EditorPlugin => ({
         render={({ findReplaceState }): any => {
           return (
             <FindReplaceToolbarButton
-              findReplaceState={findReplaceState}
+              active={findReplaceState.active}
+              findText={findReplaceState.findText}
+              index={findReplaceState.index}
+              numMatches={findReplaceState.matches.length}
+              replaceText={findReplaceState.replaceText}
+              shouldFocus={findReplaceState.shouldFocus}
               popupsBoundariesElement={popupsBoundariesElement}
               popupsMountPoint={popupsMountPoint}
               popupsScrollableElement={popupsScrollableElement}
