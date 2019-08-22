@@ -68,9 +68,12 @@ export const replace = (replaceText: string) =>
       replaceText,
     },
     (tr, state) => {
-      const pluginState = getFindReplacePluginState(state);
-      const replacePos = pluginState.matches[pluginState.index];
-      return tr.insertText(replaceText, replacePos.start, replacePos.end);
+      const { matches, index } = getFindReplacePluginState(state);
+      if (matches[index]) {
+        const replacePos = matches[index];
+        return tr.insertText(replaceText, replacePos.start, replacePos.end);
+      }
+      return tr;
     },
   );
 
