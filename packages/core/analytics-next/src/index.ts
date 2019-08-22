@@ -15,9 +15,7 @@ export {
 export { default as AnalyticsListener } from './AnalyticsListener';
 
 // AnalyticsContext component and HOC
-export {
-  AnalyticsContextProvider as AnalyticsContext,
-} from './AnalyticsContextProvider';
+export { AnalyticsContext } from './AnalyticsContext';
 export { default as withAnalyticsContext } from './withAnalyticsContext';
 
 // AnalyticsErrorBoundary component
@@ -31,6 +29,9 @@ export {
   default as withAnalyticsEvents,
   WithAnalyticsEventsProps,
 } from './withAnalyticsEvents';
+
+// AnalyticsReactContext React Context
+export { AnalyticsReactContext } from './AnalyticsReactContext';
 
 // useAnalytics React hook
 export { useAnalytics } from './useAnalytics';

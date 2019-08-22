@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 
-import { AnalyticsContext } from './AnalyticsContext';
+import { AnalyticsReactContext } from './AnalyticsReactContext';
 import {
   CreateEventMap,
   CreateUIAnalyticsEvent,
@@ -24,7 +24,7 @@ export function useAnalytics<Props extends Record<string, any>>(
   const {
     getAtlaskitAnalyticsEventHandlers,
     getAtlaskitAnalyticsContext,
-  } = useContext(AnalyticsContext);
+  } = useContext(AnalyticsReactContext);
 
   const createAnalyticsEvent = (
     payload: AnalyticsEventPayload,

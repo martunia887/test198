@@ -1,6 +1,6 @@
 import React, { useContext, FC, ReactNode, Children } from 'react';
 
-import { AnalyticsContext } from './AnalyticsContext';
+import { AnalyticsReactContext } from './AnalyticsReactContext';
 
 interface Props {
   children: ReactNode;
@@ -9,22 +9,22 @@ interface Props {
   data: unknown;
 }
 
-export const AnalyticsContextProvider: FC<Props> = ({ children, data }) => {
+export const AnalyticsContext: FC<Props> = ({ children, data }) => {
   const {
     getAtlaskitAnalyticsContext,
     getAtlaskitAnalyticsEventHandlers,
-  } = useContext(AnalyticsContext);
+  } = useContext(AnalyticsReactContext);
 
   const getAnalyticsContext = () => [...getAtlaskitAnalyticsContext(), data];
 
   return (
-    <AnalyticsContext.Provider
+    <AnalyticsReactContext.Provider
       value={{
         getAtlaskitAnalyticsContext: getAnalyticsContext,
         getAtlaskitAnalyticsEventHandlers,
       }}
     >
       {Children.only(children)}
-    </AnalyticsContext.Provider>
+    </AnalyticsReactContext.Provider>
   );
 };
