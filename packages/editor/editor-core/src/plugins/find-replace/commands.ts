@@ -7,7 +7,7 @@ import {
 import { createFindReplaceCommand, getFindReplacePluginState } from './plugin';
 import { FindReplaceActionTypes } from './actions';
 import { Match } from './types';
-import { findMatches } from './utils';
+import { findMatches, findSearchIndex } from './utils';
 
 export const activate = () =>
   createFindReplaceCommand(
@@ -17,12 +17,11 @@ export const activate = () =>
       let matches: Match[] | undefined;
       let index: number | undefined;
 
-      // if user has selected text, set that as the keyword
+      // if user has selected text and hit cmd-f, set that as the keyword
       if (selection instanceof TextSelection && !selection.empty) {
-        // TODO: Handle this properly when we update selection on find next/prev - is this still a valid comment?
         findText = getSelectedText(selection);
         matches = findMatches(state.doc, findText);
-        index = findSearchIndex(selection, matches);
+        index = findSearchIndex(selection.from, matches);
       }
 
       return {
@@ -30,6 +29,7 @@ export const activate = () =>
         findText,
         matches,
         index,
+        selectionPos: selection.from,
       };
     },
     (tr: Transaction) => tr.setSelection(Selection.atStart(tr.doc)),
@@ -37,16 +37,17 @@ export const activate = () =>
 
 export const find = (keyword?: string) =>
   createFindReplaceCommand((state: EditorState) => {
-    const { selection } = state;
+    const { selectionPos } = getFindReplacePluginState(state);
 
     const matches = keyword ? findMatches(state.doc, keyword) : [];
-    const index = findSearchIndex(selection, matches);
+    const index = findSearchIndex(selectionPos, matches);
 
     return {
       type: FindReplaceActionTypes.FIND,
       findText: keyword || '',
       matches,
       index,
+      selectionPos: matches[index] ? matches[index].start : 1,
     };
   });
 
@@ -105,8 +106,3 @@ const getSelectedText = (selection: TextSelection): string => {
   }
   return text;
 };
-
-function findSearchIndex(selection: Selection, matches: Match[]): number {
-  const selectionPos = selection.from;
-  return Math.max(matches.findIndex(match => match.start >= selectionPos), 0);
-}

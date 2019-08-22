@@ -6,7 +6,7 @@ import reducer from './reducer';
 import { Dispatch } from '../../event-dispatcher';
 import { FindReplaceAction } from './actions';
 import { Match } from './types';
-import { findMatches } from './utils';
+import { findMatches, findSearchIndex } from './utils';
 
 export interface FindReplaceState {
   /** Whether find/replace is isActive, i.e. displayed */
@@ -17,6 +17,8 @@ export interface FindReplaceState {
   findText: string;
   /** Text to replace with */
   replaceText: string;
+  /** User's selection.from position in editor */
+  selectionPos: number;
   /** Index of selected word in array of matches, this gets updated as user finds next/prev */
   index: number;
   /** Positions of find results */
@@ -28,6 +30,7 @@ export interface FindReplaceInitialState {
   shouldFocus: false;
   findText: '';
   replaceText: '';
+  selectionPos: 1;
   index: 0;
   matches: [];
 }
@@ -40,16 +43,29 @@ export const getInitialState = (): FindReplaceInitialState => ({
   findText: '',
   replaceText: '',
   index: 0,
+  selectionPos: 1,
   matches: [],
 });
 
 // Extracted so that source maps works there seems to be a bug with generic parameters of pluginFactory that treats the args as unbreakpointable
-const onDocChangedFn = (
+const handleDocChanged = (
   tr: Transaction,
   pluginState: FindReplaceState,
 ): FindReplaceState => {
   if (pluginState.isActive && pluginState.findText) {
     const matches = findMatches(tr.doc, pluginState.findText);
+    let { index, selectionPos } = pluginState;
+
+    // recalculate selected match index if matches have changed
+    if (matches.length !== pluginState.matches.length) {
+      const selectedStart = tr.mapping.map(pluginState.matches[index].start);
+      index = matches.findIndex(match => match.start === selectedStart);
+
+      if (index === -1) {
+        index = findSearchIndex(selectionPos, matches);
+      }
+    }
+
     // const mappedMatches = pluginState.matches
     //   .map(match => ({
     //     start: tr.mapping.map(match.start),
@@ -87,6 +103,7 @@ const onDocChangedFn = (
     return {
       ...pluginState,
       matches,
+      index,
       shouldFocus: false,
     };
   }
@@ -101,7 +118,7 @@ export const {
   findReplacePluginKey,
   reducer,
   {
-    onDocChanged: onDocChangedFn,
+    onDocChanged: handleDocChanged,
   },
 );
 

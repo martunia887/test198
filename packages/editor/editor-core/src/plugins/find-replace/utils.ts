@@ -1,5 +1,5 @@
-import { Match } from './types';
 import { Fragment, Node as PmNode } from 'prosemirror-model';
+import { Match } from './types';
 
 export function findMatches(
   content: PmNode | Fragment,
@@ -24,4 +24,11 @@ export function findMatches(
     }
   });
   return matches;
+}
+
+export function findSearchIndex(
+  selectionPos: number,
+  matches: Match[],
+): number {
+  return Math.max(matches.findIndex(match => match.start >= selectionPos), 0);
 }

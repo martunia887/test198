@@ -16,6 +16,7 @@ const reducer = (
           action.findText !== undefined ? action.findText : state.findText,
         matches: action.matches || state.matches,
         index: action.index !== undefined ? action.index : state.index,
+        selectionPos: action.selectionPos || state.selectionPos,
       };
 
     case FindReplaceActionTypes.FIND_NEXT:
