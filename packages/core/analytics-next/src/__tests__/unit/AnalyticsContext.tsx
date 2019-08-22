@@ -1,31 +1,29 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
-import PropTypes from 'prop-types';
-import { AnalyticsContext } from '../..';
+import { mount } from 'enzyme';
+import { AnalyticsContext as AnalyticsContextProvider } from '../..';
+import { AnalyticsContext } from '../../AnalyticsContext';
 
 interface Context {
   getAtlaskitAnalyticsContext: () => any;
 }
 
-const ContextConsumer = (
-  props: { onClick: (context: any) => void },
-  context: Context,
-) => {
-  const onClick = () => {
-    const analyticsContext = context.getAtlaskitAnalyticsContext();
-    props.onClick(analyticsContext);
-  };
-  return <button onClick={onClick} />;
-};
-ContextConsumer.contextTypes = {
-  getAtlaskitAnalyticsContext: PropTypes.func,
-};
+const ContextConsumer = (props: { onClick: (context: any) => void }) => (
+  <AnalyticsContext.Consumer>
+    {({ getAtlaskitAnalyticsContext }) => {
+      const onClick = () => {
+        const analyticsContext = getAtlaskitAnalyticsContext();
+        props.onClick(analyticsContext);
+      };
+      return <button onClick={onClick} />;
+    }}
+  </AnalyticsContext.Consumer>
+);
 
 it('should render', () => {
-  const wrapper = shallow(
-    <AnalyticsContext data={{}}>
+  const wrapper = mount(
+    <AnalyticsContextProvider data={{}}>
       <div />
-    </AnalyticsContext>,
+    </AnalyticsContextProvider>,
   );
 
   expect(wrapper.find('div')).toHaveLength(1);
@@ -33,11 +31,11 @@ it('should render', () => {
 
 it('should not create a component with multiple children', () => {
   expect(() => {
-    shallow(
-      <AnalyticsContext data={{}}>
+    mount(
+      <AnalyticsContextProvider data={{}}>
         <div />
         <div />
-      </AnalyticsContext>,
+      </AnalyticsContextProvider>,
     );
   }).toThrow();
 });
@@ -48,9 +46,9 @@ it("should add analytics context data to child's getAnalyticsContext context cal
     analyticsContext = context;
   };
   const wrapper = mount(
-    <AnalyticsContext data={{ a: 'b' }}>
+    <AnalyticsContextProvider data={{ a: 'b' }}>
       <ContextConsumer onClick={getContext} />
-    </AnalyticsContext>,
+    </AnalyticsContextProvider>,
   );
   wrapper.find(ContextConsumer).simulate('click');
 
@@ -63,13 +61,13 @@ it("should prepend analytics context data from ancestors to child's getAnalytics
     analyticsContext = context;
   };
   const wrapper = mount(
-    <AnalyticsContext data={{ a: 'e' }}>
-      <AnalyticsContext data={{ c: 'd' }}>
-        <AnalyticsContext data={{ a: 'b' }}>
+    <AnalyticsContextProvider data={{ a: 'e' }}>
+      <AnalyticsContextProvider data={{ c: 'd' }}>
+        <AnalyticsContextProvider data={{ a: 'b' }}>
           <ContextConsumer onClick={getContext} />
-        </AnalyticsContext>
-      </AnalyticsContext>
-    </AnalyticsContext>,
+        </AnalyticsContextProvider>
+      </AnalyticsContextProvider>
+    </AnalyticsContextProvider>,
   );
   wrapper.find(ContextConsumer).simulate('click');
 

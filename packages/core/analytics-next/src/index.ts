@@ -12,13 +12,13 @@ export {
 } from './UIAnalyticsEvent';
 
 // AnalyticsListener component
-export { AnalyticsListener } from './next/AnalyticsListener';
+export { default as AnalyticsListener } from './AnalyticsListener';
 
 // AnalyticsContext component and HOC
 export {
   AnalyticsContextProvider as AnalyticsContext,
-} from './next/AnalyticsContextProvider';
-export { withAnalyticsContext } from './next/withAnalyticsContext';
+} from './AnalyticsContextProvider';
+export { default as withAnalyticsContext } from './withAnalyticsContext';
 
 // AnalyticsErrorBoundary component
 export {
@@ -27,7 +27,10 @@ export {
 } from './AnalyticsErrorBoundary';
 
 // createAnalyticsEvent HOC
-export { withAnalyticsEvents } from './next/withAnalyticsEvents';
+export {
+  default as withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from './withAnalyticsEvents';
 
 // Helper functions
 export { default as createAndFireEvent } from './createAndFireEvent';

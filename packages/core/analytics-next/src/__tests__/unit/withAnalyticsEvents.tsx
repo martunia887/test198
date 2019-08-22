@@ -1,5 +1,5 @@
 import React, { Component, MouseEvent } from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import {
   UIAnalyticsEvent,
   AnalyticsListener,
@@ -36,7 +36,7 @@ class ButtonWithCreate extends Component<WrappedProps> {
 
 it('should render the provided component', () => {
   const ButtonWithAnalytics = withAnalyticsEvents()(Button);
-  const wrapper = shallow(<ButtonWithAnalytics>Hello</ButtonWithAnalytics>);
+  const wrapper = mount(<ButtonWithAnalytics>Hello</ButtonWithAnalytics>);
 
   expect(wrapper.html()).toBe('<button>Hello</button>');
 });
@@ -48,14 +48,11 @@ it('should have descriptive displayName', () => {
 
 it('should pass a createAnalyticsEvent function prop to the inner component', () => {
   const ButtonWithAnalytics = withAnalyticsEvents()(Button);
-  const wrapper = shallow(<ButtonWithAnalytics>Hello</ButtonWithAnalytics>);
+  const wrapper = mount(<ButtonWithAnalytics>Hello</ButtonWithAnalytics>);
 
-  expect(
-    typeof wrapper
-      .dive()
-      .find(Button)
-      .prop('createAnalyticsEvent'),
-  ).toBe('function');
+  expect(typeof wrapper.find(Button).prop('createAnalyticsEvent')).toBe(
+    'function',
+  );
 });
 
 describe('createAnalyticsEvent function prop', () => {
@@ -299,24 +296,30 @@ it('should not update patched prop callbacks across renders when the original ca
   // @ts-ignore
   expect(counterWrapper.instance().renderCount).toBe(1);
 
-  // Re-rendering the component with the same prop callback should not change its patched ref value
+  // The useEffect hook fires after the initial return and then runs the hook again, causing it to increment only once here
   wrapper.setProps({ onClick });
-  expect(wrapper.text()).toBe('0');
+  expect(wrapper.text()).toBe('1');
   // @ts-ignore
   expect(counterWrapper.instance().renderCount).toBe(2);
+
+  // Re-rendering the component with the same prop callback should not change its patched ref value
+  wrapper.setProps({ onClick });
+  expect(wrapper.text()).toBe('1');
+  // @ts-ignore
+  expect(counterWrapper.instance().renderCount).toBe(3);
 
   const newOnClick = () => {};
 
   // Setting a new prop callback value should update the patched ref value though
   wrapper.setProps({ onClick: newOnClick });
-  expect(wrapper.text()).toBe('1');
+  expect(wrapper.text()).toBe('2');
   // @ts-ignore
-  expect(counterWrapper.instance().renderCount).toBe(3);
+  expect(counterWrapper.instance().renderCount).toBe(4);
 
   // Make sure setting the same new prop callback does not change the ref value again
   // (This would occur if the implementation only kept the original prop callback value to check against)
   wrapper.setProps({ onClick: newOnClick });
-  expect(wrapper.text()).toBe('1');
+  expect(wrapper.text()).toBe('2');
   // @ts-ignore
-  expect(counterWrapper.instance().renderCount).toBe(4);
+  expect(counterWrapper.instance().renderCount).toBe(5);
 });
