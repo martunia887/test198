@@ -105,6 +105,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
               onFindPrev={this.props.onFindPrev}
               onReplace={this.props.onReplace}
               onReplaceAll={this.props.onReplaceAll}
+              onCancel={this.props.onCancel}
             />
           </Wrapper>
         </Dropdown>

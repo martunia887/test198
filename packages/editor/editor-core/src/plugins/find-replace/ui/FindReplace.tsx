@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import EditorCloseIcon from '@atlaskit/icon/glyph/editor/close';
+import ChevronDownIcon from '@atlaskit/icon/glyph/hipchat/chevron-down';
+import ChevronUpIcon from '@atlaskit/icon/glyph/hipchat/chevron-up';
 import Textfield from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
@@ -49,6 +51,7 @@ export interface FindReplaceProps {
   onFindPrev: () => void;
   onReplace: (replaceWith: string) => void;
   onReplaceAll: (replaceWith: string) => void;
+  onCancel: () => void;
 }
 
 export type FindReplaceComponentState = 'empty' | 'find' | 'replace';
@@ -115,12 +118,11 @@ class FindReplace extends React.PureComponent<
   };
 
   clearSearch = () => {
-    this.updateFindTextfieldValue('');
-    this.props.onFindChange();
+    this.props.onCancel();
   };
 
   handleReplaceClick = () => {
-    this.setState({ componentState: 'replace' });
+    this.props.onReplace(this.state.replaceText);
   };
 
   handleFindChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,17 +154,15 @@ class FindReplace extends React.PureComponent<
     this.props.onReplaceAll(this.state.replaceText);
   };
 
-  renderFindSection = (
-    match?: { index: number; total: number },
-    showReplaceBtn?: boolean,
-  ) => {
+  renderFindSection = () => {
     // todo: get these from i18n
-    const find = 'Find in document';
+    const find = 'Find';
     const clear = 'Clear search';
-    const replace = 'Replace';
     const noResultsFound = 'No results found';
+    const findNext = 'Find next';
+    const findPrev = 'Find previous';
 
-    const { findText } = this.props;
+    const { findText, count } = this.props;
 
     return (
       <SectionWrapper>
@@ -178,18 +178,27 @@ class FindReplace extends React.PureComponent<
           onKeyDown={this.handleFindKeyDown}
           onBlur={this.props.onFindBlur}
         />
-        {match && (
+        {findText && (
           <Count>
-            {match.total === 0
+            {count.total === 0
               ? noResultsFound
-              : `${match.index + 1} of ${match.total}`}
+              : `${count.index + 1} of ${count.total}`}
           </Count>
         )}
-        {showReplaceBtn && (
-          <FindReplaceButton onClick={this.handleReplaceClick}>
-            {replace}
-          </FindReplaceButton>
-        )}
+        <FindReplaceButton
+          title={findNext}
+          appearance="subtle"
+          iconBefore={<ChevronDownIcon label={findNext} />}
+          spacing="none"
+          onClick={this.props.onFindNext}
+        />
+        <FindReplaceButton
+          title={findPrev}
+          appearance="subtle"
+          iconBefore={<ChevronUpIcon label={findPrev} />}
+          spacing="none"
+          onClick={this.props.onFindPrev}
+        />
         <FindReplaceButton
           appearance="subtle"
           iconBefore={<EditorCloseIcon label={clear} />}
@@ -204,6 +213,7 @@ class FindReplace extends React.PureComponent<
     // todo: get these from i18n
     const replaceAll = 'Replace all';
     const replaceWith = 'Replace with';
+    const replace = 'Replace';
 
     const { replaceText } = this.state;
 
@@ -218,6 +228,9 @@ class FindReplace extends React.PureComponent<
           onChange={this.handleReplaceChange}
           onKeyDown={this.handleReplaceKeyDown}
         />
+        <FindReplaceButton onClick={this.handleReplaceClick}>
+          {replace}
+        </FindReplaceButton>
         <FindReplaceButton onClick={this.handleReplaceAllClick}>
           {replaceAll}
         </FindReplaceButton>
@@ -226,28 +239,14 @@ class FindReplace extends React.PureComponent<
   };
 
   render() {
-    const { componentState: state } = this.state;
-    const { count } = this.props;
-
     // todo: align to right as per design
-
-    if (state === 'empty') {
-      return this.renderFindSection();
-    }
-    if (state === 'find') {
-      return this.renderFindSection(count, true);
-    }
-    if (state === 'replace') {
-      return (
-        <Wrapper>
-          {this.renderFindSection(count)}
-          <Rule />
-          {this.renderReplaceSection()}
-        </Wrapper>
-      );
-    }
-
-    return null;
+    return (
+      <Wrapper>
+        {this.renderFindSection()}
+        <Rule />
+        {this.renderReplaceSection()}
+      </Wrapper>
+    );
   }
 }
 

@@ -58,10 +58,12 @@ const handleDocChanged = (
 
     // recalculate selected match index if matches have changed
     if (matches.length !== pluginState.matches.length) {
-      const selectedStart = tr.mapping.map(pluginState.matches[index].start);
-      index = matches.findIndex(match => match.start === selectedStart);
+      if (pluginState.matches[index]) {
+        const selectedStart = tr.mapping.map(pluginState.matches[index].start);
+        index = matches.findIndex(match => match.start === selectedStart);
+      }
 
-      if (index === -1) {
+      if (index === undefined || index === -1) {
         index = findSearchIndex(selectionPos, matches);
       }
     }
