@@ -19,9 +19,9 @@ const Wrapper = styled.div`
 `;
 
 export interface FindReplaceToolbarButtonProps {
-  active: boolean;
   findText: string;
   index: number;
+  isActive: boolean;
   isReducedSpacing?: boolean;
   numMatches: number;
   popupsMountPoint?: HTMLElement;
@@ -41,7 +41,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
   FindReplaceToolbarButtonProps
 > {
   toggleOpen = () => {
-    if (this.props.active) {
+    if (this.props.isActive) {
       this.cancel();
     } else {
       this.find();
@@ -67,7 +67,7 @@ class FindReplaceToolbarButton extends React.PureComponent<
       isReducedSpacing,
       findText,
       replaceText,
-      active,
+      isActive,
       index,
       numMatches,
       shouldFocus,
@@ -79,13 +79,13 @@ class FindReplaceToolbarButton extends React.PureComponent<
           mountTo={popupsMountPoint}
           boundariesElement={popupsBoundariesElement}
           scrollableElement={popupsScrollableElement}
-          isOpen={active}
+          isOpen={isActive}
           handleEscapeKeydown={this.cancel}
           fitWidth={352}
           trigger={
             <ToolbarButton
               spacing={isReducedSpacing ? 'none' : 'default'}
-              selected={active}
+              selected={isActive}
               title={title}
               iconBefore={<EditorSearchIcon label={title} />}
               onClick={this.toggleOpen}

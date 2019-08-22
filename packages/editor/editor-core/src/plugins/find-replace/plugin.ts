@@ -9,8 +9,8 @@ import { Match } from './types';
 import { findMatches } from './utils';
 
 export interface FindReplaceState {
-  /** Whether find/replace is active, i.e. displayed */
-  active: boolean;
+  /** Whether find/replace is isActive, i.e. displayed */
+  isActive: boolean;
   /** Whether we should set focus into and select all text of find textfield */
   shouldFocus: boolean;
   /** Search keyword */
@@ -24,7 +24,7 @@ export interface FindReplaceState {
 }
 
 export interface FindReplaceInitialState {
-  active: false;
+  isActive: false;
   shouldFocus: false;
   findText: '';
   replaceText: '';
@@ -35,7 +35,7 @@ export interface FindReplaceInitialState {
 export const findReplacePluginKey = new PluginKey('findReplace');
 
 export const getInitialState = (): FindReplaceInitialState => ({
-  active: false,
+  isActive: false,
   shouldFocus: false,
   findText: '',
   replaceText: '',
@@ -48,7 +48,7 @@ const onDocChangedFn = (
   tr: Transaction,
   pluginState: FindReplaceState,
 ): FindReplaceState => {
-  if (pluginState.active && pluginState.findText) {
+  if (pluginState.isActive && pluginState.findText) {
     const matches = findMatches(tr.doc, pluginState.findText);
     // const mappedMatches = pluginState.matches
     //   .map(match => ({
@@ -112,7 +112,7 @@ export const createPlugin = (dispatch: Dispatch) =>
     props: {
       decorations(state) {
         const pluginState = getFindReplacePluginState(state);
-        if (pluginState.active && pluginState.findText) {
+        if (pluginState.isActive && pluginState.findText) {
           const selectedIndex = pluginState.index;
           return DecorationSet.create(
             state.doc,

@@ -10,7 +10,7 @@ const reducer = (
     case FindReplaceActionTypes.FIND:
       return {
         ...state,
-        active: true,
+        isActive: true,
         shouldFocus: action.type === FindReplaceActionTypes.ACTIVATE,
         findText:
           action.findText !== undefined ? action.findText : state.findText,

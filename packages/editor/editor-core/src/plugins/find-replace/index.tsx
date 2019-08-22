@@ -64,7 +64,7 @@ export const findReplacePlugin = (): EditorPlugin => ({
         render={({ findReplaceState }): any => {
           return (
             <FindReplaceToolbarButton
-              active={findReplaceState.active}
+              isActive={findReplaceState.isActive}
               findText={findReplaceState.findText}
               index={findReplaceState.index}
               numMatches={findReplaceState.matches.length}
