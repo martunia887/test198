@@ -22,7 +22,7 @@ export const ServiceList: ComponentClass<HTMLAttributes<{}>> = styled.ul`
   padding: 0;
   float: left;
   width: 100%;
-  margin: 17px 0 0 0 !important; /* We need important here due to default "ul" style overrides */
+  margin: 15px 0 0 0 !important; /* We need important here due to default "ul" style overrides */
 `;
 
 export const Separator: ComponentClass<LiHTMLAttributes<{}>> = styled.li`
@@ -39,7 +39,6 @@ export const Separator: ComponentClass<LiHTMLAttributes<{}>> = styled.li`
 // https://product-fabric.atlassian.net/browse/MSW-156
 export const SeparatorLine = styled.div`
   width: 100%;
-  border-top: 1px solid rgba(9, 30, 66, 0.06);
   height: 0;
 `;
 
@@ -57,3 +56,12 @@ export const StyledSvgGroup: ComponentClass<
 > = styled.g<IconProps>`
   fill: ${({ active }) => (active ? '#0061C5' : '#42526E')};
 `;
+
+export const UploadButtonWrapper = styled.div`
+  margin: 0 20px;
+  button {
+    width: 100%;
+  }
+`;
+
+UploadButtonWrapper.displayName = 'UploadButtonWrapper';

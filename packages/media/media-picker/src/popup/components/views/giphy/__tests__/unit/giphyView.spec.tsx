@@ -17,7 +17,6 @@ import {
 import ConnectedGiphyView, { GiphyView } from '../../giphyView';
 import { BricksLayout } from '../../bricksGrid';
 import {
-  Title,
   ButtonContainer,
   WarningContainer,
   WarningIconWrapper,
@@ -131,7 +130,6 @@ describe('<ConnectedGiphyView />', () => {
         />,
       );
 
-      expect(giphyView.find(Title)).toHaveLength(1);
       expect(giphyView.find(FieldText)).toHaveLength(1);
       expect(giphyView.find(ButtonContainer)).toHaveLength(1);
       expect(giphyView.find(Button)).toHaveLength(1);
@@ -269,7 +267,6 @@ describe('<ConnectedGiphyView />', () => {
         />,
       );
 
-      expect(giphyView.find(Title)).toHaveLength(1);
       expect(giphyView.find(FieldText)).toHaveLength(1);
       expect(giphyView.find(WarningImage)).toHaveLength(1);
       expect(giphyView.find(WarningContainer)).toHaveLength(1);

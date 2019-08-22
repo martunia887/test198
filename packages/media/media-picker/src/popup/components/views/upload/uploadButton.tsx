@@ -6,9 +6,11 @@ import { messages } from '@atlaskit/media-ui';
 import { startFileBrowser } from '../../../actions/startFileBrowser';
 import { State } from '../../../domain';
 import { Browser } from '../../../../components/browser/browser';
+import { LocalButtonUploadWrapper } from './styled';
 
 export interface LocalBrowserButtonProps {
   readonly browserRef: React.RefObject<Browser>;
+  readonly appearance?: 'primary' | 'default';
 }
 
 export interface LocalBrowserButtonDispatchProps {
@@ -27,14 +29,17 @@ export class LocalBrowserButton extends React.Component<Props> {
   };
 
   render() {
+    const { appearance } = this.props;
     return (
-      <Button
-        className="e2e-upload-button"
-        appearance="default"
-        onClick={this.onUploadClick}
-      >
-        <FormattedMessage {...messages.upload_file} />
-      </Button>
+      <LocalButtonUploadWrapper>
+        <Button
+          className="e2e-upload-button"
+          appearance={appearance || 'primary'}
+          onClick={this.onUploadClick}
+        >
+          <FormattedMessage {...messages.upload_file} />
+        </Button>
+      </LocalButtonUploadWrapper>
     );
   }
 }

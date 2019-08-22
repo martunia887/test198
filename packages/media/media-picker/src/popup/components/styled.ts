@@ -13,12 +13,12 @@ export const MediaPickerPopupWrapper = styled.div`
   position: relative;
 
   /* Ensure that the modal has a static size */
-  width: 968px;
+  width: 930px;
 `;
 
 export const SidebarWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
-  width: 235px;
-  min-width: 235px;
+  width: 195px;
+  min-width: 195px;
   background-color: ${N30};
 `;
 
@@ -28,7 +28,8 @@ export const ViewWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   flex: 1;
 
   /* Height of the Popup should never change */
-  height: calc(100vh - 200px);
-
+  height: calc(100vh - 165px);
   background-color: white;
+  position: relative;
+  min-height: 250px;
 `;

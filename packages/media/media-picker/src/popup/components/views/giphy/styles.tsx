@@ -8,6 +8,14 @@ export const Container: ComponentClass<HTMLAttributes<{}>> = styled.div`
   overflow-y: scroll;
 
   padding: 0 28px;
+
+  label {
+    height: 10px;
+  }
+
+  > div {
+    margin-bottom: 5px;
+  }
 `;
 export interface GridCellProps {
   width: number;

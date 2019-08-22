@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
 import debounce from 'lodash.debounce';
+import { InfiniteScrollWrapper } from './styled';
 
 export type ThresholdReachedEventHandler = () => void;
 
 export interface InfiniteScrollProps {
-  readonly height?: number | string;
-  readonly width?: string;
   readonly delay?: number;
   readonly threshold?: number;
 
@@ -43,22 +42,15 @@ export class InfiniteScroll extends Component<
   }
 
   render(): JSX.Element {
-    const { width, height, children } = this.props;
+    const { children } = this.props;
     return (
-      <div
-        ref={this.div}
-        style={{
-          width,
-          height,
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          msOverflowStyle: 'scrollbar',
-          display: 'inline-block',
-        }}
+      <InfiniteScrollWrapper
+        innerRef={this.div}
+        className="infinite-scroll"
         onScroll={this.checkThresholdDebounce}
       >
         {children}
-      </div>
+      </InfiniteScrollWrapper>
     );
   }
 

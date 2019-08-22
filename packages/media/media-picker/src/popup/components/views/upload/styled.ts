@@ -3,16 +3,14 @@ import styled from 'styled-components';
 import { HTMLAttributes, ImgHTMLAttributes, ComponentClass } from 'react';
 import { borderIcon } from '../../../../icons';
 
-export interface IsEmptyProps {
-  isEmpty?: boolean;
-}
-
 export const SpinnerWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 60px;
-  height: calc(100% - 211px);
+  height: 100%;
+  width: calc(100% - 25px);
+  padding-top: 30px;
 `;
 
 export const DefaultImage: ComponentClass<ImgHTMLAttributes<{}>> = styled.img`
@@ -49,23 +47,21 @@ export const DropzoneContentWrapper: ComponentClass<
   transform: translate(-50%, -50%);
 `;
 
-export const DropzoneContainer: ComponentClass<
-  HTMLAttributes<{}> & IsEmptyProps
-> = styled.div`
+export const DropzoneContainer: ComponentClass<HTMLAttributes<{}>> = styled.div`
   box-sizing: border-box;
   border: 2px dashed #cfd4db;
   border-image-source: url('${borderIcon}');
   border-image-slice: 2;
   border-image-repeat: round;
   border-radius: 3px;
-  ${({ isEmpty }: IsEmptyProps) =>
-    isEmpty ? 'height: calc(100% - 4px);' : 'height: 211px;'}
+  height: calc(100% - 20px);
+  margin: 25px 25px 25px 0;
 `;
 
 export const RecentUploadsTitle: ComponentClass<
   HTMLAttributes<{}>
 > = styled.div`
-  padding: 25px 10px 5px 0;
+  padding: 15px 10px 5px 0;
   font-size: 20px;
   color: #071d43;
 `;
@@ -73,6 +69,11 @@ export const RecentUploadsTitle: ComponentClass<
 export const CardsWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: flex;
   flex-wrap: wrap;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  bottom: 80px;
 `;
 
 export const CardWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
@@ -86,12 +87,18 @@ export const CardWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   }
 `;
 
+export const LocalBrowserButtonWrapper = styled.div`
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+`;
+
 export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   box-sizing: border-box;
   width: 100%;
   height: 100%;
   background-color: white;
-  padding: 24px 24px 2px 24px;
+  padding: 0px 0px 0px 25px;
 `;
 
 export const LoadingNextPageWrapper = styled.div`
@@ -99,5 +106,16 @@ export const LoadingNextPageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-left: 70px;
+  margin-top: 30px;
+`;
+
+export const UploadWrapper = styled.div`
+  height: 100%;
+`;
+
+export const LocalButtonUploadWrapper = styled.div`
+  button[type='button'] {
+    justify-content: center;
+  }
 `;

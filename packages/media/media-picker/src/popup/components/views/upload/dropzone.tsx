@@ -16,15 +16,14 @@ import {
 import { Browser } from '../../../../components/browser/browser';
 
 export interface DropzoneProps {
-  readonly isEmpty?: boolean;
   readonly browserRef: React.RefObject<Browser>;
 }
 
 export class Dropzone extends Component<DropzoneProps> {
   render() {
-    const { isEmpty, browserRef } = this.props;
+    const { browserRef } = this.props;
     return (
-      <DropzoneContainer isEmpty={isEmpty}>
+      <DropzoneContainer>
         <DropzoneContentWrapper>
           <DefaultImage src={filesIcon} />
           <TextWrapper>
@@ -32,7 +31,10 @@ export class Dropzone extends Component<DropzoneProps> {
               <FormattedMessage {...messages.drag_and_drop_your_files} />
             </DropzoneText>
             <ButtonWrapper>
-              <LocalBrowserButton browserRef={browserRef} />
+              <LocalBrowserButton
+                browserRef={browserRef}
+                appearance="default"
+              />
             </ButtonWrapper>
           </TextWrapper>
         </DropzoneContentWrapper>

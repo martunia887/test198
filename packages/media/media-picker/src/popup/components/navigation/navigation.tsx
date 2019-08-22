@@ -33,11 +33,6 @@ import {
   AccountDropdownWrapper,
 } from './styled';
 
-const SERVICENAME: { [key: string]: string } = {
-  dropbox: 'Dropbox',
-  google: 'Google Drive',
-};
-
 export interface NavigationStateProps {
   readonly accounts: Promise<ServiceAccountWithType[]>;
   readonly path: Path;
@@ -226,8 +221,7 @@ export class Navigation extends Component<NavigationProps, NavigationState> {
     service: ServiceAccountLink,
     path: Path,
   ): JSX.Element {
-    const serviceName = SERVICENAME[service.name] || service.name;
-    const fullPath = [{ id: '', name: serviceName }].concat(path);
+    const fullPath = [{ id: '', name: '' }].concat(path);
     const breadcrumbs = fullPath
       .slice(-2)
       .map(folderReference => {

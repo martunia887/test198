@@ -157,10 +157,9 @@ describe('<StatelessUploadView />', () => {
 
     expect(component.find(Wrapper)).toHaveLength(1);
     expect(component.find(Dropzone)).toHaveLength(1);
-    expect(component.find(Dropzone).props().isEmpty).toEqual(true);
   });
 
-  it('should render cards and dropzone when there are recent items', () => {
+  it('should render cards when there are recent items', () => {
     const createRecentItem = (occurrenceKey: string): MediaCollectionItem => ({
       id: 'some-file-id',
       insertedAt: 0,
@@ -176,8 +175,6 @@ describe('<StatelessUploadView />', () => {
     const component = mount(getUploadViewElement(false, recentItems));
 
     expect(component.find(Wrapper)).toHaveLength(1);
-    expect(component.find(Dropzone)).toHaveLength(1);
-    expect(component.find(Dropzone).props().isEmpty).toEqual(false);
 
     expect(component.find(Card)).toHaveLength(3);
   });
@@ -495,11 +492,27 @@ describe('<UploadView />', () => {
 
   it('should fire an analytics event when given a react context', () => {
     const aHandler = jest.fn();
-    const { component } = createConnectedComponent(state, {
-      getAtlaskitAnalyticsEventHandlers: () => [aHandler],
-    });
+    const { component } = createConnectedComponent(
+      {
+        ...state,
+        view: {
+          ...state.view,
+          isLoading: false,
+        },
+        recents: {
+          items: [],
+        },
+        uploads: {},
+      },
+      {
+        getAtlaskitAnalyticsEventHandlers: () => [aHandler],
+      },
+    );
 
-    component.find(LocalBrowserButton).simulate('click');
+    component
+      .find(LocalBrowserButton)
+      .find(Button)
+      .simulate('click');
     expect(aHandler).toBeCalled();
   });
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Button, { ButtonProps } from '@atlaskit/button';
-import { N0, N500, N900 } from '@atlaskit/theme/colors';
+import { N0, N20, N500, N900 } from '@atlaskit/theme/colors';
 
 export const FolderViewerNavigation: React.ComponentClass<
   React.HTMLAttributes<{}>
@@ -15,6 +15,7 @@ export const FolderViewerNavigation: React.ComponentClass<
   border-radius: 3px;
   box-sizing: border-box;
   background-color: ${N0};
+  border-bottom: 1px solid ${N20};
 `;
 FolderViewerNavigation.displayName = 'FolderViewerNavigation';
 

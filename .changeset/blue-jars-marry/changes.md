@@ -1,0 +1,1 @@
+Improve media-picker UI/UX. Expand recents, remove redundant dropzone, move upload button to sidebar.

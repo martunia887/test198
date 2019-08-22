@@ -21,7 +21,7 @@ import Flag, { FlagGroup } from '@atlaskit/flag';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
 import TrashIcon from '@atlaskit/icon/glyph/trash';
 import EditorInfoIcon from '@atlaskit/icon/glyph/error';
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
+import { InjectedIntlProps, injectIntl } from 'react-intl';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import { messages, InfiniteScroll } from '@atlaskit/media-ui';
 import { isWebGLAvailable } from '../../../tools/webgl';
@@ -45,12 +45,13 @@ import {
   Wrapper,
   SpinnerWrapper,
   LoadingNextPageWrapper,
-  CardsWrapper,
-  RecentUploadsTitle,
+  LocalBrowserButtonWrapper,
+  UploadWrapper,
   CardWrapper,
 } from './styled';
 import { removeFileFromRecents } from '../../../actions/removeFileFromRecents';
 import { Browser } from '../../../../components/browser/browser';
+import LocalBrowserButton from './uploadButton';
 
 const createEditCardAction = (
   handler: CardEventHandler,
@@ -137,29 +138,27 @@ export class StatelessUploadView extends Component<
   }
 
   render() {
-    const { isLoading, browserRef } = this.props;
+    const { isLoading } = this.props;
     const cards = this.renderCards();
     const isEmpty = !isLoading && cards.length === 0;
 
     let contentPart: JSX.Element | null = null;
     if (isLoading) {
       contentPart = this.renderLoadingView();
-    } else if (!isEmpty) {
-      contentPart = this.renderRecentsView(cards);
+    } else {
+      if (isEmpty) {
+        contentPart = this.renderEmptyView();
+      } else {
+        contentPart = this.renderRecentsView(cards);
+      }
     }
     const confirmationDialog = this.renderDeleteConfirmation();
 
     return (
-      <InfiniteScroll
-        height="100%"
-        onThresholdReached={this.onThresholdReachedListener}
-      >
-        <Wrapper>
-          <Dropzone isEmpty={isEmpty} browserRef={browserRef} />
-          {contentPart}
-          {confirmationDialog}
-        </Wrapper>
-      </InfiniteScroll>
+      <Wrapper>
+        {contentPart}
+        {confirmationDialog}
+      </Wrapper>
     );
   }
 
@@ -250,14 +249,25 @@ export class StatelessUploadView extends Component<
     const { isWebGLWarningFlagVisible } = this.state;
 
     return (
-      <div>
-        <RecentUploadsTitle>
-          <FormattedMessage {...messages.recent_uploads} />
-        </RecentUploadsTitle>
-        <CardsWrapper>{cards}</CardsWrapper>
-        {this.renderLoadingNextPageView()}
+      <UploadWrapper>
+        <InfiniteScroll onThresholdReached={this.onThresholdReachedListener}>
+          {cards}
+          {this.renderLoadingNextPageView()}
+        </InfiniteScroll>
         {isWebGLWarningFlagVisible && this.renderWebGLWarningFlag()}
-      </div>
+      </UploadWrapper>
+    );
+  };
+
+  private renderEmptyView = () => {
+    const { isWebGLWarningFlagVisible } = this.state;
+    const { browserRef } = this.props;
+
+    return (
+      <UploadWrapper>
+        <Dropzone browserRef={browserRef} />
+        {isWebGLWarningFlagVisible && this.renderWebGLWarningFlag()}
+      </UploadWrapper>
     );
   };
 

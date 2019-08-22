@@ -192,7 +192,7 @@ export class App extends Component<AppProps, AppState> {
               <PassContext store={store} proxyReactContext={proxyReactContext}>
                 <MediaPickerPopupWrapper>
                   <SidebarWrapper>
-                    <Sidebar />
+                    <Sidebar browserRef={this.browserRef} />
                   </SidebarWrapper>
                   <ViewWrapper>
                     {this.renderCurrentView(selectedServiceName)}

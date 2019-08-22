@@ -7,8 +7,10 @@ import {
   getComponentClassWithStore,
   mockStore,
 } from '@atlaskit/media-test-helpers';
+import Button from '@atlaskit/button';
 import { State } from '../../../domain';
 import ConnectedApp, { App, AppDispatchProps } from '../../app';
+import Sidebar from '../../sidebar/sidebar';
 import UploadView from '../../views/upload/upload';
 import Browser from '../../views/browser/browser';
 import { fileUploadsStart } from '../../../actions/fileUploadsStart';
@@ -336,7 +338,11 @@ describe('Connected App', () => {
     const component = mount(
       <ConnectedAppWithStore store={store} tenantUploadParams={{}} />,
     );
-    component.find(LocalBrowserButton).simulate('click');
+    component
+      .find(Sidebar)
+      .find(LocalBrowserButton)
+      .find(Button)
+      .simulate('click');
     expect(handler).toBeCalledWith(
       expect.objectContaining({
         payload: {

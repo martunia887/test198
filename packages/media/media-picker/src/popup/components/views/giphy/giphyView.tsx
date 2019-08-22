@@ -18,7 +18,6 @@ import { searchGiphy } from '../../../actions/searchGiphy';
 
 import {
   Container,
-  Title,
   ButtonContainer,
   GridCell,
   WarningContainer,
@@ -87,9 +86,7 @@ export class GiphyView extends Component<GiphyViewProps, GiphyViewState> {
 
     return (
       <Container id="mediapicker-giphy-container">
-        <Title>GIPHY</Title>
         <FieldText
-          label=""
           placeholder={formatMessage(messages.search_all_gifs)}
           onChange={this.searchChangeHandler}
           shouldFitContainer={true}
