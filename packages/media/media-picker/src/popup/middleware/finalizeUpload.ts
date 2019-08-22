@@ -1,9 +1,5 @@
 import { Store, Dispatch, Middleware } from 'redux';
-import {
-  MediaStore,
-  MediaStoreCopyFileWithTokenBody,
-  MediaStoreCopyFileWithTokenParams,
-} from '@atlaskit/media-store';
+
 import {
   FinalizeUploadAction,
   isFinalizeUploadAction,
@@ -14,7 +10,6 @@ import { MediaFile } from '../../domain/file';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { resetView } from '../actions';
 import { UploadEndEvent } from '../../domain/uploadEvent';
-import { MediaClient } from '../../../../media-client/src';
 
 export default function(): Middleware {
   return store => (next: Dispatch<State>) => (action: any) => {

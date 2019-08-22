@@ -1,4 +1,6 @@
 import uuidV4 from 'uuid/v4';
+import { EventEmitter2 } from 'eventemitter2';
+
 import {
   UploadableFile,
   MediaType,
@@ -6,6 +8,8 @@ import {
   MediaClient,
   globalMediaEventEmitter,
   FilePreview,
+  CopySourceFile,
+  CopyDestination,
 } from '@atlaskit/media-client';
 import {
   MediaStore,
@@ -13,9 +17,8 @@ import {
   TouchFileDescriptor,
   UploadableFileUpfrontIds,
 } from '@atlaskit/media-store';
-import { EventEmitter2 } from 'eventemitter2';
-import { MediaFile } from '../domain/file';
 
+import { MediaFile } from '../domain/file';
 import { RECENTS_COLLECTION } from '../popup/config';
 import { getPreviewFromImage } from '../util/getPreviewFromImage';
 import { UploadParams } from '..';
@@ -28,7 +31,6 @@ import {
 } from './types';
 import { LocalFileSource, LocalFileWithSource } from '../service/types';
 import { getPreviewFromBlob } from '../util/getPreviewFromBlob';
-import { CopySourceFile, CopyDestination } from '@atlaskit/media-client';
 
 export interface CancellableFileUpload {
   mediaFile: MediaFile;
@@ -359,7 +361,6 @@ export class UploadServiceImpl implements UploadService {
       userMediaStore,
       tenantUploadParams,
       userMediaClient,
-      tenantMediaClient,
     } = this;
     if (!shouldCopyFileToRecents || !userMediaStore) {
       return Promise.resolve();

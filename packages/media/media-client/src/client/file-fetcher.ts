@@ -105,7 +105,7 @@ export interface FileFetcher {
   copyFile(
     source: CopySourceFile,
     destination: CopyDestination,
-    options?: GetFileOptions,
+    options?: Pick<GetFileOptions, 'preview'>,
   ): Promise<Observable<FileState>>;
   getFileBinaryURL(id: string, collectionName?: string): Promise<string>;
 }
@@ -427,7 +427,7 @@ export class FileFetcherImpl implements FileFetcher {
   public async copyFile(
     source: CopySourceFile,
     destination: CopyDestination,
-    options?: GetFileOptions,
+    options?: Pick<GetFileOptions, 'preview'>,
   ): Promise<Observable<FileState>> {
     const { authProvider, collection: sourceCollection, id } = source;
     const {

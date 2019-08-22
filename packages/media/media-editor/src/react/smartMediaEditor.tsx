@@ -12,6 +12,7 @@ import {
   MediaClient,
   UploadableFile,
   FileIdentifier,
+  FilePreview,
 } from '@atlaskit/media-client';
 import { messages, Shortcut } from '@atlaskit/media-ui';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
@@ -151,11 +152,13 @@ export class SmartMediaEditor extends React.Component<
     });
   };
 
-  copyFileToUserCollection = async (fileId: string) => {
+  copyFileToUserCollection = async (
+    fileId: string,
+    preview?: FilePreview | Promise<FilePreview>,
+  ) => {
     const {
       mediaClient: {
         config: { userAuthProvider, authProvider },
-        file,
       },
       identifier: { collectionName },
     } = this.props;
@@ -173,7 +176,9 @@ export class SmartMediaEditor extends React.Component<
       };
       await new MediaClient({
         authProvider: userAuthProvider,
-      }).file.copyFile(source, destination);
+      }).file.copyFile(source, destination, {
+        preview: { filePreview: preview },
+      });
     }
   };
 
@@ -228,12 +233,14 @@ export class SmartMediaEditor extends React.Component<
     const uploadingFileStateSubscription = uploadingFileState.subscribe({
       next: fileState => {
         if (fileState.status === 'processing') {
-          this.copyFileToUserCollection(fileState.id).then(() => {
-            if (onFinish) {
-              onFinish(newFileIdentifier);
-            }
-            setTimeout(() => uploadingFileStateSubscription.unsubscribe(), 0);
-          });
+          this.copyFileToUserCollection(fileState.id, fileState.preview).then(
+            () => {
+              if (onFinish) {
+                onFinish(newFileIdentifier);
+              }
+              setTimeout(() => uploadingFileStateSubscription.unsubscribe(), 0);
+            },
+          );
         } else if (
           fileState.status === 'failed-processing' ||
           fileState.status === 'error'
