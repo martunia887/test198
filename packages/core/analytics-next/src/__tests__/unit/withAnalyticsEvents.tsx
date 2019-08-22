@@ -298,28 +298,22 @@ it('should not update patched prop callbacks across renders when the original ca
 
   // The useEffect hook fires after the initial return and then runs the hook again, causing it to increment only once here
   wrapper.setProps({ onClick });
-  expect(wrapper.text()).toBe('1');
+  expect(wrapper.text()).toBe('0');
   // @ts-ignore
   expect(counterWrapper.instance().renderCount).toBe(2);
-
-  // Re-rendering the component with the same prop callback should not change its patched ref value
-  wrapper.setProps({ onClick });
-  expect(wrapper.text()).toBe('1');
-  // @ts-ignore
-  expect(counterWrapper.instance().renderCount).toBe(3);
 
   const newOnClick = () => {};
 
   // Setting a new prop callback value should update the patched ref value though
   wrapper.setProps({ onClick: newOnClick });
-  expect(wrapper.text()).toBe('2');
+  expect(wrapper.text()).toBe('1');
   // @ts-ignore
-  expect(counterWrapper.instance().renderCount).toBe(4);
+  expect(counterWrapper.instance().renderCount).toBe(3);
 
   // Make sure setting the same new prop callback does not change the ref value again
   // (This would occur if the implementation only kept the original prop callback value to check against)
   wrapper.setProps({ onClick: newOnClick });
-  expect(wrapper.text()).toBe('2');
+  expect(wrapper.text()).toBe('1');
   // @ts-ignore
-  expect(counterWrapper.instance().renderCount).toBe(5);
+  expect(counterWrapper.instance().renderCount).toBe(4);
 });

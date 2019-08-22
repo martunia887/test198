@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useState } from 'react';
 
 import { AnalyticsReactContext } from './AnalyticsReactContext';
 import {
@@ -14,9 +14,6 @@ type UseAnalyticsHook = {
   patchedEventProps: CreateEventMap;
 };
 
-let originalEventProps: CreateEventMap = {};
-let patchedEventProps: CreateEventMap = {};
-
 export function useAnalytics<Props extends Record<string, any>>(
   createEventMap: CreateEventMap = {},
   wrappedComponentProps: Props,
@@ -25,6 +22,9 @@ export function useAnalytics<Props extends Record<string, any>>(
     getAtlaskitAnalyticsEventHandlers,
     getAtlaskitAnalyticsContext,
   } = useContext(AnalyticsReactContext);
+  const [originalProps, setOriginalProps] = useState<CreateEventMap>({});
+  const [patchedProps, setPatchedProps] = useState<CreateEventMap>({});
+  const [isFirstLoop, setIsFirstLoop] = useState(true);
 
   const createAnalyticsEvent = (
     payload: AnalyticsEventPayload,
@@ -66,31 +66,43 @@ export function useAnalytics<Props extends Record<string, any>>(
 
   const updatePatchedEventProps = (props: Props): CreateEventMap => {
     const changedPropCallbacks = Object.keys(createEventMap).filter(
-      p => originalEventProps[p] !== props[p],
+      p => originalProps[p] !== props[p],
     );
     if (changedPropCallbacks.length > 0) {
-      patchedEventProps = {
-        ...patchedEventProps,
+      setPatchedProps({
+        ...patchedProps,
         ...mapCreateEventsToProps(changedPropCallbacks, props),
-      };
-      changedPropCallbacks.forEach(p => {
-        originalEventProps[p] = props[p];
+      });
+      const updatedProps = changedPropCallbacks.reduce(
+        (a, c) => ({ ...a, [c]: props[c] }),
+        {},
+      );
+      setOriginalProps({
+        ...originalProps,
+        ...updatedProps,
       });
     }
 
-    return patchedEventProps;
+    return patchedProps;
   };
 
-  useEffect(() => {
-    Object.keys(createEventMap).forEach(p => {
-      originalEventProps[p] = wrappedComponentProps[p];
-    });
-
-    patchedEventProps = mapCreateEventsToProps(
-      Object.keys(createEventMap),
-      wrappedComponentProps,
+  if (isFirstLoop) {
+    setOriginalProps(
+      Object.keys(createEventMap).reduce(
+        (a, c) => ({ ...a, [c]: wrappedComponentProps[c] }),
+        {},
+      ),
     );
-  }, []);
+
+    setPatchedProps(
+      mapCreateEventsToProps(
+        Object.keys(createEventMap),
+        wrappedComponentProps,
+      ),
+    );
+
+    setIsFirstLoop(false);
+  }
 
   return {
     createAnalyticsEvent,
