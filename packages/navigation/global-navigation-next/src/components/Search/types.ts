@@ -1,4 +1,4 @@
-import { SecondaryItemProps } from '../types';
+import { SecondaryItemProps } from '../GlobalNavigation/types';
 
 export type SearchProps = SecondaryItemProps & {
   text: string;

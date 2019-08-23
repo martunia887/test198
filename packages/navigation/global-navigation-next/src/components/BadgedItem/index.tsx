@@ -46,11 +46,11 @@ class ItemComponentWithBadge extends React.Component<
   }
 }
 
-export default class BadgedItem extends React.Component<BadgedItemProps> {
-  render() {
-    const { ...itemProps } = this.props;
+export const BadgedItem = (props: BadgedItemProps) => {
+  const { ...itemProps } = props;
 
-    // @ts-ignore ItemComponentWithBadge expects badge props that aren't on ItemProps.
-    return <Item {...itemProps} component={ItemComponentWithBadge} />;
-  }
-}
+  // @ts-ignore ItemComponentWithBadge expects badge props that aren't on ItemProps.
+  return <Item {...itemProps} component={ItemComponentWithBadge} />;
+};
+
+export default BadgedItem;

@@ -1,9 +1,6 @@
+import React from 'react';
+
 import Item from '../Item';
-import { CreateProps } from './Create/types';
-import { NotificationsProps } from './Notifications/types';
-import { ProductProps } from './ProductHome/types';
-import { SearchProps } from './Search/types';
-import { ProfileProps } from './Profile/types';
 
 export interface SecondaryItemProps {
   /**
@@ -19,14 +16,22 @@ export interface SecondaryItemProps {
   tooltip?: Item['props']['tooltip'];
 }
 
+type NavigationProps = {
+  width: number | undefined;
+};
+
+export type CreateProps = NavigationProps;
+export type ProductHomeProps = NavigationProps;
+export type SearchProps = NavigationProps;
+
 export type GlobalNavigationProps = {
-  appSwitcher?: SecondaryItemProps;
-  create?: CreateProps;
-  product: ProductProps;
-  search: SearchProps;
   primaryItems: JSX.LibraryManagedAttributes<typeof Item, Item['props']>[];
-  notifications?: NotificationsProps;
-  help?: SecondaryItemProps;
-  settings?: SecondaryItemProps;
-  profile: ProfileProps;
+  renderAppSwitcher?: React.ComponentType<{}>;
+  renderCreate?: React.ComponentType<CreateProps>;
+  renderHelp?: React.ComponentType<{}>;
+  renderNotifications?: React.ComponentType<{}>;
+  renderProductHome: React.ComponentType<ProductHomeProps>;
+  renderProfile: React.ComponentType<{}>;
+  renderSearch?: React.ComponentType<SearchProps>;
+  renderSettings?: React.ComponentType<{}>;
 };

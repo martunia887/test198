@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 
-export type ProductProps = {
+export type ProductHomeProps = {
   /** The product icon. Expected to be an Icon from the Atlaskit Logo package. Visible on smaller screen sizes */
   icon: ComponentType<{
     size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';

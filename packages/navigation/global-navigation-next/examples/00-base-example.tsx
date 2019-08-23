@@ -1,52 +1,22 @@
-import React, { Fragment } from 'react';
-import AtlassianSwitcher from '@atlaskit/atlassian-switcher';
-import Avatar from '@atlaskit/avatar';
 import { DropdownItemGroup, DropdownItem } from '@atlaskit/dropdown-menu';
-import { JiraSoftwareIcon, JiraSoftwareWordmark } from '@atlaskit/logo';
+import React, { Fragment } from 'react';
+
+import { DefaultAppSwitcher } from '../example-helpers/AppSwitcher';
+import { DefaultCreate } from '../example-helpers/Create';
+import { DefaultHelp } from '../example-helpers/Help';
+import { mockEndpoints } from '../example-helpers/mock-atlassian-switcher-endpoints';
+import {
+  mockBuiltInNotifications,
+  BuiltInNotifications,
+} from '../example-helpers/Notifications';
+import { JiraSoftwareHome } from '../example-helpers/ProductHome';
+import { DefaultProfile } from '../example-helpers/Profile';
+import { DefaultSearch } from '../example-helpers/Search';
+import { DefaultSettings } from '../example-helpers/Settings';
 import GlobalNavigation from '../src';
-import { IntlProvider } from 'react-intl';
-
-import { mockEndpoints } from './helpers/mock-atlassian-switcher-endpoints';
-import { mockNotificationsEndpoint } from './helpers/mock-notifications-endpoint';
-import { getAvatarUrl } from './helpers/avatar-data-url';
-
-const CLOUD_ID = 'some-cloud-id';
-const FABRIC_NOTIFICATION_LOG_URL = '/gateway/api/notification-log/';
 
 mockEndpoints('jira');
-mockNotificationsEndpoint(
-  `/gateway/api/notification-log/api/2/notifications/count/unseen?cloudId=${CLOUD_ID}`,
-  3,
-);
-
-const ProfileContent = () => (
-  <Fragment>
-    <DropdownItemGroup title="JimJim">
-      <DropdownItem>Profile</DropdownItem>
-      <DropdownItem>Give feedback</DropdownItem>
-      <DropdownItem>Personal settings</DropdownItem>
-      <DropdownItem>My Reminders</DropdownItem>
-      <DropdownItem>Log out</DropdownItem>
-    </DropdownItemGroup>
-  </Fragment>
-);
-
-const HelpContent = () => (
-  <Fragment>
-    <DropdownItemGroup title="Help">
-      <DropdownItem>Atlassian Documentation</DropdownItem>
-      <DropdownItem>Atlassian Community</DropdownItem>
-      <DropdownItem>What's New</DropdownItem>
-      <DropdownItem>Get Jira Mobile</DropdownItem>
-      <DropdownItem>Keyboard shortcuts</DropdownItem>
-      <DropdownItem>About Jira</DropdownItem>
-    </DropdownItemGroup>
-    <DropdownItemGroup title="Legal">
-      <DropdownItem>Terms of use</DropdownItem>
-      <DropdownItem>Privacy Policy</DropdownItem>
-    </DropdownItemGroup>
-  </Fragment>
-);
+mockBuiltInNotifications();
 
 const ProjectsContent = () => (
   <Fragment>
@@ -91,179 +61,50 @@ const DashboardsContent = () => (
   </Fragment>
 );
 
-const WrappedSwitcher = () => {
-  return (
-    <IntlProvider>
-      <AtlassianSwitcher
-        product="jira"
-        cloudId="some-cloud-id"
-        triggerXFlow={() => undefined}
-      />
-    </IntlProvider>
-  );
-};
+const primaryItems = [
+  {
+    id: 'home',
+    text: 'Home',
+    href: '#',
+  },
+  {
+    dropdownContent: ProjectsContent,
+    id: 'projects',
+    text: 'Projects',
+    onClick: () => {
+      console.log('Projects clicked');
+    },
+  },
+  {
+    dropdownContent: IssuesContent,
+    id: 'issues',
+    text: 'Issues & Filters',
+    onClick: () => {
+      console.log('Issues clicked');
+    },
+  },
+  {
+    dropdownContent: DashboardsContent,
+    id: 'dashboards',
+    text: 'Dashboards',
+    onClick: () => {
+      console.log('Dashboards clicked');
+    },
+  },
+];
 
-interface ExampleState {
-  isHelpOpen: boolean;
-  isSettingsOpen: boolean;
-}
+const BaseExample = () => (
+  <GlobalNavigation
+    primaryItems={primaryItems}
+    renderAppSwitcher={DefaultAppSwitcher}
+    renderCreate={DefaultCreate}
+    renderHelp={DefaultHelp}
+    renderNotifications={BuiltInNotifications}
+    renderProductHome={JiraSoftwareHome}
+    renderProfile={DefaultProfile}
+    renderSearch={DefaultSearch}
+    renderSettings={DefaultSettings}
+  />
+);
 
-export default class BaseExample extends React.Component<{}, ExampleState> {
-  state = {
-    isHelpOpen: false,
-    isSettingsOpen: false,
-  };
-
-  onAppSwitcherCloseComplete = () => {
-    console.log('app switcher close completed');
-  };
-
-  onHelpClick = () => {
-    this.setState(state => ({
-      isHelpOpen: !state.isHelpOpen,
-    }));
-  };
-
-  onHelpClose = () => {
-    this.setState({
-      isHelpOpen: false,
-    });
-  };
-
-  onNotificationsClick = () => {
-    console.log('notifications click');
-
-    // Notification URL is unreachable from the examples.
-    // Hence setting it to root
-    // Wait for the drawer to open and mount the iframe.
-    setTimeout(() => {
-      const iframes: NodeListOf<HTMLIFrameElement> = document.querySelectorAll(
-        'iFrame[title="Notifications"]',
-      );
-      iframes.forEach(iframe => {
-        iframe.src = '/';
-        iframe.srcdoc = 'notifications drawer iframe';
-      });
-    }, 50);
-  };
-
-  onNotificationsCloseComplete = () => {
-    console.log('notifications close completed');
-  };
-
-  onSearchCloseComplete = () => {
-    console.log('search close completed');
-  };
-
-  onSettingsCloseComplete = () => {
-    console.log('settings close completed');
-  };
-
-  onSettingsClose = () => {
-    this.setState({
-      isSettingsOpen: false,
-    });
-  };
-
-  onSettingsClick = () => {
-    this.setState(state => ({
-      isSettingsOpen: !state.isSettingsOpen,
-    }));
-  };
-
-  render() {
-    return (
-      <GlobalNavigation
-        appSwitcher={{
-          drawerContent: WrappedSwitcher,
-          tooltip: 'Switch to...',
-          onDrawerCloseComplete: this.onAppSwitcherCloseComplete,
-        }}
-        // appSwitcherComponent={undefined} // no switcher behaviour
-        create={{
-          onClick: () => console.log('Create clicked'),
-          text: 'Create',
-        }}
-        search={{
-          drawerContent: () => <div>quick search</div>,
-          text: 'Search',
-          onDrawerCloseComplete: this.onSearchCloseComplete,
-        }}
-        product={{
-          icon: JiraSoftwareIcon,
-          wordmark: JiraSoftwareWordmark,
-        }}
-        help={{
-          dropdownContent: HelpContent,
-          isOpen: this.state.isHelpOpen,
-          onClose: this.onHelpClose,
-          onClick: this.onHelpClick,
-          tooltip: 'Help',
-        }}
-        notifications={{
-          badge: {
-            type: 'builtin',
-            fabricNotificationLogUrl: FABRIC_NOTIFICATION_LOG_URL,
-            cloudId: CLOUD_ID,
-          },
-          // badge: {
-          //   type: 'provided',
-          //   count: 3,
-          // },
-          drawerContent: 'builtin',
-          // drawerContent: () => <div>custom drawer content</div>,
-          locale: 'en',
-          onClick: this.onNotificationsClick,
-          onDrawerCloseComplete: this.onNotificationsCloseComplete,
-          product: 'jira',
-          tooltip: 'Notifications',
-        }}
-        settings={{
-          isOpen: this.state.isSettingsOpen,
-          onClose: this.onSettingsClose,
-          onClick: this.onSettingsClick,
-          drawerContent: () => <div>settings</div>,
-          onDrawerCloseComplete: this.onSettingsCloseComplete,
-          tooltip: 'Settings',
-        }}
-        // profile={{
-        //   href: '/login',
-        //   text: <div>Custom sign in text</div>,
-        //   tooltip: 'Sign in',
-        // }}
-        profile={{
-          text: <Avatar src={getAvatarUrl()} />,
-          dropdownContent: ProfileContent,
-          tooltip: 'Your profile and settings',
-        }}
-        primaryItems={[
-          { id: 'home', text: 'Home', href: '#' },
-          {
-            dropdownContent: ProjectsContent,
-            id: 'projects',
-            text: 'Projects',
-            onClick: () => {
-              console.log('Projects clicked');
-            },
-          },
-          {
-            dropdownContent: IssuesContent,
-            id: 'issues',
-            text: 'Issues & Filters',
-            onClick: () => {
-              console.log('Issues clicked');
-            },
-          },
-          {
-            dropdownContent: DashboardsContent,
-            id: 'dashboards',
-            text: 'Dashboards',
-            onClick: () => {
-              console.log('Dashboards clicked');
-            },
-          },
-        ]}
-      />
-    );
-  }
-}
+export default BaseExample;
