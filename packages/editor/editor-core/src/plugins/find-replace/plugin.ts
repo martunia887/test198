@@ -100,7 +100,7 @@ export const createPlugin = (dispatch: Dispatch) =>
             pluginState.matches.map(({ start, end }, index) =>
               Decoration.inline(start, end, {
                 style: `background-color: ${
-                  index === selectedIndex ? colors.Y200 : colors.Y100
+                  index === selectedIndex ? colors.B100 : colors.B75
                 };`,
               }),
             ),
