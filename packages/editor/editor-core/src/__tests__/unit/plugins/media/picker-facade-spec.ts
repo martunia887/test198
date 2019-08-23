@@ -73,7 +73,7 @@ describe('Media PickerFacade', () => {
 
     it('listens to picker events', () => {
       expect(true).toBeTruthy();
-      expect(popupMediaPickerMock.on).toHaveBeenCalledTimes(4);
+      expect(popupMediaPickerMock.on).toHaveBeenCalledTimes(5);
       expect(popupMediaPickerMock.on).toHaveBeenCalledWith(
         'upload-preview-update',
         expect.any(Function),
