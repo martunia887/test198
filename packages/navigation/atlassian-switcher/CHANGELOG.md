@@ -1,5 +1,21 @@
 # @atlaskit/atlassian-switcher
 
+## 3.22.1
+
+### Patch Changes
+
+- [patch][ecca4d1dbb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ecca4d1dbb):
+
+  Upgraded Typescript to 3.3.x
+
+## 3.22.0
+
+### Minor Changes
+
+- [minor][66d7234386](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/66d7234386):
+
+  Bumped up item version to pick up themable item width support
+
 ## 3.21.0
 
 ### Minor Changes
