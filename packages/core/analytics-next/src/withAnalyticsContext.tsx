@@ -24,7 +24,7 @@ const withAnalyticsContext = (defaultData?: any) => <Props, Component>(
 
       return (
         <AnalyticsContext data={analyticsData}>
-          <WrappedComponent {...rest} ref={ref} />
+          <WrappedComponent {...rest as any} ref={ref} />
         </AnalyticsContext>
       );
     },
