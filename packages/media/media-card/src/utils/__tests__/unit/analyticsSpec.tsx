@@ -66,20 +66,17 @@ describe('Media Analytics', () => {
   });
 
   it('Should provide a custom analytics event creator for Media Card', () => {
-    const SomeComponent = ({
-      createAnalyticsEvent,
-    }: {
+    type SomeComponentProps = {
       createAnalyticsEvent: CreateUIAnalyticsEvent;
-    }) => {
+    };
+    const SomeComponent = (props: SomeComponentProps) => {
       const onCustomEvent = () => {
-        createAndFireCustomMediaEvent(somePayload, createAnalyticsEvent);
+        createAndFireCustomMediaEvent(somePayload, props.createAnalyticsEvent);
       };
       onCustomEvent();
       return <span>'Hi!'</span>;
     };
-    const SomeWrappedComponent = withAnalyticsEvents({
-      onClick: createAndFireMediaEvent(somePayload),
-    })(SomeComponent);
+    const SomeWrappedComponent = withAnalyticsEvents()(SomeComponent);
 
     const analyticsEventHandler = jest.fn();
     mount(
