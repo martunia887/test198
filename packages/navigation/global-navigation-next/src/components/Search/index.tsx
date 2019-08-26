@@ -1,16 +1,14 @@
+/** @jsx jsx */
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import { colors } from '@atlaskit/theme';
-import React from 'react';
+import { jsx } from '@emotion/core';
+import { Fragment } from 'react';
 
-import { CREATE_BREAKPOINT } from '../../common/constants';
 import Item from '../Item';
 
 import { SearchInput, SearchWrapper, IconWrapper } from './styled';
+import { searchIconStyles, searchInputStyles } from './styles';
 import { SearchProps } from './types';
-
-type Props = SearchProps & {
-  width?: number;
-};
 
 const SearchComponent = ({ onClick, text }: SearchProps) => {
   const onChange = () => {
@@ -31,7 +29,7 @@ const SearchComponent = ({ onClick, text }: SearchProps) => {
   );
 };
 
-export const Search = (props: Props) => {
+export const Search = (props: SearchProps) => {
   const {
     isOpen,
     onClick,
@@ -39,24 +37,36 @@ export const Search = (props: Props) => {
     onDrawerCloseComplete,
     drawerContent,
     dropdownContent,
-    width,
     text,
   } = props;
-  const fullWidth = width && width > CREATE_BREAKPOINT;
 
   return (
-    <Item
-      appearance="secondary"
-      component={fullWidth ? SearchComponent : undefined}
-      drawerContent={drawerContent}
-      dropdownContent={dropdownContent}
-      isOpen={isOpen}
-      onClick={onClick}
-      onClose={onClose}
-      onDrawerCloseComplete={onDrawerCloseComplete}
-      text={fullWidth ? text : <SearchIcon label={text} />}
-    />
+    <Fragment>
+      <div css={searchInputStyles}>
+        <Item
+          appearance="secondary"
+          component={SearchComponent}
+          drawerContent={drawerContent}
+          dropdownContent={dropdownContent}
+          isOpen={isOpen}
+          onClick={onClick}
+          onClose={onClose}
+          onDrawerCloseComplete={onDrawerCloseComplete}
+          text={text}
+        />
+      </div>
+      <div css={searchIconStyles}>
+        <Item
+          appearance="secondary"
+          drawerContent={drawerContent}
+          dropdownContent={dropdownContent}
+          isOpen={isOpen}
+          onClick={onClick}
+          onClose={onClose}
+          onDrawerCloseComplete={onDrawerCloseComplete}
+          text={<SearchIcon label={text} />}
+        />
+      </div>
+    </Fragment>
   );
 };
-
-export default Search;

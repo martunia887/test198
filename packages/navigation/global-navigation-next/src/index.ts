@@ -7,9 +7,3 @@ export { ProductHome } from './components/ProductHome';
 export { Profile } from './components/Profile';
 export { Search } from './components/Search';
 export { Settings } from './components/Settings';
-
-export {
-  CreateProps,
-  ProductHomeProps,
-  SearchProps,
-} from './components/GlobalNavigation/types';

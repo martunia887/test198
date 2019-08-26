@@ -1,22 +1,19 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import { Outer } from './styled';
+import { productIconStyles, productWordmarkStyles } from './styles';
 import { ProductHomeProps } from './types';
-import { PRODUCT_HOME_BREAKPOINT } from '../../common/constants';
-
-type Props = ProductHomeProps & {
-  width?: number;
-};
 
 export const ProductHome = ({
   icon: Icon,
-  width,
   wordmark: Wordmark,
-}: Props) => (
+}: ProductHomeProps) => (
   <Outer>
-    {width && width < PRODUCT_HOME_BREAKPOINT ? (
-      <Icon size="small" />
-    ) : (
+    <div css={productWordmarkStyles}>
       <Wordmark />
-    )}
+    </div>
+    <div css={productIconStyles}>
+      <Icon size="small" />
+    </div>
   </Outer>
 );

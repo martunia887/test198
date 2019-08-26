@@ -1,8 +1,6 @@
 /** @jsx jsx */
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
-import WidthDetector from '@atlaskit/width-detector';
 import { jsx } from '@emotion/core';
-import { Fragment } from 'react';
 import Item from '../Item';
 import getStyles from './styles';
 import { GlobalNavigationProps } from './types';
@@ -27,20 +25,18 @@ export const GlobalNavigation = (props: GlobalNavigationProps) => {
     renderSettings: Settings,
   } = props;
 
-  const width = 1800;
-
   return (
     <NavigationAnalyticsContext data={analyticsData}>
       <div css={styles.outer}>
         <div css={styles.left}>
-          {ProductHome && <ProductHome width={width} />}
+          {ProductHome && <ProductHome />}
           {primaryItems.map(props => (
             <Item key={props.id} {...props} />
           ))}
         </div>
         <div css={styles.right}>
-          {Create && <Create width={width} />}
-          {Search && <Search width={width} />}
+          {Create && <Create />}
+          {Search && <Search />}
           {AppSwitcher && <AppSwitcher />}
           {Notifications && <Notifications />}
           {Settings && <Settings />}

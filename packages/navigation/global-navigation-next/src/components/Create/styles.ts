@@ -1,4 +1,5 @@
 import { colors, gridSize as gridSizeFn, fontSizeSmall } from '@atlaskit/theme';
+import { actionSectionDesktopStyles, actionSectionMobileStyles } from '../../common/styles';
 
 const gridSize = gridSizeFn();
 
@@ -10,6 +11,8 @@ const buttonOverrides = {
   height: gridSize * 4,
   textTransform: 'uppercase',
 };
+
+export const createButtonStyles = actionSectionDesktopStyles;
 
 export const buttonTheme: any = (
   currentTheme: Function,
@@ -24,3 +27,5 @@ export const buttonTheme: any = (
     spinnerStyles,
   };
 };
+
+export const createIconStyles = actionSectionMobileStyles;

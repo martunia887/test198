@@ -16,22 +16,14 @@ export interface SecondaryItemProps {
   tooltip?: Item['props']['tooltip'];
 }
 
-type NavigationProps = {
-  width: number | undefined;
-};
-
-export type CreateProps = NavigationProps;
-export type ProductHomeProps = NavigationProps;
-export type SearchProps = NavigationProps;
-
 export type GlobalNavigationProps = {
   primaryItems: JSX.LibraryManagedAttributes<typeof Item, Item['props']>[];
   renderAppSwitcher?: React.ComponentType<{}>;
-  renderCreate?: React.ComponentType<CreateProps>;
+  renderCreate?: React.ComponentType<{}>;
   renderHelp?: React.ComponentType<{}>;
   renderNotifications?: React.ComponentType<{}>;
-  renderProductHome: React.ComponentType<ProductHomeProps>;
+  renderProductHome: React.ComponentType<{}>;
   renderProfile: React.ComponentType<{}>;
-  renderSearch?: React.ComponentType<SearchProps>;
+  renderSearch?: React.ComponentType<{}>;
   renderSettings?: React.ComponentType<{}>;
 };

@@ -1,10 +1,9 @@
 import { JiraSoftwareIcon, JiraSoftwareWordmark } from '@atlaskit/logo';
 import React from 'react';
-import { ProductHome, ProductHomeProps } from '../src';
+import { ProductHome } from '../src';
 
-export const JiraSoftwareHome = (props: ProductHomeProps) => (
+export const JiraSoftwareHome = () => (
   <ProductHome
-    {...props}
     icon={JiraSoftwareIcon}
     wordmark={JiraSoftwareWordmark}
   />
