@@ -10,6 +10,7 @@ import { CardAction, CardStatus } from '../src';
 import { MediaType } from '@atlaskit/media-store';
 import { CardView } from '../src/root/cardView';
 import { FileDetails } from '@atlaskit/media-client';
+import { AnalyticsListener } from '@atlaskit/analytics-next';
 
 const CardWrapper = styled.div`
   width: 150px;
@@ -209,4 +210,8 @@ class Example extends React.Component<{}, State> {
     );
   };
 }
-export default () => <Example />;
+export default () => (
+  <AnalyticsListener channel="media" onEvent={e => console.log('eventito', e)}>
+    <Example />;
+  </AnalyticsListener>
+);

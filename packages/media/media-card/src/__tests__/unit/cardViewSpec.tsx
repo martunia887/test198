@@ -250,4 +250,42 @@ describe('CardView', () => {
     expect(actualReturnedEvent.payload.action).toEqual('clicked');
     expect(actualReturnedEvent.context).toEqual(actualFiredEvent.context);
   });
+
+  it('should fire "clicked" analytics event when clicked', () => {
+    const clickHandler = jest.fn();
+    const analyticsEventHandler = jest.fn();
+    const card = mount(
+      <AnalyticsListener channel="media" onEvent={analyticsEventHandler}>
+        <CardView status="loading" metadata={file} onClick={clickHandler} />
+      </AnalyticsListener>,
+    );
+
+    const analyticsEventHandler = jest.fn();
+    const listener = setupAnalytics(analyticsEventHandler);
+
+    const card = listener.find(Card);
+    card.setState({ metadata });
+
+    const cardView = listener.find(CardView);
+    cardView.simulate('click');
+
+    expect(analyticsEventHandler).toHaveBeenCalledTimes(1);
+    const actualEvent: Partial<UIAnalyticsEvent> =
+      analyticsEventHandler.mock.calls[0][0];
+    expect(actualEvent.payload).toMatchObject({
+      eventType: 'ui',
+      action: 'clicked',
+      actionSubject: 'mediaCard',
+      actionSubjectId: 'mediaCardCardView',
+      attributes: {
+        packageName,
+      },
+    });
+    expect(actualEvent.context && actualEvent.context.length).toEqual(1);
+    const actualContext =
+      actualEvent.context &&
+      (actualEvent.context[0] as MediaCardAnalyticsContext);
+    expect(actualContext).not.toBeUndefined();
+    expect(actualContext).toMatchObject(context);
+  });
 });
