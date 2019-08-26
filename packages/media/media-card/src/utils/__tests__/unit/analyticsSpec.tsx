@@ -12,11 +12,13 @@ import {
   MediaCardAnalyticsPayolad,
   MediaCardAnalyticsPayoladBase,
   createAndFireCustomMediaEvent,
+  getUIAnalyticsContext,
 } from '../../analytics';
 import {
-  //version as packageVersion,
+  version as packageVersion,
   name as packageName,
 } from '../../../version.json';
+import { FileDetails } from '@atlaskit/media-client';
 
 const somePayload: MediaCardAnalyticsPayoladBase = {
   eventType: 'ui',
@@ -92,5 +94,35 @@ describe('Media Analytics', () => {
     const actualEvent: Partial<UIAnalyticsEvent> =
       analyticsEventHandler.mock.calls[0][0];
     expect(actualEvent.payload).toMatchObject(mediaPayload);
+  });
+
+  it('should generate Media Card UI Analytics Context data', () => {
+    const metadata: FileDetails = {
+      id: 'some-id',
+      mediaType: 'video',
+      size: 12345,
+      processingStatus: 'succeeded',
+    };
+
+    const expectedContextData = {
+      packageVersion,
+      packageName,
+      componentName: 'MediaCard',
+      attributes: {
+        packageVersion,
+        packageName,
+        componentName: 'MediaCard',
+        fileAttributes: {
+          fileSource: 'mediaCard',
+          fileMediatype: 'video',
+          fileId: 'some-id',
+          fileSize: 12345,
+          fileStatus: 'succeeded',
+        },
+      },
+    };
+
+    const contextData = getUIAnalyticsContext(metadata);
+    expect(contextData).toMatchObject(expectedContextData);
   });
 });
