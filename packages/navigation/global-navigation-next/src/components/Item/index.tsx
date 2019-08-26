@@ -44,13 +44,19 @@ export const Item = (props: ItemProps) => {
     };
   } else if (onClick) {
     ItemComponent = 'button';
-    itemProps = {dataset, onClick};
+    itemProps = { dataset, onClick };
   }
 
-  return (
-    <ItemComponent css={{'&&': styles.itemBase[appearance]}} {...itemProps}>
-      {tooltip ? <Tooltip content={tooltip}>{text}</Tooltip> : text}
+  const itemComponent = (
+    <ItemComponent css={{ '&&': styles.itemBase[appearance] }} {...itemProps}>
+      {text}
     </ItemComponent>
+  );
+
+  return tooltip ? (
+    <Tooltip content={tooltip}>{itemComponent}</Tooltip>
+  ) : (
+    itemComponent
   );
 };
 
