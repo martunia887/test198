@@ -4,18 +4,19 @@ import { colors } from '@atlaskit/theme';
 import { jsx } from '@emotion/core';
 import { Fragment } from 'react';
 
-import Item from '../Item';
+import { IconButton } from '../IconButton';
+import { TriggerManager } from '../TriggerManager';
 
 import { SearchInput, SearchWrapper, IconWrapper } from './styled';
 import { searchIconStyles, searchInputStyles } from './styles';
 import { SearchProps } from './types';
 
-const SearchComponent = ({ onClick, text }: SearchProps) => {
+const SearchComponent = ({ onClick, text, ...props }: SearchProps) => {
   const onChange = () => {
     onClick && onClick();
   };
   return (
-    <SearchWrapper>
+    <SearchWrapper {...props}>
       <IconWrapper>
         <SearchIcon label={text} primaryColor={colors.B50} />
       </IconWrapper>
@@ -30,43 +31,25 @@ const SearchComponent = ({ onClick, text }: SearchProps) => {
 };
 
 export const Search = (props: SearchProps) => {
-  const {
-    isOpen,
-    onClick,
-    onClose,
-    onDrawerCloseComplete,
-    drawerContent,
-    dropdownContent,
-    text,
-  } = props;
+  const { text, ...triggerManagerProps } = props;
 
   return (
-    <Fragment>
-      <div css={searchInputStyles}>
-        <Item
-          appearance="secondary"
-          component={SearchComponent}
-          drawerContent={drawerContent}
-          dropdownContent={dropdownContent}
-          isOpen={isOpen}
-          onClick={onClick}
-          onClose={onClose}
-          onDrawerCloseComplete={onDrawerCloseComplete}
-          text={text}
-        />
-      </div>
-      <div css={searchIconStyles}>
-        <Item
-          appearance="secondary"
-          drawerContent={drawerContent}
-          dropdownContent={dropdownContent}
-          isOpen={isOpen}
-          onClick={onClick}
-          onClose={onClose}
-          onDrawerCloseComplete={onDrawerCloseComplete}
-          text={<SearchIcon label={text} />}
-        />
-      </div>
-    </Fragment>
+    <TriggerManager {...triggerManagerProps}>
+      {({ onTriggerClick }) => (
+        <Fragment>
+          <SearchComponent
+            css={searchInputStyles}
+            onClick={onTriggerClick}
+            text={text}
+          />
+          <IconButton
+            css={searchIconStyles}
+            icon={<SearchIcon label={text} />}
+            onClick={onTriggerClick}
+            tooltip={text}
+          />
+        </Fragment>
+      )}
+    </TriggerManager>
   );
 };

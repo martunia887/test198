@@ -3,8 +3,8 @@ import React from 'react';
 import { Notifications } from '../src';
 import { mockNotificationsEndpoint } from './mock-notifications-endpoint';
 
-const onNotificationsClick = () => {
-  console.log('notifications click');
+const onClick = (...args: any[]) => {
+  console.log('notifications click', ...args);
 
   // Notification URL is unreachable from the examples.
   // Hence setting it to root
@@ -36,8 +36,12 @@ export const mockBuiltInNotifications = () => {
   );
 };
 
-const onDrawerCloseComplete = () => {
-  console.log('notifications close completed');
+const onClose = (...args: any[]) => {
+  console.log('notifications close', ...args);
+};
+
+const onDrawerCloseComplete = (...args: any[]) => {
+  console.log('notifications drawer close complete', ...args);
 };
 
 export const BuiltInNotifications = () => (
@@ -45,7 +49,8 @@ export const BuiltInNotifications = () => (
     badge={builtinBadge}
     drawerContent="builtin"
     locale="en"
-    onClick={onNotificationsClick}
+    onClick={onClick}
+    onClose={onClose}
     onDrawerCloseComplete={onDrawerCloseComplete}
     product="jira"
     tooltip="Notifications"

@@ -1,34 +1,42 @@
 /** @jsx jsx */
+import Badge from '@atlaskit/badge';
 import NotificationIcon from '@atlaskit/icon/glyph/notification';
 import { NotificationIndicator } from '@atlaskit/notification-indicator';
 import { NotificationLogClient } from '@atlaskit/notification-log-client';
 import { jsx } from '@emotion/core';
 import { ComponentType } from 'react';
-import BadgedItem from '../BadgedItem';
-import { Badge } from '../BadgedItem/types';
+
+import { BadgeContainer } from '../BadgeContainer';
+import { IconButton } from '../IconButton';
+import { TriggerManager } from '../TriggerManager';
 import NotificationDrawer from './NotificationDrawer';
 import { NotificationsProps } from './types';
 
 export const Notifications = (props: NotificationsProps) => {
-  const { badge, drawerContent, locale, product, ...rest } = props;
-  let resolvedBadge: Badge | undefined;
-  if (badge && badge.type === 'builtin') {
-    resolvedBadge = {
-      type: 'component',
-      component: () => (
-        <NotificationIndicator
-          notificationLogProvider={Promise.resolve(
-            new NotificationLogClient(
-              badge.fabricNotificationLogUrl,
-              badge.cloudId,
-            ),
-          )}
-          refreshRate={60000}
-        />
-      ),
-    };
-  } else if (badge && badge.type === 'provided') {
-    resolvedBadge = badge;
+  const {
+    badge,
+    drawerContent,
+    locale,
+    product,
+    tooltip,
+    ...triggerManagerProps
+  } = props;
+  let resolvedBadge: any | undefined;
+  if (badge.type === 'builtin') {
+    resolvedBadge = () => (
+      <NotificationIndicator
+        notificationLogProvider={Promise.resolve(
+          new NotificationLogClient(
+            badge.fabricNotificationLogUrl,
+            badge.cloudId,
+          ),
+        )}
+        refreshRate={60000}
+      />
+    );
+  } else {
+    const { count, ...badgeProps } = badge;
+    resolvedBadge = () => count > 0 && <Badge {...badgeProps}>{count}</Badge>;
   }
 
   let drawer: ComponentType<{}> | undefined;
@@ -42,12 +50,16 @@ export const Notifications = (props: NotificationsProps) => {
   }
 
   return (
-    <BadgedItem
-      appearance="secondary"
-      text={<NotificationIcon label={props.tooltip || 'Notifications'} />}
-      badge={resolvedBadge}
-      drawerContent={drawer}
-      {...rest}
-    />
+    <TriggerManager {...triggerManagerProps} drawerContent={drawer}>
+      {({ onTriggerClick }) => (
+        <BadgeContainer badge={resolvedBadge}>
+          <IconButton
+            icon={<NotificationIcon label={tooltip} />}
+            onClick={onTriggerClick}
+            tooltip={tooltip}
+          />
+        </BadgeContainer>
+      )}
+    </TriggerManager>
   );
 };

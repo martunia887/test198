@@ -16,13 +16,23 @@ const DrawerContent = () => {
   );
 };
 
-const onDrawerCloseComplete = () => {
-  console.log('app switcher close completed');
+const onClick = (...args: any[]) => {
+  console.log('app switcher click', ...args);
+};
+
+const onDrawerClose = (...args: any[]) => {
+  console.log('app switcher close', ...args);
+};
+
+const onDrawerCloseComplete = (...args: any[]) => {
+  console.log('app switcher close complete', ...args);
 };
 
 export const DefaultAppSwitcher = () => (
   <AppSwitcher
     drawerContent={DrawerContent}
+    onClick={onClick}
+    onClose={onDrawerClose}
     onDrawerCloseComplete={onDrawerCloseComplete}
     tooltip="Switch to..."
   />

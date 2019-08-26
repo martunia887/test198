@@ -1,13 +1,22 @@
 import React from 'react';
 import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
 
-import Item from '../Item';
+import { IconButton } from '../IconButton';
+import { TriggerManager } from '../TriggerManager';
 import { AppSwitcherProps } from './types';
 
-export const AppSwitcher = (props: AppSwitcherProps) => (
-  <Item
-    appearance="secondary"
-    text={<AppSwitcherIcon label={props.tooltip || 'Switch to...'} />}
-    {...props}
-  />
-);
+export const AppSwitcher = (props: AppSwitcherProps) => {
+  const { tooltip, ...triggerManagerProps } = props;
+
+  return (
+    <TriggerManager {...triggerManagerProps}>
+      {({ onTriggerClick }) => (
+        <IconButton
+          icon={<AppSwitcherIcon label={tooltip || 'Switch to...'} />}
+          onClick={onTriggerClick}
+          tooltip={tooltip}
+        />
+      )}
+    </TriggerManager>
+  );
+};

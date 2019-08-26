@@ -1,11 +1,11 @@
 /** @jsx jsx */
+import Button from '@atlaskit/button';
 import Tooltip from '@atlaskit/tooltip';
 import { jsx } from '@emotion/core';
-import React, { ElementType } from 'react';
+import { ElementType } from 'react';
 import DropdownItem from '../DropdownItem';
 import { ItemProps } from './types';
 import { getStyles } from './styles';
-import DrawerItem from '../DrawerItem';
 
 export const Item = (props: ItemProps) => {
   const {
@@ -26,8 +26,8 @@ export const Item = (props: ItemProps) => {
   let itemProps: Partial<ItemProps> = { dataset };
 
   if (drawerContent) {
-    ItemComponent = DrawerItem;
-    itemProps = props;
+    // ItemComponent = DrawerItem;
+    // itemProps = props;
   } else if (dropdownContent) {
     ItemComponent = DropdownItem;
     itemProps = props;
@@ -43,8 +43,8 @@ export const Item = (props: ItemProps) => {
       target,
     };
   } else if (onClick) {
-    ItemComponent = 'button';
-    itemProps = { dataset, onClick };
+    ItemComponent = Button;
+    itemProps = { ...dataset, onClick };
   }
 
   const itemComponent = (
@@ -54,7 +54,9 @@ export const Item = (props: ItemProps) => {
   );
 
   return tooltip ? (
-    <Tooltip content={tooltip}>{itemComponent}</Tooltip>
+    <Tooltip content={tooltip} hideTooltipOnClick>
+      {itemComponent}
+    </Tooltip>
   ) : (
     itemComponent
   );

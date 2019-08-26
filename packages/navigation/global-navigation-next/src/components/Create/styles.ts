@@ -1,5 +1,9 @@
 import { colors, gridSize as gridSizeFn, fontSizeSmall } from '@atlaskit/theme';
-import { actionSectionDesktopStyles, actionSectionMobileStyles } from '../../common/styles';
+import { css } from '@emotion/core';
+import {
+  actionSectionDesktopStyles,
+  actionSectionMobileStyles,
+} from '../../common/styles';
 
 const gridSize = gridSizeFn();
 
@@ -12,7 +16,10 @@ const buttonOverrides = {
   textTransform: 'uppercase',
 };
 
-export const createButtonStyles = actionSectionDesktopStyles;
+export const createButtonStyles = css`
+  ${actionSectionDesktopStyles};
+  flex-shrink: 0;
+`;
 
 export const buttonTheme: any = (
   currentTheme: Function,
@@ -28,4 +35,6 @@ export const buttonTheme: any = (
   };
 };
 
-export const createIconStyles = actionSectionMobileStyles;
+export const createIconStyles = css`
+  ${actionSectionMobileStyles};
+`;

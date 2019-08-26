@@ -20,30 +20,19 @@ const HelpContent = () => (
   </Fragment>
 );
 
-export const DefaultHelp = () => {
-  const [isHelpOpen, setIsHelpOpen] = React.useState(false);
-
-  const onClick = React.useCallback(
-    () => {
-      setIsHelpOpen(!isHelpOpen);
-    },
-    [setIsHelpOpen, isHelpOpen],
-  );
-
-  const onClose = React.useCallback(
-    () => {
-      setIsHelpOpen(false);
-    },
-    [setIsHelpOpen],
-  );
-
-  return (
-    <Help
-      dropdownContent={HelpContent}
-      isOpen={isHelpOpen}
-      onClick={onClick}
-      onClose={onClose}
-      tooltip="Help"
-    />
-  );
+const onClick = (...args: any[]) => {
+  console.log('help click', ...args);
 };
+
+const onClose = (...args: any[]) => {
+  console.log('help close', ...args);
+};
+
+export const DefaultHelp = () => (
+  <Help
+    dropdownContent={HelpContent}
+    onClick={onClick}
+    onClose={onClose}
+    tooltip="Help"
+  />
+);

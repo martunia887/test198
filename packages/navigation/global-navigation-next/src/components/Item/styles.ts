@@ -42,16 +42,6 @@ export const getStyles = (props: ItemProps) => ({
       padding: gridSize / 2,
       marginLeft: gridSize / 2,
     },
-    profile: {
-      ...baseStyles,
-      color: colors.B50,
-      display: 'inline-flex',
-      padding: gridSize / 2,
-      marginLeft: gridSize / 2,
-      ':hover,:focus': {
-        background: 'none',
-      },
-    },
   },
   contentWrapper: {},
 });

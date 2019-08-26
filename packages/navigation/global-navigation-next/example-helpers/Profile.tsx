@@ -18,10 +18,24 @@ const ProfileContent = () => (
   </Fragment>
 );
 
+const onClick = (...args: any[]) => {
+  console.log('profile click', ...args);
+};
+
+const onClose = (...args: any[]) => {
+  console.log('profile close', ...args);
+};
+
+export const AnonymousProfile = () => (
+  <Profile onClick={onClick} tooltip="Log in" />
+);
+
 export const DefaultProfile = () => (
   <Profile
+    avatar={<Avatar src={avatarUrl} />}
     dropdownContent={ProfileContent}
-    text={<Avatar src={avatarUrl} />}
+    onClick={onClick}
+    onClose={onClose}
     tooltip="Your profile and settings"
   />
 );

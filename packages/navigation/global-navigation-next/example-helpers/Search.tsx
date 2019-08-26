@@ -2,16 +2,26 @@ import React from 'react';
 
 import { Search } from '../src';
 
-const drawerContent = () => <div>quick search</div>;
+const drawerContent = () => <div>search</div>;
 
-const onDrawerCloseComplete = () => {
-  console.log('search close completed');
+const onClick = (...args: any[]) => {
+  console.log('search click', ...args);
+};
+
+const onDrawerClose = (...args: any[]) => {
+  console.log('search close', ...args);
+};
+
+const onDrawerCloseComplete = (...args: any[]) => {
+  console.log('search close complete', ...args);
 };
 
 export const DefaultSearch = () => (
   <Search
     drawerContent={drawerContent}
     text="Search"
+    onClick={onClick}
+    onClose={onDrawerClose}
     onDrawerCloseComplete={onDrawerCloseComplete}
   />
 );
