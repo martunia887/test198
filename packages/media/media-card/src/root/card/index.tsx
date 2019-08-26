@@ -406,13 +406,13 @@ export class Card extends Component<CardProps, CardState> {
     );
   };
 
-  render() {
-    const { isPlayingFile, mediaViewerSelectedItem, metadata } = this.state;
+  renderContent() {
+    const { isPlayingFile, mediaViewerSelectedItem } = this.state;
     const innerContent = isPlayingFile
       ? this.renderInlinePlayer()
       : this.renderCard();
 
-    const content = this.context.intl ? (
+    return this.context.intl ? (
       innerContent
     ) : (
       <IntlProvider locale="en">
@@ -422,10 +422,13 @@ export class Card extends Component<CardProps, CardState> {
         </>
       </IntlProvider>
     );
+  }
 
+  render() {
+    const { metadata } = this.state;
     return (
       <AnalyticsContext data={getUIAnalyticsContext(metadata)}>
-        {content}
+        {this.renderContent()}
       </AnalyticsContext>
     );
   }

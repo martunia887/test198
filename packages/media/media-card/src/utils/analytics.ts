@@ -69,8 +69,8 @@ export function getUIAnalyticsContext(
     ...getBaseAnalyticsContext(),
     attributes: {
       packageName,
+      ...getBaseAnalyticsContext(),
       fileAttributes: {
-        ...getBaseAnalyticsContext(),
         ...fileAttributes,
       },
     },
