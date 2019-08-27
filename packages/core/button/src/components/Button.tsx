@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import React from 'react';
 import memoize from 'memoize-one';
+import Vue from 'vue';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
@@ -19,7 +20,8 @@ import InnerWrapper from './InnerWrapper';
 import IconWrapper from './IconWrapper';
 import LoadingSpinner from './LoadingSpinner';
 import { ButtonProps, ThemeMode, ThemeProps, ThemeTokens } from '../types';
-
+// eslint-disable-next-line no-console
+console.log(Vue);
 export type ButtonState = {
   isHover: boolean;
   isActive: boolean;
