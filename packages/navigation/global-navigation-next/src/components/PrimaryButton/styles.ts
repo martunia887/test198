@@ -1,8 +1,14 @@
-import { colors, gridSize as gridSizeFn } from '@atlaskit/theme';
+import { colors, fontSizeSmall, gridSize as gridSizeFn } from '@atlaskit/theme';
+import css from '@emotion/css';
 
 const gridSize = gridSizeFn();
 
-export const iconButtonTheme: any = (
+export const chevronStyles = css`
+  margin: 0 -${gridSize}px;
+  visibility: hidden;
+`;
+
+export const primaryButtonTheme: any = (
   currentTheme: Function,
   themeProps: { appearance: string },
 ) => {
@@ -13,12 +19,17 @@ export const iconButtonTheme: any = (
       backgroundColor: 'transparent',
       color: colors.B50,
       display: 'inline-flex',
-      flexShrink: 0,
+      fontSize: fontSizeSmall(),
+      fontWeight: 'bold',
       height: gridSize * 4,
       marginLeft: gridSize / 2,
       padding: gridSize / 2,
+      textTransform: 'uppercase',
       ':hover, :focus': {
         backgroundColor: colors.B400,
+      },
+      ':hover .chevron, :focus .chevron': {
+        visibility: 'visible',
       },
     },
     spinnerStyles,

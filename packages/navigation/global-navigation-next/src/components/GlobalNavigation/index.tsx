@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import { jsx } from '@emotion/core';
-import Item from '../Item';
+import { PrimaryButton } from '../PrimaryButton';
 import getStyles from './styles';
 import { GlobalNavigationProps } from './types';
 
@@ -31,7 +31,7 @@ export const GlobalNavigation = (props: GlobalNavigationProps) => {
         <div css={styles.left}>
           {ProductHome && <ProductHome />}
           {primaryItems.map(props => (
-            <Item key={props.id} {...props} />
+            <PrimaryButton key={props.id} {...props} />
           ))}
         </div>
         <div css={styles.right}>
