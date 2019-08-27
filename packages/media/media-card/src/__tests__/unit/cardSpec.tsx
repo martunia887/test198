@@ -27,7 +27,6 @@ import {
   getDataURIFromFileState,
   FilePreview,
 } from '../../utils/getDataURIFromFileState';
-import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { getUIAnalyticsContext } from '../../utils/analytics';
 
 describe('Card', () => {
