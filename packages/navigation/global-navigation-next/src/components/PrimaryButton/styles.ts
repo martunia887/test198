@@ -8,6 +8,7 @@ export const chevronStyles = css`
   visibility: hidden;
 `;
 
+// TODO marginRight
 export const primaryButtonTheme: any = (
   currentTheme: Function,
   themeProps: { appearance: string },

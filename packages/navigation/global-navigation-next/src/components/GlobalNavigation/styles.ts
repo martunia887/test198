@@ -28,6 +28,7 @@ export default () => ({
   left: {
     alignItems: 'center',
     display: 'flex',
+    height: 'inherit',
   },
   right: {
     alignItems: 'center',
