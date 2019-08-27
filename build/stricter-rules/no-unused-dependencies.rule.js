@@ -6,13 +6,9 @@ const pathIsInside = require('path-is-inside');
 const trimNodeModules = (filenames /*: Array<string> */) =>
   filenames.filter(f => !f.includes(`${path.sep}node_modules${path.sep}`));
 
-// Next steps
-// 1. Verify it works - investigate css-box-model etc. in core/tree
-// 2. Add an 'excludeDeps' config option that excludes deps that are required but not imported
-// 3. Handle deps vs devDeps - could make this a 'srcPaths' config option
-// 4. Refactor + add docs in the style of atlassian/frontend-guides repo - https://github.com/atlassian/frontend-guides/tree/master/packages/stricter-plugin-tangerine/templates/rules
-// 5.
-
+// TODO:Next steps
+// 1. Add docs in the style of atlassian/frontend-guides repo - https://github.com/atlassian/frontend-guides/tree/master/packages/stricter-plugin-tangerine/templates/rules
+// 2. This is not mandatory - Handle deps vs devDeps - could make this a 'srcPaths' config option.
 /**
  * Filters dependent filenames to src files (non node-modules) inside rootPath
  */
@@ -60,6 +56,8 @@ const filterPackageJsons = (filenames, rootPath) => {
 
 module.exports = {
   onProject: ({ config, dependencies, files, rootPath }) => {
+    const excludeDeps = config.exclude || [];
+    const transformDeps = config.depTransforms || {};
     const errors = filterPackageJsons(Object.keys(files), rootPath).reduce(
       (acc, filename) => {
         const error = [];
@@ -92,10 +90,14 @@ module.exports = {
         // Stretch goal: Handle devDep vs dep
         // Abstract this into a function that takes dep/devDep & path that they should be 'allowed' in
         Object.entries(pkg.dependencies || {}).forEach(([dep]) => {
+          if (excludeDeps.includes(dep)) {
+            return;
+          }
+          const transformedDep = transformDeps[dep] || dep;
           const depExists = filteredDeps.find(depName => {
             const importedDeps = dependencies[depName];
             const foundDep = importedDeps.find(importedDep =>
-              dep.includes(importedDep),
+              importedDep.includes(transformedDep),
             );
 
             return Boolean(foundDep);

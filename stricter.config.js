@@ -19,7 +19,21 @@ module.exports = {
     // })),
     'no-unused-dependencies': {
       level: 'error',
-      config: {},
+      exclude: [
+        /^editor\/json-schema-generator\//,
+        /^core\/single-select\//,
+        /^core\/navigation\//,
+        /^core\/multi-select\//,
+      ],
+      config: {
+        exclude: ['@babel/runtime'],
+        depTransforms: {
+          '@atlaskit/icon': 'packages/core/icon/',
+          '@atlaskit/icon-object': 'packages/core/icon-object/',
+          '@atlaskit/icon-file-type': 'packages/core/icon-file-type/',
+          '@atlaskit/icon-priority': 'packages/core/icon-priority/',
+        },
+      },
     },
   },
 };
