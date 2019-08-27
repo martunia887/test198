@@ -71,24 +71,24 @@ const primaryItems = [
     dropdownContent: ProjectsContent,
     id: 'projects',
     text: 'Projects',
-    onClick: () => {
-      console.log('Projects clicked');
+    onClick: (...args: any[]) => {
+      console.log('Projects click', ...args);
     },
   },
   {
     dropdownContent: IssuesContent,
     id: 'issues',
     text: 'Issues & Filters',
-    onClick: () => {
-      console.log('Issues clicked');
+    onClick: (...args: any[]) => {
+      console.log('Issues click', ...args);
     },
   },
   {
     dropdownContent: DashboardsContent,
     id: 'dashboards',
     text: 'Dashboards',
-    onClick: () => {
-      console.log('Dashboards clicked');
+    onClick: (...args: any[]) => {
+      console.log('Dashboards click', ...args);
     },
   },
 ];
