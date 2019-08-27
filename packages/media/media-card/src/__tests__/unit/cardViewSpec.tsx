@@ -246,6 +246,12 @@ describe('CardView', () => {
       analyticsEventHandler.mock.calls[0][0];
     const actualReturnedEvent: UIAnalyticsEvent = clickHandler.mock.calls[0][1];
     expect(actualFiredEvent.hasFired).toEqual(true);
+    expect(actualFiredEvent.payload).toMatchObject({
+      eventType: 'ui',
+      action: 'clicked',
+      actionSubject: 'mediaCard',
+      actionSubjectId: 'mediaCardCardView',
+    });
     expect(actualReturnedEvent.hasFired).toEqual(false);
     expect(actualReturnedEvent.payload.action).toEqual('clicked');
     expect(actualReturnedEvent.context).toEqual(actualFiredEvent.context);
