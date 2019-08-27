@@ -928,4 +928,25 @@ describe('Card', () => {
     expect(actualEvent).toBeDefined();
     expect(actualEvent instanceof UIAnalyticsEvent).toBe(true);
   });
+
+  //TODO: fix
+  it.skip('should pass the Analytics Event fired from InlinePlayer to the provided onClick callback', () => {
+    const mediaClient = fakeMediaClient() as any;
+    const onClickHandler = jest.fn();
+    const card = mount<Card>(
+      <Card
+        mediaClient={mediaClient}
+        identifier={identifier}
+        onClick={onClickHandler}
+        useInlinePlayer={true}
+      />,
+    );
+    card.setState({ isPlayingFile: true });
+    card.update();
+    card.find(InlinePlayer).simulate('click');
+    expect(onClickHandler).toBeCalledTimes(1);
+    const actualEvent = onClickHandler.mock.calls[0][1];
+    expect(actualEvent).toBeDefined();
+    expect(actualEvent instanceof UIAnalyticsEvent).toBe(true);
+  });
 });
