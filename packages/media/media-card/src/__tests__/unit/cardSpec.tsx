@@ -906,8 +906,7 @@ describe('Card', () => {
     );
     card.setState({ metadata });
     card.update();
-    const contextData = card.find<AnalyticsContext>(AnalyticsContext).props()
-      .data;
+    const contextData = card.find(AnalyticsContext).props().data;
     expect(contextData).toMatchObject(getUIAnalyticsContext(metadata));
   });
 
