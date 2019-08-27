@@ -16,12 +16,7 @@ import {
   ExternalImageIdentifier,
   Identifier,
 } from '@atlaskit/media-client';
-import {
-  AnalyticsListener,
-  UIAnalyticsEvent,
-  withAnalyticsEvents,
-  CreateUIAnalyticsEvent,
-} from '@atlaskit/analytics-next';
+import { AnalyticsContext } from '@atlaskit/analytics-next';
 import { MediaViewer } from '@atlaskit/media-viewer';
 import { CardAction, CardProps, CardDimensions } from '../..';
 import { Card } from '../../root/card';
@@ -898,22 +893,7 @@ describe('Card', () => {
     });
   });
 
-  it('should attach UI Analytics Context when an Analytics Event is fired', () => {
-    // The shorthand for withAnalyticsEvents does not work with component.simulate('click'). Using custom events instead.
-    const FiringEventComponent = withAnalyticsEvents()(
-      (props: { createAnalyticsEvent: CreateUIAnalyticsEvent }) => (
-        <span
-          onClick={() =>
-            props
-              .createAnalyticsEvent({ some: 'payload' })
-              .fire(FabricChannel.media)
-          }
-        >
-          'Hi!'
-        </span>
-      ),
-    );
-
+  it('should attach UI Analytics Context', () => {
     const mediaClient = fakeMediaClient() as any;
     const metadata: FileDetails = {
       id: 'some-id',
@@ -921,28 +901,14 @@ describe('Card', () => {
       size: 12345,
       processingStatus: 'succeeded',
     };
-    const analyticsEventHandler = jest.fn();
 
-    Card.prototype.renderContent = jest.fn(() => <FiringEventComponent />);
-    const listener = mount(
-      <AnalyticsListener
-        channel={FabricChannel.media}
-        onEvent={analyticsEventHandler}
-      >
-        <Card mediaClient={mediaClient} identifier={identifier} />
-      </AnalyticsListener>,
+    const card = shallow<Card>(
+      <Card mediaClient={mediaClient} identifier={identifier} />,
     );
-    (Card.prototype.renderContent as jest.Mock).mockClear();
-
-    listener.find(Card).setState({ metadata });
-    listener.find(FiringEventComponent).simulate('click');
-
-    expect(analyticsEventHandler).toHaveBeenCalledTimes(1);
-    const actualEvent: Partial<UIAnalyticsEvent> =
-      analyticsEventHandler.mock.calls[0][0];
-    expect(actualEvent.context).toHaveLength(1);
-    expect(actualEvent.context[0]).toMatchObject(
-      getUIAnalyticsContext(metadata),
-    );
+    card.setState({ metadata });
+    card.update();
+    const contextData = card.find<AnalyticsContext>(AnalyticsContext).props()
+      .data;
+    expect(contextData).toMatchObject(getUIAnalyticsContext(metadata));
   });
 });
