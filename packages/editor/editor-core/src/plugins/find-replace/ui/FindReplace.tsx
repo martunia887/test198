@@ -54,10 +54,7 @@ export interface FindReplaceProps {
   onCancel: () => void;
 }
 
-export type FindReplaceComponentState = 'empty' | 'find' | 'replace';
-
 export interface FindReplaceState {
-  componentState: FindReplaceComponentState;
   replaceText: string;
   findInputValue: string;
 }
@@ -72,7 +69,6 @@ class FindReplace extends React.PureComponent<
     super(props);
 
     this.state = {
-      componentState: props.findText ? 'find' : 'empty',
       replaceText: props.replaceText || '',
       findInputValue: props.findText || '',
     };
@@ -83,12 +79,6 @@ class FindReplace extends React.PureComponent<
   }
 
   componentWillReceiveProps(newProps: FindReplaceProps) {
-    if (newProps.findText && this.state.componentState === 'empty') {
-      this.setState({ componentState: 'find' });
-    } else if (!newProps.findText) {
-      this.setState({ componentState: 'empty', replaceText: '' });
-    }
-
     // findText could have been updated from outside this component, for example
     // if a user double clicks to highlight a word and then hits cmd+f
     if (newProps.findText && newProps.findText !== this.state.findInputValue) {

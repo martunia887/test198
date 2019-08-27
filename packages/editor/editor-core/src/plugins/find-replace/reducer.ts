@@ -33,9 +33,6 @@ const reducer = (
 
     case FindReplaceActionTypes.REPLACE:
     case FindReplaceActionTypes.REPLACE_ALL:
-      // todo: both of these properly
-      // handle jumping to next selection for single replace
-      // update count/index for both
       return {
         ...state,
         replaceText: action.replaceText,
