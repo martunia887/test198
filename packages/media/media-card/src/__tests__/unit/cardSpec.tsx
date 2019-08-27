@@ -16,7 +16,7 @@ import {
   ExternalImageIdentifier,
   Identifier,
 } from '@atlaskit/media-client';
-import { AnalyticsContext } from '@atlaskit/analytics-next';
+import { AnalyticsContext, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { MediaViewer } from '@atlaskit/media-viewer';
 import { CardAction, CardProps, CardDimensions } from '../..';
 import { Card } from '../../root/card';
@@ -910,5 +910,22 @@ describe('Card', () => {
     const contextData = card.find<AnalyticsContext>(AnalyticsContext).props()
       .data;
     expect(contextData).toMatchObject(getUIAnalyticsContext(metadata));
+  });
+
+  it('should pass the Analytics Event fired from CardView to the provided onClick callback', () => {
+    const mediaClient = fakeMediaClient() as any;
+    const onClickHandler = jest.fn();
+    const card = mount<Card>(
+      <Card
+        mediaClient={mediaClient}
+        identifier={identifier}
+        onClick={onClickHandler}
+      />,
+    );
+    card.find(CardView).simulate('click');
+    expect(onClickHandler).toBeCalledTimes(1);
+    const actualEvent = onClickHandler.mock.calls[0][1];
+    expect(actualEvent).toBeDefined();
+    expect(actualEvent instanceof UIAnalyticsEvent).toBe(true);
   });
 });
