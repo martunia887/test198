@@ -9,13 +9,9 @@ import { ProfileProps } from './types';
 
 export const Profile = (props: ProfileProps) => {
   const { avatar, tooltip, ...triggerManagerProps } = props;
-  // If the user is not signed in, there's nothing to show them.
-  if (!props.dropdownContent && !props.drawerContent) {
+  if (!avatar) {
     return (
-      <IconButton
-        icon={<SignInIcon label={props.tooltip} />}
-        tooltip={tooltip}
-      />
+      <IconButton icon={<SignInIcon label={tooltip} />} tooltip={tooltip} />
     );
   }
 

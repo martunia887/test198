@@ -2,10 +2,10 @@ import Drawer from '@atlaskit/drawer';
 import React, { Fragment } from 'react';
 
 import { Dropdown } from '../Dropdown';
+import { TriggerManagerProps } from './types';
 
-export const TriggerManager = (props: any) => {
+export const TriggerManager = (props: TriggerManagerProps) => {
   const {
-    appearance,
     children,
     drawerContent: DrawerContent,
     dropdownContent: DropdownContent,
@@ -13,6 +13,7 @@ export const TriggerManager = (props: any) => {
     onClick,
     onClose,
     onDrawerCloseComplete,
+    position,
   } = props;
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const onTriggerClick = React.useCallback(
@@ -42,9 +43,9 @@ export const TriggerManager = (props: any) => {
   if (DropdownContent) {
     return (
       <Dropdown
-        appearance={appearance}
         dropdownContent={DropdownContent}
         onClose={onClose}
+        position={position}
       >
         {children({ onTriggerClick })}
       </Dropdown>

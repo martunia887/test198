@@ -1,10 +1,11 @@
 import { BadgeProps } from '@atlaskit/badge';
+import { TriggerManagerProps } from '../TriggerManager/types';
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 type RequiredBadgeProps = Omit<BadgeProps, 'children'>;
 
-export type NotificationsProps = {
+export type NotificationsProps = TriggerManagerProps & {
   badge:
     | {
         type: 'builtin';
@@ -15,11 +16,7 @@ export type NotificationsProps = {
         type: 'provided';
         count: number;
       };
-  drawerContent?: 'builtin' | React.ComponentType<{}>;
-  dropdownContent?: React.ComponentType<{}>;
   locale?: string;
-  onClick: () => void;
-  onDrawerCloseComplete?: () => void;
   product: string;
-  tooltip?: string;
+  tooltip: string;
 };

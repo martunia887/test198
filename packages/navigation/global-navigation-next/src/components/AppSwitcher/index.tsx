@@ -12,7 +12,7 @@ export const AppSwitcher = (props: AppSwitcherProps) => {
     <TriggerManager {...triggerManagerProps}>
       {({ onTriggerClick }) => (
         <IconButton
-          icon={<AppSwitcherIcon label={tooltip || 'Switch to...'} />}
+          icon={<AppSwitcherIcon label={tooltip} />}
           onClick={onTriggerClick}
           tooltip={tooltip}
         />

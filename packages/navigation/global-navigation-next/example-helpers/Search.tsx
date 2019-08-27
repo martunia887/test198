@@ -19,9 +19,10 @@ const onDrawerCloseComplete = (...args: any[]) => {
 export const DefaultSearch = () => (
   <Search
     drawerContent={drawerContent}
-    text="Search"
     onClick={onClick}
     onClose={onDrawerClose}
     onDrawerCloseComplete={onDrawerCloseComplete}
+    text="Search..."
+    tooltip="Search"
   />
 );

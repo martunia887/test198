@@ -9,10 +9,10 @@ export const Dropdown = (props: DropdownProps) => {
     props.isOpen || false,
   );
   const {
-    appearance,
     children,
     dropdownContent: DropdownContent,
     onClose,
+    position,
   } = props;
 
   const onOpenChange = ({
@@ -32,10 +32,14 @@ export const Dropdown = (props: DropdownProps) => {
     <DropdownMenuStateless
       isOpen={isDropdownOpen}
       onOpenChange={onOpenChange}
-      position={appearance === 'primary' ? 'top left' : 'top right'}
+      position={position}
       trigger={children}
     >
       <DropdownContent />
     </DropdownMenuStateless>
   );
+};
+
+Dropdown.defaultProps = {
+  position: 'top right',
 };

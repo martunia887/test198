@@ -8,7 +8,7 @@ import { IconButton } from '../IconButton';
 import { buttonTheme, createButtonStyles, createIconStyles } from './styles';
 import { CreateProps } from './types';
 
-export const Create = ({ onClick, text = 'Create' }: CreateProps) => (
+export const Create = ({ onClick, text }: CreateProps) => (
   <Fragment>
     <Button css={createButtonStyles} onClick={onClick} theme={buttonTheme}>
       {text}

@@ -12,8 +12,8 @@ import { searchIconStyles, searchInputStyles } from './styles';
 import { SearchProps } from './types';
 
 const SearchComponent = ({ onClick, text, ...props }: SearchProps) => {
-  const onChange = () => {
-    onClick && onClick();
+  const onChange = (...args: any[]) => {
+    onClick && onClick(...args);
   };
   return (
     <SearchWrapper {...props}>
@@ -31,7 +31,7 @@ const SearchComponent = ({ onClick, text, ...props }: SearchProps) => {
 };
 
 export const Search = (props: SearchProps) => {
-  const { text, ...triggerManagerProps } = props;
+  const { text, tooltip, ...triggerManagerProps } = props;
 
   return (
     <TriggerManager {...triggerManagerProps}>
@@ -44,9 +44,9 @@ export const Search = (props: SearchProps) => {
           />
           <IconButton
             css={searchIconStyles}
-            icon={<SearchIcon label={text} />}
+            icon={<SearchIcon label={tooltip} />}
             onClick={onTriggerClick}
-            tooltip={text}
+            tooltip={tooltip}
           />
         </Fragment>
       )}
