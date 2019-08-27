@@ -13,7 +13,6 @@ export const iconButtonTheme: any = (
       backgroundColor: 'transparent',
       color: colors.B50,
       display: 'inline-flex',
-      flexShrink: 0,
       height: gridSize * 4,
       marginLeft: gridSize / 2,
       padding: gridSize / 2,

@@ -33,6 +33,7 @@ export default () => ({
   right: {
     alignItems: 'center',
     display: 'flex',
+    flexShrink: 0,
     right: gridSize * 4,
   },
 });
