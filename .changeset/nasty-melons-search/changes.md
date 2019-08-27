@@ -1,0 +1,1 @@
+Button props nolonger requires all HTML attributes as props for TypeScript users
