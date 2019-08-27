@@ -4,6 +4,9 @@ import styled from '@emotion/styled';
 
 const gridSize = gridSizeFn();
 
+const wordmarkHeight = gridSize * 3.5;
+const iconHeight = gridSize * 4.75;
+
 export const Outer = styled.div`
   align-items: center;
   display: flex;
@@ -12,16 +15,16 @@ export const Outer = styled.div`
 `;
 
 export const IconSkeleton = styled.div`
-  width: ${gridSize * 4.75}px;
-  height: ${gridSize * 4.75}px;
+  width: ${iconHeight}px;
+  height: ${iconHeight}px;
   border-radius: 50%;
   ${GlobalSkeletonSyles}
 `;
 
 export const WordmarkSkeleton = styled.div`
   width: ${gridSize * 20}px;
-  height: ${gridSize * 3.5}px;
-  border-radius: ${(gridSize * 3.5) / 2}px;
+  height: ${wordmarkHeight}px;
+  border-radius: ${wordmarkHeight / 2}px;
   margin-left: ${gridSize * 2}px;
   ${GlobalSkeletonSyles}
 `;

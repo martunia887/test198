@@ -59,6 +59,9 @@ export const getStyles = (props: ItemProps) => ({
   contentWrapper: {},
 });
 
+const platformItemHeight = gridSize * 3.25;
+const profileItemHeight = gridSize * 4.25;
+
 const ItemSkeletonCommon = css`
   border: none;
   box-sizing: 'border-box';
@@ -79,21 +82,21 @@ export const ProductItemSkeleton = styled.div`
 `;
 
 export const PlatformItemSkeleton = styled.div`
-  border-radius: ${(gridSize * 3.25) / 2}px;
+  border-radius: ${platformItemHeight / 2}px;
   position: relative;
   display: inline-flex;
-  width: ${gridSize * 3.25}px;
-  height: ${gridSize * 3.25}px;
+  width: ${platformItemHeight}px;
+  height: ${platformItemHeight}px;
   margin-left: ${gridSize * 1.25}px;
   ${ItemSkeletonCommon}
 `;
 
 export const ProfileItemSkeleton = styled.div`
-  border-radius: ${(gridSize * 4.25) / 2}px;
+  border-radius: ${profileItemHeight / 2}px;
   position: relative;
   display: inline-flex;
-  width: ${gridSize * 4.25}px;
-  height: ${gridSize * 4.25}px;
+  width: ${profileItemHeight}px;
+  height: ${profileItemHeight}px;
   margin: 0px ${gridSize / 1.5}px;
   margin-left: ${gridSize * 1.5}px;
   ${ItemSkeletonCommon}

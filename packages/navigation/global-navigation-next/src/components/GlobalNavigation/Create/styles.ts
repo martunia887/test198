@@ -4,12 +4,14 @@ import { GlobalSkeletonSyles } from '../../../common/styled';
 
 const gridSize = gridSizeFn();
 
+const createItemHeight = gridSize * 4;
+
 const buttonOverrides = {
   backgroundColor: colors.B75,
   color: colors.B500,
   fontSize: fontSizeSmall(),
   fontWeight: 'bold',
-  height: gridSize * 4,
+  height: createItemHeight,
   textTransform: 'uppercase',
 };
 
@@ -29,14 +31,14 @@ export const buttonTheme: any = (
 
 export const CreateButtonSkeleton = styled.div`
   width: ${gridSize * 8}px;
-  height: ${gridSize * 4}px;
+  height: ${createItemHeight}px;
   border-radius: ${gridSize}px;
   ${GlobalSkeletonSyles}
 `;
 
 export const CreateIconSkeleton = styled.div`
-  width: ${gridSize * 4}px;
-  height: ${gridSize * 4}px;
-  border-radius: ${(gridSize * 4) / 2}px;
+  width: ${createItemHeight}px;
+  height: ${createItemHeight}px;
+  border-radius: ${createItemHeight / 2}px;
   ${GlobalSkeletonSyles}
 `;

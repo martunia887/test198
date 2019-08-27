@@ -1,1 +1,1 @@
-export { GlobalNavigationSkeleton as default } from '../';
+export { GlobalNavigationSkeleton as default } from '../src';
