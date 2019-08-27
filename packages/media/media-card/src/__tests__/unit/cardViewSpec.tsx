@@ -22,6 +22,7 @@ import { Wrapper } from '../../../src/root/styled';
 import { breakpointSize } from '../../../src/utils/breakpoint';
 
 import { shouldDisplayImageThumbnail } from '../../../src/utils/shouldDisplayImageThumbnail';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
 
 describe('CardView', () => {
   const file: FileDetails = {
@@ -233,7 +234,10 @@ describe('CardView', () => {
     const clickHandler = jest.fn();
     const analyticsEventHandler = jest.fn();
     const card = mount(
-      <AnalyticsListener channel="media" onEvent={analyticsEventHandler}>
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsEventHandler}
+      >
         <CardView status="loading" metadata={file} onClick={clickHandler} />
       </AnalyticsListener>,
     );
