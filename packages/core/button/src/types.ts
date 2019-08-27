@@ -17,11 +17,13 @@ export type ButtonAppearances =
 // HtmlAttributes = AllHTMLAttributes - OnlyButtonProps
 // We do this so onClick, and other props that overlap with html attributes,
 // have the type defined in OnlyButtonProps.
-type HtmlAttributes = Pick<
-  React.AllHTMLAttributes<HTMLElement>,
-  Exclude<
-    keyof React.AllHTMLAttributes<HTMLElement>,
-    keyof OnlyButtonProps | 'css'
+type HtmlAttributes = Partial<
+  Pick<
+    React.AllHTMLAttributes<HTMLElement>,
+    Exclude<
+      keyof React.AllHTMLAttributes<HTMLElement>,
+      keyof OnlyButtonProps | 'css'
+    >
   >
 > & { css?: InterpolationWithTheme<any> };
 
