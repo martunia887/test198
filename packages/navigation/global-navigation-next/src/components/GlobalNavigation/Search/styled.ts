@@ -1,22 +1,34 @@
 import { colors, fontSize, gridSize as gridSizeFn } from '@atlaskit/theme';
 import styled from '@emotion/styled';
+import { css } from '@emotion/core';
+import { GlobalSkeletonSyles } from '../../../common/styled';
 
 const gridSize = gridSizeFn();
 
-export const SearchInput = styled.input`
+const SearchInputCommon = css`
   width: 220px;
-  background: ${colors.B400};
   height: ${gridSize * 4}px;
+  background: ${colors.B400};
   outline: none;
   border-radius: ${gridSize * 2}px;
   border: none;
   box-sizing: border-box;
-  color: ${colors.B50};
   padding: 0 ${gridSize}px 0 40px;
+`;
+
+export const SearchInput = styled.input`
+  ${SearchInputCommon}
+  background: ${colors.B400};
+  color: ${colors.B50};
   font-size: ${fontSize()}px;
   ::placeholder {
     color: ${colors.B50};
   }
+`;
+
+export const SearchInputSkeleton = styled.div`
+  ${SearchInputCommon}
+  ${GlobalSkeletonSyles}
 `;
 
 export const SearchWrapper = styled.div`

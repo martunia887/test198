@@ -48,3 +48,5 @@ export default class Search extends Component<Props> {
     );
   }
 }
+
+export { SearchSkeleton } from './Skeleton';

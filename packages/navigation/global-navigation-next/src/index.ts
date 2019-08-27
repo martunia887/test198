@@ -1,1 +1,4 @@
-export { default } from './components/GlobalNavigation';
+export {
+  default,
+  GlobalNavigationSkeleton,
+} from './components/GlobalNavigation';

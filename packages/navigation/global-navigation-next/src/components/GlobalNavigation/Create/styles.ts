@@ -1,4 +1,6 @@
+import styled from '@emotion/styled';
 import { colors, gridSize as gridSizeFn, fontSizeSmall } from '@atlaskit/theme';
+import { GlobalSkeletonSyles } from '../../../common/styled';
 
 const gridSize = gridSizeFn();
 
@@ -24,3 +26,17 @@ export const buttonTheme: any = (
     spinnerStyles,
   };
 };
+
+export const CreateButtonSkeleton = styled.div`
+  width: ${gridSize * 8}px;
+  height: ${gridSize * 4}px;
+  border-radius: ${gridSize}px;
+  ${GlobalSkeletonSyles}
+`;
+
+export const CreateIconSkeleton = styled.div`
+  width: ${gridSize * 4}px;
+  height: ${gridSize * 4}px;
+  border-radius: ${(gridSize * 4) / 2}px;
+  ${GlobalSkeletonSyles}
+`;

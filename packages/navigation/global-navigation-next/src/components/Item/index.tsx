@@ -64,3 +64,5 @@ export default class Item extends React.Component<ItemProps> {
     );
   }
 }
+
+export * from './Skeleton';

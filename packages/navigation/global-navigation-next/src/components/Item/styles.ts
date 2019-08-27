@@ -1,5 +1,8 @@
 import { ItemProps } from './types';
 import { colors, fontSizeSmall, gridSize as gridSizeFn } from '@atlaskit/theme';
+import styled from '@emotion/styled';
+import { css } from '@emotion/core';
+import { GlobalSkeletonSyles } from '../../common/styled';
 
 const gridSize = gridSizeFn();
 
@@ -55,3 +58,43 @@ export const getStyles = (props: ItemProps) => ({
   },
   contentWrapper: {},
 });
+
+const ItemSkeletonCommon = css`
+  border: none;
+  box-sizing: 'border-box';
+  ${GlobalSkeletonSyles}
+`;
+
+export const ProductItemSkeleton = styled.div`
+  border-radius: 6px;
+  position: relative;
+  align-items: center;
+  display: flex;
+  width: ${gridSize * 6}px;
+  height: ${gridSize * 2.5}px;
+  margin: 30px 0px;
+  margin-right: ${gridSize * 3}px;
+  padding: ${`0 ${gridSize}`}px;
+  ${ItemSkeletonCommon}
+`;
+
+export const PlatformItemSkeleton = styled.div`
+  border-radius: ${(gridSize * 3.25) / 2}px;
+  position: relative;
+  display: inline-flex;
+  width: ${gridSize * 3.25}px;
+  height: ${gridSize * 3.25}px;
+  margin-left: ${gridSize * 1.25}px;
+  ${ItemSkeletonCommon}
+`;
+
+export const ProfileItemSkeleton = styled.div`
+  border-radius: ${(gridSize * 4.25) / 2}px;
+  position: relative;
+  display: inline-flex;
+  width: ${gridSize * 4.25}px;
+  height: ${gridSize * 4.25}px;
+  margin: 0px ${gridSize / 1.5}px;
+  margin-left: ${gridSize * 1.5}px;
+  ${ItemSkeletonCommon}
+`;

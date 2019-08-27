@@ -96,3 +96,5 @@ export default class GlobalNavigation extends Component<GlobalNavigationProps> {
     );
   }
 }
+
+export { GlobalNavigationSkeleton } from './Skeleton';

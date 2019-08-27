@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { ProductProps } from './types';
 import { Outer } from './styled';
 import { PRODUCT_HOME_BREAKPOINT } from '../../../common/constants';
@@ -17,8 +17,13 @@ export const ProductHome = ({
       {width && width < PRODUCT_HOME_BREAKPOINT ? (
         <Icon size="small" />
       ) : (
-        <Wordmark />
+        <Fragment>
+          <Icon size="small" />
+          <Wordmark />
+        </Fragment>
       )}
     </Outer>
   );
 };
+
+export { ProductHomeSkeleton } from './Skeleton';

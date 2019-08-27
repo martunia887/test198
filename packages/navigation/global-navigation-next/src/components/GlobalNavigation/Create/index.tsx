@@ -27,3 +27,5 @@ const Create = ({ onClick, text = 'Create', width }: Props) => {
 };
 
 export default Create;
+
+export { CreateSkeleton } from './Skeleton';
