@@ -1,0 +1,175 @@
+import React from 'react';
+import { md, Example, code } from '@atlaskit/docs';
+import SectionMessage from '@atlaskit/section-message';
+
+export default md`
+
+
+${(
+  <SectionMessage title="Deprecated Component" appearance="info">
+    {md`
+      **\`Checkbox 10.0\`** introduces theming to Checkbox through two new props – \`theme\` and \`style\`.
+
+      - **\`theme\`** allows you to override the internal **component tokens** of Checkbox to make **easy appearance changes** .
+      - **\`style\`** provides more control, allowing you to apply **custom CSS** to certain internal components inside of Checkbox _after_ the component tokens are used to style them.
+    `}
+  </SectionMessage>
+)}
+
+## ✨ Component Tokens ✨
+**\`Checkbox\`** now uses *component tokens* as a method of storing and applying styles to a component.
+All values used in styling the component are stored in a *single object*, split up at the top level into subcomponents.
+
+A portion of the Checkbox component token set is shown below:
+
+${code`const componentTokens: ComponentTokens = {
+  label: {
+    textColor: {
+      rest: { light: colors.N900, dark: colors.DN600 },
+      disabled: { light: colors.N80, dark: colors.N80 },
+    },
+    spacing: {...},
+  },
+  icon: {...},
+  requiredIndicator: {...},
+};`}
+
+Internally, these tokens are used by Emotion to generate the component's CSS; they can be moddified using the \`theme\` prop. After this, further CSS can be applied on top using the \`styles\` prop.
+
+## Theming a Checkbox with the \`theme\` prop
+
+The \`theme\` prop allows in-depth customisation of common properties inside of Checkbox. Internally, Checkbox uses **component tokens** to store and apply styles, and theming Checkbox involves modifying this token set and setting new values. 
+
+The example below demonstrates how label spacing and box size can be customised:
+
+${(
+  <Example
+    packageName="@atlaskit/checkbox"
+    Component={require('../examples/08-theming').default}
+    title="Replacing component tokens with the theme prop"
+    source={require('!!raw-loader!../examples/08-theming')}
+  />
+)}
+
+### Methods for applying the theme prop
+There are **two approaches** to defining a custom checkbox. 
+
+The first is to wrap buttons in a ThemeProvider:
+
+${code`
+import React from 'react';
+import Checkbox, { Theme as CheckboxTheme } from '@atlaskit/checkbox';
+
+// define a customTheme function
+
+<CheckboxTheme.Provider value={customTheme}>
+  <Checkbox label="both of these"/>
+  <Checkbox label="will receive custom styling"/>
+</CheckboxTheme.Provider>
+`}
+
+The second approach is to create a wrapped Button component that passes in all existing props, as well as a custom \`theme\` prop:
+
+${code`
+import React from 'react';
+import Checkbox from '@atlaskit/checkbox';
+
+// define a customTheme function
+
+export default (props) => (
+  <Checkbox
+    {...props}
+    theme={customTheme}
+    }}
+  />
+);
+`}
+
+### Building the theme prop
+
+In both cases, Checkbox's \`theme\` prop expects a theming function, which is called by the theming API to style Checkbox. \`theme\` should have the following signature:
+
+\`theme: (current, props) => ThemeTokens\`
+
+Where:
+- **current** is the built-in ADG theme function
+- **props** is the set of props passed into Checkbox
+
+How exactly the default props are modified is up to you; a common implementation is used in the example above, and follows 3 steps.
+
+#### 1 – Create your custom token set:
+
+Create an object that contains a subset of values from the standard Tokens set. An example is shown below:
+
+${code`
+const newThemeTokens: ComponentTokens = {
+  label: {
+    spacing: {
+      top: '6px',
+      bottom: '6px',
+    },
+  },
+  icon: {
+    size: 'large',
+  }
+},`}
+
+#### 2 – Create the \`theme\` function:
+
+In the basic case, we just want to apply our new tokens over the top of the current token set, keeping any tokens we haven't specified untouched. This can be performed using an _object merge_ operation; Lodash provides one such function.
+
+${code`
+const customTheme = (
+current: (props: { tokens: ComponentTokens; mode: string }) => ThemeTokens,
+{ tokens, mode }: { tokens: ComponentTokens; mode: string },
+) => {
+const mergedTokens = merge(tokens, newThemeTokens);
+return current({ tokens: mergedTokens, mode });
+};
+`}
+
+#### 3 - Pass into \`theme\` prop and render
+
+Finally, once the custom theme function has been defined, pass it into Checkbox using the \`theme\` prop, or using \`context\`
+
+${code`export default () => <Checkbox label="Remember me" theme={customTheme} />;`}
+
+With that, you have a themed Checkbox.
+
+## Applying styles using \`styles\` prop
+
+For simpler control of the specific CSS applied to components, a \`styles\` prop can be passed in:
+
+${(
+  <Example
+    packageName="@atlaskit/checkbox"
+    Component={require('../examples/09-styling').default}
+    title="Applying custom CSS with the styles prop"
+    source={require('!!raw-loader!../examples/09-styling')}
+  />
+)}
+
+### Creating the Styles Prop
+The \`styles\` prop takes an object of the following structure:
+
+${code`
+{
+  iconWrapper: (defaultStyles) => {...}
+}
+`}
+
+Style keys relate to different internal components that support custom styling. Currently, the \`iconWrapper\` component is supported.
+
+Style values take the default CSS styles, and return new ones. Spreading is an easy way to add one or two new values:
+
+${code`
+const customIconWrapperStyles = (defaultStyles: any) => {
+  return {
+    ...defaultStyles,
+    fill: 'green',
+  };
+};
+`}
+
+
+`;
