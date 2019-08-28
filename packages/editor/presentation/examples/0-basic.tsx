@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { PresentationMode } from '../src';
+import defaultADF from '../__tests__/__fixtures__/default.adf.json';
 
 export default class Example extends React.Component<
   {},
@@ -10,7 +11,7 @@ export default class Example extends React.Component<
     super(props);
 
     this.state = {
-      adf: '',
+      adf: JSON.stringify(defaultADF),
       showPresentation: false,
     };
   }
@@ -44,10 +45,16 @@ export default class Example extends React.Component<
             </button>
           </>
         )}
-        {showPresentation && <PresentationMode adf={JSON.parse(adf)} />}
+        {showPresentation && (
+          <PresentationMode adf={JSON.parse(adf)} onExit={this.onExit} />
+        )}
       </>
     );
   }
+
+  private onExit = () => {
+    this.setState({ showPresentation: false });
+  };
 
   private onADFChange = () => {
     if (this.inputBox) {
