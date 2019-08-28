@@ -29,6 +29,90 @@ import ErrorReport, { Error } from '../example-helpers/ErrorReport';
 import KitchenSinkEditor from '../example-helpers/KitchenSinkEditor';
 import withSentry from '../example-helpers/withSentry';
 import FullWidthToggle from '../example-helpers/full-width-toggle';
+import { Node } from 'prosemirror-model';
+
+type NodeMapping = {
+  name: string | ((node: any) => string);
+  attrs?: Array<string>;
+};
+
+const nodeTypes: Record<string, NodeMapping> = {
+  doc: { name: 'doc' },
+  paragraph: { name: 'p' },
+  heading: { name: node => `h${node.attrs.level}` },
+  layoutSection: { name: 'layoutSection' },
+  layoutColumn: { name: 'layoutColumn' },
+  codeBlock: { name: 'code_block', attrs: ['language'] },
+
+  strong: { name: 'b' },
+  code: { name: 'code' },
+};
+
+const buildMarks = (marks: Array<any>, leaf: string): string | undefined => {
+  const mark = marks.pop();
+  console.log('mark', mark);
+
+  if (!mark) {
+    return leaf;
+  }
+
+  const type = nodeTypes[mark.type];
+  if (!type) {
+    console.log('uih oh', mark);
+    // throw new TypeError('no builder for mark type ' + mark.type);
+    return;
+  }
+
+  const name = typeof type.name === 'function' ? type.name(node) : type.name;
+
+  const children = buildMarks(marks, leaf);
+  return `${name}(${children || leaf})`;
+};
+
+const nodeToDocBuilder = (node: any): string => {
+  if (node.type === 'text') {
+    const leaf = `'${node.text.replace(`'`, `\\'`)}'`;
+    if (node.marks) {
+      const marks = node.marks.slice();
+      return buildMarks(marks, leaf) || leaf;
+    }
+
+    return leaf;
+  }
+
+  const type = nodeTypes[node.type];
+  if (!type) {
+    console.log(node);
+    throw new TypeError('no builder for node type ' + node.type);
+  }
+
+  const childrenBuilders: string[] = [];
+
+  if (node.content) {
+    node.content.forEach((child: any) => {
+      childrenBuilders.push(nodeToDocBuilder(child));
+    });
+  }
+
+  const name = typeof type.name === 'function' ? type.name(node) : type.name;
+
+  // TODO: handle block marks
+
+  if (type.attrs) {
+    const attrs: Record<string, any> = {};
+    type.attrs.map(attrName => {
+      attrs[attrName] = node.attrs[attrName];
+    });
+
+    return `${name}(${JSON.stringify(attrs)})(${childrenBuilders.join(', ')})`;
+  }
+
+  return `${name}(${childrenBuilders.join(', ')})`;
+};
+
+const toDocBuilder = (adf: any) => {
+  return nodeToDocBuilder(adf);
+};
 
 const Container = styled.div`
   display: flex;
@@ -445,12 +529,12 @@ class FullPageRendererExample extends React.Component<Props, State> {
                     >
                       <Textarea
                         innerRef={ref => (this.inputRef = ref)}
-                        value={this.state.adfInput}
-                        onChange={this.handleInputChange}
+                        value={toDocBuilder(this.state.adf)}
+                        // onChange={this.handleInputChange}
                       />
-                      <Button onClick={() => this.importADF(actions)}>
+                      {/* <Button onClick={() => this.importADF(actions)}>
                         Import ADF
-                      </Button>
+                      </Button> */}
                     </div>
                   )}
                 </Column>
