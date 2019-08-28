@@ -20,6 +20,7 @@ module.exports = {
         ],
       },
     ],
+    'import/no-cycle': 'error',
     'import/no-unresolved': ['off'],
     'import/prefer-default-export': 'off',
     'import/extensions': [
@@ -176,6 +177,7 @@ module.exports = {
         'import/first': 'off',
         'import/newline-after-import': 'off',
         'import/no-commonjs': 'off',
+        'import/no-cycle': 'error',
         'import/no-duplicates': 'off',
         'import/no-dynamic-require': 'off',
         'import/no-extraneous-dependencies': 'off',
