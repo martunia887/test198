@@ -573,7 +573,8 @@
   },
   "resolutions": {
     "**/@atlaskit/theme/styled-components": "^3.2.6",
-    "**/expand-range/fill-range": "2.2.3"
+    "**/expand-range/fill-range": "2.2.3",
+    "prismjs": "^1.16.0"
   },
   "engines": {
     "node": "^10.13.0"

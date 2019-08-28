@@ -1,19 +1,61 @@
 import * as React from 'react';
-import { Deck, Slide } from 'spectacle';
+import { PresentationMode } from '../src';
 
-class Presentation extends React.Component {
+export default class Example extends React.Component<
+  {},
+  { adf: string; showPresentation: boolean }
+> {
+  inputBox?: HTMLTextAreaElement | null;
+  constructor(props: {}) {
+    super(props);
+
+    this.state = {
+      adf: '',
+      showPresentation: false,
+    };
+  }
+
   render() {
+    const { adf, showPresentation } = this.state;
+
     return (
-      <Deck>
-        <Slide>Spectacle Boilerplate</Slide>
-        <Slide>Typography</Slide>
-        <Slide>Standard List</Slide>
-        <Slide>Example Quote</Slide>
-      </Deck>
+      <>
+        {!showPresentation && (
+          <>
+            <textarea
+              id="presentation-value-input"
+              style={{
+                boxSizing: 'border-box',
+                border: '1px solid lightgray',
+                fontFamily: 'monospace',
+                fontSize: 16,
+                padding: 10,
+                width: '100%',
+                height: 320,
+              }}
+              ref={ref => {
+                this.inputBox = ref;
+              }}
+              value={this.state.adf}
+              onChange={this.onADFChange}
+            />
+            <button onClick={this.startPresentation} disabled={!adf}>
+              Start!
+            </button>
+          </>
+        )}
+        {showPresentation && <PresentationMode adf={JSON.parse(adf)} />}
+      </>
     );
   }
-}
 
-export default function Example() {
-  return <Presentation />;
+  private onADFChange = () => {
+    if (this.inputBox) {
+      this.setState({ adf: this.inputBox.value });
+    }
+  };
+
+  private startPresentation = () => {
+    this.setState({ showPresentation: true });
+  };
 }

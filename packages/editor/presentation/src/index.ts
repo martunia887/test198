@@ -1,3 +1,1 @@
-export function start(): void {
-  console.log('Opa');
-}
+export { PresentationMode } from './PresentationMode';
