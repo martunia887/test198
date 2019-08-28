@@ -101,7 +101,6 @@ const getPreviewByService = (
   fileId: string,
 ) => {
   const { userMediaClient, giphy } = store.getState();
-
   if (serviceName === 'giphy') {
     const selectedGiphy = giphy.imageCardModels.find(
       cardModel => cardModel.metadata.id === fileId,
@@ -125,18 +124,40 @@ const getPreviewByService = (
         });
       });
     }
-  } else if (serviceName === 'recent_files' && isPreviewableType(mediaType)) {
-    return new Promise<FilePreview>(async resolve => {
-      // We fetch a good size image, since it can be opened later on in MV
-      const blob = await userMediaClient.getImage(fileId, {
-        collection: RECENTS_COLLECTION,
-        width: 1920,
-        height: 1080,
-        mode: 'fit',
-      });
+  } else if (serviceName === 'recent_files') {
+    if (isPreviewableType(mediaType)) {
+      return new Promise<FilePreview>(async resolve => {
+        // We fetch a good size image, since it can be opened later on in MV
+        const blob = await userMediaClient.getImage(fileId, {
+          collection: RECENTS_COLLECTION,
+          width: 1920,
+          height: 1080,
+          mode: 'fit',
+        });
 
-      resolve({ value: blob });
-    });
+        resolve({ value: blob });
+      });
+    } else if (mediaType === 'doc') {
+      return new Promise<FilePreview>(async resolve => {
+        // TODO: explain
+        const response = (await userMediaClient.mediaStore.getItems(
+          [fileId],
+          RECENTS_COLLECTION,
+        )).data;
+
+        if (response.items.length) {
+          const firstItem = response.items[0];
+          const artifactUrl = await userMediaClient.file.getArtifactURL(
+            firstItem.details.artifacts,
+            'document.pdf',
+            RECENTS_COLLECTION,
+          );
+          resolve({ value: artifactUrl });
+        }
+        // TODO: reject?
+        resolve({ value: '' });
+      });
+    }
   }
 
   return undefined;
@@ -158,7 +179,6 @@ export const touchSelectedFiles = (
     ({ file: selectedFile, serviceName, touchFileDescriptor }) => {
       const id = touchFileDescriptor.fileId;
       const selectedFileId = selectedFile.id;
-
       const mediaType = getMediaTypeFromMimeType(selectedFile.type);
       const preview = getPreviewByService(
         store,

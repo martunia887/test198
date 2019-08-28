@@ -6,7 +6,12 @@ export const getObjectUrlFromFileState = async (
   if (state.status !== 'error') {
     const { preview } = state;
     if (preview) {
-      return URL.createObjectURL((await preview).value);
+      const value = (await preview).value;
+      if (typeof value === 'string') {
+        return value;
+      }
+
+      return URL.createObjectURL(value);
     }
   }
   return undefined;

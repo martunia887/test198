@@ -7,7 +7,10 @@ export const getMediaTypeFromMimeType = (type: string): MediaType => {
     return 'video';
   } else if (type.indexOf('audio/') === 0) {
     return 'audio';
-  } else if (type.indexOf('application/pdf') === 0) {
+  } else if (
+    type.indexOf('application/pdf') === 0 ||
+    type.indexOf('text/plain') === 0
+  ) {
     return 'doc';
   } else {
     return 'unknown';

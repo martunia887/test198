@@ -40,7 +40,16 @@ export class DocViewer extends BaseViewer<string, Props> {
     }
     const { item, mediaClient, collectionName } = this.props;
 
-    if (item.status === 'processed') {
+    const src = await getObjectUrlFromFileState(item);
+    if (src) {
+      this.setState({
+        content: Outcome.successful(src),
+      });
+    } else if (item.status === 'processed') {
+      // TODO: when to show pending?
+      // this.setState({
+      //   content: Outcome.pending(),
+      // });
       try {
         const src = await mediaClient.file.getArtifactURL(
           item.artifacts,
@@ -56,17 +65,6 @@ export class DocViewer extends BaseViewer<string, Props> {
           content: Outcome.failed(createError('previewFailed', err, item)),
         });
       }
-    } else {
-      const src = await getObjectUrlFromFileState(item);
-      if (!src) {
-        this.setState({
-          content: Outcome.pending(),
-        });
-        return;
-      }
-      this.setState({
-        content: Outcome.successful(src),
-      });
     }
   }
 
