@@ -25,14 +25,16 @@ A portion of the Checkbox component token set is shown below:
 ${code`const componentTokens: ComponentTokens = {
   label: {
     textColor: {
-      rest: { light: colors.N900, dark: colors.DN600 },
-      disabled: { light: colors.N80, dark: colors.N80 },
+      rest: { light: string, dark: string },
+      disabled: { light: string, dark: string },
     },
     spacing: {...},
   },
   icon: {...},
   requiredIndicator: {...},
 };`}
+
+You can view the full set of component tokens [here](http://atlaskit.atlassian.com/packages/core/checkbox/docs/component-tokens).
 
 Internally, these tokens are used by Emotion to generate the component's CSS; they can be moddified using the \`theme\` prop. After this, further CSS can be applied on top using the \`styles\` prop.
 
