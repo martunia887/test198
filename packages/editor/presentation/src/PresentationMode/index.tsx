@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { Deck, Slide, Heading } from 'spectacle';
-import { ReactSerializer } from '@atlaskit/renderer';
+import { ReactSerializer, StyleWrapper } from '@atlaskit/renderer';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { ADFEntity } from '@atlaskit/adf-utils';
+import { BaseTheme } from '@atlaskit/editor-common';
 import convertADFToSlides from '../utils/convertADFToSlides';
+import { atlassianTheme } from '../themes';
 
 const reactSerializer = ReactSerializer.fromSchema(schema, {});
 const ESC_KEY_CODE = 27;
@@ -44,7 +46,15 @@ export class PresentationMode extends React.Component<Props, State> {
   render() {
     const { adf } = this.props;
 
-    return <Deck onStateChange={this.onStateChange}>{getSliders(adf)}</Deck>;
+    return (
+      <BaseTheme>
+        <StyleWrapper>
+          <Deck theme={atlassianTheme} onStateChange={this.onStateChange}>
+            {getSliders(adf)}
+          </Deck>
+        </StyleWrapper>
+      </BaseTheme>
+    );
   }
 
   componentDidMount() {
