@@ -18,6 +18,7 @@ describe('convertADFToSlides', () => {
   test('should create slides for complicated docs', () => {
     const complicateDoc = doc(
       heading({ level: 1 })(text('heading 1')),
+      p(text('')),
       p(text('Content 1')),
       p(text('Content 1.2')),
       heading({ level: 2 })(text('heading 2')),
