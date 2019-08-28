@@ -3,15 +3,15 @@ import { Deck, Slide, Heading } from 'spectacle';
 import { ReactSerializer, StyleWrapper } from '@atlaskit/renderer';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { ADFEntity } from '@atlaskit/adf-utils';
-import { BaseTheme } from '@atlaskit/editor-common';
+import { BaseTheme, ProviderFactory } from '@atlaskit/editor-common';
 import convertADFToSlides from '../utils/convertADFToSlides';
 import { atlassianTheme } from '../themes';
 
-const reactSerializer = ReactSerializer.fromSchema(schema, {});
 const ESC_KEY_CODE = 27;
 
 interface Props {
   adf: ADFEntity;
+  providerFactory?: ProviderFactory;
   onExit?: () => boolean;
 }
 
@@ -19,25 +19,15 @@ interface State {
   onStateChange: (prev: any, next: any) => void;
 }
 
-const getSliders = (adf: ADFEntity) => {
-  const result = convertADFToSlides(adf);
-
-  return result.map((slide, index) => {
-    const docFromSchema = schema.nodeFromJSON(slide.adf);
-    const children = reactSerializer.serializeFragment(docFromSchema as any);
-
-    return (
-      <Slide key={index}>
-        <Heading>{slide.title}</Heading>
-        {children}
-      </Slide>
-    );
-  });
-};
-
 export class PresentationMode extends React.Component<Props, State> {
+  private serializer: ReactSerializer;
+
   constructor(props: Props) {
     super(props);
+
+    this.serializer = ReactSerializer.fromSchema(schema, {
+      providers: props.providerFactory,
+    });
     this.state = {
       onStateChange: this.onStateChange,
     };
@@ -50,7 +40,7 @@ export class PresentationMode extends React.Component<Props, State> {
       <BaseTheme>
         <StyleWrapper>
           <Deck theme={atlassianTheme} onStateChange={this.onStateChange}>
-            {getSliders(adf)}
+            {this.getSliders(adf)}
           </Deck>
         </StyleWrapper>
       </BaseTheme>
@@ -63,7 +53,26 @@ export class PresentationMode extends React.Component<Props, State> {
 
   componentWillUnmount() {
     document.removeEventListener('keyup', this.onESCKeyPress, false);
+    const { providerFactory } = this.props;
+
+    providerFactory && providerFactory.destroy();
   }
+
+  getSliders = (adf: ADFEntity) => {
+    const result = convertADFToSlides(adf);
+
+    return result.map((slide, index) => {
+      const docFromSchema = schema.nodeFromJSON(slide.adf);
+      const children = this.serializer.serializeFragment(docFromSchema as any);
+
+      return (
+        <Slide key={index}>
+          <Heading>{slide.title}</Heading>
+          {children}
+        </Slide>
+      );
+    });
+  };
 
   private onESCKeyPress = (event: KeyboardEvent): boolean => {
     if (event.keyCode === ESC_KEY_CODE) {

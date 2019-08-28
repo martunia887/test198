@@ -1,6 +1,17 @@
 import * as React from 'react';
 import { injectGlobal } from 'styled-components';
+import {
+  profilecard as profilecardUtils,
+  emoji,
+  taskDecision,
+} from '@atlaskit/util-data-test';
+import {
+  storyMediaProviderFactory,
+  storyContextIdentifierProviderFactory,
+} from '@atlaskit/editor-test-helpers';
+import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
 import { PresentationMode } from '../src';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import defaultADF from '../__tests__/__fixtures__/default.adf.json';
 
 injectGlobal`
@@ -20,6 +31,59 @@ injectGlobal`
     font-style: normal;
   }
 `;
+
+const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;
+const MockProfileClient = getMockProfileClientUtil(
+  ProfileClient,
+  modifyResponse,
+);
+
+const mentionProvider = Promise.resolve({
+  shouldHighlightMention(mention: { id: string }) {
+    return mention.id === 'ABCDE-ABCDE-ABCDE-ABCDE';
+  },
+});
+
+const mediaProvider = storyMediaProviderFactory();
+
+const emojiProvider = emoji.storyData.getEmojiResource();
+
+const profilecardProvider = Promise.resolve({
+  cloudId: 'DUMMY-CLOUDID',
+  resourceClient: new MockProfileClient({
+    cacheSize: 10,
+    cacheMaxAge: 5000,
+  }),
+  getActions: (id: string) => {
+    const actions = [
+      {
+        label: 'Mention',
+        callback: () => console.log('profile-card:mention'),
+      },
+      {
+        label: 'Message',
+        callback: () => console.log('profile-card:message'),
+      },
+    ];
+
+    return id === '1' ? actions : actions.slice(0, 1);
+  },
+});
+
+const taskDecisionProvider = Promise.resolve(
+  taskDecision.getMockTaskDecisionResource(),
+);
+
+const contextIdentifierProvider = storyContextIdentifierProviderFactory();
+
+const providerFactory = ProviderFactory.create({
+  mentionProvider,
+  mediaProvider,
+  emojiProvider,
+  profilecardProvider,
+  taskDecisionProvider,
+  contextIdentifierProvider,
+});
 
 export default class Example extends React.Component<
   {},
@@ -65,7 +129,11 @@ export default class Example extends React.Component<
           </>
         )}
         {showPresentation && (
-          <PresentationMode adf={JSON.parse(adf)} onExit={this.onExit} />
+          <PresentationMode
+            providerFactory={providerFactory}
+            adf={JSON.parse(adf)}
+            onExit={this.onExit}
+          />
         )}
       </>
     );

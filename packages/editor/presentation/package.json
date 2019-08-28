@@ -15,7 +15,10 @@
     "@atlaskit/adf-schema": "^3.1.2",
     "@atlaskit/adf-utils": "^6.1.6",
     "@atlaskit/editor-common": "^39.18.3",
+    "@atlaskit/editor-test-helpers": "^9.11.11",
+    "@atlaskit/profilecard": "^12.0.6",
     "@atlaskit/renderer": "^49.8.3",
+    "@atlaskit/util-data-test": "^12.9.6",
     "spectacle": "^5.7.0",
     "styled-components": "^3.2.6"
   }
