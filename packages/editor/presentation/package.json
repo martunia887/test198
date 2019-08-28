@@ -2,13 +2,19 @@
   "name": "@atlaskit/presentation",
   "version": "0.0.1",
   "description": "ADF by Sliders",
-  "main": "index.js",
+  "main": "dist/cjs/index.js",
+  "atlaskit:src": "src/index.ts",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "RatoX <rvieira@atlassian.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@atlaskit/adf-schema": "^3.1.2",
+    "@atlaskit/adf-utils": "^6.1.6",
+    "@atlaskit/renderer": "^49.8.3",
     "spectacle": "^5.7.0"
   }
 }

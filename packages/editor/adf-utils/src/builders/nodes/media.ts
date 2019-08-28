@@ -1,6 +1,12 @@
-import { MediaDefinition, MediaAttributes } from '@atlaskit/adf-schema';
+import {
+  MediaDefinition,
+  MediaAttributes,
+  ExternalMediaAttributes,
+} from '@atlaskit/adf-schema';
 
-export const media = (attrs: MediaAttributes): MediaDefinition => ({
+export const media = (
+  attrs: MediaAttributes | ExternalMediaAttributes,
+): MediaDefinition => ({
   type: 'media',
   attrs,
 });
