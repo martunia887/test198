@@ -1,0 +1,14 @@
+{
+  "name": "@atlaskit/presentation",
+  "version": "0.0.1",
+  "description": "ADF by Sliders",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "RatoX <rvieira@atlassian.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "spectacle": "^5.7.0"
+  }
+}
