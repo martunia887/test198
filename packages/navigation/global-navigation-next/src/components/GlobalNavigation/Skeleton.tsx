@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import WidthDetector from '@atlaskit/width-detector';
 import { jsx } from '@emotion/core';
 import { Fragment, FC } from 'react';
 import {
@@ -24,25 +23,23 @@ export const GlobalNavigationSkeleton: FC<Props> = ({
   const styles = getStyles();
 
   return (
-    <WidthDetector containerStyle={styles.outer as any}>
-      {(width: number | undefined) => (
-        <Fragment>
-          <div css={styles.left}>
-            <ProductHomeSkeleton width={width} />
-            {new Array(productItemCount).fill(null).map((_, index) => (
-              <ProductItemSkeleton key={index} />
-            ))}
-          </div>
-          <div css={styles.right}>
-            <CreateSkeleton width={width} />
-            <SearchSkeleton />
-            {new Array(productItemCount).fill(null).map((_, index) => (
-              <PlatformItemSkeleton key={index} />
-            ))}
-            <ProfileItemSkeleton />
-          </div>
-        </Fragment>
-      )}
-    </WidthDetector>
+    <div css={styles.outer as any}>
+      <Fragment>
+        <div css={styles.left}>
+          <ProductHomeSkeleton />
+          {new Array(productItemCount).fill(null).map((_, index) => (
+            <ProductItemSkeleton key={index} />
+          ))}
+        </div>
+        <div css={styles.right}>
+          <CreateSkeleton />
+          <SearchSkeleton />
+          {new Array(platformItemCount).fill(null).map((_, index) => (
+            <PlatformItemSkeleton key={index} />
+          ))}
+          <ProfileItemSkeleton />
+        </div>
+      </Fragment>
+    </div>
   );
 };

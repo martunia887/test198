@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { colors, gridSize as gridSizeFn, fontSizeSmall } from '@atlaskit/theme';
+import { CREATE_BREAKPOINT } from '../../../common/constants';
 import { GlobalSkeletonSyles } from '../../../common/styled';
 
 const gridSize = gridSizeFn();
@@ -34,6 +35,10 @@ export const CreateButtonSkeleton = styled.div`
   height: ${createItemHeight}px;
   border-radius: ${gridSize}px;
   ${GlobalSkeletonSyles}
+
+  @media (max-width: ${CREATE_BREAKPOINT}px) {
+    display: none;
+  }
 `;
 
 export const CreateIconSkeleton = styled.div`
@@ -41,4 +46,8 @@ export const CreateIconSkeleton = styled.div`
   height: ${createItemHeight}px;
   border-radius: ${createItemHeight / 2}px;
   ${GlobalSkeletonSyles}
+
+  @media (min-width: ${CREATE_BREAKPOINT}px) {
+    display: none;
+  }
 `;

@@ -1,5 +1,6 @@
 import { gridSize as gridSizeFn } from '@atlaskit/theme';
 import { GlobalSkeletonSyles } from '../../../common/styled';
+import { PRODUCT_HOME_BREAKPOINT } from '../../../common/constants';
 import styled from '@emotion/styled';
 
 const gridSize = gridSizeFn();
@@ -27,4 +28,8 @@ export const WordmarkSkeleton = styled.div`
   border-radius: ${wordmarkHeight / 2}px;
   margin-left: ${gridSize * 2}px;
   ${GlobalSkeletonSyles}
+
+  @media (max-width: ${PRODUCT_HOME_BREAKPOINT}px) {
+    display: none;
+  }
 `;

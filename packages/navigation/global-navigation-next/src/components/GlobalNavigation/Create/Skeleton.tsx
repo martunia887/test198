@@ -1,12 +1,9 @@
-import React, { FC } from 'react';
-import { CREATE_BREAKPOINT } from '../../../common/constants';
+import React, { FC, Fragment } from 'react';
 import { CreateButtonSkeleton, CreateIconSkeleton } from './styles';
 
-type Props = {
-  width?: number;
-};
-
-export const CreateSkeleton: FC<Props> = ({ width }) => {
-  const fullWidth = width && width > CREATE_BREAKPOINT;
-  return fullWidth ? <CreateButtonSkeleton /> : <CreateIconSkeleton />;
-};
+export const CreateSkeleton: FC = () => (
+  <Fragment>
+    <CreateButtonSkeleton />
+    <CreateIconSkeleton />
+  </Fragment>
+);
