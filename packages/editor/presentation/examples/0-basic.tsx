@@ -30,6 +30,14 @@ injectGlobal`
     font-weight: normal;
     font-style: normal;
   }
+
+  @font-face {
+    font-family: "Charlie_Display_Bold";
+    src: url("https://marketplace-cdn.atlassian.com/s/public/Charlie_Display-Bold-1-6bf3af7a4a02d59eb95811b5a85ea443.woff") format("font-woff"),
+         url("https://marketplace-cdn.atlassian.com/s/public/Charlie_Display-Bold-1-6bf3af7a4a02d59eb95811b5a85ea443.woff") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+  }
 `;
 
 const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;

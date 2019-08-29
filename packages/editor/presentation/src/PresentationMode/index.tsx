@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Deck, Slide, Heading } from 'spectacle';
-import { ReactSerializer, StyleWrapper } from '@atlaskit/renderer';
+import { Deck, Slide } from 'spectacle';
+import { StyleWrapper, Heading, Levels } from '../ui';
+import { ReactSerializer } from '@atlaskit/renderer';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { ADFEntity } from '@atlaskit/adf-utils';
 import { BaseTheme, ProviderFactory } from '@atlaskit/editor-common';
@@ -39,7 +40,12 @@ export class PresentationMode extends React.Component<Props, State> {
     return (
       <BaseTheme>
         <StyleWrapper>
-          <Deck theme={atlassianTheme} onStateChange={this.onStateChange}>
+          <Deck
+            progress="bar"
+            showFullscreenControl={false}
+            theme={atlassianTheme}
+            onStateChange={this.onStateChange}
+          >
             {this.getSliders(adf)}
           </Deck>
         </StyleWrapper>
@@ -67,7 +73,7 @@ export class PresentationMode extends React.Component<Props, State> {
 
       return (
         <Slide key={index}>
-          <Heading>{slide.title}</Heading>
+          <Heading content={slide.title} level={Levels.H1} />
           {children}
         </Slide>
       );
