@@ -26,6 +26,8 @@ import {
   calcTableColumnWidths,
 } from '@atlaskit/editor-common';
 
+export { HeadingLevel } from './nodes/heading';
+
 export interface RendererContext {
   objectAri?: string;
   containerAri?: string;

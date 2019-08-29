@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Deck, Slide } from 'spectacle';
-import { StyleWrapper, Heading, Levels } from '../ui';
+import { StyleWrapper, Heading } from '../ui';
 import { ReactSerializer } from '@atlaskit/renderer';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { ADFEntity } from '@atlaskit/adf-utils';
@@ -73,7 +73,9 @@ export class PresentationMode extends React.Component<Props, State> {
 
       return (
         <Slide key={index}>
-          <Heading content={slide.title} level={Levels.H1} />
+          {slide.title && (
+            <Heading content={slide.title.content} level={slide.title.level} />
+          )}
           {children}
         </Slide>
       );

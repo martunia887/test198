@@ -1,17 +1,9 @@
 import * as React from 'react';
+import { HeadingLevel } from '@atlaskit/renderer';
 import { Heading as RawHeading } from 'spectacle';
 
-export enum Levels {
-  H1 = 1,
-  H2 = 2,
-  H3 = 3,
-  H4 = 4,
-  H5 = 5,
-  H6 = 6,
-}
-
 interface Props {
-  level: Levels;
+  level?: HeadingLevel;
   content: string;
 }
 

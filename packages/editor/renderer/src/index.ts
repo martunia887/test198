@@ -5,7 +5,7 @@ export { default as TextSerializer } from './text';
 
 export { default as ReactRenderer } from './ui/Renderer';
 export { Props as RendererProps } from './ui/Renderer';
-export { RendererContext } from './react';
+export { RendererContext, HeadingLevel } from './react';
 export { ADFEncoder } from './utils';
 
 export { Wrapper as StyleWrapper } from './ui/Renderer/style';

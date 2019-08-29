@@ -1,10 +1,10 @@
 import { ADFEntity, doc } from '@atlaskit/adf-utils';
 import flatten from './flatten';
-import { TextSerializer } from '@atlaskit/renderer';
+import { TextSerializer, HeadingLevel } from '@atlaskit/renderer';
 import { EntityTransformer } from './transformers/types';
 import paragraphTransformer from './transformers/paragraph';
 import { defaultSchema } from '@atlaskit/adf-schema';
-import { HeadingLevel } from '../../../renderer/src/react/nodes/heading';
+
 interface SlideTitle {
   level: HeadingLevel;
   content: string;
@@ -32,7 +32,7 @@ function convertADFToSlides(adf: ADFEntity, schema = defaultSchema): Slides[] {
   const textSerializer = TextSerializer.fromSchema(schema);
 
   const flattenNodes = flatten(adf, validTypes) as ADFEntity[];
-  let currentTitle: SlideTitle | undefined = undefined;
+  let currentTitle: SlideTitle | undefined;
 
   const slides: Slides[] = flattenNodes.reduce(
     (acc, entity) => {
