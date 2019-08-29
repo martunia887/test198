@@ -46,6 +46,11 @@ const getFreshMediaProvider = () =>
   fakeMediaProvider({
     collectionName: testCollectionName,
   });
+
+const getLastMediaNodeUpdaterMockInstance = (): MediaNodeUpdater => {
+  const instances = (MediaNodeUpdater as any).instances;
+  return instances[instances.length - 1];
+};
 // TODO: Explore node rejection
 describe.skip('nodeviews/mediaSingle', () => {
   let pluginState: MediaPluginState;

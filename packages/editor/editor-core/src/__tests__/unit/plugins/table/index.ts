@@ -46,6 +46,7 @@ import {
 } from '../../../../plugins/table/utils';
 import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-single';
 import { AnalyticsHandler } from '../../../../analytics';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 // TODO: Explore node rejection
 describe.skip('table plugin', () => {
   const createEditor = createEditorFactory<TablePluginState>();

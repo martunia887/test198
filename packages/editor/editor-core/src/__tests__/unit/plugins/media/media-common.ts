@@ -18,8 +18,8 @@ import {
 } from '../../../../plugins/media/utils/media-common';
 
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
-
-describe('media-common', () => {
+// TODO: Explore node rejection
+describe.skip('media-common', () => {
   const createEditor = createEditorFactory();
 
   const editor = (doc: any) =>

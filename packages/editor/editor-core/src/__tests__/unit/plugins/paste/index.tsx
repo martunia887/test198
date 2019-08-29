@@ -50,6 +50,9 @@ import { ACTION_SUBJECT_ID } from '../../../../plugins/analytics';
 import { CardProvider } from '../../../../plugins/card';
 import { GapCursorSelection, Side } from '../../../../plugins/gap-cursor';
 import { EditorProps } from '../../../..';
+
+// @ts-ignore
+import { __serializeForClipboard } from 'prosemirror-view';
 // TODO: Explore node rejection
 describe.skip('paste plugins', () => {
   const createEditor = createEditorFactory();
