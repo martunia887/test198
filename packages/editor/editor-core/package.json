@@ -131,6 +131,7 @@
     "fetch-mock": "^7.3.3",
     "jest-sandbox": "^1.1.1",
     "jquery": "^3.2.1",
+    "prettier": "^1.14.3",
     "prosemirror-dev-tools": "^2.1.0",
     "raf-stub": "^2.0.1",
     "react": "^16.8.0",

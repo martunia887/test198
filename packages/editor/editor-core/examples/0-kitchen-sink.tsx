@@ -1,5 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import prettier from 'prettier/standalone';
+import babylon from 'prettier/parser-babylon';
 
 import Select from '@atlaskit/select';
 import Button from '@atlaskit/button';
@@ -29,7 +31,6 @@ import ErrorReport, { Error } from '../example-helpers/ErrorReport';
 import KitchenSinkEditor from '../example-helpers/KitchenSinkEditor';
 import withSentry from '../example-helpers/withSentry';
 import FullWidthToggle from '../example-helpers/full-width-toggle';
-import { Node } from 'prosemirror-model';
 
 type NodeMapping = {
   name: string | ((node: any) => string);
@@ -39,10 +40,58 @@ type NodeMapping = {
 const nodeTypes: Record<string, NodeMapping> = {
   doc: { name: 'doc' },
   paragraph: { name: 'p' },
+  blockquote: { name: 'blockquote' },
   heading: { name: node => `h${node.attrs.level}` },
+  listItem: { name: 'li' },
+  bulletList: { name: 'ul' },
+  orderedList: { name: 'ol' },
+  hardBreak: { name: 'hardBreak' },
+  rule: { name: 'hr' },
+  panel: { name: 'panel', attrs: ['panelType'] },
+  codeBlock: { name: 'code_block', attrs: ['language'] },
+  // img?
+  emoji: { name: 'emoji', attrs: ['shortName', 'id', 'fallback', 'text'] },
+  mention: {
+    name: 'mention',
+    attrs: ['id', 'text', 'userType', 'accessLevel'],
+  },
+
+  table: { name: 'table', attrs: ['isNumberColumnEnabled', 'layout'] },
+  tableRow: { name: 'tr' },
+  tableCell: {
+    name: 'td',
+    attrs: ['colspan', 'rowspan', 'colwidth', 'background'],
+  },
+  tableHeader: {
+    name: 'th',
+    attrs: ['colspan', 'rowspan', 'colwidth', 'background'],
+  },
+
+  decisionList: { name: 'decisionList', attrs: ['localId'] },
+  decisionItem: { name: 'decisionItem', attrs: ['localId'] },
+
+  taskList: { name: 'taskList', attrs: ['localId'] },
+  taskItem: { name: 'taskItem', attrs: ['localId'] },
+
+  // connie unsupported
+  // extensions
+
+  status: { name: 'status', attrs: ['text', 'color', 'localId'] },
+
+  mediaSingle: { name: 'mediaSingle', attrs: ['layout', 'width'] },
+  mediaGroup: { name: 'mediaGroup' },
+
+  // TODO: all of them
+  media: { name: 'media', attrs: ['type'] },
+
+  // applicationCard
+  // placeholder
+
   layoutSection: { name: 'layoutSection' },
   layoutColumn: { name: 'layoutColumn' },
-  codeBlock: { name: 'code_block', attrs: ['language'] },
+
+  // smart cards
+  // unsupported2
 
   strong: { name: 'b' },
   code: { name: 'code' },
@@ -50,7 +99,6 @@ const nodeTypes: Record<string, NodeMapping> = {
 
 const buildMarks = (marks: Array<any>, leaf: string): string | undefined => {
   const mark = marks.pop();
-  console.log('mark', mark);
 
   if (!mark) {
     return leaf;
@@ -58,9 +106,7 @@ const buildMarks = (marks: Array<any>, leaf: string): string | undefined => {
 
   const type = nodeTypes[mark.type];
   if (!type) {
-    console.log('uih oh', mark);
-    // throw new TypeError('no builder for mark type ' + mark.type);
-    return;
+    throw new TypeError('no builder for mark type ' + mark.type);
   }
 
   const name = typeof type.name === 'function' ? type.name(node) : type.name;
@@ -111,7 +157,10 @@ const nodeToDocBuilder = (node: any): string => {
 };
 
 const toDocBuilder = (adf: any) => {
-  return nodeToDocBuilder(adf);
+  return prettier.format(nodeToDocBuilder(adf), {
+    parser: 'babylon',
+    plugins: [babylon],
+  });
 };
 
 const Container = styled.div`
