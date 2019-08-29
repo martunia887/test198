@@ -24,7 +24,19 @@
       "content": [
         {
           "type": "text",
-          "text": "When we first started, the Fabric Editor has always positioned itself to be the "
+          "text": "When we first started, the Fabric Editor has always "
+        },
+        {
+          "type": "emoji",
+          "attrs": {
+            "shortName": ":hot_face:",
+            "id": "1f975",
+            "text": "🥵"
+          }
+        },
+        {
+          "type": "text",
+          "text": "  positioned itself to be the "
         },
         {
           "type": "text",
@@ -396,146 +408,10 @@
                   "text": "This is by far the number one task across all teams. Roadmapping, setting goals and delivering on project outcomes is common from Software to Marketing and HR team."
                 }
               ]
-            }
-          ]
-        },
-        {
-          "type": "layoutColumn",
-          "attrs": {},
-          "content": [
+            },
             {
               "type": "paragraph",
               "content": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "layoutSection",
-      "content": [
-        {
-          "type": "layoutColumn",
-          "attrs": {
-            "width": 50
-          },
-          "content": [
-            {
-              "type": "bulletList",
-              "content": [
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Project planning - Roadmapping, goal setting, timelines, milestones, logistics and resources to complete work."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Coordinate tasks between team and project."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Scheduling project deadlines"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Manage project roadblocks - Identify, understand and remove roadblocks"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Align on expectations for a project - communicating goals."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Assign work to others - Reach out to colleague, get context, assign"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Work on the same file simultaneously - collaborating and editing"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Breakdown work"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
             }
           ]
         },
@@ -567,171 +443,7 @@
                   "text": "Meetings is the most common way to communicate, sync up and coordinate between work and who’s doing that work. This can range from a one on one to a formal presentation."
                 }
               ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "layoutSection",
-      "content": [
-        {
-          "type": "layoutColumn",
-          "attrs": {
-            "width": 50
-          },
-          "content": [
-            {
-              "type": "bulletList",
-              "content": [
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Preparing, participating, follow up and make decisions in a meeting."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Share content, in the form of documents, files, links"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Scheduling project deadlines"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Giving and receiving updates."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Communicating expectations"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Create or modify meeting agenda"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Work on the same file simultaneiously."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Send and receive task reminder"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Get approval - Signoff, make decisions, pairing, updating docs."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Reading content."
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "layoutColumn",
-          "attrs": {},
-          "content": [
+            },
             {
               "type": "paragraph",
               "content": []
@@ -776,132 +488,6 @@
         },
         {
           "type": "layoutColumn",
-          "attrs": {},
-          "content": [
-            {
-              "type": "paragraph",
-              "content": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "layoutSection",
-      "content": [
-        {
-          "type": "layoutColumn",
-          "attrs": {
-            "width": 50
-          },
-          "content": [
-            {
-              "type": "bulletList",
-              "content": [
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Track productivity, tracing history, delivery on stakeholder commitments, view remaining work"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Monitor progress"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Manage project roadblocks - Identify, understand, and remove roadblocks."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Reading content and get up to date to what everyone is working on."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Give and receive updates"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Align on expectations for a project by communicating expectations"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Create and modify trackers and contents."
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "layoutColumn",
           "attrs": {
             "width": 50
           },
@@ -928,143 +514,7 @@
                   "text": "Every team needs to work towards a common goal. On the way to get there, there is a need for every individual contributor to provide ideas, resolve issues, and acknowledging the efforts and outputs of team members."
                 }
               ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "layoutSection",
-      "content": [
-        {
-          "type": "layoutColumn",
-          "attrs": {
-            "width": 50
-          },
-          "content": [
-            {
-              "type": "bulletList",
-              "content": [
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Support and motivate team members"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Request, provide, receive and manage feedback."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Transfer knowledge"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Share documents, files and links"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Communicate expectations"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Work on the same file simultaneously."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Event organisation - team building activities"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Project retrospective"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "layoutColumn",
-          "attrs": {},
-          "content": [
+            },
             {
               "type": "paragraph",
               "content": []
@@ -1109,104 +559,6 @@
         },
         {
           "type": "layoutColumn",
-          "attrs": {},
-          "content": [
-            {
-              "type": "paragraph",
-              "content": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "layoutSection",
-      "content": [
-        {
-          "type": "layoutColumn",
-          "attrs": {
-            "width": 50
-          },
-          "content": [
-            {
-              "type": "bulletList",
-              "content": [
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Personal organisation - Taking notes, personal task, prioritisation, time management"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Feedback - Request, provide, manage personal feedback, growth plan"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Transfer knowledge - Write documentations and plans, collect relevant documentations, work handoff"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Task reminders - Send and receive reminders."
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Digest information - Reading content, understanding context"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "layoutColumn",
           "attrs": {
             "width": 50
           },
@@ -1241,127 +593,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "layoutSection",
-      "content": [
-        {
-          "type": "layoutColumn",
-          "attrs": {
-            "width": 50
-          },
-          "content": [
-            {
-              "type": "bulletList",
-              "content": [
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Make information easy to find and readable - organise information, manage access to info so it’s easy to search"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Make projects deliverables professional / attractive - Formatting and designing content and presentations"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "listItem",
-                  "content": [
-                    {
-                      "type": "paragraph",
-                      "content": [
-                        {
-                          "type": "text",
-                          "text": "Documentation - Create or modify content, handoff work."
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "layoutColumn",
-          "attrs": {
-            "width": 50
-          },
-          "content": [
-            {
-              "type": "paragraph",
-              "content": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "See the full synthesis results in a Mural board here: ",
-          "marks": [
-            {
-              "type": "textColor",
-              "attrs": {
-                "color": "#97a0af"
-              }
-            },
-            {
-              "type": "subsup",
-              "attrs": {
-                "type": "sub"
-              }
-            }
-          ]
-        },
-        {
-          "type": "text",
-          "text": "https://app.mural.co/t/designops7282/m/designops7282/1563850029271/0cb3bd1ec356f8274c58e6b769807e67c6891266",
-          "marks": [
-            {
-              "type": "link",
-              "attrs": {
-                "href": "https://app.mural.co/t/designops7282/m/designops7282/1563850029271/0cb3bd1ec356f8274c58e6b769807e67c6891266"
-              }
-            },
-            {
-              "type": "subsup",
-              "attrs": {
-                "type": "sub"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": []
-    },
-    {
-      "type": "paragraph",
-      "content": []
     },
     {
       "type": "heading",
@@ -1404,9 +635,9 @@
                 {
                   "type": "status",
                   "attrs": {
-                    "text": "Express",
+                    "text": "EXPRESS",
                     "color": "purple",
-                    "localId": "7ed1de47-be8e-4e7f-ba73-e825b24a4cab"
+                    "localId": "9e9e7c6d-d797-4ade-a72f-efda617271c1"
                   }
                 }
               ]
@@ -1443,9 +674,9 @@
                 {
                   "type": "status",
                   "attrs": {
-                    "text": "Capture",
+                    "text": "CAPTURE",
                     "color": "green",
-                    "localId": "374f6bc8-1d2d-4d9a-9783-2f746c3cb872"
+                    "localId": "462107c4-391b-44cc-9aa2-884b277f550e"
                   }
                 }
               ]
@@ -1482,9 +713,9 @@
                 {
                   "type": "status",
                   "attrs": {
-                    "text": "Connect",
+                    "text": "CONNECT",
                     "color": "blue",
-                    "localId": "5de34a1e-29df-4115-a24b-c8e238342f09"
+                    "localId": "552566bb-b203-43dc-abce-be235b71af94"
                   }
                 }
               ]
@@ -1504,1146 +735,6 @@
                 {
                   "type": "text",
                   "text": "E.g. collab editing across languages, mentions, inline comments"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "Slash command",
-          "marks": [
-            {
-              "type": "strong"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "Slash command is arguably one of our biggest differentiators. It allows quick insertion of content and is deeply integrated to 3rd party extensions in the market. This allows users to quickly and effectively express their ideas in the document."
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "Integration & extensibility",
-          "marks": [
-            {
-              "type": "strong"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "We repeatedly hear the close integration between Jira and Confluence is the reason why people choose our product suite. Being able to insert a JQL generated table is powerful. Automatically linked Confluence pages in an issue also saves time. The editor powers this cross flow and unlocks even more potential by leveraging the strengths in our product."
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "Optimised for teams",
-          "marks": [
-            {
-              "type": "strong"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "Mentions, actions, decisions, and other elements are optimised for helping teams to collaborate and move work forward. Standard rich text editors like Google Docs, Pages, Evernote doesn’t even provide this ability."
-        }
-      ]
-    },
-    {
-      "type": "table",
-      "attrs": {
-        "isNumberColumnEnabled": false,
-        "layout": "default"
-      },
-      "content": [
-        {
-          "type": "tableRow",
-          "content": [
-            {
-              "type": "tableHeader",
-              "attrs": {
-                "colwidth": [
-                  226
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "text",
-                      "text": "Our strength ",
-                      "marks": [
-                        {
-                          "type": "strong"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "emoji",
-                      "attrs": {
-                        "shortName": ":arrow_right:",
-                        "id": "27a1",
-                        "text": "➡"
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": " \\ "
-                    },
-                    {
-                      "type": "text",
-                      "text": "Top task ",
-                      "marks": [
-                        {
-                          "type": "strong"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "emoji",
-                      "attrs": {
-                        "shortName": ":arrow_down:",
-                        "id": "2b07",
-                        "text": "⬇"
-                      }
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableHeader",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "text",
-                      "text": "Slash command",
-                      "marks": [
-                        {
-                          "type": "strong"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableHeader",
-              "attrs": {
-                "colwidth": [
-                  160
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "text",
-                      "text": "Integration & extensibility",
-                      "marks": [
-                        {
-                          "type": "strong"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableHeader",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "text",
-                      "text": "Optimised for team",
-                      "marks": [
-                        {
-                          "type": "strong"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "tableRow",
-          "content": [
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  226
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "emoji",
-                      "attrs": {
-                        "shortName": ":planning:",
-                        "id": "7764ef60-0277-4d49-bb81-e601449d23fb",
-                        "text": ":planning:"
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": " Plan and coordinate projects"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Slash command actions"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  160
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Tableution Roadmap"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Project poster template"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "tableRow",
-          "content": [
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  226
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "emoji",
-                      "attrs": {
-                        "shortName": ":round_pushpin:",
-                        "id": "1f4cd",
-                        "text": "📍"
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": " Effective meetings"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": []
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  160
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Tableution meetings"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Dynamic column - Google Calendar integration."
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Presentation mode - OKR table every townhall"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "tableRow",
-          "content": [
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  226
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "emoji",
-                      "attrs": {
-                        "shortName": ":rocket:",
-                        "id": "1f680",
-                        "text": "🚀"
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": " Track and report"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Jira issue macro"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Roadmap macro"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  160
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Tableution tracker - integration with Jira"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Tableution different views."
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Smart link - embed and hover state (amplitude)"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Jinfluenza - Create Jira issue."
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "New inline node → Bits (capture live data, e.g.: =NASDAQ:TEAM=, or =Atlassian-eMAU=)"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "paragraph",
-                  "content": []
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "tableRow",
-          "content": [
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  226
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "emoji",
-                      "attrs": {
-                        "shortName": ":star:",
-                        "id": "2b50",
-                        "text": "⭐"
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": " Team cohesion"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Snippets - heath monitor."
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  160
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Retro app"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "T-shirt sign up app"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Team mention"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Playbook app"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "bulletList",
-                          "content": [
-                            {
-                              "type": "listItem",
-                              "content": [
-                                {
-                                  "type": "paragraph",
-                                  "content": [
-                                    {
-                                      "type": "text",
-                                      "text": "Health monitor"
-                                    }
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "tableRow",
-          "content": [
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  226
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "emoji",
-                      "attrs": {
-                        "shortName": ":headphones:",
-                        "id": "1f3a7",
-                        "text": "🎧"
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": " Individual productivity"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Snippets - Define your own template"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "bulletList",
-                          "content": [
-                            {
-                              "type": "listItem",
-                              "content": [
-                                {
-                                  "type": "paragraph",
-                                  "content": [
-                                    {
-                                      "type": "text",
-                                      "text": "Precanned responses"
-                                    }
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Slash command actions."
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Assistant - Mastery curve and changeboarding"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  160
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Smart link"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "bulletList",
-                          "content": [
-                            {
-                              "type": "listItem",
-                              "content": [
-                                {
-                                  "type": "paragraph",
-                                  "content": [
-                                    {
-                                      "type": "text",
-                                      "text": "Invision embed"
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "listItem",
-                              "content": [
-                                {
-                                  "type": "paragraph",
-                                  "content": [
-                                    {
-                                      "type": "text",
-                                      "text": "Codepen embed"
-                                    }
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "DACI template"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Inline comments"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "bulletList",
-                          "content": [
-                            {
-                              "type": "listItem",
-                              "content": [
-                                {
-                                  "type": "paragraph",
-                                  "content": [
-                                    {
-                                      "type": "text",
-                                      "text": "Review and get feedback"
-                                    }
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Expand everywhere"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "tableRow",
-          "content": [
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  226
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": [
-                    {
-                      "type": "emoji",
-                      "attrs": {
-                        "shortName": ":card_box:",
-                        "id": "1f5c3",
-                        "text": "🗃"
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": " Maintenance"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Better Page properties macro → Roll up of information."
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  160
-                ]
-              },
-              "content": [
-                {
-                  "type": "bulletList",
-                  "content": [
-                    {
-                      "type": "listItem",
-                      "content": [
-                        {
-                          "type": "paragraph",
-                          "content": [
-                            {
-                              "type": "text",
-                              "text": "Tableution - Integration with MonkeyLearn → Autotagging"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "tableCell",
-              "attrs": {
-                "colwidth": [
-                  170
-                ]
-              },
-              "content": [
-                {
-                  "type": "paragraph",
-                  "content": []
                 }
               ]
             }
@@ -2702,9 +793,9 @@
         {
           "type": "status",
           "attrs": {
-            "text": "Express",
+            "text": "EXPRESS",
             "color": "purple",
-            "localId": "82382fb6-c2ad-4850-ac13-21f67249fe66"
+            "localId": "81fa5603-f0a1-4dd8-80da-83b201c96851"
           }
         }
       ]
@@ -2779,6 +870,1278 @@
           "text": ", powered by the Fabric Editor:"
         }
       ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "width": 66.66666666666666,
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "layoutSection",
+      "content": [
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Tableution + Jira (or any other apps, really)",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Jira is great for bringing together a centralised place to track items but hard to use. Tables are familiar and easy to manipulate but lacks power. Combining the two compliments each other by making the one source of truth easier to learn and use."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Presentation mode",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "What if pages / nodes can be shareable and presentable? This will reduce the amount of back and forth between Confluence page and Keynote while keeping the source of truth within our ecosystem."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "2) Consistent experience and deep integration across our suite",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "status",
+          "attrs": {
+            "text": "CAPTURE",
+            "color": "green",
+            "localId": "86adb69c-69d9-4186-9a6c-97ce9afb5195"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "After the founders presentation, it’s clear that we should be putting more emphasis on the less performant objectives. The first plan is to really understand the problems by talking to customers. Thankfully we have a research centre where people can sign up for interviews. Powered by Jira Service Desk, users can signup for a customer research session or submit feedback of their experience."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "This is where the benefit of a cross product editor comes in. With a consistent content creation experience, users can express their feedback using common elements like uploading media or link without the product teams having to do a single work."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Here’s how a customer might be submitting feedback through "
+        },
+        {
+          "type": "text",
+          "text": "Jira Service Desk",
+          "marks": [
+            {
+              "type": "strong"
+            },
+            {
+              "type": "textColor",
+              "attrs": {
+                "color": "#ff991f"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", powered by the Fabric Editor:"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Awesome. So this then gets submitted as a ticket and stored in Jira. Now, what typically happens is feedback often goes to the black hole because it lives in separate projects and tracked in different tools. Ideally, we’d want to bring this closer together. What if within a single project, you’re free to create pages as you’d like, using all the editor goodness and awesome tables? That way you can record customer interview sessions in the same place where the work happen."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "What’s even more awesome is the Fabric Editor of the future is tightly integrated with other 3rd party tools. Imagine a case where you are trying to organise interviews. You’d have to manage events in Calendly or Google Calendar and go back and forth with tracking it in Atlassian tools. What if you can automatically pull the event date with a table column powered by Google Calendar itself? This streamlines the whole shenanigans around scheduling calendar tetris in one simple table. Furthermore, since each row can be made into a Jira object, this gets autopopulated straightaway as a custom field within issue view. Allowing a more seamless communication between agent and customer."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Here’s how a researcher might be managing interviews within "
+        },
+        {
+          "type": "text",
+          "text": "Jira Software",
+          "marks": [
+            {
+              "type": "strong"
+            },
+            {
+              "type": "textColor",
+              "attrs": {
+                "color": "#ff991f"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", powered by the Fabric Editor:"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "layoutSection",
+      "content": [
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Page as a service",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "We’ve been thinking of the editor only living in certain places within Jira (description and commen). What if it can also live as a view? Being able to create report as a writeup and then present it using the editor."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Columns, powered by apps",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Google Calendar is only one use case. There are a multitude of other use cases where you can set a column for Slack to send precanned responses, etc."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "3) Ideation and synthesis across all mediums",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "status",
+          "attrs": {
+            "text": "CAPTURE",
+            "color": "green",
+            "localId": "5b01a63c-3e4e-4735-a248-99ea6089de54"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Now that we’ve done the research, it’s time to collate the result and come up with ideas to solve the problems. This ideation session typically happens in a meeting or a workshop, involving multiple stakeholders covered in reams of post it notes. But what happens next? Someone will inevitably have to writeup all the findings and synthesize the results into a document."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "This is where the magic happens. In the future people would be able to take photos of the results and automatically detect post it notes and whiteboard sketches. This is the perfect companion use case for a mobile editor, digital post it notes can be created automatically on the go, reducing the amount of time doing repetitive work."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Here’s how a team lead might be capturing work artefacts on "
+        },
+        {
+          "type": "text",
+          "text": "Confluence Mobile",
+          "marks": [
+            {
+              "type": "strong"
+            },
+            {
+              "type": "textColor",
+              "attrs": {
+                "color": "#00b8d9"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", powered by the Fabric Editor."
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "layoutSection",
+      "content": [
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "AI powered content detection",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Being able to transcribe post it notes is only one use case of AI in content collaboration. What if we could also autocomplete content while typing? or being able to generate content with voice & speech?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Editor apps across medium.",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The editor is optimised for long form written communication. But a lot of team activities require a more free form visual communication like being able to create diagram, murals, and post it notes. How can we support all types of mediums and accessibility needs?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "4. Seamless transformation of content",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "status",
+          "attrs": {
+            "text": "EXPRESS",
+            "color": "purple",
+            "localId": "19b8b931-5bf8-4968-ac39-78fce786dc20"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Great, so now we’ve generated a bunch of ideas and improvements through our smart mobile editor companion. How do we quickly turn these ideas into a roadmap? What if you can just select a couple of those upvoted post it notes and then turn them into a table. What’s more, since we support different types of data visualisations in the table - a roadmap view can be generated with a single click. Each item can then be converted into a Jira epic and tracked over time."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Here’s how a product manager can go from ideas to roadmap by leveraging the "
+        },
+        {
+          "type": "text",
+          "text": "combined power of Jira and Confluence",
+          "marks": [
+            {
+              "type": "strong"
+            },
+            {
+              "type": "textColor",
+              "attrs": {
+                "color": "#6554c0"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", powered by the Fabric Editor."
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "layoutSection",
+      "content": [
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Table visualization",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Because tables can be treated as a database, it unlocks the potential to be visualised in interesting ways. This can be in the form of cards, charts, or in this case a roadmap."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Cross flow with the editor",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Our products are awesome at doing its main jobs to be done. However, the editor can unlock more cross flow between products by surfacing meaningful entry points that helps enhance the purpose of each of our tools."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Open up each epic and then set a success measure. "
+                },
+                {
+                  "type": "text",
+                  "text": "The future of done",
+                  "marks": [
+                    {
+                      "type": "link",
+                      "attrs": {
+                        "href": "https://hello.atlassian.net/wiki/spaces/SWT/blog/2018/05/31/179493821/The+future+of+done"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "5) Lightning fast way to reuse content",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "status",
+          "attrs": {
+            "text": "CONNECT",
+            "color": "blue",
+            "localId": "a51718bb-7688-48a8-ad61-0da557895c94"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Awesome. So now that the roadmap is decided, time to actually design the solution. Often time people find that they are creating the same page structure all over again. Be it a design spec, a DACI, or documentation piece, there is an opportunity to save time by allowing users to predefine reusable bits. These snippets can then be shared across different teams to ensure consistency and maintain a standard within the company. What would be even more awesome is if we can autosuggest templates by detecting the page title alone."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Here’s how a designer can increase productivity by leveraging the power of "
+        },
+        {
+          "type": "text",
+          "text": "Confluence",
+          "marks": [
+            {
+              "type": "strong"
+            },
+            {
+              "type": "textColor",
+              "attrs": {
+                "color": "#ff5630"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "templates, powered by the Fabric Editor."
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Say that the design documentation is done. Let’s skip forward to actual developer implementing the feature. A pull request is submitted in Bitbucket and pending approval from the designer. Using the same editor, the designer can then comment and link an updated version of the prototype. What’s awesome is she can actually access Invision and third party tools from within the comment without having to switch context. The developer can then rely on inspect tools from Invision to make sure the end result is pixel perfect."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Here’s how a developer can collaborate and review work with precision in "
+        },
+        {
+          "type": "text",
+          "text": "Bitbucket",
+          "marks": [
+            {
+              "type": "strong"
+            },
+            {
+              "type": "textColor",
+              "attrs": {
+                "color": "#ff5630"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", powered by the Fabric Editor."
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "layoutSection",
+      "content": [
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Snippets",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Snippets allow users to define editor elements in a meaningful way that can be shared to other team members. With snippets, users can create pre-canned responses to post-mortem templates, allowing for faster content creation and increased productivity. Targeted at the maker-type users, they are also a vehicle to spread best practices within an organisation."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "layoutColumn",
+          "attrs": {
+            "width": 50
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Smart links",
+                  "marks": [
+                    {
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Smart links enables user to share documents, links, and content from all across the web and express them in inline, block, or interactive embed. This is the key to reducing context switching and keeping users engaged within our suite of products."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "6)",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " "
+        },
+        {
+          "type": "text",
+          "text": "Communicate under any situation",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "status",
+          "attrs": {
+            "text": "CAPTURE",
+            "color": "green",
+            "localId": "c254e22e-045b-48c4-a42b-5a4dc18bd48f"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Emergencies can happen at any time when teams least expect it. At this crucial point, teams need to be able to swiftly react to incidents and create incidents under pressure. This is where mobile shines. Using the lightweight version of the mobile editor, people can immediately describe the details of the incident with speed and precision."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Here’s how an on-call developer can immediately report an incident on "
+        },
+        {
+          "type": "text",
+          "text": "Opsgenie",
+          "marks": [
+            {
+              "type": "strong"
+            },
+            {
+              "type": "textColor",
+              "attrs": {
+                "color": "#ff991f"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", powered by the Fabric Editor."
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "While resolving an incident, responders will also often create a postmortem that details all the executive summary, leadup, and root causes so that future handling of the incident can be improved. Often times, this requires the responder to also create Jira tickets to further investigate the technical aspects that needs fixing. What if it’s easy to just create a ticket within Opsgenie, or better yet, across all of our products? Here’s an example of how it works:"
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "7) Collaborate across boundaries",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "status",
+          "attrs": {
+            "text": "CONNECT",
+            "color": "blue",
+            "localId": "88c99b62-d3a0-4f76-a88a-3f543aa652d7"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Once the emergency is resolved, the team members can then take next steps and actions in a meeting. This might happen across different continents, across multiple languages. What would be awesome is the ability to automatically transcribe your voice input, and then live translate the content based on user preferences. Here’s how an on-call developer can immediately report an incident on "
+        },
+        {
+          "type": "text",
+          "text": "Confluence",
+          "marks": [
+            {
+              "type": "strong"
+            },
+            {
+              "type": "textColor",
+              "attrs": {
+                "color": "#00b8d9"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", powered by the Fabric Editor."
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "rule"
+    },
+    {
+      "type": "paragraph",
+      "content": []
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "8) Track results and celebrate wins",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "status",
+          "attrs": {
+            "text": "CONNECT",
+            "color": "blue",
+            "localId": "7aef6054-1b36-4ef4-8439-1a12752e6ccc"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "At last, we’ve gone through the full circle of work trying to improve the customer experience, complete with firefighting "
+        },
+        {
+          "type": "text",
+          "text": "aw snaps",
+          "marks": [
+            {
+              "type": "strike"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " incidents. We should be seeing some impact on the goals we’ve set at the beginning of the year. Going back to the same page again, it’s easy to just hover through our key metrics and find out more details by seeing a rich preview of the links. Success of failure, there should be an easy way to send updates and celebrate the wins and learnings to the team across different channels out there."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Here’s how CEOs can give encouragement to the hardworking teams on"
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "marks": [
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Confluence",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.atlassian.com/software/confluence"
+              }
+            },
+            {
+              "type": "strong"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": ", powered by the Fabric Editor."
+        }
+      ]
+    },
+    {
+      "type": "mediaSingle",
+      "attrs": {
+        "layout": "center"
+      },
+      "content": [
+        {
+          "type": "media",
+          "attrs": {
+            "id": "2f1b7288-fa0e-4ee2-868c-f26be17f208d",
+            "type": "file",
+            "collection": "MediaServicesSample",
+            "width": 814,
+            "height": 592
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": []
     }
   ]
 }
