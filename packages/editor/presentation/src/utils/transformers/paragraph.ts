@@ -31,8 +31,15 @@ function shouldSplitParagraph(entity: ADFEntity) {
   return false;
 }
 
+function closeSentenceIfNeeded(sentence: string): string {
+  if (sentence[sentence.length - 1] !== '.') {
+    return `${sentence}.`;
+  }
+  return sentence;
+}
+
 function splitParagraph(entity: ADFEntity) {
-  const currentSize = 0;
+  let currentSize = 0;
   const paragraphs: ADFEntity[] = reduce(
     entity,
     (paragraphs, entity) => {
@@ -47,8 +54,61 @@ function splitParagraph(entity: ADFEntity) {
         currentParagraph = p();
       }
 
-      currentParagraph.content!.push(entity as Inline);
-      return [...paragraphs, currentParagraph];
+      if (!entity.text) {
+        currentParagraph.content!.push(entity as Inline);
+        return [...paragraphs, currentParagraph];
+      }
+
+      const size = entity.text.length;
+      // If the current text doesn't reach the limit. Add it.
+      if (currentSize + size < MAX_PARAGRAPH_LENGTH) {
+        currentSize += size;
+        currentParagraph.content!.push(entity as Inline);
+        return [...paragraphs, currentParagraph];
+      }
+
+      // The current text reach paragraph limit words,
+      // lets try to split it into using the closest sentence
+      const maybeASentence = entity.text
+        .split('. ')
+        .filter(sentence => !!sentence);
+      if (maybeASentence.length < 2) {
+        // no sentence found, add the whole text.
+        currentSize += size;
+        currentParagraph.content!.push(entity as Inline);
+        return [...paragraphs, currentParagraph];
+      }
+
+      // We have at least one sentence.
+      const newParagraphs = [...paragraphs, currentParagraph];
+
+      // Assure the we have a closing sentence in the current paragraph
+      const endingSentence = maybeASentence.shift()!;
+      currentSize += endingSentence.length;
+      currentParagraph.content!.push({
+        ...entity,
+        text: closeSentenceIfNeeded(endingSentence),
+      } as Inline);
+
+      for (const sentence of maybeASentence) {
+        if (currentSize + sentence.length >= MAX_PARAGRAPH_LENGTH) {
+          currentParagraph = p();
+          currentSize = sentence.length;
+
+          currentParagraph.content!.push({
+            ...entity,
+            text: closeSentenceIfNeeded(sentence),
+          } as Inline);
+          newParagraphs.push(currentParagraph);
+        } else {
+          currentSize += sentence.length;
+          currentParagraph.content!.push({
+            ...entity,
+            text: closeSentenceIfNeeded(sentence),
+          } as Inline);
+        }
+      }
+      return newParagraphs;
     },
     [] as ADFEntity[],
   );
