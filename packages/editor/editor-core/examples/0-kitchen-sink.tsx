@@ -88,7 +88,7 @@ const nodeTypes: Record<string, NodeMapping> = {
   // placeholder
 
   layoutSection: { name: 'layoutSection' },
-  layoutColumn: { name: 'layoutColumn' },
+  layoutColumn: { name: 'layoutColumn', attrs: ['width'] },
 
   // smart cards
   // unsupported2
