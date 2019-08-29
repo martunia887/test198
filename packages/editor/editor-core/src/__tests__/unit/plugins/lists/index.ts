@@ -23,7 +23,7 @@ import {
   breakout,
 } from '@atlaskit/editor-test-helpers';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
-import {  } from 'prosemirror-view';
+import { EditorView } from 'prosemirror-view';
 import {
   toggleOrderedList,
   toggleBulletList,
@@ -32,7 +32,6 @@ import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-
 import { GapCursorSelection } from '../../../../plugins/gap-cursor';
 import { AnalyticsHandler } from '../../../../analytics';
 import { INPUT_METHOD } from '../../../../plugins/analytics';
-
 // TODO: Explore node rejection
 describe.skip('lists', () => {
   const createEditor = createEditorFactory();
@@ -71,26 +70,26 @@ describe.skip('lists', () => {
 
     describe('when hit enter', () => {
       it('should split list item', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ul(li(p('text{<>}')))),
           trackEvent as any,
         );
-        sendKeyToPm(, 'Enter');
-        expect(.state.doc).toEqualDocument(
+        sendKeyToPm(editorView, 'Enter');
+        expect(editorView.state.doc).toEqualDocument(
           doc(ul(li(p('text')), li(p()))),
         );
       });
     });
 
     describe('when hit Tab', () => {
-      let : ;
+      let editorView: EditorView;
       beforeEach(() => {
-        ({  } = editor(doc(ol(li(p('text')), li(p('text{<>}'))))));
-        sendKeyToPm(, 'Tab');
+        ({ editorView } = editor(doc(ol(li(p('text')), li(p('text{<>}'))))));
+        sendKeyToPm(editorView, 'Tab');
       });
 
       it('should create a sublist', () => {
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ol(li(p('text'), ol(li(p('text{<>}')))))),
         );
       });
@@ -120,13 +119,13 @@ describe.skip('lists', () => {
 
     describe('when hit Backspace', () => {
       const backspaceCheck = (beforeDoc: any, afterDoc: any) => {
-        const {  } = editor(beforeDoc);
-        sendKeyToPm(, 'Backspace');
+        const { editorView } = editor(beforeDoc);
+        sendKeyToPm(editorView, 'Backspace');
 
-        const expectedDoc = afterDoc(.state.schema);
-        expect(.state.doc.toJSON()).toEqual(expectedDoc.toJSON());
+        const expectedDoc = afterDoc(editorView.state.schema);
+        expect(editorView.state.doc.toJSON()).toEqual(expectedDoc.toJSON());
 
-        const { state } = ;
+        const { state } = editorView;
         if (expectedDoc.refs['<']) {
           expect(state.selection.from).toEqual(expectedDoc.refs['<']);
           expect(state.selection.to).toEqual(expectedDoc.refs['>']);
@@ -405,17 +404,17 @@ describe.skip('lists', () => {
     });
 
     describe('when hit Shift-Tab', () => {
-      let : ;
+      let editorView: EditorView;
       beforeEach(() => {
-        ({  } = editor(
+        ({ editorView } = editor(
           doc(ol(li(p('One'), ul(li(p('Two{<>}')))))),
           trackEvent as any,
         ));
-        sendKeyToPm(, 'Shift-Tab');
+        sendKeyToPm(editorView, 'Shift-Tab');
       });
 
       it('should outdent the list', () => {
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ol(li(p('One')), li(p('Two{<>}')))),
         );
       });
@@ -446,14 +445,14 @@ describe.skip('lists', () => {
     describe('when hit Cmd-Shift-7', () => {
       simulatePlatform(Platforms.Mac);
 
-      let : ;
+      let editorView: EditorView;
       beforeEach(() => {
-        ({  } = editor(doc(p('One{<>}'))));
-        sendKeyToPm(, 'Cmd-Shift-7');
+        ({ editorView } = editor(doc(p('One{<>}'))));
+        sendKeyToPm(editorView, 'Cmd-Shift-7');
       });
 
       it('should create a list', () => {
-        expect(.state.doc).toEqualDocument(doc(ol(li(p('One')))));
+        expect(editorView.state.doc).toEqualDocument(doc(ol(li(p('One')))));
       });
 
       it('should call numbered list analytics event', () => {
@@ -478,14 +477,14 @@ describe.skip('lists', () => {
     describe('when hit Cmd-Shift-8', () => {
       simulatePlatform(Platforms.Mac);
 
-      let : ;
+      let editorView: EditorView;
       beforeEach(() => {
-        ({  } = editor(doc(p('One{<>}'))));
-        sendKeyToPm(, 'Cmd-Shift-8');
+        ({ editorView } = editor(doc(p('One{<>}'))));
+        sendKeyToPm(editorView, 'Cmd-Shift-8');
       });
 
       it('should create a list', () => {
-        expect(.state.doc).toEqualDocument(doc(ul(li(p('One')))));
+        expect(editorView.state.doc).toEqualDocument(doc(ul(li(p('One')))));
       });
 
       it('should call numbered list analytics event', () => {
@@ -510,18 +509,18 @@ describe.skip('lists', () => {
 
   describe('quick insert', () => {
     describe('Numbered list', () => {
-      let : ;
+      let editorView: EditorView;
       let sel: number;
 
       beforeEach(() => {
-        ({ , sel } = editor(doc(p('{<>}'))));
+        ({ editorView, sel } = editor(doc(p('{<>}'))));
 
-        insertText(, '/Numbered List', sel);
-        sendKeyToPm(, 'Enter');
+        insertText(editorView, '/Numbered List', sel);
+        sendKeyToPm(editorView, 'Enter');
       });
 
       it('should insert a numbered list', () => {
-        expect(.state.doc).toEqualDocument(doc(ol(li(p('{<>}')))));
+        expect(editorView.state.doc).toEqualDocument(doc(ol(li(p('{<>}')))));
       });
 
       it('should fire Analytics GAS V3 events', () => {
@@ -538,18 +537,18 @@ describe.skip('lists', () => {
     });
 
     describe('Unordered list', () => {
-      let : ;
+      let editorView: EditorView;
       let sel: number;
 
       beforeEach(() => {
-        ({ , sel } = editor(doc(p('{<>}'))));
+        ({ editorView, sel } = editor(doc(p('{<>}'))));
 
-        insertText(, '/Unordered List', sel);
-        sendKeyToPm(, 'Enter');
+        insertText(editorView, '/Unordered List', sel);
+        sendKeyToPm(editorView, 'Enter');
       });
 
       it('should insert an unordered list', () => {
-        expect(.state.doc).toEqualDocument(doc(ul(li(p('{<>}')))));
+        expect(editorView.state.doc).toEqualDocument(doc(ul(li(p('{<>}')))));
       });
 
       it('should fire Analytics GAS V3 events when inserting a unordered list', () => {
@@ -568,30 +567,30 @@ describe.skip('lists', () => {
 
   describe('API', () => {
     it('should allow toggling between normal text and ordered list', () => {
-      const {  } = editor(doc(p('t{a}ex{b}t')));
+      const { editorView } = editor(doc(p('t{a}ex{b}t')));
 
-      toggleOrderedList();
-      expect(.state.doc).toEqualDocument(doc(ol(li(p('text')))));
-      toggleOrderedList();
-      expect(.state.doc).toEqualDocument(doc(p('text')));
+      toggleOrderedList(editorView);
+      expect(editorView.state.doc).toEqualDocument(doc(ol(li(p('text')))));
+      toggleOrderedList(editorView);
+      expect(editorView.state.doc).toEqualDocument(doc(p('text')));
     });
 
     it('should allow toggling between normal text and bullet list', () => {
-      const {  } = editor(doc(p('t{<}ex{>}t')));
+      const { editorView } = editor(doc(p('t{<}ex{>}t')));
 
-      toggleBulletList();
-      expect(.state.doc).toEqualDocument(doc(ul(li(p('text')))));
-      toggleBulletList();
-      expect(.state.doc).toEqualDocument(doc(p('text')));
+      toggleBulletList(editorView);
+      expect(editorView.state.doc).toEqualDocument(doc(ul(li(p('text')))));
+      toggleBulletList(editorView);
+      expect(editorView.state.doc).toEqualDocument(doc(p('text')));
     });
 
     it('should allow toggling between ordered and bullet list', () => {
-      const {  } = editor(doc(ol(li(p('t{<}ex{>}t')))));
+      const { editorView } = editor(doc(ol(li(p('t{<}ex{>}t')))));
 
-      toggleBulletList();
-      expect(.state.doc).toEqualDocument(doc(ul(li(p('text')))));
-      toggleBulletList();
-      expect(.state.doc).toEqualDocument(doc(p('text')));
+      toggleBulletList(editorView);
+      expect(editorView.state.doc).toEqualDocument(doc(ul(li(p('text')))));
+      toggleBulletList(editorView);
+      expect(editorView.state.doc).toEqualDocument(doc(p('text')));
     });
 
     it('should make sure that it is enabled when selecting ordered list', () => {
@@ -614,15 +613,15 @@ describe.skip('lists', () => {
 
     describe('toggling a list', () => {
       it("shouldn't affect text selection", () => {
-        const {  } = editor(doc(p('hello{<>}')));
+        const { editorView } = editor(doc(p('hello{<>}')));
 
-        toggleBulletList();
+        toggleBulletList(editorView);
         // If the text is not selected, pressing enter will
         // create a new paragraph. If it is selected the
         // 'hello' text will be removed
-        sendKeyToPm(, 'Enter');
+        sendKeyToPm(editorView, 'Enter');
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ul(li(p('hello')), li(p('')))),
         );
       });
@@ -637,37 +636,37 @@ describe.skip('lists', () => {
       );
 
       it('should allow untoggling part of a list based on selection', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('{<}Two')), li(p('Three{>}')), li(p('Four'))),
           ),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should untoggle empty paragraphs in a list', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('{<}One')), li(p('Two')), li(p()), li(p('Three{>}')))),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           doc(p('One'), p('Two'), p(), p('Three')),
         );
       });
 
       it('should untoggle all list items with different ancestors in selection', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('{<}Two')), li(p('Three'))),
             ol(li(p('One{>}')), li(p('Two'))),
           ),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             ol(li(p('One'))),
             p('Two'),
@@ -686,22 +685,22 @@ describe.skip('lists', () => {
           ul(li(p('Two')), li(p('Three'))),
           ol(li(p('Four'))),
         );
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('{<}Two')), li(p('Three{>}')), li(p('Four'))),
           ),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should convert selection inside panel to list', () => {
         const expectedOutput = doc(panel()(ul(li(p('text')))));
-        const {  } = editor(doc(panel()(p('te{<>}xt'))));
+        const { editorView } = editor(doc(panel()(p('te{<>}xt'))));
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should allow converting part of a list based on selection that starts at the end of previous line', () => {
@@ -710,82 +709,82 @@ describe.skip('lists', () => {
           ul(li(p('Two')), li(p('Three'))),
           ol(li(p('Four'))),
         );
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One{<}')), li(p('Two')), li(p('Three{>}')), li(p('Four'))),
           ),
         ); // When selection starts on previous (empty) node
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should convert selection to a list when the selection starts with a paragraph and ends inside a list', () => {
         const expectedOutput = doc(
           ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
         );
-        const {  } = editor(
+        const { editorView } = editor(
           doc(p('{<}One'), ol(li(p('Two{>}')), li(p('Three')), li(p('Four')))),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should convert selection to a list when the selection contains a list but starts and end with paragraphs', () => {
         const expectedOutput = doc(
           ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
         );
-        const {  } = editor(
+        const { editorView } = editor(
           doc(p('{<}One'), ol(li(p('Two')), li(p('Three'))), p('Four{>}')),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should convert selection to a list when the selection starts inside a list and ends with a paragraph', () => {
         const expectedOutput = doc(
           ol(li(p('One')), li(p('Two')), li(p('Three')), li(p('Four'))),
         );
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('One')), li(p('{<}Two')), li(p('Three'))), p('Four{>}')),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should convert selection to a list and keep empty paragraphs', () => {
         const expectedOutput = doc(
           ul(li(p('One')), li(p('Two')), li(p()), li(p('Three'))),
         );
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('{<}One')), li(p('Two')), li(p()), li(p('Three{>}')))),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should convert selection to list when there is an empty paragraph between non empty two', () => {
         const expectedOutput = doc(ul(li(p('One')), li(p()), li(p('Three'))));
-        const {  } = editor(doc(p('{<}One'), p(), p('Three{>}')));
+        const { editorView } = editor(doc(p('{<}One'), p(), p('Three{>}')));
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should convert selection to a list when it is a paragraph with supported marks', () => {
         const expectedOutput = doc(
           ul(li(p('One')), li(p(underline('Two'))), li(p('Three'))),
         );
-        const {  } = editor(
+        const { editorView } = editor(
           doc(p('{<}One'), p(underline('Two')), p('Three{>}')),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
 
       it('should retain breakout marks on ancestor when toggling list within a layout', () => {
@@ -799,7 +798,7 @@ describe.skip('lists', () => {
           ),
         );
 
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             breakout({ mode: 'wide' })(
               layoutSection(
@@ -811,8 +810,8 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(expectedOutput);
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutput);
       });
     });
 
@@ -849,7 +848,7 @@ describe.skip('lists', () => {
       );
 
       it("should join with previous list if it's of the same type", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('Two')), li(p('Three'))),
             p('{<}Four'),
@@ -858,14 +857,14 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           expectedOutputForPreviousList,
         );
       });
 
       it("should join with previous list if it's of the same type and selection starts at the end of previous line", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('Two')), li(p('Three{<}'))),
             p('Four'),
@@ -874,14 +873,14 @@ describe.skip('lists', () => {
           ),
         ); // When selection starts on previous (empty) node
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           expectedOutputForPreviousList,
         );
       });
 
       it("should not join with previous list if it's not of the same type", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('Two')), li(p('Three'))),
             p('{<}Four'),
@@ -890,8 +889,8 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             ol(li(p('One')), li(p('Two')), li(p('Three'))),
             ul(li(p('Four')), li(p('Five'))),
@@ -901,7 +900,7 @@ describe.skip('lists', () => {
       });
 
       it("should not join with previous list if it's not of the same type and selection starts at the end of previous line", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('Two')), li(p('Three{<}'))),
             p('Four'),
@@ -910,8 +909,8 @@ describe.skip('lists', () => {
           ),
         ); // When selection starts on previous (empty) node
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             ol(li(p('One')), li(p('Two')), li(p('Three'))),
             ul(li(p('Four')), li(p('Five'))),
@@ -921,7 +920,7 @@ describe.skip('lists', () => {
       });
 
       it("should join with next list if it's of the same type", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             p('One'),
             p('{<}Two'),
@@ -930,12 +929,12 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(expectedOutputForNextList);
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutputForNextList);
       });
 
       it("should join with next list if it's of the same type and selection starts at the end of previous line", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             p('One{<}'),
             p('Two'),
@@ -944,12 +943,12 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(expectedOutputForNextList);
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(expectedOutputForNextList);
       });
 
       it("should not join with next list if it isn't of the same type", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             p('One'),
             p('{<}Two'),
@@ -958,8 +957,8 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             p('One'),
             ul(li(p('Two')), li(p('Three'))),
@@ -969,7 +968,7 @@ describe.skip('lists', () => {
       });
 
       it("should not join with next list if it isn't of the same type and selection starts at the end of previous line", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             p('One{<}'),
             p('Two'),
@@ -978,8 +977,8 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             p('One'),
             ul(li(p('Two')), li(p('Three'))),
@@ -989,7 +988,7 @@ describe.skip('lists', () => {
       });
 
       it("should join with previous and next list if they're of the same type", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('Two'))),
             p('{<}Three'),
@@ -998,14 +997,14 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           expectedOutputForPreviousAndNextList,
         );
       });
 
       it("should join with previous and next list if they're of the same type and selection starts at the end of previous line", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('Two{<}'))),
             p('Three'),
@@ -1014,14 +1013,14 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleOrderedList();
-        expect(.state.doc).toEqualDocument(
+        toggleOrderedList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           expectedOutputForPreviousAndNextList,
         );
       });
 
       it("should not join with previous and next list if they're not of the same type", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('Two'))),
             p('{<}Three'),
@@ -1030,8 +1029,8 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             ol(li(p('One')), li(p('Two'))),
             ul(li(p('Three')), li(p('Four'))),
@@ -1041,7 +1040,7 @@ describe.skip('lists', () => {
       });
 
       it("should not join with previous and next list if they're not of the same type and selectoin starts at the end of previous line", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('One')), li(p('Two{<}'))),
             p('Three'),
@@ -1050,8 +1049,8 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleBulletList();
-        expect(.state.doc).toEqualDocument(
+        toggleBulletList(editorView);
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             ol(li(p('One')), li(p('Two'))),
             ul(li(p('Three')), li(p('Four'))),
@@ -1064,23 +1063,23 @@ describe.skip('lists', () => {
     describe('Nested Lists', () => {
       describe('When gap cursor is inside listItem before codeBlock', () => {
         it('should increase the depth of list item when Tab key press', () => {
-          const {  } = editor(
+          const { editorView } = editor(
             doc(ol(li(p('text')), li(code_block()('{<>}text')), li(p('text')))),
           );
           // enable gap cursor
-          sendKeyToPm(, 'ArrowLeft');
-          expect(.state.selection instanceof GapCursorSelection).toBe(
+          sendKeyToPm(editorView, 'ArrowLeft');
+          expect(editorView.state.selection instanceof GapCursorSelection).toBe(
             true,
           );
-          expect(.state.selection.$from.depth).toEqual(2);
+          expect(editorView.state.selection.$from.depth).toEqual(2);
 
-          sendKeyToPm(, 'Tab');
+          sendKeyToPm(editorView, 'Tab');
 
-          expect(.state.selection.$from.depth).toEqual(4);
+          expect(editorView.state.selection.$from.depth).toEqual(4);
         });
 
         it('should decrease the depth of list item when Shift-Tab key press', () => {
-          const {  } = editor(
+          const { editorView } = editor(
             doc(
               ol(
                 li(p('text'), ol(li(code_block()('{<>}text')))),
@@ -1089,31 +1088,31 @@ describe.skip('lists', () => {
             ),
           );
           // enable gap cursor
-          sendKeyToPm(, 'ArrowLeft');
-          expect(.state.selection instanceof GapCursorSelection).toBe(
+          sendKeyToPm(editorView, 'ArrowLeft');
+          expect(editorView.state.selection instanceof GapCursorSelection).toBe(
             true,
           );
-          expect(.state.selection.$from.depth).toEqual(4);
+          expect(editorView.state.selection.$from.depth).toEqual(4);
 
-          sendKeyToPm(, 'Shift-Tab');
+          sendKeyToPm(editorView, 'Shift-Tab');
 
-          expect(.state.selection.$from.depth).toEqual(2);
+          expect(editorView.state.selection.$from.depth).toEqual(2);
         });
       });
 
       it('should increase the depth of list item when Tab key press', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('text')), li(p('te{<>}xt')), li(p('text')))),
         );
-        expect(.state.selection.$from.depth).toEqual(3);
+        expect(editorView.state.selection.$from.depth).toEqual(3);
 
-        sendKeyToPm(, 'Tab');
+        sendKeyToPm(editorView, 'Tab');
 
-        expect(.state.selection.$from.depth).toEqual(5);
+        expect(editorView.state.selection.$from.depth).toEqual(5);
       });
 
       it("shouldn't increase the depth of list item when Tab key press when at 6 levels indentation", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(
               li(
@@ -1144,15 +1143,15 @@ describe.skip('lists', () => {
           ),
         );
 
-        expect(.state.selection.$from.depth).toEqual(13);
+        expect(editorView.state.selection.$from.depth).toEqual(13);
 
-        sendKeyToPm(, 'Tab');
+        sendKeyToPm(editorView, 'Tab');
 
-        expect(.state.selection.$from.depth).toEqual(13);
+        expect(editorView.state.selection.$from.depth).toEqual(13);
       });
 
       it("shouldn't increase the depth of list item when Tab key press when a child list at 6 levels indentation", () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(
               li(
@@ -1181,50 +1180,50 @@ describe.skip('lists', () => {
           ),
         );
 
-        expect(.state.selection.$from.depth).toEqual(11);
+        expect(editorView.state.selection.$from.depth).toEqual(11);
 
-        sendKeyToPm(, 'Tab');
+        sendKeyToPm(editorView, 'Tab');
 
-        expect(.state.selection.$from.depth).toEqual(11);
+        expect(editorView.state.selection.$from.depth).toEqual(11);
       });
 
       it('should nest the list item when Tab key press', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('text')), li(p('te{<>}xt')), li(p('text')))),
         );
 
-        sendKeyToPm(, 'Tab');
+        sendKeyToPm(editorView, 'Tab');
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ol(li(p('text'), ol(li(p('te{<>}xt')))), li(p('text')))),
         );
       });
 
       it('should decrease the depth of list item when Shift-Tab key press', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('text'), ol(li(p('te{<>}xt')))), li(p('text')))),
         );
-        expect(.state.selection.$from.depth).toEqual(5);
+        expect(editorView.state.selection.$from.depth).toEqual(5);
 
-        sendKeyToPm(, 'Shift-Tab');
+        sendKeyToPm(editorView, 'Shift-Tab');
 
-        expect(.state.selection.$from.depth).toEqual(3);
+        expect(editorView.state.selection.$from.depth).toEqual(3);
       });
 
       it('should lift the list item when Shift-Tab key press', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('text'), ol(li(p('te{<>}xt')))), li(p('text')))),
         );
 
-        sendKeyToPm(, 'Shift-Tab');
+        sendKeyToPm(editorView, 'Shift-Tab');
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ol(li(p('text')), li(p('te{<>}xt')), li(p('text')))),
         );
       });
 
       it('should lift nested and same level list items correctly', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('some{<>}text'), ol(li(p('B')))), li(p('C'))),
 
@@ -1232,9 +1231,9 @@ describe.skip('lists', () => {
           ),
         );
 
-        sendKeyToPm(, 'Shift-Tab');
+        sendKeyToPm(editorView, 'Shift-Tab');
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             p('some{<>}text'),
             ol(li(p('B')), li(p('C'))),
@@ -1245,13 +1244,13 @@ describe.skip('lists', () => {
       });
 
       it('should lift the list item when Enter key press is done on empty list-item', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('text'), ol(li(p('{<>}')))), li(p('text')))),
         );
 
-        sendKeyToPm(, 'Enter');
+        sendKeyToPm(editorView, 'Enter');
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ol(li(p('text')), li(p('{<>}')), li(p('text')))),
         );
       });
@@ -1260,13 +1259,13 @@ describe.skip('lists', () => {
     describe('Enter key-press', () => {
       describe('when Enter key is pressed on empty nested list item', () => {
         it('should create new list item in parent list', () => {
-          const {  } = editor(
+          const { editorView } = editor(
             doc(ol(li(p('text'), ol(li(p('{<>}')))), li(p('text')))),
           );
 
-          sendKeyToPm(, 'Enter');
+          sendKeyToPm(editorView, 'Enter');
 
-          expect(.state.doc).toEqualDocument(
+          expect(editorView.state.doc).toEqualDocument(
             doc(ol(li(p('text')), li(p('{<>}')), li(p('text')))),
           );
         });
@@ -1274,13 +1273,13 @@ describe.skip('lists', () => {
 
       describe('when Enter key is pressed on non-empty nested list item', () => {
         it('should created new nested list item', () => {
-          const {  } = editor(
+          const { editorView } = editor(
             doc(ol(li(p('text'), ol(li(p('test{<>}')))), li(p('text')))),
           );
 
-          sendKeyToPm(, 'Enter');
+          sendKeyToPm(editorView, 'Enter');
 
-          expect(.state.doc).toEqualDocument(
+          expect(editorView.state.doc).toEqualDocument(
             doc(
               ol(
                 li(p('text'), ol(li(p('test')), li(p('{<>}')))),
@@ -1293,13 +1292,13 @@ describe.skip('lists', () => {
 
       describe('when Enter key is pressed on non-empty top level list item', () => {
         it('should created new list item at top level', () => {
-          const {  } = editor(
+          const { editorView } = editor(
             doc(ol(li(p('text')), li(p('test{<>}')), li(p('text')))),
           );
 
-          sendKeyToPm(, 'Enter');
+          sendKeyToPm(editorView, 'Enter');
 
-          expect(.state.doc).toEqualDocument(
+          expect(editorView.state.doc).toEqualDocument(
             doc(ol(li(p('text')), li(p('test')), li(p('{<>}')), li(p('text')))),
           );
         });
@@ -1307,13 +1306,13 @@ describe.skip('lists', () => {
 
       describe('when Enter key is pressed on non-empty top level list item inside panel', () => {
         it('should created new list item at top level', () => {
-          const {  } = editor(
+          const { editorView } = editor(
             doc(panel()(ol(li(p('text')), li(p('test{<>}')), li(p('text'))))),
           );
 
-          sendKeyToPm(, 'Enter');
+          sendKeyToPm(editorView, 'Enter');
 
-          expect(.state.doc).toEqualDocument(
+          expect(editorView.state.doc).toEqualDocument(
             doc(
               panel()(
                 ol(li(p('text')), li(p('test')), li(p('{<>}')), li(p('text'))),
@@ -1325,13 +1324,13 @@ describe.skip('lists', () => {
 
       describe('when Enter key is pressed on empty top level list item', () => {
         it('should create new paragraph outside the list', () => {
-          const {  } = editor(
+          const { editorView } = editor(
             doc(ol(li(p('text')), li(p('{<>}')), li(p('text')))),
           );
 
-          sendKeyToPm(, 'Enter');
+          sendKeyToPm(editorView, 'Enter');
 
-          expect(.state.doc).toEqualDocument(
+          expect(editorView.state.doc).toEqualDocument(
             doc(ol(li(p('text'))), p('{<>}'), ol(li(p('text')))),
           );
         });
@@ -1339,13 +1338,13 @@ describe.skip('lists', () => {
 
       describe('when Enter key is pressed on empty top level list item inside panel', () => {
         it('should create new paragraph outside the list', () => {
-          const {  } = editor(
+          const { editorView } = editor(
             doc(panel()(ol(li(p('text')), li(p('{<>}')), li(p('text'))))),
           );
 
-          sendKeyToPm(, 'Enter');
+          sendKeyToPm(editorView, 'Enter');
 
-          expect(.state.doc).toEqualDocument(
+          expect(editorView.state.doc).toEqualDocument(
             doc(panel()(ol(li(p('text'))), p('{<>}'), ol(li(p('text'))))),
           );
         });
@@ -1354,58 +1353,58 @@ describe.skip('lists', () => {
 
     describe('Toggle - nested list scenarios - to lift items out of list', () => {
       it('should be possible to toggle a simple nested list', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('text'), ol(li(p('text{<>}')))), li(p('text')))),
         );
 
-        toggleOrderedList();
+        toggleOrderedList(editorView);
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ol(li(p('text'))), p('text{<>}'), ol(li(p('text')))),
         );
       });
 
       it('should be possible to toggle an empty nested list item', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('text'), ol(li(p('{<>}')))), li(p('text')))),
         );
 
-        toggleOrderedList();
+        toggleOrderedList(editorView);
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ol(li(p('text'))), p('{<>}'), ol(li(p('text')))),
         );
       });
 
       it('should be possible to toggle a selection across different depths in the list', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ol(li(p('te{<}xt'), ol(li(p('text{>}')))), li(p('text')))),
         );
 
-        toggleOrderedList();
+        toggleOrderedList(editorView);
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(p('te{<}xt'), p('text{>}'), ol(li(p('text')))),
         );
       });
 
       it('should be possible to toggle a selection across lists with different parent lists', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(li(p('te{<}xt'), ol(li(p('text'))))),
             ol(li(p('te{>}xt'), ol(li(p('text'))))),
           ),
         );
 
-        toggleOrderedList();
+        toggleOrderedList(editorView);
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(p('te{<}xt'), p('text'), p('te{>}xt'), ol(li(p('text')))),
         );
       });
 
       it('should be create a new list for children of lifted list item', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(
               li(p('text'), ol(li(p('te{<>}xt'), ol(li(p('text')))))),
@@ -1414,9 +1413,9 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleOrderedList();
+        toggleOrderedList(editorView);
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             ol(li(p('text'))),
             p('te{<>}xt'),
@@ -1426,7 +1425,7 @@ describe.skip('lists', () => {
       });
 
       it('should only change type to bullet list when toggling orderedList to bulletList', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(
             ol(
               li(p('text'), ol(li(p('text'), ol(li(p('te{<>}xt')))))),
@@ -1435,9 +1434,9 @@ describe.skip('lists', () => {
           ),
         );
 
-        toggleBulletList();
+        toggleBulletList(editorView);
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             ol(
               li(p('text'), ol(li(p('text'), ul(li(p('te{<>}xt')))))),
@@ -1450,22 +1449,22 @@ describe.skip('lists', () => {
 
     describe('when adding media inside list', () => {
       it('should add media as media single', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ul(li(p('Three')), li(p('Four{<>}')))),
         );
 
         insertMediaAsMediaSingle(
-          ,
+          editorView,
           media({
             id: temporaryFileId,
             type: 'file',
             collection: testCollectionName,
             __fileMimeType: 'image/png',
-          })()(.state.schema),
+          })()(editorView.state.schema),
           INPUT_METHOD.PICKER_CLOUD,
         );
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(
             ul(
               li(p('Three')),
@@ -1487,22 +1486,22 @@ describe.skip('lists', () => {
       });
 
       it('should not add non images inside lists', () => {
-        const {  } = editor(
+        const { editorView } = editor(
           doc(ul(li(p('Three')), li(p('Four{<>}')))),
         );
 
         insertMediaAsMediaSingle(
-          ,
+          editorView,
           media({
             id: temporaryFileId,
             type: 'file',
             collection: testCollectionName,
             __fileMimeType: 'pdf',
-          })()(.state.schema),
+          })()(editorView.state.schema),
           INPUT_METHOD.PICKER_CLOUD,
         );
 
-        expect(.state.doc).toEqualDocument(
+        expect(editorView.state.doc).toEqualDocument(
           doc(ul(li(p('Three')), li(p('Four{<>}')))),
         );
       });
