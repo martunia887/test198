@@ -712,6 +712,7 @@ describe.skip('table plugin', () => {
           collection: testCollectionName,
           __fileMimeType: 'image/png',
         })()(editorView.state.schema),
+        INPUT_METHOD.PICKER_CLOUD,
       );
 
       expect(editorView.state.doc).toEqualDocument(

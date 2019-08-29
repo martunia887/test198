@@ -7,12 +7,11 @@ import React, {
   type Element,
   type ElementRef,
 } from 'react';
-import { getTheme } from '@atlaskit/theme';
+import { getTheme } from '@atlaskit/theme/components';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
   createAndFireEvent,
-  type WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 import {
   name as packageName,
@@ -60,7 +59,7 @@ type resizeObj = {
 };
 
 type Props = {
-  ...WithAnalyticsEventsProps,
+  createAnalyticsEvent: any,
   /** Elements to be displayed in the ContainerNavigationComponent */
   children?: Node,
   /** Theme object to be used to color the navigation container. */
@@ -211,7 +210,7 @@ class Navigation extends PureComponent<Props, State> {
     }
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { containerTheme, globalTheme } = nextProps;
     // TODO work out why nextProps.theme.__ATLASKIT_THEME__.mode always returns the mode
     // that was applied at time of first page load.

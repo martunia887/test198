@@ -5,6 +5,7 @@ import ChevronUpIcon from '@atlaskit/icon/glyph/chevron-up';
 import Item, { itemThemeNamespace } from '@atlaskit/item';
 import { colors, gridSize } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
+import Avatar from './avatar';
 import { FadeIn } from './fade-in';
 import { SwitcherChildItem } from '../types';
 import {
@@ -14,6 +15,7 @@ import {
   SWITCHER_CHILD_ITEM_SUBJECT,
   SWITCHER_ITEM_SUBJECT,
   SWITCHER_ITEM_EXPAND_SUBJECT,
+  WithAnalyticsEventsProps,
 } from '../utils/analytics';
 import { createIcon } from '../utils/icon-themes';
 
@@ -33,6 +35,9 @@ const itemTheme = {
     background: 'transparent',
     text: colors.text,
     secondaryText: colors.N200,
+  },
+  width: {
+    default: '100%',
   },
 };
 
@@ -71,12 +76,6 @@ const ItemWrapper = styled.div<ToggleProps>`
   width: 100%;
   overflow: hidden;
 
-  // limit the width of the Item component to make sure long labels and descriptions are ellipsed properly
-  // remove this once the Item allows width theming
-  &&& > * {
-    max-width: 100%;
-  }
-
   ${({ isParentHovered }) =>
     isParentHovered ? `background-color: ${colors.N20A}` : ''};
 
@@ -111,7 +110,7 @@ interface ToggleProps {
   isParentHovered?: boolean;
 }
 
-interface Props {
+interface Props extends WithAnalyticsEventsProps {
   children: React.ReactNode;
   icon: React.ReactNode;
   tooltipContent: React.ReactNode;
@@ -177,7 +176,12 @@ class SwitcherItemWithDropDown extends React.Component<Props, State> {
               <ChildItemsContainer>
                 {childItems.map(item => (
                   <Item
-                    elemBefore={childIcon}
+                    elemBefore={
+                      <Avatar
+                        avatarUrl={item.avatar}
+                        fallbackComponent={childIcon}
+                      />
+                    }
                     href={item.href}
                     key={item.label}
                     onClick={onChildItemClick}
@@ -198,29 +202,35 @@ class SwitcherItemWithDropDown extends React.Component<Props, State> {
     const Icon = createIcon(showChildItems ? ChevronUpIcon : ChevronDownIcon, {
       size: 'medium',
     });
+    const toggle = (
+      <Toggle isParentHovered={isParentHovered}>
+        <ThemeProvider
+          theme={{
+            [itemThemeNamespace]: itemTheme,
+          }}
+        >
+          <Item
+            data-test-id="switcher-expand-toggle"
+            onClick={this.toggleChildItemsVisibility}
+            onKeyDown={(e: KeyboardEvent) =>
+              e.key === 'Enter' && this.toggleChildItemsVisibility()
+            }
+          >
+            <Icon theme="subtle" />
+          </Item>
+        </ThemeProvider>
+      </Toggle>
+    );
 
-    return (
+    return showChildItems ? (
+      toggle
+    ) : (
       <Tooltip
-        content={!this.state.showChildItems && this.props.tooltipContent}
+        content={this.props.tooltipContent}
+        hideTooltipOnMouseDown
         position="top"
       >
-        <Toggle isParentHovered={isParentHovered}>
-          <ThemeProvider
-            theme={{
-              [itemThemeNamespace]: itemTheme,
-            }}
-          >
-            <Item
-              data-test-id="switcher-expand-toggle"
-              onClick={this.toggleChildItemsVisibility}
-              onKeyDown={(e: KeyboardEvent) =>
-                e.key === 'Enter' && this.toggleChildItemsVisibility()
-              }
-            >
-              <Icon theme="subtle" />
-            </Item>
-          </ThemeProvider>
-        </Toggle>
+        {toggle}
       </Tooltip>
     );
   }
@@ -246,7 +256,7 @@ class SwitcherItemWithDropDown extends React.Component<Props, State> {
   private onMouseLeave = () => this.setItemHovered(false);
 }
 
-const SwitcherItemWithDropDownWithEvents = withAnalyticsEvents<Props>({
+const SwitcherItemWithDropDownWithEvents = withAnalyticsEvents({
   onChildItemClick: createAndFireNavigationEvent({
     eventType: UI_EVENT_TYPE,
     action: 'clicked',
