@@ -4,7 +4,11 @@ import { StyleWrapper, Heading } from '../ui';
 import { ReactSerializer } from '@atlaskit/renderer';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { ADFEntity } from '@atlaskit/adf-utils';
-import { BaseTheme, ProviderFactory } from '@atlaskit/editor-common';
+import {
+  BaseTheme,
+  ProviderFactory,
+  WidthProvider,
+} from '@atlaskit/editor-common';
 import convertADFToSlides from '../utils/convertADFToSlides';
 import { atlassianTheme } from '../themes';
 
@@ -38,18 +42,20 @@ export class PresentationMode extends React.Component<Props, State> {
     const { adf } = this.props;
 
     return (
-      <BaseTheme>
-        <StyleWrapper>
-          <Deck
-            progress="bar"
-            showFullscreenControl={false}
-            theme={atlassianTheme}
-            onStateChange={this.onStateChange}
-          >
-            {this.getSliders(adf)}
-          </Deck>
-        </StyleWrapper>
-      </BaseTheme>
+      <WidthProvider>
+        <BaseTheme>
+          <StyleWrapper>
+            <Deck
+              progress="bar"
+              showFullscreenControl={false}
+              theme={atlassianTheme}
+              onStateChange={this.onStateChange}
+            >
+              {this.getSliders(adf)}
+            </Deck>
+          </StyleWrapper>
+        </BaseTheme>
+      </WidthProvider>
     );
   }
 
