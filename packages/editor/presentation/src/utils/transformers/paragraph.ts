@@ -1,6 +1,7 @@
 import { EntityTransformer } from './types';
-import { ADFEntity, reduce, p } from '@atlaskit/adf-utils';
+import { ADFEntity, reduce, p, doc } from '@atlaskit/adf-utils';
 import { ParagraphDefinition, Inline } from '@atlaskit/adf-schema';
+import { Slide } from '../convertADFToSlides';
 
 function isEmptyParagraph(entity: ADFEntity) {
   return (
@@ -38,7 +39,7 @@ function closeSentenceIfNeeded(sentence: string): string {
   return sentence;
 }
 
-function splitParagraph(entity: ADFEntity) {
+function splitParagraph(entity: ADFEntity): Partial<Slide>[] {
   let currentSize = 0;
   const paragraphs: ADFEntity[] = reduce(
     entity,
@@ -113,7 +114,9 @@ function splitParagraph(entity: ADFEntity) {
     [] as ADFEntity[],
   );
 
-  return paragraphs;
+  return paragraphs.map<Partial<Slide>>(paragraph => ({
+    adf: doc(paragraph as any),
+  }));
 }
 
 const paragraphTransformer: EntityTransformer = paragraphEntity => {
@@ -125,7 +128,11 @@ const paragraphTransformer: EntityTransformer = paragraphEntity => {
     return splitParagraph(paragraphEntity);
   }
 
-  return [paragraphEntity];
+  return [
+    {
+      adf: doc(paragraphEntity as any),
+    },
+  ];
 };
 
 export default paragraphTransformer;

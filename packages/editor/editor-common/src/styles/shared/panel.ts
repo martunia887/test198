@@ -11,7 +11,23 @@ import {
   akEditorDeleteIconColor,
 } from '../consts';
 
-const lightPanelColor = {
+import InfoIcon from '@atlaskit/icon/glyph/editor/info';
+import SuccessIcon from '@atlaskit/icon/glyph/editor/success';
+import NoteIcon from '@atlaskit/icon/glyph/editor/note';
+import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
+import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
+import TipIcon from '@atlaskit/icon/glyph/editor/hint';
+
+export const panelIcons = {
+  info: InfoIcon,
+  success: SuccessIcon,
+  note: NoteIcon,
+  tip: TipIcon,
+  warning: WarningIcon,
+  error: ErrorIcon,
+};
+
+export const lightPanelColor = {
   info: colors.B50,
   note: colors.P50,
   tip: colors.G50,
@@ -38,7 +54,7 @@ const darkPanelBorderColor = {
   error: colors.R400,
 };
 
-const lightIconColor = {
+export const lightIconColor = {
   info: colors.B400,
   note: colors.P400,
   tip: colors.G400,

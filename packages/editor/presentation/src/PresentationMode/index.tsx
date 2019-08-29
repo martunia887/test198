@@ -11,6 +11,7 @@ import {
 } from '@atlaskit/editor-common';
 import convertADFToSlides from '../utils/convertADFToSlides';
 import { atlassianTheme } from '../themes';
+import Layout from '../Layouts';
 
 const ESC_KEY_CODE = 27;
 
@@ -76,7 +77,9 @@ export class PresentationMode extends React.Component<Props, State> {
     return result.map((slide, index) => {
       const docFromSchema = schema.nodeFromJSON(slide.adf);
       const children = this.serializer.serializeFragment(docFromSchema as any);
-
+      if (slide.layout) {
+        return <Layout slide={slide}>{children}</Layout>;
+      }
       return (
         <Slide key={index}>
           {slide.title && (

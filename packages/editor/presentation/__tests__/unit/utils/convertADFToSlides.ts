@@ -1,17 +1,4 @@
-import {
-  doc,
-  heading,
-  text,
-  p,
-  ol,
-  li,
-  ul,
-  ADFEntity,
-  layoutSection,
-  layoutColumn,
-  mediaSingle,
-  media,
-} from '@atlaskit/adf-utils';
+import { doc, heading, text, p } from '@atlaskit/adf-utils';
 import convertADFToSlides from '../../../src/utils/convertADFToSlides';
 
 describe('convertADFToSlides', () => {

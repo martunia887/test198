@@ -18,7 +18,12 @@ export { columnLayoutSharedStyle } from './shared/column-layout';
 export { mediaSingleSharedStyle } from './shared/media-single';
 export { blockquoteSharedStyles } from './shared/blockquote';
 export { headingsSharedStyles } from './shared/headings';
-export { panelSharedStyles } from './shared/panel';
+export {
+  panelSharedStyles,
+  lightPanelColor,
+  panelIcons,
+  lightIconColor,
+} from './shared/panel';
 export { ruleSharedStyles } from './shared/rule';
 export { whitespaceSharedStyles } from './shared/whitespace';
 export { paragraphSharedStyles } from './shared/paragraph';
