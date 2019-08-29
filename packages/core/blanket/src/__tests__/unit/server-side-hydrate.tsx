@@ -24,10 +24,9 @@ test.skip('should ssr then hydrate blanket correctly', async () => {
   ReactDOM.hydrate(<Example />, elem);
   await waitForExpect(() => {
     // ignore warnings caused by emotion's server-side rendering approach
-    // @ts-ignore
     // eslint-disable-next-line no-console
-    const mockCalls = console.error.mock.calls.filter(
-      ([f, s]: [any, any]) =>
+    const mockCalls = (console.error as jest.Mock).mock.calls.filter(
+      ([f, s]) =>
         !(
           f ===
             'Warning: Did not expect server HTML to contain a <%s> in <%s>.' &&

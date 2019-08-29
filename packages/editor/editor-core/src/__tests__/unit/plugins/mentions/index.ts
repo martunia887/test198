@@ -165,7 +165,7 @@ describe('mentionTypeahead', () => {
    * resolves when it gets notified of results for the given `query`.
    *
    * @param mentionProvider Mention provider to listen to for change events.
-   * @param query Query string for which the subscrition resolves.
+   * @param query Query string for which the subscription resolves.
    *              Default: empty string.
    * @return Promise resolving with `MentionDescription[]`
    */

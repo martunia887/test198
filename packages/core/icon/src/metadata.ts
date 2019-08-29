@@ -1,4 +1,3 @@
-// @flow
 /* eslint-disable global-require */
 /**
  * NOTE:
