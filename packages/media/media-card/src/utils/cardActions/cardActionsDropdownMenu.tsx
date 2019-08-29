@@ -9,6 +9,8 @@ import DropdownMenu, {
 
 import { CardAction } from '../../actions';
 import { CardActionButton } from './styled';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
+import { createAndFireMediaEvent } from '../analytics';
 
 export type CardActionsDropdownMenuProps = {
   readonly actions: CardAction[];
@@ -16,6 +18,15 @@ export type CardActionsDropdownMenuProps = {
   readonly triggerColor?: string;
   readonly onOpenChange?: (attrs: { isOpen: boolean }) => void;
 };
+
+const CardActionButtonWithAnalytics = withAnalyticsEvents({
+  onClick: createAndFireMediaEvent({
+    eventType: 'ui',
+    action: 'clicked',
+    actionSubject: 'button',
+    actionSubjectId: 'mediaCardDropDownMenu',
+  }),
+})(CardActionButton);
 
 export class CardActionsDropdownMenu extends Component<
   CardActionsDropdownMenuProps
@@ -28,9 +39,9 @@ export class CardActionsDropdownMenu extends Component<
         <DropdownMenu
           onOpenChange={onOpenChange}
           trigger={
-            <CardActionButton style={{ color: triggerColor }}>
+            <CardActionButtonWithAnalytics style={{ color: triggerColor }}>
               <MoreIcon label="more" />
-            </CardActionButton>
+            </CardActionButtonWithAnalytics>
           }
         >
           <DropdownItemGroup>
