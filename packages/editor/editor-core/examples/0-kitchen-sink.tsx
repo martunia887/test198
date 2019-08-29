@@ -93,8 +93,12 @@ const nodeTypes: Record<string, NodeMapping> = {
   // smart cards
   // unsupported2
 
+  // text marks
   strong: { name: 'b' },
   code: { name: 'code' },
+
+  // block marks
+  breakout: { name: 'breakout', attrs: ['mode'] },
 };
 
 const buildMarks = (marks: Array<any>, leaf: string): string | undefined => {
@@ -112,6 +116,15 @@ const buildMarks = (marks: Array<any>, leaf: string): string | undefined => {
   const name = typeof type.name === 'function' ? type.name(node) : type.name;
 
   const children = buildMarks(marks, leaf);
+  if (type.attrs) {
+    const attrs: Record<string, any> = {};
+    type.attrs.map(attrName => {
+      attrs[attrName] = mark.attrs[attrName];
+    });
+
+    return `${name}(${JSON.stringify(attrs)})(${children || leaf})`;
+  }
+
   return `${name}(${children || leaf})`;
 };
 
@@ -142,7 +155,7 @@ const nodeToDocBuilder = (node: any): string => {
 
   const name = typeof type.name === 'function' ? type.name(node) : type.name;
 
-  // TODO: handle block marks
+  let leaf;
 
   if (type.attrs) {
     const attrs: Record<string, any> = {};
@@ -150,10 +163,17 @@ const nodeToDocBuilder = (node: any): string => {
       attrs[attrName] = node.attrs[attrName];
     });
 
-    return `${name}(${JSON.stringify(attrs)})(${childrenBuilders.join(', ')})`;
+    leaf = `${name}(${JSON.stringify(attrs)})(${childrenBuilders.join(', ')})`;
   }
 
-  return `${name}(${childrenBuilders.join(', ')})`;
+  leaf = `${name}(${childrenBuilders.join(', ')})`;
+
+  if (node.marks) {
+    const marks = node.marks.slice();
+    return buildMarks(marks, leaf) || leaf;
+  }
+
+  return leaf;
 };
 
 const toDocBuilder = (adf: any) => {
