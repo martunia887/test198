@@ -11,6 +11,7 @@ import { CardAction } from '../../actions';
 import { CardActionButton } from './styled';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 import { createAndFireMediaEvent } from '../analytics';
+import actionWithAnalyticsEvents from './analyticsHelper';
 
 export type CardActionsDropdownMenuProps = {
   readonly actions: CardAction[];
@@ -45,11 +46,18 @@ export class CardActionsDropdownMenu extends Component<
           }
         >
           <DropdownItemGroup>
-            {actions.map(({ label, handler }, index) => (
-              <DropdownItem key={index} onClick={handler}>
-                {label}
-              </DropdownItem>
-            ))}
+            {actions.map((action, index) => {
+              const { label, handler } = action;
+              const DropdownItemWithAnalytics = actionWithAnalyticsEvents(
+                action,
+                DropdownItem,
+              );
+              return (
+                <DropdownItemWithAnalytics key={index} onClick={handler}>
+                  {label}
+                </DropdownItemWithAnalytics>
+              );
+            })}
           </DropdownItemGroup>
         </DropdownMenu>
       );

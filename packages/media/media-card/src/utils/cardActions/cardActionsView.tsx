@@ -6,6 +6,7 @@ import { Wrapper } from './styled';
 import { CardActionIconButton } from './cardActionIconButton';
 import { CardActionsDropdownMenu } from './cardActionsDropdownMenu';
 import { PreventClickThrough } from '../preventClickThrough';
+import actionWithAnalyticsEvents from './analyticsHelper';
 
 export interface CardActionsViewProps {
   readonly actions: CardAction[];
@@ -38,8 +39,12 @@ export class CardActionsView extends Component<CardActionsViewProps> {
   private renderActionIconButton(action: CardAction): JSX.Element {
     const { triggerColor } = this.props;
     const { icon, handler } = action;
+    const CardActionIconButtonWithAnalytics = actionWithAnalyticsEvents(
+      action,
+      CardActionIconButton,
+    );
     return (
-      <CardActionIconButton
+      <CardActionIconButtonWithAnalytics
         icon={icon}
         triggerColor={triggerColor}
         onClick={() => handler()}

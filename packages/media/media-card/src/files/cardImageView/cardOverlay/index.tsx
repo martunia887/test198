@@ -11,6 +11,8 @@ import { FileIcon } from '../../../utils/fileIcon';
 import { ErrorIcon } from '../../../utils/errorIcon';
 import CardActions from '../../../utils/cardActions';
 import { CardAction, CardEventHandler } from '../../../actions';
+import { createAndFireMediaEvent } from '../../../utils/analytics';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 
 import {
   TickBox,
@@ -27,6 +29,15 @@ import {
   Metadata,
   ErrorWrapper,
 } from './styled';
+
+const RetryWithAnalytics = withAnalyticsEvents({
+  onClick: createAndFireMediaEvent({
+    eventType: 'ui',
+    action: 'clicked',
+    actionSubject: 'button',
+    actionSubjectId: 'mediaCardRetry',
+  }),
+})(Retry);
 
 export interface CardOverlayProps {
   mediaType?: MediaType;
@@ -150,9 +161,14 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
       return (
         <ErrorWrapper>
           <ErrorIcon />
-          <Retry onClick={onRetry}>
+          <RetryWithAnalytics
+            onClick={(e: Event) => {
+              e.stopPropagation();
+              onRetry();
+            }}
+          >
             <FormattedMessage {...messages.retry} />
-          </Retry>
+          </RetryWithAnalytics>
         </ErrorWrapper>
       );
     } else {
