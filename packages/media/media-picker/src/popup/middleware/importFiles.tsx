@@ -1,7 +1,6 @@
 import uuid from 'uuid/v4';
 import { Store, Dispatch, Middleware } from 'redux';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { map } from 'rxjs/operators/map';
 import {
   TouchFileDescriptor,
   FileState,
@@ -11,6 +10,8 @@ import {
   isPreviewableType,
   MediaType,
   globalMediaEventEmitter,
+  observableToPromise,
+  createFileState,
 } from '@atlaskit/media-client';
 import { State, SelectedItem, LocalUpload, ServiceName } from '../domain';
 import { isStartImportAction } from '../actions/startImport';
@@ -181,19 +182,24 @@ export const touchSelectedFiles = (
       tenantMediaClient.emit('file-added', fileState);
       globalMediaEventEmitter.emit('file-added', fileState);
 
-      const existingFileState = getFileStreamsCache().get(selectedFileId);
+      const existingFileStateStream = getFileStreamsCache().get(selectedFileId);
 
       // if we already have a fileState in the cache, we re use it for the new id, otherwise we create a new one
-      if (existingFileState) {
-        // We assign the tenant id to the observable to not emit user id instead
-        const tenantFile = existingFileState.pipe(
-          map(file => ({
-            ...file,
+      if (existingFileStateStream) {
+        observableToPromise(existingFileStateStream).then(existingFileState => {
+          if (existingFileState.status === 'error') {
+            return;
+          }
+
+          // We assign the tenant id to the observable to not emit user id instead
+          const tenantFile = createFileState({
+            ...existingFileState,
             id,
             preview: fileState.preview,
-          })),
-        );
-        getFileStreamsCache().set(id, tenantFile);
+          });
+
+          getFileStreamsCache().set(id, tenantFile);
+        });
       } else {
         const subject = new ReplaySubject<FileState>(1);
         subject.next(fileState);

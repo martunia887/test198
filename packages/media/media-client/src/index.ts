@@ -110,6 +110,7 @@ export { checkWebpSupport } from './utils/checkWebpSupport';
 export { observableToPromise } from './utils/observableToPromise';
 
 export { getMediaTypeFromMimeType } from './utils/getMediaTypeFromMimeType';
+export { createFileState } from './utils/createFileState';
 
 export {
   Identifier,

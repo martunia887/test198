@@ -1,7 +1,4 @@
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { publishReplay } from 'rxjs/operators/publishReplay';
 import uuid from 'uuid/v4';
 import Dataloader from 'dataloader';
 import {
@@ -93,7 +90,7 @@ export type ExternalUploadPayload = {
 };
 
 export interface FileFetcher {
-  getFileState(id: string, options?: GetFileOptions): Observable<FileState>;
+  getFileState(id: string, options?: GetFileOptions): ReplaySubject<FileState>;
   getArtifactURL(
     artifacts: MediaFileArtifacts,
     artifactName: keyof MediaFileArtifacts,
@@ -107,7 +104,7 @@ export interface FileFetcher {
     file: UploadableFile,
     controller?: UploadController,
     uploadableFileUpfrontIds?: UploadableFileUpfrontIds,
-  ): Observable<FileState>;
+  ): ReplaySubject<FileState>;
   uploadExternal(
     url: string,
     collection?: string,
@@ -176,22 +173,21 @@ export class FileFetcherImpl implements FileFetcher {
   public getFileState(
     id: string,
     options?: GetFileOptions,
-  ): Observable<FileState> {
+  ): ReplaySubject<FileState> {
+    // TODO: add utility to create initial subject + initial value
+    const subject = new ReplaySubject<FileState>(1);
+
     if (!isValidId(id)) {
-      return Observable.create((observer: Observer<FileState>) => {
-        observer.error(`${id} is not a valid file id`);
-      });
+      subject.error(`${id} is not a valid file id`);
+
+      return subject;
     }
 
     return getFileStreamsCache().getOrInsert(id, () => {
       const collection = options && options.collectionName;
-      const fileStream$ = publishReplay<FileState>(1)(
-        this.createDownloadFileStream(id, collection),
-      );
 
-      fileStream$.connect();
-
-      return fileStream$;
+      // return subject;
+      return this.createDownloadFileStream(id, collection);
     });
   }
 
@@ -218,37 +214,33 @@ export class FileFetcherImpl implements FileFetcher {
   private createDownloadFileStream = (
     id: string,
     collection?: string,
-  ): Observable<FileState> => {
-    return Observable.create(async (observer: Observer<FileState>) => {
-      let timeoutId: number;
+  ): ReplaySubject<FileState> => {
+    const subject = new ReplaySubject<FileState>(1);
+    let timeoutId: number;
 
-      const fetchFile = async () => {
-        try {
-          const response = await this.dataloader.load({ id, collection });
+    const fetchFile = async () => {
+      try {
+        const response = await this.dataloader.load({ id, collection });
 
-          if (!response) {
-            return;
-          }
-
-          const fileState = mapMediaItemToFileState(id, response);
-          observer.next(fileState);
-
-          if (fileState.status === 'processing') {
-            timeoutId = window.setTimeout(fetchFile, POLLING_INTERVAL);
-          } else {
-            observer.complete();
-          }
-        } catch (e) {
-          observer.error(e);
+        if (!response) {
+          return;
         }
-      };
 
-      fetchFile();
+        const fileState = mapMediaItemToFileState(id, response);
+        subject.next(fileState);
 
-      return () => {
+        if (fileState.status === 'processing') {
+          timeoutId = window.setTimeout(fetchFile, POLLING_INTERVAL);
+        }
+      } catch (e) {
+        subject.error(e);
         window.clearTimeout(timeoutId);
-      };
-    });
+      }
+    };
+
+    fetchFile();
+
+    return subject;
   };
 
   public touchFiles(
@@ -359,7 +351,7 @@ export class FileFetcherImpl implements FileFetcher {
     file: UploadableFile,
     controller?: UploadController,
     uploadableFileUpfrontIds?: UploadableFileUpfrontIds,
-  ): Observable<FileState> {
+  ): ReplaySubject<FileState> {
     if (typeof file.content === 'string') {
       file.content = convertBase64ToBlob(file.content);
     }

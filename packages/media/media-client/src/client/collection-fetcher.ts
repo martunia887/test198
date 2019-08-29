@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import {
   MediaStore,
@@ -51,7 +50,7 @@ export class CollectionFetcher {
   private createFileStateObserver(
     id: string,
     details: MediaCollectionItemFullDetails,
-  ): Observable<FileState> {
+  ): ReplaySubject<FileState> {
     const subject = new ReplaySubject<FileState>(1);
     const mediaFile: MediaFile = {
       id,
@@ -91,7 +90,7 @@ export class CollectionFetcher {
   getItems(
     collectionName: string,
     params?: MediaStoreGetCollectionItemsParams,
-  ): Observable<MediaCollectionItem[]> {
+  ): ReplaySubject<MediaCollectionItem[]> {
     if (!collectionCache[collectionName]) {
       collectionCache[collectionName] = createCacheEntry();
     }
