@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Slide as SlideADF } from '../utils/convertADFToSlides';
 import PanelLayout from './Panel';
+import ListLayout from './List';
 
 interface Props {
   slide: SlideADF;
@@ -8,6 +9,7 @@ interface Props {
 
 const layouts: { [key: string]: React.ComponentType<Props> } = {
   panel: PanelLayout,
+  list: ListLayout,
 };
 
 class Layout extends React.Component<Props> {

@@ -5,6 +5,7 @@ import { EntityTransformer } from './transformers/types';
 import paragraphTransformer from './transformers/paragraph';
 import { defaultSchema } from '@atlaskit/adf-schema';
 import panelTransformer from './transformers/panel';
+import listTransformer from './transformers/list';
 
 export interface SlideTitle {
   level: HeadingLevel;
@@ -35,6 +36,8 @@ export const validTypes = [
 const transformers: { [key: string]: EntityTransformer } = {
   paragraph: paragraphTransformer,
   panel: panelTransformer,
+  bulletList: listTransformer,
+  orderedList: listTransformer,
 };
 
 function convertADFToSlides(adf: ADFEntity, schema = defaultSchema): Slide[] {
