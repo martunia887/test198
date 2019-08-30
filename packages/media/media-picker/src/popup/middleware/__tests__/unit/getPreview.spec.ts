@@ -2,9 +2,12 @@ import { mockStore, asMockReturnValue } from '@atlaskit/media-test-helpers';
 import getPreviewMiddleware, { getPreview } from '../../getPreview';
 import { sendUploadEvent } from '../../../actions/sendUploadEvent';
 import { GetPreviewAction } from '../../../actions/getPreview';
-import { Observable } from 'rxjs';
 import { Preview } from '../../../../domain/preview';
-import { FileState, ImageMetadata } from '@atlaskit/media-client';
+import {
+  FileState,
+  ImageMetadata,
+  createFileState,
+} from '@atlaskit/media-client';
 import { Auth } from '@atlaskit/media-core';
 
 describe('getPreviewMiddleware', () => {
@@ -59,7 +62,7 @@ describe('getPreviewMiddleware', () => {
     );
     asMockReturnValue(
       userMediaClient.file.getFileState,
-      Observable.of(defaultFileState),
+      createFileState(defaultFileState),
     );
     asMockReturnValue(userMediaClient.getImageMetadata, defaultImageMetadata);
 

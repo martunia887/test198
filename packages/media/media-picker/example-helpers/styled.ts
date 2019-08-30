@@ -201,3 +201,11 @@ export const InfoContainer = styled.div`
 export const PastedImage = styled.img`
   width: 100%;
 `;
+
+export const FullFlowCardsWrapper = styled.div`
+  display: flex;
+
+  > div {
+    flex: 1;
+  }
+`;

@@ -1,4 +1,7 @@
-import { globalMediaEventEmitter } from '@atlaskit/media-client';
+import {
+  globalMediaEventEmitter,
+  createFileState,
+} from '@atlaskit/media-client';
 const globalEmitSpy = jest.spyOn(globalMediaEventEmitter, 'emit');
 import {
   mockStore,
@@ -41,10 +44,8 @@ import {
 import { SCALE_FACTOR_DEFAULT } from '../../../../util/getPreviewFromImage';
 import {
   getFileStreamsCache,
-  FileState,
   UploadingFileState,
 } from '@atlaskit/media-client';
-import { ReplaySubject, Observable } from 'rxjs';
 
 describe('importFiles middleware', () => {
   const expectUUID = expect.stringMatching(/[a-f0-9\-]+/);
@@ -597,15 +598,14 @@ describe('importFiles middleware', () => {
     });
 
     it('should add file preview for local uploads', done => {
-      const subject = new ReplaySubject<Partial<FileState>>(1);
-      subject.next({
+      const subject = createFileState({
         id: 'id-1',
         status: 'processing',
         preview: {
           value: 'some-local-preview',
         },
-      });
-      getFileStreamsCache().set('id-1', subject as Observable<FileState>);
+      } as any);
+      getFileStreamsCache().set('id-1', subject);
       const selectedFiles: SelectedUploadFile[] = [
         {
           file,
@@ -704,8 +704,7 @@ describe('importFiles middleware', () => {
         },
       ];
 
-      const subject = new ReplaySubject<Partial<FileState>>(1);
-      subject.next({
+      const subject = createFileState({
         id: 'user-id',
         status: 'uploading',
         name: 'some_file_name',
@@ -713,8 +712,11 @@ describe('importFiles middleware', () => {
         preview: {
           value: 'some-existing-preview',
         },
+        mediaType: 'image',
+        mimeType: '',
+        size: 0,
       });
-      getFileStreamsCache().set('user-id', subject as Observable<FileState>);
+      getFileStreamsCache().set('user-id', subject);
 
       const store = mockStore();
       touchSelectedFiles(selectedFiles, store);

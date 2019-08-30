@@ -5,7 +5,7 @@ import {
   ProcessedFileState,
   ProcessingFileState,
 } from '@atlaskit/media-core';
-import { getFileStreamsCache, FileState } from '@atlaskit/media-client';
+import { getFileStreamsCache, createFileState } from '@atlaskit/media-client';
 import {
   mockStore,
   expectFunctionToHaveBeenCalledWith,
@@ -20,7 +20,7 @@ import {
   FINALIZE_UPLOAD,
 } from '../../../actions/finalizeUpload';
 import { State } from '../../../domain';
-import { ReplaySubject, Observable } from 'rxjs';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 describe('finalizeUploadMiddleware', () => {
   const auth: Auth = {
@@ -205,12 +205,11 @@ describe('finalizeUploadMiddleware', () => {
 
   it('should populate cache with processed state', async () => {
     const { store, action } = setup();
-    const subject = new ReplaySubject<Partial<FileState>>(1);
-    const next = jest.fn();
-    subject.next({
+    const subject = createFileState({
       id: copiedFile.id,
-    });
-    getFileStreamsCache().set(copiedFile.id, subject as Observable<FileState>);
+    } as any);
+    const next = jest.fn();
+    getFileStreamsCache().set(copiedFile.id, subject);
 
     await finalizeUpload(store, action);
 

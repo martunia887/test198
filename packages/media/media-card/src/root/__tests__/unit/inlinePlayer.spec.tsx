@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
-import { Observable } from 'rxjs';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
 import { MediaFileArtifacts } from '@atlaskit/media-store';
-import { FileIdentifier, FileState } from '@atlaskit/media-client';
+import {
+  FileIdentifier,
+  FileState,
+  createFileState,
+} from '@atlaskit/media-client';
 import {
   asMockReturnValue,
   fakeMediaClient,
@@ -41,7 +44,7 @@ describe('<InlinePlayer />', () => {
     const mediaClient = fakeMediaClient();
     asMockReturnValue(
       mediaClient.file.getFileState,
-      Observable.of({
+      createFileState({
         ...defaultFileState,
         artifacts,
       }),
@@ -127,12 +130,12 @@ describe('<InlinePlayer />', () => {
     const mediaClient = {
       file: {
         getFileState: jest.fn().mockReturnValue(
-          Observable.of({
+          createFileState({
             status: 'uploading',
             preview: {
               value: blob,
             },
-          }),
+          } as any),
         ),
       },
     } as any;

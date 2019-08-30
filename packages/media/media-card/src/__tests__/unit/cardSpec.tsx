@@ -1,5 +1,5 @@
 jest.mock('../../utils/getDataURIFromFileState');
-import { Observable, ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import {
@@ -15,6 +15,7 @@ import {
   FileIdentifier,
   ExternalImageIdentifier,
   Identifier,
+  createFileState,
 } from '@atlaskit/media-client';
 import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { MediaViewer } from '@atlaskit/media-viewer';
@@ -80,7 +81,7 @@ describe('Card', () => {
 
     asMockReturnValue(
       mockMediaClient.file.getFileState,
-      Observable.of(fileState),
+      createFileState(fileState),
     );
     return mockMediaClient;
   };
@@ -589,12 +590,9 @@ describe('Card', () => {
 
   it('should render error card when getFileState fails', async () => {
     const mediaClient = fakeMediaClient();
-    asMockReturnValue(
-      mediaClient.file.getFileState,
-      new Observable(subscriber => {
-        subscriber.error('some-error');
-      }),
-    );
+    const fileState = createFileState();
+    fileState.error('some-error');
+    asMockReturnValue(mediaClient.file.getFileState, fileState);
 
     const { component } = setup(mediaClient);
 

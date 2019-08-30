@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import {
   nextTick,
   asMock,
@@ -12,6 +12,7 @@ import {
   FileState,
   ProcessedFileState,
   UploadingFileState,
+  createFileState,
 } from '@atlaskit/media-client';
 import { MediaImageInternal, MediaImageInternalProps } from '../../mediaImage';
 
@@ -71,7 +72,9 @@ describe('<MediaImage />', () => {
   };
 
   const setup = (
-    fileStateResult: Observable<FileState> = Observable.of(defaultFileState),
+    fileStateResult: ReplaySubject<FileState> = createFileState(
+      defaultFileState,
+    ),
   ) => {
     const mediaClient = fakeMediaClient();
 
@@ -120,7 +123,7 @@ describe('<MediaImage />', () => {
     };
     const props = {
       ...defaultProps,
-      mediaClient: setup(Observable.of(fileState)),
+      mediaClient: setup(createFileState(fileState)),
     };
 
     const wrapper = await shallowRender(props);
@@ -136,7 +139,7 @@ describe('<MediaImage />', () => {
 
     const props = {
       ...defaultProps,
-      mediaClient: setup(Observable.of(fileState)),
+      mediaClient: setup(createFileState(fileState)),
     };
     const wrapper = await shallowRender(props);
 
@@ -164,7 +167,7 @@ describe('<MediaImage />', () => {
 
     const props = {
       ...defaultProps,
-      mediaClient: setup(Observable.of(fileState)),
+      mediaClient: setup(createFileState(fileState)),
     };
     const wrapper = await shallowRender(props);
 
@@ -240,7 +243,7 @@ describe('<MediaImage />', () => {
       ...defaultFileState,
       preview: Promise.resolve({ value: new Blob() }),
     };
-    const mediaClient = setup(Observable.of(fileState));
+    const mediaClient = setup(createFileState(fileState));
     const props = {
       ...defaultProps,
       mediaClient,

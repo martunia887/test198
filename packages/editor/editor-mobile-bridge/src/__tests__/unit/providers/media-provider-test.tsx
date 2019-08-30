@@ -28,6 +28,7 @@ import {
   withMediaClient,
   MediaClient,
   ProcessedFileState,
+  createFileState,
 } from '@atlaskit/media-client';
 import uuid from 'uuid/v4';
 import {
@@ -36,7 +37,6 @@ import {
   expectFunctionToHaveBeenCalledWith,
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
-import { of } from 'rxjs/observable/of';
 import { INPUT_METHOD } from '../../../../../editor-core/src/plugins/analytics';
 
 let testFileId: string;
@@ -105,7 +105,10 @@ describe('Mobile MediaProvider', () => {
         <Component {...props} mediaClient={mediaClient} />
       ),
     );
-    asMockReturnValue(mediaClient.file.getFileState, of(testFileState));
+    asMockReturnValue(
+      mediaClient.file.getFileState,
+      createFileState(testFileState),
+    );
 
     promisedMediaProvider = Promise.resolve({
       viewMediaClientConfig: mediaClientConfig,

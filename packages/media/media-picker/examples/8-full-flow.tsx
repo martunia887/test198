@@ -13,7 +13,11 @@ import {
 } from '@atlaskit/media-client';
 import Button from '@atlaskit/button';
 import Select from '@atlaskit/select';
-import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
+import {
+  SelectWrapper,
+  OptionsWrapper,
+  FullFlowCardsWrapper,
+} from '../example-helpers/styled';
 import {
   MediaPicker,
   UploadPreviewUpdateEventPayload,
@@ -109,7 +113,7 @@ export default class Example extends React.Component<{}, State> {
       : { list };
   };
 
-  private renderCards = () => {
+  private renderCards = (shouldOpenMediaViewer?: boolean) => {
     const { events } = this.state;
 
     return events.map((fileRecord, key) => {
@@ -125,11 +129,20 @@ export default class Example extends React.Component<{}, State> {
           <Card
             mediaClientConfig={tenantMediaClientConfig}
             identifier={identifier}
-            dimensions={{
-              width: 200,
-              height: 200,
-            }}
-            shouldOpenMediaViewer={true}
+            dimensions={
+              shouldOpenMediaViewer
+                ? {
+                    width: 200,
+                    height: 200,
+                  }
+                : {
+                    width: 350,
+                    height: 200,
+                  }
+            }
+            shouldOpenMediaViewer={shouldOpenMediaViewer}
+            useInlinePlayer={!shouldOpenMediaViewer}
+            disableOverlay={!shouldOpenMediaViewer}
             mediaViewerDataSource={this.getMediaViewerDataSource()}
           />
         </div>
@@ -164,7 +177,16 @@ export default class Example extends React.Component<{}, State> {
             />
           </SelectWrapper>
         </OptionsWrapper>
-        <div>{this.renderCards()}</div>
+        <FullFlowCardsWrapper>
+          <div>
+            <h1>Cards + MediaViewer</h1>
+            {this.renderCards(true)}
+          </div>
+          <div>
+            <h1>Standalone Cards</h1>
+            {this.renderCards()}
+          </div>
+        </FullFlowCardsWrapper>
       </React.Fragment>
     );
   }
