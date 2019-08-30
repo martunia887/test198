@@ -15,6 +15,7 @@ type ItemShape = {
   label?: string,
   onClick: () => void,
   icon?: ComponentType<*>,
+  analyticsAttrs?: object,
 };
 
 type DropdownItem = {

@@ -101,7 +101,6 @@ export default class GlobalNavigation extends Component<
 
   constructor(props: GlobalNavigationProps) {
     super(props);
-
     this.state = {
       isCreateDrawerOpen: false,
       isSearchDrawerOpen: false,

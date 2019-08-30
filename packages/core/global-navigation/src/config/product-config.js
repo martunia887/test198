@@ -164,6 +164,7 @@ function notificationConfigFactory(
   isNotificationInbuilt,
   openDrawer,
   getNotificationRef,
+  notificationAnalyticsAttrs,
 ) {
   const notificationOnClickHandler = () => {
     if (onNotificationClick) {
@@ -176,6 +177,7 @@ function notificationConfigFactory(
         badgeCount,
         getRef: getNotificationRef,
         label: notificationLabel,
+        analyticsAttrs: notificationAnalyticsAttrs,
       })
     : configFactory(
         onNotificationClick || (notificationDrawerContents && openDrawer),
@@ -184,6 +186,7 @@ function notificationConfigFactory(
           ...notificationBadge(badgeCount),
           getRef: getNotificationRef,
           label: notificationLabel,
+          analyticsAttrs: notificationAnalyticsAttrs,
         },
       );
 }
@@ -214,24 +217,28 @@ export default function generateProductConfig(
     productIcon,
     productHref,
     getProductRef,
+    productAnalyticsAttrs,
 
     onRecentClick,
     recentLabel,
     recentTooltip,
     recentDrawerContents,
     getRecentRef,
+    recentAnalyticsAttrs,
 
     onInviteClick,
     inviteLabel,
     inviteTooltip,
     inviteDrawerContents,
     getInviteRef,
+    inviteAnalyticsAttrs,
 
     onCreateClick,
     createLabel,
     createTooltip,
     createDrawerContents,
     getCreateRef,
+    createAnalyticsAttrs,
 
     enableAtlassianSwitcher,
 
@@ -240,12 +247,14 @@ export default function generateProductConfig(
     onSearchClick,
     searchDrawerContents,
     getSearchRef,
+    searchAnalyticsAttrs,
 
     onStarredClick,
     starredLabel,
     starredTooltip,
     starredDrawerContents,
     getStarredRef,
+    starredAnalyticsAttrs,
 
     notificationTooltip,
     notificationsLabel,
@@ -253,11 +262,13 @@ export default function generateProductConfig(
     notificationDrawerContents,
     onNotificationClick,
     getNotificationRef,
+    notificationAnalyticsAttrs,
 
     appSwitcherComponent,
     appSwitcherLabel,
     appSwitcherTooltip,
     getAppSwitcherRef,
+    appSwitcherAnalyticsAttrs,
 
     enableHelpDrawer,
     helpItems,
@@ -266,12 +277,14 @@ export default function generateProductConfig(
     helpTooltip,
     helpDrawerContents,
     getHelpRef,
+    helpAnalyticsAttrs,
 
     onSettingsClick,
     settingsLabel,
     settingsTooltip,
     settingsDrawerContents,
     getSettingsRef,
+    settingsAnalyticsAttrs,
 
     profileItems,
     profileLabel,
@@ -279,6 +292,7 @@ export default function generateProductConfig(
     loginHref,
     profileIconUrl,
     getProfileRef,
+    profileAnalyticsAttrs,
   } = props;
 
   const shouldRenderAtlassianSwitcher =
@@ -297,50 +311,81 @@ export default function generateProductConfig(
       href: productHref,
       getRef: getProductRef,
       label: productLabel,
+      analyticsAttrs: productAnalyticsAttrs,
     }),
     recent: configFactory(
       onRecentClick || (recentDrawerContents && openDrawer('recent')),
       recentTooltip,
-      { getRef: getRecentRef, label: recentLabel },
+      {
+        getRef: getRecentRef,
+        label: recentLabel,
+        analyticsAttrs: recentAnalyticsAttrs,
+      },
     ),
     invite: configFactory(
       onInviteClick || (inviteDrawerContents && openDrawer('invite')),
       inviteTooltip,
-      { getRef: getInviteRef, label: inviteLabel },
+      {
+        getRef: getInviteRef,
+        label: inviteLabel,
+        analyticsAttrs: inviteAnalyticsAttrs,
+      },
     ),
     create: configFactory(
       onCreateClick || (createDrawerContents && openDrawer('create')),
       createTooltip,
-      { getRef: getCreateRef, label: createLabel },
+      {
+        getRef: getCreateRef,
+        label: createLabel,
+        analyticsAttrs: createAnalyticsAttrs,
+      },
     ),
     search: configFactory(
       onSearchClick || (searchDrawerContents && openDrawer('search')),
       searchTooltip,
-      { getRef: getSearchRef, label: searchLabel },
+      {
+        getRef: getSearchRef,
+        label: searchLabel,
+        analyticsAttrs: searchAnalyticsAttrs,
+      },
     ),
     starred: configFactory(
       onStarredClick || (starredDrawerContents && openDrawer('starred')),
       starredTooltip,
-      { getRef: getStarredRef, label: starredLabel },
+      {
+        getRef: getStarredRef,
+        label: starredLabel,
+        analyticsAttrs: starredAnalyticsAttrs,
+      },
     ),
     help: enableHelpDrawer
       ? configFactory(
           onHelpClick || (helpDrawerContents && openDrawer('help')),
           helpTooltip,
-          { getRef: getHelpRef, label: helpLabel },
+          {
+            getRef: getHelpRef,
+            label: helpLabel,
+            analyticsAttrs: helpAnalyticsAttrs,
+          },
         )
       : helpConfigFactory(helpItems, helpTooltip, {
           getRef: getHelpRef,
           label: helpLabel,
+          analyticsAttrs: helpAnalyticsAttrs,
         }),
     settings: configFactory(
       onSettingsClick || (settingsDrawerContents && openDrawer('settings')),
       settingsTooltip,
-      { getRef: getSettingsRef, label: settingsLabel },
+      {
+        getRef: getSettingsRef,
+        label: settingsLabel,
+        analyticsAttrs: settingsAnalyticsAttrs,
+      },
     ),
     atlassianSwitcher: shouldRenderAtlassianSwitcher
       ? configFactory(openDrawer('atlassianSwitcher'), '', {
           getRef: getAppSwitcherRef,
+          analyticsAttrs: appSwitcherAnalyticsAttrs,
         })
       : null,
 
@@ -353,13 +398,18 @@ export default function generateProductConfig(
       isNotificationInbuilt,
       openDrawer('notification'),
       getNotificationRef,
+      notificationAnalyticsAttrs,
     ),
     profile: profileConfigFactory(
       profileItems,
       profileTooltip,
       loginHref,
       profileIconUrl,
-      { getRef: getProfileRef, label: profileLabel },
+      {
+        getRef: getProfileRef,
+        label: profileLabel,
+        analyticsAttrs: profileAnalyticsAttrs,
+      },
     ),
     appSwitcher:
       appSwitcherComponent && !shouldRenderAtlassianSwitcher
@@ -368,6 +418,7 @@ export default function generateProductConfig(
             label: appSwitcherLabel,
             tooltip: appSwitcherTooltip,
             getRef: getAppSwitcherRef,
+            analyticsAttrs: appSwitcherAnalyticsAttrs,
           })
         : null,
   };

@@ -203,6 +203,8 @@ export type GlobalNavigationProps = {
   productHref?: string,
   /** A function to get ref of the product icon */
   getProductRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for product icon analytics events */
+  productAnalyticsAttrs?: object,
 
   /** A callback function which will be called when the recent item is clicked.
    * */
@@ -213,6 +215,8 @@ export type GlobalNavigationProps = {
   recentTooltip?: string | Node,
   /** A function to get ref of the recent icon */
   getRecentRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for recent analytics events */
+  recentAnalyticsAttrs?: object,
 
   /** A callback function which will be called when the global invite item is clicked.
    * */
@@ -223,6 +227,8 @@ export type GlobalNavigationProps = {
   inviteTooltip?: string | Node,
   /** A function to get ref of the global invite icon */
   getInviteRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for invite analytics events */
+  inviteAnalyticsAttrs?: object,
 
   /** A callback function which will be called when the product logo item is
    * clicked. If this is passed, the drawer does not show up. */
@@ -233,6 +239,8 @@ export type GlobalNavigationProps = {
   createTooltip?: string | Node,
   /** A function to get ref of the create icon */
   getCreateRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for create analytics events */
+  createAnalyticsAttrs?: object,
 
   /** A callback function which will be called when the starred item is clicked.
    * */
@@ -243,6 +251,8 @@ export type GlobalNavigationProps = {
   starredTooltip?: string | Node,
   /** A function to get ref of the starred icon */
   getStarredRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for starred analytics events */
+  starredAnalyticsAttrs?: object,
 
   /** A callback function which will be called when the product logo item is
    * clicked. If this is passed, the drawer does not show up. */
@@ -253,6 +263,8 @@ export type GlobalNavigationProps = {
   searchTooltip?: string | Node,
   /** A function to get ref of the search icon */
   getSearchRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for search analytics events */
+  search?: object,
 
   /** The component to render the app switcher. */
   appSwitcherComponent?: ComponentType<*>, // AppSwitcher component
@@ -262,6 +274,8 @@ export type GlobalNavigationProps = {
   appSwitcherTooltip?: string | Node,
   /** A function to get ref of the appSwitcher icon */
   getAppSwitcherRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for app switcher analytics events */
+  appSwitcherAnalyticsAttrs?: object,
 
   /** The boolean that controls whether to display the Atlassian Switcher. */
   enableAtlassianSwitcher?: boolean,
@@ -277,6 +291,8 @@ export type GlobalNavigationProps = {
   helpTooltip?: string | Node,
   /** A function to get ref of the help icon */
   getHelpRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for help analytics events */
+  helpAnalyticsAttrs?: object,
 
   /** The boolean that controls whether to display a drawer instead of a menu dropdown. */
   enableHelpDrawer?: boolean,
@@ -295,6 +311,8 @@ export type GlobalNavigationProps = {
   loginHref?: string,
   /** A function to get ref of the profile icon */
   getProfileRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for profile analytics events */
+  profileAnalyticsAttrs?: object,
 
   /** A callback function which will be called when the product logo item is
    * clicked. If this is passed, the drawer does not show up. */
@@ -308,6 +326,8 @@ export type GlobalNavigationProps = {
   notificationTooltip?: string | Node,
   /** A function to get ref of the notification icon */
   getNotificationRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for notification analytics events */
+  notificationAnalyticsAttrs?: object,
 
   /** A callback function which will be called when the settings item is clicked. */
   onSettingsClick?: ?() => void,
@@ -317,6 +337,8 @@ export type GlobalNavigationProps = {
   settingsTooltip?: string | Node,
   /** A function to get ref of the settings icon */
   getSettingsRef?: (node: NonStringRef<'div'>) => void,
+  /** Additional attributes for settings analytics events */
+  settingsAnalyticsAttrs?: object,
 
   ...$Exact<GlobalNavDrawerProps>,
 };

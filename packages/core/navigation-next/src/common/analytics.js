@@ -66,6 +66,7 @@ export const navigationItemClicked = <P: {}, C: ComponentType<P>>(
             iconSource:
               getDisplayName(props.icon) || getDisplayName(props.before),
             navigationItemIndex: props.index,
+            ...props.analyticsAttrs,
           },
         };
 
