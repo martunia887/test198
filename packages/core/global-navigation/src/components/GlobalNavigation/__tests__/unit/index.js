@@ -86,6 +86,20 @@ describe('GlobalNavigation', () => {
       productIcon.simulate('click');
       expect(mockProductClick).toHaveBeenCalled();
     });
+
+    it('should set analyticsAttrs as productAnalyticsAttrs', () => {
+      const wrapper = mount(
+        <GlobalNavigation
+          productIcon={EmojiAtlassianIcon}
+          productHref="/testtest"
+          productAnalyticsAttrs={{ test: 'test' }}
+        />,
+      );
+
+      const productItem = wrapper.find(ItemComponent);
+
+      expect(productItem.props().analyticsAttrs.test).toBe('test');
+    });
   });
 
   describe('Drawers', () => {
@@ -349,6 +363,18 @@ describe('GlobalNavigation', () => {
             wrapper.update();
             escKeyDown();
             expect(props[`on${capitalisedName}DrawerClose`]).toHaveBeenCalled();
+          });
+
+          it(`should set analyticsAttrs as ${name}AnalyticsAttrs`, () => {
+            const props = {
+              [`${name}AnalyticsAttrs`]: { test: name },
+              [`${name}DrawerContents`]: DrawerContents,
+            };
+            const wrapper = mount(<GlobalNavigation {...props} />);
+
+            const item = wrapper.find(ItemComponent);
+
+            expect(item.props().analyticsAttrs.test).toBe(name);
           });
         });
       });

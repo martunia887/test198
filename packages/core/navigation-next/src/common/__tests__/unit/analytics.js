@@ -140,6 +140,30 @@ describe('analytics', () => {
         }),
       );
     });
+
+    it('should inject contents of analyticsAttrs into event attributes', () => {
+      navigationItemClicked(dummyComp, 'comp', true);
+      const mockArgs = mockWithAnalyticsEvents.mock.calls[0][0];
+
+      mockArgs.onClick(createAnalyticsEventSpy, {
+        icon: function myIcon() {},
+        id: 'abc',
+        analyticsAttrs: { test: 'test' },
+      });
+      // Expect event to be created with correct payload
+      expect(createAnalyticsEventSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: 'clicked',
+          actionSubject: 'navigationItem',
+          actionSubjectId: 'abc',
+          attributes: {
+            componentName: 'comp',
+            iconSource: 'myIcon',
+            test: 'test',
+          },
+        }),
+      );
+    });
   });
 
   describe('navigationExpandedCollapsed', () => {
