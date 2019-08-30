@@ -164,9 +164,9 @@ const nodeToDocBuilder = (node: any): string => {
     });
 
     leaf = `${name}(${JSON.stringify(attrs)})(${childrenBuilders.join(', ')})`;
+  } else {
+    leaf = `${name}(${childrenBuilders.join(', ')})`;
   }
-
-  leaf = `${name}(${childrenBuilders.join(', ')})`;
 
   if (node.marks) {
     const marks = node.marks.slice();
