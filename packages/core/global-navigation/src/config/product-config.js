@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type StatelessFunctionalComponent } from 'react';
+import React, { type ComponentType } from 'react';
 import QuestionIcon from '@atlaskit/icon/glyph/question-circle';
 import Badge from '@atlaskit/badge';
 import Avatar from '@atlaskit/avatar';
@@ -46,7 +46,7 @@ const generateAvatar = profileIconUrl => {
 };
 type OtherConfig = {
   href?: string,
-  badge?: ?StatelessFunctionalComponent<*>,
+  badge?: ?ComponentType<*>,
   label?: string,
 };
 
@@ -275,6 +275,7 @@ export default function generateProductConfig(
     onHelpClick,
     helpLabel,
     helpTooltip,
+    helpBadge,
     helpDrawerContents,
     getHelpRef,
     helpAnalyticsAttrs,
@@ -365,12 +366,14 @@ export default function generateProductConfig(
           {
             getRef: getHelpRef,
             label: helpLabel,
+            badge: helpBadge,
             analyticsAttrs: helpAnalyticsAttrs,
           },
         )
       : helpConfigFactory(helpItems, helpTooltip, {
           getRef: getHelpRef,
           label: helpLabel,
+          badge: helpBadge,
           analyticsAttrs: helpAnalyticsAttrs,
         }),
     settings: configFactory(
