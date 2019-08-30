@@ -6,10 +6,14 @@
   "atlaskit:src": "src/index.ts",
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.ts",
+  "atlaskit": {
+    "name": "Presentation",
+    "team": "editor"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "RatoX <rvieira@atlassian.com>",
+  "author": "Atlassian Pty Ltd",
   "license": "Apache-2.0",
   "dependencies": {
     "@atlaskit/adf-schema": "^3.1.2",
