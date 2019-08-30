@@ -215,6 +215,9 @@ describe('CardActions', () => {
         (analyticsEventHandler.mock.calls[callNumber][0] as UIAnalyticsEvent)
           .payload,
       ).toMatchObject({
+        eventType: 'ui',
+        action: 'clicked',
+        actionSubject: 'button',
         actionSubjectId: formatAnalyticsEventActionLabel(
           actions[actionPosition].label,
         ),
