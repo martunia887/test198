@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Deck, Slide } from 'spectacle';
-import { StyleWrapper, Heading } from '../ui';
+import { Deck } from 'spectacle';
+import { StyleWrapper } from '../ui';
 import { ReactSerializer } from '@atlaskit/renderer';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { ADFEntity } from '@atlaskit/adf-utils';
@@ -12,6 +12,7 @@ import {
 import convertADFToSlides from '../utils/convertADFToSlides';
 import { atlassianTheme } from '../themes';
 import Layout from '../Layouts';
+import BaseLayout from '../Layouts/Base';
 
 const ESC_KEY_CODE = 27;
 
@@ -47,9 +48,11 @@ export class PresentationMode extends React.Component<Props, State> {
         <BaseTheme>
           <StyleWrapper>
             <Deck
+              transition={['slide']}
               progress="bar"
               showFullscreenControl={false}
               theme={atlassianTheme}
+              transitionDuration={500}
               onStateChange={this.onStateChange}
             >
               {this.getSliders(adf)}
@@ -71,23 +74,28 @@ export class PresentationMode extends React.Component<Props, State> {
     providerFactory && providerFactory.destroy();
   }
 
+  renderADF(adf?: ADFEntity) {
+    if (!adf) {
+      return null;
+    }
+
+    const docFromSchema = schema.nodeFromJSON(adf);
+    const children = this.serializer.serializeFragment(docFromSchema as any);
+    return <>{children}</>;
+  }
+
   getSliders = (adf: ADFEntity) => {
     const result = convertADFToSlides(adf);
 
     return result.map((slide, index) => {
-      const docFromSchema = schema.nodeFromJSON(slide.adf);
-      const children = this.serializer.serializeFragment(docFromSchema as any);
       if (slide.layout) {
-        return <Layout slide={slide}>{children}</Layout>;
+        return (
+          <Layout slide={slide} key={index}>
+            {this.renderADF(slide.adf)}
+          </Layout>
+        );
       }
-      return (
-        <Slide key={index}>
-          {slide.title && (
-            <Heading content={slide.title.content} level={slide.title.level} />
-          )}
-          {children}
-        </Slide>
-      );
+      return <BaseLayout slide={slide}>{this.renderADF(slide.adf)}</BaseLayout>;
     });
   };
 

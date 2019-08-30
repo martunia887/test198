@@ -104,8 +104,16 @@ const Headings = css`
   }
 `;
 
+const Lists = css`
+  li,
+  ol {
+    text-align: left;
+  }
+`;
+
 export const StyleWrapper = styled(StyleWrapperRenderer)`
   ${Headings};
   ${Paragraphs};
   ${Status};
+  ${Lists}
 `;

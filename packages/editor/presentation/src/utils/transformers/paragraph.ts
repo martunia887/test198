@@ -11,7 +11,7 @@ function isEmptyParagraph(entity: ADFEntity) {
   );
 }
 
-const MAX_PARAGRAPH_LENGTH = 120;
+const MAX_PARAGRAPH_LENGTH = 300;
 
 function shouldSplitParagraph(entity: ADFEntity) {
   const size = reduce(
@@ -34,7 +34,7 @@ function shouldSplitParagraph(entity: ADFEntity) {
 
 function closeSentenceIfNeeded(sentence: string): string {
   if (sentence[sentence.length - 1] !== '.') {
-    return `${sentence}.`;
+    return `${sentence}. `;
   }
   return sentence;
 }

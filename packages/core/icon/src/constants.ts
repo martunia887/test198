@@ -5,6 +5,7 @@ export const sizes: Record<sizeOpts, string> = {
   medium: '24px',
   large: '32px',
   xlarge: '48px',
+  xxlarge: '96px',
 };
 
 export const sizeMap: Record<string, sizeOpts> = {
@@ -12,4 +13,5 @@ export const sizeMap: Record<string, sizeOpts> = {
   medium: 'medium',
   large: 'large',
   xlarge: 'xlarge',
+  xxlarge: 'xxlarge',
 };

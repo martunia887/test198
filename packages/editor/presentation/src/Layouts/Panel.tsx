@@ -1,16 +1,31 @@
 import * as React from 'react';
 import { Slide } from 'spectacle';
 import { Slide as SlideADF } from '../utils/convertADFToSlides';
-import {
-  lightPanelColor,
-  panelIcons,
-  lightIconColor,
-} from '@atlaskit/editor-common';
+import { panelIcons } from '@atlaskit/editor-common';
 import { PanelAttributes } from '@atlaskit/adf-schema';
+import { colors } from '@atlaskit/theme';
 
 interface Props {
   slide: SlideADF;
 }
+
+const lightPanelColor = {
+  info: colors.B500,
+  note: colors.P500,
+  tip: colors.G500,
+  success: colors.G500,
+  warning: colors.N800,
+  error: colors.R500,
+};
+
+const lightIconColor = {
+  info: colors.B100,
+  note: colors.P100,
+  tip: colors.G400,
+  success: colors.G100,
+  warning: colors.Y300,
+  error: colors.R100,
+};
 
 class PanelLayout extends React.Component<Props> {
   render() {
@@ -19,12 +34,8 @@ class PanelLayout extends React.Component<Props> {
     const Icon = panelIcons[panelType] as any;
     const iconColor = lightIconColor[panelType];
     return (
-      <Slide
-        style={{
-          backgroundColor: lightPanelColor[panelType],
-        }}
-      >
-        <Icon size="xlarge" primaryColor={iconColor} />
+      <Slide bgColor={lightPanelColor[panelType]} textColor="#FFFFFF">
+        <Icon primaryColor={iconColor} size="xxlarge" />
         {children}
       </Slide>
     );

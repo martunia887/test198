@@ -1,1 +1,1 @@
-export declare type sizeOpts = 'small' | 'medium' | 'large' | 'xlarge';
+export declare type sizeOpts = 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
