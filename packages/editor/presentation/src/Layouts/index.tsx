@@ -19,7 +19,9 @@ class Layout extends React.Component<Props> {
     const Component = layouts[this.props.slide.layout!.type];
 
     return (
-      <Component slide={this.props.slide}>{this.props.children} </Component>
+      <Component slide={this.props.slide} {...this.props}>
+        {this.props.children}{' '}
+      </Component>
     );
   }
 }

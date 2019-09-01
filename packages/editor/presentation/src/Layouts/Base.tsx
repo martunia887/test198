@@ -28,7 +28,7 @@ class BaseLayout extends React.Component<Props> {
   render() {
     const { slide, children } = this.props;
     return (
-      <Slide style={{ overflow: 'scroll' }}>
+      <Slide style={{ overflow: 'scroll' }} {...this.props}>
         <Content>
           {slide.title && (
             <LeftContainer>

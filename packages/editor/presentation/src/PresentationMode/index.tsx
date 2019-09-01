@@ -95,7 +95,11 @@ export class PresentationMode extends React.Component<Props, State> {
           </Layout>
         );
       }
-      return <BaseLayout slide={slide}>{this.renderADF(slide.adf)}</BaseLayout>;
+      return (
+        <BaseLayout key={index} slide={slide}>
+          {this.renderADF(slide.adf)}
+        </BaseLayout>
+      );
     });
   };
 
