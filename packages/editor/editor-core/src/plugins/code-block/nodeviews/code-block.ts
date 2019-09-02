@@ -1,19 +1,107 @@
 import rafSchedule from 'raf-schd';
 import { Node, DOMSerializer, DOMOutputSpec } from 'prosemirror-model';
-import { browser } from '@atlaskit/editor-common';
+import {
+  browser,
+  akEditorSelectedBorderSize,
+  blockNodesVerticalMargin,
+  akEditorTableCellMinWidth,
+} from '@atlaskit/editor-common';
+import { gridSize, borderRadius, colors } from '@atlaskit/theme';
+import { akEditorCodeFontFamily } from '../../../styles';
+import { css, cssVar } from '@brickss/compiler';
 
 const MATCH_NEWLINES = new RegExp('\n', 'g');
 
+const minWidth = cssVar('min-width', `${akEditorTableCellMinWidth}px`);
+const fontFamily = cssVar('fontFamily', akEditorCodeFontFamily);
+const codeBorderRadius = cssVar('border-radius', `${borderRadius()}px`);
+const codeBg = cssVar('code-bg', colors.N20);
+const gutterTextColor = cssVar('gutterTextColor', colors.N300);
+const textColor = cssVar('gutterTextColor', colors.N800);
+const dangerGutterBg = cssVar('dangerGutterBg', colors.R75);
+const dangerGutterTextColor = cssVar('dangerGutterTextColor', colors.R400);
+const dangerBg = cssVar('dangerBg', colors.R50);
+
+export const codeBlockStyle = css({
+  background: codeBg,
+  fontFamily: fontFamily,
+  border: '1px solid transparent',
+  borderRadius: codeBorderRadius,
+  fontSize: '14px',
+  lineHeight: '24px',
+  margin: '1.143em 0 0 0',
+  counterReset: 'line',
+  display: 'flex',
+  minWidth: minWidth,
+
+  '.lineNumberGutter': {
+    backgroundColor: 'rgba(9, 30, 66, 0.04)',
+    color: gutterTextColor,
+    textAlign: 'right',
+    userSelect: 'none',
+    padding: '12px 8px',
+    borderRadius: codeBorderRadius,
+    fontSize: '12px',
+    lineHeight: '24px',
+
+    span: {
+      display: 'block',
+
+      '::before': {
+        counterIncrement: 'line',
+        content: 'counter(line)',
+        display: 'inline-block',
+      },
+    },
+  },
+
+  '.codeContent': {
+    color: textColor,
+    borderRadius: codeBorderRadius,
+    padding: '12px 16px',
+    overflow: 'auto',
+    display: 'flex',
+    flex: '1',
+
+    pre: {
+      width: '100%',
+    },
+
+    code: {
+      display: 'inline-block',
+      minWidth: '100%',
+      tabSize: '4',
+    },
+  },
+
+  '[state|danger]': {
+    border: '1px solid #FF5630',
+
+    '.lineNumberGutter': {
+      backgroundColor: dangerGutterBg,
+      color: dangerGutterTextColor,
+    },
+
+    '.codeContent': {
+      backgroundColor: dangerBg,
+    },
+  },
+});
+
 // For browsers <= IE11, we apply style overrides to render a basic code box
-const isIE11 = browser.ie && browser.ie_version <= 11;
-const toDOM = (node: Node) =>
-  [
+// const isIE11 = browser.ie && browser.ie_version <= 11;
+const toDOM = (node: Node) => {
+  let className = codeBlockStyle({});
+  return [
     'div',
-    { class: 'code-block' + (isIE11 ? ' ie11' : '') },
-    ['div', { class: 'line-number-gutter', contenteditable: 'false' }],
+    { class: className },
     [
       'div',
-      { class: 'code-content' },
+      { class: codeBlockStyle.lineNumberGutter, contenteditable: 'false' },
+    ],
+    [
+      'div',
+      { class: codeBlockStyle.codeContent },
       [
         'pre',
         [
@@ -24,6 +112,7 @@ const toDOM = (node: Node) =>
       ],
     ],
   ] as DOMOutputSpec;
+};
 
 export class CodeBlockView {
   node: Node;
@@ -37,7 +126,7 @@ export class CodeBlockView {
     this.dom = dom as HTMLElement;
     this.contentDOM = contentDOM as HTMLElement;
     this.lineNumberGutter = this.dom.querySelector(
-      '.line-number-gutter',
+      '.' + codeBlockStyle.lineNumberGutter,
     ) as HTMLElement;
 
     this.ensureLineNumbers();
