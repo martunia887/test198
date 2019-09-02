@@ -15,6 +15,7 @@ import {
   MediaClient,
   getFileStreamsCache,
 } from '../..';
+import { sleep } from '@atlaskit/media-test-helpers';
 
 const getOrInsertSpy = jest.spyOn(getFileStreamsCache(), 'getOrInsert');
 const authProvider: AuthProvider = () =>
@@ -90,15 +91,12 @@ describe('MediaClient', () => {
             size: 1,
             artifacts: undefined,
           });
-        },
-        complete() {
-          expect.assertions(3);
           done();
         },
       });
     });
 
-    it('should poll for changes and return the latest file state', done => {
+    it('should poll for changes and return the latest file state', async () => {
       const mediaClient = createMediaClient();
       const getFilePromiseWithProcessingStatus = (processingStatus: string) =>
         Promise.resolve({
@@ -129,14 +127,14 @@ describe('MediaClient', () => {
       const next = jest.fn();
       observer.subscribe({
         next,
-        complete() {
-          expect(getItems).toHaveBeenCalledTimes(2);
-          expect(next).toHaveBeenCalledTimes(2);
-          expect(next.mock.calls[0][0].status).toEqual('processing');
-          expect(next.mock.calls[1][0].status).toEqual('processed');
-          done();
-        },
       });
+
+      // polling interval it's 1000
+      await sleep(2000);
+      expect(getItems).toHaveBeenCalledTimes(2);
+      expect(next).toHaveBeenCalledTimes(2);
+      expect(next.mock.calls[0][0].status).toEqual('processing');
+      expect(next.mock.calls[1][0].status).toEqual('processed');
     });
 
     it('should pass options down', () => {

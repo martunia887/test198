@@ -11,7 +11,6 @@ import {
   MediaState,
   MediaProvider,
 } from '@atlaskit/editor-core';
-
 import {
   doc,
   p,
@@ -22,13 +21,16 @@ import {
   sleep,
 } from '@atlaskit/editor-test-helpers';
 
-import { Auth, AuthProvider, MediaClientConfig } from '@atlaskit/media-core';
+import {
+  Auth,
+  AuthProvider,
+  MediaClientConfig,
+  FileState,
+} from '@atlaskit/media-core';
 import {
   getMediaClient,
   withMediaClient,
   MediaClient,
-  ProcessedFileState,
-  createFileState,
 } from '@atlaskit/media-client';
 import uuid from 'uuid/v4';
 import {
@@ -38,6 +40,7 @@ import {
   fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
 import { INPUT_METHOD } from '../../../../../editor-core/src/plugins/analytics';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 let testFileId: string;
 
@@ -70,11 +73,11 @@ describe('Mobile MediaProvider', () => {
   let promisedIdentifierProvider: Promise<ContextIdentifierProvider>;
   let mockAuthProvider: AuthProvider;
   let providerFactory: ProviderFactory;
-  let testFileState: ProcessedFileState;
   let mediaClient: MediaClient;
 
   beforeEach(() => {
-    testFileState = {
+    const testFileState = new ReplaySubject<FileState>(1);
+    testFileState.next({
       status: 'processed',
       id: testFileId,
       name: 'image.jpeg',
@@ -85,7 +88,7 @@ describe('Mobile MediaProvider', () => {
       representations: {
         image: {},
       },
-    };
+    });
 
     testFileId = uuid();
     testMediaAuth = {
@@ -101,14 +104,11 @@ describe('Mobile MediaProvider', () => {
     mediaClient = fakeMediaClient();
     asMockReturnValue(getMediaClient, mediaClient);
     asMock(withMediaClient).mockImplementation(
-      (Component: React.ComponentType) => (props: any) => (
-        <Component {...props} mediaClient={mediaClient} />
-      ),
+      (Component: React.ComponentType) => (props: any) => {
+        return <Component {...props} mediaClient={mediaClient} />;
+      },
     );
-    asMockReturnValue(
-      mediaClient.file.getFileState,
-      createFileState(testFileState),
-    );
+    asMockReturnValue(mediaClient.file.getFileState, testFileState);
 
     promisedMediaProvider = Promise.resolve({
       viewMediaClientConfig: mediaClientConfig,

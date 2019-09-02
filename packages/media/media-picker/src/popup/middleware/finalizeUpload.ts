@@ -4,11 +4,7 @@ import {
   MediaStoreCopyFileWithTokenBody,
   MediaStoreCopyFileWithTokenParams,
 } from '@atlaskit/media-store';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import {
-  FileState,
-  MediaFile as MediaClientFile,
-} from '@atlaskit/media-client';
+import { MediaFile as MediaClientFile } from '@atlaskit/media-client';
 import {
   FinalizeUploadAction,
   isFinalizeUploadAction,
