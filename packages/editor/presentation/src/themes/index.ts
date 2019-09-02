@@ -1,5 +1,5 @@
 import { colors } from '@atlaskit/theme';
-import createTheme from 'spectacle/lib/themes/default';
+import createTheme from '@marduke182/spectacle/lib/themes/default';
 
 export const atlassianTheme = createTheme(
   {

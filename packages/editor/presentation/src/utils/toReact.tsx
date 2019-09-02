@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, Appear, ListItem } from 'spectacle';
+import { List, Appear, ListItem } from '@marduke182/spectacle';
 import { nodeToReact } from '@atlaskit/renderer';
 import { Node } from 'prosemirror-model';
 

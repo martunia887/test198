@@ -116,7 +116,40 @@ const Lists = css`
   }
 `;
 
+const Fonts = css`
+  @font-face {
+    font-family: 'Charlie_Display_Regular';
+    src: url('https://marketplace-cdn.atlassian.com/s/public/Charlie_Display-Regular-1-7c1c0a53957fc3b9f2716e8f26d50cf1.woff')
+        format('font-woff'),
+      url('https://marketplace-cdn.atlassian.com/s/public/Charlie_Display-Regular-1-7c1c0a53957fc3b9f2716e8f26d50cf1.woff')
+        format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Charlie_Display_Semibold';
+    src: url('https://marketplace-cdn.atlassian.com/s/public/Charlie_Display-Semibold-1-aa4aa85c7ef84dd4cb06bba4cd08a1b6.woff')
+        format('font-woff'),
+      url('https://marketplace-cdn.atlassian.com/s/public/Charlie_Display-Semibold-1-aa4aa85c7ef84dd4cb06bba4cd08a1b6.woff')
+        format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Charlie_Display_Bold';
+    src: url('https://marketplace-cdn.atlassian.com/s/public/Charlie_Display-Bold-1-6bf3af7a4a02d59eb95811b5a85ea443.woff')
+        format('font-woff'),
+      url('https://marketplace-cdn.atlassian.com/s/public/Charlie_Display-Bold-1-6bf3af7a4a02d59eb95811b5a85ea443.woff')
+        format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+`;
+
 export const StyleWrapper = styled(StyleWrapperRenderer)`
+  ${Fonts};
   ${Headings};
   ${Paragraphs};
   ${Status};

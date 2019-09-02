@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Deck } from 'spectacle';
+import { Deck } from '@marduke182/spectacle';
 import { ReactSerializer } from '@atlaskit/renderer';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { ADFEntity } from '@atlaskit/adf-utils';
