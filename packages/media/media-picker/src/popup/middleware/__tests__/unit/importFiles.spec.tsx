@@ -48,6 +48,8 @@ import {
 } from '@atlaskit/media-client';
 
 describe('importFiles middleware', () => {
+  beforeEach(() => getFileStreamsCache().removeAll());
+
   const expectUUID = expect.stringMatching(/[a-f0-9\-]+/);
   const todayDate = Date.now();
   interface SetupOptions {
@@ -686,7 +688,7 @@ describe('importFiles middleware', () => {
       });
     });
 
-    it('should reuse existing user file state for tenant id', done => {
+    it('should reuse existing user file state for tenant id', async done => {
       const userFile: MediaFile = {
         id: 'user-id',
         creationDate: 1,
@@ -719,7 +721,7 @@ describe('importFiles middleware', () => {
       getFileStreamsCache().set('user-id', subject);
 
       const store = mockStore();
-      touchSelectedFiles(selectedFiles, store);
+      await touchSelectedFiles(selectedFiles, store);
       const observable = getFileStreamsCache().get('tenant-upfront-id');
 
       observable!.subscribe({

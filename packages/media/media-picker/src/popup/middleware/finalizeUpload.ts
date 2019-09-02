@@ -72,19 +72,17 @@ const emitProcessedState = async (
     const collection = config.uploadParams && config.uploadParams.collection;
     const tenantSubject = tenantMediaClient.file.getFileState(
       destinationFile.id,
-    ) as ReplaySubject<FileState>;
+    );
     const response = (await tenantMediaClient.mediaStore.getItems(
       [destinationFile.id],
       collection,
     )).data;
     const firstItem = response.items[0];
-
     // We need this check since the return type of getFileState might not be a ReplaySubject and won't have "next"
     if (
       firstItem &&
       firstItem.details.processingStatus === 'succeeded' &&
-      tenantSubject &&
-      tenantSubject.next
+      tenantSubject
     ) {
       const subscription = tenantSubject.subscribe({
         next(currentState) {
