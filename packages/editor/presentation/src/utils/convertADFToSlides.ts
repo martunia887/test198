@@ -37,8 +37,6 @@ export const validTypes = [
 const transformers: { [key: string]: EntityTransformer } = {
   paragraph: paragraphTransformer,
   panel: panelTransformer,
-  bulletList: listTransformer,
-  orderedList: listTransformer,
   heading: headingTransformer,
 };
 

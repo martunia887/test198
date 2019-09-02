@@ -13,7 +13,7 @@ import {
   mergeTextNodes,
   isTextWrapper,
   TextWrapper,
-  toReact,
+  toReact as toReactDefault,
 } from './nodes';
 
 import { toReact as markToReact } from './marks';
@@ -26,6 +26,7 @@ import {
   calcTableColumnWidths,
 } from '@atlaskit/editor-common';
 
+export { nodeToReact } from './nodes';
 export { HeadingLevel } from './nodes/heading';
 
 export interface RendererContext {
@@ -44,6 +45,7 @@ export interface ConstructorParams {
   appearance?: RendererAppearance;
   disableHeadingIDs?: boolean;
   allowDynamicTextSizing?: boolean;
+  toReact?: (node: Node) => React.ComponentType<any>;
 }
 
 type MarkWithContent = Partial<Mark<any>> & {
@@ -85,6 +87,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   private disableHeadingIDs?: boolean;
   private headingIds: string[] = [];
   private allowDynamicTextSizing?: boolean;
+  private toReact: (node: Node) => React.ComponentType<any>;
 
   constructor({
     providers,
@@ -95,6 +98,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     appearance,
     disableHeadingIDs,
     allowDynamicTextSizing,
+    toReact = toReactDefault,
   }: ConstructorParams) {
     this.providers = providers;
     this.eventHandlers = eventHandlers;
@@ -104,6 +108,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     this.appearance = appearance;
     this.disableHeadingIDs = disableHeadingIDs;
     this.allowDynamicTextSizing = allowDynamicTextSizing;
+    this.toReact = toReact;
   }
 
   private resetState() {
@@ -148,7 +153,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
         const serializedContent = this.serializeFragment(
           node.content,
           props,
-          toReact(node),
+          this.toReact(node),
           `${node.type.name}-${index}`,
           pInfo,
         );
@@ -349,6 +354,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       appearance,
       disableHeadingIDs,
       allowDynamicTextSizing,
+      toReact,
     }: ConstructorParams,
   ): ReactSerializer {
     // TODO: Do we actually need the schema here?
@@ -359,6 +365,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       appearance,
       disableHeadingIDs,
       allowDynamicTextSizing,
+      toReact,
     });
   }
 }

@@ -55,6 +55,10 @@ const Status = css`
 `;
 
 const Paragraphs = css`
+  p {
+    text-align: left;
+  }
+
   p,
   a,
   small {
@@ -62,10 +66,6 @@ const Paragraphs = css`
     font-size: ${fontSizes.paragraph.fontSize};
     line-height: ${fontSizes.paragraph.lineHeight};
     margin-top: 2.8rem !important;
-  }
-
-  li .ak-renderer-document p:first-of-type {
-    margin-top: 0 !important;
   }
 `;
 

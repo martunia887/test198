@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Deck } from 'spectacle';
-import { StyleWrapper } from '../ui';
 import { ReactSerializer } from '@atlaskit/renderer';
 import { defaultSchema as schema } from '@atlaskit/adf-schema';
 import { ADFEntity } from '@atlaskit/adf-utils';
@@ -10,9 +9,10 @@ import {
   WidthProvider,
 } from '@atlaskit/editor-common';
 import convertADFToSlides from '../utils/convertADFToSlides';
+import { toReact } from '../utils/toReact';
 import { atlassianTheme } from '../themes';
 import Layout from '../Layouts';
-import BaseLayout from '../Layouts/Base';
+import { StyleWrapper } from '../ui';
 
 const ESC_KEY_CODE = 27;
 
@@ -34,6 +34,7 @@ export class PresentationMode extends React.Component<Props, State> {
 
     this.serializer = ReactSerializer.fromSchema(schema, {
       providers: props.providerFactory,
+      toReact,
     });
     this.state = {
       onStateChange: this.onStateChange,
@@ -87,20 +88,11 @@ export class PresentationMode extends React.Component<Props, State> {
   getSliders = (adf: ADFEntity) => {
     const result = convertADFToSlides(adf);
 
-    return result.map((slide, index) => {
-      if (slide.layout) {
-        return (
-          <Layout serializer={this.serializer} slide={slide} key={index}>
-            {this.renderADF(slide.adf)}
-          </Layout>
-        );
-      }
-      return (
-        <BaseLayout key={index} slide={slide}>
-          {this.renderADF(slide.adf)}
-        </BaseLayout>
-      );
-    });
+    return result.map((slide, index) => (
+      <Layout serializer={this.serializer} slide={slide} key={index}>
+        {this.renderADF(slide.adf)}
+      </Layout>
+    ));
   };
 
   private onESCKeyPress = (event: KeyboardEvent): boolean => {
