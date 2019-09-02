@@ -65,7 +65,7 @@
     "@types/js-search": "^1.4.0",
     "@types/react-virtualized": "^9.18.12",
     "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "es6-promise": "^4.0.5",
     "fetch-mock": "^7.3.3",
     "jest-fetch-mock": "^2.1.2",

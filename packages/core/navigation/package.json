@@ -59,7 +59,7 @@
     "@atlaskit/ssr": "^0.1.1",
     "@atlaskit/toggle": "^8.0.5",
     "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "raf-stub": "^2.0.1",
     "react-beautiful-dnd": "^10.0.2",
     "react-dom": "^16.8.0",

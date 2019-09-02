@@ -46,6 +46,6 @@
     "@atlaskit/docs": "^8.1.5",
     "@atlaskit/section-message": "^4.0.12",
     "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0"
+    "enzyme-adapter-react-16": "^1.14.0"
   }
 }

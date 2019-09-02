@@ -157,7 +157,7 @@
     "docker-compose": "^0.14.5",
     "enhanced-resolve": "3.4.1",
     "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-react-intl": "^2.0.3",
     "es6-promise": "^4.0.5",
     "eslint": "^5.15.3",

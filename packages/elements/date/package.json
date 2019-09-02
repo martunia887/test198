@@ -38,7 +38,7 @@
     "@atlaskit/elements-test-helpers": "^0.6.4",
     "@types/date-fns": "^2.6.0",
     "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "react": "^16.8.0"
   }
 }
