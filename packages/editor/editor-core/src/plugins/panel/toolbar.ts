@@ -11,6 +11,7 @@ import { FloatingToolbarHandler } from '../floating-toolbar/types';
 import { removePanel, changePanelType } from './actions';
 import { getPluginState } from './pm-plugins/main';
 import { hoverDecoration } from '../base/pm-plugins/decoration';
+import { panelStyle } from './nodeviews/panel';
 
 export const messages = defineMessages({
   info: {
@@ -101,8 +102,16 @@ export const getToolbarConfig: FloatingToolbarHandler = (
           appearance: 'danger',
           icon: RemoveIcon,
           onClick: removePanel(),
-          onMouseEnter: hoverDecoration(nodeType, true),
-          onMouseLeave: hoverDecoration(nodeType, false),
+          onMouseEnter: hoverDecoration(
+            nodeType,
+            true,
+            panelStyle.scope + '--danger',
+          ),
+          onMouseLeave: hoverDecoration(
+            nodeType,
+            false,
+            panelStyle.scope + '--danger',
+          ),
           title: formatMessage(commonMessages.remove),
         },
       ],

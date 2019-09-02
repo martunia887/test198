@@ -1092,20 +1092,20 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@brickss/compiler@^0.0.0-alpha.0":
-  version "0.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@brickss/compiler/-/compiler-0.0.0-alpha.0.tgz#be99c91763b75e1054e4efa3e1b5ef63d9502ca5"
-  integrity sha512-PEBFoghtu0lRPSu+LmjOJrR4M6g4JDMAD7xxwrQYOYV8D+1hBBElP5Thlr5jRdDX5Nkb4ZFrul7ZY+5Y6BOgVg==
+"@brickss/compiler@0.0.0-alpha.2":
+  version "0.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@brickss/compiler/-/compiler-0.0.0-alpha.2.tgz#7ab732bc06b6050986fc0fb3fc91f53fe0d03d12"
+  integrity sha512-h1QN0003pK4GrLbP5ai/tbd1Tm3WakfsSzr4VUAKHtswBGfE1HZ+LAD9HfbXTRhCOq3EO6g+hhi/RqOj5Pu1dA==
   dependencies:
     "@types/cssnano" "^4.0.0"
     cssnano "^4.1.10"
     postcss "^7.0.17"
     typescript "^3.6.2"
 
-"@brickss/runtime@^0.0.0-alpha.0":
-  version "0.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@brickss/runtime/-/runtime-0.0.0-alpha.0.tgz#dc9ce5a0ee2d615db1ead45238c44c43b4174e56"
-  integrity sha512-bSwo3rLZcMucH4ry521PHwn0Y+3tYJo3rYeNW116akpDeIJgYgyi6v8g/kFoxUOkFDbp4BE7y93Lr8lMaOe5gA==
+"@brickss/runtime@0.0.0-alpha.1":
+  version "0.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@brickss/runtime/-/runtime-0.0.0-alpha.1.tgz#3cfce7a45015b01e9ab6860dc9c1d37d48973628"
+  integrity sha512-5/MJI8UlzBhPZGp6KJY8vDqACH3Ts24INK93kS2kEWDT5VqkF6iBiMx2g9rUtAMDPtwXv6zEHk0cvUHVhw0Iwg==
 
 "@changesets/cli@^1.2.0":
   version "1.2.0"

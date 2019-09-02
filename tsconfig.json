@@ -29,7 +29,7 @@
       "es2016.array.include"
     ],
     "plugins": [
-      { "transform": "../../../../transform.ts", "type": "raw" }
+      { "transform": "./../transform.ts", "type": "raw" }
     ]
   },
   "files": [
