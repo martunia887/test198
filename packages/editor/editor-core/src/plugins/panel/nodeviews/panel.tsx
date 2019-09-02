@@ -9,6 +9,21 @@ import WarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import ErrorIcon from '@atlaskit/icon/glyph/editor/error';
 import TipIcon from '@atlaskit/icon/glyph/editor/hint';
 import { PanelType } from '@atlaskit/adf-schema';
+import { css } from '@brickss/compiler';
+
+export const style = css({
+  borderRadius: '3px',
+  margin: '18px 0',
+  padding: '8px',
+  minWidth: '680px',
+  display: 'flex',
+  alignItems: 'baseline',
+  wordBreak: 'break-word',
+
+  background: 'red !important',
+});
+
+const className = style({});
 
 const panelIcons = {
   info: InfoIcon,
@@ -23,7 +38,7 @@ const toDOM = (node: Node) =>
   [
     'div',
     {
-      class: 'ak-editor-panel',
+      class: className,
       'data-panel-type': node.attrs.panelType || 'info',
     },
     ['span', { class: 'ak-editor-panel__icon' }],
