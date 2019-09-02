@@ -4,7 +4,8 @@ function hasValidParent(parent: EntityParent, validTypes: string[]): boolean {
   if (!parent.node) {
     return false;
   }
-  if (validTypes.indexOf(parent.node.type) !== -1) {
+
+  if (parent.node.type !== 'doc') {
     return true;
   }
 
