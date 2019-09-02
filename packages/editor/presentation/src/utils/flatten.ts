@@ -1,5 +1,4 @@
-import { ADFEntity, reduce } from '@atlaskit/adf-utils';
-import { EntityParent } from '../../../adf-utils/src/traverse/traverse';
+import { ADFEntity, reduce, EntityParent } from '@atlaskit/adf-utils';
 
 function hasValidParent(parent: EntityParent, validTypes: string[]): boolean {
   if (!parent.node) {

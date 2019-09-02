@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Slide } from 'spectacle';
 import { Slide as SlideADF } from '../utils/convertADFToSlides';
-import { ADFEntity } from '../../../adf-utils/src';
+import { ADFEntity } from '@atlaskit/adf-utils';
 
 interface Props {
   slide: SlideADF;
