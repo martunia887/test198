@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ReactSerializer } from '@atlaskit/renderer';
 import { Slide as SlideADF } from '../utils/convertADFToSlides';
 import PanelLayout from './Panel';
 import ListLayout from './List';
@@ -6,6 +7,7 @@ import HeadingLayout from './Heading';
 
 interface Props {
   slide: SlideADF;
+  serializer: ReactSerializer;
 }
 
 const layouts: { [key: string]: React.ComponentType<Props> } = {

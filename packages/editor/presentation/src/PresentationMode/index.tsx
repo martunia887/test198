@@ -90,7 +90,7 @@ export class PresentationMode extends React.Component<Props, State> {
     return result.map((slide, index) => {
       if (slide.layout) {
         return (
-          <Layout slide={slide} key={index}>
+          <Layout serializer={this.serializer} slide={slide} key={index}>
             {this.renderADF(slide.adf)}
           </Layout>
         );

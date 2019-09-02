@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { Slide, Appear, Layout, Fill, Heading } from 'spectacle';
+import { ReactSerializer } from '@atlaskit/renderer';
+import { Slide, Layout, Fill, Heading } from 'spectacle';
 import { Slide as SlideADF } from '../utils/convertADFToSlides';
 import { HeadingSlide } from '../utils/transformers/heading';
 // import { Heading } from '../ui';
 
 interface Props {
   slide: SlideADF;
+  serializer: ReactSerializer;
 }
 
 class HeadingLayout extends React.Component<Props> {

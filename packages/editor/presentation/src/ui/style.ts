@@ -63,6 +63,10 @@ const Paragraphs = css`
     line-height: ${fontSizes.paragraph.lineHeight};
     margin-top: 2.8rem !important;
   }
+
+  li .ak-renderer-document p:first-of-type {
+    margin-top: 0 !important;
+  }
 `;
 
 const Headings = css`
@@ -105,9 +109,10 @@ const Headings = css`
 `;
 
 const Lists = css`
-  li,
+  ul,
   ol {
     text-align: left;
+    list-style-position: outside;
   }
 `;
 
@@ -115,5 +120,5 @@ export const StyleWrapper = styled(StyleWrapperRenderer)`
   ${Headings};
   ${Paragraphs};
   ${Status};
-  ${Lists}
+  ${Lists};
 `;

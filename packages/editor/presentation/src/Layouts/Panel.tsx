@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ReactSerializer } from '@atlaskit/renderer';
 import { Slide } from 'spectacle';
 import { Slide as SlideADF } from '../utils/convertADFToSlides';
 import { panelIcons } from '@atlaskit/editor-common';
@@ -7,6 +8,7 @@ import { colors } from '@atlaskit/theme';
 
 interface Props {
   slide: SlideADF;
+  serializer: ReactSerializer;
 }
 
 const lightPanelColor = {
@@ -34,7 +36,11 @@ class PanelLayout extends React.Component<Props> {
     const Icon = panelIcons[panelType] as any;
     const iconColor = lightIconColor[panelType];
     return (
-      <Slide bgColor={lightPanelColor[panelType]} textColor="#FFFFFF">
+      <Slide
+        bgColor={lightPanelColor[panelType]}
+        textColor="#FFFFFF"
+        {...this.props}
+      >
         <Icon primaryColor={iconColor} size="xxlarge" />
         {children}
       </Slide>
