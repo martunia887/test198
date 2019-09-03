@@ -290,7 +290,7 @@
     "@babel/runtime": "^7.0.0",
     "@emotion/core": "^10.0.9",
     "@emotion/styled": "^10.0.7",
-    "@marduke182/spectacle": "5.7.2",
+    "@marduke182/spectacle": "5.7.3",
     "@sentry/browser": "^4.6.3",
     "@types/algoliasearch": "^3.30.8",
     "@types/bricks.js": "^1.8.0",

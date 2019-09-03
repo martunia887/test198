@@ -23,7 +23,7 @@
     "@atlaskit/profilecard": "^12.0.6",
     "@atlaskit/renderer": "^49.8.3",
     "@atlaskit/util-data-test": "^12.9.6",
-    "@marduke182/spectacle": "5.7.2",
+    "@marduke182/spectacle": "5.7.3",
     "styled-components": "^3.2.6"
   }
 }
