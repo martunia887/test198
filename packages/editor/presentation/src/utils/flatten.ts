@@ -9,7 +9,7 @@ function hasValidParent(parent: EntityParent, validTypes: string[]): boolean {
     return true;
   }
 
-  return parent.parent ? hasValidParent(parent.parent, validTypes) : false;
+  return false;
 }
 
 function flatten(adf: ADFEntity, validTypes: string[]): ADFEntity[] {
