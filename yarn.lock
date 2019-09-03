@@ -1460,10 +1460,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
-"@marduke182/spectacle@5.7.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@marduke182/spectacle/-/spectacle-5.7.1.tgz#b70320c7a0f214308a19ed6cf8424d67a1fa16e0"
-  integrity sha512-NTn2TT4BB598VsaAAyoxU1Zp/pWucrmqaEZ7pm6SR/vKvFGO46bYZYtYXBuFJHtnkZT4ndTZNZeC7H2lRiTMtw==
+"@marduke182/spectacle@5.7.2":
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/@marduke182/spectacle/-/spectacle-5.7.2.tgz#5ca0ad4ac07ff0a0f4b4f5e964a5e6744be80936"
+  integrity sha512-o9SGro9jh01P+srQA/s/n9eafehyB4m6lLc+V/KT9sWiv0zMv2xm8doedDVwMHr6QqzMf0z0K7RZ/TwWNaz2JQ==
   dependencies:
     csstype "^2.6.0"
     deep-object-diff "^1.1.0"
