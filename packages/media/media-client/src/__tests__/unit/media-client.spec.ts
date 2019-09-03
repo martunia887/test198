@@ -1,4 +1,6 @@
+jest.mock('dataloader');
 import uuid from 'uuid/v4';
+import Dataloader from 'dataloader';
 import { Observable } from 'rxjs/Observable';
 import { AuthProvider, FileState } from '@atlaskit/media-core';
 import {
@@ -15,7 +17,7 @@ import {
   MediaClient,
   getFileStreamsCache,
 } from '../..';
-import { sleep } from '@atlaskit/media-test-helpers';
+import { nextTick, asMock } from '@atlaskit/media-test-helpers';
 
 const getOrInsertSpy = jest.spyOn(getFileStreamsCache(), 'getOrInsert');
 const authProvider: AuthProvider = () =>
@@ -32,9 +34,25 @@ const createMediaClient = () => {
 (uploadFile as any) = jest.fn();
 const uploadFileMock: jest.Mock<any> = uploadFile as any;
 
+// Faking Dataloader impl so that is calls batch function
+// right away.
+asMock(Dataloader).mockImplementation(callback => ({
+  load: (params: any) =>
+    callback([params]) // First we convert singular request into array of requests
+      .then(
+        // Since batch function returns array of responses, we take first one for current `.load` call
+        (results: any[]) => results[0],
+      ),
+}));
+
 describe('MediaClient', () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     uploadFileMock.mockReset();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
   });
 
   describe('.file.getFileState()', () => {
@@ -113,10 +131,12 @@ describe('MediaClient', () => {
             ],
           },
         });
+      const pendingStatus = getFilePromiseWithProcessingStatus('pending');
+      const succeededStatus = getFilePromiseWithProcessingStatus('succeeded');
       const getItems = jest
         .fn()
-        .mockReturnValueOnce(getFilePromiseWithProcessingStatus('pending'))
-        .mockReturnValueOnce(getFilePromiseWithProcessingStatus('succeeded'));
+        .mockReturnValueOnce(pendingStatus)
+        .mockReturnValueOnce(succeededStatus);
       const fakeStore = {
         getItems,
       };
@@ -129,8 +149,16 @@ describe('MediaClient', () => {
         next,
       });
 
-      // polling interval it's 1000
-      await sleep(2000);
+      await pendingStatus; // wait for `await this.mediaStore.getItems` in batchLoadingFunc()
+      await nextTick(); // wait for `await Promise.all` in batchLoadingFunc()
+      await nextTick(); // wait for `await this.dataloader.load` in fetchFile()
+
+      jest.runOnlyPendingTimers();
+
+      await succeededStatus; // wait for `await this.mediaStore.getItems` in batchLoadingFunc()
+      await nextTick(); // wait for `await Promise.all` in batchLoadingFunc()
+      await nextTick(); // wait for `await this.dataloader.load` in fetchFile()
+
       expect(getItems).toHaveBeenCalledTimes(2);
       expect(next).toHaveBeenCalledTimes(2);
       expect(next.mock.calls[0][0].status).toEqual('processing');
