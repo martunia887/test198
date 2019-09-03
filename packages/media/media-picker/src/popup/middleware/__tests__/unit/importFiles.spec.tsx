@@ -1,6 +1,6 @@
 import {
   globalMediaEventEmitter,
-  createFileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 const globalEmitSpy = jest.spyOn(globalMediaEventEmitter, 'emit');
 import {
@@ -600,7 +600,7 @@ describe('importFiles middleware', () => {
     });
 
     it('should add file preview for local uploads', done => {
-      const subject = createFileState({
+      const subject = createFileStateSubject({
         id: 'id-1',
         status: 'processing',
         preview: {
@@ -706,7 +706,7 @@ describe('importFiles middleware', () => {
         },
       ];
 
-      const subject = createFileState({
+      const subject = createFileStateSubject({
         id: 'user-id',
         status: 'uploading',
         name: 'some_file_name',

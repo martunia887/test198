@@ -1,7 +1,7 @@
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { FileState } from '../models/file-state';
 
-export const createFileState = (
+export const createFileStateSubject = (
   initialState?: FileState,
 ): ReplaySubject<FileState> => {
   const subject = new ReplaySubject<FileState>(1);

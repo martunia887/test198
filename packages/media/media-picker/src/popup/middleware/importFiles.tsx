@@ -11,7 +11,7 @@ import {
   MediaType,
   globalMediaEventEmitter,
   observableToPromise,
-  createFileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 import { State, SelectedItem, LocalUpload, ServiceName } from '../domain';
 import { isStartImportAction } from '../actions/startImport';
@@ -192,13 +192,13 @@ export const touchSelectedFiles = (
           }
 
           // We assign the tenant id to the observable to not emit user id instead
-          const tenantFile = createFileState({
+          const tenantFileStateSubject = createFileStateSubject({
             ...existingFileState,
             id,
             preview: fileState.preview,
           });
 
-          getFileStreamsCache().set(id, tenantFile);
+          getFileStreamsCache().set(id, tenantFileStateSubject);
         });
       } else {
         const subject = new ReplaySubject<FileState>(1);

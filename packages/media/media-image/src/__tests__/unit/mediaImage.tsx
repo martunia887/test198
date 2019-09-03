@@ -12,7 +12,7 @@ import {
   FileState,
   ProcessedFileState,
   UploadingFileState,
-  createFileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 import { MediaImageInternal, MediaImageInternalProps } from '../../mediaImage';
 
@@ -72,13 +72,13 @@ describe('<MediaImage />', () => {
   };
 
   const setup = (
-    fileStateResult: ReplaySubject<FileState> = createFileState(
+    fileStateSubject: ReplaySubject<FileState> = createFileStateSubject(
       defaultFileState,
     ),
   ) => {
     const mediaClient = fakeMediaClient();
 
-    asMockReturnValue(mediaClient.file.getFileState, fileStateResult);
+    asMockReturnValue(mediaClient.file.getFileState, fileStateSubject);
     asMockReturnValue(mediaClient.getImage, Promise.resolve(new Blob()));
     return mediaClient;
   };
@@ -123,7 +123,7 @@ describe('<MediaImage />', () => {
     };
     const props = {
       ...defaultProps,
-      mediaClient: setup(createFileState(fileState)),
+      mediaClient: setup(createFileStateSubject(fileState)),
     };
 
     const wrapper = await shallowRender(props);
@@ -139,7 +139,7 @@ describe('<MediaImage />', () => {
 
     const props = {
       ...defaultProps,
-      mediaClient: setup(createFileState(fileState)),
+      mediaClient: setup(createFileStateSubject(fileState)),
     };
     const wrapper = await shallowRender(props);
 
@@ -167,7 +167,7 @@ describe('<MediaImage />', () => {
 
     const props = {
       ...defaultProps,
-      mediaClient: setup(createFileState(fileState)),
+      mediaClient: setup(createFileStateSubject(fileState)),
     };
     const wrapper = await shallowRender(props);
 
@@ -243,7 +243,7 @@ describe('<MediaImage />', () => {
       ...defaultFileState,
       preview: Promise.resolve({ value: new Blob() }),
     };
-    const mediaClient = setup(createFileState(fileState));
+    const mediaClient = setup(createFileStateSubject(fileState));
     const props = {
       ...defaultProps,
       mediaClient,

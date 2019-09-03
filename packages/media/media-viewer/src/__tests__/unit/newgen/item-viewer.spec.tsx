@@ -19,7 +19,7 @@ import {
   FileState,
   Identifier,
   MediaClient,
-  createFileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 import {
   mountWithIntlContext,
@@ -384,7 +384,7 @@ describe('<ItemViewer />', () => {
       // since the test is executed synchronously
       // let's prevent the second call to getFile from immediately resolving and
       // updating the state to SUCCESSFUL before we run the assertion.
-      mediaClient.file.getFileState = () => createFileState();
+      mediaClient.file.getFileState = () => createFileStateSubject();
       el.setProps({ mediaClient, identifier: identifier2 });
       el.update();
 

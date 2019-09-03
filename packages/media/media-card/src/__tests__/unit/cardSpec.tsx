@@ -15,7 +15,7 @@ import {
   FileIdentifier,
   ExternalImageIdentifier,
   Identifier,
-  createFileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { MediaViewer } from '@atlaskit/media-viewer';
@@ -81,7 +81,7 @@ describe('Card', () => {
 
     asMockReturnValue(
       mockMediaClient.file.getFileState,
-      createFileState(fileState),
+      createFileStateSubject(fileState),
     );
     return mockMediaClient;
   };
@@ -590,9 +590,9 @@ describe('Card', () => {
 
   it('should render error card when getFileState fails', async () => {
     const mediaClient = fakeMediaClient();
-    const fileState = createFileState();
-    fileState.error('some-error');
-    asMockReturnValue(mediaClient.file.getFileState, fileState);
+    const fileStateSubject = createFileStateSubject();
+    fileStateSubject.error('some-error');
+    asMockReturnValue(mediaClient.file.getFileState, fileStateSubject);
 
     const { component } = setup(mediaClient);
 

@@ -36,6 +36,7 @@ import {
   Dimensions,
 } from '../utils/getDimensionsFromBlob';
 import { getMediaTypeFromMimeType } from '../utils/getMediaTypeFromMimeType';
+import { createFileStateSubject } from '../utils/createFileStateSubject';
 
 const POLLING_INTERVAL = 1000;
 const maxNumberOfItemsPerCall = 100;
@@ -174,10 +175,8 @@ export class FileFetcherImpl implements FileFetcher {
     id: string,
     options?: GetFileOptions,
   ): ReplaySubject<FileState> {
-    // TODO: add utility to create initial subject + initial value
-    const subject = new ReplaySubject<FileState>(1);
-
     if (!isValidId(id)) {
+      const subject = createFileStateSubject();
       subject.error(`${id} is not a valid file id`);
 
       return subject;
@@ -186,7 +185,6 @@ export class FileFetcherImpl implements FileFetcher {
     return getFileStreamsCache().getOrInsert(id, () => {
       const collection = options && options.collectionName;
 
-      // return subject;
       return this.createDownloadFileStream(id, collection);
     });
   }

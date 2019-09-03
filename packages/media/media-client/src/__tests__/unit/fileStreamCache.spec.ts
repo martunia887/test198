@@ -1,7 +1,7 @@
 import { LRUCache } from 'lru-fast';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { StreamsCache } from '../../file-streams-cache';
-import { createFileState } from '../../utils/createFileState';
+import { createFileStateSubject } from '../../utils/createFileStateSubject';
 import { FileState } from '../../models/file-state';
 
 describe('StreamsCache', () => {
@@ -9,12 +9,12 @@ describe('StreamsCache', () => {
     const cache = new StreamsCache(
       new LRUCache<string, ReplaySubject<FileState>>(10),
     );
-    const fileStream1 = createFileState();
+    const fileStateSubject = createFileStateSubject();
 
-    cache.set('1', fileStream1);
+    cache.set('1', fileStateSubject);
 
     expect(cache.has('1')).toBeTruthy();
     expect(cache.has('2')).toBeFalsy();
-    expect(cache.get('1')).toEqual(fileStream1);
+    expect(cache.get('1')).toEqual(fileStateSubject);
   });
 });

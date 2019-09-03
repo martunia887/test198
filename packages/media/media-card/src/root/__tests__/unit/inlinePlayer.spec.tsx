@@ -5,7 +5,7 @@ import { MediaFileArtifacts } from '@atlaskit/media-store';
 import {
   FileIdentifier,
   FileState,
-  createFileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 import {
   asMockReturnValue,
@@ -44,7 +44,7 @@ describe('<InlinePlayer />', () => {
     const mediaClient = fakeMediaClient();
     asMockReturnValue(
       mediaClient.file.getFileState,
-      createFileState({
+      createFileStateSubject({
         ...defaultFileState,
         artifacts,
       }),
@@ -130,7 +130,7 @@ describe('<InlinePlayer />', () => {
     const mediaClient = {
       file: {
         getFileState: jest.fn().mockReturnValue(
-          createFileState({
+          createFileStateSubject({
             status: 'uploading',
             preview: {
               value: blob,

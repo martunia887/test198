@@ -5,7 +5,10 @@ import {
   ProcessedFileState,
   ProcessingFileState,
 } from '@atlaskit/media-core';
-import { getFileStreamsCache, createFileState } from '@atlaskit/media-client';
+import {
+  getFileStreamsCache,
+  createFileStateSubject,
+} from '@atlaskit/media-client';
 import {
   mockStore,
   expectFunctionToHaveBeenCalledWith,
@@ -205,7 +208,7 @@ describe('finalizeUploadMiddleware', () => {
 
   it('should populate cache with processed state', async () => {
     const { store, action } = setup();
-    const subject = createFileState({
+    const subject = createFileStateSubject({
       id: copiedFile.id,
     } as any);
     const next = jest.fn();

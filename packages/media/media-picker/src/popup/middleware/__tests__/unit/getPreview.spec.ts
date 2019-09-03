@@ -6,7 +6,7 @@ import { Preview } from '../../../../domain/preview';
 import {
   FileState,
   ImageMetadata,
-  createFileState,
+  createFileStateSubject,
 } from '@atlaskit/media-client';
 import { Auth } from '@atlaskit/media-core';
 
@@ -62,7 +62,7 @@ describe('getPreviewMiddleware', () => {
     );
     asMockReturnValue(
       userMediaClient.file.getFileState,
-      createFileState(defaultFileState),
+      createFileStateSubject(defaultFileState),
     );
     asMockReturnValue(userMediaClient.getImageMetadata, defaultImageMetadata);
 
