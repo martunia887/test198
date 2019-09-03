@@ -34,6 +34,7 @@ export class PresentationMode extends React.Component<Props, State> {
 
     this.serializer = ReactSerializer.fromSchema(schema, {
       providers: props.providerFactory,
+      isLazy: false,
       toReact,
     });
     this.state = {

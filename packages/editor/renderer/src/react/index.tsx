@@ -43,6 +43,7 @@ export interface ConstructorParams {
   portal?: HTMLElement;
   objectContext?: RendererContext;
   appearance?: RendererAppearance;
+  isLazy?: boolean;
   disableHeadingIDs?: boolean;
   allowDynamicTextSizing?: boolean;
   toReact?: (node: Node) => React.ComponentType<any>;
@@ -84,6 +85,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   private portal?: HTMLElement;
   private rendererContext?: RendererContext;
   private appearance?: RendererAppearance;
+  private isLazy?: boolean;
   private disableHeadingIDs?: boolean;
   private headingIds: string[] = [];
   private allowDynamicTextSizing?: boolean;
@@ -98,6 +100,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     appearance,
     disableHeadingIDs,
     allowDynamicTextSizing,
+    isLazy = false,
     toReact = toReactDefault,
   }: ConstructorParams) {
     this.providers = providers;
@@ -106,6 +109,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     this.portal = portal;
     this.rendererContext = objectContext;
     this.appearance = appearance;
+    this.isLazy = appearance === 'mobile' ? false : isLazy;
     this.disableHeadingIDs = disableHeadingIDs;
     this.allowDynamicTextSizing = allowDynamicTextSizing;
     this.toReact = toReact;
@@ -256,6 +260,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       content: node.content ? node.content.toJSON() : undefined,
       allowDynamicTextSizing: this.allowDynamicTextSizing,
       rendererAppearance: this.appearance,
+      isLazy: this.isLazy,
       ...node.attrs,
     };
   }
@@ -352,6 +357,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       eventHandlers,
       extensionHandlers,
       appearance,
+      isLazy,
       disableHeadingIDs,
       allowDynamicTextSizing,
       toReact,
@@ -363,6 +369,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       eventHandlers,
       extensionHandlers,
       appearance,
+      isLazy,
       disableHeadingIDs,
       allowDynamicTextSizing,
       toReact,

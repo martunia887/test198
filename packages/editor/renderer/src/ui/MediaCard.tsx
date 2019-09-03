@@ -63,6 +63,7 @@ export interface MediaCardProps {
   resizeMode?: ImageResizeMode;
   appearance?: CardAppearance;
   rendererAppearance?: RendererAppearance;
+  isLazy: boolean;
   occurrenceKey?: string;
   imageStatus?: ImageStatus;
   disableOverlay?: boolean;
@@ -280,6 +281,7 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
       cardDimensions,
       resizeMode,
       rendererAppearance,
+      isLazy,
       disableOverlay,
       useInlinePlayer,
     } = this.props;
@@ -331,7 +333,7 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
           dimensions={cardDimensions}
           onClick={onCardClick}
           resizeMode={resizeMode}
-          isLazy={!isMobile}
+          isLazy={isLazy}
           disableOverlay={disableOverlay}
           useInlinePlayer={isInlinePlayer}
           shouldOpenMediaViewer={shouldOpenMediaViewer}
