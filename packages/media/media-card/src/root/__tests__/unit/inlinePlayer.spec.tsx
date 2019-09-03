@@ -135,10 +135,16 @@ describe('<InlinePlayer />', () => {
             preview: {
               value: blob,
             },
-          } as any),
+            id: '',
+            mediaType: 'image',
+            mimeType: '',
+            name: '',
+            progress: 0,
+            size: 0,
+          }),
         ),
       },
-    } as any;
+    };
     const { component } = setup({ mediaClient });
 
     await update(component);
