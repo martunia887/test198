@@ -95,20 +95,23 @@ const providerFactory = ProviderFactory.create({
 
 export default class Example extends React.Component<
   {},
-  { adf: string; showPresentation: boolean }
+  { title: string; adf: string; showPresentation: boolean }
 > {
   inputBox?: HTMLTextAreaElement | null;
+  inputTitle?: HTMLInputElement | null;
+
   constructor(props: {}) {
     super(props);
 
     this.state = {
       adf: JSON.stringify(defaultADF),
       showPresentation: false,
+      title: '',
     };
   }
 
   render() {
-    const { adf, showPresentation } = this.state;
+    const { adf, showPresentation, title } = this.state;
 
     return (
       <>
@@ -131,6 +134,22 @@ export default class Example extends React.Component<
               value={this.state.adf}
               onChange={this.onADFChange}
             />
+            <input
+              placeholder="Title Page"
+              style={{
+                boxSizing: 'border-box',
+                border: '1px solid lightgray',
+                fontFamily: 'monospace',
+                fontSize: 16,
+                padding: 10,
+                width: '100%',
+                height: 32,
+              }}
+              ref={ref => {
+                this.inputTitle = ref;
+              }}
+              onChange={this.onTitleChange}
+            />
             <button onClick={this.startPresentation} disabled={!adf}>
               Start!
             </button>
@@ -139,6 +158,7 @@ export default class Example extends React.Component<
         {showPresentation && (
           <PresentationMode
             providerFactory={providerFactory}
+            title={title}
             adf={JSON.parse(adf)}
             onExit={this.onExit}
           />
@@ -150,6 +170,12 @@ export default class Example extends React.Component<
   private onExit = () => {
     this.setState({ showPresentation: false });
     return false;
+  };
+
+  private onTitleChange = () => {
+    if (this.inputTitle) {
+      this.setState({ title: this.inputTitle.value });
+    }
   };
 
   private onADFChange = () => {

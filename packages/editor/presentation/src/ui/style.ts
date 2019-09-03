@@ -3,21 +3,29 @@ import styled, { css } from 'styled-components';
 import { colors } from '@atlaskit/theme';
 
 const fontSizes = {
-  h1: {
+  authorName: {
+    fontSize: '1rem',
+    lineHeight: '1rem',
+  },
+  pageTitle: {
     fontSize: '8.0rem',
     lineHeight: '8.0rem',
   },
-  h2: {
+  h1: {
     fontSize: '6.4rem',
     lineHeight: '7.2rem',
   },
-  h3: {
+  h2: {
     fontSize: '5.6rem',
     lineHeight: '6.0rem',
   },
-  h4: {
+  h3: {
     fontSize: '4.8rem',
     lineHeight: '4.8rem',
+  },
+  h4: {
+    fontSize: '4.0rem',
+    lineHeight: '4.0rem',
   },
   h5: {
     fontSize: '3.2rem',
@@ -60,8 +68,7 @@ const Paragraphs = css`
   }
 
   p,
-  a,
-  small {
+  a {
     font-family: 'Charlie_Display_Regular';
     font-size: ${fontSizes.paragraph.fontSize};
     line-height: ${fontSizes.paragraph.lineHeight};
@@ -74,6 +81,12 @@ const Headings = css`
     font-size: ${fontSizes.h1.fontSize};
     line-height: ${fontSizes.h1.lineHeight};
     font-family: 'Charlie_Display_Semibold';
+  }
+
+  h1.ak-presentationmode__page-title {
+    font-size: ${fontSizes.pageTitle.fontSize};
+    line-height: ${fontSizes.pageTitle.lineHeight};
+    font-family: 'Charlie_Display_Bold';
   }
 
   h2 {
@@ -148,8 +161,18 @@ const Fonts = css`
   }
 `;
 
+const PageTitle = css`
+  .ak-presentationmode__author-name small {
+    text-transform: uppercase;
+    font-family: 'Charlie_Display_Regular';
+    font-size: ${fontSizes.authorName.fontSize};
+    line-height: ${fontSizes.authorName.lineHeight};
+  }
+`;
+
 export const StyleWrapper = styled(StyleWrapperRenderer)`
   ${Fonts};
+  ${PageTitle};
   ${Headings};
   ${Paragraphs};
   ${Status};

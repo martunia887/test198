@@ -18,6 +18,8 @@
   "dependencies": {
     "@atlaskit/adf-schema": "^3.1.2",
     "@atlaskit/adf-utils": "^6.1.6",
+    "@atlaskit/avatar": "^16.0.14",
+    "@atlaskit/avatar-group": "^4.0.12",
     "@atlaskit/editor-common": "^39.18.3",
     "@atlaskit/editor-test-helpers": "^9.11.11",
     "@atlaskit/profilecard": "^12.0.6",

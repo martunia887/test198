@@ -12,12 +12,14 @@ import convertADFToSlides from '../utils/convertADFToSlides';
 import { toReact } from '../utils/toReact';
 import { atlassianTheme } from '../themes';
 import Layout from '../Layouts';
+import Title from '../Layouts/Title';
 import { StyleWrapper } from '../ui';
 
 const ESC_KEY_CODE = 27;
 
 interface Props {
   adf: ADFEntity;
+  title?: string;
   providerFactory?: ProviderFactory;
   onExit?: () => boolean;
 }
@@ -43,7 +45,7 @@ export class PresentationMode extends React.Component<Props, State> {
   }
 
   render() {
-    const { adf } = this.props;
+    const { adf, title } = this.props;
 
     return (
       <WidthProvider>
@@ -57,6 +59,7 @@ export class PresentationMode extends React.Component<Props, State> {
               transitionDuration={500}
               onStateChange={this.onStateChange}
             >
+              {title && title.trim() && this.getTitleSlide(title)}
               {this.getSliders(adf)}
             </Deck>
           </StyleWrapper>
@@ -85,6 +88,10 @@ export class PresentationMode extends React.Component<Props, State> {
     const children = this.serializer.serializeFragment(docFromSchema as any);
     return <>{children}</>;
   }
+
+  getTitleSlide = (title: string) => {
+    return <Title title={title} />;
+  };
 
   getSliders = (adf: ADFEntity) => {
     const result = convertADFToSlides(adf);
