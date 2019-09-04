@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { HeadingLevel } from '@atlaskit/renderer';
-import { Heading as RawHeading } from '@marduke182/spectacle';
+import { Heading as RawHeading } from 'spectacle';
 
 interface Props {
   level?: HeadingLevel;

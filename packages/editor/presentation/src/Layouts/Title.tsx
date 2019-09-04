@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Slide, Layout, Fill, Heading } from '@marduke182/spectacle';
+import { Slide, Layout, Fill, Heading } from 'spectacle';
 import Avatar from '@atlaskit/avatar';
 // import { ReactSerializer } from '@atlaskit/renderer';
 // import { Slide as SlideADF } from '../utils/convertADFToSlides';

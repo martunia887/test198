@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ReactSerializer } from '@atlaskit/renderer';
-import { Slide } from '@marduke182/spectacle';
+import { Slide } from 'spectacle';
 import { Slide as SlideADF } from '../utils/convertADFToSlides';
 import { panelIcons } from '@atlaskit/editor-common';
 import { PanelAttributes } from '@atlaskit/adf-schema';
