@@ -127,7 +127,7 @@ describe('<InlinePlayer />', () => {
 
   it('should use local preview if available', async () => {
     const blob = new Blob([], { type: 'video/mp4' });
-    const mediaClient = {
+    const mediaClient: any = {
       file: {
         getFileState: jest.fn().mockReturnValue(
           createFileStateSubject({

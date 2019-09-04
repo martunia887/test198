@@ -5,16 +5,15 @@ import {
   ProcessedFileState,
   ProcessingFileState,
 } from '@atlaskit/media-core';
-import {
-  getFileStreamsCache,
-  createFileStateSubject,
-} from '@atlaskit/media-client';
+import { getFileStreamsCache } from '@atlaskit/media-client';
 import {
   mockStore,
   expectFunctionToHaveBeenCalledWith,
   asMock,
   fakeMediaClient,
+  createTestFileStateSubject,
 } from '@atlaskit/media-test-helpers';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { sendUploadEvent } from '../../../actions/sendUploadEvent';
 import { resetView } from '../../../actions';
 import finalizeUploadMiddleware, { finalizeUpload } from '../../finalizeUpload';
@@ -23,7 +22,6 @@ import {
   FINALIZE_UPLOAD,
 } from '../../../actions/finalizeUpload';
 import { State } from '../../../domain';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 describe('finalizeUploadMiddleware', () => {
   const auth: Auth = {
@@ -208,9 +206,9 @@ describe('finalizeUploadMiddleware', () => {
 
   it('should populate cache with processed state', async () => {
     const { store, action } = setup();
-    const subject = createFileStateSubject({
+    const subject = createTestFileStateSubject({
       id: copiedFile.id,
-    } as any);
+    });
     const next = jest.fn();
     getFileStreamsCache().set(copiedFile.id, subject);
 
@@ -222,9 +220,11 @@ describe('finalizeUploadMiddleware', () => {
     // Needed due usage of setTimeout in finalizeUpload
     await new Promise(resolve => setTimeout(resolve, 1));
 
-    expect(next).toBeCalledWith({
-      id: 'some-copied-file-id',
-    });
+    expect(next).toBeCalledWith(
+      expect.objectContaining({
+        id: 'some-copied-file-id',
+      }),
+    );
   });
 
   it('should call reset view', async () => {

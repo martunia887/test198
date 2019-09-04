@@ -7,6 +7,7 @@ import {
   mockStore,
   mockWsConnectionHolder,
   mockPopupUploadEventEmitter,
+  createTestFileStateSubject,
 } from '@atlaskit/media-test-helpers';
 
 import {
@@ -600,13 +601,13 @@ describe('importFiles middleware', () => {
     });
 
     it('should add file preview for local uploads', done => {
-      const subject = createFileStateSubject({
+      const subject = createTestFileStateSubject({
         id: 'id-1',
         status: 'processing',
         preview: {
           value: 'some-local-preview',
         },
-      } as any);
+      });
       getFileStreamsCache().set('id-1', subject);
       const selectedFiles: SelectedUploadFile[] = [
         {
