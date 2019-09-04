@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { PresentationMode } from '../../presentation/src';
 import Select from '@atlaskit/select';
 import Button from '@atlaskit/button';
 
@@ -173,6 +174,8 @@ export type State = {
   showErrors: boolean;
   waitingToValidate: boolean;
   theme: Theme;
+
+  showPresentation: boolean;
 };
 
 function getInitialTheme(): Theme {
@@ -214,6 +217,7 @@ class FullPageRendererExample extends React.Component<Props, State> {
     showErrors: false,
     waitingToValidate: false,
     theme: getInitialTheme(),
+    showPresentation: false,
   };
 
   private dataProviders = ProviderFactory.create({
@@ -271,7 +275,17 @@ class FullPageRendererExample extends React.Component<Props, State> {
   };
 
   render() {
-    const { locale, messages } = this.state;
+    const { locale, messages, showPresentation } = this.state;
+    if (showPresentation && this.state.adf) {
+      return (
+        <PresentationMode
+          providerFactory={this.dataProviders}
+          adf={this.state.adf}
+          onExit={this.onExit}
+        />
+      );
+    }
+
     return (
       <EditorContext>
         <WithEditorActions
@@ -401,6 +415,13 @@ class FullPageRendererExample extends React.Component<Props, State> {
                                 locale={locale}
                                 onChange={this.loadLocale}
                               />
+                              <Button
+                                tabIndex={-2}
+                                appearance="primary"
+                                onClick={this.startPresentation}
+                              >
+                                Present
+                              </Button>
                               <SaveAndCancelButtons editorActions={actions} />
                             </React.Fragment>
                           }
@@ -517,6 +538,15 @@ class FullPageRendererExample extends React.Component<Props, State> {
     addLocaleData(localeData.default);
     const messages = await import(`../src/i18n/${locale}`);
     this.setState({ locale, messages: messages.default });
+  };
+
+  private startPresentation = () => {
+    this.setState({ showPresentation: true });
+  };
+
+  private onExit = () => {
+    this.setState({ showPresentation: false });
+    return false;
   };
 
   private getLocalTag = (locale: string) => locale.substring(0, 2);

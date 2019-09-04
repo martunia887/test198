@@ -18,7 +18,7 @@ import { StyleWrapper } from '../ui';
 const ESC_KEY_CODE = 27;
 
 interface Props {
-  adf: ADFEntity;
+  adf: ADFEntity | object;
   title?: string;
   providerFactory?: ProviderFactory;
   onExit?: () => boolean;
@@ -60,7 +60,7 @@ export class PresentationMode extends React.Component<Props, State> {
               onStateChange={this.onStateChange}
             >
               {title && title.trim() && this.getTitleSlide(title)}
-              {this.getSliders(adf)}
+              {this.getSliders(adf as ADFEntity)}
             </Deck>
           </StyleWrapper>
         </BaseTheme>
