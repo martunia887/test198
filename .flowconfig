@@ -18,6 +18,7 @@
 [include]
 
 [libs]
+./custom-definitions/
 
 [options]
 module.name_mapper='^@atlaskit\/\([a-zA-Z0-9_\-]+\)$' -> '<PROJECT_ROOT>/packages/bitbucket/\1/src/index'

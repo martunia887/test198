@@ -36,7 +36,6 @@ describe('Snapshot Test', () => {
 
     await page.goto(url);
     const image = await takeScreenShot(global.page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 
@@ -50,7 +49,6 @@ describe('Snapshot Test', () => {
     const { page } = global;
     await page.goto(url);
     const image = await takeScreenShot(page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot(); // Snapshot of product nav
   });
 
@@ -69,7 +67,6 @@ describe('Snapshot Test', () => {
       pageContent,
     );
     const image = await takeScreenShot(page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 
@@ -90,7 +87,6 @@ describe('Snapshot Test', () => {
     await page.waitFor(300);
 
     const imageWithProjectSwitcher = await page.screenshot();
-    //$FlowFixMe
     expect(imageWithProjectSwitcher).toMatchProdImageSnapshot();
   });
 
@@ -106,7 +102,6 @@ describe('Snapshot Test', () => {
     await page.setViewport({ width: 1500, height: 700 });
 
     const image = await takeScreenShot(page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 
@@ -121,7 +116,6 @@ describe('Snapshot Test', () => {
     await page.goto(url);
     await page.setViewport({ width: 1500, height: 1700 });
     const image = await takeScreenShot(page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 
@@ -141,7 +135,6 @@ describe('Snapshot Test', () => {
     await page.click(button);
 
     const image = await takeScreenShot(page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
     await page.click(button);
   });
@@ -158,7 +151,6 @@ describe('Snapshot Test', () => {
     await page.goto(url);
     await page.setViewport({ width: 900, height: 1350 });
     const image = await takeScreenShot(page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 
@@ -180,7 +172,6 @@ describe('Snapshot Test', () => {
     await page.waitFor(300);
 
     const image = await takeScreenShot(page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
     await page.click(button);
   });

@@ -317,18 +317,6 @@ async function validateExampleLoaded(page /*:any*/) {
   });
 }
 
-declare var expect: {
-  (
-    value: any,
-  ): {
-    toMatchProdImageSnapshot(options: {
-      failureThreshold: string,
-      failureThresholdType: string,
-    }): void,
-  },
-  extend(matchers: { [name: string]: JestMatcher }): void,
-};
-
 async function compareScreenshot(
   screenshot /*:any*/,
   tolerance /*:number*/ = MINIMUM_THRESHOLD,

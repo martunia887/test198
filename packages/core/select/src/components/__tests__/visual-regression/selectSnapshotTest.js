@@ -25,7 +25,6 @@ describe('Snapshot Test', () => {
     await page.waitFor(1000);
 
     const image = await takeElementScreenShot(page, modalDialog);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 });

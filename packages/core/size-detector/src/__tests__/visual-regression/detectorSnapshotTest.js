@@ -13,7 +13,6 @@ describe('Snapshot Test', () => {
       global.__BASEURL__,
     );
     const image = await takeScreenShot(global.page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 });

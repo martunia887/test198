@@ -13,7 +13,6 @@ describe('Snapshot Test', () => {
       global.__BASEURL__,
     );
     const image = await takeScreenShot(global.page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 
@@ -25,7 +24,6 @@ describe('Snapshot Test', () => {
       global.__BASEURL__,
     );
     const image = await takeScreenShot(global.page, url);
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 
@@ -45,7 +43,6 @@ describe('Snapshot Test', () => {
     await page.waitFor(300);
 
     const image = await page.screenshot();
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 
@@ -65,7 +62,6 @@ describe('Snapshot Test', () => {
     await page.waitFor(300);
 
     const image = await page.screenshot();
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
   // TODO: https://ecosystem.atlassian.net/browse/AK-6093
@@ -85,7 +81,6 @@ describe('Snapshot Test', () => {
     await page.waitFor(350);
 
     const image = await page.screenshot();
-    //$FlowFixMe
     expect(image).toMatchProdImageSnapshot();
   });
 });
