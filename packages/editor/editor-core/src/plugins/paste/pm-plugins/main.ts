@@ -41,6 +41,7 @@ import {
   unwrapNestedMediaElements,
 } from '../../media/utils/media-common';
 import { transformSliceToRemoveColumnsWidths } from '../../table/commands/misc';
+import { PasteHandler } from '..';
 export const stateKey = new PluginKey('pastePlugin');
 
 export const md = MarkdownIt('zero', { html: false });
@@ -72,6 +73,7 @@ export function createPlugin(
   schema: Schema,
   cardOptions?: CardOptions,
   sanitizePrivateContent?: boolean,
+  pasteHandlers?: Array<PasteHandler>,
 ) {
   const atlassianMarkDownParser = new MarkdownTransformer(schema, md);
 
@@ -320,6 +322,52 @@ export function createPlugin(
         }
 
         return html;
+      },
+      /**
+       * ProseMirror default behaviour for getting text content from
+       * a leaf node is to use a predefined string.
+       * @see http://prosemirror.net/docs/ref/#model.Node.textBetween
+       *
+       * Instead we call the appropriate handler on matched leaf nodes,
+       * allowing users to provided fallback text based on node attributes.
+       *
+       * @param slice
+       */
+      clipboardTextSerializer(slice) {
+        let text = '';
+        let found = false;
+        let separated = true;
+        const from = 0;
+        const to = slice.content.size;
+        const blockSeparator = '\n\n';
+
+        function findHandler(nodeName: string) {
+          return (
+            pasteHandlers &&
+            pasteHandlers.find(
+              handler => handler.nodes.indexOf(nodeName) !== -1,
+            )
+          );
+        }
+
+        slice.content.nodesBetween(from, to, (node, pos) => {
+          const handler = findHandler(node.type.name);
+          if (handler && node.isLeaf) {
+            const nodeText = handler.clipboardTextSerializer(node) || '';
+            text += nodeText;
+            found = !!nodeText;
+            separated = !blockSeparator;
+          } else if (node.isText && node.text) {
+            text += node.text.slice(Math.max(from, pos) - pos, to - pos);
+            separated = !blockSeparator;
+          } else if (!separated && node.isBlock) {
+            text += blockSeparator;
+            separated = true;
+          }
+        });
+
+        // If not found, return empty string and default to PM for handling.
+        return (found && text) || '';
       },
     },
   });

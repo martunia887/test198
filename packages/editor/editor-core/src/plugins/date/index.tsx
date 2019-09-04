@@ -2,7 +2,10 @@ import * as React from 'react';
 import { findDomRefAtPos } from 'prosemirror-utils';
 import Loadable from 'react-loadable';
 import { date } from '@atlaskit/adf-schema';
-import { todayTimestampInUTC } from '@atlaskit/editor-common';
+import {
+  todayTimestampInUTC,
+  timestampToString,
+} from '@atlaskit/editor-common';
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
@@ -136,6 +139,12 @@ const datePlugin = (): EditorPlugin => ({
         },
       },
     ],
+    paste: {
+      nodes: ['date'],
+      clipboardTextSerializer(node) {
+        return timestampToString(node.attrs.timestamp);
+      },
+    },
   },
 });
 

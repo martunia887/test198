@@ -22,6 +22,12 @@ const cardPlugin = (): EditorPlugin => ({
 
   pluginsOptions: {
     floatingToolbar,
+    paste: {
+      nodes: ['inlineCard', 'blockCard'],
+      clipboardTextSerializer(node) {
+        return node.attrs.url || (node.attrs.data && node.attrs.data.url);
+      },
+    },
   },
 });
 

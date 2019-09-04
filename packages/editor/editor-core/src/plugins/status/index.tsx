@@ -103,31 +103,38 @@ const decorateWithPluginOptions = (
   plugin: EditorPlugin,
   options: StatusPluginOptions,
 ): EditorPlugin => {
+  plugin.pluginsOptions = {
+    paste: {
+      nodes: ['status'],
+      clipboardTextSerializer(node) {
+        return node.attrs.text;
+      },
+    },
+  };
+
   if (options.menuDisabled === true) {
     return plugin;
   }
-  plugin.pluginsOptions = {
-    quickInsert: ({ formatMessage }) => [
-      {
-        title: formatMessage(messages.status),
-        description: formatMessage(messages.statusDescription),
-        priority: 700,
-        keywords: ['lozenge'],
-        icon: () => <IconStatus label={formatMessage(messages.status)} />,
-        action(insert, state) {
-          return addAnalytics(createStatus()(insert, state), {
-            action: ACTION.INSERTED,
-            actionSubject: ACTION_SUBJECT.DOCUMENT,
-            actionSubjectId: ACTION_SUBJECT_ID.STATUS,
-            attributes: {
-              inputMethod: INPUT_METHOD.QUICK_INSERT,
-            },
-            eventType: EVENT_TYPE.TRACK,
-          });
-        },
+  plugin.pluginsOptions.quickInsert = ({ formatMessage }) => [
+    {
+      title: formatMessage(messages.status),
+      description: formatMessage(messages.statusDescription),
+      priority: 700,
+      keywords: ['lozenge'],
+      icon: () => <IconStatus label={formatMessage(messages.status)} />,
+      action(insert, state) {
+        return addAnalytics(createStatus()(insert, state), {
+          action: ACTION.INSERTED,
+          actionSubject: ACTION_SUBJECT.DOCUMENT,
+          actionSubjectId: ACTION_SUBJECT_ID.STATUS,
+          attributes: {
+            inputMethod: INPUT_METHOD.QUICK_INSERT,
+          },
+          eventType: EVENT_TYPE.TRACK,
+        });
       },
-    ],
-  };
+    },
+  ];
   return plugin;
 };
 

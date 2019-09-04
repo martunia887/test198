@@ -9,6 +9,7 @@ import { ToolbarSize } from '../ui/Toolbar';
 import { QuickInsertHandler } from '../plugins/quick-insert/types';
 import { TypeAheadHandler } from '../plugins/type-ahead/types';
 import { FloatingToolbarHandler } from '../plugins/floating-toolbar/types';
+import { PasteHandler } from '../plugins/paste';
 import { PortalProviderAPI } from '../ui/PortalProvider';
 import { NodeConfig, MarkConfig, EditorConfig } from './editor-config';
 import { EditorProps, EditorAppearance } from './editor-props';
@@ -67,6 +68,7 @@ export type PluginsOptions = {
   quickInsert?: QuickInsertHandler;
   typeAhead?: TypeAheadHandler;
   floatingToolbar?: FloatingToolbarHandler;
+  paste?: PasteHandler;
 };
 
 export type PMPlugin = {
