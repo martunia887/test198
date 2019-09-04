@@ -8,7 +8,7 @@
   "atlaskit:src": "src/index.ts",
   "scripts": {
     "start": "webpack --watch",
-    "debug": "webpack -d --info-verbosity verbose --progress --watch",
+    "debug": "webpack -d --watch",
     "build:dev": "webpack -d",
     "prebuild": "rm -rf dist && copy-pkg package.json tmp/package.json --only name,version,sideEffects && mv tmp/package.json src/version.json",
     "build": "webpack -p"
@@ -43,18 +43,12 @@
     "@atlaskit/theme": "^9.2.3",
     "@babel/polyfill": "^7.0.0",
     "@types/prosemirror-view": "^1.9.0",
-    "@atlassian/confluence-wrm": "^0.0.1",
-    "@confluence/page-context": "^0.0.1",
-    "apollo-cache-inmemory": "^1.6.2",
-    "apollo-client": "^2.6.3",
     "enzyme": "^3.7.0",
     "prosemirror-history": "^1.0.2",
     "graphql": "^14.4.2",
     "graphql-tag": "^2.10.1",
     "prosemirror-state": "^1.2.2",
-    "prosemirror-view": "^1.9.12",
-    "react-apollo": "^2.5.8",
-    "react-intl": "^2.6.0"
+    "prosemirror-view": "^1.9.12"
   },
   "peerDependencies": {
     "@atlaskit/media-core": "^30.0.13",
