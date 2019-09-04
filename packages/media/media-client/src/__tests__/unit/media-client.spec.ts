@@ -217,6 +217,7 @@ describe('MediaClient', () => {
             });
           },
         });
+      jest.runOnlyPendingTimers();
     });
 
     it('should return file state regardless of the state', done => {
@@ -459,6 +460,7 @@ describe('MediaClient', () => {
             done();
           },
         });
+      jest.runOnlyPendingTimers();
     });
 
     it('should pass right mimeType when file is a Blob', done => {
@@ -486,6 +488,7 @@ describe('MediaClient', () => {
             done();
           },
         });
+      jest.runOnlyPendingTimers();
     });
   });
 
