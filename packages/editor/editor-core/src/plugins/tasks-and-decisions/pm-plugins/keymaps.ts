@@ -235,15 +235,17 @@ const splitListItemWith = (
   const after = tr.mapping.map($from.pos);
   const $after = tr.doc.resolve(after);
   const afterNode = $after.node();
-  if (afterNode.firstChild && afterNode.firstChild.nodeSize === 2) {
-    // taskItem was empty
-    const blockRange = getBlockRange($after, $after);
-    if (blockRange) {
-      tr = tr.lift(blockRange, blockRange.depth - 1).scrollIntoView();
-    }
+  if ($after.node($after.depth - 1).type.name === 'taskList') {
+    if (afterNode.firstChild && afterNode.firstChild.nodeSize === 2) {
+      // taskItem was empty
+      const blockRange = getBlockRange($after, $after);
+      if (blockRange) {
+        tr = tr.lift(blockRange, blockRange.depth - 1).scrollIntoView();
+      }
 
-    console.log('after', after);
-    tr = tr.deleteRange(after - 1, after);
+      console.log('after', after);
+      tr = tr.deleteRange(after - 1, after);
+    }
   }
 
   return tr;
