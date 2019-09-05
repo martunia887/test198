@@ -1,0 +1,1 @@
+Add open and close events to modal dialog
