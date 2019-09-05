@@ -115,15 +115,19 @@ const backspace = autoJoin(
         $cut.nodeAfter.type.name === 'paragraph'
       ) {
         // taskList contains taskItem, so this is the end of the inside
-        const $dest = $cut.doc.resolve($cut.pos - 4);
+        let $lastNode = $cut.doc.resolve($cut.pos - 1);
 
-        const slice = state.tr.doc.slice($dest.pos, $cut.pos);
+        while ($lastNode.parent.type.name !== 'taskItem') {
+          $lastNode = state.doc.resolve($lastNode.pos - 1);
+        }
+
+        const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
         console.warn('slice', slice);
 
         // join them
         const tr = state.tr.step(
           new ReplaceAroundStep(
-            $dest.pos,
+            $lastNode.pos,
             $cut.pos + $cut.nodeAfter.nodeSize,
             $cut.pos + 1,
             $cut.pos + $cut.nodeAfter.nodeSize - 1,
