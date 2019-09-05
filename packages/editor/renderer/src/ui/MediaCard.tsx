@@ -333,7 +333,7 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
           dimensions={cardDimensions}
           onClick={onCardClick}
           resizeMode={resizeMode}
-          isLazy={isLazy}
+          isLazy={false}
           disableOverlay={disableOverlay}
           useInlinePlayer={isInlinePlayer}
           shouldOpenMediaViewer={shouldOpenMediaViewer}
