@@ -68,10 +68,13 @@ class Modal extends React.Component<Props, State> {
       // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ scrollDistance });
     }
+
+    window.dispatchEvent(new Event('AkModalMount'));
     window.addEventListener('scroll', this.handleWindowScroll);
   }
 
   componentWillUnmount() {
+    window.dispatchEvent(new Event('AkModalUnmount'));
     window.removeEventListener('scroll', this.handleWindowScroll);
   }
 
