@@ -249,16 +249,17 @@ const splitListItemWith = (
   // does it have enoguh children?
   if ($oldAfter.depth === $from.depth - 1) {
     if ($oldAfter.nodeAfter && $oldAfter.nodeAfter.type.name === 'taskList') {
-      const pos = tr.mapping.map($oldAfter.pos);
+      // getBlockRange expects to be inside the taskItem
+      const pos = tr.mapping.map($oldAfter.pos + 2);
       const $after = tr.doc.resolve(pos);
 
       const blockRange = getBlockRange($after, $after);
+      console.log('blockRange', blockRange, 'pos', pos, $after);
       if (blockRange) {
         tr = tr.lift(blockRange, blockRange.depth - 1).scrollIntoView();
       }
 
-      console.log('after', pos);
-      tr = tr.deleteRange(pos - 1, pos);
+      tr = tr.deleteRange(pos - 3, pos - 2);
     }
   } else {
     console.log(
