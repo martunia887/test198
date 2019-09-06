@@ -45,7 +45,7 @@ export const taskList: NodeSpec = {
     const attrs = {
       'data-node-type': name,
       'data-task-list-local-id': localId || 'local-task-list',
-      style: 'list-style: none; padding-left: 0; border: 1px dashed silver',
+      style: 'list-style: none; padding-left: 0',
     };
 
     return ['div', attrs, 0];

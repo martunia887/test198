@@ -36,15 +36,16 @@ const isInsideTaskOrDecisionItem = (state: EditorState) => {
   return hasParentNodeOfType([decisionItem, taskItem])(state.selection);
 };
 
+// get block range over current selection, including following taskList
 const getBlockRange = ($from: ResolvedPos, $to: ResolvedPos) => {
   const { taskList } = $from.doc.type.schema.nodes;
 
   let end = $to.end();
-  const after = $to.doc.resolve(end + 1).nodeAfter;
-  console.log('after', after);
+  const $after = $to.doc.resolve(end + 1);
+  const after = $after.nodeAfter;
 
-  // TODO: ensure they have the same depth
-  if (after && after.type === taskList) {
+  // $to will be inside the text, so subtract one to get the taskItem it contains in
+  if (after && after.type === taskList && $after.depth === $to.depth - 1) {
     end += after.nodeSize;
   }
 
@@ -63,6 +64,8 @@ const unindent = autoJoin(
       if (!blockRange) {
         return false;
       }
+
+      // console.log('have depth', blockRange.depth, blockRange);
 
       dispatch(
         state.tr.lift(blockRange, blockRange.depth - 1).scrollIntoView(),
@@ -106,7 +109,7 @@ const backspace = autoJoin(
 
     const $cut = findCutBefore($from);
     if ($cut) {
-      console.log('$cut', $cut);
+      // console.log('$cut', $cut);
 
       if (
         $cut.nodeBefore &&
@@ -154,26 +157,26 @@ const backspace = autoJoin(
 
     // if ($from.nodeBefore)
     const taskBefore = $from.doc.resolve($from.before());
-    console.log('before', taskBefore.nodeBefore);
+    // console.log('before', taskBefore.nodeBefore);
     if (
       taskBefore.nodeBefore &&
       taskBefore.nodeBefore.type.name === 'taskItem' &&
       taskBefore.nodeBefore.nodeSize === 2
     ) {
-      console.warn('just delete backwards');
+      console.warn('previous was empty; just delete backwards');
       return false;
     }
 
     // if nested, just unindent
     if ($from.node($from.depth - 2).type.name === 'taskList') {
-      console.log('can unindent');
+      console.log('will unindent');
       return unindent(state, dispatch);
     }
 
     // bottom level, should "unwrap" taskItem contents into paragraph
     // we achieve this by slicing the content out, and replacing
     if (canSplitListItem(state.tr)) {
-      console.log('can split');
+      console.log('will split');
 
       if (dispatch) {
         const taskContent = state.doc.slice($from.start(), $from.end()).content;
@@ -189,7 +192,7 @@ const backspace = autoJoin(
       return true;
     }
 
-    console.warn('no split or unindent');
+    console.warn('did not split or unindent');
 
     return false;
   },
@@ -200,7 +203,7 @@ const canSplitListItem = (tr: Transaction) => {
   const { $from } = tr.selection;
   const afterTaskItem = tr.doc.resolve($from.end()).nodeAfter;
 
-  console.log('after', afterTaskItem, $from.nodeAfter);
+  // console.log('after', afterTaskItem, $from.nodeAfter);
 
   return (
     !afterTaskItem || (afterTaskItem && afterTaskItem.type.name === 'taskItem')
@@ -231,12 +234,17 @@ const splitListItemWith = (
   // put cursor inside paragraph
   tr = tr.setSelection(new TextSelection(tr.doc.resolve($from.pos + 1)));
 
+  console.log('splitListItemWith');
+
   // lift list up a level if now placeholder is top level
   const after = tr.mapping.map($from.pos);
   const $after = tr.doc.resolve(after);
   const afterNode = $after.node();
-  if ($after.node($after.depth - 1).type.name === 'taskList') {
+
+  if ($after.node().type.name === 'taskList') {
+    console.log('follows with taskList');
     if (afterNode.firstChild && afterNode.firstChild.nodeSize === 2) {
+      console.log('node after was empty');
       // taskItem was empty
       const blockRange = getBlockRange($after, $after);
       if (blockRange) {
@@ -246,6 +254,8 @@ const splitListItemWith = (
       console.log('after', after);
       tr = tr.deleteRange(after - 1, after);
     }
+  } else {
+    debugger;
   }
 
   return tr;
@@ -304,7 +314,7 @@ export function keymapPlugin(schema: Schema): Plugin | undefined {
         tr: Transaction;
         itemLocalId?: string;
       }) => {
-        console.log('insert item');
+        console.log('inserting new taskItem');
         return tr.split($from.pos, 1, [
           { type: nodeType, attrs: { localId: itemLocalId } },
         ]);
