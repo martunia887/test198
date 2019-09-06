@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CardLinkView } from '@atlaskit/media-ui';
 
 import { CardProps } from '../Card/types';
-import { LazyCardWithUrlContent as CardWithUrlContentType } from './component';
+import { CardWithUrlContent as CardWithUrlContentType } from './component';
 import { fireSmartLinkEvent } from '../../utils/analytics';
 import { AnalyticsHandler } from '../../utils/types';
 
