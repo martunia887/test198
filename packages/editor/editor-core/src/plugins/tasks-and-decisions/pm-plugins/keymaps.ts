@@ -214,7 +214,9 @@ const splitListItemWith = (
   tr: Transaction,
   content: Fragment | Node | Node[],
 ) => {
-  const { $from } = tr.selection;
+  const { $from, from } = tr.selection;
+
+  const origDoc = tr.doc;
 
   // split just before the current item
   // TODO: new id for split taskList
@@ -236,24 +238,34 @@ const splitListItemWith = (
 
   console.log('splitListItemWith');
 
-  // lift list up a level if now placeholder is top level
-  const after = tr.mapping.map($from.pos);
-  const $after = tr.doc.resolve(after);
-  const afterNode = $after.node();
+  // lift list up if the node after the initial one was a taskList
+  // which means it would have empty placeholder content if we just immediately delete it
+  //
+  // if it's a taskItem then it can stand alone, so it's fine
 
-  if ($after.node().type.name === 'taskList') {
-    console.log('follows with taskList');
-    if (afterNode.firstChild && afterNode.firstChild.nodeSize === 2) {
-      console.log('node after was empty');
-      // taskItem was empty
+  const $oldAfter = origDoc.resolve($from.after());
+
+  console.log($oldAfter, $oldAfter.depth, $from.depth - 1);
+  // does it have enoguh children?
+  if ($oldAfter.depth === $from.depth - 1) {
+    if ($oldAfter.nodeAfter && $oldAfter.nodeAfter.type.name === 'taskList') {
+      const pos = tr.mapping.map($oldAfter.pos);
+      const $after = tr.doc.resolve(pos);
+
       const blockRange = getBlockRange($after, $after);
       if (blockRange) {
         tr = tr.lift(blockRange, blockRange.depth - 1).scrollIntoView();
       }
 
-      console.log('after', after);
-      tr = tr.deleteRange(after - 1, after);
+      console.log('after', pos);
+      tr = tr.deleteRange(pos - 1, pos);
     }
+  } else {
+    console.log(
+      $oldAfter.parent.childCount - 1,
+      $oldAfter.index() + 1,
+      $oldAfter,
+    );
   }
 
   return tr;
