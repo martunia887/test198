@@ -53,6 +53,7 @@ declare module '@atlaskit/visual-regression/*';
 declare module '@atlaskit/webdriver-runner';
 declare module '@atlaskit/webdriver-runner/*';
 declare module '@atlaskit/util-common-test';
+declare module '@atlaskit/analytics-reporting';
 
 declare const ENABLE_ANALYTICS_GASV3: string;
 declare const WEBSITE_ENV: string;

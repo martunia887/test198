@@ -25,8 +25,8 @@ declare namespace jest {
      */
     toMatchWYSIWYGSnapshot(
       testName: string,
-      onImprovement: (percent: number) => {},
-      onRegression: (percent: number) => {},
+      onImprovement: (percent: number) => void,
+      onRegression: (percent: number) => void,
     ): R;
   }
 }
