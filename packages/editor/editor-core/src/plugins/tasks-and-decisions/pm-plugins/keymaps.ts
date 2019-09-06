@@ -254,8 +254,6 @@ const splitListItemWith = (
       console.log('after', after);
       tr = tr.deleteRange(after - 1, after);
     }
-  } else {
-    debugger;
   }
 
   return tr;
