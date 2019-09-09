@@ -19,7 +19,7 @@ import {
 import { AnalyticsContext } from '@atlaskit/analytics-next';
 import { MediaViewer } from '@atlaskit/media-viewer';
 import { CardAction, CardProps, CardDimensions } from '../..';
-import { Card } from '../../root/card';
+import { CardBase } from '../../root/card';
 import { CardView } from '../../root/cardView';
 import { InlinePlayer } from '../../root/inlinePlayer';
 import { LazyContent } from '../../utils/lazyContent';
@@ -46,8 +46,8 @@ describe('Card', () => {
   ) => {
     (getDataURIFromFileState as any).mockReset();
     (getDataURIFromFileState as any).mockReturnValue(filePreview);
-    const component = shallow<Card>(
-      <Card
+    const component = shallow<CardBase>(
+      <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
         isLazy={false}
@@ -227,7 +227,7 @@ describe('Card', () => {
     const mediaClient = fakeMediaClient() as any;
     const clickHandler = jest.fn();
     const card = shallow(
-      <Card
+      <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
         onClick={clickHandler}
@@ -248,8 +248,8 @@ describe('Card', () => {
     const mediaClient = fakeMediaClient() as any;
     const clickHandler = jest.fn();
     const hoverHandler = jest.fn();
-    const card = shallow<Card>(
-      <Card
+    const card = shallow<CardBase>(
+      <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
         onMouseEnter={hoverHandler}
@@ -273,7 +273,7 @@ describe('Card', () => {
     const mediaClient = fakeMediaClient() as any;
     const hoverHandler = () => {};
     const card = shallow(
-      <Card
+      <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
         onMouseEnter={hoverHandler}
@@ -286,7 +286,7 @@ describe('Card', () => {
     const mediaClient = createMediaClientWithGetFile();
     const hoverHandler = () => {};
     const card = shallow(
-      <Card
+      <CardBase
         isLazy={false}
         mediaClient={mediaClient}
         identifier={identifier}
@@ -300,7 +300,7 @@ describe('Card', () => {
   it('should pass properties down to CardView', () => {
     const mediaClient = fakeMediaClient() as any;
     const card = shallow(
-      <Card
+      <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
         dimensions={{ width: 100, height: 50 }}
@@ -316,7 +316,7 @@ describe('Card', () => {
   it('should create a card placeholder with the right props', () => {
     const mediaClient = createMediaClientWithGetFile();
     const fileCard = shallow(
-      <Card
+      <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
         dimensions={{ width: 100, height: 50 }}
@@ -332,7 +332,11 @@ describe('Card', () => {
   it('should use "crop" as default resizeMode', () => {
     const mediaClient = createMediaClientWithGetFile();
     const card = mount(
-      <Card mediaClient={mediaClient} identifier={identifier} isLazy={false} />,
+      <CardBase
+        mediaClient={mediaClient}
+        identifier={identifier}
+        isLazy={false}
+      />,
     );
 
     expect(card.find(CardView).prop('resizeMode')).toBe('crop');
@@ -342,7 +346,7 @@ describe('Card', () => {
     const mediaClient = createMediaClientWithGetFile();
 
     const card = mount(
-      <Card
+      <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
         isLazy={false}
@@ -356,7 +360,7 @@ describe('Card', () => {
   it('should pass "disableOverlay" to CardView', () => {
     const mediaClient = fakeMediaClient();
     const card = shallow(
-      <Card
+      <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
         isLazy={false}
@@ -694,7 +698,7 @@ describe('Card', () => {
     const unsubscribe = jest.fn();
     const releaseDataURI = jest.fn();
     const { component } = setup();
-    const instance = component.instance() as Card;
+    const instance = component.instance() as CardBase;
 
     instance.unsubscribe = unsubscribe;
     instance.releaseDataURI = releaseDataURI;
@@ -895,7 +899,7 @@ describe('Card', () => {
         shouldOpenMediaViewer: true,
         identifier: videoIdentifier,
       });
-      const instance = component.instance() as Card;
+      const instance = component.instance() as CardBase;
 
       instance.onClick({
         mediaItemDetails: {
@@ -917,8 +921,8 @@ describe('Card', () => {
       processingStatus: 'succeeded',
     };
 
-    const card = shallow<Card>(
-      <Card mediaClient={mediaClient} identifier={identifier} />,
+    const card = shallow<CardBase>(
+      <CardBase mediaClient={mediaClient} identifier={identifier} />,
     );
     card.setState({ metadata });
     card.update();
@@ -931,8 +935,8 @@ describe('Card', () => {
 
   it('should attach Base Analytics Context', () => {
     const mediaClient = fakeMediaClient() as any;
-    const card = shallow<Card>(
-      <Card mediaClient={mediaClient} identifier={identifier} />,
+    const card = shallow<CardBase>(
+      <CardBase mediaClient={mediaClient} identifier={identifier} />,
     );
     const contextData = card
       .find(AnalyticsContext)

@@ -12,7 +12,12 @@ import {
   isImageRepresentationReady,
 } from '@atlaskit/media-client';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
-import { AnalyticsContext, UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import {
+  AnalyticsContext,
+  UIAnalyticsEvent,
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import { Subscription } from 'rxjs/Subscription';
 import { IntlProvider } from 'react-intl';
 import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
@@ -30,7 +35,11 @@ import {
   getBaseAnalyticsContext,
 } from '../../utils/analytics';
 
-export class Card extends Component<CardProps, CardState> {
+export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
+export class CardBase extends Component<
+  CardWithAnalyticsEventsProps,
+  CardState
+> {
   private hasBeenMounted: boolean = false;
 
   subscription?: Subscription;
@@ -482,3 +491,8 @@ export class Card extends Component<CardProps, CardState> {
     }
   };
 }
+
+export const Card: React.ComponentType<
+  CardWithAnalyticsEventsProps
+> = withAnalyticsEvents()(CardBase);
+// export const Card = withAnalyticsEvents()(CardBase);
