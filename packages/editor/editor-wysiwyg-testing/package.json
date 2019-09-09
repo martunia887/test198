@@ -12,10 +12,6 @@
   "maintainers": [
     "Tim K"
   ],
-  "atlaskit:src": "src/index.ts",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/cjs/index.d.ts",
   "devDependencies": {
     "@atlaskit/adf-utils": "^6.1.6",
     "@atlaskit/analytics-reporting": "0.1.1",
