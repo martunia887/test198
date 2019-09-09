@@ -62,7 +62,7 @@ const unindent = autoJoin(
     if (dispatch) {
       const blockRange = getBlockRange($from, $to);
       if (!blockRange) {
-        return false;
+        return true;
       }
 
       dispatch(
@@ -85,12 +85,12 @@ const indent = autoJoin(
     if (dispatch) {
       const blockRange = getBlockRange($from, $to);
       if (!blockRange) {
-        return false;
+        return true;
       }
 
       const wrapping = findWrapping(blockRange, state.schema.nodes.taskList);
       if (!wrapping) {
-        return false;
+        return true;
       }
 
       dispatch(state.tr.wrap(blockRange, wrapping).scrollIntoView());
