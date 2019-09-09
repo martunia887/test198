@@ -65,8 +65,6 @@ const unindent = autoJoin(
         return false;
       }
 
-      // console.log('have depth', blockRange.depth, blockRange);
-
       dispatch(
         state.tr.lift(blockRange, blockRange.depth - 1).scrollIntoView(),
       );
@@ -107,10 +105,9 @@ const backspace = autoJoin(
   (state: EditorState, dispatch?: (tr: Transaction) => void) => {
     const { $from } = state.selection;
 
+    // try to join paragraph and taskList when backspacing
     const $cut = findCutBefore($from);
     if ($cut) {
-      // console.log('$cut', $cut);
-
       if (
         $cut.nodeBefore &&
         $cut.nodeBefore.type.name === 'taskList' &&
@@ -125,7 +122,6 @@ const backspace = autoJoin(
         }
 
         const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
-        console.warn('slice', slice);
 
         // join them
         const tr = state.tr.step(
@@ -155,35 +151,30 @@ const backspace = autoJoin(
       return false;
     }
 
-    // if ($from.nodeBefore)
+    // previous was empty, just delete backwards
     const taskBefore = $from.doc.resolve($from.before());
-    // console.log('before', taskBefore.nodeBefore);
     if (
       taskBefore.nodeBefore &&
       taskBefore.nodeBefore.type.name === 'taskItem' &&
       taskBefore.nodeBefore.nodeSize === 2
     ) {
-      console.warn('previous was empty; just delete backwards');
       return false;
     }
 
     // if nested, just unindent
     if ($from.node($from.depth - 2).type.name === 'taskList') {
-      console.log('will unindent');
       return unindent(state, dispatch);
     }
 
     // bottom level, should "unwrap" taskItem contents into paragraph
     // we achieve this by slicing the content out, and replacing
     if (canSplitListItem(state.tr)) {
-      console.log('will split');
-
       if (dispatch) {
         const taskContent = state.doc.slice($from.start(), $from.end()).content;
 
         // might be end of document after
         const slice = taskContent.size
-          ? taskContent
+          ? state.schema.nodes.paragraph.createChecked(undefined, taskContent)
           : state.schema.nodes.paragraph.createChecked();
 
         dispatch(splitListItemWith(state.tr, slice));
@@ -191,8 +182,6 @@ const backspace = autoJoin(
 
       return true;
     }
-
-    console.warn('did not split or unindent');
 
     return false;
   },
@@ -203,8 +192,6 @@ const canSplitListItem = (tr: Transaction) => {
   const { $from } = tr.selection;
   const afterTaskItem = tr.doc.resolve($from.end()).nodeAfter;
 
-  // console.log('after', afterTaskItem, $from.nodeAfter);
-
   return (
     !afterTaskItem || (afterTaskItem && afterTaskItem.type.name === 'taskItem')
   );
@@ -214,29 +201,36 @@ const splitListItemWith = (
   tr: Transaction,
   content: Fragment | Node | Node[],
 ) => {
-  const { $from, from } = tr.selection;
+  const { $from } = tr.selection;
 
   const origDoc = tr.doc;
 
   // split just before the current item
-  // TODO: new id for split taskList
-  tr = tr.split($from.pos - 1);
+  // we can only split if there was a list item before us
+  const listContainer = $from.node($from.depth - 2).type.name;
+  const posInList = $from.index($from.depth - 1);
+  const shouldSplit = !(listContainer !== 'taskList' && posInList === 0);
+
+  if (shouldSplit) {
+    // TODO: new id for split taskList
+    tr = tr.split($from.pos - 1);
+  }
 
   // and delete the action at the current pos
   // we can do this because we know either first new child will be taskItem or nothing at all
   tr = tr.deleteRange(
-    tr.mapping.map($from.pos),
+    tr.mapping.map($from.start()),
     tr.mapping.map($from.end() + 1),
   );
 
   // taskList and taskItem positions collapse (nodes get deleted), so $from.pos is now the
   // start of the split taskList or remaining nodes in doc
-  tr = tr.insert($from.pos, content);
+  tr = tr.insert($from.pos - (shouldSplit ? 0 : 2), content);
 
   // put cursor inside paragraph
-  tr = tr.setSelection(new TextSelection(tr.doc.resolve($from.pos + 1)));
-
-  console.log('splitListItemWith');
+  tr = tr.setSelection(
+    new TextSelection(tr.doc.resolve($from.pos + 1 - (shouldSplit ? 0 : 2))),
+  );
 
   // lift list up if the node after the initial one was a taskList
   // which means it would have empty placeholder content if we just immediately delete it
@@ -245,8 +239,7 @@ const splitListItemWith = (
 
   const $oldAfter = origDoc.resolve($from.after());
 
-  console.log($oldAfter, $oldAfter.depth, $from.depth - 1);
-  // does it have enoguh children?
+  // if different levels then we shouldn't lift
   if ($oldAfter.depth === $from.depth - 1) {
     if ($oldAfter.nodeAfter && $oldAfter.nodeAfter.type.name === 'taskList') {
       // getBlockRange expects to be inside the taskItem
@@ -254,19 +247,12 @@ const splitListItemWith = (
       const $after = tr.doc.resolve(pos);
 
       const blockRange = getBlockRange($after, $after);
-      console.log('blockRange', blockRange, 'pos', pos, $after);
       if (blockRange) {
         tr = tr.lift(blockRange, blockRange.depth - 1).scrollIntoView();
       }
 
       tr = tr.deleteRange(pos - 3, pos - 2);
     }
-  } else {
-    console.log(
-      $oldAfter.parent.childCount - 1,
-      $oldAfter.index() + 1,
-      $oldAfter,
-    );
   }
 
   return tr;
@@ -325,7 +311,6 @@ export function keymapPlugin(schema: Schema): Plugin | undefined {
         tr: Transaction;
         itemLocalId?: string;
       }) => {
-        console.log('inserting new taskItem');
         return tr.split($from.pos, 1, [
           { type: nodeType, attrs: { localId: itemLocalId } },
         ]);
