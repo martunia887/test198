@@ -109,10 +109,6 @@ const ContentArea = styled.div`
       clear: none;
     }
 
-    p {
-      color: blue !important;
-    }
-
     > p:last-child {
       margin-bottom: 24px;
     }
