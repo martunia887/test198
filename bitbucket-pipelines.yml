@@ -147,6 +147,9 @@ pipelines:
               - git lfs pull
               - bolt install --frozen-lockfile
               - yarn run test:vr:changed
+              # Run the WYSIWYG consistency testing whenever we change code which may impact the visual output of the editor or renderer.
+              # Note: this will run VR for the `editor-wysiwyg-testing` package twice if it is changed at the same time as changes to the dependent packages.
+              - node build/ci-scripts/run.if.package.changed.js @atlaskit/editor-common @atlaskit/editor @atlaskit/renderer -- yarn test:vr:editor-wysiwyg-testing
             after-script:
               # Extract all the diff images and store them into a folder for download.
               - mkdir ./imageSnapshotFailures && find . \( -name '*-diff.png' -or -name '*-error.png' -or -name '*-erd.png' \) -not -path "./node_modules/*" -exec cp {} ./imageSnapshotFailures \;
