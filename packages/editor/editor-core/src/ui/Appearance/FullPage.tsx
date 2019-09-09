@@ -82,6 +82,13 @@ const ContentArea = styled.div`
   & .ProseMirror {
     flex-grow: 1;
     box-sizing: border-box;
+
+    /*
+    table p {
+      color: red;
+      font-weight: bold;
+    }
+    */
   }
 
   & .ProseMirror {
@@ -100,6 +107,10 @@ const ContentArea = styled.div`
     > h6 {
       /* deliberately allow wrapping of text based nodes, just in case any are adjacent floated content */
       clear: none;
+    }
+
+    p {
+      color: blue !important;
     }
 
     > p:last-child {
