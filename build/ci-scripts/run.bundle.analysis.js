@@ -13,6 +13,7 @@ const analysisServerEndpoint = process.env.ANALYSIS_SERVER_ENDPOINT;
         'packages/css-packs/*',
         'website',
         'packages/core/polyfills',
+        'packages/editor/editor-wysiwyg-testing',
         'packages/elements/util-data-test',
       ],
     });
