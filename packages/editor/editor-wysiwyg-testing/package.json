@@ -20,7 +20,7 @@
     "@atlaskit/renderer": "^50.0.2",
     "@atlaskit/visual-regression": "^0.1.3",
     "jest-snapshot": "^24.8.0",
-    "pixelmatch": "^4.0.2",
+    "pixelmatch": "^5.0.2",
     "pngjs": "^3.4.0",
     "rimraf": "^2.6.3"
   }
