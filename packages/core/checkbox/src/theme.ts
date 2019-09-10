@@ -74,5 +74,4 @@ const evaluateMode = function<TargetType, ResultType>(
 const defaultThemeFn = ({ tokens, mode }: ThemeProps): ThemeTokens => {
   return evaluateMode<ComponentTokens, ThemeTokens>(tokens, mode);
 };
-
 export default createTheme<ThemeTokens, ThemeProps>(defaultThemeFn);
