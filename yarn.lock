@@ -1711,6 +1711,13 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/flushable/-/flushable-1.0.1.tgz#7ef22f21ee52ba6602758661cc1c1845e72c9735"
 
+"@types/fs-extra@^4.0.2":
+  version "4.0.9"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-4.0.9.tgz#401bea3a7cdfb671c06d0a1083a8e534e92eb97d"
+  integrity sha512-dC9Y/GTlzrFRxoX3YMztrjcVQ6B8UAvMbx8pAa2B3hINuhB0hv++ufZVauZpG1l9U0rJznB25IFPvf5XtMcIvw==
+  dependencies:
+    "@types/node" "*"
+
 "@types/glob@^7.1.1":
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.1.1.tgz#aa59a1c6e3fbc421e07ccd31a944c30eba521575"

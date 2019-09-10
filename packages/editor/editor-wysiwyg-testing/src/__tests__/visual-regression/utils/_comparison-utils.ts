@@ -2,6 +2,7 @@ import { toMatchSnapshot } from 'jest-snapshot';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import * as path from 'path';
+import { ensureDirSync, emptyDirSync } from 'fs-extra';
 import * as fs from 'fs';
 import {
   editorContentSelector,
@@ -132,10 +133,13 @@ export async function snapshotAndCompare(
     );
   }
 
-  const snapshotsPath = path.join(__dirname, '..', '__image_snapshots__');
-  if (!fs.existsSync(snapshotsPath)) fs.mkdirSync(snapshotsPath);
-
-  const diffPath = path.join(snapshotsPath, '__diff_output__');
+  const diffPath = path.join(
+    __dirname,
+    '..',
+    '__image_snapshots__',
+    '__diff_output__',
+  );
+  ensureDirSync(diffPath);
 
   // Take screenshots
   const editorImageBuffer = await editor.screenshot();
@@ -165,8 +169,6 @@ export async function snapshotAndCompare(
     consistency: `${consistency}%`,
   };
 
-  // Remove existing diff files prior to potential regeneration
-  if (!fs.existsSync(diffPath)) fs.mkdirSync(diffPath);
   const testFilename = testName.replace(' ', '-');
 
   // On CI we only output images is there is a change,
@@ -181,9 +183,13 @@ export async function snapshotAndCompare(
     const compositeBuffer = PNG.sync.write(compositeImage, { filterType: 4 });
 
     // Write image to disk (prefixed with an underscore to denote local debugging)
+    const debugDiffPath = path.join(diffPath, '__debug__');
+    // Remove existing diff files prior to potential regeneration
+    emptyDirSync(debugDiffPath);
+
     const debugImagePath = path.join(
-      diffPath,
-      `_wysiwyg-debug-${testFilename}-erd.png`,
+      debugDiffPath,
+      `wysiwyg-debug-${testFilename}-erd.png`,
     );
     fs.writeFileSync(debugImagePath, compositeBuffer);
   }
