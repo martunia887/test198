@@ -23,7 +23,10 @@ export interface MacroProvider {
   /**
    * If "macro" param is passed in, it will open macro browser for editing the macro
    */
-  openMacroBrowser(macroNode?: PmNode): Promise<MacroAttributes>;
+  openMacroBrowser(
+    macroNode?: PmNode,
+    element?: HTMLElement,
+  ): Promise<MacroAttributes>;
 
   autoConvert(link: String): MacroAttributes | null;
 }

@@ -106,6 +106,7 @@ const editButton = (
       icon: EditIcon,
       onClick: editExtension(
         macroState && macroState.macroProvider,
+        extensionState.element,
         extensionState.updateExtension,
       ),
       title: formatMessage(messages.edit),

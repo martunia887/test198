@@ -15,6 +15,7 @@ export type ExtensionHandler<T> = (
 
 export type UpdateExtension<T> = (
   extensionParameters: T,
+  element?: HTMLElement,
 ) => Promise<T | undefined>;
 
 export interface Extension<T> {

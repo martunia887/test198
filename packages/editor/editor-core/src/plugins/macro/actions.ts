@@ -18,6 +18,7 @@ export const insertMacroFromMacroBrowser = (
   macroProvider: MacroProvider,
   macroNode?: PmNode,
   isEditing?: boolean,
+  element?: HTMLElement,
 ) => async (
   state: EditorState,
   dispatch?: CommandDispatch,
@@ -28,6 +29,7 @@ export const insertMacroFromMacroBrowser = (
   // opens MacroBrowser for editing "macroNode" if passed in
   const newMacro: MacroAttributes = await macroProvider.openMacroBrowser(
     macroNode,
+    element,
   );
   if (newMacro) {
     const currentLayout = (macroNode && macroNode.attrs.layout) || 'default';

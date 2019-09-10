@@ -59,12 +59,13 @@ export const updateExtensionLayout = (layout: string): Command => (
 export const updateExtensionParams = (
   updateExtension: UpdateExtension<object>,
   node: { node: PmNode; pos: number },
+  element?: HTMLElement,
 ) => async (state: EditorState, dispatch?: CommandDispatch): Promise<void> => {
   if (!state.schema.nodes.extension) {
     return;
   }
   const { parameters } = node.node.attrs;
-  const newParameters = await updateExtension(parameters);
+  const newParameters = await updateExtension(parameters, element);
 
   if (newParameters) {
     const newAttrs = {
@@ -94,6 +95,7 @@ export const updateExtensionParams = (
 
 export const editExtension = (
   macroProvider: MacroProvider | null,
+  element?: HTMLElement,
   updateExtension?: UpdateExtension<object>,
 ): Command => (state, dispatch): boolean => {
   const node = getExtensionNode(state);
@@ -103,7 +105,7 @@ export const editExtension = (
   }
 
   if (updateExtension) {
-    updateExtensionParams(updateExtension, node)(state, dispatch);
+    updateExtensionParams(updateExtension, node, element)(state, dispatch);
     return true;
   }
 
@@ -111,7 +113,10 @@ export const editExtension = (
     return false;
   }
 
-  insertMacroFromMacroBrowser(macroProvider, node.node, true)(state, dispatch);
+  insertMacroFromMacroBrowser(macroProvider, node.node, true, element)(
+    state,
+    dispatch,
+  );
   return true;
 };
 
