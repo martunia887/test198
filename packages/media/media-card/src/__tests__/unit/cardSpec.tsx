@@ -16,10 +16,10 @@ import {
   ExternalImageIdentifier,
   Identifier,
 } from '@atlaskit/media-client';
-import { AnalyticsContext } from '@atlaskit/analytics-next';
+import { AnalyticsContext, AnalyticsListener } from '@atlaskit/analytics-next';
 import { MediaViewer } from '@atlaskit/media-viewer';
 import { CardAction, CardProps, CardDimensions } from '../..';
-import { CardBase } from '../../root/card';
+import { Card, CardBase } from '../../root/card';
 import { CardView } from '../../root/cardView';
 import { InlinePlayer } from '../../root/inlinePlayer';
 import { LazyContent } from '../../utils/lazyContent';
@@ -31,6 +31,7 @@ import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
 } from '../../utils/analytics';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
 
 describe('Card', () => {
   const identifier: Identifier = {
@@ -973,5 +974,104 @@ describe('Card', () => {
     expect(onClickHandler).toBeCalledTimes(1);
     const actualEvent = onClickHandler.mock.calls[0][1];
     expect(actualEvent).toBeDefined();
+  });
+
+  it('should fire Analytics Event on file load start with static file Id', async () => {
+    const mediaClient = fakeMediaClient() as any;
+    const analyticsHandler = jest.fn();
+
+    mount(
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsHandler}
+      >
+        <Card
+          mediaClient={mediaClient}
+          identifier={identifier}
+          isLazy={false}
+        />
+        ,
+      </AnalyticsListener>,
+    );
+    expect(analyticsHandler).toBeCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          eventType: 'operational',
+          action: 'commenced',
+          actionSubject: 'mediaCardRender',
+          actionSubjectId: identifier.id,
+        }),
+      }),
+      FabricChannel.media,
+    );
+  });
+
+  it('should fire Analytics Event on file load start with async file Id', async () => {
+    const mediaClient = fakeMediaClient() as any;
+    const analyticsHandler = jest.fn();
+    const asyncIdentifier = {
+      ...identifier,
+      id: Promise.resolve('some-async-id'),
+    };
+    mount(
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsHandler}
+      >
+        <Card
+          mediaClient={mediaClient}
+          identifier={asyncIdentifier}
+          isLazy={false}
+        />
+        ,
+      </AnalyticsListener>,
+    );
+    await nextTick();
+    expect(analyticsHandler).toBeCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          eventType: 'operational',
+          action: 'commenced',
+          actionSubject: 'mediaCardRender',
+          actionSubjectId: 'some-async-id',
+        }),
+      }),
+      FabricChannel.media,
+    );
+  });
+
+  it('should fire Analytics Event on file load start with external file Id', async () => {
+    const mediaClient = fakeMediaClient() as any;
+    const analyticsHandler = jest.fn();
+    const externalIdentifier: ExternalImageIdentifier = {
+      mediaItemType: 'external-image',
+      dataURI: 'bla',
+      name: 'some external image',
+    };
+    mount(
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsHandler}
+      >
+        <Card
+          mediaClient={mediaClient}
+          identifier={externalIdentifier}
+          isLazy={false}
+        />
+        ,
+      </AnalyticsListener>,
+    );
+    await nextTick();
+    expect(analyticsHandler).toBeCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          eventType: 'operational',
+          action: 'commenced',
+          actionSubject: 'mediaCardRender',
+          actionSubjectId: externalIdentifier.dataURI,
+        }),
+      }),
+      FabricChannel.media,
+    );
   });
 });

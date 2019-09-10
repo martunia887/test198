@@ -33,6 +33,7 @@ import { InlinePlayer } from '../inlinePlayer';
 import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
+  createAndFireCustomMediaEvent,
 } from '../../utils/analytics';
 
 export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
@@ -124,12 +125,22 @@ export class CardBase extends Component<
 
   async subscribe(identifier: Identifier, mediaClient: MediaClient) {
     const { isCardVisible } = this.state;
+    const { createAnalyticsEvent } = this.props;
     if (!isCardVisible) {
       return;
     }
 
     if (identifier.mediaItemType === 'external-image') {
       const { dataURI, name } = identifier;
+      createAndFireCustomMediaEvent(
+        {
+          eventType: 'operational',
+          action: 'commenced',
+          actionSubject: 'mediaCardRender',
+          actionSubjectId: dataURI,
+        },
+        createAnalyticsEvent,
+      );
 
       this.setState({
         status: 'complete',
@@ -146,6 +157,16 @@ export class CardBase extends Component<
 
     const { id, collectionName, occurrenceKey } = identifier;
     const resolvedId = typeof id === 'string' ? id : await id;
+    createAndFireCustomMediaEvent(
+      {
+        eventType: 'operational',
+        action: 'commenced',
+        actionSubject: 'mediaCardRender',
+        actionSubjectId: resolvedId,
+      },
+      createAnalyticsEvent,
+    );
+
     this.unsubscribe();
     this.subscription = mediaClient.file
       .getFileState(resolvedId, { collectionName, occurrenceKey })
@@ -495,4 +516,3 @@ export class CardBase extends Component<
 export const Card: React.ComponentType<
   CardWithAnalyticsEventsProps
 > = withAnalyticsEvents()(CardBase);
-// export const Card = withAnalyticsEvents()(CardBase);
