@@ -233,8 +233,6 @@ export const insertTaskDecisionWithAnalytics = (
     return insertTr;
   }
 
-  console.warn('abort in insert action decision');
-
   return null;
 };
 
