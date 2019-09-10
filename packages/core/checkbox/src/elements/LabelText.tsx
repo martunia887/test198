@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx, CSSObject } from '@emotion/core';
+import { defaultAttributesFn } from '../utils';
 import { ThemeTokens } from '../types';
 
 export const labelTextCSS = ({
@@ -20,7 +21,7 @@ export interface LabelTextProps extends React.HTMLProps<HTMLSpanElement> {
   children: React.ReactNode;
 }
 
-export default ({
+export function LabelText({
   attributesFn,
   tokens,
   cssFn,
@@ -30,4 +31,12 @@ export default ({
   cssFn: (props: { tokens: ThemeTokens }) => CSSObject;
   tokens: ThemeTokens;
   children: React.ReactNode;
-}) => <span {...attributesFn({})} css={cssFn({ tokens })} {...rest} />;
+}) {
+  return <span {...attributesFn({})} css={cssFn({ tokens })} {...rest} />;
+}
+
+export default {
+  component: LabelText,
+  cssFn: labelTextCSS,
+  attributesFn: defaultAttributesFn,
+};

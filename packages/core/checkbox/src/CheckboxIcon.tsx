@@ -4,8 +4,8 @@ import Icon from '@atlaskit/icon/glyph/checkbox';
 import GlobalTheme from '@atlaskit/theme/components';
 import IconIndeterminate from '@atlaskit/icon/glyph/checkbox-indeterminate';
 import Theme, { componentTokens } from './theme';
-import { createExtender, identity, ExtenderType } from './utils';
-import { IconWrapper, iconWrapperCSS } from './elements';
+import { createExtender, ExtenderType } from './utils';
+import { IconWrapperOverrides } from './elements';
 import {
   CheckboxIconProps,
   ThemeProps,
@@ -15,11 +15,7 @@ import {
 } from './types';
 
 const defaults: CheckboxIconDefaults = {
-  IconWrapper: {
-    component: IconWrapper,
-    cssFn: iconWrapperCSS,
-    attributesFn: identity,
-  },
+  IconWrapper: IconWrapperOverrides,
   IconIndeterminate: {
     component: IconIndeterminate,
   },

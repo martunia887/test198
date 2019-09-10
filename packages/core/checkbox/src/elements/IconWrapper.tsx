@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx, CSSObject } from '@emotion/core';
+import { defaultAttributesFn } from '../utils';
 import { ThemeTokens, ThemeIconTokens } from '../types';
 import React from 'react';
 
@@ -143,7 +144,7 @@ export const iconWrapperCSS = (props: IconProps): CSSObject => ({
   },
 });
 
-export default function IconWrapper({
+export function IconWrapper({
   attributesFn,
   cssFn,
   children,
@@ -151,3 +152,9 @@ export default function IconWrapper({
 }: IconProps) {
   return <span css={cssFn(props)} {...attributesFn({})} children={children} />;
 }
+
+export default {
+  component: IconWrapper,
+  cssFn: iconWrapperCSS,
+  attributesFn: defaultAttributesFn,
+};
