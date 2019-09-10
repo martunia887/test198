@@ -109,7 +109,8 @@ pipelines:
               - yarn test:editor-mobile-bridge:ios
               - yarn test:editor-mobile-bridge:android
               # This script acts like a unit test to check changes to @atlaskit/adf-schema.
-              - node build/ci-scripts/run.if.package.changed.js @atlaskit/adf-schema -- yarn build:adf-schema:checkuptodate
+              # FIXME: temporarily commented out for ED-7674
+              #- node build/ci-scripts/run.if.package.changed.js @atlaskit/adf-schema -- yarn build:adf-schema:checkuptodate
             after-script:
               - yarn send:stepFailureEvents
             caches:
@@ -401,7 +402,8 @@ pipelines:
                 - export TMPFILE=$(mktemp /tmp/jest.XXXXXX) && yarn --silent jest --listTests --json > $TMPFILE
                 - STEPS="3" STEP_IDX="0" PARALLELIZE_TESTS_FILE="$TMPFILE" yarn jest --maxWorkers=50%
                 # This script acts like a unit test to check changes to @atlaskit/adf-schema.
-                - node build/ci-scripts/run.if.package.changed.js @atlaskit/adf-schema -- yarn build:adf-schema:checkuptodate
+                # FIXME: temporarily commented out for ED-7674
+                #- node build/ci-scripts/run.if.package.changed.js @atlaskit/adf-schema -- yarn build:adf-schema:checkuptodate
               after-script:
                 - yarn send:stepFailureEvents
           - step:
