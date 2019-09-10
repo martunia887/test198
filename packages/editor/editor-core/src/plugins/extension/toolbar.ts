@@ -98,6 +98,8 @@ const editButton = (
     return [];
   }
 
+  console.log({ extensionState });
+
   return [
     {
       type: 'button',
