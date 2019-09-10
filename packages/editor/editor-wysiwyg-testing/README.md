@@ -1,39 +1,97 @@
 ### WYSIWYG Visual Consistency Testing
 
-Compares VR snapshots of the editor & renderer to validate the WYSIWYG (what you see is what you get) result.
+### What is this?
 
-Unlike regular VR tests this package doesn't store visual snapshot images. Instead it stores the percentage values in a JSON file to measure and track the visual consistency (or divergence) between the rendered results of the editor & renderer over time.
+**Compares VR snapshots of the editor & renderer to validate the [WYSIWYG](https://en.wikipedia.org/wiki/WYSIWYG) (_what you see is what you get_) result.**
 
-If the changes result in improved visual consistency then the updated percentage(s) are written to the JSON file to be used as the new baseline.
+> Showcasing them side by side allows us to see how consistent they are.
+> Hopefully, this leads to reduced divergence as we're making changes to the code in either `editor`, `renderer`, or `editor-common` (which is used by both).
 
-Tests will fail if the visual divergence widens.
+The purpose of this package is to allow developers to trust that their changes won't negatively impact the WYSIWYG consistency offered to our customers.
 
-If tests fail, the composite image, and text figures are written to disk to be reviewed by a developer.
 
-To run:
 
-```
-yarn vr:test editor-wysiwyg-testing
-```
+### How do we do this?
 
-If the consistency of a content node worsens after up-merging master, you can set the latest values as the new baseline using the `-u` or `--updateSnapshot` flag.
+Testing of each content node is done in isolation. We render 3 instances of each node, since the styling of the node may differ for the first or last instance.
 
-Using the `--debug` flag will also write the composite image to disk to aid in debugging.
+For the same reason, we also render each content node inside each container node, as the styling for the instance rules may reset per container.
 
-> Note: Report updating won't occur during debug builds because their diff won't be pixel perfect against those generated within the Docker container.
+The tests will run automatically in CI whenever a change to a dependent package occurs.
 
-If changes result in an improvement you can see them in the generated text file:
+* `@atlaskit/editor`
+* `@atlaskit/renderer`
+* `@atlaskit/editor-common`.
 
-```
-baseline: 0.0558322192513369
-current: 0.03348930481283423
-improved: 2.23%
-```
-
-If changes result in a regression you can see the figures in the generated text file:
+You can also run the tests locally when making stylistic changes. 
 
 ```
-baseline: 0.07712418300653595
-current: 0.14052287581699346
-regressed: 6.34%
+yarn test:vr editor-wysiwyg-testing
 ```
+
+### Implementation
+
+**Unlike regular VR tests this package doesn't store visual snapshot images.**
+
+Instead, it stores percentage values in a [Jest Snap file](https://jestjs.io/docs/en/snapshot-testing#whats-the-difference-between-snapshot-testing-and-visual-regression-testing) to measure and track the _visual consistency_ (or _divergence_) between the rendered results of the editor & renderer over time.
+
+```
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WYSIWYG Comparison: actions 1`] = `
+Object {
+  "consistency": "100%",
+  "divergence": 0,
+}
+`;
+
+exports[`WYSIWYG Comparison: actions inside columns 1`] = `
+Object {
+  "consistency": "92.05%",
+  "divergence": 0.0794590856144438,
+}
+`;
+
+... other content nodes ...
+```
+
+### Tracking Changes
+
+**The tests will fail if there is _any change_ to the percentage of a content node (improvement or regression!).**
+
+When _improved_ consistency occurs:
+
+* The updated percentages should be committed. _Well done!_ 🥳
+
+Increased _divergence_ should be treated with caution:
+
+* Attempt to restore and standardise any visual changes across both editor & render based on changes within your branch.
+* If the consistency of a node worsens after up-merging downstream changes, and if you're unable to remedy the regression, you can set the latest values as the new baseline.
+
+You can update the snapshots by using the `--updateSnapshot` or `-u` flag.
+
+```
+yarn test:vr editor-wysiwyg-testing -u
+```
+
+_Analytics are dispatched whenever we update the snapshot file to track changes over time._
+
+
+### Troubleshooting Changes
+
+To aid in troubleshooting regressions you can view the generated composite diff image(s) to see what's happened.
+
+> **Note that the generated image is the current state of affairs. You won't see how it looked previously, because we haven't commited any image snapshots.**
+
+Files are prefixed with `wysiwyg-` and suffixed with `-erd`, which stands for _'editor-renderer-diff'_.
+(e.g. `wysiwyg-actions-erd.png`, `wysiwyg-actions-inside-table-erd.png`)
+
+When a failure occurs in CI:
+
+* The diff images are available for download via the same `artifacts.tar.gz` file produced by normal VR test failures.
+(e.g. inside a `imageSnapshotFailures` folder)
+
+When running the tests locally:
+
+* Diff images for failures can be found inside `editor-wysiwyg-testing/src/__tests__/visual-regression/__image_snapshots__/__diff_output__/`.
+* Additionally, for debugging purposes, the diff images for all content node tests are available inside `editor-wysiwyg-testing/src/__tests__/visual-regression/__image_snapshots__/__diff_output__/__debug__`.
