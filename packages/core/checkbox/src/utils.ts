@@ -1,4 +1,6 @@
-export const identity = <T>(p: T): T => p;
+export const defaultAttributesFn = <T extends Record<string, any>>(
+  p: T,
+): Record<string, any> => ({});
 
 type OverridesFunc<
   X extends Record<string, any>,
@@ -19,9 +21,20 @@ export const createExtender: ExtenderType = function createExtender<
   defaults: DefaultType,
   /** We're defaulting to an Object.create call here to circumvent
    *  the fact that {} can't be reconciled
-   *  with a type that extends Record<string, any> */
+   *  with a type that extends Record<string, any>
+   *
+   *  By doing this, we are intentionally disallowing users
+   *  from nullifying a particular component in the tree.
+   *  This can be reverted with additional logic,
+   *  at such a time as this nullification becomes an actual usecase.
+   * */
   overrides: OverridesType = Object.create(Object.prototype),
 ) {
+  if (!defaults) {
+    throw new Error(
+      'a default set of overrides *must* be passed in as the first argument',
+    );
+  }
   return function getOverrides(key: string) {
     const {
       cssFn: defaultCssFn,
