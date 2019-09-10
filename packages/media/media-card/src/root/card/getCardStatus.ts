@@ -1,4 +1,4 @@
-import { FileDetails } from '@atlaskit/media-client';
+import { FileDetails, FileState } from '@atlaskit/media-client';
 import { CardState, CardProps, CardStatus } from '../../';
 
 // we don't want to show complete status for empty files, ideally there should be no such file on the media api,
@@ -29,4 +29,35 @@ export const getCardStatus = (
   }
 
   return status;
+};
+
+export const getCardStatusFromFileState = (
+  fileState: FileState,
+  dataURI?: string,
+): { status?: CardStatus; progress?: number } => {
+  let status: CardStatus | undefined;
+  let progress: number | undefined;
+  switch (fileState.status) {
+    case 'uploading':
+      progress = fileState.progress;
+      status = 'uploading';
+      break;
+    case 'processing':
+      if (dataURI) {
+        status = 'complete';
+        progress = 1;
+      } else {
+        status = 'processing';
+      }
+      break;
+    case 'processed':
+      status = 'complete';
+      break;
+    case 'failed-processing':
+      status = 'failed-processing';
+      break;
+    case 'error':
+      status = 'error';
+  }
+  return { status, progress };
 };

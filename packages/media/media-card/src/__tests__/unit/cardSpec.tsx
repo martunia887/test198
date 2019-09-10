@@ -32,6 +32,7 @@ import {
   getBaseAnalyticsContext,
 } from '../../utils/analytics';
 import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { getCardStatusFromFileState } from '../../root/card/getCardStatus';
 
 describe('Card', () => {
   const identifier: Identifier = {
@@ -1071,6 +1072,112 @@ describe('Card', () => {
           actionSubjectId: externalIdentifier.dataURI,
         }),
       }),
+      FabricChannel.media,
+    );
+  });
+
+  it('should fire Analytics Event on file state change from Media Client', async () => {
+    const basePayload = {
+      eventType: 'operational',
+      actionSubject: 'mediaCardRender',
+      actionSubjectId: identifier.id,
+    };
+    const genEventPayload = (fileState: FileState) => {
+      const { status: action } = getCardStatusFromFileState(fileState);
+      return expect.objectContaining({
+        payload: expect.objectContaining({
+          ...basePayload,
+          action,
+        }),
+      });
+    };
+    const genErrorEventPayload = (error: Error) => {
+      return expect.objectContaining({
+        payload: expect.objectContaining({
+          ...basePayload,
+          action: 'failed',
+          attributes: expect.objectContaining({
+            failReason: 'media-client-error',
+            error: error && error.message,
+          }),
+        }),
+      });
+    };
+
+    const baseState: FileState = {
+      id: '123',
+      mediaType: 'image',
+      status: 'processing',
+      mimeType: 'image/png',
+      name: 'file-name',
+      size: 10,
+      representations: {
+        image: {},
+      },
+    };
+    const fileState1: FileState = {
+      ...baseState,
+      status: 'uploading',
+      progress: 1,
+    };
+    const fileState2: FileState = {
+      ...baseState,
+      status: 'processed',
+      artifacts: {},
+    };
+    const fileState3: FileState = {
+      ...baseState,
+      status: 'error',
+    };
+    const theError = new Error('something went really bad');
+
+    const mediaClient = fakeMediaClient();
+    const subject = new ReplaySubject<FileState>(1);
+    asMockReturnValue(mediaClient.file.getFileState, subject);
+    const analyticsHandler = jest.fn();
+    mount(
+      <AnalyticsListener
+        channel={FabricChannel.media}
+        onEvent={analyticsHandler}
+      >
+        <Card
+          mediaClient={mediaClient}
+          identifier={identifier}
+          isLazy={false}
+        />
+        ,
+      </AnalyticsListener>,
+    );
+
+    await nextTick();
+    subject.next(fileState1);
+    await nextTick();
+    subject.next(fileState2);
+    await nextTick();
+    subject.next(fileState3);
+    await nextTick();
+    subject.error(theError);
+    await nextTick();
+
+    expect(analyticsHandler).toBeCalledTimes(5);
+    expect(analyticsHandler).toHaveBeenNthCalledWith(
+      2,
+      genEventPayload(fileState1),
+      FabricChannel.media,
+    );
+    expect(analyticsHandler).toHaveBeenNthCalledWith(
+      3,
+      genEventPayload(fileState2),
+      FabricChannel.media,
+    );
+    expect(analyticsHandler).toHaveBeenNthCalledWith(
+      4,
+      genEventPayload(fileState3),
+      FabricChannel.media,
+    );
+    expect(analyticsHandler).toHaveBeenNthCalledWith(
+      5,
+      genErrorEventPayload(theError),
       FabricChannel.media,
     );
   });

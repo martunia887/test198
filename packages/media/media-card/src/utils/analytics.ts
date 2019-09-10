@@ -46,7 +46,7 @@ export function getBaseAnalyticsContext(): GasCorePayload['attributes'] {
   };
 }
 
-const getFileAttributes = (
+export const getFileAttributes = (
   metadata?: FileDetails,
 ): MediaCardAnalyticsFileAttributes => ({
   fileSource: 'mediaCard',

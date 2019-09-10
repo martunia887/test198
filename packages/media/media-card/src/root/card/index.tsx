@@ -28,12 +28,13 @@ import { getDataURIDimension } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
 import { isBigger } from '../../utils/dimensionComparer';
-import { getCardStatus } from './getCardStatus';
+import { getCardStatus, getCardStatusFromFileState } from './getCardStatus';
 import { InlinePlayer } from '../inlinePlayer';
 import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
   createAndFireCustomMediaEvent,
+  getFileAttributes as getAnalyticsFileAttributes,
 } from '../../utils/analytics';
 
 export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
@@ -188,28 +189,10 @@ export class CardBase extends Component<
             dataURI = src;
           }
 
-          switch (fileState.status) {
-            case 'uploading':
-              progress = fileState.progress;
-              status = 'uploading';
-              break;
-            case 'processing':
-              if (dataURI) {
-                status = 'complete';
-                progress = 1;
-              } else {
-                status = 'processing';
-              }
-              break;
-            case 'processed':
-              status = 'complete';
-              break;
-            case 'failed-processing':
-              status = 'failed-processing';
-              break;
-            case 'error':
-              status = 'error';
-          }
+          ({
+            status = status,
+            progress = progress,
+          } = getCardStatusFromFileState(fileState, dataURI));
 
           const shouldFetchRemotePreview =
             !dataURI &&
@@ -242,6 +225,25 @@ export class CardBase extends Component<
             }
           }
 
+          createAndFireCustomMediaEvent(
+            {
+              eventType: 'operational',
+              action: status,
+              actionSubject: 'mediaCardRender',
+              actionSubjectId: resolvedId,
+              attributes: {
+                fileAttributes: getAnalyticsFileAttributes(metadata),
+                ...(fileState.status === 'error' && fileState.message
+                  ? {
+                      failReason: 'file-status-error',
+                      error: fileState.message,
+                    }
+                  : {}),
+              },
+            },
+            createAnalyticsEvent,
+          );
+
           this.notifyStateChange({
             metadata,
             status,
@@ -251,6 +253,20 @@ export class CardBase extends Component<
           });
         },
         error: error => {
+          createAndFireCustomMediaEvent(
+            {
+              eventType: 'operational',
+              action: 'failed',
+              actionSubject: 'mediaCardRender',
+              actionSubjectId: resolvedId,
+              attributes: {
+                failReason: 'media-client-error',
+                error: error && error.message,
+              },
+            },
+            createAnalyticsEvent,
+          );
+
           this.notifyStateChange({ error, status: 'error' });
         },
       });
