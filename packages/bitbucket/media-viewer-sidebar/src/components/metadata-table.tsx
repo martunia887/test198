@@ -1,0 +1,35 @@
+import React, { PureComponent } from 'react';
+import * as styled from './styled';
+
+interface MetadataTableState {}
+interface MetadataTableProps {
+  meta?: { [key: string]: string | number | boolean };
+}
+
+export default class MetadataTable extends PureComponent<
+  MetadataTableProps,
+  MetadataTableState
+> {
+  render() {
+    const { meta } = this.props;
+
+    if (meta === undefined) {
+      return;
+    }
+
+    return (
+      <styled.Table>
+        {Object.keys(meta).map(key => {
+          return (
+            <tr>
+              <td style={{ fontWeight: 'bold', textAlign: 'right' }}>
+                {key}:{' '}
+              </td>
+              <td>{meta[key]}</td>
+            </tr>
+          );
+        })}
+      </styled.Table>
+    );
+  }
+}
