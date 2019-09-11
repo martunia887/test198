@@ -1042,7 +1042,7 @@ describe('Card', () => {
   });
 
   it('should fire Analytics Event on file load start with external file Id', async () => {
-    const mediaClient = fakeMediaClient() as any;
+    const mediaClient = fakeMediaClient();
     const analyticsHandler = jest.fn();
     const externalIdentifier: ExternalImageIdentifier = {
       mediaItemType: 'external-image',
@@ -1091,8 +1091,8 @@ describe('Card', () => {
         }),
       });
     };
-    const genErrorEventPayload = (error: Error) => {
-      return expect.objectContaining({
+    const genErrorEventPayload = (error: Error) =>
+      expect.objectContaining({
         payload: expect.objectContaining({
           ...basePayload,
           action: 'failed',
@@ -1102,7 +1102,6 @@ describe('Card', () => {
           }),
         }),
       });
-    };
 
     const baseState: FileState = {
       id: '123',
@@ -1129,7 +1128,7 @@ describe('Card', () => {
       ...baseState,
       status: 'error',
     };
-    const theError = new Error('something went really bad');
+    const fileStateError = new Error('something went really bad');
 
     const mediaClient = fakeMediaClient();
     const subject = new ReplaySubject<FileState>(1);
@@ -1156,7 +1155,7 @@ describe('Card', () => {
     await nextTick();
     subject.next(fileState3);
     await nextTick();
-    subject.error(theError);
+    subject.error(fileStateError);
     await nextTick();
 
     expect(analyticsHandler).toBeCalledTimes(5);
@@ -1177,7 +1176,7 @@ describe('Card', () => {
     );
     expect(analyticsHandler).toHaveBeenNthCalledWith(
       5,
-      genErrorEventPayload(theError),
+      genErrorEventPayload(fileStateError),
       FabricChannel.media,
     );
   });

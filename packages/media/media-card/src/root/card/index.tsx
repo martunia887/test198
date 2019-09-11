@@ -34,7 +34,7 @@ import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
   createAndFireCustomMediaEvent,
-  getFileAttributes as getAnalyticsFileAttributes,
+  getAnalyticsFileAttributes,
 } from '../../utils/analytics';
 
 export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
@@ -225,6 +225,14 @@ export class CardBase extends Component<
             }
           }
 
+          const errorStateAttributes =
+            fileState.status === 'error'
+              ? {
+                  failReason: 'file-status-error',
+                  error: fileState.message || 'unknnown error',
+                }
+              : {};
+
           createAndFireCustomMediaEvent(
             {
               eventType: 'operational',
@@ -233,12 +241,7 @@ export class CardBase extends Component<
               actionSubjectId: resolvedId,
               attributes: {
                 fileAttributes: getAnalyticsFileAttributes(metadata),
-                ...(fileState.status === 'error' && fileState.message
-                  ? {
-                      failReason: 'file-status-error',
-                      error: fileState.message,
-                    }
-                  : {}),
+                ...errorStateAttributes,
               },
             },
             createAnalyticsEvent,
