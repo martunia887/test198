@@ -8,9 +8,7 @@ export default md`
 ${(
   <SectionMessage title="Deprecated Component" appearance="info">
     {md`
-      **\`Checkbox 10.0\`** introduces theming to Checkbox through two new props – \`theme\` and \`style\`.
-
-      - **\`theme\`** allows you to override the internal **component tokens** of Checkbox to make **easy appearance changes** .
+      **\`Checkbox 10.0\`** introduces the \`theme\` prop to Checkbox, which allows you to override the internal **component tokens** of Checkbox to make **easy appearance changes** .
     `}
   </SectionMessage>
 )}
@@ -35,7 +33,7 @@ ${code`const componentTokens: ComponentTokens = {
 
 You can view the full set of component tokens [here](http://atlaskit.atlassian.com/packages/core/checkbox/docs/component-tokens).
 
-Internally, these tokens are used by Emotion to generate the component's CSS; they can be moddified using the \`theme\` prop. After this, further CSS can be applied on top using the \`styles\` prop.
+Internally, these tokens are used by Emotion to generate the component's CSS; they can be moddified using the \`theme\` prop.
 
 ## Theming a Checkbox with the \`theme\` prop
 
