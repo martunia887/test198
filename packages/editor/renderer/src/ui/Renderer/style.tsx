@@ -35,6 +35,7 @@ import {
   shadowClassNames,
   dateSharedStyle,
   akEditorFullWidthLayoutWidth,
+  mediaSingleClassName,
   tasksAndDecisionsStyles,
 } from '@atlaskit/editor-common';
 import { RendererCssClassName } from '../../consts';
