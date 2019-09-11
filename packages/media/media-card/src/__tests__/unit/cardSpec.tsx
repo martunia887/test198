@@ -2,12 +2,9 @@ jest.mock('../../utils/getDataURIFromFileState');
 import { Observable, ReplaySubject } from 'rxjs';
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import {
-  fakeMediaClient,
-  nextTick,
-  asMockReturnValue,
-  asMock,
-} from '@atlaskit/media-test-helpers';
+
+import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { AnalyticsContext, AnalyticsListener } from '@atlaskit/analytics-next';
 import {
   MediaClient,
   FileState,
@@ -16,9 +13,15 @@ import {
   ExternalImageIdentifier,
   Identifier,
 } from '@atlaskit/media-client';
-import { AnalyticsContext, AnalyticsListener } from '@atlaskit/analytics-next';
 import { MediaViewer } from '@atlaskit/media-viewer';
-import { CardAction, CardProps, CardDimensions } from '../..';
+import {
+  fakeMediaClient,
+  nextTick,
+  asMockReturnValue,
+  asMock,
+} from '@atlaskit/media-test-helpers';
+
+import { CardAction, CardProps, CardDimensions, CardState } from '../..';
 import { Card, CardBase } from '../../root/card';
 import { CardView } from '../../root/cardView';
 import { InlinePlayer } from '../../root/inlinePlayer';
@@ -31,7 +34,6 @@ import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
 } from '../../utils/analytics';
-import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { getCardStatusFromFileState } from '../../root/card/getCardStatus';
 
 describe('Card', () => {
@@ -48,7 +50,7 @@ describe('Card', () => {
   ) => {
     (getDataURIFromFileState as any).mockReset();
     (getDataURIFromFileState as any).mockReturnValue(filePreview);
-    const component = shallow<CardBase>(
+    const component = shallow<CardProps>(
       <CardBase
         mediaClient={mediaClient}
         identifier={identifier}
@@ -226,16 +228,10 @@ describe('Card', () => {
   });
 
   it('should fire onClick when passed in as a prop and CardView fires onClick', () => {
-    const mediaClient = fakeMediaClient() as any;
     const clickHandler = jest.fn();
-    const card = shallow(
-      <CardBase
-        mediaClient={mediaClient}
-        identifier={identifier}
-        onClick={clickHandler}
-      />,
-    );
-    const cardViewOnClick = card.find(CardView).props().onClick;
+    const { component } = setup(fakeMediaClient(), { onClick: clickHandler });
+
+    const cardViewOnClick = component.find(CardView).props().onClick;
 
     if (!cardViewOnClick) {
       throw new Error('CardView onClick was undefined');
@@ -247,36 +243,35 @@ describe('Card', () => {
   });
 
   it('should fire onClick and onMouseEnter events triggered from MediaCard', () => {
-    const mediaClient = fakeMediaClient() as any;
     const clickHandler = jest.fn();
     const hoverHandler = jest.fn();
-    const card = shallow<CardBase>(
-      <CardBase
-        mediaClient={mediaClient}
-        identifier={identifier}
-        onMouseEnter={hoverHandler}
-        onClick={clickHandler}
-      />,
-    );
-    const cardView = card.find(CardView);
+    const { component } = setup(fakeMediaClient(), {
+      onMouseEnter: hoverHandler,
+      onClick: clickHandler,
+    });
+
+    const cardView = component.find(CardView);
     cardView.simulate('mouseEnter');
     cardView.simulate('click');
 
     expect(clickHandler).toHaveBeenCalledTimes(1);
     const clickHandlerArg = clickHandler.mock.calls[0][0];
-    expect(clickHandlerArg.mediaItemDetails).toEqual(card.state().metadata);
+    expect(clickHandlerArg.mediaItemDetails).toEqual(
+      component.state().metadata,
+    );
 
     expect(hoverHandler).toBeCalledTimes(1);
     const hoverHandlerArg = hoverHandler.mock.calls[0][0];
-    expect(hoverHandlerArg.mediaItemDetails).toEqual(card.state().metadata);
+    expect(hoverHandlerArg.mediaItemDetails).toEqual(
+      component.state().metadata,
+    );
   });
 
   it('should use lazy load by default', () => {
-    const mediaClient = fakeMediaClient() as any;
     const hoverHandler = () => {};
     const card = shallow(
       <CardBase
-        mediaClient={mediaClient}
+        mediaClient={fakeMediaClient()}
         identifier={identifier}
         onMouseEnter={hoverHandler}
       />,
@@ -285,46 +280,32 @@ describe('Card', () => {
   });
 
   it('should not use lazy load when "isLazy" is false', () => {
-    const mediaClient = createMediaClientWithGetFile();
     const hoverHandler = () => {};
-    const card = shallow(
-      <CardBase
-        isLazy={false}
-        mediaClient={mediaClient}
-        identifier={identifier}
-        onMouseEnter={hoverHandler}
-      />,
-    );
+    const { component } = setup(createMediaClientWithGetFile(), {
+      isLazy: false,
+      onMouseEnter: hoverHandler,
+    });
 
-    expect(card.find(LazyContent)).toHaveLength(0);
+    expect(component.find(LazyContent)).toHaveLength(0);
   });
 
   it('should pass properties down to CardView', () => {
-    const mediaClient = fakeMediaClient() as any;
-    const card = shallow(
-      <CardBase
-        mediaClient={mediaClient}
-        identifier={identifier}
-        dimensions={{ width: 100, height: 50 }}
-      />,
-    );
+    const { component } = setup(fakeMediaClient(), {
+      dimensions: { width: 100, height: 50 },
+    });
 
-    expect(card.find(CardView).props().dimensions).toEqual({
+    expect(component.find(CardView).props().dimensions).toEqual({
       width: 100,
       height: 50,
     });
   });
 
   it('should create a card placeholder with the right props', () => {
-    const mediaClient = createMediaClientWithGetFile();
-    const fileCard = shallow(
-      <CardBase
-        mediaClient={mediaClient}
-        identifier={identifier}
-        dimensions={{ width: 100, height: 50 }}
-      />,
-    );
-    const filePlaceholder = fileCard.find(CardView);
+    const { component } = setup(createMediaClientWithGetFile(), {
+      dimensions: { width: 100, height: 50 },
+    });
+
+    const filePlaceholder = component.find(CardView);
     const { status, dimensions } = filePlaceholder.props();
 
     expect(status).toBe('loading');
@@ -914,67 +895,140 @@ describe('Card', () => {
     });
   });
 
-  it('should attach UI Analytics Context', () => {
-    const mediaClient = fakeMediaClient() as any;
-    const metadata: FileDetails = {
-      id: 'some-id',
-      mediaType: 'video',
-      size: 12345,
-      processingStatus: 'succeeded',
+  describe('Analytics', () => {
+    const callCopy = async () => {
+      document.dispatchEvent(new Event('copy'));
+      await nextTick(); // copy handler is not awaited and fired in the next tick
     };
 
-    const card = shallow<CardBase>(
-      <CardBase mediaClient={mediaClient} identifier={identifier} />,
-    );
-    card.setState({ metadata });
-    card.update();
-    const contextData = card
-      .find(AnalyticsContext)
-      .at(1)
-      .props().data;
-    expect(contextData).toMatchObject(getUIAnalyticsContext(metadata));
-  });
+    it('should attach UI Analytics Context', () => {
+      const mediaClient = fakeMediaClient() as any;
+      const metadata: FileDetails = {
+        id: 'some-id',
+        mediaType: 'video',
+        size: 12345,
+        processingStatus: 'succeeded',
+      };
 
-  it('should attach Base Analytics Context', () => {
-    const mediaClient = fakeMediaClient() as any;
-    const card = shallow<CardBase>(
-      <CardBase mediaClient={mediaClient} identifier={identifier} />,
-    );
-    const contextData = card
-      .find(AnalyticsContext)
-      .at(0)
-      .props().data;
-    expect(contextData).toMatchObject(getBaseAnalyticsContext() || {});
-  });
-
-  it('should pass the Analytics Event fired from CardView to the provided onClick callback', () => {
-    const onClickHandler = jest.fn();
-    const { component } = setup(undefined, { onClick: onClickHandler });
-    component
-      .find(CardView)
-      .props()
-      .onClick({ thiIsA: 'HTMLEvent' }, { thiIsAn: 'AnalyticsEvent' });
-
-    expect(onClickHandler).toBeCalledTimes(1);
-    const actualEvent = onClickHandler.mock.calls[0][1];
-    expect(actualEvent).toBeDefined();
-  });
-
-  it('should pass the Analytics Event fired from InlinePlayer to the provided onClick callback', async () => {
-    const onClickHandler = jest.fn();
-    const { component } = setup(undefined, { onClick: onClickHandler });
-    component.setState({
-      isPlayingFile: true,
+      const card = shallow<CardProps>(
+        <CardBase mediaClient={mediaClient} identifier={identifier} />,
+      );
+      card.setState({ metadata });
+      card.update();
+      const contextData = card
+        .find(AnalyticsContext)
+        .at(0)
+        .props().data;
+      expect(contextData).toMatchObject(getUIAnalyticsContext(metadata));
     });
-    component.update();
-    component
-      .find(InlinePlayer)
-      .props()
-      .onClick({ thiIsA: 'HTMLEvent' }, { thiIsAn: 'AnalyticsEvent' });
 
-    expect(onClickHandler).toBeCalledTimes(1);
-    const actualEvent = onClickHandler.mock.calls[0][1];
-    expect(actualEvent).toBeDefined();
+    it('should attach Base Analytics Context', () => {
+      const mediaClient = fakeMediaClient() as any;
+      const card = shallow<CardProps>(
+        <Card mediaClient={mediaClient} identifier={identifier} />,
+      );
+      const contextData = card
+        .find(AnalyticsContext)
+        .at(0)
+        .props().data;
+      expect(contextData).toMatchObject(getBaseAnalyticsContext() || {});
+    });
+
+    it('should pass the Analytics Event fired from CardView to the provided onClick callback', () => {
+      const onClickHandler = jest.fn();
+      const { component } = setup(undefined, { onClick: onClickHandler });
+      component
+        .find(CardView)
+        .props()
+        .onClick({ thiIsA: 'HTMLEvent' }, { thiIsAn: 'AnalyticsEvent' });
+
+      expect(onClickHandler).toBeCalledTimes(1);
+      const actualEvent = onClickHandler.mock.calls[0][1];
+      expect(actualEvent).toBeDefined();
+    });
+
+    it('should pass the Analytics Event fired from InlinePlayer to the provided onClick callback', async () => {
+      const onClickHandler = jest.fn();
+      const { component } = setup(undefined, { onClick: onClickHandler });
+      component.setState({
+        isPlayingFile: true,
+      });
+      component.update();
+      component
+        .find(InlinePlayer)
+        .props()
+        .onClick({ thiIsA: 'HTMLEvent' }, { thiIsAn: 'AnalyticsEvent' });
+
+      expect(onClickHandler).toBeCalledTimes(1);
+      const actualEvent = onClickHandler.mock.calls[0][1];
+      expect(actualEvent).toBeDefined();
+    });
+
+    it('should fire copied file event on copy if inside a selection', async () => {
+      const mediaClient = fakeMediaClient() as any;
+      const onEvent = jest.fn();
+      window.getSelection = jest.fn().mockReturnValue({
+        containsNode: () => true,
+      });
+      mount<CardProps, CardState>(
+        <AnalyticsListener channel={'media'} onEvent={onEvent}>
+          <Card mediaClient={mediaClient} identifier={identifier} />
+        </AnalyticsListener>,
+      );
+      await callCopy();
+      expect(onEvent).toBeCalledWith(
+        expect.objectContaining({
+          payload: {
+            action: 'copied',
+            actionSubject: 'file',
+            actionSubjectId: 'some-random-id',
+            eventType: 'ui',
+            attributes: {
+              packageName: '@atlaskit/media-card',
+            },
+          },
+          context: [
+            {
+              componentName: 'MediaCard',
+              packageName: '@atlaskit/media-card',
+              packageVersion: '999.9.9',
+            },
+          ],
+        }),
+        FabricChannel.media,
+      );
+    });
+
+    it('should not fire copied file event on copy if not inside a selection', async () => {
+      const mediaClient = fakeMediaClient() as any;
+      const onEvent = jest.fn();
+      window.getSelection = jest.fn().mockReturnValue({
+        containsNode: () => false,
+      });
+      mount<CardProps, CardState>(
+        <AnalyticsListener channel={'media'} onEvent={onEvent}>
+          <Card mediaClient={mediaClient} identifier={identifier} />
+        </AnalyticsListener>,
+      );
+      await callCopy();
+      expect(onEvent).not.toBeCalled();
+    });
+
+    it('should remove listener on unmount', async () => {
+      const mediaClient = fakeMediaClient() as any;
+      const onEvent = jest.fn();
+      window.getSelection = jest.fn().mockReturnValue({
+        containsNode: () => true,
+      });
+      const handler = mount<CardProps, CardState>(
+        <AnalyticsListener channel={'media'} onEvent={onEvent}>
+          <Card mediaClient={mediaClient} identifier={identifier} />
+        </AnalyticsListener>,
+      );
+      handler.unmount();
+      await callCopy();
+      expect(onEvent).not.toBeCalled();
+    });
   });
 
   it('should fire Analytics Event on file load start with static file Id', async () => {
