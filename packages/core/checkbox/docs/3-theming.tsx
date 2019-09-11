@@ -11,7 +11,6 @@ ${(
       **\`Checkbox 10.0\`** introduces theming to Checkbox through two new props – \`theme\` and \`style\`.
 
       - **\`theme\`** allows you to override the internal **component tokens** of Checkbox to make **easy appearance changes** .
-      - **\`style\`** provides more control, allowing you to apply **custom CSS** to certain internal components inside of Checkbox _after_ the component tokens are used to style them.
     `}
   </SectionMessage>
 )}
@@ -137,41 +136,5 @@ Finally, once the custom theme function has been defined, pass it into Checkbox 
 ${code`export default () => <Checkbox label="Remember me" theme={customTheme} />;`}
 
 With that, you have a themed Checkbox.
-
-## Applying styles using \`styles\` prop
-
-For simpler control of the specific CSS applied to components, a \`styles\` prop can be passed in:
-
-${(
-  <Example
-    packageName="@atlaskit/checkbox"
-    Component={require('../examples/09-styling').default}
-    title="Applying custom CSS with the styles prop"
-    source={require('!!raw-loader!../examples/09-styling')}
-  />
-)}
-
-### Creating the Styles Prop
-The \`styles\` prop takes an object of the following structure:
-
-${code`
-{
-  iconWrapper: (defaultStyles) => {...}
-}
-`}
-
-Style keys relate to different internal components that support custom styling. Currently, the \`iconWrapper\` component is supported.
-
-Style values take the default CSS styles, and return new ones. Spreading is an easy way to add one or two new values:
-
-${code`
-const customIconWrapperStyles = (defaultStyles: any) => {
-  return {
-    ...defaultStyles,
-    fill: 'green',
-  };
-};
-`}
-
 
 `;
