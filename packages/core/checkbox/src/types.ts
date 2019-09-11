@@ -173,6 +173,7 @@ export interface ComponentTokens {
       invalid?: TokenValue;
       focused?: TokenValue;
       hovered?: TokenValue;
+      hoveredAndChecked?: TokenValue;
     };
     boxColor?: {
       rest?: TokenValue;
@@ -207,6 +208,7 @@ export interface ThemeIconTokens {
     invalid: string;
     focused: string;
     hovered: string;
+    hoveredAndChecked: string;
   };
   boxColor: {
     rest: string;
