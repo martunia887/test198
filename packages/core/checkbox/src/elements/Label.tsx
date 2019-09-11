@@ -22,6 +22,7 @@ export function Label({
   isDisabled,
   tokens,
   cssFn,
+  ...rest
 }: LabelProps) {
   return (
     <label

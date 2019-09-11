@@ -17,6 +17,16 @@ const activeBorder = (iconTokens: ThemeIconTokens) => ({
   strokeWidth: iconTokens.borderWidth,
 });
 
+const hoveredAndCheckedBorder = (iconTokens: ThemeIconTokens) => ({
+  stroke: iconTokens.borderColor.hoveredAndChecked,
+  strokeWidth: iconTokens.borderWidth,
+});
+
+const hoveredBorder = (iconTokens: ThemeIconTokens) => ({
+  stroke: iconTokens.borderColor.hovered,
+  strokeWidth: iconTokens.borderWidth,
+});
+
 const checkedBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.checked,
   strokeWidth: iconTokens.borderWidth,
@@ -43,6 +53,12 @@ const getBorderColor = ({ tokens, ...props }: IconWrapperCSSProps) => {
   }
   if (props.isActive) {
     return activeBorder(tokens.icon);
+  }
+  if (props.isHovered && props.isChecked) {
+    return hoveredAndCheckedBorder(tokens.icon);
+  }
+  if (props.isHovered) {
+    return hoveredBorder(tokens.icon);
   }
   if (props.isChecked) {
     return checkedBorder(tokens.icon);
