@@ -19,6 +19,11 @@ const isInsideTaskOrDecisionItem = (state: EditorState) => {
   return hasParentNodeOfType([decisionItem, taskItem])(state.selection);
 };
 
+const isInsideTask = (state: EditorState) => {
+  const { taskItem } = state.schema.nodes;
+  return hasParentNodeOfType([taskItem])(state.selection);
+};
+
 // get block range over current selection, including following taskList
 const getBlockRange = ($from: ResolvedPos, $to: ResolvedPos) => {
   const { taskList } = $from.doc.type.schema.nodes;
@@ -37,7 +42,8 @@ const getBlockRange = ($from: ResolvedPos, $to: ResolvedPos) => {
 
 const unindent = autoJoin(
   (state: EditorState, dispatch?: (tr: Transaction) => void) => {
-    if (!isInsideTaskOrDecisionItem(state)) {
+    // can only unindent taskItems
+    if (!isInsideTask(state)) {
       return false;
     }
 
@@ -60,7 +66,8 @@ const unindent = autoJoin(
 
 const indent = autoJoin(
   (state: EditorState, dispatch?: (tr: Transaction) => void) => {
-    if (!isInsideTaskOrDecisionItem(state)) {
+    // can only indent taskItems
+    if (!isInsideTask(state)) {
       return false;
     }
 
@@ -93,14 +100,17 @@ const backspace = autoJoin(
     if ($cut) {
       if (
         $cut.nodeBefore &&
-        $cut.nodeBefore.type.name === 'taskList' &&
+        ['taskList', 'decisionList'].indexOf($cut.nodeBefore.type.name) > -1 &&
         $cut.nodeAfter &&
         $cut.nodeAfter.type.name === 'paragraph'
       ) {
         // taskList contains taskItem, so this is the end of the inside
         let $lastNode = $cut.doc.resolve($cut.pos - 1);
 
-        while ($lastNode.parent.type.name !== 'taskItem') {
+        while (
+          ['taskItem', 'decisionItem'].indexOf($lastNode.parent.type.name) ===
+          -1
+        ) {
           $lastNode = state.doc.resolve($lastNode.pos - 1);
         }
 
@@ -130,7 +140,8 @@ const backspace = autoJoin(
       return false;
     }
 
-    if ($from.start() !== $from.pos) {
+    // ensure cursor at start of item
+    if ($from.start() !== $from.pos || !state.selection.empty) {
       return false;
     }
 
@@ -138,7 +149,8 @@ const backspace = autoJoin(
     const taskBefore = $from.doc.resolve($from.before());
     if (
       taskBefore.nodeBefore &&
-      taskBefore.nodeBefore.type.name === 'taskItem' &&
+      ['decisionItem', 'taskItem'].indexOf(taskBefore.nodeBefore.type.name) >
+        -1 &&
       taskBefore.nodeBefore.nodeSize === 2
     ) {
       return false;
@@ -192,7 +204,10 @@ const splitListItemWith = (
   // we can only split if there was a list item before us
   const listContainer = $from.node($from.depth - 2).type.name;
   const posInList = $from.index($from.depth - 1);
-  const shouldSplit = !(listContainer !== 'taskList' && posInList === 0);
+  const shouldSplit = !(
+    ['lastList', 'decisionList'].indexOf(listContainer) === -1 &&
+    posInList === 0
+  );
 
   if (shouldSplit) {
     // TODO: new id for split taskList
@@ -224,7 +239,10 @@ const splitListItemWith = (
 
   // if different levels then we shouldn't lift
   if ($oldAfter.depth === $from.depth - 1) {
-    if ($oldAfter.nodeAfter && $oldAfter.nodeAfter.type.name === 'taskList') {
+    if (
+      $oldAfter.nodeAfter &&
+      ['taskList', 'decisionList'].indexOf($oldAfter.nodeAfter.type.name) > -1
+    ) {
       // getBlockRange expects to be inside the taskItem
       const pos = tr.mapping.map($oldAfter.pos + 2);
       const $after = tr.doc.resolve(pos);

@@ -157,9 +157,10 @@ describe('tasks and decisions - keymaps', () => {
             sendKeyToPm(editorView, 'Backspace');
 
             const expectedDoc = doc(
-              list(listProps)(item(itemProps)('Hello{<>}World')),
-              // TODO - list merging FS-2947
-              list(listProps)(item(itemProps)('Cheese is great!')),
+              list(listProps)(
+                item(itemProps)('Hello{<>}World'),
+                item(itemProps)('Cheese is great!'),
+              ),
             );
             expect(editorView.state.doc).toEqualDocument(expectedDoc);
             compareSelection(editorFactory, expectedDoc, editorView);
