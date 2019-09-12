@@ -1098,7 +1098,7 @@ describe('Card', () => {
     );
   });
 
-  it('should fire Analytics Event on file load start with external file Id', async () => {
+  it('should fire Analytics Event on file load start/complete with external file Id', async () => {
     const mediaClient = fakeMediaClient();
     const analyticsHandler = jest.fn();
     const externalIdentifier: ExternalImageIdentifier = {
@@ -1120,13 +1120,27 @@ describe('Card', () => {
       </AnalyticsListener>,
     );
     await nextTick();
-    expect(analyticsHandler).toBeCalledWith(
+    expect(analyticsHandler).toHaveBeenNthCalledWith(
+      1,
       expect.objectContaining({
         payload: expect.objectContaining({
           eventType: 'operational',
           action: 'commenced',
           actionSubject: 'mediaCardRender',
-          actionSubjectId: externalIdentifier.dataURI,
+          actionSubjectId: 'url',
+        }),
+      }),
+      FabricChannel.media,
+    );
+
+    expect(analyticsHandler).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          eventType: 'operational',
+          action: 'succeeded',
+          actionSubject: 'mediaCardRender',
+          actionSubjectId: 'url',
         }),
       }),
       FabricChannel.media,

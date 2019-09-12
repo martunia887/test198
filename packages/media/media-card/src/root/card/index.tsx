@@ -184,7 +184,7 @@ export class CardBase extends Component<
           eventType: 'operational',
           action: 'commenced',
           actionSubject: 'mediaCardRender',
-          actionSubjectId: dataURI,
+          actionSubjectId: 'url',
         },
         createAnalyticsEvent,
       );
@@ -198,6 +198,16 @@ export class CardBase extends Component<
           mediaType: 'image',
         },
       });
+
+      createAndFireCustomMediaEvent(
+        {
+          eventType: 'operational',
+          action: 'succeeded',
+          actionSubject: 'mediaCardRender',
+          actionSubjectId: 'url',
+        },
+        createAnalyticsEvent,
+      );
 
       return;
     }
