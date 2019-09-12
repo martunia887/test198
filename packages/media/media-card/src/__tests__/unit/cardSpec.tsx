@@ -34,7 +34,10 @@ import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
 } from '../../utils/analytics';
-import { getCardStatusFromFileState } from '../../root/card/getCardStatus';
+import {
+  getCardStatusFromFileState,
+  getAnalyticsStatusFromCardStatus,
+} from '../../root/card/getCardStatus';
 
 describe('Card', () => {
   const identifier: Identifier = {
@@ -1137,7 +1140,9 @@ describe('Card', () => {
       actionSubjectId: identifier.id,
     };
     const genEventPayload = (fileState: FileState) => {
-      const { status: action } = getCardStatusFromFileState(fileState);
+      const action = getAnalyticsStatusFromCardStatus(
+        getCardStatusFromFileState(fileState),
+      );
       return expect.objectContaining({
         payload: expect.objectContaining({
           ...basePayload,

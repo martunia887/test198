@@ -34,30 +34,60 @@ export const getCardStatus = (
 export const getCardStatusFromFileState = (
   fileState: FileState,
   dataURI?: string,
-): { status?: CardStatus; progress?: number } => {
-  let status: CardStatus | undefined;
-  let progress: number | undefined;
+): CardStatus => {
   switch (fileState.status) {
     case 'uploading':
-      progress = fileState.progress;
-      status = 'uploading';
-      break;
+    case 'failed-processing':
+    case 'error':
+      return fileState.status;
+    case 'processed':
+      return 'complete';
     case 'processing':
       if (dataURI) {
-        status = 'complete';
-        progress = 1;
+        return 'complete';
       } else {
-        status = 'processing';
+        return 'processing';
       }
-      break;
-    case 'processed':
-      status = 'complete';
-      break;
-    case 'failed-processing':
-      status = 'failed-processing';
-      break;
-    case 'error':
-      status = 'error';
+    default:
+      return 'loading';
   }
-  return { status, progress };
 };
+
+export const getCardProgressFromFileState = (
+  fileState: FileState,
+  dataURI?: string,
+) => {
+  switch (fileState.status) {
+    case 'uploading':
+      return fileState.progress;
+    case 'processing':
+      if (dataURI) {
+        return 1;
+      }
+  }
+};
+
+export const getAnalyticsStatusFromCardStatus = (cardStatus: CardStatus) => {
+  switch (cardStatus) {
+    case 'uploading':
+    case 'loading':
+    case 'processing':
+    case 'complete':
+      return 'succeeded';
+    case 'error':
+    case 'failed-processing':
+    default:
+      return 'failed';
+  }
+};
+
+export const getAnalyticsErrorStateAttributes = (fileState: FileState) =>
+  ['error', 'failed-processing'].includes(fileState.status)
+    ? {
+        failReason: 'file-status-error',
+        error:
+          'message' in fileState
+            ? fileState.message || 'unknown error'
+            : 'unknown error',
+      }
+    : {};

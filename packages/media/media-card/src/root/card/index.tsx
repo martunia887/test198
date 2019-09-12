@@ -31,7 +31,13 @@ import { getDataURIDimension } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
 import { isBigger } from '../../utils/dimensionComparer';
-import { getCardStatus, getCardStatusFromFileState } from './getCardStatus';
+import {
+  getCardStatus,
+  getCardStatusFromFileState,
+  getAnalyticsStatusFromCardStatus,
+  getCardProgressFromFileState,
+  getAnalyticsErrorStateAttributes,
+} from './getCardStatus';
 import { InlinePlayer, InlinePlayerBase } from '../inlinePlayer';
 import {
   getUIAnalyticsContext,
@@ -229,10 +235,9 @@ export class CardBase extends Component<
             dataURI = src;
           }
 
-          ({
-            status = status,
-            progress = progress,
-          } = getCardStatusFromFileState(fileState, dataURI));
+          status = getCardStatusFromFileState(fileState, dataURI);
+          progress =
+            getCardProgressFromFileState(fileState, dataURI) || progress;
 
           const shouldFetchRemotePreview =
             !dataURI &&
@@ -265,23 +270,15 @@ export class CardBase extends Component<
             }
           }
 
-          const errorStateAttributes =
-            fileState.status === 'error'
-              ? {
-                  failReason: 'file-status-error',
-                  error: fileState.message || 'unknnown error',
-                }
-              : {};
-
           createAndFireCustomMediaEvent(
             {
               eventType: 'operational',
-              action: status,
+              action: getAnalyticsStatusFromCardStatus(status),
               actionSubject: 'mediaCardRender',
               actionSubjectId: resolvedId,
               attributes: {
                 fileAttributes: getAnalyticsFileAttributes(metadata),
-                ...errorStateAttributes,
+                ...getAnalyticsErrorStateAttributes(fileState),
               },
             },
             createAnalyticsEvent,
@@ -304,7 +301,7 @@ export class CardBase extends Component<
               actionSubjectId: resolvedId,
               attributes: {
                 failReason: 'media-client-error',
-                error: error && error.message,
+                error: (error && error.message) || 'unknown error',
               },
             },
             createAnalyticsEvent,
