@@ -1,6 +1,11 @@
 import React from 'react';
-import { Checkbox, IconProps } from '../src';
-import { ComponentTokens, ThemeTokens } from '../src/types';
+import { Checkbox } from '../src';
+import {
+  ComponentTokens,
+  ThemeTokens,
+  LabelCSSProps,
+  IconWrapperCSSProps,
+} from '../src/types';
 import merge from 'lodash.merge';
 
 import Icon from '@atlaskit/icon';
@@ -80,7 +85,10 @@ const customTheme = (
   return merge({}, themeTokens, newThemeTokens);
 };
 
-const customIconWrapperStyles = (defaultStyles: any, state: IconProps) => {
+const customIconWrapperStyles = (
+  defaultStyles: any,
+  state: IconWrapperCSSProps,
+) => {
   return {
     ...defaultStyles,
     '& path': {
@@ -89,7 +97,7 @@ const customIconWrapperStyles = (defaultStyles: any, state: IconProps) => {
   };
 };
 
-const customLabelStyles = (defaultStyles: any, state: IconProps) => {
+const customLabelStyles = (defaultStyles: any, state: LabelCSSProps) => {
   return {
     ...defaultStyles,
     alignItems: 'center',

@@ -42,11 +42,6 @@ const invalidBorder = (iconTokens: ThemeIconTokens) => ({
   strokeWidth: iconTokens.borderWidth,
 });
 
-const border = ({ isHovered, tokens: { icon } }: IconWrapperCSSProps) => ({
-  stroke: isHovered ? icon.borderColor.hovered : icon.borderColor.rest,
-  strokeWidth: icon.borderWidth,
-});
-
 const getBorderColor = ({ tokens, ...props }: IconWrapperCSSProps) => {
   if (props.isDisabled) {
     return disabledBorder(tokens.icon);
@@ -69,7 +64,11 @@ const getBorderColor = ({ tokens, ...props }: IconWrapperCSSProps) => {
   if (props.isInvalid) {
     return invalidBorder(tokens.icon);
   }
-  return border({ tokens, ...props });
+
+  return {
+    stroke: tokens.icon.borderColor.rest,
+    strokeWidth: tokens.icon.borderWidth,
+  };
 };
 
 const getTickColor = (props: IconWrapperCSSProps) => {
