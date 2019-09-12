@@ -1,12 +1,5 @@
 import { keymap } from 'prosemirror-keymap';
-import {
-  Node,
-  Schema,
-  NodeType,
-  Fragment,
-  Slice,
-  ResolvedPos,
-} from 'prosemirror-model';
+import { Node, Schema, Fragment, ResolvedPos } from 'prosemirror-model';
 import {
   EditorState,
   Transaction,
@@ -14,20 +7,10 @@ import {
   TextSelection,
 } from 'prosemirror-state';
 import { hasParentNodeOfType } from 'prosemirror-utils';
-import {
-  splitListAtSelection,
-  insertTaskDecisionWithAnalytics,
-} from '../commands';
+import { insertTaskDecisionWithAnalytics } from '../commands';
 import { INPUT_METHOD } from '../../analytics';
 import { TaskDecisionListType } from '../types';
-import { Command } from '../../../types';
-import {
-  canSplit,
-  findWrapping,
-  Transform,
-  ReplaceAroundStep,
-} from 'prosemirror-transform';
-import { liftListItem } from 'prosemirror-schema-list';
+import { findWrapping, ReplaceAroundStep } from 'prosemirror-transform';
 import { autoJoin } from 'prosemirror-commands';
 import { findCutBefore } from '../../../utils/commands';
 
