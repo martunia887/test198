@@ -10,7 +10,11 @@ import { hasParentNodeOfType } from 'prosemirror-utils';
 import { insertTaskDecisionWithAnalytics } from '../commands';
 import { INPUT_METHOD } from '../../analytics';
 import { TaskDecisionListType } from '../types';
-import { findWrapping, ReplaceAroundStep } from 'prosemirror-transform';
+import {
+  findWrapping,
+  ReplaceAroundStep,
+  liftTarget,
+} from 'prosemirror-transform';
 import { autoJoin } from 'prosemirror-commands';
 import { findCutBefore } from '../../../utils/commands';
 
@@ -54,9 +58,13 @@ const unindent = autoJoin(
         return true;
       }
 
-      dispatch(
-        state.tr.lift(blockRange, blockRange.depth - 1).scrollIntoView(),
-      );
+      // ensure we can actually lift
+      const target = liftTarget(blockRange);
+      if (typeof target !== 'number') {
+        return true;
+      }
+
+      dispatch(state.tr.lift(blockRange, target).scrollIntoView());
     }
 
     return true;
