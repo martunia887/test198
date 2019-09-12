@@ -180,7 +180,7 @@ const backspace = autoJoin(
 
     return false;
   },
-  ['taskList'],
+  ['taskList', 'decisionList'],
 );
 
 const canSplitListItem = (tr: Transaction) => {
