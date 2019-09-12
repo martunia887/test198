@@ -22,10 +22,10 @@ export function Label({
   isDisabled,
   tokens,
   cssFn,
-  ...rest
 }: LabelProps) {
   return (
     <label
+      {...attributesFn({})}
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDown}
       onMouseLeave={onMouseLeave}
