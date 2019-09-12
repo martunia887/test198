@@ -1,5 +1,5 @@
 import { keymap } from 'prosemirror-keymap';
-import { Node, Schema, Fragment, ResolvedPos } from 'prosemirror-model';
+import { Node, Schema, Fragment, ResolvedPos, Slice } from 'prosemirror-model';
 import {
   EditorState,
   Transaction,
@@ -216,14 +216,11 @@ const splitListItemWith = (
 
   // and delete the action at the current pos
   // we can do this because we know either first new child will be taskItem or nothing at all
-  tr = tr.deleteRange(
-    tr.mapping.map($from.start()),
-    tr.mapping.map($from.end() + 1),
+  tr = tr.replace(
+    tr.mapping.map($from.start() - 2),
+    tr.mapping.map($from.end() + 2),
+    new Slice(Fragment.from(content), 0, 0),
   );
-
-  // taskList and taskItem positions collapse (nodes get deleted), so $from.pos is now the
-  // start of the split taskList or remaining nodes in doc
-  tr = tr.insert($from.pos - (shouldSplit ? 0 : 2), content);
 
   // put cursor inside paragraph
   tr = tr.setSelection(
@@ -247,6 +244,7 @@ const splitListItemWith = (
       const pos = tr.mapping.map($oldAfter.pos + 2);
       const $after = tr.doc.resolve(pos);
 
+      // FIXME: should be the whole block
       const blockRange = getBlockRange($after, $after);
       if (blockRange) {
         tr = tr.lift(blockRange, blockRange.depth - 1).scrollIntoView();
