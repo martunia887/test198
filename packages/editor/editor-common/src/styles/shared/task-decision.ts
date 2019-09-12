@@ -20,6 +20,7 @@ export const tasksAndDecisionsStyles = css`
   }
 
   div[data-task-list-local-id] div[data-task-list-local-id] {
+    margin-top: 0px;
     margin-left: 24px;
   }
 `;
