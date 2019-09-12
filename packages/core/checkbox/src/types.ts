@@ -1,14 +1,12 @@
 import React from 'react';
 import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
 import { CSSObject } from '@emotion/core';
-import { IconProps } from './elements/IconWrapper';
-import { LabelProps, LabelTextProps, LabelCSSProps } from './elements';
 
 export type ChildrenType = React.ReactChild;
 export type ComponentType = React.Component<{}, {}>;
 export type ElementType = React.ReactChild;
 
-type DefaultsType = {
+export type DefaultsType = {
   Label: {
     component: React.ComponentType<LabelProps>;
     cssFn: (state: LabelCSSProps) => CSSObject;
@@ -20,8 +18,8 @@ type DefaultsType = {
     attributesFn: (props: { [key: string]: any }) => any;
   };
   IconWrapper: {
-    component: React.ComponentType<IconProps>;
-    cssFn: (props: IconProps) => CSSObject;
+    component: React.ComponentType<IconWrapperProps>;
+    cssFn: (props: IconWrapperProps) => CSSObject;
     attributesFn: (props: Record<string, any>) => Record<string, any>;
   };
   Icon: {
@@ -32,7 +30,7 @@ type DefaultsType = {
   };
 };
 
-type OverridesType = {
+export type OverridesType = {
   Label?: {
     component?: React.ComponentType<LabelProps>;
     cssFn?: (defaultStyles: CSSObject, state: LabelCSSProps) => CSSObject;
@@ -47,8 +45,8 @@ type OverridesType = {
     attributesFn?: (props: Record<string, any>) => Record<string, any>;
   };
   IconWrapper?: {
-    component?: React.ComponentType<IconProps>;
-    cssFn?: (defaultStyles: CSSObject, props: IconProps) => CSSObject;
+    component?: React.ComponentType<IconWrapperProps>;
+    cssFn?: (defaultStyles: CSSObject, props: IconWrapperProps) => CSSObject;
     attributesFn?: (props: Record<string, any>) => Record<string, any>;
   };
   Icon?: {
@@ -276,4 +274,52 @@ export interface ThemeTokens {
 export interface ThemeProps {
   tokens: ComponentTokens;
   mode: string;
+}
+
+export interface LabelTextProps extends React.HTMLProps<HTMLSpanElement> {
+  attributesFn: (props: Record<string, any>) => Record<string, any>;
+  cssFn: (props: { tokens: ThemeTokens }) => CSSObject;
+  tokens: ThemeTokens;
+  children: React.ReactNode;
+}
+
+export interface LabelTextCSSProps {
+  tokens: ThemeTokens;
+}
+
+export interface LabelProps extends React.HTMLProps<HTMLInputElement> {
+  onMouseUp: React.MouseEventHandler;
+  onMouseDown: React.MouseEventHandler;
+  onMouseEnter: React.MouseEventHandler;
+  onMouseLeave: React.MouseEventHandler;
+  attributesFn: (props: Record<string, any>) => Record<string, any>;
+  cssFn: (props: LabelCSSProps) => CSSObject;
+  isDisabled?: boolean;
+  tokens: ThemeTokens;
+}
+
+export interface IconWrapperProps extends React.HTMLProps<HTMLLabelElement> {
+  attributesFn: (props: Record<string, any>) => any;
+  cssFn: (
+    props: Pick<IconWrapperProps, Exclude<keyof IconWrapperCSSProps, 'cssFn'>>,
+  ) => CSSObject;
+  tokens: ThemeTokens;
+  isChecked?: boolean;
+  isDisabled?: boolean;
+  isActive?: boolean;
+  isHovered?: boolean;
+  isFocused?: boolean;
+  isInvalid?: boolean;
+}
+
+export type IconWrapperCSSProps = Omit<
+  IconWrapperProps,
+  'attributesFn' | 'cssFn'
+>;
+
+export type LabelCSSProps = Pick<LabelProps, 'isDisabled' | 'tokens'>;
+
+export interface RequiredIndicatorProps
+  extends React.HTMLProps<HTMLSpanElement> {
+  tokens: ThemeTokens;
 }

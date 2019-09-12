@@ -1,16 +1,7 @@
 /** @jsx jsx */
 import { jsx, CSSObject } from '@emotion/core';
 import { defaultAttributesFn } from '../utils';
-import { ThemeTokens } from '../types';
-
-export interface LabelProps extends React.HTMLProps<HTMLInputElement> {
-  attributesFn: (props: Record<string, any>) => Record<string, any>;
-  cssFn: (props: LabelCSSProps) => CSSObject;
-  isDisabled?: boolean;
-  tokens: ThemeTokens;
-}
-
-export type LabelCSSProps = Pick<LabelProps, 'isDisabled' | 'tokens'>;
+import { LabelProps, LabelCSSProps } from '../types';
 
 export const labelCSS = ({ isDisabled, tokens }: LabelCSSProps): CSSObject => ({
   alignItems: 'flex-start',
@@ -23,13 +14,24 @@ export const labelCSS = ({ isDisabled, tokens }: LabelCSSProps): CSSObject => ({
 
 export function Label({
   children,
+  onMouseUp,
+  onMouseDown,
+  onMouseLeave,
+  onMouseEnter,
   attributesFn,
   isDisabled,
   tokens,
   cssFn,
 }: LabelProps) {
   return (
-    <label {...attributesFn({})} css={cssFn({ isDisabled, tokens })}>
+    <label
+      {...attributesFn({})}
+      onMouseUp={onMouseUp}
+      onMouseDown={onMouseDown}
+      onMouseLeave={onMouseLeave}
+      onMouseEnter={onMouseEnter}
+      css={cssFn({ isDisabled, tokens })}
+    >
       {children}
     </label>
   );

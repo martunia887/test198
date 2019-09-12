@@ -1,19 +1,11 @@
 /** @jsx jsx */
 import { jsx, CSSObject } from '@emotion/core';
 import { defaultAttributesFn } from '../utils';
-import { ThemeTokens, ThemeIconTokens } from '../types';
-import React from 'react';
-
-interface Props {
-  isActive?: boolean;
-  isChecked?: boolean | unknown;
-  isDisabled?: boolean;
-  isFocused?: boolean;
-  isInvalid?: boolean;
-  isHovered?: boolean;
-  rest?: any;
-  tokens: ThemeTokens;
-}
+import {
+  IconWrapperProps,
+  ThemeIconTokens,
+  IconWrapperCSSProps,
+} from '../types';
 
 const disabledBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.disabled,
@@ -40,12 +32,12 @@ const invalidBorder = (iconTokens: ThemeIconTokens) => ({
   strokeWidth: iconTokens.borderWidth,
 });
 
-const border = ({ isHovered, tokens: { icon } }: Props) => ({
+const border = ({ isHovered, tokens: { icon } }: IconWrapperCSSProps) => ({
   stroke: isHovered ? icon.borderColor.hovered : icon.borderColor.rest,
   strokeWidth: icon.borderWidth,
 });
 
-const getBorderColor = ({ tokens, ...props }: Props) => {
+const getBorderColor = ({ tokens, ...props }: IconWrapperCSSProps) => {
   if (props.isDisabled) {
     return disabledBorder(tokens.icon);
   }
@@ -64,7 +56,7 @@ const getBorderColor = ({ tokens, ...props }: Props) => {
   return border({ tokens, ...props });
 };
 
-const getTickColor = (props: Props) => {
+const getTickColor = (props: IconWrapperCSSProps) => {
   const {
     isChecked,
     isDisabled,
@@ -84,7 +76,7 @@ const getTickColor = (props: Props) => {
   return color;
 };
 
-const getBoxColor = (props: Props) => {
+const getBoxColor = (props: IconWrapperCSSProps) => {
   const {
     isChecked,
     isDisabled,
@@ -109,19 +101,7 @@ const getBoxColor = (props: Props) => {
   return color;
 };
 
-export interface IconProps extends React.HTMLProps<HTMLLabelElement> {
-  attributesFn: (props: Record<string, any>) => any;
-  cssFn: (props: Pick<Props, Exclude<keyof Props, 'cssFn'>>) => CSSObject;
-  tokens: ThemeTokens;
-  isChecked?: boolean;
-  isDisabled?: boolean;
-  isActive?: boolean;
-  isHovered?: boolean;
-  isFocused?: boolean;
-  isInvalid?: boolean;
-}
-
-export const iconWrapperCSS = (props: IconProps): CSSObject => ({
+export const iconWrapperCSS = (props: IconWrapperProps): CSSObject => ({
   lineHeight: 0,
   flexShrink: 0,
   color: getBoxColor(props),
@@ -149,7 +129,7 @@ export function IconWrapper({
   cssFn,
   children,
   ...props
-}: IconProps) {
+}: IconWrapperProps) {
   return <span css={cssFn(props)} {...attributesFn({})} children={children} />;
 }
 
