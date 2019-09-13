@@ -19,12 +19,19 @@ import {
   isFileIdentifier,
   isDifferentIdentifier,
   isImageRepresentationReady,
+  FileState,
 } from '@atlaskit/media-client';
 import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
 
 import { Subscription } from 'rxjs/Subscription';
 import { IntlProvider } from 'react-intl';
-import { CardAction, CardDimensions, CardProps, CardState } from '../..';
+import {
+  CardAction,
+  CardDimensions,
+  CardProps,
+  CardState,
+  CardStatus,
+} from '../..';
 import { CardView, CardViewBase } from '../cardView';
 import { LazyContent } from '../../utils/lazyContent';
 import { getDataURIDimension } from '../../utils/getDataURIDimension';
@@ -37,6 +44,8 @@ import {
   getAnalyticsStatusFromCardStatus,
   getCardProgressFromFileState,
   getAnalyticsErrorStateAttributes,
+  AnalyticsErrorStateAttributes,
+  AnalyticsLoadingAction,
 } from './getCardStatus';
 import { InlinePlayer, InlinePlayerBase } from '../inlinePlayer';
 import {
@@ -52,6 +61,10 @@ export class CardBase extends Component<
   CardState
 > {
   private hasBeenMounted: boolean = false;
+  private lastLoadingAnalyticsStatus: {
+    action?: AnalyticsLoadingAction;
+    errorState?: AnalyticsErrorStateAttributes;
+  } = {};
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
 
   subscription?: Subscription;
@@ -245,10 +258,6 @@ export class CardBase extends Component<
             dataURI = src;
           }
 
-          status = getCardStatusFromFileState(fileState, dataURI);
-          progress =
-            getCardProgressFromFileState(fileState, dataURI) || progress;
-
           const shouldFetchRemotePreview =
             !dataURI &&
             isImageRepresentationReady(fileState) &&
@@ -280,19 +289,14 @@ export class CardBase extends Component<
             }
           }
 
-          createAndFireCustomMediaEvent(
-            {
-              eventType: 'operational',
-              action: getAnalyticsStatusFromCardStatus(status),
-              actionSubject: 'mediaCardRender',
-              actionSubjectId: resolvedId,
-              attributes: {
-                fileAttributes: getAnalyticsFileAttributes(metadata),
-                ...getAnalyticsErrorStateAttributes(fileState),
-              },
-            },
-            createAnalyticsEvent,
-          );
+          status = getCardStatusFromFileState(fileState, dataURI);
+          progress =
+            getCardProgressFromFileState(fileState, dataURI) || progress;
+
+          this.fireLoadingStatusAnalyticsEvent(resolvedId, status, {
+            fileState,
+            metadata,
+          });
 
           this.notifyStateChange({
             metadata,
@@ -303,24 +307,63 @@ export class CardBase extends Component<
           });
         },
         error: error => {
-          createAndFireCustomMediaEvent(
-            {
-              eventType: 'operational',
-              action: 'failed',
-              actionSubject: 'mediaCardRender',
-              actionSubjectId: resolvedId,
-              attributes: {
-                failReason: 'media-client-error',
-                error: (error && error.message) || 'unknown error',
-              },
-            },
-            createAnalyticsEvent,
-          );
-
+          this.fireLoadingStatusAnalyticsEvent(resolvedId, 'error', { error });
           this.notifyStateChange({ error, status: 'error' });
         },
       });
   }
+
+  shouldFireLoadingStatusAnalyticsEvent = (
+    action: AnalyticsLoadingAction,
+    errorState: AnalyticsErrorStateAttributes,
+  ) => {
+    const previousFailReason =
+      this.lastLoadingAnalyticsStatus.errorState &&
+      this.lastLoadingAnalyticsStatus.errorState.failReason;
+    const previousErrorMessage =
+      this.lastLoadingAnalyticsStatus.errorState &&
+      this.lastLoadingAnalyticsStatus.errorState.error;
+    const isDifferentErrorState =
+      errorState.failReason !== previousFailReason ||
+      errorState.error !== previousErrorMessage;
+    const isDifferentAction = action !== this.lastLoadingAnalyticsStatus.action;
+    return isDifferentAction || isDifferentErrorState;
+  };
+
+  fireLoadingStatusAnalyticsEvent = (
+    resolvedId: string,
+    status: CardStatus,
+    options: { fileState?: FileState; metadata?: FileDetails; error?: Error },
+  ) => {
+    const { createAnalyticsEvent } = this.props;
+    const action: AnalyticsLoadingAction = getAnalyticsStatusFromCardStatus(
+      status,
+    );
+    const errorState = getAnalyticsErrorStateAttributes(
+      options.fileState,
+      options.error,
+    );
+
+    if (this.shouldFireLoadingStatusAnalyticsEvent(action, errorState)) {
+      this.lastLoadingAnalyticsStatus = {
+        action,
+        errorState,
+      };
+      createAndFireCustomMediaEvent(
+        {
+          eventType: 'operational',
+          action,
+          actionSubject: 'mediaCardRender',
+          actionSubjectId: resolvedId,
+          attributes: {
+            fileAttributes: getAnalyticsFileAttributes(options.metadata),
+            ...errorState,
+          },
+        },
+        createAnalyticsEvent,
+      );
+    }
+  };
 
   notifyStateChange = (state: Partial<CardState>) => {
     if (this.hasBeenMounted) {

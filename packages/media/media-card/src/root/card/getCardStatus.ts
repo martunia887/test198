@@ -67,7 +67,10 @@ export const getCardProgressFromFileState = (
   }
 };
 
-export const getAnalyticsStatusFromCardStatus = (cardStatus: CardStatus) => {
+export type AnalyticsLoadingAction = 'commenced' | 'succeeded' | 'failed';
+export const getAnalyticsStatusFromCardStatus = (
+  cardStatus: CardStatus,
+): AnalyticsLoadingAction => {
   switch (cardStatus) {
     case 'uploading':
     case 'loading':
@@ -81,8 +84,21 @@ export const getAnalyticsStatusFromCardStatus = (cardStatus: CardStatus) => {
   }
 };
 
-export const getAnalyticsErrorStateAttributes = (fileState: FileState) =>
-  ['error', 'failed-processing'].includes(fileState.status)
+export type AnalyticsErrorStateAttributes = {
+  failReason?: 'media-client-error' | 'file-status-error';
+  error?: string;
+};
+
+export const getAnalyticsErrorStateAttributes = (
+  fileState?: FileState,
+  error?: Error,
+): AnalyticsErrorStateAttributes =>
+  !fileState
+    ? {
+        failReason: 'media-client-error',
+        error: (error && error.message) || 'unknown error',
+      }
+    : ['error', 'failed-processing'].includes(fileState.status)
     ? {
         failReason: 'file-status-error',
         error:
