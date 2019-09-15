@@ -27,6 +27,8 @@ export type Props = {
   featureFlags?: MediaViewerFeatureFlags;
   mediaClient: MediaClient;
   itemSource: ItemSource;
+  withSidebar: boolean;
+  onNavigationChange?: (selectedItem: Identifier) => void;
 } & WithAnalyticsEventsProps;
 
 export class MediaViewerComponent extends React.Component<Props, {}> {
@@ -77,8 +79,10 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
   }
 
   render() {
+    const { withSidebar } = this.props;
+
     const content = (
-      <Blanket>
+      <Blanket withSidebar={withSidebar}>
         {<Shortcut keyCode={27} handler={this.onShortcutClosed} />}
         <Content onClose={this.onContentClose}>{this.renderContent()}</Content>
       </Blanket>
@@ -92,7 +96,13 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
   }
 
   private renderContent() {
-    const { selectedItem, mediaClient, onClose, itemSource } = this.props;
+    const {
+      selectedItem,
+      mediaClient,
+      onClose,
+      itemSource,
+      onNavigationChange,
+    } = this.props;
     const defaultSelectedItem = selectedItem;
 
     if (itemSource.kind === 'COLLECTION') {
@@ -103,6 +113,7 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
           collectionName={itemSource.collectionName}
           mediaClient={mediaClient}
           onClose={onClose}
+          onNavigationChange={onNavigationChange}
         />
       );
     } else if (itemSource.kind === 'ARRAY') {
@@ -115,6 +126,7 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
           items={items}
           mediaClient={mediaClient}
           onClose={onClose}
+          onNavigationChange={onNavigationChange}
         />
       );
     } else {

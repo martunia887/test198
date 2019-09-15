@@ -66,10 +66,9 @@ export class List extends React.Component<Props, State> {
   }
 
   onNavigationChange = (selectedItem: Identifier) => {
-    const { onNavigationChange, showControls } = this.props;
-    if (onNavigationChange) {
-      onNavigationChange(selectedItem);
-    }
+    const { onNavigationChange = () => {}, showControls } = this.props;
+
+    onNavigationChange(selectedItem);
     if (showControls) {
       showControls();
     }

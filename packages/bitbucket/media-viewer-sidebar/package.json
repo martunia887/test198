@@ -18,6 +18,7 @@
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
+    "@atlaskit/theme": "^9.2.2"
   },
   "peerDependencies": {
     "react": "^16.8.0",
@@ -25,6 +26,10 @@
   },
   "devDependencies": {
     "@atlaskit/docs": "^8.1.5",
+    "@atlaskit/icon": "^19.0.6",
+    "@atlaskit/media-core": "^30.0.14",
+    "@atlaskit/media-test-helpers": "^25.1.1",
+    "@atlaskit/media-viewer": "^43.4.1",
     "@atlaskit/page": "^11.0.8",
     "enzyme": "^3.7.0"
   }

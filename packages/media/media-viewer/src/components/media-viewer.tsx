@@ -30,6 +30,14 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
     return dataSource;
   };
 
+  componentWillMount() {
+    const { selectedItem, onNavigationChange } = this.props;
+
+    if (onNavigationChange) {
+      onNavigationChange(selectedItem);
+    }
+  }
+
   render(): JSX.Element {
     const {
       featureFlags,
@@ -39,6 +47,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
       collectionName,
       dataSource,
       pageSize,
+      onNavigationChange,
     } = this.props;
     const defaultPageSize = 30;
     const dataSourceWithSelectedItem = this.getDataSourceWithSelectedItem(
@@ -68,6 +77,8 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
           onClose={onClose}
           itemSource={itemSource}
           featureFlags={featureFlags}
+          withSidebar={!!onNavigationChange}
+          onNavigationChange={onNavigationChange}
         />
       );
     } else if (dataSourceWithSelectedItem.collectionName) {
@@ -80,6 +91,8 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
             onClose={onClose}
             itemSource={{ kind: 'ARRAY', items: [selectedItem] }}
             featureFlags={featureFlags}
+            withSidebar={!!onNavigationChange}
+            onNavigationChange={onNavigationChange}
           />
         );
       }
@@ -101,6 +114,8 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
           onClose={onClose}
           itemSource={itemSource}
           featureFlags={featureFlags}
+          withSidebar={!!onNavigationChange}
+          onNavigationChange={onNavigationChange}
         />
       );
     } else {

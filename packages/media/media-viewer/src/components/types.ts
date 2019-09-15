@@ -17,4 +17,7 @@ export interface MediaViewerProps {
   readonly onClose?: () => void;
 
   readonly featureFlags?: MediaViewerFeatureFlags;
+
+  readonly onNavigationChange?: (selectedItem: Identifier) => void;
+  readonly action?: Function;
 }

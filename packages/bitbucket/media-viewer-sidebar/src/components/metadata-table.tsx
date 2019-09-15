@@ -3,7 +3,7 @@ import * as styled from './styled';
 
 interface MetadataTableState {}
 interface MetadataTableProps {
-  meta?: { [key: string]: string | number | boolean };
+  meta?: { [key: string]: string | number | boolean | undefined };
 }
 
 export default class MetadataTable extends PureComponent<
@@ -19,16 +19,18 @@ export default class MetadataTable extends PureComponent<
 
     return (
       <styled.Table>
-        {Object.keys(meta).map(key => {
-          return (
-            <tr>
-              <td style={{ fontWeight: 'bold', textAlign: 'right' }}>
-                {key}:{' '}
-              </td>
-              <td>{meta[key]}</td>
-            </tr>
-          );
-        })}
+        <tbody>
+          {Object.keys(meta).map(key => {
+            return (
+              <tr key={key}>
+                <td style={{ fontWeight: 'bold', textAlign: 'right' }}>
+                  {key}:{' '}
+                </td>
+                <td>{meta[key]}</td>
+              </tr>
+            );
+          })}
+        </tbody>
       </styled.Table>
     );
   }

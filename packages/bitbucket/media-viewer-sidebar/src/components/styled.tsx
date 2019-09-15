@@ -7,6 +7,8 @@ import styled, { StyledComponentClass } from 'styled-components';
 import { gridSize } from '@atlaskit/theme';
 
 export const Sidebar = styled.div`
+  width: 25%;
+  margin-left: 75%;
   height: 100%;
   padding: ${gridSize() * 4}px;
 `;

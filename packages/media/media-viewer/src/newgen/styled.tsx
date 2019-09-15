@@ -22,7 +22,14 @@ export const mediaTypeIconColors = {
 
 export const blanketColor = colors.DN30;
 
-export const Blanket = styled.div`
+export interface BlanketProps {
+  withSidebar: boolean;
+}
+
+export const Blanket: ComponentClass<
+  ImgHTMLAttributes<{}> & BlanketProps
+> = styled.div`
+  ${({ withSidebar }) => (withSidebar ? 'width: 75%;' : '')}
   position: fixed;
   top: 0;
   left: 0;
@@ -77,8 +84,9 @@ export const CloseButtonWrapper = styled.div`
 
 export const ZoomWrapper = styled.div`
   width: 100%;
-  position: fixed;
+  position: absolute;
   bottom: 0;
+  left: 0;
   height: 98px;
   background-image: linear-gradient(to top, #0e1624, rgba(14, 22, 36, 0));
   opacity: 0.85;

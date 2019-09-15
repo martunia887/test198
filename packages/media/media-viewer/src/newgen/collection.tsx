@@ -21,6 +21,7 @@ export type Props = Readonly<
     collectionName: string;
     mediaClient: MediaClient;
     pageSize: number;
+    onNavigationChange?: (selectedItem: Identifier) => void;
   } & WithShowControlMethodProp
 >;
 
@@ -125,12 +126,18 @@ export class Collection extends React.Component<Props, State> {
   }
 
   private onNavigationChange = (item: Identifier) => {
-    const { mediaClient, collectionName, pageSize } = this.props;
+    const {
+      mediaClient,
+      collectionName,
+      pageSize,
+      onNavigationChange: onNavigationChangeConsumer = () => {},
+    } = this.props;
     if (this.shouldLoadNext(item)) {
       mediaClient.collection.loadNextPage(collectionName, {
         limit: pageSize,
       });
     }
+    onNavigationChangeConsumer(item);
   };
 
   private shouldLoadNext(selectedItem: Identifier): boolean {
