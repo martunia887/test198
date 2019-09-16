@@ -1,7 +1,14 @@
 import Environments from '../utils/environments';
 
+export interface ServerError {
+  message: string;
+  name: string;
+  resourceUrl: string;
+  status: number;
+}
+
 export interface CardClient {
-  fetchData(url: string): Promise<JsonLd>;
+  fetchData(url: string): Promise<JsonLd | ServerError>;
 }
 
 export interface CardRequest {

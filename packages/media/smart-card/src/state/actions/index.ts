@@ -32,7 +32,7 @@ import {
   screenAuthPopupEvent,
 } from '../../utils/analytics';
 import { useSmartLinkContext } from '../context';
-import { JsonLd } from '../../client/types';
+import { JsonLd, ServerError } from '../../client/types';
 
 export function useSmartCardActions(
   url: string,
@@ -90,7 +90,14 @@ export function useSmartCardActions(
         return connections.client.fetchData(resourceUrl).then(
           response => {
             isCompleted = true;
-            handleResolvedLinkResponse(resourceUrl, response);
+            if (
+              'status' in response &&
+              (response as ServerError).status !== 200
+            ) {
+              handleResolvedLinkError(resourceUrl, response as ServerError);
+            } else {
+              handleResolvedLinkResponse(resourceUrl, response as JsonLd);
+            }
           },
           error => {
             isCompleted = true;

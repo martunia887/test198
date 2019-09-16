@@ -1,0 +1,1 @@
+Ensure smartcard client handles server error correctly
