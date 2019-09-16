@@ -1,5 +1,29 @@
 # @atlaskit/button
 
+## 13.3.0
+
+### Minor Changes
+
+- [minor][66e147e6a1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/66e147e6a1):
+
+  Adding an optional prop `testId` that will set the attribute value `data-testid`. It will help products to write better integration and end to end tests.
+
+## 13.2.0
+
+### Minor Changes
+
+- [minor][93022be303](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/93022be303):
+
+  Align button and subtle button text colour with ADG guidelines (improved contrast)
+
+## 13.1.7
+
+### Patch Changes
+
+- [patch][67a3a1ee02](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/67a3a1ee02):
+
+  Converts prop types to interfaces
+
 ## 13.1.6
 
 ### Patch Changes
