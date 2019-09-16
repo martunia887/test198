@@ -8,6 +8,7 @@ import { ItemViewer } from './item-viewer';
 import { HeaderWrapper, ListWrapper } from './styled';
 import { Navigation } from './navigation';
 import Header from './header';
+import { MediaViewerAction } from 'src/components/types';
 
 export type Props = Readonly<
   {
@@ -16,6 +17,7 @@ export type Props = Readonly<
     defaultSelectedItem: Identifier;
     items: Identifier[];
     mediaClient: MediaClient;
+    action?: MediaViewerAction;
   } & WithShowControlMethodProp
 >;
 

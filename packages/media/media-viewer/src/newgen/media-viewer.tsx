@@ -20,16 +20,7 @@ import { List } from './list';
 import { Collection } from './collection';
 import { Content } from './content';
 import { Blanket } from './styled';
-
-// WORK IN PROGRESS
-// MediaViewer might want to consume an array of actions that can be loaded into the header
-interface MediaViewerAction {
-  icon?: Node;
-  label?: string;
-  handler: EventHandler;
-}
-
-type EventHandler = (identifier: Identifier) => void;
+import { MediaViewerAction } from 'src/components/types';
 
 export type Props = {
   action?: MediaViewerAction;

@@ -13,6 +13,7 @@ import { toIdentifier } from './utils';
 import { Spinner } from './loading';
 import { MediaCollectionItem } from '@atlaskit/media-store';
 import { WithShowControlMethodProp } from '@atlaskit/media-ui';
+import { MediaViewerAction } from 'src/components/types';
 
 export type Props = Readonly<
   {
@@ -22,6 +23,7 @@ export type Props = Readonly<
     mediaClient: MediaClient;
     pageSize: number;
     onNavigationChange?: (selectedItem: Identifier) => void;
+    action?: MediaViewerAction;
   } & WithShowControlMethodProp
 >;
 

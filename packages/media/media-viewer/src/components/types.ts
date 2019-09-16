@@ -6,6 +6,16 @@ export interface MediaViewerDataSource {
   collectionName?: string;
 }
 
+export type EventHandler = (identifier: Identifier) => void;
+
+// WORK IN PROGRESS
+// MediaViewer might want to consume an array of actions that can be loaded into the header
+export interface MediaViewerAction {
+  icon?: React.ReactChild;
+  label?: string;
+  handler: EventHandler;
+}
+
 export interface MediaViewerProps {
   readonly mediaClient: MediaClient;
   readonly selectedItem: Identifier;
@@ -19,5 +29,5 @@ export interface MediaViewerProps {
   readonly featureFlags?: MediaViewerFeatureFlags;
 
   readonly onNavigationChange?: (selectedItem: Identifier) => void;
-  readonly action?: Function;
+  readonly action?: MediaViewerAction;
 }

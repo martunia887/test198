@@ -112,7 +112,9 @@ export default class ExampleViewer extends React.Component<{}, State> {
               dataSource={{ list: items }}
               collectionName={defaultCollectionName}
               onClose={this.closeMediaViewer}
-              onNavigationChange={this.updateSidebar}
+              onNavigationChange={
+                isSidebarOpen ? this.updateSidebar : undefined
+              }
             />
 
             {isSidebarOpen ? (
