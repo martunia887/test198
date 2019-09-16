@@ -101,7 +101,7 @@ function calcMargin(layout: MediaSingleLayout): string {
     case 'wrap-left':
       return '12px 24px 12px auto';
     default:
-      return '24px auto';
+      return '12px auto';
   }
 }
 
