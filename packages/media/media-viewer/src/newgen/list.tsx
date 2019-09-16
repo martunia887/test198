@@ -37,13 +37,14 @@ export class List extends React.Component<Props, State> {
   }
 
   renderContent(items: Identifier[]) {
-    const { mediaClient, onClose, showControls } = this.props;
+    const { action, mediaClient, onClose, showControls } = this.props;
     const { selectedItem } = this.state;
 
     return (
       <ListWrapper>
         <HeaderWrapper className={hideControlsClassName}>
           <Header
+            action={action}
             mediaClient={mediaClient}
             identifier={selectedItem}
             onClose={onClose}

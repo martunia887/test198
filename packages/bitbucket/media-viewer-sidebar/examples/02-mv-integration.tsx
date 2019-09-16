@@ -18,6 +18,7 @@ import meta from '../example-helpers/meta/meta1';
 type SyncIdentifier = Omit<Identifier, 'id'> & { id?: string };
 interface State {
   openMediaId?: SyncIdentifier;
+  isSidebarOpen: boolean;
 }
 
 const mediaClientConfig = createStorybookMediaClientConfig();
@@ -44,16 +45,12 @@ const toSyncIdentifier = async (id: Identifier) =>
 export default class ExampleViewer extends React.Component<{}, State> {
   state = {
     openMediaId: undefined,
+    isSidebarOpen: false,
   };
 
-  openSidebar = async (mediaId: Identifier) => {
-    this.setState({
-      openMediaId: await toSyncIdentifier(mediaId),
-    });
-  };
-
-  closeSidebar = () => {
-    this.setState({ openMediaId: undefined });
+  toggleSidebar = (isSidebarOpen: boolean) => {
+    console.log('toggle sidebar');
+    this.setState({ isSidebarOpen });
   };
 
   // when closing viewer we also need to close sidebar
@@ -84,25 +81,23 @@ export default class ExampleViewer extends React.Component<{}, State> {
   });
 
   getToggleAction = () => {
-    const isSidebarOpen = !!this.state.openMediaId;
-
-    if (isSidebarOpen) {
+    if (this.state.isSidebarOpen) {
       return {
         icon: <InfoIcon label="show" />,
         label: 'Show sidebar',
-        handler: this.openSidebar,
+        handler: () => this.toggleSidebar(false),
       };
     } else {
       return {
         icon: <InfoIcon label="hide" />,
         label: 'Hide sidebar',
-        handler: this.closeSidebar,
+        handler: () => this.toggleSidebar(true),
       };
     }
   };
 
   render() {
-    const { openMediaId } = this.state;
+    const { isSidebarOpen, openMediaId } = this.state;
     const isMediaViewerOpen = !!openMediaId;
 
     return (
@@ -111,18 +106,18 @@ export default class ExampleViewer extends React.Component<{}, State> {
         {isMediaViewerOpen && (
           <>
             <MediaViewer
+              action={this.getToggleAction()}
               mediaClientConfig={mediaClientConfig}
               selectedItem={items[0]}
               dataSource={{ list: items }}
               collectionName={defaultCollectionName}
               onClose={this.closeMediaViewer}
               onNavigationChange={this.updateSidebar}
-              //action={this.getToggleAction}
             />
 
-            {openMediaId ? (
+            {isSidebarOpen ? (
               <MediaViewerSidebar>
-                <h2>File details</h2>
+                <h2 style={{ color: 'white' }}>File details</h2>
                 <MetadataTable meta={this.getMetaForId(openMediaId!)} />
               </MediaViewerSidebar>
             ) : null}

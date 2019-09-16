@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
 import deepEqual from 'deep-equal';
 import {
   hideControlsClassName,
+  MediaButton,
   messages,
   toHumanReadableMediaSize,
 } from '@atlaskit/media-ui';
@@ -129,10 +130,21 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
   };
 
   render() {
+    const { action } = this.props;
+
     return (
       <HeaderWrapper className={hideControlsClassName}>
         <LeftHeader>{this.renderMetadata()}</LeftHeader>
-        <RightHeader>{this.renderDownload()}</RightHeader>
+        <RightHeader>
+          {this.renderDownload()}
+          {action && (
+            <MediaButton
+              appearance={'toolbar' as any}
+              iconBefore={action.icon}
+              onClick={() => action.handler()}
+            />
+          )}
+        </RightHeader>
       </HeaderWrapper>
     );
   }

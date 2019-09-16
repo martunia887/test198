@@ -53,6 +53,7 @@ export class Collection extends React.Component<Props, State> {
 
   render() {
     const {
+      action,
       defaultSelectedItem,
       mediaClient,
       onClose,
@@ -70,6 +71,7 @@ export class Collection extends React.Component<Props, State> {
 
         return (
           <List
+            action={action}
             items={identifiers}
             defaultSelectedItem={item}
             mediaClient={mediaClient}

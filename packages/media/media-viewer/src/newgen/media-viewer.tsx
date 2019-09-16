@@ -21,7 +21,18 @@ import { Collection } from './collection';
 import { Content } from './content';
 import { Blanket } from './styled';
 
+// WORK IN PROGRESS
+// MediaViewer might want to consume an array of actions that can be loaded into the header
+interface MediaViewerAction {
+  icon?: Node;
+  label?: string;
+  handler: EventHandler;
+}
+
+type EventHandler = (identifier: Identifier) => void;
+
 export type Props = {
+  action?: MediaViewerAction;
   onClose?: () => void;
   selectedItem?: Identifier;
   featureFlags?: MediaViewerFeatureFlags;
@@ -97,6 +108,7 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
 
   private renderContent() {
     const {
+      action,
       selectedItem,
       mediaClient,
       onClose,
@@ -108,6 +120,7 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
     if (itemSource.kind === 'COLLECTION') {
       return (
         <Collection
+          action={action}
           pageSize={itemSource.pageSize}
           defaultSelectedItem={defaultSelectedItem}
           collectionName={itemSource.collectionName}
@@ -122,6 +135,7 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
 
       return (
         <List
+          action={action}
           defaultSelectedItem={defaultSelectedItem || firstItem}
           items={items}
           mediaClient={mediaClient}
