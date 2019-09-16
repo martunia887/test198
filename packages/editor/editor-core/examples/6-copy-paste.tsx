@@ -30,6 +30,7 @@ import {
   videoFileId,
 } from '@atlaskit/media-test-helpers';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { getFileStreamsCache } from '@atlaskit/media-core';
 
 const Wrapper = styled.div`
   box-sizing: border-box;
@@ -449,13 +450,31 @@ class ExampleEditorComponent extends React.Component<
     );
   };
 
+  clearMediaCache = () => {
+    console.log(getFileStreamsCache().streams.keys());
+    getFileStreamsCache().removeAll();
+  };
+
+  renderHeader = () => {
+    return (
+      <div>
+        <Button appearance="primary" onClick={this.clearMediaCache}>
+          Clear media cache
+        </Button>
+      </div>
+    );
+  };
+
   render() {
     return (
-      <Wrapper>
-        {this.renderEditor(defaultCollectionName)}
-        {this.renderEditor(defaultMediaPickerCollectionName)}
-        {this.renderRenderer()}
-      </Wrapper>
+      <div>
+        {this.renderHeader()}
+        <Wrapper>
+          {this.renderEditor(defaultCollectionName)}
+          {this.renderEditor(defaultMediaPickerCollectionName)}
+          {this.renderRenderer()}
+        </Wrapper>
+      </div>
     );
   }
 }
