@@ -63,7 +63,7 @@ export type Reducer<PluginState, Action> = (
   action: Action,
 ) => PluginState;
 
-type MapState<PluginState> = (
+export type MapState<PluginState> = (
   tr: Transaction,
   pluginState: PluginState,
 ) => PluginState;

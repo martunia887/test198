@@ -7,15 +7,31 @@ import {
 } from '../../types';
 import { Dispatch } from '../../../../event-dispatcher';
 import { handleMouseDown, handleMouseMove } from './event-handlers';
-import { pluginFactory } from '../../../../utils/plugin-state-factory';
+import {
+  pluginFactory,
+  MapState,
+} from '../../../../utils/plugin-state-factory';
 import reducer from './reducer';
 import { setResizeHandlePos } from './commands';
 
 export const pluginKey = new PluginKey('tableFlexiColumnResizing');
 
+const cleanState: MapState<ColumnResizingPluginState> = (tr, state) => {
+  return {
+    ...state,
+    resizeHandlePos: null,
+    dragging: null,
+    lastClick: null,
+  };
+};
+
 const { createPluginState, createCommand, getPluginState } = pluginFactory(
   pluginKey,
   reducer,
+  {
+    onDocChanged: cleanState,
+    onSelectionChanged: cleanState,
+  },
 );
 
 export function createPlugin(
