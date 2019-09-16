@@ -64,7 +64,7 @@ export default class CheckboxIcon extends Component<CheckboxIconProps, {}> {
     const { component: IconWrapper, ...iconWrapperOverrides } = getOverrides(
       'IconWrapper',
     );
-    const { component: IndeterminateIcon } = getOverrides('IconIndeterminate');
+    const { component: IconIndeterminate } = getOverrides('IconIndeterminate');
     const { component: Icon } = getOverrides('Icon');
     return (
       <Theme.Provider value={theme}>
@@ -83,7 +83,7 @@ export default class CheckboxIcon extends Component<CheckboxIconProps, {}> {
                   isInvalid={isInvalid}
                 >
                   {isIndeterminate ? (
-                    <IndeterminateIcon
+                    <IconIndeterminate
                       primaryColor={primaryColor}
                       secondaryColor={secondaryColor}
                       size={tokens.icon.size}
