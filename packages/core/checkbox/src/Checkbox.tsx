@@ -24,6 +24,9 @@ import { CheckboxProps, CheckboxDefaults, CheckboxOverrides } from './types';
 const defaults: CheckboxDefaults = {
   Label: LabelOverrides,
   LabelText: LabelTextOverrides,
+  HiddenCheckbox: {
+    attributesFn: () => ({}),
+  },
 };
 
 interface State {
@@ -150,13 +153,8 @@ class Checkbox extends Component<CheckboxProps, State> {
       value,
       isRequired,
       //props not passed into HiddenCheckbox
-      defaultChecked,
-      inputRef,
       isChecked: propsIsChecked,
-      isFullWidth,
-      onChange,
       theme,
-      ...rest
     } = this.props;
 
     const isChecked =
@@ -171,6 +169,9 @@ class Checkbox extends Component<CheckboxProps, State> {
     const { component: Label, ...labelOverrides } = getOverrides('Label');
     const { component: LabelText, ...labelTextOverrides } = getOverrides(
       'LabelText',
+    );
+    const { attributesFn: hiddenCheckboxAttributesFn } = getOverrides(
+      'HiddenCheckbox',
     );
 
     return (
@@ -202,7 +203,7 @@ class Checkbox extends Component<CheckboxProps, State> {
                       name={name}
                       ref={r => (this.checkbox = r)}
                       required={isRequired}
-                      {...rest}
+                      attributesFn={hiddenCheckboxAttributesFn}
                     />
                     <CheckboxIcon
                       theme={theme}

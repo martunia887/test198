@@ -6,6 +6,11 @@ export type ChildrenType = React.ReactChild;
 export type ComponentType = React.Component<{}, {}>;
 export type ElementType = React.ReactChild;
 
+/**
+ *
+ * OVERRIDE TYPES
+ *
+ **/
 export type DefaultsType = {
   Label: {
     component: React.ComponentType<LabelProps>;
@@ -27,6 +32,11 @@ export type DefaultsType = {
   };
   IconIndeterminate: {
     component: React.ComponentType<any>;
+  };
+  HiddenCheckbox: {
+    attributesFn: (
+      props: { disabled: boolean; checked: boolean; required: boolean },
+    ) => Record<string, any>;
   };
 };
 
@@ -55,10 +65,21 @@ export type OverridesType = {
   IconIndeterminate?: {
     component?: React.ComponentType<any>;
   };
+  HiddenCheckbox?: {
+    attributesFn?: (
+      props: { disabled: boolean; checked: boolean; required: boolean },
+    ) => Record<string, any>;
+  };
 };
 
-export type CheckboxDefaults = Pick<DefaultsType, 'Label' | 'LabelText'>;
-export type CheckboxOverrides = Pick<OverridesType, 'Label' | 'LabelText'>;
+export type CheckboxDefaults = Pick<
+  DefaultsType,
+  'Label' | 'LabelText' | 'HiddenCheckbox'
+>;
+export type CheckboxOverrides = Pick<
+  OverridesType,
+  'Label' | 'LabelText' | 'HiddenCheckbox'
+>;
 
 export type CheckboxIconDefaults = Pick<
   DefaultsType,
@@ -68,6 +89,14 @@ export type CheckboxIconOverrides = Pick<
   OverridesType,
   'Icon' | 'IconWrapper' | 'IconIndeterminate'
 >;
+
+/**
+ *
+ *
+ * CHECKBOXICON PROPTYPES
+ *
+ *
+ **/
 
 export interface CheckboxIconProps {
   /** Sets the checkbox icon active state. */
@@ -93,15 +122,30 @@ export interface CheckboxIconProps {
   secondaryColor?: any;
   /** The label for icon to be displayed */
   label: any;
+  /** 
+   A prop for adding targeted customisations to the `CheckboxIcon` component.
+   Similar to the overrides prop on the `Checkbox` component, but with a subset of the properties (`Icon`, `IconIndeterminate` and `IconWrapper`)
+   
+   For a detailed explanation of how to use this prop, 
+   please see the overrides section of the `@atlaskit/checkbox` documentation. 
+  */
   overrides?: CheckboxIconOverrides;
-  theme?: (
-    current: (props: ThemeProps) => ThemeTokens,
-    props: ThemeProps,
-  ) => ThemeTokens;
+  /**
+   A prop for making thematic changes to the `CheckboxIcon` component using component tokens.
+   For more information on how theming works for this component, please see the theming guide in the `@atlaskit/checkbox` documentation. 
+   */
+  theme?: ThemeFn;
 }
 
+/**
+ *
+ *
+ * CHECKBOX PROPTYPES
+ *
+ *
+ **/
+
 export interface CheckboxProps extends WithAnalyticsEventsProps {
-  overrides?: OverridesType;
   /** Sets whether the checkbox begins checked. */
   defaultChecked?: boolean;
   /** id assigned to input */
@@ -135,13 +179,30 @@ export interface CheckboxProps extends WithAnalyticsEventsProps {
    * be called with an object containing the react synthetic event. Use currentTarget to get value, name and checked
    */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => any;
-  theme?: (
-    current: (props: ThemeProps) => ThemeTokens,
-    props: ThemeProps,
-  ) => ThemeTokens;
+  /** 
+   A prop for adding targeted customisations to the Checkbox component 
+   For a detailed explanation of how to use this prop, 
+   please see the overrides section of the @atlaskit/checkbox documentation. 
+  */
+  overrides?: OverridesType;
+  /**
+   A prop for making thematic changes to the `Checkbox` component using component tokens.
+   For more information on how theming works for this component, please see the theming guide in the @atlaskit/checkbox documentation. 
+   */
+  theme?: ThemeFn;
   /** The value to be used in the checkbox input. This is the value that will be returned on form submission. */
   value?: number | string;
 }
+
+/**
+ *
+ * THEME TYPES
+ *
+ */
+
+export type ThemeFn = (current: PrevThemeFn, props: ThemeProps) => ThemeTokens;
+
+export type PrevThemeFn = (props: ThemeProps) => ThemeTokens;
 
 interface ModeValue {
   light: string;
@@ -277,6 +338,12 @@ export interface ThemeProps {
   tokens: ComponentTokens;
   mode: string;
 }
+
+/**
+ *
+ * OVERRIDE ELEMENT TYPES
+ *
+ */
 
 export interface LabelTextProps extends React.HTMLProps<HTMLSpanElement> {
   attributesFn: (props: Record<string, any>) => Record<string, any>;
