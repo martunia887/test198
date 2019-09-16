@@ -1,16 +1,21 @@
 import React from 'react';
-import { md, Example, code, Props } from '@atlaskit/docs';
+import { md, Example, code } from '@atlaskit/docs';
 
 export default md`
 The overrides prop is an escape hatch for more granular customisation of the checkbox component. 
-The signature for this prop is as follows:
+The shape of this prop is more or less 
 
-${(
-  <Props
-    heading="Overrides Prop"
-    props={require('!!extract-react-types-loader!../docs/type-docs/Overrides')}
-  />
-)}
+${code`
+overrides = {
+  [OverrideableComponent]: {
+    component: React.ComponentType<ComponentProps>
+    cssFn: (defaultStyles, state) => CSSObject
+    attributesFn: (props) => Record<string, any> 
+  }
+}
+`}
+
+For a more detailed look at the shape of this prop, please see the prop documentation at the [bottom of the page]();
 
 ## Customising components using the \`overrides\` prop
 There may be scenarios where neither \`style\` customisation, nor \`theme\` customisations will be enough 
@@ -48,7 +53,7 @@ ${(
 
 ## Applying CSS customisations using the \`overrides\` prop
 There will be scenarios where theme isn't adequate for the type of style customisations your usecase requires. 
-In these cases, @atlaskit/checkbox exposes more granular control of the application of CSS through a \`cssFn\` property that can specified in the passed in overrides object.
+In these cases, @atlaskit/checkbox exposes more granular control of the application of CSS through a \`cssFn\` property be specified in the passed in overrides object.
 This is useful for scenarios where you want to augment how a particular theme token is being applied to your styles or if you have customisations 
 that the theme tokens do not support.
 
@@ -75,6 +80,7 @@ const customIconWrapperStyles = (defaultStyles: any) => {
 `}
 
 Below is an example of using the \`cssFn\` to augment the transition styles of an instance of @atlaskit/checkbox
+
 ${(
   <Example
     packageName="@atlaskit/checkbox"

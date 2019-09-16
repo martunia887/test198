@@ -3,8 +3,6 @@ import { md, Example, code } from '@atlaskit/docs';
 import SectionMessage from '@atlaskit/section-message';
 
 export default md`
-
-
 ${(
   <SectionMessage title="Deprecated Component" appearance="info">
     {md`
@@ -55,8 +53,7 @@ ${(
 
 ### Methods for applying the theme prop
 There are **two approaches** to defining a custom checkbox. 
-
-The first is to wrap buttons in a ThemeProvider:
+The first is to wrap our component in a ThemeProvider provided by the package:
 
 ${code`
 import React from 'react';
@@ -70,7 +67,7 @@ import Checkbox, { Theme as CheckboxTheme } from '@atlaskit/checkbox';
 </CheckboxTheme.Provider>
 `}
 
-The second approach is to create a wrapped Button component that passes in all existing props, as well as a custom \`theme\` prop:
+The second approach is to pass in theme customisations to the \`theme\` prop of the component:
 
 ${code`
 import React from 'react';
@@ -89,15 +86,24 @@ export default (props) => (
 
 ### Building the theme prop
 
-In both cases, Checkbox's \`theme\` prop expects a theming function, which is called by the theming API to style Checkbox. \`theme\` should have the following signature:
+In both cases, Checkbox's \`theme\` prop and the \`value\` prop of the Checkbox ThemeProvider expects a theming function. 
+This function should have the following signature:
 
 \`theme: (current, props) => ThemeTokens\`
 
 Where:
-- **current** is the built-in ADG theme function
+- **current** is either the default theme function, or the theme function passed down from a Checkbox ThemeProvider in upper scope. 
 - **props** is the set of props passed into Checkbox
 
 How exactly the default props are modified is up to you; a common implementation is used in the example above, and follows 3 steps.
+### 2 - Import types:
+Before you start, please import the following two types from the @atlaskit/checkbox package:
+* ComponentTokens: This is the type interface for the component tokens object that defines themed values.
+* ThemeFn: This is the type interface for the \`theme\` prop or \`value\` prop passed into the Checkbox component or Checkbox ThemeProvider respectively.
+
+${code`
+import { ComponentTokens, ThemeFn } from '@atlaskit/checkbox/types;
+`}
 
 #### 1 – Create your custom token set:
 
@@ -121,9 +127,9 @@ const newThemeTokens: ComponentTokens = {
 In the basic case, we just want to apply our new tokens over the top of the current token set, keeping any tokens we haven't specified untouched. This can be performed using an _object merge_ operation; Lodash provides one such function.
 
 ${code`
-const customTheme = (
-current: (props: { tokens: ComponentTokens; mode: string }) => ThemeTokens,
-{ tokens, mode }: { tokens: ComponentTokens; mode: string },
+const customTheme: ThemeFn = (
+current: (props,
+{ tokens, mode },
 ) => {
 const mergedTokens = merge(tokens, newThemeTokens);
 return current({ tokens: mergedTokens, mode });
