@@ -1,16 +1,12 @@
 import { Node as PMNode } from 'prosemirror-model';
-import {
-  tableCellMinWidth,
-  tableNewColumnMinWidth,
-  calcTableColumnWidths,
-} from '@atlaskit/editor-common';
+import { tableCellMinWidth } from '@atlaskit/editor-common';
 import { growColumn, shrinkColumn } from './resize-logic';
 import {
   ColumnState,
   getCellsRefsInColumn,
   getColumnStateFromDOM,
 } from './column-state';
-import { insertColgroupFromNode, hasTableBeenResized } from './colgroup';
+import { insertColgroupFromNode } from './colgroup';
 
 export interface ResizeState {
   cols: ColumnState[];
@@ -32,17 +28,6 @@ export const getResizeState = ({
   start: number;
   domAtPos: (pos: number) => { node: Node; offset: number };
 }): ResizeState => {
-  if (hasTableBeenResized(table)) {
-    return {
-      cols: calcTableColumnWidths(table).map((width, index) => ({
-        width: width === 0 ? tableNewColumnMinWidth : width,
-        minWidth: width === 0 ? tableNewColumnMinWidth : minWidth,
-        index,
-      })),
-      maxSize,
-    };
-  }
-
   // Getting the resize state from DOM
   const colgroupChildren = insertColgroupFromNode(tableRef, table);
   return {
