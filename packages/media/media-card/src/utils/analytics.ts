@@ -57,11 +57,13 @@ export const getAnalyticsFileAttributes = (
 });
 
 export function getUIAnalyticsContext(
+  actionSubjectId: string,
   metadata?: FileDetails,
 ): MediaCardAnalyticsPayolad {
   const fileAttributes = getAnalyticsFileAttributes(metadata);
 
   return {
+    actionSubjectId,
     attributes: {
       packageName,
       ...getBaseAnalyticsContext(),

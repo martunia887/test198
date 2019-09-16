@@ -24,6 +24,13 @@ import { shouldDisplayImageThumbnail } from '../../utils/shouldDisplayImageThumb
 import { ProgressBar } from '../../utils/progressBar';
 import CardActions from '../../utils/cardActions';
 
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import { createAndFireCustomMediaEvent } from '../../utils/analytics';
+import { AnalyticsLoadingAction } from '../../root/card/getCardStatus';
+
 export interface FileCardImageViewProps {
   readonly mediaName?: string;
   readonly mediaType?: MediaType;
@@ -47,7 +54,12 @@ export interface FileCardImageViewProps {
   readonly previewOrientation?: number;
 }
 
-export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
+class FileCardImageViewBase extends Component<
+  FileCardImageViewProps & WithAnalyticsEventsProps,
+  {}
+> {
+  private lastAnalyticsAction: AnalyticsLoadingAction | undefined;
+
   static defaultProps = {
     resizeMode: 'crop',
     disableOverlay: false,
@@ -172,10 +184,45 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
           crop={this.isCropped}
           stretch={this.isStretched}
           previewOrientation={previewOrientation}
+          onImageLoad={() => {
+            this.fireLoadingStatusAnalyticsEvent('succeeded');
+          }}
+          onImageError={() => {
+            this.fireLoadingStatusAnalyticsEvent('failed');
+          }}
         />
       );
+    } else {
+      this.fireLoadingStatusAnalyticsEvent('succeeded');
     }
     return null;
+  };
+
+  shouldfireLoadingStatusAnalyticsEvent = (action: AnalyticsLoadingAction) =>
+    !this.lastAnalyticsAction || this.lastAnalyticsAction !== action;
+
+  fireLoadingStatusAnalyticsEvent = (action: AnalyticsLoadingAction) => {
+    const { createAnalyticsEvent } = this.props;
+
+    if (this.shouldfireLoadingStatusAnalyticsEvent(action)) {
+      this.lastAnalyticsAction = action;
+      createAndFireCustomMediaEvent(
+        {
+          eventType: 'operational',
+          action,
+          actionSubject: 'mediaCardRender',
+          ...(action === 'failed'
+            ? {
+                attributes: {
+                  failReason: 'file-uri-error',
+                  error: 'unknown error',
+                },
+              }
+            : {}),
+        },
+        createAnalyticsEvent,
+      );
+    }
   };
 
   private renderProgressBar = () => {
@@ -284,4 +331,4 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
   }
 }
 
-export default FileCardImageView;
+export const FileCardImageView = withAnalyticsEvents()(FileCardImageViewBase);

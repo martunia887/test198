@@ -20,6 +20,7 @@ import {
   isDifferentIdentifier,
   isImageRepresentationReady,
   FileState,
+  ExternalImageIdentifier,
 } from '@atlaskit/media-client';
 import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
 
@@ -65,6 +66,7 @@ export class CardBase extends Component<
     action?: AnalyticsLoadingAction;
     errorState?: AnalyticsErrorStateAttributes;
   } = {};
+  private resolvedId: string = 'not-yet-resolved';
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
 
   subscription?: Subscription;
@@ -183,63 +185,64 @@ export class CardBase extends Component<
     }
   };
 
-  async subscribe(identifier: Identifier, mediaClient: MediaClient) {
+  subscribe(identifier: Identifier, mediaClient: MediaClient) {
     const { isCardVisible } = this.state;
-    const { createAnalyticsEvent } = this.props;
     if (!isCardVisible) {
       return;
     }
-
     if (identifier.mediaItemType === 'external-image') {
-      const { dataURI, name } = identifier;
-      createAndFireCustomMediaEvent(
-        {
-          eventType: 'operational',
-          action: 'commenced',
-          actionSubject: 'mediaCardRender',
-          actionSubjectId: 'url',
-        },
-        createAnalyticsEvent,
-      );
-
-      this.setState({
-        status: 'complete',
-        dataURI,
-        metadata: {
-          id: dataURI,
-          name: name || dataURI,
-          mediaType: 'image',
-        },
-      });
-
-      createAndFireCustomMediaEvent(
-        {
-          eventType: 'operational',
-          action: 'succeeded',
-          actionSubject: 'mediaCardRender',
-          actionSubjectId: 'url',
-        },
-        createAnalyticsEvent,
-      );
-
-      return;
+      this.subscribeExternalFile(identifier);
+    } else {
+      this.subscribeInternalFile(identifier, mediaClient);
     }
+  }
 
-    const { id, collectionName, occurrenceKey } = identifier;
-    const resolvedId = typeof id === 'string' ? id : await id;
+  subscribeExternalFile(identifier: ExternalImageIdentifier) {
+    const { createAnalyticsEvent } = this.props;
+    const { dataURI, name } = identifier;
+    this.resolvedId = 'url';
+
     createAndFireCustomMediaEvent(
       {
         eventType: 'operational',
         action: 'commenced',
         actionSubject: 'mediaCardRender',
-        actionSubjectId: resolvedId,
+        actionSubjectId: 'url',
+      },
+      createAnalyticsEvent,
+    );
+
+    this.setState({
+      status: 'complete',
+      dataURI,
+      metadata: {
+        id: dataURI,
+        name: name || dataURI,
+        mediaType: 'image',
+      },
+    });
+  }
+
+  async subscribeInternalFile(
+    identifier: FileIdentifier,
+    mediaClient: MediaClient,
+  ) {
+    const { id, collectionName, occurrenceKey } = identifier;
+    const { createAnalyticsEvent } = this.props;
+    this.resolvedId = await id;
+    createAndFireCustomMediaEvent(
+      {
+        eventType: 'operational',
+        action: 'commenced',
+        actionSubject: 'mediaCardRender',
+        actionSubjectId: this.resolvedId,
       },
       createAnalyticsEvent,
     );
 
     this.unsubscribe();
     this.subscription = mediaClient.file
-      .getFileState(resolvedId, { collectionName, occurrenceKey })
+      .getFileState(this.resolvedId, { collectionName, occurrenceKey })
       .subscribe({
         next: async fileState => {
           let {
@@ -275,7 +278,7 @@ export class CardBase extends Component<
             try {
               const mode =
                 resizeMode === 'stretchy-fit' ? 'full-fit' : resizeMode;
-              const blob = await mediaClient.getImage(resolvedId, {
+              const blob = await mediaClient.getImage(this.resolvedId, {
                 collection: collectionName,
                 mode,
                 height,
@@ -293,7 +296,9 @@ export class CardBase extends Component<
           progress =
             getCardProgressFromFileState(fileState, dataURI) || progress;
 
-          this.fireLoadingStatusAnalyticsEvent(resolvedId, status, {
+          this.fireLoadingStatusAnalyticsEvent({
+            resolvedId: this.resolvedId,
+            status,
             fileState,
             metadata,
           });
@@ -307,7 +312,11 @@ export class CardBase extends Component<
           });
         },
         error: error => {
-          this.fireLoadingStatusAnalyticsEvent(resolvedId, 'error', { error });
+          this.fireLoadingStatusAnalyticsEvent({
+            resolvedId: this.resolvedId,
+            status: 'error',
+            error,
+          });
           this.notifyStateChange({ error, status: 'error' });
         },
       });
@@ -330,21 +339,27 @@ export class CardBase extends Component<
     return isDifferentAction || isDifferentErrorState;
   };
 
-  fireLoadingStatusAnalyticsEvent = (
-    resolvedId: string,
-    status: CardStatus,
-    options: { fileState?: FileState; metadata?: FileDetails; error?: Error },
-  ) => {
+  fireLoadingStatusAnalyticsEvent = ({
+    resolvedId,
+    status,
+    fileState,
+    metadata,
+    error,
+  }: {
+    resolvedId: string;
+    status: CardStatus;
+    fileState?: FileState;
+    metadata?: FileDetails;
+    error?: Error;
+  }) => {
     const { createAnalyticsEvent } = this.props;
-    const action: AnalyticsLoadingAction = getAnalyticsStatusFromCardStatus(
-      status,
-    );
-    const errorState = getAnalyticsErrorStateAttributes(
-      options.fileState,
-      options.error,
-    );
+    const action = getAnalyticsStatusFromCardStatus(status);
+    const errorState = getAnalyticsErrorStateAttributes(fileState, error);
 
-    if (this.shouldFireLoadingStatusAnalyticsEvent(action, errorState)) {
+    if (
+      action &&
+      this.shouldFireLoadingStatusAnalyticsEvent(action, errorState)
+    ) {
       this.lastLoadingAnalyticsStatus = {
         action,
         errorState,
@@ -356,7 +371,7 @@ export class CardBase extends Component<
           actionSubject: 'mediaCardRender',
           actionSubjectId: resolvedId,
           attributes: {
-            fileAttributes: getAnalyticsFileAttributes(options.metadata),
+            fileAttributes: getAnalyticsFileAttributes(metadata),
             ...errorState,
           },
         },
@@ -382,6 +397,7 @@ export class CardBase extends Component<
     if (this.hasBeenMounted) {
       this.setState({ dataURI: undefined });
     }
+    this.lastLoadingAnalyticsStatus = {};
   };
 
   // This method is called when card fails and user press 'Retry'
@@ -577,7 +593,7 @@ export class CardBase extends Component<
           Second context provides data to be merged with any other context down in the tree and the event's payload.
           This data is usually not available at the time of firing the event, though it is needed to be sent to the backend.
        */
-      <AnalyticsContext data={getUIAnalyticsContext(metadata)}>
+      <AnalyticsContext data={getUIAnalyticsContext(this.resolvedId, metadata)}>
         {this.renderContent()}
       </AnalyticsContext>
     );

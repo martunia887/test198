@@ -67,19 +67,18 @@ export const getCardProgressFromFileState = (
   }
 };
 
-export type AnalyticsLoadingAction = 'commenced' | 'succeeded' | 'failed';
+export type AnalyticsLoadingAction = 'succeeded' | 'failed';
 export const getAnalyticsStatusFromCardStatus = (
   cardStatus: CardStatus,
-): AnalyticsLoadingAction => {
+): AnalyticsLoadingAction | void => {
   switch (cardStatus) {
     case 'uploading':
     case 'loading':
     case 'processing':
     case 'complete':
-      return 'succeeded';
+      return; // = 'succeeded' // These card status won't trigger analytics events
     case 'error':
     case 'failed-processing':
-    default:
       return 'failed';
   }
 };
