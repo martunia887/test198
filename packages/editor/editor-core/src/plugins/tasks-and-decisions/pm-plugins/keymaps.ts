@@ -17,6 +17,7 @@ import {
 } from 'prosemirror-transform';
 import { autoJoin } from 'prosemirror-commands';
 import { findCutBefore } from '../../../utils/commands';
+import { findFarthestParentNode } from '../../../utils';
 
 const isInsideTaskOrDecisionItem = (state: EditorState) => {
   const { decisionItem, taskItem } = state.schema.nodes;
@@ -79,7 +80,23 @@ const indent = autoJoin(
       return false;
     }
 
+    const { taskList } = state.schema.nodes;
     const { $from, $to } = state.selection;
+
+    const furthestParent = findFarthestParentNode(
+      node => node.type === taskList,
+    )(state.selection);
+    if (!furthestParent) {
+      // should not be possible; we're already in a taskItem
+      return false;
+    }
+
+    // limit ui indentation to 6 levels
+    const curIndentLevel = $from.depth - furthestParent.depth;
+    if (curIndentLevel >= 6) {
+      return true;
+    }
+
     if (dispatch) {
       const blockRange = getBlockRange($from, $to);
       if (!blockRange) {
