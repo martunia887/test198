@@ -32,6 +32,19 @@ export class List extends React.Component<Props, State> {
     previewCount: 0,
   };
 
+  componentDidUpdate(props: Props, state: State) {
+    const { onNavigationChange } = this.props;
+    const { selectedItem } = this.state;
+
+    if (
+      onNavigationChange &&
+      (props.onNavigationChange !== onNavigationChange ||
+        state.selectedItem !== selectedItem)
+    ) {
+      onNavigationChange(selectedItem);
+    }
+  }
+
   render() {
     const { items } = this.props;
 

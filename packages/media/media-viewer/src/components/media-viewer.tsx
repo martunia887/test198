@@ -30,14 +30,6 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
     return dataSource;
   };
 
-  componentWillMount() {
-    const { selectedItem, onNavigationChange } = this.props;
-
-    if (onNavigationChange) {
-      onNavigationChange(selectedItem);
-    }
-  }
-
   render(): JSX.Element {
     const {
       action,
