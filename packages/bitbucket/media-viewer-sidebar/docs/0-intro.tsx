@@ -168,9 +168,10 @@ MediaViewer Sidebar is a component for displaying metadata next to Atlaskit Medi
   }
   `}
 
-  ## About something
+  ## Sidebar
 
-  Add more text...
+  The sidebar is simply a component that is styled to work with the Atlaskit MediaViewer as a sibling component.
+  Using both components together, media IDs can be used to display rich metadata or other content within the sidebar.
 
   ${(
     <Example

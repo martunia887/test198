@@ -10,17 +10,25 @@ import { colors, gridSize } from '@atlaskit/theme';
 export const Sidebar = styled.div`
   background-color: ${colors.DN50};
   box-sizing: border-box;
-  color: white;
+  color: ${colors.N0};
+  height: 100%;
   width: 25%;
   margin-left: 75%;
   padding: ${gridSize() * 4}px;
   position: absolute;
   top: 0;
-  bottom: 0;
-  right: 0;
 `;
 
 export const Table = styled.table`
   margin-top: ${gridSize() * 2}px;
   margin-bottom: ${gridSize() * 2}px;
+
+  tbody {
+    border-bottom: none;
+  }
+`;
+
+export const TableDataKey = styled.td`
+  color: ${colors.DN500};
+  font-weight: bold;
 `;

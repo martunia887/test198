@@ -23,9 +23,7 @@ export default class MetadataTable extends PureComponent<
           {Object.keys(meta).map(key => {
             return (
               <tr key={key}>
-                <td style={{ fontWeight: 'bold', textAlign: 'right' }}>
-                  {key}:{' '}
-                </td>
+                <styled.TableDataKey>{key}: </styled.TableDataKey>
                 <td>{meta[key]}</td>
               </tr>
             );

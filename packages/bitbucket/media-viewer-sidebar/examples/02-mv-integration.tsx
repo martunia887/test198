@@ -1,7 +1,6 @@
 import React from 'react';
-import InfoIcon from '@atlaskit/icon/glyph/info';
+import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
 import { MediaViewer } from '@atlaskit/media-viewer';
-import { MediaViewerSidebar } from '../src';
 import {
   createStorybookMediaClientConfig,
   imageFileId,
@@ -12,8 +11,10 @@ import {
   videoFileId,
 } from '@atlaskit/media-test-helpers';
 import { Identifier } from '@atlaskit/media-core';
+
+import { MediaViewerSidebar } from '../src';
 import MetadataTable from '../src/components/metadata-table';
-import meta from '../example-helpers/meta/meta1';
+import meta from '../example-helpers/meta-example';
 
 type SyncIdentifier = Omit<Identifier, 'id'> & { id?: string };
 interface State {
@@ -49,13 +50,13 @@ export default class ExampleViewer extends React.Component<{}, State> {
   };
 
   toggleSidebar = (isSidebarOpen: boolean) => {
-    console.log('toggle sidebar');
     this.setState({ isSidebarOpen });
   };
 
   // when closing viewer we also need to close sidebar
   closeMediaViewer = () => {
     this.setState({
+      isSidebarOpen: false,
       openMediaId: undefined,
     });
   };
@@ -83,13 +84,13 @@ export default class ExampleViewer extends React.Component<{}, State> {
   getToggleAction = () => {
     if (this.state.isSidebarOpen) {
       return {
-        icon: <InfoIcon label="show" />,
+        icon: <EditorPanelIcon label="show" />,
         label: 'Show sidebar',
         handler: () => this.toggleSidebar(false),
       };
     } else {
       return {
-        icon: <InfoIcon label="hide" />,
+        icon: <EditorPanelIcon label="hide" />,
         label: 'Hide sidebar',
         handler: () => this.toggleSidebar(true),
       };
@@ -119,7 +120,7 @@ export default class ExampleViewer extends React.Component<{}, State> {
 
             {isSidebarOpen ? (
               <MediaViewerSidebar>
-                <h2 style={{ color: 'white' }}>File details</h2>
+                <h2 style={{ color: 'white' }}>Details</h2>
                 <MetadataTable meta={this.getMetaForId(openMediaId!)} />
               </MediaViewerSidebar>
             ) : null}
