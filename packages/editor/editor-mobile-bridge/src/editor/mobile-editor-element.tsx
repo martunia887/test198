@@ -96,8 +96,11 @@ export default function mobileEditor(props: Props) {
           }}
           allowPanel={true}
           allowCodeBlocks={true}
+          allowIndentation={true}
           allowTables={{
             allowControls: false,
+            allowColumnResizing: false,
+            allowColumnSorting: false,
           }}
           UNSAFE_cards={{
             provider: props.cardProvider || Promise.resolve(cardProvider),
