@@ -330,9 +330,10 @@ describe('tasks and decisions - keymaps', () => {
             sendKeyToPm(editorView, 'Delete');
 
             const expectedDoc = doc(
-              list(listProps)(item(itemProps)('Hello{<>}World')),
-              // TODO - list merging FS-2947
-              list(listProps)(item(itemProps)('Cheese is great!')),
+              list(listProps)(
+                item(itemProps)('Hello{<>}World'),
+                item(itemProps)('Cheese is great!'),
+              ),
             );
             expect(editorView.state.doc).toEqualDocument(expectedDoc);
             compareSelection(editorFactory, expectedDoc, editorView);
@@ -363,6 +364,42 @@ describe('tasks and decisions - keymaps', () => {
                       tdEmpty,
                       td()(
                         list(listProps)(
+                          item(itemProps)('World{<>}'),
+                          item(itemProps)('Hello'),
+                        ),
+                      ),
+                      tdEmpty,
+                    ),
+                  ),
+                ),
+              );
+
+              sendKeyToPm(editorView, 'Delete');
+
+              const expectedDoc = doc(
+                table()(
+                  tr(
+                    tdEmpty,
+                    td()(
+                      list(listProps)(item(itemProps)('World{<>}')),
+                      p('Hello'),
+                    ),
+                    tdEmpty,
+                  ),
+                ),
+              );
+              expect(editorView.state.doc).toEqualDocument(expectedDoc);
+              compareSelection(editorFactory, expectedDoc, editorView);
+            });
+
+            it('should move second item to first', () => {
+              const { editorView } = editorFactory(
+                doc(
+                  table()(
+                    tr(
+                      tdEmpty,
+                      td()(
+                        list(listProps)(
                           item(itemProps)('{<>}'),
                           item(itemProps)('Hello'),
                         ),
@@ -379,7 +416,7 @@ describe('tasks and decisions - keymaps', () => {
                 table()(
                   tr(
                     tdEmpty,
-                    td()(list(listProps)(item(itemProps)('{<>}')), p('Hello')),
+                    td()(list(listProps)(item(itemProps)('{<>}Hello'))),
                     tdEmpty,
                   ),
                 ),

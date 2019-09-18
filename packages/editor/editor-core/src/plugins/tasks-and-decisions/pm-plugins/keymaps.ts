@@ -216,6 +216,18 @@ const backspace = autoJoin(
   ['taskList', 'decisionList'],
 );
 
+// keep looking forward until the depth either remains the same or
+// increases
+const walkOut = ($startPos: ResolvedPos): ResolvedPos => {
+  let $pos = $startPos;
+
+  while ($pos.pos < $pos.doc.nodeSize - 2 && $pos.parentOffset > 0) {
+    $pos = $pos.doc.resolve($pos.pos + 1);
+  }
+
+  return $pos;
+};
+
 const deleteHandler: Command = (state, dispatch) => {
   if (!isInsideTaskOrDecisionItem(state)) {
     console.warn('not inside task decision');
@@ -234,23 +246,20 @@ const deleteHandler: Command = (state, dispatch) => {
   }
 
   // look for the node after this current one
-  // FIXME: +3 gave me text node, need to fix depending on surrounds + using ResolvedPos, not pos
-  const $next = state.selection.$from.doc.resolve(
-    state.selection.$from.after() + 2,
-  );
+  const $next = walkOut(state.selection.$from);
+  console.log('$next', $next);
 
   // if there's no taskItem or taskList following, then we just do the normal behaviour
   const parentList = findParentNodeOfTypeClosestToPos($next, [
     state.schema.nodes.taskList,
     state.schema.nodes.taskItem,
+    state.schema.nodes.decisionList,
+    state.schema.nodes.decisionItem,
   ]);
   if (!parentList) {
-    if (
-      $next.nodeAfter &&
-      $next.nodeAfter.type === state.schema.nodes.paragraph
-    ) {
+    if ($next.node().type === state.schema.nodes.paragraph) {
       // try to join paragraph and taskList when backspacing
-      const $cut = findCutBefore($next.doc.resolve($next.pos + 1));
+      const $cut = findCutBefore($next.doc.resolve($next.pos));
       if ($cut) {
         if (
           $cut.nodeBefore &&
@@ -295,7 +304,7 @@ const deleteHandler: Command = (state, dispatch) => {
         console.warn('no cut');
       }
     } else {
-      console.warn('after', $next.nodeAfter);
+      console.warn('after', $next.nodeAfter, $next.node());
     }
 
     return true;
@@ -340,10 +349,12 @@ const deleteHandler: Command = (state, dispatch) => {
     if (dispatch) {
       const taskContent = state.doc.slice($next.start(), $next.end()).content;
 
+      console.log('task content', taskContent);
+
       // might be end of document after
       const slice = taskContent.size
         ? state.schema.nodes.paragraph.createChecked(undefined, taskContent)
-        : state.schema.nodes.paragraph.createChecked();
+        : [];
 
       dispatch(splitListItemWith(state.tr, slice, $next, false));
     }
@@ -365,7 +376,10 @@ const canSplitListItem = (tr: Transaction) => {
   const afterTaskItem = tr.doc.resolve($from.end()).nodeAfter;
 
   return (
-    !afterTaskItem || (afterTaskItem && afterTaskItem.type.name === 'taskItem')
+    !afterTaskItem ||
+    (afterTaskItem &&
+      (afterTaskItem.type.name === 'taskItem' ||
+        afterTaskItem.type.name === 'decisionItem'))
   );
 };
 
@@ -393,10 +407,11 @@ const splitListItemWith = (
 
   // and delete the action at the current pos
   // we can do this because we know either first new child will be taskItem or nothing at all
+  const frag = Fragment.from(content);
   tr = tr.replace(
     tr.mapping.map($from.start() - 2),
     tr.mapping.map($from.end() + 2),
-    new Slice(Fragment.from(content), 0, 0),
+    frag.size ? new Slice(frag, 0, 0) : Slice.empty,
   );
 
   // put cursor inside paragraph
@@ -452,7 +467,7 @@ const splitListItem = (
           tr,
           schema.nodes.paragraph.createChecked(),
           state.selection.$from,
-          false,
+          true,
         ),
       );
     }
