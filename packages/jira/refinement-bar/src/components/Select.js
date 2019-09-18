@@ -9,6 +9,18 @@ import QuestionCircleIcon from '@atlaskit/icon/glyph/question-circle';
 import { colors, gridSize } from '@atlaskit/theme';
 import Spinner from '@atlaskit/spinner';
 
+// NOTE: This option data is used for quick and dirty referential equality
+// checks throughout the refinment bar filters, it must be imported where
+// applicable. You can use the `isClearOption` function below for string
+// equality.
+export const SELECT_CLEAR_OPTION = {
+  label: 'Clear selected items',
+  value: '__CLEAR_SELECTED__',
+};
+export function isClearOption(opt) {
+  return opt.value === SELECT_CLEAR_OPTION.value;
+}
+
 // ==============================
 // React-Select Replacements
 // ==============================
@@ -86,8 +98,37 @@ const loadingMessage = () => (
 // Exports
 // ==============================
 
-const Option = (props: *) => (
-  <CheckboxOption css={{ paddingLeft: `8px !important` }} {...props} />
+const ClearOption = ({ children, innerProps, isFocused }: *) => (
+  <div
+    css={{
+      boxSizing: 'border-box',
+      color: colors.primary(),
+      cursor: 'pointer',
+      fontSize: 'inherit',
+      padding: '8px 12px',
+      textDecoration: isFocused ? 'underline' : null,
+      userSelect: 'none',
+      webkitTapHighlightColor: 'rgba(0,0,0,0)',
+      width: '100%',
+
+      '&:hover': {
+        textDecoration: 'underline',
+      },
+    }}
+    {...innerProps}
+  >
+    {children}
+  </div>
+);
+
+// NOTE: fork the option renderer based on a "clear marker", which needs to look
+// and behave in a different way
+const Option = React.memo((props: *) =>
+  props.data === SELECT_CLEAR_OPTION ? (
+    <ClearOption {...props} />
+  ) : (
+    <CheckboxOption css={{ paddingLeft: `8px !important` }} {...props} />
+  ),
 );
 
 export const selectComponents = {

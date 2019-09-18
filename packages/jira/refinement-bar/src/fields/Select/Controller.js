@@ -1,29 +1,31 @@
 // @flow
 
 import React from 'react';
+
 import FieldController from '../Controller';
-import { isObject } from '../../utils';
+
+import { flattenByKey } from './utils';
 
 type Options = Array<Object>;
+
+const defaultGetOptionLabel = opt => opt.label;
+const defaultGetOptionValue = opt => opt.value;
 
 export default class SelectController extends FieldController {
   constructor(...args: *) {
     super(...args);
 
-    // FIXME this would be nice, but shouldn't be inherited by async...
-    // if (!this.config.options) {
-    //   throw new Error(
-    //     'Select type requires an options array or a function that resolves to an array.',
-    //   );
-    // }
-
+    this.getOptionLabel = this.config.getOptionLabel || defaultGetOptionLabel;
+    this.getOptionValue = this.config.getOptionValue || defaultGetOptionValue;
     this.onMenuScrollToBottom = this.config.onMenuScrollToBottom;
     this.onMenuScrollToTop = this.config.onMenuScrollToTop;
-    this.options = this.config.options;
+    this.options = this.config.options || [];
     this.placeholder = this.config.placeholder;
   }
 
-  options: Options | (Object => Options);
+  getOptionValue: ?Function;
+
+  options: Options;
 
   onMenuScrollToBottom: ?Function;
 
@@ -31,37 +33,73 @@ export default class SelectController extends FieldController {
 
   placeholder: ?string;
 
-  hasValue = (value: *) => {
-    return Array.isArray(value) ? value.length > 0 : isObject(value);
+  // used by async variant
+  setOptions = (options: *) => {
+    this.options = options;
   };
 
-  getInitialValue = () => [];
+  hasValue = (value: *) => {
+    return Array.isArray(value) && value.length > 0;
+  };
 
-  formatLabel = (value: *) => {
+  getInitialValue = () => {
+    return [];
+  };
+
+  /*
+    In: ['one', 'two']
+    Out: [{ label: 'One', value: 'one' }, { label: 'Two', value: 'two' }]
+  */
+  toObjectValue = value => {
+    if (value === undefined) {
+      return undefined;
+    }
+    if (!value.length) {
+      return value;
+    }
+
+    const flattenedOptions = flattenByKey(this.options, 'options');
+    const hasValue = opt => value.includes(this.getOptionValue(opt));
+
+    return flattenedOptions.filter(hasValue);
+  };
+
+  /*
+    In: [{ label: 'One', value: 'one' }, { label: 'Two', value: 'two' }]
+    Out: ['one', 'two']
+  */
+  toStringValue = value => {
+    if (value === undefined) {
+      return undefined;
+    }
+    if (!value.length) {
+      return value;
+    }
+
+    return value.map(opt => this.getOptionValue(opt));
+  };
+
+  formatLabel = (stringValue: Array<Object>) => {
+    // no value, just display the label
+    if (!this.hasValue(stringValue)) return this.label;
+
+    // build complex options
+    const value = this.toObjectValue(stringValue);
     const separator = ', ';
     const max = 3;
-    const makeLabel = suffix => (
+
+    // create a comma separated list of values
+    const valueLabels = value.map(this.getOptionLabel);
+    const valueLen = value.length;
+    const labelGroup =
+      valueLen > max
+        ? `${valueLabels.slice(0, max).join(separator)} +${valueLen - max} more`
+        : valueLabels.join(separator);
+
+    return (
       <span>
-        <strong>{this.label}:</strong> {suffix}
+        <strong>{this.label}:</strong> {labelGroup}
       </span>
-    );
-
-    // no value
-    if (!this.hasValue(value)) return this.label;
-
-    // value is object
-    if (!Array.isArray(value)) return makeLabel(value.label);
-
-    // value is array
-    // create comma separated list of values
-    // maximum 3 visible
-    const valueMap = value.map(v => v.label);
-    const valueLength = valueMap.length;
-
-    return makeLabel(
-      valueLength > max
-        ? `${valueMap.slice(0, max).join(separator)} +${valueLength - max} more`
-        : valueMap.join(separator),
     );
   };
 }

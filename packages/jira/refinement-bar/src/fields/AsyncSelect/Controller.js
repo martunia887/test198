@@ -10,7 +10,6 @@ export default class AsyncSelectController extends SelectController {
 
     this.cacheOptions = this.config.cacheOptions;
     this.defaultOptions = this.config.defaultOptions;
-    this.defaultOptionsLabel = this.config.defaultOptionsLabel;
     this.inputValue = this.config.inputValue;
     this.loadOptions = this.config.loadOptions;
     this.onInputChange = this.config.onInputChange;
@@ -19,8 +18,6 @@ export default class AsyncSelectController extends SelectController {
   cacheOptions: ?any;
 
   defaultOptions: ?Options;
-
-  defaultOptionsLabel: ?string;
 
   inputValue: ?string;
 

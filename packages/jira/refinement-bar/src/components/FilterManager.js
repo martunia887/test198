@@ -5,12 +5,8 @@ import { PureComponent } from 'react';
 import { jsx } from '@emotion/core';
 import { colors } from '@atlaskit/theme';
 
-import { BaseSelect, selectComponents } from './Select';
+import { SELECT_CLEAR_OPTION, BaseSelect, selectComponents } from './Select';
 
-const CLEAR_DATA = {
-  value: '__remove-all',
-  label: 'Remove all filters',
-};
 // ==============================
 // Styled Components
 // ==============================
@@ -42,7 +38,7 @@ const ClearOption = ({ children, innerProps, isFocused }: *) => (
 // and behave in a different way
 
 const Option = (props: *) =>
-  props.data === CLEAR_DATA ? (
+  props.data === SELECT_CLEAR_OPTION ? (
     <ClearOption {...props} />
   ) : (
     <selectComponents.Option {...props} />
@@ -69,7 +65,7 @@ export class FilterManager extends PureComponent<*> {
   handleChange = (value: *, meta: Object) => {
     const { onChange } = this.props;
 
-    if (value && Array.isArray(value) && value.includes(CLEAR_DATA)) {
+    if (value && value.includes(SELECT_CLEAR_OPTION)) {
       onChange(this.props.value, { action: 'clear-options' });
     } else {
       onChange(value, meta);
@@ -127,6 +123,6 @@ const getOptions = (current, resolved) => {
 
   return current
     .map(o => ({ ...o, aboveTheFold: true }))
-    .concat([CLEAR_DATA])
+    .concat([SELECT_CLEAR_OPTION])
     .concat(resolved);
 };
