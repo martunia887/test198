@@ -1,0 +1,9 @@
+{
+  "releases": [
+    { "name": "@atlaskit/drawer", "type": "patch" },
+    { "name": "@atlaskit/navigation-next", "type": "patch" },
+    { "name": "@atlaskit/navigation", "type": "patch" },
+    { "name": "@atlaskit/app-navigation", "type": "patch" }
+  ],
+  "dependents": []
+}
