@@ -33,7 +33,7 @@ export function storyMediaProviderFactory(
   const collection = collectionName || defaultCollectionName;
   const mediaClientConfig: MediaClientConfig = {
     authProvider: useMediaPickerAuthProvider
-      ? mediaPickerAuthProvider()
+      ? mediaPickerAuthProvider(undefined, collection)
       : defaultMediaPickerAuthProvider,
     userAuthProvider:
       includeUserAuthProvider === false ? undefined : userAuthProvider,

@@ -129,6 +129,7 @@ class MediaNode extends Component<MediaNodeProps> {
     const contextId =
       contextIdentifierProvider && contextIdentifierProvider.objectId;
 
+    console.log('render Card', { identifier });
     return (
       <Card
         // mediaClientConfig is not needed for "external" case. So we have to cheat here.

@@ -49,13 +49,21 @@ const requestAuthProvider = async (
   return response.json();
 };
 
-export const mediaPickerAuthProvider = (authEnvironment: string = 'asap') => (
-  context?: AuthContext,
-) => {
+export const mediaPickerAuthProvider = (
+  authEnvironment: string = 'asap',
+  ownCollectionName?: string,
+) => (context?: AuthContext): Promise<Auth> => {
   const collectionName =
     (context && context.collectionName) || defaultCollectionName;
   authEnvironment = authEnvironment === 'asap' ? 'asap' : '';
   const cacheKey = `${collectionName}:${authEnvironment}`;
+
+  console.log('authProvider', { ownCollectionName, collectionName });
+
+  if (ownCollectionName !== collectionName) {
+    // throw new Error(`${ownCollectionName} cant access ${collectionName}`);
+    return Promise.resolve({});
+  }
 
   if (!cachedAuths[cacheKey]) {
     cachedAuths[cacheKey] = requestAuthProvider(
