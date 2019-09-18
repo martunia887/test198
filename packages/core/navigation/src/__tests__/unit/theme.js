@@ -2,7 +2,7 @@
 import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { mount } from 'enzyme';
-import chromatism from 'chromatism';
+import { brightness } from 'chromatism';
 import * as presets from '../../theme/presets';
 import {
   prefix,
@@ -170,9 +170,7 @@ describe('theme', () => {
       });
 
       it('subText color', () => {
-        expect(generatedTheme.subText).toBe(
-          chromatism.brightness(20, textColor).hex,
-        );
+        expect(generatedTheme.subText).toBe(brightness(20, textColor).hex);
       });
 
       it('global item focus outline color', () => {
@@ -196,19 +194,19 @@ describe('theme', () => {
       describe('global item', () => {
         it('hover color (background color 10% less bright)', () => {
           expect(generatedTheme.item.hover.background).toBe(
-            chromatism.brightness(-10, backgroundColor).hex,
+            brightness(-10, backgroundColor).hex,
           );
         });
 
         it('active color (background color 10% brighter)', () => {
           expect(generatedTheme.item.active.background).toBe(
-            chromatism.brightness(10, backgroundColor).hex,
+            brightness(10, backgroundColor).hex,
           );
         });
 
         it('selected color (background color 20% less bright)', () => {
           expect(generatedTheme.item.selected.background).toBe(
-            chromatism.brightness(-20, backgroundColor).hex,
+            brightness(-20, backgroundColor).hex,
           );
         });
 

@@ -1,4 +1,4 @@
-import chromatism, { ColourModes } from 'chromatism';
+import { contrastRatio, convert, ColourModes } from 'chromatism';
 
 import { AppNavigationTheme, ModeContext } from './types';
 
@@ -64,14 +64,14 @@ export type Colors = {
 };
 
 const getColor = (baseColor: ColourModes.HSL, modifier: Modifier) =>
-  chromatism.convert({
+  convert({
     ...baseColor,
     s: Math.max(0, Math.min(100, baseColor.s + modifier.s)),
     l: Math.max(0, Math.min(100, baseColor.l + modifier.l)),
   }).hex;
 
 const getModifierStates = ({ backgroundColor, color }: Colors) => {
-  const baseBackgroundColor = chromatism.convert(backgroundColor).hsl;
+  const baseBackgroundColor = convert(backgroundColor).hsl;
 
   const getState = (modifier: Modifier) => {
     const stateBackgroundColor = getColor(baseBackgroundColor, modifier);
@@ -117,9 +117,7 @@ export const generateTheme = (args: GenerateThemeArgs): AppNavigationTheme => {
       primaryButton: primary,
       search: primary.active,
       skeleton: {
-        backgroundColor: chromatism.contrastRatio(
-          primary.default.backgroundColor,
-        ).hex,
+        backgroundColor: contrastRatio(primary.default.backgroundColor).hex,
       },
     },
   };

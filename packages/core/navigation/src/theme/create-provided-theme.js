@@ -1,8 +1,6 @@
 // @flow
 
-// 'chromatism' adds 1.9kb to the bundle.
-// After the nwb merge it should be able to be tree shaken out for those who are not using it
-import chromatism from 'chromatism';
+import { brightness } from 'chromatism';
 import type {
   Text,
   Background,
@@ -18,20 +16,20 @@ export const createGlobalTheme = (
   text: Text,
   background: Background,
 ): CustomisableThemeProperties => {
-  const active: Background = chromatism.brightness(10, background).hex;
+  const active: Background = brightness(10, background).hex;
 
   const item: ItemTheme = {
     default: {
       background: 'transparent',
     },
     hover: {
-      background: chromatism.brightness(-10, background).hex,
+      background: brightness(-10, background).hex,
     },
     active: {
       background: active,
     },
     selected: {
-      background: chromatism.brightness(-20, background).hex,
+      background: brightness(-20, background).hex,
       text,
     },
     focus: {
@@ -52,7 +50,7 @@ export const createGlobalTheme = (
       tertiary: globalTheme.background.tertiary,
     },
     text,
-    subText: chromatism.brightness(20, text).hex,
+    subText: brightness(20, text).hex,
     keyline: globalTheme.keyline,
     item,
     dropdown: globalTheme.dropdown,

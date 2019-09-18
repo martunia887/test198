@@ -1,8 +1,6 @@
 // @flow
 
-// TODO: @atlassian/navigation package is the only other package that uses chromatism (currently).
-// We should update to chromatism@3.0.0 once @atlassian/navigation package is deprecated.
-import chromatism from 'chromatism';
+import { brightness, convert, fade } from 'chromatism';
 
 import globalItemStyles from '../components/presentational/GlobalItem/styles';
 import globalNavStyles from '../components/presentational/GlobalNav/styles';
@@ -62,7 +60,7 @@ const colorMatrix = [
 
 const getStatesBackground = (parts, modifier) =>
   ['hint', 'interact', 'static'].reduce((acc, k) => {
-    acc[k] = chromatism.convert({
+    acc[k] = convert({
       ...parts,
       s: parts.s + modifier[k].s,
       l: parts.l + modifier[k].l,
@@ -71,12 +69,10 @@ const getStatesBackground = (parts, modifier) =>
   }, {});
 
 const getContextColors = ({ background, text }): ContextColors => {
-  const bgParts = chromatism.convert(background).hsl;
+  const bgParts = convert(background).hsl;
   const vs = bgParts.l < 30 && bgParts.s < 50 ? -1 : 1;
-  const textSubtle = chromatism.brightness(
-    1 + vs * 6,
-    chromatism.fade(4, background, text).hex[2],
-  ).hex;
+  const textSubtle = brightness(1 + vs * 6, fade(4, background, text).hex[2])
+    .hex;
   const colorMod = colorMatrix.find(cm => cm.when(bgParts)) || {
     hint: { s: 0, l: 8 },
     interact: { s: 0, l: 4 },

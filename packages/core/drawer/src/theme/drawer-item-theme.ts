@@ -1,7 +1,7 @@
 import { itemThemeNamespace } from '@atlaskit/item';
 import { themed } from '@atlaskit/theme/components';
 import * as colors from '@atlaskit/theme/colors';
-import chromatism from 'chromatism';
+import { convert } from 'chromatism';
 import { DrawerTheme, Background, ItemTheme, ScrollBarTheme } from './types';
 import {
   gridSize,
@@ -17,7 +17,7 @@ const focus = {
 };
 
 function lightenColor(color: string, alpha: number) {
-  const { r: red, g: green, b: blue } = chromatism.convert(color).rgb;
+  const { r: red, g: green, b: blue } = convert(color).rgb;
   return `rgba(${red}, ${green}, ${blue}, 0.${alpha})`;
 }
 

@@ -1,5 +1,5 @@
 // @flow
-import chromatism from 'chromatism';
+import { convert } from 'chromatism';
 import { themed } from '@atlaskit/theme/components';
 import * as colors from '@atlaskit/theme/colors';
 import type { Provided, ItemTheme, Background, ScrollBarTheme } from './types';
@@ -23,7 +23,7 @@ const focus = {
 };
 
 function lightenColor(color, alpha) {
-  const { r: red, g: green, b: blue } = chromatism.convert(color).rgb;
+  const { r: red, g: green, b: blue } = convert(color).rgb;
   return `rgba(${red}, ${green}, ${blue}, 0.${alpha})`;
 }
 

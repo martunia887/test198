@@ -29,7 +29,7 @@
     "@atlaskit/width-detector": "^2.0.0",
     "@emotion/core": "^10.0.9",
     "@emotion/css": "^10.0.14",
-    "chromatism": "^2.6.0",
+    "chromatism": "^3.0.0",
     "lodash.throttle": "^4.1.1"
   },
   "devDependencies": {
