@@ -1,6 +1,8 @@
 // @flow
+/** @jsx jsx */
 
-import React from 'react';
+import { Children, Fragment } from 'react';
+import { jsx } from '@emotion/core';
 
 import FieldController from '../Controller';
 
@@ -85,21 +87,54 @@ export default class SelectController extends FieldController {
 
     // build complex options
     const value = this.toObjectValue(stringValue);
-    const separator = ', ';
     const max = 3;
 
     // create a comma separated list of values
-    const valueLabels = value.map(this.getOptionLabel);
+    const valueLabels = value.map(opt => (
+      <Crop>{this.getOptionLabel(opt)}</Crop>
+    ));
     const valueLen = value.length;
-    const labelGroup =
-      valueLen > max
-        ? `${valueLabels.slice(0, max).join(separator)} +${valueLen - max} more`
-        : valueLabels.join(separator);
+    const afterElement =
+      value.length > max ? <Crop> +{valueLen - max} more</Crop> : null;
 
     return (
-      <span>
-        <strong>{this.label}:</strong> {labelGroup}
-      </span>
+      <Fragment>
+        <strong>{this.label}: </strong>
+        <Map after={afterElement} max={max}>
+          {valueLabels}
+        </Map>
+      </Fragment>
     );
   };
 }
+
+// Styled Components
+// ------------------------------
+
+const Crop = props => (
+  <span
+    css={{
+      marginLeft: '0.5ex', // circumvent spaces getting collapsed
+      maxWidth: 180,
+      minWidth: 1,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    }}
+    {...props}
+  />
+);
+const Map = ({ after, children, max }: *) => {
+  const arr = Children.toArray(children).slice(0, max);
+
+  return (
+    <Fragment>
+      {arr.map((label, idx) => (
+        <Fragment>
+          {idx ? ', ' : null}
+          {label}
+        </Fragment>
+      ))}
+      {after}
+    </Fragment>
+  );
+};
