@@ -8,7 +8,7 @@ import { ItemViewer } from './item-viewer';
 import { HeaderWrapper, ListWrapper } from './styled';
 import { Navigation } from './navigation';
 import Header from './header';
-import { MediaViewerAction } from 'src/components/types';
+import { MediaViewerAction } from '../components/types';
 
 export type Props = Readonly<
   {

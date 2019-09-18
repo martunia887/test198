@@ -43,6 +43,7 @@ function createFixture(items: Identifier[], identifier: Identifier) {
         itemSource={itemSource}
         mediaClient={mediaClient}
         onClose={onClose}
+        withSidebar={false}
       />
     </AnalyticsListener>,
   );

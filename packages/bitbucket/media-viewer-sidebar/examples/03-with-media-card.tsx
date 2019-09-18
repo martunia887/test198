@@ -123,7 +123,7 @@ export default class ExampleViewer extends React.Component<{}, State> {
             <MediaViewer
               action={this.getToggleAction()}
               mediaClientConfig={mediaClientConfig}
-              selectedItem={openMediaId}
+              selectedItem={items[0]}
               dataSource={{ list: items }}
               collectionName={defaultCollectionName}
               onClose={this.closeMediaViewer}

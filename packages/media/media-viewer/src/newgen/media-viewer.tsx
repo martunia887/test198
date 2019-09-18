@@ -20,7 +20,7 @@ import { List } from './list';
 import { Collection } from './collection';
 import { Content } from './content';
 import { Blanket } from './styled';
-import { MediaViewerAction } from 'src/components/types';
+import { MediaViewerAction } from '../components/types';
 
 export type Props = {
   action?: MediaViewerAction;

@@ -13,7 +13,7 @@ import { toIdentifier } from './utils';
 import { Spinner } from './loading';
 import { MediaCollectionItem } from '@atlaskit/media-store';
 import { WithShowControlMethodProp } from '@atlaskit/media-ui';
-import { MediaViewerAction } from 'src/components/types';
+import { MediaViewerAction } from '../components/types';
 
 export type Props = Readonly<
   {
