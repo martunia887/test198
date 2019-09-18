@@ -1,6 +1,7 @@
 import React from 'react';
 import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
 import { Card } from '@atlaskit/media-card';
+import { FilmstripView } from '@atlaskit/media-filmstrip';
 import { MediaViewer } from '@atlaskit/media-viewer';
 import {
   createStorybookMediaClientConfig,
@@ -17,10 +18,17 @@ import { MediaViewerSidebar } from '../src';
 import MetadataTable from '../src/components/metadata-table';
 import meta from '../example-helpers/meta-example';
 
+export interface FilmstripState {
+  animate: boolean;
+  offset: number;
+}
+
 type SyncIdentifier = Omit<Identifier, 'id'> & { id?: string };
 interface State {
-  openMediaId?: SyncIdentifier;
+  animate: boolean;
   isSidebarOpen: boolean;
+  offset: number;
+  openMediaId?: SyncIdentifier;
 }
 
 const mediaClientConfig = createStorybookMediaClientConfig();
@@ -46,9 +54,16 @@ const toSyncIdentifier = async (id: Identifier) =>
 
 export default class ExampleViewer extends React.Component<{}, State> {
   state = {
-    openMediaId: undefined,
+    animate: false,
     isSidebarOpen: false,
+    offset: 0,
+    openMediaId: undefined,
   };
+
+  private handleSizeChange = ({ offset }: Pick<FilmstripState, 'offset'>) =>
+    this.setState({ offset });
+  private handleScrollChange = ({ animate, offset }: FilmstripState) =>
+    this.setState({ animate, offset });
 
   toggleSidebar = (isSidebarOpen: boolean) => {
     this.setState({ isSidebarOpen });
@@ -99,23 +114,21 @@ export default class ExampleViewer extends React.Component<{}, State> {
   };
 
   render() {
-    const { isSidebarOpen, openMediaId } = this.state;
+    const { animate, isSidebarOpen, offset, openMediaId } = this.state;
 
     return (
       <>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {items.map((item, index) => (
-            <>
-              <Card
-                key={index}
-                identifier={item}
-                mediaClientConfig={mediaClientConfig}
-                onClick={() => this.openMediaViewer(item)}
-              />
-              <br />
-            </>
-          ))}
+        <div style={{ width: '400px' }}>
+          <FilmstripView
+            animate={animate}
+            offset={offset}
+            onSize={this.handleSizeChange}
+            onScroll={this.handleScrollChange}
+          >
+            {this.renderCards()}
+          </FilmstripView>
         </div>
+
         {openMediaId && (
           <>
             <MediaViewer
@@ -140,5 +153,20 @@ export default class ExampleViewer extends React.Component<{}, State> {
         )}
       </>
     );
+  }
+
+  private renderCards() {
+    {
+      return items.map((item, index) => (
+        <>
+          <Card
+            key={index}
+            identifier={item}
+            mediaClientConfig={mediaClientConfig}
+            onClick={() => this.openMediaViewer(item)}
+          />
+        </>
+      ));
+    }
   }
 }

@@ -29,6 +29,7 @@
     "@atlaskit/icon": "^19.0.6",
     "@atlaskit/media-card": "^65.0.0",
     "@atlaskit/media-core": "^30.0.14",
+    "@atlaskit/media-filmstrip": "^34.3.6",
     "@atlaskit/media-test-helpers": "^25.1.1",
     "@atlaskit/media-viewer": "^43.4.1",
     "@atlaskit/page": "^11.0.8",
