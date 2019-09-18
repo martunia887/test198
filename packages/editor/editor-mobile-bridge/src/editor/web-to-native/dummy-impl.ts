@@ -21,6 +21,21 @@ export default class DummyBridge implements NativeBridge {
   updateText(content: string) {
     this.log(`updateText(content=${content})`);
   }
+  getServiceHost(): string {
+    return 'http://www.atlassian.com';
+  }
+  getCollection(): string {
+    return 'FabricMediaSampleCollection';
+  }
+  onMediaClick(
+    mediaId: string,
+    collectionName: string,
+    occurrenceKey?: string,
+  ) {
+    this.log(
+      `onMediaClick(mediaId=${mediaId}, collectionName=${collectionName}, occurrenceKey=${occurrenceKey})`,
+    );
+  }
   submitPromise(name: string, uuid: string, args: string) {
     this.log(`submitPromise(name=${name}, uuid=${uuid}, args=${args})`);
   }

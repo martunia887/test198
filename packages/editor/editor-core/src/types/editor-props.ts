@@ -70,6 +70,17 @@ export interface ExtensionConfig {
   allowBreakout?: boolean;
 }
 
+export type MediaClickHandler = (
+  mediaId: string,
+  collectionName: string,
+  occurrenceKey?: string,
+) => void;
+
+export interface EventHandlers {
+  media?: {
+    onClick?: MediaClickHandler;
+  };
+}
 export interface EditorProps {
   /*
   Configure the display mode of the editor. Different modes may have different feature sets supported.
@@ -268,4 +279,7 @@ export interface EditorProps {
   // flag to indicate display name instead of nick name should be inserted for mentions
   // default: false, which inserts the nick name
   mentionInsertDisplayName?: boolean;
+
+  // Provide your own handlers for events within the editor such as clicking on media
+  eventHandlers?: EventHandlers;
 }

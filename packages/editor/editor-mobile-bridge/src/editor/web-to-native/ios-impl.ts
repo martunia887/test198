@@ -54,6 +54,21 @@ export default class IosBridge implements NativeBridge {
     }
   }
 
+  onMediaClick(
+    mediaId: string,
+    collectionName: string,
+    occurrenceKey?: string,
+  ) {
+    if (window.webkit && window.webkit.messageHandlers.mediaBridge) {
+      window.webkit.messageHandlers.mediaBridge.postMessage({
+        name: 'onMediaClick',
+        mediaId,
+        collectionName,
+        occurrenceKey,
+      });
+    }
+  }
+
   submitPromise(name: string, uuid: string, args: string) {
     if (window.webkit && window.webkit.messageHandlers.promiseBridge) {
       window.webkit.messageHandlers.promiseBridge.postMessage({

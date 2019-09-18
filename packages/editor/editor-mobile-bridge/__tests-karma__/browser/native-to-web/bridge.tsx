@@ -1,8 +1,9 @@
+import React from 'react';
 import { expect } from 'chai';
 import { mount, ReactWrapper } from 'enzyme';
 
 import { mountEditor } from './utils';
-import mobileEditor from '../../../src/editor/mobile-editor-element';
+import MobileEditor from '../../../src/editor/mobile-editor-element';
 
 declare var bridge: any;
 
@@ -15,7 +16,7 @@ describe('NativeToWebBridge', () => {
 
   let wrapper: ReactWrapper;
   beforeEach(async () => {
-    wrapper = mount(mobileEditor({}));
+    wrapper = mount(<MobileEditor />);
   });
 
   afterEach(() => {

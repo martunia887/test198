@@ -1,9 +1,10 @@
-import mobileEditor from '../../../src/editor/mobile-editor-element';
+import React from 'react';
 import { mount } from 'enzyme';
 import {
   storyMediaProviderFactory,
   sleep,
 } from '@atlaskit/editor-test-helpers';
+import MobileEditor from '../../../src/editor/mobile-editor-element';
 
 export async function mountEditor() {
   const elem = document.createElement('div');
@@ -11,7 +12,7 @@ export async function mountEditor() {
   const place = document.body.appendChild(elem);
   const mediaProvider = storyMediaProviderFactory({});
   await mediaProvider;
-  const wrapper = mount(mobileEditor({ mediaProvider: mediaProvider }), {
+  const wrapper = mount(<MobileEditor mediaProvider={mediaProvider} />, {
     attachTo: place,
   });
 

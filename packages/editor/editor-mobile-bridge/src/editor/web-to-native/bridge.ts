@@ -16,6 +16,11 @@ export interface TextFormattingBridge {
 export interface MediaBridge {
   getServiceHost(): string;
   getCollection(): string;
+  onMediaClick(
+    mediaId: string,
+    collectionName: string,
+    occurrenceKey?: string,
+  ): void;
 }
 
 export interface PromiseBridge {
@@ -63,7 +68,8 @@ export default interface NativeBridge
     ListBridge,
     StatusBridge,
     LinkBridge,
-    UndoRedoBridge {
+    UndoRedoBridge,
+    MediaBridge {
   call<T extends EditorPluginBridges>(
     bridge: T,
     event: keyof Exclude<EditorBridges[T], undefined>,

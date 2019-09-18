@@ -65,6 +65,11 @@ export interface MediaPMPluginOptions {
   allowDropzoneDropLine?: boolean;
   allowMarkingUploadsAsIncomplete?: boolean;
   fullWidthEnabled?: boolean;
+  clickHandler?: (
+    mediaId: string,
+    collectionName: string,
+    occurrenceKey?: string,
+  ) => void;
 }
 
 const mediaPlugin = (
@@ -140,8 +145,8 @@ const mediaPlugin = (
               allowResizing: !!(options && options.allowResizing),
             },
             reactContext,
-            dispatch,
             pluginOptions,
+            dispatch,
           ),
       },
       { name: 'mediaKeymap', plugin: () => keymapPlugin() },

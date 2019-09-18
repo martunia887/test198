@@ -71,50 +71,66 @@ type Props = EditorProps & {
   mediaProvider?: Promise<MediaProviderType>;
 };
 
-export default function mobileEditor(props: Props) {
-  // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
-  const mode = (params && params.theme) || props.mode || 'light';
-  // Temporarily opting out of the default oauth2 flow for phase 1 of Smart Links
-  // See https://product-fabric.atlassian.net/browse/FM-2149 for details.
-  const authFlow = 'disabled';
-  return (
-    <SmartCardProvider client={cardClient} authFlow={authFlow}>
-      <AtlaskitThemeProvider mode={mode}>
-        <EditorWithState
-          appearance="mobile"
-          mentionProvider={Promise.resolve(MentionProvider)}
-          emojiProvider={Promise.resolve(MockEmojiProvider)}
-          media={{
-            customMediaPicker: new MobilePicker(),
-            provider: props.mediaProvider || MediaProvider,
-            allowMediaSingle: true,
-          }}
-          allowConfluenceInlineComment={true}
-          allowLists={true}
-          onChange={() => {
-            toNativeBridge.updateText(bridge.getContent());
-          }}
-          allowPanel={true}
-          allowCodeBlocks={true}
-          allowTables={{
-            allowControls: false,
-          }}
-          UNSAFE_cards={{
-            provider: props.cardProvider || Promise.resolve(cardProvider),
-          }}
-          allowExtension={true}
-          allowTextColor={true}
-          allowDate={true}
-          allowRule={true}
-          allowStatus={true}
-          allowLayouts={{
-            allowBreakout: true,
-          }}
-          taskDecisionProvider={Promise.resolve(TaskDecisionProvider())}
-          // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
-          {...props}
-        />
-      </AtlaskitThemeProvider>
-    </SmartCardProvider>
-  );
+export default class MobileEditor extends React.Component<Props> {
+  handleMediaClick(
+    mediaId: string,
+    collectionName: string,
+    occurrenceKey?: string,
+  ) {
+    toNativeBridge.onMediaClick(mediaId, collectionName, occurrenceKey);
+  }
+
+  render() {
+    // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
+    const mode = (params && params.theme) || this.props.mode || 'light';
+    // Temporarily opting out of the default oauth2 flow for phase 1 of Smart Links
+    // See https://product-fabric.atlassian.net/browse/FM-2149 for details.
+    const authFlow = 'disabled';
+    return (
+      <SmartCardProvider client={cardClient} authFlow={authFlow}>
+        <AtlaskitThemeProvider mode={mode}>
+          <EditorWithState
+            appearance="mobile"
+            mentionProvider={Promise.resolve(MentionProvider)}
+            emojiProvider={Promise.resolve(MockEmojiProvider)}
+            media={{
+              customMediaPicker: new MobilePicker(),
+              provider: this.props.mediaProvider || MediaProvider,
+              allowMediaSingle: true,
+            }}
+            allowConfluenceInlineComment={true}
+            allowLists={true}
+            onChange={() => {
+              toNativeBridge.updateText(bridge.getContent());
+            }}
+            allowPanel={true}
+            allowCodeBlocks={true}
+            allowTables={{
+              allowControls: false,
+            }}
+            UNSAFE_cards={{
+              provider:
+                this.props.cardProvider || Promise.resolve(cardProvider),
+            }}
+            allowExtension={true}
+            allowTextColor={true}
+            allowDate={true}
+            allowRule={true}
+            allowStatus={true}
+            allowLayouts={{
+              allowBreakout: true,
+            }}
+            taskDecisionProvider={Promise.resolve(TaskDecisionProvider())}
+            eventHandlers={{
+              media: {
+                onClick: this.handleMediaClick,
+              },
+            }}
+            // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
+            {...this.props}
+          />
+        </AtlaskitThemeProvider>
+      </SmartCardProvider>
+    );
+  }
 }

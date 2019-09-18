@@ -711,12 +711,11 @@ export const createPlugin = (
   _schema: Schema,
   options: MediaPluginOptions,
   reactContext: () => {},
+  mediaPluginOptions: MediaPMPluginOptions = {},
   dispatch?: Dispatch,
-  mediaPluginOptions?: MediaPMPluginOptions,
 ) => {
-  const dropPlaceholder = createDropPlaceholder(
-    mediaPluginOptions && mediaPluginOptions.allowDropzoneDropLine,
-  );
+  const { clickHandler, allowDropzoneDropLine } = mediaPluginOptions;
+  const dropPlaceholder = createDropPlaceholder(allowDropzoneDropLine);
 
   return new Plugin({
     state: {
@@ -819,6 +818,14 @@ export const createPlugin = (
       nodeViews: options.nodeViews,
       handleTextInput(view: EditorView): boolean {
         getMediaPluginState(view.state).splitMediaGroup();
+        return false;
+      },
+      handleClickOn(view, pos, node, nodePos, event, direct): boolean {
+        // Call the handler only when user clicks on media single node
+        if (clickHandler && direct) {
+          const { id, collection, occurrenceKey } = node.child(0).attrs;
+          clickHandler(id, collection, occurrenceKey);
+        }
         return false;
       },
     },

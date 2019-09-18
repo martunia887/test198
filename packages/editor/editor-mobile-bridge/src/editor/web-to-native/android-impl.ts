@@ -59,6 +59,16 @@ export default class AndroidBridge implements NativeBridge {
     return this.mediaBridge.getCollection();
   }
 
+  onMediaClick(
+    mediaId: string,
+    collectionName: string,
+    occurrenceKey?: string,
+  ) {
+    if (this.mediaBridge && this.mediaBridge.onMediaClick) {
+      this.mediaBridge.onMediaClick(mediaId, collectionName, occurrenceKey);
+    }
+  }
+
   submitPromise(name: string, uuid: string, args: string) {
     if (this.promiseBridge) {
       this.promiseBridge.submitPromise(name, uuid, args);

@@ -151,6 +151,10 @@ export default function createPluginsList(
         // so a bit of guess for now.
         allowMarkingUploadsAsIncomplete: isMobile,
         fullWidthEnabled: props.appearance === 'full-width',
+        clickHandler:
+          props.eventHandlers &&
+          props.eventHandlers.media &&
+          props.eventHandlers.media.onClick,
       }),
     );
   }
