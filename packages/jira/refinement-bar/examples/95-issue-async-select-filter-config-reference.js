@@ -20,11 +20,13 @@ const CONFIG = {
           resolve(filterTypes(inputValue));
         }, 1000);
       }),
-    defaultOptionsLabel: 'Recommended',
-    defaultOptions: [
-      { value: '__all-standard', label: 'All standard issue types' },
-      { value: '__all-sub-task', label: 'All sub-task issue types' },
-    ],
+    defaultOptions: {
+      label: 'Recommended',
+      options: [
+        { value: '__all-standard', label: 'All standard issue types' },
+        { value: '__all-sub-task', label: 'All sub-task issue types' },
+      ],
+    },
   },
 };
 

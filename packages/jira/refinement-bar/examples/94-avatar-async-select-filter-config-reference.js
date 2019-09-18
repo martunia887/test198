@@ -20,17 +20,21 @@ const CONFIG = {
           resolve(filterAssignees(inputValue));
         }, 1000);
       }),
-    defaultOptionsLabel: 'Recommended',
     defaultOptions: [
       {
-        value: '__current-user',
-        label: 'Current User',
-        avatar: `http://i.pravatar.cc/48?u=__current-user`,
-      },
-      {
-        value: '__unassigned',
-        label: 'Unassigned',
-        avatar: null,
+        label: 'Recommended',
+        options: [
+          {
+            value: '__current-user',
+            label: 'Current User',
+            avatar: `http://i.pravatar.cc/48?u=__current-user`,
+          },
+          {
+            value: '__unassigned',
+            label: 'Unassigned',
+            avatar: null,
+          },
+        ],
       },
     ],
   },

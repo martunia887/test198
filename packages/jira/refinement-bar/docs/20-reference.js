@@ -132,7 +132,7 @@ type Options = Array<Option>
 type SelectFieldConfig = DefaultConfig & {
   onMenuScrollToBottom?: (event: WheelEvent) => void,
   onMenuScrollToTop?: (event: WheelEvent) => void,
-  options: Options | (refinementBarValue: Object) => Options,
+  options: Options,
   placeholder?: string, // Default "Search..."
 }
 
@@ -215,7 +215,6 @@ ${code`
 type AsyncSelectFieldConfig = SelectFieldConfig & {
   cacheOptions?: any,
   defaultOptions?: Options | boolean,
-  defaultOptionsLabel?: string,
   inputValue?: string,
   loadOptions: (inputValue: string) => Options,
   onInputChange?: Function,

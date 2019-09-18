@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import { Heading, PreMap } from './styled';
 import {
   AvatarAsyncSelectFilter,
   IssueSelectFilter,
@@ -14,6 +13,9 @@ import {
   RefinementBarProvider,
   RefinementBarUI,
 } from '../src';
+
+// import { filterAssignees } from './data';
+import { Heading, PreMap } from './styled';
 
 export default class AdvancedConfigExample extends React.Component {
   state = { activePopupKey: null, value: {} };
@@ -165,19 +167,24 @@ const FIELD_CONFIG = (function fieldConfig() {
     issueAssignee: {
       type: AvatarAsyncSelectFilter,
       label: 'Assignee',
-      defaultOptionsLabel: 'Recommended',
       defaultOptions: [
         {
-          value: '__current-user',
-          label: 'Current User',
-          avatar: `http://i.pravatar.cc/48?u=__current-user`,
-        },
-        {
-          value: '__unassigned',
-          label: 'Unassigned',
-          avatar: null,
+          label: 'Recommended',
+          options: [
+            {
+              value: '__current-user',
+              label: 'Current User',
+              avatar: `http://i.pravatar.cc/48?u=__current-user`,
+            },
+            {
+              value: '__unassigned',
+              label: 'Unassigned',
+              avatar: null,
+            },
+          ],
         },
       ],
+      cacheOptions: true,
       // NOTE: This may be rate limited in the future. If that happens, import
       // `filterAssignees` from `./data` and use the method beneath
       loadOptions: async inputValue => {
@@ -191,7 +198,7 @@ const FIELD_CONFIG = (function fieldConfig() {
           .map(u => ({
             avatar: u.avatar_url,
             label: u.login,
-            value: u.login,
+            value: u.id,
           }));
       },
       // loadOptions: inputValue =>

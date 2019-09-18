@@ -25,25 +25,27 @@ const FIELD_CONFIG = {
                 { label: 'Sydney', value: 'sydney' },
               ].filter(e => e.label.match(new RegExp(inputValue, 'i'))),
             ),
-          inputValue ? 0 : 3000,
+          inputValue ? 0 : 1000,
         );
       }),
   },
 };
 
 const IRREMOVABLE_KEYS = Object.keys(FIELD_CONFIG);
-const noop = () => {};
-const defaultValue = {};
 
-const AsyncLoadedSelectOptions = () => (
-  <div style={{ padding: 20 }}>
-    <RefinementBar
-      fieldConfig={FIELD_CONFIG}
-      irremovableKeys={IRREMOVABLE_KEYS}
-      onChange={noop}
-      value={defaultValue}
-    />
-  </div>
-);
+const AsyncLoadedSelectOptions = () => {
+  const [value, setValue] = React.useState({});
+
+  return (
+    <div style={{ padding: 20 }}>
+      <RefinementBar
+        fieldConfig={FIELD_CONFIG}
+        irremovableKeys={IRREMOVABLE_KEYS}
+        onChange={v => setValue(v)}
+        value={value}
+      />
+    </div>
+  );
+};
 
 export default AsyncLoadedSelectOptions;

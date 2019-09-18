@@ -20,10 +20,14 @@ const CONFIG = {
           resolve(filterCapitals(inputValue));
         }, 1000);
       }),
-    defaultOptionsLabel: 'Popular',
-    defaultOptions: CAPITALS.filter(opt =>
-      ['Melbourne', 'Sydney'].includes(opt.label),
-    ),
+    defaultOptions: [
+      {
+        label: 'Popular',
+        options: CAPITALS.filter(opt =>
+          ['Melbourne', 'Sydney'].includes(opt.label),
+        ),
+      },
+    ],
   },
 };
 
