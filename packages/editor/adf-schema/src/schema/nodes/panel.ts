@@ -34,7 +34,7 @@ export interface DOMAttributes {
 
 export const panel: NodeSpec = {
   group: 'block',
-  content: '(paragraph | heading | bulletList | orderedList)+',
+  content: '(paragraph | heading | bulletList | orderedList | mediaSingle)+',
   attrs: {
     panelType: { default: 'info' },
   },
