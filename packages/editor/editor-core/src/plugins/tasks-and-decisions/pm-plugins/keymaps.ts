@@ -6,7 +6,10 @@ import {
   Plugin,
   TextSelection,
 } from 'prosemirror-state';
-import { hasParentNodeOfType } from 'prosemirror-utils';
+import {
+  hasParentNodeOfType,
+  findParentNodeOfTypeClosestToPos,
+} from 'prosemirror-utils';
 import { insertTaskDecisionWithAnalytics } from '../commands';
 import { INPUT_METHOD } from '../../analytics';
 import { TaskDecisionListType } from '../types';
@@ -18,6 +21,7 @@ import {
 import { autoJoin } from 'prosemirror-commands';
 import { findCutBefore } from '../../../utils/commands';
 import { findFarthestParentNode } from '../../../utils';
+import { Command } from 'src/types';
 
 const isInsideTaskOrDecisionItem = (state: EditorState) => {
   const { decisionItem, taskItem } = state.schema.nodes;
@@ -116,9 +120,51 @@ const indent = autoJoin(
   ['taskList'],
 );
 
+const backspaceFrom = ($from: ResolvedPos): Command => (state, dispatch) => {
+  // previous was empty, just delete backwards
+  const taskBefore = $from.doc.resolve($from.before());
+  if (
+    taskBefore.nodeBefore &&
+    ['decisionItem', 'taskItem'].indexOf(taskBefore.nodeBefore.type.name) >
+      -1 &&
+    taskBefore.nodeBefore.nodeSize === 2
+  ) {
+    return false;
+  }
+
+  // if nested, just unindent
+  if ($from.node($from.depth - 2).type.name === 'taskList') {
+    return unindent(state, dispatch);
+  }
+
+  // bottom level, should "unwrap" taskItem contents into paragraph
+  // we achieve this by slicing the content out, and replacing
+  if (canSplitListItem(state.tr)) {
+    if (dispatch) {
+      const taskContent = state.doc.slice($from.start(), $from.end()).content;
+
+      // might be end of document after
+      const slice = taskContent.size
+        ? state.schema.nodes.paragraph.createChecked(undefined, taskContent)
+        : state.schema.nodes.paragraph.createChecked();
+
+      dispatch(splitListItemWith(state.tr, slice, $from, true));
+    }
+
+    return true;
+  }
+
+  return false;
+};
+
 const backspace = autoJoin(
   (state: EditorState, dispatch?: (tr: Transaction) => void) => {
     const { $from } = state.selection;
+
+    // ensure cursor at start of item
+    if ($from.start() !== $from.pos || !state.selection.empty) {
+      return false;
+    }
 
     // try to join paragraph and taskList when backspacing
     const $cut = findCutBefore($from);
@@ -165,48 +211,154 @@ const backspace = autoJoin(
       return false;
     }
 
-    // ensure cursor at start of item
-    if ($from.start() !== $from.pos || !state.selection.empty) {
-      return false;
-    }
-
-    // previous was empty, just delete backwards
-    const taskBefore = $from.doc.resolve($from.before());
-    if (
-      taskBefore.nodeBefore &&
-      ['decisionItem', 'taskItem'].indexOf(taskBefore.nodeBefore.type.name) >
-        -1 &&
-      taskBefore.nodeBefore.nodeSize === 2
-    ) {
-      return false;
-    }
-
-    // if nested, just unindent
-    if ($from.node($from.depth - 2).type.name === 'taskList') {
-      return unindent(state, dispatch);
-    }
-
-    // bottom level, should "unwrap" taskItem contents into paragraph
-    // we achieve this by slicing the content out, and replacing
-    if (canSplitListItem(state.tr)) {
-      if (dispatch) {
-        const taskContent = state.doc.slice($from.start(), $from.end()).content;
-
-        // might be end of document after
-        const slice = taskContent.size
-          ? state.schema.nodes.paragraph.createChecked(undefined, taskContent)
-          : state.schema.nodes.paragraph.createChecked();
-
-        dispatch(splitListItemWith(state.tr, slice));
-      }
-
-      return true;
-    }
-
-    return false;
+    return backspaceFrom($from)(state, dispatch);
   },
   ['taskList', 'decisionList'],
 );
+
+const deleteHandler: Command = (state, dispatch) => {
+  if (!isInsideTaskOrDecisionItem(state)) {
+    console.warn('not inside task decision');
+    return false;
+  }
+
+  // const { $from } = state.selection;
+
+  // ensure cursor is empty
+  if (
+    state.selection.$from.end() !== state.selection.$from.pos ||
+    !state.selection.empty
+  ) {
+    console.warn('selection was not at end or non-empty');
+    return false;
+  }
+
+  // look for the node after this current one
+  // FIXME: +3 gave me text node, need to fix depending on surrounds + using ResolvedPos, not pos
+  const $next = state.selection.$from.doc.resolve(
+    state.selection.$from.after() + 2,
+  );
+
+  // if there's no taskItem or taskList following, then we just do the normal behaviour
+  const parentList = findParentNodeOfTypeClosestToPos($next, [
+    state.schema.nodes.taskList,
+    state.schema.nodes.taskItem,
+  ]);
+  if (!parentList) {
+    if (
+      $next.nodeAfter &&
+      $next.nodeAfter.type === state.schema.nodes.paragraph
+    ) {
+      // try to join paragraph and taskList when backspacing
+      const $cut = findCutBefore($next.doc.resolve($next.pos + 1));
+      if ($cut) {
+        if (
+          $cut.nodeBefore &&
+          ['taskList', 'decisionList'].indexOf($cut.nodeBefore.type.name) >
+            -1 &&
+          $cut.nodeAfter &&
+          $cut.nodeAfter.type.name === 'paragraph'
+        ) {
+          // taskList contains taskItem, so this is the end of the inside
+          let $lastNode = $cut.doc.resolve($cut.pos - 1);
+
+          while (
+            ['taskItem', 'decisionItem'].indexOf($lastNode.parent.type.name) ===
+            -1
+          ) {
+            $lastNode = state.doc.resolve($lastNode.pos - 1);
+          }
+
+          const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
+
+          // join them
+          const tr = state.tr.step(
+            new ReplaceAroundStep(
+              $lastNode.pos,
+              $cut.pos + $cut.nodeAfter.nodeSize,
+              $cut.pos + 1,
+              $cut.pos + $cut.nodeAfter.nodeSize - 1,
+              slice,
+              0,
+              true,
+            ),
+          );
+
+          if (dispatch) {
+            dispatch(tr);
+          }
+          return true;
+        } else {
+          console.log('uhh cut surrounds:', $cut.nodeBefore, $cut.nodeAfter);
+        }
+      } else {
+        console.warn('no cut');
+      }
+    } else {
+      console.warn('after', $next.nodeAfter);
+    }
+
+    return true;
+  }
+
+  // previous was empty, just delete backwards
+  // FIXME: do we need this in delete handler?
+  const taskBefore = $next.doc.resolve($next.before());
+  if (
+    taskBefore.nodeBefore &&
+    ['decisionItem', 'taskItem'].indexOf(taskBefore.nodeBefore.type.name) >
+      -1 &&
+    taskBefore.nodeBefore.nodeSize === 2
+  ) {
+    console.log('nothing before, skipping');
+    return false;
+  }
+
+  // if nested, just unindent
+  if ($next.node($next.depth - 2).type.name === 'taskList') {
+    if (dispatch) {
+      const blockRange = getBlockRange($next, $next);
+      if (!blockRange) {
+        return true;
+      }
+
+      // ensure we can actually lift
+      const target = liftTarget(blockRange);
+      if (typeof target !== 'number') {
+        return true;
+      }
+
+      dispatch(state.tr.lift(blockRange, target).scrollIntoView());
+    }
+
+    return true;
+  }
+
+  // bottom level, should "unwrap" taskItem contents into paragraph
+  // we achieve this by slicing the content out, and replacing
+  if (canSplitListItem(state.tr)) {
+    if (dispatch) {
+      const taskContent = state.doc.slice($next.start(), $next.end()).content;
+
+      // might be end of document after
+      const slice = taskContent.size
+        ? state.schema.nodes.paragraph.createChecked(undefined, taskContent)
+        : state.schema.nodes.paragraph.createChecked();
+
+      dispatch(splitListItemWith(state.tr, slice, $next, false));
+    }
+
+    return true;
+  }
+
+  console.log('fall-through');
+
+  return false;
+
+  // return backspaceFrom($next)(state, dispatch);
+};
+
+const deleteForwards = autoJoin(deleteHandler, ['taskList', 'decisionList']);
 
 const canSplitListItem = (tr: Transaction) => {
   const { $from } = tr.selection;
@@ -220,9 +372,9 @@ const canSplitListItem = (tr: Transaction) => {
 const splitListItemWith = (
   tr: Transaction,
   content: Fragment | Node | Node[],
+  $from: ResolvedPos,
+  setSelection: boolean,
 ) => {
-  const { $from } = tr.selection;
-
   const origDoc = tr.doc;
 
   // split just before the current item
@@ -248,9 +400,11 @@ const splitListItemWith = (
   );
 
   // put cursor inside paragraph
-  tr = tr.setSelection(
-    new TextSelection(tr.doc.resolve($from.pos + 1 - (shouldSplit ? 0 : 2))),
-  );
+  if (setSelection) {
+    tr = tr.setSelection(
+      new TextSelection(tr.doc.resolve($from.pos + 1 - (shouldSplit ? 0 : 2))),
+    );
+  }
 
   // lift list up if the node after the initial one was a taskList
   // which means it would have empty placeholder content if we just immediately delete it
@@ -293,7 +447,14 @@ const splitListItem = (
 
   if (canSplitListItem(tr)) {
     if (dispatch) {
-      dispatch(splitListItemWith(tr, schema.nodes.paragraph.createChecked()));
+      dispatch(
+        splitListItemWith(
+          tr,
+          schema.nodes.paragraph.createChecked(),
+          state.selection.$from,
+          false,
+        ),
+      );
     }
     return true;
   }
@@ -306,6 +467,7 @@ export function keymapPlugin(schema: Schema): Plugin | undefined {
     'Shift-Tab': unindent,
     Tab: indent,
     Backspace: backspace,
+    Delete: deleteForwards,
 
     Enter: (state: EditorState, dispatch: (tr: Transaction) => void) => {
       const { selection } = state;
