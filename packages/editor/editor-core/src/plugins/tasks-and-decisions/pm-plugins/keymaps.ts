@@ -21,7 +21,7 @@ import {
 import { autoJoin } from 'prosemirror-commands';
 import { findCutBefore } from '../../../utils/commands';
 import { findFarthestParentNode } from '../../../utils';
-import { Command } from 'src/types';
+import { Command } from '../../../types';
 
 const isInsideTaskOrDecisionItem = (state: EditorState) => {
   const { decisionItem, taskItem } = state.schema.nodes;
