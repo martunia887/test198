@@ -92,7 +92,9 @@ export type FeatureFlagProps = {
   [MultiVariateFeature.productTopItemVariation]?: ProductTopItemVariation;
 };
 
-export type FeatureMap = FeatureFlagProps;
+export type FeatureMap = { [key in Feature]: boolean } & {
+  [MultiVariateFeature.productTopItemVariation]: ProductTopItemVariation;
+};
 
 export type CustomLinksResponse = CustomLink[];
 

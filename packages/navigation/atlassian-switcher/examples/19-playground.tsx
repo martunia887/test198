@@ -218,8 +218,8 @@ class JiraSwitcherExample extends React.Component {
           <Separator />
           <Button type="button" onClick={this.useActivityPlatform}>
             {isUsingAPRecentContainers
-              ? 'Use activity-service'
-              : 'Use Activity Platform'}{' '}
+              ? 'Use activity-service '
+              : 'Use Activity Platform '}
             for recent containers
           </Button>
           <Separator />

@@ -1,4 +1,4 @@
-import { RecentContainersProvider } from '../../instance-data-providers';
+import { RecentContainersProvider } from 'src/providers/recent-containers-provider';
 
 declare var global: any;
 import * as React from 'react';
