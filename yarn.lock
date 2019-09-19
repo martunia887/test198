@@ -37,6 +37,13 @@
   dependencies:
     babel-runtime "^6.11.6"
 
+"@atlassian/confluence-urls@^0.0.1":
+  version "0.0.1"
+  resolved "https://packages.atlassian.com/api/npm/atlassian-npm/@atlassian/confluence-urls/-/@atlassian/confluence-urls-0.0.1.tgz#f03702973391ceca6fc9bbe4d0465c893f4792a9"
+  integrity sha1-8DcClzORzspvybvk0EZciT9Hkqk=
+  dependencies:
+    window-or-global "1.0.1"
+
 "@atlassian/confluence-wrm@^0.0.1":
   version "0.0.1"
   resolved "https://packages.atlassian.com/api/npm/atlassian-npm/@atlassian/confluence-wrm/-/@atlassian/confluence-wrm-0.0.1.tgz#b406528db1ceae1fe6f855be269353076173e524"

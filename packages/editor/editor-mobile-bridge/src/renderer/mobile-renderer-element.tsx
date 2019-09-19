@@ -4,7 +4,6 @@ import {
   ProviderFactory,
   ExtensionHandler,
   ExtensionHandlers,
-  ExtensionParams,
 } from '@atlaskit/editor-common';
 import { MediaProvider as MediaProviderType } from '@atlaskit/editor-core';
 import { ReactRenderer, RendererProps } from '@atlaskit/renderer';
@@ -24,9 +23,8 @@ import {
 } from '@atlaskit/smart-card';
 import { eventDispatcher } from './dispatcher';
 import { ObjectKey, TaskState } from '@atlaskit/task-decision';
-
 import { createPromise } from '../cross-platform-promise';
-import { extensionToADF } from './helpers';
+import { MacroComponent } from './macro-extension-handler/MacroComponent';
 
 export interface MobileRendererProps {
   document?: string;
@@ -40,67 +38,6 @@ export interface MobileRendererState {
 }
 
 const rendererBridge = ((window as any).rendererBridge = new RendererBridgeImpl());
-
-export interface MacroRendererProps {
-  extension: ExtensionParams<any>;
-}
-
-export interface MacroRendererState {
-  content?: string | null;
-  contentId?: number | null;
-}
-
-class MacroComponent extends React.Component<
-  MacroRendererProps,
-  MacroRendererState
-> {
-  constructor(props: MacroRendererProps) {
-    super(props);
-
-    this.state = {
-      content: null,
-    };
-  }
-
-  componentDidMount() {
-    const ext = this.props.extension;
-    const adf = JSON.stringify(extensionToADF(ext));
-    const contentId = '960561171'; // https://product-fabric.atlassian.net/wiki/spaces/~speachey/pages/960561171/Single+macro
-
-    const dataToSend = {
-      contentId,
-      adf,
-    };
-
-    createPromise('customConfigurationMacro')
-      .submit()
-      .then(result => {
-        console.log('=== result of promise');
-        var resultObj = JSON.parse(JSON.stringify(result));
-        console.log(resultObj.contentId as number);
-        this.setState({
-          content: this.state.content,
-          contentId: resultObj.contentId as number,
-        });
-      });
-
-    // createPromise('customLegacyMacro', JSON.stringify(dataToSend))
-    //   .submit()
-    //   .then(result => {
-    //     console.log('=== result of promise');
-    //     console.log(result);
-    //     this.setState(result);
-    //   });
-  }
-
-  render() {
-    if (this.state.content) {
-      return <div dangerouslySetInnerHTML={{ __html: this.state.content }} />;
-    } else {
-      return <div>Ahoy</div>;
-    }
-  }
-}
 
 export default class MobileRenderer extends React.Component<
   MobileRendererProps,
@@ -116,6 +53,7 @@ export default class MobileRenderer extends React.Component<
 
     this.state = {
       document: props.document || null,
+      macroWhitelist: null,
     };
 
     const taskDecisionProvider = TaskDecisionProvider(this.handleToggleTask);
@@ -159,6 +97,18 @@ export default class MobileRenderer extends React.Component<
         document: content,
       });
     });
+    createPromise('customConfigurationMacro')
+      .submit()
+      .then(result => {
+        console.log('=== result of promise of whitelist');
+        var resultObj = JSON.parse(JSON.stringify(result));
+        console.log(resultObj.contentId as number);
+        this.setState({
+          content: this.state.content,
+          contentId: resultObj.contentId as number,
+          macroWhitelist: resultObj,
+        });
+      });
   }
 
   getExtensionHandlers(): ExtensionHandlers {
@@ -169,7 +119,12 @@ export default class MobileRenderer extends React.Component<
 
   getMacroExtensionHandler(): ExtensionHandler<any> {
     return extension => {
-      return <MacroComponent extension={extension} />;
+      return (
+        <MacroComponent
+          extension={extension}
+          macroWhitelist={this.state.macroWhitelist}
+        />
+      );
     };
   }
 
