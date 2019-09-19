@@ -18,8 +18,9 @@ import {
   mediaSingle,
   underline,
   randomId,
+  p,
 } from '@atlaskit/editor-test-helpers';
-import { NodeSelection } from 'prosemirror-state';
+import { NodeSelection, EditorState } from 'prosemirror-state';
 import {
   editExtension,
   removeExtension,
@@ -28,6 +29,7 @@ import {
 import { pluginKey } from '../../../../plugins/extension/plugin';
 import { findParentNodeOfType } from 'prosemirror-utils';
 import { setNodeSelection } from '../../../../utils';
+import { DecorationSet, Decoration } from 'prosemirror-view';
 
 const macroProviderPromise = Promise.resolve(macroProvider);
 
@@ -51,6 +53,108 @@ describe('extension', () => {
   };
 
   const extensionAttrs = bodiedExtensionData[1].attrs;
+
+  const getDecorations = (state: EditorState) => {
+    const plugin = pluginKey.get(state);
+    return plugin!.spec.props!.decorations!(state) as DecorationSet;
+  };
+
+  describe('when extension is the top level node', () => {
+    describe('for extension node', () => {
+      it('should include proper decoration', () => {
+        const initialValue = { content: 'hello 123' };
+        const extensionKey = 'test-key-123';
+        const extensionType = 'test-ext';
+
+        const { editorView } = editor(
+          doc(
+            extension({
+              extensionKey,
+              extensionType,
+              parameters: initialValue,
+            })(),
+          ),
+        );
+
+        const decorations = getDecorations(editorView.state);
+
+        expect(decorations.find()).toEqual([
+          Decoration.node(
+            0,
+            1,
+            {
+              class: 'top-level-block-extension',
+            },
+            {
+              key: 'extensionDec',
+            },
+          ),
+        ]);
+      });
+    });
+
+    describe('for bodied extension node', () => {
+      it('should include proper decoration', () => {
+        const { editorView } = editor(
+          doc(bodiedExtension(extensionAttrs)(paragraph('a{<>}'))),
+        );
+
+        const decorations = getDecorations(editorView.state);
+
+        const expectedNodeSize = editorView.state.doc.nodeAt(0)!.nodeSize;
+
+        expect(decorations.find()).toEqual([
+          Decoration.node(
+            0,
+            expectedNodeSize,
+            {
+              class: 'top-level-block-extension',
+            },
+            {
+              key: 'extensionDec',
+            },
+          ),
+        ]);
+      });
+    });
+  });
+
+  describe('when extension is not the top level node', () => {
+    describe('for extension node', () => {
+      it('should not include any decoration', () => {
+        const initialValue = { content: 'hello 123' };
+        const extensionKey = 'test-key-123';
+        const extensionType = 'test-ext';
+
+        const { editorView } = editor(
+          doc(
+            p('test'),
+            extension({
+              extensionKey,
+              extensionType,
+              parameters: initialValue,
+            })(),
+          ),
+        );
+
+        const decorations = getDecorations(editorView.state);
+
+        expect(decorations).toBe(DecorationSet.empty);
+      });
+    });
+
+    describe('for bodied extension node', () => {
+      it('should not include any decoration', () => {
+        const { editorView } = editor(
+          doc(p('test'), bodiedExtension(extensionAttrs)(paragraph('a{<>}'))),
+        );
+
+        const decorations = getDecorations(editorView.state);
+
+        expect(decorations).toBe(DecorationSet.empty);
+      });
+    });
+  });
 
   describe('when extension is selected', () => {
     it('should delete the bodied extension', () => {

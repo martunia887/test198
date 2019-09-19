@@ -12,7 +12,7 @@ export const extensionStyles = css`
     margin: ${blockNodesVerticalMargin}rem 0;
     user-select: none;
 
-    &:first-of-type {
+    &.top-level-block-extension {
       margin-top: 0;
     }
 

@@ -3,6 +3,8 @@ import adfWithMixedContent from './__fixtures__/mixed-content.adf.json';
 import adfWithMedia from './__fixtures__/content-with-media.adf.json';
 import adfWithBreakout from './__fixtures__/mixed-content-with-breakout.adf.json';
 import adfWithHScrollContent from './__fixtures__/horizontal-scroll-content.adf.json';
+import adfWithExtensionInTheMiddle from './__fixtures__/content-with-extension-in-the-middle.json';
+import adfWithExtensionOnTheTop from './__fixtures__/content-with-extension-on-the-top.json';
 import { Page } from '../../__helpers/page-objects/_types';
 import { scrollToTop } from '../../__helpers/page-objects/_editor';
 
@@ -43,6 +45,20 @@ describe('Full-width mode', () => {
       describe(`with media`, () => {
         it('should display content in full-width mode', async () => {
           await initEditor(adfWithMedia, width);
+          await snapshot(page);
+        });
+      });
+
+      describe('when extension is a middle node', () => {
+        it('should have margin-top', async () => {
+          await initEditor(adfWithExtensionInTheMiddle, width);
+          await snapshot(page);
+        });
+      });
+
+      describe('when extension is the top level node', () => {
+        it('should not have margin-top', async () => {
+          await initEditor(adfWithExtensionOnTheTop, width);
           await snapshot(page);
         });
       });

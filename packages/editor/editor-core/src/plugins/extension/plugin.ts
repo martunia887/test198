@@ -1,5 +1,5 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { EditorView, Decoration, DecorationSet } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { ExtensionLayout } from '@atlaskit/adf-schema';
 import {
@@ -26,6 +26,9 @@ export type ExtensionState = {
   showEditButton: boolean;
   updateExtension: UpdateExtension<object>;
 };
+
+const isBlockExtension = (node: PMNode): boolean =>
+  node.type.name === 'extension' || node.type.name === 'bodiedExtension';
 
 export default (
   dispatch: Dispatch,
@@ -139,6 +142,22 @@ export default (
     },
     key: pluginKey,
     props: {
+      decorations: ({ doc }) => {
+        const firstNode = doc.nodeAt(0);
+        if (firstNode && isBlockExtension(firstNode)) {
+          const attrs = {
+            class: 'top-level-block-extension',
+          };
+          const specs = {
+            key: 'extensionDec',
+          };
+          const decorations = [
+            Decoration.node(0, firstNode.nodeSize, attrs, specs),
+          ];
+          return DecorationSet.create(doc, decorations);
+        }
+        return DecorationSet.empty;
+      },
       nodeViews: {
         extension: ExtensionNodeView(
           portalProviderAPI,
