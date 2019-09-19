@@ -52,6 +52,7 @@ export const mockEndpoints = (
 
   const {
     RECENT_CONTAINERS_DATA,
+    GRAPHQL_RECENT_CONTAINERS,
     CUSTOM_LINKS_DATA,
     LICENSE_INFORMATION_DATA,
     USER_PERMISSION_DATA,
@@ -62,6 +63,18 @@ export const mockEndpoints = (
     '/gateway/api/worklens/api/available-products',
     transformer,
     loadTimes,
+  );
+
+  fetchMock.post(
+    '/gateway/api/graphql',
+    () =>
+      new Promise(res =>
+        setTimeout(
+          () => res(GRAPHQL_RECENT_CONTAINERS),
+          loadTimes && loadTimes.containers,
+        ),
+      ),
+    { method: 'POST', overwriteRoutes: true },
   );
 
   fetchMock.get(

@@ -37,6 +37,7 @@ export default (props: ConfluenceSwitcherProps) => (
         {(availableProducts: ProviderResult<AvailableProductsResponse>) => (
           <CommonDataProvider
             cloudId={props.cloudId}
+            isUsingAPRecentContainers={props.features.isUsingAPRecentContainers}
             isUserCentric={props.features.enableUserCentricProducts}
             disableRecentContainers={props.features.disableRecentContainers}
           >

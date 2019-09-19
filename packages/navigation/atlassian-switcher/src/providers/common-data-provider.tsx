@@ -5,7 +5,6 @@ import { LicenseInformationResponse, RecentContainersResponse } from '../types';
 
 import {
   LicenseInformationProvider,
-  RecentContainersProvider,
   UserPermissionProvider,
   XFlowSettingsProvider,
 } from './instance-data-providers';
@@ -15,11 +14,13 @@ import {
   RecommendationsEngineResponse,
   RecommendationsFeatureFlags,
 } from '../types';
+import { RecentContainersProvider } from './recent-containers-provider';
 
 interface CommonDataProviderProps {
   cloudId?: string;
   isUserCentric: boolean;
   disableRecentContainers: boolean;
+  isUsingAPRecentContainers: boolean;
   recommendationsFeatureFlags?: RecommendationsFeatureFlags;
   children: (
     props: {
@@ -39,11 +40,13 @@ export default ({
   isUserCentric,
   recommendationsFeatureFlags,
   disableRecentContainers,
+  isUsingAPRecentContainers,
 }: CommonDataProviderProps) => {
   return (
     <RecentContainersProvider
       cloudId={cloudId}
       disableRecentContainers={disableRecentContainers}
+      isUsingAPRecentContainers={isUsingAPRecentContainers}
     >
       {recentContainers => (
         <LicenseInformationProvider

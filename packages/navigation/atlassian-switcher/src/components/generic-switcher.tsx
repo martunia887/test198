@@ -33,6 +33,7 @@ export default (props: GenericSwitcherProps) => (
     {availableProducts => (
       <CommonDataProvider
         cloudId={props.cloudId}
+        isUsingAPRecentContainers={props.features.isUsingAPRecentContainers}
         isUserCentric={Boolean(props.features.enableUserCentricProducts)}
         disableRecentContainers={props.features.disableRecentContainers}
       >

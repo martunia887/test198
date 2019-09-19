@@ -4,6 +4,7 @@ const iconUrl =
 export interface MockData {
   AVAILABLE_PRODUCTS_DATA: object;
   RECENT_CONTAINERS_DATA: object;
+  GRAPHQL_RECENT_CONTAINERS: object;
   CUSTOM_LINKS_DATA: object;
   LICENSE_INFORMATION_DATA: any;
   USER_PERMISSION_DATA: {
@@ -217,6 +218,116 @@ const ORIGINAL_MOCK_DATA: MockData = {
         avatar: null,
       },
     ],
+  },
+  GRAPHQL_RECENT_CONTAINERS: {
+    data: {
+      myActivities: {
+        all: {
+          nodes: [
+            {
+              object: {
+                id: '123',
+                name: 'Notifications Platform',
+                url: 'https://product-fabric.atlassian.net/wiki/spaces/NP',
+                iconURL:
+                  'https://product-fabric.atlassian.net/wiki/download/attachments/571736830/NP?version=1&modificationDate=1561943605251&cacheVersion=1&api=v2',
+                type: 'SPACE',
+              },
+            },
+            {
+              object: {
+                id: '456',
+                name: 'Findability',
+                url: 'https://product-fabric.atlassian.net/projects/FIND',
+                iconURL:
+                  'https://product-fabric.atlassian.net/secure/projectavatar?size=medium&s=medium&pid=12998&avatarId=11621',
+                type: 'PROJECT',
+              },
+            },
+            {
+              object: {
+                id: '789',
+                name: 'Findability',
+                url: 'https://product-fabric.atlassian.net/wiki/spaces/NEMO',
+                iconURL:
+                  'https://product-fabric.atlassian.net/wiki/download/attachments/871957824/NEMO?version=1&modificationDate=1561512398586&cacheVersion=1&api=v2',
+                type: 'SPACE',
+              },
+            },
+            {
+              object: {
+                id: '101112',
+                name: 'Platform Essentials Playbook',
+                url: 'https://hello.atlassian.net/wiki/spaces/PEP',
+                iconURL:
+                  'https://hello.atlassian.net/wiki/images/logo/default-space-logo-256.png',
+                type: 'SPACE',
+              },
+            },
+            {
+              object: {
+                id: '131415',
+                name: 'Platform Essentials',
+                url: 'https://hello.atlassian.net/wiki/spaces/PES',
+                iconURL:
+                  'https://hello.atlassian.net/wiki/images/logo/default-space-logo-256.png',
+                type: 'SPACE',
+              },
+            },
+            {
+              object: {
+                id: '161718',
+                name: 'Findability Programme',
+                url: 'https://hello.atlassian.net/wiki/spaces/MDX',
+                iconURL:
+                  'https://hello.atlassian.net/wiki/download/attachments/327958981/MDX?version=2&modificationDate=1540291190365&cacheVersion=1&api=v2',
+                type: 'SPACE',
+              },
+            },
+            {
+              object: {
+                id: '192021',
+                name: 'Uchi Feedback',
+                url: 'https://product-fabric.atlassian.net/projects/UF',
+                iconURL:
+                  'https://product-fabric.atlassian.net/secure/projectavatar?size=medium&s=medium&avatarId=10324',
+                type: 'PROJECT',
+              },
+            },
+            {
+              object: {
+                id: '222324',
+                name: 'Pramod Shashidhara',
+                url: 'https://hello.atlassian.net/wiki/spaces/~pshashidhara',
+                iconURL:
+                  'https://hello.atlassian.net/wiki/aa-avatar/557058:3f204aee-0636-44df-a6bf-f57cd910104b',
+                type: 'SPACE',
+              },
+            },
+            {
+              object: {
+                id: '252627',
+                name: 'Breaking Change Action',
+                url: 'https://hello.atlassian.net/projects/UA',
+                iconURL:
+                  'https://hello.atlassian.net/secure/projectavatar?size=medium&s=medium&avatarId=24523',
+                type: 'PROJECT',
+              },
+            },
+            {
+              object: {
+                id: '282930',
+                name: 'Project Central',
+                url: 'https://hello.atlassian.net/projects/PC',
+                iconURL:
+                  'https://hello.atlassian.net/secure/projectavatar?size=medium&s=medium&pid=20740&avatarId=15426',
+                type: 'PROJECT',
+              },
+            },
+          ],
+        },
+      },
+    },
   },
   RECENT_CONTAINERS_DATA: {
     data: [

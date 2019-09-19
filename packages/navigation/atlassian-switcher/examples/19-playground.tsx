@@ -10,6 +10,7 @@ class JiraSwitcherExample extends React.Component {
   state = {
     isAdmin: true,
     isDrawerOpen: false,
+    isUsingAPRecentContainers: false,
   };
 
   componentDidMount() {
@@ -147,6 +148,12 @@ class JiraSwitcherExample extends React.Component {
     );
   };
 
+  useActivityPlatform = () => {
+    this.setState({
+      isUsingAPRecentContainers: !this.state.isUsingAPRecentContainers,
+    });
+  };
+
   openDrawer = () => {
     this.setState({
       isDrawerOpen: true,
@@ -171,6 +178,7 @@ class JiraSwitcherExample extends React.Component {
 
   render() {
     const Separator = () => <div style={{ width: 16 }} />;
+    const { isUsingAPRecentContainers } = this.state;
     return (
       <div style={{ padding: '2rem' }}>
         <Drawer onClose={this.onClose} isOpen={this.state.isDrawerOpen}>
@@ -178,9 +186,16 @@ class JiraSwitcherExample extends React.Component {
             product="jira"
             cloudId="some-cloud-id"
             triggerXFlow={this.onTriggerXFlow}
+            isUsingAPRecentContainers={isUsingAPRecentContainers}
           />
         </Drawer>
-        <div style={{ display: 'flex' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: 'fit-content',
+          }}
+        >
           <Button type="button" onClick={this.openDrawer}>
             Open drawer
           </Button>
@@ -199,6 +214,13 @@ class JiraSwitcherExample extends React.Component {
           <Separator />
           <Button type="button" onClick={this.makeError}>
             Make error
+          </Button>
+          <Separator />
+          <Button type="button" onClick={this.useActivityPlatform}>
+            {isUsingAPRecentContainers
+              ? 'Use activity-service'
+              : 'Use Activity Platform'}{' '}
+            for recent containers
           </Button>
           <Separator />
           <Button type="button" onClick={this.clearCache}>

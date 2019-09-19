@@ -61,6 +61,7 @@ export enum Feature {
   isDiscoverMoreForEveryoneEnabled = 'isDiscoverMoreForEveryoneEnabled',
   // EMCEE stands for Embedded Marketplace with in the product
   isEmceeLinkEnabled = 'isEmceeLinkEnabled',
+  isUsingAPRecentContainers = 'isUsingAPRecentContainers',
 }
 
 export enum MultiVariateFeature {
@@ -74,24 +75,24 @@ export enum ProductTopItemVariation {
 
 export type FeatureFlagProps = {
   // Show user centric avaialble products as opposed to site centric product list.
-  enableUserCentricProducts?: boolean;
+  [Feature.enableUserCentricProducts]?: boolean;
   // Custom links are enabled by default for Jira and Confluence, this feature flag allows to hide them. Custom links are not supported by the switcher in any other products.
-  disableCustomLinks?: boolean;
+  [Feature.disableCustomLinks]?: boolean;
   // Hide recent containers. Recent containers are enabled by default.
-  disableRecentContainers?: boolean;
+  [Feature.disableRecentContainers]?: boolean;
   // Remove section headers - useful if something else is providing them. i.e: trello inline dialog.
-  disableHeadings?: boolean;
+  [Feature.disableHeadings]?: boolean;
   // Enable discover more.
-  isDiscoverMoreForEveryoneEnabled?: boolean;
+  [Feature.isDiscoverMoreForEveryoneEnabled]?: boolean;
   // Enable Embedded Marketplace within the product.
-  isEmceeLinkEnabled?: boolean;
+  [Feature.isEmceeLinkEnabled]?: boolean;
+  // Whether Switcher should use Activity Platform to power recent containers instead of activity-service
+  [Feature.isUsingAPRecentContainers]?: boolean;
   // Defines which site is displayed as the top item for users with multiple sites.
   [MultiVariateFeature.productTopItemVariation]?: ProductTopItemVariation;
 };
 
-export type FeatureMap = { [key in Feature]: boolean } & {
-  [MultiVariateFeature.productTopItemVariation]: ProductTopItemVariation;
-};
+export type FeatureMap = FeatureFlagProps;
 
 export type CustomLinksResponse = CustomLink[];
 
