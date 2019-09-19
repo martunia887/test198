@@ -5,7 +5,6 @@ import {
   WithCreateAnalyticsEvent,
   ExtensionHandler,
   ExtensionHandlers,
-  ExtensionParams,
 } from '@atlaskit/editor-common';
 import { MediaProvider as MediaProviderType } from '@atlaskit/editor-core';
 import { ReactRenderer, RendererProps } from '@atlaskit/renderer';
@@ -34,9 +33,8 @@ import {
 import { eventDispatcher } from './dispatcher';
 import { ObjectKey, TaskState } from '@atlaskit/task-decision';
 import { analyticsBridgeClient } from '../analytics-client';
-
 import { createPromise } from '../cross-platform-promise';
-import { extensionToADF } from './helpers';
+import { MacroComponent } from './macro-extension-handler/MacroComponent';
 
 export interface MobileRendererProps {
   document?: string;
@@ -47,6 +45,7 @@ export interface MobileRendererProps {
 export interface MobileRendererState {
   /** as defined in the renderer */
   document: any;
+  macroWhitelist?: any;
 }
 
 const rendererBridge = ((window as any).rendererBridge = new RendererBridgeImpl());
@@ -58,66 +57,6 @@ const handleAnalyticsEvent = (
     event: JSON.stringify(event),
   });
 };
-export interface MacroRendererProps {
-  extension: ExtensionParams<any>;
-}
-
-export interface MacroRendererState {
-  content?: string | null;
-  contentId?: number | null;
-}
-
-class MacroComponent extends React.Component<
-  MacroRendererProps,
-  MacroRendererState
-> {
-  constructor(props: MacroRendererProps) {
-    super(props);
-
-    this.state = {
-      content: null,
-    };
-  }
-
-  componentDidMount() {
-    const ext = this.props.extension;
-    const adf = JSON.stringify(extensionToADF(ext));
-    const contentId = '960561171'; // https://product-fabric.atlassian.net/wiki/spaces/~speachey/pages/960561171/Single+macro
-
-    const dataToSend = {
-      contentId,
-      adf,
-    };
-
-    createPromise('customConfigurationMacro')
-      .submit()
-      .then(result => {
-        console.log('=== result of promise');
-        var resultObj = JSON.parse(JSON.stringify(result));
-        console.log(resultObj.contentId as number);
-        this.setState({
-          content: this.state.content,
-          contentId: resultObj.contentId as number,
-        });
-      });
-
-    // createPromise('customLegacyMacro', JSON.stringify(dataToSend))
-    //   .submit()
-    //   .then(result => {
-    //     console.log('=== result of promise');
-    //     console.log(result);
-    //     this.setState(result);
-    //   });
-  }
-
-  render() {
-    if (this.state.content) {
-      return <div dangerouslySetInnerHTML={{ __html: this.state.content }} />;
-    } else {
-      return <div>Ahoy</div>;
-    }
-  }
-}
 
 export default class MobileRenderer extends React.Component<
   MobileRendererProps,
@@ -141,7 +80,10 @@ export default class MobileRenderer extends React.Component<
         document = JSON.parse(props.document);
       } catch (e) {}
     }
-    this.state = { document };
+    this.state = {
+        document,
+        macroWhitelist: null,
+    };
 
     const taskDecisionProvider = TaskDecisionProvider(this.handleToggleTask);
 
@@ -195,6 +137,15 @@ export default class MobileRenderer extends React.Component<
       this.setState({
         document: content,
       });
+      createPromise('customConfigurationMacro')
+        .submit()
+        .then(result => {
+          var resultObj = JSON.parse(JSON.stringify(result));
+          console.log(JSON.stringify(result));
+          this.setState({
+            macroWhitelist: resultObj,
+          });
+        });
     });
   }
 
@@ -206,7 +157,12 @@ export default class MobileRenderer extends React.Component<
 
   getMacroExtensionHandler(): ExtensionHandler<any> {
     return extension => {
-      return <MacroComponent extension={extension} />;
+      return (
+        <MacroComponent
+          extension={extension}
+          macroWhitelist={this.state.macroWhitelist}
+        />
+      );
     };
   }
 
