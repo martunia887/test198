@@ -230,7 +230,6 @@ const walkOut = ($startPos: ResolvedPos): ResolvedPos => {
 
 const deleteHandler: Command = (state, dispatch) => {
   if (!isInsideTaskOrDecisionItem(state)) {
-    console.warn('not inside task decision');
     return false;
   }
 
@@ -241,13 +240,11 @@ const deleteHandler: Command = (state, dispatch) => {
     state.selection.$from.end() !== state.selection.$from.pos ||
     !state.selection.empty
   ) {
-    console.warn('selection was not at end or non-empty');
     return false;
   }
 
   // look for the node after this current one
   const $next = walkOut(state.selection.$from);
-  console.log('$next', $next);
 
   // if there's no taskItem or taskList following, then we just do the normal behaviour
   const parentList = findParentNodeOfTypeClosestToPos($next, [
@@ -297,14 +294,8 @@ const deleteHandler: Command = (state, dispatch) => {
             dispatch(tr);
           }
           return true;
-        } else {
-          console.log('uhh cut surrounds:', $cut.nodeBefore, $cut.nodeAfter);
         }
-      } else {
-        console.warn('no cut');
       }
-    } else {
-      console.warn('after', $next.nodeAfter, $next.node());
     }
 
     return true;
@@ -319,7 +310,6 @@ const deleteHandler: Command = (state, dispatch) => {
       -1 &&
     taskBefore.nodeBefore.nodeSize === 2
   ) {
-    console.log('nothing before, skipping');
     return false;
   }
 
@@ -349,8 +339,6 @@ const deleteHandler: Command = (state, dispatch) => {
     if (dispatch) {
       const taskContent = state.doc.slice($next.start(), $next.end()).content;
 
-      console.log('task content', taskContent);
-
       // might be end of document after
       const slice = taskContent.size
         ? state.schema.nodes.paragraph.createChecked(undefined, taskContent)
@@ -361,8 +349,6 @@ const deleteHandler: Command = (state, dispatch) => {
 
     return true;
   }
-
-  console.log('fall-through');
 
   return false;
 
