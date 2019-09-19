@@ -54,9 +54,11 @@ export { default as ConnectedItem } from './components/connected/ConnectedItem';
 export { default as GoToItem } from './components/connected/GoToItem';
 export {
   default as LayoutManagerWithViewController,
+  LayoutManagerWithViewControllerLite,
 } from './components/connected/LayoutManagerWithViewController';
 export {
   default as AsyncLayoutManagerWithViewController,
+  AsyncLayoutManagerWithViewControllerLite,
 } from './components/connected/AsyncLayoutManagerWithViewController';
 export { default as SortableGroup } from './components/connected/SortableGroup';
 export { default as SortableItem } from './components/connected/SortableItem';
@@ -79,7 +81,12 @@ export {
 } from './view-controller';
 
 /** Renderer */
-export { default as ItemsRenderer, TypedItemsRenderer } from './renderer';
+export {
+  default as ItemsRenderer,
+  TypedItemsRenderer,
+  ItemsRendererLite,
+  TypedItemsRendererLite,
+} from './renderer';
 
 /** Theme */
 export { dark, light, settings, modeGenerator, ThemeProvider } from './theme';
