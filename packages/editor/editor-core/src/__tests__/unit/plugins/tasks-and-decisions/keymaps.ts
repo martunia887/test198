@@ -599,28 +599,55 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       describe(`TAB ${name}Item`, () => {
-        it('TAB should not affect document', () => {
+        describe('first item', () => {
           const testDoc = doc(
             list(listProps)(item(itemProps)('Hello{<>} World')),
           );
+          it('TAB first item should not affect document', () => {
+            const { editorView } = editorFactory(testDoc);
 
-          const { editorView } = editorFactory(testDoc);
+            sendKeyToPm(editorView, 'Tab');
+            expect(editorView.state.doc).toEqualDocumentAndSelection(testDoc);
+          });
 
-          sendKeyToPm(editorView, 'Tab');
-          expect(editorView.state.doc).toEqualDocument(testDoc);
-          compareSelection(editorFactory, testDoc, editorView);
+          it('Shift-TAB first item should not affect document', () => {
+            const { editorView } = editorFactory(testDoc);
+
+            sendKeyToPm(editorView, 'Shift-Tab');
+            expect(editorView.state).toEqualDocumentAndSelection(testDoc);
+          });
         });
 
-        it('Shift-TAB should not affect document', () => {
+        describe('second item', () => {
           const testDoc = doc(
-            list(listProps)(item(itemProps)('Hello{<>} World')),
+            list(listProps)(
+              item(itemProps)('Hello{<>} World'),
+              item(itemProps)('Say yall{<>} wanna live with the dream'),
+            ),
           );
 
-          const { editorView } = editorFactory(testDoc);
+          it('TAB should indent', () => {
+            const { editorView } = editorFactory(testDoc);
 
-          sendKeyToPm(editorView, 'Shift-Tab');
-          expect(editorView.state.doc).toEqualDocument(testDoc);
-          compareSelection(editorFactory, testDoc, editorView);
+            sendKeyToPm(editorView, 'Tab');
+            expect(editorView.state).toEqualDocumentAndSelection(
+              doc(
+                list(listProps)(
+                  item(itemProps)('Hello{<>} World'),
+                  list(listProps)(
+                    item(itemProps)('Say yall{<>} wanna live with the dream'),
+                  ),
+                ),
+              ),
+            );
+          });
+
+          it('Shift-TAB should not affect document', () => {
+            const { editorView } = editorFactory(testDoc);
+
+            sendKeyToPm(editorView, 'Shift-Tab');
+            expect(editorView.state).toEqualDocumentAndSelection(testDoc);
+          });
         });
       });
     });
