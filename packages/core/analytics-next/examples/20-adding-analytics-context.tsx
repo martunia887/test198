@@ -22,7 +22,13 @@ const App = () => (
   >
     <AnalyticsContext data={{ issueId: 123 }}>
       <AnalyticsContext data={{ panel: 'right' }}>
-        <SaveButton />
+        <AnalyticsContext
+          getData={() => ({
+            source: 'fromFunction',
+          })}
+        >
+          <SaveButton />
+        </AnalyticsContext>
       </AnalyticsContext>
     </AnalyticsContext>
   </AnalyticsListener>

@@ -75,3 +75,37 @@ it("should prepend analytics context data from ancestors to child's getAnalytics
 
   expect(analyticsContext).toEqual([{ a: 'e' }, { c: 'd' }, { a: 'b' }]);
 });
+
+it('should get data using a function', () => {
+  let analyticsContext;
+  const getContext = (context: Context) => {
+    analyticsContext = context;
+  };
+  const wrapper = mount(
+    <AnalyticsContext
+      getData={() => ({
+        a: 'b',
+      })}
+    >
+      <ContextConsumer onClick={getContext} />
+    </AnalyticsContext>,
+  );
+  wrapper.find(ContextConsumer).simulate('click');
+
+  expect(analyticsContext).toEqual([{ a: 'b' }]);
+});
+
+it('works if no data is supplied', () => {
+  let analyticsContext;
+  const getContext = (context: Context) => {
+    analyticsContext = context;
+  };
+  const wrapper = mount(
+    <AnalyticsContext>
+      <ContextConsumer onClick={getContext} />
+    </AnalyticsContext>,
+  );
+  wrapper.find(ContextConsumer).simulate('click');
+
+  expect(analyticsContext).toEqual([]);
+});

@@ -12,7 +12,12 @@ interface Props {
   children: React.ReactNode;
   /** Arbitrary data. Any events created below this component in the tree will
    * have this added as an item in their context array. */
-  data: unknown;
+  data?: unknown;
+
+  /** Optional getter for arbitrary data, useful for context which changes at runtime
+   * and wanting to avoid re-rendering of child components
+   */
+  getData?: () => unknown;
 }
 
 interface State {
@@ -37,14 +42,18 @@ class AnalyticsContext extends Component<Props, State> {
   });
 
   getAnalyticsContext = () => {
-    const { data } = this.props;
+    const { data, getData } = this.props;
     const { getAtlaskitAnalyticsContext } = this.context;
     const ancestorData =
       (typeof getAtlaskitAnalyticsContext === 'function' &&
         getAtlaskitAnalyticsContext()) ||
       [];
 
-    return [...ancestorData, data];
+    return [
+      ...ancestorData,
+      ...(data ? [data] : []),
+      ...(getData ? [getData()] : []),
+    ];
   };
 
   getAnalyticsEventHandlers = () => {
