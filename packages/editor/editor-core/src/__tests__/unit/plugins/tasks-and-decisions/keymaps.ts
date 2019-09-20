@@ -44,6 +44,7 @@ describe('tasks and decisions - keymaps', () => {
         allowTables: true,
         allowTasksAndDecisions: true,
         mentionProvider: Promise.resolve(new MockMentionResource({})),
+        allowNestedTasks: true,
       },
       createAnalyticsEvent,
     });
@@ -607,7 +608,7 @@ describe('tasks and decisions - keymaps', () => {
             const { editorView } = editorFactory(testDoc);
 
             sendKeyToPm(editorView, 'Tab');
-            expect(editorView.state.doc).toEqualDocumentAndSelection(testDoc);
+            expect(editorView.state).toEqualDocumentAndSelection(testDoc);
           });
 
           it('Shift-TAB first item should not affect document', () => {
@@ -617,12 +618,16 @@ describe('tasks and decisions - keymaps', () => {
             expect(editorView.state).toEqualDocumentAndSelection(testDoc);
           });
         });
+      });
+    });
 
+    describe('taskList', () => {
+      describe('Tab', () => {
         describe('second item', () => {
           const testDoc = doc(
-            list(listProps)(
-              item(itemProps)('Hello{<>} World'),
-              item(itemProps)('Say yall{<>} wanna live with the dream'),
+            taskList(listProps)(
+              taskItem(itemProps)('Hello World'),
+              taskItem(itemProps)('Say yall{<>} wanna live with the dream'),
             ),
           );
 
@@ -630,12 +635,15 @@ describe('tasks and decisions - keymaps', () => {
             const { editorView } = editorFactory(testDoc);
 
             sendKeyToPm(editorView, 'Tab');
+
             expect(editorView.state).toEqualDocumentAndSelection(
               doc(
-                list(listProps)(
-                  item(itemProps)('Hello{<>} World'),
-                  list(listProps)(
-                    item(itemProps)('Say yall{<>} wanna live with the dream'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Hello World'),
+                  taskList(listProps)(
+                    taskItem(itemProps)(
+                      'Say yall{<>} wanna live with the dream',
+                    ),
                   ),
                 ),
               ),
