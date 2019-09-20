@@ -11,7 +11,6 @@ import {
   findParentNodeOfTypeClosestToPos,
 } from 'prosemirror-utils';
 import { insertTaskDecisionWithAnalytics } from '../commands';
-import { INPUT_METHOD } from '../../analytics';
 import { TaskDecisionListType } from '../types';
 import {
   findWrapping,
@@ -22,6 +21,17 @@ import { autoJoin } from 'prosemirror-commands';
 import { findCutBefore } from '../../../utils/commands';
 import { findFarthestParentNode } from '../../../utils';
 import { Command } from '../../../types';
+import {
+  withAnalytics,
+  ACTION,
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+  EVENT_TYPE,
+  INDENT_DIR,
+  INDENT_TYPE,
+  INPUT_METHOD,
+  addAnalytics,
+} from '../../analytics';
 
 const isInsideTaskOrDecisionItem = (state: EditorState) => {
   const { decisionItem, taskItem } = state.schema.nodes;
@@ -56,23 +66,49 @@ const unindent = autoJoin(
       return false;
     }
 
+    const { taskList } = state.schema.nodes;
     const { $from, $to } = state.selection;
-    if (dispatch) {
-      const blockRange = getBlockRange($from, $to);
-      if (!blockRange) {
-        return true;
-      }
 
-      // ensure we can actually lift
-      const target = liftTarget(blockRange);
-      if (typeof target !== 'number') {
-        return true;
-      }
-
-      dispatch(state.tr.lift(blockRange, target).scrollIntoView());
+    const furthestParent = findFarthestParentNode(
+      node => node.type === taskList,
+    )(state.selection);
+    if (!furthestParent) {
+      // should not be possible; we're already in a taskItem
+      return false;
     }
 
-    return true;
+    const blockRange = getBlockRange($from, $to);
+    if (!blockRange) {
+      return true;
+    }
+
+    // ensure we can actually lift
+    const target = liftTarget(blockRange);
+    if (typeof target !== 'number') {
+      return true;
+    }
+
+    const curIndentLevel = $from.depth - furthestParent.depth;
+
+    return withAnalytics({
+      action: ACTION.FORMATTED,
+      actionSubject: ACTION_SUBJECT.TEXT,
+      actionSubjectId: ACTION_SUBJECT_ID.FORMAT_INDENT,
+      eventType: EVENT_TYPE.TRACK,
+      attributes: {
+        inputMethod: INPUT_METHOD.KEYBOARD,
+        previousIndentationLevel: curIndentLevel,
+        newIndentLevel: curIndentLevel - 1,
+        direction: INDENT_DIR.OUTDENT,
+        indentType: INDENT_TYPE.TASK_LIST,
+      },
+    })((state, dispatch) => {
+      if (dispatch) {
+        dispatch(state.tr.lift(blockRange, target).scrollIntoView());
+      }
+
+      return true;
+    })(state, dispatch);
   },
   ['taskList'],
 );
@@ -101,21 +137,36 @@ const indent = autoJoin(
       return true;
     }
 
-    if (dispatch) {
-      const blockRange = getBlockRange($from, $to);
-      if (!blockRange) {
-        return true;
+    return withAnalytics({
+      action: ACTION.FORMATTED,
+      actionSubject: ACTION_SUBJECT.TEXT,
+      actionSubjectId: ACTION_SUBJECT_ID.FORMAT_INDENT,
+      eventType: EVENT_TYPE.TRACK,
+      attributes: {
+        inputMethod: INPUT_METHOD.KEYBOARD,
+        previousIndentationLevel: curIndentLevel,
+        newIndentLevel: curIndentLevel + 1,
+        direction: INDENT_DIR.INDENT,
+        indentType: INDENT_TYPE.TASK_LIST,
+      },
+    })((state, dispatch) => {
+      if (dispatch) {
+        const blockRange = getBlockRange($from, $to);
+        if (!blockRange) {
+          return true;
+        }
+
+        const wrapping = findWrapping(blockRange, state.schema.nodes.taskList);
+        if (!wrapping) {
+          console.warn('no wrapping');
+          return true;
+        }
+
+        dispatch(state.tr.wrap(blockRange, wrapping).scrollIntoView());
       }
 
-      const wrapping = findWrapping(blockRange, state.schema.nodes.taskList);
-      if (!wrapping) {
-        return true;
-      }
-
-      dispatch(state.tr.wrap(blockRange, wrapping).scrollIntoView());
-    }
-
-    return true;
+      return true;
+    })(state, dispatch);
   },
   ['taskList'],
 );
