@@ -14,19 +14,8 @@ import { DialogInner } from '../../components/Popup';
 
 import { getOptions } from '../Select/utils';
 
-type State = {
-  defaultOptions?: OptionsType,
-  inputValue: string,
-  isLoading: boolean,
-  loadedInputValue?: string,
-  loadedOptions: OptionsType,
-};
-
-export default class AsyncSelectView extends React.Component<
-  AsyncProps,
-  State,
-> {
-  constructor(props: AsyncProps) {
+export default class AsyncSelectView extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     const { field, storedValue } = props;
@@ -72,7 +61,7 @@ export default class AsyncSelectView extends React.Component<
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: C & AsyncProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     // if the cacheOptions prop changes, clear the cache
     if (nextProps.field.cacheOptions !== this.props.field.cacheOptions) {
       this.optionsCache = {};
@@ -272,11 +261,8 @@ const mergeComponents = memoizeOne(consumerComponents => ({
 // Types
 // ------------------------------
 
-type AsyncProps = {
-  /*
-    If cacheOptions is truthy, then the loaded data will be cached. The cache
-    will remain until `cacheOptions` changes value.
-  */
+type Props = {
+  /* Whilst truthy, the loaded data will be cached. */
   cacheOptions: any,
   /*
     When true, the results for `loadOptions` will be loaded on mount. When
@@ -284,12 +270,15 @@ type AsyncProps = {
   */
   defaultOptions: OptionsType | boolean,
   inputValue?: string,
-  /*
-    Function that returns a promise, which is the set of options to be used once
-    the promise resolves.
-  */
+  /* Function that returns a promise, resolves to the set of options. */
   loadOptions: (string, (OptionsType) => void) => Promise<*> | void,
   onInputChange: (string, InputActionMeta) => void,
+  passEmptyOptions: boolean,
+  // ========== END REACT SELECT ==========
+  components: Object,
+  field: Object,
+  onChange: Function,
+  storedValue: SimpleValue,
 };
 
 type InputActionTypes =
@@ -302,4 +291,15 @@ type InputActionMeta = {|
   action: InputActionTypes,
 |};
 
+type SimpleValue = Array<String>;
 type OptionsType = Array<Object>;
+
+type State = {
+  complexValue: OptionsType,
+  defaultOptions?: OptionsType,
+  inputValue: string,
+  isLoading: boolean,
+  loadedInputValue?: string,
+  loadedOptions: OptionsType,
+  passEmptyOptions: boolean,
+};

@@ -25,7 +25,9 @@ export default class SelectController extends FieldController {
     this.placeholder = this.config.placeholder;
   }
 
-  getOptionValue: ?Function;
+  getOptionLabel: Function;
+
+  getOptionValue: Function;
 
   options: Options;
 
@@ -52,9 +54,9 @@ export default class SelectController extends FieldController {
     In: ['one', 'two']
     Out: [{ label: 'One', value: 'one' }, { label: 'Two', value: 'two' }]
   */
-  toObjectValue = value => {
+  toObjectValue = (value: Array<String>): Array<Object> => {
     if (value === undefined) {
-      return undefined;
+      return [];
     }
     if (!value.length) {
       return value;
@@ -70,18 +72,18 @@ export default class SelectController extends FieldController {
     In: [{ label: 'One', value: 'one' }, { label: 'Two', value: 'two' }]
     Out: ['one', 'two']
   */
-  toStringValue = value => {
+  toStringValue = (value: Array<Object>): Array<String> => {
     if (value === undefined) {
-      return undefined;
+      return [];
     }
     if (!value.length) {
       return value;
     }
 
-    return value.map(opt => this.getOptionValue(opt));
+    return value.map(this.getOptionValue);
   };
 
-  formatLabel = (stringValue: Array<Object>) => {
+  formatLabel = (stringValue: Array<String>) => {
     // no value, just display the label
     if (!this.hasValue(stringValue)) return this.label;
 
@@ -91,11 +93,10 @@ export default class SelectController extends FieldController {
 
     // create a comma separated list of values
     const valueLabels = value.map(opt => (
-      <Crop>{this.getOptionLabel(opt)}</Crop>
+      <Crop key={this.getOptionValue(opt)}>{this.getOptionLabel(opt)}</Crop>
     ));
-    const valueLen = value.length;
     const afterElement =
-      value.length > max ? <Crop> +{valueLen - max} more</Crop> : null;
+      value.length > max ? <Crop> +{value.length - max} more</Crop> : null;
 
     return (
       <Fragment>
@@ -129,7 +130,7 @@ const Map = ({ after, children, max }: *) => {
   return (
     <Fragment>
       {arr.map((label, idx) => (
-        <Fragment>
+        <Fragment key={label.key}>
           {idx ? ', ' : null}
           {label}
         </Fragment>

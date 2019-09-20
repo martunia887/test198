@@ -17,7 +17,7 @@ export const SELECT_CLEAR_OPTION = {
   label: 'Clear selected items',
   value: '__CLEAR_SELECTED__',
 };
-export function isClearOption(opt) {
+export function isClearOption(opt: Object) {
   return opt.value === SELECT_CLEAR_OPTION.value;
 }
 
@@ -123,7 +123,8 @@ const ClearOption = ({ children, innerProps, isFocused }: *) => (
 
 // NOTE: fork the option renderer based on a "clear marker", which needs to look
 // and behave in a different way
-const Option = React.memo((props: *) =>
+// $FlowFixMe "memo" type not supported yet
+const Option = React.memo((props: Object) =>
   props.data === SELECT_CLEAR_OPTION ? (
     <ClearOption {...props} />
   ) : (
