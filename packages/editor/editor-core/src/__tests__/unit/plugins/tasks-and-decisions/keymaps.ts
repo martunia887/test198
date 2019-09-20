@@ -626,6 +626,113 @@ describe('tasks and decisions - keymaps', () => {
     const listProps = { localId: 'local-uuid' };
     const itemProps = { localId: 'local-uuid', state: 'TODO' };
 
+    describe('Backspace', () => {
+      it('unindents one level', () => {
+        const testDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Top level'),
+            taskList(listProps)(
+              taskItem(itemProps)('{<>}Nested first'),
+              taskItem(itemProps)('Nested first but also second'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Nested third'),
+                  taskItem(itemProps)('Nested fourth'),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        const { editorView } = editorFactory(testDoc);
+        sendKeyToPm(editorView, 'Backspace');
+
+        expect(editorView.state).toEqualDocumentAndSelection(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskItem(itemProps)('{<>}Nested first'),
+              taskList(itemProps)(
+                taskItem(itemProps)('Nested first but also second'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Nested second'),
+                  taskList(listProps)(
+                    taskItem(itemProps)('Nested third'),
+                    taskItem(itemProps)('Nested fourth'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      });
+
+      it('splits nested lists and moves into text', () => {
+        const testDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Top level'),
+            taskItem(itemProps)('{<>}Now doc level'),
+            taskList(listProps)(
+              taskItem(itemProps)('Nested first but also second'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Nested third'),
+                  taskItem(itemProps)('Nested fourth'),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        const { editorView } = editorFactory(testDoc);
+        sendKeyToPm(editorView, 'Backspace');
+
+        expect(editorView.state).toEqualDocumentAndSelection(
+          doc(
+            taskList(listProps)(taskItem(itemProps)('Top level')),
+            p('{<>}Now doc level'),
+            taskList(listProps)(
+              taskItem(itemProps)('Nested first but also second'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Nested third'),
+                  taskItem(itemProps)('Nested fourth'),
+                ),
+              ),
+            ),
+          ),
+        );
+      });
+
+      it('leaves list at same indent level alone, and moves into text', () => {
+        const testDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('{<>}Top level'),
+            taskList(listProps)(taskItem(itemProps)('Nested first level')),
+            taskItem(itemProps)('Also top level'),
+            taskList(listProps)(taskItem(itemProps)('Also nested level')),
+          ),
+        );
+
+        const { editorView } = editorFactory(testDoc);
+        sendKeyToPm(editorView, 'Backspace');
+
+        expect(editorView.state).toEqualDocumentAndSelection(
+          doc(
+            p('{<>}Top level'),
+            taskList(listProps)(
+              taskItem(itemProps)('Nested first level'),
+              taskItem(itemProps)('Also top level'),
+              taskList(listProps)(taskItem(itemProps)('Also nested level')),
+            ),
+          ),
+        );
+      });
+    });
+
     describe('Tab', () => {
       describe('second item', () => {
         const testDoc = doc(
