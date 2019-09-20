@@ -1,1 +1,14 @@
-1. support "simple value" for selects filters • 2. support pinned selected options for async variant • 3. cleanup: reference implementations, lozenge select, truncated button labels • 4. chore: remove defaultOptionsLabel – include the group/label in the default options
+**Features**
+
+- Support "simple value" for _all_ select filters; the `value` is now array of strings representing the corresponding option's value. Use an alternate key by passing a `getOptionValue` to the filter config.
+- Support "pinned" selected options for async variant
+- Truncate button labels to 180px
+
+**Fixes**
+
+- Fixed various bugs in reference implementations
+- Fixed lozenge select option formatting function to better handle the "clear option"
+
+**Changes**
+
+- Removed `defaultOptionsLabel` on SelectFilter; you should now just include the group/label in `defaultOptions`
