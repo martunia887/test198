@@ -211,50 +211,52 @@ interface ModeValue {
 
 type TokenValue = ModeValue | string;
 
-interface LabelTokens {
-  textColor: {
-    rest: ModeValue;
-    disabled: ModeValue;
-  };
-  spacing: {
-    top: string;
-    right: string;
-    bottom: string;
-    left: string;
-  };
-}
-
-interface IconTokens {
-  borderWidth: string;
-  borderColor: {
-    rest: TokenValue;
-    disabled: TokenValue;
-    checked: TokenValue;
-    active: TokenValue;
-    invalid: TokenValue;
-    focused: TokenValue;
-    hovered: TokenValue;
-  };
-  boxColor: {
-    rest: TokenValue;
-    disabled: TokenValue;
-    active: TokenValue;
-    hoveredAndChecked: TokenValue;
-    hovered: TokenValue;
-    checked: TokenValue;
-  };
-  tickColor: {
-    rest: TokenValue;
-    disabledAndChecked: TokenValue;
-    activeAndChecked: TokenValue;
-    checked: TokenValue;
-  };
-  size: 'small' | 'medium' | 'large';
-}
-
 export interface ComponentTokens {
-  label: LabelTokens;
-  icon: IconTokens;
+  label?: {
+    textColor?: {
+      rest: TokenValue;
+      disabled: TokenValue;
+    };
+    spacing?: {
+      bottom?: TokenValue;
+      right?: TokenValue;
+      left?: TokenValue;
+      top?: TokenValue;
+    };
+  };
+  icon?: {
+    borderWidth?: string;
+    borderColor?: {
+      rest?: TokenValue;
+      disabled?: TokenValue;
+      checked?: TokenValue;
+      active?: TokenValue;
+      invalid?: TokenValue;
+      focused?: TokenValue;
+      hovered?: TokenValue;
+      hoveredAndChecked?: TokenValue;
+    };
+    boxColor?: {
+      rest?: TokenValue;
+      disabled?: TokenValue;
+      active?: TokenValue;
+      hoveredAndChecked?: TokenValue;
+      hovered?: TokenValue;
+      checked?: TokenValue;
+    };
+    tickColor?: {
+      rest?: TokenValue;
+      disabledAndChecked?: TokenValue;
+      activeAndChecked?: TokenValue;
+      checked?: TokenValue;
+    };
+    size?: 'small' | 'medium' | 'large' | 'xlarge';
+  };
+  requiredIndicator?: {
+    textColor?: {
+      rest?: TokenValue;
+    };
+  };
 }
 
 export interface ThemeIconTokens {
@@ -389,27 +391,4 @@ export type LabelCSSProps = Pick<LabelProps, 'isDisabled' | 'tokens'>;
 export interface RequiredIndicatorProps
   extends React.HTMLProps<HTMLSpanElement> {
   tokens: ThemeTokens;
-}
-
-export interface ThemeLabelTokens {
-  textColor: {
-    rest: string;
-    disabled: string;
-  };
-  spacing: {
-    bottom: string;
-    right: string;
-    left: string;
-    top: string;
-  };
-}
-
-export interface ThemeTokens {
-  label: ThemeLabelTokens;
-  icon: ThemeIconTokens;
-}
-
-export interface ThemeProps {
-  tokens: ComponentTokens;
-  mode: string;
 }
