@@ -1,0 +1,1 @@
+1. support "simple value" for selects filters • 2. support pinned selected options for async variant • 3. cleanup: reference implementations, lozenge select, truncated button labels • 4. chore: remove defaultOptionsLabel – include the group/label in the default options
