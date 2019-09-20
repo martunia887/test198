@@ -22,7 +22,6 @@ import { findCutBefore } from '../../../utils/commands';
 import { findFarthestParentNode } from '../../../utils';
 import { Command } from '../../../types';
 import {
-  withAnalytics,
   ACTION,
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
@@ -30,7 +29,7 @@ import {
   INDENT_DIR,
   INDENT_TYPE,
   INPUT_METHOD,
-  addAnalytics,
+  analyticsDispatch,
 } from '../../analytics';
 
 const isInsideTaskOrDecisionItem = (state: EditorState) => {
@@ -59,117 +58,136 @@ const getBlockRange = ($from: ResolvedPos, $to: ResolvedPos) => {
   return $from.blockRange($to.doc.resolve(end));
 };
 
-const unindent = autoJoin(
-  (state: EditorState, dispatch?: (tr: Transaction) => void) => {
-    // can only unindent taskItems
-    if (!isInsideTask(state)) {
-      return false;
-    }
+const unindent: Command = (state, dispatch) => {
+  // can only unindent taskItems
+  if (!isInsideTask(state)) {
+    return false;
+  }
 
-    const { taskList } = state.schema.nodes;
-    const { $from, $to } = state.selection;
+  const { taskList } = state.schema.nodes;
+  const { $from, $to } = state.selection;
 
-    const furthestParent = findFarthestParentNode(
-      node => node.type === taskList,
-    )(state.selection);
-    if (!furthestParent) {
-      // should not be possible; we're already in a taskItem
-      return false;
-    }
+  const furthestParent = findFarthestParentNode(node => node.type === taskList)(
+    state.selection,
+  );
+  if (!furthestParent) {
+    // should not be possible; we're already in a taskItem
+    return false;
+  }
 
-    const blockRange = getBlockRange($from, $to);
-    if (!blockRange) {
-      return true;
-    }
+  const blockRange = getBlockRange($from, $to);
+  if (!blockRange) {
+    return true;
+  }
 
-    // ensure we can actually lift
-    const target = liftTarget(blockRange);
-    if (typeof target !== 'number') {
-      return true;
-    }
+  // ensure we can actually lift
+  const target = liftTarget(blockRange);
+  if (typeof target !== 'number') {
+    return true;
+  }
 
-    const curIndentLevel = $from.depth - furthestParent.depth;
+  const curIndentLevel = $from.depth - furthestParent.depth;
 
-    return withAnalytics({
-      action: ACTION.FORMATTED,
-      actionSubject: ACTION_SUBJECT.TEXT,
-      actionSubjectId: ACTION_SUBJECT_ID.FORMAT_INDENT,
-      eventType: EVENT_TYPE.TRACK,
-      attributes: {
-        inputMethod: INPUT_METHOD.KEYBOARD,
-        previousIndentationLevel: curIndentLevel,
-        newIndentLevel: curIndentLevel - 1,
-        direction: INDENT_DIR.OUTDENT,
-        indentType: INDENT_TYPE.TASK_LIST,
-      },
-    })((state, dispatch) => {
+  // autoJoin's wrapped dispatch does not support being passed a transaction
+  // that contains metadata.
+  //
+  // so we setMeta outside the transaction
+  return autoJoin(
+    (state: EditorState, dispatch?: (tr: Transaction) => void) => {
       if (dispatch) {
         dispatch(state.tr.lift(blockRange, target).scrollIntoView());
       }
 
       return true;
-    })(state, dispatch);
-  },
-  ['taskList'],
-);
-
-const indent = autoJoin(
-  (state: EditorState, dispatch?: (tr: Transaction) => void) => {
-    // can only indent taskItems
-    if (!isInsideTask(state)) {
-      return false;
-    }
-
-    const { taskList } = state.schema.nodes;
-    const { $from, $to } = state.selection;
-
-    const furthestParent = findFarthestParentNode(
-      node => node.type === taskList,
-    )(state.selection);
-    if (!furthestParent) {
-      // should not be possible; we're already in a taskItem
-      return false;
-    }
-
-    // limit ui indentation to 6 levels
-    const curIndentLevel = $from.depth - furthestParent.depth;
-    if (curIndentLevel >= 6) {
-      return true;
-    }
-
-    return withAnalytics({
-      action: ACTION.FORMATTED,
-      actionSubject: ACTION_SUBJECT.TEXT,
-      actionSubjectId: ACTION_SUBJECT_ID.FORMAT_INDENT,
-      eventType: EVENT_TYPE.TRACK,
-      attributes: {
-        inputMethod: INPUT_METHOD.KEYBOARD,
-        previousIndentationLevel: curIndentLevel,
-        newIndentLevel: curIndentLevel + 1,
-        direction: INDENT_DIR.INDENT,
-        indentType: INDENT_TYPE.TASK_LIST,
+    },
+    ['taskList'],
+  )(
+    state,
+    analyticsDispatch(
+      {
+        action: ACTION.FORMATTED,
+        actionSubject: ACTION_SUBJECT.TEXT,
+        actionSubjectId: ACTION_SUBJECT_ID.FORMAT_INDENT,
+        eventType: EVENT_TYPE.TRACK,
+        attributes: {
+          inputMethod: INPUT_METHOD.KEYBOARD,
+          previousIndentationLevel: curIndentLevel,
+          newIndentLevel: curIndentLevel - 1,
+          direction: INDENT_DIR.OUTDENT,
+          indentType: INDENT_TYPE.TASK_LIST,
+        },
       },
-    })((state, dispatch) => {
+      dispatch,
+    ),
+  );
+};
+
+const indent: Command = (state, dispatch) => {
+  // can only indent taskItems
+  if (!isInsideTask(state)) {
+    return false;
+  }
+
+  const { taskList } = state.schema.nodes;
+  const { $from, $to } = state.selection;
+
+  const furthestParent = findFarthestParentNode(node => node.type === taskList)(
+    state.selection,
+  );
+  if (!furthestParent) {
+    // should not be possible; we're already in a taskItem
+    return false;
+  }
+
+  // limit ui indentation to 6 levels
+  const curIndentLevel = $from.depth - furthestParent.depth;
+  if (curIndentLevel >= 6) {
+    return true;
+  }
+
+  // autoJoin's wrapped dispatch does not support being passed a transaction
+  // that contains metadata.
+  //
+  // so we setMeta outside the transaction
+  return autoJoin(
+    (state: EditorState, dispatch?: (tr: Transaction) => void) => {
+      const blockRange = getBlockRange($from, $to);
+      if (!blockRange) {
+        return true;
+      }
+
+      const wrapping = findWrapping(blockRange, state.schema.nodes.taskList);
+      if (!wrapping) {
+        return true;
+      }
+
       if (dispatch) {
-        const blockRange = getBlockRange($from, $to);
-        if (!blockRange) {
-          return true;
-        }
-
-        const wrapping = findWrapping(blockRange, state.schema.nodes.taskList);
-        if (!wrapping) {
-          console.warn('no wrapping');
-          return true;
-        }
-
         dispatch(state.tr.wrap(blockRange, wrapping).scrollIntoView());
       }
 
       return true;
-    })(state, dispatch);
-  },
-  ['taskList'],
-);
+    },
+    ['taskList'],
+  )(
+    state,
+    analyticsDispatch(
+      {
+        action: ACTION.FORMATTED,
+        actionSubject: ACTION_SUBJECT.TEXT,
+        actionSubjectId: ACTION_SUBJECT_ID.FORMAT_INDENT,
+        eventType: EVENT_TYPE.TRACK,
+        attributes: {
+          inputMethod: INPUT_METHOD.KEYBOARD,
+          previousIndentationLevel: curIndentLevel,
+          newIndentLevel: curIndentLevel + 1,
+          direction: INDENT_DIR.INDENT,
+          indentType: INDENT_TYPE.TASK_LIST,
+        },
+      },
+      dispatch,
+    ),
+  );
+};
 
 const backspaceFrom = ($from: ResolvedPos): Command => (state, dispatch) => {
   // previous was empty, just delete backwards
@@ -283,8 +301,6 @@ const deleteHandler: Command = (state, dispatch) => {
   if (!isInsideTaskOrDecisionItem(state)) {
     return false;
   }
-
-  // const { $from } = state.selection;
 
   // ensure cursor is empty
   if (
@@ -402,8 +418,6 @@ const deleteHandler: Command = (state, dispatch) => {
   }
 
   return false;
-
-  // return backspaceFrom($next)(state, dispatch);
 };
 
 const deleteForwards = autoJoin(deleteHandler, ['taskList', 'decisionList']);
