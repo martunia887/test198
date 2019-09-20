@@ -599,7 +599,7 @@ describe('tasks and decisions - keymaps', () => {
         });
       });
 
-      describe(`TAB ${name}Item`, () => {
+      describe(`TAB`, () => {
         describe('first item', () => {
           const testDoc = doc(
             list(listProps)(item(itemProps)('Hello{<>} World')),
@@ -620,43 +620,174 @@ describe('tasks and decisions - keymaps', () => {
         });
       });
     });
+  });
 
-    describe('taskList', () => {
-      describe('Tab', () => {
-        describe('second item', () => {
-          const testDoc = doc(
-            taskList(listProps)(
-              taskItem(itemProps)('Hello World'),
-              taskItem(itemProps)('Say yall{<>} wanna live with the dream'),
-            ),
-          );
+  describe('taskList', () => {
+    const listProps = { localId: 'local-uuid' };
+    const itemProps = { localId: 'local-uuid', state: 'TODO' };
 
-          it('TAB should indent', () => {
-            const { editorView } = editorFactory(testDoc);
+    describe('Tab', () => {
+      describe('second item', () => {
+        const testDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Hello World'),
+            taskItem(itemProps)('Say yall{<>} wanna live with the dream'),
+          ),
+        );
 
-            sendKeyToPm(editorView, 'Tab');
+        it('TAB should indent', () => {
+          const { editorView } = editorFactory(testDoc);
 
-            expect(editorView.state).toEqualDocumentAndSelection(
-              doc(
+          sendKeyToPm(editorView, 'Tab');
+
+          expect(editorView.state).toEqualDocumentAndSelection(
+            doc(
+              taskList(listProps)(
+                taskItem(itemProps)('Hello World'),
                 taskList(listProps)(
-                  taskItem(itemProps)('Hello World'),
-                  taskList(listProps)(
-                    taskItem(itemProps)(
-                      'Say yall{<>} wanna live with the dream',
-                    ),
-                  ),
+                  taskItem(itemProps)('Say yall{<>} wanna live with the dream'),
                 ),
               ),
-            );
-          });
-
-          it('Shift-TAB should not affect document', () => {
-            const { editorView } = editorFactory(testDoc);
-
-            sendKeyToPm(editorView, 'Shift-Tab');
-            expect(editorView.state).toEqualDocumentAndSelection(testDoc);
-          });
+            ),
+          );
         });
+
+        it('Shift-TAB should not affect document', () => {
+          const { editorView } = editorFactory(testDoc);
+
+          sendKeyToPm(editorView, 'Shift-Tab');
+          expect(editorView.state).toEqualDocumentAndSelection(testDoc);
+        });
+      });
+
+      it('should reduce indentation levels of children (directly nested)', () => {
+        const testDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Top level'),
+            taskList(listProps)(
+              taskItem(itemProps)('Nested{<>} first'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(taskItem(itemProps)('Nested third')),
+              ),
+            ),
+          ),
+        );
+
+        const { editorView } = editorFactory(testDoc);
+        sendKeyToPm(editorView, 'Shift-Tab');
+
+        expect(editorView.state).toEqualDocumentAndSelection(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskItem(itemProps)('Nested{<>} first'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(taskItem(itemProps)('Nested third')),
+              ),
+            ),
+          ),
+        );
+      });
+
+      it('should lift all child taskLists and taskItems', () => {
+        const testDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Top level'),
+            taskList(listProps)(
+              taskItem(itemProps)('Nested{<>} first'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(taskItem(itemProps)('Nested third')),
+              ),
+            ),
+          ),
+        );
+
+        const { editorView } = editorFactory(testDoc);
+        sendKeyToPm(editorView, 'Shift-Tab');
+
+        expect(editorView.state).toEqualDocumentAndSelection(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskItem(itemProps)('Nested{<>} first'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(taskItem(itemProps)('Nested third')),
+              ),
+            ),
+          ),
+        );
+      });
+
+      it('should lift only selected taskItems maintaining children', () => {
+        const testDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Top level'),
+            taskList(listProps)(
+              taskItem(itemProps)('Nested{<>} first'),
+              taskItem(itemProps)('Nested first but also second'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(taskItem(itemProps)('Nested third')),
+              ),
+            ),
+          ),
+        );
+
+        const { editorView } = editorFactory(testDoc);
+        sendKeyToPm(editorView, 'Shift-Tab');
+
+        expect(editorView.state).toEqualDocumentAndSelection(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskItem(itemProps)('Nested{<>} first'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested first but also second'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Nested second'),
+                  taskList(listProps)(taskItem(itemProps)('Nested third')),
+                ),
+              ),
+            ),
+          ),
+        );
+      });
+
+      it('should lift only selected taskItems lifting children', () => {
+        const testDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Top level'),
+            taskList(listProps)(
+              taskItem(itemProps)('Nested first'),
+              taskItem(itemProps)('Nested{<>} first but also second'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(taskItem(itemProps)('Nested third')),
+              ),
+            ),
+          ),
+        );
+
+        const { editorView } = editorFactory(testDoc);
+        sendKeyToPm(editorView, 'Shift-Tab');
+
+        expect(editorView.state).toEqualDocumentAndSelection(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(taskItem(itemProps)('Nested first')),
+              taskItem(itemProps)('Nested{<>} first but also second'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested second'),
+                taskList(listProps)(taskItem(itemProps)('Nested third')),
+              ),
+            ),
+          ),
+        );
       });
     });
   });
