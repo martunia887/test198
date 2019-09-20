@@ -131,7 +131,10 @@ describe('map-results-to-switcher-props', () => {
           managePermission: asCompletedProvider(true),
           addProductsPermission: asFailedProvider(),
         },
-        DEFAULT_FEATURES,
+        {
+          ...DEFAULT_FEATURES,
+          xflow: false,
+        },
         asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
       );
 
