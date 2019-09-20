@@ -453,7 +453,7 @@ if (process.env.CI) {
   beforeEach(() => {
     consoleError = console.error;
     consoleWarn = console.warn;
-    consoleLog = console.log;
+    // consoleLog = console.log;
     console.error = jest.fn();
     console.warn = jest.fn();
     console.log = jest.fn();
@@ -461,7 +461,7 @@ if (process.env.CI) {
   afterEach(() => {
     console.error = consoleError;
     console.warn = consoleWarn;
-    console.log = consoleLog;
+    // console.log = consoleLog;
   });
 }
 
