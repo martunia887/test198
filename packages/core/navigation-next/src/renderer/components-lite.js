@@ -10,8 +10,6 @@ import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 
 import { navigationItemClicked } from '../common/analytics';
 
-import RenderBlocker from '../components/common/RenderBlocker';
-
 import ContainerHeaderComponent from '../components/presentational/ContainerHeader';
 import GroupComponent from '../components/presentational/Group';
 import GroupHeadingComponent from '../components/presentational/GroupHeading';
@@ -184,7 +182,6 @@ const renderItemComponent = <T: empty>(
   key: string,
   index: number,
 ) => {
-  console.log(props);
   let element = null;
   // We need an explicit conditional against each type for flow type refinement to work
   if (props.type === 'BackItem') {
@@ -298,7 +295,6 @@ class TypedItemsRenderer<T: TypeShape = empty> extends PureComponent<
   render() {
     const { customComponents = {}, items } = this.props;
 
-    console.log('called');
     // We cannot destructure props.type otherwise flow type refinment does not work
     // https://github.com/facebook/flow/issues/5259
     return items.map((props, index) => {
