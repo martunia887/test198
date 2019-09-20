@@ -379,7 +379,9 @@ export class MediaNodeUpdater {
         authProvider: uploadMediaClientConfig.authProvider,
         occurrenceKey: uuidV4(),
       };
-      const mediaFile = await mediaClient.file.copyFile(source, destination);
+      const mediaFile = await mediaClient.file.copyFile(source, destination, {
+        replaceSource: true,
+      });
 
       updateMediaNodeAttrs(
         source.id,

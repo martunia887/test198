@@ -257,7 +257,7 @@ export class CardBase extends Component<
           } = this.state;
           const { contextId } = this.props;
           const metadata = extendMetadata(fileState, this.state.metadata);
-
+          console.log(this.resolvedId, { fileState });
           if (!dataURI) {
             const { src, orientation } = await getDataURIFromFileState(
               fileState,
@@ -339,6 +339,7 @@ export class CardBase extends Component<
           });
         },
         error: error => {
+          console.log('card error', error);
           this.fireLoadingStatusAnalyticsEvent({
             resolvedId: this.resolvedId,
             status: 'error',

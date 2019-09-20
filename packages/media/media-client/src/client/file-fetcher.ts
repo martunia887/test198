@@ -92,6 +92,10 @@ export type ExternalUploadPayload = {
   dimensions: Dimensions;
 };
 
+export interface CopyFileOptions {
+  replaceSource?: boolean;
+}
+
 export interface FileFetcher {
   getFileState(id: string, options?: GetFileOptions): Observable<FileState>;
   getArtifactURL(
@@ -121,6 +125,7 @@ export interface FileFetcher {
   copyFile(
     source: SourceFile,
     destination: CopyDestination,
+    options?: CopyFileOptions,
   ): Promise<MediaFile>;
   getFileBinaryURL(id: string, collectionName?: string): Promise<string>;
 }
@@ -483,6 +488,7 @@ export class FileFetcherImpl implements FileFetcher {
   public async copyFile(
     source: SourceFile,
     destination: CopyDestination,
+    options?: CopyFileOptions,
   ): Promise<MediaFile> {
     const { authProvider, collection: sourceCollection, id } = source;
     const {
@@ -514,12 +520,25 @@ export class FileFetcherImpl implements FileFetcher {
 
     const copiedFile = (await mediaStore.copyFileWithToken(body, params)).data;
     const copiedFileObservable = new ReplaySubject<FileState>(1);
-    const copiedFileState: FileState = mapMediaFileToFileState({
+    const copiedFileState = mapMediaFileToFileState({
       data: copiedFile,
     });
 
     copiedFileObservable.next(copiedFileState);
     getFileStreamsCache().set(copiedFile.id, copiedFileObservable);
+
+    if (options && options.replaceSource) {
+      const sourceFileObservable = new ReplaySubject<FileState>(1);
+      const sourceFileState = mapMediaFileToFileState({
+        data: {
+          ...copiedFile,
+          id,
+        },
+      });
+      sourceFileObservable.next(sourceFileState);
+
+      getFileStreamsCache().set(id, sourceFileObservable);
+    }
 
     return copiedFile;
   }

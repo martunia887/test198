@@ -58,11 +58,11 @@ export const mediaPickerAuthProvider = (
   authEnvironment = authEnvironment === 'asap' ? 'asap' : '';
   const cacheKey = `${collectionName}:${authEnvironment}`;
 
-  console.log('authProvider', { ownCollectionName, collectionName });
+  // console.log('authProvider', { ownCollectionName, collectionName });
 
   if (ownCollectionName !== collectionName) {
     // throw new Error(`${ownCollectionName} cant access ${collectionName}`);
-    return Promise.resolve({});
+    // return Promise.resolve({});
   }
 
   if (!cachedAuths[cacheKey]) {
