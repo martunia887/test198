@@ -85,6 +85,7 @@ function downloadFromS3(downloadToFolder, branch, package) {
       `s3-cli --region="${BUCKET_REGION}" get ${bucketPath} ${downloadToFolder}/${ratchetFile}`,
     );
   } catch (err) {
+    console.log(err);
     if (err.response.status === 403 || err.response.status === 404) {
       console.error(
         chalk.red(`Could not find file ${ratchetFile} on s3, it is likely that you are adding a new package to the repository.
