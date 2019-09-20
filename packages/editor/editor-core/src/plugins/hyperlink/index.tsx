@@ -5,6 +5,7 @@ import { createInputRulePlugin } from './pm-plugins/input-rule';
 import { createKeymapPlugin } from './pm-plugins/keymap';
 import { plugin, stateKey, LinkAction } from './pm-plugins/main';
 import fakeCursorToolbarPlugin from './pm-plugins/fake-cursor-for-toolbar';
+import sanitizeHyperlinkPlugin from './pm-plugins/sanitize-hyperlink';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import {
   addAnalytics,
@@ -29,6 +30,10 @@ const hyperlinkPlugin = (): EditorPlugin => ({
       {
         name: 'fakeCursorToolbarPlugin',
         plugin: () => fakeCursorToolbarPlugin,
+      },
+      {
+        name: 'sanitizeHyperlinkPlugin',
+        plugin: () => sanitizeHyperlinkPlugin,
       },
       {
         name: 'hyperlinkInputRule',
