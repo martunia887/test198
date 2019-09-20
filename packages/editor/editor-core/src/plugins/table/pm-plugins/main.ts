@@ -2,6 +2,7 @@ import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import {
   findParentDomRefOfType,
   findParentNodeOfType,
+  findTable,
 } from 'prosemirror-utils';
 import { EditorView, DecorationSet } from 'prosemirror-view';
 
@@ -31,7 +32,7 @@ import {
   handleMouseDown,
   whenTableInFocus,
 } from '../event-handlers';
-import { findControlsHoverDecoration } from '../utils';
+import { findControlsHoverDecoration, updateResizeHandles } from '../utils';
 import { fixTables } from '../transforms';
 import { TableCssClassName as ClassName } from '../types';
 import reducer from '../reducer';
@@ -43,11 +44,6 @@ export const defaultTableSelection = {
   hoveredRows: [],
   isInDanger: false,
 };
-
-let isBreakoutEnabled: boolean | undefined;
-let isDynamicTextSizingEnabled: boolean | undefined;
-let isFullWidthModeEnabled: boolean | undefined;
-let wasFullWidthModeEnabled: boolean | undefined;
 
 const { createPluginState, createCommand, getPluginState } = pluginFactory(
   pluginKey,
@@ -74,16 +70,10 @@ export const createPlugin = (
   dispatch: Dispatch,
   portalProviderAPI: PortalProviderAPI,
   pluginConfig: PluginConfig,
-  dynamicTextSizing?: boolean,
-  breakoutEnabled?: boolean,
-  fullWidthModeEnabled?: boolean,
-  previousFullWidthModeEnabled?: boolean,
+  isDynamicTextSizingEnabled?: boolean,
+  isBreakoutEnabled?: boolean,
+  isFullWidthModeEnabled?: boolean,
 ) => {
-  isBreakoutEnabled = breakoutEnabled;
-  isDynamicTextSizingEnabled = dynamicTextSizing;
-  isFullWidthModeEnabled = fullWidthModeEnabled;
-  wasFullWidthModeEnabled = previousFullWidthModeEnabled;
-
   const state = createPluginState(dispatch, {
     pluginConfig,
     insertColumnButtonIndex: undefined,
@@ -122,6 +112,7 @@ export const createPlugin = (
           const { selection } = state;
           const pluginState = getPluginState(state);
           let tableRef;
+          let tableNode;
           if (pluginState.editorHasFocus) {
             const parent = findParentDomRefOfType(
               state.schema.nodes.table,
@@ -130,9 +121,15 @@ export const createPlugin = (
             if (parent) {
               tableRef = (parent as HTMLElement).querySelector('table');
             }
+
+            tableNode = findTable(state.selection);
           }
           if (pluginState.tableRef !== tableRef) {
             setTableRef(tableRef)(state, dispatch);
+          }
+
+          if (pluginState.tableNode !== tableNode) {
+            updateResizeHandles(tableRef);
           }
 
           if (pluginState.editorHasFocus && pluginState.tableRef) {
@@ -177,9 +174,8 @@ export const createPlugin = (
         table: (node, view, getPos) =>
           createTableView(node, view, getPos, portalProviderAPI, {
             isBreakoutEnabled,
-            dynamicTextSizing: isDynamicTextSizingEnabled,
+            isDynamicTextSizingEnabled,
             isFullWidthModeEnabled,
-            wasFullWidthModeEnabled,
           }),
       },
 

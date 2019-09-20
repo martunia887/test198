@@ -38,7 +38,8 @@ export interface ColumnResizingPluginState {
   dragging: { startX: number; startWidth: number } | null;
   lastClick: { x: number; y: number; time: number } | null;
   lastColumnResizable?: boolean;
-  dynamicTextSizing?: boolean;
+  isDynamicTextSizingEnabled?: boolean;
+  isFullWidthModeEnabled?: boolean;
 }
 
 export interface TableColumnOrdering {
@@ -220,7 +221,6 @@ export const TableCssClassName = {
 
   // come from prosemirror-table
   SELECTED_CELL: 'selectedCell',
-  COLUMN_RESIZE_HANDLE: 'column-resize-handle',
 
   // defined in ReactNodeView based on PM node name
   NODEVIEW_WRAPPER: 'tableView-content-wrap',

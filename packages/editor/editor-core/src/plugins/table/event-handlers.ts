@@ -10,7 +10,6 @@ import { TableMap, cellAround, CellSelection } from 'prosemirror-tables';
 import { findTable, getSelectionRect, removeTable } from 'prosemirror-utils';
 import rafSchedule from 'raf-schd';
 import { browser } from '@atlaskit/editor-common';
-import { pluginKey as resizingPluginKey } from './pm-plugins/table-resizing/plugin';
 
 import { analyticsService } from '../../analytics';
 import {
@@ -350,15 +349,16 @@ export const handleCut = (
 export const whenTableInFocus = (
   eventHandler: (view: EditorView, mouseEvent: Event) => boolean,
 ) => (view: EditorView, mouseEvent: Event): boolean => {
-  if (
-    !getPluginState(view.state).tableNode ||
-    (resizingPluginKey.get(view.state) &&
-      !!getResizePluginState(view.state).dragging)
-  ) {
+  const tableResizePluginState = getResizePluginState(view.state);
+  const tablePluginState = getPluginState(view.state);
+  const isDragging =
+    tableResizePluginState && !!tableResizePluginState.dragging;
+  const hasTableNode = tablePluginState && tablePluginState.tableNode;
+
+  if (!hasTableNode || isDragging) {
     return false;
   }
 
   // debounce event handler
-  rafSchedule(eventHandler(view, mouseEvent));
-  return false;
+  return rafSchedule(eventHandler(view, mouseEvent));
 };

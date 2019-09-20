@@ -1,5 +1,21 @@
 # @atlaskit/media-viewer
 
+## 43.4.3
+
+### Patch Changes
+
+- [patch][b3d01a57df](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b3d01a57df):
+
+  Download max res image and prioritise existing preview over representations
+
+## 43.4.2
+
+### Patch Changes
+
+- [patch][fc79969f86](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/fc79969f86):
+
+  Update all the theme imports in media to use multi entry points
+
 ## 43.4.1
 
 - Updated dependencies [af72468517](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/af72468517):

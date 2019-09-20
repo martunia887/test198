@@ -30,7 +30,7 @@ import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../../analytics/enums';
 import { AnalyticsEventPayload, PLATFORM, MODE } from '../../analytics/events';
 import AnalyticsContext from '../../analytics/analyticsContext';
 import { CopyTextProvider } from '../../react/nodes/copy-text-provider';
-
+import { Provider as SmartCardStorageProvider } from '../SmartCardStorage';
 export interface Extension<T> {
   extensionKey: string;
   parameters?: T;
@@ -60,6 +60,7 @@ export interface Props {
 export class Renderer extends PureComponent<Props, {}> {
   private providerFactory: ProviderFactory;
   private serializer?: ReactSerializer;
+  private mountTimeoutId: number | undefined;
 
   constructor(props: Props) {
     super(props);
@@ -87,7 +88,7 @@ export class Renderer extends PureComponent<Props, {}> {
 
   componentDidMount() {
     // add setTimeout to ensure the rendering process has completed.
-    window.setTimeout(() => this.onRenderComplete());
+    this.mountTimeoutId = window.setTimeout(() => this.onRenderComplete());
 
     this.fireAnalyticsEvent({
       action: ACTION.STARTED,
@@ -204,12 +205,14 @@ export class Renderer extends PureComponent<Props, {}> {
                   this.fireAnalyticsEvent(event),
               }}
             >
-              <RendererWrapper
-                appearance={appearance}
-                dynamicTextSizing={!!allowDynamicTextSizing}
-              >
-                {result}
-              </RendererWrapper>
+              <SmartCardStorageProvider>
+                <RendererWrapper
+                  appearance={appearance}
+                  dynamicTextSizing={!!allowDynamicTextSizing}
+                >
+                  {result}
+                </RendererWrapper>
+              </SmartCardStorageProvider>
             </AnalyticsContext.Provider>
           </IntlProvider>
         </CopyTextProvider>
@@ -234,6 +237,8 @@ export class Renderer extends PureComponent<Props, {}> {
 
   componentWillUnmount() {
     const { dataProviders } = this.props;
+
+    window.clearTimeout(this.mountTimeoutId);
 
     // if this is the ProviderFactory which was created in constructor
     // it's safe to destroy it on Renderer unmount

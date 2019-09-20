@@ -1,4 +1,3 @@
-import { cellAround, TableMap } from 'prosemirror-tables';
 import { EditorView } from 'prosemirror-view';
 import { ResolvedPos, NodeSpec } from 'prosemirror-model';
 import { TableLayout, CellAttributes } from '@atlaskit/adf-schema';
@@ -26,12 +25,14 @@ export function getLayoutSize(
   containerWidth: number = 0,
   options: TableOptions,
 ): number {
-  const { dynamicTextSizing, isFullWidthModeEnabled } = options;
+  const { isDynamicTextSizingEnabled, isFullWidthModeEnabled } = options;
 
   if (isFullWidthModeEnabled) {
     return containerWidth
       ? Math.min(
-          containerWidth - akEditorGutterPadding * 2,
+          containerWidth -
+            akEditorGutterPadding * 2 -
+            (isDynamicTextSizingEnabled ? 0 : 4),
           akEditorFullWidthLayoutWidth,
         )
       : akEditorFullWidthLayoutWidth;
@@ -46,7 +47,7 @@ export function getLayoutSize(
     return parseInt(calculatedTableWidth, 10);
   }
 
-  if (dynamicTextSizing && tableLayout === 'default') {
+  if (isDynamicTextSizingEnabled && tableLayout === 'default') {
     return getDefaultLayoutMaxWidth(containerWidth);
   }
 
@@ -98,36 +99,4 @@ export function domCellAround(target: HTMLElement | null): HTMLElement | null {
       : (target.parentNode as HTMLElement | null);
   }
   return target;
-}
-
-// Returns the pos of the cell on the side requested.
-export function edgeCell(
-  view: EditorView,
-  event: MouseEvent,
-  side: string,
-  handleWidth: number,
-): number | null {
-  const buffer = side === 'right' ? -handleWidth : handleWidth; // Fixes finicky bug where posAtCoords could return wrong pos.
-  let posResult = view.posAtCoords({
-    left: event.clientX + buffer,
-    top: event.clientY,
-  });
-
-  if (!posResult || !posResult.pos) {
-    return null;
-  }
-
-  let $cell = cellAround(view.state.doc.resolve(posResult.pos));
-  if (!$cell) {
-    return null;
-  }
-  if (side === 'right') {
-    return $cell.pos;
-  }
-
-  let map = TableMap.get($cell.node(-1));
-  let start = $cell.start(-1);
-  let index = map.map.indexOf($cell.pos - start);
-
-  return index % map.width === 0 ? null : start + map.map[index - 1];
 }

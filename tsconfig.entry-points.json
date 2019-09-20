@@ -1755,6 +1755,10 @@
         "../../helpers/locale/src/LocaleSelect",
         "./packages/helpers/locale/src/LocaleSelect"
       ],
+      "@atlaskit/motion": [
+        "../../helpers/motion/src/",
+        "./packages/helpers/motion/src/"
+      ],
       "@atlaskit/notification-indicator": [
         "../../home/notification-indicator/src/",
         "./packages/home/notification-indicator/src/"
@@ -1814,6 +1818,10 @@
       "@atlaskit/media-card": [
         "../../media/media-card/src/",
         "./packages/media/media-card/src/"
+      ],
+      "@atlaskit/media-client/constants": [
+        "../../media/media-client/src/constants",
+        "./packages/media/media-client/src/constants"
       ],
       "@atlaskit/media-client/file-streams-cache": [
         "../../media/media-client/src/file-streams-cache",
@@ -2106,6 +2114,10 @@
       "@atlaskit/app-navigation": [
         "../../navigation/app-navigation/src/",
         "./packages/navigation/app-navigation/src/"
+      ],
+      "@atlaskit/atlassian-switcher/create-custom-provider": [
+        "../../navigation/atlassian-switcher/src/create-custom-provider",
+        "./packages/navigation/atlassian-switcher/src/create-custom-provider"
       ],
       "@atlaskit/atlassian-switcher": [
         "../../navigation/atlassian-switcher/src/",

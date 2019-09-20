@@ -1,75 +1,33 @@
 import { TableMap } from 'prosemirror-tables';
 import { EditorView } from 'prosemirror-view';
 import { getSelectionRect } from 'prosemirror-utils';
-import rafSchedule from 'raf-schd';
 import {
   tableCellMinWidth,
   akEditorTableNumberColumnWidth,
-  tableResizeHandleWidth,
 } from '@atlaskit/editor-common';
 import { TableLayout, CellAttributes } from '@atlaskit/adf-schema';
 import { pluginKey as editorDisabledPluginKey } from '../../../editor-disabled';
 import { updateColumnWidths } from '../../transforms';
 import {
-  createResizeHandle,
-  updateResizeHandle,
   getResizeState,
   resizeColumn,
   getLayoutSize,
   currentColWidth,
   pointsAtCell,
   updateControls,
-  domCellAround,
-  edgeCell,
 } from './utils';
 import { getSelectedColumnIndexes } from '../../utils';
 import { pluginKey as widthPluginKey } from '../../../width';
 import { getPluginState } from './plugin';
-import { setDragging, evenColumns, setResizeHandlePos } from './commands';
+import { setDragging, evenColumns } from './commands';
 import { getParentNodeWidth } from '../../../../utils/node-width';
-
-export const handleMouseMove = rafSchedule(
-  (view: EditorView, event: MouseEvent, lastColumnResizable: boolean) => {
-    const { state, dispatch } = view;
-    const { dragging, resizeHandlePos } = getPluginState(state);
-    if (dragging) {
-      return;
-    }
-
-    const target = domCellAround(event.target as HTMLElement | null);
-    let cellPos: number | null = null;
-
-    if (target) {
-      const { left, right } = target.getBoundingClientRect();
-      if (event.clientX - left <= tableResizeHandleWidth) {
-        cellPos = edgeCell(view, event, 'left', tableResizeHandleWidth);
-      } else if (right - event.clientX <= tableResizeHandleWidth) {
-        cellPos = edgeCell(view, event, 'right', tableResizeHandleWidth);
-      }
-    }
-
-    if (cellPos !== resizeHandlePos) {
-      if (!lastColumnResizable && cellPos !== null) {
-        const $cell = state.doc.resolve(cellPos);
-        const map = TableMap.get($cell.node(-1));
-        const start = $cell.start(-1);
-        const columnIndex =
-          map.colCount($cell.pos - start) + $cell.nodeAfter!.attrs.colspan - 1;
-
-        if (columnIndex === map.width - 1) {
-          return;
-        }
-      }
-      setResizeHandlePos(cellPos)(state, dispatch);
-    }
-  },
-);
 
 export const handleMouseDown = (
   view: EditorView,
   event: MouseEvent,
   resizeHandlePos: number,
-  dynamicTextSizing: boolean,
+  isDynamicTextSizingEnabled: boolean,
+  isFullWidthModeEnabled: boolean,
 ): boolean => {
   const { state, dispatch } = view;
   const { editorDisabled } = editorDisabledPluginKey.getState(state);
@@ -93,12 +51,9 @@ export const handleMouseDown = (
     dom = dom.parentNode! as HTMLTableElement;
   }
 
-  let resizeHandleRef: HTMLDivElement | null = createResizeHandle(
-    dom as HTMLTableElement,
-  );
-
   const containerWidth = widthPluginKey.getState(state);
   const parentWidth = getParentNodeWidth(start, state, containerWidth);
+  const colIndex = getColIndex(view, event.target, resizeHandlePos);
 
   let maxSize =
     parentWidth ||
@@ -106,7 +61,8 @@ export const handleMouseDown = (
       dom.getAttribute('data-layout') as TableLayout,
       containerWidth.width,
       {
-        dynamicTextSizing,
+        isDynamicTextSizingEnabled,
+        isFullWidthModeEnabled,
       },
     );
 
@@ -144,11 +100,6 @@ export const handleMouseDown = (
     window.removeEventListener('mouseup', finish);
     window.removeEventListener('mousemove', move);
 
-    if (resizeHandleRef && resizeHandleRef.parentNode) {
-      resizeHandleRef.parentNode.removeChild(resizeHandleRef);
-      resizeHandleRef = null;
-    }
-
     const { clientX } = event;
     const { state, dispatch } = view;
     const { dragging } = getPluginState(state);
@@ -178,11 +129,6 @@ export const handleMouseDown = (
       // For example, if a table col is deleted we won't be able to reliably remap the new widths
       // There may be a more elegant solution to this, to avoid a jarring experience.
       if (table.eq(originalTable)) {
-        const map = TableMap.get(table);
-        const colIndex =
-          map.colCount($cell.pos - start) +
-          ($cell.nodeAfter ? $cell.nodeAfter.attrs.colspan : 1) -
-          1;
         const selectionRect = getSelectionRect(state.selection);
         const selectedColumns = selectionRect
           ? getSelectedColumnIndexes(selectionRect)
@@ -217,19 +163,9 @@ export const handleMouseDown = (
     ) {
       return finish(event);
     }
-
-    const $cell = state.doc.resolve(resizeHandlePos);
-    const table = $cell.node(-1);
-    const map = TableMap.get(table);
-    const colIndex =
-      map.colCount($cell.pos - $cell.start(-1)) +
-      $cell.nodeAfter!.attrs.colspan -
-      1;
-
     resizeColumn(resizeState, colIndex, clientX - dragging.startX, dom);
 
     updateControls(state);
-    updateResizeHandle(state, domAtPos, resizeHandlePos);
   }
 
   window.addEventListener('mouseup', finish);
@@ -237,3 +173,27 @@ export const handleMouseDown = (
 
   return true;
 };
+
+function getColIndex(
+  view: EditorView,
+  resizeHandle: EventTarget | null,
+  resizeHandlePos: number,
+): number {
+  const colIndex = parseInt(
+    (resizeHandle as HTMLElement).getAttribute('data-col-index') || '-1',
+    10,
+  );
+
+  if (colIndex === -1) {
+    const $cell = view.state.doc.resolve(resizeHandlePos);
+    const table = $cell.node(-1);
+    const map = TableMap.get(table);
+    return (
+      map.colCount($cell.pos - $cell.start(-1)) +
+      $cell.nodeAfter!.attrs.colspan -
+      1
+    );
+  }
+
+  return colIndex;
+}
