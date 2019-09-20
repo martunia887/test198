@@ -2,7 +2,6 @@
 import { forwardRef } from 'react';
 import { jsx } from '@emotion/core';
 
-<<<<<<< HEAD
 export interface HiddenCheckboxProps extends React.HTMLProps<HTMLInputElement> {
   disabled?: boolean;
   checked?: boolean;
@@ -22,11 +21,6 @@ export interface HiddenCheckboxProps extends React.HTMLProps<HTMLInputElement> {
 export default forwardRef((
   // @ts-ignore - createAnalyticsEvent is injected from WithAnalyticsEvents HOC
   { createAnalyticsEvent, attributesFn, ...props }: HiddenCheckboxProps,
-=======
-export default forwardRef((
-  // @ts-ignore - createAnalyticsEvent is injected from WithAnalyticsEvents HOC
-  { createAnalyticsEvent, ...props }: React.HTMLProps<HTMLInputElement>,
->>>>>>> a01ca0307a... separate out checkbox.tsx file into smaller component files in an elements folder
   ref: React.Ref<HTMLInputElement>,
 ) => (
   <input
@@ -41,13 +35,10 @@ export default forwardRef((
       top: '50%',
     }}
     {...props}
-<<<<<<< HEAD
     {...attributesFn({
       disabled: props.disabled,
       checked: props.checked,
       required: props.required,
     })}
-=======
->>>>>>> a01ca0307a... separate out checkbox.tsx file into smaller component files in an elements folder
   />
 ));

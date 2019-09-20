@@ -1,70 +1,12 @@
 /** @jsx jsx */
-import { jsx, InterpolationWithTheme } from '@emotion/core';
-import { ThemeTokens, ThemeIconTokens } from '../types';
-import React from 'react';
+import { jsx, CSSObject } from '@emotion/core';
+import { defaultAttributesFn } from '../utils';
+import {
+  IconWrapperProps,
+  ThemeIconTokens,
+  IconWrapperCSSProps,
+} from '../types';
 
-<<<<<<< HEAD:packages/core/checkbox/src/styled/Checkbox.tsx
-export const HiddenCheckbox = React.forwardRef((
-  // @ts-ignore - createAnalyticsEvent is injected from WithAnalyticsEvents HOC
-  { createAnalyticsEvent, ...props }: React.HTMLProps<HTMLInputElement>,
-  ref: React.Ref<HTMLInputElement>,
-) => (
-  <input
-    ref={ref}
-    css={css`
-      left: 50%;
-      margin: 0;
-      opacity: 0;
-      padding: 0;
-      position: absolute;
-      transform: translate(-50%, -50%);
-      top: 50%;
-    `}
-    {...props}
-  />
-));
-
-<<<<<<< HEAD
-const disabledColor = themed({ light: colors.N80, dark: colors.N80 });
-
-=======
->>>>>>> 56f01cf1a3... fix checkbox type definitions
-=======
->>>>>>> a01ca0307a... separate out checkbox.tsx file into smaller component files in an elements folder:packages/core/checkbox/src/elements/IconWrapper.tsx
-interface Props {
-  isActive?: boolean;
-  isChecked?: boolean | unknown;
-  isDisabled?: boolean;
-  isFocused?: boolean;
-  isInvalid?: boolean;
-  isHovered?: boolean;
-  rest?: any;
-  tokens: ThemeTokens;
-}
-
-<<<<<<< HEAD:packages/core/checkbox/src/styled/Checkbox.tsx
-interface LabelProps extends React.HTMLProps<HTMLLabelElement> {
-  isDisabled?: boolean;
-  tokens: ThemeTokens;
-}
-export const Label = ({ isDisabled, ...rest }: LabelProps) => (
-  <label
-    css={css`
-      align-items: flex-start;
-      display: flex;
-      color: ${isDisabled ? disabledColor(rest) : colors.text(rest)};
-      ${isDisabled
-        ? css`
-            cursor: not-allowed;
-          `
-        : ''};
-    `}
-    {...rest}
-  />
-);
-
-=======
->>>>>>> a01ca0307a... separate out checkbox.tsx file into smaller component files in an elements folder:packages/core/checkbox/src/elements/IconWrapper.tsx
 const disabledBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.disabled,
   strokeWidth: iconTokens.borderWidth,
@@ -72,42 +14,46 @@ const disabledBorder = (iconTokens: ThemeIconTokens) => ({
 
 const activeBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.active,
-  strokeWidth: '2px',
+  strokeWidth: iconTokens.borderWidth,
+});
+
+const hoveredAndCheckedBorder = (iconTokens: ThemeIconTokens) => ({
+  stroke: iconTokens.borderColor.hoveredAndChecked,
+  strokeWidth: iconTokens.borderWidth,
+});
+
+const hoveredBorder = (iconTokens: ThemeIconTokens) => ({
+  stroke: iconTokens.borderColor.hovered,
+  strokeWidth: iconTokens.borderWidth,
 });
 
 const checkedBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.checked,
-  strokeWidth: '2px',
+  strokeWidth: iconTokens.borderWidth,
 });
 
 const focusBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.focused,
-  strokeWidth: '2px;',
+  strokeWidth: iconTokens.borderWidth,
 });
 
 const invalidBorder = (iconTokens: ThemeIconTokens) => ({
   stroke: iconTokens.borderColor.invalid,
-  strokeWidth: '2px;',
+  strokeWidth: iconTokens.borderWidth,
 });
 
-<<<<<<< HEAD
-const border = ({ isHovered, tokens: { icon }, ...rest }: Props) => css`
-  stroke: ${isHovered ? icon.borderColor.hovered : icon.borderColor.rest};
-  stroke-width: 2px;
-`;
-=======
-const border = ({ isHovered, tokens: { icon } }: Props) => ({
-  stroke: isHovered ? icon.borderColor.hovered : icon.borderColor.rest,
-  strokeWidth: icon.borderWidth,
-});
->>>>>>> 56f01cf1a3... fix checkbox type definitions
-
-const getBorderColor = ({ tokens, ...props }: Props) => {
+const getBorderColor = ({ tokens, ...props }: IconWrapperCSSProps) => {
   if (props.isDisabled) {
     return disabledBorder(tokens.icon);
   }
   if (props.isActive) {
     return activeBorder(tokens.icon);
+  }
+  if (props.isHovered && props.isChecked) {
+    return hoveredAndCheckedBorder(tokens.icon);
+  }
+  if (props.isHovered) {
+    return hoveredBorder(tokens.icon);
   }
   if (props.isChecked) {
     return checkedBorder(tokens.icon);
@@ -118,10 +64,14 @@ const getBorderColor = ({ tokens, ...props }: Props) => {
   if (props.isInvalid) {
     return invalidBorder(tokens.icon);
   }
-  return border({ tokens, ...props });
+
+  return {
+    stroke: tokens.icon.borderColor.rest,
+    strokeWidth: tokens.icon.borderWidth,
+  };
 };
 
-const getTickColor = (props: Props) => {
+const getTickColor = (props: IconWrapperCSSProps) => {
   const {
     isChecked,
     isDisabled,
@@ -141,7 +91,7 @@ const getTickColor = (props: Props) => {
   return color;
 };
 
-const getBoxColor = (props: Props) => {
+const getBoxColor = (props: IconWrapperCSSProps) => {
   const {
     isChecked,
     isDisabled,
@@ -166,60 +116,7 @@ const getBoxColor = (props: Props) => {
   return color;
 };
 
-<<<<<<< HEAD:packages/core/checkbox/src/styled/Checkbox.tsx
-<<<<<<< HEAD
-export const LabelText = (props: { children: React.ReactNode }) => (
-=======
-export const LabelText = ({
-  tokens,
-  ...rest
-}: {
-  tokens: ThemeTokens;
-  children: React.ReactNode;
-}) => (
->>>>>>> 56f01cf1a3... fix checkbox type definitions
-  <span
-    css={css`
-      padding: 6px 4px;
-    `}
-    {...props}
-  />
-);
-
-export const CheckboxWrapper = (props: { children: React.ReactNode }) => (
-  <span
-    css={{
-      display: 'flex;',
-      flexShrink: 0,
-      position: 'relative',
-    }}
-    {...props}
-  />
-);
-
-interface IconProps extends React.HTMLProps<HTMLLabelElement> {
-=======
-export interface IconProps extends React.HTMLProps<HTMLLabelElement> {
-<<<<<<< HEAD
->>>>>>> a01ca0307a... separate out checkbox.tsx file into smaller component files in an elements folder:packages/core/checkbox/src/elements/IconWrapper.tsx
-=======
-  getStyles: (
-    key: 'iconWrapper',
-    props: Pick<Props, Exclude<keyof Props, 'getStyles'>>,
-  ) => InterpolationWithTheme<any>;
->>>>>>> 9f4f583f11... implement styles prop and getStyles fns
-  tokens: ThemeTokens;
-  isChecked?: boolean;
-  isDisabled?: boolean;
-  isActive?: boolean;
-  isHovered?: boolean;
-  isFocused?: boolean;
-  isInvalid?: boolean;
-}
-
-export const iconWrapperCSS = (
-  props: IconProps,
-): InterpolationWithTheme<any> => ({
+export const iconWrapperCSS = (props: IconWrapperProps): CSSObject => ({
   lineHeight: 0,
   flexShrink: 0,
   color: getBoxColor(props),
@@ -242,6 +139,17 @@ export const iconWrapperCSS = (
   },
 });
 
-export default ({ getStyles, children, ...props }: IconProps) => (
-  <span css={getStyles('iconWrapper', props)} children={children} />
-);
+export function IconWrapper({
+  attributesFn,
+  cssFn,
+  children,
+  ...props
+}: IconWrapperProps) {
+  return <span css={cssFn(props)} {...attributesFn({})} children={children} />;
+}
+
+export default {
+  component: IconWrapper,
+  cssFn: iconWrapperCSS,
+  attributesFn: defaultAttributesFn,
+};

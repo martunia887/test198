@@ -18,11 +18,7 @@ import {
   CheckboxWrapper,
   RequiredIndicator,
   HiddenCheckbox,
-  labelCSS,
-  iconWrapperCSS,
-  labelTextCSS,
 } from './elements';
-<<<<<<< HEAD
 import { CheckboxProps, CheckboxDefaults, CheckboxOverrides } from './types';
 
 const defaults: CheckboxDefaults = {
@@ -32,26 +28,6 @@ const defaults: CheckboxDefaults = {
     attributesFn: () => ({}),
   },
 };
-file into smaller component files in an elements folder
-=======
-import {
-  CheckboxProps,
-  CheckboxStylesProp,
-  CheckboxDefaultStyles,
-} from './types';
-
-// interface CheckboxStyles {
-//   iconWrapper: (state: IconProps) => InterpolationWithTheme<any>;
-//   labelText: (state: { tokens: ThemeTokens, }) => InterpolationWithTheme<any>;
-//   label: (state: LabelProps) => InterpolationWithTheme<any>;
-// }
-
-const defaultStyles: CheckboxDefaultStyles = {
-  iconWrapper: iconWrapperCSS,
-  label: labelCSS,
-  labelText: labelTextCSS,
-};
->>>>>>> 9f4f583f11... implement styles prop and getStyles fns
 
 interface State {
   isActive: boolean;
@@ -136,19 +112,6 @@ class Checkbox extends Component<CheckboxProps, State> {
     }
   };
 
-  getStyles = (key: keyof CheckboxStylesProp, state: any) => {
-    // @ts-ignore typescript 3.1.x has issues resolving union types
-    // this is resolved in 3.3.x, for now we're applying a ts-ignore
-    const defaultStyle = defaultStyles[key](state);
-    const customStyle = this.props.styles && this.props.styles[key];
-    if (customStyle) {
-      // @ts-ignore typescript 3.1.x has issues resolving union types
-      // this is resolved in 3.3.x, for now we're applying a ts-ignore
-      return customStyle(defaultStyle, state);
-    }
-    return defaultStyle;
-  };
-
   onBlur = () =>
     this.setState({
       // onBlur is called after onMouseDown if the checkbox was focused, however
@@ -192,11 +155,6 @@ class Checkbox extends Component<CheckboxProps, State> {
       //props not passed into HiddenCheckbox
       isChecked: propsIsChecked,
       theme,
-<<<<<<< HEAD
-=======
-      styles,
-      ...rest
->>>>>>> 9f4f583f11... implement styles prop and getStyles fns
     } = this.props;
 
     const isChecked =
@@ -223,11 +181,7 @@ class Checkbox extends Component<CheckboxProps, State> {
             <Theme.Consumer mode={mode} tokens={componentTokens}>
               {tokens => (
                 <Label
-<<<<<<< HEAD
                   {...labelOverrides}
-=======
-                  getStyles={this.getStyles}
->>>>>>> 9f4f583f11... implement styles prop and getStyles fns
                   isDisabled={isDisabled}
                   onMouseDown={this.onMouseDown}
                   onMouseEnter={this.onMouseEnter}
@@ -253,21 +207,12 @@ class Checkbox extends Component<CheckboxProps, State> {
                     />
                     <CheckboxIcon
                       theme={theme}
-<<<<<<< HEAD
                       overrides={{
                         IconWrapper: overrides && overrides.IconWrapper,
                         Icon: overrides && overrides.Icon,
                         IconIndeterminate:
                           overrides && overrides.IconIndeterminate,
                       }}
-=======
-                      styles={
-                        styles &&
-                        styles.iconWrapper && {
-                          iconWrapper: styles.iconWrapper,
-                        }
-                      }
->>>>>>> 9f4f583f11... implement styles prop and getStyles fns
                       isChecked={isChecked}
                       isDisabled={isDisabled}
                       isFocused={isFocused}
@@ -280,11 +225,7 @@ class Checkbox extends Component<CheckboxProps, State> {
                       label=""
                     />
                   </CheckboxWrapper>
-<<<<<<< HEAD
                   <LabelText {...labelTextOverrides} tokens={tokens}>
-=======
-                  <LabelText getStyles={this.getStyles} tokens={tokens}>
->>>>>>> 9f4f583f11... implement styles prop and getStyles fns
                     {label}
                     {isRequired && (
                       <RequiredIndicator tokens={tokens} aria-hidden="true">

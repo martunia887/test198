@@ -98,7 +98,6 @@ export type CheckboxIconOverrides = Pick<
  *
  **/
 
-
 export interface CheckboxIconProps {
   /** Sets the checkbox icon active state. */
   isActive?: boolean;
@@ -147,7 +146,6 @@ export interface CheckboxIconProps {
  **/
 
 export interface CheckboxProps extends WithAnalyticsEventsProps {
-
   /** Sets whether the checkbox begins checked. */
   defaultChecked?: boolean;
   /** id assigned to input */
@@ -213,57 +211,6 @@ interface ModeValue {
 
 type TokenValue = ModeValue | string;
 
-export interface ComponentTokens {
-  label?: {
-    textColor?: {
-      rest: TokenValue;
-      disabled: TokenValue;
-    };
-    spacing?: {
-      bottom?: TokenValue;
-      right?: TokenValue;
-      left?: TokenValue;
-      top?: TokenValue;
-    };
-  };
-  icon?: {
-    borderWidth?: string;
-    borderColor?: {
-      rest?: TokenValue;
-      disabled?: TokenValue;
-      checked?: TokenValue;
-      active?: TokenValue;
-      invalid?: TokenValue;
-      focused?: TokenValue;
-      hovered?: TokenValue;
-      hoveredAndChecked?: TokenValue;
-    };
-    boxColor?: {
-      rest?: TokenValue;
-      disabled?: TokenValue;
-      active?: TokenValue;
-      hoveredAndChecked?: TokenValue;
-      hovered?: TokenValue;
-      checked?: TokenValue;
-    };
-    tickColor?: {
-      rest?: TokenValue;
-      disabledAndChecked?: TokenValue;
-      activeAndChecked?: TokenValue;
-      checked?: TokenValue;
-    };
-    size?: 'small' | 'medium' | 'large' | 'xlarge';
-  };
-  requiredIndicator?: {
-    textColor?: {
-      rest?: TokenValue;
-    };
-  };
-}
-
-export interface ThemeIconTokens {
-=======
-}
 interface LabelTokens {
   textColor: {
     rest: ModeValue;
@@ -277,30 +224,30 @@ interface LabelTokens {
   };
 }
 
-export interface IconTokens {
+interface IconTokens {
   borderWidth: string;
   borderColor: {
-    rest: ModeValue;
-    disabled: ModeValue;
-    checked: ModeValue;
-    active: ModeValue;
-    invalid: ModeValue;
-    focused: ModeValue;
-    hovered: ModeValue;
+    rest: TokenValue;
+    disabled: TokenValue;
+    checked: TokenValue;
+    active: TokenValue;
+    invalid: TokenValue;
+    focused: TokenValue;
+    hovered: TokenValue;
   };
   boxColor: {
-    rest: ModeValue;
-    disabled: ModeValue;
-    active: ModeValue;
-    hoveredAndChecked: ModeValue;
-    hovered: ModeValue;
-    checked: ModeValue;
+    rest: TokenValue;
+    disabled: TokenValue;
+    active: TokenValue;
+    hoveredAndChecked: TokenValue;
+    hovered: TokenValue;
+    checked: TokenValue;
   };
   tickColor: {
-    rest: ModeValue;
-    disabledAndChecked: ModeValue;
-    activeAndChecked: ModeValue;
-    checked: ModeValue;
+    rest: TokenValue;
+    disabledAndChecked: TokenValue;
+    activeAndChecked: TokenValue;
+    checked: TokenValue;
   };
   size: 'small' | 'medium' | 'large';
 }
@@ -309,7 +256,6 @@ export interface ComponentTokens {
   label: LabelTokens;
   icon: IconTokens;
 }
-
 
 export interface ThemeIconTokens {
   borderWidth: string;
