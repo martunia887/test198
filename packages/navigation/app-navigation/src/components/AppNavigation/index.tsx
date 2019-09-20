@@ -3,8 +3,8 @@ import { NavigationAnalyticsContext } from '@atlaskit/analytics-namespaced-conte
 import { jsx } from '@emotion/core';
 
 import { AppNavigationTheme, ThemeProvider, defaultTheme } from '../../theme';
-import { ThemedPrimaryButton } from '../PrimaryButton';
-import { styles } from './styles';
+import { containerCSS, leftCSS, rightCSS } from './styles';
+import { PrimaryItemsContainer } from '../PrimaryItemsContainer';
 import { AppNavigationProps } from './types';
 
 const analyticsData = {
@@ -20,32 +20,33 @@ export const AppNavigation = (
     renderAppSwitcher: AppSwitcher,
     renderCreate: Create,
     renderHelp: Help,
+    renderNotifications: Notifications,
     renderProductHome: ProductHome,
     renderProfile: Profile,
-    renderNotifications: Notifications,
     renderSearch: Search,
+    renderSignIn: SignIn,
     renderSettings: Settings,
+    moreLabel,
     theme,
   } = props;
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider value={theme}>
       <NavigationAnalyticsContext data={analyticsData}>
-        <div css={styles.outer}>
-          <div css={styles.left}>
+        <div css={containerCSS(theme)}>
+          <div css={leftCSS}>
             {ProductHome && <ProductHome />}
-            {primaryItems.map(props => (
-              <ThemedPrimaryButton key={props.id} {...props} />
-            ))}
+            <PrimaryItemsContainer moreLabel={moreLabel} items={primaryItems} />
           </div>
-          <div css={styles.right}>
+          <div css={rightCSS}>
             {Create && <Create />}
             {Search && <Search />}
             {AppSwitcher && <AppSwitcher />}
             {Notifications && <Notifications />}
             {Settings && <Settings />}
             {Help && <Help />}
-            <Profile />
+            {SignIn && <SignIn />}
+            {Profile && <Profile />}
           </div>
         </div>
       </NavigationAnalyticsContext>
@@ -55,5 +56,6 @@ export const AppNavigation = (
 
 AppNavigation.defaultProps = {
   primaryItems: [],
+  moreLabel: '…',
   theme: defaultTheme,
 };

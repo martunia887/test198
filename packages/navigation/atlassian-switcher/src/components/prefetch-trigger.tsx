@@ -1,9 +1,7 @@
 import * as React from 'react';
 import throttle from 'lodash.throttle';
+import { prefetch } from '../prefetch';
 import now from '../utils/performance-now';
-import { prefetchAll } from '../providers/instance-data-providers';
-import { prefetchAvailableProducts } from '../providers/products-data-provider';
-import prefetchSwitcherBundles from '../prefetch-bundles';
 import {
   NAVIGATION_CHANNEL,
   NavigationAnalyticsContext,
@@ -18,6 +16,7 @@ import {
 } from '@atlaskit/analytics-next';
 import packageContext from '../utils/package-context';
 import { FeatureFlagProps } from '../types';
+import { AvailableProductsDataProvider } from '../providers/products-data-provider';
 
 const THROTTLE_EXPIRES = 60 * 1000; // 60 seconds
 const THROTTLE_OPTIONS = {
@@ -35,6 +34,7 @@ type PrefetchTriggerProps = {
   children: React.ReactNode;
   cloudId?: string;
   Container?: React.ReactType;
+  availableProductsDataProvider?: AvailableProductsDataProvider;
 } & Partial<FeatureFlagProps>;
 
 class PrefetchTrigger extends React.Component<
@@ -56,16 +56,7 @@ class PrefetchTrigger extends React.Component<
 
   private triggerPrefetch = throttle(
     () => {
-      const { cloudId, product } = this.props;
-
-      prefetchSwitcherBundles(product);
-
-      if (cloudId) {
-        prefetchAll({ cloudId });
-      }
-      if (this.props.enableUserCentricProducts) {
-        prefetchAvailableProducts();
-      }
+      prefetch(this.props);
 
       this.fireOperationalEvent({
         action: 'triggered',

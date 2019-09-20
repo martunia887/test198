@@ -3,14 +3,14 @@ import SearchIcon from '@atlaskit/icon/glyph/search';
 import { jsx } from '@emotion/core';
 import { Fragment } from 'react';
 
-import { ThemedIconButton } from '../IconButton';
-import { TriggerManager } from '../TriggerManager';
+import { useTheme } from '../../theme';
+import { IconButton } from '../IconButton';
 
 import {
-  searchInputContainerStyles,
-  searchIconStyles,
-  searchInputStyles,
-  searchInputIconStyles,
+  searchInputContainerCSS,
+  searchIconCSS,
+  searchInputCSS,
+  searchInputIconCSS,
 } from './styles';
 import { SearchProps } from './types';
 
@@ -21,22 +21,28 @@ type SearchComponentProps = {
 
 const SearchComponent = (props: SearchComponentProps) => {
   const { onClick, text } = props;
+  const theme = useTheme();
 
   const onChange = (...args: any[]) => {
     // @ts-ignore
     onClick && onClick(...args);
   };
 
+  const onInputClick = (...args: any[]) => {
+    // @ts-ignore
+    onClick && onClick(...args);
+  };
+
   return (
-    <div css={searchInputContainerStyles}>
-      <div css={searchInputIconStyles}>
+    <div css={searchInputContainerCSS}>
+      <div css={searchInputIconCSS}>
         <SearchIcon label={text} />
       </div>
       <input
-        css={searchInputStyles}
+        css={searchInputCSS(theme)}
         placeholder={text}
         onChange={onChange}
-        onClick={onClick}
+        onClick={onInputClick}
         value=""
       />
     </div>
@@ -44,21 +50,17 @@ const SearchComponent = (props: SearchComponentProps) => {
 };
 
 export const Search = (props: SearchProps) => {
-  const { text, tooltip, ...triggerManagerProps } = props;
+  const { text, tooltip, ...iconButtonProps } = props;
 
   return (
-    <TriggerManager {...triggerManagerProps}>
-      {({ onTriggerClick }) => (
-        <Fragment>
-          <SearchComponent onClick={onTriggerClick} text={text} />
-          <ThemedIconButton
-            css={searchIconStyles}
-            icon={<SearchIcon label={tooltip} />}
-            onClick={onTriggerClick}
-            tooltip={tooltip}
-          />
-        </Fragment>
-      )}
-    </TriggerManager>
+    <Fragment>
+      <SearchComponent onClick={iconButtonProps.onClick} text={text} />
+      <IconButton
+        css={searchIconCSS}
+        icon={<SearchIcon label={tooltip} />}
+        tooltip={tooltip}
+        {...iconButtonProps}
+      />
+    </Fragment>
   );
 };
