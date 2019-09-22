@@ -153,14 +153,17 @@ function handleSelectionAfterWrapRight(isEmptyNode: (node: Node) => boolean) {
 const maybeRemoveMediaSingleNode = (schema: Schema): Command => {
   const isEmptyNodeInSchema = isEmptyNode(schema);
   return (state, dispatch) => {
+    console.log('maybeRemoveMedia child');
     const { selection, schema } = state;
     const { $from } = selection;
 
     if (!isEmptySelectionAtStart(state.selection)) {
+      console.log('!isEmptySelectionAtStart');
       return false;
     }
 
     if (!isSelectionInsideOf(state.selection, schema.nodes.paragraph)) {
+      console.log('!isSelectionInsideOf');
       return false;
     }
 
@@ -172,6 +175,8 @@ const maybeRemoveMediaSingleNode = (schema: Schema): Command => {
         previousSibling,
       )
     ) {
+      console.log('!isSiblingOfType');
+
       // no media single
       return false;
     }
@@ -179,6 +184,7 @@ const maybeRemoveMediaSingleNode = (schema: Schema): Command => {
     const mediaSingle = getSibling(state.selection, previousSibling)!;
 
     if (mediaSingle.attrs.layout === 'wrap-right') {
+      console.log('layout === wrap-right');
       return handleSelectionAfterWrapRight(isEmptyNodeInSchema)(
         state,
         dispatch,
@@ -187,6 +193,7 @@ const maybeRemoveMediaSingleNode = (schema: Schema): Command => {
 
     if (dispatch) {
       // Select media single, and remove paragraph if it's empty.
+      console.log('this thing happened');
       selectNodeBackward(state, tr => {
         if (isEmptyNodeInSchema($from.parent) && !atTheEndOfDoc(state)) {
           tr.replace($from.pos - 1, $from.pos + $from.parent.nodeSize - 1); // Remove node
@@ -194,6 +201,8 @@ const maybeRemoveMediaSingleNode = (schema: Schema): Command => {
         dispatch(tr);
       });
     }
+
+    console.log('end');
 
     return true;
   };

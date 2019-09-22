@@ -1,6 +1,7 @@
 import {
   doc,
   p,
+  panel,
   mediaSingle,
   media,
   extension,
@@ -43,6 +44,7 @@ describe('media-single', () => {
       doc,
       editorProps: {
         allowExtension: true,
+        allowPanel: true,
         media: {
           allowMediaSingle: true,
         },
@@ -353,6 +355,25 @@ describe('media-single', () => {
             })(),
           ),
           p(),
+        ),
+      );
+    });
+
+    it('should insert into a panel', () => {
+      const { editorView } = editor(doc(panel()(p('{<>}'))));
+
+      insertMediaSingleNode(
+        editorView,
+        createMediaState(temporaryFileId),
+        INPUT_METHOD.PICKER_CLOUD,
+        testCollectionName,
+      );
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(
+          panel()(
+            mediaSingle({ layout: 'center' })(temporaryMediaWithDimensions()),
+          ),
         ),
       );
     });

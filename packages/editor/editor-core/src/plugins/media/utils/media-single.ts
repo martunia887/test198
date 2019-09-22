@@ -158,8 +158,10 @@ export const insertMediaSingleNode = (
   const node = createMediaSingleNode(state.schema, collection)(
     mediaState as MediaSingleState,
   );
-  const shouldSplit =
-    grandParent && grandParent.type.validContent(Fragment.from(node));
+  const shouldSplit = !(
+    grandParent && grandParent.type.validContent(Fragment.from(node))
+  );
+
   let fileExtension: string | undefined;
   if (mediaState.fileName) {
     const extensionIdx = mediaState.fileName.lastIndexOf('.');
