@@ -115,6 +115,31 @@ describe('tasks and decisions - keymaps', () => {
         );
       });
 
+      it('should not indent past parent', () => {
+        const nestedDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Level 1'),
+            taskList(listProps)(taskItem(itemProps)('Level {<>}2')),
+          ),
+        );
+
+        test(nestedDoc, nestedDoc, ['Tab']);
+      });
+
+      it('should not indent past parent, even with sibling', () => {
+        const nestedDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('Level 1'),
+            taskList(listProps)(
+              taskItem(itemProps)('Level {<>}2'),
+              taskItem(itemProps)('I am indentable, however'),
+            ),
+          ),
+        );
+
+        test(nestedDoc, nestedDoc, ['Tab']);
+      });
+
       it('should not indent items past 6 levels', () => {
         const nestedDoc = doc(
           taskList(listProps)(
@@ -127,6 +152,9 @@ describe('tasks and decisions - keymaps', () => {
                   taskItem(itemProps)('Level 4'),
                   taskList(listProps)(
                     taskItem(itemProps)('Level 5'),
+                    taskItem(itemProps)(
+                      'See, my nose is wide, my blood is honey and my',
+                    ),
                     taskList(listProps)(
                       taskItem(itemProps)(
                         'Say yall{<>} wanna live with the dream',
@@ -140,6 +168,38 @@ describe('tasks and decisions - keymaps', () => {
         );
 
         test(nestedDoc, nestedDoc, ['Tab']);
+      });
+
+      it('can indent multiple tasks at same level', () => {
+        test(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)("Say ya'll wanna roll in the scene"),
+              taskList(listProps)(
+                taskItem(itemProps)("Ya'll wanna live in the dream"),
+                taskItem(itemProps)("Ay-ya, ya'll never been {<}with the team"),
+                taskItem(itemProps)('Ay-ya, ya-ya-ya{>}, ya-ya-ya'),
+                taskItem(itemProps)("Say ya'll wanna roll in the scene"),
+              ),
+            ),
+          ),
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)("Say ya'll wanna roll in the scene"),
+              taskList(listProps)(
+                taskItem(itemProps)("Ya'll wanna live in the dream"),
+                taskList(listProps)(
+                  taskItem(itemProps)(
+                    "Ay-ya, ya'll never been {<}with the team",
+                  ),
+                  taskItem(itemProps)('Ay-ya, ya-ya-ya{>}, ya-ya-ya'),
+                ),
+                taskItem(itemProps)("Say ya'll wanna roll in the scene"),
+              ),
+            ),
+          ),
+          ['Tab'],
+        );
       });
     });
   });
