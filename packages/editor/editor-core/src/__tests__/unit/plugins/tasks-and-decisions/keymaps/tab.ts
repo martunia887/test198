@@ -1,18 +1,11 @@
 import {
   createEditorFactory,
   doc,
-  p,
   decisionList,
   decisionItem,
   sendKeyToPm,
   taskList,
   taskItem,
-  mention,
-  table,
-  td,
-  tdCursor,
-  tdEmpty,
-  tr,
   RefsNode,
 } from '@atlaskit/editor-test-helpers';
 import { uuid } from '@atlaskit/adf-schema';
