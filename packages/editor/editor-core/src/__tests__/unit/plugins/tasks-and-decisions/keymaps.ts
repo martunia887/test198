@@ -8,12 +8,6 @@ import {
   sendKeyToPm,
   taskList,
   taskItem,
-  mention,
-  table,
-  td,
-  tdCursor,
-  tdEmpty,
-  tr,
 } from '@atlaskit/editor-test-helpers';
 import { uuid } from '@atlaskit/adf-schema';
 import {
