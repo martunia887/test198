@@ -214,6 +214,7 @@ module.exports = async function main(
 
   const joinedStatsGroups = [...mainStatsGroups, ...combinedStatsGroups];
   const stats = buildStats(measureCompiledOutputPath, joinedStatsGroups);
+  console.log('stats:', stats);
   // Cleanup measure output directory
   if (!isAnalyze) {
     fDeleteIfExist(measureOutputPath);

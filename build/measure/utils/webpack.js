@@ -51,7 +51,8 @@ async function createWebpackConfig({
   if (optimization) {
     config.optimization = optimization;
   }
-
+  console.log(config);
+  process.exit(1);
   return config;
 }
 

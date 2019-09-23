@@ -28,9 +28,9 @@ function buildStats(outputPath, statsGroups) {
           ? true
           : false
         : false;
-
+      console.log(filePath);
       if (!fExists(filePath)) return acc;
-
+      console.log('hello', acc);
       acc.push({
         team: packageTeam,
         package: packageName,
@@ -41,6 +41,7 @@ function buildStats(outputPath, statsGroups) {
         threshold: stat.threshold,
         stats: fStats(filePath),
       });
+      console.log('acc', acc);
       return acc;
     }, acc);
   }, []);
@@ -110,6 +111,16 @@ function diff(origOldStats, origNewStats) {
   const oldStats = [].concat(origOldStats);
   const newStats = [].concat(origNewStats);
   const statsWithDiff = [];
+  if (oldStats === newStats && oldStats === []) {
+    statsWithDiff.push({
+      stats: {
+        size: 0,
+        gzipSize: 0,
+        sizeDiff: -old.stats.size,
+        gzipSizeDiff: -old.stats.gzipSize,
+      },
+    });
+  }
 
   while (oldStats.length) {
     const old = oldStats.shift();
@@ -124,7 +135,6 @@ function diff(origOldStats, origNewStats) {
           match.threshold * old.stats.gzipSize + old.stats.gzipSize;
         isTooBig = maxSize < match.stats.gzipSize;
       }
-
       statsWithDiff.push({
         ...match,
         isTooBig,
