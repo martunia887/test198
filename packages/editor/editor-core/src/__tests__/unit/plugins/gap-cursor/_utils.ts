@@ -8,8 +8,6 @@ import {
   tdEmpty,
   decisionList,
   decisionItem,
-  taskList,
-  taskItem,
   bodiedExtension,
   hr,
   extension,
