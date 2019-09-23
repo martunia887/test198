@@ -2,13 +2,13 @@
 
 import React, {
   PureComponent,
-  Suspense,
-  lazy,
   type ComponentType,
   type ElementConfig,
   type Node,
 } from 'react';
 import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
+
+import Loadable from 'react-loadable';
 
 import { navigationItemClicked } from '../common/analytics';
 
@@ -48,10 +48,8 @@ import type {
 } from './types';
 
 const gridSize = gridSizeFn();
-const LazySwitcher = lazy(() =>
-  import('../components/presentational/Switcher'),
-);
-
+export const loadSwitcher = () =>
+  import(/* webpackChunkName: "@atlaskit/navigation-next/async-chunk/switcher" */ '../components/presentational/Switcher');
 /**
  * ITEMS
  */
@@ -263,14 +261,10 @@ const renderItemComponent = <T: empty>(
     element = <Separator key={key} {...compProps} />;
   } else if (props.type === 'Switcher') {
     const { type, ...compProps } = props;
-    const MySwitcher = props => {
-      console.log('lazy');
-      return (
-        <Suspense fallback={<div>Loading</div>}>
-          <LazySwitcher {...props} />
-        </Suspense>
-      );
-    };
+    const MySwitcher = Loadable({
+      loader: loadSwitcher,
+      loading: () => null,
+    });
     element = <MySwitcher key={key} {...compProps} />;
   } else if (props.type === 'Wordmark') {
     const { type, id, ...compProps } = props;
