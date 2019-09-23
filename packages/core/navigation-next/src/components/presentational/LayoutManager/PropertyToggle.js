@@ -24,6 +24,7 @@ class PropertyToggle extends PureComponent<Props> {
     this.attributeKeys = Object.keys(attributes);
     this.styleKeys = Object.keys(styles);
 
+    console.log(target);
     // styles
     if (this.styleKeys.length) {
       this.styleKeys.forEach(k => {
