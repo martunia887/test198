@@ -1,5 +1,53 @@
 # @atlaskit/atlassian-switcher
 
+## 3.31.1
+
+### Patch Changes
+
+- [patch][3ea2b986e1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3ea2b986e1):
+
+  1. Change Discover more label to More Atlassian Products 2. Change Browse apps label to Browse Marketplace apps
+
+## 3.31.0
+
+### Minor Changes
+
+- [minor][33fc071f60](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/33fc071f60):
+
+  Remove the top item variation, set it to current site
+
+## 3.30.1
+
+### Patch Changes
+
+- [patch][712fe8c503](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/712fe8c503):
+
+  Only show people link in Jira and Confluence because it's not supported elsewhere
+
+## 3.30.0
+
+### Minor Changes
+
+- [minor][45cba7159a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/45cba7159a):
+
+  Allow consumers to specify a custom provider for available products"
+
+## 3.29.0
+
+### Minor Changes
+
+- [minor][84c5898593](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/84c5898593):
+
+  Add FE support for Trello and Statuspage
+
+## 3.28.2
+
+### Patch Changes
+
+- [patch][7c4b42ed6b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7c4b42ed6b):
+
+  yUpdate siwtcher documentation
+
 ## 3.28.1
 
 ### Patch Changes

@@ -11,7 +11,7 @@ import { CardAction } from './actions';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
 
 export {
-  MediaCardAnalyticsPayolad,
+  MediaCardAnalyticsPayload,
   MediaCardAnalyticsFileAttributes,
 } from './utils/analytics';
 
@@ -90,6 +90,7 @@ export interface CardProps extends SharedCardProps, CardEventProps {
   readonly useInlinePlayer?: boolean;
   readonly shouldOpenMediaViewer?: boolean;
   readonly mediaViewerDataSource?: MediaViewerDataSource;
+  readonly contextId?: string;
 }
 
 export interface CardState {
