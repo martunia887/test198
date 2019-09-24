@@ -49,6 +49,10 @@ import type {
 const gridSize = gridSizeFn();
 export const loadSwitcher = () =>
   import(/* webpackChunkName: "@atlaskit/navigation-next/async-chunk/switcher" */ '../components/presentational/Switcher');
+const LazySwitcher = Loadable({
+  loader: loadSwitcher,
+  loading: () => null,
+});
 /**
  * ITEMS
  */
@@ -223,7 +227,7 @@ const itemComponents = {
   SortableItem,
   SectionHeading,
   Separator,
-  Switcher,
+  Switcher: LazySwitcher,
   Wordmark,
 };
 
@@ -260,11 +264,7 @@ const renderItemComponent = <T: empty>(
     element = <Separator key={key} {...compProps} />;
   } else if (props.type === 'Switcher') {
     const { type, ...compProps } = props;
-    const MySwitcher = Loadable({
-      loader: loadSwitcher,
-      loading: () => null,
-    });
-    element = <MySwitcher key={key} {...compProps} />;
+    element = <LazySwitcher key={key} {...compProps} />;
   } else if (props.type === 'Wordmark') {
     const { type, id, ...compProps } = props;
     element = <Wordmark key={key} {...compProps} />;
