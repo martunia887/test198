@@ -13,8 +13,6 @@ import {
 import { Identifier } from '@atlaskit/media-core';
 
 import { MediaViewerSidebar } from '../src';
-import MetadataTable from '../src/components/metadata-table';
-import meta from '../example-helpers/meta-example';
 
 type SyncIdentifier = Omit<Identifier, 'id'> & { id?: string };
 interface State {
@@ -44,10 +42,7 @@ const toSyncIdentifier = async (id: Identifier) =>
       };
 
 export default class ExampleViewer extends React.Component<{}, State> {
-  state = {
-    openMediaId: undefined,
-    isSidebarOpen: false,
-  };
+  state = { openMediaId: undefined, isSidebarOpen: false };
 
   toggleSidebar = (isSidebarOpen: boolean) => {
     this.setState({ isSidebarOpen });
@@ -76,10 +71,9 @@ export default class ExampleViewer extends React.Component<{}, State> {
     }
   };
 
-  getMetaForId = ({ id }: SyncIdentifier) => ({
-    ...meta,
-    id,
-  });
+  renderCurrentId({ id }: SyncIdentifier) {
+    return <p>Current id: {id}</p>;
+  }
 
   getToggleAction = () => {
     if (this.state.isSidebarOpen) {
@@ -121,7 +115,11 @@ export default class ExampleViewer extends React.Component<{}, State> {
             {isSidebarOpen ? (
               <MediaViewerSidebar>
                 <h2 style={{ color: 'white' }}>Details</h2>
-                <MetadataTable meta={this.getMetaForId(openMediaId!)} />
+                {Object.keys(openMediaId!).map(k => (
+                  <p>
+                    {k}: {openMediaId![k]}
+                  </p>
+                ))}
               </MediaViewerSidebar>
             ) : null}
           </>

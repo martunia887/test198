@@ -15,8 +15,6 @@ import {
 import { Identifier } from '@atlaskit/media-core';
 
 import { MediaViewerSidebar } from '../src';
-import MetadataTable from '../src/components/metadata-table';
-import meta from '../example-helpers/meta-example';
 
 export interface FilmstripState {
   animate: boolean;
@@ -92,11 +90,6 @@ export default class ExampleViewer extends React.Component<{}, State> {
     }
   };
 
-  getMetaForId = ({ id }: SyncIdentifier) => ({
-    ...meta,
-    id,
-  });
-
   getToggleAction = () => {
     if (this.state.isSidebarOpen) {
       return {
@@ -134,7 +127,7 @@ export default class ExampleViewer extends React.Component<{}, State> {
             <MediaViewer
               action={this.getToggleAction()}
               mediaClientConfig={mediaClientConfig}
-              selectedItem={openMediaId}
+              selectedItem={openMediaId!}
               dataSource={{ list: items }}
               collectionName={defaultCollectionName}
               onClose={this.closeMediaViewer}
@@ -146,7 +139,11 @@ export default class ExampleViewer extends React.Component<{}, State> {
             {isSidebarOpen ? (
               <MediaViewerSidebar>
                 <h2 style={{ color: 'white' }}>Details</h2>
-                <MetadataTable meta={this.getMetaForId(openMediaId!)} />
+                {Object.keys(openMediaId!).map(k => (
+                  <p>
+                    {k}: {openMediaId![k]}
+                  </p>
+                ))}
               </MediaViewerSidebar>
             ) : null}
           </>

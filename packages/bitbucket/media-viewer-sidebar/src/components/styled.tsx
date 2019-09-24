@@ -24,17 +24,3 @@ export const Sidebar = styled.div`
   right: 0;
   z-index: ${overlayZindex};
 `;
-
-export const Table = styled.table`
-  margin-top: ${gridSize() * 2}px;
-  margin-bottom: ${gridSize() * 2}px;
-
-  tbody {
-    border-bottom: none;
-  }
-`;
-
-export const TableDataKey = styled.td`
-  color: ${colors.DN500};
-  font-weight: bold;
-`;

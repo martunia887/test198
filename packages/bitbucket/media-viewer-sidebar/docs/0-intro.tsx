@@ -109,11 +109,6 @@ MediaViewer Sidebar is a component for displaying metadata next to Atlaskit Medi
       }
     };
 
-    getMetaForId = id => {
-      // get metadata from attachments object using the id
-      // return metadata object
-    }
-
     getToggleAction () {
       const isSidebarOpen = !!this.state.openSidebarId;
 
@@ -157,7 +152,11 @@ MediaViewer Sidebar is a component for displaying metadata next to Atlaskit Medi
               {isSidebarOpen && (
                 <MediaViewerSidebar>
                   <h2>File details</h2>
-                  <MetadataTable meta={getMetaForId(this.state.openSidebarId)} />
+                {Object.keys(this.state.openMediaId).map(k => (
+                  <p>
+                    {k}: {this.state.openMediaId[k]}
+                  </p>
+                ))}
                 </MediaViewerSidebar>
               )}
             </>
