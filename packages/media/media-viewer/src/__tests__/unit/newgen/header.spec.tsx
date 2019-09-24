@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ReactWrapper } from 'enzyme';
 import { MediaType, FileState, Identifier } from '@atlaskit/media-client';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
+import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
 import {
   fakeIntl,
   fakeMediaClient,
@@ -380,6 +381,36 @@ describe('<Header />', () => {
       );
       el.update();
       assertDownloadButton(el, false);
+    });
+  });
+
+  describe('header action button', () => {
+    it('should not include a action button if action prop is not defined', () => {
+      const el = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={{} as any}
+          identifier={externalIdentifier}
+        />,
+      );
+
+      expect(el.find(EditorPanelIcon).exists()).toBe(false);
+    });
+
+    it('should include a action button if action prop is defined', () => {
+      const el = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={{} as any}
+          identifier={externalIdentifier}
+          action={{
+            icon: <EditorPanelIcon label="show" />,
+            handler: jest.fn(),
+          }}
+        />,
+      );
+
+      expect(el.find(EditorPanelIcon).exists()).toBe(true);
     });
   });
 });

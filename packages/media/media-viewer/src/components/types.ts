@@ -11,7 +11,6 @@ export type EventHandler = (identifier: Identifier) => void;
 // MediaViewer might want to consume an array of actions that can be loaded into the header
 export interface MediaViewerAction {
   icon?: React.ReactChild;
-  label?: string;
   handler: EventHandler;
 }
 

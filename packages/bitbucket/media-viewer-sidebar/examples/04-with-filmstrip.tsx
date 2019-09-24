@@ -153,17 +153,15 @@ export default class ExampleViewer extends React.Component<{}, State> {
   }
 
   private renderCards() {
-    {
-      return items.map((item, index) => (
-        <>
-          <Card
-            key={index}
-            identifier={item}
-            mediaClientConfig={mediaClientConfig}
-            onClick={() => this.openMediaViewer(item)}
-          />
-        </>
-      ));
-    }
+    return items.map((item, index) => (
+      <>
+        <Card
+          key={index}
+          identifier={item}
+          mediaClientConfig={mediaClientConfig}
+          onClick={() => this.openMediaViewer(item)}
+        />
+      </>
+    ));
   }
 }

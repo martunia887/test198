@@ -94,4 +94,70 @@ describe('<List />', () => {
       expect(itemViewer.prop('previewCount')).toEqual(1);
     });
   });
+
+  describe('onNavigationChange', () => {
+    const identifier2: Identifier = {
+      id: 'some-id-2',
+      occurrenceKey: 'some-custom-occurrence-key',
+      mediaItemType: 'file',
+    };
+
+    const defaultProps = {
+      items: [identifier, identifier2],
+      defaultSelectedItem: identifier,
+    };
+
+    const onNavChangeMockFn: (selectedItem: Identifier) => void = jest.fn();
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('should not be called if onNavigationChange prop is not provided', () => {
+      const el = createFixture(defaultProps);
+      el.setState({
+        selectedItem: identifier2,
+      });
+
+      expect(onNavChangeMockFn).not.toHaveBeenCalled();
+    });
+
+    it('should be called if selected item state changed', () => {
+      const el = createFixture({
+        ...defaultProps,
+        onNavigationChange: onNavChangeMockFn,
+      });
+      el.setState({
+        selectedItem: identifier2,
+      });
+
+      expect(onNavChangeMockFn).toHaveBeenCalledWith(el.state('selectedItem'));
+    });
+
+    it('should be called if onNavigationChange prop changed', () => {
+      const onNavChangeMockFn2 = jest.fn();
+      const el = createFixture({
+        ...defaultProps,
+        onNavigationChange: onNavChangeMockFn,
+      });
+      el.setProps({
+        onNavigationChange: onNavChangeMockFn2,
+      });
+
+      expect(onNavChangeMockFn2).toHaveBeenCalledWith(el.state('selectedItem'));
+    });
+
+    it('should not be called if onNavigationChange prop and selected item did not change', () => {
+      const el = createFixture({
+        ...defaultProps,
+        onNavigationChange: onNavChangeMockFn,
+      });
+      const prevState = el.state();
+      el.setState({
+        previewCount: prevState.previewCount++,
+      });
+
+      expect(onNavChangeMockFn).not.toHaveBeenCalled();
+    });
+  });
 });
