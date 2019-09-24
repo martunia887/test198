@@ -19,152 +19,130 @@ MediaViewer Sidebar is a component for displaying metadata next to Atlaskit Medi
   In this example, the button could be replaced with a FilmStrip containing Cards.
 
   ${code`
-  import React, { useState } from 'react';
-  import InfoIcon from '@atlaskit/icon/glyph/info-icon';
-  import { MediaViewer } from '@atlaskit/media-viewer';
-  import { MediaViewerSidebar } from '@atlaskit/bitbucket-media-viewer-sidebar';
-  import {
-    createStorybookContext,
-    defaultCollectionName,
-  } from '@atlaskit/media-test-helpers';
+    import React from 'react';
+    import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
+    import { MediaViewer } from '@atlaskit/media-viewer';
+    import { Identifier } from '@atlaskit/media-core';
+    import { MediaViewerSidebar } from '@atlaskit/bitbucket-media-viewer-sidebar';
+    import {
+      createStorybookContext,
+      defaultCollectionName,
+    } from '@atlaskit/media-test-helpers';
 
-  type State = {
-    openMediaId: Identifier;
-    openSidebarId: Identifier;
-  };
-
-  class ExampleViewer extends React.Component<{}, State> {
-    state = {
-      openMediaId: undefined,
-      openSidebarId: undefined,
-    };
-
-    const mediaClientConfig = {
-      authProvider: () => Promise.resolve({id: '', token: '', baseUrl: ''})
+    interface State {
+      openMediaId?: Identifier;
+      isSidebarOpen: boolean;
     }
 
     const items = [
       {
         id: 'some-valid-id-1',
         occurrenceKey: 'key1',
-        type: 'file',
+        mediaItemType: 'file',
       },
       {
         id: 'some-valid-id-2',
         occurrenceKey: 'item-1',
-        type: 'file',
+        mediaItemType: 'file',
       },
       {
         id: 'some-valid-id-2',
         occurrenceKey: 'item-2',
-        type: 'file',
+        mediaItemType: 'file',
       },
     ];
 
-    const selectedItem = items[1];
-
-    const dataSource = {
-      list: items,
-    };
-
-    // this is just a helper to format our dummy data
-    // MediaViewer want file info formatted as an Identifier
-    const getIdentifier = (fileDetails) => {
-      return {
-        name: fileDetails.name,
-        id: fileDetails.id,
-        mediaItemType: fileDetails.mediaItemType,
-      }
-    }
-
-    openSidebar = mediaId => {
-      this.setState({ openSidebarId: mediaId });
-    };
-
-    closeSidebar = () => {
-      this.setState({ openSidebarId: undefined });
-    };
-
-    // when closing viewer we also need to close sidebar
-    closeMediaViewer = () => {
-      this.setState({
+    class ExampleViewer extends React.Component<{}, State> {
+      state = {
         openMediaId: undefined,
-        openSidebarId: undefined,
-      });
-    };
+        isSidebarOpen: false,
+      };
 
-    openMediaViewer = mediaId => {
-      this.setState({
-        openMediaId: mediaId,
-        openSidebarId: undefined,
-      });
-    };
+      mediaClientConfig = {
+        authProvider: () =>
+          Promise.resolve({
+            id: '',
+            token: '',
+            baseUrl: '',
+          }),
+      };
 
-    updateSidebar = nextMediaId => {
-      // wrapper could do whatever they wanted here
-      if (nextMediaId !== this.state.openSidebarId) {
+      toggleSidebar = (isSidebarOpen: boolean) => {
+        this.setState({ isSidebarOpen });
+      };
+
+      getToggleAction = () => {
+        if (this.state.isSidebarOpen) {
+          return {
+            icon: <EditorPanelIcon label="show" />,
+            label: 'Show sidebar',
+            handler: () => this.toggleSidebar(false),
+          };
+        } else {
+          return {
+            icon: <EditorPanelIcon label="hide" />,
+            label: 'Hide sidebar',
+            handler: () => this.toggleSidebar(true),
+          };
+        }
+      };
+
+      closeMediaViewer = () => {
         this.setState({
-          openSidebarId: nextMediaId,
-        })
-      }
-    };
-
-    getToggleAction () {
-      const isSidebarOpen = !!this.state.openSidebarId;
-
-      if(isSidebarOpen) {
-        return ({
-          icon: <InfoIcon />,
-          label: 'Show sidebar',
-          handler: this.openSidebar
+          isSidebarOpen: false,
+          openMediaId: undefined,
         });
-      } else {
-        return ({
-          icon: <InfoIcon />,
-          label: 'Hide sidebar',
-          handler: this.closeSidebar,
-        });
+      };
+
+      openMediaViewer = async (mediaId: Identifier) => {
+        this.setState({ openMediaId: mediaId });
+      };
+
+      updateSidebar = (nextMediaId: Identifier) => {
+        if (nextMediaId !== this.state.openMediaId) {
+          this.setState({
+            openMediaId: nextMediaId,
+          });
+        }
+      };
+
+      render() {
+        const { isSidebarOpen, openMediaId } = this.state;
+        const isMediaViewerOpen = !!openMediaId;
+
+        return (
+          <>
+            <button onClick={() => this.openMediaViewer(items[0])}>Show</button>
+            {isMediaViewerOpen && (
+              <>
+                <MediaViewer
+                  action={this.getToggleAction()}
+                  mediaClientConfig={mediaClientConfig}
+                  selectedItem={items[0]}
+                  dataSource={{ list: items }}
+                  collectionName="myCollection"
+                  onClose={this.closeMediaViewer}
+                  onNavigationChange={
+                    isSidebarOpen ? this.updateSidebar : undefined
+                  }
+                />
+                {isSidebarOpen && (
+                  <MediaViewerSidebar>
+                    <h2>File details</h2>
+                    {Object.keys(this.state.openMediaId!).map(k => (
+                      <p>
+                        {k}: {this.state.openMediaId![k]}
+                      </p>
+                    ))}
+                  </MediaViewerSidebar>
+                )}
+              </>
+            )}
+          </>
+        );
       }
     }
 
-    render() {
-      const isSidebarOpen = !!this.state.openSidebarId;
-      const isMediaViewerOpen = !!this.state.openMediaId;
-      const identifierA = getIdentifier(fileA);
-      const identifierB = getIdentifier(fileB);
-
-      return (
-        <>
-          <button onClick={() => this.openMediaViewer(identifierA)}>
-            Show
-          </button>
-          {isMediaViewerOpen && (
-            <>
-              <MediaViewer
-                mediaClientConfig={mediaClientConfig}
-                selectedItem={this.state.openMediaId}
-                dataSource={{ list: [identifierA, identifierB] }}
-                collectionName={'myCollection'}
-                onClose={this.closeMediaViewer}
-                onNavigationChange={this.updateSidebar}
-                action={this.getToggleAction()}
-              />
-              {isSidebarOpen && (
-                <MediaViewerSidebar>
-                  <h2>File details</h2>
-                {Object.keys(this.state.openMediaId).map(k => (
-                  <p>
-                    {k}: {this.state.openMediaId[k]}
-                  </p>
-                ))}
-                </MediaViewerSidebar>
-              )}
-            </>
-          )}
-        </>
-      );
-    }
-  }
   `}
 
   ## Sidebar

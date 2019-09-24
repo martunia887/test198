@@ -71,10 +71,6 @@ export default class ExampleViewer extends React.Component<{}, State> {
     }
   };
 
-  renderCurrentId({ id }: SyncIdentifier) {
-    return <p>Current id: {id}</p>;
-  }
-
   getToggleAction = () => {
     if (this.state.isSidebarOpen) {
       return {
