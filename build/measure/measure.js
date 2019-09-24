@@ -48,8 +48,9 @@ function webpackCompilerRun(configs) {
    */
   return new Promise((resolve, reject) => {
     const compiler = webpack(configs);
-    compiler.run(err => {
+    compiler.run((...err) => {
       if (err) {
+        console.log('err:', err);
         reject(err);
         return console.error(chalk.red(err));
       }
@@ -214,7 +215,6 @@ module.exports = async function main(
 
   const joinedStatsGroups = [...mainStatsGroups, ...combinedStatsGroups];
   const stats = buildStats(measureCompiledOutputPath, joinedStatsGroups);
-  console.log('stats:', stats);
   // Cleanup measure output directory
   if (!isAnalyze) {
     fDeleteIfExist(measureOutputPath);
