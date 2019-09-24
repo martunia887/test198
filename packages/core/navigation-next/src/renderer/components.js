@@ -27,9 +27,6 @@ import Wordmark from '../components/presentational/Wordmark';
 import BackItem from '../components/connected/BackItem';
 import ConnectedItem from '../components/connected/ConnectedItem';
 import GoToItem from '../components/connected/GoToItem';
-import SortableContextComponent from '../components/connected/SortableContext';
-import SortableGroupComponent from '../components/connected/SortableGroup';
-import SortableItem from '../components/connected/SortableItem';
 
 import type {
   CustomComponents,
@@ -47,11 +44,33 @@ import type {
 } from './types';
 
 const gridSize = gridSizeFn();
-export const loadSwitcher = () =>
+
+const loadSwitcher = () =>
   import(/* webpackChunkName: "@atlaskit/navigation-next/async-chunk/switcher" */ '../components/presentational/Switcher');
 const LazySwitcher = Loadable({
   loader: loadSwitcher,
   loading: () => null,
+});
+
+const loadSortableContextComponent = () =>
+  import(/* webpackChunkName: "@atlaskit/navigation-next/async-chunk/sortable-context-component" */ '../components/connected/SortableContext');
+const LazySortableContextComponent = Loadable({
+  loader: loadSortableContextComponent,
+  loading: () => null,
+});
+
+const loadSortableGroupComponent = () =>
+  import(/* webpackChunkName: "@atlaskit/navigation-next/async-chunk/sortable-group-component" */ '../components/connected/SortableGroup');
+const LazySortableGroupComponent = Loadable({
+  loader: loadSortableGroupComponent,
+  loading: () => {},
+});
+
+const loadSortableItem = () =>
+  import(/* webpackChunkName: "@atlaskit/navigation-next/async-chunk/sortable-item" */ '../components/connected/SortableItem');
+const LazySortableItem = Loadable({
+  loader: loadSortableItem,
+  loading: () => {},
 });
 /**
  * ITEMS
@@ -117,7 +136,7 @@ const SortableGroup = <T: TypeShape>({
   id,
 }: SortableGroupProps<T>) =>
   items && items.length ? (
-    <SortableGroupComponent
+    <LazySortableGroupComponent
       heading={heading}
       hasSeparator={hasSeparator}
       id={id}
@@ -125,7 +144,7 @@ const SortableGroup = <T: TypeShape>({
       <RenderBlocker items={items} customComponents={customComponents}>
         <TypedItemsRenderer items={items} customComponents={customComponents} />
       </RenderBlocker>
-    </SortableGroupComponent>
+    </LazySortableGroupComponent>
   ) : null;
 
 // Section
@@ -207,14 +226,14 @@ const SortableContext = <T: TypeShape>({
   onDragEnd,
 }: SortableContextProps<T>) =>
   items && items.length ? (
-    <SortableContextComponent
+    <LazySortableContextComponent
       id={id}
       onDragStart={onDragStart}
       onDragUpdate={onDragUpdate}
       onDragEnd={onDragEnd}
     >
       <TypedItemsRenderer items={items} customComponents={customComponents} />
-    </SortableContextComponent>
+    </LazySortableContextComponent>
   ) : null;
 
 const itemComponents = {
@@ -224,7 +243,7 @@ const itemComponents = {
   GoToItem,
   GroupHeading,
   Item: ConnectedItem,
-  SortableItem,
+  SortableItem: LazySortableItem,
   SectionHeading,
   Separator,
   Switcher: LazySwitcher,
