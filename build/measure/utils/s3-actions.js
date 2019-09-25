@@ -86,11 +86,21 @@ function downloadFromS3(downloadToFolder, branch, package) {
     );
   } catch (err) {
     if (err.status === 1) {
-      console.error(
-        chalk.red(`Could not find file ${ratchetFile} on s3, it is likely that you are adding a new package to the repository.
+      console.warn(
+        chalk.yellow(`Could not find file ${ratchetFile} on s3, it is likely that you are adding a new package to the repository.
         Please consult the README.md in the @atlaskit/measure folder on how to add a new package on s3.`),
       );
-      process.exit(1);
+      const masterStatsFilePath = path.join(
+        masterStatsFolder,
+        `${package}-bundle-size-ratchet.json`,
+      );
+      console.warn(
+        chalk.yellow(
+          `As we did not find file ${ratchetFile} on s3, we are uplaoding this version to the master folder in s3.`,
+        ),
+      );
+      uploadToS3(masterStatsFilePath, 'master');
+      process.exit(0);
     } else {
       console.error(chalk.red(`${err}`));
       process.exit(1);
