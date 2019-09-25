@@ -8,6 +8,7 @@ import {
   sendKeyToPm,
   taskList,
   taskItem,
+  RefsNode,
 } from '@atlaskit/editor-test-helpers';
 import { uuid } from '@atlaskit/adf-schema';
 import {
@@ -15,6 +16,7 @@ import {
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 import { MockMentionResource } from '@atlaskit/util-data-test';
+import { Schema } from 'prosemirror-model';
 
 describe('tasks and decisions - keymaps', () => {
   const createEditor = createEditorFactory();
@@ -60,6 +62,16 @@ describe('tasks and decisions - keymaps', () => {
       itemProps: { localId: 'local-uuid' },
     },
   ];
+
+  const test = (
+    before: (schema: Schema) => RefsNode,
+    after: (schema: Schema) => RefsNode,
+    keys: string[],
+  ) => {
+    const { editorView } = editorFactory(before);
+    keys.forEach(key => sendKeyToPm(editorView, key));
+    expect(editorView.state).toEqualDocumentAndSelection(after);
+  };
 
   scenarios.forEach(({ name, list, item, listProps, itemProps }) => {
     describe(name, () => {
@@ -214,23 +226,143 @@ describe('tasks and decisions - keymaps', () => {
           });
         });
       });
+    });
+  });
 
-      describe('Down Arrow', () => {
-        it(`should navigate out of ${name}`, () => {
-          const { editorView } = editorFactory(
-            doc(list(listProps)(item(itemProps)('Hello world{<>}'))),
-          );
+  // indentation-specific tests
+  describe('action', () => {
+    const listProps = { localId: 'local-uuid' };
+    const itemProps = { localId: 'local-uuid', state: 'TODO' };
 
-          sendKeyToPm(editorView, 'ArrowDown');
+    describe('Enter', () => {
+      it('creates another taskItem at the currently nested level', () => {
+        test(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(taskItem(itemProps)('Nested one level{<>}')),
+            ),
+          ),
 
-          const expectedDoc = doc(
-            list(listProps)(item(itemProps)('Hello world')),
-            p('{<>}'),
-          );
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested one level'),
+                taskItem(itemProps)('{<>}'),
+              ),
+            ),
+          ),
 
-          expect(editorView.state.doc).toEqualDocument(expectedDoc);
-          compareSelection(editorFactory, expectedDoc, editorView);
-        });
+          ['Enter'],
+        );
+      });
+
+      it('creates new taskItem in between nested taskItems', () => {
+        test(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested one level{<>}'),
+                taskItem(itemProps)('Nested one level'),
+              ),
+            ),
+          ),
+
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested one level'),
+                taskItem(itemProps)('{<>}'),
+                taskItem(itemProps)('Nested one level'),
+              ),
+            ),
+          ),
+
+          ['Enter'],
+        );
+      });
+
+      it('unindents when the nested taskItem is empty', () => {
+        test(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested one level'),
+                taskItem(itemProps)('{<>}'),
+              ),
+            ),
+          ),
+
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(taskItem(itemProps)('Nested one level')),
+              taskItem(itemProps)('{<>}'),
+            ),
+          ),
+
+          ['Enter'],
+        );
+      });
+
+      it('unindents taskItem nested between two others', () => {
+        test(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(
+                taskItem(itemProps)('Nested one level'),
+                taskItem(itemProps)('{<>}'),
+                taskItem(itemProps)('Nested one level'),
+              ),
+            ),
+          ),
+
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(taskItem(itemProps)('Nested one level')),
+              taskItem(itemProps)('{<>}'),
+              taskList(listProps)(taskItem(itemProps)('Nested one level')),
+            ),
+          ),
+
+          ['Enter'],
+        );
+      });
+
+      it('unindents taskItem and pulls nested with it', () => {
+        test(
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(
+                taskItem(itemProps)('Second level level'),
+                taskList(listProps)(taskItem(itemProps)('Nested two level')),
+                taskItem(itemProps)('{<>}'),
+                taskList(listProps)(taskItem(itemProps)('Nested two level')),
+              ),
+            ),
+          ),
+
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Top level'),
+              taskList(listProps)(
+                taskItem(itemProps)('Second level level'),
+                taskList(listProps)(taskItem(itemProps)('Nested two level')),
+              ),
+              taskItem(itemProps)('{<>}'),
+              taskList(listProps)(taskItem(itemProps)('Nested two level')),
+            ),
+          ),
+
+          ['Enter'],
+        );
       });
     });
   });
