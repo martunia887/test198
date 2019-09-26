@@ -243,10 +243,10 @@ module.exports = async function main(
         await downloadFromS3(masterStatsFolder, 'master', packageName);
       } catch (err) {
         console.log(`${err}`);
-        if (`${err}`.includes('not found in S3 bucket')) {
+        if (`${err}`.includes('not found in s3 bucket')) {
           // TODO: Refactor this :)
           console.log('We are inside the error');
-          const missingPkg = err
+          const missingPkg = `${err}`
             .split('was not found in s3 bucket')
             .shift()
             .split('File for this')
