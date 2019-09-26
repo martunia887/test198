@@ -241,8 +241,7 @@ module.exports = async function main(
       try {
         await downloadFromS3(masterStatsFolder, 'master', packageName);
       } catch (err) {
-        console.log('Error', err);
-        if (err.includes('not found in S3 bucket')) {
+        if (`${err}`.includes('not found in S3 bucket')) {
           // TODO: Refactor this :)
           const missingPkg = err
             .split('was not found in s3 bucket')
