@@ -243,17 +243,20 @@ module.exports = async function main(
       } catch (err) {
         if (`${err}`.includes('not found in S3 bucket')) {
           // TODO: Refactor this :)
+          console.log('We are inside the error');
           const missingPkg = err
             .split('was not found in s3 bucket')
             .shift()
             .split('File for this')
             .pop()
             .trim();
+          console.log(missingPkg);
           const masterStatsFilePath = path.join(
             masterStatsFolder,
             `${missingPkg}-bundle-size-ratchet.json`,
           );
-          uploadToS3(missingPkg, 'master');
+          console.log(masterStatsFilePath);
+          uploadToS3(masterStatsFilePath, 'master');
         } else {
           throw err;
         }
