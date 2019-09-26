@@ -238,9 +238,11 @@ module.exports = async function main(
     }
   } else {
     if (process.env.CI) {
+      console.log('I am here');
       try {
         await downloadFromS3(masterStatsFolder, 'master', packageName);
       } catch (err) {
+        console.log(`${err}`);
         if (`${err}`.includes('not found in S3 bucket')) {
           // TODO: Refactor this :)
           console.log('We are inside the error');
