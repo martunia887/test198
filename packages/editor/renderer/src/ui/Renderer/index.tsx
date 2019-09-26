@@ -42,6 +42,7 @@ export interface Props {
   dataProviders?: ProviderFactory;
   eventHandlers?: EventHandlers;
   extensionHandlers?: ExtensionHandlers;
+  isNestedRenderer?: boolean;
   onComplete?: (stat: RenderOutputStat) => void;
   portal?: HTMLElement;
   rendererContext?: RendererContext;
@@ -180,6 +181,7 @@ export class Renderer extends PureComponent<Props, {}> {
       appearance,
       adfStage,
       allowDynamicTextSizing,
+      isNestedRenderer,
       maxHeight,
       truncated,
     } = this.props;
@@ -208,6 +210,7 @@ export class Renderer extends PureComponent<Props, {}> {
                 <RendererWrapper
                   appearance={appearance}
                   dynamicTextSizing={!!allowDynamicTextSizing}
+                  isNestedRenderer={isNestedRenderer}
                 >
                   {result}
                 </RendererWrapper>
@@ -266,18 +269,23 @@ export default RendererWithAnalytics;
 type RendererWrapperProps = {
   appearance: RendererAppearance;
   dynamicTextSizing: boolean;
+  isNestedRenderer?: boolean;
 } & { children?: React.ReactNode };
 
 export function RendererWrapper({
   appearance,
   children,
   dynamicTextSizing,
+  isNestedRenderer,
 }: RendererWrapperProps) {
-  return (
-    <WidthProvider>
-      <BaseTheme dynamicTextSizing={dynamicTextSizing}>
-        <Wrapper appearance={appearance}>{children}</Wrapper>
-      </BaseTheme>
-    </WidthProvider>
+  const withTheme = (
+    <BaseTheme dynamicTextSizing={dynamicTextSizing}>
+      <Wrapper appearance={appearance}>{children}</Wrapper>
+    </BaseTheme>
+  );
+  return isNestedRenderer ? (
+    withTheme
+  ) : (
+    <WidthProvider>{withTheme}</WidthProvider>
   );
 }
