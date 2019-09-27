@@ -253,6 +253,7 @@ module.exports = async function main(
             masterStatsFolder,
             `${missingPkg}-bundle-size-ratchet.json`,
           );
+          fWriteStats(masterStatsFilePath, stats);
           uploadToS3(masterStatsFilePath, 'master');
         } else {
           throw err;
