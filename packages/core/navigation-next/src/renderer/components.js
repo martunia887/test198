@@ -63,14 +63,14 @@ const loadSortableGroupComponent = () =>
   import(/* webpackChunkName: "@atlaskit/navigation-next/async-chunk/sortable-group-component" */ '../components/connected/SortableGroup');
 const LazySortableGroupComponent = Loadable({
   loader: loadSortableGroupComponent,
-  loading: () => {},
+  loading: () => null,
 });
 
 const loadSortableItem = () =>
   import(/* webpackChunkName: "@atlaskit/navigation-next/async-chunk/sortable-item" */ '../components/connected/SortableItem');
 const LazySortableItem = Loadable({
   loader: loadSortableItem,
-  loading: () => {},
+  loading: () => null,
 });
 /**
  * ITEMS
@@ -274,7 +274,7 @@ const renderItemComponent = <T: empty>(
     element = <ConnectedItem key={key} {...compProps} index={index} />;
   } else if (props.type === 'SortableItem') {
     const { type, ...compProps } = props;
-    element = <SortableItem key={key} {...compProps} index={index} />;
+    element = <LazySortableItem key={key} {...compProps} index={index} />;
   } else if (props.type === 'SectionHeading') {
     const { type, id, ...compProps } = props;
     element = <SectionHeading key={key} {...compProps} />;
