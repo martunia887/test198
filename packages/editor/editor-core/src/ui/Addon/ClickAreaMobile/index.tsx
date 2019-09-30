@@ -18,6 +18,7 @@ const ClickWrapper = styled.div`
   */
   height: 100%;
   min-height: 80vh;
+  background: purple;
 `;
 ClickWrapper.displayName = 'ClickWrapper';
 

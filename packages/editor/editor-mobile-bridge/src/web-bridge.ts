@@ -22,6 +22,14 @@ export default abstract class WebBridge {
     let root = this.getRootElement();
     if (root) {
       root.style.padding = `${top}px ${right}px ${bottom}px ${left}px`;
+      /*
+      // We use margin for the top and bottom so that it doesn't affect content height calculations
+      // root.style.marginTop = `${top}px`;
+      // root.style.marginBottom = `${bottom}px`;
+      root.style.margin = `${top}px 0 ${bottom}px 0`;
+      // We use padding for the sides to ensure taps within the gutter trigger the content area.
+      root.style.padding = `0 ${right}px 0 ${left}px`;
+      */
       this.padding = { top, right, bottom, left };
     }
   }

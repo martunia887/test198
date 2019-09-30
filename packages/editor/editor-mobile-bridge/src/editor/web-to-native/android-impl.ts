@@ -1,6 +1,7 @@
 import { Color as StatusColor } from '@atlaskit/status/element';
 import { EditorBridges, EditorPluginBridges } from './index';
 import {
+  UserInterfaceBridge,
   MentionBridge,
   TextFormattingBridge,
   default as NativeBridge,
@@ -15,6 +16,7 @@ import {
 import { sendToBridge } from '../../bridge-utils';
 
 export default class AndroidBridge implements NativeBridge {
+  uiBridge: UserInterfaceBridge;
   mentionBridge: MentionBridge;
   textFormatBridge: TextFormattingBridge;
   mediaBridge: MediaBridge;
@@ -25,6 +27,7 @@ export default class AndroidBridge implements NativeBridge {
   undoRedoBridge: UndoRedoBridge;
 
   constructor() {
+    this.uiBridge = window.uiBridge as UserInterfaceBridge;
     this.mentionBridge = window.mentionsBridge as MentionBridge;
     this.textFormatBridge = window.textFormatBridge as TextFormattingBridge;
     this.mediaBridge = window.mediaBridge as MediaBridge;
@@ -35,12 +38,17 @@ export default class AndroidBridge implements NativeBridge {
     this.undoRedoBridge = window.undoRedoBridge as UndoRedoBridge;
   }
 
+  getKeyboardControlsHeight() {
+    // Not implemented as not useful in Android (yet?)
+    return 0; // this.uiBridge.getKeyboardControlsHeight()
+  }
+
   showMentions(query: String) {
     this.mentionBridge.showMentions(query);
   }
 
   dismissMentions() {
-    /*TODO: implement when mentions are ready */
+    this.mentionBridge.dismissMentions();
   }
 
   updateTextFormat(markStates: string) {

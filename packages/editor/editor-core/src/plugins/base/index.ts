@@ -12,6 +12,7 @@ import decorationPlugin from './pm-plugins/decoration';
 import scrollGutter from './pm-plugins/scroll-gutter';
 import { keymap } from '../../utils/keymap';
 import frozenEditor from './pm-plugins/frozen-editor';
+import iosScrolling from './pm-plugins/ios-scrolling';
 
 interface BasePluginOptions {
   allowScrollGutter?: ((view: EditorView) => HTMLElement | null) | undefined;
@@ -66,6 +67,10 @@ const basePlugin = (options?: BasePluginOptions): EditorPlugin => ({
     ];
 
     if (options && options.allowScrollGutter) {
+      plugins.push({
+        name: 'iosScrollPlugin',
+        plugin: () => iosScrolling(),
+      });
       plugins.push({
         name: 'scrollGutterPlugin',
         plugin: () => scrollGutter(options.allowScrollGutter),

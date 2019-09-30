@@ -6,7 +6,7 @@ import { sendToBridge } from '../../bridge-utils';
 
 export default class DummyBridge implements NativeBridge {
   log = (...args: any[]) => {
-    console.log(...args);
+    // console.log(...args);
   };
 
   showMentions(query: String) {

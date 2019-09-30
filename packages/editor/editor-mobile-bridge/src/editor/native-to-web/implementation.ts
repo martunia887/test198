@@ -306,6 +306,7 @@ export default class WebBridgeImpl extends WebBridge
       return;
     }
 
+    // FIXME: THis might be problematic?
     this.flushDOM();
 
     const { state, dispatch } = this.editorView;
@@ -380,6 +381,17 @@ export default class WebBridgeImpl extends WebBridge
     if (this.editorView) {
       pmHistoryRedo(this.editorView.state, this.editorView.dispatch);
     }
+  }
+
+  setKeyboardControlsHeight(height: number) {
+    // TODO: dispatch transaction with meta object which iosscrolling plugin listens for and updates internal state...
+    // ts-ignore
+    console.log(`setKeyboardControlsHeight: ${height}px`); // eslint-disable-line no-console
+    (window as any).setKeyboardControlsHeight(
+      this.editorView!.state.tr,
+      height,
+      this.editorView!.dispatch,
+    );
   }
 
   flushDOM() {

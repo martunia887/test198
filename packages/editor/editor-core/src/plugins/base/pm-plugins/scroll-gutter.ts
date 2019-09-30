@@ -45,6 +45,7 @@ function listenForGutterVisibilityChanges(
 function createGutter() {
   const gutter = document.createElement('div');
   gutter.style.paddingBottom = `${GUTTER_SIZE_IN_PX}px`;
+  gutter.style.background = `red`;
   gutter.id = GUTTER_SELECTOR.substr(1);
 
   let initialized = false;

@@ -14,6 +14,20 @@ window.logBridge = window.logBridge || [];
 export default class Example extends React.Component {
   componentDidMount() {
     disableZooming();
+
+    // TEMP DEBUGGING...
+    const pm = document.querySelector<HTMLElement>('.ProseMirror');
+    if (pm) pm.style.backgroundColor = 'yellow';
+    const wr = document.querySelector<HTMLElement>('#editor');
+    if (wr) {
+      /*
+      wr.style.backgroundColor = 'blue';
+      const themeWr = wr.firstElementChild as HTMLElement;
+      themeWr.style.background = 'unset';
+      */
+    }
+    document.body.style.backgroundColor = 'hotpink';
+
     // Set initial padding (this usually gets set by native)
     (window as any).bridge.setPadding(32, 16, 0, 16);
   }
