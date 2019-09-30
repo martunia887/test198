@@ -1,100 +1,56 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
-import styled from 'styled-components';
-import * as colors from '@atlaskit/theme/colors';
 
-// import {createMetadataLoader} from "../extensions-common/macro-loader";
-// import { MacroMetadata } from "../extensions-common/types";
+import {
+  MacroCardType,
+  MacroRendererProps,
+  MacroRendererState,
+  CreateMacro,
+} from './types';
 import Spinner from '@atlaskit/spinner';
-import { ExtensionParams } from '@atlaskit/editor-common';
-import { extensionToADF } from '../helpers';
+import ErrorIcon from '@atlaskit/icon/glyph/error';
+import { colors } from '@atlaskit/theme';
 import { macroIcon } from './MacroIcon';
 import { createPromise } from '../../cross-platform-promise';
+import {
+  Card,
+  Icon,
+  Content,
+  ContentWrapper,
+  Error,
+  Action,
+  cardStyles,
+  ErrorMessage,
+  CardBody,
+} from './styles';
 
-export interface MacroRendererProps {
-  extension: ExtensionParams<any>;
-}
-
-export interface MacroRendererState {
-  content?: string | null;
-  contentId?: number | null;
-  loading: boolean;
-  loaded: boolean;
-  errorMessage: string;
-  macroWhitelist: object | null;
-  retryCount: number;
-}
-
-type MacroCard = {
-  macroName: string;
-  title: string;
-  icon?: any;
-} & CreateMacro;
-
-type CreateMacro = {
-  isDisabled: boolean;
-  action: any;
-  onClick?: ((...args: any[]) => void) | null;
-  errorMessage?: string;
-};
-
-const Card = styled.span`
-  border: ${colors.N30} 2px solid;
-  background: ${colors.N0};
-  display: flex;
-`;
-const Content = styled.span``;
-const Icon = styled.span`
-  height: 18px;
-  width: 18px;
-  padding: 0 4px 0 10px;
-`;
-const Action = styled.span`
-  padding-right: 16px;
-  color: ${colors.B300};
-`;
-const Error = styled.span``;
-
-// content can be title or loading state
-// action is the button object
 const MacroCard = ({
   macroName,
   title,
-  icon,
+  iconUrl,
   action,
   errorMessage,
-  onClick,
-  isDisabled,
-}: MacroCard) => {
-  if (onClick) {
-    return (
-      <Button
-        onClick={onClick}
-        iconBefore={macroIcon(icon, macroName, title)}
-        isDisabled={isDisabled}
-      >
+}: MacroCardType) => (
+  <Card>
+    <Icon>{macroIcon(iconUrl, macroName, title)}</Icon>
+    <CardBody>
+      <ContentWrapper>
         <Content>{macroName}</Content>
-        <Action>{action}</Action>
-        {errorMessage ? <Error>{errorMessage}</Error> : null}
-      </Button>
-    );
-  }
-  return (
-    <Button
-      iconBefore={macroIcon(icon, macroName, title)}
-      isDisabled={isDisabled}
-    >
-      <Content>{macroName}</Content>
-      <Action>{action}</Action>
-      {errorMessage ? <Error>{errorMessage}</Error> : null}
-    </Button>
-  );
-};
-
-// const loadMacroMetadata = createMetadataLoader();
-
-// export const getMacroMetaData = (extensionKey:string): Promise<MacroMetadata[]> =>
-//   loadMacroMetadata().then(macros => macros.filter(macro => macro.macroName === extensionKey));
+        {action}
+      </ContentWrapper>
+      {errorMessage ? (
+        <Error>
+          <ErrorIcon
+            primaryColor={colors.R300}
+            size="medium"
+            label={errorMessage}
+          />
+          <ErrorMessage>{errorMessage}</ErrorMessage>
+        </Error>
+      ) : null}
+    </CardBody>
+  </Card>
+);
 
 export class MacroComponent extends React.Component<
   MacroRendererProps,
@@ -113,105 +69,131 @@ export class MacroComponent extends React.Component<
     };
   }
 
-  componentDidMount() {
-    const ext = this.props.extension;
-    const adf = JSON.stringify(extensionToADF(ext));
-    const contentId = '960561171'; // https://product-fabric.atlassian.net/wiki/spaces/~speachey/pages/960561171/Single+macro
+  getMacroId = () => {
+    const { parameters } = this.props.extension;
+    return (
+      parameters &&
+      parameters.macroMetadata &&
+      parameters.macroMetadata.macroId &&
+      parameters.macroMetadata.macroId.value
+    );
+  };
 
-    const dataToSend = {
-      contentId,
-      adf,
-    };
-
-    // createPromise('customLegacyMacro', JSON.stringify(dataToSend))
-    //   .submit()
-    //   .then(result => {
-    //     console.log('=== result of promise');
-    //     console.log(result);
-    //     this.setState(result);
-    //   });
-  }
-
-  // all optional props?
   // action can be view/retry/spinner/nothing
   createCard = ({ action, errorMessage, onClick, isDisabled }: CreateMacro) => {
     const { parameters, extensionKey } = this.props.extension;
 
-    // const macroMetadata = await getMacroMetaData(extensionKey);
-    // const macroName = macroMetadata.macroName;
+    const macroName = extensionKey;
     // const title = macroMetadata.title;
-    const macroId = parameters.macroMetadata.macroId.value;
-    // const icon = macroMetadata.icon ;
-    // console.log("==== macrometttta",macroMetadata, JSON.stringify(macroMetadata));
-    // return <MacroCard macroName={macroName} title={title} icon={icon}/>;
+    const iconUrl =
+      parameters.macroMetadata &&
+      parameters.macroMetadata.placeholder &&
+      parameters.macroMetadata.placeholder[0] &&
+      parameters.macroMetadata.placeholder[0].type === 'icon' &&
+      parameters.macroMetadata.placeholder[0].data &&
+      parameters.macroMetadata.placeholder[0].data.url;
 
-    // 3 possible actions
-    // retry load of webview
-    // tap to load promise
-    // tap to view promise
-    return (
-      <MacroCard
-        macroName={macroId}
-        title={'temp'}
-        action={action}
-        onClick={onClick}
-        isDisabled={isDisabled}
-      />
-    );
+    if (onClick) {
+      return (
+        <Button
+          onClick={onClick}
+          isDisabled={isDisabled}
+          shouldFitContainer
+          css={[cardStyles]}
+        >
+          <MacroCard
+            macroName={macroName}
+            title={macroName}
+            iconUrl={iconUrl}
+            action={action}
+          />
+        </Button>
+      );
+    } else {
+      return (
+        <Button isDisabled={isDisabled} shouldFitContainer css={[cardStyles]}>
+          <MacroCard
+            macroName={macroName}
+            title={macroName}
+            iconUrl={iconUrl}
+            action={action}
+          />
+        </Button>
+      );
+    }
   };
 
+  // isSuccessful is type string
   tapToLoad = () => {
     // on button click
     // set state to loading
     this.setState({ loading: true });
-    // promise returns set state to loaded
-    createPromise('customConfigurationMacro')
+    createPromise(
+      'customTapToLoadMacroButton',
+      JSON.stringify({
+        macroId: this.getMacroId(),
+        retryCount: this.state.retryCount,
+      }),
+    )
       .submit()
-      .then(result => {
-        const timer = setTimeout(() => {
-          console.log('=== result of promise for this one macrooooo');
-          var resultObj = JSON.parse(JSON.stringify(result));
-          console.log(resultObj.contentId as number);
+      .then(isSuccessful => {
+        if (isSuccessful === 'true') {
           this.setState({
             loaded: true,
             loading: false,
           });
-          clearTimeout(timer);
-        }, 4000);
+        } else {
+          this.setState({
+            loaded: false,
+            loading: false,
+            errorMessage: 'Error loading macro',
+          });
+        }
       });
   };
 
   tapToView = () => {
     // on button click
     // do not set state to loading
-    const { parameters } = this.props.extension;
-    const macroId = parameters.macroMetadata.macroId.value;
-    console.log('==== clicked on tap to view');
-    createPromise('showGivenMacroOnly', macroId)
-      .submit()
-      .then(result => {
-        console.log('=== result of promise taptoview', macroId);
-      });
+    createPromise(
+      'customTapToViewMacroButton',
+      JSON.stringify({ macroId: this.getMacroId() }),
+    ).submit();
   };
 
   tapToRetry = () => {
-    // on button click
-    // reset everything except counter?????????
     this.setState((state, props) => {
       return {
         retryCount: state.retryCount + 1,
       };
     });
-    createPromise('customConfigurationMacro')
+    createPromise(
+      'customTapToLoadMacroButton',
+      JSON.stringify({
+        macroId: this.getMacroId(),
+        retryCount: this.state.retryCount,
+      }),
+    )
       .submit()
-      .then(result => {
-        console.log('=== result of promise taptoretry');
+      .then(isSuccessful => {
+        if (isSuccessful === 'true') {
+          this.setState({
+            loaded: true,
+            loading: false,
+          });
+        } else {
+          this.setState({
+            loaded: false,
+            loading: false,
+            errorMessage: 'Error loading macro',
+          });
+        }
       });
   };
 
   getTapToLoadCardProps = (cardProps: CreateMacro): CreateMacro => {
     const newProps = {
-      action: <Action>Tap to Load</Action>,
+      action: <Action>Tap to load</Action>,
       isDisabled: false,
       onClick: this.tapToLoad,
     };
@@ -234,7 +216,7 @@ export class MacroComponent extends React.Component<
 
   getTapToViewCardProps = (cardProps: CreateMacro): CreateMacro => {
     const newProps = {
-      action: <Action>View</Action>,
+      action: <Action callToAction>View</Action>,
       isDisabled: false,
       onClick: this.tapToView,
     };
@@ -244,9 +226,10 @@ export class MacroComponent extends React.Component<
 
   getTapToRetryCardProps = (cardProps: CreateMacro): CreateMacro => {
     const newProps = {
-      action: <Action>Retry {this.state.retryCount}</Action>,
+      action: <Action callToAction>Retry {this.state.retryCount}</Action>,
       isDisabled: false,
       onClick: this.tapToRetry,
+      errorMessage: this.state.errorMessage,
     };
 
     return { ...cardProps, ...newProps };
@@ -259,19 +242,25 @@ export class MacroComponent extends React.Component<
       onClick: null,
     };
 
-    // check if macroname is in macrowhitelist
     if (true) {
       // if (this.props.macroWhitelist) {
+      // check if macroWhitelist has been passed
       if (true) {
+        // check if macroname is in macrowhitelist
         // if(this.props.macroWhitelist.includes("macroName")) {
-        // if the macro is in the whitelist
-        if (!this.state.loaded && !this.state.loading) {
-          // console.log("====== tap to load");
+        if (
+          !this.state.loaded &&
+          !this.state.loading &&
+          !this.state.errorMessage
+        ) {
           // show tap to load
           return this.createCard(this.getTapToLoadCardProps(cardProps));
-        } else if (!this.state.loaded && this.state.loading) {
+        } else if (
+          !this.state.loaded &&
+          this.state.loading &&
+          !this.state.errorMessage
+        ) {
           // show loading state
-          // console.log("====== loading");
           return this.createCard(this.getLoadingCardProps(cardProps));
         } else if (
           this.state.loaded &&
@@ -282,8 +271,6 @@ export class MacroComponent extends React.Component<
           // promise to show button
           return this.createCard(this.getTapToViewCardProps(cardProps));
         } else {
-          console.log('====== else');
-
           // loaded && loading should not be a possible state unless an error has occurred
           // check retry count state
           if (this.state.retryCount < 3) {
@@ -291,8 +278,9 @@ export class MacroComponent extends React.Component<
             return this.createCard(this.getTapToRetryCardProps(cardProps));
           } else {
             // show permanent error
-            cardProps.action = <Action>Welp get Help</Action>;
+            cardProps.action = <Action>Error</Action>;
             cardProps.isDisabled = true;
+            cardProps.errorMessage = 'Error cannot load macro';
           }
         }
       } else {
@@ -300,7 +288,7 @@ export class MacroComponent extends React.Component<
       }
     } else {
       // what to show while getting the whitelist is pending
-      // an unclickable card
+      // an unclickable card ?
       cardProps.isDisabled = true;
     }
 

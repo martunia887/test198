@@ -43,6 +43,8 @@
     "@atlaskit/task-decision": "^16.0.3",
     "@atlaskit/theme": "^9.2.3",
     "@atlaskit/logo": "^12.1.8",
+    "@atlaskit/icon": "^19.0.6",
+    "@atlassian/confluence-urls": "^0.0.1",
     "@babel/polyfill": "^7.0.0",
     "@types/prosemirror-view": "^1.9.0",
     "lodash.debounce": "^4.0.8",
