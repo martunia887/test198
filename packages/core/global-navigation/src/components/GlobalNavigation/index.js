@@ -379,7 +379,6 @@ export default class GlobalNavigation extends Component<
   };
 
   render() {
-    // TODO: Look into memoizing this to avoid memory bloat
     const { primaryItems, secondaryItems } = this.constructNavItems();
     const { drawerBackIcon } = this.props;
 
