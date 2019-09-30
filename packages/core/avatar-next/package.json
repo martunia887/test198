@@ -1,5 +1,5 @@
 {
-  "name": "@atlaskit/avatar-2",
+  "name": "@atlaskit/avatar-next",
   "version": "0.0.1",
   "description": "Testing.",
   "license": "Apache-2.0",
@@ -16,7 +16,7 @@
     "Alex R"
   ],
   "atlaskit": {
-    "name": "Avatar-2",
+    "name": "Avatar-next",
     "team": "core"
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
