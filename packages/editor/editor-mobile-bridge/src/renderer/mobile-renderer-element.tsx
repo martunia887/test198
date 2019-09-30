@@ -35,6 +35,7 @@ export interface MobileRendererProps {
 export interface MobileRendererState {
   /** as defined in the renderer */
   document: any;
+  macroWhitelist?: any;
 }
 
 const rendererBridge = ((window as any).rendererBridge = new RendererBridgeImpl());
@@ -100,12 +101,9 @@ export default class MobileRenderer extends React.Component<
     createPromise('customConfigurationMacro')
       .submit()
       .then(result => {
-        console.log('=== result of promise of whitelist');
         var resultObj = JSON.parse(JSON.stringify(result));
         console.log(resultObj.contentId as number);
         this.setState({
-          content: this.state.content,
-          contentId: resultObj.contentId as number,
           macroWhitelist: resultObj,
         });
       });
