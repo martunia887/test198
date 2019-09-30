@@ -161,6 +161,8 @@ function baseStyles(validationState, isCompact) {
     },
     valueContainer: css => ({
       ...css,
+      paddingLeft: 6,
+      paddingRight: 6,
       paddingBottom: isCompact ? 0 : 2,
       paddingTop: isCompact ? 0 : 2,
     }),
@@ -197,6 +199,10 @@ function baseStyles(validationState, isCompact) {
         },
       };
     },
+    indicatorsContainer: css => ({
+      ...css,
+      paddingRight: 6,
+    }),
     option: (css, { isFocused, isSelected }) => {
       const color = isSelected ? colors.N0 : null;
 
