@@ -27,6 +27,7 @@ export default class CardLoader extends React.PureComponent<
   static displayName = 'AsyncCard';
   static Card?: CardWithMediaClientConfigComponent;
   static MediaCardErrorBoundary?: MediaCardErrorBoundaryComponent;
+  private canLoadCard = true; // Prevent updating the state when the component was unmount.
 
   state: AsyncCardState = {
     Card: CardLoader.Card,
@@ -46,6 +47,10 @@ export default class CardLoader extends React.PureComponent<
           import(/* webpackChunkName:"@atlaskit-internal_MediaCardErrorBoundary" */ '../media-card-analytics-error-boundary'),
         ]);
 
+        if (!this.canLoadCard) {
+          return false;
+        }
+
         CardLoader.Card = mediaClient.withMediaClient(cardModule.Card);
         CardLoader.MediaCardErrorBoundary =
           mediaCardErrorBoundaryModule.default;
@@ -58,6 +63,10 @@ export default class CardLoader extends React.PureComponent<
         // TODO [MS-2278]: Add operational error to catch async import error
       }
     }
+  }
+
+  componentWillUnmount() {
+    this.canLoadCard = false;
   }
 
   render() {
