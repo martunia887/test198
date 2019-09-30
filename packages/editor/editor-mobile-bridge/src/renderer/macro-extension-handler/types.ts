@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { ADNode } from '@atlaskit/editor-common';
+import { ADNode, ExtensionParams } from '@atlaskit/editor-common';
 
 export type Mode = 'editor' | 'renderer';
 
@@ -137,4 +137,37 @@ export type MacroConfig = {
   contentId: string | undefined;
   setActiveModal?: (component: ReactNode, props: any) => void;
   closeActiveModal?: () => void;
+};
+
+export interface MacroRendererProps {
+  extension: ExtensionParams<any>;
+  macroWhitelist: object;
+}
+
+export interface MacroRendererState {
+  content?: string | null;
+  contentId?: number | null;
+  loading: boolean;
+  loaded: boolean;
+  errorMessage: string;
+  macroWhitelist: object | null;
+  retryCount: number;
+}
+
+export type MacroCardType = {
+  macroName: string;
+  title: string;
+  iconUrl?: any;
+  action: any;
+  errorMessage?: string;
+};
+
+export type CreateMacro = {
+  isDisabled: boolean;
+  action: any;
+  onClick?: ((...args: any[]) => void) | null;
+  errorMessage?: string;
+};
+export type ActionProps = {
+  callToAction?: boolean;
 };

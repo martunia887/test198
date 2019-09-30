@@ -1,27 +1,28 @@
 import * as React from 'react';
 import { JiraIcon as AkJiraIcon } from '@atlaskit/logo';
-import { JiraIcon as AkJiraIcon } from '@atlaskit/logo';
 import AkOverviewIcon from '@atlaskit/icon/glyph/overview';
 import AkEditorAddonIcon from '@atlaskit/icon/glyph/editor/addon';
 import { getContextAwareFullPath } from '@atlassian/confluence-urls';
 
-export const macroIcon = (icon, macroName, title) => {
-  //const { icon, macroName, title } = macro;
-
+export const macroIcon = (
+  iconUrl: string,
+  macroName: string,
+  title: string,
+) => {
   switch (macroName) {
     case 'toc':
-      return <AkOverviewIcon label={title} />;
+      return <AkOverviewIcon label={title} size="small" />;
 
     case 'jira':
-      return <AkJiraIcon label={title} />;
+      return <AkJiraIcon label={title} size="small" />;
   }
 
-  if (!icon) {
-    return <AkEditorAddonIcon label={title} />;
+  if (!iconUrl) {
+    return <AkEditorAddonIcon label={title} size="medium" />;
   }
 
   // connect macros will have absolute urls while others
   // will have relative
-  const src = getContextAwareFullPath(icon.location, true);
-  return <img src={src} width="18" height="18" alt={title} />;
+  const src = getContextAwareFullPath(iconUrl, true);
+  return <img src={src} width="16" height="16" alt={title} />; // test this, idk how but do it
 };
