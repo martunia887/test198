@@ -1,5 +1,7 @@
+import Drawer from './components';
+
+export default Drawer;
 export {
-  default,
   DrawerItemTheme,
   DrawerSkeletonHeader,
   DrawerSkeletonItem,

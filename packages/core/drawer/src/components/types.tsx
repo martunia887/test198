@@ -28,10 +28,7 @@ export interface DrawerPrimitiveProps extends BaseProps {
   onClose: (event: SyntheticEvent<HTMLElement>) => void;
 }
 
-export interface DrawerProps
-  extends BaseProps,
-    FocusLockProps,
-    WithAnalyticsEventsProps {
+export interface DrawerProps extends BaseProps, FocusLockProps {
   /**
     Callback function that will be called when the drawer is displayed and `keydown` event is triggered.
    */
