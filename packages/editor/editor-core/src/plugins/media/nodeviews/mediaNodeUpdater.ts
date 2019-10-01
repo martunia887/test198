@@ -1,5 +1,9 @@
 import uuidV4 from 'uuid/v4';
-import { updateMediaNodeAttrs, replaceExternalMedia } from '../commands';
+import {
+  updateMediaNodeAttrs,
+  replaceExternalMedia,
+  updateAllMediaNodesAttrs,
+} from '../commands';
 import { MediaAttributes, ExternalMediaAttributes } from '@atlaskit/adf-schema';
 import {
   DEFAULT_IMAGE_HEIGHT,
@@ -62,7 +66,7 @@ export class MediaNodeUpdater {
     const { id } = attrs;
     const objectId = await this.getObjectId();
 
-    updateMediaNodeAttrs(
+    updateAllMediaNodesAttrs(
       id,
       {
         __contextId: objectId,
@@ -100,9 +104,7 @@ export class MediaNodeUpdater {
     const mediaClientConfig = await getViewMediaClientConfigFromMediaProvider(
       mediaProvider,
     );
-    const mediaClient = getMediaClient({
-      mediaClientConfig,
-    });
+    const mediaClient = getMediaClient(mediaClientConfig);
 
     const options = {
       collectionName: attrs.collection,
@@ -124,7 +126,7 @@ export class MediaNodeUpdater {
     };
 
     // TODO [MS-2258]: we should pass this.props.isMediaSingle and remove hardcoded "true"
-    updateMediaNodeAttrs(attrs.id, newAttrs, true)(
+    updateAllMediaNodesAttrs(attrs.id, newAttrs, true)(
       this.props.view.state,
       this.props.view.dispatch,
     );
@@ -157,9 +159,7 @@ export class MediaNodeUpdater {
       if (!uploadMediaClientConfig || !node.attrs.url) {
         return;
       }
-      const mediaClient = getMediaClient({
-        mediaClientConfig: uploadMediaClientConfig,
-      });
+      const mediaClient = getMediaClient(uploadMediaClientConfig);
 
       const collection =
         mediaProvider.uploadParams && mediaProvider.uploadParams.collection;
@@ -201,7 +201,7 @@ export class MediaNodeUpdater {
   };
 
   updateDimensions = (dimensions: RemoteDimensions) => {
-    updateMediaNodeAttrs(
+    updateAllMediaNodesAttrs(
       dimensions.id,
       {
         height: dimensions.height,
@@ -239,9 +239,7 @@ export class MediaNodeUpdater {
     const viewMediaClientConfig = await getViewMediaClientConfigFromMediaProvider(
       mediaProvider,
     );
-    const mediaClient = getMediaClient({
-      mediaClientConfig: viewMediaClientConfig,
-    });
+    const mediaClient = getMediaClient(viewMediaClientConfig);
     const state = await mediaClient.getImageMetadata(id, {
       collection,
     });
@@ -314,9 +312,7 @@ export class MediaNodeUpdater {
     ) {
       return;
     }
-    const mediaClient = getMediaClient({
-      mediaClientConfig: uploadMediaClientConfig,
-    });
+    const mediaClient = getMediaClient(uploadMediaClientConfig);
     const auth = await uploadMediaClientConfig.getAuthFromContext(contextId);
     const source = {
       id,
@@ -362,9 +358,7 @@ export class MediaNodeUpdater {
     if (!uploadMediaClientConfig) {
       return;
     }
-    const mediaClient = getMediaClient({
-      mediaClientConfig: uploadMediaClientConfig,
-    });
+    const mediaClient = getMediaClient(uploadMediaClientConfig);
 
     if (uploadMediaClientConfig.getAuthFromContext && contextId) {
       const auth = await uploadMediaClientConfig.getAuthFromContext(contextId);

@@ -1,5 +1,21 @@
 # @atlaskit/profilecard
 
+## 12.2.0
+
+### Minor Changes
+
+- [minor][8a3c534ec6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8a3c534ec6):
+
+  Export show and hide delay times of profile card trigger
+
+## 12.1.0
+
+### Minor Changes
+
+- [minor][16bf116576](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/16bf116576):
+
+  Increased show/hide delay times for ProfileCardTrigger
+
 ## 12.0.9
 
 ### Patch Changes

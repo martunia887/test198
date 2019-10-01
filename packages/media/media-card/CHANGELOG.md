@@ -1,5 +1,21 @@
 # @atlaskit/media-card
 
+## 65.3.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 65.3.1
+
+### Patch Changes
+
+- [patch][9bac6fd58e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9bac6fd58e):
+
+  HOT-88731 don't send external image URL as a part of analytics
+
 ## 65.3.0
 
 ### Minor Changes

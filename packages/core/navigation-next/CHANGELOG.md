@@ -1,5 +1,24 @@
 # @atlaskit/navigation-next
 
+## 6.8.1
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 6.8.0
+
+### Minor Changes
+
+- [minor][6cc95a6c66](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6cc95a6c66):
+
+  - Support dynamic removal of contextual navigation via the `showContextualNavigation` prop
+  - Support content dataset that targets the page content element
+  - Remove re-renders occurring from the resize control hover effect
+  - Reduce re-renders occurring from the resize transition
+
 ## 6.7.7
 
 ### Patch Changes

@@ -31,6 +31,8 @@ import { AnalyticsEventPayload, PLATFORM, MODE } from '../../analytics/events';
 import AnalyticsContext from '../../analytics/analyticsContext';
 import { CopyTextProvider } from '../../react/nodes/copy-text-provider';
 import { Provider as SmartCardStorageProvider } from '../SmartCardStorage';
+import { name, version } from '../../version.json';
+
 export interface Extension<T> {
   extensionKey: string;
   parameters?: T;
@@ -55,6 +57,7 @@ export interface Props {
   truncated?: boolean;
   createAnalyticsEvent?: CreateUIAnalyticsEvent;
   allowColumnSorting?: boolean;
+  shouldOpenMediaViewer?: boolean;
 }
 
 export class Renderer extends PureComponent<Props, {}> {
@@ -142,6 +145,7 @@ export class Renderer extends PureComponent<Props, {}> {
       allowDynamicTextSizing,
       allowHeadingAnchorLinks,
       allowColumnSorting,
+      shouldOpenMediaViewer,
     } = props;
 
     this.serializer = new ReactSerializer({
@@ -160,6 +164,7 @@ export class Renderer extends PureComponent<Props, {}> {
       allowHeadingAnchorLinks,
       allowColumnSorting,
       fireAnalyticsEvent: this.fireAnalyticsEvent,
+      shouldOpenMediaViewer,
     });
   }
 
@@ -251,7 +256,12 @@ export class Renderer extends PureComponent<Props, {}> {
 
 const RendererWithAnalytics = (props: Props) => (
   <FabricEditorAnalyticsContext
-    data={{ appearance: getAnalyticsAppearance(props.appearance) }}
+    data={{
+      appearance: getAnalyticsAppearance(props.appearance),
+      packageName: name,
+      packageVersion: version,
+      componentName: 'editorCore',
+    }}
   >
     <WithCreateAnalyticsEvent
       render={createAnalyticsEvent => (

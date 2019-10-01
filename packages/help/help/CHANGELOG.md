@@ -1,5 +1,45 @@
 ## 0.1.0
 
+## 0.20.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 0.20.1
+
+### Patch Changes
+
+- [patch][e1de95957a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e1de95957a):
+
+  changed action value 'click' to 'clicked'
+
+## 0.20.0
+
+### Minor Changes
+
+- [minor][de49038228](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/de49038228):
+
+  Added onRelatedArticlesListItemClick Prop to RelatedArticles and ArticleListItem
+
+## 0.19.2
+
+### Patch Changes
+
+- [patch][e1cf991123](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e1cf991123):
+
+  Removed exported interfaces
+
+## 0.19.1
+
+### Patch Changes
+
+- [patch][9891d2418d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9891d2418d):
+
+  Fixed exports and onClick event of RelatedArticles
+
 ## 0.19.0
 
 ### Minor Changes

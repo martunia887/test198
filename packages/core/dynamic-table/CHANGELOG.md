@@ -1,5 +1,21 @@
 # @atlaskit/dynamic-table
 
+## 13.3.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 13.3.1
+
+### Patch Changes
+
+- [patch][8a244b1dfd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8a244b1dfd):
+
+  DynamicTable Stateful now sends analytics events via the onSort prop
+
 ## 13.3.0
 
 ### Minor Changes
