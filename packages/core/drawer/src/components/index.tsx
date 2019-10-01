@@ -179,8 +179,4 @@ export * from './skeletons';
 export * from './item-group';
 export * from './item';
 
-export default withAnalyticsContext({
-  componentName: 'drawer',
-  packageName,
-  packageVersion,
-})(withAnalyticsEvents()(DrawerBase));
+export default DrawerBase;
