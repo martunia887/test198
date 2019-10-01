@@ -16,7 +16,7 @@ export interface BaseProps {
   /** Icon to be rendered in your drawer as a component, if available */
   icon?: ComponentType<any>;
   /** Available drawer sizes */
-  width?: DrawerWidth;
+  width?: 'extended' | 'full' | 'medium' | 'narrow' | 'wide';
   /** A callback function that will be called when the drawer has finished its close transition. */
   onCloseComplete?: (node: HTMLElement) => void;
   /** Boolean that controls if drawer should be retained/discarded */
@@ -28,20 +28,21 @@ export interface DrawerPrimitiveProps extends BaseProps {
   onClose: (event: SyntheticEvent<HTMLElement>) => void;
 }
 
-export type DrawerProps = BaseProps &
-  FocusLockProps &
-  WithAnalyticsEventsProps & {
-    /**
-      Callback function that will be called when the drawer is displayed and `keydown` event is triggered.
-    */
-    onKeyDown?: (event: SyntheticEvent) => void;
-    /**
+export interface DrawerProps
+  extends BaseProps,
+    FocusLockProps,
+    WithAnalyticsEventsProps {
+  /**
+    Callback function that will be called when the drawer is displayed and `keydown` event is triggered.
+   */
+  onKeyDown?: (event: SyntheticEvent) => void;
+  /**
     Callback function to be called when the drawer will be closed.
-  */
-    onClose?: (event: SyntheticEvent<HTMLElement>, analyticsEvent: any) => void;
-    /** Controls if the drawer is open or close */
-    isOpen: boolean;
-  };
+   */
+  onClose?: (event: SyntheticEvent<HTMLElement>, analyticsEvent: any) => void;
+  /** Controls if the drawer is open or close */
+  isOpen: boolean;
+}
 
 export interface FocusLockProps {
   /**
