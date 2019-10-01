@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { toBeInTheDocument, toHaveFocus } from '@testing-library/jest-dom';
 import { XMLHttpRequest } from 'xmlhttprequest';
 import 'jest-styled-components';
 import { toMatchSnapshot } from 'jest-snapshot';
@@ -178,6 +179,13 @@ const removeIdsFromDoc = transformDoc(node => {
       replacedNode.attrs.__key = node.attrs.__key.replace(
         /(temporary:)?([a-z0-9\-]+)(:.*)?$/,
         '$11234-5678-abcd-efgh$3',
+      );
+    }
+
+    if (node.attrs.occurrenceKey) {
+      replacedNode.attrs.occurrenceKey = node.attrs.occurrenceKey.replace(
+        /([a-z0-9\-]+)(:.*)?$/,
+        '12345678-9abc-def0-1234-56789abcdef0$2',
       );
     }
 
@@ -410,6 +418,8 @@ expect.extend({
     return ret;
   },
   toHaveStyleDeclaration: matchers.toHaveStyleRule,
+  toBeInTheDocument,
+  toHaveFocus,
 });
 
 // Copied from react-beautiful-dnd/test/setup.js
@@ -451,7 +461,6 @@ if (process.env.CI) {
     console.warn = jest.fn();
     console.log = jest.fn();
   });
-
   afterEach(() => {
     console.error = consoleError;
     console.warn = consoleWarn;

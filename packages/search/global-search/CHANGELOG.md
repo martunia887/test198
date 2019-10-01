@@ -1,5 +1,39 @@
 # @atlaskit/global-search
 
+## 12.2.1
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 12.2.0
+
+### Minor Changes
+
+- [minor][bff5be0d46](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bff5be0d46):
+
+  Quick search autocomplete analytics instrumentation
+
+## 12.1.2
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/feedback-collector@4.0.17
+  - @atlaskit/global-navigation@8.0.1
+  - @atlaskit/modal-dialog@10.3.1
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
+## 12.1.1
+
+### Patch Changes
+
+- [patch][9447579b2e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9447579b2e):
+
+  Fixed withFeedbackButton warning message
+
 ## 12.1.0
 
 ### Minor Changes

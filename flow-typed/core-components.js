@@ -9,11 +9,15 @@ declare module '@atlaskit/analytics-next' {
   declare module.exports: any;
 }
 
-declare module '@atlaskit/atlassian-switcher' {
+declare module '@atlaskit/atlassian-navigation' {
   declare module.exports: any;
 }
 
-declare module '@atlaskit/app-navigation' {
+declare module '@atlaskit/atlassian-navigation/skeleton' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/atlassian-switcher' {
   declare module.exports: any;
 }
 
@@ -45,11 +49,19 @@ declare module '@atlaskit/button' {
   declare module.exports: any;
 }
 
+declare module '@atlaskit/calendar' {
+  declare module.exports: any;
+}
+
 declare module '@atlaskit/checkbox' {
   declare module.exports: any;
 }
 
 declare module '@atlaskit/code' {
+  declare module.exports: any;
+}
+
+declare module '@atlaskit/comment' {
   declare module.exports: any;
 }
 

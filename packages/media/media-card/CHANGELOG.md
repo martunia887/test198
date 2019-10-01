@@ -1,5 +1,53 @@
 # @atlaskit/media-card
 
+## 65.3.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 65.3.1
+
+### Patch Changes
+
+- [patch][9bac6fd58e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9bac6fd58e):
+
+  HOT-88731 don't send external image URL as a part of analytics
+
+## 65.3.0
+
+### Minor Changes
+
+- [minor][e44b5324de](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e44b5324de):
+
+  Card now sends "copied file" on card copy event in editor and renderer- [minor][ab53f33dc5](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ab53f33dc5):
+
+  Adding operational events for media card component
+
+## 65.2.1
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/media-ui@11.6.7
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
+## 65.2.0
+
+### Minor Changes
+
+- [minor][b709292a5c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b709292a5c):
+
+  Add new "contextId?: string" property to Card, to retrieve auth from a given context
+
+### Patch Changes
+
+- [patch][ace05e438f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ace05e438f):
+
+  Dont release file preview from Card when an external file is passed
+
 ## 65.1.1
 
 ### Patch Changes

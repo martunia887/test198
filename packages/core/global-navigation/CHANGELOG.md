@@ -1,5 +1,21 @@
 # @atlaskit/global-navigation
 
+## 8.0.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 8.0.1
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/modal-dialog@10.3.1
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
 ## 8.0.0
 
 ### Major Changes

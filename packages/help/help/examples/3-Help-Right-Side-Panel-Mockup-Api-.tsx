@@ -10,9 +10,18 @@ import {
 
 import LocaleIntlProvider from '../example-helpers/LocaleIntlProvider';
 import { getArticle, searchArticle } from './utils/mockData';
-import { ButtonsWrapper, FooterContent } from './utils/styled';
+import {
+  ButtonsWrapper,
+  FooterContent,
+  ExampleDefaultContent,
+} from './utils/styled';
 
-import Help, { ArticleFeedback } from '../src';
+import Help from '../src';
+
+interface ArticleFeedback {
+  RateReasonText: string;
+  negativeRateReason?: string;
+}
 
 const handleEvent = (analyticsEvent: { payload: any; context: any }) => {
   const { payload, context } = analyticsEvent;
@@ -26,16 +35,27 @@ export default class extends React.Component {
     articleId: undefined,
   };
 
+  private helpTimeoutId: number | undefined;
+  private getArticleTimeoutId: number | undefined;
+  private searchArticleTimeoutId: number | undefined;
+
+  componentWillUnmount() {
+    window.clearTimeout(this.helpTimeoutId);
+    window.clearTimeout(this.getArticleTimeoutId);
+    window.clearTimeout(this.searchArticleTimeoutId);
+  }
+
   onWasHelpfulSubmit = (
     articleFeedback: ArticleFeedback,
     analyticsEvent: UIAnalyticsEvent,
   ): Promise<boolean> => {
-    return new Promise(resolve =>
-      setTimeout(() => {
-        analyticsEvent.fire('help');
-        console.log(articleFeedback);
-        resolve(true);
-      }, 1000),
+    return new Promise(
+      resolve =>
+        (this.helpTimeoutId = window.setTimeout(() => {
+          analyticsEvent.fire('help');
+          console.log(articleFeedback);
+          resolve(true);
+        }, 1000)),
     );
   };
 
@@ -74,15 +94,21 @@ export default class extends React.Component {
   };
 
   onGetArticle = (articleId: string): Promise<any> => {
-    return new Promise(resolve =>
-      setTimeout(() => resolve(getArticle(articleId)), 100),
-    );
+    return new Promise(resolve => {
+      this.getArticleTimeoutId = window.setTimeout(
+        () => resolve(getArticle(articleId)),
+        100,
+      );
+    });
   };
 
   onSearch = (value: string): Promise<any> => {
-    return new Promise(resolve =>
-      setTimeout(() => resolve(searchArticle(value)), 1000),
-    );
+    return new Promise(resolve => {
+      this.searchArticleTimeoutId = window.setTimeout(
+        () => resolve(searchArticle(value)),
+        1000,
+      );
+    });
   };
 
   articleIdSetter = (id: string): void => {
@@ -141,7 +167,9 @@ export default class extends React.Component {
                       </FooterContent>
                     }
                   >
-                    Default Content
+                    <ExampleDefaultContent>
+                      <span>Default content</span>
+                    </ExampleDefaultContent>
                   </Help>
                 </LocaleIntlProvider>
               </RightSidePanel>

@@ -1,5 +1,26 @@
 # @atlaskit/emoji
 
+## 62.5.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 62.5.1
+
+- Updated dependencies [80adfefba2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/80adfefba2):
+  - @atlaskit/editor-test-helpers@10.0.0
+
+## 62.5.0
+
+### Minor Changes
+
+- [minor][8b73f10071](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8b73f10071):
+
+  fixed emoji CDN urls to ddev and re-enabled VR tests
+
 ## 62.4.1
 
 ### Patch Changes

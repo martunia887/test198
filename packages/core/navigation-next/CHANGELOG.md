@@ -1,5 +1,56 @@
 # @atlaskit/navigation-next
 
+## 6.8.1
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 6.8.0
+
+### Minor Changes
+
+- [minor][6cc95a6c66](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6cc95a6c66):
+
+  - Support dynamic removal of contextual navigation via the `showContextualNavigation` prop
+  - Support content dataset that targets the page content element
+  - Remove re-renders occurring from the resize control hover effect
+  - Reduce re-renders occurring from the resize transition
+
+## 6.7.7
+
+### Patch Changes
+
+- [patch][c479e7eb8f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c479e7eb8f):
+
+  Fixing nav resize button render issue.
+
+## 6.7.6
+
+### Patch Changes
+
+- [patch][636c5850ae](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/636c5850ae):
+
+  Fix missing horizontal navigation re-renders
+
+## 6.7.5
+
+### Patch Changes
+
+- [patch][83b9b5e4d0](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/83b9b5e4d0):
+
+  Bumping devDeps for new atlassian-nav component
+
+## 6.7.4
+
+### Patch Changes
+
+- [patch][f7eb0a4886](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f7eb0a4886):
+
+  Ensuring new horizontal nav allows for scrollbar width. Using 'vw' units prevents this.
+
 ## 6.7.3
 
 - Updated dependencies [c5939cb73d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c5939cb73d):

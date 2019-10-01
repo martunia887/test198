@@ -1,5 +1,29 @@
 # @atlaskit/dynamic-table
 
+## 13.3.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 13.3.1
+
+### Patch Changes
+
+- [patch][8a244b1dfd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8a244b1dfd):
+
+  DynamicTable Stateful now sends analytics events via the onSort prop
+
+## 13.3.0
+
+### Minor Changes
+
+- [minor][565e5c71db](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/565e5c71db):
+
+  Add ability to highlight a row in the table based on the index (0 based index) of the current visible page.
+
 ## 13.2.1
 
 - Updated dependencies [8d0f37c23e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8d0f37c23e):

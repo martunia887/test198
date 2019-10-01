@@ -1,5 +1,21 @@
 # @atlaskit/drawer
 
+## 5.0.12
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 5.0.11
+
+### Patch Changes
+
+- [patch][ab418242f6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ab418242f6):
+
+  Removes @atlaskit/docs package from dependencies
+
 ## 5.0.10
 
 - Updated dependencies [8d0f37c23e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8d0f37c23e):

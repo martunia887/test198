@@ -47,13 +47,11 @@ export enum Product {
   CONFLUENCE = 'confluence',
   HOME = 'home',
   JIRA = 'jira',
-  PEOPLE = 'people',
   SITE_ADMIN = 'site-admin',
   TRUSTED_ADMIN = 'trusted-admin',
 }
 
 export enum Feature {
-  enableUserCentricProducts = 'enableUserCentricProducts',
   disableCustomLinks = 'disableCustomLinks',
   disableRecentContainers = 'disableRecentContainers',
   disableHeadings = 'disableHeadings',
@@ -63,18 +61,7 @@ export enum Feature {
   isEmceeLinkEnabled = 'isEmceeLinkEnabled',
 }
 
-export enum MultiVariateFeature {
-  productTopItemVariation = 'productTopItemVariation',
-}
-
-export enum ProductTopItemVariation {
-  mostFrequentSite = 'most-frequent-site',
-  currentSite = 'current-site',
-}
-
 export type FeatureFlagProps = {
-  // Show user centric avaialble products as opposed to site centric product list.
-  enableUserCentricProducts?: boolean;
   // Custom links are enabled by default for Jira and Confluence, this feature flag allows to hide them. Custom links are not supported by the switcher in any other products.
   disableCustomLinks?: boolean;
   // Hide recent containers. Recent containers are enabled by default.
@@ -85,26 +72,22 @@ export type FeatureFlagProps = {
   isDiscoverMoreForEveryoneEnabled?: boolean;
   // Enable Embedded Marketplace within the product.
   isEmceeLinkEnabled?: boolean;
-  // Defines which site is displayed as the top item for users with multiple sites.
-  [MultiVariateFeature.productTopItemVariation]?: ProductTopItemVariation;
 };
 
-export type FeatureMap = { [key in Feature]: boolean } & {
-  [MultiVariateFeature.productTopItemVariation]: ProductTopItemVariation;
-};
+export type FeatureMap = { [key in Feature]: boolean };
 
 export type CustomLinksResponse = CustomLink[];
 
-export interface ProductLicenseInformation {
-  state: string;
-  applicationUrl?: string;
+export type ProvisionedProducts = { [key in WorklensProductType]?: boolean };
+
+export interface CurrentSite {
+  url: string;
+  products: AvailableProduct[];
 }
 
-export interface LicenseInformationResponse {
-  hostname: string;
-  products: {
-    [key: string]: ProductLicenseInformation;
-  };
+export interface UserSiteDataResponse {
+  currentSite: CurrentSite;
+  provisionedProducts: ProvisionedProducts;
 }
 
 export interface XFlowSettingsResponse {
@@ -169,7 +152,6 @@ export enum ProductKey {
   JIRA_CORE = 'jira-core.ondemand',
   JIRA_SOFTWARE = 'jira-software.ondemand',
   JIRA_SERVICE_DESK = 'jira-servicedesk.ondemand',
-  JIRA_OPS = 'jira-incident-manager.ondemand',
   OPSGENIE = 'opsgenie',
 }
 
