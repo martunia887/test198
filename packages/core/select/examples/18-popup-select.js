@@ -29,7 +29,18 @@ const PopupSelectExample = () => (
         {...defaults}
         target={({ ref }) => <button ref={ref}>W/O Search</button>}
         popperProps={{ placement: 'bottom', positionFixed: true }}
-        searchThreshold={10}
+        isSearchable={false}
+        styles={{
+          container: provided => ({
+            ...provided,
+            '> div': {
+              padding: 0,
+            },
+          }),
+          control: () => ({
+            display: 'none',
+          }),
+        }}
       />
       <PopupSelect
         {...defaults}
