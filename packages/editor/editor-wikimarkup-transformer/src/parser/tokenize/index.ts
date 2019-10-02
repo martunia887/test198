@@ -81,8 +81,13 @@ export interface InlineCardConversion {
   [key: string]: string;
 }
 
+export interface FilenameConversion {
+  [key: string]: string;
+}
+
 export interface Context {
   readonly inlineCardConversion?: InlineCardConversion;
+  readonly filenameConversion?: FilenameConversion;
   readonly issueKeyRegex?: RegExp | undefined;
   readonly tokenErrCallback?: TokenErrCallback;
 }

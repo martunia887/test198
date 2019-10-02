@@ -761,3 +761,67 @@ Object {
   "type": "doc",
 }
 `;
+
+exports[`JIRA wiki markup - Images and attachments should transform filename to id for attachment links if present in context 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "__contextId": null,
+            "__displayType": null,
+            "__fileMimeType": null,
+            "__fileName": null,
+            "__fileSize": null,
+            "collection": "",
+            "height": null,
+            "id": "5678",
+            "occurrenceKey": null,
+            "type": "file",
+            "url": null,
+            "width": null,
+          },
+          "type": "media",
+        },
+      ],
+      "type": "mediaGroup",
+    },
+  ],
+  "type": "doc",
+}
+`;
+
+exports[`JIRA wiki markup - Images and attachments should transform filename to id for embeddable attachments if present in context 1`] = `
+Object {
+  "content": Array [
+    Object {
+      "attrs": Object {
+        "layout": "center",
+        "width": null,
+      },
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "__contextId": null,
+            "__displayType": null,
+            "__fileMimeType": null,
+            "__fileName": null,
+            "__fileSize": null,
+            "collection": "",
+            "height": 183,
+            "id": "1234",
+            "occurrenceKey": null,
+            "type": "file",
+            "url": null,
+            "width": 200,
+          },
+          "type": "media",
+        },
+      ],
+      "type": "mediaSingle",
+    },
+  ],
+  "type": "doc",
+}
+`;

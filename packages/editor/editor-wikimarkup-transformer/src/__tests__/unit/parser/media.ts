@@ -1,4 +1,5 @@
 import WikiMarkupTransformer from '../../../index';
+import { Context } from '../../../../src/parser/tokenize';
 
 describe('JIRA wiki markup - Images and attachments', () => {
   const testCases: Array<[string, string]> = [
@@ -57,12 +58,27 @@ yep`,
       '[CS-1404] should parse attachments inside tables as single media group',
       '|colum 1 [^a-doc (jadsjdasjadsjkdasjk).pdf]\r\n[^not-empty (askjsajnkjknads).txt]|column 2|',
     ],
+    [
+      'should transform filename to id for embeddable attachments if present in context',
+      '!Screen Shot (9db1eca8-8257-4763-92fb-e6417f9e34c9)(2).jpeg!',
+    ],
+    [
+      'should transform filename to id for attachment links if present in context',
+      '[^document.pdf]',
+    ]
   ];
+
+  const context: Context = {
+    filenameConversion: {
+      'Screen Shot (9db1eca8-8257-4763-92fb-e6417f9e34c9)(2).jpeg': '1234',
+      'document.pdf': '5678',
+    },
+  };
 
   for (const [testCaseDescription, markup] of testCases) {
     it(testCaseDescription, () => {
       const transformer = new WikiMarkupTransformer();
-      expect(transformer.parse(markup)).toMatchSnapshot();
+      expect(transformer.parse(markup, context)).toMatchSnapshot();
     });
   }
 });

@@ -105,6 +105,9 @@ function getADF(wiki: string) {
       'ABC-30': 'https://instance.atlassian.net/browse/ABC-30',
       'ABC-40': 'https://instance.atlassian.net/browse/ABC-40',
     },
+    filenameConversion: {
+      'image.jpg': '1234',
+    },
   };
   const pmNode = wikiTransformer.parse(wiki, context);
 

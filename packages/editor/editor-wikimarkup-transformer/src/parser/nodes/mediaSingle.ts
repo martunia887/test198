@@ -1,5 +1,6 @@
 import { Node as PMNode, Schema } from 'prosemirror-model';
 import { LINK_TEXT_REGEXP } from '../tokenize/link-text';
+import { Context } from '../tokenize';
 
 const defaultWidth = 200;
 const defaultHeight = 183;
@@ -8,6 +9,7 @@ export default function getMediaSingleNodeView(
   schema: Schema,
   filename: string,
   attrs: { [key: string]: string },
+  context: Context,
 ): PMNode {
   const { media, mediaSingle } = schema.nodes;
   let width = defaultWidth;
@@ -37,8 +39,12 @@ export default function getMediaSingleNodeView(
 
     return mediaSingle.createChecked({}, externalMediaNode);
   } else {
+    const id =
+      context.filenameConversion && context.filenameConversion[filename]
+        ? context.filenameConversion[filename]
+        : filename;
     const mediaNode = media.createChecked({
-      id: filename,
+      id,
       type: 'file',
       collection: '',
       width,
