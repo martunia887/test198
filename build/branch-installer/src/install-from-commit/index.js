@@ -195,7 +195,7 @@ async function _installFromCommit(commitHash = '', options = {}) {
     log(`$ ${engine} ${cmdArgs.join(' ')}`);
     await spawndamnit(engine, cmdArgs, {
       stdio: 'inherit',
-      shell: process.stdout.isTTY,
+      shell: true,
     });
   }
 }
