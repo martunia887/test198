@@ -1,7 +1,7 @@
 import React, { MouseEvent } from 'react';
 import renderer from 'react-test-renderer';
 import { mount, shallow } from 'enzyme';
-import { ThemeProvider } from 'emotion-theming';
+import { ThemeProvider } from '../../../index';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 
 import DrawerPrimitive, { Content as ContentWrapper } from '../../primitives';

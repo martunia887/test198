@@ -1,3 +1,5 @@
+export { ThemeProvider } from 'emotion-theming';
+
 export {
   default,
   DrawerItemTheme,

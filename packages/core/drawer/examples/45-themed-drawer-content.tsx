@@ -1,7 +1,6 @@
 import React, { useState, Fragment } from 'react';
-import { ThemeProvider } from 'emotion-theming';
 import Button from '@atlaskit/button';
-import Drawer, { DrawerContentTheme } from '../src';
+import Drawer, { DrawerContentTheme, ThemeProvider } from '../src';
 import { drawerContentThemeNamespace } from '../src/constants';
 
 const DrawersContentTheme: DrawerContentTheme = {
