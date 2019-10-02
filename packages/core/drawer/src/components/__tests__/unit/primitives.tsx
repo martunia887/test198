@@ -141,7 +141,7 @@ describe('Drawer primitive', () => {
     });
   });
 
-  it.only('should allow content wrapper to be themed', () => {
+  it('should allow content wrapper to be themed', () => {
     const mockedDrawersContentTheme: DrawerContentTheme = {
       [drawerContentThemeNamespace]: {
         marginTop: 0,
