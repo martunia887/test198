@@ -5,7 +5,7 @@ import { layers, gridSize } from '@atlaskit/theme/constants';
 import { N0, N500, N30A, B50 } from '@atlaskit/theme/colors';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 import { jsx, CSSObject } from '@emotion/core';
-import { useTheme } from 'emotion-theming';
+import { withTheme } from 'emotion-theming';
 
 import { Slide } from './transitions';
 import {
@@ -66,20 +66,17 @@ const getContentTheme = (theme: DrawerContentTheme): CSSObject => {
     : {};
 };
 
-export const Content: FC = props => {
-  const theme = useTheme<DrawerContentTheme>();
-  return (
-    <div
-      css={{
-        flex: 1,
-        marginTop: 3 * gridSize(),
-        overflow: 'auto',
-        ...getContentTheme(theme),
-      }}
-      {...props}
-    />
-  );
-};
+export const Content: FC = withTheme(({ theme, ...props }) => (
+  <div
+    css={{
+      flex: 1,
+      marginTop: 3 * gridSize(),
+      overflow: 'auto',
+      ...getContentTheme(theme),
+    }}
+    {...props}
+  />
+));
 
 // Sidebar / Icons etc.
 // ------------------------------

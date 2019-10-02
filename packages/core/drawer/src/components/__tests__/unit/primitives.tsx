@@ -141,6 +141,15 @@ describe('Drawer primitive', () => {
     });
   });
 
+  it('should render content even when no ThemeProvider is passed', () => {
+    const wrapper = mount(
+      <ContentWrapper>
+        <DrawerContent />
+      </ContentWrapper>,
+    );
+    expect(wrapper.find(DrawerContent)).toHaveLength(1);
+  });
+
   it('should allow content wrapper to be themed', () => {
     const mockedDrawersContentTheme: DrawerContentTheme = {
       [drawerContentThemeNamespace]: {
