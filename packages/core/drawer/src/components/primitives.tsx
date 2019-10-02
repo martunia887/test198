@@ -60,24 +60,26 @@ const Wrapper = ({
 // Content
 // ------------------------------
 
-const getContentTheme = (): CSSObject => {
-  const theme = useTheme<DrawerContentTheme>();
+const getContentTheme = (theme: DrawerContentTheme): CSSObject => {
   return theme && theme[drawerContentThemeNamespace]
     ? theme[drawerContentThemeNamespace]
     : {};
 };
 
-export const Content: FC = props => (
-  <div
-    css={{
-      flex: 1,
-      marginTop: 3 * gridSize(),
-      overflow: 'auto',
-      ...getContentTheme(),
-    }}
-    {...props}
-  />
-);
+export const Content: FC = props => {
+  const theme = useTheme<DrawerContentTheme>();
+  return (
+    <div
+      css={{
+        flex: 1,
+        marginTop: 3 * gridSize(),
+        overflow: 'auto',
+        ...getContentTheme(theme),
+      }}
+      {...props}
+    />
+  );
+};
 
 // Sidebar / Icons etc.
 // ------------------------------
