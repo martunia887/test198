@@ -15,6 +15,11 @@ export interface I18nShape {
   next: string;
 }
 
+export type RowClickCallback = (
+  event: React.MouseEvent,
+  rowIndex: number,
+) => void;
+
 export interface StatelessProps extends WithAnalyticsEventsProps {
   caption?: React.ReactNode;
   /** Object describing the column headings */
@@ -51,6 +56,7 @@ export interface StatelessProps extends WithAnalyticsEventsProps {
   paginationi18n?: I18nShape;
   /** It highlights the passed row number on the current visible page. Starts with 0 */
   highlightedRowIndex?: number;
+  onRowClick?: RowClickCallback;
 }
 
 export interface StatefulProps extends WithAnalyticsEventsProps {

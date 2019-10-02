@@ -3,17 +3,24 @@ import TableRow from './TableRow';
 import withSortedPageRows, {
   WithSortedPageRowsProps,
 } from '../hoc/withSortedPageRows';
-import { HeadType } from '../types';
+import { HeadType, RowClickCallback } from '../types';
 
 interface Props extends WithSortedPageRowsProps {
   head?: HeadType;
   highlightedRowIndex?: number;
   isFixedSize: boolean;
+  onRowClick?: RowClickCallback;
 }
 
 class Body extends React.Component<Props, {}> {
   render() {
-    const { pageRows, head, isFixedSize, highlightedRowIndex } = this.props;
+    const {
+      pageRows,
+      head,
+      isFixedSize,
+      highlightedRowIndex,
+      onRowClick,
+    } = this.props;
 
     return (
       <tbody>
@@ -24,6 +31,7 @@ class Body extends React.Component<Props, {}> {
             key={rowIndex} // eslint-disable-line react/no-array-index-key
             row={row}
             isHighlighted={highlightedRowIndex === rowIndex}
+            onClick={onRowClick && (e => onRowClick(e, rowIndex))}
           />
         ))}
       </tbody>

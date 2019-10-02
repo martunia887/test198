@@ -12,6 +12,7 @@ import {
   RankStart,
   RankEnd,
   RankEndLocation,
+  RowClickCallback,
 } from '../../types';
 import withSortedPageRows, {
   WithSortedPageRowsProps,
@@ -21,6 +22,7 @@ export interface Props extends WithSortedPageRowsProps {
   highlightedRowIndex?: number;
   onRankStart: (rankStart: RankStart) => void;
   onRankEnd: (rankEnd: RankEnd) => void;
+  onRowClick?: RowClickCallback;
   isFixedSize: boolean;
   isRanking: boolean;
   isRankingDisabled: boolean;
@@ -96,6 +98,7 @@ export class RankableBody extends React.Component<Props, {}> {
       isFixedSize,
       isRanking,
       isRankingDisabled,
+      onRowClick,
     } = this.props;
 
     return (
@@ -119,6 +122,7 @@ export class RankableBody extends React.Component<Props, {}> {
                   row={row}
                   isRankingDisabled={isRankingDisabled}
                   isHighlighted={highlightedRowIndex === rowIndex}
+                  onClick={onRowClick && (e => onRowClick(e, rowIndex))}
                 />
               ))}
               {provided.placeholder}

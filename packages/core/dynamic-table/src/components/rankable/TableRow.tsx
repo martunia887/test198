@@ -13,6 +13,7 @@ export interface Props extends WithDimensionsProps {
   rowIndex: number;
   isRankingDisabled: boolean;
   isHighlighted?: boolean;
+  onClick?: React.MouseEventHandler;
 }
 
 export class RankableTableRow extends React.Component<Props, {}> {
@@ -33,6 +34,7 @@ export class RankableTableRow extends React.Component<Props, {}> {
       rowIndex,
       isRankingDisabled,
       isHighlighted,
+      onClick = () => {},
     } = this.props;
     const { cells, key, ...restRowProps } = row;
     const inlineStyles = inlineStylesIfRanking(isRanking, refWidth);
@@ -59,6 +61,7 @@ export class RankableTableRow extends React.Component<Props, {}> {
             isHighlighted={isHighlighted}
             isRanking={isRanking}
             isRankingItem={snapshot.isDragging}
+            onClick={onClick}
           >
             {cells.map((cell, cellIndex) => {
               const headCell = (head || { cells: [] }).cells[cellIndex];

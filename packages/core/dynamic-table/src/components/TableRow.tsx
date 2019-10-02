@@ -8,13 +8,24 @@ interface Props {
   isFixedSize: boolean;
   isHighlighted?: boolean;
   row: RowType;
+  onClick?: React.MouseEventHandler;
 }
 
-const Row = ({ row, head, isFixedSize, isHighlighted }: Props) => {
+const Row = ({
+  row,
+  head,
+  isFixedSize,
+  isHighlighted,
+  onClick = () => {},
+}: Props) => {
   const { cells, ...restRowProps } = row;
 
   return (
-    <TableBodyRow {...restRowProps} isHighlighted={isHighlighted}>
+    <TableBodyRow
+      {...restRowProps}
+      isHighlighted={isHighlighted}
+      onClick={onClick}
+    >
       {cells.map((cell, cellIndex) => {
         const { content, ...restCellProps } = cell;
         const { shouldTruncate, width } =
