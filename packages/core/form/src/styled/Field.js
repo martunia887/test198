@@ -12,6 +12,12 @@ const FieldWrapper = styled.div`
   margin-top: ${gridSize}px;
 `;
 
+export const CheckboxFieldWrapper = styled.div`
+  &:not(:first-of-type) ${FieldWrapper} {
+    margin-top: 0px;
+  }
+`;
+
 /**
  * Provide a styled Label for field components
  */
