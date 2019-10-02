@@ -261,8 +261,7 @@ const cellAttrs = {
 };
 
 export const tableCell = {
-  content:
-    '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaSingle |  mediaGroup | decisionList | taskList | blockCard | extension | unsupportedBlock)+',
+  content: 'block+',
   attrs: cellAttrs,
   tableRole: 'cell',
   marks: 'alignment',
