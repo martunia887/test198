@@ -1,0 +1,1 @@
+Add theme support to drawer content component
