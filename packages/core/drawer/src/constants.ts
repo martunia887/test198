@@ -9,3 +9,6 @@ export const widths = ['narrow', 'medium', 'wide', 'extended', 'full'];
 export const gridSize = akGridSize();
 export const darkDrawerItemHoverBackground = '#313F57';
 export const darkDrawerItemActiveBackground = '#2B374D';
+
+export const drawerContentThemeNamespace =
+  '@atlaskit-shared-theme/drawer-content';

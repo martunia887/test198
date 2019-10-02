@@ -1,5 +1,7 @@
 import { ComponentType, SyntheticEvent, ReactNode } from 'react';
 import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
+import { CSSObject } from '@emotion/core';
+import { drawerContentThemeNamespace } from '../constants';
 
 export type Widths = {
   extended: string;
@@ -26,6 +28,10 @@ export interface BaseProps {
 export interface DrawerPrimitiveProps extends BaseProps {
   in: boolean;
   onClose: (event: SyntheticEvent<HTMLElement>) => void;
+}
+
+export interface DrawerContentTheme {
+  [drawerContentThemeNamespace]: CSSObject;
 }
 
 export type DrawerProps = BaseProps &

@@ -1,10 +1,13 @@
 import React, { MouseEvent } from 'react';
+import renderer from 'react-test-renderer';
 import { mount, shallow } from 'enzyme';
+import { ThemeProvider } from 'emotion-theming';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
 
-import DrawerPrimitive from '../../primitives';
-import { DrawerWidth } from '../../types';
+import DrawerPrimitive, { Content as ContentWrapper } from '../../primitives';
+import { DrawerWidth, DrawerContentTheme } from '../../types';
 import { Slide } from '../../transitions';
+import { drawerContentThemeNamespace } from '../../../constants';
 
 const DrawerContent = () => <code>Drawer contents</code>;
 
@@ -136,5 +139,23 @@ describe('Drawer primitive', () => {
       callsBeforeExited: [],
       callsAfterExited: [[node]],
     });
+  });
+
+  it.only('should allow content wrapper to be themed', () => {
+    const mockedDrawersContentTheme: DrawerContentTheme = {
+      [drawerContentThemeNamespace]: {
+        marginTop: 0,
+      },
+    };
+
+    const tree = renderer
+      .create(
+        <ThemeProvider theme={mockedDrawersContentTheme}>
+          <ContentWrapper />
+        </ThemeProvider>,
+      )
+      .toJSON();
+
+    expect(tree).toMatchSnapshot();
   });
 });

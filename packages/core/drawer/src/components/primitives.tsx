@@ -4,10 +4,17 @@ import { Component, FC, ReactChildren, MouseEvent } from 'react';
 import { layers, gridSize } from '@atlaskit/theme/constants';
 import { N0, N500, N30A, B50 } from '@atlaskit/theme/colors';
 import ArrowLeft from '@atlaskit/icon/glyph/arrow-left';
-import { jsx } from '@emotion/core';
+import { jsx, CSSObject } from '@emotion/core';
+import { useTheme } from 'emotion-theming';
 
 import { Slide } from './transitions';
-import { DrawerPrimitiveProps, DrawerWidth, Widths } from './types';
+import {
+  DrawerPrimitiveProps,
+  DrawerWidth,
+  Widths,
+  DrawerContentTheme,
+} from './types';
+import { drawerContentThemeNamespace } from '../constants';
 
 // Misc.
 // ------------------------------
@@ -53,9 +60,21 @@ const Wrapper = ({
 // Content
 // ------------------------------
 
-const Content: FC = props => (
+const getContentTheme = (): CSSObject => {
+  const theme = useTheme<DrawerContentTheme>();
+  return theme && theme[drawerContentThemeNamespace]
+    ? theme[drawerContentThemeNamespace]
+    : {};
+};
+
+export const Content: FC = props => (
   <div
-    css={{ flex: 1, marginTop: 3 * gridSize(), overflow: 'auto' }}
+    css={{
+      flex: 1,
+      marginTop: 3 * gridSize(),
+      overflow: 'auto',
+      ...getContentTheme(),
+    }}
     {...props}
   />
 );

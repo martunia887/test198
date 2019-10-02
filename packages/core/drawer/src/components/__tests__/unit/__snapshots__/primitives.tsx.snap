@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Drawer primitive should allow content wrapper to be themed 1`] = `
+.emotion-0 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  margin-top: 0;
+  overflow: auto;
+}
+
+<div
+  className="emotion-0"
+/>
+`;
