@@ -17584,15 +17584,12 @@ strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
 
-stricter-plugin-tangerine@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/stricter-plugin-tangerine/-/stricter-plugin-tangerine-0.1.0.tgz#25fe3ee0d0035b67b6fd2c7dfc1194ff0a2204aa"
-  integrity sha512-ugpPOiAlX6Jautt51n40YAGSlev+oAu7nt5J250DXUq5+mRmkfrXkUv9SvAILltAl2GmZ9yB2xwB0lM7Bp3ORA==
+stricter-plugin-tangerine@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/stricter-plugin-tangerine/-/stricter-plugin-tangerine-0.2.0.tgz#4b898898488a12fd616c0217c6b08f3ce269b271"
+  integrity sha512-sg2TgGOI8koX/DH2bqge/tLNdHRVFH0sSD2RLbpb/OxZmaxEz04W4xxllS+9kLQEhDaT9vrjaOGcFve5WNv1vw==
   dependencies:
     lodash.omit "^4.5.0"
-    lodash.sortby "^4.7.0"
-    lodash.uniq "^4.5.0"
-    path-is-inside "^1.0.2"
 
 stricter@^0.3.4:
   version "0.3.4"
