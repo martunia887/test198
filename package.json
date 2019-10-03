@@ -268,6 +268,8 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.0.0",
+    "@babel/runtime-corejs2": "^7.6.2",
+    "@brisk-docs/website": "file:///Users/clee/Thinkmill/projects/brisk-docs/packages/website/brisk-docs-website-v0.9.6.tgz",
     "@emotion/core": "^10.0.9",
     "@emotion/css": "^10.0.14",
     "@emotion/styled": "^10.0.7",
