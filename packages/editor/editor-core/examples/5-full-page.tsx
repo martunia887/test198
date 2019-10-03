@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import * as React from 'react';
 import { MockActivityResource } from '@atlaskit/activity/dist/es5/support';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import Select from '@atlaskit/select';
+import Textfield from '@atlaskit/textfield';
 
 import {
   cardProviderStaging,
@@ -34,6 +36,8 @@ import {
   LOCALSTORAGE_defaultMode,
 } from '../example-helpers/example-constants';
 import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
+import { colors } from '@atlaskit/theme';
+import { exampleDoc } from '../example-helpers/example-layout-excerpt';
 
 /**
  * +-------------------------------+
@@ -155,7 +159,7 @@ export class ExampleEditorComponent extends React.Component<
 > {
   state: State = {
     disabled: true,
-    title: localStorage.getItem(LOCALSTORAGE_defaultTitleKey) || '',
+    title: 'Layout laid out',
     appearance: this.props.appearance || getAppearance(),
   };
 
@@ -188,17 +192,12 @@ export class ExampleEditorComponent extends React.Component<
               allowCodeBlocks={{ enableKeybindingsForIDE: true }}
               allowLists={true}
               allowTextColor={true}
-              allowTables={{
-                advanced: true,
-                allowColumnSorting: true,
-              }}
+              allowTables={{ advanced: true, allowColumnSorting: true }}
               allowBreakout={true}
               allowJiraIssue={true}
               allowUnsupportedContent={true}
               allowPanel={true}
-              allowExtension={{
-                allowBreakout: true,
-              }}
+              allowExtension={{ allowBreakout: true }}
               allowRule={true}
               allowDate={true}
               allowLayouts={{
@@ -209,12 +208,8 @@ export class ExampleEditorComponent extends React.Component<
               allowIndentation={true}
               allowDynamicTextSizing={true}
               allowTemplatePlaceholders={{ allowInserting: true }}
-              UNSAFE_cards={{
-                provider: Promise.resolve(cardProviderStaging),
-              }}
-              annotationProvider={{
-                component: ExampleInlineCommentComponent,
-              }}
+              UNSAFE_cards={{ provider: Promise.resolve(cardProviderStaging) }}
+              annotationProvider={{ component: ExampleInlineCommentComponent }}
               allowStatus={true}
               {...providers}
               media={{
@@ -229,32 +224,158 @@ export class ExampleEditorComponent extends React.Component<
               placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
               shouldFocus={false}
               disabled={this.state.disabled}
-              defaultValue={
-                (localStorage &&
-                  localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
-                undefined
-              }
+              defaultValue={exampleDoc}
               contentComponents={
-                <WithEditorActions
-                  render={actions => (
-                    <>
-                      <BreadcrumbsMiscActions
-                        appearance={this.state.appearance}
-                        onFullWidthChange={this.setFullWidthMode}
-                      />
-                      <TitleInput
-                        value={this.state.title}
-                        onChange={this.handleTitleChange}
-                        innerRef={this.handleTitleRef}
-                        onFocus={this.handleTitleOnFocus}
-                        onBlur={this.handleTitleOnBlur}
-                        onKeyDown={(e: KeyboardEvent) => {
-                          this.onKeyPressed(e, actions);
+                <>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      height: '100%',
+                      top: '0px',
+                      right: '0px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        background: colors.N20,
+                        height: '100%',
+                        padding: '8px',
+                        position: 'fixed',
+                        right: '0px',
+                        width: '500px',
+                        zIndex: '999',
+                        overflow: 'auto',
+                      }}
+                    >
+                      <div style={{ margin: '8px' }}>
+                        <h6>Templates</h6>
+                      </div>
+                      <div style={{ margin: '8px' }}>
+                        <Select
+                          options={[
+                            { label: 'Adelaide', value: 'adelaide' },
+                            { label: 'Brisbane', value: 'brisbane' },
+                            { label: 'Canberra', value: 'canberra' },
+                            { label: 'Darwin', value: 'darwin' },
+                            { label: 'Hobart', value: 'hobart' },
+                            { label: 'Melbourne', value: 'melbourne' },
+                            { label: 'Perth', value: 'perth' },
+                            { label: 'Sydney', value: 'sydney' },
+                          ]}
+                          placeholder="Tailored Experiences"
+                        />
+                      </div>
+                      <div style={{ margin: '8px' }}>
+                        {' '}
+                        <Textfield type="text" placeholder="Search..." />
+                      </div>
+
+                      <div
+                        style={{
+                          background: 'white',
+                          padding: '8px',
+                          paddingLeft: '72px',
+                          margin: '8px',
                         }}
-                      />
-                    </>
-                  )}
-                />
+                      >
+                        <h4>Decision</h4>
+                        <div>
+                          Record important product decisions and communicate...
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          background: 'white',
+                          padding: '8px',
+                          paddingLeft: '72px',
+                          margin: '8px',
+                        }}
+                      >
+                        <h4>Meeting Notes</h4>
+                        <div>
+                          Set meeting agendas, take notes and share action
+                          items...
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          background: 'white',
+                          padding: '8px',
+                          paddingLeft: '72px',
+                          margin: '8px',
+                        }}
+                      >
+                        <h4>Competitive Analysis</h4>
+                        <div>
+                          Keep up with the competitors by documenting their
+                          offerings...
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          background: 'white',
+                          padding: '8px',
+                          paddingLeft: '72px',
+                          margin: '8px',
+                        }}
+                      >
+                        <h4>Project Poster</h4>
+                        <div>
+                          Keep up with the competitors by documenting their
+                          offerings...
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          background: 'white',
+                          padding: '8px',
+                          paddingLeft: '72px',
+                          margin: '8px',
+                        }}
+                      >
+                        <h4>Goals, Signals, Measures</h4>
+                        <div>
+                          Use this template to distinguish the signal from the
+                          noise in...
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          background: 'white',
+                          padding: '8px',
+                          paddingLeft: '72px',
+                          margin: '8px',
+                        }}
+                      >
+                        <h4>How-to article</h4>
+                        <div>
+                          Provide step-by-step guidance for completing a task
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <WithEditorActions
+                    render={actions => (
+                      <>
+                        <BreadcrumbsMiscActions
+                          appearance={this.state.appearance}
+                          onFullWidthChange={this.setFullWidthMode}
+                        />
+                        <TitleInput
+                          value={this.state.title}
+                          onChange={this.handleTitleChange}
+                          innerRef={this.handleTitleRef}
+                          onFocus={this.handleTitleOnFocus}
+                          onBlur={this.handleTitleOnBlur}
+                          onKeyDown={(e: KeyboardEvent) => {
+                            this.onKeyPressed(e, actions);
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </>
               }
               primaryToolbarComponents={[
                 <WithEditorActions

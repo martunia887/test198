@@ -122,6 +122,7 @@
     "@atlaskit/section-message": "^4.0.12",
     "@atlaskit/share": "^0.6.10",
     "@atlaskit/textarea": "^2.2.1",
+    "@atlaskit/textfield": "^3.1.1",
     "@atlaskit/toggle": "^8.1.1",
     "@atlaskit/user-picker": "^4.1.1",
     "@atlaskit/util-data-test": "^12.11.1",
