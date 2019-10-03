@@ -319,6 +319,7 @@ export const getValidNode = (
         let mediaType = '';
         let mediaCollection = [];
         let mediaUrl = '';
+
         if (attrs) {
           const { id, collection, type, url } = attrs;
           mediaId = id;
@@ -335,6 +336,7 @@ export const getValidNode = (
               url: mediaUrl,
               width: attrs.width,
               height: attrs.height,
+              alt: attrs.alt,
             },
           };
         } else if (mediaId && mediaType) {
@@ -350,6 +352,10 @@ export const getValidNode = (
 
           if (attrs.height) {
             mediaAttrs.height = attrs.height;
+          }
+
+          if (attrs.alt) {
+            mediaAttrs.alt = attrs.alt;
           }
 
           return {
