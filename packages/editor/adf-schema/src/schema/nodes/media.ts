@@ -69,7 +69,6 @@ export const defaultAttrs: DefaultAttributes<
   width: { default: null },
   height: { default: null },
   url: { default: null },
-  alt: { default: null },
   __fileName: { default: null },
   __fileSize: { default: null },
   __fileMimeType: { default: null },
