@@ -14,11 +14,12 @@ import {
   ReplaceAroundStep,
   liftTarget,
 } from 'prosemirror-transform';
-import { autoJoin } from 'prosemirror-commands';
+import { autoJoin, chainCommands } from 'prosemirror-commands';
 import {
   findCutBefore,
   filter,
   isEmptySelectionAtEnd,
+  isEmptySelectionAtStart,
 } from '../../../utils/commands';
 import { Command, CommandDispatch } from '../../../types';
 import {
@@ -67,68 +68,75 @@ const indentationAnalyticsDispatch = (
     dispatch,
   );
 
-const unindent = filter(isInsideTask, (state, dispatch) => {
+const liftSelection: Command = (state, dispatch) => {
   const { $from, $to } = state.selection;
-  const curIndentLevel = getCurrentIndentLevel(state.selection);
   const blockRange = getBlockRange($from, $to);
-  if (!blockRange || !curIndentLevel) {
+  if (!blockRange) {
     return true;
   }
 
   // ensure we can actually lift
   const target = liftTarget(blockRange);
-  if (typeof target !== 'number') {
+  if (!target) {
     return true;
   }
 
-  // autoJoin's wrapped dispatch does not support being passed a transaction
-  // that contains metadata.
-  //
-  // so we setMeta outside the transaction
-  return autoJoin(
-    (state, dispatch) => {
-      if (dispatch) {
-        dispatch(state.tr.lift(blockRange, target).scrollIntoView());
-      }
+  if (dispatch) {
+    dispatch(state.tr.lift(blockRange, target).scrollIntoView());
+  }
 
-      return true;
-    },
-    ['taskList'],
-  )(
+  return true;
+};
+
+const wrapSelectionInTaskList: Command = (state, dispatch) => {
+  const { $from, $to } = state.selection;
+  const blockRange = getBlockRange($from, $to);
+  if (!blockRange) {
+    return true;
+  }
+
+  const wrapping = findWrapping(blockRange, state.schema.nodes.taskList);
+  if (!wrapping) {
+    return true;
+  }
+
+  if (dispatch) {
+    dispatch(state.tr.wrap(blockRange, wrapping).scrollIntoView());
+  }
+
+  return true;
+};
+
+// FIXME: ensure this works right
+const canSplitListItem = (tr: Transaction) => {
+  const { $from } = tr.selection;
+  const afterTaskItem = tr.doc.resolve($from.end()).nodeAfter;
+
+  return (
+    !afterTaskItem || (afterTaskItem && isActionOrDecisionItem(afterTaskItem))
+  );
+};
+
+const unindent = filter(isInsideTask, (state, dispatch) => {
+  const curIndentLevel = getCurrentIndentLevel(state.selection);
+  if (!curIndentLevel || curIndentLevel === 1) {
+    return false;
+  }
+
+  return autoJoin(liftSelection, ['taskList'])(
     state,
     indentationAnalyticsDispatch(curIndentLevel, INDENT_DIR.OUTDENT, dispatch),
   );
 });
 
 const indent = filter(isInsideTask, (state, dispatch) => {
-  const { $from, $to } = state.selection;
-
   // limit ui indentation to 6 levels
   const curIndentLevel = getCurrentIndentLevel(state.selection);
   if (!curIndentLevel || curIndentLevel >= 6) {
     return true;
   }
 
-  return autoJoin(
-    (state, dispatch) => {
-      const blockRange = getBlockRange($from, $to);
-      if (!blockRange) {
-        return true;
-      }
-
-      const wrapping = findWrapping(blockRange, state.schema.nodes.taskList);
-      if (!wrapping) {
-        return true;
-      }
-
-      if (dispatch) {
-        dispatch(state.tr.wrap(blockRange, wrapping).scrollIntoView());
-      }
-
-      return true;
-    },
-    ['taskList'],
-  )(
+  return autoJoin(wrapSelectionInTaskList, ['taskList'])(
     state,
     indentationAnalyticsDispatch(curIndentLevel, INDENT_DIR.INDENT, dispatch),
   );
@@ -171,61 +179,59 @@ const backspaceFrom = ($from: ResolvedPos): Command => (state, dispatch) => {
   return false;
 };
 
-const backspace = autoJoin(
-  (state, dispatch) => {
-    const { $from } = state.selection;
-    const { paragraph } = state.schema.nodes;
+const backspace = filter(
+  isEmptySelectionAtStart,
+  autoJoin(
+    (state, dispatch) => {
+      const { $from } = state.selection;
+      const { paragraph } = state.schema.nodes;
 
-    // ensure cursor at start of item
-    if ($from.start() !== $from.pos || !state.selection.empty) {
-      return false;
-    }
+      // try to join paragraph and taskList when backspacing
+      const $cut = findCutBefore($from);
+      if ($cut) {
+        if (
+          $cut.nodeBefore &&
+          isActionOrDecisionList($cut.nodeBefore) &&
+          $cut.nodeAfter &&
+          $cut.nodeAfter.type === paragraph
+        ) {
+          // taskList contains taskItem, so this is the end of the inside
+          let $lastNode = $cut.doc.resolve($cut.pos - 1);
 
-    // try to join paragraph and taskList when backspacing
-    const $cut = findCutBefore($from);
-    if ($cut) {
-      if (
-        $cut.nodeBefore &&
-        isActionOrDecisionList($cut.nodeBefore) &&
-        $cut.nodeAfter &&
-        $cut.nodeAfter.type === paragraph
-      ) {
-        // taskList contains taskItem, so this is the end of the inside
-        let $lastNode = $cut.doc.resolve($cut.pos - 1);
+          while (!isActionOrDecisionItem($lastNode.parent)) {
+            $lastNode = state.doc.resolve($lastNode.pos - 1);
+          }
 
-        while (!isActionOrDecisionItem($lastNode.parent)) {
-          $lastNode = state.doc.resolve($lastNode.pos - 1);
+          const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
+
+          // join them
+          const tr = state.tr.step(
+            new ReplaceAroundStep(
+              $lastNode.pos,
+              $cut.pos + $cut.nodeAfter.nodeSize,
+              $cut.pos + 1,
+              $cut.pos + $cut.nodeAfter.nodeSize - 1,
+              slice,
+              0,
+              true,
+            ),
+          );
+
+          if (dispatch) {
+            dispatch(tr);
+          }
+          return true;
         }
-
-        const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
-
-        // join them
-        const tr = state.tr.step(
-          new ReplaceAroundStep(
-            $lastNode.pos,
-            $cut.pos + $cut.nodeAfter.nodeSize,
-            $cut.pos + 1,
-            $cut.pos + $cut.nodeAfter.nodeSize - 1,
-            slice,
-            0,
-            true,
-          ),
-        );
-
-        if (dispatch) {
-          dispatch(tr);
-        }
-        return true;
       }
-    }
 
-    if (!isInsideTaskOrDecisionItem(state)) {
-      return false;
-    }
+      if (!isInsideTaskOrDecisionItem(state)) {
+        return false;
+      }
 
-    return backspaceFrom($from)(state, dispatch);
-  },
-  ['taskList', 'decisionList'],
+      return backspaceFrom($from)(state, dispatch);
+    },
+    ['taskList', 'decisionList'],
+  ),
 );
 
 const deleteHandler = filter(
@@ -345,15 +351,6 @@ const deleteHandler = filter(
 
 const deleteForwards = autoJoin(deleteHandler, ['taskList', 'decisionList']);
 
-const canSplitListItem = (tr: Transaction) => {
-  const { $from } = tr.selection;
-  const afterTaskItem = tr.doc.resolve($from.end()).nodeAfter;
-
-  return (
-    !afterTaskItem || (afterTaskItem && isActionOrDecisionItem(afterTaskItem))
-  );
-};
-
 const splitListItemWith = (
   tr: Transaction,
   content: Fragment | Node | Node[],
@@ -442,36 +439,36 @@ const splitListItem = (
   return false;
 };
 
-export function keymapPlugin(schema: Schema): Plugin | undefined {
-  const keymaps = {
-    'Shift-Tab': unindent,
-    Tab: indent,
-    Backspace: backspace,
-    Delete: deleteForwards,
+const isEmptyAction = (state: EditorState) => {
+  const { selection } = state;
+  const { $from } = selection;
+  const node = $from.node($from.depth);
+  return node && node.textContent.length === 0;
+};
 
-    Enter: (state: EditorState, dispatch: (tr: Transaction) => void) => {
+// // NB: previous version checked that it was nested, but might not
+// // need to do that here
+// const unindentIfEmptyAction: Command = (state, dispatch) => {
+//   // unindent if it's an empty nested taskItem (inside taskList)
+//   if (isEmpty && $from.node($from.depth - 2).type === schema.nodes.taskList) {
+//     return unindent(state, dispatch);
+//   }
+
+//   return false;
+// };
+
+const enter: Command = filter(
+  isInsideTaskOrDecisionItem,
+  chainCommands(
+    filter(isEmptyAction, chainCommands(unindent, splitListItem)),
+    (state, dispatch) => {
       const { selection, schema } = state;
-      const { taskList, taskItem } = schema.nodes;
+      const { taskItem } = schema.nodes;
       const { $from } = selection;
       const node = $from.node($from.depth);
       const nodeType = node && node.type;
-      const isEmpty = node && node.textContent.length === 0;
       const listType: TaskDecisionListType =
         nodeType === taskItem ? 'taskList' : 'decisionList';
-
-      if (!isInsideTaskOrDecisionItem(state)) {
-        return false;
-      }
-
-      // unindent if it's an empty nested taskItem (inside taskList)
-      if (isEmpty && $from.node($from.depth - 2).type === taskList) {
-        return unindent(state, dispatch);
-      }
-
-      // not nested, exit the list if possible
-      if (isEmpty && splitListItem(state, dispatch)) {
-        return true;
-      }
 
       const addItem = ({
         tr,
@@ -492,13 +489,23 @@ export function keymapPlugin(schema: Schema): Plugin | undefined {
         addItem,
       );
 
-      if (insertTr) {
+      if (insertTr && dispatch) {
         insertTr.scrollIntoView();
         dispatch(insertTr);
       }
 
       return true;
     },
+  ),
+);
+
+export function keymapPlugin(schema: Schema): Plugin | undefined {
+  const keymaps = {
+    'Shift-Tab': chainCommands(unindent, () => true),
+    Tab: indent,
+    Backspace: backspace,
+    Delete: deleteForwards,
+    Enter: enter,
   };
   return keymap(keymaps);
 }
