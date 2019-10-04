@@ -7,6 +7,12 @@ import {
   taskList,
   taskItem,
   RefsNode,
+  table,
+  tr,
+  td,
+  layoutSection,
+  layoutColumn,
+  p,
 } from '@atlaskit/editor-test-helpers';
 import { uuid } from '@atlaskit/adf-schema';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
@@ -36,6 +42,8 @@ describe('tasks and decisions - keymaps', () => {
         allowTasksAndDecisions: true,
         mentionProvider: Promise.resolve(new MockMentionResource({})),
         allowNestedTasks: true,
+
+        allowLayouts: true,
       },
       createAnalyticsEvent,
     });
@@ -104,6 +112,76 @@ describe('tasks and decisions - keymaps', () => {
               ),
             ),
           ),
+          ['Tab'],
+        );
+      });
+
+      it('can indent in a table', () => {
+        test(
+          doc(
+            table({})(
+              tr(
+                td()(
+                  taskList(listProps)(
+                    taskItem(itemProps)('Hello World'),
+                    taskItem(itemProps)(
+                      'Say yall{<>} wanna live with the dream',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          doc(
+            table({})(
+              tr(
+                td()(
+                  taskList(listProps)(
+                    taskItem(itemProps)('Hello World'),
+                    taskList(listProps)(
+                      taskItem(itemProps)(
+                        'Say yall{<>} wanna live with the dream',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          ['Tab'],
+        );
+      });
+
+      it('can indent in a layout', () => {
+        test(
+          doc(
+            layoutSection(
+              layoutColumn({ width: 50 })(
+                taskList(listProps)(
+                  taskItem(itemProps)('Hello World'),
+                  taskItem(itemProps)('Say yall{<>} wanna live with the dream'),
+                ),
+              ),
+              layoutColumn({ width: 50 })(p()),
+            ),
+          ),
+          doc(
+            layoutSection(
+              layoutColumn({ width: 50 })(
+                taskList(listProps)(
+                  taskItem(itemProps)('Hello World'),
+                  taskList(listProps)(
+                    taskItem(itemProps)(
+                      'Say yall{<>} wanna live with the dream',
+                    ),
+                  ),
+                ),
+              ),
+              layoutColumn({ width: 50 })(p()),
+            ),
+          ),
+
           ['Tab'],
         );
       });
