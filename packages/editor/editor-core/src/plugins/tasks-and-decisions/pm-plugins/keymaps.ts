@@ -41,6 +41,7 @@ import {
   getBlockRange,
   getCurrentIndentLevel,
   walkOut,
+  isEmptyAction,
 } from './helpers';
 
 const indentationAnalyticsDispatch = (
@@ -182,57 +183,59 @@ const backspaceFrom = ($from: ResolvedPos): Command => (state, dispatch) => {
 const backspace = filter(
   isEmptySelectionAtStart,
   autoJoin(
-    (state, dispatch) => {
-      const { $from } = state.selection;
-      const { paragraph } = state.schema.nodes;
-
-      // try to join paragraph and taskList when backspacing
-      const $cut = findCutBefore($from);
-      if ($cut) {
-        if (
-          $cut.nodeBefore &&
-          isActionOrDecisionList($cut.nodeBefore) &&
-          $cut.nodeAfter &&
-          $cut.nodeAfter.type === paragraph
-        ) {
-          // taskList contains taskItem, so this is the end of the inside
-          let $lastNode = $cut.doc.resolve($cut.pos - 1);
-
-          while (!isActionOrDecisionItem($lastNode.parent)) {
-            $lastNode = state.doc.resolve($lastNode.pos - 1);
-          }
-
-          const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
-
-          // join them
-          const tr = state.tr.step(
-            new ReplaceAroundStep(
-              $lastNode.pos,
-              $cut.pos + $cut.nodeAfter.nodeSize,
-              $cut.pos + 1,
-              $cut.pos + $cut.nodeAfter.nodeSize - 1,
-              slice,
-              0,
-              true,
-            ),
-          );
-
-          if (dispatch) {
-            dispatch(tr);
-          }
-          return true;
-        }
-      }
-
-      if (!isInsideTaskOrDecisionItem(state)) {
-        return false;
-      }
-
-      return backspaceFrom($from)(state, dispatch);
-    },
+    chainCommands(
+      (state, dispatch) => joinAtCut(state.selection.$from)(state, dispatch),
+      filter(isInsideTaskOrDecisionItem, (state, dispatch) =>
+        backspaceFrom(state.selection.$from)(state, dispatch),
+      ),
+    ),
     ['taskList', 'decisionList'],
   ),
 );
+
+const joinAtCut = ($pos: ResolvedPos): Command => (state, dispatch) => {
+  const $cut = findCutBefore($pos);
+  if (!$cut) {
+    return false;
+  }
+  const { paragraph } = $cut.doc.type.schema.nodes;
+
+  if (
+    $cut.nodeBefore &&
+    isActionOrDecisionItem($cut.nodeBefore) &&
+    $cut.nodeAfter &&
+    $cut.nodeAfter.type === paragraph
+  ) {
+    // taskList contains taskItem, so this is the end of the inside
+    let $lastNode = $cut.doc.resolve($cut.pos - 1);
+
+    while (!isActionOrDecisionItem($lastNode.parent)) {
+      $lastNode = state.doc.resolve($lastNode.pos - 1);
+    }
+
+    const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
+
+    // join them
+    const tr = state.tr.step(
+      new ReplaceAroundStep(
+        $lastNode.pos,
+        $cut.pos + $cut.nodeAfter.nodeSize,
+        $cut.pos + 1,
+        $cut.pos + $cut.nodeAfter.nodeSize - 1,
+        slice,
+        0,
+        true,
+      ),
+    );
+
+    if (dispatch) {
+      dispatch(tr);
+    }
+    return true;
+  }
+
+  return false;
+};
 
 const deleteHandler = filter(
   [isInsideTaskOrDecisionItem, isEmptySelectionAtEnd],
@@ -257,42 +260,7 @@ const deleteHandler = filter(
     if (!parentList) {
       if ($next.node().type === paragraph) {
         // try to join paragraph and taskList when backspacing
-        const $cut = findCutBefore($next.doc.resolve($next.pos));
-        if ($cut) {
-          if (
-            $cut.nodeBefore &&
-            isActionOrDecisionItem($cut.nodeBefore) &&
-            $cut.nodeAfter &&
-            $cut.nodeAfter.type === paragraph
-          ) {
-            // taskList contains taskItem, so this is the end of the inside
-            let $lastNode = $cut.doc.resolve($cut.pos - 1);
-
-            while (!isActionOrDecisionItem($lastNode.parent)) {
-              $lastNode = state.doc.resolve($lastNode.pos - 1);
-            }
-
-            const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
-
-            // join them
-            const tr = state.tr.step(
-              new ReplaceAroundStep(
-                $lastNode.pos,
-                $cut.pos + $cut.nodeAfter.nodeSize,
-                $cut.pos + 1,
-                $cut.pos + $cut.nodeAfter.nodeSize - 1,
-                slice,
-                0,
-                true,
-              ),
-            );
-
-            if (dispatch) {
-              dispatch(tr);
-            }
-            return true;
-          }
-        }
+        return joinAtCut($next.doc.resolve($next.pos))(state, dispatch);
       }
 
       return true;
@@ -438,24 +406,6 @@ const splitListItem = (
 
   return false;
 };
-
-const isEmptyAction = (state: EditorState) => {
-  const { selection } = state;
-  const { $from } = selection;
-  const node = $from.node($from.depth);
-  return node && node.textContent.length === 0;
-};
-
-// // NB: previous version checked that it was nested, but might not
-// // need to do that here
-// const unindentIfEmptyAction: Command = (state, dispatch) => {
-//   // unindent if it's an empty nested taskItem (inside taskList)
-//   if (isEmpty && $from.node($from.depth - 2).type === schema.nodes.taskList) {
-//     return unindent(state, dispatch);
-//   }
-
-//   return false;
-// };
 
 const enter: Command = filter(
   isInsideTaskOrDecisionItem,

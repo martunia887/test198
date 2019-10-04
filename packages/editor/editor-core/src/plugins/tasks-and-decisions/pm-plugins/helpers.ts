@@ -64,3 +64,10 @@ export const walkOut = ($startPos: ResolvedPos): ResolvedPos => {
 
   return $pos;
 };
+
+export const isEmptyAction = (state: EditorState) => {
+  const { selection } = state;
+  const { $from } = selection;
+  const node = $from.node($from.depth);
+  return node && node.textContent.length === 0;
+};
