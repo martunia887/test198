@@ -1,0 +1,1 @@
+Added optional `renderAfterComment` prop to @atlaskit/conversation and @atlaskit/comment.  Added optional `renderCustomCommentActions` prop to @atlaskit/conversation
