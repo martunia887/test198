@@ -210,6 +210,26 @@ describe('tasks and decisions - keymaps', () => {
           });
         });
 
+        describe(`when cursor is at the start of a non-empty ${name}Item`, () => {
+          it(`should insert another ${name}Item above`, () => {
+            const initialDoc = doc(
+              list(listProps)(item(itemProps)('{<>}Hello World')),
+            );
+            const { editorView } = editorFactory(initialDoc);
+
+            sendKeyToPm(editorView, 'Enter');
+
+            expect(editorView.state).toEqualDocumentAndSelection(
+              doc(
+                list(listProps)(
+                  item(itemProps)(''),
+                  item(itemProps)('{<>}Hello World'),
+                ),
+              ),
+            );
+          });
+        });
+
         it(`should fire v3 analytics event when insert ${name}`, () => {
           const { editorView } = editorFactory(
             doc(list(listProps)(item(itemProps)('Hello World{<>}'))),
