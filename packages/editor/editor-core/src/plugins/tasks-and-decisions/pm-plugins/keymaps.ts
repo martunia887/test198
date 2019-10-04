@@ -363,7 +363,7 @@ const splitListItemWith = (
   // we can only split if there was a list item before us
   const container = $from.node($from.depth - 2);
   const posInList = $from.index($from.depth - 1);
-  const shouldSplit = isActionOrDecisionList(container) || posInList !== 0;
+  const shouldSplit = !(!isActionOrDecisionList(container) && posInList === 0);
 
   if (shouldSplit) {
     // TODO: new id for split taskList
@@ -501,10 +501,8 @@ const enter: Command = filter(
 
 export function keymapPlugin(schema: Schema): Plugin | undefined {
   const keymaps = {
-    // we always want to prevent the default Shift-Tab behaviour when focused
     'Shift-Tab': chainCommands(unindent, () => true),
     Tab: indent,
-
     Backspace: backspace,
     Delete: deleteForwards,
     Enter: enter,
