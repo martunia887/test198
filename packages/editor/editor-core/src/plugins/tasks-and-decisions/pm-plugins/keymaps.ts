@@ -108,7 +108,51 @@ const wrapSelectionInTaskList: Command = (state, dispatch) => {
   return true;
 };
 
-// FIXME: ensure this works right
+const joinAtCut = ($pos: ResolvedPos): Command => (state, dispatch) => {
+  const $cut = findCutBefore($pos);
+  if (!$cut) {
+    return false;
+  }
+  const { paragraph } = $cut.doc.type.schema.nodes;
+
+  if (
+    $cut.nodeBefore &&
+    isActionOrDecisionItem($cut.nodeBefore) &&
+    $cut.nodeAfter &&
+    $cut.nodeAfter.type === paragraph
+  ) {
+    // taskList contains taskItem, so this is the end of the inside
+    let $lastNode = $cut.doc.resolve($cut.pos - 1);
+
+    while (!isActionOrDecisionItem($lastNode.parent)) {
+      $lastNode = state.doc.resolve($lastNode.pos - 1);
+    }
+
+    const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
+
+    // join them
+    const tr = state.tr.step(
+      new ReplaceAroundStep(
+        $lastNode.pos,
+        $cut.pos + $cut.nodeAfter.nodeSize,
+        $cut.pos + 1,
+        $cut.pos + $cut.nodeAfter.nodeSize - 1,
+        slice,
+        0,
+        true,
+      ),
+    );
+
+    if (dispatch) {
+      dispatch(tr);
+    }
+    return true;
+  }
+
+  return false;
+};
+
+// TODO: better name?
 const canSplitListItem = (tr: Transaction) => {
   const { $from } = tr.selection;
   const afterTaskItem = tr.doc.resolve($from.end()).nodeAfter;
@@ -193,44 +237,31 @@ const backspace = filter(
   ),
 );
 
-const joinAtCut = ($pos: ResolvedPos): Command => (state, dispatch) => {
-  const $cut = findCutBefore($pos);
-  if (!$cut) {
-    return false;
-  }
-  const { paragraph } = $cut.doc.type.schema.nodes;
+const hasTaskDecisionFollowing: Command = (state, dispatch) => {
+  // look for the node after this current one
+  const $next = walkOut(state.selection.$from);
 
-  if (
-    $cut.nodeBefore &&
-    isActionOrDecisionItem($cut.nodeBefore) &&
-    $cut.nodeAfter &&
-    $cut.nodeAfter.type === paragraph
-  ) {
-    // taskList contains taskItem, so this is the end of the inside
-    let $lastNode = $cut.doc.resolve($cut.pos - 1);
-
-    while (!isActionOrDecisionItem($lastNode.parent)) {
-      $lastNode = state.doc.resolve($lastNode.pos - 1);
+  // if there's no taskItem or taskList following, then
+  // we just do the normal behaviour
+  const {
+    taskList,
+    taskItem,
+    decisionList,
+    decisionItem,
+    paragraph,
+  } = state.schema.nodes;
+  const parentList = findParentNodeOfTypeClosestToPos($next, [
+    taskList,
+    taskItem,
+    decisionList,
+    decisionItem,
+  ]);
+  if (!parentList) {
+    if ($next.node().type === paragraph) {
+      // try to join paragraph and taskList when backspacing
+      return joinAtCut($next.doc.resolve($next.pos))(state, dispatch);
     }
 
-    const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
-
-    // join them
-    const tr = state.tr.step(
-      new ReplaceAroundStep(
-        $lastNode.pos,
-        $cut.pos + $cut.nodeAfter.nodeSize,
-        $cut.pos + 1,
-        $cut.pos + $cut.nodeAfter.nodeSize - 1,
-        slice,
-        0,
-        true,
-      ),
-    );
-
-    if (dispatch) {
-      dispatch(tr);
-    }
     return true;
   }
 
@@ -239,32 +270,10 @@ const joinAtCut = ($pos: ResolvedPos): Command => (state, dispatch) => {
 
 const deleteHandler = filter(
   [isInsideTaskOrDecisionItem, isEmptySelectionAtEnd],
-  (state, dispatch) => {
+  chainCommands(hasTaskDecisionFollowing, (state, dispatch) => {
     // look for the node after this current one
     const $next = walkOut(state.selection.$from);
-
-    // if there's no taskItem or taskList following, then we just do the normal behaviour
-    const {
-      taskList,
-      taskItem,
-      decisionList,
-      decisionItem,
-      paragraph,
-    } = state.schema.nodes;
-    const parentList = findParentNodeOfTypeClosestToPos($next, [
-      taskList,
-      taskItem,
-      decisionList,
-      decisionItem,
-    ]);
-    if (!parentList) {
-      if ($next.node().type === paragraph) {
-        // try to join paragraph and taskList when backspacing
-        return joinAtCut($next.doc.resolve($next.pos))(state, dispatch);
-      }
-
-      return true;
-    }
+    const { taskList, paragraph } = state.schema.nodes;
 
     // previous was empty, just delete backwards
     const taskBefore = $next.doc.resolve($next.before());
@@ -314,7 +323,7 @@ const deleteHandler = filter(
     }
 
     return false;
-  },
+  }),
 );
 
 const deleteForwards = autoJoin(deleteHandler, ['taskList', 'decisionList']);
