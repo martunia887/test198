@@ -1,0 +1,13 @@
+{
+    "image": "atlassianlabs/atlaskit-mk-2:1.0.15",
+    "extensions": [
+        "formulahendry.auto-rename-tag",
+        "msjsdiag.debugger-for-chrome",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "flowtype.flow-for-vscode",
+        "esbenp.prettier-vscode",
+        "WallabyJs.quokka-vscode"
+    ]
+}
