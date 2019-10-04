@@ -401,6 +401,12 @@ export default class Comment extends React.Component<Props, State> {
     );
   }
 
+  private getAfterContent() {
+    return typeof this.props.renderAfterComment === 'function'
+      ? this.props.renderAfterComment(this.props)
+      : null;
+  }
+
   private renderComments() {
     const { comment, comments, ...otherCommentProps } = this.props;
 
@@ -458,6 +464,7 @@ export default class Comment extends React.Component<Props, State> {
       dataProviders,
       objectId,
       canModerateComment,
+      renderCustomCommentActions,
     } = this.props;
     const { isEditing } = this.state;
     const canReply = !!user && !isEditing && !comment.deleted;
@@ -483,11 +490,23 @@ export default class Comment extends React.Component<Props, State> {
       </CommentAction>
     );
 
+    let customActions: JSX.Element[] = [];
+    if (typeof renderCustomCommentActions === 'function') {
+      const customActionsResult = renderCustomCommentActions(this.props);
+      if (Array.isArray(customActionsResult)) {
+        customActions = customActionsResult;
+      } else if (customActionsResult) {
+        customActions = [customActionsResult];
+      }
+    }
+
     if (createdBy && user && user.id === createdBy.id) {
       actions = [...actions, editAction, deleteAction];
     } else if (user && canModerateComment) {
       actions = [...actions, deleteAction];
     }
+
+    actions = [...actions, ...customActions];
 
     if (
       objectId &&
@@ -601,6 +620,7 @@ export default class Comment extends React.Component<Props, State> {
         }
         actions={this.getActions()}
         content={this.getContent()}
+        afterContent={this.getAfterContent()}
         isSaving={commentState === 'SAVING'}
         isError={commentState === 'ERROR'}
         errorActions={errorProps.actions}

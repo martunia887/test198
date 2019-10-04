@@ -18,6 +18,8 @@ interface Props {
   highlighted?: boolean;
   /** Optional ID for the comment */
   id?: string;
+  /** Optional content that is rendered after the comment's content */
+  afterContent?: ReactNode;
 }
 
 export default class Layout extends Component<Props> {
@@ -32,12 +34,15 @@ export default class Layout extends Component<Props> {
   }
 
   render() {
-    const { content, highlighted, id } = this.props;
+    const { content, highlighted, id, afterContent } = this.props;
 
     return (
       <Container id={id}>
         {this.renderAvatar()}
-        <ContentSectionDiv>{content}</ContentSectionDiv>
+        <ContentSectionDiv>
+          {content}
+          {afterContent}
+        </ContentSectionDiv>
         {this.renderNestedComments()}
         {highlighted && <Highlight />}
       </Container>

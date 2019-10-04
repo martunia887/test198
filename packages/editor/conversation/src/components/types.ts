@@ -74,4 +74,8 @@ export interface SharedProps {
   sendAnalyticsEvent: SendAnalyticsEvent;
 
   portal?: HTMLElement;
+
+  canModerateComments?: boolean;
+  renderAfterComment?: (props: any) => JSX.Element;
+  renderCustomCommentActions?: (props: any) => JSX.Element | JSX.Element[];
 }

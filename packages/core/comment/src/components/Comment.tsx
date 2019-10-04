@@ -38,6 +38,8 @@ interface Props {
   errorIconLabel?: string;
   /** Optional ID for the comment */
   id?: string;
+  /** Optional content that is rendered after the comment's content */
+  afterContent?: ReactNode;
 }
 
 export default class Comment extends Component<Props, {}> {
@@ -70,6 +72,7 @@ export default class Comment extends Component<Props, {}> {
       time,
       type,
       id,
+      afterContent,
     } = this.props;
 
     const headerProps = {
@@ -102,6 +105,7 @@ export default class Comment extends Component<Props, {}> {
         id={id}
         avatar={avatar}
         content={layoutContent}
+        afterContent={afterContent}
         highlighted={highlighted}
       >
         {children}
