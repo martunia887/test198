@@ -212,27 +212,25 @@ export const insertColumnWithAnalytics = (
     | INPUT_METHOD.SHORTCUT,
   position: number,
 ) =>
-  withAnalytics(state => {
-    const { totalRowCount, totalColumnCount } = getSelectedTableInfo(
-      state.selection,
-    );
-    return {
-      action: TABLE_ACTION.ADDED_COLUMN,
-      actionSubject: ACTION_SUBJECT.TABLE,
-      actionSubjectId: null,
-      attributes: {
-        inputMethod,
-        position,
-        totalRowCount,
-        totalColumnCount,
-      },
-      eventType: EVENT_TYPE.TRACK,
-    };
-  })(
-    withV2Analytics(
-      'atlassian.editor.format.table.column.button',
-      insertColumn(position),
-    ),
+  withV2Analytics(
+    'atlassian.editor.format.table.column.button',
+    insertColumn(position, state => {
+      const { totalRowCount, totalColumnCount } = getSelectedTableInfo(
+        state.selection,
+      );
+      return {
+        action: TABLE_ACTION.ADDED_COLUMN,
+        actionSubject: ACTION_SUBJECT.TABLE,
+        actionSubjectId: null,
+        attributes: {
+          inputMethod,
+          position,
+          totalRowCount,
+          totalColumnCount,
+        },
+        eventType: EVENT_TYPE.TRACK,
+      };
+    }),
   );
 
 export const deleteRowsWithAnalytics = (

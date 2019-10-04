@@ -52,14 +52,14 @@ describe('analytics', () => {
     });
 
     it('create analytics event with payload', () => {
-      tr = addAnalytics(tr, payload);
+      tr = addAnalytics(state, tr, payload);
       dispatch(tr);
 
       expect(createAnalyticsEvent).toHaveBeenCalledWith(payload);
     });
 
     it('fires analytics event for channel', () => {
-      tr = addAnalytics(tr, payload, 'atlassian');
+      tr = addAnalytics(state, tr, payload, 'atlassian');
       dispatch(tr);
 
       expect(fireMock).toHaveBeenCalledWith('atlassian');
@@ -77,8 +77,8 @@ describe('analytics', () => {
         eventType: EVENT_TYPE.UI,
       };
 
-      tr = addAnalytics(tr, payload);
-      tr = addAnalytics(tr, secondPayload);
+      tr = addAnalytics(state, tr, payload);
+      tr = addAnalytics(state, tr, secondPayload);
 
       dispatch(tr);
 

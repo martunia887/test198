@@ -96,11 +96,23 @@ export class AnalyticsStep extends Step {
   }
 
   map() {
-    return null;
+    // Return the same events, this step will never be removed
+    return new AnalyticsStep(this.createAnalyticsEvent, this.analyticsEvents);
   }
 
   getMap() {
-    return new StepMap([0, 0, 0]);
+    return new StepMap([]);
+  }
+
+  merge(other: Step) {
+    if (other instanceof AnalyticsStep) {
+      const otherAnalyticsEvents = (other as AnalyticsStep).analyticsEvents;
+      return new AnalyticsStep(this.createAnalyticsEvent, [
+        ...otherAnalyticsEvents,
+        ...this.analyticsEvents,
+      ]);
+    }
+    return null;
   }
 
   toJSON() {

@@ -1,5 +1,5 @@
 // #region Imports
-import { Selection } from 'prosemirror-state';
+import { EditorState, Selection } from 'prosemirror-state';
 import { TableMap } from 'prosemirror-tables';
 import {
   findTable,
@@ -11,11 +11,19 @@ import {
 import { getPluginState } from '../pm-plugins/main';
 import { checkIfHeaderRowEnabled, copyPreviousRow } from '../utils';
 import { Command } from '../../../types';
+import { addAnalytics, AnalyticsEventPayload } from '../../analytics';
 // #endregion
 
 // #region Commands
-export const insertColumn = (column: number): Command => (state, dispatch) => {
-  const tr = addColumnAt(column)(state.tr);
+export const insertColumn = (
+  column: number,
+  getPayload?: (state: EditorState) => AnalyticsEventPayload,
+): Command => (state, dispatch) => {
+  const tr = state.tr;
+  if (getPayload) {
+    addAnalytics(state, tr, getPayload(state));
+  }
+  addColumnAt(column)(tr);
   const table = findTable(tr.selection);
   if (!table) {
     return false;
