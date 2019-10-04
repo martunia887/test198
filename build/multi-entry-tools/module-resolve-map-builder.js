@@ -2,6 +2,7 @@ const glob = require('glob');
 const bolt = require('bolt');
 const path = require('path');
 const fromEntries = require('./utils/fromEntries');
+const fs = require('fs-extra');
 
 // Array.prototype.flat polyfill, remove when upgraded to node 10
 function flatten(array) {
@@ -39,6 +40,8 @@ module.exports = async function getAlternativeEntryPointAliasMap() {
       (await Promise.all(aliasPromises)).filter(aliases => aliases.length > 0),
     ),
   );
+
+  fs.writeFileSync('./relevant-file-name.json', JSON.stringify(aliases));
 
   return aliases;
 };
