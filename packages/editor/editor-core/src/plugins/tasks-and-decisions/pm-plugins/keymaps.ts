@@ -9,14 +9,9 @@ import {
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { insertTaskDecisionWithAnalytics } from '../commands';
 import { TaskDecisionListType } from '../types';
-import {
-  findWrapping,
-  ReplaceAroundStep,
-  liftTarget,
-} from 'prosemirror-transform';
+import { liftTarget } from 'prosemirror-transform';
 import { autoJoin, chainCommands } from 'prosemirror-commands';
 import {
-  findCutBefore,
   filter,
   isEmptySelectionAtEnd,
   isEmptySelectionAtStart,
@@ -44,6 +39,13 @@ import {
   isEmptyAction,
 } from './helpers';
 
+import {
+  liftSelection,
+  wrapSelectionInTaskList,
+  joinAtCut,
+  liftBlock,
+} from './commands';
+
 const indentationAnalyticsDispatch = (
   curIndentLevel: number,
   direction: INDENT_DIR,
@@ -68,89 +70,6 @@ const indentationAnalyticsDispatch = (
     },
     dispatch,
   );
-
-const liftSelection: Command = (state, dispatch) => {
-  const { $from, $to } = state.selection;
-  const blockRange = getBlockRange($from, $to);
-  if (!blockRange) {
-    return true;
-  }
-
-  // ensure we can actually lift
-  const target = liftTarget(blockRange);
-  if (!target) {
-    return true;
-  }
-
-  if (dispatch) {
-    dispatch(state.tr.lift(blockRange, target).scrollIntoView());
-  }
-
-  return true;
-};
-
-const wrapSelectionInTaskList: Command = (state, dispatch) => {
-  const { $from, $to } = state.selection;
-  const blockRange = getBlockRange($from, $to);
-  if (!blockRange) {
-    return true;
-  }
-
-  const wrapping = findWrapping(blockRange, state.schema.nodes.taskList);
-  if (!wrapping) {
-    return true;
-  }
-
-  if (dispatch) {
-    dispatch(state.tr.wrap(blockRange, wrapping).scrollIntoView());
-  }
-
-  return true;
-};
-
-const joinAtCut = ($pos: ResolvedPos): Command => (state, dispatch) => {
-  const $cut = findCutBefore($pos);
-  if (!$cut) {
-    return false;
-  }
-  const { paragraph } = $cut.doc.type.schema.nodes;
-
-  if (
-    $cut.nodeBefore &&
-    isActionOrDecisionList($cut.nodeBefore) &&
-    $cut.nodeAfter &&
-    $cut.nodeAfter.type === paragraph
-  ) {
-    // taskList contains taskItem, so this is the end of the inside
-    let $lastNode = $cut.doc.resolve($cut.pos - 1);
-
-    while (!isActionOrDecisionItem($lastNode.parent)) {
-      $lastNode = state.doc.resolve($lastNode.pos - 1);
-    }
-
-    const slice = state.tr.doc.slice($lastNode.pos, $cut.pos);
-
-    // join them
-    const tr = state.tr.step(
-      new ReplaceAroundStep(
-        $lastNode.pos,
-        $cut.pos + $cut.nodeAfter.nodeSize,
-        $cut.pos + 1,
-        $cut.pos + $cut.nodeAfter.nodeSize - 1,
-        slice,
-        0,
-        true,
-      ),
-    );
-
-    if (dispatch) {
-      dispatch(tr);
-    }
-    return true;
-  }
-
-  return false;
-};
 
 // TODO: better name?
 const canSplitListItem = (tr: Transaction) => {
@@ -237,7 +156,7 @@ const backspace = filter(
   ),
 );
 
-const hasTaskDecisionFollowing: Command = (state, dispatch) => {
+const joinTaskDecisionFollowing: Command = (state, dispatch) => {
   // look for the node after this current one
   const $next = walkOut(state.selection.$from);
 
@@ -270,7 +189,7 @@ const hasTaskDecisionFollowing: Command = (state, dispatch) => {
 
 const deleteHandler = filter(
   [isInsideTaskOrDecisionItem, isEmptySelectionAtEnd],
-  chainCommands(hasTaskDecisionFollowing, (state, dispatch) => {
+  chainCommands(joinTaskDecisionFollowing, (state, dispatch) => {
     // look for the node after this current one
     const $next = walkOut(state.selection.$from);
     const { taskList, paragraph } = state.schema.nodes;
@@ -287,19 +206,9 @@ const deleteHandler = filter(
 
     // if nested, just unindent
     if ($next.node($next.depth - 2).type === taskList) {
-      if (dispatch) {
-        const blockRange = getBlockRange($next, $next);
-        if (!blockRange) {
-          return true;
-        }
-
-        // ensure we can actually lift
-        const target = liftTarget(blockRange);
-        if (typeof target !== 'number') {
-          return true;
-        }
-
-        dispatch(state.tr.lift(blockRange, target).scrollIntoView());
+      const tr = liftBlock(state.tr, $next, $next);
+      if (dispatch && tr) {
+        dispatch(tr);
       }
 
       return true;
@@ -367,7 +276,6 @@ const splitListItemWith = (
   // which means it would have empty placeholder content if we just immediately delete it
   //
   // if it's a taskItem then it can stand alone, so it's fine
-
   const $oldAfter = origDoc.resolve($from.after());
 
   // if different levels then we shouldn't lift
