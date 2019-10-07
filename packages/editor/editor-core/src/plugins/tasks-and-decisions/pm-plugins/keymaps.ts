@@ -1,3 +1,4 @@
+import { uuid } from '@atlaskit/adf-schema';
 import { keymap } from 'prosemirror-keymap';
 import { Node, Schema, Fragment, ResolvedPos, Slice } from 'prosemirror-model';
 import {
@@ -247,8 +248,14 @@ const splitListItemWith = (
   const shouldSplit = !(!isActionOrDecisionList(container) && posInList === 0);
 
   if (shouldSplit) {
-    // TODO: new id for split taskList
-    tr = tr.split($from.pos - 1);
+    // this only splits a node to delete it, so we probably don't need a random uuid
+    // but generate one anyway for correctness
+    tr = tr.split($from.pos, 1, [
+      {
+        type: $from.node().type,
+        attrs: { localId: uuid.generate() },
+      },
+    ]);
   }
 
   // and delete the action at the current pos
