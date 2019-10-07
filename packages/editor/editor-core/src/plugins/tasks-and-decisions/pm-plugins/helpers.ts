@@ -1,7 +1,8 @@
 import { Node, ResolvedPos } from 'prosemirror-model';
-import { EditorState, Selection } from 'prosemirror-state';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { hasParentNodeOfType } from 'prosemirror-utils';
 import { findFarthestParentNode } from '../../../utils';
+import { liftTarget } from 'prosemirror-transform';
 
 export const isInsideTaskOrDecisionItem = (state: EditorState) => {
   const { decisionItem, taskItem } = state.schema.nodes;
@@ -65,9 +66,29 @@ export const walkOut = ($startPos: ResolvedPos): ResolvedPos => {
   return $pos;
 };
 
+// FIXME: does not check node type
 export const isEmptyAction = (state: EditorState) => {
   const { selection } = state;
   const { $from } = selection;
   const node = $from.node($from.depth);
   return node && node.textContent.length === 0;
+};
+
+export const liftBlock = (
+  tr: Transaction,
+  $from: ResolvedPos,
+  $to: ResolvedPos,
+): Transaction | null => {
+  const blockRange = getBlockRange($from, $to);
+  if (!blockRange) {
+    return null;
+  }
+
+  // ensure we can actually lift
+  const target = liftTarget(blockRange);
+  if (typeof target !== 'number') {
+    return null;
+  }
+
+  return tr.lift(blockRange, target).scrollIntoView();
 };

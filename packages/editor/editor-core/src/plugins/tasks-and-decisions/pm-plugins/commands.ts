@@ -1,9 +1,5 @@
 import { ResolvedPos } from 'prosemirror-model';
-import {
-  findWrapping,
-  ReplaceAroundStep,
-  liftTarget,
-} from 'prosemirror-transform';
+import { findWrapping, ReplaceAroundStep } from 'prosemirror-transform';
 import { findCutBefore } from '../../../utils/commands';
 import { Command } from '../../../types';
 
@@ -11,27 +7,8 @@ import {
   isActionOrDecisionList,
   isActionOrDecisionItem,
   getBlockRange,
+  liftBlock,
 } from './helpers';
-import { Transaction } from 'prosemirror-state';
-
-export const liftBlock = (
-  tr: Transaction,
-  $from: ResolvedPos,
-  $to: ResolvedPos,
-): Transaction | null => {
-  const blockRange = getBlockRange($from, $to);
-  if (!blockRange) {
-    return null;
-  }
-
-  // ensure we can actually lift
-  const target = liftTarget(blockRange);
-  if (typeof target !== 'number') {
-    return null;
-  }
-
-  return tr.lift(blockRange, target).scrollIntoView();
-};
 
 export const liftSelection: Command = (state, dispatch) => {
   const { $from, $to } = state.selection;

@@ -9,7 +9,6 @@ import {
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 import { insertTaskDecisionWithAnalytics } from '../commands';
 import { TaskDecisionListType } from '../types';
-import { liftTarget } from 'prosemirror-transform';
 import { autoJoin, chainCommands } from 'prosemirror-commands';
 import {
   filter,
@@ -37,14 +36,10 @@ import {
   getCurrentIndentLevel,
   walkOut,
   isEmptyAction,
+  liftBlock,
 } from './helpers';
 
-import {
-  liftSelection,
-  wrapSelectionInTaskList,
-  joinAtCut,
-  liftBlock,
-} from './commands';
+import { liftSelection, wrapSelectionInTaskList, joinAtCut } from './commands';
 
 const indentationAnalyticsDispatch = (
   curIndentLevel: number,
@@ -79,6 +74,37 @@ const canSplitListItem = (tr: Transaction) => {
   return (
     !afterTaskItem || (afterTaskItem && isActionOrDecisionItem(afterTaskItem))
   );
+};
+
+const joinTaskDecisionFollowing: Command = (state, dispatch) => {
+  // look for the node after this current one
+  const $next = walkOut(state.selection.$from);
+
+  // if there's no taskItem or taskList following, then
+  // we just do the normal behaviour
+  const {
+    taskList,
+    taskItem,
+    decisionList,
+    decisionItem,
+    paragraph,
+  } = state.schema.nodes;
+  const parentList = findParentNodeOfTypeClosestToPos($next, [
+    taskList,
+    taskItem,
+    decisionList,
+    decisionItem,
+  ]);
+  if (!parentList) {
+    if ($next.node().type === paragraph) {
+      // try to join paragraph and taskList when backspacing
+      return joinAtCut($next.doc.resolve($next.pos))(state, dispatch);
+    }
+
+    return true;
+  }
+
+  return false;
 };
 
 const unindent = filter(isInsideTask, (state, dispatch) => {
@@ -155,37 +181,6 @@ const backspace = filter(
     ['taskList', 'decisionList'],
   ),
 );
-
-const joinTaskDecisionFollowing: Command = (state, dispatch) => {
-  // look for the node after this current one
-  const $next = walkOut(state.selection.$from);
-
-  // if there's no taskItem or taskList following, then
-  // we just do the normal behaviour
-  const {
-    taskList,
-    taskItem,
-    decisionList,
-    decisionItem,
-    paragraph,
-  } = state.schema.nodes;
-  const parentList = findParentNodeOfTypeClosestToPos($next, [
-    taskList,
-    taskItem,
-    decisionList,
-    decisionItem,
-  ]);
-  if (!parentList) {
-    if ($next.node().type === paragraph) {
-      // try to join paragraph and taskList when backspacing
-      return joinAtCut($next.doc.resolve($next.pos))(state, dispatch);
-    }
-
-    return true;
-  }
-
-  return false;
-};
 
 const deleteHandler = filter(
   [isInsideTaskOrDecisionItem, isEmptySelectionAtEnd],
