@@ -35,12 +35,16 @@ export function addAnalytics(
     const { storedMarks } = tr;
     tr.step(
       // For some reason add an step reset all storedMarks
-      new AnalyticsStep(createAnalyticsEvent, [
-        {
-          payload,
-          channel,
-        },
-      ]),
+      new AnalyticsStep(
+        createAnalyticsEvent,
+        [
+          {
+            payload,
+            channel,
+          },
+        ],
+        tr.selection.$from.pos, // We need to create the step based on a position, this prevent split history for relative changes.
+      ),
     );
     if (storedMarks) {
       tr.setStoredMarks(storedMarks);
