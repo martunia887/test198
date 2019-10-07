@@ -21,8 +21,19 @@ import { Schema } from 'prosemirror-model';
 
 describe('tasks and decisions - keymaps', () => {
   const createEditor = createEditorFactory();
+  const editorProps = {
+    allowAnalyticsGASV3: true,
+    allowTables: true,
+    allowTasksAndDecisions: true,
+    mentionProvider: Promise.resolve(new MockMentionResource({})),
+    allowNestedTasks: true,
 
-  let createAnalyticsEvent: CreateUIAnalyticsEvent;
+    allowLayouts: true,
+  };
+
+  let createAnalyticsEvent: CreateUIAnalyticsEvent = jest.fn(() => ({
+    fire() {},
+  }));
 
   beforeEach(() => {
     uuid.setStatic('local-uuid');
@@ -33,18 +44,9 @@ describe('tasks and decisions - keymaps', () => {
   });
 
   const editorFactory = (doc: any) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
     return createEditor({
       doc,
-      editorProps: {
-        allowAnalyticsGASV3: true,
-        allowTables: true,
-        allowTasksAndDecisions: true,
-        mentionProvider: Promise.resolve(new MockMentionResource({})),
-        allowNestedTasks: true,
-
-        allowLayouts: true,
-      },
+      editorProps,
       createAnalyticsEvent,
     });
   };
@@ -70,8 +72,9 @@ describe('tasks and decisions - keymaps', () => {
     before: (schema: Schema) => RefsNode,
     after: (schema: Schema) => RefsNode,
     keys: string[],
+    factory = editorFactory,
   ) => {
-    const { editorView } = editorFactory(before);
+    const { editorView } = factory(before);
     keys.forEach(key => sendKeyToPm(editorView, key));
     expect(editorView.state).toEqualDocumentAndSelection(after);
   };
@@ -271,6 +274,33 @@ describe('tasks and decisions - keymaps', () => {
           ),
           ['Tab'],
         );
+      });
+    });
+  });
+
+  describe('allowNestedTasks', () => {
+    let simpleFactory = (doc: any) => {
+      return createEditor({
+        doc,
+        editorProps: { ...editorProps, allowNestedTasks: false },
+        createAnalyticsEvent,
+      });
+    };
+
+    describe('action', () => {
+      const listProps = { localId: 'local-uuid' };
+      const itemProps = { localId: 'local-uuid', state: 'TODO' };
+
+      describe('Tab', () => {
+        it('does nothing without feature flag turned on', () => {
+          const testDoc = doc(
+            taskList(listProps)(
+              taskItem(itemProps)('Hello World'),
+              taskItem(itemProps)('Say yall{<>} wanna live with the dream'),
+            ),
+          );
+          test(testDoc, testDoc, ['Tab'], simpleFactory);
+        });
       });
     });
   });
