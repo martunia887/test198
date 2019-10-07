@@ -12,6 +12,7 @@ import { extendPayload } from '../../../../plugins/analytics/plugin';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { createEditorFactory, doc, p } from '@atlaskit/editor-test-helpers';
 import { CommandDispatch } from '../../../../types';
+import { AnalyticsStep } from '../../../../plugins/analytics/analytics-step';
 
 describe('analytics', () => {
   const createEditor = createEditorFactory();
@@ -49,6 +50,15 @@ describe('analytics', () => {
       ({ editorView } = editor(doc(p('hello world'))));
       ({ dispatch, state } = editorView);
       tr = editorView.state.tr.insertText('hello ');
+    });
+
+    it('should add current selection position to analytics step ', () => {
+      tr = addAnalytics(state, tr, payload);
+
+      const pos = tr.selection.$from.pos;
+      const analyticsStep = tr.steps[tr.steps.length - 1] as AnalyticsStep;
+
+      expect(pos).toEqual(analyticsStep.pos);
     });
 
     it('create analytics event with payload', () => {
