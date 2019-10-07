@@ -460,10 +460,13 @@ const enter: Command = filter(
 
 export function keymapPlugin(schema: Schema): Plugin | undefined {
   const keymaps = {
+    // always eat the keyboard event when pressing Shift-Tab
     'Shift-Tab': chainCommands(unindent, () => true),
     Tab: indent,
+
     Backspace: backspace,
     Delete: deleteForwards,
+
     Enter: enter,
   };
   return keymap(keymaps);
