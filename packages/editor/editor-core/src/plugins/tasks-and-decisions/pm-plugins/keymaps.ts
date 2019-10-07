@@ -117,7 +117,7 @@ const joinAtCut = ($pos: ResolvedPos): Command => (state, dispatch) => {
 
   if (
     $cut.nodeBefore &&
-    isActionOrDecisionItem($cut.nodeBefore) &&
+    isActionOrDecisionList($cut.nodeBefore) &&
     $cut.nodeAfter &&
     $cut.nodeAfter.type === paragraph
   ) {

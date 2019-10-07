@@ -16,8 +16,6 @@ const IGNORED_NODES = [
   'decisionItem',
   'heading',
   'blockquote',
-  // 'taskList',
-  // 'taskItem',
 ];
 
 // Returns DOM node's vertical margin. It descents into the node and reads margins of nested DOM nodes

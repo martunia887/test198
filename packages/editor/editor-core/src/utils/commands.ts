@@ -34,7 +34,7 @@ const isEmptySelectionAtEnd = (state: EditorState): boolean => {
   const { empty, $from } = state.selection;
   return (
     empty &&
-    ($from.parentOffset === 0 || state.selection instanceof GapCursorSelection)
+    ($from.end() === $from.pos || state.selection instanceof GapCursorSelection)
   );
 };
 
