@@ -1,5 +1,45 @@
 # @atlaskit/atlassian-switcher
 
+## 4.3.0
+
+### Minor Changes
+
+- [minor][3920c7a2b9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3920c7a2b9):
+
+  Update translation for atlassian-switcher package
+
+## 4.2.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 4.2.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 4.2.1
+
+### Patch Changes
+
+- [patch][8ec4a18b58](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8ec4a18b58):
+
+  Updating examples
+
+## 4.2.0
+
+### Minor Changes
+
+- [minor][173ada19f7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/173ada19f7):
+
+  yRemove People link from switcher
+
 ## 4.1.0
 
 ### Minor Changes

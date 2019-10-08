@@ -40,6 +40,7 @@ export class Article extends Component<Props & HelpContextInterface, State> {
     super(props);
 
     this.onArticleEntered = this.onArticleEntered.bind(this);
+    this.onArticleExited = this.onArticleExited.bind(this);
     this.renderArticleContent = this.renderArticleContent.bind(this);
   }
 
@@ -47,9 +48,7 @@ export class Article extends Component<Props & HelpContextInterface, State> {
     // if helpContext.articleId is defined when this component is mounted,
     // set skipArticleFadeInAnimation = true to skip the initial slide-in
     this.setState({
-      skipArticleFadeInAnimation:
-        this.props.help.articleId !== '' ||
-        this.props.help.articleId !== undefined,
+      skipArticleFadeInAnimation: this.props.help.articleId !== '',
     });
   }
 
@@ -78,8 +77,20 @@ export class Article extends Component<Props & HelpContextInterface, State> {
     }
   }
 
+  onArticleExited() {
+    // when the user navigates back to the default content and the animation finished,
+    // set the articleId to ''
+    if (this.props.help.articleIdSetter) {
+      this.props.help.articleIdSetter('');
+    }
+  }
+
   renderArticleContent() {
     const currentArticle = this.props.help.getCurrentArticle();
+
+    const handleOnClick = (articleId: string) => {
+      this.props.help.loadArticle(articleId);
+    };
 
     if (currentArticle) {
       const { article } = currentArticle;
@@ -95,7 +106,10 @@ export class Article extends Component<Props & HelpContextInterface, State> {
               titleLinkUrl={article.productUrl}
             />
             <ArticleWasHelpfulForm />
-            <RelatedArticles relatedArticles={article.relatedArticles} />
+            <RelatedArticles
+              relatedArticles={article.relatedArticles}
+              onRelatedArticlesListItemClick={handleOnClick}
+            />
           </>
         );
       } else {
@@ -120,6 +134,7 @@ export class Article extends Component<Props & HelpContextInterface, State> {
         timeout={TRANSITION_DURATION_MS}
         enter={!skipArticleFadeInAnimation}
         onEntered={this.onArticleEntered}
+        onExited={this.onArticleExited}
         mountOnEnter
         unmountOnExit
       >
