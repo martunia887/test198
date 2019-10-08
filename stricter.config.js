@@ -143,5 +143,16 @@ module.exports = {
     //     },
     //   },
     // },
+    'correct-license': {
+      level: 'warning',
+      config: {
+        adg: [
+          'core/icon/',
+          'core/icon-file-type/',
+          'core/icon-object/',
+          'core/icon-priority/',
+        ],
+      },
+    },
   },
 };
