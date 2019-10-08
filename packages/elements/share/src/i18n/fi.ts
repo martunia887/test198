@@ -11,12 +11,12 @@ export default {
   'fabric.elements.share.form.retry': 'Yritä uudelleen',
   'fabric.elements.share.form.comment.placeholder': 'Lisää viesti',
   'fabric.elements.share.form.user-picker.placeholder.generic':
-    'Anna nimi, tiimi tai sähköpostiosoite',
+    'Enter name, group, team or email',
   'fabric.elements.share.form.user-picker.placeholder.existingUserOnly':
     'Anna nimi tai tiimi',
   'fabric.elements.share.form.user-picker.add-more': 'Syötä lisää',
   'fabric.elements.share.form.user-picker.validation.required':
-    'Valitse vähintään yksi käyttäjä, tiimi tai sähköpostiosoite.',
+    'Select at least one user, group, team or email.',
   'fabric.elements.share.form.user-picker.no-options.domainBasedUserOnly':
     'Voit kutsua vain henkilöitä, joilla on verkkotunnuksen {domains} sähköpostiosoite. Ota yhteyttä sivuston ylläpitäjään, jotta voit kutsua muita henkilöitä.',
   'fabric.elements.share.form.user-picker.no-options.existingUserOnly':

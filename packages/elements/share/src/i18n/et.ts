@@ -11,12 +11,12 @@ export default {
   'fabric.elements.share.form.retry': 'Proovi uuesti',
   'fabric.elements.share.form.comment.placeholder': 'Sõnumi lisamine',
   'fabric.elements.share.form.user-picker.placeholder.generic':
-    'Sisesta nimi, meeskond või e-posti aadress',
+    'Enter name, group, team or email',
   'fabric.elements.share.form.user-picker.placeholder.existingUserOnly':
     'Sisesta nimi või meeskond',
   'fabric.elements.share.form.user-picker.add-more': 'Sisesta veel',
   'fabric.elements.share.form.user-picker.validation.required':
-    'Vali vähemalt üks kasutaja, meeskond või e-posti aadress.',
+    'Select at least one user, group, team or email.',
   'fabric.elements.share.form.user-picker.no-options.domainBasedUserOnly':
     'Saad kutsuda vaid {domains} e-posti aadressiga inimesi. Teiste kutsumiseks võta ühendust lehe administraatoriga.',
   'fabric.elements.share.form.user-picker.no-options.existingUserOnly':

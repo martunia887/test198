@@ -11,12 +11,12 @@ export default {
   'fabric.elements.share.form.retry': 'Opnieuw proberen',
   'fabric.elements.share.form.comment.placeholder': 'Voeg een bericht toe',
   'fabric.elements.share.form.user-picker.placeholder.generic':
-    'Voer een naam, team of e-mailadres in',
+    'Enter name, group, team or email',
   'fabric.elements.share.form.user-picker.placeholder.existingUserOnly':
     'Voer een naam of team in',
-  'fabric.elements.share.form.user-picker.add-more': 'Meer items invoeren',
+  'fabric.elements.share.form.user-picker.add-more': 'Meer invoeren',
   'fabric.elements.share.form.user-picker.validation.required':
-    'Selecteer minimaal één gebruiker, team of e-mailadres.',
+    'Select at least one user, group, team or email.',
   'fabric.elements.share.form.user-picker.no-options.domainBasedUserOnly':
     'Je kunt alleen personen uitnodigen die een e-mailadres van {domains} hebben. Neem contact op met je sitebeheerder als je anderen wilt uitnodigen.',
   'fabric.elements.share.form.user-picker.no-options.existingUserOnly':
@@ -33,13 +33,13 @@ export default {
   'fabric.elements.share.copied.to.clipboard.icon.label':
     "Pictogram 'Link gekopieerd'",
   'fabric.elements.share.copied.to.clipboard.message':
-    'Link naar het klembord gekopieerd',
+    'Link naar klembord gekopieerd',
   'fabric.elements.share.form.capabilities.info.message':
     'Je uitnodiging wordt naar een beheerder gestuurd ter goedkeuring',
   'fabric.elements.share.failure.icon.label': "Pictogram 'Fout'",
   'fabric.elements.share.failure.message': 'Kan niet delen',
   'fabric.elements.share.success.message':
-    '{object, select, blogpost {Blog post shared} bord {Board shared} kalendar {Calendar shared} concept {Draft shared} filter {Filter shared} issue {Issue shared} media {Media shared} pagina {Page shared} project {Project shared} pull-aanvraag {Pull Request shared} vraag {Question shared} rapport {Report shared} repository {Repository shared} aanvraag {Request shared} roadmap {Roadmap shared} site {Site shared} space {Space shared} overig {Link Shared}}',
+    '{object, select, blogpost {Blog post shared} bord {Board shared} agenda {Calendar shared} concept {Draft shared} filter {Filter shared} issue {Issue shared} media {Media shared} pagina {Page shared} project {Project shared} pull-aanvraag {Pull Request shared} vraag {Question shared} rapport {Report shared} repository {Repository shared} aanvraag {Request shared} roadmap {Roadmap shared} site {Site shared} space {Space shared} overig {Link Shared}}',
   'fabric.elements.share.admin.notified.message':
     'De beheerder is op de hoogte gebracht',
 };

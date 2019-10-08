@@ -11,12 +11,12 @@ export default {
   'fabric.elements.share.form.retry': 'Újra',
   'fabric.elements.share.form.comment.placeholder': 'Üzenet hozzáadása',
   'fabric.elements.share.form.user-picker.placeholder.generic':
-    'Add meg a nevet, csapatot vagy e-mail-címet',
+    'Enter name, group, team or email',
   'fabric.elements.share.form.user-picker.placeholder.existingUserOnly':
     'Add meg a nevet vagy csapatot',
   'fabric.elements.share.form.user-picker.add-more': 'Továbbiak megadása',
   'fabric.elements.share.form.user-picker.validation.required':
-    'Válasszon ki legalább egy felhasználót, csapatot vagy e-mail-címet.',
+    'Select at least one user, group, team or email.',
   'fabric.elements.share.form.user-picker.no-options.domainBasedUserOnly':
     'Csak {domains} e-mail-címmel rendelkező személyeket hívhatsz meg. Egyéb személyek meghívásához fordulj a webhely-adminisztrátorodhoz.',
   'fabric.elements.share.form.user-picker.no-options.existingUserOnly':

@@ -11,12 +11,12 @@ export default {
   'fabric.elements.share.form.retry': 'Reyna aftur',
   'fabric.elements.share.form.comment.placeholder': 'Bæta við skilaboðum',
   'fabric.elements.share.form.user-picker.placeholder.generic':
-    'Sláðu inn nafn, teymi eða tölvupóstur',
+    'Enter name, group, team or email',
   'fabric.elements.share.form.user-picker.placeholder.existingUserOnly':
     'Sláðu inn nafn eða teymi',
   'fabric.elements.share.form.user-picker.add-more': 'Færa inn fleiri ',
   'fabric.elements.share.form.user-picker.validation.required':
-    'Veldu að minnsta kosti einn notanda, teymi eða netfang.',
+    'Select at least one user, group, team or email.',
   'fabric.elements.share.form.user-picker.no-options.domainBasedUserOnly':
     'Þú getur aðeins boðið fólki sem eru með {domains} netföng. Hafðu samband við stjórnanda síðunnar þinnar til að bjóða öðru fólki.',
   'fabric.elements.share.form.user-picker.no-options.existingUserOnly':

@@ -11,12 +11,12 @@ export default {
   'fabric.elements.share.form.retry': 'Opakovať',
   'fabric.elements.share.form.comment.placeholder': 'Pridať správu',
   'fabric.elements.share.form.user-picker.placeholder.generic':
-    'Zadajte meno, tím alebo e-mail',
+    'Enter name, group, team or email',
   'fabric.elements.share.form.user-picker.placeholder.existingUserOnly':
     'Zadajte meno alebo tím',
   'fabric.elements.share.form.user-picker.add-more': 'Zadajte ďalšie položky',
   'fabric.elements.share.form.user-picker.validation.required':
-    'Vyberte aspoň jedného používateľa, tím alebo e-mail.',
+    'Select at least one user, group, team or email.',
   'fabric.elements.share.form.user-picker.no-options.domainBasedUserOnly':
     'Môžete pozvať iba ľudí s e-mailovými adresami {domains}. Ak chcete pozvať iných ľudí, obráťte sa na svojho správcu stránky.',
   'fabric.elements.share.form.user-picker.no-options.existingUserOnly':

@@ -11,12 +11,12 @@ export default {
   'fabric.elements.share.form.retry': 'Reîncercați',
   'fabric.elements.share.form.comment.placeholder': 'Adăugați un mesaj',
   'fabric.elements.share.form.user-picker.placeholder.generic':
-    'Introduceți nume, echipă sau e-mail',
+    'Enter name, group, team or email',
   'fabric.elements.share.form.user-picker.placeholder.existingUserOnly':
     'Introduceți nume sau echipă',
   'fabric.elements.share.form.user-picker.add-more': 'Introduceți mai multe',
   'fabric.elements.share.form.user-picker.validation.required':
-    'Selectați cel puțin un utilizator, echipă sau e-mail.',
+    'Select at least one user, group, team or email.',
   'fabric.elements.share.form.user-picker.no-options.domainBasedUserOnly':
     'Puteți invita persoane nu mai cu adrese de e-mail {domains}. Contactați administratorul site-ului pentru a invita alte persoane.',
   'fabric.elements.share.form.user-picker.no-options.existingUserOnly':
