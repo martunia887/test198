@@ -7,8 +7,10 @@ const boltQuery = require('bolt-query');
 const glob = require('glob');
 const path = require('path');
 
+const cwd = process.cwd();
+
 // Get all examples for a specified package using Bolt-Query
-async function getExamplesFor(
+async function getExamplesForAsync(
   pkgName /*: string */,
 ) /*: Promise<Array<string>> */ {
   const project /*: any */ = await boltQuery({
@@ -33,4 +35,22 @@ async function getExamplesFor(
   return examplesArr;
 }
 
-module.exports = { getExamplesFor };
+// get all examples from the code sync
+function getExamplesSync(packageName /*: string */) /*: Array<Object> */ {
+  return glob
+    .sync(`**/packages/**/${packageName}/examples/*.+(js|jsx|ts|tsx)`, {
+      ignore: '**/node_modules/**',
+    })
+    .map(file => {
+      const fileName = file
+        .split('/examples/')
+        .pop()
+        .replace(/\.[^.]*$/, '')
+        .replace(/^\d+\-\s*/, '');
+      return {
+        name: fileName,
+        filePath: `${cwd}/${file}`,
+      };
+    });
+}
+module.exports = { getExamplesForAsync, getExamplesSync };
