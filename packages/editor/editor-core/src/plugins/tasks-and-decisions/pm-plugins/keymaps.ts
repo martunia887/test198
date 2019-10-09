@@ -67,14 +67,11 @@ const indentationAnalyticsDispatch = (
     dispatch,
   );
 
-// TODO: better name?
-const canSplitListItem = (tr: Transaction) => {
-  const { $from } = tr.selection;
-  const afterTaskItem = tr.doc.resolve($from.end()).nodeAfter;
+const nodeAfter = ($pos: ResolvedPos) => $pos.doc.resolve($pos.end()).nodeAfter;
 
-  return (
-    !afterTaskItem || (afterTaskItem && isActionOrDecisionItem(afterTaskItem))
-  );
+const actionDecisionFollowsOrNothing = ($pos: ResolvedPos) => {
+  const after = nodeAfter($pos);
+  return !after || isActionOrDecisionItem(after);
 };
 
 const joinTaskDecisionFollowing: Command = (state, dispatch) => {
@@ -152,7 +149,7 @@ const backspaceFrom = ($from: ResolvedPos): Command => (state, dispatch) => {
 
   // bottom level, should "unwrap" taskItem contents into paragraph
   // we achieve this by slicing the content out, and replacing
-  if (canSplitListItem(state.tr)) {
+  if (actionDecisionFollowsOrNothing($from)) {
     if (dispatch) {
       const taskContent = state.doc.slice($from.start(), $from.end()).content;
 
@@ -212,7 +209,7 @@ const deleteHandler = filter(
 
     // bottom level, should "unwrap" taskItem contents into paragraph
     // we achieve this by slicing the content out, and replacing
-    if (canSplitListItem(state.tr)) {
+    if (actionDecisionFollowsOrNothing(state.selection.$from)) {
       if (dispatch) {
         const taskContent = state.doc.slice($next.start(), $next.end()).content;
 
@@ -316,7 +313,7 @@ const splitListItem = (
     },
   } = state;
 
-  if (canSplitListItem(tr)) {
+  if (actionDecisionFollowsOrNothing($from)) {
     if (dispatch) {
       dispatch(splitListItemWith(tr, paragraph.createChecked(), $from, true));
     }
