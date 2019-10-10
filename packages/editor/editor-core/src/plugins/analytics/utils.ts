@@ -55,10 +55,11 @@ export function addAnalytics(
 }
 
 export const analyticsDispatch = (
+  state: EditorState,
   payload: AnalyticsEventPayload,
   dispatch?: CommandDispatch,
 ) => (tr?: Transaction): void =>
-  dispatch && tr && dispatch(addAnalytics(tr, payload));
+  dispatch && tr && dispatch(addAnalytics(state, tr, payload));
 
 export function withAnalytics(
   payload:

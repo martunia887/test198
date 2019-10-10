@@ -43,11 +43,13 @@ import {
 import { liftSelection, wrapSelectionInTaskList, joinAtCut } from './commands';
 
 const indentationAnalyticsDispatch = (
+  state: EditorState,
   curIndentLevel: number,
   direction: INDENT_DIR,
   dispatch: CommandDispatch | undefined,
 ) =>
   analyticsDispatch(
+    state,
     {
       action: ACTION.FORMATTED,
       actionSubject: ACTION_SUBJECT.TEXT,
@@ -113,7 +115,12 @@ const unindent = filter(isInsideTask, (state, dispatch) => {
 
   return autoJoin(liftSelection, ['taskList'])(
     state,
-    indentationAnalyticsDispatch(curIndentLevel, INDENT_DIR.OUTDENT, dispatch),
+    indentationAnalyticsDispatch(
+      state,
+      curIndentLevel,
+      INDENT_DIR.OUTDENT,
+      dispatch,
+    ),
   );
 });
 
@@ -126,7 +133,12 @@ const indent = filter(isInsideTask, (state, dispatch) => {
 
   return autoJoin(wrapSelectionInTaskList, ['taskList'])(
     state,
-    indentationAnalyticsDispatch(curIndentLevel, INDENT_DIR.INDENT, dispatch),
+    indentationAnalyticsDispatch(
+      state,
+      curIndentLevel,
+      INDENT_DIR.INDENT,
+      dispatch,
+    ),
   );
 });
 
