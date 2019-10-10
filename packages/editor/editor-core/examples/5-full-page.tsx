@@ -193,6 +193,7 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
   };
 
   replaceTemplate = () => {
+    this.oldDoc = null;
     this.props.actions.replaceDocument(templateDoc, false, false);
     this.setState({
       visible: false,
@@ -245,10 +246,10 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
               <Button
                 onMouseEnter={this.previewTemplate}
                 onMouseLeave={this.finishPreviewTemplate}
+                onClick={this.replaceTemplate}
               >
-                Preview
-              </Button>{' '}
-              <Button onClick={this.replaceTemplate}>Replace</Button>
+                Preview / Replace
+              </Button>
             </div>
           </Template>
           <Template>
@@ -258,10 +259,10 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
               <Button
                 onMouseEnter={this.previewTemplate}
                 onMouseLeave={this.finishPreviewTemplate}
+                onClick={this.replaceTemplate}
               >
-                Preview
-              </Button>{' '}
-              <Button onClick={this.replaceTemplate}>Replace</Button>
+                Preview / Replace
+              </Button>
             </div>
           </Template>
           <Template>
@@ -273,10 +274,10 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
               <Button
                 onMouseEnter={this.previewTemplate}
                 onMouseLeave={this.finishPreviewTemplate}
+                onClick={this.replaceTemplate}
               >
-                Preview
-              </Button>{' '}
-              <Button onClick={this.replaceTemplate}>Replace</Button>
+                Preview / Replace
+              </Button>
             </div>
           </Template>
           <Template>
@@ -288,10 +289,10 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
               <Button
                 onMouseEnter={this.previewTemplate}
                 onMouseLeave={this.finishPreviewTemplate}
+                onClick={this.replaceTemplate}
               >
-                Preview
-              </Button>{' '}
-              <Button onClick={this.replaceTemplate}>Replace</Button>
+                Preview / Replace
+              </Button>
             </div>
           </Template>
           <Template>
@@ -303,10 +304,10 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
               <Button
                 onMouseEnter={this.previewTemplate}
                 onMouseLeave={this.finishPreviewTemplate}
+                onClick={this.replaceTemplate}
               >
-                Preview
-              </Button>{' '}
-              <Button onClick={this.replaceTemplate}>Replace</Button>
+                Preview / Replace
+              </Button>
             </div>
           </Template>
           <Template>
@@ -316,10 +317,10 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
               <Button
                 onMouseEnter={this.previewTemplate}
                 onMouseLeave={this.finishPreviewTemplate}
+                onClick={this.replaceTemplate}
               >
-                Preview
-              </Button>{' '}
-              <Button onClick={this.replaceTemplate}>Replace</Button>
+                Preview / Replace
+              </Button>
             </div>
           </Template>
         </div>
@@ -334,7 +335,6 @@ export class ExampleEditorComponent extends React.Component<
 > {
   state: State = {
     disabled: true,
-    title: 'Layout laid out',
     appearance: this.props.appearance || getAppearance(),
   };
 
