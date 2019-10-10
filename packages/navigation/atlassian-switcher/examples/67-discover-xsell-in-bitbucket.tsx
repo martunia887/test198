@@ -65,11 +65,13 @@ class JiraSwitcherExample extends React.Component {
           <AtlassianSwitcher
             appearance="drawer"
             product="bitbucket"
-            enableUserCentricProducts
+            cloudId="some-cloud-id"
+            triggerXFlow={this.onTriggerXFlow}
+            isDiscoverSectionEnabled
+            isDiscoverMoreForEveryoneEnabled
+            isEmceeLinkEnabled
             disableCustomLinks
             disableRecentContainers
-            triggerXFlow={(...args) => console.log(args)}
-            isDiscoverSectionEnabled
           />
         </Drawer>
         <Button type="button" onClick={this.openDrawer}>

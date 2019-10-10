@@ -30,7 +30,7 @@ const AtlassianSwitcher = (props: AtlassianSwitcherProps) => {
 
   let Switcher: React.ElementType;
   switch (product) {
-    case Product.JIRA:
+    case Product.JIRA || 'bitbucket':
       Switcher = JiraSwitcherLoader;
       break;
     case Product.CONFLUENCE:
