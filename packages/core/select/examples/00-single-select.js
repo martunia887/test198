@@ -4,6 +4,7 @@ import Select from '../src';
 
 const SingleExample = () => (
   <Select
+    testId="test-select"
     className="single-select"
     classNamePrefix="react-select"
     options={[

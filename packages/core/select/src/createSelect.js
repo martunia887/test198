@@ -6,11 +6,53 @@ import memoizeOne from 'memoize-one';
 import isEqual from 'react-fast-compare';
 import { gridSize } from '@atlaskit/theme/constants';
 import * as colors from '@atlaskit/theme/colors';
-
+import { components as RSComponents } from 'react-select';
 import * as defaultComponents from './components';
 
 // NOTE in the future, `Props` and `defaultProps` should come
 // directly from react-select
+
+function applyTestIdToComponents(components, testId) {
+  const mergedComponents = { ...RSComponents, ...components };
+  if (testId) {
+    return Object.keys(mergedComponents).reduce((acc, curr) => {
+      const Component = mergedComponents[curr];
+      if (!Component) return acc;
+      if (
+        [
+          'CrossIcon',
+          'DownChevron',
+          'Input',
+          'IndicatorsContainer',
+          'ValueContainer',
+        ].includes(curr)
+      ) {
+        acc[curr] = props => {
+          return (
+            <Component
+              data-testid={`${testId}--${curr.toLowerCase()}`}
+              {...props}
+            />
+          );
+        };
+      } else {
+        acc[curr] = ({ innerProps, ...props }) => {
+          return (
+            <Component
+              innerProps={{
+                ...innerProps,
+                'data-testid': `${testId}--${curr.toLowerCase()}`,
+              }}
+              {...props}
+            />
+          );
+        };
+      }
+      return acc;
+    }, {});
+  }
+  return components;
+}
 
 type ValidationState = 'default' | 'error' | 'success';
 type OptionType = { [string]: any };
@@ -36,6 +78,8 @@ type ReactSelectProps = {
   components?: {},
   /* Delimiter used to join multiple values into a single HTML Input value */
   delimiter?: string,
+  /* test-id */
+  testId?: string,
   /* enables default animated behaviour in components */
   enableAnimation: boolean,
   /* Clear all values when the user presses escape AND the menu is closed */
@@ -260,7 +304,11 @@ export default function createSelect(WrappedComponent: ComponentType<*>) {
       this.cacheComponents = memoizeOne(this.cacheComponents, isEqual).bind(
         this,
       );
-      this.cacheComponents(props.components, props.enableAnimation);
+      this.cacheComponents(
+        props.components,
+        props.enableAnimation,
+        props.testId,
+      );
     }
 
     static defaultProps = {
@@ -272,20 +320,30 @@ export default function createSelect(WrappedComponent: ComponentType<*>) {
     };
 
     UNSAFE_componentWillReceiveProps(nextProps: Props) {
-      this.cacheComponents(nextProps.components, nextProps.enableAnimation);
+      this.cacheComponents(
+        nextProps.components,
+        nextProps.enableAnimation,
+        nextProps.testId,
+      );
     }
 
-    cacheComponents = (components?: {}, enableAnimation: boolean) => {
+    cacheComponents = (components?: {}, enableAnimation: boolean, testId) => {
       if (enableAnimation) {
-        this.components = makeAnimated({
-          ...defaultComponents,
-          ...components,
-        });
+        this.components = applyTestIdToComponents(
+          makeAnimated({
+            ...defaultComponents,
+            ...components,
+          }),
+          testId,
+        );
       } else {
-        this.components = {
-          ...defaultComponents,
-          ...components,
-        };
+        this.components = applyTestIdToComponents(
+          {
+            ...defaultComponents,
+            ...components,
+          },
+          testId,
+        );
       }
     };
 
@@ -319,7 +377,6 @@ export default function createSelect(WrappedComponent: ComponentType<*>) {
         ...props
       } = this.props; // eslint-disable-line
       const isCompact = spacing === 'compact';
-
       // props must be spread first to stop `components` being overridden
       return (
         <WrappedComponent
