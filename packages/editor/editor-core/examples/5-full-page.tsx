@@ -204,17 +204,23 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
     return (
       <div
         style={{
+          position: 'absolute',
           height: '100%',
-          zIndex: 999,
-          overflow: 'auto',
-          background: colors.N20,
-          width: this.state.visible ? '500px' : '0px',
-          transition: 'width 0.25s ease-in-out',
-          boxSizing: 'border-box',
+          top: '0px',
+          right: '0px',
         }}
       >
         <div
-          style={{ width: '500px', padding: '8px', boxSizing: 'border-box' }}
+          style={{
+            background: colors.N20,
+            height: '100%',
+            padding: '8px',
+            position: 'fixed',
+            right: '0px',
+            width: '500px',
+            zIndex: 999,
+            overflow: 'auto',
+          }}
         >
           <div style={{ margin: '8px' }}>
             <h6>Templates</h6>
@@ -413,6 +419,7 @@ export class ExampleEditorComponent extends React.Component<
                     // defaultValue={exampleDoc}
                     contentComponents={
                       <>
+                        <TemplateSidebar actions={actions} />
                         <>
                           <BreadcrumbsMiscActions
                             appearance={this.state.appearance}
@@ -447,8 +454,6 @@ export class ExampleEditorComponent extends React.Component<
                   />
                 </SmartCardProvider>
               </Content>
-
-              <TemplateSidebar actions={actions} />
             </div>
           )}
         />
