@@ -21,6 +21,7 @@ import { isIE } from '../utils/isIE';
 import {
   CustomMediaPlayer,
   WithShowControlMethodProp,
+  OnCustomMediaPlayerError,
 } from '@atlaskit/media-ui';
 import { getObjectUrlFromFileState } from '../utils/getObjectUrlFromFileState';
 
@@ -31,7 +32,7 @@ export type Props = Readonly<
     collectionName?: string;
     previewCount: number;
     onCanPlay?: () => void;
-    onError?: () => void;
+    onError?: OnCustomMediaPlayerError;
   } & WithShowControlMethodProp
 >;
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Component } from 'react';
+import { Component, SyntheticEvent } from 'react';
 import PlayIcon from '@atlaskit/icon/glyph/vid-play';
 import PauseIcon from '@atlaskit/icon/glyph/vid-pause';
 import FullScreenIconOn from '@atlaskit/icon/glyph/vid-full-screen-on';
@@ -14,6 +14,7 @@ import MediaPlayer, {
   NavigateFunction,
   VideoState,
   VideoActions,
+  SourceElement,
 } from 'react-video-renderer';
 import { B200, DN400, N0, DN60 } from '@atlaskit/theme/colors';
 import { TimeRange } from './timeRange';
@@ -54,10 +55,15 @@ export interface CustomMediaPlayerProps extends WithShowControlMethodProp {
   readonly isAutoPlay: boolean;
   readonly isShortcutEnabled?: boolean;
   readonly onCanPlay?: () => void;
-  readonly onError?: () => void;
+  readonly onError?: OnCustomMediaPlayerError;
   readonly onDownloadClick?: () => void;
   readonly onFirstPlay?: () => void;
 }
+
+export type CustomMediaPlayerErrorEvent = SyntheticEvent<SourceElement>;
+export type OnCustomMediaPlayerError = (
+  event: CustomMediaPlayerErrorEvent,
+) => void;
 
 export interface CustomMediaPlayerState {
   isFullScreenEnabled: boolean;

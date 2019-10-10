@@ -6,6 +6,7 @@ import {
 } from '@atlaskit/media-client';
 import { getArtifactUrl } from '@atlaskit/media-store';
 import {
+  OnCustomMediaPlayerError,
   CustomMediaPlayer,
   WithShowControlMethodProp,
 } from '@atlaskit/media-ui';
@@ -23,7 +24,7 @@ export type Props = Readonly<
     collectionName?: string;
     previewCount: number;
     onCanPlay?: () => void;
-    onError?: () => void;
+    onError?: OnCustomMediaPlayerError;
   } & WithShowControlMethodProp
 >;
 

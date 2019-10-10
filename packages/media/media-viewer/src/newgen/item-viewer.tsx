@@ -7,7 +7,11 @@ import {
   isFileIdentifier,
 } from '@atlaskit/media-client';
 import { FormattedMessage } from 'react-intl';
-import { messages, WithShowControlMethodProp } from '@atlaskit/media-ui';
+import {
+  messages,
+  WithShowControlMethodProp,
+  CustomMediaPlayerErrorEvent,
+} from '@atlaskit/media-ui';
 import { Outcome } from './domain';
 import { ImageViewer } from './viewers/image';
 import { VideoViewer } from './viewers/video';
@@ -112,10 +116,14 @@ export class ItemViewerBase extends React.Component<Props, State> {
     }
   };
 
-  private onError = (fileState: FileState) => () => {
+  private onError = (fileState: FileState) => (
+    event: CustomMediaPlayerErrorEvent,
+  ) => {
     if (fileState.status === 'processed') {
+      const video = event.target as HTMLVideoElement | HTMLAudioElement;
+      const failReason = video.error ? video.error.message : 'Playback failed';
       this.fireAnalytics(
-        mediaFileLoadFailedEvent(fileState.id, 'Playback failed', fileState),
+        mediaFileLoadFailedEvent(fileState.id, failReason, fileState),
       );
     }
   };

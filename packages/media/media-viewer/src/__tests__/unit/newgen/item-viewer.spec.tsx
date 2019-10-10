@@ -46,6 +46,7 @@ import {
   version as packageVersion,
 } from '../../../version.json';
 import { InteractiveImg } from '../../../newgen/viewers/image/interactive-img';
+import { CustomMediaPlayerErrorEvent } from '@atlaskit/media-ui';
 
 const identifier: Identifier = {
   id: 'some-id',
@@ -592,8 +593,10 @@ describe('<ItemViewer />', () => {
           { onError: onErrorSpy },
         );
         const Viewer = el.find(type === 'audio' ? AudioViewer : VideoViewer);
-        const onError: () => void = Viewer.prop('onError')!;
-        onError();
+        const onError: (
+          event: CustomMediaPlayerErrorEvent,
+        ) => void = Viewer.prop('onError')!;
+        onError({ target: {} } as any);
         expect(createAnalyticsEventSpy).toHaveBeenCalledWith({
           action: 'loadFailed',
           actionSubject: 'mediaFile',

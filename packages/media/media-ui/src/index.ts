@@ -24,7 +24,11 @@ export {
   loadImage,
   findParentByClassname,
 } from './util';
-export { default as CustomMediaPlayer } from './customMediaPlayer/index';
+export {
+  default as CustomMediaPlayer,
+  OnCustomMediaPlayerError,
+  CustomMediaPlayerErrorEvent,
+} from './customMediaPlayer/index';
 export * from './customMediaPlayer/timeRange';
 export * from './classNames';
 export * from './shortcut';
