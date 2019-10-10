@@ -38,6 +38,7 @@ import {
 import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
 import { colors } from '@atlaskit/theme';
 import { exampleDoc } from '../example-helpers/example-layout-excerpt';
+import { exampleDoc as templateDoc } from '../example-helpers/decision-template';
 
 /**
  * +-------------------------------+
@@ -60,6 +61,7 @@ export const Content: any = styled.div`
   height: 100%;
   width: 100%;
   box-sizing: border-box;
+  flex: 1;
 `;
 Content.displayName = 'Content';
 
@@ -154,6 +156,178 @@ export interface ExampleProps {
   onTitleChange?: (title: string) => void;
 }
 
+const Template = styled.div`
+  background: white;
+  padding: 8px;
+  padding-left: 72px;
+  margin: 8px;
+
+  & div {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+`;
+
+class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
+  state = {
+    visible: false,
+  };
+
+  oldDoc = null;
+
+  componentDidMount() {
+    this.setState({ visible: true });
+  }
+
+  previewTemplate = () => {
+    this.props.actions.getValue().then(value => {
+      this.oldDoc = value;
+      this.props.actions.replaceDocument(templateDoc, false, false);
+    });
+  };
+
+  finishPreviewTemplate = () => {
+    if (this.oldDoc) {
+      this.props.actions.replaceDocument(this.oldDoc, false, false);
+    }
+  };
+
+  replaceTemplate = () => {
+    this.props.actions.replaceDocument(templateDoc, false, false);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  render() {
+    return (
+      <div
+        style={{
+          height: '100%',
+          zIndex: 999,
+          overflow: 'auto',
+          background: colors.N20,
+          width: this.state.visible ? '500px' : '0px',
+          transition: 'width 0.25s ease-in-out',
+          boxSizing: 'border-box',
+        }}
+      >
+        <div
+          style={{ width: '500px', padding: '8px', boxSizing: 'border-box' }}
+        >
+          <div style={{ margin: '8px' }}>
+            <h6>Templates</h6>
+          </div>
+          <div style={{ margin: '8px' }}>
+            <Select
+              options={[
+                { label: 'Adelaide', value: 'adelaide' },
+                { label: 'Brisbane', value: 'brisbane' },
+                { label: 'Canberra', value: 'canberra' },
+                { label: 'Darwin', value: 'darwin' },
+                { label: 'Hobart', value: 'hobart' },
+                { label: 'Melbourne', value: 'melbourne' },
+                { label: 'Perth', value: 'perth' },
+                { label: 'Sydney', value: 'sydney' },
+              ]}
+              placeholder="Tailored Experiences"
+            />
+          </div>
+          <div style={{ margin: '8px' }}>
+            {' '}
+            <Textfield type="text" placeholder="Search..." />
+          </div>
+
+          <Template>
+            <h4>Decision</h4>
+            <div>Record important product decisions and communicate...</div>
+            <div>
+              <Button
+                onMouseEnter={this.previewTemplate}
+                onMouseLeave={this.finishPreviewTemplate}
+              >
+                Preview
+              </Button>{' '}
+              <Button onClick={this.replaceTemplate}>Replace</Button>
+            </div>
+          </Template>
+          <Template>
+            <h4>Meeting Notes</h4>
+            <div>Set meeting agendas, take notes and share action items...</div>
+            <div>
+              <Button
+                onMouseEnter={this.previewTemplate}
+                onMouseLeave={this.finishPreviewTemplate}
+              >
+                Preview
+              </Button>{' '}
+              <Button onClick={this.replaceTemplate}>Replace</Button>
+            </div>
+          </Template>
+          <Template>
+            <h4>Competitive Analysis</h4>
+            <div>
+              Keep up with the competitors by documenting their offerings...
+            </div>
+            <div>
+              <Button
+                onMouseEnter={this.previewTemplate}
+                onMouseLeave={this.finishPreviewTemplate}
+              >
+                Preview
+              </Button>{' '}
+              <Button onClick={this.replaceTemplate}>Replace</Button>
+            </div>
+          </Template>
+          <Template>
+            <h4>Project Poster</h4>
+            <div>
+              Keep up with the competitors by documenting their offerings...
+            </div>
+            <div>
+              <Button
+                onMouseEnter={this.previewTemplate}
+                onMouseLeave={this.finishPreviewTemplate}
+              >
+                Preview
+              </Button>{' '}
+              <Button onClick={this.replaceTemplate}>Replace</Button>
+            </div>
+          </Template>
+          <Template>
+            <h4>Goals, Signals, Measures</h4>
+            <div>
+              Use this template to distinguish the signal from the noise in...
+            </div>
+            <div>
+              <Button
+                onMouseEnter={this.previewTemplate}
+                onMouseLeave={this.finishPreviewTemplate}
+              >
+                Preview
+              </Button>{' '}
+              <Button onClick={this.replaceTemplate}>Replace</Button>
+            </div>
+          </Template>
+          <Template>
+            <h4>How-to article</h4>
+            <div>Provide step-by-step guidance for completing a task</div>
+            <div>
+              <Button
+                onMouseEnter={this.previewTemplate}
+                onMouseLeave={this.finishPreviewTemplate}
+              >
+                Preview
+              </Button>{' '}
+              <Button onClick={this.replaceTemplate}>Replace</Button>
+            </div>
+          </Template>
+        </div>
+      </div>
+    );
+  }
+}
+
 export class ExampleEditorComponent extends React.Component<
   EditorProps & ExampleProps,
   State
@@ -184,57 +358,61 @@ export class ExampleEditorComponent extends React.Component<
   render() {
     return (
       <Wrapper>
-        <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-          <Content>
-            <SmartCardProvider client={new SmartCardClient('prod')}>
-              <Editor
-                analyticsHandler={analyticsHandler}
-                allowAnalyticsGASV3={true}
-                quickInsert={{ provider: Promise.resolve(quickInsertProvider) }}
-                allowCodeBlocks={{ enableKeybindingsForIDE: true }}
-                allowLists={true}
-                allowTextColor={true}
-                allowTables={{ advanced: true, allowColumnSorting: true }}
-                allowBreakout={true}
-                allowJiraIssue={true}
-                allowUnsupportedContent={true}
-                allowPanel={true}
-                allowExtension={{ allowBreakout: true }}
-                allowRule={true}
-                allowDate={true}
-                allowLayouts={{
-                  allowBreakout: true,
-                  UNSAFE_addSidebarLayouts: true,
-                }}
-                allowTextAlignment={true}
-                allowIndentation={true}
-                allowDynamicTextSizing={true}
-                allowTemplatePlaceholders={{ allowInserting: true }}
-                UNSAFE_cards={{
-                  provider: Promise.resolve(cardProviderStaging),
-                }}
-                annotationProvider={{
-                  component: ExampleInlineCommentComponent,
-                }}
-                allowStatus={true}
-                {...providers}
-                media={{
-                  provider: mediaProvider,
-                  allowMediaSingle: true,
-                  allowResizing: true,
-                  allowAnnotation: true,
-                  allowLinking: true,
-                  allowResizingInTables: true,
-                }}
-                allowHelpDialog
-                placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
-                shouldFocus={false}
-                disabled={this.state.disabled}
-                defaultValue={exampleDoc}
-                contentComponents={
-                  <>
-                    <WithEditorActions
-                      render={actions => (
+        <WithEditorActions
+          render={actions => (
+            <div
+              style={{ display: 'flex', flexDirection: 'row', height: '100%' }}
+            >
+              <Content>
+                <SmartCardProvider client={new SmartCardClient('prod')}>
+                  <Editor
+                    analyticsHandler={analyticsHandler}
+                    allowAnalyticsGASV3={true}
+                    quickInsert={{
+                      provider: Promise.resolve(quickInsertProvider),
+                    }}
+                    allowCodeBlocks={{ enableKeybindingsForIDE: true }}
+                    allowLists={true}
+                    allowTextColor={true}
+                    allowTables={{ advanced: true, allowColumnSorting: true }}
+                    allowBreakout={true}
+                    allowJiraIssue={true}
+                    allowUnsupportedContent={true}
+                    allowPanel={true}
+                    allowExtension={{ allowBreakout: true }}
+                    allowRule={true}
+                    allowDate={true}
+                    allowLayouts={{
+                      allowBreakout: true,
+                      UNSAFE_addSidebarLayouts: true,
+                    }}
+                    allowTextAlignment={true}
+                    allowIndentation={true}
+                    allowDynamicTextSizing={true}
+                    allowTemplatePlaceholders={{ allowInserting: true }}
+                    UNSAFE_cards={{
+                      provider: Promise.resolve(cardProviderStaging),
+                    }}
+                    annotationProvider={{
+                      component: ExampleInlineCommentComponent,
+                    }}
+                    allowStatus={true}
+                    {...providers}
+                    media={{
+                      provider: mediaProvider,
+                      allowMediaSingle: true,
+                      allowResizing: true,
+                      allowAnnotation: true,
+                      allowLinking: true,
+                      allowResizingInTables: true,
+                    }}
+                    allowHelpDialog
+                    placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule."
+                    shouldFocus={false}
+                    disabled={this.state.disabled}
+                    // defaultValue={exampleDoc}
+                    contentComponents={
+                      <>
                         <>
                           <BreadcrumbsMiscActions
                             appearance={this.state.appearance}
@@ -251,136 +429,29 @@ export class ExampleEditorComponent extends React.Component<
                             }}
                           />
                         </>
-                      )}
-                    />
-                  </>
-                }
-                primaryToolbarComponents={[
-                  <WithEditorActions
-                    key={1}
-                    render={actions => (
-                      <SaveAndCancelButtons editorActions={actions} />
-                    )}
-                  />,
-                ]}
-                onSave={SAVE_ACTION}
-                insertMenuItems={customInsertMenuItems}
-                extensionHandlers={extensionHandlers}
-                {...this.props}
-                appearance={this.state.appearance}
-              />
-            </SmartCardProvider>
-          </Content>
+                      </>
+                    }
+                    primaryToolbarComponents={[
+                      <WithEditorActions
+                        key={1}
+                        render={actions => (
+                          <SaveAndCancelButtons editorActions={actions} />
+                        )}
+                      />,
+                    ]}
+                    onSave={SAVE_ACTION}
+                    insertMenuItems={customInsertMenuItems}
+                    extensionHandlers={extensionHandlers}
+                    {...this.props}
+                    appearance={this.state.appearance}
+                  />
+                </SmartCardProvider>
+              </Content>
 
-          <div
-            style={{
-              height: '100%',
-              padding: '8px',
-              width: '500px',
-              zIndex: '999',
-              overflow: 'auto',
-              background: colors.N20,
-            }}
-          >
-            <div style={{ margin: '8px' }}>
-              <h6>Templates</h6>
+              <TemplateSidebar actions={actions} />
             </div>
-            <div style={{ margin: '8px' }}>
-              <Select
-                options={[
-                  { label: 'Adelaide', value: 'adelaide' },
-                  { label: 'Brisbane', value: 'brisbane' },
-                  { label: 'Canberra', value: 'canberra' },
-                  { label: 'Darwin', value: 'darwin' },
-                  { label: 'Hobart', value: 'hobart' },
-                  { label: 'Melbourne', value: 'melbourne' },
-                  { label: 'Perth', value: 'perth' },
-                  { label: 'Sydney', value: 'sydney' },
-                ]}
-                placeholder="Tailored Experiences"
-              />
-            </div>
-            <div style={{ margin: '8px' }}>
-              {' '}
-              <Textfield type="text" placeholder="Search..." />
-            </div>
-
-            <div
-              style={{
-                background: 'white',
-                padding: '8px',
-                paddingLeft: '72px',
-                margin: '8px',
-              }}
-            >
-              <h4>Decision</h4>
-              <div>Record important product decisions and communicate...</div>
-            </div>
-            <div
-              style={{
-                background: 'white',
-                padding: '8px',
-                paddingLeft: '72px',
-                margin: '8px',
-              }}
-            >
-              <h4>Meeting Notes</h4>
-              <div>
-                Set meeting agendas, take notes and share action items...
-              </div>
-            </div>
-            <div
-              style={{
-                background: 'white',
-                padding: '8px',
-                paddingLeft: '72px',
-                margin: '8px',
-              }}
-            >
-              <h4>Competitive Analysis</h4>
-              <div>
-                Keep up with the competitors by documenting their offerings...
-              </div>
-            </div>
-            <div
-              style={{
-                background: 'white',
-                padding: '8px',
-                paddingLeft: '72px',
-                margin: '8px',
-              }}
-            >
-              <h4>Project Poster</h4>
-              <div>
-                Keep up with the competitors by documenting their offerings...
-              </div>
-            </div>
-            <div
-              style={{
-                background: 'white',
-                padding: '8px',
-                paddingLeft: '72px',
-                margin: '8px',
-              }}
-            >
-              <h4>Goals, Signals, Measures</h4>
-              <div>
-                Use this template to distinguish the signal from the noise in...
-              </div>
-            </div>
-            <div
-              style={{
-                background: 'white',
-                padding: '8px',
-                paddingLeft: '72px',
-                margin: '8px',
-              }}
-            >
-              <h4>How-to article</h4>
-              <div>Provide step-by-step guidance for completing a task</div>
-            </div>
-          </div>
-        </div>
+          )}
+        />
       </Wrapper>
     );
   }
