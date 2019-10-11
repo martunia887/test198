@@ -16,7 +16,7 @@ import {
   isEmptySelectionAtEnd,
   isEmptySelectionAtStart,
 } from '../../../utils/commands';
-import { Command, CommandDispatch } from '../../../types';
+import { Command } from '../../../types';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -25,7 +25,8 @@ import {
   INDENT_DIR,
   INDENT_TYPE,
   INPUT_METHOD,
-  analyticsDispatch,
+  AnalyticsEventPayload,
+  autoJoinWithAnalytics,
 } from '../../analytics';
 
 import {
@@ -42,32 +43,25 @@ import {
 
 import { liftSelection, wrapSelectionInTaskList, joinAtCut } from './commands';
 
-const indentationAnalyticsDispatch = (
-  state: EditorState,
+const indentationAnalytics = (
   curIndentLevel: number,
   direction: INDENT_DIR,
-  dispatch: CommandDispatch | undefined,
-) =>
-  analyticsDispatch(
-    state,
-    {
-      action: ACTION.FORMATTED,
-      actionSubject: ACTION_SUBJECT.TEXT,
-      actionSubjectId: ACTION_SUBJECT_ID.FORMAT_INDENT,
-      eventType: EVENT_TYPE.TRACK,
-      attributes: {
-        inputMethod: INPUT_METHOD.KEYBOARD,
-        previousIndentationLevel: curIndentLevel,
-        newIndentLevel:
-          direction === INDENT_DIR.OUTDENT
-            ? curIndentLevel - 1
-            : curIndentLevel + 1,
-        direction,
-        indentType: INDENT_TYPE.TASK_LIST,
-      },
-    },
-    dispatch,
-  );
+): AnalyticsEventPayload => ({
+  action: ACTION.FORMATTED,
+  actionSubject: ACTION_SUBJECT.TEXT,
+  actionSubjectId: ACTION_SUBJECT_ID.FORMAT_INDENT,
+  eventType: EVENT_TYPE.TRACK,
+  attributes: {
+    inputMethod: INPUT_METHOD.KEYBOARD,
+    previousIndentationLevel: curIndentLevel,
+    newIndentLevel:
+      direction === INDENT_DIR.OUTDENT
+        ? curIndentLevel - 1
+        : curIndentLevel + 1,
+    direction,
+    indentType: INDENT_TYPE.TASK_LIST,
+  },
+});
 
 const nodeAfter = ($pos: ResolvedPos) => $pos.doc.resolve($pos.end()).nodeAfter;
 
@@ -113,15 +107,11 @@ const unindent = filter(isInsideTask, (state, dispatch) => {
     return false;
   }
 
-  return autoJoin(liftSelection, ['taskList'])(
-    state,
-    indentationAnalyticsDispatch(
-      state,
-      curIndentLevel,
-      INDENT_DIR.OUTDENT,
-      dispatch,
-    ),
-  );
+  return autoJoinWithAnalytics(
+    liftSelection,
+    ['taskList'],
+    indentationAnalytics(curIndentLevel, INDENT_DIR.OUTDENT),
+  )(state, dispatch);
 });
 
 const indent = filter(isInsideTask, (state, dispatch) => {
@@ -131,15 +121,11 @@ const indent = filter(isInsideTask, (state, dispatch) => {
     return true;
   }
 
-  return autoJoin(wrapSelectionInTaskList, ['taskList'])(
-    state,
-    indentationAnalyticsDispatch(
-      state,
-      curIndentLevel,
-      INDENT_DIR.INDENT,
-      dispatch,
-    ),
-  );
+  return autoJoinWithAnalytics(
+    wrapSelectionInTaskList,
+    ['taskList'],
+    indentationAnalytics(curIndentLevel, INDENT_DIR.INDENT),
+  )(state, dispatch);
 });
 
 const backspaceFrom = ($from: ResolvedPos): Command => (state, dispatch) => {
