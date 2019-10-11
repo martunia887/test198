@@ -8,6 +8,8 @@ import {
   tdEmpty,
   decisionList,
   decisionItem,
+  taskList,
+  taskItem,
   bodiedExtension,
   hr,
   extension,
@@ -37,6 +39,10 @@ export const blockNodes = {
   decisionList: (opts: { id?: string; selected?: boolean } = {}) =>
     decisionList({ localId: opts.id })(
       decisionItem({ localId: opts.id })(cursorIfSelected(opts.selected)),
+    ),
+  taskList: (opts: { id?: string; selected?: boolean } = {}) =>
+    taskList({ localId: opts.id })(
+      taskItem({ localId: opts.id })(cursorIfSelected(opts.selected)),
     ),
   bodiedExtension: (opts: { selected?: boolean } = {}) =>
     bodiedExtension(extensionAttrs)(p(cursorIfSelected(opts.selected))),
