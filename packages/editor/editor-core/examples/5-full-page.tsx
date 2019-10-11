@@ -214,10 +214,12 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
           style={{
             background: colors.N20,
             height: '100%',
-            padding: '8px',
+            padding: this.state.visible ? '8px' : '0px',
+            boxSizing: 'border-box',
             position: 'fixed',
             right: '0px',
-            width: '500px',
+            width: this.state.visible ? '500px' : '0px',
+            transition: 'width 0.25s ease-in-out',
             zIndex: 999,
             overflow: 'auto',
           }}
