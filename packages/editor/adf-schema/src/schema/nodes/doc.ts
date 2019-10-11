@@ -29,6 +29,7 @@ import { TableDefinition as Table } from './tableNodes';
 import { ExtensionDefinition as Extension } from './extension';
 import { InlineExtensionDefinition as InlineExtension } from './inline-extension';
 import { BodiedExtensionDefinition as BodiedExtension } from './bodied-extension';
+import { ExpandDefinition as Expand } from './expand';
 
 import { TextDefinition as Text } from './text';
 import { HardBreakDefinition as HardBreak } from './hard-break';
@@ -73,6 +74,7 @@ export type BlockContent =
   | TaskList
   | NestableTaskList
   | Table
+  | Expand
   | Extension
   | BodiedExtension
   | BlockCard;

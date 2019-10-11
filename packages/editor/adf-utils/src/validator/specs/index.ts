@@ -51,6 +51,7 @@ export { default as tableHeader } from './tableHeader';
 export { default as extension } from './extension';
 export { default as inlineExtension } from './inlineExtension';
 export { default as bodiedExtension } from './bodiedExtension';
+export { default as expand } from './expand';
 export { default as hardBreak } from './hardBreak';
 export { default as mention } from './mention';
 export { default as emoji } from './emoji';

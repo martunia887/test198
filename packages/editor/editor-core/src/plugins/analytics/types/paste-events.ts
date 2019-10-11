@@ -44,6 +44,7 @@ export const PasteContents: { [P in PasteContent]: P } = {
   mediaCard: 'mediaCard',
   tableCells: 'tableCells',
   table: 'table',
+  expand: 'expand',
   mixed: 'mixed',
   blockquote: 'blockquote',
   blockCard: 'blockCard',
@@ -80,6 +81,7 @@ export type PasteContent =
   | 'mediaCard'
   | 'tableCells'
   | 'table'
+  | 'expand'
   | 'orderedList'
   | 'panel'
   | 'rule'
@@ -108,7 +110,8 @@ export type PASTE_ACTION_SUBJECT_ID =
   | ACTION_SUBJECT_ID.PASTE_TABLE_CELL
   | ACTION_SUBJECT_ID.PASTE_TABLE_HEADER
   | ACTION_SUBJECT_ID.PASTE_TABLE_ROW
-  | ACTION_SUBJECT_ID.PASTE_TASK_LIST;
+  | ACTION_SUBJECT_ID.PASTE_TASK_LIST
+  | ACTION_SUBJECT_ID.PASTE_EXPAND;
 
 type PasteBaseAEP<Action, Attributes> = TrackAEP<
   Action,

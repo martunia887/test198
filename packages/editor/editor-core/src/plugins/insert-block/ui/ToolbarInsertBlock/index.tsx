@@ -140,6 +140,16 @@ export const messages = defineMessages({
     defaultMessage: 'Insert a table',
     description: 'Inserts a table in the document',
   },
+  expand: {
+    id: 'fabric.editor.expand',
+    defaultMessage: 'Expand',
+    description: 'Inserts an expand in the document',
+  },
+  expandDescription: {
+    id: 'fabric.editor.expand.description',
+    defaultMessage: 'Insert an expand',
+    description: 'Inserts an expand in the document',
+  },
   decision: {
     id: 'fabric.editor.decision',
     defaultMessage: 'Decision',
