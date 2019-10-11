@@ -1,0 +1,1 @@
+Fix Portal typing so components/Portal.d.ts is emitted

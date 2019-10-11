@@ -143,7 +143,7 @@ class Portal extends React.Component<Props, State> {
     fireMountUnmountEvent(PORTAL_UNMOUNT_EVENT, Number(zIndex));
   }
 
-  render() {
+  render(): JSX.Element | null {
     const { container, portalIsMounted } = this.state;
     return container && portalIsMounted
       ? ReactDOM.createPortal(this.props.children, container)
