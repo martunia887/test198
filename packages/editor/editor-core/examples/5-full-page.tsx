@@ -62,8 +62,8 @@ export const Content: any = styled.div`
   box-sizing: border-box;
   flex: 1;
 
-  .fabric-editor-popup-scroll-parent {
-    ${p => (p.sidebarVisible ? 'width: calc(100% - 500px);' : '')}
+  .ak-editor-content-area {
+    ${p => (p.sidebarVisible ? 'transform: translatex(-500px);' : '')}
   }
 `;
 Content.displayName = 'Content';
@@ -213,7 +213,6 @@ class TemplateSidebar extends React.Component<{
             background: colors.N20,
             height: '100%',
             padding: this.props.visible ? '8px' : '0px',
-            boxSizing: 'border-box',
             position: 'fixed',
             right: '0px',
             width: this.props.visible ? '500px' : '0px',
