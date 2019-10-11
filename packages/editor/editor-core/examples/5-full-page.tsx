@@ -59,9 +59,12 @@ Wrapper.displayName = 'Wrapper';
 export const Content: any = styled.div`
   padding: 0;
   height: 100%;
-  width: 100%;
   box-sizing: border-box;
   flex: 1;
+
+  .fabric-editor-popup-scroll-parent {
+    ${p => (p.sidebarVisible ? 'width: calc(100% - 500px);' : '')}
+  }
 `;
 Content.displayName = 'Content';
 
@@ -120,6 +123,7 @@ export type State = {
   disabled: boolean;
   title?: string;
   appearance: EditorAppearance;
+  sidebarVisible: boolean;
 };
 
 export const providers: any = {
@@ -168,16 +172,12 @@ const Template = styled.div`
   }
 `;
 
-class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
-  state = {
-    visible: false,
-  };
-
+class TemplateSidebar extends React.Component<{
+  actions: EditorActions;
+  visible: boolean;
+  onReplace: () => void;
+}> {
   oldDoc = null;
-
-  componentDidMount() {
-    this.setState({ visible: true });
-  }
 
   previewTemplate = () => {
     this.props.actions.getValue().then(value => {
@@ -195,9 +195,7 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
   replaceTemplate = () => {
     this.oldDoc = null;
     this.props.actions.replaceDocument(templateDoc, false, false);
-    this.setState({
-      visible: false,
-    });
+    this.props.onReplace();
   };
 
   render() {
@@ -214,11 +212,11 @@ class TemplateSidebar extends React.Component<{ actions: EditorActions }> {
           style={{
             background: colors.N20,
             height: '100%',
-            padding: this.state.visible ? '8px' : '0px',
+            padding: this.props.visible ? '8px' : '0px',
             boxSizing: 'border-box',
             position: 'fixed',
             right: '0px',
-            width: this.state.visible ? '500px' : '0px',
+            width: this.props.visible ? '500px' : '0px',
             transition: 'width 0.25s ease-in-out',
             zIndex: 999,
             overflow: 'auto',
@@ -344,6 +342,7 @@ export class ExampleEditorComponent extends React.Component<
   state: State = {
     disabled: true,
     appearance: this.props.appearance || getAppearance(),
+    sidebarVisible: false,
   };
 
   componentDidMount() {
@@ -353,6 +352,8 @@ export class ExampleEditorComponent extends React.Component<
   www.dumbmacro.com?paramA=CFE
   www.smartmacro.com?paramB=CFE
     `);
+
+    this.setState({ sidebarVisible: true });
   }
 
   componentDidUpdate(prevProps: EditorProps) {
@@ -371,7 +372,7 @@ export class ExampleEditorComponent extends React.Component<
             <div
               style={{ display: 'flex', flexDirection: 'row', height: '100%' }}
             >
-              <Content>
+              <Content sidebarVisible={this.state.sidebarVisible}>
                 <SmartCardProvider client={new SmartCardClient('prod')}>
                   <Editor
                     analyticsHandler={analyticsHandler}
@@ -421,7 +422,13 @@ export class ExampleEditorComponent extends React.Component<
                     // defaultValue={exampleDoc}
                     contentComponents={
                       <>
-                        <TemplateSidebar actions={actions} />
+                        <TemplateSidebar
+                          actions={actions}
+                          visible={this.state.sidebarVisible}
+                          onReplace={() => {
+                            this.setState({ sidebarVisible: false });
+                          }}
+                        />
                         <>
                           <BreadcrumbsMiscActions
                             appearance={this.state.appearance}
