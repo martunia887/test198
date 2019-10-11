@@ -36,7 +36,7 @@ import {
   getBlockRange,
   getCurrentIndentLevel,
   walkOut,
-  isEmptyAction,
+  isEmptyTaskDecision,
   liftBlock,
 } from './helpers';
 
@@ -338,7 +338,7 @@ const splitListItem = (
 const enter: Command = filter(
   isInsideTaskOrDecisionItem,
   chainCommands(
-    filter(isEmptyAction, chainCommands(unindent, splitListItem)),
+    filter(isEmptyTaskDecision, chainCommands(unindent, splitListItem)),
     (state, dispatch) => {
       const { selection, schema } = state;
       const { taskItem } = schema.nodes;

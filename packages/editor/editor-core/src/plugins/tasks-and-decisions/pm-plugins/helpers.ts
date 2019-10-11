@@ -66,12 +66,16 @@ export const walkOut = ($startPos: ResolvedPos): ResolvedPos => {
   return $pos;
 };
 
-// FIXME: does not check node type
-export const isEmptyAction = (state: EditorState) => {
-  const { selection } = state;
+export const isEmptyTaskDecision = (state: EditorState) => {
+  const { selection, schema } = state;
   const { $from } = selection;
   const node = $from.node($from.depth);
-  return node && node.textContent.length === 0;
+  return (
+    node &&
+    (node.type === schema.nodes.taskItem ||
+      node.type === schema.nodes.decisionItem) &&
+    node.textContent.length === 0
+  );
 };
 
 export const liftBlock = (
