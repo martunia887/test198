@@ -8,12 +8,13 @@ describe('url utils', () => {
   describe('getAttrsFromUrl()', () => {
     it('should return media attrs from url', () => {
       const url =
-        'blob:http://localhost/blob_id#media-blob-url=true&id=file_id&collection=some_collection&contextId=some_context_id';
+        'blob:http://localhost/blob_id#media-blob-url=true&id=file_id&collection=some_collection&contextId=some_context_id&alt=test';
 
       expect(getAttrsFromUrl(url)).toEqual({
         id: 'file_id',
         collection: 'some_collection',
         contextId: 'some_context_id',
+        alt: 'test',
       });
     });
 
@@ -69,6 +70,25 @@ describe('url utils', () => {
       ).toEqual(
         'blob:http://localhost/blob_id#media-blob-url=true&contextId=context-id&id=file-id&collection=collection-name&height=5&width=50&mimeType=image%2Fpng&name=file-name.png&size=100',
       );
+    });
+
+    it('should return original url for Safari', () => {
+      const nativeUserAgent = navigator.userAgent;
+      (navigator as any).__defineGetter__(
+        'userAgent',
+        () =>
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Safari/605.1.15',
+      );
+      const url = 'blob:http://localhost/blob_id';
+
+      expect(
+        addFileAttrsToUrl(url, {
+          contextId: 'some-context-id',
+          id: 'some-id',
+        }),
+      ).toEqual('blob:http://localhost/blob_id');
+
+      (navigator as any).__defineGetter__('userAgent', () => nativeUserAgent);
     });
   });
 

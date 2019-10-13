@@ -179,12 +179,23 @@ export default class Page {
     return this.browser.getCssProperty(selector, cssProperty);
   }
 
+  async getCSSProperty(selector, cssProperty) {
+    const elem = await this.browser.$(selector);
+    return elem.getCSSProperty(cssProperty);
+  }
+
   async getLocation(selector, property) {
     const elem = await this.browser.$(selector);
     return elem.getLocation(selector, property);
   }
+
   getAlertText() {
     return this.browser.getAlertText();
+  }
+
+  async getAttribute(selector, attributeName) {
+    const elem = await this.browser.$(selector);
+    return elem.getAttribute(attributeName);
   }
 
   url() {
@@ -209,8 +220,8 @@ export default class Page {
     if (this.isBrowser('chrome')) {
       const logs = await this.browser.getLogs('browser');
       if (logs.length) {
-        logs.forEach(val => {
-          assert.notStrictEqual(val.level, 'SEVERE', `Error : ${val.message}`);
+        logs.forEach(log => {
+          assert.notStrictEqual(log.level, 'SEVERE', `Error : ${log.message}`);
         });
       }
     }
@@ -232,9 +243,14 @@ export default class Page {
   //will need to have wrapper for these once moved to puppeteer
   async getText(selector) {
     // replace with await page.evaluate(() => document.querySelector('p').textContent)
-    // for puppteer
+    // for puppeteer
     const elem = await this.browser.$(selector);
     return elem.getText();
+  }
+
+  async getValue(selector) {
+    const elem = await this.browser.$(selector);
+    return elem.getValue();
   }
 
   async execute(func, ...args) {
@@ -281,6 +297,11 @@ export default class Page {
 
   async isVisible(selector) {
     return this.waitFor(selector);
+  }
+
+  async isSelected(selector) {
+    const elem = await this.browser.$(selector);
+    return elem.isSelected();
   }
 
   async hasFocus(selector) {

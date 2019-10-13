@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { toBeInTheDocument, toHaveFocus } from '@testing-library/jest-dom';
 import { XMLHttpRequest } from 'xmlhttprequest';
 import 'jest-styled-components';
 import { toMatchSnapshot } from 'jest-snapshot';
@@ -417,6 +418,8 @@ expect.extend({
     return ret;
   },
   toHaveStyleDeclaration: matchers.toHaveStyleRule,
+  toBeInTheDocument,
+  toHaveFocus,
 });
 
 // Copied from react-beautiful-dnd/test/setup.js
@@ -458,7 +461,6 @@ if (process.env.CI) {
     console.warn = jest.fn();
     console.log = jest.fn();
   });
-
   afterEach(() => {
     console.error = consoleError;
     console.warn = consoleWarn;

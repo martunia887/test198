@@ -27,13 +27,11 @@ type GenericSwitcherProps = WithTheme & {
 
 export default (props: GenericSwitcherProps) => (
   <AvailableProductsProvider
-    isUserCentric={props.features.enableUserCentricProducts}
     availableProductsDataProvider={props.availableProductsDataProvider}
   >
     {availableProducts => (
       <CommonDataProvider
         cloudId={props.cloudId}
-        isUserCentric={Boolean(props.features.enableUserCentricProducts)}
         disableRecentContainers={props.features.disableRecentContainers}
       >
         {providerResults => {
@@ -42,8 +40,8 @@ export default (props: GenericSwitcherProps) => (
             providerResults,
             props.features,
             availableProducts,
+            props.product,
           );
-
           return <Switcher {...props} {...switcherLinks} />;
         }}
       </CommonDataProvider>

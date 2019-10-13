@@ -1,5 +1,28 @@
 # @atlaskit/media-ui
 
+## 11.6.8
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 11.6.7
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
+## 11.6.6
+
+### Patch Changes
+
+- [patch][a6a0cb78a6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a6a0cb78a6):
+
+  change white color to N0 import from theme
+
 ## 11.6.5
 
 ### Patch Changes

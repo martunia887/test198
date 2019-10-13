@@ -13,6 +13,7 @@ import {
   akEditorDeleteBackground,
   akEditorDeleteBorder,
   akEditorSelectedBorderBoldSize,
+  tasksAndDecisionsStyles,
 } from '@atlaskit/editor-common';
 
 import { telepointerStyle } from '../../plugins/collab-edit/styles';
@@ -30,7 +31,6 @@ import { fakeCursorStyles } from '../../plugins/fake-text-cursor/styles';
 import { mentionsStyles } from '../../plugins/mentions/styles';
 import { textFormattingStyles } from '../../plugins/text-formatting/styles';
 import { placeholderTextStyles } from '../../plugins/placeholder-text/styles';
-import { tasksAndDecisionsStyles } from '../../plugins/tasks-and-decisions/ui/styles';
 import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
 import { extensionStyles } from '../../plugins/extension/ui/styles';
@@ -78,7 +78,6 @@ const ContentStyles: ComponentClass<
     max-width: calc(100% - 20px);
     vertical-align: top;
     word-break: break-all;
-    user-select: none;
   }
 
   .inlineCardView-content-wrap .card {
@@ -88,7 +87,6 @@ const ContentStyles: ComponentClass<
 
   .blockCardView-content-wrap {
     display: inline-block;
-    user-select: none;
   }
 
   /* fix cursor alignment */

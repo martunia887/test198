@@ -1,5 +1,46 @@
 # @atlaskit/dynamic-table
 
+## 13.4.0
+
+### Minor Changes
+
+- [minor][97a4a48f58](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97a4a48f58):
+
+  - use more obvious hover background color for highlighted row
+  - add onClick into RowType typing and add examples of its usage
+
+## 13.3.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 13.3.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 13.3.1
+
+### Patch Changes
+
+- [patch][8a244b1dfd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8a244b1dfd):
+
+  DynamicTable Stateful now sends analytics events via the onSort prop
+
+## 13.3.0
+
+### Minor Changes
+
+- [minor][565e5c71db](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/565e5c71db):
+
+  Add ability to highlight a row in the table based on the index (0 based index) of the current visible page.
+
 ## 13.2.1
 
 - Updated dependencies [8d0f37c23e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8d0f37c23e):

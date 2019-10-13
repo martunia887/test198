@@ -1,5 +1,133 @@
 # @atlaskit/atlassian-switcher
 
+## 4.5.2
+
+### Patch Changes
+
+- [patch][be38f90454](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/be38f90454):
+
+  Added support for additional languages: Thai, Turkish, Ukrainia and Vietnamese
+
+## 4.5.1
+
+### Patch Changes
+
+- [patch][165f1cd0ad](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/165f1cd0ad):
+
+  Refactor codes related to experimental Discover section in Atlassian Switcher.
+
+## 4.5.0
+
+### Minor Changes
+
+- [minor][331053f02c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/331053f02c):
+
+  Add experimental discover section to Atlassian Switcher.
+
+## 4.4.0
+
+### Minor Changes
+
+- [minor][a2ae055500](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2ae055500):
+
+  Update custom links to include link type (applink vs custom link) in analytics
+
+## 4.3.0
+
+### Minor Changes
+
+- [minor][3920c7a2b9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3920c7a2b9):
+
+  Update translation for atlassian-switcher package
+
+## 4.2.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 4.2.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 4.2.1
+
+### Patch Changes
+
+- [patch][8ec4a18b58](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8ec4a18b58):
+
+  Updating examples
+
+## 4.2.0
+
+### Minor Changes
+
+- [minor][173ada19f7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/173ada19f7):
+
+  yRemove People link from switcher
+
+## 4.1.0
+
+### Minor Changes
+
+- [minor][42afbf2163](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/42afbf2163):
+
+  Only show try links if the product is not provisioned for any of the available sites
+
+## 4.0.0
+
+### Major Changes
+
+- [major][deff626951](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/deff626951):
+
+  Remove enableUserCentricProducts feature flag, enable account centric switcher by default
+
+## 3.31.3
+
+### Patch Changes
+
+- [patch][b72b5b773c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b72b5b773c):
+
+  Removed ts-ignore from the code
+
+## 3.31.2
+
+### Patch Changes
+
+- [patch][fa1f938f76](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/fa1f938f76):
+
+  [Bug fix] Emcee link was not able to capture source param, this release will fix that
+
+## 3.31.1
+
+### Patch Changes
+
+- [patch][3ea2b986e1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3ea2b986e1):
+
+  1. Change Discover more label to More Atlassian Products 2. Change Browse apps label to Browse Marketplace apps
+
+## 3.31.0
+
+### Minor Changes
+
+- [minor][33fc071f60](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/33fc071f60):
+
+  Remove the top item variation, set it to current site
+
+## 3.30.1
+
+### Patch Changes
+
+- [patch][712fe8c503](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/712fe8c503):
+
+  Only show people link in Jira and Confluence because it's not supported elsewhere
+
 ## 3.30.0
 
 ### Minor Changes

@@ -1,5 +1,130 @@
 ## 0.1.0
 
+## 0.20.8
+
+### Patch Changes
+
+- [patch][5027c848f4](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5027c848f4):
+
+  changed scrollTo for sctollTop (not supported in IE11 and edge)
+
+## 0.20.7
+
+### Patch Changes
+
+- [patch][89c775c2eb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/89c775c2eb):
+
+  fix animation when ArticleComponent mounts
+
+## 0.20.6
+
+- Updated dependencies [49c89962de](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/49c89962de):
+  - @atlaskit/right-side-panel@0.3.0
+
+## 0.20.5
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 0.20.4
+
+### Patch Changes
+
+- [patch][edd83f6f68](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/edd83f6f68):
+
+  Fix ArticleContent Animation
+
+## 0.20.3
+
+### Patch Changes
+
+- [patch][acbc924e23](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/acbc924e23):
+
+  Improved ArticleContent animations
+
+## 0.20.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 0.20.1
+
+### Patch Changes
+
+- [patch][e1de95957a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e1de95957a):
+
+  changed action value 'click' to 'clicked'
+
+## 0.20.0
+
+### Minor Changes
+
+- [minor][de49038228](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/de49038228):
+
+  Added onRelatedArticlesListItemClick Prop to RelatedArticles and ArticleListItem
+
+## 0.19.2
+
+### Patch Changes
+
+- [patch][e1cf991123](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e1cf991123):
+
+  Removed exported interfaces
+
+## 0.19.1
+
+### Patch Changes
+
+- [patch][9891d2418d](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/9891d2418d):
+
+  Fixed exports and onClick event of RelatedArticles
+
+## 0.19.0
+
+### Minor Changes
+
+- [minor][7736e89a16](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/7736e89a16):
+
+  Added loading state for RelatedArticleList
+
+## 0.18.1
+
+### Patch Changes
+
+- [patch][93f0ff1a1f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/93f0ff1a1f):
+
+  Fix toggle related articles
+
+## 0.18.0
+
+### Minor Changes
+
+- [minor][d4b481ebad](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d4b481ebad):
+
+  Exposed RelatedArticles component and ArticleItem interface
+
+## 0.17.4
+
+### Patch Changes
+
+- [patch][22d5dbc2bb](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/22d5dbc2bb):
+
+  fixed CSS issue of the ArticleListItem icons
+
+## 0.17.3
+
+### Patch Changes
+
+- [patch][c0c49e4c2b](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/c0c49e4c2b):
+
+  CSS fixes + added link icon to ArticleListItem
+
 ## 0.17.2
 
 ### Patch Changes

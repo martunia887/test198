@@ -10,7 +10,6 @@ export const extensionStyles = css`
   .extensionView-content-wrap,
   .bodiedExtensionView-content-wrap {
     margin: ${blockNodesVerticalMargin}rem 0;
-    user-select: none;
 
     &.top-level-block-extension {
       margin-top: 0;

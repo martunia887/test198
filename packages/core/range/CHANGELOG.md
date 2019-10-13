@@ -1,5 +1,19 @@
 # @atlaskit/range
 
+## 3.0.9
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 3.0.8
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
 ## 3.0.7
 
 ### Patch Changes

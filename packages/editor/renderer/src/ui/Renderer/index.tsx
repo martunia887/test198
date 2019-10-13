@@ -30,6 +30,8 @@ import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../../analytics/enums';
 import { AnalyticsEventPayload, PLATFORM, MODE } from '../../analytics/events';
 import AnalyticsContext from '../../analytics/analyticsContext';
 import { CopyTextProvider } from '../../react/nodes/copy-text-provider';
+import { Provider as SmartCardStorageProvider } from '../SmartCardStorage';
+import { name, version } from '../../version.json';
 
 export interface Extension<T> {
   extensionKey: string;
@@ -43,6 +45,7 @@ export interface Props {
   eventHandlers?: EventHandlers;
   extensionHandlers?: ExtensionHandlers;
   onComplete?: (stat: RenderOutputStat) => void;
+  onError?: (error: any) => void;
   portal?: HTMLElement;
   rendererContext?: RendererContext;
   schema?: Schema;
@@ -55,12 +58,14 @@ export interface Props {
   truncated?: boolean;
   createAnalyticsEvent?: CreateUIAnalyticsEvent;
   allowColumnSorting?: boolean;
+  shouldOpenMediaViewer?: boolean;
 }
 
 export class Renderer extends PureComponent<Props, {}> {
   private providerFactory: ProviderFactory;
   private serializer?: ReactSerializer;
-  private mountTimeoutId: number | undefined;
+  private rafID?: number;
+  private editorRef?: React.RefObject<HTMLElement>;
 
   constructor(props: Props) {
     super(props);
@@ -69,27 +74,29 @@ export class Renderer extends PureComponent<Props, {}> {
     startMeasure('Renderer Render Time');
   }
 
-  onRenderComplete() {
-    const anchorLinkAttributeHit =
-      !this.props.disableHeadingIDs &&
-      window.location.hash &&
-      document.getElementById(window.location.hash.slice(1));
+  private anchorLinkAnalytics() {
+    const hash =
+      window.location.hash && decodeURIComponent(window.location.hash.slice(1));
 
-    if (anchorLinkAttributeHit) {
-      anchorLinkAttributeHit.scrollIntoView();
-      this.fireAnalyticsEvent({
-        action: ACTION.VIEWED,
-        actionSubject: ACTION_SUBJECT.ANCHOR_LINK,
-        attributes: { platform: PLATFORM.WEB, mode: MODE.RENDERER },
-        eventType: EVENT_TYPE.UI,
-      });
+    if (
+      !this.props.disableHeadingIDs &&
+      hash &&
+      this.editorRef &&
+      this.editorRef instanceof HTMLElement
+    ) {
+      const anchorLinkElement = this.editorRef.querySelector(`#${hash}`);
+      if (anchorLinkElement) {
+        this.fireAnalyticsEvent({
+          action: ACTION.VIEWED,
+          actionSubject: ACTION_SUBJECT.ANCHOR_LINK,
+          attributes: { platform: PLATFORM.WEB, mode: MODE.RENDERER },
+          eventType: EVENT_TYPE.UI,
+        });
+      }
     }
   }
 
   componentDidMount() {
-    // add setTimeout to ensure the rendering process has completed.
-    this.mountTimeoutId = window.setTimeout(() => this.onRenderComplete());
-
     this.fireAnalyticsEvent({
       action: ACTION.STARTED,
       actionSubject: ACTION_SUBJECT.RENDERER,
@@ -97,7 +104,7 @@ export class Renderer extends PureComponent<Props, {}> {
       eventType: EVENT_TYPE.UI,
     });
 
-    requestAnimationFrame(() => {
+    this.rafID = requestAnimationFrame(() => {
       stopMeasure('Renderer Render Time', duration => {
         this.fireAnalyticsEvent({
           action: ACTION.RENDERED,
@@ -118,6 +125,7 @@ export class Renderer extends PureComponent<Props, {}> {
           eventType: EVENT_TYPE.OPERATIONAL,
         });
       });
+      this.anchorLinkAnalytics();
     });
   }
 
@@ -143,6 +151,7 @@ export class Renderer extends PureComponent<Props, {}> {
       allowDynamicTextSizing,
       allowHeadingAnchorLinks,
       allowColumnSorting,
+      shouldOpenMediaViewer,
     } = props;
 
     this.serializer = new ReactSerializer({
@@ -161,6 +170,7 @@ export class Renderer extends PureComponent<Props, {}> {
       allowHeadingAnchorLinks,
       allowColumnSorting,
       fireAnalyticsEvent: this.fireAnalyticsEvent,
+      shouldOpenMediaViewer,
     });
   }
 
@@ -177,6 +187,7 @@ export class Renderer extends PureComponent<Props, {}> {
     const {
       document,
       onComplete,
+      onError,
       schema,
       appearance,
       adfStage,
@@ -205,12 +216,17 @@ export class Renderer extends PureComponent<Props, {}> {
                   this.fireAnalyticsEvent(event),
               }}
             >
-              <RendererWrapper
-                appearance={appearance}
-                dynamicTextSizing={!!allowDynamicTextSizing}
-              >
-                {result}
-              </RendererWrapper>
+              <SmartCardStorageProvider>
+                <RendererWrapper
+                  appearance={appearance}
+                  dynamicTextSizing={!!allowDynamicTextSizing}
+                  wrapperRef={ref => {
+                    this.editorRef = ref;
+                  }}
+                >
+                  {result}
+                </RendererWrapper>
+              </SmartCardStorageProvider>
             </AnalyticsContext.Provider>
           </IntlProvider>
         </CopyTextProvider>
@@ -221,7 +237,10 @@ export class Renderer extends PureComponent<Props, {}> {
       ) : (
         rendererOutput
       );
-    } catch (ex) {
+    } catch (e) {
+      if (onError) {
+        onError(e);
+      }
       return (
         <RendererWrapper
           appearance={appearance}
@@ -236,7 +255,9 @@ export class Renderer extends PureComponent<Props, {}> {
   componentWillUnmount() {
     const { dataProviders } = this.props;
 
-    window.clearTimeout(this.mountTimeoutId);
+    if (this.rafID) {
+      window.cancelAnimationFrame(this.rafID);
+    }
 
     // if this is the ProviderFactory which was created in constructor
     // it's safe to destroy it on Renderer unmount
@@ -248,7 +269,12 @@ export class Renderer extends PureComponent<Props, {}> {
 
 const RendererWithAnalytics = (props: Props) => (
   <FabricEditorAnalyticsContext
-    data={{ appearance: getAnalyticsAppearance(props.appearance) }}
+    data={{
+      appearance: getAnalyticsAppearance(props.appearance),
+      packageName: name,
+      packageVersion: version,
+      componentName: 'editorCore',
+    }}
   >
     <WithCreateAnalyticsEvent
       render={createAnalyticsEvent => (
@@ -263,17 +289,21 @@ export default RendererWithAnalytics;
 type RendererWrapperProps = {
   appearance: RendererAppearance;
   dynamicTextSizing: boolean;
+  wrapperRef?: (instance: React.RefObject<HTMLElement>) => void;
 } & { children?: React.ReactNode };
 
 export function RendererWrapper({
   appearance,
   children,
   dynamicTextSizing,
+  wrapperRef,
 }: RendererWrapperProps) {
   return (
     <WidthProvider>
       <BaseTheme dynamicTextSizing={dynamicTextSizing}>
-        <Wrapper appearance={appearance}>{children}</Wrapper>
+        <Wrapper innerRef={wrapperRef} appearance={appearance}>
+          {children}
+        </Wrapper>
       </BaseTheme>
     </WidthProvider>
   );

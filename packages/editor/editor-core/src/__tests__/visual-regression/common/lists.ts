@@ -34,7 +34,7 @@ import {
   animationFrame,
   scrollToBottom,
 } from '../../__helpers/page-objects/_editor';
-import { EditorTestCardProvider } from '../../../../../editor-test-helpers';
+import { EditorTestCardProvider } from '@atlaskit/editor-test-helpers';
 // TODO: https://product-fabric.atlassian.net/browse/ED-7721
 describe.skip('Lists', () => {
   let page: Page;
@@ -160,7 +160,8 @@ describe('Lists adjacent floated media', () => {
 
 async function visualiseListItemBoundingBoxes(page: any) {
   const css = `
-      li > * {
+      li > *,
+      .taskItemView-content-wrap > * {
         /*
         Visualise the bounding box of list item content.
         Using green to ensure it doesn't clash with the red

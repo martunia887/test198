@@ -1,5 +1,38 @@
 # @atlaskit/select
 
+## 10.2.0
+
+### Minor Changes
+
+- [minor][17a07074e8](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/17a07074e8):
+
+  Fix padding to be consistent with other Atlaskit form fields. This change includes removing padding from around the icon itself, and adding padding to the icon container, as well as altering the padding around the input container.
+
+## 10.1.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 10.1.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 10.1.1
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/form@6.2.3
+  - @atlaskit/modal-dialog@10.3.1
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
 ## 10.1.0
 
 ### Minor Changes

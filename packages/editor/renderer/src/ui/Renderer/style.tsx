@@ -36,6 +36,7 @@ import {
   dateSharedStyle,
   akEditorFullWidthLayoutWidth,
   mediaSingleClassName,
+  tasksAndDecisionsStyles,
 } from '@atlaskit/editor-common';
 import { RendererCssClassName } from '../../consts';
 import { RendererAppearance } from './types';
@@ -101,7 +102,7 @@ const tableSortableColumnStyle = `
     cursor: pointer;
 
     &.${RendererCssClassName.SORTABLE_COLUMN_NOT_ALLOWED} {
-      cursor: not-allowed;
+      cursor: default;
     }
 
     .${RendererCssClassName.SORTABLE_COLUMN_ICON} {
@@ -220,6 +221,7 @@ export const Wrapper = styled.div<RendererWrapperProps & HTMLAttributes<{}>>`
   ${codeMarkSharedStyles};
   ${shadowSharedStyle};
   ${dateSharedStyle};
+  ${tasksAndDecisionsStyles};
 
   & .UnknownBlock {
     font-family: ${fontFamily()};

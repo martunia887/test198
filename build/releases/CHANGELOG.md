@@ -1,5 +1,21 @@
 # @atlaskit/build-releases
 
+## 3.0.8
+
+### Patch Changes
+
+- [patch][462dd21997](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/462dd21997):
+
+  Update bolt to 0.24.3
+
+## 3.0.7
+
+### Patch Changes
+
+- [patch][39af9dab8e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/39af9dab8e):
+
+  Bump bolt to 0.24.1
+
 ## 3.0.6
 
 ### Patch Changes

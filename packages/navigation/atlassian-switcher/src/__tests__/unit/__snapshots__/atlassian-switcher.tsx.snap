@@ -10,10 +10,9 @@ exports[`Atlassian Switcher basic snapshot 1`] = `
             "disableCustomLinks": false,
             "disableHeadings": false,
             "disableRecentContainers": false,
-            "enableUserCentricProducts": false,
             "isDiscoverMoreForEveryoneEnabled": false,
+            "isDiscoverSectionEnabled": false,
             "isEmceeLinkEnabled": false,
-            "productTopItemVariation": undefined,
             "xflow": true,
           },
         },
@@ -33,8 +32,8 @@ exports[`Atlassian Switcher basic snapshot 1`] = `
             "id": "fabric.atlassianSwitcher.administration",
           },
           "browseApps": Object {
-            "defaultMessage": "Browse apps",
-            "description": "The text of a link redirecting the user to Discover Embedded Marketplace within in the product",
+            "defaultMessage": "Browse Marketplace apps",
+            "description": "The text of a link redirecting the user to Discover Embedded Marketplace within in the product (Marketplace is a brand name. Please dont translate it)",
             "id": "fabric.atlassianSwitcher.browseApps",
           },
           "confluenceSpace": Object {
@@ -42,8 +41,13 @@ exports[`Atlassian Switcher basic snapshot 1`] = `
             "description": "In a context in which several items are listed , this text describes that the specific type of a given item is a Confluence space",
             "id": "fabric.atlassianSwitcher.confluenceSpace",
           },
+          "discover": Object {
+            "defaultMessage": "Discover",
+            "description": "The header of \\"Discover\\" section",
+            "id": "fabric.atlassianSwitcher.discover",
+          },
           "discoverMore": Object {
-            "defaultMessage": "Discover more",
+            "defaultMessage": "More Atlassian products",
             "description": "The text of a link redirecting the user to Discover More Atlassian products",
             "id": "fabric.atlassianSwitcher.discoverMore",
           },
@@ -92,10 +96,25 @@ exports[`Atlassian Switcher basic snapshot 1`] = `
             "description": "In a context in which users are able to view predefined custom links, this text is the title of the section displaying all existing custom links.",
             "id": "fabric.atlassianSwitcher.more",
           },
-          "people": Object {
-            "defaultMessage": "People",
-            "description": "The text of a link redirecting the user to the People directory",
-            "id": "fabric.atlassianSwitcher.people",
+          "productDescriptionConfluence": Object {
+            "defaultMessage": "Document collaboration",
+            "description": "Text displayed under Confluence product recommendation.",
+            "id": "fabric.atlassianSwitcher.product.description.confluence",
+          },
+          "productDescriptionJiraServiceDesk": Object {
+            "defaultMessage": "IT service desk and customer service",
+            "description": "Text displayed under Jira Service Desk product recommendation.",
+            "id": "fabric.atlassianSwitcher.product.description.jsd",
+          },
+          "productDescriptionJiraSoftware": Object {
+            "defaultMessage": "Project and issue tracking",
+            "description": "Text displayed under Jira Software product recommendation.",
+            "id": "fabric.atlassianSwitcher.product.description.jsw",
+          },
+          "productDescriptionOpsgenie": Object {
+            "defaultMessage": "Modern incident management",
+            "description": "Text displayed under Opsgenie product recommendation.",
+            "id": "fabric.atlassianSwitcher.product.description.opsgenie",
           },
           "recent": Object {
             "defaultMessage": "Recent",
@@ -132,10 +151,9 @@ exports[`Atlassian Switcher basic snapshot 1`] = `
             "disableCustomLinks": false,
             "disableHeadings": false,
             "disableRecentContainers": false,
-            "enableUserCentricProducts": false,
             "isDiscoverMoreForEveryoneEnabled": false,
+            "isDiscoverSectionEnabled": false,
             "isEmceeLinkEnabled": false,
-            "productTopItemVariation": undefined,
             "xflow": true,
           }
         }
@@ -147,8 +165,8 @@ exports[`Atlassian Switcher basic snapshot 1`] = `
               "id": "fabric.atlassianSwitcher.administration",
             },
             "browseApps": Object {
-              "defaultMessage": "Browse apps",
-              "description": "The text of a link redirecting the user to Discover Embedded Marketplace within in the product",
+              "defaultMessage": "Browse Marketplace apps",
+              "description": "The text of a link redirecting the user to Discover Embedded Marketplace within in the product (Marketplace is a brand name. Please dont translate it)",
               "id": "fabric.atlassianSwitcher.browseApps",
             },
             "confluenceSpace": Object {
@@ -156,8 +174,13 @@ exports[`Atlassian Switcher basic snapshot 1`] = `
               "description": "In a context in which several items are listed , this text describes that the specific type of a given item is a Confluence space",
               "id": "fabric.atlassianSwitcher.confluenceSpace",
             },
+            "discover": Object {
+              "defaultMessage": "Discover",
+              "description": "The header of \\"Discover\\" section",
+              "id": "fabric.atlassianSwitcher.discover",
+            },
             "discoverMore": Object {
-              "defaultMessage": "Discover more",
+              "defaultMessage": "More Atlassian products",
               "description": "The text of a link redirecting the user to Discover More Atlassian products",
               "id": "fabric.atlassianSwitcher.discoverMore",
             },
@@ -206,10 +229,25 @@ exports[`Atlassian Switcher basic snapshot 1`] = `
               "description": "In a context in which users are able to view predefined custom links, this text is the title of the section displaying all existing custom links.",
               "id": "fabric.atlassianSwitcher.more",
             },
-            "people": Object {
-              "defaultMessage": "People",
-              "description": "The text of a link redirecting the user to the People directory",
-              "id": "fabric.atlassianSwitcher.people",
+            "productDescriptionConfluence": Object {
+              "defaultMessage": "Document collaboration",
+              "description": "Text displayed under Confluence product recommendation.",
+              "id": "fabric.atlassianSwitcher.product.description.confluence",
+            },
+            "productDescriptionJiraServiceDesk": Object {
+              "defaultMessage": "IT service desk and customer service",
+              "description": "Text displayed under Jira Service Desk product recommendation.",
+              "id": "fabric.atlassianSwitcher.product.description.jsd",
+            },
+            "productDescriptionJiraSoftware": Object {
+              "defaultMessage": "Project and issue tracking",
+              "description": "Text displayed under Jira Software product recommendation.",
+              "id": "fabric.atlassianSwitcher.product.description.jsw",
+            },
+            "productDescriptionOpsgenie": Object {
+              "defaultMessage": "Modern incident management",
+              "description": "Text displayed under Opsgenie product recommendation.",
+              "id": "fabric.atlassianSwitcher.product.description.opsgenie",
             },
             "recent": Object {
               "defaultMessage": "Recent",

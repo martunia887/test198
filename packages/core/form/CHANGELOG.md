@@ -1,5 +1,58 @@
 # @atlaskit/form
 
+## 6.3.1
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 6.3.0
+
+### Minor Changes
+
+- [minor][32c55df1d2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/32c55df1d2):
+
+  Add align prop for FormFooter
+
+## 6.2.5
+
+- Updated dependencies [d1444cc6ef](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d1444cc6ef):
+  - @atlaskit/datetime-picker@9.0.0
+
+## 6.2.4
+
+- Updated dependencies [8c725d46ec](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8c725d46ec):
+  - @atlaskit/datetime-picker@8.1.1
+  - @atlaskit/calendar@9.0.0
+
+## 6.2.3
+
+- Updated dependencies [97bab7fd28](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/97bab7fd28):
+  - @atlaskit/button@13.3.1
+  - @atlaskit/modal-dialog@10.3.1
+  - @atlaskit/radio@3.0.18
+  - @atlaskit/select@10.1.1
+  - @atlaskit/checkbox@10.0.0
+  - @atlaskit/docs@8.1.7
+
+## 6.2.2
+
+### Patch Changes
+
+- [patch][2deee10c17](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/2deee10c17):
+
+  Bugfix - DS-6661 - The componentWillUnmount method is not overridden properly in Form component as it has been misspelled as 'componenWillUnmount'.
+
+## 6.2.1
+
+### Patch Changes
+
+- [patch][5ccdfaeef2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/5ccdfaeef2):
+
+  Fixes bug where onSubmit function in Form may not be called if reference changes
+
 ## 6.2.0
 
 ### Minor Changes

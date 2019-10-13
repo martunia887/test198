@@ -1,5 +1,21 @@
 # @atlaskit/editor-test-helpers
 
+## 10.1.1
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 10.1.0
+
+### Minor Changes
+
+- [minor][79c69ed5cd](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/79c69ed5cd):
+
+  ED-7449 Implement sorting inline cards inside tables base on resolved title
+
 ## 10.0.0
 
 ### Major Changes
