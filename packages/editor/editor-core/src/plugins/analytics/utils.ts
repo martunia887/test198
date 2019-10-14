@@ -5,13 +5,11 @@ import {
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { AnalyticsEventPayload } from './types';
 import { EditorState, Transaction } from 'prosemirror-state';
-import { Command, CommandDispatch } from '../../types';
+import { Command } from '../../types';
 import { InputRuleWithHandler } from '../../utils/input-rules';
 import { analyticsPluginKey } from './plugin';
 import { AnalyticsStep } from './analytics-step';
 import { Step } from 'prosemirror-transform';
-import { Node } from 'prosemirror-model';
-import { autoJoin as pmAutoJoin } from 'prosemirror-commands';
 
 export type DispatchAnalyticsEvent = (payload: AnalyticsEventPayload) => void;
 export type HigherOrderCommand = (command: Command) => Command;
@@ -55,28 +53,6 @@ export function addAnalytics(
 
   return tr;
 }
-
-export const analyticsDispatch = (
-  state: EditorState,
-  payload: AnalyticsEventPayload,
-  dispatch?: CommandDispatch,
-) => (tr?: Transaction): void =>
-  dispatch && tr && dispatch(addAnalytics(state, tr, payload));
-
-/**
- * A version of prosemirror-command's `autoJoin` that supports meta (e.g. analytics).
- * @param command
- * @param isJoinable
- */
-export const autoJoinWithAnalytics = (
-  command: Command,
-  isJoinable: ((before: Node, after: Node) => boolean) | string[],
-  payload: AnalyticsEventPayload,
-): Command => (state, dispatch) =>
-  pmAutoJoin(command, isJoinable)(
-    state,
-    analyticsDispatch(state, payload, dispatch),
-  );
 
 export function withAnalytics(
   payload:

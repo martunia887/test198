@@ -26,7 +26,7 @@ import {
   INDENT_TYPE,
   INPUT_METHOD,
   AnalyticsEventPayload,
-  autoJoinWithAnalytics,
+  withAnalytics,
 } from '../../analytics';
 
 import {
@@ -107,11 +107,9 @@ const unindent = filter(isInsideTask, (state, dispatch) => {
     return false;
   }
 
-  return autoJoinWithAnalytics(
-    liftSelection,
-    ['taskList'],
+  return withAnalytics(
     indentationAnalytics(curIndentLevel, INDENT_DIR.OUTDENT),
-  )(state, dispatch);
+  )(autoJoin(liftSelection, ['taskList']))(state, dispatch);
 });
 
 const indent = filter(isInsideTask, (state, dispatch) => {
@@ -121,10 +119,8 @@ const indent = filter(isInsideTask, (state, dispatch) => {
     return true;
   }
 
-  return autoJoinWithAnalytics(
-    wrapSelectionInTaskList,
-    ['taskList'],
-    indentationAnalytics(curIndentLevel, INDENT_DIR.INDENT),
+  return withAnalytics(indentationAnalytics(curIndentLevel, INDENT_DIR.INDENT))(
+    autoJoin(wrapSelectionInTaskList, ['taskList']),
   )(state, dispatch);
 });
 
