@@ -57,23 +57,21 @@ describe('tasks and decisions - keymaps', () => {
       { localId: 'local-uuid' },
     ],
   ])('%s', (name, list, item, listProps, itemProps) => {
-    describe(name, () => {
-      describe('Down Arrow', () => {
-        it(`should navigate out of ${name}`, () => {
-          const { editorView } = editorFactory(
-            doc(list(listProps)(item(itemProps)('Hello world{<>}'))),
-          );
+    describe('Down Arrow', () => {
+      it(`should navigate out of ${name}`, () => {
+        const { editorView } = editorFactory(
+          doc(list(listProps)(item(itemProps)('Hello world{<>}'))),
+        );
 
-          sendKeyToPm(editorView, 'ArrowDown');
+        sendKeyToPm(editorView, 'ArrowDown');
 
-          const expectedDoc = doc(
-            list(listProps)(item(itemProps)('Hello world')),
-            p('{<>}'),
-          );
+        const expectedDoc = doc(
+          list(listProps)(item(itemProps)('Hello world')),
+          p('{<>}'),
+        );
 
-          expect(editorView.state.doc).toEqualDocument(expectedDoc);
-          compareSelection(editorFactory, expectedDoc, editorView);
-        });
+        expect(editorView.state.doc).toEqualDocument(expectedDoc);
+        compareSelection(editorFactory, expectedDoc, editorView);
       });
     });
   });
