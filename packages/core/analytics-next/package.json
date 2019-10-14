@@ -29,12 +29,12 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.2.5",
-    "@atlaskit/button": "^13.3.3",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/field-text": "^9.0.13",
-    "@atlaskit/ssr": "^0.1.1",
-    "@atlaskit/type-helpers": "^4.2.2",
+    "@atlaskit/build-utils": "*",
+    "@atlaskit/button": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/field-text": "*",
+    "@atlaskit/ssr": "*",
+    "@atlaskit/type-helpers": "*",
     "enzyme": "^3.7.0",
     "react-dom": "^16.8.0",
     "redux": "^3.7.2"

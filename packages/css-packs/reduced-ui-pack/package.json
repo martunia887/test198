@@ -31,9 +31,9 @@
     "@atlaskit/css-reset": "^5.0.9"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/icon": "^19.0.6",
-    "@atlaskit/section-message": "^4.1.1",
+    "@atlaskit/docs": "*",
+    "@atlaskit/icon": "*",
+    "@atlaskit/section-message": "*",
     "@babel/node": "^7.0.0",
     "cheerio": "^0.22.0",
     "glob": "^7.1.2",

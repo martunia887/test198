@@ -43,8 +43,8 @@
     "react-dom": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/section-message": "^4.1.1",
+    "@atlaskit/docs": "*",
+    "@atlaskit/section-message": "*",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0"
   }

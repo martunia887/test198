@@ -33,8 +33,8 @@
     "prosemirror-model": "^1.7.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.5",
-    "@atlaskit/util-data-test": "^12.11.1",
+    "@atlaskit/docs": "*",
+    "@atlaskit/util-data-test": "*",
     "react": "^16.8.0",
     "rimraf": "^2.6.3",
     "svgexport": "^0.3.2",

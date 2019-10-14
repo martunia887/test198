@@ -38,11 +38,11 @@
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.2.5",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/media-core": "^30.0.16",
-    "@atlaskit/media-test-helpers": "^25.1.3",
-    "@atlaskit/page": "^11.0.9",
+    "@atlaskit/build-utils": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/media-core": "*",
+    "@atlaskit/media-test-helpers": "*",
+    "@atlaskit/page": "*",
     "@types/enzyme": "^3.1.15",
     "enzyme": "^3.7.0",
     "react": "^16.8.0",

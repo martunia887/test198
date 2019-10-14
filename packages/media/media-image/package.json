@@ -31,12 +31,12 @@
     "rxjs": "^5.5.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/field-text": "^9.0.13",
-    "@atlaskit/media-test-helpers": "^25.1.3",
-    "@atlaskit/select": "^10.1.3",
-    "@atlaskit/spinner": "^12.1.1",
-    "@atlaskit/theme": "^9.2.4",
+    "@atlaskit/docs": "*",
+    "@atlaskit/field-text": "*",
+    "@atlaskit/media-test-helpers": "*",
+    "@atlaskit/select": "*",
+    "@atlaskit/spinner": "*",
+    "@atlaskit/theme": "*",
     "enzyme": "^3.7.0",
     "styled-components": "^3.2.6"
   }

@@ -27,10 +27,10 @@
     "prosemirror-model": "^1.7.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.5",
-    "@atlaskit/editor-core": "^113.0.0",
-    "@atlaskit/editor-test-helpers": "^10.0.0",
-    "@atlaskit/util-data-test": "^12.9.6",
+    "@atlaskit/docs": "*",
+    "@atlaskit/editor-core": "*",
+    "@atlaskit/editor-test-helpers": "*",
+    "@atlaskit/util-data-test": "*",
     "react": "^16.8.0"
   },
   "peerDependencies": {

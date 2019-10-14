@@ -21,7 +21,7 @@
     "url": "https://bitbucket.org/atlassian/atlaskit-mk-2"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8"
+    "@atlaskit/docs": "*"
   },
   "atlaskit": {
     "internal": true,

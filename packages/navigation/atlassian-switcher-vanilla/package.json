@@ -28,7 +28,7 @@
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8",
+    "@atlaskit/docs": "*",
     "enzyme": "^3.7.0",
     "fetch-mock": "^7.3.3"
   }

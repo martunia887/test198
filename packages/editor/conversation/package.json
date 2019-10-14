@@ -41,10 +41,10 @@
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@atlaskit/analytics-listeners": "^6.2.1",
-    "@atlaskit/docs": "^8.1.5",
-    "@atlaskit/single-select": "^8.0.13",
-    "@atlaskit/util-data-test": "^12.11.1",
+    "@atlaskit/analytics-listeners": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/single-select": "*",
+    "@atlaskit/util-data-test": "*",
     "enzyme": "^3.7.0"
   }
 }

@@ -33,10 +33,10 @@
     "lodash.throttle": "^4.1.1"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/drawer": "^5.0.13",
-    "@atlaskit/dropdown-menu": "^8.1.4",
-    "@atlaskit/logo": "^12.2.1",
+    "@atlaskit/docs": "*",
+    "@atlaskit/drawer": "*",
+    "@atlaskit/dropdown-menu": "*",
+    "@atlaskit/logo": "*",
     "jest-emotion": "^10.0.10",
     "react": "^16.8.0",
     "react-intl": "^2.6.0"

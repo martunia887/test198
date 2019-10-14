@@ -29,7 +29,7 @@
     "react-dom": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8"
+    "@atlaskit/docs": "*"
   },
   "author": "Atlassian Pty. Ltd",
   "maintainers": [],

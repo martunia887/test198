@@ -29,10 +29,10 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.2.5",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/section-message": "^4.1.1",
-    "@atlaskit/ssr": "^0.1.1",
+    "@atlaskit/build-utils": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/section-message": "*",
+    "@atlaskit/ssr": "*",
     "enzyme": "^3.7.0",
     "react-dom": "^16.8.0",
     "react-redux": "^5.0.0",

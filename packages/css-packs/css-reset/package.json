@@ -33,7 +33,7 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8",
+    "@atlaskit/docs": "*",
     "less": "^2.7.1",
     "ts-node": "^6.1.1"
   },

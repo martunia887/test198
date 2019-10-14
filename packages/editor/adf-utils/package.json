@@ -40,8 +40,8 @@
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.5",
-    "@atlaskit/json-schema-generator": "^2.1.4",
+    "@atlaskit/docs": "*",
+    "@atlaskit/json-schema-generator": "*",
     "react": "^16.8.0",
     "wait-for-expect": "^1.2.0"
   },

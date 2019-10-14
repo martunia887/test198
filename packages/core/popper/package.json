@@ -25,11 +25,11 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.2.7",
-    "@atlaskit/button": "^13.3.3",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/ssr": "^0.1.1",
-    "@atlaskit/theme": "^9.2.4",
+    "@atlaskit/build-utils": "*",
+    "@atlaskit/button": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/ssr": "*",
+    "@atlaskit/theme": "*",
     "enzyme": "^3.7.0",
     "react-dom": "^16.8.0",
     "react-lorem-component": "^0.12.2",

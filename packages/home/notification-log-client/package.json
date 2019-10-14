@@ -22,8 +22,8 @@
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/notification-indicator": "^7.0.10",
+    "@atlaskit/docs": "*",
+    "@atlaskit/notification-indicator": "*",
     "fetch-mock": "^7.3.3",
     "react": "^16.8.0"
   }

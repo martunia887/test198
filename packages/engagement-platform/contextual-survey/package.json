@@ -37,8 +37,8 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/checkbox": "^10.1.2",
-    "@atlaskit/docs": "^8.1.8",
+    "@atlaskit/checkbox": "*",
+    "@atlaskit/docs": "*",
     "@testing-library/react": "^8.0.1"
   },
   "keywords": [

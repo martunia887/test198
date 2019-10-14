@@ -49,11 +49,11 @@
     "styled-components": "^3.2.6"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.2.7",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/media-store": "^12.0.13",
-    "@atlaskit/media-test-helpers": "^25.1.3",
-    "@atlaskit/ssr": "^0.1.1",
+    "@atlaskit/build-utils": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/media-store": "*",
+    "@atlaskit/media-test-helpers": "*",
+    "@atlaskit/ssr": "*",
     "enzyme": "^3.7.0",
     "react-dom": "^16.8.0",
     "react-intl": "^2.6.0",

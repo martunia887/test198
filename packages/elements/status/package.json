@@ -39,10 +39,10 @@
     "react-intl": "^2.6.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/editor-test-helpers": "^10.1.1",
-    "@atlaskit/elements-test-helpers": "^0.6.6",
-    "@atlaskit/i18n-tools": "^0.5.2",
+    "@atlaskit/docs": "*",
+    "@atlaskit/editor-test-helpers": "*",
+    "@atlaskit/elements-test-helpers": "*",
+    "@atlaskit/i18n-tools": "*",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "react": "^16.8.0",

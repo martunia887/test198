@@ -34,11 +34,11 @@
     "react-intl": "^2.6.0"
   },
   "devDependencies": {
-    "@atlaskit/button": "^13.3.3",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/navigation": "^35.2.5",
-    "@atlaskit/page": "^11.0.9",
-    "@atlaskit/section-message": "^4.1.1",
+    "@atlaskit/button": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/navigation": "*",
+    "@atlaskit/page": "*",
+    "@atlaskit/section-message": "*",
     "enzyme": "^3.7.0",
     "react-test-renderer": "^16.8.0"
   },

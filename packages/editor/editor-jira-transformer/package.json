@@ -28,12 +28,12 @@
   },
   "devDependencies": {
     "@atlaskit/activity": "^1.0.1",
-    "@atlaskit/docs": "^8.1.5",
-    "@atlaskit/editor-core": "^113.0.0",
-    "@atlaskit/editor-json-transformer": "^6.3.3",
-    "@atlaskit/editor-test-helpers": "^10.0.0",
-    "@atlaskit/theme": "^9.2.3",
-    "@atlaskit/util-data-test": "^12.9.6",
+    "@atlaskit/docs": "*",
+    "@atlaskit/editor-core": "*",
+    "@atlaskit/editor-json-transformer": "*",
+    "@atlaskit/editor-test-helpers": "*",
+    "@atlaskit/theme": "*",
+    "@atlaskit/util-data-test": "*",
     "@types/prosemirror-model": "^1.5.0",
     "styled-components": "^3.2.6"
   }

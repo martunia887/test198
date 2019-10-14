@@ -23,12 +23,12 @@
     "lodash.truncate": "^4.4.2"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.2.5",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/global-navigation": "^8.0.3",
-    "@atlaskit/logo": "^12.2.1",
-    "@atlaskit/navigation-next": "^6.8.2",
-    "@atlaskit/ssr": "^0.1.1",
+    "@atlaskit/build-utils": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/global-navigation": "*",
+    "@atlaskit/logo": "*",
+    "@atlaskit/navigation-next": "*",
+    "@atlaskit/ssr": "*",
     "axios": "^0.18.0",
     "enzyme": "^3.7.0",
     "react-dom": "^16.8.0"

@@ -34,8 +34,8 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^8.1.5",
-    "@atlaskit/elements-test-helpers": "^0.6.4",
+    "@atlaskit/docs": "*",
+    "@atlaskit/elements-test-helpers": "*",
     "@types/date-fns": "^2.6.0",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",

@@ -28,9 +28,9 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.2.7",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/visual-regression": "^0.1.3",
+    "@atlaskit/build-utils": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/visual-regression": "*",
     "enzyme": "^3.7.0"
   }
 }

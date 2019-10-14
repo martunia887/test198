@@ -28,8 +28,8 @@
     "url": "https://bitbucket.org/atlassian/atlaskit-mk-2"
   },
   "devDependencies": {
-    "@atlaskit/button": "^13.3.3",
-    "@atlaskit/docs": "^8.1.8",
+    "@atlaskit/button": "*",
+    "@atlaskit/docs": "*",
     "enzyme": "^3.7.0",
     "jest-in-case": "^1.0.2",
     "react": "^16.8.0"

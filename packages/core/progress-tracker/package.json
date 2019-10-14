@@ -34,10 +34,10 @@
   },
   "devDependencies": {
     "react-router-dom": "^4.2.2",
-    "@atlaskit/build-utils": "^2.2.5",
-    "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/ssr": "^0.1.1",
-    "@atlaskit/visual-regression": "^0.1.3",
+    "@atlaskit/build-utils": "*",
+    "@atlaskit/docs": "*",
+    "@atlaskit/ssr": "*",
+    "@atlaskit/visual-regression": "*",
     "enzyme": "^3.7.0",
     "react-dom": "^16.8.0",
     "react-test-renderer": "^16.8.0"
