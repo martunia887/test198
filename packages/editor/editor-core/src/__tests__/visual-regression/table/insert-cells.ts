@@ -16,12 +16,13 @@ const initEditor = async (adf: Object) => {
   await initEditorWithAdf(page, {
     appearance: Appearance.fullPage,
     adf,
-    viewport: { width: 1040, height: 500 },
+    viewport: { width: 3000, height: 500 },
+    withCollab: true,
   });
   await clickFirstCell(page);
 };
 
-describe('Snapshot Test: table insert/delete with merged columns', () => {
+describe('Collab - Snapshot Test: table insert/delete with merged columns', () => {
   beforeAll(() => {
     // @ts-ignore
     page = global.page;
@@ -33,6 +34,7 @@ describe('Snapshot Test: table insert/delete with merged columns', () => {
 
   test('should be able to insert a column at the end of the table', async () => {
     await insertColumn(page, 0, 'right');
+
     await snapshot(page);
   });
 });
@@ -44,7 +46,7 @@ describe('Snapshot Test: table insert/delete', () => {
   });
 
   beforeEach(async () => {
-    await initEditor(adf);
+    await initEditor(tableMergedColumnsADF);
   });
 
   afterEach(async () => {

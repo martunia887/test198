@@ -201,7 +201,7 @@ interface PropOptions {
   mediaProvider: Promise<MediaProvider>;
   mentionProvider?: Promise<MentionProvider>;
   inviteHandler?: (event: React.MouseEvent<HTMLElement>) => void;
-  parentContainer: any;
+  parentContainer?: any;
   inviteToEditComponent?: React.ComponentType<InviteToEditComponentProps>;
 }
 
@@ -211,7 +211,6 @@ const editorProps = ({
   mentionProvider,
   inviteHandler,
   inviteToEditComponent,
-  parentContainer,
 }: PropOptions): EditorProps => ({
   appearance: 'full-page',
   analyticsHandler,
@@ -238,7 +237,6 @@ const editorProps = ({
   media: {
     provider: mediaProvider,
     allowMediaSingle: true,
-    customDropzoneContainer: parentContainer,
   },
   emojiProvider: emoji.storyData.getEmojiResource() as Promise<EmojiProvider>,
   mentionProvider: Promise.resolve(
@@ -269,46 +267,62 @@ const editorProps = ({
   extensionHandlers: extensionHandlers,
 });
 
+export const CollabEditorComponent = ({
+  leftEditorProps,
+  rightEditorProps,
+}: any) => (
+  <div>
+    <Columns>
+      <Column>
+        <DropzoneEditorWrapper>
+          {parentContainer => (
+            <EditorContext>
+              <Editor
+                {...leftEditorProps}
+                media={{
+                  ...leftEditorProps.media,
+                  customDropzoneContainer: parentContainer,
+                }}
+              />
+            </EditorContext>
+          )}
+        </DropzoneEditorWrapper>
+      </Column>
+      <Column>
+        <DropzoneEditorWrapper>
+          {parentContainer => (
+            <EditorContext>
+              <Editor
+                {...rightEditorProps}
+                media={{
+                  ...rightEditorProps.media,
+                  customDropzoneContainer: parentContainer,
+                }}
+              />
+            </EditorContext>
+          )}
+        </DropzoneEditorWrapper>
+      </Column>
+    </Columns>
+  </div>
+);
+
 export default class Example extends React.Component<Props> {
   render() {
     return (
-      <div>
-        <Columns>
-          <Column>
-            <DropzoneEditorWrapper>
-              {parentContainer => (
-                <EditorContext>
-                  <Editor
-                    {...editorProps({
-                      sessionId: 'rick',
-                      mediaProvider: mediaProvider1,
-                      parentContainer,
-                      inviteToEditComponent: InviteToEditButton,
-                    })}
-                  />
-                </EditorContext>
-              )}
-            </DropzoneEditorWrapper>
-          </Column>
-          <Column>
-            <DropzoneEditorWrapper>
-              {parentContainer => (
-                <EditorContext>
-                  <Editor
-                    {...editorProps({
-                      sessionId: 'morty',
-                      mediaProvider: mediaProvider2,
-                      mentionProvider: mentionProvider2,
-                      parentContainer,
-                      inviteToEditComponent: InviteToEditButton,
-                    })}
-                  />
-                </EditorContext>
-              )}
-            </DropzoneEditorWrapper>
-          </Column>
-        </Columns>
-      </div>
+      <CollabEditorComponent
+        leftEditorProps={editorProps({
+          sessionId: 'rick',
+          mediaProvider: mediaProvider1,
+          inviteToEditComponent: InviteToEditButton,
+        })}
+        rightEditorProps={editorProps({
+          sessionId: 'morty',
+          mediaProvider: mediaProvider2,
+          mentionProvider: mentionProvider2,
+          inviteToEditComponent: InviteToEditButton,
+        })}
+      />
     );
   }
 }

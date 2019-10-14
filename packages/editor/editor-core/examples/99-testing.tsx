@@ -24,6 +24,7 @@ import mediaMockServer from '../example-helpers/media-mock';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { withSidebarContainer } from '../example-helpers/SidebarContainer';
 import { MountOptions } from '../src/__tests__/visual-regression/_utils';
+import { CollabEditorComponent } from './3-collab';
 
 function createMediaMockEnableOnce() {
   let enabled = false;
@@ -151,7 +152,7 @@ function createEditorWindowBindings(win: Window) {
     options: MountOptions = {},
   ) => {
     const target = document.getElementById('editor-container');
-    const { mode, withSidebar } = options;
+    const { mode, withSidebar, withCollab } = options;
 
     if (!target) {
       return;
@@ -193,13 +194,30 @@ function createEditorWindowBindings(win: Window) {
       props.extensionHandlers = extensionHandlers;
     }
 
-    let Editor: React.ComponentType<EditorProps> = (props: EditorProps) => (
-      <EditorWithState
-        insertMenuItems={customInsertMenuItems}
-        {...providers}
-        {...props}
-      />
-    );
+    let Editor: React.ComponentType<EditorProps>;
+
+    if (true) {
+      Editor = (props: EditorProps) => (
+        <CollabEditorComponent
+          leftEditorProps={{
+            ...providers,
+            ...props,
+          }}
+          rightEditorProps={{
+            ...providers,
+            ...props,
+          }}
+        />
+      );
+    } else {
+      Editor = (props: EditorProps) => (
+        <EditorWithState
+          insertMenuItems={customInsertMenuItems}
+          {...providers}
+          {...props}
+        />
+      );
+    }
 
     Wrapper = Editor;
     editorProps = props;

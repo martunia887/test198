@@ -137,6 +137,7 @@ function getEditorProps(appearance: Appearance) {
 export type MountOptions = {
   mode?: 'light' | 'dark';
   withSidebar?: boolean;
+  withCollab?: boolean;
 };
 
 export async function mountEditor(
@@ -177,6 +178,7 @@ type InitEditorWithADFOptions = {
   mode?: 'light' | 'dark';
   allowSideEffects?: SideEffectsOption;
   withSidebar?: boolean;
+  withCollab?: boolean;
 };
 
 export const initEditorWithAdf = async (
@@ -190,6 +192,7 @@ export const initEditorWithAdf = async (
     mode,
     allowSideEffects = {},
     withSidebar = false,
+    withCollab = false,
   }: InitEditorWithADFOptions,
 ) => {
   const url = getExampleUrl('editor', 'editor-core', 'vr-testing');
@@ -211,7 +214,7 @@ export const initEditorWithAdf = async (
       ...getEditorProps(appearance),
       ...editorProps,
     },
-    { mode, withSidebar },
+    { mode, withSidebar, withCollab },
   );
 
   // We disable possible side effects, like animation, transitions and caret cursor,
