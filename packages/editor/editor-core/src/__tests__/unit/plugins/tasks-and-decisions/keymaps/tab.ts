@@ -3,21 +3,19 @@ import {
   doc,
   decisionList,
   decisionItem,
-  sendKeyToPm,
   taskList,
   taskItem,
-  RefsNode,
   table,
   tr,
   td,
   layoutSection,
   layoutColumn,
   p,
+  testKeymap,
 } from '@atlaskit/editor-test-helpers';
 import { uuid } from '@atlaskit/adf-schema';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { MockMentionResource } from '@atlaskit/util-data-test';
-import { Schema } from 'prosemirror-model';
 
 describe('tasks and decisions - keymaps', () => {
   const createEditor = createEditorFactory();
@@ -51,44 +49,30 @@ describe('tasks and decisions - keymaps', () => {
     });
   };
 
-  const scenarios = [
-    {
-      name: 'action',
-      list: taskList,
-      item: taskItem,
-      listProps: { localId: 'local-uuid' },
-      itemProps: { localId: 'local-uuid', state: 'TODO' },
-    },
-    {
-      name: 'decision',
-      list: decisionList,
-      item: decisionItem,
-      listProps: { localId: 'local-uuid' },
-      itemProps: { localId: 'local-uuid' },
-    },
-  ];
-
-  const test = (
-    before: (schema: Schema) => RefsNode,
-    after: (schema: Schema) => RefsNode,
-    keys: string[],
-    factory = editorFactory,
-  ) => {
-    const { editorView } = factory(before);
-    keys.forEach(key => sendKeyToPm(editorView, key));
-    expect(editorView.state).toEqualDocumentAndSelection(after);
-  };
-
-  scenarios.forEach(({ name, list, item, listProps, itemProps }) => {
-    describe(name, () => {
-      describe('Tab', () => {
-        it('should do nothing on a first level list', () => {
-          test(
-            doc(list(listProps)(item(itemProps)('Hello{<>} World'))),
-            doc(list(listProps)(item(itemProps)('Hello{<>} World'))),
-            ['Tab'],
-          );
-        });
+  describe.each([
+    [
+      'action',
+      taskList,
+      taskItem,
+      { localId: 'local-uuid' },
+      { localId: 'local-uuid', state: 'TODO' },
+    ],
+    [
+      'decision',
+      decisionList,
+      decisionItem,
+      { localId: 'local-uuid' },
+      { localId: 'local-uuid' },
+    ],
+  ])('%s', (name, list, item, listProps, itemProps) => {
+    describe('Tab', () => {
+      it('should do nothing on a first level list', () => {
+        testKeymap(
+          editorFactory,
+          doc(list(listProps)(item(itemProps)('Hello{<>} World'))),
+          doc(list(listProps)(item(itemProps)('Hello{<>} World'))),
+          ['Tab'],
+        );
       });
     });
   });
@@ -100,7 +84,8 @@ describe('tasks and decisions - keymaps', () => {
 
     describe('Tab', () => {
       it('should indent top level items following the first', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Hello World'),
@@ -120,7 +105,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('can indent in a table', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             table({})(
               tr(
@@ -157,7 +143,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('can indent in a layout', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             layoutSection(
               layoutColumn({ width: 50 })(
@@ -197,7 +184,7 @@ describe('tasks and decisions - keymaps', () => {
           ),
         );
 
-        test(nestedDoc, nestedDoc, ['Tab']);
+        testKeymap(editorFactory, nestedDoc, nestedDoc, ['Tab']);
       });
 
       it('should not indent past parent, even with sibling', () => {
@@ -211,7 +198,7 @@ describe('tasks and decisions - keymaps', () => {
           ),
         );
 
-        test(nestedDoc, nestedDoc, ['Tab']);
+        testKeymap(editorFactory, nestedDoc, nestedDoc, ['Tab']);
       });
 
       it('should not indent items past 6 levels', () => {
@@ -241,11 +228,12 @@ describe('tasks and decisions - keymaps', () => {
           ),
         );
 
-        test(nestedDoc, nestedDoc, ['Tab']);
+        testKeymap(editorFactory, nestedDoc, nestedDoc, ['Tab']);
       });
 
       it('can indent multiple tasks at same level', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)("Say ya'll wanna roll in the scene"),
@@ -299,7 +287,7 @@ describe('tasks and decisions - keymaps', () => {
               taskItem(itemProps)('Say yall{<>} wanna live with the dream'),
             ),
           );
-          test(testDoc, testDoc, ['Tab'], simpleFactory);
+          testKeymap(simpleFactory, testDoc, testDoc, ['Tab']);
         });
       });
     });

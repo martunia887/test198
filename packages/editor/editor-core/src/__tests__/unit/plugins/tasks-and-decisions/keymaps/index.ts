@@ -41,24 +41,22 @@ describe('tasks and decisions - keymaps', () => {
     });
   };
 
-  const scenarios = [
-    {
-      name: 'action',
-      list: taskList,
-      item: taskItem,
-      listProps: { localId: 'local-uuid' },
-      itemProps: { localId: 'local-uuid', state: 'TODO' },
-    },
-    {
-      name: 'decision',
-      list: decisionList,
-      item: decisionItem,
-      listProps: { localId: 'local-uuid' },
-      itemProps: { localId: 'local-uuid' },
-    },
-  ];
-
-  scenarios.forEach(({ name, list, item, listProps, itemProps }) => {
+  describe.each([
+    [
+      'action',
+      taskList,
+      taskItem,
+      { localId: 'local-uuid' },
+      { localId: 'local-uuid', state: 'TODO' },
+    ],
+    [
+      'decision',
+      decisionList,
+      decisionItem,
+      { localId: 'local-uuid' },
+      { localId: 'local-uuid' },
+    ],
+  ])('%s', (name, list, item, listProps, itemProps) => {
     describe(name, () => {
       describe('Down Arrow', () => {
         it(`should navigate out of ${name}`, () => {

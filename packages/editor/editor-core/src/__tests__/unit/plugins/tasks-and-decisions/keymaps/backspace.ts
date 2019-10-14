@@ -4,7 +4,6 @@ import {
   p,
   decisionList,
   decisionItem,
-  sendKeyToPm,
   taskList,
   taskItem,
   mention,
@@ -13,12 +12,11 @@ import {
   tdCursor,
   tdEmpty,
   tr,
-  RefsNode,
+  testKeymap,
 } from '@atlaskit/editor-test-helpers';
 import { uuid } from '@atlaskit/adf-schema';
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { MockMentionResource } from '@atlaskit/util-data-test';
-import { Schema } from 'prosemirror-model';
 
 describe('tasks and decisions - keymaps', () => {
   const createEditor = createEditorFactory();
@@ -48,157 +46,152 @@ describe('tasks and decisions - keymaps', () => {
     });
   };
 
-  const scenarios = [
-    {
-      name: 'action',
-      list: taskList,
-      item: taskItem,
-      listProps: { localId: 'local-uuid' },
-      itemProps: { localId: 'local-uuid', state: 'TODO' },
-    },
-    {
-      name: 'decision',
-      list: decisionList,
-      item: decisionItem,
-      listProps: { localId: 'local-uuid' },
-      itemProps: { localId: 'local-uuid' },
-    },
-  ];
+  describe.each([
+    [
+      'action',
+      taskList,
+      taskItem,
+      { localId: 'local-uuid' },
+      { localId: 'local-uuid', state: 'TODO' },
+    ],
+    [
+      'decision',
+      decisionList,
+      decisionItem,
+      { localId: 'local-uuid' },
+      { localId: 'local-uuid' },
+    ],
+  ])('%s', (name, list, item, listProps, itemProps) => {
+    describe('Backspace', () => {
+      describe(`when ${name}List exists before paragraph`, () => {
+        it(`should merge paragraph with ${name}Item and preserve content`, () => {
+          testKeymap(
+            editorFactory,
+            doc(list(listProps)(item(itemProps)('Hello')), p('{<>}World')),
+            doc(list(listProps)(item(itemProps)('Hello{<>}World'))),
+            ['Backspace'],
+          );
+        });
 
-  const test = (
-    before: (schema: Schema) => RefsNode,
-    after: (schema: Schema) => RefsNode,
-    keys: string[],
-  ) => {
-    const { editorView } = editorFactory(before);
-    keys.forEach(key => sendKeyToPm(editorView, key));
-    expect(editorView.state).toEqualDocumentAndSelection(after);
-  };
+        it(`should remove paragraph with ${name}Item and preserve content`, () => {
+          testKeymap(
+            editorFactory,
+            doc(list(listProps)(item(itemProps)('Hello')), p('{<>}')),
+            doc(list(listProps)(item(itemProps)('Hello{<>}'))),
+            ['Backspace'],
+          );
+        });
 
-  scenarios.forEach(({ name, list, item, listProps, itemProps }) => {
-    describe(name, () => {
-      describe('Backspace', () => {
-        describe(`when ${name}List exists before paragraph`, () => {
-          it(`should merge paragraph with ${name}Item and preserve content`, () => {
-            test(
-              doc(list(listProps)(item(itemProps)('Hello')), p('{<>}World')),
-              doc(list(listProps)(item(itemProps)('Hello{<>}World'))),
-              ['Backspace'],
-            );
-          });
+        it('should delete only internal node on backspace', () => {
+          testKeymap(
+            editorFactory,
+            doc(
+              list(listProps)(
+                item(itemProps)(
+                  'Hello ',
+                  mention({ id: '1234', text: '@Oscar Wallhult' })(),
+                  '{<>}',
+                ),
+              ),
+            ),
+            doc(list(listProps)(item(itemProps)('Hello {<>}'))),
+            ['Backspace'],
+          );
+        });
+      });
 
-          it(`should remove paragraph with ${name}Item and preserve content`, () => {
-            test(
-              doc(list(listProps)(item(itemProps)('Hello')), p('{<>}')),
-              doc(list(listProps)(item(itemProps)('Hello{<>}'))),
-              ['Backspace'],
-            );
-          });
+      describe(`when cursor is at the beginning of ${name}Item`, () => {
+        it('should convert item to paragraph, splitting the list', () => {
+          testKeymap(
+            editorFactory,
+            doc(
+              list(listProps)(
+                item(itemProps)('Hello'),
+                item(itemProps)('{<>}World'),
+                item(itemProps)('Cheese is great!'),
+              ),
+            ),
+            doc(
+              list(listProps)(item(itemProps)('Hello')),
+              p('{<>}World'),
+              list(listProps)(item(itemProps)('Cheese is great!')),
+            ),
+            ['Backspace'],
+          );
+        });
 
-          it('should delete only internal node on backspace', () => {
-            test(
+        it('should merge with previous item, when backspacing twice', () => {
+          testKeymap(
+            editorFactory,
+            doc(
+              list(listProps)(
+                item(itemProps)('Hello'),
+                item(itemProps)('{<>}World'),
+                item(itemProps)('Cheese is great!'),
+              ),
+            ),
+            doc(
+              list(listProps)(
+                item(itemProps)('Hello{<>}World'),
+                item(itemProps)('Cheese is great!'),
+              ),
+            ),
+            ['Backspace', 'Backspace'],
+          );
+        });
+      });
+
+      describe(`when cursor is at the beginning of the first ${name}Item`, () => {
+        it('should convert item to paragraph', () => {
+          testKeymap(
+            editorFactory,
+            doc(
+              list(listProps)(
+                item(itemProps)('{<>}Hello'),
+                item(itemProps)('World'),
+              ),
+            ),
+            doc(p('{<>}Hello'), list(listProps)(item(itemProps)('World'))),
+            ['Backspace'],
+          );
+        });
+
+        it('should convert item to paragraph and remove the list if it is empty', () => {
+          testKeymap(
+            editorFactory,
+            doc(list(listProps)(item(itemProps)('{<>}Hello World'))),
+            doc(p('{<>}Hello World')),
+            ['Backspace'],
+          );
+        });
+
+        it(`should delete selection and keep ${name}Item`, () => {
+          testKeymap(
+            editorFactory,
+            doc(list(listProps)(item(itemProps)('{<}Hello {>}World'))),
+            doc(list(listProps)(item(itemProps)('{<>}World'))),
+            ['Backspace'],
+          );
+        });
+      });
+
+      describe('when nested inside tables', () => {
+        describe('when cursor is at the beginning of the first taskItem', () => {
+          it('should convert item to paragraph and keep the cursor in the same cell', () => {
+            testKeymap(
+              editorFactory,
               doc(
-                list(listProps)(
-                  item(itemProps)(
-                    'Hello ',
-                    mention({ id: '1234', text: '@Oscar Wallhult' })(),
-                    '{<>}',
+                table()(
+                  tr(
+                    tdEmpty,
+                    td()(list(listProps)(item(itemProps)('{<>}'))),
+                    tdEmpty,
                   ),
                 ),
               ),
-              doc(list(listProps)(item(itemProps)('Hello {<>}'))),
+              doc(table()(tr(tdEmpty, tdCursor, tdEmpty))),
               ['Backspace'],
             );
-          });
-        });
-
-        describe(`when cursor is at the beginning of a ${name}Item`, () => {
-          it('should convert item to paragraph, splitting the list', () => {
-            test(
-              doc(
-                list(listProps)(
-                  item(itemProps)('Hello'),
-                  item(itemProps)('{<>}World'),
-                  item(itemProps)('Cheese is great!'),
-                ),
-              ),
-              doc(
-                list(listProps)(item(itemProps)('Hello')),
-                p('{<>}World'),
-                list(listProps)(item(itemProps)('Cheese is great!')),
-              ),
-              ['Backspace'],
-            );
-          });
-
-          it('should merge with previous item, when backspacing twice', () => {
-            test(
-              doc(
-                list(listProps)(
-                  item(itemProps)('Hello'),
-                  item(itemProps)('{<>}World'),
-                  item(itemProps)('Cheese is great!'),
-                ),
-              ),
-              doc(
-                list(listProps)(
-                  item(itemProps)('Hello{<>}World'),
-                  item(itemProps)('Cheese is great!'),
-                ),
-              ),
-              ['Backspace', 'Backspace'],
-            );
-          });
-        });
-
-        describe(`when cursor is at the beginning of the first ${name}Item`, () => {
-          it('should convert item to paragraph', () => {
-            test(
-              doc(
-                list(listProps)(
-                  item(itemProps)('{<>}Hello'),
-                  item(itemProps)('World'),
-                ),
-              ),
-              doc(p('{<>}Hello'), list(listProps)(item(itemProps)('World'))),
-              ['Backspace'],
-            );
-          });
-
-          it('should convert item to paragraph and remove the list if it is empty', () => {
-            test(
-              doc(list(listProps)(item(itemProps)('{<>}Hello World'))),
-              doc(p('{<>}Hello World')),
-              ['Backspace'],
-            );
-          });
-
-          it(`should delete selection and keep ${name}Item`, () => {
-            test(
-              doc(list(listProps)(item(itemProps)('{<}Hello {>}World'))),
-              doc(list(listProps)(item(itemProps)('{<>}World'))),
-              ['Backspace'],
-            );
-          });
-        });
-
-        describe('when nested inside tables', () => {
-          describe('when cursor is at the beginning of the first taskItem', () => {
-            it('should convert item to paragraph and keep the cursor in the same cell', () => {
-              test(
-                doc(
-                  table()(
-                    tr(
-                      tdEmpty,
-                      td()(list(listProps)(item(itemProps)('{<>}'))),
-                      tdEmpty,
-                    ),
-                  ),
-                ),
-                doc(table()(tr(tdEmpty, tdCursor, tdEmpty))),
-                ['Backspace'],
-              );
-            });
           });
         });
       });
@@ -212,7 +205,8 @@ describe('tasks and decisions - keymaps', () => {
 
     describe('Backspace', () => {
       it('lifts nested task one level', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
@@ -250,7 +244,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('splits nested lists and moves into text', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
@@ -286,7 +281,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('joins to previous list after backspacing twice', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
@@ -321,7 +317,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('moves first item text into paragraph, leaving remaining tasks', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('{<>}Top level'),
@@ -343,7 +340,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('unindents and lifts all nested tasks up', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
@@ -379,7 +377,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('unindents and merges text for deeply nested', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),

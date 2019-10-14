@@ -8,7 +8,7 @@ import {
   sendKeyToPm,
   taskList,
   taskItem,
-  RefsNode,
+  testKeymap,
 } from '@atlaskit/editor-test-helpers';
 import { uuid } from '@atlaskit/adf-schema';
 import {
@@ -16,7 +16,6 @@ import {
   UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
 import { MockMentionResource } from '@atlaskit/util-data-test';
-import { Schema } from 'prosemirror-model';
 
 describe('tasks and decisions - keymaps', () => {
   const createEditor = createEditorFactory();
@@ -46,204 +45,190 @@ describe('tasks and decisions - keymaps', () => {
     });
   };
 
-  const scenarios = [
-    {
-      name: 'action',
-      list: taskList,
-      item: taskItem,
-      listProps: { localId: 'local-uuid' },
-      itemProps: { localId: 'local-uuid', state: 'TODO' },
-    },
-    {
-      name: 'decision',
-      list: decisionList,
-      item: decisionItem,
-      listProps: { localId: 'local-uuid' },
-      itemProps: { localId: 'local-uuid' },
-    },
-  ];
+  describe.each([
+    [
+      'action',
+      taskList,
+      taskItem,
+      { localId: 'local-uuid' },
+      { localId: 'local-uuid', state: 'TODO' },
+    ],
+    [
+      'decision',
+      decisionList,
+      decisionItem,
+      { localId: 'local-uuid' },
+      { localId: 'local-uuid' },
+    ],
+  ])('%s', (name, list, item, listProps, itemProps) => {
+    describe('Enter', () => {
+      describe(`when ${name}List is empty`, () => {
+        it('should remove decisionList and replace with paragraph', () => {
+          const { editorView } = editorFactory(
+            doc(list(listProps)(item(itemProps)('{<>}'))),
+          );
 
-  const test = (
-    before: (schema: Schema) => RefsNode,
-    after: (schema: Schema) => RefsNode,
-    keys: string[],
-  ) => {
-    const { editorView } = editorFactory(before);
-    keys.forEach(key => sendKeyToPm(editorView, key));
-    expect(editorView.state).toEqualDocumentAndSelection(after);
-  };
-
-  scenarios.forEach(({ name, list, item, listProps, itemProps }) => {
-    describe(name, () => {
-      describe('Enter', () => {
-        describe(`when ${name}List is empty`, () => {
-          it('should remove decisionList and replace with paragraph', () => {
-            const { editorView } = editorFactory(
-              doc(list(listProps)(item(itemProps)('{<>}'))),
-            );
-
-            sendKeyToPm(editorView, 'Enter');
-            const expectedDoc = doc(p('{<>}'));
-            expect(editorView.state.doc).toEqualDocument(expectedDoc);
-            compareSelection(editorFactory, expectedDoc, editorView);
-          });
+          sendKeyToPm(editorView, 'Enter');
+          const expectedDoc = doc(p('{<>}'));
+          expect(editorView.state.doc).toEqualDocument(expectedDoc);
+          compareSelection(editorFactory, expectedDoc, editorView);
         });
+      });
 
-        describe(`when cursor is at the end of empty ${name}Item`, () => {
-          it(`should remove ${name}Item and insert a paragraph after`, () => {
-            const { editorView } = editorFactory(
-              doc(
-                p('before'),
-                list(listProps)(
-                  item(itemProps)('Hello World'),
-                  item(itemProps)('{<>}'),
-                ),
-                p('after'),
-              ),
-            );
-
-            sendKeyToPm(editorView, 'Enter');
-
-            const expectedDoc = doc(
+      describe(`when cursor is at the end of empty ${name}Item`, () => {
+        it(`should remove ${name}Item and insert a paragraph after`, () => {
+          const { editorView } = editorFactory(
+            doc(
               p('before'),
-              list(listProps)(item(itemProps)('Hello World')),
-              p('{<>}'),
-              p('after'),
-            );
-
-            expect(editorView.state.doc).toEqualDocument(expectedDoc);
-            compareSelection(editorFactory, expectedDoc, editorView);
-          });
-
-          it(`should remove ${name}Item and insert a paragraph before`, () => {
-            const { editorView } = editorFactory(
-              doc(
-                p('before'),
-                list(listProps)(
-                  item(itemProps)('{<>}'),
-                  item(itemProps)('Hello World'),
-                ),
-                p('after'),
-              ),
-            );
-
-            sendKeyToPm(editorView, 'Enter');
-
-            const expectedDoc = doc(
-              p('before'),
-              p('{<>}'),
-              list(listProps)(item(itemProps)('Hello World')),
-              p('after'),
-            );
-            expect(editorView.state.doc).toEqualDocument(expectedDoc);
-            compareSelection(editorFactory, expectedDoc, editorView);
-          });
-
-          it(`should split ${name}List and insert a paragraph when in middle`, () => {
-            const { editorView } = editorFactory(
-              doc(
-                p('before'),
-                list(listProps)(
-                  item(itemProps)('Hello World'),
-                  item(itemProps)('{<>}'),
-                  item(itemProps)('Goodbye World'),
-                ),
-                p('after'),
-              ),
-            );
-
-            sendKeyToPm(editorView, 'Enter');
-
-            const expectedDoc = doc(
-              p('before'),
-              list(listProps)(item(itemProps)('Hello World')),
-              p('{<>}'),
-              list(listProps)(item(itemProps)('Goodbye World')),
-              p('after'),
-            );
-            expect(editorView.state.doc).toEqualDocument(expectedDoc);
-            compareSelection(editorFactory, expectedDoc, editorView);
-          });
-        });
-
-        describe(`when cursor is at the end of non-empty ${name}Item`, () => {
-          it(`should insert another ${name}Item`, () => {
-            const { editorView } = editorFactory(
-              doc(list(listProps)(item(itemProps)('Hello World{<>}'))),
-            );
-
-            sendKeyToPm(editorView, 'Enter');
-
-            const expectedDoc = doc(
               list(listProps)(
                 item(itemProps)('Hello World'),
                 item(itemProps)('{<>}'),
               ),
-            );
+              p('after'),
+            ),
+          );
 
-            expect(editorView.state.doc).toEqualDocument(expectedDoc);
-            compareSelection(editorFactory, expectedDoc, editorView);
-          });
+          sendKeyToPm(editorView, 'Enter');
 
-          it(`should insert another ${name}Item when in middle of list`, () => {
-            const { editorView } = editorFactory(
-              doc(
-                list(listProps)(
-                  item(itemProps)('Hello World{<>}'),
-                  item(itemProps)('Goodbye World'),
-                ),
+          const expectedDoc = doc(
+            p('before'),
+            list(listProps)(item(itemProps)('Hello World')),
+            p('{<>}'),
+            p('after'),
+          );
+
+          expect(editorView.state.doc).toEqualDocument(expectedDoc);
+          compareSelection(editorFactory, expectedDoc, editorView);
+        });
+
+        it(`should remove ${name}Item and insert a paragraph before`, () => {
+          const { editorView } = editorFactory(
+            doc(
+              p('before'),
+              list(listProps)(
+                item(itemProps)('{<>}'),
+                item(itemProps)('Hello World'),
               ),
-            );
+              p('after'),
+            ),
+          );
 
-            sendKeyToPm(editorView, 'Enter');
+          sendKeyToPm(editorView, 'Enter');
 
-            const expectedDoc = doc(
+          const expectedDoc = doc(
+            p('before'),
+            p('{<>}'),
+            list(listProps)(item(itemProps)('Hello World')),
+            p('after'),
+          );
+          expect(editorView.state.doc).toEqualDocument(expectedDoc);
+          compareSelection(editorFactory, expectedDoc, editorView);
+        });
+
+        it(`should split ${name}List and insert a paragraph when in middle`, () => {
+          const { editorView } = editorFactory(
+            doc(
+              p('before'),
               list(listProps)(
                 item(itemProps)('Hello World'),
                 item(itemProps)('{<>}'),
                 item(itemProps)('Goodbye World'),
               ),
-            );
+              p('after'),
+            ),
+          );
 
-            expect(editorView.state.doc).toEqualDocument(expectedDoc);
-            compareSelection(editorFactory, expectedDoc, editorView);
-          });
+          sendKeyToPm(editorView, 'Enter');
+
+          const expectedDoc = doc(
+            p('before'),
+            list(listProps)(item(itemProps)('Hello World')),
+            p('{<>}'),
+            list(listProps)(item(itemProps)('Goodbye World')),
+            p('after'),
+          );
+          expect(editorView.state.doc).toEqualDocument(expectedDoc);
+          compareSelection(editorFactory, expectedDoc, editorView);
         });
+      });
 
-        describe(`when cursor is at the start of a non-empty ${name}Item`, () => {
-          it(`should insert another ${name}Item above`, () => {
-            const initialDoc = doc(
-              list(listProps)(item(itemProps)('{<>}Hello World')),
-            );
-            const { editorView } = editorFactory(initialDoc);
-
-            sendKeyToPm(editorView, 'Enter');
-
-            expect(editorView.state).toEqualDocumentAndSelection(
-              doc(
-                list(listProps)(
-                  item(itemProps)(''),
-                  item(itemProps)('{<>}Hello World'),
-                ),
-              ),
-            );
-          });
-        });
-
-        it(`should fire v3 analytics event when insert ${name}`, () => {
+      describe(`when cursor is at the end of non-empty ${name}Item`, () => {
+        it(`should insert another ${name}Item`, () => {
           const { editorView } = editorFactory(
             doc(list(listProps)(item(itemProps)('Hello World{<>}'))),
           );
 
           sendKeyToPm(editorView, 'Enter');
 
-          expect(createAnalyticsEvent).toHaveBeenCalledWith({
-            action: 'inserted',
-            actionSubject: 'document',
-            actionSubjectId: name,
-            attributes: expect.objectContaining({ inputMethod: 'keyboard' }),
-            eventType: 'track',
-          });
+          const expectedDoc = doc(
+            list(listProps)(
+              item(itemProps)('Hello World'),
+              item(itemProps)('{<>}'),
+            ),
+          );
+
+          expect(editorView.state.doc).toEqualDocument(expectedDoc);
+          compareSelection(editorFactory, expectedDoc, editorView);
+        });
+
+        it(`should insert another ${name}Item when in middle of list`, () => {
+          const { editorView } = editorFactory(
+            doc(
+              list(listProps)(
+                item(itemProps)('Hello World{<>}'),
+                item(itemProps)('Goodbye World'),
+              ),
+            ),
+          );
+
+          sendKeyToPm(editorView, 'Enter');
+
+          const expectedDoc = doc(
+            list(listProps)(
+              item(itemProps)('Hello World'),
+              item(itemProps)('{<>}'),
+              item(itemProps)('Goodbye World'),
+            ),
+          );
+
+          expect(editorView.state.doc).toEqualDocument(expectedDoc);
+          compareSelection(editorFactory, expectedDoc, editorView);
+        });
+      });
+
+      describe(`when cursor is at the start of a non-empty ${name}Item`, () => {
+        it(`should insert another ${name}Item above`, () => {
+          const initialDoc = doc(
+            list(listProps)(item(itemProps)('{<>}Hello World')),
+          );
+          const { editorView } = editorFactory(initialDoc);
+
+          sendKeyToPm(editorView, 'Enter');
+
+          expect(editorView.state).toEqualDocumentAndSelection(
+            doc(
+              list(listProps)(
+                item(itemProps)(''),
+                item(itemProps)('{<>}Hello World'),
+              ),
+            ),
+          );
+        });
+      });
+
+      it(`should fire v3 analytics event when insert ${name}`, () => {
+        const { editorView } = editorFactory(
+          doc(list(listProps)(item(itemProps)('Hello World{<>}'))),
+        );
+
+        sendKeyToPm(editorView, 'Enter');
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'inserted',
+          actionSubject: 'document',
+          actionSubjectId: name,
+          attributes: expect.objectContaining({ inputMethod: 'keyboard' }),
+          eventType: 'track',
         });
       });
     });
@@ -256,7 +241,8 @@ describe('tasks and decisions - keymaps', () => {
 
     describe('Enter', () => {
       it('creates another taskItem at the currently nested level', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
@@ -279,7 +265,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('creates new taskItem in between nested taskItems', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
@@ -306,7 +293,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('unindents when the nested taskItem is empty', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
@@ -330,7 +318,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('unindents taskItem nested between two others', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
@@ -356,7 +345,8 @@ describe('tasks and decisions - keymaps', () => {
       });
 
       it('unindents taskItem and pulls nested with it', () => {
-        test(
+        testKeymap(
+          editorFactory,
           doc(
             taskList(listProps)(
               taskItem(itemProps)('Top level'),
