@@ -1,13 +1,6 @@
 import { uuid } from '@atlaskit/adf-schema';
 import { keymap } from 'prosemirror-keymap';
-import {
-  Node,
-  Schema,
-  Fragment,
-  ResolvedPos,
-  Slice,
-  NodeType,
-} from 'prosemirror-model';
+import { Node, Schema, Fragment, ResolvedPos, Slice } from 'prosemirror-model';
 import {
   EditorState,
   Transaction,
