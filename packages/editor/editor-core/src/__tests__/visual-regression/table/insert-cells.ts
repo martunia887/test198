@@ -24,7 +24,7 @@ const initEditor = async (page: PuppeteerPage, adf: Object) => {
     viewport: { width: 1040, height: 500 },
     withCollab: true,
   });
-  await clickFirstCell(page);
+  // await clickFirstCell(page);
 };
 
 describe('Collab - Snapshot Test: table insert/delete with merged columns', () => {
@@ -47,8 +47,10 @@ describe('Collab - Snapshot Test: table insert/delete with merged columns', () =
   });
 
   test('should be able to insert a column at the end of the table', async () => {
-    // await insertColumn(page, 0, 'right');
-    await page.waitForSelector(tableSelectors.topLeftCell);
+    await page.bringToFront();
+    await animationFrame(page);
+    await insertColumn(page, 0, 'right');
+    // await page.waitForSelector(tableSelectors.topLeftCell);
 
     await snapshot(page);
   });

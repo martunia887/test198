@@ -24,7 +24,6 @@ import mediaMockServer from '../example-helpers/media-mock';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { withSidebarContainer } from '../example-helpers/SidebarContainer';
 import { MountOptions } from '../src/__tests__/visual-regression/_utils';
-import { default as FullPageExample } from './5-full-page';
 import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers/src';
 
 function createMediaMockEnableOnce() {
@@ -195,27 +194,17 @@ function createEditorWindowBindings(win: Window) {
       props.extensionHandlers = extensionHandlers;
     }
 
-    let Editor: React.ComponentType<EditorProps>;
-
     if (withCollab) {
-      const collabProvider = createCollabEditProvider();
-      Editor = (props: EditorProps) => (
-        <FullPageExample
-          {...providers}
-          {...props}
-          insertMenuItems={customInsertMenuItems}
-          collabEditProvider={collabProvider}
-        />
-      );
-    } else {
-      Editor = (props: EditorProps) => (
-        <EditorWithState
-          insertMenuItems={customInsertMenuItems}
-          {...providers}
-          {...props}
-        />
-      );
+      providers.collabEditProvider = createCollabEditProvider();
     }
+
+    const Editor: React.ComponentType<EditorProps> = (props: EditorProps) => (
+      <EditorWithState
+        insertMenuItems={customInsertMenuItems}
+        {...providers}
+        {...props}
+      />
+    );
 
     Wrapper = Editor;
     editorProps = props;
