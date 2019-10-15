@@ -125,35 +125,43 @@ export interface WrapperProps {
   innerRef?: (elem: HTMLElement) => void;
   fullWidthMode?: boolean;
   isResized?: boolean;
+  forceWidth?: string;
 }
 
-/**
- * Can't use `.attrs` to handle highly dynamic styles because we are still
- * supporting `styled-components` v1.
- */
-export const MediaSingleDimensionHelper = ({
+export const calcWidth = ({
   width,
   layout,
   containerWidth = 0,
   pctWidth,
   fullWidthMode,
   isResized,
-}: WrapperProps) => css`
-  tr & {
-    max-width: 100%;
-  }
-  width: ${pctWidth
+}: WrapperProps) =>
+  pctWidth
     ? calcResizedWidth(layout, width, containerWidth)
-    : calcLegacyWidth(layout, width, containerWidth, fullWidthMode, isResized)};
-  max-width: ${calcMaxWidth(layout, containerWidth)};
-  float: ${float(layout)};
-  margin: ${calcMargin(layout)};
-  ${isImageAligned(layout)};
+    : calcLegacyWidth(layout, width, containerWidth, fullWidthMode, isResized);
 
-  &:not(.is-resizing) {
-    transition: width 100ms ease-in;
-  }
-`;
+/**
+ * Can't use `.attrs` to handle highly dynamic styles because we are still
+ * supporting `styled-components` v1.
+ */
+export const MediaSingleDimensionHelper = (wrapperProps: WrapperProps) => {
+  const { layout, containerWidth = 0 } = wrapperProps;
+
+  return css`
+    tr & {
+      max-width: 100%;
+    }
+    width: ${calcWidth(wrapperProps)};
+    max-width: ${calcMaxWidth(layout, containerWidth)};
+    float: ${float(layout)};
+    margin: ${calcMargin(layout)};
+    ${isImageAligned(layout)};
+
+    &:not(.is-resizing) {
+      transition: width 100ms ease-in;
+    }
+  `;
+};
 
 const Wrapper: React.ComponentClass<
   HTMLAttributes<{}> & WrapperProps

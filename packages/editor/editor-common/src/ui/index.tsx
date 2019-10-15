@@ -2,6 +2,8 @@ export { default as Emoji } from './Emoji';
 export {
   default as MediaSingle,
   Props as MediaSingleProps,
+  calcMediaSingleWitdh,
+  MediaSingleDimensionsProps,
   DEFAULT_IMAGE_WIDTH,
   DEFAULT_IMAGE_HEIGHT,
 } from './MediaSingle';

@@ -320,6 +320,11 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
       occurrenceKey,
     };
 
+    console.log(
+      '+++++++++++++++++++ Rendering card dimensions',
+      cardDimensions,
+    );
+
     return (
       <CardWrapper
         {...getClipboardAttrs({

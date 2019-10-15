@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import {
   MediaSingle as UIMediaSingle,
+  calcMediaSingleWitdh,
   WidthConsumer,
   akEditorFullPageMaxWidth,
   mapBreakpointToLayoutMaxWidth,
@@ -40,6 +41,19 @@ const ExtendedUIMediaSingle = styled(UIMediaSingle)`
       : ``} transition: all 0.1s linear;
 `;
 
+function calcCardDimensions(
+  wrapperWidth: number,
+  width: number,
+  height: number,
+) {
+  const cardWidth = wrapperWidth;
+  const cardHeight = (height / width) * cardWidth;
+  return {
+    width: `${cardWidth}px`,
+    height: `${cardHeight}px`,
+  };
+}
+
 export default class MediaSingle extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -60,10 +74,10 @@ export default class MediaSingle extends Component<Props, State> {
   };
 
   render() {
-    const { props } = this;
+    const { width: pctWidth, layout } = this.props;
 
     const child = React.Children.only(
-      React.Children.toArray<React.ReactElement>(props.children)[0],
+      React.Children.toArray<React.ReactElement>(this.props.children)[0],
     );
 
     let { width, height, type } = child.props;
@@ -87,18 +101,11 @@ export default class MediaSingle extends Component<Props, State> {
     const padding =
       this.props.rendererAppearance === 'full-page' ? FullPagePadding * 2 : 0;
 
+    const isFullWidth = this.props.rendererAppearance === 'full-width';
+
     return (
       <WidthConsumer>
         {({ width: containerWidth, breakpoint }) => {
-          const cardWidth = containerWidth;
-          const cardHeight = (height / width) * cardWidth;
-          const cardDimensions = {
-            width: `${cardWidth}px`,
-            height: `${cardHeight}px`,
-          };
-
-          const isFullWidth = this.props.rendererAppearance === 'full-width';
-
           const nonFullWidthSize =
             containerWidth - padding >= akEditorFullPageMaxWidth
               ? this.props.allowDynamicTextSizing
@@ -110,14 +117,35 @@ export default class MediaSingle extends Component<Props, State> {
             ? Math.min(akEditorFullWidthLayoutWidth, containerWidth - padding)
             : nonFullWidthSize;
 
+          const uiMediaSingleWidth = calcMediaSingleWitdh({
+            width,
+            height,
+            layout,
+            containerWidth,
+            pctWidth,
+            lineLength,
+          });
+          const cardDimensions = calcCardDimensions(
+            uiMediaSingleWidth,
+            // containerWidth,
+            width,
+            height,
+          );
+
+          console.log(
+            `======== cardDimensions: ${JSON.stringify(
+              cardDimensions,
+            )} - uiMediaSingleWidth: ${uiMediaSingleWidth}`,
+          );
+
           return (
             <ExtendedUIMediaSingle
-              layout={props.layout}
+              layout={layout}
               width={width}
               height={height}
               containerWidth={containerWidth}
               lineLength={lineLength}
-              pctWidth={props.width}
+              pctWidth={pctWidth}
               fullWidthMode={isFullWidth}
             >
               {React.cloneElement(child, {
