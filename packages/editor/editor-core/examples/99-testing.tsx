@@ -24,7 +24,8 @@ import mediaMockServer from '../example-helpers/media-mock';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { withSidebarContainer } from '../example-helpers/SidebarContainer';
 import { MountOptions } from '../src/__tests__/visual-regression/_utils';
-import { CollabEditorComponent } from './3-collab';
+import { default as FullPageExample } from './5-full-page';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers/src';
 
 function createMediaMockEnableOnce() {
   let enabled = false;
@@ -196,17 +197,14 @@ function createEditorWindowBindings(win: Window) {
 
     let Editor: React.ComponentType<EditorProps>;
 
-    if (true) {
+    if (withCollab) {
+      const collabProvider = createCollabEditProvider();
       Editor = (props: EditorProps) => (
-        <CollabEditorComponent
-          leftEditorProps={{
-            ...providers,
-            ...props,
-          }}
-          rightEditorProps={{
-            ...providers,
-            ...props,
-          }}
+        <FullPageExample
+          {...providers}
+          {...props}
+          insertMenuItems={customInsertMenuItems}
+          collabEditProvider={collabProvider}
         />
       );
     } else {

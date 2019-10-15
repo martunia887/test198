@@ -479,6 +479,7 @@ if (process.env.VISUAL_REGRESSION) {
 
   beforeAll(async () => {
     global.page = await global.browser.newPage();
+    global.collabPage = await global.browser.newPage();
     screenshotReporter.reset(global.page);
   }, jasmine.DEFAULT_TIMEOUT_INTERVAL);
 

@@ -8,6 +8,7 @@ import { EditorProps } from '../../types';
 import { Page } from '../__helpers/page-objects/_types';
 import { animationFrame } from '../__helpers/page-objects/_editor';
 import { GUTTER_SELECTOR } from '../../plugins/base/pm-plugins/scroll-gutter';
+import { Page as PuppeteerPage } from 'puppeteer';
 
 export {
   setupMediaMocksProviders,
@@ -181,8 +182,38 @@ type InitEditorWithADFOptions = {
   withCollab?: boolean;
 };
 
+export const initEditor = async (
+  page: PuppeteerPage,
+  {
+    appearance,
+    adf = {},
+    viewport,
+    editorProps = {},
+    mode,
+    withSidebar = false,
+    withCollab = false,
+  }: InitEditorWithADFOptions,
+) => {
+  const url = getExampleUrl('editor', 'editor-core', 'vr-testing');
+  await navigateToUrl(page, url, false);
+
+  await page.setViewport(viewport!);
+
+  // Mount the editor with the right attributes
+  await mountEditor(
+    page,
+    {
+      appearance: appearance,
+      defaultValue: JSON.stringify(adf),
+      ...getEditorProps(appearance),
+      ...editorProps,
+    },
+    { mode, withSidebar, withCollab },
+  );
+};
+
 export const initEditorWithAdf = async (
-  page: any,
+  page: Page,
   {
     appearance,
     adf = {},
