@@ -231,6 +231,35 @@ describe('tasks and decisions - keymaps', () => {
         testKeymap(editorFactory, nestedDoc, nestedDoc, ['Tab']);
       });
 
+      it('cannot wrap children past 6 levels', () => {
+        const nestedDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('The first item in the list'),
+            taskItem(itemProps)('{<>}Level 1'),
+            taskList(listProps)(
+              taskItem(itemProps)('Level 2'),
+              taskList(listProps)(
+                taskItem(itemProps)('Level 3'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Level 4'),
+                  taskList(listProps)(
+                    taskItem(itemProps)('Level 5'),
+                    taskItem(itemProps)(
+                      'See, my nose is wide, my blood is honey and my',
+                    ),
+                    taskList(listProps)(
+                      taskItem(itemProps)('Say yall wanna live with the dream'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        testKeymap(editorFactory, nestedDoc, nestedDoc, ['Tab']);
+      });
+
       it('can indent multiple tasks at same level', () => {
         testKeymap(
           editorFactory,

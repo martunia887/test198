@@ -74,8 +74,6 @@ export const treeDepth = ($pos: ResolvedPos, types: NodeType[]) => {
     return -1;
   }
 
-  console.log('root', root);
-
   // need to look at the parent node from the current ResolvedPos
   // because if we have a nested taskList they appear as siblings
   //
