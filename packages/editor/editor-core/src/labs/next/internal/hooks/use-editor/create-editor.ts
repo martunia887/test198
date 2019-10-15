@@ -23,6 +23,7 @@ export function createEditor({
 
   plugins,
   portalProviderAPI,
+  providerFactory,
   defaultValue,
   ref,
 
@@ -32,13 +33,14 @@ export function createEditor({
 
   disabled,
   onChange,
-}: CreateEditorParams): EditorSharedConfig | null {
+}: CreateEditorParams & {
+  providerFactory: ProviderFactory;
+}): EditorSharedConfig | null {
   if (!ref) {
     return null;
   }
 
   const eventDispatcher = new EventDispatcher();
-  const providerFactory = new ProviderFactory();
   const dispatch = createDispatch(eventDispatcher);
   const editorConfig = processPluginsList(plugins || [], {});
   const schema = createSchema(editorConfig);

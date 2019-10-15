@@ -1,6 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+import { mention } from '@atlaskit/util-data-test';
 
 import { WithEditorActions, EditorActions, EditorContext } from '../src';
 import { TitleArea } from '../example-helpers/PageElements';
@@ -8,6 +11,7 @@ import { TitleArea } from '../example-helpers/PageElements';
 /**
  * arch next imports
  */
+import { ConfigProvider } from '../src/labs/next/internal/context/config-context';
 import { EditorPresetCXHTML } from '../src/labs/next/presets/cxhtml';
 import { FullPage as FullPageEditor } from '../src/labs/next/full-page';
 
@@ -58,50 +62,66 @@ export const Content: any = styled.div`
 `;
 Content.displayName = 'Content';
 
+const providerFactory = ProviderFactory.create({
+  mentionProvider: Promise.resolve(
+    mention.storyData.resourceProviderWithResolver,
+  ),
+  mediaProvider: storyMediaProviderFactory(),
+});
+
 export default function Example() {
   const [disabled, setDisabledState] = React.useState(false);
   const [mounted, setMountState] = React.useState(true);
   return (
-    <EditorContext>
-      <Wrapper>
-        <Content>
-          <button onClick={() => setDisabledState(!disabled)}>
-            Toggle Disabled
-          </button>
-          <button onClick={() => setMountState(!mounted)}>Toggle Mount</button>
-          {mounted ? (
-            <EditorPresetCXHTML placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule.">
-              <FullPageEditor
-                defaultValue={
-                  (localStorage &&
-                    localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
-                  undefined
-                }
-                onMount={() => {
-                  console.log('on mount');
-                }}
-                disabled={disabled}
-                contentComponents={[
-                  <TitleArea
-                    key="title=placeholder"
-                    placeholder="Some text..."
-                  />,
-                ]}
-                primaryToolbarComponents={[
-                  <WithEditorActions
-                    key="editor-actions-save"
-                    // tslint:disable-next-line:jsx-no-lambda
-                    render={actions => (
-                      <SaveAndCancelButtons editorActions={actions} />
-                    )}
-                  />,
-                ]}
-                allowDynamicTextSizing={true}
-              />
-            </EditorPresetCXHTML>
-          ) : null}
-        </Content>
-      </Wrapper>
-    </EditorContext>
+    <ConfigProvider
+      value={{
+        featureFlags: {},
+        providerFactory,
+      }}
+    >
+      <EditorContext>
+        <Wrapper>
+          <Content>
+            <button onClick={() => setDisabledState(!disabled)}>
+              Toggle Disabled
+            </button>
+            <button onClick={() => setMountState(!mounted)}>
+              Toggle Mount
+            </button>
+            {mounted ? (
+              <EditorPresetCXHTML placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule.">
+                <FullPageEditor
+                  defaultValue={
+                    (localStorage &&
+                      localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
+                    undefined
+                  }
+                  onMount={() => {
+                    console.log('on mount');
+                  }}
+                  disabled={disabled}
+                  contentComponents={[
+                    <TitleArea
+                      key="title=placeholder"
+                      placeholder="Some text..."
+                    />,
+                  ]}
+                  primaryToolbarComponents={[
+                    <WithEditorActions
+                      key="editor-actions-save"
+                      // tslint:disable-next-line:jsx-no-lambda
+                      render={actions => (
+                        <SaveAndCancelButtons editorActions={actions} />
+                      )}
+                    />,
+                  ]}
+                  allowDynamicTextSizing={true}
+                />
+              </EditorPresetCXHTML>
+            ) : null}
+          </Content>
+        </Wrapper>
+      </EditorContext>
+    </ConfigProvider>
   );
 }

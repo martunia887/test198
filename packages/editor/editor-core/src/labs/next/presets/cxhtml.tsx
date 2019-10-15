@@ -1,7 +1,5 @@
 // #region Imports
 import * as React from 'react';
-import { MentionProvider } from '@atlaskit/mention/resource';
-
 import {
   quickInsertPlugin,
   tablesPlugin,
@@ -25,7 +23,7 @@ import {
   basePlugin,
   placeholderPlugin,
 } from '../../../plugins';
-import { MediaProvider } from '../../../plugins/media';
+import { useConfigContext } from '../internal/context/config-context';
 import { PresetProvider } from '../Editor';
 import { EditorPresetProps } from './types';
 import { useDefaultPreset } from './default';
@@ -35,15 +33,12 @@ import { getPluginsFromPreset } from './utils';
 interface EditorPresetCXHTMLProps {
   children?: React.ReactNode;
   placeholder?: string;
-  mentionProvider?: Promise<MentionProvider>;
-  mediaProvider?: Promise<MediaProvider>;
 }
 
 export function useCXHTMLPreset({
-  mentionProvider,
-  mediaProvider,
   placeholder,
 }: EditorPresetCXHTMLProps & EditorPresetProps) {
+  const { providerFactory } = useConfigContext();
   const [preset] = useDefaultPreset();
 
   preset.push(
@@ -75,15 +70,14 @@ export function useCXHTMLPreset({
     [placeholderPlugin, { placeholder }],
   );
 
-  if (mentionProvider) {
+  if (providerFactory.hasProvider('mentionProvider')) {
     preset.push(mentionsPlugin);
   }
 
-  if (mediaProvider) {
+  if (providerFactory.hasProvider('mediaProvider')) {
     preset.push([
       mediaPlugin,
       {
-        provider: mediaProvider,
         allowMediaSingle: true,
         allowMediaGroup: true,
         allowAnnotation: true,

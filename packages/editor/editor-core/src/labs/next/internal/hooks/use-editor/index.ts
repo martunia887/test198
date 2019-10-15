@@ -4,6 +4,7 @@ import { EditorSharedConfig } from '../../context/shared-config';
 import { createDispatchTransaction } from './create-dispatch-transaction';
 import { createEditor, CreateEditorParams } from './create-editor';
 import { EditorActions } from '../../../../..';
+import { useConfigContext } from '../../context/config-context';
 
 export function useEditor(
   config: CreateEditorParams & { editorActions?: EditorActions },
@@ -31,6 +32,7 @@ function useCreateEditor(
     editorSharedConfig,
     setEditorSharedConfig,
   ] = React.useState<EditorSharedConfig | null>(null);
+  const { providerFactory } = useConfigContext();
 
   return [
     editorSharedConfig,
@@ -41,10 +43,11 @@ function useCreateEditor(
       (ref: HTMLDivElement | null) => {
         setEditorSharedConfig(
           editorSharedConfig =>
-            editorSharedConfig || createEditor({ ...config, ref }),
+            editorSharedConfig ||
+            createEditor({ ...config, ref, providerFactory }),
         );
       },
-      [config],
+      [config, providerFactory],
     ),
   ];
 }
