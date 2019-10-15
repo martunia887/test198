@@ -1,7 +1,7 @@
-import { ExpandDefinition, ExpandContent } from '@atlaskit/adf-schema';
+import { ExpandDefinition, ExtensionContent } from '@atlaskit/adf-schema';
 
 export const expand = (attrs: ExpandDefinition['attrs']) => (
-  ...content: ExpandContent
+  ...content: ExtensionContent
 ): ExpandDefinition => ({
   type: 'expand',
   attrs,

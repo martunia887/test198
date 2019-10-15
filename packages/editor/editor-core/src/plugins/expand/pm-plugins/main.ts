@@ -25,6 +25,7 @@ export const createPlugin = (
     props: {
       nodeViews: {
         expand: ExpandNodeView(portalProviderAPI),
+        nestedExpand: ExpandNodeView(portalProviderAPI),
       },
     },
   });

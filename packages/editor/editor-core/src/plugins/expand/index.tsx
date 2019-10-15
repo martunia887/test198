@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { expand } from '@atlaskit/adf-schema';
+import { expand, nestedExpand } from '@atlaskit/adf-schema';
+import { findTable } from 'prosemirror-utils';
 import { EditorPlugin } from '../../types';
 import { createPlugin } from './pm-plugins/main';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
@@ -17,7 +18,10 @@ const expandPlugin = (): EditorPlugin => ({
   name: 'expand',
 
   nodes() {
-    return [{ name: 'expand', node: expand }];
+    return [
+      { name: 'expand', node: expand },
+      { name: 'nestedExpand', node: nestedExpand },
+    ];
   },
 
   pmPlugins() {
@@ -39,11 +43,16 @@ const expandPlugin = (): EditorPlugin => ({
         priority: 600,
         icon: () => <IconTable label={formatMessage(messages.expand)} />,
         action(insert, state) {
-          const tr = insert(state.schema.nodes.expand.createAndFill({}));
+          const { expand, nestedExpand } = state.schema.nodes;
+          const expandType = findTable(state.selection) ? nestedExpand : expand;
+          const tr = insert(expandType.createAndFill({}));
           return addAnalytics(state, tr, {
             action: ACTION.INSERTED,
             actionSubject: ACTION_SUBJECT.DOCUMENT,
-            actionSubjectId: ACTION_SUBJECT_ID.EXPAND,
+            actionSubjectId:
+              expandType === nestedExpand
+                ? ACTION_SUBJECT_ID.NESTED_EXPAND
+                : ACTION_SUBJECT_ID.EXPAND,
             attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
             eventType: EVENT_TYPE.TRACK,
           });

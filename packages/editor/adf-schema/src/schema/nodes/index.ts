@@ -7,6 +7,7 @@ export {
   BlockContent,
   Inline,
   ExtensionContent,
+  NestedExpandContent,
   NoMark,
   MarksObject,
   InlineFormattedText,
@@ -145,3 +146,4 @@ export { unsupportedBlock } from './unsupported-block';
 export { unsupportedInline } from './unsupported-inline';
 export { status, StatusDefinition } from './status';
 export { expand, ExpandDefinition } from './expand';
+export { nestedExpand, NestedExpandDefinition } from './nested-expand';

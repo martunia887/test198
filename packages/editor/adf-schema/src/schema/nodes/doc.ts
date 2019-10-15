@@ -30,6 +30,7 @@ import { ExtensionDefinition as Extension } from './extension';
 import { InlineExtensionDefinition as InlineExtension } from './inline-extension';
 import { BodiedExtensionDefinition as BodiedExtension } from './bodied-extension';
 import { ExpandDefinition as Expand } from './expand';
+import { NestedExpandDefinition as NestedExpand } from './nested-expand';
 
 import { TextDefinition as Text } from './text';
 import { HardBreakDefinition as HardBreak } from './hard-break';
@@ -102,9 +103,10 @@ export type TableCellContent = Array<
   | NestableTaskList
   | Extension
   | BlockCard
+  | NestedExpand
 >;
 
-// exclude Extension and BodiedExtension
+// exclude BodiedExtension
 /**
  * @name extension_content
  * @minItems 1
@@ -125,6 +127,26 @@ export type ExtensionContent = Array<
   | TaskList
   | NestableTaskList
   | Table
+  | Extension
+  | BlockCard
+>;
+
+// exclude Table and BodiedExtension
+/**
+ * @name nestedExpand_content
+ * @minItems 1
+ * @allowUnsupportedBlock true
+ */
+export type NestedExpandContent = Array<
+  | Paragraph
+  | Rule
+  | Heading
+  | CodeBlock
+  | MediaGroup
+  | MediaSingle
+  | DecisionList
+  | TaskList
+  | NestableTaskList
   | Extension
   | BlockCard
 >;

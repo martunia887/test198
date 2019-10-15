@@ -1,24 +1,24 @@
 import { NodeSpec, Node as PMNode } from 'prosemirror-model';
-import { ExtensionContent } from './doc';
+import { NestedExpandContent } from './doc';
 
 /**
- * @name expand_node
+ * @name nestedExpand_node
  * @stage 0
  */
-export interface ExpandDefinition {
-  type: 'expand';
+export interface NestedExpandDefinition {
+  type: 'nestedExpand';
   attrs: {
     title?: string;
     collapsed?: boolean;
   };
-  content: ExtensionContent;
+  content: NestedExpandContent;
 }
 
-export const expand: NodeSpec = {
+export const nestedExpand: NodeSpec = {
   inline: false,
   group: 'block',
   content:
-    '(paragraph | panel | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle | decisionList | taskList | table | blockCard | extension | unsupportedBlock)+',
+    '(paragraph | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle | decisionList | taskList | blockCard | extension | unsupportedBlock)+',
   defining: true,
   isolating: true,
   selectable: true,
@@ -28,7 +28,7 @@ export const expand: NodeSpec = {
   },
   parseDOM: [
     {
-      tag: '[data-node-type="expand"]',
+      tag: '[data-node-type="nestedExpand"]',
       getAttrs: domNode => {
         const dom = domNode as HTMLElement;
         return {
@@ -42,7 +42,7 @@ export const expand: NodeSpec = {
   ],
   toDOM(node: PMNode) {
     const attrs = {
-      'data-node-type': 'expand',
+      'data-node-type': 'nestedExpand',
       'data-title': node.attrs.title,
       'data-collapsed': node.attrs.collapsed,
     };

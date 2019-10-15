@@ -119,6 +119,7 @@ export default {
     'mediaGroup',
     'table',
     'expand',
+    'nestedExpand',
     'media',
     'tableHeader',
     'decisionList',

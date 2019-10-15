@@ -12,36 +12,23 @@ interface Props {
   pos: number;
 }
 
-interface State {
-  title: string;
-}
-
-export class Expand extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      title: props.node.attrs.title,
-    };
-  }
-
+export class Expand extends React.PureComponent<Props> {
   render() {
-    const { collapsed } = this.props.node.attrs;
+    const { node } = this.props;
+    const { collapsed, title } = node.attrs;
+    const label = this.props.node.type.name;
+
     return (
       <Container>
         <Title>
           <Icon onClick={this.handleClick}>
             {collapsed ? (
-              <ChevronRightIcon label="expand" />
+              <ChevronRightIcon label={label} />
             ) : (
-              <ChevronDownIcon label="expand" />
+              <ChevronDownIcon label={label} />
             )}
           </Icon>
-          <Input
-            type="text"
-            value={this.state.title}
-            onChange={this.handleChange}
-          />
+          <Input type="text" value={title} onChange={this.handleChange} />
         </Title>
         {collapsed ? null : (
           <Content
@@ -55,7 +42,20 @@ export class Expand extends React.PureComponent<Props, State> {
   }
 
   private handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ title: event.target.value });
+    const { state, dispatch } = this.props.view;
+    const { node, pos } = this.props;
+
+    dispatch(
+      state.tr.setNodeMarkup(
+        pos,
+        node.type,
+        {
+          ...node.attrs,
+          title: event.target.value,
+        },
+        node.marks,
+      ),
+    );
   };
 
   private handleClick = (event: React.SyntheticEvent) => {
@@ -64,17 +64,14 @@ export class Expand extends React.PureComponent<Props, State> {
     const { node, pos } = this.props;
 
     dispatch(
-      state.tr.replaceWith(
+      state.tr.setNodeMarkup(
         pos,
-        pos + node.nodeSize,
-        state.schema.nodes.expand.createChecked(
-          {
-            ...node.attrs,
-            collapsed: !node.attrs.collapsed,
-          },
-          node.content,
-          node.marks,
-        ),
+        node.type,
+        {
+          ...node.attrs,
+          collapsed: !node.attrs.collapsed,
+        },
+        node.marks,
       ),
     );
   };

@@ -23,6 +23,7 @@ export const defaultSchema: Schema = createSchema({
     'confluenceUnsupportedInline',
     'confluenceJiraIssue',
     'expand',
+    'nestedExpand',
     'extension',
     'inlineExtension',
     'bodiedExtension',
