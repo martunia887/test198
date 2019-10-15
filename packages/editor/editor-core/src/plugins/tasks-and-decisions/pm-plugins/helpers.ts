@@ -1,4 +1,4 @@
-import { Node, ResolvedPos } from 'prosemirror-model';
+import { Node, ResolvedPos, NodeType } from 'prosemirror-model';
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { hasParentNodeOfType } from 'prosemirror-utils';
 import { findFarthestParentNode } from '../../../utils';
@@ -45,7 +45,7 @@ export const getCurrentIndentLevel = (selection: Selection) => {
   const { taskList } = $from.doc.type.schema.nodes;
 
   const furthestParent = findFarthestParentNode(node => node.type === taskList)(
-    selection,
+    $from,
   );
   if (!furthestParent) {
     return null;
@@ -64,6 +64,39 @@ export const walkOut = ($startPos: ResolvedPos): ResolvedPos => {
   }
 
   return $pos;
+};
+
+export const treeDepth = ($pos: ResolvedPos, types: NodeType[]) => {
+  const root = findFarthestParentNode(node => types.indexOf(node.type) > -1)(
+    $pos,
+  );
+  if (!root) {
+    return -1;
+  }
+
+  console.log('root', root);
+
+  // need to look at the parent node from the current ResolvedPos
+  // because if we have a nested taskList they appear as siblings
+  //
+  // this is unlike regular bullet lists where the orderedList
+  // appears as descendent of listItem
+
+  let maxChildDepth = 0;
+  $pos.doc.nodesBetween(
+    root.pos,
+    root.pos + root.node.nodeSize,
+    (descendent, relPos, parent) => {
+      maxChildDepth = Math.max($pos.doc.resolve(relPos).depth, maxChildDepth);
+
+      // keep descending down the tree if we can
+      if (types.indexOf(descendent.type) > -1) {
+        return true;
+      }
+    },
+  );
+
+  return maxChildDepth;
 };
 
 export const isEmptyTaskDecision = (state: EditorState) => {

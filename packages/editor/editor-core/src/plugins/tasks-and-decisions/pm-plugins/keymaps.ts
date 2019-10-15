@@ -1,6 +1,13 @@
 import { uuid } from '@atlaskit/adf-schema';
 import { keymap } from 'prosemirror-keymap';
-import { Node, Schema, Fragment, ResolvedPos, Slice } from 'prosemirror-model';
+import {
+  Node,
+  Schema,
+  Fragment,
+  ResolvedPos,
+  Slice,
+  NodeType,
+} from 'prosemirror-model';
 import {
   EditorState,
   Transaction,
@@ -39,6 +46,7 @@ import {
   walkOut,
   isEmptyTaskDecision,
   liftBlock,
+  treeDepth,
 } from './helpers';
 
 import { liftSelection, wrapSelectionInTaskList, joinAtCut } from './commands';
@@ -116,6 +124,12 @@ const indent = filter(isInsideTask, (state, dispatch) => {
   // limit ui indentation to 6 levels
   const curIndentLevel = getCurrentIndentLevel(state.selection);
   if (!curIndentLevel || curIndentLevel >= 6) {
+    return true;
+  }
+
+  const { taskList, taskItem } = state.schema.nodes;
+  const maxDepth = treeDepth(state.selection.$from, [taskList, taskItem]);
+  if (maxDepth > 6) {
     return true;
   }
 
