@@ -1,0 +1,1 @@
+expose OnCustomMediaPlayerError and CustomMediaPlayerErrorEvent interfaces to handle mediaPlayer errors
