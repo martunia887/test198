@@ -13,6 +13,7 @@ import {
   EVENT_TYPE,
   INPUT_METHOD,
 } from '../analytics';
+import { getToolbarConfig } from './toolbar';
 
 const expandPlugin = (): EditorPlugin => ({
   name: 'expand',
@@ -36,6 +37,8 @@ const expandPlugin = (): EditorPlugin => ({
   },
 
   pluginsOptions: {
+    floatingToolbar: getToolbarConfig,
+
     quickInsert: ({ formatMessage }) => [
       {
         title: formatMessage(messages.expand),

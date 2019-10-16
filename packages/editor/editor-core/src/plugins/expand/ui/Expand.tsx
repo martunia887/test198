@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { EditorView } from 'prosemirror-view';
 import { Node as PmNode } from 'prosemirror-model';
-import { Container, Input, Icon, Content, Title } from './styles';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
 import ChevronDownIcon from '@atlaskit/icon/glyph/chevron-down';
+import { Container, Input, Icon, Content, Title } from './styles';
+import { selectExpand, collapseExpand, updateExpandTitle } from '../commands';
 
 interface Props {
   node: PmNode;
@@ -19,19 +20,20 @@ export class Expand extends React.PureComponent<Props> {
     const label = this.props.node.type.name;
 
     return (
-      <Container>
-        <Title>
-          <Icon onClick={this.handleClick}>
+      <Container onClick={this.onSelect}>
+        <Title onClick={this.onContentClick}>
+          <Icon onClick={this.onCollapse}>
             {collapsed ? (
               <ChevronRightIcon label={label} />
             ) : (
               <ChevronDownIcon label={label} />
             )}
           </Icon>
-          <Input type="text" value={title} onChange={this.handleChange} />
+          <Input type="text" value={title} onChange={this.onChange} />
         </Title>
         {collapsed ? null : (
           <Content
+            onClick={this.onContentClick}
             innerRef={ref => {
               this.props.contentDOMRef(ref);
             }}
@@ -41,38 +43,22 @@ export class Expand extends React.PureComponent<Props> {
     );
   }
 
-  private handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { state, dispatch } = this.props.view;
-    const { node, pos } = this.props;
-
-    dispatch(
-      state.tr.setNodeMarkup(
-        pos,
-        node.type,
-        {
-          ...node.attrs,
-          title: event.target.value,
-        },
-        node.marks,
-      ),
-    );
+  private onContentClick = (event: React.SyntheticEvent) => {
+    event.stopPropagation();
   };
 
-  private handleClick = (event: React.SyntheticEvent) => {
-    event.preventDefault();
+  private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { state, dispatch } = this.props.view;
-    const { node, pos } = this.props;
+    updateExpandTitle(event.target.value)(state, dispatch);
+  };
 
-    dispatch(
-      state.tr.setNodeMarkup(
-        pos,
-        node.type,
-        {
-          ...node.attrs,
-          collapsed: !node.attrs.collapsed,
-        },
-        node.marks,
-      ),
-    );
+  private onCollapse = () => {
+    const { state, dispatch } = this.props.view;
+    collapseExpand()(state, dispatch);
+  };
+
+  private onSelect = () => {
+    const { state, dispatch } = this.props.view;
+    selectExpand()(state, dispatch);
   };
 }

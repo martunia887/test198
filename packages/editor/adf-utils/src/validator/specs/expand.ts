@@ -8,6 +8,7 @@ export default {
       },
     },
     content: 'extension_content',
+    marks: { type: 'array', items: ['breakout'], optional: true },
   },
   required: ['content'],
 };

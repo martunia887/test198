@@ -1,5 +1,6 @@
 import { NodeSpec, Node as PMNode } from 'prosemirror-model';
 import { ExtensionContent } from './doc';
+import { BreakoutMarkDefinition } from '../marks';
 
 /**
  * @name expand_node
@@ -12,6 +13,7 @@ export interface ExpandDefinition {
     collapsed?: boolean;
   };
   content: ExtensionContent;
+  marks?: Array<BreakoutMarkDefinition>;
 }
 
 export const expand: NodeSpec = {
@@ -28,7 +30,12 @@ export const expand: NodeSpec = {
   },
   parseDOM: [
     {
+      context: 'expand//',
       tag: '[data-node-type="expand"]',
+      skip: true,
+    },
+    {
+      tag: 'div[data-node-type="expand"]',
       getAttrs: domNode => {
         const dom = domNode as HTMLElement;
         return {

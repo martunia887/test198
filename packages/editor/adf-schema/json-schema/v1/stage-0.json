@@ -1410,6 +1410,12 @@
         },
         "content": {
           "$ref": "#/definitions/extension_content"
+        },
+        "marks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/breakout_mark"
+          }
         }
       },
       "required": [

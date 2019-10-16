@@ -18,7 +18,7 @@ export const nestedExpand: NodeSpec = {
   inline: false,
   group: 'block',
   content:
-    '(paragraph | blockquote | orderedList | bulletList | rule | heading | codeBlock | mediaGroup | mediaSingle | decisionList | taskList | blockCard | extension | unsupportedBlock)+',
+    '(paragraph | blockquote | rule | heading | codeBlock | mediaGroup | mediaSingle | decisionList | taskList | blockCard | extension | unsupportedBlock)+',
   defining: true,
   isolating: true,
   selectable: true,
@@ -28,7 +28,12 @@ export const nestedExpand: NodeSpec = {
   },
   parseDOM: [
     {
+      context: 'nestedExpand//',
       tag: '[data-node-type="nestedExpand"]',
+      skip: true,
+    },
+    {
+      tag: 'div[data-node-type="nestedExpand"]',
       getAttrs: domNode => {
         const dom = domNode as HTMLElement;
         return {

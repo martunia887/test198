@@ -18,15 +18,7 @@ class ExpandNode extends ReactNodeView<Props> {
     super(props.node, props.view, props.getPos, props.portalProviderAPI);
   }
 
-  ignoreMutation(mutation: MutationRecord) {
-    return true;
-  }
-
   getContentDOM() {
-    if (this.node.isInline) {
-      return;
-    }
-
     const dom = document.createElement('div');
     dom.className = `${this.node.type.name}-content-dom-wrapper`;
     return { dom };
@@ -48,8 +40,13 @@ class ExpandNode extends ReactNodeView<Props> {
     return !!(
       this.dom &&
       this.dom.contains(target) &&
-      target.nodeName === 'INPUT'
+      target.nodeName === 'INPUT' &&
+      !(event instanceof ClipboardEvent)
     );
+  }
+
+  ignoreMutation(mutation: MutationRecord) {
+    return true;
   }
 }
 
