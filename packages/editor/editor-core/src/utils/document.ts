@@ -1,5 +1,5 @@
 import { Node, Schema, ResolvedPos } from 'prosemirror-model';
-import { Transaction, Selection, EditorState } from 'prosemirror-state';
+import { Transaction, EditorState } from 'prosemirror-state';
 import { validator, ADFEntity, ValidationError } from '@atlaskit/adf-utils';
 import { analyticsService } from '../analytics';
 import { ContentNodeWithPos } from 'prosemirror-utils';
