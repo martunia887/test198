@@ -1,0 +1,1 @@
+send mediaPlayer error information into analytics payload
