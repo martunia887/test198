@@ -42,7 +42,7 @@ import { LazyContent } from '../../utils/lazyContent';
 import { getDataURIDimension } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
-import { isBigger } from '../../utils/dimensionComparer';
+import { isBigger, isPercentageBased } from '../../utils/dimensionComparer';
 import {
   getCardStatus,
   getCardStatusFromFileState,
@@ -158,7 +158,7 @@ export class CardBase extends Component<
     if (!current || !next) {
       return false;
     }
-    return isBigger(current, next);
+    return isBigger(current, next) || isPercentageBased(next);
   };
 
   componentWillUnmount() {

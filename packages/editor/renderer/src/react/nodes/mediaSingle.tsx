@@ -90,13 +90,6 @@ export default class MediaSingle extends Component<Props, State> {
     return (
       <WidthConsumer>
         {({ width: containerWidth, breakpoint }) => {
-          const cardWidth = containerWidth;
-          const cardHeight = (height / width) * cardWidth;
-          const cardDimensions = {
-            width: `${cardWidth}px`,
-            height: `${cardHeight}px`,
-          };
-
           const isFullWidth = this.props.rendererAppearance === 'full-width';
 
           const nonFullWidthSize =
@@ -122,7 +115,7 @@ export default class MediaSingle extends Component<Props, State> {
             >
               {React.cloneElement(child, {
                 resizeMode: 'stretchy-fit',
-                cardDimensions,
+                cardDimensions: { width: '100%', height: '100%' }, // We need Media card to adjust to MediaSingle's wrapper dimensions
                 onExternalImageLoaded: this.onExternalImageLoaded,
                 disableOverlay: true,
               } as MediaProps & ImageLoaderProps)}
