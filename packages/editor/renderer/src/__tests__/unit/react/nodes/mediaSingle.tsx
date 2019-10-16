@@ -6,16 +6,11 @@ import MediaSingle from '../../../../react/nodes/mediaSingle';
 import { WidthProvider } from '@atlaskit/editor-common';
 
 describe('MediaSingle', () => {
-  const editorWidth = 123;
-
-  it('passes the renderer width down as cardDimensions', () => {
+  it('passes down cardDimensions set to 100%', () => {
     const mediaDimensions = {
       width: 250,
       height: 250,
     };
-
-    const mediaAspectRatio = mediaDimensions.height / mediaDimensions.width;
-
     // mock page width
     Object.defineProperties(document.body, {
       offsetWidth: {
@@ -37,15 +32,8 @@ describe('MediaSingle', () => {
     );
 
     const { cardDimensions } = mediaSingle.find(Media).props();
-    expect(cardDimensions).toBeDefined();
-
-    const cardHeightCss = cardDimensions!.height as string;
-    const cardHeight = Number(
-      cardHeightCss.substring(0, cardHeightCss.length - 2),
-    );
-
-    expect(cardDimensions!.width).toEqual(`${editorWidth}px`);
-    expect(cardHeight).toBeCloseTo(editorWidth * mediaAspectRatio);
+    expect(cardDimensions && cardDimensions.width).toEqual(`100%`);
+    expect(cardDimensions && cardDimensions.height).toEqual(`100%`);
 
     mediaSingle.unmount();
   });
