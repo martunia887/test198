@@ -170,12 +170,14 @@ type SideEffectsOption = {
   scroll?: boolean;
 };
 
+type SerializedEditorProps = Omit<EditorProps, 'media'> & { media?: boolean };
+
 type InitEditorWithADFOptions = {
   appearance: Appearance;
   adf?: Object;
   device?: Device;
   viewport?: { width: number; height: number };
-  editorProps?: EditorProps;
+  editorProps?: SerializedEditorProps;
   mode?: 'light' | 'dark';
   allowSideEffects?: SideEffectsOption;
   withSidebar?: boolean;
@@ -262,7 +264,7 @@ export const initFullPageEditorWithAdf = async (
   adf: Object,
   device?: Device,
   viewport?: { width: number; height: number },
-  editorProps?: EditorProps,
+  editorProps?: SerializedEditorProps,
   mode?: 'light' | 'dark',
   allowSideEffects?: SideEffectsOption,
 ) => {

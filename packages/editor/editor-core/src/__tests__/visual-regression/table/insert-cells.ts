@@ -1,17 +1,13 @@
-import { waitForTooltip } from '@atlaskit/visual-regression/helper';
-import adf from './__fixtures__/default-table.adf.json';
 import {
-  snapshot,
-  initEditorWithAdf,
   Appearance,
   initEditor as _initEditor,
+  initEditorWithAdf,
+  snapshot,
 } from '../_utils';
 import tableMergedColumnsADF from './__fixtures__/table-with-first-column-merged.json';
 import {
-  insertRow,
   insertColumn,
   tableSelectors,
-  clickFirstCell,
 } from '../../__helpers/page-objects/_table';
 import { animationFrame } from '../../__helpers/page-objects/_editor';
 // import { Page } from '../../__helpers/page-objects/_types';
@@ -22,6 +18,9 @@ const initEditor = async (page: PuppeteerPage, adf: Object) => {
     appearance: Appearance.fullPage,
     adf,
     viewport: { width: 1040, height: 500 },
+    editorProps: {
+      media: false,
+    },
     withCollab: true,
   });
   // await clickFirstCell(page);
@@ -41,6 +40,9 @@ describe('Collab - Snapshot Test: table insert/delete with merged columns', () =
     await _initEditor(collabPage, {
       appearance: Appearance.fullPage,
       viewport: { width: 1040, height: 500 },
+      editorProps: {
+        media: false,
+      },
       withCollab: true,
     });
     await initEditor(page, tableMergedColumnsADF);

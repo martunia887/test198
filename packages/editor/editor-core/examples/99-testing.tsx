@@ -47,7 +47,15 @@ interface EditorInstance {
   eventDispatcher: EventDispatcher;
 }
 
-export const providers: any = {
+export const providers: Pick<
+  EditorProps,
+  | 'emojiProvider'
+  | 'mentionProvider'
+  | 'taskDecisionProvider'
+  | 'contextIdentifierProvider'
+  | 'activityProvider'
+  | 'macroProvider'
+> & { collabEditProvider?: EditorProps['collabEditProvider'] } = {
   emojiProvider: emoji.storyData.getEmojiResource({
     uploadSupported: true,
     currentUser: {
