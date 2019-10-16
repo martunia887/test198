@@ -120,8 +120,10 @@ export class ItemViewerBase extends React.Component<Props, State> {
     event: CustomMediaPlayerErrorEvent,
   ) => {
     if (fileState.status === 'processed') {
-      const video = event.target as HTMLVideoElement | HTMLAudioElement;
-      const failReason = video.error ? video.error.message : 'Playback failed';
+      const mediaElement = event.target as HTMLVideoElement | HTMLAudioElement;
+      const failReason = mediaElement.error
+        ? mediaElement.error.message
+        : 'Playback failed';
       this.fireAnalytics(
         mediaFileLoadFailedEvent(fileState.id, failReason, fileState),
       );

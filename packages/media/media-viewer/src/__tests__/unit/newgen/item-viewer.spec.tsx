@@ -532,6 +532,49 @@ describe('<ItemViewer />', () => {
       });
     });
 
+    it('should use video error message as failReason', async () => {
+      const state: ProcessedFileState = {
+        id: await identifier.id,
+        mediaType: 'video',
+        status: 'processed',
+        mimeType: '',
+        name: '',
+        size: 1,
+        artifacts: {},
+        representations: {},
+      };
+      const mediaClient = makeFakeMediaClient(Observable.of(state));
+      const onErrorSpy = jest.fn();
+      const { el, createAnalyticsEventSpy } = mountBaseComponent(
+        mediaClient,
+        identifier,
+        { onError: onErrorSpy },
+      );
+      const onError: (event: CustomMediaPlayerErrorEvent) => void = el
+        .find(VideoViewer)
+        .prop('onError')!;
+      onError({
+        target: {
+          error: { message: 'video error' },
+        },
+      } as any);
+      expect(createAnalyticsEventSpy).toHaveBeenCalledWith({
+        action: 'loadFailed',
+        actionSubject: 'mediaFile',
+        actionSubjectId: 'some-id',
+        attributes: {
+          failReason: 'video error',
+          fileId: 'some-id',
+          fileMediatype: 'video',
+          fileMimetype: '',
+          fileSize: 1,
+          status: 'fail',
+          ...analyticsBaseAttributes,
+        },
+        eventType: 'operational',
+      });
+    });
+
     test.each(['audio', 'video'])(
       'should trigger analytics when %s can play',
       async (type: 'audio' | 'video') => {

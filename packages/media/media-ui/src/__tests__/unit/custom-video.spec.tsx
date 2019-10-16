@@ -18,7 +18,7 @@ import { CurrentTime } from '../../customMediaPlayer/styled';
 import { Shortcut } from '../../';
 jest.mock('../../customMediaPlayer/simultaneousPlayManager');
 import simultaneousPlayManager from '../../customMediaPlayer/simultaneousPlayManager';
-
+import MediaPlayer from 'react-video-renderer';
 // Removes errors from JSDOM virtual console on CustomMediaPlayer tests
 // Trick taken from https://github.com/jsdom/jsdom/issues/2155
 const HTMLMediaElement_play = HTMLMediaElement.prototype.play;
@@ -334,6 +334,22 @@ describe('<CustomMediaPlayer />', () => {
 
       (component.instance() as any).play();
       expect(onFirstPlay).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('#events', () => {
+    it('should call onError with the error event when an error happens', async () => {
+      const onError = jest.fn();
+      const { component } = setup({
+        onError,
+      });
+
+      // component.find(MediaPlayer).simulate('error') doesn't work
+      component.find(MediaPlayer).prop('onError')!({
+        error: 'some-error',
+      } as any);
+      expect(onError).toBeCalledTimes(1);
+      expect(onError).toBeCalledWith({ error: 'some-error' });
     });
   });
 });
