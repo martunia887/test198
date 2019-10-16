@@ -23,6 +23,7 @@ import mediaMockServer from '../example-helpers/media-mock';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { withSidebarContainer } from '../example-helpers/SidebarContainer';
 import { MountOptions } from '../src/__tests__/visual-regression/_utils';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
 
 function createMediaMockEnableOnce() {
   let enabled = false;
@@ -45,7 +46,15 @@ interface EditorInstance {
   eventDispatcher: EventDispatcher;
 }
 
-export const providers: any = {
+export const providers: Pick<
+  EditorProps,
+  | 'emojiProvider'
+  | 'mentionProvider'
+  | 'taskDecisionProvider'
+  | 'contextIdentifierProvider'
+  | 'activityProvider'
+  | 'macroProvider'
+> & { collabEditProvider?: EditorProps['collabEditProvider'] } = {
   emojiProvider: emoji.storyData.getEmojiResource({
     uploadSupported: true,
     currentUser: {
@@ -150,7 +159,7 @@ function createEditorWindowBindings(win: Window) {
     options: MountOptions = {},
   ) => {
     const target = document.getElementById('editor-container');
-    const { mode, withSidebar } = options;
+    const { mode, withSidebar, withCollab } = options;
 
     if (!target) {
       return;
@@ -192,7 +201,15 @@ function createEditorWindowBindings(win: Window) {
       props.extensionHandlers = extensionHandlers;
     }
 
-    let Editor: React.ComponentType<EditorProps> = (props: EditorProps) => (
+    if (withCollab) {
+      let collabOptions;
+      if (typeof withCollab !== 'boolean') {
+        collabOptions = withCollab;
+      }
+      providers.collabEditProvider = createCollabEditProvider(collabOptions);
+    }
+
+    const Editor: React.ComponentType<EditorProps> = (props: EditorProps) => (
       <EditorWithState
         insertMenuItems={customInsertMenuItems}
         {...providers}

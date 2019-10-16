@@ -8,6 +8,7 @@ import { EditorProps } from '../../types';
 import { Page } from '../__helpers/page-objects/_types';
 import { animationFrame } from '../__helpers/page-objects/_editor';
 import { GUTTER_SELECTOR } from '../../plugins/base/pm-plugins/scroll-gutter';
+import { Page as PuppeteerPage } from 'puppeteer';
 
 export {
   setupMediaMocksProviders,
@@ -51,6 +52,8 @@ export const deviceViewPorts = {
   [Device.iPad]: { width: 768, height: 1024 },
   [Device.iPhonePlus]: { width: 414, height: 736 },
 };
+
+type PuppeterPageWithCollab = PuppeteerPage & { collabPage: PuppeteerPage };
 
 /**
  * Sometimes it's useful to visualise whitespace, invisible elements, or bounding boxes
@@ -137,6 +140,11 @@ function getEditorProps(appearance: Appearance) {
 export type MountOptions = {
   mode?: 'light' | 'dark';
   withSidebar?: boolean;
+  withCollab?:
+    | {
+        docId?: string;
+      }
+    | boolean;
 };
 
 export async function mountEditor(
@@ -177,50 +185,93 @@ type InitEditorWithADFOptions = {
   mode?: 'light' | 'dark';
   allowSideEffects?: SideEffectsOption;
   withSidebar?: boolean;
+  withCollab?: boolean;
+};
+
+/**
+ * Create a setup editor function
+ * If withCollab is true, then we are going to create the same document id for each editor setup using this
+ * @param options
+ */
+function createSetupEditor(options: InitEditorWithADFOptions) {
+  const {
+    viewport,
+    withCollab: _withCollab,
+    appearance,
+    adf,
+    editorProps,
+    mode,
+    withSidebar,
+    allowSideEffects,
+  } = options;
+
+  let withCollab: MountOptions['withCollab'];
+  if (_withCollab) {
+    const docId = Math.random()
+      .toString(36)
+      .substring(12);
+    withCollab = {
+      docId,
+    };
+  }
+
+  return async (
+    page: PuppeteerPage,
+    options?: { withDefaultValue: boolean },
+  ) => {
+    const url = getExampleUrl('editor', 'editor-core', 'vr-testing');
+    await navigateToUrl(page, url, false);
+
+    await page.setViewport(viewport!);
+
+    // Mount the editor with the right attributes
+    await mountEditor(
+      page,
+      {
+        appearance: appearance,
+        defaultValue:
+          options && options.withDefaultValue ? JSON.stringify(adf) : '',
+        ...getEditorProps(appearance),
+        ...editorProps,
+      },
+      { mode, withSidebar, withCollab },
+    );
+
+    // We disable possible side effects, like animation, transitions and caret cursor,
+    // because we cannot control and affect snapshots
+    // You can override this disabling if you are sure that you need it in your test
+    await disableAllSideEffects(page, allowSideEffects);
+
+    // Visualise invisible elements
+    await visualiseInvisibleElements(page);
+  };
+}
+
+export const initEditor = async (
+  page: PuppeteerPage,
+  options: InitEditorWithADFOptions,
+) => {
+  const setupEditor = createSetupEditor(options);
+
+  const setupEditorPromises = [setupEditor(page, { withDefaultValue: true })];
+  const collabPage = (page as PuppeterPageWithCollab).collabPage;
+  if (options.withCollab && collabPage) {
+    setupEditorPromises.push(setupEditor(collabPage));
+  }
+  await Promise.all(setupEditorPromises);
+  await page.bringToFront();
 };
 
 export const initEditorWithAdf = async (
-  page: any,
-  {
-    appearance,
-    adf = {},
-    device = Device.Default,
-    viewport,
-    editorProps = {},
-    mode,
-    allowSideEffects = {},
-    withSidebar = false,
-  }: InitEditorWithADFOptions,
+  page: Page,
+  options: InitEditorWithADFOptions,
 ) => {
-  const url = getExampleUrl('editor', 'editor-core', 'vr-testing');
-  await navigateToUrl(page, url);
+  const { viewport: _viewport, device } = options;
+  const viewport = _viewport
+    ? _viewport
+    : deviceViewPorts[device || Device.Default];
 
-  // Set the viewport to the right one
-  if (viewport) {
-    await page.setViewport(viewport);
-  } else {
-    await page.setViewport(deviceViewPorts[device]);
-  }
-
-  // Mount the editor with the right attributes
-  await mountEditor(
-    page,
-    {
-      appearance: appearance,
-      defaultValue: JSON.stringify(adf),
-      ...getEditorProps(appearance),
-      ...editorProps,
-    },
-    { mode, withSidebar },
-  );
-
-  // We disable possible side effects, like animation, transitions and caret cursor,
-  // because we cannot control and affect snapshots
-  // You can override this disabling if you are sure that you need it in your test
-  await disableAllSideEffects(page, allowSideEffects);
-
-  // Visualise invisible elements
-  await visualiseInvisibleElements(page);
+  await initEditor(page, { ...options, viewport });
 };
 
 export const initFullPageEditorWithAdf = async (

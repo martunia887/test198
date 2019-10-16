@@ -250,7 +250,9 @@ const editorProps = ({
   ),
   contextIdentifierProvider: storyContextIdentifierProviderFactory(),
   collabEdit: {
-    provider: createCollabEditProvider(sessionId),
+    provider: createCollabEditProvider({
+      userId: sessionId,
+    }),
     inviteToEditHandler: inviteHandler,
     inviteToEditComponent,
   },

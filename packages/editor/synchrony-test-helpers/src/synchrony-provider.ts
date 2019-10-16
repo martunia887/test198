@@ -24,6 +24,7 @@ SYNCHRONY_URL={url} bolt <your-command>`;
 
 export default async function createSynchronyProvider(
   serverUrl: string,
+  docId?: string,
 ): Promise<CollabEditProvider | null> {
   let provider: CollabProviderModule;
   let cljs: CLJSModule;
@@ -40,7 +41,7 @@ export default async function createSynchronyProvider(
   const params = new URL(String(document.location)).searchParams;
   const host: string | null = params.get('host');
   const port: string = params.get('port') || '10123';
-  const docns: string = params.get('docns') || 'myapp';
+  const docns: string = params.get('docns') || docId || 'myapp';
   const docid: string = params.get('docid') || 'atldemo';
   const jwtduration: string | number = params.get('jwtduration') || 30;
 
