@@ -55,13 +55,13 @@ export function checkParseEncodeRoundTrips(
   // });
 }
 
-export const adf2wiki = (node: Node) => {
+export const adf2wikiRoundtrip = (node: Node) => {
   const transformer = new WikiMarkupTransformer();
   const wiki = transformer.encode(node);
   const adf = transformer.parse(wiki).toJSON();
   expect(adf).toEqual(node.toJSON());
 };
-export const wiki2adf = (wiki: string) => {
+export const wiki2adfRoundtrip = (wiki: string) => {
   const transformer = new WikiMarkupTransformer();
   const adf = transformer.parse(wiki);
   const roundtripped = transformer.encode(adf);
