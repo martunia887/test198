@@ -25,6 +25,7 @@ import {
   MacroState,
   insertMacroFromMacroBrowser,
 } from '../macro';
+import { pluginKey as expandStateKey } from '../expand/pm-plugins/main';
 import { pluginKey as dateStateKey, DateState } from '../date/plugin';
 import { emojiPluginKey, EmojiPluginState } from '../emoji';
 import WithPluginState from '../../ui/WithPluginState';
@@ -38,6 +39,7 @@ import { TablePluginState } from '../table/types';
 import { ImageUploadPluginState } from '../image-upload/types';
 import { LayoutState } from '../layout/pm-plugins/main';
 import { INPUT_METHOD } from '../analytics';
+import { ExpandPluginState } from '../expand/types';
 
 const toolbarSizeToButtons = (toolbarSize: ToolbarSize) => {
   switch (toolbarSize) {
@@ -101,6 +103,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
             imageUpload: imageUploadStateKey,
             placeholderTextState: placeholderTextStateKey,
             layoutState: layoutStateKey,
+            expandState: expandStateKey,
           }}
           render={({
             typeAheadState,
@@ -114,6 +117,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
             imageUpload,
             placeholderTextState,
             layoutState,
+            expandState,
           }: {
             typeAheadState: TypeAheadPluginState | undefined;
             mentionState: MentionPluginState | undefined;
@@ -127,6 +131,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
             imageUpload: ImageUploadPluginState | undefined;
             placeholderTextState: PlaceholderPluginState | undefined;
             layoutState: LayoutState | undefined;
+            expandState: ExpandPluginState | undefined;
           }) => (
             <ToolbarInsertBlock
               buttons={buttons}
@@ -155,6 +160,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
               availableWrapperBlockTypes={
                 blockTypeState && blockTypeState.availableWrapperBlockTypes
               }
+              expandSupported={!!expandState} // TODO
               linkSupported={!!hyperlinkState}
               linkDisabled={
                 !hyperlinkState ||

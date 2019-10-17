@@ -51,6 +51,14 @@ export const IconEmoji = Loadable({
   loading: () => null,
 });
 
+export const IconExpand = Loadable({
+  loader: () =>
+    import('./expand').then(module => module.default) as Promise<
+      React.ComponentType<IconProps>
+    >,
+  loading: () => null,
+});
+
 export const IconImages = Loadable({
   loader: () =>
     import('./images').then(module => module.default) as Promise<

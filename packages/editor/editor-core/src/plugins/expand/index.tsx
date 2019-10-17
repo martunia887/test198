@@ -4,7 +4,7 @@ import { findTable } from 'prosemirror-utils';
 import { EditorPlugin } from '../../types';
 import { createPlugin } from './pm-plugins/main';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import { IconTable } from '../quick-insert/assets';
+import { IconExpand } from '../quick-insert/assets';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -44,7 +44,7 @@ const expandPlugin = (): EditorPlugin => ({
         title: formatMessage(messages.expand),
         description: formatMessage(messages.expandDescription),
         priority: 600,
-        icon: () => <IconTable label={formatMessage(messages.expand)} />,
+        icon: () => <IconExpand label={formatMessage(messages.expand)} />,
         action(insert, state) {
           const { expand, nestedExpand } = state.schema.nodes;
           const expandType = findTable(state.selection) ? nestedExpand : expand;

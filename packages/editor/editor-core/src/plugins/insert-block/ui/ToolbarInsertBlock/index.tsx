@@ -23,6 +23,7 @@ import StatusIcon from '@atlaskit/icon/glyph/status';
 import PlaceholderTextIcon from '@atlaskit/icon/glyph/media-services/text';
 import LayoutTwoEqualIcon from '@atlaskit/icon/glyph/editor/layout-two-equal';
 import HorizontalRuleIcon from '@atlaskit/icon/glyph/editor/horizontal-rule';
+import ChevronRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
 import { EmojiPicker as AkEmojiPicker } from '@atlaskit/emoji/picker';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { EmojiId } from '@atlaskit/emoji/types';
@@ -73,6 +74,7 @@ import {
 } from '../../../analytics';
 import { insertEmoji } from '../../../emoji/commands/insert-emoji';
 import { DropdownItem } from '../../../block-type/ui/ToolbarBlockType';
+import { findTable, safeInsert } from 'prosemirror-utils';
 
 export const messages = defineMessages({
   action: {
@@ -143,12 +145,14 @@ export const messages = defineMessages({
   expand: {
     id: 'fabric.editor.expand',
     defaultMessage: 'Expand',
-    description: 'Inserts an expand in the document',
+    description:
+      'Inserts an expand (expandable/collapsible node type) in the document',
   },
   expandDescription: {
     id: 'fabric.editor.expand.description',
     defaultMessage: 'Insert an expand',
-    description: 'Inserts an expand in the document',
+    description:
+      'Inserts an expand (expandable/collapsible node type) in the document',
   },
   decision: {
     id: 'fabric.editor.decision',
@@ -258,6 +262,7 @@ export interface Props {
   linkDisabled?: boolean;
   emojiDisabled?: boolean;
   nativeStatusSupported?: boolean;
+  expandSupported?: boolean;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
@@ -520,6 +525,7 @@ class ToolbarInsertBlock extends React.PureComponent<
       emojiDisabled,
       emojiProvider,
       nativeStatusSupported,
+      expandSupported,
       insertMenuItems,
       dateEnabled,
       placeholderTextEnabled,
@@ -679,6 +685,15 @@ class ToolbarInsertBlock extends React.PureComponent<
       });
     }
 
+    if (expandSupported) {
+      const labelExpand = formatMessage(messages.expand);
+      items.push({
+        content: labelExpand,
+        value: { name: 'expand' },
+        elemBefore: <ChevronRightCircleIcon label={labelExpand} />,
+      });
+    }
+
     if (insertMenuItems) {
       items = items.concat(insertMenuItems);
       // keeping this here for backwards compatibility so confluence
@@ -693,6 +708,21 @@ class ToolbarInsertBlock extends React.PureComponent<
       });
     }
     return items;
+  };
+
+  private insertExpand = () => {
+    const { editorView } = this.props;
+    const { state, dispatch } = editorView;
+    const { expand, nestedExpand } = state.schema.nodes;
+
+    const expandType = findTable(state.selection) ? nestedExpand : expand;
+    const tr = safeInsert(expandType.createAndFill({}))(state.tr);
+    if (tr && dispatch) {
+      // TODO: Add analytics
+      dispatch(tr);
+      return true;
+    }
+    return false;
   };
 
   private toggleLinkPanel = withAnalytics(
@@ -919,6 +949,9 @@ class ToolbarInsertBlock extends React.PureComponent<
         break;
       case 'status':
         this.createStatus(inputMethod);
+        break;
+      case 'expand':
+        this.insertExpand();
         break;
       default:
         if (item && item.onClick) {
