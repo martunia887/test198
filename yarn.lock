@@ -2197,9 +2197,9 @@
     react-markdown "^2.5.0"
     semver "^5.4.1"
 
-"@brisk-docs/website@file:../brisk-docs/packages/website/brisk-docs-website-v0.9.13.tgz":
+"@brisk-docs/website@file:../brisk-docs/packages/website/brisk-docs-website-v0.9.16.tgz":
   version "0.9.0"
-  resolved "file:../brisk-docs/packages/website/brisk-docs-website-v0.9.13.tgz#563eac98a3ee505ef2b9e1d4d46aa52bc55613ce"
+  resolved "file:../brisk-docs/packages/website/brisk-docs-website-v0.9.16.tgz#3c9aed984a9d8070a6733a4e331819a73afbfbbe"
   dependencies:
     "@atlaskit/avatar" "^14.1.8"
     "@atlaskit/breadcrumbs" "^8.0.0"

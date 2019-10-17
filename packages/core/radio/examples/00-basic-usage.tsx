@@ -1,5 +1,5 @@
 import React, { PureComponent, SyntheticEvent } from 'react';
-import { Checkbox } from '@atlaskit/checkbox';
+// import { Checkbox } from '@atlaskit/checkbox';
 import { RadioGroup } from '../src';
 import { OptionsPropType } from '../src/types';
 
@@ -59,11 +59,6 @@ export default class BasicExample extends PureComponent<{}, State> {
         >
           {this.state.onChangeResult}
         </div>
-        <Checkbox
-          value="isDisabled"
-          label="is disabled"
-          onChange={this.toggleCheckbox}
-        />
       </div>
     );
   }
