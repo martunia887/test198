@@ -27,6 +27,7 @@
     "@atlaskit/item": "^10.1.6",
     "@atlaskit/portal": "^3.1.2",
     "@atlaskit/theme": "^9.2.4",
+    "@atlaskit/modal-dialog": "^10.3.4",
     "@emotion/core": "^10.0.9",
     "chromatism": "^2.6.0",
     "exenv": "^1.2.2",
