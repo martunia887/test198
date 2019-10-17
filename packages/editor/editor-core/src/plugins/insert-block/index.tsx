@@ -160,7 +160,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
               availableWrapperBlockTypes={
                 blockTypeState && blockTypeState.availableWrapperBlockTypes
               }
-              expandSupported={!!expandState} // TODO
+              expandSupported={!!expandState}
               linkSupported={!!hyperlinkState}
               linkDisabled={
                 !hyperlinkState ||

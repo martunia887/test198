@@ -85,8 +85,7 @@ export const handleDocOrSelectionChanged = (
 
   if (
     pluginState.tableNode !== tableNode ||
-    (pluginState.targetCellPosition !== targetCellPosition &&
-      pluginState.tableRef) ||
+    pluginState.targetCellPosition !== targetCellPosition ||
     hoverDecoration.length ||
     selectedColumnControlsDecoration.length
   ) {

@@ -2,7 +2,7 @@
 // prettier-ignore
 import { css, Styles, StyledComponentClass } from 'styled-components';
 import { fontSize } from '@atlaskit/theme';
-import { relativeSize, akEditorTableCellMinWidth } from '../consts';
+import { akEditorTableCellMinWidth } from '../consts';
 
 export const expandStyles = css`
   .ProseMirror {
