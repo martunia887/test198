@@ -1,35 +1,17 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
-import { adf2wiki, wiki2adf } from '../_test-helpers';
+import WikiMarkupTransformer from '../../../index';
 
 import { code_block, doc } from '@atlaskit/editor-test-helpers';
 
 describe('ADF => WikiMarkup => ADF - CodeBlock', () => {
-  test('should convert code block node into code macro', () => {
-    adf2wiki(
-      doc(code_block({ language: 'javascript' })('const i = 0;'))(
-        defaultSchema,
-      ),
-    );
-    adf2wiki(
-      doc(
-        code_block({ language: 'java' })(`package com.atlassian.confluence;
-public class CamelCaseLikeClassName {
-    private String sampleAttr;
-    public static void main(String[] args){
-        System.out.print("text");
-    };
-}`),
-      )(defaultSchema),
-    );
-  });
+  const transformer = new WikiMarkupTransformer();
 
-  test('should convert code macro with language attr into code block', () => {
-    wiki2adf(`{code:java}package com.atlassian.confluence;
-public class CamelCaseLikeClassName {
-    private String sampleAttr;
-    public static void main(String[] args){
-        System.out.print("text");
-    };
-}{code}`);
+  test('should convert codeBlock node', () => {
+    const node = doc(code_block({ language: 'javascript' })('const i = 0;'))(
+      defaultSchema,
+    );
+    const wiki = transformer.encode(node);
+    const adf = transformer.parse(wiki).toJSON();
+    expect(adf).toEqual(node.toJSON());
   });
 });

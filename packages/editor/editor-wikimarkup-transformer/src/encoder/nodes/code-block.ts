@@ -50,6 +50,6 @@ export const codeBlock: NodeEncoder = (node: PMNode): string => {
   if (supportedLanguageInWiki.indexOf(node.attrs.language) !== -1) {
     return `{code:${node.attrs.language}}${result}{code}`;
   } else {
-    return `{noformat}${result}{noformat}`;
+    return `{code}${result}{code}`;
   }
 };

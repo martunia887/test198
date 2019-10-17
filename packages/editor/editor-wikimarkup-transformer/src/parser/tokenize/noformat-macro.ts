@@ -38,7 +38,7 @@ const rawContentProcessor = (
     output.push(title(parsedAttrs.title, schema));
   }
 
-  output.push(codeBlock.createChecked({}, textNode));
+  output.push(codeBlock.createChecked({ language: 'java' }, textNode));
 
   return {
     type: 'pmnode',

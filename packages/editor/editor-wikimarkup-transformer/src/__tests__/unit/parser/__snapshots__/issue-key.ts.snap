@@ -219,7 +219,7 @@ Object {
     },
     Object {
       "attrs": Object {
-        "language": null,
+        "language": "java",
         "uniqueId": null,
       },
       "content": Array [
