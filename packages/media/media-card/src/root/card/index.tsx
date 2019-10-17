@@ -39,7 +39,7 @@ import {
 } from '../..';
 import { CardView, CardViewBase } from '../cardView';
 import { LazyContent } from '../../utils/lazyContent';
-import { getDataURIDimension } from '../../utils/getDataURIDimension';
+import { getDataURIDimensions } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
 import { isBigger } from '../../utils/dimensionComparer';
@@ -292,8 +292,7 @@ export class CardBase extends Component<
               dimensions,
               component: this,
             };
-            const width = getDataURIDimension('width', options);
-            const height = getDataURIDimension('height', options);
+            const { width, height } = getDataURIDimensions(options);
             try {
               const mode =
                 resizeMode === 'stretchy-fit' ? 'full-fit' : resizeMode;

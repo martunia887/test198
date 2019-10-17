@@ -35,3 +35,11 @@ export const isBigger = (current: CardDimensions, next: CardDimensions) => {
     return false;
   }
 };
+
+export const isPercentageBased = (next: CardDimensions) =>
+  (!!next.width && isValidPercentageUnit(next.width)) ||
+  (!!next.height && isValidPercentageUnit(next.height));
+
+export const isFullPercentageBased = (next: CardDimensions) =>
+  (!!next.width && isValidPercentageUnit(next.width)) ||
+  (!!next.height && isValidPercentageUnit(next.height));

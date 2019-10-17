@@ -21,7 +21,7 @@ import {
 } from '../utils/cardDimensions';
 import { isValidPercentageUnit } from '../utils/isValidPercentageUnit';
 import { getCSSUnitValue } from '../utils/getCSSUnitValue';
-import { getElementDimension } from '../utils/getElementDimension';
+import { getElementDimensions } from '../utils/getElementDimension';
 import { Wrapper } from './styled';
 import { createAndFireMediaEvent } from '../utils/analytics';
 
@@ -123,8 +123,7 @@ export class CardViewBase extends React.Component<
     const { width } = dimensions;
 
     if (width && isValidPercentageUnit(width)) {
-      const elementWidth = getElementDimension(this, 'width');
-
+      const elementWidth = getElementDimensions(this).width;
       this.setState({ elementWidth });
     }
   }

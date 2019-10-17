@@ -4,9 +4,9 @@ jest.mock('../../getElementDimension');
 import * as React from 'react';
 import { Component } from 'react';
 import { shallow } from 'enzyme';
-import { getDataURIDimension } from '../../getDataURIDimension';
+import { getDataURIDimensions } from '../../getDataURIDimension';
 import { isRetina } from '../../isRetina';
-import { getElementDimension } from '../../getElementDimension';
+import { getElementDimensions } from '../../getElementDimension';
 
 describe('getDataURIDimension()', () => {
   class SomeComponent extends Component<any, any> {
@@ -29,11 +29,7 @@ describe('getDataURIDimension()', () => {
       width: 100,
       height: 50,
     };
-    const width = getDataURIDimension('width', {
-      component,
-      dimensions,
-    });
-    const height = getDataURIDimension('height', {
+    const { width, height } = getDataURIDimensions({
       component,
       dimensions,
     });
@@ -44,19 +40,18 @@ describe('getDataURIDimension()', () => {
 
   it('should use default dimensions', () => {
     const { component } = setup();
-    const noAppearanceWidth = getDataURIDimension('width', {
+    const {
+      width: noAppearanceWidth,
+      height: noAppearanceHeight,
+    } = getDataURIDimensions({
       component,
     });
-    const appearanceWidth = getDataURIDimension('width', {
+    const {
+      width: appearanceWidth,
+      height: appearanceHeight,
+    } = getDataURIDimensions({
       component,
       appearance: 'horizontal',
-    });
-    const noAppearanceHeight = getDataURIDimension('height', {
-      component,
-    });
-    const appearanceHeight = getDataURIDimension('height', {
-      component,
-      appearance: 'square',
     });
 
     expect(noAppearanceWidth).toEqual(156);
@@ -65,10 +60,13 @@ describe('getDataURIDimension()', () => {
     expect(appearanceHeight).toEqual(125);
   });
 
-  it('should use getElementDimension when dimension is percentage unit', () => {
-    (getElementDimension as any).mockReturnValueOnce(50);
+  it('should use getElementDimensions when dimension is percentage unit', () => {
+    (getElementDimensions as any).mockReturnValueOnce({
+      width: 50,
+      height: 50,
+    });
     const { component } = setup();
-    const width = getDataURIDimension('width', {
+    const { width } = getDataURIDimensions({
       component,
       dimensions: {
         width: '25%',
@@ -81,15 +79,10 @@ describe('getDataURIDimension()', () => {
     (isRetina as any).mockReturnValue(true);
     const { component } = setup();
 
-    const width = getDataURIDimension('width', {
+    const { width, height } = getDataURIDimensions({
       component,
       dimensions: {
         width: 10,
-      },
-    });
-    const height = getDataURIDimension('height', {
-      component,
-      dimensions: {
         height: 20,
       },
     });

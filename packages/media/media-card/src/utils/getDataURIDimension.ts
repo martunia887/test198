@@ -1,9 +1,10 @@
 import { Component } from 'react';
 import { isRetina } from './isRetina';
 import { CardDimensions, CardAppearance } from '..';
-import { ElementDimension, getElementDimension } from './getElementDimension';
+import { getElementDimensions } from './getElementDimension';
 import { defaultImageCardDimensions } from './cardDimensions';
 import { isValidPercentageUnit } from './isValidPercentageUnit';
+import { isFullPercentageBased } from './dimensionComparer';
 import { containsPixelUnit } from './containsPixelUnit';
 
 export type getDataURIDimensionOptions = {
@@ -12,25 +13,50 @@ export type getDataURIDimensionOptions = {
   appearance?: CardAppearance;
 };
 
-export const getDataURIDimension = (
-  dimension: ElementDimension,
-  options: getDataURIDimensionOptions,
-): number => {
+const timesRetinaFactor = ({
+  width,
+  height,
+}: {
+  width: number;
+  height: number;
+}) => {
   const retinaFactor = isRetina() ? 2 : 1;
-  const dimensionValue =
-    (options.dimensions && options.dimensions[dimension]) || '';
+  return {
+    width: width * retinaFactor,
+    height: height * retinaFactor,
+  };
+};
 
-  if (isValidPercentageUnit(dimensionValue)) {
-    return getElementDimension(options.component, dimension) * retinaFactor;
-  }
-
+const getDataURIDimension = (
+  dimensions: CardDimensions,
+  dimensionName: keyof CardDimensions,
+  component: Component,
+) => {
+  const dimensionValue = dimensions[dimensionName];
   if (typeof dimensionValue === 'number') {
-    return dimensionValue * retinaFactor;
+    return dimensionValue;
   }
-
+  if (isValidPercentageUnit(dimensionValue || '')) {
+    return getElementDimensions(component)[dimensionName];
+  }
   if (containsPixelUnit(`${dimensionValue}`)) {
-    return parseInt(`${dimensionValue}`, 10) * retinaFactor;
+    return parseInt(`${dimensionValue}`, 10);
   }
+  return defaultImageCardDimensions[dimensionName];
+};
 
-  return defaultImageCardDimensions[dimension] * retinaFactor;
+export const getDataURIDimensions = (options: getDataURIDimensionOptions) => {
+  const { component, dimensions } = options;
+  if (!dimensions) {
+    return timesRetinaFactor(defaultImageCardDimensions);
+  } else if (isFullPercentageBased(dimensions)) {
+    const elementDimensions = getElementDimensions(component);
+    return timesRetinaFactor(elementDimensions);
+  } else {
+    const individualDimensions = {
+      width: getDataURIDimension(dimensions, 'width', component),
+      height: getDataURIDimension(dimensions, 'height', component),
+    };
+    return timesRetinaFactor(individualDimensions);
+  }
 };

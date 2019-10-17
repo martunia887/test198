@@ -1,13 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-export type ElementDimension = 'height' | 'width';
 
-export const getElementDimension = (
-  component: React.Component,
-  dimension: ElementDimension,
-): number => {
+export const getElementDimensions = (component: React.Component) => {
   const element = ReactDOM.findDOMNode(component) as Element;
-  const dimensionValue = element.getBoundingClientRect()[dimension];
-
-  return Math.round(dimensionValue);
+  const { width, height } = element.getBoundingClientRect();
+  return {
+    width: Math.round(width),
+    height: Math.round(height),
+  };
 };
