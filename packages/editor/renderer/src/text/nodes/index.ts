@@ -6,7 +6,6 @@ import hardBreak from './hardBreak';
 import heading from './heading';
 import listItem from './listItem';
 import mediaGroup from './mediaGroup';
-import mention from './mention';
 import orderedList from './orderedList';
 import panel from './panel';
 import paragraph from './paragraph';
@@ -31,7 +30,6 @@ export const nodeToReducerMapping: { [key: string]: NodeReducer } = {
   heading,
   listItem,
   mediaGroup,
-  mention,
   orderedList,
   panel,
   paragraph,
