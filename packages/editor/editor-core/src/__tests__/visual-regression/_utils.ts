@@ -188,6 +188,21 @@ type InitEditorWithADFOptions = {
   withCollab?: boolean;
 };
 
+function getCollabOptions(enabled = false): MountOptions['withCollab'] {
+  if (!enabled || !SYNCHRONY_URL) {
+    return;
+  }
+  // Create a random number to prevent collision between test using the same document
+  // TODO: Improve to prefix the file name or something to identify the test
+  const docId = Math.random()
+    .toString(36)
+    .substring(2);
+
+  return {
+    docId,
+  };
+}
+
 /**
  * Create a setup editor function
  * If withCollab is true, then we are going to create the same document id for each editor setup using this
@@ -196,7 +211,7 @@ type InitEditorWithADFOptions = {
 function createSetupEditor(options: InitEditorWithADFOptions) {
   const {
     viewport,
-    withCollab: _withCollab,
+    withCollab,
     appearance,
     adf,
     editorProps,
@@ -205,16 +220,7 @@ function createSetupEditor(options: InitEditorWithADFOptions) {
     allowSideEffects,
   } = options;
 
-  let withCollab: MountOptions['withCollab'];
-  if (_withCollab) {
-    const docId = Math.random()
-      .toString(36)
-      .substring(2);
-    withCollab = {
-      docId,
-    };
-  }
-
+  const collabOptions = getCollabOptions(withCollab);
   return async (
     page: PuppeteerPage,
     options?: { withDefaultValue: boolean },
@@ -234,7 +240,7 @@ function createSetupEditor(options: InitEditorWithADFOptions) {
         ...getEditorProps(appearance),
         ...editorProps,
       },
-      { mode, withSidebar, withCollab },
+      { mode, withSidebar, withCollab: collabOptions },
     );
 
     // We disable possible side effects, like animation, transitions and caret cursor,
