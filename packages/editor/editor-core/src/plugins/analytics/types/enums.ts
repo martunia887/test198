@@ -70,6 +70,8 @@ export enum ACTION_SUBJECT {
   TEXT = 'text',
   TYPEAHEAD = 'typeAhead',
   TABLE = 'table',
+  EXPAND = 'expand',
+  NESTED_EXPAND = 'nestedExpand',
 }
 
 export enum ACTION_SUBJECT_ID {
@@ -118,6 +120,8 @@ export enum ACTION_SUBJECT_ID {
   STATUS = 'status',
   SYMBOL = 'symbol',
   TABLE = 'table',
+  EXPAND = 'expand',
+  NESTED_EXPAND = 'nestedExpand',
   TYPEAHEAD_EMOJI = 'emojiTypeAhead',
   TYPEAHEAD_LINK = 'linkTypeAhead',
   TYPEAHEAD_MENTION = 'mentionTypeAhead',
@@ -141,4 +145,6 @@ export enum ACTION_SUBJECT_ID {
   PASTE_TABLE_ROW = 'tableRow',
   PASTE_TABLE = 'table',
   PASTE_TASK_LIST = 'taskList',
+  PASTE_EXPAND = 'expand',
+  PASTE_NESTED_EXPAND = 'nestedExpand',
 }

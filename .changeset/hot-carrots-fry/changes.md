@@ -1,0 +1,1 @@
+ED-7876: added expand and nestedExpand nodes, implemented expand in editor

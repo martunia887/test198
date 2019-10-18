@@ -14,6 +14,7 @@ import {
   akEditorDeleteBorder,
   akEditorSelectedBorderBoldSize,
   tasksAndDecisionsStyles,
+  expandStyles,
 } from '@atlaskit/editor-common';
 
 import { telepointerStyle } from '../../plugins/collab-edit/styles';
@@ -121,6 +122,7 @@ const ContentStyles: ComponentClass<
   ${blockMarksSharedStyles}
   ${dateSharedStyle}
   ${extensionStyles}
+  ${expandStyles}
 
   /** Global selector for extensions, as .danger tag is assigned to root level node which is unaccessible from triggered child node **/
   /* Danger when nested node */
@@ -171,7 +173,7 @@ const ContentStyles: ComponentClass<
     padding: 0;
   }
 
-  /* Link icon in the Atlaskit package 
+  /* Link icon in the Atlaskit package
      is bigger than the others
   */
   .hyperlink-open-link {
