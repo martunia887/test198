@@ -209,7 +209,7 @@ function createSetupEditor(options: InitEditorWithADFOptions) {
   if (_withCollab) {
     const docId = Math.random()
       .toString(36)
-      .substring(12);
+      .substring(2);
     withCollab = {
       docId,
     };
