@@ -36,9 +36,9 @@ class PuppeteerEnvironment extends JSDOMEnvironment {
       // Retrieve ws endpoint from docker
       wsEndpoint = await getDockerWsEndpoint();
     }
+    this.global.SYNCHRONY_URL = process.env.SYNCHRONY_URL || '';
 
     if (!wsEndpoint) throw new Error('wsEndpoint not found');
-
     this.global.browser = await puppeteer.connect({
       browserWSEndpoint: wsEndpoint,
       ignoreHTTPSErrors: true,
