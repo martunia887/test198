@@ -13,6 +13,11 @@ export type getDataURIDimensionOptions = {
   appearance?: CardAppearance;
 };
 
+export type DataURIDimensions = {
+  width: number;
+  height: number;
+};
+
 const timesRetinaFactor = ({
   width,
   height,
@@ -45,7 +50,9 @@ const getDataURIDimension = (
   return defaultImageCardDimensions[dimensionName];
 };
 
-export const getDataURIDimensions = (options: getDataURIDimensionOptions) => {
+export const getDataURIDimensions = (
+  options: getDataURIDimensionOptions,
+): DataURIDimensions => {
   const { component, dimensions } = options;
   if (!dimensions) {
     return timesRetinaFactor(defaultImageCardDimensions);

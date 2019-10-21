@@ -30,16 +30,13 @@ import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
 
 import { Subscription } from 'rxjs/Subscription';
 import { IntlProvider } from 'react-intl';
-import {
-  CardAction,
-  CardDimensions,
-  CardProps,
-  CardState,
-  CardStatus,
-} from '../..';
+import { CardAction, CardProps, CardState, CardStatus } from '../..';
 import { CardView, CardViewBase } from '../cardView';
 import { LazyContent } from '../../utils/lazyContent';
-import { getDataURIDimensions } from '../../utils/getDataURIDimension';
+import {
+  getDataURIDimensions,
+  DataURIDimensions,
+} from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
 import { isBigger } from '../../utils/dimensionComparer';
@@ -69,6 +66,9 @@ export class CardBase extends Component<
   private lastAction?: AnalyticsLoadingAction = undefined;
   private lastErrorState?: AnalyticsErrorStateAttributes = {};
   private resolvedId: string = '';
+  public dataURIDimensions: DataURIDimensions = getDataURIDimensions({
+    component: this,
+  });
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
 
   subscription?: Subscription;
@@ -123,8 +123,16 @@ export class CardBase extends Component<
   };
 
   componentDidMount() {
-    const { identifier, mediaClient } = this.props;
+    const { identifier, mediaClient, dimensions, appearance } = this.props;
     this.hasBeenMounted = true;
+    // The underlying opperation to find dataURIDimensions is expensive.
+    // Therefore, it needs to be called only once and be stored for further reference.
+    // Has to be set before subscribe
+    this.dataURIDimensions = getDataURIDimensions({
+      component: this,
+      dimensions,
+      appearance,
+    });
     this.subscribe(identifier, mediaClient);
     document.addEventListener('copy', this.onCopyListener);
   }
@@ -133,33 +141,28 @@ export class CardBase extends Component<
     const {
       mediaClient: currentMediaClient,
       identifier: currentIdentifier,
-      dimensions: currentDimensions,
     } = this.props;
     const {
       mediaClient: nextMediaClient,
       identifier: nextIdenfifier,
       dimensions: nextDimensions,
+      appearance: nextAppearance,
     } = nextProps;
-    const isDifferent = isDifferentIdentifier(
-      currentIdentifier,
-      nextIdenfifier,
-    );
 
+    const newDataURIDimensions = getDataURIDimensions({
+      component: this,
+      dimensions: nextDimensions,
+      appearance: nextAppearance,
+    });
     if (
       currentMediaClient !== nextMediaClient ||
-      isDifferent ||
-      this.shouldRefetchImage(currentDimensions, nextDimensions)
+      isDifferentIdentifier(currentIdentifier, nextIdenfifier) ||
+      isBigger(this.dataURIDimensions, newDataURIDimensions)
     ) {
+      this.dataURIDimensions = newDataURIDimensions; // Has to be set before subscribe
       this.subscribe(nextIdenfifier, nextMediaClient);
     }
   }
-
-  shouldRefetchImage = (current?: CardDimensions, next?: CardDimensions) => {
-    if (!current || !next) {
-      return false;
-    }
-    return isBigger(current, next);
-  };
 
   componentWillUnmount() {
     this.hasBeenMounted = false;
@@ -286,21 +289,14 @@ export class CardBase extends Component<
             metadata.mediaType &&
             isPreviewableType(metadata.mediaType);
           if (shouldFetchRemotePreview) {
-            const { appearance, dimensions, resizeMode, alt } = this.props;
-            const options = {
-              appearance,
-              dimensions,
-              component: this,
-            };
-            const { width, height } = getDataURIDimensions(options);
+            const { resizeMode, alt } = this.props;
             try {
               const mode =
                 resizeMode === 'stretchy-fit' ? 'full-fit' : resizeMode;
               const blob = await mediaClient.getImage(this.resolvedId, {
                 collection: collectionName,
                 mode,
-                height,
-                width,
+                ...this.dataURIDimensions,
                 allowAnimated: true,
               });
               dataURI = URL.createObjectURL(blob);
@@ -312,8 +308,7 @@ export class CardBase extends Component<
                   mimeType: metadata.mimeType,
                   name: metadata.name,
                   size: metadata.size,
-                  width,
-                  height,
+                  ...this.dataURIDimensions,
                   alt,
                 });
               }

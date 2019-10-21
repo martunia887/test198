@@ -1,7 +1,8 @@
 jest.mock('../../utils/getDataURIFromFileState');
+jest.mock('../../utils/getElementDimension');
 import { Observable, ReplaySubject } from 'rxjs';
 import * as React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow, mount, ShallowWrapper } from 'enzyme';
 
 import { FabricChannel } from '@atlaskit/analytics-listeners';
 import { AnalyticsContext, AnalyticsListener } from '@atlaskit/analytics-next';
@@ -40,6 +41,8 @@ import {
   getUIAnalyticsContext,
   getBaseAnalyticsContext,
 } from '../../utils/analytics';
+import { getElementDimensions } from '../../utils/getElementDimension';
+import { DataURIDimensions } from '../../utils/getDataURIDimension';
 
 describe('Card', () => {
   let identifier: Identifier;
@@ -240,6 +243,118 @@ describe('Card', () => {
 
     await nextTick();
     expect(mediaClient.getImage).toHaveBeenCalledTimes(1);
+  });
+
+  describe('Percentage dimensions: Resize and Fetch', () => {
+    const setupResize = (
+      dimensions: CardDimensions,
+      dataURIDimensions: DataURIDimensions,
+    ) => {
+      (getElementDimensions as jest.Mock).mockReturnValue(dataURIDimensions);
+      const cardProps = {
+        identifier,
+        dimensions,
+      };
+      const { component, mediaClient } = setup(
+        undefined,
+        cardProps,
+        emptyPreview,
+      );
+      return { component, mediaClient, cardProps };
+    };
+    const resize = async (
+      {
+        component,
+        mediaClient,
+        cardProps,
+      }: {
+        component: ShallowWrapper<CardProps, any, React.Component<{}, {}, any>>;
+        mediaClient: MediaClient;
+        cardProps: Partial<CardProps>;
+      },
+      newDataURIDimensions: DataURIDimensions,
+    ) => {
+      (getElementDimensions as any).mockReturnValue(newDataURIDimensions);
+      // We pass the same properties to simulate a resize
+      component.setProps({ mediaClient, ...(cardProps as CardProps) });
+      await nextTick();
+    };
+
+    it(`should refetch the image when width is a percentage and the container's width increases`, async () => {
+      const containerDimensions = { width: 500, height: 200 };
+      const newContainerDimensions = { width: 600, height: 200 };
+
+      const fullPercent = setupResize(
+        { width: '100%', height: '100%' },
+        containerDimensions,
+      );
+      await resize(fullPercent, newContainerDimensions);
+      expect(fullPercent.mediaClient.getImage).toHaveBeenCalledTimes(2);
+
+      const singlePercent = setupResize(
+        { width: '100%', height: '50px' },
+        containerDimensions,
+      );
+      await resize(singlePercent, newContainerDimensions);
+      expect(singlePercent.mediaClient.getImage).toHaveBeenCalledTimes(2);
+    });
+
+    it(`should not refetch the image when width is a percentage and the container's width decreases`, async () => {
+      const containerDimensions = { width: 500, height: 200 };
+      const newContainerDimensions = { width: 400, height: 200 };
+
+      const fullPercent = setupResize(
+        { width: '100%', height: '100%' },
+        containerDimensions,
+      );
+      await resize(fullPercent, newContainerDimensions);
+      expect(fullPercent.mediaClient.getImage).toHaveBeenCalledTimes(1);
+
+      const singlePercent = setupResize(
+        { width: '100%', height: '50px' },
+        containerDimensions,
+      );
+      await resize(singlePercent, newContainerDimensions);
+      expect(singlePercent.mediaClient.getImage).toHaveBeenCalledTimes(1);
+    });
+
+    it(`should refetch the image when height is a percentage and the container's height increases`, async () => {
+      const containerDimensions = { width: 500, height: 200 };
+      const newContainerDimensions = { width: 500, height: 300 };
+
+      const fullPercent = setupResize(
+        { width: '100%', height: '100%' },
+        containerDimensions,
+      );
+      await resize(fullPercent, newContainerDimensions);
+      expect(fullPercent.mediaClient.getImage).toHaveBeenCalledTimes(2);
+
+      const singlePercent = setupResize(
+        { width: '50px', height: '100%' },
+        containerDimensions,
+      );
+      await resize(singlePercent, newContainerDimensions);
+      expect(singlePercent.mediaClient.getImage).toHaveBeenCalledTimes(2);
+    });
+
+    it(`should not refetch the image when height is a percentage and the container's height decreases`, async () => {
+      const containerDimensions = { width: 500, height: 200 };
+      const newContainerDimensions = { width: 500, height: 100 };
+
+      const fullPercent = setupResize(
+        { width: '100%', height: '100%' },
+        containerDimensions,
+      );
+      await resize(fullPercent, newContainerDimensions);
+      expect(fullPercent.mediaClient.getImage).toHaveBeenCalledTimes(1);
+
+      const singlePercent = setupResize(
+        { width: '50px', height: '100%' },
+        containerDimensions,
+      );
+      await resize(singlePercent, newContainerDimensions);
+      expect(singlePercent.mediaClient.getImage).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('should fire onClick when passed in as a prop and CardView fires onClick', () => {
