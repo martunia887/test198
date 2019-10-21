@@ -4,11 +4,14 @@ jest.mock('../../getElementDimension');
 import * as React from 'react';
 import { Component } from 'react';
 import { shallow } from 'enzyme';
-import { getDataURIDimensions } from '../../getDataURIDimension';
+import {
+  resolveDimensions,
+  timesRetinaFactor,
+} from '../../getDataURIDimension';
 import { isRetina } from '../../isRetina';
 import { getElementDimensions } from '../../getElementDimension';
 
-describe('getDataURIDimension()', () => {
+describe('resolveDimensions()', () => {
   class SomeComponent extends Component<any, any> {
     render() {
       return <div />;
@@ -29,7 +32,7 @@ describe('getDataURIDimension()', () => {
       width: 100,
       height: 50,
     };
-    const { width, height } = getDataURIDimensions({
+    const { width, height } = resolveDimensions({
       component,
       dimensions,
     });
@@ -43,13 +46,13 @@ describe('getDataURIDimension()', () => {
     const {
       width: noAppearanceWidth,
       height: noAppearanceHeight,
-    } = getDataURIDimensions({
+    } = resolveDimensions({
       component,
     });
     const {
       width: appearanceWidth,
       height: appearanceHeight,
-    } = getDataURIDimensions({
+    } = resolveDimensions({
       component,
       appearance: 'horizontal',
     });
@@ -66,7 +69,7 @@ describe('getDataURIDimension()', () => {
       height: 50,
     });
     const { component } = setup();
-    const { width } = getDataURIDimensions({
+    const { width } = resolveDimensions({
       component,
       dimensions: {
         width: '25%',
@@ -74,20 +77,28 @@ describe('getDataURIDimension()', () => {
     });
     expect(width).toEqual(50);
   });
+});
 
-  it('should return double size dimensions when is retina factor', () => {
-    (isRetina as any).mockReturnValue(true);
-    const { component } = setup();
+it('should return double size dimensions when is retina factor', () => {
+  (isRetina as any).mockReturnValue(true);
+  expect(
+    timesRetinaFactor({
+      width: 10,
+      height: 20,
+    }),
+  ).toEqual({
+    width: 20,
+    height: 40,
+  });
 
-    const { width, height } = getDataURIDimensions({
-      component,
-      dimensions: {
-        width: 10,
-        height: 20,
-      },
-    });
-
-    expect(width).toEqual(20);
-    expect(height).toEqual(40);
+  (isRetina as any).mockReturnValue(false);
+  expect(
+    timesRetinaFactor({
+      width: 15,
+      height: 35,
+    }),
+  ).toEqual({
+    width: 15,
+    height: 35,
   });
 });
