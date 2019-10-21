@@ -23,6 +23,7 @@ import {
   handlePasteIntoTaskAndDecision,
   handleCodeBlock,
   handleMediaSingle,
+  handleExpand,
   handlePastePreservingMarks,
   handleMarkdown,
   handleRichText,
@@ -314,6 +315,21 @@ export const handleMediaSingleWithAnalytics = (
     }),
     pasteCommandWithAnalytics(view, event, slice, {
       type,
+    }),
+  )(slice);
+
+export const handleExpandWithAnalytics = (
+  view: EditorView,
+  event: ClipboardEvent,
+  slice: Slice,
+): Command =>
+  pipe(
+    handleExpand,
+    commandWithV2Analytics('atlassian.editor.paste', {
+      source: getPasteSource(event),
+    }),
+    pasteCommandWithAnalytics(view, event, slice, {
+      type: PasteTypes.richText,
     }),
   )(slice);
 

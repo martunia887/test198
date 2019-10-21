@@ -17,6 +17,7 @@ import {
   transformSliceToCorrectEmptyTableCells,
   transformSliceToFixHardBreakProblemOnCopyFromCell,
 } from '../../table/utils';
+import { transformSliceNestedExpandToExpand } from '../../expand/utils';
 import { transformSliceToAddTableHeaders } from '../../table/commands';
 import { handleMacroAutoConvert, handleMention } from '../handlers';
 import {
@@ -32,6 +33,7 @@ import {
   handlePastePreservingMarksWithAnalytics,
   handleMarkdownWithAnalytics,
   handleRichTextWithAnalytics,
+  handleExpandWithAnalytics,
 } from './analytics';
 import { PasteTypes } from '../../analytics';
 import { insideTable } from '../../../utils';
@@ -272,6 +274,14 @@ export function createPlugin(
             )(state, dispatch)
           ) {
             return true;
+          }
+
+          if (handleExpandWithAnalytics(view, event, slice)(state, dispatch)) {
+            return true;
+          }
+
+          if (!insideTable(state)) {
+            slice = transformSliceNestedExpandToExpand(slice, state.schema);
           }
 
           return handleRichTextWithAnalytics(view, event, slice)(
