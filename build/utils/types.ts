@@ -14,7 +14,6 @@ export type PackageInfo = {
   isBabel: boolean;
   isFlow: boolean;
   isESLint: boolean;
-  isKarma: boolean;
   isBrowserStack: boolean;
   isStylelint: boolean;
   isWebdriver: boolean;

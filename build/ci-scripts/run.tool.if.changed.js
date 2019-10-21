@@ -1,7 +1,6 @@
 // @flow
 const { getChangedPackagesSinceMaster } = require('../utils/packages');
 const spawndamnit = require('spawndamnit');
-const { getPackagesWithKarmaTests } = require('../karma-config');
 const {
   getPackagesInfo,
   TOOL_NAME_TO_FILTERS,

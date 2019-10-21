@@ -66,7 +66,6 @@ async function runJest(testPaths) {
       watchPathIgnorePatterns: [
         '\\/node_modules\\/',
         '.+\\/__tests__\\/(?!integration)',
-        '.+\\/__tests-karma__\\/',
         '.+\\/__snapshots__\\/',
         '.+\\/__image_snapshots__\\/',
       ],

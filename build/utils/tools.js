@@ -17,7 +17,6 @@ async function getPackageInfo(pkg, project) {
   let tsConfigCliExists = await exists(
     path.join(pkg.dir, 'build', 'cli', 'tsconfig.json'),
   );
-  let testBrowserExists = await exists(path.join(pkg.dir, '__tests-karma__'));
   let testWebdriverExists = await exists(
     path.join(pkg.dir, 'src', '__tests__', 'integration'),
   );
@@ -35,8 +34,6 @@ async function getPackageInfo(pkg, project) {
     pkg.config.peerDependencies,
   );
 
-  let hasKarmaDep = !!allDependencies.karma;
-
   let isTypeScriptCLI = tsConfigCliExists;
   let isTypeScript = tsConfigExists && !isWebsitePackage; // The website does not need to be built
 
@@ -44,8 +41,7 @@ async function getPackageInfo(pkg, project) {
   let isFlow = isBabel || isWebsitePackage;
   let isESLint = srcExists || isWebsitePackage || !isBrowserPackage;
 
-  let isKarma = testBrowserExists || hasKarmaDep;
-  let isBrowserStack = isKarma;
+  let isBrowserStack = testWebdriverExists;
   let isStylelint = srcExists && isBrowserPackage;
   let isWebdriver = testWebdriverExists;
   let isVisualRegression = testVisualRegressionExists;
@@ -60,7 +56,6 @@ async function getPackageInfo(pkg, project) {
     isBabel,
     isFlow,
     isESLint,
-    isKarma,
     isBrowserStack,
     isStylelint,
     isWebdriver,
@@ -75,7 +70,6 @@ const TOOL_NAME_TO_FILTERS /*: { [key: string]: (pkg: Object) => boolean } */ = 
   babel: pkg => pkg.isBabel,
   flow: pkg => pkg.isFlow,
   eslint: pkg => pkg.isESLint,
-  karma: pkg => pkg.isKarma,
   browserstack: pkg => pkg.isBrowserStack,
   stylelint: pkg => pkg.isStylelint,
   webdriver: pkg => pkg.isWebdriver,

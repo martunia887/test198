@@ -26,20 +26,6 @@ We encourage adding tests to all components on **Atlaskit**.
     * `yarn test <path_to_file> --updateSnapshot`
     * `yarn test <path_to_file> -u`.
 
-### Browser unit tests
-**Note**: Karma tests are skipped at the moment.
-- some components require unit tests which can be run against **real browser**.
-- these tests use *jest-karma runner*.
-- *browser unit tests* for packages should be structured under `<pkg>/__tests-karma__`.
-- on local these run against Chrome.
-- on CI these run against 5 different browsers across OS for changed packages only.
-- to run on local `yarn test:browser`.
-- to run on local using watch mode `yarn test:browser:watch`.
-- to run on *browserstack* :
-    - set `BROWSERSTACK_USERNAME = <username>`.
-    - set `BROWSERSTACK_KEY = <userkey>`.
-    - run all *browser unit test* `yarn test:browser:browserstack`.
-
 ### Browser Webdriver/Integration tests
 - webdriver tests are used to test actual behavior of component inside of browser on **user interactions**.
 - use **Jest runner** for running the webdriver tests.

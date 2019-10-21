@@ -121,7 +121,6 @@ module.exports = {
           '**/docs/**/*.js',
           '**/__tests__/**/*.js',
           '**/examples/**/*.js',
-          './projector.js',
           './resolver.js',
         ],
       },
@@ -409,7 +408,6 @@ module.exports = {
         '**/__mocks__/**',
         '**/*.test.{js,ts,tsx}',
         '**/*-test-helpers/**',
-        '**/__tests-karma__/**',
       ],
       env: {
         jest: true,

@@ -18,7 +18,6 @@ DirectoryWatcher.prototype.setDirectory = function(
   if (directoryPath.includes('__snapshots__')) return;
   if (directoryPath.includes('__image_snapshots__')) return;
   if (directoryPath.includes('__tests__')) return;
-  if (directoryPath.includes('__tests-karma__')) return;
   if (!directoryPath.includes('node_modules')) {
     _oldSetDirectory.call(this, directoryPath, exist, initial, type);
   }

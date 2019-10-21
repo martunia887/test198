@@ -23,7 +23,6 @@ DirectoryWatcher.prototype.createNestedWatcher = function(
     !dirPath.includes('visual-regression')
   )
     return;
-  if (dirPath.includes('__tests-karma__')) return;
   if (dirPath.includes('node_modules')) return;
   _oldcreateNestedWatcher.call(this, dirPath);
 };

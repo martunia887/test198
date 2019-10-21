@@ -116,18 +116,6 @@ pipelines:
               - yarn send:stepFailureEvents
             caches:
               - node
-        # https://product-fabric.atlassian.net/browse/ED-6927
-        # - step:
-        #     name: Browser Unit Testing
-        #     script:
-        #       - source ./build-setup.sh
-        #       - bolt install --frozen-lockfile
-        #       - echo "Run browser unit tests using Karma + Browserstack"
-        #       - node build/ci-scripts/run.tool.if.changed.js karma -- yarn test:browser:browserstack
-        #     after-script:
-        #       - yarn send:stepFailureEvents
-        #     caches:
-        #       - node
         - step:
             name: Browser Integration Testing
             script:
@@ -306,14 +294,6 @@ pipelines:
                 - yarn test:editor-mobile-bridge:android
               after-script:
                 - yarn send:stepFailureEvents
-          # - step:
-          #     name: Running All Browser Unit tests
-          #     script:
-          #       - source ./build-setup.sh
-          #       - bolt install --frozen-lockfile
-          #       - yarn test:browser:browserstack
-          #     after-script:
-          #       - yarn send:stepFailureEvents
           - step:
               name: Running All Browser Integration tests
               script:
