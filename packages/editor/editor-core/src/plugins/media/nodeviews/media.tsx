@@ -104,7 +104,7 @@ class MediaNode extends Component<MediaNodeProps> {
       contextIdentifierProvider,
     } = this.props;
 
-    const { id, type, collection, url } = node.attrs;
+    const { id, type, collection, url, alt } = node.attrs;
 
     if (
       type !== 'external' &&
@@ -128,16 +128,13 @@ class MediaNode extends Component<MediaNodeProps> {
           };
     const contextId =
       contextIdentifierProvider && contextIdentifierProvider.objectId;
-    // mediaClientConfig is not needed for "external" case. So we have to cheat here.
-    // there is a possibility mediaClientConfig will be part of a identifier,
-    // so this might be not an issue
-    const mediaClientConfig: MediaClientConfig = viewMediaClientConfig || {
-      authProvider: () => ({} as any),
-    };
 
     return (
       <Card
-        mediaClientConfig={mediaClientConfig}
+        // mediaClientConfig is not needed for "external" case. So we have to cheat here.
+        // there is a possibility mediaClientConfig will be part of a identifier,
+        // so this might be not an issue
+        mediaClientConfig={viewMediaClientConfig!}
         resizeMode="stretchy-fit"
         dimensions={cardDimensions}
         identifier={identifier}
@@ -148,6 +145,7 @@ class MediaNode extends Component<MediaNodeProps> {
         useInlinePlayer={allowLazyLoading}
         isLazy={allowLazyLoading}
         contextId={contextId}
+        alt={alt}
       />
     );
   }

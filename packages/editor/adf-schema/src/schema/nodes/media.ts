@@ -64,6 +64,7 @@ export const defaultAttrs: DefaultAttributes<
 > = {
   id: { default: '' },
   type: { default: 'file' },
+  alt: { default: null },
   collection: { default: null },
   occurrenceKey: { default: null },
   width: { default: null },
