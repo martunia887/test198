@@ -10,7 +10,10 @@ import FullPageExample, {
 import { collabEditProvider } from '../example-helpers/mock-collab-provider';
 import { InviteToEditButton } from './3-collab';
 
-import PropsToolbar from '../example-helpers/prop-toggles';
+import PropsToolbar, {
+  getPropsFromQuery,
+  objectMap,
+} from '../example-helpers/prop-toggles';
 
 const DisabledBlanket = styled.div`
   position: absolute;
@@ -50,7 +53,6 @@ export default class ExampleEditorComponent extends React.Component<
   private appearanceTimeoutId: number | undefined;
 
   componentDidMount() {
-    // Simulate async nature of confluence fetching appearance
     const timeout = Math.floor(Math.random() * (1500 - 750 + 1)) + 750;
     console.log(`async delay is ${timeout}`);
     this.appearanceTimeoutId = window.setTimeout(() => {
@@ -67,10 +69,15 @@ export default class ExampleEditorComponent extends React.Component<
       (localStorage && localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
       undefined;
 
+    const propsFromQuery = getPropsFromQuery();
+
+    const newObj = objectMap(propsFromQuery, value => value.value);
+
     return (
       <PropsToolbar>
         <FullPageExample
           {...this.props}
+          {...newObj}
           collabEdit={{
             provider: collabEditProvider(this.collabSessionId, defaultDoc),
             inviteToEditComponent: InviteToEditButton,

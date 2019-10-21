@@ -25,6 +25,14 @@ const OpenDrawerButton = styled.button`
   position: absolute;
 `;
 
+export const objectMap = (object: any, func: (value: any) => any) =>
+  Object.assign(
+    {},
+    ...Object.keys(object).map(key => ({
+      [key]: func(object[key]),
+    })),
+  );
+
 const booleanOptions = [
   { label: 'true', value: true },
   { label: 'false', value: false },
@@ -36,25 +44,34 @@ const propList: Array<{ [key: string]: any }> = [
     type: 'boolean',
     options: booleanOptions,
   },
+  {
+    name: 'allowCodeBlocks',
+    type: 'boolean',
+    options: booleanOptions,
+  },
 ];
 
 const isNotNil = (val: any): boolean => val !== null && val !== undefined;
 
-const getPropsFromQuery = () => {
+// const getPropsFromQuery = () => {
+//   const propNames = propList.map((item: any) => item.name);
+//   return pickBy(
+//     (key: string, value: any) => propNames.indexOf(key) >= 0,
+//     qs.parse(window.location.search),
+//   );
+// };
+
+export const getPropsFromQuery = () => {
   const propNames = propList.map((item: any) => item.name);
-  return pickBy(
+  const props = pickBy(
     (key: string, value: any) => propNames.indexOf(key) >= 0,
     qs.parse(window.location.search),
   );
-};
-
-const getPropsStateFromQuery = () => {
-  const props = getPropsFromQuery();
   let result: any = {};
   Object.keys(props).map((key: string) => {
     const match = propList.find(item => item.name === key);
     const value =
-      match && match.options.find(item => item.label === props[key]);
+      match && match.options.find((item: any) => item.label === props[key]);
 
     if (isNotNil(value)) {
       result[key] = value;
@@ -71,13 +88,10 @@ const applyOptions = (options: any) => {
     qs.parse(window.location.search),
   );
 
-  let newObj = Object.assign(
-    {},
-    ...Object.keys(options).map(key => ({ [key]: options[key].label })),
-  );
+  const newObj = objectMap(options, value => value.label);
 
   const optionValues = pickBy(
-    (key: string, value: any) => value !== null || value !== undefined,
+    (_key: string, value: any) => value !== null || value !== undefined,
     newObj,
   );
 
@@ -110,7 +124,7 @@ export default class PropsToolbar extends React.Component<{}, State> {
   };
 
   componentDidMount() {
-    this.setState({ options: getPropsStateFromQuery() });
+    this.setState({ options: getPropsFromQuery() });
   }
 
   renderBooleanPropToggle(propName: string) {
