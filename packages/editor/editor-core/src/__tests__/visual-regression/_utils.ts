@@ -261,7 +261,7 @@ export const initEditor = async (
 
   const setupEditorPromises = [setupEditor(page, { withDefaultValue: true })];
   const collabPage = (page as PuppeterPageWithCollab).collabPage;
-  if (options.withCollab && collabPage) {
+  if (options.withCollab && SYNCHRONY_URL && collabPage) {
     setupEditorPromises.push(setupEditor(collabPage));
   }
   await Promise.all(setupEditorPromises);

@@ -487,7 +487,7 @@ if (process.env.VISUAL_REGRESSION) {
 
   afterAll(async () => {
     await screenshotReporter.waitForPendingScreenshots();
-    if (global.page.collabPage) {
+    if (SYNCHRONY_URL) {
       await global.page.collabPage.close();
     }
     await global.page.close();
