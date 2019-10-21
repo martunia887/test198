@@ -1,20 +1,18 @@
 import { waitForTooltip } from '@atlaskit/visual-regression/helper';
 import adf from './__fixtures__/default-table.adf.json';
-import {
-  clickFirstCell,
-  insertColumn,
-  insertRow,
-  tableSelectors,
-} from '../../__helpers/page-objects/_table';
-
-import { Appearance, initEditorWithAdf, snapshot } from '../_utils';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 import tableMergedColumnsADF from './__fixtures__/table-with-first-column-merged.json';
-
+import {
+  insertRow,
+  insertColumn,
+  tableSelectors,
+  clickFirstCell,
+} from '../../__helpers/page-objects/_table';
 import { animationFrame } from '../../__helpers/page-objects/_editor';
 import { Page } from '../../__helpers/page-objects/_types';
 
 let page: Page;
-const initEditor = async (page: Page, adf: Object) => {
+const initEditor = async (adf: Object) => {
   await initEditorWithAdf(page, {
     appearance: Appearance.fullPage,
     adf,
@@ -23,18 +21,17 @@ const initEditor = async (page: Page, adf: Object) => {
   await clickFirstCell(page);
 };
 
-describe('Collab - Snapshot Test: table insert/delete with merged columns', () => {
+describe('Snapshot Test: table insert/delete with merged columns', () => {
   beforeAll(() => {
     // @ts-ignore
     page = global.page;
   });
 
   beforeEach(async () => {
-    await initEditor(page, tableMergedColumnsADF);
+    await initEditor(tableMergedColumnsADF);
   });
 
   test('should be able to insert a column at the end of the table', async () => {
-    await animationFrame(page);
     await insertColumn(page, 0, 'right');
     await snapshot(page);
   });
@@ -47,7 +44,7 @@ describe('Snapshot Test: table insert/delete', () => {
   });
 
   beforeEach(async () => {
-    await initEditor(page, adf);
+    await initEditor(adf);
   });
 
   afterEach(async () => {
