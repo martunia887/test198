@@ -187,7 +187,7 @@
     "jsdom": "^14.0.0",
     "json-schema-diff-validator": "^0.4.1",
     "jsverify": "^0.8.3",
-    "kakapo": "^3.3.5",
+    "kakapo": "^3.3.6",
     "less": "^2.7.1",
     "less-loader": "^4.0.5",
     "lint-staged": "^8.1.5",
