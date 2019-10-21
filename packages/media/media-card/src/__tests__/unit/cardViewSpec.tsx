@@ -157,10 +157,11 @@ describe('CardView', () => {
           status: 'loading',
           metadata: file,
           dimensions,
+          elementWidth: 300,
         },
         { disableLifecycleMethods: true },
       );
-      expect(breakpointSize).toHaveBeenCalledWith('100%');
+      expect(breakpointSize).toHaveBeenCalledWith(300);
 
       expect(element.find(Wrapper).props().breakpointSize).toEqual('small');
     });

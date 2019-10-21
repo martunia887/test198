@@ -11,22 +11,16 @@ import {
   SharedCardProps,
   CardStatus,
   OnSelectChangeFuncResult,
-  CardDimensionValue,
 } from '../index';
 import { FileCard } from '../files';
 import { breakpointSize } from '../utils/breakpoint';
-import {
-  defaultImageCardDimensions,
-  getDefaultCardDimensions,
-} from '../utils/cardDimensions';
-import { isValidPercentageUnit } from '../utils/isValidPercentageUnit';
-import { getCSSUnitValue } from '../utils/getCSSUnitValue';
-import { getElementDimensions } from '../utils/getElementDimension';
+import { getDefaultCardDimensions } from '../utils/cardDimensions';
 import { Wrapper } from './styled';
 import { createAndFireMediaEvent } from '../utils/analytics';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
+  readonly elementWidth: number;
   readonly metadata?: FileDetails;
   readonly resizeMode?: ImageResizeMode;
 
@@ -38,16 +32,11 @@ export interface CardViewOwnProps extends SharedCardProps {
   readonly onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void;
   readonly onSelectChange?: (result: OnSelectChangeFuncResult) => void;
   readonly onDisplayImage?: () => void;
-
   // FileCardProps
   readonly dataURI?: string;
   readonly progress?: number;
   readonly disableOverlay?: boolean;
   readonly previewOrientation?: number;
-}
-
-export interface CardViewState {
-  elementWidth?: number;
 }
 
 export type CardViewProps = CardViewOwnProps & WithAnalyticsEventsProps;
@@ -56,20 +45,12 @@ export type CardViewProps = CardViewOwnProps & WithAnalyticsEventsProps;
  * This is classic vanilla CardView class. To create an instance of class one would need to supply
  * `createAnalyticsEvent` prop to satisfy it's Analytics Events needs.
  */
-export class CardViewBase extends React.Component<
-  CardViewProps,
-  CardViewState
-> {
-  state: CardViewState = {};
+export class CardViewBase extends React.Component<CardViewProps> {
   divRef: React.RefObject<HTMLDivElement> = React.createRef();
 
   static defaultProps: Partial<CardViewOwnProps> = {
     appearance: 'auto',
   };
-
-  componentDidMount() {
-    this.saveElementWidth();
-  }
 
   UNSAFE_componentWillReceiveProps(nextProps: CardViewProps) {
     const { selected: currSelected } = this.props;
@@ -95,41 +76,14 @@ export class CardViewBase extends React.Component<
     }
   };
 
-  // This width is only used to calculate breakpoints, dimensions are passed down as
-  // integrator pass it to the root component
-  private get width(): CardDimensionValue {
-    const { elementWidth } = this.state;
-    if (elementWidth) {
-      return elementWidth;
-    }
-
-    const { width } = this.props.dimensions || { width: undefined };
-
-    if (!width) {
-      return defaultImageCardDimensions.width;
-    }
-
-    return getCSSUnitValue(width);
-  }
-
-  // If the dimensions.width is a percentage, we need to transform it
-  // into a pixel value in order to get the right breakpoints applied.
-  saveElementWidth() {
-    const { dimensions } = this.props;
-    if (!dimensions) {
-      return;
-    }
-
-    const { width } = dimensions;
-
-    if (width && isValidPercentageUnit(width)) {
-      const elementWidth = getElementDimensions(this).width;
-      this.setState({ elementWidth });
-    }
-  }
-
   render() {
-    const { dimensions, appearance, onClick, onMouseEnter } = this.props;
+    const {
+      dimensions,
+      appearance,
+      onClick,
+      onMouseEnter,
+      elementWidth,
+    } = this.props;
     const wrapperDimensions = dimensions
       ? dimensions
       : getDefaultCardDimensions(appearance);
@@ -137,7 +91,7 @@ export class CardViewBase extends React.Component<
     return (
       <Wrapper
         shouldUsePointerCursor={true}
-        breakpointSize={breakpointSize(this.width)}
+        breakpointSize={breakpointSize(elementWidth)}
         appearance={appearance}
         dimensions={wrapperDimensions}
         onClick={onClick}

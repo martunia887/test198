@@ -34,8 +34,9 @@ import { CardAction, CardProps, CardState, CardStatus } from '../..';
 import { CardView, CardViewBase } from '../cardView';
 import { LazyContent } from '../../utils/lazyContent';
 import {
-  getDataURIDimensions,
-  DataURIDimensions,
+  resolveDimensions,
+  timesRetinaFactor,
+  Dimensions,
 } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
 import { extendMetadata } from '../../utils/metadata';
@@ -66,7 +67,7 @@ export class CardBase extends Component<
   private lastAction?: AnalyticsLoadingAction = undefined;
   private lastErrorState?: AnalyticsErrorStateAttributes = {};
   private resolvedId: string = '';
-  public dataURIDimensions: DataURIDimensions = getDataURIDimensions({
+  public resolvedDimensions: Dimensions = resolveDimensions({
     component: this,
   });
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
@@ -128,7 +129,7 @@ export class CardBase extends Component<
     // The underlying opperation to find dataURIDimensions is expensive.
     // Therefore, it needs to be called only once and be stored for further reference.
     // Has to be set before subscribe
-    this.dataURIDimensions = getDataURIDimensions({
+    this.resolvedDimensions = resolveDimensions({
       component: this,
       dimensions,
       appearance,
@@ -149,7 +150,7 @@ export class CardBase extends Component<
       appearance: nextAppearance,
     } = nextProps;
 
-    const newDataURIDimensions = getDataURIDimensions({
+    const newResolvedDimensions = resolveDimensions({
       component: this,
       dimensions: nextDimensions,
       appearance: nextAppearance,
@@ -157,9 +158,9 @@ export class CardBase extends Component<
     if (
       currentMediaClient !== nextMediaClient ||
       isDifferentIdentifier(currentIdentifier, nextIdenfifier) ||
-      isBigger(this.dataURIDimensions, newDataURIDimensions)
+      isBigger(this.resolvedDimensions, newResolvedDimensions)
     ) {
-      this.dataURIDimensions = newDataURIDimensions; // Has to be set before subscribe
+      this.resolvedDimensions = newResolvedDimensions; // Has to be set before subscribe
       this.subscribe(nextIdenfifier, nextMediaClient);
     }
   }
@@ -289,6 +290,9 @@ export class CardBase extends Component<
             metadata.mediaType &&
             isPreviewableType(metadata.mediaType);
           if (shouldFetchRemotePreview) {
+            const { width, height } = timesRetinaFactor(
+              this.resolvedDimensions,
+            );
             const { resizeMode, alt } = this.props;
             try {
               const mode =
@@ -296,7 +300,8 @@ export class CardBase extends Component<
               const blob = await mediaClient.getImage(this.resolvedId, {
                 collection: collectionName,
                 mode,
-                ...this.dataURIDimensions,
+                width,
+                height,
                 allowAnimated: true,
               });
               dataURI = URL.createObjectURL(blob);
@@ -308,7 +313,8 @@ export class CardBase extends Component<
                   mimeType: metadata.mimeType,
                   name: metadata.name,
                   size: metadata.size,
-                  ...this.dataURIDimensions,
+                  width,
+                  height,
                   alt,
                 });
               }
@@ -602,6 +608,7 @@ export class CardBase extends Component<
         appearance={appearance}
         resizeMode={resizeMode}
         dimensions={dimensions}
+        elementWidth={this.resolvedDimensions.width}
         actions={actions}
         selectable={selectable}
         selected={selected}

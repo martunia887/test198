@@ -7,24 +7,18 @@ import { isValidPercentageUnit } from './isValidPercentageUnit';
 import { isFullPercentageBased } from './dimensionComparer';
 import { containsPixelUnit } from './containsPixelUnit';
 
-export type getDataURIDimensionOptions = {
+export type ResolveDimensionsOptions = {
   component: Component;
   dimensions?: CardDimensions;
   appearance?: CardAppearance;
 };
 
-export type DataURIDimensions = {
+export type Dimensions = {
   width: number;
   height: number;
 };
 
-const timesRetinaFactor = ({
-  width,
-  height,
-}: {
-  width: number;
-  height: number;
-}) => {
+export const timesRetinaFactor = ({ width, height }: Dimensions) => {
   const retinaFactor = isRetina() ? 2 : 1;
   return {
     width: width * retinaFactor,
@@ -32,7 +26,7 @@ const timesRetinaFactor = ({
   };
 };
 
-const getDataURIDimension = (
+const resolveDimension = (
   dimensions: CardDimensions,
   dimensionName: keyof CardDimensions,
   component: Component,
@@ -50,20 +44,18 @@ const getDataURIDimension = (
   return defaultImageCardDimensions[dimensionName];
 };
 
-export const getDataURIDimensions = (
-  options: getDataURIDimensionOptions,
-): DataURIDimensions => {
+export const resolveDimensions = (
+  options: ResolveDimensionsOptions,
+): Dimensions => {
   const { component, dimensions } = options;
   if (!dimensions) {
-    return timesRetinaFactor(defaultImageCardDimensions);
+    return defaultImageCardDimensions;
   } else if (isFullPercentageBased(dimensions)) {
-    const elementDimensions = getElementDimensions(component);
-    return timesRetinaFactor(elementDimensions);
+    return getElementDimensions(component);
   } else {
-    const individualDimensions = {
-      width: getDataURIDimension(dimensions, 'width', component),
-      height: getDataURIDimension(dimensions, 'height', component),
+    return {
+      width: resolveDimension(dimensions, 'width', component),
+      height: resolveDimension(dimensions, 'height', component),
     };
-    return timesRetinaFactor(individualDimensions);
   }
 };

@@ -42,7 +42,7 @@ import {
   getBaseAnalyticsContext,
 } from '../../utils/analytics';
 import { getElementDimensions } from '../../utils/getElementDimension';
-import { DataURIDimensions } from '../../utils/getDataURIDimension';
+import { Dimensions } from '../../utils/getDataURIDimension';
 
 describe('Card', () => {
   let identifier: Identifier;
@@ -245,12 +245,51 @@ describe('Card', () => {
     expect(mediaClient.getImage).toHaveBeenCalledTimes(1);
   });
 
+  it('should pass resolved width down to CardView', async () => {
+    (getElementDimensions as jest.Mock).mockReset();
+    (getElementDimensions as jest.Mock).mockReturnValue({
+      width: 500,
+      height: 200,
+    });
+
+    const { component: component1 } = setup(undefined, {
+      identifier,
+      dimensions: { width: '100%', height: '100%' },
+    });
+
+    const { component: component2 } = setup(undefined, {
+      identifier,
+      dimensions: { width: '450px', height: '250px' },
+    });
+
+    const { component: component3 } = setup(undefined, {
+      identifier,
+      dimensions: { width: 450, height: 250 },
+    });
+
+    await nextTick();
+
+    expect(getElementDimensions).toHaveBeenCalledTimes(1);
+
+    const cardViewElementWidth1 = component1.find(CardView).props()
+      .elementWidth;
+    expect(cardViewElementWidth1).toEqual(500);
+
+    const cardViewElementWidth2 = component2.find(CardView).props()
+      .elementWidth;
+    expect(cardViewElementWidth2).toEqual(450);
+
+    const cardViewElementWidth3 = component3.find(CardView).props()
+      .elementWidth;
+    expect(cardViewElementWidth3).toEqual(450);
+  });
+
   describe('Percentage dimensions: Resize and Fetch', () => {
     const setupResize = (
       dimensions: CardDimensions,
-      dataURIDimensions: DataURIDimensions,
+      resolvedDimensions: Dimensions,
     ) => {
-      (getElementDimensions as jest.Mock).mockReturnValue(dataURIDimensions);
+      (getElementDimensions as jest.Mock).mockReturnValue(resolvedDimensions);
       const cardProps = {
         identifier,
         dimensions,
@@ -272,9 +311,11 @@ describe('Card', () => {
         mediaClient: MediaClient;
         cardProps: Partial<CardProps>;
       },
-      newDataURIDimensions: DataURIDimensions,
+      newResolvedDimensions: Dimensions,
     ) => {
-      (getElementDimensions as any).mockReturnValue(newDataURIDimensions);
+      (getElementDimensions as jest.Mock).mockReturnValue(
+        newResolvedDimensions,
+      );
       // We pass the same properties to simulate a resize
       component.setProps({ mediaClient, ...(cardProps as CardProps) });
       await nextTick();
