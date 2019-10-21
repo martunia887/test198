@@ -24,7 +24,7 @@ export const expand: NodeSpec = {
   isolating: true,
   selectable: true,
   attrs: {
-    title: { default: 'Click here to expand...' },
+    title: { default: '' },
   },
   parseDOM: [
     {

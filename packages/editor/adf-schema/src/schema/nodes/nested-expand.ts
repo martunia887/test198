@@ -21,7 +21,7 @@ export const nestedExpand: NodeSpec = {
   isolating: true,
   selectable: true,
   attrs: {
-    title: { default: 'Click here to expand...' },
+    title: { default: '' },
   },
   parseDOM: [
     {

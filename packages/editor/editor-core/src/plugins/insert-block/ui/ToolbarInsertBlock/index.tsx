@@ -841,13 +841,10 @@ class ToolbarInsertBlock extends React.PureComponent<
     },
   );
 
-  private insertExpand = withAnalytics(
-    'atlassian.editor.format.expand.button',
-    (inputMethod: TOOLBAR_MENU_TYPE): boolean => {
-      const { state, dispatch } = this.props.editorView;
-      return insertExpand(state, dispatch);
-    },
-  );
+  private insertExpand = (): boolean => {
+    const { state, dispatch } = this.props.editorView;
+    return insertExpand(state, dispatch);
+  };
 
   private insertBlockType = (itemName: string) =>
     withAnalytics(`atlassian.editor.format.${itemName}.button`, () => {
@@ -918,7 +915,7 @@ class ToolbarInsertBlock extends React.PureComponent<
         this.insertTaskDecision(item.value.name, inputMethod)();
         break;
       case 'expand':
-        this.insertExpand(inputMethod);
+        this.insertExpand();
         break;
       case 'horizontalrule':
         this.insertHorizontalRule(inputMethod);

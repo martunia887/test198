@@ -4,7 +4,7 @@ import {
   Selection,
   EditorState,
 } from 'prosemirror-state';
-import { Node as PMNode } from 'prosemirror-model';
+import { Node as PMNode, NodeType } from 'prosemirror-model';
 import { safeInsert, findTable } from 'prosemirror-utils';
 import { createCommand } from './pm-plugins/main';
 import { Command } from '../../types';
@@ -41,12 +41,13 @@ export const selectExpand = (pos: number): Command => (state, dispatch) => {
   return true;
 };
 
-export const updateExpandTitle = (title: string, pos: number): Command => (
-  state,
-  dispatch,
-) => {
+export const updateExpandTitle = (
+  title: string,
+  pos: number,
+  nodeType: NodeType,
+): Command => (state, dispatch) => {
   const node = state.doc.nodeAt(pos);
-  if (node && dispatch) {
+  if (node && node.type === nodeType && dispatch) {
     const { tr } = state;
     tr.setNodeMarkup(
       pos,

@@ -14,15 +14,20 @@ import {
 } from '../commands';
 
 export const messages = defineMessages({
-  expand: {
+  expandNode: {
     id: 'fabric.editor.expand',
     defaultMessage: 'Expand',
     description: 'Expand the node',
   },
-  collapse: {
+  collapseNode: {
     id: 'fabric.editor.collapse',
     defaultMessage: 'Collapse',
     description: 'Collapse the node',
+  },
+  expandPlaceholderText: {
+    id: 'fabric.editor.expandPlaceholder',
+    defaultMessage: 'Give this expand a title...',
+    description: 'A placeholder text for expand node title input field',
   },
 });
 
@@ -55,7 +60,9 @@ class Expand extends React.PureComponent<Props & InjectedIntlProps, State> {
         <Title onClick={this.onContentClick}>
           <Tooltip
             content={formatMessage(
-              this.state.collapsed ? messages.expand : messages.collapse,
+              this.state.collapsed
+                ? messages.expandNode
+                : messages.collapseNode,
             )}
             position="top"
           >
@@ -70,8 +77,9 @@ class Expand extends React.PureComponent<Props & InjectedIntlProps, State> {
           <Input
             type="text"
             value={title}
-            onChange={this.onChange}
-            onFocus={this.onFocus}
+            placeholder={formatMessage(messages.expandPlaceholderText)}
+            onChange={this.onTitleChange}
+            onFocus={this.onTitleFocus}
           />
         </Title>
         {this.state.collapsed ? null : (
@@ -90,13 +98,16 @@ class Expand extends React.PureComponent<Props & InjectedIntlProps, State> {
     event.stopPropagation();
   };
 
-  private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { state, dispatch } = this.props.view;
     const pos = this.getPosFromInput(event.target);
-    updateExpandTitle(event.target.value, pos)(state, dispatch);
+    updateExpandTitle(event.target.value, pos, this.props.node.type)(
+      state,
+      dispatch,
+    );
   };
 
-  private onFocus = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private onTitleFocus = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { view } = this.props;
     const { tr } = view.state;
     const pos = this.getPosFromInput(event.target);
