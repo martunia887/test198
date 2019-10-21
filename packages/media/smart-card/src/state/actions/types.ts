@@ -2,11 +2,6 @@ import { JsonLd } from '../../client/types';
 import { AnyAction } from 'redux';
 
 export type CardActionType = 'pending' | 'resolving' | 'resolved' | 'errored';
-export type ServerErrors =
-  | 'InternalServerError'
-  | 'ResolveBadRequestError'
-  | 'ResolveUnsupportedError'
-  | 'ResolveAuthError';
 
 export interface CardAction<T = JsonLd> extends AnyAction {
   type: CardActionType;

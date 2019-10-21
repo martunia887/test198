@@ -1,12 +1,13 @@
 import * as api from './api';
 import { getResolverUrl } from '../utils/environments';
-import { getError } from '../state/actions/helpers';
+import { getError, isError } from '../state/actions/helpers';
 import {
   JsonLd,
   CardClient as CardClientInterface,
   EnvironmentsKeys,
   JsonLdBatch,
   JsonLdResponse,
+  JsonLdResponseError,
 } from './types';
 import DataLoader from 'dataloader';
 
@@ -58,35 +59,37 @@ export default class CardClient implements CardClientInterface {
     const { body, status } = response;
 
     // Catch non-200 server responses to fallback or return useful information.
-    const errorType = getError(body);
-    switch (errorType) {
-      case 'ResolveAuthError':
-        throw new FetchError(
-          'auth',
-          `authentication required for URL ${url}, error: ${errorType}`,
-        );
-      case 'InternalServerError': // Timeouts and ORS failures
-      case 'ResolveUnsupportedError': // URL isn't supported
-        throw new FetchError(
-          'fatal',
-          `the URL ${url} is unsupported, received server error: ${errorType}`,
-        );
-      default:
-        if (status === 404) {
-          return {
-            meta: {
-              visibility: 'not_found',
-              access: 'forbidden',
-              auth: [],
-              definitionId: 'provider-not-found',
-            },
-            data: {
-              url,
-            },
-          };
-        }
-
-        return response.body;
+    if (isError(body) && status != 200) {
+      const errorType = getError((body as any) as JsonLdResponseError);
+      switch (errorType) {
+        case 'ResolveAuthError':
+          throw new FetchError(
+            'auth',
+            `authentication required for URL ${url}, error: ${errorType}`,
+          );
+        case 'InternalServerError': // Timeouts and ORS failures
+        case 'ResolveUnsupportedError': // URL isn't supported
+          throw new FetchError(
+            'fatal',
+            `the URL ${url} is unsupported, received server error: ${errorType}`,
+          );
+        default:
+          if (status === 404) {
+            return {
+              meta: {
+                visibility: 'not_found',
+                access: 'forbidden',
+                auth: [],
+                definitionId: 'provider-not-found',
+              },
+              data: {
+                url,
+              },
+            };
+          }
+      }
     }
+
+    return response.body;
   }
 }

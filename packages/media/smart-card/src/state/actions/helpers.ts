@@ -1,5 +1,9 @@
-import { JsonLd } from '../../client/types';
-import { CardBaseActionCreator, ServerErrors } from './types';
+import {
+  JsonLd,
+  JsonLdResponseError,
+  JsonLdResponseErrorName,
+} from '../../client/types';
+import { CardBaseActionCreator } from './types';
 import { CardStore } from '../types';
 import { CardType } from '../store/types';
 import { Store } from 'redux';
@@ -65,7 +69,14 @@ export const getStatus = ({ meta }: JsonLd): CardType => {
   }
 };
 
-export const getError = ({ data }: JsonLd): ServerErrors | undefined => {
-  const { error = {} } = data || {};
-  return error.type;
+export const isError = (data: any): boolean => {
+  return data.name && data.message && data.resourceUrl && data.status;
+};
+
+export const getError = (
+  data: JsonLdResponseError,
+): JsonLdResponseErrorName | undefined => {
+  if (isError(data)) {
+    return data.name;
+  }
 };

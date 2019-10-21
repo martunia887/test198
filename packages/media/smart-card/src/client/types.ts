@@ -29,6 +29,19 @@ export type JsonLdResponse = {
   body: JsonLd;
 };
 
+export type JsonLdResponseErrorName =
+  | 'InternalServerError'
+  | 'ResolveBadRequestError'
+  | 'ResolveUnsupportedError'
+  | 'ResolveAuthError';
+
+export type JsonLdResponseError = {
+  name: JsonLdResponseErrorName;
+  message: string;
+  resourceUrl: string;
+  status: number;
+};
+
 export type JsonLd = {
   meta: {
     visibility: JsonLdVisibility;
