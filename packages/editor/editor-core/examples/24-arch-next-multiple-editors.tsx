@@ -13,11 +13,9 @@ import { TitleArea } from '../example-helpers/PageElements';
  */
 import { ConfigProvider } from '../src/labs/next/internal/context/config-context';
 import { EditorPresetCXHTML } from '../src/labs/next/presets/cxhtml';
-import { FullPage as FullPageEditor } from '../src/labs/next/full-page';
+import { Comment as CommentEditor } from '../src/labs/next/comment';
 
-export const LOCALSTORAGE_defaultDocKey = 'fabric.editor.example.full-page';
-export const LOCALSTORAGE_defaultTitleKey =
-  'fabric.editor.example.full-page.title';
+export const LOCALSTORAGE_defaultDocKey = 'fabric.editor.example.comment';
 
 export const SaveAndCancelButtons = (props: {
   editorActions?: EditorActions;
@@ -33,10 +31,6 @@ export const SaveAndCancelButtons = (props: {
 
         props.editorActions.getValue().then(value => {
           console.log(value);
-          localStorage.setItem(
-            LOCALSTORAGE_defaultDocKey,
-            JSON.stringify(value),
-          );
         });
       }}
     >
@@ -89,36 +83,21 @@ export default function Example() {
               Toggle Mount
             </button>
             {mounted ? (
-              <EditorPresetCXHTML placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule.">
-                <FullPageEditor
-                  defaultValue={
-                    (localStorage &&
-                      localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
-                    undefined
-                  }
-                  onMount={() => {
-                    console.log('on mount');
-                  }}
-                  disabled={disabled}
-                  contentComponents={[
-                    <TitleArea
-                      key="title=placeholder"
-                      placeholder="Some text..."
-                      rows="1"
-                    />,
-                  ]}
-                  primaryToolbarComponents={[
-                    <WithEditorActions
-                      key="editor-actions-save"
-                      // tslint:disable-next-line:jsx-no-lambda
-                      render={actions => (
-                        <SaveAndCancelButtons editorActions={actions} />
-                      )}
-                    />,
-                  ]}
-                  allowDynamicTextSizing={true}
-                />
-              </EditorPresetCXHTML>
+              <>
+                <EditorPresetCXHTML placeholder="Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule.">
+                  <CommentEditor
+                    defaultValue={
+                      (localStorage &&
+                        localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
+                      undefined
+                    }
+                    onMount={() => {
+                      console.log('on mount');
+                    }}
+                    disabled={disabled}
+                  />
+                </EditorPresetCXHTML>
+              </>
             ) : null}
           </Content>
         </Wrapper>
