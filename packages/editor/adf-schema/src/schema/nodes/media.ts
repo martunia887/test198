@@ -64,7 +64,6 @@ export const defaultAttrs: DefaultAttributes<
 > = {
   id: { default: '' },
   type: { default: 'file' },
-  alt: { default: null },
   collection: { default: null },
   occurrenceKey: { default: null },
   width: { default: null },
@@ -156,6 +155,14 @@ export const media: NodeSpec = {
 
     return ['div', attrs];
   },
+};
+
+export const mediaWithAltText: NodeSpec = {
+  ...media,
+  attrs: {
+    ...defaultAttrs,
+    alt: { default: null },
+  } as any,
 };
 
 export const camelCaseToKebabCase = (str: string) =>

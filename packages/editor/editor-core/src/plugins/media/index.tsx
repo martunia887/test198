@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { media, mediaGroup, mediaSingle } from '@atlaskit/adf-schema';
+import {
+  media,
+  mediaWithAltText,
+  mediaGroup,
+  mediaSingle,
+} from '@atlaskit/adf-schema';
 import {
   EditorPlugin,
   EditorAppearance,
@@ -65,6 +70,7 @@ export interface MediaPMPluginOptions {
   allowDropzoneDropLine?: boolean;
   allowMarkingUploadsAsIncomplete?: boolean;
   fullWidthEnabled?: boolean;
+  allowAltText?: boolean;
 }
 
 const mediaPlugin = (
@@ -75,10 +81,13 @@ const mediaPlugin = (
   name: 'media',
 
   nodes() {
+    const { allowAltText = false } = pluginOptions || {};
+    const mediaNode = allowAltText ? mediaWithAltText : media;
+
     return [
       { name: 'mediaGroup', node: mediaGroup },
       { name: 'mediaSingle', node: mediaSingle },
-      { name: 'media', node: media },
+      { name: 'media', node: mediaNode },
     ].filter(node => {
       const { allowMediaGroup = true, allowMediaSingle = false } =
         options || {};
