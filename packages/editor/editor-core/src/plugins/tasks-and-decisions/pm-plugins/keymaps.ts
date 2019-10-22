@@ -39,7 +39,7 @@ import {
   walkOut,
   isEmptyTaskDecision,
   liftBlock,
-  treeDepth,
+  subtreeHeight,
 } from './helpers';
 
 import { liftSelection, wrapSelectionInTaskList, joinAtCut } from './commands';
@@ -121,8 +121,8 @@ const indent = filter(isInsideTask, (state, dispatch) => {
   }
 
   const { taskList, taskItem } = state.schema.nodes;
-  const maxDepth = treeDepth(state.selection.$from, [taskList, taskItem]);
-  if (maxDepth > 6) {
+  const maxDepth = subtreeHeight(state.selection.$from, [taskList, taskItem]);
+  if (maxDepth >= 6) {
     return true;
   }
 
