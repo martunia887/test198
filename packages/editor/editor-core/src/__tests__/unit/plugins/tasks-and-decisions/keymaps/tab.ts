@@ -260,6 +260,76 @@ describe('tasks and decisions - keymaps', () => {
         testKeymap(editorFactory, nestedDoc, nestedDoc, ['Tab']);
       });
 
+      it('will not indent a range that includes a max-indented task', () => {
+        const nestedDoc = doc(
+          taskList(listProps)(
+            taskItem(itemProps)('The first item in the list'),
+            taskItem(itemProps)('Level 1'),
+            taskList(listProps)(
+              taskItem(itemProps)('Level 2'),
+              taskList(listProps)(
+                taskItem(itemProps)('Level 3'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Level 4'),
+                  taskList(listProps)(
+                    taskItem(itemProps)('Level{<} 5'),
+                    taskItem(itemProps)(
+                      'See, my nose is wide, my blood is honey and my',
+                    ),
+                    taskList(listProps)(taskItem(itemProps)('Level{>} 6')),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        testKeymap(editorFactory, nestedDoc, nestedDoc, ['Tab']);
+      });
+
+      it('will indent even if siblings have subtree nested fully', () => {
+        const nestedListFollowing = [
+          taskItem(itemProps)('Level 1'),
+          taskList(listProps)(
+            taskItem(itemProps)('Level 2'),
+            taskList(listProps)(
+              taskItem(itemProps)('Level 3'),
+              taskList(listProps)(
+                taskItem(itemProps)('Level 4'),
+                taskList(listProps)(
+                  taskItem(itemProps)('Level 5'),
+                  taskItem(itemProps)(
+                    'See, my nose is wide, my blood is honey and my',
+                  ),
+                  taskList(listProps)(taskItem(itemProps)('Level 6')),
+                ),
+              ),
+            ),
+          ),
+        ];
+
+        testKeymap(
+          editorFactory,
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('The first item in the list'),
+              taskItem(itemProps)('I should be able to be indented{<>}'),
+              ...nestedListFollowing,
+            ),
+          ),
+          doc(
+            taskList(listProps)(
+              taskItem(itemProps)('The first item in the list'),
+              taskList(listProps)(
+                taskItem(itemProps)('I should be able to be indented{<>}'),
+              ),
+              ...nestedListFollowing,
+            ),
+          ),
+          ['Tab'],
+        );
+      });
+
       it('can indent multiple tasks at same level', () => {
         testKeymap(
           editorFactory,
