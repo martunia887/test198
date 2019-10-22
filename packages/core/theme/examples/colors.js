@@ -11,30 +11,48 @@ const calculateColorDistance = (color1, color2) => {
     distance += (value - color2.color[idx]) ** 2;
   });
 
-  return distance;
+  return distance ** 0.5;
 };
 
-const ColorSwatch = ({ colorsToShow }) => {
+const ColorSwatch = ({ colorsToShow }: {}) => {
+  console.log(colorsToShow);
   return (
     <>
       {Object.keys(colorsToShow)
-        .filter(colorCode => typeof colors[colorCode] === 'string')
-        .map(colorCode => (
-          <span
-            key={colorCode}
-            style={{
-              backgroundColor: colors[colorCode],
-              borderRadius: 3,
-              color: color(colors[colorCode]).negate(),
-              display: 'inline-block',
-              marginBottom: 10,
-              marginRight: 10,
-              padding: 10,
-            }}
-          >
-            {colorCode}
-          </span>
-        ))}
+        .filter(
+          colorCode =>
+            typeof colors[colorCode] === 'string' ||
+            colorCode === colorsToShow[colorCode],
+        )
+        .map(colorCode => {
+          const backgroundColor =
+            colorCode === colorsToShow[colorCode]
+              ? colorCode
+              : colors[colorCode];
+          const message =
+            colorCode === colorsToShow[colorCode]
+              ? 'Perfect match not found, showing the closest match'
+              : '';
+          return (
+            <>
+              <span
+                key={colorCode}
+                style={{
+                  backgroundColor,
+                  borderRadius: 3,
+                  color: color(backgroundColor).negate(),
+                  display: 'inline-block',
+                  marginBottom: 10,
+                  marginRight: 10,
+                  padding: 10,
+                }}
+              >
+                {colorCode}
+              </span>
+              {message && <p>{message}</p>}
+            </>
+          );
+        })}
     </>
   );
 };
@@ -61,8 +79,8 @@ export default () => {
           colorDistances.push({
             colorCode: c,
             distance: calculateColorDistance(
-              color(colors[c]).hsl(),
-              inputColor.hsl(),
+              color(colors[c]).rgb(),
+              inputColor.rgb(),
             ),
           });
         }
@@ -71,13 +89,25 @@ export default () => {
       .sort((color1, color2) => color2.distance - color1.distance)
       .pop();
 
-    setColorsToShow(
-      event.target.value && inputColor
-        ? {
-            [closestColor.colorCode]: colors[closestColor.colorCode],
-          }
-        : colors,
-    );
+    console.log(closestColor);
+    if (closestColor.distance === 0) {
+      setColorsToShow(
+        event.target.value && inputColor
+          ? {
+              [closestColor.colorCode]: colors[closestColor.colorCode],
+            }
+          : colors,
+      );
+    } else {
+      setColorsToShow(
+        event.target.value && inputColor
+          ? {
+              [closestColor.colorCode]: colors[closestColor.colorCode],
+              [`${event.target.value}`]: event.target.value,
+            }
+          : colors,
+      );
+    }
   };
 
   return (
