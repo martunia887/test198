@@ -5,13 +5,13 @@ import * as React from 'react';
 import { Component } from 'react';
 import { shallow } from 'enzyme';
 import {
-  resolveDimensions,
-  timesRetinaFactor,
+  getComponentDimensions,
+  getRetinaValue,
 } from '../../getDataURIDimension';
 import { isRetina } from '../../isRetina';
 import { getElementDimensions } from '../../getElementDimension';
 
-describe('resolveDimensions()', () => {
+describe('getComponentDimensions()', () => {
   class SomeComponent extends Component<any, any> {
     render() {
       return <div />;
@@ -32,7 +32,7 @@ describe('resolveDimensions()', () => {
       width: 100,
       height: 50,
     };
-    const { width, height } = resolveDimensions({
+    const { width, height } = getComponentDimensions({
       component,
       dimensions,
     });
@@ -46,13 +46,13 @@ describe('resolveDimensions()', () => {
     const {
       width: noAppearanceWidth,
       height: noAppearanceHeight,
-    } = resolveDimensions({
+    } = getComponentDimensions({
       component,
     });
     const {
       width: appearanceWidth,
       height: appearanceHeight,
-    } = resolveDimensions({
+    } = getComponentDimensions({
       component,
       appearance: 'horizontal',
     });
@@ -69,7 +69,7 @@ describe('resolveDimensions()', () => {
       height: 50,
     });
     const { component } = setup();
-    const { width } = resolveDimensions({
+    const { width } = getComponentDimensions({
       component,
       dimensions: {
         width: '25%',
@@ -82,7 +82,7 @@ describe('resolveDimensions()', () => {
 it('should return double size dimensions when is retina factor', () => {
   (isRetina as any).mockReturnValue(true);
   expect(
-    timesRetinaFactor({
+    getRetinaValue({
       width: 10,
       height: 20,
     }),
@@ -93,7 +93,7 @@ it('should return double size dimensions when is retina factor', () => {
 
   (isRetina as any).mockReturnValue(false);
   expect(
-    timesRetinaFactor({
+    getRetinaValue({
       width: 15,
       height: 35,
     }),

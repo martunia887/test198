@@ -18,7 +18,7 @@ export type Dimensions = {
   height: number;
 };
 
-export const timesRetinaFactor = ({ width, height }: Dimensions) => {
+export const getRetinaValue = ({ width, height }: Dimensions): Dimensions => {
   const retinaFactor = isRetina() ? 2 : 1;
   return {
     width: width * retinaFactor,
@@ -26,7 +26,7 @@ export const timesRetinaFactor = ({ width, height }: Dimensions) => {
   };
 };
 
-const resolveDimension = (
+const getComponentDimension = (
   dimensions: CardDimensions,
   dimensionName: keyof CardDimensions,
   component: Component,
@@ -44,7 +44,7 @@ const resolveDimension = (
   return defaultImageCardDimensions[dimensionName];
 };
 
-export const resolveDimensions = (
+export const getComponentDimensions = (
   options: ResolveDimensionsOptions,
 ): Dimensions => {
   const { component, dimensions } = options;
@@ -54,8 +54,8 @@ export const resolveDimensions = (
     return getElementDimensions(component);
   } else {
     return {
-      width: resolveDimension(dimensions, 'width', component),
-      height: resolveDimension(dimensions, 'height', component),
+      width: getComponentDimension(dimensions, 'width', component),
+      height: getComponentDimension(dimensions, 'height', component),
     };
   }
 };

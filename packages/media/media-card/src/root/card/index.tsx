@@ -30,12 +30,18 @@ import { MediaViewer, MediaViewerDataSource } from '@atlaskit/media-viewer';
 
 import { Subscription } from 'rxjs/Subscription';
 import { IntlProvider } from 'react-intl';
-import { CardAction, CardProps, CardState, CardStatus } from '../..';
+import {
+  CardAction,
+  CardProps,
+  CardState,
+  CardStatus,
+  defaultImageCardDimensions,
+} from '../..';
 import { CardView, CardViewBase } from '../cardView';
 import { LazyContent } from '../../utils/lazyContent';
 import {
-  resolveDimensions,
-  timesRetinaFactor,
+  getComponentDimensions,
+  getRetinaValue,
   Dimensions,
 } from '../../utils/getDataURIDimension';
 import { getDataURIFromFileState } from '../../utils/getDataURIFromFileState';
@@ -67,9 +73,7 @@ export class CardBase extends Component<
   private lastAction?: AnalyticsLoadingAction = undefined;
   private lastErrorState?: AnalyticsErrorStateAttributes = {};
   private resolvedId: string = '';
-  public resolvedDimensions: Dimensions = resolveDimensions({
-    component: this,
-  });
+  public componentDimensions: Dimensions = defaultImageCardDimensions;
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
 
   subscription?: Subscription;
@@ -129,7 +133,7 @@ export class CardBase extends Component<
     // The underlying opperation to find dataURIDimensions is expensive.
     // Therefore, it needs to be called only once and be stored for further reference.
     // Has to be set before subscribe
-    this.resolvedDimensions = resolveDimensions({
+    this.componentDimensions = getComponentDimensions({
       component: this,
       dimensions,
       appearance,
@@ -150,7 +154,7 @@ export class CardBase extends Component<
       appearance: nextAppearance,
     } = nextProps;
 
-    const newResolvedDimensions = resolveDimensions({
+    const newResolvedDimensions = getComponentDimensions({
       component: this,
       dimensions: nextDimensions,
       appearance: nextAppearance,
@@ -158,9 +162,9 @@ export class CardBase extends Component<
     if (
       currentMediaClient !== nextMediaClient ||
       isDifferentIdentifier(currentIdentifier, nextIdenfifier) ||
-      isBigger(this.resolvedDimensions, newResolvedDimensions)
+      isBigger(this.componentDimensions, newResolvedDimensions)
     ) {
-      this.resolvedDimensions = newResolvedDimensions; // Has to be set before subscribe
+      this.componentDimensions = newResolvedDimensions; // Has to be set before subscribe
       this.subscribe(nextIdenfifier, nextMediaClient);
     }
   }
@@ -290,9 +294,7 @@ export class CardBase extends Component<
             metadata.mediaType &&
             isPreviewableType(metadata.mediaType);
           if (shouldFetchRemotePreview) {
-            const { width, height } = timesRetinaFactor(
-              this.resolvedDimensions,
-            );
+            const { width, height } = getRetinaValue(this.componentDimensions);
             const { resizeMode, alt } = this.props;
             try {
               const mode =
@@ -608,7 +610,7 @@ export class CardBase extends Component<
         appearance={appearance}
         resizeMode={resizeMode}
         dimensions={dimensions}
-        elementWidth={this.resolvedDimensions.width}
+        elementWidth={this.componentDimensions.width}
         actions={actions}
         selectable={selectable}
         selected={selected}

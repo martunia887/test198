@@ -1,4 +1,8 @@
-import { canCompareDimension, isBigger } from '../../dimensionComparer';
+import {
+  canCompareDimension,
+  isBigger,
+  isFullPercentageBased,
+} from '../../dimensionComparer';
 
 describe('dimensionComparer', () => {
   describe('canCompareDimension', () => {
@@ -79,5 +83,19 @@ describe('dimensionComparer', () => {
         ),
       ).toBe(false);
     });
+  });
+
+  it('should check if cardDimensions are both percentage based', () => {
+    const full = { width: '10%', height: '10%' };
+    const widthOnly = { width: '10%', height: '10px' };
+    const heightOnly = { width: 10, height: '10%' };
+    const none1 = { width: 10, height: 10 };
+    const none2 = { width: '10px', height: '10px' };
+
+    expect(isFullPercentageBased(full)).toBe(true);
+    expect(isFullPercentageBased(widthOnly)).toBe(false);
+    expect(isFullPercentageBased(heightOnly)).toBe(false);
+    expect(isFullPercentageBased(none1)).toBe(false);
+    expect(isFullPercentageBased(none2)).toBe(false);
   });
 });
