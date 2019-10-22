@@ -2,6 +2,7 @@
 
 module.exports = {
   plugins: [
+    'babel-preset-gatsby',
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-proposal-object-rest-spread',
     '@babel/syntax-dynamic-import',
