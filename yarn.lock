@@ -831,12 +831,13 @@
     pirates "^4.0.0"
     source-map-support "^0.5.9"
 
-"@babel/runtime-corejs2@^7.1.5":
-  version "7.1.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs2/-/runtime-corejs2-7.1.5.tgz#ec8341c9aec71d1139c985327314739d66b204a0"
+"@babel/runtime-corejs2@^7.6.3":
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs2/-/runtime-corejs2-7.6.3.tgz#de3f446b3fb688b98cbd220474d1a7cad909bcb8"
+  integrity sha512-nuA2o+rgX2+PrNTZ063ehncVcg7sn+tU71BB81SaWRVUbGwCOlb0+yQA1e0QqmzOfRSYOxfvf8cosYqFbJEiwQ==
   dependencies:
-    core-js "^2.5.7"
-    regenerator-runtime "^0.12.0"
+    core-js "^2.6.5"
+    regenerator-runtime "^0.13.2"
 
 "@babel/runtime@7.0.0", "@babel/runtime@^7.0.0":
   version "7.0.0"
@@ -866,6 +867,13 @@
   version "7.6.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.2.tgz#c3d6e41b304ef10dcf13777a33e7694ec4a9a6dd"
   integrity sha512-EXxN64agfUqqIGeEjI5dL5z0Sw0ZwWo1mLTi4mQowCZ42O59b7DRpZAnTC6OqdF28wMBMFKNb/4uFGrVaigSpg==
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
+"@babel/runtime@^7.5.5":
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.3.tgz#935122c74c73d2240cafd32ddb5fc2a6cd35cf1f"
+  integrity sha512-kq6anf9JGjW8Nt5rYfEuGRaEAaH1mkv3Bbu6rYvLOpPh/RusSJXuKPEAoZ7L7gybZkchE8+NV5g9vKF4AGAtsA==
   dependencies:
     regenerator-runtime "^0.13.2"
 
@@ -5827,6 +5835,11 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.9.tgz#6b4b214620c834152e179323727fc19741b084f2"
   integrity sha512-HOpZf6eXmnl7la+cUdMnLvUxKNqLUzJvgIziQ0DiF3JwSImNphIqdGqzj6hIKyX04MmV0poclQ7+wjWvxQyR2A==
 
+core-js@^2.6.5:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.10.tgz#8a5b8391f8cc7013da703411ce5b585706300d7f"
+  integrity sha512-I39t74+4t+zau64EN1fE5v2W31Adtc/REhzWN+gWRRXg6WH5qAsZm62DHpQ1+Yhe4047T55jvzz7MUqF/dBBlA==
+
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -6028,12 +6041,6 @@ crypto-random-string@^1.0.0:
 crypto@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
-
-css-box-model@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/css-box-model/-/css-box-model-1.1.1.tgz#c9fd8e7a8b1d59d41d6812fd1765433f671b2ee0"
-  dependencies:
-    tiny-invariant "^1.0.3"
 
 css-box-model@^1.2.0:
   version "1.2.0"
@@ -12598,10 +12605,6 @@ mem@^4.0.0:
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
 
-memoize-one@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-4.0.3.tgz#cdfdd942853f1a1b4c71c5336b8c49da0bf0273c"
-
 memoize-one@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.0.0.tgz#d55007dffefb8de7546659a1722a5d42e128286e"
@@ -12609,6 +12612,11 @@ memoize-one@^5.0.0:
 memoize-one@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.0.tgz#ce7af291c0e2fe041b709cac5e8c7b198c994286"
+
+memoize-one@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
+  integrity sha512-HKeeBpWvqiVJD57ZUAsJNm71eHTykffzcLZVYWiVfQeI1rJtuEaS7hQiEpWfVVk18donPwJEcFKIkCmPJNOhHA==
 
 memoizeasync@^1.1.0:
   version "1.1.0"
@@ -15450,9 +15458,10 @@ raf-schd@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/raf-schd/-/raf-schd-2.1.0.tgz#64d645723380ec25cc1714e909b953ef1cf254bf"
 
-raf-schd@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/raf-schd/-/raf-schd-4.0.0.tgz#9855756c5045ff4ed4516e14a47719387c3c907b"
+raf-schd@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/raf-schd/-/raf-schd-4.0.2.tgz#bd44c708188f2e84c810bf55fcea9231bcaed8a0"
+  integrity sha512-VhlMZmGy6A6hrkJWHLNTGl5gtgMUm+xfGza6wbwnE914yeQ5Ybm18vgM734RZhMgfw4tacUrWseGZlpUrrakEQ==
 
 raf-stub@^2.0.1:
   version "2.0.1"
@@ -15592,18 +15601,18 @@ react-base16-styling@^0.5.1:
     lodash.flow "^3.3.0"
     pure-color "^1.2.0"
 
-react-beautiful-dnd@^10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/react-beautiful-dnd/-/react-beautiful-dnd-10.0.2.tgz#618fe3dcd841c65235fca89bdde99a172fe77e50"
+react-beautiful-dnd@12.0.0-beta.8:
+  version "12.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/react-beautiful-dnd/-/react-beautiful-dnd-12.0.0-beta.8.tgz#889a6ddc1aabb64fdc6f86c440eeeface7de5049"
+  integrity sha512-2OfqUXdBCQMY1eMi21Wt0Vn0za+l/mRqZZ/dVYpFFmZn4EADKv+xbrXl83pZJ57cmrKdr+6q8DWDIQ0D4LX8hw==
   dependencies:
-    "@babel/runtime-corejs2" "^7.1.5"
-    css-box-model "^1.1.1"
-    memoize-one "^4.0.3"
-    prop-types "^15.6.1"
-    raf-schd "^4.0.0"
-    react-redux "^5.0.7"
-    redux "^4.0.1"
-    tiny-invariant "^1.0.3"
+    "@babel/runtime-corejs2" "^7.6.3"
+    css-box-model "^1.2.0"
+    memoize-one "^5.1.1"
+    raf-schd "^4.0.2"
+    react-redux "^7.1.1"
+    redux "^4.0.4"
+    use-memo-one "^1.1.1"
 
 react-circle@^1.0.1:
   version "1.0.1"
@@ -15723,6 +15732,11 @@ react-is@^16.8.1:
   version "16.9.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
 
+react-is@^16.9.0:
+  version "16.10.2"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.10.2.tgz#984120fd4d16800e9a738208ab1fba422d23b5ab"
+  integrity sha512-INBT1QEgtcCCgvccr5/86CfD71fw9EPmDxgiJX4I2Ddr6ZsV6iFXsuby+qWJPtmNuMY0zByTsG4468P7nHuNWA==
+
 react-json-tree@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-json-tree/-/react-json-tree-0.11.0.tgz#f5b17e83329a9c76ae38be5c04fda3a7fd684a35"
@@ -15798,7 +15812,7 @@ react-popper@1.0.2:
     typed-styles "^0.0.5"
     warning "^3.0.0"
 
-react-redux@^5.0.0, react-redux@^5.0.7:
+react-redux@^5.0.0:
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.0.7.tgz#0dc1076d9afb4670f993ffaef44b8f8c1155a4c8"
   dependencies:
@@ -15808,6 +15822,18 @@ react-redux@^5.0.0, react-redux@^5.0.7:
     lodash-es "^4.17.5"
     loose-envify "^1.1.0"
     prop-types "^15.6.0"
+
+react-redux@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.1.1.tgz#ce6eee1b734a7a76e0788b3309bf78ff6b34fa0a"
+  integrity sha512-QsW0vcmVVdNQzEkrgzh2W3Ksvr8cqpAv5FhEk7tNEft+5pp7rXxAudTz3VOPawRkLIepItpkEIyLcN/VVXzjTg==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    hoist-non-react-statics "^3.3.0"
+    invariant "^2.2.4"
+    loose-envify "^1.4.0"
+    prop-types "^15.7.2"
+    react-is "^16.9.0"
 
 react-render-image@^1.1.3:
   version "1.1.3"
@@ -16225,9 +16251,10 @@ redux@^3.6.0, redux@^3.7.2:
     loose-envify "^1.1.0"
     symbol-observable "^1.0.3"
 
-redux@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.1.tgz#436cae6cc40fbe4727689d7c8fae44808f1bfef5"
+redux@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.4.tgz#4ee1aeb164b63d6a1bcc57ae4aa0b6e6fa7a3796"
+  integrity sha512-vKv4WdiJxOWKxK0yRoaK3Y4pxxB0ilzVx6dszU2W8wLxlb2yikRph4iV/ymtdJ6ZxpBLFbyrxklnT5yBbQSl3Q==
   dependencies:
     loose-envify "^1.4.0"
     symbol-observable "^1.2.0"
@@ -18524,10 +18551,6 @@ tiny-invariant@^0.0.3:
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-0.0.3.tgz#4c7283c950e290889e9e94f64d3586ec9156cf44"
   integrity sha512-SA2YwvDrCITM9fTvHTHRpq9W6L2fBsClbqm3maT5PZux4Z73SPPDYwJMtnoWh6WMgmCkJij/LaOlWiqJqFMK8g==
 
-tiny-invariant@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.3.tgz#91efaaa0269ccb6271f0296aeedb05fc3e067b7a"
-
 tiny-invariant@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.6.tgz#b3f9b38835e36a41c843a3b0907a5a7b3755de73"
@@ -19278,6 +19301,11 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-memo-one@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/use-memo-one/-/use-memo-one-1.1.1.tgz#39e6f08fe27e422a7d7b234b5f9056af313bd22c"
+  integrity sha512-oFfsyun+bP7RX8X2AskHNTxu+R3QdE/RC5IefMbqptmACAA/gfol1KDD5KRzPsGMa62sWxGZw+Ui43u6x4ddoQ==
 
 use@^2.0.0:
   version "2.0.2"
