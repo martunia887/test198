@@ -9,11 +9,16 @@
 .*/node_modules/babel-flow-types/.*
 .*/node_modules/babel-normalize-comments/.*
 .*/node_modules/extract-react-types/.*
+
 # Older versions of button which are transitive deps may contain flow errors/warnings
 <PROJECT_ROOT>/node_modules/@atlaskit/button/.*
 .*/.git/.*
 [untyped]
 .*/node_modules/react-select
+# Not compatible with this older version of flow (react hooks)
+.*/node_modules/raf-schd/.*
+.*/node_modules/react-beautiful-dnd/.*
+.*/node_modules/use-memo-one/.*
 
 [include]
 
