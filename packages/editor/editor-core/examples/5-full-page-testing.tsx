@@ -6,6 +6,7 @@ import FullPageExample, {
   ExampleProps,
   getAppearance,
   LOCALSTORAGE_defaultDocKey,
+  mediaProvider,
 } from './5-full-page';
 import { collabEditProvider } from '../example-helpers/mock-collab-provider';
 import { InviteToEditButton } from './3-collab';
@@ -13,6 +14,7 @@ import { InviteToEditButton } from './3-collab';
 import PropsToolbar, {
   getPropsFromQuery,
   objectMap,
+  getEditorProps,
 } from '../example-helpers/prop-toggles';
 
 const DisabledBlanket = styled.div`
@@ -69,9 +71,20 @@ export default class ExampleEditorComponent extends React.Component<
       (localStorage && localStorage.getItem(LOCALSTORAGE_defaultDocKey)) ||
       undefined;
 
-    const propsFromQuery = getPropsFromQuery();
+    const propsFromQuery = getEditorProps();
 
-    const newObj = objectMap(propsFromQuery, value => value.value);
+    console.log(propsFromQuery);
+
+    const newObj = objectMap(propsFromQuery, (key: string, value) => {
+      if (key === 'media') {
+        return objectMap(value, (_key: string, value) => value.value);
+      }
+      return value.value;
+    });
+
+    if (newObj.media) {
+      newObj.media.provider = mediaProvider;
+    }
 
     return (
       <PropsToolbar>
