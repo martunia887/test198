@@ -320,8 +320,6 @@ export const getValidNode = (
         let mediaCollection = [];
         let mediaUrl = '';
 
-        console.log(attrs);
-
         if (attrs) {
           const { id, collection, type, url } = attrs;
           mediaId = id;
