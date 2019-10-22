@@ -93,35 +93,39 @@ export const walkOut = ($startPos: ResolvedPos): ResolvedPos => {
  * @param $pos Any position inside the tree.
  * @param types The node types to consider traversable
  */
-export const subtreeHeight = ($pos: ResolvedPos, types: NodeType[]): number => {
+export const subtreeHeight = (
+  $from: ResolvedPos,
+  $to: ResolvedPos,
+  types: NodeType[],
+): number => {
   const root = findFarthestParentNode(node => types.indexOf(node.type) > -1)(
-    $pos,
+    $from,
   );
   if (!root) {
     return -1;
   }
 
   // get the height between the root and the current position
-  const distToParent = $pos.depth - root.depth;
+  const distToParent = $from.depth - root.depth;
 
   // include any following taskList since nested lists appear
   // as siblings
   //
   // this is unlike regular bullet lists where the orderedList
   // appears as descendent of listItem
-  const blockRange = getBlockRange($pos, $pos);
+  const blockRange = getBlockRange($from, $to);
   if (!blockRange) {
     return -1;
   }
 
   // and get the max height from the current position to the
   // deepest leaf node
-  let maxChildDepth = $pos.depth;
-  $pos.doc.nodesBetween(
+  let maxChildDepth = $from.depth;
+  $from.doc.nodesBetween(
     blockRange.start,
     blockRange.end,
     (descendent, relPos, parent) => {
-      maxChildDepth = Math.max($pos.doc.resolve(relPos).depth, maxChildDepth);
+      maxChildDepth = Math.max($from.doc.resolve(relPos).depth, maxChildDepth);
 
       // keep descending down the tree if we can
       if (types.indexOf(descendent.type) > -1) {
@@ -130,7 +134,7 @@ export const subtreeHeight = ($pos: ResolvedPos, types: NodeType[]): number => {
     },
   );
 
-  return distToParent + (maxChildDepth - $pos.depth);
+  return distToParent + (maxChildDepth - $from.depth);
 };
 
 /**

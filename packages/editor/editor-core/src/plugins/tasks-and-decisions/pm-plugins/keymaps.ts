@@ -121,7 +121,8 @@ const indent = filter(isInsideTask, (state, dispatch) => {
   }
 
   const { taskList, taskItem } = state.schema.nodes;
-  const maxDepth = subtreeHeight(state.selection.$from, [taskList, taskItem]);
+  const { $from, $to } = state.selection;
+  const maxDepth = subtreeHeight($from, $to, [taskList, taskItem]);
   if (maxDepth >= 6) {
     return true;
   }
