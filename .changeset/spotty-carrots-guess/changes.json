@@ -1,0 +1,12 @@
+{
+  "releases": [
+    { "name": "@atlaskit/drawer", "type": "patch" },
+    { "name": "@atlaskit/dynamic-table", "type": "patch" },
+    { "name": "@atlaskit/item", "type": "patch" },
+    { "name": "@atlaskit/modal-dialog", "type": "patch" },
+    { "name": "@atlaskit/navigation-next", "type": "patch" },
+    { "name": "@atlaskit/navigation", "type": "patch" },
+    { "name": "@atlaskit/tree", "type": "patch" }
+  ],
+  "dependents": []
+}
