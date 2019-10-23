@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "@atlaskit/docs": "^8.1.8",
-    "@atlaskit/page": "^11.0.9",
-    "enzyme": "^3.7.0"
+    "@atlaskit/page": "^11.0.9"
   }
 }

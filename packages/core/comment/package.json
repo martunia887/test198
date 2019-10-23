@@ -39,7 +39,6 @@
     "@atlaskit/editor-core": "^113.1.4",
     "@atlaskit/ssr": "^0.1.1",
     "@atlaskit/visual-regression": "^0.1.3",
-    "enzyme": "^3.7.0",
     "react-dom": "^16.8.0",
     "wait-for-expect": "^1.2.0"
   },

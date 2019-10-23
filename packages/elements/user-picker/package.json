@@ -46,7 +46,6 @@
     "@atlaskit/util-data-test": "^13.0.0",
     "@types/lodash.debounce": "^4.0.4",
     "@types/uuid": "^3.4.4",
-    "enzyme": "^3.7.0",
     "enzyme-react-intl": "^2.0.3",
     "react-intl": "^2.6.0"
   },
