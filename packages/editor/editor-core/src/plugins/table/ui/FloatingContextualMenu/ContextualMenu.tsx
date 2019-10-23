@@ -191,7 +191,6 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
                   palette={cellBackgroundColorPalette}
                   onClick={this.setColor}
                   selectedColor={background}
-                  checkMarkColor={colors.N500}
                 />
               </div>
             )}
