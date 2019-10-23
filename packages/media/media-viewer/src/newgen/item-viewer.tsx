@@ -30,6 +30,7 @@ import {
   mediaFileCommencedEvent,
   mediaFileLoadSucceededEvent,
   mediaFileLoadFailedEvent,
+  isEmptyFile,
 } from './analytics/item-viewer';
 import { channel } from './analytics/index';
 import {
@@ -192,7 +193,18 @@ export class ItemViewerBase extends React.Component<Props, State> {
   }
 
   private renderError(errorName: ErrorName, file?: FileState) {
-    if (file) {
+    if (isEmptyFile(file)) {
+      // related to MS-2519 we are detecting corrupted files from interupted uploads
+      // no point in showing download message, file will not download
+      const err = createError(errorName, undefined, file);
+      return (
+        <ErrorMessage error={err}>
+          <p>
+            <FormattedMessage {...messages.error_generating_preview} />
+          </p>
+        </ErrorMessage>
+      );
+    } else if (file) {
       const err = createError(errorName, undefined, file);
       return (
         <ErrorMessage error={err}>

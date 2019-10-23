@@ -41,6 +41,20 @@ describe('getCardStatus()', () => {
 
       expect(getCardStatus(state, props)).toEqual('processing');
     });
+
+    it('should detect empty file and return as error', () => {
+      const state = {
+        metadata: {},
+        status: 'complete',
+      } as CardState;
+      const props = {
+        identifier: {
+          mediaItemType: 'file',
+        },
+      } as CardProps;
+
+      expect(getCardStatus(state, props)).toEqual('error');
+    });
   });
 
   describe('non image files', () => {

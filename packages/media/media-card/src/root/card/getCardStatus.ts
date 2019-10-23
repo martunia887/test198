@@ -15,7 +15,12 @@ export const getCardStatus = (
   }
 
   if (metadata) {
-    const { size, mediaType, name } = metadata as FileDetails;
+    const { size, mediaType, mimeType, name } = metadata;
+    if (!size && !mediaType && !mimeType && !name) {
+      // related to MS-2519, we are checking an edge case where intrupted files
+      // become empty, we want to track that accordingly
+      return 'error';
+    }
     if (mediaType === 'image' || mediaType === 'video') {
       if (status === 'complete' && !dataURI) {
         return 'processing';

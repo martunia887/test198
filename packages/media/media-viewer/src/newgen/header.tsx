@@ -34,6 +34,7 @@ import {
   ToolbarDownloadButton,
   DisabledToolbarDownloadButton,
 } from './download';
+import { isEmptyFile } from './analytics/item-viewer';
 
 export type Props = {
   readonly identifier: Identifier;
@@ -118,13 +119,17 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
     return item.match({
       pending: () => DisabledToolbarDownloadButton,
       failed: () => DisabledToolbarDownloadButton,
-      successful: item => (
-        <ToolbarDownloadButton
-          state={item}
-          identifier={identifier}
-          mediaClient={mediaClient}
-        />
-      ),
+      successful: item => {
+        return isEmptyFile(item) ? (
+          DisabledToolbarDownloadButton
+        ) : (
+          <ToolbarDownloadButton
+            state={item}
+            identifier={identifier}
+            mediaClient={mediaClient}
+          />
+        );
+      },
     });
   };
 
@@ -140,7 +145,8 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
   private renderMetadata() {
     const { item } = this.state;
     return item.match({
-      successful: item => this.renderMetadataLayout(item),
+      successful: item =>
+        isEmptyFile(item) ? null : this.renderMetadataLayout(item),
       pending: () => null,
       failed: () => null,
     });

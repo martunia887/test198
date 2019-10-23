@@ -1,5 +1,9 @@
 import { GasPayload } from '@atlaskit/analytics-gas-types';
-import { ProcessedFileState, FileState } from '@atlaskit/media-client';
+import {
+  ProcessedFileState,
+  FileState,
+  ProcessingFileState,
+} from '@atlaskit/media-client';
 import { packageAttributes, fileStateToFileGasPayload } from './index';
 
 export type ViewerLoadPayload = {
@@ -71,6 +75,10 @@ export const mediaPreviewFailedEvent = (
   const fileId = fileState ? fileState.id : undefined;
   const fileAttributes = fileState && fileStateToFileGasPayload(fileState);
 
+  // related to MS-2519 where files interupted during upload become empty/corrupted, with no artifacts or metadata.
+  // This should ideally be solved by the back-end (in terms of flagging the metadata with this state).
+  // For now, we detect it here and adjust the analytics data so we can segment these from genuinely unsupported file types.
+
   return {
     eventType: 'operational',
     actionSubject: 'mediaFile',
@@ -79,8 +87,33 @@ export const mediaPreviewFailedEvent = (
     attributes: {
       status: 'fail',
       ...fileAttributes,
-      failReason,
+      failReason:
+        failReason === 'unsupported' && isEmptyFile(fileState)
+          ? 'empty'
+          : failReason,
       ...packageAttributes,
     },
   };
+};
+
+export const isEmptyFile = (fileState?: FileState) => {
+  if (fileState && fileState.status === 'processing') {
+    const {
+      artifacts,
+      mediaType,
+      mimeType,
+      name,
+      representations,
+      size,
+    } = fileState;
+    return !(
+      artifacts ||
+      mediaType ||
+      mimeType ||
+      name ||
+      representations ||
+      size
+    );
+  }
+  return false;
 };

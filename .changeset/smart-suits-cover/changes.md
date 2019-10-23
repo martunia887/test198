@@ -1,0 +1,1 @@
+Detect corrupted/empty image states in media-viewer and media-card

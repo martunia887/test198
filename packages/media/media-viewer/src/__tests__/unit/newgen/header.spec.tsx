@@ -288,6 +288,30 @@ describe('<Header />', () => {
       expect(metadata.text()).toEqual('');
     });
 
+    it('shows nothing when empty file retrieved', () => {
+      const emptyFileElement = {
+        ...processedImageState,
+        artifacts: undefined,
+        mediaType: undefined,
+        mimeType: undefined,
+        name: undefined,
+        representations: undefined,
+        size: undefined,
+        status: 'processing' as any,
+      };
+      const mediaClient = fakeMediaClient();
+      mediaClient.file.getFileState = () => Observable.of(emptyFileElement);
+      const el = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={mediaClient}
+          identifier={identifier}
+        />,
+      );
+      const metadata = el.find(LeftHeader);
+      expect(metadata.text()).toEqual('');
+    });
+
     it('MSW-720: passes the collectionName to getFile', () => {
       const collectionName = 'some-collection';
       const mediaClient = fakeMediaClient();
@@ -371,6 +395,30 @@ describe('<Header />', () => {
       const mediaClient = fakeMediaClient();
       mediaClient.file.getFileState = () =>
         Observable.throw('something bad happened!');
+      const el = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={mediaClient}
+          identifier={identifier}
+        />,
+      );
+      el.update();
+      assertDownloadButton(el, false);
+    });
+
+    it('should show the download button disabled when empty file retreived', () => {
+      const emptyFileElement = {
+        ...processedImageState,
+        artifacts: undefined,
+        mediaType: undefined,
+        mimeType: undefined,
+        name: undefined,
+        representations: undefined,
+        size: undefined,
+        status: 'processing' as any,
+      };
+      const mediaClient = fakeMediaClient();
+      mediaClient.file.getFileState = () => Observable.of(emptyFileElement);
       const el = mountWithIntlContext(
         <Header
           intl={fakeIntl}
