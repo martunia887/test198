@@ -17,7 +17,7 @@ export interface Props {
 }
 
 function getContrastColor(color: string): string {
-  return [colors.N500 /* dark */, colors.N0 /* light */].sort(
+  return [colors.N800 /* dark */, colors.N0 /* light */].sort(
     (a, b) => chromatism.difference(b, color) - chromatism.difference(a, color),
   )[0];
 }
