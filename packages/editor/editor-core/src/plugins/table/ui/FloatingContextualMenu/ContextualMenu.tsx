@@ -3,7 +3,6 @@ import { Component } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
 import { splitCell, Rect } from 'prosemirror-tables';
-import { colors } from '@atlaskit/theme';
 import { canMergeCells } from '../../transforms';
 import { getPluginState } from '../../pm-plugins/main';
 import {
