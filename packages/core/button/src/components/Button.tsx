@@ -208,6 +208,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         icon={iconBefore}
                       />
                     )}
+                    Modified Button Test
                     {children && (
                       <Content
                         isLoading={isLoading}
