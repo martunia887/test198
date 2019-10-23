@@ -1,0 +1,1 @@
+Pick color with best contrast for color palette checkmarks
