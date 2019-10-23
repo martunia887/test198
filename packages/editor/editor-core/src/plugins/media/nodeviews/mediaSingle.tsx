@@ -34,7 +34,6 @@ import { stateKey as mediaPluginKey } from '../pm-plugins/main';
 import { isMobileUploadCompleted } from '../commands/helpers';
 import { MediaSingleNodeProps, MediaSingleNodeViewProps } from './types';
 import { MediaNodeUpdater } from './mediaNodeUpdater';
-import { getViewMediaClientConfigFromMediaProvider } from '../utils/media-common';
 import { DispatchAnalyticsEvent } from '../../analytics';
 import { findParentNodeOfTypeClosestToPos } from 'prosemirror-utils';
 
@@ -55,7 +54,7 @@ export default class MediaSingleNode extends Component<
     mediaOptions: {},
   };
 
-  private _cancelSetupContextProvider: CancelSetup;
+  private _cancelSetupContextProvider?: CancelSetup;
 
   state: MediaSingleNodeState = {
     width: undefined,
@@ -84,13 +83,15 @@ export default class MediaSingleNode extends Component<
     this.createMediaNodeUpdater(nextProps).updateFileAttrs();
   }
 
-  setViewMediaClientConfig = async (props: MediaSingleNodeProps) => {
+  _getMediaClientConfig = async (props: MediaSingleNodeProps) => {
     const mediaProvider = await props.mediaProvider;
     if (mediaProvider) {
-      const viewMediaClientConfig = await getViewMediaClientConfigFromMediaProvider(
-        mediaProvider,
-      );
-
+      return mediaProvider.viewMediaClientConfig;
+    }
+  };
+  setViewMediaClientConfig = async (props: MediaSingleNodeProps) => {
+    const viewMediaClientConfig = await this._getMediaClientConfig(props);
+    if (viewMediaClientConfig) {
       this.setState({
         viewMediaClientConfig,
       });
@@ -142,22 +143,23 @@ export default class MediaSingleNode extends Component<
   }
 
   private _setupContextProvider(): CancelSetup {
-    let canUpdate = true;
+    let isCancelled = false;
     const { contextIdentifierProvider } = this.props;
 
     Promise.all([
-      this.setViewMediaClientConfig(this.props),
+      this._getMediaClientConfig(this.props),
       this.updateMediaNodeAttributes(this.props),
-    ]).then(async () => {
-      if (canUpdate) {
+    ]).then(async ([viewMediaClientConfig]) => {
+      if (!isCancelled) {
         this.setState({
+          viewMediaClientConfig,
           contextIdentifierProvider: await contextIdentifierProvider,
         });
       }
     });
 
     return () => {
-      canUpdate = false;
+      isCancelled = true;
     };
   }
 
