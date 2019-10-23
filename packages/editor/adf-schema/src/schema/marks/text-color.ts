@@ -54,9 +54,7 @@ export type TextColorKey =
   | 'Orange';
 
 // @see https://product-fabric.atlassian.net/wiki/spaces/E/pages/55979455/Colour+picker+decisions#Colourpickerdecisions-Visualdesigndecisions
-export const colorPalette = new Map<string, TextColorKey>();
-
-const colorArrayPalette: Array<[string, TextColorKey]> = [
+export const colorPalette = new Map<string, TextColorKey>([
   // [N800, default],
   [N80, 'Light gray'],
   [P300, 'Purple'],
@@ -64,11 +62,7 @@ const colorArrayPalette: Array<[string, TextColorKey]> = [
   [G300, 'Green'],
   [R300, 'Red'],
   [Y400, 'Orange'],
-];
-
-colorArrayPalette.forEach(([color, label]) =>
-  colorPalette.set(color.toLowerCase(), label),
-);
+]);
 
 export const textColor: MarkSpec = {
   attrs: { color: {} },
