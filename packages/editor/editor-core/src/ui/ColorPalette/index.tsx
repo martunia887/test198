@@ -6,7 +6,7 @@ import { ColorPaletteWrapper } from './styles';
 import { PaletteColor } from './Palettes/type';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { colors } from '@atlaskit/theme';
-import { getContrastColor } from '@atlaskit/editor-common';
+import { getContrastColor } from '@atlaskit/adf-schema';
 
 export interface Props {
   palette: PaletteColor[];

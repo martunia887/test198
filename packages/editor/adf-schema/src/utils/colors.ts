@@ -1,3 +1,4 @@
+import chromatism from 'chromatism';
 import * as namedColors from 'css-color-names';
 
 /**
@@ -58,6 +59,31 @@ export const T75 = '#B3F5FF';
 export const T100 = '#79E2F2';
 export const T300 = '#00B8D9';
 export const T500 = '#008DA6';
+
+/**
+ * For a given color pick the color from a list of colors with
+ * the highest contrast
+ *
+ * @param color color string, suppports HEX, RGB, RGBA etc.
+ * @return Highest contrast color in pool
+ */
+export function getContrastColor(color: string, pool: string[]): string {
+  return pool.sort(
+    (a, b) => chromatism.difference(b, color) - chromatism.difference(a, color),
+  )[0];
+}
+
+/**
+ * For a given color set the alpha channel to alpha
+ *
+ * @param color color string, suppports HEX, RGB, RGBA etc.
+ * @param alpha Alpha channel value as fraction of 1
+ * @return CSS RGBA string with applied alpha channel
+ */
+export function setAlpha(color: string, alpha: number): string {
+  const { r, g, b } = chromatism.convert(color).rgb;
+  return `rgba(${r}, ${g}, ${b}, 0.12)`;
+}
 
 /**
  * @return String with HEX-coded color

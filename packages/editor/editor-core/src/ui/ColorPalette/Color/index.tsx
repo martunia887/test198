@@ -5,7 +5,7 @@ import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
 import { colors } from '@atlaskit/theme';
 import { Button, ButtonWrapper } from './styles';
 import Tooltip from '@atlaskit/tooltip';
-import { setAlpha } from '@atlaskit/editor-common';
+import { setAlpha } from '@atlaskit/adf-schema';
 
 // IMO these should live inside @atlaskit/theme
 const messages = defineMessages({
