@@ -9,7 +9,9 @@ import {
   ExtensionHandlers,
   ErrorReportingHandler,
   MediaProvider,
+  ExtensionProvider,
 } from '@atlaskit/editor-common';
+
 import { ActivityProvider } from '@atlaskit/activity';
 import { MentionProvider } from '@atlaskit/mention/resource';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
@@ -85,6 +87,7 @@ export interface EditorProps {
   // Legacy analytics support handler, which will be removed soon. **Do not use**.
   analyticsHandler?: AnalyticsHandler;
 
+  extensions?: ExtensionProvider[];
   contentComponents?: ReactComponents;
   primaryToolbarComponents?: ReactComponents;
   secondaryToolbarComponents?: ReactComponents;

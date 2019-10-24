@@ -14,6 +14,7 @@ import {
   startMeasure,
   stopMeasure,
   clearMeasure,
+  parseExtensionManifests,
 } from '@atlaskit/editor-common';
 import { Context as CardContext } from '@atlaskit/smart-card';
 import { FabricEditorAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
@@ -221,6 +222,7 @@ export default class Editor extends React.Component<EditorProps, {}> {
 
   private handleProviders(props: EditorProps) {
     const {
+      extensions,
       emojiProvider,
       mentionProvider,
       mediaProvider,
@@ -237,6 +239,8 @@ export default class Editor extends React.Component<EditorProps, {}> {
       autoformattingProvider,
       UNSAFE_cards,
     } = props;
+
+    parseExtensionManifests(extensions);
     this.providerFactory.setProvider('emojiProvider', emojiProvider);
     this.providerFactory.setProvider('mentionProvider', mentionProvider);
     this.providerFactory.setProvider(
