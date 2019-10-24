@@ -19,6 +19,8 @@ pipelines:
   default:
     - step:
         script:
+          - pipe: atlassian/artifactory-sidekick:v1
+          - source .artifactory/activate.sh
           - source ./build-setup.sh
           - bolt install --pure-lockfile
           - bolt build
