@@ -226,7 +226,6 @@ export class CardBase extends Component<
     document.removeEventListener('copy', this.onCopyListener);
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
-      this.resizeObserver = undefined;
     }
   }
 
