@@ -1,5 +1,179 @@
 # @atlaskit/atlassian-switcher
 
+## 4.6.6
+
+- Updated dependencies [ae4f336a3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ae4f336a3a):
+  - @atlaskit/i18n-tools@0.6.0
+  - @atlaskit/analytics-namespaced-context@4.1.10
+
+## 4.6.5
+
+### Patch Changes
+
+- [patch][fb43fc2e99](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/fb43fc2e99):
+
+  PTC-2695: Add "reason" to the analytics event fired on provider failed events
+
+## 4.6.4
+
+### Patch Changes
+
+- [patch][6bc87c7501](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/6bc87c7501):
+
+  Split mockEndpoints into a separate package
+
+## 4.6.3
+
+### Patch Changes
+
+- [patch][f07586ba0e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/f07586ba0e):
+
+  Hide manage list link when custom links are disabled
+
+## 4.6.2
+
+### Patch Changes
+
+- [patch][14e55631c6](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/14e55631c6):
+
+  Add groupIndex to switcher item analytics
+
+## 4.6.1
+
+### Patch Changes
+
+- [patch][e6f7f7747f](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/e6f7f7747f):
+
+  Add Opsgenie to default list of product recommendations
+
+## 4.6.0
+
+### Minor Changes
+
+- [minor][cd96adc5e7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/cd96adc5e7):
+
+  Add Try lozenge to first item in Discover section
+
+## 4.5.4
+
+### Patch Changes
+
+- [patch][d904d4df82](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/d904d4df82):
+
+  Use kebab case for switcher chunk names
+
+## 4.5.3
+
+### Patch Changes
+
+- [patch][03e00bd3d7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/03e00bd3d7):
+
+  Fix discover/x-sell work for Bitbucket cloud
+
+## 4.5.2
+
+### Patch Changes
+
+- [patch][be38f90454](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/be38f90454):
+
+  Added support for additional languages: Thai, Turkish, Ukrainia and Vietnamese
+
+## 4.5.1
+
+### Patch Changes
+
+- [patch][165f1cd0ad](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/165f1cd0ad):
+
+  Refactor codes related to experimental Discover section in Atlassian Switcher.
+
+## 4.5.0
+
+### Minor Changes
+
+- [minor][331053f02c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/331053f02c):
+
+  Add experimental discover section to Atlassian Switcher.
+
+## 4.4.0
+
+### Minor Changes
+
+- [minor][a2ae055500](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2ae055500):
+
+  Update custom links to include link type (applink vs custom link) in analytics
+
+## 4.3.0
+
+### Minor Changes
+
+- [minor][3920c7a2b9](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/3920c7a2b9):
+
+  Update translation for atlassian-switcher package
+
+## 4.2.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 4.2.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
+## 4.2.1
+
+### Patch Changes
+
+- [patch][8ec4a18b58](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/8ec4a18b58):
+
+  Updating examples
+
+## 4.2.0
+
+### Minor Changes
+
+- [minor][173ada19f7](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/173ada19f7):
+
+  yRemove People link from switcher
+
+## 4.1.0
+
+### Minor Changes
+
+- [minor][42afbf2163](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/42afbf2163):
+
+  Only show try links if the product is not provisioned for any of the available sites
+
+## 4.0.0
+
+### Major Changes
+
+- [major][deff626951](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/deff626951):
+
+  Remove enableUserCentricProducts feature flag, enable account centric switcher by default
+
+## 3.31.3
+
+### Patch Changes
+
+- [patch][b72b5b773c](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/b72b5b773c):
+
+  Removed ts-ignore from the code
+
+## 3.31.2
+
+### Patch Changes
+
+- [patch][fa1f938f76](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/fa1f938f76):
+
+  [Bug fix] Emcee link was not able to capture source param, this release will fix that
+
 ## 3.31.1
 
 ### Patch Changes

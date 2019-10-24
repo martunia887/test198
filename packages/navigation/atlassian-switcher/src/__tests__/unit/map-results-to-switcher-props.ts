@@ -10,8 +10,10 @@ import {
   AvailableSite,
   WorklensProductType,
   AvailableProduct,
-  LicenseInformationResponse,
   Product,
+  CustomLinksResponse,
+  RecentContainersResponse,
+  RecommendationsEngineResponse,
 } from '../../types';
 
 describe('map-results-to-switcher-props', () => {
@@ -21,13 +23,13 @@ describe('map-results-to-switcher-props', () => {
         null,
         loadingProvidersResult,
         {
-          enableUserCentricProducts: true,
           disableCustomLinks: false,
           disableRecentContainers: false,
           isDiscoverMoreForEveryoneEnabled: false,
           xflow: true,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
       );
@@ -47,69 +49,13 @@ describe('map-results-to-switcher-props', () => {
           productRecommendations: asCompletedProvider([]),
         },
         {
-          enableUserCentricProducts: true,
           disableCustomLinks: false,
           disableRecentContainers: false,
           isDiscoverMoreForEveryoneEnabled: false,
           xflow: true,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
-        },
-        asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
-      );
-
-      expect(props.hasLoadedCritical).toEqual(true);
-      expect(props.hasLoaded).toEqual(true);
-    });
-
-    it('site-centric hasLoadedCritical is set when license information has been loaded', () => {
-      const props = mapResultsToSwitcherProps(
-        cloudId,
-        {
-          ...loadingProvidersResult,
-          licenseInformation: asCompletedProvider<LicenseInformationResponse>({
-            hostname: 'hostname',
-            products: {},
-          }),
-        },
-        {
-          enableUserCentricProducts: false,
-          disableCustomLinks: false,
-          disableRecentContainers: false,
-          isDiscoverMoreForEveryoneEnabled: false,
-          xflow: true,
-          disableHeadings: false,
-          isEmceeLinkEnabled: false,
-        },
-        asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
-      );
-
-      expect(props.hasLoadedCritical).toEqual(true);
-      expect(props.hasLoaded).toEqual(false);
-    });
-
-    it('site-centric hasLoaded is set when license information + permissions + product recommendations have been loaded', () => {
-      const props = mapResultsToSwitcherProps(
-        cloudId,
-        {
-          ...loadingProvidersResult,
-          licenseInformation: asCompletedProvider<LicenseInformationResponse>({
-            hostname: 'hostname',
-            products: {},
-          }),
-          isXFlowEnabled: asCompletedProvider(true),
-          managePermission: asCompletedProvider(true),
-          addProductsPermission: asCompletedProvider(true),
-          productRecommendations: asCompletedProvider([]),
-        },
-        {
-          enableUserCentricProducts: false,
-          disableCustomLinks: false,
-          disableRecentContainers: false,
-          isDiscoverMoreForEveryoneEnabled: false,
-          xflow: true,
-          disableHeadings: false,
-          isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
       );
@@ -129,13 +75,13 @@ describe('map-results-to-switcher-props', () => {
           productRecommendations: asFailedProvider(),
         },
         {
-          enableUserCentricProducts: true,
           disableCustomLinks: false,
           disableRecentContainers: false,
           isDiscoverMoreForEveryoneEnabled: false,
           xflow: true,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
       );
@@ -153,13 +99,13 @@ describe('map-results-to-switcher-props', () => {
           addProductsPermission: asFailedProvider(),
         },
         {
-          enableUserCentricProducts: true,
           disableCustomLinks: false,
           disableRecentContainers: false,
           isDiscoverMoreForEveryoneEnabled: false,
           xflow: false,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
       );
@@ -175,13 +121,13 @@ describe('map-results-to-switcher-props', () => {
         cloudId,
         loadingProvidersResult,
         {
-          enableUserCentricProducts: true,
           disableCustomLinks: false,
           disableRecentContainers: false,
           xflow: false,
           isDiscoverMoreForEveryoneEnabled: false,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({
           sites: [
@@ -253,13 +199,13 @@ describe('map-results-to-switcher-props', () => {
         cloudId,
         loadingProvidersResult,
         {
-          enableUserCentricProducts: true,
           disableCustomLinks: false,
           disableRecentContainers: false,
           xflow: false,
           isDiscoverMoreForEveryoneEnabled: false,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({
           sites: [
@@ -307,13 +253,13 @@ describe('map-results-to-switcher-props', () => {
         cloudId,
         loadingProvidersResult,
         {
-          enableUserCentricProducts: true,
           disableCustomLinks: false,
           disableRecentContainers: false,
           xflow: false,
           isDiscoverMoreForEveryoneEnabled: false,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({
           sites: [
@@ -340,13 +286,13 @@ describe('map-results-to-switcher-props', () => {
         cloudId,
         loadingProvidersResult,
         {
-          enableUserCentricProducts: true,
           isDiscoverMoreForEveryoneEnabled: false,
           disableCustomLinks: false,
           disableRecentContainers: false,
           xflow: false,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({
           sites: [
@@ -371,13 +317,13 @@ describe('map-results-to-switcher-props', () => {
         cloudId,
         loadingProvidersResult,
         {
-          enableUserCentricProducts: true,
           disableCustomLinks: false,
           disableRecentContainers: false,
           xflow: false,
           isDiscoverMoreForEveryoneEnabled: false,
           disableHeadings: false,
           isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
         },
         asCompletedProvider<AvailableProductsResponse>({
           sites: [
@@ -409,68 +355,74 @@ describe('map-results-to-switcher-props', () => {
         },
       ]);
     });
-  });
 
-  it('People link is shown for Jira', () => {
-    const props = mapResultsToSwitcherProps(
-      cloudId,
-      loadingProvidersResult,
-      {
-        enableUserCentricProducts: true,
-        disableCustomLinks: false,
-        disableRecentContainers: false,
-        xflow: false,
-        isDiscoverMoreForEveryoneEnabled: false,
-        disableHeadings: false,
-        isEmceeLinkEnabled: false,
-      },
-      asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
-      Product.JIRA,
-    );
+    it('shows manage list if custom links are enabled', () => {
+      const props = mapResultsToSwitcherProps(
+        cloudId,
+        {
+          ...completedProvidersResult,
+          customLinks: asCompletedProvider<CustomLinksResponse>([
+            {
+              key: 'home',
+              link:
+                'https://some-random-instance.atlassian.net/secure/MyJiraHome.jspa',
+              label: 'Jira',
+              local: true,
+            },
+          ]),
+          managePermission: asCompletedProvider(true),
+        },
+        {
+          disableCustomLinks: false,
+          disableRecentContainers: false,
+          xflow: false,
+          isDiscoverMoreForEveryoneEnabled: false,
+          disableHeadings: false,
+          isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
+        },
+        asCompletedProvider<AvailableProductsResponse>({
+          sites: [generateSite('site40', [WorklensProductType.CONFLUENCE, 40])],
+        }),
+        Product.CONFLUENCE,
+      );
 
-    expect(props.fixedLinks).toHaveLength(1);
-    expect(props.fixedLinks[0].href).toEqual('/people');
-  });
+      expect(props.showManageLink).toBe(true);
+    });
 
-  it('People link is shown for Confluence', () => {
-    const props = mapResultsToSwitcherProps(
-      cloudId,
-      loadingProvidersResult,
-      {
-        enableUserCentricProducts: true,
-        disableCustomLinks: false,
-        disableRecentContainers: false,
-        xflow: false,
-        isDiscoverMoreForEveryoneEnabled: false,
-        disableHeadings: false,
-        isEmceeLinkEnabled: false,
-      },
-      asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
-      Product.CONFLUENCE,
-    );
+    it('does not shows manage list if custom links are disabled', () => {
+      const props = mapResultsToSwitcherProps(
+        cloudId,
+        {
+          ...completedProvidersResult,
+          customLinks: asCompletedProvider<CustomLinksResponse>([
+            {
+              key: 'home',
+              link:
+                'https://some-random-instance.atlassian.net/secure/MyJiraHome.jspa',
+              label: 'Jira',
+              local: true,
+            },
+          ]),
+          managePermission: asCompletedProvider(true),
+        },
+        {
+          disableCustomLinks: true,
+          disableRecentContainers: false,
+          xflow: false,
+          isDiscoverMoreForEveryoneEnabled: false,
+          disableHeadings: false,
+          isEmceeLinkEnabled: false,
+          isDiscoverSectionEnabled: false,
+        },
+        asCompletedProvider<AvailableProductsResponse>({
+          sites: [generateSite('site40', [WorklensProductType.CONFLUENCE, 40])],
+        }),
+        Product.CONFLUENCE,
+      );
 
-    expect(props.fixedLinks).toHaveLength(1);
-    expect(props.fixedLinks[0].href).toEqual('/people');
-  });
-
-  it('People link is NOT shown for other products', () => {
-    const props = mapResultsToSwitcherProps(
-      null,
-      loadingProvidersResult,
-      {
-        enableUserCentricProducts: true,
-        disableCustomLinks: false,
-        disableRecentContainers: false,
-        isDiscoverMoreForEveryoneEnabled: false,
-        xflow: true,
-        disableHeadings: false,
-        isEmceeLinkEnabled: false,
-      },
-      asCompletedProvider<AvailableProductsResponse>({ sites: [] }),
-      Product.HOME,
-    );
-
-    expect(props.fixedLinks).toHaveLength(0);
+      expect(props.showManageLink).toBe(false);
+    });
   });
 });
 
@@ -516,17 +468,27 @@ function asCompletedProvider<T>(data: T): ResultComplete<T> {
   };
 }
 
-const loadingProviderResult: ResultLoading = {
+const loadingProviderResultObject: ResultLoading = {
   status: Status.LOADING,
   data: null,
 };
 
 const loadingProvidersResult = {
-  customLinks: loadingProviderResult,
-  recentContainers: loadingProviderResult,
-  licenseInformation: loadingProviderResult,
-  managePermission: loadingProviderResult,
-  addProductsPermission: loadingProviderResult,
-  isXFlowEnabled: loadingProviderResult,
-  productRecommendations: loadingProviderResult,
+  customLinks: loadingProviderResultObject,
+  recentContainers: loadingProviderResultObject,
+  managePermission: loadingProviderResultObject,
+  addProductsPermission: loadingProviderResultObject,
+  isXFlowEnabled: loadingProviderResultObject,
+  productRecommendations: loadingProviderResultObject,
+};
+
+const completedProvidersResult = {
+  customLinks: asCompletedProvider<CustomLinksResponse>([]),
+  recentContainers: asCompletedProvider<RecentContainersResponse>({ data: [] }),
+  managePermission: asCompletedProvider(false),
+  addProductsPermission: asCompletedProvider(false),
+  isXFlowEnabled: asCompletedProvider(false),
+  productRecommendations: asCompletedProvider<RecommendationsEngineResponse>(
+    [],
+  ),
 };

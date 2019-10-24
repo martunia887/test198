@@ -25,11 +25,14 @@ describe('MediaNodeUpdater', () => {
     jest
       .spyOn(MediaClientModule, 'getMediaClient')
       .mockReturnValue(mediaClient);
-    jest.spyOn(commands, 'updateMediaNodeAttrs').mockReturnValue(() => {});
-    jest.spyOn(commands, 'replaceExternalMedia').mockReturnValue(() => {});
+    jest
+      .spyOn(commands, 'updateAllMediaNodesAttrs')
+      .mockReturnValue(() => true);
+    jest.spyOn(commands, 'updateMediaNodeAttrs').mockReturnValue(() => true);
+    jest.spyOn(commands, 'replaceExternalMedia').mockReturnValue(() => true);
     jest
       .spyOn(mediaCommon, 'getViewMediaClientConfigFromMediaProvider')
-      .mockReturnValue(getDefaultMediaClientConfig());
+      .mockReturnValue(Promise.resolve(getDefaultMediaClientConfig()));
 
     const contextIdentifierProvider: Promise<
       ContextIdentifierProvider
@@ -85,8 +88,8 @@ describe('MediaNodeUpdater', () => {
 
       await mediaNodeUpdater.updateContextId();
 
-      expect(commands.updateMediaNodeAttrs).toBeCalledTimes(1);
-      expect(commands.updateMediaNodeAttrs).toBeCalledWith(
+      expect(commands.updateAllMediaNodesAttrs).toBeCalledTimes(1);
+      expect(commands.updateAllMediaNodesAttrs).toBeCalledWith(
         'source-file-id',
         {
           __contextId: 'object-id',
@@ -122,8 +125,8 @@ describe('MediaNodeUpdater', () => {
           collectionName: 'source-collection',
         },
       );
-      expect(commands.updateMediaNodeAttrs).toBeCalledTimes(1);
-      expect(commands.updateMediaNodeAttrs).toBeCalledWith(
+      expect(commands.updateAllMediaNodesAttrs).toBeCalledTimes(1);
+      expect(commands.updateAllMediaNodesAttrs).toBeCalledWith(
         'source-file-id',
         {
           __fileName: 'some-file',
@@ -167,8 +170,8 @@ describe('MediaNodeUpdater', () => {
           collectionName: 'source-collection',
         },
       );
-      expect(commands.updateMediaNodeAttrs).toBeCalledTimes(1);
-      expect(commands.updateMediaNodeAttrs).toBeCalledWith(
+      expect(commands.updateAllMediaNodesAttrs).toBeCalledTimes(1);
+      expect(commands.updateAllMediaNodesAttrs).toBeCalledWith(
         'source-file-id',
         {
           __fileName: 'some-file',

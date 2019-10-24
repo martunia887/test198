@@ -1,5 +1,39 @@
 # @atlaskit/reactions
 
+## 17.2.5
+
+- Updated dependencies [42a92cad4e](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/42a92cad4e):
+  - @atlaskit/emoji@62.5.5
+  - @atlaskit/util-data-test@13.0.1
+  - @atlaskit/util-service-support@5.0.0
+
+## 17.2.4
+
+- Updated dependencies [bd94b1d552](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/bd94b1d552):
+- Updated dependencies [ae4f336a3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ae4f336a3a):
+  - @atlaskit/emoji@62.5.4
+  - @atlaskit/util-data-test@13.0.0
+  - @atlaskit/i18n-tools@0.6.0
+  - @atlaskit/util-service-support@4.1.0
+  - @atlaskit/editor-test-helpers@10.1.2
+  - @atlaskit/analytics-namespaced-context@4.1.10
+
+## 17.2.3
+
+### Patch Changes
+
+- [patch][35d2229b2a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/35d2229b2a):
+
+  Adding missing license to packages and update to Copyright 2019 Atlassian Pty Ltd.
+
+## 17.2.2
+
+### Patch Changes
+
+- [patch][a2d0043716](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/a2d0043716):
+
+  Updated version of analytics-next to fix potential incompatibilities with TS 3.6
+
 ## 17.2.1
 
 - Updated dependencies [80adfefba2](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/80adfefba2):

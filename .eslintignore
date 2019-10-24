@@ -5,6 +5,7 @@ node_modules
 coverage
 dist
 flow-typed
+.yarn
 
 # the docs template
 docs/templates/**
@@ -29,6 +30,10 @@ packages/bitbucket/codemod-util-shared-styles-to-theme/__fixtures__
 packages/core/icon-priority/glyph/**
 packages/core/icon-priority/cjs/**
 packages/core/icon-priority/utils/**
+
+# adf-utils manual entry-points
+packages/editor/adf-utils/*.ts
+packages/editor/adf-utils/*.js
 
 # flow tests
 packages/**/__tests__/flow/
