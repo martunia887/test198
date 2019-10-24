@@ -40,7 +40,7 @@ class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
             label={message ? formatMessage(message) : label}
             onClick={onClick}
             isSelected={value === selectedColor}
-            checkMarkColor={getContrastColor(value, [colors.N0, colors.N800])}
+            checkMarkColor={getContrastColor(value, [colors.N0, colors.N500])}
           />
         ))}
       </ColorPaletteWrapper>
