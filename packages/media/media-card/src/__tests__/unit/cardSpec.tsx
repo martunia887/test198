@@ -1,5 +1,6 @@
 jest.mock('../../utils/getDataURIFromFileState');
 jest.mock('../../utils/getElementDimension');
+jest.mock('../../utils/resizeObserver');
 import { Observable, ReplaySubject } from 'rxjs';
 import * as React from 'react';
 import { shallow, mount, ShallowWrapper } from 'enzyme';
@@ -43,6 +44,29 @@ import {
 } from '../../utils/analytics';
 import { getElementDimensions } from '../../utils/getElementDimension';
 import { Dimensions } from '../../utils/getDataURIDimension';
+import { createResizeObserver } from '../../utils/resizeObserver';
+
+class ResizeObserverMock {
+  constructor(private callback: Function) {}
+  resize(newDimensions: Dimensions, wait: number = 500) {
+    setTimeout(this.callback(newDimensions), wait);
+  }
+  disconnect() {}
+}
+const mockResizeObserver = (isSupported: boolean = false) => {
+  (createResizeObserver as jest.Mock).mockImplementation(
+    (_component: React.Component, callback: Function) =>
+      isSupported ? new ResizeObserverMock(callback) : undefined,
+  );
+};
+const supportResizeObserver = () => {
+  mockResizeObserver(true);
+};
+const unSupportResizeObserver = () => {
+  mockResizeObserver(false);
+};
+// Allows resizing in any test, only with pixel card dimensions
+unSupportResizeObserver();
 
 describe('Card', () => {
   let identifier: Identifier;
@@ -135,117 +159,7 @@ describe('Card', () => {
     expect(component.find(CardView)).toHaveLength(1);
   });
 
-  it('should refetch the image when width changes to a higher value', async () => {
-    const initialDimensions: CardDimensions = {
-      width: 100,
-      height: 200,
-    };
-    const newDimensions: CardDimensions = {
-      ...initialDimensions,
-      width: 1000,
-    };
-    const { component, mediaClient } = setup(
-      undefined,
-      {
-        identifier,
-        dimensions: initialDimensions,
-      },
-      emptyPreview,
-    );
-    component.setProps({ mediaClient, dimensions: newDimensions });
-
-    await nextTick();
-    expect(mediaClient.getImage).toHaveBeenCalledTimes(2);
-    expect(mediaClient.getImage).toHaveBeenLastCalledWith('some-random-id', {
-      allowAnimated: true,
-      collection: 'some-collection-name',
-      mode: 'crop',
-      width: 1000,
-      height: 200,
-    });
-  });
-
-  it('should refetch the image when height changes to a higher value', async () => {
-    const initialDimensions: CardDimensions = {
-      width: 100,
-      height: 200,
-    };
-    const newDimensions: CardDimensions = {
-      ...initialDimensions,
-      height: 2000,
-    };
-    const { component, mediaClient } = setup(
-      undefined,
-      {
-        identifier,
-        dimensions: initialDimensions,
-      },
-      emptyPreview,
-    );
-    component.setProps({ mediaClient, dimensions: newDimensions });
-
-    await nextTick();
-    expect(mediaClient.getImage).toHaveBeenCalledTimes(2);
-    expect(mediaClient.getImage).toHaveBeenLastCalledWith('some-random-id', {
-      allowAnimated: true,
-      collection: 'some-collection-name',
-      mode: 'crop',
-      width: 100,
-      height: 2000,
-    });
-  });
-
-  it('should not refetch the image when width changes to a smaller value', async () => {
-    const initialDimensions: CardDimensions = {
-      width: 100,
-      height: 200,
-    };
-    const newDimensions: CardDimensions = {
-      ...initialDimensions,
-      width: 10,
-    };
-    const mediaClient = createMediaClientWithGetFile({
-      ...defaultFileState,
-      preview: undefined,
-    });
-    const { component } = setup(
-      mediaClient,
-      {
-        identifier,
-        dimensions: initialDimensions,
-      },
-      emptyPreview,
-    );
-    component.setProps({ mediaClient, dimensions: newDimensions });
-
-    await nextTick();
-    expect(mediaClient.getImage).toHaveBeenCalledTimes(1);
-  });
-
-  it('should not refetch the image when height changes to a smaller value', async () => {
-    const initialDimensions: CardDimensions = {
-      width: 100,
-      height: 200,
-    };
-    const newDimensions: CardDimensions = {
-      ...initialDimensions,
-      height: 20,
-    };
-    const { component, mediaClient } = setup(
-      undefined,
-      {
-        identifier,
-        dimensions: initialDimensions,
-      },
-      emptyPreview,
-    );
-    component.setProps({ mediaClient, dimensions: newDimensions });
-
-    await nextTick();
-    expect(mediaClient.getImage).toHaveBeenCalledTimes(1);
-  });
-
-  it('should pass resolved width down to CardView', async () => {
+  it(`should pass component's width down to CardView`, async () => {
     (getElementDimensions as jest.Mock).mockReset();
     (getElementDimensions as jest.Mock).mockReturnValue({
       width: 500,
@@ -269,6 +183,7 @@ describe('Card', () => {
 
     await nextTick();
 
+    // Only percentage based dimensions should call getElementDimensions
     expect(getElementDimensions).toHaveBeenCalledTimes(1);
 
     const cardViewElementWidth1 = component1.find(CardView).props()
@@ -284,23 +199,30 @@ describe('Card', () => {
     expect(cardViewElementWidth3).toEqual(450);
   });
 
-  describe('Percentage dimensions: Resize and Fetch', () => {
+  describe('Resize and Refetch', () => {
     const setupResize = (
-      dimensions: CardDimensions,
-      resolvedDimensions: Dimensions,
+      initialCardDimensions: CardDimensions,
+      initialComponentDimensions: Dimensions,
     ) => {
-      (getElementDimensions as jest.Mock).mockReturnValue(resolvedDimensions);
-      const cardProps = {
+      (getElementDimensions as jest.Mock).mockReturnValue(
+        initialComponentDimensions,
+      );
+      const initialCardProps = {
         identifier,
-        dimensions,
+        dimensions: initialCardDimensions,
       };
       const { component, mediaClient } = setup(
         undefined,
-        cardProps,
+        initialCardProps,
         emptyPreview,
       );
-      return { component, mediaClient, cardProps };
+      return {
+        component,
+        mediaClient,
+        cardProps: initialCardProps,
+      };
     };
+
     const resize = async (
       {
         component,
@@ -311,90 +233,357 @@ describe('Card', () => {
         mediaClient: MediaClient;
         cardProps: Partial<CardProps>;
       },
-      newResolvedDimensions: Dimensions,
+      newCardDimensions: CardDimensions,
+      newComponentDimensions: Dimensions,
+      useResizeObserver: boolean = false,
     ) => {
       (getElementDimensions as jest.Mock).mockReturnValue(
-        newResolvedDimensions,
+        newComponentDimensions,
       );
       // We pass the same properties to simulate a resize
-      component.setProps({ mediaClient, ...(cardProps as CardProps) });
+      component.setProps({
+        mediaClient,
+        ...(cardProps as CardProps),
+        dimensions: newCardDimensions,
+      });
+      // And will trigger from resize observer if required too
+      if (useResizeObserver) {
+        const resizeObserver = (component.instance() as any).resizeObserver;
+        resizeObserver &&
+          (resizeObserver as ResizeObserverMock).resize(newComponentDimensions);
+      }
       await nextTick();
     };
 
-    it(`should refetch the image when width is a percentage and the container's width increases`, async () => {
-      const containerDimensions = { width: 500, height: 200 };
-      const newContainerDimensions = { width: 600, height: 200 };
+    const runTests = (useResizeObserver: boolean) => {
+      // Test all supported combinations
+      // width   height   resize
+      //  px       px     + width
+      //  px       px     - width
+      //  px       px     + height
+      //  px       px     - height
+      //  px        %     + width
+      //  px        %     - width
+      //  px        %     + height
+      //  px        %     - height
+      //   %       px     + width
+      //   %       px     - width
+      //   %       px     + height
+      //   %       px     - height
+      //   %        %     + width
+      //   %        %     - width
+      //   %        %     + height
+      //   %        %     - height
 
-      const fullPercent = setupResize(
-        { width: '100%', height: '100%' },
-        containerDimensions,
-      );
-      await resize(fullPercent, newContainerDimensions);
-      expect(fullPercent.mediaClient.getImage).toHaveBeenCalledTimes(2);
+      // px px w+
+      it('should refetch the image when width changes to a higher value', async () => {
+        const initialCardDimensions: Dimensions = {
+          width: 100,
+          height: 200,
+        };
 
-      const singlePercent = setupResize(
-        { width: '100%', height: '50px' },
-        containerDimensions,
-      );
-      await resize(singlePercent, newContainerDimensions);
-      expect(singlePercent.mediaClient.getImage).toHaveBeenCalledTimes(2);
+        const newDimensions: Dimensions = {
+          ...initialCardDimensions,
+          width: 1000,
+        };
+
+        const test = setupResize(initialCardDimensions, initialCardDimensions); //
+        await resize(test, newDimensions, newDimensions, useResizeObserver);
+
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(2);
+        expect(test.mediaClient.getImage).toHaveBeenLastCalledWith(
+          'some-random-id',
+          {
+            allowAnimated: true,
+            collection: 'some-collection-name',
+            mode: 'crop',
+            width: 1000,
+            height: 200,
+          },
+        );
+      });
+
+      // px px w-
+      it('should not refetch the image when width changes to a smaller value', async () => {
+        const initialDimensions: Dimensions = {
+          width: 100,
+          height: 200,
+        };
+        const newDimensions: Dimensions = {
+          ...initialDimensions,
+          width: 10,
+        };
+        const test = setupResize(initialDimensions, initialDimensions);
+        await resize(test, newDimensions, newDimensions, useResizeObserver);
+
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(1);
+      });
+
+      // px px h+
+      it('should refetch the image when height changes to a higher value', async () => {
+        const initialDimensions: Dimensions = {
+          width: 100,
+          height: 200,
+        };
+        const newDimensions: Dimensions = {
+          ...initialDimensions,
+          height: 2000,
+        };
+        const test = setupResize(initialDimensions, initialDimensions);
+        await resize(test, newDimensions, newDimensions, useResizeObserver);
+
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(2);
+        expect(test.mediaClient.getImage).toHaveBeenLastCalledWith(
+          'some-random-id',
+          {
+            allowAnimated: true,
+            collection: 'some-collection-name',
+            mode: 'crop',
+            width: 100,
+            height: 2000,
+          },
+        );
+      });
+
+      // px px h-
+      it('should not refetch the image when height changes to a smaller value', async () => {
+        const initialDimensions: Dimensions = {
+          width: 100,
+          height: 200,
+        };
+        const newDimensions: Dimensions = {
+          ...initialDimensions,
+          height: 20,
+        };
+        const test = setupResize(initialDimensions, initialDimensions);
+        await resize(test, newDimensions, newDimensions, useResizeObserver);
+
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(1);
+      });
+
+      // px % w+
+      it(`should refetch the image when only height is a percentage and the component's width increases`, async () => {
+        const initialCardDimensions = { width: '500px', height: '100%' };
+        const newCardDimensions = { width: '600px', height: '100%' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 600, height: 200 };
+
+        const test = setupResize(
+          initialCardDimensions,
+          initialComponentDimensions,
+        );
+        await resize(
+          test,
+          newCardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(2);
+      });
+
+      // px % w-
+      it(`should not refetch the image when only height is a percentage and the component's width decreases`, async () => {
+        const initialCardDimensions = { width: '500px', height: '100%' };
+        const newCardDimensions = { width: '400px', height: '100%' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 400, height: 200 };
+
+        const test = setupResize(
+          initialCardDimensions,
+          initialComponentDimensions,
+        );
+        await resize(
+          test,
+          newCardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(1);
+      });
+
+      // px % h+
+      it(`should refetch the image when only height is a percentage and the component's height increases`, async () => {
+        const cardDimensions = { width: '500px', height: '100%' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 500, height: 300 };
+
+        const test = setupResize(cardDimensions, initialComponentDimensions);
+        await resize(
+          test,
+          cardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(2);
+      });
+
+      // px % h-
+      it(`should not refetch the image when only height is a percentage and the component's height decreases`, async () => {
+        const cardDimensions = { width: '500px', height: '100%' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 500, height: 100 };
+
+        const test = setupResize(cardDimensions, initialComponentDimensions);
+        await resize(
+          test,
+          cardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(1);
+      });
+
+      // % px w+
+      it(`should refetch the image when only width is a percentage and the component's width increases`, async () => {
+        const cardDimensions = { width: '100%', height: '200px' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 600, height: 200 };
+
+        const test = setupResize(cardDimensions, initialComponentDimensions);
+        await resize(
+          test,
+          cardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(2);
+      });
+
+      // % px w-
+      it(`should not refetch the image when only width is a percentage and the component's width decreases`, async () => {
+        const cardDimensions = { width: '100%', height: '200px' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 400, height: 200 };
+
+        const test = setupResize(cardDimensions, initialComponentDimensions);
+        await resize(
+          test,
+          cardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(1);
+      });
+
+      // % px h+
+      it(`should refetch the image when only width is a percentage and the component's height increases`, async () => {
+        const initialCardDimensions = { width: '100%', height: '200px' };
+        const newCardDimensions = { width: '100%', height: '300px' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 500, height: 300 };
+
+        const test = setupResize(
+          initialCardDimensions,
+          initialComponentDimensions,
+        );
+        await resize(
+          test,
+          newCardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(2);
+      });
+
+      // % px h-
+      it(`should not refetch the image when only width is a percentage and the component's height decreases`, async () => {
+        const initialCardDimensions = { width: '100%', height: '200px' };
+        const newCardDimensions = { width: '100%', height: '100px' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 500, height: 100 };
+
+        const test = setupResize(
+          initialCardDimensions,
+          initialComponentDimensions,
+        );
+        await resize(
+          test,
+          newCardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(1);
+      });
+
+      // % % w+
+      it(`should refetch the image when both dimensions are percentage and the component's width increases`, async () => {
+        const cardDimensions = { width: '100%', height: '100%' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 600, height: 200 };
+
+        const test = setupResize(cardDimensions, initialComponentDimensions);
+        await resize(
+          test,
+          cardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(2);
+      });
+
+      // % % w-
+      it(`should not refetch the image when both dimensions are percentage and the component's width decreases`, async () => {
+        const cardDimensions = { width: '100%', height: '100%' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 400, height: 200 };
+
+        const test = setupResize(cardDimensions, initialComponentDimensions);
+        await resize(
+          test,
+          cardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(1);
+      });
+
+      // % % h+
+      it(`should refetch the image when both dimensions are percentage and the component's height increases`, async () => {
+        const cardDimensions = { width: '100%', height: '100%' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 500, height: 300 };
+
+        const test = setupResize(cardDimensions, initialComponentDimensions);
+        await resize(
+          test,
+          cardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(2);
+      });
+      // % % h-
+      it(`should not refetch the image when both dimensions are percentage and the component's height decreases`, async () => {
+        const cardDimensions = { width: '100%', height: '100%' };
+        const initialComponentDimensions = { width: 500, height: 200 };
+        const newComponentDimensions = { width: 500, height: 100 };
+
+        const test = setupResize(cardDimensions, initialComponentDimensions);
+        await resize(
+          test,
+          cardDimensions,
+          newComponentDimensions,
+          useResizeObserver,
+        );
+        expect(test.mediaClient.getImage).toHaveBeenCalledTimes(1);
+      });
+    };
+
+    describe('ResizeObserver unsupported', () => {
+      beforeAll(() => {
+        unSupportResizeObserver();
+      });
+      runTests(false);
     });
 
-    it(`should not refetch the image when width is a percentage and the container's width decreases`, async () => {
-      const containerDimensions = { width: 500, height: 200 };
-      const newContainerDimensions = { width: 400, height: 200 };
-
-      const fullPercent = setupResize(
-        { width: '100%', height: '100%' },
-        containerDimensions,
-      );
-      await resize(fullPercent, newContainerDimensions);
-      expect(fullPercent.mediaClient.getImage).toHaveBeenCalledTimes(1);
-
-      const singlePercent = setupResize(
-        { width: '100%', height: '50px' },
-        containerDimensions,
-      );
-      await resize(singlePercent, newContainerDimensions);
-      expect(singlePercent.mediaClient.getImage).toHaveBeenCalledTimes(1);
-    });
-
-    it(`should refetch the image when height is a percentage and the container's height increases`, async () => {
-      const containerDimensions = { width: 500, height: 200 };
-      const newContainerDimensions = { width: 500, height: 300 };
-
-      const fullPercent = setupResize(
-        { width: '100%', height: '100%' },
-        containerDimensions,
-      );
-      await resize(fullPercent, newContainerDimensions);
-      expect(fullPercent.mediaClient.getImage).toHaveBeenCalledTimes(2);
-
-      const singlePercent = setupResize(
-        { width: '50px', height: '100%' },
-        containerDimensions,
-      );
-      await resize(singlePercent, newContainerDimensions);
-      expect(singlePercent.mediaClient.getImage).toHaveBeenCalledTimes(2);
-    });
-
-    it(`should not refetch the image when height is a percentage and the container's height decreases`, async () => {
-      const containerDimensions = { width: 500, height: 200 };
-      const newContainerDimensions = { width: 500, height: 100 };
-
-      const fullPercent = setupResize(
-        { width: '100%', height: '100%' },
-        containerDimensions,
-      );
-      await resize(fullPercent, newContainerDimensions);
-      expect(fullPercent.mediaClient.getImage).toHaveBeenCalledTimes(1);
-
-      const singlePercent = setupResize(
-        { width: '50px', height: '100%' },
-        containerDimensions,
-      );
-      await resize(singlePercent, newContainerDimensions);
-      expect(singlePercent.mediaClient.getImage).toHaveBeenCalledTimes(1);
+    describe('ResizeObserver supported', () => {
+      beforeAll(() => {
+        supportResizeObserver();
+      });
+      afterAll(() => {
+        unSupportResizeObserver();
+      });
+      runTests(true);
     });
   });
 
@@ -599,6 +788,7 @@ describe('Card', () => {
       progress: 0.2,
       previewOrientation: 6,
       isPlayingFile: false,
+      componentWidth: 156,
       metadata: {
         id: '123',
         mediaType: 'image',
@@ -625,6 +815,7 @@ describe('Card', () => {
       isCardVisible: true,
       isPlayingFile: false,
       previewOrientation: 6,
+      componentWidth: 156,
       metadata: {
         id: '123',
         mediaType: 'image',
@@ -652,6 +843,7 @@ describe('Card', () => {
       isCardVisible: true,
       isPlayingFile: false,
       previewOrientation: 6,
+      componentWidth: 156,
       metadata: {
         id: '123',
         mediaType: 'image',

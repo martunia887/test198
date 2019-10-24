@@ -82,6 +82,7 @@
     "./typings/css-color-names/index.d.ts",
     "./typings/bolt/index.d.ts",
     "./typings/concurrently/index.d.ts",
-    "./typings/pubnub.d.ts"
+    "./typings/pubnub.d.ts",
+    "./typings/ResizeObserver.d.ts"
   ]
 }

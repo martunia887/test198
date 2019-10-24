@@ -104,6 +104,7 @@ export interface CardState {
   dataURI?: string;
   progress?: number;
   error?: Error;
+  componentWidth?: number;
 }
 
 export { CardLoading } from './utils/lightCards/cardLoading';

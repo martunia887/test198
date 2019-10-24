@@ -63,6 +63,10 @@ import {
   createAndFireCustomMediaEvent,
   getFileAttributes,
 } from '../../utils/analytics';
+import { createResizeObserver } from '../../utils/resizeObserver';
+import debounce from 'lodash.debounce';
+
+const DELAY_SUBSCRIPTION = 1000; // ms
 
 export type CardWithAnalyticsEventsProps = CardProps & WithAnalyticsEventsProps;
 export class CardBase extends Component<
@@ -73,7 +77,16 @@ export class CardBase extends Component<
   private lastAction?: AnalyticsLoadingAction = undefined;
   private lastErrorState?: AnalyticsErrorStateAttributes = {};
   private resolvedId: string = '';
-  public componentDimensions: Dimensions = defaultImageCardDimensions;
+  // componentDimensions is calculated out of the props.
+  // It needs to be stored to allow its use through the component
+  // and also avoid its recalculation because it can internally perform expensive DOM operations.
+  private componentDimensions: Dimensions = defaultImageCardDimensions;
+  private resizeObserver?: ResizeObserver;
+  private debouncedSubscription?: Function;
+  private debouncedUpdateComponent?: Function;
+  private debouncedOnComponentResize?: Function;
+  // nextDataURI is used to refetch avoiding to show the placeholder in between requests
+  private nextDataURI?: string;
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
 
   subscription?: Subscription;
@@ -89,6 +102,7 @@ export class CardBase extends Component<
     isCardVisible: !this.props.isLazy,
     previewOrientation: 1,
     isPlayingFile: false,
+    componentWidth: defaultImageCardDimensions.width,
   };
 
   // we add a listener for each of the cards on the page
@@ -130,6 +144,7 @@ export class CardBase extends Component<
   componentDidMount() {
     const { identifier, mediaClient, dimensions, appearance } = this.props;
     this.hasBeenMounted = true;
+    this.resizeObserver = createResizeObserver(this, this.onComponentResize);
     // The underlying opperation to find dataURIDimensions is expensive.
     // Therefore, it needs to be called only once and be stored for further reference.
     // Has to be set before subscribe
@@ -138,11 +153,29 @@ export class CardBase extends Component<
       dimensions,
       appearance,
     });
+
+    this.setState({
+      componentWidth: this.componentDimensions.width,
+    });
+
     this.subscribe(identifier, mediaClient);
     document.addEventListener('copy', this.onCopyListener);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: CardProps) {
+    if (!this.debouncedUpdateComponent) {
+      this.debouncedUpdateComponent = debounce(
+        this.updateComponent,
+        DELAY_SUBSCRIPTION,
+        { leading: true, trailing: true },
+      );
+    }
+    this.debouncedUpdateComponent && this.debouncedUpdateComponent(nextProps);
+  }
+
+  // If ResizeObserver is not supported, we need to debounce this function to avoid
+  // expensive DOM opperations by calling getComponentDimensions on every single update
+  updateComponent(nextProps: CardProps) {
     const {
       mediaClient: currentMediaClient,
       identifier: currentIdentifier,
@@ -154,26 +187,65 @@ export class CardBase extends Component<
       appearance: nextAppearance,
     } = nextProps;
 
-    const newResolvedDimensions = getComponentDimensions({
-      component: this,
-      dimensions: nextDimensions,
-      appearance: nextAppearance,
-    });
+    // A resize in the parent component might trigger a component update.
+    // If ResizeObserver is supported, we don't need to calculate the dimensions here.
+    // This way, newComponentDimensions take the current componentDimensions to prevent a
+    // resubscription by resize.
+    let newComponentDimensions = this.componentDimensions;
+    if (!this.resizeObserver) {
+      newComponentDimensions = getComponentDimensions({
+        component: this,
+        dimensions: nextDimensions,
+        appearance: nextAppearance,
+      });
+
+      this.setState({
+        componentWidth: this.componentDimensions.width,
+      });
+    }
+
     if (
       currentMediaClient !== nextMediaClient ||
       isDifferentIdentifier(currentIdentifier, nextIdenfifier) ||
-      isBigger(this.componentDimensions, newResolvedDimensions)
+      isBigger(this.componentDimensions, newComponentDimensions)
     ) {
-      this.componentDimensions = newResolvedDimensions; // Has to be set before subscribe
+      this.componentDimensions = newComponentDimensions; // Has to be set before subscribe
       this.subscribe(nextIdenfifier, nextMediaClient);
     }
   }
+
+  onComponentResize = (newDimensions: Dimensions) => {
+    if (!this.debouncedOnComponentResize) {
+      this.debouncedOnComponentResize = debounce(
+        this.doOnComponentResize,
+        DELAY_SUBSCRIPTION,
+        { leading: true, trailing: true },
+      );
+    }
+    this.debouncedOnComponentResize &&
+      this.debouncedOnComponentResize(newDimensions);
+  };
+
+  doOnComponentResize = (newDimensions: Dimensions) => {
+    const { mediaClient, identifier } = this.props;
+    if (isBigger(this.componentDimensions, newDimensions)) {
+      this.componentDimensions = newDimensions; // Has to be set before subscribe
+      this.subscribe(identifier, mediaClient);
+    }
+    this.setState({
+      componentWidth: newDimensions.width,
+    });
+  };
 
   componentWillUnmount() {
     this.hasBeenMounted = false;
     this.unsubscribe();
     this.releaseDataURI();
     document.removeEventListener('copy', this.onCopyListener);
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = undefined;
+    }
   }
 
   releaseDataURI = () => {
@@ -198,6 +270,18 @@ export class CardBase extends Component<
   };
 
   subscribe(identifier: Identifier, mediaClient: MediaClient) {
+    if (!this.debouncedSubscription) {
+      this.debouncedSubscription = debounce(
+        this.doSubscribe,
+        DELAY_SUBSCRIPTION,
+        { leading: true, trailing: true },
+      );
+    }
+    this.debouncedSubscription &&
+      this.debouncedSubscription(identifier, mediaClient);
+  }
+
+  doSubscribe(identifier: Identifier, mediaClient: MediaClient) {
     const { isCardVisible } = this.state;
 
     if (!isCardVisible) {
@@ -260,23 +344,18 @@ export class CardBase extends Component<
       .getFileState(this.resolvedId, { collectionName, occurrenceKey })
       .subscribe({
         next: async fileState => {
-          let {
-            status,
-            progress,
-            dataURI,
-            previewOrientation = 1,
-          } = this.state;
+          let { status, progress, previewOrientation = 1 } = this.state;
           const { contextId, alt } = this.props;
           const metadata = extendMetadata(fileState, this.state.metadata);
 
-          if (!dataURI) {
+          if (!this.nextDataURI) {
             const { src, orientation } = await getDataURIFromFileState(
               fileState,
             );
             previewOrientation = orientation || 1;
-            dataURI = src;
-            if (dataURI && contextId) {
-              dataURI = addFileAttrsToUrl(dataURI, {
+            this.nextDataURI = src;
+            if (this.nextDataURI && contextId) {
+              this.nextDataURI = addFileAttrsToUrl(this.nextDataURI, {
                 id: this.resolvedId,
                 collection: collectionName,
                 contextId,
@@ -289,7 +368,7 @@ export class CardBase extends Component<
           }
 
           const shouldFetchRemotePreview =
-            !dataURI &&
+            !this.nextDataURI &&
             isImageRepresentationReady(fileState) &&
             metadata.mediaType &&
             isPreviewableType(metadata.mediaType);
@@ -306,9 +385,9 @@ export class CardBase extends Component<
                 height,
                 allowAnimated: true,
               });
-              dataURI = URL.createObjectURL(blob);
+              this.nextDataURI = URL.createObjectURL(blob);
               if (contextId) {
-                dataURI = addFileAttrsToUrl(dataURI, {
+                this.nextDataURI = addFileAttrsToUrl(this.nextDataURI, {
                   id: this.resolvedId,
                   collection: collectionName,
                   contextId,
@@ -326,9 +405,10 @@ export class CardBase extends Component<
             }
           }
 
-          status = getCardStatusFromFileState(fileState, dataURI);
+          status = getCardStatusFromFileState(fileState, this.nextDataURI);
           progress =
-            getCardProgressFromFileState(fileState, dataURI) || progress;
+            getCardProgressFromFileState(fileState, this.nextDataURI) ||
+            progress;
 
           this.fireLoadingStatusAnalyticsEvent({
             resolvedId: this.resolvedId,
@@ -341,7 +421,7 @@ export class CardBase extends Component<
             metadata,
             status,
             progress,
-            dataURI,
+            dataURI: this.nextDataURI,
             previewOrientation,
           });
         },
@@ -423,10 +503,7 @@ export class CardBase extends Component<
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-
-    if (this.hasBeenMounted) {
-      this.setState({ dataURI: undefined });
-    }
+    this.nextDataURI = undefined;
     this.lastAction = undefined;
     this.lastErrorState = {};
   };
@@ -591,7 +668,13 @@ export class CardBase extends Component<
       disableOverlay,
       alt,
     } = this.props;
-    const { progress, metadata, dataURI, previewOrientation } = this.state;
+    const {
+      progress,
+      metadata,
+      dataURI,
+      previewOrientation,
+      componentWidth,
+    } = this.state;
     const {
       onRetry,
       onCardViewClick,
@@ -610,7 +693,7 @@ export class CardBase extends Component<
         appearance={appearance}
         resizeMode={resizeMode}
         dimensions={dimensions}
-        elementWidth={this.componentDimensions.width}
+        elementWidth={componentWidth}
         actions={actions}
         selectable={selectable}
         selected={selected}

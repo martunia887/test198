@@ -33,6 +33,7 @@
     "@atlaskit/type-helpers": "^4.2.2",
     "@babel/runtime": "^7.0.0",
     "classnames": "^2.2.5",
+    "lodash.debounce": "^4.0.8",
     "react-lazily-render": "^1.2.0",
     "tslib": "^1.9.3",
     "uuid": "^3.1.0",
