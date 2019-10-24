@@ -10,6 +10,7 @@ const docs = [
 
 module.exports = () => ({
   siteName: 'Atlaskit',
-  packages: ['./packages/core/*'],
+  packages: ['./packages/core/button', './packages/core/radio'],
   docs,
+  babelConfig: './babel.config.js',
 });

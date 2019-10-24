@@ -2,10 +2,9 @@
 
 module.exports = {
   plugins: [
-    'babel-preset-gatsby',
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-proposal-object-rest-spread',
-    '@babel/syntax-dynamic-import',
+    ['@babel/plugin-proposal-class-properties', {}, 'atlaskit'],
+    ['@babel/plugin-proposal-object-rest-spread', {}, 'atlaskit'],
+    ['@babel/syntax-dynamic-import', {}, 'atlaskit'],
   ],
   presets: ['@babel/react', '@babel/flow'],
   overrides: [
@@ -25,9 +24,10 @@ module.exports = {
         './packages/core/select',
         './packages/core/textfield',
       ],
-      presets: ['@emotion/babel-preset-css-prop'],
+      // presets: ['@emotion/babel-preset-css-prop'],
     },
   ],
+
   env: {
     'production:cjs': {
       plugins: [
