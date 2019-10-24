@@ -788,7 +788,7 @@ describe('Card', () => {
       progress: 0.2,
       previewOrientation: 6,
       isPlayingFile: false,
-      componentWidth: 156,
+      elementWidth: 156,
       metadata: {
         id: '123',
         mediaType: 'image',
@@ -815,7 +815,7 @@ describe('Card', () => {
       isCardVisible: true,
       isPlayingFile: false,
       previewOrientation: 6,
-      componentWidth: 156,
+      elementWidth: 156,
       metadata: {
         id: '123',
         mediaType: 'image',
@@ -843,7 +843,7 @@ describe('Card', () => {
       isCardVisible: true,
       isPlayingFile: false,
       previewOrientation: 6,
-      componentWidth: 156,
+      elementWidth: 156,
       metadata: {
         id: '123',
         mediaType: 'image',

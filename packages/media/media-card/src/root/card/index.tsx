@@ -102,7 +102,7 @@ export class CardBase extends Component<
     isCardVisible: !this.props.isLazy,
     previewOrientation: 1,
     isPlayingFile: false,
-    componentWidth: defaultImageCardDimensions.width,
+    elementWidth: defaultImageCardDimensions.width,
   };
 
   // we add a listener for each of the cards on the page
@@ -155,7 +155,7 @@ export class CardBase extends Component<
     });
 
     this.setState({
-      componentWidth: this.componentDimensions.width,
+      elementWidth: this.componentDimensions.width,
     });
 
     this.subscribe(identifier, mediaClient);
@@ -200,7 +200,7 @@ export class CardBase extends Component<
       });
 
       this.setState({
-        componentWidth: this.componentDimensions.width,
+        elementWidth: this.componentDimensions.width,
       });
     }
 
@@ -233,7 +233,7 @@ export class CardBase extends Component<
       this.subscribe(identifier, mediaClient);
     }
     this.setState({
-      componentWidth: newDimensions.width,
+      elementWidth: newDimensions.width,
     });
   };
 
@@ -673,7 +673,7 @@ export class CardBase extends Component<
       metadata,
       dataURI,
       previewOrientation,
-      componentWidth,
+      elementWidth,
     } = this.state;
     const {
       onRetry,
@@ -693,7 +693,7 @@ export class CardBase extends Component<
         appearance={appearance}
         resizeMode={resizeMode}
         dimensions={dimensions}
-        elementWidth={componentWidth}
+        elementWidth={elementWidth}
         actions={actions}
         selectable={selectable}
         selected={selected}
