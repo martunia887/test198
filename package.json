@@ -270,7 +270,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs2": "^7.6.2",
-    "@brisk-docs/website": "file:/Users/bconolly/Development/brisk-docs/packages/website/with-locked-babel-plugin-3.tgz",
+    "@brisk-docs/website": "file://Users/clee/Thinkmill/projects/brisk-docs/packages/website/gibberish-nonsensical-name-2.tgz",
     "@emotion/core": "^10.0.9",
     "@emotion/css": "^10.0.14",
     "@emotion/styled": "^10.0.7",
