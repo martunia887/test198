@@ -75,7 +75,6 @@
     "@types/prosemirror-view": "^1.9.0",
     "@types/puppeteer": "^1.12.1",
     "@types/react-loadable": "^5.4.1",
-    "chromatism": "^2.6.0",
     "classnames": "^2.2.5",
     "eventemitter2": "^4.1.0",
     "linkify-it": "^2.0.3",
