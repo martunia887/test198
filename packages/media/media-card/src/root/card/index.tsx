@@ -82,9 +82,6 @@ export class CardBase extends Component<
   // and also avoid its recalculation because it can internally perform expensive DOM operations.
   private componentDimensions: Dimensions = defaultImageCardDimensions;
   private resizeObserver?: ResizeObserver;
-  private debouncedSubscription?: Function;
-  private debouncedUpdateComponent?: Function;
-  private debouncedOnComponentResize?: Function;
   // nextDataURI is used to refetch avoiding to show the placeholder in between requests
   private nextDataURI?: string;
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
@@ -162,80 +159,65 @@ export class CardBase extends Component<
     document.addEventListener('copy', this.onCopyListener);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: CardProps) {
-    if (!this.debouncedUpdateComponent) {
-      this.debouncedUpdateComponent = debounce(
-        this.updateComponent,
-        DELAY_SUBSCRIPTION,
-        { leading: true, trailing: true },
-      );
-    }
-    this.debouncedUpdateComponent && this.debouncedUpdateComponent(nextProps);
-  }
-
   // If ResizeObserver is not supported, we need to debounce this function to avoid
   // expensive DOM opperations by calling getComponentDimensions on every single update
-  updateComponent(nextProps: CardProps) {
-    const {
-      mediaClient: currentMediaClient,
-      identifier: currentIdentifier,
-    } = this.props;
-    const {
-      mediaClient: nextMediaClient,
-      identifier: nextIdenfifier,
-      dimensions: nextDimensions,
-      appearance: nextAppearance,
-    } = nextProps;
-
-    // A resize in the parent component might trigger a component update.
-    // If ResizeObserver is supported, we don't need to calculate the dimensions here.
-    // This way, newComponentDimensions take the current componentDimensions to prevent a
-    // resubscription by resize.
-    let newComponentDimensions = this.componentDimensions;
-    if (!this.resizeObserver) {
-      newComponentDimensions = getComponentDimensions({
-        component: this,
+  UNSAFE_componentWillReceiveProps = debounce(
+    (nextProps: CardProps) => {
+      const {
+        mediaClient: currentMediaClient,
+        identifier: currentIdentifier,
+      } = this.props;
+      const {
+        mediaClient: nextMediaClient,
+        identifier: nextIdenfifier,
         dimensions: nextDimensions,
         appearance: nextAppearance,
-      });
+      } = nextProps;
 
+      // A resize in the parent component might trigger a component update.
+      // If ResizeObserver is supported, we don't need to calculate the dimensions here.
+      // This way, newComponentDimensions take the current componentDimensions to prevent a
+      // resubscription by resize.
+      let newComponentDimensions = this.componentDimensions;
+      if (!this.resizeObserver) {
+        newComponentDimensions = getComponentDimensions({
+          component: this,
+          dimensions: nextDimensions,
+          appearance: nextAppearance,
+        });
+
+        this.setState({
+          elementWidth: this.componentDimensions.width,
+        });
+      }
+
+      if (
+        currentMediaClient !== nextMediaClient ||
+        isDifferentIdentifier(currentIdentifier, nextIdenfifier) ||
+        isBigger(this.componentDimensions, newComponentDimensions)
+      ) {
+        this.componentDimensions = newComponentDimensions; // Has to be set before subscribe
+        this.subscribe(nextIdenfifier, nextMediaClient);
+      }
+    },
+    DELAY_SUBSCRIPTION,
+    { leading: true, trailing: true },
+  );
+
+  onComponentResize = debounce(
+    (newDimensions: Dimensions) => {
+      const { mediaClient, identifier } = this.props;
+      if (isBigger(this.componentDimensions, newDimensions)) {
+        this.componentDimensions = newDimensions; // Has to be set before subscribe
+        this.subscribe(identifier, mediaClient);
+      }
       this.setState({
-        elementWidth: this.componentDimensions.width,
+        elementWidth: newDimensions.width,
       });
-    }
-
-    if (
-      currentMediaClient !== nextMediaClient ||
-      isDifferentIdentifier(currentIdentifier, nextIdenfifier) ||
-      isBigger(this.componentDimensions, newComponentDimensions)
-    ) {
-      this.componentDimensions = newComponentDimensions; // Has to be set before subscribe
-      this.subscribe(nextIdenfifier, nextMediaClient);
-    }
-  }
-
-  onComponentResize = (newDimensions: Dimensions) => {
-    if (!this.debouncedOnComponentResize) {
-      this.debouncedOnComponentResize = debounce(
-        this.doOnComponentResize,
-        DELAY_SUBSCRIPTION,
-        { leading: true, trailing: true },
-      );
-    }
-    this.debouncedOnComponentResize &&
-      this.debouncedOnComponentResize(newDimensions);
-  };
-
-  doOnComponentResize = (newDimensions: Dimensions) => {
-    const { mediaClient, identifier } = this.props;
-    if (isBigger(this.componentDimensions, newDimensions)) {
-      this.componentDimensions = newDimensions; // Has to be set before subscribe
-      this.subscribe(identifier, mediaClient);
-    }
-    this.setState({
-      elementWidth: newDimensions.width,
-    });
-  };
+    },
+    DELAY_SUBSCRIPTION,
+    { leading: true, trailing: true },
+  );
 
   componentWillUnmount() {
     this.hasBeenMounted = false;
@@ -269,31 +251,21 @@ export class CardBase extends Component<
     }
   };
 
-  subscribe(identifier: Identifier, mediaClient: MediaClient) {
-    if (!this.debouncedSubscription) {
-      this.debouncedSubscription = debounce(
-        this.doSubscribe,
-        DELAY_SUBSCRIPTION,
-        { leading: true, trailing: true },
-      );
-    }
-    this.debouncedSubscription &&
-      this.debouncedSubscription(identifier, mediaClient);
-  }
-
-  doSubscribe(identifier: Identifier, mediaClient: MediaClient) {
-    const { isCardVisible } = this.state;
-
-    if (!isCardVisible) {
-      return;
-    }
-
-    if (identifier.mediaItemType === 'external-image') {
-      this.subscribeExternalFile(identifier);
-    } else {
-      this.subscribeInternalFile(identifier, mediaClient);
-    }
-  }
+  subscribe = debounce(
+    (identifier: Identifier, mediaClient: MediaClient) => {
+      const { isCardVisible } = this.state;
+      if (!isCardVisible) {
+        return;
+      }
+      if (identifier.mediaItemType === 'external-image') {
+        this.subscribeExternalFile(identifier);
+      } else {
+        this.subscribeInternalFile(identifier, mediaClient);
+      }
+    },
+    DELAY_SUBSCRIPTION,
+    { leading: true, trailing: true },
+  );
 
   subscribeExternalFile(identifier: ExternalImageIdentifier) {
     const { createAnalyticsEvent } = this.props;
