@@ -17,7 +17,7 @@ import {
   UploadErrorPayload,
   UploadEndPayload,
   SerialisedMediaFile,
-} from 'mediapicker';
+} from '@atlassian/legacy-mediapicker';
 import {
   ContextConfig,
   MediaStateManager,

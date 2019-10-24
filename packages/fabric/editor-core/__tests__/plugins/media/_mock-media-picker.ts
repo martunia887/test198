@@ -2,7 +2,7 @@ import {
   GenericUploadEvents,
   ModuleConfig,
   ComponentConfigs,
-} from 'mediapicker';
+} from '@atlassian/legacy-mediapicker';
 import { PickerType } from '../../../src/plugins/media/picker-facade';
 
 export default class MockMediaPicker {

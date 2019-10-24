@@ -8,7 +8,7 @@ import {
   Dropzone,
   Clipboard,
   BinaryUploader,
-} from 'mediapicker';
+} from '@atlassian/legacy-mediapicker';
 import {
   StoryBookAuthProvider,
   StoryBookUserAuthProvider,
