@@ -57,7 +57,7 @@ export const ArticleBody = (props: Props) => {
       if (currentIframe.contentWindow.document.body) {
         srcDoc.set(
           currentIframe,
-          `<style>${resetCSS}</style><div class="content-platform-support">${body}</div>`,
+          `<style>${resetCSS}</style><div style="overflow-x: hidden;">${body}</div>`,
         );
       }
     }
@@ -109,7 +109,7 @@ export const ArticleBody = (props: Props) => {
     <ArticleFrame
       style={{ height: articleHeight }}
       ref={iframeRef}
-      sandbox="allow-scripts allow-same-origin"
+      sandbox="allow-same-origin"
     />
   ) : null;
 };
