@@ -194,7 +194,9 @@ export const toJSON = (node: PMNode) => ({
       }
       if (
         optionalAttributes.indexOf(key) > -1 &&
-        (node.attrs[key] === null || node.attrs[key] === '')
+        (node.attrs[key] === null ||
+          node.attrs[key] === undefined ||
+          node.attrs[key] === '')
       ) {
         return obj;
       }
