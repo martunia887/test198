@@ -104,12 +104,16 @@ export default class MediaSingleNode extends Component<
       mediaNodeUpdater.updateDimensions(updatedDimensions);
     }
 
-    if (node.attrs.type === 'external') {
+    if (node.attrs.type === 'external' && node.attrs.__external) {
       if (mediaNodeUpdater.isMediaBlobUrl()) {
-        // we try to copy the image using the encoded metadata, otherwise we keep it as external
-        await mediaNodeUpdater.copyNodeFromBlobUrl(this.props.getPos());
+        try {
+          await mediaNodeUpdater.copyNodeFromBlobUrl(this.props.getPos());
+        } catch (e) {
+          await mediaNodeUpdater.uploadExternalMedia(this.props.getPos());
+        }
+      } else {
+        await mediaNodeUpdater.uploadExternalMedia(this.props.getPos());
       }
-      return;
     }
 
     const contextId = mediaNodeUpdater.getCurrentContextId();

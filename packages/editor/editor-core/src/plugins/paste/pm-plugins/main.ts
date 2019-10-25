@@ -139,6 +139,7 @@ export function createPlugin(
         const { state, dispatch } = view;
 
         if (
+          isPlainText &&
           handlePasteAsPlainTextWithAnalytics(view, event, slice)(
             state,
             dispatch,
