@@ -1,98 +1,29 @@
+import React from 'react';
 import {
-  clipboardApiSupported,
-  copyToClipboardLegacy,
-  copyToClipboard,
+  CopyTextContext,
+  CopyTextConsumer,
 } from '../../../../react/nodes/copy-text-provider';
+import { mount } from 'enzyme';
 
 describe('Renderer - clipboard utils', () => {
-  describe('clipboardApiSupported', () => {
-    const oldClipboard = navigator.clipboard;
-    beforeEach(() => {
-      Object.defineProperty(navigator, 'clipboard', {
-        value: {},
-        writable: true,
-      });
-    });
+  it('copyTextToClipboard is called correctly when provided', () => {
+    const mockCopyFunc = jest.fn();
+    const wrapper = mount(
+      <CopyTextContext.Provider
+        value={{
+          copyTextToClipboard: mockCopyFunc,
+        }}
+      >
+        <CopyTextConsumer>
+          {({ copyTextToClipboard }) => (
+            <button onClick={() => copyTextToClipboard('test')}>click</button>
+          )}
+        </CopyTextConsumer>
+      </CopyTextContext.Provider>,
+    );
 
-    afterAll(() => {
-      Object.defineProperty(navigator, 'clipboard', {
-        value: oldClipboard,
-      });
-    });
+    wrapper.find('button').simulate('click');
 
-    it('returns false when clipboard is defined but writeText is not a function', () => {
-      delete navigator.clipboard.writeText;
-      expect(clipboardApiSupported()).toEqual(false);
-    });
-
-    it('returns true when clipboard.writeText is defined', () => {
-      Object.defineProperty(navigator, 'clipboard', {
-        value: {
-          writeText: (_s: string) => Promise.resolve(),
-        },
-      });
-      expect(clipboardApiSupported()).toEqual(true);
-    });
-  });
-
-  describe('copyToClipboardLegacy', () => {
-    const oldCxecCommand = document.execCommand;
-    const copyArea = document.createElement('div');
-
-    afterEach(() => {
-      document.execCommand = oldCxecCommand;
-    });
-
-    it('promise rejected when copy area is not defined', () => {
-      expect(copyToClipboardLegacy('test', null)).rejects.toEqual(
-        'Copy area reference is not defined',
-      );
-    });
-
-    it('promise rejected when document.execCommand returns false', () => {
-      document.execCommand = jest.fn(() => false);
-      expect(copyToClipboardLegacy('test', copyArea)).rejects.toEqual(
-        'Failed to copy',
-      );
-    });
-
-    it('promise resolved when document.execCommand returns true', () => {
-      document.execCommand = jest.fn(() => true);
-      expect(copyToClipboardLegacy('test', copyArea)).resolves.toEqual(
-        undefined,
-      );
-    });
-  });
-
-  describe('copyToClipboard', () => {
-    const oldClipboard = navigator.clipboard;
-    beforeEach(() => {
-      Object.defineProperty(navigator, 'clipboard', {
-        value: {
-          writeText: jest.fn((_s: string) => Promise.resolve()),
-        },
-        writable: true,
-      });
-    });
-
-    afterAll(() => {
-      Object.defineProperty(navigator, 'clipboard', {
-        value: oldClipboard,
-      });
-    });
-
-    it('calls native clipboard.writeText', () => {
-      copyToClipboard('test clipboard.writeText');
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-        'test clipboard.writeText',
-      );
-    });
-
-    it('returns true when clipboard.writeText is defined', () => {
-      delete navigator.clipboard.writeText;
-      expect(copyToClipboard('test')).rejects.toEqual(
-        'Clipboard api is not supported',
-      );
-    });
+    expect(mockCopyFunc).toHaveBeenCalled();
   });
 });

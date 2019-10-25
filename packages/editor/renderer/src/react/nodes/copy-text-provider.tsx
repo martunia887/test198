@@ -17,6 +17,7 @@ const { Provider, Consumer } = CopyTextContext;
 
 export class CopyTextProvider extends React.Component {
   copyTextToClipboard = (textToCopy: string): Promise<void> => {
+    // Wrap native promise to es6 promise
     return new Promise<void>((resolve, reject) => {
       return Clipboard.writeText(textToCopy).then(resolve, reject);
     });
