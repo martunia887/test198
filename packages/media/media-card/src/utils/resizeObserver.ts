@@ -28,7 +28,7 @@ export function createResizeObserver(
   component: Component,
   callback: (dimensions: Dimensions) => void,
 ): ResizeObserver | undefined {
-  if (ResizeObserver) {
+  if ((window as any).ResizeObserver) {
     const element = ReactDOM.findDOMNode(component) as HTMLElement;
     const observerCallback = createObserverCallback(callback);
     const obs = new ResizeObserver(observerCallback);
