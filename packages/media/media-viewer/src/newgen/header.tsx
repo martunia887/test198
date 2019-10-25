@@ -35,13 +35,13 @@ import {
   ToolbarDownloadButton,
   DisabledToolbarDownloadButton,
 } from './download';
-import { MediaViewerAction } from '../components/types';
+import { ToolbarAction } from '../components/types';
 
 export type Props = {
   readonly identifier: Identifier;
   readonly mediaClient: MediaClient;
   readonly onClose?: () => void;
-  action?: MediaViewerAction;
+  extraToolbarAction?: ToolbarAction;
 };
 
 export type State = {
@@ -132,18 +132,18 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
   };
 
   render() {
-    const { action, identifier } = this.props;
+    const { extraToolbarAction, identifier } = this.props;
 
     return (
       <HeaderWrapper className={hideControlsClassName}>
         <LeftHeader>{this.renderMetadata()}</LeftHeader>
         <RightHeader>
           {this.renderDownload()}
-          {action && (
+          {extraToolbarAction && (
             <MediaButton
               appearance={'toolbar' as any}
-              iconBefore={action.icon}
-              onClick={() => action.handler(identifier)}
+              iconBefore={extraToolbarAction.icon}
+              onClick={() => extraToolbarAction.onClick(identifier)}
             />
           )}
         </RightHeader>

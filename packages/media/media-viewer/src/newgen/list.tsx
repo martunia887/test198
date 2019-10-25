@@ -8,16 +8,16 @@ import { ItemViewer } from './item-viewer';
 import { HeaderWrapper, ListWrapper } from './styled';
 import { Navigation } from './navigation';
 import Header from './header';
-import { MediaViewerAction } from '../components/types';
+import { ToolbarAction } from '../components/types';
 
 export type Props = Readonly<
   {
     onClose?: () => void;
-    onNavigationChange?: (selectedItem: Identifier) => void;
     defaultSelectedItem: Identifier;
     items: Identifier[];
     mediaClient: MediaClient;
-    action?: MediaViewerAction;
+    extraToolbarAction?: ToolbarAction;
+    onNavigate?: (selectedItem: Identifier) => void;
   } & WithShowControlMethodProp
 >;
 
@@ -33,15 +33,14 @@ export class List extends React.Component<Props, State> {
   };
 
   componentDidUpdate(props: Props, state: State) {
-    const { onNavigationChange } = this.props;
+    const { onNavigate } = this.props;
     const { selectedItem } = this.state;
 
     if (
-      onNavigationChange &&
-      (props.onNavigationChange !== onNavigationChange ||
-        state.selectedItem !== selectedItem)
+      onNavigate &&
+      (props.onNavigate !== onNavigate || state.selectedItem !== selectedItem)
     ) {
-      onNavigationChange(selectedItem);
+      onNavigate(selectedItem);
     }
   }
 
@@ -52,17 +51,22 @@ export class List extends React.Component<Props, State> {
   }
 
   renderContent(items: Identifier[]) {
-    const { action, mediaClient, onClose, showControls } = this.props;
+    const {
+      mediaClient,
+      onClose,
+      showControls,
+      extraToolbarAction,
+    } = this.props;
     const { selectedItem } = this.state;
 
     return (
       <ListWrapper>
         <HeaderWrapper className={hideControlsClassName}>
           <Header
-            action={action}
             mediaClient={mediaClient}
             identifier={selectedItem}
             onClose={onClose}
+            extraToolbarAction={extraToolbarAction}
           />
         </HeaderWrapper>
         <ItemViewer
@@ -82,9 +86,11 @@ export class List extends React.Component<Props, State> {
   }
 
   onNavigationChange = (selectedItem: Identifier) => {
-    const { onNavigationChange = () => {}, showControls } = this.props;
+    const { showControls, onNavigate } = this.props;
 
-    onNavigationChange(selectedItem);
+    if (onNavigate) {
+      onNavigate(selectedItem);
+    }
     if (showControls) {
       showControls();
     }

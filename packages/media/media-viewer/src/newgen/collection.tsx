@@ -13,7 +13,7 @@ import { toIdentifier } from './utils';
 import { Spinner } from './loading';
 import { MediaCollectionItem } from '@atlaskit/media-store';
 import { WithShowControlMethodProp } from '@atlaskit/media-ui';
-import { MediaViewerAction } from '../components/types';
+import { ToolbarAction } from '../components/types';
 
 export type Props = Readonly<
   {
@@ -22,8 +22,8 @@ export type Props = Readonly<
     collectionName: string;
     mediaClient: MediaClient;
     pageSize: number;
-    onNavigationChange?: (selectedItem: Identifier) => void;
-    action?: MediaViewerAction;
+    onNavigate?: (selectedItem: Identifier) => void;
+    extraToolbarAction?: ToolbarAction;
   } & WithShowControlMethodProp
 >;
 
@@ -55,7 +55,7 @@ export class Collection extends React.Component<Props, State> {
 
   render() {
     const {
-      action,
+      extraToolbarAction,
       defaultSelectedItem,
       mediaClient,
       onClose,
@@ -73,12 +73,12 @@ export class Collection extends React.Component<Props, State> {
 
         return (
           <List
-            action={action}
+            extraToolbarAction={extraToolbarAction}
             items={identifiers}
             defaultSelectedItem={item}
             mediaClient={mediaClient}
             onClose={onClose}
-            onNavigationChange={this.onNavigationChange}
+            onNavigate={this.onNavigate}
             showControls={showControls}
           />
         );
@@ -129,19 +129,21 @@ export class Collection extends React.Component<Props, State> {
     );
   }
 
-  private onNavigationChange = (item: Identifier) => {
+  private onNavigate = (item: Identifier) => {
     const {
       mediaClient,
       collectionName,
       pageSize,
-      onNavigationChange: onNavigationChangeConsumer = () => {},
+      onNavigate: onNavigateConsumer,
     } = this.props;
     if (this.shouldLoadNext(item)) {
       mediaClient.collection.loadNextPage(collectionName, {
         limit: pageSize,
       });
     }
-    onNavigationChangeConsumer(item);
+    if (onNavigateConsumer) {
+      onNavigateConsumer(item);
+    }
   };
 
   private shouldLoadNext(selectedItem: Identifier): boolean {

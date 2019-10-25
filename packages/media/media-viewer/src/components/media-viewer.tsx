@@ -32,7 +32,6 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
 
   render(): JSX.Element {
     const {
-      action,
       featureFlags,
       onClose,
       mediaClient,
@@ -40,7 +39,8 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
       collectionName,
       dataSource,
       pageSize,
-      onNavigationChange,
+      extraToolbarAction,
+      onNavigate,
     } = this.props;
     const defaultPageSize = 30;
     const dataSourceWithSelectedItem = this.getDataSourceWithSelectedItem(
@@ -65,14 +65,14 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
       };
       return (
         <MediaViewerNextGen
-          action={action}
           mediaClient={mediaClient}
           selectedItem={identifier}
           onClose={onClose}
           itemSource={itemSource}
           featureFlags={featureFlags}
           withSidebar={!!onNavigationChange}
-          onNavigationChange={onNavigationChange}
+          extraToolbarAction={extraToolbarAction}
+          onNavigate={onNavigate}
         />
       );
     } else if (dataSourceWithSelectedItem.collectionName) {
@@ -80,14 +80,14 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
         // if integrators pass an external image + collection, we remove the collection and just show the selectedItem
         return (
           <MediaViewerNextGen
-            action={action}
             mediaClient={mediaClient}
             selectedItem={selectedItem}
             onClose={onClose}
             itemSource={{ kind: 'ARRAY', items: [selectedItem] }}
             featureFlags={featureFlags}
             withSidebar={!!onNavigationChange}
-            onNavigationChange={onNavigationChange}
+            extraToolbarAction={extraToolbarAction}
+            onNavigate={onNavigate}
           />
         );
       }
@@ -104,14 +104,14 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
 
       return (
         <MediaViewerNextGen
-          action={action}
           mediaClient={mediaClient}
           selectedItem={identifier}
           onClose={onClose}
           itemSource={itemSource}
           featureFlags={featureFlags}
           withSidebar={!!onNavigationChange}
-          onNavigationChange={onNavigationChange}
+          extraToolbarAction={extraToolbarAction}
+          onNavigate={onNavigate}
         />
       );
     } else {

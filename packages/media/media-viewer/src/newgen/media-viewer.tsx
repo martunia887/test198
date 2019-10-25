@@ -20,17 +20,17 @@ import { List } from './list';
 import { Collection } from './collection';
 import { Content } from './content';
 import { Blanket } from './styled';
-import { MediaViewerAction } from '../components/types';
+import { ToolbarAction } from '../components/types';
 
 export type Props = {
-  action?: MediaViewerAction;
   onClose?: () => void;
   selectedItem?: Identifier;
   featureFlags?: MediaViewerFeatureFlags;
   mediaClient: MediaClient;
   itemSource: ItemSource;
   withSidebar: boolean;
-  onNavigationChange?: (selectedItem: Identifier) => void;
+  extraToolbarAction?: ToolbarAction;
+  onNavigate?: (selectedItem: Identifier) => void;
 } & WithAnalyticsEventsProps;
 
 export class MediaViewerComponent extends React.Component<Props, {}> {
@@ -99,25 +99,25 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
 
   private renderContent() {
     const {
-      action,
       selectedItem,
       mediaClient,
       onClose,
       itemSource,
-      onNavigationChange,
+      extraToolbarAction,
+      onNavigate,
     } = this.props;
     const defaultSelectedItem = selectedItem;
 
     if (itemSource.kind === 'COLLECTION') {
       return (
         <Collection
-          action={action}
           pageSize={itemSource.pageSize}
           defaultSelectedItem={defaultSelectedItem}
           collectionName={itemSource.collectionName}
           mediaClient={mediaClient}
           onClose={onClose}
-          onNavigationChange={onNavigationChange}
+          extraToolbarAction={extraToolbarAction}
+          onNavigate={onNavigate}
         />
       );
     } else if (itemSource.kind === 'ARRAY') {
@@ -126,12 +126,12 @@ export class MediaViewerComponent extends React.Component<Props, {}> {
 
       return (
         <List
-          action={action}
           defaultSelectedItem={defaultSelectedItem || firstItem}
           items={items}
           mediaClient={mediaClient}
           onClose={onClose}
-          onNavigationChange={onNavigationChange}
+          extraToolbarAction={extraToolbarAction}
+          onNavigate={onNavigate}
         />
       );
     } else {
