@@ -12,6 +12,7 @@ Object {
             "__fileMimeType": null,
             "__fileName": null,
             "__fileSize": null,
+            "alt": undefined,
             "collection": "",
             "height": null,
             "id": "file.pdf",
