@@ -1,6 +1,4 @@
 jest.mock('react-dom');
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { getElementDimensions } from '../../getElementDimension';
 
 describe('getElementDimension', () => {
@@ -13,13 +11,7 @@ describe('getElementDimension', () => {
         };
       },
     };
-    ((ReactDOM.findDOMNode as (
-      instance: React.Component<any, {}, any> | Element | null | undefined,
-    ) => Element | Text | null) as jest.Mock<Element>).mockReturnValue(
-      element as Element,
-    );
-    const dummyComponent = <div /> as any; // This casting is done to avoid having to create a new React class here
-    const { width, height } = getElementDimensions(dummyComponent);
+    const { width, height } = getElementDimensions(element as Element);
     expect(width).toEqual(1);
     expect(height).toEqual(10);
   });
