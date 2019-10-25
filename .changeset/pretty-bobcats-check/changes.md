@@ -1,0 +1,1 @@
+ED-7932 fix Copy link to clipboard in IE 11 copies empty string
