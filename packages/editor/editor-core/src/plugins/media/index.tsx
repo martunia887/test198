@@ -65,7 +65,6 @@ export interface MediaPMPluginOptions {
   allowDropzoneDropLine?: boolean;
   allowMarkingUploadsAsIncomplete?: boolean;
   fullWidthEnabled?: boolean;
-  allowAltText?: boolean;
 }
 
 const mediaPlugin = (

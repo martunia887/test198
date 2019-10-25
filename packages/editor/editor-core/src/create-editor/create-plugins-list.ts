@@ -153,7 +153,6 @@ export default function createPluginsList(
         // so a bit of guess for now.
         allowMarkingUploadsAsIncomplete: isMobile,
         fullWidthEnabled: props.appearance === 'full-width',
-        allowAltText: props.UNSAFE_allowAltTextOnImages,
       }),
     );
   }
