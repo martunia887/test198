@@ -10,6 +10,10 @@ import { getSelectedIndex } from '../newgen/utils';
 export interface MediaViewerState {}
 
 export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
+  static defaultProps = {
+    withSidebar: false,
+  };
+
   // returns a valid MV data source including current the card identifier
   getDataSourceWithSelectedItem = (
     dataSource: MediaViewerDataSource,
@@ -41,6 +45,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
       pageSize,
       extraToolbarAction,
       onNavigate,
+      withSidebar,
     } = this.props;
     const defaultPageSize = 30;
     const dataSourceWithSelectedItem = this.getDataSourceWithSelectedItem(
@@ -70,9 +75,9 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
           onClose={onClose}
           itemSource={itemSource}
           featureFlags={featureFlags}
-          withSidebar={!!onNavigationChange}
           extraToolbarAction={extraToolbarAction}
           onNavigate={onNavigate}
+          withSidebar={withSidebar}
         />
       );
     } else if (dataSourceWithSelectedItem.collectionName) {
@@ -85,9 +90,9 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
             onClose={onClose}
             itemSource={{ kind: 'ARRAY', items: [selectedItem] }}
             featureFlags={featureFlags}
-            withSidebar={!!onNavigationChange}
             extraToolbarAction={extraToolbarAction}
             onNavigate={onNavigate}
+            withSidebar={withSidebar}
           />
         );
       }
@@ -109,9 +114,9 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
           onClose={onClose}
           itemSource={itemSource}
           featureFlags={featureFlags}
-          withSidebar={!!onNavigationChange}
           extraToolbarAction={extraToolbarAction}
           onNavigate={onNavigate}
+          withSidebar={withSidebar}
         />
       );
     } else {
