@@ -375,6 +375,7 @@ expect.extend({
       },
     });
     const fakeThis = { ...this, currentTestName: testCase };
+
     const ret = toMatchSnapshot.call(fakeThis, transformedDoc);
     return ret;
   },

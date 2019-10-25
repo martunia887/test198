@@ -15,7 +15,8 @@ import { TableCssClassName } from '../../plugins/table/types';
  * unknown error: Maximum call stack size exceeded
  * And, don't get too fancy with it ;)
  */
-export const getDocFromElement = (el: any) => el.pmViewDesc.node.toJSON();
+export const getDocFromElement = (el: any) =>
+  JSON.parse(JSON.stringify(el.pmViewDesc.node.toJSON()));
 export const editable = '.ProseMirror';
 export const LONG_WAIT_FOR = 5000;
 export const typeAheadPicker = '.fabric-editor-typeahead';
