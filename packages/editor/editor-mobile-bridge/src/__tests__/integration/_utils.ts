@@ -22,7 +22,9 @@ export const navigateOrClear = async (browser: any, path: string) => {
   }
 };
 
-export const getDocFromElement = (el: any) => el.pmViewDesc.node.toJSON();
+export const getDocFromElement = (el: any) =>
+  JSON.parse(JSON.stringify(el.pmViewDesc.node.toJSON()));
+
 export const editable = '.ProseMirror';
 
 export const editor = {
