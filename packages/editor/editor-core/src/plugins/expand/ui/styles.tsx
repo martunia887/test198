@@ -11,7 +11,7 @@ export const Input = styled.input`
   font-size: ${fontSize}px;
   line-height: 1.714;
   font-weight: normal;
-  color: ${colors.N200};
+  color: ${colors.N200A};
   background: transparent;
   display: flex;
   flex: 1;
@@ -19,6 +19,7 @@ export const Input = styled.input`
 
   &::placeholder {
     opacity: 0.6;
+    color: ${colors.N200A};
   }
 `;
 

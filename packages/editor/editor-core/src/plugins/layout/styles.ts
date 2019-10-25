@@ -52,7 +52,8 @@ export const layoutStyles = css`
         border-color: ${colors.B200};
       }
       /* Shows the border when cursor is inside a layout */
-      &.selected > * {
+      &.selected > *,
+      &:hover > * {
         border-color: ${colors.N50};
       }
 

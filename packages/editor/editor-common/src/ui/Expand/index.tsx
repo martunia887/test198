@@ -32,6 +32,7 @@ export const messages = defineMessages({
 
 export const LAYOUT_OFFSET = 17;
 const BORDER_RADIUS = gridSize() / 2;
+const EXPAND_SELECTED_BACKGROUND = 'rgba(255, 255, 255, 0.6)';
 
 interface StyleProps {
   collapsed?: boolean;
@@ -45,6 +46,8 @@ const Container = styled.div<StyleProps>`
   border-style: solid;
   border-color: ${({ collapsed }) => (collapsed ? 'transparent' : colors.N40A)};
   border-radius: ${BORDER_RADIUS}px;
+  background: ${({ collapsed }) =>
+    collapsed ? 'transparent' : EXPAND_SELECTED_BACKGROUND};
   margin: ${props =>
     `${!props.editable ? blockNodesVerticalMargin : 0}rem ${
       // Only only these margins if the expand isn't editable
@@ -54,15 +57,18 @@ const Container = styled.div<StyleProps>`
         : `0`
     } 0`};
 
+  transition: background 0.3s ${akEditorSwoopCubicBezier};
   padding: ${gridSize}px;
   cursor: pointer;
 
   &:hover {
     border: 1px solid ${colors.N50A};
+    background: ${EXPAND_SELECTED_BACKGROUND};
   }
 
   .ProseMirror-selectednode > & {
     border-color: transparent;
+    background: ${EXPAND_SELECTED_BACKGROUND};
     box-shadow: 0 0 0 ${akEditorSelectedBorderBoldSize}px
       ${akEditorSelectedBorder};
   }
@@ -82,7 +88,7 @@ const TitleContainerStyles = `
   border: none;
   font-size: ${fontSize}px;
   width: 100%;
-  color: ${colors.N200};
+  color: ${colors.N300A};
   overflow: hidden;
   cursor: pointer;
 
@@ -180,7 +186,7 @@ function Expand({
       >
         <Tooltip content={label} position="top" tag={TooltipWrapper}>
           <Icon collapsed={collapsed} role={editable ? 'button' : undefined}>
-            <ChevronRightIcon label={label} />
+            <ChevronRightIcon label={label} primaryColor={colors.N80A} />
           </Icon>
         </Tooltip>
         {renderTitle}
