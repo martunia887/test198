@@ -65,6 +65,7 @@ import {
 } from '../../utils/analytics';
 import { createResizeObserver } from '../../utils/resizeObserver';
 import debounce from 'lodash.debounce';
+import { findDOMNode } from '../../utils/findDOMNode';
 
 const DELAY_SUBSCRIPTION = 1000; // ms
 
@@ -84,6 +85,8 @@ export class CardBase extends Component<
   private resizeObserver?: ResizeObserver;
   // nextDataURI is used to refetch avoiding to show the placeholder in between requests
   private nextDataURI?: string;
+  // Used to find the components element only once during the entire life cycle
+  private element?: Element;
   cardRef: React.RefObject<CardViewBase | InlinePlayerBase> = React.createRef();
 
   subscription?: Subscription;
@@ -142,12 +145,17 @@ export class CardBase extends Component<
   componentDidMount() {
     const { identifier, mediaClient, dimensions, appearance } = this.props;
     this.hasBeenMounted = true;
-    this.resizeObserver = createResizeObserver(this, this.onComponentResize);
+    // This operation should be replaced by ref: https://reactjs.org/docs/strict-mode.html#warning-about-deprecated-finddomnode-usage
+    this.element = findDOMNode(this) as Element;
+    this.resizeObserver = createResizeObserver(
+      this.element,
+      this.onComponentResize,
+    );
     // The underlying opperation to find dataURIDimensions is expensive.
     // Therefore, it needs to be called only once and be stored for further reference.
     // Has to be set before subscribe
     this.componentDimensions = getComponentDimensions({
-      component: this,
+      element: this.element,
       dimensions,
       appearance,
     });
@@ -181,12 +189,13 @@ export class CardBase extends Component<
       // resubscription by resize.
       let newComponentDimensions = this.componentDimensions;
       if (!this.resizeObserver) {
-        newComponentDimensions = getComponentDimensions({
-          component: this,
-          dimensions: nextDimensions,
-          appearance: nextAppearance,
-        });
-
+        if (this.element) {
+          newComponentDimensions = getComponentDimensions({
+            element: this.element,
+            dimensions: nextDimensions,
+            appearance: nextAppearance,
+          });
+        }
         this.setState({
           elementWidth: newComponentDimensions.width,
         });

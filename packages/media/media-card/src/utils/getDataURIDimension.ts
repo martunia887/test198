@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { isRetina } from './isRetina';
 import { CardDimensions, CardAppearance } from '..';
 import { getElementDimensions } from './getElementDimension';
@@ -8,7 +7,7 @@ import { isFullPercentageBased } from './dimensionComparer';
 import { containsPixelUnit } from './containsPixelUnit';
 
 export type ResolveDimensionsOptions = {
-  component: Component;
+  element: Element;
   dimensions?: CardDimensions;
   appearance?: CardAppearance;
 };
@@ -29,14 +28,14 @@ export const getRetinaValue = ({ width, height }: Dimensions): Dimensions => {
 const getComponentDimension = (
   dimensions: CardDimensions,
   dimensionName: keyof CardDimensions,
-  component: Component,
+  element: Element,
 ) => {
   const dimensionValue = dimensions[dimensionName];
   if (typeof dimensionValue === 'number') {
     return dimensionValue;
   }
   if (isValidPercentageUnit(dimensionValue || '')) {
-    return getElementDimensions(component)[dimensionName];
+    return getElementDimensions(element)[dimensionName];
   }
   if (containsPixelUnit(`${dimensionValue}`)) {
     return parseInt(`${dimensionValue}`, 10);
@@ -47,15 +46,15 @@ const getComponentDimension = (
 export const getComponentDimensions = (
   options: ResolveDimensionsOptions,
 ): Dimensions => {
-  const { component, dimensions } = options;
+  const { element, dimensions } = options;
   if (!dimensions) {
     return defaultImageCardDimensions;
   } else if (isFullPercentageBased(dimensions)) {
-    return getElementDimensions(component);
+    return getElementDimensions(element);
   } else {
     return {
-      width: getComponentDimension(dimensions, 'width', component),
-      height: getComponentDimension(dimensions, 'height', component),
+      width: getComponentDimension(dimensions, 'width', element),
+      height: getComponentDimension(dimensions, 'height', element),
     };
   }
 };

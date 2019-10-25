@@ -1,5 +1,3 @@
-import { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { Dimensions } from './getDataURIDimension';
 
 const createObserverCallback = (
@@ -25,11 +23,10 @@ const createObserverCallback = (
 };
 
 export function createResizeObserver(
-  component: Component,
+  element: Element,
   callback: (dimensions: Dimensions) => void,
 ): ResizeObserver | undefined {
   if ((window as any).ResizeObserver) {
-    const element = ReactDOM.findDOMNode(component) as HTMLElement;
     const observerCallback = createObserverCallback(callback);
     const obs = new ResizeObserver(observerCallback);
     obs.observe(element);

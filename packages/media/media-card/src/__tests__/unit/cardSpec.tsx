@@ -1,6 +1,9 @@
 jest.mock('../../utils/getDataURIFromFileState');
 jest.mock('../../utils/getElementDimension');
 jest.mock('../../utils/resizeObserver');
+jest.mock('../../utils/findDOMNode', () => ({
+  findDOMNode: () => <div />,
+}));
 import { Observable, ReplaySubject } from 'rxjs';
 import * as React from 'react';
 import { shallow, mount, ShallowWrapper } from 'enzyme';
