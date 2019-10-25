@@ -159,7 +159,7 @@ describe('Card', () => {
     expect(component.find(CardView)).toHaveLength(1);
   });
 
-  it(`should pass component's width down to CardView`, async () => {
+  it(`should pass element's width down to CardView`, async () => {
     (getElementDimensions as jest.Mock).mockReset();
     (getElementDimensions as jest.Mock).mockReturnValue({
       width: 500,
@@ -256,7 +256,50 @@ describe('Card', () => {
     };
 
     const runTests = (useResizeObserver: boolean) => {
-      // Test all supported combinations
+      it(`should update element's width in CardView`, async () => {
+        const initialCardDimensions: Dimensions = {
+          width: 100,
+          height: 200,
+        };
+        const test = setupResize(initialCardDimensions, initialCardDimensions);
+
+        const newDimensions: Dimensions = {
+          ...initialCardDimensions,
+          width: 500,
+        };
+        // First resize by new cardDimension props
+        await resize(test, newDimensions, newDimensions, useResizeObserver);
+        expect(test.component.find(CardView).props().elementWidth).toEqual(
+          newDimensions.width,
+        );
+
+        const newCardDimensions: CardDimensions = {
+          ...initialCardDimensions,
+          width: '50%',
+        };
+        // Second resize by cardDimension props percentage based
+        await resize(test, newCardDimensions, newDimensions, useResizeObserver);
+        expect(test.component.find(CardView).props().elementWidth).toEqual(
+          newDimensions.width,
+        );
+
+        const resizedDimensions: Dimensions = {
+          ...initialCardDimensions,
+          width: 600,
+        };
+        // Third resize by element's resize, same cardDimensions
+        await resize(
+          test,
+          newCardDimensions,
+          resizedDimensions,
+          useResizeObserver,
+        );
+        expect(test.component.find(CardView).props().elementWidth).toEqual(
+          resizedDimensions.width,
+        );
+      });
+
+      // cardDimensions Test all supported combinations
       // width   height   resize
       //  px       px     + width
       //  px       px     - width

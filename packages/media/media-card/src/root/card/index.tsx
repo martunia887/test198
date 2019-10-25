@@ -187,7 +187,7 @@ export class CardBase extends Component<
         });
 
         this.setState({
-          elementWidth: this.componentDimensions.width,
+          elementWidth: newComponentDimensions.width,
         });
       }
 
