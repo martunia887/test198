@@ -43,7 +43,7 @@ export interface MediaBaseAttributes {
   // For copy & paste
   __contextId?: string;
 
-  //to upload external images to media
+  // to upload external images to media
   __external?: boolean;
 }
 
@@ -56,6 +56,7 @@ export interface ExternalMediaAttributes {
   url: string;
   width?: number;
   height?: number;
+  __external?: boolean;
 }
 
 export const defaultAttrs: DefaultAttributes<

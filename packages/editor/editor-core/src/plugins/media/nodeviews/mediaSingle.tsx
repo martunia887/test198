@@ -105,14 +105,15 @@ export default class MediaSingleNode extends Component<
     }
 
     if (node.attrs.type === 'external' && node.attrs.__external) {
+      const pos = this.props.getPos();
       if (mediaNodeUpdater.isMediaBlobUrl()) {
         try {
-          await mediaNodeUpdater.copyNodeFromBlobUrl(this.props.getPos());
+          await mediaNodeUpdater.copyNodeFromBlobUrl(pos);
         } catch (e) {
-          await mediaNodeUpdater.uploadExternalMedia(this.props.getPos());
+          await mediaNodeUpdater.uploadExternalMedia(pos);
         }
       } else {
-        await mediaNodeUpdater.uploadExternalMedia(this.props.getPos());
+        await mediaNodeUpdater.uploadExternalMedia(pos);
       }
     }
 
