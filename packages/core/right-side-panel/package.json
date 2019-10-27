@@ -29,7 +29,7 @@
     "react-transition-group": "^2.2.1"
   },
   "peerDependencies": {
-    "react": "^16.8.0",
+    "react": "16.10.2",
     "react-dom": "^16.8.0",
     "react-intl": "^2.6.0"
   },

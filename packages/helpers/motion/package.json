@@ -22,7 +22,7 @@
     "tslib": "^1.9.3"
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "react": "16.10.2"
   },
   "devDependencies": {
     "@atlaskit/button": "^13.1.6",

@@ -7,13 +7,12 @@ module.exports = {
     ['@babel/syntax-dynamic-import', {}, 'atlaskit'],
   ],
   presets: ['@babel/react', '@babel/flow'],
+  /** 
   overrides: [
-    /**
      * REMOVE ME: This override is needed to make sure that we only run the emotion's
      * babel plugin on components that need it. Without it every component will
      * have emotion included in their bundle.
      * Ticket: https://ecosystem.atlassian.net/browse/AK-6065
-     */
     {
       test: [
         './packages/core/drawer',
@@ -27,6 +26,7 @@ module.exports = {
       // presets: ['@emotion/babel-preset-css-prop'],
     },
   ],
+  */
 
   env: {
     'production:cjs': {

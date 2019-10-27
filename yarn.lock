@@ -2428,9 +2428,9 @@
     react-markdown "^2.5.0"
     semver "^5.4.1"
 
-"@brisk-docs/website@file:../brisk-docs/packages/website/gibberish-nonsensical-name-2.tgz":
+"@brisk-docs/website@file:../brisk-docs/packages/website/gibberish-nonsensical-name-4.tgz":
   version "0.9.0"
-  resolved "file:../brisk-docs/packages/website/gibberish-nonsensical-name-2.tgz#587ffc642241bdbf5b70444642863764c3a0693c"
+  resolved "file:../brisk-docs/packages/website/gibberish-nonsensical-name-4.tgz#48f367f724590650e24f2cfbbe1751eee54b2a72"
   dependencies:
     "@atlaskit/avatar" "^17.1.3"
     "@atlaskit/breadcrumbs" "^8.0.0"
@@ -2478,7 +2478,6 @@
     babel-plugin-styled-components "1.10.0"
     babel-plugin-transform-dynamic-import "^2.1.0"
     babel-plugin-transform-flow-strip-types "^6.22.0"
-    babel-preset-gatsby "^0.2.17"
     command-line-args "^5.0.2"
     emotion "^9.1.3"
     emotion-server "^9.2.12"
@@ -2513,7 +2512,7 @@
     prismjs "^1.15.0"
     prop-types "^15.6.2"
     raw-loader "^1.0.0"
-    react "^16.8.4"
+    react "16.10.2"
     react-addons-text-content "^0.0.4"
     react-dom "^16.8.4"
     react-helmet "^5.2.1"
@@ -6427,7 +6426,7 @@ babel-preset-flow@^6.23.0:
   dependencies:
     babel-plugin-transform-flow-strip-types "^6.22.0"
 
-babel-preset-gatsby@^0.2.17, babel-preset-gatsby@^0.2.20:
+babel-preset-gatsby@^0.2.20:
   version "0.2.20"
   resolved "https://registry.yarnpkg.com/babel-preset-gatsby/-/babel-preset-gatsby-0.2.20.tgz#0ea93dab2a0d0e780e914e8d845021b670c53c17"
   dependencies:
@@ -21507,7 +21506,7 @@ react-virtualized@^9.8.0:
     loose-envify "^1.3.0"
     prop-types "^15.5.4"
 
-react@^16.10.2:
+react@16.10.2, react@^16.10.2:
   version "16.10.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.10.2.tgz#a5ede5cdd5c536f745173c8da47bda64797a4cf0"
   dependencies:
@@ -21515,22 +21514,13 @@ react@^16.10.2:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
 
-react@^16.4.0, react@^16.8.4:
+react@^16.4.0:
   version "16.10.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.10.1.tgz#967c1e71a2767dfa699e6ba702a00483e3b0573f"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-
-react@^16.8.0:
-  version "16.8.6"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-    scheduler "^0.13.6"
 
 read-chunk@^2.1.0:
   version "2.1.0"
