@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@atlaskit/docs": "^2.0.0",
-    "@atlaskit/editor-cq": "^6.11.5",
+    "@atlaskit/editor-cq": "6.12.0-patch1",
     "@atlaskit/editor-test-helpers": "^1.2.5",
     "@types/prosemirror-model": "^1.0.0",
     "chai-as-promised": "^6.0.0"

@@ -25,7 +25,7 @@
   "dependencies": {
     "@atlaskit/avatar": "^8.3.6",
     "@atlaskit/comment": "^2.6.7",
-    "@atlaskit/editor-core": "^60.12.1",
+    "@atlaskit/editor-core": "^60.13.0-patch1",
     "@atlaskit/renderer": "^9.1.5",
     "date-fns": "^1.29.0",
     "prop-types": "^15.5.10",
