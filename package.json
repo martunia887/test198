@@ -66,14 +66,16 @@
     "start:people-and-teams": "              yarn run website:start **/packages/people-and-teams/**",
     "start:search": "                        yarn run website:start **/packages/search/**",
     "start:trello": "                        yarn run website:start **/packages/trello/**",
-    "start:teamwork-ecosystem": "            yarn run website:start **/packages/teamwork-ecosystem/**"
+    "start:teamwork-ecosystem": "            yarn run website:start **/packages/teamwork-ecosystem/**",
+    "constellation:aliases": "                cd website-constellation && node write-resolution-map.js"
   },
   "bolt": {
     "version": "^0.23.1 || ^0.24.0",
     "workspaces": [
       "build/*",
       "packages/*/*",
-      "website"
+      "website",
+      "website-constellation"
     ]
   },
   "devDependencies": {
@@ -269,7 +271,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs2": "^7.6.2",
-    "@brisk-docs/website": "file://Users/clee/Thinkmill/projects/brisk-docs/packages/website/gibberish-nonsensical-name-4.tgz",
+    "@brisk-docs/website": "file:/Users/bconolly/Development/brisk-docs/packages/website/theoretically-working-2.tgz",
     "@emotion/core": "^10.0.9",
     "@emotion/css": "^10.0.14",
     "@emotion/styled": "^10.0.7",

@@ -41,7 +41,5 @@ module.exports = async function getAlternativeEntryPointAliasMap() {
     ),
   );
 
-  fs.writeFileSync('./relevant-file-name.json', JSON.stringify(aliases));
-
   return aliases;
 };

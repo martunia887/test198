@@ -1,4 +1,15 @@
 // @flow
+let funAliases;
+
+try {
+  // eslint-disable-next-line
+  funAliases = require('./website-constellation/aliases-written-map.json');
+} catch (e) {
+  throw new Error(
+    'ERROR - Local aliases have not been written. Please write aliases before continuing by running `yarn constellation:aliases`',
+  );
+}
+
 const docs = [
   {
     path: './docs',
@@ -13,4 +24,41 @@ module.exports = () => ({
   packages: ['./packages/core/radio'],
   docs,
   babelConfig: './babel.config.js',
+  gatsbyNode: {
+    onCreateWebpackConfig: ({ actions, loaders, getConfig }) => {
+      actions.setWebpackConfig({
+        resolve: {
+          mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
+          extensions: ['.js', '.ts', '.tsx'],
+          alias: funAliases,
+        },
+      });
+      const config = getConfig();
+
+      config.module.rules = [
+        // Omit the default rule where test === '\.jsx?$'
+        ...config.module.rules.filter(
+          rule => String(rule.test) !== String(/\.jsx?$/),
+        ),
+        // Recreate it with custom exclude filter
+        {
+          ...loaders.js(),
+          test: /\.jsx?$/,
+          exclude: modulePath =>
+            /node_modules/.test(modulePath) &&
+            /*
+              The logic for the below two regexes + boolean is we want to include things in @brisk-docs/website, but exclude things in its node_modules.
+              This is complicated by the fact that we must do this by the exclude list, making it a double negative
+            */
+            !(
+              /node_modules\/@brisk-docs\/website/.test(modulePath) &&
+              !/node_modules\/@brisk-docs\/website\/node_modules/.test(
+                modulePath,
+              )
+            ),
+        },
+      ];
+      actions.replaceWebpackConfig(config);
+    },
+  },
 });

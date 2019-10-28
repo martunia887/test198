@@ -2428,9 +2428,9 @@
     react-markdown "^2.5.0"
     semver "^5.4.1"
 
-"@brisk-docs/website@file:../brisk-docs/packages/website/gibberish-nonsensical-name-4.tgz":
+"@brisk-docs/website@file:../brisk-docs/packages/website/theoretically-working-2.tgz":
   version "0.9.0"
-  resolved "file:../brisk-docs/packages/website/gibberish-nonsensical-name-4.tgz#48f367f724590650e24f2cfbbe1751eee54b2a72"
+  resolved "file:../brisk-docs/packages/website/theoretically-working-2.tgz#3579f2cbddac385010a922b7ac87e6fa6f5d89ee"
   dependencies:
     "@atlaskit/avatar" "^17.1.3"
     "@atlaskit/breadcrumbs" "^8.0.0"
