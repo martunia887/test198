@@ -1,21 +1,44 @@
-import {
-  Transaction,
-  NodeSelection,
-  Selection,
-  EditorState,
-} from 'prosemirror-state';
-import { Node as PMNode, NodeType } from 'prosemirror-model';
+import { NodeSelection, EditorState } from 'prosemirror-state';
+import { Node as PMNode } from 'prosemirror-model';
 import { safeInsert, findTable } from 'prosemirror-utils';
 import { createCommand } from './pm-plugins/main';
 import { Command } from '../../types';
 import { findExpand } from './utils';
 
-export const setExpandRef = (ref?: HTMLDivElement | null): Command =>
+export const setExpand = (
+  expandNode?: PMNode | null,
+  expandPosition?: number,
+  expandRef?: HTMLDivElement | null,
+): Command =>
   createCommand(
     {
-      type: 'SET_EXPAND_REF',
+      type: 'SET_EXPAND',
       data: {
-        ref,
+        expandNode,
+        expandPosition,
+        expandRef,
+      },
+    },
+    tr => tr.setMeta('addToHistory', false),
+  );
+
+export const setParentLayout = (parentLayout?: string): Command =>
+  createCommand(
+    {
+      type: 'SET_PARENT_LAYOUT',
+      data: {
+        parentLayout,
+      },
+    },
+    tr => tr.setMeta('addToHistory', false),
+  );
+
+export const setShouldFocusTitle = (shouldFocusTitle: boolean): Command =>
+  createCommand(
+    {
+      type: 'SET_SHOULD_FOCUS_TITLE',
+      data: {
+        shouldFocusTitle,
       },
     },
     tr => tr.setMeta('addToHistory', false),
@@ -43,37 +66,23 @@ export const selectExpand = (pos: number): Command => (state, dispatch) => {
 
 export const updateExpandTitle = (
   title: string,
+  node: PMNode,
   pos: number,
-  nodeType: NodeType,
 ): Command => (state, dispatch) => {
-  const node = state.doc.nodeAt(pos);
-  if (node && node.type === nodeType && dispatch) {
+  if (node && dispatch) {
     const { tr } = state;
     tr.setNodeMarkup(
       pos,
-      node.type,
+      undefined,
       {
         ...node.attrs,
         title,
       },
       node.marks,
     );
-    setCursorInsideExpand(pos, tr, -1);
     dispatch(tr);
   }
   return true;
-};
-
-export const setCursorInsideExpand = (
-  pos: number,
-  tr: Transaction,
-  dir: number,
-) => {
-  const sel = Selection.findFrom(tr.doc.resolve(pos), dir, true);
-  if (sel) {
-    return tr.setSelection(sel);
-  }
-  return tr;
 };
 
 export const createExpandNode = (state: EditorState): PMNode => {

@@ -4,6 +4,9 @@ import { EditorPlugin } from '../../types';
 import { createPlugin } from './pm-plugins/main';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { IconExpand } from '../quick-insert/assets';
+import WithPluginState from '../../ui/WithPluginState';
+import { pluginKey, getPluginState } from './pm-plugins/main';
+import { pluginKey as widthPluginKey } from '../width';
 import {
   ACTION,
   ACTION_SUBJECT,
@@ -14,6 +17,7 @@ import {
 } from '../analytics';
 import { getToolbarConfig } from './toolbar';
 import { createExpandNode } from './commands';
+import FloatingTitle from './ui/FloatingTitle';
 
 const expandPlugin = (): EditorPlugin => ({
   name: 'expand',
@@ -34,6 +38,47 @@ const expandPlugin = (): EditorPlugin => ({
         },
       },
     ];
+  },
+
+  contentComponent({
+    editorView,
+    popupsMountPoint,
+    popupsBoundariesElement,
+    popupsScrollableElement,
+  }) {
+    return (
+      <WithPluginState
+        plugins={{
+          pluginState: pluginKey,
+          containerWidth: widthPluginKey,
+        }}
+        render={pluginStates => {
+          const { state } = editorView;
+          const {
+            expandRef,
+            parentLayout,
+            expandNode,
+            expandPosition,
+            shouldFocusTitle,
+          } = getPluginState(state);
+
+          return (
+            <FloatingTitle
+              view={editorView}
+              expandRef={expandRef}
+              expandNode={expandNode}
+              expandPosition={expandPosition}
+              parentLayout={parentLayout}
+              containerWidth={pluginStates.containerWidth.width}
+              shouldFocusTitle={shouldFocusTitle}
+              mountPoint={popupsMountPoint}
+              boundariesElement={popupsBoundariesElement}
+              scrollableElement={popupsScrollableElement}
+            />
+          );
+        }}
+      />
+    );
   },
 
   pluginsOptions: {

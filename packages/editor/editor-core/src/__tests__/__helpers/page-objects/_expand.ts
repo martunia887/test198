@@ -4,6 +4,8 @@ export const selectors = {
   expandToggle: '[data-node-type="expand"] [data-title] [role="button"]',
   nestedExpandToggle:
     '[data-node-type="nestedExpand"] [data-title] [role="button"]',
-  expandTitleInput: '[data-node-type="expand"] [data-title] input',
-  nestedExpandTitleInput: '[data-node-type="nestedExpand"] [data-title] input',
+  expandTitleInput:
+    '[data-node-type="expand"] [data-title] input, [data-node-type="expand"] [data-expand-title]',
+  nestedExpandTitleInput:
+    '[data-node-type="nestedExpand"] [data-title] input, [data-node-type="nestedExpand"] [data-expand-title]',
 };
