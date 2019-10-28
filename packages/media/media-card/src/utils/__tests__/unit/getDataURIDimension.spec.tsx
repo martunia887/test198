@@ -1,9 +1,6 @@
 jest.mock('../../isRetina');
 jest.mock('../../getElementDimension');
 
-import * as React from 'react';
-import { Component } from 'react';
-import { shallow } from 'enzyme';
 import {
   getComponentDimensions,
   getRetinaValue,
@@ -12,28 +9,15 @@ import { isRetina } from '../../isRetina';
 import { getElementDimensions } from '../../getElementDimension';
 
 describe('getComponentDimensions()', () => {
-  class SomeComponent extends Component<any, any> {
-    render() {
-      return <div />;
-    }
-  }
-
-  const setup = () => {
-    const component = shallow(<SomeComponent />) as any;
-
-    return {
-      component,
-    };
-  };
+  const element = document.createElement('div');
 
   it('should use passed dimensions', () => {
-    const { component } = setup();
     const dimensions = {
       width: 100,
       height: 50,
     };
     const { width, height } = getComponentDimensions({
-      component,
+      element,
       dimensions,
     });
 
@@ -42,18 +26,17 @@ describe('getComponentDimensions()', () => {
   });
 
   it('should use default dimensions', () => {
-    const { component } = setup();
     const {
       width: noAppearanceWidth,
       height: noAppearanceHeight,
     } = getComponentDimensions({
-      component,
+      element,
     });
     const {
       width: appearanceWidth,
       height: appearanceHeight,
     } = getComponentDimensions({
-      component,
+      element,
       appearance: 'horizontal',
     });
 
@@ -68,9 +51,8 @@ describe('getComponentDimensions()', () => {
       width: 50,
       height: 50,
     });
-    const { component } = setup();
     const { width } = getComponentDimensions({
-      component,
+      element,
       dimensions: {
         width: '25%',
       },
