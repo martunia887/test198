@@ -7,6 +7,151 @@ clone:
 options:
   size: 2x
 
+definitions:
+  steps:
+    - step: &build-dists
+        name: Building dists
+        script:
+          - source ./build-setup.sh
+          - bolt install --frozen-lockfile
+          - yarn build
+          - node build/ci-scripts/run.if.package.changed.js @atlaskit/editor-mobile-bridge -- yarn build:editor-mobile-bridge
+          - export CHANGED_PACKAGES=$(node build/ci-scripts/get.changed.packages.since.master.js)
+          # Change into a glob pattern (removing brackets, spaces and quotes).
+          - export CHANGED_PACKAGES_GLOB=$(echo "$CHANGED_PACKAGES" | sed 's/[][" ]//g')
+          - node build/ci-scripts/branch-deploys/update.changed.packages.deps.to.cdn.js
+          # We add in the extra braces and a trailing comma in case we only have one package.
+          - bolt ws exec --only-fs="{$CHANGED_PACKAGES_GLOB,}" -- npm pack
+          - mkdir -p dists/
+          - node build/ci-scripts/branch-deploys/copy.built.tgzs.to.dists.dir.js
+          - for file in dists/*; do node build/ci-scripts/upload.build.artefact.for.commit.js $file dists/; done
+          # Need to check that we definitely have a changeset present, error with a message if not.
+          - yarn changeset status || (echo "Please run yarn changeset:empty to create an empty changeset" && false)
+        artifacts:
+          - dists/manifest.json
+        after-script:
+          - yarn send:stepFailureEvents
+        caches:
+          - node
+    - step: &lint-typecheck
+        name: Lint + Typecheck
+        script:
+          - source ./build-setup.sh
+          - bolt install --frozen-lockfile
+          - node build/ci-scripts/run.tool.if.changed.js eslint -- yarn lint:eslint
+          - node build/ci-scripts/run.tool.if.changed.js stylelint -- yarn lint:stylelint
+          - node build/ci-scripts/run.tool.if.changed.js flow -- yarn typecheck:flow
+          - node build/ci-scripts/run.tool.if.changed.js typescript -- yarn typecheck:typescript
+          # Get the commit that we diverged from master at.
+          - export DIVERGED_AT=$(git merge-base master HEAD)
+          # Get a comma separated list of changed files.
+          - export CHANGED_FILES=$(git diff --name-only $DIVERGED_AT -- 'packages' 'build' 'website' | grep -E 'js$|ts$|tsx$' | tr '\n' ',')
+          # The below runs prettier over all changed files and fails if anyone of them don't match prettier's rules.
+          # We add fileMock.js to the list of files so that we never pass an empty list to prettier.
+          - yarn prettier --no-editorconfig "{$CHANGED_FILES,fileMock.js}" --list-different
+        after-script:
+          - yarn send:stepFailureEvents
+        caches:
+          - node
+    - step: &check-bundle-sizes
+        name: Check bundle sizes
+        script:
+          - source ./build-setup.sh
+          - bolt install --frozen-lockfile
+          - export TARGET_BRANCH="$(node build/ci-scripts/get.target.branch.js)" && echo "$TARGET_BRANCH"
+          - bolt measure:dependents:s3
+          - node build/ci-scripts/merge.json.in.folder.js .currentBundleSize
+          - if [ -e ".currentBundleSize/merged.json" ]; then node build/ci-scripts/upload.build.artefact.for.commit.js .currentBundleSize/merged.json; fi
+        after-script:
+          - yarn send:stepFailureEvents
+        caches:
+          - node
+    - step: &unit-tests
+        name: Unit Testing
+        script:
+          - source ./build-setup.sh
+          - bolt install --frozen-lockfile
+          - yarn test:changed --maxWorkers=50% --passWithNoTests
+          # Run platform-specific tests of the editor bridge
+          - yarn test:editor-mobile-bridge:ios
+          - yarn test:editor-mobile-bridge:android
+          # This script acts like a unit test to check changes to @atlaskit/adf-schema.
+          - node build/ci-scripts/run.if.package.changed.js @atlaskit/adf-schema -- yarn build:adf-schema:checkuptodate
+        after-script:
+          - yarn send:stepFailureEvents
+        caches:
+          - node
+    - step: &browser-unit-tests
+        name: Browser Unit Testing
+        script:
+          - source ./build-setup.sh
+          - bolt install --frozen-lockfile
+          - echo "Run browser unit tests using Karma + Browserstack"
+          - node build/ci-scripts/run.tool.if.changed.js karma -- yarn test:browser:browserstack
+        after-script:
+          - yarn send:stepFailureEvents
+        caches:
+          - node
+    - step: &integration-tests
+        name: Browser Integration Testing
+        script:
+          - source ./build-setup.sh
+          - bolt install --frozen-lockfile
+          - echo "Run browser integration tests using Webdriver + Browserstack"
+          # If we have changed any packages with webdriver tests, we wait until browserstack has free resources, then run our tests.
+          # BS_SESSIONS_ALLOWED represents the percentage of sessions allowed.
+          - LOCAL_IDENTIFIER=$(date +%s) BS_RETRY=5 BS_SESSIONS_ALLOWED=80 node build/ci-scripts/run.tool.if.changed.js webdriver -- node build/ci-scripts/wait.for.browserstack.resources.js && yarn test:webdriver:browserstack:changed
+        after-script:
+          - yarn send:stepFailureEvents
+        caches:
+          - node
+    - step: &vr-tests
+        name: Visual Regression Tests
+        image: atlassianlabs/atlaskit-mk-2-vr:1.0.16
+        script:
+          - source ./build-setup.sh
+          - git lfs pull
+          - bolt install --frozen-lockfile
+          - yarn run test:vr:changed
+        after-script:
+          # Extract all the diff images and store them into a folder for download.
+          - mkdir ./imageSnapshotFailures && find . \( -name '*-diff.png' -or -name '*-error.png' \) -not -path "./node_modules/*" -exec cp {} ./imageSnapshotFailures \;
+          - yarn send:stepFailureEvents
+        # If a failure occurs, you can download the image snapshot of the differences.
+        artifacts:
+          - imageSnapshotFailures/**
+        caches:
+          - node
+    - step: &build-website
+        name: Building website
+        script:
+          - source ./build-setup.sh
+          - bolt install --frozen-lockfile
+          - cd website
+          # This next line just makes it so we can skip website builds by having a branch name that starts with "skip-website/".
+          - if [[ "$BITBUCKET_BRANCH" == skip-website/* ]]; then echo "Skipping website build" && mkdir dist && echo "Build skipped" > dist/index.html; else WEBSITE_ENV=staging yarn build:no-minimize; fi
+          - yarn build:copy
+          - set -o pipefail # Make sure we fail if the deployment fails.
+          # We pipe the output to stdout AND deploy-log.txt so that we can read the live url
+          - yarn deploy:staging | tee deploy-log.txt
+          - cat deploy-log.txt | grep "URL:" | sed "s/Live Draft Url..//gi" > netlify-link.txt
+          - echo "Uploading netlify build link to s3 so that we can fetch at the end..."
+          - node ../build/ci-scripts/upload.build.artefact.for.commit.js netlify-link.txt
+        after-script:
+          - yarn send:stepFailureEvents
+        caches:
+          - node
+    - step: &send-website-url
+        name: Sending Website Build Url
+        script:
+          - (cd build/utils && yarn install) # Needed for npm-run when updating status.
+          - cd build/ci-scripts
+          - yarn install
+          - node download.build.artefact.for.commit.js netlify-link.txt
+          - node update.build.status.with.netlify.link.js
+        after-script:
+          - yarn send:buildEvents
+
 pipelines:
   branches:
     master:
@@ -39,152 +184,35 @@ pipelines:
             - yarn send:buildEvents
           caches:
             - node
+    develop:
+      - parallel:
+          - step: *build-dists
+          - step: *lint-typecheck
+          - step: *check-bundle-sizes
+          - step: *unit-tests
+          # https://product-fabric.atlassian.net/browse/ED-6927
+          # - step: *browser-unit-tests
+          - step: *integration-tests
+          - step: *vr-tests
+          - step: *build-website
+          - step:
+              name: 'Develop branch specific things'
+              script:
+                - echo 'Update merged PR with pending release info'
+      - step: *send-website-url
 
   default:
     - parallel:
-        - step:
-            name: Building dists
-            script:
-              - source ./build-setup.sh
-              - bolt install --frozen-lockfile
-              - yarn build
-              - node build/ci-scripts/run.if.package.changed.js @atlaskit/editor-mobile-bridge -- yarn build:editor-mobile-bridge
-              - export CHANGED_PACKAGES=$(node build/ci-scripts/get.changed.packages.since.master.js)
-              # Change into a glob pattern (removing brackets, spaces and quotes).
-              - export CHANGED_PACKAGES_GLOB=$(echo "$CHANGED_PACKAGES" | sed 's/[][" ]//g')
-              - node build/ci-scripts/branch-deploys/update.changed.packages.deps.to.cdn.js
-              # We add in the extra braces and a trailing comma in case we only have one package.
-              - bolt ws exec --only-fs="{$CHANGED_PACKAGES_GLOB,}" -- npm pack
-              - mkdir -p dists/
-              - node build/ci-scripts/branch-deploys/copy.built.tgzs.to.dists.dir.js
-              - for file in dists/*; do node build/ci-scripts/upload.build.artefact.for.commit.js $file dists/; done
-              # Need to check that we definitely have a changeset present, error with a message if not.
-              - yarn changeset status || (echo "Please run yarn changeset:empty to create an empty changeset" && false)
-            artifacts:
-              - dists/manifest.json
-            after-script:
-              - yarn send:stepFailureEvents
-            caches:
-              - node
-        - step:
-            name: Lint + Typecheck
-            script:
-              - source ./build-setup.sh
-              - bolt install --frozen-lockfile
-              - node build/ci-scripts/run.tool.if.changed.js eslint -- yarn lint:eslint
-              - node build/ci-scripts/run.tool.if.changed.js stylelint -- yarn lint:stylelint
-              - node build/ci-scripts/run.tool.if.changed.js flow -- yarn typecheck:flow
-              - node build/ci-scripts/run.tool.if.changed.js typescript -- yarn typecheck:typescript
-              # Get the commit that we diverged from master at.
-              - export DIVERGED_AT=$(git merge-base master HEAD)
-              # Get a comma separated list of changed files.
-              - export CHANGED_FILES=$(git diff --name-only $DIVERGED_AT -- 'packages' 'build' 'website' | grep -E 'js$|ts$|tsx$' | tr '\n' ',')
-              # The below runs prettier over all changed files and fails if anyone of them don't match prettier's rules.
-              # We add fileMock.js to the list of files so that we never pass an empty list to prettier.
-              - yarn prettier --no-editorconfig "{$CHANGED_FILES,fileMock.js}" --list-different
-            after-script:
-              - yarn send:stepFailureEvents
-            caches:
-              - node
-        - step:
-            name: Check bundle sizes
-            script:
-              - source ./build-setup.sh
-              - bolt install --frozen-lockfile
-              - export TARGET_BRANCH="$(node build/ci-scripts/get.target.branch.js)" && echo "$TARGET_BRANCH"
-              - bolt measure:dependents:s3
-              - node build/ci-scripts/merge.json.in.folder.js .currentBundleSize
-              - if [ -e ".currentBundleSize/merged.json" ]; then node build/ci-scripts/upload.build.artefact.for.commit.js .currentBundleSize/merged.json; fi
-            after-script:
-              - yarn send:stepFailureEvents
-            caches:
-              - node
-        - step:
-            name: Unit Testing
-            script:
-              - source ./build-setup.sh
-              - bolt install --frozen-lockfile
-              - yarn test:changed --maxWorkers=50% --passWithNoTests
-              # Run platform-specific tests of the editor bridge
-              - yarn test:editor-mobile-bridge:ios
-              - yarn test:editor-mobile-bridge:android
-              # This script acts like a unit test to check changes to @atlaskit/adf-schema.
-              - node build/ci-scripts/run.if.package.changed.js @atlaskit/adf-schema -- yarn build:adf-schema:checkuptodate
-            after-script:
-              - yarn send:stepFailureEvents
-            caches:
-              - node
+        - step: *build-dists
+        - step: *lint-typecheck
+        - step: *check-bundle-sizes
+        - step: *unit-tests
         # https://product-fabric.atlassian.net/browse/ED-6927
-        # - step:
-        #     name: Browser Unit Testing
-        #     script:
-        #       - source ./build-setup.sh
-        #       - bolt install --frozen-lockfile
-        #       - echo "Run browser unit tests using Karma + Browserstack"
-        #       - node build/ci-scripts/run.tool.if.changed.js karma -- yarn test:browser:browserstack
-        #     after-script:
-        #       - yarn send:stepFailureEvents
-        #     caches:
-        #       - node
-        - step:
-            name: Browser Integration Testing
-            script:
-              - source ./build-setup.sh
-              - bolt install --frozen-lockfile
-              - echo "Run browser integration tests using Webdriver + Browserstack"
-              # If we have changed any packages with webdriver tests, we wait until browserstack has free resources, then run our tests.
-              # BS_SESSIONS_ALLOWED represents the percentage of sessions allowed.
-              - LOCAL_IDENTIFIER=$(date +%s) BS_RETRY=5 BS_SESSIONS_ALLOWED=80 node build/ci-scripts/run.tool.if.changed.js webdriver -- node build/ci-scripts/wait.for.browserstack.resources.js && yarn test:webdriver:browserstack:changed
-            after-script:
-              - yarn send:stepFailureEvents
-            caches:
-              - node
-        - step:
-            name: Visual Regression Tests
-            image: atlassianlabs/atlaskit-mk-2-vr:1.0.16
-            script:
-              - source ./build-setup.sh
-              - git lfs pull
-              - bolt install --frozen-lockfile
-              - yarn run test:vr:changed
-            after-script:
-              # Extract all the diff images and store them into a folder for download.
-              - mkdir ./imageSnapshotFailures && find . \( -name '*-diff.png' -or -name '*-error.png' \) -not -path "./node_modules/*" -exec cp {} ./imageSnapshotFailures \;
-              - yarn send:stepFailureEvents
-            # If a failure occurs, you can download the image snapshot of the differences.
-            artifacts:
-              - imageSnapshotFailures/**
-            caches:
-              - node
-        - step:
-            name: Building website
-            script:
-              - source ./build-setup.sh
-              - bolt install --frozen-lockfile
-              - cd website
-              # This next line just makes it so we can skip website builds by having a branch name that starts with "skip-website/".
-              - if [[ "$BITBUCKET_BRANCH" == skip-website/* ]]; then echo "Skipping website build" && mkdir dist && echo "Build skipped" > dist/index.html; else WEBSITE_ENV=staging yarn build:no-minimize; fi
-              - yarn build:copy
-              - set -o pipefail # Make sure we fail if the deployment fails.
-              # We pipe the output to stdout AND deploy-log.txt so that we can read the live url
-              - yarn deploy:staging | tee deploy-log.txt
-              - cat deploy-log.txt | grep "URL:" | sed "s/Live Draft Url..//gi" > netlify-link.txt
-              - echo "Uploading netlify build link to s3 so that we can fetch at the end..."
-              - node ../build/ci-scripts/upload.build.artefact.for.commit.js netlify-link.txt
-            after-script:
-              - yarn send:stepFailureEvents
-            caches:
-              - node
-    - step:
-        name: Sending Website Build Url
-        script:
-          - (cd build/utils && yarn install) # Needed for npm-run when updating status.
-          - cd build/ci-scripts
-          - yarn install
-          - node download.build.artefact.for.commit.js netlify-link.txt
-          - node update.build.status.with.netlify.link.js
-        after-script:
-          - yarn send:buildEvents
+        # - step: *browser-unit-tests
+        - step: *integration-tests
+        - step: *vr-tests
+        - step: *build-website
+    - step: *send-website-url
 
   # Pipelines that can be scheduled or triggered manually.
   custom:
