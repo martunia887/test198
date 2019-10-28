@@ -3,10 +3,10 @@ import { MediaViewerSidebar } from '../src';
 
 // additional Atlaskit components
 import { FilmstripView } from '@atlaskit/media-filmstrip';
-import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
-import { MediaViewer } from '@atlaskit/media-viewer';
-import { Identifier } from '@atlaskit/media-core';
 import { Card } from '@atlaskit/media-card';
+import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
+import { Identifier } from '@atlaskit/media-core';
+import { MediaViewer } from '@atlaskit/media-viewer';
 
 // shared example helpers
 import MockSidebarContent from '../example-helpers/MockSidebarContent';
@@ -30,7 +30,7 @@ type State = {
   animate: boolean;
 };
 
-export default class ExampleMediaViewerWithSidebar extends Component<
+export default class ExampleMediaFilmstripWithSidebar extends Component<
   Props,
   State
 > {

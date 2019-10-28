@@ -28,5 +28,5 @@ export interface MediaViewerProps {
 
   readonly extraToolbarAction?: ToolbarAction;
   readonly onNavigate?: (selectedItem: Identifier) => void;
-  readonly withSidebar: boolean;
+  readonly withSidebar?: boolean;
 }

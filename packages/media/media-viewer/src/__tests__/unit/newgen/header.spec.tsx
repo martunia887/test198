@@ -385,7 +385,7 @@ describe('<Header />', () => {
   });
 
   describe('header action button', () => {
-    it('should not include a action button if action prop is not defined', () => {
+    it('should not include a action button if extraToolbarAction prop is not defined', () => {
       const el = mountWithIntlContext(
         <Header
           intl={fakeIntl}
@@ -397,15 +397,15 @@ describe('<Header />', () => {
       expect(el.find(EditorPanelIcon).exists()).toBe(false);
     });
 
-    it('should include a action button if action prop is defined', () => {
+    it('should include a action button if extraToolbarAction prop is defined', () => {
       const el = mountWithIntlContext(
         <Header
           intl={fakeIntl}
           mediaClient={{} as any}
           identifier={externalIdentifier}
-          action={{
+          extraToolbarAction={{
             icon: <EditorPanelIcon label="show" />,
-            handler: jest.fn(),
+            onClick: jest.fn(),
           }}
         />,
       );

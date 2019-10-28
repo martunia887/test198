@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { MediaViewerSidebar } from '../src';
 
 // additional Atlaskit components
+import { Card } from '@atlaskit/media-card';
 import { MediaViewer } from '@atlaskit/media-viewer';
 import { Identifier } from '@atlaskit/media-core';
-import { Card } from '@atlaskit/media-card';
 import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
 
 // shared example helpers
@@ -27,7 +27,10 @@ type State = {
   isSidebarOpen: boolean;
 };
 
-export default class SidebarWithMediaCard extends Component<Props, State> {
+export default class ExampleMediaCardWithSidebar extends Component<
+  Props,
+  State
+> {
   state = {
     isSidebarOpen: false,
     selectedItem: undefined,

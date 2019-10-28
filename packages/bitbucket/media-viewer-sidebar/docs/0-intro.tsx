@@ -21,33 +21,27 @@ MediaViewer Sidebar is a component for displaying metadata next to Atlaskit Medi
 ${code`
 import React, { Component } from 'react';
 import { MediaViewerSidebar } from '../src';
-
-// additional Atlaskit components
 import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
 import { MediaViewer } from '@atlaskit/media-viewer';
 import { Identifier } from '@atlaskit/media-core';
 
-import MockSidebarContent from '../example-helpers/MockSidebarContent';
-import * as styles from '../example-helpers/styled';
-
-
-  const identifiers = [
-    {
-      id: 'some-valid-id-1',
-      occurrenceKey: 'key1',
-      mediaItemType: 'file',
-    },
-    {
-      id: 'some-valid-id-2',
-      occurrenceKey: 'item-1',
-      mediaItemType: 'file',
-    },
-    {
-      id: 'some-valid-id-2',
-      occurrenceKey: 'item-2',
-      mediaItemType: 'file',
-    },
-  ];
+const identifiers = [
+  {
+    id: 'some-valid-id-1',
+    occurrenceKey: 'key1',
+    mediaItemType: 'file',
+  },
+  {
+    id: 'some-valid-id-2',
+    occurrenceKey: 'item-1',
+    mediaItemType: 'file',
+  },
+  {
+    id: 'some-valid-id-2',
+    occurrenceKey: 'item-2',
+    mediaItemType: 'file',
+  },
+];
 
 const firstItem = identifiers[0];
 

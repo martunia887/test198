@@ -77,7 +77,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
           featureFlags={featureFlags}
           extraToolbarAction={extraToolbarAction}
           onNavigate={onNavigate}
-          withSidebar={withSidebar}
+          withSidebar={!!withSidebar}
         />
       );
     } else if (dataSourceWithSelectedItem.collectionName) {
@@ -92,7 +92,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
             featureFlags={featureFlags}
             extraToolbarAction={extraToolbarAction}
             onNavigate={onNavigate}
-            withSidebar={withSidebar}
+            withSidebar={!!withSidebar}
           />
         );
       }
@@ -116,7 +116,7 @@ export class MediaViewer extends Component<MediaViewerProps, MediaViewerState> {
           featureFlags={featureFlags}
           extraToolbarAction={extraToolbarAction}
           onNavigate={onNavigate}
-          withSidebar={withSidebar}
+          withSidebar={!!withSidebar}
         />
       );
     } else {
