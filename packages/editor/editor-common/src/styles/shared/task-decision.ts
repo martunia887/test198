@@ -1,6 +1,4 @@
-// @ts-ignore: unused variable
-// prettier-ignore
-import { css, Styles, StyledComponentClass } from 'styled-components';
+import { css } from 'styled-components';
 import { fontSize } from '@atlaskit/theme';
 import { akEditorTableCellMinWidth } from '..';
 
@@ -17,5 +15,10 @@ export const tasksAndDecisionsStyles = css`
 
   div[data-task-list-local-id]:first-child {
     margin-top: 0;
+  }
+
+  div[data-task-list-local-id] div[data-task-list-local-id] {
+    margin-top: 0px;
+    margin-left: 24px;
   }
 `;

@@ -1,6 +1,6 @@
 {
   "name": "@atlaskit/profilecard",
-  "version": "12.3.1",
+  "version": "12.3.3",
   "config": {
     "access": "public"
   },
@@ -20,7 +20,7 @@
     "@atlaskit/layer": "^7.1.1",
     "@atlaskit/lozenge": "^9.1.1",
     "@atlaskit/popper": "^3.1.6",
-    "@atlaskit/portal": "^3.1.1",
+    "@atlaskit/portal": "^3.1.2",
     "@atlaskit/spinner": "^12.1.1",
     "@atlaskit/theme": "^9.2.4",
     "@atlaskit/util-shared-styles": "^2.10.3",
@@ -34,8 +34,8 @@
   "devDependencies": {
     "@atlaskit/docs": "^8.1.8",
     "@atlaskit/dynamic-table": "^13.3.3",
-    "@atlaskit/i18n-tools": "^0.5.2",
-    "@atlaskit/util-data-test": "^12.11.2",
+    "@atlaskit/i18n-tools": "^0.6.0",
+    "@atlaskit/util-data-test": "^13.0.0",
     "enzyme": "^3.7.0",
     "fetch-mock": "^7.3.3",
     "loader-utils": "^1.1.0",
