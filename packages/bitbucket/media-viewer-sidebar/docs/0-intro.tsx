@@ -18,23 +18,20 @@ MediaViewer Sidebar is a component for displaying metadata next to Atlaskit Medi
 
   In this example, the button could be replaced with a FilmStrip containing Cards.
 
-  ${code`
-  import React from 'react';
-  import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
-  import { MediaViewer } from '@atlaskit/media-viewer';
-  import { Identifier } from '@atlaskit/media-core';
-  import { MediaViewerSidebar } from '@atlaskit/bitbucket-media-viewer-sidebar';
-  import {
-    createStorybookContext,
-    defaultCollectionName,
-  } from '@atlaskit/media-test-helpers';
+${code`
+import React, { Component } from 'react';
+import { MediaViewerSidebar } from '../src';
 
-  interface State {
-    openMediaId?: Identifier;
-    isSidebarOpen: boolean;
-  }
+// additional Atlaskit components
+import EditorPanelIcon from '@atlaskit/icon/glyph/editor/panel';
+import { MediaViewer } from '@atlaskit/media-viewer';
+import { Identifier } from '@atlaskit/media-core';
 
-  const items = [
+import MockSidebarContent from '../example-helpers/MockSidebarContent';
+import * as styles from '../example-helpers/styled';
+
+
+  const identifiers = [
     {
       id: 'some-valid-id-1',
       occurrenceKey: 'key1',
@@ -52,97 +49,77 @@ MediaViewer Sidebar is a component for displaying metadata next to Atlaskit Medi
     },
   ];
 
-  class ExampleViewer extends React.Component<{}, State> {
-    state = {
-      openMediaId: undefined,
+const firstItem = identifiers[0];
+
+export default class SidebarWithMediaViewer extends Component<*,*> {
+  state = {
+    selectedItem: undefined,
+    isSidebarOpen: false,
+  };
+
+  toggleSidebar = () => {
+    this.setState(state => ({
+      isSidebarOpen: !state.isSidebarOpen,
+    }));
+  };
+
+  closeMediaViewer = () => {
+    this.setState({
       isSidebarOpen: false,
+      selectedItem: undefined,
+    });
+  };
+
+  openMediaViewer = async () => {
+    this.setState({
+      selectedItem: firstItem,
+    });
+  };
+
+  // when user navigates left or right in media-viewer, we need to make sure
+  // the sidebar is showing data for the current selected item
+  updateSidebar = async (nextIdentifier: Identifier) => {
+    this.setState({
+      selectedItem: await toSyncIdentifier(nextIdentifier),
+    });
+  };
+
+  render() {
+    const { isSidebarOpen, selectedItem } = this.state;
+    const isMediaViewerOpen = !!selectedItem;
+
+    const toggleSidepanelActionProps = {
+      icon: <EditorPanelIcon label={isSidebarOpen ? 'show' : 'hide'} />,
+      onClick: this.toggleSidebar,
     };
 
-    mediaClientConfig = {
-      authProvider: () =>
-        Promise.resolve({
-          id: '',
-          token: '',
-          baseUrl: '',
-        }),
-    };
-
-    toggleSidebar = (isSidebarOpen: boolean) => {
-      this.setState({ isSidebarOpen });
-    };
-
-    getToggleAction = () => {
-      if (this.state.isSidebarOpen) {
-        return {
-          icon: <EditorPanelIcon label="show" />,
-          label: 'Show sidebar',
-          handler: () => this.toggleSidebar(false),
-        };
-      } else {
-        return {
-          icon: <EditorPanelIcon label="hide" />,
-          label: 'Hide sidebar',
-          handler: () => this.toggleSidebar(true),
-        };
-      }
-    };
-
-    closeMediaViewer = () => {
-      this.setState({
-        isSidebarOpen: false,
-        openMediaId: undefined,
-      });
-    };
-
-    openMediaViewer = async (mediaId: Identifier) => {
-      this.setState({ openMediaId: mediaId });
-    };
-
-    updateSidebar = (nextMediaId: Identifier) => {
-      if (nextMediaId !== this.state.openMediaId) {
-        this.setState({
-          openMediaId: nextMediaId,
-        });
-      }
-    };
-
-    render() {
-      const { isSidebarOpen, openMediaId } = this.state;
-      const isMediaViewerOpen = !!openMediaId;
-
-      return (
-        <>
-          <button onClick={() => this.openMediaViewer(items[0])}>Show</button>
-          {isMediaViewerOpen && (
-            <>
-              <MediaViewer
-                action={this.getToggleAction()}
-                mediaClientConfig={mediaClientConfig}
-                selectedItem={items[0]}
-                dataSource={{ list: items }}
-                collectionName="myCollection"
-                onClose={this.closeMediaViewer}
-                onNavigationChange={
-                  isSidebarOpen ? this.updateSidebar : undefined
-                }
-              />
-              {isSidebarOpen && (
-                <MediaViewerSidebar>
-                  <h2>File details</h2>
-                  {Object.keys(this.state.openMediaId!).map(k => (
-                    <p>
-                      {k}: {this.state.openMediaId![k]}
-                    </p>
-                  ))}
-                </MediaViewerSidebar>
-              )}
-            </>
-          )}
-        </>
-      );
-    }
+    return (
+      <>
+        <button onClick={this.openMediaViewer}>Open</button>
+        {isMediaViewerOpen && (
+          <>
+            <MediaViewer
+              withSidebar={isSidebarOpen}
+              extraToolbarAction={toggleSidepanelActionProps}
+              mediaClientConfig={mediaClientConfig}
+              selectedItem={firstItem}
+              dataSource={{ list: identifiers }}
+              collectionName={collectionName}
+              onClose={this.closeMediaViewer}
+              onNavigate={this.updateSidebar}
+            />
+            {isSidebarOpen && (
+              <MediaViewerSidebar>
+                <p>Current identifier ID: {selectedItem.id}</p>
+              </MediaViewerSidebar>
+            )}
+          </>
+        )}
+      </>
+    );
   }
-  `}
+}
+`}
 
   ## Sidebar
 

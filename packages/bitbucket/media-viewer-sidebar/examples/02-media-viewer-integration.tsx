@@ -51,8 +51,6 @@ export default class SidebarWithMediaViewer extends Component<Props, State> {
     });
   };
 
-  // when user navigates left or right in media-viewer, we need to make sure
-  // the sidebar is showing data for the current selected item
   updateSidebar = async (nextIdentifier: Identifier) => {
     this.setState({
       selectedItem: await toSyncIdentifier(nextIdentifier),
