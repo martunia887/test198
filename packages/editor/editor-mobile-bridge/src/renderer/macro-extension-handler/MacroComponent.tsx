@@ -137,7 +137,7 @@ export class MacroComponent extends React.Component<
     )
       .submit()
       .then(isSuccessful => {
-        if (isSuccessful === 'true') {
+        if (isSuccessful) {
           this.setState({
             loaded: true,
             loading: false,
@@ -176,7 +176,7 @@ export class MacroComponent extends React.Component<
     )
       .submit()
       .then(isSuccessful => {
-        if (isSuccessful === 'true') {
+        if (isSuccessful) {
           this.setState({
             loaded: true,
             loading: false,
