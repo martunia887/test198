@@ -31,4 +31,11 @@ describe('renderer bridge', () => {
     expect(onContentRendered).toHaveBeenCalled();
     mobileRenderer.unmount();
   });
+
+  // mock the bridge responses for functions
+  // test error state
+  // loading state
+  // view state
+  // try again state
+  // tap to load state
 });

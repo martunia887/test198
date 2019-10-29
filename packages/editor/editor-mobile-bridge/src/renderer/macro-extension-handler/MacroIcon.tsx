@@ -6,10 +6,10 @@ import { getContextAwareFullPath } from '@atlassian/confluence-urls';
 
 export const macroIcon = (
   iconUrl: string,
-  macroName: string,
+  extensionKey: string,
   title: string,
 ) => {
-  switch (macroName) {
+  switch (extensionKey) {
     case 'toc':
       return <AkOverviewIcon label={title} size="small" />;
 

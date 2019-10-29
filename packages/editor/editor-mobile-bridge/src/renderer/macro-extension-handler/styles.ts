@@ -15,8 +15,8 @@ export const cardStyles = {
   border: `solid 2px ${colors.N30}`,
   display: 'flex',
   height: 'initial',
-  whiteSpace: 'normal',
-  textAlign: 'left',
+  whiteSpace: 'normal' as 'normal',
+  textAlign: 'left' as 'left',
   minWidth: '150px',
 };
 
@@ -49,7 +49,7 @@ export const Error = styled.span`
 export const ErrorMessage = styled.span`
   color: ${colors.N90};
   padding-left: 4px;
-  vertical-align: middle;
+  margin-top: -4px;
 `;
 
 export const Icon = styled.span`
