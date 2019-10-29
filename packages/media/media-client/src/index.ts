@@ -70,6 +70,7 @@ export {
   ProcessingFailedState,
   ErrorFileState,
   FileState,
+  FileStates,
   isErrorFileState,
   isImageRepresentationReady,
   mapMediaFileToFileState,

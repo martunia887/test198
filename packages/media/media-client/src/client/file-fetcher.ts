@@ -125,7 +125,7 @@ export interface FileFetcher {
 }
 
 export class FileFetcherImpl implements FileFetcher {
-  private readonly dataloader: Dataloader<DataloaderKey, DataloaderResult>;
+  protected readonly dataloader: Dataloader<DataloaderKey, DataloaderResult>;
 
   constructor(private readonly mediaStore: MediaStore) {
     this.dataloader = new Dataloader<DataloaderKey, DataloaderResult>(
@@ -214,7 +214,7 @@ export class FileFetcherImpl implements FileFetcher {
     return this.mediaStore.getFileBinaryURL(id, collectionName);
   }
 
-  private createDownloadFileStream = (
+  protected createDownloadFileStream = (
     id: string,
     collection?: string,
   ): Observable<FileState> => {

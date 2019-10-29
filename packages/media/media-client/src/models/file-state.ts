@@ -87,6 +87,8 @@ export type FileState =
   | ErrorFileState
   | ProcessingFailedState;
 
+export type FileStates = Record<string, FileState>;
+
 export const isErrorFileState = (
   fileState: FileState,
 ): fileState is ErrorFileState =>

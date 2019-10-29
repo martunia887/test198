@@ -7,6 +7,7 @@ import {
 } from './media-store';
 import { CollectionFetcher } from './collection-fetcher';
 import { FileFetcherImpl, FileFetcher } from './file-fetcher';
+import { FileFetcherImpl2 } from './file-fetcher2';
 import { UploadEventPayloadMap, EventPayloadListener } from './events';
 
 export class MediaClient {
@@ -23,7 +24,7 @@ export class MediaClient {
     });
     this.config = mediaClientConfig;
     this.collection = new CollectionFetcher(this.mediaStore);
-    this.file = new FileFetcherImpl(this.mediaStore);
+    this.file = new FileFetcherImpl2(this.mediaStore);
     this.eventEmitter = new EventEmitter2();
   }
 
