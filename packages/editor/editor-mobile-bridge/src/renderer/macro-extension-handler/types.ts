@@ -156,10 +156,11 @@ export interface MacroRendererState {
 
 export type MacroCardType = {
   macroName: string;
-  title: string;
+  extensionKey: string;
   iconUrl?: any;
   action: any;
   errorMessage?: string;
+  loading: boolean;
 };
 
 export type CreateMacro = {
