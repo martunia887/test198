@@ -1046,9 +1046,21 @@
         },
         "content": {
           "type": "array",
-          "items": {
-            "$ref": "#/definitions/taskItem_node"
-          },
+          "items": [
+            {
+              "$ref": "#/definitions/taskItem_node"
+            },
+            {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/taskItem_node"
+                },
+                {
+                  "$ref": "#/definitions/taskList_node"
+                }
+              ]
+            }
+          ],
           "minItems": 1
         },
         "attrs": {
