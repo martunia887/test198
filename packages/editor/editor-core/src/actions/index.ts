@@ -11,6 +11,7 @@ import {
 import { sanitizeNode } from '../utils/filter/node-filter';
 import { EventDispatcher } from '../event-dispatcher';
 import { safeInsert } from 'prosemirror-utils';
+import { getEditorProps } from '../plugins/shared-context';
 
 export type ContextUpdateHandler = (
   editorView: EditorView,
@@ -138,6 +139,10 @@ export default class EditorActions implements EditorActionsOptions {
   async getValue(): Promise<any | undefined> {
     const doc = await getEditorValueWithMedia(this.editorView);
 
+    const editorProps = this.editorView
+      ? getEditorProps(this.editorView.state)
+      : undefined;
+
     if (!doc) {
       return;
     }
@@ -150,7 +155,7 @@ export default class EditorActions implements EditorActionsOptions {
             )
           : doc,
       sanitizeNode,
-      toJSON,
+      node => toJSON(node, editorProps),
     )(doc);
   }
 

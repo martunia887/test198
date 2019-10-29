@@ -1,5 +1,6 @@
 import { NodeSpec, Node as PMNode } from 'prosemirror-model';
 import { N30 } from '../../utils/colors';
+import { SchemaSerializeOption } from '../types';
 
 export type MediaType = 'file' | 'link' | 'external';
 export type DisplayType = 'file' | 'thumbnail';
@@ -176,7 +177,10 @@ export const copyPrivateAttributes = (
 const optionalAttributes = ['occurrenceKey', 'width', 'height', 'url'];
 const externalOnlyAttributes = ['type', 'url', 'width', 'height'];
 
-export const toJSON = (node: PMNode) => ({
+export const toJSON = (
+  node: PMNode,
+  serializeOption?: SchemaSerializeOption,
+) => ({
   attrs: Object.keys(node.attrs)
     .filter(key => !(key[0] === '_' && key[1] === '_'))
     .reduce<Record<string, any>>((obj, key) => {

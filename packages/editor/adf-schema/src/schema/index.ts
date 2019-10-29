@@ -15,7 +15,7 @@ export {
   confluenceSchemaWithMediaSingle,
 } from './confluence-schema';
 export { defaultSchema } from './default-schema';
-
+export { SchemaSerializeOption } from './types';
 export {
   default as createJIRASchema,
   isSchemaWithLists,

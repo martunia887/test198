@@ -31,6 +31,7 @@ import { FakeTextCursorSelection } from '../plugins/fake-text-cursor/cursor';
 import { hasParentNodeOfType } from 'prosemirror-utils';
 import { GapCursorSelection, Side } from '../plugins/gap-cursor/selection';
 import { isNodeEmpty } from './document';
+import { EditorProps } from '@atlaskit/editor-core';
 
 export {
   isEmptyParagraph,
@@ -616,8 +617,9 @@ export function wrapIn(
   return tr;
 }
 
-const transformer = new JSONTransformer();
-export function toJSON(node: Node): JSONDocNode {
+export function toJSON(node: Node, editorProps?: EditorProps): JSONDocNode {
+  // TODO how to cache transformer to improve performance?
+  const transformer = new JSONTransformer(editorProps);
   return transformer.encode(node);
 }
 

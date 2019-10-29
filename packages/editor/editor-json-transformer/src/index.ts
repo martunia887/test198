@@ -9,9 +9,11 @@ import {
   toJSONTableCell,
   toJSONTableHeader,
   expandToJSON,
+  SchemaSerializeOption,
 } from '@atlaskit/adf-schema';
 import isEqual from 'lodash.isequal';
 import { Node as PMNode, Mark as PMMark } from 'prosemirror-model';
+import { EditorProps } from '@atlaskit/editor-core';
 
 interface Transformer<T> {
   encode(node: PMNode): T;
@@ -81,12 +83,25 @@ const emptyDoc = createDocFromContent([
   },
 ]);
 
-const toJSON = (node: PMNode): JSONNode => {
+const generateSchemaSerializeOption = (
+  props: EditorProps,
+): SchemaSerializeOption => {
+  let serializeOption: SchemaSerializeOption = {};
+  if (props.media && props.media.UNSAFE_allowAltTextOnImages) {
+    serializeOption.imageAltTextEnabled = true;
+  }
+  return serializeOption;
+};
+
+const toJSON = (node: PMNode, props?: EditorProps): JSONNode => {
   const obj: JSONNode = { type: node.type.name };
   if (isUnsupportedNode(node)) {
     return node.attrs.originalValue;
   } else if (isMediaNode(node)) {
-    obj.attrs = mediaToJSON(node).attrs;
+    obj.attrs = mediaToJSON(
+      node,
+      props ? generateSchemaSerializeOption(props) : undefined,
+    ).attrs;
   } else if (isMediaSingleNode(node)) {
     obj.attrs = mediaSingleToJSON(node).attrs;
   } else if (isMentionNode(node)) {
@@ -134,11 +149,16 @@ const toJSON = (node: PMNode): JSONNode => {
 };
 
 export class JSONTransformer implements Transformer<JSONDocNode> {
+  private editorProps?: EditorProps;
+  constructor(editorProps?: EditorProps) {
+    this.editorProps = editorProps;
+  }
+
   encode(node: PMNode): JSONDocNode {
     const content: JSONNode[] = [];
 
     node.content.forEach(child => {
-      content.push(toJSON(child));
+      content.push(toJSON(child, this.editorProps));
     });
 
     if (!content || isEqual(content, emptyDoc.content)) {
