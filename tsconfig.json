@@ -85,6 +85,7 @@
     "./typings/pubnub.d.ts",
     "./typings/jest-fixtures.d.ts",
     "./typings/yalc.d.ts",
-    "./typings/jest.d.ts"
+    "./typings/jest.d.ts",
+    "./typings/ResizeObserver.d.ts"
   ]
 }
