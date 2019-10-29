@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement, fullpage } from '../_helpers';
+import { expectMatchDocument, fullpage } from '../_helpers';
 import {
   goToEditorTestingExample,
   mountEditor,
@@ -7,7 +7,6 @@ import {
   copyAsHTML,
 } from '../../__helpers/testing-example-helpers';
 
-const editorSelector = '.ProseMirror';
 BrowserTestCase(
   'paste.ts: paste tests on fullpage editor: plain text',
   { skip: ['edge', 'ie', 'safari'] },
@@ -23,9 +22,7 @@ BrowserTestCase(
     await page.paste();
 
     await page.waitForSelector('p');
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -47,8 +44,7 @@ BrowserTestCase(
     await page.click(fullpage.placeholder);
     await page.paste();
     await page.waitForSelector('strong');
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -71,8 +67,7 @@ BrowserTestCase(
     await page.paste();
 
     await page.waitForSelector('ul');
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -95,7 +90,6 @@ BrowserTestCase(
     await page.paste();
 
     await page.waitForSelector('p');
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

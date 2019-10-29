@@ -1,6 +1,6 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   editable,
   insertMention,
   typeAheadPicker,
@@ -35,8 +35,7 @@ BrowserTestCase(
     await page.type(editable, 'blockquote ');
     await insertMention(page, 'Carolyn');
     await page.waitForSelector(lozenge);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -55,8 +54,7 @@ BrowserTestCase(
     await page.type(editable, 'this ');
     await insertMention(page, 'Carolyn');
     await page.waitForSelector(lozenge);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -75,8 +73,7 @@ BrowserTestCase(
     await page.type(editable, 'list ');
     await insertMention(page, 'Carolyn');
     await page.waitForSelector(lozenge);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -92,8 +89,7 @@ BrowserTestCase(
     await page.type(editable, '<> ');
     await insertMention(page, 'Carolyn');
     await page.waitForSelector(lozenge);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -109,8 +105,7 @@ BrowserTestCase(
     await page.type(editable, '[] ');
     await insertMention(page, 'Carolyn');
     await page.waitForSelector(lozenge);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -126,7 +121,6 @@ BrowserTestCase(
     await page.type(editable, '@');
     await page.waitForSelector(typeAheadPicker);
     await page.keys(['ArrowDown', 'Enter']);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

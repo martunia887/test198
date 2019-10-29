@@ -4,7 +4,7 @@ import {
   goToEditorTestingExample,
 } from '../../__helpers/testing-example-helpers';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   editable,
   insertEmoji,
   emojiItem,
@@ -29,8 +29,7 @@ BrowserTestCase(
     await highlightEmojiInTypeahead(page, 'smile');
 
     await page.keys('Return');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -50,8 +49,7 @@ BrowserTestCase(
     await highlightEmojiInTypeahead(page, 'wink');
 
     await page.keys('Return');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -64,8 +62,7 @@ BrowserTestCase(
     await page.type(editable, '```');
     await page.waitForSelector('pre', 1000);
     await page.type(editable, ':smile:');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -79,8 +76,7 @@ BrowserTestCase(
     await page.type(editable, '[] ');
     await insertEmoji(page, 'smile');
     await page.waitForSelector(emojiItem('smile'), 1000);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 

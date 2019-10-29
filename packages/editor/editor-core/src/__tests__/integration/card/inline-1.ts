@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   editable,
   copyToClipboard,
@@ -30,7 +30,6 @@ BrowserTestCase(
     // paste the link
     await browser.paste(editable);
 
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { sleep } from '@atlaskit/editor-test-helpers';
 
-import { editable, getDocFromElement, fullpage } from '../_helpers';
+import { editable, expectMatchDocument, fullpage } from '../_helpers';
 
 import {
   autoSizeToDefaultLayout,
@@ -18,6 +18,7 @@ async function loadAndRetrieveDocument(
   page: any,
   document: object,
   expectedLayout = 'default',
+  testName: string,
 ) {
   await page.browser.maximizeWindow();
 
@@ -33,8 +34,7 @@ async function loadAndRetrieveDocument(
   await page.waitForSelector(`table[data-layout="${expectedLayout}"]`);
   await sleep(500);
 
-  const doc = await page.$eval(editable, getDocFromElement);
-  return doc;
+  await expectMatchDocument(page, testName);
 }
 
 BrowserTestCase(
@@ -42,8 +42,12 @@ BrowserTestCase(
   { skip: ['ie', 'edge', 'safari', 'firefox'] },
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
-    const doc = await loadAndRetrieveDocument(page, autoSizeToDefaultLayout);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await loadAndRetrieveDocument(
+      page,
+      autoSizeToDefaultLayout,
+      'default',
+      testName,
+    );
   },
 );
 
@@ -52,12 +56,7 @@ BrowserTestCase(
   { skip: ['ie', 'edge', 'safari', 'firefox'] },
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
-    const doc = await loadAndRetrieveDocument(
-      page,
-      autoSizeToWideLayout,
-      'wide',
-    );
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await loadAndRetrieveDocument(page, autoSizeToWideLayout, 'wide', testName);
   },
 );
 
@@ -66,11 +65,11 @@ BrowserTestCase(
   { skip: ['ie', 'edge', 'safari', 'firefox'] },
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
-    const doc = await loadAndRetrieveDocument(
+    await loadAndRetrieveDocument(
       page,
       autoSizeToFullWidthLayout,
       'full-width',
+      testName,
     );
-    expect(doc).toMatchCustomDocSnapshot(testName);
   },
 );

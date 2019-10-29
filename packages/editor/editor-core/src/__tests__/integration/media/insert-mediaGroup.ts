@@ -1,5 +1,10 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, getDocFromElement, comment, insertMedia } from '../_helpers';
+import {
+  editable,
+  expectMatchDocument,
+  comment,
+  insertMedia,
+} from '../_helpers';
 import {
   mountEditor,
   goToEditorTestingExample,
@@ -27,8 +32,7 @@ import {
 
       expect(await page.isVisible('.wrapper')).toBe(true);
 
-      const doc = await page.$eval(editable, getDocFromElement);
-      expect(doc).toMatchCustomDocSnapshot(testName);
+      await expectMatchDocument(page, testName);
     },
   );
 });

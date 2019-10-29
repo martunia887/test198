@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   insertMedia,
   fullpage,
 } from '../_helpers';
@@ -37,7 +37,6 @@ BrowserTestCase(
     // now we can insert media as necessary
     await insertMedia(page);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

@@ -1,6 +1,6 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   editable,
   insertBlockMenuItem,
   changeSelectedNodeLayout,
@@ -33,8 +33,7 @@ import commonMessages from '../../../messages';
       await insertBlockMenuItem(page, 'Block macro (EH)');
       await changeSelectedNodeLayout(page, layoutMessages.defaultMessage);
 
-      const doc = await page.$eval(editable, getDocFromElement);
-      expect(doc).toMatchCustomDocSnapshot(testName);
+      await expectMatchDocument(page, testName);
     },
   );
 });

@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   insertMentionUsingClick,
   editable,
   gotoEditor,
@@ -30,8 +30,7 @@ BrowserTestCase(
     await browser.type(editable, '[] ');
     await browser.waitForSelector('div[data-node-type="actionList"]');
     await browser.paste(editable);
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -51,8 +50,7 @@ BrowserTestCase(
     await browser.type(editable, '[] ');
     await browser.waitForSelector('div[data-node-type="actionList"]');
     await browser.paste(editable);
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -71,8 +69,7 @@ BrowserTestCase(
     );
     await browser.click('div[data-node-type="actionList"] span + div');
     await browser.type(editable, 'adding action');
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -86,7 +83,6 @@ BrowserTestCase(
     await browser.type(editable, '[] ');
     await browser.waitForSelector('div[data-node-type="actionList"]');
     await insertMentionUsingClick(browser, '0');
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

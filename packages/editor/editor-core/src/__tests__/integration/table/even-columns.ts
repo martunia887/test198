@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   doubleClickResizeHandle,
 } from '../_helpers';
@@ -37,8 +37,7 @@ BrowserTestCase(
     await selectTable(page);
     await doubleClickResizeHandle(page, 2, 2);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -60,7 +59,6 @@ BrowserTestCase(
     await selectTable(page);
     await doubleClickResizeHandle(page, 2, 2);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

@@ -2,7 +2,7 @@ import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   quickInsert,
 } from '../_helpers';
@@ -30,7 +30,6 @@ BrowserTestCase(
 
     await page.type(editable, '[Atlassian](https://www.atlassian.com/)');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

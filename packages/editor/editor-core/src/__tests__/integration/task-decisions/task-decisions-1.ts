@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   gotoEditor,
   editable,
   insertBlockMenuItem,
@@ -28,8 +28,7 @@ BrowserTestCase(
     await browser.type(editable, '<> ');
     await browser.waitForSelector('ol');
     await browser.paste(editable);
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -47,8 +46,7 @@ BrowserTestCase(
     await browser.type(editable, '<> ');
     await browser.waitForSelector('ol');
     await browser.paste(editable);
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -64,7 +62,6 @@ BrowserTestCase(
     await browser.waitForSelector('ol span + div');
     await browser.click('ol span + div');
     await browser.type(editable, 'adding decisions');
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

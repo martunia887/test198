@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   comment,
   fullpage,
   editable,
@@ -44,8 +44,7 @@ const linkText2 = 'FAB-983';
       await browser.waitForSelector('[aria-label=Unlink]');
       await browser.click('[aria-label=Unlink]');
 
-      const doc = await browser.$eval(editable, getDocFromElement);
-      expect(doc).toMatchCustomDocSnapshot(testName);
+      await expectMatchDocument(page, testName);
     },
   );
 });

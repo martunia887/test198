@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement, editable, quickInsert } from '../_helpers';
+import { expectMatchDocument, editable, quickInsert } from '../_helpers';
 import { messages } from '../../../plugins/block-type/types';
 import { TableCssClassName as ClassName } from '../../../plugins/table/types';
 import {
@@ -32,9 +32,7 @@ BrowserTestCase(
 
     await page.type(editable, 'hello');
     await alignRight(page);
-    expect(
-      await page.$eval(editable, getDocFromElement),
-    ).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -55,9 +53,7 @@ BrowserTestCase(
     await page.waitFor(headingh1);
     await page.click(headingh1);
     await alignRight(page);
-    expect(
-      await page.$eval(editable, getDocFromElement),
-    ).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -119,8 +115,7 @@ BrowserTestCase(
     await page.type(editable, secondLine);
     await page.waitUntilContainsText(editable, secondLine);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -154,8 +149,6 @@ BrowserTestCase(
     await page.click(controlSelector);
 
     await alignRight(page);
-    expect(
-      await page.$eval(editable, getDocFromElement),
-    ).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

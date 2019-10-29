@@ -2,7 +2,7 @@ import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   changeSelectedNodeLayout,
   animationFrame,
@@ -41,8 +41,7 @@ BrowserTestCase(
     await clickFirstCell(page);
     await toggleBreakout(page, 1);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -63,8 +62,7 @@ BrowserTestCase(
     await clickFirstCell(page);
     await toggleBreakout(page, 2);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -85,8 +83,7 @@ BrowserTestCase(
     await clickFirstCell(page);
     await toggleBreakout(page, 1);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -108,8 +105,7 @@ BrowserTestCase(
     await clickFirstCell(page);
     await toggleBreakout(page, 1);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -130,8 +126,7 @@ BrowserTestCase(
     await clickFirstCell(page);
     await toggleBreakout(page, 2);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -152,8 +147,7 @@ BrowserTestCase(
     await clickFirstCell(page);
     await toggleBreakout(page, 3);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -186,8 +180,7 @@ BrowserTestCase(
     );
     await animationFrame(page);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -217,7 +210,6 @@ BrowserTestCase(
     await toggleBreakout(page, 2);
     await animationFrame(page);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

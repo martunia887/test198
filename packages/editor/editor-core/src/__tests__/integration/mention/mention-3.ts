@@ -1,6 +1,6 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   insertMention,
   editable,
   typeAheadPicker,
@@ -33,8 +33,7 @@ BrowserTestCase(
     await page.click('[aria-label="Mention"]');
     await page.waitForSelector(mentionId);
     await page.click(mentionId);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -54,9 +53,7 @@ BrowserTestCase(
     await page.isVisible('[data-mention-name=jjackson]');
     await page.type(editable, [' some']);
     await page.type(editable, [' text ']);
-    const doc = await page.$eval(editable, getDocFromElement);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -82,8 +79,7 @@ BrowserTestCase(
 //       return mentionsInPicker.value.length === 1;
 //     });
 //     await page.type(editable, ' text ');
-//     const doc = await page.$eval(editable, getDocFromElement);
-//     expect(doc).toMatchCustomDocSnapshot(testName);
+//    await expectMatchDocument(page, testName);
 //   },
 // );
 
@@ -100,8 +96,7 @@ BrowserTestCase(
     await page.type(editable, '`this is inline code ');
     await insertMention(page, 'Carolyn');
     await page.type(editable, '`');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -120,8 +115,7 @@ BrowserTestCase(
     await page.waitForSelector('pre');
     await page.type(editable, ['this is a code block ', '@Caro']);
     await page.keys(['Return']);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -141,7 +135,6 @@ BrowserTestCase(
     await page.isVisible('[data-mention-name=Fatima]');
     await page.type(editable, ' some');
     await page.type(editable, ' text');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

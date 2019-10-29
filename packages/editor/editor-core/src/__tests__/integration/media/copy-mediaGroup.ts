@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, getDocFromElement, fullpage } from '../_helpers';
+import { editable, expectMatchDocument, fullpage } from '../_helpers';
 import {
   goToEditorTestingExample,
   mountEditor,
@@ -53,7 +53,6 @@ BrowserTestCase(
 
     await page.paste(editable);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testCase);
+    await expectMatchDocument(page, testName);
   },
 );

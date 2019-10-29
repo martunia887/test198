@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement } from '../_helpers';
+import { expectMatchDocument } from '../_helpers';
 import {
   mountEditor,
   goToEditorTestingExample,
@@ -29,8 +29,7 @@ BrowserTestCase(
     await page.type(editorSelector, '[link](https://hello.com)');
 
     await page.waitForSelector('a');
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -47,8 +46,7 @@ BrowserTestCase(
     await page.type(editorSelector, input);
 
     await page.waitForSelector('strong');
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -63,8 +61,7 @@ BrowserTestCase(
     await page.type(editorSelector, '`');
 
     await page.waitForSelector('span.code');
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -76,8 +73,7 @@ BrowserTestCase(
     await mountEditor(page, { appearance: 'full-page' });
     await insertHeadings(page, [KEY.CONTROL, KEY.ALT]);
 
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -89,7 +85,6 @@ BrowserTestCase(
     await mountEditor(page, { appearance: 'full-page' });
     await insertHeadings(page, [KEY.META, KEY.ALT]);
 
-    const doc = await page.$eval(editorSelector, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

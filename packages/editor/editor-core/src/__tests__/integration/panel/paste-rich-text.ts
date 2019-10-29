@@ -2,7 +2,7 @@ import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   quickInsert,
   clipboardInput,
@@ -38,7 +38,6 @@ BrowserTestCase(
 
     await page.paste(editable);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

@@ -3,7 +3,7 @@ import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   insertEmoji,
   emojiItem,
@@ -43,7 +43,6 @@ BrowserTestCase(
     await browser.keys(['ArrowRight', 'ArrowRight']);
     await browser.type(editable, 'Some text');
     await browser.click(editable);
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

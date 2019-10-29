@@ -3,7 +3,7 @@ import {
   typeAheadPicker,
   insertMention,
   lozenge,
-  getDocFromElement,
+  expectMatchDocument,
   editable,
   fullpage,
 } from '../_helpers';
@@ -65,8 +65,7 @@ BrowserTestCase(
     await insertMention(page, 'Amber');
     await page.keys(['Backspace', 'Backspace']);
     await page.waitForSelector(lozenge);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -97,8 +96,7 @@ BrowserTestCase(
 
     await insertMention(page, 'Summer');
     await page.waitForSelector('span=@Summer');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 

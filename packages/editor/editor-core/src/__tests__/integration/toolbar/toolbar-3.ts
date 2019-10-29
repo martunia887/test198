@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement, comment, fullpage, editable } from '../_helpers';
+import { expectMatchDocument, comment, fullpage, editable } from '../_helpers';
 import { messages } from '../../../plugins/text-formatting/ui/ToolbarAdvancedTextFormatting';
 import {
   goToEditorTestingExample,
@@ -30,8 +30,7 @@ const clear = `span=${messages.clearFormatting.defaultMessage}`;
       await page.click(more);
       await page.click(clear);
       await page.type(editable, 'cleared');
-      const doc = await page.$eval(editable, getDocFromElement);
-      expect(doc).toMatchCustomDocSnapshot(testName);
+      await expectMatchDocument(page, testName);
     },
   );
 });

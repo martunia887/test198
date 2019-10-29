@@ -1,6 +1,6 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { testMediaFileId } from '@atlaskit/editor-test-helpers';
-import { editable, getDocFromElement, fullpage } from '../_helpers';
+import { editable, expectMatchDocument, fullpage } from '../_helpers';
 import {
   goToEditorTestingExample,
   mountEditor,
@@ -109,7 +109,6 @@ BrowserTestCase(
     await page.click('.ProseMirror :nth-child(4) .wrapper');
     await page.paste(editable);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testCase);
+    await expectMatchDocument(page, testName);
   },
 );

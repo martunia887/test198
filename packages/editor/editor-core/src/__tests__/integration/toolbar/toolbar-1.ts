@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement, comment, fullpage, editable } from '../_helpers';
+import { expectMatchDocument, comment, fullpage, editable } from '../_helpers';
 import { messages as textFormattingMessages } from '../../../plugins/text-formatting/ui/ToolbarTextFormatting';
 import { messages as advancedTextFormattingMessages } from '../../../plugins/text-formatting/ui/ToolbarAdvancedTextFormatting';
 import { messages as blockTypeToolbarMessages } from '../../../plugins/block-type/ui/ToolbarBlockType';
@@ -57,8 +57,7 @@ const input = 'helloworld ';
       await page.waitForSelector(underline);
       await page.click(underline);
       await page.type(editable, input);
-      const doc = await page.$eval(editable, getDocFromElement);
-      expect(doc).toMatchCustomDocSnapshot(testName);
+      await expectMatchDocument(page, testName);
     },
   );
 });

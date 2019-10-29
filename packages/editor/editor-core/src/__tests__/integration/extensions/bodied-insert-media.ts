@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   editable,
   insertBlockMenuItem,
@@ -23,7 +23,6 @@ BrowserTestCase(
     await insertBlockMenuItem(page, 'Bodied macro (EH)');
     await insertMedia(page);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

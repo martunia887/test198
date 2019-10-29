@@ -2,7 +2,7 @@ import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 
 import {
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   editable,
   quickInsert,
@@ -30,7 +30,6 @@ BrowserTestCase(
     await page.click('.extension-content p');
     await quickInsert(page, messages.action.defaultMessage);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

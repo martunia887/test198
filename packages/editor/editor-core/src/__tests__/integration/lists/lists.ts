@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   editable,
   getProseMirrorPos,
@@ -46,8 +46,7 @@ BrowserTestCase(
     await page.type(editable, '123');
     await page.keys('Tab');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
     expect(await page.isExisting(PM_FOCUS_SELECTOR)).toBeTruthy();
   },
 );
@@ -62,8 +61,7 @@ BrowserTestCase(
     await insertList(page, KEY.CONTROL, 'number');
     await insertList(page, KEY.CONTROL, 'bullet');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -77,8 +75,7 @@ BrowserTestCase(
     await insertList(page, KEY.META, 'number');
     await insertList(page, KEY.META, 'bullet');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 

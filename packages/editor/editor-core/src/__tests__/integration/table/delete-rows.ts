@@ -1,7 +1,7 @@
 import { IntlProvider } from 'react-intl';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
-import { editable, getDocFromElement, fullpage } from '../_helpers';
+import { editable, expectMatchDocument, fullpage } from '../_helpers';
 import { documentWithMergedCells } from './__fixtures__/merged-rows-and-cols-document';
 import { nestedInExtension } from './__fixtures__/nested-in-extension';
 import { TableCssClassName as ClassName } from '../../../plugins/table/types';
@@ -43,8 +43,7 @@ BrowserTestCase(
     await page.waitForSelector(contextMenuItemSelector);
     await page.click(contextMenuItemSelector);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -79,8 +78,7 @@ BrowserTestCase(
     await page.waitForSelector(contextMenuItemSelector);
     await page.click(contextMenuItemSelector);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -101,7 +99,6 @@ BrowserTestCase(
 
     await deleteRow(page, 1);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

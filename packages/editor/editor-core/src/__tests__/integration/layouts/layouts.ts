@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   editable,
   insertMenuItem,
@@ -23,7 +23,6 @@ BrowserTestCase(
     await page.type(editable, '123');
     await page.keys(Array.from({ length: 3 }, _ => 'Backspace'));
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

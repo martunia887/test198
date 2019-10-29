@@ -3,7 +3,7 @@ import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   quickInsert,
 } from '../_helpers';
@@ -41,8 +41,7 @@ BrowserTestCase(
       't',
     ]);
 
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -80,7 +79,6 @@ BrowserTestCase(
       't',
     ]);
 
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

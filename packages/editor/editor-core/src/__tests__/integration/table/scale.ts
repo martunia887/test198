@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, getDocFromElement, fullpage } from '../_helpers';
+import { editable, expectMatchDocument, fullpage } from '../_helpers';
 import {
   insertColumn,
   deleteColumn,
@@ -30,8 +30,7 @@ BrowserTestCase(
 
     await insertColumn(page, 5, 'left');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -51,7 +50,6 @@ BrowserTestCase(
 
     await deleteColumn(page, 1);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

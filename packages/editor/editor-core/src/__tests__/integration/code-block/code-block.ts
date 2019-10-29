@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { getDocFromElement, editable } from '../_helpers';
+import { expectMatchDocument, editable } from '../_helpers';
 import { messages } from '../../../plugins/block-type/types';
 import { EditorAppearance } from '../../../types';
 import {
@@ -30,8 +30,7 @@ const floatingToolbarLanguageSelector = 'div[aria-label="Floating Toolbar"]';
       await page.type(selectQuery, ['javascript']);
       await page.keys('Return');
 
-      const doc = await page.$eval(editable, getDocFromElement);
-      expect(doc).toMatchCustomDocSnapshot(testName);
+      await expectMatchDocument(page, testName);
     },
   );
 

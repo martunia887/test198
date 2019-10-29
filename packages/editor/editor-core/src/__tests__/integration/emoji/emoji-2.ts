@@ -4,7 +4,7 @@ import {
   goToEditorTestingExample,
 } from '../../__helpers/testing-example-helpers';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   editable,
   insertEmoji,
   emojiItem,
@@ -21,8 +21,7 @@ BrowserTestCase(
     await page.type(editable, 'some text ');
     await insertEmoji(page, 'a');
     await page.waitForSelector(emojiItem('a'), 100);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -35,8 +34,7 @@ BrowserTestCase(
     await page.type(editable, '* ');
     await insertEmoji(page, 'smile');
     await page.waitForSelector(emojiItem('smile'), 1000);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -49,8 +47,7 @@ BrowserTestCase(
     await page.type(editable, '1. ');
     await insertEmoji(page, 'a');
     await page.waitForSelector(emojiItem('a'), 1000);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -65,8 +62,7 @@ BrowserTestCase(
     await insertEmoji(page, 'joy');
     await page.waitForSelector(emojiItem('joy'), 1000);
     await page.keys(['Backspace', 'Backspace']);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -84,8 +80,7 @@ BrowserTestCase(
     await page.waitForSelector(decisions, 1000);
     await page.type(editable, 'this ');
     await insertEmojiBySelect(page, 'smile');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -101,7 +96,6 @@ BrowserTestCase(
     await page.click('[aria-label="Decision"]');
     await page.waitForSelector(decisions, 1000);
     await page.isExisting(decisions);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

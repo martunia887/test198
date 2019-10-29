@@ -1,5 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import { editable, quickInsert, getDocFromElement } from '../_helpers';
+import { editable, quickInsert, expectMatchDocument } from '../_helpers';
 import {
   goToEditorTestingExample,
   mountEditor,
@@ -24,8 +24,7 @@ BrowserTestCase(
     // await browser.debug();
     await quickInsert(page, 'Date');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
 
     teardownMockDate();
   },

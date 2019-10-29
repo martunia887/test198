@@ -3,7 +3,7 @@ import { tableNewColumnMinWidth } from '@atlaskit/editor-common';
 import { sleep } from '@atlaskit/editor-test-helpers';
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   resizeColumn,
   quickInsert,
@@ -53,8 +53,7 @@ BrowserTestCase(
 
     await resizeColumn(page, { cellHandlePos: 2, resizeWidth: 50 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -74,8 +73,7 @@ BrowserTestCase(
 
     await resizeColumn(page, { cellHandlePos: 22, resizeWidth: -50 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -95,8 +93,7 @@ BrowserTestCase(
 
     await resizeColumn(page, { cellHandlePos: 2, resizeWidth: -100 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -121,8 +118,7 @@ BrowserTestCase(
     await page.click(TableCssClassName.TOP_LEFT_CELL);
     await quickInsert(page, 'Minimum width extension');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -147,8 +143,7 @@ BrowserTestCase(
     await page.click(TableCssClassName.TOP_LEFT_CELL);
     await quickInsert(page, 'Minimum width extension');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -168,8 +163,7 @@ BrowserTestCase(
 
     await insertColumn(page, 0, 'right');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -190,8 +184,7 @@ BrowserTestCase(
 
     await resizeColumn(page, { cellHandlePos: 10, resizeWidth: -100 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -212,8 +205,7 @@ BrowserTestCase(
 
     await resizeColumn(page, { cellHandlePos: 10, resizeWidth: -100 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -238,8 +230,7 @@ BrowserTestCase(
     // InlineAsyncExtension changes the width of the extension after 2s
     await sleep(3000);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -259,8 +250,7 @@ BrowserTestCase(
 
     await resizeColumn(page, { cellHandlePos: 14, resizeWidth: -200 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -280,8 +270,7 @@ BrowserTestCase(
 
     await resizeColumn(page, { cellHandlePos: 2, resizeWidth: 420 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -303,8 +292,7 @@ BrowserTestCase(
     await selectTable(page);
     await resizeColumn(page, { cellHandlePos: 6, resizeWidth: -20 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -326,8 +314,7 @@ BrowserTestCase(
     await selectTable(page);
     await resizeColumn(page, { cellHandlePos: 2, resizeWidth: -20 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -349,7 +336,6 @@ BrowserTestCase(
     await selectColumns(page, [0, 1]);
     await resizeColumn(page, { cellHandlePos: 2, resizeWidth: 52 });
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

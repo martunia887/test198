@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   comment,
   fullpage,
   editable,
@@ -46,8 +46,7 @@ const linkText2 = 'FAB-983';
       await browser.waitForSelector(textToDisplayInput);
       await browser.type(textToDisplayInput, 'mmm');
       await browser.type(textToDisplayInput, 'Return');
-      const doc = await browser.$eval(editable, getDocFromElement);
-      expect(doc).toMatchCustomDocSnapshot(testName);
+      await expectMatchDocument(page, testName);
     },
   );
 
@@ -76,8 +75,7 @@ const linkText2 = 'FAB-983';
       await browser.waitForSelector(textToDisplayInput);
       await browser.type(textToDisplayInput, 'mmm');
       await browser.type(textToDisplayInput, 'Return');
-      const doc = await browser.$eval(editable, getDocFromElement);
-      expect(doc).toMatchCustomDocSnapshot(testName);
+      await expectMatchDocument(page, testName);
     },
   );
 });

@@ -2,7 +2,7 @@ import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
   editable,
   animationFrame,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
 } from '../_helpers';
 import { insertRow } from '../../__helpers/page-objects/_table';
@@ -38,7 +38,6 @@ BrowserTestCase(
     await insertRow(page, 1);
     await page.type(editable, 'should be inside of the table');
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

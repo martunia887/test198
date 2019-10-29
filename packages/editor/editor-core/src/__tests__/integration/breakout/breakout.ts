@@ -3,7 +3,7 @@ import {
   goToEditorTestingExample,
   mountEditor,
 } from '../../__helpers/testing-example-helpers';
-import { getDocFromElement, editable } from '../_helpers';
+import { expectMatchDocument, editable } from '../_helpers';
 
 import { messages } from '../../../plugins/block-type/types';
 import commonMessages from '../../../messages';
@@ -35,9 +35,7 @@ BrowserTestCase(
     // Switch to wide breakout mode
     await page.waitForSelector(wideBreakoutButtonQuery);
     await page.click(wideBreakoutButtonQuery);
-    expect(
-      await page.$eval(editable, getDocFromElement),
-    ).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -60,9 +58,7 @@ BrowserTestCase(
     await page.click(wideBreakoutButtonQuery);
     await page.waitForSelector(fullWidthBreakoutButtonQuery);
     await page.click(fullWidthBreakoutButtonQuery);
-    expect(
-      await page.$eval(editable, getDocFromElement),
-    ).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -89,9 +85,7 @@ BrowserTestCase(
 
     await page.waitForSelector(centerBreakoutButtonQuery);
     await page.click(centerBreakoutButtonQuery);
-    expect(
-      await page.$eval(editable, getDocFromElement),
-    ).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -117,8 +111,6 @@ BrowserTestCase(
 
     await page.type(editable, 'a');
     await page.keys('Backspace');
-    expect(
-      await page.$eval(editable, getDocFromElement),
-    ).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

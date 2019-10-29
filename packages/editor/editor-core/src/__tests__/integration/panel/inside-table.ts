@@ -2,7 +2,7 @@ import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
 import {
   editable,
-  getDocFromElement,
+  expectMatchDocument,
   fullpage,
   quickInsert,
 } from '../_helpers';
@@ -45,8 +45,7 @@ BrowserTestCase(
     const selector = `[aria-label="Error"]`;
     await page.click(selector);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
     expect(await page.isExisting(tableControls)).toBe(false);
   },
 );

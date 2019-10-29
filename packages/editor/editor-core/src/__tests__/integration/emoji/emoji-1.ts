@@ -4,7 +4,7 @@ import {
   goToEditorTestingExample,
 } from '../../__helpers/testing-example-helpers';
 import {
-  getDocFromElement,
+  expectMatchDocument,
   editable,
   LONG_WAIT_FOR,
   insertEmoji,
@@ -20,8 +20,7 @@ BrowserTestCase(
     await mountEditor(page, { appearance: 'full-page' });
     await insertEmoji(page, 'grinning');
     await page.waitForSelector(emojiItem('grinning'), 1000);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -37,8 +36,7 @@ BrowserTestCase(
     await page.type(editable, 'heading ');
     await page.type(editable, ':) ');
     await page.waitForSelector(emojiItem('slight_smile'), 1000);
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -52,8 +50,7 @@ BrowserTestCase(
     await page.type(editable, 'type `');
     await page.type(editable, ':a:');
     await page.type(editable, '`');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -73,8 +70,7 @@ BrowserTestCase(
     await page.type(editable, 'Escape');
     expect(await page.isExisting(typeahead)).toBe(false);
 
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );
 
@@ -92,8 +88,7 @@ BrowserTestCase(
     await browser.click(emojiButton);
     await browser.waitForSelector(sweatSmile);
     await browser.click(sweatSmile);
-    const doc = await browser.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+     await expectMatchDocument(page, testName);
   },
 );
 */
@@ -114,7 +109,6 @@ BrowserTestCase(
     await page.waitForSelector(emojiItem('a'), 1000);
     await page.type(editable, ['ArrowLeft', 'ArrowLeft']);
     await page.type(editable, ' that ');
-    const doc = await page.$eval(editable, getDocFromElement);
-    expect(doc).toMatchCustomDocSnapshot(testName);
+    await expectMatchDocument(page, testName);
   },
 );

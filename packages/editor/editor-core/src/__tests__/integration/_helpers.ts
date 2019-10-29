@@ -16,7 +16,13 @@ import { TableCssClassName } from '../../plugins/table/types';
  * unknown error: Maximum call stack size exceeded
  * And, don't get too fancy with it ;)
  */
-export const getDocFromElement = (el: any) => el.pmViewDesc.node.toJSON();
+export const getDocFromElement = (el: any) => {
+  // eslint-disable-next-line no-console
+  console.warn(
+    'This function is deprecated because this is not a valid result, the document needs to be transformed before being read, please use expectMatchDocument',
+  );
+  return el.pmViewDesc.node.toJSON();
+};
 
 export const expectToMatchDocument = async (page: any, testName: string) => {
   const doc = await page.browser.execute(() => {
