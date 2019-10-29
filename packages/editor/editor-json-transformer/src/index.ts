@@ -83,7 +83,6 @@ const toJSON = (node: PMNode): JSONNode => {
   } else if (Object.keys(node.attrs).length) {
     obj.attrs = node.attrs;
   }
-
   if (obj.attrs) {
     obj.attrs = filterNull(obj.attrs);
   }
