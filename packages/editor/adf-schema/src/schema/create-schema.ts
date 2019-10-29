@@ -61,7 +61,6 @@ import {
   unsupportedBlock,
   unsupportedInline,
   status,
-  nestableTaskList,
   expand,
   nestedExpand,
 } from './nodes';
