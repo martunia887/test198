@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { injectIntl, InjectedIntlProps } from 'react-intl';
 import { gridSize, fontSize } from '@atlaskit/theme';
 import {
   Expand as CommonExpand,
@@ -8,6 +7,7 @@ import {
 } from '@atlaskit/editor-common';
 import { AnalyticsEventPayload, PLATFORM, MODE } from '../analytics/events';
 import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../analytics/enums';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
 
 const Title = styled.span`
   outline: none;
