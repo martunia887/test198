@@ -2,7 +2,7 @@ import { Node, NodeSpec } from 'prosemirror-model';
 import { TaskItemDefinition as TaskItemNode } from './task-item';
 import { uuid } from '../../utils/uuid';
 
-export interface NestedTaskListContent
+export interface TaskListContent
   extends Array<TaskItemNode | TaskListDefinition> {
   0: TaskItemNode;
 }
@@ -15,7 +15,7 @@ export interface TaskListDefinition {
   /**
    * @minItems 1
    */
-  content: NestedTaskListContent;
+  content: TaskListContent;
   attrs: {
     localId: string;
   };
