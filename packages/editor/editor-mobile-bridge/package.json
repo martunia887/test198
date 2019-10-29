@@ -33,15 +33,6 @@
     "@atlaskit/editor-common": "^41.1.0",
     "@atlaskit/editor-core": "^113.1.0",
     "@atlaskit/editor-json-transformer": "^6.3.3",
-<<<<<<< HEAD
-    "@atlaskit/emoji": "^62.5.1",
-    "@atlaskit/mention": "^18.15.2",
-    "@atlaskit/renderer": "^51.1.0",
-    "@atlaskit/smart-card": "^12.5.3",
-    "@atlaskit/status": "^0.9.13",
-    "@atlaskit/task-decision": "^15.3.4",
-    "@atlaskit/textarea": "^2.1.10",
-=======
     "@atlaskit/emoji": "^62.5.2",
     "@atlaskit/icon": "^19.0.6",
     "@atlaskit/logo": "^12.1.8",
@@ -52,7 +43,6 @@
     "@atlaskit/status": "^0.9.14",
     "@atlaskit/task-decision": "^15.3.5",
     "@atlaskit/textarea": "^2.2.1",
->>>>>>> 1ce5fa93f0... Package modifiations to make the yarn production work
     "@atlaskit/theme": "^9.2.3",
     "@atlassian/confluence-urls": "^0.0.1",
     "@babel/polyfill": "^7.0.0",
