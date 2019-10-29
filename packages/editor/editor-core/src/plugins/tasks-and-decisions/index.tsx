@@ -5,7 +5,6 @@ import {
   decisionList,
   taskItem,
   taskList,
-  nestableTaskList,
 } from '@atlaskit/adf-schema';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorPlugin } from '../../types';

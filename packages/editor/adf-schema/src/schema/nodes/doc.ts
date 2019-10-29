@@ -21,10 +21,7 @@ import {
 import { MediaGroupDefinition as MediaGroup } from './media-group';
 import { MediaSingleDefinition as MediaSingle } from './media-single';
 import { DecisionListDefinition as DecisionList } from './decision-list';
-import {
-  TaskListDefinition as TaskList,
-  TaskListWithNestingDefinition as NestableTaskList,
-} from './task-list';
+import { TaskListDefinition as TaskList } from './task-list';
 import { TableDefinition as Table } from './tableNodes';
 import { ExtensionDefinition as Extension } from './extension';
 import { InlineExtensionDefinition as InlineExtension } from './inline-extension';
@@ -73,7 +70,6 @@ export type BlockContent =
   | MediaSingle
   | DecisionList
   | TaskList
-  | NestableTaskList
   | Table
   | Expand
   | Extension
@@ -100,7 +96,6 @@ export type TableCellContent = Array<
   | MediaSingle
   | DecisionList
   | TaskList
-  | NestableTaskList
   | Extension
   | BlockCard
   | NestedExpand
@@ -125,7 +120,6 @@ export type ExtensionContent = Array<
   | MediaSingle
   | DecisionList
   | TaskList
-  | NestableTaskList
   | Table
   | Extension
   | BlockCard

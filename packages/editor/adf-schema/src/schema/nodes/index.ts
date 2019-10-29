@@ -116,13 +116,7 @@ export {
   decisionListSelector,
 } from './decision-list';
 export { decisionItem, DecisionItemDefinition } from './decision-item';
-export {
-  taskList,
-  nestableTaskList,
-  TaskListDefinition,
-  TaskListWithNestingDefinition,
-  taskListSelector,
-} from './task-list';
+export { taskList, TaskListDefinition, taskListSelector } from './task-list';
 export { taskItem, TaskItemDefinition } from './task-item';
 export { extension, ExtensionDefinition } from './extension';
 export { inlineExtension, InlineExtensionDefinition } from './inline-extension';

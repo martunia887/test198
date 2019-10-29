@@ -2,37 +2,23 @@ import { Node, NodeSpec } from 'prosemirror-model';
 import { TaskItemDefinition as TaskItemNode } from './task-item';
 import { uuid } from '../../utils/uuid';
 
-export type BaseTaskListDefinition = {
-  type: 'taskList';
-  attrs: {
-    localId: string;
-  };
-};
+// export interface NestedTaskListContent
+//   extends Array<TaskItemNode | TaskListDefinition> {
+//   0: TaskItemNode;
+// }
 
 /**
  * @name taskList_node
  */
-export interface TaskListDefinition extends BaseTaskListDefinition {
+export interface TaskListDefinition {
+  type: 'taskList';
   /**
    * @minItems 1
    */
   content: Array<TaskItemNode>;
-}
-
-export interface NestedTaskListContent
-  extends Array<TaskItemNode | TaskListWithNestingDefinition> {
-  0: TaskItemNode;
-}
-
-/**
- * @name nestableTaskList_node
- * @stage 0
- */
-export interface TaskListWithNestingDefinition extends BaseTaskListDefinition {
-  /**
-   * @minItems 1
-   */
-  content: NestedTaskListContent;
+  attrs: {
+    localId: string;
+  };
 }
 
 const name = 'actionList';
@@ -42,7 +28,7 @@ export const taskListSelector = `[data-node-type="${name}"]`;
 export const taskList: NodeSpec = {
   group: 'block',
   defining: true,
-  content: 'taskItem+',
+  content: 'taskItem+ (taskItem|taskList)*',
   attrs: {
     localId: { default: '' },
   },
@@ -69,9 +55,4 @@ export const taskList: NodeSpec = {
 
     return ['div', attrs, 0];
   },
-};
-
-export const nestableTaskList: NodeSpec = {
-  ...taskList,
-  content: 'taskItem+ (taskItem|taskList)*',
 };

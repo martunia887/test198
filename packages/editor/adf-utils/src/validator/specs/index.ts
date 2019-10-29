@@ -37,7 +37,6 @@ export { default as decisionItem } from './decisionItem';
 export { default as decisionList } from './decisionList';
 export { default as taskItem } from './taskItem';
 export { default as taskList } from './taskList';
-export { default as nestableTaskList } from './nestableTaskList';
 export { default as table } from './table';
 export { default as tableRow } from './tableRow';
 export { default as tableCell } from './tableCell';

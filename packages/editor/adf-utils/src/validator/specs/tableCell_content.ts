@@ -18,7 +18,6 @@ export default {
       'mediaGroup',
       'decisionList',
       'taskList',
-      'nestableTaskList',
       'extension',
       'nestedExpand',
       'blockCard',
