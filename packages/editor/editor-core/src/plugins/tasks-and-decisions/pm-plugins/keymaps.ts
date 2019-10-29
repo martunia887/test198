@@ -370,17 +370,25 @@ const enter: Command = filter(
   ),
 );
 
-export function keymapPlugin(schema: Schema): Plugin | undefined {
-  const keymaps = {
+export function keymapPlugin(
+  schema: Schema,
+  allowNestedTasks?: boolean,
+): Plugin | undefined {
+  const indentHandlers = {
     // always eat the keyboard event when pressing Shift-Tab
     'Shift-Tab': chainCommands(unindent, () => true),
     Tab: indent,
+  };
 
+  const keymaps = {
     Backspace: backspace,
     Delete: deleteForwards,
 
     Enter: enter,
+
+    ...(allowNestedTasks ? indentHandlers : {}),
   };
+
   return keymap(keymaps);
 }
 

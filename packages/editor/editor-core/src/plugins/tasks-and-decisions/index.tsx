@@ -61,7 +61,7 @@ const tasksAndDecisionsPlugin = (allowNestedTasks?: boolean): EditorPlugin => ({
       { name: 'decisionItem', node: decisionItem },
       {
         name: 'taskList',
-        node: allowNestedTasks ? nestableTaskList : taskList,
+        node: taskList,
       },
       { name: 'taskItem', node: taskItem },
     ];
@@ -81,7 +81,7 @@ const tasksAndDecisionsPlugin = (allowNestedTasks?: boolean): EditorPlugin => ({
       },
       {
         name: 'tasksAndDecisionsKeyMap',
-        plugin: ({ schema }) => keymap(schema),
+        plugin: ({ schema }) => keymap(schema, allowNestedTasks),
       }, // Needs to be after "save-on-enter"
     ];
   },
