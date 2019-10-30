@@ -22,14 +22,24 @@ const createObserverCallback = (
   };
 };
 
+// Ensures ResizeObserver is fully supported
+const isResizeObserverSupported = () =>
+  typeof (window as any).ResizeObserver === 'function';
+const implementsResizeObserver = (instance: ResizeObserver) =>
+  typeof instance.observe === 'function' &&
+  typeof instance.disconnect === 'function' &&
+  typeof instance.unobserve === 'function';
+
 export function createResizeObserver(
   element: Element,
   callback: (dimensions: Dimensions) => void,
 ): ResizeObserver | undefined {
-  if ((window as any).ResizeObserver) {
+  if (isResizeObserverSupported()) {
     const observerCallback = createObserverCallback(callback);
     const obs = new ResizeObserver(observerCallback);
-    obs.observe(element);
-    return obs;
+    if (implementsResizeObserver(obs)) {
+      obs.observe(element);
+      return obs;
+    }
   }
 }
