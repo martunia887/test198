@@ -253,7 +253,7 @@ export function transformSliceForMedia(slice: Slice, schema: Schema) {
       );
     }
 
-    newSlice = mapSlice(slice, node =>
+    newSlice = mapSlice(newSlice, node =>
       node.type.name === 'media' && node.attrs.type === 'external'
         ? media.createChecked(
             { ...node.attrs, __external: true },
