@@ -7,10 +7,7 @@ Object {
       "type": "paragraph",
     },
     Object {
-      "attrs": Object {
-        "language": null,
-        "uniqueId": null,
-      },
+      "attrs": Object {},
       "marks": Array [
         Object {
           "attrs": Object {
@@ -23,6 +20,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -33,14 +31,12 @@ Object {
       "type": "paragraph",
     },
     Object {
-      "attrs": Object {
-        "language": null,
-        "uniqueId": null,
-      },
+      "attrs": Object {},
       "type": "codeBlock",
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -51,10 +47,7 @@ Object {
       "type": "paragraph",
     },
     Object {
-      "attrs": Object {
-        "language": null,
-        "uniqueId": null,
-      },
+      "attrs": null,
       "marks": Array [
         Object {
           "attrs": Object {
@@ -67,6 +60,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -77,10 +71,7 @@ Object {
       "type": "paragraph",
     },
     Object {
-      "attrs": Object {
-        "language": null,
-        "uniqueId": null,
-      },
+      "attrs": null,
       "marks": Array [
         Object {
           "attrs": Object {
@@ -93,5 +84,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;

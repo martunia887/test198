@@ -21,7 +21,6 @@ Object {
           },
           "macroParams": Object {},
         },
-        "text": null,
       },
       "content": Array [
         Object {
@@ -44,5 +43,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;

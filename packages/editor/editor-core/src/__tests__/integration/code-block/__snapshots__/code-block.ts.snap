@@ -9,7 +9,6 @@ Object {
     Object {
       "attrs": Object {
         "language": "javascript",
-        "uniqueId": null,
       },
       "type": "codeBlock",
     },
@@ -18,6 +17,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -30,11 +30,11 @@ Object {
     Object {
       "attrs": Object {
         "language": "javascript",
-        "uniqueId": null,
       },
       "type": "codeBlock",
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;

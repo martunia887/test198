@@ -1,22 +1,32 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
   expectMatchDocument,
   fullpage,
-  editable,
   insertBlockMenuItem,
   insertMedia,
-  setupMediaMocksProviders,
 } from '../_helpers';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 
 BrowserTestCase(
   `bodied-insert-media.ts: Bodied Extension: Insert Media`,
   { skip: ['edge', 'ie', 'safari'] },
   async (client: any, testName: string) => {
-    const page = new Page(client);
-    await page.goto(fullpage.path);
+    const page = await goToEditorTestingExample(client);
 
-    await setupMediaMocksProviders(page);
+    await mountEditor(page, {
+      appearance: 'full-page',
+      media: {
+        allowMediaSingle: true,
+        allowMediaGroup: true,
+      },
+      allowExtension: {
+        allowBreakout: true,
+      },
+    });
+
     await page.waitForSelector(fullpage.placeholder);
     await page.click(fullpage.placeholder);
 
