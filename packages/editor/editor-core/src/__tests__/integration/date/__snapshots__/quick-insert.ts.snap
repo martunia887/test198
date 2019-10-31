@@ -20,5 +20,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
