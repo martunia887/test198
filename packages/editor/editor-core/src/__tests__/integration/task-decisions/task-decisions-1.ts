@@ -3,7 +3,6 @@ import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
   expectMatchDocument,
   editable,
-  insertBlockMenuItem,
   copyToClipboard,
   fullpage,
   quickInsert,

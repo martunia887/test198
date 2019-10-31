@@ -1,11 +1,16 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
+import { cardProviderStaging } from '@atlaskit/editor-test-helpers';
 import {
   expectMatchDocument,
   fullpage,
   editable,
   copyToClipboard,
 } from '../_helpers';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 
 BrowserTestCase(
   `inline-1.ts: pasting an link converts to inline card`,
@@ -19,10 +24,13 @@ BrowserTestCase(
     await copyToClipboard(browser, 'https://www.atlassian.com');
 
     // open up editor
-    await browser.goto(fullpage.path);
-    await browser.waitForSelector(fullpage.placeholder);
-    await browser.click(fullpage.placeholder);
-    await browser.waitForSelector(editable);
+    await goToEditorTestingExample(client, browser);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+      UNSAFE_cards: {
+        provider: Promise.resolve(cardProviderStaging),
+      },
+    });
 
     // type some text into the paragraph first
     await browser.type(editable, 'hello have a link ');
@@ -30,6 +38,6 @@ BrowserTestCase(
     // paste the link
     await browser.paste(editable);
 
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );
