@@ -34,6 +34,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -41,10 +42,7 @@ exports[`emoji-3.ts: should render emoji inside codeblock 1`] = `
 Object {
   "content": Array [
     Object {
-      "attrs": Object {
-        "language": null,
-        "uniqueId": null,
-      },
+      "attrs": Object {},
       "content": Array [
         Object {
           "text": ":smile:",
@@ -55,6 +53,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -80,6 +79,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -105,5 +105,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;

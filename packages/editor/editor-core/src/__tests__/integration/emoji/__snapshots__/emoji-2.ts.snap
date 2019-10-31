@@ -14,6 +14,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -55,6 +56,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -96,6 +98,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -130,6 +133,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -165,6 +169,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -200,5 +205,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
