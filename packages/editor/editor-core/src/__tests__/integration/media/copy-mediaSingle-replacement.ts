@@ -86,7 +86,7 @@ const baseADF = {
 BrowserTestCase(
   'copy-mediaSingle-replacement.ts: Copies and pastes mediaSingle on fullpage',
   { skip: ['edge', 'ie', 'safari'] },
-  async (client: any, testCase: string) => {
+  async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
     await mountEditor(page, {
       appearance: fullpage.appearance,

@@ -15,22 +15,15 @@ Object {
     Object {
       "attrs": Object {
         "layout": "center",
-        "width": null,
       },
       "content": Array [
         Object {
           "attrs": Object {
-            "__contextId": "DUMMY-OBJECT-ID",
-            "__displayType": null,
-            "__fileMimeType": "image/svg+xml",
             "__fileName": "example.png",
-            "__fileSize": 235,
             "collection": "MediaServicesSample",
             "height": 4096,
             "id": "1234-5678-abcd-efgh",
-            "occurrenceKey": null,
             "type": "file",
-            "url": null,
             "width": 4096,
           },
           "type": "media",
@@ -43,5 +36,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
