@@ -14,7 +14,6 @@ Object {
               "marks": Array [
                 Object {
                   "attrs": Object {
-                    "__confluenceMetadata": null,
                     "href": "https://www.atlassian.com/",
                   },
                   "type": "link",
@@ -31,5 +30,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
