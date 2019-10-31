@@ -34,7 +34,6 @@ Object {
             "accessLevel": "",
             "id": "0",
             "text": "@Carolyn",
-            "userType": null,
           },
           "type": "mention",
         },
@@ -47,5 +46,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;

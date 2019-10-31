@@ -1,6 +1,4 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
-
 import {
   editable,
   expectMatchDocument,
@@ -10,6 +8,10 @@ import {
   insertMention,
   lozenge,
 } from '../_helpers';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 
 // https://product-fabric.atlassian.net/browse/ED-6802
 // TODO: unskip firefox and safari
@@ -17,11 +19,10 @@ BrowserTestCase(
   'emoji.ts: Insert an emoji, then a mention, move to right before the emoji and try to add text between both',
   { skip: ['ie', 'safari', 'firefox'] },
   async (client: any, testName: string) => {
-    const browser = new Page(client);
-
-    await browser.goto(fullpage.path);
-    await browser.waitForSelector(editable);
-    await browser.click(editable);
+    const browser = await goToEditorTestingExample(client);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+    });
 
     await insertEmoji(browser, 'grinning');
     await browser.waitForSelector(emojiItem('grinning'));
@@ -43,6 +44,6 @@ BrowserTestCase(
     await browser.keys(['ArrowRight', 'ArrowRight']);
     await browser.type(editable, 'Some text');
     await browser.click(editable);
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );
