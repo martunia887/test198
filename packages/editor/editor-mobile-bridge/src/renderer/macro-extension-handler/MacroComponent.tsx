@@ -77,7 +77,6 @@ export class MacroComponent extends React.Component<
   // action can be view/retry/spinner/nothing
   createCard = ({ action, errorMessage, onClick, isDisabled }: CreateMacro) => {
     const { parameters, extensionKey } = this.props.extension;
-    console.log('======== error my mboi', errorMessage);
     // fallback to the extensionkey while the changes soak for the title to be f
     // title might not be a string??
     const macroName = this.getMacroName();
@@ -144,6 +143,7 @@ export class MacroComponent extends React.Component<
     this.setState({
       loaded: true,
       loading: false,
+      errorMessage: '',
     });
   };
 
@@ -151,9 +151,7 @@ export class MacroComponent extends React.Component<
   tapToLoad = () => {
     // on button click
     // set state to loading
-    console.log('tap ===== to ==== load');
     this.setState({ loading: true });
-    console.log('=== loading state');
     createPromise(
       'customTapToLoadMacroButton',
       JSON.stringify({
@@ -193,6 +191,7 @@ export class MacroComponent extends React.Component<
         retryCount: state.retryCount + 1,
         loading: true,
         loaded: false,
+        errorMessage: '',
       };
     });
     createPromise(
@@ -253,7 +252,7 @@ export class MacroComponent extends React.Component<
 
   getTapToRetryCardProps = (cardProps: CreateMacro): CreateMacro => {
     const newProps = {
-      action: <Action callToAction>Try again {this.state.retryCount}</Action>,
+      action: <Action callToAction>Try again</Action>,
       isDisabled: false,
       onClick: this.tapToRetry,
       errorMessage: this.state.errorMessage,
@@ -268,10 +267,9 @@ export class MacroComponent extends React.Component<
     //   isDisabled: false,
     //   onClick: this.tapToRetry,
     //   errorMessage: this.state.errorMessage,
-    //   secondaryAction:  <Action callToAction>Refresh page {this.state.retryCount}</Action>
+    //   secondaryAction:  <Action callToAction>Refresh page</Action>
     // };
     // right now refresh is disabled
-    console.log(this.state.errorMessage, '======== error yallllllllll');
     const newProps = {
       isDisabled: true,
       errorMessage: this.state.errorMessage,
@@ -301,9 +299,6 @@ export class MacroComponent extends React.Component<
         ) {
           // show tap to load
           return this.createCard(this.getTapToLoadCardProps(cardProps));
-        } else if (!this.state.loaded && this.state.loading) {
-          // show loading state, possible to have error message and loading
-          return this.createCard(this.getLoadingCardProps(cardProps));
         } else if (
           this.state.loaded &&
           !this.state.loading &&
@@ -312,6 +307,9 @@ export class MacroComponent extends React.Component<
           // show tap to show button
           // promise to show button
           return this.createCard(this.getTapToViewCardProps(cardProps));
+        } else if (!this.state.loaded && this.state.loading) {
+          // show loading state, possible to have error message and loading
+          return this.createCard(this.getLoadingCardProps(cardProps));
         } else {
           // loaded && loading should not be a possible state unless an error has occurred
           // check retry count state
