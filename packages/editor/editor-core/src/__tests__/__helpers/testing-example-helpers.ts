@@ -20,8 +20,8 @@ export async function mountEditor(page: any, props: EditorProps) {
   await page.click('.ProseMirror');
 }
 
-export async function goToEditorTestingExample(client: any) {
-  const page = new Page(client);
+export async function goToEditorTestingExample(client: any, currentPage?: any) {
+  const page = currentPage || new Page(client);
   const currentUrl = await page.url();
   const url = getExampleUrl(
     'editor',

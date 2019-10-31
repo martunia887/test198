@@ -2,11 +2,16 @@ import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
   expectMatchDocument,
-  gotoEditor,
   editable,
   insertBlockMenuItem,
   copyToClipboard,
+  fullpage,
+  quickInsert,
 } from '../_helpers';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 
 /*
  * Safari adds special characters that end up in the snapshot
@@ -23,12 +28,14 @@ BrowserTestCase(
       '<p>this is a link <a href="http://www.google.com">www.google.com</a></p><p>more elements with some <strong>format</strong></p><p>some addition<em> formatting</em></p>',
       'html',
     );
-    await gotoEditor(browser);
-    await browser.waitFor(editable);
+    await goToEditorTestingExample(client, browser);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+    });
     await browser.type(editable, '<> ');
     await browser.waitForSelector('ol');
     await browser.paste(editable);
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );
 
@@ -41,12 +48,14 @@ BrowserTestCase(
       browser,
       'this is a link http://www.google.com more elements with some **format** some addition *formatting*',
     );
-    await gotoEditor(browser);
-    await browser.waitFor(editable);
+    await goToEditorTestingExample(client, browser);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+    });
     await browser.type(editable, '<> ');
     await browser.waitForSelector('ol');
     await browser.paste(editable);
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );
 
@@ -56,12 +65,15 @@ BrowserTestCase(
   'task-decision-1.ts: can type into decision',
   { skip: ['ie', 'safari', 'edge'] },
   async (client: any, testName: string) => {
-    const browser = new Page(client);
-    await gotoEditor(browser);
-    await insertBlockMenuItem(browser, 'Decision');
+    const browser = await goToEditorTestingExample(client);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+      allowTasksAndDecisions: true,
+    });
+    await quickInsert(browser, 'Decision');
     await browser.waitForSelector('ol span + div');
     await browser.click('ol span + div');
     await browser.type(editable, 'adding decisions');
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );

@@ -4,9 +4,13 @@ import {
   expectMatchDocument,
   insertMentionUsingClick,
   editable,
-  gotoEditor,
   copyToClipboard,
+  fullpage,
 } from '../_helpers';
+import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
 
 export const loadActionButton = '[aria-label="Action item"]';
 
@@ -25,12 +29,14 @@ BrowserTestCase(
       '<p>this is a link <a href="http://www.google.com">www.google.com</a></p><p>more elements with some <strong>format</strong></p><p>some addition<em> formatting</em></p>',
       'html',
     );
-    await gotoEditor(browser);
-    await browser.waitFor(editable);
+    await goToEditorTestingExample(client, browser);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+    });
     await browser.type(editable, '[] ');
     await browser.waitForSelector('div[data-node-type="actionList"]');
     await browser.paste(editable);
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );
 
@@ -45,12 +51,17 @@ BrowserTestCase(
       browser,
       'this is a link http://www.google.com more elements with some **format** some addition *formatting*',
     );
-    await gotoEditor(browser);
+
+    await goToEditorTestingExample(client, browser);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+    });
+
     await browser.waitFor(editable);
     await browser.type(editable, '[] ');
     await browser.waitForSelector('div[data-node-type="actionList"]');
     await browser.paste(editable);
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );
 
@@ -61,15 +72,18 @@ BrowserTestCase(
   'task-decision-2.ts: can type into decision',
   { skip: ['ie', 'safari', 'edge', 'chrome'] },
   async (client: any, testName: string) => {
-    const browser = new Page(client);
-    await gotoEditor(browser);
+    const browser = await goToEditorTestingExample(client);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+    });
+
     await browser.click(loadActionButton);
     await browser.waitForSelector(
       'div[data-node-type="actionList"] span + div',
     );
     await browser.click('div[data-node-type="actionList"] span + div');
     await browser.type(editable, 'adding action');
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );
 
@@ -77,12 +91,14 @@ BrowserTestCase(
   'task-decision-2.ts: can insert mention into an action using click',
   { skip: ['ie', 'safari'] },
   async (client: any, testName: string) => {
-    const browser = new Page(client);
-    await gotoEditor(browser);
-    await browser.waitFor(editable);
+    const browser = await goToEditorTestingExample(client);
+    await mountEditor(browser, {
+      appearance: fullpage.appearance,
+    });
+
     await browser.type(editable, '[] ');
     await browser.waitForSelector('div[data-node-type="actionList"]');
     await insertMentionUsingClick(browser, '0');
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );

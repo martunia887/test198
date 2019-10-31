@@ -22,7 +22,6 @@ Object {
               "marks": Array [
                 Object {
                   "attrs": Object {
-                    "__confluenceMetadata": null,
                     "href": "http://www.google.com",
                   },
                   "type": "link",
@@ -43,6 +42,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -68,7 +68,6 @@ Object {
               "marks": Array [
                 Object {
                   "attrs": Object {
-                    "__confluenceMetadata": null,
                     "href": "http://www.google.com",
                   },
                   "type": "link",
@@ -117,6 +116,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -146,5 +146,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
