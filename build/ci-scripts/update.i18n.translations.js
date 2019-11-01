@@ -14,7 +14,7 @@ const packages = [
   {
     packagePath: './packages/editor/editor-core',
     maintainers: ['samuellewis', 'nathanflew'],
-    targetBranch: 'editor-next-release',
+    targetBranch: 'develop',
   },
 ];
 
