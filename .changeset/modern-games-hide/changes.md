@@ -1,0 +1,1 @@
+ED-7947 editor-json-transformer will accept option for turn on or off alt text
