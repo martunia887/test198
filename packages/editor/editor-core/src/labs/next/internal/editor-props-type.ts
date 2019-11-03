@@ -1,11 +1,14 @@
 import { Schema } from 'prosemirror-model';
 import { Transformer } from '@atlaskit/editor-common';
+import EditorActions from '../../../actions';
 import { EditorPlugin } from '../../../types';
 
 export type EditorProps = {
   plugins?: Array<EditorPlugin>;
-  transformer?: (schema: Schema) => Transformer<string>;
+  transformer?: (schema: Schema) => Transformer<any>;
   children?: React.ReactChild;
+
+  handleAnalyticsEvent?: AnalyticsEventHandler;
 
   // Set the default editor content.
   defaultValue?: string | object;
@@ -25,4 +28,11 @@ export type EditorProps = {
 
   // Set for an on cancel callback.
   onCancel?: (value: any) => void;
+
+  onMount?: (actions: EditorActions) => void;
+  onDestroy?: () => void;
 };
+
+export type AnalyticsEventHandler = (
+  data: { payload: Record<string, any>; [key: string]: any },
+) => void;

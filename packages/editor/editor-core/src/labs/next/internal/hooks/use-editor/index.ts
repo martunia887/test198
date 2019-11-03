@@ -1,20 +1,31 @@
 import * as React from 'react';
 import { DirectEditorProps } from 'prosemirror-view';
+import { measureRender, getResponseEndTime } from '@atlaskit/editor-common';
+import EditorActions from '../../../../../actions';
+import measurements from '../../../../../utils/performance/measure-enum';
+import { getNodesCount } from '../../../../../utils';
+import {
+  analyticsEventKey,
+  ACTION,
+  ACTION_SUBJECT,
+  EVENT_TYPE,
+} from '../../../../../plugins/analytics';
 import { EditorSharedConfig } from '../../context/shared-config';
 import { createDispatchTransaction } from './create-dispatch-transaction';
 import { createEditor, CreateEditorParams } from './create-editor';
-import { EditorActions } from '../../../../..';
+import { useAnalyticsHandler } from '../use-analytics';
 
 export function useEditor(
   config: CreateEditorParams & { editorActions?: EditorActions },
 ): [EditorSharedConfig | null, (ref: HTMLDivElement | null) => void] {
   const [editorSharedConfig, mountEditor] = useCreateEditor(config);
-
   const editorSharedConfigRef = React.useRef<EditorSharedConfig | null>(null);
   editorSharedConfigRef.current = editorSharedConfig;
 
   useApplyEditorViewProps(editorSharedConfig, config.disabled);
   useHandleEditorUnmount(editorSharedConfigRef);
+  useAnalyticsHandler(editorSharedConfigRef);
+
   return [editorSharedConfig, mountEditor];
 }
 
@@ -24,6 +35,9 @@ export function useEditor(
  *
  */
 
+/**
+ * Main hook that creates an instance of EditorView, EditorSharedConfig, etc...
+ */
 function useCreateEditor(
   config: CreateEditorParams,
 ): [EditorSharedConfig | null, (ref: HTMLDivElement | null) => void] {
@@ -34,12 +48,45 @@ function useCreateEditor(
 
   return [
     editorSharedConfig,
+
+    // This callback is being used as `ref={callback}` on EditorContentProvider,
+    // When called with `ref` mounts editor and creates editorSharedConfig.
     React.useCallback(
-      (ref: any) => {
-        setEditorSharedConfig(
-          editorSharedConfig =>
-            editorSharedConfig || createEditor({ ...config, ref }),
-        );
+      (ref: HTMLDivElement | null) => {
+        // If editorSharedConfig already exists it means that editorView is mounted
+        // and we just need to ignore this function altogether.
+        if (!ref) {
+          return;
+        }
+
+        setEditorSharedConfig(editorSharedConfig => {
+          if (!editorSharedConfig) {
+            measureRender(
+              measurements.PROSEMIRROR_RENDERED,
+              (duration, startTime) => {
+                if (sharedConfig && sharedConfig.dispatch) {
+                  sharedConfig.dispatch(analyticsEventKey, {
+                    payload: {
+                      action: ACTION.PROSEMIRROR_RENDERED,
+                      actionSubject: ACTION_SUBJECT.EDITOR,
+                      attributes: {
+                        duration,
+                        startTime,
+                        nodes: getNodesCount(sharedConfig.editorView.state.doc),
+                        ttfb: getResponseEndTime(),
+                      },
+                      eventType: EVENT_TYPE.OPERATIONAL,
+                    },
+                  });
+                }
+              },
+            );
+          }
+
+          const sharedConfig =
+            editorSharedConfig || createEditor({ ...config, ref });
+          return sharedConfig;
+        });
       },
       [config],
     ),
@@ -72,7 +119,7 @@ function useApplyEditorViewProps(
 /**
  * Handles editor component unmount
  */
-function useHandleEditorUnmount(
+export function useHandleEditorUnmount(
   editorSharedConfigRef: React.MutableRefObject<EditorSharedConfig | null>,
 ) {
   React.useEffect(
@@ -86,7 +133,11 @@ function useHandleEditorUnmount(
           return;
         }
 
-        const { eventDispatcher, editorView } = editorSharedConfig.current;
+        const {
+          eventDispatcher,
+          editorView,
+          onDestroy,
+        } = editorSharedConfig.current;
 
         if (eventDispatcher) {
           eventDispatcher.destroy();
@@ -98,7 +149,12 @@ function useHandleEditorUnmount(
             dispatchTransaction: _tr => {},
           } as DirectEditorProps);
 
-          // Destroy the state if the Editor is being unmounted
+          if (onDestroy) {
+            onDestroy();
+          }
+
+          // Destroy plugin states and editor state
+          // when the editor is being unmounted
           const editorState = editorView.state;
           editorState.plugins.forEach(plugin => {
             const state = plugin.getState(editorState);

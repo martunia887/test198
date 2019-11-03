@@ -1,7 +1,5 @@
 import * as React from 'react';
-// @ts-ignore: unused variable
-// prettier-ignore
-import { ComponentType, Consumer, Provider } from 'react';
+import { ComponentType } from 'react';
 import { Fragment, Mark, MarkType, Node, Schema } from 'prosemirror-model';
 import { Serializer } from '../';
 import { RendererAppearance } from '../ui/Renderer/types';
@@ -291,6 +289,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       allowHeadingAnchorLinks: this.allowHeadingAnchorLinks,
       rendererAppearance: this.appearance,
       fireAnalyticsEvent: this.fireAnalyticsEvent,
+      nodeType: node.type.name,
       ...node.attrs,
     };
   }

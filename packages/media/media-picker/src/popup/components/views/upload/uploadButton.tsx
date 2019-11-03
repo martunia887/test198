@@ -5,10 +5,10 @@ import { FormattedMessage } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
 import { startFileBrowser } from '../../../actions/startFileBrowser';
 import { State } from '../../../domain';
-import { Browser } from '../../../../components/browser/browser';
+import { BrowserBase } from '../../../../components/browser/browser';
 
 export interface LocalBrowserButtonProps {
-  readonly browserRef: React.RefObject<Browser>;
+  readonly browserRef: React.RefObject<BrowserBase>;
 }
 
 export interface LocalBrowserButtonDispatchProps {
@@ -29,7 +29,7 @@ export class LocalBrowserButton extends React.Component<Props> {
   render() {
     return (
       <Button
-        className="e2e-upload-button"
+        data-test-id="media-picker-upload-button"
         appearance="default"
         onClick={this.onUploadClick}
       >

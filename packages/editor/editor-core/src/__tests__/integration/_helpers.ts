@@ -176,12 +176,12 @@ export const insertMediaFromMediaPicker = async (
   filenames = ['one.svg'],
   fileSelector = 'div=%s',
 ) => {
-  const insertMediaButton = '.e2e-insert-button';
+  const insertMediaButton = '[data-test-id="media-picker-insert-button"]';
   const mediaCardSelector = `${editable} .img-wrapper`;
   const existingMediaCards = await browser.$$(mediaCardSelector);
   // wait for media item, and select it
   await browser.waitForSelector(
-    '.e2e-recent-upload-card [aria-label="one.svg"]',
+    '[data-test-id="media-picker-popup"] [data-test-id="media-card-view"] [aria-label="one.svg"]',
   );
   if (filenames) {
     for (const filename of filenames) {
@@ -488,7 +488,18 @@ export const doubleClickResizeHandle = async (
 ) => {
   const tableCellSelector = getSelectorForTableCell({ row, cell: column });
 
-  await page.moveTo(tableCellSelector, 0, 0);
+  const cell = await page.getBoundingRect(tableCellSelector);
+
+  // We need to move the mouse first, giving time to prosemirror catch the event
+  // and add the decorations
+  await page.moveTo(tableCellSelector, cell.width - 1, 0);
+
+  await animationFrame(page);
+  await page.moveTo(
+    `${tableCellSelector} .${TableCssClassName.RESIZE_HANDLE_DECORATION}`,
+    0,
+    0,
+  );
   await page.browser.positionDoubleClick();
 };
 

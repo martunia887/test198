@@ -1,14 +1,17 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { EditorView } from 'prosemirror-view';
+import { Transformer } from '@atlaskit/editor-common';
 import { EventDispatcher, Dispatch } from '../../../../event-dispatcher';
 import { EditorAppearanceComponentProps } from '../../../../types';
-import { EditorProps } from '../editor-props-type';
+import { EditorProps, AnalyticsEventHandler } from '../editor-props-type';
 
 export type EditorSharedConfig = {
   editorView: EditorView;
   eventDispatcher: EventDispatcher;
   dispatch: Dispatch;
+  transformer?: Transformer<any>;
+  handleAnalyticsEvent?: AnalyticsEventHandler;
 
   primaryToolbarComponents: EditorAppearanceComponentProps['primaryToolbarComponents'];
   contentComponents: EditorAppearanceComponentProps['contentComponents'];
@@ -21,6 +24,7 @@ export type EditorSharedConfig = {
   disabled: EditorProps['disabled'];
 
   onChange?: EditorProps['onChange'];
+  onDestroy?: EditorProps['onDestroy'];
 };
 
 const EditorSharedConfigContext = React.createContext<EditorSharedConfig | null>(

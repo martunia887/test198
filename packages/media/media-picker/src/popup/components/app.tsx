@@ -9,7 +9,6 @@ import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { UIAnalyticsEventHandler } from '@atlaskit/analytics-next';
 
 import { ServiceName, State } from '../domain';
-import { UploadParams, PopupConfig } from '../..';
 
 /* Components */
 import Footer from './footer/footer';
@@ -40,18 +39,23 @@ import {
   UploadProcessingEventPayload,
   UploadEndEventPayload,
   UploadErrorEventPayload,
-} from '../../domain/uploadEvent';
+  ClipboardConfig,
+  DropzoneConfig,
+  UploadParams,
+  PopupConfig,
+} from '../../types';
 import { MediaPickerPopupWrapper, SidebarWrapper, ViewWrapper } from './styled';
 import {
   DropzoneDragEnterEventPayload,
   DropzoneDragLeaveEventPayload,
-  ClipboardConfig,
-  DropzoneConfig,
 } from '../../components/types';
 
 import { Clipboard } from '../../components/clipboard/clipboard';
 import { Dropzone, DropzoneBase } from '../../components/dropzone/dropzone';
-import { Browser as BrowserComponent } from '../../components/browser/browser';
+import {
+  Browser as BrowserComponent,
+  BrowserBase,
+} from '../../components/browser/browser';
 import { LocalUploadComponent } from '../../components/localUpload';
 import { resetView } from '../actions/resetView';
 
@@ -101,7 +105,7 @@ export interface AppState {
 
 export class App extends Component<AppProps, AppState> {
   private readonly componentMediaClient: MediaClient;
-  private browserRef = React.createRef<BrowserComponent>();
+  private browserRef = React.createRef<BrowserBase>();
   private dropzoneRef = React.createRef<DropzoneBase>();
   private readonly localUploader: LocalUploadComponent;
 
@@ -130,7 +134,6 @@ export class App extends Component<AppProps, AppState> {
     const mediaClient = new MediaClient({
       authProvider: tenantMediaClient.config.authProvider,
       userAuthProvider: userMediaClient.config.authProvider,
-      cacheSize: tenantMediaClient.config.cacheSize,
     });
 
     this.componentMediaClient = mediaClient;
@@ -190,20 +193,22 @@ export class App extends Component<AppProps, AppState> {
           <Provider store={store}>
             <ModalDialog onClose={onClose} width="x-large" isChromeless={true}>
               <PassContext store={store} proxyReactContext={proxyReactContext}>
-                <MediaPickerPopupWrapper>
-                  <SidebarWrapper>
-                    <Sidebar />
-                  </SidebarWrapper>
-                  <ViewWrapper>
-                    {this.renderCurrentView(selectedServiceName)}
-                    <Footer />
-                  </ViewWrapper>
-                  <DropzonePlaceholder isActive={isDropzoneActive} />
-                  <MainEditorView localUploader={this.localUploader} />
-                </MediaPickerPopupWrapper>
-                {this.renderClipboard()}
-                {this.renderDropzone()}
-                {this.renderBrowser()}
+                <div data-test-id="media-picker-popup">
+                  <MediaPickerPopupWrapper>
+                    <SidebarWrapper>
+                      <Sidebar />
+                    </SidebarWrapper>
+                    <ViewWrapper>
+                      {this.renderCurrentView(selectedServiceName)}
+                      <Footer />
+                    </ViewWrapper>
+                    <DropzonePlaceholder isActive={isDropzoneActive} />
+                    <MainEditorView localUploader={this.localUploader} />
+                  </MediaPickerPopupWrapper>
+                  {this.renderClipboard()}
+                  {this.renderDropzone()}
+                  {this.renderBrowser()}
+                </div>
               </PassContext>
             </ModalDialog>
           </Provider>

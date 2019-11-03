@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
-import { EditorProps } from 'prosemirror-view';
 import { PortalRenderer, PortalProvider } from '../../ui/PortalProvider';
 import { EditorInternal } from './internal/components/EditorInternal';
 import {
@@ -12,6 +11,7 @@ import {
   EditorSharedConfigConsumer,
 } from './internal/context/shared-config';
 import { EditorContent } from './internal/components/EditorContent';
+import { EditorProps } from './internal/editor-props-type';
 
 function Editor(props: EditorProps) {
   const plugins = usePresetContext();
@@ -23,8 +23,9 @@ function Editor(props: EditorProps) {
           <>
             <EditorInternal
               {...props}
-              plugins={plugins}
+              plugins={plugins.length ? plugins : props.plugins}
               portalProviderAPI={portalProviderAPI}
+              handleAnalyticsEvent={props.handleAnalyticsEvent}
             />
             <PortalRenderer portalProviderAPI={portalProviderAPI} />
           </>
@@ -41,10 +42,12 @@ function Editor(props: EditorProps) {
  */
 
 export {
+  // Components
   PresetProvider,
   Editor,
   EditorContent,
-  EditorProps,
   EditorSharedConfigConsumer,
+  // Types
+  EditorProps,
   EditorSharedConfig,
 };

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
+  getArtifactUrl,
   MediaClient,
   FileState,
   globalMediaEventEmitter,
 } from '@atlaskit/media-client';
-import { getArtifactUrl } from '@atlaskit/media-store';
 import {
   CustomMediaPlayer,
   WithShowControlMethodProp,
@@ -70,7 +70,7 @@ export class VideoViewer extends BaseViewer<string, Props, State> {
     const useCustomVideoPlayer = !isIE();
     const isAutoPlay = previewCount === 0;
     return useCustomVideoPlayer ? (
-      <CustomVideoPlayerWrapper>
+      <CustomVideoPlayerWrapper data-test-id="media-viewer-video-content">
         <CustomMediaPlayer
           type="video"
           isAutoPlay={isAutoPlay}

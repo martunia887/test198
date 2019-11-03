@@ -14,12 +14,14 @@ import {
 import Button from '@atlaskit/button';
 import Select from '@atlaskit/select';
 import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
+import { MediaPicker } from '../src';
 import {
-  MediaPicker,
   UploadPreviewUpdateEventPayload,
   MediaFile,
   Popup,
-} from '../src';
+  UploadProcessingEventPayload,
+  UploadEndEventPayload,
+} from '../src/types';
 import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 
 addGlobalEventEmitterListeners();
@@ -84,10 +86,20 @@ export default class Example extends React.Component<{}, State> {
     });
 
     popup.on('upload-preview-update', this.onUploadPreviewUpdate);
+    popup.on('upload-processing', this.onUploadProcessing);
+    popup.on('upload-end', this.onUploadEnd);
     this.setState({ popup });
 
     popup.show();
   }
+
+  onUploadProcessing = (event: UploadProcessingEventPayload) => {
+    console.log('onUploadProcessing', event.file.id);
+  };
+
+  onUploadEnd = (event: UploadEndEventPayload) => {
+    console.log('onUploadEnd', event.file.id);
+  };
 
   private onUploadPreviewUpdate = async (
     event: UploadPreviewUpdateEventPayload,

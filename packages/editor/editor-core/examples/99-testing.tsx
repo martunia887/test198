@@ -20,10 +20,10 @@ import ClipboardHelper from './1-clipboard-helper';
 import { SaveAndCancelButtons } from './5-full-page';
 import { TitleInput } from '../example-helpers/PageElements';
 import mediaMockServer from '../example-helpers/media-mock';
-// @ts-ignore
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { withSidebarContainer } from '../example-helpers/SidebarContainer';
 import { MountOptions } from '../src/__tests__/visual-regression/_utils';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
 
 function createMediaMockEnableOnce() {
   let enabled = false;
@@ -46,7 +46,16 @@ interface EditorInstance {
   eventDispatcher: EventDispatcher;
 }
 
-export const providers: any = {
+type Providers = Pick<
+  EditorProps,
+  | 'emojiProvider'
+  | 'mentionProvider'
+  | 'taskDecisionProvider'
+  | 'contextIdentifierProvider'
+  | 'activityProvider'
+  | 'macroProvider'
+> & { collabEditProvider?: EditorProps['collabEditProvider'] };
+export const providers: Providers = {
   emojiProvider: emoji.storyData.getEmojiResource({
     uploadSupported: true,
     currentUser: {
@@ -191,6 +200,10 @@ function createEditorWindowBindings(win: Window) {
 
     if (props && props.allowExtension) {
       props.extensionHandlers = extensionHandlers;
+    }
+
+    if (options.collab) {
+      providers.collabEditProvider = createCollabEditProvider(options.collab);
     }
 
     let Editor: React.ComponentType<EditorProps> = (props: EditorProps) => (

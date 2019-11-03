@@ -1,14 +1,5 @@
 import uuidV4 from 'uuid/v4';
 import {
-  UploadableFile,
-  MediaType,
-  getMediaTypeFromMimeType,
-  getFileStreamsCache,
-  MediaClient,
-  globalMediaEventEmitter,
-} from '@atlaskit/media-client';
-import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
-import {
   MediaStore,
   MediaStoreCopyFileWithTokenBody,
   UploadController,
@@ -17,15 +8,21 @@ import {
   MediaFile as MediaStoreMediaFile,
   TouchFileDescriptor,
   UploadableFileUpfrontIds,
-} from '@atlaskit/media-store';
+  UploadableFile,
+  MediaType,
+  getMediaTypeFromMimeType,
+  getFileStreamsCache,
+  MediaClient,
+  globalMediaEventEmitter,
+} from '@atlaskit/media-client';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import { EventEmitter2 } from 'eventemitter2';
-import { MediaFile } from '../domain/file';
+import { MediaFile, UploadParams } from '../types';
 
 import { mapAuthToSourceFileOwner } from '../popup/domain/source-file';
 import { getPreviewFromImage } from '../util/getPreviewFromImage';
-import { UploadParams } from '..';
 import { SmartMediaProgress } from '../domain/progress';
-import { MediaErrorName } from '../domain/error';
+import { MediaErrorName } from '../types';
 import {
   UploadService,
   UploadServiceEventListener,
@@ -188,7 +185,7 @@ export class UploadServiceImpl implements UploadService {
             }
 
             if (state.status === 'processing') {
-              subscription.unsubscribe();
+              setTimeout(() => subscription.unsubscribe(), 0);
               if (shouldCopyFileToRecents) {
                 mediaClient.emit('file-added', state);
                 globalMediaEventEmitter.emit('file-added', state);
