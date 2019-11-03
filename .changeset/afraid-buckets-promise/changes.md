@@ -1,0 +1,1 @@
+ED-7947 pass serializeOption to toJSON function
