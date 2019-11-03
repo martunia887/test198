@@ -24,6 +24,14 @@ export const getDocFromElement = (el: any) => {
   return el.pmViewDesc.node.toJSON();
 };
 
+export const expectMatchDocument = async (page: any, testName: string) => {
+  const doc = await page.browser.execute(() => {
+    return (window as any).__documentToJSON();
+  });
+
+  expect(doc).toMatchCustomDocSnapshot(testName);
+};
+
 export const expectToMatchDocument = async (page: any, testName: string) => {
   const doc = await page.browser.execute(() => {
     return (window as any).__documentToJSON();
