@@ -8,6 +8,10 @@ import {
   linkToolbar,
 } from '../_helpers';
 import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 
 const linkText1 = 'http://hello.com ';
 const linkText2 = 'FAB-983';
@@ -22,11 +26,8 @@ const linkText2 = 'FAB-983';
     },
     async (client: any, testName: string) => {
       const textToDisplayInput = '[placeholder="Text to display"]';
-      let browser = new Page(client);
-      await browser.goto(editor.path);
-      await browser.waitForSelector(editor.placeholder);
-      await browser.click(editor.placeholder);
-      await browser.waitForSelector(editable);
+      const browser = await goToEditorTestingExample(client);
+      await mountEditor(browser, { appearance: editor.appearance });
 
       await browser.click(`[aria-label="${messages.link.defaultMessage}"]`);
       await browser.waitForSelector(linkToolbar);
@@ -46,7 +47,7 @@ const linkText2 = 'FAB-983';
       await browser.waitForSelector(textToDisplayInput);
       await browser.type(textToDisplayInput, 'mmm');
       await browser.type(textToDisplayInput, 'Return');
-      await expectMatchDocument(page, testName);
+      await expectMatchDocument(browser, testName);
     },
   );
 
@@ -57,11 +58,8 @@ const linkText2 = 'FAB-983';
     },
     async (client: any, testName: string) => {
       const textToDisplayInput = '[placeholder="Text to display"]';
-      let browser = new Page(client);
-      await browser.goto(editor.path);
-      await browser.waitForSelector(editor.placeholder);
-      await browser.click(editor.placeholder);
-      await browser.waitForSelector(editable);
+      const browser = await goToEditorTestingExample(client);
+      await mountEditor(browser, { appearance: editor.appearance });
 
       await browser.click(`[aria-label="${messages.link.defaultMessage}"]`);
       await browser.waitForSelector(linkToolbar);
@@ -75,7 +73,7 @@ const linkText2 = 'FAB-983';
       await browser.waitForSelector(textToDisplayInput);
       await browser.type(textToDisplayInput, 'mmm');
       await browser.type(textToDisplayInput, 'Return');
-      await expectMatchDocument(page, testName);
+      await expectMatchDocument(browser, testName);
     },
   );
 });

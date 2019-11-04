@@ -1,5 +1,4 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import {
   editable,
   expectMatchDocument,
@@ -7,12 +6,17 @@ import {
   quickInsert,
   linkToolbar,
 } from '../_helpers';
+import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
 
 BrowserTestCase(
   'quick-insert.ts: Insert hyperlink via quick insert',
   { skip: ['ie', 'edge', 'safari'] },
   async (client: any, testName: string) => {
-    const browser = new Page(client);
+    let browser = await goToEditorTestingExample(client);
+    await mountEditor(browser, { appearance: 'full-page' });
 
     await browser.goto(fullpage.path);
     await browser.waitForSelector(editable);
@@ -24,6 +28,6 @@ BrowserTestCase(
     await browser.keys(['Return']);
     await browser.waitForSelector('a');
 
-    await expectMatchDocument(page, testName);
+    await expectMatchDocument(browser, testName);
   },
 );

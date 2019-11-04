@@ -1,6 +1,9 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import { expectMatchDocument, comment, fullpage, editable } from '../_helpers';
+import {
+  mountEditor,
+  goToEditorTestingExample,
+} from '../../__helpers/testing-example-helpers';
 
 [comment, fullpage].forEach(editor => {
   BrowserTestCase(
@@ -9,16 +12,13 @@ import { expectMatchDocument, comment, fullpage, editable } from '../_helpers';
       skip: ['ie', 'edge', 'safari'],
     },
     async (client: any, testName: string) => {
-      let browser = new Page(client);
-      await browser.goto(editor.path);
-      await browser.waitForSelector(editor.placeholder);
-      await browser.click(editor.placeholder);
-      await browser.waitForSelector(editable);
+      let browser = await goToEditorTestingExample(client);
+      await mountEditor(browser, { appearance: 'full-page' });
 
       await browser.type(editable, ['[link](https://hello.com)']);
       await browser.waitForSelector('a');
 
-      await expectMatchDocument(page, testName);
+      await expectMatchDocument(browser, testName);
     },
   );
 });

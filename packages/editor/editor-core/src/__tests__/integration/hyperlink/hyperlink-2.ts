@@ -7,6 +7,10 @@ import {
   editable,
   copyToClipboard,
 } from '../_helpers';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 
 [comment, fullpage].forEach(editor => {
   BrowserTestCase(
@@ -22,10 +26,9 @@ import {
         `<a href="${linkText1}">${linkText1}</a>`,
         'html',
       );
-      await sample.goto(editor.path);
-      await sample.waitForSelector(editor.placeholder);
-      await sample.click(editor.placeholder);
-      await sample.waitForSelector(editable);
+      await goToEditorTestingExample(client, sample);
+      await mountEditor(sample, { appearance: 'full-page' });
+
       await sample.paste();
       await sample.type(editable, '.');
       await sample.keys(['Return']);
@@ -36,7 +39,7 @@ import {
       await sample.paste();
 
       await sample.waitForSelector('a');
-      await expectMatchDocument(page, testName);
+      await expectMatchDocument(sample, testName);
     },
   );
 });

@@ -1,7 +1,10 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
-import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 import { comment, fullpage, editable, linkToolbar } from '../_helpers';
 import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
+import {
+  goToEditorTestingExample,
+  mountEditor,
+} from '../../__helpers/testing-example-helpers';
 
 const linkText1 = 'http://hello.com ';
 
@@ -15,11 +18,8 @@ const linkText1 = 'http://hello.com ';
     },
     async (client: any) => {
       const textToDisplayInput = '[placeholder="Text to display"]';
-      let browser = new Page(client);
-      await browser.goto(editor.path);
-      await browser.waitForSelector(editor.placeholder);
-      await browser.click(editor.placeholder);
-      await browser.waitForSelector(editable);
+      let browser = await goToEditorTestingExample(client);
+      await mountEditor(browser, { appearance: editor.appearance });
 
       await browser.click(`[aria-label="${messages.link.defaultMessage}"]`);
       await browser.waitForSelector(linkToolbar);
