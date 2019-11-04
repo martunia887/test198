@@ -5,7 +5,6 @@ Object {
   "content": Array [
     Object {
       "attrs": Object {
-        "__autoSize": false,
         "isNumberColumnEnabled": false,
         "layout": "default",
       },
@@ -14,12 +13,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   284,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -36,12 +32,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   110,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -52,12 +45,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   284,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -79,12 +69,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   284,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -95,12 +82,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   110,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -125,12 +109,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   284,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -146,12 +127,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   284,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -162,12 +140,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   110,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -178,12 +153,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   284,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -200,6 +172,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -208,7 +181,6 @@ Object {
   "content": Array [
     Object {
       "attrs": Object {
-        "__autoSize": false,
         "isNumberColumnEnabled": false,
         "layout": "full-width",
       },
@@ -217,12 +189,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -239,12 +208,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -255,12 +221,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -276,12 +239,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -292,12 +252,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -314,12 +271,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -335,12 +289,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -351,12 +302,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -367,12 +315,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   600,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -395,6 +340,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -403,7 +349,6 @@ Object {
   "content": Array [
     Object {
       "attrs": Object {
-        "__autoSize": false,
         "isNumberColumnEnabled": false,
         "layout": "wide",
       },
@@ -412,12 +357,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   438,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -434,12 +376,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   86,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -450,12 +389,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   436,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -477,12 +413,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   438,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -493,12 +426,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   86,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -523,12 +453,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   436,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -544,12 +471,9 @@ Object {
           "content": Array [
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   438,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -560,12 +484,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   86,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -576,12 +497,9 @@ Object {
             },
             Object {
               "attrs": Object {
-                "background": null,
-                "colspan": 1,
                 "colwidth": Array [
                   436,
                 ],
-                "rowspan": 1,
               },
               "content": Array [
                 Object {
@@ -598,5 +516,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
