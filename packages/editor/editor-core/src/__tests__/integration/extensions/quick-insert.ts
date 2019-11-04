@@ -1,12 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { messages } from '../../../plugins/insert-block/ui/ToolbarInsertBlock';
 
-import {
-  expectMatchDocument,
-  fullpage,
-  editable,
-  quickInsert,
-} from '../_helpers';
+import { expectMatchDocument, fullpage, quickInsert } from '../_helpers';
 import {
   mountEditor,
   goToEditorTestingExample,

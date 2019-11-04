@@ -2,7 +2,6 @@ import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { tableNewColumnMinWidth } from '@atlaskit/editor-common';
 import { sleep } from '@atlaskit/editor-test-helpers';
 import {
-  editable,
   expectMatchDocument,
   fullpage,
   resizeColumn,

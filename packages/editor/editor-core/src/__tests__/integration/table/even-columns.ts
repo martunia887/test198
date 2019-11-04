@@ -1,6 +1,5 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
-  editable,
   expectMatchDocument,
   fullpage,
   doubleClickResizeHandle,

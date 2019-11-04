@@ -1,7 +1,6 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import {
   expectMatchDocument,
-  editable,
   insertBlockMenuItem,
   changeSelectedNodeLayout,
 } from '../_helpers';

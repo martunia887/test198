@@ -1,7 +1,7 @@
 import { IntlProvider } from 'react-intl';
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 
-import { editable, expectMatchDocument, fullpage } from '../_helpers';
+import { expectMatchDocument, fullpage } from '../_helpers';
 import { documentWithMergedCells } from './__fixtures__/merged-rows-and-cols-document';
 import { TableCssClassName as ClassName } from '../../../plugins/table/types';
 import {

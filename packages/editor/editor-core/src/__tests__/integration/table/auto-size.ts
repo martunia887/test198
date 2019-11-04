@@ -1,7 +1,7 @@
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { sleep } from '@atlaskit/editor-test-helpers';
 
-import { editable, expectMatchDocument, fullpage } from '../_helpers';
+import { expectMatchDocument, fullpage } from '../_helpers';
 
 import {
   autoSizeToDefaultLayout,
