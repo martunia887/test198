@@ -6,6 +6,7 @@ import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import { Transformer } from '@atlaskit/editor-common';
 import { EditorActions } from '../../index';
 import Editor from '../../editor';
+import * as utils from '../../utils';
 
 describe('Editor Actions', () => {
   const transformer = new JSONTransformer();
@@ -20,6 +21,7 @@ describe('Editor Actions', () => {
 
   describe('getValue', () => {
     it('filters out invalid marks when a contentTransformer is present', async () => {
+      jest.spyOn(utils, 'toJSON');
       const wrapper = mount(
         <Editor
           emojiProvider={emojiData.testData.getEmojiResourcePromise()}
@@ -47,7 +49,15 @@ describe('Editor Actions', () => {
       );
 
       const value = await editorActions.getValue();
-
+      expect(utils.toJSON).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          allowNewInsertionBehaviour: true,
+          appearance: 'comment',
+          disabled: false,
+        }),
+      );
+      (utils.toJSON as jest.Mock).mockRestore();
       expect(value).toMatchInlineSnapshot(`
 Object {
   "content": Array [

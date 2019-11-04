@@ -1,3 +1,3 @@
 export type SchemaSerializeOption = {
-  imageAltTextEnabled?: boolean;
+  UNSAFE_allowAltTextOnImages?: boolean;
 };

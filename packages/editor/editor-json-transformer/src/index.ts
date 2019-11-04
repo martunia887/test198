@@ -83,12 +83,13 @@ const emptyDoc = createDocFromContent([
   },
 ]);
 
-const generateSchemaSerializeOption = (
+export const generateSchemaSerializeOption = (
   props: EditorProps,
 ): SchemaSerializeOption => {
   let serializeOption: SchemaSerializeOption = {};
-  if (props.media && props.media.UNSAFE_allowAltTextOnImages) {
-    serializeOption.imageAltTextEnabled = true;
+  if (props.media) {
+    serializeOption.UNSAFE_allowAltTextOnImages =
+      props.media.UNSAFE_allowAltTextOnImages;
   }
   return serializeOption;
 };

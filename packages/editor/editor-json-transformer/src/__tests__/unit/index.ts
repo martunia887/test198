@@ -2,6 +2,7 @@ import {
   bitbucketSchema,
   confluenceSchema,
   createJIRASchema,
+  SchemaSerializeOption,
 } from '@atlaskit/adf-schema';
 import {
   createEditorFactory,
@@ -51,8 +52,13 @@ import { MarkdownTransformer } from '@atlaskit/editor-markdown-transformer';
 import { WikiMarkupTransformer } from '@atlaskit/editor-wikimarkup-transformer';
 import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { Node as PMNode } from 'prosemirror-model';
+import { EditorProps, MediaOptions } from '@atlaskit/editor-core';
 
-import { JSONTransformer, JSONDocNode } from '../../index';
+import {
+  JSONTransformer,
+  JSONDocNode,
+  generateSchemaSerializeOption,
+} from '../../index';
 
 const transformer = new JSONTransformer();
 const toJSON = (node: PMNode) => transformer.encode(node);
@@ -65,6 +71,28 @@ describe('JSONTransformer:', () => {
   beforeAll(() => {
     // @ts-ignore
     global['fetch'] = () => Promise.resolve();
+  });
+
+  describe('generateSchemaSerializeOption', () => {
+    test.each<[EditorProps, SchemaSerializeOption]>([
+      [{}, {}],
+      [{ media: {} }, {}],
+      [
+        { media: { UNSAFE_allowAltTextOnImages: true } },
+        { UNSAFE_allowAltTextOnImages: true },
+      ],
+      [
+        { media: { UNSAFE_allowAltTextOnImages: false } },
+        { UNSAFE_allowAltTextOnImages: false },
+      ],
+    ])(
+      'should generate correct serialize option from editor props',
+      (input: EditorProps, output: SchemaSerializeOption) => {
+        expect(generateSchemaSerializeOption(input as EditorProps)).toEqual(
+          output,
+        );
+      },
+    );
   });
 
   describe('encode', () => {

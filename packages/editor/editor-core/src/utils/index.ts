@@ -618,7 +618,7 @@ export function wrapIn(
 }
 
 export function toJSON(node: Node, editorProps?: EditorProps): JSONDocNode {
-  // TODO how to cache transformer to improve performance?
+  // TODO ED-8009 Explore the options to optimize toJSON function in editor-core
   const transformer = new JSONTransformer(editorProps);
   return transformer.encode(node);
 }
