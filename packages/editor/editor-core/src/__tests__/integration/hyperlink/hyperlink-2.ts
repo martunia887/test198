@@ -27,7 +27,10 @@ import {
         'html',
       );
       await goToEditorTestingExample(client, sample);
-      await mountEditor(sample, { appearance: 'full-page' });
+      await mountEditor(sample, {
+        appearance: editor.appearance,
+        allowLists: true,
+      });
 
       await sample.paste();
       await sample.type(editable, '.');
