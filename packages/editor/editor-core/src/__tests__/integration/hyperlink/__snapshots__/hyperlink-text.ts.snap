@@ -9,7 +9,6 @@ Object {
           "marks": Array [
             Object {
               "attrs": Object {
-                "__confluenceMetadata": null,
                 "href": "https://product-fabric.atlassian.net/browse/FAB-983",
               },
               "type": "link",
@@ -27,7 +26,6 @@ Object {
           "marks": Array [
             Object {
               "attrs": Object {
-                "__confluenceMetadata": null,
                 "href": "http://hello.com",
               },
               "type": "link",
@@ -45,6 +43,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -57,7 +56,6 @@ Object {
           "marks": Array [
             Object {
               "attrs": Object {
-                "__confluenceMetadata": null,
                 "href": "https://product-fabric.atlassian.net/browse/FAB-983",
               },
               "type": "link",
@@ -75,7 +73,6 @@ Object {
           "marks": Array [
             Object {
               "attrs": Object {
-                "__confluenceMetadata": null,
                 "href": "http://hello.com",
               },
               "type": "link",
@@ -93,6 +90,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -105,7 +103,6 @@ Object {
           "marks": Array [
             Object {
               "attrs": Object {
-                "__confluenceMetadata": null,
                 "href": "https://product-fabric.atlassian.net/browse/FAB-983",
               },
               "type": "link",
@@ -119,6 +116,7 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
 
@@ -131,7 +129,6 @@ Object {
           "marks": Array [
             Object {
               "attrs": Object {
-                "__confluenceMetadata": null,
                 "href": "https://product-fabric.atlassian.net/browse/FAB-983",
               },
               "type": "link",
@@ -145,5 +142,6 @@ Object {
     },
   ],
   "type": "doc",
+  "version": 1,
 }
 `;
