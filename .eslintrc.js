@@ -126,9 +126,6 @@ module.exports = {
       },
     ],
 
-    // TODO: Might be worth re-enabling it at some stage (or using stricter instead)
-    'import/no-cycle': 'off',
-
     'no-labels': 'off',
     'no-restricted-syntax': 'off',
     'no-underscore-dangle': 'off',
