@@ -27,6 +27,8 @@ export interface MediaImageInternalProps {
   apiConfig?: MediaStoreGetFileImageParams;
   /** Render props returning `MediaImageChildrenProps` data structure */
   children: (props: MediaImageChildrenProps) => ReactNode;
+  /* Will update the children with new src only when loading has finished */
+  lazyUpdate: boolean;
 }
 
 export interface MediaImageState {
@@ -163,7 +165,13 @@ export class MediaImageInternal extends Component<
     return this.props.children({
       loading: this.state.status === 'loading',
       error: this.state.status === 'error',
-      data: this.state.status === 'succeeded' ? this.state : undefined,
+      data:
+        this.state.status === 'succeeded' ||
+        (this.props.lazyUpdate &&
+          this.state.src &&
+          this.state.status === 'loading')
+          ? this.state
+          : undefined,
     });
   }
 }
