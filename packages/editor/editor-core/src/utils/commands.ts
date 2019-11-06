@@ -4,7 +4,7 @@ import { CellSelection } from 'prosemirror-tables';
 import { ResolvedPos, MarkType, Mark, Node as PmNode } from 'prosemirror-model';
 import { transformSmartCharsMentionsAndEmojis } from '../plugins/text-formatting/commands/transform-to-code';
 import { GapCursorSelection } from '../plugins/gap-cursor';
-import { Command } from '../types';
+import { Command, HigherOrderCommand } from '../types';
 
 type Predicate = (state: EditorState, view?: EditorView) => boolean;
 
@@ -206,6 +206,26 @@ const toggleMark = (
   return toggleMarkInRange(mark)(state, dispatch);
 };
 
+/**
+ * A wrapper command to call prosemirror's tr.scrollIntoView() when the
+ * wrapped command is dispatched
+ */
+const withScrollIntoView: HigherOrderCommand = (command: Command): Command => (
+  state,
+  dispatch,
+  view,
+) =>
+  command(
+    state,
+    tr => {
+      tr.scrollIntoView();
+      if (dispatch) {
+        dispatch(tr);
+      }
+    },
+    view,
+  );
+
 export {
   // https://github.com/typescript-eslint/typescript-eslint/issues/131
   // eslint-disable-next-line no-undef
@@ -218,4 +238,5 @@ export {
   findCutBefore,
   toggleMark,
   applyMarkOnRange,
+  withScrollIntoView,
 };

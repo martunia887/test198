@@ -159,6 +159,7 @@ export const insertTaskDecision = (
     addToList,
   );
   if (tr) {
+    tr.scrollIntoView();
     view.dispatch(tr);
     return true;
   }

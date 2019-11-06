@@ -21,6 +21,7 @@ import {
 } from './_utils';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { EditorView } from 'prosemirror-view';
 
 const createMediaState = (
   id: string,
@@ -33,6 +34,9 @@ const createMediaState = (
 });
 
 describe('media-single', () => {
+  let editorView: EditorView;
+  let dispatchSpy: jest.SpyInstance;
+
   const createEditor = createEditorFactory();
   const editor = (doc: any) => {
     const contextIdentifierProvider = storyContextIdentifierProviderFactory();
@@ -51,6 +55,12 @@ describe('media-single', () => {
       providerFactory,
     });
   };
+
+  afterEach(() => {
+    if (dispatchSpy) {
+      dispatchSpy.mockRestore();
+    }
+  });
 
   describe('insertMediaAsMediaSingle', () => {
     describe('when inserting node that is not a media node', () => {
@@ -120,8 +130,9 @@ describe('media-single', () => {
 
   describe('insertMediaSingleNode', () => {
     describe('when there is only one image data', () => {
-      it('inserts one mediaSingle node into the document', () => {
-        const { editorView } = editor(doc(p('text{<>}')));
+      beforeEach(() => {
+        ({ editorView } = editor(doc(p('text{<>}'))));
+        dispatchSpy = jest.spyOn(editorView, 'dispatch');
 
         insertMediaSingleNode(
           editorView,
@@ -129,7 +140,9 @@ describe('media-single', () => {
           INPUT_METHOD.PICKER_CLOUD,
           testCollectionName,
         );
+      });
 
+      it('inserts one mediaSingle node into the document', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -138,12 +151,17 @@ describe('media-single', () => {
           ),
         );
       });
+
+      it('scrolls into view when insert media single', () => {
+        const dispatchedTr = dispatchSpy.mock.calls[0][0];
+        expect(dispatchedTr.scrolledIntoView).toEqual(true);
+      });
     });
 
     describe("when there are multiple images' data", () => {
-      it('inserts multiple mediaSingle nodes into the document', () => {
-        const { editorView } = editor(doc(p('text{<>}hello')));
-
+      beforeEach(() => {
+        ({ editorView } = editor(doc(p('text{<>}hello'))));
+        dispatchSpy = jest.spyOn(editorView, 'dispatch');
         ([
           createMediaState(temporaryFileId),
           createMediaState(temporaryFileId + '1'),
@@ -156,7 +174,9 @@ describe('media-single', () => {
             testCollectionName,
           ),
         );
+      });
 
+      it('inserts multiple mediaSingle nodes into the document', () => {
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -190,6 +210,11 @@ describe('media-single', () => {
             p('hello'),
           ),
         );
+      });
+
+      it('scrolls into view when insert multiple media singles', () => {
+        const dispatchedTr = dispatchSpy.mock.calls[0][0];
+        expect(dispatchedTr.scrolledIntoView).toEqual(true);
       });
     });
 

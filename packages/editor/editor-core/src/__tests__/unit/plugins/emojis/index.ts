@@ -151,6 +151,15 @@ describe('emojis', () => {
         attributes: { inputMethod: 'picker' },
       });
     });
+
+    it('scrolls inserted emoji into view', () => {
+      const { editorView } = editor(doc(p('{<>}')));
+      const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+      insertEmoji(grinEmojiId)(editorView.state, editorView.dispatch);
+
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
+    });
   });
 
   describe('quick insert', () => {

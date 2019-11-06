@@ -6,6 +6,7 @@ import {
   isFirstChildOfParent,
   findCutBefore,
   toggleMark,
+  withScrollIntoView,
 } from '../../../utils/commands';
 import {
   createEditorFactory,
@@ -28,6 +29,7 @@ import {
   mention,
 } from '@atlaskit/editor-test-helpers';
 import { Command } from '../../../types';
+import { EditorView } from 'prosemirror-view';
 
 describe('utils -> commands', () => {
   const createEditor = createEditorFactory();
@@ -764,6 +766,41 @@ describe('utils -> commands', () => {
       expect(editorView.state.doc).toEqualDocument(
         doc(p('text here', subsup({ type: 'sup' })(''))),
       );
+    });
+  });
+
+  describe('withScrollIntoView', () => {
+    let editorView: EditorView;
+    let dispatchSpy: jest.SpyInstance;
+    let cmd: jest.Mock;
+
+    beforeEach(() => {
+      ({ editorView } = createEditor({
+        doc: doc(p('hello{<>}')),
+      }));
+      dispatchSpy = jest.spyOn(editorView, 'dispatch');
+
+      cmd = jest.fn((state, dispatch) => {
+        if (dispatch) {
+          dispatch(state.tr);
+        }
+        return true;
+      });
+      withScrollIntoView(cmd)(editorView.state, editorView.dispatch);
+    });
+
+    afterEach(() => {
+      dispatchSpy.mockRestore();
+      cmd.mockRestore();
+    });
+
+    it('scrolls selection into view', () => {
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
+    });
+
+    it('calls wrapped command', () => {
+      expect(cmd).toHaveBeenCalled();
     });
   });
 });

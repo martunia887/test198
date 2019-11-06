@@ -104,6 +104,7 @@ function insertNodesWithOptionalParagraph(
         getInsertMediaAnalytics(inputMethod, fileExtension),
       );
     }
+    tr.scrollIntoView();
 
     if (dispatch) {
       dispatch(tr);
@@ -199,6 +200,8 @@ export const insertMediaSingleNode = (
         getInsertMediaAnalytics(inputMethod, fileExtension),
       );
     }
+    tr.scrollIntoView();
+
     dispatch(tr);
   }
 

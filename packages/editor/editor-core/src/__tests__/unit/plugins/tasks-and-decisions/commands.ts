@@ -159,6 +159,14 @@ describe('tasks and decisions - commands', () => {
             expect(insertTaskDecision(editorView, listName)).toBe(false);
           });
 
+          it(`scrolls into view when insert ${name}`, () => {
+            const { editorView } = editorFactory(doc(p('Hello{<>} World')));
+            const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+            insertTaskDecision(editorView, listName);
+            const dispatchedTr = dispatchSpy.mock.calls[0][0];
+            expect(dispatchedTr.scrolledIntoView).toEqual(true);
+          });
+
           describe('when cursor is inside of a block node', () => {
             it(`should append an empty ${name} list after the parent block node`, () => {
               const { editorView } = editorFactory(doc(panel()(p('te{<>}xt'))));

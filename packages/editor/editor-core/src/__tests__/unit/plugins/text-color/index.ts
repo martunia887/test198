@@ -9,6 +9,7 @@ import {
   strong,
   panel,
 } from '@atlaskit/editor-test-helpers';
+import { EditorView } from 'prosemirror-view';
 import {
   TextColorPluginState,
   pluginKey as textColorPluginKey,
@@ -29,16 +30,59 @@ describe('text-color', () => {
   const testColor2 = '#0747a6';
   const createTextColor = (color: string) => textColor({ color });
 
-  it('should be able to replace textColor on a character', () => {
-    const { editorView } = editor(
-      doc(p(createTextColor(testColor1)('{<}t{>}'), 'ext')),
-    );
-    const { dispatch, state } = editorView;
+  let editorView: EditorView;
+  let dispatchSpy: jest.SpyInstance;
+  let pluginState: TextColorPluginState;
 
-    expect(changeColor(testColor2)(state, dispatch));
-    expect(editorView.state.doc).toEqualDocument(
-      doc(p(createTextColor(testColor2)('t'), 'ext')),
-    );
+  afterEach(() => {
+    if (dispatchSpy) {
+      dispatchSpy.mockRestore();
+    }
+  });
+
+  describe('changeColor', () => {
+    describe('toggleColor', () => {
+      beforeEach(() => {
+        ({ editorView } = editor(
+          doc(p(createTextColor(testColor1)('{<}t{>}'), 'ext')),
+        ));
+        dispatchSpy = jest.spyOn(editorView, 'dispatch');
+        changeColor(testColor2)(editorView.state, editorView.dispatch);
+      });
+
+      it('changes text color of a character', () => {
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p(createTextColor(testColor2)('t'), 'ext')),
+        );
+      });
+
+      it('scrolls into view when change text color', () => {
+        const dispatchedTr = dispatchSpy.mock.calls[0][0];
+        expect(dispatchedTr.scrolledIntoView).toEqual(true);
+      });
+    });
+
+    describe('removeColor', () => {
+      beforeEach(() => {
+        ({ editorView, pluginState } = editor(
+          doc(p(createTextColor(testColor1)('{<}t{>}'), 'ext')),
+        ));
+        dispatchSpy = jest.spyOn(editorView, 'dispatch');
+        changeColor(pluginState.defaultColor)(
+          editorView.state,
+          editorView.dispatch,
+        );
+      });
+
+      it('resets to default text color', () => {
+        expect(editorView.state.doc).toEqualDocument(doc(p('text')));
+      });
+
+      it('scrolls into view when reset text color', () => {
+        const dispatchedTr = dispatchSpy.mock.calls[0][0];
+        expect(dispatchedTr.scrolledIntoView).toEqual(true);
+      });
+    });
   });
 
   it('should expose whether textColor has any color on an empty selection', () => {

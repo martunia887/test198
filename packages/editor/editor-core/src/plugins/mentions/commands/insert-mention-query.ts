@@ -7,13 +7,17 @@ import {
   withAnalytics,
 } from '../../analytics';
 import { TOOLBAR_MENU_TYPE } from '../../insert-block/ui/ToolbarInsertBlock';
+import { Command } from '../../../types';
+import { withScrollIntoView } from '../../../utils/commands';
 
-export function insertMentionQuery(inputMethod: TOOLBAR_MENU_TYPE) {
-  return withAnalytics({
-    action: ACTION.INVOKED,
-    actionSubject: ACTION_SUBJECT.TYPEAHEAD,
-    actionSubjectId: ACTION_SUBJECT_ID.TYPEAHEAD_MENTION,
-    attributes: { inputMethod },
-    eventType: EVENT_TYPE.UI,
-  })(insertTypeAheadQuery('@'));
+export function insertMentionQuery(inputMethod: TOOLBAR_MENU_TYPE): Command {
+  return withScrollIntoView(
+    withAnalytics({
+      action: ACTION.INVOKED,
+      actionSubject: ACTION_SUBJECT.TYPEAHEAD,
+      actionSubjectId: ACTION_SUBJECT_ID.TYPEAHEAD_MENTION,
+      attributes: { inputMethod },
+      eventType: EVENT_TYPE.UI,
+    })(insertTypeAheadQuery('@')),
+  );
 }

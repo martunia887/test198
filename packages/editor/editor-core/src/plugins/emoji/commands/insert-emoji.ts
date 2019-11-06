@@ -11,6 +11,7 @@ import {
   ACTION_SUBJECT,
   ACTION,
 } from '../../analytics';
+import { withScrollIntoView } from '../../../utils/commands';
 
 export function insertEmoji(
   emojiId: EmojiId,
@@ -19,7 +20,7 @@ export function insertEmoji(
     | INPUT_METHOD.ASCII
     | INPUT_METHOD.TYPEAHEAD,
 ): Command {
-  return (state, dispatch) => {
+  return withScrollIntoView((state, dispatch) => {
     const { emoji } = state.schema.nodes;
 
     if (emoji && emojiId) {
@@ -53,5 +54,5 @@ export function insertEmoji(
       return true;
     }
     return false;
-  };
+  });
 }

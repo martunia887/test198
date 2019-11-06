@@ -5,6 +5,7 @@ import { pluginKey, LayoutState } from './pm-plugins/main';
 import { EditorState, Transaction, TextSelection } from 'prosemirror-state';
 import { mapChildren, flatmap } from '../../utils/slice';
 import { isEmptyDocument, getStepRange } from '../../utils';
+import { withScrollIntoView } from '../../utils/commands';
 import {
   addAnalytics,
   ACTION,
@@ -92,12 +93,14 @@ export const createDefaultLayoutSection = (state: EditorState) => {
   return layoutSection.createAndFill(undefined, columns) as Node;
 };
 
-export const insertLayoutColumns: Command = (state, dispatch) => {
-  if (dispatch) {
-    dispatch(safeInsert(createDefaultLayoutSection(state))(state.tr));
-  }
-  return true;
-};
+export const insertLayoutColumns: Command = withScrollIntoView(
+  (state, dispatch) => {
+    if (dispatch) {
+      dispatch(safeInsert(createDefaultLayoutSection(state))(state.tr));
+    }
+    return true;
+  },
+);
 
 export const insertLayoutColumnsWithAnalytics = (
   inputMethod: TOOLBAR_MENU_TYPE,

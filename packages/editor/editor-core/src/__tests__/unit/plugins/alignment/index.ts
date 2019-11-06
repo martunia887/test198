@@ -77,6 +77,14 @@ describe('alignment', () => {
         ),
       );
     });
+
+    it('scrolls into view when alignment is applied', () => {
+      const { editorView } = editor(doc(p('hello{<>}')));
+      const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+      changeAlignment('end')(editorView.state, editorView.dispatch);
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
+    });
   });
 
   describe('Does not apply inside special block nodes', () => {

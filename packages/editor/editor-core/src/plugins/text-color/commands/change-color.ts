@@ -1,4 +1,4 @@
-import { Command } from '../../../types';
+import { Command, HigherOrderCommand } from '../../../types';
 import { toggleColor } from './toggle-color';
 import { removeColor } from './remove-color';
 import { pluginKey } from '../pm-plugins/main';
@@ -9,7 +9,6 @@ import {
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
   EVENT_TYPE,
-  HigherOrderCommand,
 } from '../../analytics';
 import { PaletteColor } from '../../../ui/ColorPalette/Palettes/type';
 

@@ -174,6 +174,9 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
     if (toolbarOption) {
       toolbarOption.unmount();
     }
+    if (dispatchSpy) {
+      dispatchSpy.mockRestore();
+    }
   });
 
   it('should render nothing if none of the plugins are present', () => {
@@ -308,6 +311,15 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
       });
 
       describe('mentions option', () => {
+        beforeEach(() => {
+          buildToolbarForMenu({
+            mentionsSupported: true,
+            isTypeAheadAllowed: true,
+            mentionsEnabled: true,
+          });
+          menu.clickButton(messages.mention.defaultMessage, toolbarOption);
+        });
+
         // Following test case is breaking due to trouble in @atlaskit/downdown.
         // isDisabled is always set to false.
         it.skip('should disable button if mentionsEnabled is false', () => {
@@ -324,12 +336,6 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
         });
 
         it('should fire v3 analytics event when mention option clicked', () => {
-          buildToolbarForMenu({
-            mentionsSupported: true,
-            isTypeAheadAllowed: true,
-            mentionsEnabled: true,
-          });
-          menu.clickButton(messages.mention.defaultMessage, toolbarOption);
           expect(createAnalyticsEvent).toHaveBeenCalledWith({
             action: 'invoked',
             actionSubject: 'typeAhead',
@@ -337,6 +343,11 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
             attributes: { inputMethod: menu.name },
             eventType: 'ui',
           });
+        });
+
+        it('scrolls selection into view', () => {
+          const dispatchedTr = dispatchSpy.mock.calls[0][0];
+          expect(dispatchedTr.scrolledIntoView).toEqual(true);
         });
       });
 
@@ -387,7 +398,6 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
             hyperlinkPluginKey,
           );
           expect(linkMeta.type).toEqual(LinkAction.SHOW_INSERT_TOOLBAR);
-          dispatchSpy.mockRestore();
         });
 
         it('should fire analytics event', () => {
@@ -398,6 +408,11 @@ describe('@atlaskit/editor-core/ui/ToolbarInsertBlock', () => {
             attributes: { inputMethod: menu.name },
             eventType: 'ui',
           });
+        });
+
+        it('scrolls selection into view', () => {
+          const dispatchedTr = dispatchSpy.mock.calls[0][0];
+          expect(dispatchedTr.scrolledIntoView).toEqual(true);
         });
       });
 

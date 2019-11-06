@@ -5,14 +5,13 @@ import {
 import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { AnalyticsEventPayload } from './types';
 import { EditorState, Transaction } from 'prosemirror-state';
-import { Command } from '../../types';
+import { HigherOrderCommand } from '../../types';
 import { InputRuleWithHandler } from '../../utils/input-rules';
 import { analyticsPluginKey } from './plugin';
 import { AnalyticsStep } from './analytics-step';
 import { Step } from 'prosemirror-transform';
 
 export type DispatchAnalyticsEvent = (payload: AnalyticsEventPayload) => void;
-export type HigherOrderCommand = (command: Command) => Command;
 
 function getAnalyticsState(
   editorState: EditorState,

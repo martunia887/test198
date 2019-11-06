@@ -1,9 +1,12 @@
 import { TextSelection, Selection } from 'prosemirror-state';
-import { hasCode } from '../utils';
-import { markActive } from '../utils';
+import { hasCode, markActive } from '../utils';
 import { analyticsService } from '../../../analytics';
 import { Command } from '../../../types';
-import { toggleMark, applyMarkOnRange } from '../../../utils/commands';
+import {
+  toggleMark,
+  applyMarkOnRange,
+  withScrollIntoView,
+} from '../../../utils/commands';
 import {
   withAnalytics,
   ACTION,
@@ -152,15 +155,14 @@ type InputMethodBasic =
   | INPUT_METHOD.SHORTCUT
   | INPUT_METHOD.FORMATTING;
 
-export const toggleEm = (): Command => {
-  return (state, dispatch) => {
+export const toggleEm = (): Command =>
+  withScrollIntoView((state, dispatch) => {
     const { em } = state.schema.marks;
     if (em) {
       return toggleMark(em)(state, dispatch);
     }
     return false;
-  };
-};
+  });
 
 export const toggleEmWithAnalytics = ({
   inputMethod,
@@ -177,15 +179,14 @@ export const toggleEmWithAnalytics = ({
     },
   })(toggleEm());
 
-export const toggleStrike = (): Command => {
-  return (state, dispatch) => {
+export const toggleStrike = (): Command =>
+  withScrollIntoView((state, dispatch) => {
     const { strike } = state.schema.marks;
     if (strike) {
       return toggleMark(strike)(state, dispatch);
     }
     return false;
-  };
-};
+  });
 
 export const toggleStrikeWithAnalytics = ({
   inputMethod,
@@ -202,15 +203,14 @@ export const toggleStrikeWithAnalytics = ({
     },
   })(toggleStrike());
 
-export const toggleStrong = (): Command => {
-  return (state, dispatch) => {
+export const toggleStrong = (): Command =>
+  withScrollIntoView((state, dispatch) => {
     const { strong } = state.schema.marks;
     if (strong) {
       return toggleMark(strong)(state, dispatch);
     }
     return false;
-  };
-};
+  });
 
 export const toggleStrongWithAnalytics = ({
   inputMethod,
@@ -227,15 +227,14 @@ export const toggleStrongWithAnalytics = ({
     },
   })(toggleStrong());
 
-export const toggleUnderline = (): Command => {
-  return (state, dispatch) => {
+export const toggleUnderline = (): Command =>
+  withScrollIntoView((state, dispatch) => {
     const { underline } = state.schema.marks;
     if (underline) {
       return toggleMark(underline)(state, dispatch);
     }
     return false;
-  };
-};
+  });
 
 export const toggleUnderlineWithAnalytics = ({
   inputMethod,
@@ -252,15 +251,14 @@ export const toggleUnderlineWithAnalytics = ({
     },
   })(toggleUnderline());
 
-export const toggleSuperscript = (): Command => {
-  return (state, dispatch) => {
+export const toggleSuperscript = (): Command =>
+  withScrollIntoView((state, dispatch) => {
     const { subsup } = state.schema.marks;
     if (subsup) {
       return toggleMark(subsup, { type: 'sup' })(state, dispatch);
     }
     return false;
-  };
-};
+  });
 
 export const toggleSuperscriptWithAnalytics = (): Command =>
   withAnalytics({
@@ -273,15 +271,14 @@ export const toggleSuperscriptWithAnalytics = (): Command =>
     },
   })(toggleSuperscript());
 
-export const toggleSubscript = (): Command => {
-  return (state, dispatch) => {
+export const toggleSubscript = (): Command =>
+  withScrollIntoView((state, dispatch) => {
     const { subsup } = state.schema.marks;
     if (subsup) {
       return toggleMark(subsup, { type: 'sub' })(state, dispatch);
     }
     return false;
-  };
-};
+  });
 
 export const toggleSubscriptWithAnalytics = (): Command =>
   withAnalytics({
@@ -294,16 +291,15 @@ export const toggleSubscriptWithAnalytics = (): Command =>
     },
   })(toggleSubscript());
 
-export const toggleCode = (): Command => {
-  return (state, dispatch) => {
+export const toggleCode = (): Command =>
+  withScrollIntoView((state, dispatch) => {
     const { code } = state.schema.marks;
     if (code) {
       return toggleMark(code)(state, dispatch);
     }
 
     return false;
-  };
-};
+  });
 
 export const toggleCodeWithAnalytics = ({
   inputMethod,

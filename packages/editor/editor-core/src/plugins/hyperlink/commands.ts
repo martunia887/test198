@@ -6,7 +6,7 @@ import {
   canLinkBeCreatedInRange,
 } from './pm-plugins/main';
 import { EditorState, Selection } from 'prosemirror-state';
-import { filter, Predicate } from '../../utils/commands';
+import { filter, Predicate, withScrollIntoView } from '../../utils/commands';
 import { Mark, Node, ResolvedPos } from 'prosemirror-model';
 import {
   addAnalytics,
@@ -213,7 +213,7 @@ export function showLinkToolbar(
     | INPUT_METHOD.SHORTCUT
     | INPUT_METHOD.INSERT_MENU = INPUT_METHOD.TOOLBAR,
 ): Command {
-  return function(state, dispatch) {
+  return withScrollIntoView((state, dispatch) => {
     if (dispatch) {
       let tr = state.tr.setMeta(stateKey, {
         type: LinkAction.SHOW_INSERT_TOOLBAR,
@@ -228,7 +228,7 @@ export function showLinkToolbar(
       dispatch(tr);
     }
     return true;
-  };
+  });
 }
 
 export function hideLinkToolbar(): Command {

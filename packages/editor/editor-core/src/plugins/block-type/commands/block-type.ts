@@ -10,7 +10,6 @@ import {
   NORMAL_TEXT,
   HeadingLevelsAndNormalText,
 } from '../types';
-import { removeBlockMarks } from '../../../utils/mark';
 import {
   withAnalytics,
   ACTION,
@@ -19,7 +18,8 @@ import {
   EVENT_TYPE,
   INPUT_METHOD,
 } from '../../analytics';
-import { filterChildrenBetween } from '../../../utils';
+import { filterChildrenBetween, removeBlockMarks } from '../../../utils';
+import { withScrollIntoView } from '../../../utils/commands';
 import { PANEL_TYPE } from '../../analytics';
 
 type InputMethod =
@@ -66,7 +66,7 @@ export function setBlockTypeWithAnalytics(
 }
 
 export function setNormalText(): Command {
-  return function(state, dispatch) {
+  return withScrollIntoView((state, dispatch) => {
     const {
       tr,
       selection: { $from, $to },
@@ -76,8 +76,9 @@ export function setNormalText(): Command {
       dispatch(tr.setBlockType($from.pos, $to.pos, schema.nodes.paragraph));
     }
     return true;
-  };
+  });
 }
+
 function withCurrentHeadingLevel(
   fn: (level?: HeadingLevelsAndNormalText) => Command,
 ): Command {
@@ -126,7 +127,7 @@ export function setNormalTextWithAnalytics(inputMethod: InputMethod): Command {
   );
 }
 export function setHeading(level: HeadingLevelsAndNormalText): Command {
-  return function(state, dispatch) {
+  return withScrollIntoView((state, dispatch) => {
     const {
       tr,
       selection: { $from, $to },
@@ -138,7 +139,7 @@ export function setHeading(level: HeadingLevelsAndNormalText): Command {
       );
     }
     return true;
-  };
+  });
 }
 
 export const setHeadingWithAnalytics = (
@@ -266,7 +267,7 @@ function wrapSelectionIn(type: NodeType<any>): Command {
  * Function will insert code block at current selection if block is empty or below current selection and set focus on it.
  */
 function insertCodeBlock(): Command {
-  return function(state: EditorState, dispatch) {
+  return withScrollIntoView((state: EditorState, dispatch) => {
     const { tr } = state;
     const { $to } = state.selection;
     const { codeBlock } = state.schema.nodes;
@@ -287,7 +288,7 @@ function insertCodeBlock(): Command {
       dispatch(tr);
     }
     return true;
-  };
+  });
 }
 
 export const cleanUpAtTheStartOfDocument: Command = (state, dispatch) => {

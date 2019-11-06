@@ -15,6 +15,8 @@ import {
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
 import { browser } from '@atlaskit/editor-common';
+import { EditorState } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 import {
   pluginKey as blockTypePluginKey,
   BlockTypeState,
@@ -38,10 +40,15 @@ import {
   ACTION_SUBJECT_ID,
   INPUT_METHOD,
 } from '../../../../plugins/analytics';
+import { CommandDispatch } from '../../../../types';
 
 describe('block-type', () => {
   const createEditor = createEditorFactory<BlockTypeState>();
   let createAnalyticsEvent: CreateUIAnalyticsEvent;
+  let editorView: EditorView;
+  let dispatchSpy: jest.SpyInstance;
+  let state: EditorState;
+  let dispatch: CommandDispatch;
 
   const editor = (doc: any) => {
     createAnalyticsEvent = jest.fn(
@@ -63,29 +70,65 @@ describe('block-type', () => {
     });
   };
 
-  it('should be able to change to normal text', () => {
-    const { editorView } = editor(doc(h1('te{<>}xt')));
-    const { state, dispatch } = editorView;
+  const initEditor = (adf = doc(p('te{<>}xt'))) => {
+    ({ editorView } = editor(adf));
+    dispatchSpy = jest.spyOn(editorView, 'dispatch');
+    ({ state, dispatch } = editorView);
+  };
 
-    setBlockType('normal')(state, dispatch);
-    expect(editorView.state.doc).toEqualDocument(doc(p('text')));
+  afterEach(() => {
+    if (dispatchSpy) {
+      dispatchSpy.mockRestore();
+    }
   });
 
-  [h1, h2, h3, h4, h5, h6].forEach((builder, idx) => {
-    const level = idx + 1;
+  describe('text style', () => {
+    describe('normal text', () => {
+      beforeEach(() => {
+        initEditor(doc(h1('te{<>}xt')));
+        setBlockType('normal')(state, dispatch);
+      });
 
-    it(`should be able to change to heading${level}`, () => {
-      const { editorView } = editor(doc(p('te{<>}xt')));
-      const { state, dispatch } = editorView;
+      it('should be able to change to normal text', () => {
+        expect(editorView.state.doc).toEqualDocument(doc(p('text')));
+      });
 
-      setBlockType(`heading${level}`)(state, dispatch);
-      expect(editorView.state.doc).toEqualDocument(doc(builder('text')));
+      it('scrolls into view when change to normal text', () => {
+        const dispatchedTr = dispatchSpy.mock.calls[0][0];
+        expect(dispatchedTr.scrolledIntoView).toEqual(true);
+      });
+    });
+
+    [h1, h2, h3, h4, h5, h6].forEach((builder, idx) => {
+      const level = idx + 1;
+
+      describe(`heading${level}`, () => {
+        beforeEach(() => {
+          initEditor();
+          setBlockType(`heading${level}`)(state, dispatch);
+        });
+
+        it(`should be able to change to heading${level}`, () => {
+          expect(editorView.state.doc).toEqualDocument(doc(builder('text')));
+        });
+
+        it(`scrolls into view when change to heading${level}`, () => {
+          const dispatchedTr = dispatchSpy.mock.calls[0][0];
+          expect(dispatchedTr.scrolledIntoView).toEqual(true);
+        });
+      });
     });
   });
 
   describe('block quote', () => {
+    const inputMethod = INPUT_METHOD.TOOLBAR;
+
+    beforeEach(() => {
+      initEditor();
+      insertBlockTypesWithAnalytics('blockquote', inputMethod)(state, dispatch);
+    });
+
     it('should create analytics GAS v3 event', () => {
-      const inputMethod = INPUT_METHOD.TOOLBAR;
       const expectedPayload: AnalyticsEventPayload = {
         action: ACTION.FORMATTED,
         actionSubject: ACTION_SUBJECT.TEXT,
@@ -95,22 +138,16 @@ describe('block-type', () => {
           inputMethod,
         },
       };
-      const { editorView } = editor(doc(p('te{<>}xt')));
-      const { state, dispatch } = editorView;
-
-      insertBlockTypesWithAnalytics('blockquote', inputMethod)(state, dispatch);
       expect(createAnalyticsEvent).toHaveBeenCalledWith(expectedPayload);
     });
 
     it('should be able to change to block quote', () => {
-      const { editorView } = editor(doc(p('te{<>}xt')));
-      const { state, dispatch } = editorView;
-
-      insertBlockTypesWithAnalytics('blockquote', INPUT_METHOD.TOOLBAR)(
-        state,
-        dispatch,
-      );
       expect(editorView.state.doc).toEqualDocument(doc(blockquote(p('text'))));
+    });
+
+    it('scrolls into view when change to block quote', () => {
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
     });
 
     describe('when rendering a block quote', () => {
@@ -126,65 +163,62 @@ describe('block-type', () => {
   });
 
   describe('code block', () => {
+    const inputMethod = INPUT_METHOD.TOOLBAR;
+
+    beforeEach(() => {
+      initEditor();
+      insertBlockTypesWithAnalytics('codeblock', inputMethod)(state, dispatch);
+    });
+
     it('should be able to insert code block', () => {
-      const { editorView } = editor(doc(p('te{<>}xt')));
-      const { state, dispatch } = editorView;
-
-      insertBlockTypesWithAnalytics('codeblock', INPUT_METHOD.TOOLBAR)(
-        state,
-        dispatch,
-      );
-
       expect(editorView.state.doc).toEqualDocument(
         doc(p('te'), code_block()(), p('xt')),
       );
     });
 
     it('should fire analytics event', () => {
-      const { editorView } = editor(doc(p('te{<>}xt')));
-      const { state, dispatch } = editorView;
-      insertBlockTypesWithAnalytics('codeblock', INPUT_METHOD.TOOLBAR)(
-        state,
-        dispatch,
-      );
-
       expect(createAnalyticsEvent).toHaveBeenCalledWith({
         action: 'inserted',
         actionSubject: 'document',
         eventType: 'track',
         actionSubjectId: 'codeBlock',
-        attributes: { inputMethod: 'toolbar' },
+        attributes: { inputMethod },
       });
+    });
+
+    it('scrolls into view when insert code block', () => {
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
     });
   });
 
   describe('panel', () => {
+    const inputMethod = INPUT_METHOD.TOOLBAR;
+
+    beforeEach(() => {
+      initEditor();
+      insertBlockTypesWithAnalytics('panel', inputMethod)(state, dispatch);
+    });
+
     it('should be able to insert panel', () => {
-      const { editorView } = editor(doc(p('{<>}')));
-      const { state, dispatch } = editorView;
-
-      insertBlockType('panel')(state, dispatch);
-
       expect(editorView.state.doc).toEqualDocument(
-        doc(panel({ type: 'info' })(p())),
+        doc(panel({ type: 'info' })(p('text'))),
       );
     });
 
     it('should fire analytics event', () => {
-      const { editorView } = editor(doc(p('te{<>}xt')));
-      const { state, dispatch } = editorView;
-      insertBlockTypesWithAnalytics('panel', INPUT_METHOD.TOOLBAR)(
-        state,
-        dispatch,
-      );
-
       expect(createAnalyticsEvent).toHaveBeenCalledWith({
         action: 'inserted',
         actionSubject: 'document',
         eventType: 'track',
         actionSubjectId: 'panel',
-        attributes: { inputMethod: 'toolbar', panelType: 'info' },
+        attributes: { inputMethod, panelType: 'info' },
       });
+    });
+
+    it('scrolls into view when insert panel', () => {
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
     });
   });
 

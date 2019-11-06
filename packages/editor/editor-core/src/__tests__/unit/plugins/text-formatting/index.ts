@@ -512,6 +512,14 @@ describe('text-formatting', () => {
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
     });
 
+    it('scrolls into view when toggle strong', () => {
+      const { editorView } = editor(doc(p('{<}t{>}ext')));
+      const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+      commands.toggleStrong()(editorView.state, editorView.dispatch);
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
+    });
+
     it('should expose whether strong is active on an empty selection', () => {
       const { pluginState } = editor(doc(p(strong('te{<>}xt'))));
       expect(pluginState.strongActive).toBe(true);
@@ -565,6 +573,14 @@ describe('text-formatting', () => {
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
     });
 
+    it('scrolls into view when toggle underline', () => {
+      const { editorView } = editor(doc(p('{<}t{>}ext')));
+      const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+      commands.toggleUnderline()(editorView.state, editorView.dispatch);
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
+    });
+
     it('should expose whether underline is active on an empty selection', () => {
       const { pluginState } = editor(doc(p(underline('te{<>}xt'))));
       expect(pluginState.underlineActive).toBe(true);
@@ -614,6 +630,14 @@ describe('text-formatting', () => {
       expect(editorView.state.doc).toEqualDocument(doc(p(strike('t'), 'ext')));
       expect(commands.toggleStrike()(editorView.state, editorView.dispatch));
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
+    });
+
+    it('scrolls into view when toggle strike', () => {
+      const { editorView } = editor(doc(p('{<}t{>}ext')));
+      const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+      commands.toggleStrike()(editorView.state, editorView.dispatch);
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
     });
 
     it('should expose whether strike is active on an empty selection', () => {
@@ -666,6 +690,14 @@ describe('text-formatting', () => {
       );
       expect(commands.toggleSubscript()(editorView.state, editorView.dispatch));
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
+    });
+
+    it('scrolls into view when toggle subscript', () => {
+      const { editorView } = editor(doc(p('{<}t{>}ext')));
+      const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+      commands.toggleSubscript()(editorView.state, editorView.dispatch);
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
     });
 
     it('should expose whether subcript is active on an empty selection', () => {
@@ -738,6 +770,14 @@ describe('text-formatting', () => {
       expect(editorView.state.doc).toEqualDocument(doc(p('text')));
     });
 
+    it('scrolls into view when toggle superscript', () => {
+      const { editorView } = editor(doc(p('{<}t{>}ext')));
+      const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+      commands.toggleSuperscript()(editorView.state, editorView.dispatch);
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
+    });
+
     it('should expose whether superscript is active on an empty selection', () => {
       const { pluginState } = editor(
         doc(p(subsup({ type: 'sup' })('te{<>}xt'))),
@@ -804,6 +844,14 @@ describe('text-formatting', () => {
       );
 
       expect(createAnalyticsEvent).toHaveBeenCalledWith(expectedPayload);
+    });
+
+    it('scrolls into view when toggle code', () => {
+      const { editorView } = editor(doc(p('{<}t{>}ext')));
+      const dispatchSpy = jest.spyOn(editorView, 'dispatch');
+      commands.toggleCode()(editorView.state, editorView.dispatch);
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
     });
 
     describe('when the cursor is right after the code mark', () => {

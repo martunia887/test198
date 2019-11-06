@@ -103,7 +103,10 @@ describe('layout actions', () => {
   });
 
   describe('#insertLayoutColumnsWithAnalytics', () => {
+    let dispatchSpy: jest.SpyInstance;
+
     beforeEach(() => {
+      dispatchSpy = jest.spyOn(editorView, 'dispatch');
       insertLayoutColumnsWithAnalytics(INPUT_METHOD.INSERT_MENU)(
         editorView.state,
         editorView.dispatch,
@@ -129,6 +132,11 @@ describe('layout actions', () => {
         eventType: 'track',
         attributes: { inputMethod: 'insertMenu' },
       });
+    });
+
+    it('scrolls into view when insert layout', () => {
+      const dispatchedTr = dispatchSpy.mock.calls[0][0];
+      expect(dispatchedTr.scrolledIntoView).toEqual(true);
     });
   });
 });
