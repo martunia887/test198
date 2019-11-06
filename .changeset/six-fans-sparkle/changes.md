@@ -1,0 +1,1 @@
+Circular dependency removed from theme's color constants
