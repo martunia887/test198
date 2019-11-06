@@ -1,4 +1,5 @@
 import * as colors from './colors';
+import * as themedColors from './themed-colors';
 import * as colorPalettes from './color-palettes';
 import * as elevation from './elevation';
 import * as typography from './typography';
@@ -12,6 +13,7 @@ const typedElevation: Record<string, string> = elevation as any;
 
 export {
   typedColors as colors,
+  themedColors,
   colorPalettes,
   typedElevation as elevation,
   typography,
