@@ -55,6 +55,7 @@ export interface Props {
   allowDynamicTextSizing?: boolean;
   allowHeadingAnchorLinks?: boolean;
   maxHeight?: number;
+  fadeOutHeight?: number;
   truncated?: boolean;
   createAnalyticsEvent?: CreateUIAnalyticsEvent;
   allowColumnSorting?: boolean;
@@ -194,8 +195,9 @@ export class Renderer extends PureComponent<Props, {}> {
       appearance,
       adfStage,
       allowDynamicTextSizing,
-      maxHeight,
       truncated,
+      maxHeight,
+      fadeOutHeight,
     } = this.props;
 
     try {
@@ -235,7 +237,9 @@ export class Renderer extends PureComponent<Props, {}> {
       );
 
       return truncated ? (
-        <TruncatedWrapper height={maxHeight}>{rendererOutput}</TruncatedWrapper>
+        <TruncatedWrapper height={maxHeight} fadeHeight={fadeOutHeight}>
+          {rendererOutput}
+        </TruncatedWrapper>
       ) : (
         rendererOutput
       );
