@@ -1,0 +1,106 @@
+# Avatr
+
+An avatar is a visual representation of a user or entity. 
+
+# Examples 
+
+## Basic Avatar 
+
+### Circular 
+
+Use circular avatars to represent a group of people
+
+### Square 
+
+Use square avatars to represent an entity, such as a project, repository or space. When using square avatars, opt for a height and width of 100 percent.
+[Add Example 01-basicAvatar.tsx]
+
+## Sizes 
+
+Avatars are available in 6 sizes. 
+
+xxlarge 
+Use xxlarge people avatars in places where larger avatars are needed. For example, the Atlassian People Directory. This size is currently not used for entities.
+
+xlarge 
+Use xlarge people avatars where they’re needed to display prominently on a page. This size is currently not used for entities.
+
+large
+Use large avatars to represent people and entities for display in page titles such as a user’s account settings or in entity titles for Jira projects or Confluence spaces. 
+
+medium
+Use medium avatars to represent people in activity streams or comments and entity avatars in table views for project listings. 
+
+small
+Use small people avatars in small areas like 40 px text fields, and entity avatars for use in things like dropdown menus.
+
+xsmall
+Use xsmall people and entity avatars for onscreen metadata such as in Jira issues or dropdown menus. 
+[Add example] 
+
+## Tooltip on hover
+
+On hover, a tooltip is displayed to reveal the avatar name.
+[add an example (one does not exist yet)]
+
+## Default avatar
+
+A default avatar is displayed when a chosen avatar is unavailable. For example, when there’s a problem displaying the image due to an error.
+
+[Add example (one does not exist yet)]
+
+## User presence
+
+Use presence indicators on avatars to display a user or entity’s availability. 
+Note: xsmall and xxlarge avatars don’t support presence indicators. 
+
+[Add example (a single example does not exist)]
+
+## Avatar status
+
+Use a status to show if a user approves or declines something, such as a pull request in Bitbucket. You can also use status to show if an entity is private, such as a Confluence space. 
+Note:  xsmall and xxlarge avatars don't support statuses.
+
+[Add example (a single example does not exist)]
+
+
+# Design
+
+## Anatomy diagram 
+
+[img]
+
+## Usage
+
+An avatar acts as a proxy for a user or entity (such as a project, repository, or space), in a product. 
+They're often combined with status or presence indicators to give more context. 
+Users generally upload their own image, otherwise, a default image is displayed. 
+
+Use:
+
+* circular avatars to quickly identify users
+
+* square avatars to help identify large product entities like projects, spaces, groups, rooms, or repositories
+
+* a presence indicator to indicate presence for a single user
+
+* a status icon to indicate a user’s status in a product
+
+
+# Code 
+
+## Import Instructions 
+
+For the default use case import the Avatar component as follows: 
+`import Avatar from @atlaskit/avatar`
+
+@atlaskit/avatar also exports the following sub-components
+for other use cases: 
+* Presence - 
+* Status - 
+* AvatarItem -
+* AvatarGroup -
+## PropTypes [automated]
+## Changelog  [automated]
+## Accessbility
+alt text, use it 
