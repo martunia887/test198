@@ -1091,6 +1091,10 @@
         "../../editor/editor-common/src/",
         "./packages/editor/editor-common/src/"
       ],
+      "@atlaskit/editor-common/providerFactory": [
+        "../../editor/editor-common/src/providerFactory",
+        "./packages/editor/editor-common/src/providerFactory"
+      ],
       "@atlaskit/editor-common/validator": [
         "../../editor/editor-common/src/validator",
         "./packages/editor/editor-common/src/validator"
