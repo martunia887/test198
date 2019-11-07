@@ -1,22 +1,19 @@
+import { AsapBasedAuth, Auth, AuthProvider, ClientBasedAuth } from './types';
+
+export {
+  AsapBasedAuth,
+  Auth,
+  AuthProvider,
+  ClientBasedAuth,
+  MediaClientConfig,
+  AuthContext,
+} from './types'; // Re export to prevent breaking
+
 export interface ClientAltBasedAuth {
   readonly id: string;
   readonly token: string;
   readonly baseUrl: string;
 }
-
-export interface ClientBasedAuth {
-  readonly clientId: string;
-  readonly token: string;
-  readonly baseUrl: string;
-}
-
-export interface AsapBasedAuth {
-  readonly asapIssuer: string;
-  readonly token: string;
-  readonly baseUrl: string;
-}
-
-export type Auth = ClientBasedAuth | AsapBasedAuth;
 
 export function isClientBasedAuth(auth: Auth): auth is ClientBasedAuth {
   return !!(auth as ClientBasedAuth).clientId;
@@ -39,19 +36,6 @@ export const authToOwner = (auth: Auth): ClientAltBasedAuth | AsapBasedAuth => {
 
   return clientAuth;
 };
-export interface MediaClientConfig {
-  readonly authProvider: AuthProvider;
-  readonly userAuthProvider?: AuthProvider;
-  readonly getAuthFromContext?: AuthFromContextProvider;
-}
-
-export interface AuthContext {
-  readonly collectionName?: string;
-}
-
-export type AuthProvider = (context?: AuthContext) => Promise<Auth>;
-
-export type AuthFromContextProvider = (contextId: string) => Promise<Auth>;
 
 export type MediaApiConfig = {
   authProvider: AuthProvider;
