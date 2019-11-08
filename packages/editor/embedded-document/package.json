@@ -18,7 +18,6 @@
     "@atlaskit/editor-common": "^41.2.1",
     "@atlaskit/editor-core": "^114.0.0",
     "@atlaskit/renderer": "^53.0.0",
-    "@atlaskit/theme": "^9.2.3",
     "@atlaskit/util-service-support": "^5.0.0"
   },
   "peerDependencies": {
