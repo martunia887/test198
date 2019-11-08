@@ -35,12 +35,11 @@
     "@atlaskit/status": "^0.9.16",
     "@atlaskit/task-decision": "^16.0.2",
     "@atlaskit/theme": "^9.2.3",
-    "@atlaskit/type-helpers": "^4.2.1",
     "@atlaskit/tooltip": "^15.0.15",
+    "@atlaskit/type-helpers": "^4.2.1",
     "prosemirror-model": "^1.7.0",
-    "raf-schd": "^2.1.0",
-    "react-loadable": "^5.1.0",
     "react-intl": "^2.6.0",
+    "react-loadable": "^5.1.0",
     "url-parse": "^1.4.3"
   },
   "peerDependencies": {

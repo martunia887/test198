@@ -34,8 +34,6 @@
     "@atlaskit/smart-card": "^12.5.11",
     "@atlaskit/textarea": "^2.2.1",
     "enzyme": "^3.7.0",
-    "prosemirror-commands": "^1.0.7",
-    "prosemirror-keymap": "^1.0.1",
     "prosemirror-model": "^1.7.0",
     "prosemirror-state": "^1.2.2",
     "prosemirror-tables": "0.9.5",
