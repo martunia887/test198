@@ -16,10 +16,8 @@ import {
 } from '../styled/ItemParts';
 
 type DnDType = {
-  draggableProps: {
-    style: ?Object,
-    'data-react-beautiful-dnd-draggable': string,
-  },
+  // Tries to support 11.0 and 12.0 react-beautiful-dnd api
+  draggableProps: ?Object,
   dragHandleProps: ?Object,
   innerRef: Function,
   placeholder?: Node,
@@ -136,32 +134,30 @@ export default class Item extends Component<Props, {}> {
 
     const { rootComponent: Root } = this;
     const dragHandleProps: ?Object = (dnd && dnd.dragHandleProps) || null;
+    const draggableProps: ?Object = (dnd && dnd.draggableProps) || null;
 
     const patchedEventHandlers = {
       onClick: (event: MouseEvent) => {
-        const original = () => {
-          if (!isDisabled && onClick) {
-            onClick(event);
-          }
-        };
-
-        if (!dragHandleProps || !dragHandleProps.onClick) {
-          original();
-          return;
+        // rbd 11.x API
+        if (dragHandleProps && dragHandleProps.onClick) {
+          // Drag and drop has its own disabled mechansim
+          // So not checking for isDisabled
+          dragHandleProps.onClick(event);
         }
 
-        // Drag and drop has its own disabled mechansim
-        // So not checking for isDisabled
-        dragHandleProps.onClick(event);
-
-        // if default is prevent - do not fire the onClick prop
+        // if default is prevented - do not fire the onClick prop
         if (event.defaultPrevented) {
           return;
         }
 
-        original();
+        // Technically a disabled item can be dragged.
+        // Need to use Draggable | isDragDisabled
+        if (!isDisabled && onClick) {
+          onClick(event);
+        }
       },
       onMouseDown: (event: MouseEvent) => {
+        // rbd 11.x API
         if (dragHandleProps && dragHandleProps.onMouseDown) {
           dragHandleProps.onMouseDown(event);
         }
@@ -170,36 +166,32 @@ export default class Item extends Component<Props, {}> {
         event.preventDefault();
       },
       onKeyDown: (event: KeyboardEvent) => {
-        const original = () => {
-          if (!isDisabled && onKeyDown) {
-            onKeyDown(event);
-          }
-        };
-
-        if (!dragHandleProps || !dragHandleProps.onKeyDown) {
-          original();
-          return;
+        // rbd 11.x API
+        if (dragHandleProps && dragHandleProps.onKeyDown) {
+          dragHandleProps.onKeyDown(event);
         }
-
-        dragHandleProps.onKeyDown(event);
 
         // if default is prevent - do not fire other handlers
         if (event.defaultPrevented) {
           return;
         }
 
-        // not allowing keyboard events on the element while dragging
+        // rbd will call event.preventDefault() on browser behaviour it wants to opt out of.
+        // We are making an extra decision not to publish any keyboard events on the element while dragging
         if (isDragging) {
           return;
         }
 
-        original();
+        if (!isDisabled && onKeyDown) {
+          onKeyDown(event);
+        }
       },
     };
 
     const patchedInnerRef = ref => {
       this.setRef(ref);
 
+      // rbd 11.x and 12.x api
       if (dnd && dnd.innerRef) {
         dnd.innerRef(ref);
       }
@@ -221,7 +213,7 @@ export default class Item extends Component<Props, {}> {
         target={this.props.target}
         title={this.props.title}
         innerRef={patchedInnerRef}
-        {...dnd && dnd.draggableProps}
+        {...draggableProps}
         {...dragHandleProps}
         {...patchedEventHandlers}
         {...otherProps}

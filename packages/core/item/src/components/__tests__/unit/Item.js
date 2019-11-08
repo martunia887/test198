@@ -70,10 +70,7 @@ describe(`${name} - Item`, () => {
       describe('with drag and drop', () => {
         it('should call the original function there is no dragHandle onClick', () => {
           const dnd = {
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
             dragHandleProps: undefined,
             innerRef: () => {},
           };
@@ -88,10 +85,7 @@ describe(`${name} - Item`, () => {
         it('should call the drag handle function and the onclick prop', () => {
           const onClick = jest.fn();
           const dnd = {
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
             dragHandleProps: {
               onClick: jest.fn(),
             },
@@ -108,10 +102,7 @@ describe(`${name} - Item`, () => {
         it('should call the dragHandle function even if disabled - dnd has its own disabled mechanism', () => {
           const onClick = jest.fn();
           const dnd = {
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
             dragHandleProps: {
               onClick: jest.fn(),
             },
@@ -130,10 +121,7 @@ describe(`${name} - Item`, () => {
         it('should not call the onclick prop if the dnd onClick prevents default', () => {
           const onClick = jest.fn();
           const dnd = {
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
             dragHandleProps: {
               onClick: jest.fn((event: MouseEvent) => event.preventDefault()),
             },
@@ -156,10 +144,7 @@ describe(`${name} - Item`, () => {
             onMouseDown: jest.fn(),
           },
           innerRef: () => {},
-          draggableProps: {
-            style: undefined,
-            'data-react-beautiful-dnd-draggable': '',
-          },
+          draggableProps: {},
         };
         const wrapper = mount(<Item dnd={dnd} />);
 
@@ -174,10 +159,7 @@ describe(`${name} - Item`, () => {
             onMouseDown: jest.fn(),
           },
           innerRef: () => {},
-          draggableProps: {
-            style: undefined,
-            'data-react-beautiful-dnd-draggable': '',
-          },
+          draggableProps: {},
         };
         const wrapper = mount(<Item dnd={dnd} isDisabled />);
 
@@ -228,10 +210,7 @@ describe(`${name} - Item`, () => {
           const dnd = {
             dragHandleProps: undefined,
             innerRef: () => {},
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
           };
           const onKeyDown = jest.fn();
           const wrapper = mount(<Item dnd={dnd} onKeyDown={onKeyDown} />);
@@ -249,10 +228,7 @@ describe(`${name} - Item`, () => {
               ),
             },
             innerRef: () => {},
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
           };
           const wrapper = mount(<Item dnd={dnd} />);
 
@@ -269,10 +245,7 @@ describe(`${name} - Item`, () => {
               ),
             },
             innerRef: () => {},
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
           };
           const wrapper = mount(<Item dnd={dnd} isDisabled />);
 
@@ -289,10 +262,7 @@ describe(`${name} - Item`, () => {
               ),
             },
             innerRef: () => {},
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
           };
           const onKeyDown = jest.fn();
           const wrapper = mount(<Item dnd={dnd} onKeyDown={onKeyDown} />);
@@ -308,10 +278,7 @@ describe(`${name} - Item`, () => {
               onKeyDown: jest.fn(),
             },
             innerRef: () => {},
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
           };
           const onKeyDown = jest.fn();
           const wrapper = mount(
@@ -329,10 +296,7 @@ describe(`${name} - Item`, () => {
               onKeyDown: jest.fn(),
             },
             innerRef: () => {},
-            draggableProps: {
-              style: undefined,
-              'data-react-beautiful-dnd-draggable': '',
-            },
+            draggableProps: {},
           };
           const onKeyDown = jest.fn();
           const wrapper = mount(<Item dnd={dnd} onKeyDown={onKeyDown} />);

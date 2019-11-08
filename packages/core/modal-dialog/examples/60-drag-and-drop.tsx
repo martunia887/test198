@@ -126,6 +126,7 @@ class ItemLineCard extends React.Component<
       if (isMiddleClick(event)) {
         this.propagateClick(event);
       }
+      // rbd 11.x api
       if (dragHandleProps && dragHandleProps.onMouseDown) {
         dragHandleProps.onMouseDown(event);
       }
