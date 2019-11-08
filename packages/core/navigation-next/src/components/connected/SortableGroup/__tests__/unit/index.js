@@ -62,7 +62,7 @@ describe('SortableGroup', () => {
       <SortableGroup {...baseProps}>Group children</SortableGroup>,
     );
 
-    const droppable = wrapper.find(Droppable);
+    const droppable = wrapper.find('Droppable');
     expect(droppable).toHaveLength(1);
     expect(droppable.props()).toEqual({
       children: expect.any(Function),
@@ -75,7 +75,7 @@ describe('SortableGroup', () => {
     const wrapper = shallow(
       <SortableGroup {...baseProps}>Group children</SortableGroup>,
     )
-      .find(Droppable)
+      .find('Droppable')
       .dive();
 
     expect(wrapper.props()).toEqual(

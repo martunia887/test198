@@ -1,5 +1,4 @@
 import React from 'react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { mount, shallow } from 'enzyme';
 import { RankableBody } from '../../rankable/Body';
 import { head, rowsWithKeys } from './_data';
@@ -44,9 +43,9 @@ test('only one DragDropContext and Droppable are rendered', () => {
     </table>,
   );
 
-  const dragDropContext = wrapper.find(DragDropContext);
-  const droppable = wrapper.find(Droppable);
-  const draggable = wrapper.find(Draggable);
+  const dragDropContext = wrapper.find('DragDropContext');
+  const droppable = wrapper.find('Droppable');
+  const draggable = wrapper.find('Draggable');
 
   expect(dragDropContext).toHaveLength(1);
   expect(droppable).toHaveLength(1);
@@ -60,7 +59,7 @@ test('onDragStart - onRankStart is called with proper arguments', () => {
 
   const wrapper = shallow(<RankableBody {...props} isRanking />);
 
-  const dndContext = wrapper.find(DragDropContext);
+  const dndContext = wrapper.find('DragDropContext');
   dndContext.simulate('beforeDragStart', {
     draggableId: key,
     source: { index },
@@ -78,7 +77,7 @@ test('onDragEnd - onRankEnd is called with proper empty destination if drag was 
 
   const wrapper = shallow(<RankableBody {...props} />);
 
-  const dndContext = wrapper.find(DragDropContext);
+  const dndContext = wrapper.find('DragDropContext');
   dndContext.simulate('dragEnd', createDragEndProps(sourceKey, sourceIndex));
 
   const { onRankEnd } = props;
@@ -97,7 +96,7 @@ const testOnRankEnd = (
 
   const wrapper = shallow(<RankableBody {...props} />);
 
-  const dndContext = wrapper.find(DragDropContext);
+  const dndContext = wrapper.find('DragDropContext');
   dndContext.simulate(
     'dragEnd',
     createDragEndProps(sourceKey, sourceIndex, destinationIndex),

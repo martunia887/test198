@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { shallow } from 'enzyme';
-import { DragDropContext } from 'react-beautiful-dnd';
 
 import { LayoutEventEmitter } from '../../../../presentational/LayoutManager/LayoutEvent';
 import SortableContext from '../../index';
@@ -44,7 +43,7 @@ describe('SortableContext', () => {
       </SortableContext>,
     ).dive();
 
-    const dragDropContext = wrapper.find(DragDropContext);
+    const dragDropContext = wrapper.find('DragDropContext');
     expect(dragDropContext).toHaveLength(1);
     expect(dragDropContext.props()).toEqual({
       children: sectionChildren,
@@ -68,7 +67,7 @@ describe('SortableContext', () => {
     expect(onDragStart).not.toHaveBeenCalled();
     expect(layoutEventEmitters.emitItemDragStart).not.toHaveBeenCalled();
 
-    wrapper.find(DragDropContext).prop('onDragStart')(...onDragStartArgs);
+    wrapper.find('DragDropContext').prop('onDragStart')(...onDragStartArgs);
 
     expect(layoutEventEmitters.emitItemDragStart).toHaveBeenCalledTimes(1);
     expect(onDragStart).toHaveBeenCalledTimes(1);
@@ -87,7 +86,7 @@ describe('SortableContext', () => {
     expect(onDragEnd).not.toHaveBeenCalled();
     expect(layoutEventEmitters.emitItemDragEnd).not.toHaveBeenCalled();
 
-    wrapper.find(DragDropContext).prop('onDragEnd')(...onDragEndArgs);
+    wrapper.find('DragDropContext').prop('onDragEnd')(...onDragEndArgs);
 
     expect(layoutEventEmitters.emitItemDragEnd).toHaveBeenCalledTimes(1);
     expect(onDragEnd).toHaveBeenCalledTimes(1);
@@ -105,7 +104,7 @@ describe('SortableContext', () => {
 
     expect(onDragUpdate).not.toHaveBeenCalled();
 
-    wrapper.find(DragDropContext).prop('onDragUpdate')(...onDragUpdateArgs);
+    wrapper.find('DragDropContext').prop('onDragUpdate')(...onDragUpdateArgs);
 
     expect(onDragUpdate).toHaveBeenCalledTimes(1);
     expect(onDragUpdate).toHaveBeenCalledWith(...onDragUpdateArgs);

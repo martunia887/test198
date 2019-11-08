@@ -6,7 +6,6 @@ import {
   DropResult,
   DragUpdate,
   DragStart,
-  Droppable,
 } from 'react-beautiful-dnd-next';
 import { getBox } from 'css-box-model';
 import Tree from '../../Tree';
@@ -72,7 +71,7 @@ describe('@atlaskit/tree - Tree', () => {
       const tree = mount(
         <Tree tree={treeWithThreeLeaves} renderItem={mockRender} />,
       );
-      const droppable = tree.find(Droppable);
+      const droppable = tree.find('Droppable');
       expect(droppable.prop('droppableId')).toBe('tree');
       expect(droppable.prop('isCombineEnabled')).toBe(false);
       expect(droppable.prop('ignoreContainerClipping')).toBe(true);
