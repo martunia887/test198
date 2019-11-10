@@ -72,7 +72,7 @@ describe('SortableItem', () => {
   it('should wrap Item with a Draggable component', () => {
     const wrapper = shallow(<SortableItem {...baseProps} />);
 
-    const draggable = wrapper.find('Draggable');
+    const draggable = wrapper.find(Draggable);
     expect(draggable).toHaveLength(1);
     expect(draggable.props()).toEqual({
       draggableId: 'my-item',

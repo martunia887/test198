@@ -15,8 +15,6 @@ jest.mock('exenv', () => ({
   },
 }));
 
-jest.spyOn(global.console, 'error');
-
 afterEach(() => {
   jest.resetAllMocks();
 });
@@ -42,6 +40,17 @@ const App = () => (
 
 test('should ssr then hydrate tree correctly', () => {
   const canUseDom = jest.spyOn(exenv, 'canUseDOM', 'get');
+  // react-beautiful-dnd does not use canUseDOM so it will
+  // log a warning for usage with useLayoutEffect
+  const error = jest
+    .spyOn(global.console, 'error')
+    .mockImplementation((message: string) => {
+      if (message.includes('Warning: useLayoutEffect')) {
+        return;
+      }
+      console.warn(message);
+      throw new Error('Unexpected console.error');
+    });
 
   // server-side
   canUseDom.mockReturnValue(false);
@@ -55,6 +64,7 @@ test('should ssr then hydrate tree correctly', () => {
 
   ReactDOM.hydrate(<App />, elem);
 
-  // eslint-disable-next-line no-console
-  expect(console.error).not.toBeCalled();
+  // adding an assertion
+  expect(true).toBe(true);
+  error.mockRestore();
 });
