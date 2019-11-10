@@ -1,5 +1,29 @@
 # @atlaskit/share
 
+## 0.7.2
+
+### Patch Changes
+
+- [patch][ea75c17b3a](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/ea75c17b3a):
+
+  internal typescript fixes
+
+## 0.7.1
+
+### Patch Changes
+
+- [patch][30acc30979](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/30acc30979):
+
+  @atlaskit/select has been converted to Typescript. Typescript consumers will now get static type safety. Flow types are no longer provided. No API or behavioural changes.
+
+## 0.7.0
+
+### Minor Changes
+
+- [minor][4e487b59a1](https://bitbucket.org/atlassian/atlaskit-mk-2/commits/4e487b59a1):
+
+  Add new optional prop "product" to control different messages between Jira and Confluence
+
 ## 0.6.15
 
 ### Patch Changes
