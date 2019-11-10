@@ -2,11 +2,7 @@ import { mount, configure } from 'enzyme';
 //@ts-ignore
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
-import {
-  DropResult,
-  DragUpdate,
-  DragStart,
-} from 'react-beautiful-dnd-next';
+import { DropResult, DragUpdate, DragStart } from 'react-beautiful-dnd-next';
 import { getBox } from 'css-box-model';
 import Tree from '../../Tree';
 // import { Props as TreeProps } from '../../Tree-types';
