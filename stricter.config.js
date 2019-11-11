@@ -126,7 +126,7 @@ module.exports = {
     // TODO: https://product-fabric.atlassian.net/browse/BUILDTOOLS-268
     // We have to wait till stricter support TS.
     'no-unused-dependencies': {
-      level: 'error',
+      level: 'warning',
       exclude: [
         /^editor\/json-schema-generator\//,
         /^core\/single-select\//,
@@ -134,7 +134,7 @@ module.exports = {
         /^core\/multi-select\//,
       ],
       config: {
-        exclude: ['@babel/runtime'],
+        exclude: ['@babel/runtime', 'tslib'],
         depTransforms: {
           '@atlaskit/icon': 'packages/core/icon/',
           '@atlaskit/icon-object': 'packages/core/icon-object/',
