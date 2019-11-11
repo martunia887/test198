@@ -5,10 +5,16 @@ import {
   withAnalyticsContext,
   createAndFireEvent,
 } from '@atlaskit/analytics-next';
-import CloseIcon from '@atlaskit/icon/glyph/cross';
-import ConfirmIcon from '@atlaskit/icon/glyph/check';
 import { name as packageName, version as packageVersion } from './version.json';
-import { Handle, IconWrapper, Inner, Input, Label, Slide } from './styled';
+import {
+  Handle,
+  Icon,
+  IconWrapper,
+  Inner,
+  Input,
+  Label,
+  Slide,
+} from './styled';
 import { StatelessProps, StyledProps, Sizes } from './types';
 
 interface State {
@@ -68,7 +74,7 @@ class ToggleStateless extends Component<StatelessProps, State> {
       isFocused,
       size: size!,
     };
-    const Icon = isChecked ? ConfirmIcon : CloseIcon;
+
     const id = uid({ id: this.constructor.name });
 
     return (
@@ -92,12 +98,12 @@ class ToggleStateless extends Component<StatelessProps, State> {
               isDisabled={isDisabled}
               size={size!}
             />
-            <IconWrapper isChecked={isChecked} size={size!}>
-              <Icon
-                label={label || (isChecked ? 'Uncheck' : 'Check')}
-                size={size === 'large' ? undefined : 'small'}
-                primaryColor="inherit"
-              />
+            <IconWrapper
+              isChecked={isChecked}
+              size={size!}
+              aria-label={label || (isChecked ? 'Uncheck' : 'Check')}
+            >
+              <Icon isChecked={isChecked} size={size === 'large' ? 24 : 16} />
             </IconWrapper>
           </Inner>
         </Slide>
