@@ -43,12 +43,14 @@ test('should ssr then hydrate tree correctly', () => {
   // react-beautiful-dnd does not use canUseDOM so it will
   // log a warning for usage with useLayoutEffect
   const error = jest
+    // eslint-disable-next-line no-console
     .spyOn(global.console, 'error')
     .mockImplementation((message: string) => {
       if (message.includes('Warning: useLayoutEffect')) {
         return;
       }
-      console.warn(message);
+      // eslint-disable-next-line no-console
+      global.console.warn(message);
       throw new Error('Unexpected console.error');
     });
 
