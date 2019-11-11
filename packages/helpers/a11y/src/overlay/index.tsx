@@ -1,5 +1,6 @@
 import React from 'react';
 import axe from 'axe-core';
+import { Popper } from '@atlaskit/popper';
 
 function validateNode(node) {
   return new Promise((resolve, reject) => {
@@ -27,6 +28,7 @@ function segmentViolationsByNode(violations) {
 function Violation(props: any) {
   const [isHovered, setIsHovered] = React.useState(false);
 
+  const element = document.querySelector<HTMLElement>(props.target);
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
 
@@ -46,15 +48,26 @@ function Violation(props: any) {
     };
   }, [props.target]);
 
-  if (!isHovered) return null;
+  if (!element) return null;
 
   return (
-    <div>
-      <h1>{props.target}</h1>
-      {props.violations.map((violation, index) => (
-        <p key={index}>{violation.description}</p>
-      ))}
-    </div>
+    element && (
+      <Popper referenceElement={element}>
+        {({ ref, style }) => (
+          <div ref={ref} style={style}>
+            oh no
+            {isHovered && (
+              <div>
+                <h1>{props.target}</h1>
+                {props.violations.map((violation, index) => (
+                  <p key={index}>{violation.description}</p>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </Popper>
+    )
   );
 }
 
@@ -62,6 +75,7 @@ export default function A11y(props: { children: React.ReactNode }) {
   const [violations, setViolations] = React.useState([]);
   const [idleID, setIdleID] = React.useState(null);
   const child = React.useRef(null);
+
   React.useEffect(() => {
     if (child.current) {
       if (idleID) {
