@@ -20,8 +20,6 @@ const IconWrapper = styled.span<{ size: IconSizeType }>`
   > svg {
     height: 100%;
     width: 100%;
-    max-height: 100%;
-    max-width: 100%;
     overflow: hidden;
     pointer-events: none;
     vertical-align: bottom;
