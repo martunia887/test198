@@ -1,0 +1,44 @@
+{
+  "name": "@atlaskit/a11y",
+  "version": "0.0.0",
+  "description": "Accessibility helpers for Atlassian products.",
+  "license": "Apache-2.0",
+  "module": "dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "atlaskit:src": "src/index.tsx",
+  "sideEffects": false,
+  "author": "Atlassian Pty Ltd",
+  "maintainers": [
+    "Michael Dougall"
+  ],
+  "atlaskit": {
+    "name": "a11y",
+    "team": "core"
+  },
+  "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
+  "dependencies": {
+    "@emotion/core": "^10.0.9",
+    "tslib": "^1.9.3"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
+  },
+  "devDependencies": {
+    "@atlaskit/button": "^13.1.6",
+    "@atlaskit/docs": "^8.1.5",
+    "@atlaskit/logo": "^12.1.8",
+    "@atlaskit/section-message": "^4.0.12",
+    "@atlaskit/theme": "^9.2.2",
+    "@testing-library/react": "^8.0.1",
+    "raf-stub": "^2.0.1"
+  },
+  "keywords": [
+    "atlaskit",
+    "a11y",
+    "accessibility",
+    "react",
+    "ui"
+  ]
+}
