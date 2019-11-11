@@ -1,11 +1,10 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import CloseIcon from '@atlaskit/icon/glyph/cross';
-import ConfirmIcon from '@atlaskit/icon/glyph/check';
+
 import ToggleStatelessWithAnalytics, {
   ToggleStatelessWithoutAnalytics as Toggle,
 } from '../../ToggleStateless';
-import { Input } from '../../styled';
+import { Input, Icon } from '../../styled';
 
 declare var global: any;
 
@@ -16,15 +15,13 @@ describe('Toggle', () => {
     it('should set the correct icons when checked', () => {
       const wrapper = mount(<Toggle isChecked />);
       expect(wrapper.find(Input).prop('checked')).toBe(true);
-      expect(wrapper.find(ConfirmIcon).exists()).toBe(true);
-      expect(wrapper.find(CloseIcon).exists()).toBe(false);
+      expect(wrapper.find(Icon).prop('isChecked')).toBe(true);
     });
 
     it('should set the correct icons when not checked', () => {
       const wrapper = mount(<Toggle />);
       expect(wrapper.find(Input).prop('checked')).toBe(false);
-      expect(wrapper.find(ConfirmIcon).exists()).toBe(false);
-      expect(wrapper.find(CloseIcon).exists()).toBe(true);
+      expect(wrapper.find(Icon).prop('isChecked')).toBe(false);
     });
 
     it('should disable the input when disabled', () => {
