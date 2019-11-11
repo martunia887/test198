@@ -5,24 +5,6 @@ module.exports = {
   plugins: ['tangerine'],
   exclude: [/node_modules/, /__fixtures__/, /monorepo-tooling/, /build/],
   rules: {
-<<<<<<< HEAD
-    // We need to update the rule to be applicable to Atlaskit.
-    //   'tangerine/project-structure': ({ packages }) => packages.map(pkg => ({
-    //     level: 'error',
-    //     config: {
-    //       rootPath: pkg,
-    //       definitions:{
-    //         '.':{
-    //           'package.json': {type: 'file'}
-    //         }
-    //       }
-    //     },
-    // })),
-    'no-unused-dependencies': {
-      level: 'error',
-      config: {},
-    },
-=======
     // TODO: https://product-fabric.atlassian.net/browse/BUILDTOOLS-272
     // We have to wait till stricter support TS to add dedicated files.
     'tangerine/project-structure': ({ packages }) =>
@@ -143,24 +125,23 @@ module.exports = {
       })),
     // TODO: https://product-fabric.atlassian.net/browse/BUILDTOOLS-268
     // We have to wait till stricter support TS.
-    // 'no-unused-dependencies': {
-    //   level: 'error',
-    //   exclude: [
-    //     /^editor\/json-schema-generator\//,
-    //     /^core\/single-select\//,
-    //     /^core\/navigation\//,
-    //     /^core\/multi-select\//,
-    //   ],
-    //   config: {
-    //     exclude: ['@babel/runtime'],
-    //     depTransforms: {
-    //       '@atlaskit/icon': 'packages/core/icon/',
-    //       '@atlaskit/icon-object': 'packages/core/icon-object/',
-    //       '@atlaskit/icon-file-type': 'packages/core/icon-file-type/',
-    //       '@atlaskit/icon-priority': 'packages/core/icon-priority/',
-    //     },
-    //   },
-    // },
->>>>>>> Adding rule for project structure
+    'no-unused-dependencies': {
+      level: 'error',
+      exclude: [
+        /^editor\/json-schema-generator\//,
+        /^core\/single-select\//,
+        /^core\/navigation\//,
+        /^core\/multi-select\//,
+      ],
+      config: {
+        exclude: ['@babel/runtime'],
+        depTransforms: {
+          '@atlaskit/icon': 'packages/core/icon/',
+          '@atlaskit/icon-object': 'packages/core/icon-object/',
+          '@atlaskit/icon-file-type': 'packages/core/icon-file-type/',
+          '@atlaskit/icon-priority': 'packages/core/icon-priority/',
+        },
+      },
+    },
   },
 };
