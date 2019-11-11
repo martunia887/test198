@@ -1,8 +1,10 @@
-import { FileIdentifier } from '@atlaskit/media-client';
+import { FileIdentifier } from '@atlaskit/media-client/identifier';
 import { MediaClientConfig } from '@atlaskit/media-core';
 import { UploadParams, MediaFile } from '@atlaskit/media-picker/types';
 import { EditorView } from 'prosemirror-view';
 import { NodeType } from 'prosemirror-model';
+import { MediaProvider } from '@atlaskit/editor-common';
+
 
 export type MediaStateStatus =
   | 'unknown'
@@ -89,3 +91,22 @@ export type MediaToolbarBaseConfig = {
   getDomRef?: (view: EditorView) => HTMLElement | undefined;
   nodeType: NodeType | NodeType[];
 };
+
+
+export interface MediaSingleOptions {
+  disableLayout?: boolean;
+}
+
+export interface MediaOptions {
+  provider?: Promise<MediaProvider>;
+  allowMediaSingle?: boolean | MediaSingleOptions;
+  allowMediaGroup?: boolean;
+  customDropzoneContainer?: HTMLElement;
+  customMediaPicker?: CustomMediaPicker;
+  allowResizing?: boolean;
+  allowResizingInTables?: boolean;
+  allowAnnotation?: boolean;
+  allowLinking?: boolean;
+  // This enables the option to add an alt-text attribute to images contained in the Editor.
+  UNSAFE_allowAltTextOnImages?: boolean;
+}

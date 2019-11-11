@@ -28,7 +28,7 @@ import linkingPlugin from './pm-plugins/linking';
 import ToolbarMedia from './ui/ToolbarMedia';
 import { ReactMediaGroupNode } from './nodeviews/mediaGroup';
 import { ReactMediaSingleNode } from './nodeviews/mediaSingle';
-import { CustomMediaPicker, MediaEditorState } from './types';
+import { CustomMediaPicker, MediaEditorState, MediaOptions } from './types';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import { floatingToolbar } from './toolbar';
 
@@ -48,23 +48,7 @@ import { MediaPickerComponents } from './ui/MediaPicker';
 export { MediaState, MediaProvider, CustomMediaPicker };
 export { insertMediaSingleNode } from './utils/media-single';
 
-export interface MediaOptions {
-  provider?: Promise<MediaProvider>;
-  allowMediaSingle?: boolean | MediaSingleOptions;
-  allowMediaGroup?: boolean;
-  customDropzoneContainer?: HTMLElement;
-  customMediaPicker?: CustomMediaPicker;
-  allowResizing?: boolean;
-  allowResizingInTables?: boolean;
-  allowAnnotation?: boolean;
-  allowLinking?: boolean;
-  // This enables the option to add an alt-text attribute to images contained in the Editor.
-  UNSAFE_allowAltTextOnImages?: boolean;
-}
-
-export interface MediaSingleOptions {
-  disableLayout?: boolean;
-}
+export { MediaOptions, MediaSingleOptions } from './types'
 
 export interface MediaPMPluginOptions {
   allowLazyLoading?: boolean;

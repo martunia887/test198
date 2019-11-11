@@ -17,12 +17,11 @@ import {
   hidePlaceholderFloatingToolbar,
   insertPlaceholderTextAtSelection,
 } from './actions';
+import { PlaceholderTextOptions } from './types';
 
 export const pluginKey = new PluginKey('placeholderTextPlugin');
 
-export interface PlaceholderTextOptions {
-  allowInserting?: boolean;
-}
+export { PlaceholderTextOptions } from './types'
 
 export interface PluginState {
   showInsertPanelAt: number | null;
