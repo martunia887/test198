@@ -142,7 +142,6 @@ export default class MobileRenderer extends React.Component<
         .then(result => {
           var resultObj = JSON.parse(JSON.stringify(result));
           console.log(JSON.stringify(result));
-          console.log('=== hello my dearie');
           this.setState({
             macroWhitelist: resultObj,
           });
