@@ -28,7 +28,6 @@
     "@atlaskit/media-client": "^4.0.0",
     "@atlaskit/media-ui": "^11.7.0",
     "@atlaskit/media-viewer": "^44.0.1",
-    "@atlaskit/spinner": "^12.1.2",
     "@atlaskit/theme": "^9.2.6",
     "@atlaskit/type-helpers": "^4.2.2",
     "@babel/runtime": "^7.0.0",
