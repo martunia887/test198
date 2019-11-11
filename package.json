@@ -244,7 +244,7 @@
     "seedrandom": "^2.4.4",
     "sinon": "^2.2.0",
     "spawndamnit": "^1.0.0",
-    "stricter": "^0.3.4",
+    "stricter": "^0.3.5",
     "stricter-plugin-tangerine": "^0.2.0",
     "style-loader": "^0.16.1",
     "svg-sprite": "^1.3.6",
