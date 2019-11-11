@@ -137,14 +137,15 @@ export default class MobileRenderer extends React.Component<
       this.setState({
         document: content,
       });
-    });
-    createPromise('customConfigurationMacro')
-      .submit()
-      .then(result => {
-        var resultObj = JSON.parse(JSON.stringify(result));
-        console.log(resultObj.contentId as number);
-        this.setState({
-          macroWhitelist: resultObj,
+      createPromise('customConfigurationMacro')
+        .submit()
+        .then(result => {
+          var resultObj = JSON.parse(JSON.stringify(result));
+          console.log(JSON.stringify(result));
+          console.log('=== hello my dearie');
+          this.setState({
+            macroWhitelist: resultObj,
+          });
         });
     });
   }
