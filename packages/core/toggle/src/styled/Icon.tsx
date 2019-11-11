@@ -9,7 +9,8 @@ const CheckIconSvg = `<svg width="16" height="16" viewBox="0 0 16 16" focusable=
 <path d="M10.2928932,5.29289322 C10.6834175,4.90236893 11.3165825,4.90236893 11.7071068,5.29289322 C12.0976311,5.68341751 12.0976311,6.31658249 11.7071068,6.70710678 L7.70710678,10.7071068 C7.31658249,11.0976311 6.68341751,11.0976311 6.29289322,10.7071068 L4.29289322,8.70710678 C3.90236893,8.31658249 3.90236893,7.68341751 4.29289322,7.29289322 C4.68341751,6.90236893 5.31658249,6.90236893 5.70710678,7.29289322 L7,8.58578644 L10.2928932,5.29289322 Z" fill="currentColor"></path>
 </svg>`;
 
-const IconWrapper = styled.span<{ size: number }>`
+type IconSizeType = 24 | 16;
+const IconWrapper = styled.span<{ size: IconSizeType }>`
   width: ${p => p.size}px;
   height: ${p => p.size}px;
   display: inline-block;
@@ -27,7 +28,7 @@ const IconWrapper = styled.span<{ size: number }>`
   }
 `;
 
-const Icon: React.FC<{ isChecked?: boolean; size: 24 | 16 }> = ({
+const Icon: React.FC<{ isChecked?: boolean; size: IconSizeType }> = ({
   isChecked,
   size,
 }) => (
