@@ -40,6 +40,7 @@ export type LocalUploadComponentBaseProps = {
 interface BasePayload {
   attributes: {
     packageName: string;
+    sourceType: 'local' | 'cloud';
     fileAttributes: {
       fileSize: number;
       fileMimetype: string;
@@ -69,6 +70,7 @@ const basePayload = (
   actionSubjectId: 'localMedia',
   attributes: {
     packageName,
+    sourceType: 'local',
     fileAttributes: {
       fileSize: size,
       fileMimetype: type,
