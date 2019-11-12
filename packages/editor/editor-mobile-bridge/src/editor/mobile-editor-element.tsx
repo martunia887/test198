@@ -27,12 +27,9 @@ import {
   TaskDecisionProvider,
   EmojiProvider,
 } from '../providers';
-import { parseLocationSearch } from '../bridge-utils';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
 import { cardClient, cardProvider } from '../providers/cardProvider';
 import { analyticsBridgeClient } from '../analytics-client';
-
-const params = parseLocationSearch();
 
 export const bridge: WebBridgeImpl = ((window as any).bridge = new WebBridgeImpl());
 
@@ -83,8 +80,8 @@ type Props = EditorProps & {
 };
 
 export default function mobileEditor(props: Props) {
-  // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
-  const mode = (params && params.theme) || props.mode || 'light';
+  const mode = props.mode || 'light';
+
   // Temporarily opting out of the default oauth2 flow for phase 1 of Smart Links
   // See https://product-fabric.atlassian.net/browse/FM-2149 for details.
   const authFlow = 'disabled';
@@ -106,17 +103,17 @@ export default function mobileEditor(props: Props) {
               allowMediaSingle: true,
             }}
             allowConfluenceInlineComment={true}
-            allowLists={true}
             onChange={() => {
               toNativeBridge.updateText(bridge.getContent());
             }}
             allowPanel={true}
-            allowCodeBlocks={true}
             allowTables={{
               allowControls: false,
             }}
             UNSAFE_cards={{
-              provider: props.cardProvider || Promise.resolve(cardProvider),
+              provider:
+                (props.UNSAFE_cards && props.UNSAFE_cards.provider) ||
+                Promise.resolve(cardProvider),
             }}
             allowExtension={true}
             allowTextColor={true}
@@ -128,7 +125,6 @@ export default function mobileEditor(props: Props) {
             }}
             allowAnalyticsGASV3={true}
             taskDecisionProvider={Promise.resolve(TaskDecisionProvider())}
-            // eg. If the URL parameter is like ?mode=dark use that, otherwise check the prop (used in example)
             {...props}
           />
         </AtlaskitThemeProvider>

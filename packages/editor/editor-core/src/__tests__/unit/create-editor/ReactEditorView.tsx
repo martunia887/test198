@@ -203,9 +203,10 @@ describe(name, () => {
 
         const expectedTransactionCount = 1;
 
-        const dispatchTransactionSpy: jest.SpyInstance<
-          ReactEditorView['dispatchTransaction']
-        > = jest.spyOn(editor as any, 'dispatchTransaction');
+        const dispatchTransactionSpy: jest.SpyInstance<ReactEditorView['dispatchTransaction']> = jest.spyOn(
+          editor as any,
+          'dispatchTransaction',
+        );
         editor.view!.dispatch(editor.view!.state.tr);
         expect(dispatchTransactionSpy).toHaveBeenCalledTimes(
           expectedTransactionCount,
@@ -275,7 +276,6 @@ describe(name, () => {
             {...requiredProps()}
             {...analyticsProps()}
             editorProps={{
-              allowCodeBlocks: true,
               allowDate: true,
               ...analyticsProps(),
             }}
@@ -294,7 +294,9 @@ describe(name, () => {
 
         expect(analyticsService.trackEvent).toHaveBeenCalledWith(
           'atlaskit.fabric.editor.invalidtransaction',
-          { documents: JSON.stringify(documents) },
+          {
+            documents: JSON.stringify(documents),
+          },
         );
       });
 

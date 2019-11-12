@@ -16,7 +16,7 @@ import { TaskDecisionProvider } from '@atlaskit/task-decision';
 
 import { PluginConfig as TablesPluginConfig } from '../plugins/table/types';
 import { TextColorPluginConfig } from '../plugins/text-color/pm-plugins/main';
-import { MediaProvider, MediaState } from '../plugins/media/types';
+import { MediaState } from '../plugins/media/types';
 import { AnalyticsHandler } from '../analytics/handler';
 
 import { ImageUploadHandler } from '../plugins/image-upload/types';
@@ -26,8 +26,7 @@ import { MacroProvider } from '../plugins/macro/types';
 import { MediaOptions } from '../plugins/media';
 import { PlaceholderTextOptions } from '../plugins/placeholder-text';
 import { CollabEditOptions } from '../plugins/collab-edit/types';
-import { CodeBlockOptions } from '../plugins/code-block';
-import { CardProvider, CardOptions } from '../plugins/card/types';
+import { CardOptions } from '../plugins/card/types';
 import { QuickInsertOptions } from '../plugins/quick-insert/types';
 import { AutoformattingProvider } from '../plugins/custom-autoformat/types';
 import { AnnotationProvider } from '../plugins/annotation/types';
@@ -87,7 +86,6 @@ export interface EditorProps {
   contentComponents?: ReactComponents;
   primaryToolbarComponents?: ReactComponents;
   secondaryToolbarComponents?: ReactComponents;
-  addonToolbarComponents?: ReactComponents;
   allowAnalyticsGASV3?: boolean;
   // Configure allowed blocks in the editor, currently only supports `heading`, `blockquote`, `hardBreak` and `codeBlock`.
   allowBlockType?: { exclude?: Array<AllowedBlockTypes> };
@@ -102,12 +100,6 @@ export interface EditorProps {
 
   // Enables horizontal rules.
   allowRule?: boolean;
-
-  // Enables code blocks. This is different to inline code, it is a block element and support languages.
-  allowCodeBlocks?: boolean | CodeBlockOptions;
-
-  // Enables bullet and numbered lists.
-  allowLists?: boolean;
 
   // Enables text colour. Ew are you sure you want to enable this?
   allowTextColor?: boolean | TextColorPluginConfig;
@@ -140,7 +132,6 @@ export interface EditorProps {
   allowExtension?: boolean | ExtensionConfig;
 
   allowConfluenceInlineComment?: boolean;
-  allowPlaceholderCursor?: boolean;
 
   // Enable placeholder text which is handy for things like a template editor.
   // Placeholder text is an inline text element that is removed when a user clicks on it.
@@ -181,15 +172,14 @@ export interface EditorProps {
    **/
   allowNewInsertionBehaviour?: boolean;
 
-  // This enables the option to add an alt-text attribute to images contained in the Editor.
-  UNSAFE_allowAltTextOnImages?: boolean;
-
   // Set to enable the quick insert menu i.e. '/' key trigger.
   // You can also provide your own insert menu options that will be shown in addition to the enabled
   // editor features e.g. Confluence uses this to provide its macros.
   quickInsert?: QuickInsertOptions;
 
   UNSAFE_cards?: CardOptions;
+
+  UNSAFE_allowExpand?: boolean;
 
   // Submits on the enter key. Probably useful for an inline comment editor use case.
   saveOnEnter?: boolean;
@@ -216,14 +206,12 @@ export interface EditorProps {
 
   legacyImageUploadProvider?: Promise<ImageUploadHandler>;
   mentionProvider?: Promise<MentionProvider>;
-  mediaProvider?: Promise<MediaProvider>;
 
   // Allows you to define custom autoformatting rules.
   autoformattingProvider?: Promise<AutoformattingProvider>;
 
   // This is temporary for Confluence. **Please do not use**.
   macroProvider?: Promise<MacroProvider>;
-  cardProvider?: Promise<CardProvider>;
 
   // Set if you want to wait for media file uploads before save.
   waitForMediaUpload?: boolean;

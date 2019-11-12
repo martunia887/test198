@@ -5,6 +5,7 @@ import { EditorView } from 'prosemirror-view';
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
 import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { JSONTransformer } from '@atlaskit/editor-json-transformer';
 import {
   cardProvider,
   storyMediaProviderFactory,
@@ -23,6 +24,7 @@ import mediaMockServer from '../example-helpers/media-mock';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 import { withSidebarContainer } from '../example-helpers/SidebarContainer';
 import { MountOptions } from '../src/__tests__/visual-regression/_utils';
+import { createCollabEditProvider } from '@atlaskit/synchrony-test-helpers';
 
 function createMediaMockEnableOnce() {
   let enabled = false;
@@ -45,7 +47,16 @@ interface EditorInstance {
   eventDispatcher: EventDispatcher;
 }
 
-export const providers: any = {
+type Providers = Pick<
+  EditorProps,
+  | 'emojiProvider'
+  | 'mentionProvider'
+  | 'taskDecisionProvider'
+  | 'contextIdentifierProvider'
+  | 'activityProvider'
+  | 'macroProvider'
+> & { collabEditProvider?: EditorProps['collabEditProvider'] };
+export const providers: Providers = {
   emojiProvider: emoji.storyData.getEmojiResource({
     uploadSupported: true,
     currentUser: {
@@ -94,6 +105,22 @@ function createEditorWindowBindings(win: Window) {
       (window as any)['__editorView'] = instance.view;
       this.editorView = instance.view;
       this.createApplyRemoteSteps();
+      this.createDocumentToJSON();
+    }
+
+    createDocumentToJSON() {
+      const view = this.editorView;
+
+      if (!view) {
+        return;
+      }
+
+      (window as any)['__documentToJSON'] = function() {
+        const transform = new JSONTransformer();
+        const doc = view.state.doc;
+
+        return transform.encode(doc);
+      };
     }
 
     createApplyRemoteSteps() {
@@ -190,6 +217,10 @@ function createEditorWindowBindings(win: Window) {
 
     if (props && props.allowExtension) {
       props.extensionHandlers = extensionHandlers;
+    }
+
+    if (options.collab) {
+      providers.collabEditProvider = createCollabEditProvider(options.collab);
     }
 
     let Editor: React.ComponentType<EditorProps> = (props: EditorProps) => (

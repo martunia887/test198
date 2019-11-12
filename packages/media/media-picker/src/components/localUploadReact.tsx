@@ -10,9 +10,10 @@ import {
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
   UploadEventPayloadMap,
-} from '../domain/uploadEvent';
+  UploadParams,
+  MediaFile,
+} from '../types';
 import { UploadComponent } from './component';
-import { UploadParams } from '../domain/config';
 import { UploadServiceImpl } from '../service/uploadServiceImpl';
 import { LocalUploadConfig } from './types';
 import { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
@@ -23,7 +24,6 @@ import {
   GasCorePayload,
 } from '@atlaskit/analytics-gas-types';
 import { name as packageName } from '../version.json';
-import { MediaFile } from '../domain/file';
 import { ANALYTICS_MEDIA_CHANNEL } from './media-picker-analytics-error-boundary';
 
 export type LocalUploadComponentBaseProps = {
@@ -47,13 +47,18 @@ interface BasePayload {
   };
 }
 
-type AdditionalPayloadAttributes =
-  | {}
-  | {
-      status: 'success' | 'fail';
-      uploadDurationMsec: number;
-      failReason?: any;
-    };
+export type FailurePayload = {
+  status: 'fail';
+  uploadDurationMsec: number;
+  failReason: any;
+};
+
+export type SuccessPayload = {
+  status: 'success';
+  uploadDurationMsec: number;
+};
+
+type AdditionalPayloadAttributes = {} | FailurePayload | SuccessPayload;
 
 type AnalyticsPayload = GasCorePayload &
   BasePayload &
@@ -151,13 +156,10 @@ export class LocalUploadComponentReact<
 
     const { duration = -1 } = end(`MediaPicker.fireUpload.${id}`);
     this.createAndFireAnalyticsEvent({
-      ...basePayload(
-        { size, type },
-        {
-          status: 'success',
-          uploadDurationMsec: duration,
-        },
-      ),
+      ...basePayload({ size, type }, {
+        status: 'success',
+        uploadDurationMsec: duration,
+      } as SuccessPayload),
       action: 'uploaded',
       eventType: TRACK_EVENT_TYPE,
     });
@@ -168,14 +170,11 @@ export class LocalUploadComponentReact<
 
     const { duration = -1 } = end(`MediaPicker.fireUpload.${id}`);
     this.createAndFireAnalyticsEvent({
-      ...basePayload(
-        { size, type },
-        {
-          status: 'fail',
-          failReason: payload.error.description,
-          uploadDurationMsec: duration,
-        },
-      ),
+      ...basePayload({ size, type }, {
+        status: 'fail',
+        failReason: payload.error.description,
+        uploadDurationMsec: duration,
+      } as FailurePayload),
       action: 'uploaded',
       eventType: TRACK_EVENT_TYPE,
     });

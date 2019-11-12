@@ -319,6 +319,7 @@ export const getValidNode = (
         let mediaType = '';
         let mediaCollection = [];
         let mediaUrl = '';
+
         if (attrs) {
           const { id, collection, type, url } = attrs;
           mediaId = id;
@@ -328,14 +329,20 @@ export const getValidNode = (
         }
 
         if (mediaType === 'external' && !!mediaUrl) {
+          const mediaAttrs: any = {
+            type: mediaType,
+            url: mediaUrl,
+            width: attrs.width,
+            height: attrs.height,
+          };
+
+          if (attrs.alt && adfStage === 'stage0') {
+            mediaAttrs.alt = attrs.alt;
+          }
+
           return {
             type,
-            attrs: {
-              type: mediaType,
-              url: mediaUrl,
-              width: attrs.width,
-              height: attrs.height,
-            },
+            attrs: mediaAttrs,
           };
         } else if (mediaId && mediaType) {
           const mediaAttrs: any = {
@@ -350,6 +357,10 @@ export const getValidNode = (
 
           if (attrs.height) {
             mediaAttrs.height = attrs.height;
+          }
+
+          if (attrs.alt && adfStage === 'stage0') {
+            mediaAttrs.alt = attrs.alt;
           }
 
           return {
@@ -433,17 +444,14 @@ export const getValidNode = (
         let { marks } = node;
         if (text) {
           if (marks) {
-            marks = marks.reduce(
-              (acc, mark) => {
-                const validMark = getValidMark(mark, adfStage);
-                if (validMark) {
-                  acc.push(validMark);
-                }
+            marks = marks.reduce((acc, mark) => {
+              const validMark = getValidMark(mark, adfStage);
+              if (validMark) {
+                acc.push(validMark);
+              }
 
-                return acc;
-              },
-              [] as ADMark[],
-            );
+              return acc;
+            }, [] as ADMark[]);
           }
           return marks ? { type, text, marks: marks } : { type, text };
         }
@@ -660,6 +668,11 @@ export const getValidNode = (
         }
 
         break;
+      }
+
+      case 'expand':
+      case 'nestedExpand': {
+        return { type, attrs, content, marks };
       }
     }
   }

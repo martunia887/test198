@@ -67,8 +67,6 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
           quickInsert={{
             provider: this.quickInsertProviderPromise,
           }}
-          allowCodeBlocks={{ enableKeybindingsForIDE: true }}
-          allowLists={true}
           allowTextColor={true}
           allowTables={{
             advanced: true,
@@ -91,6 +89,7 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
           UNSAFE_cards={{
             provider: this.cardProviderPromise,
           }}
+          UNSAFE_allowExpand={true}
           annotationProvider={{
             component: ExampleInlineCommentComponent,
           }}

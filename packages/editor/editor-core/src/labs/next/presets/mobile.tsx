@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { EmojiProvider } from '@atlaskit/emoji';
 import { MentionProvider } from '@atlaskit/mention/resource';
+import { TaskDecisionProvider } from '@atlaskit/task-decision';
 
 import {
   tablesPlugin,
@@ -23,6 +24,7 @@ import {
   basePlugin,
   placeholderPlugin,
   annotationPlugin,
+  iOSScrollPlugin,
 } from '../../../plugins';
 import { MediaProvider, CustomMediaPicker } from '../../../plugins/media';
 import { PresetProvider } from '../Editor';
@@ -36,6 +38,7 @@ interface EditorPresetMobileProps {
   placeholder?: string;
   mentionProvider?: Promise<MentionProvider>;
   emojiProvider?: Promise<EmojiProvider>;
+  taskDecisionProvider?: Promise<TaskDecisionProvider>;
   media?: {
     provider?: Promise<MediaProvider>;
     picker?: CustomMediaPicker;
@@ -48,10 +51,20 @@ export function useMobilePreset({
   media,
   placeholder,
 }: EditorPresetMobileProps & EditorPresetProps) {
+  const isIOS = !!(window as any).webkit;
+
   const [preset] = useDefaultPreset();
 
   preset.push(
-    [basePlugin, { allowScrollGutter: () => document.body }],
+    [
+      basePlugin,
+      {
+        allowScrollGutter: {
+          getScrollElement: () => document.body,
+          allowCustomScrollHandler: false,
+        },
+      },
+    ],
     [tablesPlugin, { tableOptions: { allowControls: false } }],
     codeBlockPlugin,
     panelPlugin,
@@ -88,6 +101,10 @@ export function useMobilePreset({
       // TODO: ED-7891 Align media plugin constructor with other plugins
       // { allowMarkingUploadsAsIncomplete: true },
     ]);
+  }
+
+  if (isIOS) {
+    preset.push(iOSScrollPlugin);
   }
 
   return [preset];

@@ -13,7 +13,7 @@ import {
 } from '../actions/finalizeUpload';
 import { State, SourceFile } from '../domain';
 import { mapAuthToSourceFileOwner } from '../domain/source-file';
-import { MediaFile } from '../../domain/file';
+import { MediaFile } from '../../types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
 import { resetView } from '../actions';
 import { UploadEndEvent } from '../../domain/uploadEvent';
@@ -71,10 +71,12 @@ const emitProcessedState = async (
     const tenantSubject = tenantMediaClient.file.getFileState(
       destinationFile.id,
     ) as ReplaySubject<FileState>;
-    const response = (await tenantMediaClient.mediaStore.getItems(
-      [destinationFile.id],
-      collection,
-    )).data;
+    const response = (
+      await tenantMediaClient.mediaStore.getItems(
+        [destinationFile.id],
+        collection,
+      )
+    ).data;
     const firstItem = response.items[0];
 
     // We need this check since the return type of getFileState might not be a ReplaySubject and won't have "next"

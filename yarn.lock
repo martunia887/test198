@@ -1679,6 +1679,13 @@
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/@types/classnames/-/classnames-2.2.6.tgz#dbe8a666156d556ed018e15a4c65f08937c3f628"
 
+"@types/clean-css@*":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@types/clean-css/-/clean-css-4.2.1.tgz#cb0134241ec5e6ede1b5344bc829668fd9871a8d"
+  integrity sha512-A1HQhQ0hkvqqByJMgg+Wiv9p9XdoYEzuwm11SVo1mX2/4PSdhjcrUlilJQoqLscIheC51t1D5g+EFWCXZ2VTQQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/color-convert@*":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@types/color-convert/-/color-convert-1.9.0.tgz#bfa8203e41e7c65471e9841d7e306a7cd8b5172d"
@@ -1774,6 +1781,24 @@
 "@types/history@*":
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.2.tgz#0e670ea254d559241b6eeb3894f8754991e73220"
+
+"@types/html-minifier@*":
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/@types/html-minifier/-/html-minifier-3.5.3.tgz#5276845138db2cebc54c789e0aaf87621a21e84f"
+  integrity sha512-j1P/4PcWVVCPEy5lofcHnQ6BtXz9tHGiFPWzqm7TtGuWZEfCHEP446HlkSNc9fQgNJaJZ6ewPtp2aaFla/Uerg==
+  dependencies:
+    "@types/clean-css" "*"
+    "@types/relateurl" "*"
+    "@types/uglify-js" "*"
+
+"@types/html-webpack-plugin@^3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@types/html-webpack-plugin/-/html-webpack-plugin-3.2.1.tgz#d3401407261ec82cb0fc380df28e57c94e851e4d"
+  integrity sha512-H8Pj1/Urx6qlUednZpNsveDVUsO63gQdu5DLaAf9t7iG0iyK0OS4XKFG5v1PSG1Nek9S65BrPrKt8DfEib02ng==
+  dependencies:
+    "@types/html-minifier" "*"
+    "@types/tapable" "*"
+    "@types/webpack" "*"
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.1"
@@ -2182,6 +2207,11 @@
   resolved "https://registry.yarnpkg.com/@types/redux/-/redux-3.6.0.tgz#f1ebe1e5411518072e4fdfca5c76e16e74c1399a"
   dependencies:
     redux "*"
+
+"@types/relateurl@*":
+  version "0.2.28"
+  resolved "https://registry.yarnpkg.com/@types/relateurl/-/relateurl-0.2.28.tgz#6bda7db8653fa62643f5ee69e9f69c11a392e3a6"
+  integrity sha1-a9p9uGU/piZD9e5p6facEaOS46Y=
 
 "@types/seedrandom@^2.4.27":
   version "2.4.27"
@@ -14420,10 +14450,12 @@ pend@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
 
-perf-marks@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/perf-marks/-/perf-marks-1.0.1.tgz#22f464ceba25d9a6c9d7bc94e53f3588db1a5e95"
-  integrity sha512-6LUHGgPK13vwL9aFS1Jtqz19uAxQMn0fRZU8O00cI78G2LwSKjnC1bhXnOCOA0UBcadez9ny5nZgZpakSUMi/A==
+perf-marks@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/perf-marks/-/perf-marks-1.5.0.tgz#04ad778ac47208d4b9cc676fcf31792877c4314d"
+  integrity sha512-BXwOawYXOX2Ga0O2cWAu1B2KMZrGm545btsbzbX3UgiR9J/El6Yo6dQbufgKpzis79pmyNL482OMVTenHD7IEA==
+  dependencies:
+    tslib "^1.10.0"
 
 performance-now@2.1.0, performance-now@^2.1.0:
   version "2.1.0"
@@ -14977,10 +15009,10 @@ prettier@^1.14.3, prettier@^1.7.0:
   version "1.15.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.15.1.tgz#06c67106afb1b40e74b002353b2079cc7e0e67bf"
 
-prettier@^1.18.2:
-  version "1.18.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.18.2.tgz#6823e7c5900017b4bd3acf46fe9ac4b4d7bda9ea"
-  integrity sha512-OeHeMc0JhFE9idD4ZdtNibzY0+TPHSpSSb9h8FqtP+YnoZZ1sl8Vc9b1sasjfymH3SonAF4QcA2+mzHPhMvIiw==
+prettier@^1.19.1:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
 prettier@^1.5.3:
   version "1.12.1"
@@ -15294,9 +15326,10 @@ prosemirror-tables@0.9.5:
     prosemirror-transform "^1.0.0"
     prosemirror-view "^1.0.0"
 
-prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0, prosemirror-transform@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/prosemirror-transform/-/prosemirror-transform-1.1.3.tgz#28cfdf1f9ee514edc40466be7b7db39eed545fdf"
+prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0, prosemirror-transform@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/prosemirror-transform/-/prosemirror-transform-1.1.6.tgz#11a83e74b3e13313c1eeae20b7d3c31c641aa114"
+  integrity sha512-Tag1yJedGvDGCY/gKpCfgzLEEsFJady3DzNHk3E61VZLL85j/C8feORV3Ot4Kr8AlPTbKPGKTe3LQ5V2sKgw6w==
   dependencies:
     prosemirror-model "^1.0.0"
 
@@ -18816,9 +18849,10 @@ ts-node@^6.0.2, ts-node@^6.1.1:
     source-map-support "^0.5.6"
     yn "^2.0.0"
 
-tslib@^1, tslib@^1.2.0, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
+tslib@^1, tslib@^1.2.0, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3, tslib@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
+  integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
 
 tsutils@^3.7.0:
   version "3.10.0"

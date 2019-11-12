@@ -24,7 +24,7 @@ import { editorClose } from '../../../actions/editorClose';
 import { handleCloudFetchingEvent } from '../../../actions/handleCloudFetchingEvent';
 import { startFileBrowser } from '../../../actions/startFileBrowser';
 import { GET_PREVIEW } from '../../../actions/getPreview';
-import { MediaFile } from '../../../../domain/file';
+import { MediaFile } from '../../../../types';
 import { buttonClickPayload, Payload } from '../../analyticsHandlers';
 
 type TestPayload = GasCorePayload & { action: string; attributes: {} };
@@ -444,7 +444,12 @@ describe('analyticsProcessing middleware', () => {
         description: 'id1 failed',
         uploadId: 'upid1',
       }),
-      makePayloadForTrackFileConversion(testFile1, 'cloudMedia', 'fail'),
+      makePayloadForTrackFileConversion(
+        testFile1,
+        'cloudMedia',
+        'fail',
+        'id1 failed',
+      ),
       {
         remoteUploads: {
           upid1: {

@@ -218,9 +218,10 @@ export function handlePastePreservingMarks(slice: Slice): Command {
         orderedList,
       )(slice)
     ) {
-      const transformedSlice = applyTextMarksToSlice(schema, selectionMarks)(
-        slice,
-      );
+      const transformedSlice = applyTextMarksToSlice(
+        schema,
+        selectionMarks,
+      )(slice);
 
       const tr = closeHistory(state.tr)
         .replaceSelection(transformedSlice)
@@ -383,6 +384,42 @@ export function handleMediaSingle(inputMethod: InputMethodInsertMedia) {
       }
       return false;
     };
+  };
+}
+
+export function handleExpand(slice: Slice): Command {
+  return (state, dispatch) => {
+    if (!insideTable(state)) {
+      return false;
+    }
+
+    const { expand, nestedExpand } = state.schema.nodes;
+    let { tr } = state;
+    let hasExpand = false;
+
+    const newSlice = mapSlice(slice, maybeNode => {
+      if (maybeNode.type === expand) {
+        hasExpand = true;
+        try {
+          return nestedExpand.createChecked(
+            maybeNode.attrs,
+            maybeNode.content,
+            maybeNode.marks,
+          );
+        } catch (e) {
+          tr = safeInsert(maybeNode, tr.selection.$to.pos)(tr);
+          return Fragment.empty;
+        }
+      }
+      return maybeNode;
+    });
+
+    if (hasExpand && dispatch) {
+      dispatch(tr.replaceSelection(newSlice));
+      return true;
+    }
+
+    return false;
   };
 }
 

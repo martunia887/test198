@@ -28,6 +28,8 @@ const mockPlugins: { [name: string]: jest.Mock } = {
   quickInsertPlugin: jest.fn(),
   historyPlugin: jest.fn(),
   sharedContextPlugin: jest.fn(),
+  iOSScrollPlugin: jest.fn(),
+  listsPlugin: jest.fn(),
 };
 jest.mock('../../../plugins', () => mockPlugins);
 
@@ -44,6 +46,7 @@ import {
   layoutPlugin,
   statusPlugin,
   historyPlugin,
+  iOSScrollPlugin,
 } from '../../../plugins';
 
 import createPluginsList from '../../../create-editor/create-plugins-list';
@@ -225,5 +228,34 @@ describe('createPluginsList', () => {
   it('should not add historyPlugin to non-mobile editor', () => {
     createPluginsList({ appearance: 'full-page' });
     expect(historyPlugin).not.toHaveBeenCalled();
+  });
+
+  describe('iOSScrollPlugin', () => {
+    let _webkit: any;
+
+    beforeEach(() => {
+      _webkit = (window as any).webkit;
+    });
+
+    afterEach(() => {
+      (window as any).webkit = _webkit;
+    });
+
+    it('should add iOSScrollPlugin to mobile editor on iOS', () => {
+      (window as any).webkit = {};
+      createPluginsList({ appearance: 'mobile' });
+      expect(iOSScrollPlugin).toHaveBeenCalled();
+    });
+
+    it('should not add iOSScrollPlugin to mobile editor on Android', () => {
+      (window as any).webkit = undefined;
+      createPluginsList({ appearance: 'mobile' });
+      expect(iOSScrollPlugin).not.toHaveBeenCalled();
+    });
+
+    it('should not add iOSScrollPlugin to non-mobile editor', () => {
+      createPluginsList({ appearance: 'full-page' });
+      expect(iOSScrollPlugin).not.toHaveBeenCalled();
+    });
   });
 });

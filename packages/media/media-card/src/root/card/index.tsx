@@ -507,7 +507,13 @@ export class CardBase extends Component<
   };
 
   renderInlinePlayer = () => {
-    const { identifier, mediaClient, dimensions, selected } = this.props;
+    const {
+      identifier,
+      mediaClient,
+      dimensions,
+      selected,
+      testId,
+    } = this.props;
 
     return (
       <InlinePlayer
@@ -518,6 +524,7 @@ export class CardBase extends Component<
         onClick={this.onClick}
         selected={selected}
         ref={this.cardRef}
+        testId={testId}
       />
     );
   };
@@ -589,6 +596,7 @@ export class CardBase extends Component<
       onSelectChange,
       disableOverlay,
       alt,
+      testId,
     } = this.props;
     const { progress, metadata, dataURI, previewOrientation } = this.state;
     const {
@@ -621,6 +629,7 @@ export class CardBase extends Component<
         onDisplayImage={onDisplayImage}
         previewOrientation={previewOrientation}
         ref={this.cardRef}
+        testId={testId}
       />
     );
 
@@ -703,8 +712,6 @@ export class CardBase extends Component<
   This Context provides data needed to build packageHierarchy in Atlaskit Analytics Listener and Media Analytics Listener.
   This data is not added to the final GASv3 payload
 */
-export const Card: React.ComponentType<
-  CardWithAnalyticsEventsProps
-> = withAnalyticsContext(getBaseAnalyticsContext())(
-  withAnalyticsEvents()(CardBase),
-);
+export const Card: React.ComponentType<CardWithAnalyticsEventsProps> = withAnalyticsContext(
+  getBaseAnalyticsContext(),
+)(withAnalyticsEvents()(CardBase));

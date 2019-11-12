@@ -16,6 +16,15 @@ import { TableCssClassName } from '../../plugins/table/types';
  * And, don't get too fancy with it ;)
  */
 export const getDocFromElement = (el: any) => el.pmViewDesc.node.toJSON();
+
+export const expectToMatchDocument = async (page: any, testName: string) => {
+  const doc = await page.browser.execute(() => {
+    return (window as any).__documentToJSON();
+  });
+
+  expect(doc).toMatchCustomDocSnapshot(testName);
+};
+
 export const editable = '.ProseMirror';
 export const LONG_WAIT_FOR = 5000;
 export const typeAheadPicker = '.fabric-editor-typeahead';
@@ -176,12 +185,12 @@ export const insertMediaFromMediaPicker = async (
   filenames = ['one.svg'],
   fileSelector = 'div=%s',
 ) => {
-  const insertMediaButton = '.e2e-insert-button';
+  const insertMediaButton = '[data-testid="media-picker-insert-button"]';
   const mediaCardSelector = `${editable} .img-wrapper`;
   const existingMediaCards = await browser.$$(mediaCardSelector);
   // wait for media item, and select it
   await browser.waitForSelector(
-    '.e2e-recent-upload-card [aria-label="one.svg"]',
+    '[data-testid="media-picker-popup"] [data-testid="media-file-card-view"] [aria-label="one.svg"]',
   );
   if (filenames) {
     for (const filename of filenames) {
