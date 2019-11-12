@@ -1372,17 +1372,17 @@ const metaData: Record<string, Data> = {
     package: '@atlaskit/icon/glyph/person-circle',
   },
   'person-with-circle': {
-    keywords: ['person-with-circle', 'personwithcircle', 'icon', 'core'],
+    keywords: ['person-with-circle', 'personwithcircle', 'person', 'user', 'icon', 'core'],
     componentName: 'PersonWithCircleIcon',
     package: '@atlaskit/icon/glyph/person-with-circle',
   },
   'person-with-cross': {
-    keywords: ['person-with-cross', 'personwithcross', 'icon', 'core'],
+    keywords: ['person-with-cross', 'personwithcross', 'person', 'user', 'icon', 'core'],
     componentName: 'PersonWithCrossIcon',
     package: '@atlaskit/icon/glyph/person-with-cross',
   },
   'person-with-tick': {
-    keywords: ['person-with-tick', 'personwithtick', 'icon', 'core'],
+    keywords: ['person-with-tick', 'personwithtick', 'person', 'user', 'icon', 'core'],
     componentName: 'PersonWithTickIcon',
     package: '@atlaskit/icon/glyph/person-with-tick',
   },
