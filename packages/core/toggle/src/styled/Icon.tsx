@@ -55,7 +55,7 @@ const Icon: React.FC<{ isChecked?: boolean; size: Sizes }> = ({
   size,
 }) => (
   <IconWrapper size={size}>
-    {isChecked ? <CrossIconSvg /> : <CheckIconSvg />}
+    {isChecked ? <CheckIconSvg /> : <CrossIconSvg />}
   </IconWrapper>
 );
 
