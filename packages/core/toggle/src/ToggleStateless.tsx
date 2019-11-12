@@ -103,7 +103,7 @@ class ToggleStateless extends Component<StatelessProps, State> {
               size={size!}
               aria-label={label || (isChecked ? 'Uncheck' : 'Check')}
             >
-              <Icon isChecked={isChecked} size={size === 'large' ? 24 : 16} />
+              <Icon isChecked={isChecked} size={size!} />
             </IconWrapper>
           </Inner>
         </Slide>
