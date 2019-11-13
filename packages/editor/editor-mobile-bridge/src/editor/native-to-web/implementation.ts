@@ -37,7 +37,7 @@ import {
 } from '@atlaskit/editor-core';
 import { EditorView } from 'prosemirror-view';
 import { EditorViewWithComposition } from '../../types';
-import { EditorState } from 'prosemirror-state';
+import { EditorState, Selection } from 'prosemirror-state';
 import {
   undo as pmHistoryUndo,
   redo as pmHistoryRedo,
@@ -389,6 +389,21 @@ export default class WebBridgeImpl extends WebBridge
         this.editorView.state,
         this.editorView.dispatch,
       );
+    }
+  }
+
+  setSelectionByTopPixelOffset(coords: string) {
+    if (this.editorView && coords) {
+      const points = this.editorView.posAtCoords(JSON.parse(coords));
+      if (points) {
+        const { dispatch, state } = this.editorView;
+        const selection = Selection.findFrom(state.doc.resolve(points.pos), 1);
+        console.log({ points, selection });
+        if (selection) {
+          this.editorView.focus();
+          dispatch(state.tr.setSelection(selection).scrollIntoView());
+        }
+      }
     }
   }
 
