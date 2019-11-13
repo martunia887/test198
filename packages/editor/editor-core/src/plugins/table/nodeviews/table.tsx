@@ -141,6 +141,14 @@ export default class TableView extends ReactNodeView<Props> {
     return true;
   }
 
+  stopEvent(event: Event) {
+    const target = event.target as HTMLElement;
+    return !!closestElement(
+      target,
+      `.${ClassName.ROW_CONTROLS_WRAPPER}, .${ClassName.COLUMN_CONTROLS}`,
+    );
+  }
+
   destroy() {
     if (this.observer) {
       this.observer.disconnect();
@@ -208,7 +216,8 @@ export default class TableView extends ReactNodeView<Props> {
   };
 
   private handleMutation = (records: Array<MutationRecord>) => {
-    if (!records.length || !this.contentDOM) {
+    const { reordering } = getPluginState(this.view.state);
+    if (!records.length || !this.contentDOM || reordering) {
       return;
     }
 

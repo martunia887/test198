@@ -55,10 +55,7 @@ const tableSharedStyle = css`
   .${TableSharedCssClassName.TABLE_NODE_WRAPPER} > table {
     border-collapse: collapse;
     margin: ${tableMarginTop}px ${tableMarginSides}px 0 0;
-    border: ${tableCellBorderWidth}px solid ${themed({
-  light: akEditorTableBorder,
-  dark: akEditorTableBorderDark,
-})};
+
     table-layout: fixed;
     font-size: ${fontSize()}px;
     width: 100%;
@@ -73,11 +70,13 @@ const tableSharedStyle = css`
       }
 
       tbody {
-        border-bottom: none;
+        border-right: ${tableCellBorderWidth}px solid ${akEditorTableBorder};
+        border-bottom: ${tableCellBorderWidth}px solid ${akEditorTableBorder};
       }
       th td {
         background-color: white;
       }
+
       th,
       td {
         min-width: ${tableCellMinWidth}px;

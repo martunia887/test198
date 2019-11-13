@@ -1,6 +1,13 @@
+import { EditorState } from 'prosemirror-state';
 import { TableCssClassName as ClassName } from '../types';
 import { closestElement, containsClassName } from '../../../utils';
 import { tableToolbarSize } from '../ui/styles';
+import { getPluginState } from '../pm-plugins/main';
+
+export const isActiveTable = (
+  state: EditorState,
+  tableNodeViewRef?: HTMLTableElement | null,
+) => tableNodeViewRef && tableNodeViewRef === getPluginState(state).tableRef;
 
 export const isCell = (node: HTMLElement): boolean => {
   return (
@@ -25,8 +32,8 @@ export const getColumnOrRowIndex = (target: HTMLElement): [number, number] => [
   parseInt(target.getAttribute('data-end-index') || '-1', 10),
 ];
 
-export const isColumnControlsDecorations = (node: HTMLElement): boolean =>
-  containsClassName(node, ClassName.COLUMN_CONTROLS_DECORATIONS);
+export const isColumnControlsButton = (node: HTMLElement): boolean =>
+  containsClassName(node, ClassName.COLUMN_CONTROLS_BUTTON);
 
 export const isRowControlsButton = (node: HTMLElement): boolean =>
   containsClassName(node, ClassName.ROW_CONTROLS_BUTTON) ||

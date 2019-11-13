@@ -1,7 +1,7 @@
 // #region Imports
 import { TableMap } from 'prosemirror-tables';
 import { findTable, getCellsInColumn, getCellsInRow } from 'prosemirror-utils';
-import { createCommand } from '../pm-plugins/main';
+import { createCommand, getPluginState } from '../pm-plugins/main';
 import {
   updatePluginStateDecorations,
   createCellHoverDecoration,
@@ -55,7 +55,7 @@ export const hoverColumns = (hoveredColumns: number[], isInDanger?: boolean) =>
   createCommand(
     state => {
       const cells = getCellsInColumn(hoveredColumns)(state.selection);
-      if (!cells) {
+      if (!cells || getPluginState(state).reordering) {
         return false;
       }
       const decorations = createControlsHoverDecoration(
@@ -84,7 +84,7 @@ export const hoverRows = (hoveredRows: number[], isInDanger?: boolean) =>
   createCommand(
     state => {
       const cells = getCellsInRow(hoveredRows)(state.selection);
-      if (!cells) {
+      if (!cells || getPluginState(state).reordering) {
         return false;
       }
       const decorations = createControlsHoverDecoration(
@@ -113,7 +113,7 @@ export const hoverTable = (isInDanger?: boolean) =>
   createCommand(
     state => {
       const table = findTable(state.selection);
-      if (!table) {
+      if (!table || getPluginState(state).reordering) {
         return false;
       }
       const map = TableMap.get(table.node);
@@ -161,16 +161,21 @@ export const clearHoverSelection = () =>
 export const showResizeHandleLine = (
   cellColumnPositioning: CellColumnPositioning,
 ) =>
-  createCommand(state => ({
-    type: 'SHOW_RESIZE_HANDLE_LINE',
-    data: {
-      decorationSet: updatePluginStateDecorations(
-        state,
-        createColumnLineResize(state.selection, cellColumnPositioning),
-        TableDecorations.COLUMN_RESIZING_HANDLE_LINE,
-      ),
-    },
-  }));
+  createCommand(state => {
+    if (getPluginState(state).reordering) {
+      return false;
+    }
+    return {
+      type: 'SHOW_RESIZE_HANDLE_LINE',
+      data: {
+        decorationSet: updatePluginStateDecorations(
+          state,
+          createColumnLineResize(state.selection, cellColumnPositioning),
+          TableDecorations.COLUMN_RESIZING_HANDLE_LINE,
+        ),
+      },
+    };
+  });
 
 export const hideResizeHandleLine = () =>
   createCommand(state => ({

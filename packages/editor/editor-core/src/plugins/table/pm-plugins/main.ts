@@ -11,6 +11,7 @@ import {
   findTable,
 } from 'prosemirror-utils';
 import { EditorView, DecorationSet } from 'prosemirror-view';
+import { EventEmitter2 } from 'eventemitter2';
 
 import { browser } from '@atlaskit/editor-common';
 import { Dispatch } from '../../../event-dispatcher';
@@ -18,6 +19,9 @@ import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { pluginFactory } from '../../../utils/plugin-state-factory';
 
 import { createTableView } from '../nodeviews/table';
+import { createRowView } from '../nodeviews/tableRow';
+import { createCellView } from '../nodeviews/tableCell';
+
 import {
   setTableRef,
   clearHoverSelection,
@@ -100,6 +104,7 @@ export const createPlugin = (
     isHeaderRowEnabled: !!pluginConfig.allowHeaderRow,
     isHeaderColumnEnabled: false,
     ...defaultTableSelection,
+    eventEmitter: new EventEmitter2(),
   });
 
   return new Plugin({
@@ -163,6 +168,10 @@ export const createPlugin = (
             }
           }
         },
+        destroy() {
+          const { eventEmitter } = getPluginState(editorView.state);
+          eventEmitter.removeAllListeners();
+        },
       };
     },
     props: {
@@ -199,6 +208,9 @@ export const createPlugin = (
             isFullWidthModeEnabled,
             wasFullWidthModeEnabled,
           }),
+        tableRow: createRowView,
+        tableCell: createCellView,
+        tableHeader: createCellView,
       },
 
       handleDOMEvents: {

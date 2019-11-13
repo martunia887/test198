@@ -7,6 +7,7 @@ import { GapCursorSelection, JSON_ID, Side } from '../selection';
 import { fixCursorAlignment, isIgnoredClick } from '../utils';
 import { setGapCursorAtPos, deleteNode } from '../actions';
 import { Direction } from '../direction';
+import { getPluginState } from '../../table/pm-plugins/main';
 
 export const pluginKey = new PluginKey('gapCursorPlugin');
 
@@ -80,6 +81,7 @@ const plugin = new Plugin({
 
       // this helps to ignore all of the clicks outside of the parent (e.g. nodeView controls)
       if (
+        !getPluginState(view.state).isReordering &&
         posAtCoords &&
         posAtCoords.inside !== position &&
         !isIgnoredClick(event.target as HTMLElement)

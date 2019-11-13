@@ -502,7 +502,7 @@
     "react-addons-css-transition-group": "^15.6.2",
     "react-addons-text-content": "^0.0.4",
     "react-animate-height": "^2.0.5",
-    "react-beautiful-dnd": "^10.0.2",
+    "react-beautiful-dnd": "12.1.0-alpha.0",
     "react-codesandboxer": "^3.1.5",
     "react-deprecate": "^0.1.0",
     "react-dom": "^16.8.0",
@@ -587,8 +587,8 @@
   "resolutions": {
     "**/@atlaskit/theme/styled-components": "^3.2.6",
     "**/expand-range/fill-range": "2.2.3",
-    "react":"16.8.6",
-    "react-dom":"16.8.6"
+    "react": "16.8.6",
+    "react-dom": "16.8.6"
   },
   "engines": {
     "node": "^10.13.0"

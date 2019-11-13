@@ -1,3 +1,4 @@
+import { DecorationSet } from 'prosemirror-view';
 import { TablePluginState, TablePluginAction } from './types';
 import { defaultTableSelection } from './pm-plugins/main';
 
@@ -71,6 +72,32 @@ export default (
         };
       }
       return pluginState;
+    case 'ON_BEFORE_REORDERING_START':
+      return {
+        ...pluginState,
+        ...defaultTableSelection,
+        decorationSet: DecorationSet.empty,
+        insertRowButtonIndex: undefined,
+        insertColumnButtonIndex: undefined,
+        reordering: action.data.type,
+        rowHeights: action.data.rowHeights,
+        columnWidths: action.data.columnWidths,
+        tableHeight: action.data.tableHeight,
+        tableWidth: action.data.tableWidth,
+        reorderIndex: action.data.reorderIndex,
+        multiReorderIndexes: action.data.multiReorderIndexes,
+      };
+    case 'ON_REORDERING_END':
+      return {
+        ...pluginState,
+        reordering: undefined,
+        rowHeights: undefined,
+        columnWidths: undefined,
+        tableWidth: undefined,
+        tableHeight: undefined,
+        reorderIndex: undefined,
+        multiReorderIndexes: undefined,
+      };
 
     case 'ADD_RESIZE_HANDLE_DECORATIONS':
     case 'SET_TABLE_REF':

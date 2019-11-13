@@ -32,7 +32,7 @@ import {
 import {
   isCell,
   isInsertRowButton,
-  isColumnControlsDecorations,
+  isColumnControlsButton,
   isTableControlsButton,
   isRowControlsButton,
   isCornerButton,
@@ -80,7 +80,7 @@ export const handleClick = (view: EditorView, event: Event): boolean => {
   const element = event.target as HTMLElement;
   const table = findTable(view.state.selection)!;
 
-  if (event instanceof MouseEvent && isColumnControlsDecorations(element)) {
+  if (event instanceof MouseEvent && isColumnControlsButton(element)) {
     const [startIndex] = getColumnOrRowIndex(element);
     const { state, dispatch } = view;
 
@@ -150,7 +150,7 @@ export const handleMouseOver = (
     return showInsertRowButton(positionRow)(state, dispatch);
   }
 
-  if (isColumnControlsDecorations(target)) {
+  if (isColumnControlsButton(target)) {
     const [startIndex] = getColumnOrRowIndex(target);
     const { state, dispatch } = view;
 
@@ -182,8 +182,7 @@ export const handleMouseDown = (_: EditorView, event: Event) => {
   const isControl = !!(
     event.target &&
     event.target instanceof HTMLElement &&
-    (isColumnControlsDecorations(event.target) ||
-      isRowControlsButton(event.target))
+    (isColumnControlsButton(event.target) || isRowControlsButton(event.target))
   );
 
   if (isControl) {
@@ -199,7 +198,7 @@ export const handleMouseOut = (
 ): boolean => {
   const target = mouseEvent.target as HTMLElement;
 
-  if (isColumnControlsDecorations(target)) {
+  if (isColumnControlsButton(target)) {
     const { state, dispatch } = view;
     return clearHoverSelection()(state, dispatch);
   }
@@ -237,7 +236,7 @@ export const handleMouseLeave = (view: EditorView, event: Event): boolean => {
 export const handleMouseMove = (view: EditorView, event: Event) => {
   const element = event.target as HTMLElement;
 
-  if (isColumnControlsDecorations(element)) {
+  if (isColumnControlsButton(element)) {
     const { state, dispatch } = view;
     const { insertColumnButtonIndex } = getPluginState(state);
     const [startIndex, endIndex] = getColumnOrRowIndex(element);
@@ -408,7 +407,7 @@ export const whenTableInFocus = (
     tableResizePluginState && !!tableResizePluginState.dragging;
   const hasTableNode = tablePluginState && tablePluginState.tableNode;
 
-  if (!hasTableNode || isDragging) {
+  if (!hasTableNode || isDragging || tablePluginState.reordering) {
     return false;
   }
 

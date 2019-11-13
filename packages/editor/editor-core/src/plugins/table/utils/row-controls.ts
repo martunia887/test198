@@ -15,6 +15,8 @@ export interface RowParams {
   startIndex: number;
   endIndex: number;
   height: number;
+  isPortal?: boolean;
+  rowHeights?: number[];
 }
 
 export const getRowHeights = (tableRef: HTMLTableElement): number[] => {
@@ -22,9 +24,12 @@ export const getRowHeights = (tableRef: HTMLTableElement): number[] => {
   if (tableRef.lastChild) {
     const rows = tableRef.lastChild.childNodes;
     for (let i = 0, count = rows.length; i < count; i++) {
-      const cell = rows[i] as HTMLTableCellElement;
-      const rect = cell.getBoundingClientRect();
-      heights[i] = (rect ? rect.height : cell.offsetHeight) + 1;
+      const row = rows[i] as HTMLTableCellElement;
+      if (row.getAttribute(ClassName.RBD_PLACEHOLDER)) {
+        break;
+      }
+      const rect = row.getBoundingClientRect();
+      heights[i] = (rect ? rect.height : row.offsetHeight) + 1;
     }
   }
   return heights;

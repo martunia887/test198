@@ -29,7 +29,6 @@ import {
   checkIfHeaderColumnEnabled,
   isIsolating,
   updatePluginStateDecorations,
-  createColumnControlsDecoration,
 } from '../utils';
 import { Command } from '../../../types';
 import { analyticsService } from '../../../analytics';
@@ -78,19 +77,6 @@ export const setTableRef = (ref?: HTMLElement | null) =>
         closestElement(tableRef, `.${ClassName.TABLE_NODE_WRAPPER}`) ||
         undefined;
       const layout = tableNode ? tableNode.attrs.layout : undefined;
-      const {
-        pluginConfig: { allowControls = true },
-      } = getPluginState(state);
-
-      let decorationSet = DecorationSet.empty;
-
-      if (allowControls && tableRef) {
-        decorationSet = updatePluginStateDecorations(
-          state,
-          createColumnControlsDecoration(state.selection),
-          TableDecorations.COLUMN_CONTROLS_DECORATIONS,
-        );
-      }
 
       return {
         type: 'SET_TABLE_REF',
@@ -101,7 +87,7 @@ export const setTableRef = (ref?: HTMLElement | null) =>
           layout: layout || 'default',
           isHeaderRowEnabled: checkIfHeaderRowEnabled(state),
           isHeaderColumnEnabled: checkIfHeaderColumnEnabled(state),
-          decorationSet,
+          decorationSet: DecorationSet.empty,
         },
       };
     },

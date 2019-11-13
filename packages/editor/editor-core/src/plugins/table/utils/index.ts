@@ -7,7 +7,6 @@ export {
 export {
   findControlsHoverDecoration,
   createControlsHoverDecoration,
-  createColumnControlsDecoration,
   createColumnSelectedDecorations,
   createCellHoverDecoration,
   updatePluginStateDecorations,
@@ -39,7 +38,7 @@ export {
   isCell,
   isCornerButton,
   isInsertRowButton,
-  isColumnControlsDecorations,
+  isColumnControlsButton,
   isTableControlsButton,
   isRowControlsButton,
   getColumnOrRowIndex,
@@ -47,12 +46,15 @@ export {
   getMousePositionVerticalRelativeByElement,
   updateResizeHandles,
   isResizeHandleDecoration,
+  isActiveTable,
 } from './dom';
 export {
   getColumnsWidths,
   isColumnDeleteButtonVisible,
   getColumnDeleteButtonParams,
   getColumnClassNames,
+  getColumnsParams,
+  ColumnParams,
 } from './column-controls';
 export {
   getRowHeights,
@@ -66,3 +68,12 @@ export {
 export { getSelectedTableInfo, getSelectedCellInfo } from './analytics';
 export { getMergedCellsPositions } from './table';
 export { TableSortStep } from './sort-step';
+export {
+  moveRow,
+  moveColumn,
+  addRowPlaceholder,
+  cleanupAfterReordering,
+  onReorderingRows,
+  onReorderingColumns,
+  addStylesToCellsBeforeReordering,
+} from './reorder';

@@ -38,3 +38,4 @@ export {
   addResizeHandleDecorations,
 } from './misc';
 export { sortByColumn } from './sort';
+export { onBeforeReorderingStart, onReorderingEnd } from './reorder';

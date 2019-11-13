@@ -12,11 +12,15 @@ import { TableMap, CellSelection } from 'prosemirror-tables';
 import { tableDeleteButtonSize } from '../ui/styles';
 import { TableCssClassName as ClassName } from '../types';
 
-export const getColumnsWidths = (
-  view: EditorView,
-): Array<number | undefined> => {
+export interface ColumnParams {
+  startIndex: number;
+  endIndex: number;
+  width: number;
+}
+
+export const getColumnsWidths = (view: EditorView): number[] => {
   const { selection } = view.state;
-  let widths: Array<number | undefined> = [];
+  let widths: number[] = [];
   const table = findTable(selection);
   if (table) {
     const map = TableMap.get(table.node);
@@ -29,13 +33,37 @@ export const getColumnsWidths = (
       const cell = cells[0];
       if (cell) {
         const cellRef = findDomRefAtPos(cell.pos, domAtPos) as HTMLElement;
-        const rect = cellRef.getBoundingClientRect();
-        widths[i] = (rect ? rect.width : cellRef.offsetWidth) + 1;
+        if (cellRef.getAttribute(ClassName.RBD_PLACEHOLDER)) {
+          break;
+        }
+        widths[i] = cellRef.offsetWidth;
+
         i += cell.node.attrs.colspan - 1;
       }
     }
   }
   return widths;
+};
+
+export const getColumnsParams = (
+  columnsWidths: Array<number | undefined>,
+): ColumnParams[] => {
+  const columns: ColumnParams[] = [];
+  for (let i = 0, count = columnsWidths.length; i < count; i++) {
+    const width = columnsWidths[i];
+    if (!width) {
+      continue;
+    }
+    let endIndex = columnsWidths.length;
+    for (let k = i + 1, count = columnsWidths.length; k < count; k++) {
+      if (columnsWidths[k]) {
+        endIndex = k;
+        break;
+      }
+    }
+    columns.push({ startIndex: i, endIndex, width: width + 1 });
+  }
+  return columns;
 };
 
 export const isColumnDeleteButtonVisible = (selection: Selection): boolean => {

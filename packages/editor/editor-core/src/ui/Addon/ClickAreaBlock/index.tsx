@@ -5,6 +5,7 @@ import { EditorView } from 'prosemirror-view';
 import { createParagraphAtEnd } from '../../../commands';
 import { setCursorForTopLevelBlocks } from '../../../plugins/gap-cursor';
 import { closestElement } from '../../../utils';
+import { getPluginState as getTablePluginState } from '../../../plugins/table/pm-plugins/main';
 
 const ClickWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   flex-grow: 1;
@@ -46,6 +47,10 @@ export default class ClickAreaBlock extends React.Component<Props> {
     const isPopupClicked = !!closestElement(target, '[data-editor-popup]');
     // Fixes issue when using a textarea for editor title in full page editor doesn't let user focus it.
     const isTextAreaClicked = target.nodeName === 'TEXTAREA';
+
+    const isTableReordering =
+      view && !!getTablePluginState(view.state).reordering;
+
     if (
       (!contentArea ||
         !insideContentArea(target.parentNode as HTMLElement | null) ||
@@ -53,6 +58,7 @@ export default class ClickAreaBlock extends React.Component<Props> {
       !isInputClicked &&
       !isTextAreaClicked &&
       !isPopupClicked &&
+      !isTableReordering &&
       view
     ) {
       const { dispatch, dom } = view;

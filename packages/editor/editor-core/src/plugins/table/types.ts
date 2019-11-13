@@ -1,6 +1,7 @@
 import { Node as PmNode } from 'prosemirror-model';
 import { Transaction } from 'prosemirror-state';
 import { DecorationSet } from 'prosemirror-view';
+import { EventEmitter2 } from 'eventemitter2';
 import {
   TableLayout,
   tablePrefixSelector,
@@ -70,6 +71,7 @@ export interface ColumnResizingPluginState {
  *
  */
 export type CellColumnPositioning = Pick<Rect, 'right' | 'left'>;
+export type ReorderingType = 'columns' | 'rows';
 
 export interface TableColumnOrdering {
   columnIndex: number;
@@ -98,6 +100,14 @@ export interface TablePluginState {
   isFullWidthModeEnabled?: boolean;
   layout?: TableLayout;
   ordering?: TableColumnOrdering;
+  reordering?: ReorderingType;
+  rowHeights?: number[];
+  columnWidths?: number[];
+  tableWidth?: number;
+  tableHeight?: number;
+  reorderIndex?: number;
+  multiReorderIndexes?: number[];
+  eventEmitter: EventEmitter2;
 }
 
 export type TablePluginAction =
@@ -167,7 +177,20 @@ export type TablePluginAction =
   | {
       type: 'HIDE_INSERT_COLUMN_OR_ROW_BUTTON';
     }
-  | { type: 'TOGGLE_CONTEXTUAL_MENU' };
+  | { type: 'TOGGLE_CONTEXTUAL_MENU' }
+  | {
+      type: 'ON_BEFORE_REORDERING_START';
+      data: {
+        type: ReorderingType;
+        rowHeights?: number[];
+        columnWidths?: number[];
+        tableWidth?: number;
+        tableHeight?: number;
+        reorderIndex?: number;
+        multiReorderIndexes?: number[];
+      };
+    }
+  | { type: 'ON_REORDERING_END' };
 
 export type ColumnResizingPluginAction =
   | {
@@ -203,7 +226,11 @@ export const TableCssClassName = {
   ...TableSharedCssClassName,
 
   COLUMN_CONTROLS: `${tablePrefixSelector}-column-controls`,
+  COLUMN_CONTROLS_WRAPPER: `${tablePrefixSelector}-column-controls-wrapper`,
   COLUMN_CONTROLS_DECORATIONS: `${tablePrefixSelector}-column-controls-decoration`,
+  COLUMN_CONTROLS_INNER: `${tablePrefixSelector}-column-controls__inner`,
+  COLUMN_CONTROLS_BUTTON_WRAP: `${tablePrefixSelector}-column-controls__button-wrap`,
+  COLUMN_CONTROLS_BUTTON: `${tablePrefixSelector}-column-controls__button`,
   COLUMN_SELECTED: `${tablePrefixSelector}-column__selected`,
 
   ROW_CONTROLS_WRAPPER: `${tablePrefixSelector}-row-controls-wrapper`,
@@ -259,6 +286,20 @@ export const TableCssClassName = {
   CONTEXTUAL_MENU_BUTTON_WRAP: `${tablePrefixSelector}-contextual-menu-button-wrap`,
   CONTEXTUAL_MENU_BUTTON: `${tablePrefixSelector}-contextual-menu-button`,
   CONTEXTUAL_MENU_ICON: `${tablePrefixSelector}-contextual-submenu-icon`,
+
+  // react-beautiful-dnd
+  RBD_PLACEHOLDER: 'data-rbd-placeholder',
+  RBD_DRAGGABLE: 'data-rbd-draggable-context-id',
+  TABLE_PORTAL: `${tablePrefixSelector}-table-portal`,
+  RBD_PORTAL: `${tablePrefixSelector}-rbd-portal`,
+  COLUMN_CONTROLS_PORTAL: `${tablePrefixSelector}-column-controls-portal`,
+  ROW_CONTROLS_PORTAL: `${tablePrefixSelector}-row-controls-portal`,
+  ROW_CONTROLS_PORTAL_CONTENT_WRAP: `${tablePrefixSelector}-row-controls-portal-content-wrap`,
+  WITH_NUMBERED_COLUMN: `${tablePrefixSelector}-with-numbered-column`,
+  REORDERING: `${tablePrefixSelector}-reordering`,
+  REORDERING_INDICATOR: `${tablePrefixSelector}-reordering-indicator`,
+  SHOW_MERGED_CELLS: `${tablePrefixSelector}-show-merged-cells`,
+  MULTI_REORDERING: `${tablePrefixSelector}-multi-reordering`,
 
   // come from prosemirror-table
   SELECTED_CELL: 'selectedCell',

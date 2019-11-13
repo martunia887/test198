@@ -21,6 +21,20 @@ function getHeights(
   }
   return heights;
 }
+function getWidths(children: HTMLCollection): Array<number | undefined> {
+  const widths: Array<number | undefined> = [];
+  for (let i = 0, count = children.length; i < count; i++) {
+    const child: HTMLElement = children[i] as HTMLElement;
+    if (child) {
+      const rect = child.getBoundingClientRect();
+      const width = rect ? rect.width : child.offsetWidth;
+      widths[i] = width;
+    } else {
+      widths[i] = undefined;
+    }
+  }
+  return widths;
+}
 
 export const updateControls = (state: EditorState) => {
   const { tableRef } = getMainPluginState(state);
@@ -35,8 +49,11 @@ export const updateControls = (state: EditorState) => {
   if (!(wrapper && wrapper.parentElement)) {
     return;
   }
-
+  const cols = tr.children;
   const rows = tableRef.querySelectorAll('tr');
+  const columnControls = wrapper.querySelectorAll<HTMLElement>(
+    `.${ClassName.COLUMN_CONTROLS_BUTTON_WRAP}`,
+  );
   const rowControls = wrapper.parentElement.querySelectorAll<HTMLElement>(
     `.${ClassName.ROW_CONTROLS_BUTTON_WRAP}`,
   );
@@ -44,7 +61,16 @@ export const updateControls = (state: EditorState) => {
     ClassName.NUMBERED_COLUMN_BUTTON,
   );
 
+  const colWidths = getWidths(cols);
   const rowHeights = getHeights(rows);
+
+  // update column controls width on resize
+  for (let i = 0, count = columnControls.length; i < count; i++) {
+    const colWidth = colWidths[i];
+    if (colWidth) {
+      columnControls[i].style.width = `${colWidth + 1}px`;
+    }
+  }
 
   // update rows controls height on resize
   for (let i = 0, count = rowControls.length; i < count; i++) {

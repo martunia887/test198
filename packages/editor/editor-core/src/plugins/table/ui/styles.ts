@@ -15,7 +15,7 @@ import {
 } from '@atlaskit/editor-common';
 import { scrollbarStyles } from '../../../ui/styles';
 import { TableCssClassName as ClassName, RESIZE_HANDLE_AREA_DECORATION_GAP } from '../types';
-import { tableBackgroundBorderColor } from '@atlaskit/adf-schema';
+import { tableBackgroundBorderColor, N30 } from '@atlaskit/adf-schema';
 
 const {
   N40A,
@@ -33,7 +33,6 @@ const {
   N90,
   N200,
   N0,
-  R500,
   Y50,
   Y200,
 } = colors;
@@ -59,7 +58,7 @@ export const layoutButtonSize = 32;
 export const tableInsertColumnButtonOffset = 3;
 export const tableScrollbarOffset = 15;
 export const tableMarginFullWidthMode = 2;
-export const lineMarkerOffsetFromColumnControls = 13;
+export const lineMarkerOffsetFromControls = 13;
 export const lineMarkerSize = 4;
 export const columnControlsDecorationHeight = 25;
 export const columnControlsZIndex = akEditorUnitZIndex * 10;
@@ -133,6 +132,18 @@ const HeaderButton = (css?: string) => `
     ${css}
   }
 
+  .${ClassName.COLUMN_CONTROLS_BUTTON}::after {
+    content: ' ';
+    background-color: transparent;
+    position: absolute;
+    width: 100%;
+    left: 0;
+      top: -30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 1;
+  }
+
   .${ClassName.ROW_CONTROLS_BUTTON}::after {
     content: ' ';
     background-color: transparent;
@@ -144,7 +155,7 @@ const HeaderButton = (css?: string) => `
     z-index: 1;
   }
 
-  .active .${ClassName.CONTROLS_BUTTON} {
+  .active.${ClassName.CONTROLS_BUTTON} {
     color: ${N0};
     background-color: ${tableToolbarSelectedColor};
     border-color: ${tableBorderSelectedColor};
@@ -153,16 +164,19 @@ const HeaderButton = (css?: string) => `
 
 
 const HeaderButtonHover = () => `
-  .${ClassName.CONTROLS_BUTTON}:hover {
+  .${ClassName.CONTROLS_BUTTON}:not(.${ClassName.NUMBERED_COLUMN_BUTTON}):hover {
+    cursor: pointer;
+  }
+  .${ClassName.CONTROLS_BUTTON}:not(.${ClassName.NUMBERED_COLUMN_BUTTON}, .${ClassName.SHOW_MERGED_CELLS}):hover {
     color: ${N0};
     background-color: ${tableToolbarSelectedColor};
     border-color: ${tableBorderSelectedColor};
-    cursor: pointer;
   }
 `;
 
 const HeaderButtonDanger = () => `
-  .${ClassName.HOVERED_CELL_IN_DANGER} .${ClassName.CONTROLS_BUTTON} {
+  .${ClassName.HOVERED_CELL_IN_DANGER} .${ClassName.CONTROLS_BUTTON},
+  .${ClassName.HOVERED_CELL_IN_DANGER}.${ClassName.CONTROLS_BUTTON} {
     background-color: ${tableToolbarDeleteColor};
     border-color: ${tableBorderDeleteColor};
     position: relative;
@@ -222,20 +236,6 @@ const insertRowButtonWrapper = `
     left: ${tableInsertColumnButtonSize - 1}px;
   `)}
 `;
-
-const columnControlsLineMarker = `
-  .${ClassName.TABLE_CONTAINER}.${ClassName.WITH_CONTROLS} table tr:first-child td,
-  .${ClassName.TABLE_CONTAINER}.${ClassName.WITH_CONTROLS} table tr:first-child th {
-    position: relative;
-
-    &::before {
-      content: ' ';
-      ${Marker};
-      top: -${tableToolbarSize + lineMarkerOffsetFromColumnControls}px;
-      right: -${lineMarkerSize / 2}px;
-    }
-  }
-`
 
 const DeleteButton = `
   .${ClassName.CONTROLS_DELETE_BUTTON_WRAP},
@@ -298,81 +298,198 @@ const OverflowShadow = `
 }
 `;
 
-const columnHeaderButton = (css?: string) => `
-  background: ${tableToolbarColor};
-  border-top: 1px solid ${tableBorderColor};
-  border-left: 1px solid ${tableBorderColor};
-  display: block;
-  box-sizing: border-box;
-  padding: 0;
-
-  :focus {
-    outline: none;
-  }
-
-  ${css}
-`;
-
-const columnHeaderButtonSelected = `
-  color: ${N0};
-  background-color: ${tableToolbarSelectedColor};
-  border-color: ${tableBorderSelectedColor};
-  z-index: ${columnControlsSelectedZIndex};
-`;
-
-const columnControlsDecoration = `
-  .${ClassName.COLUMN_CONTROLS_DECORATIONS} {
+const columnControls = `
+  .${ClassName.COLUMN_CONTROLS} {
+    height: ${tableToolbarSize}px;
+    box-sizing: border-box;
     display: none;
-    cursor: pointer;
     position: absolute;
-    width: calc(100% + ${tableCellBorderWidth * 2}px);
-    left: -1px;
-    top: -${columnControlsDecorationHeight + tableCellBorderWidth}px;
-    height: ${columnControlsDecorationHeight}px;
+    top: ${tableMarginTop - 1}px;
+  }
+  :not(.${ClassName.IS_RESIZING}) .${ClassName.COLUMN_CONTROLS} {
+    ${HeaderButtonHover()}
+    ${HeaderButtonDanger()}
+  }
+  .${ClassName.COLUMN_CONTROLS_INNER} {
+    display: flex;
+  }
+  .${ClassName.COLUMN_CONTROLS_BUTTON_WRAP} {
+    position: relative;
+    margin-right: -1px;
+  }
+  .${ClassName.COLUMN_CONTROLS_BUTTON_WRAP}::before {
+    content: ' ';
+    ${Marker};
+    top: -${lineMarkerOffsetFromControls}px;
+    right: -${lineMarkerSize / 2}px;
+  }
+  .${ClassName.COLUMN_CONTROLS_BUTTON_WRAP}:last-child {
+    border-top-right-radius: ${tableBorderRadiusSize}px;
+  }
+  .${ClassName.COLUMN_CONTROLS_BUTTON_WRAP}.active,
+  .${ClassName.CONTROLS_BUTTON}:hover {
+    z-index: ${akEditorUnitZIndex};
+    position: relative;
+  }
+  ${HeaderButton(`
+    border-right: 1px solid ${tableBorderColor};
+    height: ${tableToolbarSize}px;
+    width: 100%;
 
-    &::after {
-      content: ' ';
+    .${ClassName.CONTROLS_BUTTON_OVERLAY} {
+      position: absolute;
+      width: 50%;
+      height: 30px;
+      bottom: 0;
+      right: 0;
+    }
+    .${ClassName.CONTROLS_BUTTON_OVERLAY}:first-child {
+      left: 0;
+    }
+  `)}
+`;
 
-      ${columnHeaderButton(`
-        border-right: ${tableCellBorderWidth}px solid ${tableBorderColor};
-        border-bottom: none;
-        height: ${tableToolbarSize}px;
-        width: 100%;
-        position: absolute;
-        top: ${columnControlsDecorationHeight - tableToolbarSize}px;
-        left: 0px;
-        z-index: ${columnControlsZIndex};
-      `)}
+const reordering = `
+  .${ClassName.RBD_PORTAL} {
+    line-height: 24px;
+
+    td, th {
+      opacity: 0.75;
+      position: relative;
+    }
+
+    .${ClassName.TABLE_CONTAINER} {
+      margin: 0;
+    }
+
+    .${ClassName.TABLE_NODE_WRAPPER} {
+      padding-right: 0;
+      padding-left: 0;
+      padding-bottom: 0;
+      padding-top: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      width: 100%;
+
+      .${ClassName.TABLE_PORTAL} {
+        margin: 0;
+      }
+    }
+
+    .${ClassName.CONTROLS_INSERT_MARKER},
+    .${ClassName.COLUMN_CONTROLS_BUTTON}:before {
+      display: none;
     }
   }
-
-  .${ClassName.WITH_CONTROLS} .${ClassName.COLUMN_CONTROLS_DECORATIONS} {
+  .${ClassName.ROW_CONTROLS_PORTAL} {
     display: block;
-  }
+    margin-top: -1px;
 
-  table tr:first-child td.${ClassName.TABLE_CELL},
-  table tr:first-child th.${ClassName.TABLE_HEADER_CELL} {
-    &.${ClassName.COLUMN_SELECTED},
-    &.${ClassName.HOVERED_COLUMN},
-    &.${ClassName.HOVERED_TABLE} {
-      .${ClassName.COLUMN_CONTROLS_DECORATIONS}::after {
-        ${columnHeaderButtonSelected};
-      }
+    .${ClassName.ROW_CONTROLS_PORTAL_CONTENT_WRAP} {
+      overflow: hidden;
+      height: 100%;
+      position: relative;
+    }
 
-      &.${ClassName.HOVERED_CELL_IN_DANGER} .${ClassName.COLUMN_CONTROLS_DECORATIONS}::after {
-        background-color: ${tableToolbarDeleteColor};
-        border: 1px solid ${tableBorderDeleteColor};
-        border-bottom: none;
-        z-index: ${akEditorUnitZIndex * 100};
+    .${ClassName.TABLE_CONTAINER} {
+      position: absolute;
+      top: 0;
+      left: ${tableToolbarSize}px;
+    }
+    .${ClassName.ROW_CONTROLS} {
+      width: ${tableToolbarSize + 1}px;
+      height: 100%;
+
+      div.${ClassName.ROW_CONTROLS_BUTTON}:last-child {
+        margin: 0;
+        border-bottom-left-radius: 0;
       }
     }
   }
+  .${ClassName.WITH_NUMBERED_COLUMN} {
+    text-align: center;
+    font-size: ${fontSize()}px;
+    color: ${N200};
 
-  .${ClassName.TABLE_SELECTED} table tr:first-child td.${ClassName.TABLE_CELL},
-  .${ClassName.TABLE_SELECTED} table tr:first-child th.${ClassName.TABLE_HEADER_CELL} {
-    .${ClassName.COLUMN_CONTROLS_DECORATIONS}::after {
-      ${columnHeaderButtonSelected};
+    .${ClassName.ROW_CONTROLS} {
+      width: ${akEditorTableToolbarSize + akEditorTableNumberColumnWidth}px;
     }
+    .${ClassName.TABLE_CONTAINER} {
+      left: ${akEditorTableToolbarSize + akEditorTableNumberColumnWidth - 1}px;
+    }
+  }
+
+  .${ClassName.REORDERING}-rows {
+    .${ClassName.COLUMN_CONTROLS} .${ClassName.CONTROLS_BUTTON} {
+      border-bottom: 1px solid ${tableBorderColor};
+      height: ${tableToolbarSize + 1}px;
+    }
+    table tbody {
+      border-right: none;
+    }
+    tr {
+      border-right: 1px solid ${tableBorderColor};
+    }
+  }
+  .${ClassName.REORDERING}-columns  {
+    td:before,
+    th:before {
+      content: ' ';
+      width: 1px;
+      height: calc(100% + 2px);
+      border-right: ${tableCellBorderWidth}px solid ${akEditorTableBorder};
+      position: absolute;
+      right: -1px;
+      top: -1px;
+    }
+  }
+  .${ClassName.REORDERING}-rows,
+  .${ClassName.REORDERING}-columns {
+    user-select: none;
+
+    table tbody {
+      border-top: none;
+      border-bottom: none;
+    }
+    td:after,
+    th:after {
+      content: ' ';
+      width: calc(100% + 2px);
+      height: 1px;
+      border-bottom: ${tableCellBorderWidth}px solid ${akEditorTableBorder};
+      position: absolute;
+      bottom: -1px;
+      left: -1px;
+    }
+  }
+  .${ClassName.REORDERING_INDICATOR} {
+    background: ${colors.B300};
+    border-radius: 50%;
+    position: absolute;
+    color: white;
+    z-index: 2;
+    font-size: 75%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px -2px ${N60A}, 0 0 1px ${N60A};
+    top: -9px;
+  }
+  .${ClassName.COLUMN_CONTROLS_PORTAL} .${ClassName.REORDERING_INDICATOR} {
+    right: -9px;
+  }
+  .${ClassName.ROW_CONTROLS_PORTAL} .${ClassName.REORDERING_INDICATOR} {
+    left: -9px;
+  }
+  td.${ClassName.MULTI_REORDERING},
+  th.${ClassName.MULTI_REORDERING},
+  tr.${ClassName.MULTI_REORDERING} th,
+  tr.${ClassName.MULTI_REORDERING} td,
+  .${ClassName.CONTROLS_BUTTON}.${ClassName.MULTI_REORDERING} {
+    opacity: 0.5;
+    border-color: ${colors.N50};
   }
 `;
 
@@ -455,14 +572,14 @@ export const tableStyles = css`
     cursor: pointer;
   }
 
-
   .ProseMirror {
     ${tableSharedStyle};
-    ${columnControlsLineMarker};
+    ${columnControls};
     ${hoveredDeleteButton};
     ${hoveredCell};
     ${hoveredWarningCell};
     ${resizeHandle};
+    ${reordering}
 
     .${ClassName.LAST_ITEM_IN_CELL} {
       margin-bottom: 0;
@@ -515,8 +632,6 @@ export const tableStyles = css`
       width: 100% !important;
     }
 
-    ${columnControlsDecoration};
-
     /* Corner controls */
     .${ClassName.CORNER_CONTROLS} {
       width: ${tableToolbarSize + 1}px;
@@ -560,15 +675,6 @@ export const tableStyles = css`
       border-color: ${tableBorderSelectedColor};
       background: ${tableToolbarSelectedColor};
     }
-    .${ClassName.TABLE_CONTAINER}[data-number-column='true'] {
-      .${ClassName.CORNER_CONTROLS},
-      .${ClassName.CONTROLS_CORNER_BUTTON} {
-        width: ${akEditorTableToolbarSize + akEditorTableNumberColumnWidth}px;
-      }
-      .${ClassName.ROW_CONTROLS} .${ClassName.CONTROLS_BUTTON} {
-        border-right-width: 0;
-      }
-    }
     :not(.${ClassName.IS_RESIZING}) .${ClassName.CONTROLS_CORNER_BUTTON}:hover {
       border-color: ${tableBorderSelectedColor};
       background: ${tableToolbarSelectedColor};
@@ -581,39 +687,42 @@ export const tableStyles = css`
 
     /* Row controls */
     .${ClassName.ROW_CONTROLS} {
-      width: ${tableToolbarSize}px;
+      width: ${tableToolbarSize + 1}px;
       box-sizing: border-box;
-      display: none;
       position: relative;
-
-      ${InsertMarker(`
-        bottom: -1px;
-        left: -11px;
-      `)};
 
       .${ClassName.ROW_CONTROLS_INNER} {
         display: flex;
         flex-direction: column;
       }
-      .${ClassName.ROW_CONTROLS_BUTTON_WRAP}:last-child > button {
+      .${ClassName.ROW_CONTROLS_BUTTON}:last-child {
         border-bottom-left-radius: ${tableBorderRadiusSize}px;
       }
-      .${ClassName.ROW_CONTROLS_BUTTON_WRAP} {
+      .${ClassName.ROW_CONTROLS_BUTTON} {
         position: relative;
         margin-top: -1px;
       }
-      .${ClassName.ROW_CONTROLS_BUTTON_WRAP}:hover,
-      .${ClassName.ROW_CONTROLS_BUTTON_WRAP}.active,
+      .${ClassName.ROW_CONTROLS_BUTTON}:hover,
+      .${ClassName.ROW_CONTROLS_BUTTON}.active,
       .${ClassName.CONTROLS_BUTTON}:hover {
         z-index: ${akEditorUnitZIndex};
+      }
+      .${ClassName.ROW_CONTROLS_BUTTON}::before {
+        content: ' ';
+        ${Marker};
+        bottom: -${lineMarkerSize / 2}px;
+        left: -${lineMarkerOffsetFromControls}px;
       }
 
       ${HeaderButton(`
         border-bottom: 1px solid ${tableBorderColor};
-        border-right: 0px;
+        border-right: 1px solid ${tableBorderColor};
         border-radius: 0;
         height: 100%;
-        width: ${tableToolbarSize}px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         .${ClassName.CONTROLS_BUTTON_OVERLAY} {
           position: absolute;
@@ -632,27 +741,29 @@ export const tableStyles = css`
       ${HeaderButtonDanger()}
     }
 
-    /* Numbered column */
-    .${ClassName.NUMBERED_COLUMN} {
-      position: relative;
-      float: right;
-      margin-left: ${akEditorTableToolbarSize - 1}px;
-      top: ${akEditorTableToolbarSize}px;
-      width: ${akEditorTableNumberColumnWidth + 1}px;
-      box-sizing: border-box;
-      border-left: 1px solid ${akEditorTableBorder};
-    }
-    .${ClassName.NUMBERED_COLUMN_BUTTON} {
-      border-top: 1px solid ${akEditorTableBorder};
-      border-right: 1px solid ${akEditorTableBorder};
-      box-sizing: border-box;
-      margin-top: -1px;
-      padding: 10px 2px;
+    .${ClassName.NUMBERED_COLUMN} .${ClassName.ROW_CONTROLS_BUTTON}{
       text-align: center;
       font-size: ${fontSize()}px;
-      background-color: ${tableToolbarColor};
       color: ${N200};
-      border-color: ${akEditorTableBorder};
+    }
+    .${ClassName.TABLE_CONTAINER}[data-number-column='true'] {
+      .${ClassName.CORNER_CONTROLS},
+      .${ClassName.CONTROLS_CORNER_BUTTON},
+      .${ClassName.NUMBERED_COLUMN} {
+        width: ${akEditorTableToolbarSize + akEditorTableNumberColumnWidth}px;
+      }
+      .${ClassName.TABLE_LEFT_SHADOW} {
+        left: ${akEditorTableNumberColumnWidth}px;
+      }
+    }
+
+    .${ClassName.NUMBERED_COLUMN} {
+      margin-top: ${akEditorTableToolbarSize}px;
+    }
+    .${ClassName.NUMBERED_COLUMN_BUTTON} {
+      margin-top: -1px;
+      font-size: ${fontSize()}px;
+      color: ${N200};
 
       :first-child {
         margin-top: 0;
@@ -661,45 +772,15 @@ export const tableStyles = css`
         border-bottom: 1px solid ${akEditorTableBorder};
       }
     }
+
     .${ClassName.WITH_CONTROLS} {
+      .${ClassName.COLUMN_CONTROLS},
       .${ClassName.CORNER_CONTROLS},
       .${ClassName.ROW_CONTROLS} {
         display: block;
       }
       .${ClassName.NUMBERED_COLUMN} {
-        border-left: 0 none;
-        padding-left: 1px;
-        margin-left: 0;
-
-        .${ClassName.NUMBERED_COLUMN_BUTTON}.active {
-          border-bottom: 1px solid ${tableBorderSelectedColor};
-          border-color: ${tableBorderSelectedColor};
-          background-color: ${tableToolbarSelectedColor};
-          position: relative;
-          z-index: ${akEditorUnitZIndex};
-          color: ${N0};
-        }
-      }
-    }
-    :not(.${ClassName.IS_RESIZING}) .${ClassName.WITH_CONTROLS} {
-      .${ClassName.NUMBERED_COLUMN_BUTTON} {
-        cursor: pointer;
-      }
-      .${ClassName.NUMBERED_COLUMN_BUTTON}:hover {
-        border-bottom: 1px solid ${tableBorderSelectedColor};
-        border-color: ${tableBorderSelectedColor};
-        background-color: ${tableToolbarSelectedColor};
-        position: relative;
-        z-index: ${akEditorUnitZIndex};
-        color: ${N0};
-      }
-      .${ClassName.NUMBERED_COLUMN_BUTTON}.${ClassName.HOVERED_CELL_IN_DANGER} {
-        background-color: ${tableToolbarDeleteColor};
-        border: 1px solid ${tableBorderDeleteColor};
-        border-left: 0;
-        color: ${R500};
-        position: relative;
-        z-index: ${akEditorUnitZIndex};
+        margin-top: 0;
       }
     }
 
@@ -707,10 +788,6 @@ export const tableStyles = css`
     .${ClassName.TABLE_NODE_WRAPPER} > table {
       overflow: hidden visible;
       table-layout: fixed;
-
-      .${ClassName.COLUMN_CONTROLS_DECORATIONS} + * {
-        margin-top: 0;
-      }
 
       .${ClassName.SELECTED_CELL},
       .${ClassName.HOVERED_CELL_IN_DANGER} {
@@ -760,13 +837,6 @@ export const tableStyles = css`
       /* fixes gap cursor height */
       overflow: ${isIE11 ? 'none' : 'auto'};
       position: relative;
-    }
-  }
-
-  .ProseMirror.${ClassName.IS_RESIZING} {
-    .${ClassName.TABLE_NODE_WRAPPER} {
-      overflow-x: ${isIE11 ? 'none' : 'auto'};
-      ${!isIE11 ? scrollbarStyles : ''};
     }
   }
 

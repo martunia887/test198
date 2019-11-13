@@ -2,16 +2,14 @@ import * as React from 'react';
 import { Component } from 'react';
 import { EditorView } from 'prosemirror-view';
 import { Selection } from 'prosemirror-state';
-import { browser } from '@atlaskit/editor-common';
-import CornerControls from './CornerControls';
+import { CornerControls } from './CornerControls';
 import RowControls from './RowControls';
-import NumberColumn from './NumberColumn';
 import { isSelectionUpdated } from '../../utils';
-import { hoverRows, selectRow } from '../../commands';
 import { TableColumnOrdering } from '../../types';
 
 export interface Props {
   editorView: EditorView;
+  editorParent: HTMLElement;
   selection?: Selection;
   tableRef?: HTMLTableElement;
   tableActive?: boolean;
@@ -20,10 +18,12 @@ export interface Props {
   isHeaderRowEnabled?: boolean;
   isHeaderColumnEnabled?: boolean;
   isNumberColumnEnabled?: boolean;
+  hasMergedCells?: boolean;
   hasHeaderRow?: boolean;
   tableHeight?: number;
   hoveredRows?: number[];
   ordering?: TableColumnOrdering;
+  multiReorderIndexes?: number[];
 }
 
 export default class TableFloatingControls extends Component<Props> {
@@ -69,6 +69,9 @@ export default class TableFloatingControls extends Component<Props> {
       tableActive,
       hasHeaderRow,
       hoveredRows,
+      hasMergedCells,
+      multiReorderIndexes,
+      editorParent,
     } = this.props;
 
     if (!tableRef) {
@@ -77,19 +80,6 @@ export default class TableFloatingControls extends Component<Props> {
 
     return (
       <div onMouseDown={e => e.preventDefault()}>
-        {isNumberColumnEnabled ? (
-          <NumberColumn
-            editorView={editorView}
-            hoverRows={this.hoverRows}
-            tableRef={tableRef}
-            tableActive={tableActive}
-            hoveredRows={hoveredRows}
-            hasHeaderRow={hasHeaderRow}
-            isInDanger={isInDanger}
-            isResizing={isResizing}
-            selectRow={this.selectRow}
-          />
-        ) : null}
         <CornerControls
           editorView={editorView}
           tableRef={tableRef}
@@ -102,28 +92,18 @@ export default class TableFloatingControls extends Component<Props> {
         <RowControls
           editorView={editorView}
           tableRef={tableRef}
-          hoverRows={this.hoverRows}
           hoveredRows={hoveredRows}
           isInDanger={isInDanger}
           isResizing={isResizing}
-          selectRow={this.selectRow}
+          isNumberColumnEnabled={isNumberColumnEnabled}
+          hasHeaderRow={hasHeaderRow}
+          tableActive={tableActive}
+          isHeaderRowEnabled={isHeaderRowEnabled}
+          hasMergedCells={hasMergedCells}
+          editorParent={editorParent}
+          multiReorderIndexes={multiReorderIndexes}
         />
       </div>
     );
   }
-
-  private selectRow = (row: number, expand: boolean) => {
-    const { editorView } = this.props;
-    const { state, dispatch } = editorView;
-    // fix for issue ED-4665
-    if (browser.ie_version === 11) {
-      (editorView.dom as HTMLElement).blur();
-    }
-    selectRow(row, expand)(state, dispatch);
-  };
-
-  private hoverRows = (rows: Array<number>, danger?: boolean) => {
-    const { state, dispatch } = this.props.editorView;
-    hoverRows(rows, danger)(state, dispatch);
-  };
 }
