@@ -4,6 +4,11 @@ const manifest: ExtensionManifest = {
   title: 'Lorem ipsum',
   key: 'fake.lorem.ipsum',
   description: 'Inline extension demo',
+  authros: [
+    {
+      name: 'Leandro Lemos',
+    },
+  ],
   icons: {
     '16': () => import('@atlaskit/icon/glyph/editor/code'),
   },
@@ -29,32 +34,6 @@ const manifest: ExtensionManifest = {
       },
       {
         key: 'qi-lorem-ipsum-4',
-        title: 'Lorem Ipsum 4 inline',
-        icon: () => import('@atlaskit/icon/glyph/bitbucket/pipelines'),
-        target: 'lorem-ipsum-4-inline',
-      },
-    ],
-    insertMenu: [
-      {
-        key: 'im-lorem-ipsum-1',
-        title: 'Lorem Ipsum 1',
-        icon: () => import('@atlaskit/icon/glyph/tray'),
-        target: 'lorem-ipsum-1',
-      },
-      {
-        key: 'im-lorem-ipsum-2',
-        title: 'Lorem Ipsum 2',
-        icon: () => import('@atlaskit/icon/glyph/book'),
-        target: 'lorem-ipsum-2',
-      },
-      {
-        key: 'im-lorem-ipsum-3',
-        title: 'Lorem Ipsum 3 with body',
-        icon: () => import('@atlaskit/icon/glyph/tray'),
-        target: 'lorem-ipsum-3-with-body',
-      },
-      {
-        key: 'im-lorem-ipsum-4',
         title: 'Lorem Ipsum 4 inline',
         icon: () => import('@atlaskit/icon/glyph/bitbucket/pipelines'),
         target: 'lorem-ipsum-4-inline',

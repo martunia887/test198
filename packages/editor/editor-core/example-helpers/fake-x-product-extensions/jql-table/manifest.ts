@@ -4,6 +4,12 @@ const manifest: ExtensionManifest = {
   title: 'JQL table',
   key: 'jql-table-extension',
   description: 'Jira results in a table',
+  authros: [
+    {
+      name: 'Leandro Lemos',
+      email: 'llemos@atlassian.com',
+    },
+  ],
   icons: {
     '16': () => import('@atlaskit/icon/glyph/editor/code'),
   },
@@ -12,14 +18,6 @@ const manifest: ExtensionManifest = {
       {
         key: 'jql-table',
         icon: () => import('@atlaskit/icon/glyph/table'),
-        target: 'jql-table',
-      },
-    ],
-    insertMenu: [
-      {
-        key: 'jql-table',
-        icon: () => import('@atlaskit/icon/glyph/table'),
-        description: 'Insert a table with results from a JQL query',
         target: 'jql-table',
       },
     ],

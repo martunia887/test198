@@ -17,12 +17,8 @@ const makeDummyQuickInsertItem = (id: number): ExtensionModule => ({
   target: `node-${id}`,
 });
 
-const makeDummyNode = (
-  id: number,
-  type: string = 'block',
-): ExtensionModuleNode => ({
+const makeDummyNode = (id: number): ExtensionModuleNode => ({
   key: `node-${id}`,
-  type,
   insert: createFakeModule(''),
   render: createFakeModule(''),
 });
@@ -34,6 +30,7 @@ const makeDummyExtensionManifest = (
   key: `dummy-extension-${id}`,
   title: `Extension ${id}`,
   description: `Extension ${id} Description`,
+  authros: [{ name: 'John Doe' }],
   icons: {
     '16': createFakeModule(''),
     '48': createFakeModule(''),

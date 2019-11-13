@@ -286,6 +286,6 @@ export interface EditorProps {
   inputSamplingLimit?: number;
 
   // New extension API
-  // This is going to repalce `quickInsert.provider`, `extensionHandlers`, and `insertMenuItems`.
+  // This is going to repalce `quickInsert.provider` and `extensionHandlers`.
   extensionProviders?: Array<ExtensionProvider>;
 }
