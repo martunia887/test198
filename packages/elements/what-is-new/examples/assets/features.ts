@@ -54,11 +54,12 @@ const lorem = [
   'Is bello mundi z?',
 ];
 
-export const getFeatures = (count: number): Feature[] =>
+export const getFeatures = (count: number, startIdx: number = 0): Feature[] =>
   Array.from({ length: count }, (_, idx) => {
+    const i = idx + startIdx;
     return {
-      id: `feature_id_${idx}`,
-      date: 1573700033538 + idx * 200,
+      id: `feature_id_${i}`,
+      date: Date.now(),
       title: titles[Math.floor(Math.random() * titles.length)],
       description: lorem[Math.floor(Math.random() * lorem.length)],
       link: 'https://google.com/',

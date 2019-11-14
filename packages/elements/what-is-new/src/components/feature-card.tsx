@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import React, { FunctionComponent, useState } from 'react';
 import { N900, N20, N40 } from '@atlaskit/theme/colors';
 import StarFilledIcon from '@atlaskit/icon/glyph/star-filled';
-import Button from '@atlaskit/Button';
 import { Feature } from '../types';
 
 export type FeatureCardProps = {
@@ -67,6 +66,7 @@ export const FeatureCard: FunctionComponent<FeatureCardProps> = (
 
       {isOpen && (
         <>
+          {/* <p>{new D2ate(props.feature.date).toLocaleDateString('en-US')}</p> */}
           <p>{props.feature.description}</p>
           <a href={props.feature.link}>Learn more...</a>
         </>

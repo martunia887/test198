@@ -58,11 +58,11 @@ const NotificationsContent: FunctionComponent<Pick<
 };
 
 export const WhatIsNewButton = forwardRef(
-  (props: ButtonProps, ref: Ref<any>) => {
+  (props: ButtonProps & { newItems?: boolean }, ref: Ref<any>) => {
     return (
       <Tooltip content="What is new?" hideTooltipOnClick position="top">
         <Button
-          appearance="primary"
+          appearance={props.newItems ? 'primary' : 'default'}
           iconBefore={<PremiumIcon label="What is new?" />}
           ref={ref}
           {...props}
