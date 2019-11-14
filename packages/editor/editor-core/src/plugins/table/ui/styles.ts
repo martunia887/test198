@@ -172,6 +172,9 @@ const HeaderButtonHover = () => `
     background-color: ${tableToolbarSelectedColor};
     border-color: ${tableBorderSelectedColor};
   }
+  .${ClassName.CONTROLS_BUTTON}.${ClassName.SHOW_MERGED_CELLS}:hover {
+    cursor: no-drop;
+  }
 `;
 
 const HeaderButtonDanger = () => `

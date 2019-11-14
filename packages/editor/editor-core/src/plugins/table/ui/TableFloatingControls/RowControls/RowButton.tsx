@@ -100,6 +100,9 @@ const RowControlButton = ({
 
   const onMouseOut = () => {
     clearHoverSelection()(editorView.state, dispatch);
+  };
+
+  const onMouseUp = () => {
     if (showMergedCells) {
       setShowMergedCells(false);
     }
@@ -197,6 +200,7 @@ const RowControlButton = ({
       onMouseDown={onMouseDown}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
+      onMouseUp={onMouseUp}
       data-start-index={startIndex}
       data-end-index={endIndex}
       key={startIndex}
@@ -238,6 +242,7 @@ const RowControlButton = ({
       <Tooltip
         content={formatMessage(messages.canNotReorderRows)}
         position="top"
+        delay={0}
       >
         {control}
       </Tooltip>

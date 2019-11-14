@@ -102,6 +102,9 @@ const ColumnControlButton = ({
 
   const onMouseOut = () => {
     clearHoverSelection()(editorView.state, dispatch);
+  };
+
+  const onMouseUp = () => {
     if (showMergedCells) {
       setShowMergedCells(false);
     }
@@ -182,6 +185,7 @@ const ColumnControlButton = ({
       onMouseDown={onMouseDown}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
+      onMouseUp={onMouseUp}
       data-start-index={startIndex}
       data-end-index={endIndex}
       key={startIndex}
@@ -216,6 +220,7 @@ const ColumnControlButton = ({
       <Tooltip
         content={formatMessage(messages.canNotReorderColumns)}
         position="top"
+        delay={0}
       >
         {control}
       </Tooltip>
