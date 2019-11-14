@@ -787,7 +787,7 @@ export const tableStyles = css`
 
     /* Table */
     .${ClassName.TABLE_NODE_WRAPPER} > table {
-      overflow: hidden visible;
+      /* overflow: hidden visible; */
       table-layout: fixed;
 
       .${ClassName.SELECTED_CELL},

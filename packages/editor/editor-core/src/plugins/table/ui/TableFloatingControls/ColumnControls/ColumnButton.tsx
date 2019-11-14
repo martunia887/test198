@@ -208,9 +208,11 @@ const ColumnControlButton = ({
               cl.HOVERED_CELL_ACTIVE,
             )}
           />
-          <div className={cl.REORDERING_INDICATOR}>
-            {multiReorderIndexes.length || 1}
-          </div>
+          {multiReorderIndexes.length > 1 && (
+            <div className={cl.REORDERING_INDICATOR}>
+              {multiReorderIndexes.length}
+            </div>
+          )}
           {portalContent}
         </>
       )}
