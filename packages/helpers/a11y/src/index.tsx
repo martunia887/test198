@@ -1,1 +1,1 @@
-export { default as A11yOverlay } from './overlay';
+export { default as createA11yOverlay } from './overlay';

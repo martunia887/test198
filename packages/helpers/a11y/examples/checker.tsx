@@ -1,17 +1,34 @@
 import React from 'react';
-import { A11yOverlay } from '../src';
+import { createA11yOverlay } from '../src';
 
-export default () => {
+const A11yOverlay = createA11yOverlay(React);
+
+const App = () => {
+  const [isValid, setValidity] = React.useState(true);
+  const props = isValid ? { alt: '' } : {};
+
   return (
-    <A11yOverlay>
-      <img width="100px" height="100px" />
-      <img width="100px" height="100px" />
-      <img width="100px" height="100px" />
-      <img width="100px" height="100px" />
+    <div>
+      <img width="100px" height="100px" {...props} />
+      <img width="100px" height="100px" {...props} />
+      <img width="100px" height="100px" {...props} />
+      <img width="100px" height="100px" alt="" />
 
       <div>
         <img width="100px" height="100px" />
       </div>
+
+      <button onClick={() => setValidity(valid => !valid)}>
+        {isValid ? 'break' : 'fix'}
+      </button>
+    </div>
+  );
+};
+
+export default () => {
+  return (
+    <A11yOverlay>
+      <App />
     </A11yOverlay>
   );
 };
