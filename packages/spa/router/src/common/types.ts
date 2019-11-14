@@ -223,9 +223,9 @@ export type HistoryListen = (
 
 export type HistoryActions = {
   push: (path: Href | LocationShape) => void;
-  replace(path: Href | LocationShape): void;
-  goBack(): void;
-  goForward(): void;
+  replace: (path: Href | LocationShape) => void;
+  goBack: () => void;
+  goForward: () => void;
   registerBlock: (blocker: HistoryBlocker) => () => void;
   listen: HistoryListen;
 };

@@ -12,7 +12,6 @@ import { RouterProps } from './types';
 export class Router extends Component<RouterProps> {
   static defaultProps = {
     isStatic: false,
-    routes: [],
     history: DEFAULT_HISTORY,
     transitionBlocker: async () => true,
   };
