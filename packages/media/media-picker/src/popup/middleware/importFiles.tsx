@@ -352,6 +352,7 @@ export const importFilesFromLocalUpload = async (
     touchFileDescriptor,
   } = selectedUploadFile;
 
+  store.dispatch(setEventProxy(id, uploadId));
   await touchSelectedFile(touchFileDescriptor, store);
 
   localUpload.events.forEach(originalEvent => {
@@ -369,8 +370,6 @@ export const importFilesFromLocalUpload = async (
       store.dispatch(sendUploadEvent({ event, uploadId }));
     }
   });
-
-  store.dispatch(setEventProxy(id, uploadId));
 };
 
 export const importFilesFromRecentFiles = async (
@@ -384,6 +383,7 @@ export const importFilesFromRecentFiles = async (
     collection: RECENTS_COLLECTION,
   };
 
+  // we want to dispatch preview to provide card size to editor before we wait for http calls
   store.dispatch(getPreview(fileId, file, RECENTS_COLLECTION));
   await touchSelectedFile(touchFileDescriptor, store);
   store.dispatch(finalizeUpload(file, fileId, source, fileId));
@@ -401,8 +401,6 @@ export const importFilesFromRemoteService = async (
     file,
   } = selectedUploadFile;
   const { fileId } = touchFileDescriptor;
-
-  await touchSelectedFile(touchFileDescriptor, store);
 
   const uploadActivity = new RemoteUploadActivity(fileId, (event, payload) => {
     if (event === 'NotifyMetadata') {
@@ -452,4 +450,8 @@ export const importFilesFromRemoteService = async (
       jobId: fileId,
     },
   });
+
+  // that still may cause async issues if file is fetched before this has happened
+  // but the chances of that are extremely slim as cloud fetching is a very lengthy procedure
+  await touchSelectedFile(touchFileDescriptor, store);
 };
