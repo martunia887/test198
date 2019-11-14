@@ -15,12 +15,11 @@ const CardWrapper = styled.div`
   font-weight: 400;
   min-height: 40px;
   padding: 12px 8px;
-  margin-top: 8px;
+  margin-bottom: 8px;
   border-radius: 4px;
 
   :hover {
     background-color: ${colors.N40};
-    transition: background-color 0.1s;
   }
 `;
 

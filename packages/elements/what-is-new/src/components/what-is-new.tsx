@@ -3,15 +3,15 @@ import Popup from '@atlaskit/popup';
 
 import PremiumIcon from '@atlaskit/icon/glyph/premium';
 import Button, { ButtonProps } from '@atlaskit/button';
+import Tooltip from '@atlaskit/tooltip';
 import { Feature } from '../types';
 import { FeatureCard } from './feature-card';
 
 const wrapperCSS = {
-  width: 540,
-  height: 'calc(100vh - 200px)',
-  paddingTop: 18,
-  paddingLeft: 18,
-  display: 'flex',
+  width: 380,
+  'max-height': 'calc(100vh - 200px)',
+  overflow: 'scroll',
+  padding: '18px',
 };
 
 const NotificationsContent: FunctionComponent<Pick<
@@ -28,12 +28,14 @@ const NotificationsContent: FunctionComponent<Pick<
 export const WhatIsNewButton = forwardRef(
   (props: ButtonProps, ref: Ref<any>) => {
     return (
-      <Button
-        appearance="primary"
-        iconBefore={<PremiumIcon label="What is new?" />}
-        ref={ref}
-        {...props}
-      />
+      <Tooltip content="What is new?" hideTooltipOnClick position="top">
+        <Button
+          appearance="primary"
+          iconBefore={<PremiumIcon label="What is new?" />}
+          ref={ref}
+          {...props}
+        />
+      </Tooltip>
     );
   },
 );

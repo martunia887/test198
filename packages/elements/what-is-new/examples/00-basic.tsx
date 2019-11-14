@@ -1,6 +1,5 @@
 import React from 'react';
 import { WhatIsNew } from '../src';
-import { FeatureCard } from '../src/components/feature-card';
 import { Feature } from '../src/types';
 
 const feature: Feature = {
@@ -20,7 +19,7 @@ export default function Example() {
         paddingTop: '40px',
       }}
     >
-      <WhatIsNew features={[feature]} />
+      <WhatIsNew features={new Array(10).fill(feature)} />
     </div>
   );
 }
