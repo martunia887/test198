@@ -3,12 +3,44 @@ import { EditorState, NodeSelection } from 'prosemirror-state';
 import { removeSelectedNode } from 'prosemirror-utils';
 
 import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
-import OpenIcon from '@atlaskit/icon/glyph/open';
+import UnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
+import OpenIcon from '@atlaskit/icon/glyph/shortcut';
 
 import { analyticsService } from '../../analytics';
+import { Command } from '../../types';
+import {
+  FloatingToolbarConfig,
+  FloatingToolbarItem,
+} from '../floating-toolbar/types';
+import {
+  ACTION,
+  ACTION_SUBJECT,
+  INPUT_METHOD,
+  EVENT_TYPE,
+  addAnalytics,
+  AnalyticsEventPayload,
+  ACTION_SUBJECT_ID,
+} from '../analytics';
+import { linkToolbarMessages } from '../../messages';
 import commonMessages from '../../messages';
-import { Command } from '../../../src/types';
-import { FloatingToolbarConfig } from '../../../src/plugins/floating-toolbar/types';
+
+import { Node } from 'prosemirror-model';
+import { hoverDecoration } from '../base/pm-plugins/decoration';
+import { changeSelectedCardToText } from './pm-plugins/doc';
+import { CardPluginState } from './types';
+import { pluginKey } from './pm-plugins/main';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import {
+  buildEditLinkToolbar,
+  editLink,
+  editLinkToolbarConfig,
+} from './ui/EditLinkToolbar';
+import {
+  displayInfoForCard,
+  findCardInfo,
+  titleUrlPairFromNode,
+} from './utils';
+import { isSafeUrl } from '@atlaskit/adf-schema';
 
 export const messages = defineMessages({
   block: {
@@ -29,123 +61,157 @@ export const messages = defineMessages({
   },
 });
 
-const remove: Command = (state, dispatch) => {
+export const removeCard: Command = (state, dispatch) => {
+  if (!(state.selection instanceof NodeSelection)) {
+    return false;
+  }
+
+  const type = state.selection.node.type.name;
+  const payload: AnalyticsEventPayload = {
+    action: ACTION.DELETED,
+    actionSubject: ACTION_SUBJECT.SMART_LINK,
+    actionSubjectId: type as
+      | ACTION_SUBJECT_ID.CARD_INLINE
+      | ACTION_SUBJECT_ID.CARD_BLOCK,
+    attributes: {
+      inputMethod: INPUT_METHOD.TOOLBAR,
+      displayMode: type as
+        | ACTION_SUBJECT_ID.CARD_INLINE
+        | ACTION_SUBJECT_ID.CARD_BLOCK,
+    },
+    eventType: EVENT_TYPE.TRACK,
+  };
   if (dispatch) {
-    dispatch(removeSelectedNode(state.tr));
+    dispatch(addAnalytics(state, removeSelectedNode(state.tr), payload));
   }
   analyticsService.trackEvent('atlassian.editor.format.card.delete.button');
   return true;
 };
 
-const visit: Command = state => {
-  if (state.selection instanceof NodeSelection) {
-    const { attrs } = state.selection.node;
-    const data = attrs.data || {};
-    const url = attrs.url || data.url;
-
-    // We are in edit mode here, open the smart card URL in a new window.
-    window.open(url);
-    analyticsService.trackEvent('atlassian.editor.format.card.visit.button');
-    return true;
+export const visitCardLink: Command = (state, dispatch) => {
+  if (!(state.selection instanceof NodeSelection)) {
+    return false;
   }
 
-  return false;
-};
+  const { type } = state.selection.node;
+  const { url } = titleUrlPairFromNode(state.selection.node);
 
-// Temporarily disabled after https://product-fabric.atlassian.net/browse/MS-1308
-/*
-const changeAppearance = (selectedOption: SelectOption) => {
-  if (selectedOption.value === 'link') {
-    return changeSelectedCardToLink;
-  } else {
-    return setSelectedCardAppearance(selectedOption.value as CardAppearance);
+  const payload: AnalyticsEventPayload = {
+    action: ACTION.VISITED,
+    actionSubject: ACTION_SUBJECT.SMART_LINK,
+    actionSubjectId: type.name as
+      | ACTION_SUBJECT_ID.CARD_INLINE
+      | ACTION_SUBJECT_ID.CARD_BLOCK,
+    attributes: {
+      inputMethod: INPUT_METHOD.TOOLBAR,
+    },
+    eventType: EVENT_TYPE.TRACK,
+  };
+
+  // All card links should open in the same tab per https://product-fabric.atlassian.net/browse/MS-1583.
+  analyticsService.trackEvent('atlassian.editor.format.card.visit.button');
+  // We are in edit mode here, open the smart card URL in a new window.
+  window.open(url);
+
+  if (dispatch) {
+    dispatch(addAnalytics(state, state.tr, payload));
   }
+  return true;
 };
 
-const buildDropdown = (
+const unlinkCard = (node: Node, state: EditorState): Command => {
+  const displayInfo = displayInfoForCard(node, findCardInfo(state));
+  const text = displayInfo.title || displayInfo.url;
+  if (text) {
+    return changeSelectedCardToText(text);
+  }
+
+  return () => false;
+};
+
+const generateDeleteButton = (
+  node: Node,
   state: EditorState,
   intl: InjectedIntl,
 ): FloatingToolbarItem<Command> => {
-  const { selection } = state;
-  const selectedNode = selection instanceof NodeSelection && selection.node;
-  const options: SelectOption[] = [];
-  const { inlineCard, blockCard } = state.schema.nodes;
+  const { inlineCard } = state.schema.nodes;
 
-  if (selectedNode && [inlineCard, blockCard].indexOf(selectedNode.type) > -1) {
-    const currentAppearance = appearanceForNodeType(selectedNode.type);
-
-    ['block', 'inline', 'link'].forEach(value => {
-      // don't allow conversion to link if it has no url attached
-      if (value === 'link' && !selectedNode.attrs.url) {
-        return;
-      }
-
-      if (value === 'block') {
-        // don't allow conversion if the parent node doesn't allow it
-        const { $from } = selection;
-        const containerDepth =
-          currentAppearance === 'block' ? $from.depth : $from.depth - 1;
-
-        const allowed = $from
-          .node(containerDepth)
-          .type.validContent(
-            Fragment.from(
-              blockCard.createChecked(
-                selectedNode.attrs,
-                undefined,
-                selectedNode.marks,
-              ),
-            ),
-          );
-
-        if (!allowed) {
-          return;
-        }
-      }
-
-      options.push({
-        value,
-        label: intl.formatMessage(messages[value]),
-        selected: currentAppearance === value,
-      });
-    });
+  if (node.type === inlineCard) {
+    return {
+      type: 'button',
+      title: intl.formatMessage(linkToolbarMessages.unlink),
+      icon: UnlinkIcon,
+      onClick: unlinkCard(node, state),
+    };
   }
 
   return {
-    type: 'select',
-    options,
-    defaultValue: options.find(option => !!option.selected),
-    onChange: changeAppearance,
+    type: 'button',
+    appearance: 'danger',
+    icon: RemoveIcon,
+    onMouseEnter: hoverDecoration(node.type, true),
+    onMouseLeave: hoverDecoration(node.type, false),
+    title: intl.formatMessage(commonMessages.remove),
+    onClick: removeCard,
   };
-}; */
+};
 
-export const floatingToolbar = (
+const generateToolbarItems = (
   state: EditorState,
   intl: InjectedIntl,
-): FloatingToolbarConfig | undefined => {
-  const { inlineCard, blockCard } = state.schema.nodes;
+  providerFactory: ProviderFactory,
+) => (node: Node): Array<FloatingToolbarItem<Command>> => {
+  const { url } = titleUrlPairFromNode(node);
+  if (url && !isSafeUrl(url)) {
+    return [];
+  }
 
-  return {
-    title: 'Card floating controls',
-    nodeType: [inlineCard, blockCard],
-    items: [
-      // Temporarily disabled after https://product-fabric.atlassian.net/browse/MS-1308
-      // buildDropdown(state, intl),
-      // { type: 'separator' },
+  const pluginState: CardPluginState = pluginKey.getState(state);
+
+  if (pluginState.showLinkingToolbar) {
+    return [
+      buildEditLinkToolbar({
+        providerFactory,
+        node,
+      }),
+    ];
+  } else {
+    return [
       {
         type: 'button',
-        icon: OpenIcon,
-        title: intl.formatMessage(commonMessages.visit),
-        onClick: visit,
+        selected: false,
+        title: intl.formatMessage(linkToolbarMessages.editLink),
+        showTitle: true,
+        onClick: editLink,
       },
       { type: 'separator' },
       {
         type: 'button',
-        appearance: 'danger',
-        icon: RemoveIcon,
-        title: intl.formatMessage(commonMessages.remove),
-        onClick: remove,
+        icon: OpenIcon,
+        className: 'hyperlink-open-link',
+        title: intl.formatMessage(linkToolbarMessages.openLink),
+        onClick: visitCardLink,
       },
-    ],
+      { type: 'separator' },
+      generateDeleteButton(node, state, intl),
+    ];
+  }
+};
+
+export const floatingToolbar = (
+  state: EditorState,
+  intl: InjectedIntl,
+  providerFactory: ProviderFactory,
+): FloatingToolbarConfig | undefined => {
+  const { inlineCard, blockCard } = state.schema.nodes;
+  const nodeType = [inlineCard, blockCard];
+
+  const pluginState: CardPluginState = pluginKey.getState(state);
+
+  return {
+    title: 'Card floating controls',
+    nodeType,
+    items: generateToolbarItems(state, intl, providerFactory),
+    ...(pluginState.showLinkingToolbar ? editLinkToolbarConfig : {}),
   };
 };

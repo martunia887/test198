@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
-import ReactNodeView, { ForwardRef } from '../../../nodeviews/ReactNodeView';
+import ReactNodeView, {
+  ForwardRef,
+  getPosHandler,
+  getPosHandlerNode,
+} from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { Filmstrip } from '@atlaskit/media-filmstrip';
 import {
   MediaPluginState,
   stateKey as mediaStateKey,
 } from '../pm-plugins/main';
-import { Context, FileIdentifier } from '@atlaskit/media-core';
+import { FileIdentifier } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { setNodeSelection } from '../../../utils';
 import WithPluginState from '../../../ui/WithPluginState';
 import { stateKey as reactNodeViewStateKey } from '../../../plugins/base/pm-plugins/react-nodeview';
@@ -17,13 +22,15 @@ import {
   pluginKey as editorDisabledPluginKey,
   EditorDisabledPluginState,
 } from '../../editor-disabled';
-import { EditorAppearance } from '../../../types';
 
-export interface Props {
-  children?: React.ReactNode;
-  view: EditorView;
-  node: PMNode;
-}
+import { EditorAppearance } from '../../../types';
+import {
+  WithProviders,
+  ProviderFactory,
+  ContextIdentifierProvider,
+  MediaProvider,
+} from '@atlaskit/editor-common';
+import { MediaNodeUpdater } from './mediaNodeUpdater';
 
 export type MediaGroupProps = {
   forwardRef?: (ref: HTMLElement) => void;
@@ -32,11 +39,14 @@ export type MediaGroupProps = {
   getPos: () => number;
   selected: number | null;
   disabled?: boolean;
+  allowLazyLoading?: boolean;
   editorAppearance: EditorAppearance;
+  mediaProvider: Promise<MediaProvider>;
+  contextIdentifierProvider?: Promise<ContextIdentifierProvider>;
 };
 
 export interface MediaGroupState {
-  viewContext?: Context;
+  viewMediaClientConfig?: MediaClientConfig;
 }
 
 export default class MediaGroup extends React.Component<
@@ -47,21 +57,48 @@ export default class MediaGroup extends React.Component<
   private mediaNodes: PMNode[];
 
   state: MediaGroupState = {
-    viewContext: undefined,
+    viewMediaClientConfig: undefined,
   };
 
   constructor(props: MediaGroupProps) {
     super(props);
+    this.mediaNodes = [];
     this.mediaPluginState = mediaStateKey.getState(props.view.state);
     this.setMediaItems(props);
   }
 
   componentDidMount() {
-    this.updateMediaContext();
+    this.updateMediaClientConfig();
+
+    this.mediaNodes.forEach(async (node: PMNode) => {
+      if (node.attrs.type === 'external') {
+        return;
+      }
+
+      const { view, mediaProvider, contextIdentifierProvider } = this.props;
+      const mediaNodeUpdater = new MediaNodeUpdater({
+        view,
+        mediaProvider,
+        contextIdentifierProvider,
+        node,
+        isMediaSingle: false,
+      });
+
+      const contextId = mediaNodeUpdater.getCurrentContextId();
+      if (!contextId) {
+        await mediaNodeUpdater.updateContextId();
+      }
+
+      const isNodeFromDifferentCollection = await mediaNodeUpdater.isNodeFromDifferentCollection();
+
+      if (isNodeFromDifferentCollection) {
+        mediaNodeUpdater.copyNode();
+      }
+    });
   }
 
-  componentWillReceiveProps(props: MediaGroupProps) {
-    this.updateMediaContext();
+  UNSAFE_componentWillReceiveProps(props: MediaGroupProps) {
+    this.updateMediaClientConfig();
     this.setMediaItems(props);
   }
 
@@ -69,7 +106,8 @@ export default class MediaGroup extends React.Component<
     if (
       this.props.selected !== nextProps.selected ||
       this.props.node !== nextProps.node ||
-      this.state.viewContext !== this.mediaPluginState.mediaContext
+      this.state.viewMediaClientConfig !==
+        this.mediaPluginState.mediaClientConfig
     ) {
       return true;
     }
@@ -77,12 +115,12 @@ export default class MediaGroup extends React.Component<
     return false;
   }
 
-  updateMediaContext() {
-    const { viewContext } = this.state;
-    const { mediaContext } = this.mediaPluginState;
-    if (!viewContext && mediaContext) {
+  updateMediaClientConfig() {
+    const { viewMediaClientConfig } = this.state;
+    const { mediaClientConfig } = this.mediaPluginState;
+    if (!viewMediaClientConfig && mediaClientConfig) {
       this.setState({
-        viewContext: mediaContext,
+        viewMediaClientConfig: mediaClientConfig,
       });
     }
   }
@@ -100,7 +138,7 @@ export default class MediaGroup extends React.Component<
   };
 
   renderChildNodes = () => {
-    const { viewContext } = this.state;
+    const { viewMediaClientConfig } = this.state;
     const items = this.mediaNodes.map((item, idx) => {
       const identifier: FileIdentifier = {
         id: item.attrs.id,
@@ -112,7 +150,7 @@ export default class MediaGroup extends React.Component<
       return {
         identifier,
         selectable: true,
-        isLazy: this.props.editorAppearance !== 'mobile',
+        isLazy: this.props.allowLazyLoading,
         selected: this.props.selected === nodePos,
         onClick: () => {
           setNodeSelection(this.props.view, nodePos);
@@ -120,10 +158,10 @@ export default class MediaGroup extends React.Component<
         actions: [
           {
             handler: this.props.disabled
-              ? {}
+              ? () => {}
               : this.mediaPluginState.handleMediaNodeRemoval.bind(
                   null,
-                  null,
+                  undefined,
                   () => nodePos,
                 ),
             icon: <EditorCloseIcon label="delete" />,
@@ -132,7 +170,9 @@ export default class MediaGroup extends React.Component<
       };
     });
 
-    return <Filmstrip items={items} context={viewContext} />;
+    return (
+      <Filmstrip items={items} mediaClientConfig={viewMediaClientConfig} />
+    );
   };
 
   render() {
@@ -140,52 +180,74 @@ export default class MediaGroup extends React.Component<
   }
 }
 
-class MediaGroupNodeView extends ReactNodeView {
-  render(_props: any, forwardRef: ForwardRef) {
-    const { editorAppearance } = this.reactComponentProps;
+interface MediaGroupNodeViewProps {
+  allowLazyLoading?: boolean;
+  editorAppearance: EditorAppearance;
+  providerFactory: ProviderFactory;
+}
+
+class MediaGroupNodeView extends ReactNodeView<MediaGroupNodeViewProps> {
+  render(props: MediaGroupNodeViewProps, forwardRef: ForwardRef) {
+    const { allowLazyLoading, editorAppearance, providerFactory } = props;
+    const getPos = this.getPos as getPosHandlerNode;
     return (
-      <WithPluginState
-        editorView={this.view}
-        plugins={{
-          reactNodeViewState: reactNodeViewStateKey,
-          editorDisabledPlugin: editorDisabledPluginKey,
-        }}
-        render={({
-          editorDisabledPlugin,
-        }: {
-          editorDisabledPlugin: EditorDisabledPluginState;
-        }) => {
-          const nodePos = this.getPos();
-          const { $anchor, $head } = this.view.state.selection;
-          const isSelected =
-            nodePos < $anchor.pos && $head.pos < nodePos + this.node.nodeSize;
+      <WithProviders
+        providers={['mediaProvider', 'contextIdentifierProvider']}
+        providerFactory={providerFactory}
+        renderNode={({ mediaProvider, contextIdentifierProvider }) => {
+          const renderFn = ({
+            editorDisabledPlugin,
+          }: {
+            editorDisabledPlugin: EditorDisabledPluginState;
+          }) => {
+            const nodePos = getPos();
+            const { $anchor, $head } = this.view.state.selection;
+            const isSelected =
+              nodePos < $anchor.pos && $head.pos < nodePos + this.node.nodeSize;
+
+            if (!mediaProvider) {
+              return null;
+            }
+            return (
+              <MediaGroup
+                node={this.node}
+                getPos={getPos}
+                view={this.view}
+                forwardRef={forwardRef}
+                selected={isSelected ? $anchor.pos : null}
+                disabled={(editorDisabledPlugin || {}).editorDisabled}
+                allowLazyLoading={allowLazyLoading}
+                editorAppearance={editorAppearance}
+                mediaProvider={mediaProvider}
+                contextIdentifierProvider={contextIdentifierProvider}
+              />
+            );
+          };
           return (
-            <MediaGroup
-              node={this.node}
-              getPos={this.getPos}
-              view={this.view}
-              forwardRef={forwardRef}
-              selected={isSelected ? $anchor.pos : null}
-              disabled={(editorDisabledPlugin || {}).editorDisabled}
-              editorAppearance={editorAppearance}
+            <WithPluginState
+              editorView={this.view}
+              plugins={{
+                reactNodeViewState: reactNodeViewStateKey,
+                editorDisabledPlugin: editorDisabledPluginKey,
+              }}
+              render={renderFn}
             />
           );
         }}
       />
     );
   }
-
-  stopEvent(event: Event) {
-    event.preventDefault();
-    return true;
-  }
 }
 
 export const ReactMediaGroupNode = (
   portalProviderAPI: PortalProviderAPI,
-  editorAppearance?: EditorAppearance,
-) => (node: PMNode, view: EditorView, getPos: () => number): NodeView => {
+  providerFactory: ProviderFactory,
+  allowLazyLoading?: boolean,
+  editorAppearance?: any,
+) => (node: PMNode, view: EditorView, getPos: getPosHandler): NodeView => {
   return new MediaGroupNodeView(node, view, getPos, portalProviderAPI, {
+    allowLazyLoading,
+    providerFactory,
     editorAppearance,
   }).init();
 };

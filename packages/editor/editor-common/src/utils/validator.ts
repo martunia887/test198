@@ -140,27 +140,6 @@ const flattenUnknownBlockTree = (
   return output;
 };
 
-// null is Object, also maybe check obj.constructor == Object if we want to skip Class
-const isValidObject = (obj: object) => obj !== null && typeof obj === 'object';
-const isValidString = (str: any): str is string => typeof str === 'string';
-const keysLen = (obj: object) => Object.keys(obj).length;
-
-const isValidIcon = (icon: any) =>
-  isValidObject(icon) &&
-  keysLen(icon) === 2 &&
-  isValidString(icon.url) &&
-  isValidString(icon.label);
-
-const isValidUser = (user: { id: string; icon: any }) => {
-  const len = keysLen(user);
-  return (
-    isValidObject(user) &&
-    len <= 2 &&
-    isValidIcon(user.icon) &&
-    (len === 1 || isValidString(user.id))
-  );
-};
-
 /**
  * Sanitize unknown node tree
  *
@@ -236,117 +215,6 @@ export const getValidNode = (
 
   if (type) {
     switch (type) {
-      case 'applicationCard': {
-        if (!attrs) {
-          break;
-        }
-        const {
-          text,
-          link,
-          background,
-          preview,
-          title,
-          description,
-          details,
-          actions,
-          context,
-        } = attrs;
-        if (!isValidString(text) || !isValidObject(title) || !title.text) {
-          break;
-        }
-
-        // title can contain at most two keys (text, user)
-        const titleKeys = Object.keys(title);
-        if (titleKeys.length > 2) {
-          break;
-        }
-        if (titleKeys.length === 2 && !title.user) {
-          break;
-        }
-        if (title.user && !isValidUser(title.user)) {
-          break;
-        }
-
-        if (
-          (link && !link.url) ||
-          (background && !background.url) ||
-          (preview && !preview.url) ||
-          (description && !description.text)
-        ) {
-          break;
-        }
-
-        if (context && !isValidString(context.text)) {
-          break;
-        }
-        if (context && (context.icon && !isValidIcon(context.icon))) {
-          break;
-        }
-
-        if (actions && !Array.isArray(actions)) {
-          break;
-        }
-        if (actions && !actions.length) {
-          break;
-        }
-        if (
-          actions &&
-          actions.some((meta: any) => {
-            const { key, title, target, parameters } = meta;
-            if (key && !isValidString(key)) {
-              return true;
-            }
-            if (!isValidString(title)) {
-              return true;
-            }
-            if (!target) {
-              return true;
-            }
-            if (!isValidString(target.key)) {
-              return true;
-            }
-            if (target.receiver && !isValidString(target.receiver)) {
-              return true;
-            }
-            if (parameters && !isValidObject(parameters)) {
-              return true;
-            }
-          })
-        ) {
-          break;
-        }
-
-        if (details && !Array.isArray(details)) {
-          break;
-        }
-        if (
-          details &&
-          details.some((meta: any) => {
-            const { badge, lozenge, users } = meta;
-            if (badge && typeof badge.value !== 'number') {
-              return true;
-            }
-            if (lozenge && !lozenge.text) {
-              return true;
-            }
-            if (users && !Array.isArray(users)) {
-              return true;
-            }
-
-            if (users && !users.every(isValidUser)) {
-              return true;
-            }
-          })
-        ) {
-          break;
-        }
-
-        return {
-          type,
-          text,
-          attrs,
-        };
-      }
       case 'doc': {
         const { version } = originalNode as ADDoc;
         if (version && content && content.length) {
@@ -419,7 +287,11 @@ export const getValidNode = (
       }
       case 'inlineCard':
       case 'blockCard': {
-        if (attrs && (attrs.url || attrs.data)) {
+        if (
+          attrs &&
+          ((attrs.url && isSafeUrl(attrs.url)) ||
+            (attrs.data && attrs.data.url && isSafeUrl(attrs.data.url)))
+        ) {
           return {
             type,
             attrs,
@@ -447,6 +319,7 @@ export const getValidNode = (
         let mediaType = '';
         let mediaCollection = [];
         let mediaUrl = '';
+
         if (attrs) {
           const { id, collection, type, url } = attrs;
           mediaId = id;
@@ -456,14 +329,20 @@ export const getValidNode = (
         }
 
         if (mediaType === 'external' && !!mediaUrl) {
+          const mediaAttrs: any = {
+            type: mediaType,
+            url: mediaUrl,
+            width: attrs.width,
+            height: attrs.height,
+          };
+
+          if (attrs.alt && adfStage === 'stage0') {
+            mediaAttrs.alt = attrs.alt;
+          }
+
           return {
             type,
-            attrs: {
-              type: mediaType,
-              url: mediaUrl,
-              width: attrs.width,
-              height: attrs.height,
-            },
+            attrs: mediaAttrs,
           };
         } else if (mediaId && mediaType) {
           const mediaAttrs: any = {
@@ -478,6 +357,10 @@ export const getValidNode = (
 
           if (attrs.height) {
             mediaAttrs.height = attrs.height;
+          }
+
+          if (attrs.alt && adfStage === 'stage0') {
+            mediaAttrs.alt = attrs.alt;
           }
 
           return {
@@ -561,17 +444,14 @@ export const getValidNode = (
         let { marks } = node;
         if (text) {
           if (marks) {
-            marks = marks.reduce(
-              (acc, mark) => {
-                const validMark = getValidMark(mark, adfStage);
-                if (validMark) {
-                  acc.push(validMark);
-                }
+            marks = marks.reduce((acc, mark) => {
+              const validMark = getValidMark(mark, adfStage);
+              if (validMark) {
+                acc.push(validMark);
+              }
 
-                return acc;
-              },
-              [] as ADMark[],
-            );
+              return acc;
+            }, [] as ADMark[]);
           }
           return marks ? { type, text, marks: marks } : { type, text };
         }
@@ -789,6 +669,11 @@ export const getValidNode = (
 
         break;
       }
+
+      case 'expand':
+      case 'nestedExpand': {
+        return { type, attrs, content, marks };
+      }
     }
   }
 
@@ -812,15 +697,6 @@ export const getValidMark = (
 
   if (type) {
     switch (type) {
-      case 'action': {
-        if (attrs && attrs.target && attrs.target.key) {
-          return {
-            type,
-            attrs,
-          };
-        }
-        break;
-      }
       case 'code': {
         return {
           type,

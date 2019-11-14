@@ -8,7 +8,7 @@ import {
 } from '@atlaskit/media-test-helpers';
 import { Rectangle, Camera, Vector2 } from '@atlaskit/media-ui';
 import {
-  InteractiveImg,
+  InteractiveImgComponent,
   zoomLevelAfterResize,
   Props,
   State,
@@ -20,12 +20,14 @@ import { Outcome } from '../../../../../newgen/domain';
 
 function createFixture(props?: Partial<Props>) {
   const onClose = jest.fn();
+  const onBlanketClicked = jest.fn();
   const el = mountWithIntlContext<Props, State>(
-    <InteractiveImg
+    <InteractiveImgComponent
       onLoad={jest.fn()}
       onError={jest.fn()}
       src={''}
       onClose={onClose}
+      onBlanketClicked={onBlanketClicked}
       {...props}
     />,
   );
@@ -35,10 +37,10 @@ function createFixture(props?: Partial<Props>) {
   const zoomLevel = new ZoomLevel(1);
 
   el.setState({
-    camera: Outcome.successful(camera),
+    camera: Outcome.successful(camera) as any,
     zoomLevel,
   });
-  return { el, onClose, camera, zoomLevel };
+  return { el, onClose, camera, zoomLevel, onBlanketClicked };
 }
 
 function clickZoomIn(el: ReactWrapper<any, any>) {
@@ -224,6 +226,14 @@ describe('InteractiveImg', () => {
   });
 });
 
+describe('analytics', () => {
+  it('should raise onBlanketClicked when blanket clicked', () => {
+    const { el, onBlanketClicked } = createFixture();
+    el.find(ImageWrapper).simulate('click');
+    expect(onBlanketClicked).toHaveBeenCalled();
+  });
+});
+
 describe('zoomLevelAfterResize', () => {
   const sideLenGenerator = () => jsc.integer(1, 10000);
 
@@ -247,6 +257,7 @@ describe('zoomLevelAfterResize', () => {
         oldCamera,
         oldZoomLevel,
       );
+      expect(newZoomLevel.value === newCamera.scaleDownToFit).toBeTruthy();
       return newZoomLevel.value === newCamera.scaleDownToFit;
     },
   );
@@ -271,6 +282,7 @@ describe('zoomLevelAfterResize', () => {
         oldCamera,
         oldZoomLevel,
       );
+      expect(newZoomLevel.value === oldZoomLevel.value).toBeTruthy();
       return newZoomLevel.value === oldZoomLevel.value;
     },
   );

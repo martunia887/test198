@@ -1,6 +1,4 @@
-/* tslint:disable:variable-name */
 import styled from 'styled-components';
-
 export interface DropzoneContainerProps {
   isActive: boolean;
 }
@@ -65,13 +63,13 @@ export const DropzoneContainer = styled.div`
 `;
 
 export const DropzoneConfigOptions = styled.div``;
-
 export const DropzoneRoot = styled.div`
   display: flex;
 `;
 
 export const DropzoneContentWrapper = styled.div`
   display: flex;
+  min-height: 200px;
 `;
 
 export const PreviewsWrapper = styled.div`
@@ -172,4 +170,33 @@ export const UnsplashHeader = styled.div`
   > div {
     flex: initial;
   }
+`;
+
+export const InfoContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  border: 5px dashed #81ebff;
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+
+  .info {
+    position: absolute;
+    left: 0;
+    bottom: -30px;
+    background-color: black;
+    opacity: 0.5;
+    color: white;
+    white-space: nowrap;
+  }
+
+  .close_button {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+`;
+
+export const PastedImage = styled.img`
+  width: 100%;
 `;

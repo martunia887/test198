@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import LaunchDarkly, { LDClient } from 'ldclient-js';
 import uuid from 'uuid/v4';
 import {
@@ -42,6 +42,7 @@ const createClient = () => {
   return () => {
     if (!client) {
       client = LaunchDarkly.initialize(
+        /* WEBSITE_ENV is set by webpack config */
         clientKey(WEBSITE_ENV),
         anonymousUser(),
         {

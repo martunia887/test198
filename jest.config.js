@@ -2,13 +2,12 @@
 /* eslint-disable no-console */
 const fs = require('fs');
 
-const CHANGED_PACKAGES = process.env.CHANGED_PACKAGES;
-const COVERAGE_PACKAGES = process.env.COVERAGE_PACKAGES;
-const INTEGRATION_TESTS = process.env.INTEGRATION_TESTS;
-const VISUAL_REGRESSION = process.env.VISUAL_REGRESSION;
-const PARALLELIZE_TESTS = process.env.PARALLELIZE_TESTS;
-const PARALLELIZE_TESTS_FILE = process.env.PARALLELIZE_TESTS_FILE;
-const TEST_ONLY_PATTERN = process.env.TEST_ONLY_PATTERN;
+const { CHANGED_PACKAGES } = process.env;
+const { COVERAGE_PACKAGES } = process.env;
+const { INTEGRATION_TESTS } = process.env;
+const { VISUAL_REGRESSION } = process.env;
+const { PARALLELIZE_TESTS } = process.env;
+const { PARALLELIZE_TESTS_FILE } = process.env;
 
 // These are set by Pipelines if you are running in a parallel steps
 const STEP_IDX = Number(process.env.STEP_IDX);
@@ -55,30 +54,37 @@ const config = {
   watchPathIgnorePatterns: [
     '\\/packages\\/core\\/navigation-next\\/[^\\/]*\\.js$',
   ],
+  watchPlugins: [
+    'jest-watch-typeahead/filename',
+    'jest-watch-typeahead/testname',
+  ],
   modulePathIgnorePatterns: ['/__fixtures__/', './node_modules', '/dist/'],
   // don't transform any files under node_modules except @atlaskit/* and react-syntax-highlighter (it
   // uses dynamic imports which are not valid in node)
   transformIgnorePatterns: [
     '\\/node_modules\\/(?!@atlaskit|react-syntax-highlighter)',
   ],
-  resolver: `${__dirname}/resolver.js`,
+  resolver: `${__dirname}/build/resolvers/jest-resolver.js`,
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',
   },
   globals: {
     'ts-jest': {
-      tsConfigFile: './tsconfig.jest.json',
+      tsConfig: './tsconfig.jest.json',
+      diagnostics: false,
+      isolatedModules: true,
     },
     __BASEURL__: 'http://localhost:9000',
+    synchronyUrl: '',
   },
   moduleFileExtensions: ['js', 'ts', 'tsx', 'json'],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/fileMock.js',
   },
   snapshotSerializers: ['enzyme-to-json/serializer'],
-  setupFiles: ['./build/jest-config/setup.js'],
-  setupTestFrameworkScriptFile: `${__dirname}/jestFrameworkSetup.js`,
+  setupFiles: ['./build/jest-config/setup.js', 'jest-canvas-mock'],
+  setupFilesAfterEnv: [`${__dirname}/jestFrameworkSetup.js`],
   testResultsProcessor: 'jest-junit',
   testEnvironmentOptions: {
     // Need this to have jsdom loading images.
@@ -90,7 +96,20 @@ const config = {
   coverageThreshold: {},
   globalSetup: undefined,
   globalTeardown: undefined,
-  testEnvironment: 'jsdom',
+  // Jest's default test environment 'jsdom' uses JSDOM 11 to support Node 6. Here we upgrade to JSDOM 14, which supports Node >= 8
+  testEnvironment: 'jest-environment-jsdom-fourteen',
+  // The modules below cause problems when automocking.
+  unmockedModulePathPatterns: [
+    'tslib',
+    'babel-runtime',
+    'es-abstract',
+    'graceful-fs',
+    'any-promise',
+    'globby',
+    'chalk',
+    'fs-extra',
+    'meow',
+  ],
 };
 
 // If the CHANGED_PACKAGES variable is set, we parse it to get an array of changed packages and only
@@ -138,26 +157,6 @@ if (INTEGRATION_TESTS || VISUAL_REGRESSION) {
   }
 }
 
-// The TEST_ONLY_PATTERN is added to let us restrict a set of tests that *would* have been run; to
-// only the ones that match a given pattern. This is slightly different to something like `yarn jest packages/core`
-// since we can take advantage of other parts of the jest config. `TEST_ONLY_PATTERN="packages/core" yarn run test:changed`
-if (TEST_ONLY_PATTERN) {
-  // There is a bit to unwrap here. What we are trying to achieve is a way to pass simple options like "packages/editor" and "!packages/editor"
-  // to our script and have them work as expected. Since this is going into the testPathIgnore variable, we do need to negate the negation however.
-  // So to run only non-editor tests you'd pass TEST_ONLY_PATTERN="!packages/editor". To turn that into an "ignore" regex, we can simply remove the "!".
-  // Note: it's important to use "packages/editor" and not just "editor" since editor can (and does) appear in other tests paths.
-  // Now, it's more complicated when we want to run tests that *only* match a specific part of a pattern.
-  // We can't use a simple negative lookahead (?!packages/editor/) since this match *everything* that doesn't match our pattern
-  // So we essentially have to check that all characters in the string *do not* follow our negated pattern (the . and *). We then also need
-  // to match this on the whole string, otherwise *any* character that matches would be a match, hence the ^ and $
-  let newIgnore = `(^((?!${TEST_ONLY_PATTERN}).)*$)`;
-  if (TEST_ONLY_PATTERN.startsWith('!')) {
-    newIgnore = TEST_ONLY_PATTERN.substr(1);
-  }
-
-  config.testPathIgnorePatterns.push(newIgnore);
-}
-
 /**
  * Batching.
  * In CI we want to be able to split out tests into multiple parallel steps that can be run concurrently.
@@ -195,8 +194,12 @@ if (process.env.VISUAL_REGRESSION) {
   config.globalTeardown = `${__dirname}/build/visual-regression/config/jest/globalTeardown.js`;
   config.testEnvironment = `${__dirname}/build/visual-regression/config/jest/jsdomEnvironment.js`;
 
-  if (!process.env.CI) {
+  if (!process.env.CI && !process.env.DEBUG) {
     config.globals.__BASEURL__ = 'http://testing.local.com:9000';
+  }
+
+  if (process.env.SYNCHRONY_URL) {
+    config.globals.synchronyUrl = process.env.SYNCHRONY_URL;
   }
 }
 

@@ -7,6 +7,7 @@ import {
   calculatePlacement,
   findOverflowScrollParent,
   Position,
+  validatePosition,
 } from './utils';
 
 export interface Props {
@@ -24,10 +25,13 @@ export interface Props {
   offset?: number[];
   onPositionCalculated?: (position: Position) => Position;
   onPlacementChanged?: (placement: [string, string]) => void;
+  shouldRenderPopup?: (position: Position) => boolean;
   scrollableElement?: HTMLElement;
   stick?: boolean;
   ariaLabel?: string;
   forcePlacement?: boolean;
+  allowOutOfBounds?: boolean; // Allow to correct position elements inside table: https://product-fabric.atlassian.net/browse/ED-7191
+  rect?: DOMRect;
 }
 
 export interface State {
@@ -37,16 +41,19 @@ export interface State {
   position?: Position;
 
   overflowScrollParent: HTMLElement | false;
+  validPosition: boolean;
 }
 
 export default class Popup extends React.Component<Props, State> {
   scrollElement: undefined | false | HTMLElement;
   static defaultProps = {
     offset: [0, 0],
+    allowOutOfBound: false,
   };
 
   state: State = {
     overflowScrollParent: false,
+    validPosition: true,
   };
 
   private placement: [string, string] = ['', ''];
@@ -67,6 +74,8 @@ export default class Popup extends React.Component<Props, State> {
       alignY,
       stick,
       forcePlacement,
+      allowOutOfBounds,
+      rect,
     } = props;
     const { popup } = state;
 
@@ -83,6 +92,7 @@ export default class Popup extends React.Component<Props, State> {
       alignY,
       forcePlacement,
     );
+
     if (onPlacementChanged && this.placement.join('') !== placement.join('')) {
       onPlacementChanged(placement);
       this.placement = placement;
@@ -94,10 +104,15 @@ export default class Popup extends React.Component<Props, State> {
       target,
       stick,
       offset: offset!,
+      allowOutOfBounds,
+      rect,
     });
     position = onPositionCalculated ? onPositionCalculated(position) : position;
 
-    this.setState({ position });
+    this.setState({
+      position,
+      validPosition: validatePosition(target),
+    });
   }
 
   private cannotSetPopup(
@@ -116,7 +131,8 @@ export default class Popup extends React.Component<Props, State> {
     return (
       !target ||
       (document.body.contains(target) &&
-        (popup.offsetParent && !popup.offsetParent.contains(target!))) ||
+        popup.offsetParent &&
+        !popup.offsetParent.contains(target!)) ||
       (overflowScrollParent &&
         !overflowScrollParent.contains(popup.offsetParent))
     );
@@ -154,7 +170,7 @@ export default class Popup extends React.Component<Props, State> {
 
   onResize = () => this.scheduledUpdatePosition();
 
-  componentWillReceiveProps(newProps: Props) {
+  UNSAFE_componentWillReceiveProps(newProps: Props) {
     // We are delaying `updatePosition` otherwise it happens before the children
     // get rendered and we end up with a wrong position
     this.scheduledUpdatePosition(newProps);
@@ -185,6 +201,11 @@ export default class Popup extends React.Component<Props, State> {
 
   private renderPopup() {
     const { position } = this.state;
+    const { shouldRenderPopup } = this.props;
+
+    if (shouldRenderPopup && !shouldRenderPopup(position || {})) {
+      return null;
+    }
 
     return (
       <div
@@ -204,12 +225,15 @@ export default class Popup extends React.Component<Props, State> {
   }
 
   render() {
-    if (!this.props.target) {
+    const { target, mountTo } = this.props;
+    const { validPosition } = this.state;
+
+    if (!target || !validPosition) {
       return null;
     }
 
-    if (this.props.mountTo) {
-      return createPortal(this.renderPopup(), this.props.mountTo);
+    if (mountTo) {
+      return createPortal(this.renderPopup(), mountTo);
     }
 
     // Without mountTo property renders popup as is,
@@ -217,3 +241,5 @@ export default class Popup extends React.Component<Props, State> {
     return this.renderPopup();
   }
 }
+
+export { findOverflowScrollParent, Position } from './utils';

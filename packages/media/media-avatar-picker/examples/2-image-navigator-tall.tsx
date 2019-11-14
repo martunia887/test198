@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { tallImage } from '@atlaskit/media-test-helpers';
@@ -26,16 +26,10 @@ export default () => (
       <h1>Local tall image</h1>
       <ImageNavigator
         imageSource={tallImage}
-        onPositionChanged={(x, y) => {
-          console.log('onPositionChanged', x, y);
-        }}
-        onSizeChanged={size => {
-          console.log('onSizeChanged', size);
-        }}
         onLoad={onLoad}
         onRemoveImage={() => console.log('onRemoveImage')}
         onImageError={errorMessage => console.log('onImageError', errorMessage)}
-        onImageLoaded={(file, crop) => console.log('onImageLoaded', file, crop)}
+        onImageLoaded={file => console.log('onImageLoaded', file)}
         onImageUploaded={file => console.log('onImageLoaded', file)}
       />
       <button onClick={exportImage}>Export</button>

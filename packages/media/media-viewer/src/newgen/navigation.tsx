@@ -1,20 +1,16 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { FileIdentifier } from '@atlaskit/media-core';
+import { Identifier } from '@atlaskit/media-client';
 import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/chevron-left-circle';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
-import { colors } from '@atlaskit/theme';
-import Button from '@atlaskit/button';
+import { N800 } from '@atlaskit/theme/colors';
+import { hideControlsClassName, MediaButton } from '@atlaskit/media-ui';
 import { Shortcut } from '@atlaskit/media-ui';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import {
-  ArrowsWrapper,
-  RightWrapper,
-  LeftWrapper,
-  Arrow,
-  hideControlsClassName,
-} from './styled';
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import { ArrowsWrapper, RightWrapper, LeftWrapper, Arrow } from './styled';
 import { getSelectedIndex } from './utils';
 import { channel } from './analytics';
 import {
@@ -25,11 +21,11 @@ import {
 export type NavigationDirection = 'prev' | 'next';
 
 export type NavigationProps = Readonly<{
-  items: FileIdentifier[];
-  selectedItem: FileIdentifier;
-  onChange: (item: FileIdentifier) => void;
+  items: Identifier[];
+  selectedItem: Identifier;
+  onChange: (item: Identifier) => void;
 }> &
-  WithAnalyticsEventProps;
+  WithAnalyticsEventsProps;
 
 export type NavigationSource = 'keyboard' | 'mouse';
 export class NavigationBase extends Component<NavigationProps, {}> {
@@ -82,11 +78,12 @@ export class NavigationBase extends Component<NavigationProps, {}> {
           {isLeftVisible ? (
             <Arrow className={hideControlsClassName}>
               <Shortcut keyCode={37} handler={prev('keyboard')} />
-              <Button
+              <MediaButton
+                data-testid="media-viewer-navigation-left"
                 onClick={prev('mouse')}
                 iconBefore={
                   <ArrowLeftCircleIcon
-                    primaryColor={colors.N800}
+                    primaryColor={N800}
                     size="xlarge"
                     label="Previous"
                   />
@@ -100,11 +97,12 @@ export class NavigationBase extends Component<NavigationProps, {}> {
           {isRightVisible ? (
             <Arrow className={hideControlsClassName}>
               <Shortcut keyCode={39} handler={next('keyboard')} />
-              <Button
+              <MediaButton
+                data-testid="media-viewer-navigation-right"
                 onClick={next('mouse')}
                 iconBefore={
                   <ArrowRightCircleIcon
-                    primaryColor={colors.N800}
+                    primaryColor={N800}
                     size="xlarge"
                     label="Next"
                   />

@@ -20,7 +20,7 @@ import {
   ACTION_SUBJECT_ID,
 } from '../analytics';
 
-const quickInsertPlugin: EditorPlugin = {
+const quickInsertPlugin = (): EditorPlugin => ({
   name: 'quickInsert',
 
   pmPlugins(quickInsert: Array<QuickInsertHandler>) {
@@ -41,7 +41,7 @@ const quickInsertPlugin: EditorPlugin = {
         state,
         intl,
         { prevActive, queryChanged },
-        tr,
+        _tr,
         dispatch,
       ) => {
         analyticsService.trackEvent('atlassian.editor.quickinsert.query');
@@ -69,7 +69,7 @@ const quickInsertPlugin: EditorPlugin = {
               ),
             )
             .catch(err => {
-              // tslint:disable-next-line:no-console
+              // eslint-disable-next-line no-console
               console.error(err);
               return defaultSearch();
             });
@@ -85,7 +85,7 @@ const quickInsertPlugin: EditorPlugin = {
       },
     },
   },
-};
+});
 
 export default quickInsertPlugin;
 
@@ -146,7 +146,7 @@ function quickInsertPluginFactory(
 
     view(editorView) {
       const providerHandler = (
-        name: string,
+        _name: string,
         providerPromise?: Promise<QuickInsertProvider>,
       ) => {
         if (providerPromise) {

@@ -8,15 +8,16 @@ import {
   ContextIdentifierProvider,
   ExtensionHandlers,
   ErrorReportingHandler,
+  MediaProvider,
 } from '@atlaskit/editor-common';
 import { ActivityProvider } from '@atlaskit/activity';
-import { MentionProvider } from '@atlaskit/mention';
-import { EmojiProvider } from '@atlaskit/emoji';
+import { MentionProvider } from '@atlaskit/mention/resource';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { TaskDecisionProvider } from '@atlaskit/task-decision';
 
 import { PluginConfig as TablesPluginConfig } from '../plugins/table/types';
 import { TextColorPluginConfig } from '../plugins/text-color/pm-plugins/main';
-import { MediaProvider, MediaState } from '../plugins/media/types';
+import { MediaState } from '../plugins/media/types';
 import { AnalyticsHandler } from '../analytics/handler';
 
 import { ImageUploadHandler } from '../plugins/image-upload/types';
@@ -29,10 +30,13 @@ import { CollabEditOptions } from '../plugins/collab-edit/types';
 import { CodeBlockOptions } from '../plugins/code-block';
 import { CardProvider, CardOptions } from '../plugins/card/types';
 import { QuickInsertOptions } from '../plugins/quick-insert/types';
+import { AutoformattingProvider } from '../plugins/custom-autoformat/types';
+import { AnnotationProvider } from '../plugins/annotation/types';
 
 export type EditorAppearance =
   | 'comment'
   | 'full-page'
+  | 'full-width'
   | 'chromeless'
   | 'mobile';
 
@@ -48,6 +52,13 @@ export type InsertMenuCustomItem = {
   isDisabled?: boolean;
   className?: string;
   onClick?: (editorActions: EditorActions) => void;
+};
+
+export type FeedbackInfo = {
+  product?: string;
+  packageVersion?: string;
+  packageName?: string;
+  labels?: Array<string>;
 };
 
 export type AllowedBlockTypes =
@@ -109,6 +120,10 @@ export interface EditorProps {
   // Enable the editor help dialog.
   allowHelpDialog?: boolean;
 
+  // Information required for editor to display the feedback modal.
+  // This is also required to enable quick insert plugin for feedback modal.
+  feedbackInfo?: FeedbackInfo;
+
   // This is a temporary setting for Confluence until we ship smart cards. **Please do not use.**
   allowJiraIssue?: boolean;
 
@@ -137,13 +152,13 @@ export interface EditorProps {
   // Enable dates. You will most likely need backend ADF storage for this feature.
   allowDate?: boolean;
 
-  allowInlineAction?: boolean;
-
   // Temporary flag to enable layouts while it's under development
+  // Use object form to enable breakout for layouts, and to enable the newer layouts - left sidebar & right sidebar
   allowLayouts?:
     | boolean
     | {
         allowBreakout: boolean;
+        UNSAFE_addSidebarLayouts?: boolean;
       };
 
   // Enable status, if menuDisabled is passed then plugin is enabled by default
@@ -161,12 +176,20 @@ export interface EditorProps {
   // Enable indentation support for `heading` and `paragraph`
   allowIndentation?: boolean;
 
+  /**
+   * This enables new insertion behaviour only for horizontal rule and media single in certain conditions.
+   * The idea of this new behaviour is to have a consistent outcome regardless of the insertion method.
+   **/
+  allowNewInsertionBehaviour?: boolean;
+
   // Set to enable the quick insert menu i.e. '/' key trigger.
   // You can also provide your own insert menu options that will be shown in addition to the enabled
   // editor features e.g. Confluence uses this to provide its macros.
   quickInsert?: QuickInsertOptions;
 
   UNSAFE_cards?: CardOptions;
+
+  UNSAFE_allowExpand?: boolean;
 
   // Submits on the enter key. Probably useful for an inline comment editor use case.
   saveOnEnter?: boolean;
@@ -181,15 +204,22 @@ export interface EditorProps {
   uploadErrorHandler?: (state: MediaState) => void;
 
   activityProvider?: Promise<ActivityProvider>;
+
+  annotationProvider?: AnnotationProvider;
+
   collabEditProvider?: Promise<CollabEditProvider>;
   presenceProvider?: Promise<any>;
   emojiProvider?: Promise<EmojiProvider>;
   taskDecisionProvider?: Promise<TaskDecisionProvider>;
+  allowNestedTasks?: boolean;
   contextIdentifierProvider?: Promise<ContextIdentifierProvider>;
 
   legacyImageUploadProvider?: Promise<ImageUploadHandler>;
   mentionProvider?: Promise<MentionProvider>;
   mediaProvider?: Promise<MediaProvider>;
+
+  // Allows you to define custom autoformatting rules.
+  autoformattingProvider?: Promise<AutoformattingProvider>;
 
   // This is temporary for Confluence. **Please do not use**.
   macroProvider?: Promise<MacroProvider>;
@@ -241,4 +271,15 @@ export interface EditorProps {
 
   // Set to provide your extensions handlers.
   extensionHandlers?: ExtensionHandlers;
+
+  // Flag to remove private content such as mention names
+  sanitizePrivateContent?: boolean;
+
+  // flag to indicate display name instead of nick name should be inserted for mentions
+  // default: false, which inserts the nick name
+  mentionInsertDisplayName?: boolean;
+
+  // The nth keystroke after which an input time taken event is sent, 0 to disable it
+  // default: 100
+  inputSamplingLimit?: number;
 }

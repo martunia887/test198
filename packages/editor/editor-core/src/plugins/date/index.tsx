@@ -1,9 +1,8 @@
 import * as React from 'react';
-import EditorDateIcon from '@atlaskit/icon/glyph/editor/date';
-import { date } from '@atlaskit/adf-schema';
 import { findDomRefAtPos } from 'prosemirror-utils';
-import * as Loadable from 'react-loadable';
-
+import Loadable from 'react-loadable';
+import { date } from '@atlaskit/adf-schema';
+import { todayTimestampInUTC } from '@atlaskit/editor-common';
 import { EditorPlugin } from '../../types';
 import WithPluginState from '../../ui/WithPluginState';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
@@ -13,17 +12,24 @@ import createDatePlugin, {
   pluginKey as datePluginKey,
 } from './plugin';
 import keymap from './keymap';
-
 import {
   pluginKey as editorDisabledPluginKey,
   EditorDisabledPluginState,
 } from '../editor-disabled';
-import { todayTimestampInUTC } from '@atlaskit/editor-common';
+import { IconDate } from '../quick-insert/assets';
+import {
+  addAnalytics,
+  INPUT_METHOD,
+  ACTION,
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+  EVENT_TYPE,
+} from '../analytics';
 
 const DatePicker = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-editor-datepicker" */ './ui/DatePicker').then(
-      module => module.default,
+    import(
+      /* webpackChunkName:"@atlaskit-internal-editor-datepicker" */ './ui/DatePicker'
     ),
   loading: () => null,
 });
@@ -34,7 +40,9 @@ export type DateType = {
   day?: number;
 };
 
-const datePlugin: EditorPlugin = {
+const datePlugin = (): EditorPlugin => ({
+  name: 'date',
+
   nodes() {
     return [{ name: 'date', node: date }];
   },
@@ -74,13 +82,14 @@ const datePlugin: EditorPlugin = {
           editorDisabledPlugin: EditorDisabledPluginState;
           datePlugin: DateState;
         }) => {
-          const { showDatePickerAt } = datePlugin;
+          const showDatePickerAt = datePlugin && datePlugin.showDatePickerAt;
           if (
             !showDatePickerAt ||
             (editorDisabledPlugin || {}).editorDisabled
           ) {
             return null;
           }
+
           const element = findDomRefAtPos(
             showDatePickerAt,
             domAtPos,
@@ -90,7 +99,9 @@ const datePlugin: EditorPlugin = {
             <DatePicker
               key={showDatePickerAt}
               element={element}
-              onSelect={date => insertDate(date)(editorView.state, dispatch)}
+              onSelect={(date?: DateType) =>
+                insertDate(date)(editorView.state, dispatch)
+              }
               closeDatePicker={() =>
                 setDatePickerAt(null)(editorView.state, dispatch)
               }
@@ -105,15 +116,24 @@ const datePlugin: EditorPlugin = {
     quickInsert: ({ formatMessage }) => [
       {
         title: formatMessage(messages.date),
+        description: formatMessage(messages.dateDescription),
         priority: 800,
         keywords: ['time', 'today', '/'],
-        icon: () => <EditorDateIcon label={formatMessage(messages.date)} />,
+        keyshortcut: '//',
+        icon: () => <IconDate label={formatMessage(messages.date)} />,
         action(insert, state) {
           const dateNode = state.schema.nodes.date.createChecked({
             timestamp: todayTimestampInUTC(),
           });
 
           const tr = insert(dateNode, { selectInlineNode: true });
+          addAnalytics(state, tr, {
+            action: ACTION.INSERTED,
+            actionSubject: ACTION_SUBJECT.DOCUMENT,
+            actionSubjectId: ACTION_SUBJECT_ID.DATE,
+            eventType: EVENT_TYPE.TRACK,
+            attributes: { inputMethod: INPUT_METHOD.QUICK_INSERT },
+          });
           return tr.setMeta(datePluginKey, {
             showDatePickerAt: tr.selection.from,
           });
@@ -121,6 +141,6 @@ const datePlugin: EditorPlugin = {
       },
     ],
   },
-};
+});
 
 export default datePlugin;

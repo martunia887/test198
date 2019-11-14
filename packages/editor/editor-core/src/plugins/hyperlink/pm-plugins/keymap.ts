@@ -1,20 +1,16 @@
 import { keymap } from 'prosemirror-keymap';
-import { Schema } from 'prosemirror-model';
 import { Plugin, EditorState } from 'prosemirror-state';
 import * as keymaps from '../../../keymaps';
 import { analyticsService, trackAndInvoke } from '../../../analytics';
-import { EditorProps } from '../../../types/editor-props';
 import { Match, getLinkMatch } from '../utils';
 import { HyperlinkState, stateKey } from '../pm-plugins/main';
 import { showLinkToolbar, hideLinkToolbar } from '../commands';
 import { queueCards } from '../../card/pm-plugins/actions';
 import { Command } from '../../../types';
-import { INPUT_METHOD } from '../../analytics';
+import { INPUT_METHOD, addAnalytics } from '../../analytics';
+import { getLinkCreationAnalyticsEvent } from '../analytics';
 
-export function createKeymapPlugin(
-  schema: Schema,
-  props: EditorProps,
-): Plugin | undefined {
+export function createKeymapPlugin(): Plugin | undefined {
   const list = {};
 
   keymaps.bindKeymapWithCommand(
@@ -84,6 +80,8 @@ const mayConvertLastWordToHyperlink: Command = (state, dispatch) => {
         url,
         pos: start,
         appearance: 'inline',
+        compareLinkText: true,
+        source: INPUT_METHOD.AUTO_DETECT,
       },
     ])(state.tr.addMark(start, end, markType));
 
@@ -92,7 +90,13 @@ const mayConvertLastWordToHyperlink: Command = (state, dispatch) => {
     );
 
     if (dispatch) {
-      dispatch(tr);
+      dispatch(
+        addAnalytics(
+          state,
+          tr,
+          getLinkCreationAnalyticsEvent(INPUT_METHOD.AUTO_DETECT, url),
+        ),
+      );
     }
   }
   return false;

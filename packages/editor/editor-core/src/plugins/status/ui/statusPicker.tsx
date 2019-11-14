@@ -2,13 +2,19 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Popup, akEditorFloatingDialogZIndex } from '@atlaskit/editor-common';
 import { colors, borderRadius, gridSize } from '@atlaskit/theme';
-import { StatusPicker as AkStatusPicker, Color } from '@atlaskit/status';
+import {
+  StatusPicker as AkStatusPicker,
+  ColorType as Color,
+} from '@atlaskit/status/picker';
+
 import { dropShadow } from '../../../ui/styles';
 import withOuterListeners from '../../../ui/with-outer-listeners';
 import { DEFAULT_STATUS } from '../actions';
 import { StatusType } from '../plugin';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
+import {
+  withAnalyticsEvents,
+  CreateUIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { analyticsState, createStatusAnalyticsAndFire } from '../analytics';
 
 const PopupWithListeners = withOuterListeners(Popup);
@@ -29,7 +35,7 @@ export interface Props {
   defaultText?: string;
   defaultColor?: Color;
   defaultLocalId?: string;
-  createAnalyticsEvent?: CreateUIAnalyticsEventSignature;
+  createAnalyticsEvent?: CreateUIAnalyticsEvent;
 }
 
 export interface State {
@@ -50,10 +56,6 @@ export class StatusPickerWithoutAnalytcs extends React.Component<Props, State> {
   private startTime!: number;
   private inputMethod?: InputMethod;
   private createStatusAnalyticsAndFireFunc: Function;
-
-  static defaultProps = {
-    autoFocus: false,
-  };
 
   constructor(props: Props) {
     super(props);

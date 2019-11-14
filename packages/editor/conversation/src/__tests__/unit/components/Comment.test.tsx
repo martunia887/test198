@@ -1,7 +1,7 @@
 import AkAvatar from '@atlaskit/avatar';
 import AkComment, { CommentAction, CommentAuthor } from '@atlaskit/comment';
 import { ConnectedReactionsView } from '@atlaskit/reactions';
-import { mount, shallow } from 'enzyme';
+import { mount, shallow, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import {
   mockComment,
@@ -12,25 +12,32 @@ import { getDataProviderFactory } from '../../../../example-helpers/MockProvider
 import Comment, { DeletedMessage } from '../../../../src/components/Comment';
 import Editor from '../../../../src/components/Editor';
 import CommentContainer from '../../../../src/containers/Comment';
+import { User } from '../../../model';
 
-// @ts-ignore
-function findEditAction(comment) {}
+const findAction = (comment: ReactWrapper, key: string): ReactWrapper =>
+  comment
+    .first()
+    .find(CommentAction)
+    .findWhere(
+      (item: ReactWrapper) => item.is(CommentAction) && item.key() === key,
+    );
+
 // avoid polluting test logs with error message in console
 // please ensure you fix it if you expect console.error to be thrown
-// tslint:disable-next-line:no-console
+// eslint-disable-next-line no-console
 let consoleError = console.error;
 describe('Comment', () => {
   const defaultProps = {
     sendAnalyticsEvent: () => {},
   };
 
-  let comment;
+  let comment: any;
   beforeEach(() => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error = jest.fn();
   });
   afterEach(() => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error = consoleError;
   });
   describe('rendering', () => {
@@ -119,13 +126,8 @@ describe('Comment', () => {
         />,
       );
 
-      const replyLink = comment
-        .first()
-        .find(CommentAction)
-        .findWhere(item => item.is(CommentAction) && item.text() === 'Reply')
-        .first();
+      expect(findAction(comment, 'reply').length).toEqual(1);
 
-      expect(replyLink.length).toEqual(1);
       comment.unmount();
     });
 
@@ -138,21 +140,16 @@ describe('Comment', () => {
         />,
       );
 
-      const replyLink = comment
-        .first()
-        .find(CommentAction)
-        .findWhere(item => item.is(CommentAction) && item.text() === 'Reply')
-        .first();
+      expect(findAction(comment, 'reply').length).toEqual(0);
 
-      expect(replyLink.length).toEqual(0);
       comment.unmount();
     });
   });
 
   describe('edit link', () => {
     let user;
-    let editLink;
-    let onUpdateComment;
+    let editLink: ReactWrapper;
+    let onUpdateComment: jest.Mock;
 
     beforeEach(() => {
       user = MOCK_USERS[0];
@@ -169,11 +166,7 @@ describe('Comment', () => {
         />,
       );
 
-      editLink = comment
-        .first()
-        .find(CommentAction)
-        .findWhere(item => item.is(CommentAction) && item.text() === 'Edit')
-        .first();
+      editLink = findAction(comment, 'edit');
     });
 
     afterEach(() => {
@@ -193,20 +186,14 @@ describe('Comment', () => {
           user={otherUser}
         />,
       );
-      const secondCommentEditLink = secondComment
-        .first()
-        .find(CommentAction)
-        // @TODO ED-3521 - Remove the hardcoded string and find by a unique identifier instead
-        .findWhere(item => item.is(CommentAction) && item.text() === 'Edit')
-        .first();
 
-      expect(secondCommentEditLink.length).toEqual(0);
+      expect(findAction(secondComment, 'edit').length).toEqual(0);
 
       secondComment.unmount();
     });
 
     describe.skip('when clicked', () => {
-      let editor;
+      let editor: ReactWrapper;
 
       beforeEach(() => {
         expect(comment.find(Editor).length).toBe(0);
@@ -223,7 +210,7 @@ describe('Comment', () => {
       });
 
       describe('and saved', () => {
-        let newDoc;
+        let newDoc: object;
 
         beforeEach(() => {
           newDoc = {
@@ -241,7 +228,7 @@ describe('Comment', () => {
             ],
           };
 
-          const { onSave } = editor.first().props();
+          const { onSave } = editor.first().props() as any;
           onSave(newDoc);
           comment.update();
         });
@@ -261,7 +248,7 @@ describe('Comment', () => {
 
       describe('and cancelled', () => {
         beforeEach(() => {
-          const { onCancel } = editor.first().props();
+          const { onCancel } = editor.first().props() as any;
           onCancel();
           comment.update();
         });
@@ -277,10 +264,10 @@ describe('Comment', () => {
     });
   });
 
-  describe.skip('delete link', () => {
+  describe('delete link', () => {
     let user;
-    let deleteLink;
-    let onDeleteComment;
+    let deleteLink: ReactWrapper;
+    let onDeleteComment: jest.Mock;
 
     beforeEach(() => {
       user = MOCK_USERS[0];
@@ -297,12 +284,7 @@ describe('Comment', () => {
         />,
       );
 
-      deleteLink = comment
-        .first()
-        .find(CommentAction)
-        // @TODO ED-3521 - Remove the hardcoded string and find by a unique identifier instead
-        .findWhere(item => item.text() === 'Delete')
-        .first();
+      deleteLink = findAction(comment, 'delete');
     });
 
     afterEach(() => {
@@ -322,19 +304,28 @@ describe('Comment', () => {
           user={otherUser}
         />,
       );
-      const secondCommentDeleteLink = secondComment
-        .first()
-        .find(CommentAction)
-        // @TODO ED-3521 - Remove the hardcoded string and find by a unique identifier instead
-        .findWhere(item => item.text() === 'Delete')
-        .first();
-
-      expect(secondCommentDeleteLink.length).toEqual(0);
+      expect(findAction(secondComment, 'delete').length).toEqual(0);
 
       secondComment.unmount();
     });
 
-    it('should delete the comment when clicked', () => {
+    it('should be shown for comments when user can moderate them', () => {
+      const someUser = MOCK_USERS[2];
+
+      const comment = mount(
+        <Comment
+          {...defaultProps}
+          conversationId={mockComment.conversationId}
+          comment={mockComment}
+          user={someUser}
+          canModerateComment={true}
+        />,
+      );
+
+      expect(findAction(comment, 'delete').length).toEqual(1);
+    });
+
+    it.skip('should delete the comment when clicked', () => {
       deleteLink.simulate('click');
       expect(onDeleteComment).toBeCalledWith(
         mockComment.conversationId,
@@ -344,9 +335,9 @@ describe('Comment', () => {
   });
 
   describe('username link', () => {
-    let user;
-    let usernameLink;
-    let onUserClick;
+    let user: User;
+    let usernameLink: ReactWrapper;
+    let onUserClick: jest.Mock;
 
     beforeEach(() => {
       user = MOCK_USERS[0];
@@ -480,6 +471,27 @@ describe('Comment', () => {
       );
 
       expect(comment.first().find(ConnectedReactionsView).length).toEqual(0);
+
+      comment.unmount();
+    });
+  });
+
+  describe('more actions', () => {
+    it('should render additional comment actions when provided', () => {
+      const [user] = MOCK_USERS;
+      const comment = mount(
+        <Comment
+          {...defaultProps}
+          conversationId={mockComment.conversationId}
+          comment={mockComment}
+          user={user}
+          renderAdditionalCommentActions={CommentAction => [
+            <CommentAction key="create-task">Create Task</CommentAction>,
+          ]}
+        />,
+      );
+
+      expect(findAction(comment, 'create-task').length).toEqual(1);
 
       comment.unmount();
     });

@@ -16,6 +16,9 @@ const SectionTitle = styled.h1`
   text-transform: uppercase;
   margin-bottom: ${gridSize()}px;
   margin-left: ${gridSize()}px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 type SectionProps = {
@@ -36,9 +39,11 @@ const Section = (props: SectionProps) => {
 
   return React.Children.count(children) ? (
     <SectionContainer>
-      <FadeIn>
-        <SectionTitle>{title}</SectionTitle>
-      </FadeIn>
+      {title && (
+        <FadeIn>
+          <SectionTitle>{title}</SectionTitle>
+        </FadeIn>
+      )}
       {children}
     </SectionContainer>
   ) : null;

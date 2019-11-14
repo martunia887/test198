@@ -1,5 +1,5 @@
 import { snapshot, initFullPageEditorWithAdf } from '../_utils';
-import * as adf from './__fixtures__/default-table.adf.json';
+import adf from './__fixtures__/default-table.adf.json';
 import {
   clickFirstCell,
   clickTableOptions,
@@ -8,9 +8,9 @@ import {
   selectCellOption,
 } from '../../__helpers/page-objects/_table';
 
-// Unskip in ED-6470
-describe.skip('Table floating toolbar:fullpage', () => {
+describe('Table floating toolbar:fullpage', () => {
   let page: any;
+
   beforeAll(async () => {
     // @ts-ignore
     page = global.page;

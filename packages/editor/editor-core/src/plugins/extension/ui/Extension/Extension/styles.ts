@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { colors, borderRadius, themed } from '@atlaskit/theme';
-import { blockNodesVerticalMargin } from '@atlaskit/editor-common';
 import { Wrapper as WrapperDefault, padding } from '../styles';
 
 export const Wrapper = styled(WrapperDefault)`
-  margin: ${blockNodesVerticalMargin} 0;
+  .extension-overflow-wrapper:not(.with-body) {
+    overflow-x: auto;
+  }
 
   /* extension container breakout, only works on top level */
   .ProseMirror > [extensiontype] &[data-layout='full-width'],
@@ -24,8 +25,7 @@ export const Header = styled.div`
   vertical-align: middle;
 
   &.with-children {
-    padding: 0;
-    background: white;
+    padding: 4px 8px 8px;
   }
 `;
 

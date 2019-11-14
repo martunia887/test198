@@ -3,8 +3,8 @@ import {
   AnalyticsContext,
   AnalyticsListener,
   withAnalyticsEvents,
+  WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import { mount } from 'enzyme';
 import * as React from 'react';
 import {
@@ -45,7 +45,7 @@ describe('<FabricElementsListener />', () => {
   });
 
   const fireAndVerifySentEvent = (
-    Component: React.ComponentClass<OwnProps>,
+    Component: React.ComponentType<OwnProps>,
     expectedEvent: any,
   ) => {
     const compOnClick = jest.fn();
@@ -131,7 +131,7 @@ describe('<FabricElementsListener />', () => {
     });
 
     describe('with source from context', () => {
-      class DummyComponent extends React.Component<WithAnalyticsEventProps> {
+      class DummyComponent extends React.Component<WithAnalyticsEventsProps> {
         render() {
           return (
             <div
@@ -150,7 +150,7 @@ describe('<FabricElementsListener />', () => {
         }
       }
 
-      const DummyComponentWithAnalytics: React.ComponentClass<{}> = withAnalyticsEvents(
+      const DummyComponentWithAnalytics: React.ComponentType<{}> = withAnalyticsEvents(
         {},
       )(DummyComponent);
 
@@ -223,6 +223,34 @@ describe('<FabricElementsListener />', () => {
               </FabricElementsListener>
             </AnalyticsContext>
           </AnalyticsContext>,
+        );
+
+        component
+          .find(DummyComponent)
+          .find('div')
+          .simulate('click');
+
+        expect(analyticsWebClientMock.sendUIEvent).toBeCalledWith(
+          expect.objectContaining({
+            action: 'some-action',
+            actionSubject: 'some-component',
+            source: 'issue',
+          }),
+        );
+      });
+
+      it('should use more specific context', () => {
+        const component = mount(
+          <FabricElementsListener
+            client={analyticsWebClientMock}
+            logger={loggerMock}
+          >
+            <AnalyticsContext data={{ source: 'jira' }}>
+              <AnalyticsContext data={{ source: 'issue' }}>
+                <DummyComponentWithAnalytics />
+              </AnalyticsContext>
+            </AnalyticsContext>
+          </FabricElementsListener>,
         );
 
         component

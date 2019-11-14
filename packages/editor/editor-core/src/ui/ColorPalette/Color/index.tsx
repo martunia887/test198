@@ -4,44 +4,23 @@ import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done';
 import { colors } from '@atlaskit/theme';
 import { Button, ButtonWrapper } from './styles';
+import Tooltip from '@atlaskit/tooltip';
+import chromatism from 'chromatism';
+
+/**
+ * For a given color set the alpha channel to alpha
+ *
+ * @param color color string, suppports HEX, RGB, RGBA etc.
+ * @param alpha Alpha channel value as fraction of 1
+ * @return CSS RGBA string with applied alpha channel
+ */
+export function setAlpha(color: string, alpha: number): string {
+  const { r, g, b } = chromatism.convert(color).rgb;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 // IMO these should live inside @atlaskit/theme
 const messages = defineMessages({
-  '#172b4d': {
-    id: 'fabric.theme.#172b4d',
-    defaultMessage: 'Dark gray',
-    description: 'Name of a color.',
-  },
-  '#97a0af': {
-    id: 'fabric.theme.#97a0af',
-    defaultMessage: 'Light grey',
-    description: 'Name of a color.',
-  },
-  '#6554c0': {
-    id: 'fabric.theme.#6554c0',
-    defaultMessage: 'Purple',
-    description: 'Name of a color.',
-  },
-  '#00b8d9': {
-    id: 'fabric.theme.#00b8d9',
-    defaultMessage: 'Teal',
-    description: 'Name of a color.',
-  },
-  '#36b37e': {
-    id: 'fabric.theme.#36b37e',
-    defaultMessage: 'Green',
-    description: 'Name of a color.',
-  },
-  '#ff5630': {
-    id: 'fabric.theme.#ff5630',
-    defaultMessage: 'Red',
-    description: 'Name of a color.',
-  },
-  '#ff991f': {
-    id: 'fabric.theme.#ff991f',
-    defaultMessage: 'Orange',
-    description: 'Name of a color.',
-  },
   selected: {
     id: 'fabric.editor.selected',
     defaultMessage: 'Selected',
@@ -55,7 +34,7 @@ export interface Props {
   tabIndex?: number;
   isSelected?: boolean;
   onClick: (value: string) => void;
-  borderColor: string;
+  borderColor?: string;
   checkMarkColor?: string;
 }
 
@@ -66,36 +45,34 @@ class Color extends PureComponent<Props & InjectedIntlProps> {
       value,
       label,
       isSelected,
-      borderColor,
+      borderColor = setAlpha(colors.N800, 0.12),
       checkMarkColor = colors.N0,
       intl: { formatMessage },
     } = this.props;
     const borderStyle = `1px solid ${borderColor}`;
+
     return (
-      <ButtonWrapper>
-        <Button
-          onClick={this.onClick}
-          onMouseDown={this.onMouseDown}
-          tabIndex={tabIndex}
-          className={`${isSelected ? 'selected' : ''}`}
-          title={
-            value && messages[value as keyof typeof messages]
-              ? formatMessage(messages[value as keyof typeof messages])
-              : label
-          }
-          style={{
-            backgroundColor: value || 'transparent',
-            border: borderStyle,
-          }}
-        >
-          {isSelected && (
-            <EditorDoneIcon
-              primaryColor={checkMarkColor}
-              label={formatMessage(messages.selected)}
-            />
-          )}
-        </Button>
-      </ButtonWrapper>
+      <Tooltip content={label}>
+        <ButtonWrapper>
+          <Button
+            onClick={this.onClick}
+            onMouseDown={this.onMouseDown}
+            tabIndex={tabIndex}
+            className={`${isSelected ? 'selected' : ''}`}
+            style={{
+              backgroundColor: value || 'transparent',
+              border: borderStyle,
+            }}
+          >
+            {isSelected && (
+              <EditorDoneIcon
+                primaryColor={checkMarkColor}
+                label={formatMessage(messages.selected)}
+              />
+            )}
+          </Button>
+        </ButtonWrapper>
+      </Tooltip>
     );
   }
 

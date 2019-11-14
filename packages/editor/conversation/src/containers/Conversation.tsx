@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { Editor as AkEditor, EditorProps } from '@atlaskit/editor-core';
+import { CommentAction as AkCommentAction } from '@atlaskit/comment';
 import { Provider, connect, Dispatch } from 'react-redux';
 import Conversation, { Props as BaseProps } from '../components/Conversation';
 import { ResourceProvider } from '../api/ConversationResource';
+import { Comment as CommentType } from '../model/Comment';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 
 import {
@@ -90,7 +92,10 @@ const mapDispatchToProps = (
     dispatch(revertComment(conversationId, commentId, provider));
   },
 
-  onHighlightComment(commentId: string) {
+  onHighlightComment(
+    _event: React.MouseEvent<HTMLAnchorElement>,
+    commentId: string,
+  ) {
     dispatch({ type: HIGHLIGHT_COMMENT, payload: { commentId } });
   },
 
@@ -147,7 +152,8 @@ const ResourcedConversation = withAnalyticsEvents()(
   connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(Conversation as any),
+    // @ts-ignore connect generic types to be provided
+  )(Conversation),
 );
 
 export interface ContainerProps {
@@ -171,6 +177,11 @@ export interface ContainerProps {
   allowFeedbackAndHelpButtons?: boolean;
 
   portal?: HTMLElement;
+  renderAdditionalCommentActions?: (
+    CommentAction: typeof AkCommentAction,
+    comment: CommentType,
+  ) => JSX.Element[];
+  renderAfterComment?: (comment: CommentType) => JSX.Element;
 }
 
 class ConversationContainer extends React.Component<ContainerProps, any> {
@@ -190,7 +201,7 @@ class ConversationContainer extends React.Component<ContainerProps, any> {
 
     return (
       <Provider store={store}>
-        <ResourcedConversation {...props} localId={localId} />
+        <ResourcedConversation {...(props as any)} localId={localId} />
       </Provider>
     );
   }

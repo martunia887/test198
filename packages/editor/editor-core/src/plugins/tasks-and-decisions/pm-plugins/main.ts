@@ -5,17 +5,16 @@ import {
   ProviderFactory,
   ContextIdentifierProvider,
 } from '@atlaskit/editor-common';
-import { findParentNodeOfType } from 'prosemirror-utils';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
 import { decisionItemNodeView } from '../nodeviews/decisionItem';
 import { taskItemNodeViewFactory } from '../nodeviews/taskItem';
-import { EditorAppearance, Command } from '../../../types';
+import { Command } from '../../../types';
 import { Dispatch } from '../../../event-dispatcher';
+import { nodesBetweenChanged } from '../../../utils';
 
 export const stateKey = new PluginKey('tasksAndDecisionsPlugin');
 
 enum ACTIONS {
-  SET_CURRENT_TASK_DECISION_ITEM,
   SET_CONTEXT_PROVIDER,
 }
 
@@ -23,21 +22,6 @@ export interface TaskDecisionPluginState {
   currentTaskDecisionItem: PMNode | undefined;
   contextIdentifierProvider?: ContextIdentifierProvider;
 }
-
-const setCurrentTaskDecisionItem = (item: PMNode | undefined): Command => (
-  state,
-  dispatch,
-) => {
-  if (dispatch) {
-    dispatch(
-      state.tr.setMeta(stateKey, {
-        action: ACTIONS.SET_CURRENT_TASK_DECISION_ITEM,
-        data: item,
-      }),
-    );
-  }
-  return true;
-};
 
 const setContextIdentifierProvider = (
   provider: ContextIdentifierProvider | undefined,
@@ -57,7 +41,6 @@ export function createPlugin(
   portalProviderAPI: PortalProviderAPI,
   providerFactory: ProviderFactory,
   dispatch: Dispatch,
-  editorAppearance?: EditorAppearance,
 ) {
   return new Plugin({
     props: {
@@ -78,13 +61,6 @@ export function createPlugin(
         let newPluginState = pluginState;
 
         switch (action) {
-          case ACTIONS.SET_CURRENT_TASK_DECISION_ITEM:
-            newPluginState = {
-              ...pluginState,
-              currentTaskDecisionItem: data,
-            };
-            break;
-
           case ACTIONS.SET_CONTEXT_PROVIDER:
             newPluginState = {
               ...pluginState,
@@ -122,53 +98,7 @@ export function createPlugin(
       };
       providerFactory.subscribe('contextIdentifierProvider', providerHandler);
 
-      return {
-        update: view => {
-          if (editorAppearance !== 'mobile') {
-            return;
-          }
-
-          /**
-           * For composition we need to hide the placeholder when the user is
-           * inside of a taskItem, this is done via pluginState since focus always
-           * lies with the root PM node.
-           *
-           * For web this should always display the placeholder until there is content.
-           * Only mobile will hide the placeholder on focus.
-           *
-           * @see ED-5924
-           */
-          const { state, dispatch } = view;
-          const { selection, schema } = state;
-
-          const {
-            currentTaskDecisionItem,
-          }: TaskDecisionPluginState = stateKey.getState(state);
-          const taskDecisionItem = findParentNodeOfType([
-            schema.nodes.taskItem,
-            schema.nodes.decisionItem,
-          ])(selection);
-
-          if (!taskDecisionItem && currentTaskDecisionItem) {
-            setCurrentTaskDecisionItem(undefined)(state, dispatch);
-            return;
-          }
-
-          if (
-            taskDecisionItem &&
-            currentTaskDecisionItem &&
-            taskDecisionItem.node.eq(currentTaskDecisionItem) === false
-          ) {
-            setCurrentTaskDecisionItem(taskDecisionItem.node)(state, dispatch);
-            return;
-          }
-
-          if (taskDecisionItem && !currentTaskDecisionItem) {
-            setCurrentTaskDecisionItem(taskDecisionItem.node)(state, dispatch);
-            return;
-          }
-        },
-      };
+      return {};
     },
     key: stateKey,
     /*
@@ -182,9 +112,13 @@ export function createPlugin(
     appendTransaction: (transactions, _oldState, newState) => {
       const tr = newState.tr;
       let modified = false;
-      if (transactions.some(transaction => transaction.docChanged)) {
+      transactions.forEach(transaction => {
+        if (!transaction.docChanged) {
+          return;
+        }
+
         // Adds a unique id to a node
-        newState.doc.descendants((node, pos) => {
+        nodesBetweenChanged(transaction, (node, pos) => {
           const {
             decisionList,
             decisionItem,
@@ -208,7 +142,7 @@ export function createPlugin(
             }
           }
         });
-      }
+      });
 
       if (modified) {
         return tr;

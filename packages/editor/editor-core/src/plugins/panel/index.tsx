@@ -1,9 +1,4 @@
 import * as React from 'react';
-import InfoIcon from '@atlaskit/icon/glyph/editor/info';
-import EditorWarningIcon from '@atlaskit/icon/glyph/editor/warning';
-import EditorErrorIcon from '@atlaskit/icon/glyph/editor/error';
-import EditorSuccessIcon from '@atlaskit/icon/glyph/editor/success';
-import EditorNoteIcon from '@atlaskit/icon/glyph/editor/note';
 import { panel, PanelType } from '@atlaskit/adf-schema';
 
 import { EditorPlugin } from '../../types';
@@ -23,6 +18,13 @@ import {
   PANEL_TYPE,
 } from '../analytics';
 import { QuickInsertActionInsert } from '../quick-insert/types';
+import {
+  IconPanel,
+  IconPanelNote,
+  IconPanelSuccess,
+  IconPanelWarning,
+  IconPanelError,
+} from '../quick-insert/assets';
 
 const insertPanelTypeWithAnalytics = (
   panelType: PANEL_TYPE,
@@ -31,7 +33,7 @@ const insertPanelTypeWithAnalytics = (
 ) => {
   const tr = insert(insertPanelType(panelType, state));
   if (tr) {
-    addAnalytics(tr, {
+    addAnalytics(state, tr, {
       action: ACTION.INSERTED,
       actionSubject: ACTION_SUBJECT.DOCUMENT,
       actionSubjectId: ACTION_SUBJECT_ID.PANEL,
@@ -51,7 +53,9 @@ const insertPanelType = (panelType: PanelType, state: EditorState) =>
     state.schema.nodes.paragraph.createChecked(),
   );
 
-const panelPlugin: EditorPlugin = {
+const panelPlugin = (): EditorPlugin => ({
+  name: 'panel',
+
   nodes() {
     return [{ name: 'panel', node: panel }];
   },
@@ -69,31 +73,32 @@ const panelPlugin: EditorPlugin = {
   pluginsOptions: {
     quickInsert: ({ formatMessage }) => [
       {
-        title: formatMessage(messages.panel),
-        keywords: ['info'],
+        title: formatMessage(messages.infoPanel),
+        description: formatMessage(messages.infoPanelDescription),
+        keywords: ['info', 'panel'],
         priority: 900,
-        icon: () => <InfoIcon label={formatMessage(messages.panel)} />,
+        icon: () => <IconPanel label={formatMessage(messages.infoPanel)} />,
         action(insert, state) {
           return insertPanelTypeWithAnalytics(PANEL_TYPE.INFO, state, insert);
         },
       },
       {
         title: formatMessage(messages.notePanel),
+        description: formatMessage(messages.notePanelDescription),
         keywords: ['note'],
         priority: 1000,
-        icon: () => (
-          <EditorNoteIcon label={formatMessage(messages.notePanel)} />
-        ),
+        icon: () => <IconPanelNote label={formatMessage(messages.notePanel)} />,
         action(insert, state) {
           return insertPanelTypeWithAnalytics(PANEL_TYPE.NOTE, state, insert);
         },
       },
       {
         title: formatMessage(messages.successPanel),
+        description: formatMessage(messages.successPanelDescription),
         keywords: ['success', 'tip'],
         priority: 1000,
         icon: () => (
-          <EditorSuccessIcon label={formatMessage(messages.successPanel)} />
+          <IconPanelSuccess label={formatMessage(messages.successPanel)} />
         ),
         action(insert, state) {
           return insertPanelTypeWithAnalytics(
@@ -105,10 +110,11 @@ const panelPlugin: EditorPlugin = {
       },
       {
         title: formatMessage(messages.warningPanel),
+        description: formatMessage(messages.warningPanelDescription),
         keywords: ['warning'],
         priority: 1000,
         icon: () => (
-          <EditorWarningIcon label={formatMessage(messages.warningPanel)} />
+          <IconPanelWarning label={formatMessage(messages.warningPanel)} />
         ),
         action(insert, state) {
           return insertPanelTypeWithAnalytics(
@@ -120,10 +126,11 @@ const panelPlugin: EditorPlugin = {
       },
       {
         title: formatMessage(messages.errorPanel),
+        description: formatMessage(messages.errorPanelDescription),
         keywords: ['error'],
         priority: 1000,
         icon: () => (
-          <EditorErrorIcon label={formatMessage(messages.errorPanel)} />
+          <IconPanelError label={formatMessage(messages.errorPanel)} />
         ),
         action(insert, state) {
           return insertPanelTypeWithAnalytics(PANEL_TYPE.ERROR, state, insert);
@@ -132,6 +139,6 @@ const panelPlugin: EditorPlugin = {
     ],
     floatingToolbar: getToolbarConfig,
   },
-};
+});
 
 export default panelPlugin;

@@ -3,13 +3,29 @@ import {
   createEditorFactory,
   p,
   a,
+  blockquote,
+  table,
+  th,
+  tr,
+  td,
+  ul,
+  panel,
+  bodiedExtension,
+  taskItem,
+  taskList,
+  decisionList,
+  decisionItem,
+  li,
   insertText,
+  createAnalyticsEventMock,
+  defaultSchema,
+  text,
+  cleanOne,
 } from '@atlaskit/editor-test-helpers';
 import { EditorView } from 'prosemirror-view';
-import { Fragment, Slice } from 'prosemirror-model';
+import { Fragment, Slice, Node } from 'prosemirror-model';
 
 import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
-import cardPlugin from '../../../../plugins/card';
 import { CardProvider, CardPluginState } from '../../../../plugins/card/types';
 import {
   setProvider,
@@ -17,40 +33,84 @@ import {
 } from '../../../../plugins/card/pm-plugins/actions';
 
 import { setTextSelection } from '../../../../utils';
-import { queueCardsFromChangedTr } from '../../../../plugins/card/pm-plugins/doc';
-import { panelPlugin } from '../../../../plugins';
+import {
+  queueCardsFromChangedTr,
+  shouldReplace,
+} from '../../../../plugins/card/pm-plugins/doc';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { createCardRequest, setupProvider, ProviderWrapper } from './_helpers';
+
+const inlineCardAdf = {
+  type: 'inlineCard',
+  attrs: {
+    url: '',
+    data: {
+      '@context': 'https://www.w3.org/ns/activitystreams',
+      '@type': 'Document',
+      name: 'Welcome to Atlassian!',
+      url: 'http://www.atlassian.com',
+    },
+  },
+};
+const atlassianUrl = 'http://www.atlassian.com/';
+const googleUrl = 'http://www.google.com/';
 
 describe('card', () => {
   const createEditor = createEditorFactory();
-
+  let createAnalyticsEvent: jest.MockInstance<UIAnalyticsEvent, any>;
   const editor = (doc: any) => {
-    return createEditor({
+    createAnalyticsEvent = createAnalyticsEventMock();
+    const editorWrapper = createEditor({
       doc,
-      editorPlugins: [cardPlugin, panelPlugin],
+      editorProps: {
+        allowTables: {
+          advanced: true,
+        },
+        allowAnalyticsGASV3: true,
+        allowExtension: true,
+        allowPanel: true,
+        allowLists: true,
+        allowTasksAndDecisions: true,
+        UNSAFE_cards: {},
+      },
+      createAnalyticsEvent: createAnalyticsEvent as any,
       pluginKey,
     });
+
+    createAnalyticsEvent.mockClear();
+
+    return editorWrapper;
   };
 
   describe('doc', () => {
-    describe('#state.update', async () => {
+    describe('#state.update', () => {
       it('keeps positions the same for typing after the link', () => {
-        const href = 'http://www.atlassian.com/';
-
         const { editorView, refs } = editor(
-          doc(p('hello have a link {<>}', a({ href })(href))),
+          doc(
+            p(
+              'hello have a link {<>}',
+              a({ href: atlassianUrl })(atlassianUrl),
+            ),
+          ),
         );
 
         const { state, dispatch } = editorView;
         dispatch(
-          queueCards([{ url: href, pos: refs['<>'], appearance: 'inline' }])(
-            state.tr,
-          ),
+          queueCards([createCardRequest(atlassianUrl, refs['<>'])])(state.tr),
         );
 
         // should be at initial pos
         const initialState = {
-          requests: [{ url: href, pos: refs['<>'], appearance: 'inline' }],
+          cards: [],
+          requests: [
+            expect.objectContaining({
+              url: atlassianUrl,
+              pos: refs['<>'],
+            }),
+          ],
           provider: null,
+          showLinkingToolbar: false,
         } as CardPluginState;
         expect(pluginKey.getState(editorView.state)).toEqual(initialState);
 
@@ -63,11 +123,10 @@ describe('card', () => {
       });
 
       it('queues the link in a slice as the only node', () => {
-        const href = 'http://www.atlassian.com/';
         const linkDoc = p(
           a({
-            href,
-          })(href),
+            href: atlassianUrl,
+          })(atlassianUrl),
         );
 
         const { editorView } = editor(doc(p('blah')));
@@ -80,32 +139,39 @@ describe('card', () => {
           new Slice(Fragment.from(linkDoc(editorView.state.schema)), 1, 1),
         );
 
-        editorView.dispatch(queueCardsFromChangedTr(editorView.state, tr));
+        editorView.dispatch(
+          queueCardsFromChangedTr(editorView.state, tr, INPUT_METHOD.CLIPBOARD),
+        );
 
         expect(pluginKey.getState(editorView.state)).toEqual({
+          cards: [],
           requests: [
             {
               url: 'http://www.atlassian.com/',
               pos: 1,
               appearance: 'inline',
+              compareLinkText: true,
+              source: 'clipboard',
             },
           ],
           provider: null,
-        });
+          showLinkingToolbar: false,
+        } as CardPluginState);
       });
 
       it('remaps positions for typing before the link', () => {
-        const href = 'http://www.atlassian.com/';
-
         const { editorView, refs } = editor(
-          doc(p('{<>}hello have a link', a({ href })('{link}' + href))),
+          doc(
+            p(
+              '{<>}hello have a link',
+              a({ href: atlassianUrl })('{link}' + atlassianUrl),
+            ),
+          ),
         );
 
         const { state, dispatch } = editorView;
         dispatch(
-          queueCards([{ url: href, pos: refs['link'], appearance: 'inline' }])(
-            state.tr,
-          ),
+          queueCards([createCardRequest(atlassianUrl, refs['link'])])(state.tr),
         );
 
         // type something at start
@@ -114,21 +180,22 @@ describe('card', () => {
 
         // nothing should have changed
         expect(pluginKey.getState(editorView.state)).toEqual({
+          cards: [],
           requests: [
-            {
-              url: href,
+            expect.objectContaining({
+              url: atlassianUrl,
               pos: refs['link'] + typedText.length,
-              appearance: 'inline',
-            },
+            }),
           ],
           provider: null,
+          showLinkingToolbar: false,
         } as CardPluginState);
       });
 
       it('only remaps the relevant link based on position', () => {
         const hrefs = {
-          A: 'http://www.atlassian.com/',
-          B: 'http://www.google.com/',
+          A: atlassianUrl,
+          B: googleUrl,
         };
 
         // create a doc with 2 links
@@ -148,40 +215,57 @@ describe('card', () => {
         // queue both links
         (Object.keys(hrefs) as Array<keyof typeof hrefs>).map(key => {
           dispatch(
-            queueCards([
-              { url: hrefs[key], pos: refs[key], appearance: 'inline' },
-            ])(editorView.state.tr),
+            queueCards([createCardRequest(hrefs[key], refs[key])])(
+              editorView.state.tr,
+            ),
           );
         });
 
         // everything should be at initial pos
         expect(pluginKey.getState(editorView.state)).toEqual({
+          cards: [],
           requests: [
-            { url: hrefs['A'], pos: refs['A'], appearance: 'inline' },
-            { url: hrefs['B'], pos: refs['B'], appearance: 'inline' },
+            expect.objectContaining({
+              url: hrefs['A'],
+              pos: refs['A'],
+            }),
+            expect.objectContaining({
+              url: hrefs['B'],
+              pos: refs['B'],
+            }),
           ],
           provider: null,
-        });
+          showLinkingToolbar: false,
+        } as CardPluginState);
 
         // type something in between the links
         insertText(editorView, 'ok', refs['middle']);
 
         // only B should have moved 2 to the right
         expect(pluginKey.getState(editorView.state)).toEqual({
+          cards: [],
           requests: [
-            { url: hrefs['A'], pos: refs['A'], appearance: 'inline' },
-            { url: hrefs['B'], pos: refs['B'] + 2, appearance: 'inline' },
+            expect.objectContaining({
+              url: hrefs['A'],
+              pos: refs['A'],
+            }),
+            expect.objectContaining({
+              url: hrefs['B'],
+              pos: refs['B'] + 2,
+            }),
           ],
-
           provider: null,
-        });
+          showLinkingToolbar: false,
+        } as CardPluginState);
       });
     });
 
-    describe('provider', () => {
-      const href = 'http://www.atlassian.com/';
+    describe('does not replace if provider', () => {
       const initialDoc = doc(
-        p('hello have a link ', a({ href })('{<>}' + href)),
+        p(
+          'hello have a link ',
+          a({ href: atlassianUrl })('{<>}' + atlassianUrl),
+        ),
       );
 
       let view: EditorView;
@@ -192,9 +276,21 @@ describe('card', () => {
         view = editorView;
       });
 
-      it('does not replace if provider returns invalid ADF', async () => {
+      afterEach(async () => {
+        // queue should now be empty, and document should remain the same
+        expect(pluginKey.getState(view.state)).toEqual({
+          cards: [],
+          requests: [],
+          provider: provider,
+          showLinkingToolbar: false,
+        } as CardPluginState);
+
+        expect(view.state.doc).toEqualDocument(initialDoc);
+      });
+
+      test('returns invalid ADF', async () => {
         const { dispatch } = view;
-        const doc = {
+        const invalidADF = {
           type: 'panel',
           content: [
             {
@@ -208,79 +304,42 @@ describe('card', () => {
             },
           ],
         };
-
-        provider = new class implements CardProvider {
-          resolve(url: string): Promise<any> {
-            return new Promise(resolve => {
-              resolve(doc);
-            });
-          }
-        }();
-
-        dispatch(setProvider(provider)(view.state.tr));
+        const providerWrapper = setupProvider(invalidADF);
+        providerWrapper.addProvider(view);
+        ({ provider } = providerWrapper);
 
         // try to replace the link using bad provider
         dispatch(
           queueCards([
-            { url: href, pos: view.state.selection.from, appearance: 'inline' },
+            createCardRequest(atlassianUrl, view.state.selection.from),
           ])(view.state.tr),
         );
       });
 
-      it('does not replace if provider rejects', async () => {
+      test('rejects', async () => {
         const { dispatch } = view;
-        provider = new class implements CardProvider {
-          resolve(url: string): Promise<any> {
+        provider = new (class implements CardProvider {
+          resolve(): Promise<any> {
             return Promise.reject('error').catch(() => {});
           }
-        }();
+        })();
 
         dispatch(setProvider(provider)(view.state.tr));
 
         // try to replace the link using bad provider
         dispatch(
           queueCards([
-            { url: href, pos: view.state.selection.from, appearance: 'inline' },
+            createCardRequest(atlassianUrl, view.state.selection.from),
           ])(view.state.tr),
         );
-      });
-
-      afterEach(async () => {
-        // queue should now be empty, and document should remain the same
-        expect(pluginKey.getState(view.state)).toEqual({
-          requests: [],
-          provider: provider,
-        });
-
-        expect(view.state.doc).toEqualDocument(initialDoc);
       });
     });
 
     describe('changed document', () => {
-      let promises: Promise<any>[] = [];
-      let provider: CardProvider;
-      const cardAdf = {
-        type: 'paragraph',
-        content: [
-          {
-            type: 'text',
-            text: 'hello world',
-          },
-        ],
-      };
+      let providerWrapper: ProviderWrapper;
 
       beforeEach(() => {
-        provider = new class implements CardProvider {
-          resolve(url: string): Promise<any> {
-            const promise = new Promise(resolve => resolve(cardAdf));
-            promises.push(promise);
-            return promise;
-          }
-        }();
-      });
-
-      afterEach(() => {
-        promises = [];
+        providerWrapper = setupProvider();
       });
 
       it('does not replace if link text changes', async () => {
@@ -290,16 +349,12 @@ describe('card', () => {
         );
 
         const { dispatch } = editorView;
-        dispatch(setProvider(provider)(editorView.state.tr));
+        providerWrapper.addProvider(editorView);
 
         // queue it
         dispatch(
           queueCards([
-            {
-              url: href,
-              pos: editorView.state.selection.from,
-              appearance: 'inline',
-            },
+            createCardRequest(href, editorView.state.selection.from),
           ])(editorView.state.tr),
         );
 
@@ -307,7 +362,7 @@ describe('card', () => {
         // we prefer to change on the other side of the boundary)
         insertText(editorView, 'change', editorView.state.selection.from + 1);
 
-        await Promise.all(promises);
+        await providerWrapper.waitForRequests();
 
         // link should not have been replaced, but text will have changed
         expect(editorView.state.doc).toEqualDocument(
@@ -321,35 +376,460 @@ describe('card', () => {
 
         // queue should be empty
         expect(pluginKey.getState(editorView.state)).toEqual({
+          cards: [],
           requests: [],
-          provider: provider,
-        });
+          provider: providerWrapper.provider,
+          showLinkingToolbar: false,
+        } as CardPluginState);
+      });
+
+      it('replaces anyway if compareLinkText is false', async () => {
+        const { editorView } = editor(
+          doc(
+            p(
+              'hello have a link ',
+              a({
+                href: atlassianUrl,
+              })('{<>}renamed link'),
+            ),
+          ),
+        );
+
+        const { dispatch } = editorView;
+        providerWrapper.addProvider(editorView);
+
+        // queue it
+        dispatch(
+          queueCards([
+            createCardRequest(atlassianUrl, editorView.state.selection.from, {
+              compareLinkText: false,
+            }),
+          ])(editorView.state.tr),
+        );
+
+        // the test cardProvider stores the promise for each card it's converting
+        // resolve all the promises to allow the card plugin to convert the cards to links
+        await providerWrapper.waitForRequests();
+
+        // this test provider replaces links with the ADF of: p('hello world')
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p('hello have a link '), p('hello world'), p()),
+        );
+      });
+
+      it('replaces a link encoded with spaces', async () => {
+        const { editorView } = editor(
+          doc(
+            p(
+              'hello have a link ',
+              a({
+                href:
+                  'https://www.atlassian.com/s/7xr7xdqto7trhvr/Media%20picker.sketch?dl=0',
+              })(
+                '{<>}https://www.atlassian.com/s/7xr7xdqto7trhvr/Media%20picker.sketch?dl=0',
+              ),
+            ),
+          ),
+        );
+
+        const { dispatch } = editorView;
+        providerWrapper.addProvider(editorView);
+
+        // queue it
+        dispatch(
+          queueCards([
+            createCardRequest(
+              'https://www.atlassian.com/s/7xr7xdqto7trhvr/Media%20picker.sketch?dl=0',
+              editorView.state.selection.from,
+            ),
+          ])(editorView.state.tr),
+        );
+
+        await providerWrapper.waitForRequests();
+
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p('hello have a link '), p('hello world'), p()),
+        );
+      });
+
+      it('replaces when link text is unencoded', async () => {
+        const { editorView } = editor(
+          doc(
+            p(
+              'hello have a link ',
+              a({
+                href:
+                  'https://www.atlassian.com/s/7xr7xdqto7trhvr/Media%20picker.sketch?dl=0',
+              })(
+                '{<>}https://www.atlassian.com/s/7xr7xdqto7trhvr/Media picker.sketch?dl=0',
+              ),
+            ),
+          ),
+        );
+
+        const { dispatch } = editorView;
+        providerWrapper.addProvider(editorView);
+
+        // queue it
+        dispatch(
+          queueCards([
+            createCardRequest(
+              'https://www.atlassian.com/s/7xr7xdqto7trhvr/Media%20picker.sketch?dl=0',
+              editorView.state.selection.from,
+            ),
+          ])(editorView.state.tr),
+        );
+
+        await providerWrapper.waitForRequests();
+
+        expect(editorView.state.doc).toEqualDocument(
+          doc(p('hello have a link '), p('hello world'), p()),
+        );
       });
 
       it('does not replace if position is some other content', async () => {
-        const href = 'http://www.atlassian.com/';
-        const initialDoc = doc(p('hello have a link '), p('{<>}' + href));
+        const initialDoc = doc(
+          p('hello have a link '),
+          p('{<>}' + atlassianUrl),
+        );
 
         const { editorView } = editor(initialDoc);
+
         const { dispatch } = editorView;
-        dispatch(setProvider(provider)(editorView.state.tr));
+        providerWrapper.addProvider(editorView);
 
         // queue a non-link node
         dispatch(
           queueCards([
-            {
-              url: href,
-              pos: editorView.state.selection.from,
-              appearance: 'inline',
-            },
+            createCardRequest(atlassianUrl, editorView.state.selection.from),
           ])(editorView.state.tr),
         );
 
         // resolve the provider
-        await Promise.all(promises);
+        await providerWrapper.waitForRequests();
 
         // nothing should change
         expect(editorView.state.doc).toEqualDocument(initialDoc);
+      });
+    });
+
+    describe('analytics GAS V3', () => {
+      const providerWrapper = setupProvider(inlineCardAdf);
+
+      it('should create analytics GAS V3 event if insert card', async () => {
+        const { editorView } = editor(
+          doc(
+            p(
+              'hello have a link ',
+              a({
+                href: atlassianUrl,
+              })(`{<>}${atlassianUrl}`),
+            ),
+          ),
+        );
+
+        providerWrapper.addProvider(editorView);
+
+        // queue it
+        editorView.dispatch(
+          queueCards([
+            createCardRequest(atlassianUrl, editorView.state.selection.from),
+          ])(editorView.state.tr),
+        );
+
+        await providerWrapper.waitForRequests();
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith({
+          action: 'inserted',
+          actionSubject: 'document',
+          actionSubjectId: 'smartLink',
+          eventType: 'track',
+          attributes: expect.objectContaining({
+            domainName: 'www.atlassian.com',
+            nodeType: 'inlineCard',
+          }),
+        });
+      });
+
+      function testWithContext(initialDoc: object, expectedContext: string) {
+        test(`should create analytics GAS V3 with node context ${expectedContext}`, async () => {
+          const { editorView } = editor(initialDoc);
+
+          providerWrapper.addProvider(editorView);
+
+          // queue it
+          editorView.dispatch(
+            queueCards([
+              createCardRequest(atlassianUrl, editorView.state.selection.from),
+            ])(editorView.state.tr),
+          );
+
+          await providerWrapper.waitForRequests();
+
+          expect(createAnalyticsEvent).toHaveBeenCalledWith({
+            action: 'inserted',
+            actionSubject: 'document',
+            actionSubjectId: 'smartLink',
+            eventType: 'track',
+            attributes: expect.objectContaining({
+              nodeContext: expectedContext,
+            }),
+          });
+        });
+      }
+
+      // Test analytics with right context
+      [
+        {
+          initialDoc: doc(
+            blockquote(
+              p(
+                'hello have a link ',
+                a({
+                  href: atlassianUrl,
+                })(`{<>}${atlassianUrl}`),
+              ),
+            ),
+          ),
+          expectedContext: 'blockquote',
+        },
+        {
+          initialDoc: doc(
+            table()(
+              tr(
+                th({ colwidth: [100] })(p('1')),
+                th({ colwidth: [100] })(p('2')),
+                th({ colwidth: [480] })(p('3')),
+              ),
+              tr(
+                td({ colwidth: [100] })(
+                  p(
+                    'hello have a link ',
+                    a({
+                      href: atlassianUrl,
+                    })(`{<>}${atlassianUrl}`),
+                  ),
+                ),
+                td({ colwidth: [100] })(p('5')),
+                td({ colwidth: [480] })(p('6')),
+              ),
+            ),
+          ),
+          expectedContext: 'tableCell',
+        },
+        {
+          initialDoc: doc(
+            table()(
+              tr(
+                th({ colwidth: [100] })(
+                  p(
+                    'hello have a link ',
+                    a({
+                      href: atlassianUrl,
+                    })(`{<>}${atlassianUrl}`),
+                  ),
+                ),
+                th({ colwidth: [100] })(p('2')),
+                th({ colwidth: [480] })(p('3')),
+              ),
+              tr(
+                td({ colwidth: [100] })(p('4')),
+                td({ colwidth: [100] })(p('5')),
+                td({ colwidth: [480] })(p('6')),
+              ),
+            ),
+          ),
+          expectedContext: 'tableHeader',
+        },
+        {
+          initialDoc: doc(
+            ul(
+              li(
+                p(
+                  'hello have a link ',
+                  a({
+                    href: atlassianUrl,
+                  })(`{<>}${atlassianUrl}`),
+                ),
+              ),
+            ),
+          ),
+          expectedContext: 'listItem',
+        },
+        {
+          initialDoc: doc(
+            decisionList()(
+              decisionItem({ localId: 'local-decision' })(
+                'hello have a link ',
+                a({
+                  href: atlassianUrl,
+                })(`{<>}${atlassianUrl}`),
+              ),
+            ),
+          ),
+          expectedContext: 'decisionList',
+        },
+        {
+          initialDoc: doc(
+            taskList()(
+              taskItem({ localId: 'local-task' })(
+                'hello have a link ',
+                a({
+                  href: atlassianUrl,
+                })(`{<>}${atlassianUrl}`),
+              ),
+            ),
+          ),
+          expectedContext: 'taskList',
+        },
+        {
+          initialDoc: doc(
+            panel()(
+              p(
+                'hello have a link ',
+                a({
+                  href: atlassianUrl,
+                })(`{<>}${atlassianUrl}`),
+              ),
+            ),
+          ),
+          expectedContext: 'panel',
+        },
+        {
+          initialDoc: doc(
+            bodiedExtension({
+              extensionType: 'com.atlassian.confluence.macro.core',
+              extensionKey: 'expand',
+            })(
+              p(
+                'hello have a link ',
+                a({
+                  href: atlassianUrl,
+                })(`{<>}${atlassianUrl}`),
+              ),
+            ),
+          ),
+          expectedContext: 'bodiedExtension',
+        },
+      ].forEach(({ initialDoc, expectedContext }) =>
+        testWithContext(initialDoc, expectedContext),
+      );
+    });
+
+    describe('shouldReplace', () => {
+      it('returns true for regular link, same href and text', () => {
+        const link = cleanOne(
+          a({ href: 'https://invis.io/P8OKINLRQEH' })(
+            'https://invis.io/P8OKINLRQEH',
+          ),
+        )(defaultSchema);
+
+        expect(shouldReplace(link)).toBe(true);
+      });
+
+      it('returns false for regular link, differing href and text', () => {
+        const link = cleanOne(
+          a({ href: 'https://invis.io/P8OKINLRQEH' })(
+            'https://invis.io/P8OKINLRQE',
+          ),
+        )(defaultSchema);
+
+        expect(shouldReplace(link)).toBe(false);
+      });
+
+      it('returns true for differing href and text if compare is skipped', () => {
+        const link = cleanOne(
+          a({ href: 'https://invis.io/P8OKINLRQEH' })(
+            'https://www.atlassian.com/',
+          ),
+        )(defaultSchema);
+
+        expect(shouldReplace(link, false)).toBe(true);
+      });
+
+      it('returns false for same href and text if compare url differs', () => {
+        const link = cleanOne(
+          a({
+            href: 'https://invis.io/P8OKINLRQEH',
+          })('https://invis.io/P8OKINLRQEH'),
+        )(defaultSchema);
+
+        expect(shouldReplace(link, true, 'http://www.atlassian.com/')).toBe(
+          false,
+        );
+      });
+
+      it('returns true for same href and text if compare url matches', () => {
+        const link = cleanOne(
+          a({
+            href: 'https://invis.io/P8OKINLRQEH',
+          })('https://invis.io/P8OKINLRQEH'),
+        )(defaultSchema);
+
+        expect(shouldReplace(link, true, 'https://invis.io/P8OKINLRQEH')).toBe(
+          true,
+        );
+      });
+
+      it('returns true for link with encoded spaces in url and text', () => {
+        const link = cleanOne(
+          a({
+            href:
+              'https://www.dropbox.com/s/2mh79iuglsnmbwf/Get%20Started%20with%20Dropbox.pdf?dl=0',
+          })(
+            'https://www.dropbox.com/s/2mh79iuglsnmbwf/Get%20Started%20with%20Dropbox.pdf?dl=0',
+          ),
+        )(defaultSchema);
+
+        expect(shouldReplace(link)).toBe(true);
+      });
+
+      it('returns true for link with url encoded spaces, text unencoded', () => {
+        const link = cleanOne(
+          a({
+            href:
+              'https://www.dropbox.com/s/2mh79iuglsnmbwf/Get%20Started%20with%20Dropbox.pdf?dl=0',
+          })(
+            'https://www.dropbox.com/s/2mh79iuglsnmbwf/Get Started with Dropbox.pdf?dl=0',
+          ),
+        )(defaultSchema);
+
+        expect(shouldReplace(link)).toBe(true);
+      });
+
+      it('returns true for link with text encoded spaces, url unencoded', () => {
+        const link = cleanOne(
+          a({
+            href:
+              'https://www.dropbox.com/s/2mh79iuglsnmbwf/Get Started with Dropbox.pdf?dl=0',
+          })(
+            'https://www.dropbox.com/s/2mh79iuglsnmbwf/Get%20Started%20with%20Dropbox.pdf?dl=0',
+          ),
+        )(defaultSchema);
+
+        expect(shouldReplace(link)).toBe(true);
+      });
+
+      it('returns true for link with slash', () => {
+        const link = cleanOne(
+          a({
+            href: 'https://invis.io/P8OKINLRQEH/',
+          })('https://invis.io/P8OKINLRQEH/'),
+        )(defaultSchema);
+
+        expect(shouldReplace(link, true, 'https://invis.io/P8OKINLRQEH/')).toBe(
+          true,
+        );
+      });
+
+      it('returns false for text node', () => {
+        const textRefNode = text('https://invis.io/P8OKINLRQEH', defaultSchema);
+        const textNode = Node.fromJSON(
+          defaultSchema,
+          (textRefNode as Node).toJSON(),
+        );
+
+        expect(shouldReplace(textNode)).toBe(false);
       });
     });
   });

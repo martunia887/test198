@@ -1,6 +1,6 @@
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-import 'whatwg-fetch';
-import * as fetchMock from 'fetch-mock/src/client';
+
+import fetchMock from 'fetch-mock/src/client';
 
 import { requestService } from '../serviceUtils';
 import {
@@ -78,7 +78,7 @@ describe('requestService', () => {
       expect(calls.length).toEqual(1);
       const url = calls[0][0];
       const { headers, method } = calls[0][1];
-      const xCheeseHeader = headers.map['x-cheese'];
+      const xCheeseHeader = headers['X-Cheese'];
       expect(xCheeseHeader).not.toEqual(undefined);
       expect(xCheeseHeader).toEqual('american');
       expect(url.indexOf(url)).toEqual(0);
@@ -128,7 +128,7 @@ describe('requestService', () => {
       const url = refreshCalls[0][0];
       const { headers } = refreshCalls[0][1];
 
-      const xCheeseHeader = headers.map['x-cheese'];
+      const xCheeseHeader = headers['X-Cheese'];
       expect(xCheeseHeader).not.toEqual(undefined);
       expect(xCheeseHeader).toEqual('swiss');
       expect(url.indexOf(url)).toEqual(0);

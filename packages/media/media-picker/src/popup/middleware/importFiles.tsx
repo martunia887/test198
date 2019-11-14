@@ -1,15 +1,20 @@
-import * as uuid from 'uuid/v4';
+import uuid from 'uuid/v4';
 import { Store, Dispatch, Middleware } from 'redux';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import {
   TouchFileDescriptor,
   FileState,
-  fileStreamsCache,
+  getFileStreamsCache,
   getMediaTypeFromMimeType,
   FilePreview,
   isPreviewableType,
   MediaType,
-} from '@atlaskit/media-core';
+  globalMediaEventEmitter,
+  observableToPromise,
+  isErrorFileState,
+} from '@atlaskit/media-client';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
+
 import { State, SelectedItem, LocalUpload, ServiceName } from '../domain';
 import { isStartImportAction } from '../actions/startImport';
 import { finalizeUpload } from '../actions/finalizeUpload';
@@ -18,16 +23,17 @@ import { getPreview } from '../actions/getPreview';
 import { handleCloudFetchingEvent } from '../actions/handleCloudFetchingEvent';
 import { setEventProxy } from '../actions/setEventProxy';
 import { hidePopup } from '../actions/hidePopup';
-import { RECENTS_COLLECTION } from '../config';
+import { resetView } from '../actions/resetView';
 import { WsProvider } from '../tools/websocket/wsProvider';
 import { WsConnectionHolder } from '../tools/websocket/wsConnectionHolder';
 import { RemoteUploadActivity } from '../tools/websocket/upload/remoteUploadActivity';
-import { MediaFile, copyMediaFileForUpload } from '../../domain/file';
+import { copyMediaFileForUpload } from '../../domain/file';
+import { MediaFile } from '../../types';
 import { PopupUploadEventEmitter } from '../../components/types';
 import { sendUploadEvent } from '../actions/sendUploadEvent';
-import { setUpfrontIdDeferred } from '../actions/setUpfrontIdDeferred';
 import { WsNotifyMetadata } from '../tools/websocket/wsMessageData';
 import { getPreviewFromMetadata } from '../../domain/preview';
+
 export interface RemoteFileItem extends SelectedItem {
   accountId: string;
   publicId: string;
@@ -59,9 +65,9 @@ const mapSelectedItemToSelectedUploadFile = (
     date,
     serviceName,
     accountId,
-    upfrontId,
     occurrenceKey = uuid(),
   }: SelectedItem,
+  tenantFileId: string,
   collection?: string,
 ): SelectedUploadFile => ({
   file: {
@@ -70,13 +76,12 @@ const mapSelectedItemToSelectedUploadFile = (
     size,
     creationDate: date || Date.now(),
     type: mimeType,
-    upfrontId,
     occurrenceKey,
   },
   serviceName,
   accountId,
   touchFileDescriptor: {
-    fileId: uuid(),
+    fileId: tenantFileId,
     occurrenceKey,
     collection,
   },
@@ -86,7 +91,7 @@ export function importFilesMiddleware(
   eventEmitter: PopupUploadEventEmitter,
   wsProvider: WsProvider,
 ): Middleware {
-  return store => (next: Dispatch<State>) => action => {
+  return store => (next: Dispatch<State>) => (action: any) => {
     if (isStartImportAction(action)) {
       importFiles(eventEmitter, store as any, wsProvider);
     }
@@ -100,7 +105,7 @@ const getPreviewByService = (
   mediaType: MediaType,
   fileId: string,
 ) => {
-  const { userContext, giphy } = store.getState();
+  const { userMediaClient, giphy } = store.getState();
 
   if (serviceName === 'giphy') {
     const selectedGiphy = giphy.imageCardModels.find(
@@ -112,7 +117,7 @@ const getPreviewByService = (
       };
     }
   } else if (serviceName === 'upload') {
-    const observable = fileStreamsCache.get(fileId);
+    const observable = getFileStreamsCache().get(fileId);
     if (observable) {
       return new Promise<FilePreview>(resolve => {
         const subscription = observable.subscribe({
@@ -128,12 +133,15 @@ const getPreviewByService = (
   } else if (serviceName === 'recent_files' && isPreviewableType(mediaType)) {
     return new Promise<FilePreview>(async resolve => {
       // We fetch a good size image, since it can be opened later on in MV
-      const blob = await userContext.getImage(fileId, {
-        collection: RECENTS_COLLECTION,
-        width: 1920,
-        height: 1080,
-        mode: 'fit',
-      });
+      const blob = await userMediaClient.getImage(
+        fileId,
+        {
+          collection: RECENTS_COLLECTION,
+          mode: 'fit',
+        },
+        undefined,
+        true,
+      );
 
       resolve({ value: blob });
     });
@@ -142,6 +150,108 @@ const getPreviewByService = (
   return undefined;
 };
 
+/**
+ * Take selected file (that can be local uploads, recents or remote file (giphy, google, dropbox))
+ * and convert it to FileState that will become tenant file state.
+ * If selected file already in the cache (for local uploads and recents) we take everything it has, change it's id
+ * to new tenant id (generated on client side) and add a preview.
+ * If selected file is not in the cache (for remote selected files) we generate new file state
+ * with details found in selected file.
+ */
+export const getTenantFileState = async (
+  store: Store<State>,
+  selectedUploadFile: SelectedUploadFile,
+): Promise<FileState> => {
+  const {
+    file: selectedUserFile,
+    serviceName,
+    touchFileDescriptor,
+  } = selectedUploadFile;
+
+  const tenantFileId = touchFileDescriptor.fileId;
+  const selectedUserFileId = selectedUserFile.id;
+
+  const mediaType = getMediaTypeFromMimeType(selectedUserFile.type);
+  const preview = getPreviewByService(
+    store,
+    serviceName,
+    mediaType,
+    selectedUserFileId,
+  );
+
+  const userFileObservable = getFileStreamsCache().get(selectedUserFileId);
+  if (userFileObservable) {
+    // Even though there is await here we will wait mostly for 1 tick, since
+    // observable.next inside observableToPromise will eval synchronously.
+    const userFileState = await observableToPromise(userFileObservable);
+
+    if (isErrorFileState(userFileState)) {
+      return {
+        ...userFileState,
+        id: tenantFileId,
+      };
+    } else {
+      return {
+        ...userFileState,
+        id: tenantFileId,
+        preview,
+      };
+    }
+  } else {
+    return {
+      id: tenantFileId,
+      status: 'processing',
+      mediaType,
+      mimeType: selectedUserFile.type,
+      name: selectedUserFile.name,
+      size: selectedUserFile.size,
+      preview,
+      representations: {},
+    };
+  }
+};
+
+/**
+ * Add tenant state to the cache and then emit this state to everyone who is listening on
+ * 1. mediaClient even-emitter interface (mediaClient.on()).
+ *  Note: There shouldn't be anyone listening here atm. This will be removed as soon as we remove Context API.
+ * 2. globalMediaEventEmitter even-emitter interface.
+ *  Note: This is different from `mediaPicker.on()` event-emitter interface!
+ */
+const distributeTenantFileState = async (
+  store: Store<State>,
+  tenantFileState: FileState,
+  userSelectedFileId: string,
+) => {
+  const { tenantMediaClient } = store.getState();
+  const tenantFileSubject = new ReplaySubject<FileState>(1);
+  const userFileObservable = getFileStreamsCache().get(userSelectedFileId);
+
+  getFileStreamsCache().set(tenantFileState.id, tenantFileSubject);
+  tenantFileSubject.next(tenantFileState);
+  if (userFileObservable) {
+    userFileObservable.subscribe({
+      next: latestUserFileState => {
+        const previewOverride = !isErrorFileState(tenantFileState)
+          ? { preview: tenantFileState.preview }
+          : {};
+        tenantFileSubject.next({
+          ...latestUserFileState,
+          ...previewOverride,
+          id: tenantFileState.id,
+        });
+      },
+    });
+  }
+
+  tenantMediaClient.emit('file-added', tenantFileState);
+  globalMediaEventEmitter.emit('file-added', tenantFileState);
+};
+
+/**
+ * We call `/upload/createWithFiles` (touch) endpoint to create an empty file with client side
+ * generated file ID that we use here as tenant file id.
+ */
 export const touchSelectedFiles = (
   selectedUploadFiles: SelectedUploadFile[],
   store: Store<State>,
@@ -150,42 +260,17 @@ export const touchSelectedFiles = (
     return;
   }
 
-  const { tenantContext, config } = store.getState();
+  const { tenantMediaClient, config } = store.getState();
   const tenantCollection =
     config.uploadParams && config.uploadParams.collection;
-
-  selectedUploadFiles.forEach(
-    ({ file: selectedFile, serviceName, touchFileDescriptor }) => {
-      const id = touchFileDescriptor.fileId;
-
-      const mediaType = getMediaTypeFromMimeType(selectedFile.type);
-      const preview = getPreviewByService(
-        store,
-        serviceName,
-        mediaType,
-        selectedFile.id,
-      );
-
-      const state: FileState = {
-        id,
-        status: 'processing',
-        mediaType,
-        mimeType: selectedFile.type,
-        name: selectedFile.name,
-        size: selectedFile.size,
-        preview,
-        representations: {},
-      };
-      const subject = new ReplaySubject<FileState>(1);
-      subject.next(state);
-      fileStreamsCache.set(id, subject);
-    },
-  );
 
   const touchFileDescriptors = selectedUploadFiles.map(
     selectedUploadFile => selectedUploadFile.touchFileDescriptor,
   );
-  tenantContext.file.touchFiles(touchFileDescriptors, tenantCollection);
+  return tenantMediaClient.file.touchFiles(
+    touchFileDescriptors,
+    tenantCollection,
+  );
 };
 
 const isKnowServiceName = ({ serviceName }: SelectedItem) =>
@@ -198,12 +283,11 @@ export async function importFiles(
   store: Store<State>,
   wsProvider: WsProvider,
 ): Promise<void> {
-  const { uploads, selectedItems, userContext, config } = store.getState();
+  const { uploads, selectedItems, userMediaClient, config } = store.getState();
   const tenantCollection =
     config.uploadParams && config.uploadParams.collection;
   store.dispatch(hidePopup());
 
-  const auth = await userContext.config.authProvider();
   const selectedUploadFiles = selectedItems
     .filter(isKnowServiceName)
     .map(item => mapSelectedItemToSelectedUploadFile(item, tenantCollection));
@@ -213,12 +297,45 @@ export async function importFiles(
 
   touchSelectedFiles(selectedUploadFiles, store);
   eventEmitter.emitPluginItemsInserted(selectedPluginItems);
+  const userAuth = await userMediaClient.config.authProvider();
+
+  // const selectedUploadFiles = selectedItems.map(item => {
+  //   const tenantFileId = uuid();
+  //   return mapSelectedItemToSelectedUploadFile(
+  //     item,
+  //     tenantFileId,
+  //     tenantCollection,
+  //   );
+  // });
+
+  await Promise.all(
+    selectedUploadFiles.map(async selectedUploadFile => {
+      // 1. We convert selectedUploadItems into tenant's fileState
+      const tenantFileStates = await getTenantFileState(
+        store,
+        selectedUploadFile,
+      );
+
+      const userSelectedFileId = selectedUploadFile.file.id;
+
+      // 2. We store them to the cache and notify all listeners of global event emitter
+      distributeTenantFileState(store, tenantFileStates, userSelectedFileId);
+    }),
+  );
+
+  // 3. We notify all listeners of mediaPicker event emitter about 'uploads-start' event
   eventEmitter.emitUploadsStart(
     selectedUploadFiles.map(({ file, touchFileDescriptor }) =>
       copyMediaFileForUpload(file, touchFileDescriptor.fileId),
     ),
   );
 
+  // 4. Now we touch the files
+  touchSelectedFiles(selectedUploadFiles, store);
+
+  // 5. Now, when empty file was created we can do all the necessary uploading/copy operations
+  // TODO here we don't have actually guarantee that empty file was created.
+  // https://product-fabric.atlassian.net/browse/MS-2165
   selectedUploadFiles.forEach(selectedUploadFile => {
     const { file, serviceName, touchFileDescriptor } = selectedUploadFile;
     const selectedItemId = file.id;
@@ -235,7 +352,7 @@ export async function importFiles(
     } else if (serviceName === 'recent_files') {
       importFilesFromRecentFiles(selectedUploadFile, store);
     } else if (isRemoteService(serviceName)) {
-      const wsConnectionHolder = wsProvider.getWsConnectionHolder(auth);
+      const wsConnectionHolder = wsProvider.getWsConnectionHolder(userAuth);
 
       importFilesFromRemoteService(
         selectedUploadFile,
@@ -244,6 +361,8 @@ export async function importFiles(
       );
     }
   });
+
+  store.dispatch(resetView());
 }
 
 export const importFilesFromLocalUpload = (
@@ -299,14 +418,6 @@ export const importFilesFromRemoteService = (
     file,
   } = selectedUploadFile;
   const { fileId } = touchFileDescriptor;
-  const { deferredIdUpfronts } = store.getState();
-  const deferred = deferredIdUpfronts[file.id];
-
-  if (deferred) {
-    const { rejecter, resolver } = deferred;
-    // We asociate the temporary file.id with the uploadId
-    store.dispatch(setUpfrontIdDeferred(fileId, resolver, rejecter));
-  }
   const uploadActivity = new RemoteUploadActivity(fileId, (event, payload) => {
     if (event === 'NotifyMetadata') {
       const preview = getPreviewFromMetadata(

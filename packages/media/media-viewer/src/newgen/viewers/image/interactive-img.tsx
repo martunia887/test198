@@ -6,11 +6,17 @@ import {
   Vector2,
   getCssFromImageOrientation,
 } from '@atlaskit/media-ui';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import { BaselineExtend, ImageWrapper, Img } from '../../styled';
 import { ZoomLevel } from '../../domain/zoomLevel';
 import { closeOnDirectClick } from '../../utils/closeOnDirectClick';
 import { ZoomControls } from '../../zoomControls';
 import { Outcome } from '../../domain';
+import { closedEvent } from '../../analytics/closed';
+import { channel } from '../../analytics';
 
 export function zoomLevelAfterResize(
   newCamera: Camera,
@@ -32,13 +38,14 @@ const naturalSizeRectangle = (el: HTMLImageElement): Rectangle => {
   return new Rectangle(naturalWidth, naturalHeight);
 };
 
-export type Props = {
+export interface Props extends WithAnalyticsEventsProps {
   src: string;
   orientation?: number;
   onClose?: () => void;
-  onLoad: () => void;
-  onError: () => void;
-};
+  onLoad?: () => void;
+  onError?: () => void;
+  onBlanketClicked?: () => void;
+}
 
 export type State = {
   zoomLevel: ZoomLevel;
@@ -54,7 +61,7 @@ const initialState: State = {
   cursorPos: new Vector2(0, 0),
 };
 
-export class InteractiveImg extends React.Component<Props, State> {
+export class InteractiveImgComponent extends React.Component<Props, State> {
   state: State = initialState;
   private wrapper?: HTMLDivElement;
   private saveWrapperRef = (ref: HTMLDivElement) => (this.wrapper = ref);
@@ -72,8 +79,16 @@ export class InteractiveImg extends React.Component<Props, State> {
     document.removeEventListener('mouseup', this.stopDragging);
   }
 
+  onImageClicked = (e: React.MouseEvent) => {
+    const { onClose, onBlanketClicked } = this.props;
+    if (e.target === e.currentTarget && onBlanketClicked) {
+      onBlanketClicked();
+    }
+    closeOnDirectClick(onClose)(e);
+  };
+
   render() {
-    const { src, onClose, orientation } = this.props;
+    const { src, orientation, onError } = this.props;
     const { zoomLevel, camera, isDragging } = this.state;
 
     const canDrag = camera.match({
@@ -94,16 +109,18 @@ export class InteractiveImg extends React.Component<Props, State> {
 
     return (
       <ImageWrapper
-        onClick={closeOnDirectClick(onClose)}
+        data-testid="media-viewer-image-content"
+        onClick={this.onImageClicked}
         innerRef={this.saveWrapperRef}
       >
         <Img
+          data-testid="media-viewer-image"
           canDrag={canDrag}
           isDragging={isDragging}
           src={src}
           style={imgStyle}
           onLoad={this.onImgLoad}
-          onError={this.onError}
+          onError={onError}
           onMouseDown={this.startDragging}
           shouldPixelate={zoomLevel.value > 1}
         />
@@ -121,6 +138,7 @@ export class InteractiveImg extends React.Component<Props, State> {
 
   private onImgLoad = (ev: React.SyntheticEvent<HTMLImageElement>) => {
     if (this.wrapper) {
+      const { onLoad } = this.props;
       const viewport = clientRectangle(this.wrapper);
       const originalImg = naturalSizeRectangle(ev.currentTarget);
       const camera = new Camera(viewport, originalImg);
@@ -128,12 +146,10 @@ export class InteractiveImg extends React.Component<Props, State> {
         camera: Outcome.successful(camera),
         zoomLevel: new ZoomLevel(camera.scaleDownToFit),
       });
+      if (onLoad) {
+        onLoad();
+      }
     }
-    this.props.onLoad();
-  };
-
-  private onError = () => {
-    this.props.onError();
   };
 
   private onResize = () => {
@@ -202,3 +218,10 @@ export class InteractiveImg extends React.Component<Props, State> {
     }
   };
 }
+
+export const InteractiveImg = withAnalyticsEvents({
+  onBlanketClicked: createAnalyticsEvent => {
+    const event = createAnalyticsEvent(closedEvent('blanket'));
+    event.fire(channel);
+  },
+})(InteractiveImgComponent);

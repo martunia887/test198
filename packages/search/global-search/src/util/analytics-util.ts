@@ -6,6 +6,7 @@ import {
 } from '../model/Result';
 import { GasPayload } from '@atlaskit/analytics-gas-types';
 import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
+import { ABTest } from '../api/CrossProductSearchClient';
 
 export declare type ScreenEventSafeGasPayload = GasPayload & { name: string };
 
@@ -23,7 +24,7 @@ export interface ShownAnalyticsAttributes {
   resultCount: number;
   resultSectionCount: number;
   resultContext: ShownResultContextSection[];
-  experimentId?: string;
+  abTest?: ABTest;
 }
 
 export interface PerformanceTiming {
@@ -40,6 +41,7 @@ export interface ShownResultContextItem {
   resultContentId: string;
   resultType?: string;
   containerId?: string;
+  isRecentResult?: boolean;
 }
 
 export interface PostQueryShownAttributes extends ShownAnalyticsAttributes {
@@ -83,6 +85,7 @@ function mapResultToShownResult(result: Result): ShownResultContextItem {
       resultContentId: result.resultId,
       resultType: confluenceResult.contentType,
       containerId: sanitizeContainerId(confluenceResult.containerId),
+      isRecentResult: !!result.isRecentResult,
     };
   } else if (result.resultType === ResultType.JiraObjectResult) {
     const jiraResult = result as JiraResult;
@@ -112,14 +115,7 @@ export function buildShownEventDetails(
     0,
   );
 
-  // Grab experiment ID from the first result. For now we only run single experiments.
-  const experimentId =
-    sectionsWithContent[0] && sectionsWithContent[0][0]
-      ? sectionsWithContent[0][0].experimentId
-      : undefined;
-
   return {
-    experimentId: experimentId,
     resultCount: totalResultCount,
     resultSectionCount: sectionsWithContent.length,
     resultContext: sectionsWithContent.map(mapResultsToShownSection),
@@ -135,7 +131,7 @@ export function buildScreenEvent(
   screen: Screen,
   timesViewed: number,
   searchSessionId: string,
-  referralContextIdentifiers: ReferralContextIdentifiers,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
 ): ScreenEventSafeGasPayload {
   return {
     action: 'viewed',
@@ -147,7 +143,15 @@ export function buildScreenEvent(
       subscreen: screen,
       timesViewed: timesViewed,
       searchSessionId: searchSessionId,
-      ...referralContextIdentifiers,
+      searchReferrerId:
+        referralContextIdentifiers &&
+        referralContextIdentifiers.searchReferrerId,
+      currentContentId:
+        referralContextIdentifiers &&
+        referralContextIdentifiers.currentContentId,
+      currentContainerId:
+        referralContextIdentifiers &&
+        referralContextIdentifiers.currentContainerId,
       ...DEFAULT_GAS_ATTRIBUTES,
     },
   };

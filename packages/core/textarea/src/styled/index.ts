@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
-import { codeFontFamily, fontSize, gridSize } from '@atlaskit/theme';
+import { codeFontFamily, fontSize, gridSize } from '@atlaskit/theme/constants';
 import { ThemeTokens } from '../theme';
 import { Props } from '../components/TextArea';
 
-type StyleProps = Props & ThemeTokens & { isFocused?: boolean; none?: any };
+type StyleProps = Props & ThemeTokens & { isFocused: boolean; none?: any };
 
 const grid = gridSize();
 const borderRadius = '3px';
@@ -11,7 +11,7 @@ const borderWidth = 2;
 const lineHeightBase = grid * 2.5;
 const lineHeightCompact = grid * 2;
 const getLineHeight = ({ isCompact }: Pick<Partial<Props>, 'isCompact'>) =>
-  isCompact ? lineHeightBase : lineHeightCompact;
+  isCompact ? lineHeightCompact : lineHeightBase;
 const getVerticalPadding = ({ isCompact }: Pick<Partial<Props>, 'isCompact'>) =>
   isCompact ? 2 : 6;
 const horizontalPadding = grid;
@@ -62,15 +62,12 @@ const getHoverState = (props: StyleProps) => {
   `;
 };
 
-const getMinimumRowsHeight = ({
-  minimumRows,
-  isCompact,
-}: Pick<Props, 'isCompact' | 'minimumRows'>) => {
+const getMinimumRowsHeight = ({ minimumRows = 1, isCompact }: Props) => {
   const lineHeight = getLineHeight({ isCompact });
   return `min-height: ${lineHeight * minimumRows}px;`;
 };
 
-const getResizeStyles = ({ resize }: Pick<Partial<Props>, 'resize'>) => {
+const getResizeStyles = ({ resize }: Props) => {
   if (resize === 'auto') {
     return `resize: auto;`;
   }
@@ -125,7 +122,6 @@ export const TextAreaWrapper = styled.div<StyleProps>`
   border-radius: ${borderRadius};
   border-style: ${getBorderStyle};
   box-sizing: border-box;
-  line-height: ${getLineHeight};
   overflow: auto;
   transition: background-color ${transitionDuration} ease-in-out,
     border-color ${transitionDuration} ease-in-out;
@@ -158,6 +154,7 @@ export const TextAreaWrapper = styled.div<StyleProps>`
     overflow: auto;
     max-width: 100%;
     width: 100%;
+    padding: 0;
     ${getPlaceholderStyle(getPlaceholderColor)};
     ${getMinimumRowsHeight}
 

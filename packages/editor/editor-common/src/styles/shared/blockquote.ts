@@ -1,5 +1,4 @@
-// @ts-ignore: unused variable
-import { css, Styles, StyledComponentClass } from 'styled-components';
+import { css } from 'styled-components';
 import { gridSize } from '@atlaskit/theme';
 import {
   akEditorBlockquoteBorderColor,
@@ -11,7 +10,7 @@ export const blockquoteSharedStyles = css`
     box-sizing: border-box;
     padding-left: ${gridSize() * 2}px;
     border-left: 2px solid ${akEditorBlockquoteBorderColor};
-    margin: ${blockNodesVerticalMargin} 0 0 0;
+    margin: ${blockNodesVerticalMargin}rem 0 0 0;
     margin-right: 0;
 
     [dir='rtl'] & {

@@ -10,14 +10,23 @@ import { keydownHandler } from 'prosemirror-keymap';
 import { findParentNodeOfType } from 'prosemirror-utils';
 import { filter } from '../../../utils/commands';
 import { Command } from '../../../types';
-import { fixColumnSizes } from '../actions';
+import {
+  fixColumnSizes,
+  PresetLayout,
+  getSelectedLayout,
+  fixColumnStructure,
+} from '../actions';
 
 export type LayoutState = {
   pos: number | null;
   allowBreakout: boolean;
+  addSidebarLayouts: boolean;
+  selectedLayout: PresetLayout | undefined;
 };
 
 type Change = { from: number; to: number; slice: Slice };
+
+export const DEFAULT_LAYOUT = 'two_equal';
 
 const isWholeSelectionInsideLayoutColumn = (state: EditorState): boolean => {
   // Since findParentNodeOfType doesn't check if selection.to shares the parent, we do this check ourselves
@@ -59,7 +68,10 @@ const getNodeDecoration = (pos: number, node: Node) => [
 ];
 
 const getInitialPluginState = (
-  pluginConfig: { allowBreakout?: boolean } | undefined | boolean,
+  pluginConfig:
+    | { allowBreakout?: boolean; UNSAFE_addSidebarLayouts?: boolean }
+    | undefined
+    | boolean,
   state: EditorState,
 ): LayoutState => {
   const maybeLayoutSection = findParentNodeOfType(
@@ -68,13 +80,25 @@ const getInitialPluginState = (
 
   const allowBreakout =
     typeof pluginConfig === 'object' ? !!pluginConfig.allowBreakout : false;
+  const addSidebarLayouts =
+    typeof pluginConfig === 'object'
+      ? !!pluginConfig.UNSAFE_addSidebarLayouts
+      : false;
   const pos = maybeLayoutSection ? maybeLayoutSection.pos : null;
-  return { pos, allowBreakout };
+  const selectedLayout = getSelectedLayout(
+    maybeLayoutSection && maybeLayoutSection.node,
+    DEFAULT_LAYOUT,
+  );
+  return { pos, allowBreakout, addSidebarLayouts, selectedLayout };
 };
 
 export const pluginKey = new PluginKey('layout');
 
-export default (pluginConfig?: { allowBreakout: boolean } | boolean) =>
+export default (
+  pluginConfig?:
+    | { allowBreakout: boolean; UNSAFE_addSidebarLayouts?: boolean }
+    | boolean,
+) =>
   new Plugin({
     key: pluginKey,
     state: {
@@ -90,6 +114,10 @@ export default (pluginConfig?: { allowBreakout: boolean } | boolean) =>
           const newPluginState = {
             ...pluginState,
             pos: maybeLayoutSection ? maybeLayoutSection.pos : null,
+            selectedLayout: getSelectedLayout(
+              maybeLayoutSection && maybeLayoutSection.node,
+              pluginState.selectedLayout,
+            ),
           };
           return newPluginState;
         }
@@ -102,9 +130,10 @@ export default (pluginConfig?: { allowBreakout: boolean } | boolean) =>
         if (layoutState.pos !== null) {
           return DecorationSet.create(
             state.doc,
-            getNodeDecoration(layoutState.pos, state.doc.nodeAt(
+            getNodeDecoration(
               layoutState.pos,
-            ) as Node),
+              state.doc.nodeAt(layoutState.pos) as Node,
+            ),
           );
         }
         return undefined;
@@ -113,7 +142,7 @@ export default (pluginConfig?: { allowBreakout: boolean } | boolean) =>
         Tab: filter(isWholeSelectionInsideLayoutColumn, moveCursorToNextColumn),
       }),
     },
-    appendTransaction: (transactions, oldState, newState) => {
+    appendTransaction: (transactions, _oldState, newState) => {
       let changes: Change[] = [];
       transactions.forEach(prevTr => {
         // remap change segments across the transaction set
@@ -137,12 +166,16 @@ export default (pluginConfig?: { allowBreakout: boolean } | boolean) =>
       });
 
       if (changes.length) {
-        const tr = newState.tr;
+        let tr = newState.tr;
         const selection = newState.selection;
 
         changes.forEach(change => {
           tr.replaceRange(change.from, change.to, change.slice);
         });
+
+        // selecting and deleting across columns in 3 col layouts can remove
+        // a layoutColumn so we fix the structure here
+        tr = fixColumnStructure(newState) || tr;
 
         if (tr.docChanged) {
           tr.setSelection(selection);
@@ -150,5 +183,7 @@ export default (pluginConfig?: { allowBreakout: boolean } | boolean) =>
           return tr;
         }
       }
+
+      return;
     },
   });

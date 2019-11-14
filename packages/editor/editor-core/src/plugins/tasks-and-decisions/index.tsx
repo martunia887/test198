@@ -1,12 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import EditorTaskIcon from '@atlaskit/icon/glyph/editor/task';
-import EditorDecisionIcon from '@atlaskit/icon/glyph/editor/decision';
 import {
   decisionItem,
   decisionList,
   taskItem,
   taskList,
+  nestableTaskList,
 } from '@atlaskit/adf-schema';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorPlugin } from '../../types';
@@ -20,8 +19,8 @@ import { INPUT_METHOD } from '../analytics';
 import { insertTaskDecisionWithAnalytics, getListTypes } from './commands';
 import { Transaction, EditorState } from 'prosemirror-state';
 import { TaskDecisionListType } from './types';
+import { IconAction, IconDecision } from '../quick-insert/assets';
 
-// tslint:disable-next-line:variable-name
 const TaskDecisionToolbarGroup = styled.div`
   display: flex;
 `;
@@ -55,12 +54,16 @@ const quickInsertItem = (
   ) as Transaction;
 };
 
-const tasksAndDecisionsPlugin: EditorPlugin = {
-  nodes() {
+const tasksAndDecisionsPlugin = (): EditorPlugin => ({
+  name: 'taskDecision',
+  nodes(editorProps) {
     return [
       { name: 'decisionList', node: decisionList },
       { name: 'decisionItem', node: decisionItem },
-      { name: 'taskList', node: taskList },
+      {
+        name: 'taskList',
+        node: editorProps.allowNestedTasks ? nestableTaskList : taskList,
+      },
       { name: 'taskItem', node: taskItem },
     ];
   },
@@ -69,13 +72,8 @@ const tasksAndDecisionsPlugin: EditorPlugin = {
     return [
       {
         name: 'tasksAndDecisions',
-        plugin: ({ portalProviderAPI, providerFactory, dispatch, props }) => {
-          return createPlugin(
-            portalProviderAPI,
-            providerFactory,
-            dispatch,
-            props.appearance,
-          );
+        plugin: ({ portalProviderAPI, providerFactory, dispatch }) => {
+          return createPlugin(portalProviderAPI, providerFactory, dispatch);
         },
       },
       {
@@ -110,10 +108,12 @@ const tasksAndDecisionsPlugin: EditorPlugin = {
     quickInsert: ({ formatMessage }) => [
       {
         title: formatMessage(insertBlockMessages.action),
+        description: formatMessage(insertBlockMessages.actionDescription),
         priority: 100,
         keywords: ['checkbox', 'task', 'todo'],
+        keyshortcut: '[]',
         icon: () => (
-          <EditorTaskIcon label={formatMessage(insertBlockMessages.action)} />
+          <IconAction label={formatMessage(insertBlockMessages.action)} />
         ),
         action(insert, state) {
           return quickInsertItem(insert, state, 'taskList');
@@ -121,11 +121,11 @@ const tasksAndDecisionsPlugin: EditorPlugin = {
       },
       {
         title: formatMessage(insertBlockMessages.decision),
+        description: formatMessage(insertBlockMessages.decisionDescription),
         priority: 900,
+        keyshortcut: '<>',
         icon: () => (
-          <EditorDecisionIcon
-            label={formatMessage(insertBlockMessages.decision)}
-          />
+          <IconDecision label={formatMessage(insertBlockMessages.decision)} />
         ),
         action(insert, state) {
           return quickInsertItem(insert, state, 'decisionList');
@@ -133,6 +133,6 @@ const tasksAndDecisionsPlugin: EditorPlugin = {
       },
     ],
   },
-};
+});
 
 export default tasksAndDecisionsPlugin;

@@ -1,10 +1,12 @@
-import { FieldTextStateless } from '@atlaskit/field-text';
+import TextField from '@atlaskit/textfield';
 import { gridSize } from '@atlaskit/theme';
 import * as React from 'react';
 import { FormEvent, PureComponent } from 'react';
 import styled from 'styled-components';
 import ColorPalette from './internal/color-palette';
-import { Color as ColorType } from './Status';
+import { Color } from './Status';
+
+export type ColorType = Color;
 
 const FieldTextWrapper = styled.div`
   margin: 0 ${gridSize()}px;
@@ -36,16 +38,14 @@ export class StatusPicker extends PureComponent<Props, any> {
     return (
       <React.Fragment>
         <FieldTextWrapper key={this.fieldTextWrapperKey}>
-          <FieldTextStateless
+          <TextField
             value={text}
-            isLabelHidden={true}
-            shouldFitContainer={true}
+            isCompact
+            ref={this.handleInputRef}
             onChange={this.onChange}
             onKeyPress={this.onKeyPress}
-            compact={true}
-            innerRef={this.handleInputRef}
+            spellCheck={false}
             autoComplete="off"
-            isSpellCheckEnabled={false}
           />
         </FieldTextWrapper>
         <ColorPalette
@@ -69,7 +69,7 @@ export class StatusPicker extends PureComponent<Props, any> {
     }
   };
 
-  private handleInputRef = (ref: HTMLInputElement | null) => {
+  private handleInputRef = (ref?: HTMLInputElement) => {
     if (ref && this.props.autoFocus) {
       // Defer to prevent editor scrolling to top (See FS-3227, also ED-2992)
       setTimeout(() => {

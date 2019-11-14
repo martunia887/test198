@@ -1,23 +1,25 @@
-import * as React from 'react';
+import React from 'react';
 import { match } from 'react-router';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { Redirect } from 'react-router-dom';
-import { Link } from '../../components/WrappedLink';
+import LinkButton from '../../components/LinkButton';
 import { Helmet } from 'react-helmet';
 
+import Button from '@atlaskit/button';
 import CodeIcon from '@atlaskit/icon/glyph/code';
 import CloseIcon from '@atlaskit/icon/glyph/cross';
 import ScreenIcon from '@atlaskit/icon/glyph/screen';
 import LinkIcon from '@atlaskit/icon/glyph/link';
 
-import Button, { ButtonGroup } from '@atlaskit/button';
+import { ButtonGroup } from '@atlaskit/button';
 import { FlagGroup } from '@atlaskit/flag';
 import Tooltip from '@atlaskit/tooltip';
 import Modal, {
   ModalBody as Body,
   ModalHeader as OgModalHeader,
   ModalTitle,
+  HeaderComponentProps,
 } from '@atlaskit/modal-dialog';
 import { colors, elevation, gridSize } from '@atlaskit/theme';
 
@@ -93,12 +95,6 @@ const NavInner = styled.div`
   max-height: 100%;
   overflow-y: auto;
   padding: 2px;
-
-  /* Not ideal to be overriding AkButton styles, but we don't have a link list component */
-  a {
-    margin: 2px 0 0 0;
-    width: 100%;
-  }
 `;
 
 interface ExampleNavigationProps {
@@ -137,6 +133,17 @@ function ExampleNavigation({
                     onExampleSelected(
                       fs.normalize(filePath.replace('examples/', '')),
                     );
+                  }}
+                  theme={(current, props) => {
+                    const { buttonStyles, ...rest } = current(props);
+                    return {
+                      buttonStyles: {
+                        ...buttonStyles,
+                        width: '100%',
+                        margin: '2px 0 0 0',
+                      },
+                      ...rest,
+                    };
                   }}
                 >
                   {fs.titleize(file.id)}
@@ -205,7 +212,7 @@ function toExampleUrl(
 
 interface ModalHeaderCompProps {
   afterDeployError: any;
-  showKeyline: boolean;
+  showKeyline?: boolean;
   packageId: string;
   example: any;
   examples: any;
@@ -213,7 +220,7 @@ interface ModalHeaderCompProps {
   pkgJSON: any;
   displayCode: boolean;
   exampleId: string | null;
-  loaderUrl: string | null;
+  loaderUrl: string | undefined;
   onCodeToggle: () => void;
   close: () => void;
 }
@@ -273,9 +280,8 @@ const ModalHeaderComp = ({
           Source
         </Button>
         <Tooltip content="Fullscreen" position="bottom">
-          <Button
+          <LinkButton
             appearance="subtle"
-            component={Link}
             iconBefore={<ScreenIcon label="Screen Icon" />}
             to={toExampleUrl(groupId, packageId, exampleId)}
           />
@@ -283,7 +289,6 @@ const ModalHeaderComp = ({
         <Tooltip content="Isolated View" position="bottom">
           <Button
             appearance="subtle"
-            component={'a'}
             iconBefore={<LinkIcon label="Link Icon" />}
             href={loaderUrl}
             target={'_blank'}
@@ -343,7 +348,7 @@ export default class ExamplesModal extends React.Component<Props, State> {
   onCodeToggle = () =>
     this.setState(state => ({ displayCode: !state.displayCode }));
 
-  close = (event?: Event) => {
+  close = (event?: React.MouseEvent<any> | React.KeyboardEvent<any>) => {
     if (event) event.stopPropagation();
 
     const { params } = this.props.match;
@@ -390,7 +395,7 @@ export default class ExamplesModal extends React.Component<Props, State> {
       <Modal
         autoFocus={false}
         components={{
-          Header: ({ showKeyline }: { showKeyline: boolean }) => (
+          Header: ({ showKeyline }: HeaderComponentProps) => (
             <ModalHeaderComp
               afterDeployError={null}
               showKeyline={showKeyline}

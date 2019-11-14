@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Color as StatusColor } from '@atlaskit/status';
+import { Color as StatusColor } from '@atlaskit/status/element';
 import Form, { Field, FormFooter } from '@atlaskit/form';
 import AkButton from '@atlaskit/button';
 import Textfield from '@atlaskit/textfield';
@@ -15,9 +15,9 @@ export interface Props {
   uuid: string;
 }
 
-const Container: React.ComponentClass<
-  React.HTMLAttributes<{}> & { height?: string }
-> = styled.div`
+const Container: React.ComponentClass<React.HTMLAttributes<{}> & {
+  height?: string;
+}> = styled.div`
   height: ${props => (props.height ? props.height : 'auto')};
   border: 1px solid #ddd;
   margin: 16px 0;

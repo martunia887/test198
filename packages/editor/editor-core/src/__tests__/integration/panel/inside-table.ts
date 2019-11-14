@@ -17,9 +17,7 @@ BrowserTestCase(
   'inside-table.ts: Insert panel into table, add text, change panel type',
   { skip: ['edge', 'ie'] },
   async (client: any, testName: string) => {
-    const insertTableMenu = `[aria-label="${
-      insertBlockMessages.table.defaultMessage
-    }"]`;
+    const insertTableMenu = `[aria-label="${insertBlockMessages.table.defaultMessage}"]`;
     const tableControls = '[aria-label="Table floating controls"]';
 
     const page = await goToEditorTestingExample(client);
@@ -35,7 +33,7 @@ BrowserTestCase(
     await page.click(insertTableMenu);
     await page.waitForSelector(tableControls);
 
-    await quickInsert(page, 'Panel');
+    await quickInsert(page, 'Info panel');
     await page.waitForSelector(selectors.PANEL_EDITOR_CONTAINER);
 
     // type some text
@@ -48,6 +46,5 @@ BrowserTestCase(
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchCustomDocSnapshot(testName);
     expect(await page.isExisting(tableControls)).toBe(false);
-    expect(await page.isVisible(tableControls)).toBe(false);
   },
 );

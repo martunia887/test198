@@ -1,12 +1,14 @@
 ### Prerequisites
 
-Check that your bug report hasn't already being filed [here](https://ecosystem.atlassian.net/issues/?filter=61467)
+This bug template has been designed for Design System / Core components.
+If you want to check that your bug report hasn't already been raised, either contact the team on Slack or seach through their Jira projects.
+See the full list of Slack channels and Jira projects on our [Contributing](CONTRIBUTING.md) page.
 
 ### Description
 
 [Description of the issue]
 
-Add an example using [this codesandbox](http://go.atlassian.com/ak-sandbox) as starting point.
+Add an example using [this codesandbox](http://go.atlassian.com/ak-codesandbox) as starting point.
 
 ### Steps to reproduce
 
@@ -39,11 +41,11 @@ _If needed, show keystrokes using [this](https://github.com/keycastr/keycastr)_
 | ---------- | :------ | :------------------------------------------------------------ | :------------------------- |
 |            |         | Yes/ No/ I don't know                                         |                            |
 
-* To get the component version:
+- To get the component version:
   [You can get this information by running `yarn ls | grep '@atlaskit'` or `npm list | grep '@atlaskit'` from the command line.]
 
-* To get the browser version, got to http://www.whatsmybrowser.org/ and copy the link
-* Any additional information, configuration or data that might be necessary to reproduce the issue.
+- To get the browser version, got to http://www.whatsmybrowser.org/ and copy the link
+- Any additional information, configuration or data that might be necessary to reproduce the issue.
 
 ### Jira markdown template
 
@@ -51,7 +53,7 @@ _If needed, show keystrokes using [this](https://github.com/keycastr/keycastr)_
 h2.Description
 
 Description of the issue
-Add a link to a codepen example using [this codesandbox](http://go.atlassian.com/ak-sandbox) as starting point.
+Add a link to a codepen example using [this codesandbox](http://go.atlassian.com/ak-codesandbox) as starting point.
 
 h2.Steps to Reproduce
 
@@ -61,7 +63,7 @@ Either
 ...
 
 Or
-Create a gif using -> http://gifbrewery.com/  
+Create a gif using -> http://gifbrewery.com/
 If needed, show keystrokes using -> https://github.com/keycastr/keycastr
 
 h2.Expected behavior

@@ -1,10 +1,12 @@
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { Comment as CommentType, User } from '../model';
 import { Editor as AkEditor, EditorProps } from '@atlaskit/editor-core';
+import { CommentAction as AkCommentAction } from '@atlaskit/comment';
 import { SuccessHandler } from '../internal/actions';
 import { EventData } from '../internal/analytics';
 
 export type SendAnalyticsEvent = (eventData: EventData) => void;
+
 /**
  * Props which are passed down from the parent Conversation/Comment
  */
@@ -34,7 +36,10 @@ export interface SharedProps {
   onRevertComment?: (conversationId: string, commentId: string) => void;
   onCancelComment?: (conversationId: string, commentId: string) => void;
   onCancel?: () => void;
-  onHighlightComment?: (commentId: string) => void;
+  onHighlightComment?: (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    commentId: string,
+  ) => void;
   onEditorOpen?: () => void;
   onEditorClose?: () => void;
   onEditorChange?: (
@@ -53,6 +58,10 @@ export interface SharedProps {
   // Event Hooks
   onUserClick?: (user: User) => void;
   onRetry?: (localId?: string) => void;
+  onCommentPermalinkClick?: (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    commentId: string,
+  ) => void;
 
   // Editor
   renderEditor?: (Editor: typeof AkEditor, props: EditorProps) => JSX.Element;
@@ -67,4 +76,10 @@ export interface SharedProps {
   sendAnalyticsEvent: SendAnalyticsEvent;
 
   portal?: HTMLElement;
+
+  renderAdditionalCommentActions?: (
+    CommentAction: typeof AkCommentAction,
+    comment: CommentType,
+  ) => JSX.Element[];
+  renderAfterComment?: (comment: CommentType) => JSX.Element;
 }

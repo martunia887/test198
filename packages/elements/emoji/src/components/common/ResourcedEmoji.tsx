@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ComponentClass } from 'react';
 
-import { defaultEmojiHeight } from '../../constants';
+import { defaultEmojiHeight } from '../../util/constants';
 import EmojiPlaceholder from './EmojiPlaceholder';
 import LoadingEmojiComponent, {
   Props as LoadingProps,
@@ -16,7 +16,9 @@ import {
 export interface Props extends BaseResourcedEmojiProps, LoadingProps {}
 
 const resourcedEmojiModuleLoader = () =>
-  import(/* webpackChunkName:"@atlaskit-internal_resourcedEmojiComponent" */ './ResourcedEmojiComponent');
+  import(
+    /* webpackChunkName:"@atlaskit-internal_resourcedEmojiComponent" */ './ResourcedEmojiComponent'
+  );
 
 const resourcedEmojiComponentLoader: () => Promise<
   ComponentClass<ComponentProps>

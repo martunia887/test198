@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 import * as React from 'react';
 import { mention } from '@atlaskit/util-data-test';
@@ -42,11 +42,7 @@ export default class EditorWithFeedback extends React.Component<Props, State> {
       <EditorContext>
         <div>
           <ToolsDrawer
-            renderEditor={({
-              mentionProvider,
-              onChange,
-              disabled,
-            }: RenderEditorProps) => (
+            renderEditor={({ onChange, disabled }: RenderEditorProps) => (
               <div style={{ padding: '20px' }}>
                 <CollapsedEditor
                   placeholder="What do you want to say?"

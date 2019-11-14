@@ -2,27 +2,27 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { TextSelection } from 'prosemirror-state';
 import { createEditorFactory } from '@atlaskit/editor-test-helpers';
-import collabEdit, {
-  pluginKey as collabEditPluginKey,
-} from '../../../../src/plugins/collab-edit';
+import { pluginKey as collabEditPluginKey } from '../../../../src/plugins/collab-edit';
 import { ProviderFactory } from '@atlaskit/editor-common';
-import { collabEditProvider } from '../../../../example-helpers/mock-collab-provider';
 import { findPointers } from '../../../../src/plugins/collab-edit/utils';
-import tablesPlugin from '../../../../src/plugins/table';
+import { createMockCollabEditProvider } from '@atlaskit/synchrony-test-helpers/src/mock-collab-provider';
 
 describe('editor/plugins/collab-edit', () => {
   const createEditor = createEditorFactory();
 
   const setupEditor = (setProvider: boolean = true) => {
     const providerFactory = new ProviderFactory();
-    const providerPromise = collabEditProvider();
+    const providerPromise = createMockCollabEditProvider();
 
     if (setProvider) {
       providerFactory.setProvider('collabEditProvider', providerPromise);
     }
 
     const { editorView } = createEditor({
-      editorPlugins: [collabEdit(), tablesPlugin()],
+      editorProps: {
+        allowTables: true,
+        collabEdit: { provider: providerPromise },
+      },
       providerFactory,
     });
 

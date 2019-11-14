@@ -2,7 +2,7 @@ import {
   MediaItemType,
   FileDetails,
   ExternalImageIdentifier,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import {
   defaultCollectionName as collectionName,
   onlyAnimatedGifsCollectionName,
@@ -65,6 +65,13 @@ export const imageFileId = {
   mediaItemType: fileType,
   collectionName,
 };
+
+export const emptyImageFileId = {
+  id: 'aa7f7a63-2b1a-4405-b585-62e375a3b40a', // jpg image
+  mediaItemType: fileType,
+  collectionName,
+};
+
 export const smallImageFileId = {
   id: 'f251bd05-4b2d-485d-a088-57d112ca7945',
   mediaItemType: fileType,
@@ -79,6 +86,12 @@ export const wideImageFileId = {
 
 export const largeImageFileId = {
   id: '0607a6a8-b2ec-49a7-b6d3-d767cb49e844',
+  mediaItemType: fileType,
+  collectionName,
+};
+
+export const verticalImageFileId = {
+  id: 'f9235f5a-d582-4740-8611-ebf3feaf28b6',
   mediaItemType: fileType,
   collectionName,
 };
@@ -143,6 +156,10 @@ export const atlassianLogoUrl =
 export const externalImageIdentifier: ExternalImageIdentifier = {
   mediaItemType: 'external-image',
   dataURI: atlassianLogoUrl,
+};
+export const externalSmallImageIdentifier: ExternalImageIdentifier = {
+  mediaItemType: 'external-image',
+  dataURI: 'https://aui-cdn.atlassian.com/media/files-icon.png',
 };
 
 export const genericFileDetails: FileDetails = {

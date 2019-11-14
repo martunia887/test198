@@ -1,11 +1,11 @@
 import {
   createAndFireEvent,
   withAnalyticsEvents,
+  WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 import * as React from 'react';
 
-export type Props = WithAnalyticsEventProps & {
+export type Props = WithAnalyticsEventsProps & {
   text?: string;
   onClick: (e: React.SyntheticEvent) => void;
 };

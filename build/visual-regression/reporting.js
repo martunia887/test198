@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 // @flow
 const get = require('lodash.get');
 const sendLogs = require('@atlaskit/analytics-reporting');
@@ -25,6 +26,19 @@ const extractResultInformationIntoProperties = results => {
     }));
 };
 
+const extractInconsistentTest = results => {
+  return results.testResults
+    .filter(test => test.numPassingTests > 0)
+    .map(test => ({
+      inconsistenTests: test.numPassingTests,
+      testFilePath: test.testFilePath.replace(process.cwd(), ''),
+      duration: get(test, 'testResults[0].duration', 0),
+      testName: get(test, 'testResults[0].fullName'),
+      buildNumber: process.env.BITBUCKET_BUILD_NUMBER,
+      branch: process.env.BITBUCKET_BRANCH,
+    }));
+};
+
 const buildEventPayload = (properties, eventName) => {
   return {
     name: eventName,
@@ -37,28 +51,49 @@ const buildEventPayload = (properties, eventName) => {
 };
 
 module.exports = {
+  reportInconsistency(results /*: any */) {
+    const properties = extractInconsistentTest(results);
+    if (!properties.length) {
+      return;
+    }
+    return sendLogs(
+      // $FlowFixMe - return error
+      JSON.stringify({
+        events: properties.map(property =>
+          buildEventPayload(property, 'atlaskit.qa.vr_test.inconsistency'),
+        ),
+      }),
+    ).then(() => {
+      console.log(
+        `Sent ${properties.length} inconsistent visual-regression tests event${
+          properties.length > 1 ? 's' : ''
+        }`,
+      );
+    });
+  },
   reportFailure(results /*: any */, eventName /*: string */) {
     const properties = extractResultInformationIntoProperties(results);
     if (!properties.length) {
       return;
     }
     return sendLogs(
+      // $FlowFixMe - return error
       JSON.stringify({
-        events: properties.map(property => {
-          buildEventPayload(property, eventName);
-        }),
+        events: properties.map(property =>
+          buildEventPayload(property, eventName),
+        ),
       }),
-      () => {
-        console.log(
-          `Sent ${properties.length} visual regression test failure event${
-            properties.length > 1 ? 's' : ''
-          }`,
-        );
-      },
-    );
+    ).then(() => {
+      console.log(
+        `Sent ${properties.length} failure visual-regression tests event${
+          properties.length > 1 ? 's' : ''
+        }`,
+      );
+    });
   },
   reportLongRunningTests(results /*: any */, threshold /*: number */) {
     return sendLogs(
+      // $FlowFixMe - return error
       JSON.stringify({
         events: results.map(result => {
           return {
@@ -75,7 +110,7 @@ module.exports = {
           };
         }),
       }),
-    ).then(res => {
+    ).then(() => {
       console.log(
         `Sent ${results.length} visual regression long running tests event${
           results.length > 1 ? 's' : ''

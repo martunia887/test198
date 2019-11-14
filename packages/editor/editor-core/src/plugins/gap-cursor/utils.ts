@@ -1,8 +1,6 @@
 import { Node as PMNode, ResolvedPos, Schema } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 import { findPositionOfNodeBefore, findDomRefAtPos } from 'prosemirror-utils';
-import { tableMarginTop } from '@atlaskit/editor-common';
-
 import { GapCursorSelection, Side } from './selection';
 import { TableCssClassName } from '../table/types';
 import { tableInsertColumnButtonSize } from '../table/ui/styles';
@@ -44,6 +42,45 @@ export const isIgnored = (node?: PMNode | null): boolean => {
 export const isValidTargetNode = (node?: PMNode | null): boolean => {
   return !!node && !isIgnored(node);
 };
+
+export function getMediaNearPos(
+  doc: PMNode,
+  $pos: ResolvedPos,
+  schema: Schema,
+  dir = -1,
+): PMNode | null {
+  let $currentPos = $pos;
+  let currentNode: PMNode | null = null;
+  const { mediaSingle, media, mediaGroup } = schema.nodes;
+
+  do {
+    $currentPos = doc.resolve(
+      dir === -1 ? $currentPos.before() : $currentPos.after(),
+    );
+
+    if (!$currentPos) {
+      return null;
+    }
+
+    currentNode =
+      (dir === -1 ? $currentPos.nodeBefore : $currentPos.nodeAfter) ||
+      $currentPos.parent;
+
+    if (!currentNode || currentNode.type === schema.nodes.doc) {
+      return null;
+    }
+
+    if (
+      currentNode.type === mediaSingle ||
+      currentNode.type === media ||
+      currentNode.type === mediaGroup
+    ) {
+      return currentNode;
+    }
+  } while ($currentPos.depth > 0);
+
+  return null;
+}
 
 export const isTextBlockNearPos = (
   doc: PMNode,
@@ -133,7 +170,12 @@ export const fixCursorAlignment = (view: EditorView) => {
     state: { selection, schema },
     domAtPos,
   } = view;
-  const { side, $from } = selection as GapCursorSelection;
+
+  if (!(selection instanceof GapCursorSelection)) {
+    return;
+  }
+
+  const { side, $from } = selection;
 
   // gap cursor is positioned relative to that node
   const targetNode = side === Side.LEFT ? $from.nodeAfter! : $from.nodeBefore!;
@@ -142,21 +184,28 @@ export const fixCursorAlignment = (view: EditorView) => {
   }
   const targetNodePos =
     side === Side.LEFT ? $from.pos + 1 : findPositionOfNodeBefore(selection);
-  if (!targetNodePos) {
+  if (targetNodePos === undefined) {
     return;
   }
 
   let targetNodeRef = findDomRefAtPos(
     targetNodePos,
     domAtPos.bind(view),
-  ) as HTMLElement;
+  ) as HTMLElement | null;
 
-  const gapCursorRef = view.dom.querySelector(
+  const gapCursorRef = view.dom.querySelector<HTMLSpanElement>(
     '.ProseMirror-gapcursor span',
-  ) as HTMLElement;
+  );
+  if (!gapCursorRef) {
+    return;
+  }
 
-  const gapCursorParentNodeRef = gapCursorRef.parentNode! as HTMLElement;
-  const previousSibling = gapCursorParentNodeRef.previousSibling as HTMLElement;
+  const gapCursorParentNodeRef = gapCursorRef.parentElement;
+  if (!gapCursorParentNodeRef) {
+    return;
+  }
+
+  const previousSibling = gapCursorParentNodeRef.previousSibling as HTMLElement | null;
   const isTargetNodeMediaSingle = isMediaSingle(targetNodeRef);
   const isMediaWithWrapping =
     isTargetNodeMediaSingle &&
@@ -175,14 +224,21 @@ export const fixCursorAlignment = (view: EditorView) => {
 
   // gets width and height of the prevNode DOM element, or its nodeView wrapper DOM element
   do {
+    if (!targetNodeRef) {
+      break;
+    }
+
     const isTargetNodeNodeViewWrapper = isNodeViewWrapper(targetNodeRef);
-    const firstChild = targetNodeRef.firstChild as HTMLElement;
+    const firstChild = targetNodeRef.firstElementChild;
     const css = window.getComputedStyle(
-      isTargetNodeMediaSingle || isTargetNodeNodeViewWrapper
-        ? firstChild
+      isTargetNodeNodeViewWrapper && !isTargetNodeMediaSingle
+        ? firstChild || targetNodeRef
         : targetNodeRef,
     );
-    const isInTableCell = /td|th/i.test(targetNodeRef.parentNode!.nodeName);
+
+    const isInTableCell =
+      !!targetNodeRef.parentElement &&
+      /td|th/i.test(targetNodeRef.parentElement.nodeName);
 
     height = parseInt(css.height!, 10);
     width = parseInt(css.width!, 10);
@@ -209,7 +265,13 @@ export const fixCursorAlignment = (view: EditorView) => {
       breakoutWidth = width;
     }
 
-    targetNodeRef = targetNodeRef.parentNode as HTMLElement;
+    if (
+      targetNodeRef.parentElement &&
+      targetNodeRef.parentElement.classList.contains('ProseMirror')
+    ) {
+      break;
+    }
+    targetNodeRef = targetNodeRef.parentElement;
   } while (targetNodeRef && !targetNodeRef.contains(gapCursorRef));
 
   // height of the rule (<hr>) is 0, that's why we set minHeight
@@ -218,18 +280,31 @@ export const fixCursorAlignment = (view: EditorView) => {
     marginTop -= Math.round(minHeight / 2) - 1;
   }
 
-  // table nodeView margin fix
-  if (targetNode.type === schema.nodes.table) {
-    const tableFullMarginTop = tableMarginTop + tableInsertColumnButtonSize / 2;
-    height -= tableFullMarginTop;
-    marginTop = tableFullMarginTop;
-    gapCursorRef.style.paddingLeft = `${paddingLeft}px`;
-  }
-
   // breakout mode
   const breakoutMode = getBreakoutModeFromTargetNode(targetNode);
-  if (/full-width|wide/i.test(breakoutMode)) {
+  const hasBreakoutEnable = /full-width|wide/i.test(breakoutMode);
+  if (hasBreakoutEnable) {
     gapCursorRef.setAttribute('layout', breakoutMode);
+  }
+
+  // table nodeView margin fix
+  if (targetNodeRef && targetNode.type === schema.nodes.table) {
+    const tableNode = targetNodeRef.querySelector('table');
+    if (!tableNode) {
+      return;
+    }
+    const style = window.getComputedStyle(tableNode);
+    const halfPlusButtonSize = tableInsertColumnButtonSize / 2;
+    marginTop = parseInt(style.marginTop!, 10);
+    paddingLeft =
+      side === Side.RIGHT
+        ? hasBreakoutEnable
+          ? tableInsertColumnButtonSize
+          : halfPlusButtonSize
+        : 0;
+    height = parseInt(style.height!, 10);
+
+    gapCursorRef.style.paddingLeft = `${paddingLeft}px`;
   }
 
   // mediaSingle with layout="wrap-left" or "wrap-right"
@@ -270,12 +345,12 @@ export const isIgnoredClick = (elem: HTMLElement) => {
     const rowControls = tableWrap.querySelector(
       `.${TableCssClassName.ROW_CONTROLS_WRAPPER}`,
     );
-    const columnControls = tableWrap.querySelector(
-      `.${TableCssClassName.COLUMN_CONTROLS_WRAPPER}`,
-    );
+    const isColumnControlsDecoration =
+      elem &&
+      elem.classList &&
+      elem.classList.contains(TableCssClassName.COLUMN_CONTROLS_DECORATIONS);
     return (
-      (rowControls && rowControls.contains(elem)) ||
-      (columnControls && columnControls.contains(elem))
+      (rowControls && rowControls.contains(elem)) || isColumnControlsDecoration
     );
   }
 

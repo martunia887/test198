@@ -20,19 +20,26 @@ const AppSwitcherComponent = props => (
   />
 );
 
+const SearchTooltip = () => (
+  <div css={{ background: 'red' }}> Search Tooltip</div>
+);
+
 // TODO: make onClicks targets show up on page instead of console.logs
 const Global = () => (
   <GlobalNavigation
     productIcon={EmojiAtlassianIcon}
     productHref="#"
+    searchTooltip={<SearchTooltip />}
+    searchLabel="Search Label"
     onProductClick={() => console.log('product clicked')}
     onCreateClick={() => console.log('create clicked')}
     onSearchClick={() => console.log('search clicked')}
     onStarredClick={() => console.log('starred clicked')}
+    onHelpClick={() => console.log('help clicked')}
+    helpItems={() => <div />}
     onNotificationClick={() => console.log('notification clicked')}
     appSwitcherComponent={AppSwitcherComponent}
     appSwitcherTooltip="Switch to ..."
-    helpItems={() => <div />}
     onSettingsClick={() => console.log('settings clicked')}
     loginHref="#login"
   />

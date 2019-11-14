@@ -43,11 +43,11 @@ export default class Reveal extends PureComponent<Props, State> {
     });
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const isClosed = !this.props.isOpen;
     const willClose = !nextProps.isOpen;
     const willOpen = nextProps.isOpen;
-    const shouldAnimate = nextProps.shouldAnimate;
+    const { shouldAnimate } = nextProps;
 
     // ensure children are rendered before open animation occurs
     if (isClosed && willOpen) {

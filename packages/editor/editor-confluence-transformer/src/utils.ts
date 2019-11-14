@@ -6,7 +6,7 @@ import {
   MarkType,
 } from 'prosemirror-model';
 
-import { normalizeHexColor } from '@atlaskit/editor-common';
+import { normalizeHexColor } from '@atlaskit/adf-schema';
 import { AC_XMLNS } from './encode-cxhtml';
 import { Macro } from './types';
 
@@ -255,8 +255,6 @@ export function createCodeFragment(
   title?: string | null,
 ): Fragment {
   const content: PMNode[] = [];
-  // @ts-ignore: Unused variable, delete me???
-  let nodeSize = 0;
 
   if (!!title) {
     const titleNode = schema.nodes.heading.createChecked(
@@ -264,7 +262,6 @@ export function createCodeFragment(
       schema.text(title),
     );
     content.push(titleNode);
-    nodeSize += titleNode.nodeSize;
   }
 
   const codeBlockNode = schema.nodes.codeBlock.createChecked(
@@ -273,7 +270,6 @@ export function createCodeFragment(
   );
 
   content.push(codeBlockNode);
-  nodeSize += codeBlockNode.nodeSize;
 
   return Fragment.from(content);
 }

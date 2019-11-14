@@ -1,41 +1,48 @@
 import * as React from 'react';
 import { Component } from 'react';
+
+import { filter, ADFEntity } from '@atlaskit/adf-utils';
 import {
   CardAppearance,
   CardDimensions,
   Card,
-  CardView,
+  CardLoading,
+  CardError,
   CardOnClickCallback,
 } from '@atlaskit/media-card';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
-  Context,
   ImageResizeMode,
   FileIdentifier,
   ExternalImageIdentifier,
-} from '@atlaskit/media-core';
+  Identifier,
+  getMediaClient,
+  FileState,
+} from '@atlaskit/media-client';
 import { MediaType } from '@atlaskit/adf-schema';
 import {
   withImageLoader,
   ImageStatus,
-  // @ts-ignore
-  ImageLoaderProps,
-  // @ts-ignore
-  ImageLoaderState,
+  ContextIdentifierProvider,
 } from '@atlaskit/editor-common';
-import { RendererAppearance } from './Renderer';
+import { RendererAppearance } from './Renderer/types';
+import { RendererContext } from '../react';
+import styled from 'styled-components';
 
-export interface MediaProvider {
-  viewContext?: Context;
-}
+export type MediaProvider = {
+  viewMediaClientConfig: MediaClientConfig;
+};
 
 export interface MediaCardProps {
   id?: string;
-  mediaProvider?: MediaProvider;
+  mediaProvider?: Promise<MediaProvider>;
+  contextIdentifierProvider?: Promise<ContextIdentifierProvider>;
   eventHandlers?: {
     media?: {
       onClick?: CardOnClickCallback;
     };
   };
+  shouldOpenMediaViewer?: boolean;
   type: MediaType;
   collection?: string;
   url?: string;
@@ -47,44 +54,133 @@ export interface MediaCardProps {
   imageStatus?: ImageStatus;
   disableOverlay?: boolean;
   useInlinePlayer?: boolean;
+  rendererContext?: RendererContext;
+  alt?: string;
 }
 
 export interface State {
-  context?: Context;
+  mediaClientConfig?: MediaClientConfig;
+  contextIdentifierProvider?: ContextIdentifierProvider;
+  fileState?: FileState;
 }
+
+const mediaIdentifierMap: Map<string, Identifier> = new Map();
+
+export const getListOfIdentifiersFromDoc = (doc?: ADFEntity): Identifier[] => {
+  if (!doc) {
+    return [];
+  }
+  return filter(doc, node => node.type === 'media').reduce(
+    (identifierList: Identifier[], mediaNode) => {
+      if (mediaNode.attrs) {
+        const { type, url: dataURI, id } = mediaNode.attrs;
+
+        if (type === 'file' && id) {
+          identifierList.push({
+            mediaItemType: 'file',
+            id,
+          });
+        } else if (type === 'external' && dataURI) {
+          identifierList.push({
+            mediaItemType: 'external-image',
+            dataURI,
+            name: dataURI,
+          });
+        }
+      }
+      return identifierList;
+    },
+    [],
+  );
+};
 
 export class MediaCardInternal extends Component<MediaCardProps, State> {
   state: State = {};
 
   async componentDidMount() {
-    const { mediaProvider } = this.props;
+    const {
+      rendererContext,
+      mediaProvider,
+      contextIdentifierProvider,
+      id,
+      url,
+      collection: collectionName,
+    } = this.props;
 
     if (!mediaProvider) {
       return;
     }
 
-    const provider = await mediaProvider;
-    const context = await provider.viewContext;
+    if (contextIdentifierProvider) {
+      this.setState({
+        contextIdentifierProvider: await contextIdentifierProvider,
+      });
+    }
+    const mediaProviderObject = await mediaProvider;
+    const mediaClientConfig = mediaProviderObject.viewMediaClientConfig;
 
+    const nodeIsInCache =
+      (id && mediaIdentifierMap.has(id)) ||
+      (url && mediaIdentifierMap.has(url));
+    if (rendererContext && rendererContext.adDoc && !nodeIsInCache) {
+      getListOfIdentifiersFromDoc(rendererContext.adDoc).forEach(identifier => {
+        if (identifier.mediaItemType === 'file') {
+          mediaIdentifierMap.set(identifier.id as string, {
+            ...identifier,
+            collectionName,
+          });
+        } else if (identifier.mediaItemType === 'external-image') {
+          mediaIdentifierMap.set(identifier.dataURI as string, identifier);
+        }
+      });
+    }
     this.setState({
-      context,
+      mediaClientConfig: mediaClientConfig,
     });
+
+    if (id) {
+      this.saveFileState(id, mediaClientConfig);
+    }
   }
+
+  UNSAFE_componentWillReceiveProps(newProps: MediaCardProps) {
+    const { mediaClientConfig } = this.state;
+    const { id: newId } = newProps;
+    if (mediaClientConfig && newId && newId !== this.props.id) {
+      this.saveFileState(newId, mediaClientConfig);
+    }
+  }
+
+  componentWillUnmount() {
+    const { id, url: dataURI } = this.props;
+
+    if (id) {
+      mediaIdentifierMap.delete(id);
+    } else if (dataURI) {
+      mediaIdentifierMap.delete(dataURI);
+    }
+  }
+
+  saveFileState = async (id: string, mediaClientConfig: MediaClientConfig) => {
+    const { collection: collectionName } = this.props;
+    const mediaClient = getMediaClient(mediaClientConfig);
+    const options = {
+      collectionName,
+    };
+    const fileState = await mediaClient.file.getCurrentState(id, options);
+    this.setState({
+      fileState,
+    });
+  };
 
   private renderLoadingCard = () => {
     const { cardDimensions } = this.props;
 
-    return (
-      <CardView
-        status="loading"
-        mediaItemType="file"
-        dimensions={cardDimensions}
-      />
-    );
+    return <CardLoading dimensions={cardDimensions} />;
   };
 
-  private renderExternal() {
-    const { context } = this.state;
+  private renderExternal(shouldOpenMediaViewer: boolean) {
+    const { mediaClientConfig } = this.state;
     const {
       cardDimensions,
       resizeMode,
@@ -106,21 +202,58 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
 
     return (
       <Card
-        context={context as any} // context is not really used when the type is external and we want to render the component asap
+        // context is not really used when the type is external and we want to render the component asap
+        mediaClientConfig={mediaClientConfig!}
         identifier={identifier}
         dimensions={cardDimensions}
         appearance={appearance}
         resizeMode={resizeMode}
         disableOverlay={disableOverlay}
+        shouldOpenMediaViewer={shouldOpenMediaViewer}
+        mediaViewerDataSource={{
+          list: Array.from(mediaIdentifierMap.values()),
+        }}
       />
     );
   }
 
+  /**
+   * We want to call provided `eventHandlers.media.onClick` when it's provided,
+   * but we also don't want to call it when it's a video and inline video player is enabled.
+   * This is due to consumers normally process this onClick call by opening media viewer and
+   * we don't want that to happened described above text.
+   */
+  private getOnCardClickCallback = (isInlinePlayer: boolean) => {
+    const { eventHandlers } = this.props;
+    if (eventHandlers && eventHandlers.media && eventHandlers.media.onClick) {
+      return ((result, analyticsEvent) => {
+        const isVideo =
+          result.mediaItemDetails &&
+          result.mediaItemDetails.mediaType === 'video';
+        const isVideoWithInlinePlayer = isInlinePlayer && isVideo;
+        if (
+          !isVideoWithInlinePlayer &&
+          eventHandlers &&
+          eventHandlers.media &&
+          eventHandlers.media.onClick
+        ) {
+          eventHandlers.media.onClick(result, analyticsEvent);
+        }
+      }) as CardOnClickCallback;
+    }
+
+    return undefined;
+  };
+
   render() {
-    const { context } = this.state;
     const {
-      eventHandlers,
+      contextIdentifierProvider,
+      mediaClientConfig,
+      fileState,
+    } = this.state;
+    const {
       id,
+      alt,
       type,
       collection,
       occurrenceKey,
@@ -129,35 +262,37 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
       rendererAppearance,
       disableOverlay,
       useInlinePlayer,
+      shouldOpenMediaViewer: forceOpenMediaViewer,
     } = this.props;
     const isMobile = rendererAppearance === 'mobile';
     const shouldPlayInline =
       useInlinePlayer !== undefined ? useInlinePlayer : true;
-    const onCardClick =
-      eventHandlers && eventHandlers.media && eventHandlers.media.onClick;
-    const shouldOpenMediaViewer = !isMobile && !onCardClick;
+    const isInlinePlayer = isMobile ? false : shouldPlayInline;
+
+    const onCardClick = this.getOnCardClickCallback(isInlinePlayer);
+
+    const shouldOpenMediaViewer =
+      typeof forceOpenMediaViewer === 'boolean'
+        ? forceOpenMediaViewer
+        : !isMobile && !onCardClick;
 
     if (type === 'external') {
-      return this.renderExternal();
+      return this.renderExternal(shouldOpenMediaViewer);
     }
 
     if (type === 'link') {
       return null;
     }
 
-    if (!context || !id) {
+    if (!mediaClientConfig || !id) {
       return this.renderLoadingCard();
     }
 
     if (!id || type !== 'file') {
-      return (
-        <CardView
-          status="error"
-          mediaItemType={type}
-          dimensions={cardDimensions}
-        />
-      );
+      return <CardError dimensions={cardDimensions} />;
     }
+    const contextId =
+      contextIdentifierProvider && contextIdentifierProvider.objectId;
 
     const identifier: FileIdentifier = {
       id,
@@ -167,19 +302,88 @@ export class MediaCardInternal extends Component<MediaCardProps, State> {
     };
 
     return (
-      <Card
-        identifier={identifier}
-        context={context}
-        dimensions={cardDimensions}
-        onClick={onCardClick}
-        resizeMode={resizeMode}
-        isLazy={!isMobile}
-        disableOverlay={disableOverlay}
-        useInlinePlayer={isMobile ? false : shouldPlayInline}
-        shouldOpenMediaViewer={shouldOpenMediaViewer}
-      />
+      <CardWrapper
+        {...getClipboardAttrs({
+          id,
+          alt,
+          collection,
+          contextIdentifierProvider,
+          cardDimensions,
+          fileState,
+        })}
+      >
+        <Card
+          identifier={identifier}
+          alt={alt}
+          contextId={contextId}
+          mediaClientConfig={mediaClientConfig}
+          dimensions={cardDimensions}
+          onClick={onCardClick}
+          resizeMode={resizeMode}
+          isLazy={!isMobile}
+          disableOverlay={disableOverlay}
+          useInlinePlayer={isInlinePlayer}
+          shouldOpenMediaViewer={shouldOpenMediaViewer}
+          mediaViewerDataSource={{
+            list: Array.from(mediaIdentifierMap.values()),
+          }}
+        />
+      </CardWrapper>
     );
   }
 }
+
+export const CardWrapper = styled.div``;
+
+// Needed for copy & paste
+export const getClipboardAttrs = ({
+  id,
+  alt,
+  collection,
+  contextIdentifierProvider,
+  cardDimensions,
+  fileState,
+}: {
+  id: string;
+  alt?: string;
+  collection?: string;
+  contextIdentifierProvider?: ContextIdentifierProvider;
+  cardDimensions?: CardDimensions;
+  fileState?: FileState;
+}): { [key: string]: string | number | undefined } => {
+  const contextId =
+    contextIdentifierProvider && contextIdentifierProvider.objectId;
+  const width =
+    cardDimensions &&
+    cardDimensions.width &&
+    parseInt(`${cardDimensions.width}`);
+  const height =
+    cardDimensions &&
+    cardDimensions.height &&
+    parseInt(`${cardDimensions.height}`);
+  let fileName = 'file'; // default name is needed for Confluence
+  let fileSize = 1;
+  let fileMimeType = '';
+
+  if (fileState && fileState.status !== 'error') {
+    fileSize = fileState.size;
+    fileName = fileState.name;
+    fileMimeType = fileState.mimeType;
+  }
+
+  return {
+    'data-context-id': contextId,
+    'data-type': 'file',
+    'data-node-type': 'media',
+    'data-width': width,
+    'data-height': height,
+    'data-id': id,
+    'data-collection': collection,
+    'data-file-name': fileName,
+    'data-file-size': fileSize,
+    'data-file-mime-type': fileMimeType,
+    'data-alt': alt,
+  };
+};
 
 export const MediaCard = withImageLoader<MediaCardProps>(MediaCardInternal);

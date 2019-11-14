@@ -1,9 +1,9 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { List as VirtualList } from 'react-virtualized/dist/commonjs/List';
-import { customCategory, userCustomTitle } from '../../constants';
+import { customCategory, userCustomTitle } from '../../util/constants';
 import {
   EmojiDescription,
   EmojiId,
@@ -25,11 +25,11 @@ import {
   CategoryHeadingItem,
   EmojisRowItem,
   LoadingItem,
-  SearchItem,
   VirtualItem,
   virtualItemRenderer,
 } from './EmojiPickerVirtualItems';
 import * as styles from './styles';
+import EmojiPickerListSearch from './EmojiPickerListSearch';
 
 const categoryClassname = 'emoji-category';
 
@@ -116,7 +116,7 @@ export default class EmojiPickerVirtualList extends PureComponent<
     };
   }
 
-  componentWillUpdate(nextProps: Props, nextState: State) {
+  UNSAFE_componentWillUpdate(nextProps: Props, nextState: State) {
     if (
       this.props.emojis !== nextProps.emojis ||
       this.props.selectedTone !== nextProps.selectedTone ||
@@ -200,13 +200,6 @@ export default class EmojiPickerVirtualList extends PureComponent<
     let items: Items.VirtualItem<any>[] = [];
 
     this.categoryTracker.reset();
-
-    items.push(
-      new SearchItem({
-        onChange: this.onSearch,
-        query,
-      }),
-    );
 
     if (loading) {
       items.push(new LoadingItem());
@@ -323,7 +316,9 @@ export default class EmojiPickerVirtualList extends PureComponent<
       const root = this.refs.root as HTMLDivElement;
       const display = root.style.display;
       root.style.display = 'none';
-      // tslint:disable-next-line:no-unused-expression no-unused-variable we need to access offset to force repaint
+
+      // we need to access offset to force repaint
+      // eslint-disable-next-line no-unused-expressions
       root.offsetHeight;
       root.style.display = display;
     }
@@ -364,7 +359,7 @@ export default class EmojiPickerVirtualList extends PureComponent<
     virtualItemRenderer(this.virtualItems, context);
 
   render() {
-    const { onMouseLeave, onMouseEnter } = this.props;
+    const { onMouseLeave, onMouseEnter, query } = this.props;
     const classes = [styles.emojiPickerList];
 
     return (
@@ -374,6 +369,7 @@ export default class EmojiPickerVirtualList extends PureComponent<
         onMouseLeave={onMouseLeave}
         onMouseEnter={onMouseEnter}
       >
+        <EmojiPickerListSearch onChange={this.onSearch} query={query} />
         <VirtualList
           ref="list"
           height={sizes.listHeight}

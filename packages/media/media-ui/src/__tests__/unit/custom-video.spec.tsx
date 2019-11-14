@@ -4,9 +4,10 @@ import { mount } from 'enzyme';
 import FullScreenIcon from '@atlaskit/icon/glyph/vid-full-screen-on';
 import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
 import VidHdCircleIcon from '@atlaskit/icon/glyph/vid-hd-circle';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
 import Button from '@atlaskit/button';
 import Spinner from '@atlaskit/spinner';
-import { fakeIntl } from '@atlaskit/media-test-helpers';
+import { fakeIntl, asMock } from '@atlaskit/media-test-helpers';
 import {
   CustomMediaPlayer,
   CustomMediaPlayerProps,
@@ -15,6 +16,23 @@ import { toggleFullscreen } from '../../customMediaPlayer/fullscreen';
 import { TimeRange, TimeRangeProps } from '../../customMediaPlayer/timeRange';
 import { CurrentTime } from '../../customMediaPlayer/styled';
 import { Shortcut } from '../../';
+jest.mock('../../customMediaPlayer/simultaneousPlayManager');
+import simultaneousPlayManager from '../../customMediaPlayer/simultaneousPlayManager';
+
+// Removes errors from JSDOM virtual console on CustomMediaPlayer tests
+// Trick taken from https://github.com/jsdom/jsdom/issues/2155
+const HTMLMediaElement_play = HTMLMediaElement.prototype.play;
+const HTMLMediaElement_pause = HTMLMediaElement.prototype.pause;
+
+beforeAll(() => {
+  HTMLMediaElement.prototype.play = () => Promise.resolve();
+  HTMLMediaElement.prototype.pause = () => Promise.resolve();
+});
+
+afterAll(() => {
+  HTMLMediaElement.prototype.play = HTMLMediaElement_play;
+  HTMLMediaElement.prototype.pause = HTMLMediaElement_pause;
+});
 
 describe('<CustomMediaPlayer />', () => {
   const setup = (props?: Partial<CustomMediaPlayerProps>) => {
@@ -118,6 +136,15 @@ describe('<CustomMediaPlayer />', () => {
 
       component.find('video').simulate('waiting');
       expect(component.find(Spinner)).toHaveLength(1);
+    });
+
+    it('should render download button if onDownloadClick is passed', () => {
+      const onDownloadClick = jest.fn();
+      const { component } = setup({ onDownloadClick });
+
+      expect(component.find(DownloadIcon)).toHaveLength(1);
+      component.find(DownloadIcon).simulate('click');
+      expect(onDownloadClick).toBeCalledTimes(1);
     });
   });
 
@@ -232,6 +259,81 @@ describe('<CustomMediaPlayer />', () => {
         isAutoPlay: false,
       });
       expect(component.find({ autoPlay: true })).toHaveLength(0);
+    });
+  });
+
+  describe('simultaneous play', () => {
+    beforeEach(() => {
+      asMock(simultaneousPlayManager.subscribe).mockClear();
+      asMock(simultaneousPlayManager.pauseOthers).mockClear();
+      asMock(simultaneousPlayManager.unsubscribe).mockClear();
+    });
+
+    afterAll(() => {
+      asMock(simultaneousPlayManager.subscribe).mockRestore();
+      asMock(simultaneousPlayManager.pauseOthers).mockRestore();
+      asMock(simultaneousPlayManager.unsubscribe).mockRestore();
+    });
+
+    it('should subscribe to Simultaneous Play Manager', () => {
+      setup();
+      expect(simultaneousPlayManager.subscribe).toBeCalledTimes(1);
+    });
+
+    it('should unsubscribe from Simultaneous Play Manager on unmount', () => {
+      const { component } = setup();
+      component.unmount();
+      expect(simultaneousPlayManager.unsubscribe).toBeCalledTimes(1);
+    });
+
+    it('should pause other players when click play button', () => {
+      const { component } = setup({ isAutoPlay: false });
+
+      component
+        .find(Button)
+        .at(0)
+        .simulate('click');
+      expect(simultaneousPlayManager.pauseOthers).toHaveBeenCalledTimes(1);
+    });
+
+    it('should pause other players if autoplay is ON', () => {
+      setup({ isAutoPlay: true });
+      expect(simultaneousPlayManager.pauseOthers).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('#onFirstPlay', () => {
+    it('should be called once when loaded with autoplay = true', () => {
+      const onFirstPlay = jest.fn();
+      const { component } = setup({
+        onFirstPlay,
+        isHDAvailable: true,
+        isAutoPlay: true,
+      });
+      expect(onFirstPlay).toHaveBeenCalledTimes(1);
+
+      // Accessing private variable since there are no other way to simulate user starting play
+      // via external MediaPlayer component.
+      (component.instance() as any).play();
+      expect(onFirstPlay).toHaveBeenCalledTimes(1);
+    });
+
+    it('should be called once when loaded with autoplay = false and user start play', () => {
+      const onFirstPlay = jest.fn();
+      const { component } = setup({
+        onFirstPlay,
+        isHDAvailable: true,
+        isAutoPlay: false,
+      });
+      expect(onFirstPlay).toHaveBeenCalledTimes(0);
+
+      // Accessing private variable since there are no other way to simulate user starting play
+      // via external MediaPlayer component.
+      (component.instance() as any).play();
+      expect(onFirstPlay).toHaveBeenCalledTimes(1);
+
+      (component.instance() as any).play();
+      expect(onFirstPlay).toHaveBeenCalledTimes(1);
     });
   });
 });

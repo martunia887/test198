@@ -1,7 +1,8 @@
-import { ContextFactory, FileState } from '@atlaskit/media-core';
+import { FileState } from '@atlaskit/media-client';
+import * as MediaClientModule from '@atlaskit/media-client';
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-import 'whatwg-fetch';
-import * as fetchMock from 'fetch-mock/src/client';
+
+import fetchMock from 'fetch-mock/src/client';
 import * as sinon from 'sinon';
 import { waitUntil } from '@atlaskit/util-common-test';
 
@@ -18,12 +19,11 @@ import {
   EmojiUpload,
   ImageRepresentation,
 } from '../../../../types';
-import { toEmojiId } from '../../../../type-helpers';
+import { toEmojiId } from '../../../../util/type-helpers';
 
 import {
   atlassianServiceEmojis,
   defaultMediaApiToken,
-  fetchSiteEmojiUrl,
   missingMediaEmoji,
   missingMediaEmojiId,
   missingMediaServiceEmoji,
@@ -31,8 +31,6 @@ import {
   loadedMediaEmoji,
 } from '../../_test-data';
 import { Observable } from 'rxjs/Observable';
-
-jest.mock('@atlaskit/media-core');
 
 class TestSiteEmojiResource extends SiteEmojiResource {
   constructor(tokenManager: TokenManager) {
@@ -42,8 +40,17 @@ class TestSiteEmojiResource extends SiteEmojiResource {
 }
 
 describe('SiteEmojiResource', () => {
+  let getMediaClientSpy: jest.SpyInstance<typeof MediaClientModule['getMediaClient']>;
+
+  beforeEach(() => {
+    // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+    //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
+    getMediaClientSpy = jest.spyOn(MediaClientModule, 'getMediaClient');
+  });
+
   afterEach(() => {
     fetchMock.restore();
+    getMediaClientSpy.mockRestore();
   });
 
   describe('#uploadEmoji', () => {
@@ -98,11 +105,11 @@ describe('SiteEmojiResource', () => {
         }),
       );
 
-      (ContextFactory as any).create = () => {
-        return {
-          file: { upload: uploadFile },
-        };
-      };
+      getMediaClientSpy.mockReturnValue({
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
+        file: { upload: uploadFile },
+      });
 
       return { uploadFile };
     };
@@ -176,7 +183,11 @@ describe('SiteEmojiResource', () => {
         }),
       );
 
-      (ContextFactory as any).create = () => ({ file: { upload: uploadFile } });
+      getMediaClientSpy.mockReturnValue({
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
+        file: { upload: uploadFile },
+      });
 
       const tokenManagerStub = sinon.createStubInstance(TokenManager) as any;
       const siteEmojiResource = new TestSiteEmojiResource(tokenManagerStub);
@@ -269,7 +280,11 @@ describe('SiteEmojiResource', () => {
         }),
       );
 
-      (ContextFactory as any).create = () => ({ file: { upload: uploadFile } });
+      getMediaClientSpy.mockReturnValue({
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
+        file: { upload: uploadFile },
+      });
       const tokenManagerStub = sinon.createStubInstance(TokenManager) as any;
       const siteEmojiResource = new TestSiteEmojiResource(tokenManagerStub);
 
@@ -407,11 +422,10 @@ describe('SiteEmojiResource', () => {
         },
       };
 
-      fetchMock.post({
-        matcher: `begin:${fetchSiteEmojiUrl(missingMediaEmojiId)}`,
-        response: {
-          body: serviceResponse,
-        },
+      fetchMock.mock({
+        method: 'GET',
+        matcher: 'end:?altScale=XHDPI',
+        response: serviceResponse,
         name: 'fetch-site-emoji',
       });
 
@@ -434,11 +448,10 @@ describe('SiteEmojiResource', () => {
         },
       };
 
-      fetchMock.post({
-        matcher: `begin:${fetchSiteEmojiUrl(missingMediaEmojiId)}`,
-        response: {
-          body: serviceResponse,
-        },
+      fetchMock.mock({
+        method: 'GET',
+        matcher: 'end:?altScale=XHDPI',
+        response: serviceResponse,
         name: 'fetch-site-emoji',
       });
 
@@ -462,11 +475,10 @@ describe('SiteEmojiResource', () => {
         },
       };
 
-      fetchMock.post({
-        matcher: `begin:${fetchSiteEmojiUrl(atlassianId)}`,
-        response: {
-          body: serviceResponse,
-        },
+      fetchMock.mock({
+        method: 'GET',
+        matcher: 'end:?altScale=XHDPI',
+        response: serviceResponse,
         name: 'fetch-site-emoji',
       });
 
@@ -481,12 +493,12 @@ describe('SiteEmojiResource', () => {
       const tokenManagerStub = sinon.createStubInstance(TokenManager) as any;
       const siteEmojiResource = new TestSiteEmojiResource(tokenManagerStub);
 
-      fetchMock.post({
-        matcher: `begin:${fetchSiteEmojiUrl(missingMediaEmojiId)}`,
+      fetchMock.mock({
+        method: 'GET',
+        matcher: 'end:?altScale=XHDPI',
         response: 403,
         name: 'fetch-site-emoji',
       });
-
       return siteEmojiResource.findEmoji(missingMediaEmojiId).then(emoji => {
         expect(emoji).toEqual(undefined);
         const fetchSiteEmojiCalls = fetchMock.calls('fetch-site-emoji');

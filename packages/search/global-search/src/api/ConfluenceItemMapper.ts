@@ -1,4 +1,3 @@
-import * as URI from 'urijs';
 import {
   ResultType,
   AnalyticsType,
@@ -15,58 +14,50 @@ export function removeHighlightTags(text: string): string {
 
 function mapConfluenceItemToResultObject(
   item: ConfluenceItem,
-  searchSessionId: string,
   experimentId?: string,
 ): ConfluenceObjectResult {
-  const href = new URI(`${item.baseUrl}${item.url}`);
-  href.addQuery('search_id', searchSessionId);
-
   return {
     resultId: item.content!.id, // content always available for pages/blogs/attachments
     name: removeHighlightTags(item.title),
-    href: `${href.pathname()}?${href.query()}`,
+    href: `${item.baseUrl}${item.url}`,
     containerName: item.container.title,
     analyticsType: AnalyticsType.ResultConfluence,
     contentType: `confluence-${item.content!.type}` as ContentType,
     resultType: ResultType.ConfluenceObjectResult,
-    containerId: 'UNAVAILABLE', // TODO
+    containerId:
+      item.content!.space && item.content!.space!.id
+        ? item.content!.space!.id
+        : 'UNAVAILABLE',
     iconClass: item.iconCssClass,
     experimentId: experimentId,
+    friendlyLastModified: item.friendlyLastModified,
   };
 }
 
 function mapConfluenceItemToResultSpace(
   spaceItem: ConfluenceItem,
-  searchSessionId: string,
   experimentId?: string,
 ): ContainerResult {
-  // add searchSessionId
-  const href = new URI(
-    `${spaceItem.baseUrl || ''}${spaceItem.container.displayUrl}`,
-  );
-  href.addQuery('search_id', searchSessionId);
-
   return {
     resultId: `space-${spaceItem.space!.key}`, // space is always defined for space results
     avatarUrl: `${spaceItem.baseUrl}${spaceItem.space!.icon.path}`,
     name: spaceItem.container.title,
-    href: `${href.pathname()}?${href.query()}`,
+    href: `${spaceItem.baseUrl || ''}${spaceItem.container.displayUrl}`,
     analyticsType: AnalyticsType.ResultConfluence,
     resultType: ResultType.GenericContainerResult,
     contentType: ContentType.ConfluenceSpace,
     experimentId: experimentId,
+    key: spaceItem.space!.key,
   };
 }
 
 export function mapConfluenceItemToResult(
   scope: Scope,
   item: ConfluenceItem,
-  searchSessionId: string,
-  experimentId?: string,
 ): Result {
   const mapper =
     scope === Scope.ConfluenceSpace
       ? mapConfluenceItemToResultSpace
       : mapConfluenceItemToResultObject;
-  return mapper(item as ConfluenceItem, searchSessionId, experimentId);
+  return mapper(item);
 }

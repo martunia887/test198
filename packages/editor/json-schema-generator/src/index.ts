@@ -1,9 +1,10 @@
-/* tslint:disable:no-bitwise */
+/* eslint-disable no-bitwise */
 import * as ts from 'typescript';
-import { writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
+import JSON5 from 'json5';
 import { resolve, join } from 'path';
 import * as prettier from 'prettier';
-import * as mkdirp from 'mkdirp';
+import mkdirp from 'mkdirp';
 
 import JSONSchemaNode, {
   SchemaNode,
@@ -37,6 +38,7 @@ import {
   isTypeAliasDeclaration,
   isUnionType,
   getPmName,
+  LiteralType,
 } from './utils';
 
 export default (
@@ -45,7 +47,19 @@ export default (
   root = 'doc_node',
   description = 'Schema for Atlassian Document Format.',
 ) => {
-  const program = ts.createProgram(files, { jsx: ts.JsxEmit.React });
+  const entryPointsTsConfig = JSON5.parse(
+    readFileSync(
+      join(__dirname, '../../../../tsconfig.entry-points.json'),
+      'utf8',
+    ),
+  );
+  const program = ts.createProgram(files, {
+    jsx: ts.JsxEmit.React,
+    // We need our paths configuration here to compile atlaskit dependencies now that we no longer
+    // have root index.ts files
+    baseUrl: join(__dirname, '..'),
+    paths: entryPointsTsConfig.compilerOptions.paths,
+  });
   const checker = program.getTypeChecker();
   const typeIdToDefName: Map<number, string> = new Map();
   const experimentalNodes: Set<number> = new Set();
@@ -67,7 +81,6 @@ export default (
       if (!isSpecMode()) {
         jsonSchema.markAsUsed(root);
         const outputFileName =
-          // tslint:disable-next-line:triple-equals
           stage != null ? `stage-${stage}.json` : 'full.json';
         writeFileSync(
           join(resolvedOutDir, outputFileName),
@@ -105,7 +118,7 @@ export default (
         });
       }
     })
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     .catch(console.error);
 
   function waitForTicks() {
@@ -151,7 +164,7 @@ export default (
     }
   }
 
-  function shouldExclude(stage) {
+  function shouldExclude(stage?: string) {
     return (
       (flags.stage === undefined && stage !== undefined) ||
       (flags.stage !== undefined &&
@@ -187,7 +200,7 @@ export default (
       const isEnum = type.types.every(t => isStringLiteralType(t));
       if (isEnum) {
         return new EnumSchemaNode(
-          type.types.map(t => (t as ts.LiteralType).value),
+          type.types.map(t => (t as LiteralType).value),
         );
       } else {
         return new AnyOfSchemaNode(

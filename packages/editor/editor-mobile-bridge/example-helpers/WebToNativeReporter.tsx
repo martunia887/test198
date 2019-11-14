@@ -17,7 +17,7 @@ export interface State {
 let logId = 0;
 
 export default class WebToNativeReporter extends React.Component<Props, State> {
-  private oldLog: string;
+  private oldLog?: string;
 
   constructor(props: any) {
     super(props);
@@ -26,7 +26,7 @@ export default class WebToNativeReporter extends React.Component<Props, State> {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.oldLog = (toNativeBridge as any).log;
     (toNativeBridge as any).log = this.handleNewLog;
   }

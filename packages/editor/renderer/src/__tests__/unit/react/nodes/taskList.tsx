@@ -19,11 +19,9 @@ describe('Renderer - React/Nodes/TaskList', () => {
     };
   });
 
-  it('should wrap content with <AkTaskList>-tag with start prop', () => {
+  it('shouldmatch rendered AkTaskList', () => {
     const text: any = 'This is a task list';
-    const taskListWrapper = shallow(<TaskList>{text}</TaskList>);
-    const taskList = taskListWrapper.childAt(0);
-    expect(taskListWrapper.is('div')).toEqual(true);
+    const taskList = shallow(<TaskList>{text}</TaskList>);
     expect(taskList.is(AkTaskList)).toEqual(true);
   });
 
@@ -53,7 +51,6 @@ describe('Renderer - React/Nodes/TaskList', () => {
             listLocalId: 'list-1',
             localId: 'task-1',
             objectAri: '',
-            containerAri: '',
             userContext: 'document',
             listSize: 1,
             position: 0,
@@ -88,7 +85,6 @@ describe('Renderer - React/Nodes/TaskList', () => {
             listLocalId: 'list-1',
             localId: 'task-2',
             objectAri: '',
-            containerAri: '',
             userContext: 'document',
             listSize: 2,
             position: 1,

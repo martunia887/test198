@@ -10,24 +10,35 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import { undo } from 'prosemirror-history';
 import { NodeSelection, TextSelection } from 'prosemirror-state';
+import { MockMentionResource } from '@atlaskit/util-data-test';
+import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers/fakeMediaClient';
+import { ProviderFactory } from '@atlaskit/editor-common';
 import { setNodeSelection } from '../../../../utils';
 import {
   removeMediaNode,
   splitMediaGroup,
 } from '../../../../plugins/media/utils/media-common';
-import mediaPlugin from '../../../../plugins/media';
-import mentionsPlugin from '../../../../plugins/mentions';
-import rulePlugin from '../../../../plugins/rule';
 
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 
 describe('media-common', () => {
   const createEditor = createEditorFactory();
+  const mediaProvider = Promise.resolve({
+    viewMediaClientConfig: getDefaultMediaClientConfig(),
+  });
+  const providerFactory = ProviderFactory.create({
+    mediaProvider,
+  });
 
-  const editor = (doc: any, uploadErrorHandler?: () => void) =>
+  const editor = (doc: any) =>
     createEditor({
       doc,
-      editorPlugins: [mediaPlugin(), mentionsPlugin(), rulePlugin],
+      editorProps: {
+        media: {},
+        mentionProvider: Promise.resolve(new MockMentionResource({})),
+        allowRule: true,
+      },
+      providerFactory,
     });
 
   describe('removeMediaNode', () => {
@@ -186,7 +197,6 @@ describe('media-common', () => {
             deletingMediaNode(editorView.state.schema),
             () => positionOfDeletingNode,
           );
-
           undo(editorView.state, editorView.dispatch);
 
           expect(editorView.state.doc).toEqualDocument(
@@ -213,9 +223,10 @@ describe('media-common', () => {
               type: 'file',
               collection: testCollectionName,
             })();
-            const { editorView, sel } = editor(
+            const { editorView } = editor(
               doc(
-                p('hello{<>}'),
+                p('hello'),
+                '{<node>}',
                 mediaGroup(
                   deletingMediaNode,
                   media({
@@ -232,13 +243,12 @@ describe('media-common', () => {
                 p('world'),
               ),
             );
-            const positionOfDeletingNode = sel + 2;
-            setNodeSelection(editorView, positionOfDeletingNode);
 
+            const sel = editorView.state.selection.from;
             removeMediaNode(
               editorView,
               deletingMediaNode(editorView.state.schema),
-              () => positionOfDeletingNode,
+              () => editorView.state.selection.from,
             );
 
             expect(editorView.state.selection.from).toEqual(sel);

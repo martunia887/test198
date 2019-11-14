@@ -1,6 +1,27 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  confluence_no_results_in_space: {
+    id: 'global_search.confluence.no_results_in_space',
+    defaultMessage: "No results in '{spaceTitle}'",
+    description: '',
+  },
+  confluence_remove_space_filter: {
+    id: 'global_search.confluence.remove_space_filter',
+    defaultMessage: 'Remove space filter',
+    description: '',
+  },
+  confluence_space_filter: {
+    id: 'global_search.confluence.space_filter',
+    defaultMessage: 'Filter results by space',
+    description: '',
+  },
+  confluence_more_filters: {
+    id: 'global_search.confluence.more_filters',
+    defaultMessage: 'More filter options',
+    description:
+      'Text to display on button that takes the user to advanced search, which has more filtering options',
+  },
   confluence_recent_pages_heading: {
     id: 'global_search.confluence.recent_pages_heading',
     defaultMessage: 'Recent pages and blogs',
@@ -54,7 +75,7 @@ export const messages = defineMessages({
   },
   no_results_title: {
     id: 'global_search.no_results_title',
-    defaultMessage: 'No results in titles and people',
+    defaultMessage: "We couldn't find anything matching your search",
     description: '',
   },
   no_results_body: {
@@ -113,6 +134,12 @@ export const messages = defineMessages({
     defaultMessage: 'Recent boards, projects and filters',
     description: '',
   },
+  jira_recent_core_containers: {
+    id: 'global_search.jira.recent_core_containers',
+    defaultMessage: 'Recent projects and filters',
+    description: '',
+  },
+
   jira_search_result_issues_heading: {
     id: 'global_search.jira.search_result_issues_heading',
     defaultMessage: 'Issues',
@@ -123,6 +150,11 @@ export const messages = defineMessages({
     defaultMessage: 'Boards, projects and filters',
     description: '',
   },
+  jira_search_result_core_containers_heading: {
+    id: 'global_search.jira.search_result_core_containers_heading',
+    defaultMessage: 'Projects and filters',
+    description: '',
+  },
   jira_search_result_people_heading: {
     id: 'global_search.jira.search_result_people_heading',
     defaultMessage: 'People',
@@ -130,38 +162,43 @@ export const messages = defineMessages({
   },
   jira_advanced_search: {
     id: 'global_search.jira.advanced_search',
-    defaultMessage: 'Advanced search for',
+    defaultMessage: 'View all:',
     description: '',
   },
   jira_advanced_search_issues: {
     id: 'global_search.jira.advanced_search_issues',
-    defaultMessage: 'issues',
+    defaultMessage: 'Issues',
     description: 'Plural of issue',
   },
   jira_advanced_search_projects: {
     id: 'global_search.jira.advanced_search_projects',
-    defaultMessage: 'projects',
+    defaultMessage: 'Projects',
     description: 'Plural of project',
   },
   jira_advanced_search_boards: {
     id: 'global_search.jira.advanced_search_boards',
-    defaultMessage: 'boards',
+    defaultMessage: 'Boards',
     description: 'Plural of board',
   },
   jira_advanced_search_filters: {
     id: 'global_search.jira.advanced_search_filters',
-    defaultMessage: 'filters',
+    defaultMessage: 'Filters',
     description: 'Plural of filter',
   },
   jira_advanced_search_people: {
     id: 'global_search.jira.advanced_search_people',
-    defaultMessage: 'people',
+    defaultMessage: 'People',
     description: '',
   },
   jira_advanced_issue_search: {
     id: 'global_search.jira.advanced_issue_search',
     defaultMessage: 'Advanced search for issues',
     description: '',
+  },
+  jira_view_all_issues: {
+    id: 'global_search.jira.view_all_issues',
+    defaultMessage: 'View all issues',
+    description: 'Advanced search for issues in post query screen',
   },
   jira_no_results_title: {
     id: 'global_search.jira.no_results_title',
@@ -170,8 +207,7 @@ export const messages = defineMessages({
   },
   jira_no_results_body: {
     id: 'global_search.jira.no_results_body',
-    defaultMessage:
-      'Try again with a different term, or refine your results with our advanced search.',
+    defaultMessage: 'Try again with a different term.',
     description: '',
   },
   jira_no_recent_activity_body: {
@@ -208,5 +244,28 @@ export const messages = defineMessages({
     id: 'global_search.jira.result_type.filter',
     defaultMessage: 'Filter',
     description: '',
+  },
+  give_feedback: {
+    id: 'global_search.give_feedback',
+    defaultMessage: 'Give feedback',
+    description: '',
+  },
+  show_more_button_text: {
+    id: 'global_search.show_more_button_text',
+    defaultMessage: 'Show {itemsPerPage} more results',
+    description:
+      'Text for button that is used to load more results for a search',
+  },
+  show_more_button_advanced_search: {
+    id: 'global_search.show_more_button_advanced_search_v2',
+    defaultMessage: 'View all results',
+    description:
+      'Text for button that is used when we cannot load more results and direct user to advanced search',
+  },
+  confluence_container_subtext_with_modified_date: {
+    id: 'global_search.confluence.subtext_with_modified_date',
+    defaultMessage: '{containerName}  ·  Updated {friendlyLastModified}',
+    description:
+      'Text describing which space a given search result is from, as well as a date when it was last edited or created.',
   },
 });

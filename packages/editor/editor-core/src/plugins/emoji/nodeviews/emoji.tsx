@@ -1,36 +1,59 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { Node as PMNode } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
+import { EditorView, NodeView } from 'prosemirror-view';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import Emoji from '../ui/Emoji';
-
-// tslint:disable-next-line:variable-name
-const Wrapper = styled.span`
-  user-select: all;
-`;
+import { ReactNodeView, getPosHandler } from '../../../nodeviews';
+import InlineNodeWrapper, {
+  createMobileInlineDomRef,
+} from '../../../ui/InlineNodeWrapper';
+import { PortalProviderAPI } from '../../../ui/PortalProvider';
+import { ZeroWidthSpace } from '../../../utils';
+import { EmojiPluginOptions } from '../index';
 
 export interface Props {
-  children?: React.ReactNode;
-  view: EditorView;
-  node: PMNode;
   providerFactory: ProviderFactory;
+  options?: EmojiPluginOptions;
 }
 
-export default class EmojiNode extends React.PureComponent<Props, {}> {
-  render() {
-    const { node, providerFactory } = this.props;
-    const { shortName, id, text } = node.attrs;
+export class EmojiNodeView extends ReactNodeView<Props> {
+  createDomRef() {
+    if (
+      this.reactComponentProps.options &&
+      this.reactComponentProps.options.useInlineWrapper
+    ) {
+      return createMobileInlineDomRef();
+    }
+
+    return super.createDomRef();
+  }
+
+  render(props: Props) {
+    const { providerFactory, options } = props;
+    const { shortName, id, text } = this.node.attrs;
 
     return (
-      <Wrapper>
+      <InlineNodeWrapper useInlineWrapper={options && options.useInlineWrapper}>
         <Emoji
           providers={providerFactory}
           id={id}
           shortName={shortName}
           fallback={text}
         />
-      </Wrapper>
+        {options && options.allowZeroWidthSpaceAfter && ZeroWidthSpace}
+      </InlineNodeWrapper>
     );
   }
+}
+
+export default function emojiNodeView(
+  portalProviderAPI: PortalProviderAPI,
+  providerFactory: ProviderFactory,
+  options?: EmojiPluginOptions,
+) {
+  return (node: PMNode, view: EditorView, getPos: getPosHandler): NodeView =>
+    new EmojiNodeView(node, view, getPos, portalProviderAPI, {
+      providerFactory,
+      options,
+    }).init();
 }

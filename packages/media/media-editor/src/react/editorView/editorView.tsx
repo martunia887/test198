@@ -1,11 +1,21 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { MediaEditor, LoadParameters } from '../mediaEditor';
-import { Tool, Color, Dimensions, ShapeParameters } from '../../common';
 import { messages } from '@atlaskit/media-ui';
+import { ThemeProvider } from 'styled-components';
+import { MediaEditor, LoadParameters } from '../mediaEditor';
+import {
+  CancelInputType,
+  Tool,
+  Dimensions,
+  ShapeParameters,
+} from '../../common';
 import Toolbar, { tools } from './toolbar/toolbar';
 import { EditorContainer } from './styles';
+import { R300 } from '@atlaskit/theme/colors';
+import { Theme as ButtonTheme } from '@atlaskit/button';
+import { rgbToHex } from '../../util';
+import { DEFAULT_COLOR } from './toolbar/popups/colorPopup';
 
 const DEFAULT_WIDTH = 845;
 const DEFAULT_HEIGHT = 530;
@@ -20,19 +30,19 @@ const propertyLineWidth = 'media-editor-line-width';
 export interface EditorViewProps {
   readonly imageUrl: string;
   readonly onSave: (image: string, dimensions: Dimensions) => void;
-  readonly onCancel: () => void;
+  readonly onCancel: (input: CancelInputType) => void;
   readonly onError: (message: string) => void;
-  readonly onAnyEdit?: () => void;
+  readonly onAnyEdit?: (tool: Tool, shapeParameters: ShapeParameters) => void;
 }
 
 export interface EditorViewState {
   readonly dimensions: Dimensions;
-  readonly color: Color;
+  readonly color: string;
   readonly lineWidth: number;
   readonly tool: Tool;
 }
 
-class EditorView extends Component<
+export class EditorView extends Component<
   EditorViewProps & InjectedIntlProps,
   EditorViewState
 > {
@@ -43,7 +53,7 @@ class EditorView extends Component<
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT - TOOLBAR_HEIGHT,
     },
-    color: { red: 0xbf, green: 0x26, blue: 0x00 },
+    color: R300,
     lineWidth: 8,
     tool: 'arrow',
   };
@@ -70,12 +80,20 @@ class EditorView extends Component<
     const refHandler = (div: HTMLDivElement) => {
       this.rootDiv = div;
     };
-
+    const theme = { __ATLASKIT_THEME__: { mode: 'dark' } };
     return (
-      <EditorContainer innerRef={refHandler}>
-        {this.renderEditor()}
-        {this.renderToolbar()}
-      </EditorContainer>
+      <ThemeProvider theme={theme}>
+        <ButtonTheme.Provider
+          value={(currentTheme, themeProps) =>
+            currentTheme({ ...themeProps, mode: 'dark' })
+          }
+        >
+          <EditorContainer innerRef={refHandler} onKeyDown={this.handleEsc}>
+            {this.renderEditor()}
+            {this.renderToolbar()}
+          </EditorContainer>
+        </ButtonTheme.Provider>
+      </ThemeProvider>
     );
   }
 
@@ -109,10 +127,10 @@ class EditorView extends Component<
   renderToolbar(): JSX.Element {
     const { tool, color, lineWidth } = this.state;
     const onToolChanged = (tool: Tool) => this.setState({ tool });
-    const onColorChanged = (color: Color) => this.setState({ color });
+    const onColorChanged = (color: string) => this.setState({ color });
     const onLineWidthChanged = (lineWidth: number) =>
       this.setState({ lineWidth });
-    const onCancel = () => this.props.onCancel();
+    const onCancel = () => this.props.onCancel('button');
 
     return (
       <Toolbar
@@ -169,7 +187,7 @@ class EditorView extends Component<
       localStorage.setItem(propertyTool, tool);
       localStorage.setItem(propertyLineWidth, lineWidth.toString());
     } catch (error) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.warn(
         `Failed to save properties for MediaEditor: ${color} ${tool} ${lineWidth}`,
       );
@@ -180,11 +198,21 @@ class EditorView extends Component<
     const color = localStorage.getItem(propertyColor);
     if (color) {
       try {
+        let parsedColor = JSON.parse(color);
+        if (parsedColor.red !== undefined) {
+          // Backward compatible with already stored colors in users' local storage
+          parsedColor = rgbToHex(parsedColor);
+        } else if (
+          typeof parsedColor !== 'string' ||
+          parsedColor.indexOf('#') !== 0
+        ) {
+          parsedColor = DEFAULT_COLOR;
+        }
         this.setState({
-          color: JSON.parse(color),
+          color: parsedColor,
         });
       } catch (error) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.warn(
           `Failed to parse color property for MediaEditor: ${color}`,
         );
@@ -205,6 +233,14 @@ class EditorView extends Component<
       });
     }
   }
+
+  private handleEsc = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      e.nativeEvent.stopImmediatePropagation();
+      this.props.onCancel('esc');
+    }
+  };
 }
 
 function isTool(value: string): value is Tool {

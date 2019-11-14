@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ImageWrapper } from './styled';
-import { isImageRemote } from '@atlaskit/media-core';
+import { isImageRemote } from '../image-cropper/isImageRemote';
 
 export interface ImagePlacerImageProps {
   src?: string;
@@ -26,7 +26,7 @@ export class ImagePlacerImage extends React.Component<
   ImagePlacerImageProps,
   {}
 > {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { src, onError } = this.props;
     if (src !== undefined) {
       try {

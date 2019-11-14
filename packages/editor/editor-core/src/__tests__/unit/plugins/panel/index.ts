@@ -17,11 +17,10 @@ import {
   li,
   insertText,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
-import panelPlugin from '../../../../plugins/panel';
-import listPlugin from '../../../../plugins/lists';
-import tablesPlugin from '../../../../plugins/table';
-import quickInsertPlugin from '../../../../plugins/quick-insert';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   removePanel,
   changePanelType,
@@ -31,19 +30,18 @@ describe('@atlaskit/editor-core ui/PanelPlugin', () => {
   const createEditor = createEditorFactory<PanelState>();
 
   const event = createEvent('event');
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
 
   const editor = (doc: any) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
     return createEditor({
       doc,
-      editorPlugins: [
-        panelPlugin,
-        listPlugin,
-        tablesPlugin(),
-        quickInsertPlugin,
-      ],
-      editorProps: { allowAnalyticsGASV3: true },
+      editorProps: {
+        allowAnalyticsGASV3: true,
+        allowPanel: true,
+        allowLists: true,
+        allowTables: true,
+      },
       pluginKey: panelPluginKey,
       createAnalyticsEvent,
     });

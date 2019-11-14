@@ -7,19 +7,34 @@
 // Czech
 export default {
   'fabric.atlassianSwitcher.switchTo': 'Přepnout na',
-  'fabric.atlassianSwitcher.switchToTooltip': 'Přepnout na ...',
+  'fabric.atlassianSwitcher.switchToTooltip': 'Přepnout na...',
   'fabric.atlassianSwitcher.recent': 'Nedávné',
   'fabric.atlassianSwitcher.more': 'Více',
   'fabric.atlassianSwitcher.try': 'Vyzkoušejte to',
   'fabric.atlassianSwitcher.manageList': 'Spravovat seznam',
   'fabric.atlassianSwitcher.jiraProject': 'Projekt Jira',
   'fabric.atlassianSwitcher.confluenceSpace': 'Prostor Confluence',
-  'fabric.atlassianSwitcher.people': 'Lidé',
   'fabric.atlassianSwitcher.administration': 'Správa',
-  'fabric.atlassianSwitcher.discoverMore': 'Objevte více',
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Procházet aplikace na Marketplace',
+  'fabric.atlassianSwitcher.errorHeading': 'Něco se pokazilo',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    'Tyto chyby zaznamenáváme, ale nebojte se nás kontaktovat, pokud obnovení stránky problém nevyřeší.',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    'Rozbitý robot a několik lidí se ho snaží opravit.',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'Tento seznam se nám nepodařilo načíst. Obnovte stránku a zkuste to znova.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'Byli jste odhlášeni. Přihlaste se znovu.',
+  'fabric.atlassianSwitcher.login': 'Přihlášení',
+  'fabric.atlassianSwitcher.show.more.sites': 'Zobrazit více stránek',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

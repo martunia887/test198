@@ -6,20 +6,35 @@
  */
 // Japanese
 export default {
-  'fabric.atlassianSwitcher.switchTo': '切り替え',
-  'fabric.atlassianSwitcher.switchToTooltip': '製品を切り替え...',
+  'fabric.atlassianSwitcher.switchTo': '切り替え先',
+  'fabric.atlassianSwitcher.switchToTooltip': '切り替え先...',
   'fabric.atlassianSwitcher.recent': '最近',
   'fabric.atlassianSwitcher.more': 'その他',
   'fabric.atlassianSwitcher.try': '試してみる',
   'fabric.atlassianSwitcher.manageList': 'リストの管理',
   'fabric.atlassianSwitcher.jiraProject': 'Jira プロジェクト',
   'fabric.atlassianSwitcher.confluenceSpace': 'Confluence スペース',
-  'fabric.atlassianSwitcher.people': 'ユーザー',
   'fabric.atlassianSwitcher.administration': '管理',
-  'fabric.atlassianSwitcher.discoverMore': 'もっと見る',
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Marketplace アプリを閲覧',
+  'fabric.atlassianSwitcher.errorHeading': '問題が発生しました',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    'エラーはすべて記録されていますが、リフレッシュしても問題が修正されない場合はお気軽にお問い合わせください。',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    '鋭意問題の修正に当たっています。',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'このリストを読み込めませんでした。ページを読み込み直してもう一度お試しください。',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'ログアウトしました。ログインし直してください。',
+  'fabric.atlassianSwitcher.login': 'ログイン',
+  'fabric.atlassianSwitcher.show.more.sites': '他のサイトを表示',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

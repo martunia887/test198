@@ -15,11 +15,22 @@ export { default as languages } from './i18n/languages';
 export { locales };
 export * from './infiniteScroll';
 export * from './imageMetaData';
-export * from './util';
+export {
+  dataURItoFile,
+  fileToArrayBuffer,
+  fileToDataURI,
+  getFileInfo,
+  getFileInfoFromSrc,
+  loadImage,
+  findParentByClassname,
+} from './util';
 export { default as CustomMediaPlayer } from './customMediaPlayer/index';
 export * from './customMediaPlayer/timeRange';
 export * from './classNames';
 export * from './shortcut';
 export * from './formatDuration';
-export { default as theme } from './theme';
+export { default as MediaButton } from './MediaButton';
 export { default as ModalSpinner } from './modalSpinner';
+export * from './mediaImage';
+export { InactivityDetector } from './inactivityDetector/inactivityDetector';
+export { WithShowControlMethodProp } from './types';

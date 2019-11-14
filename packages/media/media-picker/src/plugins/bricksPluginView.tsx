@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { ExternalImageIdentifier } from '@atlaskit/media-core';
+import { ExternalImageIdentifier } from '@atlaskit/media-client';
 import { Card } from '@atlaskit/media-card';
 import Spinner from '@atlaskit/spinner';
 import { Container, GridCell } from '../popup/components/views/giphy/styles';
@@ -86,7 +86,7 @@ export class BricksView extends Component<BricksViewProps, {}> {
       return (
         <GridCell key={`${i}-metadata.id`} width={dimensions.width}>
           <Card
-            context={{} as any}
+            mediaClientConfig={{} as any}
             identifier={identifier}
             dimensions={dimensions}
             selectable={true}

@@ -7,22 +7,51 @@ export {
   BlockContent,
   Inline,
   ExtensionContent,
+  NestedExpandContent,
   NoMark,
   MarksObject,
+  InlineFormattedText,
+  InlineLinkText,
+  InlineAtomic,
+  InlineCode,
 } from './doc';
 export { blockquote, BlockQuoteDefinition } from './blockquote';
-export { bulletList, BulletListDefinition } from './bullet-list';
+export {
+  bulletList,
+  BulletListDefinition,
+  bulletListSelector,
+} from './bullet-list';
 export {
   codeBlock,
   toJSON as codeBlockToJSON,
   CodeBlockDefinition,
   CodeBlockAttrs,
+  CodeBlockBaseDefinition,
+  CodeBlockWithMarksDefinition,
 } from './code-block';
 export { hardBreak, HardBreakDefinition } from './hard-break';
-export { heading, HeadingDefinition } from './heading';
+export {
+  heading,
+  HeadingDefinition,
+  HeadingBaseDefinition,
+  HeadingWithAlignmentDefinition,
+  HeadingWithIndentationDefinition,
+  HeadingWithMarksDefinition,
+} from './heading';
 export { rule, RuleDefinition } from './rule';
-export { orderedList, OrderedListDefinition } from './ordered-list';
-export { paragraph, ParagraphDefinition } from './paragraph';
+export {
+  orderedList,
+  OrderedListDefinition,
+  orderedListSelector,
+} from './ordered-list';
+export {
+  paragraph,
+  ParagraphDefinition,
+  ParagraphBaseDefinition,
+  ParagraphWithAlignmentDefinition,
+  ParagraphWithIndentationDefinition,
+  ParagraphWithMarksDefinition,
+} from './paragraph';
 export { emoji, EmojiAttributes, EmojiDefinition } from './emoji';
 export { image } from './image';
 export {
@@ -38,6 +67,7 @@ export { text, TextDefinition } from './text';
 export { default as unknownBlock } from './unknown-block';
 export {
   media,
+  mediaWithAltText,
   MediaType,
   MediaBaseAttributes,
   MediaAttributes,
@@ -65,26 +95,34 @@ export {
   toJSONTableHeader,
   tableRow,
   tableBackgroundColorPalette,
-  tableBackgroundBorderColors,
+  tableBackgroundBorderColor,
   tableBackgroundColorNames,
   CellAttributes,
   Layout as TableLayout,
-  calcTableColumnWidths,
   TableDefinition,
   TableCell as TableCellDefinition,
   TableHeader as TableHeaderDefinition,
   TableRow as TableRowDefinition,
   setCellAttrs,
+  tablePrefixSelector,
+  tableCellSelector,
+  tableHeaderSelector,
+  tableCellContentWrapperSelector,
+  tableCellContentDomSelector,
 } from './tableNodes';
 export {
-  applicationCard,
-  ApplicationCardAttributes,
-  AppCardAction,
-  ApplicationCardDefinition,
-} from './applicationCard';
-export { decisionList, DecisionListDefinition } from './decision-list';
+  decisionList,
+  DecisionListDefinition,
+  decisionListSelector,
+} from './decision-list';
 export { decisionItem, DecisionItemDefinition } from './decision-item';
-export { taskList, TaskListDefinition } from './task-list';
+export {
+  taskList,
+  nestableTaskList,
+  TaskListDefinition,
+  TaskListWithNestingDefinition,
+  taskListSelector,
+} from './task-list';
 export { taskItem, TaskItemDefinition } from './task-item';
 export { extension, ExtensionDefinition } from './extension';
 export { inlineExtension, InlineExtensionDefinition } from './inline-extension';
@@ -98,7 +136,15 @@ export { placeholder, PlaceholderDefinition } from './placeholder';
 export { layoutSection, LayoutSectionDefinition } from './layout-section';
 export { layoutColumn, LayoutColumnDefinition } from './layout-column';
 export { inlineCard, InlineCardDefinition } from './inline-card';
-export { blockCard, CardAttributes, BlockCardDefinition } from './block-card';
+export {
+  blockCard,
+  UrlType,
+  DataType,
+  CardAttributes,
+  BlockCardDefinition,
+} from './block-card';
 export { unsupportedBlock } from './unsupported-block';
 export { unsupportedInline } from './unsupported-inline';
 export { status, StatusDefinition } from './status';
+export { expand, ExpandDefinition, toJSON as expandToJSON } from './expand';
+export { nestedExpand, NestedExpandDefinition } from './nested-expand';

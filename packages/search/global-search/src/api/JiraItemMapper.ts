@@ -1,5 +1,4 @@
-import * as URI from 'urijs';
-import * as uuid from 'uuid';
+import uuid from 'uuid';
 
 import {
   ResultType,
@@ -9,42 +8,14 @@ import {
   JiraProjectType,
 } from '../model/Result';
 
-import {
-  JiraItem,
-  JiraItemV1,
-  JiraItemV2,
-  JiraItemAttributes,
-  JiraResultQueryParams,
-} from './types';
+import { JiraItem, JiraItemV1, JiraItemV2, JiraItemAttributes } from './types';
 
-export const mapJiraItemToResult = (
+export const mapJiraItemToResult = (analyticsType: AnalyticsType) => (
   item: JiraItem,
-  searchSessionId: string,
-  addSessionIdToJiraResult?: boolean,
 ): JiraResult =>
   (<JiraItemV2>item).attributes && (<JiraItemV2>item).attributes['@type']
-    ? mapJiraItemToResultV2(
-        item as JiraItemV2,
-        searchSessionId,
-        addSessionIdToJiraResult,
-      )
-    : mapJiraItemToResultV1(item as JiraItemV1);
-
-/**
- * add search session id, object id, container id and result type to query params
- */
-export const addJiraResultQueryParams = (
-  url: string,
-  queryParams: JiraResultQueryParams,
-) => {
-  const href = new URI(url);
-  Object.keys(queryParams)
-    .filter(key => !!queryParams[key])
-    .forEach(key => {
-      href.addQuery(key, queryParams[key]);
-    });
-  return href.toString();
-};
+    ? mapJiraItemToResultV2(item as JiraItemV2, analyticsType)
+    : mapJiraItemToResultV1(item as JiraItemV1, analyticsType);
 
 const extractSpecificAttributes = (
   attributes: JiraItemAttributes,
@@ -54,11 +25,12 @@ const extractSpecificAttributes = (
     case 'issue':
       return {
         objectKey: attributes.key,
-        containerName: attributes.issueTypeName,
+        containerName: attributes.container && attributes.container.title,
       };
     case 'board':
       return {
         containerName: attributes.containerName,
+        containerId: attributes.containerId,
       };
     case 'filter':
       return {
@@ -73,7 +45,10 @@ const extractSpecificAttributes = (
   return null;
 };
 
-const extractAvatarUrl = ({ url = '', urls = {} } = {}) => {
+const extractAvatarUrl = ({
+  url = '',
+  urls = {},
+}: { url?: string; urls?: Record<string, string> } = {}) => {
   if (url) {
     return url;
   }
@@ -89,21 +64,10 @@ const JIRA_TYPE_TO_CONTENT_TYPE = {
 
 const mapJiraItemToResultV2 = (
   item: JiraItemV2,
-  searchSessionId: string,
-  addSessionIdToJiraResult?: boolean,
+  analyticsType: AnalyticsType,
 ): JiraResult => {
   const { id, name, url, attributes } = item;
   const contentType = JIRA_TYPE_TO_CONTENT_TYPE[attributes['@type']];
-  const queryParams = {
-    searchSessionId,
-    searchContainerId: attributes.containerId,
-    searchObjectId: id,
-    searchContentType: attributes['@type'],
-  };
-
-  const href = addSessionIdToJiraResult
-    ? addJiraResultQueryParams(url, queryParams)
-    : url;
 
   const resultType =
     contentType === ContentType.JiraProject
@@ -114,17 +78,21 @@ const mapJiraItemToResultV2 = (
     resultId: id,
     key: uuid(),
     name: name,
-    href,
+    href: url,
     resultType: resultType,
-    containerId: attributes.containerId,
-    analyticsType: AnalyticsType.ResultJira,
+    containerId: attributes.container && attributes.container.id,
+    analyticsType,
     ...extractSpecificAttributes(attributes),
     avatarUrl: attributes.avatar && extractAvatarUrl(attributes.avatar),
     contentType,
+    isRecentResult: mapAnalyticsTypeToRecentResult(analyticsType),
   };
 };
 
-const mapJiraItemToResultV1 = (item: JiraItemV1): JiraResult => {
+const mapJiraItemToResultV1 = (
+  item: JiraItemV1,
+  analyticsType: AnalyticsType,
+): JiraResult => {
   return {
     resultId: item.key,
     avatarUrl: item.fields.issuetype.iconUrl,
@@ -132,8 +100,15 @@ const mapJiraItemToResultV1 = (item: JiraItemV1): JiraResult => {
     href: `/browse/${item.key}`,
     containerName: item.fields.project.name,
     objectKey: item.key,
-    analyticsType: AnalyticsType.ResultJira,
+    analyticsType,
     resultType: ResultType.JiraObjectResult,
     contentType: ContentType.JiraIssue,
+    isRecentResult: mapAnalyticsTypeToRecentResult(analyticsType),
   };
+};
+
+const mapAnalyticsTypeToRecentResult = (
+  analyticsType: AnalyticsType,
+): boolean => {
+  return analyticsType.startsWith('recent');
 };

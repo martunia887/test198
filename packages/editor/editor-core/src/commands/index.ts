@@ -8,9 +8,11 @@ import {
 import {
   EditorState,
   NodeSelection,
+  Selection,
   TextSelection,
   Transaction,
 } from 'prosemirror-state';
+import { CellSelection } from 'prosemirror-tables';
 import { canMoveDown, canMoveUp } from '../utils';
 import { Command } from '../types';
 import { EditorView } from 'prosemirror-view';
@@ -24,7 +26,7 @@ import {
 import { AlignmentState } from '../plugins/alignment/pm-plugins/main';
 
 export function preventDefault(): Command {
-  return function(state, dispatch) {
+  return function() {
     return true;
   };
 }
@@ -36,11 +38,11 @@ export function insertNewLine(): Command {
     const { hardBreak } = state.schema.nodes;
 
     if (hardBreak) {
-      const hardBreakNode = hardBreak.create();
+      const hardBreakNode = hardBreak.createChecked();
 
       if (parent && parent.type.validContent(Fragment.from(hardBreakNode))) {
         if (dispatch) {
-          dispatch(state.tr.replaceSelectionWith(hardBreakNode));
+          dispatch(state.tr.replaceSelectionWith(hardBreakNode, false));
         }
         return true;
       }
@@ -227,7 +229,7 @@ export const changeImageAlignment = (align?: AlignmentState): Command => (
 
   const tr = state.tr;
 
-  state.doc.nodesBetween(from, to, (node, pos, parent) => {
+  state.doc.nodesBetween(from, to, (node, pos) => {
     if (node.type === state.schema.nodes.mediaSingle) {
       tr.setNodeMarkup(pos, undefined, {
         ...node.attrs,
@@ -244,25 +246,19 @@ export const changeImageAlignment = (align?: AlignmentState): Command => (
   return false;
 };
 
-/**
- * Toggles block mark based on the return type of `getAttrs`.
- * This is similar to ProseMirror's `getAttrs` from `AttributeSpec`
- * return `false` to remove the mark.
- * return `undefined for no-op.
- * return an `object` to update the mark.
- */
-export const toggleBlockMark = <T = object>(
+export const createToggleBlockMarkOnRange = <T = object>(
   markType: MarkType,
-  getAttrs: ((prevAttrs?: T, node?: PMNode) => T | undefined | false),
+  getAttrs: (prevAttrs?: T, node?: PMNode) => T | undefined | false,
   allowedBlocks?:
     | Array<NodeType>
     | ((schema: Schema, node: PMNode, parent: PMNode) => boolean),
-): Command => (state, dispatch) => {
-  const { from, to } = state.selection;
-
+) => (
+  from: number,
+  to: number,
+  tr: Transaction,
+  state: EditorState,
+): boolean => {
   let markApplied = false;
-  const tr = state.tr;
-
   state.doc.nodesBetween(from, to, (node, pos, parent) => {
     if (!node.type.isBlock) {
       return false;
@@ -292,12 +288,60 @@ export const toggleBlockMark = <T = object>(
         markApplied = true;
       }
     }
+    return;
   });
+  return markApplied;
+};
+
+/**
+ * Toggles block mark based on the return type of `getAttrs`.
+ * This is similar to ProseMirror's `getAttrs` from `AttributeSpec`
+ * return `false` to remove the mark.
+ * return `undefined for no-op.
+ * return an `object` to update the mark.
+ */
+export const toggleBlockMark = <T = object>(
+  markType: MarkType,
+  getAttrs: (prevAttrs?: T, node?: PMNode) => T | undefined | false,
+  allowedBlocks?:
+    | Array<NodeType>
+    | ((schema: Schema, node: PMNode, parent: PMNode) => boolean),
+): Command => (state, dispatch) => {
+  let markApplied = false;
+  const tr = state.tr;
+
+  const toggleBlockMarkOnRange = createToggleBlockMarkOnRange(
+    markType,
+    getAttrs,
+    allowedBlocks,
+  );
+
+  if (state.selection instanceof CellSelection) {
+    state.selection.forEachCell((cell, pos) => {
+      markApplied = toggleBlockMarkOnRange(pos, pos + cell.nodeSize, tr, state);
+    });
+  } else {
+    const { from, to } = state.selection;
+    markApplied = toggleBlockMarkOnRange(from, to, tr, state);
+  }
 
   if (markApplied && tr.docChanged) {
     if (dispatch) {
       dispatch(tr.scrollIntoView());
     }
+    return true;
+  }
+
+  return false;
+};
+
+export const clearEditorContent: Command = (state, dispatch) => {
+  const tr = state.tr;
+  tr.replace(0, state.doc.nodeSize - 2);
+  tr.setSelection(Selection.atStart(tr.doc));
+
+  if (dispatch) {
+    dispatch(tr);
     return true;
   }
 

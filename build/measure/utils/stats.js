@@ -1,9 +1,13 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
+// @flow
 const path = require('path');
 const fs = require('fs');
 const { fStats, fExists } = require('./fs');
 
-function buildStats(outputPath, statsGroups) {
+function buildStats(outputPath /*: string */, statsGroups /*: Array<Object>*/) {
   return statsGroups.reduce((acc, group) => {
+    // eslint-disable-next-line no-shadow
     return group.stats.reduce((acc, stat) => {
       if (stat.group) {
         acc.push(...buildStats(outputPath, [stat]));
@@ -13,9 +17,31 @@ function buildStats(outputPath, statsGroups) {
       if (!stat.fileName) return acc;
 
       const filePath = path.resolve(outputPath, stat.fileName);
+      const pathToPkg = outputPath.split('/.')[0];
+      // $StringLitteral
+      const packageVersion = require(`${pathToPkg}/package.json`).version;
+      // $StringLitteral
+      const packageName = require(`${pathToPkg}/package.json`).name;
+      // $StringLitteral
+      const packageTeam = require(`${pathToPkg}/package.json`).atlaskit.team;
+      // CHANGED_MAIN_PACKAGES return only the packages that have changed since master.
+      // CHANGED_PACKAGES - use for the main scripts - can return either only the packages that have changed since master or
+      // those packages and includes their dependents if the flag --dependent='direct' is set.
+      // The goal of this code below is to check if the tool runs against the main changed package or a dependent.
+      // eslint-disable-next-line no-nested-ternary
+      const mainPkgs = process.env.CHANGED_MAIN_PACKAGES
+        ? !!JSON.parse(process.env.CHANGED_MAIN_PACKAGES)
+            .map(pkg => path.join(process.cwd(), pkg))
+            .includes(pathToPkg)
+        : false;
+
       if (!fExists(filePath)) return acc;
 
       acc.push({
+        team: packageTeam,
+        package: packageName,
+        version: packageVersion,
+        dependent: !mainPkgs,
         id: stat.id,
         name: stat.name,
         threshold: stat.threshold,
@@ -30,7 +56,17 @@ function buildStats(outputPath, statsGroups) {
  * Creates an array of all packages groups in the repo
  * and cacheGroups for them.
  */
-function createAtlaskitStatsGroups(packagesDir, packagePath) {
+function createAtlaskitStatsGroups(
+  packagesDir /*: string*/,
+  packagePath /*: string*/,
+) {
+  // $StringLitteral
+  const packageVersion = require(`${packagesDir}/${packagePath}/package.json`)
+    .version;
+  // $StringLitteral
+  const packageName = require(`${packagesDir}/${packagePath}/package.json`)
+    .name;
+
   return fs
     .readdirSync(packagesDir)
     .filter(gr => !gr.startsWith('.'))
@@ -48,6 +84,9 @@ function createAtlaskitStatsGroups(packagesDir, packagePath) {
         group: true,
         stats: [
           {
+            team: name,
+            package: packageName, // replacing 'core/button' by button
+            version: packageVersion,
             id: `atlaskit.${name}.main`,
             name: 'main',
             fileName: `${chunkName}.js`,
@@ -60,6 +99,8 @@ function createAtlaskitStatsGroups(packagesDir, packagePath) {
             },
           },
           {
+            team: name,
+            package: packageName,
             id: `atlaskit.${name}.async`,
             name: 'async',
             fileName: `${chunkName}-async.js`,
@@ -76,7 +117,10 @@ function createAtlaskitStatsGroups(packagesDir, packagePath) {
     });
 }
 
-function diff(origOldStats, origNewStats) {
+function diff(
+  origOldStats /*:Array<Object> */,
+  origNewStats /*:Array<Object> */,
+) {
   const oldStats = [].concat(origOldStats);
   const newStats = [].concat(origNewStats);
   const statsWithDiff = [];
@@ -100,7 +144,11 @@ function diff(origOldStats, origNewStats) {
         isTooBig,
         stats: {
           ...match.stats,
+          originalSize: old.stats.size,
+          newSize: match.stats.size,
           sizeDiff: match.stats.size - old.stats.size,
+          gzipOriginalSize: old.stats.gzipSize,
+          gzipSize: match.stats.gzipSize,
           gzipSizeDiff,
         },
       });
@@ -123,13 +171,15 @@ function diff(origOldStats, origNewStats) {
   return [
     ...statsWithDiff,
     ...newStats.map(stat => {
+      // eslint-disable-next-line no-param-reassign
       stat.new = true;
       return stat;
     }),
   ];
 }
 
-function clearStats(stats) {
+function clearStats(stats /*:Array<Object> */) {
+  // $FlowFixMe - map issue
   return stats
     .filter(item => !item.deleted)
     .map(item => {

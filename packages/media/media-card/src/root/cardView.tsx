@@ -1,23 +1,17 @@
 import * as React from 'react';
 import { MouseEvent } from 'react';
-import {
-  MediaItemType,
-  FileDetails,
-  ImageResizeMode,
-} from '@atlaskit/media-core';
+import { FileDetails, ImageResizeMode } from '@atlaskit/media-client';
 import {
   withAnalyticsEvents,
-  createAndFireEvent,
+  WithAnalyticsEventsProps,
+  UIAnalyticsEvent,
 } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 
 import {
   SharedCardProps,
   CardStatus,
-  CardEvent,
   OnSelectChangeFuncResult,
   CardDimensionValue,
-  CardOnClickCallback,
 } from '../index';
 import { FileCard } from '../files';
 import { breakpointSize } from '../utils/breakpoint';
@@ -29,19 +23,21 @@ import { isValidPercentageUnit } from '../utils/isValidPercentageUnit';
 import { getCSSUnitValue } from '../utils/getCSSUnitValue';
 import { getElementDimension } from '../utils/getElementDimension';
 import { Wrapper } from './styled';
-
-import { WithCardViewAnalyticsContext } from './withCardViewAnalyticsContext';
+import { createAndFireMediaEvent } from '../utils/analytics';
 
 export interface CardViewOwnProps extends SharedCardProps {
   readonly status: CardStatus;
-  readonly mediaItemType?: MediaItemType;
   readonly metadata?: FileDetails;
   readonly resizeMode?: ImageResizeMode;
 
   readonly onRetry?: () => void;
-  readonly onClick?: CardOnClickCallback;
-  readonly onMouseEnter?: (result: CardEvent) => void;
+  readonly onClick?: (
+    event: React.MouseEvent<HTMLDivElement>,
+    analyticsEvent?: UIAnalyticsEvent,
+  ) => void;
+  readonly onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void;
   readonly onSelectChange?: (result: OnSelectChangeFuncResult) => void;
+  readonly onDisplayImage?: () => void;
 
   // FileCardProps
   readonly dataURI?: string;
@@ -54,26 +50,28 @@ export interface CardViewState {
   elementWidth?: number;
 }
 
-export type CardViewBaseProps = CardViewOwnProps &
-  WithAnalyticsEventProps & {
-    readonly mediaItemType: MediaItemType;
-  };
+export type CardViewProps = CardViewOwnProps & WithAnalyticsEventsProps;
 
 /**
  * This is classic vanilla CardView class. To create an instance of class one would need to supply
  * `createAnalyticsEvent` prop to satisfy it's Analytics Events needs.
  */
 export class CardViewBase extends React.Component<
-  CardViewBaseProps,
+  CardViewProps,
   CardViewState
 > {
   state: CardViewState = {};
+  divRef: React.RefObject<HTMLDivElement> = React.createRef();
+
+  static defaultProps: Partial<CardViewOwnProps> = {
+    appearance: 'auto',
+  };
 
   componentDidMount() {
     this.saveElementWidth();
   }
 
-  componentWillReceiveProps(nextProps: CardViewBaseProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CardViewProps) {
     const { selected: currSelected } = this.props;
     const { selectable: nextSelectable, selected: nextSelected } = nextProps;
 
@@ -132,21 +130,27 @@ export class CardViewBase extends React.Component<
   }
 
   render() {
-    const { onClick, onMouseEnter } = this;
-    const { dimensions, appearance, mediaItemType } = this.props;
-    const shouldUsePointerCursor = mediaItemType === 'file';
+    const {
+      dimensions,
+      appearance,
+      onClick,
+      onMouseEnter,
+      testId,
+    } = this.props;
     const wrapperDimensions = dimensions
       ? dimensions
       : getDefaultCardDimensions(appearance);
 
     return (
       <Wrapper
-        shouldUsePointerCursor={shouldUsePointerCursor}
+        data-testid={testId || 'media-card-view'}
+        shouldUsePointerCursor={true}
         breakpointSize={breakpointSize(this.width)}
         appearance={appearance}
         dimensions={wrapperDimensions}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
+        innerRef={this.divRef}
       >
         {this.renderFile()}
       </Wrapper>
@@ -167,8 +171,9 @@ export class CardViewBase extends React.Component<
       selectable,
       selected,
       disableOverlay,
-      mediaItemType,
       previewOrientation,
+      alt,
+      onDisplayImage,
     } = this.props;
 
     return (
@@ -176,6 +181,7 @@ export class CardViewBase extends React.Component<
         status={status}
         details={metadata}
         dataURI={dataURI}
+        alt={alt}
         progress={progress}
         onRetry={onRetry}
         resizeMode={resizeMode}
@@ -185,63 +191,17 @@ export class CardViewBase extends React.Component<
         selectable={selectable}
         selected={selected}
         disableOverlay={disableOverlay}
-        mediaItemType={mediaItemType}
         previewOrientation={previewOrientation}
+        onDisplayImage={onDisplayImage}
       />
     );
   };
-
-  private onClick = (event: MouseEvent<HTMLDivElement>) => {
-    const { onClick, metadata: mediaItemDetails } = this.props;
-    if (onClick) {
-      onClick({ event, mediaItemDetails });
-    }
-  };
-
-  private onMouseEnter = (event: MouseEvent<HTMLDivElement>) => {
-    const { onMouseEnter, metadata: mediaItemDetails } = this.props;
-    if (onMouseEnter) {
-      onMouseEnter({ event, mediaItemDetails });
-    }
-  };
 }
 
-const createAndFireEventOnMedia = createAndFireEvent('media');
-/**
- * With this CardView class constructor version `createAnalyticsEvent` props is supplied for you, so
- * when creating instance of that class you don't need to worry about it.
- */
-export const CardViewWithAnalyticsEvents = withAnalyticsEvents({
-  onClick: createAndFireEventOnMedia({ action: 'clicked' }),
+export const CardView = withAnalyticsEvents({
+  onClick: createAndFireMediaEvent({
+    eventType: 'ui',
+    action: 'clicked',
+    actionSubject: 'mediaCard',
+  }),
 })(CardViewBase);
-
-/**
- * This if final version of CardView that is exported to the consumer. This version wraps everything
- * with Analytics Context information so that all the Analytics Events created anywhere inside CardView
- * will have it automatically.
- */
-export class CardView extends React.Component<CardViewOwnProps, CardViewState> {
-  static defaultProps: Partial<CardViewOwnProps> = {
-    appearance: 'auto',
-  };
-
-  private get mediaItemType(): MediaItemType {
-    return 'file';
-  }
-
-  render() {
-    const mediaItemType = this.mediaItemType;
-
-    return (
-      <WithCardViewAnalyticsContext
-        {...this.props}
-        mediaItemType={mediaItemType}
-      >
-        <CardViewWithAnalyticsEvents
-          {...this.props}
-          mediaItemType={mediaItemType}
-        />
-      </WithCardViewAnalyticsContext>
-    );
-  }
-}

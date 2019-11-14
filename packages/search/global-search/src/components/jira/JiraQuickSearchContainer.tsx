@@ -7,51 +7,68 @@ import {
 import styled from 'styled-components';
 import { gridSize } from '@atlaskit/theme';
 import { withAnalytics } from '@atlaskit/analytics';
+import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 import { CancelableEvent } from '@atlaskit/quick-search';
 import StickyFooter from '../common/StickyFooter';
 import { CreateAnalyticsEventFn } from '../analytics/types';
 import { SearchScreenCounter } from '../../util/ScreenCounter';
 import { JiraClient } from '../../api/JiraClient';
 import { PeopleSearchClient } from '../../api/PeopleSearchClient';
-import { Scope } from '../../api/types';
+import { Scope, JiraItem } from '../../api/types';
 import {
   LinkComponent,
   ReferralContextIdentifiers,
   Logger,
+  JiraApplicationPermission,
 } from '../GlobalQuickSearchWrapper';
-import QuickSearchContainer from '../common/QuickSearchContainer';
+import {
+  BaseJiraQuickSearchContainerJira,
+  SearchResultProps,
+  PartiallyLoadedRecentItems,
+} from '../common/QuickSearchContainer';
 import { messages } from '../../messages';
-import { sliceResults } from './JiraSearchResultsMapper';
 import SearchResultsComponent from '../common/SearchResults';
 import NoResultsState from './NoResultsState';
 import JiraAdvancedSearch from './JiraAdvancedSearch';
 import {
   mapRecentResultsToUIGroups,
   mapSearchResultsToUIGroups,
+  MAX_RECENT_RESULTS_TO_SHOW,
 } from './JiraSearchResultsMapper';
 import {
   handlePromiseError,
   JiraEntityTypes,
   redirectToJiraAdvancedSearch,
+  ADVANCED_JIRA_SEARCH_RESULT_ID,
 } from '../SearchResultsUtil';
 import {
-  ContentType,
   JiraResult,
   Result,
   ResultsWithTiming,
-  GenericResultMap,
   JiraResultsMap,
+  AnalyticsType,
 } from '../../model/Result';
 import { getUniqueResultId } from '../ResultList';
 import {
   CrossProductSearchClient,
   CrossProductSearchResults,
-  ABTest,
+  SearchItem,
 } from '../../api/CrossProductSearchClient';
 import performanceNow from '../../util/performance-now';
+import {
+  fireSelectedAdvancedSearch,
+  AdvancedSearchSelectedEvent,
+} from '../../util/analytics-event-helper';
 import AdvancedIssueSearchLink from './AdvancedIssueSearchLink';
+import { getJiraMaxObjects } from '../../util/experiment-utils';
+import { buildJiraModelParams } from '../../util/model-parameters';
+import { JiraFeatures } from '../../util/features';
+import { injectFeatures } from '../FeaturesProvider';
+import { mapJiraItemToResult } from '../../api/JiraItemMapper';
+import { appendListWithoutDuplication } from '../../util/search-results-utils';
 
 const JIRA_RESULT_LIMIT = 6;
+const JIRA_PREQUERY_RESULT_LIMIT = 10;
 
 const NoResultsAdvancedSearchContainer = styled.div`
   margin-top: ${4 * gridSize()}px;
@@ -61,32 +78,77 @@ const BeforePreQueryStateContainer = styled.div`
   margin-top: ${gridSize()}px;
 `;
 
+const containsQuery = (string: string, query: string) => {
+  return string.toLowerCase().indexOf(query.toLowerCase()) > -1;
+};
+
+const getRecentItemMatches = (
+  query: string,
+  recentItems: JiraResultsMap | null,
+): Result[] => {
+  if (!recentItems) {
+    return [];
+  }
+
+  const issueKeyMatches = recentItems.objects.filter(
+    result => result.objectKey && containsQuery(result.objectKey, query),
+  );
+  const titleMatches = recentItems.objects.filter(result =>
+    containsQuery(result.name, query),
+  );
+
+  return issueKeyMatches
+    .concat(titleMatches)
+    .slice(0, MAX_RECENT_RESULTS_TO_SHOW);
+};
+
+const mergeSearchResultsWithRecentItems = (
+  searchResults: JiraResultsMap,
+  recentItems: Result[],
+): JiraResultsMap => {
+  const defaultSearchResults: JiraResultsMap = {
+    objects: [],
+    containers: [],
+    people: [],
+  };
+
+  const results = { ...defaultSearchResults, ...searchResults };
+
+  return {
+    objects: appendListWithoutDuplication(recentItems, results.objects),
+    containers: results.containers,
+    people: results.people,
+  };
+};
+
+/**
+ * NOTE: This component is only consumed internally as such avoid using optional props
+ * i.e. instead of "propX?: something" use "propX: something | undefined"
+ *
+ * This improves type safety and prevent us from accidentally forgetting a parameter.
+ */
 export interface Props {
-  createAnalyticsEvent?: CreateAnalyticsEventFn;
-  linkComponent?: LinkComponent;
-  referralContextIdentifiers?: ReferralContextIdentifiers;
+  createAnalyticsEvent?: CreateAnalyticsEventFn | undefined;
+  linkComponent: LinkComponent | undefined;
+  referralContextIdentifiers: ReferralContextIdentifiers | undefined;
   jiraClient: JiraClient;
   peopleSearchClient: PeopleSearchClient;
   crossProductSearchClient: CrossProductSearchClient;
-  disableJiraPreQueryPeopleSearch?: boolean;
   logger: Logger;
-  isSendSearchTermsEnabled?: boolean;
-  onAdvancedSearch?: (
-    e: CancelableEvent,
-    entity: string,
-    query: string,
-    searchSessionId: string,
-  ) => void;
+  onAdvancedSearch:
+    | undefined
+    | ((
+        e: CancelableEvent,
+        entity: string,
+        query: string,
+        searchSessionId: string,
+      ) => void);
+  appPermission: JiraApplicationPermission | undefined;
+  features: JiraFeatures;
+  isJiraPeopleProfilesEnabled?: boolean;
 }
 
-const contentTypeToSection = {
-  [ContentType.JiraIssue]: 'issues',
-  [ContentType.JiraBoard]: 'boards',
-  [ContentType.JiraFilter]: 'filters',
-  [ContentType.JiraProject]: 'projects',
-};
-
-const scopes = [Scope.JiraIssue, Scope.JiraBoardProjectFilter];
+const SCOPES = [Scope.JiraIssue, Scope.JiraBoardProjectFilter];
 
 export interface State {
   selectedAdvancedSearchType: JiraEntityTypes;
@@ -142,6 +204,91 @@ export class JiraQuickSearchContainer extends React.Component<
     }
   };
 
+  handleAdvancedSearch = (
+    event: CancelableEvent,
+    entity: string,
+    query: string,
+    searchSessionId: string,
+    analyticsData: Object,
+    isLoading: boolean,
+  ) => {
+    const {
+      referralContextIdentifiers,
+      onAdvancedSearch = () => {},
+    } = this.props;
+    const eventData = {
+      resultId: ADVANCED_JIRA_SEARCH_RESULT_ID,
+      ...analyticsData,
+      query,
+      // queryversion is missing
+      contentType: entity,
+      type: AnalyticsType.AdvancedSearchJira,
+      isLoading,
+    } as AdvancedSearchSelectedEvent;
+
+    fireSelectedAdvancedSearch(
+      eventData,
+      searchSessionId,
+      referralContextIdentifiers,
+      this.props.createAnalyticsEvent,
+    );
+    onAdvancedSearch(event, entity, query, searchSessionId);
+  };
+
+  getPreQueryDisplayedResults = (
+    recentItems: JiraResultsMap | null,
+    searchSessionId: string,
+  ) => {
+    const { features } = this.props;
+
+    return mapRecentResultsToUIGroups(
+      recentItems,
+      searchSessionId,
+      features,
+      this.props.appPermission,
+    );
+  };
+
+  getPostQueryDisplayedResults = (
+    searchResults: JiraResultsMap | null,
+    latestSearchQuery: string,
+    recentItems: JiraResultsMap | null,
+    isLoading: boolean,
+    searchSessionId: string,
+  ) => {
+    const { features } = this.props;
+    if (features.isInFasterSearchExperiment) {
+      const currentSearchResults: JiraResultsMap =
+        isLoading || !searchResults ? ({} as JiraResultsMap) : searchResults;
+
+      const recentResults = getRecentItemMatches(
+        latestSearchQuery,
+        recentItems,
+      );
+
+      const mergedRecentSearchResults = mergeSearchResultsWithRecentItems(
+        currentSearchResults,
+        recentResults,
+      );
+
+      return mapSearchResultsToUIGroups(
+        mergedRecentSearchResults,
+        searchSessionId,
+        features,
+        this.props.appPermission,
+        latestSearchQuery,
+      );
+    }
+
+    return mapSearchResultsToUIGroups(
+      searchResults as JiraResultsMap,
+      searchSessionId,
+      features,
+      this.props.appPermission,
+      latestSearchQuery,
+    );
+  };
+
   getSearchResultsComponent = ({
     retrySearch,
     latestSearchQuery,
@@ -151,33 +298,54 @@ export class JiraQuickSearchContainer extends React.Component<
     recentItems,
     keepPreQueryState,
     searchSessionId,
-  }) => {
+    searchMore,
+    currentFilters,
+    onFilterChanged,
+  }: SearchResultProps<JiraResultsMap>) => {
     const query = latestSearchQuery;
-    const isPreQuery = !query; // it's true if the query is empty
     const {
       referralContextIdentifiers,
       onAdvancedSearch = () => {},
+      appPermission,
+      features,
+      isJiraPeopleProfilesEnabled,
     } = this.props;
+
     return (
       <SearchResultsComponent
         query={query}
+        isPreQuery={!query}
         isError={isError}
         isLoading={isLoading}
         retrySearch={retrySearch}
-        keepPreQueryState={keepPreQueryState}
+        keepPreQueryState={
+          features.isInFasterSearchExperiment ? false : keepPreQueryState
+        }
         searchSessionId={searchSessionId}
         {...this.screenCounters}
         referralContextIdentifiers={referralContextIdentifiers}
+        searchMore={searchMore}
+        currentFilters={currentFilters}
+        onFilterChanged={onFilterChanged}
         renderNoRecentActivity={() => (
           <>
             <FormattedHTMLMessage {...messages.jira_no_recent_activity_body} />
             <NoResultsAdvancedSearchContainer>
               <JiraAdvancedSearch
+                appPermission={appPermission}
                 query={query}
                 analyticsData={{ resultsCount: 0, wasOnNoResultsScreen: true }}
                 onClick={(mouseEvent, entity) =>
-                  onAdvancedSearch(mouseEvent, entity, query, searchSessionId)
+                  this.handleAdvancedSearch(
+                    mouseEvent,
+                    entity,
+                    query,
+                    searchSessionId,
+                    { resultsCount: 0, wasOnNoResultsScreen: true },
+                    isLoading,
+                  )
                 }
+                isJiraPeopleProfilesEnabled={isJiraPeopleProfilesEnabled}
               />
             </NoResultsAdvancedSearchContainer>
           </>
@@ -185,13 +353,20 @@ export class JiraQuickSearchContainer extends React.Component<
         renderAdvancedSearchGroup={(analyticsData?) => (
           <StickyFooter style={{ marginTop: `${2 * gridSize()}px` }}>
             <JiraAdvancedSearch
+              appPermission={appPermission}
               analyticsData={analyticsData}
               query={query}
-              showKeyboardLozenge={!isPreQuery && !keepPreQueryState}
-              showSearchIcon
               onClick={(mouseEvent, entity) =>
-                onAdvancedSearch(mouseEvent, entity, query, searchSessionId)
+                this.handleAdvancedSearch(
+                  mouseEvent,
+                  entity,
+                  query,
+                  searchSessionId,
+                  analyticsData,
+                  isLoading,
+                )
               }
+              isJiraPeopleProfilesEnabled={isJiraPeopleProfilesEnabled}
             />
           </StickyFooter>
         )}
@@ -209,16 +384,32 @@ export class JiraQuickSearchContainer extends React.Component<
             />
           </BeforePreQueryStateContainer>
         )}
-        getPreQueryGroups={() => mapRecentResultsToUIGroups(recentItems)}
+        getPreQueryGroups={() =>
+          this.getPreQueryDisplayedResults(recentItems, searchSessionId)
+        }
         getPostQueryGroups={() =>
-          mapSearchResultsToUIGroups(searchResults as JiraResultsMap)
+          this.getPostQueryDisplayedResults(
+            searchResults,
+            latestSearchQuery,
+            recentItems,
+            isLoading,
+            searchSessionId,
+          )
         }
         renderNoResult={() => (
           <NoResultsState
             query={query}
             onAdvancedSearch={(mouseEvent, entity) =>
-              onAdvancedSearch(mouseEvent, entity, query, searchSessionId)
+              this.handleAdvancedSearch(
+                mouseEvent,
+                entity,
+                query,
+                searchSessionId,
+                { resultsCount: 0, wasOnNoResultsScreen: true },
+                isLoading,
+              )
             }
+            isJiraPeopleProfilesEnabled={isJiraPeopleProfilesEnabled}
           />
         )}
       />
@@ -230,12 +421,10 @@ export class JiraQuickSearchContainer extends React.Component<
       the following code is temporarily feature flagged for performance reasons and will be shortly reinstated.
       https://product-fabric.atlassian.net/browse/QS-459
     */
-    if (this.props.disableJiraPreQueryPeopleSearch) {
+    if (this.props.features.disableJiraPreQueryPeopleSearch) {
       return Promise.resolve([]);
     } else {
-      const peoplePromise: Promise<
-        Result[]
-      > = this.props.peopleSearchClient.getRecentPeople();
+      const peoplePromise: Promise<Result[]> = this.props.peopleSearchClient.getRecentPeople();
       return handlePromiseError<Result[]>(
         peoplePromise,
         [] as Result[],
@@ -249,45 +438,43 @@ export class JiraQuickSearchContainer extends React.Component<
     }
   };
 
-  getJiraRecentItems = (sessionId: string): Promise<GenericResultMap> => {
-    const jiraRecentItemsPromise = this.props.jiraClient
-      .getRecentItems(sessionId)
-      .then(items =>
-        items.reduce<GenericResultMap<JiraResult>>((acc, item) => {
-          if (item.contentType) {
-            const section = contentTypeToSection[item.contentType];
-            acc[section] = ([] as JiraResult[]).concat(
-              acc[section] || [],
-              item,
-            );
-          }
-          return acc;
-        }, {}),
-      )
-      .then(({ issues = [], boards = [], projects = [], filters = [] }) => ({
-        objects: issues,
-        containers: [...boards, ...projects, ...filters],
-      }));
+  getJiraRecentItems = (): Promise<JiraResultsMap> => {
+    const { features } = this.props;
 
-    return handlePromiseError(
-      jiraRecentItemsPromise,
-      {
-        objects: [],
-        containers: [],
-      },
-      error =>
+    return this.props.crossProductSearchClient
+      .getRecentItems({
+        context: 'jira',
+        modelParams: [],
+        resultLimit: getJiraMaxObjects(
+          features.abTest,
+          JIRA_PREQUERY_RESULT_LIMIT,
+        ),
+        mapItemToResult: (_: Scope, item: SearchItem) =>
+          mapJiraItemToResult(AnalyticsType.RecentJira)(item as JiraItem),
+      })
+      .then(xpRecentResults => {
+        const objects = xpRecentResults.results[Scope.JiraIssue];
+        const containers =
+          xpRecentResults.results[Scope.JiraBoardProjectFilter];
+
+        return {
+          objects: objects ? objects.items : [],
+          containers: containers ? containers.items : [],
+          people: [],
+        };
+      })
+      .catch(error => {
         this.props.logger.safeError(
           LOGGER_NAME,
           'error in recent Jira items promise',
           error,
-        ),
-    );
-  };
-
-  getAbTestData = (sessionId: string): Promise<ABTest | undefined> => {
-    return this.props.crossProductSearchClient.getAbTestData(Scope.JiraIssue, {
-      sessionId,
-    });
+        );
+        return {
+          objects: [],
+          containers: [],
+          people: [],
+        };
+      });
   };
 
   canSearchUsers = (): Promise<boolean> => {
@@ -295,7 +482,7 @@ export class JiraQuickSearchContainer extends React.Component<
       the following code is temporarily feature flagged for performance reasons and will be shortly reinstated.
       https://product-fabric.atlassian.net/browse/QS-459
     */
-    if (this.props.disableJiraPreQueryPeopleSearch) {
+    if (this.props.features.disableJiraPreQueryPeopleSearch) {
       return Promise.resolve(false);
     } else {
       return handlePromiseError(
@@ -311,31 +498,47 @@ export class JiraQuickSearchContainer extends React.Component<
     }
   };
 
-  getRecentItems = (sessionId: string): Promise<ResultsWithTiming> => {
-    return Promise.all([
-      this.getJiraRecentItems(sessionId),
-      this.getRecentlyInteractedPeople(),
-      this.canSearchUsers(),
-    ])
-      .then(([jiraItems, people, canSearchUsers]) => {
-        return { ...jiraItems, people: canSearchUsers ? people : [] };
-      })
-      .then(results => ({ results } as ResultsWithTiming));
+  getRecentItems = (): PartiallyLoadedRecentItems<JiraResultsMap> => {
+    return {
+      eagerRecentItemsPromise: this.getJiraRecentItems().then(
+        results => ({ results } as ResultsWithTiming<JiraResultsMap>),
+      ),
+      lazyLoadedRecentItemsPromise: Promise.all([
+        this.getRecentlyInteractedPeople(),
+        this.canSearchUsers(),
+      ]).then(([people, canSearchUsers]) => {
+        return {
+          people: canSearchUsers ? people : [],
+        };
+      }),
+    };
   };
 
   getSearchResults = (
     query: string,
     sessionId: string,
     startTime: number,
-  ): Promise<ResultsWithTiming> => {
+    queryVersion: number,
+  ): Promise<ResultsWithTiming<JiraResultsMap>> => {
+    const { features } = this.props;
+
     const referrerId =
       this.props.referralContextIdentifiers &&
       this.props.referralContextIdentifiers.searchReferrerId;
+
     const crossProductSearchPromise = this.props.crossProductSearchClient.search(
-      query,
-      { sessionId, referrerId },
-      scopes,
-      JIRA_RESULT_LIMIT,
+      {
+        query,
+        sessionId,
+        referrerId,
+        scopes: SCOPES,
+        modelParams: buildJiraModelParams(
+          queryVersion,
+          this.props.referralContextIdentifiers &&
+            this.props.referralContextIdentifiers.currentContainerId,
+        ),
+        resultLimit: getJiraMaxObjects(features.abTest, JIRA_RESULT_LIMIT),
+      },
     );
 
     const searchPeoplePromise = Promise.resolve([] as Result[]);
@@ -363,20 +566,25 @@ export class JiraQuickSearchContainer extends React.Component<
         peopleElapsedMs,
         canSearchPeople,
       ]) => {
-        this.highlightMatchingFirstResult(query, xpsearchResults.results.get(
-          Scope.JiraIssue,
-        ) as JiraResult[]);
+        const objects = xpsearchResults.results[Scope.JiraIssue];
+        const containers =
+          xpsearchResults.results[Scope.JiraBoardProjectFilter];
+
+        const objectItems = objects ? objects.items : [];
+
+        this.highlightMatchingFirstResult(query, objectItems as JiraResult[]);
+
         return {
           results: {
-            objects: xpsearchResults.results.get(Scope.JiraIssue) || [],
-            containers:
-              xpsearchResults.results.get(Scope.JiraBoardProjectFilter) || [],
+            objects: objectItems,
+            containers: containers ? containers.items : [],
             people: canSearchPeople ? peopleResults : [],
           },
           timings: {
             crossProductSearchElapsedMs,
             peopleElapsedMs,
           },
+
           abTest: xpsearchResults.abTest,
         };
       },
@@ -398,7 +606,7 @@ export class JiraQuickSearchContainer extends React.Component<
     }
   }
 
-  handleSelectedResultIdChanged(newSelectedId) {
+  handleSelectedResultIdChanged(newSelectedId?: string) {
     this.setState({
       selectedResultId: newSelectedId,
     });
@@ -408,35 +616,49 @@ export class JiraQuickSearchContainer extends React.Component<
     const {
       linkComponent,
       createAnalyticsEvent,
-      isSendSearchTermsEnabled,
       logger,
+      features,
+      referralContextIdentifiers,
+      isJiraPeopleProfilesEnabled,
     } = this.props;
     const { selectedResultId } = this.state;
 
     return (
-      <QuickSearchContainer
+      // @ts-ignore
+      <BaseJiraQuickSearchContainerJira
         placeholder={this.props.intl.formatMessage(
           messages.jira_search_placeholder,
         )}
         linkComponent={linkComponent}
-        getDisplayedResults={sliceResults}
+        getPreQueryDisplayedResults={(
+          recentItems: JiraResultsMap | null,
+          searchSessionId: string,
+        ) => this.getPreQueryDisplayedResults(recentItems, searchSessionId)}
+        getPostQueryDisplayedResults={this.getPostQueryDisplayedResults}
         getSearchResultsComponent={this.getSearchResultsComponent}
         getRecentItems={this.getRecentItems}
         getSearchResults={this.getSearchResults}
-        getAbTestData={this.getAbTestData}
         handleSearchSubmit={this.handleSearchSubmit}
         createAnalyticsEvent={createAnalyticsEvent}
         logger={logger}
         selectedResultId={selectedResultId}
-        onSelectedResultIdChanged={newId =>
+        onSelectedResultIdChanged={(newId: any) =>
           this.handleSelectedResultIdChanged(newId)
         }
-        isSendSearchTermsEnabled={isSendSearchTermsEnabled}
+        referralContextIdentifiers={referralContextIdentifiers}
+        product="jira"
+        features={features}
+        advancedSearchId={ADVANCED_JIRA_SEARCH_RESULT_ID}
+        isJiraPeopleProfilesEnabled={isJiraPeopleProfilesEnabled}
       />
     );
   }
 }
 
-export default injectIntl<Props>(
+const JiraQuickSearchContainerWithIntl = injectIntl<Props>(
   withAnalytics(JiraQuickSearchContainer, {}, {}),
+);
+
+export default injectFeatures(
+  withAnalyticsEvents()(JiraQuickSearchContainerWithIntl),
 );

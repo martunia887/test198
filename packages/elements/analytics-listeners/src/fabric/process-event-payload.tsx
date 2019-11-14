@@ -3,15 +3,17 @@ import {
   GasPayload,
   GasScreenEventPayload,
 } from '@atlaskit/analytics-gas-types';
-import { ELEMENTS_CONTEXT } from '@atlaskit/analytics-namespaced-context';
 import {
-  ObjectType,
-  UIAnalyticsEventInterface,
-} from '@atlaskit/analytics-next-types';
-import * as merge from 'lodash.merge';
+  ELEMENTS_CONTEXT,
+  EDITOR_CONTEXT,
+} from '@atlaskit/analytics-namespaced-context';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import merge from 'lodash.merge';
+import { ELEMENTS_TAG } from './FabricElementsListener';
+import { EDITOR_TAG } from './FabricEditorListener';
 
 const extractFieldsFromContext = (fieldsToPick: string[]) => (
-  contexts: Array<ObjectType>,
+  contexts: Record<string, any>[],
 ) =>
   contexts
     .map(ctx =>
@@ -23,27 +25,42 @@ const extractFieldsFromContext = (fieldsToPick: string[]) => (
     )
     .reduce((result, item) => merge(result, item), {});
 
-const fieldExtractor = extractFieldsFromContext([
-  'source',
-  'objectType',
-  'objectId',
-  'containerType',
-  'containerId',
-  ELEMENTS_CONTEXT,
-]);
+const fieldExtractor = (contextKey: string) =>
+  extractFieldsFromContext([
+    'source',
+    'objectType',
+    'objectId',
+    'containerType',
+    'containerId',
+    contextKey,
+  ]);
+
+const getContextKey = (tag: string): string => {
+  switch (tag) {
+    case ELEMENTS_TAG:
+      return ELEMENTS_CONTEXT;
+    case EDITOR_TAG:
+      return EDITOR_CONTEXT;
+    default:
+      return '';
+  }
+};
 
 const updatePayloadWithContext = (
-  event: UIAnalyticsEventInterface,
+  tag: string,
+  event: UIAnalyticsEvent,
 ): GasPayload | GasScreenEventPayload => {
   if (event.context.length === 0) {
     return { source: DEFAULT_SOURCE, ...event.payload } as
       | GasPayload
       | GasScreenEventPayload;
   }
+
+  const contextKey = getContextKey(tag) || 'attributes';
   const {
-    [ELEMENTS_CONTEXT]: attributes,
+    [contextKey]: attributes,
     ...fields
-  }: ObjectType = fieldExtractor(event.context);
+  }: Record<string, any> = fieldExtractor(contextKey)(event.context);
 
   if (attributes) {
     event.payload.attributes = merge(
@@ -63,11 +80,11 @@ const addTag = (tag: string, originalTags?: string[]): string[] => {
 };
 
 export const processEventPayload = (
-  event: UIAnalyticsEventInterface,
+  event: UIAnalyticsEvent,
   tag: string,
 ): GasPayload | GasScreenEventPayload => {
   return {
-    ...updatePayloadWithContext(event),
+    ...updatePayloadWithContext(tag, event),
     tags: addTag(tag, event.payload.tags),
   };
 };

@@ -4,10 +4,13 @@ import { renderNodes, Serializer } from '../..';
 import { ExtensionLayout } from '@atlaskit/adf-schema';
 import {
   ADNode,
+  calcBreakoutWidth,
   ExtensionHandlers,
+  getExtensionRenderer,
+  overflowShadow,
+  OverflowShadowProps,
   WidthConsumer,
 } from '@atlaskit/editor-common';
-import { calcBreakoutWidth } from '@atlaskit/editor-common';
 import { RendererCssClassName } from '../../consts';
 
 export interface Props {
@@ -21,23 +24,33 @@ export interface Props {
   layout?: ExtensionLayout;
 }
 
-export const renderExtension = (content: any, layout: string) => (
-  <WidthConsumer>
-    {({ width }) => (
-      <div
-        className={RendererCssClassName.EXTENSION}
-        style={{
-          width: calcBreakoutWidth(layout, width),
-        }}
-        data-layout={layout}
-      >
-        {content}
-      </div>
-    )}
-  </WidthConsumer>
-);
+export const renderExtension = (
+  content: any,
+  layout: string,
+  options?: OverflowShadowProps,
+) => {
+  return (
+    <WidthConsumer>
+      {({ width }) => (
+        <div
+          ref={options && options.handleRef}
+          className={`${RendererCssClassName.EXTENSION} ${options &&
+            options.shadowClassNames}`}
+          style={{
+            width: calcBreakoutWidth(layout, width),
+          }}
+          data-layout={layout}
+        >
+          <div className={RendererCssClassName.EXTENSION_OVERFLOW_CONTAINER}>
+            {content}
+          </div>
+        </div>
+      )}
+    </WidthConsumer>
+  );
+};
 
-const Extension: React.StatelessComponent<Props> = ({
+const Extension: React.StatelessComponent<Props & OverflowShadowProps> = ({
   serializer,
   extensionHandlers,
   rendererContext,
@@ -46,10 +59,13 @@ const Extension: React.StatelessComponent<Props> = ({
   text,
   parameters,
   layout = 'default',
+  handleRef,
+  shadowClassNames,
 }) => {
   try {
     if (extensionHandlers && extensionHandlers[extensionType]) {
-      const content = extensionHandlers[extensionType](
+      const render = getExtensionRenderer(extensionHandlers[extensionType]);
+      const content = render(
         {
           type: 'extension',
           extensionKey,
@@ -63,7 +79,10 @@ const Extension: React.StatelessComponent<Props> = ({
       switch (true) {
         case content && React.isValidElement(content):
           // Return the content directly if it's a valid JSX.Element
-          return renderExtension(content, layout);
+          return renderExtension(content, layout, {
+            handleRef,
+            shadowClassNames,
+          });
         case !!content:
           // We expect it to be Atlassian Document here
           const nodes = Array.isArray(content) ? content : [content];
@@ -80,7 +99,12 @@ const Extension: React.StatelessComponent<Props> = ({
     /** We keep rendering the default content */
   }
   // Always return default content if anything goes wrong
-  return renderExtension(text || 'extension', layout);
+  return renderExtension(text || 'extension', layout, {
+    handleRef,
+    shadowClassNames,
+  });
 };
 
-export default Extension;
+export default overflowShadow(Extension, {
+  overflowSelector: `.${RendererCssClassName.EXTENSION_OVERFLOW_CONTAINER}`,
+});

@@ -8,7 +8,7 @@ import getAttrsWithChangesRecorder from '../../../utils/getAttrsWithChangesRecor
 
 const MAX_INDENTATION_LEVEL = 6;
 
-const isIndentationAllowed = (schema: Schema, node: PmNode, parent: PmNode) => {
+const isIndentationAllowed = (schema: Schema, node: PmNode) => {
   const {
     nodes: { paragraph, heading },
     marks: { alignment },
@@ -55,10 +55,10 @@ function createIndentationCommandWithAnalytics(
   direction: INDENT_DIR,
 ): Command {
   // Create a new getAttrs function to record the changes
-  const { getAttrs, getAndResetAttrsChanges } = getAttrsWithChangesRecorder(
-    getNewIndentationAttrs,
-    { direction },
-  );
+  const {
+    getAttrs,
+    getAndResetAttrsChanges,
+  } = getAttrsWithChangesRecorder(getNewIndentationAttrs, { direction });
 
   // Use new getAttrs wrapper
   const indentationCommand = createIndentationCommand(getAttrs);
@@ -67,7 +67,7 @@ function createIndentationCommandWithAnalytics(
   return (state, dispatch) => {
     return indentationCommand(
       state,
-      createAnalyticsDispatch(getAndResetAttrsChanges, dispatch),
+      createAnalyticsDispatch(getAndResetAttrsChanges, state, dispatch),
     );
   };
 }

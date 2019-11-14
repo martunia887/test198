@@ -2,13 +2,14 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { messages } from '@atlaskit/media-ui';
 import {
-  Context,
+  MediaClient,
   FileState,
   isErrorFileState,
-  FileIdentifier,
-} from '@atlaskit/media-core';
+  Identifier,
+  isExternalImageIdentifier,
+} from '@atlaskit/media-client';
 import { DownloadButtonWrapper } from './styled';
-import Button from '@atlaskit/button';
+import { MediaButton } from '@atlaskit/media-ui';
 import { withAnalyticsEvents } from '@atlaskit/analytics-next';
 import {
   downloadButtonEvent,
@@ -16,32 +17,32 @@ import {
 } from './analytics/download';
 import { channel } from './analytics';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { MediaViewerError } from './error';
 
 const downloadIcon = <DownloadIcon label="Download" />;
 
 // TODO: MS-1556
 export const DownloadButton: any = withAnalyticsEvents({
-  onClick: (createEvent: CreateUIAnalyticsEventSignature, props: any) => {
+  onClick: (createEvent: CreateUIAnalyticsEvent, props: any) => {
     const ev = createEvent(props.analyticsPayload);
     ev.fire(channel);
   },
-})(Button);
+})(MediaButton);
 
 export const createItemDownloader = (
   file: FileState,
-  context: Context,
+  mediaClient: MediaClient,
   collectionName?: string,
 ) => () => {
   const id = file.id;
   const name = !isErrorFileState(file) ? file.name : undefined;
-  return context.file.downloadBinary(id, name, collectionName);
+  return mediaClient.file.downloadBinary(id, name, collectionName);
 };
 
 export type ErrorViewDownloadButtonProps = {
   state: FileState;
-  context: Context;
+  mediaClient: MediaClient;
   err: MediaViewerError;
   collectionName?: string;
 };
@@ -53,11 +54,12 @@ export const ErrorViewDownloadButton = (
   return (
     <DownloadButtonWrapper>
       <DownloadButton
+        data-testid="media-viewer-download-button"
         analyticsPayload={downloadEvent}
         appearance="primary"
         onClick={createItemDownloader(
           props.state,
-          props.context,
+          props.mediaClient,
           props.collectionName,
         )}
       >
@@ -69,20 +71,28 @@ export const ErrorViewDownloadButton = (
 
 export type ToolbarDownloadButtonProps = {
   state: FileState;
-  identifier: FileIdentifier;
-  context: Context;
+  identifier: Identifier;
+  mediaClient: MediaClient;
 };
 
 export const ToolbarDownloadButton = (props: ToolbarDownloadButtonProps) => {
-  const downloadEvent = downloadButtonEvent(props.state);
+  const { state, mediaClient, identifier } = props;
+  const downloadEvent = downloadButtonEvent(state);
+
+  // TODO [MS-1731]: make it work for external files as well
+  if (isExternalImageIdentifier(identifier)) {
+    return null;
+  }
+
   return (
     <DownloadButton
+      data-testid="media-viewer-download-button"
       analyticsPayload={downloadEvent}
       appearance={'toolbar' as any}
       onClick={createItemDownloader(
-        props.state,
-        props.context,
-        props.identifier.collectionName,
+        state,
+        mediaClient,
+        identifier.collectionName,
       )}
       iconBefore={downloadIcon}
     />
@@ -90,7 +100,7 @@ export const ToolbarDownloadButton = (props: ToolbarDownloadButtonProps) => {
 };
 
 export const DisabledToolbarDownloadButton = (
-  <Button
+  <MediaButton
     appearance={'toolbar' as any}
     isDisabled={true}
     iconBefore={downloadIcon}

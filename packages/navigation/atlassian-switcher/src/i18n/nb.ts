@@ -14,12 +14,27 @@ export default {
   'fabric.atlassianSwitcher.manageList': 'Administrer liste',
   'fabric.atlassianSwitcher.jiraProject': 'Jira-prosjekt',
   'fabric.atlassianSwitcher.confluenceSpace': 'Confluence-område',
-  'fabric.atlassianSwitcher.people': 'Personer',
   'fabric.atlassianSwitcher.administration': 'Administrasjon',
-  'fabric.atlassianSwitcher.discoverMore': 'Få mer informasjon',
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Bla gjennom Marketplace-apper',
+  'fabric.atlassianSwitcher.errorHeading': 'Noe har gått galt',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    'Vi registrerer disse feilene, men ta gjerne kontakt hvis det ikke hjelper å oppdatere',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    'En robot som har brutt sammen, og en rekke personer som er opptatt med å fikse den.',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'Vi kunne ikke laste denne listen. Last inn siden på nytt og prøv igjen.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'Du er logget av. Logg inn igjen.',
+  'fabric.atlassianSwitcher.login': 'Logg inn',
+  'fabric.atlassianSwitcher.show.more.sites': 'Vis flere sider',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { createStorybookContext } from '@atlaskit/media-test-helpers';
+import {
+  externalImageIdentifier,
+  defaultCollectionName,
+  createStorybookMediaClientConfig,
+} from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
-import { FileIdentifier, Identifier } from '@atlaskit/media-core';
+import { Identifier } from '@atlaskit/media-client';
 import { ButtonList, Container, Group } from '../example-helpers/styled';
 import {
   archiveItem,
@@ -9,6 +13,7 @@ import {
   audioItemNoCover,
   docItem,
   imageItem,
+  emptyImage,
   largeImageItem,
   smallImageItem,
   unsupportedItem,
@@ -17,48 +22,45 @@ import {
   videoLargeFileItem,
   videoProcessingFailedItem,
   wideImageItem,
-  defaultCollectionName,
+  verticalImageItem,
   videoSquareFileIdItem,
 } from '../example-helpers';
 import { MediaViewer } from '../src';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
 import { I18NWrapper } from '@atlaskit/media-test-helpers';
-const context = createStorybookContext();
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
+addGlobalEventEmitterListeners();
 
-const handleEvent = (analyticsEvent: UIAnalyticsEventInterface) => {
-  const { payload } = analyticsEvent;
-  console.log('EVENT:', payload);
-};
+const mediaClientConfig = createStorybookMediaClientConfig();
 
 export type State = {
-  selectedItem?: Identifier;
+  selectedIdentifier?: Identifier;
 };
 
 export default class Example extends React.Component<{}, State> {
-  state: State = { selectedItem: undefined };
+  state: State = { selectedIdentifier: undefined };
 
-  setItem = (selectedItem: Identifier) => () => {
-    this.setState({ selectedItem });
+  setItem = (selectedIdentifier: Identifier) => () => {
+    this.setState({ selectedIdentifier });
   };
 
-  createItem = (item: FileIdentifier, title: string) => {
-    const identifier: FileIdentifier = {
-      id: item.id,
-      mediaItemType: 'file',
-      collectionName: defaultCollectionName,
-    };
-    const onClick = this.setItem(item);
+  createItem = (identifier: Identifier, title: string) => {
+    const onClick = this.setItem(identifier);
 
     return (
       <div>
         <h4>{title}</h4>
-        <Card identifier={identifier} context={context} onClick={onClick} />
+        <Card
+          identifier={identifier}
+          mediaClientConfig={mediaClientConfig}
+          onClick={onClick}
+        />
       </div>
     );
   };
 
   render() {
+    const { selectedIdentifier } = this.state;
+
     return (
       <I18NWrapper>
         <Container>
@@ -68,6 +70,7 @@ export default class Example extends React.Component<{}, State> {
               <li>{this.createItem(imageItem, 'Picture')}</li>
               <li>{this.createItem(smallImageItem, 'Icon')}</li>
               <li>{this.createItem(wideImageItem, 'Wide')}</li>
+              <li>{this.createItem(verticalImageItem, 'Vertical')}</li>
               <li>{this.createItem(largeImageItem, 'Large')}</li>
             </ButtonList>
           </Group>
@@ -94,6 +97,14 @@ export default class Example extends React.Component<{}, State> {
             </ButtonList>
           </Group>
           <Group>
+            <h2>External images</h2>
+            <ButtonList>
+              <li>
+                {this.createItem(externalImageIdentifier, 'Atlassian logo')}
+              </li>
+            </ButtonList>
+          </Group>
+          <Group>
             <h2>Errors</h2>
             <ButtonList>
               <li>{this.createItem(unsupportedItem, 'Unsupported item')}</li>
@@ -104,18 +115,17 @@ export default class Example extends React.Component<{}, State> {
                   'Failed processing',
                 )}
               </li>
+              <li>{this.createItem(emptyImage, 'Empty File (version: 0)')}</li>
             </ButtonList>
           </Group>
-          {this.state.selectedItem && (
-            <AnalyticsListener channel="media" onEvent={handleEvent}>
-              <MediaViewer
-                context={context}
-                selectedItem={this.state.selectedItem}
-                dataSource={{ list: [this.state.selectedItem] }}
-                collectionName={defaultCollectionName}
-                onClose={() => this.setState({ selectedItem: undefined })}
-              />
-            </AnalyticsListener>
+          {selectedIdentifier && (
+            <MediaViewer
+              mediaClientConfig={mediaClientConfig}
+              selectedItem={selectedIdentifier}
+              dataSource={{ list: [selectedIdentifier] }}
+              collectionName={defaultCollectionName}
+              onClose={() => this.setState({ selectedIdentifier: undefined })}
+            />
           )}
         </Container>
       </I18NWrapper>

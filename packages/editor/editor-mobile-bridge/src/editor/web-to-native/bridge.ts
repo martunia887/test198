@@ -1,4 +1,4 @@
-import { Color as StatusColor } from '@atlaskit/status';
+import { Color as StatusColor } from '@atlaskit/status/element';
 import { EditorBridges, EditorPluginBridges } from './index';
 
 export interface MentionBridge {
@@ -42,7 +42,22 @@ export interface TypeAheadBridge {
 }
 
 export interface LinkBridge {
-  currentSelection(text: string, url: string): void;
+  currentSelection(
+    text: string,
+    url: string,
+    top: number,
+    right: number,
+    bottom: number,
+    left: number,
+  ): void;
+}
+
+export interface UndoRedoBridge {
+  stateChanged(canUndo: boolean, canRedo: boolean): void;
+}
+
+export interface AnalyticsBridge {
+  trackEvent(event: string): void;
 }
 
 export default interface NativeBridge
@@ -51,7 +66,9 @@ export default interface NativeBridge
     PromiseBridge,
     ListBridge,
     StatusBridge,
-    LinkBridge {
+    LinkBridge,
+    UndoRedoBridge,
+    AnalyticsBridge {
   call<T extends EditorPluginBridges>(
     bridge: T,
     event: keyof Exclude<EditorBridges[T], undefined>,

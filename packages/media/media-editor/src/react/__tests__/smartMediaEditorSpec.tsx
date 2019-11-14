@@ -1,31 +1,39 @@
 import * as React from 'react';
-import { shallow, ShallowWrapper } from 'enzyme';
+import { InjectedIntlProps } from 'react-intl';
+import { ReactWrapper } from 'enzyme';
 import {
   asMock,
   expectFunctionToHaveBeenCalledWith,
   expectToEqual,
-  fakeContext,
+  fakeMediaClient,
+  mountWithIntlContext,
+  getDefaultMediaClientConfig,
+  nextTick,
+  sleep,
 } from '@atlaskit/media-test-helpers';
-import * as uuid from 'uuid';
 import { Shortcut } from '@atlaskit/media-ui';
 import ModalDialog from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
 import {
-  Context,
+  MediaClient,
   FileState,
-  UploadableFile,
   FileIdentifier,
-} from '@atlaskit/media-core';
-import { TouchedFiles, UploadableFileUpfrontIds } from '@atlaskit/media-store';
+  TouchedFiles,
+  UploadableFileUpfrontIds,
+} from '@atlaskit/media-client';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import {
   SmartMediaEditor,
   SmartMediaEditorProps,
   SmartMediaEditorState,
+  convertFileNameToPng,
 } from '../smartMediaEditor';
 
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import EditorView, { EditorViewProps } from '../editorView/editorView';
+import { EditorView, EditorViewProps } from '../editorView/editorView';
 import ErrorView, { ErrorViewProps } from '../editorView/errorView/errorView';
+import { ANALYTICS_MEDIA_CHANNEL } from '../../common';
+import { Blanket } from '../styled';
 
 describe('Smart Media Editor', () => {
   let fileIdPromise: Promise<string>;
@@ -33,10 +41,13 @@ describe('Smart Media Editor', () => {
   let fileIdentifier: FileIdentifier;
   let onFinish: SmartMediaEditorProps['onFinish'];
   let onUploadStart: SmartMediaEditorProps['onUploadStart'];
-  let context: Context;
-  let component: ShallowWrapper<SmartMediaEditorProps, SmartMediaEditorState>;
+  let onClose: SmartMediaEditorProps['onClose'];
+  let mediaClient: MediaClient;
+  let component: ReactWrapper<SmartMediaEditorProps, SmartMediaEditorState>;
   let givenFileStateObservable: ReplaySubject<FileState>;
   let formatMessage: jest.Mock<any>;
+  let fakeCreateAnalyticsEvent: jest.Mock<any>;
+  let fakeAnalyticsEventFire: jest.Mock<any>;
 
   beforeEach(() => {
     formatMessage = jest
@@ -52,45 +63,59 @@ describe('Smart Media Editor', () => {
       occurrenceKey: 'some-occurrence-key',
     };
     onFinish = jest.fn();
+    onClose = jest.fn();
     onUploadStart = jest.fn();
-    context = fakeContext();
+    mediaClient = fakeMediaClient();
+    fakeAnalyticsEventFire = jest.fn();
+    fakeCreateAnalyticsEvent = jest
+      .fn()
+      .mockImplementation(() => ({ fire: fakeAnalyticsEventFire }));
     givenFileStateObservable = new ReplaySubject<FileState>(1);
-    asMock(context.file.getFileState).mockReturnValue(givenFileStateObservable);
-
-    component = shallow(
-      <SmartMediaEditor
-        context={context}
-        identifier={fileIdentifier}
-        onFinish={onFinish}
-        onUploadStart={onUploadStart}
-        intl={fakeIntl}
-      />,
+    asMock(mediaClient.file.getFileState).mockReturnValue(
+      givenFileStateObservable,
     );
 
-    jest
-      .spyOn(uuid, 'v4')
-      .mockReturnValueOnce('uuid1')
-      .mockReturnValueOnce('uuid2')
-      .mockReturnValueOnce('uuid3')
-      .mockReturnValueOnce('uuid4');
+    component = mountWithIntlContext<
+      SmartMediaEditorProps,
+      SmartMediaEditorState
+    >(
+      <SmartMediaEditor
+        mediaClient={mediaClient}
+        identifier={fileIdentifier}
+        onFinish={onFinish}
+        onClose={onClose}
+        onUploadStart={onUploadStart}
+        intl={fakeIntl}
+        createAnalyticsEvent={fakeCreateAnalyticsEvent}
+      />,
+    );
   });
 
-  it('should call onFinish when escape pressed', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should call onClose when escape pressed', () => {
     const shortcut = component.find(Shortcut);
     const { keyCode, handler } = shortcut.props();
     expectToEqual(keyCode, 27);
     handler();
-    expect(onFinish).toHaveBeenCalled();
+    expect(onClose).toHaveBeenCalled();
   });
-
   it('should display spinner on initial render', () => {
     expect(component.find(Spinner)).toHaveLength(1);
+  });
+
+  it('should pass click even through Blanket', () => {
+    const stopPropagation = jest.fn();
+    component.find(Blanket).simulate('click', { stopPropagation });
+    expect(stopPropagation).toHaveBeenCalled();
   });
 
   it('should call getFileState for given file', async () => {
     const { collectionName, occurrenceKey } = fileIdentifier;
     await fileIdPromise;
-    expectFunctionToHaveBeenCalledWith(context.file.getFileState, [
+    expectFunctionToHaveBeenCalledWith(mediaClient.file.getFileState, [
       fileId,
       {
         collectionName,
@@ -100,8 +125,8 @@ describe('Smart Media Editor', () => {
   });
 
   const forFileToBeProcessed = async () => {
-    const imageUrlPromise = Promise.resolve('some-image-url');
-    asMock(context.getImageUrl).mockReturnValue(imageUrlPromise);
+    const imageUrlPromise = Promise.resolve('https://some-image-url');
+    asMock(mediaClient.getImageUrl).mockReturnValue(imageUrlPromise);
     givenFileStateObservable.next({
       status: 'processed',
       id: fileId,
@@ -116,6 +141,7 @@ describe('Smart Media Editor', () => {
     await fileIdPromise;
     await imageUrlPromise;
     component.update();
+    await nextTick();
   };
 
   describe('when incoming file is processed', () => {
@@ -124,14 +150,16 @@ describe('Smart Media Editor', () => {
     });
 
     it('should render EditorView', async () => {
-      const editorView = component.find<EditorViewProps>(EditorView);
+      const editorView = component.find<EditorViewProps & InjectedIntlProps>(
+        EditorView,
+      );
       expect(editorView).toHaveLength(1);
       const { imageUrl } = editorView.props();
-      expectToEqual(imageUrl, 'some-image-url');
+      expectToEqual(imageUrl, 'https://some-image-url');
     });
 
-    it('should call context.getImageUrl', () => {
-      expectFunctionToHaveBeenCalledWith(context.getImageUrl, [
+    it('should call mediaClient.getImageUrl', () => {
+      expectFunctionToHaveBeenCalledWith(mediaClient.getImageUrl, [
         fileId,
         {
           collection: fileIdentifier.collectionName,
@@ -142,7 +170,7 @@ describe('Smart Media Editor', () => {
 
     it('should not listen for farther file states', async () => {
       // Wait for observable unsubscription
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await sleep();
       givenFileStateObservable.next({
         status: 'error',
         id: fileId,
@@ -154,10 +182,11 @@ describe('Smart Media Editor', () => {
     });
   });
 
-  describe('when EditorView calls onSave callback', () => {
+  describe('onSave callback', () => {
     let resultingFileStateObservable: ReplaySubject<FileState>;
-    beforeEach(async () => {
-      await forFileToBeProcessed();
+    const callEditorViewOnSaveWithCustomMediaClient = (
+      customMediaClient: MediaClient,
+    ) => {
       resultingFileStateObservable = new ReplaySubject<FileState>(1);
       const touchedFiles: TouchedFiles = {
         created: [
@@ -167,143 +196,309 @@ describe('Smart Media Editor', () => {
           },
         ],
       };
-      asMock(context.file.touchFiles).mockResolvedValue(touchedFiles);
-      asMock(context.file.upload).mockReturnValue(resultingFileStateObservable);
-      const editorView = component.find<EditorViewProps>(EditorView);
+      asMock(customMediaClient.file.touchFiles).mockResolvedValue(touchedFiles);
+      asMock(customMediaClient.file.upload).mockReturnValue(
+        resultingFileStateObservable,
+      );
+      const editorView = component.find<EditorViewProps & InjectedIntlProps>(
+        EditorView,
+      );
       const { onSave } = editorView.props();
       onSave('some-image-content', { width: 200, height: 100 });
+    };
+
+    describe('when EditorView calls onSave with userAuthProvider', () => {
+      let userAuthProvider: any;
+      beforeEach(async () => {
+        await forFileToBeProcessed();
+        const defaultConfig = getDefaultMediaClientConfig();
+        userAuthProvider = jest.fn() as any;
+        const config = {
+          ...defaultConfig,
+          userAuthProvider,
+        };
+        mediaClient = fakeMediaClient(config);
+        component.setProps({
+          mediaClient,
+        });
+        callEditorViewOnSaveWithCustomMediaClient(mediaClient);
+      });
+
+      it('should call mediaClient.file.copyFile', async () => {
+        resultingFileStateObservable.next({
+          status: 'processing',
+          id: 'uuid1',
+          mediaType: 'image',
+          mimeType: 'image/gif',
+          name: 'some-name',
+          size: 42,
+          representations: {},
+        });
+        await nextTick();
+        expect(mediaClient.file.copyFile).toHaveBeenCalledTimes(1);
+        expectFunctionToHaveBeenCalledWith(mediaClient.file.copyFile, [
+          {
+            id: 'uuid1',
+            collection: fileIdentifier.collectionName,
+            authProvider: mediaClient.config.authProvider,
+          },
+          {
+            collection: RECENTS_COLLECTION,
+            authProvider: userAuthProvider,
+            occurrenceKey: expect.any(String),
+          },
+        ]);
+      });
+
+      it('should call onFinish after context.file.copyFile', async () => {
+        resultingFileStateObservable.next({
+          status: 'processing',
+          id: 'uuid1',
+          mediaType: 'image',
+          mimeType: 'image/gif',
+          name: 'some-name',
+          size: 42,
+          representations: {},
+        });
+
+        expect(onFinish).toHaveBeenCalledTimes(0);
+        await nextTick();
+        expect(mediaClient.file.copyFile).toHaveBeenCalledTimes(1);
+        expect(onFinish).toHaveBeenCalledTimes(1);
+      });
     });
 
-    it('should upload a file', async () => {
-      // First we touch files with client generated id
-      expectFunctionToHaveBeenCalledWith(context.file.touchFiles, [
-        [
+    describe('when EditorView calls onSave without userAuthProvider', () => {
+      beforeEach(async () => {
+        await forFileToBeProcessed();
+        callEditorViewOnSaveWithCustomMediaClient(mediaClient);
+      });
+
+      it('should upload a file', async () => {
+        // First we touch files with client generated id
+        expectFunctionToHaveBeenCalledWith(mediaClient.file.touchFiles, [
+          [
+            {
+              fileId: expect.any(String),
+              collection: fileIdentifier.collectionName,
+              occurrenceKey: expect.any(String),
+            },
+          ],
+          fileIdentifier.collectionName,
+        ]);
+
+        // Then we call upload
+        expectFunctionToHaveBeenCalledWith(mediaClient.file.upload, [
           {
-            fileId: 'uuid1',
+            content: 'some-image-content',
+            name: 'some-name.png',
             collection: fileIdentifier.collectionName,
           },
-        ],
-        fileIdentifier.collectionName,
-      ]);
+          undefined,
+          {
+            id: expect.any(String),
+            deferredUploadId: expect.anything(),
+            occurrenceKey: expect.any(String),
+          },
+        ]);
+        const actualUploadableFileUpfrontIds: UploadableFileUpfrontIds = asMock(
+          mediaClient.file.upload,
+        ).mock.calls[0][2];
+        const actualUploadId = await actualUploadableFileUpfrontIds.deferredUploadId;
+        expectToEqual(actualUploadId, 'some-upload-id');
 
-      // Then we call upload
-      const expectedUploadableFile: UploadableFile = {
-        content: 'some-image-content',
-        name: 'some-name',
-        collection: fileIdentifier.collectionName,
-      };
-      const expectedUploadableFileUpfrontIds: UploadableFileUpfrontIds = {
-        id: 'uuid1',
-        deferredUploadId: expect.anything(),
-        occurrenceKey: 'some-occurrence-key',
-      };
-      expectFunctionToHaveBeenCalledWith(context.file.upload, [
-        expectedUploadableFile,
-        undefined,
-        expectedUploadableFileUpfrontIds,
-      ]);
-      const actualUploadableFileUpfrontIds: UploadableFileUpfrontIds = asMock(
-        context.file.upload,
-      ).mock.calls[0][2];
-      const actualUploadId = await actualUploadableFileUpfrontIds.deferredUploadId;
-      expectToEqual(actualUploadId, 'some-upload-id');
-
-      // In the end we exit synchronously with new identifier
-      expectFunctionToHaveBeenCalledWith(onUploadStart, [
-        {
-          mediaItemType: 'file',
-          id: 'uuid1',
-          collectionName: fileIdentifier.collectionName,
-        },
-        {
-          width: 200,
-          height: 100,
-        },
-      ]);
-    });
-
-    it('should call onFinish when new file fully uploaded (processing)', async () => {
-      resultingFileStateObservable.next({
-        status: 'processing',
-        id: 'uuid1',
-        mediaType: 'image',
-        mimeType: 'image/gif',
-        name: 'some-name',
-        size: 42,
-        representations: {},
+        // In the end we exit synchronously with new identifier
+        expectFunctionToHaveBeenCalledWith(onUploadStart!, [
+          {
+            mediaItemType: 'file',
+            id: expect.any(String),
+            collectionName: fileIdentifier.collectionName,
+            occurrenceKey: expect.any(String),
+          },
+          {
+            width: 200,
+            height: 100,
+          },
+        ]);
       });
-      await new Promise(resolve => setTimeout(resolve, 0));
-      resultingFileStateObservable.next({
-        status: 'processing',
-        id: 'uuid1',
-        mediaType: 'image',
-        mimeType: 'image/gif',
-        name: 'some-name',
-        size: 42,
-        representations: {},
-      });
-      expect(onFinish).toHaveBeenCalledTimes(1);
-    });
 
-    it('should show error screen when processing-failed', async () => {
-      asMock(formatMessage).mockReturnValue('Error message');
-      resultingFileStateObservable.next({
-        status: 'failed-processing',
-        id: 'uuid1',
-        mediaType: 'image',
-        mimeType: 'image/gif',
-        name: 'some-name',
-        size: 42,
-        artifacts: [],
-        representations: {},
-      });
-      component.update();
-      expect(component.find(EditorView)).toHaveLength(0);
-      expect(component.find(ErrorView)).toHaveLength(1);
-      const errorViewProps = component.find<ErrorViewProps>(ErrorView).props();
-      expectToEqual(errorViewProps.message, 'Error message');
-    });
+      describe('when new file is fully uploaded (processing)', () => {
+        it('should call onFinish', async () => {
+          resultingFileStateObservable.next({
+            status: 'processing',
+            id: 'uuid1',
+            mediaType: 'image',
+            mimeType: 'image/gif',
+            name: 'some-name',
+            size: 42,
+            representations: {},
+          });
+          await nextTick();
+          expect(onFinish).toHaveBeenCalledTimes(1);
+        });
 
-    it('should show error screen when error', async () => {
-      asMock(formatMessage).mockReturnValue('Error message');
-      resultingFileStateObservable.next({
-        status: 'error',
-        id: 'uuid1',
-      });
-      component.update();
-      expect(component.find(EditorView)).toHaveLength(0);
-      expect(component.find(ErrorView)).toHaveLength(1);
-      const errorViewProps = component.find<ErrorViewProps>(ErrorView).props();
-      expectToEqual(errorViewProps.message, 'Error message');
-    });
+        it('should emit analytics ui + track events if observable returns "processing" file state', async () => {
+          resultingFileStateObservable.next({
+            status: 'processing',
+            id: 'uuid1',
+            mediaType: 'image',
+            mimeType: 'image/gif',
+            name: 'some-name',
+            size: 42,
+            representations: {},
+          });
+          await nextTick();
+          expect(fakeCreateAnalyticsEvent).toHaveBeenCalledTimes(2);
 
-    it('should close editor when error is dismissed', () => {
-      resultingFileStateObservable.next({
-        status: 'failed-processing',
-        id: 'uuid1',
-        mediaType: 'image',
-        mimeType: 'image/gif',
-        name: 'some-name',
-        size: 42,
-        artifacts: [],
-        representations: {},
+          expect(fakeCreateAnalyticsEvent).toBeCalledWith(
+            expect.objectContaining({
+              eventType: 'ui',
+              action: 'clicked',
+              actionSubject: 'button',
+              actionSubjectId: 'saveButton',
+              attributes: { annotated: false },
+            }),
+          );
+          expect(fakeCreateAnalyticsEvent).toBeCalledWith(
+            expect.objectContaining({
+              eventType: 'track',
+              action: 'uploaded',
+              actionSubject: 'media',
+              actionSubjectId: expect.any(String),
+              attributes: {
+                status: 'success',
+                fileStatus: 'processing',
+                fileMediatype: 'image',
+                fileMimetype: 'image/gif',
+                fileSize: 42,
+                uploadDurationMsec: expect.any(Number),
+                annotated: false,
+              },
+            }),
+          );
+          expect(fakeAnalyticsEventFire).toHaveBeenLastCalledWith(
+            ANALYTICS_MEDIA_CHANNEL,
+          );
+        });
       });
-      component.update();
-      const errorViewProps = component.find<ErrorViewProps>(ErrorView).props();
-      errorViewProps.onCancel();
-      expect(onFinish).toHaveBeenCalled();
+
+      describe('when new file processing fails (failed-processing)', () => {
+        it('should show error screen when processing-failed', async () => {
+          asMock(formatMessage).mockReturnValue('Error message');
+          resultingFileStateObservable.next({
+            status: 'failed-processing',
+            id: 'uuid1',
+            mediaType: 'image',
+            mimeType: 'image/gif',
+            name: 'some-name',
+            size: 42,
+            artifacts: [],
+            representations: {},
+          });
+          await nextTick();
+          component.update();
+          expect(component.find(EditorView)).toHaveLength(0);
+          expect(component.find(ErrorView)).toHaveLength(1);
+          const errorViewProps = component
+            .find<ErrorViewProps>(ErrorView)
+            .props();
+          expectToEqual(errorViewProps.message, 'Error message');
+        });
+
+        it('should show error screen when error', async () => {
+          asMock(formatMessage).mockReturnValue('Error message');
+          resultingFileStateObservable.next({
+            status: 'error',
+            id: 'uuid1',
+          });
+          await nextTick();
+          component.update();
+          expect(component.find(EditorView)).toHaveLength(0);
+          expect(component.find(ErrorView)).toHaveLength(1);
+          const errorViewProps = component
+            .find<ErrorViewProps>(ErrorView)
+            .props();
+          expectToEqual(errorViewProps.message, 'Error message');
+        });
+
+        it('should close editor when error is dismissed', async () => {
+          resultingFileStateObservable.next({
+            status: 'failed-processing',
+            id: 'uuid1',
+            mediaType: 'image',
+            mimeType: 'image/gif',
+            name: 'some-name',
+            size: 42,
+            artifacts: [],
+            representations: {},
+          });
+          await nextTick();
+          component.update();
+          const errorViewProps = component
+            .find<ErrorViewProps>(ErrorView)
+            .props();
+          errorViewProps.onCancel();
+          expect(onClose).toHaveBeenCalled();
+        });
+
+        it('should emit analytics ui + track events if observable returns "failed-processing" file state', async () => {
+          resultingFileStateObservable.next({
+            status: 'failed-processing',
+            id: 'uuid1',
+            mediaType: 'image',
+            mimeType: 'image/gif',
+            name: 'some-name',
+            size: 42,
+            artifacts: [],
+            representations: {},
+          });
+          await nextTick();
+          expect(fakeCreateAnalyticsEvent).toHaveBeenCalledTimes(2);
+
+          expect(fakeCreateAnalyticsEvent).toBeCalledWith(
+            expect.objectContaining({
+              eventType: 'ui',
+              action: 'clicked',
+              actionSubject: 'button',
+              actionSubjectId: 'saveButton',
+              attributes: { annotated: false },
+            }),
+          );
+          expect(fakeCreateAnalyticsEvent).toBeCalledWith(
+            expect.objectContaining({
+              eventType: 'track',
+              action: 'uploaded',
+              actionSubject: 'media',
+              actionSubjectId: expect.any(String),
+              attributes: {
+                status: 'fail',
+                failReason: 'Ouch! We could not save the image',
+                fileStatus: 'failed-processing',
+                uploadDurationMsec: expect.any(Number),
+                annotated: false,
+              },
+            }),
+          );
+          expect(fakeAnalyticsEventFire).toHaveBeenLastCalledWith(
+            ANALYTICS_MEDIA_CHANNEL,
+          );
+        });
+      });
     });
   });
 
-  describe('when changes has been made and cancel is pressed', () => {
-    let modalDialog: ShallowWrapper;
+  describe('when changes have been made and cancel is pressed', () => {
+    let modalDialog: ReactWrapper<React.ComponentProps<typeof ModalDialog>>;
 
     beforeEach(async () => {
       await forFileToBeProcessed();
-      const editorView = component.find<EditorViewProps>(EditorView);
+      const editorView = component.find<EditorViewProps & InjectedIntlProps>(
+        EditorView,
+      );
       const { onAnyEdit, onCancel } = editorView.props();
-      onAnyEdit!();
-      onCancel();
+      onAnyEdit!('arrow', { lineWidth: 1, addShadow: true, color: '#ccc' });
+      onCancel('button');
+      component.update();
       modalDialog = component.find(ModalDialog);
     });
 
@@ -312,20 +507,118 @@ describe('Smart Media Editor', () => {
       expect(modalDialog.prop('heading')).toEqual('Unsaved changes');
     });
 
-    it('should call onFinish when first action is chosen', () => {
+    it('should call onClose when first action is chosen', () => {
       const firstAction = (modalDialog.prop('actions') as any)[0];
       expect(firstAction.text).toEqual('Close anyway');
       firstAction.onClick();
-      expect(onFinish).toHaveBeenCalled();
+      expect(onClose).toHaveBeenCalled();
     });
 
-    it('should just close confirmation dialog and not call onFinish when second action is chosen', () => {
+    it('should just close confirmation dialog and not call onClose when second action is chosen', () => {
       const secondAction = (modalDialog.prop('actions') as any)[1];
       expect(secondAction.text).toEqual('Cancel');
       secondAction.onClick();
-      expect(onFinish).not.toHaveBeenCalled();
+      expect(onClose).not.toHaveBeenCalled();
+      component.update();
       modalDialog = component.find(ModalDialog);
       expect(modalDialog).toHaveLength(0);
+    });
+
+    it('should emit analytics ui clicked+annotated events', async () => {
+      expect(fakeCreateAnalyticsEvent).toHaveBeenCalledTimes(2);
+      expect(fakeCreateAnalyticsEvent).toBeCalledWith(
+        expect.objectContaining({
+          eventType: 'ui',
+          action: 'clicked',
+          actionSubject: 'button',
+          actionSubjectId: 'cancelButton',
+          attributes: { annotated: true, input: 'button' },
+        }),
+      );
+      expect(fakeCreateAnalyticsEvent).toBeCalledWith(
+        expect.objectContaining({
+          eventType: 'ui',
+          action: 'annotated',
+          actionSubject: 'annotation',
+          actionSubjectId: 'arrow',
+          attributes: { lineWidth: 1, addShadow: true, color: '#ccc' },
+        }),
+      );
+      expect(fakeAnalyticsEventFire).toHaveBeenLastCalledWith(
+        ANALYTICS_MEDIA_CHANNEL,
+      );
+    });
+  });
+
+  describe('when changes have been made and esc is pressed', () => {
+    beforeEach(async () => {
+      await forFileToBeProcessed();
+      const editorView = component.find<EditorViewProps & InjectedIntlProps>(
+        EditorView,
+      );
+      const { onAnyEdit, onCancel } = editorView.props();
+      onAnyEdit!('arrow', { lineWidth: 1, addShadow: true, color: '#ccc' });
+      onCancel('esc');
+      component.update();
+    });
+
+    it('should emit analytics ui annotated event', async () => {
+      expect(fakeCreateAnalyticsEvent).toHaveBeenCalledTimes(2);
+      expect(fakeCreateAnalyticsEvent).toBeCalledWith(
+        expect.objectContaining({
+          eventType: 'ui',
+          action: 'clicked',
+          actionSubject: 'button',
+          actionSubjectId: 'cancelButton',
+          attributes: { annotated: true, input: 'esc' },
+        }),
+      );
+      expect(fakeCreateAnalyticsEvent).toBeCalledWith(
+        expect.objectContaining({
+          eventType: 'ui',
+          action: 'annotated',
+          actionSubject: 'annotation',
+          actionSubjectId: 'arrow',
+          attributes: { lineWidth: 1, addShadow: true, color: '#ccc' },
+        }),
+      );
+      expect(fakeAnalyticsEventFire).toHaveBeenLastCalledWith(
+        ANALYTICS_MEDIA_CHANNEL,
+      );
+    });
+  });
+
+  describe('#convertFileNameToPng()', () => {
+    it('should return default value if undefined', () => {
+      expect(convertFileNameToPng(undefined)).toEqual('annotated-image.png');
+    });
+
+    it('should return default value if empty', () => {
+      expect(convertFileNameToPng('')).toEqual('annotated-image.png');
+    });
+
+    it('should replace anything that looks like an extension with .png', () => {
+      expect(convertFileNameToPng('some.image')).toEqual('some.png');
+    });
+
+    it('should replace anything that looks like an extension with .png if starts with a dot', () => {
+      expect(convertFileNameToPng('.some.other.image')).toEqual(
+        '.some.other.png',
+      );
+    });
+
+    it('should append .png if nothing looks like an extension', () => {
+      expect(convertFileNameToPng('somethingElse')).toEqual(
+        'somethingElse.png',
+      );
+    });
+
+    it('should append .png if nothing looks like an extension if starts with a dot', () => {
+      expect(convertFileNameToPng('.some')).toEqual('.some.png');
+    });
+
+    it('should append .png if nothing looks like an extension if ends with a dot', () => {
+      expect(convertFileNameToPng('.some.stuff.')).toEqual('.some.stuff.png');
     });
   });
 });

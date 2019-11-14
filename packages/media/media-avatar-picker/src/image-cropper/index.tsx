@@ -2,70 +2,52 @@ import * as React from 'react';
 import { Component } from 'react';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import { InjectedIntlProps, injectIntl } from 'react-intl';
-import { messages } from '@atlaskit/media-ui';
+import { messages, MediaImage } from '@atlaskit/media-ui';
 import { isImageRemote } from './isImageRemote';
 import {
   CircularMask,
   Container,
   DragOverlay,
   RectMask,
-  Image,
   RemoveImageContainer,
   RemoveImageButton,
-  containerPadding,
+  ImageContainer,
 } from './styled';
 import { ERROR } from '../avatar-picker-dialog';
-import { CONTAINER_INNER_SIZE } from '../image-navigator';
-
-export interface LoadParameters {
-  export: () => string;
-}
-
-export type OnLoadHandler = (params: LoadParameters) => void;
+import { CONTAINER_INNER_SIZE } from '../avatar-picker-dialog/layout-const';
 
 export interface ImageCropperProp {
   imageSource: string;
-  scale?: number; // Value from 0 to 1
   containerSize?: number;
   isCircularMask?: boolean;
   top: number;
   left: number;
   imageWidth?: number;
+  imageHeight?: number;
+  imageOrientation: number;
   onDragStarted?: (x: number, y: number) => void;
-  onImageSize: (width: number, height: number) => void;
-  onLoad?: OnLoadHandler;
+  onImageLoaded: (image: HTMLImageElement) => void;
   onRemoveImage: () => void;
   onImageError: (errorMessage: string) => void;
 }
-
-const defaultScale = 1;
 
 export class ImageCropper extends Component<
   ImageCropperProp & InjectedIntlProps,
   {}
 > {
-  private imageElement?: HTMLImageElement;
-
   static defaultProps = {
     containerSize: CONTAINER_INNER_SIZE,
     isCircleMask: false,
-    scale: defaultScale,
     onDragStarted: () => {},
     onImageSize: () => {},
   };
 
   componentDidMount() {
     const {
-      onLoad,
       imageSource,
       onImageError,
       intl: { formatMessage },
     } = this.props;
-    if (onLoad) {
-      onLoad({
-        export: this.export,
-      });
-    }
     try {
       isImageRemote(imageSource);
     } catch (e) {
@@ -77,12 +59,6 @@ export class ImageCropper extends Component<
     if (this.props.onDragStarted) {
       this.props.onDragStarted(e.screenX, e.screenY);
     }
-  };
-
-  onImageLoaded = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const image = e.target as HTMLImageElement;
-    this.props.onImageSize(image.naturalWidth, image.naturalHeight);
-    this.imageElement = image;
   };
 
   onImageError = () => {
@@ -99,21 +75,29 @@ export class ImageCropper extends Component<
       containerSize,
       top,
       left,
+      imageWidth,
+      imageHeight,
       imageSource,
       onRemoveImage,
+      imageOrientation,
+      onImageLoaded,
       intl: { formatMessage },
     } = this.props;
     const containerStyle = {
       width: `${containerSize}px`,
       height: `${containerSize}px`,
     };
-    const width = this.width ? `${this.width}px` : 'auto';
-    const imageStyle = {
+    const width = imageWidth ? `${imageWidth}px` : 'auto';
+    const height = imageHeight ? `${imageHeight}px` : 'auto';
+
+    const imageContainerStyle = {
       width,
+      height,
       display: width === 'auto' ? 'none' : 'block',
       top: `${top}px`,
       left: `${left}px`,
     };
+
     let crossOrigin: '' | 'anonymous' | 'use-credentials' | undefined;
     try {
       crossOrigin = isImageRemote(imageSource) ? 'anonymous' : undefined;
@@ -123,13 +107,17 @@ export class ImageCropper extends Component<
 
     return (
       <Container style={containerStyle}>
-        <Image
-          crossOrigin={crossOrigin}
-          src={imageSource}
-          style={imageStyle}
-          onLoad={this.onImageLoaded}
-          onError={this.onImageError}
-        />
+        <ImageContainer style={imageContainerStyle}>
+          <MediaImage
+            crossOrigin={crossOrigin}
+            dataURI={imageSource}
+            crop={false}
+            stretch={true}
+            previewOrientation={imageOrientation}
+            onImageLoad={onImageLoaded}
+            onImageError={this.onImageError}
+          />
+        </ImageContainer>
         {isCircularMask ? <CircularMask /> : <RectMask />}
         <DragOverlay onMouseDown={this.onDragStarted} />
         <RemoveImageContainer>
@@ -143,48 +131,6 @@ export class ImageCropper extends Component<
       </Container>
     );
   }
-
-  private get width() {
-    const { imageWidth, scale } = this.props;
-
-    return imageWidth ? imageWidth * (scale || defaultScale) : 0;
-  }
-
-  export = (): string => {
-    let imageData = '';
-    const canvas = document.createElement('canvas');
-    const { top, left, scale, containerSize } = this.props;
-    const size = containerSize || 0;
-    const scaleWithDefault = scale || 1;
-    const destinationSize = Math.max(size - containerPadding * 2, 0);
-
-    canvas.width = destinationSize;
-    canvas.height = destinationSize;
-
-    const context = canvas.getContext('2d');
-
-    if (context && this.imageElement) {
-      const sourceLeft = (-left + containerPadding) / scaleWithDefault;
-      const sourceTop = (-top + containerPadding) / scaleWithDefault;
-      const sourceWidth = destinationSize / scaleWithDefault;
-      const sourceHeight = destinationSize / scaleWithDefault;
-
-      context.drawImage(
-        this.imageElement,
-        sourceLeft,
-        sourceTop,
-        sourceWidth,
-        sourceHeight,
-        0,
-        0,
-        destinationSize,
-        destinationSize,
-      );
-      imageData = canvas.toDataURL();
-    }
-
-    return imageData;
-  };
 }
 
 export default injectIntl(ImageCropper);

@@ -8,7 +8,7 @@ import Tooltip from '@atlaskit/tooltip';
 import { Content, ButtonGroup } from './styles';
 import imageUploadHandler from './imageUpload';
 
-import { MentionResource, EmojiResource } from '../src';
+import { TeamMentionResource, MentionResource, EmojiResource } from '../src';
 import { toJSON } from '../src/utils';
 import {
   storyContextIdentifierProviderFactory,
@@ -25,17 +25,28 @@ const pendingPromise = new Promise<any>(() => {});
 
 // https://pug.jira-dev.com
 const testCloudId = 'DUMMY-a5a01d21-1cc3-4f29-9565-f2bb8cd969f5';
+
+const teamMentionConfig = {
+  url: 'https://api-private.stg.atlassian.com/teams/mentions',
+  productId: 'micros-group/confluence',
+  // can highlight current mention user by using
+  // shouldHighlightMention: mention => mention.id === currentUserId,
+};
+
+const userMentionConfig = {
+  url: `https://api-private.stg.atlassian.com/mentions/${testCloudId}`,
+  productId: 'micros-group/confluence',
+};
+
 const providers = {
   mentionProvider: {
     resolved: Promise.resolve(mention.storyData.resourceProvider),
-    external: Promise.resolve(
-      new MentionResource({
-        url: `https://api-private.stg.atlassian.com/mentions/${testCloudId}`,
-        productId: 'micros-group/confluence',
-      }),
-    ),
+    external: Promise.resolve(new MentionResource(userMentionConfig)),
     pending: pendingPromise,
     rejected: rejectedPromise,
+    teamMentionResource: Promise.resolve(
+      new TeamMentionResource(userMentionConfig, teamMentionConfig),
+    ),
     undefined: undefined,
   },
   emojiProvider: {
@@ -83,7 +94,7 @@ const providers = {
     pending: pendingPromise,
     rejected: rejectedPromise,
     'view only': storyMediaProviderFactory({
-      includeUploadContext: false,
+      includeUploadMediaClientConfig: false,
     }),
     'w/o userAuthProvider': storyMediaProviderFactory({
       includeUserAuthProvider: false,
@@ -178,6 +189,7 @@ export default class ToolsDrawer extends React.Component<Props & any, State> {
     this.setState(prevState => ({ editorEnabled: !prevState.editorEnabled }));
 
   private toggleMediaMock = () => {
+    // eslint-disable-next-line no-unused-expressions
     this.state.mediaMockEnabled ? mediaMock.disable() : mediaMock.enable();
     this.setState(prevState => ({
       mediaMockEnabled: !prevState.mediaMockEnabled,
@@ -277,7 +289,6 @@ export default class ToolsDrawer extends React.Component<Props & any, State> {
                                   ? 'primary'
                                   : 'default'
                               }
-                              theme="dark"
                               spacing="compact"
                             >
                               {providerStateName}
@@ -290,18 +301,13 @@ export default class ToolsDrawer extends React.Component<Props & any, State> {
                 )}
                 <div>
                   <ButtonGroup>
-                    <Button
-                      onClick={this.toggleDisabled}
-                      theme="dark"
-                      spacing="compact"
-                    >
+                    <Button onClick={this.toggleDisabled} spacing="compact">
                       {this.state.editorEnabled
                         ? 'Disable editor'
                         : 'Enable editor'}
                     </Button>
                     <Button
                       onClick={this.reloadEditor}
-                      theme="dark"
                       spacing="compact"
                       className="reloadEditorButton"
                     >
@@ -314,7 +320,6 @@ export default class ToolsDrawer extends React.Component<Props & any, State> {
                       <Button
                         key={key}
                         onClick={() => this.toggleFeature(key)}
-                        theme="dark"
                         spacing="compact"
                         className={`toggleFeature-${key} ${
                           this.state.enabledFeatures[key] ? 'disable' : 'enable'
@@ -330,7 +335,6 @@ export default class ToolsDrawer extends React.Component<Props & any, State> {
                       <Button
                         onClick={this.toggleMediaMock}
                         appearance={mediaMockEnabled ? 'primary' : 'default'}
-                        theme="dark"
                         spacing="compact"
                         className="mediaPickerMock"
                       >

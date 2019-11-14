@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { IconAndTitleLayout } from '../IconAndTitleLayout';
 import Button from '@atlaskit/button';
-import { truncateUrlForErrorView } from '../utils';
 import { Frame } from '../Frame';
-import { colors } from '@atlaskit/theme';
+import { B400, N500 } from '@atlaskit/theme/colors';
+import { messages } from '../../messages';
+import { FormattedMessage } from 'react-intl';
+import LockIcon from '@atlaskit/icon/glyph/lock-filled';
+import { AKIconWrapper } from '../Icon';
+import { ForbiddenWrapper } from '../ForbiddenView/styled';
 
 export interface InlineCardUnauthorizedViewProps {
   /** The url to display */
@@ -11,17 +15,23 @@ export interface InlineCardUnauthorizedViewProps {
   /** The icon of the service (e.g. Dropbox/Asana/Google/etc) to display */
   icon?: string;
   /** The optional click handler */
-  onClick?: () => void;
+  onClick?: React.EventHandler<React.MouseEvent | React.KeyboardEvent>;
   /** What to do when a user hit "Try another account" button */
   onAuthorise?: () => void;
   /** A flag that determines whether the card is selected in edit mode. */
   isSelected?: boolean;
 }
 
+const FallbackUnauthorizedIcon = (
+  <AKIconWrapper>
+    <LockIcon label="error" size="small" primaryColor={B400} />
+  </AKIconWrapper>
+);
+
 export class InlineCardUnauthorizedView extends React.Component<
   InlineCardUnauthorizedViewProps
 > {
-  handleConnectAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
+  handleConnectAccount = (event: React.MouseEvent<HTMLElement>) => {
     const { onAuthorise } = this.props;
     event.preventDefault();
     event.stopPropagation();
@@ -31,30 +41,27 @@ export class InlineCardUnauthorizedView extends React.Component<
   render() {
     const { url, icon, onClick, isSelected, onAuthorise } = this.props;
     return (
-      <Frame onClick={onClick} isSelected={isSelected}>
+      <Frame link={url} onClick={onClick} isSelected={isSelected}>
         <IconAndTitleLayout
-          icon={icon}
-          title={
-            <span style={{ color: colors.N500 }}>
-              {truncateUrlForErrorView(url)}
-            </span>
-          }
+          icon={icon ? icon : FallbackUnauthorizedIcon}
+          title={url}
+          titleColor={N500}
         />
         {!onAuthorise ? (
-          ''
+          <ForbiddenWrapper>
+            {` \u2011 `}
+            <FormattedMessage {...messages.invalid_permissions} />
+            {` `}
+          </ForbiddenWrapper>
         ) : (
           <>
-            {/* 
-              NB: a non-breaking hyphen - hyphentation should be
-              handled by the browser, not us.
-            */}
             {` \u2011 `}
             <Button
               spacing="none"
               appearance="link"
               onClick={this.handleConnectAccount}
             >
-              Connect your account to preview links
+              <FormattedMessage {...messages.connect_link_account} />
             </Button>
           </>
         )}

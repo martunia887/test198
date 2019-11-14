@@ -1,4 +1,4 @@
-/* tslint:disable: no-console */
+// eslint-disable-line no-console
 
 import * as React from 'react';
 import { HTMLAttributes, ComponentClass, LabelHTMLAttributes } from 'react';
@@ -8,7 +8,7 @@ import Slider from '@atlaskit/field-range';
 import Button from '@atlaskit/button';
 import { Card } from '@atlaskit/media-card';
 import {
-  createStorybookContext,
+  createStorybookMediaClientConfig,
   genericFileId,
 } from '@atlaskit/media-test-helpers';
 import { FilmstripView } from '../src/filmstripView';
@@ -22,9 +22,8 @@ const Separator: ComponentClass<HTMLAttributes<{}>> = styled.hr`
   border: 1px solid #ccc;
 `;
 
-const ControlLabel: ComponentClass<
-  HTMLAttributes<{}> & LabelHTMLAttributes<{}>
-> = styled.label`
+const ControlLabel: ComponentClass<HTMLAttributes<{}> &
+  LabelHTMLAttributes<{}>> = styled.label`
   display: block;
   margin-top: 1em;
   font-weight: bold;
@@ -45,14 +44,14 @@ const Box: ComponentClass<HTMLAttributes<{}> & BoxProps> = styled.div`
   ${({ grow }: { grow?: number }) => (grow && `flex-grow: ${grow};`) || ''};
 `;
 
-const context = createStorybookContext() as any;
+const mediaClientConfig = createStorybookMediaClientConfig();
 
 const exampleActions = [{ label: 'View', handler: () => console.log('View') }];
 
 const cards = [
   <Card
     key="card3"
-    context={context}
+    mediaClientConfig={mediaClientConfig}
     identifier={genericFileId}
     actions={exampleActions}
   />,

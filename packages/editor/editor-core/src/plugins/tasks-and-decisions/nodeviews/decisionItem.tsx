@@ -1,24 +1,13 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
-import { EditorView, NodeView, Decoration } from 'prosemirror-view';
+import { NodeView, Decoration } from 'prosemirror-view';
 import DecisionItem from '../ui/Decision';
-import { ReactNodeView, ReactComponentProps } from '../../../nodeviews';
+import { ReactNodeView, ForwardRef, getPosHandler } from '../../../nodeviews';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import WithPluginState from '../../../ui/WithPluginState';
-import {
-  stateKey as taskPluginKey,
-  TaskDecisionPluginState,
-} from '../pm-plugins/main';
-
-export interface Props {
-  children?: React.ReactNode;
-  view: EditorView;
-  node: PMNode;
-}
 
 class Decision extends ReactNodeView {
-  private isContentEmpty() {
-    return this.node.content.childCount === 0;
+  private isContentEmpty(node: PMNode) {
+    return node.content.childCount === 0;
   }
 
   createDomRef() {
@@ -31,46 +20,30 @@ class Decision extends ReactNodeView {
     return { dom: document.createElement('div') };
   }
 
-  render(_props: ReactComponentProps, forwardRef: any) {
+  render(_props: never, forwardRef: ForwardRef) {
     return (
-      <WithPluginState
-        plugins={{
-          taskDecisionPlugin: taskPluginKey,
-        }}
-        render={({
-          taskDecisionPlugin,
-        }: {
-          taskDecisionPlugin: TaskDecisionPluginState;
-        }) => {
-          let insideCurrentNode = false;
-          if (
-            taskDecisionPlugin &&
-            taskDecisionPlugin.currentTaskDecisionItem
-          ) {
-            insideCurrentNode = this.node.eq(
-              taskDecisionPlugin.currentTaskDecisionItem,
-            );
-          }
-          return (
-            <DecisionItem
-              contentRef={forwardRef}
-              showPlaceholder={!insideCurrentNode && this.isContentEmpty()}
-            />
-          );
-        }}
+      <DecisionItem
+        contentRef={forwardRef}
+        showPlaceholder={this.isContentEmpty(this.node)}
       />
     );
   }
 
-  update(node: PMNode, decorations: Decoration[]) {
+  viewShouldUpdate(nextNode: PMNode) {
     /**
-     * Returning false here when the previous content was empty – fixes an error where the editor fails to set selection
-     * inside the contentDOM after a transaction. See ED-2374.
+     * To ensure the placeholder is correctly toggled we need to allow react to re-render
+     * on first character insertion.
+     * Note: last character deletion is handled externally and automatically re-renders.
      */
+    return this.isContentEmpty(this.node) && !!nextNode.content.childCount;
+  }
+
+  update(node: PMNode, decorations: Decoration[]) {
     return super.update(
       node,
       decorations,
-      (_currentNode, _newNode) => !this.isContentEmpty(),
+      // Toggle the placeholder based on whether user input exists.
+      (_currentNode, _newNode) => !this.isContentEmpty(_newNode),
     );
   }
 }
@@ -78,7 +51,7 @@ class Decision extends ReactNodeView {
 export const decisionItemNodeView = (portalProviderAPI: PortalProviderAPI) => (
   node: any,
   view: any,
-  getPos: () => number,
+  getPos: getPosHandler,
 ): NodeView => {
-  return new Decision(node, view, getPos, portalProviderAPI).init();
+  return new Decision(node, view, getPos, portalProviderAPI, {}).init();
 };

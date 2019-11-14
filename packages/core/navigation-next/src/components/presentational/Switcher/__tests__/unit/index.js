@@ -3,7 +3,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { PopupSelect } from '@atlaskit/select';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import {
   BaseSwitcher,
   Footer,
@@ -182,7 +182,7 @@ describe('Switcher', () => {
     });
     wrapper.instance().forceUpdate();
     expect(wrapper.find(PopupSelect).props().minMenuWidth).toBe(
-      300 - gridSize() * 2 - 60, // ¯\_(ツ)_/¯
+      300 - gridSize() * 2,
     );
   });
 });

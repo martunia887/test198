@@ -5,7 +5,7 @@ import { createInputRulePlugin } from './pm-plugins/input-rule';
 import { createKeymapPlugin } from './pm-plugins/keymap';
 import { plugin, stateKey, LinkAction } from './pm-plugins/main';
 import fakeCursorToolbarPlugin from './pm-plugins/fake-cursor-for-toolbar';
-import EditorSuccessIcon from '@atlaskit/icon/glyph/editor/success';
+import { messages } from '../insert-block/ui/ToolbarInsertBlock';
 import {
   addAnalytics,
   ACTION,
@@ -15,8 +15,12 @@ import {
   ACTION_SUBJECT_ID,
 } from '../analytics';
 import { getToolbarConfig } from './Toolbar';
+import { tooltip, addLink } from '../../keymaps';
+import { IconLink } from '../quick-insert/assets';
 
-const hyperlinkPlugin: EditorPlugin = {
+const hyperlinkPlugin = (): EditorPlugin => ({
+  name: 'hyperlink',
+
   marks() {
     return [{ name: 'link', mark: link }];
   },
@@ -34,7 +38,7 @@ const hyperlinkPlugin: EditorPlugin = {
       },
       {
         name: 'hyperlinkKeymap',
-        plugin: ({ schema, props }) => createKeymapPlugin(schema, props),
+        plugin: () => createKeymapPlugin(),
       },
     ];
   },
@@ -42,21 +46,23 @@ const hyperlinkPlugin: EditorPlugin = {
   pluginsOptions: {
     quickInsert: ({ formatMessage }) => [
       {
-        title: 'Hyperlink',
+        title: formatMessage(messages.link),
+        description: formatMessage(messages.linkDescription),
         keywords: ['url', 'link', 'hyperlink'],
         priority: 1200,
-        icon: () => <EditorSuccessIcon label={'Hyperlink'} />,
-        action(insert, state) {
+        keyshortcut: tooltip(addLink),
+        icon: () => <IconLink label={formatMessage(messages.link)} />,
+        action(_insert, state) {
           const pos = state.selection.from;
           const { nodeBefore } = state.selection.$from;
           if (!nodeBefore) {
             return false;
           }
           const tr = state.tr
-            .setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR)
+            .setMeta(stateKey, { type: LinkAction.SHOW_INSERT_TOOLBAR })
             .delete(pos - nodeBefore.nodeSize, pos);
 
-          return addAnalytics(tr, {
+          return addAnalytics(state, tr, {
             action: ACTION.INVOKED,
             actionSubject: ACTION_SUBJECT.TYPEAHEAD,
             actionSubjectId: ACTION_SUBJECT_ID.TYPEAHEAD_LINK,
@@ -68,7 +74,7 @@ const hyperlinkPlugin: EditorPlugin = {
     ],
     floatingToolbar: getToolbarConfig,
   },
-};
+});
 
 export { HyperlinkState } from './pm-plugins/main';
 

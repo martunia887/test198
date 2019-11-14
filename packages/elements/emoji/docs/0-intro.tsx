@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { md, Example, code } from '@atlaskit/docs';
+import { md, Example, code, AtlassianInternalWarning } from '@atlaskit/docs';
 import SectionMessage from '@atlaskit/section-message';
 import SimpleEmojiExample from '../examples/00-simple-emoji';
 
 const SimpleEmojiSource = require('!!raw-loader!../examples/00-simple-emoji');
 
 export default md`
+  ${(<AtlassianInternalWarning />)}
+
   The main purpose of the emoji package is to provide multiple components for selecting from a list of provided emojis and rendering them.
 
   It includes support for adding a custom set of emojis from a specified provider and uploading images as emojis to a service.
@@ -15,7 +17,8 @@ export default md`
   Import the component in your React app as follows:
 
   ${code`
-  import EmojiPicker, { EmojiResource } from '@atlaskit/emoji';
+  import EmojiPicker from '@atlaskit/emoji/picker';
+  import { EmojiResource } from '@atlaskit/emoji/resource';
 
   const emojiProvider = new EmojiResource({
     providers: [
@@ -42,6 +45,17 @@ export default md`
     />,
     container,
   );`}
+
+  ### Other emoji components import examples
+
+  ${code`
+    import Emoji from '@atlaskit/emoji/element';
+    import EmojiTypeAhead from '@atlaskit/emoji/typeahead';
+    import EmojiPicker from '@atlaskit/emoji/picker';
+    import ResourcedEmoji, { EmojiResource, AbstractResource, EmojiProvider, UploadingEmojiProvider, EmojiResourceConfig, EmojiRepository, EmojiLoader} from '@atlaskit/emoji/resource';
+    import { toEmojiId, toOptionalEmojiId, denormaliseEmojiServiceResponse, UsageFrequencyTracker } from '@atlaskit/emoji/utils';
+    import { EmojiUploader } from '@atlaskit/emoji/admin';
+  `}
 
   ### Note:
 
@@ -70,6 +84,7 @@ export default md`
       title="Props can not be displayed for the time being."
       actions={[
         {
+          key: '1',
           href:
             'https://bitbucket.org/atlassian/atlaskit-mk-2/src/master/packages/elements/emoji/src/components/common/Emoji.tsx',
           text: 'Emoji Props',

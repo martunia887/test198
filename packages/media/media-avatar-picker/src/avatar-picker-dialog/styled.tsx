@@ -1,12 +1,8 @@
-/* tslint:disable:variable-name */
-
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass } from 'react';
 
-export const AvatarPickerViewWrapper: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const AvatarPickerViewWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,11 +18,14 @@ export const ModalHeader: ComponentClass<HTMLAttributes<{}>> = styled.div`
 
 export const CroppingWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: inline-block;
+  user-select: none;
+
+  * {
+    user-select: none;
+  }
 `;
 
-export const ModalFooterButtons: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const ModalFooterButtons: ComponentClass<HTMLAttributes<{}>> = styled.div`
   text-align: right;
   width: 100%;
 

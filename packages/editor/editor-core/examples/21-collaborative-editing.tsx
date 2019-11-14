@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 import styled from 'styled-components';
 import * as React from 'react';
@@ -11,11 +11,11 @@ import WithEditorActions from './../src/ui/WithEditorActions';
 import {
   storyMediaProviderFactory,
   storyContextIdentifierProviderFactory,
+  extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
 import { mention, emoji, taskDecision } from '@atlaskit/util-data-test';
-import { EmojiProvider } from '@atlaskit/emoji';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
 import { customInsertMenuItems } from '@atlaskit/editor-test-helpers';
-import { extensionHandlers } from '../example-helpers/extension-handlers';
 import { CollabProvider } from '../src/plugins/collab-edit';
 import { EditorActions } from '../src';
 
@@ -131,6 +131,7 @@ export default class Example extends React.Component<Props, State> {
         </div>
       );
     }
+    return;
   }
 
   renderDocumentId() {
@@ -159,6 +160,7 @@ export default class Example extends React.Component<Props, State> {
               <Editor
                 appearance="full-page"
                 analyticsHandler={analyticsHandler}
+                allowStatus={true}
                 allowAnalyticsGASV3={true}
                 allowCodeBlocks={true}
                 allowLayouts={true}
@@ -184,12 +186,13 @@ export default class Example extends React.Component<Props, State> {
                   emoji.storyData.getEmojiResource() as Promise<EmojiProvider>
                 }
                 mentionProvider={Promise.resolve(
-                  mention.storyData.resourceProvider,
+                  mention.storyData.resourceProviderWithResolver,
                 )}
                 taskDecisionProvider={Promise.resolve(
                   taskDecision.getMockTaskDecisionResource(),
                 )}
                 contextIdentifierProvider={storyContextIdentifierProviderFactory()}
+                sanitizePrivateContent={true}
                 collabEdit={{
                   useNativePlugin: true,
                   provider: Promise.resolve(
@@ -241,7 +244,7 @@ export default class Example extends React.Component<Props, State> {
   private onJoin = () => {
     const { input } = this.state;
     if (input) {
-      const { value } = input as HTMLInputElement;
+      const { value } = input! as HTMLInputElement;
       if (value) {
         this.setState({
           documentId: value,
@@ -264,7 +267,7 @@ export default class Example extends React.Component<Props, State> {
     );
   }
 
-  private inviteToEditHandler = (event: Event) => {
+  private inviteToEditHandler = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({
       isInviteToEditButtonSelected: !this.state.isInviteToEditButtonSelected,
     });

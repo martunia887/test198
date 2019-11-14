@@ -4,14 +4,18 @@ const HAS_BASE64_FILE_SUPPORT =
   typeof FileList !== 'undefined' &&
   typeof Blob !== 'undefined';
 
-const getPasteFiles = (clipboardData: DataTransfer) => {
+const getPasteFiles = (clipboardData: DataTransfer | null) => {
   if (!clipboardData) {
     return [];
   }
 
-  const items = Array.prototype.reduce.call(
+  const items = Array.prototype.reduce.call<
+    DataTransferItemList | FileList,
+    any,
+    Array<File>
+  >(
     clipboardData.items || clipboardData.files,
-    (filesArr: File[], item: DataTransferItem) => {
+    (filesArr: Array<File>, item: DataTransferItem) => {
       if (item.kind === 'file') {
         filesArr.push(item.getAsFile() as File);
       }
@@ -38,8 +42,8 @@ export class Converter {
 
   convert(
     files: File[],
-    fn = (base64src: string) => {},
-    errFn = (file: File) => {},
+    fn = (_base64src: string) => {},
+    errFn = (_file: File) => {},
   ) {
     if (files && files[0]) {
       files.forEach((file: File) => {
@@ -54,7 +58,7 @@ export class Converter {
         }
 
         const reader = new FileReader();
-        reader.onerror = (e: Event) => {
+        reader.onerror = () => {
           errFn(file);
         };
 

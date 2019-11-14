@@ -1,7 +1,7 @@
 import {
-  CreateUIAnalyticsEventSignature,
-  UIAnalyticsEventInterface,
-} from '@atlaskit/analytics-next-types';
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   name as packageName,
   version as packageVersion,
@@ -18,8 +18,8 @@ type EventPayload = {
 };
 
 export const createStatusAnalyticsAndFire = (
-  createAnalyticsEvent: CreateUIAnalyticsEventSignature,
-) => (payload: EventPayload): UIAnalyticsEventInterface => {
+  createAnalyticsEvent: CreateUIAnalyticsEvent,
+) => (payload: EventPayload): UIAnalyticsEvent => {
   const statusPayload = { ...payload, eventType: 'ui' };
   if (!statusPayload.attributes) {
     statusPayload.attributes = {};

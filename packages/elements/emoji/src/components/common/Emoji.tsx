@@ -2,17 +2,17 @@ import Button from '@atlaskit/button';
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import { colors } from '@atlaskit/theme';
 import Tooltip from '@atlaskit/tooltip';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { MouseEvent, SyntheticEvent } from 'react';
 import { shouldUseAltRepresentation } from '../../api/EmojiUtils';
-import { deleteEmojiLabel } from '../../constants';
+import { deleteEmojiLabel } from '../../util/constants';
 import {
   isImageRepresentation,
   isMediaRepresentation,
   isSpriteRepresentation,
   toEmojiId,
-} from '../../type-helpers';
+} from '../../util/type-helpers';
 import {
   EmojiDescription,
   OnEmojiEvent,
@@ -178,11 +178,9 @@ const renderAsSprite = (props: Props) => {
   return (
     <span
       className={classNames(classes)}
-      // tslint:disable-next-line:jsx-no-lambda
       onMouseDown={event => {
         handleMouseDown(props, event);
       }}
-      // tslint:disable-next-line:jsx-no-lambda
       onMouseMove={event => {
         handleMouseMove(props, event);
       }}
@@ -279,6 +277,10 @@ const renderAsImage = (props: Props) => {
       src={src}
       key={src}
       alt={emoji.shortName}
+      data-emoji-short-name={emoji.shortName}
+      data-emoji-id={emoji.id}
+      data-emoji-text={emoji.fallback || emoji.shortName}
+      className="emoji"
       style={{ visibility: 'visible' }}
       onError={onError}
       {...sizing}
@@ -288,11 +290,9 @@ const renderAsImage = (props: Props) => {
   return (
     <span
       className={classNames(classes)}
-      // tslint:disable-next-line:jsx-no-lambda
       onMouseDown={event => {
         handleMouseDown(props, event);
       }}
-      // tslint:disable-next-line:jsx-no-lambda
       onMouseMove={event => {
         handleMouseMove(props, event);
       }}
@@ -310,7 +310,6 @@ const renderAsImage = (props: Props) => {
   );
 };
 
-// tslint:disable-next-line:variable-name
 export const Emoji = (props: Props) => {
   const { emoji } = props;
   if (isSpriteRepresentation(emoji.representation)) {

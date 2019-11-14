@@ -43,6 +43,7 @@ type DropdownProps = {
 };
 class BetterDropdown extends Component<DropdownProps, DropdownState> {
   static defaultProps = { defaultIsOpen: false };
+
   state = { isOpen: this.props.defaultIsOpen };
 
   onOpenChange = (openState: DropdownState) => {
@@ -76,7 +77,7 @@ const ConfiguredAvatar = itemState => (
   <ItemAvatar itemState={itemState} presence="online" size="small" />
 );
 
-const ConfiguredBadge = () => <Badge appearance="primary" value={3} />;
+const ConfiguredBadge = () => <Badge appearance="primary">3</Badge>;
 
 const CloseButton = () => (
   <div css={{ lineHeight: 0 }}>

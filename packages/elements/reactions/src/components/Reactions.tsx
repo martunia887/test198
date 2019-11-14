@@ -1,6 +1,8 @@
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
-import { EmojiProvider } from '@atlaskit/emoji';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
 import Tooltip from '@atlaskit/tooltip';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -30,7 +32,6 @@ const reactionsStyle = style({
   display: 'flex',
   flexWrap: 'wrap',
   position: 'relative',
-  background: 'white',
   alignItems: 'center',
   borderRadius: '15px',
   // To allow to row spacing of 2px on wrap, and 0px on first row
@@ -56,7 +57,7 @@ export interface Props {
 }
 
 class ReactionsWithoutAnalytics extends React.PureComponent<
-  Props & WithAnalyticsEventProps
+  Props & WithAnalyticsEventsProps
 > {
   static defaultProps = {
     flash: {},
@@ -68,7 +69,7 @@ class ReactionsWithoutAnalytics extends React.PureComponent<
   private openTime: number | undefined;
   private renderTime: number | undefined;
 
-  constructor(props: Props & WithAnalyticsEventProps) {
+  constructor(props: Props & WithAnalyticsEventsProps) {
     super(props);
     if (props.status !== ReactionStatus.ready) {
       this.renderTime = Date.now();

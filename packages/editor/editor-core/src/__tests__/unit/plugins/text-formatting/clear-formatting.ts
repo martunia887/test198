@@ -25,38 +25,35 @@ import {
   textColor,
 } from '@atlaskit/editor-test-helpers';
 import { pluginKey as clearFormattingPluginKey } from '../../../../plugins/text-formatting/pm-plugins/clear-formatting';
-import codeBlockPlugin from '../../../../plugins/code-block';
-import textColorPlugin from '../../../../plugins/text-color';
-import listPlugin from '../../../../plugins/lists';
-import panelPlugin from '../../../../plugins/panel';
 import {
   clearFormatting,
   clearFormattingWithAnalytics,
 } from '../../../../plugins/text-formatting/commands/clear-formatting';
 import { checkFormattingIsPresent } from '../../../../plugins/text-formatting/utils';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('clear-formatting', () => {
   const createEditor = createEditorFactory();
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
 
   const editor = (
     doc: any,
     { trackEvent }: { trackEvent: () => void } = { trackEvent: () => {} },
   ) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
     const editor = createEditor({
       doc,
-      editorPlugins: [
-        codeBlockPlugin(),
-        textColorPlugin,
-        listPlugin,
-        panelPlugin,
-      ],
       editorProps: {
         analyticsHandler: trackEvent,
         allowAnalyticsGASV3: true,
+        allowCodeBlocks: true,
+        allowTextColor: true,
+        allowLists: true,
+        allowPanel: true,
       },
       createAnalyticsEvent,
     });
@@ -213,7 +210,7 @@ describe('clear-formatting', () => {
     });
 
     describe('Analytics GAS V3', () => {
-      function createClearFormattingPayloadWithAttributes(attributes) {
+      function createClearFormattingPayloadWithAttributes(attributes: object) {
         return {
           action: 'formatted',
           actionSubject: 'text',

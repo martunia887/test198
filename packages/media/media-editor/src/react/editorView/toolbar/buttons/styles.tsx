@@ -1,12 +1,7 @@
-// tslint:disable:variable-name
-
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass } from 'react';
-import { colors } from '@atlaskit/theme';
 
-const optionsColorNormal = colors.N500;
-const optionsColorActive = colors.B400;
 const colorSampleOutlineColor = 'rgba(255, 255, 255, 0.5)';
 
 export const ToolbarButton: ComponentClass<HTMLAttributes<{}>> = styled.div`
@@ -22,27 +17,6 @@ export const ToolbarButton: ComponentClass<HTMLAttributes<{}>> = styled.div`
   align-items: center;
 `;
 
-export const ActiveToolbarButton: ComponentClass<HTMLAttributes<{}>> = styled(
-  ToolbarButton,
-)`
-  background-color: ${colors.N500};
-  color: ${colors.N0};
-`;
-
-export interface OptionsIconWrapperProps {
-  isActive: boolean;
-}
-
-export const OptionsIconWrapper: ComponentClass<
-  HTMLAttributes<{}> & OptionsIconWrapperProps
-> = styled.div`
-  position: absolute;
-  right: -7px;
-  bottom: -10px;
-  color: ${({ isActive }: OptionsIconWrapperProps) =>
-    isActive ? optionsColorActive : optionsColorNormal};
-`;
-
 export const ColorSample: ComponentClass<HTMLAttributes<{}>> = styled.div`
   width: 18px;
   height: 18px;
@@ -54,16 +28,12 @@ export const ColorSample: ComponentClass<HTMLAttributes<{}>> = styled.div`
   box-sizing: border-box;
 `;
 
-export const DropdownLeftIconWrapper: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const DropdownLeftIconWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   margin-right: -6px;
   margin-left: -8px;
 `;
 
-export const DropdownRightIconWrapper: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const DropdownRightIconWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   margin-right: -10px;
   margin-left: -8px;
 `;

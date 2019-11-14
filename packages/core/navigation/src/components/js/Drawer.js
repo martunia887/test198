@@ -68,7 +68,7 @@ export class DrawerImpl extends PureComponent<Props, State> {
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.isOpen !== this.props.isOpen) {
       this.setState({ isAnimating: true });
     }
@@ -96,7 +96,9 @@ export class DrawerImpl extends PureComponent<Props, State> {
   };
 
   onBackButtonByBackButton = this.createBackButtonHandler('back-btn');
+
   onBackButtonByBlanket = this.createBackButtonHandler('blanket');
+
   onBackButtonByEscKey = this.createBackButtonHandler('esc-key');
 
   handleKeyDown = (event: KeyboardEvent) => {

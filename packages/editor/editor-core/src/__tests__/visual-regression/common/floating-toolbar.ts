@@ -1,29 +1,34 @@
-import { initFullPageEditorWithAdf, snapshot, Device } from '../_utils';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 import {
   getSelectorForTableCell,
   tableSelectors,
 } from '../../__helpers/page-objects/_table';
-import * as table from './__fixtures__/toolbar-adf.json';
+import toolbarAdf from './__fixtures__/toolbar-adf.json';
 import { waitForElementWithText } from '../../__helpers/page-objects/_editor';
 import {
   clickOnExtension,
   waitForExtensionToolbar,
 } from '../../__helpers/page-objects/_extensions';
+import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Floating toolbars:', () => {
-  let page;
-  beforeAll(async () => {
+  let page: Page;
+  beforeEach(async () => {
     // @ts-ignore
     page = global.page;
-    await initFullPageEditorWithAdf(page, table, Device.LaptopMDPI);
+    await initEditorWithAdf(page, {
+      adf: toolbarAdf,
+      appearance: Appearance.fullPage,
+      viewport: { width: 1280, height: 700 },
+    });
   });
 
   afterEach(async () => {
-    // currently set high need to revisit
-    await snapshot(page, 0.02);
+    await snapshot(page);
   });
 
-  it('should render the table toolbar', async () => {
+  // TODO: Fix flaky toolbar - https://product-fabric.atlassian.net/browse/ED-5631
+  it.skip('should render the table toolbar', async () => {
     const endCellSelector = getSelectorForTableCell({ row: 3, cell: 2 });
     await page.click(endCellSelector);
 

@@ -1,22 +1,30 @@
 import * as React from 'react';
-import { Context, FileState, FileIdentifier } from '@atlaskit/media-core';
+import {
+  MediaClient,
+  FileState,
+  Identifier,
+  isExternalImageIdentifier,
+  isFileIdentifier,
+} from '@atlaskit/media-client';
 import { FormattedMessage } from 'react-intl';
-import { messages } from '@atlaskit/media-ui';
-import { Outcome, MediaViewerFeatureFlags } from './domain';
+import { messages, WithShowControlMethodProp } from '@atlaskit/media-ui';
+import { Outcome } from './domain';
 import { ImageViewer } from './viewers/image';
 import { VideoViewer } from './viewers/video';
 import { DocViewer } from './viewers/doc';
 import { Spinner } from './loading';
 import { Subscription } from 'rxjs/Subscription';
-import * as deepEqual from 'deep-equal';
+import deepEqual from 'deep-equal';
 import ErrorMessage, {
   createError,
   MediaViewerError,
   ErrorName,
 } from './error';
 import { ErrorViewDownloadButton } from './download';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import {
   ViewerLoadPayload,
   mediaFileCommencedEvent,
@@ -29,16 +37,16 @@ import {
   GasScreenEventPayload,
 } from '@atlaskit/analytics-gas-types';
 import { AudioViewer } from './viewers/audio';
+import { InteractiveImg } from './viewers/image/interactive-img';
 
 export type Props = Readonly<{
-  identifier: FileIdentifier;
-  context: Context;
-  featureFlags?: MediaViewerFeatureFlags;
-  showControls?: () => void;
+  identifier: Identifier;
+  mediaClient: MediaClient;
   onClose?: () => void;
   previewCount: number;
 }> &
-  WithAnalyticsEventProps;
+  WithAnalyticsEventsProps &
+  WithShowControlMethodProp;
 
 export type State = {
   item: Outcome<FileState, MediaViewerError>;
@@ -73,15 +81,15 @@ export class ItemViewerBase extends React.Component<Props, State> {
     this.init(this.props);
   }
 
-  private onViewerLoaded = async (payload: ViewerLoadPayload) => {
+  private onImageViewerLoaded = async (payload: ViewerLoadPayload) => {
     const { item } = this.state;
     // the item.whenFailed case is handled in the "init" method
-    item.whenSuccessful(async file => {
-      if (file.status === 'processed') {
+    item.whenSuccessful(async fileState => {
+      if (fileState.status === 'processed') {
+        const { identifier } = this.props;
         if (payload.status === 'success') {
-          this.fireAnalytics(mediaFileLoadSucceededEvent(file));
-        } else if (payload.status === 'error') {
-          const { identifier } = this.props;
+          this.fireAnalytics(mediaFileLoadSucceededEvent(fileState));
+        } else if (payload.status === 'error' && isFileIdentifier(identifier)) {
           const id =
             typeof identifier.id === 'string'
               ? identifier.id
@@ -89,13 +97,39 @@ export class ItemViewerBase extends React.Component<Props, State> {
           this.fireAnalytics(
             mediaFileLoadFailedEvent(
               id,
-              payload.errorMessage || 'Viewer error',
-              file,
+              payload.errorMessage || 'ImageViewer error',
+              fileState,
             ),
           );
         }
       }
     });
+  };
+
+  private onCanPlay = (fileState: FileState) => () => {
+    if (fileState.status === 'processed') {
+      this.fireAnalytics(mediaFileLoadSucceededEvent(fileState));
+    }
+  };
+
+  private onError = (fileState: FileState) => () => {
+    if (fileState.status === 'processed') {
+      this.fireAnalytics(
+        mediaFileLoadFailedEvent(fileState.id, 'Playback failed', fileState),
+      );
+    }
+  };
+
+  private onDocError = (fileState: FileState) => (error: Error) => {
+    const processedFileState =
+      fileState.status === 'processed' ? fileState : undefined;
+    this.fireAnalytics(
+      mediaFileLoadFailedEvent(
+        fileState.id,
+        `${error.name}: ${error.message}`,
+        processedFileState,
+      ),
+    );
   };
 
   private renderFileState(item: FileState) {
@@ -104,30 +138,34 @@ export class ItemViewerBase extends React.Component<Props, State> {
     }
 
     const {
-      context,
+      mediaClient,
       identifier,
-      featureFlags,
       showControls,
       onClose,
       previewCount,
     } = this.props;
-
+    const collectionName = isFileIdentifier(identifier)
+      ? identifier.collectionName
+      : undefined;
     const viewerProps = {
-      context,
+      mediaClient,
       item,
-      collectionName: identifier.collectionName,
+      collectionName,
       onClose,
       previewCount,
     };
 
     switch (item.mediaType) {
       case 'image':
-        return <ImageViewer onLoad={this.onViewerLoaded} {...viewerProps} />;
+        return (
+          <ImageViewer onLoad={this.onImageViewerLoaded} {...viewerProps} />
+        );
       case 'audio':
         return (
           <AudioViewer
             showControls={showControls}
-            featureFlags={featureFlags}
+            onCanPlay={this.onCanPlay(item)}
+            onError={this.onError(item)}
             {...viewerProps}
           />
         );
@@ -135,12 +173,19 @@ export class ItemViewerBase extends React.Component<Props, State> {
         return (
           <VideoViewer
             showControls={showControls}
-            featureFlags={featureFlags}
+            onCanPlay={this.onCanPlay(item)}
+            onError={this.onError(item)}
             {...viewerProps}
           />
         );
       case 'doc':
-        return <DocViewer {...viewerProps} />;
+        return (
+          <DocViewer
+            onSuccess={this.onCanPlay(item)}
+            onError={this.onDocError(item)}
+            {...viewerProps}
+          />
+        );
       default:
         return this.renderError('unsupported', item);
     }
@@ -163,7 +208,14 @@ export class ItemViewerBase extends React.Component<Props, State> {
   }
 
   render() {
-    return this.state.item.match({
+    const { identifier } = this.props;
+    const { item } = this.state;
+    if (isExternalImageIdentifier(identifier)) {
+      const { dataURI } = identifier;
+      return <InteractiveImg src={dataURI} />;
+    }
+
+    return item.match({
       successful: item => {
         switch (item.status) {
           case 'processed':
@@ -171,6 +223,7 @@ export class ItemViewerBase extends React.Component<Props, State> {
           case 'processing':
             return this.renderFileState(item);
           case 'failed-processing':
+            return this.renderError('failedProcessing', item);
           case 'error':
             return this.renderError('previewFailed', item);
           default:
@@ -178,28 +231,36 @@ export class ItemViewerBase extends React.Component<Props, State> {
         }
       },
       pending: () => <Spinner />,
-      failed: err => this.renderError(err.errorName, this.state.item.data),
+      failed: err => this.renderError(err.errorName, item.data),
     });
   }
 
   private renderDownloadButton(state: FileState, err: MediaViewerError) {
-    const { context, identifier } = this.props;
+    const { mediaClient, identifier } = this.props;
+    const collectionName = isFileIdentifier(identifier)
+      ? identifier.collectionName
+      : undefined;
     return (
       <ErrorViewDownloadButton
         state={state}
-        context={context}
+        mediaClient={mediaClient}
         err={err}
-        collectionName={identifier.collectionName}
+        collectionName={collectionName}
       />
     );
   }
 
   private async init(props: Props) {
-    const { context, identifier } = props;
+    const { mediaClient, identifier } = props;
+
+    if (isExternalImageIdentifier(identifier)) {
+      return;
+    }
+
     const id =
       typeof identifier.id === 'string' ? identifier.id : await identifier.id;
     this.fireAnalytics(mediaFileCommencedEvent(id));
-    this.subscription = context.file
+    this.subscription = mediaClient.file
       .getFileState(id, {
         collectionName: identifier.collectionName,
       })
@@ -228,12 +289,12 @@ export class ItemViewerBase extends React.Component<Props, State> {
     }
   };
 
-  // It's possible that a different identifier or context was passed.
+  // It's possible that a different identifier or mediaClient was passed.
   // We therefore need to reset Media Viewer.
   private needsReset(propsA: Props, propsB: Props) {
     return (
       !deepEqual(propsA.identifier, propsB.identifier) ||
-      propsA.context !== propsB.context
+      propsA.mediaClient !== propsB.mediaClient
     );
   }
 

@@ -10,11 +10,10 @@ import {
   MacroProvider,
   MacroAttributes,
 } from '../../../../plugins/macro';
-import { extensionPlugin, macroPlugin } from '../../../../plugins';
 
 const macroProvider: MacroProvider = {
   config: {},
-  openMacroBrowser: node => {
+  openMacroBrowser: () => {
     const attrs: MacroAttributes = {
       type: 'extension',
       attrs: {
@@ -40,7 +39,10 @@ describe('macro plugin -> commands -> insert macro from provider', () => {
           extensionType: 'atlassian.com.editor',
         })(p('{<>}')),
       ),
-      editorPlugins: [macroPlugin, extensionPlugin],
+      editorProps: {
+        allowExtension: true,
+        macroProvider: Promise.resolve(macroProvider),
+      },
     });
 
     const macroNode = editorView.state.schema.nodes.bodiedExtension.createChecked(

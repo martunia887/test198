@@ -1,4 +1,7 @@
-import { FireAnalyticsEvent, withAnalytics } from '@atlaskit/analytics';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import * as React from 'react';
 import { ComponentClass } from 'react';
 import { EmojiProvider } from '../../api/EmojiResource';
@@ -15,7 +18,9 @@ import { LoadingItem } from './EmojiPickerVirtualItems';
 import * as styles from './styles';
 
 const emojiPickerModuleLoader = () =>
-  import(/* webpackChunkName:"@atlaskit-internal_emojiPickerComponent" */ './EmojiPickerComponent');
+  import(
+    /* webpackChunkName:"@atlaskit-internal_emojiPickerComponent" */ './EmojiPickerComponent'
+  );
 
 const emojiPickerLoader: () => Promise<ComponentClass<ComponentProps>> = () =>
   emojiPickerModuleLoader().then(module => module.default);
@@ -24,11 +29,10 @@ export interface Props extends LoadingProps {
   onSelection?: OnEmojiEvent;
   onPickerRef?: PickerRefHandler;
   hideToneSelector?: boolean;
-  firePrivateAnalyticsEvent?: FireAnalyticsEvent;
 }
 
 export class EmojiPickerInternal extends LoadingEmojiComponent<
-  Props,
+  Props & WithAnalyticsEventsProps,
   LoadingState
 > {
   // state initialised with static component to prevent
@@ -77,12 +81,6 @@ export class EmojiPickerInternal extends LoadingEmojiComponent<
   }
 }
 
-// tslint:disable-next-line:variable-name
-const EmojiPicker = withAnalytics<typeof EmojiPickerInternal>(
-  EmojiPickerInternal,
-  {},
-  {},
-);
-type EmojiPicker = EmojiPickerInternal;
+const EmojiPicker = withAnalyticsEvents()(EmojiPickerInternal);
 
 export default EmojiPicker;

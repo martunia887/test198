@@ -7,19 +7,33 @@
 // Chinese
 export default {
   'fabric.atlassianSwitcher.switchTo': '切换到',
-  'fabric.atlassianSwitcher.switchToTooltip': '切换到 …',
+  'fabric.atlassianSwitcher.switchToTooltip': '切换到...',
   'fabric.atlassianSwitcher.recent': '最近',
   'fabric.atlassianSwitcher.more': '更多',
   'fabric.atlassianSwitcher.try': '尝试',
   'fabric.atlassianSwitcher.manageList': '管理列表',
   'fabric.atlassianSwitcher.jiraProject': 'Jira 项目',
   'fabric.atlassianSwitcher.confluenceSpace': 'Confluence 空间',
-  'fabric.atlassianSwitcher.people': '人员',
   'fabric.atlassianSwitcher.administration': '管理',
-  'fabric.atlassianSwitcher.discoverMore': '发现更多',
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': '浏览 Marketplace 应用',
+  'fabric.atlassianSwitcher.errorHeading': '出错了',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    '我们会跟踪这些错误，但是如果刷新不能修复问题，请随时与我们联系',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    '一个损坏的机器人和一些人员正在繁忙修理中。',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    '无法加载此列表。请重新加载页面，然后重试。',
+  'fabric.atlassianSwitcher.errorTextLoggedOut': '您已注销。请再次登录。',
+  'fabric.atlassianSwitcher.login': '登录',
+  'fabric.atlassianSwitcher.show.more.sites': '显示更多站点',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

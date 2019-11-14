@@ -8,7 +8,7 @@
  */
 import { ProviderFactory } from '@atlaskit/editor-common';
 import { emoji } from '@atlaskit/util-data-test';
-import * as Ajv from 'ajv';
+import Ajv from 'ajv';
 import * as React from 'react';
 import { ChangeEvent, PureComponent } from 'react';
 
@@ -66,9 +66,7 @@ export default class Example extends PureComponent<{}, State> {
     }
 
     if (err) {
-      textMessage = `Error occured while fetching the latest JSON schema for Atlassian Document Format: ${
-        err.message
-      }`;
+      textMessage = `Error occured while fetching the latest JSON schema for Atlassian Document Format: ${err.message}`;
     } else if (fetchingSchema) {
       textMessage =
         'Fetching latest JSON schema for Atlassian Document Format. Please wait...';
@@ -88,7 +86,7 @@ export default class Example extends PureComponent<{}, State> {
     this.setState({ fetchingSchema: true });
 
     fetch(
-      'https://unpkg.com/@atlaskit/editor-common@latest/dist/json-schema/v1/full.json',
+      'https://unpkg.com/@atlaskit/adf-schema@latest/dist/json-schema/v1/full.json',
     )
       .then(res => {
         return res.json();

@@ -1,5 +1,4 @@
 import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
-import cardPlugin from '../../../../plugins/card';
 import { setProvider } from '../../../../plugins/card/pm-plugins/actions';
 
 import {
@@ -16,7 +15,9 @@ describe('card', () => {
   const editor = (doc: any) => {
     return createEditor({
       doc,
-      editorPlugins: [cardPlugin],
+      editorProps: {
+        UNSAFE_cards: {},
+      },
       pluginKey,
     });
   };
@@ -36,15 +37,19 @@ describe('card', () => {
         dispatchPasteEvent(editorView, { plain: text });
 
         expect(pluginKey.getState(editorView.state)).toEqual({
+          cards: [],
           requests: [
             {
               url:
                 'https://www.atlassian.com/s/7xr7xdqto7trhvr/Media%20picker.sketch?dl=0',
               pos: 1,
               appearance: 'inline',
+              compareLinkText: true,
+              source: 'clipboard',
             },
           ],
           provider,
+          showLinkingToolbar: false,
         });
       });
     });

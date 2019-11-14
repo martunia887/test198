@@ -2,13 +2,36 @@ import * as React from 'react';
 import { EmailValidator } from './components/emailValidation';
 
 export type UserPickerProps = {
+  /**
+   * Used to configure additional information regarding where the
+   * user picker has been mounted.
+   *
+   * The purpose is to give more context as to where user picker events
+   * are being fired from, as the current data may not uniquely identify
+   * which field is the source.
+   *
+   * The value will be passed as a data attribute for analytics.
+   * Examples include "assignee", "watchers" and "share".
+   *
+   * A second usage for the fieldId is for server side rendering (SSR) where it must be a unique id per UserPicker
+   * instance contained in the serialized SSR content. E.g. a SPA page rendered through SSR that has multiple user pickers.
+   *
+   * fieldId can be set to null if the integrator is not listening
+   * for the analytic events or does not care about SSR.
+   */
+  fieldId: string | null;
   /** List of users or teams to be used as options by the user picker. */
   options?: OptionData[];
   /** Width of the user picker field. It can be the amount of pixels as numbers or a string with the percentage. */
   width?: number | string;
   /** Sets the minimum width for the menu. If not set, menu will always have the same width of the field. */
   menuMinWidth?: number;
-  /** Function used to load options asynchronously. */
+  /**
+   * Function used to load options asynchronously.
+   * accepts two optional params:
+   * searchText?: optional text to filter results
+   * sessionId?: user picker session identifier, used to track success metric for users providers
+   */
   loadOptions?: LoadOptions;
   /** Callback for value change events fired whenever a selection is inserted or removed. */
   onChange?: OnChange;
@@ -44,8 +67,14 @@ export type UserPickerProps = {
   placeholder?: React.ReactNode;
   /** Message to encourage the user to add more items to user picker. */
   addMoreMessage?: string;
-  /** Message to be shown when the menu is open but no options are provided. */
-  noOptionsMessage?: string;
+  /** Message to be shown when the menu is open but no options are provided.
+   * If message is null, no message will be displayed.
+   * If message is undefined, default message will be displayed.
+   */
+  noOptionsMessage?:
+    | ((value: { inputValue: string }) => string | null)
+    | string
+    | null;
   /** Controls if the user picker has a value or not. If not provided, UserPicker will control the value internally. */
   value?: Value;
   /** Disable all interactions with the picker, putting it in a read-only state. */
@@ -64,6 +93,12 @@ export type UserPickerProps = {
   disableInput?: boolean;
   /** Override default email validation function. */
   isValidEmail?: EmailValidator;
+  /** Override the internal behaviour to automatically focus the control when the picker is open */
+  autoFocus?: boolean;
+  /** The maximum number options to be displayed in the dropdown menu during any state of search. The value should be non-negative. */
+  maxOptions?: number;
+  /** Allows clicking on a label with the same id to open user picker. */
+  inputId?: string;
 };
 
 export type PopupUserPickerProps = UserPickerProps & {
@@ -71,6 +106,11 @@ export type PopupUserPickerProps = UserPickerProps & {
   target: Target;
   /** Optional title assigned to popup picker */
   popupTitle?: string;
+  /**
+   *  Reference to the HTMLElement that should be used as a boundary for the popup.
+   *  Viewport is used by default.
+   */
+  boundariesElement?: HTMLElement;
 };
 
 export type UserPickerState = {
@@ -81,6 +121,7 @@ export type UserPickerState = {
   hoveringClearIndicator: boolean;
   menuIsOpen: boolean;
   inputValue: string;
+  resolving: boolean;
 };
 
 export interface HighlightRange {
@@ -98,10 +139,14 @@ export interface TeamHighlight {
   description?: HighlightRange[];
 }
 
+export interface GroupHighlight {
+  name: HighlightRange[];
+}
+
 export interface OptionData {
   id: string;
   name: string;
-  type?: 'user' | 'team' | 'email';
+  type?: 'user' | 'team' | 'email' | 'group';
   fixed?: boolean;
 }
 
@@ -126,6 +171,13 @@ export interface Team extends OptionData {
   type: 'team';
 }
 
+export const GroupType = 'group';
+
+export interface Group extends OptionData {
+  highlight?: GroupHighlight;
+  type: 'group';
+}
+
 export type Value = OptionData | OptionData[] | null | undefined;
 export const EmailType = 'email';
 
@@ -144,20 +196,20 @@ export type ActionTypes =
 
 export type OnChange = (value: Value, action: ActionTypes) => void;
 
-export type OnInputChange = (query?: string) => void;
+export type OnInputChange = (query?: string, sessionId?: string) => void;
 
-export type OnPicker = () => void;
+export type OnPicker = (sessionId?: string) => void;
 
-export type OnOption = (value: Value) => void;
+export type OnOption = (value: Value, sessionId?: string) => void;
 
-export type Option = {
+export type Option<Data = OptionData> = {
   label: string;
   value: string;
-  data: OptionData;
+  data: Data;
 };
 
 export interface LoadOptions {
-  (searchText?: string):
+  (searchText?: string, sessionId?: string):
     | Promisable<OptionData | OptionData[]>
     | Iterable<
         Promisable<OptionData[] | OptionData> | OptionData | OptionData[]

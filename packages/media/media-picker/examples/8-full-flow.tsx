@@ -1,20 +1,19 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import {
   defaultCollectionName,
-  createUploadContext,
+  createStorybookMediaClientConfig,
+  createUploadMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
-import { FileIdentifier, ExternalImageIdentifier } from '@atlaskit/media-core';
-import Button from '@atlaskit/button';
-import Select from '@atlaskit/select';
-import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
 import {
-  MediaPicker,
-  UploadPreviewUpdateEventPayload,
-  MediaFile,
-  Popup,
-} from '../src';
+  FileIdentifier, ExternalImageIdentifier,
+} from '@atlaskit/media-client';
+import Button from '@atlaskit/button';
+import Select, { ValueType } from '@atlaskit/select';
+import { SelectWrapper, OptionsWrapper } from '../example-helpers/styled';
+import { MediaPicker } from '../src';
 import {
   unsplashPlugin,
   UnsplashFileMetadata,
@@ -22,10 +21,26 @@ import {
 import { PluginItemPayload } from '../src/domain/plugin';
 import { emojiPlugin } from '../example-helpers/emojiPlugin';
 import { AIPlugin } from '../example-helpers/AIPlugin';
+import {
+  UploadProcessingEventPayload,
+  UploadEndEventPayload,
+  UploadPreviewUpdateEventPayload,
+  Popup,
+  MediaFile
+} from '../src/types';
+import { addGlobalEventEmitterListeners } from '@atlaskit/media-test-helpers';
 
-const context = createUploadContext();
+addGlobalEventEmitterListeners();
 
-const dataSourceOptions = [
+const userMediaClientConfig = createUploadMediaClientConfig();
+const tenantMediaClientConfig = createStorybookMediaClientConfig();
+
+interface DataSourceOption {
+  label: string;
+  value: DataSourceType;
+}
+
+const dataSourceOptions: DataSourceOption[] = [
   { label: 'List', value: 'list' },
   { label: 'Collection', value: 'collection' },
 ];
@@ -45,8 +60,13 @@ export interface State {
 export default class Example extends React.Component<{}, State> {
   state: State = { events: [], dataSourceType: 'list' };
 
+  static contextTypes = {
+    // Required context in order to integrate analytics in media picker
+    getAtlaskitAnalyticsEventHandlers: PropTypes.func,
+  };
+
   async componentDidMount() {
-    const popup = await MediaPicker('popup', context, {
+    const popup = await MediaPicker(userMediaClientConfig, {
       uploadParams: {
         collection: defaultCollectionName,
       },
@@ -77,14 +97,15 @@ export default class Example extends React.Component<{}, State> {
       this.setState({
         events: [...events, ...newEvents],
       });
+      // Media picker requires `proxyReactContext` to enable analytics
+      // otherwise, analytics Gasv3 integrations won't work
+      // proxyReactContext: this.context,
     });
 
     popup.on('uploads-start', (payload: { files: MediaFile[] }) => {
       const { events } = this.state;
       payload.files.forEach(file => {
-        file.upfrontId.then(id => {
-          console.log('PUBLIC: uploads-start', file.id, id);
-        });
+        console.log('PUBLIC: uploads-start', file.id);
       });
 
       this.setState({
@@ -99,19 +120,25 @@ export default class Example extends React.Component<{}, State> {
     });
 
     popup.on('upload-preview-update', this.onUploadPreviewUpdate);
+    popup.on('upload-processing', this.onUploadProcessing);
+    popup.on('upload-end', this.onUploadEnd);
     this.setState({ popup });
 
     popup.show();
   }
 
+  onUploadProcessing = (event: UploadProcessingEventPayload) => {
+    console.log('onUploadProcessing', event.file.id);
+  };
+
+  onUploadEnd = (event: UploadEndEventPayload) => {
+    console.log('onUploadEnd', event.file.id);
+  };
+
   private onUploadPreviewUpdate = async (
     event: UploadPreviewUpdateEventPayload,
   ) => {
-    console.log(
-      'PUBLIC: upload-preview-update',
-      event.file.id,
-      await event.file.upfrontId,
-    );
+    console.log('PUBLIC: upload-preview-update', event.file.id);
   };
 
   private getMediaViewerDataSource = (): MediaViewerDataSource => {
@@ -158,7 +185,7 @@ export default class Example extends React.Component<{}, State> {
       return (
         <div key={key} style={{ display: 'inline-block', margin: '10px' }}>
           <Card
-            context={context}
+            mediaClientConfig={tenantMediaClientConfig}
             identifier={identifier}
             dimensions={{
               width: 200,
@@ -172,9 +199,11 @@ export default class Example extends React.Component<{}, State> {
     });
   };
 
-  private onDataSourceChange = (event: { value: DataSourceType }) => {
+  private onDataSourceChange = (option: ValueType<DataSourceOption>) => {
+    if (!option) return;
+
     this.setState({
-      dataSourceType: event.value,
+      dataSourceType: (option as DataSourceOption).value,
     });
   };
 

@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { EmojiId, ResourcedEmoji } from '@atlaskit/emoji';
+import { ResourcedEmoji } from '@atlaskit/emoji/element';
+import { EmojiId } from '@atlaskit/emoji/types';
 import {
   ProviderFactory,
   Providers,
   WithProviders,
 } from '@atlaskit/editor-common';
+import { ClickSelectWrapper } from '../../../../ui/styles';
 
 export interface EmojiProps extends EmojiId {
   allowTextFallback?: boolean;
@@ -42,13 +44,19 @@ export default class EmojiNode extends PureComponent<EmojiProps, {}> {
       return <span>{fallback || shortName}</span>;
     }
 
+    if (!providers.emojiProvider) {
+      return null;
+    }
+
     return (
-      <ResourcedEmoji
-        emojiId={{ id, fallback, shortName }}
-        emojiProvider={providers.emojiProvider}
-        showTooltip={true}
-        fitToHeight={fitToHeight}
-      />
+      <ClickSelectWrapper>
+        <ResourcedEmoji
+          emojiId={{ id, fallback, shortName }}
+          emojiProvider={providers.emojiProvider}
+          showTooltip={true}
+          fitToHeight={fitToHeight}
+        />
+      </ClickSelectWrapper>
     );
   };
 

@@ -27,12 +27,14 @@ export default class BasicExample extends PureComponent<void, State> {
       isOpen: !this.state.isOpen,
     });
   };
+
   onOpenChange = () => {
     this.setState({
       eventResult: 'onOpenChange called',
       isOpen: false,
     });
   };
+
   onItemActivated = () => {
     this.setState({
       eventResult: 'Item onActivated called',
@@ -63,6 +65,7 @@ export default class BasicExample extends PureComponent<void, State> {
           onClick={this.onClick}
           isOpen={this.state.isOpen}
           trigger={<Button>...</Button>}
+          testId="droplist"
         >
           <ItemGroup title="Australia">
             <Item href="//atlassian.com" target="_blank">

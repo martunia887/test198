@@ -7,6 +7,7 @@ export enum ResultType {
   GenericContainerResult = 'generic-container-result',
   PersonResult = 'person-result',
   ConfluenceObjectResult = 'confluence-object-result',
+  JiraIssueAdvancedSearch = 'JiraIssueAdvancedSearch',
 }
 
 export enum JiraProjectType {
@@ -15,6 +16,16 @@ export enum JiraProjectType {
   Business = 'business',
   Ops = 'ops',
 }
+
+export interface Results<T = Result> {
+  items: T[];
+  totalSize: number;
+  numberOfCurrentItems?: number;
+}
+
+export type PeopleResults = Results<PersonResult>;
+
+export type ConfluenceObjectResults = Results<ConfluenceObjectResult>;
 
 export interface Result {
   resultId: string;
@@ -34,33 +45,40 @@ export interface Result {
   experimentId?: string;
   contentType: ContentType;
   key?: string;
-}
-/**
- * Map of String keys and Array of results value, but can be empty as well
- */
-export interface GenericResultMap<T = Result> {
-  [key: string]: T[];
+  // used to indicate the result came from the recently viewed FE cache
+  isRecentResult?: boolean;
+  // optional key of object, such as the issue key
+  objectKey?: string;
 }
 
-export type ResultsWithTiming = {
-  results: GenericResultMap;
+export type ResultsWithTiming<
+  T extends ConfluenceResultsMap | JiraResultsMap
+> = {
+  results: T;
   timings?: {
     [key: string]: number | string;
   };
   abTest?: ABTest;
 };
 
-export interface ConfluenceResultsMap extends GenericResultMap {
-  people: Result[];
-  objects: Result[];
-  spaces: Result[];
+export interface ConfluenceResultsMap {
+  [key: string]: PeopleResults | ConfluenceObjectResults | Results;
+  people: PeopleResults;
+  objects: ConfluenceObjectResults;
+  spaces: Results;
 }
 
-export interface JiraResultsMap extends GenericResultMap {
-  issues: Result[];
-  boards: Result[];
-  projects: Result[];
-  filters: Result[];
+export interface ConfluenceRecentsMap {
+  objects: ConfluenceObjectResults;
+  spaces: Results;
+  people: PeopleResults;
+}
+
+export interface JiraResultsMap {
+  [key: string]: Result[];
+  objects: Result[];
+  containers: Result[];
+  people: Result[];
 }
 
 export interface ConfluenceObjectResult extends Result {
@@ -69,12 +87,15 @@ export interface ConfluenceObjectResult extends Result {
   contentType: ContentType;
   resultType: ResultType.ConfluenceObjectResult;
   iconClass?: string;
+  friendlyLastModified: string | undefined;
 }
 
 export type ResultsGroup = {
   items: Result[];
   key: string;
-  title: FormattedMessage.MessageDescriptor;
+  showTotalSize: boolean;
+  totalSize: number;
+  title?: FormattedMessage.MessageDescriptor;
 };
 
 export interface JiraResult extends Result {
@@ -119,5 +140,6 @@ export enum AnalyticsType {
   AdvancedSearchConfluence = 'advanced-search-confluence',
   AdvancedSearchJira = 'advanced-search-jira',
   TopLinkPreQueryAdvancedSearchJira = 'top-link-prequery-advanced-search-jira',
+  LinkPostQueryAdvancedSearchJira = 'link-postquery-advanced-search-jira',
   AdvancedSearchPeople = 'advanced-search-people',
 }

@@ -1,5 +1,9 @@
 import { defaultSchema } from '@atlaskit/adf-schema';
-import { doc, p, strong } from '@atlaskit/editor-test-helpers';
+import {
+  doc,
+  p,
+  strong,
+} from '@atlaskit/editor-test-helpers/src/schema-builder';
 import { ADFEncoder } from '../../index';
 import { getText } from '../../utils';
 
@@ -10,7 +14,7 @@ describe('Renderer - utils', () => {
 
     beforeEach(() => {
       transformer = { encode: jest.fn(), parse: jest.fn() };
-      transformerProvider = jest.fn(schema => transformer);
+      transformerProvider = jest.fn(_schema => transformer);
     });
 
     it('should pass the default schema to the transformer provider', () => {

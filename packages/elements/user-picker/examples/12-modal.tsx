@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { ExampleWrapper } from '../example-helpers/ExampleWrapper';
-import { PopupUserPicker } from '../src/components/PopupUserPicker';
+import { PopupUserPicker } from '../src';
 
 const Table = styled.div`
   display: flex;
@@ -31,6 +31,7 @@ const renderRows = (count: number) => {
           <ExampleWrapper>
             {({ options, onInputChange }) => (
               <PopupUserPicker
+                fieldId="example"
                 target={({ ref }) => <button ref={ref}>Target</button>}
                 options={options}
                 onInputChange={onInputChange}

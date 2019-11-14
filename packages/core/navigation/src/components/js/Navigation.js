@@ -7,12 +7,11 @@ import React, {
   type Element,
   type ElementRef,
 } from 'react';
-import { getTheme } from '@atlaskit/theme';
+import { getTheme } from '@atlaskit/theme/components';
 import {
   withAnalyticsEvents,
   withAnalyticsContext,
   createAndFireEvent,
-  type WithAnalyticsEventsProps,
 } from '@atlaskit/analytics-next';
 import {
   name as packageName,
@@ -60,7 +59,7 @@ type resizeObj = {
 };
 
 type Props = {
-  ...WithAnalyticsEventsProps,
+  createAnalyticsEvent: any,
   /** Elements to be displayed in the ContainerNavigationComponent */
   children?: Node,
   /** Theme object to be used to color the navigation container. */
@@ -125,6 +124,8 @@ type Props = {
   onToggleStart: () => void,
   /** Function called when a collapse/expand finishes */
   onToggleEnd: () => void,
+  /** aria-label for the resizer button to help screen readers (a11y) */
+  resizerButtonLabel?: string,
   /** The offset at the top of the page before the navigation begins. This allows
   absolute items such as a banner to be placed above nav, without lower nav items
   being pushed off the screen. **DO NOT** use this outside of this use-case. Changes
@@ -146,6 +147,13 @@ type State = {
   isTogglingIsOpen: boolean,
   resizeDelta: number,
 };
+
+if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '@atlaskit/navigation has been deprecated. Please use the @atlaskit/navigation-next package instead.',
+  );
+}
 
 class Navigation extends PureComponent<Props, State> {
   static defaultProps = {
@@ -170,7 +178,6 @@ class Navigation extends PureComponent<Props, State> {
     super(props, context);
 
     const { containerTheme, globalTheme } = props;
-    // $FlowFixMe  - theme is not found in props
     const { mode } = getTheme(props);
 
     this.state = {
@@ -202,12 +209,11 @@ class Navigation extends PureComponent<Props, State> {
     }
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { containerTheme, globalTheme } = nextProps;
     // TODO work out why nextProps.theme.__ATLASKIT_THEME__.mode always returns the mode
     // that was applied at time of first page load.
 
-    // $FlowFixMe - theme is not found in props
     const { mode } = getTheme(nextProps);
 
     const isTogglingIsOpen = this.props.isOpen !== nextProps.isOpen;
@@ -349,6 +355,7 @@ class Navigation extends PureComponent<Props, State> {
       onResizeStart,
       onSearchDrawerOpen,
       topOffset,
+      resizerButtonLabel,
     } = this.props;
 
     const {
@@ -419,6 +426,7 @@ class Navigation extends PureComponent<Props, State> {
         onResizeButton={this.triggerResizeButtonHandler}
         onResizeStart={onResizeStart}
         onResizeEnd={this.onResizeEnd}
+        resizerButtonLabel={resizerButtonLabel}
         showResizeButton={canCollapse}
       />
     ) : null;

@@ -1,11 +1,12 @@
 {
-  "extends": "../../../tsconfig.elements.json",
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./"
+  },
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",
-
-
     "./docs/**/*.ts",
-    "./docs/**/*.tsx",
+    "./docs/**/*.tsx"
   ]
 }

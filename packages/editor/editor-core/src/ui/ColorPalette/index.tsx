@@ -1,52 +1,64 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import chromatism from 'chromatism';
 import Color from './Color';
 
 import { ColorPaletteWrapper } from './styles';
+import { PaletteColor } from './Palettes/type';
+import { injectIntl, InjectedIntlProps } from 'react-intl';
+import * as colors from '@atlaskit/theme/colors';
 
 export interface Props {
-  palette: Map<string, string>;
+  palette: PaletteColor[];
   selectedColor: string | null;
-  borderColors: object;
   onClick: (value: string) => void;
   cols?: number;
   className?: string;
-  checkMarkColor?: string;
 }
 
-export default class ColorPalette extends PureComponent<Props, any> {
+/**
+ * For a given color pick the color from a list of colors with
+ * the highest contrast
+ *
+ * @param color color string, suppports HEX, RGB, RGBA etc.
+ * @return Highest contrast color in pool
+ */
+export function getContrastColor(color: string, pool: string[]): string {
+  return pool.sort(
+    (a, b) => chromatism.difference(b, color) - chromatism.difference(a, color),
+  )[0];
+}
+
+class ColorPalette extends PureComponent<Props & InjectedIntlProps, any> {
   render() {
     const {
       palette,
       cols = 7,
       onClick,
       selectedColor,
-      borderColors,
       className,
-      checkMarkColor,
+      intl: { formatMessage },
     } = this.props;
-
-    const colors: [string, string][] = Array.from(palette.entries());
 
     return (
       <ColorPaletteWrapper
         className={className}
         style={{ maxWidth: cols * 32 }}
       >
-        {colors.map(([color, label]) => (
+        {palette.map(({ value, label, border, message }) => (
           <Color
-            key={color}
-            value={color}
-            borderColor={
-              (borderColors as any)[label.toLowerCase() || 'transparent']
-            }
-            label={label}
+            key={value}
+            value={value}
+            borderColor={border}
+            label={message ? formatMessage(message) : label}
             onClick={onClick}
-            isSelected={color === selectedColor}
-            checkMarkColor={checkMarkColor}
+            isSelected={value === selectedColor}
+            checkMarkColor={getContrastColor(value, [colors.N0, colors.N500])}
           />
         ))}
       </ColorPaletteWrapper>
     );
   }
 }
+
+export default injectIntl(ColorPalette);

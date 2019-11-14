@@ -1,36 +1,42 @@
-import * as React from 'react';
+import React from 'react';
+import Media from 'react-media';
 import { match, RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
-import { Link } from '../../components/WrappedLink';
-import Loadable from '../../components/WrappedLoader';
 import { Helmet } from 'react-helmet';
-import { gridSize, colors, math } from '@atlaskit/theme';
 import Button from '@atlaskit/button';
-import ExamplesIcon from '@atlaskit/icon/glyph/screen';
 import { AtlassianIcon } from '@atlaskit/logo';
-
-import Loading from '../../components/Loading';
-import Page from '../../components/Page';
-import FourOhFour from '../FourOhFour';
+import ExamplesIcon from '@atlaskit/icon/glyph/screen';
+import { gridSize, colors, math } from '@atlaskit/theme';
+import Lozenge from '@atlaskit/lozenge';
 
 import MetaData from './MetaData';
-import LatestChangelog from './LatestChangelog';
-
 import * as fs from '../../utils/fs';
+import FourOhFour from '../FourOhFour';
+import Page from '../../components/Page';
 import { File, Directory } from '../../types';
-
+import Loading from '../../components/Loading';
+import LatestChangelog from './LatestChangelog';
 import { Log } from '../../components/ChangeLog';
+import Loadable from '../../components/WrappedLoader';
+import { DESKTOP_BREAKPOINT_MIN } from '../../constants';
 import fetchPackageData, {
   PackageData,
   PackageJson,
 } from './utils/fsOperations';
+import LinkButton from '../../components/LinkButton';
 
-export const Title = styled.div`
+const TopRow = styled.div`
   display: flex;
+`;
 
-  h1 {
-    flex-grow: 1;
-  }
+const Title = styled.h1`
+  flex-grow: 1;
+`;
+
+const Actions = styled.div``;
+
+const Badges = styled.div`
+  margin-top: ${math.multiply(gridSize, 1.5)}px;
 `;
 
 export const Intro = styled.p`
@@ -120,7 +126,7 @@ export default function LoadData({
         <FourOhFour />
       ) : (
         <Package
-          {...props as PackageData}
+          {...(props as PackageData)}
           pkgId={pkgId}
           groupId={groupId}
           urlIsExactMatch={match.isExact}
@@ -147,52 +153,71 @@ class Package extends React.Component<Props> {
       pkgId,
       examples,
     );
-
     const title = fs.titleize(pkgId);
 
+    const badges: React.ReactNode[] = [
+      Boolean(pkg.types) ? (
+        <Lozenge key="ts" appearance="inprogress">
+          Typescript{' '}
+          <span role="img" aria-label="Heart">
+            ❤️
+          </span>
+        </Lozenge>
+      ) : null,
+    ].filter(Boolean);
+
     return (
-      <Page>
-        {urlIsExactMatch && (
-          <Helmet>
-            <title>{`${title} package - ${BASE_TITLE}`}</title>
-          </Helmet>
+      <Media query={`(min-width: ${DESKTOP_BREAKPOINT_MIN}px)`}>
+        {(isDesktop: boolean) => (
+          <Page>
+            {urlIsExactMatch && (
+              <Helmet>
+                <title>{`${title} package - ${BASE_TITLE}`}</title>
+              </Helmet>
+            )}
+            <TopRow>
+              <Title>{title}</Title>
+              <Actions>
+                {examplePath && exampleModalPath && (
+                  <ButtonGroup>
+                    <LinkButton
+                      iconBefore={<ExamplesIcon label="Examples Icon" />}
+                      to={examplePath}
+                    />
+                    {isDesktop && (
+                      <LinkButton to={exampleModalPath}>Examples</LinkButton>
+                    )}
+                    {pkg && pkg['atlaskit:designLink'] && (
+                      <Button
+                        iconBefore={<AtlassianIcon size="small" />}
+                        href={pkg['atlaskit:designLink'] as string}
+                      >
+                        Design docs
+                      </Button>
+                    )}
+                  </ButtonGroup>
+                )}
+              </Actions>
+            </TopRow>
+            {/* Only show a badges section if there are badges */}
+            {badges.length ? (
+              <Badges>{badges.map((badge: React.ReactNode) => badge)}</Badges>
+            ) : null}
+            <Intro>{pkg.description}</Intro>
+            <MetaData
+              packageName={pkg.name as string}
+              packageSrc={`https://bitbucket.org/atlassian/atlaskit-mk-2/src/master/packages/${groupId}/${pkgId}`}
+            />
+            <LatestChangelog
+              changelog={changelog}
+              pkgId={pkgId}
+              groupId={groupId}
+            />
+            <Sep />
+            {doc || <NoDocs name={pkgId} />}
+          </Page>
         )}
-        <Title>
-          <h1>{title}</h1>
-          {examplePath && (
-            <ButtonGroup>
-              <Button
-                component={Link}
-                iconBefore={<ExamplesIcon label="Examples Icon" />}
-                to={examplePath}
-              />
-              <Button component={Link} to={exampleModalPath}>
-                Examples
-              </Button>
-              {pkg && pkg['atlaskit:designLink'] && (
-                <Button
-                  iconBefore={<AtlassianIcon size="small" />}
-                  href={pkg['atlaskit:designLink']}
-                >
-                  Design docs
-                </Button>
-              )}
-            </ButtonGroup>
-          )}
-        </Title>
-        <Intro>{pkg.description}</Intro>
-        <MetaData
-          packageName={pkg.name as string}
-          packageSrc={`https://bitbucket.org/atlassian/atlaskit-mk-2/src/master/packages/${groupId}/${pkgId}`}
-        />
-        <LatestChangelog
-          changelog={changelog}
-          pkgId={pkgId}
-          groupId={groupId}
-        />
-        <Sep />
-        {doc || <NoDocs name={pkgId} />}
-      </Page>
+      </Media>
     );
   }
 }

@@ -1,5 +1,5 @@
 import { name } from '../../../../version.json';
-import { createSchema } from '../../../../..';
+import { createSchema } from '../../../../schema/create-schema';
 import { toHTML, fromHTML, textWithMarks } from '../../../../../test-helpers';
 import { Node } from 'prosemirror-model';
 
@@ -115,7 +115,7 @@ function makeSchema() {
   });
 }
 
-function itMatches(html: string, href, expectedText: string) {
+function itMatches(html: string, href: string, expectedText: string) {
   it(`matches ${html}`, () => {
     const schema = makeSchema();
     const doc = fromHTML(html, schema);

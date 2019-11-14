@@ -1,14 +1,20 @@
-import * as util from '../../../../../newgen/utils';
-const constructAuthTokenUrlSpy = jest.spyOn(util, 'constructAuthTokenUrl');
 import * as React from 'react';
 import Button from '@atlaskit/button';
-import { Auth, ProcessedFileState } from '@atlaskit/media-core';
+import {
+  globalMediaEventEmitter,
+  MediaViewedEventPayload,
+  ProcessedFileState,
+} from '@atlaskit/media-client';
 import Spinner from '@atlaskit/spinner';
-import { awaitError, mountWithIntlContext } from '@atlaskit/media-test-helpers';
+import {
+  mountWithIntlContext,
+  fakeMediaClient,
+  expectFunctionToHaveBeenCalledWith,
+} from '@atlaskit/media-test-helpers';
 import { CustomMediaPlayer } from '@atlaskit/media-ui';
-import { createContext } from '../../../_stubs';
 import { VideoViewer, Props } from '../../../../../newgen/viewers/video';
 import { ErrorMessage } from '../../../../../newgen/error';
+import { Auth } from '@atlaskit/media-core';
 
 const token = 'some-token';
 const clientId = 'some-client-id';
@@ -49,31 +55,44 @@ const sdVideoItem: ProcessedFileState = {
   representations: {},
 };
 
-const videoItemWithNoArtifacts: ProcessedFileState = {
-  ...videoItem,
-  artifacts: {},
-};
-
 function createFixture(
   authPromise: Promise<Auth>,
   props?: Partial<Props>,
   item?: ProcessedFileState,
+  mockReturnGetArtifactURL?: Promise<string>,
 ) {
-  const context = createContext({ authPromise });
+  const mediaClient = fakeMediaClient({
+    authProvider: () => authPromise,
+  });
+
+  jest
+    .spyOn(mediaClient.file, 'getArtifactURL')
+    .mockReturnValue(
+      mockReturnGetArtifactURL ||
+        Promise.resolve(
+          'some-base-url/video_hd?client=some-client-id&token=some-token',
+        ),
+    );
+
   const el = mountWithIntlContext(
     <VideoViewer
-      context={context}
+      mediaClient={mediaClient}
       item={item || videoItem}
       {...props}
-      previewCount={0}
+      previewCount={(props && props.previewCount) || 0}
     />,
   );
-  return { context, el };
+  return { mediaClient, el };
 }
 
 describe('Video viewer', () => {
+  beforeEach(() => {
+    jest.spyOn(globalMediaEventEmitter, 'emit');
+  });
+
   afterEach(() => {
-    constructAuthTokenUrlSpy.mockClear();
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
     localStorage.clear();
     (localStorage.setItem as jest.Mock).mockClear();
   });
@@ -95,29 +114,14 @@ describe('Video viewer', () => {
     expect(el.find(Spinner)).toHaveLength(1);
   });
 
-  it('shows error message if there is an error generating the preview', async () => {
-    const authPromise = Promise.reject(new Error('test error'));
-    const { el } = createFixture(authPromise);
-    await awaitError(authPromise, 'test error');
-    el.update();
-    expect(el.find(ErrorMessage)).toHaveLength(1);
-
-    const errorMessage = el.find(ErrorMessage);
-    expect(errorMessage).toHaveLength(1);
-    expect(errorMessage.text()).toContain(
-      "We couldn't generate a preview for this file",
-    );
-
-    // download button:
-    expect(errorMessage.text()).toContain(
-      'Try downloading the file to view it.',
-    );
-    expect(errorMessage.find(Button)).toHaveLength(1);
-  });
-
   it('shows error message when there are not video artifacts in the media item', async () => {
     const authPromise = Promise.resolve({ token, clientId, baseUrl });
-    const { el } = createFixture(authPromise, {}, videoItemWithNoArtifacts);
+    const { el } = createFixture(
+      authPromise,
+      undefined,
+      undefined,
+      Promise.resolve(''),
+    );
 
     await (el as any).instance()['init']();
     el.update();
@@ -130,13 +134,15 @@ describe('Video viewer', () => {
     );
   });
 
-  it('MSW-720: passes collectionName to constructAuthTokenUrl', async () => {
+  it('MSW-720: passes collectionName to getArtifactURL', async () => {
     const collectionName = 'some-collection';
     const authPromise = Promise.resolve({ token, clientId, baseUrl });
-    const { el } = createFixture(authPromise, { collectionName });
+    const { el, mediaClient } = createFixture(authPromise, { collectionName });
     await (el as any).instance()['init']();
     el.update();
-    expect(constructAuthTokenUrlSpy.mock.calls[0][2]).toEqual(collectionName);
+    expect(
+      (mediaClient.file.getArtifactURL as jest.Mock).mock.calls[0][2],
+    ).toEqual(collectionName);
   });
 
   it('should render a custom video player if the feature flag is active', async () => {
@@ -212,10 +218,10 @@ describe('Video viewer', () => {
   describe('AutoPlay', () => {
     async function createAutoPlayFixture(previewCount: number) {
       const authPromise = Promise.resolve({ token, clientId, baseUrl });
-      const context = createContext({ authPromise });
+      const { mediaClient } = createFixture(authPromise);
       const el = mountWithIntlContext(
         <VideoViewer
-          context={context}
+          mediaClient={mediaClient}
           previewCount={previewCount}
           item={videoItem}
         />,
@@ -236,5 +242,26 @@ describe('Video viewer', () => {
       expect(el.find(CustomMediaPlayer)).toHaveLength(1);
       expect(el.find({ autoPlay: true })).toHaveLength(0);
     });
+  });
+
+  it('should trigger media-viewed when video is first played', async () => {
+    localStorage.setItem('mv_video_player_quality', 'sd');
+    const authPromise = Promise.resolve({ token, clientId, baseUrl });
+    const { el } = createFixture(authPromise, { previewCount: 1 });
+    await (el as any).instance()['init']();
+    el.update();
+    const { onFirstPlay } = el.find(CustomMediaPlayer).props();
+    if (!onFirstPlay) {
+      return expect(onFirstPlay).toBeDefined();
+    }
+    onFirstPlay();
+    expect(globalMediaEventEmitter.emit).toHaveBeenCalledTimes(1);
+    expectFunctionToHaveBeenCalledWith(globalMediaEventEmitter.emit, [
+      'media-viewed',
+      {
+        fileId: 'some-id',
+        viewingLevel: 'full',
+      } as MediaViewedEventPayload,
+    ]);
   });
 });

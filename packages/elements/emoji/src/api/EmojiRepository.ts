@@ -1,10 +1,10 @@
 import { ITokenizer, Search, UnorderedSearchIndex } from 'js-search';
 import { CategoryId } from '../components/picker/categories';
-import { defaultCategories, frequentCategory } from '../constants';
+import { defaultCategories, frequentCategory } from '../util/constants';
 import {
   getCategoryId,
   isEmojiDescriptionWithVariations,
-} from '../type-helpers';
+} from '../util/type-helpers';
 import {
   EmojiDescription,
   EmojiSearchResult,
@@ -371,10 +371,10 @@ export default class EmojiRepository {
     this.shortNameMap = new Map();
     this.idMap = new Map();
     this.asciiMap = new Map();
-    const categorySet = new Set();
+    const categorySet = new Set<CategoryId>();
 
     this.emojis.forEach(emoji => {
-      categorySet.add(emoji.category);
+      categorySet.add(emoji.category as CategoryId);
       this.addToMaps(emoji);
     });
 

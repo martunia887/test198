@@ -1,5 +1,4 @@
-import { Device, initFullPageEditorWithAdf, snapshot } from '../_utils';
-
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
 import {
   clickCellOptions,
   getSelectorForTableCell,
@@ -8,32 +7,34 @@ import {
   clickFirstCell,
 } from '../../__helpers/page-objects/_table';
 import {
-  pressKey,
-  pressKeyup,
-  KeyboardKeys,
+  pressKeyDown,
+  pressKeyUp,
 } from '../../__helpers/page-objects/_keyboard';
-import * as adf from './__fixtures__/default-table.adf.json';
+import adf from './__fixtures__/default-table.adf.json';
+import { Page } from '../../__helpers/page-objects/_types';
 
 describe('Table context menu: merge-split cells', () => {
-  let page;
+  let page: Page;
 
-  const tableMergeAndSplitCells = async (firstCell, lastCell) => {
-    const threshold = 0.04;
+  const tableMergeAndSplitCells = async (
+    firstCell: string,
+    lastCell: string,
+  ) => {
     await page.click(firstCell);
-    await pressKey(page, KeyboardKeys.shift);
+    await pressKeyDown(page, 'Shift');
     await page.click(lastCell);
-    await pressKeyup(page, KeyboardKeys.shift);
+    await pressKeyUp(page, 'Shift');
     await page.waitForSelector(tableSelectors.selectedCell);
     await clickCellOptions(page);
-    await snapshot(page, threshold);
+    await snapshot(page);
     await selectCellOption(page, tableSelectors.mergeCellsText);
-    await snapshot(page, threshold);
+    await snapshot(page);
     await page.waitForSelector(firstCell);
     await page.click(firstCell);
     await clickCellOptions(page);
-    await snapshot(page, threshold);
+    await snapshot(page);
     await selectCellOption(page, tableSelectors.splitCellText);
-    await snapshot(page, threshold);
+    await snapshot(page);
   };
 
   beforeAll(async () => {
@@ -42,7 +43,11 @@ describe('Table context menu: merge-split cells', () => {
   });
 
   beforeEach(async () => {
-    await initFullPageEditorWithAdf(page, adf, Device.LaptopHiDPI);
+    await initEditorWithAdf(page, {
+      adf,
+      appearance: Appearance.fullPage,
+      viewport: { width: 1280, height: 600 },
+    });
     await clickFirstCell(page);
   });
 

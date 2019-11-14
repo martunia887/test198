@@ -1,4 +1,3 @@
-import { EditorView } from 'prosemirror-view';
 import {
   Plugin,
   PluginKey,
@@ -14,10 +13,12 @@ import {
   TypeAheadItemsLoader,
 } from '../types';
 import { dismissCommand } from '../commands/dismiss';
+import { insertTypeAheadQuery } from '../commands/insert-query';
 import { itemsListUpdated } from '../commands/items-list-updated';
 import { updateQueryCommand } from '../commands/update-query';
 import { isQueryActive } from '../utils/is-query-active';
 import { findTypeAheadQuery } from '../utils/find-query-mark';
+import { selectCurrentItem } from '../commands/select-item';
 
 export const pluginKey = new PluginKey('typeAheadPlugin');
 
@@ -35,13 +36,7 @@ export type PluginState = {
   queryStarted: number;
   upKeyCount: number;
   downKeyCount: number;
-};
-
-type EditorViewWithDOMChange = EditorView & {
-  inDOMChange: {
-    composing: boolean;
-    finish: (force: boolean) => void;
-  };
+  highlight?: JSX.Element | null;
 };
 
 export const ACTIONS = {
@@ -86,7 +81,7 @@ export function createPlugin(
         return createInitialPluginState();
       },
 
-      apply(tr, pluginState, oldState, state) {
+      apply(tr, pluginState, _oldState, state) {
         const meta = tr.getMeta(pluginKey) || {};
         const { action, params } = meta;
 
@@ -194,14 +189,29 @@ export function createPlugin(
         },
       };
     },
+    appendTransaction(_trs, _oldState, newState) {
+      const pluginState = pluginKey.getState(newState) as PluginState;
+      if (
+        pluginState.active &&
+        pluginState.query &&
+        pluginState.typeAheadHandler &&
+        pluginState.typeAheadHandler.forceSelect &&
+        pluginState.typeAheadHandler.forceSelect(
+          pluginState.query,
+          pluginState.items,
+        )
+      ) {
+        let newTr;
+        selectCurrentItem()(newState, tr => (newTr = tr));
+        return newTr;
+      }
+
+      return null;
+    },
     props: {
       handleDOMEvents: {
         input(view, event: any) {
-          const {
-            state,
-            dispatch,
-            inDOMChange: domChange,
-          } = view as EditorViewWithDOMChange;
+          const { state, dispatch } = view;
           const { selection, schema } = state;
 
           if (
@@ -213,17 +223,27 @@ export function createPlugin(
             return false;
           }
 
+          return false;
+        },
+        // FM-2123: On latest Android version Q there's a bug while compositionend,
+        // the typeAheadQuery is inserted next to the position of the trigger character (so that creates double characters).
+        // In this use case, need to replace the last written character with our typeAheadQuery.
+        compositionend: (view, event: any) => {
+          const { state, dispatch } = view;
+          const { selection, schema } = state;
+
           const triggers = typeAhead.map(
             typeAheadHandler => typeAheadHandler.trigger,
           );
 
           if (
             triggers.indexOf(event.data) !== -1 &&
-            event.inputType === 'insertCompositionText' &&
-            domChange &&
-            domChange.composing
+            selection instanceof TextSelection &&
+            selection.$cursor &&
+            !schema.marks.typeAheadQuery.isInSet(selection.$cursor.marks())
           ) {
-            domChange.finish(true);
+            insertTypeAheadQuery(event.data, true)(state, dispatch);
+            return true;
           }
 
           return false;
@@ -333,6 +353,7 @@ export function defaultActionHandler({
   const typeAheadHandler = typeAhead.find(t => t.trigger === trigger)!;
   let typeAheadItems: Array<TypeAheadItem> | Promise<Array<TypeAheadItem>> = [];
   let itemsLoader: TypeAheadItemsLoader = null;
+  let highlight: JSX.Element | null = null;
 
   try {
     const { intl } = reactContext();
@@ -348,14 +369,18 @@ export function defaultActionHandler({
       dispatch,
     );
 
+    if (typeAheadHandler.getHighlight) {
+      highlight = typeAheadHandler.getHighlight(state);
+    }
+
     if (pluginState.itemsLoader) {
       pluginState.itemsLoader.cancel();
     }
 
     if ((typeAheadItems as Promise<Array<TypeAheadItem>>).then) {
-      itemsLoader = createItemsLoader(typeAheadItems as Promise<
-        Array<TypeAheadItem>
-      >);
+      itemsLoader = createItemsLoader(
+        typeAheadItems as Promise<Array<TypeAheadItem>>,
+      );
       typeAheadItems = pluginState.items;
     }
   } catch (e) {}
@@ -376,6 +401,7 @@ export function defaultActionHandler({
     queryStarted: Date.now(),
     upKeyCount: 0,
     downKeyCount: 0,
+    highlight,
   };
 
   dispatch(pluginKey, newPluginState);
@@ -468,7 +494,6 @@ export function itemsListUpdatedActionHandler({
 
 export function selectCurrentActionHandler({
   dispatch,
-  pluginState,
 }: ActionHandlerParams): PluginState {
   const newPluginState = createInitialPluginState(false);
   dispatch(pluginKey, newPluginState);

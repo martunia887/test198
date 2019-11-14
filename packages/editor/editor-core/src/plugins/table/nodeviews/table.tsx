@@ -8,20 +8,28 @@ import { EditorView, NodeView } from 'prosemirror-view';
 import ReactNodeView, {
   ForwardRef,
   getPosHandler,
+  getPosHandlerNode,
 } from '../../../nodeviews/ReactNodeView';
 import { PortalProviderAPI } from '../../../ui/PortalProvider';
-import { generateColgroup } from '../utils';
+import { generateColgroup } from '../pm-plugins/table-resizing/utils';
 import TableComponent from './TableComponent';
 
 import WithPluginState from '../../../ui/WithPluginState';
 import { pluginKey as widthPluginKey } from '../../width';
 import { pluginKey, getPluginState } from '../pm-plugins/main';
 import { pluginKey as tableResizingPluginKey } from '../pm-plugins/table-resizing/index';
-import { contentWidth } from '../pm-plugins/table-resizing/resizer/contentWidth';
-import { handleBreakoutContent } from '../pm-plugins/table-resizing/actions';
+import { contentWidth } from '../pm-plugins/table-resizing/utils';
+import { handleBreakoutContent } from '../pm-plugins/table-resizing/commands';
 import { pluginConfig as getPluginConfig } from '../index';
 import { TableCssClassName as ClassName } from '../types';
-import { closestElement } from '../../../utils';
+import { closestElement, containsClassName } from '../../../utils';
+
+export type TableOptions = {
+  dynamicTextSizing?: boolean;
+  isBreakoutEnabled?: boolean;
+  isFullWidthModeEnabled?: boolean;
+  wasFullWidthModeEnabled?: boolean;
+};
 
 export interface Props {
   node: PmNode;
@@ -30,7 +38,7 @@ export interface Props {
   cellMinWidth?: number;
   portalProviderAPI: PortalProviderAPI;
   getPos: () => number;
-  dynamicTextSizing?: boolean;
+  options?: TableOptions;
 }
 
 const tableAttributes = (node: PmNode) => {
@@ -57,15 +65,17 @@ const toDOM = (node: PmNode, props: Props) => {
   ] as DOMOutputSpec;
 };
 
-export default class TableView extends ReactNodeView {
+export default class TableView extends ReactNodeView<Props> {
   private table: HTMLElement | undefined;
   private observer?: MutationObserver;
+  getPos: getPosHandlerNode;
 
   constructor(props: Props) {
     super(props.node, props.view, props.getPos, props.portalProviderAPI, props);
 
     const MutObserver = (window as any).MutationObserver;
-    this.observer = MutObserver && new MutObserver(this.handleBreakoutContent);
+    this.observer = MutObserver && new MutObserver(this.handleMutation);
+    this.getPos = props.getPos;
   }
 
   getContentDOM() {
@@ -79,14 +89,16 @@ export default class TableView extends ReactNodeView {
 
       // Ignore mutation doesn't pick up children updates
       // E.g. inserting a bodiless extension that renders
-      // arbitary nodes (aka macros).
-      if (this.observer) {
-        this.observer.observe(rendered.dom, {
-          subtree: true,
-          childList: true,
-          attributes: true,
-        });
-      }
+      // arbitrary nodes (aka macros).
+      requestAnimationFrame(() => {
+        if (this.observer) {
+          this.observer.observe(rendered.dom, {
+            subtree: true,
+            childList: true,
+            attributes: true,
+          });
+        }
+      });
     }
 
     return rendered;
@@ -125,7 +137,7 @@ export default class TableView extends ReactNodeView {
     );
   }
 
-  ignoreMutation(record: MutationRecord) {
+  ignoreMutation() {
     return true;
   }
 
@@ -137,35 +149,65 @@ export default class TableView extends ReactNodeView {
   }
 
   private resizeForBreakoutContent = (target: HTMLElement) => {
-    const elemOrWrapper =
-      closestElement(
-        target,
-        `.${ClassName.TABLE_HEADER_NODE_WRAPPER}, .${
-          ClassName.TABLE_CELL_NODE_WRAPPER
-        }`,
-      ) || target;
-
+    const { view } = this;
+    const elemOrWrapper = closestElement(
+      target,
+      `.${ClassName.TABLE_HEADER_CELL}, .${ClassName.TABLE_CELL}`,
+    );
     const { minWidth } = contentWidth(target, target);
 
-    if (
-      this.node &&
-      elemOrWrapper &&
-      elemOrWrapper.getAttribute('data-colwidth') !== null &&
-      elemOrWrapper.offsetWidth < minWidth
-    ) {
-      const cellPos = this.view.posAtDOM(elemOrWrapper, 0);
+    // This can also trigger for a non-resized table.
+    if (this.node && elemOrWrapper && elemOrWrapper.offsetWidth < minWidth) {
+      const cellPos = view.posAtDOM(elemOrWrapper, 0);
+      const domAtPos = view.domAtPos.bind(view);
+      const { state, dispatch } = view;
       handleBreakoutContent(
-        this.view,
-        elemOrWrapper,
+        elemOrWrapper as HTMLTableElement,
         cellPos - 1,
         this.getPos() + 1,
         minWidth,
         this.node,
-      );
+        domAtPos,
+      )(state, dispatch);
     }
   };
 
-  private handleBreakoutContent = (records: Array<MutationRecord>) => {
+  private resizeForExtensionContent = (target: HTMLElement) => {
+    if (!this.node) {
+      return;
+    }
+    const { view } = this;
+    const elemOrWrapper = closestElement(
+      target,
+      '.inlineExtensionView-content-wrap, .extensionView-content-wrap',
+    );
+    if (!elemOrWrapper) {
+      return;
+    }
+    const container = closestElement(
+      target,
+      `.${ClassName.TABLE_HEADER_CELL}, .${ClassName.TABLE_CELL}`,
+    ) as HTMLTableElement;
+    if (!container) {
+      return;
+    }
+
+    if (container.offsetWidth < elemOrWrapper.offsetWidth) {
+      const domAtPos = view.domAtPos.bind(view);
+      const cellPos = view.posAtDOM(container, 0);
+      const { state, dispatch } = view;
+      handleBreakoutContent(
+        container,
+        cellPos - 1,
+        this.getPos() + 1,
+        elemOrWrapper.offsetWidth,
+        this.node,
+        domAtPos,
+      )(state, dispatch);
+    }
+  };
+
+  private handleMutation = (records: Array<MutationRecord>) => {
     if (!records.length || !this.contentDOM) {
       return;
     }
@@ -173,10 +215,18 @@ export default class TableView extends ReactNodeView {
     const uniqueTargets: Set<HTMLElement> = new Set();
     records.forEach(record => {
       const target = record.target as HTMLElement;
+      // ED-7344: ignore mutations that happen inside anything other than DIV or SPAN elements
+      if (
+        ['DIV', 'SPAN'].indexOf(target.tagName) === -1 ||
+        containsClassName(target, ClassName.RESIZE_HANDLE)
+      ) {
+        return;
+      }
       // If we've seen this target already in this set of targets
       // We dont need to reprocess.
       if (!uniqueTargets.has(target)) {
         this.resizeForBreakoutContent(target);
+        this.resizeForExtensionContent(target);
         uniqueTargets.add(target);
       }
     });
@@ -184,18 +234,20 @@ export default class TableView extends ReactNodeView {
 }
 
 export const createTableView = (
+  node: PmNode,
+  view: EditorView,
+  getPos: getPosHandler,
   portalProviderAPI: PortalProviderAPI,
-  dynamicTextSizing?: boolean,
-) => (node: PmNode, view: EditorView, getPos: getPosHandler): NodeView => {
+  options: TableOptions,
+): NodeView => {
   const { pluginConfig } = getPluginState(view.state);
   const { allowColumnResizing } = getPluginConfig(pluginConfig);
-
   return new TableView({
     node,
     view,
     allowColumnResizing,
     portalProviderAPI,
-    getPos,
-    dynamicTextSizing,
+    getPos: getPos as getPosHandlerNode,
+    options,
   }).init();
 };

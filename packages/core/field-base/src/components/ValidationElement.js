@@ -1,14 +1,14 @@
 // @flow
 import styled from 'styled-components';
 import React, { Component } from 'react';
-import { colors } from '@atlaskit/theme';
+import { yellow } from '@atlaskit/theme/colors';
 import Spinner from '@atlaskit/spinner';
 import Icon from '@atlaskit/icon/glyph/warning';
 
 // exported for testing
 export const WarningIcon = styled.div`
   align-items: center;
-  color: ${colors.yellow};
+  color: ${yellow};
   display: flex;
   flex-shrink: 0;
 `;
@@ -31,6 +31,7 @@ export default class ValidationElement extends Component<Props, void> {
     isInvalid: false,
     isLoading: false,
   };
+
   render() {
     if (!this.props.isDisabled && this.props.isInvalid) {
       return (

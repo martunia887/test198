@@ -1,16 +1,11 @@
+// @flow
+// $FlowFixMe - There is a type issue with projector spawn.
 const spawn = require('projector-spawn');
 const path = require('path');
 
 const parseChangesetCommit = require('@atlaskit/build-releases/changeset/parseChangesetCommit');
 
-// Parses lines that are in the form 'HASH message goes here'
-const parseCommitLine = line => {
-  // ignore first result, it is the whole pattern match
-  const [_, hash, message] = line.match(/([^ ]+) (.+)/);
-  return { commit: hash, message };
-};
-
-async function getCommitsSince(ref) {
+async function getCommitsSince(ref /*: string */) {
   const gitCmd = await spawn('git', [
     'rev-list',
     '--no-merges',
@@ -20,7 +15,10 @@ async function getCommitsSince(ref) {
   return gitCmd.stdout.trim().split('\n');
 }
 
-async function getChangedFilesSince(ref, fullPath = false) {
+async function getChangedFilesSince(
+  ref /*: string */,
+  fullPath /*:boolean*/ = false,
+) {
   // First we need to find the commit where we diverged from `ref` at using `git merge-base`
   let cmd = await spawn('git', ['merge-base', ref, 'HEAD']);
   const divergedAt = cmd.stdout.trim();
@@ -31,11 +29,12 @@ async function getChangedFilesSince(ref, fullPath = false) {
   return files.map(file => path.resolve(file));
 }
 
-async function getChangedChangesetFilesSinceMaster(fullPath = false) {
-  let ref = await getMasterRef();
+async function getChangedChangesetFilesSinceMaster(
+  fullPath /*:boolean*/ = false,
+) {
+  const ref = await getMasterRef();
   // First we need to find the commit where we diverged from `ref` at using `git merge-base`
   let cmd = await spawn('git', ['merge-base', ref, 'HEAD']);
-  const divergedAt = cmd.stdout.trim();
   // Now we can find which files we added
   cmd = await spawn('git', [
     'diff',
@@ -62,30 +61,40 @@ async function getMasterRef() {
   return gitCmd.stdout.trim().split('\n')[0];
 }
 
-async function add(pathToFile) {
+async function add(pathToFile /*: string */) {
   const gitCmd = await spawn('git', ['add', pathToFile]);
   return gitCmd.code === 0;
 }
 
-async function commit(message) {
+async function checkout(pathToFile /*: string */) {
+  const gitCmd = await spawn('git', ['checkout', pathToFile]);
+  return gitCmd.code === 0;
+}
+
+async function branch(branchName /*: string */) {
+  const gitCmd = await spawn('git', ['checkout', '-b', branchName]);
+  return gitCmd.code === 0;
+}
+
+async function commit(message /*: string */) {
   const gitCmd = await spawn('git', ['commit', '-m', message, '--allow-empty']);
   return gitCmd.code === 0;
 }
 
-async function push(args = []) {
+async function push(args /*: Array<any>*/ = []) {
   const gitCmd = await spawn('git', ['push', ...args]);
   return gitCmd.code === 0;
 }
 
 // used to create a single tag at a time for the current head only
-async function tag(tagStr) {
+async function tag(tagStr /*: string */) {
   // NOTE: it's important we use the -m flag otherwise 'git push --follow-tags' wont actually push
   // the tags
   const gitCmd = await spawn('git', ['tag', tagStr, '-m', tagStr]);
   return gitCmd.code === 0;
 }
 
-async function rebase(maxAttempts = 3) {
+async function rebase(maxAttempts /*: number*/ = 3) {
   let attempts = 0;
   let rebased = false;
   let lastError = {};
@@ -114,7 +123,7 @@ async function rebase(maxAttempts = 3) {
 
 // We expose this as a combined command because we want to be able to do both commands
 // atomically
-async function rebaseAndPush(maxAttempts = 3) {
+async function rebaseAndPush(maxAttempts /*: number*/ = 3) {
   let attempts = 0;
   let pushed = false;
   let lastError = {};
@@ -161,7 +170,8 @@ async function getAndParseJsonFromCommitsStartingWith(str, since) {
     // need to manually pull it out here.
     .filter(parsed => parsed.message.includes('---'))
     .map(parsedCommit => {
-      const commit = parsedCommit.commit;
+      // eslint-disable-next-line no-shadow
+      const { commit } = parsedCommit;
       const changeset = parseChangesetCommit(parsedCommit.message);
       if (!changeset) return undefined;
       // we only care about the changeset and the commit
@@ -174,11 +184,11 @@ async function getAndParseJsonFromCommitsStartingWith(str, since) {
 
 // TODO: Don't parse these, just return the commits
 // LB: BETTER DO THIS SOON
-async function getAllReleaseCommits(since) {
+async function getAllReleaseCommits(since /*: any */) {
   return getAndParseJsonFromCommitsStartingWith('RELEASING: ', since);
 }
 
-async function getAllChangesetCommits(since) {
+async function getAllChangesetCommits(since /*: any */) {
   return getAndParseJsonFromCommitsStartingWith('CHANGESET: ', since);
 }
 
@@ -221,28 +231,30 @@ async function getLastPublishCommit() {
     '--max-count=1',
     '--format="%H"',
   ]);
+  // eslint-disable-next-line no-shadow
   const commit = gitCmd.stdout.trim().replace(/"/g, '');
 
   return commit;
 }
 
-async function getCommitThatAddsFile(path) {
+async function getCommitThatAddsFile(pathTo /*: string */) {
   const gitCmd = await spawn('git', [
     'log',
     '--reverse',
     '--max-count=1',
     '--pretty=format:%h',
     '-p',
-    path,
+    pathTo,
   ]);
   // For reasons I do not understand, passing pretty format through this is not working
   // The slice below is aimed at achieving the same thing.
+  // eslint-disable-next-line no-shadow
   const commit = gitCmd.stdout.split('\n')[0];
 
   return commit;
 }
 
-async function getUnpublishedChangesetCommits(since) {
+async function getUnpublishedChangesetCommits(since /*: any */) {
   // Start one commit before the "since" if it's passed in so that we can find that commit if required
   const releaseCommits = await getAllReleaseCommits(
     since ? `${since}~1` : undefined,
@@ -250,6 +262,7 @@ async function getUnpublishedChangesetCommits(since) {
   const changesetCommits = await getAllChangesetCommits(since);
   // to find unpublished commits, we'll go through them one by one and compare them to all release
   // commits and see if there are any that dont have a release commit that matches them
+  // $FlowFixMe - because of the type of changeset commits
   const unpublishedCommits = changesetCommits.filter(cs => {
     return !releaseCommits.find(publishCommit => {
       // release commits have references to the changesets that they come from
@@ -269,6 +282,8 @@ module.exports = {
   getBranchName,
   getMasterRef,
   add,
+  branch,
+  checkout,
   commit,
   push,
   tag,

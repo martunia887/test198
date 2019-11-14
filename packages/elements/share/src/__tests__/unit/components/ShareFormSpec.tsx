@@ -6,12 +6,12 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { CommentField } from '../../../components/CommentField';
-import { CopyLinkButton } from '../../../components/CopyLinkButton';
+import CopyLinkButton from '../../../components/CopyLinkButton';
 import { ShareForm } from '../../../components/ShareForm';
 import { ShareHeader } from '../../../components/ShareHeader';
 import { UserPickerField } from '../../../components/UserPickerField';
 import { messages } from '../../../i18n';
-import { ConfigResponse, DialogContentState } from '../../../types';
+import { ConfigResponse, DialogContentState, ShareError } from '../../../types';
 import { renderProp } from '../_testUtils';
 
 describe('ShareForm', () => {
@@ -25,7 +25,7 @@ describe('ShareForm', () => {
     ({ allowComment, submitButtonLabel }) => {
       const mockLink = 'link';
       const loadOptions = jest.fn();
-      const onShareClick = jest.fn();
+      const onSubmit = jest.fn();
       const config: ConfigResponse = {
         mode: 'EXISTING_USERS_ONLY',
         allowComment,
@@ -34,19 +34,21 @@ describe('ShareForm', () => {
         <ShareForm
           copyLink={mockLink}
           loadOptions={loadOptions}
-          onShareClick={onShareClick}
+          onSubmit={onSubmit}
           title="some title"
           config={config}
           submitButtonLabel={submitButtonLabel}
+          product="confluence"
         />,
       );
 
       const akForm = component.find<any>(Form);
       expect(akForm).toHaveLength(1);
-      expect(akForm.prop('onSubmit')).toBe(onShareClick);
+      expect(akForm.prop('onSubmit')).toBe(onSubmit);
 
       const formProps = {};
       const form = renderProp(akForm, 'children', { formProps })
+        .dive()
         .dive()
         .find('form');
       expect(form).toHaveLength(1);
@@ -70,11 +72,13 @@ describe('ShareForm', () => {
         appearance: 'primary',
         type: 'submit',
         isLoading: false,
-        children: submitButtonLabel || (
-          <FormattedMessage {...messages.formSend} />
+        children: (
+          <>
+            {submitButtonLabel || <FormattedMessage {...messages.formSend} />}
+          </>
         ),
       });
-      const copyLinkButton = footer.find(CopyLinkButton);
+      const copyLinkButton = footer.find(CopyLinkButton).dive();
       expect(copyLinkButton.length).toBe(1);
       expect(copyLinkButton.prop('link')).toEqual(mockLink);
 
@@ -88,31 +92,87 @@ describe('ShareForm', () => {
       const mockLink = 'link';
       const loadOptions = jest.fn();
       const wrapper = shallow(
-        <ShareForm copyLink={mockLink} loadOptions={loadOptions} isSharing />,
-      );
-
-      const akForm = wrapper.find<any>(Form);
-      const form = renderProp(akForm, 'children', { formProps: {} })
-        .dive()
-        .find('form');
-      const footer = form.find(FormFooter);
-      expect(footer.find(Button).prop('isLoading')).toBeTruthy();
-    });
-  });
-
-  describe('shareError prop', () => {
-    it('should render Retry button with an ErrorIcon and Tooltip', () => {
-      const mockShareError = { message: 'error' };
-      const wrapper = shallow(
         <ShareForm
-          copyLink="link"
-          loadOptions={jest.fn()}
-          shareError={mockShareError}
+          copyLink={mockLink}
+          loadOptions={loadOptions}
+          isSharing
+          product="confluence"
         />,
       );
 
       const akForm = wrapper.find<any>(Form);
       const form = renderProp(akForm, 'children', { formProps: {} })
+        .dive()
+        .dive()
+        .find('form');
+      const footer = form.find(FormFooter);
+      expect(footer.find(Button).prop('isLoading')).toBeTruthy();
+    });
+
+    it('should set appearance prop to "primary" and isLoading prop to true to the Send button, and hide the tooltip', () => {
+      const mockLink = 'link';
+      const mockShareError: ShareError = { message: 'error' };
+      const loadOptions = jest.fn();
+      const wrapper = shallow(
+        <ShareForm
+          copyLink={mockLink}
+          loadOptions={loadOptions}
+          shareError={mockShareError}
+          isSharing
+          product="confluence"
+        />,
+      );
+
+      const akForm = wrapper.find<any>(Form);
+      const form = renderProp(akForm, 'children', { formProps: {} })
+        .dive()
+        .dive()
+        .find('form');
+      const footer = form.find(FormFooter);
+      expect(footer.find(Tooltip)).toHaveLength(0);
+      expect(footer.find(Button).prop('isLoading')).toBeTruthy();
+      expect(footer.find(Button).prop('appearance')).toEqual('primary');
+    });
+  });
+
+  describe('isFetchingConfig prop', () => {
+    it('should set isLoading prop to true to the UserPickerField', () => {
+      const mockLink = 'link';
+      const loadOptions = jest.fn();
+      const wrapper = shallow(
+        <ShareForm
+          copyLink={mockLink}
+          loadOptions={loadOptions}
+          isFetchingConfig
+          product="confluence"
+        />,
+      );
+
+      const akForm = wrapper.find<any>(Form);
+      const form = renderProp(akForm, 'children', { formProps: {} })
+        .dive()
+        .dive()
+        .find('form');
+      const userPickerField = form.find(UserPickerField);
+      expect(userPickerField.prop('isLoading')).toBeTruthy();
+    });
+  });
+
+  describe('shareError prop', () => {
+    it('should render Retry button with an ErrorIcon and Tooltip', () => {
+      const mockShareError: ShareError = { message: 'error' };
+      const wrapper = shallow(
+        <ShareForm
+          copyLink="link"
+          loadOptions={jest.fn()}
+          shareError={mockShareError}
+          product="confluence"
+        />,
+      );
+
+      const akForm = wrapper.find<any>(Form);
+      const form = renderProp(akForm, 'children', { formProps: {} })
+        .dive()
         .dive()
         .find('form');
       const footer = form.find(FormFooter);
@@ -156,11 +216,14 @@ describe('ShareForm', () => {
         title="some title"
         defaultValue={defaultValue}
         config={config}
+        product="confluence"
       />,
     );
     const formProps = {};
     const akForm = component.find<any>(Form);
-    const form = renderProp(akForm, 'children', { formProps }).dive();
+    const form = renderProp(akForm, 'children', { formProps })
+      .dive()
+      .dive();
 
     expect(form.find(UserPickerField).prop('defaultValue')).toBe(
       defaultValue.users,

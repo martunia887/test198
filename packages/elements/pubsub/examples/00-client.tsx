@@ -8,10 +8,9 @@ import Client, { PubSubClientConfig, SpecialEventType } from '../src';
 
 let clientConfig: { serviceConfig: PubSubClientConfig };
 try {
-  // tslint:disable-next-line import/no-unresolved, no-var-requires
+  // eslint-disable-next-line import/no-unresolved
   clientConfig = require('../local-config')['default'];
 } catch (e) {
-  // tslint:disable-next-line import/no-unresolved, no-var-requires
   clientConfig = require('../local-config-example')['default'];
 }
 
@@ -134,9 +133,7 @@ class PubSubEventComponent extends Component<{}, State> {
         <ButtonGroup>
           <Button onClick={this.onJoin}>Join</Button>
           <Button onClick={this.onLeave}>Leave</Button>
-          <Lozenge id="status" appearance="success">
-            {this.state.status}
-          </Lozenge>
+          <Lozenge appearance="success">{this.state.status}</Lozenge>
         </ButtonGroup>
 
         <FieldText

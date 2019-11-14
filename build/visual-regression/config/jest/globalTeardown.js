@@ -13,19 +13,18 @@ const docker = require('../../docker-helper');
  *  - Local stop docker
  */
 async function globalTeardown() {
-  if (process.env.CI) {
+  if (process.env.CI || process.env.DEBUG) {
     // Close browser created in globalSetup and remove web socket file
     await global.__BROWSER__.close();
     rimraf.sync(DIR);
   } else {
     // Connect to docker puppeteer to close browser
     const wsEndpoint = await getDockerWsEndpoint();
-    dockerBrowser = await puppeteer.connect({
+    const dockerBrowser = await puppeteer.connect({
       browserWSEndpoint: wsEndpoint,
       ignoreHTTPSErrors: true,
     });
-
-    dockerBrowser.close();
+    await dockerBrowser.close();
 
     // Stop docker execution
     await docker.stopDocker();

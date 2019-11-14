@@ -25,7 +25,13 @@ export interface ValueUpdatedParams {
 
 export interface Props {
   notificationLogProvider: Promise<NotificationLogProvider>;
-  appearance?: string;
+  appearance?:
+    | 'added'
+    | 'default'
+    | 'important'
+    | 'primary'
+    | 'primaryInverted'
+    | 'removed';
   max?: number;
   refreshRate?: number;
   refreshOnHidden?: boolean;
@@ -161,11 +167,13 @@ class NotificationIndicator extends Component<Props, State> {
     try {
       const count =
         updatingResult.countOverride ||
-        (await this.notificationLogProvider.countUnseenNotifications({
-          queryParams: {
-            currentCount: this.state.count || 0,
-          },
-        })).count;
+        (
+          await this.notificationLogProvider.countUnseenNotifications({
+            queryParams: {
+              currentCount: this.state.count || 0,
+            },
+          })
+        ).count;
 
       if (this.state.count === null || this.state.count !== count) {
         const countUpdateProperties = {
@@ -194,7 +202,9 @@ class NotificationIndicator extends Component<Props, State> {
 
     return count ? (
       <div data-test-selector="NotificationIndicator">
-        <Badge max={max} appearance={appearance} value={count} />
+        <Badge max={max} appearance={appearance}>
+          {count}
+        </Badge>
       </div>
     ) : null;
   }

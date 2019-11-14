@@ -1,4 +1,11 @@
 const mockCalls = [] as string[];
+
+const mockPmHistory = {
+  undo: jest.fn(() => () => {}),
+  redo: jest.fn(() => () => {}),
+};
+jest.mock('prosemirror-history', () => mockPmHistory);
+
 const mockEditorCore = {
   ...jest.genMockFromModule('@atlaskit/editor-core'),
   indentList: jest.fn(() => () => {}),
@@ -10,10 +17,17 @@ const mockEditorCore = {
   isLinkAtPos: jest.fn(pos => () => pos === 6),
   setLinkHref: jest.fn(() => () => mockCalls.push('setLinkHref')),
   setLinkText: jest.fn(() => () => mockCalls.push('setLinkText')),
+  clearEditorContent: jest.fn(() => {}),
+  setKeyboardHeight: jest.fn(() => () => {}),
 };
+
+jest.mock('../../../../version.json', () => ({
+  name: '@atlaskit/editor-mobile-bridge',
+  version: '1.2.3.4',
+}));
+
 jest.mock('@atlaskit/editor-core', () => mockEditorCore);
 
-import WebBridgeImpl from '../../../../editor/native-to-web';
 import {
   indentList,
   outdentList,
@@ -24,22 +38,24 @@ import {
   isLinkAtPos,
   setLinkHref,
   setLinkText,
+  clearEditorContent,
+  setKeyboardHeight,
 } from '@atlaskit/editor-core';
 
-afterEach(() => {
-  (indentList as jest.Mock<{}>).mockClear();
-  (outdentList as jest.Mock<{}>).mockClear();
-  (toggleOrderedList as jest.Mock<{}>).mockClear();
-  (toggleBulletList as jest.Mock<{}>).mockClear();
-  (insertLink as jest.Mock<{}>).mockClear();
-  (isTextAtPos as jest.Mock<{}>).mockClear();
-  (isLinkAtPos as jest.Mock<{}>).mockClear();
-  (setLinkHref as jest.Mock<{}>).mockClear();
-  (setLinkText as jest.Mock<{}>).mockClear();
+import WebBridgeImpl from '../../../../editor/native-to-web';
+import { defaultPadding } from '../../../../web-bridge';
+
+describe('general', () => {
+  const bridge: any = new WebBridgeImpl();
+
+  it('should return valid bridge version', () => {
+    expect(bridge.currentVersion()).toEqual('1.2.3.4');
+  });
 });
 
 describe('lists should work', () => {
-  let bridge: any = new WebBridgeImpl();
+  const bridge: any = new WebBridgeImpl();
+
   beforeEach(() => {
     mockCalls.length = 0;
     bridge.editorView = {};
@@ -49,6 +65,11 @@ describe('lists should work', () => {
   afterEach(() => {
     bridge.editorView = undefined;
     bridge.listBridgeState = undefined;
+
+    ((indentList as Function) as jest.Mock<{}>).mockClear();
+    ((outdentList as Function) as jest.Mock<{}>).mockClear();
+    ((toggleOrderedList as Function) as jest.Mock<{}>).mockClear();
+    ((toggleBulletList as Function) as jest.Mock<{}>).mockClear();
   });
 
   it('should call ordered list toggle', () => {
@@ -121,10 +142,21 @@ describe('lists should work', () => {
 });
 
 describe('links should work', () => {
-  let bridge: any = new WebBridgeImpl();
+  const bridge: any = new WebBridgeImpl();
+
   beforeEach(() => {
     mockCalls.length = 0;
     bridge.editorView = {};
+  });
+
+  afterEach(() => {
+    bridge.editorView = undefined;
+
+    ((insertLink as Function) as jest.Mock<{}>).mockClear();
+    ((isTextAtPos as Function) as jest.Mock<{}>).mockClear();
+    ((isLinkAtPos as Function) as jest.Mock<{}>).mockClear();
+    ((setLinkHref as Function) as jest.Mock<{}>).mockClear();
+    ((setLinkText as Function) as jest.Mock<{}>).mockClear();
   });
 
   it('should call insertLink when not on text node', () => {
@@ -288,5 +320,84 @@ describe('links should work', () => {
     expect(mockCalls).toEqual(
       expect.arrayContaining(['setLinkText', 'setLinkHref']),
     );
+  });
+});
+
+describe('content should work', () => {
+  const bridge: any = new WebBridgeImpl();
+
+  beforeEach(() => {
+    mockCalls.length = 0;
+    bridge.editorView = {};
+  });
+
+  afterEach(() => {
+    bridge.editorView = undefined;
+
+    ((clearEditorContent as Function) as jest.Mock<{}>).mockClear();
+  });
+
+  it('should clear content', () => {
+    bridge.clearContent();
+    expect(clearEditorContent).toHaveBeenCalled();
+  });
+});
+
+describe('history', () => {
+  const bridge: any = new WebBridgeImpl();
+
+  beforeEach(() => {
+    bridge.editorView = {};
+  });
+
+  it('should call undo', () => {
+    bridge.undo();
+    expect(mockPmHistory.undo).toHaveBeenCalled();
+  });
+
+  it('should call redo', () => {
+    bridge.redo();
+    expect(mockPmHistory.redo).toHaveBeenCalled();
+  });
+});
+
+describe('ui', () => {
+  const bridge: any = new WebBridgeImpl();
+
+  beforeEach(() => {
+    bridge.editorView = {};
+  });
+
+  it('should set keyboard height', () => {
+    bridge.setKeyboardControlsHeight('350');
+    expect(setKeyboardHeight).toHaveBeenCalledWith(350);
+  });
+});
+
+describe('styling', () => {
+  let bridge: any;
+  let mockRootEl: { style: Partial<CSSStyleDeclaration> };
+
+  beforeEach(() => {
+    bridge = new WebBridgeImpl();
+    mockRootEl = {
+      style: {
+        padding: 'auto',
+        margin: 'auto',
+      },
+    };
+    jest.spyOn(bridge, 'getRootElement').mockReturnValue(mockRootEl);
+    bridge.setPadding(...defaultPadding);
+  });
+
+  it('sets padding', () => {
+    const expectedPadding = defaultPadding.map(p => `${p}px`).join(' ');
+    expect(mockRootEl.style.padding).toBe(expectedPadding);
+  });
+
+  // Setting margin causes a bug in Android Recycled View where the height grows
+  // indefinitely https://product-fabric.atlassian.net/browse/FM-2472
+  it('does not set margin', () => {
+    expect(mockRootEl.style.margin).toBe('auto');
   });
 });

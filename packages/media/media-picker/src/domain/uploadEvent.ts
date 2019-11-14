@@ -1,55 +1,10 @@
-import { MediaFile as MediaStoreMediaFile } from '@atlaskit/media-store';
-import { MediaProgress } from './progress';
-import { MediaError } from './error';
-import { Preview, isImagePreview } from './preview';
-import { MediaFile } from './file';
-import { PluginItemPayload } from './plugin';
-
-export { isImagePreview };
-
-export type UploadsStartEventPayload = {
-  readonly files: MediaFile[];
-};
-
-export type UploadPreviewUpdateEventPayload = {
-  readonly file: MediaFile;
-  readonly preview: Preview;
-};
-
-export type UploadStatusUpdateEventPayload = {
-  readonly file: MediaFile;
-  readonly progress: MediaProgress;
-};
-
-export type UploadProcessingEventPayload = {
-  readonly file: MediaFile;
-};
-
-export type UploadEndEventPayload = {
-  readonly file: MediaFile;
-  readonly public: Partial<MediaStoreMediaFile>; // TODO [MS-1446]: remove
-};
-
-export type UploadErrorEventPayload = {
-  readonly file: MediaFile;
-  readonly error: MediaError;
-};
-
-export type UploadEventPayloadMap = {
-  readonly 'plugin-items-inserted': PluginItemPayload[];
-  readonly 'uploads-start': UploadsStartEventPayload;
-  readonly 'upload-preview-update': UploadPreviewUpdateEventPayload;
-  readonly 'upload-status-update': UploadStatusUpdateEventPayload;
-  readonly 'upload-processing': UploadProcessingEventPayload;
-  readonly 'upload-end': UploadEndEventPayload;
-  readonly 'upload-error': UploadErrorEventPayload;
-};
+import { UploadEventPayloadMap } from '../types';
 
 export type UploadEventMap = {
   readonly [K in keyof UploadEventPayloadMap]: {
     readonly name: K;
     readonly data: UploadEventPayloadMap[K];
-  }
+  };
 };
 
 export type UploadEventName = keyof UploadEventMap;

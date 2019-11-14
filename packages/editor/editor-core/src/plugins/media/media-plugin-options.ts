@@ -2,7 +2,7 @@ import { Node as PMNode } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
 import { ProviderFactory, ErrorReporter } from '@atlaskit/editor-common';
 import { MediaState, CustomMediaPicker } from './types';
-import { EditorAppearance } from '../../types/editor-props';
+import { getPosHandler } from '../../nodeviews';
 
 export type MediaPluginOptions = {
   providerFactory: ProviderFactory;
@@ -10,7 +10,7 @@ export type MediaPluginOptions = {
     [name: string]: (
       node: PMNode,
       view: EditorView,
-      getPos: () => number,
+      getPos: getPosHandler,
     ) => NodeView;
   };
   errorReporter?: ErrorReporter;
@@ -18,6 +18,5 @@ export type MediaPluginOptions = {
   waitForMediaUpload?: boolean;
   customDropzoneContainer?: HTMLElement;
   customMediaPicker?: CustomMediaPicker;
-  appearance?: EditorAppearance;
   allowResizing: boolean;
 };

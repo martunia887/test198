@@ -12,7 +12,7 @@ import { ZoomLevel } from '../../domain/zoomLevel';
 
 export const pdfViewerClassName = 'pdfViewer';
 
-/* tslint:disable:no-unused-expression */
+/* eslint-disable no-unused-expressions */
 injectGlobal`
   .${pdfViewerClassName} {
     margin-top: 64px;
@@ -76,17 +76,19 @@ injectGlobal`
     }
   }
 `;
-/* tslint:enable:no-unused-expression */
+/* eslint-enable no-unused-expressions */
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/'; // TODO: use web workers instead of fake worker.
 
-const fetch = (url: string): Promise<Blob> => {
+const fetchPdf = (url: string): Promise<Blob> => {
   return pdfjsLib.getDocument(url).promise;
 };
 
 export type Props = {
   src: string;
   onClose?: () => void;
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
 };
 
 export type State = {
@@ -110,17 +112,27 @@ export class PDFRenderer extends React.Component<Props, State> {
   }
 
   private async init() {
+    const { src, onSuccess, onError } = this.props;
+
     try {
-      const doc = await fetch(this.props.src);
+      const doc = await fetchPdf(src);
       this.setState({ doc: Outcome.successful(doc) }, () => {
         this.pdfViewer = new PDFJSViewer.PDFViewer({ container: this.el });
         this.pdfViewer.setDocument(doc);
         this.pdfViewer.firstPagePromise.then(this.scaleToFit);
+
+        if (onSuccess) {
+          onSuccess();
+        }
       });
     } catch (err) {
       this.setState({
         doc: Outcome.failed(createError('previewFailed', err)),
       });
+
+      if (onError) {
+        onError(err);
+      }
     }
   }
 
@@ -147,7 +159,10 @@ export class PDFRenderer extends React.Component<Props, State> {
     return this.state.doc.match({
       pending: () => <Spinner />,
       successful: () => (
-        <PDFWrapper innerRef={this.savePdfElement}>
+        <PDFWrapper
+          data-testid="media-viewer-pdf-content"
+          innerRef={this.savePdfElement}
+        >
           <div
             className={pdfViewerClassName}
             onClick={closeOnDirectClick(this.props.onClose)}

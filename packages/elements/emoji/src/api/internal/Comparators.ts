@@ -1,5 +1,5 @@
-import { MAX_ORDINAL } from '../../constants';
-import { isEmojiVariationDescription } from '../../type-helpers';
+import { MAX_ORDINAL } from '../../util/constants';
+import { isEmojiVariationDescription } from '../../util/type-helpers';
 import { EmojiDescription } from '../../types';
 
 /**
@@ -239,7 +239,7 @@ export class UsageFrequencyComparator implements EmojiComparator {
 }
 
 type KeysOfType<T, TProp> = {
-  [P in keyof T]: T[P] extends (TProp | undefined) ? P : never
+  [P in keyof T]: T[P] extends TProp | undefined ? P : never;
 }[keyof T];
 
 /**

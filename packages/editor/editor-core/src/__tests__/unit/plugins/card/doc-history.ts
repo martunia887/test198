@@ -4,12 +4,12 @@ import { closeHistory } from 'prosemirror-history';
 import { doc, createEditorFactory, p, a } from '@atlaskit/editor-test-helpers';
 
 import { pluginKey } from '../../../../plugins/card/pm-plugins/main';
-import cardPlugin from '../../../../plugins/card';
 import { CardProvider } from '../../../../plugins/card/types';
 import {
   setProvider,
   queueCards,
 } from '../../../../plugins/card/pm-plugins/actions';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('card', () => {
   const createEditor = createEditorFactory();
@@ -17,7 +17,9 @@ describe('card', () => {
   const editor = (doc: any) => {
     return createEditor({
       doc,
-      editorPlugins: [cardPlugin],
+      editorProps: {
+        UNSAFE_cards: {},
+      },
       pluginKey,
     });
   };
@@ -47,20 +49,20 @@ describe('card', () => {
       };
 
       beforeEach(() => {
-        provider = new class implements CardProvider {
-          resolve(url: string): Promise<any> {
+        provider = new (class implements CardProvider {
+          resolve(): Promise<any> {
             const promise = new Promise(resolve => resolve(cardAdf));
             promises.push(promise);
             return promise;
           }
-        }();
+        })();
       });
 
       afterEach(() => {
         promises = [];
       });
 
-      describe('replacedQueuedCardWithUrl', async () => {
+      describe('replacedQueuedCardWithUrl', () => {
         it('closes history around the transaction', async () => {
           const href = 'http://www.atlassian.com/';
           const initialDoc = doc(
@@ -79,6 +81,8 @@ describe('card', () => {
                 url: href,
                 pos: editorView.state.selection.from,
                 appearance: 'inline',
+                compareLinkText: true,
+                source: INPUT_METHOD.CLIPBOARD,
               },
             ])(editorView.state.tr),
           );

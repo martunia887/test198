@@ -4,10 +4,11 @@ import { ERROR } from '../../avatar-picker-dialog';
 import {
   Container,
   DragOverlay,
+  ImageContainer,
   RemoveImageButton,
-  Image,
 } from '../../image-cropper/styled';
 import { smallImage, mountWithIntlContext } from '@atlaskit/media-test-helpers';
+import { MediaImage } from '@atlaskit/media-ui';
 
 const imageWidth = 600;
 const imageHeight = 400;
@@ -15,43 +16,45 @@ const imageSource = smallImage;
 const top = 10;
 const left = 20;
 const containerSize = 400;
-const scale = 0.8;
 
 describe('Image cropper', () => {
   const createComponent = (props = {}) => {
     const onDragStartedSpy = jest.fn();
-    const onImageSizeSpy = jest.fn();
+    const onImageLoadedSpy = jest.fn();
     const onLoadSpy = jest.fn();
     const onRemoveImageSpy = jest.fn();
     const onImageErrorSpy = jest.fn();
 
     const allProps: ImageCropperProp = {
       imageSource,
-      scale,
       containerSize,
       top,
       left,
       onDragStarted: onDragStartedSpy,
-      onImageSize: onImageSizeSpy,
-      onLoad: onLoadSpy,
+      onImageLoaded: onImageLoadedSpy,
       onRemoveImage: onRemoveImageSpy,
       onImageError: onImageErrorSpy,
+      imageOrientation: 1,
       ...props,
     };
-    const component = mountWithIntlContext(<ImageCropper {...allProps} />);
+    const component = mountWithIntlContext<ImageCropperProp, {}>(
+      <ImageCropper {...allProps} />,
+    );
     const img = component.find('img');
+    const imgContainer = component.find(ImageContainer);
     const container = component.find(Container);
     const removeImageButton = component.find(RemoveImageButton);
     const dragOverlay = component.find(DragOverlay);
 
     return {
       onDragStartedSpy,
-      onImageSizeSpy,
+      onImageLoadedSpy,
       onLoadSpy,
       onRemoveImageSpy,
       onImageErrorSpy,
       component,
       img,
+      imgContainer,
       container,
       removeImageButton,
       dragOverlay,
@@ -59,7 +62,7 @@ describe('Image cropper', () => {
   };
 
   describe('with image width', () => {
-    describe('image tag', () => {
+    describe("image tag and it's container", () => {
       it('should have defined source', () => {
         const { img } = createComponent({ imageWidth });
 
@@ -67,19 +70,16 @@ describe('Image cropper', () => {
       });
 
       it('should have defined position', () => {
-        const { img } = createComponent({ imageWidth });
+        const { img, imgContainer } = createComponent({ imageWidth });
 
-        expect(img.props().style).toMatchObject({
+        expect(imgContainer.props().style).toMatchObject({
           top: `${top}px`,
           left: `${left}px`,
         });
-      });
-
-      it('should have scaled width', () => {
-        const { img } = createComponent({ imageWidth });
 
         expect(img.props().style).toMatchObject({
-          width: `${imageWidth * scale}px`,
+          height: '100%',
+          transform: 'translate(-50%, -50%)',
         });
       });
     });
@@ -104,14 +104,16 @@ describe('Image cropper', () => {
   });
 
   describe('without image width', () => {
-    it('should call onImageSize when image is loaded', () => {
-      const { img, onImageSizeSpy } = createComponent({ imageWidth });
+    it('should call onImageLoaded when image is loaded', () => {
+      const { component, onImageLoadedSpy } = createComponent({ imageWidth });
+      const img = {
+        naturalWidth: imageWidth,
+        naturalHeight: imageHeight,
+      } as any;
 
-      img.simulate('load', {
-        target: { naturalWidth: imageWidth, naturalHeight: imageHeight },
-      });
-      expect(onImageSizeSpy).toHaveBeenCalledTimes(1);
-      expect(onImageSizeSpy).toHaveBeenCalledWith(imageWidth, imageHeight);
+      component.find(MediaImage).props().onImageLoad!(img);
+      expect(onImageLoadedSpy).toHaveBeenCalledTimes(1);
+      expect(onImageLoadedSpy).toHaveBeenCalledWith(img);
     });
   });
 
@@ -142,8 +144,10 @@ describe('Image cropper', () => {
         imageSource: badImageURI,
       });
 
-      const onError = component.find(Image).prop('onError')!;
-      onError({} as React.SyntheticEvent<HTMLImageElement>);
+      const onError = component.find('img').prop('onError');
+      if (onError) {
+        onError({} as React.SyntheticEvent<HTMLImageElement>);
+      }
 
       expect(onImageErrorSpy).toHaveBeenCalledTimes(1);
       expect(onImageErrorSpy).toHaveBeenCalledWith(ERROR.FORMAT.defaultMessage);

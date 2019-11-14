@@ -1,4 +1,3 @@
-/* tslint:disable variable-name */
 import * as React from 'react';
 import { Component } from 'react';
 import {
@@ -9,9 +8,10 @@ import {
   OnSelectChangeFunc,
   OnLoadingChangeFunc,
   defaultImageCardDimensions,
-  CardView,
+  CardLoading,
 } from '@atlaskit/media-card';
-import { Context, Identifier } from '@atlaskit/media-core';
+import { Identifier } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import { FilmstripView } from './filmstripView';
 import { generateIdentifierKey } from './utils/generateIdentifierKey';
 
@@ -26,10 +26,11 @@ export interface FilmstripItem {
   readonly onLoadingChange?: OnLoadingChangeFunc;
 }
 
-export interface FilmstripProps {
+export type FilmstripProps = {
   items: FilmstripItem[];
-  context?: Context;
-}
+  shouldOpenMediaViewer?: boolean;
+  mediaClientConfig?: MediaClientConfig;
+};
 
 export interface FilmstripState {
   animate: boolean;
@@ -48,33 +49,33 @@ export class Filmstrip extends Component<FilmstripProps, FilmstripState> {
     this.setState({ animate, offset });
 
   private renderCards() {
-    const { items, context } = this.props;
+    const { items, mediaClientConfig, shouldOpenMediaViewer } = this.props;
 
-    const cards = items.map(item => {
+    const mediaViewerDataSource = shouldOpenMediaViewer
+      ? { list: items.map(item => item.identifier) }
+      : undefined;
+
+    return items.map(item => {
       const key = generateIdentifierKey(item.identifier);
 
-      if (!context) {
+      if (!mediaClientConfig) {
         return (
-          <CardView
-            key={key}
-            status="loading"
-            dimensions={defaultImageCardDimensions}
-          />
+          <CardLoading key={key} dimensions={defaultImageCardDimensions} />
         );
       }
 
       return (
         <Card
           key={key}
-          context={context}
+          mediaClientConfig={mediaClientConfig}
           dimensions={defaultImageCardDimensions}
           useInlinePlayer={false}
+          shouldOpenMediaViewer={shouldOpenMediaViewer}
+          mediaViewerDataSource={mediaViewerDataSource}
           {...item}
         />
       );
     });
-
-    return cards;
   }
 
   render() {

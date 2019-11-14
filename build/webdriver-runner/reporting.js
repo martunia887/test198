@@ -1,5 +1,4 @@
 // @flow
-const fetch = require('node-fetch');
 const get = require('lodash.get');
 const sendLogs = require('@atlaskit/analytics-reporting');
 /**
@@ -26,6 +25,19 @@ const extractResultInformationIntoProperties = results => {
     }));
 };
 
+const extractInconsistentTest = results => {
+  return results.testResults
+    .filter(test => test.numPassingTests > 0)
+    .map(test => ({
+      inconsistenTests: test.numPassingTests,
+      testFilePath: test.testFilePath.replace(process.cwd(), ''),
+      duration: get(test, 'testResults[0].duration', 0),
+      testName: get(test, 'testResults[0].fullName'),
+      buildNumber: process.env.BITBUCKET_BUILD_NUMBER,
+      branch: process.env.BITBUCKET_BRANCH,
+    }));
+};
+
 const buildEventPayload = (properties, eventName) => {
   return {
     name: eventName,
@@ -38,12 +50,38 @@ const buildEventPayload = (properties, eventName) => {
 };
 
 module.exports = {
+  reportInconsistency(results /*: any */) {
+    const properties = extractInconsistentTest(results);
+    if (!properties.length) {
+      return;
+    }
+    // eslint-disable-next-line consistent-return
+    return sendLogs(
+      // $FlowFixMe - return error
+      JSON.stringify({
+        events: properties.map(property =>
+          buildEventPayload(
+            property,
+            'atlaskit.qa.integration_test.inconsistency',
+          ),
+        ),
+      }),
+    ).then(() => {
+      console.log(
+        `Sent ${properties.length} inconsistent integration tests event${
+          properties.length > 1 ? 's' : ''
+        }`,
+      );
+    });
+  },
   reportFailure(results /*: any */, eventName /*: string */) {
     const properties = extractResultInformationIntoProperties(results);
     if (!properties.length) {
       return;
     }
+    // eslint-disable-next-line consistent-return
     return sendLogs(
+      // $FlowFixMe - return error
       JSON.stringify({
         events: properties.map(property =>
           buildEventPayload(property, eventName),
@@ -51,7 +89,7 @@ module.exports = {
       }),
     ).then(() => {
       console.log(
-        `Sent ${properties.length} integration test failure event${
+        `Sent ${properties.length} failure integration tests event${
           properties.length > 1 ? 's' : ''
         }`,
       );
@@ -59,6 +97,7 @@ module.exports = {
   },
   reportLongRunningTests(results /*: any */, threshold /*: number */) {
     return sendLogs(
+      // $FlowFixMe - return error
       JSON.stringify({
         events: results.map(result => {
           return {
@@ -75,7 +114,7 @@ module.exports = {
           };
         }),
       }),
-    ).then(res => {
+    ).then(() => {
       console.log(
         `Sent ${results.length} integration long running tests event${
           results.length > 1 ? 's' : ''

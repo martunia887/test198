@@ -1,7 +1,15 @@
 import * as React from 'react';
-import { md, code, Example, Props } from '@atlaskit/docs';
+import {
+  md,
+  code,
+  Example,
+  Props,
+  AtlassianInternalWarning,
+} from '@atlaskit/docs';
 
 export default md`
+  ${(<AtlassianInternalWarning />)}
+  
   This component provides a way to do image annotations.
 
   ## Usage
@@ -30,13 +38,6 @@ export default md`
     <Props
       heading="Media Editor Props"
       props={require('!!extract-react-types-loader!../src/react/mediaEditor')}
-    />
-  )}
-
-  ${(
-    <Props
-      heading="Toolbar Props"
-      props={require('!!extract-react-types-loader!../src/react/toolbar')}
     />
   )}
 `;

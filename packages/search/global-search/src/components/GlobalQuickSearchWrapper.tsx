@@ -1,11 +1,30 @@
 import * as React from 'react';
-import memoizeOne from 'memoize-one';
 import { CancelableEvent } from '@atlaskit/quick-search';
-import HomeQuickSearchContainer from './home/HomeQuickSearchContainer';
 import ConfluenceQuickSearchContainer from './confluence/ConfluenceQuickSearchContainer';
 import JiraQuickSearchContainer from './jira/JiraQuickSearchContainer';
-import configureSearchClients, { Config } from '../api/configureSearchClients';
+import configureSearchClients, {
+  Config,
+  SearchClients,
+} from '../api/configureSearchClients';
 import MessagesIntlProvider from './MessagesIntlProvider';
+import { GlobalSearchPreFetchContext } from './PrefetchedResultsProvider';
+import {
+  QuickSearchContext,
+  ConfluenceModelContext,
+  JiraModelContext,
+} from '../api/types';
+import {
+  createFeatures,
+  JiraFeatures,
+  ConfluenceFeatures,
+} from '../util/features';
+import { ABTest } from '../api/CrossProductSearchClient';
+import { ABTestProvider } from './AbTestProvider';
+import {
+  withFeedbackButton,
+  FeedbackCollectorProps,
+} from './feedback/withFeedbackButton';
+import FeaturesProvider from './FeaturesProvider';
 
 const DEFAULT_NOOP_LOGGER: Logger = {
   safeInfo() {},
@@ -29,6 +48,16 @@ export type Logger = {
 export type ReferralContextIdentifiers = {
   searchReferrerId: string;
   currentContentId: string;
+  currentContainerId?: string;
+  currentContainerName?: string;
+  currentContainerIcon?: string;
+};
+
+export type JiraApplicationPermission = {
+  hasCoreAccess: boolean;
+  hasSoftwareAccess: boolean;
+  hasServiceDeskAccess: boolean;
+  hasOpsAccess: boolean;
 };
 
 export type AdvancedSearchEvent = {
@@ -46,7 +75,7 @@ export type AdvancedSearchEvent = {
    */
   category: string;
   /**
-   * orignial event, this is useful when need to check if the click was to open in new tab or in same tab
+   * original event, this is useful when need to check if the click was to open in new tab or in same tab
    * but if consumer wanna cancel the event {@link preventDefault} should be used
    */
   originalEvent: object;
@@ -54,6 +83,10 @@ export type AdvancedSearchEvent = {
    * searchSessionId from the quick search session, it should be used for the advanced search session
    */
   searchSessionId: string;
+  /**
+   * Space Keys of the spaces to filter the search to (confluence only)
+   */
+  spaces: string[];
 };
 export interface Props {
   /**
@@ -64,7 +97,7 @@ export interface Props {
   /**
    * The context for quick-search determines the UX and what kind of entities the component is searching.
    */
-  context: 'confluence' | 'home' | 'jira';
+  context: QuickSearchContext;
 
   /**
    * For development purposes only: Overrides the URL to the activity service.
@@ -87,6 +120,11 @@ export interface Props {
   confluenceUrl?: string;
 
   /**
+   * The URL for Autocomplete service. Overrides the URL to the autocomplete service
+   */
+  autocompleteUrl?: string;
+
+  /**
    * The URL for Jira. Must include the context path.
    */
   jiraUrl?: string;
@@ -104,24 +142,14 @@ export interface Props {
   referralContextIdentifiers?: ReferralContextIdentifiers;
 
   /**
-   * Indicates if search terms should be send in analytic events when a search is performed.
+   * Indicates whether or not autocompletion features is enabled
    */
-  isSendSearchTermsEnabled?: boolean;
+  isAutocompleteEnabled?: boolean;
 
   /**
-   * Indicates whether or not quick nav should be used for people searches.
+   * Indicates whether or not navautocompletion features is enabled
    */
-  useQuickNavForPeopleResults?: boolean;
-
-  /**
-   * Indicates whether or not CPUS should be used for people searches.
-   */
-  useCPUSForPeopleResults?: boolean;
-
-  /**
-   * Indicates whether to add sessionId to jira result query param
-   */
-  addSessionIdToJiraResult?: boolean;
+  isNavAutocompleteEnabled?: boolean;
 
   /**
    * Indicates whether to disable Jira people search on the pre-query screen
@@ -137,7 +165,57 @@ export interface Props {
    * call back, to be called when advanced search is clicked
    */
   onAdvancedSearch?: (e: AdvancedSearchEvent) => void;
+
+  /**
+   * controls where to retrieve prequery results either from aggregator or directly from the product
+   */
+  enablePreQueryFromAggregator?: boolean;
+
+  /**
+   * A prop to provide additional elements to render on the right of the search bar, e.g. the feedback button.
+   */
+  inputControls?: JSX.Element;
+
+  /*
+   * detemrine jira application permission like software or servicedesk acess
+   * optional because it is passed only for jira
+   */
+  appPermission?: JiraApplicationPermission;
+
+  /**
+   * Determine whether to enable urs for bootstrapping people search.
+   */
+  useUrsForBootstrapping?: boolean;
+
+  /**
+   * Additional context paramters used to evaluate search models
+   */
+  modelContext?: ConfluenceModelContext | JiraModelContext;
+
+  /**
+   * Determines whether or not to show a feedback collector
+   */
+  showFeedbackCollector?: boolean;
+
+  /**
+   * Props to pass down to the feedback collector
+   */
+  feedbackCollectorProps?: FeedbackCollectorProps;
+
+  /**
+   * The user's account id. null if the user is anonymous.
+   */
+  userId: string | null;
+
+  /**
+   * Check if Jira's people profile's page is enabled.
+   */
+  isJiraPeopleProfilesEnabled?: boolean;
 }
+
+const ConfluenceContainerWithFeedback = withFeedbackButton(
+  ConfluenceQuickSearchContainer,
+);
 
 /**
  * Component that exposes the public API for global quick search. Its only purpose is to offer a simple, user-friendly API to the outside and hide the implementation detail of search clients etc.
@@ -146,8 +224,6 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
   static defaultProps = {
     logger: DEFAULT_NOOP_LOGGER,
   };
-  // configureSearchClients is a potentially expensive function that we don't want to invoke on re-renders
-  memoizedConfigureSearchClients = memoizeOne(configureSearchClients);
 
   private makeConfig() {
     const config: Partial<Config> = {};
@@ -156,7 +232,7 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
       searchAggregatorServiceUrl,
       directoryServiceUrl,
       confluenceUrl,
-      addSessionIdToJiraResult,
+      autocompleteUrl,
     } = this.props;
 
     if (activityServiceUrl) {
@@ -175,27 +251,16 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
       config.confluenceUrl = confluenceUrl;
     }
 
-    config.addSessionIdToJiraResult = addSessionIdToJiraResult;
+    if (autocompleteUrl) {
+      config.autocompleteUrl = autocompleteUrl;
+    }
 
     return config;
   }
 
-  private getContainerComponent(): React.ComponentClass<any> {
-    if (this.props.context === 'confluence') {
-      return ConfluenceQuickSearchContainer;
-    } else if (this.props.context === 'home') {
-      return HomeQuickSearchContainer;
-    } else if (this.props.context === 'jira') {
-      return JiraQuickSearchContainer;
-    } else {
-      // fallback to home if nothing specified
-      return HomeQuickSearchContainer;
-    }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: Props, nextState: any) {
     return (
-      Object.keys({ ...nextProps, ...this.props })
+      (Object.keys({ ...nextProps, ...this.props }) as Array<keyof Props>)
         .map(key => this.props[key] !== nextProps[key])
         .reduce((acc, value) => acc || value, false) || this.state !== nextState
     );
@@ -206,6 +271,7 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
     entity: string,
     query: string,
     searchSessionId: string,
+    spaces: string[] = [],
   ) => {
     if (this.props.onAdvancedSearch) {
       let preventEventDefault = false;
@@ -215,44 +281,128 @@ export default class GlobalQuickSearchWrapper extends React.Component<Props> {
         category: entity,
         originalEvent: e,
         searchSessionId,
+        spaces,
       });
 
-      if (preventEventDefault) {
+      if (preventEventDefault && e) {
         e.preventDefault();
         e.stopPropagation();
       }
     }
   };
 
-  render() {
-    const ContainerComponent = this.getContainerComponent();
-    const searchClients = this.memoizedConfigureSearchClients(
-      this.props.cloudId,
-      this.makeConfig(),
-    );
+  createFeatures(abTest: ABTest): ConfluenceFeatures & JiraFeatures {
     const {
-      linkComponent,
-      isSendSearchTermsEnabled,
-      useQuickNavForPeopleResults,
-      referralContextIdentifiers,
-      useCPUSForPeopleResults,
-      logger,
       disableJiraPreQueryPeopleSearch,
+      enablePreQueryFromAggregator,
+      useUrsForBootstrapping,
+      isAutocompleteEnabled,
+      isNavAutocompleteEnabled,
     } = this.props;
 
+    return createFeatures({
+      abTest,
+      useUrsForBootstrapping: !!useUrsForBootstrapping,
+      disableJiraPreQueryPeopleSearch: !!disableJiraPreQueryPeopleSearch,
+      enablePreQueryFromAggregator: !!enablePreQueryFromAggregator,
+      isAutocompleteEnabled: !!isAutocompleteEnabled,
+      isNavAutocompleteEnabled: !!isNavAutocompleteEnabled,
+    });
+  }
+
+  renderSearchContainer(searchClients: SearchClients, abTest: ABTest) {
+    const {
+      linkComponent,
+      referralContextIdentifiers,
+      logger,
+      inputControls,
+      appPermission,
+      modelContext,
+      showFeedbackCollector,
+      feedbackCollectorProps,
+      confluenceUrl,
+      isJiraPeopleProfilesEnabled,
+    } = this.props;
+
+    const commonProps = {
+      ...searchClients,
+      linkComponent: linkComponent,
+      referralContextIdentifiers: referralContextIdentifiers,
+      logger: logger || DEFAULT_NOOP_LOGGER,
+      onAdvancedSearch: this.onAdvancedSearch,
+    };
+
+    if (this.props.context === 'confluence') {
+      if (showFeedbackCollector) {
+        return (
+          // Same as below but missing input controls which is injected by the feedback button
+          <ConfluenceContainerWithFeedback
+            {...commonProps}
+            {...feedbackCollectorProps}
+            modelContext={modelContext}
+            confluenceUrl={confluenceUrl || ''}
+          />
+        );
+      }
+
+      return (
+        <ConfluenceQuickSearchContainer
+          {...commonProps}
+          {...feedbackCollectorProps}
+          modelContext={modelContext}
+          inputControls={inputControls}
+          confluenceUrl={confluenceUrl || ''}
+        />
+      );
+    } else if (this.props.context === 'jira') {
+      return (
+        <JiraQuickSearchContainer
+          {...commonProps}
+          appPermission={appPermission}
+          isJiraPeopleProfilesEnabled={isJiraPeopleProfilesEnabled}
+        />
+      );
+    } else {
+      const errorMessage = `Invalid product type, product ${this.props.context} is unsupported`;
+
+      if (logger) {
+        logger.safeError(errorMessage);
+      }
+
+      throw new Error(errorMessage);
+    }
+  }
+
+  render() {
     return (
       <MessagesIntlProvider>
-        <ContainerComponent
-          {...searchClients}
-          linkComponent={linkComponent}
-          isSendSearchTermsEnabled={isSendSearchTermsEnabled}
-          useQuickNavForPeopleResults={useQuickNavForPeopleResults}
-          referralContextIdentifiers={referralContextIdentifiers}
-          useCPUSForPeopleResults={useCPUSForPeopleResults}
-          disableJiraPreQueryPeopleSearch={disableJiraPreQueryPeopleSearch}
-          logger={logger}
-          onAdvancedSearch={this.onAdvancedSearch}
-        />
+        <GlobalSearchPreFetchContext.Consumer>
+          {prefetchedResults => {
+            const searchClients = configureSearchClients(
+              this.props.cloudId,
+              this.makeConfig(),
+              this.props.userId === null,
+              prefetchedResults,
+            );
+
+            const { context } = this.props;
+
+            return (
+              <ABTestProvider
+                context={context}
+                crossProductSearchClient={
+                  searchClients.crossProductSearchClient
+                }
+              >
+                {abTest => (
+                  <FeaturesProvider features={this.createFeatures(abTest)}>
+                    {this.renderSearchContainer(searchClients, abTest)}
+                  </FeaturesProvider>
+                )}
+              </ABTestProvider>
+            );
+          }}
+        </GlobalSearchPreFetchContext.Consumer>
       </MessagesIntlProvider>
     );
   }

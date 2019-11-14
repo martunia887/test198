@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass } from 'react';
-import { colors, fontFamily } from '@atlaskit/theme';
+import { fontFamily } from '@atlaskit/theme/constants';
+import { N30 } from '@atlaskit/theme/colors';
 
-export const MediaPickerPopupWrapper: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+const MIN_HEIGHT = '498px';
+
+export const MediaPickerPopupWrapper = styled.div`
   display: flex;
   cursor: default;
   user-select: none;
@@ -20,7 +21,8 @@ export const MediaPickerPopupWrapper: ComponentClass<
 export const SidebarWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   width: 235px;
   min-width: 235px;
-  background-color: ${colors.N30};
+  background-color: ${N30};
+  min-height: ${MIN_HEIGHT};
 `;
 
 export const ViewWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
@@ -32,4 +34,5 @@ export const ViewWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   height: calc(100vh - 200px);
 
   background-color: white;
+  min-height: ${MIN_HEIGHT};
 `;

@@ -1,11 +1,11 @@
-import { MediaFile as MediaStoreMediaFile } from '@atlaskit/media-store';
-import { MediaFile } from '../domain/file';
-import { MediaProgress } from '../domain/progress';
-import { MediaError } from '../domain/error';
-import { Preview } from '../domain/preview';
-
+import {
+  MediaFile,
+  Preview,
+  MediaError,
+  MediaProgress,
+  UploadEventPayloadMap,
+} from '../types';
 import { GenericEventEmitter } from '../util/eventEmitter';
-import { UploadEventPayloadMap } from '../domain/uploadEvent';
 import { SelectedItem } from '../popup/domain';
 import { PluginItemPayload } from '../domain/plugin';
 
@@ -15,10 +15,7 @@ export interface UploadEventEmitter {
   emitUploadProgress(file: MediaFile, progress: MediaProgress): void;
   emitUploadPreviewUpdate(file: MediaFile, preview: Preview): void;
   emitUploadProcessing(file: MediaFile): void;
-  emitUploadEnd(
-    file: MediaFile,
-    fileDetails: Partial<MediaStoreMediaFile>,
-  ): void;
+  emitUploadEnd(file: MediaFile): void;
   emitUploadError(file: MediaFile, error: MediaError): void;
 }
 
@@ -63,11 +60,8 @@ export class UploadComponent<M extends UploadEventPayloadMap>
     this.emit('upload-processing', { file });
   }
 
-  emitUploadEnd(
-    file: MediaFile,
-    fileDetails: Partial<MediaStoreMediaFile>,
-  ): void {
-    this.emit('upload-end', { file, public: fileDetails });
+  emitUploadEnd(file: MediaFile): void {
+    this.emit('upload-end', { file });
   }
 
   emitUploadError(file: MediaFile, error: MediaError): void {

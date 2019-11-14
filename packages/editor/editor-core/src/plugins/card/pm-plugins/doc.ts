@@ -1,15 +1,112 @@
 import { Transaction, EditorState, NodeSelection } from 'prosemirror-state';
 
 import { pluginKey } from './main';
-import { CardPluginState, Request, CardAppearance } from '../types';
+import {
+  CardPluginState,
+  Request,
+  CardAppearance,
+  CardReplacementInputMethod,
+} from '../types';
 import { resolveCard, queueCards } from './actions';
 import { appearanceForNodeType } from '../utils';
 
 import { Command } from '../../../types';
-import { processRawValue, getStepRange } from '../../../utils';
-import { Schema } from 'prosemirror-model';
+import { processRawValue, nodesBetweenChanged } from '../../../utils';
+import { Schema, Node, Fragment } from 'prosemirror-model';
 import { md } from '../../paste/pm-plugins/main';
 import { closeHistory } from 'prosemirror-history';
+import {
+  addAnalytics,
+  ACTION,
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+  EVENT_TYPE,
+} from '../../../plugins/analytics';
+import { SmartLinkNodeContext } from '../../analytics/types/smart-links';
+import { safeInsert } from 'prosemirror-utils';
+import { isSafeUrl } from '@atlaskit/adf-schema';
+
+export function shouldReplace(
+  node: Node,
+  compareLinkText: boolean = true,
+  compareToUrl?: string,
+) {
+  const linkMark = node.marks.find(mark => mark.type.name === 'link');
+  if (!linkMark) {
+    // not a link anymore
+    return false;
+  }
+
+  // ED-6041: compare normalised link text after linkfy from Markdown transformer
+  // instead, since it always decodes URL ('%20' -> ' ') on the link text
+  const normalisedHref = md.normalizeLinkText(linkMark.attrs.href);
+  const normalizedLinkText = md.normalizeLinkText(node.text || '');
+
+  if (compareLinkText && normalisedHref !== normalizedLinkText) {
+    return false;
+  }
+
+  if (compareToUrl) {
+    const normalizedUrl = md.normalizeLinkText(compareToUrl);
+    if (normalizedUrl !== normalisedHref) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function insertCard(tr: Transaction, cardAdf: Node, schema: Schema) {
+  const { inlineCard } = schema.nodes;
+
+  // ED-5638: add an extra space after inline cards to avoid re-rendering them
+  const nodes = [cardAdf];
+  if (cardAdf.type === inlineCard) {
+    nodes.push(schema.text(' '));
+  }
+
+  return safeInsert(Fragment.fromArray(nodes))(tr);
+}
+
+/**
+ * Attempt to replace the link into the respective card.
+ */
+function replaceLinksToCards(
+  tr: Transaction,
+  cardAdf: Node,
+  schema: Schema,
+  request: Request,
+): string | undefined {
+  const { inlineCard } = schema.nodes;
+  const { url } = request;
+
+  if (!isSafeUrl(url)) {
+    return;
+  }
+
+  // replace all the outstanding links with their cards
+  const pos = tr.mapping.map(request.pos);
+  const $pos = tr.doc.resolve(pos);
+
+  const node = tr.doc.nodeAt(pos);
+  if (!node || !node.type.isText) {
+    return;
+  }
+
+  if (!shouldReplace(node, request.compareLinkText, url)) {
+    return;
+  }
+
+  // ED-5638: add an extra space after inline cards to avoid re-rendering them
+  const nodes = [cardAdf];
+  if (cardAdf.type === inlineCard) {
+    nodes.push(schema.text(' '));
+  }
+
+  tr.replaceWith(pos, pos + (node.text || url).length, nodes);
+
+  return $pos.node($pos.depth - 1).type.name;
+}
 
 export const replaceQueuedUrlWithCard = (
   url: string,
@@ -29,34 +126,41 @@ export const replaceQueuedUrlWithCard = (
   const cardAdf = processRawValue(schema, cardData);
 
   let tr = editorState.tr;
+
   if (cardAdf) {
-    requests.forEach(request => {
-      // replace all the outstanding links with their cards
-      const pos = tr.mapping.map(request.pos);
-      const node = tr.doc.nodeAt(pos);
-      if (!node || !node.type.isText) {
-        return;
-      }
+    // Should prevent any other node than cards? [inlineCard, blockCard].includes(cardAdf.type)
+    const nodeContexts: Array<string | undefined> = requests
+      .map(request => replaceLinksToCards(tr, cardAdf, schema, request))
+      .filter(context => !!context); // context exist
 
-      // not a link anymore
-      const linkMark = node.marks.find(mark => mark.type.name === 'link');
-      if (!linkMark) {
-        return;
-      }
+    // Send analytics information
+    if (nodeContexts.length) {
+      const nodeContext = nodeContexts.every(
+        context => context === nodeContexts[0],
+      )
+        ? nodeContexts[0]
+        : 'mixed';
+      const nodeType = cardAdf.type === inlineCard ? 'inlineCard' : 'blockCard';
+      const [, , domainName] = url.split('/');
 
-      const textSlice = node.text;
-      if (linkMark.attrs.href !== url || textSlice !== url) {
-        return;
-      }
+      addAnalytics(editorState, tr, {
+        action: ACTION.INSERTED,
+        actionSubject: ACTION_SUBJECT.DOCUMENT,
+        actionSubjectId: ACTION_SUBJECT_ID.SMART_LINK,
+        eventType: EVENT_TYPE.TRACK,
+        attributes: {
+          inputMethod:
+            requests[0]
+              .source /* TODO: what if each request has a different source?
+                         unlikely, but need to define behaviour.
 
-      // ED-5638: add an extra space after inline cards to avoid re-rendering them
-      const nodes = [cardAdf];
-      if (cardAdf.type === inlineCard) {
-        nodes.push(schema.text(' '));
-      }
-
-      tr = tr.replaceWith(pos, pos + url.length, nodes);
-    });
+                         ignore analytics event? take first? provide 'mixed' as well?*/,
+          nodeType,
+          nodeContext: nodeContext as SmartLinkNodeContext,
+          domainName,
+        },
+      });
+    }
   }
 
   if (dispatch) {
@@ -68,19 +172,14 @@ export const replaceQueuedUrlWithCard = (
 export const queueCardsFromChangedTr = (
   state: EditorState,
   tr: Transaction,
+  source: CardReplacementInputMethod,
   normalizeLinkText: boolean = true,
 ): Transaction => {
   const { schema } = state;
   const { link } = schema.marks;
 
-  const stepRange = getStepRange(tr);
-  if (!stepRange) {
-    // no steps mutate this document, do nothing
-    return tr;
-  }
-
   const requests: Request[] = [];
-  tr.doc.nodesBetween(stepRange.from, stepRange.to, (node, pos) => {
+  nodesBetweenChanged(tr, (node, pos) => {
     if (!node.isText) {
       return true;
     }
@@ -88,12 +187,7 @@ export const queueCardsFromChangedTr = (
     const linkMark = node.marks.find(mark => mark.type === link);
 
     if (linkMark) {
-      // ED-6041: compare normalised link text after linkfy from Markdown transformer
-      // instead, since it always decodes URL ('%20' -> ' ') on the link text
-      const normalizedLinkText = md.normalizeLinkText(linkMark.attrs.href);
-
-      // don't bother queueing nodes that have user-defined text for a link
-      if (node.text !== normalizedLinkText) {
+      if (!shouldReplace(node, normalizeLinkText)) {
         return false;
       }
 
@@ -101,6 +195,8 @@ export const queueCardsFromChangedTr = (
         url: linkMark.attrs.href,
         pos,
         appearance: 'inline',
+        compareLinkText: normalizeLinkText,
+        source,
       } as Request);
     }
 
@@ -110,7 +206,10 @@ export const queueCardsFromChangedTr = (
   return queueCards(requests)(tr);
 };
 
-export const changeSelectedCardToLink: Command = (state, dispatch) => {
+export const changeSelectedCardToLink = (
+  text?: string,
+  href?: string,
+): Command => (state, dispatch) => {
   const selectedNode =
     state.selection instanceof NodeSelection && state.selection.node;
   if (!selectedNode) {
@@ -118,13 +217,31 @@ export const changeSelectedCardToLink: Command = (state, dispatch) => {
   }
 
   const { link } = state.schema.marks;
+  const url = selectedNode.attrs.url || selectedNode.attrs.data.url;
 
   const tr = state.tr.replaceSelectionWith(
-    state.schema.text(selectedNode.attrs.url, [
-      link.create({ href: selectedNode.attrs.url }),
-    ]),
+    state.schema.text(text || url, [link.create({ href: href || url })]),
     false,
   );
+
+  if (dispatch) {
+    dispatch(tr.scrollIntoView());
+  }
+
+  return true;
+};
+
+export const changeSelectedCardToText = (text: string): Command => (
+  state,
+  dispatch,
+) => {
+  const selectedNode =
+    state.selection instanceof NodeSelection && state.selection.node;
+  if (!selectedNode) {
+    return false;
+  }
+
+  const tr = state.tr.replaceSelectionWith(state.schema.text(text), false);
 
   if (dispatch) {
     dispatch(tr.scrollIntoView());

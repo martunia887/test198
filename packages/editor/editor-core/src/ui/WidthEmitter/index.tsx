@@ -10,8 +10,12 @@ export interface Props {
 }
 
 export default class WidthEmitter extends Component<Props> {
-  private width: number;
+  private width?: number;
   private debounce: number | null = null;
+
+  componentWillUnmount() {
+    if (this.debounce) window.clearTimeout(this.debounce);
+  }
 
   render() {
     return (
@@ -23,7 +27,7 @@ export default class WidthEmitter extends Component<Props> {
     const { editorView } = this.props;
     if (editorView && this.width !== width) {
       if (this.debounce) {
-        clearTimeout(this.debounce);
+        window.clearTimeout(this.debounce);
       }
 
       // NodeViews will trigger multiple state change error without this debounce

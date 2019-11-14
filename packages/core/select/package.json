@@ -1,17 +1,19 @@
 {
   "name": "@atlaskit/select",
-  "version": "8.0.3",
+  "version": "11.0.1",
   "description": "React component which allows selection of item(s) from a dropdown list.",
   "license": "Apache-2.0",
-  "module": "index.js",
-  "atlaskit:src": "src/index.js",
+  "module": "dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "atlaskit:src": "src/index.ts",
   "sideEffects": false,
-  "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/single-select",
+  "atlaskit:designLink": "https://atlassian.design/guidelines/product/components/select",
   "author": "Atlassian Pty Ltd",
   "maintainers": [
     "Sean C",
-    "Ajay M",
-    "Charles L"
+    "Daniel DC",
+    "Harsha I",
+    "Alex R"
   ],
   "atlaskit": {
     "name": "Select",
@@ -19,39 +21,42 @@
   },
   "repository": "https://bitbucket.org/atlassian/atlaskit-mk-2",
   "dependencies": {
-    "@atlaskit/analytics-next": "^4.0.1",
-    "@atlaskit/icon": "^16.0.5",
-    "@atlaskit/spinner": "^10.0.1",
-    "@atlaskit/theme": "^8.0.1",
+    "@atlaskit/analytics-next": "^6.3.1",
+    "@atlaskit/icon": "^19.0.6",
+    "@atlaskit/spinner": "^12.1.2",
+    "@atlaskit/theme": "^9.2.6",
     "@babel/runtime": "^7.0.0",
+    "@emotion/core": "^10.0.9",
+    "@types/react-select": "^3.0.8",
     "focus-trap": "^2.4.5",
-    "memoize-one": "^3.0.1",
+    "memoize-one": "^5.1.0",
     "react-fast-compare": "^2.0.1",
     "react-node-resolver": "^1.0.1",
-    "react-popper": "1.0.2",
-    "react-select": "^2.4.2",
-    "react-transition-group": "^2.2.1",
-    "shallow-equal": "^1.0.0"
+    "react-popper": "1.3.4",
+    "react-select": "^3.0.4",
+    "shallow-equal": "^1.0.0",
+    "tslib": "^1.9.3"
   },
   "peerDependencies": {
-    "react": "^16.4.0",
-    "react-dom": "^16.4.2",
-    "styled-components": "^3.2.6"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/build-utils": "^2.0.0",
-    "@atlaskit/button": "^11.0.0",
-    "@atlaskit/checkbox": "^6.0.1",
-    "@atlaskit/docs": "^7.0.1",
-    "@atlaskit/form": "^5.2.1",
-    "@atlaskit/logo": "^10.0.1",
-    "@atlaskit/modal-dialog": "^8.0.2",
-    "@atlaskit/ssr": "^0.0.1",
-    "@atlaskit/tooltip": "^13.0.1",
-    "@atlaskit/visual-regression": "^0.0.1",
-    "@atlaskit/webdriver-runner": "^0.1.0",
+    "@atlaskit/build-utils": "^2.2.7",
+    "@atlaskit/button": "^13.3.4",
+    "@atlaskit/checkbox": "^10.1.3",
+    "@atlaskit/docs": "^8.1.8",
+    "@atlaskit/form": "^6.3.2",
+    "@atlaskit/logo": "^12.2.2",
+    "@atlaskit/modal-dialog": "^10.3.6",
+    "@atlaskit/ssr": "^0.1.1",
+    "@atlaskit/tooltip": "^15.1.3",
+    "@atlaskit/visual-regression": "^0.1.3",
+    "@atlaskit/webdriver-runner": "^0.1.5",
     "enzyme": "^3.7.0",
-    "react-dom": "^16.4.2",
-    "react-value": "^0.2.0"
+    "react-dom": "^16.8.0",
+    "react-value": "^0.2.0",
+    "styled-components": "^3.2.6",
+    "wait-for-expect": "^1.2.0"
   }
 }

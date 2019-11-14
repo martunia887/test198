@@ -4,9 +4,11 @@ import {
   hexToRgb,
   MediaSingleAttributes,
   tableBackgroundColorPalette,
-  calcTableColumnWidths,
 } from '@atlaskit/adf-schema';
-import { timestampToIsoFormat } from '@atlaskit/editor-common';
+import {
+  timestampToIsoFormat,
+  calcTableColumnWidths,
+} from '@atlaskit/editor-common';
 import { Fragment, Node as PMNode, Mark, Schema } from 'prosemirror-model';
 import parseCxhtml from './parse-cxhtml';
 import { AC_XMLNS, FAB_XMLNS, default as encodeCxhtml } from './encode-cxhtml';
@@ -170,7 +172,7 @@ export default function encode(node: PMNode, schema: Schema) {
     const { isNumberColumnEnabled } = node.attrs;
     const tableColumnWidths = calcTableColumnWidths(node);
 
-    node.content.forEach((rowNode, _, i) => {
+    node.content.forEach(rowNode => {
       const rowElement = doc.createElement('tr');
 
       rowNode.content.forEach((colNode, _, j) => {
@@ -213,7 +215,7 @@ export default function encode(node: PMNode, schema: Schema) {
     });
 
     // now we have all the column widths, assign them to each <col> in the <colgroup>
-    tableColumnWidths.forEach((colwidth, i) => {
+    tableColumnWidths.forEach(colwidth => {
       const colInfoElement = document.createElement('col');
       if (colwidth) {
         colInfoElement.style.width = colwidth + 'px';
@@ -287,16 +289,13 @@ export default function encode(node: PMNode, schema: Schema) {
             // marks on the same PM node will be applied in reverse order. The code below compensates
             // for that while retaining current behaviour.
             for (let mark of [...marks].reverse()) {
-              elem = elem.appendChild(
-                encodeConfluenceInlineComment(node, mark, schema),
-              );
+              elem = elem.appendChild(encodeConfluenceInlineComment(mark));
             }
             break;
           case 'textColor':
             elem = elem.appendChild(encodeTextColor(node, schema));
             break;
           case 'emojiQuery':
-            elem.textContent = node.text;
             break;
           default:
             throw new Error(`Unable to encode mark '${type}'`);
@@ -444,6 +443,7 @@ export default function encode(node: PMNode, schema: Schema) {
     if (domNode) {
       return doc.importNode(domNode, true);
     }
+    return;
   }
 
   function encodeJiraIssue(node: PMNode) {
@@ -468,11 +468,7 @@ export default function encode(node: PMNode, schema: Schema) {
     return elem;
   }
 
-  function encodeConfluenceInlineComment(
-    node: PMNode,
-    mark: Mark,
-    schema: Schema,
-  ) {
+  function encodeConfluenceInlineComment(mark: Mark) {
     let marker = doc.createElementNS(AC_XMLNS, 'ac:inline-comment-marker');
     const reference = mark ? mark.attrs.reference : '';
     marker.setAttributeNS(AC_XMLNS, 'ac:ref', reference);

@@ -29,9 +29,10 @@ export default class Widgets extends React.Component<WidgetsProps> {
       <Badge
         key="badge"
         appearance={badge.appearance || 'default'}
-        value={badge.value}
         max={badge.max}
-      />
+      >
+        {badge.value}
+      </Badge>
     );
   }
 
@@ -89,7 +90,7 @@ export default class Widgets extends React.Component<WidgetsProps> {
     }
 
     if (attrs.length === 0) {
-      // tslint:disable-next-line
+      // eslint-disable-next-line
       console.warn(
         `Widgets: A widget doesn't contain any supported attributes: ${JSON.stringify(
           attrs,

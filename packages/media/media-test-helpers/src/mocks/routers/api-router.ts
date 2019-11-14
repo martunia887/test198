@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import {
   Router,
   Response,
@@ -6,13 +6,13 @@ import {
   Record,
   RouterOptions,
   RequestHandler,
+  InterceptorOptions,
   Database,
 } from 'kakapo';
-import { TouchFileDescriptor } from '@atlaskit/media-store';
-import * as uuid from 'uuid/v4';
+import uuid from 'uuid/v4';
 
-import { mapDataUriToBlob } from '../../utils';
-import { mockDataUri } from '../database/mockData';
+import { TouchFileDescriptor } from '@atlaskit/media-client';
+
 import {
   DatabaseSchema,
   createCollection,
@@ -21,10 +21,15 @@ import {
 import { defaultBaseUrl } from '../..';
 import { Chunk } from '../database/chunk';
 import { createUpload } from '../database/upload';
+import { mockDataUri } from '../database/mockData';
+import { mapDataUriToBlob } from '../../utils';
 
 class RouterWithLogging<M extends DatabaseSchema> extends Router<M> {
-  constructor(options?: RouterOptions) {
-    super(options);
+  constructor(
+    interceptorOptions?: InterceptorOptions,
+    options?: RouterOptions,
+  ) {
+    super(interceptorOptions, options);
   }
 
   register(method: string, path: string, originalHandler: RequestHandler<M>) {
@@ -47,6 +52,7 @@ class RouterWithLogging<M extends DatabaseSchema> extends Router<M> {
         error = e;
       }
 
+      // eslint-disable-next-line no-console
       console.log({
         method,
         path,
@@ -67,10 +73,13 @@ class RouterWithLogging<M extends DatabaseSchema> extends Router<M> {
 }
 
 export function createApiRouter(): Router<DatabaseSchema> {
-  const router = new RouterWithLogging<DatabaseSchema>({
-    host: defaultBaseUrl,
-    requestDelay: 10,
-  });
+  const router = new RouterWithLogging<DatabaseSchema>(
+    {
+      host: defaultBaseUrl,
+      requestDelay: 10,
+    },
+    { strategies: ['fetch'] },
+  );
 
   router.post('/collection', ({ body }, database) => {
     const { name } = JSON.parse(body);
@@ -93,7 +102,10 @@ export function createApiRouter(): Router<DatabaseSchema> {
     database.push('collectionItem', item);
 
     return {
-      data: item.details,
+      data: {
+        id: item.id,
+        ...item.details,
+      },
     };
   });
 
@@ -112,14 +124,18 @@ export function createApiRouter(): Router<DatabaseSchema> {
     };
   });
 
-  router.get('/file/:fileId/image', ({ query }) => {
+  router.get('/file/:fileId/image', ({ params, query }, database) => {
+    const { fileId } = params;
     const { width, height, 'max-age': maxAge = 3600 } = query;
-    const dataUri = mockDataUri(
-      Number.parseInt(width, 10),
-      Number.parseInt(height, 10),
-    );
+    const record = database.findOne('collectionItem', { id: fileId });
+    let blob: Blob;
+    if (!record || record.data.blob.type === 'image/svg+xml') {
+      const dataUri = mockDataUri(width, height);
 
-    const blob = mapDataUriToBlob(dataUri);
+      blob = mapDataUriToBlob(dataUri);
+    } else {
+      blob = record.data.blob;
+    }
 
     return new Response(200, blob, {
       'content-type': blob.type,
@@ -284,7 +300,7 @@ export function createApiRouter(): Router<DatabaseSchema> {
     const records = descriptors.map((descriptor: any) => {
       const record = database.findOne('collectionItem', {
         id: descriptor.id,
-        collectionName: descriptor.collection,
+        // TODO [MS-2249]: add collectionName: descriptor.collection check
       });
       if (record) {
         return {
@@ -324,9 +340,14 @@ export function createApiRouter(): Router<DatabaseSchema> {
 
     const { details, blob } = sourceRecord.data;
 
-    const record = database.push('collectionItem', {
+    const existingRecord = database.findOne('collectionItem', {
       id: replaceFileId,
-      insertedAt: Date.now(),
+      collectionName: destinationCollection,
+      occurrenceKey,
+    });
+    const record = database.update('collectionItem', existingRecord.id, {
+      id: replaceFileId,
+      insertedAt: sourceRecord.data.insertedAt,
       occurrenceKey,
       details,
       blob,

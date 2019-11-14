@@ -86,23 +86,31 @@ const FixedTarget = styled.div`
   }};
 `;
 
+if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '@atlaskit/layer has been deprecated. It is an internal component and should not be used directly.',
+  );
+}
+
 export default class Layer extends Component<Props, State> {
   popper: {
     destroy: Function,
   };
 
   targetRef: ?ElementRef<any>;
+
   contentRef: ?ElementRef<any>;
+
   fixedRef: ?ElementRef<any>;
 
-  // TODO: get the value of zIndex from theme, not using it now as it is not
   // working with extract-react-types
   static defaultProps = {
     autoFlip: true,
     boundariesElement: 'viewport',
     children: null,
     content: null,
-    offset: '0 0',
+    offset: '0, 0',
     onFlippedChange: () => {},
     position: 'right middle',
     zIndex: 400,
@@ -143,7 +151,7 @@ export default class Layer extends Component<Props, State> {
     this.calculateFixedOffset(this.props);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     this.applyPopper(nextProps);
     this.calculateFixedOffset(nextProps);
   }
@@ -327,6 +335,7 @@ export default class Layer extends Component<Props, State> {
           ),
         },
       },
+      positionFixed: props.isAlwaysFixed,
     };
 
     const flipBehavior = getFlipBehavior(props);

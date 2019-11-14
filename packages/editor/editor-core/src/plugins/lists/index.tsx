@@ -7,9 +7,6 @@ import { createPlugin, pluginKey } from './pm-plugins/main';
 import inputRulePlugin from './pm-plugins/input-rule';
 import keymapPlugin from './pm-plugins/keymap';
 import WithPluginState from '../../ui/WithPluginState';
-
-import EditorBulletListIcon from '@atlaskit/icon/glyph/editor/bullet-list';
-import EditorNumberedListIcon from '@atlaskit/icon/glyph/editor/number-list';
 import { messages } from '../lists/messages';
 import {
   addAnalytics,
@@ -19,8 +16,12 @@ import {
   ACTION_SUBJECT,
   ACTION_SUBJECT_ID,
 } from '../analytics';
+import { tooltip, toggleBulletList, toggleOrderedList } from '../../keymaps';
+import { IconList, IconListNumber } from '../quick-insert/assets';
 
-const listPlugin: EditorPlugin = {
+const listPlugin = (): EditorPlugin => ({
+  name: 'list',
+
   nodes() {
     return [
       { name: 'bulletList', node: bulletList },
@@ -36,7 +37,7 @@ const listPlugin: EditorPlugin = {
         name: 'listsInputRule',
         plugin: ({ schema }) => inputRulePlugin(schema),
       },
-      { name: 'listsKeymap', plugin: ({ schema }) => keymapPlugin(schema) },
+      { name: 'listsKeymap', plugin: () => keymapPlugin() },
     ];
   },
 
@@ -44,11 +45,11 @@ const listPlugin: EditorPlugin = {
     quickInsert: ({ formatMessage }) => [
       {
         title: formatMessage(messages.unorderedList),
+        description: formatMessage(messages.unorderedListDescription),
         keywords: ['ul', 'unordered list'],
         priority: 1100,
-        icon: () => (
-          <EditorBulletListIcon label={formatMessage(messages.unorderedList)} />
-        ),
+        keyshortcut: tooltip(toggleBulletList),
+        icon: () => <IconList label={formatMessage(messages.unorderedList)} />,
         action(insert, state) {
           const tr = insert(
             state.schema.nodes.bulletList.createChecked(
@@ -60,7 +61,7 @@ const listPlugin: EditorPlugin = {
             ),
           );
 
-          return addAnalytics(tr, {
+          return addAnalytics(state, tr, {
             action: ACTION.FORMATTED,
             actionSubject: ACTION_SUBJECT.TEXT,
             actionSubjectId: ACTION_SUBJECT_ID.FORMAT_LIST_BULLET,
@@ -73,10 +74,12 @@ const listPlugin: EditorPlugin = {
       },
       {
         title: formatMessage(messages.orderedList),
+        description: formatMessage(messages.orderedListDescription),
         keywords: ['ol', 'ordered list', 'numbered list'],
         priority: 1200,
+        keyshortcut: tooltip(toggleOrderedList),
         icon: () => (
-          <EditorNumberedListIcon label={formatMessage(messages.orderedList)} />
+          <IconListNumber label={formatMessage(messages.orderedList)} />
         ),
         action(insert, state) {
           const tr = insert(
@@ -89,7 +92,7 @@ const listPlugin: EditorPlugin = {
             ),
           );
 
-          return addAnalytics(tr, {
+          return addAnalytics(state, tr, {
             action: ACTION.FORMATTED,
             actionSubject: ACTION_SUBJECT.TEXT,
             actionSubjectId: ACTION_SUBJECT_ID.FORMAT_LIST_NUMBER,
@@ -105,8 +108,6 @@ const listPlugin: EditorPlugin = {
 
   primaryToolbarComponent({
     editorView,
-    appearance,
-    dispatchAnalyticsEvent,
     popupsMountPoint,
     popupsBoundariesElement,
     popupsScrollableElement,
@@ -127,7 +128,6 @@ const listPlugin: EditorPlugin = {
             isReducedSpacing={isToolbarReducedSpacing}
             disabled={disabled}
             editorView={editorView}
-            dispatchAnalyticsEvent={dispatchAnalyticsEvent}
             popupsMountPoint={popupsMountPoint}
             popupsBoundariesElement={popupsBoundariesElement}
             popupsScrollableElement={popupsScrollableElement}
@@ -140,6 +140,6 @@ const listPlugin: EditorPlugin = {
       />
     );
   },
-};
+});
 
 export default listPlugin;

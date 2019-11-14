@@ -1,10 +1,7 @@
 import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
-import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
+import { HTMLAttributes, ComponentClass } from 'react';
 import { borderRadius, colors } from '@atlaskit/theme';
 
-// tslint:disable-next-line:variable-name
 export const Dropdown: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: flex;
   flex-direction: column;

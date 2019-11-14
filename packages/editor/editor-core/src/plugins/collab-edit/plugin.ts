@@ -1,7 +1,10 @@
 import { Plugin, PluginKey, Transaction, Selection } from 'prosemirror-state';
-import { Decoration, DecorationSet } from 'prosemirror-view';
+import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 import { Step, ReplaceStep } from 'prosemirror-transform';
+import { fixTablesKey } from 'prosemirror-tables';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import memoizeOne from 'memoize-one';
+
 import { Dispatch } from '../../event-dispatcher';
 import {
   getSendableSelection,
@@ -12,39 +15,72 @@ import {
   applyRemoteData,
 } from './actions';
 import {
-  Participant,
-  ConnectionData,
-  PresenceData,
-  TelepointerData,
+  CollabParticipant,
+  CollabEventConnectionData,
+  CollabeEventPresenceData,
+  CollabEventTelepointerData,
 } from './types';
 import { Participants, ReadOnlyParticipants } from './participants';
 import { findPointers, createTelepointers } from './utils';
-import { CollabEditProvider } from './provider';
+import { CollabEditProvider, CollabEvent } from './provider';
 import { CollabEditOptions } from './types';
 
 export { CollabEditProvider };
 
 export const pluginKey = new PluginKey('collabEditPlugin');
 
+const unsubscribeAllEvents = (provider: CollabEditProvider) => {
+  const collabEvents: Array<CollabEvent> = [
+    'init',
+    'connected',
+    'data',
+    'presence',
+    'telepointer',
+    'local-steps',
+    'error',
+  ];
+
+  collabEvents.forEach(evt => {
+    provider.unsubscribeAll(evt);
+  });
+};
+
+const initCollab = (
+  collabEditProvider: CollabEditProvider,
+  view: EditorView,
+) => {
+  collabEditProvider.initialize(
+    () => view.state,
+    json => Step.fromJSON(view.state.schema, json),
+  );
+};
+
+const initCollabMemo = memoizeOne(initCollab);
+
 export const createPlugin = (
   dispatch: Dispatch,
   providerFactory: ProviderFactory,
   options?: CollabEditOptions,
+  sanitizePrivateContent?: boolean,
 ) => {
   let collabEditProvider: CollabEditProvider | null;
-  let isReady = false;
-
+  let messageTimeoutId: number = 0;
   return new Plugin({
     key: pluginKey,
     state: {
-      init: PluginState.init,
+      init(config) {
+        return PluginState.init(config);
+      },
       apply(tr, prevPluginState: PluginState, oldState, newState) {
         const pluginState = prevPluginState.apply(tr);
-
-        if (tr.getMeta('isRemote') !== true) {
-          if (collabEditProvider) {
-            collabEditProvider.send(tr, oldState, newState);
-          }
+        const pmTablesMeta = tr.getMeta(fixTablesKey);
+        if (
+          collabEditProvider &&
+          tr.getMeta('isRemote') !== true &&
+          !(pmTablesMeta && pmTablesMeta.fixTables) &&
+          pluginState.isReady
+        ) {
+          collabEditProvider.send(tr, oldState, newState);
         }
 
         const { activeParticipants: prevActiveParticipants } = prevPluginState;
@@ -61,16 +97,23 @@ export const createPlugin = (
             (sessionId && participantsChanged)
           ) {
             const selection = getSendableSelection(newState.selection);
+
+            const message: CollabEventTelepointerData = {
+              type: 'telepointer',
+              selection,
+              sessionId,
+            };
+            const sendMessage = collabEditProvider.sendMessage.bind(
+              collabEditProvider,
+            );
+
             // Delay sending selection till next tick so that participants info
-            // can go before it
-            window.setTimeout(
-              collabEditProvider.sendMessage.bind(collabEditProvider),
+            // can go before it.
+            clearTimeout(messageTimeoutId);
+            messageTimeoutId = window.setTimeout(
+              (data: CollabEventTelepointerData) => sendMessage(data),
               0,
-              {
-                type: 'telepointer',
-                selection,
-                sessionId,
-              },
+              message,
             );
           }
         }
@@ -85,9 +128,12 @@ export const createPlugin = (
       },
     },
     filterTransaction(tr, state) {
+      const pluginState = pluginKey.getState(state);
+      const collabInitialiseTr = tr.getMeta('collabInitialised');
+
       // Don't allow transactions that modifies the document before
       // collab-plugin is ready.
-      if (!isReady && tr.docChanged) {
+      if (!!collabInitialiseTr && !pluginState.isReady && tr.docChanged) {
         return false;
       }
 
@@ -96,15 +142,29 @@ export const createPlugin = (
     view(view) {
       providerFactory.subscribe(
         'collabEditProvider',
-        async (name: string, providerPromise?: Promise<CollabEditProvider>) => {
+        async (
+          _name: string,
+          providerPromise?: Promise<CollabEditProvider>,
+        ) => {
           if (providerPromise) {
+            const pluginState = pluginKey.getState(view.state);
             collabEditProvider = await providerPromise;
+
+            if (pluginState.isReady) {
+              unsubscribeAllEvents(collabEditProvider);
+            }
 
             // Initialize provider
             collabEditProvider
               .on('init', data => {
-                isReady = true;
-                handleInit(data, view, options);
+                view.dispatch(view.state.tr.setMeta('collabInitialised', true));
+                handleInit(
+                  data,
+                  view,
+                  options,
+                  providerFactory,
+                  sanitizePrivateContent,
+                );
               })
               .on('connected', data => handleConnection(data, view))
               .on('data', data => applyRemoteData(data, view, options))
@@ -120,16 +180,17 @@ export const createPlugin = (
                 const newState = state.apply(tr);
                 view.updateState(newState);
               })
-              .on('error', err => {
+              .on('error', () => {
                 // TODO: Handle errors property (ED-2580)
-              })
-              .initialize(
-                () => view.state,
-                json => Step.fromJSON(view.state.schema, json),
-              );
+              });
+
+            /**
+             * We only want to initialise once, if we reload/reconfigure this plugin
+             * We dont want to re-init collab, it would break existing sessions
+             */
+            initCollabMemo(collabEditProvider, view);
           } else {
             collabEditProvider = null;
-            isReady = false;
           }
         },
       );
@@ -137,7 +198,13 @@ export const createPlugin = (
       return {
         destroy() {
           providerFactory.unsubscribeAll('collabEditProvider');
+          if (collabEditProvider) {
+            unsubscribeAllEvents(collabEditProvider);
+          }
           collabEditProvider = null;
+
+          // Prevent potential async updates once destroyed.
+          clearTimeout(messageTimeoutId);
         },
       };
     },
@@ -165,6 +232,7 @@ export class PluginState {
   private decorationSet: DecorationSet;
   private participants: Participants;
   private sid?: string;
+  public isReady: boolean;
 
   get decorations() {
     return this.decorationSet;
@@ -182,10 +250,12 @@ export class PluginState {
     decorations: DecorationSet,
     participants: Participants,
     sessionId?: string,
+    collabInitalised: boolean = false,
   ) {
     this.decorationSet = decorations;
     this.participants = participants;
     this.sid = sessionId;
+    this.isReady = collabInitalised;
   }
 
   getInitial(sessionId: string) {
@@ -194,11 +264,18 @@ export class PluginState {
   }
 
   apply(tr: Transaction) {
-    let { decorationSet, participants, sid } = this;
+    let { decorationSet, participants, sid, isReady } = this;
 
-    const presenceData = tr.getMeta('presence') as PresenceData;
-    const telepointerData = tr.getMeta('telepointer') as TelepointerData;
-    const sessionIdData = tr.getMeta('sessionId') as ConnectionData;
+    const presenceData = tr.getMeta('presence') as CollabeEventPresenceData;
+    const telepointerData = tr.getMeta(
+      'telepointer',
+    ) as CollabEventTelepointerData;
+    const sessionIdData = tr.getMeta('sessionId') as CollabEventConnectionData;
+    let collabInitialised = tr.getMeta('collabInitialised');
+
+    if (typeof collabInitialised !== 'boolean') {
+      collabInitialised = isReady;
+    }
 
     if (sessionIdData) {
       sid = sessionIdData.sid;
@@ -209,7 +286,7 @@ export class PluginState {
 
     if (presenceData) {
       const {
-        joined = [] as Participant[],
+        joined = [] as CollabParticipant[],
         left = [] as { sessionId: string }[],
       } = presenceData;
 
@@ -338,7 +415,7 @@ export class PluginState {
       decorationSet = decorationSet.add(tr.doc, add);
     }
 
-    return new PluginState(decorationSet, participants, sid);
+    return new PluginState(decorationSet, participants, sid, collabInitialised);
   }
 
   static init(config: any) {

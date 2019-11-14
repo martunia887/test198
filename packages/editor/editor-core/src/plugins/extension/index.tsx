@@ -7,7 +7,13 @@ import { EditorPlugin } from '../../types';
 import createPlugin from './plugin';
 import { getToolbarConfig } from './toolbar';
 
-const extensionPlugin: EditorPlugin = {
+interface ExtensionPluginOptions {
+  breakoutEnabled?: boolean;
+}
+
+const extensionPlugin = (options?: ExtensionPluginOptions): EditorPlugin => ({
+  name: 'extension',
+
   nodes() {
     return [
       { name: 'extension', node: extension },
@@ -20,21 +26,32 @@ const extensionPlugin: EditorPlugin = {
     return [
       {
         name: 'extension',
-        plugin: ({ props, dispatch, providerFactory, portalProviderAPI }) =>
-          createPlugin(
+        plugin: ({ props, dispatch, providerFactory, portalProviderAPI }) => {
+          let allowBreakout =
+            (typeof props.allowExtension === 'object'
+              ? props.allowExtension
+              : { allowBreakout: false }
+            ).allowBreakout &&
+            options &&
+            options.breakoutEnabled;
+
+          return createPlugin(
             dispatch,
             providerFactory,
             props.extensionHandlers || {},
             portalProviderAPI,
-            props.allowExtension,
-          ),
+            typeof props.allowExtension === 'object'
+              ? { ...props.allowExtension, allowBreakout }
+              : props.allowExtension,
+          );
+        },
       },
     ];
   },
 
   pluginsOptions: {
-    floatingToolbar: getToolbarConfig,
+    floatingToolbar: getToolbarConfig(options && options.breakoutEnabled),
   },
-};
+});
 
 export default extensionPlugin;

@@ -1,17 +1,19 @@
-import Button from '@atlaskit/button';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import LinkFilledIcon from '@atlaskit/icon/glyph/link-filled';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { colors } from '@atlaskit/theme';
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import styled from 'styled-components';
+import Button from './styles';
 import { messages } from '../i18n';
+
+const AUTO_DISMISS_SECONDS = 8;
 
 export const MessageContainer = styled.div`
   display: flex;
   align-items: center;
-  margin: -10px -15px;
+  margin: -8px -16px;
 `;
 
 const MessageSpan = styled.span`
@@ -19,12 +21,12 @@ const MessageSpan = styled.span`
 `;
 
 type InputProps = {
-  ref?: React.RefObject<HTMLInputElement>;
   text: string;
 };
 
-export const HiddenInput: React.ComponentType<InputProps> = React.forwardRef(
-  (props: { text: string }, ref?: React.Ref<HTMLInputElement>) => (
+export const HiddenInput = React.forwardRef<HTMLInputElement, InputProps>(
+  // we need a hidden input to reliably copy to clipboard across all browsers.
+  (props, ref) => (
     <input
       style={{ position: 'absolute', left: '-9999px' }}
       ref={ref}
@@ -43,35 +45,56 @@ export type State = {
   shouldShowCopiedMessage: boolean;
 };
 
-export const NoPaddingButton = styled(Button)`
-  padding: 0;
-`;
+export const AUTO_DISMISS_MS = AUTO_DISMISS_SECONDS * 1000;
 
-export class CopyLinkButton extends React.Component<Props, State> {
+export class CopyLinkButton extends React.Component<
+  Props & InjectedIntlProps,
+  State
+> {
+  private autoDismiss: ReturnType<typeof setTimeout> | undefined;
   private inputRef: React.RefObject<HTMLInputElement> = React.createRef();
 
   state = {
     shouldShowCopiedMessage: false,
   };
 
-  private handleClick = () => {
-    if (this.inputRef.current) {
-      this.inputRef.current!.select();
+  componentWillUnmount() {
+    this.clearAutoDismiss();
+  }
+
+  private clearAutoDismiss = () => {
+    if (this.autoDismiss) {
+      clearTimeout(this.autoDismiss);
+      this.autoDismiss = undefined;
     }
+  };
+
+  private handleClick = () => {
+    this.inputRef.current!.select();
     document.execCommand('copy');
 
     if (this.props.onLinkCopy) {
       this.props.onLinkCopy!(this.props.link);
     }
-    this.setState({ shouldShowCopiedMessage: true });
+
+    this.setState({ shouldShowCopiedMessage: true }, () => {
+      this.clearAutoDismiss();
+      this.autoDismiss = setTimeout(() => {
+        this.setState({ shouldShowCopiedMessage: false });
+      }, AUTO_DISMISS_SECONDS * 1000);
+    });
   };
 
   private handleDismissCopiedMessage = () => {
+    this.clearAutoDismiss();
     this.setState({ shouldShowCopiedMessage: false });
   };
 
   render() {
     const { shouldShowCopiedMessage } = this.state;
+    const {
+      intl: { formatMessage },
+    } = this.props;
 
     return (
       <>
@@ -80,7 +103,7 @@ export class CopyLinkButton extends React.Component<Props, State> {
           content={
             <MessageContainer>
               <CheckCircleIcon
-                label="check circle icon"
+                label={formatMessage(messages.copiedToClipboardIconLabel)}
                 primaryColor={colors.G300}
               />
               <MessageSpan>
@@ -92,15 +115,22 @@ export class CopyLinkButton extends React.Component<Props, State> {
           onClose={this.handleDismissCopiedMessage}
           placement="top-start"
         >
-          <NoPaddingButton
+          <Button
             appearance="subtle-link"
-            iconBefore={<LinkFilledIcon label="copy link icon" />}
+            iconBefore={
+              <LinkFilledIcon
+                label={formatMessage(messages.copyLinkButtonIconLabel)}
+                size="medium"
+              />
+            }
             onClick={this.handleClick}
           >
             <FormattedMessage {...messages.copyLinkButtonText} />
-          </NoPaddingButton>
+          </Button>
         </InlineDialog>
       </>
     );
   }
 }
+
+export default injectIntl(CopyLinkButton);

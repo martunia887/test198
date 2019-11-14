@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Identifier, FileIdentifier } from '@atlaskit/media-core';
+import { Identifier, FileIdentifier } from '@atlaskit/media-client';
 import { Observable } from 'rxjs';
 import { List, Props, State } from '../../../newgen/list';
-import { ErrorMessage } from '../../../newgen/error';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/chevron-right-circle';
 import { ItemViewer } from '../../../newgen/item-viewer';
-import Button from '@atlaskit/button';
 import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
 
 function createFixture(props: Partial<Props>) {
@@ -15,7 +13,7 @@ function createFixture(props: Partial<Props>) {
     occurrenceKey: '',
     mediaItemType: 'file',
   };
-  const context = {
+  const mediaClient = {
     file: {
       getFileState: () =>
         Observable.of({
@@ -29,7 +27,7 @@ function createFixture(props: Partial<Props>) {
     <List
       items={items}
       defaultSelectedItem={selectedItem}
-      context={context}
+      mediaClient={mediaClient}
       {...props}
     />,
   );
@@ -57,28 +55,6 @@ describe('<List />', () => {
     expect(el.state().selectedItem).toMatchObject({ id: 'some-id' });
     el.find(ArrowRightCircleIcon).simulate('click');
     expect(el.state().selectedItem).toMatchObject({ id: 'some-id-2' });
-  });
-
-  it('should show an error if selected item is not found in the list', () => {
-    const list: FileIdentifier[] = [
-      {
-        id: 'some-id',
-        occurrenceKey: 'some-custom-occurrence-key',
-        mediaItemType: 'file',
-      },
-    ];
-    const defaultSelectedItem: Identifier = {
-      id: 'some-id-2',
-      occurrenceKey: 'some-custom-occurrence-key',
-      mediaItemType: 'file',
-    };
-    const el = createFixture({ items: list, defaultSelectedItem });
-    const errorMessage = el.find(ErrorMessage);
-    expect(errorMessage).toHaveLength(1);
-    expect(errorMessage.text()).toContain(
-      'The selected item was not found on the list.',
-    );
-    expect(errorMessage.find(Button)).toHaveLength(0);
   });
 
   it('should show controls when navigation occurs', () => {

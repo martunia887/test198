@@ -34,6 +34,9 @@ export interface MentionDescription {
 
 export interface MentionDescContext {
   members: TeamMember[];
+  includesYou: boolean;
+  memberCount: number;
+  teamLink: string;
 }
 
 export interface MentionsResult {
@@ -52,6 +55,8 @@ export interface Team {
   smallAvatarImageUrl: string;
   displayName: string;
   members: TeamMember[];
+  includesYou: boolean;
+  memberCount: number;
   highlight?: Highlight;
 }
 
@@ -86,6 +91,18 @@ export enum UserType {
   SYSTEM,
 }
 
+export enum MentionNameStatus {
+  UNKNOWN,
+  SERVICE_ERROR,
+  OK,
+}
+
+export interface MentionNameDetails {
+  id: string;
+  name?: string;
+  status: MentionNameStatus;
+}
+
 export function isRestricted(accessLevel?: string): boolean {
   return (
     !!accessLevel && accessLevel !== UserAccessLevel[UserAccessLevel.CONTAINER]
@@ -107,3 +124,5 @@ export function isTeamMention(mention: MentionDescription) {
 export function isSpecialMentionText(mentionText: string) {
   return mentionText && (mentionText === '@all' || mentionText === '@here');
 }
+
+export const isPromise = <T>(p: any): p is Promise<T> => !!(p && p.then);

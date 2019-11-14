@@ -10,7 +10,6 @@ export interface WithOutsideClickProps {
   handleEnterKeydown?: SimpleEventHandler;
 }
 
-// tslint:disable:next-line variable-name
 export default function withOuterListeners<P>(
   Component: ComponentClass<P> | StatelessComponent<P>,
 ): ComponentClass<P & WithOutsideClickProps> {
@@ -57,7 +56,7 @@ export default function withOuterListeners<P>(
     };
 
     render() {
-      return <Component {...this.props as any} />;
+      return <Component {...(this.props as any)} />;
     }
   };
 }

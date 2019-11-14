@@ -1,71 +1,97 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { EditorState, Transaction, Selection } from 'prosemirror-state';
-import { EditorView, DirectEditorProps } from 'prosemirror-view';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
+import { DirectEditorProps, EditorView } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { intlShape } from 'react-intl';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
-import { ProviderFactory, Transformer } from '@atlaskit/editor-common';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import {
+  browser,
+  ErrorReporter,
+  getResponseEndTime,
+  measureRender,
+  ProviderFactory,
+  Transformer,
+} from '@atlaskit/editor-common';
 
-import { EventDispatcher, createDispatch } from '../event-dispatcher';
+import { createDispatch, Dispatch, EventDispatcher } from '../event-dispatcher';
 import { processRawValue } from '../utils';
 import { findChangedNodesFromTransaction, validateNodes } from '../utils/nodes';
 import createPluginList from './create-plugins-list';
 import {
-  analyticsEventKey,
-  fireAnalyticsEvent,
+  ACTION,
+  ACTION_SUBJECT,
   AnalyticsDispatch,
+  analyticsEventKey,
   AnalyticsEventPayload,
+  DispatchAnalyticsEvent,
+  EVENT_TYPE,
+  fireAnalyticsEvent,
+  FULL_WIDTH_MODE,
+  getAnalyticsEventsFromTransaction,
+  PLATFORMS,
 } from '../plugins/analytics';
-import { EditorProps, EditorConfig, EditorPlugin } from '../types';
+import {
+  EditorAppearance,
+  EditorConfig,
+  EditorPlugin,
+  EditorProps,
+} from '../types';
 import { PortalProviderAPI } from '../ui/PortalProvider';
 import {
-  pluginKey as editorDisabledPluginKey,
   EditorDisabledPluginState,
+  pluginKey as editorDisabledPluginKey,
 } from '../plugins/editor-disabled';
 import { analyticsService } from '../analytics';
 import {
-  processPluginsList,
-  createSchema,
   createErrorReporter,
   createPMPlugins,
+  createSchema,
   initAnalytics,
+  processPluginsList,
 } from './create-editor';
-import { analyticsPluginKey } from '../plugins/analytics/plugin';
 import { getDocStructure } from '../utils/document-logger';
+import { isFullPage } from '../utils/is-full-page';
+import measurements from '../utils/performance/measure-enum';
+import { getNodesCount } from '../utils/document';
 
 export interface EditorViewProps {
   editorProps: EditorProps;
-  createAnalyticsEvent?: CreateUIAnalyticsEventSignature;
+  createAnalyticsEvent?: CreateUIAnalyticsEvent;
   providerFactory: ProviderFactory;
   portalProviderAPI: PortalProviderAPI;
   allowAnalyticsGASV3?: boolean;
-  render?: (
-    props: {
-      editor: JSX.Element;
-      view?: EditorView;
-      config: EditorConfig;
-      eventDispatcher: EventDispatcher;
-      transformer?: Transformer<string>;
-      dispatchAnalyticsEvent: (payload: AnalyticsEventPayload) => void;
-    },
-  ) => JSX.Element;
-  onEditorCreated: (
-    instance: {
-      view: EditorView;
-      config: EditorConfig;
-      eventDispatcher: EventDispatcher;
-      transformer?: Transformer<string>;
-    },
-  ) => void;
-  onEditorDestroyed: (
-    instance: {
-      view: EditorView;
-      config: EditorConfig;
-      eventDispatcher: EventDispatcher;
-      transformer?: Transformer<string>;
-    },
-  ) => void;
+  disabled?: boolean;
+  render?: (props: {
+    editor: JSX.Element;
+    view?: EditorView;
+    config: EditorConfig;
+    eventDispatcher: EventDispatcher;
+    transformer?: Transformer<string>;
+    dispatchAnalyticsEvent: DispatchAnalyticsEvent;
+  }) => JSX.Element;
+  onEditorCreated: (instance: {
+    view: EditorView;
+    config: EditorConfig;
+    eventDispatcher: EventDispatcher;
+    transformer?: Transformer<string>;
+  }) => void;
+  onEditorDestroyed: (instance: {
+    view: EditorView;
+    config: EditorConfig;
+    eventDispatcher: EventDispatcher;
+    transformer?: Transformer<string>;
+  }) => void;
+}
+
+function handleEditorFocus(view: EditorView): number | undefined {
+  if (view.hasFocus()) {
+    return;
+  }
+
+  return window.setTimeout(() => {
+    view.focus();
+  }, 0);
 }
 
 export default class ReactEditorView<T = {}> extends React.Component<
@@ -74,36 +100,48 @@ export default class ReactEditorView<T = {}> extends React.Component<
   view?: EditorView;
   eventDispatcher: EventDispatcher;
   contentTransformer?: Transformer<string>;
-  config: EditorConfig;
+  config!: EditorConfig;
   editorState: EditorState;
-  analyticsEventHandler: (
-    payloadChannel: { payload: AnalyticsEventPayload; channel?: string },
-  ) => void;
+  errorReporter: ErrorReporter;
+  dispatch: Dispatch;
+  analyticsEventHandler!: (payloadChannel: {
+    payload: AnalyticsEventPayload;
+    channel?: string;
+  }) => void;
 
   static contextTypes = {
     getAtlaskitAnalyticsEventHandlers: PropTypes.func,
     intl: intlShape,
   };
 
+  // ProseMirror is instantiated prior to the initial React render cycle,
+  // so we allow transactions by default, to avoid discarding the initial one.
+  private canDispatchTransactions = true;
+
+  private focusTimeoutId: number | undefined;
+
   constructor(props: EditorViewProps & T) {
     super(props);
 
+    this.eventDispatcher = new EventDispatcher();
+    this.dispatch = createDispatch(this.eventDispatcher);
+    this.errorReporter = createErrorReporter(
+      props.editorProps.errorReporterHandler,
+    );
     this.editorState = this.createEditorState({ props, replaceDoc: true });
 
     const { createAnalyticsEvent, allowAnalyticsGASV3 } = props;
     if (allowAnalyticsGASV3) {
       this.activateAnalytics(createAnalyticsEvent);
     }
-
-    this.eventDispatcher.emit(analyticsEventKey, {
-      payload: {
-        action: 'started',
-        actionSubject: 'editor',
-        attributes: { platform: 'web' },
-        eventType: 'ui',
-      },
-    });
     initAnalytics(props.editorProps.analyticsHandler);
+
+    this.dispatchAnalyticsEvent({
+      action: ACTION.STARTED,
+      actionSubject: ACTION_SUBJECT.EDITOR,
+      attributes: { platform: PLATFORMS.WEB },
+      eventType: EVENT_TYPE.UI,
+    });
   }
 
   private broadcastDisabled = (disabled: boolean) => {
@@ -118,7 +156,7 @@ export default class ReactEditorView<T = {}> extends React.Component<
     }
   };
 
-  componentWillReceiveProps(nextProps: EditorViewProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: EditorViewProps) {
     if (
       this.view &&
       this.props.editorProps.disabled !== nextProps.editorProps.disabled
@@ -128,6 +166,13 @@ export default class ReactEditorView<T = {}> extends React.Component<
       this.view.setProps({
         editable: _state => !nextProps.editorProps.disabled,
       } as DirectEditorProps);
+
+      if (
+        !nextProps.editorProps.disabled &&
+        nextProps.editorProps.shouldFocus
+      ) {
+        this.focusTimeoutId = handleEditorFocus(this.view);
+      }
     }
 
     // Activate or deactivate analytics if change property
@@ -147,7 +192,78 @@ export default class ReactEditorView<T = {}> extends React.Component<
         this.activateAnalytics(nextProps.createAnalyticsEvent); // Activate the new one
       }
     }
+
+    const { appearance } = this.props.editorProps;
+    const { appearance: nextAppearance } = nextProps.editorProps;
+    if (nextAppearance !== appearance) {
+      this.reconfigureState(nextProps);
+      if (nextAppearance === 'full-width' || appearance === 'full-width') {
+        this.dispatchAnalyticsEvent({
+          action: ACTION.CHANGED_FULL_WIDTH_MODE,
+          actionSubject: ACTION_SUBJECT.EDITOR,
+          eventType: EVENT_TYPE.TRACK,
+          attributes: {
+            previousMode: this.formatFullWidthAppearance(appearance),
+            newMode: this.formatFullWidthAppearance(nextAppearance),
+          },
+        });
+      }
+    }
   }
+
+  formatFullWidthAppearance = (
+    appearance: EditorAppearance | undefined,
+  ): FULL_WIDTH_MODE => {
+    if (appearance === 'full-width') {
+      return FULL_WIDTH_MODE.FULL_WIDTH;
+    }
+    return FULL_WIDTH_MODE.FIXED_WIDTH;
+  };
+
+  reconfigureState = (props: EditorViewProps) => {
+    if (!this.view) {
+      return;
+    }
+
+    // We cannot currently guarentee when all the portals will have re-rendered during a reconfigure
+    // so we blur here to stop ProseMirror from trying to apply selection to detached nodes or
+    // nodes that haven't been re-rendered to the document yet.
+    if (this.view.dom instanceof HTMLElement && this.view.hasFocus()) {
+      this.view.dom.blur();
+    }
+
+    this.config = processPluginsList(
+      this.getPlugins(
+        props.editorProps,
+        this.props.editorProps,
+        props.createAnalyticsEvent,
+      ),
+      props.editorProps,
+    );
+
+    const state = this.editorState;
+    const plugins = createPMPlugins({
+      schema: state.schema,
+      dispatch: this.dispatch,
+      errorReporter: this.errorReporter,
+      editorConfig: this.config,
+      props: props.editorProps,
+      prevProps: this.props.editorProps,
+      eventDispatcher: this.eventDispatcher,
+      providerFactory: props.providerFactory,
+      portalProviderAPI: props.portalProviderAPI,
+      reactContext: () => this.context,
+      dispatchAnalyticsEvent: this.dispatchAnalyticsEvent,
+    });
+
+    const newState = state.reconfigure({ plugins });
+
+    // need to update the state first so when the view builds the nodeviews it is
+    // using the latest plugins
+    this.view.updateState(newState);
+
+    return this.view.update({ ...this.view.props, state: newState });
+  };
 
   /**
    * Deactivate analytics event handler, if exist any.
@@ -162,18 +278,36 @@ export default class ReactEditorView<T = {}> extends React.Component<
    * Create analytics event handler, if createAnalyticsEvent exist
    * @param createAnalyticsEvent
    */
-  activateAnalytics(createAnalyticsEvent?: CreateUIAnalyticsEventSignature) {
+  activateAnalytics(createAnalyticsEvent?: CreateUIAnalyticsEvent) {
     if (createAnalyticsEvent) {
       this.analyticsEventHandler = fireAnalyticsEvent(createAnalyticsEvent);
       this.eventDispatcher.on(analyticsEventKey, this.analyticsEventHandler);
     }
   }
 
+  componentDidMount() {
+    // Transaction dispatching is already enabled by default prior to
+    // mounting, but we reset it here, just in case the editor view
+    // instance is ever recycled (mounted again after unmounting) with
+    // the same key.
+    // Although storing mounted state is an anti-pattern in React,
+    // we do so here so that we can intercept and abort asynchronous
+    // ProseMirror transactions when a dismount is imminent.
+    this.canDispatchTransactions = true;
+  }
+
   /**
    * Clean up any non-PM resources when the editor is unmounted
    */
   componentWillUnmount() {
+    // We can ignore any transactions from this point onwards.
+    // This serves to avoid potential runtime exceptions which could arise
+    // from an async dispatched transaction after it's unmounted.
+    this.canDispatchTransactions = false;
+
     this.eventDispatcher.destroy();
+
+    clearTimeout(this.focusTimeoutId);
 
     if (this.view) {
       // Destroy the state if the Editor is being unmounted
@@ -191,9 +325,10 @@ export default class ReactEditorView<T = {}> extends React.Component<
   // Helper to allow tests to inject plugins directly
   getPlugins(
     editorProps: EditorProps,
-    createAnalyticsEvent?: CreateUIAnalyticsEventSignature,
+    prevEditorProps?: EditorProps,
+    createAnalyticsEvent?: CreateUIAnalyticsEvent,
   ): EditorPlugin[] {
-    return createPluginList(editorProps, createAnalyticsEvent);
+    return createPluginList(editorProps, prevEditorProps, createAnalyticsEvent);
   }
 
   createEditorState = (options: {
@@ -208,7 +343,7 @@ export default class ReactEditorView<T = {}> extends React.Component<
        * keeps a list of Steps to undo/redo (which are tied to the schema).
        * Without a good way to do work around this, we prevent this for now.
        */
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.warn(
         'The editor does not support changing the schema dynamically.',
       );
@@ -218,6 +353,7 @@ export default class ReactEditorView<T = {}> extends React.Component<
     this.config = processPluginsList(
       this.getPlugins(
         options.props.editorProps,
+        undefined,
         options.props.createAnalyticsEvent,
       ),
       options.props.editorProps,
@@ -227,23 +363,19 @@ export default class ReactEditorView<T = {}> extends React.Component<
     const {
       contentTransformerProvider,
       defaultValue,
-      errorReporterHandler,
     } = options.props.editorProps;
-
-    this.eventDispatcher = new EventDispatcher();
-    const dispatch = createDispatch(this.eventDispatcher);
-    const errorReporter = createErrorReporter(errorReporterHandler);
 
     const plugins = createPMPlugins({
       schema,
-      dispatch,
-      errorReporter,
+      dispatch: this.dispatch,
+      errorReporter: this.errorReporter,
       editorConfig: this.config,
       props: options.props.editorProps,
       eventDispatcher: this.eventDispatcher,
       providerFactory: options.props.providerFactory,
       portalProviderAPI: this.props.portalProviderAPI,
       reactContext: () => this.context,
+      dispatchAnalyticsEvent: this.dispatchAnalyticsEvent,
     });
 
     this.contentTransformer = contentTransformerProvider
@@ -255,15 +387,19 @@ export default class ReactEditorView<T = {}> extends React.Component<
       doc =
         this.contentTransformer && typeof defaultValue === 'string'
           ? this.contentTransformer.parse(defaultValue)
-          : processRawValue(schema, defaultValue);
+          : processRawValue(
+              schema,
+              defaultValue,
+              options.props.providerFactory,
+              options.props.editorProps.sanitizePrivateContent,
+            );
     }
     let selection: Selection | undefined;
     if (doc) {
       // ED-4759: Don't set selection at end for full-page editor - should be at start
-      selection =
-        options.props.editorProps.appearance === 'full-page'
-          ? Selection.atStart(doc)
-          : Selection.atEnd(doc);
+      selection = isFullPage(options.props.editorProps.appearance)
+        ? Selection.atStart(doc)
+        : Selection.atEnd(doc);
     }
     // Workaround for ED-3507: When media node is the last element, scrollIntoView throws an error
     const patchedSelection = selection
@@ -278,67 +414,101 @@ export default class ReactEditorView<T = {}> extends React.Component<
     });
   };
 
+  private dispatchTransaction = (transaction: Transaction) => {
+    if (!this.view) {
+      return;
+    }
+
+    const nodes: PMNode[] = findChangedNodesFromTransaction(transaction);
+    if (validateNodes(nodes)) {
+      // go ahead and update the state now we know the transaction is good
+      const editorState = this.view.state.apply(transaction);
+      this.view.updateState(editorState);
+      if (this.props.editorProps.onChange && transaction.docChanged) {
+        this.props.editorProps.onChange(this.view);
+      }
+      this.editorState = editorState;
+    } else {
+      const documents = {
+        new: getDocStructure(transaction.doc),
+        prev: getDocStructure(transaction.docs[0]),
+      };
+      analyticsService.trackEvent(
+        'atlaskit.fabric.editor.invalidtransaction',
+        { documents: JSON.stringify(documents) }, // V2 events don't support object properties
+      );
+
+      this.dispatchAnalyticsEvent({
+        action: ACTION.DISPATCHED_INVALID_TRANSACTION,
+        actionSubject: ACTION_SUBJECT.EDITOR,
+        eventType: EVENT_TYPE.OPERATIONAL,
+        attributes: {
+          analyticsEventPayloads: getAnalyticsEventsFromTransaction(
+            transaction,
+          ),
+          documents,
+        },
+      });
+    }
+  };
+
+  getDirectEditorProps = (state?: EditorState): DirectEditorProps => {
+    return {
+      state: state || this.editorState,
+      dispatchTransaction: (tr: Transaction) => {
+        // Block stale transactions:
+        // Prevent runtime exeptions from async transactions that would attempt to
+        // update the DOM after React has unmounted the Editor.
+        if (this.canDispatchTransactions) {
+          this.dispatchTransaction(tr);
+        }
+      },
+      // Disables the contentEditable attribute of the editor if the editor is disabled
+      editable: _state => !this.props.editorProps.disabled,
+      attributes: { 'data-gramm': 'false' },
+    };
+  };
+
   createEditorView = (node: HTMLDivElement) => {
+    measureRender(measurements.PROSEMIRROR_RENDERED, (duration, startTime) => {
+      if (this.view) {
+        this.dispatchAnalyticsEvent({
+          action: ACTION.PROSEMIRROR_RENDERED,
+          actionSubject: ACTION_SUBJECT.EDITOR,
+          attributes: {
+            duration,
+            startTime,
+            nodes: getNodesCount(this.view.state.doc),
+            ttfb: getResponseEndTime(),
+          },
+          eventType: EVENT_TYPE.OPERATIONAL,
+        });
+      }
+    });
+
     // Creates the editor-view from this.editorState. If an editor has been mounted
     // previously, this will contain the previous state of the editor.
-    this.view = new EditorView(
-      { mount: node },
-      {
-        state: this.editorState,
-        dispatchTransaction: (transaction: Transaction) => {
-          if (!this.view) {
-            return;
-          }
-
-          const nodes: PMNode[] = findChangedNodesFromTransaction(transaction);
-          if (validateNodes(nodes)) {
-            // go ahead and update the state now we know the transaction is good
-            const editorState = this.view.state.apply(transaction);
-            this.view.updateState(editorState);
-            if (this.props.editorProps.onChange && transaction.docChanged) {
-              this.props.editorProps.onChange(this.view);
-            }
-            this.editorState = editorState;
-          } else {
-            const documents = {
-              new: getDocStructure(transaction.doc),
-              prev: getDocStructure(transaction.docs[0]),
-            };
-            analyticsService.trackEvent(
-              'atlaskit.fabric.editor.invalidtransaction',
-              { documents: JSON.stringify(documents) }, // V2 events don't support object properties
-            );
-            this.eventDispatcher.emit(analyticsEventKey, {
-              payload: {
-                action: 'dispatchedInvalidTransaction',
-                actionSubject: 'editor',
-                eventType: 'operational',
-                attributes: {
-                  analyticsEventPayloads: transaction.getMeta(
-                    analyticsPluginKey,
-                  ),
-                  documents,
-                },
-              },
-            });
-          }
-        },
-        // Disables the contentEditable attribute of the editor if the editor is disabled
-        editable: _state => !this.props.editorProps.disabled,
-        attributes: { 'data-gramm': 'false' },
-      },
-    );
+    this.view = new EditorView({ mount: node }, this.getDirectEditorProps());
   };
 
   handleEditorViewRef = (node: HTMLDivElement) => {
     if (!this.view && node) {
       this.createEditorView(node);
+      const view = this.view!;
       this.props.onEditorCreated({
-        view: this.view!,
+        view,
         config: this.config,
         eventDispatcher: this.eventDispatcher,
         transformer: this.contentTransformer,
       });
+
+      if (
+        this.props.editorProps.shouldFocus &&
+        view.props.editable &&
+        view.props.editable(view.state)
+      ) {
+        this.focusTimeoutId = handleEditorFocus(view);
+      }
 
       // Set the state of the EditorDisabled plugin to the current value
       this.broadcastDisabled(!!this.props.editorProps.disabled);
@@ -370,7 +540,13 @@ export default class ReactEditorView<T = {}> extends React.Component<
   };
 
   render() {
-    const editor = <div key="ProseMirror" ref={this.handleEditorViewRef} />;
+    const editor = (
+      <div
+        className={getUAPrefix()}
+        key="ProseMirror"
+        ref={this.handleEditorViewRef}
+      />
+    );
     return this.props.render
       ? this.props.render({
           editor,
@@ -382,4 +558,16 @@ export default class ReactEditorView<T = {}> extends React.Component<
         })
       : editor;
   }
+}
+
+function getUAPrefix() {
+  if (browser.chrome) {
+    return 'ua-chrome';
+  } else if (browser.ie) {
+    return 'ua-ie';
+  } else if (browser.gecko) {
+    return 'ua-firefox';
+  }
+
+  return '';
 }

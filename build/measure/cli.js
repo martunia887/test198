@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-const log = console.log;
+// @flow
+/* eslint-disable no-shadow */
 const meow = require('meow');
 const chalk = require('chalk');
-const measure = require('./measure');
 const bolt = require('bolt');
 const minimatch = require('minimatch');
+const measure = require('./measure');
 
-let c = meow(
+const c = meow(
   `
     Usage
         $ measure <[paths]>
@@ -16,6 +17,7 @@ let c = meow(
         --json                  Outputs measure stats as json
         --lint                  Lint mode fails build if size has been increased beyond threshold
         --updateSnapshot        Update measure snapshots
+        --s3                    Run S3 flow
 
       Examples
         $ measure editor-core editor-common
@@ -37,6 +39,10 @@ let c = meow(
         default: false,
       },
       updateSnapshot: {
+        type: 'boolean',
+        default: false,
+      },
+      s3: {
         type: 'boolean',
         default: false,
       },
@@ -67,16 +73,17 @@ async function resolvePaths(paths) {
     .map(ws => ws.dir);
 }
 
-async function executeMeasure(paths, c, errors = [], results = []) {
+async function executeMeasure(paths, cParam, errors = [], results = []) {
   const path = paths.pop();
 
   try {
     const result = await measure(
       path,
-      c.flags.analyze,
-      c.flags.json,
-      c.flags.lint,
-      c.flags.updateSnapshot,
+      cParam.flags.analyze,
+      cParam.flags.json,
+      cParam.flags.lint,
+      cParam.flags.updateSnapshot,
+      cParam.flags.s3,
     );
     results.push(result);
   } catch (error) {
@@ -84,10 +91,9 @@ async function executeMeasure(paths, c, errors = [], results = []) {
   }
 
   if (paths.length > 0) {
-    return executeMeasure(paths, c, errors, results);
-  } else {
-    return { errors, results };
+    return executeMeasure(paths, cParam, errors, results);
   }
+  return { errors, results };
 }
 
 function handleMeasureResult({ errors, results }) {
@@ -99,16 +105,29 @@ function handleMeasureResult({ errors, results }) {
     );
 
     errors.forEach(error => {
-      console.log('  ' + chalk.red(error));
+      console.log(`  ${chalk.red(error)}`);
     });
 
     logInvalidUse();
     process.exit(1);
   } else {
+    if (!c.flags.s3) {
+      console.warn(
+        chalk.yellow(
+          'The measure tool now stores s3 ratchet in s3, you can still run it locally, but the data maybe inaccurate.',
+        ),
+      );
+    }
     if (c.flags.updateSnapshot) {
       console.log(chalk.green('Updated bundle size snapshots'));
     } else if (allPassed) {
       console.log(chalk.green('No significant bundle size changes detected'));
+    } else if (c.flags.s3) {
+      console.log(
+        chalk.yellow(
+          'The bundle size has been measured using s3 flag, please report to the add-on on your pull-request.',
+        ),
+      );
     } else {
       console.log(
         chalk.red(

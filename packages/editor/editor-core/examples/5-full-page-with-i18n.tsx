@@ -19,9 +19,9 @@ export default class ExampleEditor extends React.Component<Props, State> {
     const { locale, messages } = this.state;
     return (
       <IntlProvider locale={this.getLocalTag(locale)} messages={messages}>
-        {FullPageExample({
-          allowHelpDialog: true,
-          primaryToolbarComponents: (
+        <FullPageExample
+          allowHelpDialog
+          primaryToolbarComponents={
             <WithEditorActions
               render={actions => (
                 <React.Fragment>
@@ -34,19 +34,27 @@ export default class ExampleEditor extends React.Component<Props, State> {
                 </React.Fragment>
               )}
             />
-          ),
-        })}
+          }
+        />
       </IntlProvider>
     );
   }
 
   private loadLocale = async (locale: string) => {
-    const localeData = await import(`react-intl/locale-data/${this.getLocalTag(
-      locale,
-    )}`);
+    const localeData = await import(
+      `react-intl/locale-data/${this.getLocalTag(locale)}`
+    );
     addLocaleData(localeData.default);
-    const messages = await import(`../src/i18n/${locale}`);
-    this.setState({ locale, messages: messages.default });
+
+    const messages = await Promise.all([
+      import(`../src/i18n/${locale}`),
+      import(`@atlaskit/mention/src/i18n/${locale}`),
+    ]).then(args => ({
+      ...args[0].default,
+      ...args[1].default,
+    }));
+
+    this.setState({ locale, messages });
   };
 
   private getLocalTag = (locale: string) => locale.substring(0, 2);

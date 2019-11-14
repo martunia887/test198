@@ -1,171 +1,227 @@
 import {
   getFixedProductLinks,
-  getProductLink,
-  getLicensedProductLinks,
-  PRODUCT_DATA_MAP,
-  ProductKey,
-  getProductIsActive,
   getAdministrationLinks,
   getSuggestedProductLink,
+  getJoinableSiteLinks,
 } from '../../links';
+import {
+  Product,
+  WorklensProductType,
+  ProvisionedProducts,
+  ProductKey,
+} from '../../../types';
 
-const HOSTNAME = 'my-hostname.com';
-const CLOUD_ID = 'some-cloud-id';
-const ACTIVE_PRODUCT_STATE = {
-  state: 'ACTIVE',
-};
-const generateLicenseInformation = (activeProducts: string[]) => {
-  const products = activeProducts.reduce(
-    (ans: { [productKey: string]: any }, next: string) => {
-      ans[next] = ACTIVE_PRODUCT_STATE;
-      return ans;
-    },
+import { resolveRecommendations } from '../../../providers/recommendations';
+import mockJoinableSites from '../../../../test-helpers/mockJoinableSites';
+
+const generateProvisionedProducts = (
+  activeProducts: WorklensProductType[],
+): ProvisionedProducts =>
+  activeProducts.reduce(
+    (acc, product) => ({
+      ...acc,
+      [product]: true,
+    }),
     {},
   );
-  return {
-    hostname: HOSTNAME,
-    products,
-  };
-};
 
 describe('utils/links', () => {
-  it('Fixed product list should have People', () => {
-    const expectedProducts = ['people'];
-    const fixedLinks = getFixedProductLinks();
-    expect(fixedLinks.map(({ key }) => key)).toMatchObject(expectedProducts);
-  });
-
-  it('getProductLink should create a correct link config', () => {
-    const productLink = getProductLink(ProductKey.CONFLUENCE);
-    const expectedLink = {
-      key: 'confluence.ondemand',
-      ...PRODUCT_DATA_MAP[ProductKey.CONFLUENCE],
-    };
-    expect(productLink).toMatchObject(expectedLink);
-  });
-
-  describe('getProductIsActive', () => {
-    const productKey = 'some.awesome.new.atlassian.product';
-    const licenseInformation = generateLicenseInformation([productKey]);
-    it('should return true if a product is active', () => {
-      const result = getProductIsActive(licenseInformation, productKey);
-      expect(result).toBe(true);
-    });
-    it('should return false if a product is not active', () => {
-      const productKey = 'some.eol.product';
-      const result = getProductIsActive(licenseInformation, productKey);
-      expect(result).toBe(false);
-    });
-  });
-
-  describe('getLicensedProductLinks', () => {
-    it('should only add active products', () => {
-      const licenseInformation = generateLicenseInformation([
-        'confluence.ondemand',
-      ]);
-      const result = getLicensedProductLinks(licenseInformation, false);
-      expect(result.map(({ key }) => key)).toMatchObject([
-        'confluence.ondemand',
-      ]);
-    });
-    it('should use single Jira link if split jira disabled and there is jira product', () => {
-      const licenseInformation = generateLicenseInformation([
-        'jira-software.ondemand',
-        'jira-incident-manager.ondemand',
-        'confluence.ondemand',
-      ]);
-      const result = getLicensedProductLinks(licenseInformation, false);
-      expect(result.map(({ key }) => key)).toMatchObject([
-        'jira',
-        'confluence.ondemand',
-      ]);
-    });
-    it('should ignore Jira Core when a major Jira product is present', () => {
-      const licenseInformation = generateLicenseInformation([
-        'jira-software.ondemand',
-        'jira-core.ondemand',
-        'confluence.ondemand',
-      ]);
-      const result = getLicensedProductLinks(licenseInformation, false);
-      expect(result.map(({ key }) => key)).toMatchObject([
-        'jira-software.ondemand',
-        'confluence.ondemand',
-      ]);
-    });
-    it('should only render Jira Core when it is the only Jira product', () => {
-      const licenseInformation = generateLicenseInformation([
-        'jira-core.ondemand',
-        'confluence.ondemand',
-      ]);
-      const result = getLicensedProductLinks(licenseInformation, false);
-      expect(result.map(({ key }) => key)).toMatchObject([
-        'jira-core.ondemand',
-        'confluence.ondemand',
-      ]);
-    });
-    it('should return exactly what license information returns', () => {
-      const licenseInformation = generateLicenseInformation([
-        'jira-software.ondemand',
-        'jira-servicedesk.ondemand',
-        'jira-incident-manager.ondemand',
-        'jira-core.ondemand',
-      ]);
-      const result = getLicensedProductLinks(licenseInformation, true);
-      expect(result.map(({ key }) => key)).toMatchObject([
-        'jira-software.ondemand',
-        'jira-servicedesk.ondemand',
-        'jira-incident-manager.ondemand',
-        'jira-core.ondemand',
-      ]);
+  describe('fixed product links', () => {
+    it('should have discover more button if enabled', () => {
+      const isDiscoverMoreForEveryoneEnabled = true;
+      const expectedProducts = ['discover-more'];
+      const fixedLinks = getFixedProductLinks({
+        isDiscoverMoreForEveryoneEnabled,
+      });
+      expect(fixedLinks.map(({ key }) => key)).toMatchObject(expectedProducts);
     });
   });
 
   describe('getAdministrationLinks', () => {
+    let isEmceeLinkEnabled = false;
     it('should assemble admin links for site admins', () => {
       const isAdmin = true;
-      const result = getAdministrationLinks(CLOUD_ID, isAdmin);
-      const expectedResult = [
-        `/admin/s/some-cloud-id/billing/addapplication`,
-        `/admin/s/some-cloud-id`,
-      ];
+      const isDiscoverMoreForEveryoneEnabled = false;
+      const result = getAdministrationLinks(
+        isAdmin,
+        isDiscoverMoreForEveryoneEnabled,
+        isEmceeLinkEnabled,
+      );
+      const expectedResult = [`/admin/billing/addapplication`, `/admin`];
       expect(result.map(({ href }) => href)).toMatchObject(expectedResult);
     });
     it('should assemble admin links for site trusted users', () => {
       const isAdmin = false;
-      const result = getAdministrationLinks(CLOUD_ID, isAdmin);
+      const isDiscoverMoreForEveryoneEnabled = false;
+      const result = getAdministrationLinks(
+        isAdmin,
+        isDiscoverMoreForEveryoneEnabled,
+        isEmceeLinkEnabled,
+      );
       const expectedResult = [
         `/trusted-admin/billing/addapplication`,
         `/trusted-admin`,
       ];
       expect(result.map(({ href }) => href)).toMatchObject(expectedResult);
     });
+    it('should not include discover admin link if more if discover more button is enabled for all users', () => {
+      const isDiscoverMoreForEveryoneEnabled = true;
+      const result = getAdministrationLinks(
+        true,
+        isDiscoverMoreForEveryoneEnabled,
+        isEmceeLinkEnabled,
+      );
+
+      const expectedResult = [`administration`];
+      expect(result.map(({ key }) => key)).toMatchObject(expectedResult);
+    });
+    it('When product is Jira & Emcee enabled, should include Jira Emcee link', () => {
+      const product = Product.JIRA;
+      isEmceeLinkEnabled = true;
+      const isDiscoverMoreForEveryoneEnabled = false;
+      const result = getAdministrationLinks(
+        true,
+        isDiscoverMoreForEveryoneEnabled,
+        isEmceeLinkEnabled,
+        product,
+      );
+
+      const expectedResult =
+        '/plugins/servlet/ac/com.atlassian.jira.emcee/discover#!/discover?source=app_switcher';
+      expect(result.map(({ href }) => href)).toContain(expectedResult);
+    });
+    it('When product is Confluence & Emcee enabled, should include Confluence Emcee link', () => {
+      const product = Product.CONFLUENCE;
+      isEmceeLinkEnabled = true;
+      const isDiscoverMoreForEveryoneEnabled = false;
+      const result = getAdministrationLinks(
+        true,
+        isDiscoverMoreForEveryoneEnabled,
+        isEmceeLinkEnabled,
+        product,
+      );
+
+      const expectedResult =
+        '/wiki/plugins/servlet/ac/com.atlassian.confluence.emcee/discover#!/discover?source=app_switcher';
+      expect(result.map(({ href }) => href)).toContain(expectedResult);
+    });
   });
 
   describe('getXSellLink', () => {
-    it("should offer Confluence if it hasn't being activated", () => {
-      const licenseInformation = generateLicenseInformation([
-        'jira-software.ondemand',
-      ]);
-      const result = getSuggestedProductLink(licenseInformation);
-      expect(result.length).toEqual(1);
-      expect(result[0]).toHaveProperty('key', 'confluence.ondemand');
+    const suggestedProducts = resolveRecommendations();
+    it('should offer both JSW and Confluence if no products are active', () => {
+      const provisionedProducts = generateProvisionedProducts([]);
+      const result = getSuggestedProductLink(
+        provisionedProducts,
+        suggestedProducts,
+      );
+      expect(result).toHaveLength(2);
+      expect(result[0]).toHaveProperty('key', ProductKey.JIRA_SOFTWARE);
+      expect(result[1]).toHaveProperty('key', ProductKey.CONFLUENCE);
     });
-    it('should offer Jira Service Desk if Confluence is active', () => {
-      const licenseInformation = generateLicenseInformation([
-        'jira-software.ondemand',
-        'confluence.ondemand',
+    it('should offer both JSW and JSD if Confluence is active', () => {
+      const provisionedProducts = generateProvisionedProducts([
+        WorklensProductType.CONFLUENCE,
       ]);
-      const result = getSuggestedProductLink(licenseInformation);
-      expect(result.length).toEqual(1);
-      expect(result[0]).toHaveProperty('key', 'jira-servicedesk.ondemand');
+      const result = getSuggestedProductLink(
+        provisionedProducts,
+        suggestedProducts,
+      );
+      expect(result).toHaveLength(2);
+      expect(result[0]).toHaveProperty('key', ProductKey.JIRA_SOFTWARE);
+      expect(result[1]).toHaveProperty('key', ProductKey.JIRA_SERVICE_DESK);
     });
-    it('should return empty array if Confluence and JSD are active', () => {
-      const licenseInformation = generateLicenseInformation([
-        'jira-servicedesk.ondemand',
-        'confluence.ondemand',
+    it('should offer both Confluence and JSD if Jira is active', () => {
+      const provisionedProducts = generateProvisionedProducts([
+        WorklensProductType.JIRA_SOFTWARE,
       ]);
-      const result = getSuggestedProductLink(licenseInformation);
-      expect(result).toEqual([]);
+      const result = getSuggestedProductLink(
+        provisionedProducts,
+        suggestedProducts,
+      );
+      expect(result).toHaveLength(2);
+      expect(result[0]).toHaveProperty('key', ProductKey.CONFLUENCE);
+      expect(result[1]).toHaveProperty('key', ProductKey.JIRA_SERVICE_DESK);
+    });
+    it('should offer Jira Service Desk and Opsgenie if Confluence and JSW are active', () => {
+      const provisionedProducts = generateProvisionedProducts([
+        WorklensProductType.JIRA_SOFTWARE,
+        WorklensProductType.CONFLUENCE,
+      ]);
+      const result = getSuggestedProductLink(
+        provisionedProducts,
+        suggestedProducts,
+      );
+      expect(result.length).toEqual(2);
+      expect(result[0]).toHaveProperty('key', ProductKey.JIRA_SERVICE_DESK);
+      expect(result[1]).toHaveProperty('key', ProductKey.OPSGENIE);
+    });
+    it('should offer Confluence and Opsgenie, if JSW and JSD are active', () => {
+      const provisionedProducts = generateProvisionedProducts([
+        WorklensProductType.JIRA_SOFTWARE,
+        WorklensProductType.JIRA_SERVICE_DESK,
+      ]);
+      const result = getSuggestedProductLink(
+        provisionedProducts,
+        suggestedProducts,
+      );
+      expect(result.length).toEqual(2);
+      expect(result[0]).toHaveProperty('key', ProductKey.CONFLUENCE);
+      expect(result[1]).toHaveProperty('key', ProductKey.OPSGENIE);
+    });
+    it('should return Jira if Confluence and JSD are active', () => {
+      const provisionedProducts = generateProvisionedProducts([
+        WorklensProductType.JIRA_SERVICE_DESK,
+        WorklensProductType.CONFLUENCE,
+      ]);
+      const result = getSuggestedProductLink(
+        provisionedProducts,
+        suggestedProducts,
+      );
+      expect(result[0]).toHaveProperty('key', ProductKey.JIRA_SOFTWARE);
+    });
+    it('should offer Opsgenie if Confluence, JSD and JSW are active', () => {
+      const provisionedProducts = generateProvisionedProducts([
+        WorklensProductType.JIRA_SERVICE_DESK,
+        WorklensProductType.CONFLUENCE,
+        WorklensProductType.JIRA_SOFTWARE,
+      ]);
+      const result = getSuggestedProductLink(
+        provisionedProducts,
+        suggestedProducts,
+      );
+      expect(result).toHaveLength(1);
+      expect(result[0]).toHaveProperty('key', ProductKey.OPSGENIE);
+    });
+
+    it('should return an empty array if Confluence, JSD, JSW, and Opsgenie are active', () => {
+      const provisionedProducts = generateProvisionedProducts([
+        WorklensProductType.JIRA_SERVICE_DESK,
+        WorklensProductType.CONFLUENCE,
+        WorklensProductType.JIRA_SOFTWARE,
+        WorklensProductType.OPSGENIE,
+      ]);
+      const result = getSuggestedProductLink(
+        provisionedProducts,
+        suggestedProducts,
+      );
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('getJoinableSiteLinks', () => {
+    it('should return an array', () => {
+      const result = getJoinableSiteLinks([]);
+      expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('should return 3 items at maximum', () => {
+      const result = getJoinableSiteLinks(
+        mockJoinableSites.sites.map(site =>
+          Object.assign({}, site, { relevance: 10 }),
+        ),
+      );
+      expect(result.length).toBe(3);
     });
   });
 });

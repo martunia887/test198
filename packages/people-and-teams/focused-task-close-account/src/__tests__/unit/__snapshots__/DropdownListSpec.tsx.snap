@@ -63,13 +63,8 @@ exports[`Dropdown list button renders sites list with collapse button for more t
     />
   </styled.div>
   <styled.div>
-    <WithAnalyticsContext(WithAnalyticsEvents(WithDeprecationWarnings(Button)))
+    <WithAnalyticsContext(WithAnalyticsEvents(Button))
       appearance="link"
-      iconBefore={
-        <ChevronUpIcon
-          label="collapse"
-        />
-      }
       onClick={[Function]}
       spacing="none"
     >
@@ -79,7 +74,7 @@ exports[`Dropdown list button renders sites list with collapse button for more t
         id="focused-task-close-account.delete-account.drop-down-collapse-button"
         values={Object {}}
       />
-    </WithAnalyticsContext(WithAnalyticsEvents(WithDeprecationWarnings(Button)))>
+    </WithAnalyticsContext(WithAnalyticsEvents(Button))>
   </styled.div>
 </Fragment>
 `;
@@ -104,13 +99,8 @@ exports[`Dropdown list button renders sites list with expand button for more tha
     </li>
   </styled.ul>
   <styled.div>
-    <WithAnalyticsContext(WithAnalyticsEvents(WithDeprecationWarnings(Button)))
+    <WithAnalyticsContext(WithAnalyticsEvents(Button))
       appearance="link"
-      iconBefore={
-        <ChevronDownIcon
-          label="expand"
-        />
-      }
       onClick={[Function]}
       spacing="none"
     >
@@ -124,7 +114,7 @@ exports[`Dropdown list button renders sites list with expand button for more tha
           }
         }
       />
-    </WithAnalyticsContext(WithAnalyticsEvents(WithDeprecationWarnings(Button)))>
+    </WithAnalyticsContext(WithAnalyticsEvents(Button))>
   </styled.div>
 </Fragment>
 `;
@@ -149,13 +139,8 @@ exports[`Dropdown list button renders sites list with expand button for more tha
     </li>
   </styled.ul>
   <styled.div>
-    <WithAnalyticsContext(WithAnalyticsEvents(WithDeprecationWarnings(Button)))
+    <WithAnalyticsContext(WithAnalyticsEvents(Button))
       appearance="link"
-      iconBefore={
-        <ChevronDownIcon
-          label="expand"
-        />
-      }
       onClick={[Function]}
       spacing="none"
     >
@@ -169,7 +154,7 @@ exports[`Dropdown list button renders sites list with expand button for more tha
           }
         }
       />
-    </WithAnalyticsContext(WithAnalyticsEvents(WithDeprecationWarnings(Button)))>
+    </WithAnalyticsContext(WithAnalyticsEvents(Button))>
   </styled.div>
 </Fragment>
 `;

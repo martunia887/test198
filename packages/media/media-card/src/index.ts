@@ -1,28 +1,23 @@
 import { MouseEvent } from 'react';
 import {
   FileDetails,
-  MediaType,
-  FileProcessingStatus,
-  Context,
+  MediaClient,
   Identifier,
   ImageResizeMode,
-} from '@atlaskit/media-core';
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
+} from '@atlaskit/media-client';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 import { CardAction } from './actions';
 import { MediaViewerDataSource } from '@atlaskit/media-viewer';
 
-// the only components we expose to consumers is Card and CardView
+export {
+  MediaCardAnalyticsPayload,
+  MediaCardAnalyticsFileAttributes,
+} from './utils/analytics';
+
 export { default as Card } from './root/card/cardLoader';
 
-export { CardView } from './root/cardViewLoader';
-
-export {
-  CardViewState,
-  CardViewOwnProps as CardViewProps,
-} from './root/cardView';
-
-export * from './actions';
+export { CardAction, CardEventHandler } from './actions';
 
 export type CardStatus =
   | 'uploading'
@@ -71,10 +66,12 @@ export interface SharedCardProps {
   readonly actions?: Array<CardAction>;
   readonly selectable?: boolean;
   readonly selected?: boolean;
+  readonly alt?: string;
+  readonly testId?: string;
 }
 
 export interface CardOnClickCallback {
-  (result: CardEvent, analyticsEvent?: UIAnalyticsEventInterface): void;
+  (result: CardEvent, analyticsEvent?: UIAnalyticsEvent): void;
 }
 
 export interface CardEventProps {
@@ -84,45 +81,8 @@ export interface CardEventProps {
   readonly onLoadingChange?: OnLoadingChangeFunc;
 }
 
-export interface AnalyticsFileAttributes {
-  fileMediatype?: MediaType;
-  fileMimetype?: string;
-  fileStatus?: FileProcessingStatus;
-  fileSize?: number;
-}
-
-export interface AnalyticsLinkAttributes {
-  linkDomain: string;
-}
-
-export interface AnalyticsViewAttributes {
-  viewPreview: boolean;
-  viewActionmenu: boolean;
-  viewSize?: CardAppearance;
-}
-
-export interface BaseAnalyticsContext {
-  // These fields are requested to be in all UI events. See guidelines:
-  // https://extranet.atlassian.com/display/PData/UI+Events
-  packageVersion: string; // string — in a format like '3.2.1'
-  packageName: string;
-  componentName: string;
-  actionSubject: string; // ex. MediaCard
-  actionSubjectId: string | null; // file/link id
-}
-
-export interface CardAnalyticsContext extends BaseAnalyticsContext {}
-
-export interface CardViewAnalyticsContext extends BaseAnalyticsContext {
-  loadStatus: 'fail' | 'loading_metadata' | 'uploading' | 'complete';
-  type: 'file' | 'link' | 'smart' | 'external-image';
-  viewAttributes: AnalyticsViewAttributes;
-  fileAttributes?: AnalyticsFileAttributes;
-  linkAttributes?: AnalyticsLinkAttributes;
-}
-
 export interface CardProps extends SharedCardProps, CardEventProps {
-  readonly context: Context;
+  readonly mediaClient: MediaClient;
   readonly identifier: Identifier;
   readonly isLazy?: boolean;
   readonly resizeMode?: ImageResizeMode;
@@ -132,6 +92,7 @@ export interface CardProps extends SharedCardProps, CardEventProps {
   readonly useInlinePlayer?: boolean;
   readonly shouldOpenMediaViewer?: boolean;
   readonly mediaViewerDataSource?: MediaViewerDataSource;
+  readonly contextId?: string;
 }
 
 export interface CardState {
@@ -146,4 +107,6 @@ export interface CardState {
   error?: Error;
 }
 
-export { defaultImageCardDimensions } from './utils';
+export { CardLoading } from './utils/lightCards/cardLoading';
+export { CardError } from './utils/lightCards/cardError';
+export { defaultImageCardDimensions } from './utils/cardDimensions';

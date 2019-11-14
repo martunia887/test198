@@ -58,8 +58,12 @@ describe('JIRA wiki markup - Lists', () => {
     ['should use mediaSingle nodes', '* !attached-image.gif!'],
     [
       'should not fail for multiple lists',
-      // tslint:disable-next-line:max-line-length
+
       "Steps to reproduce:\r\n* Type something\r\n* Type @\r\n* Type few letters\r\n* mention mark disappears \r\n\r\nExpected:\r\n* Mention mark doesn't disappear",
+    ],
+    [
+      'should break out the media group but merge separate media groups into single media group if only separated by space',
+      `* This is a media group [^file1.pdf] [^file2.pdf] [^file3.pdf] [^file4.pdf] and text after it [^file5.pdf] [^file6.pdf] [^file7.pdf] [^file8.pdf]`,
     ],
     [
       'should break out the media group',
@@ -164,6 +168,10 @@ abc
 * item 1
 * item 2 with {code}code block{code}
 `,
+    ],
+    [
+      'should not break {color} macro to differnt lines',
+      `* {color:#205081}123{color} {color:#d04437}456{color}`,
     ],
   ];
 

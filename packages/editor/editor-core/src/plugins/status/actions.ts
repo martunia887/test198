@@ -8,6 +8,15 @@ import {
 import { EditorView } from 'prosemirror-view';
 import { uuid } from '@atlaskit/adf-schema';
 import { pluginKey, StatusType } from './plugin';
+import { TOOLBAR_MENU_TYPE } from '../insert-block/ui/ToolbarInsertBlock';
+import {
+  withAnalytics,
+  ACTION,
+  ACTION_SUBJECT,
+  ACTION_SUBJECT_ID,
+  EVENT_TYPE,
+} from '../analytics';
+import { Command } from '../../types';
 
 export const DEFAULT_STATUS: StatusType = {
   text: '',
@@ -23,8 +32,6 @@ export const createStatus = (showStatusPickerAtOffset = -2) => (
     localId: uuid.generate(),
   });
 
-  const selectedStatus = statusNode.attrs;
-
   const tr = insert(statusNode);
   const showStatusPickerAt = tr.selection.from + showStatusPickerAtOffset;
   return tr
@@ -32,18 +39,16 @@ export const createStatus = (showStatusPickerAtOffset = -2) => (
     .setMeta(pluginKey, {
       showStatusPickerAt,
       isNew: true,
-      selectedStatus,
     });
 };
 
-export const updateStatus = (status?: StatusType) => (
-  editorView: EditorView,
-): boolean => {
-  const { state, dispatch } = editorView;
+export const updateStatus = (status?: StatusType): Command => (
+  state,
+  dispatch,
+) => {
   const { schema } = state;
-  const selectedStatus = null;
 
-  const updatedStatus = status
+  const selectedStatus = status
     ? Object.assign(status, {
         text: status.text.trim(),
         localId: status.localId || uuid.generate(),
@@ -52,7 +57,7 @@ export const updateStatus = (status?: StatusType) => (
 
   const statusProps = {
     ...DEFAULT_STATUS,
-    ...updatedStatus,
+    ...selectedStatus,
   };
 
   let tr = state.tr;
@@ -69,27 +74,40 @@ export const updateStatus = (status?: StatusType) => (
     tr = tr
       .setMeta(pluginKey, {
         showStatusPickerAt: newShowStatusPickerAt,
-        selectedStatus,
         isNew: true,
       })
       .scrollIntoView();
-    dispatch(tr);
+    if (dispatch) {
+      dispatch(tr);
+    }
     return true;
   }
 
   if (state.doc.nodeAt(showStatusPickerAt)) {
     tr = tr.setNodeMarkup(showStatusPickerAt, schema.nodes.status, statusProps);
     tr = tr.setSelection(NodeSelection.create(tr.doc, showStatusPickerAt));
-    tr = tr
-      .setMeta(pluginKey, { showStatusPickerAt, selectedStatus })
-      .scrollIntoView();
+    tr = tr.setMeta(pluginKey, { showStatusPickerAt }).scrollIntoView();
 
-    dispatch(tr);
+    if (dispatch) {
+      dispatch(tr);
+    }
     return true;
   }
 
   return false;
 };
+
+export const updateStatusWithAnalytics = (
+  inputMethod: TOOLBAR_MENU_TYPE,
+  status?: StatusType,
+): Command =>
+  withAnalytics({
+    action: ACTION.INSERTED,
+    actionSubject: ACTION_SUBJECT.DOCUMENT,
+    actionSubjectId: ACTION_SUBJECT_ID.STATUS,
+    attributes: { inputMethod },
+    eventType: EVENT_TYPE.TRACK,
+  })(updateStatus(status));
 
 export const setStatusPickerAt = (showStatusPickerAt: number | null) => (
   state: EditorState,
@@ -99,7 +117,6 @@ export const setStatusPickerAt = (showStatusPickerAt: number | null) => (
     state.tr.setMeta(pluginKey, {
       showStatusPickerAt,
       isNew: false,
-      selectedStatus: null,
     }),
   );
   return true;
@@ -123,14 +140,16 @@ export const commitStatusPicker = () => (editorView: EditorView) => {
   tr = tr.setMeta(pluginKey, {
     showStatusPickerAt: null,
     isNew: false,
-    selectedStatus: null,
   });
 
   if (statusNode.attrs.text) {
-    // still has content - keep content, move selection after status
-    tr = tr.setSelection(
-      Selection.near(state.tr.doc.resolve(showStatusPickerAt + 2)),
-    );
+    // still has content - keep content
+    // move selection after status if selection did not change
+    if (tr.selection.from === showStatusPickerAt) {
+      tr = tr.setSelection(
+        Selection.near(state.tr.doc.resolve(showStatusPickerAt + 2)),
+      );
+    }
   } else {
     // no content - remove node
     tr = tr.delete(showStatusPickerAt, showStatusPickerAt + 1);

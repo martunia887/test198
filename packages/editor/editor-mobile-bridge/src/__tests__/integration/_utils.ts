@@ -2,7 +2,8 @@ import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
 
 declare global {
   interface Window {
-    bridge: any;
+    bridge?: any;
+    rendererBridge?: any;
   }
 }
 
@@ -36,15 +37,25 @@ export const renderer = {
   placeholder: '#examples', // FIXME lets add something better to renderer
 };
 
-export const copyIcon = 'span[aria-label="copy"]';
-export const clipboardInput = '#input';
+export const clipboardHelper = {
+  name: 'editor-with-copy-paste',
+  path: getExampleUrl(
+    'editor',
+    'editor-mobile-bridge',
+    'editor-with-copy-paste',
+  ),
+  placeholder: editable,
+};
+
+export const clipboardInput = 'textarea[data-id=clipboardInput]';
+export const copyButton = 'button[aria-label="copy"]';
 
 export const callNativeBridge = async (
   browser: any,
   bridgeFn: string,
   ...args: any[]
 ) => {
-  return await browser.browser.execute(
+  return await browser.execute(
     (bridgeFn: any, args: any[]) => {
       if (window.bridge && window.bridge[bridgeFn]) {
         window.bridge[bridgeFn].apply(window.bridge, args);
@@ -55,8 +66,25 @@ export const callNativeBridge = async (
   );
 };
 
+export const callRendererBridge = async (
+  browser: any,
+  bridgeFn: string,
+  ...args: any[]
+) => {
+  return await browser.execute(
+    (bridgeFn: any, args: any[]) => {
+      let bridge = window.rendererBridge || {};
+      if (bridgeFn in bridge) {
+        return bridge[bridgeFn].apply(bridge, args);
+      }
+    },
+    bridgeFn,
+    args || [],
+  );
+};
+
 const clearBridgeOutput = async (browser: any) => {
-  await browser.browser.execute(() => {
+  await browser.execute(() => {
     // @ts-ignore
     window.logBridge = [];
   });
@@ -67,7 +95,7 @@ export const getBridgeOutput = async (
   bridge: string,
   bridgeFn: string,
 ) => {
-  const logs = await browser.browser.execute(
+  const logs = await browser.execute(
     (bridge: string, bridgeFn: string) => {
       // @ts-ignore
       let logs = window.logBridge;
@@ -82,11 +110,11 @@ export const getBridgeOutput = async (
     bridgeFn,
   );
 
-  return logs.value;
+  return logs;
 };
 
 export const clearEditor = async (browser: any) => {
-  await browser.browser.execute(() => {
+  await browser.execute(() => {
     const dom = document.querySelector('.ProseMirror') as HTMLElement;
     dom.innerHTML = '<p><br /></p>';
   });

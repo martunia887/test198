@@ -7,7 +7,7 @@ export type DisplayType = 'file' | 'thumbnail';
 export type DefaultAttributes<T> = {
   [P in keyof T]: {
     default?: T[P] | null;
-  }
+  };
 };
 
 /**
@@ -33,6 +33,10 @@ export interface MediaBaseAttributes {
    * @minLength 1
    */
   occurrenceKey?: string;
+  /**
+   * @stage 0
+   */
+  alt?: string;
   // For both CQ and JIRA
   __fileName?: string | null;
   // For CQ
@@ -40,6 +44,11 @@ export interface MediaBaseAttributes {
   __fileMimeType?: string | null;
   // For JIRA
   __displayType?: DisplayType | null;
+  // For copy & paste
+  __contextId?: string;
+
+  // is set to true when new external media is inserted, false for external media in existing documents
+  __external?: boolean;
 }
 
 export interface MediaAttributes extends MediaBaseAttributes {
@@ -51,6 +60,7 @@ export interface ExternalMediaAttributes {
   url: string;
   width?: number;
   height?: number;
+  __external?: boolean;
 }
 
 export const defaultAttrs: DefaultAttributes<
@@ -67,20 +77,24 @@ export const defaultAttrs: DefaultAttributes<
   __fileSize: { default: null },
   __fileMimeType: { default: null },
   __displayType: { default: null },
+  __contextId: { default: null },
+  __external: { default: false },
 };
 
 export const media: NodeSpec = {
+  selectable: true,
   attrs: defaultAttrs as any,
   parseDOM: [
     {
       tag: 'div[data-node-type="media"]',
       getAttrs: dom => {
-        const attrs = {} as MediaAttributes;
+        const attrs = {} as Record<string, any>;
 
         (Object.keys(defaultAttrs) as Array<keyof MediaAttributes>).forEach(
           k => {
             const key = camelCaseToKebabCase(k).replace(/^__/, '');
-            const value = (dom as HTMLElement).getAttribute(`data-${key}`);
+            const value =
+              (dom as HTMLElement).getAttribute(`data-${key}`) || '';
             if (value) {
               attrs[k] = value;
             }
@@ -100,7 +114,7 @@ export const media: NodeSpec = {
           attrs.height = Number(attrs.height);
         }
 
-        return attrs;
+        return attrs as MediaAttributes;
       },
     },
     // Don't match data URI
@@ -128,6 +142,7 @@ export const media: NodeSpec = {
       'data-width': node.attrs.width,
       'data-height': node.attrs.height,
       'data-url': node.attrs.url,
+      'data-alt': node.attrs.alt,
       // toDOM is used for static rendering as well as editor rendering. This comes into play for
       // emails, copy/paste, etc, so the title and styling here *is* useful (despite a React-based
       // node view being used for editing).
@@ -145,6 +160,14 @@ export const media: NodeSpec = {
 
     return ['div', attrs];
   },
+};
+
+export const mediaWithAltText: NodeSpec = {
+  ...media,
+  attrs: {
+    ...defaultAttrs,
+    alt: { default: null },
+  } as any,
 };
 
 export const camelCaseToKebabCase = (str: string) =>
@@ -168,7 +191,7 @@ export const copyPrivateAttributes = (
  * There's no concept of optional property in ProseMirror. It sets value as `null`
  * when there's no use of any property. We are filtering out all private & optional attrs here.
  */
-const optionalAttributes = ['occurrenceKey', 'width', 'height', 'url'];
+const optionalAttributes = ['occurrenceKey', 'width', 'height', 'url', 'alt'];
 const externalOnlyAttributes = ['type', 'url', 'width', 'height'];
 
 export const toJSON = (node: PMNode) => ({

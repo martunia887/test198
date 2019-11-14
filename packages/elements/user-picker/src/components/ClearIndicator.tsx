@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { components } from '@atlaskit/select';
+import { components, IndicatorProps } from '@atlaskit/select';
 import Tooltip from '@atlaskit/tooltip';
-import { isPopupUserPickerByProps } from './utils';
 
-export class ClearIndicator extends React.PureComponent<any> {
+export class ClearIndicator extends React.PureComponent<IndicatorProps<any>> {
   private handleMouseDown = (event: React.MouseEvent) => {
     if (event && event.type === 'mousedown' && event.button !== 0) {
       return;
@@ -11,10 +10,7 @@ export class ClearIndicator extends React.PureComponent<any> {
     this.props.clearValue();
     // Prevent focus when clear on blurred state
     const { selectProps } = this.props;
-    if (
-      selectProps &&
-      (!selectProps.isFocused || isPopupUserPickerByProps(selectProps))
-    ) {
+    if (selectProps && !selectProps.isFocused) {
       event.stopPropagation();
     }
   };

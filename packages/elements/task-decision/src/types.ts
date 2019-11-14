@@ -14,7 +14,7 @@ export interface ContentRef {
 
 export interface ObjectKey {
   localId: string;
-  containerAri: string;
+  containerAri?: string;
   objectAri: string;
 }
 
@@ -25,18 +25,14 @@ export interface BaseItem<S> extends ObjectKey {
 }
 
 export interface ServiceDecision {
-  containerAri: string;
-  creationDate: string;
-  creator?: User;
-  lastUpdater?: User;
+  creationDate?: string;
+  creatorId?: UserId;
+  lastUpdaterId?: UserId;
   lastUpdateDate: string;
   localId: string;
   objectAri: string;
-  participants: User[];
-  // Atlassian Document fragment (json string)
-  rawContent: string;
-  contentAsFabricDocument: string;
-  state: DecisionState;
+  participants?: UserId[];
+  state?: DecisionState;
   status: DecisionStatus;
   type: DecisionType;
 }
@@ -52,18 +48,7 @@ export interface ServiceDecisionResponse {
 
 export type ServiceItem = ServiceDecision | ServiceTask;
 
-export interface ServiceItemResponse {
-  elements: ServiceItem[];
-  meta: Meta;
-}
-
-export interface ServiceTaskResponse {
-  tasks: ServiceTask[];
-  meta: Meta;
-}
-
 export interface ServiceTaskState {
-  containerAri: string;
   lastUpdateDate: string;
   localId: string;
   objectAri: string;
@@ -71,81 +56,41 @@ export interface ServiceTaskState {
 }
 
 export interface Decision extends BaseItem<DecisionState> {
-  creationDate: Date;
-  creator?: User;
-  lastUpdater?: User;
+  creationDate?: Date;
+  creator?: UserId;
+  lastUpdater?: UserId;
   lastUpdateDate: Date;
-  participants: User[];
-  // Atlassian Document fragment
-  content: any;
+  participants?: UserId[];
   status: DecisionStatus;
   type: DecisionType;
 }
 
-export interface DecisionResponse {
-  decisions: Decision[];
-  nextQuery?: Query;
-}
-
-export interface TaskResponse {
-  tasks: Task[];
-  nextQuery?: Query;
-}
-
 export type Item = Decision | Task;
 
-export interface ItemResponse {
-  items: Item[];
-  nextQuery?: Query;
-}
-
-export type SortCriteria = 'lastUpdateDate' | 'creationDate';
-
-export interface Query {
-  containerAri: string;
-  limit?: number;
-  cursor?: Cursor;
-  sortCriteria?: SortCriteria;
-}
-
-export interface User {
-  id: string;
-  displayName: string;
-  nickname?: string;
-  avatarUrl: string;
-}
-
-// Kept for compatibility
-export type Participant = User;
+export type UserId = string;
 
 export interface ServiceTask {
-  containerAri: string;
-  creationDate: string;
-  creator?: User;
-  lastUpdater?: User;
+  creationDate?: string;
+  creatorId?: UserId;
+  lastUpdaterId?: UserId;
   lastUpdateDate: string;
   localId: string;
   objectAri: string;
-  parentLocalId: string;
-  participants: User[];
+  parentLocalId?: string;
+  participants?: UserId[];
   position: number;
-  // Atlassian Document fragment (json string)
-  rawContent: string;
-  contentAsFabricDocument: string;
   state: TaskState;
   type: TaskType;
 }
 
 export interface Task extends BaseItem<TaskState> {
-  creationDate: Date;
-  creator?: User;
-  lastUpdater?: User;
+  creationDate?: Date;
+  creator?: UserId;
+  lastUpdater?: UserId;
   lastUpdateDate: Date;
-  parentLocalId: string;
-  participants: User[];
-  position: number;
-  // Atlassian Document fragment
-  content: any;
+  parentLocalId?: string;
+  participants?: UserId[];
+  position?: number;
   type: TaskType;
 }
 
@@ -154,7 +99,7 @@ export type Handler = (state: TaskState | DecisionState) => void;
 export type RecentUpdatesId = string;
 
 export interface RecentUpdateContext {
-  containerAri: string;
+  objectAri: string;
   localId?: string;
 }
 
@@ -180,32 +125,33 @@ export interface RecentUpdatesListener {
 }
 
 export interface TaskDecisionResourceConfig extends ServiceConfig {
-  currentUser?: User;
   pubSubClient?: PubSubClient;
+
+  /**
+   * Indicates if initial state for an action or decision is should be cached,
+   * from the content, i.e. was originally hydrated from the service initially,
+   * and so should be considered up to date.
+   *
+   * Will stop the initiation of the hydration from the service the first
+   * time an action or decision is seen.
+   *
+   * If false the state will always be hydrated from the service on first view.
+   */
+  disableServiceHydration?: boolean;
 }
 
 export interface TaskDecisionProvider {
-  getDecisions(
-    query: Query,
-    recentUpdatesListener?: RecentUpdatesListener,
-  ): Promise<DecisionResponse>;
-  getTasks(
-    query: Query,
-    recentUpdatesListener?: RecentUpdatesListener,
-  ): Promise<TaskResponse>;
-  getItems(
-    query: Query,
-    recentUpdatesListener?: RecentUpdatesListener,
-  ): Promise<ItemResponse>;
-
   unsubscribeRecentUpdates(id: RecentUpdatesId): void;
   notifyRecentUpdates(updateContext: RecentUpdateContext): void;
 
   // Tasks
   toggleTask(objectKey: ObjectKey, state: TaskState): Promise<TaskState>;
-  subscribe(objectKey: ObjectKey, handler: Handler): void;
+  subscribe(
+    objectKey: ObjectKey,
+    handler: Handler,
+    item?: BaseItem<TaskState | DecisionState>,
+  ): void;
   unsubscribe(objectKey: ObjectKey, handler: Handler): void;
-  getCurrentUser?(): User | undefined;
 }
 
 /**
@@ -213,7 +159,7 @@ export interface TaskDecisionProvider {
  */
 export interface RendererContext {
   objectAri: string;
-  containerAri: string;
+  containerAri?: string;
 }
 
 export interface RenderDocument {
@@ -224,7 +170,7 @@ export interface OnUpdate<T> {
   (allDecisions: T[], newDecisions: T[]): void;
 }
 
-export type Appearance = 'inline' | 'card';
+export type Appearance = 'inline';
 
 /**
  * Same as PubSub client types (don't want a direct dep though)

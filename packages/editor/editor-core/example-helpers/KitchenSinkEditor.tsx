@@ -5,14 +5,17 @@ import { EditorView } from 'prosemirror-view';
 import {
   cardProvider,
   customInsertMenuItems,
+  extensionHandlers,
 } from '@atlaskit/editor-test-helpers';
 
 import { validator, ErrorCallback, ADFEntity } from '@atlaskit/adf-utils';
 import { Provider as SmartCardProvider } from '@atlaskit/smart-card';
+import { mention } from '@atlaskit/util-data-test';
 
 import Editor from './../src/editor';
 import { EditorAppearance } from '../src/types';
 import { EditorActions } from '../src';
+import { ExampleInlineCommentComponent } from '@atlaskit/editor-test-helpers';
 
 import {
   providers,
@@ -20,7 +23,6 @@ import {
   analyticsHandler,
   quickInsertProvider,
 } from '../examples/5-full-page';
-import { extensionHandlers } from './extension-handlers';
 import { Error } from './ErrorReport';
 
 export type Props = {
@@ -82,18 +84,28 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
           allowDate={true}
           allowLayouts={{
             allowBreakout: true,
+            UNSAFE_addSidebarLayouts: true,
           }}
           allowTextAlignment={true}
           allowTemplatePlaceholders={{ allowInserting: true }}
           UNSAFE_cards={{
             provider: this.cardProviderPromise,
           }}
+          UNSAFE_allowExpand={true}
+          annotationProvider={{
+            component: ExampleInlineCommentComponent,
+          }}
           allowStatus={true}
+          allowNestedTasks
           {...providers}
+          mentionProvider={Promise.resolve(
+            mention.storyData.resourceProviderWithTeamMentionHighlight,
+          )} // enable highlight only for kitchen sink example
           media={{
             provider: mediaProvider,
             allowMediaSingle: true,
             allowResizing: true,
+            allowLinking: true,
           }}
           insertMenuItems={customInsertMenuItems}
           extensionHandlers={extensionHandlers}
@@ -117,7 +129,7 @@ export default class KitchenSinkEditor extends React.Component<Props, State> {
     this.validateDocument();
   }
 
-  componentWillReceiveProps(newProps: Props) {
+  UNSAFE_componentWillReceiveProps(newProps: Props) {
     if (this.props.actions !== newProps.actions) {
       this.editorView = newProps.actions._privateGetEditorView();
     }

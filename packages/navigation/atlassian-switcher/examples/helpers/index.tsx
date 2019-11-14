@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
-import { AnalyticsListener } from '@atlaskit/analytics-next';
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
+import { AnalyticsListener, UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 import {
   SwitcherWrapper,
@@ -87,11 +86,8 @@ export class Switcher extends React.Component {
   }
 }
 
-const onAnalyticsEvent = (
-  event: UIAnalyticsEventInterface,
-  channel?: string,
-) => {
-  // tslint:disable-next-line:no-console
+const onAnalyticsEvent = (event: UIAnalyticsEvent, channel?: string) => {
+  // eslint-disable-next-line no-console
   console.log(
     `AnalyticsEvent(${channel})\n\tpayload=%o\n\tcontext=%o`,
     event.payload,
@@ -99,7 +95,11 @@ const onAnalyticsEvent = (
   );
 };
 
-export const AnalyticsLogger = ({ children }: { children: any }) => {
+export const AnalyticsLogger = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   return (
     <AnalyticsListener channel="*" onEvent={onAnalyticsEvent}>
       {children}
@@ -107,17 +107,17 @@ export const AnalyticsLogger = ({ children }: { children: any }) => {
   );
 };
 
-export const withAnalyticsLogger = (WrappedComponent: React.ReactType) => (
-  props: object,
-) => (
+export const withAnalyticsLogger = <Props extends Object>(
+  WrappedComponent: React.ComponentType<Props>,
+) => (props: Props) => (
   <AnalyticsLogger>
     <WrappedComponent {...props} />
   </AnalyticsLogger>
 );
 
-export const withIntlProvider = (WrappedComponent: React.ReactType) => (
-  props: object,
-) => (
+export const withIntlProvider = <Props extends Object>(
+  WrappedComponent: React.ComponentType<Props>,
+) => (props: Props) => (
   <IntlProvider>
     <WrappedComponent {...props} />
   </IntlProvider>

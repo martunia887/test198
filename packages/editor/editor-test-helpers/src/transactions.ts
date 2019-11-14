@@ -8,10 +8,10 @@ import { RefsNode, Refs, coerce, offsetRefs } from './schema-builder';
 export function insertText(
   view: EditorView,
   text: string,
-  from: number,
-  to?: number,
+  from?: number,
+  _to?: number,
 ) {
-  let pos = from;
+  let pos = typeof from === 'number' ? from : view.state.selection.from;
 
   text.split('').forEach((character, index) => {
     if (
@@ -56,4 +56,8 @@ export function insert(
   const tr = state.tr.replaceWith(from, to, nodes);
   view.dispatch(tr);
   return offsetRefs(refs, from);
+}
+
+export function scrollIntoView(view: EditorView) {
+  view.dispatch(view.state.tr.scrollIntoView());
 }

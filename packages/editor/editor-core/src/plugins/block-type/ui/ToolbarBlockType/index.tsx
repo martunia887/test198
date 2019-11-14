@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ReactElement, createElement } from 'react';
+import { createElement } from 'react';
 import {
   defineMessages,
   injectIntl,
@@ -12,7 +12,7 @@ import { akEditorMenuZIndex } from '@atlaskit/editor-common';
 
 import { analyticsService as analytics } from '../../../../analytics';
 import ToolbarButton from '../../../../ui/ToolbarButton';
-import DropdownMenu from '../../../../ui/DropdownMenu';
+import DropdownMenu, { MenuItem } from '../../../../ui/DropdownMenu';
 import {
   ButtonContent,
   Separator,
@@ -22,7 +22,8 @@ import {
 } from '../../../../ui/styles';
 import { BlockTypeState } from '../../pm-plugins/main';
 import { BlockType, NORMAL_TEXT } from '../../types';
-import { BlockTypeMenuItem } from './styled';
+import { BlockTypeMenuItem, KeyboardShortcut } from './styled';
+import { tooltip, findKeymapByDescription } from '../../../../keymaps';
 
 export const messages = defineMessages({
   textStyles: {
@@ -33,11 +34,8 @@ export const messages = defineMessages({
   },
 });
 
-export type DropdownItem = {
-  content: ReactElement<any>;
-  key: string;
+export type DropdownItem = MenuItem & {
   value: BlockType;
-  isActive: boolean;
 };
 
 export interface Props {
@@ -113,7 +111,7 @@ class ToolbarBlockType extends React.PureComponent<
           disabled={disabled}
           onClick={this.handleTriggerClick}
           title={labelTextStyles}
-          ariaLabel="Font style"
+          aria-label="Font style"
           iconAfter={
             <Wrapper isSmall={isSmall}>
               {isSmall && <TextStyleIcon label={labelTextStyles} />}
@@ -125,7 +123,9 @@ class ToolbarBlockType extends React.PureComponent<
         >
           {!isSmall && (
             <ButtonContent>
-              <FormattedMessage {...blockTypeTitles[0] || NORMAL_TEXT.title} />
+              <FormattedMessage
+                {...(blockTypeTitles[0] || NORMAL_TEXT.title)}
+              />
               <div style={{ overflow: 'hidden', height: 0 }}>
                 {longestDropdownMenuItem}
               </div>
@@ -175,27 +175,26 @@ class ToolbarBlockType extends React.PureComponent<
       intl: { formatMessage },
     } = this.props;
     const { currentBlockType, availableBlockTypes } = this.props.pluginState;
-    const items = availableBlockTypes.reduce(
-      (acc, blockType, blockTypeNo) => {
-        const isActive = currentBlockType === blockType;
-        const tagName = blockType.tagName || 'p';
-        acc.push({
-          content: (
-            <BlockTypeMenuItem tagName={tagName} selected={isActive}>
-              {createElement(tagName, {}, formatMessage(blockType.title))}
-            </BlockTypeMenuItem>
-          ),
-          value: blockType,
-          key: `${blockType}-${blockTypeNo}`,
-          // ED-2853, hiding tooltips as shortcuts are not working atm.
-          // tooltipDescription: tooltip(findKeymapByDescription(blockType.title)),
-          // tooltipPosition: 'right',
-          isActive,
-        });
-        return acc;
-      },
-      [] as Array<DropdownItem>,
-    );
+    const items = availableBlockTypes.reduce((acc, blockType, blockTypeNo) => {
+      const isActive = currentBlockType === blockType;
+      const tagName = blockType.tagName || 'p';
+      acc.push({
+        content: (
+          <BlockTypeMenuItem tagName={tagName} selected={isActive}>
+            {createElement(tagName, {}, formatMessage(blockType.title))}
+          </BlockTypeMenuItem>
+        ),
+        value: blockType,
+        key: `${blockType.name}-${blockTypeNo}`,
+        elemAfter: (
+          <KeyboardShortcut selected={isActive}>
+            {tooltip(findKeymapByDescription(blockType.title.defaultMessage))}
+          </KeyboardShortcut>
+        ),
+        isActive,
+      });
+      return acc;
+    }, [] as Array<DropdownItem>);
     return [{ items }];
   };
 

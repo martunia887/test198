@@ -1,5 +1,4 @@
-/* tslint:disable:variable-name */
-import { borderRadius } from '@atlaskit/theme';
+import { borderRadius } from '@atlaskit/theme/constants';
 import { CardAppearance } from '../index';
 import { defaultTransitionDuration } from './config';
 

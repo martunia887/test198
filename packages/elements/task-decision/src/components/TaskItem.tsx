@@ -3,9 +3,11 @@ import { PureComponent } from 'react';
 import { CheckBoxWrapper } from '../styled/TaskItem';
 
 import Item from './Item';
-import { Appearance, ContentRef, User } from '../types';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
+import { Appearance, ContentRef } from '../types';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import { createAndFireEventInElementsChannel } from '../analytics';
 
 export interface Props {
@@ -17,10 +19,6 @@ export interface Props {
   placeholder?: string;
   showPlaceholder?: boolean;
   appearance?: Appearance;
-  participants?: User[];
-  showParticipants?: boolean;
-  creator?: User;
-  lastUpdater?: User;
   disabled?: boolean;
 }
 
@@ -28,7 +26,7 @@ let taskCount = 0;
 const getCheckBoxId = (localId: string) => `${localId}-${taskCount++}`;
 
 export class TaskItem extends PureComponent<
-  Props & WithAnalyticsEventProps,
+  Props & WithAnalyticsEventsProps,
   {}
 > {
   public static defaultProps: Partial<Props> = {
@@ -37,12 +35,12 @@ export class TaskItem extends PureComponent<
 
   private checkBoxId: string;
 
-  constructor(props: Props & WithAnalyticsEventProps) {
+  constructor(props: Props & WithAnalyticsEventsProps) {
     super(props);
     this.checkBoxId = getCheckBoxId(props.taskId);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.taskId !== this.props.taskId) {
       this.checkBoxId = getCheckBoxId(nextProps.taskId);
     }
@@ -67,27 +65,12 @@ export class TaskItem extends PureComponent<
     }
   };
 
-  getAttributionText() {
-    const { creator, lastUpdater, isDone } = this.props;
-
-    if (isDone && lastUpdater) {
-      return `Completed by ${lastUpdater.displayName}`;
-    }
-
-    if (!creator || !creator.displayName) {
-      return undefined;
-    }
-
-    return `Added by ${creator.displayName}`;
-  }
-
   render() {
     const {
       appearance,
       isDone,
       contentRef,
       children,
-      participants,
       placeholder,
       showPlaceholder,
       disabled,
@@ -113,10 +96,8 @@ export class TaskItem extends PureComponent<
         appearance={appearance}
         contentRef={contentRef}
         icon={icon}
-        participants={participants}
         placeholder={placeholder}
         showPlaceholder={showPlaceholder}
-        attribution={this.getAttributionText()}
       >
         {children}
       </Item>
@@ -126,5 +107,5 @@ export class TaskItem extends PureComponent<
 
 // This is to ensure that the "type" is exported, as it gets lost and not exported along with TaskItem after
 // going through the high order component.
-// tslint:disable-next-line:variable-name
+
 export default withAnalyticsEvents()(TaskItem);

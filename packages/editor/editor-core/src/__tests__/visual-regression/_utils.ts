@@ -1,6 +1,14 @@
-import { getExampleUrl } from '@atlaskit/visual-regression/helper';
+import {
+  getExampleUrl,
+  disableAllSideEffects,
+  navigateToUrl,
+  compareScreenshot,
+} from '@atlaskit/visual-regression/helper';
 import { EditorProps } from '../../types';
 import { Page } from '../__helpers/page-objects/_types';
+import { animationFrame } from '../__helpers/page-objects/_editor';
+import { GUTTER_SELECTOR } from '../../plugins/base/pm-plugins/scroll-gutter';
+import { CreateCollabProviderOptions } from '@atlaskit/synchrony-test-helpers';
 
 export {
   setupMediaMocksProviders,
@@ -11,6 +19,12 @@ export {
   toggleFeature,
 } from '../integration/_helpers';
 
+export const editorSelector = '.akEditor';
+export const editorFullPageContentSelector =
+  '.fabric-editor-popup-scroll-parent';
+export const editorCommentContentSelector = '.ak-editor-content-area';
+export const pmSelector = '.ProseMirror';
+
 export const DEFAULT_WIDTH = 800;
 export const DEFAULT_HEIGHT = 600;
 
@@ -20,35 +34,6 @@ export const dynamicTextViewportSizes = [
   { width: 768, height: 4000 },
   { width: 1024, height: 4000 },
 ];
-
-// TODO: remove this gotoExample step
-export const initEditor = async (page: any, appearance: string) => {
-  const editor = '.ProseMirror';
-  const url = getExampleUrl(
-    'editor',
-    'editor-core',
-    appearance,
-    // @ts-ignore
-    global.__BASEURL__,
-  );
-  await page.goto(url);
-  if (appearance === 'comment') {
-    const placeholder = 'input[placeholder="What do you want to say?"]';
-    await page.waitForSelector(placeholder);
-    await page.click(placeholder);
-  }
-
-  await page.setViewport({ width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
-  await page.waitForSelector(editor);
-  await page.click(editor);
-  await page.addStyleTag({
-    content: `
-      .json-output { display: none; }
-      .ProseMirror { caret-color: transparent; }
-      .ProseMirror-gapcursor span::after { animation-play-state: paused !important; }
-    `,
-  });
-};
 
 export enum Device {
   Default = 'Default',
@@ -67,6 +52,26 @@ export const deviceViewPorts = {
   [Device.iPad]: { width: 768, height: 1024 },
   [Device.iPhonePlus]: { width: 414, height: 736 },
 };
+
+/**
+ * Sometimes it's useful to visualise whitespace, invisible elements, or bounding boxes
+ * to track layout changes and capture regressions in CI.
+ *
+ * Green is used to ensure it doesn't clash with the red and yellow used by jest-image-snapshot.
+ */
+const WHITESPACE_DEBUGGING_FILL_COLOR = '#0c0';
+
+async function visualiseInvisibleElements(page: any) {
+  await page.addStyleTag({
+    content: `
+      /*
+        Visualise the invisible scroll gutter (padding at bottom of full page editor).
+        This allows us to see whether the element exists within a snapshot, and compare the scroll offset.
+      */
+      ${GUTTER_SELECTOR} { background: ${WHITESPACE_DEBUGGING_FILL_COLOR}; }
+    `,
+  });
+}
 
 function getEditorProps(appearance: Appearance) {
   const enableAllEditorProps = {
@@ -98,9 +103,14 @@ function getEditorProps(appearance: Appearance) {
       'Use markdown shortcuts to format your page as you type, like * for lists, # for headers, and *** for a horizontal rule.',
     shouldFocus: false,
     UNSAFE_cards: true,
+    UNSAFE_allowExpand: true,
+    allowHelpDialog: true,
   };
 
-  if (appearance === Appearance.fullPage) {
+  if (
+    appearance === Appearance.fullPage ||
+    appearance === Appearance.fullWidth
+  ) {
     return {
       ...enableAllEditorProps,
       primaryToolbarComponents: true,
@@ -126,17 +136,40 @@ function getEditorProps(appearance: Appearance) {
   return enableAllEditorProps;
 }
 
-export async function mountEditor(page: any, props) {
-  await page.evaluate(props => {
-    (window as any).__mountEditor(props);
-  }, props);
-  await page.waitForSelector('.ProseMirror', 500);
+export type MountOptions = {
+  mode?: 'light' | 'dark';
+  withSidebar?: boolean;
+  collab?: CreateCollabProviderOptions;
+};
+
+export async function mountEditor(
+  page: any,
+  props: any,
+  mountOptions?: MountOptions,
+) {
+  await page.evaluate(
+    (props: EditorProps, mountOptions?: MountOptions) => {
+      (window as any).__mountEditor(props, mountOptions);
+    },
+    props,
+    mountOptions,
+  );
+  await page.waitForSelector(pmSelector, 500);
 }
 
 export enum Appearance {
+  fullWidth = 'full-width',
   fullPage = 'full-page',
   comment = 'comment',
+  mobile = 'mobile',
 }
+
+type SideEffectsOption = {
+  cursor?: boolean;
+  animation?: boolean;
+  transition?: boolean;
+  scroll?: boolean;
+};
 
 type InitEditorWithADFOptions = {
   appearance: Appearance;
@@ -144,26 +177,33 @@ type InitEditorWithADFOptions = {
   device?: Device;
   viewport?: { width: number; height: number };
   editorProps?: EditorProps;
+  mode?: 'light' | 'dark';
+  allowSideEffects?: SideEffectsOption;
+  withSidebar?: boolean;
+  withCollab?: boolean;
 };
 
-export const initEditorWithAdf = async (
-  page,
-  {
+async function setupEditor(
+  page: Page,
+  options: Omit<
+    InitEditorWithADFOptions,
+    'withSidebar' | 'withCollab' | 'mode'
+  >,
+  mountOptions: MountOptions,
+) {
+  const {
     appearance,
     adf = {},
     device = Device.Default,
     viewport,
     editorProps = {},
-  }: InitEditorWithADFOptions,
-) => {
+    allowSideEffects = {},
+  } = options;
+
+  const { mode, withSidebar = false } = mountOptions;
+  await page.bringToFront();
   const url = getExampleUrl('editor', 'editor-core', 'vr-testing');
-
-  const currentUrl = page.url();
-
-  if (currentUrl !== url) {
-    // We don't have to load the already existing page
-    await page.goto(url);
-  }
+  await navigateToUrl(page, url);
 
   // Set the viewport to the right one
   if (viewport) {
@@ -173,20 +213,56 @@ export const initEditorWithAdf = async (
   }
 
   // Mount the editor with the right attributes
-  await mountEditor(page, {
-    appearance: appearance,
-    defaultValue: JSON.stringify(adf),
-    ...getEditorProps(appearance),
-    ...editorProps,
-  });
+  await mountEditor(
+    page,
+    {
+      appearance: appearance,
+      defaultValue: JSON.stringify(adf),
+      ...getEditorProps(appearance),
+      ...editorProps,
+    },
+    { mode, withSidebar },
+  );
+
+  // We disable possible side effects, like animation, transitions and caret cursor,
+  // because we cannot control and affect snapshots
+  // You can override this disabling if you are sure that you need it in your test
+  await disableAllSideEffects(page, allowSideEffects);
+
+  // Visualise invisible elements
+  await visualiseInvisibleElements(page);
+}
+
+export const initEditorWithAdf = async (
+  page: any,
+  options: InitEditorWithADFOptions,
+) => {
+  let mountOptions: MountOptions = {
+    mode: options.mode,
+    withSidebar: options.withSidebar,
+  };
+  // @ts-ignore
+  const collabPage = global.collabPage as Page;
+  if (options.withCollab && collabPage) {
+    mountOptions.collab = {
+      docId: Math.random()
+        .toString(32)
+        .substring(2),
+    };
+    // Remove adf, the page should be initialized by the other page.
+    await setupEditor(collabPage, { ...options, adf: '' }, mountOptions);
+  }
+  await setupEditor(page, options, mountOptions);
 };
 
 export const initFullPageEditorWithAdf = async (
-  page,
+  page: any,
   adf: Object,
   device?: Device,
   viewport?: { width: number; height: number },
-  editorProps: EditorProps = {},
+  editorProps?: EditorProps,
+  mode?: 'light' | 'dark',
+  allowSideEffects?: SideEffectsOption,
 ) => {
   await initEditorWithAdf(page, {
     adf,
@@ -194,11 +270,13 @@ export const initFullPageEditorWithAdf = async (
     device,
     viewport,
     editorProps,
+    mode,
+    allowSideEffects,
   });
 };
 
 export const initCommentEditorWithAdf = async (
-  page,
+  page: any,
   adf: Object,
   device?: Device,
 ) => {
@@ -209,19 +287,49 @@ export const initCommentEditorWithAdf = async (
   });
 };
 
-export const clearEditor = async page => {
+/**
+ * Updates props of current mounted Editor component
+ * Pass in only the new props you wish to apply on top of the current ones
+ */
+export const updateEditorProps = async (
+  page: Page,
+  newProps: Partial<EditorProps>,
+) => {
+  await page.evaluate((props: EditorProps) => {
+    (window as any).__updateEditorProps(props);
+  }, newProps);
+};
+
+export const clearEditor = async (page: any) => {
   await page.evaluate(() => {
-    const dom = document.querySelector('.ProseMirror') as HTMLElement;
+    const dom = document.querySelector(pmSelector) as HTMLElement;
     dom.innerHTML = '<p><br /></p>';
   });
 };
 
-export const snapshot = async (
+interface Threshold {
+  tolerance?: number;
+  useUnsafeThreshold?: boolean;
+}
+
+type CustomSnapshotIdentifier = (
+  testPath: string,
+  currentTestName: string,
+  counter: string,
+  defaultIdentifier: string,
+) => string;
+
+async function takeSnapshot(
   page: Page,
-  tolerance?: number,
-  selector = '.akEditor',
-) => {
+  threshold: Threshold = {},
+  selector: string = editorFullPageContentSelector,
+  customSnapshotIdentifier?: CustomSnapshotIdentifier,
+) {
+  const { tolerance, useUnsafeThreshold } = threshold;
   const editor = await page.$(selector);
+
+  // Wait for a frame because we are using RAF to throttle floating toolbar render
+  animationFrame(page);
 
   // Try to take a screenshot of only the editor.
   // Otherwise take the whole page.
@@ -232,14 +340,34 @@ export const snapshot = async (
     image = await page.screenshot();
   }
 
-  if (tolerance !== undefined) {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot({
-      failureThreshold: `${tolerance}`,
-      failureThresholdType: 'percent',
-    });
-  } else {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot();
+  return compareScreenshot(image, tolerance, {
+    useUnsafeThreshold,
+    customSnapshotIdentifier,
+  });
+}
+
+export const snapshot = async (
+  page: Page,
+  threshold: Threshold = {},
+  selector: string = editorFullPageContentSelector,
+) => {
+  // @ts-ignore
+  const { collabPage, synchronyUrl } = global || {};
+  if (synchronyUrl && collabPage) {
+    await (collabPage as Page).bringToFront();
+    await takeSnapshot(
+      collabPage,
+      threshold,
+      selector,
+      (_t, _n, _c, defaultIdentifier) => `Collab Page - ${defaultIdentifier}`,
+    );
+    await page.bringToFront();
   }
+  await takeSnapshot(page, threshold, selector);
+};
+
+export const applyRemoteStep = async (page: Page, stepsAsString: string[]) => {
+  return await page.evaluate((_stepsAsString: string[]) => {
+    (window as any).__applyRemoteSteps(_stepsAsString);
+  }, stepsAsString);
 };

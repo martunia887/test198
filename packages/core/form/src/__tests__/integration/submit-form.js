@@ -1,6 +1,7 @@
 // @flow
 import { BrowserTestCase } from '@atlaskit/webdriver-runner/runner';
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
+
 import Page from '@atlaskit/webdriver-runner/wd-wrapper';
 
 /* Url to test the example */
@@ -20,8 +21,10 @@ BrowserTestCase(
     await formTest.goto(urlSubmitForm);
     await formTest.waitForSelector(submitForm);
     await formTest.type(submitFormTextfield, 'Jane Chan');
+    await formTest.waitForSelector(submitFormTextarea);
     await formTest.click(submitFormTextarea);
-    await formTest.keys(['Control', 'Enter']);
+    // Use unicode keys for Control & Enter fo FF and Safari
+    await formTest.keys('\uE009\uE007');
     await formTest.waitForSelector(submitFormSubmitted);
     expect(await formTest.getText(submitFormSubmitted)).toBe(
       'You have successfully submitted!',

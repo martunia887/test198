@@ -2,39 +2,48 @@ import * as React from 'react';
 import { Component } from 'react';
 import { defineMessages, injectIntl, InjectedIntlProps } from 'react-intl';
 import { EditorView } from 'prosemirror-view';
-import { splitCell } from 'prosemirror-tables';
-import { colors } from '@atlaskit/theme';
-import {
-  tableBackgroundColorPalette,
-  tableBackgroundBorderColors,
-} from '@atlaskit/adf-schema';
-import {
-  mergeCells,
-  canMergeCells,
-  deleteColumns,
-  deleteRows,
-} from '../../transforms';
+import { splitCell, Rect } from 'prosemirror-tables';
+import { canMergeCells } from '../../transforms';
 import { getPluginState } from '../../pm-plugins/main';
 import {
+  hoverMergedCells,
   hoverColumns,
   hoverRows,
   clearHoverSelection,
-  insertColumn,
-  insertRow,
   toggleContextualMenu,
-  emptyMultipleCells,
-  setMultipleCellAttrs,
-} from '../../actions';
-import { CellRect, TableCssClassName as ClassName } from '../../types';
+} from '../../commands';
+import { TableCssClassName as ClassName, SortOrder } from '../../types';
 import { contextualMenuDropdownWidth } from '../styles';
 import { Shortcut } from '../../../../ui/styles';
 import DropdownMenu from '../../../../ui/DropdownMenu';
-import {
-  analyticsService as analytics,
-  withAnalytics,
-} from '../../../../analytics';
 import ColorPalette from '../../../../ui/ColorPalette';
 import tableMessages from '../messages';
+import { INPUT_METHOD } from '../../../analytics';
+import {
+  setColorWithAnalytics,
+  deleteRowsWithAnalytics,
+  deleteColumnsWithAnalytics,
+  insertRowWithAnalytics,
+  mergeCellsWithAnalytics,
+  splitCellWithAnalytics,
+  emptyMultipleCellsWithAnalytics,
+  insertColumnWithAnalytics,
+  sortColumnWithAnalytics,
+} from '../../commands-with-analytics';
+import { closestElement } from '../../../../utils';
+import {
+  getMergedCellsPositions,
+  getSelectedColumnIndexes,
+  getSelectedRowIndexes,
+} from '../../utils';
+import {
+  tooltip,
+  addColumnAfter,
+  addRowAfter,
+  backspace,
+} from '../../../../keymaps';
+import { DropdownItem } from '../../../block-type/ui/ToolbarBlockType';
+import cellBackgroundColorPalette from '../../../../ui/ColorPalette/Palettes/cellBackgroundColorPalette';
 
 export const messages = defineMessages({
   cellBackground: {
@@ -58,15 +67,31 @@ export const messages = defineMessages({
     description:
       'Clears the contents of the selected cells (this does not delete the cells themselves).',
   },
+  sortColumnASC: {
+    id: 'fabric.editor.sortColumnASC',
+    defaultMessage: 'Sort column A → Z',
+    description: 'Sort column in ascending order',
+  },
+  sortColumnDESC: {
+    id: 'fabric.editor.sortColumnDESC',
+    defaultMessage: 'Sort column Z → A',
+    description: 'Sort column in descending order',
+  },
+  canNotSortTable: {
+    id: 'fabric.editor.canNotSortTable',
+    defaultMessage: `⚠️ You can't sort a table with merged cells`,
+    description: `Split your cells to enable this feature`,
+  },
 });
 
 export interface Props {
   editorView: EditorView;
   isOpen: boolean;
-  selectionRect: CellRect;
+  selectionRect: Rect;
   targetCellPosition?: number;
   mountPoint?: HTMLElement;
   allowMergeCells?: boolean;
+  allowColumnSorting?: boolean;
   allowBackgroundColor?: boolean;
   boundariesElement?: HTMLElement;
   offset?: Array<number>;
@@ -112,16 +137,16 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
   }
 
   private handleSubMenuRef = (ref: HTMLDivElement | null) => {
-    const { boundariesElement } = this.props;
-
-    if (!(boundariesElement && ref)) {
+    const parent = closestElement(
+      this.props.editorView.dom as HTMLElement,
+      '.fabric-editor-popup-scroll-parent',
+    );
+    if (!(parent && ref)) {
       return;
     }
-
-    const boundariesRect = boundariesElement.getBoundingClientRect();
+    const boundariesRect = parent.getBoundingClientRect();
     const rect = ref.getBoundingClientRect();
-
-    if (rect.left + rect.width - boundariesRect.left > boundariesRect.width) {
+    if (rect.left + rect.width > boundariesRect.width) {
       ref.style.left = `-${rect.width}px`;
     }
   };
@@ -129,6 +154,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
   private createItems = () => {
     const {
       allowMergeCells,
+      allowColumnSorting,
       allowBackgroundColor,
       editorView: { state },
       targetCellPosition,
@@ -160,11 +186,10 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
                 ref={this.handleSubMenuRef}
               >
                 <ColorPalette
-                  palette={tableBackgroundColorPalette}
-                  borderColors={tableBackgroundBorderColors}
+                  cols={7}
+                  palette={cellBackgroundColorPalette}
                   onClick={this.setColor}
                   selectedColor={background}
-                  checkMarkColor={colors.N500}
                 />
               </div>
             )}
@@ -176,13 +201,13 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     items.push({
       content: formatMessage(tableMessages.insertColumn),
       value: { name: 'insert_column' },
-      elemAfter: <Shortcut>⌃⌥→</Shortcut>,
+      elemAfter: <Shortcut>{tooltip(addColumnAfter)}</Shortcut>,
     });
 
     items.push({
       content: formatMessage(tableMessages.insertRow),
       value: { name: 'insert_row' },
-      elemAfter: <Shortcut>⌃⌥↓</Shortcut>,
+      elemAfter: <Shortcut>{tooltip(addRowAfter)}</Shortcut>,
     });
 
     const { top, bottom, right, left } = selectionRect;
@@ -216,64 +241,107 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       });
     }
 
+    if (allowColumnSorting) {
+      const hasMergedCellsInTable =
+        getMergedCellsPositions(state.tr).length > 0;
+      const warning = hasMergedCellsInTable
+        ? {
+            tooltipDescription: formatMessage(messages.canNotSortTable),
+            isDisabled: true,
+          }
+        : {};
+
+      items.push({
+        content: formatMessage(messages.sortColumnASC),
+        value: { name: 'sort_column_asc' },
+        ...warning,
+      });
+
+      items.push({
+        content: formatMessage(messages.sortColumnDESC),
+        value: { name: 'sort_column_desc' },
+        ...warning,
+      });
+    }
+
     items.push({
       content: formatMessage(messages.clearCells, {
         0: Math.max(noOfColumns, noOfRows),
       }),
       value: { name: 'clear' },
-      elemAfter: <Shortcut>⌫</Shortcut>,
+      elemAfter: <Shortcut>{tooltip(backspace)}</Shortcut>,
     });
 
     return items.length ? [{ items }] : null;
   };
 
-  private onMenuItemActivated = ({ item }: { item: any }) => {
+  private onMenuItemActivated = ({ item }: { item: DropdownItem }) => {
     const { editorView, selectionRect, targetCellPosition } = this.props;
     const { state, dispatch } = editorView;
 
     switch (item.value.name) {
+      case 'sort_column_desc':
+        sortColumnWithAnalytics(
+          INPUT_METHOD.CONTEXT_MENU,
+          selectionRect.left,
+          SortOrder.DESC,
+        )(state, dispatch);
+        this.toggleOpen();
+        break;
+      case 'sort_column_asc':
+        sortColumnWithAnalytics(
+          INPUT_METHOD.CONTEXT_MENU,
+          selectionRect.left,
+          SortOrder.ASC,
+        )(state, dispatch);
+        this.toggleOpen();
+        break;
       case 'merge':
-        analytics.trackEvent('atlassian.editor.format.table.merge.button');
-        dispatch(mergeCells(state.tr));
+        mergeCellsWithAnalytics()(state, dispatch);
         this.toggleOpen();
         break;
       case 'split':
-        analytics.trackEvent('atlassian.editor.format.table.split.button');
-        splitCell(state, dispatch);
+        splitCellWithAnalytics()(state, dispatch);
         this.toggleOpen();
         break;
       case 'clear':
-        analytics.trackEvent('atlassian.editor.format.table.split.button');
-        emptyMultipleCells(targetCellPosition)(state, dispatch);
+        emptyMultipleCellsWithAnalytics(
+          INPUT_METHOD.CONTEXT_MENU,
+          targetCellPosition,
+        )(state, dispatch);
         this.toggleOpen();
         break;
       case 'insert_column':
-        insertColumn(selectionRect.right)(state, dispatch);
+        insertColumnWithAnalytics(
+          INPUT_METHOD.CONTEXT_MENU,
+          selectionRect.right,
+        )(state, dispatch);
         this.toggleOpen();
         break;
       case 'insert_row':
-        insertRow(selectionRect.bottom)(state, dispatch);
+        insertRowWithAnalytics(INPUT_METHOD.CONTEXT_MENU, selectionRect.bottom)(
+          state,
+          dispatch,
+        );
         this.toggleOpen();
         break;
       case 'delete_column':
-        analytics.trackEvent(
-          'atlassian.editor.format.table.delete_column.button',
-        );
-        dispatch(
-          deleteColumns(getSelectedColumnIndexes(selectionRect))(state.tr),
+        deleteColumnsWithAnalytics(INPUT_METHOD.CONTEXT_MENU, selectionRect)(
+          state,
+          dispatch,
         );
         this.toggleOpen();
         break;
       case 'delete_row':
-        analytics.trackEvent('atlassian.editor.format.table.delete_row.button');
         const {
           pluginConfig: { isHeaderRowRequired },
         } = getPluginState(state);
-        dispatch(
-          deleteRows(getSelectedRowIndexes(selectionRect), isHeaderRowRequired)(
-            state.tr,
-          ),
-        );
+
+        deleteRowsWithAnalytics(
+          INPUT_METHOD.CONTEXT_MENU,
+          selectionRect,
+          !!isHeaderRowRequired,
+        )(state, dispatch);
         this.toggleOpen();
         break;
     }
@@ -284,7 +352,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       isOpen,
       editorView: { state, dispatch },
     } = this.props;
-    toggleContextualMenu(state, dispatch);
+    toggleContextualMenu()(state, dispatch);
     if (!isOpen) {
       this.setState({
         isSubmenuOpen: false,
@@ -296,7 +364,7 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     const {
       editorView: { state, dispatch },
     } = this.props;
-    toggleContextualMenu(state, dispatch);
+    toggleContextualMenu()(state, dispatch);
     this.setState({ isSubmenuOpen: false });
   };
 
@@ -318,8 +386,16 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
         dispatch,
       );
     }
+
     if (item.value.name === 'delete_row') {
       hoverRows(getSelectedRowIndexes(selectionRect), true)(state, dispatch);
+    }
+
+    if (
+      ['sort_column_asc', 'sort_column_desc'].indexOf(item.value.name) > -1 &&
+      getMergedCellsPositions(state.tr).length !== 0
+    ) {
+      hoverMergedCells()(state, dispatch);
     }
   };
 
@@ -329,10 +405,14 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
       this.closeSubmenu();
     }
     if (
-      item.value.name === 'delete_column' ||
-      item.value.name === 'delete_row'
+      [
+        'sort_column_asc',
+        'sort_column_desc',
+        'delete_column',
+        'delete_row',
+      ].indexOf(item.value.name) > -1
     ) {
-      clearHoverSelection(state, dispatch);
+      clearHoverSelection()(state, dispatch);
     }
   };
 
@@ -342,34 +422,12 @@ class ContextualMenu extends Component<Props & InjectedIntlProps, State> {
     }
   };
 
-  private setColor = withAnalytics(
-    'atlassian.editor.format.table.backgroundColor.button',
-    (color: string) => {
-      const { targetCellPosition, editorView } = this.props;
-      const { state, dispatch } = editorView;
-      setMultipleCellAttrs({ background: color }, targetCellPosition)(
-        state,
-        dispatch,
-      );
-      this.toggleOpen();
-    },
-  );
+  private setColor = (color: string) => {
+    const { targetCellPosition, editorView } = this.props;
+    const { state, dispatch } = editorView;
+    setColorWithAnalytics(color, targetCellPosition)(state, dispatch);
+    this.toggleOpen();
+  };
 }
-
-export const getSelectedColumnIndexes = (selectionRect: CellRect): number[] => {
-  const columnIndexes: number[] = [];
-  for (let i = selectionRect.left; i < selectionRect.right; i++) {
-    columnIndexes.push(i);
-  }
-  return columnIndexes;
-};
-
-export const getSelectedRowIndexes = (selectionRect: CellRect): number[] => {
-  const rowIndexes: number[] = [];
-  for (let i = selectionRect.top; i < selectionRect.bottom; i++) {
-    rowIndexes.push(i);
-  }
-  return rowIndexes;
-};
 
 export default injectIntl(ContextualMenu);

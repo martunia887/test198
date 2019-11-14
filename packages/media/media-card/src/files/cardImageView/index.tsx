@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
-import { MediaType, ImageResizeMode } from '@atlaskit/media-core';
+import { MediaType, ImageResizeMode } from '@atlaskit/media-client';
+import { Ellipsify, MediaImage } from '@atlaskit/media-ui';
+import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
 
 import { CardDimensions, CardStatus } from '../../index';
 import { CardAction } from '../../actions';
@@ -17,13 +19,16 @@ import {
   Title,
 } from './styled';
 import { isLoadingImage } from '../../utils/isLoadingImage';
-import { MediaImage } from '../../utils/mediaImage';
-import { CardLoading } from '../../utils/cardLoading';
-import VidPlayIcon from '@atlaskit/icon/glyph/vid-play';
+import { CardLoading } from '../../utils/lightCards/cardLoading';
 import { shouldDisplayImageThumbnail } from '../../utils/shouldDisplayImageThumbnail';
-import { Ellipsify } from '@atlaskit/media-ui';
 import { ProgressBar } from '../../utils/progressBar';
 import CardActions from '../../utils/cardActions';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import { createAndFireCustomMediaEvent } from '../../utils/analytics';
+import { AnalyticsLoadingAction } from '../../root/card/getCardStatus';
 
 export interface FileCardImageViewProps {
   readonly mediaName?: string;
@@ -31,6 +36,7 @@ export interface FileCardImageViewProps {
   readonly fileSize?: string;
 
   readonly dataURI?: string;
+  readonly alt?: string;
   readonly progress?: number;
   readonly status: CardStatus;
 
@@ -45,19 +51,36 @@ export interface FileCardImageViewProps {
 
   readonly actions?: CardAction[];
   readonly onRetry?: () => void;
+  readonly onDisplayImage?: () => void;
   readonly previewOrientation?: number;
 }
 
-export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
+export class FileCardImageViewBase extends Component<
+  FileCardImageViewProps & WithAnalyticsEventsProps,
+  {}
+> {
+  private wasThumbnailDisplayed = false;
+  private lastAnalyticsAction: AnalyticsLoadingAction | undefined;
   static defaultProps = {
     resizeMode: 'crop',
     disableOverlay: false,
   };
 
   render() {
-    const { disableOverlay, selectable, selected, mediaType } = this.props;
+    const {
+      disableOverlay,
+      selectable,
+      selected,
+      mediaType,
+      progress,
+      status,
+    } = this.props;
     return (
       <Wrapper
+        data-testid="media-file-card-view"
+        data-test-status={status}
+        data-test-progress={progress}
+        data-test-selected={selected ? true : undefined}
         disableOverlay={disableOverlay}
         selectable={selectable}
         selected={selected}
@@ -164,19 +187,75 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
     );
   };
 
+  onImageLoad = () => {
+    this.fireLoadingStatusAnalyticsEvent('succeeded');
+  };
+
+  onImageError = () => {
+    this.fireLoadingStatusAnalyticsEvent('failed');
+  };
+
   private renderMediaImage = () => {
-    const { dataURI, mediaType, previewOrientation } = this.props;
-    if (shouldDisplayImageThumbnail(dataURI, mediaType)) {
-      return (
-        <MediaImage
-          dataURI={dataURI}
-          crop={this.isCropped}
-          stretch={this.isStretched}
-          previewOrientation={previewOrientation}
-        />
+    const {
+      dataURI,
+      mediaType,
+      previewOrientation,
+      onDisplayImage,
+      alt,
+    } = this.props;
+
+    if (!shouldDisplayImageThumbnail(dataURI, mediaType)) {
+      this.fireLoadingStatusAnalyticsEvent('succeeded');
+      return null;
+    }
+
+    if (
+      !this.wasThumbnailDisplayed &&
+      onDisplayImage &&
+      mediaType === 'image'
+    ) {
+      onDisplayImage();
+      this.wasThumbnailDisplayed = true;
+    }
+
+    return (
+      <MediaImage
+        dataURI={dataURI}
+        alt={alt}
+        crop={this.isCropped}
+        stretch={this.isStretched}
+        previewOrientation={previewOrientation}
+        onImageLoad={this.onImageLoad}
+        onImageError={this.onImageError}
+      />
+    );
+  };
+  shouldFireLoadingStatusAnalyticsEvent = (action: AnalyticsLoadingAction) =>
+    !this.lastAnalyticsAction || this.lastAnalyticsAction !== action;
+
+  fireLoadingStatusAnalyticsEvent = (action: AnalyticsLoadingAction) => {
+    const { createAnalyticsEvent } = this.props;
+
+    if (this.shouldFireLoadingStatusAnalyticsEvent(action)) {
+      this.lastAnalyticsAction = action;
+
+      createAndFireCustomMediaEvent(
+        {
+          eventType: 'operational',
+          action,
+          actionSubject: 'mediaCardRender',
+          ...(action === 'failed'
+            ? {
+                attributes: {
+                  failReason: 'file-uri-error',
+                  error: 'unknown error',
+                },
+              }
+            : {}),
+        },
+        createAnalyticsEvent,
       );
     }
-    return null;
   };
 
   private renderProgressBar = () => {
@@ -285,4 +364,4 @@ export class FileCardImageView extends Component<FileCardImageViewProps, {}> {
   }
 }
 
-export default FileCardImageView;
+export const FileCardImageView = withAnalyticsEvents()(FileCardImageViewBase);

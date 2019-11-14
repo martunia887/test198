@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 // we explicitly do not want to use our wrapped loadable here, as the modal being loaded should
 // be handled by the iframe sendApdex
 import Loadable from 'react-loadable';
@@ -12,7 +12,7 @@ export type Props = {
     b: React.ComponentType,
     c: boolean,
   ) => React.ReactChild;
-  src: string | null;
+  src?: string;
   name: string;
   example: {
     contents: Function;
@@ -31,22 +31,22 @@ export type Example = {
 };
 
 export default class ExampleDisplay extends React.Component<Props> {
-  iframeRef: HTMLIFrameElement;
-  ExampleCode:
+  iframeRef?: HTMLIFrameElement;
+  ExampleCode!:
     | (React.ComponentClass & Loadable.LoadableComponent)
     | (React.StatelessComponent & Loadable.LoadableComponent);
-  Example: () => JSX.Element;
+  Example!: () => JSX.Element;
   constructor(props: Props) {
     super(props);
     this.buildExampleComponents(props);
   }
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (this.props.src !== nextProps.src) {
       const contentWindow =
         this.iframeRef &&
         (this.iframeRef.contentWindow as
           | null
-          | Window & { unmountApp?: Function });
+          | (Window & { unmountApp?: Function }));
 
       if (contentWindow && contentWindow.unmountApp) {
         contentWindow.unmountApp();
@@ -59,7 +59,7 @@ export default class ExampleDisplay extends React.Component<Props> {
       this.iframeRef &&
       (this.iframeRef.contentWindow as
         | null
-        | Window & { unmountApp?: Function });
+        | (Window & { unmountApp?: Function }));
 
     if (contentWindow && contentWindow.unmountApp) {
       contentWindow.unmountApp();

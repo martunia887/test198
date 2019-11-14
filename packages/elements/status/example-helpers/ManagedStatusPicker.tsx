@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Color as ColorType } from '../src/components/Status';
-import { StatusPicker } from '../src/components/StatusPicker';
+import { StatusPicker, ColorType } from '../src/picker';
 
 export interface Props {
   initialSelectedColor: ColorType;
@@ -44,6 +43,7 @@ export default class ManagedStatusPicker extends React.Component<Props, State> {
     const { selectedColor, text } = this.state;
     return (
       <div
+        id="container"
         style={{
           border: '1px solid #ccc',
           width: '225px',

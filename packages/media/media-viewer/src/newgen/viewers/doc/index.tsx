@@ -1,26 +1,28 @@
 import * as React from 'react';
-import { Context, FileState } from '@atlaskit/media-core';
+import { MediaClient, FileState } from '@atlaskit/media-client';
 import { Outcome } from '../../domain';
 import { createError, MediaViewerError } from '../../error';
 import { Spinner } from '../../loading';
-import { constructAuthTokenUrl } from '../../utils';
 import { Props as RendererProps } from './pdfRenderer';
 import { ComponentClass } from 'react';
-import { getArtifactUrl } from '@atlaskit/media-store';
 import { BaseViewer } from '../base-viewer';
 import { getObjectUrlFromFileState } from '../../utils/getObjectUrlFromFileState';
 
 const moduleLoader = () =>
-  import(/* webpackChunkName:"@atlaskit-internal_media-viewer-pdf-viewer" */ './pdfRenderer');
+  import(
+    /* webpackChunkName:"@atlaskit-internal_media-viewer-pdf-viewer" */ './pdfRenderer'
+  );
 
 const componentLoader: () => Promise<ComponentClass<RendererProps>> = () =>
   moduleLoader().then(module => module.PDFRenderer);
 
 export type Props = {
-  context: Context;
+  mediaClient: MediaClient;
   item: FileState;
   collectionName?: string;
   onClose?: () => void;
+  onError?: (error: Error) => void;
+  onSuccess?: () => void;
 };
 
 export type State = {
@@ -40,24 +42,16 @@ export class DocViewer extends BaseViewer<string, Props> {
     if (!DocViewer.PDFComponent) {
       await this.loadDocViewer();
     }
-    const { item, context, collectionName } = this.props;
+    const { item, mediaClient, collectionName, onError } = this.props;
 
     if (item.status === 'processed') {
-      const pdfArtifactUrl = getArtifactUrl(item.artifacts, 'document.pdf');
-      if (!pdfArtifactUrl) {
-        this.setState({
-          content: Outcome.failed(
-            createError('noPDFArtifactsFound', undefined, item),
-          ),
-        });
-        return;
-      }
       try {
-        const src = await constructAuthTokenUrl(
-          pdfArtifactUrl,
-          context,
+        const src = await mediaClient.file.getArtifactURL(
+          item.artifacts,
+          'document.pdf',
           collectionName,
         );
+        this.onMediaDisplayed();
         this.setState({
           content: Outcome.successful(src),
         });
@@ -65,6 +59,9 @@ export class DocViewer extends BaseViewer<string, Props> {
         this.setState({
           content: Outcome.failed(createError('previewFailed', err, item)),
         });
+        if (onError) {
+          onError(err);
+        }
       }
     } else {
       const src = await getObjectUrlFromFileState(item);
@@ -95,12 +92,19 @@ export class DocViewer extends BaseViewer<string, Props> {
   }
 
   protected renderSuccessful(content: string) {
-    const { onClose } = this.props;
+    const { onClose, onSuccess, onError } = this.props;
     const { PDFComponent } = DocViewer;
 
     if (!PDFComponent) {
       return <Spinner />;
     }
-    return <PDFComponent src={content} onClose={onClose} />;
+    return (
+      <PDFComponent
+        src={content}
+        onSuccess={onSuccess}
+        onError={onError}
+        onClose={onClose}
+      />
+    );
   }
 }

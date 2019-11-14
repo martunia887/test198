@@ -1,39 +1,59 @@
 import * as React from 'react';
 import { Node as PMNode } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
+import { EditorView, NodeView } from 'prosemirror-view';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import Mention from '../ui/Mention';
-import { EditorAppearance } from '../../../types';
+import { ReactNodeView, getPosHandler } from '../../../nodeviews';
+import InlineNodeWrapper, {
+  createMobileInlineDomRef,
+} from '../../../ui/InlineNodeWrapper';
+import { PortalProviderAPI } from '../../../ui/PortalProvider';
+import { ZeroWidthSpace } from '../../../utils';
+import { MentionPluginOptions } from '../index';
 
 export interface Props {
-  children?: React.ReactNode;
-  view: EditorView;
-  node: PMNode;
   providerFactory: ProviderFactory;
-  editorAppearance: EditorAppearance;
+  options?: MentionPluginOptions;
 }
 
-export default class MentionNode extends React.PureComponent<Props, {}> {
-  render() {
-    const { node, providerFactory, editorAppearance } = this.props;
-    const { id, text, accessLevel } = node.attrs;
-
-    /**
-     * Work around to bypass continuing a composition event.
-     * @see ED-5924
-     */
-    let mentionText = text;
-    if (text && editorAppearance === 'mobile') {
-      mentionText = `‌‌ ${mentionText}‌‌ `;
+export class MentionNodeView extends ReactNodeView<Props> {
+  createDomRef() {
+    if (
+      this.reactComponentProps.options &&
+      this.reactComponentProps.options.useInlineWrapper
+    ) {
+      return createMobileInlineDomRef();
     }
 
+    return super.createDomRef();
+  }
+
+  render(props: Props) {
+    const { providerFactory, options } = props;
+    const { id, text, accessLevel } = this.node.attrs;
+
     return (
-      <Mention
-        id={id}
-        text={mentionText}
-        accessLevel={accessLevel}
-        providers={providerFactory}
-      />
+      <InlineNodeWrapper useInlineWrapper={options && options.useInlineWrapper}>
+        <Mention
+          id={id}
+          text={text}
+          accessLevel={accessLevel}
+          providers={providerFactory}
+        />
+        {options && options.allowZeroWidthSpaceAfter && ZeroWidthSpace}
+      </InlineNodeWrapper>
     );
   }
+}
+
+export default function mentionNodeView(
+  portalProviderAPI: PortalProviderAPI,
+  providerFactory: ProviderFactory,
+  options?: MentionPluginOptions,
+) {
+  return (node: PMNode, view: EditorView, getPos: getPosHandler): NodeView =>
+    new MentionNodeView(node, view, getPos, portalProviderAPI, {
+      providerFactory,
+      options,
+    }).init();
 }

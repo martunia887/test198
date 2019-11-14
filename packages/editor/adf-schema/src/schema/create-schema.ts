@@ -10,10 +10,8 @@ import {
   subsup,
   underline,
   code,
-  emojiQuery,
   typeAheadQuery,
   confluenceInlineComment,
-  action,
   breakout,
   alignment,
   indentation,
@@ -46,7 +44,6 @@ import {
   tableCell,
   tableHeader,
   tableRow,
-  applicationCard,
   decisionList,
   decisionItem,
   taskList,
@@ -64,6 +61,9 @@ import {
   unsupportedBlock,
   unsupportedInline,
   status,
+  nestableTaskList,
+  expand,
+  nestedExpand,
 } from './nodes';
 
 function addItems(
@@ -159,13 +159,15 @@ const nodesInOrder: SchemaBuiltInItem[] = [
   { name: 'confluenceJiraIssue', spec: confluenceJiraIssue },
   { name: 'confluenceUnsupportedInline', spec: confluenceUnsupportedInline },
   { name: 'confluenceUnsupportedBlock', spec: confluenceUnsupportedBlock },
-  { name: 'applicationCard', spec: applicationCard },
   { name: 'decisionList', spec: decisionList },
   { name: 'decisionItem', spec: decisionItem },
   { name: 'taskList', spec: taskList },
+  { name: 'taskList', spec: nestableTaskList },
   { name: 'taskItem', spec: taskItem },
   { name: 'date', spec: date },
   { name: 'status', spec: status },
+  { name: 'expand', spec: expand },
+  { name: 'nestedExpand', spec: nestedExpand },
   { name: 'extension', spec: extension },
   { name: 'inlineExtension', spec: inlineExtension },
   { name: 'bodiedExtension', spec: bodiedExtension },
@@ -185,9 +187,7 @@ const marksInOrder: SchemaBuiltInItem[] = [
   { name: 'subsup', spec: subsup },
   { name: 'underline', spec: underline },
   { name: 'code', spec: code },
-  { name: 'emojiQuery', spec: emojiQuery },
   { name: 'typeAheadQuery', spec: typeAheadQuery },
-  { name: 'action', spec: action },
   { name: 'alignment', spec: alignment },
   { name: 'annotation', spec: annotation },
   { name: 'confluenceInlineComment', spec: confluenceInlineComment },
@@ -206,8 +206,14 @@ export function createSchema(config: SchemaConfig): Schema {
     .concat(config.marks || [])
     .concat(markGroupDeclarationsNames);
 
-  let nodes = addItems(nodesInOrder, nodesConfig, customNodeSpecs);
-  let marks = addItems(marksInOrder, marksConfig, customMarkSpecs);
+  let nodes = addItems(nodesInOrder, nodesConfig, customNodeSpecs) as Record<
+    string,
+    NodeSpec
+  >;
+  let marks = addItems(marksInOrder, marksConfig, customMarkSpecs) as Record<
+    string,
+    MarkSpec
+  >;
   nodes = sanitizeNodes(nodes, marks);
   return new Schema<string, string>({
     nodes,

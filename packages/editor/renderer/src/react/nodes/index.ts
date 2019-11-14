@@ -6,7 +6,6 @@ import BodiedExtension, {
   Props as BodiedExtensionProps,
 } from './bodiedExtension';
 import BulletList from './bulletList';
-import CodeBlock from './codeBlock';
 import DecisionList from './decisionList';
 import Doc from './doc';
 import Extension, { Props as ExtensionProps } from './extension';
@@ -25,75 +24,118 @@ import Panel from './panel';
 import Paragraph from './paragraph';
 import Placeholder from './placeholder';
 import Rule from './rule';
-import TaskItem from './taskItem';
 import TaskList from './taskList';
 import Table from './table';
-import TableCell from './tableCell';
-import TableHeader from './tableHeader';
+import { TableCell, TableHeader } from './tableCell';
 import TableRow from './tableRow';
 import UnknownBlock from './unknownBlock';
-import * as Loadable from 'react-loadable';
+import Loadable from 'react-loadable';
+
+const CodeBlock = Loadable({
+  loader: () =>
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_CodeBlock" */
+      './codeBlock'
+    ),
+  loading: () => null,
+});
+
+const TaskItem = Loadable({
+  loader: () =>
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_TaskItem" */
+      './taskItem'
+    ),
+  loading: () => null,
+});
 
 const DecisionItem = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_DecisionItem" */
-    './decisionItem').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_DecisionItem" */
+      './decisionItem'
+    ),
   loading: () => null,
 });
 
 const Date = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Date" */
-    './date').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_Date" */
+      './date'
+    ),
   loading: () => null,
 });
 
 const Status = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Status" */
-    './status').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_Status" */
+      './status'
+    ),
   loading: () => null,
 });
 
 const Emoji = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Emoji" */
-    './emoji').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_Emoji" */
+      './emoji'
+    ),
   loading: () => null,
 });
 
 const InlineCard = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_InlineCard" */
-    './inlineCard').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_InlineCard" */
+      './inlineCard'
+    ),
   loading: () => null,
 });
 
 const BlockCard = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_BlockCard" */
-    './blockCard').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_BlockCard" */
+      './blockCard'
+    ),
   loading: () => null,
 });
 
 const Media = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Media" */
-    './media').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_Media" */
+      './media'
+    ),
   loading: () => null,
 });
 
 const MediaGroup = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_MediaGroup" */
-    './mediaGroup').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_MediaGroup" */
+      './mediaGroup'
+    ),
   loading: () => null,
 });
 
 const Mention = Loadable({
   loader: () =>
-    import(/* webpackChunkName:"@atlaskit-internal-renderer-node_Mention" */
-    './mention').then(module => module.default),
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_Mention" */
+      './mention'
+    ),
+  loading: () => null,
+});
+
+const Expand = Loadable({
+  loader: () =>
+    import(
+      /* webpackChunkName:"@atlaskit-internal-renderer-node_Expand" */
+      '../../ui/Expand'
+    ),
   loading: () => null,
 });
 
@@ -134,6 +176,8 @@ export const nodeToReact: { [key: string]: React.ComponentType<any> } = {
   tableHeader: TableHeader,
   tableRow: TableRow,
   unknownBlock: UnknownBlock,
+  expand: Expand,
+  nestedExpand: Expand,
 };
 
 export const toReact = (node: Node): React.ComponentType<any> => {
@@ -236,7 +280,7 @@ const whitespaceRegex = /^\s*$/;
  * Detects whether a fragment contains a single paragraph node
  * whose content satisfies the condition for an emoji block
  */
-export const isEmojiDoc = (doc: Fragment, props: any = {}): boolean => {
+export const isEmojiDoc = (doc: Fragment): boolean => {
   if (doc.childCount !== 1) {
     return false;
   }
@@ -312,7 +356,6 @@ export {
   TaskList,
   Table,
   TableCell,
-  TableHeader,
   TableRow,
   UnknownBlock,
 };

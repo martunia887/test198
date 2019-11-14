@@ -51,7 +51,10 @@ describe('<QuickSearch />', () => {
         childContextTypes: { onAnalyticsEvent: PropTypes.func },
       },
     );
-    searchInput = wrapper.find(AkSearch).find('input');
+    searchInput = wrapper
+      .find(AkSearch)
+      .find('input')
+      .last();
   };
 
   beforeEach(() => {
@@ -75,11 +78,16 @@ describe('<QuickSearch />', () => {
 
     it('should support non-component children', () => {
       render({ children: 'child' });
+      // Modified as per BUILDTOOLS-220: expect.hasAssertions(), please modify accordingly.
+      expect(wrapper.children).toBeDefined();
       /* Expect that no errors occur while parsing children */
     });
 
     it('should support non-component grandchildren', () => {
       render({ children: <div>grandchild</div> });
+      // Modified as per BUILDTOOLS-220: expect.hasAssertions(), please modify accordingly.
+      expect(wrapper.find('div').exists()).toBe(true);
+      expect(wrapper.find('div').children).toBeDefined();
       /* Expect that no errors occur while parsing children */
     });
   });
@@ -215,11 +223,14 @@ describe('<QuickSearch />', () => {
   });
 
   describe('Keyboard controls', () => {
-    let originalWindowAssign;
-    let locationAssignSpy;
+    let originalWindowLocation = window.location;
+    let locationAssignSpy: jest.Mock<{}>;
 
     beforeAll(() => {
-      originalWindowAssign = window.location.assign;
+      delete window.location;
+      window.location = Object.assign({}, window.location, {
+        assign: jest.fn(),
+      });
     });
 
     beforeEach(() => {
@@ -228,7 +239,7 @@ describe('<QuickSearch />', () => {
     });
 
     afterAll(() => {
-      window.location.assign = originalWindowAssign;
+      window.location = originalWindowLocation;
     });
     it('should select the first result on first DOWN keystroke', () => {
       wrapper
@@ -419,6 +430,28 @@ describe('<QuickSearch />', () => {
       expect(
         wrapper.find(ResultItem).filterWhere(n => !!n.prop('isSelected')),
       ).toHaveLength(0);
+    });
+
+    it('should autocomplete when Tab is pressed', () => {
+      render({ autocompleteText: 'autocomplete' });
+      searchInput.simulate('keydown', { key: 'Tab' });
+
+      expect(wrapper.find(AkSearch).prop('value')).toBe('autocomplete ');
+    });
+
+    it('should autocomplete when ArrowRight is pressed', () => {
+      render({ autocompleteText: 'autocomplete' });
+      searchInput.simulate('keydown', { key: 'ArrowRight' });
+
+      expect(wrapper.find(AkSearch).prop('value')).toBe('autocomplete ');
+    });
+
+    it('should not autocomplete when Tab is pressed repeatedly', () => {
+      render({ autocompleteText: 'autocomplete' });
+      searchInput.simulate('keydown', { key: 'Tab' });
+      expect(wrapper.find(AkSearch).prop('value')).toBe('autocomplete ');
+      searchInput.simulate('keydown', { key: 'Tab' });
+      expect(wrapper.find(AkSearch).prop('value')).toBe('autocomplete ');
     });
   });
 

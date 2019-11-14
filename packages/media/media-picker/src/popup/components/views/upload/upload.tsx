@@ -9,12 +9,13 @@ import {
   CardEventHandler,
 } from '@atlaskit/media-card';
 import {
-  Context,
   FileItem,
   FileDetails,
   FileIdentifier,
   getMediaTypeFromMimeType,
-} from '@atlaskit/media-core';
+  MediaClient,
+} from '@atlaskit/media-client';
+import { RECENTS_COLLECTION } from '@atlaskit/media-client/constants';
 import Spinner from '@atlaskit/spinner';
 import Flag, { FlagGroup } from '@atlaskit/flag';
 import AnnotateIcon from '@atlaskit/icon/glyph/media-services/annotate';
@@ -23,13 +24,11 @@ import EditorInfoIcon from '@atlaskit/icon/glyph/error';
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import { messages, InfiniteScroll } from '@atlaskit/media-ui';
-import { Browser } from '../../../../components/types';
 import { isWebGLAvailable } from '../../../tools/webgl';
 import { Dropzone } from './dropzone';
 import { fileClick } from '../../../actions/fileClick';
 import { editorShowImage } from '../../../actions/editorShowImage';
 import { editRemoteImage } from '../../../actions/editRemoteImage';
-import { setUpfrontIdDeferred } from '../../../actions/setUpfrontIdDeferred';
 
 import {
   FileReference,
@@ -50,8 +49,8 @@ import {
   RecentUploadsTitle,
   CardWrapper,
 } from './styled';
-import { RECENTS_COLLECTION } from '../../../config';
 import { removeFileFromRecents } from '../../../actions/removeFileFromRecents';
+import { BrowserBase } from '../../../../components/browser/browser';
 
 const createEditCardAction = (
   handler: CardEventHandler,
@@ -74,9 +73,14 @@ const createDeleteCardAction = (handler: CardEventHandler): CardAction => {
 
 const cardDimension = { width: 162, height: 108 };
 
+interface IterableCard {
+  key: string;
+  card: JSX.Element;
+}
+
 export interface UploadViewOwnProps {
-  readonly mpBrowser: Browser;
-  readonly context: Context;
+  readonly browserRef: React.RefObject<BrowserBase>;
+  readonly mediaClient: MediaClient;
   readonly recentsCollection: string;
 }
 
@@ -97,16 +101,7 @@ export interface UploadViewDispatchProps {
     file: FileReference,
     collectionName: string,
   ) => void;
-  readonly setUpfrontIdDeferred: (
-    id: string,
-    resolver: (id: string) => void,
-    rejecter: Function,
-  ) => void;
-  readonly removeFileFromRecents: (
-    id: string,
-    occurrenceKey?: string,
-    userFileId?: string,
-  ) => void;
+  readonly removeFileFromRecents: (id: string, occurrenceKey?: string) => void;
 }
 
 export type UploadViewProps = UploadViewOwnProps &
@@ -121,8 +116,7 @@ export interface UploadViewState {
   readonly isLoadingNextPage: boolean;
   readonly deletionCandidate?: {
     id: string;
-    occurrenceKey: string;
-    userFileId?: string;
+    occurrenceKey?: string;
   };
 }
 
@@ -130,6 +124,8 @@ export class StatelessUploadView extends Component<
   UploadViewProps,
   UploadViewState
 > {
+  private mounted = false;
+
   state: UploadViewState = {
     hasPopupBeenVisible: false,
     isWebGLWarningFlagVisible: false,
@@ -137,8 +133,16 @@ export class StatelessUploadView extends Component<
     isLoadingNextPage: false,
   };
 
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   render() {
-    const { isLoading, mpBrowser } = this.props;
+    const { isLoading, browserRef } = this.props;
     const cards = this.renderCards();
     const isEmpty = !isLoading && cards.length === 0;
 
@@ -152,11 +156,12 @@ export class StatelessUploadView extends Component<
 
     return (
       <InfiniteScroll
+        data-testid="media-picker-recents-infinite-scroll"
         height="100%"
         onThresholdReached={this.onThresholdReachedListener}
       >
         <Wrapper>
-          <Dropzone isEmpty={isEmpty} mpBrowser={mpBrowser} />
+          <Dropzone isEmpty={isEmpty} browserRef={browserRef} />
           {contentPart}
           {confirmationDialog}
         </Wrapper>
@@ -175,12 +180,12 @@ export class StatelessUploadView extends Component<
       return null;
     }
 
-    const { id, occurrenceKey, userFileId } = deletionCandidate;
+    const { id, occurrenceKey } = deletionCandidate;
     const actions = [
       {
         text: 'Delete permanently',
         onClick: () => {
-          removeFileFromRecents(id, occurrenceKey, userFileId);
+          removeFileFromRecents(id, occurrenceKey);
           closeDialog();
         },
       },
@@ -217,10 +222,12 @@ export class StatelessUploadView extends Component<
 
     this.setState({ isLoadingNextPage: true }, async () => {
       try {
-        const { context } = this.props;
-        await context.collection.loadNextPage(RECENTS_COLLECTION);
+        const { mediaClient } = this.props;
+        await mediaClient.collection.loadNextPage(RECENTS_COLLECTION);
       } finally {
-        this.setState({ isLoadingNextPage: false });
+        if (this.mounted) {
+          this.setState({ isLoadingNextPage: false });
+        }
       }
     });
   };
@@ -278,7 +285,6 @@ export class StatelessUploadView extends Component<
     return (
       <FlagGroup onDismissed={this.onFlagDismissed}>
         <Flag
-          shouldDismiss={this.state.shouldDismissWebGLWarningFlag}
           description={formatMessage(messages.webgl_warning_description)}
           icon={<EditorInfoIcon label="info" />}
           id="webgl-warning-flag"
@@ -297,17 +303,15 @@ export class StatelessUploadView extends Component<
   private renderCards() {
     const recentFilesCards = this.recentFilesCards();
     const uploadingFilesCards = this.uploadingFilesCards();
-    return uploadingFilesCards
-      .concat(recentFilesCards)
-      .map(({ key, el: card }) => (
-        <CardWrapper tabIndex={0} className="e2e-recent-upload-card" key={key}>
-          {card}
-        </CardWrapper>
-      ));
+    return uploadingFilesCards.concat(recentFilesCards).map(({ key, card }) => (
+      <CardWrapper tabIndex={0} key={key}>
+        {card}
+      </CardWrapper>
+    ));
   }
 
-  private uploadingFilesCards(): { key: string; el: JSX.Element }[] {
-    const { uploads, onFileClick, context } = this.props;
+  private uploadingFilesCards(): IterableCard[] {
+    const { uploads, onFileClick, mediaClient } = this.props;
     const itemsKeys = Object.keys(uploads);
     itemsKeys.sort((a, b) => {
       return uploads[b].index - uploads[a].index;
@@ -325,66 +329,57 @@ export class StatelessUploadView extends Component<
         ...file.metadata,
         mimeType: mediaType,
       };
-      const {
-        id,
-        userOccurrenceKey,
-        userUpfrontId,
-        size,
-        name,
-        upfrontId,
-      } = fileMetadata;
+      const { id, size, name, occurrenceKey } = fileMetadata;
       const selected = selectedUploadIds.indexOf(id) > -1;
       const serviceFile: ServiceFile = {
         id,
         mimeType: mediaType,
         name,
         size,
-        upfrontId,
-        occurrenceKey: fileMetadata.occurrenceKey,
+        occurrenceKey,
         date: 0,
       };
       const onClick = () => onFileClick(serviceFile, 'upload');
       const actions: CardAction[] = [
         createDeleteCardAction(async () => {
-          const userFileId = await userUpfrontId;
-          const occurrenceKey = await userOccurrenceKey;
           this.setState({
-            deletionCandidate: { id, occurrenceKey, userFileId },
+            deletionCandidate: { id, occurrenceKey },
           });
         }),
       ]; // TODO [MS-1017]: allow file annotation for uploading files
 
       const identifier: FileIdentifier = {
-        id: userUpfrontId,
+        id,
         mediaItemType: 'file',
       };
 
       return {
+        isUploading: true,
         key: id,
-        el: (
+        card: (
           <Card
-            context={context}
+            mediaClientConfig={mediaClient.config}
             identifier={identifier}
             dimensions={cardDimension}
             selectable={true}
             selected={selected}
             onClick={onClick}
             actions={actions}
+            testId="media-picker-uploading-media-card"
           />
         ),
       };
     });
   }
 
-  private recentFilesCards(): { key: string; el: JSX.Element }[] {
+  private recentFilesCards(): IterableCard[] {
     const {
-      context,
+      mediaClient,
       recents,
       recentsCollection,
       selectedItems,
       onFileClick,
       onEditRemoteImage,
-      setUpfrontIdDeferred,
       intl: { formatMessage },
     } = this.props;
     const { items } = recents;
@@ -396,9 +391,6 @@ export class StatelessUploadView extends Component<
       const fileDetails = mediaItemDetails as FileDetails;
       if (fileDetails) {
         const { id } = fileDetails;
-        const upfrontId = new Promise<string>((resolve, reject) => {
-          setUpfrontIdDeferred(id, resolve, reject);
-        });
 
         onFileClick(
           {
@@ -407,7 +399,6 @@ export class StatelessUploadView extends Component<
             name: fileDetails.name || '',
             mimeType: fileDetails.mimeType || '',
             size: fileDetails.size || 0,
-            upfrontId,
           },
           'recent_files',
         );
@@ -450,9 +441,9 @@ export class StatelessUploadView extends Component<
 
       return {
         key: `${occurrenceKey}-${id}`,
-        el: (
+        card: (
           <Card
-            context={context}
+            mediaClientConfig={mediaClient.config}
             identifier={{
               id,
               mediaItemType: 'file',
@@ -463,6 +454,7 @@ export class StatelessUploadView extends Component<
             selected={selected}
             onClick={onClick}
             actions={actions}
+            testId="media-picker-recent-media-card"
           />
         ),
       };
@@ -500,10 +492,8 @@ const mapDispatchToProps = (
     dispatch(editorShowImage(dataUri, file)),
   onEditRemoteImage: (file, collectionName) =>
     dispatch(editRemoteImage(file, collectionName)),
-  setUpfrontIdDeferred: (id, resolver, rejecter) =>
-    dispatch(setUpfrontIdDeferred(id, resolver, rejecter)),
-  removeFileFromRecents: (id, occurrenceKey, userFileId) =>
-    dispatch(removeFileFromRecents(id, occurrenceKey, userFileId)),
+  removeFileFromRecents: (id, occurrenceKey) =>
+    dispatch(removeFileFromRecents(id, occurrenceKey)),
 });
 
 export default connect<

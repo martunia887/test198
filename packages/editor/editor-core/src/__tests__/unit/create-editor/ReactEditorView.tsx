@@ -1,5 +1,5 @@
 import { name } from '../../../version.json';
-import { shallow } from 'enzyme';
+import { shallow, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { TextSelection } from 'prosemirror-state';
 import { ProviderFactory } from '@atlaskit/editor-common';
@@ -8,9 +8,13 @@ import {
   p,
   mediaGroup,
   media,
+  mention,
   defaultSchema,
   storyMediaProviderFactory,
+  createAnalyticsEventMock,
 } from '@atlaskit/editor-test-helpers';
+import { mention as mentionData } from '@atlaskit/util-data-test';
+import { MentionProvider } from '@atlaskit/mention/resource';
 import ReactEditorView from '../../../create-editor/ReactEditorView';
 import { toJSON } from '../../../utils';
 import {
@@ -29,13 +33,29 @@ import {
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
   addAnalytics,
+  DispatchAnalyticsEvent,
+  editorAnalyticsChannel,
 } from '../../../plugins/analytics';
 import { analyticsService } from '../../../analytics';
+import { EditorAppearance } from '../../../types';
 
 const portalProviderAPI: any = {
   render() {},
   remove() {},
 };
+
+const requiredProps = () => ({
+  providerFactory: ProviderFactory.create({}),
+  portalProviderAPI,
+  onEditorCreated: () => {},
+  onEditorDestroyed: () => {},
+  editorProps: {},
+});
+
+const analyticsProps = () => ({
+  allowAnalyticsGASV3: true,
+  createAnalyticsEvent: createAnalyticsEventMock() as any,
+});
 
 const payload: AnalyticsEventPayload = {
   action: ACTION.CLICKED,
@@ -46,16 +66,24 @@ const payload: AnalyticsEventPayload = {
 };
 
 describe(name, () => {
+  let mockFire: ReturnType<typeof AnalyticsPlugin.fireAnalyticsEvent>;
+
+  beforeEach(() => {
+    mockFire = jest.fn();
+    jest.spyOn(AnalyticsPlugin, 'fireAnalyticsEvent').mockReturnValue(mockFire);
+  });
+
+  afterEach(() => {
+    (AnalyticsPlugin.fireAnalyticsEvent as jest.Mock).mockRestore();
+  });
+
   describe('<ReactEditorView />', () => {
     it('should place the initial selection at the end of the document', () => {
       const document = doc(p('hello{endPos}'))(defaultSchema);
       const wrapper = shallow(
         <ReactEditorView
+          {...requiredProps()}
           editorProps={{ defaultValue: toJSON(document) }}
-          providerFactory={new ProviderFactory()}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
         />,
       );
       const { editorState } = wrapper.instance() as ReactEditorView;
@@ -68,14 +96,11 @@ describe(name, () => {
       const document = doc(p('{startPos}hello'))(defaultSchema);
       const wrapper = shallow(
         <ReactEditorView
+          {...requiredProps()}
           editorProps={{
             defaultValue: toJSON(document),
             appearance: 'full-page',
           }}
-          providerFactory={new ProviderFactory()}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
         />,
       );
       const { editorState } = wrapper.instance() as ReactEditorView;
@@ -86,15 +111,7 @@ describe(name, () => {
 
     it('should place the initial selection at the start/end when document is empty', () => {
       const document = doc(p('{endPos}'))(defaultSchema);
-      const wrapper = shallow(
-        <ReactEditorView
-          editorProps={{}}
-          providerFactory={new ProviderFactory()}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
-        />,
-      );
+      const wrapper = shallow(<ReactEditorView {...requiredProps()} />);
       const { editorState } = wrapper.instance() as ReactEditorView;
       const cursorPos = (editorState.selection as TextSelection).$cursor!.pos;
       expect(cursorPos).toEqual(document.refs.endPos);
@@ -106,16 +123,14 @@ describe(name, () => {
       const mediaNode = media({ id: '1', type: 'file', collection: '2' });
       const document = doc(p('Start'), mediaGroup(mediaNode()))(defaultSchema);
       const mediaProvider = storyMediaProviderFactory();
-      const wrapper = shallow(
+      const wrapper = mountWithIntl(
         <ReactEditorView
+          {...requiredProps()}
           editorProps={{
             defaultValue: toJSON(document),
             media: { provider: mediaProvider },
           }}
           providerFactory={ProviderFactory.create({ mediaProvider })}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
         />,
       );
       const { editorState } = wrapper.instance() as ReactEditorView;
@@ -130,35 +145,15 @@ describe(name, () => {
     });
 
     it("should set `key` on the ProseMirror div node to aid React's reconciler", () => {
-      const wrapper = mountWithIntl(
-        <ReactEditorView
-          editorProps={{}}
-          providerFactory={ProviderFactory.create({})}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
-        />,
-      );
+      const wrapper = mountWithIntl(<ReactEditorView {...requiredProps()} />);
 
       expect(wrapper.children().key()).toEqual('ProseMirror');
       wrapper.unmount();
     });
 
     it('should forward all events dispatched with analyticsEventKey to analytics plugin', () => {
-      const mockFire = jest.fn();
-      const mockAnalytics = jest
-        .spyOn(AnalyticsPlugin, 'fireAnalyticsEvent')
-        .mockReturnValue(mockFire);
       const wrapper = mountWithIntl(
-        <ReactEditorView
-          editorProps={{}}
-          providerFactory={ProviderFactory.create({})}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
-          createAnalyticsEvent={jest.fn()}
-          allowAnalyticsGASV3
-        />,
+        <ReactEditorView {...requiredProps()} {...analyticsProps()} />,
       );
 
       (wrapper.instance() as ReactEditorView).eventDispatcher.emit(
@@ -166,24 +161,11 @@ describe(name, () => {
         { payload },
       );
       expect(mockFire).toHaveBeenCalledWith({ payload });
-      mockAnalytics.mockRestore();
     });
 
     it('should trigger editor started analytics event', () => {
-      const mockFire = jest.fn();
-      const mockAnalytics = jest
-        .spyOn(AnalyticsPlugin, 'fireAnalyticsEvent')
-        .mockReturnValue(mockFire);
-      mountWithIntl(
-        <ReactEditorView
-          editorProps={{}}
-          providerFactory={ProviderFactory.create({})}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
-          createAnalyticsEvent={jest.fn()}
-          allowAnalyticsGASV3
-        />,
+      const wrapper = mountWithIntl(
+        <ReactEditorView {...requiredProps()} {...analyticsProps()} />,
       );
 
       expect(mockFire).toHaveBeenCalledWith({
@@ -192,20 +174,12 @@ describe(name, () => {
           actionSubject: 'editor',
         }),
       });
-      mockAnalytics.mockRestore();
+      wrapper.unmount();
     });
 
     describe('when a transaction is dispatched', () => {
       it('should not trigger a re-render', () => {
-        const wrapper = mountWithIntl(
-          <ReactEditorView
-            editorProps={{}}
-            providerFactory={ProviderFactory.create({})}
-            portalProviderAPI={portalProviderAPI}
-            onEditorCreated={() => {}}
-            onEditorDestroyed={() => {}}
-          />,
-        );
+        const wrapper = mountWithIntl(<ReactEditorView {...requiredProps()} />);
 
         const editor = wrapper.instance() as ReactEditorView;
         patchEditorViewForJSDOM(editor.view);
@@ -215,6 +189,46 @@ describe(name, () => {
 
         expect(renderSpy).toHaveBeenCalledTimes(0);
         wrapper.unmount();
+      });
+
+      it('should discard stale transactions after componentWillUnmount is triggered', () => {
+        const unmountSpy = jest.spyOn(
+          ReactEditorView.prototype,
+          'componentWillUnmount',
+        );
+        const wrapper = mountWithIntl(<ReactEditorView {...requiredProps()} />);
+
+        const editor = wrapper.instance() as ReactEditorView;
+        patchEditorViewForJSDOM(editor.view);
+
+        const expectedTransactionCount = 1;
+
+        const dispatchTransactionSpy: jest.SpyInstance<ReactEditorView['dispatchTransaction']> = jest.spyOn(
+          editor as any,
+          'dispatchTransaction',
+        );
+        editor.view!.dispatch(editor.view!.state.tr);
+        expect(dispatchTransactionSpy).toHaveBeenCalledTimes(
+          expectedTransactionCount,
+        );
+
+        // Manually invoke componentWillUnmount.
+        // This won't actually unmount it, but it allows us to check the logic
+        // peformed inside that lifecycle method, ahead of the actual unmounting,
+        // which allows us to dispatch from our view reference before it gets wiped out.
+        editor.componentWillUnmount();
+
+        // Simulate dispatching a stale async transaction after a dismount is triggered.
+        editor.view!.dispatch(editor.view!.state.tr);
+
+        // Because we block transactions once a dismount is imminent the surplus transaction
+        // should have been discarded and the count shouldn't have increased.
+        expect(dispatchTransactionSpy).toHaveBeenCalledTimes(
+          expectedTransactionCount,
+        );
+
+        wrapper.unmount();
+        expect(unmountSpy).toHaveBeenCalledTimes(2);
       });
     });
 
@@ -252,21 +266,20 @@ describe(name, () => {
         editor.view.dispatch(invalidTr);
       };
 
-      let wrapper;
-      let editor;
+      let wrapper: ReactWrapper;
+      let editor: any;
       let invalidTr;
 
       beforeEach(() => {
         wrapper = mountWithIntl(
           <ReactEditorView
+            {...requiredProps()}
+            {...analyticsProps()}
             editorProps={{
               allowCodeBlocks: true,
               allowDate: true,
+              ...analyticsProps(),
             }}
-            providerFactory={ProviderFactory.create({})}
-            portalProviderAPI={portalProviderAPI}
-            onEditorCreated={() => {}}
-            onEditorDestroyed={() => {}}
           />,
         );
         editor = wrapper.instance() as ReactEditorView;
@@ -282,14 +295,13 @@ describe(name, () => {
 
         expect(analyticsService.trackEvent).toHaveBeenCalledWith(
           'atlaskit.fabric.editor.invalidtransaction',
-          { documents: JSON.stringify(documents) },
+          {
+            documents: JSON.stringify(documents),
+          },
         );
       });
 
       it('sends V3 analytics event with info on failed transaction', () => {
-        const { eventDispatcher } = wrapper.instance() as ReactEditorView;
-        jest.spyOn(eventDispatcher, 'emit');
-
         const analyticsEventPayload: AnalyticsEventPayload = {
           action: ACTION.CLICKED,
           actionSubject: ACTION_SUBJECT.BUTTON,
@@ -298,11 +310,18 @@ describe(name, () => {
           eventType: EVENT_TYPE.UI,
         };
 
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
+        mockFire.mockClear();
         dispatchInvalidTransaction(
           // add v3 analytics meta to transaction as we want to check this info is sent on
-          addAnalytics(editor.view.state.tr, analyticsEventPayload),
+          addAnalytics(
+            editor.view.state,
+            editor.view.state.tr,
+            analyticsEventPayload,
+          ),
         );
-        expect(eventDispatcher.emit).toHaveBeenCalledWith(analyticsEventKey, {
+        expect(mockFire).toHaveBeenCalledWith({
           payload: {
             action: 'dispatchedInvalidTransaction',
             actionSubject: 'editor',
@@ -310,7 +329,7 @@ describe(name, () => {
             attributes: {
               analyticsEventPayloads: [
                 {
-                  channel: undefined,
+                  channel: editorAnalyticsChannel,
                   payload: analyticsEventPayload,
                 },
               ],
@@ -331,11 +350,9 @@ describe(name, () => {
       let handleEditorCreated = jest.fn();
       let wrapper = mountWithIntl(
         <ReactEditorView
+          {...requiredProps()}
           editorProps={{ appearance: 'comment' }}
-          providerFactory={new ProviderFactory()}
-          portalProviderAPI={portalProviderAPI}
           onEditorCreated={handleEditorCreated}
-          onEditorDestroyed={() => {}}
         />,
       );
 
@@ -359,10 +376,8 @@ describe(name, () => {
       let handleEditorDestroyed = jest.fn();
       const wrapper = mountWithIntl(
         <ReactEditorView
+          {...requiredProps()}
           editorProps={{ appearance: 'comment' }}
-          providerFactory={new ProviderFactory()}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
           onEditorDestroyed={handleEditorDestroyed}
         />,
       );
@@ -383,45 +398,14 @@ describe(name, () => {
       });
     });
 
-    it('should call destroy() on plugin states when it gets unmounted', () => {
-      let spies: Array<jest.SpyInstance> = [];
-      const mediaProvider = storyMediaProviderFactory({
-        includeUserAuthProvider: true,
-      });
-      const wrapper = mountWithIntl(
-        <ReactEditorView
-          editorProps={{
-            mediaProvider: mediaProvider,
-          }}
-          providerFactory={ProviderFactory.create({ mediaProvider })}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={({ view }) => {
-            spies = view.state.plugins
-              .map(plugin => plugin.getState(view.state))
-              .filter(state => !!state && !!state.destroy)
-              .map(state => jest.spyOn(state, 'destroy'));
-          }}
-          onEditorDestroyed={() => {}}
-        />,
-      );
-
-      expect(spies.length).toBeGreaterThan(0);
-      wrapper.unmount();
-
-      spies.forEach(spy => expect(spy).toHaveBeenCalledTimes(1));
-    });
-
     it('should call destroy() on EventDispatcher when it gets unmounted', () => {
       let eventDispatcherDestroySpy;
       const wrapper = mountWithIntl(
         <ReactEditorView
-          editorProps={{}}
-          providerFactory={new ProviderFactory()}
-          portalProviderAPI={portalProviderAPI}
+          {...requiredProps()}
           onEditorCreated={({ eventDispatcher }) => {
             eventDispatcherDestroySpy = jest.spyOn(eventDispatcher, 'destroy');
           }}
-          onEditorDestroyed={() => {}}
         />,
       );
       wrapper.unmount();
@@ -429,15 +413,7 @@ describe(name, () => {
     });
 
     it('should disable grammarly in the editor', () => {
-      const wrapper = mountWithIntl(
-        <ReactEditorView
-          editorProps={{}}
-          providerFactory={ProviderFactory.create({})}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
-        />,
-      );
+      const wrapper = mountWithIntl(<ReactEditorView {...requiredProps()} />);
       const editorDOM = (wrapper.instance() as ReactEditorView).view!.dom;
       expect(editorDOM.getAttribute('data-gramm')).toBe('false');
       wrapper.unmount();
@@ -448,10 +424,8 @@ describe(name, () => {
         let handleEditorDestroyed = jest.fn();
         const wrapper = mountWithIntl(
           <ReactEditorView
+            {...requiredProps()}
             editorProps={{ appearance: 'comment' }}
-            providerFactory={new ProviderFactory()}
-            portalProviderAPI={portalProviderAPI}
-            onEditorCreated={() => {}}
             onEditorDestroyed={handleEditorDestroyed}
           />,
         );
@@ -482,16 +456,13 @@ describe(name, () => {
         let editorViewDestroy: jest.SpyInstance | undefined;
         const wrapper = mountWithIntl(
           <ReactEditorView
-            editorProps={{}}
-            providerFactory={new ProviderFactory()}
-            portalProviderAPI={portalProviderAPI}
+            {...requiredProps()}
             onEditorCreated={({ view }) => {
               // So we don't accidently re-set this when we create the new editor view
               if (!editorViewDestroy) {
                 editorViewDestroy = jest.spyOn(view, 'destroy');
               }
             }}
-            onEditorDestroyed={() => {}}
           />,
         );
 
@@ -510,9 +481,7 @@ describe(name, () => {
         let newEditorView;
         const wrapper = mountWithIntl(
           <ReactEditorView
-            editorProps={{}}
-            providerFactory={new ProviderFactory()}
-            portalProviderAPI={portalProviderAPI}
+            {...requiredProps()}
             onEditorCreated={({ view }) => {
               newEditorView = view;
             }}
@@ -538,9 +507,7 @@ describe(name, () => {
         let eventDispatcherDestroySpy;
         const wrapper = mountWithIntl(
           <ReactEditorView
-            editorProps={{}}
-            providerFactory={new ProviderFactory()}
-            portalProviderAPI={portalProviderAPI}
+            {...requiredProps()}
             onEditorCreated={({ eventDispatcher }) => {
               // So we don't accidently re-set this when we create the new editor view
               if (!oldEventDispatcher) {
@@ -551,7 +518,6 @@ describe(name, () => {
                 );
               }
             }}
-            onEditorDestroyed={() => {}}
           />,
         );
 
@@ -569,21 +535,54 @@ describe(name, () => {
       });
     });
 
+    describe('when appearance changes to full width', () => {
+      const initFullWidthEditor = (appearance: EditorAppearance) =>
+        mountWithIntl(
+          <ReactEditorView
+            {...requiredProps()}
+            {...analyticsProps()}
+            editorProps={{ appearance }}
+          />,
+        );
+
+      it('fires analytics event when entering full-width mode', () => {
+        const wrapper = initFullWidthEditor('full-page');
+        wrapper.setProps({ editorProps: { appearance: 'full-width' } });
+
+        expect(mockFire).toHaveBeenCalledWith({
+          payload: {
+            action: 'changedFullWidthMode',
+            actionSubject: 'editor',
+            attributes: {
+              previousMode: 'fixedWidth',
+              newMode: 'fullWidth',
+            },
+            eventType: 'track',
+          },
+        });
+      });
+
+      it('fires analytics event when leaving full-width mode', () => {
+        const wrapper = initFullWidthEditor('full-width');
+        wrapper.setProps({ editorProps: { appearance: 'full-page' } });
+
+        expect(mockFire).toHaveBeenCalledWith({
+          payload: {
+            action: 'changedFullWidthMode',
+            actionSubject: 'editor',
+            attributes: {
+              previousMode: 'fullWidth',
+              newMode: 'fixedWidth',
+            },
+            eventType: 'track',
+          },
+        });
+      });
+    });
+
     it('should re-setup analytics event forwarding when createAnalyticsEvent prop changes', () => {
-      const mockFire = jest.fn();
-      const mockAnalytics = jest
-        .spyOn(AnalyticsPlugin, 'fireAnalyticsEvent')
-        .mockReturnValue(mockFire);
       const wrapper = mountWithIntl(
-        <ReactEditorView
-          editorProps={{}}
-          providerFactory={ProviderFactory.create({})}
-          portalProviderAPI={portalProviderAPI}
-          onEditorCreated={() => {}}
-          onEditorDestroyed={() => {}}
-          createAnalyticsEvent={jest.fn()}
-          allowAnalyticsGASV3
-        />,
+        <ReactEditorView {...requiredProps()} {...analyticsProps()} />,
       );
       const { eventDispatcher } = wrapper.instance() as ReactEditorView;
       jest.spyOn(eventDispatcher, 'on');
@@ -597,30 +596,17 @@ describe(name, () => {
       expect(AnalyticsPlugin.fireAnalyticsEvent).toHaveBeenCalledWith(
         newCreateAnalyticsEvent,
       );
-      mockAnalytics.mockRestore();
     });
 
     describe('dispatch analytics event', () => {
       function setupDispatchAnalyticsTest(allowAnalyticsGASV3: boolean) {
-        jest
-          .spyOn(AnalyticsPlugin, 'fireAnalyticsEvent')
-          .mockReturnValue(() => null);
-        let dispatch;
+        let dispatch: undefined | DispatchAnalyticsEvent;
         const wrapper = mountWithIntl(
           <ReactEditorView
-            editorProps={{}}
-            providerFactory={ProviderFactory.create({})}
-            portalProviderAPI={portalProviderAPI}
-            onEditorCreated={() => {}}
-            onEditorDestroyed={() => {}}
-            createAnalyticsEvent={jest.fn()}
+            {...requiredProps()}
+            {...analyticsProps()}
             allowAnalyticsGASV3={allowAnalyticsGASV3}
-            render={({
-              editor,
-              config,
-              eventDispatcher,
-              dispatchAnalyticsEvent,
-            }) => {
+            render={({ dispatchAnalyticsEvent }) => {
               dispatch = dispatchAnalyticsEvent;
               return <p>Component</p>;
             }}
@@ -630,7 +616,7 @@ describe(name, () => {
         jest.spyOn(eventDispatcher, 'emit');
 
         return {
-          dispatch,
+          dispatch: dispatch!,
           eventDispatcher,
         };
       }
@@ -650,6 +636,76 @@ describe(name, () => {
         dispatch(payload);
         expect(eventDispatcher.emit).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('sanitize private content', () => {
+    const document = doc(
+      p('hello', mention({ id: '1', text: '@cheese' })(), '{endPos}'),
+    )(defaultSchema);
+
+    const mentionProvider: Promise<MentionProvider> = Promise.resolve(
+      mentionData.storyData.resourceProvider,
+    );
+
+    it('mentions should be sanitized when sanitizePrivateContent true', () => {
+      const wrapper = shallow(
+        <ReactEditorView
+          {...requiredProps()}
+          editorProps={{
+            defaultValue: toJSON(document),
+            mentionProvider,
+            sanitizePrivateContent: true,
+          }}
+          providerFactory={ProviderFactory.create({ mentionProvider })}
+        />,
+      );
+      const { editorState } = wrapper.instance() as ReactEditorView;
+      // Expect document changed with mention text attr empty
+      expect(editorState.doc.toJSON()).toEqual(
+        doc(p('hello', mention({ id: '1' })(), '{endPos}'))(
+          defaultSchema,
+        ).toJSON(),
+      );
+
+      wrapper.unmount();
+    });
+
+    it('mentions should not be sanitized when sanitizePrivateContent false', () => {
+      const wrapper = shallow(
+        <ReactEditorView
+          {...requiredProps()}
+          editorProps={{
+            defaultValue: toJSON(document),
+            sanitizePrivateContent: false,
+            mentionProvider,
+          }}
+          providerFactory={ProviderFactory.create({ mentionProvider })}
+        />,
+      );
+      const { editorState } = wrapper.instance() as ReactEditorView;
+      // Expect document unchanged
+      expect(editorState.doc.toJSON()).toEqual(document.toJSON());
+
+      wrapper.unmount();
+    });
+
+    it('mentions should not be sanitized when no collabEdit options', () => {
+      const wrapper = shallow(
+        <ReactEditorView
+          {...requiredProps()}
+          editorProps={{
+            defaultValue: toJSON(document),
+            mentionProvider,
+          }}
+          providerFactory={ProviderFactory.create({ mentionProvider })}
+        />,
+      );
+      const { editorState } = wrapper.instance() as ReactEditorView;
+      // Expect document unchanged
+      expect(editorState.doc.toJSON()).toEqual(document.toJSON());
+
+      wrapper.unmount();
     });
   });
 });

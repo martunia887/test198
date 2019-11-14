@@ -1,4 +1,4 @@
-import { Color as StatusColor } from '@atlaskit/status';
+import { Color as StatusColor } from '@atlaskit/status/element';
 import { EditorBridges, EditorPluginBridges } from './index';
 import {
   MentionBridge,
@@ -9,6 +9,8 @@ import {
   ListBridge,
   StatusBridge,
   LinkBridge,
+  UndoRedoBridge,
+  AnalyticsBridge,
 } from './bridge';
 
 import { sendToBridge } from '../../bridge-utils';
@@ -21,6 +23,8 @@ export default class AndroidBridge implements NativeBridge {
   listBridge: ListBridge;
   statusBridge: StatusBridge;
   linkBridge: LinkBridge;
+  undoRedoBridge: UndoRedoBridge;
+  analyticsBridge: AnalyticsBridge;
 
   constructor() {
     this.mentionBridge = window.mentionsBridge as MentionBridge;
@@ -30,9 +34,11 @@ export default class AndroidBridge implements NativeBridge {
     this.listBridge = window.listBridge as ListBridge;
     this.statusBridge = window.statusBridge as StatusBridge;
     this.linkBridge = window.linkBridge as LinkBridge;
+    this.undoRedoBridge = window.undoRedoBridge as UndoRedoBridge;
+    this.analyticsBridge = window.analyticsBridge as AnalyticsBridge;
   }
 
-  showMentions(query: String) {
+  showMentions(query: string) {
     this.mentionBridge.showMentions(query);
   }
 
@@ -57,7 +63,9 @@ export default class AndroidBridge implements NativeBridge {
   }
 
   submitPromise(name: string, uuid: string, args: string) {
-    this.promiseBridge.submitPromise(name, uuid, args);
+    if (this.promiseBridge) {
+      this.promiseBridge.submitPromise(name, uuid, args);
+    }
   }
 
   updateBlockState(currentBlockType: string) {
@@ -81,8 +89,25 @@ export default class AndroidBridge implements NativeBridge {
     this.statusBridge.dismissStatusPicker(isNew);
   }
 
-  currentSelection(text: string, url: string) {
-    this.linkBridge.currentSelection(text, url);
+  currentSelection(
+    text: string,
+    url: string,
+    top: number,
+    right: number,
+    bottom: number,
+    left: number,
+  ) {
+    this.linkBridge.currentSelection(text, url, top, right, bottom, left);
+  }
+
+  stateChanged(canUndo: boolean, canRedo: boolean) {
+    if (this.undoRedoBridge) {
+      this.undoRedoBridge.stateChanged(canUndo, canRedo);
+    }
+  }
+
+  trackEvent(event: string) {
+    this.analyticsBridge.trackEvent(event);
   }
 
   call<T extends EditorPluginBridges>(

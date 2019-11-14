@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import keyCode from 'keycode';
-import { fontSize } from '@atlaskit/theme';
+import { fontSize } from '@atlaskit/theme/constants';
 import styled from 'styled-components';
 
 const common = `
@@ -55,6 +55,13 @@ type Props = {
   onKeyDown?: (e: KeyboardEvent) => mixed,
 };
 
+if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '@atlaskit/input has been deprecated. It is an internal component and should not be used directly.',
+  );
+}
+
 export default class SingleLineTextInput extends Component<Props, {}> {
   static defaultProps = {
     style: {},
@@ -62,6 +69,7 @@ export default class SingleLineTextInput extends Component<Props, {}> {
     onConfirm: () => {},
     onKeyDown: () => {},
   };
+
   inputRef: ?HTMLInputElement;
 
   componentDidMount() {

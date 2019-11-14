@@ -6,11 +6,11 @@ import {
   emojiFooterBoxShadow,
   emojiPickerBorderColor,
   emojiPickerBoxShadow,
-} from '../../shared-styles';
+} from '../../util/shared-styles';
 
 import { emojiSprite, placeholder, emojiNode } from '../common/styles';
 
-import { emojiPickerHeight, emojiPickerWidth } from '../../constants';
+import { emojiPickerHeight, emojiPickerWidth } from '../../util/constants';
 
 export const active = 'emoji-picker-active';
 export const disable = 'emoji-picker-disable';
@@ -144,7 +144,7 @@ export const input = 'input';
 
 export const pickerSearch = style({
   boxSizing: 'border-box',
-  padding: '10px',
+  padding: '10px 10px 9px 10px',
   flex: '0 0 auto',
 
   $nest: {

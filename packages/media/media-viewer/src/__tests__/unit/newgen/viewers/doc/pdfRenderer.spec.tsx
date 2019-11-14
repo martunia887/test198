@@ -1,3 +1,21 @@
+jest.mock('pdfjs-dist/build/pdf', () => ({
+  __esModule: true, // this property makes it work
+  GlobalWorkerOptions: {
+    workerSrc: '',
+  },
+  getDocument: jest.fn(),
+}));
+
+jest.mock('pdfjs-dist/web/pdf_viewer', () => ({
+  __esModule: true, // this property makes it work
+  PDFViewer: jest.fn().mockImplementation(() => {
+    return {
+      setDocument: jest.fn(),
+      firstPagePromise: new Promise(() => {}),
+    };
+  }),
+}));
+
 import * as React from 'react';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import * as PDFJSViewer from 'pdfjs-dist/web/pdf_viewer';
@@ -15,31 +33,29 @@ import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
 
 function createFixture(documentPromise: Promise<any>) {
   const onClose = jest.fn();
-  pdfjsLib.getDocument = jest.fn(() => ({
+  const onSuccess = jest.fn();
+  (pdfjsLib.getDocument as jest.Mock<{}>).mockReturnValue({
     promise: documentPromise,
-  }));
-  PDFJSViewer.PDFViewer = jest.fn(() => {
-    return {
-      setDocument: jest.fn(),
-      firstPagePromise: new Promise(() => {}),
-    };
   });
+
   const el = mountWithIntlContext<Props, State>(
-    <PDFRenderer src={''} onClose={onClose} />,
+    <PDFRenderer src={''} onClose={onClose} onSuccess={onSuccess} />,
   );
-  return { el, onClose };
+  return { el, onClose, onSuccess };
 }
 
 describe('PDFRenderer', () => {
-  let originalGetDocument: any;
-  let originalViewer: any;
   beforeEach(() => {
-    originalGetDocument = pdfjsLib.getDocument;
-    originalViewer = PDFJSViewer.PDFViewer;
+    (PDFJSViewer.PDFViewer as jest.Mock<{}>).mockImplementation(() => {
+      return {
+        setDocument: jest.fn(),
+        firstPagePromise: new Promise(() => {}),
+      };
+    });
   });
   afterEach(() => {
-    pdfjsLib.getDocument = originalGetDocument;
-    PDFJSViewer.PDFViewer = originalViewer;
+    (pdfjsLib.getDocument as jest.Mock<{}>).mockReset();
+    (PDFJSViewer.PDFViewer as jest.Mock<{}>).mockReset();
   });
 
   it('supports zooming', async () => {
@@ -49,6 +65,7 @@ describe('PDFRenderer', () => {
     el.update();
 
     expect(el.state('zoomLevel').value).toEqual(1);
+
     expect(el.state('doc').status).toEqual('SUCCESSFUL');
     expect(el.find(ZoomControls)).toHaveLength(1);
     el.find(ZoomControls)
@@ -73,6 +90,7 @@ describe('PDFRenderer', () => {
     el.update();
 
     const errorMessage = el.find(ErrorMessage);
+
     expect(errorMessage).toHaveLength(1);
     expect(errorMessage.text()).toContain(
       "We couldn't generate a preview for this file",
@@ -89,5 +107,14 @@ describe('PDFRenderer', () => {
     el.find(`.${pdfViewerClassName}`).simulate('click');
 
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('should call onSuccess when loaded', async () => {
+    const documentPromise = Promise.resolve({});
+    const { el, onSuccess } = createFixture(documentPromise);
+    await documentPromise;
+    el.update();
+
+    expect(onSuccess).toHaveBeenCalled();
   });
 });

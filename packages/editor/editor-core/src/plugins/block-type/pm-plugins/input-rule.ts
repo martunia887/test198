@@ -2,8 +2,6 @@ import {
   textblockTypeInputRule,
   wrappingInputRule,
   inputRules,
-  // @ts-ignore
-  InputRule,
 } from 'prosemirror-inputrules';
 import { Schema, NodeType } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
@@ -31,13 +29,15 @@ import {
   ruleWithAnalytics,
 } from '../../analytics';
 
-import { HeadingLevels } from '../types';
+import { HeadingLevelsAndNormalText } from '../types';
 
 const MAX_HEADING_LEVEL = 6;
 
-function getHeadingLevel(match: string[]): { level: HeadingLevels } {
+function getHeadingLevel(
+  match: string[],
+): { level: HeadingLevelsAndNormalText } {
   return {
-    level: match[1].length as HeadingLevels,
+    level: match[1].length as HeadingLevelsAndNormalText,
   };
 }
 
@@ -97,7 +97,7 @@ function getHeadingRules(schema: Schema): InputRuleWithHandler[] {
 
   // New analytics handler
   const ruleWithHeadingAnalytics = ruleWithAnalytics(
-    (state, match: string[]) => ({
+    (_state, match: string[]) => ({
       action: ACTION.FORMATTED,
       actionSubject: ACTION_SUBJECT.TEXT,
       eventType: EVENT_TYPE.TRACK,
@@ -135,7 +135,7 @@ function getBlockQuoteRules(schema: Schema): InputRuleWithHandler[] {
 
   const leftNodeReplacementGreatherRule = createInputRule(
     new RegExp(`${leafNodeReplacementCharacter}\\s*>\\s$`),
-    (state, match, start, end) => {
+    (state, _match, start, end) => {
       return insertBlock(
         state,
         schema.nodes.blockquote,
@@ -195,7 +195,7 @@ function getCodeBlockRules(schema: Schema): InputRuleWithHandler[] {
           // remove markdown decorator ```
           .delete(newStart, end)
           .scrollIntoView();
-        return addAnalytics(tr, analyticsPayload);
+        return addAnalytics(state, tr, analyticsPayload);
       }
       let { tr } = state;
       tr = tr.delete(newStart, end);
@@ -221,7 +221,7 @@ function getCodeBlockRules(schema: Schema): InputRuleWithHandler[] {
         attributes,
       );
       if (tr) {
-        tr = addAnalytics(tr, analyticsPayload);
+        tr = addAnalytics(state, tr, analyticsPayload);
       }
       return tr;
     },
@@ -249,6 +249,7 @@ export function inputRulePlugin(schema: Schema): Plugin | undefined {
   if (rules.length !== 0) {
     return inputRules({ rules });
   }
+  return;
 }
 
 export default inputRulePlugin;

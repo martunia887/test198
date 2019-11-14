@@ -1,5 +1,4 @@
 import * as ts from 'typescript';
-
 export type TagInfo = {
   name: string;
   allowUnsupportedBlock?: boolean;
@@ -7,44 +6,50 @@ export type TagInfo = {
 };
 
 export function getTags(tagInfo: ts.JSDocTagInfo[]): TagInfo {
-  return tagInfo.reduce(
-    (obj, { name, text = '' }) => {
-      // TODO: Fix any
-      let val: any = text;
-      if (/^\d+$/.test(text)) {
-        // Number
-        val = +text;
-      } else if (text[0] === '"') {
-        // " wrapped string
-        val = JSON.parse(text);
-      } else if (text === 'true') {
-        val = true;
-      } else if (text === 'false') {
-        val = false;
-      }
-      // TODO: Fix any
-      (obj as any)[name] = val;
-      return obj;
-    },
-    {} as TagInfo,
-  );
+  return tagInfo.reduce((obj, { name, text = '' }) => {
+    // TODO: Fix any
+    let val: any = text;
+    if (/^\d+$/.test(text)) {
+      // Number
+      val = +text;
+    } else if (text[0] === '"') {
+      // " wrapped string
+      val = JSON.parse(text);
+    } else if (text === 'true') {
+      val = true;
+    } else if (text === 'false') {
+      val = false;
+    }
+    // TODO: Fix any
+    (obj as any)[name] = val;
+    return obj;
+  }, {} as TagInfo);
 }
 
 export type PrimitiveType = number | boolean | string;
-
+export type LiteralType = {
+  [k in keyof ts.LiteralType]: ts.LiteralType[k] extends
+    | string
+    | number
+    | ts.PseudoBigInt
+    ? PrimitiveType
+    : ts.LiteralType[k];
+};
 export function extractLiteralValue(typ: ts.Type): PrimitiveType {
+  /* eslint-disable no-bitwise */
   if (typ.flags & ts.TypeFlags.EnumLiteral) {
-    let str = String((typ as ts.LiteralType).value);
+    let str = String((typ as LiteralType).value);
     let num = parseFloat(str);
     return isNaN(num) ? str : num;
   } else if (typ.flags & ts.TypeFlags.StringLiteral) {
-    return (typ as ts.LiteralType).value;
+    return (typ as LiteralType).value;
   } else if (typ.flags & ts.TypeFlags.NumberLiteral) {
-    return (typ as ts.LiteralType).value;
+    return (typ as LiteralType).value;
   } else if (typ.flags & ts.TypeFlags.BooleanLiteral) {
     // TODO: Fix any
     return (typ as any).intrinsicName === 'true';
   }
+  /* eslint-enable no-bitwise */
   throw new Error(`Couldn't parse in extractLiteralValue`);
 }
 
@@ -68,6 +73,7 @@ export function isTypeAliasDeclaration(
   return node.kind === ts.SyntaxKind.TypeAliasDeclaration;
 }
 
+/* eslint-disable no-bitwise */
 export function isStringType(type: ts.Type) {
   return (type.flags & ts.TypeFlags.String) > 0;
 }
@@ -120,6 +126,7 @@ export function isNonPrimitiveType(type: ts.Type): type is ts.LiteralType {
 export function isAnyType(type: ts.Type): type is ts.Type {
   return (type.flags & ts.TypeFlags.Any) > 0;
 }
+/* eslint-enable no-bitwise */
 
 export function syntaxKindToName(kind: ts.SyntaxKind) {
   return ts.SyntaxKind[kind];

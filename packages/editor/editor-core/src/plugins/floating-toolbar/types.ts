@@ -1,14 +1,15 @@
 import { InjectedIntl } from 'react-intl';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { NodeType } from 'prosemirror-model';
+import { NodeType, Node } from 'prosemirror-model';
 
 import { Command } from '../../types';
 import { ButtonAppearance } from './ui/Button';
 import { DropdownOptions, RenderOptionsPropsT } from './ui/Dropdown';
-import { SelectOptions, SelectOption } from './ui/Select';
+import { SelectOption } from './ui/Select';
 import { ProviderFactory } from '@atlaskit/editor-common';
 import React from 'react';
+import { DispatchAnalyticsEvent } from '../analytics';
 
 export type Icon = React.ComponentType<{ label: string }>;
 export type RenderOptionsProps = RenderOptionsPropsT<Command>;
@@ -19,15 +20,18 @@ export type FloatingToolbarButton<T> = {
   type: 'button';
   title: string;
   onClick: T;
+  showTitle?: boolean;
   onMouseEnter?: T;
   onMouseLeave?: T;
-  icon: Icon;
+  icon?: Icon;
   selected?: boolean;
   disabled?: boolean;
   hidden?: boolean;
   appearance?: ButtonAppearance;
   href?: string;
   target?: string;
+  className?: string;
+  tooltipContent?: React.ReactNode;
 };
 
 export type FloatingToolbarInput<T> = {
@@ -39,19 +43,20 @@ export type FloatingToolbarInput<T> = {
   hidden?: boolean;
 };
 
-export type FloatingToolbarCustom<T> = {
+export type FloatingToolbarCustom = {
   type: 'custom';
   // No superset of all these types yet
   render: (
     view?: EditorView,
     idx?: number,
+    dispatchAnalyticsEvent?: DispatchAnalyticsEvent,
   ) => React.ComponentClass | React.SFC | React.ReactElement<any> | null;
   hidden?: boolean;
 };
 
 export type FloatingToolbarSelect<T> = {
   type: 'select';
-  options: SelectOptions<T>;
+  options: SelectOption[];
   hidden?: boolean;
   hideExpandIcon?: boolean;
   defaultValue?: SelectOption;
@@ -78,7 +83,7 @@ export type FloatingToolbarItem<T> =
   | FloatingToolbarDropdown<T>
   | FloatingToolbarSelect<T>
   | FloatingToolbarInput<T>
-  | FloatingToolbarCustom<T>
+  | FloatingToolbarCustom
   | FloatingToolbarSeparator;
 
 export interface FloatingToolbarConfig {
@@ -94,11 +99,15 @@ export interface FloatingToolbarConfig {
 
   visible?: boolean;
   nodeType: NodeType | NodeType[];
-  items: Array<FloatingToolbarItem<Command>>;
+  items:
+    | Array<FloatingToolbarItem<Command>>
+    | ((node: Node) => Array<FloatingToolbarItem<Command>>);
   align?: AlignType;
   className?: string;
   height?: number;
   width?: number;
+  offset?: [number, number];
+  forcePlacement?: boolean;
 }
 
 export type FloatingToolbarHandler = (

@@ -19,14 +19,11 @@ import {
   pluginKey as tablePluginKey,
   getPluginState,
 } from '../../../../plugins/table/pm-plugins/main';
-import tablesPlugin from '../../../../plugins/table';
 import {
   PermittedLayoutsDescriptor,
   TablePluginState,
 } from '../../../../plugins/table/types';
-import layoutPlugin from '../../../../plugins/layout';
-import extensionPlugin from '../../../../plugins/extension';
-import { toggleTableLayout } from '../../../../plugins/table/actions';
+import { toggleTableLayout } from '../../../../plugins/table/commands';
 import { isLayoutSupported } from '../../../../plugins/table/utils';
 
 describe('table toolbar', () => {
@@ -44,13 +41,10 @@ describe('table toolbar', () => {
     };
     return createEditor({
       doc,
-      editorPlugins: [
-        tablesPlugin(tableOptions),
-        layoutPlugin,
-        extensionPlugin,
-      ],
       editorProps: {
         allowTables: tableOptions,
+        allowExtension: true,
+        allowLayouts: true,
       },
       pluginKey: tablePluginKey,
     });
@@ -123,7 +117,8 @@ describe('table toolbar', () => {
               nextLayout = 'default';
               break;
           }
-          expect(tableNode.attrs.layout).toBe(nextLayout);
+          expect(tableNode).toBeDefined();
+          expect(tableNode!.attrs.layout).toBe(nextLayout);
         });
       });
     });

@@ -1,5 +1,5 @@
 // @flow
-import type { ComponentType, ElementConfig } from 'react';
+import type { ComponentType, ElementConfig, Node } from 'react';
 import { GlobalItem, GlobalNav } from '@atlaskit/navigation-next';
 
 type DefaultItemShape = {
@@ -7,18 +7,18 @@ type DefaultItemShape = {
   label: string,
   section: 'primary' | 'secondary',
   rank: number,
-  tooltip: string,
+  tooltip: string | Node,
 };
 
 type ItemShape = {
-  tooltip?: string,
+  tooltip?: string | Node,
   label?: string,
   onClick: () => void,
   icon?: ComponentType<*>,
 };
 
 type DropdownItem = {
-  tooltip?: string,
+  tooltip?: string | Node,
   label?: string,
   icon?: ComponentType<*>,
   component?: ComponentType<*>,
@@ -38,9 +38,10 @@ export type DefaultConfigShape = {
   },
   help: DefaultItemShape,
   settings: DefaultItemShape,
-  atlassianSwitcher: DefaultItemShape,
   profile: DefaultItemShape,
 };
+
+type helpContent = ItemShape | DropdownItem;
 
 export type ProductConfigShape = {
   product: ?ItemShape,
@@ -51,9 +52,8 @@ export type ProductConfigShape = {
   appSwitcher: ?{
     itemComponent: ComponentType<*>,
   },
-  help: ?DropdownItem,
+  help: ?helpContent,
   settings: ?ItemShape,
-  atlassianSwitcher: ?ItemShape,
   profile: ?DropdownItem,
 };
 

@@ -1,3 +1,4 @@
+import { Rect } from 'prosemirror-tables';
 import {
   doc,
   p,
@@ -9,9 +10,16 @@ import {
   tdEmpty,
 } from '@atlaskit/editor-test-helpers';
 import { TablePluginState } from '../../../../../plugins/table/types';
-import tablesPlugin from '../../../../../plugins/table';
 import { deleteColumns } from '../../../../../plugins/table/transforms';
 import { pluginKey } from '../../../../../plugins/table/pm-plugins/main';
+import { getSelectionRect } from 'prosemirror-utils';
+
+const colsToRect = (cols: Array<number>, noOfRows: number): Rect => ({
+  left: Math.min(...cols),
+  right: Math.max(...cols) + 1,
+  top: 0,
+  bottom: noOfRows,
+});
 
 describe('table plugin -> transforms -> delete columns', () => {
   const createEditor = createEditorFactory<TablePluginState>();
@@ -19,11 +27,11 @@ describe('table plugin -> transforms -> delete columns', () => {
   const editor = (doc: any) =>
     createEditor({
       doc,
-      editorPlugins: [tablesPlugin()],
+      editorProps: { allowTables: true },
       pluginKey,
     });
 
-  describe('when column indexes are given', () => {
+  describe('when selection rect is given', () => {
     describe('when the first column is deleted', () => {
       it('should delete the column and move cursor to the first column', () => {
         const {
@@ -42,7 +50,7 @@ describe('table plugin -> transforms -> delete columns', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteColumns([0])(state.tr));
+        dispatch(deleteColumns(colsToRect([0], 1))(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(p('text'), table()(tr(td({})(p('c2')), td()(p('c3'))))),
         );
@@ -68,7 +76,7 @@ describe('table plugin -> transforms -> delete columns', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteColumns([1])(state.tr));
+        dispatch(deleteColumns(colsToRect([1], 1))(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(p('text'), table()(tr(tdEmpty, td()(p('c3'))))),
         );
@@ -76,7 +84,7 @@ describe('table plugin -> transforms -> delete columns', () => {
       });
     });
 
-    describe('when an array of column indexes is passed in', () => {
+    describe('when multiple rows are selected', () => {
       it('should delete these columns', () => {
         const { editorView } = editor(
           doc(
@@ -85,36 +93,11 @@ describe('table plugin -> transforms -> delete columns', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteColumns([0, 1])(state.tr));
+        dispatch(deleteColumns(colsToRect([0, 1], 1))(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(p('text'), table()(tr(td()(p('c2'))))),
         );
       });
-    });
-  });
-
-  describe('when no columns are selected', () => {
-    it('should do nothing', () => {
-      const { editorView } = editor(
-        doc(
-          p('text'),
-          table()(
-            tr(td({})(p('a1')), td({})(p('a2'))),
-            tr(td({})(p('b1')), td({})(p('b2'))),
-          ),
-        ),
-      );
-      const { state, dispatch } = editorView;
-      dispatch(deleteColumns()(state.tr));
-      expect(editorView.state.doc).toEqualDocument(
-        doc(
-          p('text'),
-          table()(
-            tr(td({})(p('a1')), td({})(p('a2'))),
-            tr(td({})(p('b1')), td({})(p('b2'))),
-          ),
-        ),
-      );
     });
   });
 
@@ -130,7 +113,7 @@ describe('table plugin -> transforms -> delete columns', () => {
         ),
       );
       const { state, dispatch } = editorView;
-      dispatch(deleteColumns()(state.tr));
+      dispatch(deleteColumns(getSelectionRect(state.selection)!)(state.tr));
       expect(editorView.state.doc).toEqualDocument(
         doc(
           p('text'),
@@ -155,7 +138,7 @@ describe('table plugin -> transforms -> delete columns', () => {
         ),
       );
       const { state, dispatch } = editorView;
-      dispatch(deleteColumns()(state.tr));
+      dispatch(deleteColumns(getSelectionRect(state.selection)!)(state.tr));
       expect(editorView.state.doc).toEqualDocument(
         doc(p('text'), table()(tr(td({})(p('a3'))), tr(td({})(p('b3'))))),
       );
@@ -174,7 +157,7 @@ describe('table plugin -> transforms -> delete columns', () => {
         ),
       );
       const { state, dispatch } = editorView;
-      dispatch(deleteColumns()(state.tr));
+      dispatch(deleteColumns(getSelectionRect(state.selection)!)(state.tr));
       expect(editorView.state.doc).toEqualDocument(
         doc(
           p('text'),
@@ -208,7 +191,7 @@ describe('table plugin -> transforms -> delete columns', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteColumns()(state.tr));
+        dispatch(deleteColumns(getSelectionRect(state.selection)!)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -235,7 +218,7 @@ describe('table plugin -> transforms -> delete columns', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteColumns()(state.tr));
+        dispatch(deleteColumns(getSelectionRect(state.selection)!)(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             p('text'),
@@ -266,7 +249,7 @@ describe('table plugin -> transforms -> delete columns', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(deleteColumns([0])(state.tr));
+          dispatch(deleteColumns(colsToRect([0], 3))(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               table()(
@@ -316,7 +299,7 @@ describe('table plugin -> transforms -> delete columns', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(deleteColumns([0])(state.tr));
+          dispatch(deleteColumns(colsToRect([0], 4))(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               table()(
@@ -368,7 +351,7 @@ describe('table plugin -> transforms -> delete columns', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(deleteColumns([1])(state.tr));
+          dispatch(deleteColumns(colsToRect([1], 3))(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               table()(
@@ -415,7 +398,7 @@ describe('table plugin -> transforms -> delete columns', () => {
             ),
           );
           const { state, dispatch } = editorView;
-          dispatch(deleteColumns([1])(state.tr));
+          dispatch(deleteColumns(colsToRect([1], 4))(state.tr));
           expect(editorView.state.doc).toEqualDocument(
             doc(
               table()(
@@ -461,7 +444,7 @@ describe('table plugin -> transforms -> delete columns', () => {
           ),
         );
         const { state, dispatch } = editorView;
-        dispatch(deleteColumns([1, 2])(state.tr));
+        dispatch(deleteColumns(colsToRect([1, 2], 3))(state.tr));
         expect(editorView.state.doc).toEqualDocument(
           doc(
             table()(

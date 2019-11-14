@@ -1,4 +1,5 @@
-'use strict';
+/* eslint-disable no-undef */
+/* eslint-disable no-param-reassign */
 // @flow
 
 /*
@@ -6,16 +7,17 @@
  * BrowserTestCase is customized wrapper over jest-test-runner handling test setup, execution and
  * teardown for webdriver tests .
  */
-
 // increase default jasmine timeout not to fail on webdriver tests as tests run can
 // take a while depending on the number of threads executing.
 
 // increase this time out to handle queuing on browserstack
+// eslint-disable-next-line no-undef
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1200e3;
 const isBrowserStack = process.env.TEST_ENV === 'browserstack';
-const setupClients = require('./utils/setupClients');
 const path = require('path');
 const Queue = require('promise-queue');
+const webdriverio = require('webdriverio');
+const setupClients = require('./utils/setupClients');
 
 let clients /*: Array<?Object>*/ = [];
 
@@ -25,48 +27,42 @@ if (isBrowserStack) {
   clients = setupClients.setLocalClients();
 }
 
-const launchClient = async client => {
-  if (
-    client &&
-    (client.isReady ||
-      (client.driver.requestHandler && client.driver.requestHandler.sessionID))
-  ) {
-    return;
+const launchClient = client => {
+  if (client && client.driver && client.driver.sessionId) {
+    return client.driver;
   }
 
-  client.isReady = true;
+  if (isBrowserStack) {
+    client.options.capabilities.name = filename;
+  }
+
+  const init = webdriverio.remote(client.options);
   client.queue = new Queue(1, 100);
-  return client.driver.init();
+
+  init.then(driver => {
+    driver.capabilities.os = client.options.capabilities.os;
+    client.driver = driver;
+  });
+
+  return init;
 };
 
-const endSession = async client => {
-  if (client && client.isReady) {
-    client.isReady = false;
-    await client.driver.end();
+const endSession = client => {
+  if (!client || !client.driver) {
+    return Promise.resolve();
   }
+
+  return client.driver.deleteSession();
 };
+
 const filename = path.basename(module.parent.filename);
 
-const initDrivers = () => {
-  const c = [];
+const launchedDrivers = {};
+const launchedClients = [];
 
-  for (const client of clients) {
-    if (!client) {
-      continue;
-    }
-
-    client.driver.desiredCapabilities.name = filename;
-    c.push(launchClient(client));
-  }
-
-  return Promise.all(c);
-};
-
-// We need to init all driver on load this file
-const drivers = initDrivers();
-
+// eslint-disable-next-line func-names
 afterAll(async function() {
-  await Promise.all(clients.map(endSession));
+  await Promise.all(launchedClients.map(endSession));
 });
 
 /*::
@@ -77,7 +73,6 @@ function BrowserTestCase(
   options /*: {skip?: string[]} */,
   tester /*: Tester<Object> */,
 ) {
-  let testsToRun = [];
   let skip = [];
   if (options && options.skip) {
     skip = Array.isArray(options.skip) ? options.skip : [];
@@ -88,15 +83,26 @@ function BrowserTestCase(
   );
 
   describe(filename, () => {
-    for (let c of execClients) {
-      const client = c || {};
-      const testCode = () => tester(client.driver, testCase);
+    if (!execClients.length) {
+      test.skip(testCase, () => {});
+      return;
+    }
 
+    for (const c of execClients) {
+      const client = c || {};
+      const testCode = async () => tester(client.driver, testCase);
+      if (!launchedDrivers[client.browserName]) {
+        launchedDrivers[client.browserName] = launchClient(client);
+        launchedClients.push(client);
+      }
+
+      // eslint-disable-next-line no-loop-func
       describe(client.browserName, () => {
         test.concurrent(testCase, async () => {
-          // We need to wait for the drivers be
+          // We need to wait for the driver be
           // ready to start
-          await drivers;
+          await launchedDrivers[client.browserName];
+
           // This will make sure that we will run
           // only on test case per time on
           // the same browser

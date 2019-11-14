@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { md, Example, Props, code } from '@atlaskit/docs';
-
-// Otherwise tslint complains about require not being declared
-declare const require: any;
+import {
+  md,
+  Example,
+  Props,
+  code,
+  AtlassianInternalWarning,
+} from '@atlaskit/docs';
 
 export default md`
+${(<AtlassianInternalWarning />)}
 
 This component provides a renderer for ADF documents.
 

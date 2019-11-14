@@ -7,19 +7,34 @@
 // Estonian
 export default {
   'fabric.atlassianSwitcher.switchTo': 'Asenda tootega',
-  'fabric.atlassianSwitcher.switchToTooltip': 'Asenda tootega …',
+  'fabric.atlassianSwitcher.switchToTooltip': 'Asenda rakendusega...',
   'fabric.atlassianSwitcher.recent': 'Hiljutised',
   'fabric.atlassianSwitcher.more': 'Rohkem',
   'fabric.atlassianSwitcher.try': 'Proovi',
   'fabric.atlassianSwitcher.manageList': 'Halda loendit',
   'fabric.atlassianSwitcher.jiraProject': 'Jira projekt',
   'fabric.atlassianSwitcher.confluenceSpace': 'Confluence’i ruum',
-  'fabric.atlassianSwitcher.people': 'Inimesed',
   'fabric.atlassianSwitcher.administration': 'Administreerimine',
-  'fabric.atlassianSwitcher.discoverMore': 'Avasta veel',
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Rakenduse Marketplace sirvimine',
+  'fabric.atlassianSwitcher.errorHeading': 'Midagi läks valesti',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    'Hoiame neil vigadel silma peal, ent võid ka meiega ühendust võtta, kui värskendamine ei tee asju paremaks.',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    'Robot on katki ja mitu inimest tegelevad praegu selle parandamisega.',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'Meil ei õnnestunud seda loendit laadida. Laadi lehte ja proovi uuesti.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'Oled välja logitud. Logi uuesti sisse.',
+  'fabric.atlassianSwitcher.login': 'Logi sisse',
+  'fabric.atlassianSwitcher.show.more.sites': 'Näita rohkem lehti',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

@@ -13,7 +13,7 @@ const messages = defineMessages({
   },
   switchToTooltip: {
     id: 'fabric.atlassianSwitcher.switchToTooltip',
-    defaultMessage: 'Switch to …',
+    defaultMessage: 'Switch to…',
     description:
       'This text appears as a tooltip when a user hovers over the atlassian switcher icon before clicking on it.',
   },
@@ -53,12 +53,6 @@ const messages = defineMessages({
     description:
       'In a context in which several items are listed , this text describes that the specific type of a given item is a Confluence space',
   },
-  people: {
-    id: 'fabric.atlassianSwitcher.people',
-    defaultMessage: 'People',
-    description:
-      'The text of a link redirecting the user to the People directory',
-  },
   administration: {
     id: 'fabric.atlassianSwitcher.administration',
     defaultMessage: 'Administration',
@@ -67,13 +61,19 @@ const messages = defineMessages({
   },
   discoverMore: {
     id: 'fabric.atlassianSwitcher.discoverMore',
-    defaultMessage: 'Discover more',
+    defaultMessage: 'More Atlassian products',
     description:
       'The text of a link redirecting the user to Discover More Atlassian products',
   },
+  browseApps: {
+    id: 'fabric.atlassianSwitcher.browseApps',
+    defaultMessage: 'Browse Marketplace apps',
+    description:
+      'The text of a link redirecting the user to Discover Embedded Marketplace within in the product (Marketplace is a brand name. Please dont translate it)',
+  },
   errorHeading: {
     id: 'fabric.atlassianSwitcher.errorHeading',
-    defaultMessage: 'Something went wrong',
+    defaultMessage: 'Something’s gone wrong',
     description:
       'Heading of the error screen which is shown when an unknown error happens in the Atlassian Switcher. Usually due to failed network requests.',
   },
@@ -89,6 +89,59 @@ const messages = defineMessages({
     defaultMessage: 'A broken robot and a number of people busy fixing it.',
     description:
       'Text displayed as alt text when an error occurs in the Atlassian Switcher',
+  },
+  errorTextNetwork: {
+    id: 'fabric.atlassianSwitcher.errorTextNetwork',
+    defaultMessage:
+      'We couldn’t load this list. Please reload the page and try again.',
+    description: 'Text that is displayed when we detect a network issue.',
+  },
+  errorTextLoggedOut: {
+    id: 'fabric.atlassianSwitcher.errorTextLoggedOut',
+    defaultMessage: 'You’ve been logged out. Please log in again.',
+    description: 'Text that is displayed when we detect user is logged out.',
+  },
+  login: {
+    id: 'fabric.atlassianSwitcher.login',
+    defaultMessage: 'Log in',
+    description: 'Text in log in button.',
+  },
+  showMoreSites: {
+    id: 'fabric.atlassianSwitcher.show.more.sites',
+    defaultMessage: 'Show more sites',
+    description: 'The text of a toggle showing more site options',
+  },
+  discover: {
+    id: 'fabric.atlassianSwitcher.discover',
+    defaultMessage: 'Discover',
+    description: 'The header of "Discover" section',
+  },
+  productDescriptionConfluence: {
+    id: 'fabric.atlassianSwitcher.product.description.confluence',
+    defaultMessage: 'Document collaboration',
+    description: 'Text displayed under Confluence product recommendation.',
+  },
+  productDescriptionJiraServiceDesk: {
+    id: 'fabric.atlassianSwitcher.product.description.jsd',
+    defaultMessage: 'IT service desk and customer service',
+    description:
+      'Text displayed under Jira Service Desk product recommendation.',
+  },
+  productDescriptionJiraSoftware: {
+    id: 'fabric.atlassianSwitcher.product.description.jsw',
+    defaultMessage: 'Project and issue tracking',
+    description: 'Text displayed under Jira Software product recommendation.',
+  },
+  productDescriptionOpsgenie: {
+    id: 'fabric.atlassianSwitcher.product.description.opsgenie',
+    defaultMessage: 'Modern incident management',
+    description: 'Text displayed under Opsgenie product recommendation.',
+  },
+  join: {
+    id: 'fabric.atlassianSwitcher.join',
+    defaultMessage: 'Join',
+    description:
+      'Section Header in Atlassian Switcher. To set the expectation of what items would be shown in following section. Shown when an user has at least one joinable site via Domain Enabled Sign up with common collaborators.',
   },
 });
 

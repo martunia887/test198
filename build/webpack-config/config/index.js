@@ -4,9 +4,9 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
+const moduleResolveMapBuilder = require('@atlaskit/multi-entry-tools/module-resolve-map-builder');
 const { createDefaultGlob } = require('./utils');
 const statsOptions = require('./statsOptions');
 
@@ -15,7 +15,7 @@ const baseCacheDir = path.resolve(
   '../../../node_modules/.cache-loader',
 );
 
-module.exports = function createWebpackConfig(
+module.exports = async function createWebpackConfig(
   {
     globs = createDefaultGlob(),
     mode = 'development',
@@ -37,6 +37,17 @@ module.exports = function createWebpackConfig(
   }*/,
 ) {
   const isProduction = mode === 'production';
+
+  // Synchrony integration should be enabled only in development mode
+  const isSynchronyEnabled =
+    !isProduction && (process.env.SYNCHRONY_URL || null) !== null;
+
+  // GASv3 integration should be enabled only in development mode
+  // So we should check if is not production and we are requiring GASv3
+  // integration in dev mode
+  const isAnalyticsGASv3Enabled =
+    !isProduction &&
+    (process.env.ENABLE_ANALYTICS_GASV3 || '').toLowerCase() === 'true';
 
   return {
     stats: statsOptions,
@@ -192,6 +203,32 @@ module.exports = function createWebpackConfig(
     resolve: {
       mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
       extensions: ['.js', '.ts', '.tsx'],
+      alias: {
+        ...(await moduleResolveMapBuilder()),
+        // Mocking the modules in case the of the flag is not enabled (default behavior)
+        // In case it's enabled the user needs to make sure that the package was installed globally
+        // and linked properly on `website` folder
+        ...(isAnalyticsGASv3Enabled
+          ? {}
+          : {
+              '@atlassiansox/analytics-web-client': path.resolve(
+                websiteDir,
+                'src/module-mocks/analytics-web-client.js',
+              ),
+            }),
+        ...(isSynchronyEnabled
+          ? {}
+          : {
+              '@atlassian/prosemirror-synchrony-plugin/build/collab-provider': path.resolve(
+                websiteDir,
+                'src/module-mocks/prosemirror-synchrony-plugin-collab-provider.js',
+              ),
+              '@atlassian/prosemirror-synchrony-plugin/build/cljs': path.resolve(
+                websiteDir,
+                'src/module-mocks/prosemirror-synchrony-plugin-cljs.js',
+              ),
+            }),
+      },
     },
     resolveLoader: {
       modules: [
@@ -199,7 +236,14 @@ module.exports = function createWebpackConfig(
         'node_modules',
       ],
     },
-    plugins: getPlugins({ websiteDir, isProduction, websiteEnv, report }),
+    plugins: getPlugins({
+      websiteDir,
+      isProduction,
+      websiteEnv,
+      report,
+      isAnalyticsGASv3Enabled,
+      isSynchronyEnabled,
+    }),
     optimization: getOptimizations({
       isProduction,
       noMinimizeFlag: noMinimize,
@@ -213,7 +257,9 @@ function getPlugins(
     isProduction,
     websiteEnv,
     report,
-  } /*: { websiteDir: string, websiteEnv: string, report: boolean, isProduction: boolean } */,
+    isAnalyticsGASv3Enabled = false,
+    isSynchronyEnabled = false,
+  } /*: { websiteDir: string, websiteEnv: string, report: boolean, isProduction: boolean, isAnalyticsGASv3Enabled: boolean, isSynchronyEnabled: boolean } */,
 ) {
   const faviconPath = path.join(
     websiteDir,
@@ -237,22 +283,28 @@ function getPlugins(
     }),
 
     new webpack.DefinePlugin({
+      SYNCHRONY_URL: `${JSON.stringify(
+        isSynchronyEnabled ? String(process.env.SYNCHRONY_URL) : '',
+      )}`,
+      ENABLE_ANALYTICS_GASV3: `${String(isAnalyticsGASv3Enabled)}`,
       WEBSITE_ENV: `"${websiteEnv}"`,
       BASE_TITLE: `"Atlaskit by Atlassian ${!isProduction ? '- DEV' : ''}"`,
       DEFAULT_META_DESCRIPTION: `"Atlaskit is the official component library for Atlassian's Design System."`,
     }),
   ];
 
-  plugins.push(
-    new BundleAnalyzerPlugin({
-      analyzerMode: report ? 'static' : 'disabled',
-      generateStatsFile: true,
-      openAnalyzer: report,
-      logLevel: 'error',
-      statsOptions: statsOptions,
-      defaultSizes: 'gzip',
-    }),
-  );
+  if (report) {
+    plugins.push(
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        generateStatsFile: true,
+        openAnalyzer: true,
+        logLevel: 'error',
+        statsOptions: { ...statsOptions, assets: true, modules: true },
+        defaultSizes: 'gzip',
+      }),
+    );
+  }
 
   return plugins;
 }
@@ -324,11 +376,27 @@ function getOptimizations({ isProduction, noMinimizeFlag }) {
     // There's an interesting bug in webpack where passing *any* uglify plugin, where `minimize` is
     // false, causes webpack to use its own minimizer plugin + settings.
     minimizer: noMinimizeFlag ? undefined : [uglifyPlugin],
-    minimize: noMinimizeFlag ? false : true,
+    minimize: !noMinimizeFlag,
     splitChunks: {
       // "Maximum number of parallel requests when on-demand loading. (default in production: 5)"
       // The default value of 5 causes the webpack process to crash, reason currently unknown
       maxAsyncRequests: Infinity,
+      cacheGroups: {
+        vendors: {
+          name: 'vendors',
+          enforce: true,
+          chunks: 'all',
+          test: (module /*: { context: string | null } */) => {
+            if (!module.context) {
+              return false;
+            }
+            return /node_modules\/(react|react-dom|styled-components|prop-types|@emotion|@babel\/runtime)($|\/)/.test(
+              module.context,
+            );
+          },
+          priority: 1,
+        },
+      },
     },
   };
 }

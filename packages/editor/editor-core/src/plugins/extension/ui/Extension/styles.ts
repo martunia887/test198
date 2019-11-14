@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
-import { HTMLAttributes, ClassAttributes, ComponentClass } from 'react';
-import { fontSize } from '@atlaskit/theme';
+import { HTMLAttributes, ComponentClass, ImgHTMLAttributes } from 'react';
+import { fontSize, gridSize } from '@atlaskit/theme';
 import { colors, borderRadius, themed } from '@atlaskit/theme';
 
-export const padding = 8;
+export const padding = gridSize();
+export const BODIED_EXT_PADDING = padding * 2;
 
 export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   background: ${themed({
@@ -20,10 +19,8 @@ export const Wrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   vertical-align: middle;
   font-size: ${fontSize()}px;
 
-  .ProseMirror-selectednode > & > .extension-overlay {
-    border: 2px solid ${colors.B200};
-    top: -2px;
-    left: -2px;
+  .ProseMirror-selectednode > span > & > .extension-overlay {
+    box-shadow: inset 0px 0px 0px 2px ${colors.B200};
     opacity: 1;
   }
 
@@ -49,9 +46,7 @@ export const Overlay: ComponentClass<HTMLAttributes<{}>> = styled.div`
   transition: opacity 0.3s;
 `;
 
-export const PlaceholderFallback: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const PlaceholderFallback: ComponentClass<HTMLAttributes<{}>> = styled.div`
   display: inline-flex;
   align-items: center;
 
@@ -60,9 +55,7 @@ export const PlaceholderFallback: ComponentClass<
   }
 `;
 
-export const PlaceholderFallbackParams: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.span`
+export const PlaceholderFallbackParams: ComponentClass<HTMLAttributes<{}>> = styled.span`
   display: inline-block;
   max-width: 200px;
   margin-left: 5px;
@@ -70,4 +63,9 @@ export const PlaceholderFallbackParams: ComponentClass<
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+`;
+
+export const StyledImage: ComponentClass<ImgHTMLAttributes<{}>> = styled.img`
+  max-height: 16px;
+  max-width: 16px;
 `;

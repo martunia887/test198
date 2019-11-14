@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import * as dateformat from 'dateformat'; // ToDo: FIL-3207 | replace dateformat library with native solution
-import * as filesize from 'filesize'; // ToDo: FIL-3208 | replace filesize library with native solution
+import dateformat from 'dateformat'; // ToDo: FIL-3207 | replace dateformat library with native solution
+import filesize from 'filesize'; // ToDo: FIL-3208 | replace filesize library with native solution
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import { changeCloudAccountFolder } from '../../../../actions/changeCloudAccountFolder';
 import { fetchNextCloudFilesPage } from '../../../../actions/fetchNextCloudFilesPage';
@@ -11,7 +11,6 @@ import Spinner from '@atlaskit/spinner';
 
 /* Actions */
 import { fileClick } from '../../../../actions/fileClick';
-import { setUpfrontIdDeferred } from '../../../../actions/setUpfrontIdDeferred';
 
 import {
   isServiceFile,
@@ -86,11 +85,6 @@ export interface FolderViewDispatchProps {
     accountId: string,
     path: Path,
     nextCursor: string,
-  ) => void;
-  readonly setUpfrontIdDeferred: (
-    id: string,
-    resolver: (id: string) => void,
-    rejecter: Function,
   ) => void;
 }
 
@@ -256,14 +250,8 @@ export class FolderViewer extends Component<FolderViewerProps, {}> {
         path.push({ id: item.id, name: item.name });
         onFolderClick(service.name, service.accountId, path);
       } else {
-        const { setUpfrontIdDeferred } = this.props;
-        const upfrontId = new Promise<string>((resolve, reject) => {
-          setUpfrontIdDeferred(item.id, resolve, reject);
-        });
-
         const file: ServiceFile = {
           ...item,
-          upfrontId,
         };
         onFileClick(service.name, service.accountId, file);
       }
@@ -295,7 +283,5 @@ export default connect<
       dispatch(
         fetchNextCloudFilesPage(serviceName, accountId, path, nextCursor),
       ),
-    setUpfrontIdDeferred: (id, resolver, rejecter) =>
-      dispatch(setUpfrontIdDeferred(id, resolver, rejecter)),
   }),
 )(FolderViewer);

@@ -26,7 +26,6 @@ export interface MediaSingleDefinition {
 }
 export interface MediaSingleAttributes {
   /**
-   * @stage 0
    * @minimum 0
    * @maximum 100
    */
@@ -43,6 +42,7 @@ export const mediaSingle: NodeSpec = {
   inline: false,
   group: 'block',
   selectable: true,
+  atom: true,
   content: 'media',
   attrs: defaultAttrs,
   parseDOM: [

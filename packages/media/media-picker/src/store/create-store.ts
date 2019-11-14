@@ -1,4 +1,4 @@
-import { Context } from '@atlaskit/media-core';
+import { MediaClient } from '@atlaskit/media-client';
 import { applyMiddleware, createStore, Store, Middleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
@@ -28,17 +28,18 @@ import { handleCloudFetchingEvent } from '../popup/middleware/handleCloudFetchin
 import searchGiphy from '../popup/middleware/searchGiphy';
 import hidePopupMiddleware from '../popup/middleware/hidePopup';
 import sendUploadEventMiddleware from '../popup/middleware/sendUploadEvent';
-import { PopupConfig, PopupUploadEventEmitter } from '../components/types';
+import { PopupUploadEventEmitter } from '../components/types';
+import { PopupConfig } from '../types';
 import analyticsProcessing from '../popup/middleware/analyticsProcessing';
 import { removeFileFromRecents } from '../popup/middleware/removeFileFromRecents';
 
 export default (
   eventEmitter: PopupUploadEventEmitter,
-  tenantContext: Context,
-  userContext: Context,
+  tenantMediaClient: MediaClient,
+  userMediaClient: MediaClient,
   config: Partial<PopupConfig>,
 ): Store<State> => {
-  const userAuthProvider = userContext.config.authProvider;
+  const userAuthProvider = userMediaClient.config.authProvider;
   const redirectUrl = appConfig.html.redirectUrl;
   const fetcher = new MediaApiFetcher();
   const wsProvider = new WsProvider();
@@ -46,9 +47,9 @@ export default (
   const partialState: State = {
     ...defaultState,
     redirectUrl,
-    tenantContext: tenantContext,
-    userContext: userContext,
     plugins: config.plugins,
+    tenantMediaClient,
+    userMediaClient,
     config,
   };
 
@@ -71,7 +72,7 @@ export default (
         importFilesMiddleware(eventEmitter, wsProvider),
         editRemoteImageMiddleware() as Middleware,
         getPreviewMiddleware(),
-        finalizeUploadMiddleware(fetcher),
+        finalizeUploadMiddleware(),
         proxyUploadEvents as Middleware,
         handleCloudFetchingEvent as Middleware,
         searchGiphy(fetcher) as Middleware,

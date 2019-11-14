@@ -7,19 +7,34 @@
 // French
 export default {
   'fabric.atlassianSwitcher.switchTo': 'Passer à',
-  'fabric.atlassianSwitcher.switchToTooltip': 'Passer à…',
+  'fabric.atlassianSwitcher.switchToTooltip': 'Basculer vers…',
   'fabric.atlassianSwitcher.recent': 'Récents',
   'fabric.atlassianSwitcher.more': 'Plus',
   'fabric.atlassianSwitcher.try': 'Essayer',
   'fabric.atlassianSwitcher.manageList': 'Gérer la liste',
   'fabric.atlassianSwitcher.jiraProject': 'Projet Jira',
   'fabric.atlassianSwitcher.confluenceSpace': 'Espace Confluence',
-  'fabric.atlassianSwitcher.people': 'Personnes',
   'fabric.atlassianSwitcher.administration': 'Administration',
-  'fabric.atlassianSwitcher.discoverMore': "Découvrir d'autres produits",
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Parcourir les apps du Marketplace',
+  'fabric.atlassianSwitcher.errorHeading': 'Une erreur est survenue',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    'Nous suivons ces erreurs, mais n’hésitez pas à nous contacter si elles persistent même après avoir actualisé la page.',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    'Plusieurs personnes occupées à réparer un robot cassé.',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'Impossible de charger la liste. Actualisez la page, puis réessayez.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'Vous avez été déconnecté. Veuillez vous reconnecter.',
+  'fabric.atlassianSwitcher.login': 'Se connecter',
+  'fabric.atlassianSwitcher.show.more.sites': 'Afficher plus de sites',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

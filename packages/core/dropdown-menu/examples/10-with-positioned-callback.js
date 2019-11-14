@@ -23,6 +23,7 @@ export default class PositionCallbackExample extends Component<{}, State> {
     beforePosition: { x: 0, y: 0 },
     afterPosition: { x: 0, y: 0 },
   };
+
   ref: ?HTMLElement;
 
   componentDidMount() {
@@ -54,12 +55,8 @@ export default class PositionCallbackExample extends Component<{}, State> {
           <br />
         </Description>
         <CoordWrapper>
-          <p>{`Before onPositioned called - x: ${beforePosition.x}, y: ${
-            beforePosition.y
-          }`}</p>
-          <p>{`After onPositioned called - x: ${afterPosition.x}, y: ${
-            afterPosition.y
-          }`}</p>
+          <p>{`Before onPositioned called - x: ${beforePosition.x}, y: ${beforePosition.y}`}</p>
+          <p>{`After onPositioned called - x: ${afterPosition.x}, y: ${afterPosition.y}`}</p>
         </CoordWrapper>
         <DropdownMenuStateless
           triggerType="button"

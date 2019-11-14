@@ -8,9 +8,21 @@ export enum Scope {
   JiraFilter = 'jira.filter',
   JiraBoardProjectFilter = 'jira.board,project,filter',
   People = 'cpus.user',
+  UserJira = 'urs.user-jira',
+  UserConfluence = 'urs.user-confluence',
+  NavSearchCompleteConfluence = 'nav.completion-confluence',
 }
 
+export type QuickSearchContext = 'jira' | 'confluence';
+
 type ConfluenceItemContentType = 'page' | 'blogpost';
+
+interface Container {
+  title: string;
+  id?: string; // This has to be optional because Confluence doesn't return it
+  displayUrl?: string;
+}
+
 export interface ConfluenceItem {
   title: string; // this is highlighted
   baseUrl: string;
@@ -18,11 +30,11 @@ export interface ConfluenceItem {
   content?: {
     id: string;
     type: ConfluenceItemContentType;
+    space?: {
+      id: string;
+    };
   };
-  container: {
-    title: string; // this is unhighlighted
-    displayUrl: string;
-  };
+  container: Container;
   space?: {
     key: string; // currently used as instance-unique ID
     icon: {
@@ -30,6 +42,7 @@ export interface ConfluenceItem {
     };
   };
   iconCssClass: string; // icon-file-* for attachments, otherwise not needed
+  friendlyLastModified: string; // e.g. "about 6 hours ago"
 }
 
 export interface JiraItemV1 {
@@ -48,13 +61,14 @@ export interface JiraItemV1 {
 export interface JiraItemAvatar {
   url?: string;
   css?: string;
-  urls?: object;
+  urls?: Record<string, string>;
 }
 
 export interface JiraItemAttributes {
   '@type': 'issue' | 'board' | 'project' | 'filter';
-  containerId?: string;
+  container?: Container;
   containerName?: string;
+  containerId?: string;
   ownerId?: string;
   ownerName?: string;
   key?: string;
@@ -71,6 +85,15 @@ export interface JiraItemV2 {
   attributes: JiraItemAttributes;
 }
 
+export interface NavScopeResultItem {
+  query: string;
+}
+
+export interface NavScopeResult {
+  id: string;
+  results: NavScopeResultItem[];
+}
+
 export type JiraItem = JiraItemV1 | JiraItemV2;
 
 export interface PersonItem {
@@ -81,9 +104,22 @@ export interface PersonItem {
   picture: string;
 }
 
+export interface UrsPersonItem {
+  avatarUrl: string;
+  entityType: string;
+  id: string;
+  name: string;
+  nickname?: string;
+}
+
 export interface JiraResultQueryParams {
-  searchSessionId: string;
   searchContainerId?: string;
   searchObjectId?: string;
   searchContentType?: 'issue' | 'board' | 'project' | 'filter';
 }
+
+export interface ConfluenceModelContext {
+  spaceKey?: string;
+}
+
+export interface JiraModelContext {}

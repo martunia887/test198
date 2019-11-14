@@ -3,67 +3,80 @@ import {
   CrossProductSearchClient,
   CrossProductSearchResults,
   EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE,
-  SearchSession,
+  DEFAULT_AB_TEST,
+  SearchParams,
+  RecentParams,
 } from '../../../api/CrossProductSearchClient';
 import { Scope } from '../../../api/types';
-import { Result } from '../../../model/Result';
-import { makeJiraObjectResult } from '../_test-util';
-
-export function makeSingleResultCrossProductSearchResponse(
-  scope: Scope,
-  result?: Result,
-): CrossProductSearchResults {
-  const response = new Map();
-  response.set(scope, [result || makeJiraObjectResult()]);
-  return { results: response };
-}
 
 export const noResultsCrossProductSearchClient: CrossProductSearchClient = {
-  search(query: string) {
+  search(params: SearchParams) {
     return Promise.resolve(EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE);
   },
-  getAbTestData(scope: Scope, searchSession: SearchSession) {
-    return Promise.resolve(undefined);
+  getRecentItems(params: RecentParams) {
+    return Promise.resolve(EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE);
+  },
+  getAbTestDataForProduct() {
+    return Promise.resolve(DEFAULT_AB_TEST);
+  },
+  getAbTestData(scope: Scope) {
+    return Promise.resolve(DEFAULT_AB_TEST);
+  },
+  getPeople() {
+    return Promise.resolve(EMPTY_CROSS_PRODUCT_SEARCH_RESPONSE);
+  },
+  getNavAutocompleteSuggestions() {
+    return Promise.resolve([]);
   },
 };
 
-export const errorCrossProductSearchClient: CrossProductSearchClient = {
-  search(query: string) {
-    return Promise.reject('error');
+export const mockErrorCrossProductSearchClient = (
+  error: Error,
+): CrossProductSearchClient => ({
+  search(params: SearchParams) {
+    return Promise.reject(error);
   },
-  getAbTestData(scope: Scope, searchSession: SearchSession) {
-    return Promise.reject('error');
+  getRecentItems() {
+    return Promise.reject(error);
   },
-};
+  getAbTestDataForProduct() {
+    return Promise.reject(error);
+  },
+  getAbTestData(scope: Scope) {
+    return Promise.reject(error);
+  },
+  getPeople() {
+    return Promise.reject(error);
+  },
+  getNavAutocompleteSuggestions() {
+    return Promise.reject(error);
+  },
+});
 
-export function singleResultCrossProductSearchClient(
-  scope: Scope,
-): CrossProductSearchClient {
-  return {
-    search(query: string) {
-      return Promise.resolve(makeSingleResultCrossProductSearchResponse(scope));
-    },
-    getAbTestData(scope: Scope, searchSession: SearchSession) {
-      return Promise.resolve(undefined);
-    },
-  };
-}
+export const errorCrossProductSearchClient = mockErrorCrossProductSearchClient(
+  new Error('error'),
+);
 
 export const mockCrossProductSearchClient = (
   data: CrossProductSearchResults,
-  abTest?: ABTest,
+  abTest: ABTest,
 ): CrossProductSearchClient => ({
-  search(
-    query: string,
-    searchSession: SearchSession,
-    scopes: Scope[],
-  ): Promise<CrossProductSearchResults> {
+  search(params: SearchParams): Promise<CrossProductSearchResults> {
     return Promise.resolve(data);
   },
-  getAbTestData(
-    scope: Scope,
-    searchSession: SearchSession,
-  ): Promise<ABTest | undefined> {
+  getRecentItems(params: RecentParams): Promise<CrossProductSearchResults> {
+    return Promise.resolve(data);
+  },
+  getAbTestDataForProduct() {
+    return Promise.reject(abTest);
+  },
+  getAbTestData(scope: Scope): Promise<ABTest> {
     return Promise.resolve(abTest);
+  },
+  getPeople() {
+    return Promise.resolve(data);
+  },
+  getNavAutocompleteSuggestions() {
+    return Promise.resolve([]);
   },
 });

@@ -6,7 +6,12 @@ export { CollabProvider, CollabEditProvider } from './provider';
 
 export { CollabEditOptions, pluginKey };
 
-const collabEditPlugin = (options?: CollabEditOptions): EditorPlugin => ({
+const collabEditPlugin = (
+  options?: CollabEditOptions,
+  sanitizePrivateContent?: boolean,
+): EditorPlugin => ({
+  name: 'collabEdit',
+
   pmPlugins() {
     const { useNativePlugin = false, userId = null } = options || {};
 
@@ -22,7 +27,12 @@ const collabEditPlugin = (options?: CollabEditOptions): EditorPlugin => ({
       {
         name: 'collab',
         plugin: ({ dispatch, providerFactory }) =>
-          createPlugin(dispatch, providerFactory, options),
+          createPlugin(
+            dispatch,
+            providerFactory,
+            options,
+            sanitizePrivateContent,
+          ),
       },
     ];
   },

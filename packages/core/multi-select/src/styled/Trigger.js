@@ -1,7 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
 
-import { fontSize, gridSize, colors } from '@atlaskit/theme';
+import { fontSize, gridSize } from '@atlaskit/theme/constants';
+import { placeholderText, text } from '@atlaskit/theme/colors';
 
 const gridSizeUnitless = gridSize();
 
@@ -30,12 +31,12 @@ const getPlaceholderStyle = style => css`
   }
 `;
 const getPlaceholderColor = css`
-  color: ${colors.placeholderText};
+  color: ${placeholderText};
 `;
 
 const Content = styled.div`
   flex: 1 1 auto;
-  margin: 3px ${gridSizeUnitless}px; /* magic number to make multi-select the same height as field-text, to be fixed TODO: AK-1699 */
+  margin: 3px ${gridSizeUnitless}px; /* magic number to make multi-select the same height as field-text. */
   white-space: nowrap;
   width: 100%;
 `;
@@ -59,7 +60,7 @@ const Input = styled.input`
   align-self: center;
   font-size: ${fontSize}px;
   line-height: ${lineHeightDefault};
-  color: ${colors.text};
+  color: ${text};
 
   ${getPlaceholderStyle(getPlaceholderColor)};
 `;
@@ -68,7 +69,7 @@ const TriggerDiv = styled.div`
   align-items: center;
   display: flex;
   width: 100%;
-  min-height: 37px; /* magic number to make multi-select the same height as field-text, to be fixed TODO: AK-1699 */
+  min-height: 37px; /* magic number to make multi-select the same height as field-text. */
 
   ${({ isDisabled }) =>
     isDisabled

@@ -1,7 +1,6 @@
-/* tslint:disable:variable-name */
-
 import styled, { keyframes } from 'styled-components';
-import { borderRadius, colors, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import { N200 } from '@atlaskit/theme/colors';
 import { checkeredBg } from './images';
 
 import {
@@ -73,9 +72,8 @@ export interface DragZoneProps {
   showBorder: boolean;
 }
 
-export const DragZone: ComponentClass<
-  HTMLAttributes<{}> & DragZoneProps
-> = styled.div`
+export const DragZone: ComponentClass<HTMLAttributes<{}> &
+  DragZoneProps> = styled.div`
   width: 200px;
   height: 200px;
   display: flex;
@@ -121,11 +119,10 @@ export interface DragZoneTextProps {
   isFullSize: boolean;
 }
 
-export const DragZoneText: ComponentClass<
-  HTMLAttributes<{}> & DragZoneTextProps
-> = styled.div`
+export const DragZoneText: ComponentClass<HTMLAttributes<{}> &
+  DragZoneTextProps> = styled.div`
   text-align: center;
-  color: ${colors.N200};
+  color: ${N200};
   ${(props: DragZoneTextProps) =>
     props.isFullSize
       ? `width: ${AVATAR_DIALOG_WIDTH - gridSize() * 8}px`
@@ -145,4 +142,15 @@ export const SelectionBlocker: ComponentClass<HTMLAttributes<{}>> = styled.div`
 export const PaddedBreak: ComponentClass<HTMLAttributes<{}>> = styled.p`
   margin-top: 10px !important;
   margin-bottom: 10px;
+`;
+
+export const SliderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .zoom_button svg {
+    position: relative;
+    left: -2px;
+  }
 `;

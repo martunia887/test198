@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as debounce from 'lodash.debounce';
+import debounce from 'lodash.debounce';
 import styled from 'styled-components';
 import AkAvatar from '@atlaskit/avatar';
 import { ProviderFactory } from '@atlaskit/editor-common';
@@ -19,6 +19,23 @@ import {
 
 import { User } from '../model';
 
+// See https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+// https://developer.mozilla.org/en-US/docs/Web/API/Event/returnValue
+interface UnloadEvent extends Event {
+  returnValue: any;
+}
+
+// This is a stop-gap for preventing the user from losing their work. Eventually
+// this will be replaced with drafts/auto-save functionality
+function beforeUnloadHandler(e: UnloadEvent) {
+  // The beforeUnload dialog is implemented inconsistently.
+  // The following is the most cross-browser approach.
+  const confirmationMessage =
+    'You have an unsaved comment. Are you sure you want to leave without saving?';
+  e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+  return confirmationMessage; // Gecko, WebKit, Chrome <34
+}
+
 export interface Props {
   defaultValue?: any;
   isExpanded?: boolean;
@@ -28,6 +45,7 @@ export interface Props {
   onOpen?: () => void;
   isEditing?: boolean;
   onChange?: (value: any) => void;
+  showBeforeUnloadWarning?: boolean;
 
   // Provider
   dataProviders?: ProviderFactory;
@@ -64,9 +82,7 @@ const Container: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   }
 `;
 
-const AvatarSection: React.ComponentClass<
-  React.HTMLAttributes<{}>
-> = styled.div`
+const AvatarSection: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   /* stylelint-disable value-no-vendor-prefix */
   -ms-grid-row: 1;
   -ms-grid-column: 1;
@@ -75,17 +91,19 @@ const AvatarSection: React.ComponentClass<
   margin-right: 8px;
 `;
 
-const EditorSection: React.ComponentClass<
-  React.HTMLAttributes<{}>
-> = styled.div`
+const EditorSection: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   /* stylelint-disable value-no-vendor-prefix */
   -ms-grid-row: 1;
   -ms-grid-column: 2;
   /* stylelint-enable */
   grid-area: editor-area;
+  /* min-width: 0; behavior is described here https://stackoverflow.com/a/43312314 */
+  min-width: 0;
 `;
 
 export default class Editor extends React.Component<Props, State> {
+  private readonly beforeUnloadHandler: any;
+
   constructor(props: Props) {
     super(props);
 
@@ -93,9 +111,11 @@ export default class Editor extends React.Component<Props, State> {
       isExpanded: props.isExpanded,
       isEditing: props.isEditing,
     };
+
+    this.beforeUnloadHandler = beforeUnloadHandler.bind({});
   }
 
-  UNSAFE_componentWillUpdate(nextProps: Props, nextState: State) {
+  UNSAFE_componentWillUpdate(_nextProps: Props, nextState: State) {
     if (nextState.isExpanded && !this.state.isExpanded && this.props.onOpen) {
       this.props.onOpen();
     } else if (
@@ -113,7 +133,22 @@ export default class Editor extends React.Component<Props, State> {
     }
   }
 
+  componentDidUpdate(prevProps: Readonly<Props>): void {
+    const { showBeforeUnloadWarning } = this.props;
+
+    if (
+      !showBeforeUnloadWarning &&
+      prevProps.showBeforeUnloadWarning !== showBeforeUnloadWarning
+    ) {
+      window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+    }
+  }
+
   componentWillUnmount() {
+    if (this.props.showBeforeUnloadWarning) {
+      window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+    }
+
     if (this.props.onClose) {
       this.props.onClose();
     }
@@ -155,9 +190,21 @@ export default class Editor extends React.Component<Props, State> {
     });
   };
 
+  private isEditorValueEmpty = (value: any): boolean =>
+    value.content.length === 1 && value.content[0].content.length === 0;
+
   private onChange = async (actions: EditorActions) => {
+    const value = await actions.getValue();
+
+    if (!!this.isEditorValueEmpty(value)) {
+      window.removeEventListener('beforeunload', this.beforeUnloadHandler);
+    } else {
+      if (this.props.showBeforeUnloadWarning) {
+        window.addEventListener('beforeunload', this.beforeUnloadHandler);
+      }
+    }
+
     if (this.props.onChange) {
-      const value = await actions.getValue();
       this.props.onChange(value);
     }
   };
@@ -189,15 +236,14 @@ export default class Editor extends React.Component<Props, State> {
       onChange: debounce(() => this.onChange(actions), 250),
       defaultValue,
       allowHelpDialog: allowFeedbackAndHelpButtons,
+      feedbackInfo: allowFeedbackAndHelpButtons
+        ? {
+            packageVersion: packageVersion,
+            packageName: packageName,
+          }
+        : undefined,
       primaryToolbarComponents: allowFeedbackAndHelpButtons
-        ? [
-            <ToolbarFeedback
-              key="feedback"
-              packageName={packageName}
-              packageVersion={packageVersion}
-            />,
-            <ToolbarHelp key="help" />,
-          ]
+        ? [<ToolbarFeedback key="feedback" />, <ToolbarHelp key="help" />]
         : undefined,
       ...providers,
     };

@@ -7,7 +7,7 @@ import {
 } from './pm-plugins/main';
 import { EditorState, Selection } from 'prosemirror-state';
 import { filter, Predicate } from '../../utils/commands';
-import { Mark, Node } from 'prosemirror-model';
+import { Mark, Node, ResolvedPos } from 'prosemirror-model';
 import {
   addAnalytics,
   ACTION,
@@ -15,8 +15,12 @@ import {
   INPUT_METHOD,
   EVENT_TYPE,
   ACTION_SUBJECT_ID,
+  withAnalytics,
 } from '../analytics';
 import { queueCardsFromChangedTr } from '../card/pm-plugins/doc';
+import { LinkInputType } from './ui/HyperlinkAddToolbar/HyperlinkAddToolbar';
+import { getLinkCreationAnalyticsEvent } from './analytics';
+import { LinkAttributes } from '@atlaskit/adf-schema';
 
 export function isTextAtPos(pos: number): Predicate {
   return (state: EditorState) => {
@@ -32,7 +36,12 @@ export function isLinkAtPos(pos: number): Predicate {
   };
 }
 
-export function setLinkHref(href: string, pos: number, to?: number): Command {
+export function setLinkHref(
+  href: string,
+  pos: number,
+  to?: number,
+  isTabPressed?: boolean,
+): Command {
   return filter(isTextAtPos(pos), (state, dispatch) => {
     const $pos = state.doc.resolve(pos);
     const node = state.doc.nodeAt(pos) as Node;
@@ -58,7 +67,9 @@ export function setLinkHref(href: string, pos: number, to?: number): Command {
           href: url,
         }),
       );
-      tr.setMeta(stateKey, LinkAction.HIDE_TOOLBAR);
+    }
+    if (!isTabPressed) {
+      tr.setMeta(stateKey, { type: LinkAction.HIDE_TOOLBAR });
     }
 
     if (dispatch) {
@@ -66,6 +77,45 @@ export function setLinkHref(href: string, pos: number, to?: number): Command {
     }
     return true;
   });
+}
+
+export function updateLink(
+  href: string,
+  text: string,
+  pos: number,
+  to?: number,
+): Command {
+  return (state, dispatch) => {
+    const $pos: ResolvedPos = state.doc.resolve(pos);
+    const node: Node | null | undefined = state.doc.nodeAt(pos);
+    if (!node) {
+      return false;
+    }
+    const url = normalizeUrl(href);
+
+    if (!url) {
+      return false;
+    }
+
+    const mark: Mark = state.schema.marks.link.isInSet(node.marks);
+    const linkMark = state.schema.marks.link;
+
+    const rightBound =
+      to && pos !== to ? to : pos - $pos.textOffset + node.nodeSize;
+    const tr = state.tr;
+    tr.insertText(text, pos, rightBound);
+    // Casting to LinkAttributes to prevent wrong attributes been passed (Example ED-7951)
+    const linkAttrs: LinkAttributes = {
+      ...((mark && (mark.attrs as LinkAttributes)) || {}),
+      href: url,
+    };
+    tr.addMark(pos, pos + text.length, linkMark.create(linkAttrs));
+    tr.setMeta(stateKey, { type: LinkAction.HIDE_TOOLBAR });
+    if (dispatch) {
+      dispatch(tr);
+    }
+    return true;
+  };
 }
 
 export function setLinkText(text: string, pos: number, to?: number): Command {
@@ -80,7 +130,7 @@ export function setLinkText(text: string, pos: number, to?: number): Command {
 
       tr.insertText(text, pos, rightBound);
       tr.addMark(pos, pos + text.length, mark);
-      tr.setMeta(stateKey, LinkAction.HIDE_TOOLBAR);
+      tr.setMeta(stateKey, { type: LinkAction.HIDE_TOOLBAR });
 
       if (dispatch) {
         dispatch(tr);
@@ -96,28 +146,30 @@ export function insertLink(
   to: number,
   href: string,
   text?: string,
+  source?: INPUT_METHOD.MANUAL | INPUT_METHOD.TYPEAHEAD,
 ): Command {
   return filter(canLinkBeCreatedInRange(from, to), (state, dispatch) => {
     const link = state.schema.marks.link;
     if (href.trim()) {
       const { tr } = state;
+      const normalizedUrl = normalizeUrl(href);
       if (from === to) {
         const textContent = text || href;
         tr.insertText(textContent, from, to);
         tr.addMark(
           from,
           from + textContent.length,
-          link.create({ href: normalizeUrl(href) }),
+          link.create({ href: normalizedUrl }),
         );
       } else {
-        tr.addMark(from, to, link.create({ href: normalizeUrl(href) }));
+        tr.addMark(from, to, link.create({ href: normalizedUrl }));
         tr.setSelection(Selection.near(tr.doc.resolve(to)));
       }
 
-      queueCardsFromChangedTr(state, tr);
+      queueCardsFromChangedTr(state, tr, source!, false);
 
+      tr.setMeta(stateKey, { type: LinkAction.HIDE_TOOLBAR });
       if (dispatch) {
-        tr.setMeta(stateKey, LinkAction.HIDE_TOOLBAR);
         dispatch(tr);
       }
       return true;
@@ -126,20 +178,47 @@ export function insertLink(
   });
 }
 
+export const insertLinkWithAnalytics = (
+  inputMethod: LinkInputType,
+  from: number,
+  to: number,
+  href: string,
+  text?: string,
+) =>
+  withAnalytics(getLinkCreationAnalyticsEvent(inputMethod, href))(
+    insertLink(from, to, href, text, inputMethod),
+  );
+
 export function removeLink(pos: number): Command {
   return setLinkHref('', pos);
+}
+
+export function editInsertedLink(): Command {
+  return (state, dispatch) => {
+    if (dispatch) {
+      dispatch(
+        state.tr.setMeta(stateKey, {
+          type: LinkAction.EDIT_INSERTED_TOOLBAR,
+        }),
+      );
+    }
+    return true;
+  };
 }
 
 export function showLinkToolbar(
   inputMethod:
     | INPUT_METHOD.TOOLBAR
     | INPUT_METHOD.QUICK_INSERT
-    | INPUT_METHOD.SHORTCUT = INPUT_METHOD.TOOLBAR,
+    | INPUT_METHOD.SHORTCUT
+    | INPUT_METHOD.INSERT_MENU = INPUT_METHOD.TOOLBAR,
 ): Command {
   return function(state, dispatch) {
     if (dispatch) {
-      let tr = state.tr.setMeta(stateKey, LinkAction.SHOW_INSERT_TOOLBAR);
-      tr = addAnalytics(tr, {
+      let tr = state.tr.setMeta(stateKey, {
+        type: LinkAction.SHOW_INSERT_TOOLBAR,
+      });
+      tr = addAnalytics(state, tr, {
         action: ACTION.INVOKED,
         actionSubject: ACTION_SUBJECT.TYPEAHEAD,
         actionSubjectId: ACTION_SUBJECT_ID.TYPEAHEAD_LINK,
@@ -155,7 +234,7 @@ export function showLinkToolbar(
 export function hideLinkToolbar(): Command {
   return function(state, dispatch) {
     if (dispatch) {
-      dispatch(state.tr.setMeta(stateKey, LinkAction.HIDE_TOOLBAR));
+      dispatch(state.tr.setMeta(stateKey, { type: LinkAction.HIDE_TOOLBAR }));
     }
     return true;
   };

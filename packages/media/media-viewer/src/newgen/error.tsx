@@ -2,11 +2,13 @@ import * as React from 'react';
 import { ReactNode } from 'react';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { ErrorMessageWrapper, ErrorImage } from './styled';
-import { FileState } from '@atlaskit/media-core';
+import { FileState } from '@atlaskit/media-client';
 import { messages as i18nMessages } from '@atlaskit/media-ui';
 import { cannotViewFile, errorLoadingFile } from './error-images';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import { mediaPreviewFailedEvent } from './analytics/item-viewer';
 import {
   GasPayload,
@@ -21,7 +23,8 @@ export type ErrorName =
   | 'metadataFailed'
   | 'unsupported'
   | 'idNotFound'
-  | 'noPDFArtifactsFound';
+  | 'noPDFArtifactsFound'
+  | 'failedProcessing';
 
 export type Props = Readonly<{
   error: MediaViewerError;
@@ -96,6 +99,18 @@ const getErrorMessage = (
         </p>
       </div>
     ),
+
+    failedProcessing: (
+      <div>
+        {errorLoadingFileImage(formatMessage)}
+        <p>
+          <FormattedMessage {...i18nMessages.something_went_wrong} />
+        </p>
+        <p>
+          <FormattedMessage {...i18nMessages.might_be_a_hiccup} />
+        </p>
+      </div>
+    ),
   };
 
   return messages[errorName];
@@ -104,7 +119,7 @@ const getErrorMessage = (
 export class MediaViewerError {
   constructor(
     readonly errorName: ErrorName,
-    readonly file?: FileState,
+    readonly fileState?: FileState,
     readonly innerError?: Error,
   ) {}
 }
@@ -112,13 +127,13 @@ export class MediaViewerError {
 export const createError = (
   name: ErrorName,
   innerError?: Error,
-  file?: FileState,
+  fileState?: FileState,
 ): MediaViewerError => {
-  return new MediaViewerError(name, file, innerError);
+  return new MediaViewerError(name, fileState, innerError);
 };
 
 export class ErrorMessage extends React.Component<
-  Props & InjectedIntlProps & WithAnalyticsEventProps,
+  Props & InjectedIntlProps & WithAnalyticsEventsProps,
   {}
 > {
   private fireAnalytics = (payload: GasPayload | GasScreenEventPayload) => {
@@ -131,10 +146,10 @@ export class ErrorMessage extends React.Component<
 
   componentDidMount() {
     const {
-      error: { errorName: failReason, file },
+      error: { errorName: failReason, fileState },
     } = this.props;
-    const fileId = file ? file.id : undefined;
-    this.fireAnalytics(mediaPreviewFailedEvent(failReason, fileId));
+    const event = mediaPreviewFailedEvent(failReason, fileState);
+    this.fireAnalytics(event);
   }
 
   render() {
@@ -147,7 +162,7 @@ export class ErrorMessage extends React.Component<
     );
 
     return (
-      <ErrorMessageWrapper>
+      <ErrorMessageWrapper data-testid="media-viewer-error">
         {errorMessage}
         {this.props.children}
       </ErrorMessageWrapper>

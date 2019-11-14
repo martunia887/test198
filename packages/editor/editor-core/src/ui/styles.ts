@@ -1,12 +1,12 @@
 import { HTMLAttributes, ComponentClass } from 'react';
 import styled, { css } from 'styled-components';
-import { colors, gridSize } from '@atlaskit/theme';
+import { colors, gridSize, borderRadius } from '@atlaskit/theme';
 
 const akGridSize = gridSize() + 'px';
 
-export const ButtonGroup: ComponentClass<
-  HTMLAttributes<{}> & { width?: 'small' | 'large' }
-> = styled.span`
+export const ButtonGroup: ComponentClass<HTMLAttributes<{}> & {
+  width?: 'small' | 'large';
+}> = styled.span`
   display: inline-flex;
   align-items: center;
 
@@ -23,9 +23,9 @@ export const Separator: ComponentClass<HTMLAttributes<{}>> = styled.span`
   margin: 0 8px;
 `;
 
-export const Wrapper: ComponentClass<
-  HTMLAttributes<{}> & { isSmall?: boolean }
-> = styled.span`
+export const Wrapper: ComponentClass<HTMLAttributes<{}> & {
+  isSmall?: boolean;
+}> = styled.span`
   display: flex;
   align-items: center;
 
@@ -42,9 +42,7 @@ export const Wrapper: ComponentClass<
     isSmall ? '40px' : 'auto'};
 `;
 
-export const ExpandIconWrapper: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.span`
+export const ExpandIconWrapper: ComponentClass<HTMLAttributes<{}>> = styled.span`
   margin-left: -8px;
 `;
 
@@ -96,7 +94,16 @@ export const scrollbarStyles = `
   }
 `;
 
-export const Shortcut = styled.small`
-  color: ${colors.N50};
-  margin-top: 0;
+export const Shortcut = styled.div`
+  background-color: rgba(223, 225, 229, 0.5); /* N60 at 50% */
+  color: ${colors.N100};
+  border-radius: ${borderRadius()}px;
+  padding: 4px;
+  line-height: 12px;
+  font-size: 11.67px;
+  align-self: flex-end;
+`;
+
+export const ClickSelectWrapper: React.ComponentClass<React.HTMLAttributes<{}>> = styled.span`
+  user-select: all;
 `;

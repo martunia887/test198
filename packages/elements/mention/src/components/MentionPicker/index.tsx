@@ -1,5 +1,7 @@
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import * as React from 'react';
 import {
   ErrorCallback,
@@ -40,6 +42,9 @@ export interface Props {
   zIndex?: number | string;
   offsetX?: number;
   offsetY?: number;
+
+  showTeamMentionsHighlight?: boolean;
+  createTeamPath?: string;
 }
 
 export interface State {
@@ -51,7 +56,7 @@ export interface State {
  * @class MentionPicker
  */
 export class MentionPicker extends React.PureComponent<
-  Props & WithAnalyticsEventProps,
+  Props & WithAnalyticsEventsProps,
   State
 > {
   private subscriberKey: string;
@@ -63,7 +68,7 @@ export class MentionPicker extends React.PureComponent<
     onClose: () => {},
   };
 
-  constructor(props: Props & WithAnalyticsEventProps) {
+  constructor(props: Props & WithAnalyticsEventsProps) {
     super(props);
     this.subscriberKey = uniqueId('ak-mention-picker');
     this.state = {
@@ -76,7 +81,9 @@ export class MentionPicker extends React.PureComponent<
     this.subscribeResourceProvider(this.props.resourceProvider);
   }
 
-  componentWillReceiveProps(nextProps: Props & WithAnalyticsEventProps) {
+  UNSAFE_componentWillReceiveProps(
+    nextProps: Props & WithAnalyticsEventsProps,
+  ) {
     this.applyPropChanges(this.props, nextProps);
   }
 
@@ -224,6 +231,7 @@ export class MentionPicker extends React.PureComponent<
 
   render() {
     const {
+      createTeamPath,
       resourceProvider,
       presenceProvider,
       onSelection,
@@ -233,6 +241,7 @@ export class MentionPicker extends React.PureComponent<
       zIndex,
       offsetX,
       offsetY,
+      showTeamMentionsHighlight,
     } = this.props;
     const { visible, info } = this.state;
 
@@ -243,6 +252,8 @@ export class MentionPicker extends React.PureComponent<
         onSelection={onSelection}
         query={query}
         ref={this.handleMentionListRef}
+        isTeamMentionHighlightEnabled={!!showTeamMentionsHighlight}
+        createTeamPath={createTeamPath}
       />
     );
 

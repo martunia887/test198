@@ -15,17 +15,6 @@ export enum ConfluenceAdvancedSearchTypes {
   People = 'people',
 }
 
-const JIRA_ADVANCED_SEARCH_URLS = {
-  [JiraEntityTypes.Issues]: query =>
-    `/secure/QuickSearch.jspa?searchString=${query}`,
-  [JiraEntityTypes.Boards]: query =>
-    `/secure/ManageRapidViews.jspa?contains=${query}`,
-  [JiraEntityTypes.Filters]: query =>
-    `/secure/ManageFilters.jspa?Search=Search&filterView=search&name=${query}`,
-  [JiraEntityTypes.Projects]: query => `/projects?contains=${query}`,
-  [JiraEntityTypes.People]: query => `/people/search?q=${query}`,
-};
-
 export const isAdvancedSearchResult = (resultId: string) =>
   [
     ADVANCED_CONFLUENCE_SEARCH_RESULT_ID,
@@ -34,16 +23,40 @@ export const isAdvancedSearchResult = (resultId: string) =>
   ].some(advancedResultId => advancedResultId === resultId);
 
 export function getConfluenceAdvancedSearchLink(query?: string) {
-  const queryString = query ? `?queryString=${encodeURIComponent(query)}` : '';
-  return `/wiki/dosearchsite.action${queryString}`;
+  const queryString = query ? `?text=${encodeURIComponent(query)}` : '';
+  return `/wiki/search${queryString}`;
 }
 
-export function getJiraAdvancedSearchUrl(
-  entityType: JiraEntityTypes,
-  query?: string,
-) {
-  const getUrl = JIRA_ADVANCED_SEARCH_URLS[entityType];
-  return getUrl(query || '');
+type Props = {
+  entityType: JiraEntityTypes;
+  query?: string;
+  enableIssueKeySmartMode?: boolean;
+  isJiraPeopleProfilesEnabled?: boolean;
+};
+
+export function getJiraAdvancedSearchUrl(props: Props) {
+  const {
+    entityType,
+    query,
+    enableIssueKeySmartMode,
+    isJiraPeopleProfilesEnabled,
+  } = props;
+  switch (entityType) {
+    case JiraEntityTypes.Issues:
+      return !enableIssueKeySmartMode && query && +query
+        ? `/issues/?jql=order+by+created+DESC`
+        : `/secure/QuickSearch.jspa?searchString=${query}`;
+    case JiraEntityTypes.Boards:
+      return `/secure/ManageRapidViews.jspa?contains=${query}`;
+    case JiraEntityTypes.Filters:
+      return `/secure/ManageFilters.jspa?Search=Search&filterView=search&name=${query}`;
+    case JiraEntityTypes.Projects:
+      return `/projects?contains=${query}`;
+    case JiraEntityTypes.People:
+      return !!isJiraPeopleProfilesEnabled
+        ? `/jira/people/search?q=${query}`
+        : `/people/search?q=${query}`;
+  }
 }
 
 export function redirectToConfluenceAdvancedSearch(query = '') {
@@ -55,7 +68,13 @@ export function redirectToJiraAdvancedSearch(
   entityType: JiraEntityTypes,
   query = '',
 ) {
-  window.location.assign(getJiraAdvancedSearchUrl(entityType, query));
+  window.location.assign(
+    getJiraAdvancedSearchUrl({
+      entityType,
+      query,
+      enableIssueKeySmartMode: true,
+    }),
+  );
 }
 
 export function take<T>(array: Array<T>, n: number) {
@@ -66,9 +85,6 @@ export function isEmpty<T>(array: Array<T>) {
   return array.length === 0;
 }
 
-export function objectValues(object) {
-  return Object.keys(object || {}).map(key => object[key]);
-}
 /**
  *
  * Gracefully handle promise catch and returning default value
@@ -79,7 +95,7 @@ export function objectValues(object) {
 export function handlePromiseError<T>(
   promise: Promise<T>,
   defaultValue: T,
-  errorHandler?: ((reason: any) => T | void),
+  errorHandler?: (reason: any) => T | void,
 ): Promise<T> {
   return promise.catch(error => {
     try {

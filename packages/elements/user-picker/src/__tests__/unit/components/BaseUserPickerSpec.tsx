@@ -5,6 +5,8 @@ import { mountWithIntl, shallowWithIntl } from 'enzyme-react-intl';
 import * as debounce from 'lodash.debounce';
 import * as React from 'react';
 import { BaseUserPicker } from '../../../components/BaseUserPicker';
+import { getComponents } from '../../../components/components';
+import * as analytics from '../../../analytics';
 import {
   optionToSelectableOption,
   optionToSelectableOptions,
@@ -14,13 +16,14 @@ import {
   OptionData,
   Team,
   User,
+  Group,
   UserPickerProps,
   UserType,
 } from '../../../types';
-import { getComponents } from '../../../components/components';
 
 const getBasePicker = (props: Partial<UserPickerProps> = {}) => (
   <BaseUserPicker
+    fieldId="test"
     SelectComponent={Select}
     styles={{}}
     components={getComponents(props.isMulti)}
@@ -53,8 +56,10 @@ describe('BaseUserPicker', () => {
   it('should render using a Select', () => {
     const component = shallowUserPicker({ options });
     const select = component.find(Select);
+
     expect(select.prop('options')).toEqual(userOptions);
     expect(select.prop('menuPlacement')).toBeTruthy();
+    expect(select.prop('instanceId')).toEqual('test'); // match fieldId
   });
 
   it('should disable picker if isDisabled is true', () => {
@@ -87,13 +92,6 @@ describe('BaseUserPicker', () => {
     expect(onChange).toHaveBeenCalledWith(options[0], 'select-option');
   });
 
-  it('should not hide selected users by default', () => {
-    const component = shallowUserPicker();
-
-    const select = component.find(Select);
-    expect(select.prop('hideSelectedOptions')).toBeFalsy();
-  });
-
   it('should trigger props.onSelection if onChange with select-option action', () => {
     const onSelection = jest.fn();
     const component = shallowUserPicker({ onSelection });
@@ -101,7 +99,7 @@ describe('BaseUserPicker', () => {
     const select = component.find(Select);
     select.simulate('change', userOptions[0], { action: 'select-option' });
 
-    expect(onSelection).toHaveBeenCalledWith(options[0]);
+    expect(onSelection).toHaveBeenCalledWith(options[0], undefined);
   });
 
   it('should trigger props.onClear if onChange with clear action', () => {
@@ -112,6 +110,12 @@ describe('BaseUserPicker', () => {
     select.simulate('change', userOptions[0], { action: 'clear' });
 
     expect(onClear).toHaveBeenCalled();
+  });
+
+  it('should display no loading message', () => {
+    const component = shallowUserPicker();
+    const select = component.find(Select);
+    expect(select.prop('loadingMessage')()).toEqual(null);
   });
 
   it('should call onFocus handler', () => {
@@ -138,6 +142,22 @@ describe('BaseUserPicker', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
+  it('should clear options on blur', () => {
+    const onBlur = jest.fn();
+    const component = shallowUserPicker({ onBlur, options });
+    expect(component.state('options')).toEqual(options);
+    component.simulate('blur');
+    expect(component.state('options')).toEqual([]);
+  });
+
+  it('should clear options on close', () => {
+    const onClose = jest.fn();
+    const component = shallowUserPicker({ onClose, options });
+    expect(component.state('options')).toEqual(options);
+    component.simulate('close');
+    expect(component.state('options')).toEqual([]);
+  });
+
   describe('Multiple users select', () => {
     it('should set isMulti in Select', () => {
       const component = shallowUserPicker({ options, isMulti: true });
@@ -157,13 +177,6 @@ describe('BaseUserPicker', () => {
         [options[0], options[1]],
         'select-option',
       );
-    });
-
-    it('should hide selected users', () => {
-      const component = shallowUserPicker({ isMulti: true });
-
-      const select = component.find(Select);
-      expect(select.prop('hideSelectedOptions')).toBeTruthy();
     });
   });
 
@@ -228,6 +241,16 @@ describe('BaseUserPicker', () => {
       const component = shallowUserPicker();
       expect(component.find(Select).prop('autoFocus')).toBeFalsy();
     });
+
+    it('should always autoFocus if prop set to true', () => {
+      const component = shallowUserPicker({ autoFocus: true });
+      expect(component.find(Select).prop('autoFocus')).toBeTruthy();
+    });
+
+    it('should never autoFocus if prop set to false', () => {
+      const component = shallowUserPicker({ open: true, autoFocus: false });
+      expect(component.find(Select).prop('autoFocus')).toBeFalsy();
+    });
   });
 
   describe('async load', () => {
@@ -252,23 +275,89 @@ describe('BaseUserPicker', () => {
     });
 
     describe('onInputChange', () => {
-      it('should load users on input change', () => {
-        const usersPromise = new Promise<User[]>(resolve =>
+      it.each([['input-change'], ['set-value']])(
+        'should load users on input change with action "%s"',
+        action => {
+          const usersPromise = new Promise<User[]>(resolve =>
+            window.setTimeout(() => resolve(options), 500),
+          );
+          const loadOptions = jest.fn(() => usersPromise);
+          const component = shallowUserPicker({ loadOptions });
+          const select = component.find(Select);
+          select.simulate('inputChange', 'some text', { action });
+          expect(component.find(Select).prop('isLoading')).toBeTruthy();
+          jest.runAllTimers();
+          expect(loadOptions).toHaveBeenCalled();
+          expect(loadOptions).toHaveBeenCalledWith('some text');
+          return usersPromise.then(() => {
+            jest.runAllTimers();
+            expect(component.state()).toMatchObject({
+              options,
+            });
+          });
+        },
+      );
+
+      it('should replace old options after new query', () => {
+        const options2 = [
+          {
+            id: 'some-id',
+            name: 'Some Value',
+            publicName: 'svalue',
+          },
+          {
+            id: 'some-id-2',
+            name: 'Second Value',
+            publicName: 'svalue2',
+          },
+        ];
+        const promise1 = new Promise<User[]>(resolve =>
           window.setTimeout(() => resolve(options), 500),
         );
-        const loadOptions = jest.fn(() => usersPromise);
+        const promise2 = new Promise<User[]>(resolve =>
+          window.setTimeout(() => resolve(options2), 1000),
+        );
+        const loadOptions = (search?: string) =>
+          search === 'a' ? promise1 : promise2;
         const component = shallowUserPicker({ loadOptions });
         const select = component.find(Select);
-        select.simulate('inputChange', 'some text', { action: 'input-change' });
+        select.simulate('inputChange', 'a', { action: 'input-change' });
         jest.runAllTimers();
-        expect(loadOptions).toHaveBeenCalled();
-        expect(loadOptions).toHaveBeenCalledWith('some text');
-        return usersPromise.then(() => {
+        return promise1.then(() => {
           jest.runAllTimers();
           expect(component.state()).toMatchObject({
             options,
           });
+          select.simulate('inputChange', 'n', { action: 'input-change' });
+          return promise2.then(() => {
+            jest.runAllTimers();
+            expect(component.state()).toMatchObject({
+              options: options2,
+            });
+          });
         });
+      });
+
+      it('should finish resolving even when loadOptions errors', () => {
+        const usersPromise = new Promise<User[]>((_, reject) =>
+          window.setTimeout(() => reject('Bad loadOptions'), 500),
+        );
+        const longerPromise = new Promise(resolve =>
+          window.setTimeout(() => resolve(1), 1000),
+        );
+        const loadOptions = jest.fn(() => usersPromise);
+        const component = shallowUserPicker({ loadOptions });
+
+        const select = component.find(Select);
+        select.simulate('inputChange', 'a', { action: 'input-change' });
+        jest.runAllTimers();
+        return usersPromise
+          .catch(() => longerPromise)
+          .then(() => {
+            expect(component.state()).toMatchObject({
+              resolving: false,
+            });
+          });
       });
 
       it('should call props.onInputChange', () => {
@@ -295,6 +384,130 @@ describe('BaseUserPicker', () => {
         shallowUserPicker({ loadOptions });
 
         expect(debounce).toHaveBeenCalledWith(expect.any(Function), 200);
+      });
+    });
+
+    describe('with session id', () => {
+      let analyticsSpy: jest.SpyInstance;
+      beforeEach(() => {
+        // @ts-ignore This violated type definition upgrade of @types/jest to v24.0.18 & ts-jest v24.1.0.
+        //See BUILDTOOLS-210-clean: https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/7178/buildtools-210-clean/diff
+        analyticsSpy = jest.spyOn(analytics, 'startSession').mockReturnValue({
+          id: 'random-session-id',
+        });
+      });
+
+      afterEach(() => {
+        analyticsSpy.mockRestore();
+      });
+
+      it('should pass sessionId to load option', () => {
+        const loadOptions = jest.fn(() => Promise.resolve(options));
+        const component = mountWithIntl(getBasePicker({ loadOptions }));
+        const input = component.find('input');
+        input.simulate('focus');
+        expect(loadOptions).toHaveBeenCalledWith(
+          undefined,
+          'random-session-id',
+        );
+      });
+
+      const testData = [
+        {
+          callback: jest.fn(),
+          payload: ['random-session-id'],
+          prop: 'onFocus',
+          toString: () => 'onFocus',
+        },
+        {
+          callback: jest.fn(),
+          payload: ['random-session-id'],
+          prop: 'onBlur',
+          toString: () => 'onBlur',
+        },
+        {
+          callback: jest.fn(),
+          payload: ['random-session-id'],
+          prop: 'onClose',
+          toString: () => 'onClose',
+        },
+        {
+          callback: jest.fn(),
+          payload: ['search', 'random-session-id'],
+          prop: 'onInputChange',
+          propParams: ['search', { action: 'input-change' }],
+          toString: () => 'onInputChange',
+        },
+      ];
+
+      test.each(testData)(
+        'should pass session id %s',
+        ({ callback, payload, prop, propParams = [] }) => {
+          const component = mountWithIntl(
+            getBasePicker({ [prop]: callback, open: true }),
+          );
+          const input = component.find(Select);
+          input.props()[prop](...propParams);
+          expect(callback).toHaveBeenCalledWith(...payload);
+        },
+      );
+
+      it('should pass session id on select when it starts opened', () => {
+        const onSelection = jest.fn();
+        const component = mountWithIntl(
+          getBasePicker({ onSelection, open: true }),
+        );
+        const input = component.find(Select);
+        input
+          .props()
+          ['onChange']({ data: 'user-id' }, { action: 'select-option' });
+        expect(onSelection).toHaveBeenCalledWith(
+          'user-id',
+          'random-session-id',
+        );
+      });
+
+      it('should pass session id on focus before open', () => {
+        const onFocus = jest.fn();
+        const component = mountWithIntl(getBasePicker({ onFocus }));
+        const input = component.find('input');
+        input.simulate('focus');
+        expect(onFocus).toHaveBeenCalledWith('random-session-id');
+      });
+
+      it('should use the same session id on 2nd focus', async () => {
+        analyticsSpy
+          .mockReturnValueOnce({ id: 'session-first' })
+          .mockReturnValueOnce({ id: 'session-second' });
+        const onFocus = jest.fn();
+        const component = mountWithIntl(getBasePicker({ onFocus }));
+        const input = component.find('input');
+        input.simulate('focus');
+        await component.update();
+        input.simulate('focus');
+        await component.update();
+        expect(onFocus).toHaveBeenCalledTimes(2);
+        expect(onFocus).toHaveBeenCalledWith('session-first');
+      });
+
+      it('should use new session id for on focus if open is false', async () => {
+        analyticsSpy
+          .mockReturnValueOnce({ id: 'session-first' })
+          .mockReturnValueOnce({ id: 'session-second' });
+        const onFocus = jest.fn();
+        const component = mountWithIntl(
+          getBasePicker({ onFocus, open: false }),
+        );
+        const input = component.find('input');
+        input.simulate('focus');
+        await component.update();
+        input.simulate('focus');
+        await component.update();
+        expect(onFocus).toHaveBeenCalledTimes(2);
+        expect(onFocus.mock.calls).toMatchObject([
+          ['session-first'],
+          ['session-second'],
+        ]);
       });
     });
   });
@@ -410,7 +623,65 @@ describe('BaseUserPicker', () => {
         search: 'test',
       });
 
-      expect(loadOptions).toHaveBeenCalledWith('test');
+      expect(loadOptions).toHaveBeenCalledWith('test', expect.any(String));
+    });
+  });
+
+  describe('maxOptions', () => {
+    it('should only pass maxOptions number of options to dropdown in single picker', () => {
+      const component = shallowUserPicker({
+        options,
+        open: true,
+        maxOptions: 1,
+      });
+
+      expect(component.prop('options')).toHaveLength(1);
+      expect(component.prop('options')[0]).toEqual(userOptions[0]);
+    });
+
+    it('should not display any options if maxOptions is zero', () => {
+      const component = shallowUserPicker({
+        options,
+        open: true,
+        maxOptions: 0,
+      });
+
+      expect(component.prop('options')).toHaveLength(0);
+    });
+
+    it('should ignore negative number of maxOptions', () => {
+      const component = shallowUserPicker({
+        options,
+        open: true,
+        maxOptions: -1,
+      });
+
+      expect(component.prop('options')).toHaveLength(2);
+    });
+
+    it('should only pass #maxOptions options to dropdown in multi picker', () => {
+      const component = shallowUserPicker({
+        options,
+        open: true,
+        maxOptions: 1,
+        isMulti: true,
+      });
+
+      expect(component.prop('options')).toHaveLength(1);
+      expect(component.prop('options')[0]).toEqual(userOptions[0]);
+    });
+
+    it('should not include selected options in #maxOptions options passed to dropdown', () => {
+      const component = shallowUserPicker({
+        options,
+        value: [options[0]],
+        open: true,
+        maxOptions: 1,
+        isMulti: true,
+      });
+
+      expect(component.prop('options')).toHaveLength(1);
+      expect(component.prop('options')[0]).toEqual(userOptions[1]);
     });
   });
 
@@ -510,7 +781,7 @@ describe('BaseUserPicker', () => {
     expect(preventDefault).toHaveBeenCalledTimes(0);
   });
 
-  describe('teams', () => {
+  describe('groups and teams', () => {
     const teamOptions: Team[] = [
       {
         id: 'team-123',
@@ -526,13 +797,22 @@ describe('BaseUserPicker', () => {
       },
     ];
 
+    const groupOptions: Group[] = [
+      { id: 'group-90210', name: 'the-bae-goals-group', type: 'group' },
+      { id: 'group-111', name: 'groups-that-group-groups', type: 'group' },
+    ];
+
     const selectableTeamOptions: Option[] = optionToSelectableOptions(
       teamOptions,
     );
-
-    const mixedOptions: OptionData[] = (options as OptionData[]).concat(
-      teamOptions,
+    const selectableGroupOptions: Option[] = optionToSelectableOptions(
+      groupOptions,
     );
+
+    const mixedOptions: OptionData[] = (options as OptionData[])
+      .concat(teamOptions)
+      .concat(groupOptions);
+
     const selectableMixedOptions: Option[] = optionToSelectableOptions(
       mixedOptions,
     );
@@ -543,13 +823,19 @@ describe('BaseUserPicker', () => {
       expect(select.prop('options')).toEqual(selectableTeamOptions);
     });
 
-    it('should render select with both teams and users', () => {
+    it('should render select with only groups', () => {
+      const component = shallowUserPicker({ options: groupOptions });
+      const select = component.find(Select);
+      expect(select.prop('options')).toEqual(selectableGroupOptions);
+    });
+
+    it('should render select with teams, groups, and users', () => {
       const component = shallowUserPicker({ options: mixedOptions });
       const select = component.find(Select);
       expect(select.prop('options')).toEqual(selectableMixedOptions);
     });
 
-    it('should be able to multi-select a mix of users and teams', () => {
+    it('should be able to multi-select a mix of teams, groups, and users', () => {
       const onChange = jest.fn();
       const component = shallowUserPicker({
         options: mixedOptions,
@@ -562,7 +848,7 @@ describe('BaseUserPicker', () => {
       });
 
       expect(onChange).toHaveBeenCalledWith(
-        [mixedOptions[0], mixedOptions[1], mixedOptions[2], mixedOptions[3]],
+        mixedOptions.slice(0, 6),
         'select-option',
       );
     });
@@ -597,6 +883,7 @@ describe('BaseUserPicker', () => {
             actionSubject: 'userPicker',
             eventType: 'ui',
             attributes: {
+              context: 'test',
               sessionDuration: expect.any(Number),
               packageName: '@atlaskit/user-picker',
               packageVersion: expect.any(String),
@@ -622,7 +909,7 @@ describe('BaseUserPicker', () => {
       input.simulate('keyDown', { keyCode: 40 });
       input.simulate('keyDown', { keyCode: 38 });
       input.simulate('keyDown', { keyCode: 13 });
-      component.find<any>(Select).prop('onChange')(
+      component.find(Select).prop('onChange')(
         optionToSelectableOption(options[0]),
         {
           action: 'select-option',
@@ -635,6 +922,7 @@ describe('BaseUserPicker', () => {
             actionSubject: 'userPicker',
             eventType: 'ui',
             attributes: {
+              context: 'test',
               sessionDuration: expect.any(Number),
               packageName: '@atlaskit/user-picker',
               packageVersion: expect.any(String),
@@ -661,7 +949,7 @@ describe('BaseUserPicker', () => {
       input.simulate('keyDown', { keyCode: 40 });
       input.simulate('keyDown', { keyCode: 40 });
       input.simulate('keyDown', { keyCode: 38 });
-      component.find<any>(Select).prop('onChange')(
+      component.find(Select).prop('onChange')(
         optionToSelectableOption(options[0]),
         {
           action: 'select-option',
@@ -674,6 +962,7 @@ describe('BaseUserPicker', () => {
             actionSubject: 'userPicker',
             eventType: 'ui',
             attributes: {
+              context: 'test',
               sessionDuration: expect.any(Number),
               packageName: '@atlaskit/user-picker',
               packageVersion: expect.any(String),
@@ -695,7 +984,7 @@ describe('BaseUserPicker', () => {
     it('should trigger cleared event', () => {
       const input = component.find('input');
       input.simulate('focus');
-      component.find<any>(Select).prop('onChange')(
+      component.find(Select).prop('onChange')(
         optionToSelectableOption(options[0]),
         {
           action: 'clear',
@@ -708,6 +997,7 @@ describe('BaseUserPicker', () => {
             actionSubject: 'userPicker',
             eventType: 'ui',
             attributes: {
+              context: 'test',
               packageName: '@atlaskit/user-picker',
               packageVersion: expect.any(String),
               sessionId: expect.any(String),
@@ -725,7 +1015,7 @@ describe('BaseUserPicker', () => {
       component.setProps({ isMulti: true });
       const input = component.find('input');
       input.simulate('focus');
-      component.find<any>(Select).prop('onChange')([], {
+      component.find(Select).prop('onChange')([], {
         action: 'remove-value',
         removedValue: optionToSelectableOption(options[0]),
       });
@@ -736,6 +1026,7 @@ describe('BaseUserPicker', () => {
             actionSubject: 'userPickerItem',
             eventType: 'ui',
             attributes: {
+              context: 'test',
               packageName: '@atlaskit/user-picker',
               packageVersion: expect.any(String),
               sessionId: expect.any(String),
@@ -752,7 +1043,7 @@ describe('BaseUserPicker', () => {
       component.setProps({ isMulti: true });
       const input = component.find('input');
       input.simulate('focus');
-      component.find<any>(Select).prop('onChange')([], {
+      component.find(Select).prop('onChange')([], {
         action: 'pop-value',
         removedValue: undefined,
       });
@@ -782,6 +1073,7 @@ describe('BaseUserPicker', () => {
                 actionSubject: 'userPicker',
                 eventType: 'operational',
                 attributes: {
+                  context: 'test',
                   packageName: '@atlaskit/user-picker',
                   packageVersion: expect.any(String),
                   pickerType: 'single',
@@ -809,6 +1101,7 @@ describe('BaseUserPicker', () => {
                 actionSubject: 'userPicker',
                 eventType: 'operational',
                 attributes: expect.objectContaining({
+                  context: 'test',
                   packageVersion: expect.any(String),
                   packageName: '@atlaskit/user-picker',
                   sessionId: expect.any(String),
@@ -879,6 +1172,7 @@ describe('BaseUserPicker', () => {
                 actionSubject: 'userPicker',
                 eventType: 'operational',
                 attributes: expect.objectContaining({
+                  context: 'test',
                   packageVersion: expect.any(String),
                   packageName: '@atlaskit/user-picker',
                   sessionId: expect.any(String),

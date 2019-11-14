@@ -4,19 +4,12 @@ import { ReactRenderer as Renderer } from '@atlaskit/renderer';
 import { AtlaskitThemeProvider } from '@atlaskit/theme';
 
 import TaskItem from '../src/components/TaskItem';
-import {
-  MessageContainer,
-  SidebarContainer,
-  dumpRef,
-  action,
-  document,
-  getParticipants,
-} from '../example-helpers/story-utils';
+import { dumpRef, action, document } from '../example-helpers/story-utils';
 
 export default () => (
   <AtlaskitThemeProvider mode={'dark'}>
-    <h3>Simple TaskItem</h3>
-    <MessageContainer>
+    <div style={{ padding: '10px' }}>
+      <h3>Simple TaskItem</h3>
       <TaskItem
         taskId="task-1"
         contentRef={dumpRef}
@@ -24,10 +17,8 @@ export default () => (
       >
         Hello <b>world</b>.
       </TaskItem>
-    </MessageContainer>
 
-    <h3>Long TaskItem</h3>
-    <MessageContainer>
+      <h3>Long TaskItem</h3>
       <TaskItem taskId="task-1" contentRef={dumpRef}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
@@ -37,10 +28,8 @@ export default () => (
         occaecat cupidatat non proident, sunt in culpa qui officia deserunt
         mollit anim id est laborum.
       </TaskItem>
-    </MessageContainer>
 
-    <h3>Simple Completed TaskItem </h3>
-    <MessageContainer>
+      <h3>Simple Completed TaskItem </h3>
       <TaskItem
         taskId="task-2"
         isDone={true}
@@ -49,10 +38,8 @@ export default () => (
       >
         <Renderer document={document} />
       </TaskItem>
-    </MessageContainer>
 
-    <h3>Simple TaskItem with renderer</h3>
-    <MessageContainer>
+      <h3>Simple TaskItem with renderer</h3>
       <TaskItem
         taskId="task-3"
         contentRef={dumpRef}
@@ -60,83 +47,15 @@ export default () => (
       >
         <Renderer document={document} />
       </TaskItem>
-    </MessageContainer>
 
-    <h3>Simple TaskItem with placeholder</h3>
-    <MessageContainer>
+      <h3>Simple TaskItem with placeholder</h3>
       <TaskItem
         taskId="task-1"
         contentRef={dumpRef}
         onChange={action('onChange')}
         showPlaceholder={true}
+        placeholder="Placeholder text"
       />
-    </MessageContainer>
-
-    <h3>
-      Simple TaskItem with 1 participant, inline (shouldn\'t render
-      participants)
-    </h3>
-    <MessageContainer>
-      <TaskItem
-        taskId="task-3"
-        contentRef={dumpRef}
-        onChange={action('onChange')}
-        participants={getParticipants(1)}
-        appearance="inline"
-      >
-        <Renderer document={document} />
-      </TaskItem>
-    </MessageContainer>
-
-    <h3>Simple TaskItem with no participants</h3>
-    <SidebarContainer>
-      <TaskItem
-        taskId="task-3"
-        contentRef={dumpRef}
-        onChange={action('onChange')}
-        appearance="card"
-      >
-        <Renderer document={document} />
-      </TaskItem>
-    </SidebarContainer>
-
-    <h3>Simple TaskItem with 1 participant</h3>
-    <SidebarContainer>
-      <TaskItem
-        taskId="task-3"
-        contentRef={dumpRef}
-        onChange={action('onChange')}
-        participants={getParticipants(1)}
-        appearance="card"
-      >
-        <Renderer document={document} />
-      </TaskItem>
-    </SidebarContainer>
-
-    <h3>Simple TaskItem with 4 participants</h3>
-    <SidebarContainer>
-      <TaskItem
-        taskId="task-3"
-        contentRef={dumpRef}
-        onChange={action('onChange')}
-        participants={getParticipants(4)}
-        appearance="card"
-      >
-        <Renderer document={document} />
-      </TaskItem>
-    </SidebarContainer>
-
-    <h3>Simple TaskItem with 5 participants</h3>
-    <SidebarContainer>
-      <TaskItem
-        taskId="task-3"
-        contentRef={dumpRef}
-        onChange={action('onChange')}
-        participants={getParticipants(5)}
-        appearance="card"
-      >
-        <Renderer document={document} />
-      </TaskItem>
-    </SidebarContainer>
+    </div>
   </AtlaskitThemeProvider>
 );

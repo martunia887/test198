@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { Link } from '../../components/WrappedLink';
-import { gridSize, colors, math } from '@atlaskit/theme';
+import { gridSize, colors } from '@atlaskit/theme';
 import debounce from 'lodash.debounce';
 
 import { AtlassianIcon } from '@atlaskit/logo';
@@ -18,7 +18,7 @@ import {
   MOBILE_BREAKPOINT_MAX,
   TABLET_BREAKPOINT_MIN,
   TABLET_BREAKPOINT_MAX,
-} from './config';
+} from '../../constants';
 
 const CardIcon = styled.span`
   align-items: center;
@@ -32,7 +32,7 @@ const CardIcon = styled.span`
   width: 24px;
 `;
 
-const cardVerticalAnimationDistance = math.multiply(gridSize, 7.5);
+const cardVerticalAnimationDistance = gridSize() * 7.5;
 
 const loadInAnimation = keyframes`
   0% {
@@ -52,6 +52,7 @@ export const CardsWrapper = styled.div`
   display: flex;
   max-width: 980px;
   justify-content: center;
+  margin: 0 auto;
   box-sizing: border-box;
 
   @media (max-width: ${MOBILE_BREAKPOINT_MAX}px) {
@@ -87,7 +88,7 @@ const BaseCardStyles = css`
 
   @media (max-width: ${TABLET_BREAKPOINT_MIN}px) {
     display: block;
-    margin: ${math.multiply(gridSize, 3)}px ${gridSize}px;
+    margin: ${gridSize() * 3}px ${gridSize}px;
   }
 
   &:hover {
@@ -137,7 +138,7 @@ export type CardProps = {
   title: string;
   image?: string;
   alt?: string;
-  to?: string;
+  to: string;
   href?: string;
 };
 
@@ -198,6 +199,7 @@ const cards = [
   },
   {
     href: 'http://atlassian.design',
+    to: '',
     title: 'Atlassian Design Guidelines',
     image: multiTool,
     icon: () => (
@@ -231,6 +233,7 @@ const cards = [
   },
   {
     href: 'https://bitbucket.org/atlassian/atlaskit-mk-2',
+    to: '',
     title: 'Atlaskit Repository',
     icon: () => (
       <CardIcon color={colors.Y400}>
@@ -247,6 +250,7 @@ const cards = [
   },
   {
     href: 'https://developer.atlassian.com/blog/',
+    to: '',
     title: 'Atlassian Developer Blog',
     icon: () => (
       <CardIcon color={colors.N0}>
@@ -266,15 +270,17 @@ export default class Cards extends React.Component {
   state = {
     columnCount: 3,
   };
-  debouncedDetect: () => void;
+  debouncedDetect?: () => void;
 
   componentDidMount() {
     this.debouncedDetect = debounce(this.detectColumns, 500);
-    window.addEventListener('resize', this.debouncedDetect);
+    window.addEventListener('resize', this.debouncedDetect!);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.debouncedDetect);
+    if (this.debouncedDetect) {
+      window.removeEventListener('resize', this.debouncedDetect);
+    }
   }
 
   detectColumns = () => {
@@ -293,9 +299,16 @@ export default class Cards extends React.Component {
     if (columnCount === 1) {
       return [[0, 1, 2, 3, 4, 5]];
     } else if (columnCount === 2) {
-      return [[0, 2], [1, 3, 4, 5]];
+      return [
+        [0, 2],
+        [1, 3, 4, 5],
+      ];
     }
-    return [[0, 3], [1, 4], [2, 5]];
+    return [
+      [0, 3],
+      [1, 4],
+      [2, 5],
+    ];
   };
 
   render() {

@@ -20,7 +20,7 @@ import {
   hasParentNodeOfType,
   findPositionOfNodeBefore,
 } from 'prosemirror-utils';
-import { isEmptyNode, hasVisibleContent } from '../../utils/document';
+import { hasVisibleContent, isNodeEmpty } from '../../utils/document';
 import {
   filter,
   isEmptySelectionAtStart,
@@ -217,7 +217,7 @@ export const enterKeyCommand: Command = (state, dispatch): boolean => {
     if (wrapper && wrapper.type === listItem) {
       /** Check if the wrapper has any visible content */
       const wrapperHasContent = hasVisibleContent(wrapper);
-      if (isEmptyNode(node) && !wrapperHasContent) {
+      if (isNodeEmpty(node) && !wrapperHasContent) {
         return outdentList()(state, dispatch);
       } else if (!hasParentNodeOfType(codeBlock)(selection)) {
         return splitListItem(listItem)(state, dispatch);
@@ -511,11 +511,7 @@ export function liftListItems(): Command {
     tr.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
       // Following condition will ensure that block types paragraph, heading, codeBlock, blockquote, panel are lifted.
       // isTextblock is true for paragraph, heading, codeBlock.
-      if (
-        node.isTextblock ||
-        node.type.name === 'blockquote' ||
-        node.type.name === 'panel'
-      ) {
+      if (node.isTextblock) {
         const sel = new NodeSelection(tr.doc.resolve(tr.mapping.map(pos)));
         const range = sel.$from.blockRange(sel.$to);
 
@@ -531,6 +527,7 @@ export function liftListItems(): Command {
 
         tr.lift(range, target);
       }
+      return;
     });
 
     if (dispatch) {
@@ -624,6 +621,7 @@ export const toggleList = (
   dispatch: (tr: Transaction) => void,
   view: EditorView,
   listType: 'bulletList' | 'orderedList',
+  inputMethod: INPUT_METHOD.KEYBOARD | INPUT_METHOD.TOOLBAR,
 ): boolean => {
   const { selection } = state;
   const fromNode = selection.$from.node(selection.$from.depth - 2);
@@ -631,9 +629,14 @@ export const toggleList = (
   if (
     !fromNode ||
     fromNode.type.name !== listType ||
-    (!endNode || endNode.type.name !== listType)
+    !endNode ||
+    endNode.type.name !== listType
   ) {
-    return toggleListCommand(listType)(state, dispatch, view);
+    return toggleListCommandWithAnalytics(inputMethod, listType)(
+      state,
+      dispatch,
+      view,
+    );
   } else {
     const depth = rootListDepth(selection.$to, state.schema.nodes);
     let tr = liftFollowingList(
@@ -644,6 +647,18 @@ export const toggleList = (
       state.tr,
     );
     tr = liftSelectionList(state, tr);
+    tr = addAnalytics(state, tr, {
+      action: ACTION.FORMATTED,
+      actionSubject: ACTION_SUBJECT.TEXT,
+      actionSubjectId:
+        listType === 'bulletList'
+          ? ACTION_SUBJECT_ID.FORMAT_LIST_BULLET
+          : ACTION_SUBJECT_ID.FORMAT_LIST_NUMBER,
+      eventType: EVENT_TYPE.TRACK,
+      attributes: {
+        inputMethod,
+      },
+    });
     dispatch(tr);
     return true;
   }
@@ -719,7 +734,7 @@ export function toggleListCommand(
 // TODO: Toggle list command dispatch more than one time, so commandWithAnalytics doesn't work as expected.
 // This is a helper to fix that.
 export const toggleListCommandWithAnalytics = (
-  inputMethod: INPUT_METHOD.KEYBOARD,
+  inputMethod: INPUT_METHOD.KEYBOARD | INPUT_METHOD.TOOLBAR,
   listType: 'bulletList' | 'orderedList',
 ): Command => {
   const listTypeActionSubjectId = {
@@ -730,7 +745,7 @@ export const toggleListCommandWithAnalytics = (
     if (toggleListCommand(listType)(state, dispatch, view)) {
       if (view && dispatch) {
         dispatch(
-          addAnalytics(view.state.tr, {
+          addAnalytics(state, view.state.tr, {
             action: ACTION.FORMATTED,
             actionSubject: ACTION_SUBJECT.TEXT,
             actionSubjectId: listTypeActionSubjectId[listType] as
@@ -749,12 +764,28 @@ export const toggleListCommandWithAnalytics = (
   };
 };
 
-export function toggleBulletList(view: EditorView) {
-  return toggleList(view.state, view.dispatch, view, 'bulletList');
+export function toggleBulletList(
+  view: EditorView,
+  inputMethod:
+    | INPUT_METHOD.TOOLBAR
+    | INPUT_METHOD.KEYBOARD = INPUT_METHOD.TOOLBAR,
+) {
+  return toggleList(view.state, view.dispatch, view, 'bulletList', inputMethod);
 }
 
-export function toggleOrderedList(view: EditorView) {
-  return toggleList(view.state, view.dispatch, view, 'orderedList');
+export function toggleOrderedList(
+  view: EditorView,
+  inputMethod:
+    | INPUT_METHOD.TOOLBAR
+    | INPUT_METHOD.KEYBOARD = INPUT_METHOD.TOOLBAR,
+) {
+  return toggleList(
+    view.state,
+    view.dispatch,
+    view,
+    'orderedList',
+    inputMethod,
+  );
 }
 
 export function wrapInList(nodeType: NodeType): Command {

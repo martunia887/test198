@@ -1,21 +1,28 @@
-import RecentSearchClientImpl, {
-  RecentSearchClient,
-} from './RecentSearchClient';
-import CrossProductSearchClientImpl, {
+import CachingConfluenceClient from './CachingConfluenceClient';
+import { CachingPeopleSearchClient } from './CachingPeopleSearchClient';
+import { ConfluenceClient } from './ConfluenceClient';
+import CachingCrossProductSearchClientImpl, {
   CrossProductSearchClient,
 } from './CrossProductSearchClient';
-import PeopleSearchClientImpl, {
-  PeopleSearchClient,
-} from './PeopleSearchClient';
-import ConfluenceClientImpl, { ConfluenceClient } from './ConfluenceClient';
 import JiraClientImpl, { JiraClient } from './JiraClient';
+import { PeopleSearchClient } from './PeopleSearchClient';
+import {
+  ConfluencePrefetchedResults,
+  GlobalSearchPrefetchedResults,
+} from './prefetchResults';
+import {
+  AutocompleteClientImpl,
+  AutocompleteClient,
+} from './AutocompleteClient';
+import memoizeOne from 'memoize-one';
+import deepEqual from 'deep-equal';
 
 export interface SearchClients {
-  recentSearchClient: RecentSearchClient;
   crossProductSearchClient: CrossProductSearchClient;
   peopleSearchClient: PeopleSearchClient;
   confluenceClient: ConfluenceClient;
   jiraClient: JiraClient;
+  autocompleteClient: AutocompleteClient;
 }
 
 export interface Config {
@@ -24,7 +31,7 @@ export interface Config {
   directoryServiceUrl: string;
   confluenceUrl: string;
   jiraUrl: string;
-  addSessionIdToJiraResult?: boolean;
+  autocompleteUrl: string;
 }
 
 const defaultConfig: Config = {
@@ -33,37 +40,49 @@ const defaultConfig: Config = {
   directoryServiceUrl: '/gateway/api/directory',
   confluenceUrl: '/wiki',
   jiraUrl: '',
-  addSessionIdToJiraResult: false,
+  autocompleteUrl: '/gateway/api/ccsearch-autocomplete',
 };
 
-export default function configureSearchClients(
+function configureSearchClients(
   cloudId: string,
   partialConfig: Partial<Config>,
+  isUserAnonymous: boolean,
+  prefetchedResults?: GlobalSearchPrefetchedResults,
 ): SearchClients {
   const config = {
     ...defaultConfig,
     ...partialConfig,
   };
 
+  const confluencePrefetchedResults =
+    prefetchedResults &&
+    (<ConfluencePrefetchedResults>prefetchedResults)
+      .confluenceRecentItemsPromise
+      ? (<ConfluencePrefetchedResults>prefetchedResults)
+          .confluenceRecentItemsPromise
+      : undefined;
+
   return {
-    recentSearchClient: new RecentSearchClientImpl(
-      config.activityServiceUrl,
-      cloudId,
-    ),
-    crossProductSearchClient: new CrossProductSearchClientImpl(
+    crossProductSearchClient: new CachingCrossProductSearchClientImpl(
       config.searchAggregatorServiceUrl,
       cloudId,
-      config.addSessionIdToJiraResult,
+      isUserAnonymous,
+      prefetchedResults,
     ),
-    peopleSearchClient: new PeopleSearchClientImpl(
+    peopleSearchClient: new CachingPeopleSearchClient(
       config.directoryServiceUrl,
       cloudId,
     ),
-    confluenceClient: new ConfluenceClientImpl(config.confluenceUrl, cloudId),
-    jiraClient: new JiraClientImpl(
-      config.jiraUrl,
-      cloudId,
-      config.addSessionIdToJiraResult,
+    confluenceClient: new CachingConfluenceClient(
+      config.confluenceUrl,
+      confluencePrefetchedResults,
     ),
+    autocompleteClient: new AutocompleteClientImpl(
+      config.autocompleteUrl,
+      cloudId,
+    ),
+    jiraClient: new JiraClientImpl(config.jiraUrl, cloudId, isUserAnonymous),
   };
 }
+
+export default memoizeOne(configureSearchClients, deepEqual);

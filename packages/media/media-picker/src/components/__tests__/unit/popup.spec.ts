@@ -1,12 +1,11 @@
 jest.mock('react-dom');
-import { ContextFactory } from '@atlaskit/media-core';
 import { render } from 'react-dom';
-import { PopupConfig } from '../../types';
 import { PopupImpl } from '../../popup';
-import { UploadParams } from '../../..';
+import { UploadParams, PopupConfig } from '../../../types';
+import { fakeMediaClient } from '@atlaskit/media-test-helpers';
 
 describe('MediaPickerPopup', () => {
-  const context = ContextFactory.create({
+  const mediaClient = fakeMediaClient({
     authProvider: () =>
       Promise.resolve({
         clientId: '',
@@ -32,28 +31,28 @@ describe('MediaPickerPopup', () => {
 
   describe('constructor', () => {
     it('sets uploadParams to the default when none are supplied', () => {
-      const mediaPicker = new PopupImpl(context, popupConfig);
+      const mediaPicker = new PopupImpl(mediaClient, popupConfig);
 
       const expectedUploadParams: UploadParams = {
         collection: '',
       };
-      expect((mediaPicker as any)[
-        'tenantUploadParams'
-      ] as UploadParams).toEqual(expectedUploadParams);
+      expect(
+        (mediaPicker as any)['tenantUploadParams'] as UploadParams,
+      ).toEqual(expectedUploadParams);
     });
 
     it('merges uploadParams with the defaults when they are supplied', () => {
       const newUploadParams: UploadParams = {
         collection: 'hello-world',
       };
-      const mediaPicker = new PopupImpl(context, {
+      const mediaPicker = new PopupImpl(mediaClient, {
         ...popupConfig,
         uploadParams: newUploadParams,
       });
 
-      expect((mediaPicker as any)[
-        'tenantUploadParams'
-      ] as UploadParams).toEqual({
+      expect(
+        (mediaPicker as any)['tenantUploadParams'] as UploadParams,
+      ).toEqual({
         collection: 'hello-world',
       });
     });
@@ -64,7 +63,7 @@ describe('MediaPickerPopup', () => {
       const collection = 'some-collection-name';
       const newUploadParams: UploadParams = { collection };
 
-      const mediaPicker = new PopupImpl(context, popupConfig);
+      const mediaPicker = new PopupImpl(mediaClient, popupConfig);
       mediaPicker.setUploadParams(newUploadParams);
 
       expect(
@@ -75,7 +74,7 @@ describe('MediaPickerPopup', () => {
 
   describe('hide', () => {
     it('fires a closed event when the popup is hidden', () => {
-      const mediaPicker = new PopupImpl(context, popupConfig);
+      const mediaPicker = new PopupImpl(mediaClient, popupConfig);
       const emitSpy = jest.fn();
 
       mediaPicker.emit = emitSpy;
@@ -88,7 +87,7 @@ describe('MediaPickerPopup', () => {
 
   describe('render', () => {
     it('should render <App /> with the right properties', () => {
-      const mediaPicker = new PopupImpl(context, popupConfig) as any;
+      const mediaPicker = new PopupImpl(mediaClient, popupConfig) as any;
 
       expect((render as jest.Mock).mock.calls[0][0].props).toEqual({
         proxyReactContext: undefined,

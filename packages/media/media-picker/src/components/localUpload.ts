@@ -1,4 +1,4 @@
-import { Context } from '@atlaskit/media-core';
+import { MediaClient } from '@atlaskit/media-client';
 import { UploadService } from '../service/types';
 import {
   UploadEndEventPayload,
@@ -8,29 +8,29 @@ import {
   UploadProcessingEventPayload,
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
-} from '../domain/uploadEvent';
+  UploadParams,
+} from '../types';
 import { UploadComponent } from './component';
-import { UploadParams } from '../domain/config';
-import { NewUploadServiceImpl } from '../service/newUploadServiceImpl';
+import { UploadServiceImpl } from '../service/uploadServiceImpl';
 import { LocalUploadConfig } from './types';
 
 export class LocalUploadComponent<
   M extends UploadEventPayloadMap = UploadEventPayloadMap
 > extends UploadComponent<M> implements LocalUploadComponent {
   protected readonly uploadService: UploadService;
-  protected readonly context: Context;
+  protected readonly mediaClient: MediaClient;
   protected config: LocalUploadConfig;
 
-  constructor(context: Context, config: LocalUploadConfig) {
+  constructor(mediaClient: MediaClient, config: LocalUploadConfig) {
     super();
     const tenantUploadParams = config.uploadParams;
 
-    this.context = context;
+    this.mediaClient = mediaClient;
 
     const { shouldCopyFileToRecents = true } = config;
 
-    this.uploadService = new NewUploadServiceImpl(
-      this.context,
+    this.uploadService = new UploadServiceImpl(
+      this.mediaClient,
       tenantUploadParams,
       shouldCopyFileToRecents,
     );
@@ -42,6 +42,8 @@ export class LocalUploadComponent<
     this.uploadService.on('file-converted', this.onFileConverted);
     this.uploadService.on('file-upload-error', this.onUploadError);
   }
+
+  public addFiles = (files: File[]) => this.uploadService.addFiles(files);
 
   public cancel(uniqueIdentifier?: string): void {
     this.uploadService.cancel(uniqueIdentifier);
@@ -74,7 +76,7 @@ export class LocalUploadComponent<
   };
 
   private onFileConverted = (payload: UploadEndEventPayload): void => {
-    this.emitUploadEnd(payload.file, payload.public);
+    this.emitUploadEnd(payload.file);
   };
 
   private onUploadError = ({ file, error }: UploadErrorEventPayload): void => {

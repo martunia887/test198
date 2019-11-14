@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { remoteImage } from '@atlaskit/media-test-helpers';
@@ -26,9 +26,7 @@ export default () => (
       <h1>Remote image</h1>
       <ImageNavigator
         imageSource={remoteImage}
-        onImageLoaded={(file, crop) => console.log('onImageLoaded', file, crop)}
-        onPositionChanged={(x, y) => console.log('onPositionChanged', x, y)}
-        onSizeChanged={size => console.log('onSizeChanged', size)}
+        onImageLoaded={file => console.log('onImageLoaded', file)}
         onRemoveImage={() => console.log('onRemoveImage')}
         onImageError={errorMessage => console.log('onImageError', errorMessage)}
         onLoad={onLoad}

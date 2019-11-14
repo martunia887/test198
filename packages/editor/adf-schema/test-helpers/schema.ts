@@ -12,7 +12,6 @@ export { AttributeSpec, MarkSpec, Node, NodeSpec, ParseRule, Schema };
 export default createSchema({
   nodes: [
     'doc',
-    'applicationCard',
     'paragraph',
     'text',
     'bulletList',
@@ -51,6 +50,8 @@ export default createSchema({
     'placeholder',
     'inlineCard',
     'blockCard',
+    'expand',
+    'nestedExpand',
     'unsupportedBlock',
     'unsupportedInline',
   ],
@@ -61,11 +62,8 @@ export default createSchema({
     'strike',
     'underline',
     'link',
-    'mentionQuery',
     'subsup',
-    'emojiQuery',
     'textColor',
-    'action',
   ],
   customNodeSpecs: {
     plain: { ...paragraph, content: 'text*', marks: '' },

@@ -32,11 +32,11 @@ ${code`
   import {
     withAnalyticsEvents,
     createAndFireEvent,
+    WithAnalyticsEventsProps
   } from '@atlaskit/analytics-next';
   import FabricAnalyticsListeners from '@atlaskit/analytics-listeners';
-  import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
 
-  export type Props = WithAnalyticsEventProps & {
+  export type Props = WithAnalyticsEventsProps & {
     onClick: (e) => void;
   };
 

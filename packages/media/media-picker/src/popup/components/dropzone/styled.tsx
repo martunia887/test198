@@ -1,13 +1,10 @@
-/* tslint:disable:variable-name */
-
 import styled, { keyframes } from 'styled-components';
 
-import { HTMLAttributes, ComponentClass, SVGAttributes, SVGProps } from 'react';
+import { HTMLAttributes, ComponentClass } from 'react';
 import { DropzoneProps } from './dropzone';
 
-export const Wrapper: ComponentClass<
-  HTMLAttributes<{}> & DropzoneProps
-> = styled.div`
+export const Wrapper: ComponentClass<HTMLAttributes<{}> &
+  DropzoneProps> = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -50,11 +47,9 @@ export const Glass: ComponentClass<HTMLAttributes<{}>> = styled.div`
   z-index: 101;
 `;
 
-export const StyledIcon: ComponentClass<SVGAttributes<{}>> = styled.svg`
+export const StyledIcon = styled.svg`
   width: 70px;
   height: 70px;
 `;
 
-export const StyledSvgGroup: ComponentClass<
-  HTMLAttributes<{}> & SVGProps<SVGGElement>
-> = styled.g``;
+export const StyledSvgGroup = styled.g``;

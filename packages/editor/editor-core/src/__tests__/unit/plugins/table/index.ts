@@ -21,9 +21,7 @@ import {
   media,
   sendKeyToPm,
   randomId,
-  insertText,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
 import {
   pluginKey,
   getPluginState,
@@ -32,31 +30,26 @@ import {
   TablePluginState,
   PluginConfig,
 } from '../../../../plugins/table/types';
-import { createTable, setEditorFocus } from '../../../../plugins/table/actions';
-import { setNodeSelection } from '../../../../utils';
 import {
+  createTable,
+  setEditorFocus,
   toggleHeaderRow,
   toggleHeaderColumn,
   insertColumn,
   insertRow,
-} from '../../../../plugins/table/actions';
+} from '../../../../plugins/table/commands';
+import { setNodeSelection } from '../../../../utils';
 import {
   checkIfNumberColumnEnabled,
   checkIfHeaderColumnEnabled,
   checkIfHeaderRowEnabled,
 } from '../../../../plugins/table/utils';
-import tablesPlugin from '../../../../plugins/table';
-import codeBlockPlugin from '../../../../plugins/code-block';
-import quickInsertPlugin from '../../../../plugins/quick-insert';
-import { mediaPlugin } from '../../../../plugins';
 import { insertMediaAsMediaSingle } from '../../../../plugins/media/utils/media-single';
-import listPlugin from '../../../../plugins/lists';
 import { AnalyticsHandler } from '../../../../analytics';
+import { INPUT_METHOD } from '../../../../plugins/analytics';
 
 describe('table plugin', () => {
   const createEditor = createEditorFactory<TablePluginState>();
-
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
 
   const editor = (doc: any, trackEvent: AnalyticsHandler = () => {}) => {
     const tableOptions = {
@@ -65,32 +58,24 @@ describe('table plugin', () => {
       allowHeaderColumn: true,
       permittedLayouts: 'all',
     } as PluginConfig;
-    createAnalyticsEvent = jest.fn().mockReturnValue({ fire() {} });
+
     return createEditor({
       doc,
-      editorPlugins: [
-        listPlugin,
-        tablesPlugin(tableOptions),
-        codeBlockPlugin(),
-        mediaPlugin({ allowMediaSingle: true }),
-        quickInsertPlugin,
-      ],
       editorProps: {
         analyticsHandler: trackEvent,
         allowTables: tableOptions,
         allowAnalyticsGASV3: true,
+        allowLists: true,
+        allowCodeBlocks: true,
+        media: {
+          allowMediaSingle: true,
+        },
       },
       pluginKey,
-      createAnalyticsEvent,
     });
   };
 
-  let trackEvent: AnalyticsHandler;
-  beforeEach(() => {
-    trackEvent = jest.fn();
-  });
-
-  describe('createTable()', () => {
+  describe('insertTable()', () => {
     describe('when the cursor is outside the table', () => {
       it('it should create a new table and return true', () => {
         const { editorView } = editor(doc(p('{<>}')));
@@ -127,12 +112,19 @@ describe('table plugin', () => {
   });
 
   describe('insertColumn(number)', () => {
+    it('should not insert a column if selection is not in table', () => {
+      const { editorView } = editor(doc(p('{<>}')));
+
+      expect(insertColumn(2)(editorView.state, editorView.dispatch)).toBe(
+        false,
+      );
+    });
+
     describe('when table has 2 columns', () => {
       describe('when it called with 0', () => {
         it("it should prepend a new column and move cursor inside it's first cell", () => {
           const { editorView } = editor(
             doc(p('text'), table()(tr(td({})(p('c1')), td({})(p('c2{<>}'))))),
-            trackEvent,
           );
 
           insertColumn(0)(editorView.state, editorView.dispatch);
@@ -142,9 +134,6 @@ describe('table plugin', () => {
               table()(tr(tdCursor, td({})(p('c1')), td({})(p('c2')))),
             ),
           );
-          expect(trackEvent).toHaveBeenCalledWith(
-            'atlassian.editor.format.table.column.button',
-          );
           expect(editorView.state.selection.$from.pos).toEqual(10);
         });
       });
@@ -153,7 +142,6 @@ describe('table plugin', () => {
         it("it should insert a new column in the middle and move cursor inside it's first cell", () => {
           const { editorView } = editor(
             doc(p('text'), table()(tr(td({})(p('c1{<>}')), td({})(p('c2'))))),
-            trackEvent,
           );
 
           insertColumn(1)(editorView.state, editorView.dispatch);
@@ -163,9 +151,6 @@ describe('table plugin', () => {
               table()(tr(td({})(p('c1')), tdCursor, td({})(p('c2')))),
             ),
           );
-          expect(trackEvent).toHaveBeenCalledWith(
-            'atlassian.editor.format.table.column.button',
-          );
           expect(editorView.state.selection.$from.pos).toEqual(16);
         });
       });
@@ -174,7 +159,6 @@ describe('table plugin', () => {
         it("it should append a new column and move cursor inside it's first cell", () => {
           const { editorView } = editor(
             doc(p('text'), table()(tr(td({})(p('c1{<>}')), td({})(p('c2'))))),
-            trackEvent,
           );
 
           insertColumn(2)(editorView.state, editorView.dispatch);
@@ -183,9 +167,6 @@ describe('table plugin', () => {
               p('text'),
               table()(tr(td({})(p('c1')), td({})(p('c2')), tdCursor)),
             ),
-          );
-          expect(trackEvent).toHaveBeenCalledWith(
-            'atlassian.editor.format.table.column.button',
           );
           expect(editorView.state.selection.$from.pos).toEqual(22);
         });
@@ -202,7 +183,6 @@ describe('table plugin', () => {
               p('text'),
               table()(tr(td({})(p('row1'))), tr(td({})(p('row2{<>}')))),
             ),
-            trackEvent,
           );
 
           insertRow(0)(editorView.state, editorView.dispatch);
@@ -216,9 +196,6 @@ describe('table plugin', () => {
               ),
             ),
           );
-          expect(trackEvent).toHaveBeenCalledWith(
-            'atlassian.editor.format.table.row.button',
-          );
           expect(editorView.state.selection.$from.pos).toEqual(10);
         });
       });
@@ -230,7 +207,6 @@ describe('table plugin', () => {
               p('text'),
               table()(tr(td({})(p('row1{<>}'))), tr(td({})(p('row2')))),
             ),
-            trackEvent,
           );
 
           insertRow(1)(editorView.state, editorView.dispatch);
@@ -243,9 +219,6 @@ describe('table plugin', () => {
                 tr(td({})(p('row2'))),
               ),
             ),
-          );
-          expect(trackEvent).toHaveBeenCalledWith(
-            'atlassian.editor.format.table.row.button',
           );
           expect(editorView.state.selection.$from.pos).toEqual(20);
         });
@@ -260,7 +233,6 @@ describe('table plugin', () => {
               p('text'),
               table()(tr(td({})(p('row1{<>}'))), tr(td({})(p('row2')))),
             ),
-            trackEvent,
           );
 
           insertRow(2)(editorView.state, editorView.dispatch);
@@ -273,9 +245,6 @@ describe('table plugin', () => {
                 tr(tdCursor),
               ),
             ),
-          );
-          expect(trackEvent).toHaveBeenCalledWith(
-            'atlassian.editor.format.table.row.button',
           );
           expect(editorView.state.selection.$from.pos).toEqual(30);
         });
@@ -292,7 +261,6 @@ describe('table plugin', () => {
                 tr(td({ colspan: 2, background: '#e6fcff' })(p('row2{<>}'))),
               ),
             ),
-            trackEvent,
           );
 
           insertRow(2)(editorView.state, editorView.dispatch);
@@ -306,10 +274,6 @@ describe('table plugin', () => {
               ),
             ),
           );
-
-          expect(trackEvent).toHaveBeenLastCalledWith(
-            'atlassian.editor.format.table.row.button',
-          );
         });
       });
 
@@ -322,7 +286,6 @@ describe('table plugin', () => {
               tr(td({ colspan: 2, background: '#e6fcff' })(p('row2'))),
             ),
           ),
-          trackEvent,
         );
 
         insertRow(2)(editorView.state, editorView.dispatch);
@@ -337,10 +300,12 @@ describe('table plugin', () => {
             ),
           ),
         );
+      });
 
-        expect(trackEvent).toHaveBeenLastCalledWith(
-          'atlassian.editor.format.table.row.button',
-        );
+      it('should not insert a row if selection is not in table', () => {
+        const { editorView } = editor(doc(p('{<>}')));
+
+        expect(insertRow(2)(editorView.state, editorView.dispatch)).toBe(false);
       });
 
       it('copies the structure from a tableHeader', () => {
@@ -354,7 +319,6 @@ describe('table plugin', () => {
               ),
             ),
           ),
-          trackEvent,
         );
 
         insertRow(2)(editorView.state, editorView.dispatch);
@@ -370,10 +334,6 @@ describe('table plugin', () => {
               tr(th({ colspan: 2, background: '#e6fcff' })(p()), td()(p())),
             ),
           ),
-        );
-
-        expect(trackEvent).toHaveBeenLastCalledWith(
-          'atlassian.editor.format.table.row.button',
         );
       });
     });
@@ -442,6 +402,36 @@ describe('table plugin', () => {
   });
 
   describe('toggleHeaderRow()', () => {
+    describe('when the table has rowspan and colspan', () => {
+      const buildTableDoc = (hasHeaderRow: boolean) => {
+        const cell = hasHeaderRow ? th : td;
+        return doc(
+          p('text'),
+          table()(
+            tr(cell({ colspan: 2 })(p('')), cell({ rowspan: 2 })(p(''))),
+            tr(tdEmpty, tdEmpty),
+            tr(tdEmpty, tdEmpty, tdEmpty),
+          ),
+        );
+      };
+
+      it('should add header cells on the first line', () => {
+        const { editorView } = editor(buildTableDoc(false));
+
+        toggleHeaderRow(editorView.state, editorView.dispatch);
+
+        expect(editorView.state.doc).toEqualDocument(buildTableDoc(true));
+      });
+
+      it('should remove header cells on first line', () => {
+        const { editorView } = editor(buildTableDoc(true));
+
+        toggleHeaderRow(editorView.state, editorView.dispatch);
+
+        expect(editorView.state.doc).toEqualDocument(buildTableDoc(false));
+      });
+    });
+
     describe("when there's no header row yet", () => {
       it('it should convert first row to a header row', () => {
         // p('text') goes before table to ensure that conversion uses absolute position of cells relative to the document
@@ -737,6 +727,7 @@ describe('table plugin', () => {
           collection: testCollectionName,
           __fileMimeType: 'image/png',
         })()(editorView.state.schema),
+        INPUT_METHOD.PICKER_CLOUD,
       );
 
       expect(editorView.state.doc).toEqualDocument(
@@ -822,7 +813,7 @@ describe('table plugin', () => {
       );
       const { tableNode } = getPluginState(view.state);
       expect(tableNode).toBeDefined();
-      expect(tableNode.type.name).toEqual('table');
+      expect(tableNode!.type.name).toEqual('table');
     });
     it('should update targetCellPosition when document changes', () => {
       const { editorView } = editor(doc(table()(tr(tdCursor, tdEmpty))));
@@ -837,22 +828,6 @@ describe('table plugin', () => {
 
       pluginState = getPluginState(editorView.state);
       expect(pluginState.targetCellPosition).toEqual(23);
-    });
-  });
-
-  describe('quick insert', () => {
-    it('should fire analytics event when table inserted', () => {
-      const { editorView, sel } = editor(doc(p('{<>}')));
-      insertText(editorView, '/Table', sel);
-      sendKeyToPm(editorView, 'Enter');
-
-      expect(createAnalyticsEvent).toHaveBeenCalledWith({
-        action: 'inserted',
-        actionSubject: 'document',
-        actionSubjectId: 'table',
-        attributes: { inputMethod: 'quickInsert' },
-        eventType: 'track',
-      });
     });
   });
 });

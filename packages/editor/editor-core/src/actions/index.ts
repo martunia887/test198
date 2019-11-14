@@ -1,11 +1,10 @@
 import { Node } from 'prosemirror-model';
-import { TextSelection } from 'prosemirror-state';
+import { TextSelection, Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { Transformer } from '@atlaskit/editor-common';
 import {
   compose,
   getEditorValueWithMedia,
-  insertFileFromDataUrl as insertFileFromUrl,
   toJSON,
   processRawValue,
 } from '../utils';
@@ -26,12 +25,12 @@ export interface EditorActionsOptions {
   replaceDocument(rawValue: any): boolean;
   replaceSelection(rawValue: Node | Object | string): boolean;
   appendText(text: string): boolean;
-  insertFileFromDataUrl(url: string, filename: string): boolean;
 }
 
 export default class EditorActions implements EditorActionsOptions {
   private editorView?: EditorView;
   private contentTransformer?: Transformer<any>;
+  private contentEncode?: Transformer<any>['encode'];
   private eventDispatcher?: EventDispatcher;
   private listeners: Array<ContextUpdateHandler> = [];
 
@@ -71,12 +70,19 @@ export default class EditorActions implements EditorActionsOptions {
         "Editor has already been registered! It's not allowed to re-register editor with the new Editor instance.",
       );
     }
+
+    if (this.contentTransformer) {
+      this.contentEncode = this.contentTransformer.encode.bind(
+        this.contentTransformer,
+      );
+    }
   }
 
   // This method needs to be public for EditorContext component.
   _privateUnregisterEditor(): void {
     this.editorView = undefined;
     this.contentTransformer = undefined;
+    this.contentEncode = undefined;
     this.eventDispatcher = undefined;
   }
 
@@ -136,17 +142,23 @@ export default class EditorActions implements EditorActionsOptions {
       return;
     }
 
-    if (this.contentTransformer) {
-      return this.contentTransformer.encode(doc);
-    }
-
     return compose(
+      doc =>
+        this.contentEncode
+          ? this.contentEncode(
+              Node.fromJSON(this.editorView!.state.schema, doc),
+            )
+          : doc,
       sanitizeNode,
       toJSON,
     )(doc);
   }
 
-  replaceDocument(rawValue: any, shouldScrollToBottom = true): boolean {
+  replaceDocument(
+    rawValue: any,
+    shouldScrollToBottom = true,
+    shouldAddToHistory = true,
+  ): boolean {
     if (!this.editorView || rawValue === undefined || rawValue === null) {
       return false;
     }
@@ -166,9 +178,16 @@ export default class EditorActions implements EditorActionsOptions {
 
     // In case of replacing a whole document, we only need a content of a top level node e.g. document.
     let tr = state.tr.replaceWith(0, state.doc.nodeSize - 2, content.content);
+    if (!shouldScrollToBottom && !tr.selectionSet) {
+      // Restore selection at start of document instead of the end.
+      tr.setSelection(Selection.atStart(tr.doc));
+    }
 
     if (shouldScrollToBottom) {
       tr = tr.scrollIntoView();
+    }
+    if (!shouldAddToHistory) {
+      tr.setMeta('addToHistory', false);
     }
 
     this.editorView.dispatch(tr);
@@ -176,7 +195,10 @@ export default class EditorActions implements EditorActionsOptions {
     return true;
   }
 
-  replaceSelection(rawValue: Node | Object | string): boolean {
+  replaceSelection(
+    rawValue: Node | Object | string,
+    tryToReplace?: boolean,
+  ): boolean {
     if (!this.editorView) {
       return false;
     }
@@ -197,7 +219,9 @@ export default class EditorActions implements EditorActionsOptions {
     }
 
     // try to find a place in the document where to insert a node if its not allowed at the cursor position by schema
-    this.editorView.dispatch(safeInsert(content)(state.tr).scrollIntoView());
+    this.editorView.dispatch(
+      safeInsert(content, undefined, tryToReplace)(state.tr).scrollIntoView(),
+    );
 
     return true;
   }
@@ -217,14 +241,6 @@ export default class EditorActions implements EditorActionsOptions {
     const tr = state.tr.insertText(text).scrollIntoView();
     this.editorView.dispatch(tr);
 
-    return true;
-  }
-
-  insertFileFromDataUrl(url: string, filename: string): boolean {
-    if (!this.editorView) {
-      return false;
-    }
-    insertFileFromUrl(this.editorView.state, url, filename);
     return true;
   }
 }

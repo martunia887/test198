@@ -1,16 +1,21 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
 import {
-  Context,
+  MediaClient,
   FileState,
   MediaType,
   ProcessedFileState,
   ProcessingFileState,
-  FileIdentifier,
-} from '@atlaskit/media-core';
+  Identifier,
+  isExternalImageIdentifier,
+} from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
-import * as deepEqual from 'deep-equal';
-import { messages, toHumanReadableMediaSize } from '@atlaskit/media-ui';
+import deepEqual from 'deep-equal';
+import {
+  hideControlsClassName,
+  messages,
+  toHumanReadableMediaSize,
+} from '@atlaskit/media-ui';
 import { FormattedMessage, injectIntl, InjectedIntlProps } from 'react-intl';
 import { Outcome } from './domain';
 import {
@@ -22,7 +27,6 @@ import {
   MedatadataTextWrapper,
   MetadataIconWrapper,
   MetadataFileName,
-  hideControlsClassName,
 } from './styled';
 import { MediaTypeIcon } from './media-type-icon';
 import { MediaViewerError, createError } from './error';
@@ -32,8 +36,8 @@ import {
 } from './download';
 
 export type Props = {
-  readonly identifier: FileIdentifier;
-  readonly context: Context;
+  readonly identifier: Identifier;
+  readonly mediaClient: MediaClient;
   readonly onClose?: () => void;
 };
 
@@ -50,7 +54,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
 
   private subscription?: Subscription;
 
-  componentWillUpdate(nextProps: Props) {
+  UNSAFE_componentWillUpdate(nextProps: Props) {
     if (this.needsReset(this.props, nextProps)) {
       this.release();
       this.init(nextProps);
@@ -67,10 +71,29 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
 
   private init(props: Props) {
     this.setState(initialState, async () => {
-      const { context, identifier } = props;
+      const { mediaClient, identifier } = props;
+
+      if (isExternalImageIdentifier(identifier)) {
+        const { name = identifier.dataURI } = identifier;
+        // Simulate a processing file state to render right metadata
+        const fileState: ProcessingFileState = {
+          status: 'processing',
+          id: name,
+          mediaType: 'image',
+          mimeType: 'image/',
+          name,
+          representations: {},
+          size: 0,
+        };
+
+        this.setState({
+          item: Outcome.successful(fileState),
+        });
+        return;
+      }
       const id =
         typeof identifier.id === 'string' ? identifier.id : await identifier.id;
-      this.subscription = context.file
+      this.subscription = mediaClient.file
         .getFileState(id, {
           collectionName: identifier.collectionName,
         })
@@ -91,7 +114,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
 
   private renderDownload = () => {
     const { item } = this.state;
-    const { identifier, context } = this.props;
+    const { identifier, mediaClient } = this.props;
     return item.match({
       pending: () => DisabledToolbarDownloadButton,
       failed: () => DisabledToolbarDownloadButton,
@@ -99,7 +122,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
         <ToolbarDownloadButton
           state={item}
           identifier={identifier}
-          context={context}
+          mediaClient={mediaClient}
         />
       ),
     });
@@ -169,7 +192,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
     const message = mediaTypeTranslationMap[mediaType || 'unknown'];
 
     // Defaulting to unknown again since backend has more mediaTypes than the current supported ones
-    return <FormattedMessage {...message || messages.unknown} />;
+    return <FormattedMessage {...(message || messages.unknown)} />;
   };
 
   private getMediaIcon = (mediaType?: MediaType) => {
@@ -179,7 +202,7 @@ export class Header extends React.Component<Props & InjectedIntlProps, State> {
   private needsReset(propsA: Props, propsB: Props) {
     return (
       !deepEqual(propsA.identifier, propsB.identifier) ||
-      propsA.context !== propsB.context
+      propsA.mediaClient !== propsB.mediaClient
     );
   }
 

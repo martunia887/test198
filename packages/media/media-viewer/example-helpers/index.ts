@@ -5,6 +5,7 @@ import {
   docFileId,
   largePdfFileId,
   imageFileId,
+  emptyImageFileId,
   largeImageFileId,
   smallImageFileId,
   unknownFileId,
@@ -15,10 +16,9 @@ import {
   wideImageFileId,
   errorFileId,
   videoSquareFileId,
+  verticalImageFileId,
 } from '@atlaskit/media-test-helpers';
-import { FileIdentifier } from '@atlaskit/media-core';
-
-export { defaultCollectionName } from '@atlaskit/media-test-helpers';
+import { FileIdentifier } from '@atlaskit/media-client';
 
 export const imageIdentifier: FileIdentifier = {
   ...imageFileId,
@@ -55,6 +55,11 @@ export const unsupportedIdentifier: FileIdentifier = {
   occurrenceKey: 'testOccurrenceKey',
 };
 
+export const emptyImage: FileIdentifier = {
+  ...emptyImageFileId,
+  occurrenceKey: 'corruptedTestOccurrenceKey',
+};
+
 export const imageItem: FileIdentifier = {
   ...imageFileId,
   occurrenceKey: 'testOccurrenceKey',
@@ -72,6 +77,11 @@ export const largeImageItem: FileIdentifier = {
 
 export const wideImageItem: FileIdentifier = {
   ...wideImageFileId,
+  occurrenceKey: 'testOccurrenceKey',
+};
+
+export const verticalImageItem: FileIdentifier = {
+  ...verticalImageFileId,
   occurrenceKey: 'testOccurrenceKey',
 };
 

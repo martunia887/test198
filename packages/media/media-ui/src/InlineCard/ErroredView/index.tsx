@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { colors } from '@atlaskit/theme';
+import { R300 } from '@atlaskit/theme/colors';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Button from '@atlaskit/button';
-import { truncateUrlForErrorView } from '../utils';
 import { Frame } from '../Frame';
 import { IconAndTitleLayout } from '../IconAndTitleLayout';
 import { AKIconWrapper } from '../Icon';
+import { messages } from '../../messages';
+import { FormattedMessage } from 'react-intl';
 
 export interface InlineCardErroredViewProps {
   /** The url to display */
@@ -13,7 +14,7 @@ export interface InlineCardErroredViewProps {
   /** The error message to display */
   message: string;
   /** The optional click handler */
-  onClick?: () => void;
+  onClick?: React.EventHandler<React.MouseEvent | React.KeyboardEvent>;
   /** What to do when a user clicks "Try again" button */
   onRetry?: () => void;
   /** A flag that determines whether the card is selected in edit mode. */
@@ -23,7 +24,7 @@ export interface InlineCardErroredViewProps {
 export class InlineCardErroredView extends React.Component<
   InlineCardErroredViewProps
 > {
-  handleRetry = (event: React.MouseEvent<HTMLButtonElement>) => {
+  handleRetry = (event: React.MouseEvent<HTMLElement>) => {
     const { onRetry } = this.props;
     if (onRetry) {
       event.preventDefault();
@@ -35,26 +36,19 @@ export class InlineCardErroredView extends React.Component<
   render() {
     const { url, message, onClick, onRetry, isSelected } = this.props;
     return (
-      <Frame onClick={onClick} isSelected={isSelected}>
+      <Frame link={url} onClick={onClick} isSelected={isSelected}>
         <IconAndTitleLayout
           icon={
             <AKIconWrapper>
-              <ErrorIcon
-                label="error"
-                size="small"
-                primaryColor={colors.R300}
-              />
+              <ErrorIcon label="error" size="small" primaryColor={R300} />
             </AKIconWrapper>
           }
-          title={
-            <span style={{ color: colors.R300 }}>
-              {truncateUrlForErrorView(url) + ' - ' + message.trim()}
-            </span>
-          }
+          title={url + ' - ' + message.trim()}
+          titleColor={R300}
         />{' '}
         {onRetry && (
           <Button spacing="none" appearance="link" onClick={this.handleRetry}>
-            Try again
+            <FormattedMessage {...messages.try_again} />
           </Button>
         )}
       </Frame>

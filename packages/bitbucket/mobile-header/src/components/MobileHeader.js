@@ -5,7 +5,7 @@ import MenuIcon from '@atlaskit/icon/glyph/menu';
 import * as styles from '../styled';
 
 type MobileHeaderProps = {
-  navigation: (isOpen: boolean) => Node,
+  navigation?: (isOpen: boolean) => Node,
   sidebar: (isOpen: boolean) => Node,
   onNavigationOpen: () => void,
   onDrawerClose: () => void,
@@ -13,6 +13,8 @@ type MobileHeaderProps = {
   secondaryContent?: Node,
   pageHeading: Node,
   menuIconLabel: string,
+  customMenu?: Node,
+  topOffset?: number,
 };
 
 type MobileHeaderState = {
@@ -26,7 +28,11 @@ class MobileHeader extends PureComponent<MobileHeaderProps, MobileHeaderState> {
     isAnimatingSidebar: false,
   };
 
-  componentWillReceiveProps(nextProps: MobileHeaderProps) {
+  static defaultProps = {
+    topOffset: 0,
+  };
+
+  UNSAFE_componentWillReceiveProps(nextProps: MobileHeaderProps) {
     if (nextProps.drawerState === 'none') {
       if (this.props.drawerState === 'navigation') {
         this.setState({ isAnimatingNavigation: true });
@@ -47,34 +53,40 @@ class MobileHeader extends PureComponent<MobileHeaderProps, MobileHeaderState> {
   renderSlider = (
     isOpen: boolean,
     isAnimating: boolean,
-    renderFn: (isOpen: boolean) => Node,
+    renderFn?: (isOpen: boolean) => Node,
     onTransitionEnd: Function,
+    topOffset?: number,
     side: string = 'left',
   ) => (
     <styles.MobileNavSlider
       isOpen={isOpen}
       onTransitionEnd={onTransitionEnd}
       side={side}
+      topOffset={topOffset}
     >
-      {(isOpen || isAnimating) && renderFn(isOpen)}
+      {(isOpen || isAnimating) && renderFn && renderFn(isOpen)}
     </styles.MobileNavSlider>
   );
 
   render() {
     const { isAnimatingNavigation, isAnimatingSidebar } = this.state;
-    const { drawerState, menuIconLabel } = this.props;
+    const { drawerState, menuIconLabel, customMenu, topOffset } = this.props;
     const isNavigationOpen = drawerState === 'navigation';
     const isSidebarOpen = drawerState === 'sidebar';
+
+    const menu = customMenu || (
+      <Button
+        appearance="subtle"
+        iconBefore={<MenuIcon label={menuIconLabel} size="large" />}
+        onClick={this.props.onNavigationOpen}
+      />
+    );
 
     return (
       <Fragment>
         <styles.MobilePageHeader>
-          <styles.MobilePageHeaderContent>
-            <Button
-              appearance="subtle"
-              iconBefore={<MenuIcon label={menuIconLabel} size="large" />}
-              onClick={this.props.onNavigationOpen}
-            />
+          <styles.MobilePageHeaderContent topOffset={topOffset}>
+            {menu}
             <styles.PageHeading>{this.props.pageHeading}</styles.PageHeading>
             {this.props.secondaryContent}
           </styles.MobilePageHeaderContent>
@@ -85,6 +97,7 @@ class MobileHeader extends PureComponent<MobileHeaderProps, MobileHeaderState> {
           isAnimatingNavigation,
           this.props.navigation,
           this.handleNavSlideFinish,
+          topOffset,
         )}
 
         {this.renderSlider(
@@ -92,6 +105,7 @@ class MobileHeader extends PureComponent<MobileHeaderProps, MobileHeaderState> {
           isAnimatingSidebar,
           this.props.sidebar,
           this.handleSidebarSlideFinish,
+          topOffset,
           'right',
         )}
 

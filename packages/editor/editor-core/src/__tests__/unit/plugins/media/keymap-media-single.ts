@@ -7,7 +7,6 @@ import {
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
 
-import codeBlockPlugin from '../../../../plugins/code-block';
 import { temporaryMedia, mediaEditor } from './_utils';
 
 describe('mediaSingle - keymap', () => {
@@ -56,7 +55,7 @@ describe('mediaSingle - keymap', () => {
         mediaSingle({ layout: 'wrap-right' })(temporaryMedia),
         p('{<>}Hello World!'),
       ),
-      [codeBlockPlugin()],
+      { allowCodeBlocks: true },
     );
 
     sendKeyToPm(editorView, 'Backspace');
@@ -69,7 +68,7 @@ describe('mediaSingle - keymap', () => {
     );
   });
 
-  it('should not remove anything on backspace if the paragraph before is not empty', () => {
+  it('should move the text to the paragraph before media single like a normal paragraph delete works', () => {
     const { editorView } = mediaEditor(
       doc(
         p('Hey!'),
@@ -82,7 +81,34 @@ describe('mediaSingle - keymap', () => {
 
     expect(editorView.state.doc).toEqualDocument(
       doc(
-        p('Hey!'),
+        p('Hey!Hello World!'),
+        mediaSingle({ layout: 'wrap-right' })(temporaryMedia),
+        p(''),
+      ),
+    );
+  });
+
+  it('should delete the last empty paragraph', () => {
+    const { editorView } = mediaEditor(
+      doc(
+        p(''),
+        p(''),
+        p(''),
+        p(''),
+        p(''),
+        mediaSingle({ layout: 'wrap-right' })(temporaryMedia),
+        p('{<>}Hello World!'),
+      ),
+    );
+
+    sendKeyToPm(editorView, 'Backspace');
+
+    expect(editorView.state.doc).toEqualDocument(
+      doc(
+        p(''),
+        p(''),
+        p(''),
+        p(''),
         mediaSingle({ layout: 'wrap-right' })(temporaryMedia),
         p('Hello World!'),
       ),

@@ -1,5 +1,5 @@
 import { GasPayload } from '@atlaskit/analytics-gas-types';
-import { ProcessedFileState, FileState } from '@atlaskit/media-core';
+import { ProcessedFileState, FileState } from '@atlaskit/media-client';
 import { packageAttributes, fileStateToFileGasPayload } from './index';
 
 export type ViewerLoadPayload = {
@@ -66,19 +66,16 @@ export const mediaFileLoadFailedEvent = (
 
 export const mediaPreviewFailedEvent = (
   failReason: string,
-  id?: string,
-  file?: FileState,
+  fileState?: FileState,
 ): GasPayload => {
-  const fileAttributes = file
-    ? fileStateToFileGasPayload(file)
-    : {
-        fileId: id,
-      };
+  const fileId = fileState ? fileState.id : undefined;
+  const fileAttributes = fileState && fileStateToFileGasPayload(fileState);
+
   return {
     eventType: 'operational',
     actionSubject: 'mediaFile',
     action: 'previewFailed',
-    actionSubjectId: id,
+    actionSubjectId: fileId,
     attributes: {
       status: 'fail',
       ...fileAttributes,

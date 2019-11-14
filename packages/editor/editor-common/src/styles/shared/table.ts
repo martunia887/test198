@@ -1,6 +1,10 @@
 import { css } from 'styled-components';
-import { TableLayout } from '@atlaskit/adf-schema';
-import { fontSize, themed } from '@atlaskit/theme';
+import {
+  TableLayout,
+  tableCellContentDomSelector,
+  tablePrefixSelector,
+} from '@atlaskit/adf-schema';
+import { fontSize, themed, colors } from '@atlaskit/theme';
 import {
   akEditorTableBorder,
   akEditorTableBorderDark,
@@ -11,7 +15,6 @@ import {
   akEditorFullWidthLayoutWidth,
   akEditorBreakoutPadding,
 } from '../consts';
-import { PanelSharedCssClassName } from './panel';
 
 export const tableMarginTop = 24;
 export const tableMarginBottom = 16;
@@ -19,15 +22,15 @@ export const tableMarginSides = 8;
 export const tableCellMinWidth = 48;
 export const tableNewColumnMinWidth = 140;
 export const tableCellBorderWidth = 1;
-
-const clPrefix = 'pm-table-';
+export const tableCellPadding = 8;
+export const tableResizeHandleWidth = 6;
 
 export const TableSharedCssClassName = {
-  TABLE_CONTAINER: `${clPrefix}container`,
-  TABLE_NODE_WRAPPER: `${clPrefix}wrapper`,
-  TABLE_LEFT_SHADOW: `${clPrefix}with-left-shadow`,
-  TABLE_RIGHT_SHADOW: `${clPrefix}with-right-shadow`,
-  TABLE_CELL_NODEVIEW_CONTENT_DOM: `${clPrefix}cell-nodeview-content-dom`,
+  TABLE_CONTAINER: `${tablePrefixSelector}-container`,
+  TABLE_NODE_WRAPPER: `${tablePrefixSelector}-wrapper`,
+  TABLE_LEFT_SHADOW: `${tablePrefixSelector}-with-left-shadow`,
+  TABLE_RIGHT_SHADOW: `${tablePrefixSelector}-with-right-shadow`,
+  TABLE_CELL_NODEVIEW_CONTENT_DOM: tableCellContentDomSelector,
 };
 
 const tableSharedStyle = css`
@@ -39,8 +42,6 @@ const tableSharedStyle = css`
     /**
      * Fix block top alignment inside table cells.
      */
-    .code-block,
-    .${PanelSharedCssClassName.PANEL_CONTAINER},
     .taskItemView-content-wrap > div,
     .decisionItemView-content-wrap > div {
       margin-top: 0;
@@ -53,7 +54,7 @@ const tableSharedStyle = css`
   .${TableSharedCssClassName.TABLE_CONTAINER} > table,
   .${TableSharedCssClassName.TABLE_NODE_WRAPPER} > table {
     border-collapse: collapse;
-    margin: ${tableMarginTop}px ${tableMarginSides}px 0;
+    margin: ${tableMarginTop}px ${tableMarginSides}px 0 0;
     border: ${tableCellBorderWidth}px solid ${themed({
   light: akEditorTableBorder,
   dark: akEditorTableBorderDark,
@@ -76,12 +77,11 @@ const tableSharedStyle = css`
       }
       th td {
         background-color: white;
-        font-weight: normal;
       }
       th,
       td {
         min-width: ${tableCellMinWidth}px;
-        height: 3em;
+        font-weight: normal;
         vertical-align: top;
         border: 1px solid ${themed({
           light: akEditorTableBorder,
@@ -89,9 +89,21 @@ const tableSharedStyle = css`
         })};
         border-right-width: 0;
         border-bottom-width: 0;
-        padding: 10px;
+        padding: ${tableCellPadding}px;
         /* https://stackoverflow.com/questions/7517127/borders-not-shown-in-firefox-with-border-collapse-on-table-position-relative-o */
         background-clip: padding-box;
+
+        > *:first-child {
+          margin-top: 0;
+        }
+
+        > .ProseMirror-gapcursor.-right:first-child + * {
+          margin-top: 0;
+        }
+
+        > .ProseMirror-gapcursor:first-child + span + * {
+          margin-top: 0;
+        }
 
         th p:not(:first-of-type),
         td p:not(:first-of-type) {
@@ -104,11 +116,21 @@ const tableSharedStyle = css`
           dark: akEditorTableToolbarDark,
         })};
         text-align: left;
-        & *:not(strong) {
-          font-weight: normal;
-        }
-        & .${TableSharedCssClassName.TABLE_CELL_NODEVIEW_CONTENT_DOM} > p {
-          font-weight: bold;
+
+        .code-block {
+          /*
+            Add a background color tint to code blocks inside a table heading since they both
+            share the same background colour. This prevents them visually blending together.
+          */
+          background: ${themed({ light: colors.N20A, dark: colors.DN700A })};
+
+          > span {
+            /*
+              The codeblock inside @atlaskit/code uses inline styles so we disable the default
+              background color because editor/renderer provides it's own background colours.
+            */
+            background: transparent !important;
+          }
         }
       }
     }

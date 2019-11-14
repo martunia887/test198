@@ -1,4 +1,4 @@
-// tslint:disable:no-console
+/* eslint-disable no-console */
 import * as React from 'react';
 import {
   profilecard as profilecardUtils,
@@ -6,7 +6,7 @@ import {
   taskDecision,
 } from '@atlaskit/util-data-test';
 import { CardEvent } from '@atlaskit/media-card';
-import { defaultSchema, ActionMarkAction } from '@atlaskit/adf-schema';
+import { defaultSchema } from '@atlaskit/adf-schema';
 import {
   CardSurroundings,
   ProviderFactory,
@@ -20,22 +20,22 @@ import {
 } from '@atlaskit/editor-test-helpers';
 import * as Clock from 'react-live-clock';
 
-import { document } from './story-data';
+import { document as storyDataDocument } from './story-data';
 import {
   default as Renderer,
   Props as RendererProps,
-  RendererAppearance,
 } from '../../src/ui/Renderer';
 
-import { AkProfileClient, modifyResponse } from '@atlaskit/profilecard';
+import { ProfileClient, modifyResponse } from '@atlaskit/profilecard';
 
-import { EmailSerializer, renderDocument, TextSerializer } from '../../src';
+import { renderDocument, TextSerializer } from '../../src';
 
 import Sidebar, { getDefaultShowSidebarState } from './NavigationNext';
+import { RendererAppearance } from '../../src/ui/Renderer/types';
 
 const { getMockProfileClient: getMockProfileClientUtil } = profilecardUtils;
 const MockProfileClient = getMockProfileClientUtil(
-  AkProfileClient,
+  ProfileClient,
   modifyResponse,
 );
 
@@ -87,7 +87,7 @@ const providerFactory = ProviderFactory.create({
 });
 
 const extensionHandlers: ExtensionHandlers = {
-  'com.atlassian.fabric': (ext, doc) => {
+  'com.atlassian.fabric': ext => {
     const { extensionKey } = ext;
 
     switch (extensionKey) {
@@ -157,10 +157,6 @@ const eventHandlers: EventHandlers = {
       );
     },
   },
-  action: {
-    onClick: (event: ActionMarkAction) =>
-      console.log('onClick', '[react.MouseEvent]', event),
-  },
 };
 
 export interface DemoRendererProps {
@@ -173,6 +169,8 @@ export interface DemoRendererProps {
   maxHeight?: number;
   truncationEnabled?: boolean;
   allowDynamicTextSizing?: boolean;
+  allowHeadingAnchorLinks?: boolean;
+  allowColumnSorting?: boolean;
 }
 
 export interface DemoRendererState {
@@ -188,14 +186,21 @@ export default class RendererDemo extends React.Component<
   DemoRendererState
 > {
   textSerializer = new TextSerializer(defaultSchema);
-  emailSerializer = new EmailSerializer();
   emailRef?: HTMLIFrameElement;
-  inputBox: HTMLTextAreaElement | null;
+  inputBox?: HTMLTextAreaElement | null;
+  emailTextareaRef?: any;
 
   constructor(props: DemoRendererProps) {
     super(props);
 
-    const doc = !!this.props.document ? this.props.document : document;
+    const doc = !!this.props.document ? this.props.document : storyDataDocument;
+
+    // Prevent browser retain the previous scroll position when refresh,
+    // This code is necessary for pages with scrollable body to avoid two scroll actions.
+    // For pages such as confluence(with a scrollable div), this code is not necessary.
+    if (props.allowHeadingAnchorLinks && history.scrollRestoration === 'auto') {
+      history.scrollRestoration = 'manual';
+    }
 
     this.state = {
       input: JSON.stringify(doc, null, 2),
@@ -208,26 +213,6 @@ export default class RendererDemo extends React.Component<
   private handlePortalRef = (portal: HTMLElement | null) => {
     this.setState({ portal: portal || undefined });
   };
-
-  private onEmailRef = (ref: HTMLIFrameElement | null) => {
-    this.emailRef = ref || undefined;
-
-    if (ref && ref.contentDocument) {
-      // reset padding/margin for empty iframe with about:src URL
-      ref.contentDocument.body.style.padding = '0';
-      ref.contentDocument.body.style.margin = '0';
-
-      this.onComponentRendered();
-    }
-  };
-
-  componentDidMount() {
-    this.onComponentRendered();
-  }
-
-  componentDidUpdate() {
-    this.onComponentRendered();
-  }
 
   render() {
     return (
@@ -260,31 +245,13 @@ export default class RendererDemo extends React.Component<
             </fieldset>
             {this.renderRenderer(additionalRendererProps)}
             {this.renderText()}
-            {this.renderEmail()}
           </div>
         )}
       </Sidebar>
     );
   }
 
-  private onComponentRendered() {
-    if (this.props.serializer !== 'email' || !this.emailRef) {
-      return;
-    }
-
-    try {
-      const doc = JSON.parse(this.state.input);
-      const html = renderDocument<string>(doc, this.emailSerializer).result;
-
-      if (this.emailRef && this.emailRef.contentDocument && html) {
-        this.emailRef.contentDocument.body.innerHTML = html;
-      }
-    } catch (ex) {
-      // pass
-    }
-  }
-
-  private toggleTruncated(e: Event) {
+  private toggleTruncated() {
     this.setState(prevState => ({
       truncated: !prevState.truncated,
     }));
@@ -308,6 +275,10 @@ export default class RendererDemo extends React.Component<
         props.dataProviders = providerFactory;
       }
 
+      if (this.props.allowHeadingAnchorLinks) {
+        props.allowHeadingAnchorLinks = true;
+      }
+
       if (this.props.withExtension) {
         props.extensionHandlers = extensionHandlers;
       }
@@ -316,10 +287,10 @@ export default class RendererDemo extends React.Component<
         props.portal = this.state.portal;
       }
 
-      props.appearance = this.props.appearance;
       props.maxHeight = this.props.maxHeight;
       props.truncated = this.props.truncationEnabled && this.state.truncated;
       props.allowDynamicTextSizing = this.props.allowDynamicTextSizing;
+      props.allowColumnSorting = this.props.allowColumnSorting;
 
       if (additionalRendererProps) {
         props = {
@@ -328,12 +299,14 @@ export default class RendererDemo extends React.Component<
         };
       }
 
+      props.appearance = this.props.appearance;
+
       const expandButton = (
         <div>
           <Button
             appearance={'link'}
             spacing={'none'}
-            onClick={(e: Event) => this.toggleTruncated(e)}
+            onClick={this.toggleTruncated}
           >
             {this.state.truncated ? 'Expand text' : 'Collapse text'}
           </Button>
@@ -379,31 +352,6 @@ export default class RendererDemo extends React.Component<
         </div>
       );
     } catch (ex) {
-      return null;
-    }
-  }
-
-  private renderEmail() {
-    if (this.props.serializer !== 'email') {
-      return null;
-    }
-
-    try {
-      JSON.parse(this.state.input);
-
-      return (
-        <div>
-          <h1>E-mail HTML</h1>
-          <iframe
-            ref={this.onEmailRef}
-            frameBorder="0"
-            src="about:blank"
-            style={{ width: '100%', height: '400px' }}
-          />
-        </div>
-      );
-    } catch (ex) {
-      console.error(ex.stack);
       return null;
     }
   }

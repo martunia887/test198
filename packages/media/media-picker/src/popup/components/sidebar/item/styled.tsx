@@ -1,19 +1,15 @@
-/* tslint:disable:variable-name */
-
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass, LiHTMLAttributes } from 'react';
-import { colors } from '@atlaskit/theme';
+import { B400, N500 } from '@atlaskit/theme/colors';
 
 export interface WrapperProps {
   isActive: boolean;
 }
 
-export const Wrapper: ComponentClass<
-  LiHTMLAttributes<{}> & WrapperProps
-> = styled.li`
-  color: ${({ isActive }: WrapperProps) =>
-    isActive ? colors.B400 : colors.N500};
+export const Wrapper: ComponentClass<LiHTMLAttributes<{}> &
+  WrapperProps> = styled.li`
+  color: ${({ isActive }: WrapperProps) => (isActive ? B400 : N500)};
   padding: 6px 25px;
   list-style-type: none;
   opacity: 1;

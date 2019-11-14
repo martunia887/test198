@@ -30,10 +30,6 @@ exports[`isOpen snapshot 1`] = `
               values={Object {}}
             />
              
-            <ShortcutIcon
-              label=""
-              size="small"
-            />
           </ForwardRef>
         }
         submitButton={
@@ -48,7 +44,7 @@ exports[`isOpen snapshot 1`] = `
 `;
 
 exports[`learnMoreLink display Learn more link is displayed when the link is passed in the props 1`] = `
-<WithAnalyticsContext(WithAnalyticsEvents(WithDeprecationWarnings(Button)))
+<WithAnalyticsContext(WithAnalyticsEvents(Button))
   appearance="subtle-link"
   href="https://hello.atlassian.net"
   spacing="none"
@@ -61,9 +57,5 @@ exports[`learnMoreLink display Learn more link is displayed when the link is pas
     values={Object {}}
   />
    
-  <ShortcutIcon
-    label=""
-    size="small"
-  />
-</WithAnalyticsContext(WithAnalyticsEvents(WithDeprecationWarnings(Button)))>
+</WithAnalyticsContext(WithAnalyticsEvents(Button))>
 `;

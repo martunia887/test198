@@ -3,14 +3,34 @@ import {
   insertText,
   sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
-import { doc, p } from '@atlaskit/editor-test-helpers';
-import { MockMentionResource } from '@atlaskit/util-data-test';
+import { doc, p, mention, a } from '@atlaskit/editor-test-helpers';
+import {
+  MockMentionResource,
+  MockMentionConfig,
+} from '@atlaskit/util-data-test';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import {
+  MentionProvider,
+  MentionDescription,
+  MentionNameResolver,
+} from '@atlaskit/mention/resource';
+import { EditorView } from 'prosemirror-view';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { selectCurrentItem } from '../../../../plugins/type-ahead/commands/select-item';
 import { dismissCommand } from '../../../../plugins/type-ahead/commands/dismiss';
-import { ProviderFactory } from '@atlaskit/editor-common';
-import { MentionProvider, MentionDescription } from '@atlaskit/mention';
-import { EditorView } from 'prosemirror-view';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
+import { EditorProps } from '../../../../types';
+
+let mockRegisterTeamMention = jest.fn();
+
+jest.mock('@atlaskit/mention/spotlight', () => ({
+  __esModule: true,
+  TeamMentionHighlightController: {
+    registerTeamMention: () => mockRegisterTeamMention(),
+  },
+}));
 
 describe('mentionTypeahead', () => {
   const createEditor = createEditorFactory();
@@ -22,12 +42,16 @@ describe('mentionTypeahead', () => {
     childObjectId: 'child-object-id',
   };
 
+  // all team ids in `packages/elements/util-data-test/json-data/mention-data.json`
+  const allTeamIds = ['team-1', 'team-2', 'team-3', 'team-4'];
+
   type TestDependencies = {
     editorView: EditorView;
     sel: number;
     mentionProvider: MentionProvider;
-    createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+    createAnalyticsEvent: CreateUIAnalyticsEvent;
     event: any;
+    mockMentionNameResolver?: MentionNameResolver;
   };
   type TestExecutor = (
     deps: TestDependencies,
@@ -42,13 +66,43 @@ describe('mentionTypeahead', () => {
    * @param test Test case function to be passed to Jest
    * @return Promise resolving with the return value of the test.
    */
-  const withMentionQuery = (query: string, test: TestExecutor) => async (
-    ...args: any[]
-  ) => {
+  const withMentionQuery = (
+    query: string,
+    test: TestExecutor,
+    options?: any,
+  ) => async (...args: any[]) => {
     const { event, createAnalyticsEvent } = analyticsMocks();
-    const { editorView, sel, mentionProvider } = await editor({
-      createAnalyticsEvent,
-    });
+    const mentionNameResolver: MentionNameResolver = {
+      cacheName: jest.fn(),
+      lookupName: jest.fn(),
+    };
+    let editorProps: EditorProps = {};
+    let mentionProviderConfig: MockMentionConfig = {};
+    if (options && options.sanitizePrivateContent) {
+      editorProps = {
+        collabEdit: {},
+        sanitizePrivateContent: true,
+        mentionInsertDisplayName: options.mentionInsertDisplayName,
+      };
+      mentionProviderConfig = {
+        mentionNameResolver,
+      };
+    }
+
+    if (options && options.mentionInsertDisplayName) {
+      editorProps = {
+        ...editorProps,
+        mentionInsertDisplayName: options.mentionInsertDisplayName,
+      };
+    }
+
+    const { editorView, sel, mentionProvider } = await editor(
+      {
+        createAnalyticsEvent,
+      },
+      editorProps,
+      mentionProviderConfig,
+    );
     const mentionResults = subscribe(mentionProvider, query);
     insertText(editorView, `@${query}`, sel);
     // Ensures results have been handled by the plugin before moving on
@@ -62,6 +116,7 @@ describe('mentionTypeahead', () => {
           mentionProvider,
           createAnalyticsEvent,
           event,
+          mockMentionNameResolver: mentionNameResolver,
         },
         ...args,
       ),
@@ -75,8 +130,14 @@ describe('mentionTypeahead', () => {
    * @param options List of options to add or override when creating the editor.
    * @return Object containing `editorView`, `sel` and `mentionProvider`.
    */
-  const editor = async (options?: any) => {
-    const mentionProvider = Promise.resolve(new MockMentionResource({}));
+  const editor = async (
+    options?: any,
+    editorProps?: any,
+    mentionProviderConfig?: MockMentionConfig,
+  ) => {
+    const mentionProvider = Promise.resolve(
+      new MockMentionResource(mentionProviderConfig || {}),
+    );
     const contextIdentifierProvider = Promise.resolve(contextIdentifiers);
     const { editorView, sel } = createEditor({
       doc: doc(p('{<>}')),
@@ -84,6 +145,7 @@ describe('mentionTypeahead', () => {
         mentionProvider,
         contextIdentifierProvider,
         allowAnalyticsGASV3: true,
+        ...editorProps,
       },
       providerFactory: ProviderFactory.create({
         mentionProvider,
@@ -128,14 +190,18 @@ describe('mentionTypeahead', () => {
    * @return Object containing the mocks `event` and `createAnalyticsEvent`.
    */
   const analyticsMocks = () => {
-    const event = { fire: jest.fn().mockName('event.fire') };
+    const event = {
+      fire: jest.fn().mockName('event.fire') as any,
+    } as UIAnalyticsEvent;
     const createAnalyticsEvent = jest
       .fn(payload =>
         // We're only interested in recording events for 'mentionTypeahead'
         // ignoring all others
         payload.actionSubject === expectedActionSubject
           ? event
-          : { fire: jest.fn() },
+          : ({
+              fire: jest.fn() as any,
+            } as UIAnalyticsEvent),
       )
       .mockName('createAnalyticsEvent');
 
@@ -204,6 +270,51 @@ describe('mentionTypeahead', () => {
                 accessLevel: 'CONTAINER',
                 userType: 'SPECIAL',
                 userId: 'here',
+                memberCount: null,
+                includesYou: null,
+              }),
+            }),
+          );
+          expect(event.fire).toHaveBeenCalledTimes(1);
+          expect(event.fire).toHaveBeenCalledWith('fabric-elements');
+        },
+      ),
+    );
+
+    it.each([
+      ['pressed', () => selectCurrentItem('enter'), 'enter'],
+      ['clicked', () => selectCurrentItem(), undefined],
+    ])(
+      'should fire typeahead %s event for teams',
+      withMentionQuery(
+        'Team Alpha',
+        (
+          { editorView, event, createAnalyticsEvent },
+          expectedActionName,
+          selectCurrentItem,
+          keyboardKey,
+        ) => {
+          jest.clearAllMocks();
+          selectCurrentItem()(editorView.state, editorView.dispatch);
+
+          expect(createAnalyticsEvent).toHaveBeenCalledWith(
+            expect.objectContaining({
+              action: expectedActionName,
+              actionSubject: expectedActionSubject,
+              eventType: 'ui',
+              attributes: expect.objectContaining({
+                packageName: '@atlaskit/editor-core',
+                packageVersion: expect.any(String),
+                duration: expect.any(Number),
+                position: 0,
+                keyboardKey: keyboardKey,
+                queryLength: 10,
+                spaceInQuery: true,
+                accessLevel: 'CONTAINER',
+                userType: 'TEAM',
+                userId: 'team-1',
+                memberCount: 5,
+                includesYou: true,
               }),
             }),
           );
@@ -234,6 +345,21 @@ describe('mentionTypeahead', () => {
         );
         expect(event.fire).toHaveBeenCalledTimes(1);
         expect(event.fire).toHaveBeenCalledWith('fabric-elements');
+
+        // check there is no team id in attributes.userIds
+        // note that `expect.not.arrayContaining` is not supported in current Jest version yet.
+        // @ts-ignore
+        const renderedCall = createAnalyticsEvent.mock.calls.find(
+          (
+            call: any, // tslint:disable-line no-any
+          ) =>
+            call[0] &&
+            call[0].action === 'rendered' &&
+            call[0].actionSubject === 'mentionTypeahead',
+        );
+        renderedCall[0].attributes.userIds.forEach((userId: string) => {
+          expect(allTeamIds.includes(userId)).toEqual(false);
+        });
       }),
     );
 
@@ -251,6 +377,7 @@ describe('mentionTypeahead', () => {
               duration: expect.any(Number),
               queryLength: 3,
               spaceInQuery: false,
+              // assert this attribute below
               userIds: expect.any(Array),
               sessionId: expect.stringMatching(sessionIdRegex),
             }),
@@ -258,6 +385,21 @@ describe('mentionTypeahead', () => {
         );
         expect(event.fire).toHaveBeenCalledTimes(4);
         expect(event.fire).toHaveBeenCalledWith('fabric-elements');
+
+        // check there is no team id in attributes.userIds
+        // note that `expect.not.arrayContaining` is not supported in current Jest version yet.
+        // @ts-ignore
+        const renderedCall = createAnalyticsEvent.mock.calls.find(
+          (
+            call: any, // tslint:disable-line no-any
+          ) =>
+            call[0] &&
+            call[0].action === 'rendered' &&
+            call[0].actionSubject === 'mentionTypeahead',
+        );
+        renderedCall[0].attributes.userIds.forEach((userId: string) => {
+          expect(allTeamIds.includes(userId)).toEqual(false);
+        });
       }),
     );
   });
@@ -299,6 +441,69 @@ describe('mentionTypeahead', () => {
         eventType: 'ui',
       });
     });
+
+    it(
+      'should trigger `mentionTypeahead` and `teamMentionTypeahead` analytics event',
+      withMentionQuery('team', ({ createAnalyticsEvent }) => {
+        const commonAttrsTypeAhead = {
+          componentName: 'mention',
+          packageName: '@atlaskit/editor-core',
+          packageVersion: expect.any(String),
+          queryLength: expect.any(Number),
+          spaceInQuery: false,
+          sessionId: expect.stringMatching(sessionIdRegex),
+        };
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith(
+          expect.objectContaining({
+            action: 'rendered',
+            actionSubject: 'teamMentionTypeahead',
+            eventType: 'operational',
+            attributes: expect.objectContaining({
+              ...commonAttrsTypeAhead,
+              duration: 200,
+              userIds: null,
+              teams: expect.arrayContaining(
+                allTeamIds.map(teamId => ({
+                  teamId,
+                  includesYou: expect.anything(),
+                  memberCount: expect.anything(),
+                })),
+              ),
+            }),
+          }),
+        );
+
+        expect(createAnalyticsEvent).toHaveBeenCalledWith(
+          expect.objectContaining({
+            action: 'rendered',
+            actionSubject: 'mentionTypeahead',
+            eventType: 'operational',
+            attributes: expect.objectContaining({
+              ...commonAttrsTypeAhead,
+              duration: 100,
+              userIds: expect.any(Array),
+              teams: null,
+            }),
+          }),
+        );
+
+        // check there is no team id in attributes.userIds
+        // note that `expect.not.arrayContaining` is not supported in current Jest version yet.
+        // @ts-ignore
+        const renderedCall = createAnalyticsEvent.mock.calls.find(
+          (
+            call: any, // tslint:disable-line no-any
+          ) =>
+            call[0] &&
+            call[0].action === 'rendered' &&
+            call[0].actionSubject === 'mentionTypeahead',
+        );
+        renderedCall[0].attributes.userIds.forEach((userId: string) => {
+          expect(allTeamIds.includes(userId)).toEqual(false);
+        });
+      }),
+    );
   });
 
   describe('mentionProvider', () => {
@@ -358,6 +563,226 @@ describe('mentionTypeahead', () => {
             }),
           );
         }),
+      );
+
+      it(
+        'should not register a team mention while selecting a user',
+        withMentionQuery('here', ({ editorView, mentionProvider }) => {
+          // select a user
+          selectCurrentItem()(editorView.state, editorView.dispatch);
+          expect(mockRegisterTeamMention).not.toHaveBeenCalled();
+        }),
+      );
+
+      it(
+        'should not insert mention name when collabEdit.sanitizePrivateContent is true and mentionInsertDisplayName is true',
+        withMentionQuery(
+          'april',
+          ({ editorView, mockMentionNameResolver }) => {
+            selectCurrentItem()(editorView.state, editorView.dispatch);
+
+            expect(mockMentionNameResolver!.lookupName).toHaveBeenCalledTimes(
+              0,
+            );
+            expect(mockMentionNameResolver!.cacheName).toHaveBeenCalledTimes(1);
+            expect(mockMentionNameResolver!.cacheName).toHaveBeenCalledWith(
+              '6',
+              'Dorene Rieger',
+            );
+
+            // expect text in mention to be empty due to sanitization
+            expect(editorView.state.doc).toEqualDocument(
+              doc(
+                p(
+                  mention({
+                    id: '6',
+                    text: '',
+                  })(),
+                  ' ',
+                ),
+              ),
+            );
+          },
+          { sanitizePrivateContent: true, mentionInsertDisplayName: true },
+        ),
+      );
+
+      it(
+        'should not insert mention name when collabEdit.sanitizePrivateContent is true and mentionInsertDisplayName is falsy',
+        withMentionQuery(
+          'april',
+          ({ editorView, mockMentionNameResolver }) => {
+            selectCurrentItem()(editorView.state, editorView.dispatch);
+
+            expect(mockMentionNameResolver!.lookupName).toHaveBeenCalledTimes(
+              0,
+            );
+            expect(mockMentionNameResolver!.cacheName).toHaveBeenCalledTimes(1);
+            expect(mockMentionNameResolver!.cacheName).toHaveBeenCalledWith(
+              '6',
+              'April',
+            );
+
+            // expect text in mention to be empty due to sanitization
+            expect(editorView.state.doc).toEqualDocument(
+              doc(
+                p(
+                  mention({
+                    id: '6',
+                    text: '',
+                  })(),
+                  ' ',
+                ),
+              ),
+            );
+          },
+          { sanitizePrivateContent: true },
+        ),
+      );
+
+      it(
+        'should insert mention name when collabEdit.sanitizePrivateContent is falsy and mentionInsertDisplayName true',
+        withMentionQuery(
+          'april',
+          ({ editorView }) => {
+            selectCurrentItem()(editorView.state, editorView.dispatch);
+
+            // expect text in mention to be empty due to sanitization
+            expect(editorView.state.doc).toEqualDocument(
+              doc(
+                p(
+                  mention({
+                    id: '6',
+                    text: '@Dorene Rieger',
+                  })(),
+                  ' ',
+                ),
+              ),
+            );
+          },
+          { mentionInsertDisplayName: true },
+        ),
+      );
+
+      it(
+        'should insert nickname when collabEdit.sanitizePrivateContent is falsy and mentionInsertDisplayName falsy',
+        withMentionQuery(
+          'april',
+          ({ editorView }) => {
+            selectCurrentItem()(editorView.state, editorView.dispatch);
+
+            // expect text in mention to be empty due to sanitization
+            expect(editorView.state.doc).toEqualDocument(
+              doc(
+                p(
+                  mention({
+                    id: '6',
+                    text: '@April',
+                  })(),
+                  ' ',
+                ),
+              ),
+            );
+          },
+          {},
+        ),
+      );
+    });
+
+    describe('when selecting a team', () => {
+      it(
+        'should expand members when selecting a team mention ',
+        withMentionQuery('Team Beta', ({ editorView }) => {
+          // select Team Beta team
+          selectCurrentItem()(editorView.state, editorView.dispatch);
+          // should expand 2 members
+          expect(editorView.state.doc).toEqualDocument(
+            doc(
+              p(
+                '',
+                a({ href: 'http://localhost/people/team/team-2' })('Team Beta'),
+                ' (',
+                mention({
+                  id: 'member-1',
+                  text: '@Tung Dang',
+                  userType: 'DEFAULT',
+                  accessLevel: 'CONTAINER',
+                })(),
+                ' ',
+                mention({
+                  id: 'member-2',
+                  text: '@Ishan Somasiri',
+                  userType: 'DEFAULT',
+                  accessLevel: 'CONTAINER',
+                })(),
+                ')',
+              ),
+            ),
+          );
+        }),
+      );
+
+      it(
+        'should register a team mention ',
+        withMentionQuery('Team Beta', ({ editorView }) => {
+          // select Team Beta team
+          selectCurrentItem()(editorView.state, editorView.dispatch);
+          expect(mockRegisterTeamMention).toHaveBeenCalled();
+        }),
+      );
+
+      it(
+        'should not insert mention name when collabEdit.sanitizePrivateContent is true',
+        withMentionQuery(
+          'Team Beta',
+          ({ editorView, mockMentionNameResolver }) => {
+            // select Team Beta team
+            selectCurrentItem()(editorView.state, editorView.dispatch);
+
+            expect(mockMentionNameResolver!.lookupName).toHaveBeenCalledTimes(
+              0,
+            );
+            expect(mockMentionNameResolver!.cacheName).toHaveBeenCalledTimes(2);
+            expect(mockMentionNameResolver!.cacheName).toHaveBeenNthCalledWith(
+              1,
+              'member-1',
+              'Tung Dang',
+            );
+            expect(mockMentionNameResolver!.cacheName).toHaveBeenNthCalledWith(
+              2,
+              'member-2',
+              'Ishan Somasiri',
+            );
+
+            // should expand 2 members
+            expect(editorView.state.doc).toEqualDocument(
+              doc(
+                p(
+                  '',
+                  a({ href: 'http://localhost/people/team/team-2' })(
+                    'Team Beta',
+                  ),
+                  ' (',
+                  mention({
+                    id: 'member-1',
+                    text: '',
+                    userType: 'DEFAULT',
+                    accessLevel: 'CONTAINER',
+                  })(),
+                  ' ',
+                  mention({
+                    id: 'member-2',
+                    text: '',
+                    userType: 'DEFAULT',
+                    accessLevel: 'CONTAINER',
+                  })(),
+                  ')',
+                ),
+              ),
+            );
+          },
+          { sanitizePrivateContent: true },
+        ),
       );
     });
   });

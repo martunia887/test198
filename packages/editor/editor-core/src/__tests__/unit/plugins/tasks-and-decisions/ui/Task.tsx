@@ -6,7 +6,7 @@ import { mountWithIntl } from '@atlaskit/editor-test-helpers';
 import Task from '../../../../../plugins/tasks-and-decisions/ui/Task';
 // avoid polluting test logs with error message in console
 // please ensure you fix it if you expect console.error to be thrown
-// tslint:disable-next-line:no-console
+// eslint-disable-next-line no-console
 let consoleError = console.error;
 
 const taskDecisionProvider = Promise.resolve(
@@ -22,13 +22,13 @@ describe('@atlaskit/editor-core/ui/Task', () => {
 
   beforeEach(() => {
     providerFactory = new ProviderFactory();
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error = jest.fn();
   });
 
   afterEach(() => {
     providerFactory.destroy();
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error = consoleError;
   });
 
@@ -68,7 +68,6 @@ describe('@atlaskit/editor-core/ui/Task', () => {
     task.update();
     const resourcedTaskItem = task.find(ResourcedTaskItem);
     expect(resourcedTaskItem.prop('objectAri')).toEqual('abc');
-    expect(resourcedTaskItem.prop('containerAri')).toEqual('def');
     task.unmount();
   });
 

@@ -1,12 +1,13 @@
 import { OptionData } from '@atlaskit/user-picker';
 import {
   isValidEmailUsingConfig,
-  showInviteWarning,
+  getInviteWarningType,
+  showAdminNotifiedFlag,
 } from '../../../components/utils';
 import { ConfigResponse, ConfigResponseMode } from '../../../types';
 
 describe('utils functions', () => {
-  describe('showInviteWarning', () => {
+  describe('showAdminNotifiedFlag', () => {
     const noUsersSelected: OptionData[] = [];
     const emailUsersSelected: OptionData[] = [
       {
@@ -31,13 +32,6 @@ describe('utils functions', () => {
       allowComment: true,
     });
 
-    /**
-     * `EXISTING_USERS_ONLY` - Emails not allowed.
-     * `INVITE_NEEDS_APPROVAL` - Always show warning message if email options.
-     * `ONLY_DOMAIN_BASED_INVITE` - Only allow emails within the allowed domains. Check allowedDomains property.
-     * `DOMAIN_BASED_INVITE` - Show warning message when it doesn't match allowed domains. Check allowedDomains property.
-     * `ANYONE` - Never show warning message.
-     */
     describe.each`
       mode                          | no Users | no Emails | match Domain | do Not Match Domain
       ${undefined}                  | ${false} | ${false}  | ${false}     | ${false}
@@ -57,7 +51,58 @@ describe('utils functions', () => {
         `should return $expected for ${mode}, $domains and $options`,
         ({ options, domains, expected }) => {
           expect(
-            showInviteWarning(createConfig(mode, domains), options),
+            showAdminNotifiedFlag(createConfig(mode, domains), options),
+          ).toEqual(expected);
+        },
+      );
+    });
+  });
+
+  describe('getInviteWarningType', () => {
+    const noUsersSelected: OptionData[] = [];
+    const emailUsersSelected: OptionData[] = [
+      {
+        type: 'email',
+        id: 'chandra@atlassian.com',
+        name: 'chandra@atlassian.com',
+      },
+    ];
+    const selectedUsersWithoutEmail: OptionData[] = [
+      {
+        type: 'user',
+        id: 'abc-123',
+        name: 'Nissa',
+      },
+    ];
+    const createConfig = (
+      mode: ConfigResponseMode,
+      domains?: string[],
+    ): ConfigResponse => ({
+      mode,
+      allowedDomains: domains,
+      allowComment: true,
+    });
+
+    describe.each`
+      mode                          | no Users | no Emails | match Domain | do Not Match Domain
+      ${undefined}                  | ${null}  | ${null}   | ${null}      | ${null}
+      ${'EXISTING_USERS_ONLY'}      | ${null}  | ${null}   | ${'ADMIN'}   | ${'ADMIN'}
+      ${'INVITE_NEEDS_APPROVAL'}    | ${null}  | ${null}   | ${'ADMIN'}   | ${'ADMIN'}
+      ${'ONLY_DOMAIN_BASED_INVITE'} | ${null}  | ${null}   | ${'DIRECT'}  | ${'ADMIN'}
+      ${'DOMAIN_BASED_INVITE'}      | ${null}  | ${null}   | ${'DIRECT'}  | ${'ADMIN'}
+      ${'ANYONE'}                   | ${null}  | ${null}   | ${'DIRECT'}  | ${'DIRECT'}
+    `('$mode', ({ mode, noUsers, noEmails, matchDomain, doNotMatchDomain }) => {
+      it.each`
+        options                      | domains              | expected
+        ${noUsersSelected}           | ${[]}                | ${noUsers}
+        ${selectedUsersWithoutEmail} | ${[]}                | ${noEmails}
+        ${emailUsersSelected}        | ${['atlassian.com']} | ${matchDomain}
+        ${emailUsersSelected}        | ${['trello.com']}    | ${doNotMatchDomain}
+      `(
+        `should return $expected for ${mode}, $domains and $options`,
+        ({ options, domains, expected }) => {
+          expect(
+            getInviteWarningType(createConfig(mode, domains), options),
           ).toEqual(expected);
         },
       );
@@ -82,7 +127,7 @@ describe('utils functions', () => {
       ['INVALID', '123'],
       ['POTENTIAL', 'someEmail@'],
       ['POTENTIAL', 'someEmail@atlassian'],
-      ['POTENTIAL', 'someEmail@trello.com'],
+      ['INVALID', 'someEmail@trello.com'],
       ['VALID', 'someEmail@atlassian.com'],
     ];
     describe.each`

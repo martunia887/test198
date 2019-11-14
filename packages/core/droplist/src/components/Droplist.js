@@ -10,7 +10,7 @@ import {
 import Layer from '@atlaskit/layer';
 import Spinner from '@atlaskit/spinner';
 import { ThemeProvider } from 'styled-components';
-import { gridSize } from '@atlaskit/theme';
+import { gridSize } from '@atlaskit/theme/constants';
 import {
   name as packageName,
   version as packageVersion,
@@ -23,7 +23,7 @@ import Wrapper, {
 import itemTheme from '../theme/item-theme';
 
 const halfFocusRing = 1;
-const dropOffset = `0 ${gridSize()}px`;
+const dropOffset = `0, ${gridSize()}px`;
 
 type Props = {
   /**
@@ -63,7 +63,21 @@ type Props = {
   trigger?: Node,
   /** Callback to know when the list is first correctly positioned within it's Layer */
   onPositioned?: Function,
+  /**
+   * A `testId` prop is provided for specified elements, which is a unique
+   * string that appears as a data attribute `data-testid` in the rendered code,
+   * serving as a hook for automated tests.
+   - testId--content to identify the droplist content.
+    */
+  testId?: string,
 };
+
+if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '@atlaskit/droplist has been deprecated. It is an internal component and should not be used directly.',
+  );
+}
 
 class Droplist extends Component<Props, void> {
   static defaultProps = {
@@ -125,6 +139,7 @@ class Droplist extends Component<Props, void> {
   };
 
   dropContentRef: HTMLElement;
+
   triggerRef: HTMLElement;
 
   handleEsc = (event: KeyboardEvent): void => {
@@ -189,11 +204,13 @@ class Droplist extends Component<Props, void> {
       shouldFlip,
       trigger,
       onPositioned,
+      testId,
     } = this.props;
 
     const layerContent = isOpen ? (
       <Content
         data-role="droplistContent"
+        data-testid={testId && `${testId}--content`}
         isTall={appearance === 'tall'}
         innerRef={this.handleContentRef}
         maxHeight={maxHeight}

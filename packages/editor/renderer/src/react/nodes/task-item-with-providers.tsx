@@ -10,7 +10,6 @@ import {
 export interface Props {
   taskId: string;
   objectAri: string;
-  containerAri: string;
   isDone: boolean;
   contentRef?: ContentRef;
   onChange?: (taskId: string, isChecked: boolean) => void;
@@ -27,11 +26,11 @@ export interface State {
 export default class TaskItemWithProviders extends Component<Props, State> {
   state: State = { resolvedContextProvider: undefined };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.updateContextIdentifierProvider(this.props);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (
       nextProps.contextIdentifierProvider !==
       this.props.contextIdentifierProvider
@@ -54,25 +53,12 @@ export default class TaskItemWithProviders extends Component<Props, State> {
   }
 
   render() {
-    const {
-      contextIdentifierProvider,
-      objectAri,
-      containerAri,
-      ...otherProps
-    } = this.props;
-    const { objectId, containerId } =
-      this.state.resolvedContextProvider ||
-      ({
-        objectId: objectAri,
-        containerId: containerAri,
-      } as ContextIdentifierProvider);
+    const { contextIdentifierProvider, objectAri, ...otherProps } = this.props;
+    const resolvedObjectId =
+      (this.state.resolvedContextProvider &&
+        this.state.resolvedContextProvider.objectId) ||
+      objectAri;
 
-    return (
-      <ResourcedTaskItem
-        {...otherProps}
-        objectAri={objectId}
-        containerAri={containerId}
-      />
-    );
+    return <ResourcedTaskItem {...otherProps} objectAri={resolvedObjectId} />;
   }
 }

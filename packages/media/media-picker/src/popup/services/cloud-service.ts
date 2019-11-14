@@ -1,11 +1,10 @@
 // We still need postis here to communicate with the "link-account-handler" iframe
-import * as postis from 'postis';
-import * as uuid from 'uuid';
+import postis from 'postis';
+import uuidV4 from 'uuid/v4';
 import { AuthProvider } from '@atlaskit/media-core';
-
+import { objectToQueryString } from '@atlaskit/media-client';
 import { ServiceName } from '../domain';
 import { mapAuthToQueryParameters } from '../domain/auth';
-import { objectToQueryString } from '../tools/objectToQueryString';
 import { pickerUrl } from '../tools/fetcher/fetcher';
 
 export class CloudService {
@@ -17,7 +16,7 @@ export class CloudService {
     return this.userAuthProvider()
       .then(auth => {
         return new Promise<void>(resolve => {
-          const channelId = uuid.v4();
+          const channelId = uuidV4();
 
           const authParams = mapAuthToQueryParameters(auth);
           const queryString = objectToQueryString({

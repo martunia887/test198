@@ -11,13 +11,20 @@ export default class SlowLoad extends Component<
     tableData: null,
   };
 
+  dataTimeoutId = undefined;
+
   componentDidMount() {
-    setTimeout(() => {
+    this.dataTimeoutId = setTimeout(() => {
       this.setState({
         tableData: staticData.children,
       });
     }, 3000);
   }
+
+  componentWillUnmount() {
+    clearTimeout(this.dataTimeoutId);
+  }
+
   render() {
     return (
       <TableTree>

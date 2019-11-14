@@ -1,5 +1,11 @@
-import * as uuid from 'uuid/v1';
+import uuid from 'uuid/v1';
 import { AbstractResource } from '@atlaskit/util-service-support';
+
+import {
+  EmojiProvider,
+  UploadingEmojiProvider,
+  EmojiRepository,
+} from '@atlaskit/emoji/resource';
 
 import {
   EmojiDescription,
@@ -11,11 +17,8 @@ import {
   ToneSelection,
   User,
   OptionalUser,
-  EmojiProvider,
-  UploadingEmojiProvider,
-  EmojiRepository,
   CategoryId,
-} from '@atlaskit/emoji';
+} from '@atlaskit/emoji/types';
 
 import {
   PromiseBuilder,
@@ -184,7 +187,7 @@ export class MockNonUploadingEmojiResource
           tone ? tone.toString() : '',
         );
       } catch (e) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error('failed to store selected emoji skin tone', e);
       }
     }

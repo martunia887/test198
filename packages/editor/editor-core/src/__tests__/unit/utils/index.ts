@@ -19,6 +19,7 @@ import {
   mediaGroup,
   mediaSingle,
 } from '@atlaskit/editor-test-helpers';
+import { MockMentionResource } from '@atlaskit/util-data-test';
 import { toggleMark } from 'prosemirror-commands';
 
 import {
@@ -27,14 +28,11 @@ import {
   isEmptyNode,
   dedupe,
   compose,
+  pipe,
   closestElement,
+  isSelectionInsideLastNodeInDocument,
+  shallowEqual,
 } from '../../../utils';
-import mediaPlugin from '../../../plugins/media';
-import codeBlockPlugin from '../../../plugins/code-block';
-import panelPlugin from '../../../plugins/panel';
-import listPlugin from '../../../plugins/lists';
-import mentionsPlugin from '../../../plugins/mentions';
-import tasksAndDecisionsPlugin from '../../../plugins/tasks-and-decisions';
 import { Node, Schema } from 'prosemirror-model';
 
 describe('@atlaskit/editore-core/utils', () => {
@@ -43,14 +41,16 @@ describe('@atlaskit/editore-core/utils', () => {
   const editor = (doc: any) =>
     createEditor({
       doc,
-      editorPlugins: [
-        mediaPlugin({ allowMediaSingle: true }),
-        codeBlockPlugin(),
-        panelPlugin,
-        listPlugin,
-        mentionsPlugin(),
-        tasksAndDecisionsPlugin,
-      ],
+      editorProps: {
+        media: {
+          allowMediaSingle: true,
+        },
+        allowCodeBlocks: true,
+        allowPanel: true,
+        allowLists: true,
+        allowTasksAndDecisions: true,
+        mentionProvider: Promise.resolve(new MockMentionResource({})),
+      },
     });
 
   describe('#closest', () => {
@@ -343,14 +343,16 @@ describe('@atlaskit/editore-core/utils', () => {
     });
 
     it('should throw for unknown nodes', () => {
-      expect(() =>
-        checkEmptyNode((() =>
-          ({
-            type: {
-              name: 'unknown',
-            },
-          } as any)) as any),
-      ).toThrow('unknown node is not implemented');
+      expect(
+        checkEmptyNode(
+          (() =>
+            ({
+              type: {
+                name: 'unknown',
+              },
+            } as any)) as any,
+        ),
+      ).toBeTruthy();
     });
   });
 
@@ -444,17 +446,94 @@ describe('@atlaskit/editore-core/utils', () => {
     });
   });
 
+  describe('#pipe', () => {
+    it('pipes functions', () => {
+      const fn1 = (val: string) => `fn1(${val})`;
+      const fn2 = (val: string) => `fn2(${val})`;
+      const fn3 = (val: string) => `fn3(${val})`;
+
+      const pipedFunction = pipe(fn1, fn2, fn3);
+
+      expect(pipedFunction('inner')).toBe('fn3(fn2(fn1(inner)))');
+    });
+
+    it('pipes functions with different initial type', () => {
+      const fn1 = (val: string, num: number) => `fn1(${val}-${num})`;
+      const fn2 = (val: string) => `fn2(${val})`;
+      const fn3 = (val: string) => `fn3(${val})`;
+      const pipedFunction = pipe(fn1, fn2, fn3);
+
+      expect(pipedFunction('inner', 2)).toBe('fn3(fn2(fn1(inner-2)))');
+    });
+
+    it('pipes functions with different return value', () => {
+      const fn1 = (val: string) => Number.parseInt(val, 10);
+      const fn2 = (val: number) => ({ number: val, string: val.toString() });
+      const fn3 = (val: object) => `fn3(${JSON.stringify(val)})`;
+
+      const pipedFunction = pipe(fn1, fn2, fn3);
+
+      expect(pipedFunction('2')).toBe('fn3({"number":2,"string":"2"})');
+    });
+  });
+
   describe('#compose', () => {
     it('should compose functions right to left', () => {
       const f1 = (a: string) => `#${a}`;
       const f2 = (b: string) => `!${b}`;
 
+      expect(compose(f1, f2)('test')).toEqual('#!test');
+    });
+  });
+
+  describe('#isSelectionInsideLastNodeInDocument', () => {
+    it('should detect selection is inside last node in document', () => {
+      const { editorView } = editor(
+        doc(p('First Element'), p('{<>}Last Element')),
+      );
+
       expect(
-        compose(
-          f1,
-          f2,
-        )('test'),
-      ).toEqual('#!test');
+        isSelectionInsideLastNodeInDocument(editorView.state.selection),
+      ).toBe(true);
+    });
+    it('should detect selection is not inside last element in the document', () => {
+      const { editorView } = editor(
+        doc(p('{<>}First Element'), p('Last Element')),
+      );
+
+      expect(
+        isSelectionInsideLastNodeInDocument(editorView.state.selection),
+      ).toBe(false);
+    });
+  });
+
+  describe('#shallowEqual', () => {
+    it('should return true if all props from obj1 equals obj2', () => {
+      const objA = { test: 'ok', num: 2, prop: 'xx' };
+      const objB = { test: 'ok', num: 2, prop: 'xx' };
+
+      expect(shallowEqual(objA, objB)).toBe(true);
+    });
+
+    it('should return false if one prop from obj2 differs from obj1', () => {
+      const objA = { test: 'ok', num: 2, prop: 'xx' };
+      const objB = { test: 'ok', num: 2, prop: 'xx2' };
+
+      expect(shallowEqual(objA, objB)).toBe(false);
+    });
+
+    it('should return false if obj2 has nested properties', () => {
+      const objA = { test: 'ok', num: 2, prop: { sub: 'ok' } };
+      const objB = { test: 'ok', num: 2, prop: { sub: 'ok' } };
+
+      expect(shallowEqual(objA, objB)).toBe(false);
+    });
+
+    it('should return false if obj2 has different number of keys', () => {
+      const objA = { test: 'ok' };
+      const objB = { test: 'ok', num: 2, prop: { sub: 'ok' } };
+
+      expect(shallowEqual(objA, objB)).toBe(false);
     });
   });
 });

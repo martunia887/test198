@@ -1,12 +1,9 @@
 import * as React from 'react';
-// @ts-ignore: unused variable
-// prettier-ignore
-import { ComponentType, Consumer, Provider } from 'react';
+import { ComponentType } from 'react';
 import { Fragment, Mark, MarkType, Node, Schema } from 'prosemirror-model';
-
 import { Serializer } from '../';
-import { getText } from '../utils';
-import { RendererAppearance } from '../ui/Renderer';
+import { RendererAppearance } from '../ui/Renderer/types';
+import { AnalyticsEventPayload } from '../analytics/events';
 
 import {
   Doc,
@@ -17,14 +14,15 @@ import {
 } from './nodes';
 
 import { toReact as markToReact } from './marks';
-import { calcTableColumnWidths } from '@atlaskit/adf-schema';
 import {
   ProviderFactory,
   getMarksByOrder,
   isSameMark,
   EventHandlers,
   ExtensionHandlers,
+  calcTableColumnWidths,
 } from '@atlaskit/editor-common';
+import { getText } from '../utils';
 
 export interface RendererContext {
   objectAri?: string;
@@ -42,6 +40,11 @@ export interface ConstructorParams {
   appearance?: RendererAppearance;
   disableHeadingIDs?: boolean;
   allowDynamicTextSizing?: boolean;
+  allowHeadingAnchorLinks?: boolean;
+  allowColumnSorting?: boolean;
+  fireAnalyticsEvent?: (event: AnalyticsEventPayload) => void;
+  shouldOpenMediaViewer?: boolean;
+  UNSAFE_allowAltTextOnImages?: boolean;
 }
 
 type MarkWithContent = Partial<Mark<any>> & {
@@ -49,28 +52,25 @@ type MarkWithContent = Partial<Mark<any>> & {
 };
 
 function mergeMarks(marksAndNodes: Array<MarkWithContent | Node>) {
-  return marksAndNodes.reduce(
-    (acc, markOrNode) => {
-      const prev = (acc.length && acc[acc.length - 1]) || null;
+  return marksAndNodes.reduce((acc, markOrNode) => {
+    const prev = (acc.length && acc[acc.length - 1]) || null;
 
-      if (
-        markOrNode.type instanceof MarkType &&
-        prev &&
-        prev.type instanceof MarkType &&
-        Array.isArray(prev.content) &&
-        isSameMark(prev as Mark, markOrNode as Mark)
-      ) {
-        prev.content = mergeMarks(
-          prev.content.concat((markOrNode as MarkWithContent).content),
-        );
-      } else {
-        acc.push(markOrNode);
-      }
+    if (
+      markOrNode.type instanceof MarkType &&
+      prev &&
+      prev.type instanceof MarkType &&
+      Array.isArray(prev.content) &&
+      isSameMark(prev as Mark, markOrNode as Mark)
+    ) {
+      prev.content = mergeMarks(
+        prev.content.concat((markOrNode as MarkWithContent).content),
+      );
+    } else {
+      acc.push(markOrNode);
+    }
 
-      return acc;
-    },
-    [] as Array<MarkWithContent | Node>,
-  );
+    return acc;
+  }, [] as Array<MarkWithContent | Node>);
 }
 
 export default class ReactSerializer implements Serializer<JSX.Element> {
@@ -83,6 +83,11 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
   private disableHeadingIDs?: boolean;
   private headingIds: string[] = [];
   private allowDynamicTextSizing?: boolean;
+  private allowHeadingAnchorLinks?: boolean;
+  private allowColumnSorting?: boolean;
+  private fireAnalyticsEvent?: (event: AnalyticsEventPayload) => void;
+  private shouldOpenMediaViewer?: boolean;
+  private UNSAFE_allowAltTextOnImages?: boolean;
 
   constructor({
     providers,
@@ -93,6 +98,11 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     appearance,
     disableHeadingIDs,
     allowDynamicTextSizing,
+    allowHeadingAnchorLinks,
+    allowColumnSorting,
+    fireAnalyticsEvent,
+    shouldOpenMediaViewer,
+    UNSAFE_allowAltTextOnImages,
   }: ConstructorParams) {
     this.providers = providers;
     this.eventHandlers = eventHandlers;
@@ -102,6 +112,11 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     this.appearance = appearance;
     this.disableHeadingIDs = disableHeadingIDs;
     this.allowDynamicTextSizing = allowDynamicTextSizing;
+    this.allowHeadingAnchorLinks = allowHeadingAnchorLinks;
+    this.allowColumnSorting = allowColumnSorting;
+    this.fireAnalyticsEvent = fireAnalyticsEvent;
+    this.shouldOpenMediaViewer = shouldOpenMediaViewer;
+    this.UNSAFE_allowAltTextOnImages = UNSAFE_allowAltTextOnImages;
   }
 
   private resetState() {
@@ -113,7 +128,7 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     props: any = {},
     target: any = Doc,
     key: string = 'root-0',
-    parentInfo?: { parentIsIncompleteTask: boolean },
+    parentInfo?: { parentIsIncompleteTask: boolean; path: Array<Node> },
   ): JSX.Element | null {
     // This makes sure that we reset internal state on re-render.
     if (key === 'root-0') {
@@ -133,15 +148,24 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
         } else if (node.type.name === 'date') {
           props = this.getDateProps(node, parentInfo);
         } else if (node.type.name === 'heading') {
-          props = this.getHeadingProps(node);
+          props = this.getHeadingProps(node, parentInfo && parentInfo.path);
+        } else if (['tableHeader', 'tableRow'].indexOf(node.type.name) > -1) {
+          props = this.getTableChildrenProps(node);
+        } else if (node.type.name === 'media') {
+          props = this.getMediaProps(node);
         } else {
           props = this.getProps(node);
         }
 
-        let pInfo = parentInfo;
-        if (node.type.name === 'taskItem' && node.attrs.state !== 'DONE') {
-          pInfo = { parentIsIncompleteTask: true };
-        }
+        let currentPath = (parentInfo && parentInfo.path) || [];
+
+        const parentIsIncompleteTask =
+          node.type.name === 'taskItem' && node.attrs.state !== 'DONE';
+
+        let pInfo = {
+          parentIsIncompleteTask,
+          path: [...currentPath, node],
+        };
 
         const serializedContent = this.serializeFragment(
           node.content,
@@ -183,9 +207,9 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       return (mark as any).text;
     }
 
-    const content = ((mark as any).content || []).map(
-      (child: Mark, index: number) => this.serializeMark(child, index),
-    );
+    const content = (
+      (mark as any).content || []
+    ).map((child: Mark, index: number) => this.serializeMark(child, index));
     return this.renderMark(
       markToReact(mark),
       this.getMarkProps(mark),
@@ -220,10 +244,19 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     );
   }
 
+  private getTableChildrenProps(node: Node) {
+    return {
+      ...this.getProps(node),
+      allowColumnSorting: this.allowColumnSorting,
+    };
+  }
+
   private getTableProps(node: Node) {
     return {
       ...this.getProps(node),
+      allowColumnSorting: this.allowColumnSorting,
       columnWidths: calcTableColumnWidths(node),
+      tableNode: node,
     };
   }
 
@@ -234,6 +267,13 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
     return {
       timestamp: node.attrs && node.attrs.timestamp,
       parentIsIncompleteTask: parentInfo && parentInfo.parentIsIncompleteTask,
+    };
+  }
+  private getMediaProps(node: Node) {
+    return {
+      ...this.getProps(node),
+      shouldOpenMediaViewer: this.shouldOpenMediaViewer,
+      UNSAFE_allowAltTextOnImages: this.UNSAFE_allowAltTextOnImages,
     };
   }
 
@@ -248,30 +288,54 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       serializer: this,
       content: node.content ? node.content.toJSON() : undefined,
       allowDynamicTextSizing: this.allowDynamicTextSizing,
+      allowHeadingAnchorLinks: this.allowHeadingAnchorLinks,
       rendererAppearance: this.appearance,
+      fireAnalyticsEvent: this.fireAnalyticsEvent,
+      nodeType: node.type.name,
       ...node.attrs,
     };
   }
 
-  private getHeadingProps(node: Node) {
+  private headingAnchorSupported(path: Array<Node> = []): boolean {
+    return (
+      path.length === 0 || path[path.length - 1].type.name === 'layoutColumn'
+    );
+  }
+
+  private getHeadingProps(node: Node, path: Array<Node> = []) {
     return {
       ...node.attrs,
       content: node.content ? node.content.toJSON() : undefined,
       headingId: this.getHeadingId(node),
+      showAnchorLink:
+        this.allowHeadingAnchorLinks &&
+        !this.disableHeadingIDs &&
+        this.headingAnchorSupported(path),
     };
   }
 
+  // The return value of this function is NOT url encoded,
+  // In HTML5 standard, id can contain any characters, encoding is no necessary.
+  // Plus we trying to avoid double encoding, therefore we leave the value as is.
+  // Remember to use encodeURIComponent when generating url from the id value.
   private getHeadingId(node: Node) {
     if (this.disableHeadingIDs || !node.content.size) {
       return;
     }
 
-    const headingId = (node as any).content
+    // We are not use node.textContent here, because we would like to handle cases where
+    // headings only contain inline blocks like emoji, status and date.
+    const nodeContent = (node as any).content
       .toJSON()
       .reduce((acc: string, node: any) => acc.concat(getText(node) || ''), '')
-      .replace(/ /g, '-');
+      .trim()
+      .replace(/\s/g, '-');
 
-    return this.getUniqueHeadingId(headingId);
+    if (!nodeContent) {
+      return;
+    }
+
+    return this.getUniqueHeadingId(nodeContent);
   }
 
   private getUniqueHeadingId(baseId: string, counter = 0): string {
@@ -322,24 +386,21 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
           return node;
         }
 
-        return nodeMarks.reverse().reduce(
-          (acc, mark) => {
-            const { eq } = mark;
+        return nodeMarks.reverse().reduce((acc, mark) => {
+          const { eq } = mark;
 
-            return {
-              ...mark,
-              eq,
-              content: [acc],
-            };
-          },
-          node as any,
-        );
+          return {
+            ...mark,
+            eq,
+            content: [acc],
+          };
+        }, node as any);
       }),
     ) as Mark[];
   }
 
   static fromSchema(
-    schema: Schema,
+    _schema: Schema,
     {
       providers,
       eventHandlers,
@@ -347,6 +408,8 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       appearance,
       disableHeadingIDs,
       allowDynamicTextSizing,
+      allowHeadingAnchorLinks,
+      allowColumnSorting,
     }: ConstructorParams,
   ): ReactSerializer {
     // TODO: Do we actually need the schema here?
@@ -357,6 +420,8 @@ export default class ReactSerializer implements Serializer<JSX.Element> {
       appearance,
       disableHeadingIDs,
       allowDynamicTextSizing,
+      allowHeadingAnchorLinks,
+      allowColumnSorting,
     });
   }
 }

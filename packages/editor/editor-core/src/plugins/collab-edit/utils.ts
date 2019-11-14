@@ -3,10 +3,11 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 import { Node as PMNode } from 'prosemirror-model';
 import { colors as themeColors } from '@atlaskit/theme';
 
-import { hexToRgba } from '@atlaskit/editor-common';
+import { hexToRgba } from '@atlaskit/adf-schema';
+import { ProviderFactory } from '@atlaskit/editor-common';
 
 import { CollabEditOptions } from './types';
-import { processRawValue } from '../../utils';
+import { processRawValue, ZeroWidthSpace } from '../../utils';
 
 export interface Color {
   solid: string;
@@ -40,20 +41,20 @@ export const colors: Color[] = [
   selection: hexToRgba(solid, 0.2)!,
 }));
 
-// tslint:disable:no-bitwise
 export const getAvatarColor = (str: string) => {
   let hash = 0;
 
   for (let i = 0; i < str.length; i++) {
+    /* eslint-disable no-bitwise */
     hash = (hash << 5) - hash + str.charCodeAt(i);
     hash = hash & hash;
+    /* eslint-enable no-bitwise */
   }
 
   const index = Math.abs(hash) % colors.length;
 
   return { index, color: colors[index] };
 };
-// tslint:enable:no-bitwise
 
 export const findPointers = (
   id: string,
@@ -95,12 +96,15 @@ export const createTelepointers = (
   }
 
   const cursor = document.createElement('span');
-  cursor.textContent = '\u200b';
+  cursor.textContent = ZeroWidthSpace;
   cursor.className = `telepointer color-${color} telepointer-selection-badge`;
   cursor.style.cssText = `${style({ color: avatarColor.color.solid })};`;
   cursor.setAttribute('data-initial', initial);
   return decorations.concat(
-    (Decoration as any).widget(to, cursor, { pointer: { sessionId } }),
+    (Decoration as any).widget(to, cursor, {
+      pointer: { sessionId },
+      key: `telepointer-${sessionId}`,
+    }),
   );
 };
 
@@ -109,6 +113,8 @@ export const replaceDocument = (
   state: EditorState,
   version?: number,
   options?: CollabEditOptions,
+  providerFactory?: ProviderFactory,
+  sanitizePrivateContent?: boolean,
 ) => {
   const { schema, tr } = state;
 
@@ -118,7 +124,13 @@ export const replaceDocument = (
   if (options && options.allowUnsupportedContent) {
     // Process the value coming in, this allows us to wrap blocks unknown to us.
     // Instead of throwing an error at this point.
-    content = processRawValue(state.schema, doc);
+    content = processRawValue(
+      state.schema,
+      doc,
+      providerFactory,
+      sanitizePrivateContent,
+    );
+
     hasContent = !!content;
   } else {
     content = (doc.content || []).map((child: any) =>
@@ -132,7 +144,7 @@ export const replaceDocument = (
     tr.replaceWith(0, state.doc.nodeSize - 2, content!);
     tr.setSelection(Selection.atStart(tr.doc));
 
-    if (typeof version !== undefined && (options && options.useNativePlugin)) {
+    if (typeof version !== undefined && options && options.useNativePlugin) {
       const collabState = { version, unconfirmed: [] };
       tr.setMeta('collab$', collabState);
     }

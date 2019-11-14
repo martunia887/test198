@@ -1,5 +1,8 @@
-import { Context } from '@atlaskit/media-core';
-import { MediaFile, UploadParams } from '@atlaskit/media-picker';
+import { FileIdentifier } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
+import { UploadParams, MediaFile } from '@atlaskit/media-picker/types';
+import { EditorView } from 'prosemirror-view';
+import { NodeType } from 'prosemirror-model';
 
 export type MediaStateStatus =
   | 'unknown'
@@ -27,30 +30,7 @@ export interface MediaState {
   };
   /** still require to support Mobile */
   publicId?: string;
-}
-
-export interface FeatureFlags {}
-
-export interface MediaProvider {
-  uploadParams?: UploadParams;
-
-  /**
-   * Used for displaying Media Cards and downloading files.
-   * This is context config is required.
-   */
-  viewContext: Promise<Context>;
-
-  /**
-   * (optional) Used for creating new uploads and finalizing files.
-   * NOTE: We currently don't accept Context instance, because we need config properties
-   *       to initialize
-   */
-  uploadContext?: Promise<Context>;
-
-  /**
-   * (optional) For any additional feature to be enabled
-   */
-  featureFlags?: FeatureFlags;
+  contextId?: string;
 }
 
 export type Listener = (data: any) => void;
@@ -68,4 +48,44 @@ export type MobileUploadEndEventPayload = {
     readonly collectionName?: string;
     readonly publicId?: string;
   };
+};
+
+export type MediaEditorState = {
+  mediaClientConfig?: MediaClientConfig;
+  editor?: {
+    pos: number;
+    identifier: FileIdentifier;
+  };
+};
+
+export type OpenMediaEditor = {
+  type: 'open';
+  pos: number;
+  identifier: FileIdentifier;
+};
+
+export type UploadAnnotation = {
+  type: 'upload';
+  newIdentifier: FileIdentifier;
+};
+
+export type CloseMediaEditor = {
+  type: 'close';
+};
+
+export type SetMediaMediaClientConfig = {
+  type: 'setMediaClientConfig';
+  mediaClientConfig?: MediaClientConfig;
+};
+
+export type MediaEditorAction =
+  | OpenMediaEditor
+  | CloseMediaEditor
+  | UploadAnnotation
+  | SetMediaMediaClientConfig;
+
+export type MediaToolbarBaseConfig = {
+  title: string;
+  getDomRef?: (view: EditorView) => HTMLElement | undefined;
+  nodeType: NodeType | NodeType[];
 };

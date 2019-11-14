@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import ArrowLeftCircleIcon from '@atlaskit/icon/glyph/arrow-left-circle';
-import { gridSize as gridSizeFn } from '@atlaskit/theme';
+import { gridSize as gridSizeFn } from '@atlaskit/theme/constants';
 
 import ConnectedItem from '../ConnectedItem';
 import type { BackItemProps } from './types';
@@ -17,6 +17,7 @@ export default class BackItem extends Component<BackItemProps> {
   static defaultProps = {
     text: 'Back',
   };
+
   render() {
     const { before: beforeProp, text, ...props } = this.props;
     let before = beforeProp;

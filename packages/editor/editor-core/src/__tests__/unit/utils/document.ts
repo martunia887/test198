@@ -16,7 +16,7 @@ import {
   media,
 } from '@atlaskit/editor-test-helpers';
 import {
-  isEmptyNode,
+  isNodeEmpty,
   isEmptyParagraph,
   isEmptyDocument,
   processRawValue,
@@ -35,25 +35,25 @@ describe(name, () => {
       });
     });
 
-    describe('isEmptyNode', () => {
+    describe('isNodeEmpty', () => {
       it('should return true if node is empty', () => {
-        expect(isEmptyNode(p('')(schema))).toBe(true);
+        expect(isNodeEmpty(p('')(schema))).toBe(true);
       });
 
       it('should return true if the only child of a node is an empty paragraph', () => {
-        expect(isEmptyNode(doc(p(''))(schema))).toBe(true);
+        expect(isNodeEmpty(doc(p(''))(schema))).toBe(true);
       });
 
       it('should return true if node only contains empty block nodes', () => {
-        expect(isEmptyNode(doc(p(''), p(''), p(''))(schema))).toBe(true);
+        expect(isNodeEmpty(doc(p(''), p(''), p(''))(schema))).toBe(true);
       });
 
       it('should return false if the only child of a node is not an empty paragraph', () => {
-        expect(isEmptyNode(doc(p('some text'))(schema))).toBe(false);
+        expect(isNodeEmpty(doc(p('some text'))(schema))).toBe(false);
       });
 
       it('should return false if node contains non-empty block nodes', () => {
-        expect(isEmptyNode(doc(p(''), p('some text'), p(''))(schema))).toBe(
+        expect(isNodeEmpty(doc(p(''), p('some text'), p(''))(schema))).toBe(
           false,
         );
       });
@@ -151,12 +151,12 @@ describe(name, () => {
 
     describe('failure cases', () => {
       // Silence console.error
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       const oldConsole = console.error;
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.error = jest.fn();
       afterAll(() => {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error = oldConsole;
       });
 

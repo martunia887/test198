@@ -1,10 +1,16 @@
 import * as React from 'react';
 import { Component } from 'react';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
+import {
+  WithAnalyticsEventsProps,
+  withAnalyticsEvents,
+} from '@atlaskit/analytics-next';
 import Button from '@atlaskit/button';
 import Tooltip from '@atlaskit/tooltip';
-import { Tool, Color } from '../../../common';
+import { messages } from '@atlaskit/media-ui';
 
+import { Tool } from '../../../common';
+import { fireAnalyticsEvent } from '../../../util';
 import LineWidthButton from './buttons/lineWidthButton';
 import ColorButton from './buttons/colorButton';
 import { ToolButton } from './buttons/toolButton';
@@ -14,7 +20,6 @@ import { ToolbarContainer, CenterButtons, VerticalLine } from './styles';
 import { ShapePopup, shapeTools } from './popups/shapePopup';
 import ShapeButton from './buttons/shapeButton';
 import { ButtonGroup } from './buttons/buttonGroup';
-import { messages } from '@atlaskit/media-ui';
 
 export type PopupState = 'none' | 'color' | 'lineWidth' | 'shape';
 
@@ -29,13 +34,13 @@ export const tools: Tool[] = [
 ];
 
 export interface ToolbarProps {
-  readonly color: Color;
+  readonly color: string;
   readonly tool: Tool;
   readonly lineWidth: number;
   readonly onSave: () => void;
   readonly onCancel: () => void;
   readonly onToolChanged: (tool: Tool) => void;
-  readonly onColorChanged: (color: Color) => void;
+  readonly onColorChanged: (color: string) => void;
   readonly onLineWidthChanged: (lineWidth: number) => void;
 }
 
@@ -44,7 +49,7 @@ export interface ToolbarState {
 }
 
 export class Toolbar extends Component<
-  ToolbarProps & InjectedIntlProps,
+  ToolbarProps & InjectedIntlProps & WithAnalyticsEventsProps,
   ToolbarState
 > {
   state: ToolbarState = { popup: 'none' };
@@ -63,6 +68,7 @@ export class Toolbar extends Component<
       onSave,
       onCancel,
       intl: { formatMessage },
+      createAnalyticsEvent,
     } = this.props;
     const { popup } = this.state;
 
@@ -70,13 +76,37 @@ export class Toolbar extends Component<
     const showLineWidthPopup = popup === 'lineWidth';
     const showShapePopup = popup === 'shape';
 
-    const onPickColor = (color: Color) => {
+    const onPickColor = (color: string) => {
       onColorChanged(color);
-      this.setState({ popup: 'none' });
+
+      fireAnalyticsEvent(
+        {
+          eventType: 'ui',
+          action: 'selected',
+          actionSubject: 'annotation',
+          actionSubjectId: 'colour',
+          attributes: { color },
+        },
+        createAnalyticsEvent,
+      );
     };
 
     const onLineWidthClick = (lineWidth: number) => {
       onLineWidthChanged(lineWidth);
+
+      fireAnalyticsEvent(
+        {
+          eventType: 'ui',
+          action: 'selected',
+          actionSubject: 'annotation',
+          actionSubjectId: 'size',
+          attributes: { lineWidth },
+        },
+        createAnalyticsEvent,
+      );
+    };
+
+    const onCloseInlinePopup = () => {
       this.setState({ popup: 'none' });
     };
 
@@ -116,6 +146,7 @@ export class Toolbar extends Component<
 
             <VerticalLine />
             <LineWidthPopup
+              onClose={onCloseInlinePopup}
               onLineWidthClick={onLineWidthClick}
               lineWidth={lineWidth}
               isOpen={showLineWidthPopup}
@@ -130,6 +161,7 @@ export class Toolbar extends Component<
             </LineWidthPopup>
 
             <ColorPopup
+              onClose={onCloseInlinePopup}
               onPickColor={onPickColor}
               color={color}
               isOpen={showColorPopup}
@@ -145,15 +177,10 @@ export class Toolbar extends Component<
 
             <VerticalLine />
 
-            <Button
-              appearance="primary"
-              theme="dark"
-              onClick={onSave}
-              autoFocus={true}
-            >
+            <Button appearance="primary" onClick={onSave} autoFocus={true}>
               {formatMessage(messages.save)}
             </Button>
-            <Button appearance="default" onClick={onCancel} theme="dark">
+            <Button appearance="default" onClick={onCancel}>
               {formatMessage(messages.cancel)}
             </Button>
           </ButtonGroup>
@@ -165,6 +192,16 @@ export class Toolbar extends Component<
   private onToolClick = (tool: Tool) => {
     this.setState({ popup: 'none' });
     this.props.onToolChanged(tool);
+
+    fireAnalyticsEvent(
+      {
+        eventType: 'ui',
+        action: 'selected',
+        actionSubject: 'annotation',
+        actionSubjectId: tool,
+      },
+      this.props.createAnalyticsEvent,
+    );
   };
 
   private renderSimpleTool(tool: Tool) {
@@ -189,4 +226,4 @@ export class Toolbar extends Component<
   }
 }
 
-export default injectIntl(Toolbar);
+export default withAnalyticsEvents()(injectIntl(Toolbar));

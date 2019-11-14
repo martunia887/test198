@@ -1,16 +1,18 @@
-import { Context, ContextFactory } from '@atlaskit/media-core';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import {
   defaultCollectionName,
   userAuthProvider,
   mediaPickerAuthProvider,
   defaultMediaPickerAuthProvider,
+  getAuthFromContextProvider,
+  fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
 import { MediaProvider } from '@atlaskit/editor-core';
 
 export interface MediaProviderFactoryConfig {
   collectionName?: string;
   dropzoneContainer?: HTMLElement;
-  includeUploadContext?: boolean;
+  includeUploadMediaClientConfig?: boolean;
   includeUserAuthProvider?: boolean;
   useMediaPickerAuthProvider?: boolean;
 }
@@ -24,29 +26,44 @@ export function storyMediaProviderFactory(
 ) {
   const {
     collectionName,
-    includeUploadContext,
+    includeUploadMediaClientConfig,
     includeUserAuthProvider,
     useMediaPickerAuthProvider = true,
   } = mediaProviderFactoryConfig;
   const collection = collectionName || defaultCollectionName;
-  const context = ContextFactory.create({
+  const mediaClientConfig: MediaClientConfig = {
     authProvider: useMediaPickerAuthProvider
       ? mediaPickerAuthProvider()
       : defaultMediaPickerAuthProvider,
     userAuthProvider:
       includeUserAuthProvider === false ? undefined : userAuthProvider,
-  });
+    getAuthFromContext: getAuthFromContextProvider,
+  };
 
   return Promise.resolve<MediaProvider>({
     featureFlags: {},
     uploadParams: { collection },
-    viewContext: Promise.resolve<Context>(context),
-    uploadContext:
-      includeUploadContext === false
-        ? undefined
-        : Promise.resolve<Context>(context),
+    viewMediaClientConfig: mediaClientConfig,
+    uploadMediaClientConfig:
+      includeUploadMediaClientConfig === false ? undefined : mediaClientConfig,
   });
 }
+
+// This method returns an instance of MediaProvider ready to use in tests and side effect free
+// We should migrate unit tests to this method and stop using storyMediaProviderFactory
+export const fakeMediaProvider = (
+  mediaProviderFactoryConfig: MediaProviderFactoryConfig = {},
+): Promise<MediaProvider> => {
+  const { collectionName } = mediaProviderFactoryConfig;
+  const collection = collectionName || defaultCollectionName;
+  const mediaClientConfig = fakeMediaClient().config;
+  return Promise.resolve<MediaProvider>({
+    featureFlags: {},
+    uploadParams: { collection },
+    viewMediaClientConfig: mediaClientConfig,
+    uploadMediaClientConfig: mediaClientConfig,
+  });
+};
 
 export type promisedString = Promise<string>;
 export type resolveFn = (...v: any) => any;

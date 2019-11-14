@@ -1,21 +1,21 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { ContextFactory } from '@atlaskit/media-core';
+import { MediaClientConfig } from '@atlaskit/media-core';
 import Button from '@atlaskit/button';
 import DropdownMenu, { DropdownItem } from '@atlaskit/dropdown-menu';
-import AKListeners from '@atlaskit/analytics-listeners';
 import {
   userAuthProvider,
   mediaPickerAuthProvider,
   defaultCollectionName,
   defaultMediaPickerCollectionName,
-  createStorybookContext,
+  createStorybookMediaClientConfig,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '@atlaskit/media-card';
 import Toggle from '@atlaskit/toggle';
-import { MediaPicker, Popup, MediaProgress } from '../src';
+import { MediaPicker } from '../src';
+import { MediaProgress } from '../src/types';
 import {
   PopupContainer,
   PopupHeader,
@@ -33,11 +33,12 @@ import {
   UploadProcessingEventPayload,
   UploadsStartEventPayload,
   UploadStatusUpdateEventPayload,
-} from '../src/domain/uploadEvent';
-import { PopupUploadEventPayloadMap } from '../src/components/types';
+  PopupUploadEventPayloadMap,
+  Popup,
+} from '../src/types';
 import { AuthEnvironment } from '../example-helpers/types';
 
-const context = createStorybookContext();
+const cardMediaClientConfig = createStorybookMediaClientConfig();
 
 export type PublicFile = {
   publicId: string;
@@ -74,6 +75,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
   };
 
   static contextTypes = {
+    // Required context in order to integrate analytics in media picker
     getAtlaskitAnalyticsEventHandlers: PropTypes.func,
   };
 
@@ -95,17 +97,19 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
       popup.teardown();
     }
 
-    const context = ContextFactory.create({
+    const mediaClientConfig: MediaClientConfig = {
       authProvider: mediaPickerAuthProvider(this.state.authEnvironment),
       userAuthProvider,
-    });
+    };
 
-    const newPopup = await MediaPicker('popup', context, {
+    const newPopup = await MediaPicker(mediaClientConfig, {
       container: document.body,
       uploadParams: {
         collection: defaultMediaPickerCollectionName,
       },
       singleSelect,
+      // Media picker requires `proxyReactContext` to enable analytics
+      // otherwise, analytics Gasv3 integrations won't work
       proxyReactContext: this.state.useProxyContext ? this.context : undefined,
     });
 
@@ -128,6 +132,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
       const authStg = confirm(
         'It looks like you are not authorized in Staging. Press OK to authorize',
       );
+      // eslint-disable-next-line no-unused-expressions
       authStg
         ? window.open('https://id.stg.internal.atlassian.com', '_blank')
         : this.state.popup!.hide();
@@ -354,7 +359,7 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
     const cards = publicIds.map((id, key) => (
       <CardItemWrapper key={key}>
         <Card
-          context={context}
+          mediaClientConfig={cardMediaClientConfig}
           isLazy={false}
           identifier={{
             mediaItemType: 'file',
@@ -458,15 +463,4 @@ class PopupWrapper extends Component<{}, PopupWrapperState> {
   }
 }
 
-export default () => (
-  <AKListeners
-    client={{
-      sendUIEvent: () => {},
-      sendOperationalEvent: () => {},
-      sendTrackEvent: () => {},
-      sendScreenEvent: () => {},
-    }}
-  >
-    <PopupWrapper />
-  </AKListeners>
-);
+export default () => <PopupWrapper />;

@@ -13,23 +13,6 @@ import {
 } from '../internal/analytics';
 import { SuccessHandler } from '../internal/actions';
 
-// See https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
-// https://developer.mozilla.org/en-US/docs/Web/API/Event/returnValue
-interface UnloadEvent extends Event {
-  returnValue: any;
-}
-
-// This is a stop-gap for preventing the user from losing their work. Eventually
-// this will be replaced with drafts/auto-save functionality
-function beforeUnloadHandler(e: UnloadEvent) {
-  // The beforeUnload dialog is implemented inconsistently.
-  // The following is the most cross-browser approach.
-  const confirmationMessage =
-    'You have an unsaved comment. Are you sure you want to leave without saving?';
-  e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-  return confirmationMessage; // Gecko, WebKit, Chrome <34
-}
-
 export interface Props extends SharedProps {
   id?: string;
   localId?: string;
@@ -55,6 +38,7 @@ export interface Props extends SharedProps {
   createAnalyticsEvent: createAnalyticsEvent;
 
   portal?: HTMLElement;
+  canModerateComments?: boolean;
 }
 
 export interface State {
@@ -72,6 +56,8 @@ export default class Conversation extends React.PureComponent<Props, State> {
 
   static defaultProps = {
     placeholder: 'What do you want to say?',
+    onEditorOpen: () => {},
+    onEditorClose: () => {},
   };
 
   /*
@@ -103,7 +89,6 @@ export default class Conversation extends React.PureComponent<Props, State> {
       onUpdateComment,
       onDeleteComment,
       onRevertComment,
-      onHighlightComment,
       onUserClick,
       onCancel,
       user,
@@ -115,6 +100,9 @@ export default class Conversation extends React.PureComponent<Props, State> {
       disableScrollTo,
       allowFeedbackAndHelpButtons,
       portal,
+      canModerateComments,
+      renderAdditionalCommentActions,
+      renderAfterComment,
     } = this.props;
 
     if (!conversation) {
@@ -136,12 +124,19 @@ export default class Conversation extends React.PureComponent<Props, State> {
         onEditorOpen={this.onEditorOpen}
         onEditorClose={this.onEditorClose}
         onEditorChange={this.handleEditorChange}
-        onHighlightComment={onHighlightComment}
+        onHighlightComment={this.onHighlightComment}
         onRetry={this.onRetry(comment.document)}
         onCancel={onCancel}
         onUserClick={onUserClick}
         dataProviders={dataProviders}
-        renderComment={props => <Comment {...props} />}
+        renderComment={props => (
+          <Comment
+            {...props}
+            canModerateComment={canModerateComments}
+            renderAdditionalCommentActions={renderAdditionalCommentActions}
+            renderAfterComment={renderAfterComment}
+          />
+        )}
         renderEditor={renderEditor}
         objectId={objectId}
         containerId={containerId}
@@ -164,13 +159,6 @@ export default class Conversation extends React.PureComponent<Props, State> {
     }
   };
 
-  private onOpen = () => {
-    this.sendEditorAnalyticsEvent({
-      actionSubjectId: actionSubjectIds.createCommentInput,
-    });
-    this.onEditorOpen();
-  };
-
   private renderConversationsEditor() {
     const {
       isExpanded,
@@ -182,6 +170,7 @@ export default class Conversation extends React.PureComponent<Props, State> {
       placeholder,
       disableScrollTo,
       allowFeedbackAndHelpButtons,
+      showBeforeUnloadWarning,
     } = this.props;
     const isInline = !!meta;
     const hasConversation = !!conversation;
@@ -193,7 +182,7 @@ export default class Conversation extends React.PureComponent<Props, State> {
           isExpanded={isExpanded}
           onSave={this.onSave}
           onCancel={this.onCancel}
-          onOpen={this.onOpen}
+          onOpen={this.onEditorOpen}
           onClose={this.onEditorClose}
           onChange={this.handleEditorChange}
           dataProviders={dataProviders}
@@ -202,9 +191,11 @@ export default class Conversation extends React.PureComponent<Props, State> {
           placeholder={placeholder}
           disableScrollTo={disableScrollTo}
           allowFeedbackAndHelpButtons={allowFeedbackAndHelpButtons}
+          showBeforeUnloadWarning={showBeforeUnloadWarning}
         />
       );
     }
+    return;
   }
 
   private onRetry = (document: any) => (commentLocalId?: string) => {
@@ -276,12 +267,36 @@ export default class Conversation extends React.PureComponent<Props, State> {
         openEditorCount: this.state.openEditorCount - 1,
       });
     }
+
+    if (typeof this.props.onEditorClose === 'function') {
+      this.props.onEditorClose();
+    }
   };
 
   private onEditorOpen = () => {
+    this.sendEditorAnalyticsEvent({
+      actionSubjectId: actionSubjectIds.createCommentInput,
+    });
+
     this.setState({
       openEditorCount: this.state.openEditorCount + 1,
     });
+
+    if (typeof this.props.onEditorOpen === 'function') {
+      this.props.onEditorOpen();
+    }
+  };
+
+  private onHighlightComment = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    commentId: string,
+  ) => {
+    if (typeof this.props.onHighlightComment === 'function') {
+      this.props.onHighlightComment(event, commentId);
+      if (typeof this.props.onCommentPermalinkClick === 'function') {
+        this.props.onCommentPermalinkClick(event, commentId);
+      }
+    }
   };
 
   private handleEditorChange = (value: any, commentId?: string) => {
@@ -307,24 +322,6 @@ export default class Conversation extends React.PureComponent<Props, State> {
       );
     }
   };
-
-  componentDidUpdate() {
-    if (!this.props.showBeforeUnloadWarning) {
-      return;
-    }
-
-    if (this.state.openEditorCount === 0) {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
-    } else if (this.state.openEditorCount === 1) {
-      window.addEventListener('beforeunload', beforeUnloadHandler);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.props.showBeforeUnloadWarning) {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
-    }
-  }
 
   render() {
     return (

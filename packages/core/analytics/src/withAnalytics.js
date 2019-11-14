@@ -18,6 +18,13 @@ type AnalyticsProps = {
   innerRef?: Function,
 };
 
+if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    'The @atlaskit/analytics package has been deprecated. Please use the @atlaskit/analytics-next package instead.',
+  );
+}
+
 /*
 The withAnalytics HOC wraps a component and provides the `fireAnalyticsEvent`
 and `firePrivateAnalyticsEvent` methods to it as props. It contains the logic
@@ -38,6 +45,7 @@ const withAnalytics = (
 ) =>
   class WithAnalytics extends Component<AnalyticsProps, {}> {
     props: AnalyticsProps;
+
     static displayName = `WithAnalytics(${WrappedComponent.displayName ||
       WrappedComponent.name})`;
 
@@ -53,7 +61,7 @@ const withAnalytics = (
 
     evaluatedMap = {};
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       this.evaluatedMap =
         typeof map === 'function' ? map(this.fireAnalyticsEvent) : map;
     }

@@ -1,35 +1,46 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { Filmstrip, FilmstripView, FilmstripProps, FilmstripItem } from '../..';
-import { fakeContext } from '@atlaskit/media-test-helpers';
-import { Card } from '@atlaskit/media-card';
-import { Identifier } from '@atlaskit/media-core';
+import { getDefaultMediaClientConfig } from '@atlaskit/media-test-helpers';
+import { Card, CardLoading } from '@atlaskit/media-card';
+import { Identifier } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
 
 describe('<Filmstrip />', () => {
   const firstIdenfier: Identifier = {
     id: 'id-1',
     mediaItemType: 'file',
   };
-  const setup = (props?: Partial<FilmstripProps>) => {
-    const context = fakeContext();
+  const secondIdentifier: Identifier = {
+    id: 'id-2',
+    mediaItemType: 'file',
+  };
+  type Arguments = {
+    items?: FilmstripProps['items'];
+    shouldOpenMediaViewer?: FilmstripProps['shouldOpenMediaViewer'];
+    mediaClientConfig?: FilmstripProps['mediaClientConfig'];
+  };
+  const setup = (props: Arguments = {}) => {
+    const mediaClientConfig: MediaClientConfig = getDefaultMediaClientConfig();
     const items: FilmstripItem[] = [
       {
         identifier: firstIdenfier,
       },
       {
-        identifier: {
-          id: 'id-2',
-          mediaItemType: 'file',
-        },
+        identifier: secondIdentifier,
       },
     ];
     const component = shallow(
-      <Filmstrip context={context} items={items} {...props} />,
+      <Filmstrip
+        mediaClientConfig={mediaClientConfig}
+        items={items}
+        {...props}
+      />,
     );
 
     return {
       component,
-      context,
+      mediaClientConfig,
     };
   };
 
@@ -60,14 +71,18 @@ describe('<Filmstrip />', () => {
   });
 
   it('should pass properties down to Cards', () => {
-    const { component, context } = setup({
+    const { component, mediaClientConfig } = setup({
       items: [
         {
           identifier: firstIdenfier,
           selectable: true,
           selected: true,
         },
+        {
+          identifier: secondIdentifier,
+        },
       ],
+      shouldOpenMediaViewer: true,
     });
 
     expect(
@@ -78,21 +93,62 @@ describe('<Filmstrip />', () => {
         .props(),
     ).toEqual(
       expect.objectContaining({
-        context,
+        mediaClientConfig,
         selectable: true,
         selected: true,
         identifier: {
           id: 'id-1',
           mediaItemType: 'file',
         },
+        shouldOpenMediaViewer: true,
+        mediaViewerDataSource: { list: [firstIdenfier, secondIdentifier] },
       }),
     );
   });
 
-  it('should render loading cards if context is missing', () => {
+  it('should not activate media-viewer by default', () => {
     const { component } = setup({
-      context: undefined,
+      items: [{ identifier: firstIdenfier }, { identifier: secondIdentifier }],
     });
-    expect(component.find('CardView[status="loading"]')).toHaveLength(2);
+
+    expect(
+      component
+        .find(FilmstripView)
+        .find(Card)
+        .first()
+        .props(),
+    ).toEqual(
+      expect.objectContaining({
+        shouldOpenMediaViewer: undefined,
+        mediaViewerDataSource: undefined,
+      }),
+    );
+  });
+
+  it('should not activate media-viewer if shouldOpenMediaViewer is false', () => {
+    const { component } = setup({
+      items: [{ identifier: firstIdenfier }, { identifier: secondIdentifier }],
+      shouldOpenMediaViewer: false,
+    });
+
+    expect(
+      component
+        .find(FilmstripView)
+        .find(Card)
+        .first()
+        .props(),
+    ).toEqual(
+      expect.objectContaining({
+        shouldOpenMediaViewer: false,
+        mediaViewerDataSource: undefined,
+      }),
+    );
+  });
+
+  it('should render loading cards if mediaClientConfig is missing', () => {
+    const { component } = setup({
+      mediaClientConfig: undefined,
+    });
+    expect(component.find(CardLoading)).toHaveLength(2);
   });
 });

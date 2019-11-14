@@ -2,7 +2,6 @@ import { InputRule, inputRules } from 'prosemirror-inputrules';
 import { Schema, MarkType } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 import { analyticsService } from '../../../analytics';
-import { transformToCodeAction } from '../commands/transform-to-code';
 import { InputRuleHandler, createInputRule } from '../../../utils/input-rules';
 import {
   ACTION,
@@ -12,6 +11,7 @@ import {
   INPUT_METHOD,
 } from '../../analytics';
 import { ruleWithAnalytics } from '../../analytics/utils';
+import { applyMarkOnRange } from '../../../utils/commands';
 
 const validCombos = {
   '**': ['_', '~~'],
@@ -114,13 +114,25 @@ function addMark(
 
 function addCodeMark(
   markType: MarkType,
-  schema: Schema,
   specialChar: string,
 ): InputRuleHandler {
   return (state, match, start, end) => {
     if (match[1] && match[1].length > 0) {
-      const nodeBefore = state.doc.resolve(start + match[1].length).nodeBefore;
-      if (!(nodeBefore && nodeBefore.type === state.schema.nodes.hardBreak)) {
+      const allowedPrefixConditions = [
+        (prefix: string): boolean => {
+          return prefix === '(';
+        },
+        (prefix: string): boolean => {
+          const nodeBefore = state.doc.resolve(start + prefix.length)
+            .nodeBefore;
+          return (
+            (nodeBefore && nodeBefore.type === state.schema.nodes.hardBreak) ||
+            false
+          );
+        },
+      ];
+
+      if (allowedPrefixConditions.every(condition => !condition(match[1]))) {
         return null;
       }
     }
@@ -131,12 +143,21 @@ function addCodeMark(
         return null;
       }
     }
+
+    let tr = state.tr;
+    // checks if a selection exists and needs to be removed
+    if (state.selection.from !== state.selection.to) {
+      tr.delete(state.selection.from, state.selection.to);
+      end -= state.selection.to - state.selection.from;
+    }
+
     analyticsService.trackEvent('atlassian.editor.format.code.autoformatting');
     const regexStart = end - match[2].length + 1;
-    const tr = transformToCodeAction(regexStart, end, state.tr)
+    const codeMark = state.schema.marks.code.create();
+    return applyMarkOnRange(regexStart, end, false, codeMark, tr)
+      .setStoredMarks([codeMark])
       .delete(regexStart, regexStart + specialChar.length)
       .removeStoredMark(markType);
-    return tr;
   };
 }
 
@@ -263,7 +284,7 @@ function getCodeInputRules(schema: Schema): InputRule[] {
 
   const backTickRule = createInputRule(
     codeRegex,
-    addCodeMark(schema.marks.code, schema, '`'),
+    addCodeMark(schema.marks.code, '`'),
   );
 
   return [ruleWithCodeAnalytics(backTickRule)];
@@ -291,6 +312,7 @@ export function inputRulePlugin(schema: Schema): Plugin | undefined {
   if (rules.length !== 0) {
     return inputRules({ rules });
   }
+  return;
 }
 
 export default inputRulePlugin;

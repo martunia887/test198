@@ -3,9 +3,10 @@ import { Component, ComponentType } from 'react';
 
 export interface ImageLoaderProps {
   url?: string;
-  onExternalImageLoaded?: (
-    dimensions: { width: number; height: number },
-  ) => void;
+  onExternalImageLoaded?: (dimensions: {
+    width: number;
+    height: number;
+  }) => void;
   imageStatus?: ImageStatus;
 }
 
@@ -26,13 +27,13 @@ export const withImageLoader = <P extends {}>(
       imageStatus: 'loading',
     };
 
-    img: HTMLImageElement | null;
+    img?: HTMLImageElement | null;
 
     componentDidMount() {
       this.fetchImage(this.props);
     }
 
-    componentWillReceiveProps(nextProps: ImageLoaderProps) {
+    UNSAFE_componentWillReceiveProps(nextProps: ImageLoaderProps) {
       if (nextProps.url !== this.props.url) {
         this.setState({
           imageStatus: 'loading',

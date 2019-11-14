@@ -15,8 +15,8 @@ export const defaultConfig: AlignmentPluginState = {
   align: 'start',
 };
 
-const alignmentPlugin: EditorPlugin = {
-  name: 'alignmentPlugin',
+const alignmentPlugin = (): EditorPlugin => ({
+  name: 'alignment',
 
   marks() {
     return [{ name: 'alignment', mark: alignment }];
@@ -26,7 +26,7 @@ const alignmentPlugin: EditorPlugin = {
     return [
       {
         name: 'alignmentPlugin',
-        plugin: ({ props, dispatch }) => createPlugin(dispatch, defaultConfig),
+        plugin: ({ dispatch }) => createPlugin(dispatch, defaultConfig),
       },
     ];
   },
@@ -62,6 +62,6 @@ const alignmentPlugin: EditorPlugin = {
       />
     );
   },
-};
+});
 
 export default alignmentPlugin;

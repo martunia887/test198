@@ -1,4 +1,5 @@
-import { EmojiProvider, EmojiDescription } from '@atlaskit/emoji';
+import { EmojiProvider } from '@atlaskit/emoji/resource';
+import { EmojiDescription } from '@atlaskit/emoji/types';
 import { inputRules } from 'prosemirror-inputrules';
 import { Schema, Node } from 'prosemirror-model';
 import { EditorState, Transaction, Plugin, PluginKey } from 'prosemirror-state';
@@ -79,12 +80,13 @@ function inputRuleHandler(
 }
 
 function isEnabled(state: EditorState) {
-  const emojiQuery = state.schema.marks.emojiQuery;
-  const isEmojiQueryActive = state.selection.$from
+  const typeAheadQuery = state.schema.marks.typeAheadQuery;
+  const isTypeAheadQueryActive = state.selection.$from
     .marks()
-    .some(mark => mark.type === emojiQuery);
+    .some(mark => mark.type === typeAheadQuery);
   return (
-    isEmojiQueryActive || isMarkTypeAllowedInCurrentSelection(emojiQuery, state)
+    isTypeAheadQueryActive ||
+    isMarkTypeAllowedInCurrentSelection(typeAheadQuery, state)
   );
 }
 
@@ -236,7 +238,7 @@ class AsciiEmojiTransactionCreator {
       this.to,
       this.createNodes(),
     );
-    return addAnalytics(tr, {
+    return addAnalytics(this.state, tr, {
       action: ACTION.INSERTED,
       actionSubject: ACTION_SUBJECT.DOCUMENT,
       actionSubjectId: ACTION_SUBJECT_ID.EMOJI,

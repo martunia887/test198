@@ -9,10 +9,12 @@ import {
   decisionList,
   decisionItem,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { uuid } from '@atlaskit/adf-schema';
-import tasksAndDecisionsPlugin from '../../../../plugins/tasks-and-decisions';
-import quickInsertPlugin from '../../../../plugins/quick-insert';
+import { EditorView } from 'prosemirror-view';
 
 describe('tasks and decisions', () => {
   const createEditor = createEditorFactory();
@@ -27,14 +29,13 @@ describe('tasks and decisions', () => {
     },
   ];
 
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
 
   const editor = (doc: any) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
     return createEditor({
       doc,
-      editorPlugins: [tasksAndDecisionsPlugin, quickInsertPlugin],
-      editorProps: { allowAnalyticsGASV3: true },
+      editorProps: { allowAnalyticsGASV3: true, allowTasksAndDecisions: true },
       createAnalyticsEvent,
     });
   };
@@ -49,8 +50,8 @@ describe('tasks and decisions', () => {
 
   scenarios.forEach(scenario => {
     describe('quick insert', () => {
-      let editorView;
-      let sel;
+      let editorView: EditorView;
+      let sel: number;
 
       beforeEach(() => {
         ({ editorView, sel } = editor(doc(p('{<>}'))));
@@ -68,9 +69,7 @@ describe('tasks and decisions', () => {
         );
       });
 
-      it(`should fire v3 analytics event when ${
-        scenario.name
-      } inserted`, () => {
+      it(`should fire v3 analytics event when ${scenario.name} inserted`, () => {
         expect(createAnalyticsEvent).toHaveBeenCalledWith({
           action: 'inserted',
           actionSubject: 'document',

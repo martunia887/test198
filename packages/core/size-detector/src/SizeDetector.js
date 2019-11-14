@@ -35,6 +35,13 @@ type SizeDetectorStateType = {
   sizeMetrics: SizeDetectorSizeMetricsType,
 };
 
+if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '@atlaskit/size-detector has been deprecated. Please use the @atlaskit/width-detector package instead.',
+  );
+}
+
 export default class SizeDetector extends Component<
   SizeDetectorPropType,
   SizeDetectorStateType,
@@ -42,6 +49,7 @@ export default class SizeDetector extends Component<
   resizeObjectDocument: ?window;
 
   containerRef = React.createRef();
+
   objectElementRef = React.createRef();
 
   static defaultProps = {
@@ -72,6 +80,7 @@ export default class SizeDetector extends Component<
       );
     }
   }
+
   // Attach the resize event to object when it loads
   handleObjectLoad = () => {
     if (!this.objectElementRef.current) {

@@ -1,11 +1,13 @@
 import * as React from 'react';
+
 import {
-  Context,
+  MediaClient,
   FileItem,
   FileState,
   isImageRepresentationReady,
-} from '@atlaskit/media-core';
+} from '@atlaskit/media-client';
 import { getOrientation } from '@atlaskit/media-ui';
+
 import { Outcome } from '../../domain';
 import { createError, MediaViewerError } from '../../error';
 import { InteractiveImg } from './interactive-img';
@@ -13,10 +15,9 @@ import { AnalyticViewerProps } from '../../analytics/item-viewer';
 import { BaseViewer } from '../base-viewer';
 
 export type ObjectUrl = string;
-export const REQUEST_CANCELLED = 'request_cancelled';
 
 export type ImageViewerProps = AnalyticViewerProps & {
-  context: Context;
+  mediaClient: MediaClient;
   item: FileState;
   collectionName?: string;
   onClose?: () => void;
@@ -46,15 +47,8 @@ export class ImageViewer extends BaseViewer<
 
   private cancelImageFetch?: () => void;
 
-  // This method is spied on by some test cases, so don't rename or remove it.
-  public preventRaceCondition() {
-    // Calling setState might introduce a race condition, because the app has
-    // already transitioned to a different state. To avoid this we're not doing
-    // anything.
-  }
-
   protected async init() {
-    const { item: file, context, collectionName } = this.props;
+    const { item: file, mediaClient, collectionName } = this.props;
     if (file.status === 'error') {
       return;
     }
@@ -63,54 +57,49 @@ export class ImageViewer extends BaseViewer<
       let orientation = 1;
       let objectUrl: string;
 
-      if (isImageRepresentationReady(file)) {
+      const { preview } = file;
+      if (preview) {
+        const { value } = await preview;
+        if (value instanceof Blob) {
+          orientation = await getOrientation(value as File);
+          objectUrl = URL.createObjectURL(value);
+        } else {
+          objectUrl = value;
+        }
+      } else if (isImageRepresentationReady(file)) {
         const item = processedFileStateToMediaItem(file);
         const controller =
           typeof AbortController !== 'undefined'
             ? new AbortController()
             : undefined;
-        const response = context.getImage(
+        const response = mediaClient.getImage(
           item.details.id,
           {
-            width: 1920,
-            height: 1080,
-            mode: 'fit',
-            allowAnimated: true,
             collection: collectionName,
+            mode: 'fit',
           },
           controller,
+          true,
         );
         this.cancelImageFetch = () => controller && controller.abort();
         objectUrl = URL.createObjectURL(await response);
       } else {
-        const { preview } = file;
-        if (preview) {
-          const { value } = await preview;
-          if (value instanceof Blob) {
-            orientation = await getOrientation(value as File);
-            objectUrl = URL.createObjectURL(value);
-          } else {
-            objectUrl = value;
-          }
-        } else {
-          this.setState({
-            content: Outcome.pending(),
-          });
-          return;
-        }
+        this.setState({
+          content: Outcome.pending(),
+        });
+        return;
       }
 
       this.setState({
         content: Outcome.successful({ objectUrl, orientation }),
       });
     } catch (err) {
-      if (err.message === REQUEST_CANCELLED) {
-        this.preventRaceCondition();
-      } else {
+      if (!isAbortedRequestError(err)) {
         this.setState({
           content: Outcome.failed(createError('previewFailed', err, file)),
         });
-        this.props.onLoad({ status: 'error', errorMessage: err.message });
+        const errorMessage = err.message || err.name;
+        this.props.onLoad({ status: 'error', errorMessage });
       }
     }
   }
@@ -145,6 +134,7 @@ export class ImageViewer extends BaseViewer<
 
   private onLoad = () => {
     this.props.onLoad({ status: 'success' });
+    this.onMediaDisplayed();
   };
 
   private onError = () => {
@@ -154,3 +144,7 @@ export class ImageViewer extends BaseViewer<
     });
   };
 }
+
+const isAbortedRequestError = (error: Error): boolean => {
+  return error.message === 'request_cancelled' || error.name === 'AbortError';
+};

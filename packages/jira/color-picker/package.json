@@ -1,12 +1,15 @@
 {
   "name": "@atlaskit/color-picker",
-  "version": "0.4.1",
+  "version": "0.5.16",
   "description": "Jira Color Picker Component",
-  "modules": "index.js",
-  "types": "dist/es5/types.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/types.d.ts",
   "atlaskit:src": "src/index.ts",
   "atlaskit": {
-    "internal": true
+    "internal": true,
+    "name": "Color Picker",
+    "team": "jira"
   },
   "repository": {
     "type": "git",
@@ -21,21 +24,20 @@
     "palette"
   ],
   "dependencies": {
-    "@atlaskit/analytics-next": "^4.0.1",
-    "@atlaskit/icon": "^16.0.5",
-    "@atlaskit/select": "^8.0.3",
-    "@atlaskit/theme": "^8.0.1",
-    "memoize-one": "^3.0.1",
+    "@atlaskit/analytics-next": "^6.3.1",
+    "@atlaskit/icon": "^19.0.6",
+    "@atlaskit/select": "^11.0.0",
+    "@atlaskit/theme": "^9.2.4",
+    "memoize-one": "^5.1.0",
     "styled-components": "^3.2.6"
   },
   "peerDependencies": {
-    "react": "^16.4.0"
+    "react": "^16.8.0"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^7.0.1",
-    "@atlaskit/section-message": "^2.0.1",
+    "@atlaskit/docs": "^8.1.8",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
-    "react": "^16.4.0"
+    "react": "^16.8.0"
   }
 }

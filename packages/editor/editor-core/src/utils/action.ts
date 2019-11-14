@@ -1,11 +1,13 @@
 import { Node } from 'prosemirror-model';
+import { EditorState, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { EditorState } from 'prosemirror-state';
 
 import {
   stateKey as mediaStateKey,
   MediaPluginState,
 } from '../plugins/media/pm-plugins/main';
+
+import { Command, CommandDispatch } from '../types';
 
 export async function getEditorValueWithMedia(
   editorView?: EditorView,
@@ -26,17 +28,30 @@ export async function getEditorValueWithMedia(
   return editorView.state.doc;
 }
 
-export function insertFileFromDataUrl(
-  editorState: EditorState | undefined,
-  url: string,
-  fileName: string,
-): void {
-  if (!editorState) {
-    return;
-  }
+/**
+ * Iterates over the commands one after the other,
+ * passes the tr through and dispatches the cumulated transaction
+ */
+export function cascadeCommands(cmds: Command[]): Command {
+  return (state: EditorState, dispatch?: CommandDispatch) => {
+    let { tr: baseTr } = state;
+    let shouldDispatch = false;
 
-  const mediaPluginState = mediaStateKey.getState(
-    editorState,
-  ) as MediaPluginState;
-  mediaPluginState.insertFileFromDataUrl(url, fileName);
+    const onDispatchAction = (tr: Transaction) => {
+      baseTr.setSelection(tr.selection);
+      tr.steps.forEach(st => {
+        baseTr.step(st);
+      });
+      shouldDispatch = true;
+    };
+
+    cmds.forEach(cmd => cmd(state, onDispatchAction));
+
+    if (dispatch && shouldDispatch) {
+      dispatch(baseTr);
+      return true;
+    }
+
+    return false;
+  };
 }

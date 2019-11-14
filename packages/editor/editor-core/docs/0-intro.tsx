@@ -1,7 +1,15 @@
 import * as React from 'react';
-import { md, code, Example, Props } from '@atlaskit/docs';
+import {
+  md,
+  code,
+  Example,
+  Props,
+  AtlassianInternalWarning,
+} from '@atlaskit/docs';
 
 export default md`
+${(<AtlassianInternalWarning />)}
+
   ### Note:
 
   Don't forget to add these polyfills to your product build if you're using emoji or mentions in the editor and you want to target older browsers:
@@ -204,7 +212,7 @@ ${code`
 
 ${code`
   <WithEditorActions
-    // tslint:disable-next-line:jsx-no-lambda
+     
     render={actions => (
       <TitleInput
         placeholder="Give this page a title..."

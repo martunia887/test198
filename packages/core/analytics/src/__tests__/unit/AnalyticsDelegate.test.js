@@ -18,6 +18,7 @@ const Button = withAnalytics(
         one: 1,
       });
     };
+
     render() {
       const props = cleanProps(this.props);
       return <button {...props} onClick={this.onClick} />;
@@ -26,6 +27,15 @@ const Button = withAnalytics(
 );
 
 describe('AnalyticsDelegate', () => {
+  beforeEach(() => {
+    jest.spyOn(global.console, 'warn');
+    jest.spyOn(global.console, 'error');
+  });
+  afterEach(() => {
+    global.console.warn.mockRestore();
+    global.console.error.mockRestore();
+  });
+
   it('should ignore events if no delegateAnalyticsEvent callback', () => {
     const component = mount(
       <AnalyticsDelegate>
@@ -33,6 +43,10 @@ describe('AnalyticsDelegate', () => {
       </AnalyticsDelegate>,
     );
     component.find(Button).simulate('click');
+    /* eslint-disable no-console */
+    expect(console.warn).not.toHaveBeenCalled();
+    expect(console.error).not.toHaveBeenCalled();
+    /* eslint-enable no-console */
   });
 
   it('should pass through public/private events', () => {

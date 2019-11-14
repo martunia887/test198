@@ -1,18 +1,15 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
-import { PureComponent, ReactInstance } from 'react';
+import { PureComponent, ReactInstance, SyntheticEvent } from 'react';
 import { MentionUserType as UserType } from '@atlaskit/adf-schema';
 import { MentionProvider, ResourcedMention } from '@atlaskit/mention';
 
 import { ProfilecardProvider } from './types';
-import ProfileCard, {
-  AkProfilecardTriggerActions,
-} from '@atlaskit/profilecard';
+import ProfileCard, { ProfileCardAction } from '@atlaskit/profilecard';
 import { MentionEventHandler } from '../EventHandlers';
 import Popup from '../Popup';
 import withOuterListeners from '../with-outer-listeners';
 
-// tslint:disable-next-line:variable-name
 const ProfilecardResourcedWithListeners = withOuterListeners(ProfileCard);
 
 interface Coords {
@@ -28,9 +25,9 @@ export interface Props {
   mentionProvider?: Promise<MentionProvider>;
   portal?: HTMLElement;
   profilecardProvider: ProfilecardProvider;
-  onClick: MentionEventHandler;
-  onMouseEnter: MentionEventHandler;
-  onMouseLeave: MentionEventHandler;
+  onClick?: MentionEventHandler;
+  onMouseEnter?: MentionEventHandler;
+  onMouseLeave?: MentionEventHandler;
 }
 
 export type PopupAlignX = 'left' | 'right';
@@ -47,7 +44,7 @@ export default class MentionWithProfileCard extends PureComponent<
   Props,
   State
 > {
-  private domNode: HTMLElement | null;
+  private domNode: HTMLElement | null | undefined;
   state: State = {
     target: null,
     visible: false,
@@ -99,7 +96,7 @@ export default class MentionWithProfileCard extends PureComponent<
     id: string,
     text: string,
     accessLevel?: string,
-  ): AkProfilecardTriggerActions[] {
+  ): ProfileCardAction[] {
     const { profilecardProvider } = this.props;
     const actions = profilecardProvider.getActions(id, text, accessLevel);
 
@@ -108,16 +105,20 @@ export default class MentionWithProfileCard extends PureComponent<
         ...action,
         callback: () => {
           this.setState({ visible: false });
-          action.callback();
+          if (action && action.callback) {
+            action.callback();
+          }
         },
       };
     });
   }
 
-  private showProfilecard = () => {
+  private showProfilecard = (event: SyntheticEvent<HTMLElement>) => {
     if (!this.domNode) {
       return;
     }
+
+    event.stopPropagation();
 
     const [popupAlignX, popupAlignY] = this.calculateLayerPosition();
 

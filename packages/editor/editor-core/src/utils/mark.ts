@@ -14,6 +14,7 @@ export const isMarkAllowedInRange = (
         return false;
       }
       can = node.inlineContent && node.type.allowsMarkType(type);
+      return;
     });
     if (can) {
       return can;
@@ -32,7 +33,7 @@ export const isMarkExcluded = (
   return false;
 };
 
-const not = <T>(fn: ((args: T) => boolean)) => (arg: T) => !fn(arg);
+const not = <T>(fn: (args: T) => boolean) => (arg: T) => !fn(arg);
 
 export const removeBlockMarks = (
   state: EditorState,

@@ -1,24 +1,63 @@
 import { EditorView } from 'prosemirror-view';
-import { findTable } from 'prosemirror-utils';
-import { TextSelection, Selection } from 'prosemirror-state';
-import { TableMap, cellAround } from 'prosemirror-tables';
+import {
+  EditorState,
+  Transaction,
+  TextSelection,
+  Selection,
+} from 'prosemirror-state';
 import { Node as PmNode } from 'prosemirror-model';
+import { TableMap, cellAround, CellSelection } from 'prosemirror-tables';
+import {
+  findTable,
+  getSelectionRect,
+  removeTable,
+  findCellRectClosestToPos,
+} from 'prosemirror-utils';
+import rafSchedule from 'raf-schd';
 import { browser } from '@atlaskit/editor-common';
 
+import { analyticsService } from '../../analytics';
+import {
+  addAnalytics,
+  TABLE_ACTION,
+  ACTION_SUBJECT,
+  EVENT_TYPE,
+} from '../analytics';
 import {
   isElementInTableCell,
   setNodeSelection,
   isLastItemMediaGroup,
   closestElement,
 } from '../../utils/';
-import { isInsertColumnButton, isInsertRowButton, getIndex } from './utils';
+import {
+  isCell,
+  isInsertRowButton,
+  isColumnControlsDecorations,
+  isTableControlsButton,
+  isRowControlsButton,
+  isCornerButton,
+  isResizeHandleDecoration,
+  getColumnOrRowIndex,
+  getMousePositionHorizontalRelativeByElement,
+  getMousePositionVerticalRelativeByElement,
+} from './utils';
 import {
   setEditorFocus,
   showInsertColumnButton,
   showInsertRowButton,
-  handleShiftSelection,
   hideInsertColumnOrRowButton,
-} from './actions';
+  addResizeHandleDecorations,
+  selectColumn,
+  hoverColumns,
+  clearHoverSelection,
+  showResizeHandleLine,
+  hideResizeHandleLine,
+} from './commands';
+import { getPluginState } from './pm-plugins/main';
+import { getPluginState as getResizePluginState } from './pm-plugins/table-resizing/plugin';
+import { getSelectedCellInfo } from './utils';
+import { deleteColumns, deleteRows } from './transforms';
+import { RESIZE_HANDLE_AREA_DECORATION_GAP } from './types';
 
 export const handleBlur = (view: EditorView, event: Event): boolean => {
   const { state, dispatch } = view;
@@ -41,6 +80,12 @@ export const handleClick = (view: EditorView, event: Event): boolean => {
   const element = event.target as HTMLElement;
   const table = findTable(view.state.selection)!;
 
+  if (event instanceof MouseEvent && isColumnControlsDecorations(element)) {
+    const [startIndex] = getColumnOrRowIndex(element);
+    const { state, dispatch } = view;
+
+    return selectColumn(startIndex, event.shiftKey)(state, dispatch);
+  }
   /**
    * Check if the table cell with an image is clicked
    * and its not the image itself
@@ -90,24 +135,169 @@ export const handleMouseOver = (
 ): boolean => {
   const { state, dispatch } = view;
   const target = mouseEvent.target as HTMLElement;
+  const { insertColumnButtonIndex, insertRowButtonIndex } = getPluginState(
+    state,
+  );
 
-  if (isInsertColumnButton(target)) {
-    return showInsertColumnButton(getIndex(target))(state, dispatch);
-  }
   if (isInsertRowButton(target)) {
-    return showInsertRowButton(getIndex(target))(state, dispatch);
+    const [startIndex, endIndex] = getColumnOrRowIndex(target);
+
+    const positionRow =
+      getMousePositionVerticalRelativeByElement(mouseEvent as MouseEvent) ===
+      'bottom'
+        ? endIndex
+        : startIndex;
+    return showInsertRowButton(positionRow)(state, dispatch);
   }
-  if (hideInsertColumnOrRowButton(state, dispatch)) {
-    return true;
+
+  if (isColumnControlsDecorations(target)) {
+    const [startIndex] = getColumnOrRowIndex(target);
+    const { state, dispatch } = view;
+
+    return hoverColumns([startIndex], false)(state, dispatch);
   }
+
+  if (
+    (isCell(target) || isCornerButton(target)) &&
+    (typeof insertColumnButtonIndex === 'number' ||
+      typeof insertRowButtonIndex === 'number')
+  ) {
+    return hideInsertColumnOrRowButton()(state, dispatch);
+  }
+
+  if (isResizeHandleDecoration(target)) {
+    const [startIndex, endIndex] = getColumnOrRowIndex(target);
+    return showResizeHandleLine({ left: startIndex, right: endIndex })(
+      state,
+      dispatch,
+    );
+  }
+
   return false;
 };
 
-export const handleMouseLeave = (view: EditorView): boolean => {
+// Ignore any `mousedown` `event` from control and numbered column buttons
+// PM end up changing selection during shift selection if not prevented
+export const handleMouseDown = (_: EditorView, event: Event) => {
+  const isControl = !!(
+    event.target &&
+    event.target instanceof HTMLElement &&
+    (isColumnControlsDecorations(event.target) ||
+      isRowControlsButton(event.target))
+  );
+
+  if (isControl) {
+    event.preventDefault();
+  }
+
+  return isControl;
+};
+
+export const handleMouseOut = (
+  view: EditorView,
+  mouseEvent: Event,
+): boolean => {
+  const target = mouseEvent.target as HTMLElement;
+
+  if (isColumnControlsDecorations(target)) {
+    const { state, dispatch } = view;
+    return clearHoverSelection()(state, dispatch);
+  }
+
+  if (isResizeHandleDecoration(target)) {
+    const { state, dispatch } = view;
+    return hideResizeHandleLine()(state, dispatch);
+  }
+
+  return false;
+};
+
+export const handleMouseLeave = (view: EditorView, event: Event): boolean => {
   const { state, dispatch } = view;
-  if (hideInsertColumnOrRowButton(state, dispatch)) {
+  const { insertColumnButtonIndex, insertRowButtonIndex } = getPluginState(
+    state,
+  );
+
+  const target = event.target as HTMLElement;
+  if (isTableControlsButton(target)) {
     return true;
   }
+
+  if (
+    (typeof insertColumnButtonIndex !== 'undefined' ||
+      typeof insertRowButtonIndex !== 'undefined') &&
+    hideInsertColumnOrRowButton()(state, dispatch)
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+export const handleMouseMove = (view: EditorView, event: Event) => {
+  const element = event.target as HTMLElement;
+
+  if (isColumnControlsDecorations(element)) {
+    const { state, dispatch } = view;
+    const { insertColumnButtonIndex } = getPluginState(state);
+    const [startIndex, endIndex] = getColumnOrRowIndex(element);
+
+    const positionColumn =
+      getMousePositionHorizontalRelativeByElement(event as MouseEvent) ===
+      'right'
+        ? endIndex
+        : startIndex;
+
+    if (positionColumn !== insertColumnButtonIndex) {
+      return showInsertColumnButton(positionColumn)(state, dispatch);
+    }
+  }
+
+  if (isRowControlsButton(element)) {
+    const { state, dispatch } = view;
+    const { insertRowButtonIndex } = getPluginState(state);
+    const [startIndex, endIndex] = getColumnOrRowIndex(element);
+
+    const positionRow =
+      getMousePositionVerticalRelativeByElement(event as MouseEvent) ===
+      'bottom'
+        ? endIndex
+        : startIndex;
+
+    if (positionRow !== insertRowButtonIndex) {
+      return showInsertRowButton(positionRow)(state, dispatch);
+    }
+  }
+
+  if (!isResizeHandleDecoration(element) && isCell(element)) {
+    const positionColumn = getMousePositionHorizontalRelativeByElement(
+      event as MouseEvent,
+      RESIZE_HANDLE_AREA_DECORATION_GAP,
+    );
+
+    if (positionColumn != null) {
+      const { state, dispatch } = view;
+      const tableCell = closestElement(
+        element,
+        'td, th',
+      ) as HTMLTableCellElement;
+      const cellStartPosition = view.posAtDOM(tableCell, 0);
+      const rect = findCellRectClosestToPos(
+        state.doc.resolve(cellStartPosition),
+      );
+
+      if (rect) {
+        const columnEndIndexTarget =
+          positionColumn === 'left' ? rect.left : rect.right;
+
+        return addResizeHandleDecorations(columnEndIndexTarget)(
+          state,
+          dispatch,
+        );
+      }
+    }
+  }
+
   return false;
 };
 
@@ -136,13 +326,92 @@ export function handleTripleClick(view: EditorView, pos: number) {
 
   return false;
 }
-export const handleMouseDown = (view: EditorView, event: Event): boolean => {
-  const { state, dispatch } = view;
+export const handleCut = (
+  oldTr: Transaction,
+  oldState: EditorState,
+  newState: EditorState,
+): Transaction => {
+  const oldSelection = oldState.tr.selection;
+  let { tr } = newState;
+  if (oldSelection instanceof CellSelection) {
+    const $anchorCell = oldTr.doc.resolve(
+      oldTr.mapping.map(oldSelection.$anchorCell.pos),
+    );
+    const $headCell = oldTr.doc.resolve(
+      oldTr.mapping.map(oldSelection.$headCell.pos),
+    );
 
-  // shift-selecting table rows/columns
-  if (handleShiftSelection(event as MouseEvent)(state, dispatch)) {
-    return true;
+    // We need to fix the type of CellSelection in `prosemirror-tables'
+    const cellSelection = new CellSelection($anchorCell, $headCell) as any;
+    tr.setSelection(cellSelection);
+
+    if (tr.selection instanceof CellSelection) {
+      const rect = getSelectionRect(cellSelection);
+      if (rect) {
+        const {
+          verticalCells,
+          horizontalCells,
+          totalCells,
+          totalRowCount,
+          totalColumnCount,
+        } = getSelectedCellInfo(tr.selection);
+
+        // Reassigning to make it more obvious and consistent
+        tr = addAnalytics(newState, tr, {
+          action: TABLE_ACTION.CUT,
+          actionSubject: ACTION_SUBJECT.TABLE,
+          actionSubjectId: null,
+          attributes: {
+            verticalCells,
+            horizontalCells,
+            totalCells,
+            totalRowCount,
+            totalColumnCount,
+          },
+          eventType: EVENT_TYPE.TRACK,
+        });
+
+        // Need this check again since we are overriding the tr in previous statement
+        if (tr.selection instanceof CellSelection) {
+          const isTableSelected =
+            tr.selection.isRowSelection() && tr.selection.isColSelection();
+          if (isTableSelected) {
+            tr = removeTable(tr);
+          } else if (tr.selection.isRowSelection()) {
+            const {
+              pluginConfig: { isHeaderRowRequired },
+            } = getPluginState(newState);
+            tr = deleteRows(rect, isHeaderRowRequired)(tr);
+            analyticsService.trackEvent(
+              'atlassian.editor.format.table.delete_row.button',
+            );
+          } else if (tr.selection.isColSelection()) {
+            analyticsService.trackEvent(
+              'atlassian.editor.format.table.delete_column.button',
+            );
+            tr = deleteColumns(rect)(tr);
+          }
+        }
+      }
+    }
   }
 
-  return false;
+  return tr;
+};
+
+export const whenTableInFocus = (
+  eventHandler: (view: EditorView, mouseEvent: Event) => boolean,
+) => (view: EditorView, mouseEvent: Event): boolean => {
+  const tableResizePluginState = getResizePluginState(view.state);
+  const tablePluginState = getPluginState(view.state);
+  const isDragging =
+    tableResizePluginState && !!tableResizePluginState.dragging;
+  const hasTableNode = tablePluginState && tablePluginState.tableNode;
+
+  if (!hasTableNode || isDragging) {
+    return false;
+  }
+
+  // debounce event handler
+  return rafSchedule(eventHandler(view, mouseEvent));
 };

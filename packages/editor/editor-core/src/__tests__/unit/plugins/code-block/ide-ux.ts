@@ -18,7 +18,7 @@ import {
   INDENT_DIR,
   INDENT_TYPE,
 } from '../../../../plugins/analytics';
-import { UIAnalyticsEventInterface } from '@atlaskit/analytics-next-types';
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
 
 const createIndentationAttributes = (
   previousIndentationLevel: number,
@@ -33,10 +33,10 @@ const createIndentationAttributes = (
 
 describe('IDE UX plugin', () => {
   const createEditor = createEditorFactory();
-  let createAnalyticsEvent: jest.MockInstance<UIAnalyticsEventInterface>;
+  let createAnalyticsEvent: jest.MockInstance<UIAnalyticsEvent, any>;
   let trackEvent = jest.fn();
 
-  const editor = doc => {
+  const editor = (doc: any) => {
     createAnalyticsEvent = createAnalyticsEventMock();
     return createEditor({
       doc,

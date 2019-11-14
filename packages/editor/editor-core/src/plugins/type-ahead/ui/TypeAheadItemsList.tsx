@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import Item, { ItemGroup, itemThemeNamespace } from '@atlaskit/item';
-import { colors, themed } from '@atlaskit/theme';
+import { colors, borderRadius, themed } from '@atlaskit/theme';
 import { TypeAheadItem } from '../types';
+import IconFallback from '../../quick-insert/assets/fallback';
+import { Shortcut } from '../../../ui/styles';
 
 const itemTheme = {
   [itemThemeNamespace]: {
@@ -19,7 +21,7 @@ const itemTheme = {
     },
     borderRadius: () => 0,
     hover: {
-      background: colors.transparent,
+      // background: colors.transparent, transparent is not a thing
       text: colors.text,
       secondaryText: colors.N200,
     },
@@ -29,6 +31,49 @@ const itemTheme = {
       secondaryText: themed({ light: colors.N200, dark: colors.DN300 }),
     },
   },
+};
+
+export const ItemIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border: 1px solid rgba(223, 225, 229, 0.5); /* N60 at 50% */
+  border-radius: ${borderRadius()}px;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    width: 40px;
+    height: 40px;
+  }
+`;
+
+const ItemBody = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  line-height: 1.4;
+`;
+
+const ItemText = styled.div`
+  white-space: initial;
+  .item-description {
+    font-size: 11.67px;
+    color: ${colors.N200};
+    margin-top: 4px;
+  }
+`;
+
+const ItemAfter = styled.div`
+  flex: 0 0 auto;
+`;
+
+const fallbackIcon = (label: string) => {
+  return <IconFallback label={label} />;
 };
 
 export type TypeAheadItemsListProps = {
@@ -74,42 +119,101 @@ export function TypeAheadItemsList({
   return (
     <ThemeProvider theme={itemTheme}>
       <ItemGroup>
-        {items.map((item, index) =>
-          item.render ? (
-            <div
-              key={item.title}
-              ref={
-                index === currentIndex
-                  ? ref => ref && scrollIntoViewIfNeeded(ref)
-                  : () => null
-              }
-            >
-              {item.render({
-                onClick: () => insertByIndex(index),
-                onMouseMove: () => setCurrentIndex(index),
-                isSelected: index === currentIndex,
-              })}
-            </div>
-          ) : (
-            <Item
-              key={item.title}
-              onClick={() => insertByIndex(index)}
-              onMouseMove={() => setCurrentIndex(index)}
-              elemBefore={item.icon ? item.icon() : null}
-              isSelected={index === currentIndex}
-              aria-describedby={item.title}
-              ref={
-                index === currentIndex
-                  ? (ref: { ref: HTMLDivElement } | null) =>
-                      ref && scrollIntoViewIfNeeded(ref.ref)
-                  : null
-              }
-            >
-              {item.title}
-            </Item>
-          ),
-        )}
+        {items.map((item, index) => (
+          <TypeAheadItemComponent
+            key={item.key || item.title}
+            item={item}
+            index={index}
+            currentIndex={currentIndex}
+            insertByIndex={insertByIndex}
+            setCurrentIndex={setCurrentIndex}
+          />
+        ))}
       </ItemGroup>
     </ThemeProvider>
   );
+}
+
+export type TypeAheadItemComponentProps = {
+  item: TypeAheadItem;
+  index: number;
+  currentIndex: number;
+  insertByIndex: (index: number) => void;
+  setCurrentIndex: (index: number) => void;
+};
+
+export class TypeAheadItemComponent extends React.Component<
+  TypeAheadItemComponentProps,
+  { ref: HTMLElement | null }
+> {
+  state = { ref: null };
+
+  shouldComponentUpdate(nextProps: TypeAheadItemComponentProps) {
+    return (
+      nextProps.item !== this.props.item ||
+      this.isSelected(this.props) !== this.isSelected(nextProps)
+    );
+  }
+
+  isSelected(props: TypeAheadItemComponentProps) {
+    return props.index === props.currentIndex;
+  }
+
+  insertByIndex = () => {
+    this.props.insertByIndex(this.props.index);
+  };
+
+  setCurrentIndex = () => {
+    this.props.setCurrentIndex(this.props.index);
+  };
+
+  handleRef = (ref: HTMLElement | null) => {
+    let hasRef = (ref: any): ref is { ref: HTMLElement } => ref && ref.ref;
+    this.setState({ ref: hasRef(ref) ? ref.ref : ref });
+  };
+
+  componentDidUpdate() {
+    const ref = this.state.ref;
+    if (this.props.index === this.props.currentIndex && ref) {
+      scrollIntoViewIfNeeded(ref);
+    }
+  }
+
+  render() {
+    const { item } = this.props;
+    return item.render ? (
+      <div ref={this.handleRef} style={{ overflow: 'hidden' }}>
+        <item.render
+          onClick={this.insertByIndex}
+          onHover={this.setCurrentIndex}
+          isSelected={this.isSelected(this.props)}
+        />
+      </div>
+    ) : (
+      <Item
+        onClick={this.insertByIndex}
+        onMouseEnter={this.setCurrentIndex}
+        elemBefore={
+          <ItemIcon>
+            {item.icon ? item.icon() : fallbackIcon(item.title)}
+          </ItemIcon>
+        }
+        isSelected={this.isSelected(this.props)}
+        aria-describedby={item.title}
+        ref={this.handleRef}
+      >
+        <ItemBody>
+          <ItemText>
+            <div className="item-title">{item.title}</div>
+            {item.description && (
+              <div className="item-description">{item.description}</div>
+            )}
+          </ItemText>
+          <ItemAfter>
+            {item.keyshortcut && <Shortcut>{item.keyshortcut}</Shortcut>}
+          </ItemAfter>
+        </ItemBody>
+      </Item>
+    );
+  }
 }

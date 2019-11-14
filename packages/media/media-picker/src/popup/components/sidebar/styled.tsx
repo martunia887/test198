@@ -1,11 +1,8 @@
-/* tslint:disable:variable-name */
-
 import styled from 'styled-components';
 
 import {
   HTMLAttributes,
   ComponentClass,
-  SVGAttributes,
   LiHTMLAttributes,
   SVGProps,
 } from 'react';
@@ -40,7 +37,7 @@ export const Separator: ComponentClass<LiHTMLAttributes<{}>> = styled.li`
 
 // TODO: rgba(9, 30, 66, 0.06) is not an atlaskit colour
 // https://product-fabric.atlassian.net/browse/MSW-156
-export const SeparatorLine: ComponentClass<HTMLAttributes<{}>> = styled.div`
+export const SeparatorLine = styled.div`
   width: 100%;
   border-top: 1px solid rgba(9, 30, 66, 0.06);
   height: 0;
@@ -50,13 +47,12 @@ export interface IconProps {
   active: boolean;
 }
 
-export const StyledIcon: ComponentClass<SVGAttributes<{}>> = styled.svg`
+export const StyledIcon = styled.svg`
   width: 22px;
   height: 22px;
 `;
 
-export const StyledSvgGroup: ComponentClass<
-  IconProps & SVGProps<SVGGElement>
-> = styled.g`
-  fill: ${({ active }: IconProps) => (active ? '#0061C5' : '#42526E')};
+export const StyledSvgGroup: ComponentClass<IconProps &
+  SVGProps<SVGGElement>> = styled.g<IconProps>`
+  fill: ${({ active }) => (active ? '#0061C5' : '#42526E')};
 `;

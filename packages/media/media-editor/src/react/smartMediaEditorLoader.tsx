@@ -1,21 +1,26 @@
 import * as React from 'react';
-
 import { ModalSpinner } from '@atlaskit/media-ui';
-import { colors } from '@atlaskit/theme';
-import SmartMediaEditorType, {
-  SmartMediaEditorProps,
-} from './smartMediaEditor';
+import { WithMediaClientConfigProps } from '@atlaskit/media-client';
+import { N700A } from '@atlaskit/theme/colors';
+import { SmartMediaEditorProps } from './smartMediaEditor';
+
+type SmartEditorWithMediaClientConfigProps = WithMediaClientConfigProps<
+  SmartMediaEditorProps
+>;
+type SmartEditorWithMediaClientConfigComponent = React.ComponentType<
+  SmartEditorWithMediaClientConfigProps
+>;
 
 interface AsyncSmartMediaEditorState {
-  SmartMediaEditor?: typeof SmartMediaEditorType;
+  SmartMediaEditor?: SmartEditorWithMediaClientConfigComponent;
 }
 
 export default class AsyncSmartMediaEditor extends React.PureComponent<
-  SmartMediaEditorProps & AsyncSmartMediaEditorState,
+  SmartEditorWithMediaClientConfigProps & AsyncSmartMediaEditorState,
   AsyncSmartMediaEditorState & { isErrored: boolean }
 > {
   static displayName = 'AsyncSmartMediaEditor';
-  static SmartMediaEditor?: typeof SmartMediaEditorType;
+  static SmartMediaEditor?: SmartEditorWithMediaClientConfigComponent;
 
   state = {
     // Set state value to equal to current static value of this class.
@@ -23,15 +28,25 @@ export default class AsyncSmartMediaEditor extends React.PureComponent<
     isErrored: false,
   };
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     if (!this.state.SmartMediaEditor) {
       try {
-        const module = await import(/* webpackChunkName:"@atlaskit-internal_smart-media-editor" */
-        './smartMediaEditor');
-        AsyncSmartMediaEditor.SmartMediaEditor = module.default;
-        this.setState({ SmartMediaEditor: module.default });
+        const [mediaClient, smartEditorModule] = await Promise.all([
+          import(
+            /* webpackChunkName:"@atlaskit-media-client" */ '@atlaskit/media-client'
+          ),
+          import(
+            /* webpackChunkName:"@atlaskit-internal_smart-media-editor" */ './smartMediaEditor'
+          ),
+        ]);
+        AsyncSmartMediaEditor.SmartMediaEditor = mediaClient.withMediaClient(
+          smartEditorModule.default,
+        );
+        this.setState({
+          SmartMediaEditor: AsyncSmartMediaEditor.SmartMediaEditor,
+        });
       } catch (e) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(e);
         this.setState({ isErrored: true });
       }
@@ -45,9 +60,7 @@ export default class AsyncSmartMediaEditor extends React.PureComponent<
       return null;
     }
     if (!this.state.SmartMediaEditor) {
-      return (
-        <ModalSpinner blankedColor={colors.N700A} invertSpinnerColor={true} />
-      );
+      return <ModalSpinner blankedColor={N700A} invertSpinnerColor={true} />;
     }
 
     return <this.state.SmartMediaEditor {...this.props} />;

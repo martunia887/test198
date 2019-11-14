@@ -3,6 +3,7 @@ import {
   layers,
   colors,
   fontSize as defaultFontSize,
+  gridSize,
 } from '@atlaskit/theme';
 
 const {
@@ -20,6 +21,7 @@ const {
   N700,
   N900,
   R300,
+  R400,
   R50,
   R75,
   DN50,
@@ -40,6 +42,14 @@ export const akEditorPrimaryButton = B400;
 export const akEditorCodeBackground = N20;
 export const akEditorCodeBlockPadding = '12px';
 export const akEditorCodeInlinePadding = '2px 4px';
+export const akEditorDeleteBackground = R50;
+export const akEditorDeleteBackgroundShaded = R50;
+export const akEditorDeleteBorder = R300;
+export const akEditorDeleteIconColor = R400;
+export const akEditorSelectedBorder = B300;
+export const akEditorSelectedIconColor = B400;
+export const akEditorSelectedBorderSize = 1;
+export const akEditorSelectedBorderBoldSize = 2;
 export const akEditorUnitZIndex = 1;
 export const akEditorSmallZIndex = 2;
 export const akEditorGridLineZIndex = 9999;
@@ -74,11 +84,17 @@ export const akEditorWideLayoutWidth = 960;
 export const akEditorFullWidthLayoutWidth = 1800;
 export const akEditorTableNumberColumnWidth = 42;
 export const akEditorBreakoutPadding = 96;
+export const akEditorGutterPadding = 32;
 export const akEditorMobileBreakoutPoint = 720;
 export const akEditorTableCellMinWidth = 48;
 export const akEditorTableLegacyCellMinWidth = 128;
+export const akEditorMediaResizeHandlerPaddingWide = 12;
+export const akEditorMediaResizeHandlerPadding = 4;
+export const akEditorSwoopCubicBezier = `cubic-bezier(0.15, 1, 0.3, 1)`;
 export const gridMediumMaxWidth = 1024;
 export const breakoutWideScaleRatio = 1.33;
+export const akMediaSingleResizeZIndex = akEditorUnitZIndex * 99;
+export const akLayoutGutterOffset = gridSize() * 1.5;
 
 export type EditorTheme = {
   baseFontSize?: number;

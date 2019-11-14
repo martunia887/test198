@@ -1,6 +1,6 @@
 import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
-import { DecorationSet, Decoration } from 'prosemirror-view';
+import { DecorationSet, Decoration, EditorView } from 'prosemirror-view';
 import { EditorPlugin } from '../../types';
 import { isEmptyDocument } from '../../utils';
 
@@ -16,8 +16,45 @@ export function createPlaceholderDecoration(
   placeholderNode.textContent = placeholderText;
   placeholderDecoration.appendChild(placeholderNode);
   return DecorationSet.create(doc, [
-    Decoration.widget(1, placeholderDecoration, { side: -1 }),
+    Decoration.widget(1, placeholderDecoration, {
+      side: -1,
+      key: 'placeholder',
+    }),
   ]);
+}
+
+function removePlaceholderIfData(view: EditorView, event: Event) {
+  const havePlaceholder = pluginKey.getState(view.state);
+  const compositionEvent = event as CompositionEvent;
+
+  const hasData =
+    compositionEvent.type === 'compositionstart' ||
+    (compositionEvent.type === 'compositionupdate' && !!compositionEvent.data);
+
+  if (havePlaceholder && hasData) {
+    view.dispatch(
+      view.state.tr.setMeta(pluginKey, { removePlaceholder: true }),
+    );
+  }
+
+  return false;
+}
+
+function applyPlaceholderIfEmpty(view: EditorView, event: Event) {
+  const havePlaceholder = pluginKey.getState(view.state);
+  const compositionEvent = event as CompositionEvent;
+
+  const emptyData = compositionEvent.data === '';
+
+  if (!havePlaceholder && emptyData) {
+    view.dispatch(
+      view.state.tr.setMeta(pluginKey, {
+        applyPlaceholderIfEmpty: true,
+      }),
+    );
+  }
+
+  return false;
 }
 
 export function createPlugin(placeholderText?: string): Plugin | undefined {
@@ -29,7 +66,7 @@ export function createPlugin(placeholderText?: string): Plugin | undefined {
     key: pluginKey,
     state: {
       init: (_, state) => isEmptyDocument(state.doc),
-      apply: (tr, _oldPluginState, oldEditorState, newEditorState) => {
+      apply: (tr, _oldPluginState, _oldEditorState, newEditorState) => {
         const meta = tr.getMeta(pluginKey);
 
         if (meta) {
@@ -58,50 +95,39 @@ export function createPlugin(placeholderText?: string): Plugin | undefined {
         if (havePlaceholder) {
           return createPlaceholderDecoration(editorState.doc, placeholderText);
         }
+        return;
       },
       // Workaround for ED-4063: On Mobile / Android, a user can start typing but it won't trigger
       // an Editor state update so the placeholder will still be shown. We hook into the compositionstart
       // and compositionend events instead, to make sure we show/hide the placeholder for these devices.
       handleDOMEvents: {
-        compositionstart(view) {
-          const havePlaceholder = pluginKey.getState(view.state);
-
-          if (havePlaceholder) {
-            // remove placeholder, since document definitely contains text
-            view.dispatch(
-              view.state.tr.setMeta(pluginKey, { removePlaceholder: true }),
-            );
-          }
-
-          return false;
-        },
-        compositionend(view) {
-          const havePlaceholder = pluginKey.getState(view.state);
-
-          if (!havePlaceholder) {
-            view.dispatch(
-              view.state.tr.setMeta(pluginKey, {
-                applyPlaceholderIfEmpty: true,
-              }),
-            );
-          }
-
-          return false;
-        },
+        compositionstart: removePlaceholderIfData,
+        compositionupdate: (view: EditorView, event: Event) =>
+          applyPlaceholderIfEmpty(view, event) ||
+          removePlaceholderIfData(view, event),
+        compositionend: applyPlaceholderIfEmpty,
       },
     },
   });
 }
 
-const placeholderPlugin: EditorPlugin = {
+interface PlaceholderPluginOptions {
+  placeholder?: string;
+}
+
+const placeholderPlugin = (
+  options?: PlaceholderPluginOptions,
+): EditorPlugin => ({
+  name: 'placeholder',
+
   pmPlugins() {
     return [
       {
         name: 'placeholder',
-        plugin: ({ schema, props }) => createPlugin(props.placeholder),
+        plugin: () => createPlugin(options && options.placeholder),
       },
     ];
   },
-};
+});
 
 export default placeholderPlugin;

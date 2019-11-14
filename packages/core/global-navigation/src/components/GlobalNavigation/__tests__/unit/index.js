@@ -5,12 +5,10 @@ import { IntlProvider } from 'react-intl';
 import { mount, shallow } from 'enzyme';
 import Badge from '@atlaskit/badge';
 import { DropdownItem } from '@atlaskit/dropdown-menu';
+import Avatar from '@atlaskit/avatar';
 import Drawer from '@atlaskit/drawer';
-import AtlassianSwitcher, {
-  ConfluenceSwitcher,
-  JiraSwitcher,
-} from '@atlaskit/atlassian-switcher';
-import AppSwitcherIcon from '@atlaskit/icon/glyph/app-switcher';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
+import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import CreateIcon from '@atlaskit/icon/glyph/add';
 import StarLargeIcon from '@atlaskit/icon/glyph/star-large';
@@ -18,11 +16,12 @@ import NotificationIcon from '@atlaskit/icon/glyph/notification';
 import SettingsIcon from '@atlaskit/icon/glyph/settings';
 import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 import QuestionIcon from '@atlaskit/icon/glyph/question-circle';
+import InviteTeamIcon from '@atlaskit/icon/glyph/invite-team';
 import { NotificationIndicator } from '@atlaskit/notification-indicator';
 import GlobalNavigation from '../../index';
 import ScreenTracker from '../../../ScreenTracker';
 import ItemComponent from '../../../ItemComponent';
-import { mockJestEndpoints } from '../../../../../examples/helpers/mock-atlassian-switcher-endpoints';
+import RecentIcon from '../../../CustomIcons';
 
 const DrawerContents = () => <div>drawer</div>;
 const EmojiAtlassianIcon = () => <button>EmojiAtlassianIcon</button>;
@@ -114,6 +113,16 @@ describe('GlobalNavigation', () => {
         capitalisedName: 'Settings',
         name: 'settings',
       },
+      {
+        akIcon: RecentIcon,
+        capitalisedName: 'Recent',
+        name: 'recent',
+      },
+      {
+        akIcon: InviteTeamIcon,
+        capitalisedName: 'Invite',
+        name: 'invite',
+      },
     ];
 
     drawerItems.forEach(({ name, akIcon, capitalisedName }) => {
@@ -203,6 +212,36 @@ describe('GlobalNavigation', () => {
           });
         });
 
+        describe('BackIcon', () => {
+          it(`should render correct backIcon`, () => {
+            // Testing XDrawerContents positive
+            const props = {
+              drawerBackIcon: CrossIcon,
+              [`${name}DrawerContents`]: DrawerContents,
+            };
+            const wrapper = mount(<GlobalNavigation {...props} />);
+            expect(wrapper.find(CrossIcon).exists()).toBeFalsy();
+
+            const icon = wrapper.find(akIcon);
+            icon.simulate('click');
+
+            expect(wrapper.find(CrossIcon).exists()).toBeTruthy();
+          });
+          it(`should render correct default backIcon`, () => {
+            // Testing XDrawerContents positive
+            const props = {
+              [`${name}DrawerContents`]: DrawerContents,
+            };
+            const wrapper = mount(<GlobalNavigation {...props} />);
+            expect(wrapper.find(ArrowLeftIcon).exists()).toBeFalsy();
+
+            const icon = wrapper.find(akIcon);
+            icon.simulate('click');
+
+            expect(wrapper.find(ArrowLeftIcon).exists()).toBeTruthy();
+          });
+        });
+
         describe('Uncontrolled', () => {
           it(`should open "${name}" drawer when "${name}" icon is clicked`, () => {
             // Testing XDrawerContents positive
@@ -287,7 +326,7 @@ describe('GlobalNavigation', () => {
             // Cannot assert for the drawer to be absent because it is
             // dismounted by ReactTransitionGroup on animationEnd, which is not
             // being captured by enzyme.
-            expect(wrapper.find('DrawerPrimitive').prop('in')).toBeFalsy();
+            expect(wrapper.find('DrawerPrimitive').exists()).toBe(false);
           });
 
           //  There is no onXOpen callback for controlled drawers. A consumer can
@@ -327,12 +366,13 @@ describe('GlobalNavigation', () => {
         onSearchClick={noop}
         starredTooltip="starred tooltip"
         onStarredClick={noop}
+        helpTooltip="help tooltip"
+        onHelpClick={noop}
+        helpItems={() => <div>items</div>}
         notificationTooltip="notification tooltip"
         onNotificationClick={noop}
         profileTooltip="profile tooltip"
         loginHref="#login"
-        helpItems={() => <div>items</div>}
-        helpTooltip="help tooltip"
         onSettingsClick={noop}
         settingsTooltip="settings tooltip"
       />,
@@ -345,10 +385,11 @@ describe('GlobalNavigation', () => {
         onCreateClick={noop}
         onSearchClick={noop}
         onStarredClick={noop}
+        onHelpClick={noop}
+        helpItems={() => <div>items</div>}
         onNotificationClick={noop}
         onSettingsClick={noop}
         loginHref="#login"
-        helpItems={() => <div>items</div>}
       />,
     );
 
@@ -409,14 +450,15 @@ describe('GlobalNavigation', () => {
 
     navItems.forEach(({ icon, name }) => {
       it(`should render a custom tooltip for "${name}" item`, () => {
+        const customTooltip = `${name} tooltip`;
         expect(
           customTooltipWrapper
             .find(icon)
             .parents('Tooltip')
             .prop('content'),
-        ).toBe(`${name} tooltip`);
+        ).toBe(`${customTooltip}`);
         expect(customTooltipWrapper.find(icon).prop('label')).toBe(
-          `${name} tooltip`,
+          `${customTooltip}`,
         );
       });
     });
@@ -431,10 +473,11 @@ describe('GlobalNavigation', () => {
         onCreateClick={noop}
         onSearchClick={noop}
         onStarredClick={noop}
+        onHelpClick={noop}
+        helpItems={() => <div>items</div>}
         onNotificationClick={noop}
         onSettingsClick={noop}
         loginHref="#login"
-        helpItems={() => <div>items</div>}
       />,
     );
 
@@ -829,12 +872,17 @@ describe('GlobalNavigation', () => {
         onCreateClick={noop}
         onSearchClick={noop}
         onStarredClick={noop}
+        onHelpClick={noop}
+        helpItems={() => <div>items</div>}
         onNotificationClick={noop}
         onSettingsClick={noop}
         appSwitcherComponent={AppSwitcher}
         appSwitcherTooltip="appSwitcher tooltip"
+        // Intentionally passes these props in. We expect this to be ignored.
+        product="jira"
+        cloudId="some-cloud-id"
+        enableAtlassianSwitcher
         loginHref="#login"
-        helpItems={() => <div>items</div>}
       />,
     );
     it('should render the AppSwitcher component', () => {
@@ -876,9 +924,6 @@ describe('GlobalNavigation', () => {
     jest.useFakeTimers();
     const cloudId = 'some-cloud-id';
 
-    mockJestEndpoints(cloudId);
-    const triggerXFlowStub = jest.fn();
-
     const AppSwitcher = () => <div />;
     AppSwitcher.displayName = 'AppSwitcher';
     const getDefaultWrapper = (propsToOverride: any = {}) =>
@@ -893,91 +938,56 @@ describe('GlobalNavigation', () => {
             onCreateClick={noop}
             onSearchClick={noop}
             onStarredClick={noop}
+            onHelpClick={noop}
+            helpItems={() => <div>items</div>}
             onNotificationClick={noop}
             onSettingsClick={noop}
             appSwitcherComponent={AppSwitcher}
             appSwitcherTooltip="appSwitcher tooltip"
             enableAtlassianSwitcher
             loginHref="#login"
-            helpItems={() => <div>items</div>}
-            triggerXFlow={triggerXFlowStub}
             {...propsToOverride}
           />
         </IntlProvider>,
       );
     let globalNavWrapper = getDefaultWrapper();
 
-    it('should not render Atlassian Switcher if product is missing', () => {
-      globalNavWrapper = getDefaultWrapper({
-        product: undefined,
-      });
-      expect(globalNavWrapper.find(AppSwitcher)).toHaveLength(1);
-      expect(globalNavWrapper.find(AtlassianSwitcher)).toHaveLength(0);
-    });
-
-    it('should not render Atlassian Switcher if cloudId is missing', () => {
-      globalNavWrapper = getDefaultWrapper({
-        cloudId: undefined,
-      });
-      expect(globalNavWrapper.find(AppSwitcher)).toHaveLength(1);
-      expect(globalNavWrapper.find(AtlassianSwitcher)).toHaveLength(0);
-    });
-
     it('should render AppSwitcher when enableAtlassianSwitcher is false', () => {
       globalNavWrapper = getDefaultWrapper({
         enableAtlassianSwitcher: false,
       });
       expect(globalNavWrapper.find(AppSwitcher)).toHaveLength(1);
-      expect(globalNavWrapper.find(AtlassianSwitcher)).toHaveLength(0);
     });
 
-    it('should not render AppSwitcher when enableAtlassianSwitcher is truthy', () => {
+    it('should STILL render AppSwitcher when enableAtlassianSwitcher is truthy', () => {
       globalNavWrapper = getDefaultWrapper();
-      globalNavWrapper.find(AppSwitcherIcon).simulate('click');
-      expect(globalNavWrapper.children().find(AtlassianSwitcher)).toHaveLength(
-        1,
-      );
-      expect(globalNavWrapper.children().find(AppSwitcher)).toHaveLength(0);
-    });
-
-    it('should open a Drawer with the product specific switcher', () => {
-      globalNavWrapper = getDefaultWrapper();
-      const AtlassianSwitcherIcon = globalNavWrapper.find(AppSwitcherIcon);
-      AtlassianSwitcherIcon.simulate('click');
-      expect(globalNavWrapper.find(JiraSwitcher)).toHaveLength(1);
-      expect(globalNavWrapper.find(ConfluenceSwitcher)).toHaveLength(0);
-    });
-
-    it('should pass the triggerXFlow callback', () => {
-      const productKey = 'product.key';
-      const sourceComponent = 'source-component';
-      globalNavWrapper = getDefaultWrapper();
-      globalNavWrapper.find(AppSwitcherIcon).simulate('click');
-      globalNavWrapper.find(AtlassianSwitcher).prop('triggerXFlow')(
-        productKey,
-        sourceComponent,
-      );
-      expect(triggerXFlowStub).toHaveBeenCalledWith(
-        productKey,
-        sourceComponent,
-      );
+      expect(globalNavWrapper.children().find(AppSwitcher)).toHaveLength(1);
     });
   });
 
   describe('Help', () => {
-    xit('should render help menu when "helpItems" is passed', () => {
+    it('should render help menu when "helpItems" is passed', () => {
       const HelpItems = () => <div />;
       HelpItems.displayName = 'HelpItems';
       const wrapper = mount(<GlobalNavigation helpItems={HelpItems} />);
 
       expect(wrapper.find('[id="help"]').exists()).toBeTruthy();
-      expect(wrapper.children().exists(HelpItems)).toBeTruthy();
       expect(wrapper.children().exists('DropdownItem')).toBeTruthy();
     });
 
     it('should not render help menu when "helpItems" is not passed', () => {
-      const wrapper = mount(<GlobalNavigation helpTooltip="help tooltip" />);
+      const wrapper = shallow(<GlobalNavigation helpTooltip="help tooltip" />);
       expect(wrapper.find('[id="help"]').exists()).toBeFalsy();
+    });
+
+    it('should render helpBadge when passed in', () => {
+      const HelpBadge = () => <div />;
+      const HelpItems = () => <div />;
+      const wrapper = mount(
+        <GlobalNavigation helpItems={HelpItems} helpBadge={HelpBadge} />,
+      );
+
+      expect(wrapper.find(HelpBadge).exists()).toBeTruthy();
     });
   });
 
@@ -1030,9 +1040,7 @@ describe('GlobalNavigation', () => {
       );
 
       expect(wrapper.find('DefaultImage').exists()).toBeFalsy();
-      expect(wrapper.find('Avatar').prop('src')).toEqual(
-        '//url.to.image/fancy',
-      );
+      expect(wrapper.find(Avatar).prop('src')).toEqual('//url.to.image/fancy');
     });
   });
 
@@ -1067,6 +1075,7 @@ describe('GlobalNavigation', () => {
             }),
           }),
         }),
+        undefined,
       );
     });
 
@@ -1080,12 +1089,20 @@ describe('GlobalNavigation', () => {
         analyticsId: 'createDrawer',
       },
       {
+        drawerName: 'invite',
+        analyticsId: 'inviteDrawer',
+      },
+      {
         drawerName: 'notification',
         analyticsId: 'notificationsDrawer',
       },
       {
         drawerName: 'starred',
         analyticsId: 'starDrawer',
+      },
+      {
+        drawerName: 'help',
+        analyticsId: 'helpDrawer',
       },
       {
         drawerName: 'settings',

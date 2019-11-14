@@ -24,7 +24,9 @@ import {
 } from '@atlaskit/editor-common';
 import WidthEmitter from '../WidthEmitter';
 import { GRID_GUTTER } from '../../plugins/grid';
-import * as classnames from 'classnames';
+import classnames from 'classnames';
+import { InjectedIntlProps, injectIntl } from 'react-intl';
+import messages from '../../messages';
 
 export interface CommentEditorProps {
   isMaxContentSizeReached?: boolean;
@@ -33,7 +35,6 @@ export interface CommentEditorProps {
 const CommentEditorMargin = 14;
 const CommentEditorSmallerMargin = 8;
 
-// tslint:disable-next-line:variable-name
 const CommentEditor: any = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,9 +60,8 @@ const CommentEditor: any = styled.div`
   word-wrap: break-word;
 `;
 CommentEditor.displayName = 'CommentEditor';
-const TableControlsPadding = 16;
+const TableControlsPadding = 20;
 
-// tslint:disable-next-line:variable-name
 const MainToolbar = styled.div`
   position: relative;
   align-items: center;
@@ -81,7 +81,6 @@ const MainToolbar = styled.div`
 `;
 MainToolbar.displayName = 'MainToolbar';
 
-// tslint:disable-next-line:variable-name
 const MainToolbarCustomComponentsSlot = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -95,7 +94,6 @@ const MainToolbarCustomComponentsSlot = styled.div`
 `;
 MainToolbarCustomComponentsSlot.displayName = 'MainToolbar';
 
-// tslint:disable-next-line:variable-name
 const ContentArea = styled(ContentStyles)`
   flex-grow: 1;
   overflow-x: hidden;
@@ -120,7 +118,6 @@ const ContentArea = styled(ContentStyles)`
 `;
 ContentArea.displayName = 'ContentArea';
 
-// tslint:disable-next-line:variable-name
 const SecondaryToolbar = styled.div`
   box-sizing: border-box;
   justify-content: flex-end;
@@ -132,8 +129,8 @@ SecondaryToolbar.displayName = 'SecondaryToolbar';
 
 export interface EditorAppearanceComponentState {}
 
-export default class Editor extends React.Component<
-  EditorAppearanceComponentProps,
+class Editor extends React.Component<
+  EditorAppearanceComponentProps & InjectedIntlProps,
   EditorAppearanceComponentState
 > {
   static displayName = 'CommentEditorAppearance';
@@ -179,6 +176,7 @@ export default class Editor extends React.Component<
       onCancel,
       disabled,
       dispatchAnalyticsEvent,
+      intl,
     } = this.props;
     const maxContentSizeReached =
       maxContentSize && maxContentSize.maxContentSizeReached;
@@ -249,7 +247,7 @@ export default class Editor extends React.Component<
                   disabled || (mediaState && !mediaState.allUploadsFinished)
                 }
               >
-                Save
+                {intl.formatMessage(messages.saveButton)}
               </Button>
             )}
             {!!onCancel && (
@@ -258,7 +256,7 @@ export default class Editor extends React.Component<
                 onClick={this.handleCancel}
                 isDisabled={disabled}
               >
-                Cancel
+                {intl.formatMessage(messages.cancelButton)}
               </Button>
             )}
           </ButtonGroup>
@@ -281,3 +279,5 @@ export default class Editor extends React.Component<
     );
   }
 }
+
+export default injectIntl(Editor);

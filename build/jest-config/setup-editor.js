@@ -1,9 +1,10 @@
+// @flow
 const warnOnce = (() => {
   return () => {
     if (window.hasWarnedAboutJsdomFixtures) {
       return;
     }
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.warn(
       'Warning! Test depends on DOM selection API which is not supported in JSDOM/Node environment.',
     );
@@ -30,7 +31,7 @@ const rangeFixture = {
   getClientRects: () => [],
   getBoundingClientRect: () => clientRectFixture,
 };
-
+// $FlowFixMe - type issue
 Object.defineProperty(rangeFixture, 'commonAncestorContainer', {
   enumerable: true,
   get: () => {
@@ -46,35 +47,42 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof document !== 'undefined') {
+  // $FlowFixMe - type issue
   document.getSelection = () => {
     warnOnce();
     return selectionFixture;
   };
 
   // Do nothing when attempting to create DOM ranges
+  // $FlowFixMe - type issue
   document.createRange = () => {
     warnOnce();
     return rangeFixture;
   };
 
   if (!('getClientRects' in document.createElement('div'))) {
+    // $FlowFixMe - type issue
     Element.prototype.getClientRects = () => [];
+    // $FlowFixMe - type issue
     Element.prototype.getBoundingClientRect = () => clientRectFixture;
   }
 }
 
-if (typeof window !== 'undefined' && typeof window.InputEvent === 'undefined') {
-  class InputEvent {
+if (typeof window !== 'undefined') {
+  // Replace the native InputEvent which ships with JSDOM 12+
+  window.InputEvent = class InputEvent {
     constructor(typeArg, inputEventInit) {
       const uiEvent = new UIEvent(typeArg, inputEventInit);
-
+      // $FlowFixMe - type issue
       uiEvent.inputType = (inputEventInit && inputEventInit.inputType) || '';
+      // $FlowFixMe - type issue
       uiEvent.isComposing =
         (inputEventInit && inputEventInit.isComposing) || false;
+      // $FlowFixMe - type issue
       uiEvent.data = (inputEventInit && inputEventInit.data) || null;
       return uiEvent;
     }
-  }
+  };
 
-  window.InputEvent = InputEvent;
+  window.scrollBy = () => {};
 }

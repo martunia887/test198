@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+// eslint-disable-line no-console
 import * as React from 'react';
 import { atlassianLogoUrl, tallImage } from '@atlaskit/media-test-helpers';
 import { Checkbox } from '@atlaskit/checkbox';
@@ -6,10 +6,9 @@ import styled from 'styled-components';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
 import BookIcon from '@atlaskit/icon/glyph/book';
 import EditIcon from '@atlaskit/icon/glyph/edit';
-import { CardAction, CardStatus, CardEvent } from '../src';
-import { MediaType } from '@atlaskit/media-store';
+import { CardAction, CardStatus } from '../src';
 import { CardView } from '../src/root/cardView';
-import { FileDetails } from '@atlaskit/media-core';
+import { FileDetails, MediaType } from '@atlaskit/media-client';
 
 const CardWrapper = styled.div`
   width: 150px;
@@ -194,19 +193,8 @@ class Example extends React.Component<{}, State> {
         <CardView
           status={status}
           metadata={metadata}
-          mediaItemType={isExternalImage ? 'external-image' : 'file'}
-          onClick={(e: CardEvent) =>
-            console.log(
-              'mouse click!',
-              e.mediaItemDetails && (e.mediaItemDetails as FileDetails).id,
-            )
-          }
-          onMouseEnter={(e: CardEvent) =>
-            console.log(
-              'mouse enter!',
-              e.mediaItemDetails && (e.mediaItemDetails as FileDetails).id,
-            )
-          }
+          onClick={(e: React.MouseEvent) => console.log('mouse click!')}
+          onMouseEnter={(e: React.MouseEvent) => console.log('mouse enter!')}
           resizeMode="crop"
           progress={0.5}
           disableOverlay={disableOverlay}

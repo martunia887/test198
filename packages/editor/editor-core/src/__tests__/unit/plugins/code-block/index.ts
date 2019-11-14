@@ -10,36 +10,34 @@ import {
   createEvent,
   insertText,
 } from '@atlaskit/editor-test-helpers';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 
 import { pluginKey as codeBlockPluginKey } from '../../../../plugins/code-block/pm-plugins/main';
-import tablesPlugin from '../../../../plugins/table';
-import listPlugin from '../../../../plugins/lists';
 import {
   removeCodeBlock,
   changeLanguage,
 } from '../../../../plugins/code-block/actions';
 import { setTextSelection } from '../../../../utils';
-import codeBlockPlugin from '../../../../plugins/code-block';
-import quickInsertPlugin from '../../../../plugins/quick-insert';
 
 describe('code-block', () => {
   const createEditor = createEditorFactory();
 
   const event = createEvent('event');
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
 
   const editor = (doc: any) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
     return createEditor({
       doc,
-      editorPlugins: [
-        codeBlockPlugin(),
-        listPlugin,
-        tablesPlugin(),
-        quickInsertPlugin,
-      ],
-      editorProps: { allowCodeBlocks: true, allowAnalyticsGASV3: true },
+      editorProps: {
+        allowCodeBlocks: true,
+        allowAnalyticsGASV3: true,
+        allowTables: true,
+        allowLists: true,
+      },
       pluginKey: codeBlockPluginKey,
       createAnalyticsEvent,
     });

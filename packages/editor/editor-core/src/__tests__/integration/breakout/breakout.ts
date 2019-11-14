@@ -8,19 +8,13 @@ import { getDocFromElement, editable } from '../_helpers';
 import { messages } from '../../../plugins/block-type/types';
 import commonMessages from '../../../messages';
 
-const wideBreakoutButtonQuery = `div[aria-label="${
-  commonMessages.layoutWide.defaultMessage
-}"]`;
-const fullWidthBreakoutButtonQuery = `div[aria-label="${
-  commonMessages.layoutFullWidth.defaultMessage
-}"]`;
-const centerBreakoutButtonQuery = `div[aria-label="${
-  commonMessages.layoutFixedWidth.defaultMessage
-}"]`;
+const wideBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutWide.defaultMessage}"]`;
+const fullWidthBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutFullWidth.defaultMessage}"]`;
+const centerBreakoutButtonQuery = `div[aria-label="${commonMessages.layoutFixedWidth.defaultMessage}"]`;
 
 BrowserTestCase(
   'breakout: should be able to switch to wide mode',
-  { skip: [] },
+  {},
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
@@ -43,7 +37,7 @@ BrowserTestCase(
 
 BrowserTestCase(
   'breakout: should be able to switch to full-width mode',
-  { skip: [] },
+  {},
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
@@ -95,9 +89,11 @@ BrowserTestCase(
   },
 );
 
+// TODO: https://product-fabric.atlassian.net/browse/ED-6802
+// skipped on ie
 BrowserTestCase(
   'breakout: should be able to delete last character inside a "wide" codeBlock preserving the node',
-  { skip: [] },
+  { skip: ['ie'] },
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
 
@@ -114,7 +110,7 @@ BrowserTestCase(
     await page.click(wideBreakoutButtonQuery);
 
     await page.type(editable, 'a');
-    await page.type(editable, 'Backspace');
+    await page.keys('Backspace');
     expect(
       await page.$eval(editable, getDocFromElement),
     ).toMatchCustomDocSnapshot(testName);

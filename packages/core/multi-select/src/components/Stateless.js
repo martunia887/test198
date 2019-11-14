@@ -130,9 +130,18 @@ type State = {
   groupedItems: Array<GroupType>,
 };
 
+if (process.env.NODE_ENV !== 'production' && !process.env.CI) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '@atlaskit/multi-select has been deprecated. Please use the @atlaskit/select package instead.',
+  );
+}
+
 export default class StatelessMultiSelect extends PureComponent<Props, State> {
   inputNode: HTMLElement | null;
+
   tagGroup: HTMLElement | null;
+
   static defaultProps = {
     appearance: appearances.default,
     createNewItemLabel: 'New item',
@@ -169,7 +178,7 @@ export default class StatelessMultiSelect extends PureComponent<Props, State> {
     }
   };
 
-  componentWillReceiveProps = (nextProps: Props) => {
+  UNSAFE_componentWillReceiveProps = (nextProps: Props) => {
     if (this.props.items !== nextProps.items) {
       this.setState({ groupedItems: groupItems(nextProps.items) });
     }
@@ -291,7 +300,7 @@ export default class StatelessMultiSelect extends PureComponent<Props, State> {
 
   removeLatestItem = () => {
     if (this.props.selectedItems.length) {
-      const selectedItems = this.props.selectedItems;
+      const { selectedItems } = this.props;
       this.handleItemRemove(selectedItems[selectedItems.length - 1]);
     }
   };
@@ -314,7 +323,7 @@ export default class StatelessMultiSelect extends PureComponent<Props, State> {
   };
 
   handleOnChange = (event: SyntheticEvent<any>) => {
-    const value = event.currentTarget.value;
+    const { value } = event.currentTarget;
 
     if (value !== this.props.filterValue) {
       // We want to get rid of the focus on the items when the shouldAllowCreateItem enabled.

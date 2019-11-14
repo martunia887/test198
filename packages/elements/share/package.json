@@ -1,17 +1,14 @@
 {
   "name": "@atlaskit/share",
-  "version": "0.2.1",
+  "version": "0.7.2",
   "config": {
     "access": "private"
   },
   "description": "Fabric Share Element",
-  "modules": "index.js",
-  "types": "dist/es5/types.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/types.d.ts",
   "atlaskit:src": "src/index.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
   "repository": {
     "type": "git",
     "url": "https://bitbucket.org/atlassian/atlaskit-mk-2"
@@ -22,37 +19,44 @@
     "ui",
     "share",
     "fabric",
-    "elements"
+    "teams"
   ],
-  "dependencies": {
-    "@atlaskit/button": "^11.0.2",
-    "@atlaskit/field-text-area": "^5.0.1",
-    "@atlaskit/form": "^5.2.1",
-    "@atlaskit/icon": "^16.0.5",
-    "@atlaskit/inline-dialog": "^10.0.1",
-    "@atlaskit/theme": "^8.0.1",
-    "@atlaskit/tooltip": "^13.0.1",
-    "@atlaskit/user-picker": "^2.0.2",
-    "@atlaskit/util-service-support": "^4.0.1",
-    "memoize-one": "^3.0.1",
-    "styled-components": "^3.2.6"
+  "atlaskit": {
+    "name": "Share",
+    "team": "teams"
   },
-  "peerDependencies": {
-    "react": "^16.4.0",
-    "react-intl": "^2.6.0"
+  "dependencies": {
+    "@atlaskit/analytics-next": "^6.3.1",
+    "@atlaskit/button": "^13.3.4",
+    "@atlaskit/field-text-area": "^6.0.14",
+    "@atlaskit/form": "^6.3.2",
+    "@atlaskit/icon": "^19.0.6",
+    "@atlaskit/inline-dialog": "^12.1.5",
+    "@atlaskit/theme": "^9.2.8",
+    "@atlaskit/tooltip": "^15.1.1",
+    "@atlaskit/user-picker": "^4.1.4",
+    "@atlaskit/util-service-support": "^5.0.0",
+    "memoize-one": "^5.1.0",
+    "tiny-invariant": "^0.0.3"
   },
   "devDependencies": {
-    "@atlaskit/docs": "^7.0.1",
-    "@atlaskit/editor-test-helpers": "^8.0.2",
-    "@atlaskit/i18n-tools": "^0.5.0",
-    "@atlaskit/section-message": "^2.0.1",
-    "@atlaskit/select": "^8.0.3",
-    "@atlaskit/toggle": "^6.0.1",
-    "@atlaskit/util-data-test": "^11.1.1",
+    "@atlaskit/docs": "^8.1.8",
+    "@atlaskit/editor-test-helpers": "^10.1.2",
+    "@atlaskit/flag": "^12.3.2",
+    "@atlaskit/i18n-tools": "^0.6.0",
+    "@atlaskit/select": "^11.0.0",
+    "@atlaskit/toggle": "^8.1.2",
+    "@atlaskit/util-data-test": "^13.0.1",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
-    "react": "^16.4.0",
+    "jest-fetch-mock": "^2.1.2",
+    "react": "^16.8.0",
     "react-intl": "^2.6.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "react-intl": "^2.6.0",
+    "styled-components": "^3.2.6"
   },
   "scripts": {
     "i18n:push": "i18n-tools push --resource share . --type ts",

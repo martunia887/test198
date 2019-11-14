@@ -59,7 +59,7 @@ type Props = {|
   /** After this delay the onSubmit callback will be triggered optimistically **/
   timeoutOnSubmit: number,
   /**  Override the default id for the "type" custom field in your widget service **/
-  typeFiedlId: string,
+  typeFieldId: string,
   /**  Override the default value for the "Bug" type of response in your widget service **/
   typeBugDefaultValue: FieldValueType,
   /**  Override the default value for the "Comment" type of response in your widget service **/
@@ -103,7 +103,7 @@ export default class FeedbackCollector extends Component<Props> {
     summaryDefaultValue: '',
     summaryTruncateLength: 100,
     timeoutOnSubmit: 700,
-    typeFiedlId: 'customfield_10042',
+    typeFieldId: 'customfield_10042',
     typeBugDefaultValue: { id: '10105' },
     typeCommentDefaultValue: { id: '10106' },
     typeSuggestionDefaultValue: { id: '10107' },
@@ -157,7 +157,7 @@ export default class FeedbackCollector extends Component<Props> {
   mapFormToJSD(formValues: FormFields) {
     const fields = [
       {
-        id: this.props.typeFiedlId,
+        id: this.props.typeFieldId,
         value: this.getTypeFieldValue(formValues.type),
       },
       {
@@ -198,21 +198,29 @@ export default class FeedbackCollector extends Component<Props> {
   postFeedback = (formValues: FormFields) => {
     const body: FeedbackType = this.mapFormToJSD(formValues);
 
-    fetch(
-      `https://jsd-widget.atlassian.com/api/embeddable/${
-        this.props.embeddableKey
-      }/request?requestTypeId=${this.props.requestTypeId}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    // Don't dispatch unless we have suitable props (allows tests to pass through empty strings and avoid redundant network calls)
+    if (this.props.embeddableKey && this.props.requestTypeId) {
+      fetch(
+        `https://jsd-widget.atlassian.com/api/embeddable/${this.props.embeddableKey}/request?requestTypeId=${this.props.requestTypeId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
         },
-        body: JSON.stringify(body),
-      },
-    );
+      );
+    }
 
     this.props.onClose();
+
     // slightly delay confirming submit since we don't wait for the REST call to succeed
+    //
+    // Because `onClose` is invoked prior to this timeout triggering, the `componentWillUnmount`
+    // may occur before the `onSubmit` is called. To prevent prematurely cancelling the
+    // network request, we deliberately don't clear this timeout inside `componentWillUnmount`.
+    //
+    // eslint-disable-next-line @wordpress/react-no-unsafe-timeout
     setTimeout(this.props.onSubmit, this.props.timeoutOnSubmit);
   };
 

@@ -9,12 +9,15 @@ import { Toolbar } from './components/toolbar';
 import { InputCommand, KeyboardInput } from './components/keyboardInput';
 import { ImageReceiver } from './components/imageReceiver';
 import { ShapeDeleter } from './components/shapeDeleter';
+import { UndoerRedoer } from './components/undoerRedoer';
 
 import { BitmapExporter } from './core/bitmapExporter';
 import { BitmapProvider } from './core/bitmaps/bitmapProvider';
 import { BrowserTypesetter } from './core/typesetter/browserTypesetter';
 import { ContextHolder } from './core/contextHolder';
 import { TimerFactory } from './core/timerFactory';
+import { hexToRgb, rgbToHex } from '../util';
+import { DEFAULT_COLOR } from '../react/editorView/toolbar/popups/colorPopup';
 
 export type CoreErrorHandler = (message: string) => void;
 
@@ -30,6 +33,7 @@ export interface EngineConfig {
   keyboardInput: KeyboardInput;
   imageReceiver: ImageReceiver;
   shapeDeleter: ShapeDeleter;
+  undoerRedoer: UndoerRedoer;
 }
 
 const defaultFormat = 'image/png';
@@ -96,6 +100,7 @@ export class Engine {
       toolbar,
       keyboardInput,
       shapeDeleter,
+      undoerRedoer,
     } = this.config;
 
     drawingArea.resize.listen(size => {
@@ -123,7 +128,7 @@ export class Engine {
       // https://jira.atlassian.com/browse/FIL-3997
     });
     toolbar.colorChanged.listen(color =>
-      this.veCall('update color', ve => ve.setColor(color)),
+      this.veCall('update color', ve => ve.setColor(hexToRgb(color))),
     );
     toolbar.lineWidthChanged.listen(lineWidth =>
       this.veCall('update line width', ve => ve.setLineWidth(lineWidth)),
@@ -145,6 +150,12 @@ export class Engine {
     shapeDeleter.deleteShape.listen(() =>
       this.veCall('delete shape', ve => ve.deleteShape()),
     );
+    undoerRedoer.undo.listen(() => {
+      this.veCall('undo', ve => ve.undo());
+    });
+    undoerRedoer.redo.listen(() => {
+      this.veCall('redo', ve => ve.redo());
+    });
   }
 
   private createNativeCore(): void {
@@ -160,6 +171,7 @@ export class Engine {
       keyboardInput,
       imageReceiver,
       shapeDeleter,
+      undoerRedoer,
     } = this.config;
 
     const contextHolder = new ContextHolder(drawingArea);
@@ -187,7 +199,7 @@ export class Engine {
       addShadow: boolean,
     ) => {
       toolbar.updateByCore({
-        color: { red, green, blue },
+        color: rgbToHex({ red, green, blue }),
         lineWidth,
         addShadow,
       });
@@ -229,14 +241,30 @@ export class Engine {
         shapeDeleter.deleteDisabled();
       }
     };
+
+    this.module.handleUndoRedoStateChanged = (canUndo, canRedo) => {
+      if (canUndo) {
+        undoerRedoer.undoEnabled();
+      } else {
+        undoerRedoer.undoDisabled();
+      }
+      if (canRedo) {
+        undoerRedoer.redoEnabled();
+      } else {
+        undoerRedoer.redoDisabled();
+      }
+    };
   }
 
   private createVeEngine(): void {
     const { shapeParameters, drawingArea, imageProvider } = this.config;
     const { backImage, backImageUuid } = imageProvider;
-
+    const color =
+      typeof shapeParameters.color === 'string'
+        ? shapeParameters.color
+        : DEFAULT_COLOR;
     const initialParameters = {
-      shapeColor: shapeParameters.color,
+      shapeColor: hexToRgb(color),
       lineWidth: shapeParameters.lineWidth,
       addShadow: shapeParameters.addShadow,
       tool: this.toVeTool(this.config.initialTool),
@@ -270,9 +298,7 @@ export class Engine {
   ): void {
     if (!method(this.ve)) {
       this.config.onCoreError(
-        `Could not perform '${description}'. Reason: '${
-          this.ve.failureReason
-        }'`,
+        `Could not perform '${description}'. Reason: '${this.ve.failureReason}'`,
       );
     }
   }

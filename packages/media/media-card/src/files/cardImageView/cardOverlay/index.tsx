@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { MouseEvent, Component, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
-import * as cx from 'classnames';
-import { MediaType } from '@atlaskit/media-core';
+import cx from 'classnames';
+import { MediaType } from '@atlaskit/media-client';
 import TickIcon from '@atlaskit/icon/glyph/check';
 import { Ellipsify } from '@atlaskit/media-ui';
 import { messages } from '@atlaskit/media-ui';
@@ -11,6 +11,11 @@ import { FileIcon } from '../../../utils/fileIcon';
 import { ErrorIcon } from '../../../utils/errorIcon';
 import CardActions from '../../../utils/cardActions';
 import { CardAction, CardEventHandler } from '../../../actions';
+import { createAndFireMediaEvent } from '../../../utils/analytics';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 
 import {
   TickBox,
@@ -27,6 +32,21 @@ import {
   Metadata,
   ErrorWrapper,
 } from './styled';
+
+type RetryProps = React.HTMLAttributes<HTMLDivElement> &
+  WithAnalyticsEventsProps;
+const RetryWithProps = (props: RetryProps) => (
+  <Retry data-testid="media-card-retry-button" {...props} />
+);
+
+const RetryWithAnalytics = withAnalyticsEvents({
+  onClick: createAndFireMediaEvent({
+    eventType: 'ui',
+    action: 'clicked',
+    actionSubject: 'button',
+    actionSubjectId: 'mediaCardRetry',
+  }),
+})(RetryWithProps);
 
 export interface CardOverlayProps {
   mediaType?: MediaType;
@@ -150,9 +170,9 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
       return (
         <ErrorWrapper>
           <ErrorIcon />
-          <Retry onClick={onRetry}>
+          <RetryWithAnalytics onClick={onRetry}>
             <FormattedMessage {...messages.retry} />
-          </Retry>
+          </RetryWithAnalytics>
         </ErrorWrapper>
       );
     } else {
@@ -184,7 +204,7 @@ export class CardOverlay extends Component<CardOverlayProps, CardOverlayState> {
   };
 
   removeBtnClick(handler: CardEventHandler) {
-    return (e: MouseEvent<HTMLDivElement>) => {
+    return (e: MouseEvent<HTMLDivElement, any>) => {
       e.preventDefault();
       e.stopPropagation();
       handler();

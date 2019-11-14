@@ -7,19 +7,34 @@
 // Finnish
 export default {
   'fabric.atlassianSwitcher.switchTo': 'Vaihda kohteeseen',
-  'fabric.atlassianSwitcher.switchToTooltip': 'Vaihda kohteeseen …',
+  'fabric.atlassianSwitcher.switchToTooltip': 'Vaihda kohteeseen...',
   'fabric.atlassianSwitcher.recent': 'Viimeaikainen',
   'fabric.atlassianSwitcher.more': 'Lisää',
   'fabric.atlassianSwitcher.try': 'Yritä',
   'fabric.atlassianSwitcher.manageList': 'Hallinnoi luetteloa',
   'fabric.atlassianSwitcher.jiraProject': 'Jira-projekti',
   'fabric.atlassianSwitcher.confluenceSpace': 'Confluence-työtila',
-  'fabric.atlassianSwitcher.people': 'Henkilöt',
   'fabric.atlassianSwitcher.administration': 'Hallinto',
-  'fabric.atlassianSwitcher.discoverMore': 'Löydä enemmän',
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Selaa Marketplace-sovelluksia',
+  'fabric.atlassianSwitcher.errorHeading': 'Jotain meni pieleen',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    'Huomioimme nämä virheet, mutta ota meihin yhteyttä, jos sivun lataus ei paranna asiaa',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    'Rikkoutunut robotti ja monta ihmistä korjaamassa sitä.',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'Tätä luetteloa ei voitu ladata. Lataa sivu ja yritä uudelleen.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'Sinut on kirjattu ulos. Kirjaudu sisään uudelleen.',
+  'fabric.atlassianSwitcher.login': 'Kirjaudu sisään',
+  'fabric.atlassianSwitcher.show.more.sites': 'Näytä lisää sivustoja',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

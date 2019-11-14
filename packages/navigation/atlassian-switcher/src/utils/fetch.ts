@@ -1,3 +1,21 @@
+export const FETCH_ERROR_NAME = 'FetchError';
+
+export type ErrorWithStatus = Error & {
+  status: number;
+};
+
+export function enrichFetchError(
+  error: Error,
+  status: number,
+): ErrorWithStatus {
+  return {
+    name: FETCH_ERROR_NAME,
+    message: error.message,
+    stack: error.stack,
+    status,
+  };
+}
+
 export const fetchJsonSameOrigin = <T>(
   url: string,
   init?: RequestInit,
@@ -6,8 +24,11 @@ export const fetchJsonSameOrigin = <T>(
     if (response.ok) {
       return response.json();
     }
-    throw new Error(
-      `Unable to fetch ${url} ${response.status} ${response.statusText}`,
+    throw enrichFetchError(
+      new Error(
+        `Unable to fetch ${url} ${response.status} ${response.statusText}`,
+      ),
+      response.status,
     );
   });
 

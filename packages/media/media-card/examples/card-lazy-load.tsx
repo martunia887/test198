@@ -1,15 +1,13 @@
 import * as React from 'react';
-import * as scrollParent from 'scrollparent';
+import scrollParent from 'scrollparent';
 import styled from 'styled-components';
 import {
-  createStorybookContext,
+  createStorybookMediaClientConfig,
   genericFileId,
 } from '@atlaskit/media-test-helpers';
 import { Card } from '../src';
 
-const GradientBackground: React.ComponentClass<
-  React.HTMLAttributes<{}>
-> = styled.div`
+const GradientBackground: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   background: linear-gradient(
     to bottom,
     rgba(226, 226, 226, 1) 0%,
@@ -21,7 +19,7 @@ const DummyContent: React.ComponentClass<React.HTMLAttributes<{}>> = styled.div`
   height: 125vh;
 `;
 
-const context = createStorybookContext();
+const mediaClientConfig = createStorybookMediaClientConfig();
 
 class Example extends React.Component<{}, {}> {
   handleMount = (el: any) => {
@@ -36,7 +34,10 @@ class Example extends React.Component<{}, {}> {
       <div ref={this.handleMount}>
         <GradientBackground>
           <DummyContent />
-          <Card context={context} identifier={genericFileId} />
+          <Card
+            mediaClientConfig={mediaClientConfig}
+            identifier={genericFileId}
+          />
           <DummyContent />
         </GradientBackground>
       </div>

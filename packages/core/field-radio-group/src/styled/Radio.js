@@ -1,6 +1,7 @@
 // @flow
 import styled, { css } from 'styled-components';
-import { colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import * as colors from '@atlaskit/theme/colors';
 
 export const HiddenInput = styled.input`
   border: 0;
@@ -24,7 +25,6 @@ type LabelProps = {
 export const Label = styled.label`
   display: 'block';
   color: ${(props: LabelProps): string =>
-    // $FlowFixMe - theme is not found in props
     props.isDisabled ? disabledColor(props) : colors.text(props)};
   ${({ isDisabled }: LabelProps) =>
     isDisabled

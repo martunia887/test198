@@ -1,11 +1,9 @@
 import { TextSelection, Selection } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import { hasCode } from '../utils';
 import { markActive } from '../utils';
-import { transformToCodeAction } from './transform-to-code';
 import { analyticsService } from '../../../analytics';
 import { Command } from '../../../types';
-import { toggleMark } from '../../../utils/commands';
+import { toggleMark, applyMarkOnRange } from '../../../utils/commands';
 import {
   withAnalytics,
   ACTION,
@@ -66,9 +64,7 @@ export const moveRight = (): Command => {
   };
 };
 
-export const moveLeft = (
-  view: EditorView & { cursorWrapper?: any },
-): Command => {
+export const moveLeft = (): Command => {
   return (state, dispatch) => {
     const { code } = state.schema.marks;
     const { empty, $cursor } = state.selection as TextSelection;
@@ -260,10 +256,6 @@ export const toggleSuperscript = (): Command => {
   return (state, dispatch) => {
     const { subsup } = state.schema.marks;
     if (subsup) {
-      if (markActive(state, subsup.create({ type: 'sub' }))) {
-        // If subscript is enabled, turn it off first.
-        return toggleMark(subsup)(state, dispatch);
-      }
       return toggleMark(subsup, { type: 'sup' })(state, dispatch);
     }
     return false;
@@ -285,9 +277,6 @@ export const toggleSubscript = (): Command => {
   return (state, dispatch) => {
     const { subsup } = state.schema.marks;
     if (subsup) {
-      if (markActive(state, subsup.create({ type: 'sup' }))) {
-        return toggleMark(subsup)(state, dispatch);
-      }
       return toggleMark(subsup, { type: 'sub' })(state, dispatch);
     }
     return false;
@@ -308,16 +297,10 @@ export const toggleSubscriptWithAnalytics = (): Command =>
 export const toggleCode = (): Command => {
   return (state, dispatch) => {
     const { code } = state.schema.marks;
-    const { from, to } = state.selection;
     if (code) {
-      if (!markActive(state, code.create())) {
-        if (dispatch) {
-          dispatch(transformToCodeAction(from, to, state.tr));
-        }
-        return true;
-      }
       return toggleMark(code)(state, dispatch);
     }
+
     return false;
   };
 };
@@ -353,20 +336,22 @@ const createInlineCodeFromTextInput = (
         analyticsService.trackEvent(
           `atlassian.editor.format.code.autoformatting`,
         );
-        const tr = state.tr.replaceRangeWith(
+        let tr = state.tr.replaceRangeWith(
           from - 1,
           to + 1,
           state.schema.text(text),
         );
 
         if (dispatch) {
-          dispatch(
-            transformToCodeAction(
-              tr.mapping.map(from - 1),
-              tr.mapping.map(to + 1),
-              tr,
-            ),
-          );
+          const codeMark = state.schema.marks.code.create();
+          tr = applyMarkOnRange(
+            tr.mapping.map(from - 1),
+            tr.mapping.map(to + 1),
+            false,
+            codeMark,
+            tr,
+          ).setStoredMarks([codeMark]);
+          dispatch(tr);
         }
         return true;
       }

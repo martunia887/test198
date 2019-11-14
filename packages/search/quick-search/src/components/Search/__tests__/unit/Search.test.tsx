@@ -1,6 +1,6 @@
-import { mount, ReactWrapper } from 'enzyme';
+import { mount, shallow, ReactWrapper } from 'enzyme';
 import * as React from 'react';
-import FieldBase from '@atlaskit/field-base';
+import Spinner from '@atlaskit/spinner';
 import Search from '../../Search';
 
 describe('Search', () => {
@@ -13,20 +13,27 @@ describe('Search', () => {
     expect(isInputFocused(wrapper)).toBe(true);
   });
 
-  it('should pass on its isLoading prop to the internal FieldBase for it to handle', () => {
+  it('should show spinner when loading', () => {
     expect(
-      mount(<Search onInput={() => {}} onKeyDown={() => {}} isLoading />)
-        .find(FieldBase)
-        .at(0)
-        .prop('isLoading'),
-    ).toBe(true);
+      mount(<Search onInput={() => {}} onKeyDown={() => {}} isLoading />).find(
+        Spinner,
+      ).length,
+    ).toBe(1);
     expect(
       mount(
         <Search onInput={() => {}} onKeyDown={() => {}} isLoading={false} />,
-      )
-        .find(FieldBase)
-        .at(0)
-        .prop('isLoading'),
-    ).toBe(false);
+      ).find(Spinner).length,
+    ).toBe(0);
+  });
+
+  it('should render input controls if provided', () => {
+    const wrapper = shallow(
+      <Search inputControls={<button key="testKey">Test Btn</button>} />,
+    );
+    const inputControlsContainer = wrapper.find('SearchInputControlsContainer');
+
+    expect(inputControlsContainer.length).toBe(1);
+    expect(inputControlsContainer.children().length).toBe(1);
+    expect(inputControlsContainer.childAt(0).key()).toBe('testKey');
   });
 });

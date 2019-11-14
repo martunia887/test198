@@ -1,7 +1,9 @@
+/* eslint-disable no-param-reassign */
+// @flow
 const path = require('path');
 const webpackConfig = require('@atlaskit/webpack-config');
 
-function buildCacheGroups(statsGroups) {
+function buildCacheGroups(statsGroups /*:Array<Object> */) {
   return statsGroups.reduce((acc, group) => {
     return group.stats.reduce((cacheGroups, item) => {
       if (item.cacheGroup) {
@@ -15,13 +17,16 @@ function buildCacheGroups(statsGroups) {
   }, {});
 }
 
-function createWebpackConfig({
-  entryPoint,
-  outputDir,
-  optimization,
-  isAnalyze = false,
-}) {
-  const config = webpackConfig({
+async function createWebpackConfig(
+  {
+    entryPoint,
+    outputDir,
+    optimization,
+    isAnalyze = false,
+  } /*: { entryPoint: string,  outputDir: string, optimization: string, isAnalyze: boolean} */,
+) {
+  // $FlowFixMe - webpack issue
+  const config = await webpackConfig({
     mode: 'production',
     websiteEnv: 'production',
     noMinimize: false,
@@ -40,6 +45,7 @@ function createWebpackConfig({
    * so they are not affecting a package bundle size.
    */
   config.resolve.alias = {
+    ...config.resolve.alias,
     'styled-components': path.resolve(__dirname, '..', 'noop.js'),
     react: path.resolve(__dirname, '..', 'noop.js'),
     'react-dom': path.resolve(__dirname, '..', 'noop.js'),

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import * as classnames from 'classnames';
+import classnames from 'classnames';
 import { withTheme } from 'styled-components';
 
 import { PluginKey } from 'prosemirror-state';
-import { EditorPlugin, EditorAppearance } from '../../types';
+import { EditorPlugin } from '../../types';
 import { MediaSingleLayout } from '@atlaskit/adf-schema';
 import {
   akEditorFullPageMaxWidth,
@@ -75,13 +75,13 @@ const overflowHighlight = (
 };
 
 const gutterGridLines = (
-  appearance: EditorAppearance,
   editorMaxWidth: number,
   editorWidth: number,
   highlights: Highlights,
+  shouldCalcBreakoutGridLines?: boolean,
 ): JSX.Element[] => {
   const gridLines: JSX.Element[] = [];
-  if (appearance !== 'full-page') {
+  if (!shouldCalcBreakoutGridLines) {
     return gridLines;
   }
 
@@ -143,7 +143,7 @@ const lineLengthGridLines = (highlights: Highlights) => {
 
 type Props = {
   theme: any;
-  appearance: EditorAppearance;
+  shouldCalcBreakoutGridLines?: boolean;
   containerElement: HTMLElement;
   editorWidth: number;
 
@@ -156,7 +156,7 @@ class Grid extends React.Component<Props> {
   render() {
     const {
       highlight,
-      appearance,
+      shouldCalcBreakoutGridLines,
       theme,
       containerElement,
       editorWidth,
@@ -167,7 +167,12 @@ class Grid extends React.Component<Props> {
 
     let gridLines = [
       ...lineLengthGridLines(highlight),
-      ...gutterGridLines(appearance, editorMaxWidth, editorWidth, highlight),
+      ...gutterGridLines(
+        editorMaxWidth,
+        editorWidth,
+        highlight,
+        shouldCalcBreakoutGridLines,
+      ),
     ];
 
     return (
@@ -191,8 +196,14 @@ class Grid extends React.Component<Props> {
 
 const ThemedGrid = withTheme(Grid);
 
-const gridPlugin: EditorPlugin = {
-  contentComponent: ({ editorView, appearance }) => {
+interface GridPluginOptions {
+  shouldCalcBreakoutGridLines?: boolean;
+}
+
+const gridPlugin = (options?: GridPluginOptions): EditorPlugin => ({
+  name: 'grid',
+
+  contentComponent: ({ editorView }) => {
     return (
       <WithPluginState
         plugins={{
@@ -212,7 +223,9 @@ const gridPlugin: EditorPlugin = {
 
           return (
             <ThemedGrid
-              appearance={appearance}
+              shouldCalcBreakoutGridLines={
+                options && options.shouldCalcBreakoutGridLines
+              }
               editorWidth={widthState.width}
               containerElement={editorView.dom as HTMLElement}
               {...grid}
@@ -222,7 +235,7 @@ const gridPlugin: EditorPlugin = {
       />
     );
   },
-};
+});
 
 export default gridPlugin;
 export { GRID_GUTTER } from './styles';

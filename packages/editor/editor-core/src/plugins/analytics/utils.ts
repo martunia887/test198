@@ -1,35 +1,79 @@
-import { editorAnalyticsChannel } from './index';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
+import {
+  AnalyticsEventPayloadWithChannel,
+  editorAnalyticsChannel,
+} from './index';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
 import { AnalyticsEventPayload } from './types';
-import { Transaction, EditorState } from 'prosemirror-state';
+import { EditorState, Transaction } from 'prosemirror-state';
 import { Command } from '../../types';
 import { InputRuleWithHandler } from '../../utils/input-rules';
 import { analyticsPluginKey } from './plugin';
+import { AnalyticsStep } from './analytics-step';
+import { Step } from 'prosemirror-transform';
 
-export function addAnalytics(
-  tr: Transaction,
-  payload: AnalyticsEventPayload,
-  channel?: string,
-): Transaction {
-  const analyticsMeta = tr.getMeta(analyticsPluginKey) || [];
-  analyticsMeta.push({ payload, channel });
-  return tr.setMeta(analyticsPluginKey, analyticsMeta);
-}
-
+export type DispatchAnalyticsEvent = (payload: AnalyticsEventPayload) => void;
 export type HigherOrderCommand = (command: Command) => Command;
 
-export function withAnalytics(
+function getAnalyticsState(
+  editorState: EditorState,
+): CreateUIAnalyticsEvent | null | undefined {
+  return analyticsPluginKey.getState(editorState) as
+    | CreateUIAnalyticsEvent
+    | null
+    | undefined;
+}
+
+export function addAnalytics(
+  state: EditorState,
+  tr: Transaction,
   payload: AnalyticsEventPayload,
+  channel: string = editorAnalyticsChannel,
+): Transaction {
+  const createAnalyticsEvent = getAnalyticsState(state);
+
+  if (createAnalyticsEvent) {
+    const { storedMarks } = tr;
+    tr.step(
+      new AnalyticsStep(
+        createAnalyticsEvent,
+        [
+          {
+            payload,
+            channel,
+          },
+        ],
+        tr.selection.$from.pos, // We need to create the step based on a position, this prevent split history for relative changes.
+      ),
+    );
+    // When you add a new step all the storedMarks are removed it
+    if (storedMarks) {
+      tr.setStoredMarks(storedMarks);
+    }
+  }
+
+  return tr;
+}
+
+export function withAnalytics(
+  payload:
+    | AnalyticsEventPayload
+    | ((state: EditorState) => AnalyticsEventPayload | undefined),
   channel?: string,
 ): HigherOrderCommand {
-  return command => (state, dispatch, view?) =>
+  return command => (state, dispatch, view) =>
     command(
       state,
       tr => {
         if (dispatch) {
-          dispatch(addAnalytics(tr, payload, channel));
+          if (payload instanceof Function) {
+            const dynamicPayload = payload(state);
+            if (dynamicPayload) {
+              dispatch(addAnalytics(state, tr, dynamicPayload, channel));
+            }
+          } else {
+            dispatch(addAnalytics(state, tr, payload, channel));
+          }
         }
-        return true;
       },
       view,
     );
@@ -44,7 +88,7 @@ export function ruleWithAnalytics(
   ) => AnalyticsEventPayload,
 ) {
   return (rule: InputRuleWithHandler) => {
-    // Monkeypatching handler to add analytcs
+    // Monkey patching handler to add analytics
     const handler = rule.handler;
 
     rule.handler = (
@@ -57,7 +101,7 @@ export function ruleWithAnalytics(
 
       if (tr) {
         const payload = getPayload(state, match, start, end);
-        tr = addAnalytics(tr, payload);
+        tr = addAnalytics(state, tr, payload);
       }
       return tr;
     };
@@ -65,14 +109,32 @@ export function ruleWithAnalytics(
   };
 }
 
-export const fireAnalyticsEvent = (
-  createAnalyticsEvent?: CreateUIAnalyticsEventSignature,
+export type FireAnalyticsEvent = (
+  createAnalyticsEvent?: CreateUIAnalyticsEvent | undefined,
 ) => ({
   payload,
-  channel = editorAnalyticsChannel,
+  channel,
 }: {
   payload: AnalyticsEventPayload;
-  channel?: string;
+  channel?: string | undefined;
+}) => void | undefined;
+
+export const fireAnalyticsEvent: FireAnalyticsEvent = createAnalyticsEvent => ({
+  payload,
+  channel = editorAnalyticsChannel,
 }) => {
   return createAnalyticsEvent && createAnalyticsEvent(payload).fire(channel);
 };
+
+export function getAnalyticsEventsFromTransaction(
+  tr: Transaction,
+): AnalyticsEventPayloadWithChannel[] {
+  return (tr.steps as Step[])
+    .filter<AnalyticsStep>(
+      (step: Step): step is AnalyticsStep => step instanceof AnalyticsStep,
+    )
+    .reduce<AnalyticsEventPayloadWithChannel[]>(
+      (acc, step) => [...acc, ...step.analyticsEvents],
+      [],
+    );
+}

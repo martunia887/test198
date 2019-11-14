@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import semver from 'semver';
 import styled, { css } from 'styled-components';
@@ -16,12 +16,10 @@ function getVersion(str: string) {
 }
 const Heading = ({
   children,
-  packageName,
   href,
 }: {
   children: React.ReactChild;
   level: number;
-  packageName: string;
   href: string;
 }) => {
   const childrenArray = React.Children.toArray(children);
@@ -90,7 +88,6 @@ export type Props = {
 };
 
 export default class ChangeLog extends React.Component<Props> {
-  props: Props; // eslint-disable-line react/sort-comp
   render() {
     const { changelog, packageName, range } = this.props;
     const logs = range
@@ -109,9 +106,7 @@ export default class ChangeLog extends React.Component<Props> {
             const majorHasChanged = currentMajor !== major;
             currentMajor = major;
             // In case of blank / empty changelogs, the default commit points to mk-2
-            const href = `https://bitbucket.org/atlassian/${
-              v.repository
-            }/commits/tag/%40atlaskit%2F${packageName}%40${v.version}`;
+            const href = `https://bitbucket.org/atlassian/${v.repository}/commits/tag/%40atlaskit%2F${packageName}%40${v.version}`;
             return (
               // Version is not unique enough due to untidy changelogs.
               /* eslint-disable react/no-array-index-key */

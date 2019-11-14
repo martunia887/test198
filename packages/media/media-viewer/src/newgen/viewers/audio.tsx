@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { ProcessedFileState, Context, FileState } from '@atlaskit/media-core';
+import {
+  ProcessedFileState,
+  MediaClient,
+  FileState,
+  globalMediaEventEmitter,
+} from '@atlaskit/media-client';
 import AudioIcon from '@atlaskit/icon/glyph/media-services/audio';
-import { constructAuthTokenUrl } from '../utils';
-import { Outcome, MediaViewerFeatureFlags } from '../domain';
+import { Outcome } from '../domain';
 import {
   AudioPlayer,
   AudioCover,
@@ -12,20 +16,24 @@ import {
   CustomAudioPlayerWrapper,
 } from '../styled';
 import { createError, MediaViewerError } from '../error';
-import { getArtifactUrl } from '@atlaskit/media-store';
 import { BaseState, BaseViewer } from './base-viewer';
 import { isIE } from '../utils/isIE';
-import { CustomMediaPlayer } from '@atlaskit/media-ui';
+import {
+  CustomMediaPlayer,
+  WithShowControlMethodProp,
+} from '@atlaskit/media-ui';
 import { getObjectUrlFromFileState } from '../utils/getObjectUrlFromFileState';
 
-export type Props = Readonly<{
-  item: FileState;
-  context: Context;
-  collectionName?: string;
-  previewCount: number;
-  featureFlags?: MediaViewerFeatureFlags;
-  showControls?: () => void;
-}>;
+export type Props = Readonly<
+  {
+    item: FileState;
+    mediaClient: MediaClient;
+    collectionName?: string;
+    previewCount: number;
+    onCanPlay?: () => void;
+    onError?: () => void;
+  } & WithShowControlMethodProp
+>;
 
 export type State = BaseState<string> & {
   coverUrl?: string;
@@ -39,10 +47,12 @@ const defaultCover = (
 
 const getCoverUrl = (
   item: ProcessedFileState,
-  context: Context,
+  mediaClient: MediaClient,
   collectionName?: string,
 ): Promise<string> =>
-  constructAuthTokenUrl(`/file/${item.id}/image`, context, collectionName);
+  mediaClient.getImageUrl(item.id, {
+    collection: collectionName,
+  });
 
 export class AudioViewer extends BaseViewer<string, Props, State> {
   protected get initialState() {
@@ -70,13 +80,21 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
     audioElement.setAttribute('controlsList', 'nodownload');
   };
 
+  private onFirstPlay = () => {
+    const { item } = this.props;
+    globalMediaEventEmitter.emit('media-viewed', {
+      fileId: item.id,
+      viewingLevel: 'full',
+    });
+  };
+
   protected renderSuccessful(src: string) {
-    const { showControls, previewCount } = this.props;
+    const { showControls, previewCount, onCanPlay, onError } = this.props;
 
     const useCustomAudioPlayer = !isIE();
     const isAutoPlay = previewCount === 0;
     return useCustomAudioPlayer ? (
-      <AudioPlayer>
+      <AudioPlayer data-testid="media-viewer-audio-content">
         {this.renderCover()}
         <CustomAudioPlayerWrapper>
           <CustomMediaPlayer
@@ -85,6 +103,9 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
             src={src}
             isShortcutEnabled={true}
             showControls={showControls}
+            onCanPlay={onCanPlay}
+            onFirstPlay={this.onFirstPlay}
+            onError={onError}
           />
         </CustomAudioPlayerWrapper>
       </AudioPlayer>
@@ -115,12 +136,12 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
   };
 
   private setCoverUrl = async () => {
-    const { context, item, collectionName } = this.props;
+    const { mediaClient, item, collectionName } = this.props;
 
     if (item.status !== 'processed') {
       return;
     }
-    const coverUrl = await getCoverUrl(item, context, collectionName);
+    const coverUrl = await getCoverUrl(item, mediaClient, collectionName);
 
     try {
       await this.loadCover(coverUrl);
@@ -129,21 +150,18 @@ export class AudioViewer extends BaseViewer<string, Props, State> {
   };
 
   protected async init() {
-    const { context, item, collectionName } = this.props;
+    const { mediaClient, item, collectionName } = this.props;
 
     try {
       let audioUrl: string | undefined;
 
       if (item.status === 'processed') {
-        const artifactUrl = getArtifactUrl(item.artifacts, 'audio.mp3');
-        if (!artifactUrl) {
-          throw new Error('No audio artifacts found');
-        }
-        audioUrl = await constructAuthTokenUrl(
-          artifactUrl,
-          context,
+        audioUrl = await mediaClient.file.getArtifactURL(
+          item.artifacts,
+          'audio.mp3',
           collectionName,
         );
+
         if (!audioUrl) {
           throw new Error('No audio artifacts found');
         }

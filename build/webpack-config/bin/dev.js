@@ -6,7 +6,9 @@
 // in node_modules folder which contains circular symbolic links
 
 const DirectoryWatcher = require('watchpack/lib/DirectoryWatcher');
+
 const _oldSetDirectory = DirectoryWatcher.prototype.setDirectory;
+// eslint-disable-next-line func-names
 DirectoryWatcher.prototype.setDirectory = function(
   directoryPath,
   exist,
@@ -31,9 +33,13 @@ const minimatch = require('minimatch');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const historyApiFallback = require('connect-history-api-fallback');
-const createConfig = require('../config');
+const ora = require('ora');
+const chalk = require('chalk');
+const path = require('path');
+const createWebpackConfig = require('../config');
 const utils = require('../config/utils');
-const { print, devServerBanner, errorMsg } = require('../banner');
+const { print, devServerBanner } = require('../banner');
+
 let HOST = 'localhost';
 let disableHostCheck = false;
 
@@ -63,12 +69,32 @@ async function runDevServer() {
           minimatch(ws.dir, glob, { matchBase: true }),
         ),
       )
-    : workspaces; // if no globs were passed, we'll use all workspaces
+    : workspaces; // if no globs were passed, we'll use all workspaces.
 
-  const globs =
+  let globs =
     workspaceGlobs.length > 0
       ? utils.createWorkspacesGlob(filteredWorkspaces, projectRoot)
       : utils.createDefaultGlob();
+
+  /* At the moment, the website and webpack folders do not build a package and it is not possible to test it.
+  ** The current workaround, we build another package that builds the homepage and indirectly test the website.
+  ** We picked the package polyfills:
+   - the package is internal.
+   - no integration tests will be added.
+   - changes to the package will not impact the build system.
+  */
+  if (['website', 'webpack'].indexOf(globs) === -1) {
+    globs = globs.map(glob =>
+      glob
+        .replace('website', 'packages/core/polyfills')
+        .replace('build/webpack-config', 'packages/core/polyfills')
+        // Remap packages without examples to a package they indend to leverage within their tests
+        .replace(
+          'packages/editor/editor-common',
+          'packages/editor/editor-core',
+        ),
+    );
+  }
 
   if (!globs.length) {
     console.info(
@@ -91,7 +117,7 @@ async function runDevServer() {
   // Creating webpack instance
   //
 
-  const config = createConfig({
+  const config = await createWebpackConfig({
     globs,
     mode,
     websiteEnv,
@@ -104,6 +130,8 @@ async function runDevServer() {
   // Starting Webpack Dev Server
   //
 
+  const spinner = ora(chalk.cyan('Starting webpack dev server')).start();
+
   const server = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
     compress: true,
@@ -113,12 +141,21 @@ async function runDevServer() {
 
     overlay: true,
     stats,
+    // We should use public as content based.
+    contentBase: path.join(__dirname, '../../..', 'website/public'),
   });
 
   return new Promise((resolve, reject) => {
+    compiler.hooks.done.tap('done', () => {
+      spinner.succeed(chalk.cyan('Compiled packages!'));
+    });
+
+    // eslint-disable-next-line consistent-return
     server.listen(PORT, HOST, err => {
       if (err) {
-        console.log(err.stack || err);
+        spinner.fail();
+        console.log(chalk.red(err.stack || err));
+        // eslint-disable-next-line prefer-promise-reject-errors
         return reject(1);
       }
 

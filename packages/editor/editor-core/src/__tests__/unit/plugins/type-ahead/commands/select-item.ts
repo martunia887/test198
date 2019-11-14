@@ -1,3 +1,4 @@
+import { Fragment } from 'prosemirror-model';
 import {
   createEditorFactory,
   doc,
@@ -14,7 +15,7 @@ import {
   selectByIndex,
   selectItem,
 } from '../../../../../plugins/type-ahead/commands/select-item';
-import { datePlugin, extensionPlugin } from '../../../../../plugins';
+import { datePlugin } from '../../../../../plugins';
 import { TypeAheadSelectItem } from '../../../../../plugins/type-ahead/types';
 
 const createTypeAheadPlugin = ({
@@ -144,7 +145,7 @@ describe('typeahead plugin -> commands -> select-item', () => {
       const plugin = createTypeAheadPlugin();
       const { editorView } = createEditor({
         doc: doc(p(typeAheadQuery({ trigger: '/' })('/query{<>}'))),
-        editorPlugins: [plugin, datePlugin],
+        editorPlugins: [plugin, datePlugin()],
       });
       selectItem(
         {
@@ -166,17 +167,45 @@ describe('typeahead plugin -> commands -> select-item', () => {
       const plugin = createTypeAheadPlugin();
       const { editorView } = createEditor({
         doc: doc(p(typeAheadQuery({ trigger: '/' })('/query{<>}'))),
-        editorPlugins: [plugin, datePlugin],
+        editorPlugins: [plugin, datePlugin()],
       });
       selectItem(
         {
           trigger: '/',
-          selectItem: (state, item, insert) => insert('some text'),
+          selectItem: (_state, _item, insert) => insert('some text'),
           getItems: () => [],
         },
         { title: '1' },
       )(editorView.state, editorView.dispatch);
       expect(editorView.state.doc).toEqualDocument(doc(p('some text')));
+    });
+
+    it('should accept fragment', () => {
+      const plugin = createTypeAheadPlugin();
+      const { editorView } = createEditor({
+        doc: doc(p(typeAheadQuery({ trigger: '/' })('/query{<>}'))),
+        editorPlugins: [plugin, datePlugin()],
+      });
+
+      selectItem(
+        {
+          trigger: '/',
+          selectItem: (state, _item, insert) => {
+            const fragment = Fragment.fromArray([
+              state.schema.text('text one'),
+              state.schema.text('  '),
+              state.schema.text('text two'),
+            ]);
+            return insert(fragment);
+          },
+          getItems: () => [],
+        },
+        { title: '1' },
+      )(editorView.state, editorView.dispatch);
+
+      expect(editorView.state.doc).toEqualDocument(
+        doc(p('text one  text two')),
+      );
     });
 
     it('should not add a space when replacing a type ahead query with a text node', () => {
@@ -224,7 +253,7 @@ describe('typeahead plugin -> commands -> select-item', () => {
       selectItem(
         {
           trigger: '/',
-          selectItem: (state, item, replaceWith) =>
+          selectItem: (state, _item, replaceWith) =>
             replaceWith(
               state.schema.nodes.blockquote.createChecked(
                 {},
@@ -252,7 +281,7 @@ describe('typeahead plugin -> commands -> select-item', () => {
       selectItem(
         {
           trigger: '/',
-          selectItem: (state, item, replaceWith) =>
+          selectItem: (state, _item, replaceWith) =>
             replaceWith(
               state.schema.nodes.blockquote.createChecked(
                 {},
@@ -276,7 +305,7 @@ describe('typeahead plugin -> commands -> select-item', () => {
       const plugin = createTypeAheadPlugin();
       const { editorView } = createEditor({
         doc: doc(p(typeAheadQuery({ trigger: '/' })('/query{<>}'))),
-        editorPlugins: [plugin, datePlugin],
+        editorPlugins: [plugin, datePlugin()],
       });
       selectItem(
         {
@@ -299,7 +328,7 @@ describe('typeahead plugin -> commands -> select-item', () => {
       const plugin = createTypeAheadPlugin();
       const { editorView } = createEditor({
         doc: doc(p(typeAheadQuery({ trigger: '/' })('/query{<>}'))),
-        editorPlugins: [plugin, datePlugin],
+        editorPlugins: [plugin, datePlugin()],
       });
       selectItem(
         {
@@ -318,7 +347,6 @@ describe('typeahead plugin -> commands -> select-item', () => {
     });
 
     it("should normalise a nodes layout if it's being nested.", () => {
-      const plugin = createTypeAheadPlugin();
       const { editorView } = createEditor({
         doc: doc(
           bodiedExtension({
@@ -326,12 +354,14 @@ describe('typeahead plugin -> commands -> select-item', () => {
             extensionType: 'atlassian.com.editor',
           })(p(typeAheadQuery({ trigger: '/' })('/query{<>}'))),
         ),
-        editorPlugins: [plugin, extensionPlugin],
+        editorProps: {
+          allowExtension: true,
+        },
       });
       selectItem(
         {
           trigger: '/',
-          selectItem: (state, item, insert) =>
+          selectItem: (state, _item, insert) =>
             insert(
               state.schema.nodes.extension.createChecked({
                 layout: 'full-width',

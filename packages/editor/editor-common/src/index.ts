@@ -1,6 +1,27 @@
 export * from './utils';
 
-export * from './types';
+export {
+  ExtensionParams,
+  ExtensionHandler,
+  UpdateExtension,
+  Extension,
+  ExtensionHandlers,
+  Transformer,
+  SortOrder,
+  // Collab Types
+  CollabEditProvider,
+  CollabEvent,
+  CollabEventData,
+  CollabEventConnectionData,
+  CollabEventInitData,
+  CollabParticipant,
+  CollabeEventPresenceData,
+  CollabEventRemoteData,
+  CollabSendableSelection,
+  CollabEventTelepointerData, // End Collab Types
+  MediaProvider,
+} from './types';
+
 export * from './contextIdentifier';
 
 export {

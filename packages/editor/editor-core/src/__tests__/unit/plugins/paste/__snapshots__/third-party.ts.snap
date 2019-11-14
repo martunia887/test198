@@ -51,20 +51,40 @@ Object {
     Object {
       "content": Array [
         Object {
-          "text": "1. Ordered list item",
-          "type": "text",
+          "content": Array [
+            Object {
+              "content": Array [
+                Object {
+                  "text": "Ordered list item",
+                  "type": "text",
+                },
+              ],
+              "type": "paragraph",
+            },
+          ],
+          "type": "listItem",
         },
       ],
-      "type": "paragraph",
+      "type": "orderedList",
     },
     Object {
       "content": Array [
         Object {
-          "text": "2. Ordered list item",
-          "type": "text",
+          "content": Array [
+            Object {
+              "content": Array [
+                Object {
+                  "text": "Ordered list item",
+                  "type": "text",
+                },
+              ],
+              "type": "paragraph",
+            },
+          ],
+          "type": "listItem",
         },
       ],
-      "type": "paragraph",
+      "type": "orderedList",
     },
     Object {
       "content": Array [
@@ -150,7 +170,7 @@ Object {
           "marks": Array [
             Object {
               "attrs": Object {
-                "href": "https://google.com",
+                "href": "https://google.com/",
               },
               "type": "link",
             },
@@ -1829,13 +1849,33 @@ Object {
           "text": "Emphasis",
           "type": "text",
         },
-      ],
-      "type": "paragraph",
-    },
-    Object {
-      "content": Array [
         Object {
-          "type": "hardBreak",
+          "text": " ",
+          "type": "text",
+        },
+        Object {
+          "marks": Array [
+            Object {
+              "attrs": Object {
+                "type": "sup",
+              },
+              "type": "subsup",
+            },
+          ],
+          "text": "Superscript",
+          "type": "text",
+        },
+        Object {
+          "marks": Array [
+            Object {
+              "attrs": Object {
+                "type": "sub",
+              },
+              "type": "subsup",
+            },
+          ],
+          "text": "Subscript",
+          "type": "text",
         },
       ],
       "type": "paragraph",

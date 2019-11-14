@@ -1,21 +1,14 @@
+import { MediaPicker, isImagePreview } from '@atlaskit/media-picker';
 import {
-  MediaPicker,
-  MediaPickerComponent,
-  MediaPickerComponents,
+  Popup,
+  PopupConfig,
   MediaFile,
-  ComponentConfigs,
   UploadPreviewUpdateEventPayload,
-  UploadEndEventPayload,
   UploadParams,
   UploadErrorEventPayload,
-  ImagePreview,
-  isDropzone,
-  isClipboard,
-  isPopup,
-  isBinaryUploader,
-  isBrowser,
-} from '@atlaskit/media-picker';
-import { Context } from '@atlaskit/media-core';
+  UploadProcessingEventPayload,
+} from '@atlaskit/media-picker/types';
+import { MediaClientConfig } from '@atlaskit/media-core';
 
 import { ErrorReportingHandler } from '@atlaskit/editor-common';
 
@@ -25,29 +18,37 @@ import {
   MobileUploadEndEventPayload,
 } from './types';
 
-export type PickerType = keyof MediaPickerComponents | 'customMediaPicker';
-export type ExtendedComponentConfigs = ComponentConfigs & {
+export type PickerType =
+  | 'popup'
+  | 'clipboard'
+  | 'dropzone'
+  | 'customMediaPicker';
+export type ExtendedComponentConfigs = {
+  popup: PopupConfig;
   customMediaPicker: CustomMediaPicker;
+  dropzone: null;
+  clipboard: null;
 };
 
 export type PickerFacadeConfig = {
-  context: Context;
+  mediaClientConfig: MediaClientConfig;
   errorReporter: ErrorReportingHandler;
 };
 
 export type MediaStateEvent = MediaState;
 export type MediaStateEventListener = (evt: MediaStateEvent) => void;
 
-export type MediaStateEventSubscriber = ((
+export type MediaStateEventSubscriber = (
   listener: MediaStateEventListener,
-) => void);
+) => void;
 export type NewMediaEvent = (
   state: MediaState,
   onStateChanged: MediaStateEventSubscriber,
+  pickerType?: string,
 ) => void;
 
 export default class PickerFacade {
-  private picker: MediaPickerComponent | CustomMediaPicker;
+  private picker?: Popup | CustomMediaPicker;
   private onDragListeners: Array<Function> = [];
   private errorReporter: ErrorReportingHandler;
   private pickerType: PickerType;
@@ -56,48 +57,47 @@ export default class PickerFacade {
     string,
     Array<MediaStateEventListener> | undefined
   > = {};
+  private analyticsName: string | undefined;
 
   constructor(
     pickerType: PickerType,
     readonly config: PickerFacadeConfig,
     readonly pickerConfig?: ExtendedComponentConfigs[PickerType],
     readonly mediaPickerFactoryClass = MediaPicker,
+    analyticsName?: string,
   ) {
     this.pickerType = pickerType;
     this.errorReporter = config.errorReporter;
+    this.analyticsName = analyticsName;
   }
 
   async init(): Promise<PickerFacade> {
     let picker;
     if (this.pickerType === 'customMediaPicker') {
       picker = this.picker = this.pickerConfig as CustomMediaPicker;
-    } else {
+    } else if (this.pickerType === 'popup') {
       picker = this.picker = await this.mediaPickerFactoryClass(
-        this.pickerType,
-        this.config.context,
-        this.pickerConfig as any,
+        this.config.mediaClientConfig,
+        this.pickerConfig as PopupConfig,
       );
     }
 
     (picker as any).on('upload-preview-update', this.handleUploadPreviewUpdate);
     (picker as any).on('upload-processing', this.handleReady);
+    // media picker not always fires upload-processing but always fires upload-end, and since handleReady() is idempotent it can be treated the same
+    (picker as any).on('upload-end', this.handleReady);
     (picker as any).on('upload-error', this.handleUploadError);
     (picker as any).on('mobile-upload-end', this.handleMobileUploadEnd);
-
-    if (isDropzone(picker)) {
-      (picker as any).on('drag-enter', this.handleDragEnter);
-      (picker as any).on('drag-leave', this.handleDragLeave);
-    }
-
-    if (isDropzone(picker) || isClipboard(picker)) {
-      picker.activate();
-    }
 
     return this;
   }
 
   get type() {
     return this.pickerType;
+  }
+
+  get mediaPicker() {
+    return this.picker;
   }
 
   destroy() {
@@ -109,23 +109,15 @@ export default class PickerFacade {
 
     (picker as any).removeAllListeners('upload-preview-update');
     (picker as any).removeAllListeners('upload-processing');
+    (picker as any).removeAllListeners('upload-end');
     (picker as any).removeAllListeners('upload-error');
-
-    if (isDropzone(picker)) {
-      (picker as any).removeAllListeners('drag-enter');
-      (picker as any).removeAllListeners('drag-leave');
-    }
 
     this.onStartListeners = [];
     this.onDragListeners = [];
 
     try {
-      if (isDropzone(picker) || isClipboard(picker)) {
-        picker.deactivate();
-      }
-
-      if (isPopup(picker) || isBrowser(picker)) {
-        picker.teardown();
+      if (this.pickerType === 'popup') {
+        (picker as Popup).teardown();
       }
     } catch (ex) {
       this.errorReporter.captureException(ex);
@@ -133,55 +125,36 @@ export default class PickerFacade {
   }
 
   setUploadParams(params: UploadParams): void {
-    this.picker.setUploadParams(params);
+    if (this.picker) {
+      this.picker.setUploadParams(params);
+    }
   }
 
   onClose(cb: () => void): () => void {
     const { picker } = this;
-    if (isPopup(picker)) {
-      picker.on('closed', cb);
+    if (this.pickerType === 'popup') {
+      const popupPicker = picker as Popup;
+      popupPicker.on('closed', cb);
 
-      return () => picker.off('closed', cb);
+      return () => popupPicker.off('closed', cb);
     }
 
     return () => {};
   }
 
-  activate() {
-    const { picker } = this;
-    if (isDropzone(picker) || isClipboard(picker)) {
-      picker.activate();
-    }
-  }
-
-  deactivate() {
-    const { picker } = this;
-    if (isDropzone(picker) || isClipboard(picker)) {
-      picker.deactivate();
-    }
-  }
-
   show(): void {
-    if (isPopup(this.picker)) {
+    if (this.pickerType === 'popup') {
       try {
-        this.picker.show();
+        (this.picker as Popup).show();
       } catch (ex) {
         this.errorReporter.captureException(ex);
       }
-    } else if (isBrowser(this.picker)) {
-      this.picker.browse();
     }
   }
 
   hide(): void {
-    if (isPopup(this.picker)) {
-      this.picker.hide();
-    }
-  }
-
-  upload(url: string, fileName: string): void {
-    if (isBinaryUploader(this.picker)) {
-      this.picker.upload(url, fileName);
+    if (this.pickerType === 'popup') {
+      (this.picker as Popup).hide();
     }
   }
 
@@ -193,11 +166,13 @@ export default class PickerFacade {
     this.onDragListeners.push(cb);
   }
 
-  private handleUploadPreviewUpdate = (
+  public handleUploadPreviewUpdate = (
     event: UploadPreviewUpdateEventPayload,
   ) => {
-    let { file, preview } = event;
-    const { dimensions, scaleFactor } = preview as ImagePreview;
+    const { file, preview } = event;
+    const { dimensions, scaleFactor } = isImagePreview(preview)
+      ? preview
+      : { dimensions: undefined, scaleFactor: undefined };
 
     const state: MediaState = {
       id: file.id,
@@ -210,7 +185,11 @@ export default class PickerFacade {
 
     this.eventListeners[file.id] = [];
     this.onStartListeners.forEach(cb =>
-      cb(state, evt => this.subscribeStateChanged(file, evt)),
+      cb(
+        state,
+        evt => this.subscribeStateChanged(file, evt),
+        this.analyticsName || this.pickerType,
+      ),
     );
   };
 
@@ -226,7 +205,7 @@ export default class PickerFacade {
     subscribers.push(onStateChanged);
   };
 
-  private handleUploadError = ({ error }: UploadErrorEventPayload) => {
+  public handleUploadError = ({ error }: UploadErrorEventPayload) => {
     if (!error || !error.fileId) {
       const err = new Error(
         `Media: unknown upload-error received from Media Picker: ${error &&
@@ -253,7 +232,7 @@ export default class PickerFacade {
     delete this.eventListeners[error.fileId];
   };
 
-  private handleMobileUploadEnd = (event: MobileUploadEndEventPayload) => {
+  public handleMobileUploadEnd = (event: MobileUploadEndEventPayload) => {
     const { file } = event;
 
     const listeners = this.eventListeners[file.id];
@@ -272,7 +251,7 @@ export default class PickerFacade {
     );
   };
 
-  private handleReady = (event: UploadEndEventPayload) => {
+  public handleReady = (event: UploadProcessingEventPayload) => {
     const { file } = event;
 
     const listeners = this.eventListeners[file.id];
@@ -289,13 +268,5 @@ export default class PickerFacade {
 
     // remove listeners
     delete this.eventListeners[file.id];
-  };
-
-  private handleDragEnter = () => {
-    this.onDragListeners.forEach(cb => cb.call(cb, 'enter'));
-  };
-
-  private handleDragLeave = () => {
-    this.onDragListeners.forEach(cb => cb.call(cb, 'leave'));
   };
 }

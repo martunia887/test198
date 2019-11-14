@@ -26,9 +26,6 @@ import {
   messages,
 } from '../../../../../plugins/block-type/types';
 import { analyticsService } from '../../../../../analytics';
-import panelPlugin from '../../../../../plugins/panel';
-import listPlugin from '../../../../../plugins/lists';
-import codeBlockPlugin from '../../../../../plugins/code-block';
 import { setBlockType } from '../../../../../plugins/block-type/commands';
 import { ReactWrapper } from 'enzyme';
 
@@ -39,7 +36,11 @@ describe('@atlaskit/editor-core/ui/ToolbarBlockType', () => {
     createEditor({
       doc,
       pluginKey,
-      editorPlugins: [panelPlugin, listPlugin, codeBlockPlugin()],
+      editorProps: {
+        allowPanel: true,
+        allowLists: true,
+        allowCodeBlocks: true,
+      },
     });
 
   it('should render disabled ToolbarButton if isDisabled property is true', () => {
@@ -219,12 +220,12 @@ describe('@atlaskit/editor-core/ui/ToolbarBlockType', () => {
       HEADING_5,
       HEADING_6,
     ].forEach(blockType => {
-      it(`should trigger analyticsService.trackEvent when ${
-        blockType.title.defaultMessage
-      } is clicked`, () => {
+      it(`should trigger analyticsService.trackEvent when ${blockType.title.defaultMessage} is clicked`, () => {
         toolbarOption
           .find(Item)
-          .filterWhere(n => n.text() === blockType.title.defaultMessage)
+          .filterWhere(
+            n => n.text().indexOf(blockType.title.defaultMessage) === 0,
+          )
           .simulate('click');
         expect(trackEvent).toHaveBeenCalledWith(
           `atlassian.editor.format.${blockType.name}.button`,

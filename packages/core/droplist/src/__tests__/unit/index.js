@@ -7,7 +7,7 @@ import Item, { ItemGroup } from '@atlaskit/item';
 
 import { name } from '../../version.json';
 
-import DroplistWithAnalytics from '../../../src';
+import DroplistWithAnalytics from '../..';
 import { DroplistWithoutAnalytics as Droplist } from '../../components/Droplist';
 import { Trigger, Content } from '../../styled/Droplist';
 
@@ -57,7 +57,7 @@ describe(`${name} - core`, () => {
 
     it('should pass required properties to Layer', () => {
       const layer = wrapper.find(Layer);
-      expect(layer.prop('offset')).toBe('0 8px');
+      expect(layer.prop('offset')).toBe('0, 8px');
       expect(layer.prop('position')).toBe('bottom left');
       expect(layer.prop('autoFlip')).toBe(wrapper.props().shouldFlip);
       expect(layer.prop('boundariesElement')).toBe('viewport');

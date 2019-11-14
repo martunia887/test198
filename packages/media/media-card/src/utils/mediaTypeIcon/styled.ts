@@ -1,15 +1,13 @@
-/* tslint:disable:variable-name */
-
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass } from 'react';
-import { colors } from '@atlaskit/theme';
+import { Y200, P200, B300 } from '@atlaskit/theme/colors';
 
 const typeToColorMap: any = {
-  image: colors.Y200,
-  audio: colors.P200,
+  image: Y200,
+  audio: P200,
   video: '#ff7143',
-  doc: colors.B300,
+  doc: B300,
   unknown: '#3dc7dc',
 };
 
@@ -17,9 +15,8 @@ export interface IconWrapperProps {
   type: string;
 }
 
-export const IconWrapper: ComponentClass<
-  HTMLAttributes<{}> & IconWrapperProps
-> = styled.div`
+export const IconWrapper: ComponentClass<HTMLAttributes<{}> &
+  IconWrapperProps> = styled.div`
   display: inline-flex;
   color: ${({ type }: IconWrapperProps) =>
     typeToColorMap[type] || typeToColorMap.unknown};

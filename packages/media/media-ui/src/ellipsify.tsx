@@ -1,4 +1,3 @@
-/* tslint:disable:variable-name */
 import * as React from 'react';
 import styled, { ThemedOuterStyledProps } from 'styled-components';
 import * as exenv from 'exenv';
@@ -6,9 +5,8 @@ export interface WrapperProps {
   inline?: boolean;
 }
 
-const Wrapper: React.ComponentClass<
-  React.HTMLAttributes<{}> & ThemedOuterStyledProps<WrapperProps, {}>
-> = styled.div`
+const Wrapper: React.ComponentClass<React.HTMLAttributes<{}> &
+  ThemedOuterStyledProps<WrapperProps, {}>> = styled.div`
   ${({ inline }: WrapperProps) => (inline && 'display: inline;') || ''};
 `;
 

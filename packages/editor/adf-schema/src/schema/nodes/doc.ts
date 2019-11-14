@@ -20,13 +20,17 @@ import {
 } from './code-block';
 import { MediaGroupDefinition as MediaGroup } from './media-group';
 import { MediaSingleDefinition as MediaSingle } from './media-single';
-import { ApplicationCardDefinition as ApplicationCard } from './applicationCard';
 import { DecisionListDefinition as DecisionList } from './decision-list';
-import { TaskListDefinition as TaskList } from './task-list';
+import {
+  TaskListDefinition as TaskList,
+  TaskListWithNestingDefinition as NestableTaskList,
+} from './task-list';
 import { TableDefinition as Table } from './tableNodes';
 import { ExtensionDefinition as Extension } from './extension';
 import { InlineExtensionDefinition as InlineExtension } from './inline-extension';
 import { BodiedExtensionDefinition as BodiedExtension } from './bodied-extension';
+import { ExpandDefinition as Expand } from './expand';
+import { NestedExpandDefinition as NestedExpand } from './nested-expand';
 
 import { TextDefinition as Text } from './text';
 import { HardBreakDefinition as HardBreak } from './hard-break';
@@ -48,7 +52,6 @@ import { CodeDefinition as Code } from '../marks/code';
 import { SubSupDefinition as SubSup } from '../marks/subsup';
 import { UnderlineDefinition as Underline } from '../marks/underline';
 import { TextColorDefinition as TextColor } from '../marks/text-color';
-import { ActionDefinition as Action } from '../marks/action';
 import { AnnotationMarkDefinition as Annotation } from '../marks/annotation';
 
 // NOTE: BlockContent is only being used by layoutColumn now.
@@ -68,10 +71,11 @@ export type BlockContent =
   | CodeBlock
   | MediaGroup
   | MediaSingle
-  | ApplicationCard
   | DecisionList
   | TaskList
+  | NestableTaskList
   | Table
+  | Expand
   | Extension
   | BodiedExtension
   | BlockCard;
@@ -94,14 +98,15 @@ export type TableCellContent = Array<
   | CodeBlock
   | MediaGroup
   | MediaSingle
-  | ApplicationCard
   | DecisionList
   | TaskList
+  | NestableTaskList
   | Extension
   | BlockCard
+  | NestedExpand
 >;
 
-// exclude Extension and BodiedExtension
+// exclude BodiedExtension
 /**
  * @name extension_content
  * @minItems 1
@@ -118,12 +123,21 @@ export type ExtensionContent = Array<
   | CodeBlock
   | MediaGroup
   | MediaSingle
-  | ApplicationCard
   | DecisionList
   | TaskList
+  | NestableTaskList
   | Table
   | Extension
   | BlockCard
+>;
+
+/**
+ * @name nestedExpand_content
+ * @minItems 1
+ * @allowUnsupportedBlock true
+ */
+export type NestedExpandContent = Array<
+  Paragraph | Heading | MediaSingle | MediaGroup
 >;
 
 /**
@@ -148,15 +162,7 @@ export interface NoMark {
  */
 export type InlineFormattedText = Text &
   MarksObject<
-    | Link
-    | Em
-    | Strong
-    | Strike
-    | SubSup
-    | Underline
-    | TextColor
-    | Action
-    | Annotation
+    Link | Em | Strong | Strike | SubSup | Underline | TextColor | Annotation
   >;
 
 /**

@@ -50,9 +50,7 @@ const flavorValidation = (data, errors) => {
   if (data.icecream && data.icecream.length >= 3) {
     return {
       ...errors,
-      icecream: `${
-        data.icecream.length
-      } is too many flavors, don't be greedy, you get to pick 2.`,
+      icecream: `${data.icecream.length} is too many flavors, don't be greedy, you get to pick 2.`,
     };
   }
 
@@ -84,6 +82,7 @@ export default () => (
                   inputId={id}
                   {...rest}
                   options={colors}
+                  isClearable
                 />
                 {error && <ErrorMessage>{error}</ErrorMessage>}
               </Fragment>

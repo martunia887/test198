@@ -1,13 +1,14 @@
-import * as util from '../../../newgen/utils';
-const constructAuthTokenUrlSpy = jest.spyOn(util, 'constructAuthTokenUrl');
-
 import * as React from 'react';
 import { Observable } from 'rxjs';
-import { ReactWrapper, mount } from 'enzyme';
-import { MediaType, FileState, Identifier } from '@atlaskit/media-core';
+import { ReactWrapper } from 'enzyme';
+import { MediaType, FileState, Identifier } from '@atlaskit/media-client';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
-import { fakeIntl } from '@atlaskit/media-test-helpers';
-import { createContext } from '../_stubs';
+import {
+  fakeIntl,
+  fakeMediaClient,
+  asMock,
+  mountWithIntlContext,
+} from '@atlaskit/media-test-helpers';
 import { Header, State as HeaderState } from '../../../newgen/header';
 import { MetadataFileName, MetadataSubText } from '../../../newgen/styled';
 import { LeftHeader } from '../../../newgen/styled';
@@ -17,7 +18,15 @@ const identifier: Identifier = {
   occurrenceKey: 'some-custom-occurrence-key',
   mediaItemType: 'file',
 };
-
+const externalIdentifierWithName: Identifier = {
+  dataURI: 'some-external-src',
+  name: 'some-name',
+  mediaItemType: 'external-image',
+};
+const externalIdentifier: Identifier = {
+  dataURI: 'some-external-src',
+  mediaItemType: 'external-image',
+};
 const identifier2: Identifier = {
   id: 'some-id-2',
   occurrenceKey: 'some-custom-occurrence-key',
@@ -38,42 +47,51 @@ const processedImageState: FileState = {
 };
 
 describe('<Header />', () => {
-  afterEach(() => {
-    constructAuthTokenUrlSpy.mockClear();
-  });
-
   it('shows an empty header while loading', () => {
-    const context = createContext({
-      getFileState: () => Observable.empty(),
-    });
-    const el = mount(
-      <Header intl={fakeIntl} context={context} identifier={identifier} />,
+    const mediaClient = fakeMediaClient();
+    mediaClient.file.getFileState = () => Observable.empty();
+    const el = mountWithIntlContext(
+      <Header
+        intl={fakeIntl}
+        mediaClient={mediaClient}
+        identifier={identifier}
+      />,
     );
     const metadata = el.find(LeftHeader);
     expect(metadata.text()).toEqual('');
   });
 
   it('resubscribes to the provider when the data property value is changed', () => {
-    const context = createContext({
-      getFileState: () => Observable.of(processedImageState),
-    });
-    const el = mount(
-      <Header intl={fakeIntl} context={context} identifier={identifier} />,
+    const mediaClient = fakeMediaClient();
+    asMock(mediaClient.file.getFileState).mockReturnValue(
+      Observable.of(processedImageState),
+    );
+    const el = mountWithIntlContext(
+      <Header
+        intl={fakeIntl}
+        mediaClient={mediaClient}
+        identifier={identifier}
+      />,
     );
     el.update();
     expect(el.find(MetadataFileName).text()).toEqual('my image');
 
-    expect(context.file.getFileState).toHaveBeenCalledTimes(1);
+    expect(mediaClient.file.getFileState).toHaveBeenCalledTimes(1);
     el.setProps({ identifier: identifier2 });
-    expect(context.file.getFileState).toHaveBeenCalledTimes(2);
+    expect(mediaClient.file.getFileState).toHaveBeenCalledTimes(2);
   });
 
   it('component resets initial state when new identifier is passed', () => {
-    const context = createContext({
-      getFileState: () => Observable.of(processedImageState),
-    });
-    const el = mount<{}, HeaderState>(
-      <Header intl={fakeIntl} context={context} identifier={identifier} />,
+    const mediaClient = fakeMediaClient();
+    asMock(mediaClient.file.getFileState).mockReturnValue(
+      Observable.of(processedImageState),
+    );
+    const el = mountWithIntlContext<{}, HeaderState>(
+      <Header
+        intl={fakeIntl}
+        mediaClient={mediaClient}
+        identifier={identifier}
+      />,
     );
 
     expect(el.state().item.status).toEqual('SUCCESSFUL');
@@ -81,39 +99,76 @@ describe('<Header />', () => {
     // since the test is executed synchronously
     // let's prevent the second call to getFile from immediately resolving and
     // updating the state to SUCCESSFUL before we run the assertion.
-    context.file.getFileState = () => Observable.never();
+    asMock(mediaClient.file.getFileState).mockReturnValue(Observable.never());
 
     el.setProps({ identifier: identifier2 });
     expect(el.state().item.status).toEqual('PENDING');
   });
 
-  it('component resets initial state when new context is passed', () => {
-    const context = createContext({
-      getFileState: () => Observable.of(processedImageState),
-    });
-    const el = mount<{}, HeaderState>(
-      <Header intl={fakeIntl} context={context} identifier={identifier} />,
+  it('component resets initial state when new mediaClient is passed', () => {
+    const mediaClient = fakeMediaClient();
+    asMock(mediaClient.file.getFileState).mockReturnValue(
+      Observable.of(processedImageState),
+    );
+    const el = mountWithIntlContext<{}, HeaderState>(
+      <Header
+        intl={fakeIntl}
+        mediaClient={mediaClient}
+        identifier={identifier}
+      />,
     );
     expect(el.state().item.status).toEqual('SUCCESSFUL');
 
     // since the test is executed synchronously
     // let's prevent the second call to getFile from immediately resolving and
     // updating the state to SUCCESSFUL before we run the assertion.
-    const newContext = createContext({
-      getFileState: () => Observable.never(),
-    });
-    el.setProps({ context: newContext });
+    const newMediaClient = fakeMediaClient();
+    asMock(newMediaClient.file.getFileState).mockReturnValue(
+      Observable.never(),
+    );
+    el.setProps({ mediaClient: newMediaClient });
     expect(el.state().item.status).toEqual('PENDING');
   });
 
   describe('Metadata', () => {
+    it('should work with external image identifier', () => {
+      const element = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={{} as any}
+          identifier={externalIdentifierWithName}
+        />,
+      );
+
+      expect(element.find(MetadataFileName).text()).toEqual('some-name');
+      expect(element.find(MetadataSubText).text()).toEqual('image');
+    });
+
+    it('should default to dataURI as name when no name is passed in a external image identifier', () => {
+      const element = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={{} as any}
+          identifier={externalIdentifier}
+        />,
+      );
+
+      expect(element.find(MetadataFileName).text()).toEqual(
+        'some-external-src',
+      );
+    });
+
     describe('File collectionName', () => {
       it('shows the title when loaded', () => {
-        const context = createContext({
-          getFileState: () => Observable.of(processedImageState),
-        });
-        const el = mount(
-          <Header intl={fakeIntl} context={context} identifier={identifier} />,
+        const mediaClient = fakeMediaClient();
+        mediaClient.file.getFileState = () =>
+          Observable.of(processedImageState);
+        const el = mountWithIntlContext(
+          <Header
+            intl={fakeIntl}
+            mediaClient={mediaClient}
+            identifier={identifier}
+          />,
         );
         el.update();
         expect(el.find(MetadataFileName).text()).toEqual('my image');
@@ -124,11 +179,16 @@ describe('<Header />', () => {
           ...processedImageState,
           name: '',
         };
-        const context = createContext({
-          getFileState: () => Observable.of(unNamedImage),
-        });
-        const el = mount(
-          <Header intl={fakeIntl} context={context} identifier={identifier} />,
+        const mediaClient = fakeMediaClient();
+        asMock(mediaClient.file.getFileState).mockReturnValue(
+          Observable.of(unNamedImage),
+        );
+        const el = mountWithIntlContext(
+          <Header
+            intl={fakeIntl}
+            mediaClient={mediaClient}
+            identifier={identifier}
+          />,
         );
         el.update();
         expect(el.find(MetadataFileName).text()).toEqual('unknown');
@@ -152,11 +212,14 @@ describe('<Header />', () => {
             image: {},
           },
         };
-        const context = createContext({
-          getFileState: () => Observable.of(testItem),
-        });
-        const el = mount(
-          <Header intl={fakeIntl} context={context} identifier={identifier} />,
+        const mediaClient = fakeMediaClient();
+        mediaClient.file.getFileState = () => Observable.of(testItem);
+        const el = mountWithIntlContext(
+          <Header
+            intl={fakeIntl}
+            mediaClient={mediaClient}
+            identifier={identifier}
+          />,
         );
         el.update();
         expect(el.find(MetadataSubText).text()).toEqual(
@@ -177,11 +240,14 @@ describe('<Header />', () => {
           ...processedImageState,
           size: 0,
         };
-        const context = createContext({
-          getFileState: () => Observable.of(noSizeImage),
-        });
-        const el = mount(
-          <Header intl={fakeIntl} context={context} identifier={identifier} />,
+        const mediaClient = fakeMediaClient();
+        mediaClient.file.getFileState = () => Observable.of(noSizeImage);
+        const el = mountWithIntlContext(
+          <Header
+            intl={fakeIntl}
+            mediaClient={mediaClient}
+            identifier={identifier}
+          />,
         );
         el.update();
         expect(el.find(MetadataSubText).text()).toEqual('image');
@@ -193,11 +259,14 @@ describe('<Header />', () => {
           mediaType: '' as MediaType,
           size: 23232323,
         };
-        const context = createContext({
-          getFileState: () => Observable.of(noMediaTypeElement),
-        });
-        const el = mount(
-          <Header intl={fakeIntl} context={context} identifier={identifier} />,
+        const mediaClient = fakeMediaClient();
+        mediaClient.file.getFileState = () => Observable.of(noMediaTypeElement);
+        const el = mountWithIntlContext(
+          <Header
+            intl={fakeIntl}
+            mediaClient={mediaClient}
+            identifier={identifier}
+          />,
         );
         el.update();
         expect(el.find(MetadataSubText).text()).toEqual('unknown · 22.2 MB');
@@ -205,11 +274,15 @@ describe('<Header />', () => {
     });
 
     it('shows nothing when metadata failed to be retrieved', () => {
-      const context = createContext({
-        getFileState: () => Observable.throw('something bad happened!'),
-      });
-      const el = mount(
-        <Header intl={fakeIntl} context={context} identifier={identifier} />,
+      const mediaClient = fakeMediaClient();
+      mediaClient.file.getFileState = () =>
+        Observable.throw('something bad happened!');
+      const el = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={mediaClient}
+          identifier={identifier}
+        />,
       );
       const metadata = el.find(LeftHeader);
       expect(metadata.text()).toEqual('');
@@ -217,40 +290,42 @@ describe('<Header />', () => {
 
     it('MSW-720: passes the collectionName to getFile', () => {
       const collectionName = 'some-collection';
-      const context = createContext({
-        getFileState: () => Observable.of(processedImageState),
-      });
+      const mediaClient = fakeMediaClient();
+      asMock(mediaClient.file.getFileState).mockReturnValue(
+        Observable.of(processedImageState),
+      );
       const identifierWithCollection = { ...identifier, collectionName };
-      const el = mount(
+      const el = mountWithIntlContext(
         <Header
           intl={fakeIntl}
-          context={context}
+          mediaClient={mediaClient}
           identifier={identifierWithCollection}
         />,
       );
       el.update();
-      expect(context.file.getFileState).toHaveBeenCalledWith('some-id', {
+      expect(mediaClient.file.getFileState).toHaveBeenCalledWith('some-id', {
         collectionName: 'some-collection',
       });
     });
 
-    it('MSW-720: passes the collectionName to context.file.downloadBinary', () => {
+    it('MSW-720: passes the collectionName to mediaClient.file.downloadBinary', () => {
       const collectionName = 'some-collection';
-      const context = createContext({
-        getFileState: () => Observable.of(processedImageState),
-      });
+      const mediaClient = fakeMediaClient();
+      asMock(mediaClient.file.getFileState).mockReturnValue(
+        Observable.of(processedImageState),
+      );
       const identifierWithCollection = { ...identifier, collectionName };
-      const el = mount(
+      const el = mountWithIntlContext(
         <Header
           intl={fakeIntl}
-          context={context}
+          mediaClient={mediaClient}
           identifier={identifierWithCollection}
         />,
       );
       el.update();
       el.find(DownloadIcon).simulate('click');
       expect(
-        (context.file.downloadBinary as jest.Mock).mock.calls[0][2],
+        (mediaClient.file.downloadBinary as jest.Mock).mock.calls[0][2],
       ).toEqual(collectionName);
     });
   });
@@ -260,38 +335,48 @@ describe('<Header />', () => {
       el: ReactWrapper<any, any>,
       enabled: boolean,
     ) => {
-      expect(el.find({ type: 'button', isDisabled: !enabled })).toHaveLength(1);
+      expect(el.find({ isDisabled: !enabled }).find('button')).toHaveLength(1);
       expect(el.find(DownloadIcon)).toHaveLength(1);
     };
 
     it('should show the download button disabled while the item metadata is loading', () => {
-      const context = createContext({
-        getFileState: () => Observable.empty(),
-      });
-      const el = mount(
-        <Header intl={fakeIntl} context={context} identifier={identifier} />,
+      const mediaClient = fakeMediaClient();
+      mediaClient.file.getFileState = () => Observable.empty();
+      const el = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={mediaClient}
+          identifier={identifier}
+        />,
       );
       el.update();
       assertDownloadButton(el, false);
     });
 
     it('should show the download button enabled when the item is loaded', () => {
-      const context = createContext({
-        getFileState: () => Observable.of(processedImageState),
-      });
-      const el = mount(
-        <Header intl={fakeIntl} context={context} identifier={identifier} />,
+      const mediaClient = fakeMediaClient();
+      mediaClient.file.getFileState = () => Observable.of(processedImageState);
+      const el = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={mediaClient}
+          identifier={identifier}
+        />,
       );
       el.update();
       assertDownloadButton(el, true);
     });
 
     it('should show the download button disabled when there is an error', () => {
-      const context = createContext({
-        getFileState: () => Observable.throw('something bad happened!'),
-      });
-      const el = mount(
-        <Header intl={fakeIntl} context={context} identifier={identifier} />,
+      const mediaClient = fakeMediaClient();
+      mediaClient.file.getFileState = () =>
+        Observable.throw('something bad happened!');
+      const el = mountWithIntlContext(
+        <Header
+          intl={fakeIntl}
+          mediaClient={mediaClient}
+          identifier={identifier}
+        />,
       );
       el.update();
       assertDownloadButton(el, false);

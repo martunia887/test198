@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { ProcessedFileState } from '@atlaskit/media-core';
+
+import { ProcessedFileState } from '@atlaskit/media-client';
 import {
   awaitError,
   mountWithIntlContext,
-  fakeContext,
+  fakeMediaClient,
 } from '@atlaskit/media-test-helpers';
+
 import {
   ImageViewer,
-  REQUEST_CANCELLED,
   ImageViewerProps,
 } from '../../../../../newgen/viewers/image';
 import { BaseState } from '../../../../../newgen/viewers/base-viewer';
@@ -28,20 +29,20 @@ const imageItem: ProcessedFileState = {
 };
 
 function createFixture(response: Promise<Blob>, item = imageItem) {
-  const context = fakeContext();
-  (context.getImage as jest.Mock).mockReturnValue(response);
+  const mediaClient = fakeMediaClient();
+  (mediaClient.getImage as jest.Mock).mockReturnValue(response);
   const onClose = jest.fn();
   const onLoaded = jest.fn();
   const el = mountWithIntlContext<ImageViewerProps, BaseState<Content>>(
     <ImageViewer
-      context={context}
+      mediaClient={mediaClient}
       item={item}
       collectionName={collectionName}
       onClose={onClose}
       onLoad={onLoaded}
     />,
   );
-  return { context, el, onClose };
+  return { mediaClient, el, onClose };
 }
 
 describe('ImageViewer', () => {
@@ -54,17 +55,27 @@ describe('ImageViewer', () => {
     expect(el.state().content.data).toBeDefined();
   });
 
-  it('does not update state when image fetch request is cancelled', async () => {
-    const response = Promise.reject(new Error(REQUEST_CANCELLED));
+  it('should not update state when image fetch request is cancelled', async () => {
+    const response = Promise.reject(new Error('request_cancelled'));
     const { el } = createFixture(response);
 
-    (el as any).instance()['preventRaceCondition'] = jest.fn();
+    const previousContent = el.state().content;
+    expect(previousContent).toEqual({ state: { status: 'PENDING' } });
 
-    await awaitError(response, REQUEST_CANCELLED);
+    await awaitError(response, 'request_cancelled');
 
-    expect(
-      (el as any).instance()['preventRaceCondition'].mock.calls.length === 1,
-    );
+    expect(el.state().content).toEqual(previousContent);
+  });
+
+  it('should not call `onLoad` callback when image fetch request is cancelled', async () => {
+    const response = Promise.reject(new Error('request_cancelled'));
+    const { el } = createFixture(response);
+
+    expect(el.props().onLoad).not.toHaveBeenCalled();
+
+    await awaitError(response, 'request_cancelled');
+
+    expect(el.props().onLoad).not.toHaveBeenCalled();
   });
 
   it('cancels an image fetch request when unmounted', () => {
@@ -94,23 +105,40 @@ describe('ImageViewer', () => {
     expect(revokeObjectUrl).toHaveBeenCalled();
   });
 
-  it('should pass collectionName to context.getImage', async () => {
+  it('should call mediaClient.getImage when image representation is present and no preview is present', async () => {
     const response = Promise.resolve(new Blob());
-    const { el, context } = createFixture(response);
+    const { el, mediaClient } = createFixture(response);
 
     await response;
     el.update();
 
-    expect(context.getImage).toHaveBeenCalledWith(
+    expect(mediaClient.getImage).toHaveBeenCalledWith(
       'some-id',
-      expect.objectContaining({ collection: 'some-collection' }),
+      {
+        collection: 'some-collection',
+        mode: 'fit',
+      },
       expect.anything(),
+      true,
     );
   });
 
-  it('should not call context.getImage when image representation is not present', async () => {
+  it('should not call mediaClient.getImage when image representation and a preview is present', async () => {
     const response = Promise.resolve(new Blob());
-    const { el, context } = createFixture(response, {
+    const { el, mediaClient } = createFixture(response, {
+      ...imageItem,
+      preview: { value: new Blob() },
+    });
+
+    await response;
+    el.update();
+
+    expect(mediaClient.getImage).not.toHaveBeenCalled();
+  });
+
+  it('should not call mediaClient.getImage when image representation is not present', async () => {
+    const response = Promise.resolve(new Blob());
+    const { el, mediaClient } = createFixture(response, {
       ...imageItem,
       representations: {},
     });
@@ -118,7 +146,7 @@ describe('ImageViewer', () => {
     await response;
     el.update();
 
-    expect(context.getImage).not.toHaveBeenCalled();
+    expect(mediaClient.getImage).not.toHaveBeenCalled();
   });
 
   it('MSW-700: clicking on background of ImageViewer does not close it', async () => {

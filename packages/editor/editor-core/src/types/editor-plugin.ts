@@ -10,19 +10,25 @@ import { QuickInsertHandler } from '../plugins/quick-insert/types';
 import { TypeAheadHandler } from '../plugins/type-ahead/types';
 import { FloatingToolbarHandler } from '../plugins/floating-toolbar/types';
 import { PortalProviderAPI } from '../ui/PortalProvider';
-import { NodeConfig, MarkConfig } from './editor-config';
+import { NodeConfig, MarkConfig, EditorConfig } from './editor-config';
 import { EditorProps, EditorAppearance } from './editor-props';
-import { AnalyticsEventPayload } from '../plugins/analytics';
+import { DispatchAnalyticsEvent } from '../plugins/analytics';
 
 export type PMPluginFactoryParams = {
   schema: Schema;
   props: EditorProps;
+  prevProps?: EditorProps;
   dispatch: Dispatch;
   eventDispatcher: EventDispatcher;
   providerFactory: ProviderFactory;
-  errorReporter: ErrorReporter;
+  errorReporter?: ErrorReporter;
   portalProviderAPI: PortalProviderAPI;
   reactContext: () => { [key: string]: any };
+  dispatchAnalyticsEvent: DispatchAnalyticsEvent;
+};
+
+export type PMPluginCreateConfig = PMPluginFactoryParams & {
+  editorConfig: EditorConfig;
 };
 
 export type PMPluginFactory = (
@@ -33,7 +39,7 @@ export type UiComponentFactoryParams = {
   editorView: EditorView;
   editorActions: EditorActions;
   eventDispatcher: EventDispatcher;
-  dispatchAnalyticsEvent?: (payload: AnalyticsEventPayload) => void;
+  dispatchAnalyticsEvent?: DispatchAnalyticsEvent;
   providerFactory: ProviderFactory;
   appearance: EditorAppearance;
   popupsMountPoint?: HTMLElement;
@@ -63,11 +69,16 @@ export type PluginsOptions = {
   floatingToolbar?: FloatingToolbarHandler;
 };
 
+export type PMPlugin = {
+  name: string;
+  plugin: PMPluginFactory;
+};
+
 export interface EditorPlugin {
   /**
-   * Name of a plugin, that other plugins can use to provide options to it.
+   * Name of a plugin, that other plugins can use to provide options to it or exclude via a preset.
    */
-  name?: string;
+  name: string;
 
   /**
    * Options that will be passed to a plugin with a corresponding name if it exists and enabled.
@@ -77,9 +88,7 @@ export interface EditorPlugin {
   /**
    * List of ProseMirror-plugins. This is where we define which plugins will be added to EditorView (main-plugin, keybindings, input-rules, etc.).
    */
-  pmPlugins?: (
-    pluginOptions?: any,
-  ) => { name: string; plugin: PMPluginFactory }[];
+  pmPlugins?: (pluginOptions?: any) => Array<PMPlugin>;
 
   /**
    * List of Nodes to add to the schema.

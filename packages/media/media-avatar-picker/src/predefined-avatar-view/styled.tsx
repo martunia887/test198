@@ -1,44 +1,38 @@
-/* tslint:disable:variable-name */
-
 import styled from 'styled-components';
 
 import { HTMLAttributes, ComponentClass, ImgHTMLAttributes } from 'react';
-import { colors, borderRadius, gridSize } from '@atlaskit/theme';
+import { borderRadius, gridSize } from '@atlaskit/theme/constants';
+import { B200 } from '@atlaskit/theme/colors';
 
 export interface AvatarImageProps {
   isSelected: boolean;
 }
 
-const AvatarImage: ComponentClass<
-  ImgHTMLAttributes<{}> & AvatarImageProps
-> = styled.img`
+const AvatarImage: ComponentClass<ImgHTMLAttributes<{}> &
+  AvatarImageProps> = styled.img`
   border-radius: ${borderRadius()};
   cursor: pointer;
   ${({ isSelected }: AvatarImageProps) =>
     isSelected
       ? `
-    box-shadow: 0px 0px 0px 1px white, 0px 0px 0px 3px ${colors.B200};
+    box-shadow: 0px 0px 0px 1px white, 0px 0px 0px 3px ${B200};
   `
       : ''};
 `;
 
-export const LargeAvatarImage: ComponentClass<
-  ImgHTMLAttributes<{}> & AvatarImageProps
-> = styled(AvatarImage)`
+export const LargeAvatarImage: ComponentClass<ImgHTMLAttributes<{}> &
+  AvatarImageProps> = styled(AvatarImage)`
   width: ${gridSize() * 9}px;
   height: ${gridSize() * 9}px;
 `;
 
-export const SmallAvatarImage: ComponentClass<
-  ImgHTMLAttributes<{}> & AvatarImageProps
-> = styled(AvatarImage)`
+export const SmallAvatarImage: ComponentClass<ImgHTMLAttributes<{}> &
+  AvatarImageProps> = styled(AvatarImage)`
   width: ${gridSize() * 5}px;
   height: ${gridSize() * 5}px;
 `;
 
-export const PredefinedAvatarViewWrapper: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const PredefinedAvatarViewWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   ul {
     display: flex;
     flex-flow: row wrap;

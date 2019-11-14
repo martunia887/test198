@@ -1,4 +1,9 @@
 import {
+  bitbucketSchema,
+  confluenceSchema,
+  createJIRASchema,
+} from '@atlaskit/adf-schema';
+import {
   createEditorFactory,
   doc,
   // Node
@@ -8,6 +13,8 @@ import {
   li,
   code_block,
   emoji,
+  expand,
+  nestedExpand,
   br,
   h1,
   h2,
@@ -37,19 +44,15 @@ import {
   underline,
 } from '@atlaskit/editor-test-helpers';
 import { ProviderFactory } from '@atlaskit/editor-common';
+import { BitbucketTransformer } from '@atlaskit/editor-bitbucket-transformer';
+import { ConfluenceTransformer } from '@atlaskit/editor-confluence-transformer';
+import { JIRATransformer } from '@atlaskit/editor-jira-transformer';
+import { MarkdownTransformer } from '@atlaskit/editor-markdown-transformer';
+import { WikiMarkupTransformer } from '@atlaskit/editor-wikimarkup-transformer';
 import { emoji as emojiData } from '@atlaskit/util-data-test';
 import { Node as PMNode } from 'prosemirror-model';
 
 import { JSONTransformer, JSONDocNode } from '../../index';
-import emojiPlugin from '../../../../editor-core/src/plugins/emoji';
-import mentionsPlugin from '../../../../editor-core/src/plugins/mentions';
-import codeBlockPlugin from '../../../../editor-core/src/plugins/code-block';
-import mediaPlugin from '../../../../editor-core/src/plugins/media';
-import textColorPlugin from '../../../../editor-core/src/plugins/text-color';
-import panelPlugin from '../../../../editor-core/src/plugins/panel';
-import listPlugin from '../../../../editor-core/src/plugins/lists';
-import rulePlugin from '../../../../editor-core/src/plugins/rule';
-import tablesPlugin from '../../../../editor-core/src/plugins/table';
 
 const transformer = new JSONTransformer();
 const toJSON = (node: PMNode) => transformer.encode(node);
@@ -60,6 +63,7 @@ describe('JSONTransformer:', () => {
   const createEditor = createEditorFactory();
 
   beforeAll(() => {
+    // @ts-ignore
     global['fetch'] = () => Promise.resolve();
   });
 
@@ -67,19 +71,62 @@ describe('JSONTransformer:', () => {
     const editor = (doc: any) =>
       createEditor({
         doc,
-        editorPlugins: [
-          emojiPlugin,
-          mentionsPlugin(),
-          codeBlockPlugin(),
-          mediaPlugin(),
-          textColorPlugin,
-          panelPlugin,
-          listPlugin,
-          rulePlugin,
-          tablesPlugin(),
-        ],
+        editorProps: {
+          emojiProvider: new Promise(() => {}),
+          mentionProvider: new Promise(() => {}),
+          allowCodeBlocks: true,
+          media: {},
+          allowTextColor: true,
+          allowPanel: true,
+          allowLists: true,
+          allowRule: true,
+          allowTables: true,
+          UNSAFE_allowExpand: true,
+        },
         providerFactory: ProviderFactory.create({ emojiProvider }),
       });
+
+    const standardEmptyAdf: JSONDocNode = {
+      type: 'doc',
+      version: 1,
+      content: [],
+    };
+
+    it('should create a standard empty adf for empty Bitbucket', () => {
+      const bitbucketTransformer = new BitbucketTransformer(bitbucketSchema);
+
+      expect(toJSON(bitbucketTransformer.parse(''))).toEqual(standardEmptyAdf);
+    });
+
+    it('should create a standard empty adf for empty Confluence', () => {
+      const confluenceTransformer = new ConfluenceTransformer(confluenceSchema);
+
+      expect(toJSON(confluenceTransformer.parse('<p />'))).toEqual(
+        standardEmptyAdf,
+      );
+    });
+
+    it('should create a standard empty adf for empty JIRA', () => {
+      const schema = createJIRASchema({
+        allowBlockQuote: true,
+        allowLists: true,
+      });
+      const jiraTransformer = new JIRATransformer(schema);
+
+      expect(toJSON(jiraTransformer.parse(''))).toEqual(standardEmptyAdf);
+    });
+
+    it('should create a standard empty adf for empty Markdown', () => {
+      const markdownTransformer = new MarkdownTransformer();
+
+      expect(toJSON(markdownTransformer.parse(''))).toEqual(standardEmptyAdf);
+    });
+
+    it('should create a standard empty adf for empty WikiMarkup', () => {
+      const wikiMarkupTransformer = new WikiMarkupTransformer();
+
+      expect(toJSON(wikiMarkupTransformer.parse(''))).toEqual(standardEmptyAdf);
+    });
 
     it('should have an empty content attribute for a header with no content', () => {
       const { editorView } = editor(doc(h1()));
@@ -166,6 +213,100 @@ describe('JSONTransformer:', () => {
                   type: 'file',
                   collection: '',
                 },
+              },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('should strip optional attrs from expand node', () => {
+      const { editorView } = editor(
+        doc(
+          expand({
+            title: 'Click here to expand...',
+            __expanded: true,
+          })(p('hello')),
+        ),
+      );
+      expect(toJSON(editorView.state.doc)).toEqual({
+        version: 1,
+        type: 'doc',
+        content: [
+          {
+            type: 'expand',
+            attrs: {
+              title: 'Click here to expand...',
+            },
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'text',
+                    text: 'hello',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('should strip optional attrs from nestedExpand node', () => {
+      const { editorView } = editor(
+        doc(
+          table()(
+            tr(
+              td({})(
+                nestedExpand({
+                  title: 'Click here to expand...',
+                  __expanded: true,
+                })(p('hello')),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(toJSON(editorView.state.doc)).toEqual({
+        version: 1,
+        type: 'doc',
+        content: [
+          {
+            type: 'table',
+            attrs: {
+              isNumberColumnEnabled: false,
+              layout: 'default',
+            },
+            content: [
+              {
+                type: 'tableRow',
+                content: [
+                  {
+                    type: 'tableCell',
+                    attrs: {},
+                    content: [
+                      {
+                        type: 'nestedExpand',
+                        attrs: {
+                          title: 'Click here to expand...',
+                        },
+                        content: [
+                          {
+                            type: 'paragraph',
+                            content: [
+                              {
+                                type: 'text',
+                                text: 'hello',
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
@@ -501,6 +642,31 @@ describe('JSONTransformer:', () => {
   });
 
   describe('parse', () => {
+    it('should create standard prose mirror for empty content', () => {
+      const adf: JSONDocNode = {
+        version: 1,
+        type: 'doc',
+        content: [],
+      };
+
+      expect(parseJSON(adf)).toEqualDocument(doc(p()));
+    });
+
+    it('should create standard prose mirror for empty paragraph', () => {
+      const adf: JSONDocNode = {
+        version: 1,
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [],
+          },
+        ],
+      };
+
+      expect(parseJSON(adf)).toEqualDocument(doc(p()));
+    });
+
     it('should convert ADF to PM representation', () => {
       const adf: JSONDocNode = {
         version: 1,

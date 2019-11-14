@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { md, Example, Props, code } from '@atlaskit/docs';
+import {
+  md,
+  Example,
+  Props,
+  code,
+  AtlassianInternalWarning,
+} from '@atlaskit/docs';
+
 import StatusExample from '../examples/00-simple-status';
 const StatusSource = require('!!raw-loader!../examples/00-simple-status');
 import StatusPickerExample from '../examples/01-status-picker';
@@ -8,6 +15,8 @@ const StatusPickerSource = require('!!raw-loader!../examples/01-status-picker');
 const StatusPickerProps = require('!!extract-react-types-loader!../src/components/StatusPicker');
 
 export default md`
+${(<AtlassianInternalWarning />)}
+
 This component is the implementation of the Status element in React.
 
 ## Usage
@@ -38,7 +47,7 @@ This component is the implementation of the Status element in React.
     />
   )}
 
-  ${<Props heading="StatusPicker Props" props={StatusPickerProps} />}
+  ${(<Props heading="StatusPicker Props" props={StatusPickerProps} />)}
 `;
 
 // TODO: Add Props for Status when pretty prop types support function.

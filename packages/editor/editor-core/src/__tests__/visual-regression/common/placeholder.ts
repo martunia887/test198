@@ -1,8 +1,8 @@
-import { initFullPageEditorWithAdf, snapshot } from '../_utils';
-import * as adf from './__fixtures__/noData-adf.json';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+import adf from './__fixtures__/noData-adf.json';
 
 describe('Placeholder', () => {
-  let page;
+  let page: any;
 
   beforeAll(() => {
     // @ts-ignore
@@ -10,7 +10,11 @@ describe('Placeholder', () => {
   });
 
   it('wraps long placeholder onto new line', async () => {
-    await initFullPageEditorWithAdf(page, adf);
-    await snapshot(page, 0.01);
+    await initEditorWithAdf(page, {
+      appearance: Appearance.fullPage,
+      adf,
+      viewport: { width: 800, height: 300 },
+    });
+    await snapshot(page);
   });
 });

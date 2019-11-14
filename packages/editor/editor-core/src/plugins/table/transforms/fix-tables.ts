@@ -8,12 +8,12 @@ import {
   tableCellMinWidth,
 } from '@atlaskit/editor-common';
 
-import { contentWidth } from '../pm-plugins/table-resizing/resizer/contentWidth';
 import {
-  calculateColWidth,
+  calculateColumnWidth,
   getCellsRefsInColumn,
-} from '../pm-plugins/table-resizing/resizer/utils';
-import { getLayoutSize } from '../pm-plugins/table-resizing/utils';
+  contentWidth,
+  getLayoutSize,
+} from '../pm-plugins/table-resizing/utils';
 import { sendLogs } from '../../../utils/sendLogs';
 
 export const fireAnalytics = (properties = {}) =>
@@ -41,7 +41,7 @@ export const removeExtraneousColumnWidths = (
   node: PMNode,
   basePos: number,
   tr: Transaction,
-) => {
+): boolean => {
   let hasProblems = false;
 
   tr = replaceCells(tr, node, basePos, cell => {
@@ -64,19 +64,24 @@ export const removeExtraneousColumnWidths = (
 
   if (hasProblems) {
     fireAnalytics({ message: 'removeExtraneousColumnWidths' });
+    return true;
   }
 
-  return tr;
+  return false;
 };
 
-export const fixTables = (tr: Transaction): Transaction => {
+export const fixTables = (tr: Transaction): Transaction | undefined => {
+  let hasProblems = false;
   tr.doc.descendants((node, pos) => {
     if (node.type.name === 'table') {
       // in the unlikely event of having to fix multiple tables at the same time
-      tr = removeExtraneousColumnWidths(node, tr.mapping.map(pos), tr);
+      hasProblems = removeExtraneousColumnWidths(node, tr.mapping.map(pos), tr);
     }
   });
-  return tr;
+
+  if (hasProblems) {
+    return tr;
+  }
 };
 
 // When we get a table with an 'auto' attribute, we want to:
@@ -111,11 +116,9 @@ export const fixAutoSizedTable = (
     0,
   );
   const tableLayout = getLayoutBasedOnWidth(totalContentWidth);
-  const maxLayoutSize = getLayoutSize(
-    tableLayout,
-    opts.containerWidth,
-    opts.dynamicTextSizing,
-  );
+  const maxLayoutSize = getLayoutSize(tableLayout, opts.containerWidth, {
+    dynamicTextSizing: opts.dynamicTextSizing,
+  });
 
   // Content width will generally not meet the constraints of the layout
   // whether it be below or above, so we scale our columns widths
@@ -190,7 +193,7 @@ function parseDOMColumnWidths(
         tableStart,
         domAtPos,
       );
-      const colWidth = calculateColWidth(cells, col => {
+      const colWidth = calculateColumnWidth(cells, (_, col) => {
         return contentWidth(col as HTMLElement, tableRef).width;
       });
 

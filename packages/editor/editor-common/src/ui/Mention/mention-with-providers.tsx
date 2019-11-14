@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { MentionProvider, ResourcedMention } from '@atlaskit/mention';
+import { MentionProvider } from '@atlaskit/mention/resource';
+import { ResourcedMention } from '@atlaskit/mention/element';
 import { MentionUserType as UserType } from '@atlaskit/adf-schema';
 
 import { MentionEventHandlers } from '../EventHandlers';
@@ -28,11 +29,11 @@ const noop = () => {};
 export default class MentionWithProviders extends PureComponent<Props, State> {
   state: State = { profilecardProvider: null };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.updateProfilecardProvider(this.props);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.profilecardProvider !== this.props.profilecardProvider) {
       this.updateProfilecardProvider(nextProps);
     }
@@ -48,7 +49,7 @@ export default class MentionWithProviders extends PureComponent<Props, State> {
         .then(profilecardProvider => {
           this.setState({ profilecardProvider });
         })
-        .catch(err => {
+        .catch(() => {
           this.setState({ profilecardProvider: null });
         });
     } else {
@@ -77,7 +78,6 @@ export default class MentionWithProviders extends PureComponent<Props, State> {
         (eventHandlers && eventHandlers[handler]) || noop;
     });
 
-    // tslint:disable-next-line:variable-name
     const MentionComponent =
       profilecardProvider && GENERIC_USER_IDS.indexOf(id) === -1
         ? ResourcedMentionWithProfilecard

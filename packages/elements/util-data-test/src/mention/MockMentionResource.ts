@@ -4,9 +4,20 @@ import {
   MentionDescription,
   MentionsResult,
   AbstractMentionResource,
-} from '@atlaskit/mention';
+  MentionNameResolver,
+  DefaultMentionNameResolver,
+  ResolvingMentionProvider,
+  MentionNameDetails,
+  MentionNameStatus,
+  TeamMentionProvider,
+} from '@atlaskit/mention/resource';
+import {
+  UIAnalyticsEvent,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
 import debug from '../logger';
 import { mentionResult } from './mention-data';
+import { MockMentionNameClient } from './MockMentionNameClient';
 import { HttpError } from './utils';
 
 const search = new Search('id');
@@ -19,9 +30,26 @@ search.addDocuments(mentionResult);
 export interface MockMentionConfig {
   minWait?: number;
   maxWait?: number;
+  mentionNameResolver?: MentionNameResolver;
+  enableTeamMentionHighlight?: boolean;
 }
 
-export class MockMentionResource extends AbstractMentionResource {
+export const createMockMentionNameResolver = () => {
+  const analyticsProps: WithAnalyticsEventsProps = {
+    createAnalyticsEvent: payload => {
+      // eslint-disable-next-line no-console
+      console.log('analytics event', payload);
+      return new UIAnalyticsEvent({ payload });
+    },
+  };
+  return new DefaultMentionNameResolver(
+    new MockMentionNameClient(),
+    analyticsProps,
+  );
+};
+
+export class MockMentionResource extends AbstractMentionResource
+  implements ResolvingMentionProvider, TeamMentionProvider {
   private config: MockMentionConfig;
   private lastReturnedSearch: number;
 
@@ -37,7 +65,14 @@ export class MockMentionResource extends AbstractMentionResource {
     const notify = (mentions: MentionsResult) => {
       if (searchTime >= this.lastReturnedSearch) {
         this.lastReturnedSearch = searchTime;
-        this._notifyListeners(mentions, { remoteSearch: true, duration: 100 });
+        let stats: { teamMentionDuration?: number; duration?: number } = {};
+        if (query === 'team') {
+          stats.teamMentionDuration = 200;
+        } else {
+          stats.duration = 100;
+        }
+
+        this._notifyListeners(mentions, stats);
       } else {
         const date = new Date(searchTime).toISOString().substr(17, 6);
         debug('Stale search result, skipping', date, query); // eslint-disable-line no-console, max-len
@@ -76,4 +111,40 @@ export class MockMentionResource extends AbstractMentionResource {
   recordMentionSelection(mention: MentionDescription): void {
     debug(`Record mention selection ${mention.id}`);
   }
+
+  resolveMentionName(
+    id: string,
+  ): Promise<MentionNameDetails> | MentionNameDetails {
+    debug('(mock)resolveMentionName', id);
+    if (!this.config.mentionNameResolver) {
+      return {
+        id,
+        name: '',
+        status: MentionNameStatus.UNKNOWN,
+      };
+    }
+    return this.config.mentionNameResolver.lookupName(id);
+  }
+
+  cacheMentionName(id: string, name: string) {
+    debug('(mock)cacheMentionName', id, name);
+    if (this.config.mentionNameResolver) {
+      this.config.mentionNameResolver.cacheName(id, name);
+    }
+  }
+
+  supportsMentionNameResolving() {
+    const supported = !!this.config.mentionNameResolver;
+    debug('supportsMentionNameResolving', supported);
+    return supported;
+  }
+
+  shouldHighlightMention(mention: MentionDescription): boolean {
+    return mention.id === 'oscar';
+  }
+
+  mentionTypeaheadHighlightEnabled = () =>
+    this.config.enableTeamMentionHighlight || false;
+
+  mentionTypeaheadCreateTeamPath = () => '/people/search#createTeam';
 }

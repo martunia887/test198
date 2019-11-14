@@ -7,19 +7,34 @@
 // Romanian
 export default {
   'fabric.atlassianSwitcher.switchTo': 'Comutați la',
-  'fabric.atlassianSwitcher.switchToTooltip': 'Comutați la…',
+  'fabric.atlassianSwitcher.switchToTooltip': 'Comutare la…',
   'fabric.atlassianSwitcher.recent': 'Recente',
   'fabric.atlassianSwitcher.more': 'Mai mult',
   'fabric.atlassianSwitcher.try': 'Încercați',
   'fabric.atlassianSwitcher.manageList': 'Gestionați lista',
   'fabric.atlassianSwitcher.jiraProject': 'Proiect Jira',
   'fabric.atlassianSwitcher.confluenceSpace': 'Spațiu Confluence',
-  'fabric.atlassianSwitcher.people': 'Persoane',
   'fabric.atlassianSwitcher.administration': 'Administrare',
-  'fabric.atlassianSwitcher.discoverMore': 'Descoperiți mai multe',
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Browse Marketplace apps',
+  'fabric.atlassianSwitcher.errorHeading': 'Ceva nu a funcționat corect',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    'Monitorizăm erorile de acest tip, însă ne puteți contacta dacă reîmprospătarea nu îmbunătățește lucrurile',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    'Un robot este defect și câțiva oameni sunt ocupați să îl repare. ',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'Nu am putut încărca această listă. Reîncărcați pagina și încercați din nou.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'V-ați deconectat. Conectați-vă din nou.',
+  'fabric.atlassianSwitcher.login': 'Conectare',
+  'fabric.atlassianSwitcher.show.more.sites': 'Afișare mai multe site-uri',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

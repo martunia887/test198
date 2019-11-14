@@ -5,7 +5,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { ExampleWrapper } from '../example-helpers/ExampleWrapper';
 import { OptionData, Value } from '../src';
-import { UserPicker } from '../src/components/UserPicker';
+import UserPicker from '../src';
 import { isTeam, isUser } from '../src/components/utils';
 
 type State = {
@@ -110,6 +110,7 @@ export default class Example extends React.PureComponent<Props, State> {
               />
             ))}
             <UserPicker
+              fieldId="example"
               ref={this.userPickerRef}
               options={options.filter(user => value.indexOf(user) === -1)}
               value={null}

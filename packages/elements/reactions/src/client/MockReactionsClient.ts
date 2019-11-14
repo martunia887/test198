@@ -1,4 +1,4 @@
-import { EmojiId } from '@atlaskit/emoji';
+import { EmojiId } from '@atlaskit/emoji/types';
 import { defaultReactionsByShortName } from '../components/Selector';
 import { Reactions } from '../types/Reactions';
 import { ReactionSummary } from '../types/ReactionSummary';
@@ -61,14 +61,11 @@ export class MockReactionsClient implements ReactionClient {
 
   getReactions(containerAri: string, aris: string[]): Promise<Reactions> {
     return this.delayPromise().then(() =>
-      aris.reduce(
-        (results, ari) => {
-          const reactionKey = objectReactionKey(containerAri, ari);
-          results[ari] = this.mockData[reactionKey] || [];
-          return results;
-        },
-        {} as Reactions,
-      ),
+      aris.reduce((results, ari) => {
+        const reactionKey = objectReactionKey(containerAri, ari);
+        results[ari] = this.mockData[reactionKey] || [];
+        return results;
+      }, {} as Reactions),
     );
   }
 

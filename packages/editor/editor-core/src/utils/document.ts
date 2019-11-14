@@ -1,8 +1,11 @@
-import { Node, Schema } from 'prosemirror-model';
-import { Transaction, Selection } from 'prosemirror-state';
+import { Node, Schema, ResolvedPos } from 'prosemirror-model';
+import { Transaction, EditorState } from 'prosemirror-state';
 import { validator, ADFEntity, ValidationError } from '@atlaskit/adf-utils';
 import { analyticsService } from '../analytics';
 import { ContentNodeWithPos } from 'prosemirror-utils';
+import { sanitizeNodeForPrivacy } from '../utils/filter/privacy-filter';
+import { ProviderFactory } from '@atlaskit/editor-common';
+import { JSONDocNode } from '../utils';
 
 const FALSE_POSITIVE_MARKS = ['code', 'alignment', 'indentation'];
 
@@ -48,7 +51,7 @@ export function hasVisibleContent(node: Node): boolean {
 /**
  * Checks if a node has any content. Ignores node that only contain empty block nodes.
  */
-export function isEmptyNode(node?: Node): boolean {
+export function isNodeEmpty(node?: Node): boolean {
   if (node && node.textContent) {
     return false;
   }
@@ -125,6 +128,8 @@ function fireAnalyticsEvent(
 export function processRawValue(
   schema: Schema,
   value?: string | object,
+  providerFactory?: ProviderFactory,
+  sanitizePrivateContent?: boolean,
 ): Node | undefined {
   if (!value) {
     return;
@@ -138,7 +143,7 @@ export function processRawValue(
     try {
       node = JSON.parse(value);
     } catch (e) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.error(`Error processing value: ${value} isn't a valid JSON`);
       return;
     }
@@ -147,13 +152,12 @@ export function processRawValue(
   }
 
   if (Array.isArray(node)) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error(
       `Error processing value: ${node} is an array, but it must be an object.`,
     );
     return;
   }
-
   try {
     const nodes = Object.keys(schema.nodes);
     const marks = Object.keys(schema.marks);
@@ -220,19 +224,38 @@ export function processRawValue(
       },
     );
 
-    const parsedDoc = Node.fromJSON(schema, entity);
+    let newEntity = maySanitizePrivateContent(
+      entity as JSONDocNode,
+      providerFactory,
+      sanitizePrivateContent,
+    );
+
+    const parsedDoc = Node.fromJSON(schema, newEntity);
 
     // throws an error if the document is invalid
     parsedDoc.check();
+
     return parsedDoc;
   } catch (e) {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error(
-      `Error processing value: "${JSON.stringify(node)}" – ${e.message}`,
+      `Error processing document:\n${e.message}\n\n`,
+      JSON.stringify(node),
     );
     return;
   }
 }
+
+const maySanitizePrivateContent = (
+  entity: JSONDocNode,
+  providerFactory?: ProviderFactory,
+  sanitizePrivateContent?: boolean,
+): JSONDocNode => {
+  if (sanitizePrivateContent && providerFactory) {
+    return sanitizeNodeForPrivacy(entity, providerFactory);
+  }
+  return entity;
+};
 
 export const getStepRange = (
   transaction: Transaction,
@@ -259,18 +282,16 @@ export const getStepRange = (
  * @param predicate Function to check the node
  */
 export const findFarthestParentNode = (predicate: (node: Node) => boolean) => (
-  selection: Selection,
+  $pos: ResolvedPos,
 ): ContentNodeWithPos | null => {
-  const { $from } = selection;
-
   let candidate: ContentNodeWithPos | null = null;
 
-  for (let i = $from.depth; i > 0; i--) {
-    const node = $from.node(i);
+  for (let i = $pos.depth; i > 0; i--) {
+    const node = $pos.node(i);
     if (predicate(node)) {
       candidate = {
-        pos: i > 0 ? $from.before(i) : 0,
-        start: $from.start(i),
+        pos: i > 0 ? $pos.before(i) : 0,
+        start: $pos.start(i),
         depth: i,
         node,
       };
@@ -278,3 +299,35 @@ export const findFarthestParentNode = (predicate: (node: Node) => boolean) => (
   }
   return candidate;
 };
+
+export const isSelectionEndOfParagraph = (state: EditorState): boolean =>
+  state.selection.$to.parent.type === state.schema.nodes.paragraph &&
+  state.selection.$to.pos === state.doc.resolve(state.selection.$to.pos).end();
+
+export function nodesBetweenChanged(
+  tr: Transaction,
+  f: (
+    node: Node<any>,
+    pos: number,
+    parent: Node<any>,
+    index: number,
+  ) => boolean | null | undefined | void,
+  startPos?: number,
+) {
+  const stepRange = getStepRange(tr);
+  if (!stepRange) {
+    return;
+  }
+
+  tr.doc.nodesBetween(stepRange.from, stepRange.to, f, startPos);
+}
+
+export function getNodesCount(node: Node): Record<string, number> {
+  let count: Record<string, number> = {};
+
+  node.nodesBetween(0, node.nodeSize - 2, node => {
+    count[node.type.name] = (count[node.type.name] || 0) + 1;
+  });
+
+  return count;
+}

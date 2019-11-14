@@ -8,9 +8,15 @@ import {
   tableToJSON,
   toJSONTableCell,
   toJSONTableHeader,
+  expandToJSON,
 } from '@atlaskit/adf-schema';
-import { Transformer } from '@atlaskit/editor-common';
+import isEqual from 'lodash.isequal';
 import { Node as PMNode, Mark as PMMark } from 'prosemirror-model';
+
+interface Transformer<T> {
+  encode(node: PMNode): T;
+  parse(content: T): PMNode;
+}
 
 export type JSONNode = {
   type: string;
@@ -39,6 +45,8 @@ const isTable = isType('table');
 const isTableCell = isType('tableCell');
 const isTableHeader = isType('tableHeader');
 const isLinkMark = isType('link');
+const isExpand = isType('expand');
+const isNestedExpand = isType('nestedExpand');
 const isUnsupportedNode = (node: PMNode) =>
   isType('unsupportedBlock')(node) || isType('unsupportedInline')(node);
 
@@ -58,6 +66,21 @@ const filterNull = (subject: any) => {
   }, {});
 };
 
+const createDocFromContent = (content: JSONNode[]): JSONDocNode => {
+  return {
+    version: 1,
+    type: 'doc',
+    content: content || [],
+  };
+};
+
+const emptyDoc = createDocFromContent([
+  {
+    type: 'paragraph',
+    content: [],
+  },
+]);
+
 const toJSON = (node: PMNode): JSONNode => {
   const obj: JSONNode = { type: node.type.name };
   if (isUnsupportedNode(node)) {
@@ -76,6 +99,8 @@ const toJSON = (node: PMNode): JSONNode => {
     obj.attrs = toJSONTableCell(node).attrs;
   } else if (isTableHeader(node)) {
     obj.attrs = toJSONTableHeader(node).attrs;
+  } else if (isExpand(node) || isNestedExpand(node)) {
+    obj.attrs = expandToJSON(node).attrs;
   } else if (Object.keys(node.attrs).length) {
     obj.attrs = node.attrs;
   }
@@ -116,20 +141,29 @@ export class JSONTransformer implements Transformer<JSONDocNode> {
       content.push(toJSON(child));
     });
 
-    return {
-      version: 1,
-      type: 'doc',
-      content,
-    };
+    if (!content || isEqual(content, emptyDoc.content)) {
+      return createDocFromContent([]);
+    }
+
+    return createDocFromContent(content);
+  }
+
+  private internalParse(content: JSONDocNode): PMNode {
+    const doc = defaultSchema.nodeFromJSON(content);
+    doc.check();
+    return doc;
   }
 
   parse(content: JSONDocNode): PMNode {
     if (content.type !== 'doc') {
       throw new Error('Expected content format to be ADF');
     }
-    const doc = defaultSchema.nodeFromJSON(content);
-    doc.check();
-    return doc;
+
+    if (!content.content || content.content.length === 0) {
+      return this.internalParse(emptyDoc);
+    }
+
+    return this.internalParse(content);
   }
 
   /**

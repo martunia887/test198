@@ -1,40 +1,82 @@
 import * as React from 'react';
-import { CardLoading } from '../../utils/cardLoading';
-import { Card as CardType } from './index';
-import { CardProps } from '../..';
+import { WithMediaClientConfigProps } from '@atlaskit/media-client';
+import { CardLoading } from '../..';
+import { MediaCardAnalyticsErrorBoundaryProps } from '../media-card-analytics-error-boundary';
+import { CardWithAnalyticsEventsProps } from '.';
 
-interface AsyncCardProps {
-  Card?: typeof CardType;
+export type CardWithMediaClientConfigProps = WithMediaClientConfigProps<
+  CardWithAnalyticsEventsProps
+>;
+
+type CardWithMediaClientConfigComponent = React.ComponentType<
+  CardWithMediaClientConfigProps
+>;
+
+type MediaCardErrorBoundaryComponent = React.ComponentType<
+  MediaCardAnalyticsErrorBoundaryProps
+>;
+
+export interface AsyncCardState {
+  Card?: CardWithMediaClientConfigComponent;
+  MediaCardErrorBoundary?: MediaCardErrorBoundaryComponent;
 }
 
-export default class Card extends React.PureComponent<
-  CardProps & AsyncCardProps,
-  AsyncCardProps
+export default class CardLoader extends React.PureComponent<
+  CardWithMediaClientConfigProps & AsyncCardState,
+  AsyncCardState
 > {
   static displayName = 'AsyncCard';
-  static Card?: typeof CardType;
+  static Card?: CardWithMediaClientConfigComponent;
+  static MediaCardErrorBoundary?: MediaCardErrorBoundaryComponent;
 
-  state = {
-    Card: Card.Card,
+  state: AsyncCardState = {
+    Card: CardLoader.Card,
+    MediaCardErrorBoundary: CardLoader.MediaCardErrorBoundary,
   };
 
-  componentWillMount() {
+  async componentDidMount() {
     if (!this.state.Card) {
-      import(/* webpackChunkName:"@atlaskit-internal_Card" */
-      './index').then(module => {
-        Card.Card = module.Card;
-        this.setState({ Card: module.Card });
-      });
+      try {
+        const [
+          mediaClient,
+          cardModule,
+          mediaCardErrorBoundaryModule,
+        ] = await Promise.all([
+          import(
+            /* webpackChunkName:"@atlaskit-media-client" */ '@atlaskit/media-client'
+          ),
+          import(/* webpackChunkName:"@atlaskit-internal_Card" */ './index'),
+          import(
+            /* webpackChunkName:"@atlaskit-internal_MediaCardErrorBoundary" */ '../media-card-analytics-error-boundary'
+          ),
+        ]);
+
+        CardLoader.Card = mediaClient.withMediaClient(cardModule.Card);
+        CardLoader.MediaCardErrorBoundary =
+          mediaCardErrorBoundaryModule.default;
+
+        this.setState({
+          Card: CardLoader.Card,
+          MediaCardErrorBoundary: CardLoader.MediaCardErrorBoundary,
+        });
+      } catch (error) {
+        // TODO [MS-2278]: Add operational error to catch async import error
+      }
     }
   }
 
   render() {
-    const { dimensions } = this.props;
+    const { dimensions, testId } = this.props;
+    const { Card, MediaCardErrorBoundary } = this.state;
 
-    if (!this.state.Card) {
-      return <CardLoading dimensions={dimensions} />;
+    if (!Card || !MediaCardErrorBoundary) {
+      return <CardLoading testId={testId} dimensions={dimensions} />;
     }
 
-    return <this.state.Card {...this.props} />;
+    return (
+      <MediaCardErrorBoundary>
+        <Card {...this.props} />
+      </MediaCardErrorBoundary>
+    );
   }
 }

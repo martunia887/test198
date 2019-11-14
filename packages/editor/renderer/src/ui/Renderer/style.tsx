@@ -1,6 +1,5 @@
 import { HTMLAttributes } from 'react';
-import styled from 'styled-components';
-
+import styled, { css } from 'styled-components';
 import {
   colors,
   gridSize,
@@ -8,6 +7,7 @@ import {
   fontSize,
   borderRadius,
   themed,
+  typography,
 } from '@atlaskit/theme';
 import {
   tableSharedStyle,
@@ -17,7 +17,9 @@ import {
   headingsSharedStyles,
   panelSharedStyles,
   ruleSharedStyles,
+  whitespaceSharedStyles,
   paragraphSharedStyles,
+  listsSharedStyles,
   indentationSharedStyles,
   blockMarksSharedStyles,
   mediaSingleSharedStyle,
@@ -27,27 +29,101 @@ import {
   akEditorTableNumberColumnWidth,
   TableSharedCssClassName,
   tableMarginTop,
-  akEditorSmallZIndex,
   gridMediumMaxWidth,
   codeMarkSharedStyles,
+  shadowSharedStyle,
+  shadowClassNames,
+  dateSharedStyle,
+  akEditorFullWidthLayoutWidth,
+  mediaSingleClassName,
+  tasksAndDecisionsStyles,
 } from '@atlaskit/editor-common';
-import { RendererAppearance } from './';
 import { RendererCssClassName } from '../../consts';
+import { RendererAppearance } from './types';
+import { HeadingAnchorWrapperClassName } from '../../react/nodes/heading-anchor';
 
 export const FullPagePadding = 32;
-const shadowWidth = 8;
 
-export const shadowClassNames = {
-  RIGHT_SHADOW: 'right-shadow',
-  LEFT_SHADOW: 'left-shadow',
-};
-
-export type Props = {
+export type RendererWrapperProps = {
   appearance?: RendererAppearance;
   theme?: any;
 };
 
-const tableStyles = ({ appearance }: Props) => {
+const getLineHeight = (fontCode: string): number =>
+  typography.headingSizes[fontCode].lineHeight /
+  typography.headingSizes[fontCode].size;
+
+export const headingSizes: { [key: string]: { [key: string]: number } } = {
+  h1: {
+    lineHeight: getLineHeight('h700'),
+  },
+  h2: {
+    lineHeight: getLineHeight('h600'),
+  },
+  h3: {
+    lineHeight: getLineHeight('h500'),
+  },
+  h4: {
+    lineHeight: getLineHeight('h400'),
+  },
+  h5: {
+    lineHeight: getLineHeight('h300'),
+  },
+  h6: {
+    lineHeight: getLineHeight('h100'),
+  },
+};
+
+const headingAnchorStyle = (headingTag: string) =>
+  css`
+    & .${HeadingAnchorWrapperClassName} {
+      position: absolute;
+      width: 0;
+      height: ${headingSizes[headingTag].lineHeight}em;
+
+      & button {
+        opacity: 0;
+        transform: translate(8px, 0px);
+        transition: opacity 0.2s ease 0s, transform 0.2s ease 0s;
+      }
+    }
+
+    &:hover {
+      & .${HeadingAnchorWrapperClassName} button {
+        opacity: 1;
+        transform: none;
+        width: unset;
+      }
+    }
+  `;
+
+const tableSortableColumnStyle = `
+  .${RendererCssClassName.SORTABLE_COLUMN} {
+    cursor: pointer;
+
+    &.${RendererCssClassName.SORTABLE_COLUMN_NOT_ALLOWED} {
+      cursor: default;
+    }
+
+    .${RendererCssClassName.SORTABLE_COLUMN_ICON} {
+      margin: 0;
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .${RendererCssClassName.SORTABLE_COLUMN_NO_ORDER} {
+      opacity: 0;
+    }
+
+    &:hover {
+      .${RendererCssClassName.SORTABLE_COLUMN_NO_ORDER} {
+        opacity: 1;
+      }
+    }
+  }
+`;
+
+const tableStyles = ({ appearance }: RendererWrapperProps) => {
   if (appearance === 'mobile') {
     return 'table-layout: auto';
   }
@@ -55,13 +131,7 @@ const tableStyles = ({ appearance }: Props) => {
   return '';
 };
 
-const fullPageStyles = ({
-  theme,
-  appearance,
-}: {
-  appearance?: 'full-page' | 'mobile';
-  theme?: any;
-}) => {
+const fullPageStyles = ({ theme, appearance }: RendererWrapperProps) => {
   if (appearance !== 'full-page' && appearance !== 'mobile') {
     return '';
   }
@@ -75,14 +145,55 @@ const fullPageStyles = ({
   `;
 };
 
-// prettier-ignore
-export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
-  ${fullPageStyles}
+const fullWidthStyles = ({ appearance }: RendererWrapperProps) => {
+  if (appearance !== 'full-width') {
+    return '';
+  }
 
+  return `
+  max-width: ${akEditorFullWidthLayoutWidth}px;
+  margin: 0 auto;
+
+  .fabric-editor-breakout-mark,
+  .pm-table-container,
+  .ak-renderer-extension {
+    width: 100% !important;
+  }
+  `;
+};
+
+// prettier-ignore
+export const Wrapper = styled.div<RendererWrapperProps & HTMLAttributes<{}>>`
   font-size: ${editorFontSize}px;
   line-height: 24px;
   color: ${themed({ light: colors.N800, dark: '#B8C7E0' })};
-  word-wrap: break-word;
+
+  ${fullPageStyles}
+  ${fullWidthStyles}
+
+  & h1 {
+    ${headingAnchorStyle('h1')}
+  }
+
+  & h2 {
+    ${headingAnchorStyle('h2')}
+  }
+
+  & h3 {
+    ${headingAnchorStyle('h3')}
+  }
+
+  & h4 {
+    ${headingAnchorStyle('h4')}
+  }
+
+  & h5 {
+    ${headingAnchorStyle('h5')}
+  }
+
+  & h6 {
+    ${headingAnchorStyle('h6')}
+  }
 
   & span.akActionMark {
     color: ${colors.B400};
@@ -98,14 +209,19 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
     cursor: pointer;
   }
 
+  ${whitespaceSharedStyles};
   ${blockquoteSharedStyles};
   ${headingsSharedStyles};
   ${panelSharedStyles};
   ${ruleSharedStyles};
   ${paragraphSharedStyles};
+  ${listsSharedStyles};
   ${indentationSharedStyles};
   ${blockMarksSharedStyles};
   ${codeMarkSharedStyles};
+  ${shadowSharedStyle};
+  ${dateSharedStyle};
+  ${tasksAndDecisionsStyles};
 
   & .UnknownBlock {
     font-family: ${fontFamily()};
@@ -130,88 +246,22 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
     color: ${colors.R500};
   }
 
-  & ul {
-    list-style-type: disc;
-
-    & ul {
-      list-style-type: circle;
-    }
-
-    & ul ul {
-      list-style-type: square;
-    }
-
-    & ul ul ul {
-      list-style-type: disc;
-    }
-
-    & ul ul ul ul {
-      list-style-type: circle;
-    }
-
-    & ul ul ul ul ul {
-      list-style-type: square;
-    }
-  }
-
-  & ol {
-    list-style-type: decimal;
-
-    & ol {
-      list-style-type: lower-alpha;
-    }
-
-    & ol ol {
-      list-style-type: lower-roman;
-    }
-
-    & ol ol ol {
-      list-style-type: decimal;
-    }
-
-    & ol ol ol ol {
-      list-style-type: lower-alpha;
-    }
-
-    & ol ol ol ol ol {
-      list-style-type: lower-roman;
-    }
-
-    & ol ol ol ol ol ol {
-      list-style-type: decimal;
-    }
-
-    & ol ol ol ol ol ol ol {
-      list-style-type: lower-alpha;
-    }
-
-    & ol ol ol ol ol ol ol ol {
-      list-style-type: lower-roman;
-    }
-  }
-
-  & .akTaskList > ol,
-  & .akDecisionList > ol {
-    list-style-type: none;
-    font-size: ${fontSize()}px;
-  }
-
   & .renderer-image {
     max-width: 100%;
     display: block;
     margin: ${gridSize() * 3}px 0;
   }
 
-  .media-single.media-wrapped + .media-single:not(.media-wrapped) {
+  .${mediaSingleClassName}.media-wrapped + .${mediaSingleClassName}:not(.media-wrapped) {
     clear: both;
   }
 
-  & .CodeBlock,
+  & .code-block,
   & blockquote,
   & hr,
   & > div > div:not(.media-wrapped),
-  .media-single.media-wrapped + .media-wrapped + *:not(.media-wrapped),
-  .media-single.media-wrapped + div:not(.media-wrapped) {
+  .${mediaSingleClassName}.media-wrapped + .media-wrapped + *:not(.media-wrapped),
+  .${mediaSingleClassName}.media-wrapped + div:not(.media-wrapped) {
     clear: both;
   }
 
@@ -223,6 +273,19 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
     & + h5,
     & + h6 {
       margin-top: 8px;
+    }
+  }
+
+  & .fabric-editor-block-mark[data-align='end'],
+  & .fabric-editor-block-mark[data-align='center'],
+  & .fabric-editor-block-mark[data-align='right'] {
+    & > h1,
+    & > h2,
+    & > h3,
+    & > h4,
+    & > h5,
+    & > h6 {
+      display: inline-block;
     }
   }
 
@@ -245,6 +308,10 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
     * .${RendererCssClassName.EXTENSION} {
       width: 100% !important;
     }
+
+    * .${RendererCssClassName.EXTENSION_OVERFLOW_CONTAINER} {
+      overflow-x: auto;
+    }
   }
 
     .${TableSharedCssClassName.TABLE_NODE_WRAPPER} {
@@ -254,6 +321,7 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
   ${tableSharedStyle}
 
   .${TableSharedCssClassName.TABLE_CONTAINER} {
+    z-index: 0;
     transition: all 0.1s linear;
 
     /** Shadow overrides */
@@ -264,8 +332,14 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
 
     table {
       ${tableStyles};
+      ${tableSortableColumnStyle};
       margin-left: 0;
       margin-right: 0;
+    }
+
+    table tr:first-child td,
+    table tr:first-child th {
+      position: relative;
     }
 
     table[data-number-column='true'] {
@@ -284,7 +358,7 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
    * We wrap CodeBlock in a grid to prevent it from overflowing the container of the renderer.
    * See ED-4159.
    */
-  & .CodeBlock {
+  & .code-block {
     max-width: 100%;
     /* -ms- properties are necessary until MS supports the latest version of the grid spec */
     /* stylelint-disable value-no-vendor-prefix, declaration-block-no-duplicate-properties */
@@ -312,7 +386,7 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
   }
 
   & .MediaGroup,
-  & .CodeBlock {
+  & .code-block {
     margin-top: ${blockNodesVerticalMargin};
 
     &:first-child {
@@ -332,39 +406,5 @@ export const Wrapper = styled.div < Props & HTMLAttributes < {} >> `
         margin-left: 0;
       }
     }
-  }
-
-  & .${shadowClassNames.RIGHT_SHADOW}::before, .${shadowClassNames.RIGHT_SHADOW}::after,
-    .${shadowClassNames.LEFT_SHADOW}::before, .${shadowClassNames.LEFT_SHADOW}::after {
-      display: none;
-      position: absolute;
-      pointer-events: none;
-      z-index: ${akEditorSmallZIndex};
-      width: ${shadowWidth}px;
-      content: '';
-      /* Scrollbar is outside the content in IE, inset in other browsers. */
-      height: calc(100%);
-  }
-
-  & .${shadowClassNames.LEFT_SHADOW}::before {
-    background: linear-gradient(
-      to left,
-      rgba(99, 114, 130, 0) 0,
-      ${colors.N40A} 100%
-    );
-    top: 0px;
-    left: 0;
-    display: block;
-  }
-
-  & .${shadowClassNames.RIGHT_SHADOW}::after {
-    background: linear-gradient(
-      to right,
-      rgba(99, 114, 130, 0) 0,
-      ${colors.N40A} 100%
-    );
-    left: calc(100% - ${shadowWidth}px);
-    top: 0px;
-    display: block;
   }
 `;

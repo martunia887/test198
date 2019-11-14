@@ -19,7 +19,10 @@ export class DeleteUserOverviewScreen extends React.Component<
     isCurrentUser: false,
   };
 
-  selectAdminOrSelfCopy = (adminCopy, selfCopy) => {
+  selectAdminOrSelfCopy = (
+    adminCopy: FormattedMessage.MessageDescriptor,
+    selfCopy: FormattedMessage.MessageDescriptor,
+  ) => {
     return this.props.isCurrentUser ? selfCopy : adminCopy;
   };
 
@@ -133,7 +136,7 @@ export class DeleteUserOverviewScreen extends React.Component<
             overviewMessages.paragraphListOfAppsWithPersonalDataAdmin,
             overviewMessages.paragraphListOfAppsWithPersonalDataSelf,
           )}
-        />{' '}
+        />
         <Styled.IconHoverWrapper>
           <StatefulInlineDialog
             placement="auto-start"
@@ -160,7 +163,7 @@ export class DeleteUserOverviewScreen extends React.Component<
             overviewMessages.paragraphContentCreatedAdmin,
             overviewMessages.paragraphContentCreatedSelf,
           )}
-        />{' '}
+        />
         <Styled.IconHoverWrapper>
           <StatefulInlineDialog
             placement="auto-start"

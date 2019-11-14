@@ -1,109 +1,81 @@
-// @flow
-/* eslint import/no-extraneous-dependencies: 0 */
+/* eslint import/no-extraneous-dependencies: 0, flowtype/require-valid-file-annotation: 0 */
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const moduleResolveMapBuilder = require('@atlaskit/multi-entry-tools/module-resolve-map-builder');
 
-const emptyExportPath = `${path.resolve(__dirname)}/empty.ts`;
+module.exports = async function createWebpackConfig(_, args) {
+  const mode = typeof args.mode === 'undefined' ? 'development' : args.mode;
+  const devtool =
+    mode === 'development' && typeof args.devtool !== 'string'
+      ? 'source-map'
+      : args.devtool;
 
-const mode = process.env.NODE_ENV || 'development';
-
-const envPlugins = [];
-
-if (mode === 'production') {
-  envPlugins.push(
-    new UglifyJsPlugin({
-      test: /\.js($|\?)/i,
-      sourceMap: true,
-      uglifyOptions: {
-        mangle: {
-          keep_fnames: true,
-        },
-        compress: {
-          warnings: false,
-        },
-        output: {
-          beautify: false,
-        },
-      },
-    }),
-  );
-}
-
-module.exports = {
-  mode,
-  entry: {
-    editor: './src/editor/index.tsx',
-    renderer: './src/renderer/index.tsx',
-    'error-reporter': './src/error-reporter.ts',
-  },
-  stats: {
-    warnings: false,
-  },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'dist/bundle'),
-  },
-  resolve: {
-    mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
-    extensions: ['.js', '.ts', '.tsx'],
-    alias: {
-      '@atlaskit/modal-dialog': emptyExportPath,
-      '@atlaskit/logo': emptyExportPath,
-      '@atlaskit/avatar': emptyExportPath,
-      '@atlaskit/avatar-group': emptyExportPath,
-      '@atlaskit/profilecard': emptyExportPath,
-      '@atlaskit/select': emptyExportPath,
-      'react-select': emptyExportPath,
-      'components/picker/EmojiPicker': emptyExportPath,
-      'react-virtualized/dist/commonjs/List': emptyExportPath,
-      'react-virtualized': emptyExportPath,
+  return {
+    mode,
+    entry: {
+      editor: './src/editor/index.tsx',
+      renderer: './src/renderer/index.tsx',
+      'error-reporter': './src/error-reporter.ts',
     },
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: require.resolve('babel-loader'),
-        options: {
-          cacheDirectory: true,
-          babelrc: true,
-          rootMode: 'upward',
-          envName: 'production:esm',
-        },
+    stats: {
+      warnings: false,
+    },
+    output: {
+      filename: '[name].js',
+      path: path.resolve(__dirname, 'dist/bundle'),
+    },
+    devtool,
+    resolve: {
+      mainFields: ['atlaskit:src', 'module', 'browser', 'main'],
+      extensions: ['.js', '.json', '.ts', '.tsx'],
+      alias: {
+        ...(await moduleResolveMapBuilder()),
       },
-      {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        loader: require.resolve('ts-loader'),
-        options: {
-          transpileOnly: true,
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: require.resolve('babel-loader'),
+          options: {
+            cacheDirectory: true,
+            babelrc: true,
+            rootMode: 'upward',
+            envName: 'production:esm',
+          },
         },
-      },
+        {
+          test: /\.tsx?$/,
+          exclude: /node_modules/,
+          loader: require.resolve('ts-loader'),
+          options: {
+            transpileOnly: true,
+          },
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, 'public/editor.html.ejs'),
+        chunks: ['error-reporter', 'editor'],
+        chunksSortMode: 'manual',
+        filename: 'editor.html',
+      }),
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, 'public/renderer.html.ejs'),
+        chunks: ['error-reporter', 'renderer'],
+        chunksSortMode: 'manual',
+        filename: 'renderer.html',
+      }),
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
     ],
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        mode === 'production' ? 'production' : 'development',
-      ),
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'public/editor.html.ejs'),
-      chunks: ['error-reporter', 'editor'],
-      chunksSortMode: 'manual',
-      filename: 'editor.html',
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'public/renderer.html.ejs'),
-      chunks: ['error-reporter', 'renderer'],
-      chunksSortMode: 'manual',
-      filename: 'renderer.html',
-    }),
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1,
-    }),
-  ].concat(envPlugins),
+    optimization: {
+      nodeEnv: JSON.stringify(mode),
+      splitChunks: false,
+    },
+  };
 };

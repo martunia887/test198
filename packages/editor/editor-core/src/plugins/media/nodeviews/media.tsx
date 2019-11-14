@@ -2,25 +2,29 @@ import * as React from 'react';
 import { Component } from 'react';
 import { Node as PMNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
-import { ProviderFactory, ImageLoaderProps } from '@atlaskit/editor-common';
-import { ProsemirrorGetPosHandler, ReactNodeProps } from '../../../nodeviews';
+
+import {
+  ImageLoaderProps,
+  withImageLoader,
+  ContextIdentifierProvider,
+} from '@atlaskit/editor-common';
+
+import {
+  Card,
+  CardDimensions,
+  CardLoading,
+  CardOnClickCallback,
+} from '@atlaskit/media-card';
+import { Identifier } from '@atlaskit/media-client';
+import { MediaClientConfig } from '@atlaskit/media-core';
+
 import {
   MediaPluginState,
   stateKey as mediaStateKey,
   MediaProvider,
 } from '../pm-plugins/main';
-import { Context, ImageResizeMode, Identifier } from '@atlaskit/media-core';
-import {
-  Card,
-  CardDimensions,
-  CardView,
-  CardEventHandler,
-  CardOnClickCallback,
-} from '@atlaskit/media-card';
-import { MediaType, MediaBaseAttributes } from '@atlaskit/adf-schema';
-import { withImageLoader, ImageStatus } from '@atlaskit/editor-common';
 
-import { EditorAppearance } from '../../../types';
+import { ProsemirrorGetPosHandler, ReactNodeProps } from '../../../nodeviews';
 
 // This is being used by DropPlaceholder now
 export const MEDIA_HEIGHT = 125;
@@ -29,60 +33,43 @@ export const FILE_WIDTH = 156;
 export type Appearance = 'small' | 'image' | 'horizontal' | 'square';
 
 export interface MediaNodeProps extends ReactNodeProps, ImageLoaderProps {
-  getPos: ProsemirrorGetPosHandler;
   view: EditorView;
   node: PMNode;
-  providerFactory?: ProviderFactory;
+  getPos: ProsemirrorGetPosHandler;
+  contextIdentifierProvider?: ContextIdentifierProvider;
   cardDimensions: CardDimensions;
   isMediaSingle?: boolean;
   onClick?: CardOnClickCallback;
-  onExternalImageLoaded?: (
-    dimensions: { width: number; height: number },
-  ) => void;
-  editorAppearance: EditorAppearance;
+  onExternalImageLoaded?: (dimensions: {
+    width: number;
+    height: number;
+  }) => void;
+  allowLazyLoading?: boolean;
   mediaProvider?: Promise<MediaProvider>;
-  viewContext?: Context;
+  viewMediaClientConfig?: MediaClientConfig;
+  uploadComplete?: boolean;
 }
 
-export interface Props extends Partial<MediaBaseAttributes> {
-  type: MediaType;
-  cardDimensions?: CardDimensions;
-  onClick?: CardOnClickCallback;
-  onDelete?: CardEventHandler;
-  resizeMode?: ImageResizeMode;
-  appearance?: Appearance;
-  selected?: boolean;
-  url?: string;
-  imageStatus?: ImageStatus;
-  context: Context;
-  disableOverlay?: boolean;
-  mediaProvider?: Promise<MediaProvider>;
-  viewContext?: Context;
-}
-
-export interface MediaNodeState {
-  viewContext?: Context;
-}
-
-class MediaNode extends Component<MediaNodeProps, MediaNodeState> {
-  private pluginState: MediaPluginState;
+class MediaNode extends Component<MediaNodeProps> {
+  private mediaPluginState: MediaPluginState;
 
   constructor(props: MediaNodeProps) {
     super(props);
     const { view } = this.props;
-    this.pluginState = mediaStateKey.getState(view.state);
+    this.mediaPluginState = mediaStateKey.getState(view.state);
   }
 
-  shouldComponentUpdate(
-    nextProps: MediaNodeProps & ImageLoaderProps,
-    nextState: MediaNodeState,
-  ) {
+  shouldComponentUpdate(nextProps: MediaNodeProps & ImageLoaderProps) {
     if (
       this.props.selected !== nextProps.selected ||
-      this.props.viewContext !== nextProps.viewContext ||
+      this.props.viewMediaClientConfig !== nextProps.viewMediaClientConfig ||
+      this.props.uploadComplete !== nextProps.uploadComplete ||
       this.props.node.attrs.id !== nextProps.node.attrs.id ||
       this.props.node.attrs.collection !== nextProps.node.attrs.collection ||
-      this.props.cardDimensions !== nextProps.cardDimensions
+      this.props.cardDimensions.height !== nextProps.cardDimensions.height ||
+      this.props.cardDimensions.width !== nextProps.cardDimensions.width ||
+      this.props.contextIdentifierProvider !==
+        nextProps.contextIdentifierProvider
     ) {
       return true;
     }
@@ -95,15 +82,15 @@ class MediaNode extends Component<MediaNodeProps, MediaNodeState> {
 
   componentWillUnmount() {
     const { node } = this.props;
-    this.pluginState.handleMediaNodeUnmount(node);
+    this.mediaPluginState.handleMediaNodeUnmount(node);
   }
 
   componentDidUpdate(prevProps: Readonly<MediaNodeProps & ImageLoaderProps>) {
     if (prevProps.node.attrs.id !== this.props.node.attrs.id) {
-      this.pluginState.handleMediaNodeUnmount(prevProps.node);
+      this.mediaPluginState.handleMediaNodeUnmount(prevProps.node);
       this.handleNewNode(this.props);
     }
-    this.pluginState.updateElement();
+    this.mediaPluginState.updateElement();
   }
 
   render() {
@@ -112,22 +99,20 @@ class MediaNode extends Component<MediaNodeProps, MediaNodeState> {
       selected,
       cardDimensions,
       onClick,
-      editorAppearance,
+      allowLazyLoading,
+      viewMediaClientConfig,
+      uploadComplete,
+      contextIdentifierProvider,
     } = this.props;
-    const { id, type, collection, url } = node.attrs;
-    const { viewContext } = this.props;
-    /**
-     * On mobile we don't receive a collectionName until the `upload-end` event.
-     * We don't want to render a proper card until we have a valid collection.
-     * Render loading until we do.
-     */
-    const isMobile = editorAppearance === 'mobile';
-    let isMobileReady = isMobile
-      ? typeof collection === 'string' && collection.length > 0
-      : true;
 
-    if (type !== 'external' && (!viewContext || !isMobileReady)) {
-      return <CardView status="loading" dimensions={cardDimensions} />;
+    const { id, type, collection, url, alt } = node.attrs;
+
+    if (
+      type !== 'external' &&
+      (!viewMediaClientConfig ||
+        (typeof uploadComplete === 'boolean' && !uploadComplete))
+    ) {
+      return <CardLoading dimensions={cardDimensions} />;
     }
 
     const identifier: Identifier =
@@ -142,10 +127,18 @@ class MediaNode extends Component<MediaNodeProps, MediaNodeState> {
             mediaItemType: 'file',
             collectionName: collection!,
           };
+    const contextId =
+      contextIdentifierProvider && contextIdentifierProvider.objectId;
+    // mediaClientConfig is not needed for "external" case. So we have to cheat here.
+    // there is a possibility mediaClientConfig will be part of a identifier,
+    // so this might be not an issue
+    const mediaClientConfig: MediaClientConfig = viewMediaClientConfig || {
+      authProvider: () => ({} as any),
+    };
 
     return (
       <Card
-        context={viewContext as any}
+        mediaClientConfig={mediaClientConfig}
         resizeMode="stretchy-fit"
         dimensions={cardDimensions}
         identifier={identifier}
@@ -153,8 +146,10 @@ class MediaNode extends Component<MediaNodeProps, MediaNodeState> {
         selected={selected}
         disableOverlay={true}
         onClick={onClick}
-        useInlinePlayer={!isMobile}
-        isLazy={!isMobile}
+        useInlinePlayer={allowLazyLoading}
+        isLazy={allowLazyLoading}
+        contextId={contextId}
+        alt={alt}
       />
     );
   }
@@ -163,7 +158,10 @@ class MediaNode extends Component<MediaNodeProps, MediaNodeState> {
     const { node } = props;
 
     // +1 indicates the media node inside the mediaSingle nodeview
-    this.pluginState.handleMediaNodeMount(node, () => this.props.getPos() + 1);
+    this.mediaPluginState.handleMediaNodeMount(
+      node,
+      () => this.props.getPos() + 1,
+    );
   };
 }
 

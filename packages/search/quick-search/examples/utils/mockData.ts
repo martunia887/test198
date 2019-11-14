@@ -79,8 +79,8 @@ export function randomJiraIconUrl() {
 
 export function randomConfluenceIconUrl() {
   const urls = [
-    'https://home.useast.atlassian.io/confluence-page-icon.svg',
-    'https://home.useast.atlassian.io/confluence-blogpost-icon.svg',
+    'https://home-static.us-east-1.prod.public.atl-paas.net/confluence-page-icon.svg',
+    'https://home-static.us-east-1.prod.public.atl-paas.net/confluence-blogpost-icon.svg',
   ];
 
   return pickRandom(urls);
@@ -158,4 +158,14 @@ export function personData(n: number): PersonResultProps[] {
   }
 
   return items;
+}
+
+export function makeAutocompleteData(): string[] {
+  const tokensPerPhrase: string[][] = mockCatchPhrases.map(phrase =>
+    phrase.split(/\W+/),
+  );
+  const tokens = tokensPerPhrase
+    .reduce((acc, val) => acc.concat(val), [])
+    .map(token => token.toLowerCase());
+  return [...new Set(tokens)];
 }

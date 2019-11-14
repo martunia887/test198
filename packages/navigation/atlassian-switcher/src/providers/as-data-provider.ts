@@ -1,6 +1,18 @@
 import * as React from 'react';
+import {
+  NAVIGATION_CHANNEL,
+  OPERATIONAL_EVENT_TYPE,
+  withAnalyticsEvents,
+} from '../utils/analytics';
+import {
+  AnalyticsEventPayload,
+  WithAnalyticsEventsProps,
+} from '@atlaskit/analytics-next';
+import { errorToReason } from '../utils/error-to-reason';
 
-enum Status {
+const DATA_PROVIDER_SUBJECT = 'atlassianSwitcherDataProvider';
+
+export enum Status {
   LOADING = 'loading',
   COMPLETE = 'complete',
   ERROR = 'error',
@@ -33,6 +45,9 @@ export const isLoading = <T>(
   result: ProviderResult<T>,
 ): result is ResultLoading => result.status === Status.LOADING;
 
+export const hasLoaded = <T>(result: ProviderResult<T>) =>
+  result.status !== Status.LOADING;
+
 export type ProviderResult<T> = ResultComplete<T> | ResultLoading | ResultError;
 
 interface PropsToPromiseMapper<P, D> extends Function {
@@ -43,11 +58,13 @@ interface PropsToValueMapper<P, D> {
   (props: P): D;
 }
 
+type ProviderRenderer<D> = (props: ProviderResult<D>) => React.ReactNode;
 export interface DataProviderProps<D> {
-  children: (props: ProviderResult<D>) => React.ReactNode;
+  children: ProviderRenderer<D>;
 }
 
 export default function<P, D>(
+  name: string,
   mapPropsToPromise: PropsToPromiseMapper<Readonly<P>, D>,
   mapPropsToInitialValue?: PropsToValueMapper<Readonly<P>, D | void>,
 ) {
@@ -68,9 +85,14 @@ export default function<P, D>(
     };
   };
 
-  return class DataProvider extends React.Component<P & DataProviderProps<D>> {
+  type Props = P & DataProviderProps<D> & WithAnalyticsEventsProps;
+  type States = ProviderResult<D>;
+
+  class DataProvider extends React.Component<Props, States> {
     acceptResults = true;
     state = getInitialState(this.props);
+
+    static displayName = `DataProvider(${name})`;
 
     componentWillUnmount() {
       /**
@@ -89,6 +111,22 @@ export default function<P, D>(
         });
     }
 
+    private fireOperationalEvent = (payload: AnalyticsEventPayload) => {
+      if (this.props.createAnalyticsEvent) {
+        this.props
+          .createAnalyticsEvent({
+            eventType: OPERATIONAL_EVENT_TYPE,
+            actionSubject: DATA_PROVIDER_SUBJECT,
+            ...payload,
+            attributes: {
+              ...payload.attributes,
+              outdated: !this.acceptResults,
+            },
+          })
+          .fire(NAVIGATION_CHANNEL);
+      }
+    };
+
     onResult(value: D) {
       if (this.acceptResults) {
         this.setState({
@@ -96,6 +134,11 @@ export default function<P, D>(
           status: Status.COMPLETE,
         });
       }
+
+      this.fireOperationalEvent({
+        action: 'receivedResult',
+        actionSubjectId: name,
+      });
     }
 
     onError(error: any) {
@@ -106,12 +149,23 @@ export default function<P, D>(
         this.setState({
           error,
           status: Status.ERROR,
+          data: null,
         });
       }
+
+      this.fireOperationalEvent({
+        action: 'failed',
+        actionSubjectId: name,
+        attributes: {
+          reason: errorToReason(error),
+        },
+      });
     }
 
     render() {
-      return this.props.children(this.state);
+      return (this.props.children as ProviderRenderer<D>)(this.state);
     }
-  };
+  }
+
+  return withAnalyticsEvents()(DataProvider);
 }

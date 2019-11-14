@@ -1,5 +1,5 @@
-// tslint:disable:no-console
-import { Color as StatusColor } from '@atlaskit/status';
+/* eslint-disable no-console */
+import { Color as StatusColor } from '@atlaskit/status/element';
 import { EditorBridges, EditorPluginBridges } from './index';
 import NativeBridge from './bridge';
 import { sendToBridge } from '../../bridge-utils';
@@ -9,7 +9,7 @@ export default class DummyBridge implements NativeBridge {
     console.log(...args);
   };
 
-  showMentions(query: String) {
+  showMentions(query: string) {
     this.log(`showMentions(query=${query})`);
   }
   dismissMentions() {
@@ -43,8 +43,23 @@ export default class DummyBridge implements NativeBridge {
   dismissStatusPicker(isNew: boolean) {
     this.log(`dismissStatusPicker(isNew=${isNew})`);
   }
-  currentSelection(text: string, url: string) {
-    this.log(`currentSelection(text=${text}, url=${url})`);
+  currentSelection(
+    text: string,
+    url: string,
+    top: number,
+    right: number,
+    bottom: number,
+    left: number,
+  ) {
+    this.log(
+      `currentSelection(text=${text}, url=${url}, top=${top}, right=${right}, bottom=${bottom}, left=${left})`,
+    );
+  }
+  stateChanged(canUndo: boolean, canRedo: boolean) {
+    this.log(`stateChanged(canUndo=${canUndo}, canRedo=${canRedo})`);
+  }
+  trackEvent(event: string) {
+    this.log(`trackEvent(${event})`);
   }
 
   call<T extends EditorPluginBridges>(

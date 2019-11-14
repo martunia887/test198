@@ -1,14 +1,17 @@
-import * as util from '../../../../../newgen/utils';
-const constructAuthTokenUrlSpy = jest.spyOn(util, 'constructAuthTokenUrl');
-
 import * as React from 'react';
-import { ProcessedFileState } from '@atlaskit/media-core';
-import { createContext } from '../../../_stubs';
+import {
+  globalMediaEventEmitter,
+  MediaViewedEventPayload,
+  ProcessedFileState,
+} from '@atlaskit/media-client';
+import {
+  mountWithIntlContext,
+  fakeMediaClient,
+  expectFunctionToHaveBeenCalledWith,
+  nextTick,
+} from '@atlaskit/media-test-helpers';
 import { Spinner } from '../../../../../newgen/loading';
 import { DocViewer, Props } from '../../../../../newgen/viewers/doc/index';
-import { ErrorMessage, createError } from '../../../../../newgen/error';
-import Button from '@atlaskit/button';
-import { mountWithIntlContext } from '@atlaskit/media-test-helpers';
 import { BaseState } from '../../../../../newgen/viewers/base-viewer';
 import { Content } from '../../../../../newgen/content';
 
@@ -16,14 +19,31 @@ function createFixture(
   fetchPromise: Promise<any>,
   item: ProcessedFileState,
   collectionName?: string,
+  mockReturnGetArtifactURL?: Promise<string>,
 ) {
-  const context = createContext(undefined as any);
+  const mediaClient = fakeMediaClient();
   const onClose = jest.fn(() => fetchPromise);
+  const onError = jest.fn();
+
+  jest
+    .spyOn(mediaClient.file, 'getArtifactURL')
+    .mockReturnValue(
+      mockReturnGetArtifactURL ||
+        Promise.resolve(
+          'some-base-url/document?client=some-client-id&token=some-token',
+        ),
+    );
+
   const el = mountWithIntlContext<Props, BaseState<Content>>(
-    <DocViewer item={item} context={context} collectionName={collectionName} />,
+    <DocViewer
+      item={item}
+      mediaClient={mediaClient}
+      collectionName={collectionName}
+      onError={onError}
+    />,
   );
   (el as any).instance()['fetch'] = jest.fn();
-  return { context, el, onClose };
+  return { mediaClient, el, onClose, onError };
 }
 
 const item: ProcessedFileState = {
@@ -42,22 +62,39 @@ const item: ProcessedFileState = {
   representations: {},
 };
 
-const itemWithNoArtifacts: ProcessedFileState = {
-  ...item,
-  artifacts: {},
-};
-
 describe('DocViewer', () => {
-  afterEach(() => {
-    constructAuthTokenUrlSpy.mockClear();
+  beforeEach(() => {
+    jest.spyOn(globalMediaEventEmitter, 'emit');
   });
 
-  it('assigns a document content when successful', async () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  const getSuccessDocument = async () => {
     const fetchPromise = Promise.resolve();
     const { el } = createFixture(fetchPromise, item);
-    await (el as any).instance()['init']();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    return el;
+  };
 
+  it('assigns a document content when successful', async () => {
+    const el = await getSuccessDocument();
     expect(el.state().content.status).toEqual('SUCCESSFUL');
+  });
+
+  it('triggers media-viewed when successful', async () => {
+    await getSuccessDocument();
+    expect(globalMediaEventEmitter.emit).toHaveBeenCalledTimes(1);
+    expectFunctionToHaveBeenCalledWith(globalMediaEventEmitter.emit, [
+      'media-viewed',
+      {
+        fileId: 'some-id',
+        viewingLevel: 'full',
+      } as MediaViewedEventPayload,
+    ]);
   });
 
   it('shows an indicator while loading', async () => {
@@ -68,36 +105,29 @@ describe('DocViewer', () => {
     expect(el.find(Spinner)).toHaveLength(1);
   });
 
-  it('shows an error message and download button if no artifact found', async () => {
-    const fetchPromise = Promise.resolve(() => {});
-    const { el } = createFixture(fetchPromise, itemWithNoArtifacts);
-
-    await (el as any).instance()['init']();
-
-    const { content } = el.state();
-    expect(content.status).toEqual('FAILED');
-    expect(content.err).toEqual(
-      createError('noPDFArtifactsFound', undefined, itemWithNoArtifacts),
-    );
-
-    const errorMessage = el.find(ErrorMessage);
-    expect(errorMessage).toHaveLength(1);
-    expect(errorMessage.text()).toContain(
-      'No PDF artifacts found for this file.',
-    );
-
-    // download button
-    expect(errorMessage.text()).toContain(
-      'Try downloading the file to view it',
-    );
-    expect(errorMessage.find(Button)).toHaveLength(1);
-  });
-
-  it('MSW-720: passes collectionName to constructAuthTokenUrl', async () => {
+  it('MSW-720: passes collectionName to getArtifactURL', async () => {
     const collectionName = 'some-collection';
     const fetchPromise = Promise.resolve();
-    const { el } = createFixture(fetchPromise, item, collectionName);
+    const { el, mediaClient } = createFixture(
+      fetchPromise,
+      item,
+      collectionName,
+    );
     await (el as any).instance()['init']();
-    expect(constructAuthTokenUrlSpy.mock.calls[0][2]).toEqual(collectionName);
+    expect(
+      (mediaClient.file.getArtifactURL as jest.Mock).mock.calls[0][2],
+    ).toEqual(collectionName);
+  });
+
+  it('should call onError when an error happens', async () => {
+    const fetchPromise = Promise.resolve();
+    const { el, onError } = createFixture(
+      fetchPromise,
+      item,
+      undefined,
+      Promise.reject('some error'),
+    );
+    await (el as any).instance()['init']();
+    expect(onError).toBeCalledWith('some error');
   });
 });

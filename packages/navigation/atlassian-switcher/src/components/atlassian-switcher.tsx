@@ -1,56 +1,54 @@
 import * as React from 'react';
-import JiraSwitcher from './jira-switcher';
-import ConfluenceSwitcher from './confluence-switcher';
-import GenericSwitcher from './generic-switcher';
 import ErrorBoundary from './error-boundary';
-import { TriggerXFlowCallback, FeatureFlagProps, Product } from '../types';
+import { Product, AtlassianSwitcherProps } from '../types';
 import IntlProvider from './intl-provider';
 import messages from '../utils/messages';
 import {
   analyticsAttributes,
   NavigationAnalyticsContext,
+  SWITCHER_COMPONENT,
+  SWITCHER_SOURCE,
 } from '../utils/analytics';
+import packageContext from '../utils/package-context';
+import mapPropsToFeatures from '../utils/map-props-to-features';
 
-type AtlassianSwitcherProps = {
-  product: string;
-  cloudId: string;
-  triggerXFlow: TriggerXFlowCallback;
-} & Partial<FeatureFlagProps>;
+import {
+  JiraSwitcherLoader,
+  ConfluenceSwitcherLoader,
+  GenericSwitcherLoader,
+} from './loaders';
 
-const getAnalyticsContext = (props: { [key: string]: any }) => ({
-  source: 'atlassianSwitcher',
-  ...analyticsAttributes({
-    featureFlags: Object.keys(props)
-      .filter(key => key.startsWith('enable'))
-      .reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]: props[key],
-        }),
-        {} as object,
-      ),
-  }),
+const getAnalyticsContext = (attributes: object) => ({
+  source: SWITCHER_SOURCE,
+  componentName: SWITCHER_COMPONENT,
+  ...packageContext,
+  ...analyticsAttributes(attributes),
 });
 
 const AtlassianSwitcher = (props: AtlassianSwitcherProps) => {
   const { product } = props;
 
-  let Switcher: React.ReactType;
+  let Switcher: React.ElementType;
   switch (product) {
     case Product.JIRA:
-      Switcher = JiraSwitcher;
+      Switcher = JiraSwitcherLoader;
       break;
     case Product.CONFLUENCE:
-      Switcher = ConfluenceSwitcher;
+      Switcher = ConfluenceSwitcherLoader;
       break;
     default:
-      Switcher = GenericSwitcher;
+      Switcher = GenericSwitcherLoader;
   }
+
+  const features = mapPropsToFeatures(props);
+
   return (
     <IntlProvider>
-      <NavigationAnalyticsContext data={getAnalyticsContext(props)}>
+      <NavigationAnalyticsContext
+        data={getAnalyticsContext({ featureFlags: features })}
+      >
         <ErrorBoundary messages={messages}>
-          <Switcher messages={messages} {...props} />
+          <Switcher {...props} messages={messages} features={features} />
         </ErrorBoundary>
       </NavigationAnalyticsContext>
     </IntlProvider>

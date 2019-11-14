@@ -2,10 +2,20 @@ import styled from 'styled-components';
 import { HTMLAttributes, ComponentClass } from 'react';
 import {
   editorFontSize,
+  whitespaceSharedStyles,
   paragraphSharedStyles,
+  listsSharedStyles,
   indentationSharedStyles,
   blockMarksSharedStyles,
+  shadowSharedStyle,
+  inlineNodeSharedStyle,
+  dateSharedStyle,
+  akEditorDeleteBackground,
+  akEditorDeleteBorder,
+  akEditorSelectedBorderBoldSize,
+  tasksAndDecisionsStyles,
 } from '@atlaskit/editor-common';
+
 import { telepointerStyle } from '../../plugins/collab-edit/styles';
 import { gapCursorStyles } from '../../plugins/gap-cursor/styles';
 import { tableStyles } from '../../plugins/table/ui/styles';
@@ -21,13 +31,15 @@ import { fakeCursorStyles } from '../../plugins/fake-text-cursor/styles';
 import { mentionsStyles } from '../../plugins/mentions/styles';
 import { textFormattingStyles } from '../../plugins/text-formatting/styles';
 import { placeholderTextStyles } from '../../plugins/placeholder-text/styles';
-import { tasksAndDecisionsStyles } from '../../plugins/tasks-and-decisions/ui/styles';
 import { gridStyles } from '../../plugins/grid/styles';
 import { linkStyles } from '../../plugins/hyperlink/styles';
+import { extensionStyles } from '../../plugins/extension/ui/styles';
+import { expandStyles } from '../../plugins/expand/ui/styles';
 
-const ContentStyles: ComponentClass<
-  HTMLAttributes<{}> & { theme: any }
-> = styled.div`
+const ContentStyles: ComponentClass<HTMLAttributes<{}> & {
+  theme: any;
+  allowAnnotation?: boolean;
+}> = styled.div`
   /* Hack for ie11 that is being used in code block.
    * https://bitbucket.org/atlassian/atlaskit/src/ad09f6361109ece1aab316c8cbd8116ffb7963ef/packages/editor-core/src/schema/nodes/code-block.ts?fileviewer=file-view-default#code-block.ts-110
    */
@@ -37,13 +49,15 @@ const ContentStyles: ComponentClass<
   }
 
   .ProseMirror {
-    word-wrap: break-word;
-    white-space: pre-wrap;
     outline: none;
     font-size: ${editorFontSize}px;
 
+    ${whitespaceSharedStyles};
     ${paragraphSharedStyles};
-    ${indentationSharedStyles}
+    ${listsSharedStyles};
+    ${indentationSharedStyles};
+    ${shadowSharedStyle};
+    ${inlineNodeSharedStyle};
   }
 
   .ProseMirror-hideselection *::selection {
@@ -63,10 +77,14 @@ const ContentStyles: ComponentClass<
   }
 
   .inlineCardView-content-wrap {
-    display: inline-block;
     max-width: calc(100% - 20px);
     vertical-align: top;
     word-break: break-all;
+  }
+
+  .inlineCardView-content-wrap .card {
+    padding-left: 2px;
+    padding-right: 2px;
   }
 
   .blockCardView-content-wrap {
@@ -103,6 +121,22 @@ const ContentStyles: ComponentClass<
   ${gridStyles}
   ${linkStyles}
   ${blockMarksSharedStyles}
+  ${dateSharedStyle}
+  ${extensionStyles}
+  ${expandStyles}
+
+  /** Global selector for extensions, as .danger tag is assigned to root level node which is unaccessible from triggered child node **/
+  /* Danger when nested node */
+  .danger .extension-container {
+    background: rgb(255, 189, 173, 0.5); /* R75 with 50% opactiy */
+    transition: opacity 0s;
+  }
+
+  /* Danger when top level node */
+  .danger > span > .extension-container {
+    background: ${akEditorDeleteBackground};
+    box-shadow: 0 0 0 ${akEditorSelectedBorderBoldSize}px ${akEditorDeleteBorder};
+  }
 
   .panelView-content-wrap {
     box-sizing: border-box;
@@ -113,6 +147,13 @@ const ContentStyles: ComponentClass<
   }
 
   /** Needed to override any cleared floats, e.g. image wrapping */
+
+  span.fabric-editor-annotation {
+    /* Y200 with 40% opacity */
+    background-color: ${({ allowAnnotation }: any) =>
+      allowAnnotation ? 'rgba(255, 196, 0, 0.4)' : 'transparent'};
+  }
+
   div.fabric-editor-block-mark[class^='fabric-editor-align'] {
     clear: none !important;
   }
@@ -131,6 +172,18 @@ const ContentStyles: ComponentClass<
 
   .hyperlink-floating-toolbar {
     padding: 0;
+  }
+
+  /* Link icon in the Atlaskit package
+     is bigger than the others
+  */
+  .hyperlink-open-link {
+    svg {
+      max-width: 18px;
+    }
+    &[href] {
+      padding: 0 4px;
+    }
   }
 
 `;

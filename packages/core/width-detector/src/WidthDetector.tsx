@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import rafSchedule from 'raf-schd';
 
 const containerDivStyle: React.CSSProperties = {
@@ -108,6 +108,7 @@ export default class WidthDetector extends React.Component<Props, State> {
     this.resizeObjectDocument = this.resizeObject.contentDocument
       .defaultView as Window;
     this.resizeObjectDocument.addEventListener('resize', this.handleResize);
+    this.handleResize();
   };
 
   render() {

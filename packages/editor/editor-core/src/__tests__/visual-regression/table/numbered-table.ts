@@ -1,36 +1,43 @@
 import {
-  snapshot,
-  initFullPageEditorWithAdf,
+  clickFirstCell,
+  tableSelectors,
+} from '../../__helpers/page-objects/_table';
+import {
   Device,
   initCommentEditorWithAdf,
+  initFullPageEditorWithAdf,
+  snapshot,
+  editorCommentContentSelector,
 } from '../_utils';
-import { getSelectorForTableCell } from '../../__helpers/page-objects/_table';
-import * as adf from './__fixtures__/numbered-table.adf.json';
+import adf from './__fixtures__/numbered-table.adf.json';
+import multipleTablesAdf from './__fixtures__/numbered-table-multiple.adf.json';
+import { Page } from '../../__helpers/page-objects/_types';
 
-describe.skip('Snapshot Test: numbered table', () => {
-  let page: any;
+describe('Snapshot Test: numbered table', () => {
+  let page: Page;
 
   beforeAll(async () => {
     // @ts-ignore
     page = global.page;
   });
 
-  afterEach(async () => {
+  it('looks correct for fullpage', async () => {
+    await initFullPageEditorWithAdf(page, multipleTablesAdf, Device.LaptopMDPI);
+    await clickFirstCell(page);
     await snapshot(page);
   });
 
-  it(`looks correct at LaptopMDPI for fullpage`, async () => {
-    await initFullPageEditorWithAdf(page, adf, Device.LaptopMDPI);
-    await page.click(getSelectorForTableCell({ row: 1, cell: 1 }));
+  it('looks correct  for comment', async () => {
+    await initCommentEditorWithAdf(page, multipleTablesAdf, Device.LaptopMDPI);
+    await clickFirstCell(page);
+    await snapshot(page, undefined, editorCommentContentSelector);
   });
 
-  it(`looks correct at iPadPro for fullpage`, async () => {
-    await initFullPageEditorWithAdf(page, adf, Device.iPadPro);
-    await page.click(getSelectorForTableCell({ row: 1, cell: 1 }));
-  });
-
-  it(`looks correct at LaptopMDPI for comment`, async () => {
-    await initCommentEditorWithAdf(page, adf, Device.LaptopMDPI);
-    await page.click(getSelectorForTableCell({ row: 1, cell: 1 }));
+  it('should show insert button when mouse is hover numbered button', async () => {
+    await initFullPageEditorWithAdf(page, adf);
+    await clickFirstCell(page);
+    await page.hover(tableSelectors.nthRowControl(2));
+    await page.waitFor(tableSelectors.insertRowButton);
+    await snapshot(page);
   });
 });

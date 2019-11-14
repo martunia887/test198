@@ -1,7 +1,7 @@
-/* tslint:disable:variable-name */
 import styled from 'styled-components';
 import { absolute, borderRadius, size } from '@atlaskit/media-ui';
-import { colors, themed } from '@atlaskit/theme';
+import { themed } from '@atlaskit/theme/components';
+import { N20, DN50, N0 } from '@atlaskit/theme/colors';
 import { Root, cardShadow } from '../../styles';
 import { getSelectedBorderStyle } from '../../styles/getSelectedBorderStyle';
 
@@ -23,14 +23,14 @@ const getBackgroundColor = (props: WrapperProps) => {
   return `background: ${
     mediaType === 'image'
       ? 'transparent'
-      : themed({ light: colors.N20, dark: colors.DN50 })(props)
+      : themed({ light: N20, dark: DN50 })(props)
   };`;
 };
 
 export const Wrapper = styled(Root)`
   ${getShadowAttribute}
   ${borderRadius}
-  background: ${themed({ light: '#FFF', dark: colors.DN50 })};
+  ${getBackgroundColor}
 
   line-height: normal;
   position: relative;
@@ -39,7 +39,6 @@ export const Wrapper = styled(Root)`
 
   ${size()} .wrapper {
     ${borderRadius};
-    ${getBackgroundColor};
     display: block;
     height: inherit;
     position: relative;
@@ -93,14 +92,16 @@ export const ProgressBarWrapper = styled.div`
 `;
 
 export const Overlay = styled.div`
-  ${absolute()} ${size()} border-radius: inherit;
+  ${absolute()}
+  ${size()} 
+  border-radius: inherit;
   background-color: rgba(9, 30, 66, 0.5);
 `;
 
 export const Title = styled.div`
   ${absolute()} width: 100%;
   padding: 8px;
-  color: ${colors.N0};
+  color: ${N0};
   font-size: 12px;
   line-height: 18px;
   word-wrap: break-word;
@@ -112,7 +113,7 @@ export const Body = styled.div`
   bottom: 0;
   width: 100%;
   padding: 8px;
-  color: ${colors.N0};
+  color: ${N0};
 `;
 
 export const ProgressWrapper = styled.div`

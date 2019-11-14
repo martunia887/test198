@@ -1,21 +1,20 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { expect } from 'chai';
-import { ResourcedMention } from '@atlaskit/mention';
+import { ResourcedMention } from '@atlaskit/mention/element';
 import ProviderFactory from '../../../providerFactory';
 import Mention from '../../../ui/Mention';
 // avoid polluting test logs with error message in console
 // please ensure you fix it if you expect console.error to be thrown
-// tslint:disable-next-line:no-console
+// eslint-disable-next-line no-console
 let consoleError = console.error;
 
 describe('@atlaskit/editor-core/ui/Mention', () => {
   beforeEach(() => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error = jest.fn();
   });
   afterEach(() => {
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error = consoleError;
   });
   it('should render resourced mention', () => {
@@ -24,8 +23,8 @@ describe('@atlaskit/editor-core/ui/Mention', () => {
     );
     const resourcedMention = mention.find(ResourcedMention);
 
-    expect(resourcedMention.prop('id')).to.equal('abcd-abcd-abcd');
-    expect(resourcedMention.prop('text')).to.equal('@Oscar Wallhult');
+    expect(resourcedMention.prop('id')).toEqual('abcd-abcd-abcd');
+    expect(resourcedMention.prop('text')).toEqual('@Oscar Wallhult');
   });
 
   it('should not render ResourcedMentionWithProfilecard if profilecardProvider is not set', () => {
@@ -40,7 +39,7 @@ describe('@atlaskit/editor-core/ui/Mention', () => {
         providers={providerFactory}
       />,
     );
-    expect(mention.find('WithProfilecardMention')).to.have.length(0);
+    expect(mention.find('WithProfilecardMention')).toHaveLength(0);
     mention.unmount();
   });
 
@@ -58,7 +57,7 @@ describe('@atlaskit/editor-core/ui/Mention', () => {
     );
     const resourcedMention = mention.find(ResourcedMention);
 
-    expect(resourcedMention.prop('mentionProvider')).to.equal(mentionProvider);
+    expect(resourcedMention.prop('mentionProvider')).toEqual(mentionProvider);
     mention.unmount();
   });
 
@@ -78,7 +77,7 @@ describe('@atlaskit/editor-core/ui/Mention', () => {
     try {
       await profilecardProvider;
     } catch (err) {
-      expect(mention.find('WithProfilecardMention')).to.have.length(0);
+      expect(mention.find('WithProfilecardMention')).toHaveLength(0);
     }
     mention.unmount();
   });
@@ -98,7 +97,7 @@ describe('@atlaskit/editor-core/ui/Mention', () => {
       );
       await profilecardProvider;
 
-      expect(mention.find('WithProfilecardMention')).to.have.length(0);
+      expect(mention.find('WithProfilecardMention')).toHaveLength(0);
       mention.unmount();
     });
   });

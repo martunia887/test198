@@ -1,10 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-import { gridSize, math, colors } from '@atlaskit/theme';
+import { colors } from '@atlaskit/theme';
 import Cards from './Cards';
-import { TABLET_BREAKPOINT_MIN } from './config';
-import '../../../public/css/charlie-display-font.less';
+import { DESKTOP_BREAKPOINT_MIN } from '../../constants';
 
 const fonts =
   '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
@@ -40,13 +39,8 @@ const HomePageWrapper = styled.div`
   margin: 0 auto;
   text-align: center;
   color: ${colors.N0};
-  margin-top: ${math.add(gridSize, 3)}px;
 
-  @media (min-width: ${TABLET_BREAKPOINT_MIN}px) {
-    margin-top: ${math.add(gridSize, 10)}px;
-  }
-
-  @media (min-width: 800px) {
+  @media (min-width: ${DESKTOP_BREAKPOINT_MIN}px) {
     margin-right: 64px;
   }
 `;
@@ -67,7 +61,7 @@ export default class HomePage extends React.Component {
           <title>{`${BASE_TITLE}`}</title>
         </Helmet>
         <Style />
-        <Title>Atlaskit</Title>
+        <Title data-testid="title">Atlaskit</Title>
         <Intro>
           Atlassian&#39;s official UI library, built according to the
           Atlassian&nbsp;Design&nbsp;Guidelines.

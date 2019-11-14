@@ -1,7 +1,5 @@
-// @ts-ignore: Props needed for inferred type declaration
-import { ComponentType, Props } from 'react';
+import { ComponentType } from 'react';
 import { Mark } from 'prosemirror-model';
-
 import Code from './code';
 import Em from './em';
 import Link from './link';
@@ -10,7 +8,6 @@ import Strong from './strong';
 import Subsup from './subsup';
 import TextColor from './textColor';
 import Underline from './underline';
-import Action from './action';
 import Breakout from './breakout';
 import Alignment from './alignment';
 import Indentation from './indentation';
@@ -28,7 +25,6 @@ export const markToReact: { [key: string]: ComponentType<any> } = {
   subsup: Subsup,
   textColor: TextColor,
   underline: Underline,
-  action: Action,
   annotation: Annotation,
 
   // Stage0
@@ -51,7 +47,6 @@ export {
   Subsup,
   TextColor,
   Underline,
-  Action,
   Breakout,
   Annotation,
 };

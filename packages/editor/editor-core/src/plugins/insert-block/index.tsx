@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EditorPlugin } from '../../types';
-import { WithProviders } from '@atlaskit/editor-common';
+import { WithProviders, Providers } from '@atlaskit/editor-common';
 import {
   pluginKey as blockTypeStateKey,
   BlockTypeState,
@@ -14,20 +14,20 @@ import {
   HyperlinkState,
 } from '../hyperlink/pm-plugins/main';
 import { mentionPluginKey, MentionPluginState } from '../mentions';
-import { pluginKey as tablesStateKey } from '../table/pm-plugins/main';
 import { stateKey as imageUploadStateKey } from '../image-upload/pm-plugins/main';
 import {
   pluginKey as placeholderTextStateKey,
   PluginState as PlaceholderPluginState,
 } from '../placeholder-text';
 import { pluginKey as layoutStateKey } from '../layout';
+import { pluginKey as expandStateKey, ExpandPluginState } from '../expand';
 import {
   pluginKey as macroStateKey,
   MacroState,
   insertMacroFromMacroBrowser,
 } from '../macro';
 import { pluginKey as dateStateKey, DateState } from '../date/plugin';
-import { emojiPluginKey, EmojiState } from '../emoji/pm-plugins/main';
+import { emojiPluginKey, EmojiPluginState } from '../emoji';
 import WithPluginState from '../../ui/WithPluginState';
 import { ToolbarSize } from '../../ui/Toolbar';
 import ToolbarInsertBlock from './ui/ToolbarInsertBlock';
@@ -46,7 +46,7 @@ const toolbarSizeToButtons = (toolbarSize: ToolbarSize) => {
     case ToolbarSize.XL:
     case ToolbarSize.L:
     case ToolbarSize.M:
-      return 6;
+      return 7;
 
     case ToolbarSize.S:
       return 2;
@@ -57,6 +57,7 @@ const toolbarSizeToButtons = (toolbarSize: ToolbarSize) => {
 };
 
 export interface InsertBlockOptions {
+  allowTables?: boolean;
   insertMenuItems?: any;
   horizontalRuleEnabled?: boolean;
   nativeStatusSupported?: boolean;
@@ -70,7 +71,9 @@ function handleInsertBlockType(name: string) {
   return insertBlockTypesWithAnalytics(name, INPUT_METHOD.TOOLBAR);
 }
 
-const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
+const insertBlockPlugin = (options: InsertBlockOptions = {}): EditorPlugin => ({
+  name: 'insertBlock',
+
   primaryToolbarComponent({
     editorView,
     editorActions,
@@ -84,7 +87,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
     isToolbarReducedSpacing,
   }) {
     const buttons = toolbarSizeToButtons(toolbarSize);
-    const renderNode = (providers: Record<string, Promise<any>>) => {
+    const renderNode = (providers: Providers) => {
       return (
         <WithPluginState
           plugins={{
@@ -92,7 +95,6 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
             blockTypeState: blockTypeStateKey,
             mediaState: mediaStateKey,
             mentionState: mentionPluginKey,
-            tablesState: tablesStateKey,
             macroState: macroStateKey,
             hyperlinkState: hyperlinkPluginKey,
             emojiState: emojiPluginKey,
@@ -100,13 +102,13 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
             imageUpload: imageUploadStateKey,
             placeholderTextState: placeholderTextStateKey,
             layoutState: layoutStateKey,
+            expandState: expandStateKey,
           }}
           render={({
             typeAheadState,
             mentionState,
             blockTypeState,
             mediaState,
-            tablesState,
             macroState = {} as MacroState,
             hyperlinkState,
             emojiState,
@@ -114,6 +116,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
             imageUpload,
             placeholderTextState,
             layoutState,
+            expandState,
           }: {
             typeAheadState: TypeAheadPluginState | undefined;
             mentionState: MentionPluginState | undefined;
@@ -122,11 +125,12 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
             tablesState: TablePluginState | undefined;
             macroState: MacroState | undefined;
             hyperlinkState: HyperlinkState | undefined;
-            emojiState: EmojiState | undefined;
+            emojiState: EmojiPluginState | undefined;
             dateState: DateState | undefined;
             imageUpload: ImageUploadPluginState | undefined;
             placeholderTextState: PlaceholderPluginState | undefined;
             layoutState: LayoutState | undefined;
+            expandState: ExpandPluginState | undefined;
           }) => (
             <ToolbarInsertBlock
               buttons={buttons}
@@ -134,7 +138,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
               isDisabled={disabled}
               isTypeAheadAllowed={typeAheadState && typeAheadState.isAllowed}
               editorView={editorView}
-              tableSupported={!!tablesState}
+              tableSupported={options.allowTables}
               actionSupported={!!editorView.state.schema.nodes.taskItem}
               mentionsSupported={
                 !!(mentionState && mentionState.mentionProvider)
@@ -146,6 +150,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
                 placeholderTextState && placeholderTextState.allowInserting
               }
               layoutSectionEnabled={!!layoutState}
+              expandEnabled={!!expandState}
               mediaUploadsEnabled={mediaState && mediaState.allowsUploads}
               onShowMediaPicker={mediaState && mediaState.showMediaPicker}
               mediaSupported={!!mediaState}
@@ -161,8 +166,7 @@ const insertBlockPlugin = (options: InsertBlockOptions): EditorPlugin => ({
                 !hyperlinkState.canInsertLink ||
                 !!hyperlinkState.activeLinkMark
               }
-              emojiDisabled={!emojiState || !emojiState.enabled}
-              insertEmoji={emojiState && emojiState.insertEmoji}
+              emojiDisabled={!emojiState || !emojiState.emojiProvider}
               emojiProvider={providers.emojiProvider}
               nativeStatusSupported={options.nativeStatusSupported}
               horizontalRuleEnabled={options.horizontalRuleEnabled}

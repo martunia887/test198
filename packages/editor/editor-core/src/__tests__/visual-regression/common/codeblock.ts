@@ -1,15 +1,19 @@
-import { initFullPageEditorWithAdf, snapshot, Device } from '../_utils';
-import * as adf from './__fixtures__/code-block-adf.json';
+import { snapshot, initEditorWithAdf, Appearance } from '../_utils';
+import adf from './__fixtures__/code-block-adf.json';
 import { selectors } from '../../__helpers/page-objects/_editor';
+import { Page } from '../../__helpers/page-objects/_types';
 
-// https://product-fabric.atlassian.net/browse/ED-6434
-describe.skip('Code breakout:', () => {
+describe('Code breakout:', () => {
   it('looks correct', async () => {
     // @ts-ignore
-    const page = global.page;
-    await initFullPageEditorWithAdf(page, adf, Device.LaptopMDPI);
+    const page: Page = global.page;
+    await initEditorWithAdf(page, {
+      adf,
+      appearance: Appearance.fullPage,
+      viewport: { width: 1280, height: 500 },
+    });
     await page.waitForSelector(selectors.codeContent);
     await page.click(selectors.codeContent);
-    await snapshot(page, 0.001);
+    await snapshot(page);
   });
 });

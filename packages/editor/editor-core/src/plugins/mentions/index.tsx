@@ -1,18 +1,25 @@
 import * as React from 'react';
-import * as uuid from 'uuid';
+import uuid from 'uuid';
+import { Schema, Node, Fragment } from 'prosemirror-model';
 import { EditorState, Plugin, PluginKey, StateField } from 'prosemirror-state';
 import {
   AnalyticsEventPayload,
-  CreateUIAnalyticsEventSignature,
-} from '@atlaskit/analytics-next-types';
-import MentionIcon from '@atlaskit/icon/glyph/editor/mention';
+  CreateUIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import {
   MentionProvider,
-  MentionItem,
+  TeamMentionProvider,
   isSpecialMention,
+  isResolvingMentionProvider,
   MentionDescription,
   ELEMENTS_CHANNEL,
-} from '@atlaskit/mention';
+} from '@atlaskit/mention/resource';
+import {
+  TeamMentionHighlight,
+  TeamMentionHighlightController,
+} from '@atlaskit/mention/spotlight';
+import { MentionItem } from '@atlaskit/mention/item';
+import { TeamMember } from '@atlaskit/mention/team-resource';
 import { mention } from '@atlaskit/adf-schema';
 import {
   ProviderFactory,
@@ -20,7 +27,7 @@ import {
 } from '@atlaskit/editor-common';
 
 import { analyticsService } from '../../analytics';
-import { EditorPlugin, Command, EditorAppearance } from '../../types';
+import { EditorPlugin, Command } from '../../types';
 import { Dispatch } from '../../event-dispatcher';
 import { PortalProviderAPI } from '../../ui/PortalProvider';
 import WithPluginState from '../../ui/WithPluginState';
@@ -30,7 +37,6 @@ import {
   createInitialPluginState,
 } from '../type-ahead/pm-plugins/main';
 import { messages } from '../insert-block/ui/ToolbarInsertBlock';
-import { ReactNodeView } from '../../nodeviews';
 import ToolbarMention from './ui/ToolbarMention';
 import mentionNodeView from './nodeviews/mention';
 import {
@@ -50,21 +56,37 @@ import {
   ACTION_SUBJECT_ID,
 } from '../analytics';
 import { TypeAheadItem } from '../type-ahead/types';
+import { isTeamStats, isTeamType } from './utils';
+import { IconMention } from '../quick-insert/assets';
 
-const mentionsPlugin = (
-  createAnalyticsEvent?: CreateUIAnalyticsEventSignature,
-): EditorPlugin => {
+export interface TeamInfoAttrAnalytics {
+  teamId: String;
+  includesYou: boolean;
+  memberCount: number;
+}
+
+export interface MentionPluginOptions {
+  createAnalyticsEvent?: CreateUIAnalyticsEvent;
+  sanitizePrivateContent?: boolean;
+  mentionInsertDisplayName?: boolean;
+  useInlineWrapper?: boolean;
+  allowZeroWidthSpaceAfter?: boolean;
+}
+
+const mentionsPlugin = (options?: MentionPluginOptions): EditorPlugin => {
   let sessionId = uuid();
   const fireEvent = <T extends AnalyticsEventPayload>(payload: T): void => {
-    if (createAnalyticsEvent) {
+    if (options && options.createAnalyticsEvent) {
       if (payload.attributes && !payload.attributes.sessionId) {
         payload.attributes.sessionId = sessionId;
       }
-      createAnalyticsEvent(payload).fire(ELEMENTS_CHANNEL);
+      options.createAnalyticsEvent(payload).fire(ELEMENTS_CHANNEL);
     }
   };
 
   return {
+    name: 'mention',
+
     nodes() {
       return [{ name: 'mention', node: mention }];
     },
@@ -73,13 +95,13 @@ const mentionsPlugin = (
       return [
         {
           name: 'mention',
-          plugin: ({ providerFactory, dispatch, portalProviderAPI, props }) =>
+          plugin: ({ providerFactory, dispatch, portalProviderAPI }) =>
             mentionPluginFactory(
               dispatch,
               providerFactory,
               portalProviderAPI,
               fireEvent,
-              props.appearance,
+              options,
             ),
         },
       ];
@@ -115,15 +137,17 @@ const mentionsPlugin = (
       quickInsert: ({ formatMessage }) => [
         {
           title: formatMessage(messages.mention),
+          description: formatMessage(messages.mentionDescription),
           priority: 400,
-          icon: () => <MentionIcon label={formatMessage(messages.mention)} />,
+          keyshortcut: '@',
+          icon: () => <IconMention label={formatMessage(messages.mention)} />,
           action(insert, state) {
             const mark = state.schema.mark('typeAheadQuery', {
               trigger: '@',
             });
             const mentionText = state.schema.text('@', [mark]);
             const tr = insert(mentionText);
-            return addAnalytics(tr, {
+            return addAnalytics(state, tr, {
               action: ACTION.INVOKED,
               actionSubject: ACTION_SUBJECT.TYPEAHEAD,
               actionSubjectId: ACTION_SUBJECT_ID.TYPEAHEAD_MENTION,
@@ -138,6 +162,27 @@ const mentionsPlugin = (
         // Custom regex must have a capture group around trigger
         // so it's possible to use it without needing to scan through all triggers again
         customRegex: '\\(?(@)',
+        getHighlight: (state: EditorState) => {
+          const pluginState = getMentionPluginState(state);
+          const provider = pluginState.mentionProvider;
+          if (provider) {
+            const teamMentionProvider = provider as TeamMentionProvider;
+            if (
+              isTeamMentionProvider(teamMentionProvider) &&
+              teamMentionProvider.mentionTypeaheadHighlightEnabled()
+            ) {
+              return (
+                <TeamMentionHighlight
+                  createTeamLink={teamMentionProvider.mentionTypeaheadCreateTeamPath()}
+                  onClose={() =>
+                    TeamMentionHighlightController.registerClosed()
+                  }
+                />
+              );
+            }
+          }
+          return null;
+        },
         getItems(
           query,
           state,
@@ -178,11 +223,11 @@ const mentionsPlugin = (
           return mentions.map(
             (mention: MentionDescription): TypeAheadItem => ({
               title: mention.id,
-              render: ({ isSelected, onClick, onMouseMove }) => (
+              render: ({ isSelected, onClick, onHover }) => (
                 <MentionItem
                   mention={mention}
                   selected={isSelected}
-                  onMouseMove={onMouseMove}
+                  onMouseEnter={onHover}
                   onSelection={onClick}
                 />
               ),
@@ -191,10 +236,22 @@ const mentionsPlugin = (
           );
         },
         selectItem(state, item, insert, { mode }) {
+          const sanitizePrivateContent =
+            options && options.sanitizePrivateContent;
+          const mentionInsertDisplayName =
+            options && options.mentionInsertDisplayName;
+
+          const { schema } = state;
+
           const pluginState = getMentionPluginState(state);
           const { mentionProvider } = pluginState;
           const { id, name, nickname, accessLevel, userType } = item.mention;
-          const renderName = nickname ? nickname : name;
+          const trimmedNickname =
+            nickname && nickname.startsWith('@') ? nickname.slice(1) : nickname;
+          const renderName =
+            mentionInsertDisplayName || !trimmedNickname
+              ? name
+              : trimmedNickname;
           const typeAheadPluginState = typeAheadPluginKey.getState(
             state,
           ) as TypeAheadPluginState;
@@ -242,9 +299,33 @@ const mentionsPlugin = (
 
           sessionId = uuid();
 
+          if (mentionProvider && isTeamType(userType)) {
+            TeamMentionHighlightController.registerTeamMention();
+
+            return insert(
+              buildNodesForTeamMention(
+                schema,
+                item.mention,
+                mentionProvider,
+                sanitizePrivateContent,
+              ),
+            );
+          }
+
+          // Don't insert into document if document data is sanitized.
+          const text = sanitizePrivateContent ? '' : `@${renderName}`;
+
+          if (
+            sanitizePrivateContent &&
+            isResolvingMentionProvider(mentionProvider)
+          ) {
+            // Cache (locally) for later rendering
+            mentionProvider.cacheMentionName(id, renderName);
+          }
+
           return insert(
-            state.schema.nodes.mention.createChecked({
-              text: `@${renderName}`,
+            schema.nodes.mention.createChecked({
+              text,
               id,
               accessLevel,
               userType: userType === 'DEFAULT' ? null : userType,
@@ -346,7 +427,7 @@ export function getMentionPluginState(state: EditorState) {
 }
 
 export type MentionPluginState = {
-  mentionProvider?: MentionProvider;
+  mentionProvider?: MentionProvider | TeamMentionProvider;
   contextIdentifierProvider?: ContextIdentifierProvider;
   mentions?: Array<MentionDescription>;
 };
@@ -356,7 +437,7 @@ function mentionPluginFactory(
   providerFactory: ProviderFactory,
   portalProviderAPI: PortalProviderAPI,
   fireEvent: (payload: any) => void,
-  editorAppearance?: EditorAppearance,
+  options?: MentionPluginOptions,
 ) {
   let mentionProvider: MentionProvider;
 
@@ -381,6 +462,7 @@ function mentionPluginFactory(
               mentionProvider: params.provider,
             };
             dispatch(mentionPluginKey, newPluginState);
+
             return newPluginState;
 
           case ACTIONS.SET_RESULTS:
@@ -405,11 +487,7 @@ function mentionPluginFactory(
     } as StateField<MentionPluginState>,
     props: {
       nodeViews: {
-        mention: ReactNodeView.fromComponent(
-          mentionNodeView,
-          portalProviderAPI,
-          { providerFactory, editorAppearance },
-        ),
+        mention: mentionNodeView(portalProviderAPI, providerFactory, options),
       },
     },
     view(editorView) {
@@ -440,13 +518,43 @@ function mentionPluginFactory(
                   (mentions, query, stats) => {
                     setResults(mentions)(editorView.state, editorView.dispatch);
 
-                    fireEvent(
-                      buildTypeAheadRenderedPayload(
-                        stats && stats.duration,
-                        mentions.map(mention => mention.id),
-                        query || '',
-                      ),
+                    let duration: number = 0;
+                    let userIds: string[] | null = null;
+                    let teams: TeamInfoAttrAnalytics[] | null = null;
+
+                    if (!isTeamStats(stats)) {
+                      // is from user mention
+                      duration = stats && stats.duration;
+                      teams = null;
+                      userIds = mentions
+                        .map(mention =>
+                          isTeamType(mention.userType) ? null : mention.id,
+                        )
+                        .filter(m => !!m) as string[];
+                    } else {
+                      // is from team mention
+                      duration = stats && stats.teamMentionDuration;
+                      userIds = null;
+                      teams = mentions
+                        .map(mention =>
+                          isTeamType(mention.userType)
+                            ? {
+                                teamId: mention.id,
+                                includesYou: mention.context!.includesYou,
+                                memberCount: mention.context!.memberCount,
+                              }
+                            : null,
+                        )
+                        .filter(m => !!m) as TeamInfoAttrAnalytics[];
+                    }
+
+                    const payload = buildTypeAheadRenderedPayload(
+                      duration,
+                      userIds,
+                      query || '',
+                      teams,
                     );
+                    fireEvent(payload);
                   },
                 );
               })
@@ -492,3 +600,63 @@ function mentionPluginFactory(
     },
   });
 }
+
+/**
+ * When a team mention is selected, we render a team link and list of member/user mentions
+ * in editor content
+ */
+function buildNodesForTeamMention(
+  schema: Schema,
+  selectedMention: MentionDescription,
+  mentionProvider: MentionProvider,
+  sanitizePrivateContent?: boolean,
+): Fragment {
+  const { nodes, marks } = schema;
+  const { name, id: teamId, accessLevel, context } = selectedMention;
+
+  // build team link
+  const defaultTeamLink = `${window.location.origin}/people/team/${teamId}`;
+  const teamLink =
+    context && context.teamLink ? context.teamLink : defaultTeamLink;
+  const teamLinkNode = schema.text(name!, [
+    marks.link.create({ href: teamLink }),
+  ]);
+
+  const openBracketText = schema.text('(');
+  const closeBracketText = schema.text(')');
+  const emptySpaceText = schema.text(' ');
+
+  const inlineNodes: Node[] = [teamLinkNode, emptySpaceText, openBracketText];
+
+  const members: TeamMember[] =
+    context && context.members ? context.members : [];
+  members.forEach((member: TeamMember, index) => {
+    const { name, id } = member;
+    const mentionName = `@${name}`;
+    const text = sanitizePrivateContent ? '' : mentionName;
+    if (sanitizePrivateContent && isResolvingMentionProvider(mentionProvider)) {
+      mentionProvider.cacheMentionName(id, name);
+    }
+    const userMentionNode = nodes.mention.createChecked({
+      text,
+      id: member.id,
+      accessLevel,
+      userType: 'DEFAULT',
+    });
+
+    inlineNodes.push(userMentionNode);
+    // should not add empty space after the last user mention.
+    if (index !== members.length - 1) {
+      inlineNodes.push(emptySpaceText);
+    }
+  });
+
+  inlineNodes.push(closeBracketText);
+  return Fragment.fromArray(inlineNodes);
+}
+
+const isTeamMentionProvider = (p: any): p is TeamMentionProvider =>
+  !!(
+    (p as TeamMentionProvider).mentionTypeaheadHighlightEnabled &&
+    (p as TeamMentionProvider).mentionTypeaheadCreateTeamPath
+  );

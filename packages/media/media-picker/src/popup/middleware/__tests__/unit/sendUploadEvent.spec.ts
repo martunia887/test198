@@ -4,26 +4,22 @@ import {
 } from '@atlaskit/media-test-helpers';
 import sendUploadEventMiddleware from '../../sendUploadEvent';
 import { sendUploadEvent } from '../../../actions/sendUploadEvent';
-import { MediaError } from '../../../../domain/error';
+import { MediaError } from '../../../../types';
 import { SCALE_FACTOR_DEFAULT } from '../../../../util/getPreviewFromImage';
-import { MediaFile } from '../../../../domain/file';
+import { MediaFile } from '../../../../types';
 // avoid polluting test logs with error message in console
 // please ensure you fix it if you expect console.error to be thrown
-// tslint:disable-next-line:no-console
+// eslint-disable-next-line no-console
 let consoleError = console.error;
 
 describe('sendUploadEvent middleware', () => {
   const uploadId = 'some-upload-id';
-  const upfrontId = Promise.resolve('1');
-  const userUpfrontId = Promise.resolve('');
   const file: MediaFile = {
     id: 'some-file-id',
     name: 'some-file-name',
     size: 12345,
     creationDate: Date.now(),
     type: 'image/jpg',
-    upfrontId,
-    userUpfrontId,
   };
   const setup = () => ({
     eventEmitter: mockPopupUploadEventEmitter(),
@@ -139,9 +135,6 @@ describe('sendUploadEvent middleware', () => {
 
   it('should emit upload end event', () => {
     const { eventEmitter, store, next } = setup();
-    const mediaApiData = {
-      id: file.id,
-    };
 
     sendUploadEventMiddleware(eventEmitter)(store)(next)(
       sendUploadEvent({
@@ -149,25 +142,21 @@ describe('sendUploadEvent middleware', () => {
           name: 'upload-end',
           data: {
             file,
-            public: mediaApiData,
           },
         },
         uploadId,
       }),
     );
 
-    expect(eventEmitter.emitUploadEnd).toBeCalledWith(
-      {
-        ...file,
-        id: uploadId,
-      },
-      mediaApiData,
-    );
+    expect(eventEmitter.emitUploadEnd).toBeCalledWith({
+      ...file,
+      id: uploadId,
+    });
   });
 
   it('should emit upload error event', () => {
     const { eventEmitter, store, next } = setup();
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error = jest.fn();
     const error: MediaError = {
       name: 'upload_fail',
@@ -194,7 +183,7 @@ describe('sendUploadEvent middleware', () => {
       },
       error,
     );
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.error = consoleError;
   });
 });

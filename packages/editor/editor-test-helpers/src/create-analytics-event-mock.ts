@@ -1,27 +1,28 @@
 import {
-  UIAnalyticsEventInterface,
-  AnalyticsEventUpdater,
-  CreateUIAnalyticsEventSignature,
+  UIAnalyticsEvent,
+  CreateUIAnalyticsEvent,
   AnalyticsEventPayload,
-} from '@atlaskit/analytics-next-types';
+} from '@atlaskit/analytics-next';
 
-const mock: CreateUIAnalyticsEventSignature = (
+const mock: CreateUIAnalyticsEvent = (
   payload: AnalyticsEventPayload,
-): UIAnalyticsEventInterface => ({
+): UIAnalyticsEvent => ({
   context: [],
+  handlers: [],
   hasFired: false,
   payload,
   clone() {
     return null;
   },
   fire() {},
-  update(updater: AnalyticsEventUpdater): UIAnalyticsEventInterface {
+  update(_updater) {
     return mock(payload);
   },
 });
 
 export default function createAnalyticsEventMock(): jest.MockInstance<
-  UIAnalyticsEventInterface
+  UIAnalyticsEvent,
+  any
 > {
   return jest.fn(mock);
 }

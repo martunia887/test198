@@ -1,13 +1,9 @@
-/* tslint:disable:variable-name */
-
 import styled, { ThemedOuterStyledProps } from 'styled-components';
 
 import { HTMLAttributes, ComponentClass, LiHTMLAttributes } from 'react';
-import { colors } from '@atlaskit/theme';
+import { N20, N40, B400, B50 } from '@atlaskit/theme/colors';
 
-export const FilmStripViewWrapper: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const FilmStripViewWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   position: relative;
   padding: 3px 0;
   border-radius: 3px;
@@ -21,17 +17,15 @@ export const FilmStripViewWrapper: ComponentClass<
   }
 `;
 
-export const FilmStripListWrapper: ComponentClass<
-  HTMLAttributes<{}> & ThemedOuterStyledProps<{}, {}>
-> = styled.div`
+export const FilmStripListWrapper: ComponentClass<HTMLAttributes<{}> &
+  ThemedOuterStyledProps<{}, {}>> = styled.div`
   width: inherit;
   overflow: hidden;
   padding: 2px 0;
 `;
 
-export const FilmStripList: ComponentClass<
-  HTMLAttributes<{}> & ThemedOuterStyledProps<{}, {}>
-> = styled.ul`
+export const FilmStripList: ComponentClass<HTMLAttributes<{}> &
+  ThemedOuterStyledProps<{}, {}>> = styled.ul`
   margin: 0;
   padding: 0;
   transition-property: transform;
@@ -40,9 +34,7 @@ export const FilmStripList: ComponentClass<
   display: inline-block;
 `;
 
-export const FilmStripListItem: ComponentClass<
-  LiHTMLAttributes<{}>
-> = styled.li`
+export const FilmStripListItem: ComponentClass<LiHTMLAttributes<{}>> = styled.li`
   list-style-type: none;
   margin: 0;
   padding: 0 4px;
@@ -56,7 +48,7 @@ export const ArrowWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: ${colors.N20};
+  background-color: ${N20};
   border-radius: 100%;
   display: flex;
   cursor: pointer;
@@ -70,12 +62,12 @@ export const ArrowWrapper: ComponentClass<HTMLAttributes<{}>> = styled.div`
 
   &:hover {
     color: black;
-    background-color: ${colors.N40};
+    background-color: ${N40};
   }
 
   &:active {
-    color: ${colors.B400};
-    background-color: ${colors.B50};
+    color: ${B400};
+    background-color: ${B50};
   }
 
   svg {

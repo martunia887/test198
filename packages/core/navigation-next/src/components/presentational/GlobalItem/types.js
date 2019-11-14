@@ -1,7 +1,6 @@
 // @flow
 
-import type { ComponentType, ElementConfig, Node } from 'react';
-import type { WithAnalyticsEventsProps } from '@atlaskit/analytics-next';
+import type { ComponentType, ElementConfig, ElementRef, Node } from 'react';
 
 import type { StyleReducer, WithGlobalThemeProps } from '../../../theme/types';
 import type { InteractionState } from '../InteractionStateManager/types';
@@ -32,6 +31,10 @@ export type GlobalItemStyles = {
 type GlobalItemIconProps = {
   label: string,
   secondaryColor: 'inherit',
+};
+
+type NonStringRef<T> = {
+  current: ElementRef<T> | null,
 };
 
 type BaseItemProps = {
@@ -76,7 +79,7 @@ export type GlobalItemRenderComponentProps = {
 
 export type InjectedGlobalItemProps = {|
   ...$Exact<WithGlobalThemeProps>,
-  ...$Exact<WithAnalyticsEventsProps>,
+  createAnalyticsEvent: Function,
 |};
 
 /**
@@ -94,6 +97,8 @@ export type BaseGlobalItemProps = {
    * className, children and onClick props which should be passed on to the
    * element you render. */
   component?: ComponentType<GlobalItemRenderComponentProps>,
+  /** A function to access the ref of the GlobalItem. */
+  getRef?: (node: NonStringRef<'span'>) => void,
 };
 
 export type GlobalItemProps = {

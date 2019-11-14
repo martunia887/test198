@@ -5,7 +5,8 @@ import { ProviderFactory } from '@atlaskit/editor-common';
 import { EditorAppearance, UIComponentFactory } from '../../types';
 import { EventDispatcher } from '../../event-dispatcher';
 import EditorActions from '../../actions';
-import { AnalyticsEventPayload } from '../../plugins/analytics';
+import { DispatchAnalyticsEvent } from '../../plugins/analytics';
+import { whichTransitionEvent } from '../../utils';
 
 const PluginsComponentsWrapper = styled.div`
   display: flex;
@@ -17,16 +18,19 @@ export interface Props {
   editorActions?: EditorActions;
   eventDispatcher?: EventDispatcher;
   providerFactory: ProviderFactory;
-  appearance: EditorAppearance;
+  appearance?: EditorAppearance;
   popupsMountPoint?: HTMLElement;
   popupsBoundariesElement?: HTMLElement;
   popupsScrollableElement?: HTMLElement;
   containerElement: HTMLElement | undefined;
   disabled: boolean;
-  dispatchAnalyticsEvent?: (payload: AnalyticsEventPayload) => void;
+  dispatchAnalyticsEvent?: DispatchAnalyticsEvent;
+  contentArea?: HTMLElement;
 }
 
 export default class PluginSlot extends React.Component<Props, any> {
+  transitionEvent = whichTransitionEvent<'transitionend'>();
+
   shouldComponentUpdate(nextProps: Props) {
     const {
       editorView,
@@ -40,6 +44,7 @@ export default class PluginSlot extends React.Component<Props, any> {
       containerElement,
       disabled,
     } = this.props;
+
     return !(
       nextProps.editorView === editorView &&
       nextProps.editorActions === editorActions &&
@@ -53,6 +58,51 @@ export default class PluginSlot extends React.Component<Props, any> {
       nextProps.disabled === disabled
     );
   }
+
+  componentDidMount() {
+    this.addModeChangeListener(this.props.contentArea);
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
+    if (this.props.contentArea !== nextProps.contentArea) {
+      this.removeModeChangeListener(this.props.contentArea);
+      this.addModeChangeListener(nextProps.contentArea);
+    }
+  }
+
+  componentWillUnmount() {
+    this.removeModeChangeListener(this.props.contentArea);
+  }
+
+  forceComponentUpdate = (event: TransitionEvent): void => {
+    // Only trigger an update if the transition is on a property containing `width`
+    // This will cater for media and the content area itself currently.
+    if (event.propertyName.includes('width')) {
+      this.forceUpdate();
+    }
+  };
+
+  removeModeChangeListener = (contentArea?: HTMLElement) => {
+    if (contentArea && this.transitionEvent) {
+      contentArea.removeEventListener(
+        this.transitionEvent,
+        this.forceComponentUpdate,
+      );
+    }
+  };
+
+  addModeChangeListener = (contentArea?: HTMLElement) => {
+    if (contentArea && this.transitionEvent) {
+      /**
+       * Update the plugin components once the transition
+       * to full width / default mode completes
+       */
+      contentArea.addEventListener(
+        this.transitionEvent,
+        this.forceComponentUpdate,
+      );
+    }
+  };
 
   render() {
     const {
@@ -84,7 +134,7 @@ export default class PluginSlot extends React.Component<Props, any> {
             eventDispatcher: eventDispatcher as EventDispatcher,
             providerFactory,
             dispatchAnalyticsEvent,
-            appearance,
+            appearance: appearance!,
             popupsMountPoint,
             popupsBoundariesElement,
             popupsScrollableElement,

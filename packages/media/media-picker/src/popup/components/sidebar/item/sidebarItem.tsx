@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { changeService } from '../../../actions';
+import { changeService } from '../../../actions/changeService';
 import { ServiceName as ServiceNameDomain } from '../../../domain';
 import { Wrapper, ServiceIcon, ServiceName } from './styled';
 
@@ -19,10 +19,14 @@ export type SidebarItemProps = SidebarItemOwnProps & SidebarItemDispatchProps;
 
 export class StatelessSidebarItem extends Component<SidebarItemProps> {
   render() {
-    const { serviceFullName, isActive, children } = this.props;
+    const { serviceFullName, serviceName, isActive, children } = this.props;
 
     return (
-      <Wrapper isActive={isActive} onClick={this.onClick}>
+      <Wrapper
+        data-testid={`media-picker-${serviceName}-menu-item`}
+        isActive={isActive}
+        onClick={this.onClick}
+      >
         <ServiceIcon>{children}</ServiceIcon>
         <ServiceName>{serviceFullName}</ServiceName>
       </Wrapper>

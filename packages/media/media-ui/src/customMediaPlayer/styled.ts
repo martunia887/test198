@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
+import { R300 } from '@atlaskit/theme/colors';
 
 export interface MutedIndicatorProps {
   isMuted: boolean;
@@ -34,6 +34,9 @@ export const VolumeWrapper = styled.div`
   overflow: hidden;
   transition: width 0.3s;
   align-items: center;
+  position: absolute;
+  bottom: 0px;
+  left: 43px;
 
   &:hover,
   &:active {
@@ -130,7 +133,7 @@ export const VolumeToggleWrapper = styled.div`
   button {
     width: 36px;
     color: ${({ isMuted }: MutedIndicatorProps) =>
-      isMuted ? `${colors.R300} !important;` : ''};
+      isMuted ? `${R300} !important;` : ''};
   }
 `;
 
@@ -145,7 +148,7 @@ export const MutedIndicator = styled.div`
   position: absolute;
   top: 5px;
   left: 9px;
-  background: ${colors.R300};
+  background: ${R300};
   transform: rotate(32deg) translateY(10px);
   opacity: 0;
   pointer-events: none;
@@ -176,6 +179,7 @@ export const CurrentTimeTooltip = styled.div`
   opacity: ${(props: CurrentTimeTooltipProps) =>
     props.isDragging ? '1' : '0'};
   transition: opacity 0.3s;
+  word-break: keep-all;
 `;
 
 export const TimeRangeWrapper = styled.div`

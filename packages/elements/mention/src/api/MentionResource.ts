@@ -9,8 +9,11 @@ import {
   isAppMention,
   isTeamMention,
   MentionsResult,
+  MentionNameDetails,
+  MentionNameStatus,
 } from '../types';
 import debug from '../util/logger';
+import { MentionNameResolver } from './MentionNameResolver';
 
 const MAX_QUERY_ITEMS = 100;
 const MAX_NOTIFIED_ITEMS = 20;
@@ -33,6 +36,13 @@ export interface MentionResourceConfig extends ServiceConfig {
   containerId?: string;
   productId?: string;
   shouldHighlightMention?: (mention: MentionDescription) => boolean;
+  mentionNameResolver?: MentionNameResolver;
+}
+
+export interface TeamMentionResourceConfig extends MentionResourceConfig {
+  teamLinkResolver?: (teamId: string) => string;
+  teamHighlightEnabled?: boolean;
+  createTeamPath?: string;
 }
 
 export interface ResourceProvider<Result> {
@@ -76,6 +86,22 @@ export interface MentionProvider
   ): void;
   shouldHighlightMention(mention: MentionDescription): boolean;
   isFiltering(query: string): boolean;
+}
+
+export interface TeamMentionProvider extends MentionProvider {
+  mentionTypeaheadHighlightEnabled: () => boolean;
+  mentionTypeaheadCreateTeamPath: () => string | undefined;
+}
+
+/**
+ * Support
+ */
+export interface ResolvingMentionProvider extends MentionProvider {
+  resolveMentionName(
+    id: string,
+  ): Promise<MentionNameDetails> | MentionNameDetails;
+  cacheMentionName(id: string, mentionName: string): void;
+  supportsMentionNameResolving(): boolean;
 }
 
 const emptySecurityProvider = () => {
@@ -225,7 +251,8 @@ class AbstractMentionResource extends AbstractResource<MentionDescription[]>
 /**
  * Provides a Javascript API
  */
-export class MentionResource extends AbstractMentionResource {
+export class MentionResource extends AbstractMentionResource
+  implements ResolvingMentionProvider {
   private config: MentionResourceConfig;
   private lastReturnedSearch: number;
   private activeSearches: Set<string>;
@@ -304,6 +331,34 @@ export class MentionResource extends AbstractMentionResource {
     return this.activeSearches.has(query);
   }
 
+  resolveMentionName(
+    id: string,
+  ): Promise<MentionNameDetails> | MentionNameDetails {
+    if (!this.config.mentionNameResolver) {
+      return {
+        id,
+        name: '',
+        status: MentionNameStatus.UNKNOWN,
+      };
+    }
+    return this.config.mentionNameResolver.lookupName(id);
+  }
+
+  cacheMentionName(id: string, mentionName: string): void {
+    if (!this.config.mentionNameResolver) {
+      return;
+    }
+    this.config.mentionNameResolver.cacheName(id, mentionName);
+  }
+
+  supportsMentionNameResolving(): boolean {
+    return !!this.config.mentionNameResolver;
+  }
+
+  protected updateActiveSearches(query: string): void {
+    this.activeSearches.add(query);
+  }
+
   protected verifyMentionConfig(config: MentionResourceConfig) {
     if (!config.url) {
       throw new Error('config.url is a required parameter');
@@ -320,6 +375,29 @@ export class MentionResource extends AbstractMentionResource {
     return this.remoteInitialState(contextIdentifier);
   }
 
+  /**
+   * Clear a context object to generate query params by removing empty
+   * strings, `undefined` and empty values.
+   *
+   * @param contextIdentifier the current context identifier
+   * @returns a safe context for query encoding
+   */
+  private clearContext(
+    contextIdentifier: MentionContextIdentifier = {},
+  ): MentionContextIdentifier {
+    return (Object.keys(contextIdentifier) as Array<
+      keyof MentionContextIdentifier
+    >)
+      .filter(key => contextIdentifier[key])
+      .reduce(
+        (context, key) => ({
+          [key]: contextIdentifier[key],
+          ...context,
+        }),
+        {},
+      );
+  }
+
   private getQueryParams(
     contextIdentifier?: MentionContextIdentifier,
   ): KeyValues {
@@ -334,7 +412,7 @@ export class MentionResource extends AbstractMentionResource {
     }
 
     // if contextParams exist then it will override configParams for containerId
-    return { ...configParams, ...contextIdentifier };
+    return { ...configParams, ...this.clearContext(contextIdentifier) };
   }
 
   /**
@@ -403,7 +481,7 @@ export class MentionResource extends AbstractMentionResource {
     return { ...result, mentions, query: result.query || query };
   }
 
-  protected recordSelection(
+  recordSelection(
     mention: MentionDescription,
     contextIdentifier?: MentionContextIdentifier,
   ): Promise<void> {
@@ -435,6 +513,15 @@ export class HttpError implements Error {
     this.stack = new Error().stack;
   }
 }
+
+export const isResolvingMentionProvider = (
+  p: any,
+): p is ResolvingMentionProvider =>
+  !!(
+    p &&
+    (<ResolvingMentionProvider>p).supportsMentionNameResolving &&
+    p.supportsMentionNameResolving()
+  );
 
 export { AbstractResource, AbstractMentionResource };
 export default MentionResource;

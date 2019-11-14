@@ -1,39 +1,70 @@
 import * as React from 'react';
 import { Messages } from 'react-intl';
-import * as isEqual from 'lodash.isequal';
-
+import { UIAnalyticsEvent } from '@atlaskit/analytics-next';
+import isEqual from 'lodash.isequal';
 import {
-  SwitcherWrapper,
-  SwitcherItem,
+  SwitcherThemedItemWithEvents,
+  SwitcherItemWithDropdown,
   Section,
+  SwitcherWrapper,
   ManageButton,
   Skeleton,
+  TryLozenge,
+  FormattedMessage,
+  ItemWithAvatarGroup,
 } from '../primitives';
-import { SwitcherItemType, RecentItemType } from '../utils/links';
 
+import {
+  SwitcherItemType,
+  RecentItemType,
+  JoinableSiteItemType,
+} from '../utils/links';
 import {
   analyticsAttributes,
   NavigationAnalyticsContext,
   SWITCHER_SUBJECT,
   RenderTracker,
+  ViewedTracker,
 } from '../utils/analytics';
 import now from '../utils/performance-now';
-import FormattedMessage from '../primitives/formatted-message';
-import TryLozenge from '../primitives/try-lozenge';
-import { TriggerXFlowCallback, FeatureFlagProps } from '../types';
+import { urlToHostname } from '../utils/url-to-hostname';
+import { Appearance } from '../theme/types';
+import { TriggerXFlowCallback, DiscoverMoreCallback } from '../types';
 
-type SwitcherProps = {
+const noop = () => void 0;
+
+export type SwitcherProps = {
   messages: Messages;
   triggerXFlow: TriggerXFlowCallback;
-  isLoading: boolean;
+  /**
+   * Whether all the contents have been loaded
+   */
+  hasLoaded: boolean;
+  /**
+   * Whether contents considered critical path have been loaded
+   */
+  hasLoadedCritical: boolean;
+  onDiscoverMoreClicked: DiscoverMoreCallback;
   licensedProductLinks: SwitcherItemType[];
   suggestedProductLinks: SwitcherItemType[];
   fixedLinks: SwitcherItemType[];
   adminLinks: SwitcherItemType[];
+  joinableSiteLinks?: JoinableSiteItemType[];
   recentLinks: RecentItemType[];
   customLinks: SwitcherItemType[];
   manageLink?: string;
-} & FeatureFlagProps;
+  /**
+   * Remove section headers - useful if something else is providing them. i.e: trello inline dialog
+   */
+  disableHeadings?: boolean;
+  appearance?: Appearance;
+  /**
+   * Links for experimental "Discover" section
+   * which is a variation of suggestedProductLinks and fixedLinks combined
+   */
+  isDiscoverSectionEnabled?: boolean;
+  discoverSectionLinks: SwitcherItemType[];
+};
 
 const getAnalyticsContext = (itemsCount: number) => ({
   ...analyticsAttributes({
@@ -42,38 +73,60 @@ const getAnalyticsContext = (itemsCount: number) => ({
 });
 
 const getItemAnalyticsContext = (
-  index: number,
+  groupIndex: number,
   id: string | null,
   type: string,
+  href: string,
+  productType?: string,
+  extraAttributes?: { [key: string]: string },
 ) => ({
   ...analyticsAttributes({
-    groupItemIndex: index,
+    groupIndex,
     itemId: id,
     itemType: type,
+    domain: urlToHostname(href),
+    productType,
+    ...extraAttributes,
   }),
 });
 
 export default class Switcher extends React.Component<SwitcherProps> {
+  static defaultProps = {
+    appearance: 'drawer',
+  };
   mountedAt?: number;
 
   componentDidMount() {
     this.mountedAt = now();
   }
 
+  shouldComponentUpdate(nextProps: SwitcherProps) {
+    return !(isEqual(this.props, nextProps) as boolean);
+  }
+
   timeSinceMounted(): number {
     return this.mountedAt ? Math.round(now() - this.mountedAt) : 0;
   }
 
-  triggerXFlow = () => {
-    const { triggerXFlow, suggestedProductLinks } = this.props;
-    if (suggestedProductLinks.length) {
-      triggerXFlow(suggestedProductLinks[0].key, 'atlassian-switcher');
-    }
+  triggerXFlow = (key: string) => (
+    event: any,
+    analyticsEvent: UIAnalyticsEvent,
+  ) => {
+    const { triggerXFlow } = this.props;
+    triggerXFlow(key, 'atlassian-switcher', event, analyticsEvent);
   };
 
-  shouldComponentUpdate(nextProps: SwitcherProps) {
-    return !(isEqual(this.props, nextProps) as boolean);
-  }
+  /** https://bitbucket.org/atlassian/atlaskit-mk-2/pull-requests/6522/issue-prst-13-adding-discover-more-button/
+   * Currently Atlaskit's Item prioritises the usage of href over onClick in the case the href is a valid value.
+   *
+   *  The Discover more link is rendered with href=”” and onClick={actualImplementation}. Because the value of
+   *  href is not valid for this case the item will instead call the onClick callback provided.
+   *  */
+
+  onDiscoverMoreClicked = (event: any, analyticsEvent: UIAnalyticsEvent) => {
+    const { onDiscoverMoreClicked } = this.props;
+    onDiscoverMoreClicked(event, analyticsEvent);
+  };
 
   render() {
     const {
@@ -85,9 +138,13 @@ export default class Switcher extends React.Component<SwitcherProps> {
       recentLinks,
       customLinks,
       manageLink,
-      isLoading,
+      hasLoaded,
+      hasLoadedCritical,
+      disableHeadings,
+      appearance,
+      isDiscoverSectionEnabled,
+      discoverSectionLinks,
     } = this.props;
-
     /**
      * It is essential that switchToLinks reflects the order corresponding nav items
      * are rendered below in the 'Switch to' section.
@@ -99,14 +156,48 @@ export default class Switcher extends React.Component<SwitcherProps> {
       ...adminLinks,
     ];
 
+    const joinableSiteLinks = this.props.joinableSiteLinks || [];
+
     const itemsCount =
-      switchToLinks.length + recentLinks.length + customLinks.length;
+      switchToLinks.length +
+      recentLinks.length +
+      customLinks.length +
+      discoverSectionLinks.length +
+      joinableSiteLinks.length;
 
     const firstContentArrived = Boolean(licensedProductLinks.length);
 
+    let numberOfSites = firstContentArrived ? 1 : 0;
+    if (licensedProductLinks) {
+      const uniqueSets: { [key: string]: boolean } = {};
+      licensedProductLinks.forEach(link => {
+        (link.childItems || []).forEach(item => {
+          uniqueSets[item.label] = true;
+        });
+      });
+
+      const numbberOfUniqueSites = Object.keys(uniqueSets).length;
+      if (numbberOfUniqueSites > 0) {
+        numberOfSites = numbberOfUniqueSites;
+      }
+    }
+
     return (
       <NavigationAnalyticsContext data={getAnalyticsContext(itemsCount)}>
-        <SwitcherWrapper>
+        <SwitcherWrapper appearance={appearance}>
+          {hasLoaded && (
+            <ViewedTracker
+              subject={SWITCHER_SUBJECT}
+              data={{
+                licensedProducts: licensedProductLinks.map(item => item.key),
+                suggestedProducts: suggestedProductLinks.map(item => item.key),
+                adminLinks: adminLinks.map(item => item.key),
+                fixedLinks: fixedLinks.map(item => item.key),
+                joinableSiteLinks: joinableSiteLinks.map(item => item.key),
+                numberOfSites,
+              }}
+            />
+          )}
           {firstContentArrived && (
             <RenderTracker
               subject={SWITCHER_SUBJECT}
@@ -115,118 +206,250 @@ export default class Switcher extends React.Component<SwitcherProps> {
           )}
           <Section
             sectionId="switchTo"
-            title={<FormattedMessage {...messages.switchTo} />}
+            title={
+              disableHeadings ? null : (
+                <FormattedMessage {...messages.switchTo} />
+              )
+            }
           >
-            {licensedProductLinks.map(item => (
+            {licensedProductLinks.map((item, groupIndex) => (
               <NavigationAnalyticsContext
                 key={item.key}
                 data={getItemAnalyticsContext(
-                  switchToLinks.indexOf(item),
+                  groupIndex,
                   item.key,
                   'product',
+                  item.href,
+                  item.productType,
                 )}
               >
-                <SwitcherItem
+                <SwitcherItemWithDropdown
                   icon={<item.Icon theme="product" />}
+                  childIcon={<item.Icon theme="subtle" />}
+                  description={item.description}
                   href={item.href}
+                  childItems={item.childItems}
+                  tooltipContent={
+                    <FormattedMessage {...messages.showMoreSites} />
+                  }
                 >
                   {item.label}
-                </SwitcherItem>
+                </SwitcherItemWithDropdown>
               </NavigationAnalyticsContext>
             ))}
-            {suggestedProductLinks.map(item => (
+            {!isDiscoverSectionEnabled &&
+              suggestedProductLinks.map((item, groupIndex) => (
+                <NavigationAnalyticsContext
+                  key={item.key}
+                  data={getItemAnalyticsContext(
+                    groupIndex,
+                    item.key,
+                    'try',
+                    item.href,
+                  )}
+                >
+                  <SwitcherThemedItemWithEvents
+                    icon={<item.Icon theme="product" />}
+                    onClick={this.triggerXFlow(item.key)}
+                  >
+                    {item.label}
+                    <TryLozenge>
+                      <FormattedMessage {...messages.try} />
+                    </TryLozenge>
+                  </SwitcherThemedItemWithEvents>
+                </NavigationAnalyticsContext>
+              ))}
+            {fixedLinks.map((item, groupIndex) => (
               <NavigationAnalyticsContext
                 key={item.key}
                 data={getItemAnalyticsContext(
-                  switchToLinks.indexOf(item),
-                  item.key,
-                  'try',
-                )}
-              >
-                <SwitcherItem
-                  icon={<item.Icon theme="product" />}
-                  onClick={this.triggerXFlow}
-                >
-                  {item.label}
-                  <TryLozenge>
-                    <FormattedMessage {...messages.try} />
-                  </TryLozenge>
-                </SwitcherItem>
-              </NavigationAnalyticsContext>
-            ))}
-            {fixedLinks.map(item => (
-              <NavigationAnalyticsContext
-                key={item.key}
-                data={getItemAnalyticsContext(
-                  switchToLinks.indexOf(item),
+                  groupIndex,
                   item.key,
                   'product',
+                  item.href,
                 )}
               >
-                <SwitcherItem
+                <SwitcherThemedItemWithEvents
                   icon={<item.Icon theme="product" />}
                   href={item.href}
+                  onClick={
+                    item.key === 'discover-more'
+                      ? this.onDiscoverMoreClicked
+                      : noop
+                  }
                 >
                   {item.label}
-                </SwitcherItem>
+                </SwitcherThemedItemWithEvents>
               </NavigationAnalyticsContext>
             ))}
-            {adminLinks.map(item => (
+            {adminLinks.map((item, groupIndex) => (
               <NavigationAnalyticsContext
                 key={item.key}
                 data={getItemAnalyticsContext(
-                  switchToLinks.indexOf(item),
+                  groupIndex,
                   item.key,
                   'admin',
+                  item.href,
                 )}
               >
-                <SwitcherItem
+                <SwitcherThemedItemWithEvents
                   icon={<item.Icon theme="admin" />}
                   href={item.href}
                 >
                   {item.label}
-                </SwitcherItem>
+                </SwitcherThemedItemWithEvents>
               </NavigationAnalyticsContext>
             ))}
           </Section>
+          )}
+          {isDiscoverSectionEnabled && (
+            <Section
+              sectionId="discover"
+              title={
+                disableHeadings ? null : (
+                  <FormattedMessage {...messages.discover} />
+                )
+              }
+            >
+              {suggestedProductLinks.map((item, groupIndex) => (
+                <NavigationAnalyticsContext
+                  key={item.key}
+                  data={getItemAnalyticsContext(
+                    groupIndex,
+                    item.key,
+                    'discover',
+                    item.href,
+                  )}
+                >
+                  <SwitcherThemedItemWithEvents
+                    icon={<item.Icon theme="recommendedProduct" />}
+                    description={item.description}
+                    onClick={this.triggerXFlow(item.key)}
+                  >
+                    {item.label}
+                    {groupIndex === 0 && (
+                      <TryLozenge isBold={false}>
+                        <FormattedMessage {...messages.try} />
+                      </TryLozenge>
+                    )}
+                  </SwitcherThemedItemWithEvents>
+                </NavigationAnalyticsContext>
+              ))}
+              {discoverSectionLinks.map((item, groupIndex) => (
+                <NavigationAnalyticsContext
+                  key={item.key}
+                  data={getItemAnalyticsContext(
+                    groupIndex,
+                    item.key,
+                    'discover-fixed-links',
+                    item.href,
+                  )}
+                >
+                  <SwitcherThemedItemWithEvents
+                    icon={<item.Icon theme="discover" />}
+                    href={item.href}
+                    onClick={
+                      item.key === 'discover-more'
+                        ? this.onDiscoverMoreClicked
+                        : noop
+                    }
+                  >
+                    {item.label}
+                  </SwitcherThemedItemWithEvents>
+                </NavigationAnalyticsContext>
+              ))}
+            </Section>
+          )}
+          <Section
+            sectionId="join"
+            title={<FormattedMessage {...messages.join} />}
+          >
+            {joinableSiteLinks.map(
+              (
+                { cloudId, description, href, Icon, label, productType, users },
+                groupIndex: number,
+              ) => (
+                <NavigationAnalyticsContext
+                  key={groupIndex}
+                  data={getItemAnalyticsContext(
+                    groupIndex,
+                    cloudId,
+                    'join',
+                    href,
+                    productType,
+                  )}
+                >
+                  <ItemWithAvatarGroup
+                    icon={<Icon theme="product" />}
+                    description={description}
+                    users={users}
+                    href={href}
+                  >
+                    {label}
+                  </ItemWithAvatarGroup>
+                </NavigationAnalyticsContext>
+              ),
+            )}
+          </Section>
           <Section
             sectionId="recent"
-            title={<FormattedMessage {...messages.recent} />}
+            title={
+              disableHeadings ? null : <FormattedMessage {...messages.recent} />
+            }
           >
             {recentLinks.map(
-              ({ key, label, href, type, description, Icon }, idx) => (
+              ({ key, label, href, type, description, Icon }, groupIndex) => (
                 <NavigationAnalyticsContext
                   key={key}
-                  data={getItemAnalyticsContext(idx, type, 'recent')}
+                  data={getItemAnalyticsContext(
+                    groupIndex,
+                    type,
+                    'recent',
+                    href,
+                  )}
                 >
-                  <SwitcherItem
+                  <SwitcherThemedItemWithEvents
                     icon={<Icon theme="recent" />}
                     description={description}
                     href={href}
                   >
                     {label}
-                  </SwitcherItem>
+                  </SwitcherThemedItemWithEvents>
                 </NavigationAnalyticsContext>
               ),
             )}
           </Section>
           <Section
             sectionId="customLinks"
-            title={<FormattedMessage {...messages.more} />}
+            title={
+              disableHeadings ? null : <FormattedMessage {...messages.more} />
+            }
           >
-            {customLinks.map(({ label, href, Icon }, idx) => (
-              // todo: id in SwitcherItem should be consumed from custom link resolver
-              <NavigationAnalyticsContext
-                key={idx + '.' + label}
-                data={getItemAnalyticsContext(idx, null, 'customLink')}
-              >
-                <SwitcherItem icon={<Icon theme="custom" />} href={href}>
-                  {label}
-                </SwitcherItem>
-              </NavigationAnalyticsContext>
-            ))}
+            {customLinks.map(
+              ({ analyticsAttributes, label, href, Icon }, groupIndex) => (
+                // todo: id in SwitcherItem should be consumed from custom link resolver
+                <NavigationAnalyticsContext
+                  key={groupIndex + '.' + label}
+                  data={getItemAnalyticsContext(
+                    groupIndex,
+                    null,
+                    'customLink',
+                    href,
+                    undefined,
+                    analyticsAttributes,
+                  )}
+                >
+                  <SwitcherThemedItemWithEvents
+                    icon={<Icon theme="custom" />}
+                    href={href}
+                  >
+                    {label}
+                  </SwitcherThemedItemWithEvents>
+                </NavigationAnalyticsContext>
+              ),
+            )}
           </Section>
-          {isLoading && <Skeleton />}
+          {!hasLoadedCritical && <Skeleton />}
           {manageLink && <ManageButton href={manageLink} />}
         </SwitcherWrapper>
       </NavigationAnalyticsContext>

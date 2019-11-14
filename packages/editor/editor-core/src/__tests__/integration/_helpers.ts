@@ -1,9 +1,14 @@
 import { getExampleUrl } from '@atlaskit/webdriver-runner/utils/example';
 import { messages as insertBlockMessages } from '../../plugins/insert-block/ui/ToolbarInsertBlock';
 import { ToolbarFeatures } from '../../../example-helpers/ToolsDrawer';
-import { EditorAppearance } from '../../types';
+import { EditorAppearance, EditorProps } from '../../types';
 import { pluginKey as tableResizingPluginKey } from '../../plugins/table/pm-plugins/table-resizing';
 import messages from '../../messages';
+import {
+  tableSelectors,
+  getSelectorForTableCell,
+} from '../__helpers/page-objects/_table';
+import { TableCssClassName } from '../../plugins/table/types';
 
 /**
  * This function will in browser context. Make sure you call `toJSON` otherwise you will get:
@@ -21,8 +26,11 @@ export const linkToolbar =
 export const insertMention = async (browser: any, query: string) => {
   await browser.type(editable, '@');
   await browser.waitForSelector(typeAheadPicker);
-  await browser.type(editable, query);
-  await browser.type(editable, 'Return');
+  // Investigate why string based input (without an array) fails in firefox
+  // https://product-fabric.atlassian.net/browse/ED-7044
+  const q = query.split('');
+  await browser.type(editable, q);
+  await browser.keys(['Return']);
 };
 
 export const gotoEditor = async (browser: any) => {
@@ -94,6 +102,22 @@ export const clipboardInput = 'textarea';
 export const copyAsPlaintextButton = '.copy-as-plaintext';
 export const copyAsHTMLButton = '.copy-as-html';
 
+/**
+ * Copies plain text or HTML to clipboard for tests that need to paste
+ */
+export const copyToClipboard = async (
+  browser: any,
+  text: string,
+  copyAs: 'plain' | 'html' = 'plain',
+) => {
+  await browser.goto(clipboardHelper);
+  await browser.isVisible(clipboardInput);
+  await browser.type(clipboardInput, text);
+  await browser.click(
+    copyAs === 'html' ? copyAsHTMLButton : copyAsPlaintextButton,
+  );
+};
+
 export const mediaInsertDelay = 1000;
 
 const mediaPickerMock = '.mediaPickerMock';
@@ -146,24 +170,18 @@ export const rerenderEditor = async (browser: any) => {
   await browser.click('.reloadEditorButton');
 };
 
-export const insertMedia = async (
+// This function assumes the media picker modal is already shown.
+export const insertMediaFromMediaPicker = async (
   browser: any,
   filenames = ['one.svg'],
   fileSelector = 'div=%s',
 ) => {
-  const openMediaPopup = `[aria-label="${
-    insertBlockMessages.filesAndImages.defaultMessage
-  }"]`;
-  const insertMediaButton = '.e2e-insert-button';
+  const insertMediaButton = '[data-testid="media-picker-insert-button"]';
   const mediaCardSelector = `${editable} .img-wrapper`;
-
   const existingMediaCards = await browser.$$(mediaCardSelector);
-
-  await browser.click(openMediaPopup);
-
   // wait for media item, and select it
   await browser.waitForSelector(
-    '.e2e-recent-upload-card [aria-label="one.svg"]',
+    '[data-testid="media-picker-popup"] [data-testid="media-file-card-view"] [aria-label="one.svg"]',
   );
   if (filenames) {
     for (const filename of filenames) {
@@ -182,7 +200,7 @@ export const insertMedia = async (
   const mediaCardCount = get$$Length(existingMediaCards) + filenames.length;
 
   // Workaround - we need to use different wait methods depending on where we are running.
-  if (browser.browser.desiredCapabilities) {
+  if (browser.browser.capabilities) {
     await browser.browser.waitUntil(async () => {
       const mediaCards = await browser.$$(mediaCardSelector);
 
@@ -195,7 +213,7 @@ export const insertMedia = async (
       );
     });
   } else {
-    await browser.evaluate(() => {
+    browser.evaluate(() => {
       window.scrollBy(0, window.innerHeight);
     });
     await browser.waitFor(
@@ -208,6 +226,19 @@ export const insertMedia = async (
       mediaCardCount,
     );
   }
+};
+
+export const insertMedia = async (
+  browser: any,
+  filenames = ['one.svg'],
+  fileSelector = 'div=%s',
+) => {
+  const openMediaPopup = `[aria-label="${insertBlockMessages.filesAndImages.defaultMessage}"]`;
+
+  // wait for media button in toolbar and click it
+  await browser.waitForSelector(openMediaPopup);
+  await browser.click(openMediaPopup);
+  await insertMediaFromMediaPicker(browser, filenames, fileSelector);
 };
 
 /**
@@ -241,9 +272,7 @@ export const insertBlockMenuItem = async (
     menuSelector = `[aria-label="${menuTitle}"]`;
   } else {
     // Open insert menu and try to look the menu there
-    const openInsertBlockMenuSelector = `[aria-label="${
-      insertBlockMessages.insertMenu.defaultMessage
-    }"]`;
+    const openInsertBlockMenuSelector = `[aria-label="${insertBlockMessages.insertMenu.defaultMessage}"]`;
 
     await browser.click(openInsertBlockMenuSelector);
 
@@ -277,11 +306,17 @@ export const toggleBreakout = async (page: any, times: number) => {
   for (let _iter of timesArray) {
     await page.waitForSelector(breakoutSelector);
     await page.click(breakoutSelector);
+    await animationFrame(page);
   }
 };
 
 export const quickInsert = async (browser: any, insertTitle: string) => {
-  await browser.type(editable, `/${insertTitle.split(' ')[0]}`);
+  const firstWord = `/${insertTitle.split(' ')[0]}`;
+  // Investigate why string based input (without an array) fails in firefox
+  // https://product-fabric.atlassian.net/browse/ED-7044
+  const inputText = firstWord.split('');
+  await browser.type(editable, inputText);
+
   await browser.waitForSelector('div[aria-label="Popup"]');
   await browser.waitForSelector(
     `[aria-label="Popup"] [role="button"][aria-describedby="${insertTitle}"]`,
@@ -306,7 +341,7 @@ export const insertMenuItem = async (browser: any, title: string) => {
 };
 
 export const currentSelectedEmoji = '.emoji-typeahead-selected';
-export const typeahead = '.ak-emoji-typeahead';
+export const typeahead = 'span[data-type-ahead-query]';
 
 export const insertEmoji = async (browser: any, query: string) => {
   await browser.type(editable, ':');
@@ -324,7 +359,7 @@ export const insertEmojiBySelect = async (browser: any, select: string) => {
 };
 
 export const currentSelectedEmojiShortName = async (browser: any) => {
-  return await browser.$(currentSelectedEmoji).getProperty('data-emoji-id');
+  return await browser.getProperty(currentSelectedEmoji, 'data-emoji-id');
 };
 
 export const highlightEmojiInTypeahead = async (
@@ -337,12 +372,12 @@ export const highlightEmojiInTypeahead = async (
     if (selectedEmojiShortName === `:${emojiShortName}:`) {
       break;
     }
-    await browser.type(editable, 'ArrowDown');
+    await browser.keys(['ArrowDown']);
   }
 };
 
 export const emojiItem = (emojiShortName: string): string => {
-  return `span[data-emoji-short-name=":${emojiShortName}:"]`;
+  return `span[shortname=":${emojiShortName}:"]`;
 };
 
 interface ResizeOptions {
@@ -352,12 +387,48 @@ interface ResizeOptions {
   startX?: number;
 }
 
+export const updateEditorProps = async (
+  page: any,
+  newProps: Partial<EditorProps>,
+) => {
+  await page.browser.execute((props: EditorProps) => {
+    (window as any).__updateEditorProps(props);
+  }, newProps);
+};
+
+export const setProseMirrorTextSelection = async (
+  page: any,
+  pos: { anchor: number; head?: number },
+) => {
+  await page.browser.execute(
+    (anchor: number, head: number) => {
+      var view = (window as any).__editorView;
+      view.dispatch(
+        view.state.tr.setSelection(
+          // Re-use the current selection (presumed TextSelection) to use our new positions.
+          view.state.selection.constructor.create(view.state.doc, anchor, head),
+        ),
+      );
+      view.focus();
+    },
+    pos.anchor,
+    pos.head || pos.anchor,
+  );
+};
+
+export const getProseMirrorPos = async (page: any): Promise<number> => {
+  return await page.browser.execute(() => {
+    var view = (window as any).__editorView;
+    return view.state.selection.from;
+  });
+};
+
 export const resizeColumn = async (page: any, resizeOptions: ResizeOptions) => {
   await page.browser.execute(
     (
       tableResizingPluginKey: any,
       resizeWidth: any,
-      cellHandlePos: any,
+      resizeHandlePos: any,
       startX: any,
     ) => {
       const view = (window as any).__editorView;
@@ -368,7 +439,10 @@ export const resizeColumn = async (page: any, resizeOptions: ResizeOptions) => {
 
       view.dispatch(
         view.state.tr.setMeta(tableResizingPluginKey, {
-          setHandle: cellHandlePos,
+          type: 'SET_RESIZE_HANDLE_POSITION',
+          data: {
+            resizeHandlePos,
+          },
         }),
       );
 
@@ -397,8 +471,42 @@ export const resizeColumn = async (page: any, resizeOptions: ResizeOptions) => {
   );
 };
 
-export const animationFrame = async page => {
-  await page.browser.executeAsync(done => {
+export const animationFrame = async (page: any) => {
+  await page.browser.executeAsync((done: (time: number) => void) => {
     window.requestAnimationFrame(done);
   });
+};
+
+export const doubleClickResizeHandle = async (
+  page: any,
+  row: number,
+  column: number,
+) => {
+  const tableCellSelector = getSelectorForTableCell({ row, cell: column });
+
+  const cell = await page.getBoundingRect(tableCellSelector);
+
+  // We need to move the mouse first, giving time to prosemirror catch the event
+  // and add the decorations
+  await page.moveTo(tableCellSelector, cell.width - 1, 0);
+
+  await animationFrame(page);
+  await page.moveTo(
+    `${tableCellSelector} .${TableCssClassName.RESIZE_HANDLE_DECORATION}`,
+    0,
+    0,
+  );
+  await page.browser.positionDoubleClick();
+};
+
+export const selectColumns = async (page: any, indexes: number[]) => {
+  for (let i = 0, count = indexes.length; i < count; i++) {
+    const controlSelector = `.${TableCssClassName.COLUMN_CONTROLS_DECORATIONS}[data-start-index="${indexes[i]}"]`;
+    await page.waitForSelector(controlSelector);
+    if (i > 0) {
+      await page.browser.keys(['Shift']);
+    }
+    await page.click(controlSelector);
+    await page.waitForSelector(tableSelectors.selectedCell);
+  }
 };

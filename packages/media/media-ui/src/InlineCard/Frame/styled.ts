@@ -1,7 +1,8 @@
 import { AnchorHTMLAttributes, ComponentClass } from 'react';
 import styled from 'styled-components';
-import { colors } from '@atlaskit/theme';
-import { borderRadius as akBorderRadius } from '@atlaskit/theme';
+import { B100, N20, B50 } from '@atlaskit/theme/colors';
+import { borderRadius as akBorderRadius } from '@atlaskit/theme/constants';
+import { e100 } from '@atlaskit/theme/elevation';
 
 export interface WrapperProps {
   isSelected?: boolean;
@@ -11,8 +12,9 @@ export interface WrapperProps {
 
 const selected = `
   cursor: pointer;
-  box-shadow: 0 0 0 2px ${colors.B100};
+  box-shadow: 0 0 0 2px ${B100};
   outline: none;
+  user-select: none;
   &, :hover, :focus, :active {
     text-decoration: none;
   }
@@ -23,11 +25,11 @@ const isInteractive = ({ isInteractive }: WrapperProps) => {
     return `
       cursor: pointer;
       :hover {
-        background-color: ${colors.N40A};
+        background-color: ${N20};
         text-decoration: none;
       }
       :active {
-        background-color: ${colors.B50};
+        background-color: ${B50};
         text-decoration: none;
       }
       :focus {
@@ -41,14 +43,19 @@ const isInteractive = ({ isInteractive }: WrapperProps) => {
 };
 
 const background = ({ withoutBackground }: WrapperProps) => {
-  return withoutBackground ? `` : `background-color: ${colors.N30A};`;
+  return withoutBackground
+    ? ``
+    : `
+    background-color: white; 
+    ${e100()}
+  `;
 };
 
 const isSelected = ({ isSelected }: WrapperProps) => {
   if (isSelected) {
     return selected;
   } else {
-    return '';
+    return 'user-select: text';
   }
 };
 
@@ -64,16 +71,15 @@ const isSelected = ({ isSelected }: WrapperProps) => {
 // NB: `padding` consistent with @mentions.
 // NB: `display: inline` required for `box-decoration-break` to work.
 // NB: `box-decoration-break` required for retaining properties (border-radius) on wrap.
-export const Wrapper: ComponentClass<
-  AnchorHTMLAttributes<{}> & WrapperProps
-> = styled.a`
+export const Wrapper: ComponentClass<AnchorHTMLAttributes<{}> &
+  WrapperProps> = styled.a`
   line-height: ${16 / 14};
   padding: 0px 0.24em 2px 0.24em;
   display: inline;
   box-decoration-break: clone;
   border-radius: ${akBorderRadius()}px;
-  user-select: none;
   ${background};
   ${isInteractive}
   ${isSelected};
+  transition: 0.1s all ease-in-out;
 `;

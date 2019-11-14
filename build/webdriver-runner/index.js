@@ -1,15 +1,16 @@
+/* eslint-disable global-require */
 // @flow
-'use strict';
 
 const path = require('path');
 const isReachable = require('is-reachable');
 const jest = require('jest');
 const meow = require('meow');
+const chalk = require('chalk');
 
 const webpack = require('./utils/webpack');
 const reporting = require('./reporting');
 
-const LONG_RUNNING_TESTS_THRESHOLD_SECS = 70;
+const LONG_RUNNING_TESTS_THRESHOLD_SECS = 60;
 
 /*
  * function main() to
@@ -36,7 +37,24 @@ const cli = meow({
 });
 
 function getExitCode(result /*: any */) {
-  return !result || result.success ? 0 : 1;
+  // we don't check result.success as this is false when there are obsolete
+  // snapshots, which can legitimately happen with Webdriver tests on CI
+  // as they are only run on Chrome in the Landkid build
+  if (
+    !result ||
+    (result.numFailedTestSuites === 0 && result.numFailedTests === 0)
+  ) {
+    return 0;
+  }
+  return 1;
+}
+
+function isSnapshotAddedFailure(testResult /*: any */) /*: boolean*/ {
+  if (!testResult.failureMessage) {
+    return false;
+  }
+  // When updating Jest, check that this message is still correct
+  return testResult.failureMessage.indexOf('New snapshot was not written') > -1;
 }
 
 async function runJest(testPaths) {
@@ -54,6 +72,7 @@ async function runJest(testPaths) {
       ],
       passWithNoTests: true,
       updateSnapshot: cli.flags.updateSnapshot,
+      ci: process.env.CI,
     },
     [process.cwd()],
   );
@@ -61,24 +80,33 @@ async function runJest(testPaths) {
   return status.results;
 }
 
-async function rerunFailedTests(result) {
-  const failingTestPaths = result.testResults
+async function rerunFailedTests(results) {
+  const { testResults } = results;
+  if (!testResults) {
+    return results;
+  }
+
+  const failingTestPaths = testResults
     // If a test **suite** fails (where no tests are executed), we should check to see if
     // failureMessage is truthy, as no tests have actually run in this scenario.
-    .filter(
-      testResult =>
-        testResult.numFailingTests > 0 ||
-        (testResult.failureMessage && result.numFailedTestSuites > 0),
-    )
+    // If a test suite has failed because only because snapshots were added
+    // there is no point in re-running the tests as we know they will fail.
+    .filter(testResult => {
+      return (
+        (testResult.numFailingTests > 0 ||
+          (testResult.failureMessage && results.numFailedTestSuites > 0)) &&
+        !isSnapshotAddedFailure(testResult)
+      );
+    })
     .map(testResult => testResult.testFilePath);
 
   if (!failingTestPaths.length) {
-    return getExitCode(result);
+    return results;
   }
 
   console.log(
     `Re-running ${
-      result.numFailedTestSuites
+      failingTestPaths.length
     } test suites.\n${failingTestPaths.join('\n')}`,
   );
 
@@ -88,14 +116,13 @@ async function rerunFailedTests(result) {
     process.cwd(),
     'test-reports/junit-rerun.xml',
   );
-  const results = await runJest(failingTestPaths);
-  return results;
+  return runJest(failingTestPaths);
 }
 
 function runTestsWithRetry() {
   return new Promise(async resolve => {
-    let code = 0;
     let results;
+    let code = 0;
     try {
       results = await runJest();
       const perfStats = results.testResults
@@ -122,24 +149,30 @@ function runTestsWithRetry() {
       }
 
       code = getExitCode(results);
+
       // Only retry and report results in CI.
       if (code !== 0 && process.env.CI) {
+        let snapshotsAdded = false;
+        if (results.testResults) {
+          snapshotsAdded =
+            results.testResults.filter(testResult =>
+              isSnapshotAddedFailure(testResult),
+            ).length > 0;
+        }
         results = await rerunFailedTests(results);
-        code = getExitCode(results);
+
+        code = snapshotsAdded ? 1 : getExitCode(results);
 
         /**
          * If the re-run succeeds,
          * log the previously failed tests to indicate flakiness
          */
         if (code === 0) {
-          await reporting.reportFailure(
-            results,
-            'atlaskit.qa.integration_test.flakiness',
-          );
+          await reporting.reportInconsistency(results);
         } else {
           await reporting.reportFailure(
             results,
-            'atlaskit.qa.integration_test.testfailure',
+            'atlaskit.qa.integration_test.failure',
           );
         }
       }
@@ -170,19 +203,25 @@ async function main() {
     await webpack.startDevServer();
   }
 
-  let client = initClient();
+  const client = initClient();
 
-  client.startServer();
+  client
+    .startServer()
+    .then(async () => {
+      const code = await runTestsWithRetry();
 
-  const code = await runTestsWithRetry();
+      console.log(`Exiting tests with exit code: ${+code}`);
+      if (!serverAlreadyRunning) {
+        webpack.stopDevServer();
+      }
 
-  console.log(`Exiting tests with exit code: ${+code}`);
-  if (!serverAlreadyRunning) {
-    webpack.stopDevServer();
-  }
-
-  client.stopServer();
-  process.exit(code);
+      client.stopServer();
+      process.exit(code);
+    })
+    .catch(() => {
+      console.log(chalk.red('Exiting as failed to start server'));
+      process.exit(1);
+    });
 }
 
 main().catch(err => {

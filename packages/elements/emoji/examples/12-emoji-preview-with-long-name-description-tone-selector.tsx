@@ -4,7 +4,7 @@ import { getEmojis } from '../example-helpers';
 
 import EmojiPreview from '../src/components/common/EmojiPreview';
 
-import { emojiPickerWidth } from '../src/constants';
+import { emojiPickerWidth } from '../src/util/constants';
 import filters from '../src/util/filters';
 
 const emojis = getEmojis();
@@ -16,9 +16,7 @@ const tongueEmoji = filters.byShortName(
 const longTongueEmoji = {
   ...tongueEmoji,
   name: `${tongueEmoji.name} ${tongueEmoji.name} ${tongueEmoji.name}`,
-  shortName: `${tongueEmoji.shortName}_${tongueEmoji.shortName}_${
-    tongueEmoji.shortName
-  }`,
+  shortName: `${tongueEmoji.shortName}_${tongueEmoji.shortName}_${tongueEmoji.shortName}`,
 };
 
 const toneEmoji = filters.toneEmoji(emojis);

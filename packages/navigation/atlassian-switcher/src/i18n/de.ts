@@ -14,12 +14,27 @@ export default {
   'fabric.atlassianSwitcher.manageList': 'Liste verwalten',
   'fabric.atlassianSwitcher.jiraProject': 'Jira-Projekt',
   'fabric.atlassianSwitcher.confluenceSpace': 'Confluence-Bereich',
-  'fabric.atlassianSwitcher.people': 'Personen',
   'fabric.atlassianSwitcher.administration': 'Administration',
-  'fabric.atlassianSwitcher.discoverMore': 'Mehr entdecken',
-  'fabric.atlassianSwitcher.errorHeading': 'Something went wrong',
+  'fabric.atlassianSwitcher.discoverMore': 'More Atlassian products',
+  'fabric.atlassianSwitcher.browseApps': 'Marketplace-Apps durchsuchen',
+  'fabric.atlassianSwitcher.errorHeading': 'Irgendetwas ist schiefgelaufen',
   'fabric.atlassianSwitcher.errorText':
-    'We keep track of these errors, but feel free to contact us if refreshing doesn’t fix things',
+    'Wir verfolgen diese Fehler, aber Sie können uns gerne kontaktieren, wenn das Problem nach dem Aktualisieren weiterhin besteht.',
   'fabric.atlassianSwitcher.errorImageAltText':
-    'A broken robot and a number of people busy fixing it.',
+    'Ein kaputter Roboter und viele Menschen, die ihn reparieren.',
+  'fabric.atlassianSwitcher.errorTextNetwork':
+    'Diese Liste konnte nicht geladen werden. Bitte laden Sie diese Seite neu und versuchen Sie es erneut.',
+  'fabric.atlassianSwitcher.errorTextLoggedOut':
+    'Sie wurden ausgeloggt. Bitte loggen Sie sich wieder ein.',
+  'fabric.atlassianSwitcher.login': 'Einloggen',
+  'fabric.atlassianSwitcher.show.more.sites': 'Mehr Sites anzeigen',
+  'fabric.atlassianSwitcher.discover': 'Discover',
+  'fabric.atlassianSwitcher.product.description.confluence':
+    'Document collaboration',
+  'fabric.atlassianSwitcher.product.description.jsd':
+    'IT service desk and customer service',
+  'fabric.atlassianSwitcher.product.description.jsw':
+    'Project and issue tracking',
+  'fabric.atlassianSwitcher.product.description.opsgenie':
+    'Modern incident management',
 };

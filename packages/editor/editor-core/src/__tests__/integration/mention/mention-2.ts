@@ -53,7 +53,7 @@ BrowserTestCase(
 
 BrowserTestCase(
   'mention-2.ts: user should be able remove mention on backspace',
-  { skip: ['safari', 'ie'] },
+  { skip: ['ie'] },
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
     await mountEditor(page, {
@@ -63,7 +63,7 @@ BrowserTestCase(
     await insertMention(page, 'Carolyn');
     await insertMention(page, 'Summer');
     await insertMention(page, 'Amber');
-    await page.type(editable, ['Backspace', 'Backspace']);
+    await page.keys(['Backspace', 'Backspace']);
     await page.waitForSelector(lozenge);
     const doc = await page.$eval(editable, getDocFromElement);
     expect(doc).toMatchCustomDocSnapshot(testName);
@@ -88,7 +88,7 @@ BrowserTestCase(
 
 BrowserTestCase(
   'mention-2.ts: user should see space after node',
-  { skip: ['safari', 'ie'] },
+  { skip: ['ie'] },
   async (client: any, testName: string) => {
     const page = await goToEditorTestingExample(client);
     await mountEditor(page, {
@@ -104,7 +104,7 @@ BrowserTestCase(
 
 BrowserTestCase(
   'mention-2.ts: escape closes picker',
-  { skip: ['safari', 'ie'] },
+  { skip: ['ie'] },
   async (client: any) => {
     const page = await goToEditorTestingExample(client);
     await mountEditor(page, {

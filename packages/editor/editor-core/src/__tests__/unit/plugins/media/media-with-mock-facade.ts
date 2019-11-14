@@ -1,27 +1,27 @@
+import { nextTick } from '@atlaskit/media-test-helpers';
+
 const removeOnCloseListener = jest.fn();
 const spies = {} as any;
 
-const mockMediaPickerFacade = {
-  default: jest.fn(pickerType => {
-    const picker: any = {
-      on: jest.fn(),
-      onClose: jest.fn().mockReturnValue(removeOnCloseListener),
-      onNewMedia: jest.fn(),
-      onMediaEvent: jest.fn(),
-      onDrag: jest.fn(),
-      hide: jest.fn(),
-      setUploadParams: jest.fn(),
-      show: jest.fn(),
-      deactivate: jest.fn(),
-      activate: jest.fn(),
-      destroy: jest.fn(),
-      type: 'popup',
-    };
-    picker.init = jest.fn().mockReturnValue(picker);
-    spies[pickerType] = picker;
-    return picker;
-  }),
-};
+const mockMediaPickerFacade = jest.fn(pickerType => {
+  const picker: any = {
+    on: jest.fn(),
+    onClose: jest.fn().mockReturnValue(removeOnCloseListener),
+    onNewMedia: jest.fn(),
+    onMediaEvent: jest.fn(),
+    onDrag: jest.fn(),
+    hide: jest.fn(),
+    setUploadParams: jest.fn(),
+    show: jest.fn(),
+    deactivate: jest.fn(),
+    activate: jest.fn(),
+    destroy: jest.fn(),
+    type: 'popup',
+  };
+  picker.init = jest.fn().mockReturnValue(picker);
+  spies[pickerType] = picker;
+  return picker;
+});
 jest.mock(
   '../../../../plugins/media/picker-facade',
   () => mockMediaPickerFacade,
@@ -40,7 +40,7 @@ import {
   stateKey as mediaPluginKey,
   MediaPluginState,
 } from '../../../../plugins/media/pm-plugins/main';
-import mediaPlugin from '../../../../plugins/media';
+import { waitForAllPickersInitialised } from './_utils';
 
 const testCollectionName = `media-plugin-mock-collection-${randomId()}`;
 
@@ -49,12 +49,6 @@ const getFreshMediaProvider = () =>
     collectionName: testCollectionName,
     includeUserAuthProvider: true,
   });
-
-const waitForAllPickersInitialised = async (pluginState: MediaPluginState) => {
-  while (pluginState.pickers.length < 4) {
-    await new Promise(resolve => resolve());
-  }
-};
 
 describe('Media with mock facade', () => {
   const createEditor = createEditorFactory<MediaPluginState>();
@@ -68,14 +62,14 @@ describe('Media with mock facade', () => {
   ) =>
     createEditor({
       doc,
-      editorPlugins: [
-        mediaPlugin({
+      editorProps: {
+        ...editorProps,
+        media: {
           provider: mediaProvider,
           allowMediaSingle: true,
           customDropzoneContainer: dropzoneContainer,
-        }),
-      ],
-      editorProps: editorProps,
+        },
+      },
       providerFactory,
       pluginKey: mediaPluginKey,
     });
@@ -84,9 +78,7 @@ describe('Media with mock facade', () => {
     const { pluginState } = editor(doc(p('{<>}')));
     await waitForAllPickersInitialised(pluginState);
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
 
     expect(spies.popup.onClose).toHaveBeenCalledTimes(1);
     expect(spies.popup.onClose).toHaveBeenCalledWith(
@@ -95,49 +87,63 @@ describe('Media with mock facade', () => {
     pluginState.destroy();
   });
 
+  it('should call popupPicker.show when showMediaPicker is called', async () => {
+    const { pluginState } = editor(doc(p('{<>}')));
+    await waitForAllPickersInitialised(pluginState);
+
+    await mediaProvider;
+
+    pluginState.showMediaPicker();
+    expect(spies.popup.show).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call onPopupPickerOpen(true) callback when showMediaPicker is called', async () => {
+    const { pluginState } = editor(doc(p('{<>}')));
+    const onPopupPickerOpenMock = jest.fn();
+    await waitForAllPickersInitialised(pluginState);
+
+    await mediaProvider;
+
+    pluginState.onPopupToggle(onPopupPickerOpenMock);
+    pluginState.showMediaPicker();
+    expect(onPopupPickerOpenMock).toHaveBeenCalledTimes(1);
+    expect(onPopupPickerOpenMock).toHaveBeenCalledWith(true);
+  });
+
+  it('should call onPopupPickerOpen(false) callback when onPopupPickerClose is called', async () => {
+    const { pluginState } = editor(doc(p('{<>}')));
+    const onPopupPickerOpenMock = jest.fn();
+    await waitForAllPickersInitialised(pluginState);
+
+    await mediaProvider;
+
+    pluginState.onPopupToggle(onPopupPickerOpenMock);
+    pluginState.onPopupPickerClose();
+    expect(onPopupPickerOpenMock).toHaveBeenCalledTimes(1);
+    expect(onPopupPickerOpenMock).toHaveBeenCalledWith(false);
+  });
+
   it('should cleanup properly on destroy', async () => {
     removeOnCloseListener.mockClear();
     const { pluginState } = editor(doc(p('{<>}')));
     await waitForAllPickersInitialised(pluginState);
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
 
     pluginState.destroy();
     expect(removeOnCloseListener).toHaveBeenCalledTimes(1);
   });
 
-  it('should deactivate the drop-zone picker on showMediaPicker', async () => {
-    spies.popup.show.mockClear();
-    spies.dropzone.deactivate.mockClear();
+  it('should cleanup properly on destroy when pickers arent completely initialised.', async () => {
+    spies.popup.destroy.mockClear();
     const { pluginState } = editor(doc(p('{<>}')));
-    await waitForAllPickersInitialised(pluginState);
 
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
+    await mediaProvider;
+    await nextTick();
 
-    pluginState.showMediaPicker();
-    expect(spies.popup.show).toHaveBeenCalledTimes(1);
-    expect(spies.dropzone.deactivate).toHaveBeenCalledTimes(1);
     pluginState.destroy();
-  });
+    await Promise.all(pluginState.pickerPromises);
 
-  it('should activate the drop-zone picker after media picker closed', async () => {
-    spies.popup.show.mockClear();
-    spies.dropzone.activate.mockClear();
-    const { pluginState } = editor(doc(p('{<>}')));
-    await waitForAllPickersInitialised(pluginState);
-
-    const provider = await mediaProvider;
-    await provider.uploadContext;
-    await provider.viewContext;
-
-    pluginState.showMediaPicker();
-    expect(spies.dropzone.activate).toHaveBeenCalledTimes(0);
-    pluginState.onPopupPickerClose();
-    expect(spies.dropzone.activate).toHaveBeenCalledTimes(1);
-    pluginState.destroy();
+    expect(spies.popup.destroy).toHaveBeenCalledTimes(1);
   });
 });

@@ -7,26 +7,27 @@ import {
   bodiedExtension,
   bodiedExtensionData,
 } from '@atlaskit/editor-test-helpers';
-import rulePlugin from '../../../../plugins/rule';
-import extensionPlugin from '../../../../plugins/extension';
-import { CreateUIAnalyticsEventSignature } from '@atlaskit/analytics-next-types';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 
 describe('rule', () => {
   const createEditor = createEditorFactory();
 
-  let createAnalyticsEvent: CreateUIAnalyticsEventSignature;
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
 
   const editor = (doc: any, trackEvent = () => {}) => {
-    createAnalyticsEvent = jest.fn(() => ({ fire() {} }));
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
     return createEditor({
       doc,
-      editorPlugins: [rulePlugin, extensionPlugin],
       editorProps: {
         analyticsHandler: trackEvent,
         allowExtension: {
           allowBreakout: true,
         },
         allowAnalyticsGASV3: true,
+        allowRule: true,
       },
       createAnalyticsEvent,
     });

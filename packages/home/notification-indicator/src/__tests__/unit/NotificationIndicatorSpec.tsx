@@ -93,7 +93,7 @@ describe('NotificationIndicator', () => {
     wrapper.update();
     const badge = wrapper.find(Badge);
 
-    expect(badge.prop('value')).toEqual(5);
+    expect(badge.prop('children')).toEqual(5);
     expect(badge.prop('max')).toEqual(10);
     expect(badge.prop('appearance')).toEqual('primary');
   });
@@ -190,8 +190,9 @@ describe('NotificationIndicator', () => {
     // Ensure window.setInterval has been cleared
     expect(onCountUpdated.callCount).toEqual(2);
   });
-
-  it('Should update refresh interval when refreshRate prop changes', async () => {
+  //TODO: This test is inconsistent - it passes locally but sometimes fail in CI
+  //  https://product-fabric.atlassian.net/browse/NP-1467
+  it.skip('Should update refresh interval when refreshRate prop changes', async () => {
     const onCountUpdated = sinon.spy();
     const wrapper = await renderNotificationIndicator(returnCount(1), {
       refreshRate: 1,

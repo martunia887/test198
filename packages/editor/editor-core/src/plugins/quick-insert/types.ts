@@ -4,7 +4,7 @@ import { Node } from 'prosemirror-model';
 import { TypeAheadItem } from '../type-ahead/types';
 
 export type QuickInsertActionInsert = (
-  node?: Node | Object | string,
+  node?: Node | Record<string, any> | string,
   opts?: { selectInlineNode?: boolean },
 ) => Transaction;
 
@@ -30,3 +30,7 @@ export type QuickInsertOptions =
 export type QuickInsertHandler =
   | Array<QuickInsertItem>
   | ((intl: InjectedIntl) => Array<QuickInsertItem>);
+
+export type IconProps = {
+  label?: string;
+};

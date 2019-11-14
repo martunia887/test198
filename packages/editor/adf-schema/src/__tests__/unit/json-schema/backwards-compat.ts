@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { validateSchemaCompatibility } from 'json-schema-diff-validator';
-import * as newSchema from '../../../../json-schema/v1/full.json';
+import newSchema from '../../../../json-schema/v1/full.json';
 import { version } from '../../../version.json';
 
 // TODO: remove this when jest unit tests are supported for TS files
@@ -56,6 +56,9 @@ describe('JSON schema', () => {
     let existingSchema: any;
 
     try {
+      // This should prevent breakcing changes are introduced into editor-next-release
+      // We should revert this back to fetchMasterJSONSchema when editor-next-release is merged back
+      // into master
       existingSchema = await fetchMasterJSONSchema();
     } catch (err) {
       // if package with this version doesn't exist test against the latest version

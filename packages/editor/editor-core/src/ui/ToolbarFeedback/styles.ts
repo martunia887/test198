@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-// @ts-ignore: unused variable
-// prettier-ignore
-import { HTMLAttributes, ClassAttributes, ImgHTMLAttributes, ComponentClass } from 'react';
+import { HTMLAttributes, ImgHTMLAttributes, ComponentClass } from 'react';
 import { gridSize, borderRadius, colors } from '@atlaskit/theme';
 
 export const ButtonContent: ComponentClass<HTMLAttributes<{}>> = styled.span`
@@ -48,18 +46,14 @@ export const ConfirmationText: ComponentClass<HTMLAttributes<{}>> = styled.div`
   }
 `;
 
-export const ConfirmationHeader: ComponentClass<
-  HTMLAttributes<{}>
-> = styled.div`
+export const ConfirmationHeader: ComponentClass<HTMLAttributes<{}>> = styled.div`
   background-color: ${colors.P400};
   height: 100px;
   width: 100%;
   display: inline-block;
 `;
 
-export const ConfirmationImg: ComponentClass<
-  ImgHTMLAttributes<{}>
-> = styled.img`
+export const ConfirmationImg: ComponentClass<ImgHTMLAttributes<{}>> = styled.img`
   width: 100px;
   display: block;
   margin: 25px auto 0 auto;

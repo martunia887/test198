@@ -10,13 +10,12 @@ import { PreQueryAnalyticsComponent } from './ScreenAnalyticsHelper';
 import { ReferralContextIdentifiers } from '../GlobalQuickSearchWrapper';
 
 export interface Props {
-  query: string;
   resultsGroups: ResultsGroup[];
   searchSessionId: string;
   screenCounter?: ScreenCounter;
   referralContextIdentifiers?: ReferralContextIdentifiers;
   renderNoRecentActivity: () => JSX.Element;
-  renderAdvancedSearchGroup: (analyticsData?) => JSX.Element;
+  renderAdvancedSearchGroup: (analyticsData?: any) => JSX.Element;
 }
 
 export default class PreQueryState extends React.Component<Props> {
@@ -55,6 +54,8 @@ export default class PreQueryState extends React.Component<Props> {
         searchSessionId={searchSessionId}
         screenCounter={screenCounter}
         referralContextIdentifiers={referralContextIdentifiers}
+        onShowMoreClicked={() => {}}
+        query=""
       />
     );
   }

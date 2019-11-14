@@ -13,6 +13,7 @@ type Props = {
   source: string,
   title: string,
   packageName: string,
+  highlight: string,
 };
 
 type State = {
@@ -23,6 +24,7 @@ type State = {
 export default class Example extends React.Component<Props, State> {
   static defaultProps = {
     language: 'javascript',
+    highlight: '',
   };
 
   state = {
@@ -40,7 +42,14 @@ export default class Example extends React.Component<Props, State> {
   };
 
   render() {
-    const { Component, source, language, title, packageName } = this.props;
+    const {
+      Component,
+      source,
+      language,
+      title,
+      packageName,
+      highlight,
+    } = this.props;
     const { isHover, isSourceVisible } = this.state;
     const toggleLabel = isSourceVisible
       ? 'Hide Code Snippet'
@@ -68,6 +77,7 @@ export default class Example extends React.Component<Props, State> {
               text={packageName ? replaceSrc(source, packageName) : source}
               language={language}
               showLineNumbers={false}
+              highlight={highlight}
             />
           </CodeWrapper>
         ) : null}
@@ -101,10 +111,12 @@ const toggleColor = themed('mode', {
 const Wrapper = styled.div`
   background-color: ${p => exampleBackgroundColor[p.mode]};
   border-radius: 5px;
+  box-sizing: border-box;
   color: ${toggleColor};
   margin-top: 20px;
   padding: 0 ${gridSize}px ${gridSize}px;
   transition: background-color ${TRANSITION_DURATION};
+  max-width: calc(100vw - 4rem);
 `;
 
 export const Toggle = styled.div`

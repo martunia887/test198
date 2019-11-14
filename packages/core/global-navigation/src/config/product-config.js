@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type StatelessFunctionalComponent } from 'react';
+import React, { type ComponentType } from 'react';
 import QuestionIcon from '@atlaskit/icon/glyph/question-circle';
 import Badge from '@atlaskit/badge';
 import Avatar from '@atlaskit/avatar';
@@ -23,12 +23,16 @@ const generateAvatar = profileIconUrl => {
   const GeneratedAvatar = ({
     className,
     onClick,
+    label,
   }: {
     className: string,
     onClick: () => void,
+    label: string,
   }) => (
     <span className={className}>
       <Avatar
+        name={label}
+        enableTooltip={false}
         borderColor="transparent"
         src={profileIconUrl}
         isActive={false}
@@ -42,7 +46,8 @@ const generateAvatar = profileIconUrl => {
 };
 type OtherConfig = {
   href?: string,
-  badge?: ?StatelessFunctionalComponent<*>,
+  badge?: ?ComponentType<*>,
+  label?: string,
 };
 
 function configFactory(
@@ -52,7 +57,10 @@ function configFactory(
 ) {
   const { href } = otherConfig;
   const shouldNotRenderItem = !onClick && !href;
-
+  let { label } = otherConfig;
+  if (!label && typeof tooltip === 'string') {
+    label = tooltip;
+  }
   if (shouldNotRenderItem && (tooltip || isNotEmpty(otherConfig))) {
     // eslint-disable-next-line no-console
     console.warn(
@@ -65,7 +73,8 @@ function configFactory(
   return {
     ...(href ? { href } : null),
     ...(onClick ? { onClick } : null),
-    ...(tooltip ? { tooltip, label: tooltip } : null),
+    ...(tooltip ? { tooltip } : null),
+    label,
     ...otherConfig,
   };
 }
@@ -79,11 +88,15 @@ function helpConfigFactory(items, tooltip, otherConfig = {}) {
   }
 
   if (!items) return null;
-
+  let { label } = otherConfig;
+  if (!label && typeof tooltip === 'string') {
+    label = tooltip;
+  }
   return {
     icon: QuestionIcon,
     dropdownItems: items,
-    ...(tooltip ? { tooltip, label: tooltip } : null),
+    ...(tooltip ? { tooltip } : null),
+    label,
     ...otherConfig,
   };
 }
@@ -115,10 +128,14 @@ function profileConfigFactory(
   const profileComponent = items
     ? { icon: generateAvatar(profileIconUrl), dropdownItems: items }
     : { icon: SignInIcon, href };
-
+  let { label } = otherConfig;
+  if (!label && typeof tooltip === 'string') {
+    label = tooltip;
+  }
   return {
     ...profileComponent,
-    ...(tooltip ? { tooltip, label: tooltip } : null),
+    ...(tooltip ? { tooltip } : null),
+    label,
     ...otherConfig,
   };
 }
@@ -127,11 +144,9 @@ function notificationBadge(badgeCount) {
   return {
     badge: badgeCount
       ? () => (
-          <Badge
-            max={MAX_NOTIFICATIONS_COUNT}
-            appearance="important"
-            value={badgeCount}
-          />
+          <Badge max={MAX_NOTIFICATIONS_COUNT} appearance="important">
+            {badgeCount}
+          </Badge>
         )
       : null,
     badgeCount,
@@ -140,11 +155,13 @@ function notificationBadge(badgeCount) {
 
 function notificationConfigFactory(
   notificationTooltip,
+  notificationLabel,
   badgeCount,
   notificationDrawerContents,
   onNotificationClick,
   isNotificationInbuilt,
   openDrawer,
+  getNotificationRef,
 ) {
   const notificationOnClickHandler = () => {
     if (onNotificationClick) {
@@ -155,12 +172,29 @@ function notificationConfigFactory(
   return isNotificationInbuilt
     ? configFactory(notificationOnClickHandler, notificationTooltip, {
         badgeCount,
+        getRef: getNotificationRef,
+        label: notificationLabel,
       })
     : configFactory(
         onNotificationClick || (notificationDrawerContents && openDrawer),
         notificationTooltip,
-        notificationBadge(badgeCount),
+        {
+          ...notificationBadge(badgeCount),
+          getRef: getNotificationRef,
+          label: notificationLabel,
+        },
       );
+}
+
+function appSwitcherConfigFactory(props) {
+  let { label } = props;
+  if (!label && typeof props.tooltip === 'string') {
+    label = props.tooltip;
+  }
+  return {
+    ...props,
+    label,
+  };
 }
 
 export default function generateProductConfig(
@@ -169,55 +203,83 @@ export default function generateProductConfig(
   isNotificationInbuilt: boolean,
 ): ProductConfigShape {
   const {
-    product,
-    cloudId,
-
     onProductClick,
     productTooltip,
+    productLabel,
     productIcon,
     productHref,
+    getProductRef,
+
+    onRecentClick,
+    recentLabel,
+    recentTooltip,
+    recentDrawerContents,
+    getRecentRef,
+
+    onInviteClick,
+    inviteLabel,
+    inviteTooltip,
+    inviteDrawerContents,
+    getInviteRef,
 
     onCreateClick,
+    createLabel,
     createTooltip,
     createDrawerContents,
-
-    enableAtlassianSwitcher,
+    getCreateRef,
 
     searchTooltip,
+    searchLabel,
     onSearchClick,
     searchDrawerContents,
+    getSearchRef,
 
     onStarredClick,
+    starredLabel,
     starredTooltip,
     starredDrawerContents,
+    getStarredRef,
 
     notificationTooltip,
+    notificationsLabel,
     notificationCount,
     notificationDrawerContents,
     onNotificationClick,
+    getNotificationRef,
 
     appSwitcherComponent,
+    appSwitcherLabel,
     appSwitcherTooltip,
+    getAppSwitcherRef,
 
+    enableHelpDrawer,
     helpItems,
+    onHelpClick,
+    helpLabel,
     helpTooltip,
+    helpBadge,
+    helpDrawerContents,
+    getHelpRef,
 
     onSettingsClick,
+    settingsLabel,
     settingsTooltip,
     settingsDrawerContents,
+    getSettingsRef,
 
     profileItems,
+    profileLabel,
     profileTooltip,
     loginHref,
     profileIconUrl,
+    getProfileRef,
   } = props;
 
-  const shouldRenderAtlassianSwitcher =
-    enableAtlassianSwitcher && cloudId && product;
-
-  if (enableAtlassianSwitcher && !shouldRenderAtlassianSwitcher) {
+  // $FlowFixMe
+  if (props.enableAtlassianSwitcher) {
+    // eslint-disable-next-line no-console
     console.warn(
-      'When using the enableAtlassianSwitcher prop, be sure to send the cloudId and product props. Falling back to the legacy app-switcher',
+      'Use of `enableAtlassianSwitcher` has been deprecated because `atlassian-switcher` is no longer bundled. Please use `appSwitcherComponent` instead.',
     );
   }
 
@@ -225,49 +287,75 @@ export default function generateProductConfig(
     product: configFactory(onProductClick, productTooltip, {
       icon: productIcon,
       href: productHref,
+      getRef: getProductRef,
+      label: productLabel,
     }),
+    recent: configFactory(
+      onRecentClick || (recentDrawerContents && openDrawer('recent')),
+      recentTooltip,
+      { getRef: getRecentRef, label: recentLabel },
+    ),
+    invite: configFactory(
+      onInviteClick || (inviteDrawerContents && openDrawer('invite')),
+      inviteTooltip,
+      { getRef: getInviteRef, label: inviteLabel },
+    ),
     create: configFactory(
       onCreateClick || (createDrawerContents && openDrawer('create')),
       createTooltip,
+      { getRef: getCreateRef, label: createLabel },
     ),
     search: configFactory(
       onSearchClick || (searchDrawerContents && openDrawer('search')),
       searchTooltip,
+      { getRef: getSearchRef, label: searchLabel },
     ),
     starred: configFactory(
       onStarredClick || (starredDrawerContents && openDrawer('starred')),
       starredTooltip,
+      { getRef: getStarredRef, label: starredLabel },
     ),
+    help: enableHelpDrawer
+      ? configFactory(
+          onHelpClick || (helpDrawerContents && openDrawer('help')),
+          helpTooltip,
+          { getRef: getHelpRef, label: helpLabel, badge: helpBadge },
+        )
+      : helpConfigFactory(helpItems, helpTooltip, {
+          getRef: getHelpRef,
+          label: helpLabel,
+          badge: helpBadge,
+        }),
     settings: configFactory(
       onSettingsClick || (settingsDrawerContents && openDrawer('settings')),
       settingsTooltip,
+      { getRef: getSettingsRef, label: settingsLabel },
     ),
-    atlassianSwitcher: shouldRenderAtlassianSwitcher
-      ? configFactory(openDrawer('atlassianSwitcher'))
-      : null,
 
     notification: notificationConfigFactory(
       notificationTooltip,
+      notificationsLabel,
       notificationCount,
       notificationDrawerContents,
       onNotificationClick,
       isNotificationInbuilt,
       openDrawer('notification'),
+      getNotificationRef,
     ),
-    help: helpConfigFactory(helpItems, helpTooltip),
     profile: profileConfigFactory(
       profileItems,
       profileTooltip,
       loginHref,
       profileIconUrl,
+      { getRef: getProfileRef, label: profileLabel },
     ),
-    appSwitcher:
-      appSwitcherComponent && !shouldRenderAtlassianSwitcher
-        ? {
-            itemComponent: appSwitcherComponent,
-            label: appSwitcherTooltip,
-            tooltip: appSwitcherTooltip,
-          }
-        : null,
+    appSwitcher: appSwitcherComponent
+      ? appSwitcherConfigFactory({
+          itemComponent: appSwitcherComponent,
+          label: appSwitcherLabel,
+          tooltip: appSwitcherTooltip,
+          getRef: getAppSwitcherRef,
+        })
+      : null,
   };
 }

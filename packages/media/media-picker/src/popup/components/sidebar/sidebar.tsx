@@ -10,7 +10,7 @@ import { State } from '../../domain';
 import SidebarItem from './item/sidebarItem';
 import GiphySidebarItem from './item/giphySidebarItem';
 import { Wrapper, ServiceList, Separator, SeparatorLine } from './styled';
-import { MediaPickerPlugin } from 'src/domain/plugin';
+import { MediaPickerPlugin } from '../../../domain/plugin';
 
 export interface SidebarStateProps {
   readonly selected: string;

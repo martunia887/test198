@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import { IntlProvider } from 'react-intl';
 import { Schema } from 'prosemirror-model';
 import { defaultSchema } from '@atlaskit/adf-schema';
+import { reduce } from '@atlaskit/adf-utils';
 import {
   ADFStage,
   UnsupportedBlock,
@@ -10,13 +12,26 @@ import {
   ExtensionHandlers,
   BaseTheme,
   WidthProvider,
+  getAnalyticsAppearance,
+  WithCreateAnalyticsEvent,
+  getResponseEndTime,
+  startMeasure,
+  stopMeasure,
 } from '@atlaskit/editor-common';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import { FabricChannel } from '@atlaskit/analytics-listeners';
+import { FabricEditorAnalyticsContext } from '@atlaskit/analytics-namespaced-context';
 import { ReactSerializer, renderDocument, RendererContext } from '../../';
 import { RenderOutputStat } from '../../render-document';
 import { Wrapper } from './style';
 import { TruncatedWrapper } from './truncated-wrapper';
-
-export type RendererAppearance = 'comment' | 'full-page' | 'mobile' | undefined;
+import { RendererAppearance } from './types';
+import { ACTION, ACTION_SUBJECT, EVENT_TYPE } from '../../analytics/enums';
+import { AnalyticsEventPayload, PLATFORM, MODE } from '../../analytics/events';
+import AnalyticsContext from '../../analytics/analyticsContext';
+import { CopyTextProvider } from '../../react/nodes/copy-text-provider';
+import { Provider as SmartCardStorageProvider } from '../SmartCardStorage';
+import { name, version } from '../../version.json';
 
 export interface Extension<T> {
   extensionKey: string;
@@ -30,6 +45,7 @@ export interface Props {
   eventHandlers?: EventHandlers;
   extensionHandlers?: ExtensionHandlers;
   onComplete?: (stat: RenderOutputStat) => void;
+  onError?: (error: any) => void;
   portal?: HTMLElement;
   rendererContext?: RendererContext;
   schema?: Schema;
@@ -37,22 +53,90 @@ export interface Props {
   adfStage?: ADFStage;
   disableHeadingIDs?: boolean;
   allowDynamicTextSizing?: boolean;
+  allowHeadingAnchorLinks?: boolean;
   maxHeight?: number;
   truncated?: boolean;
+  createAnalyticsEvent?: CreateUIAnalyticsEvent;
+  allowColumnSorting?: boolean;
+  shouldOpenMediaViewer?: boolean;
+  UNSAFE_allowAltTextOnImages?: boolean;
 }
 
-export default class Renderer extends PureComponent<Props, {}> {
+export class Renderer extends PureComponent<Props, {}> {
   private providerFactory: ProviderFactory;
-  private serializer: ReactSerializer;
+  private serializer?: ReactSerializer;
+  private rafID?: number;
+  private editorRef?: React.RefObject<HTMLElement>;
 
   constructor(props: Props) {
     super(props);
     this.providerFactory = props.dataProviders || new ProviderFactory();
     this.updateSerializer(props);
+    startMeasure('Renderer Render Time');
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.portal !== this.props.portal) {
+  private anchorLinkAnalytics() {
+    const hash =
+      window.location.hash && decodeURIComponent(window.location.hash.slice(1));
+
+    if (
+      !this.props.disableHeadingIDs &&
+      hash &&
+      this.editorRef &&
+      this.editorRef instanceof HTMLElement
+    ) {
+      const anchorLinkElement = document.getElementById(hash);
+      // We are not use this.editorRef.querySelector here, instead we have this.editorRef.contains
+      // because querySelector might fail if there are special characters in hash, and CSS.escape is still experimental.
+      if (anchorLinkElement && this.editorRef.contains(anchorLinkElement)) {
+        this.fireAnalyticsEvent({
+          action: ACTION.VIEWED,
+          actionSubject: ACTION_SUBJECT.ANCHOR_LINK,
+          attributes: { platform: PLATFORM.WEB, mode: MODE.RENDERER },
+          eventType: EVENT_TYPE.UI,
+        });
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.fireAnalyticsEvent({
+      action: ACTION.STARTED,
+      actionSubject: ACTION_SUBJECT.RENDERER,
+      attributes: { platform: PLATFORM.WEB },
+      eventType: EVENT_TYPE.UI,
+    });
+
+    this.rafID = requestAnimationFrame(() => {
+      stopMeasure('Renderer Render Time', duration => {
+        this.fireAnalyticsEvent({
+          action: ACTION.RENDERED,
+          actionSubject: ACTION_SUBJECT.RENDERER,
+          attributes: {
+            platform: PLATFORM.WEB,
+            duration,
+            ttfb: getResponseEndTime(),
+            nodes: reduce<Record<string, number>>(
+              this.props.document,
+              (acc, node) => {
+                acc[node.type] = (acc[node.type] || 0) + 1;
+                return acc;
+              },
+              {},
+            ),
+          },
+          eventType: EVENT_TYPE.OPERATIONAL,
+        });
+      });
+      this.anchorLinkAnalytics();
+    });
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
+    if (
+      nextProps.portal !== this.props.portal ||
+      nextProps.appearance !== this.props.appearance
+    ) {
       this.updateSerializer(nextProps);
     }
   }
@@ -68,6 +152,10 @@ export default class Renderer extends PureComponent<Props, {}> {
       appearance,
       disableHeadingIDs,
       allowDynamicTextSizing,
+      allowHeadingAnchorLinks,
+      allowColumnSorting,
+      shouldOpenMediaViewer,
+      UNSAFE_allowAltTextOnImages,
     } = props;
 
     this.serializer = new ReactSerializer({
@@ -83,13 +171,28 @@ export default class Renderer extends PureComponent<Props, {}> {
       appearance,
       disableHeadingIDs,
       allowDynamicTextSizing,
+      allowHeadingAnchorLinks,
+      allowColumnSorting,
+      fireAnalyticsEvent: this.fireAnalyticsEvent,
+      shouldOpenMediaViewer,
+      UNSAFE_allowAltTextOnImages,
     });
   }
+
+  private fireAnalyticsEvent = (event: AnalyticsEventPayload) => {
+    const { createAnalyticsEvent } = this.props;
+
+    if (createAnalyticsEvent) {
+      const channel = FabricChannel.editor;
+      createAnalyticsEvent(event).fire(channel);
+    }
+  };
 
   render() {
     const {
       document,
       onComplete,
+      onError,
       schema,
       appearance,
       adfStage,
@@ -101,7 +204,7 @@ export default class Renderer extends PureComponent<Props, {}> {
     try {
       const { result, stat } = renderDocument(
         document,
-        this.serializer,
+        this.serializer!,
         schema || defaultSchema,
         adfStage,
       );
@@ -110,12 +213,28 @@ export default class Renderer extends PureComponent<Props, {}> {
         onComplete(stat);
       }
       const rendererOutput = (
-        <RendererWrapper
-          appearance={appearance}
-          dynamicTextSizing={!!allowDynamicTextSizing}
-        >
-          {result}
-        </RendererWrapper>
+        <CopyTextProvider>
+          <IntlProvider>
+            <AnalyticsContext.Provider
+              value={{
+                fireAnalyticsEvent: (event: AnalyticsEventPayload) =>
+                  this.fireAnalyticsEvent(event),
+              }}
+            >
+              <SmartCardStorageProvider>
+                <RendererWrapper
+                  appearance={appearance}
+                  dynamicTextSizing={!!allowDynamicTextSizing}
+                  wrapperRef={ref => {
+                    this.editorRef = ref;
+                  }}
+                >
+                  {result}
+                </RendererWrapper>
+              </SmartCardStorageProvider>
+            </AnalyticsContext.Provider>
+          </IntlProvider>
+        </CopyTextProvider>
       );
 
       return truncated ? (
@@ -123,7 +242,10 @@ export default class Renderer extends PureComponent<Props, {}> {
       ) : (
         rendererOutput
       );
-    } catch (ex) {
+    } catch (e) {
+      if (onError) {
+        onError(e);
+      }
       return (
         <RendererWrapper
           appearance={appearance}
@@ -138,6 +260,10 @@ export default class Renderer extends PureComponent<Props, {}> {
   componentWillUnmount() {
     const { dataProviders } = this.props;
 
+    if (this.rafID) {
+      window.cancelAnimationFrame(this.rafID);
+    }
+
     // if this is the ProviderFactory which was created in constructor
     // it's safe to destroy it on Renderer unmount
     if (!dataProviders) {
@@ -146,20 +272,43 @@ export default class Renderer extends PureComponent<Props, {}> {
   }
 }
 
+const RendererWithAnalytics = (props: Props) => (
+  <FabricEditorAnalyticsContext
+    data={{
+      appearance: getAnalyticsAppearance(props.appearance),
+      packageName: name,
+      packageVersion: version,
+      componentName: 'editorCore',
+    }}
+  >
+    <WithCreateAnalyticsEvent
+      render={createAnalyticsEvent => (
+        <Renderer {...props} createAnalyticsEvent={createAnalyticsEvent} />
+      )}
+    />
+  </FabricEditorAnalyticsContext>
+);
+
+export default RendererWithAnalytics;
+
 type RendererWrapperProps = {
   appearance: RendererAppearance;
   dynamicTextSizing: boolean;
+  wrapperRef?: (instance: React.RefObject<HTMLElement>) => void;
 } & { children?: React.ReactNode };
 
 export function RendererWrapper({
   appearance,
   children,
   dynamicTextSizing,
+  wrapperRef,
 }: RendererWrapperProps) {
   return (
     <WidthProvider>
       <BaseTheme dynamicTextSizing={dynamicTextSizing}>
-        <Wrapper appearance={appearance}>{children}</Wrapper>
+        <Wrapper innerRef={wrapperRef} appearance={appearance}>
+          {children}
+        </Wrapper>
       </BaseTheme>
     </WidthProvider>
   );

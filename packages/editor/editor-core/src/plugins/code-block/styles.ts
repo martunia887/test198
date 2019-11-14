@@ -5,15 +5,22 @@ import {
   akEditorTableCellMinWidth,
 } from '@atlaskit/editor-common';
 import { akEditorCodeFontFamily, akEditorCodeBlockPadding } from '../../styles';
+import {
+  akEditorDeleteBackground,
+  akEditorDeleteBorder,
+  akEditorSelectedBorderSize,
+  akEditorDeleteIconColor,
+} from '@atlaskit/editor-common';
 
 export const codeBlockStyles = css`
   .ProseMirror .code-block {
-    background: ${themed({ light: colors.N20, dark: colors.DN50 })}
+    background: ${themed({ light: colors.N20, dark: colors.DN50 })};
     font-family: ${akEditorCodeFontFamily};
+    border: ${akEditorSelectedBorderSize}px solid transparent;
     border-radius: ${borderRadius()}px;
     font-size: 14px;
     line-height: 24px;
-    margin: ${blockNodesVerticalMargin} 0 0 0;
+    margin: ${blockNodesVerticalMargin}rem 0 0 0;
     counter-reset: line;
     display: flex;
     min-width: ${akEditorTableCellMinWidth}px;
@@ -22,7 +29,7 @@ export const codeBlockStyles = css`
       background-color: ${themed({
         light: 'rgba(9, 30, 66, 0.04)',
         dark: colors.DN40,
-      })}
+      })};
       color: ${colors.N300};
       text-align: right;
       user-select: none;
@@ -43,7 +50,8 @@ export const codeBlockStyles = css`
     }
 
     .code-content {
-      color: ${themed({ light: colors.N800, dark: colors.DN500 })}
+      color: ${themed({ light: colors.N800, dark: colors.DN500 })};
+      border-radius: ${borderRadius()}px;
       padding: ${akEditorCodeBlockPadding} 16px;
       overflow: auto;
       display: flex;
@@ -78,7 +86,34 @@ export const codeBlockStyles = css`
       }
     }
   }
+
   .ProseMirror li > .code-block {
     margin: 0;
+  }
+
+  /* Danger when top level node */
+  .ProseMirror .danger.code-block {
+    border: ${akEditorSelectedBorderSize}px solid ${akEditorDeleteBorder};
+    .line-number-gutter {
+      background-color: ${colors.R75};
+      color: ${akEditorDeleteIconColor};
+    }
+
+    .code-content {
+      background-color: ${akEditorDeleteBackground};
+    }
+  }
+
+  /* Danger when nested node */
+  .ProseMirror .danger .code-block {
+    .line-number-gutter {
+      background-color: rgba(255, 143, 115, 0.5);
+      color: ${akEditorDeleteIconColor};
+    }
+
+    .code-content {
+      background-color: ${akEditorDeleteBackground};
+      background-color: rgba(255, 189, 173, 0.5);
+    }
   }
 `;

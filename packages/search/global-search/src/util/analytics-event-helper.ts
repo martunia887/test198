@@ -11,6 +11,18 @@ import {
 import { GasPayload, EventType } from '@atlaskit/analytics-gas-types';
 import { CreateAnalyticsEventFn } from '../components/analytics/types';
 import { ABTest } from '../api/CrossProductSearchClient';
+import { ReferralContextIdentifiers } from '../components/GlobalQuickSearchWrapper';
+
+function stripUGC(referralContextIdentifiers?: ReferralContextIdentifiers) {
+  if (referralContextIdentifiers) {
+    const {
+      searchReferrerId,
+      currentContentId,
+      currentContainerId,
+    } = referralContextIdentifiers;
+    return { searchReferrerId, currentContentId, currentContainerId };
+  }
+}
 
 const fireGasEvent = (
   createAnalyticsEvent: CreateAnalyticsEventFn | undefined,
@@ -22,7 +34,7 @@ const fireGasEvent = (
   nonPrivacySafeAttributes?: object | null,
 ): void => {
   if (createAnalyticsEvent) {
-    const event = createAnalyticsEvent();
+    const event = createAnalyticsEvent({});
     const payload: GasPayload = {
       action,
       actionSubject,
@@ -47,7 +59,9 @@ export function firePreQueryShownEvent(
   renderTimeMs: number,
   searchSessionId: string,
   createAnalyticsEvent: CreateAnalyticsEventFn,
-  experimentRequestDurationMs?: number,
+  abTest: ABTest,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
+  retrievedFromAggregator?: boolean,
 ) {
   fireGasEvent(
     createAnalyticsEvent,
@@ -57,10 +71,12 @@ export function firePreQueryShownEvent(
     'ui',
     {
       preQueryRequestDurationMs: elapsedMs,
-      experimentRequestDurationMs,
       renderTimeMs,
       searchSessionId: searchSessionId,
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
       ...eventAttributes,
+      retrievedFromAggregator,
+      ...abTest,
     },
   );
 }
@@ -105,7 +121,6 @@ export function fireTextEnteredEvent(
   query: string,
   searchSessionId: string,
   queryVersion: number,
-  isSendSearchTermsEnabled?: boolean,
   createAnalyticsEvent?: CreateAnalyticsEventFn,
 ) {
   fireGasEvent(
@@ -120,7 +135,7 @@ export function fireTextEnteredEvent(
       ...getQueryAttributes(query),
       searchSessionId: searchSessionId,
     },
-    isSendSearchTermsEnabled ? getNonPrivacySafeAttributes(query) : undefined,
+    getNonPrivacySafeAttributes(query),
   );
 }
 
@@ -142,9 +157,12 @@ export function firePostQueryShownEvent(
   timings: PerformanceTiming,
   searchSessionId: string,
   query: string,
+  filtersApplied: { [filterType: string]: boolean },
   createAnalyticsEvent: CreateAnalyticsEventFn,
+  abTest: ABTest,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
 ) {
-  const event = createAnalyticsEvent();
+  const event = createAnalyticsEvent({});
 
   const { elapsedMs, ...otherPerformanceTimings } = timings;
   const payload: GasPayload = {
@@ -155,11 +173,14 @@ export function firePostQueryShownEvent(
     source: DEFAULT_GAS_SOURCE,
     attributes: {
       ...getQueryAttributes(query),
+      filtersApplied,
       postQueryRequestDurationMs: elapsedMs,
       searchSessionId,
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
       ...otherPerformanceTimings,
       ...resultsDetails,
       ...DEFAULT_GAS_ATTRIBUTES,
+      ...abTest,
     },
   };
   event.update(payload).fire(DEFAULT_GAS_CHANNEL);
@@ -175,6 +196,7 @@ const transformSearchResultEventData = (eventData: SearchResultEvent) => ({
   containerId: sanitizeContainerId(eventData.containerId),
   resultCount: eventData.resultCount,
   experimentId: eventData.experimentId,
+  isRecentResult: eventData.isRecentResult,
 });
 
 const hash = (str: string): string =>
@@ -192,6 +214,7 @@ export interface SearchResultEvent {
   containerId?: string;
   resultCount?: string;
   experimentId?: string;
+  isRecentResult?: boolean;
 }
 
 export interface KeyboardControlEvent extends SearchResultEvent {
@@ -215,13 +238,14 @@ export interface AdvancedSearchSelectedEvent extends SelectedSearchResultEvent {
 export type AnalyticsNextEvent = {
   payload: GasPayload;
   context: Array<any>;
-  update: (GasPayload) => AnalyticsNextEvent;
-  fire: (string) => AnalyticsNextEvent;
+  update: (payload: GasPayload) => AnalyticsNextEvent;
+  fire: (string: string) => AnalyticsNextEvent;
 };
 
 export function fireSelectedSearchResult(
   eventData: SelectedSearchResultEvent,
   searchSessionId: string,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
   createAnalyticsEvent?: CreateAnalyticsEventFn,
 ) {
   const { method, newTab, query, queryVersion } = eventData;
@@ -239,6 +263,7 @@ export function fireSelectedSearchResult(
       searchSessionId: searchSessionId,
       newTab,
       ...transformSearchResultEventData(eventData),
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
     },
   );
 }
@@ -246,6 +271,7 @@ export function fireSelectedSearchResult(
 export function fireSelectedAdvancedSearch(
   eventData: AdvancedSearchSelectedEvent,
   searchSessionId: string,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
   createAnalyticsEvent?: CreateAnalyticsEventFn,
 ) {
   const { method, newTab, query, queryVersion } = eventData;
@@ -265,6 +291,7 @@ export function fireSelectedAdvancedSearch(
       ...getQueryAttributes(query),
       wasOnNoResultsScreen: eventData.wasOnNoResultsScreen || false,
       ...transformSearchResultEventData(eventData),
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
     },
   );
 }
@@ -272,6 +299,7 @@ export function fireSelectedAdvancedSearch(
 export function fireHighlightedSearchResult(
   eventData: KeyboardControlEvent,
   searchSessionId: string,
+  referralContextIdentifiers?: ReferralContextIdentifiers,
   createAnalyticsEvent?: CreateAnalyticsEventFn,
 ) {
   const { key } = eventData;
@@ -285,6 +313,116 @@ export function fireHighlightedSearchResult(
       searchSessionId: searchSessionId,
       ...transformSearchResultEventData(eventData),
       key,
+      referralContextIdentifiers: stripUGC(referralContextIdentifiers),
+    },
+  );
+}
+
+export function fireShowMoreButtonClickEvent(
+  searchSessionId: string,
+  currentSize: number,
+  totalResultSize: number,
+  buttonIdentifier: string,
+  pageSize: number,
+  createAnalyticsEvent?: CreateAnalyticsEventFn,
+) {
+  fireGasEvent(
+    createAnalyticsEvent,
+    'clicked',
+    'button',
+    buttonIdentifier,
+    'ui',
+    {
+      searchSessionId,
+      currentSize,
+      totalResultSize,
+      pageSize,
+    },
+  );
+}
+
+export function fireMoreFiltersButtonClickEvent(
+  searchSessionId: string,
+  createAnalyticsEvent?: CreateAnalyticsEventFn,
+) {
+  fireGasEvent(
+    createAnalyticsEvent,
+    'clicked',
+    'button',
+    'showMoreFilters',
+    'ui',
+    {
+      searchSessionId,
+    },
+  );
+}
+
+export function fireSpaceFilterShownEvent(
+  searchSessionId: string,
+  createAnalyticsEvent?: CreateAnalyticsEventFn,
+) {
+  fireGasEvent(
+    createAnalyticsEvent,
+    'shown',
+    'filter',
+    'spaceFilterButton',
+    'ui',
+    {
+      searchSessionId,
+    },
+  );
+}
+
+export function fireAutocompleteRenderedEvent(
+  duration: number,
+  searchSessionId: string,
+  query: string,
+  autocompleteText: string,
+  queryVersion: number,
+  fromCache: boolean,
+  createAnalyticsEvent?: CreateAnalyticsEventFn,
+) {
+  fireGasEvent(
+    createAnalyticsEvent,
+    'rendered',
+    'autocomplete',
+    '',
+    'operational',
+    {
+      duration,
+      searchSessionId,
+      ...getQueryAttributes(query),
+      autocompleteTextHash: hash(autocompleteText),
+      queryVersion,
+      fromCache,
+    },
+    {
+      ...getNonPrivacySafeAttributes(query),
+      autocompleteText,
+    },
+  );
+}
+
+export function fireAutocompleteCompletedEvent(
+  searchSessionId: string,
+  query: string,
+  completedText: string,
+  createAnalyticsEvent?: CreateAnalyticsEventFn,
+) {
+  fireGasEvent(
+    createAnalyticsEvent,
+    'completed',
+    'autocomplete',
+    '',
+    'ui',
+    {
+      searchSessionId,
+      ...getQueryAttributes(query),
+      completedTextHash: hash(completedText),
+    },
+    {
+      ...getNonPrivacySafeAttributes(query),
+      completedText,
     },
   );
 }

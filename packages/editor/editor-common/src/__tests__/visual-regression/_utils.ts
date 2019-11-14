@@ -1,4 +1,8 @@
-import { getExampleUrl } from '@atlaskit/visual-regression/helper';
+import {
+  compareScreenshot,
+  getExampleUrl,
+  loadExampleUrl,
+} from '@atlaskit/visual-regression/helper';
 
 export const DEFAULT_WIDTH = 800;
 export const DEFAULT_HEIGHT = 600;
@@ -12,9 +16,8 @@ export const loadFullPageEditorWithAdf = async (page: any, adf: any) => {
     'editor-core',
     'full-page-with-adf-import',
   );
-
-  await page.goto(url);
-
+  await loadExampleUrl(page, url);
+  await page.waitForSelector(adfInputSelector);
   await page.evaluate(
     (adfInputSelector: string, adf: object) => {
       (document as any).querySelector(adfInputSelector).value = JSON.stringify(
@@ -29,9 +32,13 @@ export const loadFullPageEditorWithAdf = async (page: any, adf: any) => {
 
 export const snapshot = async (
   page: any,
-  tolerance?: number,
-  selector = '.akEditor',
+  threshold: {
+    tolerance?: number;
+    useUnsafeThreshold?: boolean;
+  } = {},
+  selector: string = '.ProseMirror',
 ) => {
+  const { tolerance, useUnsafeThreshold } = threshold;
   const editor = await page.$(selector);
 
   // Try to take a screenshot of only the editor.
@@ -43,14 +50,5 @@ export const snapshot = async (
     image = await page.screenshot();
   }
 
-  if (tolerance !== undefined) {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot({
-      failureThreshold: `${tolerance}`,
-      failureThresholdType: 'percent',
-    });
-  } else {
-    // @ts-ignore
-    expect(image).toMatchProdImageSnapshot();
-  }
+  return compareScreenshot(image, tolerance, { useUnsafeThreshold });
 };

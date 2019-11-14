@@ -1,24 +1,19 @@
 import { Transaction, Selection } from 'prosemirror-state';
-import { TableMap } from 'prosemirror-tables';
-import { findTable, getSelectionRect } from 'prosemirror-utils';
+import { TableMap, Rect } from 'prosemirror-tables';
+import { findTable } from 'prosemirror-utils';
 import { Node as PMNode } from 'prosemirror-model';
 import { CellAttributes } from '@atlaskit/adf-schema';
+import { setMeta } from './metadata';
 
-export const deleteColumns = (columnsToDelete: number[] = []) => (
-  tr: Transaction,
-): Transaction => {
+export const deleteColumns = (rect: Rect) => (tr: Transaction): Transaction => {
   const table = findTable(tr.selection);
   if (!table) {
     return tr;
   }
-  if (!columnsToDelete.length) {
-    const rect = getSelectionRect(tr.selection);
-    if (rect) {
-      columnsToDelete = [];
-      for (let i = rect.left; i < rect.right; i++) {
-        columnsToDelete.push(i);
-      }
-    }
+
+  const columnsToDelete: number[] = [];
+  for (let i = rect.left; i < rect.right; i++) {
+    columnsToDelete.push(i);
   }
 
   if (!columnsToDelete.length) {
@@ -116,7 +111,7 @@ export const deleteColumns = (columnsToDelete: number[] = []) => (
   }
 
   if (!rows.length) {
-    return tr;
+    return setMeta({ type: 'DELETE_COLUMNS', problem: 'EMPTY_TABLE' })(tr);
   }
 
   const newTable = table.node.type.createChecked(
@@ -124,16 +119,19 @@ export const deleteColumns = (columnsToDelete: number[] = []) => (
     rows,
     table.node.marks,
   );
+
+  const fixedTable = fixRowSpans(newTable);
+  if (fixedTable === null) {
+    return setMeta({ type: 'DELETE_COLUMNS', problem: 'FIX_ROWSPANS' })(tr);
+  }
+
   const cursorPos = getNextCursorPos(newTable, columnsToDelete);
-  return (
+
+  return setMeta({ type: 'DELETE_COLUMNS' })(
     tr
-      .replaceWith(
-        table.pos,
-        table.pos + table.node.nodeSize,
-        fixRowSpans(newTable),
-      )
+      .replaceWith(table.pos, table.pos + table.node.nodeSize, fixedTable)
       // move cursor to the left of the deleted columns if possible, otherwise - to the first column
-      .setSelection(Selection.near(tr.doc.resolve(table.pos + cursorPos)))
+      .setSelection(Selection.near(tr.doc.resolve(table.pos + cursorPos))),
   );
 };
 
@@ -160,7 +158,7 @@ function getMinRowSpans(table: PMNode): number[] {
   return minRowSpans;
 }
 
-function fixRowSpans(table: PMNode): PMNode {
+function fixRowSpans(table: PMNode): PMNode | null {
   const map = TableMap.get(table);
   const minRowSpans = getMinRowSpans(table);
   if (!minRowSpans.some(rowspan => rowspan > 1)) {
@@ -177,6 +175,9 @@ function fixRowSpans(table: PMNode): PMNode {
       for (let colIndex = 0; colIndex < row.childCount; colIndex++) {
         const cell = row.child(colIndex);
         const rowspan = cell.attrs.rowspan - minRowSpans[rowIndex] + 1;
+        if (rowspan < 1) {
+          return null;
+        }
         const newCell = cell.type.createChecked(
           {
             ...cell.attrs,
@@ -189,6 +190,10 @@ function fixRowSpans(table: PMNode): PMNode {
       }
       rows.push(row.type.createChecked(row.attrs, rowCells, row.marks));
     }
+  }
+
+  if (!rows.length) {
+    return null;
   }
 
   return table.type.createChecked(table.attrs, rows, table.marks);

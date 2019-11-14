@@ -28,12 +28,10 @@ type Item = {|
 |};
 
 const getItems = (count: number): Item[] =>
-  Array.from({ length: count }, (v, k) => k).map(
-    (val: number): Item => ({
-      id: `${val}`,
-      content: `item ${val}`,
-    }),
-  );
+  Array.from({ length: count }, (v, k) => k).map((val: number): Item => ({
+    id: `${val}`,
+    content: `item ${val}`,
+  }));
 
 type State = {
   items: Item[],
@@ -65,8 +63,8 @@ export default class NavigationWithDragAndDrop extends Component<void, State> {
       document.body.classList.remove(isDraggingClassName);
     }
 
-    const source = result.source;
-    const destination = result.destination;
+    const { source } = result;
+    const { destination } = result;
 
     if (destination == null) {
       return;

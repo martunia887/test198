@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type Shared<A, B> = {
-  [P in Extract<keyof A, keyof B>]?: A[P] extends B[P] ? B[P] : never
+  [P in Extract<keyof A, keyof B>]?: A[P] extends B[P] ? B[P] : never;
 } &
   { [P in Extract<keyof B, keyof A>]?: B[P] extends A[P] ? A[P] : never };
 
@@ -19,13 +19,13 @@ export type PropsOf<C> = C extends new (props: infer P) => React.Component
 
 export const withDefaultProps = <P, DP extends Partial<P>>(
   defaultProps: DP,
-  Component: React.ComponentClass<P>,
+  Component: React.ComponentType<P>,
 ) => {
   type NonDefaultProps = Omit<P, keyof Shared<P, DP>>;
   type DefaultedProps = Omit<P, keyof NonDefaultProps>;
   type Props = Partial<DefaultedProps> & NonDefaultProps;
   Component.defaultProps = defaultProps;
-  return (Component as any) as React.ComponentClass<Props>;
+  return (Component as any) as React.ComponentType<Props>;
 };
 
 export type ResultantProps<InjectedProps, P extends InjectedProps> = Omit<
@@ -48,11 +48,11 @@ export type ResultantProps<InjectedProps, P extends InjectedProps> = Omit<
  *       Component,
  *     )})`;
  *
- *     componentWillMount() {
+ *     UNSAFE_componentWillMount() {
  *       warnIfDeprecatedAppearance(this.props.appearance);
  *     }
  *
- *     componentWillReceiveProps(newProps: AppearanceProps) {
+ *     UNSAFE_componentWillReceiveProps(newProps: AppearanceProps) {
  *       if (newProps.appearance !== this.props.appearance) {
  *         warnIfDeprecatedAppearance(newProps.appearance);
  *       }
@@ -69,18 +69,6 @@ export type PropsPasser<Extra extends object = {}> = <
 >(
   Component: C,
 ) => React.ComponentClass<PropsOf<C> & Extra>;
-
-/**
- * This type is used for HOC's that inject props into the provided component in
- * such a way that the resultant component does not accept those props any more
- */
-export type PropsInjector<InjectedProps extends object> = <
-  C extends React.ComponentClass<any>
->(
-  Component: C,
-) => React.ComponentClass<
-  Omit<PropsOf<C>, keyof Shared<InjectedProps, PropsOf<C>>>
->;
 
 /**
  * Sometimes we want to utilse the power of Algebraic Data Types.
@@ -104,3 +92,58 @@ export type SumPropsInjector<InjectedProps extends object> = <
 >(
   Component: C,
 ) => React.ComponentClass<PropsOf<C> & InjectedProps>;
+
+/**
+ * Returns a type with keys that are not in T and U set to never.
+ * For example:
+ * ```
+ * interface T {
+ *    foo: string;
+ * }
+ * interface U {
+ *    foo: string;
+ *    bar: string;
+ * }
+ * type Result = Without<T, U>;
+ * // Result === { bar?: never };
+ * ```
+ */
+export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+
+/**
+ * Returns type that accepts either one of two provided types.
+ * For example:
+ * ```
+ * interface T{
+ *   foo: string;
+ * }
+ * interface U{
+ *   bar: string;
+ * }
+ * type OneOfTwo = XOR<T, U>
+ *
+ * const one: OneOfTwo = {foo: "hello"};
+ * const two: OneOfTwo = {bar: "hello"};
+ *
+ * const error: OneOfTwo = {foo: "hello", bar: "hello"}; // Throws an error
+ *
+ * console.log(one.foo); // OK
+ * console.log(one.bar); // ERROR
+ * console.log(two.bar); // OK
+ * console.log(two.foo); // ERROR
+ * ```
+ *
+ * But! There is a catch.
+ * ```
+ * function(oneOrTwo: OneOrTwo) {
+ *   console.log(oneOrTwo.foo); // OK
+ *   console.log(oneOrTwo.bar); // OK
+ * }
+ * ```
+ * This is somewhat buggy in that context, so you should be careful reading values checking them
+ * manually first.
+ *
+ */
+export type XOR<T, U> = T | U extends object
+  ? (Without<T, U> & U) | (Without<U, T> & T)
+  : T | U;

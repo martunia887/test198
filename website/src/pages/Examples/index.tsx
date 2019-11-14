@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React, { CSSProperties } from 'react';
 import { match } from 'react-router';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import Media from 'react-media';
 
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import LinkIcon from '@atlaskit/icon/glyph/link';
@@ -10,7 +11,7 @@ import Button from '@atlaskit/button';
 import CodeIcon from '@atlaskit/icon/glyph/code';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import Flag, { FlagGroup } from '@atlaskit/flag';
-import Select from '@atlaskit/select';
+import Select, { ValueType, OptionType } from '@atlaskit/select';
 import Tooltip from '@atlaskit/tooltip';
 import { colors } from '@atlaskit/theme';
 
@@ -22,6 +23,7 @@ import { packageUrl } from '../../utils/url';
 import { externalPackages } from '../../site';
 import CodeSandbox from '../Package/CodeSandbox';
 import CodeSandboxLogo from '../Package/CodeSandboxLogo';
+import { TABLET_BREAKPOINT_MIN } from '../../constants';
 
 import {
   CodeContainer,
@@ -34,6 +36,7 @@ import {
   NavButton,
   NavLink,
   NavSection,
+  RightNavButtonContainer,
 } from './styled';
 
 export const SANDBOX_DEPLOY_ENDPOINT =
@@ -67,6 +70,7 @@ function PackageSelector(props: any) {
           container: (styles: object) => ({
             ...styles,
             flex: '1 1 0px',
+            minWidth: '300px',
           }),
           control: (styles: object) => ({
             ...styles,
@@ -75,9 +79,10 @@ function PackageSelector(props: any) {
         }}
         options={packagesSelectOptions}
         placeholder="Select Package"
-        onChange={(value: string, { action }: { action: string }) =>
-          action === 'select-option' && props.onSelected(value)
-        }
+        onChange={(
+          option: ValueType<OptionType>,
+          { action }: { action: string },
+        ) => action === 'select-option' && props.onSelected(option)}
         value={selectedPackageItem}
       />
     </Control>
@@ -111,20 +116,22 @@ function ExampleSelector(props: any) {
     <Control>
       <Select
         styles={{
-          container: (styles: object) => ({
+          container: (styles: CSSProperties) => ({
             ...styles,
             flex: '1 1 0px',
+            minWidth: '300px',
           }),
-          control: (styles: object) => ({
+          control: (styles: CSSProperties) => ({
             ...styles,
             backgroundColor: '#fff',
           }),
         }}
         options={examplesSelectItems}
         placeholder="Select Example"
-        onChange={(value: string, { action }: { action: string }) =>
-          action === 'select-option' && props.onSelected(value)
-        }
+        onChange={(
+          option: ValueType<OptionType>,
+          { action }: { action: string },
+        ) => action === 'select-option' && props.onSelected(option)}
         value={selectedExampleItem}
       />
     </Control>
@@ -138,7 +145,7 @@ export type ExampleNavigationProps = {
   onPackageSelected?: (selected: { value: string }) => void;
   exampleId?: string;
   groupId: string;
-  loaderUrl?: string | null;
+  loaderUrl?: string;
   packageId: string;
   config?: any;
   codeIsVisible: boolean;
@@ -166,73 +173,95 @@ class ExampleNavigation extends React.Component<ExampleNavigationProps> {
       examples && examples.children.find((e: any) => e.id === exampleId);
 
     return (
-      <Nav>
-        <NavSection style={{ marginLeft: 8 }}>
-          <Tooltip content="Back to docs" position="right">
-            <NavLink to={packageUrl(groupId, packageId)}>
-              <ArrowLeftIcon label="Back to docs" />
-            </NavLink>
-          </Tooltip>
-        </NavSection>
-
-        <NavSection>
-          <PackageSelector
-            groupId={groupId}
-            packageId={packageId}
-            onSelected={onPackageSelected}
-          />
-          <ExampleSelector
-            examples={examples}
-            exampleId={exampleId}
-            onSelected={onExampleSelected}
-          />
-        </NavSection>
-        <NavSection style={{ marginRight: 8 }}>
-          <Tooltip
-            content={error ? error.name : 'Deploy to CodeSandbox'}
-            position="left"
-          >
-            <CodeSandbox
-              examples={examples}
-              example={example}
-              groupId={groupId}
-              packageId={packageId}
-              pkgJSON={config}
-              afterDeployError={(error: Error) => this.setState({ error })}
-              loadingButton={() => (
-                <NavButton style={{ marginRight: 8 }} type="Submit" disabled>
-                  <CodeSandboxLogo />
-                </NavButton>
-              )}
-              deployButton={({ isDisabled }: { isDisabled: boolean }) => (
-                <NavButton
-                  style={{ marginRight: 8 }}
-                  type="Submit"
-                  disabled={isDisabled}
-                >
-                  <CodeSandboxLogo />
-                </NavButton>
-              )}
-            />
-          </Tooltip>
-          <Tooltip
-            content={`${codeIsVisible ? 'Hide' : 'Show'} source`}
-            position="left"
-          >
-            <NavButton isSelected={codeIsVisible} onClick={onCodeToggle}>
-              <CodeIcon label="Show source" />
-            </NavButton>
-          </Tooltip>
-          <Tooltip content="Isolated View" position="bottom">
-            <Button
-              appearance="subtle"
-              iconBefore={<LinkIcon label="Link Icon" />}
-              href={loaderUrl}
-              target="_blank"
-            />
-          </Tooltip>
-        </NavSection>
-      </Nav>
+      <Media query={`(min-width: ${TABLET_BREAKPOINT_MIN}px)`}>
+        {(isDesktopOrTablet: boolean) => (
+          <Nav>
+            {isDesktopOrTablet && (
+              <NavSection style={{ marginLeft: 8 }}>
+                <Tooltip content="Back to docs" position="right">
+                  <NavLink to={packageUrl(groupId, packageId)}>
+                    <ArrowLeftIcon label="Back to docs" />
+                  </NavLink>
+                </Tooltip>
+              </NavSection>
+            )}
+            <NavSection>
+              <PackageSelector
+                groupId={groupId}
+                packageId={packageId}
+                onSelected={onPackageSelected}
+              />
+              <ExampleSelector
+                examples={examples}
+                exampleId={exampleId}
+                onSelected={onExampleSelected}
+              />
+            </NavSection>
+            {isDesktopOrTablet && (
+              <NavSection
+                style={{ marginRight: 8, justifyContent: 'flex-end' }}
+              >
+                <RightNavButtonContainer>
+                  <CodeSandbox
+                    examples={examples}
+                    example={example}
+                    groupId={groupId}
+                    packageId={packageId}
+                    pkgJSON={config}
+                    afterDeployError={(error: Error) =>
+                      this.setState({ error })
+                    }
+                    loadingButton={() => (
+                      <NavButton
+                        style={{ marginRight: 8 }}
+                        type="submit"
+                        disabled
+                      >
+                        <CodeSandboxLogo />
+                      </NavButton>
+                    )}
+                    deployButton={({ isDisabled }: { isDisabled: boolean }) => (
+                      <Tooltip
+                        content={
+                          error && error.name
+                            ? error.name
+                            : 'Deploy to CodeSandbox'
+                        }
+                        position="left"
+                      >
+                        <NavButton type="submit" disabled={isDisabled}>
+                          <CodeSandboxLogo />
+                        </NavButton>
+                      </Tooltip>
+                    )}
+                  />
+                </RightNavButtonContainer>
+                <RightNavButtonContainer>
+                  <Tooltip
+                    content={`${codeIsVisible ? 'Hide' : 'Show'} source`}
+                    position="left"
+                  >
+                    <NavButton
+                      isSelected={codeIsVisible}
+                      onClick={onCodeToggle}
+                    >
+                      <CodeIcon label="Show source" />
+                    </NavButton>
+                  </Tooltip>
+                </RightNavButtonContainer>
+                <Tooltip content="Isolated View" position="bottom">
+                  <Button
+                    appearance="subtle"
+                    iconBefore={<LinkIcon label="Link Icon" />}
+                    href={loaderUrl}
+                    target="_blank"
+                  />
+                </Tooltip>
+              </NavSection>
+            )}
+          </Nav>
+        )}
+      </Media>
     );
   }
 }
@@ -307,13 +336,10 @@ export default class Examples extends React.Component<Props, State> {
     title: string;
   }) => {
     const id = Date.now().toString();
-    const icon = (() => {
-      if (flagProps.appearance === 'error') {
-        return <ErrorIcon label="Error" secondaryColor={colors.R400} />;
-      }
-
-      return '';
-    })();
+    const icon = (() =>
+      flagProps.appearance === 'error' ? (
+        <ErrorIcon label="Error" secondaryColor={colors.R400} />
+      ) : null)();
     this.setState({
       flags: {
         [id]: (

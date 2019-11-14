@@ -1,5 +1,7 @@
 import { Node, Schema } from 'prosemirror-model';
 import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
+import { browser } from '@atlaskit/editor-common';
 import {
   NORMAL_TEXT,
   HEADING_1,
@@ -16,9 +18,16 @@ import {
   TEXT_BLOCK_TYPES,
   WRAPPER_BLOCK_TYPES,
   HEADINGS_BY_LEVEL,
+  HeadingLevels,
+  HeadingLevelsAndNormalText,
 } from '../types';
 import { areBlockTypesDisabled } from '../../../utils';
-import { EditorAppearance } from '../../../types';
+import { HEADING_KEYS } from '../../../keymaps';
+import {
+  setHeadingWithAnalytics,
+  setNormalTextWithAnalytics,
+} from '../commands';
+import { INPUT_METHOD } from '../../analytics';
 
 export type BlockTypeState = {
   currentBlockType: BlockType;
@@ -61,6 +70,7 @@ const isBlockTypeSchemaSupported = (
     case PANEL:
       return !!state.schema.nodes.panel;
   }
+  return;
 };
 
 const detectBlockType = (
@@ -73,7 +83,7 @@ const detectBlockType = (
   }
   let blockType: BlockType | undefined;
   const { $from, $to } = state.selection;
-  state.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+  state.doc.nodesBetween($from.pos, $to.pos, node => {
     const nodeBlockType = availableBlockTypes.filter(
       blockType => blockType === blockTypeForNode(node, state.schema),
     );
@@ -88,18 +98,38 @@ const detectBlockType = (
   return blockType || OTHER;
 };
 
+const autoformatHeading = (
+  headingLevel: HeadingLevelsAndNormalText,
+  view: EditorView,
+): boolean => {
+  if (headingLevel === 0) {
+    setNormalTextWithAnalytics(INPUT_METHOD.FORMATTING)(
+      view.state,
+      view.dispatch,
+    );
+  } else {
+    setHeadingWithAnalytics(
+      headingLevel as HeadingLevels,
+      INPUT_METHOD.FORMATTING,
+    )(view.state, view.dispatch);
+  }
+  return true;
+};
+
 export const pluginKey = new PluginKey('blockTypePlugin');
 export const createPlugin = (
   dispatch: (eventName: string | PluginKey, data: any) => void,
-  appearance?: EditorAppearance,
+  lastNodeMustBeParagraph?: boolean,
 ) => {
+  let altKeyLocation = 0;
+
   return new Plugin({
     appendTransaction(
-      transactions: Transaction[],
-      oldState: EditorState,
+      _transactions: Transaction[],
+      _oldState: EditorState,
       newState: EditorState,
     ): Transaction | void {
-      if (appearance === 'comment') {
+      if (lastNodeMustBeParagraph) {
         const pos = newState.doc.resolve(newState.doc.content.size - 1);
         const lastNode = pos.node(1);
         const { paragraph } = newState.schema.nodes;
@@ -113,7 +143,7 @@ export const createPlugin = (
     },
 
     state: {
-      init(config, state: EditorState) {
+      init(_config, state: EditorState) {
         const availableBlockTypes = TEXT_BLOCK_TYPES.filter(blockType =>
           isBlockTypeSchemaSupported(blockType, state),
         );
@@ -130,9 +160,9 @@ export const createPlugin = (
       },
 
       apply(
-        tr,
+        _tr,
         oldPluginState: BlockTypeState,
-        oldState: EditorState,
+        _oldState: EditorState,
         newState: EditorState,
       ) {
         const newPluginState = {
@@ -157,5 +187,39 @@ export const createPlugin = (
     },
 
     key: pluginKey,
+
+    props: {
+      /**
+       * As we only want the left alt key to work for headings shortcuts on Windows
+       * we can't use prosemirror-keymap and need to handle these shortcuts specially
+       * Shortcut on Mac: Cmd-Opt-{heading level}
+       * Shortcut on Windows: Ctrl-LeftAlt-{heading level}
+       */
+      handleKeyDown: (view: EditorView, event: KeyboardEvent): boolean => {
+        const headingLevel = HEADING_KEYS.indexOf(
+          event.keyCode,
+        ) as HeadingLevels;
+        if (headingLevel > -1 && event.altKey) {
+          if (browser.mac && event.metaKey) {
+            return autoformatHeading(headingLevel, view);
+          } else if (
+            !browser.mac &&
+            event.ctrlKey &&
+            altKeyLocation !== event.DOM_KEY_LOCATION_RIGHT
+          ) {
+            return autoformatHeading(headingLevel, view);
+          }
+        } else if (event.key === 'Alt') {
+          // event.location is for the current key only; when a user hits Ctrl-Alt-1 the
+          // location refers to the location of the '1' key
+          // We store the location of the Alt key when it is hit to check against later
+          altKeyLocation = event.location;
+        } else if (!event.altKey) {
+          altKeyLocation = 0;
+        }
+
+        return false;
+      },
+    },
   });
 };

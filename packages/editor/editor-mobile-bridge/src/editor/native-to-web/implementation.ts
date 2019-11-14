@@ -32,17 +32,25 @@ import {
   isLinkAtPos,
   setLinkHref,
   setLinkText,
+  clearEditorContent,
+  setKeyboardHeight,
 } from '@atlaskit/editor-core';
 import { EditorView } from 'prosemirror-view';
+import { EditorViewWithComposition } from '../../types';
 import { EditorState } from 'prosemirror-state';
+import {
+  undo as pmHistoryUndo,
+  redo as pmHistoryRedo,
+} from 'prosemirror-history';
 import { JSONTransformer } from '@atlaskit/editor-json-transformer';
-import { Color as StatusColor } from '@atlaskit/status';
+import { Color as StatusColor } from '@atlaskit/status/element';
 
 import NativeToWebBridge from './bridge';
 import WebBridge from '../../web-bridge';
-import { ProseMirrorDOMChange } from '../../types';
 import { hasValue } from '../../utils';
 import { rejectPromise, resolvePromise } from '../../cross-platform-promise';
+
+import { version as packageVersion } from '../../version.json';
 
 export default class WebBridgeImpl extends WebBridge
   implements NativeToWebBridge {
@@ -51,11 +59,15 @@ export default class WebBridgeImpl extends WebBridge
   blockFormatBridgeState: BlockTypeState | null = null;
   listBridgeState: ListsState | null = null;
   mentionsPluginState: MentionPluginState | null = null;
-  editorView: EditorView & ProseMirrorDOMChange | null = null;
+  editorView: (EditorView & EditorViewWithComposition) | null = null;
   transformer: JSONTransformer = new JSONTransformer();
   editorActions: EditorActions = new EditorActions();
   mediaPicker: CustomMediaPicker | undefined;
   mediaMap: Map<string, Function> = new Map();
+
+  currentVersion(): string {
+    return packageVersion;
+  }
 
   onBoldClicked() {
     if (this.textFormatBridgeState && this.editorView) {
@@ -99,9 +111,9 @@ export default class WebBridgeImpl extends WebBridge
     }
   }
 
-  onMentionSelect(mention: string) {}
+  onMentionSelect(_mention: string) {}
 
-  onMentionPickerResult(result: string) {}
+  onMentionPickerResult(_result: string) {}
 
   onMentionPickerDismissed() {}
 
@@ -111,7 +123,7 @@ export default class WebBridgeImpl extends WebBridge
         text,
         color,
         localId: uuid,
-      })(this.editorView);
+      })(this.editorView.state, this.editorView.dispatch);
     }
   }
 
@@ -123,7 +135,14 @@ export default class WebBridgeImpl extends WebBridge
 
   setContent(content: string) {
     if (this.editorActions) {
-      this.editorActions.replaceDocument(content, false);
+      this.editorActions.replaceDocument(content, false, false);
+    }
+  }
+
+  clearContent() {
+    if (this.editorView) {
+      const { state, dispatch } = this.editorView;
+      clearEditorContent(state, dispatch);
     }
   }
 
@@ -277,7 +296,7 @@ export default class WebBridgeImpl extends WebBridge
         return;
 
       default:
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(`${type} cannot be inserted as it's not supported`);
         return;
     }
@@ -308,6 +327,16 @@ export default class WebBridgeImpl extends WebBridge
             });
             return insert(mention);
           }
+          if (type === 'emoji') {
+            const { id, shortName, fallback } = item;
+            const emoji = state.schema.nodes.emoji.createChecked({
+              shortName,
+              id,
+              fallback,
+              text: fallback || shortName,
+            });
+            return insert(emoji);
+          }
 
           return false;
         },
@@ -334,20 +363,49 @@ export default class WebBridgeImpl extends WebBridge
     return true;
   }
 
+  scrollToSelection(): void {
+    if (!this.editorView) {
+      return;
+    }
+
+    this.editorView.dispatch(this.editorView.state.tr.scrollIntoView());
+  }
+
+  undo() {
+    if (this.editorView) {
+      pmHistoryUndo(this.editorView.state, this.editorView.dispatch);
+    }
+  }
+
+  redo() {
+    if (this.editorView) {
+      pmHistoryRedo(this.editorView.state, this.editorView.dispatch);
+    }
+  }
+
+  setKeyboardControlsHeight(height: string) {
+    if (this.editorView) {
+      setKeyboardHeight(+height)(
+        this.editorView.state,
+        this.editorView.dispatch,
+      );
+    }
+  }
+
   flushDOM() {
     if (!this.editorView) {
       return false;
     }
 
     /**
-     * NOTE: `inDOMChange` is a private API, it's used as a workaround to forcefully apply current composition
+     * NOTE: `domObserver` is a private API, it's used as a workaround to forcefully apply current composition
      * when integrators request the content. It doesn't break the users current composing so they may continue
      * to compose the current item.
      * @see ED-5924
      */
-    const domChange = this.editorView.inDOMChange;
-    if (domChange && domChange.composing) {
-      domChange.finish(true);
+    const { composing, domObserver } = this.editorView;
+    if (composing && domObserver) {
+      domObserver.flush();
       return true;
     }
 

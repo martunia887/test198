@@ -8,7 +8,6 @@ export type BreakoutMarkAttrs = {
 
 /**
  * @name breakout_mark
- * @stage 0
  */
 export interface BreakoutMarkDefinition {
   type: 'breakout';
@@ -16,8 +15,6 @@ export interface BreakoutMarkDefinition {
 }
 
 export const breakout: MarkSpec = {
-  // @ts-ignore
-  // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/32611
   spanning: false,
 
   parseDOM: [

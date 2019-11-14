@@ -11,7 +11,11 @@ import EmojiTravelIcon from '@atlaskit/icon/glyph/emoji/travel';
 import EmojiProductivityIcon from '@atlaskit/icon/glyph/emoji/productivity';
 
 import { CategoryDescription } from '../../types';
-import { customCategory, userCustomTitle, customTitle } from '../../constants';
+import {
+  customCategory,
+  userCustomTitle,
+  customTitle,
+} from '../../util/constants';
 
 export type CategoryId =
   | 'FREQUENT'
@@ -29,7 +33,7 @@ export type CategoryId =
 export type CategoryGroupKey = CategoryId | 'USER_CUSTOM' | 'SEARCH';
 
 export type CategoryDescriptionMap = {
-  [key in CategoryGroupKey]: CategoryDescription
+  [key in CategoryGroupKey]: CategoryDescription;
 };
 
 export const CategoryDescriptionMap: CategoryDescriptionMap = {

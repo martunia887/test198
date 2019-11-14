@@ -1,4 +1,5 @@
 import { Slice, Mark, Node, NodeType, Schema } from 'prosemirror-model';
+import { PasteSource } from '../analytics';
 
 export function isPastedFromWord(html?: string): boolean {
   return !!html && html.indexOf('urn:schemas-microsoft-com:office:word') >= 0;
@@ -32,8 +33,8 @@ export const isSingleLine = (text: string): boolean => {
   return !!text && text.trim().split('\n').length === 1;
 };
 
-export function getPasteSource(event: ClipboardEvent): string {
-  const html = event.clipboardData.getData('text/html');
+export function getPasteSource(event: ClipboardEvent): PasteSource {
+  const html = event.clipboardData!.getData('text/html');
 
   if (isPastedFromDropboxPaper(html)) {
     return 'dropbox-paper';
@@ -51,7 +52,7 @@ export function getPasteSource(event: ClipboardEvent): string {
     return 'fabric-editor';
   }
 
-  return 'other';
+  return 'uncategorized';
 }
 
 // TODO: Write JEST tests for this part
@@ -134,7 +135,7 @@ export function applyTextMarksToSlice(
 
     const sliceCopy = Slice.fromJSON(schema, slice.toJSON() || {});
 
-    sliceCopy.content.descendants((node, pos, parent) => {
+    sliceCopy.content.descendants((node, _pos, parent) => {
       if (node.isText && parent && parent.isBlock) {
         node.marks = [
           ...((node.marks &&

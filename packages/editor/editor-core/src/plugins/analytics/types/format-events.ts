@@ -5,24 +5,27 @@ import {
   ACTION_SUBJECT_ID,
   INPUT_METHOD,
 } from './enums';
+import { HeadingLevelsAndNormalText } from '../../block-type/types';
 
-export const enum INDENT_DIR {
+export enum INDENT_DIR {
   INDENT = 'indent',
   OUTDENT = 'outdent',
 }
 
-export const enum INDENT_TYPE {
+export enum INDENT_TYPE {
   PARAGRAPH = 'paragraph',
   LIST = 'list',
   HEADING = 'heading',
   CODE_BLOCK = 'codeBlock',
+  TASK_LIST = 'taskList',
 }
 
 type FormatAEP<ActionSubjectID, Attributes> = TrackAEP<
   ACTION.FORMATTED,
   ACTION_SUBJECT.TEXT,
   ActionSubjectID,
-  Attributes
+  Attributes,
+  undefined
 >;
 
 type FormatBasicAEP = FormatAEP<
@@ -58,7 +61,8 @@ type FormatIndentationAEP = FormatAEP<
       | INDENT_TYPE.PARAGRAPH
       | INDENT_TYPE.LIST
       | INDENT_TYPE.HEADING
-      | INDENT_TYPE.CODE_BLOCK;
+      | INDENT_TYPE.CODE_BLOCK
+      | INDENT_TYPE.TASK_LIST;
   }
 >;
 
@@ -68,8 +72,10 @@ type FormatHeadingAEP = FormatAEP<
     inputMethod:
       | INPUT_METHOD.TOOLBAR
       | INPUT_METHOD.SHORTCUT
-      | INPUT_METHOD.FORMATTING;
-    newHeadingLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+      | INPUT_METHOD.FORMATTING
+      | INPUT_METHOD.QUICK_INSERT;
+    newHeadingLevel: HeadingLevelsAndNormalText;
+    previousHeadingLevel?: HeadingLevelsAndNormalText;
   }
 >;
 

@@ -1,10 +1,4 @@
-import {
-  EditorState,
-  Plugin,
-  Selection,
-  TextSelection,
-  NodeSelection,
-} from 'prosemirror-state';
+import { EditorState, TextSelection, NodeSelection } from 'prosemirror-state';
 import { findChildrenByType, NodeWithPos } from 'prosemirror-utils';
 import { EditorView } from 'prosemirror-view';
 import {
@@ -13,16 +7,19 @@ import {
   p,
   status,
   StatusLocalIdRegex,
+  insertText,
+  sendKeyToPm,
 } from '@atlaskit/editor-test-helpers';
 import {
   updateStatus,
   setStatusPickerAt,
 } from '../../../../plugins/status/actions';
 import { setNodeSelectionNearPos } from '../../../../plugins/status/utils';
-import createPlugin, {
-  pluginKey,
-  SelectionChange,
-} from '../../../../plugins/status/plugin';
+import { pluginKey } from '../../../../plugins/status/plugin';
+import {
+  CreateUIAnalyticsEvent,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 
 export const setSelectionAndPickerAt = (pos: number) => (
   editorView: EditorView,
@@ -32,9 +29,7 @@ export const setSelectionAndPickerAt = (pos: number) => (
   return editorView.state;
 };
 
-export const validateSelection = (pos: number, text: string, color: string) => (
-  state: EditorState,
-) => {
+export const validateSelection = (pos: number) => (state: EditorState) => {
   let statusState = pluginKey.getState(state);
 
   expect(state.tr.selection).toBeInstanceOf(NodeSelection);
@@ -42,11 +37,6 @@ export const validateSelection = (pos: number, text: string, color: string) => (
   expect(statusState).toMatchObject({
     isNew: false,
     showStatusPickerAt: pos, // status node start position
-    selectedStatus: expect.objectContaining({
-      text,
-      color,
-      localId: expect.stringMatching(StatusLocalIdRegex),
-    }),
   });
 };
 
@@ -65,122 +55,29 @@ export const getStatusesInDocument = (
 
 describe('status plugin: plugin', () => {
   const createEditor = createEditorFactory();
+  let createAnalyticsEvent: CreateUIAnalyticsEvent;
+  let editorView: EditorView;
 
-  const createSelection = (from: number, to?: number): Selection => {
-    const actualTo = to === undefined ? from : to;
-    return {
-      from,
-      to: actualTo,
-      eq: (selection: Selection) =>
-        selection.from === from && selection.to === actualTo,
-    } as any;
-  };
-
-  const sel1 = createSelection(1);
-  const sel2 = createSelection(2);
-
-  const editorFactory = (doc: any) =>
-    createEditor({
+  const editorFactory = (doc: any) => {
+    createAnalyticsEvent = jest.fn(() => ({ fire() {} } as UIAnalyticsEvent));
+    return createEditor({
       editorProps: {
         allowStatus: true,
+        allowAnalyticsGASV3: true,
       },
       doc,
+      createAnalyticsEvent,
     });
-
-  describe('SelectionChangeHandler', () => {
-    let change: SelectionChange;
-    beforeEach(() => {
-      change = new SelectionChange();
-    });
-
-    it('notify should return when no subscribed', () => {
-      change.notifyNewSelection(createSelection(1), createSelection(2));
-    });
-
-    it('notify should notify single subscriber', () => {
-      const sub1 = jest.fn();
-      change.subscribe(sub1);
-      change.notifyNewSelection(sel1, sel2);
-      expect(sub1).toBeCalledWith(sel1, sel2);
-    });
-
-    it('notify should notify two subscribers', () => {
-      const sub1 = jest.fn();
-      const sub2 = jest.fn();
-      change.subscribe(sub1);
-      change.subscribe(sub2);
-      change.notifyNewSelection(sel1, sel2);
-      expect(sub1).toBeCalledWith(sel1, sel2);
-      expect(sub2).toBeCalledWith(sel1, sel2);
-    });
-
-    it('notify should not notify unsubscribers', () => {
-      const sub1 = jest.fn();
-      const sub2 = jest.fn();
-      change.subscribe(sub1);
-      change.subscribe(sub2);
-      change.unsubscribe(sub1);
-      change.notifyNewSelection(sel1, sel2);
-      expect(sub1).toHaveBeenCalledTimes(0);
-      expect(sub2).toBeCalledWith(sel1, sel2);
-    });
-  });
-
-  describe('Editor updates', () => {
-    let update: (view: EditorView, prevState: EditorState) => void;
-    let editorView: EditorView;
-    let previousEditorState: EditorState;
-    let notifyNewSelectionSpy: jest.SpyInstance<any>;
-    let pluginKeyGetStateSpy: jest.SpyInstance<any>;
-
-    beforeEach(() => {
-      const selectionChanges = new SelectionChange();
-      notifyNewSelectionSpy = jest.spyOn(
-        selectionChanges,
-        'notifyNewSelection',
-      );
-      pluginKeyGetStateSpy = jest.spyOn(pluginKey, 'getState');
-      pluginKeyGetStateSpy.mockImplementation(() => ({
-        selectionChanges,
-      }));
-      const plugin = createPlugin({} as any) as Plugin;
-      const spec = plugin.spec;
-      update = spec.view().update;
-
-      // Just enough for tests
-      editorView = {
-        state: {
-          selection: sel1,
-        },
-      } as EditorView;
-      previousEditorState = {
-        selection: sel2,
-      } as EditorState;
-    });
-
-    afterEach(() => {
-      pluginKeyGetStateSpy.mockRestore();
-    });
-
-    it('editor update selection changed', () => {
-      update(editorView, previousEditorState);
-      expect(notifyNewSelectionSpy).toBeCalledWith(sel1, sel2);
-    });
-
-    it('editor update selection changed', () => {
-      previousEditorState = {
-        selection: sel1,
-      } as EditorState;
-      update(editorView, previousEditorState);
-      expect(notifyNewSelectionSpy).toHaveBeenCalledTimes(0);
-    });
-  });
+  };
 
   describe('Edge cases', () => {
     it('StatusPicker should be dismissed if cursor is outside the Status node selection', () => {
       const { editorView } = editorFactory(doc(p('Status: {<>}')));
       // insert new Status at {<>}
-      updateStatus({ text: 'Yay', color: 'blue' })(editorView);
+      updateStatus({ text: 'Yay', color: 'blue' })(
+        editorView.state,
+        editorView.dispatch,
+      );
 
       let statusState = pluginKey.getState(editorView.state);
 
@@ -191,32 +88,25 @@ describe('status plugin: plugin', () => {
       expect(statusState).toMatchObject({
         isNew: true,
         showStatusPickerAt: editorView.state.tr.selection.from, // status node start position
-        selectedStatus: expect.objectContaining({
-          text: 'Yay',
-          color: 'blue',
-          localId: expect.stringMatching(StatusLocalIdRegex),
-        }),
       });
 
       const statusFromPosition = editorView.state.tr.selection.from;
 
       // simulate the scenario where user uses left arrow to move cursor outside the status node
+      const beforeStatus = editorView.state.tr.doc.resolve(
+        statusFromPosition - 1,
+      );
       editorView.dispatch(
-        editorView.state.tr.setSelection(
-          TextSelection.create(editorView.state.doc, statusFromPosition),
-        ),
+        editorView.state.tr.setSelection(new TextSelection(beforeStatus)),
       );
 
       statusState = pluginKey.getState(editorView.state);
 
       // expects the showStatusPickerAt to be reset to null
       expect(editorView.state.tr.selection).toBeInstanceOf(TextSelection);
-      expect(editorView.state.tr.selection.to).toBe(
-        editorView.state.tr.selection.from,
-      );
+      expect(editorView.state.tr.selection.to).toBe(statusFromPosition - 1);
       expect(statusState).toMatchObject({
         showStatusPickerAt: null,
-        selectedStatus: null,
       });
     });
 
@@ -244,7 +134,7 @@ describe('status plugin: plugin', () => {
 
       // select the first status (empty text)
       let state = setSelectionAndPickerAt(cursorPos)(editorView);
-      validateSelection(cursorPos, '', 'blue')(state);
+      validateSelection(cursorPos)(state);
       getStatusesInDocument(state, 2); // ensure there are two status nodes in the document
 
       // simulate the scenario where user selects another status
@@ -276,12 +166,40 @@ describe('status plugin: plugin', () => {
 
       // select the first status (empty text)
       let state = setSelectionAndPickerAt(cursorPos)(editorView);
-      validateSelection(cursorPos, '', 'blue')(state);
+      validateSelection(cursorPos)(state);
       getStatusesInDocument(state, 1);
 
       // simulate the scenario where user selects a text node
       state = setSelectionAndPickerAt(cursorPos + 2)(editorView);
       getStatusesInDocument(state, 0);
+    });
+  });
+
+  describe('Quick insert', () => {
+    beforeEach(() => {
+      ({ editorView } = editorFactory(doc(p('{<>}'))));
+      insertText(editorView, `/status`);
+      sendKeyToPm(editorView, 'Enter');
+    });
+
+    it('inserts default status', () => {
+      const statuses = getStatusesInDocument(editorView.state, 1);
+
+      expect(statuses[0].node.attrs).toMatchObject({
+        text: '',
+        color: 'neutral',
+        localId: expect.stringMatching(StatusLocalIdRegex),
+      });
+    });
+
+    it('fires analytics event', () => {
+      expect(createAnalyticsEvent).toHaveBeenCalledWith({
+        action: 'inserted',
+        actionSubject: 'document',
+        actionSubjectId: 'status',
+        eventType: 'track',
+        attributes: { inputMethod: 'quickInsert' },
+      });
     });
   });
 });

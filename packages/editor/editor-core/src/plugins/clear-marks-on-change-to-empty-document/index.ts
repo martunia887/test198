@@ -10,7 +10,7 @@ export function createPlugin(): Plugin | undefined {
   return new Plugin({
     key: pluginKey,
     appendTransaction: (
-      transactions: Transaction[],
+      _transactions: Transaction[],
       oldState: EditorState,
       newState: EditorState,
     ) => {
@@ -18,14 +18,17 @@ export function createPlugin(): Plugin | undefined {
       if (!isEmptyDocument(oldState.doc) && isEmptyDocument(newState.doc)) {
         return newState.tr.setStoredMarks([]);
       }
+      return;
     },
   });
 }
 
-const clearMarksOnChangeToEmptyDocumentPlugin: EditorPlugin = {
+const clearMarksOnChangeToEmptyDocumentPlugin = (): EditorPlugin => ({
+  name: 'clearMarksOnEmptyDoc',
+
   pmPlugins() {
-    return [{ name: 'clearMarksOnChange', plugin: schema => createPlugin() }];
+    return [{ name: 'clearMarksOnChange', plugin: createPlugin }];
   },
-};
+});
 
 export default clearMarksOnChangeToEmptyDocumentPlugin;

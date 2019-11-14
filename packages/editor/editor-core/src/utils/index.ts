@@ -21,6 +21,7 @@ import {
 } from 'prosemirror-state';
 import { liftTarget, findWrapping } from 'prosemirror-transform';
 import { LEFT } from '../keymaps';
+import { browser } from '@atlaskit/editor-common';
 import {
   JSONTransformer,
   JSONDocNode,
@@ -29,19 +30,34 @@ import {
 import { FakeTextCursorSelection } from '../plugins/fake-text-cursor/cursor';
 import { hasParentNodeOfType } from 'prosemirror-utils';
 import { GapCursorSelection, Side } from '../plugins/gap-cursor/selection';
+import { isNodeEmpty } from './document';
 
-export * from './document';
+export {
+  isEmptyParagraph,
+  hasVisibleContent,
+  isNodeEmpty,
+  isEmptyDocument,
+  processRawValue,
+  getStepRange,
+  findFarthestParentNode,
+  isSelectionEndOfParagraph,
+  nodesBetweenChanged,
+  getNodesCount,
+} from './document';
+
 export * from './action';
 export * from './step';
 export * from './mark';
+export { isNodeTypeParagraph } from './nodes';
 
 export { JSONDocNode, JSONNode };
 
 export { filterContentByType } from './filter';
 
-export const ZWSP = '\u200b';
+export { containsClassName } from './dom';
+export const ZeroWidthSpace = '\u200b';
 
-function validateNode(node: Node): boolean {
+function validateNode(_node: Node): boolean {
   return false;
 }
 
@@ -64,12 +80,18 @@ function closest(
   s: string,
 ): HTMLElement | null {
   let el = node as HTMLElement;
+
   if (!el) {
     return null;
   }
   if (!document.documentElement || !document.documentElement.contains(el)) {
     return null;
   }
+
+  if (el.closest) {
+    return el.closest(s);
+  }
+
   const matches = el.matches ? 'matches' : 'msMatchesSelector';
 
   do {
@@ -147,6 +169,15 @@ export function canMoveDown(state: EditorState): boolean {
   }
 
   return !atTheEndOfDoc(state);
+}
+
+export function isSelectionInsideLastNodeInDocument(
+  selection: Selection,
+): boolean {
+  const docNode = selection.$anchor.node(0);
+  const rootNode = selection.$anchor.node(1);
+
+  return docNode.lastChild === rootNode;
 }
 
 export function atTheEndOfDoc(state: EditorState): boolean {
@@ -285,9 +316,14 @@ export function checkNodeDown(
   doc: Node,
   filter: (node: Node) => boolean,
 ): boolean {
-  const res = doc.resolve(
-    selection.$to.after(findAncestorPosition(doc, selection.$to).depth),
-  );
+  const ancestorDepth = findAncestorPosition(doc, selection.$to).depth;
+
+  // Top level node
+  if (ancestorDepth === 0) {
+    return false;
+  }
+
+  const res = doc.resolve(selection.$to.after(ancestorDepth));
   return res.nodeAfter ? filter(res.nodeAfter) : false;
 }
 
@@ -449,7 +485,7 @@ export function getGroupsInRange(
 /**
  * Traverse the document until an "ancestor" is found. Any nestable block can be an ancestor.
  */
-export function findAncestorPosition(doc: Node, pos: any): any {
+export function findAncestorPosition(doc: Node, pos: ResolvedPos): any {
   const nestableBlocks = ['blockquote', 'bulletList', 'orderedList'];
 
   if (pos.depth === 1) {
@@ -614,6 +650,32 @@ export function closestElement(
   return closest(node, s);
 }
 
+/*
+ * From Modernizr
+ * Returns the kind of transitionevent available for the element
+ */
+export function whichTransitionEvent<TransitionEventName extends string>() {
+  const el = document.createElement('fakeelement');
+  const transitions: Record<string, string> = {
+    transition: 'transitionend',
+    MozTransition: 'transitionend',
+    OTransition: 'oTransitionEnd',
+    WebkitTransition: 'webkitTransitionEnd',
+  };
+
+  for (const t in transitions) {
+    if (el.style[t as keyof CSSStyleDeclaration] !== undefined) {
+      // Use a generic as the return type because TypeScript doesnt know
+      // about cross browser features, so we cast here to align to the
+      // standard Event spec and propagate the type properly to the callbacks
+      // of `addEventListener` and `removeEventListener`.
+      return transitions[t] as TransitionEventName;
+    }
+  }
+
+  return;
+}
+
 export function moveLeft(view: EditorView) {
   const event = new CustomEvent('keydown', {
     bubbles: true,
@@ -639,7 +701,7 @@ function getSelectedWrapperNodes(state: EditorState): NodeType[] {
       listItem,
       codeBlock,
     } = state.schema.nodes;
-    state.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+    state.doc.nodesBetween($from.pos, $to.pos, node => {
       if (
         (node.isBlock &&
           [blockquote, panel, orderedList, bulletList, listItem].indexOf(
@@ -669,9 +731,9 @@ export const isTemporary = (id: string): boolean => {
 
 // @see: https://github.com/ProseMirror/prosemirror/issues/710
 // @see: https://bugs.chromium.org/p/chromium/issues/detail?id=740085
-// Chrome >= 58
+// Chrome >= 58 (desktop only)
 export const isChromeWithSelectionBug =
-  parseInt((navigator.userAgent.match(/Chrome\/(\d{2})/) || [])[1], 10) >= 58;
+  browser.chrome && !browser.android && browser.chrome_version >= 58;
 
 export const isEmptyNode = (schema: Schema) => {
   const {
@@ -692,7 +754,7 @@ export const isEmptyNode = (schema: Schema) => {
     mediaGroup,
     mediaSingle,
   } = schema.nodes;
-  const innerIsEmptyNode = (node: Node): any => {
+  const innerIsEmptyNode = (node: Node): boolean => {
     switch (node.type) {
       case media:
       case mediaGroup:
@@ -727,10 +789,16 @@ export const isEmptyNode = (schema: Schema) => {
         });
         return isEmpty;
       default:
-        throw new Error(`${node.type.name} node is not implemented`);
+        return isNodeEmpty(node);
     }
   };
   return innerIsEmptyNode;
+};
+
+export const insideTable = (state: EditorState): Boolean => {
+  const { table, tableCell } = state.schema.nodes;
+
+  return hasParentNodeOfType([table, tableCell])(state.selection);
 };
 
 export const insideTableCell = (state: EditorState) => {
@@ -792,6 +860,7 @@ export const isTextSelection = (
 
 /** Helper type for single arg function */
 type Func<A, B> = (a: A) => B;
+type FuncN<A extends any[], B> = (...args: A) => B;
 
 /**
  * Compose 1 to n functions.
@@ -821,6 +890,51 @@ export function compose<
   } as R;
 }
 
+export function pipe(): <R>(a: R) => R;
+
+export function pipe<F extends Function>(f: F): F;
+
+// one function
+export function pipe<F1 extends FuncN<any, any>>(
+  f1: F1,
+): (...args: Parameters<F1>) => ReturnType<F1>;
+
+// two function
+export function pipe<
+  F1 extends FuncN<any, any>,
+  F2 extends Func<ReturnType<F1>, any>
+>(f1: F1, f2: F2): (...args: Parameters<F1>) => ReturnType<F2>;
+
+// three function
+export function pipe<
+  F1 extends FuncN<any, any>,
+  F2 extends Func<ReturnType<F1>, any>,
+  F3 extends Func<ReturnType<F2>, any>
+>(f1: F1, f2: F2, f3: F3): (...args: Parameters<F1>) => ReturnType<F3>;
+// If needed add more than 3 function
+// Generic
+export function pipe<
+  F1 extends FuncN<any, any>,
+  F2 extends Func<ReturnType<F1>, any>,
+  F3 extends Func<ReturnType<F2>, any>,
+  FN extends Array<Func<any, any>>
+>(f1: F1, f2: F2, f3: F3, ...fn: FN): (...args: Parameters<F1>) => any;
+
+// rest
+export function pipe(...fns: Function[]) {
+  if (fns.length === 0) {
+    return (a: any) => a;
+  }
+
+  if (fns.length === 1) {
+    return fns[0];
+  }
+
+  return fns.reduce((prevFn, nextFn) => (...args: any[]) =>
+    nextFn(prevFn(...args)),
+  );
+}
+
 export const normaliseNestedLayout = (state: EditorState, node: Node) => {
   if (state.selection.$from.depth > 1) {
     if (node.attrs.layout && node.attrs.layout !== 'default') {
@@ -845,3 +959,21 @@ export const normaliseNestedLayout = (state: EditorState, node: Node) => {
 
   return node;
 };
+
+export function shallowEqual(obj1: any = {}, obj2: any = {}) {
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  return (
+    keys1.length === keys2.length &&
+    keys1.reduce((acc, key) => acc && obj1[key] === obj2[key], true)
+  );
+}
+
+export function sum<T>(arr: Array<T>, f: (val: T) => number) {
+  return arr.reduce((val, x) => val + f(x), 0);
+}
+
+export function nonNullable<T>(value: T): value is NonNullable<T> {
+  return value !== null && value !== undefined;
+}

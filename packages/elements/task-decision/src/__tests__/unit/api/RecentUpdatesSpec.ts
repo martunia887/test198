@@ -1,4 +1,3 @@
-import 'whatwg-fetch';
 import {
   RecentUpdates,
   ACTION_DECISION_FPS_EVENTS,
@@ -25,8 +24,6 @@ const serviceTask = (
   parentLocalId: '123',
   participants: [],
   position: 1,
-  rawContent: '[]',
-  contentAsFabricDocument: '[]',
   state: state || 'TODO',
   type: 'TASK',
 });
@@ -34,7 +31,6 @@ const serviceTask = (
 const objectKey = {
   localId: 'task-1',
   objectAri: 'objectAri',
-  containerAri: 'containerAri',
 };
 
 describe('RecentUpdates', () => {
@@ -50,13 +46,13 @@ describe('RecentUpdates', () => {
   });
 
   it('should not subscribe to any PubSub event if PubSubClient not provided', () => {
-    // tslint:disable-next-line:no-unused-expression
+    // eslint-disable-next-line no-unused-expressions
     new RecentUpdates();
     expect(mockPubSubClient.on).not.toHaveBeenCalled();
   });
 
   it('should subscribe to all action&decision PubSub event if PubSubClient is provided', () => {
-    // tslint:disable-next-line:no-unused-expression
+    // eslint-disable-next-line no-unused-expressions
     new RecentUpdates(mockPubSubClient);
     expect(mockPubSubClient.on).toHaveBeenCalledWith(
       ACTION_DECISION_FPS_EVENTS,
@@ -79,7 +75,7 @@ describe('RecentUpdates', () => {
     it('should notify of recent updates', () => {
       const recentUpdates = new RecentUpdates(mockPubSubClient);
       const mockRecentUpdatesListener = jest.fn();
-      recentUpdates.subscribe('containerAri', {
+      recentUpdates.subscribe('objectAri', {
         id: jest.fn(),
         recentUpdates: mockRecentUpdatesListener,
       });
@@ -90,7 +86,7 @@ describe('RecentUpdates', () => {
       );
 
       expect(mockRecentUpdatesListener).toHaveBeenCalledWith({
-        containerAri: 'containerAri',
+        objectAri: 'objectAri',
       });
     });
   });

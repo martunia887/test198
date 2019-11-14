@@ -1,5 +1,4 @@
-import { Context } from '@atlaskit/media-core';
-import { MediaCollectionItem } from '@atlaskit/media-store';
+import { MediaClient, MediaCollectionItem } from '@atlaskit/media-client';
 import { Subscription } from 'rxjs/Subscription';
 import { LocalUploads } from './local-upload';
 
@@ -20,8 +19,8 @@ export {
 } from './local-upload';
 
 import { ImageCardModel } from '../tools/fetcher/fetcher';
-import { PopupConfig } from '../..';
 import { MediaPickerPlugin } from '../../domain/plugin';
+import { PopupConfig } from '../../types';
 
 export interface State {
   readonly redirectUrl: string;
@@ -34,16 +33,13 @@ export interface State {
   readonly remoteUploads: RemoteUploads;
   readonly isCancelling: boolean;
   readonly isUploading: boolean;
-  readonly tenantContext: Context;
-  readonly userContext: Context;
+  readonly tenantMediaClient: MediaClient;
+  readonly userMediaClient: MediaClient;
   readonly lastUploadIndex: number;
   readonly giphy: GiphyState;
   readonly collectionItemsSubscription?: Subscription;
   readonly onCancelUpload: CancelUploadHandler;
   readonly config: Partial<PopupConfig>;
-  readonly deferredIdUpfronts: {
-    [id: string]: { resolver: (id: string) => void; rejecter: Function };
-  };
   readonly plugins?: MediaPickerPlugin[];
 }
 
@@ -143,7 +139,6 @@ export interface ServiceFolder {
 export interface ServiceFile {
   readonly mimeType: string;
   readonly id: string;
-  readonly upfrontId: Promise<string>;
   readonly name: string;
   readonly size: number;
   readonly date: number;

@@ -1,10 +1,10 @@
-import { Color as StatusColor } from '@atlaskit/status';
+import { Color as StatusColor } from '@atlaskit/status/element';
 import { EditorBridges, EditorPluginBridges } from './index';
 import NativeBridge from './bridge';
 import { sendToBridge } from '../../bridge-utils';
 
 export default class IosBridge implements NativeBridge {
-  showMentions(query: String) {
+  showMentions(query: string) {
     if (window.webkit && window.webkit.messageHandlers.mentionBridge) {
       window.webkit.messageHandlers.mentionBridge.postMessage({
         name: 'showMentions',
@@ -111,12 +111,42 @@ export default class IosBridge implements NativeBridge {
     }
   }
 
-  currentSelection(text: string, url: string) {
+  currentSelection(
+    text: string,
+    url: string,
+    top: number,
+    right: number,
+    bottom: number,
+    left: number,
+  ) {
     if (window.webkit && window.webkit.messageHandlers.linkBridge) {
       window.webkit.messageHandlers.linkBridge.postMessage({
         name: 'currentSelection',
         text,
         url,
+        top,
+        right,
+        bottom,
+        left,
+      });
+    }
+  }
+
+  stateChanged(canUndo: boolean, canRedo: boolean) {
+    if (window.webkit && window.webkit.messageHandlers.undoRedoBridge) {
+      window.webkit.messageHandlers.undoRedoBridge.postMessage({
+        name: 'stateChanged',
+        canUndo,
+        canRedo,
+      });
+    }
+  }
+
+  trackEvent(event: string) {
+    if (window.webkit && window.webkit.messageHandlers.analyticsBridge) {
+      window.webkit.messageHandlers.analyticsBridge.postMessage({
+        name: 'trackEvent',
+        event,
       });
     }
   }

@@ -36,10 +36,11 @@ export const selectCurrentItem = (
     );
   }
 
-  return selectItem(typeAheadHandler, items[currentIndex], mode)(
-    state,
-    dispatch,
-  );
+  return selectItem(
+    typeAheadHandler,
+    items[currentIndex],
+    mode,
+  )(state, dispatch);
 };
 
 export const selectSingleItemOrDismiss = (
@@ -85,7 +86,7 @@ export const selectItem = (
 ): Command => (state, dispatch) => {
   return withTypeAheadQueryMarkPosition(state, (start, end) => {
     const insert = (
-      maybeNode?: Node | Object | string,
+      maybeNode?: Node | Object | string | Fragment,
       opts: { selectInlineNode?: boolean } = {},
     ) => {
       let tr = state.tr;
@@ -98,16 +99,17 @@ export const selectItem = (
         return tr;
       }
 
+      const isInputFragment = maybeNode instanceof Fragment;
       let node;
       try {
         node =
-          maybeNode instanceof Node
+          maybeNode instanceof Node || isInputFragment
             ? maybeNode
             : typeof maybeNode === 'string'
             ? state.schema.text(maybeNode)
             : Node.fromJSON(state.schema, maybeNode);
       } catch (e) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(e);
         return tr;
       }
@@ -128,12 +130,14 @@ export const selectItem = (
          * Replacing a type ahead query mark with an inline node.
          *
          */
-      } else if (node.isInline) {
-        const fragment = Fragment.fromArray([node, state.schema.text(' ')]);
+      } else if (node.isInline || isInputFragment) {
+        const fragment = isInputFragment
+          ? node
+          : Fragment.fromArray([node, state.schema.text(' ')]);
 
         tr = tr.replaceWith(start, start, fragment);
 
-        // This problem affects Chrome v58-62. See: https://github.com/ProseMirror/prosemirror/issues/710
+        // This problem affects Chrome v58+. See: https://github.com/ProseMirror/prosemirror/issues/710
         if (isChromeWithSelectionBug) {
           const selection = document.getSelection();
           if (selection) {

@@ -1,5 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { storyMediaProviderFactory } from '@atlaskit/editor-test-helpers';
+import { ProviderFactory } from '@atlaskit/editor-common';
+
 import Renderer from './../src/renderer/mobile-renderer-element';
 
 export const Wrapper: any = styled.div`
@@ -34,10 +37,21 @@ const initialDocument = JSON.stringify({
   ],
 });
 
+const providerFactory = ProviderFactory.create({
+  mentionProvider: Promise.resolve({}),
+});
+
 export default function Example() {
   return (
     <Wrapper>
-      <Renderer document={initialDocument} />
+      <Renderer
+        document={initialDocument}
+        mediaProvider={storyMediaProviderFactory({
+          collectionName: 'InitialCollectionForTesting',
+          includeUserAuthProvider: true,
+        })}
+        dataProviders={providerFactory}
+      />
     </Wrapper>
   );
 }

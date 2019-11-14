@@ -2,20 +2,31 @@ import * as React from 'react';
 import { MouseEvent } from 'react';
 import styled from 'styled-components';
 import { colors } from '@atlaskit/theme';
-import { akEditorMenuZIndex } from '@atlaskit/editor-common';
+import {
+  akEditorMenuZIndex,
+  akEditorFullWidthLayoutWidth,
+  akEditorGutterPadding,
+  akEditorSwoopCubicBezier,
+  akLayoutGutterOffset,
+} from '@atlaskit/editor-common';
+import { taskListSelector, decisionListSelector } from '@atlaskit/adf-schema';
 import { EditorAppearanceComponentProps, EditorAppearance } from '../../types';
 import Avatars from '../../plugins/collab-edit/ui/avatars';
 import PluginSlot from '../PluginSlot';
 import Toolbar from '../Toolbar';
 import ContentStyles from '../ContentStyles';
 import { ClickAreaBlock } from '../Addon';
-import { tableFullPageEditorStyles } from '../../plugins/table/ui/styles';
+import {
+  tableFullPageEditorStyles,
+  tableMarginFullWidthMode,
+} from '../../plugins/table/ui/styles';
 import { akEditorToolbarKeylineHeight } from '../../styles';
 import rafSchedule from 'raf-schd';
 import { scrollbarStyles } from '../styles';
 import WidthEmitter from '../WidthEmitter';
 
-const GUTTER_PADDING = 32;
+const SWOOP_ANIMATION = `0.5s ${akEditorSwoopCubicBezier}`;
+const TOTAL_PADDING = akEditorGutterPadding * 2;
 
 const FullPageEditorWrapper = styled.div`
   min-width: 340px;
@@ -39,38 +50,107 @@ ScrollContainer.displayName = 'ScrollContainer';
 
 const ContentArea = styled.div`
   line-height: 24px;
-  height: 100%;
-  width: 100%;
-  max-width: ${({ theme }: any) => theme.layoutMaxWidth + GUTTER_PADDING * 2}px;
   padding-top: 50px;
-  margin: 0 auto;
-  display: flex;
+  padding-bottom: 55px;
+  height: calc(
+    100% - 105px
+  ); /* fill the viewport: 100% - (padding top & bottom) */
+  width: 100%;
   flex-direction: column;
   flex-grow: 1;
-  padding-bottom: 55px;
+
+  max-width: ${({ theme, fullWidthMode }: any) =>
+    (fullWidthMode ? akEditorFullWidthLayoutWidth : theme.layoutMaxWidth) +
+    TOTAL_PADDING}px;
+  transition: margin-left ${SWOOP_ANIMATION}, max-width ${SWOOP_ANIMATION};
+  margin-left: ${({ theme, fullWidthMode }: any) =>
+    !fullWidthMode &&
+    `calc(50% - ${(theme.layoutMaxWidth + TOTAL_PADDING) / 2}px)`};
+
+  ${({ fullWidthMode }) =>
+    fullWidthMode &&
+    `
+    @media (min-width: ${akEditorFullWidthLayoutWidth + TOTAL_PADDING}px) {
+      margin-left: ${`calc(50% - ${(akEditorFullWidthLayoutWidth +
+        TOTAL_PADDING) /
+        2}px)`};
+  }`}
+
+  ${({ theme }) => `
+    @media (max-width: ${theme.layoutMaxWidth + TOTAL_PADDING}px) {
+      margin-left: auto;
+    }
+  `}
 
   & .ProseMirror {
     flex-grow: 1;
     box-sizing: border-box;
   }
 
-  && .ProseMirror {
+  & .ProseMirror {
     & > * {
+      /* pre-emptively clear all direct descendant content, just in case any are adjacent floated content */
       clear: both;
     }
     > p,
     > ul,
-    > ol,
+    > ol:not(${taskListSelector}):not(${decisionListSelector}),
     > h1,
     > h2,
     > h3,
     > h4,
     > h5,
     > h6 {
+      /* deliberately allow wrapping of text based nodes, just in case any are adjacent floated content */
       clear: none;
     }
+
+    > p:last-child {
+      margin-bottom: 24px;
+    }
   }
+
   ${tableFullPageEditorStyles};
+
+  .fabric-editor--full-width-mode {
+    /* Full Width Mode styles for ignoring breakout sizes */
+    .fabric-editor-breakout-mark,
+    .extension-container,
+    .pm-table-container {
+      width: 100% !important;
+    }
+
+    /* Prevent horizontal scroll on page in full width mode */
+    ${({ containerWidth }) => {
+      if (!containerWidth) {
+        // initially hide until we have a containerWidth and can properly size them,
+        // otherwise they can cause the editor width to extend which is non-recoverable
+        return `
+          .pm-table-container,
+          .code-block,
+          .extension-container {
+            display: none;
+          }
+        `;
+      }
+
+      return `
+        .pm-table-container,
+        .code-block,
+        .extension-container {
+          max-width: ${containerWidth -
+            TOTAL_PADDING -
+            tableMarginFullWidthMode * 2}px;
+        }
+
+        [data-layout-section] {
+          max-width: ${containerWidth -
+            TOTAL_PADDING +
+            akLayoutGutterOffset * 2}px;
+        }
+      `;
+    }}
+  }
 `;
 ContentArea.displayName = 'ContentArea';
 
@@ -78,9 +158,8 @@ interface MainToolbarProps {
   showKeyline: boolean;
 }
 
-const MainToolbar: React.ComponentClass<
-  React.HTMLAttributes<{}> & MainToolbarProps
-> = styled.div`
+const MainToolbar: React.ComponentClass<React.HTMLAttributes<{}> &
+  MainToolbarProps> = styled.div`
   position: relative;
   align-items: center;
   box-shadow: ${(props: MainToolbarProps) =>
@@ -116,18 +195,25 @@ const SecondaryToolbar = styled.div`
 `;
 SecondaryToolbar.displayName = 'SecondaryToolbar';
 
+interface State {
+  showKeyline: boolean;
+  containerWidth?: number;
+}
+
 export default class Editor extends React.Component<
   EditorAppearanceComponentProps,
-  any
+  State
 > {
-  state = { showKeyline: false };
+  state: State = { showKeyline: false };
 
   static displayName = 'FullPageEditor';
   private appearance: EditorAppearance = 'full-page';
   private scrollContainer: HTMLElement | undefined;
+  private contentArea: HTMLElement | undefined;
   private scheduledKeylineUpdate: number | undefined;
+  private scheduledWidthUpdate: number | undefined;
 
-  stopPropagation = (event: MouseEvent<HTMLDivElement>) =>
+  stopPropagation = (event: MouseEvent<HTMLDivElement, any>) =>
     event.stopPropagation();
 
   scrollContainerRef = (ref: HTMLElement | null) => {
@@ -150,6 +236,7 @@ export default class Editor extends React.Component<
         false,
       );
       this.updateToolbarKeyline();
+      this.updateContainerWidth();
     }
   };
 
@@ -159,27 +246,54 @@ export default class Editor extends React.Component<
     }
 
     const { scrollTop } = this.scrollContainer;
-    this.setState({ showKeyline: scrollTop > akEditorToolbarKeylineHeight });
+    const showKeyline = scrollTop > akEditorToolbarKeylineHeight;
+    if (showKeyline !== this.state.showKeyline) {
+      this.setState({ showKeyline });
+    }
 
     return false;
   };
-
   private scheduleUpdateToolbarKeyline = rafSchedule(this.updateToolbarKeyline);
 
+  updateContainerWidth = () => {
+    this.setState({
+      containerWidth: this.scrollContainer!.clientWidth,
+    });
+  };
+  private scheduleUpdateContainerWidth = rafSchedule(this.updateContainerWidth);
+
+  handleResize = () => {
+    this.scheduledKeylineUpdate = this.scheduleUpdateToolbarKeyline();
+    this.scheduledWidthUpdate = this.scheduleUpdateContainerWidth();
+  };
+
   componentDidMount() {
-    window.addEventListener('resize', this.scheduleUpdateToolbarKeyline, false);
+    window.addEventListener('resize', this.handleResize, false);
+  }
+
+  componentDidUpdate() {
+    if (
+      this.scrollContainer &&
+      this.scrollContainer.clientWidth !== this.state.containerWidth
+    ) {
+      this.updateContainerWidth();
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.scheduleUpdateToolbarKeyline);
+    window.removeEventListener('resize', this.handleResize);
 
     if (this.scheduledKeylineUpdate) {
       cancelAnimationFrame(this.scheduledKeylineUpdate);
+    }
+    if (this.scheduledWidthUpdate) {
+      cancelAnimationFrame(this.scheduledWidthUpdate);
     }
   }
 
   render() {
     const {
+      appearance,
       editorDOMElement,
       editorView,
       editorActions,
@@ -195,9 +309,10 @@ export default class Editor extends React.Component<
       disabled,
       collabEdit,
       dispatchAnalyticsEvent,
+      allowAnnotation,
     } = this.props;
 
-    const { showKeyline } = this.state;
+    const { showKeyline, containerWidth } = this.state;
 
     return (
       <FullPageEditorWrapper className="akEditor">
@@ -219,6 +334,9 @@ export default class Editor extends React.Component<
             <Avatars
               editorView={editorView}
               eventDispatcher={eventDispatcher}
+              inviteToEditComponent={
+                collabEdit && collabEdit.inviteToEditComponent
+              }
               inviteToEditHandler={collabEdit && collabEdit.inviteToEditHandler}
               isInviteToEditButtonSelected={
                 collabEdit && collabEdit.isInviteToEditButtonSelected
@@ -229,13 +347,25 @@ export default class Editor extends React.Component<
         </MainToolbar>
         <ScrollContainer
           innerRef={this.scrollContainerRef}
+          allowAnnotation={allowAnnotation}
           className="fabric-editor-popup-scroll-parent"
         >
           <ClickAreaBlock editorView={editorView}>
-            <ContentArea>
+            <ContentArea
+              fullWidthMode={appearance === 'full-width'}
+              innerRef={(contentArea: HTMLElement) => {
+                this.contentArea = contentArea;
+              }}
+              containerWidth={containerWidth}
+            >
               <div
-                style={{ padding: `0 ${GUTTER_PADDING}px` }}
-                className="ak-editor-content-area"
+                style={{ padding: `0 ${akEditorGutterPadding}px` }}
+                className={[
+                  'ak-editor-content-area',
+                  this.props.appearance === 'full-width'
+                    ? 'fabric-editor--full-width-mode'
+                    : '',
+                ].join(' ')}
               >
                 {customContentComponents}
                 {
@@ -244,8 +374,9 @@ export default class Editor extends React.Component<
                     editorActions={editorActions}
                     eventDispatcher={eventDispatcher}
                     providerFactory={providerFactory}
-                    appearance={this.appearance}
+                    appearance={this.props.appearance || this.appearance}
                     items={contentComponents}
+                    contentArea={this.contentArea}
                     popupsMountPoint={popupsMountPoint}
                     popupsBoundariesElement={popupsBoundariesElement}
                     popupsScrollableElement={popupsScrollableElement}

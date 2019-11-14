@@ -1,7 +1,7 @@
 import { SecurityOptions } from '@atlaskit/util-service-support';
 import 'es6-promise/auto'; // 'whatwg-fetch' needs a Promise polyfill
-import 'whatwg-fetch';
-import * as fetchMock from 'fetch-mock/src/client';
+
+import fetchMock from 'fetch-mock/src/client';
 import * as queryString from 'query-string';
 import MentionResource, {
   MentionResourceConfig,
@@ -29,8 +29,22 @@ const options = (
   omitCredentials,
 });
 
-const getSecurityHeader = (call: any) =>
-  call[1].headers.get(defaultSecurityHeader);
+type MockFetchResponse = Array<
+  | string
+  | {
+      headers: any;
+      credentials: string;
+      request: any;
+      identifier: string;
+      isUnmatched: any;
+    }
+>;
+
+const getSecurityHeader = (call: MockFetchResponse) => {
+  const data = call[1];
+  if (typeof data === 'string') return undefined;
+  return data.headers[defaultSecurityHeader];
+};
 
 const defaultSecurityCode = '10804';
 
@@ -55,8 +69,16 @@ const FULL_CONTEXT = {
   sessionId: 'someSessionId',
 };
 
+const PARTIAL_CONTEXT = {
+  containerId: '',
+  objectId: undefined,
+  childObjectId: '',
+  sessionId: 'longfurbies',
+};
+
 describe('MentionResource', () => {
   beforeEach(() => {
+    // eslint-disable-next-line no-unused-expressions
     fetchMock.mock(
       /\/mentions\/search\?.*query=esoares(&|$)/,
       {
@@ -271,6 +293,7 @@ describe('MentionResource', () => {
           throw new Error('listener should not be called');
         },
         () => {
+          expect(true).toBe(true);
           done();
         },
       );
@@ -378,7 +401,7 @@ describe('MentionResource', () => {
             const calls = fetchMock.calls(matcher.name);
             expect(calls).toHaveLength(2);
             expect(getSecurityHeader(calls[0])).toEqual(defaultSecurityCode);
-            expect(getSecurityHeader(calls[1])).toEqual('666');
+            expect(getSecurityHeader(calls[1])).toEqual(666);
             done();
           } catch (ex) {
             done.fail(ex);
@@ -411,6 +434,23 @@ describe('MentionResource', () => {
           done();
         });
     });
+
+    it('should resolve the query parameters with a partial context', done => {
+      const resource = new MentionResource(apiConfig);
+      resource
+        .recordMentionSelection({ id: '666' }, PARTIAL_CONTEXT)
+        .then(() => {
+          const queryParams = queryString.parse(
+            queryString.extract(fetchMock.lastUrl()),
+          );
+
+          expect(queryParams).not.toHaveProperty('containerId');
+          expect(queryParams).not.toHaveProperty('objectId');
+          expect(queryParams).not.toHaveProperty('objectChildId');
+          expect(queryParams.sessionId).toBe(PARTIAL_CONTEXT.sessionId);
+          done();
+        });
+    });
   });
 
   describe('#shouldHighlightMention', () => {
@@ -431,6 +471,24 @@ describe('MentionResource', () => {
         true,
       );
       expect(resource.shouldHighlightMention({ id: 'abcd-abcd' })).toBe(false);
+    });
+  });
+
+  describe('#ResolvingMentionProvider', () => {
+    it('should not support mention name resolving without supplying MentionNameResolver', () => {
+      const resource = new MentionResource(apiConfig);
+      expect(resource.supportsMentionNameResolving()).toEqual(false);
+    });
+
+    it('should support mention name resolving when supplying MentionNameResolver', () => {
+      const resource = new MentionResource({
+        ...apiConfig,
+        mentionNameResolver: {
+          cacheName: jest.fn(),
+          lookupName: jest.fn(),
+        },
+      });
+      expect(resource.supportsMentionNameResolving()).toEqual(true);
     });
   });
 });

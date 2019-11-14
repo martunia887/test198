@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import {
   ContainerNavigation,
@@ -12,13 +12,13 @@ import { light } from '../../../../../theme';
 describe('ContentNavigation primitives', () => {
   describe('ContainerNavigationMask', () => {
     it('should render correctly with default props', () => {
-      const wrapper = shallow(<ContainerNavigationMask />);
+      const wrapper = mount(<ContainerNavigationMask />);
 
       expect(wrapper).toMatchSnapshot();
     });
 
     it('should set pointerEvents to none when interaction is disabled', () => {
-      const wrapper = shallow(<ContainerNavigationMask disableInteraction />);
+      const wrapper = mount(<ContainerNavigationMask disableInteraction />);
 
       expect(wrapper).toMatchSnapshot();
     });
@@ -30,6 +30,7 @@ describe('ContentNavigation primitives', () => {
       defaultProps = {
         isEntering: false,
         isExiting: false,
+        isVisible: true,
       };
     });
 
@@ -81,7 +82,7 @@ describe('ContentNavigation primitives', () => {
   describe('ProductNavigation', () => {
     it('should use the `light` theme if another theme was not provided', () => {
       const wrapper = mount(
-        <ProductNavigation>
+        <ProductNavigation isVisible>
           <p>This is a text</p>
         </ProductNavigation>,
       );
@@ -98,7 +99,7 @@ describe('ContentNavigation primitives', () => {
 
     it('should ALWAYS use the `product` context', () => {
       const wrapper = mount(
-        <ProductNavigation>
+        <ProductNavigation isVisible>
           <p>This is a text</p>
         </ProductNavigation>,
       );
@@ -113,7 +114,7 @@ describe('ContentNavigation primitives', () => {
 
     it('should have scrollable effect', () => {
       const wrapper = mount(
-        <ProductNavigation>
+        <ProductNavigation isVisible>
           <p>This is a text</p>
         </ProductNavigation>,
       );
@@ -123,7 +124,7 @@ describe('ContentNavigation primitives', () => {
 
     it('should render the received children', () => {
       const wrapper = mount(
-        <ProductNavigation>
+        <ProductNavigation isVisible>
           <p>This is a text</p>
         </ProductNavigation>,
       );

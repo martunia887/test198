@@ -1,16 +1,15 @@
 import * as React from 'react';
-import {
-  Context,
-  Identifier,
-  isFileIdentifier,
-  FileIdentifier,
-} from '@atlaskit/media-core';
+import { SyntheticEvent } from 'react';
+import { MediaClient, Identifier } from '@atlaskit/media-client';
 import { IntlProvider, intlShape } from 'react-intl';
-import { ThemeProvider } from 'styled-components';
-import { Shortcut, theme } from '@atlaskit/media-ui';
-import { withAnalyticsEvents } from '@atlaskit/analytics-next';
-import { WithAnalyticsEventProps } from '@atlaskit/analytics-next-types';
+import { Shortcut } from '@atlaskit/media-ui';
+import {
+  withAnalyticsEvents,
+  WithAnalyticsEventsProps,
+  UIAnalyticsEvent,
+} from '@atlaskit/analytics-next';
 import { mediaViewerModalEvent } from './analytics/media-viewer';
+import { closedEvent, ClosedInputType } from './analytics/closed';
 import { channel } from './analytics/index';
 import {
   GasPayload,
@@ -21,18 +20,17 @@ import { List } from './list';
 import { Collection } from './collection';
 import { Content } from './content';
 import { Blanket } from './styled';
+import { start } from 'perf-marks';
 
-export type Props = Readonly<
-  {
-    onClose?: () => void;
-    selectedItem?: Identifier;
-    featureFlags?: MediaViewerFeatureFlags;
-    context: Context;
-    itemSource: ItemSource;
-  } & WithAnalyticsEventProps
->;
+export type Props = {
+  onClose?: () => void;
+  selectedItem?: Identifier;
+  featureFlags?: MediaViewerFeatureFlags;
+  mediaClient: MediaClient;
+  itemSource: ItemSource;
+} & WithAnalyticsEventsProps;
 
-class MediaViewerComponent extends React.Component<Props, {}> {
+export class MediaViewerComponent extends React.Component<Props, {}> {
   static contextTypes = {
     intl: intlShape,
   };
@@ -45,19 +43,43 @@ class MediaViewerComponent extends React.Component<Props, {}> {
     }
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fireAnalytics(mediaViewerModalEvent());
+    start('MediaViewer.SessionDuration');
+  }
+
+  onShortcutClosed = () => {
+    this.sendClosedEvent('escKey');
+    const { onClose } = this.props;
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  onContentClose = (_e?: SyntheticEvent, analyticsEvent?: UIAnalyticsEvent) => {
+    const { onClose } = this.props;
+    if (
+      analyticsEvent &&
+      analyticsEvent.payload &&
+      analyticsEvent.payload.actionSubject === 'button'
+    ) {
+      this.sendClosedEvent('button');
+    }
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  private sendClosedEvent(input: ClosedInputType) {
+    this.fireAnalytics(closedEvent(input));
   }
 
   render() {
-    const { onClose } = this.props;
     const content = (
-      <ThemeProvider theme={theme}>
-        <Blanket>
-          {onClose && <Shortcut keyCode={27} handler={onClose} />}
-          <Content onClose={onClose}>{this.renderContent()}</Content>
-        </Blanket>
-      </ThemeProvider>
+      <Blanket media-test-id="media-viewer-popup">
+        {<Shortcut keyCode={27} handler={this.onShortcutClosed} />}
+        <Content onClose={this.onContentClose}>{this.renderContent()}</Content>
+      </Blanket>
     );
 
     return this.context.intl ? (
@@ -68,15 +90,8 @@ class MediaViewerComponent extends React.Component<Props, {}> {
   }
 
   private renderContent() {
-    const {
-      selectedItem,
-      context,
-      onClose,
-      itemSource,
-      featureFlags,
-    } = this.props;
-    const defaultSelectedItem =
-      selectedItem && isFileIdentifier(selectedItem) ? selectedItem : undefined;
+    const { selectedItem, mediaClient, onClose, itemSource } = this.props;
+    const defaultSelectedItem = selectedItem;
 
     if (itemSource.kind === 'COLLECTION') {
       return (
@@ -84,24 +99,20 @@ class MediaViewerComponent extends React.Component<Props, {}> {
           pageSize={itemSource.pageSize}
           defaultSelectedItem={defaultSelectedItem}
           collectionName={itemSource.collectionName}
-          context={context}
+          mediaClient={mediaClient}
           onClose={onClose}
-          featureFlags={featureFlags}
         />
       );
     } else if (itemSource.kind === 'ARRAY') {
-      const items = itemSource.items.filter(item =>
-        isFileIdentifier(item),
-      ) as FileIdentifier[];
-      const firstItem = items[0] as FileIdentifier;
+      const { items } = itemSource;
+      const firstItem = items[0];
 
       return (
         <List
           defaultSelectedItem={defaultSelectedItem || firstItem}
           items={items}
-          context={context}
+          mediaClient={mediaClient}
           onClose={onClose}
-          featureFlags={featureFlags}
         />
       );
     } else {
