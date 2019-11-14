@@ -101,6 +101,11 @@ export interface ProfileCardAction {
   label: string;
 }
 
+export type Badge = {
+  name: string;
+  imgUrl: string;
+};
+
 export interface ProfilecardProps {
   isLoading?: boolean;
   hasError?: boolean;
@@ -132,6 +137,7 @@ export interface ProfilecardProps {
   disabledAccountMessage?: React.ReactNode;
   // Allow to show a status lozenge for disabled account which `status` prop is `inactive` or `closed`
   hasDisabledAccountLozenge?: boolean;
+  badges?: Badge[];
 }
 
 export interface MessageIntlProviderProps {

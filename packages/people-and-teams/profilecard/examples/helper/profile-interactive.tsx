@@ -64,6 +64,7 @@ type State = {
   hasCompanyName: boolean;
   hasLongName: boolean;
   hasLongRole: boolean;
+  hasBadges: boolean;
   hasAltActions: boolean;
   hasNoActions: boolean;
   hasLoadingState: boolean;
@@ -99,6 +100,7 @@ export default class ProfilecardInteractive extends Component<Props, State> {
     hasTime: true,
     hasLongName: false,
     hasLongRole: false,
+    hasBadges: false,
     hasAltActions: false,
     hasNoActions: false,
     hasLoadingState: false,
@@ -284,6 +286,14 @@ export default class ProfilecardInteractive extends Component<Props, State> {
                 )
               }
               hasDisabledAccountLozenge={this.state.hasDisabledAccountLozenge}
+              badges={
+                this.state.hasBadges
+                  ? [
+                      { name: 'Winner', imgUrl: 'winner.png' },
+                      { name: 'Participation', imgUrl: 'participation.png' },
+                    ]
+                  : []
+              }
             />
           </ProfileCardWrapper>
 
@@ -296,6 +306,7 @@ export default class ProfilecardInteractive extends Component<Props, State> {
               <li>{this.createCheckboxBooleanAttribute('hasLocation')}</li>
               <li>{this.createCheckboxBooleanAttribute('hasCompanyName')}</li>
               <li>{this.createCheckboxBooleanAttribute('hasTime')}</li>
+              <li>{this.createCheckboxBooleanAttribute('hasBadges')}</li>
             </ul>
 
             <ul>

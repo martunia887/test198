@@ -45,6 +45,7 @@ export default class Profilecard extends React.PureComponent<ProfilecardProps> {
     customElevation: 'e200',
     analytics: () => null,
     clientFetchProfile: () => null,
+    badges: [],
   };
 
   private timeOpen: number | null;
@@ -260,7 +261,7 @@ export default class Profilecard extends React.PureComponent<ProfilecardProps> {
   }
 
   render() {
-    const { fullName, status, customElevation } = this.props;
+    const { fullName, status, customElevation, badges } = this.props;
     let cardContent: React.ReactNode = null;
 
     // @FIXME do closed users have empty fullName field?
@@ -297,11 +298,13 @@ export default class Profilecard extends React.PureComponent<ProfilecardProps> {
               borderColor={colors.N0}
             />
           </ProfileImage>
-          <ProfileBadges>
-            <Badge />
-            <Badge />
-            <Badge />
-          </ProfileBadges>
+          {badges ? (
+            <ProfileBadges>
+              {badges.map(badge => (
+                <Badge />
+              ))}
+            </ProfileBadges>
+          ) : null}
           <CardContent>
             {this.renderCardDetails()}
             {actions ? (
