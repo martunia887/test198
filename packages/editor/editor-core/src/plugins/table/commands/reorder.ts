@@ -1,5 +1,6 @@
 import { Node as PmNode } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
+import { CellSelection } from 'prosemirror-tables';
 import { getSelectionRect } from 'prosemirror-utils';
 import { DropResult, DraggableLocation } from 'react-beautiful-dnd';
 import { Transaction, Selection } from 'prosemirror-state';
@@ -25,16 +26,22 @@ export const onBeforeReorderingStart = (
   view: EditorView,
 ) => {
   const tbody = tableRef.querySelector('tbody');
+  const { selection } = view.state;
   const columnWidths = getColumnsWidths(view);
   const rowHeights = getRowHeights(tableRef);
   const tableWidth = tbody ? tbody.offsetWidth : undefined;
   const tableHeight = tbody ? tbody.offsetHeight : undefined;
-  const selectionRect = getSelectionRect(view.state.selection);
-  const selectedIndexes = selectionRect
-    ? type === 'rows'
-      ? getSelectedRowIndexes(selectionRect)
-      : getSelectedColumnIndexes(selectionRect)
-    : [];
+  const selectionRect = getSelectionRect(selection);
+
+  let selectedIndexes: number[] = [];
+  if (selectionRect && selection instanceof CellSelection) {
+    if (type === 'rows' && selection.isRowSelection()) {
+      selectedIndexes = getSelectedRowIndexes(selectionRect);
+    } else if (type === 'columns' && selection.isColSelection()) {
+      selectedIndexes = getSelectedColumnIndexes(selectionRect);
+    }
+  }
+
   const multiReorderIndexes =
     selectedIndexes.indexOf(index) > -1 ? selectedIndexes : [];
 
