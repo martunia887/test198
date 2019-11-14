@@ -836,7 +836,8 @@ export const tableStyles = css`
       margin-bottom: -${tableScrollbarOffset}px;
       z-index: ${akEditorUnitZIndex - 1};
       /* fixes gap cursor height */
-      overflow: ${isIE11 ? 'none' : 'auto'};
+      overflow-x: ${isIE11 ? 'none' : 'auto'};
+      overflow-y: hidden;
       position: relative;
     }
   }
