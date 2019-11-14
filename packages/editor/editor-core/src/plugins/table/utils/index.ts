@@ -79,4 +79,5 @@ export {
   onBeforeCapture,
   enableGlobalDraggingStyles,
   disableGlobalDraggingStyles,
+  bringBackControlsDimensions,
 } from './reorder';

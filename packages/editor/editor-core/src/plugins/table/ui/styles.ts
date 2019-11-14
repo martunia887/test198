@@ -15,7 +15,7 @@ import {
 } from '@atlaskit/editor-common';
 import { scrollbarStyles } from '../../../ui/styles';
 import { TableCssClassName as ClassName, RESIZE_HANDLE_AREA_DECORATION_GAP } from '../types';
-import { tableBackgroundBorderColor, N30 } from '@atlaskit/adf-schema';
+import { tableBackgroundBorderColor } from '@atlaskit/adf-schema';
 
 const {
   N40A,

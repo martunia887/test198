@@ -39,14 +39,14 @@ export const selectRows = (rowIndexes: number[]) => (tr: Transaction) => {
       left: 0,
       right: map.width,
       top: index,
-      bottom: index,
+      bottom: index + 1,
     });
     return acc.concat(positions);
   }, []);
   if (!cells || !cells.length) {
     return tr;
   }
-  const $anchor = tr.doc.resolve(cells[0]);
-  const $head = tr.doc.resolve(cells[cells.length - 1]);
+  const $anchor = tr.doc.resolve(cells[0] + table.start);
+  const $head = tr.doc.resolve(cells[cells.length - 1] + table.start);
   return tr.setSelection(new CellSelection($anchor, $head) as any);
 };

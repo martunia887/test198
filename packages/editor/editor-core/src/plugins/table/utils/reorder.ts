@@ -5,7 +5,7 @@ import {
   akEditorTableToolbarSize as controlsSize,
   akEditorTableNumberColumnWidth,
 } from '@atlaskit/editor-common';
-import { TableCssClassName as ClassName } from '../types';
+import { TableCssClassName as ClassName, ReorderingType } from '../types';
 
 export const moveRow = (
   node: PMNode,
@@ -130,7 +130,10 @@ export const addStylesToCellsBeforeReordering = (
   }
 };
 
-export const onBeforeCapture = (tableRef?: HTMLTableElement | null) => {
+export const onBeforeCapture = (
+  type: ReorderingType,
+  tableRef?: HTMLTableElement | null,
+) => {
   if (!tableRef) {
     return;
   }
@@ -141,20 +144,66 @@ export const onBeforeCapture = (tableRef?: HTMLTableElement | null) => {
   const tableWidth = tbody.offsetWidth;
   const tableHeight = tbody.offsetHeight;
 
-  const rowControls = document.querySelectorAll(
-    `.${ClassName.ROW_CONTROLS_INNER}`,
-  );
-  const columnControls = document.querySelectorAll(
-    `.${ClassName.COLUMN_CONTROLS_INNER}`,
-  );
-  Array.prototype.slice.call(rowControls).forEach(control => {
-    control.style.width = `${tableWidth}px`;
-    control.style.height = `${tableHeight}px`;
-  });
-  Array.prototype.slice.call(columnControls).forEach(control => {
-    control.style.width = `${tableWidth}px`;
-    control.style.height = `${tableHeight}px`;
-  });
+  if (type === 'rows') {
+    const rowControls = document.querySelectorAll(
+      `.${ClassName.ROW_CONTROLS_INNER}`,
+    );
+    Array.prototype.slice.call(rowControls).forEach(control => {
+      control.style.width = `${tableWidth}px`;
+      control.style.height = `${tableHeight}px`;
+
+      const buttons = control.querySelectorAll(
+        `.${ClassName.ROW_CONTROLS_BUTTON}`,
+      );
+      Array.prototype.slice.call(buttons).forEach(button => {
+        button.style.width = `${tableWidth}px`;
+      });
+    });
+  } else {
+    const columnControls = document.querySelectorAll(
+      `.${ClassName.COLUMN_CONTROLS_INNER}`,
+    );
+
+    Array.prototype.slice.call(columnControls).forEach(control => {
+      control.style.width = `${tableWidth}px`;
+      control.style.height = `${tableHeight}px`;
+
+      const buttons = control.querySelectorAll(
+        `.${ClassName.COLUMN_CONTROLS_BUTTON}`,
+      );
+      Array.prototype.slice.call(buttons).forEach(button => {
+        button.style.height = `${tableHeight}px`;
+      });
+    });
+  }
+};
+
+export const bringBackControlsDimensions = (
+  type: ReorderingType,
+  tableRef?: HTMLTableElement | null,
+) => {
+  if (!tableRef) {
+    return;
+  }
+  if (type === 'rows') {
+    const buttons = document.querySelectorAll(
+      `.${ClassName.ROW_CONTROLS_BUTTON}`,
+    );
+    Array.prototype.slice.call(buttons).forEach(button => {
+      const height = button.offsetHeight;
+      button.removeAttribute('style');
+      button.style.height = `${height}px`;
+    });
+  } else {
+    const buttons = document.querySelectorAll(
+      `.${ClassName.COLUMN_CONTROLS_BUTTON}`,
+    );
+    Array.prototype.slice.call(buttons).forEach((button, i) => {
+      const width = button.offsetWidth;
+      button.removeAttribute('style');
+      button.style.width = `${width}px`;
+    });
+  }
 };
 
 export const addRowPlaceholder = (

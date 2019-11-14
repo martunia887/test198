@@ -321,10 +321,11 @@ class TableComponent extends React.Component<ComponentProps, TableState> {
     );
   }
 
-  private onBeforeCapture = () => {
+  private onBeforeCapture = ({ draggableId }: DragStart) => {
     const { view } = this.props;
     if (this.table && isActiveTable(view.state, this.table)) {
-      onBeforeCapture(this.table);
+      const type = draggableId.indexOf('row') > -1 ? 'rows' : 'columns';
+      onBeforeCapture(type as ReorderingType, this.table);
     }
   };
 

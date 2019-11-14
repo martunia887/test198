@@ -16,6 +16,7 @@ import {
   addStylesToCellsBeforeReordering,
   getSelectedColumnIndexes,
   getSelectedRowIndexes,
+  bringBackControlsDimensions,
 } from '../utils';
 import { selectColumns, selectRows } from '../transforms/selection';
 
@@ -47,6 +48,10 @@ export const onBeforeReorderingStart = (
 
   // locking dimensions of all cells
   addStylesToCellsBeforeReordering(tableRef, columnWidths, rowHeights);
+
+  addStylesToCellsBeforeReordering(tableRef, columnWidths, rowHeights);
+
+  bringBackControlsDimensions(type, tableRef);
 
   // reset CellSelection
   const { tr } = view.state;
