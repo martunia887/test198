@@ -392,9 +392,9 @@ export default class WebBridgeImpl extends WebBridge
     }
   }
 
-  setSelectionByTopPixelOffset(coords: string) {
-    if (this.editorView && coords) {
-      const points = this.editorView.posAtCoords(JSON.parse(coords));
+  setSelectionByTopPixelOffset(left: number, top: number) {
+    if (this.editorView && left && top) {
+      const points = this.editorView.posAtCoords({ left: left, top: top });
       if (points) {
         const { dispatch, state } = this.editorView;
         const selection = Selection.findFrom(state.doc.resolve(points.pos), 1);
@@ -402,6 +402,10 @@ export default class WebBridgeImpl extends WebBridge
         if (selection) {
           this.editorView.focus();
           dispatch(state.tr.setSelection(selection).scrollIntoView());
+          // Scrolling manually due to https://discuss.prosemirror.net/t/scrollintoview-control-offset/754
+          const coordsAfterScroll = this.editorView.coordsAtPos(points.pos);
+          const topPadding = 8;
+          window.scrollBy(0, coordsAfterScroll.top - topPadding);
         }
       }
     }
