@@ -46,7 +46,7 @@ export const MemoryRouter = (props: MemoryRouterProps) => {
   const routerProps = getRouterProps(props);
 
   return (
-    <Router history={history} {...routerProps}>
+    <Router history={history} {...(routerProps as RouterProps)}>
       {children}
     </Router>
   );
