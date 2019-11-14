@@ -166,6 +166,19 @@ export const createRowControlsDecoration = (
     element.dataset.startIndex = `${index}`;
     index += rowspan;
     element.dataset.endIndex = `${index}`;
+    element.style.zIndex = `${index}`;
+    element.addEventListener('mouseout', e => {
+      console.log('eita carai', e);
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    element.addEventListener('mouseover', e => {
+      console.log('eita carai', e);
+      e.stopImmediatePropagation();
+      // e.preventDefault();
+      // e.stopPropagation();
+    });
 
     return Decoration.widget(
       cell.pos + 1,

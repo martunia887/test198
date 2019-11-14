@@ -144,6 +144,9 @@ export const handleMouseOver = (
   view: EditorView,
   mouseEvent: Event,
 ): boolean => {
+  mouseEvent.stopImmediatePropagation();
+  mouseEvent.preventDefault();
+  mouseEvent.stopPropagation();
   const { state, dispatch } = view;
   const target = mouseEvent.target as HTMLElement;
   const { insertColumnButtonIndex, insertRowButtonIndex } = getPluginState(
@@ -172,6 +175,7 @@ export const handleMouseOver = (
     const [startIndex] = getColumnOrRowIndex(target);
     const { state, dispatch } = view;
 
+    mouseEvent.preventDefault();
     return hoverRows([startIndex], false)(state, dispatch);
   }
 
@@ -215,6 +219,9 @@ export const handleMouseOut = (
   view: EditorView,
   mouseEvent: Event,
 ): boolean => {
+  mouseEvent.stopImmediatePropagation();
+  mouseEvent.preventDefault();
+  mouseEvent.stopPropagation();
   const target = mouseEvent.target as HTMLElement;
 
   if (isColumnControlsDecorations(target) || isRowControlsDecorations(target)) {
@@ -253,6 +260,9 @@ export const handleMouseLeave = (view: EditorView, event: Event): boolean => {
 };
 
 export const handleMouseMove = (view: EditorView, event: Event) => {
+  event.stopImmediatePropagation();
+  event.preventDefault();
+  event.stopPropagation();
   const element = event.target as HTMLElement;
 
   if (isColumnControlsDecorations(element)) {
