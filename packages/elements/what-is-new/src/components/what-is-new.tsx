@@ -3,6 +3,8 @@ import Popup from '@atlaskit/popup';
 
 import PremiumIcon from '@atlaskit/icon/glyph/premium';
 import Button, { ButtonProps } from '@atlaskit/button';
+import { Feature } from '../types';
+import { FeatureCard } from './feature-card';
 
 const wrapperCSS = {
   width: 540,
@@ -12,8 +14,15 @@ const wrapperCSS = {
   display: 'flex',
 };
 
-const NotificationsContent = () => (
-  <div style={wrapperCSS}>Here goes sam cards</div>
+const NotificationsContent: FunctionComponent<Pick<
+  WhatIsNewProps,
+  'features'
+>> = ({ features }) => (
+  <div style={wrapperCSS}>
+    {features.map(feature => {
+      return <FeatureCard feature={feature} key={feature.id} />;
+    })}
+  </div>
 );
 
 export const WhatIsNewButton = forwardRef(
@@ -29,7 +38,11 @@ export const WhatIsNewButton = forwardRef(
   },
 );
 
-export const WhatIsNew: FunctionComponent = () => {
+interface WhatIsNewProps {
+  features: Feature[];
+}
+
+export const WhatIsNew: FunctionComponent<WhatIsNewProps> = ({ features }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onClick = () => {
@@ -43,7 +56,7 @@ export const WhatIsNew: FunctionComponent = () => {
   return (
     <Popup
       placement="bottom-start"
-      content={NotificationsContent}
+      content={() => <NotificationsContent features={features} />}
       isOpen={isOpen}
       onClose={onClose}
       trigger={triggerProps => (

@@ -4,6 +4,7 @@ import { FeatureCard } from '../src/components/feature-card';
 import { Feature } from '../src/types';
 
 const feature: Feature = {
+  id: '1',
   date: 1573700033538,
   title: 'Feature 1 - Wow!',
   description:
@@ -19,8 +20,7 @@ export default function Example() {
         paddingTop: '40px',
       }}
     >
-      <WhatIsNew />
-      <FeatureCard feature={feature} />
+      <WhatIsNew features={[feature]} />
     </div>
   );
 }
